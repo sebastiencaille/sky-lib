@@ -16,7 +16,10 @@
 package org.skymarshall.example.hmi.controller.impl;
 
 import java.awt.Container;
-import java.awt.GridLayout;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -30,7 +33,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
-import org.skymarshall.example.hmi.Counter;
 import org.skymarshall.example.hmi.TestObject;
 import org.skymarshall.example.hmi.TestObjectTableModel;
 import org.skymarshall.example.hmi.TestObjectToStringConverter;
@@ -46,15 +48,18 @@ import org.skymarshall.hmi.swing17.bindings.SwingBindings;
 
 public class ControllerExampleView extends JFrame {
 
-    private static final long serialVersionUID = -7524991791160097387L;
-    private final Container   container;
+    private static final long                 serialVersionUID = -7524991791160097387L;
+    private final Container                   container;
+    private int                               row              = 0;
+    private final ControllerExampleController controller;
 
     public ControllerExampleView(final ControllerExampleController controller) {
+        this.controller = controller;
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         container = getContentPane();
 
-        getContentPane().setLayout(new GridLayout(7, 4));
+        getContentPane().setLayout(new GridBagLayout());
 
         // Checkbox input
         final BooleanProperty booleanProperty = controller.model.getABooleanProperty();
@@ -84,32 +89,39 @@ public class ControllerExampleView extends JFrame {
         addGuiLineItem(property, stringEditor, stringCheck);
 
         // Item selection
-        final SelectionProperty<String> listSelectionProperty = controller.model.getListSelectionProperty();
+
         final JList<String> selectionEditor = new JList<>(new String[] { "A", "B", "C" });
+
+        final SelectionProperty<String> listSelectionProperty = controller.model.getListSelectionProperty();
         listSelectionProperty.bind(SwingBindings.selection(selectionEditor, String.class));
 
         final JLabel selectionCheck = new JLabel();
         listSelectionProperty.bind(SwingBindings.value(selectionCheck));
-        addGuiLineItem(listSelectionProperty, new JScrollPane(selectionEditor), selectionCheck);
+
+        final JScrollPane itemEditorPane = new JScrollPane(selectionEditor);
+        itemEditorPane.setPreferredSize(new Dimension(200, 100));
+        addGuiLineItem(listSelectionProperty, itemEditorPane, selectionCheck);
 
         // Selection of list which content is based on "Item selection"
 
-        final SelectionProperty<String> dynamicListSelectionProperty = controller.model
-                .getDynamicListSelectionProperty();
         final JList<String> dynamicListSelectionEditor = new JList<>();
+        final JLabel dynamicListSelectioncheck = new JLabel();
+
         listSelectionProperty.bind(new DynamicListContentConverter()).bind(
                 SwingBindings.values(dynamicListSelectionEditor));
 
+        final SelectionProperty<String> dynamicListSelectionProperty = controller.model
+                .getDynamicListSelectionProperty();
+
         dynamicListSelectionProperty.bind(SwingBindings.selection(dynamicListSelectionEditor, String.class));
+        dynamicListSelectionProperty.bind(SwingBindings.value(dynamicListSelectioncheck));
 
         // Restore selection after model update
         controller.getModelValuesGroup().addAction(Actions.restoreAfterUpdate(dynamicListSelectionProperty));
 
-        final JLabel dynamicListSelectioncheck = new JLabel();
-        dynamicListSelectionProperty.bind(SwingBindings.value(dynamicListSelectioncheck));
-
-        addGuiLineItem(dynamicListSelectionProperty, new JScrollPane(dynamicListSelectionEditor),
-                dynamicListSelectioncheck);
+        final JScrollPane dynamicListPane = new JScrollPane(dynamicListSelectionEditor);
+        dynamicListPane.setPreferredSize(new Dimension(200, 100));
+        addGuiLineItem(dynamicListSelectionProperty, dynamicListPane, dynamicListSelectioncheck);
 
         // Table example
         final SelectionProperty<TestObject> tableSelectionProperty = controller.model.getComplexProperty();
@@ -120,13 +132,22 @@ public class ControllerExampleView extends JFrame {
         final JLabel tableSelectionCheck = new JLabel();
         tableSelectionProperty.bind(new TestObjectToStringConverter()).bind(SwingBindings.value(tableSelectionCheck));
 
-        addGuiLineItem(tableSelectionProperty, new JScrollPane(tableSelectionEditor), tableSelectionCheck);
+        final JScrollPane tableEditorPane = new JScrollPane(tableSelectionEditor);
+        tableEditorPane.setPreferredSize(new Dimension(200, 70));
+        addGuiLineItem(tableSelectionProperty, tableEditorPane, tableSelectionCheck);
 
         // Display of errors
         final ErrorProperty errorProperty = controller.getErrorProperty();
         final JLabel errorLabel = new JLabel();
         errorProperty.bind(Converters.hmiErrorToString()).bind(SwingBindings.value(errorLabel));
         addGuiLineItem(errorProperty, errorLabel, null);
+
+        final GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = row++;
+        constraints.fill = GridBagConstraints.VERTICAL;
+        constraints.weighty = 1.0;
+        add(new JPanel(), constraints);
 
         controller.setCreated();
 
@@ -135,24 +156,46 @@ public class ControllerExampleView extends JFrame {
     }
 
     public void addGuiLineItem(final AbstractProperty property, final JComponent editor, final JComponent check) {
-        final JLabel type = new JLabel(property.getName());
-        final JLabel counterLabel = new JLabel();
-        container.add(type);
-        container.add(editor);
-        if (check != null) {
-            container.add(check);
-        } else {
-            container.add(new JPanel());
-        }
-        container.add(counterLabel);
-        final Counter counter = new Counter();
+        final GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = row++;
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.weightx = 0.0;
+        constraints.insets = new Insets(0, 5, 1, 5);
+
+        final String lineName = property.getName();
+        final IntProperty counterProperty = new IntProperty(lineName + "Counter", controller.getPropertySupport(),
+                controller.getErrorProperty(), null);
         property.addListener(new PropertyChangeListener() {
 
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
-                counterLabel.setText(Integer.toString(counter.count()));
+                counterProperty.setValue(this, counterProperty.getValue() + 1);
             }
         });
-    }
 
+        final JLabel type = new JLabel(lineName);
+
+        final JLabel counterLabel = new JLabel();
+        counterLabel.setPreferredSize(new Dimension(30, -1));
+        counterProperty.bind(Converters.intToString()).bind(SwingBindings.value(counterLabel));
+
+        container.add(type, constraints);
+
+        constraints.gridx++;
+        constraints.weightx = 1.0;
+
+        container.add(editor, constraints);
+
+        constraints.gridx++;
+        constraints.weightx = 0.0;
+        if (check != null) {
+            check.setPreferredSize(new Dimension(100, -1));
+            container.add(check, constraints);
+        }
+
+        constraints.gridx++;
+        container.add(counterLabel, constraints);
+
+    }
 }

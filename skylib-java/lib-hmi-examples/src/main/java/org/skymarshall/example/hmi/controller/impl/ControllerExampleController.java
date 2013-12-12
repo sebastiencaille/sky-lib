@@ -21,8 +21,8 @@ import org.skymarshall.hmi.mvc.PropertyGroup;
 
 public class ControllerExampleController extends HmiController {
 
-    final ControllerExampleModel model                = new ControllerExampleModel(propertySupport, errorProperty);
-    private final PropertyGroup  modelPropertiesGroup = new PropertyGroup();
+    private final ControllerExampleModel model                = new ControllerExampleModel(this);
+    private final PropertyGroup          modelPropertiesGroup = new PropertyGroup();
 
     public ControllerExampleController() {
         modelPropertiesGroup.addProperty(model.getListSelectionProperty());
@@ -31,8 +31,13 @@ public class ControllerExampleController extends HmiController {
         model.getTableModel().insert(new TestObject("Hello", 1));
     }
 
-    public void setCreated() {
-        propertySupport.startController();
+    public ControllerExampleModel getModel() {
+        return model;
+    }
+
+    @Override
+    public void start() {
+        propertySupport.attachAll();
     }
 
     public PropertyGroup getModelValuesGroup() {

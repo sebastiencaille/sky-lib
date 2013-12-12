@@ -62,17 +62,17 @@ public class ControllerExampleView extends JFrame {
         getContentPane().setLayout(new GridBagLayout());
 
         // Checkbox input
-        final BooleanProperty booleanProperty = controller.model.getABooleanProperty();
+        final BooleanProperty booleanProperty = controller.getModel().getABooleanProperty();
         final JCheckBox booleanEditor = new JCheckBox();
         booleanProperty.bind(SwingBindings.value(booleanEditor));
         addGuiLineItem(booleanProperty, booleanEditor, null);
 
         // Int input field
-        final IntProperty intProperty = controller.model.getAnIntPropertyProperty();
+        final IntProperty intProperty = controller.getModel().getAnIntPropertyProperty();
 
         final JTextField intEditor = new JTextField();
         intProperty.bind(Converters.intToString()).bind(SwingBindings.value(intEditor));
-        controller.model.getABooleanProperty().bind(SwingBindings.enabled(intEditor));
+        controller.getModel().getABooleanProperty().bind(SwingBindings.enabled(intEditor));
 
         final JLabel intCheck = new JLabel();
         intProperty.bind(Converters.intToString()).bind(SwingBindings.value(intCheck));
@@ -80,7 +80,7 @@ public class ControllerExampleView extends JFrame {
         addGuiLineItem(intProperty, intEditor, intCheck);
 
         // String input field
-        final ObjectProperty<String> property = controller.model.getAStringPropertyProperty();
+        final ObjectProperty<String> property = controller.getModel().getAStringPropertyProperty();
         final JTextField stringEditor = new JTextField();
         property.bind(SwingBindings.value(stringEditor));
 
@@ -92,7 +92,7 @@ public class ControllerExampleView extends JFrame {
 
         final JList<String> selectionEditor = new JList<>(new String[] { "A", "B", "C" });
 
-        final SelectionProperty<String> listSelectionProperty = controller.model.getListSelectionProperty();
+        final SelectionProperty<String> listSelectionProperty = controller.getModel().getListSelectionProperty();
         listSelectionProperty.bind(SwingBindings.selection(selectionEditor, String.class));
 
         final JLabel selectionCheck = new JLabel();
@@ -110,7 +110,7 @@ public class ControllerExampleView extends JFrame {
         listSelectionProperty.bind(new DynamicListContentConverter()).bind(
                 SwingBindings.values(dynamicListSelectionEditor));
 
-        final SelectionProperty<String> dynamicListSelectionProperty = controller.model
+        final SelectionProperty<String> dynamicListSelectionProperty = controller.getModel()
                 .getDynamicListSelectionProperty();
 
         dynamicListSelectionProperty.bind(SwingBindings.selection(dynamicListSelectionEditor, String.class));
@@ -124,8 +124,9 @@ public class ControllerExampleView extends JFrame {
         addGuiLineItem(dynamicListSelectionProperty, dynamicListPane, dynamicListSelectioncheck);
 
         // Table example
-        final SelectionProperty<TestObject> tableSelectionProperty = controller.model.getComplexProperty();
-        final TestObjectTableModel tableSelectionTableModel = new TestObjectTableModel(controller.model.getTableModel());
+        final SelectionProperty<TestObject> tableSelectionProperty = controller.getModel().getComplexProperty();
+        final TestObjectTableModel tableSelectionTableModel = new TestObjectTableModel(controller.getModel()
+                .getTableModel());
         final JTable tableSelectionEditor = new JTable(tableSelectionTableModel);
         tableSelectionProperty.bind(SwingBindings.selection(tableSelectionEditor, tableSelectionTableModel));
 
@@ -137,7 +138,7 @@ public class ControllerExampleView extends JFrame {
         addGuiLineItem(tableSelectionProperty, tableEditorPane, tableSelectionCheck);
 
         // Display of errors
-        final ErrorProperty errorProperty = controller.getErrorProperty();
+        final ErrorProperty errorProperty = controller.getModel().getErrorProperty();
         final JLabel errorLabel = new JLabel();
         errorProperty.bind(Converters.hmiErrorToString()).bind(SwingBindings.value(errorLabel));
         addGuiLineItem(errorProperty, errorLabel, null);
@@ -149,7 +150,7 @@ public class ControllerExampleView extends JFrame {
         constraints.weighty = 1.0;
         add(new JPanel(), constraints);
 
-        controller.setCreated();
+        controller.start();
 
         validate();
         pack();
@@ -165,7 +166,7 @@ public class ControllerExampleView extends JFrame {
 
         final String lineName = property.getName();
         final IntProperty counterProperty = new IntProperty(lineName + "Counter", controller.getPropertySupport(),
-                controller.getErrorProperty(), null);
+                controller.getModel().getErrorProperty(), null);
         property.addListener(new PropertyChangeListener() {
 
             @Override

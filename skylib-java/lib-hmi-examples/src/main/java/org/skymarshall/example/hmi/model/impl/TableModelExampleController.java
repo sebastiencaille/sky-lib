@@ -45,7 +45,7 @@ public class TableModelExampleController {
     }
 
     public void setCreated() {
-        propertySupport.startController();
+        propertySupport.attachAll();
     }
 
 }

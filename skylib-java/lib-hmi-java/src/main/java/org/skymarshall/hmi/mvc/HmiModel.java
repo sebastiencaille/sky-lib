@@ -24,11 +24,20 @@ public class HmiModel {
 
     public HmiModel(final HmiController controller) {
         this.propertySupport = controller.getPropertySupport();
-        this.errorProperty = controller.getErrorProperty();
+        this.errorProperty = new ErrorProperty("InputError", propertySupport, null);
     }
 
     public HmiModel(final ControllerPropertyChangeSupport propertySupport, final ErrorProperty errorProperty) {
         this.propertySupport = propertySupport;
         this.errorProperty = errorProperty;
+    }
+
+    public HmiModel(final ControllerPropertyChangeSupport propertySupport) {
+        this.propertySupport = propertySupport;
+        this.errorProperty = new ErrorProperty("InputError", propertySupport, null);
+    }
+
+    public ErrorProperty getErrorProperty() {
+        return errorProperty;
     }
 }

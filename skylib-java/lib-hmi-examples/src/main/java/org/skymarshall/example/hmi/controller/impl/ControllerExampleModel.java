@@ -20,8 +20,7 @@ import java.util.Comparator;
 import org.skymarshall.example.hmi.TestObject;
 import org.skymarshall.hmi.model.ListModel;
 import org.skymarshall.hmi.model.views.ListView;
-import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
-import org.skymarshall.hmi.mvc.properties.ErrorProperty;
+import org.skymarshall.hmi.mvc.HmiController;
 import org.skymarshall.hmi.mvc.properties.SelectionProperty;
 
 public class ControllerExampleModel extends ControllerExampleObjectHmiModel {
@@ -34,9 +33,8 @@ public class ControllerExampleModel extends ControllerExampleObjectHmiModel {
         }
     }
 
-    public ControllerExampleModel(final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty) {
-        super(propertySupport, errorProperty);
+    public ControllerExampleModel(final HmiController controller) {
+        super(controller);
     }
 
     private final SelectionProperty<String>     listSelectionProperty        = new SelectionProperty<>(

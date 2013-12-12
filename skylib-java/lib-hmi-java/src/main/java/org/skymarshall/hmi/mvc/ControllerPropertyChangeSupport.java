@@ -31,6 +31,9 @@ import org.skymarshall.hmi.mvc.properties.AbstractProperty;
  * 
  * The support can detect loops that may appear when a chain of properties are
  * fired.
+ * <p>
+ * By default, all the properties are detached from the controller. They can be
+ * attached by calling the method startController
  * 
  * @author Sebastien Caille
  * 
@@ -146,9 +149,10 @@ public class ControllerPropertyChangeSupport {
     }
 
     /**
-     * Attaches all the properties.
+     * Attaches all the properties to the bindings. Should be called once all
+     * the components are bound to the properties
      */
-    public void startController() {
+    public void attachAll() {
         for (final AbstractProperty property : properties) {
             property.attach();
         }

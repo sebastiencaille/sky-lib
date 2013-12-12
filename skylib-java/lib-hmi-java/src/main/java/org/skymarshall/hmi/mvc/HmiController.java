@@ -15,8 +15,6 @@
  ******************************************************************************/
 package org.skymarshall.hmi.mvc;
 
-import org.skymarshall.hmi.mvc.properties.ErrorProperty;
-
 /**
  * Base of MVC controller.
  * <p>
@@ -31,23 +29,13 @@ public class HmiController {
      * The associated support
      */
     protected final ControllerPropertyChangeSupport propertySupport;
-    /**
-     * The basic error property
-     */
-    protected final ErrorProperty                   errorProperty;
 
     public HmiController() {
         this.propertySupport = new ControllerPropertyChangeSupport(this);
-        errorProperty = new ErrorProperty("InputError", propertySupport, null);
     }
 
     public HmiController(final ControllerPropertyChangeSupport propertySupport) {
         this.propertySupport = propertySupport;
-        errorProperty = new ErrorProperty("InputError", propertySupport, null);
-    }
-
-    public ErrorProperty getErrorProperty() {
-        return errorProperty;
     }
 
     public ControllerPropertyChangeSupport getPropertySupport() {
@@ -60,7 +48,7 @@ public class HmiController {
      * the values to be sent to the components
      */
     public void start() {
-        propertySupport.startController();
+        propertySupport.attachAll();
     }
 
 }

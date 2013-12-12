@@ -1,18 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2013 Sebastien Caille.
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms are permitted
- * provided that the above copyright notice and this paragraph are
- * duplicated in all such forms and that any documentation,
- * advertising materials, and other materials related to such
- * distribution and use acknowledge that the software was developed
- * by Sebastien Caille.  The name of Sebastien Caille may not be used to endorse or promote products derived
- * from this software without specific prior written permission.
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
- ******************************************************************************/
 package org.skymarshall.example.hmi.controller.impl;
 
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
@@ -56,21 +41,21 @@ public class ControllerExampleObjectHmiModel extends HmiModel implements IObject
         }
     }
 
-    protected final ObjectProperty<java.lang.String> aStringPropertyProperty;
-    protected final BooleanProperty aBooleanProperty;
-    protected final ObjectProperty<org.skymarshall.example.hmi.TestObject> aTestObjectPropertyProperty;
-    protected final IntProperty anIntPropertyProperty;
+    protected final ObjectProperty<java.lang.String> aStringPropertyProperty = new ObjectProperty<java.lang.String>("AStringProperty",  propertySupport, errorProperty, FieldAccess.create(ASTRING_PROPERTY_FIELD, java.lang.String.class));
+    protected final BooleanProperty aBooleanProperty = new BooleanProperty("ABoolean",  propertySupport, errorProperty, FieldAccess.create(ABOOLEAN_FIELD));
+    protected final ObjectProperty<org.skymarshall.example.hmi.TestObject> aTestObjectPropertyProperty = new ObjectProperty<org.skymarshall.example.hmi.TestObject>("ATestObjectProperty",  propertySupport, errorProperty, FieldAccess.create(ATEST_OBJECT_PROPERTY_FIELD, org.skymarshall.example.hmi.TestObject.class));
+    protected final IntProperty anIntPropertyProperty = new IntProperty("AnIntProperty",  propertySupport, errorProperty, FieldAccess.create(AN_INT_PROPERTY_FIELD));
 
     public ControllerExampleObjectHmiModel(final HmiController controller) {
-        this(controller.getPropertySupport(), controller.getErrorProperty());
+        super(controller);
+    }
+
+    public ControllerExampleObjectHmiModel(final ControllerPropertyChangeSupport propertySupport) {
+        super(propertySupport);
     }
 
     public ControllerExampleObjectHmiModel(final ControllerPropertyChangeSupport propertySupport, final ErrorProperty errorProperty) {
         super(propertySupport, errorProperty);
-        aStringPropertyProperty = new ObjectProperty<java.lang.String>("AStringProperty", propertySupport, errorProperty, FieldAccess.create(ASTRING_PROPERTY_FIELD, java.lang.String.class));
-        aBooleanProperty = new BooleanProperty("ABoolean", propertySupport, errorProperty, FieldAccess.create(ABOOLEAN_FIELD));
-        aTestObjectPropertyProperty = new ObjectProperty<org.skymarshall.example.hmi.TestObject>("ATestObjectProperty", propertySupport, errorProperty, FieldAccess.create(ATEST_OBJECT_PROPERTY_FIELD, org.skymarshall.example.hmi.TestObject.class));
-        anIntPropertyProperty = new IntProperty("AnIntProperty", propertySupport, errorProperty, FieldAccess.create(AN_INT_PROPERTY_FIELD));
     }
 
 

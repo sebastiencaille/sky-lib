@@ -27,7 +27,8 @@ import org.junit.Test;
 import org.skymarshall.hmi.model.ListModel;
 import org.skymarshall.hmi.model.views.IListView;
 import org.skymarshall.hmi.model.views.ListView;
-import org.skymarshall.hmi.mvc.HmiController;
+import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
+import org.skymarshall.hmi.mvc.HmiModel;
 import org.skymarshall.hmi.mvc.properties.MultipleSelectionProperty;
 import org.skymarshall.hmi.swing17.model.ListModelTableModel;
 
@@ -41,10 +42,13 @@ public class TableTest extends Assert {
 
                                                     });
 
-    private static class Controller extends HmiController {
+    private static class Model extends HmiModel {
         MultipleSelectionProperty<TestObject> selection = new MultipleSelectionProperty<TestObject>("Selection",
                                                                 propertySupport, errorProperty, null);
 
+        public Model(final ControllerPropertyChangeSupport support) {
+            super(support);
+        }
     }
 
     private enum Columns {
@@ -70,15 +74,15 @@ public class TableTest extends Assert {
 
     @Test
     public void testSelectionOnInsert() throws InvocationTargetException, InterruptedException {
-        final ListModel<TestObject> model = new ListModel<>(VIEW);
 
-        final Controller controller = new Controller();
-        controller.start();
+        final ControllerPropertyChangeSupport support = new ControllerPropertyChangeSupport(this);
+        final Model model = new Model(support);
+        support.attachAll();
 
-        final TestTableModel tableModel = new TestTableModel(model);
+        final ListModel<TestObject> listModel = new ListModel<>(VIEW);
+        final TestTableModel tableModel = new TestTableModel(listModel);
         final JTable table = new JTable();
-        controller.selection.bind(new org.skymarshall.hmi.swing17.bindings.JTableMultiSelectionBinding<>(table,
-                tableModel));
+        model.selection.bind(new org.skymarshall.hmi.swing17.bindings.JTableMultiSelectionBinding<>(table, tableModel));
 
         final TestObject object1 = new TestObject(1);
         final TestObject object3 = new TestObject(3);
@@ -88,14 +92,14 @@ public class TableTest extends Assert {
 
             @Override
             public void run() {
-                model.insert(object1);
-                model.insert(object3);
-                model.insert(object5);
-                controller.selection.setValue(this, Collections.singleton(object3));
-                model.insert(new TestObject(2));
-                assertEquals(1, controller.selection.getValue().size());
-                model.insert(new TestObject(4));
-                assertEquals(1, controller.selection.getValue().size());
+                listModel.insert(object1);
+                listModel.insert(object3);
+                listModel.insert(object5);
+                model.selection.setValue(this, Collections.singleton(object3));
+                listModel.insert(new TestObject(2));
+                assertEquals(1, model.selection.getValue().size());
+                listModel.insert(new TestObject(4));
+                assertEquals(1, model.selection.getValue().size());
 
             }
         });

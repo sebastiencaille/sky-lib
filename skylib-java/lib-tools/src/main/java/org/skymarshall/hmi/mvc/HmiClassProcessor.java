@@ -103,7 +103,14 @@ public class HmiClassProcessor {
         gen.addImport(HmiController.class);
         gen.appendLine("public " + getClassName() + "(final HmiController controller) {");
         gen.indent();
-        gen.appendLine("this(controller.getPropertySupport(), controller.getErrorProperty());");
+        gen.appendLine("super(controller);");
+        gen.unindent();
+        gen.appendLine("}");
+        gen.newLine();
+
+        gen.appendLine("public " + getClassName() + "(final ControllerPropertyChangeSupport propertySupport) {");
+        gen.indent();
+        gen.appendLine("super(propertySupport);");
         gen.unindent();
         gen.appendLine("}");
         gen.newLine();
@@ -112,16 +119,6 @@ public class HmiClassProcessor {
                 + "(final ControllerPropertyChangeSupport propertySupport, final ErrorProperty errorProperty) {");
         gen.indent();
         gen.appendLine("super(propertySupport, errorProperty);");
-
-        forEachAttribute(metaData, new AttributeApplier() {
-
-            @Override
-            public void apply(final AbstractAttributeMetaData<?> attrib) throws IOException {
-                FieldProcessor.create(gen, attrib).generateInitializer();
-            }
-
-        });
-
         gen.unindent();
         gen.appendLine("}");
         gen.newLine();

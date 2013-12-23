@@ -20,6 +20,7 @@ import org.skymarshall.hmi.mvc.IBindingController;
 import org.skymarshall.hmi.mvc.IComponentBinding;
 import org.skymarshall.hmi.mvc.PropertyEvent.EventKind;
 import org.skymarshall.hmi.mvc.converters.AbstractLongConverter;
+import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
 import org.skymarshall.hmi.mvc.converters.LongToLongConverter;
 import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
 
@@ -30,7 +31,7 @@ import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
  * @author Sebastien Caille
  * 
  */
-public class LongProperty extends PrimitiveProperty {
+public class LongProperty extends PrimitiveProperty<Long> {
 
     private long       value;
     private final long defaultValue;
@@ -47,6 +48,10 @@ public class LongProperty extends PrimitiveProperty {
     }
 
     public <C> IBindingController<C> bind(final AbstractLongConverter<C> converter) {
+        return converter.bindWithProperty(this, errorNotifier);
+    }
+
+    public <C> IBindingController<C> bind(final AbstractObjectConverter<Long, C> converter) {
         return converter.bindWithProperty(this, errorNotifier);
     }
 
@@ -69,6 +74,19 @@ public class LongProperty extends PrimitiveProperty {
 
     public long getValue() {
         return value;
+    }
+
+    @Override
+    public void setObjectValue(final Object caller, final Long newValue) {
+        if (newValue == null) {
+            throw new IllegalArgumentException("Null value is not allowed");
+        }
+        setValue(caller, newValue.longValue());
+    }
+
+    @Override
+    public Long getObjectValue() {
+        return Long.valueOf(getValue());
     }
 
     @Override

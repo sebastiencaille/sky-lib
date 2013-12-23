@@ -20,6 +20,7 @@ import org.skymarshall.hmi.mvc.IBindingController;
 import org.skymarshall.hmi.mvc.IComponentBinding;
 import org.skymarshall.hmi.mvc.PropertyEvent.EventKind;
 import org.skymarshall.hmi.mvc.converters.AbstractBooleanConverter;
+import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
 import org.skymarshall.hmi.mvc.converters.BooleanToBooleanConverter;
 import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
 
@@ -30,7 +31,7 @@ import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
  * @author Sebastien Caille
  * 
  */
-public class BooleanProperty extends PrimitiveProperty {
+public class BooleanProperty extends PrimitiveProperty<Boolean> {
     private boolean       value;
     private final boolean defaultValue;
 
@@ -46,6 +47,10 @@ public class BooleanProperty extends PrimitiveProperty {
     }
 
     public <C> IBindingController<C> bind(final AbstractBooleanConverter<C> converter) {
+        return converter.bindWithProperty(this, errorNotifier);
+    }
+
+    public <C> IBindingController<C> bind(final AbstractObjectConverter<Boolean, C> converter) {
         return converter.bindWithProperty(this, errorNotifier);
     }
 
@@ -69,6 +74,19 @@ public class BooleanProperty extends PrimitiveProperty {
 
     public boolean getValue() {
         return value;
+    }
+
+    @Override
+    public void setObjectValue(final Object caller, final Boolean newValue) {
+        if (newValue == null) {
+            throw new IllegalArgumentException("Null value is not allowed");
+        }
+        setValue(caller, newValue.booleanValue());
+    }
+
+    @Override
+    public Boolean getObjectValue() {
+        return Boolean.valueOf(getValue());
     }
 
     @Override

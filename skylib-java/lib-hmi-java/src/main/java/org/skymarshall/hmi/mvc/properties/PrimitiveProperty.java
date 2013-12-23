@@ -18,28 +18,28 @@ package org.skymarshall.hmi.mvc.properties;
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
 import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
 
-public abstract class PrimitiveProperty extends AbstractProperty {
+public abstract class PrimitiveProperty<T> extends AbstractTypedProperty<T> {
 
-	private final IObjectAccess<?> objectAccess;
+    private final IObjectAccess<?> objectAccess;
 
-	protected abstract void loadValueFromObject(final Object caller, final Object object, final IObjectAccess<?> access);
+    protected abstract void loadValueFromObject(final Object caller, final Object object, final IObjectAccess<?> access);
 
-	protected abstract void saveValueIntoObject(Object object, IObjectAccess<?> access);
+    protected abstract void saveValueIntoObject(Object object, IObjectAccess<?> access);
 
-	public PrimitiveProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-			final ErrorProperty errorProperty, final IObjectAccess<?> objectAccess) {
-		super(name, propertySupport, errorProperty);
-		this.objectAccess = objectAccess;
-	}
+    public PrimitiveProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
+            final ErrorProperty errorProperty, final IObjectAccess<?> objectAccess) {
+        super(name, propertySupport, errorProperty);
+        this.objectAccess = objectAccess;
+    }
 
-	@Override
-	public void loadFrom(final Object caller, final Object object) {
-		loadValueFromObject(caller, object, objectAccess);
-	}
+    @Override
+    public void loadFrom(final Object caller, final Object object) {
+        loadValueFromObject(caller, object, objectAccess);
+    }
 
-	@Override
-	public void saveInto(final Object object) {
-		saveValueIntoObject(object, objectAccess);
-	}
+    @Override
+    public void saveInto(final Object object) {
+        saveValueIntoObject(object, objectAccess);
+    }
 
 }

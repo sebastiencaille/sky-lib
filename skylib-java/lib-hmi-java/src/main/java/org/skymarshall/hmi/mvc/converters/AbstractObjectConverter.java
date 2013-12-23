@@ -16,8 +16,8 @@
 package org.skymarshall.hmi.mvc.converters;
 
 import org.skymarshall.hmi.mvc.IBindingController;
+import org.skymarshall.hmi.mvc.properties.AbstractTypedProperty;
 import org.skymarshall.hmi.mvc.properties.ErrorNotifier;
-import org.skymarshall.hmi.mvc.properties.ObjectProperty;
 
 /**
  * Root of all type converters.
@@ -32,12 +32,12 @@ import org.skymarshall.hmi.mvc.properties.ObjectProperty;
  */
 public abstract class AbstractObjectConverter<T, C> extends AbstractConverter<T, C> {
 
-    private ObjectProperty<T> property;
+    private AbstractTypedProperty<T> property;
 
     public AbstractObjectConverter() {
     }
 
-    public IBindingController<C> bindWithProperty(final ObjectProperty<T> aProperty,
+    public IBindingController<C> bindWithProperty(final AbstractTypedProperty<T> aProperty,
             final ErrorNotifier theErrorProperty) {
         this.property = aProperty;
         return super.bind(aProperty, theErrorProperty);
@@ -45,12 +45,12 @@ public abstract class AbstractObjectConverter<T, C> extends AbstractConverter<T,
 
     @Override
     public T getPropertyValue() {
-        return property.getValue();
+        return property.getObjectValue();
     }
 
     @Override
     public void setPropertyValue(final Object component, final T propertyObject) {
-        property.setValue(component, propertyObject);
+        property.setObjectValue(component, propertyObject);
     }
 
 }

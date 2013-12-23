@@ -15,13 +15,14 @@
  ******************************************************************************/
 package org.skymarshall.example.hmi.controller.impl;
 
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.awt.Rectangle;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
@@ -37,6 +38,9 @@ import org.skymarshall.example.hmi.TestObject;
 import org.skymarshall.example.hmi.TestObjectTableModel;
 import org.skymarshall.example.hmi.TestObjectToStringConverter;
 import org.skymarshall.hmi.mvc.Actions;
+import org.skymarshall.hmi.mvc.HmiErrors.HmiError;
+import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
+import org.skymarshall.hmi.mvc.converters.ConversionException;
 import org.skymarshall.hmi.mvc.converters.Converters;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 import org.skymarshall.hmi.mvc.properties.BooleanProperty;
@@ -56,99 +60,122 @@ public class ControllerExampleView extends JFrame {
     public ControllerExampleView(final ControllerExampleController controller) {
         this.controller = controller;
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-        container = getContentPane();
-
         getContentPane().setLayout(new GridBagLayout());
+        getContentPane().setBackground(Color.WHITE);
+
+        container = new JPanel(new GridBagLayout());
+
+        final GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(5, 5, 5, 5);
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 0.0;
+        constraints.weighty = 0.0;
+        getContentPane().add(container, constraints);
 
         // Checkbox input
         final BooleanProperty booleanProperty = controller.getModel().getABooleanProperty();
         final JCheckBox booleanEditor = new JCheckBox();
+        final JLabel label = new JLabel("Am I enabled?");
+        final JLabel booleanCounter = new JLabel();
         booleanProperty.bind(SwingBindings.value(booleanEditor));
-        addGuiLineItem(booleanProperty, booleanEditor, null);
+        booleanProperty.bind(SwingBindings.enabled(label));
+        booleanProperty.bind(new CounterBinding<Boolean>()).bind(SwingBindings.value(booleanCounter));
+        addGuiLineItem(booleanProperty, booleanEditor, label, booleanCounter);
 
         // Int input field
         final IntProperty intProperty = controller.getModel().getAnIntPropertyProperty();
-
         final JTextField intEditor = new JTextField();
-        intProperty.bind(Converters.intToString()).bind(SwingBindings.value(intEditor));
-        controller.getModel().getABooleanProperty().bind(SwingBindings.enabled(intEditor));
-
         final JLabel intCheck = new JLabel();
-        intProperty.bind(Converters.intToString()).bind(SwingBindings.value(intCheck));
+        final JLabel intCounter = new JLabel();
 
-        addGuiLineItem(intProperty, intEditor, intCheck);
+        intProperty.bind(Converters.intToString()).bind(SwingBindings.value(intEditor));
+        intProperty.bind(Converters.intToString()).bind(SwingBindings.value(intCheck));
+        intProperty.bind(new CounterBinding<Integer>()).bind(SwingBindings.value(intCounter));
+
+        addGuiLineItem(intProperty, intEditor, intCheck, intCounter);
 
         // String input field
-        final ObjectProperty<String> property = controller.getModel().getAStringPropertyProperty();
+        final ObjectProperty<String> stringProperty = controller.getModel().getAStringPropertyProperty();
         final JTextField stringEditor = new JTextField();
-        property.bind(SwingBindings.value(stringEditor));
-
         final JLabel stringCheck = new JLabel();
-        property.bind(SwingBindings.value(stringCheck));
-        addGuiLineItem(property, stringEditor, stringCheck);
+        final JLabel stringCounter = new JLabel();
+        stringProperty.bind(SwingBindings.value(stringEditor));
+        stringProperty.bind(SwingBindings.value(stringCheck));
+        stringProperty.bind(new CounterBinding<String>()).bind(SwingBindings.value(stringCounter));
+        addGuiLineItem(stringProperty, stringEditor, stringCheck, stringCounter);
 
         // Item selection
 
         final JList<String> selectionEditor = new JList<>(new String[] { "A", "B", "C" });
+        final JLabel selectionCheck = new JLabel();
+        final JLabel selectionCounter = new JLabel();
 
         final SelectionProperty<String> listSelectionProperty = controller.getModel().getListSelectionProperty();
         listSelectionProperty.bind(SwingBindings.selection(selectionEditor, String.class));
-
-        final JLabel selectionCheck = new JLabel();
         listSelectionProperty.bind(SwingBindings.value(selectionCheck));
+        listSelectionProperty.bind(new CounterBinding<String>()).bind(SwingBindings.value(selectionCounter));
 
         final JScrollPane itemEditorPane = new JScrollPane(selectionEditor);
         itemEditorPane.setPreferredSize(new Dimension(200, 100));
-        addGuiLineItem(listSelectionProperty, itemEditorPane, selectionCheck);
+        addGuiLineItem(listSelectionProperty, itemEditorPane, selectionCheck, selectionCounter);
 
         // Selection of list which content is based on "Item selection"
 
         final JList<String> dynamicListSelectionEditor = new JList<>();
         final JLabel dynamicListSelectioncheck = new JLabel();
+        final JLabel dynamicListSelectionCounter = new JLabel();
 
         listSelectionProperty.bind(new DynamicListContentConverter()).bind(
                 SwingBindings.values(dynamicListSelectionEditor));
 
         final SelectionProperty<String> dynamicListSelectionProperty = controller.getModel()
                 .getDynamicListSelectionProperty();
-
         dynamicListSelectionProperty.bind(SwingBindings.selection(dynamicListSelectionEditor, String.class));
         dynamicListSelectionProperty.bind(SwingBindings.value(dynamicListSelectioncheck));
+        dynamicListSelectionProperty.bind(new CounterBinding<String>()).bind(
+                SwingBindings.value(dynamicListSelectionCounter));
 
         // Restore selection after model update
         controller.getDynamicListUpdater().addAction(Actions.restoreAfterUpdate(dynamicListSelectionProperty));
 
         final JScrollPane dynamicListPane = new JScrollPane(dynamicListSelectionEditor);
         dynamicListPane.setPreferredSize(new Dimension(200, 100));
-        addGuiLineItem(dynamicListSelectionProperty, dynamicListPane, dynamicListSelectioncheck);
+        addGuiLineItem(dynamicListSelectionProperty, dynamicListPane, dynamicListSelectioncheck,
+                dynamicListSelectionCounter);
 
         // Table example
-        final SelectionProperty<TestObject> tableSelectionProperty = controller.getModel().getComplexProperty();
         final TestObjectTableModel tableSelectionTableModel = new TestObjectTableModel(controller.getModel()
                 .getTableModel());
         final JTable tableSelectionEditor = new JTable(tableSelectionTableModel);
-        tableSelectionProperty.bind(SwingBindings.selection(tableSelectionEditor, tableSelectionTableModel));
-
         final JLabel tableSelectionCheck = new JLabel();
+        final JLabel tableSelectionCounter = new JLabel();
+
+        final SelectionProperty<TestObject> tableSelectionProperty = controller.getModel().getComplexProperty();
+        tableSelectionProperty.bind(SwingBindings.selection(tableSelectionEditor, tableSelectionTableModel));
         tableSelectionProperty.bind(new TestObjectToStringConverter()).bind(SwingBindings.value(tableSelectionCheck));
+        tableSelectionProperty.bind(new CounterBinding<TestObject>()).bind(SwingBindings.value(tableSelectionCounter));
 
         final JScrollPane tableEditorPane = new JScrollPane(tableSelectionEditor);
         tableEditorPane.setPreferredSize(new Dimension(200, 70));
-        addGuiLineItem(tableSelectionProperty, tableEditorPane, tableSelectionCheck);
+        addGuiLineItem(tableSelectionProperty, tableEditorPane, tableSelectionCheck, tableSelectionCounter);
 
         // Display of errors
         final ErrorProperty errorProperty = controller.getModel().getErrorProperty();
-        final JLabel errorLabel = new JLabel();
+        final JLabel errorLabel = new JLabel("No Error");
+        final JLabel errorCounter = new JLabel();
         errorProperty.bind(Converters.hmiErrorToString()).bind(SwingBindings.value(errorLabel));
-        addGuiLineItem(errorProperty, errorLabel, null);
+        errorProperty.bind(new CounterBinding<HmiError>()).bind(SwingBindings.value(errorCounter));
+        addGuiLineItem(errorProperty, errorLabel, null, errorCounter);
 
-        final GridBagConstraints constraints = new GridBagConstraints();
-        constraints.gridx = 0;
-        constraints.gridy = row++;
-        constraints.fill = GridBagConstraints.VERTICAL;
-        constraints.weighty = 1.0;
-        add(new JPanel(), constraints);
+        final GridBagConstraints fillerConstraints = new GridBagConstraints();
+        fillerConstraints.gridx = 1;
+        fillerConstraints.gridy = 1;
+        fillerConstraints.fill = GridBagConstraints.BOTH;
+        fillerConstraints.weightx = 1.0;
+        fillerConstraints.weighty = 1.0;
+        final JPanel filler = new JPanel();
+        filler.setOpaque(false);
+        getContentPane().add(filler, fillerConstraints);
 
         controller.start();
 
@@ -156,37 +183,61 @@ public class ControllerExampleView extends JFrame {
         pack();
     }
 
-    public void addGuiLineItem(final AbstractProperty property, final JComponent editor, final JComponent check) {
+    private static class CounterBinding<T> extends AbstractObjectConverter<T, String> {
+
+        private int count = 0;
+
+        @Override
+        protected T convertComponentValueToPropertyValue(final String componentValue) throws ConversionException {
+            return null;
+        }
+
+        @Override
+        protected String convertPropertyValueToComponentValue(final T propertyValue) {
+            return String.valueOf(++count);
+        }
+    }
+
+    public void addGuiLineItem(final AbstractProperty property, final JComponent editor, final JComponent check,
+            final JLabel counterLabel) {
+
+        editor.setOpaque(false);
+
         final GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = 0;
         constraints.gridy = row++;
         constraints.fill = GridBagConstraints.BOTH;
         constraints.weightx = 0.0;
-        constraints.insets = new Insets(0, 5, 1, 5);
 
-        final String lineName = property.getName();
-        final IntProperty counterProperty = new IntProperty(lineName + "Counter", controller.getPropertySupport(),
-                controller.getModel().getErrorProperty(), null);
-        property.addListener(new PropertyChangeListener() {
-
+        // Title
+        final JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEADING)) {
             @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                counterProperty.setValue(this, counterProperty.getValue() + 1);
-            }
-        });
+            protected void paintComponent(final java.awt.Graphics g) {
+                super.paintComponent(g);
+                g.setColor(Color.BLACK);
+                final Rectangle clipBounds = g.getClipBounds();
+                final int y = clipBounds.height / 2;
+                g.drawLine(0, y, getWidth(), y);
+            };
+        };
+        final JLabel title = new JLabel(property.getName());
+        title.setOpaque(true);
+        panel.add(title);
 
-        final JLabel type = new JLabel(lineName);
+        constraints.gridwidth = 5;
+        container.add(panel, constraints);
+        constraints.gridwidth = 1;
 
-        final JLabel counterLabel = new JLabel();
-        counterLabel.setPreferredSize(new Dimension(30, -1));
-        counterProperty.bind(Converters.intToString()).bind(SwingBindings.value(counterLabel));
-
-        container.add(type, constraints);
+        // Editor
+        constraints.gridx = 0;
+        constraints.gridy = row++;
+        constraints.insets = new Insets(0, 5, 5, 5);
+        container.add(editor, constraints);
+        constraints.insets = new Insets(0, 0, 0, 0);
 
         constraints.gridx++;
-        constraints.weightx = 1.0;
-
-        container.add(editor, constraints);
+        counterLabel.setPreferredSize(new Dimension(30, -1));
+        container.add(counterLabel, constraints);
 
         constraints.gridx++;
         constraints.weightx = 0.0;
@@ -195,8 +246,17 @@ public class ControllerExampleView extends JFrame {
             container.add(check, constraints);
         }
 
+        final JPanel gap = new JPanel();
+        gap.setPreferredSize(new Dimension(1, 5));
+        gap.setBackground(Color.WHITE);
+        constraints.gridx = 0;
+        constraints.gridy = row++;
+        constraints.gridwidth = 5;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+
+        container.add(gap, constraints);
+
         constraints.gridx++;
-        container.add(counterLabel, constraints);
 
     }
 }

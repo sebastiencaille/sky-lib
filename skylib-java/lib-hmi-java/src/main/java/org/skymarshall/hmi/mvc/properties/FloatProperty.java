@@ -20,6 +20,7 @@ import org.skymarshall.hmi.mvc.IBindingController;
 import org.skymarshall.hmi.mvc.IComponentBinding;
 import org.skymarshall.hmi.mvc.PropertyEvent.EventKind;
 import org.skymarshall.hmi.mvc.converters.AbstractFloatConverter;
+import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
 import org.skymarshall.hmi.mvc.converters.FloatToFloatConverter;
 import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
 
@@ -30,7 +31,7 @@ import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
  * @author Sebastien Caille
  * 
  */
-public class FloatProperty extends PrimitiveProperty {
+public class FloatProperty extends PrimitiveProperty<Float> {
 
     private float       value;
     private final float defaultValue;
@@ -46,8 +47,12 @@ public class FloatProperty extends PrimitiveProperty {
         this(name, propertySupport, errorProperty, access, 0.0f);
     }
 
-    public void bind(final AbstractFloatConverter<?> converter) {
-        converter.bindWithProperty(this, errorNotifier);
+    public <C> IBindingController<C> bind(final AbstractFloatConverter<C> converter) {
+        return converter.bindWithProperty(this, errorNotifier);
+    }
+
+    public <C> IBindingController<C> bind(final AbstractObjectConverter<Float, C> converter) {
+        return converter.bindWithProperty(this, errorNotifier);
     }
 
     public IBindingController<Float> bind(final IComponentBinding<Float> binding) {
@@ -69,6 +74,19 @@ public class FloatProperty extends PrimitiveProperty {
 
     public float getValue() {
         return value;
+    }
+
+    @Override
+    public void setObjectValue(final Object caller, final Float newValue) {
+        if (newValue == null) {
+            throw new IllegalArgumentException("Null value is not allowed");
+        }
+        setValue(caller, newValue.floatValue());
+    }
+
+    @Override
+    public Float getObjectValue() {
+        return Float.valueOf(getValue());
     }
 
     @Override

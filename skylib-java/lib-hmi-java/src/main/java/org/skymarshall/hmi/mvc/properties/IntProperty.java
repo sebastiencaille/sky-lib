@@ -20,6 +20,7 @@ import org.skymarshall.hmi.mvc.IBindingController;
 import org.skymarshall.hmi.mvc.IComponentBinding;
 import org.skymarshall.hmi.mvc.PropertyEvent.EventKind;
 import org.skymarshall.hmi.mvc.converters.AbstractIntConverter;
+import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
 import org.skymarshall.hmi.mvc.converters.IntToIntConverter;
 import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
 
@@ -30,7 +31,7 @@ import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
  * @author Sebastien Caille
  * 
  */
-public class IntProperty extends PrimitiveProperty {
+public class IntProperty extends PrimitiveProperty<Integer> {
 
     private int       value;
     private final int defaultValue;
@@ -47,6 +48,10 @@ public class IntProperty extends PrimitiveProperty {
     }
 
     public <C> IBindingController<C> bind(final AbstractIntConverter<C> converter) {
+        return converter.bindWithProperty(this, errorNotifier);
+    }
+
+    public <C> IBindingController<C> bind(final AbstractObjectConverter<Integer, C> converter) {
         return converter.bindWithProperty(this, errorNotifier);
     }
 
@@ -69,6 +74,19 @@ public class IntProperty extends PrimitiveProperty {
 
     public int getValue() {
         return value;
+    }
+
+    @Override
+    public void setObjectValue(final Object caller, final Integer newValue) {
+        if (newValue == null) {
+            throw new IllegalArgumentException("Null value is not allowed");
+        }
+        setValue(caller, newValue.intValue());
+    }
+
+    @Override
+    public Integer getObjectValue() {
+        return Integer.valueOf(getValue());
     }
 
     @Override

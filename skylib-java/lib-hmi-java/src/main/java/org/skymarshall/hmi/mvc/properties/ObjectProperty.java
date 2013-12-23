@@ -31,7 +31,7 @@ import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
  * 
  * @param <T>
  */
-public class ObjectProperty<T> extends AbstractProperty {
+public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 
     private final IObjectAccess<T> objectAccess;
 
@@ -74,6 +74,16 @@ public class ObjectProperty<T> extends AbstractProperty {
         } finally {
             fireEvent(caller, EventKind.AFTER);
         }
+    }
+
+    @Override
+    public T getObjectValue() {
+        return getValue();
+    }
+
+    @Override
+    public void setObjectValue(final Object caller, final T newValue) {
+        setValue(caller, newValue);
     }
 
     public void forceChanged(final Object caller) {

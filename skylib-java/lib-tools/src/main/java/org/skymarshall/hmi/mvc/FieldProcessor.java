@@ -187,7 +187,11 @@ abstract class FieldProcessor {
     }
 
     void generateDeclaration() throws IOException {
-        gen.appendLine(String.format("protected final %s %s = new %s(\"%s\",  propertySupport, errorProperty, %s);",
-                getPropertyType(), getPropertyName(), getPropertyType(), attrib.getName(), getFieldCreation()));
+        gen.appendIndentedLine(String.format("protected final %s %s;", getPropertyType(), getPropertyName()));
+    }
+
+    void generateInitialization() throws IOException {
+        gen.appendIndentedLine(String.format("%s = new %s(prefix + \"-%s\",  propertySupport, errorProperty, %s);",
+                getPropertyName(), getPropertyType(), attrib.getName(), getFieldCreation()));
     }
 }

@@ -1,50 +1,50 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.skymarshall</groupId>
-  <artifactId>libs</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+	<groupId>org.skymarshall</groupId>
+	<artifactId>libs</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
 
-  <name>skylib</name>
-  <packaging>pom</packaging>
+	<name>skylib</name>
+	<packaging>pom</packaging>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-	<version>3.1</version>
-        <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
-  <dependencyManagement>
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-  </dependencyManagement>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.11</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
-  <modules>
-  	<module>lib-utils</module>
-	<module>lib-hmi-java</module>
-	<module>lib-hmi-swing16</module>
-	<module>lib-hmi-swing17</module>
-  	<module>lib-tools</module>
-	<module>lib-hmi-examples</module>
-  </modules>
+	<modules>
+		<module>lib-utils</module>
+		<module>lib-hmi-java</module>
+		<module>lib-hmi-swing16</module>
+		<module>lib-hmi-swing17</module>
+		<module>lib-tools</module>
+		<module>lib-hmi-examples</module>
+	</modules>
 </project>

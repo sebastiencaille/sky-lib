@@ -21,7 +21,6 @@ import java.util.Comparator;
 import org.junit.Assert;
 import org.junit.Test;
 import org.skymarshall.hmi.TestObject;
-import org.skymarshall.hmi.model.ListModel;
 import org.skymarshall.hmi.model.views.IListView;
 import org.skymarshall.hmi.model.views.ListView;
 
@@ -31,7 +30,7 @@ public class ListModelBasicTest extends Assert {
                                                                  @Override
                                                                  public int compare(final TestObject o1,
                                                                          final TestObject o2) {
-                                                                     return o1.val.compareTo(o2.val);
+                                                                     return o1.val - o2.val;
                                                                  }
 
                                                              });
@@ -40,7 +39,7 @@ public class ListModelBasicTest extends Assert {
                                                                  @Override
                                                                  public int compare(final TestObject o1,
                                                                          final TestObject o2) {
-                                                                     return o2.val.compareTo(o1.val);
+                                                                     return o2.val - o1.val;
                                                                  }
 
                                                              });
@@ -72,7 +71,7 @@ public class ListModelBasicTest extends Assert {
         checkModel(model2, 1, 3, 4);
 
         model.startEditingValue(toMove);
-        toMove.val = new Integer(2);
+        toMove.val = 2;
         model.stopEditingValue();
 
         checkModel(model, 1, 2, 3);
@@ -112,7 +111,7 @@ public class ListModelBasicTest extends Assert {
     private void checkModel(final ListModel<TestObject> model, final int... expected) {
         final int[] current = new int[model.getSize()];
         for (int i = 0; i < model.getSize(); i++) {
-            current[i] = model.getValueAt(i).val.intValue();
+            current[i] = model.getValueAt(i).val;
         }
         assertEquals(Arrays.toString(expected), Arrays.toString(current));
     }

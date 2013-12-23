@@ -117,7 +117,7 @@ public class ControllerExampleView extends JFrame {
         dynamicListSelectionProperty.bind(SwingBindings.value(dynamicListSelectioncheck));
 
         // Restore selection after model update
-        controller.getModelValuesGroup().addAction(Actions.restoreAfterUpdate(dynamicListSelectionProperty));
+        controller.getDynamicListUpdater().addAction(Actions.restoreAfterUpdate(dynamicListSelectionProperty));
 
         final JScrollPane dynamicListPane = new JScrollPane(dynamicListSelectionEditor);
         dynamicListPane.setPreferredSize(new Dimension(200, 100));

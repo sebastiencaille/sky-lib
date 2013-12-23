@@ -6,10 +6,13 @@ import org.skymarshall.hmi.mvc.IObjectHmiModel;
 import org.skymarshall.hmi.mvc.objectaccess.FieldAccess;
 import java.lang.reflect.AccessibleObject;
 import org.skymarshall.hmi.mvc.properties.ObjectProperty;
-import org.skymarshall.hmi.mvc.properties.ErrorProperty;
+import org.skymarshall.hmi.mvc.IComponentBinding;
 import org.skymarshall.hmi.mvc.HmiController;
 import java.lang.reflect.Field;
 import org.skymarshall.hmi.mvc.properties.IntProperty;
+import org.skymarshall.hmi.mvc.properties.ErrorProperty;
+import org.skymarshall.hmi.mvc.IComponentLink;
+import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 
 public class TestObjectHmiModel extends HmiModel implements IObjectHmiModel<org.skymarshall.example.hmi.TestObject> {
     public static final String ASECOND_VALUE = "ASecondValue";
@@ -30,19 +33,28 @@ public class TestObjectHmiModel extends HmiModel implements IObjectHmiModel<org.
         }
     }
 
-    protected final IntProperty aSecondValueProperty = new IntProperty("ASecondValue",  propertySupport, errorProperty, FieldAccess.create(ASECOND_VALUE_FIELD));
-    protected final ObjectProperty<java.lang.String> aFirstValueProperty = new ObjectProperty<java.lang.String>("AFirstValue",  propertySupport, errorProperty, FieldAccess.create(AFIRST_VALUE_FIELD, java.lang.String.class));
+    protected final IntProperty aSecondValueProperty;
+    protected final ObjectProperty<java.lang.String> aFirstValueProperty;
+    public TestObjectHmiModel(final String prefix, final ControllerPropertyChangeSupport propertySupport, final ErrorProperty errorProperty) {
+        super(propertySupport, errorProperty);
+        aSecondValueProperty = new IntProperty(prefix + "-ASecondValue",  propertySupport, errorProperty, FieldAccess.create(ASECOND_VALUE_FIELD));
+        aFirstValueProperty = new ObjectProperty<java.lang.String>(prefix + "-AFirstValue",  propertySupport, errorProperty, FieldAccess.create(AFIRST_VALUE_FIELD, java.lang.String.class));
+    }
+
+    public TestObjectHmiModel(final String prefix, final HmiController controller) {
+        this(prefix, controller.getPropertySupport(), HmiModel.createErrorProperty(prefix + "-Error", controller.getPropertySupport()));
+    }
 
     public TestObjectHmiModel(final HmiController controller) {
-        super(controller);
+        this("TestObject", controller.getPropertySupport(), HmiModel.createErrorProperty("TestObject-Error", controller.getPropertySupport()));
+    }
+
+    public TestObjectHmiModel(final String prefix, final ControllerPropertyChangeSupport propertySupport) {
+        this(prefix, propertySupport, HmiModel.createErrorProperty(prefix + "-Error", propertySupport));
     }
 
     public TestObjectHmiModel(final ControllerPropertyChangeSupport propertySupport) {
-        super(propertySupport);
-    }
-
-    public TestObjectHmiModel(final ControllerPropertyChangeSupport propertySupport, final ErrorProperty errorProperty) {
-        super(propertySupport, errorProperty);
+        this("TestObject", propertySupport, HmiModel.createErrorProperty("TestObject-Error", propertySupport));
     }
 
 
@@ -64,5 +76,22 @@ public class TestObjectHmiModel extends HmiModel implements IObjectHmiModel<org.
     public void saveInto(org.skymarshall.example.hmi.TestObject object) {
         aSecondValueProperty.saveInto(object);
         aFirstValueProperty.saveInto(object);
+    }
+
+    public IComponentBinding<org.skymarshall.example.hmi.TestObject> binding() {
+        return new IComponentBinding<org.skymarshall.example.hmi.TestObject>() {
+            @Override
+            public Object getComponent() {
+                return TestObjectHmiModel.this;
+            }
+            @Override
+            public void addComponentValueChangeListener(final IComponentLink<org.skymarshall.example.hmi.TestObject> link) {
+                // nope
+            }
+            @Override
+            public void setComponentValue(final AbstractProperty source, final org.skymarshall.example.hmi.TestObject value) {
+                loadFrom(value);
+            }
+        };
     }
 }

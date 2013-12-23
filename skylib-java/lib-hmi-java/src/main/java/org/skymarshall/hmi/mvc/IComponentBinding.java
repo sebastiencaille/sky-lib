@@ -17,11 +17,30 @@ package org.skymarshall.hmi.mvc;
 
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 
+/**
+ * Unified access to a component's "property".
+ * <p>
+ * 
+ * @author Sebastien Caille
+ * 
+ * @param <T>
+ *            the type of the component's property
+ */
 public interface IComponentBinding<T> {
+
     public Object getComponent();
 
-    public void addComponentValueChangeListener(final IComponentLink<T> converter);
+    /**
+     * Called when bound to a link, so the component binding can hook to the
+     * component and forward it's content to the property
+     */
+    public void addComponentValueChangeListener(final IComponentLink<T> link);
 
+    /**
+     * 
+     * @param source
+     * @param value
+     */
     public void setComponentValue(final AbstractProperty source, final T value);
 
 }

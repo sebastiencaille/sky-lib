@@ -16,16 +16,25 @@
 package org.skymarshall.util.helpers;
 
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 public class Duration {
 
-    private final int millisecondsInDay;
-    private final int days;
-    private final int months;
-    private final int years;
+    private final long millisecondsInDay;
+    private final int  days;
+    private final int  months;
+    private final int  years;
 
     public Duration(final int hours, final int minutes, final int seconds) {
-        millisecondsInDay = (hours * 3600 + minutes * 60 + seconds) * 1000;
+        millisecondsInDay = TimeUnit.HOURS.toMillis(hours) + TimeUnit.MINUTES.toMillis(minutes)
+                + TimeUnit.SECONDS.toMillis(seconds);
+        days = 0;
+        months = 0;
+        years = 0;
+    }
+
+    public Duration(final int time, final TimeUnit unit) {
+        millisecondsInDay = unit.toMillis(time);
         days = 0;
         months = 0;
         years = 0;
@@ -33,7 +42,7 @@ public class Duration {
 
     public Calendar addTo(final Calendar cal) {
         final Calendar clone = (Calendar) cal.clone();
-        clone.add(Calendar.MILLISECOND, millisecondsInDay);
+        clone.add(Calendar.MILLISECOND, (int) millisecondsInDay);
         clone.add(Calendar.DAY_OF_YEAR, days);
         clone.add(Calendar.MONTH, months);
         clone.add(Calendar.YEAR, years);

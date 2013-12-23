@@ -32,11 +32,19 @@ public abstract class ThreadedActionListener implements
         futureTask = new FutureTask<Void>(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-                actionPerformedInThread(e);
+                try {
+                    actionPerformedInThread(e);
+                } catch (final RuntimeException e) {
+                    handleRuntimeException(e);
+                }
                 return null;
             }
         });
         run();
+    }
+
+    protected void handleRuntimeException(final RuntimeException e) {
+        e.printStackTrace();
     }
 
     protected void run() {

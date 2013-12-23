@@ -66,24 +66,24 @@ public class DataObjectMetaDataExample {
         final DataObjectMetaData<ADataObject> metadata = new DataObjectMetaData<ADataObject>(ADataObject.class);
         final ADataObject do1 = new ADataObject();
 
-        log.appendLine("Class " + ADataObject.class.getName() + " contains the following attributes");
+        log.appendIndentedLine("Class " + ADataObject.class.getName() + " contains the following attributes");
         log.indent();
         for (final AbstractAttributeMetaData<ADataObject> attribute : metadata.getAttributes()) {
-            log.appendLine(attribute.toString());
+            log.appendIndentedLine(attribute.toString());
         }
         log.unindent();
 
-        log.appendLine("Read/Write access using the DO's MetaData");
+        log.appendIndentedLine("Read/Write access using the DO's MetaData");
         log.indent();
         metadata.getAttribute("AnAttribute").setValueOf(do1, "data1");
-        log.appendLine("anAttribute:" + metadata.getAttribute("AnAttribute").getValueOf(do1));
+        log.appendIndentedLine("anAttribute:" + metadata.getAttribute("AnAttribute").getValueOf(do1));
         log.unindent();
 
-        log.appendLine("One can also copy the content of the DO...");
+        log.appendIndentedLine("One can also copy the content of the DO...");
         log.indent();
         final ADataObject do2 = new ADataObject();
         metadata.copy(do1, do2);
-        log.appendLine("anAttribute:" + metadata.getAttribute("AnAttribute").getValueOf(do2));
+        log.appendIndentedLine("anAttribute:" + metadata.getAttribute("AnAttribute").getValueOf(do2));
         log.unindent();
     }
 }

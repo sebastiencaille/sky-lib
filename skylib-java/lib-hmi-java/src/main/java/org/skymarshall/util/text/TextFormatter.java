@@ -83,14 +83,27 @@ public class TextFormatter {
         indentationManager.indent();
     }
 
-    public void unindent() {
+    public TextFormatter unindent() {
         indentationManager.unindent();
+        return this;
     }
 
-    public void appendLine(final String string) throws IOException {
+    public TextFormatter appendIndented(final String string) throws IOException {
+        output.append(indentationManager.getIndentation());
+        output.append(string);
+        return this;
+    }
+
+    public TextFormatter appendIndentedLine(final String string) throws IOException {
         output.append(indentationManager.getIndentation());
         output.append(string);
         output.append('\n');
+        return this;
+    }
+
+    public TextFormatter append(final String str) throws IOException {
+        output.append(str);
+        return this;
     }
 
     public void add(final String string) throws IOException {
@@ -98,8 +111,9 @@ public class TextFormatter {
 
     }
 
-    public void newLine() throws IOException {
+    public TextFormatter newLine() throws IOException {
         output.append('\n');
+        return this;
     }
 
     public IOutput getOutput() {

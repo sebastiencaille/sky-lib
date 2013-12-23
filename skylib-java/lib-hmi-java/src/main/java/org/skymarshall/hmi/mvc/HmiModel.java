@@ -24,7 +24,7 @@ public class HmiModel {
 
     public HmiModel(final HmiController controller) {
         this.propertySupport = controller.getPropertySupport();
-        this.errorProperty = new ErrorProperty("InputError", propertySupport, null);
+        this.errorProperty = createErrorProperty("InputError", propertySupport);
     }
 
     public HmiModel(final ControllerPropertyChangeSupport propertySupport, final ErrorProperty errorProperty) {
@@ -34,10 +34,14 @@ public class HmiModel {
 
     public HmiModel(final ControllerPropertyChangeSupport propertySupport) {
         this.propertySupport = propertySupport;
-        this.errorProperty = new ErrorProperty("InputError", propertySupport, null);
+        this.errorProperty = createErrorProperty("InputError", propertySupport);
     }
 
     public ErrorProperty getErrorProperty() {
         return errorProperty;
+    }
+
+    protected static ErrorProperty createErrorProperty(final String name, final ControllerPropertyChangeSupport support) {
+        return new ErrorProperty(name, support, null);
     }
 }

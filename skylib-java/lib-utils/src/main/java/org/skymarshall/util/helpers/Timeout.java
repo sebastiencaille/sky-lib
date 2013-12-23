@@ -17,6 +17,7 @@
 package org.skymarshall.util.helpers;
 
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class Timeout {
@@ -25,6 +26,10 @@ public class Timeout {
 
         public TimeoutFactory(final int hours, final int minutes, final int seconds) {
             super(hours, minutes, seconds);
+        }
+
+        public TimeoutFactory(final int time, final TimeUnit unit) {
+            super(time, unit);
         }
 
         public Timeout createTimeout() {
@@ -51,11 +56,31 @@ public class Timeout {
         try {
             Thread.sleep(100);
         } catch (final InterruptedException e) {
+            // Just let it go
         }
     }
 
     public TimeoutFactory createTimeoutFactory(final int hours, final int minutes, final int seconds) {
         return new TimeoutFactory(hours, minutes, seconds);
+    }
+
+    public void waitOn(final Object obj) throws InterruptedException, TimeoutException {
+        final long waitTime = stop - System.currentTimeMillis();
+        if (waitTime > 0) {
+            obj.wait(waitTime);
+        }
+        if (hasTimedOut()) {
+            throw new TimeoutException("Time out: " + info);
+        }
+
+    }
+
+    public long remaining() {
+        final long l = stop - System.currentTimeMillis();
+        if (l < 1) {
+            return 1;
+        }
+        return l;
     }
 
 }

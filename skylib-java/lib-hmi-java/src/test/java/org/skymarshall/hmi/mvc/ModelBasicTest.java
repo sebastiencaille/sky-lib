@@ -19,26 +19,34 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.skymarshall.hmi.TestObject;
-import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
 import org.skymarshall.hmi.mvc.converters.ConversionException;
+import org.skymarshall.hmi.mvc.converters.Converters;
 import org.skymarshall.hmi.mvc.objectaccess.FieldAccess;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
+import org.skymarshall.hmi.mvc.properties.IntProperty;
 import org.skymarshall.hmi.mvc.properties.ObjectProperty;
 
 public class ModelBasicTest extends Assert {
 
     private class TestHmiModel extends HmiModel {
+
+        private final IntProperty            integerProperty;
+
+        private final ObjectProperty<String> stringProperty;
+
         public TestHmiModel(final HmiController controller) {
             super(controller);
+            try {
+                integerProperty = new IntProperty("IntegerProperty", propertySupport, errorProperty,
+                        FieldAccess.create(TestObject.class.getField("val")));
+                stringProperty = new ObjectProperty<String>("StringProperty", propertySupport, errorProperty, null);
+            } catch (final NoSuchFieldException e) {
+                throw new IllegalStateException(e);
+            } catch (final SecurityException e) {
+                throw new IllegalStateException(e);
+            }
         }
 
-        private final ObjectProperty<Integer> integerProperty = new ObjectProperty<Integer>("IntegerProperty",
-                                                                      propertySupport, errorProperty,
-                                                                      FieldAccess.<Integer> create(TestObject.class,
-                                                                              "val", Integer.class));
-
-        private final ObjectProperty<String>  stringProperty  = new ObjectProperty<String>("StringProperty",
-                                                                      propertySupport, errorProperty, null);
     }
 
     private HmiController controller;
@@ -50,30 +58,11 @@ public class ModelBasicTest extends Assert {
         model = new TestHmiModel(controller);
     }
 
-    private static class IntegerToStringConverter extends AbstractObjectConverter<Integer, String> {
-
-        @Override
-        protected String convertPropertyValueToComponentValue(final Integer propertyValue) {
-            return String.valueOf(propertyValue);
-        }
-
-        @Override
-        protected Integer convertComponentValueToPropertyValue(final String componentValue) throws ConversionException {
-            try {
-                return Integer.valueOf(componentValue);
-            } catch (final NumberFormatException e) {
-                errorNotifier.setError(getComponent(), HmiErrors.fromException(e));
-                return getPropertyValue();
-            }
-        }
-
-    }
-
     private static class TestBinding implements
             IComponentBinding<String> {
 
         private String                 value;
-        private IComponentLink<String> converter;
+        private IComponentLink<String> onlyConverter;
 
         @Override
         public Object getComponent() {
@@ -82,11 +71,11 @@ public class ModelBasicTest extends Assert {
 
         @Override
         public void addComponentValueChangeListener(final IComponentLink<String> converter) {
-            this.converter = converter;
+            this.onlyConverter = converter;
         }
 
         public void setValue(final String value) {
-            converter.setValueFromComponent(getComponent(), value);
+            onlyConverter.setValueFromComponent(getComponent(), value);
         }
 
         @Override
@@ -99,7 +88,7 @@ public class ModelBasicTest extends Assert {
     @Test
     public void testChain() {
         final TestBinding binding = new TestBinding();
-        model.integerProperty.bind(new IntegerToStringConverter()).bind(binding);
+        model.integerProperty.bind(Converters.intToString()).bind(binding);
         controller.start();
 
         final TestObject testObject = new TestObject(321);
@@ -107,20 +96,20 @@ public class ModelBasicTest extends Assert {
         model.integerProperty.loadFrom(this, testObject);
         assertEquals("321", binding.value);
 
-        model.integerProperty.setValue(this, Integer.valueOf(123));
+        model.integerProperty.setValue(this, 123);
         assertEquals("123", binding.value);
 
         binding.setValue("456");
-        assertEquals(Integer.valueOf(456), model.integerProperty.getValue());
+        assertEquals(456, model.integerProperty.getValue());
 
         model.integerProperty.saveInto(testObject);
-        assertEquals(Integer.valueOf(456), testObject.val);
+        assertEquals(456, testObject.val);
 
         // Test exception
         binding.setValue("bla");
-        assertEquals(Integer.valueOf(456), model.integerProperty.getValue());
+        assertEquals(456, model.integerProperty.getValue());
         assertNotNull(model.errorProperty.getValue().getContent());
-        assertEquals(NumberFormatException.class, model.errorProperty.getValue().getContent().getClass());
+        assertEquals(ConversionException.class, model.errorProperty.getValue().getContent().getClass());
     }
 
     @Test

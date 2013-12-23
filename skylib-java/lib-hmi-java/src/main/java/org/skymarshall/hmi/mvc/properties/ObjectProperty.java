@@ -23,13 +23,21 @@ import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
 import org.skymarshall.hmi.mvc.converters.IdentityObjectConverter;
 import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
 
+/**
+ * A property that contains an object.
+ * <p>
+ * 
+ * @author Sebastien Caille
+ * 
+ * @param <T>
+ */
 public class ObjectProperty<T> extends AbstractProperty {
 
     private final IObjectAccess<T> objectAccess;
 
     private T                      value;
 
-    private T                      valueWhenDetached;
+    private T                      valueAtDetach;
 
     private T                      defaultValue;
 
@@ -82,17 +90,17 @@ public class ObjectProperty<T> extends AbstractProperty {
 
     @Override
     public void detach() {
-        valueWhenDetached = getValue();
+        valueAtDetach = getValue();
         super.detach();
     }
 
-    public T getValueWhenDetached() {
-        return valueWhenDetached;
+    public T getValueAtDetach() {
+        return valueAtDetach;
     }
 
     @Override
     public void attach() {
-        attach(valueWhenDetached);
+        attach(valueAtDetach);
     }
 
     protected void attach(final T oldValue) {
@@ -100,7 +108,7 @@ public class ObjectProperty<T> extends AbstractProperty {
         if (oldValue != null || value != null) {
             propertySupport.firePropertyChange(getName(), this, oldValue, value);
         }
-        valueWhenDetached = null;
+        valueAtDetach = null;
     }
 
     @Override

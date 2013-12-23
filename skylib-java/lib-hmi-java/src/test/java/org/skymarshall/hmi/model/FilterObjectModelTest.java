@@ -21,8 +21,6 @@ import java.util.Comparator;
 import org.junit.Assert;
 import org.junit.Test;
 import org.skymarshall.hmi.TestObject;
-import org.skymarshall.hmi.model.IFilter;
-import org.skymarshall.hmi.model.ListModel;
 import org.skymarshall.hmi.model.views.IListView;
 import org.skymarshall.hmi.model.views.ListView;
 
@@ -32,7 +30,7 @@ public class FilterObjectModelTest extends Assert {
                                                                  @Override
                                                                  public int compare(final TestObject o1,
                                                                          final TestObject o2) {
-                                                                     return o1.val.compareTo(o2.val);
+                                                                     return o1.val - o2.val;
                                                                  }
 
                                                              });
@@ -42,7 +40,7 @@ public class FilterObjectModelTest extends Assert {
 
                                                                  @Override
                                                                  public boolean accept(final TestObject value) {
-                                                                     return value.val.intValue() % 2 == 0;
+                                                                     return value.val % 2 == 0;
                                                                  }
 
                                                              };
@@ -52,7 +50,7 @@ public class FilterObjectModelTest extends Assert {
 
                                                                  @Override
                                                                  public boolean accept(final TestObject value) {
-                                                                     return value.val.intValue() % 2 == 1;
+                                                                     return value.val % 2 == 1;
                                                                  }
 
                                                              };
@@ -82,7 +80,7 @@ public class FilterObjectModelTest extends Assert {
         baseModel.insert(toMove);
 
         baseModel.startEditingValue(toMove);
-        toMove.val = new Integer(2);
+        toMove.val = 2;
         baseModel.stopEditingValue();
 
         checkModel(model, 2, 4);
@@ -123,7 +121,7 @@ public class FilterObjectModelTest extends Assert {
     private void checkModel(final ListModel<TestObject> model, final int... expected) {
         final int[] current = new int[model.getSize()];
         for (int i = 0; i < model.getSize(); i++) {
-            current[i] = model.getValueAt(i).val.intValue();
+            current[i] = model.getValueAt(i).val;
         }
         assertEquals(Arrays.toString(expected), Arrays.toString(current));
     }

@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.skymarshall.JavaClassGenerator;
 import org.skymarshall.hmi.mvc.objectaccess.FieldAccess;
+import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 import org.skymarshall.hmi.mvc.properties.ErrorProperty;
 import org.skymarshall.util.dao.metadata.AbstractAttributeMetaData;
 import org.skymarshall.util.dao.metadata.UntypedDataObjectMetaData;
@@ -65,13 +66,14 @@ public class HmiClassProcessor {
         gen.setPackage(pkg);
         gen.addImport(HmiModel.class);
         gen.addImport(IObjectHmiModel.class);
+        gen.addImport(IComponentBinding.class);
         gen.addImport(ErrorProperty.class);
         gen.addImport(org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport.class);
 
-        gen.appendLine("public class " + getClassName() + " extends HmiModel implements IObjectHmiModel<"
-                + typeToString(metaData.getDataType()) + "> {");
+        final String strType = typeToString(metaData.getDataType());
+        final String defaultPrefixInQuotes = "\"" + clazz.getSimpleName() + "\"";
 
-        gen.indent();
+        gen.openBlock("public class ", getClassName(), " extends HmiModel implements IObjectHmiModel<", strType, ">");
 
         beforePreprocessAttribs();
 
@@ -99,28 +101,44 @@ public class HmiClassProcessor {
 
         });
 
+        gen.openBlock("public ", getClassName(),
+                "(final String prefix, final ControllerPropertyChangeSupport propertySupport, final ErrorProperty errorProperty)");
+        gen.appendIndentedLine("super(propertySupport, errorProperty);");
+        forEachAttribute(metaData, new AttributeApplier() {
+
+            @Override
+            public void apply(final AbstractAttributeMetaData<?> attrib) throws IOException {
+                final FieldProcessor processor = FieldProcessor.create(gen, attrib);
+                processor.generateInitialization();
+            }
+
+        });
+        gen.closeBlock();
+
         gen.newLine();
         gen.addImport(HmiController.class);
-        gen.appendLine("public " + getClassName() + "(final HmiController controller) {");
-        gen.indent();
-        gen.appendLine("super(controller);");
-        gen.unindent();
-        gen.appendLine("}");
+        gen.openBlock("public ", getClassName(), "(final String prefix, final HmiController controller)");
+        gen.appendIndentedLine("this(prefix, controller.getPropertySupport(), HmiModel.createErrorProperty(prefix + \"-Error\", controller.getPropertySupport()));");
+        gen.closeBlock();
         gen.newLine();
 
-        gen.appendLine("public " + getClassName() + "(final ControllerPropertyChangeSupport propertySupport) {");
-        gen.indent();
-        gen.appendLine("super(propertySupport);");
-        gen.unindent();
-        gen.appendLine("}");
+        gen.openBlock("public ", getClassName(), "(final HmiController controller)");
+        gen.appendIndentedLine("this(" + defaultPrefixInQuotes
+                + ", controller.getPropertySupport(), HmiModel.createErrorProperty(\"" + clazz.getSimpleName()
+                + "-Error\", controller.getPropertySupport()));");
+        gen.closeBlock();
         gen.newLine();
 
-        gen.appendLine("public " + getClassName()
-                + "(final ControllerPropertyChangeSupport propertySupport, final ErrorProperty errorProperty) {");
-        gen.indent();
-        gen.appendLine("super(propertySupport, errorProperty);");
-        gen.unindent();
-        gen.appendLine("}");
+        gen.openBlock("public ", getClassName(),
+                "(final String prefix, final ControllerPropertyChangeSupport propertySupport)");
+        gen.appendIndentedLine("this(prefix, propertySupport, HmiModel.createErrorProperty(prefix + \"-Error\", propertySupport));");
+        gen.closeBlock();
+        gen.newLine();
+
+        gen.openBlock("public ", getClassName(), "(final ControllerPropertyChangeSupport propertySupport)");
+        gen.appendIndentedLine("this(" + defaultPrefixInQuotes + ", propertySupport, HmiModel.createErrorProperty(\""
+                + clazz.getSimpleName() + "-Error\", propertySupport));");
+        gen.closeBlock();
         gen.newLine();
 
         forEachAttribute(metaData, new AttributeApplier() {
@@ -133,9 +151,8 @@ public class HmiClassProcessor {
         });
 
         gen.newLine();
-        gen.appendLine("@Override");
-        gen.appendLine("public void loadFrom(" + typeToString(metaData.getDataType()) + " object) {");
-        gen.indent();
+        gen.appendIndentedLine("@Override");
+        gen.openBlock("public void loadFrom(" + strType + " object)");
         forEachAttribute(metaData, new AttributeApplier() {
 
             @Override
@@ -143,13 +160,11 @@ public class HmiClassProcessor {
                 processLoadFrom(attrib);
             }
         });
-        gen.unindent();
-        gen.appendLine("}");
+        gen.closeBlock();
 
         gen.newLine();
-        gen.appendLine("@Override");
-        gen.appendLine("public void saveInto(" + typeToString(metaData.getDataType()) + " object) {");
-        gen.indent();
+        gen.appendIndentedLine("@Override");
+        gen.openBlock("public void saveInto(" + strType + " object)");
         forEachAttribute(metaData, new AttributeApplier() {
 
             @Override
@@ -157,11 +172,31 @@ public class HmiClassProcessor {
                 processSaveInto(attrib);
             }
         });
-        gen.unindent();
-        gen.appendLine("}");
+        gen.closeBlock();
 
-        gen.unindent();
-        gen.appendLine("}");
+        gen.newLine();
+
+        gen.addImport(IComponentLink.class);
+        gen.addImport(IComponentBinding.class);
+        gen.addImport(AbstractProperty.class);
+        gen.openBlock("public IComponentBinding<", strType, "> binding()");
+        gen.openBlock("return new IComponentBinding<" + strType + ">()");
+        gen.appendIndentedLine("@Override");
+        gen.openBlock("public Object getComponent()");
+        gen.appendIndentedLine("return " + getClassName() + ".this;");
+        gen.closeBlock();
+        gen.appendIndentedLine("@Override");
+        gen.openBlock("public void addComponentValueChangeListener(final IComponentLink<", strType, "> link)");
+        gen.appendIndentedLine("// nope");
+        gen.closeBlock();
+        gen.appendIndentedLine("@Override");
+        gen.openBlock("public void setComponentValue(final AbstractProperty source, final ", strType, " value)");
+        gen.appendIndentedLine("loadFrom(value);");
+        gen.closeBlock();
+        gen.closeBlock(";");
+        gen.closeBlock();
+        gen.closeBlock();
+
     }
 
     private interface AttributeApplier {
@@ -180,49 +215,45 @@ public class HmiClassProcessor {
     }
 
     private void processLoadFrom(final AbstractAttributeMetaData<?> attrib) throws IOException {
-        gen.appendLine(FieldProcessor.create(gen, attrib).getPropertyName() + ".loadFrom(this, object);");
+        gen.appendIndentedLine(FieldProcessor.create(gen, attrib).getPropertyName() + ".loadFrom(this, object);");
     }
 
     private void processSaveInto(final AbstractAttributeMetaData<?> attrib) throws IOException {
-        gen.appendLine(FieldProcessor.create(gen, attrib).getPropertyName() + ".saveInto(object);");
+        gen.appendIndentedLine(FieldProcessor.create(gen, attrib).getPropertyName() + ".saveInto(object);");
     }
 
     private void preprocess(final AbstractAttributeMetaData<?> attrib) throws IOException {
         final String constant = gen.toConstant(attrib.getName());
-        gen.appendLine("public static final String " + constant + " = \"" + attrib.getName() + "\";");
+        gen.appendIndentedLine("public static final String " + constant + " = \"" + attrib.getName() + "\";");
         gen.newLine();
 
         final String fieldConstant = constant + "_FIELD";
         fieldConstants.put(fieldConstant, attrib.getCodeName());
-        gen.appendLine("private static final Field " + fieldConstant + ';');
+        gen.appendIndentedLine("private static final Field " + fieldConstant + ';');
         gen.newLine();
     }
 
     private void afterPreprocessAttribs() throws IOException {
-        gen.appendLine("static {");
-        gen.indent();
-        gen.appendLine("try {");
-        gen.indent();
+        gen.openBlock("static");
+        gen.openBlock("try");
 
         final StringBuilder list = new StringBuilder();
         for (final Map.Entry<String, String> entry : fieldConstants.entrySet()) {
-            gen.appendLine(entry.getKey() + " = " + typeToString(clazz) + ".class.getDeclaredField(\""
+            gen.appendIndentedLine(entry.getKey() + " = " + typeToString(clazz) + ".class.getDeclaredField(\""
                     + entry.getValue() + "\");");
             list.append(", ");
             list.append(entry.getKey());
         }
 
         gen.addImport(AccessibleObject.class);
-        gen.appendLine("AccessibleObject.setAccessible(new AccessibleObject[]{" + list.toString().substring(2)
+        gen.appendIndentedLine("AccessibleObject.setAccessible(new AccessibleObject[]{" + list.toString().substring(2)
                 + "}, true);");
         gen.unindent();
-        gen.appendLine("} catch (final Exception e) {");
+        gen.appendIndentedLine("} catch (final Exception e) {");
         gen.indent();
-        gen.appendLine("throw new IllegalStateException(\"Cannot initialize class\", e);");
-        gen.unindent();
-        gen.appendLine("}");
-        gen.unindent();
-        gen.appendLine("}");
+        gen.appendIndentedLine("throw new IllegalStateException(\"Cannot initialize class\", e);");
+        gen.closeBlock();
+        gen.closeBlock();
 
         gen.addImport(FieldAccess.class);
     }
@@ -231,11 +262,9 @@ public class HmiClassProcessor {
         gen.newLine();
         final FieldProcessor processor = FieldProcessor.create(gen, attrib);
 
-        gen.appendLine("public " + processor.getPropertyType() + " get" + attrib.getName() + "Property() {");
-        gen.indent();
-        gen.appendLine("return " + processor.getPropertyName() + ";");
-        gen.unindent();
-        gen.appendLine("}");
+        gen.openBlock("public ", processor.getPropertyType(), " get", attrib.getName(), "Property()");
+        gen.appendIndentedLine("return " + processor.getPropertyName() + ";");
+        gen.closeBlock();
 
     }
 

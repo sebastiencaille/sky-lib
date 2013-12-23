@@ -53,6 +53,13 @@ import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 public abstract class ObjectControllerTableModel<ObjectType, ControllerType extends IObjectHmiModel<ObjectType>, ColumnsType extends Enum<ColumnsType>>
         extends ListModelTableModel<ObjectType, ColumnsType> {
 
+    /**
+     * Represents a column of the table.
+     * <p>
+     * 
+     * @param <U>
+     *            the type associated to the column value
+     */
     static class TableBinding<U> implements
             IComponentBinding<U> {
 
@@ -61,7 +68,7 @@ public abstract class ObjectControllerTableModel<ObjectType, ControllerType exte
         private AbstractProperty     property;
         private Object               value;
 
-        private IComponentLink<U>    converter;
+        private IComponentLink<U>    singleListener;
 
         public TableBinding() {
         }
@@ -77,7 +84,7 @@ public abstract class ObjectControllerTableModel<ObjectType, ControllerType exte
 
         void commit(final Object object) {
             if (changes.containsKey(object)) {
-                converter.setValueFromComponent(null, changes.get(object));
+                singleListener.setValueFromComponent(null, changes.get(object));
                 property.saveInto(object);
             }
         }
@@ -92,7 +99,7 @@ public abstract class ObjectControllerTableModel<ObjectType, ControllerType exte
 
         @Override
         public void addComponentValueChangeListener(final IComponentLink<U> converter) {
-            this.converter = converter;
+            this.singleListener = converter;
         }
 
         @Override

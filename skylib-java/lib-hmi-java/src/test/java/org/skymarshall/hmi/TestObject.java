@@ -17,15 +17,15 @@ package org.skymarshall.hmi;
 
 public class TestObject {
 
-    public Integer val;
+    public int val;
 
     public TestObject(final int val) {
         super();
-        this.val = new Integer(val);
+        this.val = val;
     }
 
     @Override
     public String toString() {
-        return val.toString();
+        return String.valueOf(val);
     }
 }

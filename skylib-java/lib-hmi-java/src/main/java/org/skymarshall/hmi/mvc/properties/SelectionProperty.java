@@ -43,8 +43,8 @@ public class SelectionProperty<T> extends ObjectProperty<T> {
     }
 
     public void fix() {
-        setValue(null, getValueWhenDetached());
-        selectionFixProperty.fire(getValueWhenDetached());
+        setValue(null, getValueAtDetach());
+        selectionFixProperty.fire(getValueAtDetach());
     }
 
 }

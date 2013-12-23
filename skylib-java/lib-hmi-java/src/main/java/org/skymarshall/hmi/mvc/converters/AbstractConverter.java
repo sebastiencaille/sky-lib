@@ -46,7 +46,7 @@ public abstract class AbstractConverter<PropertyType, ComponentType> extends Abs
         try {
             bindingFrom.setPropertySideValue(source, convertComponentValueToPropertyValue(componentValue));
         } catch (final ConversionException e) {
-            errorNotifier.setError(bindingTo.getComponent(), HmiErrors.fromException(e));
+            getErrorNotifier().setError(bindingTo.getComponent(), HmiErrors.fromException(e));
         }
     }
 

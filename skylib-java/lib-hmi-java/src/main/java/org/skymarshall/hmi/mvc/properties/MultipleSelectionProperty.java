@@ -35,7 +35,7 @@ public class MultipleSelectionProperty<T> extends ObjectCollectionProperty<T> {
     }
 
     public void fix() {
-        setValue(null, getValueWhenDetached());
+        setValue(null, getValueAtDetach());
     }
 
 }

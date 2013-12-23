@@ -7,10 +7,13 @@ import org.skymarshall.hmi.mvc.IObjectHmiModel;
 import org.skymarshall.hmi.mvc.objectaccess.FieldAccess;
 import java.lang.reflect.AccessibleObject;
 import org.skymarshall.hmi.mvc.properties.ObjectProperty;
-import org.skymarshall.hmi.mvc.properties.ErrorProperty;
+import org.skymarshall.hmi.mvc.IComponentBinding;
 import org.skymarshall.hmi.mvc.HmiController;
 import java.lang.reflect.Field;
 import org.skymarshall.hmi.mvc.properties.IntProperty;
+import org.skymarshall.hmi.mvc.properties.ErrorProperty;
+import org.skymarshall.hmi.mvc.IComponentLink;
+import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 
 public class ControllerExampleObjectHmiModel extends HmiModel implements IObjectHmiModel<org.skymarshall.example.hmi.controller.impl.ControllerExampleObject> {
     public static final String ASTRING_PROPERTY = "AStringProperty";
@@ -41,21 +44,32 @@ public class ControllerExampleObjectHmiModel extends HmiModel implements IObject
         }
     }
 
-    protected final ObjectProperty<java.lang.String> aStringPropertyProperty = new ObjectProperty<java.lang.String>("AStringProperty",  propertySupport, errorProperty, FieldAccess.create(ASTRING_PROPERTY_FIELD, java.lang.String.class));
-    protected final BooleanProperty aBooleanProperty = new BooleanProperty("ABoolean",  propertySupport, errorProperty, FieldAccess.create(ABOOLEAN_FIELD));
-    protected final ObjectProperty<org.skymarshall.example.hmi.TestObject> aTestObjectPropertyProperty = new ObjectProperty<org.skymarshall.example.hmi.TestObject>("ATestObjectProperty",  propertySupport, errorProperty, FieldAccess.create(ATEST_OBJECT_PROPERTY_FIELD, org.skymarshall.example.hmi.TestObject.class));
-    protected final IntProperty anIntPropertyProperty = new IntProperty("AnIntProperty",  propertySupport, errorProperty, FieldAccess.create(AN_INT_PROPERTY_FIELD));
+    protected final ObjectProperty<java.lang.String> aStringPropertyProperty;
+    protected final BooleanProperty aBooleanProperty;
+    protected final ObjectProperty<org.skymarshall.example.hmi.TestObject> aTestObjectPropertyProperty;
+    protected final IntProperty anIntPropertyProperty;
+    public ControllerExampleObjectHmiModel(final String prefix, final ControllerPropertyChangeSupport propertySupport, final ErrorProperty errorProperty) {
+        super(propertySupport, errorProperty);
+        aStringPropertyProperty = new ObjectProperty<java.lang.String>(prefix + "-AStringProperty",  propertySupport, errorProperty, FieldAccess.create(ASTRING_PROPERTY_FIELD, java.lang.String.class));
+        aBooleanProperty = new BooleanProperty(prefix + "-ABoolean",  propertySupport, errorProperty, FieldAccess.create(ABOOLEAN_FIELD));
+        aTestObjectPropertyProperty = new ObjectProperty<org.skymarshall.example.hmi.TestObject>(prefix + "-ATestObjectProperty",  propertySupport, errorProperty, FieldAccess.create(ATEST_OBJECT_PROPERTY_FIELD, org.skymarshall.example.hmi.TestObject.class));
+        anIntPropertyProperty = new IntProperty(prefix + "-AnIntProperty",  propertySupport, errorProperty, FieldAccess.create(AN_INT_PROPERTY_FIELD));
+    }
+
+    public ControllerExampleObjectHmiModel(final String prefix, final HmiController controller) {
+        this(prefix, controller.getPropertySupport(), HmiModel.createErrorProperty(prefix + "-Error", controller.getPropertySupport()));
+    }
 
     public ControllerExampleObjectHmiModel(final HmiController controller) {
-        super(controller);
+        this("ControllerExampleObject", controller.getPropertySupport(), HmiModel.createErrorProperty("ControllerExampleObject-Error", controller.getPropertySupport()));
+    }
+
+    public ControllerExampleObjectHmiModel(final String prefix, final ControllerPropertyChangeSupport propertySupport) {
+        this(prefix, propertySupport, HmiModel.createErrorProperty(prefix + "-Error", propertySupport));
     }
 
     public ControllerExampleObjectHmiModel(final ControllerPropertyChangeSupport propertySupport) {
-        super(propertySupport);
-    }
-
-    public ControllerExampleObjectHmiModel(final ControllerPropertyChangeSupport propertySupport, final ErrorProperty errorProperty) {
-        super(propertySupport, errorProperty);
+        this("ControllerExampleObject", propertySupport, HmiModel.createErrorProperty("ControllerExampleObject-Error", propertySupport));
     }
 
 
@@ -89,5 +103,22 @@ public class ControllerExampleObjectHmiModel extends HmiModel implements IObject
         aBooleanProperty.saveInto(object);
         aTestObjectPropertyProperty.saveInto(object);
         anIntPropertyProperty.saveInto(object);
+    }
+
+    public IComponentBinding<org.skymarshall.example.hmi.controller.impl.ControllerExampleObject> binding() {
+        return new IComponentBinding<org.skymarshall.example.hmi.controller.impl.ControllerExampleObject>() {
+            @Override
+            public Object getComponent() {
+                return ControllerExampleObjectHmiModel.this;
+            }
+            @Override
+            public void addComponentValueChangeListener(final IComponentLink<org.skymarshall.example.hmi.controller.impl.ControllerExampleObject> link) {
+                // nope
+            }
+            @Override
+            public void setComponentValue(final AbstractProperty source, final org.skymarshall.example.hmi.controller.impl.ControllerExampleObject value) {
+                loadFrom(value);
+            }
+        };
     }
 }

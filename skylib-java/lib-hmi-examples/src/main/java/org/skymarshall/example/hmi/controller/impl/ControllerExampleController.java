@@ -35,12 +35,7 @@ public class ControllerExampleController extends HmiController {
         return model;
     }
 
-    @Override
-    public void start() {
-        propertySupport.attachAll();
-    }
-
-    public PropertyGroup getModelValuesGroup() {
+    public PropertyGroup getDynamicListUpdater() {
         return modelPropertiesGroup;
     }
 

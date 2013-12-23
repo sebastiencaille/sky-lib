@@ -291,7 +291,7 @@ public abstract class AbstractLink<FromType, ToType> implements
      */
     protected BindingTo<ToType>     bindingTo;
 
-    protected ErrorNotifier         errorNotifier;
+    private ErrorNotifier           errorNotifier;
 
     /**
      * if true, transmits the value of the property to the component
@@ -333,6 +333,7 @@ public abstract class AbstractLink<FromType, ToType> implements
      * @param source
      * @param componentValue
      */
+    @Override
     public abstract void setValueFromComponent(final Object source, final ToType componentValue);
 
     public AbstractProperty getProperty() {
@@ -347,12 +348,12 @@ public abstract class AbstractLink<FromType, ToType> implements
      * 
      * @param aProperty
      *            the property this link is chained to
-     * @param errorNotifier
+     * @param notifier
      *            an error notifier
      * @return a controller on this binding
      */
-    protected IBindingController<ToType> bind(final AbstractProperty aProperty, final ErrorNotifier errorNotifier) {
-        this.errorNotifier = errorNotifier;
+    protected IBindingController<ToType> bind(final AbstractProperty aProperty, final ErrorNotifier notifier) {
+        this.errorNotifier = notifier;
         final PropertyBindingController controller = new PropertyBindingController(aProperty).bind();
         bindingFrom = controller;
         return controller;
@@ -364,15 +365,19 @@ public abstract class AbstractLink<FromType, ToType> implements
      * 
      * @param link
      *            the chained link
-     * @param errorNotifier
+     * @param notifier
      *            an error notifier
      * @return the controller on the link
      */
-    public IBindingController<ToType> bind(final AbstractLink<?, FromType> link, final ErrorNotifier errorNotifier) {
-        this.errorNotifier = errorNotifier;
+    public IBindingController<ToType> bind(final AbstractLink<?, FromType> link, final ErrorNotifier notifier) {
+        this.errorNotifier = notifier;
         final LinkBindingController linkBindingController = new LinkBindingController(link);
         bindingFrom = linkBindingController;
         return linkBindingController;
+    }
+
+    protected ErrorNotifier getErrorNotifier() {
+        return errorNotifier;
     }
 
     /**
@@ -387,6 +392,7 @@ public abstract class AbstractLink<FromType, ToType> implements
     /**
      * Reloads the property value into the component
      */
+    @Override
     public void reloadComponentValue() {
         setValueFromProperty(bindingFrom.getProperty(), getPropertyValue());
     }

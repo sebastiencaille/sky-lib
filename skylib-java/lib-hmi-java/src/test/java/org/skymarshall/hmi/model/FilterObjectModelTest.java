@@ -69,6 +69,16 @@ public class FilterObjectModelTest extends Assert {
     }
 
     @Test
+    public void testFind() {
+        final ListModel<TestObject> baseModel = new ListModel<TestObject>(ListView.sorted(COMPARATOR));
+
+        baseModel.insert(new TestObject(1));
+        baseModel.insert(new TestObject(4));
+        assertSame(baseModel.getValueAt(0), baseModel.find(new TestObject(1)));
+        assertSame(baseModel.getValueAt(1), baseModel.find(new TestObject(4)));
+    }
+
+    @Test
     public void testUpdate() {
         final ListModel<TestObject> baseModel = new ListModel<TestObject>(ListView.sorted(COMPARATOR));
         final ListModel<TestObject> model = new ListModel<TestObject>(baseModel, ListView.filtered(FILTER));
@@ -83,8 +93,40 @@ public class FilterObjectModelTest extends Assert {
         toMove.val = 2;
         baseModel.stopEditingValue();
 
+        // model is filtered
         checkModel(model, 2, 4);
 
+    }
+
+    @Test
+    public void testFindForEdition() {
+        final ListModel<TestObject> baseModel = new ListModel<TestObject>(ListView.sorted(COMPARATOR));
+
+        baseModel.insert(new TestObject(1));
+        baseModel.insert(new TestObject(4));
+
+        final TestObject edition = baseModel.findForEdition(new TestObject(1));
+        assertSame(baseModel.getValueAt(0), edition);
+        edition.val = 5;
+        baseModel.stopEditingValue();
+        checkModel(baseModel, 4, 5);
+    }
+
+    @Test
+    public void testFindOrCreateForEdition() {
+        final ListModel<TestObject> baseModel = new ListModel<TestObject>(ListView.sorted(COMPARATOR));
+
+        baseModel.insert(new TestObject(4));
+
+        final TestObject edition = baseModel.findOrCreateForEdition(new TestObject(1));
+        edition.val = 5;
+        baseModel.stopEditingValue();
+        checkModel(baseModel, 4, 5);
+
+        final TestObject edition2 = baseModel.findOrCreateForEdition(new TestObject(5));
+        edition2.val = 3;
+        baseModel.stopEditingValue();
+        checkModel(baseModel, 3, 4);
     }
 
     @Test

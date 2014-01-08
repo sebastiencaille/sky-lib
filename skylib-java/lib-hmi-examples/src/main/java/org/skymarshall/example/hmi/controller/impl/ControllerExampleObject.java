@@ -21,8 +21,8 @@ import org.skymarshall.hmi.HmiObject;
 @HmiObject
 public class ControllerExampleObject {
 
-	boolean aBoolean;
-	int anIntProperty;
-	String aStringProperty;
-	TestObject aTestObjectProperty;
+    boolean    booleanProp;
+    int        intProp;
+    String     stringProp;
+    TestObject testObjectProp;
 }

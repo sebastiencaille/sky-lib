@@ -48,11 +48,12 @@ import org.skymarshall.hmi.mvc.properties.ObjectProperty;
  * <p>
  * The lists can be stacked. If no ListView is defined for a list, the IListView of the
  * parent is used.
+ * <p>
  * 
  * @author Sebastien Caille
  * 
  * @param <T>
- *            the type of the list content
+ *            the type of the list's content. T must have an implementation of the Object.equals method. It is better if an element of the list can be uniquely identified using Object.equals. 
  */
 public class ListModel<T> extends AbstractListModel<T> implements
         Iterable<T> {
@@ -78,9 +79,6 @@ public class ListModel<T> extends AbstractListModel<T> implements
             this.value = value;
             this.oldIndex = oldIndex;
             accepted = viewProperty.getValue().accept(value);
-            if (verbose()) {
-                log("editing " + value + ", index=" + oldIndex);
-            }
         }
 
         public boolean isAccepted() {
@@ -211,10 +209,6 @@ public class ListModel<T> extends AbstractListModel<T> implements
         this.parent = source;
         attachToParent();
         setView(view);
-    }
-
-    protected boolean verbose() {
-        return false;
     }
 
     private void attachToParent() {
@@ -524,9 +518,6 @@ public class ListModel<T> extends AbstractListModel<T> implements
     public int getRowOf(final T value) {
         final int index = Collections.binarySearch(data, value, viewProperty.getValue());
         if (index < 0) {
-            if (verbose()) {
-                log("Not found(1): " + index);
-            }
             return index;
         }
         if (data.get(index).equals(value)) {
@@ -576,6 +567,14 @@ public class ListModel<T> extends AbstractListModel<T> implements
         return null;
     }
 
+    /**
+     * Finds an object in the model, and starts its edition if found
+     * 
+     * @param sample
+     *            a sample of the object (must contains the values required to
+     *            find the object)
+     * @return an object if found, null if not
+     */
     public T findForEdition(final T sample) {
         final T found = find(sample);
         if (found != null) {
@@ -584,18 +583,32 @@ public class ListModel<T> extends AbstractListModel<T> implements
         return found;
     }
 
+    /**
+     * Finds an object in the model, or insert the sample if not found.
+     * 
+     * @param sample
+     *            a sample of the object (must contains the values required to
+     *            find the object)
+     * @return an object if found, the sample if not found
+     */
     public T findOrCreate(final T sample) {
         T result = find(sample);
         if (result == null) {
-            if (verbose()) {
-                log("creating new value: " + sample);
-            }
             result = sample;
             insert(sample);
         }
         return result;
     }
 
+    /**
+     * Finds an object in the model, starting it's edition, or insert the sample
+     * if not found.
+     * 
+     * @param sample
+     *            a sample of the object (must contains the values required to
+     *            find the object)
+     * @return an object if found, the sample if not found
+     */
     public T findOrCreateForEdition(final T sample) {
         final T found = findOrCreate(sample);
         startEditingValue(found);
@@ -606,7 +619,4 @@ public class ListModel<T> extends AbstractListModel<T> implements
         return localImpl;
     }
 
-    protected void log(final String msg) {
-        System.out.println(toString() + ": " + msg);
-    }
 }

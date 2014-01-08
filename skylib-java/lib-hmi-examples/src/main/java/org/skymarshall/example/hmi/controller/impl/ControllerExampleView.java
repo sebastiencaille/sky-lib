@@ -19,11 +19,13 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Rectangle;
 
+import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -52,13 +54,11 @@ import org.skymarshall.hmi.swing17.bindings.SwingBindings;
 
 public class ControllerExampleView extends JFrame {
 
-    private static final long                 serialVersionUID = -7524991791160097387L;
-    private final Container                   container;
-    private int                               row              = 0;
-    private final ControllerExampleController controller;
+    private static final long serialVersionUID = -7524991791160097387L;
+    private final Container   container;
+    private int               row              = 0;
 
     public ControllerExampleView(final ControllerExampleController controller) {
-        this.controller = controller;
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         getContentPane().setLayout(new GridBagLayout());
         getContentPane().setBackground(Color.WHITE);
@@ -66,14 +66,14 @@ public class ControllerExampleView extends JFrame {
         container = new JPanel(new GridBagLayout());
 
         final GridBagConstraints constraints = new GridBagConstraints();
-        constraints.insets = new Insets(5, 5, 5, 5);
+        constraints.insets = new Insets(5, 5, 0, 5);
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.weightx = 0.0;
         constraints.weighty = 0.0;
         getContentPane().add(container, constraints);
 
         // Checkbox input
-        final BooleanProperty booleanProperty = controller.getModel().getABooleanProperty();
+        final BooleanProperty booleanProperty = controller.getModel().getBooleanPropProperty();
         final JCheckBox booleanEditor = new JCheckBox();
         final JLabel label = new JLabel("Am I enabled?");
         final JLabel booleanCounter = new JLabel();
@@ -83,7 +83,7 @@ public class ControllerExampleView extends JFrame {
         addGuiLineItem(booleanProperty, booleanEditor, label, booleanCounter);
 
         // Int input field
-        final IntProperty intProperty = controller.getModel().getAnIntPropertyProperty();
+        final IntProperty intProperty = controller.getModel().getIntPropProperty();
         final JTextField intEditor = new JTextField();
         final JLabel intCheck = new JLabel();
         final JLabel intCounter = new JLabel();
@@ -95,7 +95,7 @@ public class ControllerExampleView extends JFrame {
         addGuiLineItem(intProperty, intEditor, intCheck, intCounter);
 
         // String input field
-        final ObjectProperty<String> stringProperty = controller.getModel().getAStringPropertyProperty();
+        final ObjectProperty<String> stringProperty = controller.getModel().getStringPropProperty();
         final JTextField stringEditor = new JTextField();
         final JLabel stringCheck = new JLabel();
         final JLabel stringCounter = new JLabel();
@@ -174,6 +174,7 @@ public class ControllerExampleView extends JFrame {
         fillerConstraints.weightx = 1.0;
         fillerConstraints.weighty = 1.0;
         final JPanel filler = new JPanel();
+        filler.setPreferredSize(new Dimension(0, 0));
         filler.setOpaque(false);
         getContentPane().add(filler, fillerConstraints);
 
@@ -217,11 +218,19 @@ public class ControllerExampleView extends JFrame {
                 g.setColor(Color.BLACK);
                 final Rectangle clipBounds = g.getClipBounds();
                 final int y = clipBounds.height / 2;
-                g.drawLine(0, y, getWidth(), y);
+                g.drawLine(5, y, getWidth() - 10, y);
             };
+
+            @Override
+            protected void paintChildren(final Graphics g) {
+                g.translate(5, 0);
+                super.paintChildren(g);
+                g.translate(-5, 0);
+            }
         };
         final JLabel title = new JLabel(property.getName());
         title.setOpaque(true);
+        title.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
         panel.add(title);
 
         constraints.gridwidth = 5;

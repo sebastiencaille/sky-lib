@@ -16,44 +16,44 @@ import org.skymarshall.hmi.mvc.IComponentLink;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 
 public class ControllerExampleObjectHmiModel extends HmiModel implements IObjectHmiModel<org.skymarshall.example.hmi.controller.impl.ControllerExampleObject> {
-    public static final String ASTRING_PROPERTY = "AStringProperty";
+    public static final String BOOLEAN_PROP = "BooleanProp";
 
-    private static final Field ASTRING_PROPERTY_FIELD;
+    private static final Field BOOLEAN_PROP_FIELD;
 
-    public static final String ABOOLEAN = "ABoolean";
+    public static final String INT_PROP = "IntProp";
 
-    private static final Field ABOOLEAN_FIELD;
+    private static final Field INT_PROP_FIELD;
 
-    public static final String ATEST_OBJECT_PROPERTY = "ATestObjectProperty";
+    public static final String TEST_OBJECT_PROP = "TestObjectProp";
 
-    private static final Field ATEST_OBJECT_PROPERTY_FIELD;
+    private static final Field TEST_OBJECT_PROP_FIELD;
 
-    public static final String AN_INT_PROPERTY = "AnIntProperty";
+    public static final String STRING_PROP = "StringProp";
 
-    private static final Field AN_INT_PROPERTY_FIELD;
+    private static final Field STRING_PROP_FIELD;
 
     static {
         try {
-            AN_INT_PROPERTY_FIELD = org.skymarshall.example.hmi.controller.impl.ControllerExampleObject.class.getDeclaredField("anIntProperty");
-            ASTRING_PROPERTY_FIELD = org.skymarshall.example.hmi.controller.impl.ControllerExampleObject.class.getDeclaredField("aStringProperty");
-            ATEST_OBJECT_PROPERTY_FIELD = org.skymarshall.example.hmi.controller.impl.ControllerExampleObject.class.getDeclaredField("aTestObjectProperty");
-            ABOOLEAN_FIELD = org.skymarshall.example.hmi.controller.impl.ControllerExampleObject.class.getDeclaredField("aBoolean");
-            AccessibleObject.setAccessible(new AccessibleObject[]{AN_INT_PROPERTY_FIELD, ASTRING_PROPERTY_FIELD, ATEST_OBJECT_PROPERTY_FIELD, ABOOLEAN_FIELD}, true);
+            STRING_PROP_FIELD = org.skymarshall.example.hmi.controller.impl.ControllerExampleObject.class.getDeclaredField("stringProp");
+            INT_PROP_FIELD = org.skymarshall.example.hmi.controller.impl.ControllerExampleObject.class.getDeclaredField("intProp");
+            BOOLEAN_PROP_FIELD = org.skymarshall.example.hmi.controller.impl.ControllerExampleObject.class.getDeclaredField("booleanProp");
+            TEST_OBJECT_PROP_FIELD = org.skymarshall.example.hmi.controller.impl.ControllerExampleObject.class.getDeclaredField("testObjectProp");
+            AccessibleObject.setAccessible(new AccessibleObject[]{STRING_PROP_FIELD, INT_PROP_FIELD, BOOLEAN_PROP_FIELD, TEST_OBJECT_PROP_FIELD}, true);
         } catch (final Exception e) {
             throw new IllegalStateException("Cannot initialize class", e);
         }
     }
 
-    protected final ObjectProperty<java.lang.String> aStringPropertyProperty;
-    protected final BooleanProperty aBooleanProperty;
-    protected final ObjectProperty<org.skymarshall.example.hmi.TestObject> aTestObjectPropertyProperty;
-    protected final IntProperty anIntPropertyProperty;
+    protected final BooleanProperty booleanPropProperty;
+    protected final IntProperty intPropProperty;
+    protected final ObjectProperty<org.skymarshall.example.hmi.TestObject> testObjectPropProperty;
+    protected final ObjectProperty<java.lang.String> stringPropProperty;
     public ControllerExampleObjectHmiModel(final String prefix, final ControllerPropertyChangeSupport propertySupport, final ErrorProperty errorProperty) {
         super(propertySupport, errorProperty);
-        aStringPropertyProperty = new ObjectProperty<java.lang.String>(prefix + "-AStringProperty",  propertySupport, errorProperty, FieldAccess.create(ASTRING_PROPERTY_FIELD, java.lang.String.class));
-        aBooleanProperty = new BooleanProperty(prefix + "-ABoolean",  propertySupport, errorProperty, FieldAccess.create(ABOOLEAN_FIELD));
-        aTestObjectPropertyProperty = new ObjectProperty<org.skymarshall.example.hmi.TestObject>(prefix + "-ATestObjectProperty",  propertySupport, errorProperty, FieldAccess.create(ATEST_OBJECT_PROPERTY_FIELD, org.skymarshall.example.hmi.TestObject.class));
-        anIntPropertyProperty = new IntProperty(prefix + "-AnIntProperty",  propertySupport, errorProperty, FieldAccess.create(AN_INT_PROPERTY_FIELD));
+        booleanPropProperty = new BooleanProperty(prefix + "-BooleanProp",  propertySupport, errorProperty, FieldAccess.create(BOOLEAN_PROP_FIELD));
+        intPropProperty = new IntProperty(prefix + "-IntProp",  propertySupport, errorProperty, FieldAccess.create(INT_PROP_FIELD));
+        testObjectPropProperty = new ObjectProperty<org.skymarshall.example.hmi.TestObject>(prefix + "-TestObjectProp",  propertySupport, errorProperty, FieldAccess.create(TEST_OBJECT_PROP_FIELD, org.skymarshall.example.hmi.TestObject.class));
+        stringPropProperty = new ObjectProperty<java.lang.String>(prefix + "-StringProp",  propertySupport, errorProperty, FieldAccess.create(STRING_PROP_FIELD, java.lang.String.class));
     }
 
     public ControllerExampleObjectHmiModel(final String prefix, final HmiController controller) {
@@ -73,36 +73,36 @@ public class ControllerExampleObjectHmiModel extends HmiModel implements IObject
     }
 
 
-    public ObjectProperty<java.lang.String> getAStringPropertyProperty() {
-        return aStringPropertyProperty;
+    public BooleanProperty getBooleanPropProperty() {
+        return booleanPropProperty;
     }
 
-    public BooleanProperty getABooleanProperty() {
-        return aBooleanProperty;
+    public IntProperty getIntPropProperty() {
+        return intPropProperty;
     }
 
-    public ObjectProperty<org.skymarshall.example.hmi.TestObject> getATestObjectPropertyProperty() {
-        return aTestObjectPropertyProperty;
+    public ObjectProperty<org.skymarshall.example.hmi.TestObject> getTestObjectPropProperty() {
+        return testObjectPropProperty;
     }
 
-    public IntProperty getAnIntPropertyProperty() {
-        return anIntPropertyProperty;
+    public ObjectProperty<java.lang.String> getStringPropProperty() {
+        return stringPropProperty;
     }
 
     @Override
     public void loadFrom(org.skymarshall.example.hmi.controller.impl.ControllerExampleObject object) {
-        aStringPropertyProperty.loadFrom(this, object);
-        aBooleanProperty.loadFrom(this, object);
-        aTestObjectPropertyProperty.loadFrom(this, object);
-        anIntPropertyProperty.loadFrom(this, object);
+        booleanPropProperty.loadFrom(this, object);
+        intPropProperty.loadFrom(this, object);
+        testObjectPropProperty.loadFrom(this, object);
+        stringPropProperty.loadFrom(this, object);
     }
 
     @Override
     public void saveInto(org.skymarshall.example.hmi.controller.impl.ControllerExampleObject object) {
-        aStringPropertyProperty.saveInto(object);
-        aBooleanProperty.saveInto(object);
-        aTestObjectPropertyProperty.saveInto(object);
-        anIntPropertyProperty.saveInto(object);
+        booleanPropProperty.saveInto(object);
+        intPropProperty.saveInto(object);
+        testObjectPropProperty.saveInto(object);
+        stringPropProperty.saveInto(object);
     }
 
     public IComponentBinding<org.skymarshall.example.hmi.controller.impl.ControllerExampleObject> binding() {

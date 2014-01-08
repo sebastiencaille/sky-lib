@@ -97,7 +97,7 @@ public class BooleanProperty extends PrimitiveProperty<Boolean> {
     @Override
     public void attach() {
         super.attach();
-        propertySupport.firePropertyChange(getName(), this, Boolean.valueOf(!value), Boolean.valueOf(value));
+        propertySupport.firePropertyChange(getName(), this, null, Boolean.valueOf(value));
     }
 
     @Override

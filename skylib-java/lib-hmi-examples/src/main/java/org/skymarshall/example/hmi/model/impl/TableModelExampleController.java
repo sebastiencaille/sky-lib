@@ -26,16 +26,16 @@ public class TableModelExampleController {
 
     private final ControllerPropertyChangeSupport propertySupport = new ControllerPropertyChangeSupport(this);
 
-    private final ErrorProperty                   errorProperty   = new ErrorProperty("Error", propertySupport, null);
+    private final ErrorProperty                   errorProperty   = new ErrorProperty("Error", propertySupport);
 
     public final BooleanProperty                  reverseOrder    = new BooleanProperty("Order", propertySupport,
-                                                                          errorProperty, null);
+                                                                          errorProperty);
 
     public final BooleanProperty                  enableFilter    = new BooleanProperty("Filter", propertySupport,
-                                                                          errorProperty, null);
+                                                                          errorProperty);
 
     public final SelectionProperty<TestObject>    objectSelection = new SelectionProperty<TestObject>("Selection",
-                                                                          propertySupport, errorProperty, null);
+                                                                          propertySupport, errorProperty);
 
     public final PropertyGroup                    listChangers    = new PropertyGroup();
 

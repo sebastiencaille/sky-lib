@@ -22,7 +22,6 @@ import org.skymarshall.hmi.mvc.PropertyEvent.EventKind;
 import org.skymarshall.hmi.mvc.converters.AbstractIntConverter;
 import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
 import org.skymarshall.hmi.mvc.converters.IntToIntConverter;
-import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
 
 /**
  * Property containing an int value.
@@ -31,20 +30,20 @@ import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
  * @author Sebastien Caille
  * 
  */
-public class IntProperty extends PrimitiveProperty<Integer> {
+public class IntProperty extends AbstractTypedProperty<Integer> {
 
     private int       value;
     private final int defaultValue;
 
     public IntProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty, final IObjectAccess<?> access, final int defaultValue) {
-        super(name, propertySupport, errorProperty, access);
+            final ErrorProperty errorProperty, final int defaultValue) {
+        super(name, propertySupport, errorProperty);
         this.defaultValue = defaultValue;
     }
 
     public IntProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty, final IObjectAccess<?> access) {
-        this(name, propertySupport, errorProperty, access, 0);
+            final ErrorProperty errorProperty) {
+        this(name, propertySupport, errorProperty, 0);
     }
 
     public <C> IBindingController<C> bind(final AbstractIntConverter<C> converter) {
@@ -62,13 +61,13 @@ public class IntProperty extends PrimitiveProperty<Integer> {
     }
 
     public void setValue(final Object caller, final int newValue) {
-        fireEvent(caller, EventKind.BEFORE);
+        onValueSet(caller, EventKind.BEFORE);
         try {
             final int oldValue = value;
             value = newValue;
             propertySupport.firePropertyChange(getName(), caller, Integer.valueOf(oldValue), Integer.valueOf(newValue));
         } finally {
-            fireEvent(caller, EventKind.AFTER);
+            onValueSet(caller, EventKind.AFTER);
         }
     }
 
@@ -100,13 +99,4 @@ public class IntProperty extends PrimitiveProperty<Integer> {
         setValue(this, defaultValue);
     }
 
-    @Override
-    protected void loadValueFromObject(final Object caller, final Object object, final IObjectAccess<?> access) {
-        setValue(caller, access.getInt(object));
-    }
-
-    @Override
-    protected void saveValueIntoObject(final Object object, final IObjectAccess<?> access) {
-        access.setInt(object, value);
-    }
 }

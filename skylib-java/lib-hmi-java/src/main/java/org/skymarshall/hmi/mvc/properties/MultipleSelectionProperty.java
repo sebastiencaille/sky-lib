@@ -16,18 +16,16 @@
 package org.skymarshall.hmi.mvc.properties;
 
 import java.beans.PropertyChangeListener;
-import java.util.Collection;
 
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
-import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
 
 public class MultipleSelectionProperty<T> extends ObjectCollectionProperty<T> {
 
     // private final SelectionFixProperty<T> selectionFixProperty;
 
     public MultipleSelectionProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty, final IObjectAccess<Collection<T>> access) {
-        super(name, propertySupport, errorProperty, access);
+            final ErrorProperty errorProperty) {
+        super(name, propertySupport, errorProperty);
     }
 
     public void addListSelectionFixListener(final PropertyChangeListener propertyChangeListener) {

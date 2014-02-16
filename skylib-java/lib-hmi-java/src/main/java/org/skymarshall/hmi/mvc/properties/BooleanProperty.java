@@ -22,7 +22,6 @@ import org.skymarshall.hmi.mvc.PropertyEvent.EventKind;
 import org.skymarshall.hmi.mvc.converters.AbstractBooleanConverter;
 import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
 import org.skymarshall.hmi.mvc.converters.BooleanToBooleanConverter;
-import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
 
 /**
  * Property containing a boolean value.
@@ -31,19 +30,19 @@ import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
  * @author Sebastien Caille
  * 
  */
-public class BooleanProperty extends PrimitiveProperty<Boolean> {
+public class BooleanProperty extends AbstractTypedProperty<Boolean> {
     private boolean       value;
     private final boolean defaultValue;
 
     public BooleanProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty, final IObjectAccess<?> access, final boolean defaultValue) {
-        super(name, propertySupport, errorProperty, access);
+            final ErrorProperty errorProperty, final boolean defaultValue) {
+        super(name, propertySupport, errorProperty);
         this.defaultValue = defaultValue;
     }
 
     public BooleanProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty, final IObjectAccess<?> access) {
-        this(name, propertySupport, errorProperty, access, false);
+            final ErrorProperty errorProperty) {
+        this(name, propertySupport, errorProperty, false);
     }
 
     public <C> IBindingController<C> bind(final AbstractBooleanConverter<C> converter) {
@@ -62,13 +61,13 @@ public class BooleanProperty extends PrimitiveProperty<Boolean> {
     }
 
     public void setValue(final Object caller, final boolean newValue) {
-        fireEvent(caller, EventKind.BEFORE);
+        onValueSet(caller, EventKind.BEFORE);
         try {
             final boolean oldValue = value;
             value = newValue;
             propertySupport.firePropertyChange(getName(), caller, Boolean.valueOf(oldValue), Boolean.valueOf(newValue));
         } finally {
-            fireEvent(caller, EventKind.AFTER);
+            onValueSet(caller, EventKind.AFTER);
         }
     }
 
@@ -98,16 +97,6 @@ public class BooleanProperty extends PrimitiveProperty<Boolean> {
     public void attach() {
         super.attach();
         propertySupport.firePropertyChange(getName(), this, null, Boolean.valueOf(value));
-    }
-
-    @Override
-    protected void loadValueFromObject(final Object caller, final Object object, final IObjectAccess<?> access) {
-        setValue(caller, access.getBoolean(object));
-    }
-
-    @Override
-    protected void saveValueIntoObject(final Object object, final IObjectAccess<?> access) {
-        access.setBoolean(object, value);
     }
 
 }

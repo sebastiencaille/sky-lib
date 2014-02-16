@@ -15,26 +15,17 @@
  ******************************************************************************/
 package org.skymarshall.hmi.mvc.objectaccess;
 
+/**
+ * Access to object fields
+ * <p>
+ * 
+ * @author Sebastien Caille
+ *
+ * @param <T>
+ */
 public interface IObjectAccess<T> {
 
-	boolean getBoolean(Object object);
+    T get(Object object);
 
-	int getInt(Object object);
-
-	long getLong(Object object);
-
-	float getFloat(Object object);
-
-	T getObject(Object object);
-
-	void setBoolean(Object object, boolean value);
-
-	void setInt(Object object, int value);
-
-	void setLong(Object object, long value);
-
-	void setFloat(Object object, float value);
-
-	void setObject(Object object, T value);
-
+    void set(Object object, T value);
 }

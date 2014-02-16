@@ -48,7 +48,7 @@ abstract class FieldProcessor {
         return gen.toFirstLetterInLowerCase(attrib.getName()) + "Property";
     }
 
-    protected String typeToString() {
+    protected String getTypeAsString() {
         return HmiClassProcessor.typeToString(attrib.getType());
     }
 
@@ -80,7 +80,8 @@ abstract class FieldProcessor {
 
         @Override
         protected String getFieldCreation() {
-            return "FieldAccess.create(" + gen.toConstant(attrib.getName() + "Field") + ")";
+            return "FieldAccess." + attrib.getType().getName() + "Access(" + gen.toConstant(attrib.getName() + "Field")
+                    + ")";
         }
 
         @Override
@@ -103,7 +104,7 @@ abstract class FieldProcessor {
 
         @Override
         protected String getFieldCreation() {
-            return "FieldAccess.create(" + gen.toConstant(attrib.getName() + "Field") + ", " + typeToString()
+            return "FieldAccess.create(" + gen.toConstant(attrib.getName() + "Field") + ", " + getTypeAsString()
                     + ".class)";
         }
 
@@ -112,6 +113,10 @@ abstract class FieldProcessor {
             gen.addImport(SetProperty.class);
         }
 
+        @Override
+        void generateInitialization() throws IOException {
+            generateInitializationWithType();
+        }
     }
 
     static class MapProcessor extends FieldProcessor {
@@ -127,7 +132,7 @@ abstract class FieldProcessor {
 
         @Override
         protected String getFieldCreation() {
-            return "FieldAccess.create(" + gen.toConstant(attrib.getName() + "Field") + ", " + typeToString()
+            return "FieldAccess.create(" + gen.toConstant(attrib.getName() + "Field") + ", " + getTypeAsString()
                     + ".class)";
         }
 
@@ -136,6 +141,10 @@ abstract class FieldProcessor {
             gen.addImport(MapProperty.class);
         }
 
+        @Override
+        void generateInitialization() throws IOException {
+            generateInitializationWithType();
+        }
     }
 
     static class ListProcessor extends FieldProcessor {
@@ -151,13 +160,18 @@ abstract class FieldProcessor {
 
         @Override
         protected String getFieldCreation() {
-            return "FieldAccess.create(" + gen.toConstant(attrib.getName() + "Field") + ", " + typeToString()
+            return "FieldAccess.create(" + gen.toConstant(attrib.getName() + "Field") + ", " + getTypeAsString()
                     + ".class)";
         }
 
         @Override
         void addImport() {
             gen.addImport(ListProperty.class);
+        }
+
+        @Override
+        void generateInitialization() throws IOException {
+            generateInitializationWithType();
         }
 
     }
@@ -175,12 +189,12 @@ abstract class FieldProcessor {
 
         @Override
         protected String getPropertyType() {
-            return "ObjectProperty<" + typeToString() + ">";
+            return "ObjectProperty<" + getTypeAsString() + ">";
         }
 
         @Override
         protected String getFieldCreation() {
-            return "FieldAccess.create(" + gen.toConstant(attrib.getName() + "Field") + ", " + typeToString()
+            return "FieldAccess.create(" + gen.toConstant(attrib.getName() + "Field") + ", " + getTypeAsString()
                     + ".class)";
         }
 
@@ -190,8 +204,16 @@ abstract class FieldProcessor {
         gen.appendIndentedLine(String.format("protected final %s %s;", getPropertyType(), getPropertyName()));
     }
 
+    void generateInitializationWithType() throws IOException {
+        gen.appendIndentedLine(String.format(
+                "%s = Properties.<%s, %s>persistent(new %s(prefix + \"-%s\",  propertySupport, errorProperty), %s);",
+                getPropertyName(), getTypeAsString(), getPropertyType(), getPropertyType(), attrib.getName(),
+                getFieldCreation()));
+    }
+
     void generateInitialization() throws IOException {
-        gen.appendIndentedLine(String.format("%s = new %s(prefix + \"-%s\",  propertySupport, errorProperty, %s);",
+        gen.appendIndentedLine(String.format(
+                "%s = Properties.persistent(new %s(prefix + \"-%s\",  propertySupport, errorProperty), %s);",
                 getPropertyName(), getPropertyType(), attrib.getName(), getFieldCreation()));
     }
 }

@@ -17,6 +17,14 @@ package org.skymarshall.hmi.mvc;
 
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 
+/**
+ * To change the state of the binding.
+ * <p>
+ * 
+ * @author Sebastien Caille
+ *
+ * @param <ComponentType>
+ */
 public interface IBindingController<ComponentType> {
 
     void attach();

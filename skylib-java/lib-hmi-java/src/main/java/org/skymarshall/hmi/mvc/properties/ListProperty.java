@@ -18,7 +18,6 @@ package org.skymarshall.hmi.mvc.properties;
 import java.util.List;
 
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
-import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
 import org.skymarshall.util.CollectionHelper;
 
 /**
@@ -34,8 +33,8 @@ import org.skymarshall.util.CollectionHelper;
 public class ListProperty<T> extends ObjectProperty<List> {
 
     public ListProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty, final IObjectAccess<List> access) {
-        super(name, propertySupport, errorProperty, access);
+            final ErrorProperty errorProperty) {
+        super(name, propertySupport, errorProperty);
     }
 
     public <U> List<U> getValue(final Class<U> clazz) {

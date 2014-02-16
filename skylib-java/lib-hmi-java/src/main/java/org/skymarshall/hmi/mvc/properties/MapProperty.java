@@ -19,25 +19,24 @@ import java.util.Map;
 import java.util.Set;
 
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
-import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
 import org.skymarshall.util.CollectionHelper;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class MapProperty extends ObjectProperty<Map> {
 
-	public MapProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-			final ErrorProperty errorProperty, final IObjectAccess<Map> access) {
-		super(name, propertySupport, errorProperty, access);
-	}
+    public MapProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
+            final ErrorProperty errorProperty) {
+        super(name, propertySupport, errorProperty);
+    }
 
-	public <U, V> Map<U, V> getValue(final Class<U> keyClazz, final Class<V> valueClazz) {
-		CollectionHelper.checkContent(getValue().keySet(), keyClazz);
-		CollectionHelper.checkContent(getValue().values(), valueClazz);
-		return getValue();
-	}
+    public <U, V> Map<U, V> getValue(final Class<U> keyClazz, final Class<V> valueClazz) {
+        CollectionHelper.checkContent(getValue().keySet(), keyClazz);
+        CollectionHelper.checkContent(getValue().values(), valueClazz);
+        return getValue();
+    }
 
-	public <U> Set<U> getKeys(final Class<U> keyClazz) {
-		CollectionHelper.checkContent(getValue().keySet(), keyClazz);
-		return getValue().keySet();
-	}
+    public <U> Set<U> getKeys(final Class<U> keyClazz) {
+        CollectionHelper.checkContent(getValue().keySet(), keyClazz);
+        return getValue().keySet();
+    }
 }

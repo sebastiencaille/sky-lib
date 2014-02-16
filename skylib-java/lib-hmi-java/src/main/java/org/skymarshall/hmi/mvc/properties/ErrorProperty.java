@@ -17,7 +17,6 @@ package org.skymarshall.hmi.mvc.properties;
 
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
 import org.skymarshall.hmi.mvc.HmiErrors.HmiError;
-import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
 
 /**
  * Property containing an error.
@@ -29,9 +28,8 @@ import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
 public class ErrorProperty extends ObjectProperty<HmiError> implements
         ErrorNotifier {
 
-    public ErrorProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final IObjectAccess<HmiError> access) {
-        super(name, propertySupport, null, access);
+    public ErrorProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {
+        super(name, propertySupport, null);
     }
 
     @Override

@@ -26,6 +26,7 @@ import org.skymarshall.JavaClassGenerator;
 import org.skymarshall.hmi.mvc.objectaccess.FieldAccess;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 import org.skymarshall.hmi.mvc.properties.ErrorProperty;
+import org.skymarshall.hmi.mvc.properties.Properties;
 import org.skymarshall.util.dao.metadata.AbstractAttributeMetaData;
 import org.skymarshall.util.dao.metadata.UntypedDataObjectMetaData;
 
@@ -69,6 +70,7 @@ public class HmiClassProcessor {
         gen.addImport(IComponentBinding.class);
         gen.addImport(ErrorProperty.class);
         gen.addImport(org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport.class);
+        gen.addImport(Properties.class);
 
         final String strType = typeToString(metaData.getDataType());
         final String defaultPrefixInQuotes = "\"" + clazz.getSimpleName() + "\"";

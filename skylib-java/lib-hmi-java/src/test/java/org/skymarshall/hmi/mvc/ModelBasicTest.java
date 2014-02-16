@@ -25,6 +25,7 @@ import org.skymarshall.hmi.mvc.objectaccess.FieldAccess;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 import org.skymarshall.hmi.mvc.properties.IntProperty;
 import org.skymarshall.hmi.mvc.properties.ObjectProperty;
+import org.skymarshall.hmi.mvc.properties.Properties;
 
 public class ModelBasicTest extends Assert {
 
@@ -37,8 +38,8 @@ public class ModelBasicTest extends Assert {
         public TestHmiModel(final HmiController controller) {
             super(controller);
             try {
-                integerProperty = new IntProperty("IntegerProperty", propertySupport, errorProperty,
-                        FieldAccess.create(TestObject.class.getField("val")));
+                integerProperty = Properties.persistent(new IntProperty("IntegerProperty", propertySupport,
+                        errorProperty), FieldAccess.intAccess(TestObject.class.getField("val")));
                 stringProperty = new ObjectProperty<String>("StringProperty", propertySupport, errorProperty, null);
             } catch (final NoSuchFieldException e) {
                 throw new IllegalStateException(e);
@@ -46,7 +47,6 @@ public class ModelBasicTest extends Assert {
                 throw new IllegalStateException(e);
             }
         }
-
     }
 
     private HmiController controller;

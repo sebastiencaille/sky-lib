@@ -20,15 +20,14 @@ import java.beans.PropertyChangeListener;
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
 import org.skymarshall.hmi.mvc.IBindingController;
 import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
-import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
 
 public class SelectionProperty<T> extends ObjectProperty<T> {
 
     private final SelectionFixProperty<T> selectionFixProperty;
 
     public SelectionProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty, final IObjectAccess<T> access) {
-        super(name, propertySupport, errorProperty, access);
+            final ErrorProperty errorProperty) {
+        super(name, propertySupport, errorProperty);
         selectionFixProperty = new SelectionFixProperty<T>(name, propertySupport, errorProperty);
     }
 

@@ -22,7 +22,6 @@ import org.skymarshall.hmi.mvc.PropertyEvent.EventKind;
 import org.skymarshall.hmi.mvc.converters.AbstractFloatConverter;
 import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
 import org.skymarshall.hmi.mvc.converters.FloatToFloatConverter;
-import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
 
 /**
  * Property containing a float value.
@@ -31,20 +30,20 @@ import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
  * @author Sebastien Caille
  * 
  */
-public class FloatProperty extends PrimitiveProperty<Float> {
+public class FloatProperty extends AbstractTypedProperty<Float> {
 
     private float       value;
     private final float defaultValue;
 
     public FloatProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty, final IObjectAccess<?> access, final float defaultValue) {
-        super(name, propertySupport, errorProperty, access);
+            final ErrorProperty errorProperty, final float defaultValue) {
+        super(name, propertySupport, errorProperty);
         this.defaultValue = defaultValue;
     }
 
     public FloatProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty, final IObjectAccess<?> access) {
-        this(name, propertySupport, errorProperty, access, 0.0f);
+            final ErrorProperty errorProperty) {
+        this(name, propertySupport, errorProperty, 0.0f);
     }
 
     public <C> IBindingController<C> bind(final AbstractFloatConverter<C> converter) {
@@ -62,13 +61,13 @@ public class FloatProperty extends PrimitiveProperty<Float> {
     }
 
     public void setValue(final Object caller, final float newValue) {
-        fireEvent(caller, EventKind.BEFORE);
+        onValueSet(caller, EventKind.BEFORE);
         try {
             final float oldValue = value;
             value = newValue;
             propertySupport.firePropertyChange(getName(), caller, Float.valueOf(oldValue), Float.valueOf(newValue));
         } finally {
-            fireEvent(caller, EventKind.AFTER);
+            onValueSet(caller, EventKind.AFTER);
         }
     }
 
@@ -100,13 +99,4 @@ public class FloatProperty extends PrimitiveProperty<Float> {
         setValue(this, defaultValue);
     }
 
-    @Override
-    protected void loadValueFromObject(final Object caller, final Object object, final IObjectAccess<?> access) {
-        setValue(caller, access.getFloat(object));
-    }
-
-    @Override
-    protected void saveValueIntoObject(final Object object, final IObjectAccess<?> access) {
-        access.setFloat(object, value);
-    }
 }

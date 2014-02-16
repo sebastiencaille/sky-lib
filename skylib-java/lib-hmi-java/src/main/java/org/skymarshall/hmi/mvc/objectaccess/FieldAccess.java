@@ -17,146 +17,163 @@ package org.skymarshall.hmi.mvc.objectaccess;
 
 import java.lang.reflect.Field;
 
-public class FieldAccess<T> implements
+/**
+ * Access to object fields
+ * <p>
+ * 
+ * @author Sebastien Caille
+ *
+ * @param <T>
+ */
+public abstract class FieldAccess<T> implements
         IObjectAccess<T> {
 
-    private final Field    field;
-    private final Class<T> clazz;
-
-    protected FieldAccess(final Field field, final Class<T> clazz) {
-        this.field = field;
-        this.clazz = clazz;
-    }
-
-    protected FieldAccess(final Field field) {
-        this.field = field;
+    public static IObjectAccess<Boolean> booleanAccess(final Field field) {
         field.setAccessible(true);
-        this.clazz = null;
+
+        return new IObjectAccess<Boolean>() {
+
+            @Override
+            public Boolean get(final Object object) {
+                try {
+                    return Boolean.valueOf(field.getBoolean(object));
+                } catch (final IllegalAccessException e) {
+                    throw new IllegalStateException("Unable to access field", e);
+                }
+            }
+
+            @Override
+            public void set(final Object object, final Boolean value) {
+                try {
+                    field.setBoolean(object, value.booleanValue());
+                } catch (final IllegalAccessException e) {
+                    throw new IllegalStateException("Unable to access field", e);
+                }
+            }
+
+        };
     }
 
-    @Override
-    public boolean getBoolean(final Object object) {
-        try {
-            return field.getBoolean(object);
-        } catch (final IllegalAccessException e) {
-            throw new IllegalStateException("Unable to access field", e);
+    public static IObjectAccess<Integer> intAccess(final Field field) {
+        field.setAccessible(true);
+
+        return new IObjectAccess<Integer>() {
+
+            @Override
+            public Integer get(final Object object) {
+                try {
+                    return Integer.valueOf(field.getInt(object));
+                } catch (final IllegalAccessException e) {
+                    throw new IllegalStateException("Unable to access field", e);
+                }
+            }
+
+            @Override
+            public void set(final Object object, final Integer value) {
+                try {
+                    field.setInt(object, value.intValue());
+                } catch (final IllegalAccessException e) {
+                    throw new IllegalStateException("Unable to access field", e);
+                }
+            }
+
+        };
+    }
+
+    public static IObjectAccess<Long> longAccess(final Field field) {
+        field.setAccessible(true);
+
+        return new IObjectAccess<Long>() {
+
+            @Override
+            public Long get(final Object object) {
+                try {
+                    return Long.valueOf(field.getLong(object));
+                } catch (final IllegalAccessException e) {
+                    throw new IllegalStateException("Unable to access field", e);
+                }
+            }
+
+            @Override
+            public void set(final Object object, final Long value) {
+                try {
+                    field.setLong(object, value.longValue());
+                } catch (final IllegalAccessException e) {
+                    throw new IllegalStateException("Unable to access field", e);
+                }
+            }
+
+        };
+    }
+
+    public static IObjectAccess<Float> floatAccess(final Field field) {
+        field.setAccessible(true);
+
+        return new IObjectAccess<Float>() {
+
+            @Override
+            public Float get(final Object object) {
+                try {
+                    return Float.valueOf(field.getFloat(object));
+                } catch (final IllegalAccessException e) {
+                    throw new IllegalStateException("Unable to access field", e);
+                }
+            }
+
+            @Override
+            public void set(final Object object, final Float value) {
+                try {
+                    field.setFloat(object, value.floatValue());
+                } catch (final IllegalAccessException e) {
+                    throw new IllegalStateException("Unable to access field", e);
+                }
+            }
+
+        };
+    }
+
+    public static <T> IObjectAccess<T> objectAccess(final Field field, final Class<T> clazz) {
+        field.setAccessible(true);
+
+        return new IObjectAccess<T>() {
+
+            @Override
+            public T get(final Object object) {
+                try {
+                    return clazz.cast(field.get(object));
+                } catch (final IllegalAccessException e) {
+                    throw new IllegalStateException("Unable to access field", e);
+                }
+            }
+
+            @Override
+            public void set(final Object object, final T value) {
+                try {
+                    field.set(object, value);
+                } catch (final IllegalAccessException e) {
+                    throw new IllegalStateException("Unable to access field", e);
+                }
+            }
+
+        };
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> IObjectAccess<T> create(final Field field) {
+        if (int.class.equals(field.getType())) {
+            return (IObjectAccess<T>) intAccess(field);
+        } else if (long.class.equals(field.getType())) {
+            return (IObjectAccess<T>) longAccess(field);
+        } else if (float.class.equals(field.getType())) {
+            return (IObjectAccess<T>) floatAccess(field);
+        } else if (boolean.class.equals(field.getType())) {
+            return (IObjectAccess<T>) booleanAccess(field);
+        } else {
+            throw new IllegalArgumentException("Unhandled type " + field.getType().getName());
         }
     }
 
-    @Override
-    public void setBoolean(final Object object, final boolean value) {
-        try {
-            field.setBoolean(object, value);
-        } catch (final IllegalAccessException e) {
-            throw new IllegalStateException("Unable to access field", e);
-        }
+    public static <T> IObjectAccess<T> create(final Field field, final Class<T> type) {
+        return FieldAccess.<T> objectAccess(field, type);
     }
-
-    @Override
-    public int getInt(final Object object) {
-        try {
-            return field.getInt(object);
-        } catch (final IllegalAccessException e) {
-            throw new IllegalStateException("Unable to access field", e);
-        }
-    }
-
-    @Override
-    public void setInt(final Object object, final int value) {
-        try {
-            field.setInt(object, value);
-        } catch (final IllegalAccessException e) {
-            throw new IllegalStateException("Unable to access field", e);
-        }
-    }
-
-    @Override
-    public long getLong(final Object object) {
-        try {
-            return field.getLong(object);
-        } catch (final IllegalAccessException e) {
-            throw new IllegalStateException("Unable to access field", e);
-        }
-    }
-
-    @Override
-    public void setLong(final Object object, final long value) {
-        try {
-            field.setLong(object, value);
-        } catch (final IllegalAccessException e) {
-            throw new IllegalStateException("Unable to access field", e);
-        }
-    }
-
-    @Override
-    public float getFloat(final Object object) {
-        try {
-            return field.getFloat(object);
-        } catch (final IllegalAccessException e) {
-            throw new IllegalStateException("Unable to access field", e);
-        }
-    }
-
-    @Override
-    public void setFloat(final Object object, final float value) {
-        try {
-            field.setFloat(object, value);
-        } catch (final IllegalAccessException e) {
-            throw new IllegalStateException("Unable to access field", e);
-        }
-    }
-
-    @Override
-    public T getObject(final Object object) {
-        if (clazz == null) {
-            throw new IllegalStateException("Field type not defined: " + field);
-        }
-        try {
-            return clazz.cast(field.get(object));
-        } catch (final IllegalAccessException e) {
-            throw new IllegalStateException("Unable to access field", e);
-        }
-    }
-
-    @Override
-    public void setObject(final Object object, final T value) {
-        if (clazz == null) {
-            throw new IllegalStateException("Field type not defined: " + field);
-        }
-        try {
-            field.set(object, value);
-        } catch (final IllegalAccessException e) {
-            throw new IllegalStateException("Unable to access field", e);
-        }
-
-    }
-
-    public static final IObjectAccess<?> create(final Field field) {
-        if (!field.getType().isPrimitive()) {
-            throw new IllegalArgumentException("field is not a primitive type. Use create(Field, Class):" + field);
-        }
-        return new FieldAccess<Object>(field);
-    }
-
-    public static final <U> IObjectAccess<U> create(final Field field, final Class<U> expectedType) {
-        if (field.getType().isPrimitive()) {
-            throw new IllegalArgumentException("field is a primitive type. Use create(Field):" + field);
-        }
-        return new FieldAccess<U>(field, expectedType);
-    }
-
-    public static final <U> IObjectAccess<U> create(final Class<?> declaringClass, final String fieldname,
-            final Class<U> clazz) {
-        Field field;
-        try {
-            field = declaringClass.getDeclaredField(fieldname);
-        } catch (final Exception e) {
-            throw new IllegalArgumentException("Cannot get field " + fieldname + " from " + declaringClass, e);
-        }
-        if (field.getType().isPrimitive()) {
-            throw new IllegalArgumentException("field is a primitive type. Use create(Field):" + field);
-        }
-        return new FieldAccess<U>(field, clazz);
-    }
-
 }

@@ -42,6 +42,6 @@ public class HmiModel {
     }
 
     protected static ErrorProperty createErrorProperty(final String name, final ControllerPropertyChangeSupport support) {
-        return new ErrorProperty(name, support, null);
+        return new ErrorProperty(name, support);
     }
 }

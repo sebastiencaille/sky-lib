@@ -21,7 +21,6 @@ import org.skymarshall.hmi.mvc.IComponentBinding;
 import org.skymarshall.hmi.mvc.PropertyEvent.EventKind;
 import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
 import org.skymarshall.hmi.mvc.converters.IdentityObjectConverter;
-import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
 
 /**
  * A property that contains an object.
@@ -33,24 +32,21 @@ import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
  */
 public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 
-    private final IObjectAccess<T> objectAccess;
+    private T value;
 
-    private T                      value;
+    private T valueAtDetach;
 
-    private T                      valueAtDetach;
-
-    private T                      defaultValue;
+    private T defaultValue;
 
     public ObjectProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty, final IObjectAccess<T> access, final T defaultValue) {
+            final ErrorProperty errorProperty, final T defaultValue) {
         super(name, propertySupport, errorProperty);
-        this.objectAccess = access;
         this.defaultValue = defaultValue;
     }
 
     public ObjectProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty, final IObjectAccess<T> access) {
-        this(name, propertySupport, errorProperty, access, null);
+            final ErrorProperty errorProperty) {
+        this(name, propertySupport, errorProperty, null);
     }
 
     public <C> IBindingController<C> bind(final AbstractObjectConverter<T, C> converter) {
@@ -64,7 +60,7 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
     }
 
     public void setValue(final Object caller, final T newValue) {
-        fireEvent(caller, EventKind.BEFORE);
+        onValueSet(caller, EventKind.BEFORE);
         try {
             final T oldValue = value;
             value = newValue;
@@ -72,7 +68,7 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
                 propertySupport.firePropertyChange(getName(), caller, oldValue, newValue);
             }
         } finally {
-            fireEvent(caller, EventKind.AFTER);
+            onValueSet(caller, EventKind.AFTER);
         }
     }
 
@@ -124,16 +120,6 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
     @Override
     public void reset(final Object caller) {
         setValue(this, defaultValue);
-    }
-
-    @Override
-    public void loadFrom(final Object caller, final Object object) {
-        setValue(caller, objectAccess.getObject(object));
-    }
-
-    @Override
-    public void saveInto(final Object object) {
-        objectAccess.setObject(object, value);
     }
 
 }

@@ -15,7 +15,6 @@
  ******************************************************************************/
 package org.skymarshall.hmi.mvc.properties;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.event.EventListenerList;
@@ -56,8 +55,6 @@ public abstract class AbstractProperty {
 
     protected boolean                               attached       = false;
 
-    private Object                                  autoCommitObject;
-
     public abstract void reset(final Object caller);
 
     public abstract void loadFrom(final Object caller, final Object object);
@@ -70,19 +67,6 @@ public abstract class AbstractProperty {
         this.propertySupport = propertySupport;
         this.errorNotifier = errorNotifier;
         propertySupport.register(this);
-        addListener(new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                if (autoCommitObject != null) {
-                    saveInto(autoCommitObject);
-                }
-            }
-        });
-    }
-
-    public void setAutoCommitObject(final Object autoCommitObject) {
-        this.autoCommitObject = autoCommitObject;
     }
 
     public String getName() {
@@ -113,7 +97,7 @@ public abstract class AbstractProperty {
         eventListeners.add(IPropertyEventListener.class, listener);
     }
 
-    protected void fireEvent(final Object caller, final EventKind eventKind) {
+    protected void onValueSet(final Object caller, final EventKind eventKind) {
         final PropertyEvent event = new PropertyEvent(eventKind, this);
         for (final IPropertyEventListener listener : eventListeners.getListeners(IPropertyEventListener.class)) {
             listener.propertyModified(caller, event);

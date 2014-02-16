@@ -34,8 +34,8 @@ public abstract class ThreadedActionListener implements
             public Void call() throws Exception {
                 try {
                     actionPerformedInThread(e);
-                } catch (final RuntimeException e) {
-                    handleRuntimeException(e);
+                } catch (final RuntimeException e2) {
+                    handleRuntimeException(e2);
                 }
                 return null;
             }

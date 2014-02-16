@@ -18,19 +18,18 @@ package org.skymarshall.hmi.mvc.properties;
 import java.util.Set;
 
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
-import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
 import org.skymarshall.util.CollectionHelper;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class SetProperty extends ObjectProperty<Set> {
 
-	public SetProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-			final ErrorProperty errorProperty, final IObjectAccess<Set> access) {
-		super(name, propertySupport, errorProperty, access);
-	}
+    public SetProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
+            final ErrorProperty errorProperty) {
+        super(name, propertySupport, errorProperty);
+    }
 
-	public <U> Set<U> getValue(final Class<U> clazz) {
-		CollectionHelper.checkContent(getValue(), clazz);
-		return getValue();
-	}
+    public <U> Set<U> getValue(final Class<U> clazz) {
+        CollectionHelper.checkContent(getValue(), clazz);
+        return getValue();
+    }
 }

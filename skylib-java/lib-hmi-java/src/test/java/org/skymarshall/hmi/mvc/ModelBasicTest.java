@@ -38,9 +38,11 @@ public class ModelBasicTest extends Assert {
         public TestHmiModel(final HmiController controller) {
             super(controller);
             try {
-                integerProperty = Properties.persistent(new IntProperty("IntegerProperty", propertySupport,
-                        errorProperty), FieldAccess.intAccess(TestObject.class.getField("val")));
-                stringProperty = new ObjectProperty<String>("StringProperty", propertySupport, errorProperty, null);
+                integerProperty = Properties.of(new IntProperty("IntegerProperty", propertySupport))
+                        .persistent(FieldAccess.intAccess(TestObject.class.getField("val")))
+                        .setErrorNotifier(errorProperty).getProperty();
+                stringProperty = Properties.setErrorNotifier(new ObjectProperty<String>("StringProperty",
+                        propertySupport), errorProperty);
             } catch (final NoSuchFieldException e) {
                 throw new IllegalStateException(e);
             } catch (final SecurityException e) {

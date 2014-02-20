@@ -39,14 +39,14 @@ public class ControllerExampleModel extends ControllerExampleObjectHmiModel {
 
     private final SelectionProperty<String>     listSelectionProperty        = new SelectionProperty<>(
                                                                                      "ListSelectionProperty",
-                                                                                     propertySupport, errorProperty);
+                                                                                     propertySupport);
 
     private final SelectionProperty<String>     dynamicListSelectionProperty = new SelectionProperty<>(
                                                                                      "DynamicListSelectionProperty",
-                                                                                     propertySupport, errorProperty);
+                                                                                     propertySupport);
 
     private final SelectionProperty<TestObject> complexProperty              = new SelectionProperty<>("ComplexObject",
-                                                                                     propertySupport, errorProperty);
+                                                                                     propertySupport);
 
     final ListModel<TestObject>                 tableModel                   = new ListModel<>(
                                                                                      ListView.sorted(new ComplexTestObjectComparator()));

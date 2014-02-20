@@ -20,6 +20,7 @@ import java.beans.PropertyChangeListener;
 import javax.swing.event.EventListenerList;
 
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
+import org.skymarshall.hmi.mvc.HmiErrors.HmiError;
 import org.skymarshall.hmi.mvc.IPropertyEventListener;
 import org.skymarshall.hmi.mvc.PropertyEvent;
 import org.skymarshall.hmi.mvc.PropertyEvent.EventKind;
@@ -32,6 +33,14 @@ import org.skymarshall.hmi.mvc.PropertyEvent.EventKind;
  * 
  */
 public abstract class AbstractProperty {
+
+    public static final ErrorNotifier               EMPTY_NOTIFIER = new ErrorNotifier() {
+                                                                       @Override
+                                                                       public void setError(final Object caller,
+                                                                               final HmiError e) {
+                                                                           // nope
+                                                                       }
+                                                                   };
 
     /**
      * Name of the property
@@ -51,7 +60,7 @@ public abstract class AbstractProperty {
     /**
      * Error property
      */
-    protected final ErrorNotifier                   errorNotifier;
+    protected ErrorNotifier                         errorNotifier  = EMPTY_NOTIFIER;
 
     protected boolean                               attached       = false;
 
@@ -61,11 +70,9 @@ public abstract class AbstractProperty {
 
     public abstract void saveInto(Object object);
 
-    public AbstractProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorNotifier errorNotifier) {
+    public AbstractProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {
         this.name = name;
         this.propertySupport = propertySupport;
-        this.errorNotifier = errorNotifier;
         propertySupport.register(this);
     }
 
@@ -79,6 +86,14 @@ public abstract class AbstractProperty {
 
     public void attach() {
         attached = true;
+    }
+
+    public void setErrorNotifier(final ErrorNotifier errorNotifier) {
+        if (errorNotifier != null) {
+            this.errorNotifier = errorNotifier;
+        } else {
+            this.errorNotifier = EMPTY_NOTIFIER;
+        }
     }
 
     public void addListener(final PropertyChangeListener propertyChangeListener) {

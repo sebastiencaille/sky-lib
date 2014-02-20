@@ -19,15 +19,14 @@ import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
 
 class SelectionFixProperty<T> extends ObjectProperty<T> {
 
-	SelectionFixProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-			final ErrorProperty errorProperty) {
-		super(name + "SelectionFix", propertySupport, errorProperty, null);
-	}
+    SelectionFixProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {
+        super(name + "SelectionFix", propertySupport, null);
+    }
 
-	public void fire(final T selectedValue) {
-		if (selectedValue != null) {
-			propertySupport.firePropertyChange(getName(), null, null, selectedValue);
-		}
-	}
+    public void fire(final T selectedValue) {
+        if (selectedValue != null) {
+            propertySupport.firePropertyChange(getName(), null, null, selectedValue);
+        }
+    }
 
 }

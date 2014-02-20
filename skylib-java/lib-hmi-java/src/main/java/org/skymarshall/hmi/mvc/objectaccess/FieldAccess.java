@@ -132,15 +132,16 @@ public abstract class FieldAccess<T> implements
         };
     }
 
-    public static <T> IObjectAccess<T> objectAccess(final Field field, final Class<T> clazz) {
+    public static <T> IObjectAccess<T> objectAccess(final Field field) {
         field.setAccessible(true);
 
         return new IObjectAccess<T>() {
 
+            @SuppressWarnings("unchecked")
             @Override
             public T get(final Object object) {
                 try {
-                    return clazz.cast(field.get(object));
+                    return (T) (field.get(object));
                 } catch (final IllegalAccessException e) {
                     throw new IllegalStateException("Unable to access field", e);
                 }
@@ -169,11 +170,8 @@ public abstract class FieldAccess<T> implements
         } else if (boolean.class.equals(field.getType())) {
             return (IObjectAccess<T>) booleanAccess(field);
         } else {
-            throw new IllegalArgumentException("Unhandled type " + field.getType().getName());
+            return FieldAccess.<T> objectAccess(field);
         }
     }
 
-    public static <T> IObjectAccess<T> create(final Field field, final Class<T> type) {
-        return FieldAccess.<T> objectAccess(field, type);
-    }
 }

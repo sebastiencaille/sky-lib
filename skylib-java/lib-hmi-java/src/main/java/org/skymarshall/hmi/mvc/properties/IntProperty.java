@@ -35,15 +35,13 @@ public class IntProperty extends AbstractTypedProperty<Integer> {
     private int       value;
     private final int defaultValue;
 
-    public IntProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty, final int defaultValue) {
-        super(name, propertySupport, errorProperty);
+    public IntProperty(final String name, final ControllerPropertyChangeSupport propertySupport, final int defaultValue) {
+        super(name, propertySupport);
         this.defaultValue = defaultValue;
     }
 
-    public IntProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty) {
-        this(name, propertySupport, errorProperty, 0);
+    public IntProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {
+        this(name, propertySupport, 0);
     }
 
     public <C> IBindingController<C> bind(final AbstractIntConverter<C> converter) {

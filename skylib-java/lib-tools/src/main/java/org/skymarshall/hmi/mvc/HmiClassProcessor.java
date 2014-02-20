@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,8 +34,41 @@ import org.skymarshall.util.dao.metadata.UntypedDataObjectMetaData;
 
 public class HmiClassProcessor {
 
-    static String typeToString(final Class<?> clazz) {
-        return clazz.getCanonicalName();
+    static String typeToString(final Type type) {
+        if (type instanceof Class) {
+            return ((Class<?>) type).getCanonicalName();
+        } else if (type instanceof ParameterizedType) {
+
+            final ParameterizedType p = (ParameterizedType) type;
+            final StringBuilder builder = new StringBuilder(typeToString(p.getRawType()));
+            char sep = '<';
+            for (final Type st : p.getActualTypeArguments()) {
+                builder.append(sep).append(typeToString(st));
+                sep = ',';
+            }
+            builder.append('>');
+            return builder.toString();
+        } else {
+            throw new IllegalArgumentException("Unhandled type " + type);
+        }
+
+    }
+
+    static String typeParametersToString(final Type type) {
+        if (type instanceof ParameterizedType) {
+            final ParameterizedType p = (ParameterizedType) type;
+            final StringBuilder builder = new StringBuilder();
+            char sep = '<';
+            for (final Type st : p.getActualTypeArguments()) {
+                builder.append(sep).append(typeToString(st));
+                sep = ',';
+            }
+            builder.append('>');
+            return builder.toString();
+        } else {
+            throw new IllegalArgumentException("Unhandled type " + type);
+        }
+
     }
 
     private final Class<?>            clazz;

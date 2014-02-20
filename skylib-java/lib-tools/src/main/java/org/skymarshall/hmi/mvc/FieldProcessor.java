@@ -35,8 +35,6 @@ abstract class FieldProcessor {
 
     protected abstract String getPropertyType();
 
-    protected abstract String getFieldCreation();
-
     abstract void addImport();
 
     public FieldProcessor(final JavaClassGenerator gen, final AbstractAttributeMetaData<?> attrib) {
@@ -48,8 +46,12 @@ abstract class FieldProcessor {
         return gen.toFirstLetterInLowerCase(attrib.getName()) + "Property";
     }
 
+    protected String getFieldCreation() {
+        return "FieldAccess.<" + getTypeAsString() + ">create(" + gen.toConstant(attrib.getName()) + "_FIELD)";
+    }
+
     protected String getTypeAsString() {
-        return HmiClassProcessor.typeToString(attrib.getType());
+        return HmiClassProcessor.typeToString(attrib.getGenericType());
     }
 
     static FieldProcessor create(final JavaClassGenerator gen, final AbstractAttributeMetaData<?> attrib) {
@@ -80,8 +82,8 @@ abstract class FieldProcessor {
 
         @Override
         protected String getFieldCreation() {
-            return "FieldAccess." + attrib.getType().getName() + "Access(" + gen.toConstant(attrib.getName() + "Field")
-                    + ")";
+            return "FieldAccess." + attrib.getType().getName() + "Access(" + gen.toConstant(attrib.getName())
+                    + "_FIELD)";
         }
 
         @Override
@@ -99,13 +101,7 @@ abstract class FieldProcessor {
 
         @Override
         protected String getPropertyType() {
-            return "SetProperty";
-        }
-
-        @Override
-        protected String getFieldCreation() {
-            return "FieldAccess.create(" + gen.toConstant(attrib.getName() + "Field") + ", " + getTypeAsString()
-                    + ".class)";
+            return "SetProperty" + HmiClassProcessor.typeParametersToString(attrib.getGenericType());
         }
 
         @Override
@@ -127,13 +123,7 @@ abstract class FieldProcessor {
 
         @Override
         protected String getPropertyType() {
-            return "MapProperty";
-        }
-
-        @Override
-        protected String getFieldCreation() {
-            return "FieldAccess.create(" + gen.toConstant(attrib.getName() + "Field") + ", " + getTypeAsString()
-                    + ".class)";
+            return "MapProperty" + HmiClassProcessor.typeParametersToString(attrib.getGenericType());
         }
 
         @Override
@@ -151,17 +141,12 @@ abstract class FieldProcessor {
 
         public ListProcessor(final JavaClassGenerator gen, final AbstractAttributeMetaData<?> attrib) {
             super(gen, attrib);
+            System.out.println();
         }
 
         @Override
         protected String getPropertyType() {
-            return "ListProperty";
-        }
-
-        @Override
-        protected String getFieldCreation() {
-            return "FieldAccess.create(" + gen.toConstant(attrib.getName() + "Field") + ", " + getTypeAsString()
-                    + ".class)";
+            return "ListProperty" + HmiClassProcessor.typeParametersToString(attrib.getGenericType());
         }
 
         @Override
@@ -192,12 +177,6 @@ abstract class FieldProcessor {
             return "ObjectProperty<" + getTypeAsString() + ">";
         }
 
-        @Override
-        protected String getFieldCreation() {
-            return "FieldAccess.create(" + gen.toConstant(attrib.getName() + "Field") + ", " + getTypeAsString()
-                    + ".class)";
-        }
-
     }
 
     void generateDeclaration() throws IOException {
@@ -205,15 +184,15 @@ abstract class FieldProcessor {
     }
 
     void generateInitializationWithType() throws IOException {
-        gen.appendIndentedLine(String.format(
-                "%s = Properties.<%s, %s>persistent(new %s(prefix + \"-%s\",  propertySupport, errorProperty), %s);",
-                getPropertyName(), getTypeAsString(), getPropertyType(), getPropertyType(), attrib.getName(),
-                getFieldCreation()));
+        gen.appendIndentedLine(String
+                .format("%s = Properties.<%s, %s>of(new %s(prefix + \"-%s\",  propertySupport)).persistent(%s).setErrorNotifier(errorProperty).getProperty();",
+                        getPropertyName(), getTypeAsString(), getPropertyType(), getPropertyType(), attrib.getName(),
+                        getFieldCreation()));
     }
 
     void generateInitialization() throws IOException {
-        gen.appendIndentedLine(String.format(
-                "%s = Properties.persistent(new %s(prefix + \"-%s\",  propertySupport, errorProperty), %s);",
-                getPropertyName(), getPropertyType(), attrib.getName(), getFieldCreation()));
+        gen.appendIndentedLine(String
+                .format("%s = Properties.of(new %s(prefix + \"-%s\",  propertySupport)).persistent(%s).setErrorNotifier(errorProperty).getProperty();",
+                        getPropertyName(), getPropertyType(), attrib.getName(), getFieldCreation()));
     }
 }

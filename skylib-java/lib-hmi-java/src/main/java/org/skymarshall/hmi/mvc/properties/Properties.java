@@ -26,7 +26,12 @@ public class Properties<T, U extends AbstractTypedProperty<T>> {
         return this;
     }
 
-    public U property() {
+    public Properties<T, U> setErrorNotifier(final ErrorNotifier notifier) {
+        setErrorNotifier(property, notifier);
+        return this;
+    }
+
+    public U getProperty() {
         return property;
     }
 
@@ -39,4 +44,9 @@ public class Properties<T, U extends AbstractTypedProperty<T>> {
         return property;
     }
 
+    public static <T, U extends AbstractTypedProperty<T>> U setErrorNotifier(final U property,
+            final ErrorNotifier notifier) {
+        property.setErrorNotifier(notifier);
+        return property;
+    }
 }

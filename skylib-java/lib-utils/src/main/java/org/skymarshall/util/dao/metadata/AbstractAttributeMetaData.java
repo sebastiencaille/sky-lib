@@ -56,56 +56,56 @@ import java.lang.reflect.Type;
  */
 public abstract class AbstractAttributeMetaData<T> {
 
-	protected final String name;
+    protected final String   name;
 
-	protected final Class<?> type;
+    protected final Class<?> type;
 
-	public abstract Object getValueOf(T _from);
+    public abstract Object getValueOf(T _from);
 
-	public abstract void setValueOf(T _to, Object _value);
+    public abstract void setValueOf(T _to, Object _value);
 
-	public abstract boolean isReadOnly();
+    public abstract boolean isReadOnly();
 
-	public abstract Class<?> getDeclaringType();
+    public abstract Class<?> getDeclaringType();
 
-	public abstract <A extends Annotation> A getAnnotation(Class<A> annotation);
+    public abstract <A extends Annotation> A getAnnotation(Class<A> annotation);
 
-	public abstract Type getGenericType();
+    public abstract Type getGenericType();
 
-	public abstract String getCodeName();
+    public abstract String getCodeName();
 
-	public abstract int getModifier();
+    public abstract int getModifier();
 
-	public AbstractAttributeMetaData(final String name, final Class<?> type) {
-		super();
-		this.name = name;
-		this.type = type;
-	}
+    public AbstractAttributeMetaData(final String name, final Class<?> type) {
+        super();
+        this.name = name;
+        this.type = type;
+    }
 
-	public <U> U get(final T _from, final Class<U> _clazz) {
-		return _clazz.cast(getValueOf(_from));
-	}
+    public <U> U get(final T _from, final Class<U> _clazz) {
+        return _clazz.cast(getValueOf(_from));
+    }
 
-	public void copy(final T _from, final T _to) {
-		setValueOf(_to, getValueOf(_from));
-	}
+    public void copy(final T _from, final T _to) {
+        setValueOf(_to, getValueOf(_from));
+    }
 
-	@Override
-	public boolean equals(final Object o) {
-		return name.equals(((GetSetAttribute<?>) o).name);
-	}
+    @Override
+    public boolean equals(final Object o) {
+        return name.equals(((GetSetAttribute<?>) o).name);
+    }
 
-	@Override
-	public int hashCode() {
-		return name.hashCode();
-	}
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public Class<?> getType() {
-		return type;
-	}
+    public Class<?> getType() {
+        return type;
+    }
 
 }

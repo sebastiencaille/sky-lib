@@ -56,73 +56,73 @@ import java.lang.reflect.Type;
  */
 public class GetSetAttribute<T> extends AbstractAttributeMetaData<T> {
 
-	protected final Method setter;
-	protected final Method getter;
+    protected final Method setter;
+    protected final Method getter;
 
-	public GetSetAttribute(final String name, final Method getter, final Method setter) {
-		super(name, getter.getReturnType());
-		this.getter = getter;
-		this.setter = setter;
-	}
+    public GetSetAttribute(final String name, final Method getter, final Method setter) {
+        super(name, getter.getReturnType());
+        this.getter = getter;
+        this.setter = setter;
+    }
 
-	public Method getSetter() {
-		return setter;
-	}
+    public Method getSetter() {
+        return setter;
+    }
 
-	public Method getGetter() {
-		return getter;
-	}
+    public Method getGetter() {
+        return getter;
+    }
 
-	@Override
-	public Object getValueOf(final T _from) {
-		try {
-			return getter.invoke(_from);
-		} catch (final Exception e) {
-			throw new IllegalStateException("Unable to get object", e);
-		}
-	}
+    @Override
+    public Object getValueOf(final T _from) {
+        try {
+            return getter.invoke(_from);
+        } catch (final Exception e) {
+            throw new IllegalStateException("Unable to get object", e);
+        }
+    }
 
-	@Override
-	public void setValueOf(final T _to, final Object _value) {
-		try {
-			setter.invoke(_to, _value);
-		} catch (final Exception e) {
-			throw new IllegalStateException("Unable to set object", e);
-		}
-	}
+    @Override
+    public void setValueOf(final T _to, final Object _value) {
+        try {
+            setter.invoke(_to, _value);
+        } catch (final Exception e) {
+            throw new IllegalStateException("Unable to set object", e);
+        }
+    }
 
-	@Override
-	public boolean isReadOnly() {
-		return false;
-	}
+    @Override
+    public boolean isReadOnly() {
+        return false;
+    }
 
-	@Override
-	public <A extends Annotation> A getAnnotation(final Class<A> annotation) {
-		return getter.getAnnotation(annotation);
-	}
+    @Override
+    public <A extends Annotation> A getAnnotation(final Class<A> annotation) {
+        return getter.getAnnotation(annotation);
+    }
 
-	@Override
-	public Class<?> getDeclaringType() {
-		return setter.getDeclaringClass();
-	}
+    @Override
+    public Class<?> getDeclaringType() {
+        return setter.getDeclaringClass();
+    }
 
-	@Override
-	public Type getGenericType() {
-		return getter.getGenericReturnType();
-	}
+    @Override
+    public Type getGenericType() {
+        return getter.getGenericReturnType();
+    }
 
-	@Override
-	public String getCodeName() {
-		return getName();
-	}
+    @Override
+    public String getCodeName() {
+        return getName();
+    }
 
-	@Override
-	public String toString() {
-		return name + '(' + type.getName() + ')';
-	}
+    @Override
+    public String toString() {
+        return name + '(' + type.getName() + ')';
+    }
 
-	@Override
-	public int getModifier() {
-		return getter.getModifiers();
-	}
+    @Override
+    public int getModifier() {
+        return getter.getModifiers();
+    }
 }

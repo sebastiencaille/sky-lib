@@ -18,7 +18,6 @@ package org.skymarshall.hmi.mvc.properties;
 import java.util.List;
 
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
-import org.skymarshall.util.CollectionHelper;
 
 /**
  * Property containing a list of Objects.
@@ -29,16 +28,9 @@ import org.skymarshall.util.CollectionHelper;
  * @param <T>
  *            type of the contained objects
  */
-@SuppressWarnings({ "unchecked", "rawtypes" })
-public class ListProperty<T> extends ObjectProperty<List> {
+public class ListProperty<T> extends ObjectProperty<List<T>> {
 
-    public ListProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty) {
-        super(name, propertySupport, errorProperty);
-    }
-
-    public <U> List<U> getValue(final Class<U> clazz) {
-        CollectionHelper.checkContent(getValue(), clazz);
-        return getValue();
+    public ListProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {
+        super(name, propertySupport);
     }
 }

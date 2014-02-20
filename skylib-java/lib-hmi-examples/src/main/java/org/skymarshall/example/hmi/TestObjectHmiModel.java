@@ -38,8 +38,8 @@ public class TestObjectHmiModel extends HmiModel implements IObjectHmiModel<org.
     protected final IntProperty aSecondValueProperty;
     public TestObjectHmiModel(final String prefix, final ControllerPropertyChangeSupport propertySupport, final ErrorProperty errorProperty) {
         super(propertySupport, errorProperty);
-        aFirstValueProperty = Properties.persistent(new ObjectProperty<java.lang.String>(prefix + "-AFirstValue",  propertySupport, errorProperty), FieldAccess.create(AFIRST_VALUE_FIELD, java.lang.String.class));
-        aSecondValueProperty = Properties.persistent(new IntProperty(prefix + "-ASecondValue",  propertySupport, errorProperty), FieldAccess.intAccess(ASECOND_VALUE_FIELD));
+        aFirstValueProperty = Properties.of(new ObjectProperty<java.lang.String>(prefix + "-AFirstValue",  propertySupport)).persistent(FieldAccess.<java.lang.String>create(AFIRST_VALUE_FIELD)).setErrorNotifier(errorProperty).getProperty();
+        aSecondValueProperty = Properties.of(new IntProperty(prefix + "-ASecondValue",  propertySupport)).persistent(FieldAccess.intAccess(ASECOND_VALUE_FIELD)).setErrorNotifier(errorProperty).getProperty();
     }
 
     public TestObjectHmiModel(final String prefix, final HmiController controller) {

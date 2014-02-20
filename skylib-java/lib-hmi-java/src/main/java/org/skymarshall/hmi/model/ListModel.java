@@ -111,7 +111,7 @@ public class ListModel<T> extends AbstractListModel<T> implements
      * The current view
      */
     private final ObjectProperty<IListView<T>>        viewProperty   = new ObjectProperty<IListView<T>>("View",
-                                                                             propertyChange, null, null);
+                                                                             propertyChange);
 
     private ListModel<T>                              parent;
 

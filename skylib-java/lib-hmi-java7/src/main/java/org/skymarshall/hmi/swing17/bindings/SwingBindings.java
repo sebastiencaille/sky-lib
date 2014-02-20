@@ -90,7 +90,7 @@ public class SwingBindings {
         return new JTableMultiSelectionBinding<>(editor, tableModel);
     }
 
-    public static <T> IComponentBinding<Collection<T>> values(final JComboBox<T> component) {
+    public static <T> IComponentBinding<List<T>> values(final JComboBox<T> component) {
         return new JComboBoxValuesBinding<>(component);
     }
 

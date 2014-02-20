@@ -25,10 +25,9 @@ public class SelectionProperty<T> extends ObjectProperty<T> {
 
     private final SelectionFixProperty<T> selectionFixProperty;
 
-    public SelectionProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty) {
-        super(name, propertySupport, errorProperty);
-        selectionFixProperty = new SelectionFixProperty<T>(name, propertySupport, errorProperty);
+    public SelectionProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {
+        super(name, propertySupport);
+        selectionFixProperty = new SelectionFixProperty<T>(name, propertySupport);
     }
 
     public void addListSelectionFixListener(final PropertyChangeListener propertyChangeListener) {

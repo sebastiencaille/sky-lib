@@ -16,27 +16,13 @@
 package org.skymarshall.hmi.mvc.properties;
 
 import java.util.Map;
-import java.util.Set;
 
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
-import org.skymarshall.util.CollectionHelper;
 
-@SuppressWarnings({ "unchecked", "rawtypes" })
-public class MapProperty extends ObjectProperty<Map> {
+public class MapProperty<T, U> extends ObjectProperty<Map<T, U>> {
 
-    public MapProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty) {
-        super(name, propertySupport, errorProperty);
+    public MapProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {
+        super(name, propertySupport);
     }
 
-    public <U, V> Map<U, V> getValue(final Class<U> keyClazz, final Class<V> valueClazz) {
-        CollectionHelper.checkContent(getValue().keySet(), keyClazz);
-        CollectionHelper.checkContent(getValue().values(), valueClazz);
-        return getValue();
-    }
-
-    public <U> Set<U> getKeys(final Class<U> keyClazz) {
-        CollectionHelper.checkContent(getValue().keySet(), keyClazz);
-        return getValue().keySet();
-    }
 }

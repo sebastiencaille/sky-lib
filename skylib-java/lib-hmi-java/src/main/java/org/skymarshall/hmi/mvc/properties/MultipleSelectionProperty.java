@@ -23,9 +23,8 @@ public class MultipleSelectionProperty<T> extends ObjectCollectionProperty<T> {
 
     // private final SelectionFixProperty<T> selectionFixProperty;
 
-    public MultipleSelectionProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty) {
-        super(name, propertySupport, errorProperty);
+    public MultipleSelectionProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {
+        super(name, propertySupport);
     }
 
     public void addListSelectionFixListener(final PropertyChangeListener propertyChangeListener) {

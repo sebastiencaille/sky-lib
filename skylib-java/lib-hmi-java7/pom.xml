@@ -9,19 +9,16 @@
 		<relativePath>..</relativePath>
 	</parent>
 
-	<artifactId>lib-hmi-swing16</artifactId>
+	<artifactId>lib-hmi-java7</artifactId>
 	<packaging>jar</packaging>
-
-	<name>lib-hmi-swing16</name>
-	<url>http://maven.apache.org</url>
 
 	<build>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.7</source>
+					<target>1.7</target>
 				</configuration>
 			</plugin>
 		</plugins>

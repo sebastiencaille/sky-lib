@@ -51,10 +51,10 @@ public class ControllerExampleObjectHmiModel extends HmiModel implements IObject
     protected final ObjectProperty<java.lang.String> stringPropProperty;
     public ControllerExampleObjectHmiModel(final String prefix, final ControllerPropertyChangeSupport propertySupport, final ErrorProperty errorProperty) {
         super(propertySupport, errorProperty);
-        booleanPropProperty = Properties.persistent(new BooleanProperty(prefix + "-BooleanProp",  propertySupport, errorProperty), FieldAccess.booleanAccess(BOOLEAN_PROP_FIELD));
-        intPropProperty = Properties.persistent(new IntProperty(prefix + "-IntProp",  propertySupport, errorProperty), FieldAccess.intAccess(INT_PROP_FIELD));
-        testObjectPropProperty = Properties.persistent(new ObjectProperty<org.skymarshall.example.hmi.TestObject>(prefix + "-TestObjectProp",  propertySupport, errorProperty), FieldAccess.create(TEST_OBJECT_PROP_FIELD, org.skymarshall.example.hmi.TestObject.class));
-        stringPropProperty = Properties.persistent(new ObjectProperty<java.lang.String>(prefix + "-StringProp",  propertySupport, errorProperty), FieldAccess.create(STRING_PROP_FIELD, java.lang.String.class));
+        booleanPropProperty = Properties.of(new BooleanProperty(prefix + "-BooleanProp",  propertySupport)).persistent(FieldAccess.booleanAccess(BOOLEAN_PROP_FIELD)).setErrorNotifier(errorProperty).getProperty();
+        intPropProperty = Properties.of(new IntProperty(prefix + "-IntProp",  propertySupport)).persistent(FieldAccess.intAccess(INT_PROP_FIELD)).setErrorNotifier(errorProperty).getProperty();
+        testObjectPropProperty = Properties.of(new ObjectProperty<org.skymarshall.example.hmi.TestObject>(prefix + "-TestObjectProp",  propertySupport)).persistent(FieldAccess.<org.skymarshall.example.hmi.TestObject>create(TEST_OBJECT_PROP_FIELD)).setErrorNotifier(errorProperty).getProperty();
+        stringPropProperty = Properties.of(new ObjectProperty<java.lang.String>(prefix + "-StringProp",  propertySupport)).persistent(FieldAccess.<java.lang.String>create(STRING_PROP_FIELD)).setErrorNotifier(errorProperty).getProperty();
     }
 
     public ControllerExampleObjectHmiModel(final String prefix, final HmiController controller) {

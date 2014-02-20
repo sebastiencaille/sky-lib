@@ -9,9 +9,8 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
     private IObjectAccess<T> objectAccess;
     private Object           autoCommitObject;
 
-    public AbstractTypedProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorNotifier errorNotifier) {
-        super(name, propertySupport, errorNotifier);
+    public AbstractTypedProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {
+        super(name, propertySupport);
     }
 
     public void setObjectAccess(final IObjectAccess<T> objectAccess) {

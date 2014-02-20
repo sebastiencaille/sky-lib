@@ -19,23 +19,18 @@ import org.skymarshall.example.hmi.TestObject;
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
 import org.skymarshall.hmi.mvc.PropertyGroup;
 import org.skymarshall.hmi.mvc.properties.BooleanProperty;
-import org.skymarshall.hmi.mvc.properties.ErrorProperty;
 import org.skymarshall.hmi.mvc.properties.SelectionProperty;
 
 public class TableModelExampleController {
 
     private final ControllerPropertyChangeSupport propertySupport = new ControllerPropertyChangeSupport(this);
 
-    private final ErrorProperty                   errorProperty   = new ErrorProperty("Error", propertySupport);
+    public final BooleanProperty                  reverseOrder    = new BooleanProperty("Order", propertySupport);
 
-    public final BooleanProperty                  reverseOrder    = new BooleanProperty("Order", propertySupport,
-                                                                          errorProperty);
-
-    public final BooleanProperty                  enableFilter    = new BooleanProperty("Filter", propertySupport,
-                                                                          errorProperty);
+    public final BooleanProperty                  enableFilter    = new BooleanProperty("Filter", propertySupport);
 
     public final SelectionProperty<TestObject>    objectSelection = new SelectionProperty<TestObject>("Selection",
-                                                                          propertySupport, errorProperty);
+                                                                          propertySupport);
 
     public final PropertyGroup                    listChangers    = new PropertyGroup();
 

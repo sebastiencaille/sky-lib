@@ -35,14 +35,13 @@ public class BooleanProperty extends AbstractTypedProperty<Boolean> {
     private final boolean defaultValue;
 
     public BooleanProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty, final boolean defaultValue) {
-        super(name, propertySupport, errorProperty);
+            final boolean defaultValue) {
+        super(name, propertySupport);
         this.defaultValue = defaultValue;
     }
 
-    public BooleanProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty) {
-        this(name, propertySupport, errorProperty, false);
+    public BooleanProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {
+        this(name, propertySupport, false);
     }
 
     public <C> IBindingController<C> bind(final AbstractBooleanConverter<C> converter) {

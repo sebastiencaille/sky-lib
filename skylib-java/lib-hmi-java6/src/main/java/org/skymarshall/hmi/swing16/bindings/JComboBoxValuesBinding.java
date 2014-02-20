@@ -15,14 +15,14 @@
  ******************************************************************************/
 package org.skymarshall.hmi.swing16.bindings;
 
-import java.util.Collection;
+import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 
-public class JComboBoxValuesBinding<T> extends AbstractComponentBinding<Collection<T>> {
+public class JComboBoxValuesBinding<T> extends AbstractComponentBinding<List<T>> {
 
     private final JComboBox<T> box;
 
@@ -32,7 +32,7 @@ public class JComboBoxValuesBinding<T> extends AbstractComponentBinding<Collecti
     }
 
     @Override
-    public void setComponentValue(final AbstractProperty source, final Collection<T> value) {
+    public void setComponentValue(final AbstractProperty source, final List<T> value) {
         final DefaultComboBoxModel<T> newModel = new DefaultComboBoxModel<T>();
         for (final T obj : value) {
             newModel.addElement(obj);

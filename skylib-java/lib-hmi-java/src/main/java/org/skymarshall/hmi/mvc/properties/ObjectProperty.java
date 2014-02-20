@@ -38,15 +38,13 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 
     private T defaultValue;
 
-    public ObjectProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty, final T defaultValue) {
-        super(name, propertySupport, errorProperty);
+    public ObjectProperty(final String name, final ControllerPropertyChangeSupport propertySupport, final T defaultValue) {
+        super(name, propertySupport);
         this.defaultValue = defaultValue;
     }
 
-    public ObjectProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty) {
-        this(name, propertySupport, errorProperty, null);
+    public ObjectProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {
+        this(name, propertySupport, null);
     }
 
     public <C> IBindingController<C> bind(final AbstractObjectConverter<T, C> converter) {

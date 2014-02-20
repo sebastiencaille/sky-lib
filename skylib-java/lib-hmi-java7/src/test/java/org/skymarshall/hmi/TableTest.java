@@ -44,7 +44,7 @@ public class TableTest extends Assert {
 
     private static class Model extends HmiModel {
         MultipleSelectionProperty<TestObject> selection = new MultipleSelectionProperty<TestObject>("Selection",
-                                                                propertySupport, errorProperty);
+                                                                propertySupport);
 
         public Model(final ControllerPropertyChangeSupport support) {
             super(support);

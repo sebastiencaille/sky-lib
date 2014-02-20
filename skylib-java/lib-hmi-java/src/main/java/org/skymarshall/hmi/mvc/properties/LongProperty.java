@@ -36,14 +36,13 @@ public class LongProperty extends AbstractTypedProperty<Long> {
     private final long defaultValue;
 
     public LongProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty, final long defaultValue) {
-        super(name, propertySupport, errorProperty);
+            final long defaultValue) {
+        super(name, propertySupport);
         this.defaultValue = defaultValue;
     }
 
-    public LongProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty) {
-        this(name, propertySupport, errorProperty, 0);
+    public LongProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {
+        this(name, propertySupport, 0);
     }
 
     public <C> IBindingController<C> bind(final AbstractLongConverter<C> converter) {

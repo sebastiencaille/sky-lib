@@ -23,9 +23,8 @@ import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
 
 public class ObjectCollectionProperty<T> extends ObjectProperty<Collection<T>> {
 
-    public ObjectCollectionProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty) {
-        super(name, propertySupport, errorProperty);
+    public ObjectCollectionProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {
+        super(name, propertySupport);
 
     }
 

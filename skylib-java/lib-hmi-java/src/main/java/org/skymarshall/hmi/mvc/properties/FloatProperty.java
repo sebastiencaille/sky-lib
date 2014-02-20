@@ -36,14 +36,13 @@ public class FloatProperty extends AbstractTypedProperty<Float> {
     private final float defaultValue;
 
     public FloatProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty, final float defaultValue) {
-        super(name, propertySupport, errorProperty);
+            final float defaultValue) {
+        super(name, propertySupport);
         this.defaultValue = defaultValue;
     }
 
-    public FloatProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-            final ErrorProperty errorProperty) {
-        this(name, propertySupport, errorProperty, 0.0f);
+    public FloatProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {
+        this(name, propertySupport, 0.0f);
     }
 
     public <C> IBindingController<C> bind(final AbstractFloatConverter<C> converter) {

@@ -9,7 +9,7 @@
 		<relativePath>..</relativePath>
 	</parent>
 
-	<artifactId>lib-hmi-java7</artifactId>
+	<artifactId>lib-hmi-java6</artifactId>
 	<packaging>jar</packaging>
 
 

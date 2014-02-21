@@ -522,8 +522,6 @@ public class ListModel<T> extends AbstractListModel<T> implements
             return;
         }
 
-        final int newIndex = computeInsertionPoint(objectEdition.value);
-
         objectEdition.updateAccepted();
         if (!objectEdition.isAccepted() && objectEdition.oldIndex < 0) {
             // Edited object was not in the model and is still not in the model
@@ -542,16 +540,19 @@ public class ListModel<T> extends AbstractListModel<T> implements
             // models
             fireEditionCancelled(objectEdition.value);
             fireMutating();
+            final int newIndex = computeInsertionPoint(objectEdition.value);
             data.add(newIndex, objectEdition.value);
             fireIntervalAdded(this, newIndex, newIndex);
             fireValueAdded(objectEdition.value);
         } else {
-            // Edited object may have moved
+            // Edited object may have moved. First remove the data, since it may
+            // be at wrong location and this may confuse computeInsertionPoint
+            data.remove(objectEdition.oldIndex);
+            final int newIndex = computeInsertionPoint(objectEdition.value);
+            data.add(newIndex, objectEdition.value);
             if (objectEdition.oldIndex == newIndex) {
                 fireContentsChanged(this, newIndex, newIndex);
             } else {
-                data.remove(objectEdition.oldIndex);
-                data.add(newIndex, objectEdition.value);
                 fireIntervalRemoved(this, objectEdition.oldIndex, objectEdition.oldIndex);
                 fireIntervalAdded(this, newIndex, newIndex);
             }

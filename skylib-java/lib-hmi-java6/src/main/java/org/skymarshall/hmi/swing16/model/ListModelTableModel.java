@@ -21,6 +21,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.table.AbstractTableModel;
 
 import org.skymarshall.hmi.model.ListModel;
+import org.skymarshall.hmi.mvc.PropertyEvent.EventKind;
 
 /**
  * Table model based on a {@link ListModel}, with enum based column identifiers.
@@ -39,8 +40,8 @@ public abstract class ListModelTableModel<T, C extends Enum<C>> extends Abstract
 
     private static final long    serialVersionUID      = -877625721248108739L;
 
-    public static final int      TABLE_ABOUT_TO_CHANGE = 98;
-    public static final int      TABLE_CHANGE_DONE     = 99;
+    public static final int      TABLE_ABOUT_TO_CHANGE = EventKind.BEFORE.getTableModelId();
+    public static final int      TABLE_CHANGE_DONE     = EventKind.AFTER.getTableModelId();
 
     protected final ListModel<T> model;
     private final Class<C>       columnsEnumClass;

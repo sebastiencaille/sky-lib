@@ -43,6 +43,12 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
         super.onValueSet(caller, eventKind);
     }
 
+    public void setObjectValueFromComponent(final Object caller, final T newValue) {
+        if (attached) {
+            setObjectValue(caller, newValue);
+        }
+    }
+
     public abstract T getObjectValue();
 
     public abstract void setObjectValue(final Object caller, final T newValue);

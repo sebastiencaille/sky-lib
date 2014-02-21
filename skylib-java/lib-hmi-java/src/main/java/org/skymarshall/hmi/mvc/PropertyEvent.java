@@ -27,7 +27,17 @@ import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 public class PropertyEvent {
 
     public enum EventKind {
-        BEFORE, AFTER
+        BEFORE(98), AFTER(99);
+
+        private final int tableModelId;
+
+        private EventKind(final int tableModelId) {
+            this.tableModelId = tableModelId;
+        }
+
+        public int getTableModelId() {
+            return tableModelId;
+        }
     }
 
     private final EventKind        kind;

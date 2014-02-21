@@ -17,6 +17,17 @@ package org.skymarshall.hmi.model;
 
 public class ListModelAdapter<T> implements
         IListModelListener<T> {
+    @Override
+    public void mutates() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void valuesSet(final ListEvent<T> event) {
+        // TODO Auto-generated method stub
+
+    }
 
     @Override
     public void valuesCleared(final ListEvent<T> event) {

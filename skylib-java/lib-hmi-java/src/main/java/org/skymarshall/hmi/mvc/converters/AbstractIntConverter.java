@@ -36,11 +36,4 @@ public abstract class AbstractIntConverter<C> extends AbstractConverter<Integer,
         return Integer.valueOf(intProperty.getValue());
     }
 
-    @Override
-    public void setPropertyValue(final Object source, final Integer propertyValue) {
-        if (propertyValue == null) {
-            throw new IllegalArgumentException("Null value is not accepted");
-        }
-        intProperty.setValue(source, propertyValue.intValue());
-    }
 }

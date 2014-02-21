@@ -62,7 +62,7 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
         try {
             final T oldValue = value;
             value = newValue;
-            if (attached && (value != null || newValue != null)) {
+            if (attached && (oldValue != null || newValue != null)) {
                 propertySupport.firePropertyChange(getName(), caller, oldValue, newValue);
             }
         } finally {
@@ -109,9 +109,7 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 
     protected void attach(final T oldValue) {
         super.attach();
-        if (oldValue != null || value != null) {
-            propertySupport.firePropertyChange(getName(), this, oldValue, value);
-        }
+        propertySupport.firePropertyChange(getName(), this, null, value);
         valueAtDetach = null;
     }
 

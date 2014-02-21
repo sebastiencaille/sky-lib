@@ -141,12 +141,25 @@ public class ListModel<T> extends AbstractListModel<T> implements
         }
 
         @Override
+        public void mutates() {
+            // noop
+        }
+
+        @Override
+        public void valuesSet(final ListEvent<T> event) {
+            setValues(event.getObjects());
+        }
+
+        @Override
         public void valuesCleared(final ListEvent<T> event) {
             clear();
         }
 
         @Override
         public void valuesAdded(final ListEvent<T> event) {
+            if (event.getObjects().isEmpty()) {
+                return;
+            }
             if (data.size() / event.getObjects().size() < 2) {
                 for (final T value : event.getObjects()) {
                     insert(value);
@@ -240,6 +253,19 @@ public class ListModel<T> extends AbstractListModel<T> implements
         return listeners.getListeners(IListModelListener.class);
     }
 
+    private void fireMutating() {
+        for (final IListModelListener<T> listener : listeners()) {
+            listener.mutates();
+        }
+    }
+
+    protected void fireValuesSet(final List<T> set) {
+        final ListEvent<T> event = new ListEvent<T>(this, set);
+        for (final IListModelListener<T> listener : listeners()) {
+            listener.valuesSet(event);
+        }
+    }
+
     protected void fireValuesCleared(final List<T> cleared) {
         final ListEvent<T> event = new ListEvent<T>(this, cleared);
         for (final IListModelListener<T> listener : listeners()) {
@@ -308,6 +334,7 @@ public class ListModel<T> extends AbstractListModel<T> implements
     }
 
     public void viewUpdated() {
+        fireMutating();
         rebuildModel();
         fireViewUpdated();
     }
@@ -359,12 +386,21 @@ public class ListModel<T> extends AbstractListModel<T> implements
     }
 
     public void setValues(final Collection<T> newData) {
-        clear();
-        addValues(newData);
+        checkNoEdition();
+        fireMutating();
+        clearModel();
+        addToModel(newData);
+        fireValuesSet(data);
     }
 
     public void addValues(final Collection<T> newData) {
         checkNoEdition();
+        fireMutating();
+        final List<T> addedData = addToModel(newData);
+        fireValuesAdded(addedData);
+    }
+
+    protected List<T> addToModel(final Collection<T> newData) {
         final List<T> addedData = new ArrayList<T>(newData.size());
         final int oldSize = data.size();
         for (final T value : newData) {
@@ -375,19 +411,25 @@ public class ListModel<T> extends AbstractListModel<T> implements
         }
         Collections.sort(data, viewProperty.getValue());
         if (addedData.size() > 0) {
-            fireValuesAdded(addedData);
+            fireIntervalAdded(this, oldSize, data.size() - 1);
         }
-        fireIntervalAdded(this, oldSize, data.size() - 1);
         fireContentsChanged(this, 0, oldSize - 1);
+        return addedData;
     }
 
     public void clear() {
         checkNoEdition();
+        fireMutating();
+        final List<T> removed = clearModel();
+        fireValuesCleared(removed);
+    }
+
+    protected List<T> clearModel() {
         final int size = data.size();
         final List<T> removed = new ArrayList<T>(data);
         data.clear();
         fireIntervalRemoved(this, 0, size - 1);
-        fireValuesCleared(removed);
+        return removed;
     }
 
     private int computeInsertionPoint(final T value) {
@@ -407,6 +449,7 @@ public class ListModel<T> extends AbstractListModel<T> implements
         final int row = getRowOf(value);
         final T removed;
         if (row >= 0) {
+            fireMutating();
             removed = data.remove(row);
             fireIntervalRemoved(this, row, row);
             fireValueRemoved(value);
@@ -419,6 +462,7 @@ public class ListModel<T> extends AbstractListModel<T> implements
     public int insert(final T value) {
         checkNoEdition();
         if (viewProperty.getValue().accept(value)) {
+            fireMutating();
             final int row = computeInsertionPoint(value);
             data.add(row, value);
             fireIntervalAdded(this, row, row);
@@ -478,9 +522,6 @@ public class ListModel<T> extends AbstractListModel<T> implements
             return;
         }
 
-        if (objectEdition.oldIndex >= 0) {
-            data.remove(objectEdition.oldIndex);
-        }
         final int newIndex = computeInsertionPoint(objectEdition.value);
 
         objectEdition.updateAccepted();
@@ -492,21 +533,25 @@ public class ListModel<T> extends AbstractListModel<T> implements
             // Edited object is removed from the model, and potentially from
             // child models
             fireEditionCancelled(objectEdition.value);
+            fireMutating();
+            data.remove(objectEdition.oldIndex);
             fireIntervalRemoved(this, objectEdition.oldIndex, objectEdition.oldIndex);
             fireValueRemoved(objectEdition.value);
         } else if (objectEdition.oldIndex < 0) {
             // Edited object is added to the model, and potentially to child
             // models
             fireEditionCancelled(objectEdition.value);
+            fireMutating();
             data.add(newIndex, objectEdition.value);
             fireIntervalAdded(this, newIndex, newIndex);
             fireValueAdded(objectEdition.value);
         } else {
             // Edited object may have moved
-            data.add(newIndex, objectEdition.value);
             if (objectEdition.oldIndex == newIndex) {
                 fireContentsChanged(this, newIndex, newIndex);
             } else {
+                data.remove(objectEdition.oldIndex);
+                data.add(newIndex, objectEdition.value);
                 fireIntervalRemoved(this, objectEdition.oldIndex, objectEdition.oldIndex);
                 fireIntervalAdded(this, newIndex, newIndex);
             }

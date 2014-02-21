@@ -15,34 +15,12 @@
  ******************************************************************************/
 package org.skymarshall.hmi.mvc.properties;
 
-import java.beans.PropertyChangeListener;
-
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
-import org.skymarshall.hmi.mvc.IBindingController;
-import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
 
 public class SelectionProperty<T> extends ObjectProperty<T> {
 
-    private final SelectionFixProperty<T> selectionFixProperty;
-
     public SelectionProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {
         super(name, propertySupport);
-        selectionFixProperty = new SelectionFixProperty<T>(name, propertySupport);
-    }
-
-    public void addListSelectionFixListener(final PropertyChangeListener propertyChangeListener) {
-        selectionFixProperty.addListener(propertyChangeListener);
-    }
-
-    @Override
-    public <C> IBindingController<C> bind(final AbstractObjectConverter<T, C> anObjectConverter) {
-        anObjectConverter.listenToProperty(selectionFixProperty);
-        return super.bind(anObjectConverter);
-    }
-
-    public void fix() {
-        setValue(null, getValueAtDetach());
-        selectionFixProperty.fire(getValueAtDetach());
     }
 
 }

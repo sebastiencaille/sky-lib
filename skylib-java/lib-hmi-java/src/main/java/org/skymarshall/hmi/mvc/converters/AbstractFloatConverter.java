@@ -36,11 +36,4 @@ public abstract class AbstractFloatConverter<C> extends AbstractConverter<Float,
         return Float.valueOf(floatProperty.getValue());
     }
 
-    @Override
-    public void setPropertyValue(final Object source, final Float propertyValue) {
-        if (propertyValue == null) {
-            throw new IllegalArgumentException("Null value is not accepted");
-        }
-        floatProperty.setValue(source, propertyValue.floatValue());
-    }
 }

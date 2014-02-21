@@ -48,9 +48,4 @@ public abstract class AbstractObjectConverter<T, C> extends AbstractConverter<T,
         return property.getObjectValue();
     }
 
-    @Override
-    public void setPropertyValue(final Object component, final T propertyObject) {
-        property.setObjectValue(component, propertyObject);
-    }
-
 }

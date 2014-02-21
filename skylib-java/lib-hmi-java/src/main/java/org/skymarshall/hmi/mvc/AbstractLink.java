@@ -19,6 +19,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
+import org.skymarshall.hmi.mvc.properties.AbstractTypedProperty;
 import org.skymarshall.hmi.mvc.properties.ErrorNotifier;
 
 /**
@@ -176,13 +177,11 @@ public abstract class AbstractLink<FromType, ToType> implements
     private class PropertyBindingController extends AbstractLinkController implements
             BindingFrom<FromType> {
 
-        private final AbstractProperty property;
+        private final AbstractTypedProperty<FromType> property;
 
-        private FromType               detachedValue;
+        private PropertyChangeListener                listener;
 
-        private PropertyChangeListener listener;
-
-        public PropertyBindingController(final AbstractProperty property) {
+        public PropertyBindingController(final AbstractTypedProperty<FromType> property) {
             this.property = property;
         }
 
@@ -192,14 +191,14 @@ public abstract class AbstractLink<FromType, ToType> implements
         }
 
         /**
-         * Puts back the component value into the property
+         * Puts back the property value into the component
          */
         @Override
         public void attach() {
             // System.out.println(getProperty().getName() + ":attaching "
             // + binding.getComponent().getClass().getSimpleName());
             transmit = true;
-            setPropertyValue(bindingTo.getComponent(), detachedValue);
+            reloadComponentValue();
         }
 
         /**
@@ -210,7 +209,6 @@ public abstract class AbstractLink<FromType, ToType> implements
             // System.out.println(getProperty().getName() + ":detaching "
             // + binding.getComponent().getClass().getSimpleName());
             transmit = false;
-            detachedValue = getPropertyValue();
         }
 
         @Override
@@ -235,7 +233,7 @@ public abstract class AbstractLink<FromType, ToType> implements
 
         @Override
         public void setPropertySideValue(final Object source, final FromType value) {
-            AbstractLink.this.setPropertyValue(source, value);
+            property.setObjectValueFromComponent(source, value);
         }
 
     }
@@ -306,16 +304,6 @@ public abstract class AbstractLink<FromType, ToType> implements
     public abstract FromType getPropertyValue();
 
     /**
-     * Sets the value of the property, when link is bound to a property
-     * 
-     * @param source
-     *            the caller
-     * @param propertyValue
-     *            the new value of the property
-     */
-    public abstract void setPropertyValue(final Object source, final FromType propertyValue);
-
-    /**
      * Sets the component side value from the property.
      * <p>
      * Normally calls bindingTo.setComponentSideValue
@@ -352,7 +340,8 @@ public abstract class AbstractLink<FromType, ToType> implements
      *            an error notifier
      * @return a controller on this binding
      */
-    protected IBindingController<ToType> bind(final AbstractProperty aProperty, final ErrorNotifier notifier) {
+    protected IBindingController<ToType> bind(final AbstractTypedProperty<FromType> aProperty,
+            final ErrorNotifier notifier) {
         this.errorNotifier = notifier;
         final PropertyBindingController controller = new PropertyBindingController(aProperty).bind();
         bindingFrom = controller;
@@ -404,7 +393,7 @@ public abstract class AbstractLink<FromType, ToType> implements
      *            the property this binding will listen to
      * @return a controller on the binding
      */
-    public PropertyBindingController listenToProperty(final AbstractProperty property) {
+    public PropertyBindingController listenToProperty(final AbstractTypedProperty<FromType> property) {
         return new PropertyBindingController(property).bind();
     }
 }

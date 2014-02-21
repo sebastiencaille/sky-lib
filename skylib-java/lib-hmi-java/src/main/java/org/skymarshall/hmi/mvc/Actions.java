@@ -15,8 +15,10 @@
  ******************************************************************************/
 package org.skymarshall.hmi.mvc;
 
+import org.skymarshall.hmi.model.IListModelListener;
+import org.skymarshall.hmi.model.ListEvent;
 import org.skymarshall.hmi.mvc.PropertyEvent.EventKind;
-import org.skymarshall.hmi.mvc.properties.SelectionProperty;
+import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 
 /**
  * Some default actions performed when property events are fired.
@@ -31,22 +33,80 @@ public class Actions {
      * Restores the selection once some properties are fired.
      * <p>
      * 
-     * @param selectionProperty
+     * @param property
      *            the property that contains the selection to restore
      * @return an action
      */
-    public static IPropertyEventListener restoreAfterUpdate(final SelectionProperty<?> selectionProperty) {
+    public static IPropertyEventListener restoreAfterUpdate(final AbstractProperty property) {
         return new IPropertyEventListener() {
 
             @Override
             public void propertyModified(final Object caller, final PropertyEvent event) {
                 if (event.getKind() == EventKind.BEFORE) {
-                    selectionProperty.detach();
+                    property.detach();
                 } else if (event.getKind() == EventKind.AFTER) {
-                    selectionProperty.fix();
-                    selectionProperty.attach();
+                    property.attach();
                 }
             }
+        };
+    }
+
+    /**
+     * Restores the selection once some properties are fired.
+     * <p>
+     * 
+     * @param property
+     *            the property that contains the selection to restore
+     * @return an action
+     */
+    public static <T> IListModelListener<T> restoreAfterListModelUpdate(final AbstractProperty property) {
+        return new IListModelListener<T>() {
+
+            @Override
+            public void mutates() {
+                property.detach();
+            }
+
+            @Override
+            public void valuesSet(final ListEvent<T> event) {
+                property.attach();
+            }
+
+            @Override
+            public void valuesCleared(final ListEvent<T> event) {
+                property.attach();
+            }
+
+            @Override
+            public void valuesAdded(final ListEvent<T> event) {
+                property.attach();
+            }
+
+            @Override
+            public void valuesRemoved(final ListEvent<T> event) {
+                property.attach();
+            }
+
+            @Override
+            public void editionCancelled(final ListEvent<T> event) {
+                // noop
+            }
+
+            @Override
+            public void editionsStarted(final ListEvent<T> event) {
+                // noop
+            }
+
+            @Override
+            public void editionsStopping(final ListEvent<T> event) {
+                // noop
+            }
+
+            @Override
+            public void editionsStopped(final ListEvent<T> event) {
+                // noop
+            }
+
         };
     }
 }

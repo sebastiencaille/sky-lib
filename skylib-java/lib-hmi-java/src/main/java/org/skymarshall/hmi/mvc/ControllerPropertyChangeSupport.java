@@ -135,7 +135,7 @@ public class ControllerPropertyChangeSupport {
     }
 
     private boolean equals(final Object oldValue, final Object newValue) {
-        return oldValue == null && newValue == null || (oldValue != null && oldValue.equals(newValue));
+        return oldValue == newValue || (oldValue != null && newValue != null && oldValue.equals(newValue));
     }
 
     /**

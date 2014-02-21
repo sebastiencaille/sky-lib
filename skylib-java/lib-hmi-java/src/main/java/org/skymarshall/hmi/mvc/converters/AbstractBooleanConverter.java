@@ -36,11 +36,4 @@ public abstract class AbstractBooleanConverter<C> extends AbstractConverter<Bool
         return Boolean.valueOf(booleanProperty.getValue());
     }
 
-    @Override
-    public void setPropertyValue(final Object source, final Boolean propertyValue) {
-        if (propertyValue == null) {
-            throw new IllegalArgumentException("Null value is not accepted");
-        }
-        booleanProperty.setValue(source, propertyValue.booleanValue());
-    }
 }

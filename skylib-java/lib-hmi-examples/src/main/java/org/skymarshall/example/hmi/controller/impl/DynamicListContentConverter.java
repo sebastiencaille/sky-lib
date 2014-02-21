@@ -27,6 +27,10 @@ public class DynamicListContentConverter extends AbstractObjectConverter<String,
     @Override
     protected List<String> convertPropertyValueToComponentValue(final String propertyValue) {
 
+        if (propertyValue == null) {
+            return Collections.emptyList();
+        }
+
         switch (propertyValue) {
         case "A":
             return Arrays.asList("A", "B", "C");

@@ -36,11 +36,4 @@ public abstract class AbstractLongConverter<C> extends AbstractConverter<Long, C
         return Long.valueOf(longProperty.getValue());
     }
 
-    @Override
-    public void setPropertyValue(final Object source, final Long propertyValue) {
-        if (propertyValue == null) {
-            throw new IllegalArgumentException("Null value is not accepted");
-        }
-        longProperty.setValue(source, propertyValue.longValue());
-    }
 }

@@ -228,7 +228,9 @@ public class HmiClassProcessor {
         gen.closeBlock();
         gen.appendIndentedLine("@Override");
         gen.openBlock("public void setComponentValue(final AbstractProperty source, final ", strType, " value)");
+        gen.openBlock("if (value != null)");
         gen.appendIndentedLine("loadFrom(value);");
+        gen.closeBlock();
         gen.closeBlock();
         gen.closeBlock(";");
         gen.closeBlock();

@@ -49,7 +49,7 @@ import org.skymarshall.hmi.mvc.properties.BooleanProperty;
 import org.skymarshall.hmi.mvc.properties.ErrorProperty;
 import org.skymarshall.hmi.mvc.properties.IntProperty;
 import org.skymarshall.hmi.mvc.properties.ObjectProperty;
-import org.skymarshall.hmi.mvc.properties.SelectionProperty;
+import org.skymarshall.hmi.mvc.properties.ObjectProperty;
 import org.skymarshall.hmi.swing17.bindings.SwingBindings;
 
 public class ControllerExampleView extends JFrame {
@@ -110,14 +110,14 @@ public class ControllerExampleView extends JFrame {
         final JLabel selectionCheck = new JLabel();
         final JLabel selectionCounter = new JLabel();
 
-        final SelectionProperty<String> listSelectionProperty = controller.getModel().getListSelectionProperty();
-        listSelectionProperty.bind(SwingBindings.selection(selectionEditor, String.class));
-        listSelectionProperty.bind(SwingBindings.value(selectionCheck));
-        listSelectionProperty.bind(new CounterBinding<String>()).bind(SwingBindings.value(selectionCounter));
+        final ObjectProperty<String> listObjectProperty = controller.getModel().getListObjectProperty();
+        listObjectProperty.bind(SwingBindings.selection(selectionEditor, String.class));
+        listObjectProperty.bind(SwingBindings.value(selectionCheck));
+        listObjectProperty.bind(new CounterBinding<String>()).bind(SwingBindings.value(selectionCounter));
 
         final JScrollPane itemEditorPane = new JScrollPane(selectionEditor);
         itemEditorPane.setPreferredSize(new Dimension(200, 100));
-        addGuiLineItem(listSelectionProperty, itemEditorPane, selectionCheck, selectionCounter);
+        addGuiLineItem(listObjectProperty, itemEditorPane, selectionCheck, selectionCounter);
 
         // Selection of list which content is based on "Item selection"
 
@@ -125,22 +125,22 @@ public class ControllerExampleView extends JFrame {
         final JLabel dynamicListSelectioncheck = new JLabel();
         final JLabel dynamicListSelectionCounter = new JLabel();
 
-        listSelectionProperty.bind(new DynamicListContentConverter()).bind(
+        listObjectProperty.bind(new DynamicListContentConverter()).bind(
                 SwingBindings.values(dynamicListSelectionEditor));
 
-        final SelectionProperty<String> dynamicListSelectionProperty = controller.getModel()
-                .getDynamicListSelectionProperty();
-        dynamicListSelectionProperty.bind(SwingBindings.selection(dynamicListSelectionEditor, String.class));
-        dynamicListSelectionProperty.bind(SwingBindings.value(dynamicListSelectioncheck));
-        dynamicListSelectionProperty.bind(new CounterBinding<String>()).bind(
+        final ObjectProperty<String> dynamicListObjectProperty = controller.getModel()
+                .getDynamicListObjectProperty();
+        dynamicListObjectProperty.bind(SwingBindings.selection(dynamicListSelectionEditor, String.class));
+        dynamicListObjectProperty.bind(SwingBindings.value(dynamicListSelectioncheck));
+        dynamicListObjectProperty.bind(new CounterBinding<String>()).bind(
                 SwingBindings.value(dynamicListSelectionCounter));
 
         // Restore selection after model update
-        controller.getDynamicListUpdater().addAction(Actions.restoreAfterUpdate(dynamicListSelectionProperty));
+        controller.getDynamicListUpdater().addAction(Actions.restoreAfterUpdate(dynamicListObjectProperty));
 
         final JScrollPane dynamicListPane = new JScrollPane(dynamicListSelectionEditor);
         dynamicListPane.setPreferredSize(new Dimension(200, 100));
-        addGuiLineItem(dynamicListSelectionProperty, dynamicListPane, dynamicListSelectioncheck,
+        addGuiLineItem(dynamicListObjectProperty, dynamicListPane, dynamicListSelectioncheck,
                 dynamicListSelectionCounter);
 
         // Table example
@@ -150,14 +150,14 @@ public class ControllerExampleView extends JFrame {
         final JLabel tableSelectionCheck = new JLabel();
         final JLabel tableSelectionCounter = new JLabel();
 
-        final SelectionProperty<TestObject> tableSelectionProperty = controller.getModel().getComplexProperty();
-        tableSelectionProperty.bind(SwingBindings.selection(tableSelectionEditor, tableSelectionTableModel));
-        tableSelectionProperty.bind(new TestObjectToStringConverter()).bind(SwingBindings.value(tableSelectionCheck));
-        tableSelectionProperty.bind(new CounterBinding<TestObject>()).bind(SwingBindings.value(tableSelectionCounter));
+        final ObjectProperty<TestObject> tableObjectProperty = controller.getModel().getComplexProperty();
+        tableObjectProperty.bind(SwingBindings.selection(tableSelectionEditor, tableSelectionTableModel));
+        tableObjectProperty.bind(new TestObjectToStringConverter()).bind(SwingBindings.value(tableSelectionCheck));
+        tableObjectProperty.bind(new CounterBinding<TestObject>()).bind(SwingBindings.value(tableSelectionCounter));
 
         final JScrollPane tableEditorPane = new JScrollPane(tableSelectionEditor);
         tableEditorPane.setPreferredSize(new Dimension(200, 70));
-        addGuiLineItem(tableSelectionProperty, tableEditorPane, tableSelectionCheck, tableSelectionCounter);
+        addGuiLineItem(tableObjectProperty, tableEditorPane, tableSelectionCheck, tableSelectionCounter);
 
         // Display of errors
         final ErrorProperty errorProperty = controller.getModel().getErrorProperty();

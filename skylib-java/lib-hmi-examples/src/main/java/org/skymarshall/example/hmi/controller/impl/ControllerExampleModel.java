@@ -21,7 +21,7 @@ import org.skymarshall.example.hmi.TestObject;
 import org.skymarshall.hmi.model.ListModel;
 import org.skymarshall.hmi.model.views.ListView;
 import org.skymarshall.hmi.mvc.HmiController;
-import org.skymarshall.hmi.mvc.properties.SelectionProperty;
+import org.skymarshall.hmi.mvc.properties.ObjectProperty;
 
 public class ControllerExampleModel extends ControllerExampleObjectHmiModel {
 
@@ -37,29 +37,29 @@ public class ControllerExampleModel extends ControllerExampleObjectHmiModel {
         super(controller);
     }
 
-    private final SelectionProperty<String>     listSelectionProperty        = new SelectionProperty<>(
-                                                                                     "ListSelectionProperty",
+    private final ObjectProperty<String>     listObjectProperty        = new ObjectProperty<>(
+                                                                                     "ListObjectProperty",
                                                                                      propertySupport);
 
-    private final SelectionProperty<String>     dynamicListSelectionProperty = new SelectionProperty<>(
-                                                                                     "DynamicListSelectionProperty",
+    private final ObjectProperty<String>     dynamicListObjectProperty = new ObjectProperty<>(
+                                                                                     "DynamicListObjectProperty",
                                                                                      propertySupport);
 
-    private final SelectionProperty<TestObject> complexProperty              = new SelectionProperty<>("ComplexObject",
+    private final ObjectProperty<TestObject> complexProperty              = new ObjectProperty<>("ComplexObject",
                                                                                      propertySupport);
 
     final ListModel<TestObject>                 tableModel                   = new ListModel<>(
                                                                                      ListView.sorted(new ComplexTestObjectComparator()));
 
-    public SelectionProperty<String> getListSelectionProperty() {
-        return listSelectionProperty;
+    public ObjectProperty<String> getListObjectProperty() {
+        return listObjectProperty;
     }
 
-    public SelectionProperty<String> getDynamicListSelectionProperty() {
-        return dynamicListSelectionProperty;
+    public ObjectProperty<String> getDynamicListObjectProperty() {
+        return dynamicListObjectProperty;
     }
 
-    public SelectionProperty<TestObject> getComplexProperty() {
+    public ObjectProperty<TestObject> getComplexProperty() {
         return complexProperty;
     }
 

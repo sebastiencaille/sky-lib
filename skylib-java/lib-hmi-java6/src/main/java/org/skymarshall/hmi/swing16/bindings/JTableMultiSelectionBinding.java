@@ -16,7 +16,6 @@
 package org.skymarshall.hmi.swing16.bindings;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JTable;
@@ -29,7 +28,7 @@ import org.skymarshall.hmi.mvc.IComponentLink;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 import org.skymarshall.hmi.swing16.model.ListModelTableModel;
 
-public class JTableMultiSelectionBinding<T> extends AbstractComponentBinding<Collection<T>> {
+public class JTableMultiSelectionBinding<T> extends AbstractComponentBinding<List<T>> {
 
     private final JTable                    table;
     private final ListModelTableModel<T, ?> model;
@@ -42,7 +41,7 @@ public class JTableMultiSelectionBinding<T> extends AbstractComponentBinding<Col
         table.setModel(model);
     }
 
-    private void updateSelection(final IComponentLink<Collection<T>> converter) {
+    private void updateSelection(final IComponentLink<List<T>> converter) {
         final List<T> selected = new ArrayList<T>();
         for (final int row : table.getSelectedRows()) {
             if (row >= 0 && row < model.getRowCount()) {
@@ -53,7 +52,7 @@ public class JTableMultiSelectionBinding<T> extends AbstractComponentBinding<Col
     }
 
     @Override
-    public void addComponentValueChangeListener(final IComponentLink<Collection<T>> converter) {
+    public void addComponentValueChangeListener(final IComponentLink<List<T>> converter) {
         table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
             @Override
@@ -82,7 +81,7 @@ public class JTableMultiSelectionBinding<T> extends AbstractComponentBinding<Col
     }
 
     @Override
-    public void setComponentValue(final AbstractProperty source, final Collection<T> values) {
+    public void setComponentValue(final AbstractProperty source, final List<T> values) {
         if ((source == null || !source.isModifiedBy(table)) && values != null) {
 
             table.getSelectionModel().setValueIsAdjusting(true);

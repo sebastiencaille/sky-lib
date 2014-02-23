@@ -21,30 +21,30 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JPopupMenu;
 
-import org.skymarshall.hmi.mvc.properties.SelectionProperty;
+import org.skymarshall.hmi.mvc.properties.ObjectProperty;
 
 public abstract class AbstractPopup<T> extends MouseAdapter {
 
-	private final JPopupMenu componentPopupMenu = new JPopupMenu();
-	protected final SelectionProperty<T> lastSelected;
+    private final JPopupMenu          componentPopupMenu = new JPopupMenu();
+    protected final ObjectProperty<T> lastSelected;
 
-	protected abstract void buildPopup(JPopupMenu popupMenu, T selected);
+    protected abstract void buildPopup(JPopupMenu popupMenu, T selected);
 
-	public AbstractPopup(final SelectionProperty<T> lastSelected) {
-		this.lastSelected = lastSelected;
-	}
+    public AbstractPopup(final ObjectProperty<T> lastSelected) {
+        this.lastSelected = lastSelected;
+    }
 
-	protected T getValueForPopup(final Point p) {
-		return lastSelected.getValue();
-	}
+    protected T getValueForPopup(final Point p) {
+        return lastSelected.getValue();
+    }
 
-	@Override
-	public void mousePressed(final MouseEvent e) {
-		if (e.isPopupTrigger()) {
-			final T selected = getValueForPopup(e.getPoint());
-			buildPopup(componentPopupMenu, selected);
-			componentPopupMenu.show(e.getComponent(), e.getX(), e.getY());
-		}
-	}
+    @Override
+    public void mousePressed(final MouseEvent e) {
+        if (e.isPopupTrigger()) {
+            final T selected = getValueForPopup(e.getPoint());
+            buildPopup(componentPopupMenu, selected);
+            componentPopupMenu.show(e.getComponent(), e.getX(), e.getY());
+        }
+    }
 
 }

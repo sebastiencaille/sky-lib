@@ -15,7 +15,6 @@
  ******************************************************************************/
 package org.skymarshall.hmi.swing17.bindings;
 
-import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JCheckBox;
@@ -85,7 +84,7 @@ public class SwingBindings {
         return new JTableSelectionBinding<>(editor, tableModel);
     }
 
-    public static <T> IComponentBinding<Collection<T>> multipleSelection(final JTable editor,
+    public static <T> IComponentBinding<List<T>> multipleSelection(final JTable editor,
             final ListModelTableModel<T, ?> tableModel) {
         return new JTableMultiSelectionBinding<>(editor, tableModel);
     }

@@ -19,7 +19,7 @@ import org.skymarshall.example.hmi.TestObject;
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
 import org.skymarshall.hmi.mvc.PropertyGroup;
 import org.skymarshall.hmi.mvc.properties.BooleanProperty;
-import org.skymarshall.hmi.mvc.properties.SelectionProperty;
+import org.skymarshall.hmi.mvc.properties.ObjectProperty;
 
 public class TableModelExampleController {
 
@@ -29,7 +29,7 @@ public class TableModelExampleController {
 
     public final BooleanProperty                  enableFilter    = new BooleanProperty("Filter", propertySupport);
 
-    public final SelectionProperty<TestObject>    objectSelection = new SelectionProperty<TestObject>("Selection",
+    public final ObjectProperty<TestObject>    objectSelection = new ObjectProperty<TestObject>("Selection",
                                                                           propertySupport);
 
     public final PropertyGroup                    listChangers    = new PropertyGroup();

@@ -29,7 +29,7 @@ import org.skymarshall.hmi.model.views.IListView;
 import org.skymarshall.hmi.model.views.ListView;
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
 import org.skymarshall.hmi.mvc.HmiModel;
-import org.skymarshall.hmi.mvc.properties.MultipleSelectionProperty;
+import org.skymarshall.hmi.mvc.properties.ListProperty;
 import org.skymarshall.hmi.swing17.model.ListModelTableModel;
 
 public class TableTest extends Assert {
@@ -43,8 +43,7 @@ public class TableTest extends Assert {
                                                     });
 
     private static class Model extends HmiModel {
-        MultipleSelectionProperty<TestObject> selection = new MultipleSelectionProperty<TestObject>("Selection",
-                                                                propertySupport);
+        ListProperty<TestObject> selection = new ListProperty<TestObject>("Selection", propertySupport);
 
         public Model(final ControllerPropertyChangeSupport support) {
             super(support);
@@ -95,7 +94,7 @@ public class TableTest extends Assert {
                 listModel.insert(object1);
                 listModel.insert(object3);
                 listModel.insert(object5);
-                model.selection.setValue(this, Collections.singleton(object3));
+                model.selection.setValue(this, Collections.singletonList(object3));
                 listModel.insert(new TestObject(2));
                 assertEquals(1, model.selection.getValue().size());
                 listModel.insert(new TestObject(4));

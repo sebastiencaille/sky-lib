@@ -25,7 +25,7 @@ public class ControllerExampleController extends HmiController {
     private final PropertyGroup          modelPropertiesGroup = new PropertyGroup();
 
     public ControllerExampleController() {
-        modelPropertiesGroup.addProperty(model.getListSelectionProperty());
+        modelPropertiesGroup.addProperty(model.getListObjectProperty());
 
         model.getTableModel().insert(new TestObject("World", 2));
         model.getTableModel().insert(new TestObject("Hello", 1));

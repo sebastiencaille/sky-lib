@@ -16,11 +16,11 @@
 package org.skymarshall.hmi.swing16;
 
 import java.awt.Point;
+import java.util.Collection;
 
 import javax.swing.JTable;
 
-import org.skymarshall.hmi.mvc.properties.MultipleSelectionProperty;
-import org.skymarshall.hmi.mvc.properties.SelectionProperty;
+import org.skymarshall.hmi.mvc.properties.ObjectProperty;
 import org.skymarshall.hmi.swing16.model.ListModelTableModel;
 
 /**
@@ -34,12 +34,12 @@ import org.skymarshall.hmi.swing16.model.ListModelTableModel;
  */
 public abstract class AbstractJTablePopup<T> extends AbstractPopup<T> {
 
-    private final JTable                       table;
-    private final ListModelTableModel<T, ?>    model;
-    private final MultipleSelectionProperty<T> selections;
+    private final JTable                                  table;
+    private final ListModelTableModel<T, ?>               model;
+    private final ObjectProperty<? extends Collection<T>> selections;
 
     public AbstractJTablePopup(final JTable table, final ListModelTableModel<T, ?> model,
-            final SelectionProperty<T> lastSelected, final MultipleSelectionProperty<T> selections) {
+            final ObjectProperty<T> lastSelected, final ObjectProperty<? extends Collection<T>> selections) {
         super(lastSelected);
         this.table = table;
         this.model = model;

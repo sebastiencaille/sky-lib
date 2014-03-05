@@ -17,6 +17,7 @@ package org.skymarshall.hmi.mvc;
 
 import org.skymarshall.hmi.model.IListModelListener;
 import org.skymarshall.hmi.model.ListEvent;
+import org.skymarshall.hmi.model.ListModelAdapter;
 import org.skymarshall.hmi.mvc.PropertyEvent.EventKind;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 
@@ -60,7 +61,7 @@ public class Actions {
      * @return an action
      */
     public static <T> IListModelListener<T> restoreAfterListModelUpdate(final AbstractProperty property) {
-        return new IListModelListener<T>() {
+        return new ListModelAdapter<T>() {
 
             @Override
             public void mutates() {
@@ -87,26 +88,7 @@ public class Actions {
                 property.attach();
             }
 
-            @Override
-            public void editionCancelled(final ListEvent<T> event) {
-                // noop
-            }
-
-            @Override
-            public void editionsStarted(final ListEvent<T> event) {
-                // noop
-            }
-
-            @Override
-            public void editionsStopping(final ListEvent<T> event) {
-                // noop
-            }
-
-            @Override
-            public void editionsStopped(final ListEvent<T> event) {
-                // noop
-            }
-
         };
     }
+
 }

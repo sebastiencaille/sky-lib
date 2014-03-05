@@ -1,5 +1,6 @@
 package org.skymarshall.hmi.mvc.properties;
 
+import org.skymarshall.hmi.mvc.AutoCommitListener;
 import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
 
 /**
@@ -31,6 +32,11 @@ public class Properties<T, U extends AbstractTypedProperty<T>> {
         return this;
     }
 
+    public Properties<T, U> autoCommitInto(final Object object) {
+        autoCommitInto(property, object);
+        return this;
+    }
+
     public U getProperty() {
         return property;
     }
@@ -47,6 +53,11 @@ public class Properties<T, U extends AbstractTypedProperty<T>> {
     public static <T, U extends AbstractTypedProperty<T>> U setErrorNotifier(final U property,
             final ErrorNotifier notifier) {
         property.setErrorNotifier(notifier);
+        return property;
+    }
+
+    public static <T, U extends AbstractTypedProperty<T>> U autoCommitInto(final U property, final Object object) {
+        property.addListener(new AutoCommitListener(object));
         return property;
     }
 }

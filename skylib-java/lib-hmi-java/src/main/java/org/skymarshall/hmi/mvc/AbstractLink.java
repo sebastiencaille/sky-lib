@@ -233,7 +233,9 @@ public abstract class AbstractLink<FromType, ToType> implements
 
         @Override
         public void setPropertySideValue(final Object source, final FromType value) {
-            property.setObjectValueFromComponent(source, value);
+            if (transmit) {
+                property.setObjectValueFromComponent(source, value);
+            }
         }
 
     }

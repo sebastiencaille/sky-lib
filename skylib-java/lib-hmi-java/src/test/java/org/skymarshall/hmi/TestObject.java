@@ -25,6 +25,11 @@ public class TestObject {
     }
 
     @Override
+    public int hashCode() {
+        return val;
+    }
+
+    @Override
     public boolean equals(final Object obj) {
         return this.val == ((TestObject) obj).val;
     }

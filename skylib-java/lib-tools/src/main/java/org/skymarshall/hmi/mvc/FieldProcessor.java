@@ -185,14 +185,14 @@ abstract class FieldProcessor {
 
     void generateInitializationWithType() throws IOException {
         gen.appendIndentedLine(String
-                .format("%s = Properties.<%s, %s>of(new %s(prefix + \"-%s\",  propertySupport)).persistent(%s).setErrorNotifier(errorProperty).getProperty();",
+                .format("%s = Properties.<%s, %s>of(new %s(prefix + \"-%s\",  propertySupport)).persistent(Persisters.from(currentObjectProvider, %s)).setErrorNotifier(errorProperty).getProperty();",
                         getPropertyName(), getTypeAsString(), getPropertyType(), getPropertyType(), attrib.getName(),
                         getFieldCreation()));
     }
 
     void generateInitialization() throws IOException {
         gen.appendIndentedLine(String
-                .format("%s = Properties.of(new %s(prefix + \"-%s\",  propertySupport)).persistent(%s).setErrorNotifier(errorProperty).getProperty();",
+                .format("%s = Properties.of(new %s(prefix + \"-%s\",  propertySupport)).persistent(Persisters.from(currentObjectProvider, %s)).setErrorNotifier(errorProperty).getProperty();",
                         getPropertyName(), getPropertyType(), attrib.getName(), getFieldCreation()));
     }
 }

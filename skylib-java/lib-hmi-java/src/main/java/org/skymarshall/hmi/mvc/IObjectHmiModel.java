@@ -17,8 +17,10 @@ package org.skymarshall.hmi.mvc;
 
 public interface IObjectHmiModel<T> {
 
-	public void loadFrom(final T object);
+    void setCurrentObject(T object);
 
-	public void saveInto(final T object);
+    void load();
+
+    void save();
 
 }

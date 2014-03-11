@@ -84,7 +84,7 @@ public class TableModelExampleView extends JFrame {
 
         final JTable table = new JTable(tableModel);
         controller.objectSelection.bind(SwingBindings.selection(table, tableModel));
-        controller.listChangers.addAction(Actions.restoreAfterUpdate(controller.objectSelection));
+        controller.listChangers.addListener(Actions.restoreAfterUpdate(controller.objectSelection));
         getContentPane().add(table, BorderLayout.CENTER);
 
         controller.reverseOrder.bind(Converters.booleanToOrder()).bind(ListModelBindings.view(model));

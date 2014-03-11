@@ -25,7 +25,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.skymarshall.JavaClassGenerator;
-import org.skymarshall.hmi.mvc.objectaccess.FieldAccess;
+import org.skymarshall.hmi.mvc.persisters.FieldAccess;
+import org.skymarshall.hmi.mvc.persisters.ObjectProviderPersister;
+import org.skymarshall.hmi.mvc.persisters.Persisters;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 import org.skymarshall.hmi.mvc.properties.ErrorProperty;
 import org.skymarshall.hmi.mvc.properties.Properties;
@@ -125,6 +127,10 @@ public class HmiClassProcessor {
 
         afterPreprocessAttribs();
 
+        gen.addImport(ObjectProviderPersister.class);
+        gen.appendIndentedLine("private final ObjectProviderPersister.CurrentObjectProvider currentObjectProvider = new ObjectProviderPersister.CurrentObjectProvider();");
+
+        gen.addImport(Persisters.class);
         gen.newLine();
 
         forEachAttribute(metaData, new AttributeApplier() {
@@ -189,7 +195,13 @@ public class HmiClassProcessor {
 
         gen.newLine();
         gen.appendIndentedLine("@Override");
-        gen.openBlock("public void loadFrom(" + strType + " object)");
+        gen.openBlock("public void setCurrentObject(final " + strType + " value)");
+        gen.appendIndentedLine("currentObjectProvider.setObject(value);");
+        gen.closeBlock();
+
+        gen.newLine();
+        gen.appendIndentedLine("@Override");
+        gen.openBlock("public void load()");
         forEachAttribute(metaData, new AttributeApplier() {
 
             @Override
@@ -201,7 +213,7 @@ public class HmiClassProcessor {
 
         gen.newLine();
         gen.appendIndentedLine("@Override");
-        gen.openBlock("public void saveInto(" + strType + " object)");
+        gen.openBlock("public void save()");
         forEachAttribute(metaData, new AttributeApplier() {
 
             @Override
@@ -229,7 +241,8 @@ public class HmiClassProcessor {
         gen.appendIndentedLine("@Override");
         gen.openBlock("public void setComponentValue(final AbstractProperty source, final ", strType, " value)");
         gen.openBlock("if (value != null)");
-        gen.appendIndentedLine("loadFrom(value);");
+        gen.appendIndentedLine("setCurrentObject(value);");
+        gen.appendIndentedLine("load();");
         gen.closeBlock();
         gen.closeBlock();
         gen.closeBlock(";");
@@ -254,11 +267,11 @@ public class HmiClassProcessor {
     }
 
     private void processLoadFrom(final AbstractAttributeMetaData<?> attrib) throws IOException {
-        gen.appendIndentedLine(FieldProcessor.create(gen, attrib).getPropertyName() + ".loadFrom(this, object);");
+        gen.appendIndentedLine(FieldProcessor.create(gen, attrib).getPropertyName() + ".load(this);");
     }
 
     private void processSaveInto(final AbstractAttributeMetaData<?> attrib) throws IOException {
-        gen.appendIndentedLine(FieldProcessor.create(gen, attrib).getPropertyName() + ".saveInto(object);");
+        gen.appendIndentedLine(FieldProcessor.create(gen, attrib).getPropertyName() + ".save();");
     }
 
     private void preprocess(final AbstractAttributeMetaData<?> attrib) throws IOException {

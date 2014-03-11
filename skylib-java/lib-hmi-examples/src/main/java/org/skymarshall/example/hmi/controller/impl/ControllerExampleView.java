@@ -49,7 +49,6 @@ import org.skymarshall.hmi.mvc.properties.BooleanProperty;
 import org.skymarshall.hmi.mvc.properties.ErrorProperty;
 import org.skymarshall.hmi.mvc.properties.IntProperty;
 import org.skymarshall.hmi.mvc.properties.ObjectProperty;
-import org.skymarshall.hmi.mvc.properties.ObjectProperty;
 import org.skymarshall.hmi.swing17.bindings.SwingBindings;
 
 public class ControllerExampleView extends JFrame {
@@ -136,7 +135,7 @@ public class ControllerExampleView extends JFrame {
                 SwingBindings.value(dynamicListSelectionCounter));
 
         // Restore selection after model update
-        controller.getDynamicListUpdater().addAction(Actions.restoreAfterUpdate(dynamicListObjectProperty));
+        controller.getDynamicListUpdater().addListener(Actions.restoreAfterUpdate(dynamicListObjectProperty));
 
         final JScrollPane dynamicListPane = new JScrollPane(dynamicListSelectionEditor);
         dynamicListPane.setPreferredSize(new Dimension(200, 100));

@@ -46,39 +46,36 @@ import org.skymarshall.hmi.mvc.properties.AbstractProperty;
  * @author Sebastien Caille
  * 
  * @param <ObjectType>
- * @param <ControllerType>
+ * @param <ModelType>
  * @param <ColumnsType>
  */
 @SuppressWarnings("serial")
-public abstract class ObjectControllerTableModel<ObjectType, ControllerType extends IObjectHmiModel<ObjectType>, ColumnsType extends Enum<ColumnsType>>
+public abstract class ObjectControllerTableModel<ObjectType, ModelType extends IObjectHmiModel<ObjectType>, ColumnsType extends Enum<ColumnsType>>
         extends ListModelTableModel<ObjectType, ColumnsType> {
 
-    static class TableBinding<U> implements
+    static class TableBinding<ObjectType, U> implements
             IComponentBinding<U> {
 
-        private final Map<Object, U> changes = new HashMap<>();
+        private final Map<ObjectType, U> changes = new HashMap<>();
 
-        private AbstractProperty     property;
-        private Object               value;
+        private AbstractProperty         property;
 
-        private IComponentLink<U>    singleListener;
+        private IComponentLink<U>        singleListener;
+
+        private Object                   loadedValue;
 
         public TableBinding() {
         }
 
-        public Object getValue() {
-            return value;
-        }
-
         @SuppressWarnings("unchecked")
-        void addChange(final Object object, final Object newValue) {
+        void addChange(final ObjectType object, final Object newValue) {
             changes.put(object, (U) newValue);
         }
 
         void commit(final Object object) {
             if (changes.containsKey(object)) {
                 singleListener.setValueFromComponent(null, changes.get(object));
-                property.saveInto(object);
+                property.save();
             }
         }
 
@@ -86,8 +83,9 @@ public abstract class ObjectControllerTableModel<ObjectType, ControllerType exte
             if (changes.containsKey(object)) {
                 return changes.get(object);
             }
-            property.loadFrom(this, object);
-            return value;
+            // This calls setComponentValue(...)
+            property.load(this);
+            return loadedValue;
         }
 
         @Override
@@ -97,7 +95,7 @@ public abstract class ObjectControllerTableModel<ObjectType, ControllerType exte
 
         @Override
         public void setComponentValue(final org.skymarshall.hmi.mvc.properties.AbstractProperty source, final U value) {
-            this.value = value;
+            this.loadedValue = value;
         }
 
         @Override
@@ -106,37 +104,40 @@ public abstract class ObjectControllerTableModel<ObjectType, ControllerType exte
         }
     }
 
-    private final TableBinding<?>[] bindings;
+    private final TableBinding<ObjectType, ?>[] bindings;
+    private final ModelType                     objectModel;
 
     /**
      * Binds all model properties with this model's bindings
      * 
-     * @param aController
+     * @param aModel
      */
-    protected abstract void bindController(ControllerType aController);
+    protected abstract void bindModel(ModelType anObjectModel);
 
-    protected abstract AbstractProperty getPropertyAt(ControllerType aController, ColumnsType column);
+    protected abstract AbstractProperty getPropertyAt(ModelType anObjectModel, ColumnsType column);
 
-    public ObjectControllerTableModel(final ListModel<ObjectType> model, final ControllerType controller,
+    public ObjectControllerTableModel(final ListModel<ObjectType> listModel, final ModelType objectModel,
             final Class<ColumnsType> columnsEnumClass) {
-        super(model, columnsEnumClass);
+        super(listModel, columnsEnumClass);
+        this.objectModel = objectModel;
+        bindings = new TableBinding[columnsEnumClass.getEnumConstants().length];
+        bindModel(objectModel);
 
-        bindings = new TableBinding<?>[columnsEnumClass.getEnumConstants().length];
-        bindController(controller);
         for (final ColumnsType column : columnsEnumClass.getEnumConstants()) {
-            bindings[column.ordinal()].property = getPropertyAt(controller, column);
+            bindings[column.ordinal()].property = getPropertyAt(objectModel, column);
         }
     }
 
     protected <U> IComponentBinding<U> getColumnBinding(final ColumnsType column) {
-        final TableBinding<U> binding = new TableBinding<>();
+        final TableBinding<ObjectType, U> binding = new TableBinding<>();
         bindings[column.ordinal()] = binding;
         return binding;
     }
 
     @Override
     protected Object getValueAtColumn(final ObjectType object, final ColumnsType column) {
-        final TableBinding<?> binding = bindings[column.ordinal()];
+        final TableBinding<ObjectType, ?> binding = bindings[column.ordinal()];
+        objectModel.setCurrentObject(object);
         return binding.getDisplayValue(object);
     }
 
@@ -146,16 +147,17 @@ public abstract class ObjectControllerTableModel<ObjectType, ControllerType exte
     }
 
     public void commit() {
-        final Set<Object> modified = new HashSet<>();
-        for (final TableBinding<?> binding : bindings) {
+        final Set<ObjectType> modified = new HashSet<>();
+        for (final TableBinding<ObjectType, ?> binding : bindings) {
             modified.addAll(binding.changes.keySet());
         }
-        for (final Object object : modified) {
-            for (final TableBinding<?> binding : bindings) {
+        for (final ObjectType object : modified) {
+            objectModel.setCurrentObject(object);
+            for (final TableBinding<?, ?> binding : bindings) {
                 binding.commit(object);
             }
         }
-        for (final TableBinding<?> binding : bindings) {
+        for (final TableBinding<?, ?> binding : bindings) {
             binding.changes.clear();
         }
     }

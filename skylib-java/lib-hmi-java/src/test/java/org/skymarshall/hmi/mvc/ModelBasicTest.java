@@ -21,7 +21,8 @@ import org.junit.Test;
 import org.skymarshall.hmi.TestObject;
 import org.skymarshall.hmi.mvc.converters.ConversionException;
 import org.skymarshall.hmi.mvc.converters.Converters;
-import org.skymarshall.hmi.mvc.objectaccess.FieldAccess;
+import org.skymarshall.hmi.mvc.persisters.FieldAccess;
+import org.skymarshall.hmi.mvc.persisters.Persisters;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 import org.skymarshall.hmi.mvc.properties.IntProperty;
 import org.skymarshall.hmi.mvc.properties.ObjectProperty;
@@ -39,12 +40,9 @@ public class ModelBasicTest extends Assert {
             super(controller);
             try {
                 integerProperty = Properties.of(new IntProperty("IntegerProperty", propertySupport))
-                        .persistent(FieldAccess.intAccess(TestObject.class.getField("val")))
                         .setErrorNotifier(errorProperty).getProperty();
                 stringProperty = Properties.setErrorNotifier(new ObjectProperty<String>("StringProperty",
                         propertySupport), errorProperty);
-            } catch (final NoSuchFieldException e) {
-                throw new IllegalStateException(e);
             } catch (final SecurityException e) {
                 throw new IllegalStateException(e);
             }
@@ -88,14 +86,15 @@ public class ModelBasicTest extends Assert {
     }
 
     @Test
-    public void testChain() {
+    public void testChain() throws NoSuchFieldException {
         final TestBinding binding = new TestBinding();
         model.integerProperty.bind(Converters.intToString()).bind(binding);
         controller.start();
 
         final TestObject testObject = new TestObject(321);
+        Properties.persistent(model.integerProperty, Persisters.persister(testObject, testObjectValAccess()));
 
-        model.integerProperty.loadFrom(this, testObject);
+        model.integerProperty.load(this);
         assertEquals("321", binding.value);
 
         model.integerProperty.setValue(this, 123);
@@ -104,7 +103,7 @@ public class ModelBasicTest extends Assert {
         binding.setValue("456");
         assertEquals(456, model.integerProperty.getValue());
 
-        model.integerProperty.saveInto(testObject);
+        model.integerProperty.save();
         assertEquals(456, testObject.val);
 
         // Test exception
@@ -125,6 +124,19 @@ public class ModelBasicTest extends Assert {
 
         binding.setValue("456");
         assertEquals("456", model.stringProperty.getValue());
+    }
+
+    @Test
+    public void testAutoCommit() throws NoSuchFieldException {
+        final TestObject testObject = new TestObject(123);
+        Properties.persistent(model.integerProperty, Persisters.persister(testObject, testObjectValAccess()));
+        Properties.autoCommit(model.integerProperty);
+        model.integerProperty.setValue(this, 456);
+        assertEquals(456, testObject.val);
+    }
+
+    protected FieldAccess<Integer> testObjectValAccess() throws NoSuchFieldException {
+        return FieldAccess.intAccess(TestObject.class.getField("val"));
     }
 
 }

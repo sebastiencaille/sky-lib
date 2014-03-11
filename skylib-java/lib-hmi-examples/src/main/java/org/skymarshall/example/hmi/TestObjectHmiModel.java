@@ -1,19 +1,21 @@
 package org.skymarshall.example.hmi;
 
-import org.skymarshall.hmi.mvc.HmiModel;
 import org.skymarshall.hmi.mvc.IComponentBinding;
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
+import java.lang.reflect.Field;
+import org.skymarshall.hmi.mvc.properties.AbstractProperty;
+import org.skymarshall.hmi.mvc.persisters.FieldAccess;
+import org.skymarshall.hmi.mvc.IObjectHmiModel;
+import org.skymarshall.hmi.mvc.persisters.ObjectProviderPersister;
+import org.skymarshall.hmi.mvc.HmiModel;
 import org.skymarshall.hmi.mvc.properties.ErrorProperty;
 import org.skymarshall.hmi.mvc.HmiController;
 import org.skymarshall.hmi.mvc.properties.IntProperty;
 import org.skymarshall.hmi.mvc.properties.Properties;
 import org.skymarshall.hmi.mvc.properties.ObjectProperty;
-import java.lang.reflect.Field;
 import org.skymarshall.hmi.mvc.IComponentLink;
-import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 import java.lang.reflect.AccessibleObject;
-import org.skymarshall.hmi.mvc.objectaccess.FieldAccess;
-import org.skymarshall.hmi.mvc.IObjectHmiModel;
+import org.skymarshall.hmi.mvc.persisters.Persisters;
 
 public class TestObjectHmiModel extends HmiModel implements IObjectHmiModel<org.skymarshall.example.hmi.TestObject> {
     public static final String AFIRST_VALUE = "AFirstValue";
@@ -33,13 +35,14 @@ public class TestObjectHmiModel extends HmiModel implements IObjectHmiModel<org.
             throw new IllegalStateException("Cannot initialize class", e);
         }
     }
+    private final ObjectProviderPersister.CurrentObjectProvider currentObjectProvider = new ObjectProviderPersister.CurrentObjectProvider();
 
     protected final ObjectProperty<java.lang.String> aFirstValueProperty;
     protected final IntProperty aSecondValueProperty;
     public TestObjectHmiModel(final String prefix, final ControllerPropertyChangeSupport propertySupport, final ErrorProperty errorProperty) {
         super(propertySupport, errorProperty);
-        aFirstValueProperty = Properties.of(new ObjectProperty<java.lang.String>(prefix + "-AFirstValue",  propertySupport)).persistent(FieldAccess.<java.lang.String>create(AFIRST_VALUE_FIELD)).setErrorNotifier(errorProperty).getProperty();
-        aSecondValueProperty = Properties.of(new IntProperty(prefix + "-ASecondValue",  propertySupport)).persistent(FieldAccess.intAccess(ASECOND_VALUE_FIELD)).setErrorNotifier(errorProperty).getProperty();
+        aFirstValueProperty = Properties.of(new ObjectProperty<java.lang.String>(prefix + "-AFirstValue",  propertySupport)).persistent(Persisters.from(currentObjectProvider, FieldAccess.<java.lang.String>create(AFIRST_VALUE_FIELD))).setErrorNotifier(errorProperty).getProperty();
+        aSecondValueProperty = Properties.of(new IntProperty(prefix + "-ASecondValue",  propertySupport)).persistent(Persisters.from(currentObjectProvider, FieldAccess.intAccess(ASECOND_VALUE_FIELD))).setErrorNotifier(errorProperty).getProperty();
     }
 
     public TestObjectHmiModel(final String prefix, final HmiController controller) {
@@ -68,15 +71,20 @@ public class TestObjectHmiModel extends HmiModel implements IObjectHmiModel<org.
     }
 
     @Override
-    public void loadFrom(org.skymarshall.example.hmi.TestObject object) {
-        aFirstValueProperty.loadFrom(this, object);
-        aSecondValueProperty.loadFrom(this, object);
+    public void setCurrentObject(final org.skymarshall.example.hmi.TestObject value) {
+        currentObjectProvider.setObject(value);
     }
 
     @Override
-    public void saveInto(org.skymarshall.example.hmi.TestObject object) {
-        aFirstValueProperty.saveInto(object);
-        aSecondValueProperty.saveInto(object);
+    public void load() {
+        aFirstValueProperty.load(this);
+        aSecondValueProperty.load(this);
+    }
+
+    @Override
+    public void save() {
+        aFirstValueProperty.save();
+        aSecondValueProperty.save();
     }
 
     public IComponentBinding<org.skymarshall.example.hmi.TestObject> binding() {
@@ -91,7 +99,10 @@ public class TestObjectHmiModel extends HmiModel implements IObjectHmiModel<org.
             }
             @Override
             public void setComponentValue(final AbstractProperty source, final org.skymarshall.example.hmi.TestObject value) {
-                loadFrom(value);
+                if (value != null) {
+                    setCurrentObject(value);
+                    load();
+                }
             }
         };
     }

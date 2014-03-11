@@ -1,7 +1,6 @@
 package org.skymarshall.hmi.mvc.properties;
 
 import org.skymarshall.hmi.mvc.AutoCommitListener;
-import org.skymarshall.hmi.mvc.objectaccess.IObjectAccess;
 
 /**
  * To tune the properties.
@@ -22,8 +21,8 @@ public class Properties<T, U extends AbstractTypedProperty<T>> {
         this.property = property;
     }
 
-    public Properties<T, U> persistent(final IObjectAccess<T> access) {
-        persistent(property, access);
+    public Properties<T, U> persistent(final IPersister<T> persister) {
+        persistent(property, persister);
         return this;
     }
 
@@ -32,8 +31,8 @@ public class Properties<T, U extends AbstractTypedProperty<T>> {
         return this;
     }
 
-    public Properties<T, U> autoCommitInto(final Object object) {
-        autoCommitInto(property, object);
+    public Properties<T, U> autoCommit() {
+        autoCommit(property);
         return this;
     }
 
@@ -45,8 +44,8 @@ public class Properties<T, U extends AbstractTypedProperty<T>> {
         return new Properties<T, U>(property);
     }
 
-    public static <T, U extends AbstractTypedProperty<T>> U persistent(final U property, final IObjectAccess<T> access) {
-        property.setObjectAccess(access);
+    public static <T, U extends AbstractTypedProperty<T>> U persistent(final U property, final IPersister<T> persister) {
+        property.setPersister(persister);
         return property;
     }
 
@@ -56,8 +55,8 @@ public class Properties<T, U extends AbstractTypedProperty<T>> {
         return property;
     }
 
-    public static <T, U extends AbstractTypedProperty<T>> U autoCommitInto(final U property, final Object object) {
-        property.addListener(new AutoCommitListener(object));
+    public static <T, U extends AbstractTypedProperty<T>> U autoCommit(final U property) {
+        property.addListener(new AutoCommitListener());
         return property;
     }
 }

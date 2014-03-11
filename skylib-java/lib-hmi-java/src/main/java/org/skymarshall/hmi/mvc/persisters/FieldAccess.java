@@ -13,9 +13,11 @@
  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  ******************************************************************************/
-package org.skymarshall.hmi.mvc.objectaccess;
+package org.skymarshall.hmi.mvc.persisters;
 
 import java.lang.reflect.Field;
+
+import org.skymarshall.hmi.mvc.properties.IPersister;
 
 /**
  * Access to object fields
@@ -25,13 +27,30 @@ import java.lang.reflect.Field;
  *
  * @param <T>
  */
-public abstract class FieldAccess<T> implements
-        IObjectAccess<T> {
+public abstract class FieldAccess<T> {
 
-    public static IObjectAccess<Boolean> booleanAccess(final Field field) {
+    public abstract T get(Object object);
+
+    public abstract void set(Object object, T value);
+
+    public IPersister<T> asPersister(final Object object) {
+        return new IPersister<T>() {
+            @Override
+            public T get() {
+                return FieldAccess.this.get(object);
+            }
+
+            @Override
+            public void set(final T value) {
+                FieldAccess.this.set(object, value);
+            }
+        };
+    }
+
+    public static FieldAccess<Boolean> booleanAccess(final Field field) {
         field.setAccessible(true);
 
-        return new IObjectAccess<Boolean>() {
+        return new FieldAccess<Boolean>() {
 
             @Override
             public Boolean get(final Object object) {
@@ -54,10 +73,10 @@ public abstract class FieldAccess<T> implements
         };
     }
 
-    public static IObjectAccess<Integer> intAccess(final Field field) {
+    public static FieldAccess<Integer> intAccess(final Field field) {
         field.setAccessible(true);
 
-        return new IObjectAccess<Integer>() {
+        return new FieldAccess<Integer>() {
 
             @Override
             public Integer get(final Object object) {
@@ -80,10 +99,10 @@ public abstract class FieldAccess<T> implements
         };
     }
 
-    public static IObjectAccess<Long> longAccess(final Field field) {
+    public static FieldAccess<Long> longAccess(final Field field) {
         field.setAccessible(true);
 
-        return new IObjectAccess<Long>() {
+        return new FieldAccess<Long>() {
 
             @Override
             public Long get(final Object object) {
@@ -106,10 +125,10 @@ public abstract class FieldAccess<T> implements
         };
     }
 
-    public static IObjectAccess<Float> floatAccess(final Field field) {
+    public static FieldAccess<Float> floatAccess(final Field field) {
         field.setAccessible(true);
 
-        return new IObjectAccess<Float>() {
+        return new FieldAccess<Float>() {
 
             @Override
             public Float get(final Object object) {
@@ -132,10 +151,10 @@ public abstract class FieldAccess<T> implements
         };
     }
 
-    public static <T> IObjectAccess<T> objectAccess(final Field field) {
+    public static <T> FieldAccess<T> objectAccess(final Field field) {
         field.setAccessible(true);
 
-        return new IObjectAccess<T>() {
+        return new FieldAccess<T>() {
 
             @SuppressWarnings("unchecked")
             @Override
@@ -160,15 +179,15 @@ public abstract class FieldAccess<T> implements
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> IObjectAccess<T> create(final Field field) {
+    public static <T> FieldAccess<T> create(final Field field) {
         if (int.class.equals(field.getType())) {
-            return (IObjectAccess<T>) intAccess(field);
+            return (FieldAccess<T>) intAccess(field);
         } else if (long.class.equals(field.getType())) {
-            return (IObjectAccess<T>) longAccess(field);
+            return (FieldAccess<T>) longAccess(field);
         } else if (float.class.equals(field.getType())) {
-            return (IObjectAccess<T>) floatAccess(field);
+            return (FieldAccess<T>) floatAccess(field);
         } else if (boolean.class.equals(field.getType())) {
-            return (IObjectAccess<T>) booleanAccess(field);
+            return (FieldAccess<T>) booleanAccess(field);
         } else {
             return FieldAccess.<T> objectAccess(field);
         }

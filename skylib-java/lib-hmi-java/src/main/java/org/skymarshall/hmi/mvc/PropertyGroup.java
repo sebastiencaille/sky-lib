@@ -68,7 +68,7 @@ public class PropertyGroup {
         prop.addListener(impl);
     }
 
-    public void addAction(final IPropertyEventListener action) {
+    public void addListener(final IPropertyEventListener action) {
         actions.add(IPropertyEventListener.class, action);
     }
 

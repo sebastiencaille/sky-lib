@@ -37,7 +37,7 @@ public class TestObjectControllerModelFrameModel extends
     }
 
     @Override
-    protected void bindController(final TestObjectHmiModel testObjectModel) {
+    protected void bindModel(final TestObjectHmiModel testObjectModel) {
         testObjectModel.getAFirstValueProperty().bind(this.<String> getColumnBinding(Columns.VAL1));
         testObjectModel.getASecondValueProperty().bind(Converters.intToString())
                 .bind(this.<String> getColumnBinding(Columns.VAL2));
@@ -57,6 +57,7 @@ public class TestObjectControllerModelFrameModel extends
 
     @Override
     protected AbstractProperty getPropertyAt(final TestObjectHmiModel controller, final Columns column) {
+
         switch (column) {
         case VAL1:
             return controller.getAFirstValueProperty();

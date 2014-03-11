@@ -34,7 +34,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.skymarshall</groupId>
-			<artifactId>lib-hmi-swing17</artifactId>
+			<artifactId>lib-hmi-java7</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>

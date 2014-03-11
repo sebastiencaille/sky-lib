@@ -66,9 +66,9 @@ public abstract class AbstractProperty {
 
     public abstract void reset(final Object caller);
 
-    public abstract void loadFrom(final Object caller, final Object object);
+    public abstract void load(final Object caller);
 
-    public abstract void saveInto(Object object);
+    public abstract void save();
 
     public AbstractProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {
         this.name = name;
@@ -110,6 +110,10 @@ public abstract class AbstractProperty {
 
     public void addListener(final IPropertyEventListener listener) {
         eventListeners.add(IPropertyEventListener.class, listener);
+    }
+
+    public void removeListener(final IPropertyEventListener listener) {
+        eventListeners.remove(IPropertyEventListener.class, listener);
     }
 
     protected void onValueSet(final Object caller, final EventKind eventKind) {

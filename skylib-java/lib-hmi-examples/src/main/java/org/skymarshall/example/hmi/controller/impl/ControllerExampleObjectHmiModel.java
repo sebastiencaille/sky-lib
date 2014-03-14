@@ -1,22 +1,23 @@
 package org.skymarshall.example.hmi.controller.impl;
 
-import org.skymarshall.hmi.mvc.IComponentBinding;
-import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
-import org.skymarshall.hmi.mvc.properties.BooleanProperty;
-import java.lang.reflect.Field;
-import org.skymarshall.hmi.mvc.properties.AbstractProperty;
-import org.skymarshall.hmi.mvc.persisters.FieldAccess;
-import org.skymarshall.hmi.mvc.IObjectHmiModel;
-import org.skymarshall.hmi.mvc.persisters.ObjectProviderPersister;
-import org.skymarshall.hmi.mvc.HmiModel;
-import org.skymarshall.hmi.mvc.properties.ErrorProperty;
-import org.skymarshall.hmi.mvc.HmiController;
-import org.skymarshall.hmi.mvc.properties.IntProperty;
-import org.skymarshall.hmi.mvc.properties.Properties;
-import org.skymarshall.hmi.mvc.properties.ObjectProperty;
-import org.skymarshall.hmi.mvc.IComponentLink;
 import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Field;
+
+import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
+import org.skymarshall.hmi.mvc.HmiController;
+import org.skymarshall.hmi.mvc.HmiModel;
+import org.skymarshall.hmi.mvc.IComponentBinding;
+import org.skymarshall.hmi.mvc.IComponentLink;
+import org.skymarshall.hmi.mvc.IObjectHmiModel;
+import org.skymarshall.hmi.mvc.persisters.FieldAccess;
+import org.skymarshall.hmi.mvc.persisters.ObjectProviderPersister;
 import org.skymarshall.hmi.mvc.persisters.Persisters;
+import org.skymarshall.hmi.mvc.properties.AbstractProperty;
+import org.skymarshall.hmi.mvc.properties.BooleanProperty;
+import org.skymarshall.hmi.mvc.properties.ErrorProperty;
+import org.skymarshall.hmi.mvc.properties.IntProperty;
+import org.skymarshall.hmi.mvc.properties.ObjectProperty;
+import org.skymarshall.hmi.mvc.properties.Properties;
 
 public class ControllerExampleObjectHmiModel extends HmiModel implements IObjectHmiModel<org.skymarshall.example.hmi.controller.impl.ControllerExampleObject> {
     public static final String BOOLEAN_PROP = "BooleanProp";

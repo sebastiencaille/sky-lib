@@ -75,6 +75,9 @@ public class ListView<T> implements
     @Override
     public void attach(final IListViewOwner<T> owner) {
         parentView = owner.getParentView();
+        if (filter instanceof IDynamicFilter) {
+            ((IDynamicFilter<T>) filter).attach(owner);
+        }
     }
 
     @Override
@@ -87,28 +90,4 @@ public class ListView<T> implements
         return getClass().getSimpleName() + ":[comparator=" + comparator + ", filter=" + filter + ']';
     }
 
-    public static <U> IListView<U> sorted(final Comparator<U> comparator) {
-        return new ListView<U>(comparator, null);
-    }
-
-    public static <U extends Comparable<U>> IListView<U> sorted(final Class<U> clazz) {
-        return new ListView<U>(new Comparator<U>() {
-            @Override
-            public int compare(final U o1, final U o2) {
-                return o1.compareTo(o2);
-            }
-        }, null);
-    }
-
-    public static <U> IListView<U> sortedFiltered(final Comparator<U> comparator, final IFilter<U> filter) {
-        return new ListView<U>(comparator, filter);
-    }
-
-    public static <U> IListView<U> filtered(final IFilter<U> filter) {
-        return new ListView<U>(null, filter);
-    }
-
-    public static <U> IListView<U> inherited() {
-        return new ListView<U>(null, null);
-    }
 }

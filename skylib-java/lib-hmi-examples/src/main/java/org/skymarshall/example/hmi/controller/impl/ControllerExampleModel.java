@@ -19,7 +19,7 @@ import java.util.Comparator;
 
 import org.skymarshall.example.hmi.TestObject;
 import org.skymarshall.hmi.model.ListModel;
-import org.skymarshall.hmi.model.views.ListView;
+import org.skymarshall.hmi.model.views.ListViews;
 import org.skymarshall.hmi.mvc.HmiController;
 import org.skymarshall.hmi.mvc.properties.ObjectProperty;
 
@@ -37,19 +37,19 @@ public class ControllerExampleModel extends ControllerExampleObjectHmiModel {
         super(controller);
     }
 
-    private final ObjectProperty<String>     listObjectProperty        = new ObjectProperty<>(
-                                                                                     "ListObjectProperty",
-                                                                                     propertySupport);
+    private final ObjectProperty<String>     listObjectProperty        = new ObjectProperty<>("ListObjectProperty",
+                                                                               propertySupport);
 
     private final ObjectProperty<String>     dynamicListObjectProperty = new ObjectProperty<>(
-                                                                                     "DynamicListObjectProperty",
-                                                                                     propertySupport);
+                                                                               "DynamicListObjectProperty",
+                                                                               propertySupport);
 
-    private final ObjectProperty<TestObject> complexProperty              = new ObjectProperty<>("ComplexObject",
-                                                                                     propertySupport);
+    private final ObjectProperty<TestObject> complexProperty           = new ObjectProperty<>("ComplexObject",
+                                                                               propertySupport);
 
-    final ListModel<TestObject>                 tableModel                   = new ListModel<>(
-                                                                                     ListView.sorted(new ComplexTestObjectComparator()));
+    final ListModel<TestObject>              tableModel                = new ListModel<>(
+                                                                               ListViews
+                                                                                       .sorted(new ComplexTestObjectComparator()));
 
     public ObjectProperty<String> getListObjectProperty() {
         return listObjectProperty;

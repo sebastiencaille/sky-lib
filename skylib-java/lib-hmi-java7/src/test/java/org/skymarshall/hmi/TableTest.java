@@ -26,7 +26,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.skymarshall.hmi.model.ListModel;
 import org.skymarshall.hmi.model.views.IListView;
-import org.skymarshall.hmi.model.views.ListView;
+import org.skymarshall.hmi.model.views.ListViews;
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
 import org.skymarshall.hmi.mvc.HmiModel;
 import org.skymarshall.hmi.mvc.properties.ListProperty;
@@ -34,7 +34,7 @@ import org.skymarshall.hmi.swing17.model.ListModelTableModel;
 
 public class TableTest extends Assert {
 
-    private static final IListView<TestObject> VIEW = ListView.sorted(new Comparator<TestObject>() {
+    private static final IListView<TestObject> VIEW = ListViews.sorted(new Comparator<TestObject>() {
                                                         @Override
                                                         public int compare(final TestObject o1, final TestObject o2) {
                                                             return o1.val.compareTo(o2.val);

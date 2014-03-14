@@ -58,6 +58,8 @@ public abstract class AbstractLink<FromType, ToType> implements
         void setPropertySideValue(final Object source, final FromType value);
 
         AbstractProperty getProperty();
+
+        void unbind();
     }
 
     /**
@@ -152,13 +154,16 @@ public abstract class AbstractLink<FromType, ToType> implements
                 throw new RuntimeException("Already bound to " + bindingTo);
             }
             bindingTo = new BindingToComponent(newBinding).bind();
+            reloadComponentValue();
         }
 
         @Override
         public <NextToType> IBindingController<NextToType> bind(final AbstractLink<ToType, NextToType> link) {
             final BindingToLink<NextToType> binding = new BindingToLink<NextToType>(link);
             bindingTo = binding;
-            return binding.bind();
+            final IBindingController<NextToType> controller = binding.bind();
+            reloadComponentValue();
+            return controller;
         }
 
         @Override
@@ -267,7 +272,7 @@ public abstract class AbstractLink<FromType, ToType> implements
 
         @Override
         public void unbind() {
-            // no op
+            chain.bindingFrom.unbind();
         }
 
         @Override
@@ -385,7 +390,9 @@ public abstract class AbstractLink<FromType, ToType> implements
      */
     @Override
     public void reloadComponentValue() {
-        setValueFromProperty(bindingFrom.getProperty(), getPropertyValue());
+        if (bindingFrom != null && bindingFrom.getProperty().isAttached()) {
+            setValueFromProperty(bindingFrom.getProperty(), getPropertyValue());
+        }
     }
 
     /**

@@ -13,13 +13,37 @@
  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  ******************************************************************************/
-package org.skymarshall.hmi.model;
+package org.skymarshall.hmi.model.staging;
 
-import java.io.Serializable;
+import java.util.EventListener;
 
-public interface IFilter<T> extends
-        Serializable {
+/**
+ * Listener over dynamic list events.
+ * <p>
+ * 
+ * @author Sebastien Caille
+ * 
+ * @param <T>
+ */
+public interface IListModelListener<T> extends
+        EventListener {
 
-    boolean accept(T value);
+    void mutates();
+
+    void valuesSet(ListEvent<T> event);
+
+    void valuesCleared(ListEvent<T> event);
+
+    void valuesAdded(ListEvent<T> event);
+
+    void valuesRemoved(ListEvent<T> event);
+
+    void editionCancelled(ListEvent<T> event);
+
+    void editionsStarted(ListEvent<T> event);
+
+    void editionsStopping(ListEvent<T> event);
+
+    void editionsStopped(ListEvent<T> event);
 
 }

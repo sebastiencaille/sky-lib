@@ -13,7 +13,7 @@
  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  ******************************************************************************/
-package org.skymarshall.hmi.model;
+package org.skymarshall.hmi.model.staging;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -60,6 +60,11 @@ public class ListModel<T> extends AbstractListModel<T> implements
 
     private static final long serialVersionUID = 5327890361188939439L;
 
+    public interface IEdition<U> extends
+            AutoCloseable {
+        public U getEditedObject();
+    }
+
     /**
      * An edition in progress
      * 
@@ -67,6 +72,7 @@ public class ListModel<T> extends AbstractListModel<T> implements
      * 
      */
     private class Edition implements
+            IEdition<T>,
             Serializable {
         final T value;
         int     oldIndex;
@@ -81,17 +87,27 @@ public class ListModel<T> extends AbstractListModel<T> implements
             accepted = viewProperty.getValue().accept(value);
         }
 
-        public boolean isAccepted() {
+        boolean isAccepted() {
             return accepted;
         }
 
         @Override
-        public String toString() {
-            return "index=" + oldIndex;
+        public T getEditedObject() {
+            return value;
         }
 
-        public void updateAccepted() {
+        void updateAccepted() {
             accepted = viewProperty.getValue().accept(value);
+        }
+
+        @Override
+        public void close() {
+            stopEditingValue();
+        }
+
+        @Override
+        public String toString() {
+            return "[" + value + "]@" + oldIndex;
         }
 
     }
@@ -110,8 +126,7 @@ public class ListModel<T> extends AbstractListModel<T> implements
     /**
      * The current view
      */
-    private final ObjectProperty<IListView<T>>        viewProperty   = new ObjectProperty<IListView<T>>("View",
-                                                                             propertyChange);
+    private final ObjectProperty<IListView<T>>        viewProperty   = new ObjectProperty<>("View", propertyChange);
 
     private ListModel<T>                              parent;
 
@@ -265,42 +280,42 @@ public class ListModel<T> extends AbstractListModel<T> implements
     }
 
     protected void fireValuesSet(final List<T> set) {
-        final ListEvent<T> event = new ListEvent<T>(this, set);
+        final ListEvent<T> event = new ListEvent<>(this, set);
         for (final IListModelListener<T> listener : listeners()) {
             listener.valuesSet(event);
         }
     }
 
     protected void fireValuesCleared(final List<T> cleared) {
-        final ListEvent<T> event = new ListEvent<T>(this, cleared);
+        final ListEvent<T> event = new ListEvent<>(this, cleared);
         for (final IListModelListener<T> listener : listeners()) {
             listener.valuesCleared(event);
         }
     }
 
     protected void fireValuesAdded(final List<T> added) {
-        final ListEvent<T> event = new ListEvent<T>(this, added);
+        final ListEvent<T> event = new ListEvent<>(this, added);
         for (final IListModelListener<T> listener : listeners()) {
             listener.valuesAdded(event);
         }
     }
 
     protected void fireValueAdded(final T object) {
-        final ListEvent<T> event = new ListEvent<T>(this, object);
+        final ListEvent<T> event = new ListEvent<>(this, object);
         for (final IListModelListener<T> listener : listeners()) {
             listener.valuesAdded(event);
         }
     }
 
     protected void fireValueRemoved(final T object) {
-        final ListEvent<T> event = new ListEvent<T>(this, object);
+        final ListEvent<T> event = new ListEvent<>(this, object);
         for (final IListModelListener<T> listener : listeners()) {
             listener.valuesRemoved(event);
         }
     }
 
     private void fireEditionCancelled(final T value) {
-        final ListEvent<T> event = new ListEvent<T>(this, value);
+        final ListEvent<T> event = new ListEvent<>(this, value);
         for (final IListModelListener<T> listener : listeners()) {
             listener.editionCancelled(event);
         }
@@ -338,7 +353,7 @@ public class ListModel<T> extends AbstractListModel<T> implements
         return viewProperty.getValue();
     }
 
-    private void viewUpdated() {
+    public void viewUpdated() {
         fireMutating();
         rebuildModel();
         fireViewUpdated();
@@ -494,12 +509,13 @@ public class ListModel<T> extends AbstractListModel<T> implements
         return objectEdition.value;
     }
 
-    public void startEditingValue(final T value) {
+    public IEdition<T> startEditingValue(final T value) {
         checkNoEdition();
         final int oldIndex = getRowOf(value);
         objectEdition = new Edition(value, oldIndex);
         editionStack = Thread.currentThread().getStackTrace();
         fireEditionsStarted(value);
+        return objectEdition;
     }
 
     protected void checkNoEdition() {
@@ -626,12 +642,12 @@ public class ListModel<T> extends AbstractListModel<T> implements
      *            find the object)
      * @return an object if found, null if not
      */
-    public T findForEdition(final T sample) {
+    public IEdition<T> findForEdition(final T sample) {
         final T found = find(sample);
-        if (found != null) {
-            startEditingValue(found);
+        if (found == null) {
+            return null;
         }
-        return found;
+        return startEditingValue(found);
     }
 
     /**
@@ -660,10 +676,13 @@ public class ListModel<T> extends AbstractListModel<T> implements
      *            find the object)
      * @return an object if found, the sample if not found
      */
-    public T findOrCreateForEdition(final T sample) {
+    public IEdition<T> findOrCreateForEdition(final T sample) {
         final T found = findOrCreate(sample);
-        startEditingValue(found);
-        return found;
+        return startEditingValue(found);
+    }
+
+    public PropertyChangeListener getViewUpdatedListener() {
+        return localImpl;
     }
 
 }

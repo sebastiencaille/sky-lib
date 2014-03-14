@@ -88,6 +88,10 @@ public abstract class AbstractProperty {
         attached = true;
     }
 
+    public boolean isAttached() {
+        return attached;
+    }
+
     public void setErrorNotifier(final ErrorNotifier errorNotifier) {
         if (errorNotifier != null) {
             this.errorNotifier = errorNotifier;

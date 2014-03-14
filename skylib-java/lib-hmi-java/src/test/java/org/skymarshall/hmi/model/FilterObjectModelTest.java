@@ -22,11 +22,11 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.skymarshall.hmi.TestObject;
 import org.skymarshall.hmi.model.views.IListView;
-import org.skymarshall.hmi.model.views.ListView;
+import org.skymarshall.hmi.model.views.ListViews;
 
 public class FilterObjectModelTest extends Assert {
 
-    private static final IListView<TestObject> COMPARATOR    = ListView.sorted(new Comparator<TestObject>() {
+    private static final IListView<TestObject> COMPARATOR    = ListViews.sorted(new Comparator<TestObject>() {
                                                                  @Override
                                                                  public int compare(final TestObject o1,
                                                                          final TestObject o2) {
@@ -57,8 +57,8 @@ public class FilterObjectModelTest extends Assert {
 
     @Test
     public void testInsert() {
-        final ListModel<TestObject> baseModel = new ListModel<TestObject>(ListView.sorted(COMPARATOR));
-        final ListModel<TestObject> model = new ListModel<TestObject>(baseModel, ListView.filtered(FILTER));
+        final ListModel<TestObject> baseModel = new ListModel<TestObject>(ListViews.sorted(COMPARATOR));
+        final ListModel<TestObject> model = new ListModel<TestObject>(baseModel, ListViews.filtered(FILTER));
 
         baseModel.insert(new TestObject(1));
         baseModel.insert(new TestObject(3));
@@ -70,7 +70,7 @@ public class FilterObjectModelTest extends Assert {
 
     @Test
     public void testFind() {
-        final ListModel<TestObject> baseModel = new ListModel<TestObject>(ListView.sorted(COMPARATOR));
+        final ListModel<TestObject> baseModel = new ListModel<TestObject>(ListViews.sorted(COMPARATOR));
 
         baseModel.insert(new TestObject(1));
         baseModel.insert(new TestObject(4));
@@ -80,8 +80,8 @@ public class FilterObjectModelTest extends Assert {
 
     @Test
     public void testUpdate() {
-        final ListModel<TestObject> baseModel = new ListModel<TestObject>(ListView.sorted(COMPARATOR));
-        final ListModel<TestObject> model = new ListModel<TestObject>(baseModel, ListView.filtered(FILTER));
+        final ListModel<TestObject> baseModel = new ListModel<TestObject>(ListViews.sorted(COMPARATOR));
+        final ListModel<TestObject> model = new ListModel<TestObject>(baseModel, ListViews.filtered(FILTER));
 
         baseModel.insert(new TestObject(1));
         baseModel.insert(new TestObject(4));
@@ -100,7 +100,7 @@ public class FilterObjectModelTest extends Assert {
 
     @Test
     public void testFindForEdition() {
-        final ListModel<TestObject> baseModel = new ListModel<TestObject>(ListView.sorted(COMPARATOR));
+        final ListModel<TestObject> baseModel = new ListModel<TestObject>(ListViews.sorted(COMPARATOR));
 
         baseModel.insert(new TestObject(1));
         baseModel.insert(new TestObject(4));
@@ -114,7 +114,7 @@ public class FilterObjectModelTest extends Assert {
 
     @Test
     public void testFindOrCreateForEdition() {
-        final ListModel<TestObject> baseModel = new ListModel<TestObject>(ListView.sorted(COMPARATOR));
+        final ListModel<TestObject> baseModel = new ListModel<TestObject>(ListViews.sorted(COMPARATOR));
 
         baseModel.insert(new TestObject(4));
 
@@ -131,8 +131,8 @@ public class FilterObjectModelTest extends Assert {
 
     @Test
     public void testDelete() {
-        final ListModel<TestObject> baseModel = new ListModel<TestObject>(ListView.sorted(COMPARATOR));
-        final ListModel<TestObject> model = new ListModel<TestObject>(baseModel, ListView.filtered(FILTER));
+        final ListModel<TestObject> baseModel = new ListModel<TestObject>(ListViews.sorted(COMPARATOR));
+        final ListModel<TestObject> model = new ListModel<TestObject>(baseModel, ListViews.filtered(FILTER));
 
         model.insert(new TestObject(1));
         final TestObject toAddAndRemove = new TestObject(2);
@@ -146,15 +146,15 @@ public class FilterObjectModelTest extends Assert {
 
     @Test
     public void testChangeFilter() {
-        final ListModel<TestObject> baseModel = new ListModel<TestObject>(ListView.sorted(COMPARATOR));
-        final ListModel<TestObject> model = new ListModel<TestObject>(baseModel, ListView.filtered(FILTER));
+        final ListModel<TestObject> baseModel = new ListModel<TestObject>(ListViews.sorted(COMPARATOR));
+        final ListModel<TestObject> model = new ListModel<TestObject>(baseModel, ListViews.filtered(FILTER));
 
         baseModel.insert(new TestObject(1));
         baseModel.insert(new TestObject(3));
         baseModel.insert(new TestObject(2));
         baseModel.insert(new TestObject(4));
 
-        model.setView(ListView.filtered(IMPAIR_FILTER));
+        model.setView(ListViews.filtered(IMPAIR_FILTER));
 
         checkModel(model, 1, 3);
 

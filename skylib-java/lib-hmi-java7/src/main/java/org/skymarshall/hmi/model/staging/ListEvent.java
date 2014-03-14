@@ -13,20 +13,54 @@
  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  ******************************************************************************/
-package org.skymarshall.hmi.model.views;
+package org.skymarshall.hmi.model.staging;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
- * Must be implemented by the ListView's owner.
+ * Event on dynamic list.
  * <p>
  * 
  * @author Sebastien Caille
  * 
  * @param <T>
  */
-public interface IListViewOwner<T> {
+public class ListEvent<T> {
 
-    IListView<T> getParentView();
+	private final ListModel<T>	source;
 
-    void viewUpdated();
+	private final List<T>				objects;
+
+	public ListEvent(final ListModel<T> source) {
+		this.source = source;
+		objects = null;
+	}
+
+	public ListEvent(final ListModel<T> source, final T object) {
+		this.source = source;
+		this.objects = Collections.singletonList(object);
+	}
+
+	public ListEvent(final ListModel<T> source, final List<T> objects) {
+		this.source = source;
+		this.objects = objects;
+	}
+
+	public ListModel<T> getSource() {
+		return source;
+	}
+
+	public Collection<T> getObjects() {
+		return objects;
+	}
+
+	public T getObject() {
+		if (objects.size() > 1) {
+			throw new IllegalStateException("Event has more than one object");
+		}
+		return objects.get(0);
+	}
 
 }

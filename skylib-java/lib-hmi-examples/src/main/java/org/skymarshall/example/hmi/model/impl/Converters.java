@@ -17,7 +17,7 @@ package org.skymarshall.example.hmi.model.impl;
 
 import org.skymarshall.example.hmi.TestObject;
 import org.skymarshall.hmi.model.views.IListView;
-import org.skymarshall.hmi.model.views.ListView;
+import org.skymarshall.hmi.model.views.ListViews;
 import org.skymarshall.hmi.mvc.converters.AbstractBooleanConverter;
 import org.skymarshall.hmi.mvc.converters.ConversionException;
 
@@ -30,9 +30,9 @@ public class Converters {
             @Override
             protected IListView<TestObject> convertPropertyValueToComponentValue(final Boolean propertyValue) {
                 if (propertyValue.booleanValue()) {
-                    return ListView.filtered(TableModelExampleView.FILTER);
+                    return ListViews.filtered(TableModelExampleView.FILTER);
                 } else {
-                    return ListView.<TestObject> inherited();
+                    return ListViews.<TestObject> inherited();
                 }
             }
 
@@ -52,9 +52,9 @@ public class Converters {
             @Override
             protected IListView<TestObject> convertPropertyValueToComponentValue(final Boolean propertyValue) {
                 if (propertyValue.booleanValue()) {
-                    return ListView.sorted(TableModelExampleView.NORMAL_ORDER);
+                    return ListViews.sorted(TableModelExampleView.NORMAL_ORDER);
                 } else {
-                    return ListView.sorted(TableModelExampleView.REVERSE_ORDER);
+                    return ListViews.sorted(TableModelExampleView.REVERSE_ORDER);
                 }
             }
 

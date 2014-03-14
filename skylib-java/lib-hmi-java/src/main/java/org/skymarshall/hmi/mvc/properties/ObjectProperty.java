@@ -41,6 +41,7 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
     public ObjectProperty(final String name, final ControllerPropertyChangeSupport propertySupport, final T defaultValue) {
         super(name, propertySupport);
         this.defaultValue = defaultValue;
+        value = defaultValue;
     }
 
     public ObjectProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {

@@ -29,7 +29,7 @@ import org.skymarshall.example.hmi.TestObjectTableModel;
 import org.skymarshall.hmi.model.IFilter;
 import org.skymarshall.hmi.model.ListModel;
 import org.skymarshall.hmi.model.ListModelBindings;
-import org.skymarshall.hmi.model.views.ListView;
+import org.skymarshall.hmi.model.views.ListViews;
 import org.skymarshall.hmi.mvc.Actions;
 import org.skymarshall.hmi.swing17.bindings.SwingBindings;
 
@@ -76,10 +76,10 @@ public class TableModelExampleView extends JFrame {
     public TableModelExampleView() {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        model = new ListModel<TestObject>(ListView.sorted(NORMAL_ORDER));
+        model = new ListModel<TestObject>(ListViews.sorted(NORMAL_ORDER));
 
         final ListModel<TestObject> filteredModel = new ListModel<TestObject>(model,
-                ListView.filtered(TableModelExampleView.FILTER));
+                ListViews.filtered(TableModelExampleView.FILTER));
         final TestObjectTableModel tableModel = new TestObjectTableModel(filteredModel);
 
         final JTable table = new JTable(tableModel);

@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2013 Sebastien Caille.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms are permitted
  * provided that the above copyright notice and this paragraph are
  * duplicated in all such forms and that any documentation,
@@ -25,14 +25,14 @@ import org.skymarshall.hmi.model.IFilter;
  * <p>
  * The comparator is mandatory, because log(n) access to data requires sorted
  * data.
- * 
+ *
  * @author Sebastien Caille
- * 
+ *
  * @param <T>
  */
 public class ListView<T> implements
-        IListView<T>,
-        Serializable {
+IListView<T>,
+Serializable {
 
     private static final long     serialVersionUID = -4696996416566266010L;
 
@@ -42,7 +42,7 @@ public class ListView<T> implements
 
     /**
      * Creates a list view using a comparator and a filter
-     * 
+     *
      * @param comparator
      * @param filter
      */
@@ -75,8 +75,8 @@ public class ListView<T> implements
     @Override
     public void attach(final IListViewOwner<T> owner) {
         parentView = owner.getParentView();
-        if (filter instanceof IDynamicFilter) {
-            ((IDynamicFilter<T>) filter).attach(owner);
+        if (filter instanceof AbstractDynamicFilter) {
+            ((AbstractDynamicFilter<T>) filter).attach(owner);
         }
     }
 

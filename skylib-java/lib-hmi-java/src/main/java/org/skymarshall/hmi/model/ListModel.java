@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2013 Sebastien Caille.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms are permitted
  * provided that the above copyright notice and this paragraph are
  * duplicated in all such forms and that any documentation,
@@ -44,16 +44,16 @@ import org.skymarshall.hmi.mvc.properties.ObjectProperty;
  * compute the actual row of another edition with a log(n) complexity.
  * <p>
  * The sorting and filtering is done using an {@link IListView}. A default implementation  ({@link org.skymarshall.hmi.model.views.ListView) is provided.
- * Note that total ordering is mandatory to have a log(n) access.  
+ * Note that total ordering is mandatory to have a log(n) access.
  * <p>
  * The lists can be stacked. If no ListView is defined for a list, the IListView of the
  * parent is used.
  * <p>
- * 
+ *
  * @author Sebastien Caille
- * 
+ *
  * @param <T>
- *            the type of the list's content. T must have an implementation of the Object.equals method. It is better if an element of the list can be uniquely identified using Object.equals. 
+ *            the type of the list's content. T must have an implementation of the Object.equals method. It is better if an element of the list can be uniquely identified using Object.equals.
  */
 public class ListModel<T> extends AbstractListModel<T> implements
         Iterable<T> {
@@ -62,9 +62,9 @@ public class ListModel<T> extends AbstractListModel<T> implements
 
     /**
      * An edition in progress
-     * 
+     *
      * @author Sebastien Caille
-     * 
+     *
      */
     private class Edition implements
             Serializable {
@@ -346,7 +346,7 @@ public class ListModel<T> extends AbstractListModel<T> implements
 
     /**
      * Sets a new view on the list
-     * 
+     *
      * @param newView
      */
     public void setView(final IListView<T> newView) {
@@ -620,7 +620,7 @@ public class ListModel<T> extends AbstractListModel<T> implements
 
     /**
      * Finds an object in the model, and starts its edition if found
-     * 
+     *
      * @param sample
      *            a sample of the object (must contains the values required to
      *            find the object)
@@ -636,7 +636,7 @@ public class ListModel<T> extends AbstractListModel<T> implements
 
     /**
      * Finds an object in the model, or insert the sample if not found.
-     * 
+     *
      * @param sample
      *            a sample of the object (must contains the values required to
      *            find the object)
@@ -654,7 +654,7 @@ public class ListModel<T> extends AbstractListModel<T> implements
     /**
      * Finds an object in the model, starting it's edition, or insert the sample
      * if not found.
-     * 
+     *
      * @param sample
      *            a sample of the object (must contains the values required to
      *            find the object)
@@ -664,6 +664,10 @@ public class ListModel<T> extends AbstractListModel<T> implements
         final T found = findOrCreate(sample);
         startEditingValue(found);
         return found;
+    }
+
+    public Collection<T> values() {
+        return new ArrayList<T>(data);
     }
 
 }

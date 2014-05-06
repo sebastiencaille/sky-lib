@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2013 Sebastien Caille.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms are permitted
  * provided that the above copyright notice and this paragraph are
  * duplicated in all such forms and that any documentation,
@@ -68,7 +68,7 @@ public class JTableSelectionBinding<T> extends AbstractComponentBinding<T> {
     public void setComponentValue(final AbstractProperty source, final T value) {
         if (source == null || !source.isModifiedBy(table)) {
             if (value == null) {
-                table.getSelectionModel().setSelectionInterval(-1, -1);
+                table.getSelectionModel().clearSelection();
             } else {
                 final int index = model.getRowOf(value);
                 if (table.getSelectedRow() != index && index >= 0) {

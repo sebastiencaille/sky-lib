@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2013 Sebastien Caille.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms are permitted
  * provided that the above copyright notice and this paragraph are
  * duplicated in all such forms and that any documentation,
@@ -23,9 +23,9 @@ import org.skymarshall.hmi.swing17.model.ListModelTableModel;
 /**
  * Table column model based on per-column contribution.
  * <p>
- * 
+ *
  * @author Sebastien Caille
- * 
+ *
  * @param <C>
  *            enum that defines the columns (see {@link ListModelTableModel}
  */
@@ -62,7 +62,7 @@ public abstract class ContributionTableColumn<C extends Enum<C>> extends TableCo
 
     /**
      * Column that occupies the gap left open by the other columns
-     * 
+     *
      * @param columnIdentifier
      *            identifier of the column
      * @param percent
@@ -92,7 +92,7 @@ public abstract class ContributionTableColumn<C extends Enum<C>> extends TableCo
 
     /**
      * Column with fixed length
-     * 
+     *
      * @param columnIdentifier
      *            identifier of the column
      * @param fixedWidth

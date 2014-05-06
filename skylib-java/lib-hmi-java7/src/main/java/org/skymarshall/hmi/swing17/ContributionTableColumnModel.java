@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2013 Sebastien Caille.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms are permitted
  * provided that the above copyright notice and this paragraph are
  * duplicated in all such forms and that any documentation,
@@ -29,9 +29,9 @@ import org.skymarshall.hmi.swing17.model.ListModelTableModel;
  * Column model that uses {@link ContributionTableColumn}.
  * <p>
  * The remaining space will be occupied by gapColumns.
- * 
+ *
  * @author Sebastien Caille
- * 
+ *
  * @param <C>
  *            enum that defines the columns (see {@link ListModelTableModel}
  */
@@ -48,6 +48,11 @@ public class ContributionTableColumnModel<C extends Enum<C>> extends DefaultTabl
                 table.setAutoCreateColumnsFromModel(false);
             }
         });
+    }
+
+    public ContributionTableColumnModel<C> install() {
+        table.setColumnModel(this);
+        return this;
     }
 
     /**

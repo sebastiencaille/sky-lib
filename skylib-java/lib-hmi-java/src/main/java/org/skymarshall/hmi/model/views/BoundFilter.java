@@ -4,9 +4,8 @@ import org.skymarshall.hmi.mvc.IComponentBinding;
 import org.skymarshall.hmi.mvc.IComponentLink;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 
-public abstract class BoundFilter<DataType, FilterObjectType> implements
-        IDynamicFilter<DataType>,
-        IComponentBinding<FilterObjectType> {
+public abstract class BoundFilter<DataType, FilterObjectType> extends AbstractDynamicFilter<DataType> implements
+IComponentBinding<FilterObjectType> {
 
     private FilterObjectType         filterObject;
     private IListViewOwner<DataType> owner;

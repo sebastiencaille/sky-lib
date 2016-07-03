@@ -1,23 +1,22 @@
 package org.skymarshall.example.hmi.controller.impl;
 
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Field;
-
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
-import org.skymarshall.hmi.mvc.HmiController;
-import org.skymarshall.hmi.mvc.HmiModel;
-import org.skymarshall.hmi.mvc.IComponentBinding;
-import org.skymarshall.hmi.mvc.IComponentLink;
-import org.skymarshall.hmi.mvc.IObjectHmiModel;
-import org.skymarshall.hmi.mvc.persisters.FieldAccess;
-import org.skymarshall.hmi.mvc.persisters.ObjectProviderPersister;
-import org.skymarshall.hmi.mvc.persisters.Persisters;
-import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 import org.skymarshall.hmi.mvc.properties.BooleanProperty;
-import org.skymarshall.hmi.mvc.properties.ErrorProperty;
-import org.skymarshall.hmi.mvc.properties.IntProperty;
+import org.skymarshall.hmi.mvc.HmiModel;
+import org.skymarshall.hmi.mvc.IObjectHmiModel;
+import java.lang.reflect.AccessibleObject;
 import org.skymarshall.hmi.mvc.properties.ObjectProperty;
+import org.skymarshall.hmi.mvc.persisters.ObjectProviderPersister;
+import org.skymarshall.hmi.mvc.IComponentBinding;
+import org.skymarshall.hmi.mvc.HmiController;
+import java.lang.reflect.Field;
+import org.skymarshall.hmi.mvc.properties.IntProperty;
+import org.skymarshall.hmi.mvc.persisters.Persisters;
+import org.skymarshall.hmi.mvc.persisters.FieldAccess;
 import org.skymarshall.hmi.mvc.properties.Properties;
+import org.skymarshall.hmi.mvc.properties.ErrorProperty;
+import org.skymarshall.hmi.mvc.IComponentLink;
+import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 
 public class ControllerExampleObjectHmiModel extends HmiModel implements IObjectHmiModel<org.skymarshall.example.hmi.controller.impl.ControllerExampleObject> {
     public static final String BOOLEAN_PROP = "BooleanProp";
@@ -38,11 +37,11 @@ public class ControllerExampleObjectHmiModel extends HmiModel implements IObject
 
     static {
         try {
-            TEST_OBJECT_PROP_FIELD = org.skymarshall.example.hmi.controller.impl.ControllerExampleObject.class.getDeclaredField("testObjectProp");
-            BOOLEAN_PROP_FIELD = org.skymarshall.example.hmi.controller.impl.ControllerExampleObject.class.getDeclaredField("booleanProp");
             STRING_PROP_FIELD = org.skymarshall.example.hmi.controller.impl.ControllerExampleObject.class.getDeclaredField("stringProp");
             INT_PROP_FIELD = org.skymarshall.example.hmi.controller.impl.ControllerExampleObject.class.getDeclaredField("intProp");
-            AccessibleObject.setAccessible(new AccessibleObject[]{TEST_OBJECT_PROP_FIELD, BOOLEAN_PROP_FIELD, STRING_PROP_FIELD, INT_PROP_FIELD}, true);
+            BOOLEAN_PROP_FIELD = org.skymarshall.example.hmi.controller.impl.ControllerExampleObject.class.getDeclaredField("booleanProp");
+            TEST_OBJECT_PROP_FIELD = org.skymarshall.example.hmi.controller.impl.ControllerExampleObject.class.getDeclaredField("testObjectProp");
+            AccessibleObject.setAccessible(new AccessibleObject[]{STRING_PROP_FIELD, INT_PROP_FIELD, BOOLEAN_PROP_FIELD, TEST_OBJECT_PROP_FIELD}, true);
         } catch (final Exception e) {
             throw new IllegalStateException("Cannot initialize class", e);
         }

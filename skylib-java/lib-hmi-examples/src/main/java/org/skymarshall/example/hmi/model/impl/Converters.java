@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2013 Sebastien Caille.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms are permitted
  * provided that the above copyright notice and this paragraph are
  * duplicated in all such forms and that any documentation,
@@ -19,52 +19,18 @@ import org.skymarshall.example.hmi.TestObject;
 import org.skymarshall.hmi.model.views.IListView;
 import org.skymarshall.hmi.model.views.ListViews;
 import org.skymarshall.hmi.mvc.converters.AbstractBooleanConverter;
-import org.skymarshall.hmi.mvc.converters.ConversionException;
 
 public class Converters {
 
-    public static AbstractBooleanConverter<IListView<TestObject>> booleanToFilter() {
+	public static AbstractBooleanConverter<IListView<TestObject>> booleanToFilter() {
+		return AbstractBooleanConverter.<IListView<TestObject>>either(
+				() -> ListViews.filtered(TableModelExampleView.FILTER), () -> ListViews.<TestObject>inherited());
+	}
 
-        return new AbstractBooleanConverter<IListView<TestObject>>() {
-
-            @Override
-            protected IListView<TestObject> convertPropertyValueToComponentValue(final Boolean propertyValue) {
-                if (propertyValue.booleanValue()) {
-                    return ListViews.filtered(TableModelExampleView.FILTER);
-                } else {
-                    return ListViews.<TestObject> inherited();
-                }
-            }
-
-            @Override
-            protected Boolean convertComponentValueToPropertyValue(final IListView<TestObject> componentValue)
-                    throws ConversionException {
-                return null;
-            }
-
-        };
-    }
-
-    public static AbstractBooleanConverter<IListView<TestObject>> booleanToOrder() {
-
-        return new AbstractBooleanConverter<IListView<TestObject>>() {
-
-            @Override
-            protected IListView<TestObject> convertPropertyValueToComponentValue(final Boolean propertyValue) {
-                if (propertyValue.booleanValue()) {
-                    return ListViews.sorted(TableModelExampleView.NORMAL_ORDER);
-                } else {
-                    return ListViews.sorted(TableModelExampleView.REVERSE_ORDER);
-                }
-            }
-
-            @Override
-            protected Boolean convertComponentValueToPropertyValue(final IListView<TestObject> componentValue)
-                    throws ConversionException {
-                return null;
-            }
-
-        };
-    }
+	public static AbstractBooleanConverter<IListView<TestObject>> booleanToOrder() {
+		return AbstractBooleanConverter.<IListView<TestObject>>either(
+				() -> ListViews.sorted(TableModelExampleView.NORMAL_ORDER),
+				() -> ListViews.sorted(TableModelExampleView.REVERSE_ORDER));
+	}
 
 }

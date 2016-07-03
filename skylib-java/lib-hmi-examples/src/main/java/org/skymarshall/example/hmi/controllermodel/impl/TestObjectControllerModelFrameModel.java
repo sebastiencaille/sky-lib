@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2013 Sebastien Caille.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms are permitted
  * provided that the above copyright notice and this paragraph are
  * duplicated in all such forms and that any documentation,
@@ -22,55 +22,55 @@ import org.skymarshall.hmi.model.ListModel;
 import org.skymarshall.hmi.mvc.HmiController;
 import org.skymarshall.hmi.mvc.converters.Converters;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
-import org.skymarshall.hmi.swing17.model.ObjectControllerTableModel;
+import org.skymarshall.hmi.swing.model.ObjectControllerTableModel;
 
 @SuppressWarnings("serial")
-public class TestObjectControllerModelFrameModel extends
-        ObjectControllerTableModel<TestObject, TestObjectHmiModel, Columns> {
+public class TestObjectControllerModelFrameModel
+		extends ObjectControllerTableModel<TestObject, TestObjectHmiModel, Columns> {
 
-    public static enum Columns {
-        VAL1, VAL2
-    }
+	public static enum Columns {
+		VAL1, VAL2
+	}
 
-    public TestObjectControllerModelFrameModel(final HmiController controller, final ListModel<TestObject> model) {
-        super(model, new TestObjectHmiModel(controller), Columns.class);
-    }
+	public TestObjectControllerModelFrameModel(final HmiController controller, final ListModel<TestObject> model) {
+		super(model, new TestObjectHmiModel(controller), Columns.class);
+	}
 
-    @Override
-    protected void bindModel(final TestObjectHmiModel testObjectModel) {
-        testObjectModel.getAFirstValueProperty().bind(this.<String> getColumnBinding(Columns.VAL1));
-        testObjectModel.getASecondValueProperty().bind(Converters.intToString())
-                .bind(this.<String> getColumnBinding(Columns.VAL2));
-    }
+	@Override
+	protected void bindModel(final TestObjectHmiModel testObjectModel) {
+		testObjectModel.getAFirstValueProperty().bind(this.<String>getColumnBinding(Columns.VAL1));
+		testObjectModel.getASecondValueProperty().bind(Converters.intToString())
+				.bind(this.<String>getColumnBinding(Columns.VAL2));
+	}
 
-    @Override
-    public String getColumnName(final int column) {
-        switch (Columns.values()[column]) {
-        case VAL1:
-            return "Value1";
-        case VAL2:
-            return "Value2";
-        default:
-            return null;
-        }
-    }
+	@Override
+	public String getColumnName(final int column) {
+		switch (Columns.values()[column]) {
+		case VAL1:
+			return "Value1";
+		case VAL2:
+			return "Value2";
+		default:
+			return null;
+		}
+	}
 
-    @Override
-    protected AbstractProperty getPropertyAt(final TestObjectHmiModel controller, final Columns column) {
+	@Override
+	protected AbstractProperty getPropertyAt(final TestObjectHmiModel controller, final Columns column) {
 
-        switch (column) {
-        case VAL1:
-            return controller.getAFirstValueProperty();
-        case VAL2:
-            return controller.getASecondValueProperty();
-        default:
-            return null;
-        }
-    }
+		switch (column) {
+		case VAL1:
+			return controller.getAFirstValueProperty();
+		case VAL2:
+			return controller.getASecondValueProperty();
+		default:
+			return null;
+		}
+	}
 
-    @Override
-    public boolean isCellEditable(final int rowIndex, final int columnIndex) {
-        return true;
-    }
+	@Override
+	public boolean isCellEditable(final int rowIndex, final int columnIndex) {
+		return true;
+	}
 
 }

@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2013 Sebastien Caille.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms are permitted
  * provided that the above copyright notice and this paragraph are
  * duplicated in all such forms and that any documentation,
@@ -23,24 +23,23 @@ import org.skymarshall.hmi.mvc.properties.ObjectProperty;
 
 public class TableModelExampleController {
 
-    private final ControllerPropertyChangeSupport propertySupport = new ControllerPropertyChangeSupport(this);
+	private final ControllerPropertyChangeSupport propertySupport = new ControllerPropertyChangeSupport(this);
 
-    public final BooleanProperty                  reverseOrder    = new BooleanProperty("Order", propertySupport);
+	public final BooleanProperty reverseOrder = new BooleanProperty("Order", propertySupport);
 
-    public final BooleanProperty                  enableFilter    = new BooleanProperty("Filter", propertySupport);
+	public final BooleanProperty enableFilter = new BooleanProperty("Filter", propertySupport);
 
-    public final ObjectProperty<TestObject>    objectSelection = new ObjectProperty<TestObject>("Selection",
-                                                                          propertySupport);
+	public final ObjectProperty<TestObject> objectSelection = new ObjectProperty<>("Selection", propertySupport);
 
-    public final PropertyGroup                    listChangers    = new PropertyGroup();
+	public final PropertyGroup listChangers = new PropertyGroup();
 
-    public TableModelExampleController() {
-        listChangers.addProperty(reverseOrder);
-        listChangers.addProperty(enableFilter);
-    }
+	public TableModelExampleController() {
+		listChangers.addProperty(reverseOrder);
+		listChangers.addProperty(enableFilter);
+	}
 
-    public void setCreated() {
-        propertySupport.attachAll();
-    }
+	public void setCreated() {
+		propertySupport.attachAll();
+	}
 
 }

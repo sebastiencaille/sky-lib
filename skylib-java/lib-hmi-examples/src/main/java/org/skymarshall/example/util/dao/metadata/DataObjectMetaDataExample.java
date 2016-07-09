@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2013 Sebastien Caille.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms are permitted
  * provided that the above copyright notice and this paragraph are
  * duplicated in all such forms and that any documentation,
@@ -16,19 +16,19 @@
 /*
  * Copyright (c) 2008, Caille Sebastien
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification,are permitted provided that the following conditions are met:
- * 
+ *
  *  * Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  *  * Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation 
+ *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *  * Neither the name of the owner nor the names of its contributors may be 
- *    used to endorse or promote products derived from this software without 
+ *  * Neither the name of the owner nor the names of its contributors may be
+ *    used to endorse or promote products derived from this software without
  *    specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -52,38 +52,38 @@ import org.skymarshall.util.text.TextFormatter;
 
 /**
  * This just shows how to use the DataObjectMetaData...
- * 
+ *
  * @author Sebastien Caille
- * 
+ *
  */
 public class DataObjectMetaDataExample {
 
-    public static void main(final String[] args) throws IOException {
+	public static void main(final String[] args) throws IOException {
 
-        final TextFormatter log = new TextFormatter(TextFormatter.output(System.out));
-        log.setIndentationManager(new ArrowIndentationManager());
+		final TextFormatter log = new TextFormatter(TextFormatter.output(System.out));
+		log.setIndentationManager(new ArrowIndentationManager());
 
-        final DataObjectMetaData<ADataObject> metadata = new DataObjectMetaData<ADataObject>(ADataObject.class);
-        final ADataObject do1 = new ADataObject();
+		final DataObjectMetaData<ADataObject> metadata = new DataObjectMetaData<>(ADataObject.class);
+		final ADataObject do1 = new ADataObject();
 
-        log.appendIndentedLine("Class " + ADataObject.class.getName() + " contains the following attributes");
-        log.indent();
-        for (final AbstractAttributeMetaData<ADataObject> attribute : metadata.getAttributes()) {
-            log.appendIndentedLine(attribute.toString());
-        }
-        log.unindent();
+		log.appendIndentedLine("Class " + ADataObject.class.getName() + " contains the following attributes");
+		log.indent();
+		for (final AbstractAttributeMetaData<ADataObject> attribute : metadata.getAttributes()) {
+			log.appendIndentedLine(attribute.toString());
+		}
+		log.unindent();
 
-        log.appendIndentedLine("Read/Write access using the DO's MetaData");
-        log.indent();
-        metadata.getAttribute("AnAttribute").setValueOf(do1, "data1");
-        log.appendIndentedLine("anAttribute:" + metadata.getAttribute("AnAttribute").getValueOf(do1));
-        log.unindent();
+		log.appendIndentedLine("Read/Write access using the DO's MetaData");
+		log.indent();
+		metadata.getAttribute("AnAttribute").setValueOf(do1, "data1");
+		log.appendIndentedLine("anAttribute:" + metadata.getAttribute("AnAttribute").getValueOf(do1));
+		log.unindent();
 
-        log.appendIndentedLine("One can also copy the content of the DO...");
-        log.indent();
-        final ADataObject do2 = new ADataObject();
-        metadata.copy(do1, do2);
-        log.appendIndentedLine("anAttribute:" + metadata.getAttribute("AnAttribute").getValueOf(do2));
-        log.unindent();
-    }
+		log.appendIndentedLine("One can also copy the content of the DO...");
+		log.indent();
+		final ADataObject do2 = new ADataObject();
+		metadata.copy(do1, do2);
+		log.appendIndentedLine("anAttribute:" + metadata.getAttribute("AnAttribute").getValueOf(do2));
+		log.unindent();
+	}
 }

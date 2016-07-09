@@ -1,10 +1,10 @@
 package org.skymarshall.hmi.model.views;
 
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import org.skymarshall.hmi.mvc.IComponentBinding;
-import org.skymarshall.hmi.mvc.IComponentLink;
-import org.skymarshall.hmi.mvc.properties.AbstractProperty;
+import org.skymarshall.util.Lambda;
 
 public abstract class AbstractDynamicFilter<T> implements Predicate<T> {
 
@@ -14,26 +14,14 @@ public abstract class AbstractDynamicFilter<T> implements Predicate<T> {
 		this.viewOwner = aViewOwner;
 	}
 
-	protected class FilterUpdateBinding<U> implements IComponentBinding<U> {
-
-		@Override
-		public Object getComponent() {
-			return AbstractDynamicFilter.this;
-		}
-
-		@Override
-		public void addComponentValueChangeListener(final IComponentLink<U> link) {
-			// read-only
-		}
-
-		@Override
-		public void setComponentValue(final AbstractProperty source,
-				final U value) {
-			if (viewOwner != null) {
-				viewOwner.viewUpdated();
-			}
-
-		}
+	public <U> IComponentBinding<U> filterUpdate(final Consumer<U> c) {
+		return IComponentBinding.<AbstractDynamicFilter<T>, U>component(AbstractDynamicFilter.this,
+				Lambda.nothingBiConsumer(), (f, p, v) -> {
+					c.accept(v);
+					if (viewOwner != null) {
+						viewOwner.viewUpdated();
+					}
+				});
 	}
 
 }

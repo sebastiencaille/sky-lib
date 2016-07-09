@@ -16,6 +16,7 @@
 package org.skymarshall.hmi.mvc.properties;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
 import org.skymarshall.hmi.mvc.IBindingController;
@@ -101,6 +102,19 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 
 	public T getValue() {
 		return value;
+	}
+
+	public void ifNotNullC(final Consumer<T> consumer) {
+		if (value != null) {
+			consumer.accept(value);
+		}
+	}
+
+	public <R> R ifNotNullF(final Function<T, R> function) {
+		if (value != null) {
+			return function.apply(value);
+		}
+		return null;
 	}
 
 	@Override

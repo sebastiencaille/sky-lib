@@ -38,26 +38,8 @@ import org.skymarshall.hmi.swing.bindings.SwingBindings;
 @SuppressWarnings("serial")
 public class TableModelExampleView extends JFrame {
 
-	private static class IntOrder implements Comparator<TestObject> {
-
-		@Override
-		public int compare(final TestObject o1, final TestObject o2) {
-			return o1.aSecondValue - o2.aSecondValue;
-		}
-
-	}
-
-	private static class IntReverseOrder implements Comparator<TestObject> {
-
-		@Override
-		public int compare(final TestObject o1, final TestObject o2) {
-			return o2.aSecondValue - o1.aSecondValue;
-		}
-
-	}
-
-	static final IntOrder NORMAL_ORDER = new IntOrder();
-	static final IntReverseOrder REVERSE_ORDER = new IntReverseOrder();
+	static final Comparator<TestObject> NORMAL_ORDER = (o1, o2) -> o1.aSecondValue - o2.aSecondValue;
+	static final Comparator<TestObject> REVERSE_ORDER = (o1, o2) -> o2.aSecondValue - o1.aSecondValue;
 	static final Predicate<TestObject> FILTER = ((value) -> value.aSecondValue % 2 == 0);
 
 	private final TableModelExampleController controller = new TableModelExampleController();

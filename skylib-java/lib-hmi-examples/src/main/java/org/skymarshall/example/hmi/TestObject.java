@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2013 Sebastien Caille.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms are permitted
  * provided that the above copyright notice and this paragraph are
  * duplicated in all such forms and that any documentation,
@@ -16,22 +16,27 @@
 package org.skymarshall.example.hmi;
 
 import org.skymarshall.hmi.HmiObject;
+import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
+import org.skymarshall.hmi.mvc.converters.Converters;
 
 @HmiObject
 public class TestObject {
 
-    public TestObject(final String string, final int i) {
-        aFirstValue = string;
-        aSecondValue = i;
-    }
+	public TestObject(final String string, final int i) {
+		aFirstValue = string;
+		aSecondValue = i;
+	}
 
-    public String aFirstValue;
+	public String aFirstValue;
 
-    public int    aSecondValue;
+	public int aSecondValue;
 
-    @Override
-    public String toString() {
-        return aFirstValue + " / " + aSecondValue;
-    }
+	@Override
+	public String toString() {
+		return aFirstValue + " / " + aSecondValue;
+	}
 
+	public static AbstractObjectConverter<TestObject, String> convertToString() {
+		return Converters.writeOnly(o -> o.aFirstValue != null ? o.aFirstValue : "");
+	}
 }

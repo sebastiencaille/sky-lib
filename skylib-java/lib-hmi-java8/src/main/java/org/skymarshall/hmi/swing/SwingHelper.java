@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2013 Sebastien Caille.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms are permitted
  * provided that the above copyright notice and this paragraph are
  * duplicated in all such forms and that any documentation,
@@ -15,9 +15,12 @@
  ******************************************************************************/
 package org.skymarshall.hmi.swing;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.function.Consumer;
 
 import javax.swing.ImageIcon;
 
@@ -35,5 +38,15 @@ public class SwingHelper {
 		}
 		in.close();
 		return new ImageIcon(out.toByteArray());
+	}
+
+	public static ActionListener actionListener(final Consumer<ActionEvent> c) {
+		return new ActionListener() {
+
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				c.accept(e);
+			}
+		};
 	}
 }

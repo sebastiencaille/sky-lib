@@ -163,14 +163,14 @@ public final class Converters {
 		return intConverter(i -> Integer.toString(i), numberToString(Integer::parseInt));
 	}
 
-	public static <T, U> AbstractObjectConverter<T, U> readOnly(final Function<T, U> prop2comp) {
+	public static <T, U> AbstractObjectConverter<T, U> writeOnly(final Function<T, U> prop2comp) {
 		return converter(prop2comp, o -> {
 			throw new IllegalStateException("Read only");
 		});
 	}
 
 	public static <T> AbstractObjectConverter<T, String> objectToString() {
-		return readOnly(Object::toString);
+		return writeOnly(Object::toString);
 	}
 
 	public static <T extends Enum<T>> AbstractObjectConverter<T, String> enumToString(final Class<T> clazz) {
@@ -178,10 +178,10 @@ public final class Converters {
 	}
 
 	public static <T extends Number> AbstractObjectConverter<T, String> numberToSize() {
-		return readOnly(Utils::toSize);
+		return writeOnly(Utils::toSize);
 	}
 
 	public static <T> AbstractObjectConverter<T, Boolean> isNotNull() {
-		return readOnly((p) -> p != null);
+		return writeOnly((p) -> p != null);
 	}
 }

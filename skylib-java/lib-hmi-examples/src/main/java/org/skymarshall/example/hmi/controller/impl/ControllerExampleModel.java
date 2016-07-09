@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2013 Sebastien Caille.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms are permitted
  * provided that the above copyright notice and this paragraph are
  * duplicated in all such forms and that any documentation,
@@ -25,46 +25,36 @@ import org.skymarshall.hmi.mvc.properties.ObjectProperty;
 
 public class ControllerExampleModel extends ControllerExampleObjectHmiModel {
 
-    private static final class ComplexTestObjectComparator implements
-            Comparator<TestObject> {
-        @Override
-        public int compare(final TestObject o1, final TestObject o2) {
-            return o1.aFirstValue.compareTo(o2.aFirstValue);
-        }
-    }
+	private static final Comparator<TestObject> TEST_COMPARATOR = (o1, o2) -> o1.aFirstValue.compareTo(o2.aFirstValue);
 
-    public ControllerExampleModel(final HmiController controller) {
-        super(controller);
-    }
+	public ControllerExampleModel(final HmiController controller) {
+		super(controller);
+	}
 
-    private final ObjectProperty<String>     listObjectProperty        = new ObjectProperty<>("ListObjectProperty",
-                                                                               propertySupport);
+	private final ObjectProperty<String> listObjectProperty = new ObjectProperty<>("ListObjectProperty",
+			propertySupport);
 
-    private final ObjectProperty<String>     dynamicListObjectProperty = new ObjectProperty<>(
-                                                                               "DynamicListObjectProperty",
-                                                                               propertySupport);
+	private final ObjectProperty<String> dynamicListObjectProperty = new ObjectProperty<>("DynamicListObjectProperty",
+			propertySupport);
 
-    private final ObjectProperty<TestObject> complexProperty           = new ObjectProperty<>("ComplexObject",
-                                                                               propertySupport);
+	private final ObjectProperty<TestObject> complexProperty = new ObjectProperty<>("ComplexObject", propertySupport);
 
-    final ListModel<TestObject>              tableModel                = new ListModel<>(
-                                                                               ListViews
-                                                                                       .sorted(new ComplexTestObjectComparator()));
+	final ListModel<TestObject> tableModel = new ListModel<>(ListViews.sorted(TEST_COMPARATOR));
 
-    public ObjectProperty<String> getListObjectProperty() {
-        return listObjectProperty;
-    }
+	public ObjectProperty<String> getListObjectProperty() {
+		return listObjectProperty;
+	}
 
-    public ObjectProperty<String> getDynamicListObjectProperty() {
-        return dynamicListObjectProperty;
-    }
+	public ObjectProperty<String> getDynamicListObjectProperty() {
+		return dynamicListObjectProperty;
+	}
 
-    public ObjectProperty<TestObject> getComplexProperty() {
-        return complexProperty;
-    }
+	public ObjectProperty<TestObject> getComplexProperty() {
+		return complexProperty;
+	}
 
-    public ListModel<TestObject> getTableModel() {
-        return tableModel;
-    }
+	public ListModel<TestObject> getTableModel() {
+		return tableModel;
+	}
 
 }

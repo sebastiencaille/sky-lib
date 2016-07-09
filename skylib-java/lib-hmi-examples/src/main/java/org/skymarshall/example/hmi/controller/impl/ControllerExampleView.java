@@ -41,7 +41,6 @@ import javax.swing.JTextField;
 
 import org.skymarshall.example.hmi.TestObject;
 import org.skymarshall.example.hmi.TestObjectTableModel;
-import org.skymarshall.example.hmi.TestObjectToStringConverter;
 import org.skymarshall.hmi.mvc.Actions;
 import org.skymarshall.hmi.mvc.HmiErrors.HmiError;
 import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
@@ -152,7 +151,7 @@ public class ControllerExampleView extends JFrame {
 
 		final ObjectProperty<TestObject> tableObjectProperty = controller.getModel().getComplexProperty();
 		tableObjectProperty.bind(SwingBindings.selection(tableSelectionEditor, tableSelectionTableModel));
-		tableObjectProperty.bind(new TestObjectToStringConverter()).bind(text(tableSelectionCheck));
+		tableObjectProperty.bind(TestObject.convertToString()).bind(text(tableSelectionCheck));
 		tableObjectProperty.bind(new CounterBinding<TestObject>()).bind(text(tableSelectionCounter));
 
 		final JScrollPane tableEditorPane = new JScrollPane(tableSelectionEditor);

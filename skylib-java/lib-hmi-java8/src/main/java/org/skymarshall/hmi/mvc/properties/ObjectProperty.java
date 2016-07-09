@@ -15,6 +15,7 @@
  ******************************************************************************/
 package org.skymarshall.hmi.mvc.properties;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
@@ -101,6 +102,10 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 
 	public T getValue() {
 		return value;
+	}
+
+	public Optional<T> optional() {
+		return Optional.of(value);
 	}
 
 	@Override

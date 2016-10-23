@@ -60,6 +60,9 @@ public class LongProperty extends AbstractTypedProperty<Long> {
 	}
 
 	public void setValue(final Object caller, final long newValue) {
+		if (!attached) {
+			return;
+		}
 		onValueSet(caller, EventKind.BEFORE);
 		try {
 			final long oldValue = value;

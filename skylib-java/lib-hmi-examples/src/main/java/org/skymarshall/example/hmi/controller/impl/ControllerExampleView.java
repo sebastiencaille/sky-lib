@@ -15,7 +15,13 @@
  ******************************************************************************/
 package org.skymarshall.example.hmi.controller.impl;
 
+import static org.skymarshall.example.hmi.TestObject.testObjectToString;
+import static org.skymarshall.hmi.mvc.converters.Converters.hmiErrorToString;
+import static org.skymarshall.hmi.mvc.converters.Converters.intToString;
+import static org.skymarshall.hmi.swing.bindings.SwingBindings.selection;
 import static org.skymarshall.hmi.swing.bindings.SwingBindings.text;
+import static org.skymarshall.hmi.swing.bindings.SwingBindings.value;
+import static org.skymarshall.hmi.swing.bindings.SwingBindings.values;
 import static org.skymarshall.hmi.swing.bindings.SwingBindings.wo;
 
 import java.awt.Color;
@@ -41,17 +47,13 @@ import javax.swing.JTextField;
 
 import org.skymarshall.example.hmi.TestObject;
 import org.skymarshall.example.hmi.TestObjectTableModel;
-import org.skymarshall.hmi.mvc.Actions;
-import org.skymarshall.hmi.mvc.HmiErrors.HmiError;
 import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
 import org.skymarshall.hmi.mvc.converters.ConversionException;
-import org.skymarshall.hmi.mvc.converters.Converters;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 import org.skymarshall.hmi.mvc.properties.BooleanProperty;
 import org.skymarshall.hmi.mvc.properties.ErrorProperty;
 import org.skymarshall.hmi.mvc.properties.IntProperty;
 import org.skymarshall.hmi.mvc.properties.ObjectProperty;
-import org.skymarshall.hmi.swing.bindings.SwingBindings;
 
 public class ControllerExampleView extends JFrame {
 
@@ -60,6 +62,9 @@ public class ControllerExampleView extends JFrame {
 	private int row = 0;
 
 	public ControllerExampleView(final ControllerExampleController controller) {
+
+		final ControllerExampleModel model = controller.getModel();
+
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		getContentPane().setLayout(new GridBagLayout());
 		getContentPane().setBackground(Color.WHITE);
@@ -74,47 +79,46 @@ public class ControllerExampleView extends JFrame {
 		getContentPane().add(container, constraints);
 
 		// Checkbox input
-		final BooleanProperty booleanProperty = controller.getModel().getBooleanPropProperty();
+		final BooleanProperty booleanProperty = model.getBooleanPropProperty();
 		final JCheckBox booleanEditor = new JCheckBox();
 		final JLabel label = new JLabel("Am I enabled?");
 		final JLabel booleanCounter = new JLabel();
-		booleanProperty.bind(org.skymarshall.hmi.swing.bindings.SwingBindings.value(booleanEditor));
+		booleanProperty.bind(value(booleanEditor));
 		booleanProperty.bind(wo(label, JLabel::setEnabled, false));
-		booleanProperty.bind(new CounterBinding<Boolean>()).bind(text(booleanCounter));
+		booleanProperty.bind(counter()).bind(text(booleanCounter));
 		addGuiLineItem(booleanProperty, booleanEditor, label, booleanCounter);
 
 		// Int input field
-		final IntProperty intProperty = controller.getModel().getIntPropProperty();
+		final IntProperty intProperty = model.getIntPropProperty();
 		final JTextField intEditor = new JTextField();
 		final JLabel intCheck = new JLabel();
 		final JLabel intCounter = new JLabel();
 
-		intProperty.bind(Converters.intToString()).bind(SwingBindings.value(intEditor));
-		intProperty.bind(Converters.intToString()).bind(text(intCheck));
-		intProperty.bind(new CounterBinding<Integer>()).bind(text(intCounter));
+		intProperty.bind(intToString()).bind(value(intEditor));
+		intProperty.bind(intToString()).bind(text(intCheck));
+		intProperty.bind(counter()).bind(text(intCounter));
 
 		addGuiLineItem(intProperty, intEditor, intCheck, intCounter);
 
 		// String input field
-		final ObjectProperty<String> stringProperty = controller.getModel().getStringPropProperty();
+		final ObjectProperty<String> stringProperty = model.getStringPropProperty();
 		final JTextField stringEditor = new JTextField();
 		final JLabel stringCheck = new JLabel();
 		final JLabel stringCounter = new JLabel();
-		stringProperty.bind(SwingBindings.value(stringEditor));
+		stringProperty.bind(value(stringEditor));
 		stringProperty.bind(text(stringCheck));
-		stringProperty.bind(new CounterBinding<String>()).bind(text(stringCounter));
+		stringProperty.bind(counter()).bind(text(stringCounter));
 		addGuiLineItem(stringProperty, stringEditor, stringCheck, stringCounter);
 
 		// Item selection
-
 		final JList<String> selectionEditor = new JList<>(new String[] { "A", "B", "C" });
 		final JLabel selectionCheck = new JLabel();
 		final JLabel selectionCounter = new JLabel();
 
-		final ObjectProperty<String> listObjectProperty = controller.getModel().getListObjectProperty();
-		listObjectProperty.bind(SwingBindings.selection(selectionEditor, String.class));
+		final ObjectProperty<String> listObjectProperty = model.getListObjectProperty();
+		listObjectProperty.bind(selection(selectionEditor, String.class));
 		listObjectProperty.bind(text(selectionCheck));
-		listObjectProperty.bind(new CounterBinding<String>()).bind(text(selectionCounter));
+		listObjectProperty.bind(counter()).bind(text(selectionCounter));
 
 		final JScrollPane itemEditorPane = new JScrollPane(selectionEditor);
 		itemEditorPane.setPreferredSize(new Dimension(200, 100));
@@ -126,16 +130,15 @@ public class ControllerExampleView extends JFrame {
 		final JLabel dynamicListSelectioncheck = new JLabel();
 		final JLabel dynamicListSelectionCounter = new JLabel();
 
-		listObjectProperty.bind(new DynamicListContentConverter())
-				.bind(SwingBindings.values(dynamicListSelectionEditor));
+		listObjectProperty.bind(new DynamicListContentConverter()).bind(values(dynamicListSelectionEditor));
 
-		final ObjectProperty<String> dynamicListObjectProperty = controller.getModel().getDynamicListObjectProperty();
-		dynamicListObjectProperty.bind(SwingBindings.selection(dynamicListSelectionEditor, String.class));
+		final ObjectProperty<String> dynamicListObjectProperty = model.getDynamicListObjectProperty();
+		dynamicListObjectProperty.bind(selection(dynamicListSelectionEditor, String.class));
 		dynamicListObjectProperty.bind(text(dynamicListSelectioncheck));
-		dynamicListObjectProperty.bind(new CounterBinding<String>()).bind(text(dynamicListSelectionCounter));
+		dynamicListObjectProperty.bind(counter()).bind(text(dynamicListSelectionCounter));
 
 		// Restore selection after model update
-		controller.getDynamicListUpdater().addListener(Actions.restoreAfterUpdate(dynamicListObjectProperty));
+		model.dependencyManager.dependOn(dynamicListObjectProperty, model.getListObjectProperty());
 
 		final JScrollPane dynamicListPane = new JScrollPane(dynamicListSelectionEditor);
 		dynamicListPane.setPreferredSize(new Dimension(200, 100));
@@ -143,27 +146,26 @@ public class ControllerExampleView extends JFrame {
 				dynamicListSelectionCounter);
 
 		// Table example
-		final TestObjectTableModel tableSelectionTableModel = new TestObjectTableModel(
-				controller.getModel().getTableModel());
+		final TestObjectTableModel tableSelectionTableModel = new TestObjectTableModel(model.getTableModel());
 		final JTable tableSelectionEditor = new JTable(tableSelectionTableModel);
 		final JLabel tableSelectionCheck = new JLabel();
 		final JLabel tableSelectionCounter = new JLabel();
 
-		final ObjectProperty<TestObject> tableObjectProperty = controller.getModel().getComplexProperty();
-		tableObjectProperty.bind(SwingBindings.selection(tableSelectionEditor, tableSelectionTableModel));
-		tableObjectProperty.bind(TestObject.convertToString()).bind(text(tableSelectionCheck));
-		tableObjectProperty.bind(new CounterBinding<TestObject>()).bind(text(tableSelectionCounter));
+		final ObjectProperty<TestObject> tableObjectProperty = model.getComplexProperty();
+		tableObjectProperty.bind(selection(tableSelectionEditor, tableSelectionTableModel));
+		tableObjectProperty.bind(testObjectToString()).bind(text(tableSelectionCheck));
+		tableObjectProperty.bind(counter()).bind(text(tableSelectionCounter));
 
 		final JScrollPane tableEditorPane = new JScrollPane(tableSelectionEditor);
 		tableEditorPane.setPreferredSize(new Dimension(200, 70));
 		addGuiLineItem(tableObjectProperty, tableEditorPane, tableSelectionCheck, tableSelectionCounter);
 
 		// Display of errors
-		final ErrorProperty errorProperty = controller.getModel().getErrorProperty();
+		final ErrorProperty errorProperty = model.getErrorProperty();
 		final JLabel errorLabel = new JLabel("No Error");
 		final JLabel errorCounter = new JLabel();
-		errorProperty.bind(Converters.hmiErrorToString()).bind(text(errorLabel));
-		errorProperty.bind(new CounterBinding<HmiError>()).bind(text(errorCounter));
+		errorProperty.bind(hmiErrorToString()).bind(text(errorLabel));
+		errorProperty.bind(counter()).bind(text(errorCounter));
 		addGuiLineItem(errorProperty, errorLabel, null, errorCounter);
 
 		final GridBagConstraints fillerConstraints = new GridBagConstraints();
@@ -196,6 +198,10 @@ public class ControllerExampleView extends JFrame {
 		protected String convertPropertyValueToComponentValue(final T propertyValue) {
 			return String.valueOf(++count);
 		}
+	}
+
+	private static <T> CounterBinding<T> counter() {
+		return new CounterBinding<>();
 	}
 
 	public void addGuiLineItem(final AbstractProperty property, final JComponent editor, final JComponent check,

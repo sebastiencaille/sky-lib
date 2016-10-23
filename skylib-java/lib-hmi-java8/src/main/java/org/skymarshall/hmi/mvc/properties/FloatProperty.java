@@ -60,6 +60,9 @@ public class FloatProperty extends AbstractTypedProperty<Float> {
 	}
 
 	public void setValue(final Object caller, final float newValue) {
+		if (!attached) {
+			return;
+		}
 		onValueSet(caller, EventKind.BEFORE);
 		try {
 			final float oldValue = value;

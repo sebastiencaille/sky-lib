@@ -16,6 +16,7 @@
 package org.skymarshall.hmi.mvc.properties;
 
 import java.beans.PropertyChangeListener;
+import java.util.List;
 import java.util.function.Consumer;
 
 import javax.swing.event.EventListenerList;
@@ -111,6 +112,12 @@ public abstract class AbstractProperty {
 		propertySupport.removePropertyChangeListener(name, propertyChangeListener);
 	}
 
+	public void removeListeners(final List<IPropertyEventListener> toRemove) {
+		for (final IPropertyEventListener listener : toRemove) {
+			removeListener(listener);
+		}
+	}
+
 	public boolean isModifiedBy(final Object caller) {
 		return propertySupport.isModifiedBy(name, caller);
 	}
@@ -144,6 +151,20 @@ public abstract class AbstractProperty {
 	@Override
 	public String toString() {
 		return "Property " + name;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null || !this.getClass().isInstance(obj)) {
+			return false;
+		}
+
+		return name.equals(((AbstractProperty) obj).name);
+	}
+
+	@Override
+	public int hashCode() {
+		return name.hashCode();
 	}
 
 }

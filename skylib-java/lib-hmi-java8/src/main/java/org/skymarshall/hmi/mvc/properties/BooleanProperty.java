@@ -60,6 +60,9 @@ public class BooleanProperty extends AbstractTypedProperty<Boolean> {
 	}
 
 	public void setValue(final Object caller, final boolean newValue) {
+		if (!attached) {
+			return;
+		}
 		onValueSet(caller, EventKind.BEFORE);
 		try {
 			final boolean oldValue = value;

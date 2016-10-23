@@ -69,6 +69,9 @@ public class IntProperty extends AbstractTypedProperty<Integer> {
 	}
 
 	public void setValue(final Object caller, final int newValue) {
+		if (!attached) {
+			return;
+		}
 		onValueSet(caller, EventKind.BEFORE);
 		try {
 			final int oldValue = value;

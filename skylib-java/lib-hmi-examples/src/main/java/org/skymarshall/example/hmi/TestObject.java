@@ -36,7 +36,7 @@ public class TestObject {
 		return aFirstValue + " / " + aSecondValue;
 	}
 
-	public static AbstractObjectConverter<TestObject, String> convertToString() {
+	public static AbstractObjectConverter<TestObject, String> testObjectToString() {
 		return Converters.writeOnly(o -> o.aFirstValue != null ? o.aFirstValue : "");
 	}
 }

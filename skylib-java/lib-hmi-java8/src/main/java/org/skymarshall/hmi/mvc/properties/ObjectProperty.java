@@ -37,8 +37,6 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 
 	private T value;
 
-	private T valueAtDetach;
-
 	private T defaultValue;
 
 	public ObjectProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
@@ -109,24 +107,9 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 	}
 
 	@Override
-	public void detach() {
-		valueAtDetach = getValue();
-		super.detach();
-	}
-
-	public T getValueAtDetach() {
-		return valueAtDetach;
-	}
-
-	@Override
 	public void attach() {
-		attach(valueAtDetach);
-	}
-
-	protected void attach(final T oldValue) {
 		super.attach();
-		propertySupport.firePropertyChange(getName(), this, null, value);
-		valueAtDetach = null;
+		propertySupport.firePropertyChange(getName(), this, null, getValue());
 	}
 
 	@Override

@@ -12,6 +12,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<data-flow-manager-version>0.0.1-SNAPSHOT</data-flow-manager-version>
 	</properties>
 
 	<build>
@@ -30,16 +31,34 @@
 		</pluginManagement>
 	</build>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>ch.skymarshall.dataflowmgr</groupId>
+				<artifactId>data-flow-model</artifactId>
+				<version>${data-flow-manager-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.skymarshall.dataflowmgr</groupId>
+				<artifactId>data-flow-model</artifactId>
+				<classifier>test</classifier>
+				<version>${data-flow-manager-version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
+			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
 	<modules>
 		<module>ch.skymarshall.dataflowmgr</module>
 		<module>engine</module>
+		<module>generator</module>
 	</modules>
 </project>

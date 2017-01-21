@@ -1,105 +1,42 @@
 package ch.skymarshall.dataflowmgr.engine;
 
-import static ch.skymarshall.dataflowmgr.engine.DecisionRule.apply;
-import static ch.skymarshall.dataflowmgr.engine.DecisionRule.switchFlow;
-
-import org.junit.Assert;
 import org.junit.Test;
 
-import ch.skymarshall.dataflowmgr.engine.data.ContextConverters;
-import ch.skymarshall.dataflowmgr.engine.data.GreetingsCtxt;
-import ch.skymarshall.dataflowmgr.engine.data.GreetingsService;
-import ch.skymarshall.dataflowmgr.engine.data.Holder;
-import ch.skymarshall.dataflowmgr.engine.data.Mood;
+import ch.skymarshall.dataflowmgr.engine.data.DispatchJoinFlowFactory;
+import ch.skymarshall.dataflowmgr.engine.data.SimpleFlowFactory;
+import ch.skymarshall.dataflowmgr.engine.data.SimpleFlowFactory.IntTransfer;
+import ch.skymarshall.dataflowmgr.engine.model.ExecutionReport;
+import ch.skymarshall.dataflowmgr.engine.sequential.FlowExecution;
+import ch.skymarshall.dataflowmgr.engine.sequential.MemRegistry;
+import ch.skymarshall.dataflowmgr.model.Flow;
 
 public class DataFlowTest {
 
 	@Test
-	@SuppressWarnings("unchecked")
 	public void testNominal() {
 
-		final GreetingsService greetingsSvc = new GreetingsService();
+		final MemRegistry registry = new MemRegistry();
+		final Flow<IntTransfer> simpleFlow = SimpleFlowFactory.simpleFlow(registry);
 
-		// Makes hello or goodbye
-		final DecisionPoint<GreetingsCtxt> prepareGreetings = new DecisionPoint<GreetingsCtxt>("Hello or Goodbye").add(
-				new DecisionRule<>(apply(ctxt -> greetingsSvc.goodMood(ctxt.getMood()), GreetingsCtxt::setGreetings),
-						(ctxt) -> ctxt.getMood() == Mood.GOOD),
-				new DecisionRule<>(apply(ctxt -> greetingsSvc.badMood(ctxt.getMood()), GreetingsCtxt::setGreetings),
-						(ctxt) -> ctxt.getMood() == Mood.BAD));
+		final ExecutionReport report = new ExecutionReport(registry);
+		new FlowExecution<>(simpleFlow).execute(new IntTransfer(1), report, registry);
+		new FlowExecution<>(simpleFlow).execute(new IntTransfer(2), report, registry);
 
-		// Add world or kitty
-		final DecisionPoint<GreetingsCtxt> identifyTarget = new DecisionPoint<GreetingsCtxt>("World or Kitty").add(//
-				DecisionRule.<GreetingsCtxt>either(ctxt -> ctxt.getGreetings().isEvil(), //
-						apply(ctxt -> greetingsSvc.kitty(ctxt.getGreetings()), GreetingsCtxt::setResult), //
-						apply(ctxt -> greetingsSvc.world(ctxt.getGreetings()), GreetingsCtxt::setResult)));
-
-		// Hold String result
-		final Holder<String> result = new Holder<>();
-		final DecisionPoint<GreetingsCtxt> accumulateResult = new DecisionPoint<GreetingsCtxt>("Save result")
-				.add(new DecisionRule<>(apply(ctxt -> result.set(ctxt.getResult()))));
-
-		// Define flow
-		final Flow<GreetingsCtxt>.FlowExecution flowExecution = new Flow<GreetingsCtxt>("Main").add(prepareGreetings)
-				.nextStep().add(identifyTarget).nextStep().add(accumulateResult).build();
-
-		// Run
-		GreetingsCtxt ctxt;
-		final ExecutionReport report = new ExecutionReport();
-
-		ctxt = new GreetingsCtxt(Mood.GOOD);
-		flowExecution.execute(ctxt, report);
-		Assert.assertEquals("Hello world", result.get());
-
-		ctxt = new GreetingsCtxt(Mood.BAD);
-		flowExecution.execute(ctxt, report);
-		Assert.assertEquals("Goodbye kitty", result.get());
+		System.out.println(report.simpleFormat());
 
 	}
 
 	@Test
-	@SuppressWarnings("unchecked")
-	public void testSubFlow() {
+	public void testDispatchJoin() {
+		final MemRegistry registry = new MemRegistry();
+		final Flow<IntTransfer> joinFlow = DispatchJoinFlowFactory.dispatchJoinFlow(registry);
 
-		final GreetingsService greetingsSvc = new GreetingsService();
-
-		// Hold the result
-		final Holder<String> result = new Holder<>();
-		final DecisionPoint<GreetingsCtxt> accumulateResult = new DecisionPoint<GreetingsCtxt>("Save result").add(//
-				new DecisionRule<>(apply(ctxt -> result.set(ctxt.getResult()))));
-
-		// Define sub flow
-
-		final DecisionPoint<GreetingsCtxt> greetings = new DecisionPoint<GreetingsCtxt>("Greetings").add( //
-				new DecisionRule<>(apply(ctxt -> greetingsSvc.greet(), GreetingsCtxt::setResult)));
-
-		final Flow<GreetingsCtxt> greetFlow = new Flow<GreetingsCtxt>("Sub").add(greetings).nextStep()
-				.add(accumulateResult);
-
-		// Define main flow
-		final DecisionPoint<GreetingsCtxt> prepare = new DecisionPoint<GreetingsCtxt>("Hello or Goodbye").add( //
-				new DecisionRule<>(apply(ctxt -> greetingsSvc.goodMood(ctxt.getMood()), GreetingsCtxt::setGreetings),
-						ctxt -> ctxt.getMood() == Mood.GOOD),
-				new DecisionRule<>(switchFlow(greetFlow, ContextConverters::copy), ctxt -> ctxt.getMood() == Mood.BAD));
-
-		final DecisionPoint<GreetingsCtxt> identifyTarget = new DecisionPoint<GreetingsCtxt>("World or Kitty").add( //
-				DecisionRule.<GreetingsCtxt>either(ctxt -> ctxt.getGreetings().isEvil(),
-						apply(ctxt -> greetingsSvc.kitty(ctxt.getGreetings()), GreetingsCtxt::setResult),
-						apply(ctxt -> greetingsSvc.world(ctxt.getGreetings()), GreetingsCtxt::setResult)));
-
-		final Flow<GreetingsCtxt>.FlowExecution flowExecution = new Flow<GreetingsCtxt>("Main").add(prepare).nextStep()
-				.add(identifyTarget).nextStep().add(accumulateResult).build();
-
-		// Run
-		GreetingsCtxt ctxt;
-		final ExecutionReport report = new ExecutionReport();
-
-		ctxt = new GreetingsCtxt(Mood.GOOD);
-		flowExecution.execute(ctxt, report);
-		Assert.assertEquals("Hello world", result.get());
-
-		ctxt = new GreetingsCtxt(Mood.BAD);
-		flowExecution.execute(ctxt, report);
-		Assert.assertEquals("Greetings", result.get());
+		final ExecutionReport report = new ExecutionReport(registry);
+		try {
+			new FlowExecution<>(joinFlow).execute(new IntTransfer(1), report, registry);
+		} finally {
+			System.out.println(report.simpleFormat());
+		}
 
 	}
 

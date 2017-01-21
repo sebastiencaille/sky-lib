@@ -24,17 +24,13 @@ public class MemRegistry implements Registry {
 	}
 
 	@Override
-	public void register(final UUID uuid, final Object inputData) {
-		data.put(uuid, inputData);
-	}
-
-	@Override
 	public <T> T get(final UUID uuid) {
 		return null;
 	}
 
 	@Override
 	public <T> T get(final UUID uuid, final Supplier<T> newData) {
+		@SuppressWarnings("unchecked")
 		T value = (T) data.get(uuid);
 		if (value == null) {
 			value = newData.get();

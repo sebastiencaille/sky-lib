@@ -10,7 +10,7 @@ public class NoData extends FlowData {
 	};
 
 	public NoData() {
-		super(UUID.fromString("00000000-0000-0000-0000-000000000000"), null);
+		super(UUIDs.NO_DATA);
 	}
 
 }

@@ -11,14 +11,15 @@ import java.util.UUID;
 public class FlowData extends IDData {
 
 	private UUID currentFlow;
-
-	public FlowData(final UUID uuid, final UUID currentFlow) {
-		super(uuid);
-		this.currentFlow = currentFlow;
-	}
+	private UUID source;
 
 	public FlowData(final UUID uuid) {
 		super(uuid);
+	}
+
+	public void setContext(final FlowData originalData, final UUID source) {
+		this.currentFlow = originalData.getCurrentFlowExecution();
+		this.source = source;
 	}
 
 	public void setCurrentFlowExecution(final UUID currentFlow) {
@@ -27,6 +28,10 @@ public class FlowData extends IDData {
 
 	public UUID getCurrentFlowExecution() {
 		return currentFlow;
+	}
+
+	public UUID getSource() {
+		return source;
 	}
 
 }

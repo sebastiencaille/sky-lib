@@ -8,17 +8,21 @@
 		<artifactId>data-flow-manager</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>engine</artifactId>
-	<name>engine</name>
+	<artifactId>data-flow-engine</artifactId>
+	<name>data-flow-engine</name>
 	<url>http://maven.apache.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
+			<groupId>ch.skymarshall.dataflowmgr</groupId>
+			<artifactId>data-flow-model</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ch.skymarshall.dataflowmgr</groupId>
+			<artifactId>data-flow-model</artifactId>
+			<classifier>test</classifier>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

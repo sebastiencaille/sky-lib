@@ -5,7 +5,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 /**
- * Transforms a data and send it to the nex
+ * Transforms a data and send it to the next action
  *
  * @author scaille
  *
@@ -30,15 +30,25 @@ public class InFlowDecisionRule<InFlowType extends FlowData, InActionPointType e
 		return new InFlowDecisionRule<>(uuid, inputClass, actionPoint, fillFunction, activationPredicate);
 	}
 
+	/**
+	 * Fills the input class with the incoming data using the fillFunction
+	 *
+	 * @param uuid
+	 * @param inputClass
+	 * @param actionPoint
+	 * @param fillFunction
+	 * @param activationPredicate
+	 * @return
+	 */
 	public static <InFlow extends FlowData, InActPointType extends FlowData> InFlowDecisionRule<InFlow, InActPointType> input(
 			final UUID uuid, final Class<InFlow> inputClass, final ActionPoint<InActPointType, ?> actionPoint,
 			final BiConsumer<InFlow, InActPointType> fillFunction, final Predicate<InFlow> activationPredicate) {
 		return new InFlowDecisionRule<>(uuid, inputClass, actionPoint, new CollectorFunction<InFlow, InActPointType>() {
 			@Override
-			public InActPointType apply(final InFlow outputData, final ActionPoint<InActPointType, ?> ap,
+			public InActPointType apply(final InFlow incomingData, final ActionPoint<InActPointType, ?> ap,
 					final Registry reg) {
-				final InActPointType in = ap.get(reg, outputData);
-				fillFunction.accept(outputData, in);
+				final InActPointType in = ap.get(reg, incomingData);
+				fillFunction.accept(incomingData, in);
 				return in;
 			}
 		}, activationPredicate);
@@ -55,7 +65,7 @@ public class InFlowDecisionRule<InFlowType extends FlowData, InActionPointType e
 		this.collectFunction = collectFunction;
 	}
 
-	public ActionPoint<InActionPointType, ?> getActionPointToExecute() {
+	public ActionPoint<?, ?> getActionPointToExecute() {
 		return actionPointToExecute;
 	}
 

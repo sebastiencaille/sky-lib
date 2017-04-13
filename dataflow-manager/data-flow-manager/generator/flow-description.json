@@ -1,0 +1,25 @@
+{
+	"package": "<global package>",
+	"defaultActionTemplate": "<name of the template used for actions, default: 'action' >",
+	"dtos": [
+		{
+			"uuid": "<some uuid>",
+			"name": "<name of the dto. Typically, the name of the class>",
+			"description": "<some text description>",
+			"fields": {
+				"name": "type"
+			}
+		}
+	],
+	"actions": [
+		{
+			"uuid": "<some uuid>",
+			"name": "<name of the action. Typically, the name of the class>",
+			"input": "<input dto>",
+			"output": "<output dto>",
+			"terminal": "true/false",
+			"action": "<action content>",
+			"action-<template>": "<action content based on template <template>"
+		}
+	]
+}

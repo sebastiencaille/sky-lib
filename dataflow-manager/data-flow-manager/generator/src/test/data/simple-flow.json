@@ -1,0 +1,36 @@
+{
+	"name" : "simpleFlow",
+	"package-name": "ch.skymarshall.dataflowmgr.engine.examples",
+	"dtos": [
+		{
+			"name": "IntTransfer",
+			"description": "Transfers int values",
+			"fields": {
+			 	"intValue" : "int" 
+			 }
+			
+		}
+	],
+	"actions": [
+		{
+			"name": "IntTransferIdentity",
+			"input": "IntTransfer",
+			"output": "IntTransfer",
+			"action-function": "input"
+		},
+		{
+			"name": "DumpIntTransfer",
+			"input": "IntTransfer",
+			"terminal": true,
+			"action-terminal": "System.out.println"
+		}
+	],
+	"flows": [
+		{
+			"name": "SimpleFlow",
+			"description": "Simple Test Flow",
+			"input": "IntTransfer",
+			"action": "IntTransferIdentity"
+		}
+	]
+}

@@ -133,15 +133,15 @@ public class DispatchJoinFlowFactory {
 
 		// All out
 		final OutFlowDecisionRule<Data2ab, IntTransfer> ap1ToAp2a = OutFlowDecisionRule.output(uuid(),
-				FlowActionType.CONTINUE, ap2a, (d) -> d.data2a, d -> d.getData2a() != null);
+				d -> d.getData2a() != null, FlowActionType.CONTINUE, ap2a, (d) -> d.data2a);
 		final OutFlowDecisionRule<Data2ab, IntTransfer> ap1ToAp2b = OutFlowDecisionRule.output(uuid(),
-				FlowActionType.CONTINUE, ap2b, (d) -> d.data2b, d -> d.getData2b() != null);
+				d -> d.getData2b() != null, FlowActionType.CONTINUE, ap2b, (d) -> d.data2b);
 		ap1.addOutputRule(ap1ToAp2a, ap1ToAp2b);
 
 		final OutFlowDecisionRule<IntTransfer, IntTransfer> ap2aToJoin = OutFlowDecisionRule.output(uuid(),
-				FlowActionType.CONTINUE, joinIn2a, (out) -> out, (out) -> true);
+				(out) -> true, FlowActionType.CONTINUE, joinIn2a, (out) -> out);
 		final OutFlowDecisionRule<IntTransfer, IntTransfer> ap2bToJoin = OutFlowDecisionRule.output(uuid(),
-				FlowActionType.CONTINUE, joinIn2b, (out) -> out, (out) -> true);
+				(out) -> true, FlowActionType.CONTINUE, joinIn2b, (out) -> out);
 		ap2a.addOutputRule(ap2aToJoin);
 		ap2b.addOutputRule(ap2bToJoin);
 

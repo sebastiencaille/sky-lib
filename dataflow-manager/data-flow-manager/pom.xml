@@ -60,5 +60,6 @@
 		<module>ch.skymarshall.dataflowmgr</module>
 		<module>engine</module>
 		<module>generator</module>
+		<module>examples</module>
 	</modules>
 </project>

@@ -11,9 +11,11 @@ import java.util.function.Consumer;
 import ch.skymarshall.dataflowmgr.engine.model.ExecutionReport;
 import ch.skymarshall.dataflowmgr.engine.model.ExecutionReport.Event;
 import ch.skymarshall.dataflowmgr.model.ActionPoint;
+import ch.skymarshall.dataflowmgr.model.ActionPointReference;
 import ch.skymarshall.dataflowmgr.model.ExecutorFactory;
 import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.FlowData;
+import ch.skymarshall.dataflowmgr.model.LocalAPRef;
 import ch.skymarshall.dataflowmgr.model.OutFlowDecisionRule;
 import ch.skymarshall.dataflowmgr.model.Registry;
 
@@ -38,7 +40,7 @@ public class FlowExecution<InputDataType extends FlowData> {
 		final Set<ActionPoint<?, ?>.ExecutionSteps> dpExecutions = new HashSet<>();
 
 		inputData.setCurrentFlowExecution(flowExecution);
-		dpExecutions.addAll(new ActionPointExecutor(flow.getEntryPoint().inject(inputData), report).execute(registry));
+		dpExecutions.addAll(new ActionPointExecutor(flow.getEntryPoint().invoke(inputData), report).execute(registry));
 
 		while (!dpExecutions.isEmpty()) {
 			final Iterator<ActionPoint<?, ?>.ExecutionSteps> iterator = dpExecutions.iterator();
@@ -88,8 +90,9 @@ public class FlowExecution<InputDataType extends FlowData> {
 
 				@Override
 				public <T extends FlowData> ActionPoint<?, ?>.ExecutionSteps createNextDecisionPointExecution(
-						final ActionPoint<?, ?> nextDp, final T nextData) {
-					return nextDp.inject(nextData);
+						final ActionPointReference<T> nextDp, final T nextData) {
+					return LocalAPRef.invoke(nextDp, nextData);
+
 				}
 			});
 

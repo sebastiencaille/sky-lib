@@ -83,7 +83,7 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 	}
 
 	/**
-	 * Steps of decision point execution
+	 * Steps of the execution of the decision point
 	 *
 	 * @author scaille
 	 *
@@ -99,11 +99,19 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 			this.untypedInputData = untypedInputData;
 		}
 
+		/**
+		 * Creates the input data using the input rules
+		 *
+		 * @param registry
+		 * @param orElse
+		 *            consumer executed in case of error
+		 */
 		public void executeInputRules(final Registry registry, final Consumer<String> orElse) {
 			final List<InFlowDecisionRule<?, InputDataType>> inputSelectedRules = inputDecisionRules.stream()
 					.filter(rule -> rule.matches(untypedInputData)).collect(toList());
-			if (inputSelectedRules.size() > 1) {
-				orElse.accept("TooManyInputRules");
+			if (inputSelectedRules.size() == 1) {
+				inputData = inputSelectedRules.get(0).convertData(untypedInputData, registry);
+
 			} else if (inputSelectedRules.isEmpty()) {
 				// implicit identity conversion
 				if (!action.getInputClass().isInstance(untypedInputData)) {
@@ -111,11 +119,18 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 							+ untypedInputData.getClass().getName());
 				}
 				inputData = action.getInputClass().cast(untypedInputData);
+
 			} else {
-				inputData = inputSelectedRules.get(0).convertData(untypedInputData, registry);
+				orElse.accept("TooManyInputRules");
 			}
 		}
 
+		/**
+		 * Executes the action according to the input data extracted by
+		 * executeInputRules
+		 *
+		 * @return
+		 */
 		public boolean executeAction() {
 			if (!activator.test(inputData)) {
 				return false;
@@ -139,7 +154,7 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 		}
 
 		/**
-		 * Creates the executors that will execute the enxt action points
+		 * Creates the executors that will execute the next action points
 		 *
 		 * @param registry
 		 * @param executorFactory
@@ -147,7 +162,7 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 		 */
 		public <ExecType> Set<ExecType> createExecutions(final Registry registry,
 				final ExecutorFactory<ExecType> executorFactory) {
-			return selectedRules.stream().map(dr -> dr.executor(outputData, executorFactory))
+			return selectedRules.stream().map(dr -> dr.createExecutor(outputData, executorFactory))
 					.collect(Collectors.toSet());
 		}
 
@@ -179,20 +194,20 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 	 * @param inputData
 	 * @return
 	 */
-	public ActionPoint<InputDataType, OutputDataType>.ExecutionSteps inject(final FlowData inputData) {
+	public ActionPoint<InputDataType, OutputDataType>.ExecutionSteps invoke(final FlowData inputData) {
 		return new ExecutionSteps(inputData);
 	}
 
-	public static <InputDataType extends FlowData, OutputDataType extends FlowData> ActionPoint<InputDataType, OutputDataType> simple(
+	public static <InputDataType extends FlowData, OutputDataType extends FlowData, APRef extends ActionPointReference<?>> ActionPoint<InputDataType, OutputDataType> simple(
 			final UUID uuid, final FlowAction<InputDataType, OutputDataType> action) {
 		return new ActionPoint<>(uuid, action);
 	}
 
-	public static <InputDataType extends FlowData> ActionPoint<InputDataType, ?> terminal(final UUID uuid,
-			final FlowAction<InputDataType, NoData> action) {
+	public static <InputDataType extends FlowData, APRef extends ActionPointReference<NoData>> ActionPoint<InputDataType, ?> terminal(
+			final UUID uuid, final FlowAction<InputDataType, NoData> action) {
 		final ActionPoint<InputDataType, NoData> decisionPoint = new ActionPoint<>(uuid, action);
-		decisionPoint.addOutputRule(
-				new OutFlowDecisionRule<>(NoData.NO_DATA.uuid(), FlowActionType.STOP, null, null, d -> true));
+		decisionPoint.addOutputRule(new OutFlowDecisionRule<NoData, NoData>(NoData.NO_DATA.uuid(), d -> true,
+				FlowActionType.STOP, null, null));
 		return decisionPoint;
 	}
 

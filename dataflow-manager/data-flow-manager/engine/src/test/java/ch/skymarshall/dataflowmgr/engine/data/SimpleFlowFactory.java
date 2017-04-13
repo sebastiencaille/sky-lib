@@ -68,8 +68,8 @@ public class SimpleFlowFactory {
 		final ActionPoint<IntTransfer, IntTransfer> action1 = ActionPoint.simple(uuid(), new IntTransferIdentity());
 		final ActionPoint<IntTransfer, ?> action2 = ActionPoint.terminal(uuid(), new DumpIntTransfer());
 
-		final OutFlowDecisionRule<IntTransfer, IntTransfer> a1Toa2 = OutFlowDecisionRule.output(uuid(),
-				FlowActionType.CONTINUE, action2, (d) -> d, (t) -> true);
+		final OutFlowDecisionRule<IntTransfer, IntTransfer> a1Toa2 = OutFlowDecisionRule.output(uuid(), (t) -> true,
+				FlowActionType.CONTINUE, action2, (d) -> d);
 		action1.addOutputRule(a1Toa2);
 
 		registry.registerObject(action1, "action1");

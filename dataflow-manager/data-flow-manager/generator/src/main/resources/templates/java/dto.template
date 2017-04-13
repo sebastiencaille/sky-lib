@@ -1,0 +1,17 @@
+package ${package}.dto;
+
+import ch.skymarshall.dataflowmgr.model.FlowData;
+import java.util.UUID;
+
+public class ${dto.name} extends FlowData {
+
+		public ${dto.name}() {
+			super(null);
+		}
+
+		public ${dto.name}(final UUID uuid) {
+			super(uuid);
+		}
+
+${fields}
+	}

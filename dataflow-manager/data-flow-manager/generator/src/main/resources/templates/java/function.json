@@ -1,0 +1,10 @@
+
+	{
+		"regexp": "(.*\\.)([^\\.]*)",
+		"variables": [
+			"function.target",
+			"function.name"
+		],
+		"output": "return ${function.target}${function.name}(input)"
+	}
+

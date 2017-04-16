@@ -19,5 +19,9 @@
 			<groupId>ch.skymarshall.dataflowmgr</groupId>
 			<artifactId>data-flow-model</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>ch.skymarshall.dataflowmgr</groupId>
+			<artifactId>data-flow-engine</artifactId>
+		</dependency>
 	</dependencies>
 </project>

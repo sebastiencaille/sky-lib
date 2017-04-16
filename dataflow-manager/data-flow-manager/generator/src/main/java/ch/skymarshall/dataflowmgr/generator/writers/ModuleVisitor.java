@@ -12,7 +12,9 @@ import org.slf4j.LoggerFactory;
 import ch.skymarshall.dataflowmgr.generator.model.ActionPoint;
 import ch.skymarshall.dataflowmgr.generator.model.Dto;
 import ch.skymarshall.dataflowmgr.generator.model.Flow;
+import ch.skymarshall.dataflowmgr.generator.model.InFlowRule;
 import ch.skymarshall.dataflowmgr.generator.model.Module;
+import ch.skymarshall.dataflowmgr.generator.model.OutFlowRule;
 import ch.skymarshall.dataflowmgr.generator.model.Template;
 import ch.skymarshall.dataflowmgr.generator.model.Template.TEMPLATE;
 
@@ -42,15 +44,6 @@ public class ModuleVisitor<T> {
 
 	public T visit(final T context) {
 		T result = context;
-		for (final Dto dto : module.dtos) {
-			for (final Map.Entry<String, String> field : dto.fields.entrySet()) {
-				result = visitField(module, dto, field, context);
-			}
-			result = visit(module, dto, context);
-		}
-		for (final ActionPoint action : module.actions) {
-			result = visit(module, action, context);
-		}
 		for (final Flow flow : module.flows) {
 			result = visit(module, flow, context);
 		}
@@ -62,15 +55,42 @@ public class ModuleVisitor<T> {
 	}
 
 	public T visit(final Module module, final Dto dto, final T context) {
-		return context;
+		T result = context;
+		for (final Map.Entry<String, String> field : dto.fields.entrySet()) {
+			result = visitField(module, dto, field, context);
+		}
+		return result;
 	}
 
 	public T visit(final Module module, final ActionPoint ap, final T context) {
+		T result = context;
+		for (final InFlowRule rule : ap.inputRules) {
+			result = visit(module, ap, rule, context);
+		}
+		for (final OutFlowRule rule : ap.outputRules) {
+			result = visitField(module, ap, rule, context);
+		}
+		return result;
+	}
+
+	public T visitField(final Module module, final ActionPoint ap, final OutFlowRule rule, final T context) {
+		return context;
+	}
+
+	public T visit(final Module module, final ActionPoint ap, final InFlowRule rule, final T context) {
 		return context;
 	}
 
 	public T visit(final Module module, final Flow flow, final T context) {
-		return context;
+		T result = context;
+		for (final Dto dto : module.dtos) {
+			result = visit(module, dto, context);
+		}
+		for (final ActionPoint action : module.actions) {
+			result = visit(module, action, context);
+		}
+
+		return result;
 	}
 
 }

@@ -1,3 +1,4 @@
+// File generated from template
 package ch.skymarshall.dataflowmgr.engine.examples.dto;
 
 import ch.skymarshall.dataflowmgr.model.FlowData;
@@ -13,6 +14,7 @@ public class IntTransfer extends FlowData {
 			super(uuid);
 		}
 
+// File generated from template
 		int intValue;
 
 		public int getIntValue() {

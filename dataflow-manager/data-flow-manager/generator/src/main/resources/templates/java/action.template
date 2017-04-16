@@ -5,13 +5,13 @@ ${imports}
 
 public class ${action.name} extends FlowAction<${action.input}, ${action.output}> {
 
-		public ${action.name}() {
-			super(${action.input}.class, ${action.input}::new);
-		}
-
-		@Override
-		public ${action.output} apply(final ${action.input} input) {
-			${action.body};
-		}
-
+	public ${action.name}() {
+		super(${action.input}.class, ${action.input}::new);
 	}
+	
+	@Override
+	public ${action.output} apply(final ${action.input} input) {
+		${action.body};
+	}
+
+}

@@ -124,10 +124,10 @@ public class DispatchJoinFlowFactory {
 		registry.registerObject(joinPoint, "joinPoint");
 
 		// All in
-		final InFlowDecisionRule<IntTransfer, Data2ab> joinIn2a = joinPoint.addInputRule(uuid(), IntTransfer.class,
-				(in, d) -> d.data2a = in, (in) -> in.getSource().equals(ap2a.uuid()));
-		final InFlowDecisionRule<IntTransfer, Data2ab> joinIn2b = joinPoint.addInputRule(uuid(), IntTransfer.class,
-				(in, d) -> d.data2b = in, (in) -> in.getSource().equals(ap2b.uuid()));
+		final InFlowDecisionRule<IntTransfer, Data2ab> joinIn2a = joinPoint.addInFlowRule(uuid(), IntTransfer.class,
+				(in) -> in.getSource().equals(ap2a.uuid()), (in, d) -> d.data2a = in);
+		final InFlowDecisionRule<IntTransfer, Data2ab> joinIn2b = joinPoint.addInFlowRule(uuid(), IntTransfer.class,
+				(in) -> in.getSource().equals(ap2b.uuid()), (in, d) -> d.data2b = in);
 		registry.registerObject(joinIn2a, "joinIn2a");
 		registry.registerObject(joinIn2b, "joinIn2b");
 

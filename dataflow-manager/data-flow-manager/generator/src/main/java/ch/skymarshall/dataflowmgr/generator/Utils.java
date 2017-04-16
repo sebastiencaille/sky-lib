@@ -29,6 +29,14 @@ public class Utils {
 		return firstUpper + str.substring(1);
 	}
 
+	public static String firstLowerCase(final String str) {
+		if (str.length() == 1) {
+			return str.toLowerCase();
+		}
+		final char firstUpper = Character.toLowerCase(str.charAt(0));
+		return firstUpper + str.substring(1);
+	}
+
 	public static String read(final InputStream in) throws IOException {
 		final StringBuilder result = new StringBuilder();
 

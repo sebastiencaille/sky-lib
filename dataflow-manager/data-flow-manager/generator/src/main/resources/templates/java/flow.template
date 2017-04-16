@@ -1,0 +1,25 @@
+package ${package};
+
+import ch.skymarshall.dataflowmgr.model.ActionPoint;
+import ch.skymarshall.dataflowmgr.model.Flow;
+import ch.skymarshall.dataflowmgr.model.FlowActionType;
+import ch.skymarshall.dataflowmgr.model.InFlowDecisionRule;
+import ch.skymarshall.dataflowmgr.model.OutFlowDecisionRule;
+import ch.skymarshall.dataflowmgr.model.Registry;
+
+import java.util.UUID;
+${imports}
+
+public class ${flow.name}Factory {
+
+	public static Flow<${flow.input}> create(final Registry registry) {
+		${flow.actions}
+		${flow.inputRules}
+		${flow.outputRules}
+		${flow.registry}
+	
+		return new Flow<>(${flow.uuid}, ${flow.firstAction});
+	}
+	
+
+}

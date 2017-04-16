@@ -27,7 +27,7 @@ public class InFlowDecisionRule<InFlowType extends FlowData, InActionPointType e
 	public static <InFlow extends FlowData, ActPointInType extends FlowData> InFlowDecisionRule<InFlow, ActPointInType> input(
 			final UUID uuid, final Class<InFlow> inputClass, final ActionPoint<ActPointInType, ?> actionPoint,
 			final CollectorFunction<InFlow, ActPointInType> fillFunction, final Predicate<InFlow> activationPredicate) {
-		return new InFlowDecisionRule<>(uuid, inputClass, actionPoint, fillFunction, activationPredicate);
+		return new InFlowDecisionRule<>(uuid, inputClass, activationPredicate, actionPoint, fillFunction);
 	}
 
 	/**
@@ -35,15 +35,15 @@ public class InFlowDecisionRule<InFlowType extends FlowData, InActionPointType e
 	 *
 	 * @param uuid
 	 * @param inputClass
+	 * @param activationPredicate
 	 * @param actionPoint
 	 * @param fillFunction
-	 * @param activationPredicate
 	 * @return
 	 */
 	public static <InFlow extends FlowData, InActPointType extends FlowData> InFlowDecisionRule<InFlow, InActPointType> input(
-			final UUID uuid, final Class<InFlow> inputClass, final ActionPoint<InActPointType, ?> actionPoint,
-			final BiConsumer<InFlow, InActPointType> fillFunction, final Predicate<InFlow> activationPredicate) {
-		return new InFlowDecisionRule<>(uuid, inputClass, actionPoint, new CollectorFunction<InFlow, InActPointType>() {
+			final UUID uuid, final Class<InFlow> inputClass, final Predicate<InFlow> activationPredicate,
+			final ActionPoint<InActPointType, ?> actionPoint, final BiConsumer<InFlow, InActPointType> fillFunction) {
+		return new InFlowDecisionRule<>(uuid, inputClass, activationPredicate, actionPoint, new CollectorFunction<InFlow, InActPointType>() {
 			@Override
 			public InActPointType apply(final InFlow incomingData, final ActionPoint<InActPointType, ?> ap,
 					final Registry reg) {
@@ -51,13 +51,13 @@ public class InFlowDecisionRule<InFlowType extends FlowData, InActionPointType e
 				fillFunction.accept(incomingData, in);
 				return in;
 			}
-		}, activationPredicate);
+		});
 	}
 
 	protected InFlowDecisionRule(final UUID uuid, final Class<InFlowType> inputClass,
+			final Predicate<InFlowType> activationPredicate,
 			final ActionPoint<InActionPointType, ?> ap,
-			final CollectorFunction<InFlowType, InActionPointType> collectFunction,
-			final Predicate<InFlowType> activationPredicate) {
+			final CollectorFunction<InFlowType, InActionPointType> collectFunction) {
 		super(uuid);
 		this.inputClass = inputClass;
 		this.activationPredicate = activationPredicate;

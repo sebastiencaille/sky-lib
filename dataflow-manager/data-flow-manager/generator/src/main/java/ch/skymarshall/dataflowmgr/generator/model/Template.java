@@ -19,7 +19,7 @@ public class Template {
 	private final Map<String, String> properties = new HashMap<>();
 
 	public enum TEMPLATE {
-		DTO, FIELD, ACTION
+		DTO, FIELD, ACTION, FLOW
 	}
 
 	public Template(final String content) {
@@ -33,7 +33,7 @@ public class Template {
 
 	public String generate() {
 		LOGGER.info("Generating with properties " + properties);
-		final StringBuilder result = new StringBuilder();
+		final StringBuilder result = new StringBuilder("// File generated from template\n");
 		int nextVariable = 0;
 		int pos = 0;
 		while ((nextVariable = content.indexOf("${", nextVariable)) > 0) {

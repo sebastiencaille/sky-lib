@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -48,11 +49,11 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 		return action;
 	}
 
-	public final <T extends FlowData> InFlowDecisionRule<T, InputDataType> addInputRule(final UUID uuid,
-			final Class<T> inputClass, final BiConsumer<T, InputDataType> collectFunction,
-			final Predicate<T> activationPredicate) {
-		final InFlowDecisionRule<T, InputDataType> rule = new InFlowDecisionRule<>(uuid, inputClass, this,
-				new CollectorFunction<T, InputDataType>() {
+	public final <T extends FlowData> InFlowDecisionRule<T, InputDataType> addInFlowRule(final UUID uuid,
+			final Class<T> inputClass, final Predicate<T> activationPredicate,
+			final BiConsumer<T, InputDataType> collectFunction) {
+		final InFlowDecisionRule<T, InputDataType> rule = new InFlowDecisionRule<>(uuid, inputClass,
+				activationPredicate, this, new CollectorFunction<T, InputDataType>() {
 					@Override
 					public InputDataType apply(final T inputData, final ActionPoint<InputDataType, ?> ap,
 							final Registry reg) {
@@ -60,7 +61,22 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 						collectFunction.accept(inputData, ApInputData);
 						return ApInputData;
 					}
-				}, activationPredicate);
+				});
+		inputDecisionRules.add(rule);
+		return rule;
+	}
+
+	public final <T extends FlowData> InFlowDecisionRule<T, InputDataType> addInFlowRule(final UUID uuid,
+			final Class<T> inputClass, final Predicate<T> activationPredicate,
+			final Function<T, InputDataType> collectFunction) {
+		final InFlowDecisionRule<T, InputDataType> rule = new InFlowDecisionRule<>(uuid, inputClass,
+				activationPredicate, this, new CollectorFunction<T, InputDataType>() {
+					@Override
+					public InputDataType apply(final T inputData, final ActionPoint<InputDataType, ?> ap,
+							final Registry reg) {
+						return collectFunction.apply(inputData);
+					}
+				});
 		inputDecisionRules.add(rule);
 		return rule;
 	}

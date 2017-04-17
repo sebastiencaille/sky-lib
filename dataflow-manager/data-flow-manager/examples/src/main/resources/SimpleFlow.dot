@@ -1,0 +1,7 @@
+digraph "SimpleFlow" {
+	"45d3a926-6e9c-48d1-95d9-6ffc071b8f3d" [ shape="box" ];
+	"8a3152fb-4d16-4ff7-92a4-bce11cc30987" [ shape="box" ];
+	"45d3a926-6e9c-48d1-95d9-6ffc071b8f3d" -> "IntTransferIdentity" [ label="IntTransfer" ];
+	"IntTransferIdentity" -> "8a3152fb-4d16-4ff7-92a4-bce11cc30987" [ label="IntTransfer" ];
+	"8a3152fb-4d16-4ff7-92a4-bce11cc30987" -> "DumpIntTransfer" [ label="IntTransfer" ];
+}

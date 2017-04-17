@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -23,14 +22,13 @@ import ch.skymarshall.dataflowmgr.generator.model.Module;
 import ch.skymarshall.dataflowmgr.generator.model.Template;
 import ch.skymarshall.dataflowmgr.generator.model.Template.TEMPLATE;
 import ch.skymarshall.dataflowmgr.generator.model.Transformer;
-import ch.skymarshall.dataflowmgr.generator.writers.java.JavaModuleVisitor;
 
 public abstract class AbstractWriter {
 
 	protected final JsonAdapter jsonAdapter;
 	protected Config config;
 	protected Registry registry;
-	private final List<Module> modules = new ArrayList<>();
+	protected final List<Module> modules = new ArrayList<>();
 
 	public AbstractWriter() {
 		jsonAdapter = new JsonAdapter();
@@ -62,12 +60,6 @@ public abstract class AbstractWriter {
 			modules.add(module);
 		}
 
-	}
-
-	public void generate() {
-		for (final Module module : modules) {
-			new JavaModuleVisitor(module, this).visit(new HashMap<>());
-		}
 	}
 
 	private InputStream openResourceStream(final String filename) {

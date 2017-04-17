@@ -1,20 +1,19 @@
-package ch.skymarshall.dataflowmgr.generator.writers.singlenode;
+package ch.skymarshall.dataflowmgr.generator.writers.dot;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import ch.skymarshall.dataflowmgr.generator.model.Module;
 import ch.skymarshall.dataflowmgr.generator.writers.AbstractWriter;
-import ch.skymarshall.dataflowmgr.generator.writers.java.JavaModuleVisitor;
+import ch.skymarshall.dataflowmgr.generator.writers.dot.DotModuleVisitor.Graph;
 
-public class SingleNodeWriter extends AbstractWriter {
+public class DotFileWriter extends AbstractWriter {
 
 	private final File outputFolder;
 
-	public SingleNodeWriter(final File outputFolder) {
+	public DotFileWriter(final File outputFolder) {
 		this.outputFolder = outputFolder;
 	}
 
@@ -25,7 +24,7 @@ public class SingleNodeWriter extends AbstractWriter {
 
 	public void generate() {
 		for (final Module module : modules) {
-			new JavaModuleVisitor(module, this).visit(new HashMap<>());
+			new DotModuleVisitor(module, this).visit(new Graph());
 		}
 	}
 
@@ -34,7 +33,7 @@ public class SingleNodeWriter extends AbstractWriter {
 		final File outputFolder = new File(args[1]);
 		outputFolder.mkdirs();
 
-		final SingleNodeWriter writer = new SingleNodeWriter(outputFolder);
+		final DotFileWriter writer = new DotFileWriter(outputFolder);
 		writer.configure(configFile);
 
 		for (int i = 2; i < args.length; i++) {
@@ -46,5 +45,4 @@ public class SingleNodeWriter extends AbstractWriter {
 		writer.generate();
 
 	}
-
 }

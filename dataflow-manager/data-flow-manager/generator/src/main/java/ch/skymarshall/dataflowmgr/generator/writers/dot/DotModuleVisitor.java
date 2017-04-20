@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 import ch.skymarshall.dataflowmgr.generator.model.ActionPoint;
 import ch.skymarshall.dataflowmgr.generator.model.Flow;
@@ -19,24 +22,24 @@ public class DotModuleVisitor extends ModuleVisitor<DotModuleVisitor.Graph> {
 	private final AbstractWriter writer;
 
 	private static class Node {
-		final String name;
+		final UUID uuid;
+		final String label;
 		final Shape shape;
 
-		public Node(final String name, final Shape shape) {
-			super();
-			this.name = name;
+		public Node(final UUID uuid, final String label, final Shape shape) {
+			this.uuid = uuid;
+			this.label = label;
 			this.shape = shape;
 		}
 
 	}
 
 	private static class Link {
-		final String from;
-		final String to;
+		final UUID from;
+		final UUID to;
 		final String label;
 
-		public Link(final String from, final String to, final String label) {
-			super();
+		public Link(final UUID from, final UUID to, final String label) {
 			this.from = from;
 			this.to = to;
 			this.label = label;
@@ -47,6 +50,7 @@ public class DotModuleVisitor extends ModuleVisitor<DotModuleVisitor.Graph> {
 	public static class Graph {
 		final List<Node> nodes = new ArrayList<>();
 		final List<Link> links = new ArrayList<>();
+		final Set<UUID> executed = new HashSet<>();
 	}
 
 	public DotModuleVisitor(final Module module, final AbstractWriter writer) {
@@ -56,17 +60,24 @@ public class DotModuleVisitor extends ModuleVisitor<DotModuleVisitor.Graph> {
 
 	@Override
 	public Graph visit(final Module module, final ActionPoint ap, final InFlowRule rule, final Graph context) {
-		context.nodes.add(new Node(rule.uuid.toString(), Shape.box));
-		context.links.add(new Link(rule.uuid.toString(), ap.name, ap.input));
+		context.nodes.add(new Node(rule.uuid, rule.uuid.toString(), Shape.box));
+		context.links.add(new Link(rule.uuid, ap.uuid, ap.input));
 		return super.visit(module, ap, rule, context);
 	}
 
 	@Override
 	public Graph visitField(final Module module, final ActionPoint ap, final OutFlowRule rule, final Graph context) {
-		context.links.add(new Link(ap.name, rule.uuid.toString(), ap.output));
-		context.nodes.add(new Node(rule.uuid.toString(), Shape.box));
-		context.links.add(new Link(rule.uuid.toString(), rule.nextAction, rule.output));
+		context.links.add(new Link(ap.uuid, rule.uuid, ap.output));
+		context.nodes.add(new Node(rule.uuid, rule.uuid.toString(), Shape.box));
+		context.links.add(new Link(rule.uuid, findAction(module, rule.nextAction).uuid, rule.output));
 		return super.visitField(module, ap, rule, context);
+	}
+
+	@Override
+	public Graph visit(final Module module, final ActionPoint ap, final Graph context) {
+		final Graph c = super.visit(module, ap, context);
+		c.nodes.add(new Node(ap.uuid, ap.name, Shape.ellipse));
+		return c;
 	}
 
 	@Override
@@ -74,7 +85,14 @@ public class DotModuleVisitor extends ModuleVisitor<DotModuleVisitor.Graph> {
 		super.visit(module, flow, context);
 		final StringBuilder output = new StringBuilder("digraph \"").append(flow.name).append("\" {\n");
 		for (final Node node : context.nodes) {
-			output.append(String.format("	\"%s\" [ shape=\"%s\" ];\n", node.name, node.shape.name()));
+			String extra;
+			if (context.executed.contains(node.uuid)) {
+				extra = ", fillcolor=yellow, style=filled";
+			} else {
+				extra = "";
+			}
+			output.append(String.format("	\"%s\" [ label=\"%s\", shape=\"%s\" %s ];\n", node.uuid.toString(),
+					node.label, node.shape.name(), extra));
 		}
 		for (final Link link : context.links) {
 			output.append(String.format("	\"%s\" -> \"%s\" [ label=\"%s\" ];\n", link.from, link.to, link.label));

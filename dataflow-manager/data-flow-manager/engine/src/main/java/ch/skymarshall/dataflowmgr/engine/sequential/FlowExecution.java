@@ -53,40 +53,43 @@ public class FlowExecution<InputDataType extends FlowData> {
 
 	public static class ActionPointExecutor {
 
-		private final ActionPoint<?, ?>.ExecutionSteps execution;
+		private final ActionPoint<?, ?>.ExecutionSteps apExecution;
 		private final ExecutionReport report;
 
 		public ActionPointExecutor(final ActionPoint<?, ?>.ExecutionSteps execution, final ExecutionReport report) {
-			this.execution = execution;
+			this.apExecution = execution;
 			this.report = report;
 		}
 
 		public Set<ActionPoint<?, ?>.ExecutionSteps> execute(final Registry registry) {
 
 			final Consumer<String> handleError = e -> {
-				report.add(Event.ERROR, execution.uuid(), execution.currentFlowExecution(), e);
-				throw new IllegalStateException(e + ": decision point=" + execution.uuid() + ", input="
-						+ execution.inputToString() + ", output=" + execution.outputToString());
+				report.add(Event.ERROR, apExecution.uuid(), apExecution.currentFlowExecution(), e);
+				throw new IllegalStateException(e + ": decision point=" + apExecution.uuid() + ", input="
+						+ apExecution.inputToString() + ", output=" + apExecution.outputToString());
 			};
 
-			report.add(Event.HANDLE_INPUT, execution.uuid(), execution.currentFlowExecution());
-			execution.executeInputRules(registry, handleError);
+			report.add(Event.SELECT_AND_EXEC_INPUT_RULE, apExecution.uuid(), apExecution.currentFlowExecution());
+			final UUID executedInputRule = apExecution.executeInputRule(registry, handleError);
+			if (executedInputRule != null) {
+				report.add(Event.EXECUTED_INPUT_RULE, executedInputRule, apExecution.currentFlowExecution());
+			}
 
-			report.add(Event.EXECUTE_AP, execution.uuid(), execution.currentFlowExecution());
-			if (!execution.executeAction()) {
-				report.add(Event.AP_NOT_READY, execution.uuid(), execution.currentFlowExecution());
+			report.add(Event.EXECUTE_AP, apExecution.uuid(), apExecution.currentFlowExecution());
+			if (!apExecution.executeAction()) {
+				report.add(Event.AP_NOT_READY, apExecution.uuid(), apExecution.currentFlowExecution());
 				return Collections.emptySet();
 			}
 
-			report.add(Event.SELECT_OUTPUT_RULES, execution.uuid(), execution.currentFlowExecution());
-			final List<OutFlowDecisionRule<?, ?>> selectRules = execution.selectOutputRules(handleError);
-			if (execution.stop()) {
-				report.add(Event.STOP_RULE, execution.uuid(), execution.currentFlowExecution());
+			report.add(Event.SELECT_OUTPUT_RULES, apExecution.uuid(), apExecution.currentFlowExecution());
+			final List<OutFlowDecisionRule<?, ?>> selectRules = apExecution.selectOutputRules(handleError);
+			if (apExecution.stop()) {
+				report.add(Event.STOP_RULE, apExecution.uuid(), apExecution.currentFlowExecution());
 				return Collections.emptySet();
 			}
 			selectRules.stream()
-					.forEach(r -> report.add(Event.SELECTED_OUTPUT_RULE, r.uuid(), execution.currentFlowExecution()));
-			return execution.createExecutions(registry, new ExecutorFactory<ActionPoint<?, ?>.ExecutionSteps>() {
+					.forEach(r -> report.add(Event.SELECTED_OUTPUT_RULE, r.uuid(), apExecution.currentFlowExecution()));
+			return apExecution.createExecutions(registry, new ExecutorFactory<ActionPoint<?, ?>.ExecutionSteps>() {
 
 				@Override
 				public <T extends FlowData> ActionPoint<?, ?>.ExecutionSteps createNextDecisionPointExecution(

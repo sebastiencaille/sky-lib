@@ -93,4 +93,10 @@ public class ModuleVisitor<T> {
 		return result;
 	}
 
+	protected ActionPoint findAction(final Module module, final String actionName) {
+		return module.actions.stream().filter((action) -> {
+			return action.name.equals(actionName);
+		}).findFirst().orElseThrow(() -> new IllegalStateException("Unable to find action " + actionName));
+	}
+
 }

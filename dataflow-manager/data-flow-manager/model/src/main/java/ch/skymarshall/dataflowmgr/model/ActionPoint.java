@@ -122,11 +122,12 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 		 * @param orElse
 		 *            consumer executed in case of error
 		 */
-		public void executeInputRules(final Registry registry, final Consumer<String> orElse) {
+		public UUID executeInputRule(final Registry registry, final Consumer<String> orElse) {
 			final List<InFlowDecisionRule<?, InputDataType>> inputSelectedRules = inputDecisionRules.stream()
 					.filter(rule -> rule.matches(untypedInputData)).collect(toList());
 			if (inputSelectedRules.size() == 1) {
 				inputData = inputSelectedRules.get(0).convertData(untypedInputData, registry);
+				return inputSelectedRules.get(0).uuid();
 
 			} else if (inputSelectedRules.isEmpty()) {
 				// implicit identity conversion
@@ -135,10 +136,10 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 							+ untypedInputData.getClass().getName());
 				}
 				inputData = action.getInputClass().cast(untypedInputData);
-
 			} else {
 				orElse.accept("TooManyInputRules");
 			}
+			return null;
 		}
 
 		/**

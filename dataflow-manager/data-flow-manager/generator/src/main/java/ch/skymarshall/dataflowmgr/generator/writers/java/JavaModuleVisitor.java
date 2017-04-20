@@ -264,12 +264,6 @@ public class JavaModuleVisitor extends ModuleVisitor<Map<String, String>> {
 		}
 	}
 
-	private ActionPoint findAction(final Module module, final String actionName) {
-		return module.actions.stream().filter((action) -> {
-			return action.name.equals(actionName);
-		}).findFirst().orElseThrow(() -> new IllegalStateException("Unable to find action " + actionName));
-	}
-
 	private String variableName(final ActionPoint ap) {
 		return Utils.firstLowerCase(ap.name);
 	}

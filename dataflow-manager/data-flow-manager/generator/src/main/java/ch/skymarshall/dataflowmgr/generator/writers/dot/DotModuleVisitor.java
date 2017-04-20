@@ -60,7 +60,7 @@ public class DotModuleVisitor extends ModuleVisitor<DotModuleVisitor.Graph> {
 
 	@Override
 	public Graph visit(final Module module, final ActionPoint ap, final InFlowRule rule, final Graph context) {
-		context.nodes.add(new Node(rule.uuid, rule.uuid.toString(), Shape.box));
+		context.nodes.add(new Node(rule.uuid, rule.input + "\\n" + rule.activator, Shape.box));
 		context.links.add(new Link(rule.uuid, ap.uuid, ap.input));
 		return super.visit(module, ap, rule, context);
 	}
@@ -68,7 +68,8 @@ public class DotModuleVisitor extends ModuleVisitor<DotModuleVisitor.Graph> {
 	@Override
 	public Graph visitField(final Module module, final ActionPoint ap, final OutFlowRule rule, final Graph context) {
 		context.links.add(new Link(ap.uuid, rule.uuid, ap.output));
-		context.nodes.add(new Node(rule.uuid, rule.uuid.toString(), Shape.box));
+
+		context.nodes.add(new Node(rule.uuid, rule.output + "\\n" + rule.activator, Shape.box));
 		context.links.add(new Link(rule.uuid, findAction(module, rule.nextAction).uuid, rule.output));
 		return super.visitField(module, ap, rule, context);
 	}

@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 import ch.skymarshall.dataflowmgr.generator.model.Module;
 import ch.skymarshall.dataflowmgr.generator.writers.AbstractWriter;
+import ch.skymarshall.dataflowmgr.generator.writers.BasicArgsParser;
 import ch.skymarshall.dataflowmgr.generator.writers.java.JavaModuleVisitor;
 
 public class SingleNodeWriter extends AbstractWriter {
@@ -30,19 +31,19 @@ public class SingleNodeWriter extends AbstractWriter {
 	}
 
 	public static void main(final String[] args) throws FileNotFoundException, IOException {
-		final File configFile = new File(args[0]);
-		final File outputFolder = new File(args[1]);
-		outputFolder.mkdirs();
 
-		final SingleNodeWriter writer = new SingleNodeWriter(outputFolder);
-		writer.configure(configFile);
+		final BasicArgsParser argsParser = new BasicArgsParser().parse(args);
 
-		for (int i = 2; i < args.length; i++) {
-			writer.loadModule(new File(args[i]));
+		final SingleNodeWriter writer = new SingleNodeWriter(argsParser.getOutputFolder());
+		writer.configure(argsParser.getConfigFile());
+
+		for (final File file : argsParser.getFlows()) {
+			writer.loadModule(file);
 		}
 		writer.loadTransformers();
 		writer.loadTemplates();
 
+		argsParser.getOutputFolder().mkdirs();
 		writer.generate();
 
 	}

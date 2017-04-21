@@ -51,6 +51,7 @@ public class DotModuleVisitor extends ModuleVisitor<DotModuleVisitor.Graph> {
 		final List<Node> nodes = new ArrayList<>();
 		final List<Link> links = new ArrayList<>();
 		final Set<UUID> executed = new HashSet<>();
+		final Set<UUID> expected = new HashSet<>();
 	}
 
 	public DotModuleVisitor(final Module module, final AbstractWriter writer) {
@@ -84,11 +85,30 @@ public class DotModuleVisitor extends ModuleVisitor<DotModuleVisitor.Graph> {
 	@Override
 	public Graph visit(final Module module, final Flow flow, final Graph context) {
 		super.visit(module, flow, context);
+
+		final boolean compare = !context.expected.isEmpty();
+
 		final StringBuilder output = new StringBuilder("digraph \"").append(flow.name).append("\" {\n");
 		for (final Node node : context.nodes) {
-			String extra;
-			if (context.executed.contains(node.uuid)) {
-				extra = ", fillcolor=yellow, style=filled";
+			String color = null;
+			if (!compare && context.executed.contains(node.uuid)) {
+				color = "yellow";
+			} else if (compare) {
+				final boolean executed = context.executed.contains(node.uuid);
+				final boolean expected = context.expected.contains(node.uuid);
+				if (executed && expected) {
+					color = "green";
+				} else if (executed && !expected) {
+					color = "red";
+				} else if (!executed && expected) {
+					color = "blue";
+				} else {
+					color = null;
+				}
+			}
+			final String extra;
+			if (color != null) {
+				extra = ", fillcolor=" + color + ", style=filled";
 			} else {
 				extra = "";
 			}

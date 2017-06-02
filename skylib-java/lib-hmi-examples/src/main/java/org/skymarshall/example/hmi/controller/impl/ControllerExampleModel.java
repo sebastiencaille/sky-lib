@@ -20,15 +20,12 @@ import java.util.Comparator;
 import org.skymarshall.example.hmi.TestObject;
 import org.skymarshall.hmi.model.ListModel;
 import org.skymarshall.hmi.model.views.ListViews;
-import org.skymarshall.hmi.mvc.DependenciesManager;
 import org.skymarshall.hmi.mvc.HmiController;
 import org.skymarshall.hmi.mvc.properties.ObjectProperty;
 
 public class ControllerExampleModel extends ControllerExampleObjectHmiModel {
 
 	private static final Comparator<TestObject> TEST_COMPARATOR = (o1, o2) -> o1.aFirstValue.compareTo(o2.aFirstValue);
-
-	final DependenciesManager dependencyManager = new DependenciesManager();
 
 	public ControllerExampleModel(final HmiController controller) {
 		super(controller);

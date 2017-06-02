@@ -49,6 +49,7 @@ import org.skymarshall.example.hmi.TestObject;
 import org.skymarshall.example.hmi.TestObjectTableModel;
 import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
 import org.skymarshall.hmi.mvc.converters.ConversionException;
+import org.skymarshall.hmi.mvc.converters.Converters;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 import org.skymarshall.hmi.mvc.properties.BooleanProperty;
 import org.skymarshall.hmi.mvc.properties.ErrorProperty;
@@ -127,22 +128,20 @@ public class ControllerExampleView extends JFrame {
 		// Selection of list which content is based on "Item selection"
 
 		final JList<String> dynamicListSelectionEditor = new JList<>();
-		final JLabel dynamicListSelectioncheck = new JLabel();
+		final JLabel dynamicListSelectionCheck = new JLabel();
 		final JLabel dynamicListSelectionCounter = new JLabel();
 
 		listObjectProperty.bind(new DynamicListContentConverter()).bind(values(dynamicListSelectionEditor));
 
-		final ObjectProperty<String> dynamicListObjectProperty = model.getDynamicListObjectProperty();
-		dynamicListObjectProperty.bind(selection(dynamicListSelectionEditor, String.class));
-		dynamicListObjectProperty.bind(text(dynamicListSelectioncheck));
-		dynamicListObjectProperty.bind(counter()).bind(text(dynamicListSelectionCounter));
-
-		// Restore selection after model update
-		model.dependencyManager.dependOn(dynamicListObjectProperty, model.getListObjectProperty());
+		final ObjectProperty<String> dynamicListSelectionProperty = model.getDynamicListObjectProperty();
+		dynamicListSelectionProperty.bind(Converters.detachOnUpdate(model.getListObjectProperty()))
+				.bind(selection(dynamicListSelectionEditor, String.class));
+		dynamicListSelectionProperty.bind(text(dynamicListSelectionCheck));
+		dynamicListSelectionProperty.bind(counter()).bind(text(dynamicListSelectionCounter));
 
 		final JScrollPane dynamicListPane = new JScrollPane(dynamicListSelectionEditor);
 		dynamicListPane.setPreferredSize(new Dimension(200, 100));
-		addGuiLineItem(dynamicListObjectProperty, dynamicListPane, dynamicListSelectioncheck,
+		addGuiLineItem(dynamicListSelectionProperty, dynamicListPane, dynamicListSelectionCheck,
 				dynamicListSelectionCounter);
 
 		// Table example

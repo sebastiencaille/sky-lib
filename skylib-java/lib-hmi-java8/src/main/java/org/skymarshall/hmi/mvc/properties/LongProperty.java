@@ -50,7 +50,7 @@ public class LongProperty extends AbstractTypedProperty<Long> {
 	}
 
 	public <C> IBindingController<C> bind(final AbstractObjectConverter<Long, C> converter) {
-		return converter.bindWithProperty(this, errorNotifier);
+		return converter.bind(this, errorNotifier);
 	}
 
 	public IBindingController<Long> bind(final IComponentBinding<Long> binding) {

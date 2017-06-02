@@ -37,8 +37,8 @@ public abstract class AbstractObjectConverter<T, C> extends AbstractConverter<T,
 	public AbstractObjectConverter() {
 	}
 
-	public IBindingController<C> bindWithProperty(final AbstractTypedProperty<T> aProperty,
-			final ErrorNotifier theErrorProperty) {
+	@Override
+	public IBindingController<C> bind(final AbstractTypedProperty<T> aProperty, final ErrorNotifier theErrorProperty) {
 		this.property = aProperty;
 		return super.bind(aProperty, theErrorProperty);
 	}

@@ -51,7 +51,7 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 	}
 
 	public <C> IBindingController<C> bind(final AbstractObjectConverter<T, C> converter) {
-		return converter.bindWithProperty(this, errorNotifier);
+		return converter.bind(this, errorNotifier);
 	}
 
 	public IBindingController<T> bind(final IComponentBinding<T> binding) {

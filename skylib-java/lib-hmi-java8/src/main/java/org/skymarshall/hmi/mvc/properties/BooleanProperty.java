@@ -49,7 +49,7 @@ public class BooleanProperty extends AbstractTypedProperty<Boolean> {
 	}
 
 	public <C> IBindingController<C> bind(final AbstractObjectConverter<Boolean, C> converter) {
-		return converter.bindWithProperty(this, errorNotifier);
+		return converter.bind(this, errorNotifier);
 	}
 
 	public IBindingController<Boolean> bind(final IComponentBinding<Boolean> binding) {

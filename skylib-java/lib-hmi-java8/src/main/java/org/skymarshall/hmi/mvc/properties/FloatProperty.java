@@ -50,7 +50,7 @@ public class FloatProperty extends AbstractTypedProperty<Float> {
 	}
 
 	public <C> IBindingController<C> bind(final AbstractObjectConverter<Float, C> converter) {
-		return converter.bindWithProperty(this, errorNotifier);
+		return converter.bind(this, errorNotifier);
 	}
 
 	public IBindingController<Float> bind(final IComponentBinding<Float> binding) {

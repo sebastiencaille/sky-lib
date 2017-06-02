@@ -171,9 +171,9 @@ public abstract class AbstractLink<FromType, ToType> implements IComponentLink<T
 	/**
 	 * Controls the binding to the property.
 	 * <p>
-	 * Allows preventing the transmission of the value set into the property,
-	 * and restoring the component value when reattached. Useful when you want
-	 * to use the {@link BindingSelector}
+	 * Allows preventing the transmission of the value set into the property, and
+	 * restoring the component value when reattached. Useful when you want to use
+	 * the {@link BindingSelector}
 	 */
 	private class PropertyBindingController extends AbstractLinkController implements BindingFrom<FromType> {
 
@@ -333,7 +333,7 @@ public abstract class AbstractLink<FromType, ToType> implements IComponentLink<T
 	}
 
 	/**
-	 * Chains this link to a property.
+	 * Chains this link to a propery
 	 *
 	 * @param aProperty
 	 *            the property this link is chained to
@@ -350,7 +350,7 @@ public abstract class AbstractLink<FromType, ToType> implements IComponentLink<T
 	}
 
 	/**
-	 * Chains a link to this link
+	 * Chains this link to the previous link
 	 * <p>
 	 *
 	 * @param link

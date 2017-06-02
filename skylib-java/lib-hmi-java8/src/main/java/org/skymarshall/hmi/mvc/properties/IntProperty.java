@@ -52,7 +52,7 @@ public class IntProperty extends AbstractTypedProperty<Integer> {
 	}
 
 	public <C> IBindingController<C> bind(final AbstractObjectConverter<Integer, C> converter) {
-		return converter.bindWithProperty(this, errorNotifier);
+		return converter.bind(this, errorNotifier);
 	}
 
 	public IBindingController<Integer> bind(final IComponentBinding<Integer> binding) {

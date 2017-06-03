@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2013 Sebastien Caille.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms are permitted
  * provided that the above copyright notice and this paragraph are
  * duplicated in all such forms and that any documentation,
@@ -19,24 +19,24 @@ import org.skymarshall.hmi.mvc.HmiErrors.HmiError;
 
 public class HmiErrorToStringConverter extends AbstractObjectConverter<HmiError, String> {
 
-    public HmiErrorToStringConverter() {
-    }
+	public HmiErrorToStringConverter() {
+	}
 
-    @Override
-    protected HmiError convertComponentValueToPropertyValue(final String text) {
-        throw new IllegalStateException("No error can be created from HMI");
-    }
+	@Override
+	public HmiError convertComponentValueToPropertyValue(final String text) {
+		throw new IllegalStateException("No error can be created from HMI");
+	}
 
-    @Override
-    protected String convertPropertyValueToComponentValue(final HmiError value) {
-        if (value == null) {
-            return "No error provided";
-        }
-        final Object content = value.getContent();
-        if (content instanceof Exception) {
-            return ((Exception) content).getLocalizedMessage();
-        }
-        return String.valueOf(content);
-    }
+	@Override
+	public String convertPropertyValueToComponentValue(final HmiError value) {
+		if (value == null) {
+			return "No error provided";
+		}
+		final Object content = value.getContent();
+		if (content instanceof Exception) {
+			return ((Exception) content).getLocalizedMessage();
+		}
+		return String.valueOf(content);
+	}
 
 }

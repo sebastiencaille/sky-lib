@@ -15,39 +15,10 @@
  ******************************************************************************/
 package org.skymarshall.hmi.mvc.converters;
 
-import org.skymarshall.hmi.mvc.AbstractLink;
-import org.skymarshall.hmi.mvc.HmiErrors;
-import org.skymarshall.hmi.mvc.properties.AbstractProperty;
+public interface AbstractConverter<PropertyType, ComponentType> {
 
-public abstract class AbstractConverter<PropertyType, ComponentType> extends AbstractLink<PropertyType, ComponentType> {
+	ComponentType convertPropertyValueToComponentValue(final PropertyType propertyValue);
 
-	protected abstract ComponentType convertPropertyValueToComponentValue(final PropertyType propertyValue);
-
-	protected abstract PropertyType convertComponentValueToPropertyValue(ComponentType componentValue)
-			throws ConversionException;
-
-	public AbstractConverter() {
-	}
-
-	@Override
-	protected void setValueFromProperty(final AbstractProperty source, final PropertyType value) {
-		final ComponentType converted = convertPropertyValueToComponentValue(value);
-		bindingTo.setComponentSideValue(source, converted);
-	}
-
-	/**
-	 * Called by binding to set the value provided by the component
-	 *
-	 * @param source
-	 * @param componentValue
-	 */
-	@Override
-	public void setValueFromComponent(final Object source, final ComponentType componentValue) {
-		try {
-			bindingFrom.setPropertySideValue(source, convertComponentValueToPropertyValue(componentValue));
-		} catch (final ConversionException e) {
-			getErrorNotifier().notifyError(bindingTo.getComponent(), HmiErrors.fromException(e));
-		}
-	}
+	PropertyType convertComponentValueToPropertyValue(ComponentType componentValue) throws ConversionException;
 
 }

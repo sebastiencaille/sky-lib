@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2013 Sebastien Caille.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms are permitted
  * provided that the above copyright notice and this paragraph are
  * duplicated in all such forms and that any documentation,
@@ -15,30 +15,29 @@
  ******************************************************************************/
 package org.skymarshall.hmi.mvc.converters;
 
-
 public class EnumToStringConverter<E extends Enum<E>> extends AbstractObjectConverter<E, String> {
-    private final Class<E> clazz;
+	private final Class<E> clazz;
 
-    public EnumToStringConverter(final Class<E> clazz) {
-        this.clazz = clazz;
-    }
+	public EnumToStringConverter(final Class<E> clazz) {
+		this.clazz = clazz;
+	}
 
-    @Override
-    protected E convertComponentValueToPropertyValue(final String componentObject) {
-        for (final E value : clazz.getEnumConstants()) {
-            if (value.toString().equals(componentObject)) {
-                return value;
-            }
-        }
-        return null;
-    }
+	@Override
+	public E convertComponentValueToPropertyValue(final String componentObject) {
+		for (final E value : clazz.getEnumConstants()) {
+			if (value.toString().equals(componentObject)) {
+				return value;
+			}
+		}
+		return null;
+	}
 
-    @Override
-    protected String convertPropertyValueToComponentValue(final E value) {
-        if (value == null) {
-            return "";
-        }
-        return value.toString();
-    }
+	@Override
+	public String convertPropertyValueToComponentValue(final E value) {
+		if (value == null) {
+			return "";
+		}
+		return value.toString();
+	}
 
 }

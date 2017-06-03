@@ -15,25 +15,9 @@
  ******************************************************************************/
 package org.skymarshall.hmi.mvc.converters;
 
-import org.skymarshall.hmi.mvc.IBindingController;
-import org.skymarshall.hmi.mvc.properties.AbstractProperty.ErrorNotifier;
-import org.skymarshall.hmi.mvc.properties.FloatProperty;
-
-public abstract class AbstractFloatConverter<C> extends AbstractConverter<Float, C> {
+public abstract class AbstractFloatConverter<C> implements AbstractConverter<Float, C> {
 
 	public AbstractFloatConverter() {
-	}
-
-	private FloatProperty floatProperty;
-
-	public IBindingController<C> bindWithProperty(final FloatProperty aProperty, final ErrorNotifier errorNotifier) {
-		this.floatProperty = aProperty;
-		return super.bind(aProperty, errorNotifier);
-	}
-
-	@Override
-	public Float getPropertyValue() {
-		return Float.valueOf(floatProperty.getValue());
 	}
 
 }

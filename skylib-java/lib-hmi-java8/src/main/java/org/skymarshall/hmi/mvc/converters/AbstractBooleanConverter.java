@@ -17,32 +17,16 @@ package org.skymarshall.hmi.mvc.converters;
 
 import java.util.function.Supplier;
 
-import org.skymarshall.hmi.mvc.IBindingController;
-import org.skymarshall.hmi.mvc.properties.AbstractProperty.ErrorNotifier;
-import org.skymarshall.hmi.mvc.properties.BooleanProperty;
-
-public abstract class AbstractBooleanConverter<C> extends AbstractConverter<Boolean, C> {
+public abstract class AbstractBooleanConverter<C> implements AbstractConverter<Boolean, C> {
 
 	public AbstractBooleanConverter() {
-	}
-
-	private BooleanProperty booleanProperty;
-
-	public IBindingController<C> bindWithProperty(final BooleanProperty aProperty, final ErrorNotifier errorNotifier) {
-		this.booleanProperty = aProperty;
-		return super.bind(aProperty, errorNotifier);
-	}
-
-	@Override
-	public Boolean getPropertyValue() {
-		return Boolean.valueOf(booleanProperty.getValue());
 	}
 
 	public static <C> AbstractBooleanConverter<C> either(final Supplier<C> either, final Supplier<C> or) {
 		return new AbstractBooleanConverter<C>() {
 
 			@Override
-			protected C convertPropertyValueToComponentValue(final Boolean propertyValue) {
+			public C convertPropertyValueToComponentValue(final Boolean propertyValue) {
 				if (propertyValue) {
 					return either.get();
 				}
@@ -50,7 +34,7 @@ public abstract class AbstractBooleanConverter<C> extends AbstractConverter<Bool
 			}
 
 			@Override
-			protected Boolean convertComponentValueToPropertyValue(final C componentValue) throws ConversionException {
+			public Boolean convertComponentValueToPropertyValue(final C componentValue) throws ConversionException {
 				return null;
 			}
 

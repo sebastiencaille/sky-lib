@@ -17,13 +17,14 @@ package org.skymarshall.hmi.mvc.properties;
 
 import java.util.function.Consumer;
 
+import org.skymarshall.hmi.mvc.BindingChain;
+import org.skymarshall.hmi.mvc.BindingChain.EndOfChain;
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
 import org.skymarshall.hmi.mvc.IBindingController;
 import org.skymarshall.hmi.mvc.IComponentBinding;
 import org.skymarshall.hmi.mvc.PropertyEvent.EventKind;
 import org.skymarshall.hmi.mvc.converters.AbstractIntConverter;
 import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
-import org.skymarshall.hmi.mvc.converters.Converters;
 
 /**
  * Property containing an int value.
@@ -47,18 +48,20 @@ public class IntProperty extends AbstractTypedProperty<Integer> {
 		this(name, propertySupport, 0);
 	}
 
-	public <C> IBindingController<C> bind(final AbstractIntConverter<C> converter) {
-		return converter.bindWithProperty(this, errorNotifier);
+	private EndOfChain<Integer> bindingChain() {
+		return new BindingChain(this, errorNotifier).<Integer>bindProperty((c, v) -> setObjectValueFromComponent(c, v));
 	}
 
-	public <C> IBindingController<C> bind(final AbstractObjectConverter<Integer, C> converter) {
-		return converter.bind(this, errorNotifier);
+	public <C> EndOfChain<C> bind(final AbstractIntConverter<C> binding) {
+		return bindingChain().bind(binding);
 	}
 
-	public IBindingController<Integer> bind(final IComponentBinding<Integer> binding) {
-		final IBindingController<Integer> controller = Converters.intIdentity().bindWithProperty(this, errorNotifier);
-		controller.bind(binding);
-		return controller;
+	public <C> EndOfChain<C> bind(final AbstractObjectConverter<Integer, C> binding) {
+		return bindingChain().bind(binding);
+	}
+
+	public IBindingController bind(final IComponentBinding<Integer> binding) {
+		return bindingChain().bind(binding);
 	}
 
 	@SafeVarargs

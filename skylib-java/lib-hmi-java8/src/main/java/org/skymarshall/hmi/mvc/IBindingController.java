@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2013 Sebastien Caille.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms are permitted
  * provided that the above copyright notice and this paragraph are
  * duplicated in all such forms and that any documentation,
@@ -20,22 +20,20 @@ import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 /**
  * To change the state of the binding.
  * <p>
- * 
+ *
  * @author Sebastien Caille
  *
  * @param <ComponentType>
  */
-public interface IBindingController<ComponentType> {
+public interface IBindingController {
 
-    void attach();
+	void attach();
 
-    void detach();
+	void detach();
 
-    AbstractProperty getProperty();
+	AbstractProperty getProperty();
 
-    void bind(final IComponentBinding<ComponentType> newBinding);
+	void unbind();
 
-    <T> IBindingController<T> bind(final AbstractLink<ComponentType, T> converter);
-
-    void unbind();
+	void detachOnUpdateOf(AbstractProperty property);
 }

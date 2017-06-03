@@ -49,7 +49,6 @@ import org.skymarshall.example.hmi.TestObject;
 import org.skymarshall.example.hmi.TestObjectTableModel;
 import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
 import org.skymarshall.hmi.mvc.converters.ConversionException;
-import org.skymarshall.hmi.mvc.converters.Converters;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 import org.skymarshall.hmi.mvc.properties.BooleanProperty;
 import org.skymarshall.hmi.mvc.properties.ErrorProperty;
@@ -134,8 +133,8 @@ public class ControllerExampleView extends JFrame {
 		listObjectProperty.bind(new DynamicListContentConverter()).bind(values(dynamicListSelectionEditor));
 
 		final ObjectProperty<String> dynamicListSelectionProperty = model.getDynamicListObjectProperty();
-		dynamicListSelectionProperty.bind(Converters.detachOnUpdate(model.getListObjectProperty()))
-				.bind(selection(dynamicListSelectionEditor, String.class));
+		dynamicListSelectionProperty.bind(selection(dynamicListSelectionEditor, String.class))
+				.detachOnUpdateOf(model.getListObjectProperty());
 		dynamicListSelectionProperty.bind(text(dynamicListSelectionCheck));
 		dynamicListSelectionProperty.bind(counter()).bind(text(dynamicListSelectionCounter));
 
@@ -189,12 +188,12 @@ public class ControllerExampleView extends JFrame {
 		private int count = 0;
 
 		@Override
-		protected T convertComponentValueToPropertyValue(final String componentValue) throws ConversionException {
+		public T convertComponentValueToPropertyValue(final String componentValue) throws ConversionException {
 			return null;
 		}
 
 		@Override
-		protected String convertPropertyValueToComponentValue(final T propertyValue) {
+		public String convertPropertyValueToComponentValue(final T propertyValue) {
 			return String.valueOf(++count);
 		}
 	}

@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2013 Sebastien Caille.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms are permitted
  * provided that the above copyright notice and this paragraph are
  * duplicated in all such forms and that any documentation,
@@ -24,27 +24,27 @@ import org.skymarshall.hmi.mvc.converters.ConversionException;
 
 public class DynamicListContentConverter extends AbstractObjectConverter<String, List<String>> {
 
-    @Override
-    protected List<String> convertPropertyValueToComponentValue(final String propertyValue) {
+	@Override
+	public List<String> convertPropertyValueToComponentValue(final String propertyValue) {
 
-        if (propertyValue == null) {
-            return Collections.emptyList();
-        }
+		if (propertyValue == null) {
+			return Collections.emptyList();
+		}
 
-        switch (propertyValue) {
-        case "A":
-            return Arrays.asList("A", "B", "C");
-        case "B":
-            return Arrays.asList("B", "C", "D");
-        case "C":
-            return Arrays.asList("C", "D", "E");
-        }
-        return Collections.emptyList();
-    }
+		switch (propertyValue) {
+		case "A":
+			return Arrays.asList("A", "B", "C");
+		case "B":
+			return Arrays.asList("B", "C", "D");
+		case "C":
+			return Arrays.asList("C", "D", "E");
+		}
+		return Collections.emptyList();
+	}
 
-    @Override
-    protected String convertComponentValueToPropertyValue(final List<String> componentValue) throws ConversionException {
-        return null;
-    }
+	@Override
+	public String convertComponentValueToPropertyValue(final List<String> componentValue) throws ConversionException {
+		return null;
+	}
 
 }

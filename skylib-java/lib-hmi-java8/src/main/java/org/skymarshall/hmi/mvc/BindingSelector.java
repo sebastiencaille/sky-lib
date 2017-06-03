@@ -36,14 +36,14 @@ import org.skymarshall.hmi.mvc.properties.AbstractProperty;
  */
 public class BindingSelector<T> implements PropertyChangeListener {
 
-	private final Map<T, List<IBindingController<?>>> objectControllers = new WeakHashMap<>();
+	private final Map<T, List<IBindingController>> objectControllers = new WeakHashMap<>();
 
 	public BindingSelector(final AbstractProperty property) {
 		property.addListener(this);
 	}
 
-	public void add(final T object, final IBindingController<?>... controllers) {
-		List<IBindingController<?>> ctrls = objectControllers.get(object);
+	public void add(final T object, final IBindingController... controllers) {
+		List<IBindingController> ctrls = objectControllers.get(object);
 		if (ctrls == null) {
 			ctrls = new ArrayList<>();
 			objectControllers.put(object, ctrls);
@@ -56,17 +56,17 @@ public class BindingSelector<T> implements PropertyChangeListener {
 
 		final Object oldValue = evt.getOldValue();
 		if (oldValue != null) {
-			final List<IBindingController<?>> toDetach = objectControllers.get(oldValue);
-			for (final IBindingController<?> controller : toDetach) {
+			final List<IBindingController> toDetach = objectControllers.get(oldValue);
+			for (final IBindingController controller : toDetach) {
 				controller.detach();
 			}
 		}
 
 		final Object newValue = evt.getNewValue();
 		if (newValue != null) {
-			final List<IBindingController<?>> toAttach = objectControllers.get(newValue);
+			final List<IBindingController> toAttach = objectControllers.get(newValue);
 			if (toAttach != null) {
-				for (final IBindingController<?> controller : toAttach) {
+				for (final IBindingController controller : toAttach) {
 					controller.attach();
 				}
 			}

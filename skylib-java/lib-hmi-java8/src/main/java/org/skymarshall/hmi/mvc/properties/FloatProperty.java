@@ -15,13 +15,14 @@
  ******************************************************************************/
 package org.skymarshall.hmi.mvc.properties;
 
+import org.skymarshall.hmi.mvc.BindingChain;
+import org.skymarshall.hmi.mvc.BindingChain.EndOfChain;
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
 import org.skymarshall.hmi.mvc.IBindingController;
 import org.skymarshall.hmi.mvc.IComponentBinding;
 import org.skymarshall.hmi.mvc.PropertyEvent.EventKind;
 import org.skymarshall.hmi.mvc.converters.AbstractFloatConverter;
 import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
-import org.skymarshall.hmi.mvc.converters.Converters;
 
 /**
  * Property containing a float value.
@@ -45,18 +46,20 @@ public class FloatProperty extends AbstractTypedProperty<Float> {
 		this(name, propertySupport, 0.0f);
 	}
 
-	public <C> IBindingController<C> bind(final AbstractFloatConverter<C> converter) {
-		return converter.bindWithProperty(this, errorNotifier);
+	private EndOfChain<Float> bindingChain() {
+		return new BindingChain(this, errorNotifier).<Float>bindProperty((c, v) -> setObjectValueFromComponent(c, v));
 	}
 
-	public <C> IBindingController<C> bind(final AbstractObjectConverter<Float, C> converter) {
-		return converter.bind(this, errorNotifier);
+	public <C> EndOfChain<C> bind(final AbstractFloatConverter<C> binding) {
+		return bindingChain().bind(binding);
 	}
 
-	public IBindingController<Float> bind(final IComponentBinding<Float> binding) {
-		final IBindingController<Float> controller = Converters.floatIdentity().bindWithProperty(this, errorNotifier);
-		controller.bind(binding);
-		return controller;
+	public <C> EndOfChain<C> bind(final AbstractObjectConverter<Float, C> binding) {
+		return bindingChain().bind(binding);
+	}
+
+	public IBindingController bind(final IComponentBinding<Float> binding) {
+		return bindingChain().bind(binding);
 	}
 
 	public void setValue(final Object caller, final float newValue) {

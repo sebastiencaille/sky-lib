@@ -18,14 +18,7 @@ package org.skymarshall.hmi.mvc.converters;
 import java.util.function.Function;
 
 import org.skymarshall.hmi.Utils;
-import org.skymarshall.hmi.mvc.AbstractLink;
 import org.skymarshall.hmi.mvc.HmiErrors.HmiError;
-import org.skymarshall.hmi.mvc.IBindingController;
-import org.skymarshall.hmi.mvc.IPropertyEventListener;
-import org.skymarshall.hmi.mvc.PropertyEvent;
-import org.skymarshall.hmi.mvc.properties.AbstractProperty;
-import org.skymarshall.hmi.mvc.properties.AbstractProperty.ErrorNotifier;
-import org.skymarshall.hmi.mvc.properties.AbstractTypedProperty;
 import org.skymarshall.util.FunctionWithException;
 import org.skymarshall.util.Lambda;
 
@@ -40,12 +33,12 @@ public final class Converters {
 		return new AbstractObjectConverter<T, C>() {
 
 			@Override
-			protected C convertPropertyValueToComponentValue(final T propertyValue) {
+			public C convertPropertyValueToComponentValue(final T propertyValue) {
 				return prop2comp.apply(propertyValue);
 			}
 
 			@Override
-			protected T convertComponentValueToPropertyValue(final C componentValue) throws ConversionException {
+			public T convertComponentValueToPropertyValue(final C componentValue) throws ConversionException {
 				return comp2prop.apply(componentValue);
 			}
 
@@ -57,12 +50,12 @@ public final class Converters {
 		return new AbstractIntConverter<C>() {
 
 			@Override
-			protected C convertPropertyValueToComponentValue(final Integer propertyValue) {
+			public C convertPropertyValueToComponentValue(final Integer propertyValue) {
 				return prop2comp.apply(propertyValue);
 			}
 
 			@Override
-			protected Integer convertComponentValueToPropertyValue(final C componentValue) throws ConversionException {
+			public Integer convertComponentValueToPropertyValue(final C componentValue) throws ConversionException {
 				return comp2prop.apply(componentValue);
 			}
 
@@ -74,12 +67,12 @@ public final class Converters {
 		return new AbstractLongConverter<C>() {
 
 			@Override
-			protected C convertPropertyValueToComponentValue(final Long propertyValue) {
+			public C convertPropertyValueToComponentValue(final Long propertyValue) {
 				return prop2comp.apply(propertyValue);
 			}
 
 			@Override
-			protected Long convertComponentValueToPropertyValue(final C componentValue) throws ConversionException {
+			public Long convertComponentValueToPropertyValue(final C componentValue) throws ConversionException {
 				return comp2prop.apply(componentValue);
 			}
 
@@ -91,12 +84,12 @@ public final class Converters {
 		return new AbstractBooleanConverter<C>() {
 
 			@Override
-			protected C convertPropertyValueToComponentValue(final Boolean propertyValue) {
+			public C convertPropertyValueToComponentValue(final Boolean propertyValue) {
 				return prop2comp.apply(propertyValue);
 			}
 
 			@Override
-			protected Boolean convertComponentValueToPropertyValue(final C componentValue) throws ConversionException {
+			public Boolean convertComponentValueToPropertyValue(final C componentValue) throws ConversionException {
 				return comp2prop.apply(componentValue);
 			}
 
@@ -108,12 +101,12 @@ public final class Converters {
 		return new AbstractFloatConverter<C>() {
 
 			@Override
-			protected C convertPropertyValueToComponentValue(final Float propertyValue) {
+			public C convertPropertyValueToComponentValue(final Float propertyValue) {
 				return prop2comp.apply(propertyValue);
 			}
 
 			@Override
-			protected Float convertComponentValueToPropertyValue(final C componentValue) throws ConversionException {
+			public Float convertComponentValueToPropertyValue(final C componentValue) throws ConversionException {
 				return comp2prop.apply(componentValue);
 			}
 
@@ -192,72 +185,4 @@ public final class Converters {
 		return writeOnly((p) -> p != null);
 	}
 
-	public static <T> AbstractObjectConverter<T, T> detachOnUpdate(final AbstractProperty updatedProperty) {
-
-		return new AbstractObjectConverter<T, T>() {
-
-			private void addListener(final IBindingController<?> controller) {
-				updatedProperty.addListener(new IPropertyEventListener() {
-
-					@Override
-					public void propertyModified(final Object caller, final PropertyEvent event) {
-						switch (event.getKind()) {
-						case BEFORE:
-							controller.detach();
-							break;
-						case AFTER:
-							transmit = true;
-							controller.attach();
-							break;
-						default:
-							// ignore
-							break;
-						}
-
-					}
-				});
-			}
-
-			@Override
-			public IBindingController<T> bind(final AbstractTypedProperty<T> aProperty, final ErrorNotifier notifier) {
-				final IBindingController<T> controller = super.bind(aProperty, notifier);
-				addListener(controller);
-				return controller;
-			}
-
-			@Override
-			public IBindingController<T> bind(final AbstractLink<?, T> link, final ErrorNotifier notifier) {
-				final IBindingController<T> controller = super.bind(link, notifier);
-				addListener(controller);
-				return controller;
-			}
-
-			@Override
-			public void setValueFromComponent(final Object source, final T componentValue) {
-				if (!transmit) {
-					return;
-				}
-				super.setValueFromComponent(source, componentValue);
-			}
-
-			@Override
-			protected void setValueFromProperty(final AbstractProperty source, final T value) {
-				if (!transmit) {
-					return;
-				}
-				super.setValueFromProperty(source, value);
-			}
-
-			@Override
-			protected T convertPropertyValueToComponentValue(final T propertyValue) {
-				return propertyValue;
-			}
-
-			@Override
-			protected T convertComponentValueToPropertyValue(final T componentValue) throws ConversionException {
-				return componentValue;
-			}
-
-		};
-	}
 }

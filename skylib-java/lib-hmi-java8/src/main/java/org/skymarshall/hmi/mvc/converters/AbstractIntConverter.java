@@ -15,25 +15,9 @@
  ******************************************************************************/
 package org.skymarshall.hmi.mvc.converters;
 
-import org.skymarshall.hmi.mvc.IBindingController;
-import org.skymarshall.hmi.mvc.properties.AbstractProperty.ErrorNotifier;
-import org.skymarshall.hmi.mvc.properties.IntProperty;
-
-public abstract class AbstractIntConverter<C> extends AbstractConverter<Integer, C> {
+public abstract class AbstractIntConverter<C> implements AbstractConverter<Integer, C> {
 
 	public AbstractIntConverter() {
-	}
-
-	private IntProperty intProperty;
-
-	public IBindingController<C> bindWithProperty(final IntProperty aProperty, final ErrorNotifier errorNotifier) {
-		this.intProperty = aProperty;
-		return super.bind(aProperty, errorNotifier);
-	}
-
-	@Override
-	public Integer getPropertyValue() {
-		return Integer.valueOf(intProperty.getValue());
 	}
 
 }

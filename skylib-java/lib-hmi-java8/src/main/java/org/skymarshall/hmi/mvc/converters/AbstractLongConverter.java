@@ -15,25 +15,9 @@
  ******************************************************************************/
 package org.skymarshall.hmi.mvc.converters;
 
-import org.skymarshall.hmi.mvc.IBindingController;
-import org.skymarshall.hmi.mvc.properties.AbstractProperty.ErrorNotifier;
-import org.skymarshall.hmi.mvc.properties.LongProperty;
-
-public abstract class AbstractLongConverter<C> extends AbstractConverter<Long, C> {
+public abstract class AbstractLongConverter<C> implements AbstractConverter<Long, C> {
 
 	public AbstractLongConverter() {
-	}
-
-	private LongProperty longProperty;
-
-	public IBindingController<C> bindWithProperty(final LongProperty aProperty, final ErrorNotifier errorNotifier) {
-		this.longProperty = aProperty;
-		return super.bind(aProperty, errorNotifier);
-	}
-
-	@Override
-	public Long getPropertyValue() {
-		return Long.valueOf(longProperty.getValue());
 	}
 
 }

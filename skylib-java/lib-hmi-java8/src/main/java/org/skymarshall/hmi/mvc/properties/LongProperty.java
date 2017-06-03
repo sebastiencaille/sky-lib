@@ -15,13 +15,14 @@
  ******************************************************************************/
 package org.skymarshall.hmi.mvc.properties;
 
+import org.skymarshall.hmi.mvc.BindingChain;
+import org.skymarshall.hmi.mvc.BindingChain.EndOfChain;
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
 import org.skymarshall.hmi.mvc.IBindingController;
 import org.skymarshall.hmi.mvc.IComponentBinding;
 import org.skymarshall.hmi.mvc.PropertyEvent.EventKind;
 import org.skymarshall.hmi.mvc.converters.AbstractLongConverter;
 import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
-import org.skymarshall.hmi.mvc.converters.Converters;
 
 /**
  * Property containing a long value.
@@ -45,18 +46,20 @@ public class LongProperty extends AbstractTypedProperty<Long> {
 		this(name, propertySupport, 0);
 	}
 
-	public <C> IBindingController<C> bind(final AbstractLongConverter<C> converter) {
-		return converter.bindWithProperty(this, errorNotifier);
+	private EndOfChain<Long> bindingChain() {
+		return new BindingChain(this, errorNotifier).<Long>bindProperty((c, v) -> setObjectValueFromComponent(c, v));
 	}
 
-	public <C> IBindingController<C> bind(final AbstractObjectConverter<Long, C> converter) {
-		return converter.bind(this, errorNotifier);
+	public <C> EndOfChain<C> bind(final AbstractLongConverter<C> binding) {
+		return bindingChain().bind(binding);
 	}
 
-	public IBindingController<Long> bind(final IComponentBinding<Long> binding) {
-		final IBindingController<Long> controller = Converters.longIdentity().bindWithProperty(this, errorNotifier);
-		controller.bind(binding);
-		return controller;
+	public <C> EndOfChain<C> bind(final AbstractObjectConverter<Long, C> binding) {
+		return bindingChain().bind(binding);
+	}
+
+	public IBindingController bind(final IComponentBinding<Long> binding) {
+		return bindingChain().bind(binding);
 	}
 
 	public void setValue(final Object caller, final long newValue) {

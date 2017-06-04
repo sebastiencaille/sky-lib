@@ -18,11 +18,7 @@ package org.skymarshall.hmi.mvc.properties;
 import org.skymarshall.hmi.mvc.BindingChain;
 import org.skymarshall.hmi.mvc.BindingChain.EndOfChain;
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
-import org.skymarshall.hmi.mvc.IBindingController;
-import org.skymarshall.hmi.mvc.IComponentBinding;
-import org.skymarshall.hmi.mvc.PropertyEvent.EventKind;
 import org.skymarshall.hmi.mvc.converters.AbstractBooleanConverter;
-import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
 
 /**
  * Property containing a boolean value.
@@ -45,46 +41,31 @@ public class BooleanProperty extends AbstractTypedProperty<Boolean> {
 		this(name, propertySupport, false);
 	}
 
-	private EndOfChain<Boolean> bindingChain() {
+	@Override
+	protected EndOfChain<Boolean> createBindingChain() {
 		return new BindingChain(this, errorNotifier).<Boolean>bindProperty((c, v) -> setObjectValueFromComponent(c, v));
 	}
 
 	public <C> EndOfChain<C> bind(final AbstractBooleanConverter<C> binding) {
-		return bindingChain().bind(binding);
-	}
-
-	public <C> EndOfChain<C> bind(final AbstractObjectConverter<Boolean, C> binding) {
-		return bindingChain().bind(binding);
-	}
-
-	public IBindingController bind(final IComponentBinding<Boolean> binding) {
-		return bindingChain().bind(binding);
-	}
-
-	public void setValue(final Object caller, final boolean newValue) {
-		if (!attached) {
-			return;
-		}
-		onValueSet(caller, EventKind.BEFORE);
-		try {
-			final boolean oldValue = value;
-			value = newValue;
-			propertySupport.firePropertyChange(getName(), caller, Boolean.valueOf(oldValue), Boolean.valueOf(newValue));
-		} finally {
-			onValueSet(caller, EventKind.AFTER);
-		}
+		return createBindingChain().bind(binding);
 	}
 
 	public boolean getValue() {
 		return value;
 	}
 
+	public void setValue(final Object caller, final boolean newValue) {
+		setObjectValue(caller, newValue);
+	}
+
 	@Override
-	public void setObjectValue(final Object caller, final Boolean newValue) {
+	protected Boolean replaceValue(final Boolean newValue) {
 		if (newValue == null) {
 			throw new IllegalArgumentException("Null value is not allowed");
 		}
-		setValue(caller, newValue.booleanValue());
+		final boolean oldValue = value;
+		value = newValue;
+		return oldValue;
 	}
 
 	@Override

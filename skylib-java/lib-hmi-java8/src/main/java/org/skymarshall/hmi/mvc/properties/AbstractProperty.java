@@ -137,7 +137,8 @@ public abstract class AbstractProperty {
 		}
 	}
 
-	public AbstractProperty setConfiguration(final Consumer<AbstractProperty>... properties) {
+	public AbstractProperty setConfiguration(
+			@SuppressWarnings("unchecked") final Consumer<AbstractProperty>... properties) {
 		for (final Consumer<AbstractProperty> prop : properties) {
 			prop.accept(this);
 		}

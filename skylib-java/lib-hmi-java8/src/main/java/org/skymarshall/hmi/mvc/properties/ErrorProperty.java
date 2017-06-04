@@ -34,6 +34,6 @@ public class ErrorProperty extends ObjectProperty<HmiError> implements ErrorNoti
 
 	@Override
 	public void notifyError(final Object caller, final HmiError e) {
-		setValue(caller, e);
+		setObjectValue(caller, e);
 	}
 }

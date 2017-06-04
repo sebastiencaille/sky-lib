@@ -66,9 +66,9 @@ public class ListModel<T> extends AbstractListModel<T> implements Iterable<T> {
 
 	/**
 	 * An edition in progress
-	 * 
+	 *
 	 * @author Sebastien Caille
-	 * 
+	 *
 	 */
 	private class Edition implements IEdition<T>, Serializable {
 		final T value;
@@ -118,7 +118,7 @@ public class ListModel<T> extends AbstractListModel<T> implements Iterable<T> {
 
 	private transient ControllerPropertyChangeSupport propertyChange = new ControllerPropertyChangeSupport(this, false);
 
-	private final List<T> data = new ArrayList<T>();
+	private final List<T> data = new ArrayList<>();
 
 	/**
 	 * The current view
@@ -354,7 +354,7 @@ public class ListModel<T> extends AbstractListModel<T> implements Iterable<T> {
 
 	/**
 	 * Sets a new view on the list
-	 * 
+	 *
 	 * @param newView
 	 */
 	public void setView(final IListView<T> newView) {
@@ -629,10 +629,10 @@ public class ListModel<T> extends AbstractListModel<T> implements Iterable<T> {
 
 	/**
 	 * Finds an object in the model, and starts its edition if found
-	 * 
+	 *
 	 * @param sample
-	 *            a sample of the object (must contains the values required to
-	 *            find the object)
+	 *            a sample of the object (must contains the values required to find
+	 *            the object)
 	 * @return an object if found, null if not
 	 */
 	public IEdition<T> findForEdition(final T sample) {
@@ -645,10 +645,10 @@ public class ListModel<T> extends AbstractListModel<T> implements Iterable<T> {
 
 	/**
 	 * Finds an object in the model, or insert the sample if not found.
-	 * 
+	 *
 	 * @param sample
-	 *            a sample of the object (must contains the values required to
-	 *            find the object)
+	 *            a sample of the object (must contains the values required to find
+	 *            the object)
 	 * @return an object if found, the sample if not found
 	 */
 	public T findOrCreate(final T sample) {
@@ -661,12 +661,12 @@ public class ListModel<T> extends AbstractListModel<T> implements Iterable<T> {
 	}
 
 	/**
-	 * Finds an object in the model, starting it's edition, or insert the sample
-	 * if not found.
-	 * 
+	 * Finds an object in the model, starting it's edition, or insert the sample if
+	 * not found.
+	 *
 	 * @param sample
-	 *            a sample of the object (must contains the values required to
-	 *            find the object)
+	 *            a sample of the object (must contains the values required to find
+	 *            the object)
 	 * @return an object if found, the sample if not found
 	 */
 	public IEdition<T> findOrCreateForEdition(final T sample) {

@@ -20,11 +20,7 @@ import java.util.function.Consumer;
 import org.skymarshall.hmi.mvc.BindingChain;
 import org.skymarshall.hmi.mvc.BindingChain.EndOfChain;
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
-import org.skymarshall.hmi.mvc.IBindingController;
-import org.skymarshall.hmi.mvc.IComponentBinding;
-import org.skymarshall.hmi.mvc.PropertyEvent.EventKind;
 import org.skymarshall.hmi.mvc.converters.AbstractIntConverter;
-import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
 
 /**
  * Property containing an int value.
@@ -48,20 +44,13 @@ public class IntProperty extends AbstractTypedProperty<Integer> {
 		this(name, propertySupport, 0);
 	}
 
-	private EndOfChain<Integer> bindingChain() {
+	@Override
+	protected EndOfChain<Integer> createBindingChain() {
 		return new BindingChain(this, errorNotifier).<Integer>bindProperty((c, v) -> setObjectValueFromComponent(c, v));
 	}
 
 	public <C> EndOfChain<C> bind(final AbstractIntConverter<C> binding) {
-		return bindingChain().bind(binding);
-	}
-
-	public <C> EndOfChain<C> bind(final AbstractObjectConverter<Integer, C> binding) {
-		return bindingChain().bind(binding);
-	}
-
-	public IBindingController bind(final IComponentBinding<Integer> binding) {
-		return bindingChain().bind(binding);
+		return createBindingChain().bind(binding);
 	}
 
 	@SafeVarargs
@@ -71,30 +60,22 @@ public class IntProperty extends AbstractTypedProperty<Integer> {
 		return this;
 	}
 
-	public void setValue(final Object caller, final int newValue) {
-		if (!attached) {
-			return;
-		}
-		onValueSet(caller, EventKind.BEFORE);
-		try {
-			final int oldValue = value;
-			value = newValue;
-			propertySupport.firePropertyChange(getName(), caller, Integer.valueOf(oldValue), Integer.valueOf(newValue));
-		} finally {
-			onValueSet(caller, EventKind.AFTER);
-		}
-	}
-
 	public int getValue() {
 		return value;
 	}
 
+	public void setValue(final Object caller, final int newValue) {
+		setObjectValue(caller, newValue);
+	}
+
 	@Override
-	public void setObjectValue(final Object caller, final Integer newValue) {
+	protected Integer replaceValue(final Integer newValue) {
 		if (newValue == null) {
 			throw new IllegalArgumentException("Null value is not allowed");
 		}
-		setValue(caller, newValue.intValue());
+		final int oldValue = value;
+		value = newValue;
+		return oldValue;
 	}
 
 	@Override
@@ -110,7 +91,7 @@ public class IntProperty extends AbstractTypedProperty<Integer> {
 
 	@Override
 	public void reset(final Object caller) {
-		setValue(this, defaultValue);
+		setObjectValue(this, defaultValue);
 	}
 
 }

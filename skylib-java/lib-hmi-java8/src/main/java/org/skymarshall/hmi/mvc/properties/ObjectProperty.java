@@ -21,10 +21,6 @@ import java.util.function.Consumer;
 import org.skymarshall.hmi.mvc.BindingChain;
 import org.skymarshall.hmi.mvc.BindingChain.EndOfChain;
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
-import org.skymarshall.hmi.mvc.IBindingController;
-import org.skymarshall.hmi.mvc.IComponentBinding;
-import org.skymarshall.hmi.mvc.PropertyEvent.EventKind;
-import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
 
 /**
  * A property that contains an object.
@@ -51,16 +47,9 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 		this(name, propertySupport, null);
 	}
 
-	private EndOfChain<T> bindingChain() {
+	@Override
+	protected EndOfChain<T> createBindingChain() {
 		return new BindingChain(this, errorNotifier).<T>bindProperty((c, v) -> setObjectValueFromComponent(c, v));
-	}
-
-	public <C> EndOfChain<C> bind(final AbstractObjectConverter<T, C> binding) {
-		return bindingChain().bind(binding);
-	}
-
-	public IBindingController bind(final IComponentBinding<T> binding) {
-		return bindingChain().bind(binding);
 	}
 
 	@Override
@@ -70,27 +59,20 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 		return this;
 	}
 
+	@Override
+	protected T replaceValue(final T newValue) {
+		final T oldValue = value;
+		value = newValue;
+		return oldValue;
+	}
+
 	public void setValue(final Object caller, final T newValue) {
-		onValueSet(caller, EventKind.BEFORE);
-		try {
-			final T oldValue = value;
-			value = newValue;
-			if (attached && (oldValue != null || newValue != null)) {
-				propertySupport.firePropertyChange(getName(), caller, oldValue, newValue);
-			}
-		} finally {
-			onValueSet(caller, EventKind.AFTER);
-		}
+		setObjectValue(caller, newValue);
 	}
 
 	@Override
 	public T getObjectValue() {
 		return getValue();
-	}
-
-	@Override
-	public void setObjectValue(final Object caller, final T newValue) {
-		setValue(caller, newValue);
 	}
 
 	public void forceChanged(final Object caller) {
@@ -117,7 +99,7 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 
 	@Override
 	public void reset(final Object caller) {
-		setValue(this, defaultValue);
+		setObjectValue(this, defaultValue);
 	}
 
 }

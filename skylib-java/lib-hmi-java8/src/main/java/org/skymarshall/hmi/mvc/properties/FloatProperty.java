@@ -18,11 +18,7 @@ package org.skymarshall.hmi.mvc.properties;
 import org.skymarshall.hmi.mvc.BindingChain;
 import org.skymarshall.hmi.mvc.BindingChain.EndOfChain;
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
-import org.skymarshall.hmi.mvc.IBindingController;
-import org.skymarshall.hmi.mvc.IComponentBinding;
-import org.skymarshall.hmi.mvc.PropertyEvent.EventKind;
 import org.skymarshall.hmi.mvc.converters.AbstractFloatConverter;
-import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
 
 /**
  * Property containing a float value.
@@ -46,46 +42,31 @@ public class FloatProperty extends AbstractTypedProperty<Float> {
 		this(name, propertySupport, 0.0f);
 	}
 
-	private EndOfChain<Float> bindingChain() {
+	@Override
+	protected EndOfChain<Float> createBindingChain() {
 		return new BindingChain(this, errorNotifier).<Float>bindProperty((c, v) -> setObjectValueFromComponent(c, v));
 	}
 
 	public <C> EndOfChain<C> bind(final AbstractFloatConverter<C> binding) {
-		return bindingChain().bind(binding);
-	}
-
-	public <C> EndOfChain<C> bind(final AbstractObjectConverter<Float, C> binding) {
-		return bindingChain().bind(binding);
-	}
-
-	public IBindingController bind(final IComponentBinding<Float> binding) {
-		return bindingChain().bind(binding);
-	}
-
-	public void setValue(final Object caller, final float newValue) {
-		if (!attached) {
-			return;
-		}
-		onValueSet(caller, EventKind.BEFORE);
-		try {
-			final float oldValue = value;
-			value = newValue;
-			propertySupport.firePropertyChange(getName(), caller, Float.valueOf(oldValue), Float.valueOf(newValue));
-		} finally {
-			onValueSet(caller, EventKind.AFTER);
-		}
+		return createBindingChain().bind(binding);
 	}
 
 	public float getValue() {
 		return value;
 	}
 
+	public void setValue(final Object caller, final float newValue) {
+		setObjectValue(caller, newValue);
+	}
+
 	@Override
-	public void setObjectValue(final Object caller, final Float newValue) {
+	protected Float replaceValue(final Float newValue) {
 		if (newValue == null) {
 			throw new IllegalArgumentException("Null value is not allowed");
 		}
-		setValue(caller, newValue.floatValue());
+		final float oldValue = value;
+		value = newValue;
+		return oldValue;
 	}
 
 	@Override

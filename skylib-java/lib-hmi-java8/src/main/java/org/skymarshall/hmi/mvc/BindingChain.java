@@ -32,7 +32,9 @@ public class BindingChain implements IBindingController {
 
 	private final AbstractProperty property;
 
-	private final PropertyChangeListener listener;
+	private final List<AbstractProperty> dependenciesOf = new ArrayList<>();
+
+	private final PropertyChangeListener valueUpdateListener;
 
 	private boolean transmit = true;
 
@@ -125,7 +127,7 @@ public class BindingChain implements IBindingController {
 	public BindingChain(final AbstractProperty prop, final ErrorNotifier errorNotifier) {
 		this.property = prop;
 		this.errorNotifier = errorNotifier;
-		this.listener = new PropertyChangeListener() {
+		this.valueUpdateListener = new PropertyChangeListener() {
 
 			@Override
 			public void propertyChange(final PropertyChangeEvent evt) {
@@ -164,7 +166,7 @@ public class BindingChain implements IBindingController {
 	}
 
 	public <T> EndOfChain<T> bindProperty(final BiConsumer<Object, T> propertySetter) {
-		property.addListener(listener);
+		property.addListener(valueUpdateListener);
 		links.add(new Link() {
 			@Override
 			public Object toProperty(final Object component, final Object value) throws ConversionException {
@@ -202,12 +204,14 @@ public class BindingChain implements IBindingController {
 
 	@Override
 	public void detachOnUpdateOf(final AbstractProperty property) {
+		dependenciesOf.add(property);
 		property.addListener(detachReattachListener);
 	}
 
 	@Override
 	public void unbind() {
-
+		dependenciesOf.stream().forEach(p -> p.removeListener(detachReattachListener));
+		property.removeListener(valueUpdateListener);
 	}
 
 }

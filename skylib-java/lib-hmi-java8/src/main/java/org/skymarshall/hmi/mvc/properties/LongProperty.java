@@ -18,11 +18,7 @@ package org.skymarshall.hmi.mvc.properties;
 import org.skymarshall.hmi.mvc.BindingChain;
 import org.skymarshall.hmi.mvc.BindingChain.EndOfChain;
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
-import org.skymarshall.hmi.mvc.IBindingController;
-import org.skymarshall.hmi.mvc.IComponentBinding;
-import org.skymarshall.hmi.mvc.PropertyEvent.EventKind;
 import org.skymarshall.hmi.mvc.converters.AbstractLongConverter;
-import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
 
 /**
  * Property containing a long value.
@@ -46,46 +42,31 @@ public class LongProperty extends AbstractTypedProperty<Long> {
 		this(name, propertySupport, 0);
 	}
 
-	private EndOfChain<Long> bindingChain() {
+	@Override
+	protected EndOfChain<Long> createBindingChain() {
 		return new BindingChain(this, errorNotifier).<Long>bindProperty((c, v) -> setObjectValueFromComponent(c, v));
 	}
 
 	public <C> EndOfChain<C> bind(final AbstractLongConverter<C> binding) {
-		return bindingChain().bind(binding);
-	}
-
-	public <C> EndOfChain<C> bind(final AbstractObjectConverter<Long, C> binding) {
-		return bindingChain().bind(binding);
-	}
-
-	public IBindingController bind(final IComponentBinding<Long> binding) {
-		return bindingChain().bind(binding);
-	}
-
-	public void setValue(final Object caller, final long newValue) {
-		if (!attached) {
-			return;
-		}
-		onValueSet(caller, EventKind.BEFORE);
-		try {
-			final long oldValue = value;
-			value = newValue;
-			propertySupport.firePropertyChange(getName(), caller, Long.valueOf(oldValue), Long.valueOf(newValue));
-		} finally {
-			onValueSet(caller, EventKind.AFTER);
-		}
+		return createBindingChain().bind(binding);
 	}
 
 	public long getValue() {
 		return value;
 	}
 
+	public void setValue(final Object caller, final long newValue) {
+		setObjectValue(caller, newValue);
+	}
+
 	@Override
-	public void setObjectValue(final Object caller, final Long newValue) {
+	protected Long replaceValue(final Long newValue) {
 		if (newValue == null) {
 			throw new IllegalArgumentException("Null value is not allowed");
 		}
-		setValue(caller, newValue.longValue());
+		final long oldValue = value;
+		value = newValue;
+		return oldValue;
 	}
 
 	@Override
@@ -101,7 +82,7 @@ public class LongProperty extends AbstractTypedProperty<Long> {
 
 	@Override
 	public void reset(final Object caller) {
-		setValue(this, defaultValue);
+		setObjectValue(this, defaultValue);
 	}
 
 }

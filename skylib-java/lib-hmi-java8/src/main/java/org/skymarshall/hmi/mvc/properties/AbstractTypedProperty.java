@@ -2,7 +2,12 @@ package org.skymarshall.hmi.mvc.properties;
 
 import java.util.function.Consumer;
 
+import org.skymarshall.hmi.mvc.BindingChain.EndOfChain;
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
+import org.skymarshall.hmi.mvc.IBindingController;
+import org.skymarshall.hmi.mvc.IComponentBinding;
+import org.skymarshall.hmi.mvc.PropertyEvent.EventKind;
+import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
 
 /**
  * A property with a typed value.
@@ -43,15 +48,42 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 		}
 	}
 
-	public AbstractTypedProperty<T> setTypedConfiguration(final Consumer<AbstractTypedProperty<T>>... properties) {
+	public AbstractTypedProperty<T> setTypedConfiguration(
+			@SuppressWarnings("unchecked") final Consumer<AbstractTypedProperty<T>>... properties) {
 		for (final Consumer<AbstractTypedProperty<T>> prop : properties) {
 			prop.accept(this);
 		}
 		return this;
 	}
 
+	public <C> EndOfChain<C> bind(final AbstractObjectConverter<T, C> binding) {
+		return createBindingChain().bind(binding);
+	}
+
+	public IBindingController bind(final IComponentBinding<T> binding) {
+		return createBindingChain().bind(binding);
+	}
+
+	protected void setObjectValue(final Object caller, final T newValue) {
+		if (!attached) {
+			replaceValue(newValue);
+			return;
+		}
+		onValueSet(caller, EventKind.BEFORE);
+		try {
+			final T oldValue = replaceValue(newValue);
+			if (oldValue != null || newValue != null) {
+				propertySupport.firePropertyChange(getName(), caller, oldValue, newValue);
+			}
+		} finally {
+			onValueSet(caller, EventKind.AFTER);
+		}
+	}
+
+	protected abstract T replaceValue(T newValue);
+
 	public abstract T getObjectValue();
 
-	public abstract void setObjectValue(final Object caller, final T newValue);
+	protected abstract EndOfChain<T> createBindingChain();
 
 }

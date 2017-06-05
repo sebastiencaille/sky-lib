@@ -21,7 +21,7 @@ public class InFlowDecisionRule<InFlowType extends FlowData, InActionPointType e
 
 	private final Predicate<InFlowType> activationPredicate;
 	private final ActionPoint<InActionPointType, ?> actionPointToExecute;
-	private final CollectorFunction<InFlowType, InActionPointType> collectFunction;
+	private final CollectorFunction<InFlowType, InActionPointType> dataMuxFunction;
 	private final Class<InFlowType> inputClass;
 
 	public static <InFlow extends FlowData, ActPointInType extends FlowData> InFlowDecisionRule<InFlow, ActPointInType> input(
@@ -37,32 +37,33 @@ public class InFlowDecisionRule<InFlowType extends FlowData, InActionPointType e
 	 * @param inputClass
 	 * @param activationPredicate
 	 * @param actionPoint
-	 * @param fillFunction
+	 * @param dataMuxFunction
 	 * @return
 	 */
 	public static <InFlow extends FlowData, InActPointType extends FlowData> InFlowDecisionRule<InFlow, InActPointType> input(
 			final UUID uuid, final Class<InFlow> inputClass, final Predicate<InFlow> activationPredicate,
-			final ActionPoint<InActPointType, ?> actionPoint, final BiConsumer<InFlow, InActPointType> fillFunction) {
-		return new InFlowDecisionRule<>(uuid, inputClass, activationPredicate, actionPoint, new CollectorFunction<InFlow, InActPointType>() {
-			@Override
-			public InActPointType apply(final InFlow incomingData, final ActionPoint<InActPointType, ?> ap,
-					final Registry reg) {
-				final InActPointType in = ap.get(reg, incomingData);
-				fillFunction.accept(incomingData, in);
-				return in;
-			}
-		});
+			final ActionPoint<InActPointType, ?> actionPoint,
+			final BiConsumer<InFlow, InActPointType> dataMuxFunction) {
+		return new InFlowDecisionRule<>(uuid, inputClass, activationPredicate, actionPoint,
+				new CollectorFunction<InFlow, InActPointType>() {
+					@Override
+					public InActPointType apply(final InFlow incomingData, final ActionPoint<InActPointType, ?> ap,
+							final Registry reg) {
+						final InActPointType in = ap.get(reg, incomingData);
+						dataMuxFunction.accept(incomingData, in);
+						return in;
+					}
+				});
 	}
 
 	protected InFlowDecisionRule(final UUID uuid, final Class<InFlowType> inputClass,
-			final Predicate<InFlowType> activationPredicate,
-			final ActionPoint<InActionPointType, ?> ap,
-			final CollectorFunction<InFlowType, InActionPointType> collectFunction) {
+			final Predicate<InFlowType> activationPredicate, final ActionPoint<InActionPointType, ?> ap,
+			final CollectorFunction<InFlowType, InActionPointType> dataMuxFunction) {
 		super(uuid);
 		this.inputClass = inputClass;
 		this.activationPredicate = activationPredicate;
 		this.actionPointToExecute = ap;
-		this.collectFunction = collectFunction;
+		this.dataMuxFunction = dataMuxFunction;
 	}
 
 	public ActionPoint<?, ?> getActionPointToExecute() {
@@ -70,7 +71,7 @@ public class InFlowDecisionRule<InFlowType extends FlowData, InActionPointType e
 	}
 
 	protected InActionPointType convertData(final FlowData inFlow, final Registry registry) {
-		final InActionPointType apValue = collectFunction.apply(inputClass.cast(inFlow), actionPointToExecute,
+		final InActionPointType apValue = dataMuxFunction.apply(inputClass.cast(inFlow), actionPointToExecute,
 				registry);
 		apValue.setContext(inFlow, actionPointToExecute.uuid());
 		return apValue;

@@ -19,6 +19,13 @@ import ch.skymarshall.dataflowmgr.model.LocalAPRef;
 import ch.skymarshall.dataflowmgr.model.OutFlowDecisionRule;
 import ch.skymarshall.dataflowmgr.model.Registry;
 
+/**
+ * Sequential flow execution
+ *
+ * @author scaille
+ *
+ * @param <InputDataType>
+ */
 public class FlowExecution<InputDataType extends FlowData> {
 
 	/**
@@ -51,6 +58,12 @@ public class FlowExecution<InputDataType extends FlowData> {
 
 	}
 
+	/**
+	 * Executes the action point logic and accordingly generates a report
+	 *
+	 * @author scaille
+	 *
+	 */
 	public static class ActionPointExecutor {
 
 		private final ActionPoint<?, ?>.ExecutionSteps apExecution;

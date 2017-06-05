@@ -10,7 +10,7 @@ import ch.skymarshall.dataflowmgr.model.Registry;
 
 public class MemRegistry implements Registry {
 
-	private final Map<UUID, Object> data = new HashMap<>();
+	private final Map<String, Object> data = new HashMap<>();
 	private final Map<UUID, String> names = new HashMap<>();
 
 	@Override
@@ -29,12 +29,13 @@ public class MemRegistry implements Registry {
 	}
 
 	@Override
-	public <T> T get(final UUID uuid, final Supplier<T> newData) {
+	public <T> T get(final UUID apUuid, final UUID flowUuid, final Supplier<T> newData) {
 		@SuppressWarnings("unchecked")
-		T value = (T) data.get(uuid);
+		final String id = apUuid + "-" + flowUuid;
+		T value = (T) data.get(id);
 		if (value == null) {
 			value = newData.get();
-			data.put(uuid, value);
+			data.put(id, value);
 			return value;
 		}
 		return value;

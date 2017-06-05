@@ -32,6 +32,11 @@ public class StreamHelper {
 		}
 	}
 
+	/**
+	 * Collector that allows to check for zero or one value available
+	 * 
+	 * @return
+	 */
 	public static <E> Collector<E, ?, ZeroOrOne<E>> zeroOrOne() {
 		return Collector.of(ZeroOrOne::new, ZeroOrOne::setValue, (left, right) -> {
 			left.setValue(right.getValue());

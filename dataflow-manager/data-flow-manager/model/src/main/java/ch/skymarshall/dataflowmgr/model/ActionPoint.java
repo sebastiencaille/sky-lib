@@ -5,6 +5,7 @@ import static java.util.stream.Collectors.toList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.BiConsumer;
@@ -57,9 +58,9 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 					@Override
 					public InputDataType apply(final T inputData, final ActionPoint<InputDataType, ?> ap,
 							final Registry reg) {
-						final InputDataType ApInputData = ap.get(reg, inputData);
-						collectFunction.accept(inputData, ApInputData);
-						return ApInputData;
+						final InputDataType apInputData = ap.get(reg, inputData);
+						collectFunction.accept(inputData, apInputData);
+						return apInputData;
 					}
 				});
 		inputDecisionRules.add(rule);
@@ -70,13 +71,7 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 			final Class<T> inputClass, final Predicate<T> activationPredicate,
 			final Function<T, InputDataType> collectFunction) {
 		final InFlowDecisionRule<T, InputDataType> rule = new InFlowDecisionRule<>(uuid, inputClass,
-				activationPredicate, this, new CollectorFunction<T, InputDataType>() {
-					@Override
-					public InputDataType apply(final T inputData, final ActionPoint<InputDataType, ?> ap,
-							final Registry reg) {
-						return collectFunction.apply(inputData);
-					}
-				});
+				activationPredicate, this, (inputData, ap, reg) -> collectFunction.apply(inputData));
 		inputDecisionRules.add(rule);
 		return rule;
 	}
@@ -161,6 +156,13 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 			return true;
 		}
 
+		/**
+		 * Finds the output rule to apply
+		 *
+		 * @param orElse
+		 *            consumer executed in case of error
+		 * @return
+		 */
 		public List<OutFlowDecisionRule<?, ?>> selectOutputRules(final Consumer<String> orElse) {
 			selectedRules = outputDecisionRules.stream().filter(rule -> rule.getActivationPredicate().test(outputData))
 					.collect(toList());
@@ -184,11 +186,11 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 		}
 
 		public String inputToString() {
-			return "TODO";
+			return Objects.toString(untypedInputData);
 		}
 
 		public String outputToString() {
-			return "TODO";
+			return Objects.toString(outputData);
 		}
 
 		public boolean stop() {
@@ -229,7 +231,7 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 	}
 
 	public InputDataType get(final Registry registry, final FlowData data) {
-		return registry.get(data.getCurrentFlowExecution(), action.getInputDataSupplier());
+		return registry.get(uuid(), data.getCurrentFlowExecution(), action.getInputDataSupplier());
 	}
 
 }

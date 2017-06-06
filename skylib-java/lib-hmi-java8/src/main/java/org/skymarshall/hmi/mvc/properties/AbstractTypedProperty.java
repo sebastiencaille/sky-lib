@@ -1,6 +1,7 @@
 package org.skymarshall.hmi.mvc.properties;
 
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import org.skymarshall.hmi.mvc.BindingChain.EndOfChain;
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
@@ -49,10 +50,8 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 	}
 
 	public AbstractTypedProperty<T> setTypedConfiguration(
-			@SuppressWarnings("unchecked") final Consumer<AbstractTypedProperty<T>>... properties) {
-		for (final Consumer<AbstractTypedProperty<T>> prop : properties) {
-			prop.accept(this);
-		}
+			@SuppressWarnings("unchecked") final Consumer<AbstractTypedProperty<T>>... propertyConfigurer) {
+		Stream.of(propertyConfigurer).forEach(prop -> prop.accept(this));
 		return this;
 	}
 

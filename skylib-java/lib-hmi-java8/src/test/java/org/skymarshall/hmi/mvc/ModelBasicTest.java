@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2013 Sebastien Caille.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms are permitted
  * provided that the above copyright notice and this paragraph are
  * duplicated in all such forms and that any documentation,
@@ -15,6 +15,7 @@
  ******************************************************************************/
 package org.skymarshall.hmi.mvc;
 
+import static org.skymarshall.hmi.mvc.properties.Configuration.errorNotifier;
 import static org.skymarshall.hmi.mvc.properties.Configuration.persistent;
 
 import org.junit.Assert;
@@ -40,15 +41,15 @@ public class ModelBasicTest extends Assert {
 		public TestHmiModel(final HmiController controller) {
 			super(controller);
 			try {
-				integerProperty = new IntProperty("IntegerProperty",
-						propertySupport).setTypedConfiguration(Configuration
-						.errorNotifier(errorProperty));
-				stringProperty = new ObjectProperty<String>("StringProperty",
-						propertySupport).setTypedConfiguration(Configuration
-						.errorNotifier(errorProperty));
+				integerProperty = new IntProperty("IntegerProperty", propertySupport)
+						.setTypedConfiguration(errorNotifier(errorProperty));
+				stringProperty = new ObjectProperty<String>("StringProperty", propertySupport)
+						.setTypedConfiguration(errorNotifier(errorProperty));
 			} catch (final SecurityException e) {
 				throw new IllegalStateException(e);
 			}
+			integerProperty.attach();
+			stringProperty.attach();
 		}
 	}
 
@@ -57,8 +58,7 @@ public class ModelBasicTest extends Assert {
 
 	@Before
 	public void init() {
-		controller = new HmiController(new ControllerPropertyChangeSupport(
-				this, false));
+		controller = new HmiController(new ControllerPropertyChangeSupport(this, false));
 		model = new TestHmiModel(controller);
 	}
 
@@ -73,8 +73,7 @@ public class ModelBasicTest extends Assert {
 		}
 
 		@Override
-		public void addComponentValueChangeListener(
-				final IComponentLink<String> converter) {
+		public void addComponentValueChangeListener(final IComponentLink<String> converter) {
 			this.onlyConverter = converter;
 		}
 
@@ -83,8 +82,7 @@ public class ModelBasicTest extends Assert {
 		}
 
 		@Override
-		public void setComponentValue(final AbstractProperty source,
-				final String value) {
+		public void setComponentValue(final AbstractProperty source, final String value) {
 			this.value = value;
 		}
 
@@ -97,8 +95,7 @@ public class ModelBasicTest extends Assert {
 		controller.start();
 
 		final TestObject testObject = new TestObject(321);
-		model.integerProperty.setTypedConfiguration(persistent(testObject,
-				testObjectValAccess()));
+		model.integerProperty.setTypedConfiguration(persistent(testObject, testObjectValAccess()));
 
 		model.integerProperty.load(this);
 		assertEquals("321", binding.value);
@@ -116,8 +113,7 @@ public class ModelBasicTest extends Assert {
 		binding.setValue("bla");
 		assertEquals(456, model.integerProperty.getValue());
 		assertNotNull(model.errorProperty.getValue().getContent());
-		assertEquals(ConversionException.class, model.errorProperty.getValue()
-				.getContent().getClass());
+		assertEquals(ConversionException.class, model.errorProperty.getValue().getContent().getClass());
 	}
 
 	@Test
@@ -137,16 +133,14 @@ public class ModelBasicTest extends Assert {
 	public void testAutoCommit() throws NoSuchFieldException {
 		final TestObject testObject = new TestObject(123);
 
-		model.integerProperty.setTypedConfiguration(
-				persistent(testObject, testObjectValAccess()),
+		model.integerProperty.setTypedConfiguration(persistent(testObject, testObjectValAccess()),
 				Configuration::autoCommit);
 
 		model.integerProperty.setValue(this, 456);
 		assertEquals(456, testObject.val);
 	}
 
-	protected FieldAccess<Integer> testObjectValAccess()
-			throws NoSuchFieldException {
+	protected FieldAccess<Integer> testObjectValAccess() throws NoSuchFieldException {
 		return FieldAccess.intAccess(TestObject.class.getField("val"));
 	}
 

@@ -55,8 +55,8 @@ public class IntProperty extends AbstractTypedProperty<Integer> {
 
 	@SafeVarargs
 	@Override
-	public final IntProperty setTypedConfiguration(final Consumer<AbstractTypedProperty<Integer>>... properties) {
-		super.setTypedConfiguration(properties);
+	public final IntProperty setTypedConfiguration(final Consumer<AbstractTypedProperty<Integer>>... propertyConfigurer) {
+		super.setTypedConfiguration(propertyConfigurer);
 		return this;
 	}
 

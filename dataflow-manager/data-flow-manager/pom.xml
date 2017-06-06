@@ -69,7 +69,7 @@
 	</dependencies>
 
 	<modules>
-		<module>ch.skymarshall.dataflowmgr</module>
+		<module>model</module>
 		<module>engine</module>
 		<module>generator</module>
 		<module>examples</module>

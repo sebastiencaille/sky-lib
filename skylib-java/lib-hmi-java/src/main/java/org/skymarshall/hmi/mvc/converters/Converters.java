@@ -15,23 +15,50 @@
  ******************************************************************************/
 package org.skymarshall.hmi.mvc.converters;
 
+import org.skymarshall.hmi.Utils;
 import org.skymarshall.hmi.mvc.HmiErrors.HmiError;
 
-public class Converters {
+public final class Converters {
 
-    public static AbstractObjectConverter<HmiError, String> hmiErrorToString() {
-        return new HmiErrorToStringConverter();
-    }
+	private Converters() {
 
-    public static AbstractIntConverter<String> intToString() {
-        return new IntToStringConverter();
-    }
+	}
 
-    public static <T> AbstractObjectConverter<T, String> objectToString() {
-        return new ObjectToStringConverter<T>();
-    }
+	public static AbstractObjectConverter<HmiError, String> hmiErrorToString() {
+		return new HmiErrorToStringConverter();
+	}
 
-    public static <T extends Enum<T>> AbstractObjectConverter<T, String> enumToString(final Class<T> clazz) {
-        return new EnumToStringConverter<T>(clazz);
-    }
+	public static AbstractIntConverter<String> intToString() {
+		return new IntToStringConverter();
+	}
+
+	public static <T> AbstractObjectConverter<T, String> objectToString() {
+		return new ObjectToStringConverter<T>();
+	}
+
+	public static <T extends Enum<T>> AbstractObjectConverter<T, String> enumToString(
+			final Class<T> clazz) {
+		return new EnumToStringConverter<T>(clazz);
+	}
+
+	public static <T extends Number> ReadOnlyObjectConverter<T, String> numberToSize() {
+		return new ReadOnlyObjectConverter<T, String>() {
+
+			@Override
+			protected String convertPropertyValueToComponentValue(
+					final Number propertyValue) {
+				return Utils.toSize(propertyValue);
+			}
+		};
+	}
+
+	public static <T> ReadOnlyObjectConverter<T, Boolean> isNotNull() {
+		return new ReadOnlyObjectConverter<T, Boolean>() {
+			@Override
+			protected Boolean convertPropertyValueToComponentValue(
+					final T propertyValue) {
+				return propertyValue != null;
+			}
+		};
+	}
 }

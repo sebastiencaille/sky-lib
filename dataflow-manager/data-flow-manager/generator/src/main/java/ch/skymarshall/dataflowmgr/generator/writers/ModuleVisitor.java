@@ -68,12 +68,12 @@ public class ModuleVisitor<T> {
 			result = visit(module, ap, rule, context);
 		}
 		for (final OutFlowRule rule : ap.outputRules) {
-			result = visitField(module, ap, rule, context);
+			result = visit(module, ap, rule, context);
 		}
 		return result;
 	}
 
-	public T visitField(final Module module, final ActionPoint ap, final OutFlowRule rule, final T context) {
+	public T visit(final Module module, final ActionPoint ap, final OutFlowRule rule, final T context) {
 		return context;
 	}
 

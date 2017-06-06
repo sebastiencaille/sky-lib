@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import org.skymarshall.util.text.TextFormatter;
+
 import ch.skymarshall.dataflowmgr.generator.model.ActionPoint;
 import ch.skymarshall.dataflowmgr.generator.model.Flow;
 import ch.skymarshall.dataflowmgr.generator.model.InFlowRule;
@@ -67,12 +69,12 @@ public class DotModuleVisitor extends ModuleVisitor<DotModuleVisitor.Graph> {
 	}
 
 	@Override
-	public Graph visitField(final Module module, final ActionPoint ap, final OutFlowRule rule, final Graph context) {
+	public Graph visit(final Module module, final ActionPoint ap, final OutFlowRule rule, final Graph context) {
 		context.links.add(new Link(ap.uuid, rule.uuid, ap.output));
 
 		context.nodes.add(new Node(rule.uuid, rule.output + "\\n" + rule.activator, Shape.box));
 		context.links.add(new Link(rule.uuid, findAction(module, rule.nextAction).uuid, rule.output));
-		return super.visitField(module, ap, rule, context);
+		return super.visit(module, ap, rule, context);
 	}
 
 	@Override
@@ -87,41 +89,45 @@ public class DotModuleVisitor extends ModuleVisitor<DotModuleVisitor.Graph> {
 		super.visit(module, flow, context);
 
 		final boolean compare = !context.expected.isEmpty();
-
-		final StringBuilder output = new StringBuilder("digraph \"").append(flow.name).append("\" {\n");
-		for (final Node node : context.nodes) {
-			String color = null;
-			if (!compare && context.executed.contains(node.uuid)) {
-				color = "yellow";
-			} else if (compare) {
-				final boolean executed = context.executed.contains(node.uuid);
-				final boolean expected = context.expected.contains(node.uuid);
-				if (executed && expected) {
-					color = "green";
-				} else if (executed && !expected) {
-					color = "red";
-				} else if (!executed && expected) {
-					color = "blue";
-				} else {
-					color = null;
-				}
-			}
-			final String extra;
-			if (color != null) {
-				extra = ", fillcolor=" + color + ", style=filled";
-			} else {
-				extra = "";
-			}
-			output.append(String.format("	\"%s\" [ label=\"%s\", shape=\"%s\" %s ];\n", node.uuid.toString(),
-					node.label, node.shape.name(), extra));
-		}
-		for (final Link link : context.links) {
-			output.append(String.format("	\"%s\" -> \"%s\" [ label=\"%s\" ];\n", link.from, link.to, link.label));
-		}
-		output.append("}");
 		try {
+			final TextFormatter output = new TextFormatter(TextFormatter.output(new StringBuilder()));
+			output.appendIndented("digraph \"").append(flow.name).append("\" {").newLine();
+			output.indent();
+			for (final Node node : context.nodes) {
+				String color = null;
+				if (!compare && context.executed.contains(node.uuid)) {
+					color = "yellow";
+				} else if (compare) {
+					final boolean executed = context.executed.contains(node.uuid);
+					final boolean expected = context.expected.contains(node.uuid);
+					if (executed && expected) {
+						color = "green";
+					} else if (executed && !expected) {
+						color = "red";
+					} else if (!executed && expected) {
+						color = "blue";
+					} else {
+						color = null;
+					}
+				}
+				final String extra;
+				if (color != null) {
+					extra = ", fillcolor=" + color + ", style=filled";
+				} else {
+					extra = "";
+				}
+				output.appendIndented(String.format("\"%s\" [ label=\"%s\", shape=\"%s\" %s ];", node.uuid.toString(),
+						node.label, node.shape.name(), extra)).newLine();
+			}
+			for (final Link link : context.links) {
+				output.appendIndented(
+						String.format("\"%s\" -> \"%s\" [ label=\"%s\" ];", link.from, link.to, link.label)).newLine();
+			}
+			output.unindent();
+			output.appendIndented("}");
+
 			Files.write(new File(writer.getModuleLocation(module), flow.name + ".dot").toPath(),
-					output.toString().getBytes("UTF-8"));
+					output.getOutput().toString().getBytes("UTF-8"));
 		} catch (final IOException e) {
 			throw new IllegalStateException("Unable to write file", e);
 		}

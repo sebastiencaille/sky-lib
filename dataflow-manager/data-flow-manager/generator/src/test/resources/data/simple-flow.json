@@ -44,7 +44,7 @@
 			"name": "DumpIntTransfer",
 			"input": "IntTransfer",
 			"terminal": true,
-			"action-terminal": "System.out.println"
+			"action-terminal": "System.out.println(input)"
 		}
 	],
 	"flows": [

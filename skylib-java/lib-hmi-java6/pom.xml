@@ -9,6 +9,7 @@
 		<relativePath>..</relativePath>
 	</parent>
 
+	<groupId>org.skymarshall.libs</groupId>
 	<artifactId>lib-hmi-java6</artifactId>
 	<packaging>jar</packaging>
 

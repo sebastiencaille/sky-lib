@@ -18,6 +18,9 @@ package org.skymarshall.util.text;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.skymarshall.util.text.CharIndentationManager;
+import org.skymarshall.util.text.IIndentationManager;
+
 /**
  * To output formatted text.
  * <p>

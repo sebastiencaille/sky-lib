@@ -16,34 +16,21 @@
 package org.skymarshall.hmi.swing17.renderers;
 
 import java.awt.Component;
-import java.text.DecimalFormat;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+
+import org.skymarshall.hmi.Utils;
 
 @SuppressWarnings("serial")
 public class SizeRenderer extends DefaultTableCellRenderer {
 
 	@Override
-	public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
+	public Component getTableCellRendererComponent(final JTable table,
+			final Object value, final boolean isSelected,
 			final boolean hasFocus, final int row, final int column) {
-		float val = ((Number) value).floatValue();
-
-		String unit = "";
-		if (val > 1024) {
-			unit = "Ko";
-			val = val / 1024;
-		}
-		if (val > 1024) {
-			unit = "Mo";
-			val = val / 1024;
-		}
-		if (val > 1024) {
-			unit = "Go";
-			val = val / 1024;
-		}
-		final String res = new DecimalFormat("##0.0").format(val) + unit;
-
-		return super.getTableCellRendererComponent(table, res, isSelected, hasFocus, row, column);
+		final String res = Utils.toSize((Number) value);
+		return super.getTableCellRendererComponent(table, res, isSelected,
+				hasFocus, row, column);
 	}
 }

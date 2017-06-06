@@ -9,7 +9,6 @@ import java.util.regex.Pattern;
 import ch.skymarshall.dataflowmgr.generator.model.Module;
 import ch.skymarshall.dataflowmgr.generator.writers.AbstractWriter;
 import ch.skymarshall.dataflowmgr.generator.writers.BasicArgsParser;
-import ch.skymarshall.dataflowmgr.generator.writers.java.JavaModuleVisitor;
 
 public class SingleNodeWriter extends AbstractWriter {
 
@@ -26,7 +25,7 @@ public class SingleNodeWriter extends AbstractWriter {
 
 	public void generate() {
 		for (final Module module : modules) {
-			new JavaModuleVisitor(module, this).visit(new HashMap<>());
+			new SingleNodeJavaModuleGenerator(module, this).visit(new HashMap<>());
 		}
 	}
 

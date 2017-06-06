@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2013 Sebastien Caille.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms are permitted
  * provided that the above copyright notice and this paragraph are
  * duplicated in all such forms and that any documentation,
@@ -28,51 +28,51 @@ import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 /**
  * Allows enabling some properties on a per-object basis.
  * <p>
- * 
+ * Selects the Properties according to the value contained in the property
+ *
  * @author Sebastien Caille
- * 
+ *
  * @param <T>
  *            type of the object according to which the properties are enabled
  */
-public class BindingSelector<T> implements
-        PropertyChangeListener {
+public class BindingSelector<T> implements PropertyChangeListener {
 
-    private final Map<T, List<IBindingController<?>>> objectControllers = new WeakHashMap<T, List<IBindingController<?>>>();
+	private final Map<T, List<IBindingController<?>>> objectControllers = new WeakHashMap<T, List<IBindingController<?>>>();
 
-    public BindingSelector(final AbstractProperty property) {
-        property.addListener(this);
-    }
+	public BindingSelector(final AbstractProperty property) {
+		property.addListener(this);
+	}
 
-    public void add(final T object, final IBindingController<?>... controllers) {
-        List<IBindingController<?>> ctrls = objectControllers.get(object);
-        if (ctrls == null) {
-            ctrls = new ArrayList<IBindingController<?>>();
-            objectControllers.put(object, ctrls);
-        }
-        ctrls.addAll(Arrays.asList(controllers));
-    }
+	public void add(final T object, final IBindingController<?>... controllers) {
+		List<IBindingController<?>> ctrls = objectControllers.get(object);
+		if (ctrls == null) {
+			ctrls = new ArrayList<IBindingController<?>>();
+			objectControllers.put(object, ctrls);
+		}
+		ctrls.addAll(Arrays.asList(controllers));
+	}
 
-    @Override
-    public void propertyChange(final PropertyChangeEvent evt) {
+	@Override
+	public void propertyChange(final PropertyChangeEvent evt) {
 
-        final Object oldValue = evt.getOldValue();
-        if (oldValue != null) {
-            final List<IBindingController<?>> toDetach = objectControllers.get(oldValue);
-            for (final IBindingController<?> controller : toDetach) {
-                controller.detach();
-            }
-        }
+		final Object oldValue = evt.getOldValue();
+		if (oldValue != null) {
+			final List<IBindingController<?>> toDetach = objectControllers.get(oldValue);
+			for (final IBindingController<?> controller : toDetach) {
+				controller.detach();
+			}
+		}
 
-        final Object newValue = evt.getNewValue();
-        if (newValue != null) {
-            final List<IBindingController<?>> toAttach = objectControllers.get(newValue);
-            if (toAttach != null) {
-                for (final IBindingController<?> controller : toAttach) {
-                    controller.attach();
-                }
-            }
-        }
+		final Object newValue = evt.getNewValue();
+		if (newValue != null) {
+			final List<IBindingController<?>> toAttach = objectControllers.get(newValue);
+			if (toAttach != null) {
+				for (final IBindingController<?> controller : toAttach) {
+					controller.attach();
+				}
+			}
+		}
 
-    }
+	}
 
 }

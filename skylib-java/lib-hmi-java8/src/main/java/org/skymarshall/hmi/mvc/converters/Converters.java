@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above copyright notice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -165,16 +165,12 @@ public final class Converters {
 
 	public static <T, U> AbstractObjectConverter<T, U> writeOnly(final Function<T, U> prop2comp) {
 		return converter(prop2comp, o -> {
-			throw new IllegalStateException("Read only");
+			throw new IllegalStateException("Write only");
 		});
 	}
 
 	public static <T> AbstractObjectConverter<T, String> objectToString() {
 		return writeOnly(Object::toString);
-	}
-
-	public static <T extends Enum<T>> AbstractObjectConverter<T, String> enumToString(final Class<T> clazz) {
-		return new EnumToStringConverter<>(clazz);
 	}
 
 	public static <T extends Number> AbstractObjectConverter<T, String> numberToSize() {

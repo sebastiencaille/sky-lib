@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above copyright notice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -18,6 +18,7 @@ package org.skymarshall.hmi.mvc.properties;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import javax.swing.event.EventListenerList;
 
@@ -113,9 +114,7 @@ public abstract class AbstractProperty {
 	}
 
 	public void removeListeners(final List<IPropertyEventListener> toRemove) {
-		for (final IPropertyEventListener listener : toRemove) {
-			removeListener(listener);
-		}
+		toRemove.forEach(l -> removeListener(l));
 	}
 
 	public boolean isModifiedBy(final Object caller) {
@@ -132,16 +131,13 @@ public abstract class AbstractProperty {
 
 	protected void onValueSet(final Object caller, final EventKind eventKind) {
 		final PropertyEvent event = new PropertyEvent(eventKind, this);
-		for (final IPropertyEventListener listener : eventListeners.getListeners(IPropertyEventListener.class)) {
-			listener.propertyModified(caller, event);
-		}
+		Stream.of(eventListeners.getListeners(IPropertyEventListener.class))
+				.forEach(l -> l.propertyModified(caller, event));
 	}
 
 	public AbstractProperty setConfiguration(
 			@SuppressWarnings("unchecked") final Consumer<AbstractProperty>... properties) {
-		for (final Consumer<AbstractProperty> prop : properties) {
-			prop.accept(this);
-		}
+		Stream.of(properties).forEach(prop -> prop.accept(this));
 		return this;
 	}
 

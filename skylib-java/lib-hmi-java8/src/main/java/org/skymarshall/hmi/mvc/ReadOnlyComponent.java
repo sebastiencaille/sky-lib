@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above copyright notice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -15,18 +15,11 @@
  ******************************************************************************/
 package org.skymarshall.hmi.mvc;
 
+public abstract class ReadOnlyComponent<T> implements IComponentBinding<T> {
 
-public abstract class ReadOnlyComponent<T> implements
-        IComponentBinding<T> {
-
-    @Override
-    public Object getComponent() {
-        return null;
-    }
-
-    @Override
-    public void addComponentValueChangeListener(final IComponentLink<T> link) {
-        // Read only
-    }
+	@Override
+	public void addComponentValueChangeListener(final IComponentLink<T> link) {
+		// Read only
+	}
 
 }

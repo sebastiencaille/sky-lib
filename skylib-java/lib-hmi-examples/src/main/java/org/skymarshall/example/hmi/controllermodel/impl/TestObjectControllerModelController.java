@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above copyright notice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -30,8 +30,8 @@ public class TestObjectControllerModelController extends HmiController {
 	private final TestObjectControllerModelFrameModel tableModel;
 
 	public TestObjectControllerModelController() {
-		model.insert(new TestObject("Bla", 1));
-		model.insert(new TestObject("BlaBla", 2));
+		model.insert(new TestObject("Foo", 1));
+		model.insert(new TestObject("Bar", 2));
 
 		tableModel = new TestObjectControllerModelFrameModel(this, model);
 	}

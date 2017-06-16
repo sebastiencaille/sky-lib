@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above copyright notice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -22,21 +22,20 @@ import javax.swing.JList;
 
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 
-public class JListContentBinding<T> extends AbstractComponentBinding<List<T>> {
+public class JListContentBinding<T> extends DefaultComponentBinding<List<T>> {
 
-    private final JList<T> list;
+	private final JList<T> list;
 
-    public JListContentBinding(final JList<T> component) {
-        super(component);
-        this.list = component;
-    }
+	public JListContentBinding(final JList<T> component) {
+		this.list = component;
+	}
 
-    @Override
-    public void setComponentValue(final AbstractProperty source, final List<T> value) {
-        final DefaultListModel<T> newModel = new DefaultListModel<>();
-        for (final T obj : value) {
-            newModel.addElement(obj);
-        }
-        list.setModel(newModel);
-    }
+	@Override
+	public void setComponentValue(final AbstractProperty source, final List<T> value) {
+		final DefaultListModel<T> newModel = new DefaultListModel<>();
+		for (final T obj : value) {
+			newModel.addElement(obj);
+		}
+		list.setModel(newModel);
+	}
 }

@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above copyright notice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -30,8 +30,6 @@ import org.skymarshall.hmi.mvc.properties.AbstractProperty;
  */
 public interface IComponentBinding<T> {
 
-	public Object getComponent();
-
 	/**
 	 * Called when bound to a link, so the component binding can hook to the
 	 * component and forward it's content to the property
@@ -55,11 +53,6 @@ public interface IComponentBinding<T> {
 		return new IComponentBinding<T>() {
 
 			@Override
-			public Object getComponent() {
-				return component;
-			}
-
-			@Override
 			public void addComponentValueChangeListener(final IComponentLink<T> link) {
 				addValueChangeListener.accept(component, link);
 
@@ -68,6 +61,26 @@ public interface IComponentBinding<T> {
 			@Override
 			public void setComponentValue(final AbstractProperty source, final T value) {
 				setComponentValue.setComponentValue(component, source, value);
+			}
+		};
+	}
+
+	/**
+	 *
+	 * @param setComponentValue
+	 *            (source, value)
+	 * @return
+	 */
+	public static <T> IComponentBinding<T> writeOnly(final BiConsumer<AbstractProperty, T> setComponentValue) {
+		return new IComponentBinding<T>() {
+
+			@Override
+			public void addComponentValueChangeListener(final IComponentLink<T> link) {
+			}
+
+			@Override
+			public void setComponentValue(final AbstractProperty source, final T value) {
+				setComponentValue.accept(source, value);
 			}
 		};
 	}

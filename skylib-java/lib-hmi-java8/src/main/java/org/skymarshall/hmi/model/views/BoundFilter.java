@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above copyright notice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -21,7 +21,7 @@ import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 
 /**
  * Filter that can be used in a component Binding
- * 
+ *
  * @author scaille
  *
  * @param <DataType>
@@ -45,11 +45,6 @@ public abstract class BoundFilter<DataType, FilterObjectType> extends AbstractDy
 	@Override
 	public void attach(final IListViewOwner<DataType> viewOwner) {
 		this.owner = viewOwner;
-	}
-
-	@Override
-	public Object getComponent() {
-		return this;
 	}
 
 	@Override

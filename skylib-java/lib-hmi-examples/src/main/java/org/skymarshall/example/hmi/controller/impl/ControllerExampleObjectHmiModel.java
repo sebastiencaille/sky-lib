@@ -1,18 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2017 Sebastien Caille.
- *  All rights reserved.
- * 
- *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
- *  duplicated in all such forms and that any documentation,
- *  advertising materials, and other materials related to such
- *  distribution and use acknowledge that the software was developed
- *  by Sebastien Caille.  The name of Sebastien Caille may not be used to endorse or promote products derived
- *  from this software without specific prior written permission.
- *  THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
- *  IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
- *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
- ******************************************************************************/
 package org.skymarshall.example.hmi.controller.impl;
 
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
@@ -34,6 +19,8 @@ import org.skymarshall.hmi.mvc.IComponentLink;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 
 public class ControllerExampleObjectHmiModel extends HmiModel implements IObjectHmiModel<org.skymarshall.example.hmi.controller.impl.ControllerExampleObject> {
+    private final ObjectProviderPersister.CurrentObjectProvider currentObjectProvider = new ObjectProviderPersister.CurrentObjectProvider();
+
     public static final String BOOLEAN_PROP = "BooleanProp";
 
     private static final Field BOOLEAN_PROP_FIELD;
@@ -61,12 +48,11 @@ public class ControllerExampleObjectHmiModel extends HmiModel implements IObject
             throw new IllegalStateException("Cannot initialize class", e);
         }
     }
-    private final ObjectProviderPersister.CurrentObjectProvider currentObjectProvider = new ObjectProviderPersister.CurrentObjectProvider();
-
     protected final BooleanProperty booleanPropProperty;
     protected final IntProperty intPropProperty;
     protected final ObjectProperty<org.skymarshall.example.hmi.TestObject> testObjectPropProperty;
     protected final ObjectProperty<java.lang.String> stringPropProperty;
+
     public ControllerExampleObjectHmiModel(final String prefix, final ControllerPropertyChangeSupport propertySupport, final ErrorProperty errorProperty) {
         super(propertySupport, errorProperty);
         booleanPropProperty = Properties.of(new BooleanProperty(prefix + "-BooleanProp",  propertySupport)).persistent(Persisters.from(currentObjectProvider, FieldAccess.booleanAccess(BOOLEAN_PROP_FIELD))).setErrorNotifier(errorProperty).getProperty();
@@ -109,11 +95,6 @@ public class ControllerExampleObjectHmiModel extends HmiModel implements IObject
     }
 
     @Override
-    public void setCurrentObject(final org.skymarshall.example.hmi.controller.impl.ControllerExampleObject value) {
-        currentObjectProvider.setObject(value);
-    }
-
-    @Override
     public void load() {
         booleanPropProperty.load(this);
         intPropProperty.load(this);
@@ -129,12 +110,13 @@ public class ControllerExampleObjectHmiModel extends HmiModel implements IObject
         stringPropProperty.save();
     }
 
+    @Override
+    public void setCurrentObject(final org.skymarshall.example.hmi.controller.impl.ControllerExampleObject value) {
+        currentObjectProvider.setObject(value);
+    }
+
     public IComponentBinding<org.skymarshall.example.hmi.controller.impl.ControllerExampleObject> binding() {
         return new IComponentBinding<org.skymarshall.example.hmi.controller.impl.ControllerExampleObject>() {
-            @Override
-            public Object getComponent() {
-                return ControllerExampleObjectHmiModel.this;
-            }
             @Override
             public void addComponentValueChangeListener(final IComponentLink<org.skymarshall.example.hmi.controller.impl.ControllerExampleObject> link) {
                 // nope

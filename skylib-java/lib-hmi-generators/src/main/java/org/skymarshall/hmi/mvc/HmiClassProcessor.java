@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above copyright notice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -140,10 +140,6 @@ public class HmiClassProcessor {
 		gen.addImport(AbstractProperty.class);
 		gen.openBlock("public IComponentBinding<", strType, "> binding()");
 		gen.openBlock("return new IComponentBinding<" + strType + ">()");
-		gen.appendIndentedLine("@Override");
-		gen.openBlock("public Object getComponent()");
-		gen.appendIndentedLine("return " + getClassName() + ".this;");
-		gen.closeBlock();
 		gen.appendIndentedLine("@Override");
 		gen.openBlock("public void addComponentValueChangeListener(final IComponentLink<", strType, "> link)");
 		gen.appendIndentedLine("// nope");

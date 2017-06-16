@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above copyright notice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -35,14 +35,10 @@ public class JavaClassGenerator extends TextFormatter {
 	@Override
 	public String toString() {
 		final StringBuilder builder = new StringBuilder();
-		builder.append("package ");
-		builder.append(pkg);
-		builder.append(";\n\n");
+		builder.append("package ").append(pkg).append(";\n\n");
 
 		for (final String imp : imports) {
-			builder.append("import ");
-			builder.append(imp);
-			builder.append(";\n");
+			builder.append("import ").append(imp).append(";\n");
 		}
 
 		builder.append('\n');

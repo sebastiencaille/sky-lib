@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above copyright notice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -31,77 +31,76 @@ import org.skymarshall.hmi.swing.model.ListModelTableModel;
 /**
  * Binds to multiple selection of JTable.
  * <p>
- * 
+ *
  * @author Sebastien Caille
  *
  * @param <T>
  */
-public class JTableMultiSelectionBinding<T> extends AbstractComponentBinding<List<T>> {
+public class JTableMultiSelectionBinding<T> extends DefaultComponentBinding<List<T>> {
 
-    private final JTable                    table;
-    private final ListModelTableModel<T, ?> model;
-    private boolean                         modelChange = false;
+	private final JTable table;
+	private final ListModelTableModel<T, ?> model;
+	private boolean modelChange = false;
 
-    public JTableMultiSelectionBinding(final JTable component, final ListModelTableModel<T, ?> model) {
-        super(component);
-        this.table = component;
-        this.model = model;
-        table.setModel(model);
-    }
+	public JTableMultiSelectionBinding(final JTable component, final ListModelTableModel<T, ?> model) {
+		this.table = component;
+		this.model = model;
+		table.setModel(model);
+	}
 
-    private void updateSelection(final IComponentLink<List<T>> converter) {
-        final List<T> selected = new ArrayList<>();
-        for (final int row : table.getSelectedRows()) {
-            if (row >= 0 && row < model.getRowCount()) {
-                selected.add(model.getObjectAtRow(row));
-            }
-        }
-        converter.setValueFromComponent(table, selected);
-    }
+	private void updateSelection(final IComponentLink<List<T>> converter) {
+		final List<T> selected = new ArrayList<>();
+		for (final int row : table.getSelectedRows()) {
+			if (row >= 0 && row < model.getRowCount()) {
+				selected.add(model.getObjectAtRow(row));
+			}
+		}
+		converter.setValueFromComponent(table, selected);
+	}
 
-    @Override
-    public void addComponentValueChangeListener(final IComponentLink<List<T>> converter) {
-        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+	@Override
+	public void addComponentValueChangeListener(final IComponentLink<List<T>> converter) {
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
-            @Override
-            public void valueChanged(final ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting() && !modelChange) {
-                    updateSelection(converter);
-                }
-            }
+			@Override
+			public void valueChanged(final ListSelectionEvent e) {
+				if (!e.getValueIsAdjusting() && !modelChange) {
+					updateSelection(converter);
+				}
+			}
 
-        });
-        model.addTableModelListener(new TableModelListener() {
+		});
+		model.addTableModelListener(new TableModelListener() {
 
-            @Override
-            public void tableChanged(final TableModelEvent event) {
-                if (event.getType() == ListModelTableModel.TABLE_CHANGE_DONE) {
-                    modelChange = false;
-                    converter.reloadComponentValue();
-                } else if (event.getType() == ListModelTableModel.TABLE_ABOUT_TO_CHANGE) {
-                    modelChange = true;
-                } else if (!modelChange) {
-                    updateSelection(converter);
-                }
-            }
-        });
+			@Override
+			public void tableChanged(final TableModelEvent event) {
+				if (event.getType() == ListModelTableModel.TABLE_CHANGE_DONE) {
+					modelChange = false;
+					converter.reloadComponentValue();
+				} else if (event.getType() == ListModelTableModel.TABLE_ABOUT_TO_CHANGE) {
+					modelChange = true;
+				} else if (!modelChange) {
+					updateSelection(converter);
+				}
+			}
+		});
 
-    }
+	}
 
-    @Override
-    public void setComponentValue(final AbstractProperty source, final List<T> values) {
-        if ((source == null || !source.isModifiedBy(table)) && values != null) {
+	@Override
+	public void setComponentValue(final AbstractProperty source, final List<T> values) {
+		if ((source == null || !source.isModifiedBy(table)) && values != null) {
 
-            table.getSelectionModel().setValueIsAdjusting(true);
-            table.getSelectionModel().clearSelection();
+			table.getSelectionModel().setValueIsAdjusting(true);
+			table.getSelectionModel().clearSelection();
 
-            for (final T value : values) {
-                final int index = model.getRowOf(value);
-                if (index >= 0) {
-                    table.getSelectionModel().addSelectionInterval(index, index);
-                }
-            }
-            table.getSelectionModel().setValueIsAdjusting(false);
-        }
-    }
+			for (final T value : values) {
+				final int index = model.getRowOf(value);
+				if (index >= 0) {
+					table.getSelectionModel().addSelectionInterval(index, index);
+				}
+			}
+			table.getSelectionModel().setValueIsAdjusting(false);
+		}
+	}
 }

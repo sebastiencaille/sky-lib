@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above copyright notice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -22,12 +22,11 @@ import javax.swing.JComboBox;
 
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 
-public class JComboBoxValuesBinding<T> extends AbstractComponentBinding<List<T>> {
+public class JComboBoxValuesBinding<T> extends DefaultComponentBinding<List<T>> {
 
 	private final JComboBox<T> box;
 
 	public JComboBoxValuesBinding(final JComboBox<T> component) {
-		super(component);
 		this.box = component;
 	}
 

@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above copyright notice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -16,6 +16,7 @@
 package org.skymarshall.hmi.mvc.properties;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.skymarshall.hmi.mvc.BindingChain.EndOfChain;
@@ -74,8 +75,16 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 		return createBindingChain().bind(binding);
 	}
 
+	public <C> EndOfChain<C> bind(final Function<T, C> binding) {
+		return createBindingChain().bind(binding);
+	}
+
 	public IBindingController bind(final IComponentBinding<T> binding) {
 		return createBindingChain().bind(binding);
+	}
+
+	public IBindingController bindWO(final Consumer<T> binding) {
+		return createBindingChain().bindWO(binding);
 	}
 
 	protected void setObjectValue(final Object caller, final T newValue) {

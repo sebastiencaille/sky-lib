@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above copyright notice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -22,39 +22,38 @@ import javax.swing.event.ListSelectionListener;
 import org.skymarshall.hmi.mvc.IComponentLink;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 
-public class JListSelectionBinding<T> extends AbstractComponentBinding<T> {
+public class JListSelectionBinding<T> extends DefaultComponentBinding<T> {
 
-    private final JList<T>    list;
-    private final Class<T>    clazz;
-    private IComponentLink<T> link;
+	private final JList<T> list;
+	private final Class<T> clazz;
+	private IComponentLink<T> link;
 
-    public JListSelectionBinding(final JList<T> component, final Class<T> clazz) {
-        super(component);
-        this.list = component;
-        this.clazz = clazz;
-    }
+	public JListSelectionBinding(final JList<T> component, final Class<T> clazz) {
+		this.list = component;
+		this.clazz = clazz;
+	}
 
-    @Override
-    public void addComponentValueChangeListener(final IComponentLink<T> fromLink) {
-        this.link = fromLink;
-        list.addListSelectionListener(new ListSelectionListener() {
+	@Override
+	public void addComponentValueChangeListener(final IComponentLink<T> fromLink) {
+		this.link = fromLink;
+		list.addListSelectionListener(new ListSelectionListener() {
 
-            @Override
-            public void valueChanged(final ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting()) {
-                    fromLink.setValueFromComponent(list, clazz.cast(list.getSelectedValue()));
-                }
-            }
-        });
-    }
+			@Override
+			public void valueChanged(final ListSelectionEvent e) {
+				if (!e.getValueIsAdjusting()) {
+					fromLink.setValueFromComponent(list, clazz.cast(list.getSelectedValue()));
+				}
+			}
+		});
+	}
 
-    @Override
-    public void setComponentValue(final AbstractProperty source, final T value) {
-        if (!source.isModifiedBy(list)) {
-            list.setSelectedValue(value, true);
-            if (list.getSelectedValue() == null) {
-                link.setValueFromComponent(list, null);
-            }
-        }
-    }
+	@Override
+	public void setComponentValue(final AbstractProperty source, final T value) {
+		if (!source.isModifiedBy(list)) {
+			list.setSelectedValue(value, true);
+			if (list.getSelectedValue() == null) {
+				link.setValueFromComponent(list, null);
+			}
+		}
+	}
 }

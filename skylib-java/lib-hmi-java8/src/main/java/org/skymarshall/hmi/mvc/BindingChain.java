@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above copyright notice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -20,6 +20,8 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.skymarshall.hmi.mvc.converters.AbstractConverter;
 import org.skymarshall.hmi.mvc.converters.ConversionException;
@@ -43,6 +45,33 @@ public class BindingChain implements IBindingController {
 		void handleException(ConversionException e);
 	}
 
+	@FunctionalInterface
+	private interface ConversionFunction {
+		Object apply(Object value) throws ConversionException;
+	}
+
+	private static <T, NextType> Link link(final ConversionFunction prop2Comp, final ConversionFunction comp2Prop,
+			final Consumer<ConversionException> exceptionConsumer) {
+		return new Link() {
+
+			@Override
+			public Object toComponent(final Object value) throws ConversionException {
+				return prop2Comp.apply(value);
+			}
+
+			@Override
+			public Object toProperty(final Object component, final Object value) throws ConversionException {
+				return comp2Prop.apply(value);
+			}
+
+			@Override
+			public void handleException(final ConversionException e) {
+				exceptionConsumer.accept(e);
+			}
+
+		};
+	}
+
 	private final List<Link> links = new ArrayList<>();
 
 	private final AbstractProperty property;
@@ -62,6 +91,18 @@ public class BindingChain implements IBindingController {
 		public EndOfChain<T> detachOnUpdateOf(final AbstractProperty prop) {
 			BindingChain.this.detachOnUpdateOf(prop);
 			return this;
+		}
+
+		public IBindingController bindWO(final Consumer<T> newBinding) {
+			links.add(link(v -> {
+				newBinding.accept((T) v);
+				return null;
+			}, v -> {
+				throw new IllegalStateException("Read only");
+			}, e -> {
+				throw new IllegalStateException("Read only");
+			}));
+			return BindingChain.this;
 		}
 
 		public IBindingController bind(final IComponentBinding<T> newBinding) {
@@ -106,8 +147,7 @@ public class BindingChain implements IBindingController {
 
 				@Override
 				public Object toProperty(final Object component, final Object value) {
-					newBinding.setComponentValue(property, (T) value);
-					return value;
+					throw new IllegalStateException("Component endpoint");
 				}
 
 				@Override
@@ -119,24 +159,26 @@ public class BindingChain implements IBindingController {
 		}
 
 		public <NextType> EndOfChain<NextType> bind(final AbstractConverter<T, NextType> link) {
-			links.add(new Link() {
-				@Override
-				public Object toComponent(final Object value) throws ConversionException {
-					return link.convertPropertyValueToComponentValue((T) value);
-				}
-
-				@Override
-				public Object toProperty(final Object component, final Object value) throws ConversionException {
-					return link.convertComponentValueToPropertyValue((NextType) value);
-				}
-
-				@Override
-				public void handleException(final ConversionException e) {
-					errorNotifier.notifyError(property, HmiErrors.fromException(e));
-				}
-			});
+			links.add(link(value -> link.convertPropertyValueToComponentValue((T) value),
+					value -> link.convertComponentValueToPropertyValue((NextType) value),
+					e -> errorNotifier.notifyError(property, HmiErrors.fromException(e))));
 			return new EndOfChain<>();
 		}
+
+		public <NextType> EndOfChain<NextType> bind(final Function<T, NextType> prop2Comp,
+				final Function<NextType, T> comp2Prop) {
+			links.add(link(value -> prop2Comp.apply((T) value), value -> comp2Prop.apply((NextType) value),
+					e -> errorNotifier.notifyError(property, HmiErrors.fromException(e))));
+			return new EndOfChain<>();
+		}
+
+		public <NextType> EndOfChain<NextType> bind(final Function<T, NextType> prop2Comp) {
+			links.add(link(value -> prop2Comp.apply((T) value), value -> {
+				throw new ConversionException("Read only");
+			}, e -> errorNotifier.notifyError(property, HmiErrors.fromException(e))));
+			return new EndOfChain<>();
+		}
+
 	}
 
 	public BindingChain(final AbstractProperty prop, final ErrorNotifier errorNotifier) {

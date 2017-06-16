@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above copyright notice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -14,8 +14,6 @@
  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  ******************************************************************************/
 package org.skymarshall.example.hmi.model.impl;
-
-import static org.skymarshall.hmi.swing.bindings.SwingBindings.enabled;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -80,13 +78,13 @@ public class TableModelExampleView extends JFrame {
 
 	private void addFilter(final JPanel optionsPanel) {
 		final JCheckBox filter = new JCheckBox("Filter");
-		controller.enableFilter.bind(enabled(filter));
+		controller.enableFilter.bindWO(filter::setEnabled);
 		optionsPanel.add(filter);
 	}
 
 	private void addRevOrder(final JPanel optionsPanel) {
 		final JCheckBox reverse = new JCheckBox("Rev. Order");
-		controller.reverseOrder.bind(enabled(reverse));
+		controller.reverseOrder.bindWO(reverse::setEnabled);
 		optionsPanel.add(reverse);
 	}
 }

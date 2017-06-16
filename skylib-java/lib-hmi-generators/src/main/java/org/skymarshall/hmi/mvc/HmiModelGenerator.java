@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above copyright notice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -56,7 +56,7 @@ public class HmiModelGenerator {
 			System.out.println("Generating " + outputFile.getAbsolutePath());
 			outputFile.getParentFile().mkdirs();
 			final FileOutputStream fout = new FileOutputStream(outputFile);
-			fout.write(generator.getOutput().toString().getBytes());
+			fout.write(generator.toString().getBytes());
 			fout.close();
 		}
 

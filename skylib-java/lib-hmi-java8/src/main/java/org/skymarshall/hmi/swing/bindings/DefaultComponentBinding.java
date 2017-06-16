@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above copyright notice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -15,8 +15,6 @@
  ******************************************************************************/
 package org.skymarshall.hmi.swing.bindings;
 
-import javax.swing.JComponent;
-
 import org.skymarshall.hmi.mvc.IComponentBinding;
 import org.skymarshall.hmi.mvc.IComponentLink;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
@@ -24,33 +22,21 @@ import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 /**
  * Parent class of all component bindings.
  * <p>
- * 
+ *
  * @author Sebastien Caille
- * 
+ *
  * @param <T>
  */
-public abstract class AbstractComponentBinding<T> implements
-        IComponentBinding<T> {
+public abstract class DefaultComponentBinding<T> implements IComponentBinding<T> {
 
-    private final JComponent component;
+	@Override
+	public void addComponentValueChangeListener(final IComponentLink<T> converter) {
+		// no op
+	}
 
-    public AbstractComponentBinding(final JComponent component) {
-        this.component = component;
-    }
-
-    @Override
-    public JComponent getComponent() {
-        return component;
-    }
-
-    @Override
-    public void addComponentValueChangeListener(final IComponentLink<T> converter) {
-        // no op
-    }
-
-    @Override
-    public void setComponentValue(final AbstractProperty source, final T value) {
-        // no op
-    }
+	@Override
+	public void setComponentValue(final AbstractProperty source, final T value) {
+		// no op
+	}
 
 }

@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above copyright notice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -68,17 +68,12 @@ public class ModelBasicTest extends Assert {
 		private IComponentLink<String> onlyConverter;
 
 		@Override
-		public Object getComponent() {
-			return "TestComponent";
-		}
-
-		@Override
 		public void addComponentValueChangeListener(final IComponentLink<String> converter) {
 			this.onlyConverter = converter;
 		}
 
 		public void setValue(final String value) {
-			onlyConverter.setValueFromComponent(getComponent(), value);
+			onlyConverter.setValueFromComponent(this, value);
 		}
 
 		@Override

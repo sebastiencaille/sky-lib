@@ -24,12 +24,12 @@ import org.skymarshall.util.Lambda;
 public class ListModelBindings {
 
 	public static <T> IComponentBinding<IListView<T>> view(final ListModel<T> model) {
-		return IComponentBinding.<ListModel<T>, IListView<T>>component(model, Lambda.nothingBiConsumer(),
+		return IComponentBinding.<ListModel<T>, IListView<T>>component(model, Lambda.emptyBiConsumer(),
 				(c, p, t) -> c.setView(t));
 	}
 
 	public static <T> IComponentBinding<Collection<T>> values(final ListModel<T> model) {
-		return IComponentBinding.<ListModel<T>, Collection<T>>component(model, Lambda.nothingBiConsumer(),
+		return IComponentBinding.<ListModel<T>, Collection<T>>component(model, Lambda.emptyBiConsumer(),
 				(c, p, t) -> c.setValues(t));
 	}
 }

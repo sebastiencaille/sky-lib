@@ -31,7 +31,7 @@ public abstract class AbstractDynamicFilter<T> implements Predicate<T> {
 
 	public <U> IComponentBinding<U> filterUpdate(final Consumer<U> c) {
 		return IComponentBinding.<AbstractDynamicFilter<T>, U>component(AbstractDynamicFilter.this,
-				Lambda.nothingBiConsumer(), (f, p, v) -> {
+				Lambda.emptyBiConsumer(), (f, p, v) -> {
 					c.accept(v);
 					if (viewOwner != null) {
 						viewOwner.viewUpdated();

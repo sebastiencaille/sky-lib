@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above copyright notice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -59,9 +59,7 @@ public class ExecutionReport {
 
 	public String simpleFormat() {
 		final StringBuilder sb = new StringBuilder();
-		for (final String str : report) {
-			sb.append(str).append("\n");
-		}
+		report.forEach(str -> sb.append(str).append("\n"));
 		return sb.toString();
 	}
 

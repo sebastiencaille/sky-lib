@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above copyright notice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -65,6 +65,17 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 		return action;
 	}
 
+	/**
+	 * Add an inflow rule
+	 * 
+	 * @param uuid
+	 * @param inputClass
+	 * @param activationPredicate
+	 * @param collectFunction
+	 *            function that merges the flow's input into the action point's
+	 *            input
+	 * @return
+	 */
 	public final <T extends FlowData> InFlowDecisionRule<T, InputDataType> addInFlowRule(final UUID uuid,
 			final Class<T> inputClass, final Predicate<T> activationPredicate,
 			final BiConsumer<T, InputDataType> collectFunction) {

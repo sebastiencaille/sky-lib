@@ -33,7 +33,7 @@ public class Lambda {
 		return (FunctionWithException<T, T, E>) FUNCTION_IDENTITY;
 	}
 
-	public static <T> Consumer<T> nothingConsumer() {
+	public static <T> Consumer<T> emptyConsumer() {
 		return new Consumer<T>() {
 			@Override
 			public void accept(final T t) {
@@ -41,7 +41,7 @@ public class Lambda {
 		};
 	}
 
-	public static <T, U> BiConsumer<T, U> nothingBiConsumer() {
+	public static <T, U> BiConsumer<T, U> emptyBiConsumer() {
 		return new BiConsumer<T, U>() {
 			@Override
 			public void accept(final T t, final U u) {

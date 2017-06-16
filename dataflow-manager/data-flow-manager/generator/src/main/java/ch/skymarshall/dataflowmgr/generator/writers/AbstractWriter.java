@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above copyright notice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -44,19 +44,20 @@ public abstract class AbstractWriter {
 	protected Config config;
 	protected Registry registry;
 	protected final List<Module> modules = new ArrayList<>();
+	private String commandLine;
 
 	public AbstractWriter() {
 		jsonAdapter = new JsonAdapter();
 	}
 
-	public void configure(final File configFile)
+	public void configure(final File configFile, final String commandLine)
 			throws JsonParseException, JsonMappingException, IOException, FileNotFoundException {
 		try (FileInputStream configIn = new FileInputStream(configFile)) {
 			config = jsonAdapter.readConfig(configIn);
+			this.commandLine = commandLine;
 		}
 		registry = new Registry();
-		final Transformer idTemplate = new Transformer();
-		registry.addTransformer(idTemplate);
+		registry.addTransformer(new Transformer());
 	}
 
 	protected void loadModule(final File file) throws FileNotFoundException, IOException {
@@ -112,10 +113,16 @@ public abstract class AbstractWriter {
 	protected void loadTemplates() throws IOException {
 		for (final TEMPLATE template : TEMPLATE.values()) {
 			try (InputStream in = openResourceStream(template.name().toLowerCase() + ".template")) {
-				registry.addTemplate(template, new Template(Utils.read(in)));
+				final Template newTemplate = new Template(Utils.read(in));
+				newTemplate.setCommandLine(commandLine);
+				registry.addTemplate(template, newTemplate);
 			}
 		}
 	}
 
 	public abstract File getModuleLocation(Module module);
+
+	public String getCommandLine() {
+		return commandLine;
+	}
 }

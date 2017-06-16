@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above copyright notice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -19,6 +19,7 @@ import static java.util.Arrays.asList;
 
 import java.io.File;
 import java.util.List;
+import java.util.stream.Stream;
 
 import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.OptionParser;
@@ -64,6 +65,12 @@ public class BasicArgsParser {
 
 	public List<File> getFlows() {
 		return options.valuesOf(flowsOpt);
+	}
+
+	public static String line(final Class<?> class1, final String[] args) {
+		final StringBuilder builder = new StringBuilder(class1.getSimpleName());
+		Stream.of(args).forEach(s -> builder.append(" ").append(s));
+		return builder.toString();
 	}
 
 }

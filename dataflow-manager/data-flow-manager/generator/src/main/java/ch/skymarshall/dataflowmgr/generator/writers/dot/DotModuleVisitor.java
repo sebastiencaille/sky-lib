@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above copyright notice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -106,6 +106,7 @@ public class DotModuleVisitor extends ModuleVisitor<DotModuleVisitor.Graph> {
 		final boolean compare = !context.expected.isEmpty();
 		try {
 			final TextFormatter output = new TextFormatter(TextFormatter.output(new StringBuilder()));
+			output.appendIndented("// ").add(writer.getCommandLine()).newLine();
 			output.appendIndented("digraph \"").append(flow.name).append("\" {").newLine();
 			output.indent();
 			for (final Node node : context.nodes) {

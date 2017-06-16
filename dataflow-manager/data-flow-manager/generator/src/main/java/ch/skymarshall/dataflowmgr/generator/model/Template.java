@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above copyright notice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -33,6 +33,8 @@ public class Template {
 	private final String content;
 	private final Map<String, String> properties = new HashMap<>();
 
+	private String commandLine;
+
 	public enum TEMPLATE {
 		DTO, FIELD, ACTION, FLOW
 	}
@@ -43,12 +45,21 @@ public class Template {
 
 	@Override
 	public Template clone() {
-		return new Template(content);
+		final Template newTemplate = new Template(content);
+		newTemplate.setCommandLine(commandLine);
+		return newTemplate;
+	}
+
+	public void setCommandLine(final String commandLine) {
+		this.commandLine = commandLine;
 	}
 
 	public String generate() {
 		LOGGER.info("Generating with properties " + properties);
-		final StringBuilder result = new StringBuilder("// File generated from template\n");
+		final StringBuilder result = new StringBuilder("// File generated from template").append("\n");
+		if (commandLine != null) {
+			result.append("// ").append(commandLine).append("\n");
+		}
 		int nextVariable = 0;
 		int pos = 0;
 		while ((nextVariable = content.indexOf("${", nextVariable)) > 0) {

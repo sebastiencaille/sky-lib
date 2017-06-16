@@ -1,3 +1,4 @@
+// DotFileWriter -c /home/scaille/src/github/sky-lib/dataflow-manager/data-flow-manager/generator/src/test/resources/data/config.json -o /home/scaille/src/github/sky-lib/dataflow-manager/data-flow-manager/examples/src/main/resources -r /home/scaille/src/github/sky-lib/dataflow-manager/data-flow-manager/examples/src/main/reports/simple-flow-report.json -e /home/scaille/src/github/sky-lib/dataflow-manager/data-flow-manager/examples/src/main/reports/simple-flow-expected.json -f /home/scaille/src/github/sky-lib/dataflow-manager/data-flow-manager/generator/src/test/resources/data/simple-flow.json
 digraph "SimpleFlow" {
     "45d3a926-6e9c-48d1-95d9-6ffc071b8f3d" [ label="IntTransfer\ntrue", shape="box" , fillcolor=green, style=filled ];
     "8a3152fb-4d16-4ff7-92a4-bce11cc30987" [ label="IntTransfer\ntrue", shape="box" , fillcolor=blue, style=filled ];

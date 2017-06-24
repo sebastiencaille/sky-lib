@@ -1,9 +1,9 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -18,7 +18,6 @@ package org.skymarshall.hmi.mvc.properties;
 import org.skymarshall.hmi.mvc.BindingChain;
 import org.skymarshall.hmi.mvc.BindingChain.EndOfChain;
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
-import org.skymarshall.hmi.mvc.converters.AbstractBooleanConverter;
 
 /**
  * Property containing a boolean value.
@@ -43,11 +42,7 @@ public class BooleanProperty extends AbstractTypedProperty<Boolean> {
 
 	@Override
 	protected EndOfChain<Boolean> createBindingChain() {
-		return new BindingChain(this, errorNotifier).<Boolean>bindProperty((c, v) -> setObjectValueFromComponent(c, v));
-	}
-
-	public <C> EndOfChain<C> bind(final AbstractBooleanConverter<C> binding) {
-		return createBindingChain().bind(binding);
+		return new BindingChain(this, errorNotifier).<Boolean>bindProperty(this::setObjectValueFromComponent);
 	}
 
 	public boolean getValue() {

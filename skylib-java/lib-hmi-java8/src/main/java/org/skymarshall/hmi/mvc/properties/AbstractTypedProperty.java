@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -24,7 +24,7 @@ import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
 import org.skymarshall.hmi.mvc.IBindingController;
 import org.skymarshall.hmi.mvc.IComponentBinding;
 import org.skymarshall.hmi.mvc.PropertyEvent.EventKind;
-import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
+import org.skymarshall.hmi.mvc.converters.AbstractConverter;
 
 /**
  * A property with a typed value.
@@ -71,7 +71,7 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 		return this;
 	}
 
-	public <C> EndOfChain<C> bind(final AbstractObjectConverter<T, C> binding) {
+	public <C> EndOfChain<C> bind(final AbstractConverter<T, C> binding) {
 		return createBindingChain().bind(binding);
 	}
 

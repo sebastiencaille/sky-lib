@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -103,29 +103,13 @@ public class DotModuleVisitor extends ModuleVisitor<DotModuleVisitor.Graph> {
 	public Graph visit(final Module module, final Flow flow, final Graph context) {
 		super.visit(module, flow, context);
 
-		final boolean compare = !context.expected.isEmpty();
 		try {
 			final TextFormatter output = new TextFormatter(TextFormatter.output(new StringBuilder()));
 			output.appendIndented("// ").add(writer.getCommandLine()).newLine();
 			output.appendIndented("digraph \"").append(flow.name).append("\" {").newLine();
 			output.indent();
 			for (final Node node : context.nodes) {
-				String color = null;
-				if (!compare && context.executed.contains(node.uuid)) {
-					color = "yellow";
-				} else if (compare) {
-					final boolean executed = context.executed.contains(node.uuid);
-					final boolean expected = context.expected.contains(node.uuid);
-					if (executed && expected) {
-						color = "green";
-					} else if (executed && !expected) {
-						color = "red";
-					} else if (!executed && expected) {
-						color = "blue";
-					} else {
-						color = null;
-					}
-				}
+				final String color = computeColor(context, node);
 				final String extra;
 				if (color != null) {
 					extra = ", fillcolor=" + color + ", style=filled";
@@ -148,6 +132,25 @@ public class DotModuleVisitor extends ModuleVisitor<DotModuleVisitor.Graph> {
 			throw new IllegalStateException("Unable to write file", e);
 		}
 		return context;
+	}
+
+	private String computeColor(final Graph context, final Node node) {
+		final boolean compare = !context.expected.isEmpty();
+		String color = null;
+		if (!compare && context.executed.contains(node.uuid)) {
+			color = "yellow";
+		} else if (compare) {
+			final boolean executed = context.executed.contains(node.uuid);
+			final boolean expected = context.expected.contains(node.uuid);
+			if (executed && expected) {
+				color = "green";
+			} else if (executed) {
+				color = "red";
+			} else if (expected) {
+				color = "blue";
+			}
+		}
+		return color;
 	}
 
 }

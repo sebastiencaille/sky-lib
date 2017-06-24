@@ -1,9 +1,9 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -16,7 +16,7 @@
 package org.skymarshall.example.hmi;
 
 import org.skymarshall.hmi.HmiObject;
-import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
+import org.skymarshall.hmi.mvc.converters.AbstractConverter;
 import org.skymarshall.hmi.mvc.converters.Converters;
 
 @HmiObject
@@ -36,7 +36,7 @@ public class TestObject {
 		return aFirstValue + " / " + aSecondValue;
 	}
 
-	public static AbstractObjectConverter<TestObject, String> testObjectToString() {
+	public static AbstractConverter<TestObject, String> testObjectToString() {
 		return Converters.writeOnly(o -> o.aFirstValue != null ? o.aFirstValue : "");
 	}
 }

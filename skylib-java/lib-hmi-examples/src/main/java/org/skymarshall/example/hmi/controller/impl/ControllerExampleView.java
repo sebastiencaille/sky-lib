@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -45,7 +45,7 @@ import javax.swing.JTextField;
 
 import org.skymarshall.example.hmi.TestObject;
 import org.skymarshall.example.hmi.TestObjectTableModel;
-import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
+import org.skymarshall.hmi.mvc.converters.AbstractConverter;
 import org.skymarshall.hmi.mvc.converters.ConversionException;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 import org.skymarshall.hmi.mvc.properties.BooleanProperty;
@@ -181,7 +181,7 @@ public class ControllerExampleView extends JFrame {
 		pack();
 	}
 
-	private static class CounterBinding<T> extends AbstractObjectConverter<T, String> {
+	private static class CounterBinding<T> implements AbstractConverter<T, String> {
 
 		private int count = 0;
 

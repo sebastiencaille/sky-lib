@@ -1,9 +1,9 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 
@@ -111,7 +112,7 @@ public class ControllerPropertyChangeSupport {
 
 	/**
 	 * Triggers a property change
-	 * 
+	 *
 	 * @param propertyName
 	 *            name of the property
 	 * @param caller
@@ -123,7 +124,7 @@ public class ControllerPropertyChangeSupport {
 	 */
 	public void firePropertyChange(final String propertyName, final Object caller, final Object oldValue,
 			final Object newValue) {
-		if (equals(oldValue, newValue)) {
+		if (Objects.equals(oldValue, newValue)) {
 			return;
 		}
 		prepareFire(propertyName, caller);
@@ -134,13 +135,9 @@ public class ControllerPropertyChangeSupport {
 		}
 	}
 
-	private boolean equals(final Object oldValue, final Object newValue) {
-		return oldValue == newValue || (oldValue != null && newValue != null && oldValue.equals(newValue));
-	}
-
 	/**
 	 * Registers a property
-	 * 
+	 *
 	 * @param abstractProperty
 	 *            the property to register
 	 */
@@ -149,8 +146,8 @@ public class ControllerPropertyChangeSupport {
 	}
 
 	/**
-	 * Attaches all the properties to the bindings. Should be called once all
-	 * the components are bound to the properties
+	 * Attaches all the properties to the bindings. Should be called once all the
+	 * components are bound to the properties
 	 */
 	public void attachAll() {
 		for (final AbstractProperty property : properties) {

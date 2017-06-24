@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -16,10 +16,6 @@
 package org.skymarshall.hmi.swing.bindings;
 
 import javax.swing.JTable;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 
 import org.skymarshall.hmi.mvc.IComponentLink;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
@@ -39,28 +35,21 @@ public class JTableSelectionBinding<T> extends DefaultComponentBinding<T> {
 
 	@Override
 	public void addComponentValueChangeListener(final IComponentLink<T> converter) {
-		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(final ListSelectionEvent e) {
-
-				if (!e.getValueIsAdjusting() && !modelChange) {
-					updateSelection(converter);
-				}
+		table.getSelectionModel().addListSelectionListener(e -> {
+			if (!e.getValueIsAdjusting() && !modelChange) {
+				updateSelection(converter);
 			}
 		});
-		model.addTableModelListener(new TableModelListener() {
 
-			@Override
-			public void tableChanged(final TableModelEvent event) {
-				if (event.getType() == ListModelTableModel.TABLE_CHANGE_DONE) {
-					modelChange = false;
-					converter.reloadComponentValue();
-				} else if (event.getType() == ListModelTableModel.TABLE_ABOUT_TO_CHANGE) {
-					modelChange = true;
-				}
+		model.addTableModelListener(event -> {
+			if (event.getType() == ListModelTableModel.TABLE_CHANGE_DONE) {
+				modelChange = false;
+				converter.reloadComponentValue();
+			} else if (event.getType() == ListModelTableModel.TABLE_ABOUT_TO_CHANGE) {
+				modelChange = true;
 			}
 		});
+
 	}
 
 	@Override

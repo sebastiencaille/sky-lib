@@ -1,9 +1,9 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -35,13 +35,11 @@ import org.skymarshall.hmi.mvc.properties.AbstractProperty.ErrorNotifier;
  */
 public class Configuration {
 
+	private Configuration() {
+	}
+
 	public static <T, U extends AbstractTypedProperty<T>> Consumer<U> persistent(final IPersister<T> persister) {
-		return new Consumer<U>() {
-			@Override
-			public void accept(final U property) {
-				property.setPersister(persister);
-			}
-		};
+		return property -> property.setPersister(persister);
 	}
 
 	public static <T, U extends AbstractTypedProperty<T>> Consumer<U> persistent(final Object object,
@@ -49,17 +47,11 @@ public class Configuration {
 		return persistent(Persisters.from(object, fieldAccess));
 	}
 
-	public static <T, U extends AbstractProperty> Consumer<U> errorNotifier(final ErrorNotifier notifier) {
-		return new Consumer<U>() {
-			@Override
-			public void accept(final U property) {
-				property.setErrorNotifier(notifier);
-			}
-		};
-
+	public static <U extends AbstractProperty> Consumer<U> errorNotifier(final ErrorNotifier notifier) {
+		return property -> property.setErrorNotifier(notifier);
 	}
 
-	public static <T, U extends AbstractProperty> void autoCommit(final U property) {
+	public static <U extends AbstractProperty> void autoCommit(final U property) {
 		property.addListener(new AutoCommitListener());
 	}
 

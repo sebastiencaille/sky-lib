@@ -1,9 +1,9 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -160,7 +160,7 @@ public class ListModel<T> extends AbstractListModel<T> implements Iterable<T> {
 				return;
 			}
 			if (data.size() / event.getObjects().size() < 2) {
-				event.getObjects().forEach(v -> insert(v));
+				event.getObjects().forEach(v -> insert(v)); // NOSONAR
 			} else {
 				addValues(event.getObjects());
 			}
@@ -168,7 +168,7 @@ public class ListModel<T> extends AbstractListModel<T> implements Iterable<T> {
 
 		@Override
 		public void valuesRemoved(final ListEvent<T> event) {
-			event.getObjects().forEach(v -> remove(v));
+			event.getObjects().forEach(v -> remove(v));// NOSONAR
 		}
 
 		@Override
@@ -404,7 +404,7 @@ public class ListModel<T> extends AbstractListModel<T> implements Iterable<T> {
 		});
 
 		Collections.sort(data, viewProperty.getValue());
-		if (addedData.size() > 0) {
+		if (!addedData.isEmpty()) {
 			fireIntervalAdded(this, oldSize, data.size() - 1);
 		}
 		fireContentsChanged(this, 0, oldSize - 1);
@@ -611,8 +611,8 @@ public class ListModel<T> extends AbstractListModel<T> implements Iterable<T> {
 	 * Finds an object in the model, and starts its edition if found
 	 *
 	 * @param sample
-	 *            a sample of the object (must contains the values required to
-	 *            find the object)
+	 *            a sample of the object (must contains the values required to find
+	 *            the object)
 	 * @return an object if found, null if not
 	 */
 	public T findForEdition(final T sample) {
@@ -627,8 +627,8 @@ public class ListModel<T> extends AbstractListModel<T> implements Iterable<T> {
 	 * Finds an object in the model, or insert the sample if not found.
 	 *
 	 * @param sample
-	 *            a sample of the object (must contains the values required to
-	 *            find the object)
+	 *            a sample of the object (must contains the values required to find
+	 *            the object)
 	 * @return an object if found, the sample if not found
 	 */
 	public T findOrCreate(final T sample) {
@@ -641,12 +641,12 @@ public class ListModel<T> extends AbstractListModel<T> implements Iterable<T> {
 	}
 
 	/**
-	 * Finds an object in the model, starting it's edition, or insert the sample
-	 * if not found.
+	 * Finds an object in the model, starting it's edition, or insert the sample if
+	 * not found.
 	 *
 	 * @param sample
-	 *            a sample of the object (must contains the values required to
-	 *            find the object)
+	 *            a sample of the object (must contains the values required to find
+	 *            the object)
 	 * @return an object if found, the sample if not found
 	 */
 	public T findOrCreateForEdition(final T sample) {

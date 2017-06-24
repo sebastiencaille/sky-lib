@@ -1,9 +1,9 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -82,10 +82,10 @@ public class SingleNodeJavaModuleGenerator extends JavaDTOsAndActionsGenerator {
 		final String code;
 		if (ap.terminal) {
 			code = String.format("ActionPoint<%s, ?> %s = ActionPoint.terminal(%s, new %s());\n", ap.input,
-					variableName(ap), uuid(ap.uuid), className(ap));
+					variableName(ap), uuid(ap.uuid), className(ap)); // NOSONAR
 		} else {
 			code = String.format("ActionPoint<%s, %s> %s = ActionPoint.simple(%s, new %s());\n", ap.input, ap.output,
-					variableName(ap), uuid(ap.uuid), className(ap));
+					variableName(ap), uuid(ap.uuid), className(ap)); // NOSONAR
 		}
 		append(context, "flow.actions", code);
 
@@ -112,7 +112,7 @@ public class SingleNodeJavaModuleGenerator extends JavaDTOsAndActionsGenerator {
 		// Registry
 		final StringBuilder regs = new StringBuilder();
 		for (final Entry<String, String> reg : registry.entrySet()) {
-			regs.append(String.format("registry.registerObject(%s, \"%s\");\n", reg.getKey(), reg.getValue()));
+			regs.append(String.format("registry.registerObject(%s, \"%s\");\n", reg.getKey(), reg.getValue())); // NOSONAR
 		}
 		scoped.put("flow.registry", regs.toString());
 		final Template template = getTemplate(TEMPLATE.FLOW, scoped);

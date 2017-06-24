@@ -1,9 +1,9 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -37,7 +37,7 @@ import ch.skymarshall.dataflowmgr.generator.writers.ModuleVisitor;
 
 /**
  * Generates the dto and action classes
- * 
+ *
  * @author scaille
  *
  */
@@ -107,7 +107,7 @@ public abstract class JavaDTOsAndActionsGenerator extends ModuleVisitor<Map<Stri
 		final String code = String.format(
 				"final InFlowDecisionRule<%s,%s> %s = %s.addInFlowRule(%s, %s, (flowIn) -> %s, %s);\n", rule.input,
 				ap.input, variableName(ap, rule), variableName(ap), uuid(rule.uuid), rule.input + ".class",
-				rule.activator, transform);
+				rule.activator, transform); // NOSONAR
 		append(context, "flow.inputRules", code);
 		registry.put(variableName(ap, rule), variableName(ap, rule));
 		return context;
@@ -121,7 +121,7 @@ public abstract class JavaDTOsAndActionsGenerator extends ModuleVisitor<Map<Stri
 
 		final String nextActionRef = createActionCaller(context, nextAP);
 		String code = String.format(
-				"final OutFlowDecisionRule<%s, %s> %s = OutFlowDecisionRule.output(%s, (apOut) -> %s, %s, %s, (apOut) ->  %s);\n",
+				"final OutFlowDecisionRule<%s, %s> %s = OutFlowDecisionRule.output(%s, (apOut) -> %s, %s, %s, (apOut) ->  %s);%n",
 				ap.output, rule.output, variableName(ap, rule), uuid(rule.uuid), rule.activator,
 				"FlowActionType.CONTINUE", nextActionRef, rule.transformFunction);
 		code += variableName(ap) + ".addOutputRule(" + variableName(ap, rule) + ");\n";
@@ -249,7 +249,8 @@ public abstract class JavaDTOsAndActionsGenerator extends ModuleVisitor<Map<Stri
 		try {
 			Class.forName(clazz);
 			return;
-		} catch (final ClassNotFoundException e) {
+		} catch (final ClassNotFoundException e) { // NOSONAR
+			// ignore failure
 		}
 		for (final Dto dto : module.dtos) {
 			if (dto.name.equals(clazz)) {
@@ -277,7 +278,7 @@ public abstract class JavaDTOsAndActionsGenerator extends ModuleVisitor<Map<Stri
 			Class.forName(clazz);
 			toImport.add(clazz);
 			return true;
-		} catch (final ClassNotFoundException e2) {
+		} catch (final ClassNotFoundException e2) { // NOSONAR
 			// fallback
 			return false;
 		}

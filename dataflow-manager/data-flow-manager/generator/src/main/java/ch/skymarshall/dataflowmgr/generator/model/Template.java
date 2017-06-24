@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -55,7 +55,7 @@ public class Template {
 	}
 
 	public String generate() {
-		LOGGER.info("Generating with properties " + properties);
+		LOGGER.info("Generating with properties {}", properties);
 		final StringBuilder result = new StringBuilder("// File generated from template").append("\n");
 		if (commandLine != null) {
 			result.append("// ").append(commandLine).append("\n");
@@ -68,12 +68,12 @@ public class Template {
 				nextVariable++;
 				continue;
 			}
-			final String variable = content.substring(nextVariable + 2, content.indexOf("}", nextVariable));
+			final String variable = content.substring(nextVariable + 2, content.indexOf('}', nextVariable));
 			final String value = properties.get(variable);
 			if (value == null) {
 				throw new TemplateException("No value for property " + variable);
 			}
-			LOGGER.debug("replacing " + variable + " with " + value);
+			LOGGER.debug("replacing {} with {}", variable, value);
 			result.append(content.substring(pos, nextVariable)).append(value);
 			nextVariable = nextVariable + variable.length() + 3;
 			pos = nextVariable;
@@ -83,7 +83,7 @@ public class Template {
 	}
 
 	public void write(final File file) throws IOException {
-		LOGGER.info("Writing " + file);
+		LOGGER.info("Writing {}", file);
 		file.getParentFile().mkdirs();
 		try (FileWriter out = new FileWriter(file)) {
 			out.write(generate());

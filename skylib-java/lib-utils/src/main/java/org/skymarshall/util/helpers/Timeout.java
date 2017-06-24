@@ -1,9 +1,9 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -21,65 +21,65 @@ import java.util.concurrent.TimeoutException;
 
 public class Timeout {
 
-    public static class TimeoutFactory extends Duration {
+	public static class TimeoutFactory extends Duration {
 
-        public TimeoutFactory(final int hours, final int minutes, final int seconds) {
-            super(hours, minutes, seconds);
-        }
+		public TimeoutFactory(final int hours, final int minutes, final int seconds) {
+			super(hours, minutes, seconds);
+		}
 
-        public TimeoutFactory(final int time, final TimeUnit unit) {
-            super(time, unit);
-        }
+		public TimeoutFactory(final int time, final TimeUnit unit) {
+			super(time, unit);
+		}
 
-        public Timeout createTimeout() {
-            return new Timeout(addTo(Calendar.getInstance()), this);
-        }
-    }
+		public Timeout createTimeout() {
+			return new Timeout(addTo(Calendar.getInstance()), this);
+		}
+	}
 
-    private final long   stop;
-    private final Object info;
+	private final long stop;
+	private final Object info;
 
-    public Timeout(final Calendar cal, final Object info) {
-        this.info = info;
-        stop = cal.getTimeInMillis();
-    }
+	public Timeout(final Calendar cal, final Object info) {
+		this.info = info;
+		stop = cal.getTimeInMillis();
+	}
 
-    public boolean hasTimedOut() {
-        return System.currentTimeMillis() > stop;
-    }
+	public boolean hasTimedOut() {
+		return System.currentTimeMillis() > stop;
+	}
 
-    public void yield() throws TimeoutException {
-        if (hasTimedOut()) {
-            throw new TimeoutException("Time out: " + info);
-        }
-        try {
-            Thread.sleep(100);
-        } catch (final InterruptedException e) {
-            // Just let it go
-        }
-    }
+	public void yield() throws TimeoutException {
+		if (hasTimedOut()) {
+			throw new TimeoutException("Time out: " + info);
+		}
+		try {
+			Thread.sleep(100);
+		} catch (final InterruptedException e) {
+			// Just let it go
+		}
+	}
 
-    public TimeoutFactory createTimeoutFactory(final int hours, final int minutes, final int seconds) {
-        return new TimeoutFactory(hours, minutes, seconds);
-    }
+	public TimeoutFactory createTimeoutFactory(final int hours, final int minutes, final int seconds) {
+		return new TimeoutFactory(hours, minutes, seconds);
+	}
 
-    public void waitOn(final Object obj) throws InterruptedException, TimeoutException {
-        final long waitTime = stop - System.currentTimeMillis();
-        if (waitTime > 0) {
-            obj.wait(waitTime);
-        }
-        if (hasTimedOut()) {
-            throw new TimeoutException("Time out: " + info);
-        }
+	public void waitOn(final Object obj) throws InterruptedException, TimeoutException {
+		final long waitTime = stop - System.currentTimeMillis();
+		if (waitTime > 0) {
+			obj.wait(waitTime); // NOSONAR
+		}
+		if (hasTimedOut()) {
+			throw new TimeoutException("Time out: " + info);
+		}
 
-    }
+	}
 
-    public long remaining() {
-        final long l = stop - System.currentTimeMillis();
-        if (l < 1) {
-            return 1;
-        }
-        return l;
-    }
+	public long remaining() {
+		final long l = stop - System.currentTimeMillis();
+		if (l < 1) {
+			return 1;
+		}
+		return l;
+	}
 
 }

@@ -1,9 +1,9 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -19,10 +19,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.skymarshall.hmi.mvc.converters.AbstractObjectConverter;
+import org.skymarshall.hmi.mvc.converters.AbstractConverter;
 import org.skymarshall.hmi.mvc.converters.ConversionException;
 
-public class DynamicListContentConverter extends AbstractObjectConverter<String, List<String>> {
+public class DynamicListContentConverter implements AbstractConverter<String, List<String>> {
 
 	@Override
 	public List<String> convertPropertyValueToComponentValue(final String propertyValue) {

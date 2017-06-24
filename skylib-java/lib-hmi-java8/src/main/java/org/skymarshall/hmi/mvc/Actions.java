@@ -1,9 +1,9 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -29,6 +29,9 @@ import org.skymarshall.hmi.mvc.properties.AbstractProperty;
  */
 public class Actions {
 
+	private Actions() {
+	}
+
 	/**
 	 * Restores the selection once some properties are fired.
 	 * <p>
@@ -38,21 +41,18 @@ public class Actions {
 	 * @return an action
 	 */
 	public static IPropertyEventListener restoreAfterUpdate(final AbstractProperty child) {
-		return new IPropertyEventListener() {
-
-			@Override
-			public void propertyModified(final Object caller, final PropertyEvent event) {
-				switch (event.getKind()) {
-				case BEFORE:
-					child.detach();
-					break;
-				case AFTER:
-					child.attach();
-					break;
-				default:
-					throw new IllegalStateException("Unhandled case:" + event.getKind());
-				}
+		return (caller, event) -> {
+			switch (event.getKind()) {
+			case BEFORE:
+				child.detach();
+				break;
+			case AFTER:
+				child.attach();
+				break;
+			default:
+				throw new IllegalStateException("Unhandled case:" + event.getKind());
 			}
+
 		};
 	}
 

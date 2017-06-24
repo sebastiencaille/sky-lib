@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -17,8 +17,6 @@ package org.skymarshall.hmi.swing.bindings;
 
 import javax.swing.JComponent;
 import javax.swing.JTabbedPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import org.skymarshall.hmi.mvc.IComponentLink;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
@@ -43,25 +41,21 @@ public class JTabbedPaneSelectionBinding<T> extends DefaultComponentBinding<T> {
 
 	@Override
 	public void addComponentValueChangeListener(final IComponentLink<T> converter) {
-		pane.addChangeListener(new ChangeListener() {
+		pane.addChangeListener(e -> {
+			final int index = pane.getSelectedIndex();
 
-			@Override
-			public void stateChanged(final ChangeEvent e) {
-				final int index = pane.getSelectedIndex();
+			if (index >= 0) {
 
-				if (index >= 0) {
-
-					final Object clientProperty = pane.getClientProperty(pane.getComponentAt(index));
-					if (clientProperty == null) {
-						// throw new IllegalStateException("Object for tab " +
-						// index + " does not exist");
-						return;
-					}
-					if (!clazz.isInstance(clientProperty)) {
-						throw new IllegalStateException("Object for tab " + index + " must be a " + clazz.getName());
-					}
-					converter.setValueFromComponent(pane, clazz.cast(clientProperty));
+				final Object clientProperty = pane.getClientProperty(pane.getComponentAt(index));
+				if (clientProperty == null) {
+					// throw new IllegalStateException("Object for tab " +
+					// index + " does not exist");
+					return;
 				}
+				if (!clazz.isInstance(clientProperty)) {
+					throw new IllegalStateException("Object for tab " + index + " must be a " + clazz.getName());
+				}
+				converter.setValueFromComponent(pane, clazz.cast(clientProperty));
 			}
 
 		});

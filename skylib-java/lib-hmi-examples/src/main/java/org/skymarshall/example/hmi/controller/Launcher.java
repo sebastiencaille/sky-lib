@@ -1,9 +1,9 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -20,17 +20,11 @@ import java.awt.EventQueue;
 import org.skymarshall.example.hmi.controller.impl.ControllerExampleController;
 import org.skymarshall.example.hmi.controller.impl.ControllerExampleView;
 
-public class Launcher {
+public interface Launcher {
 
 	public static void main(final String[] args) {
 		final ControllerExampleController controller = new ControllerExampleController();
-		EventQueue.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				new ControllerExampleView(controller).setVisible(true);
-			}
-		});
+		EventQueue.invokeLater(() -> new ControllerExampleView(controller).setVisible(true));
 
 	}
 }

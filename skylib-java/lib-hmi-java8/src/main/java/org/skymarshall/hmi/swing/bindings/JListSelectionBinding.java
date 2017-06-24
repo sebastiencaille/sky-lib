@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -16,8 +16,6 @@
 package org.skymarshall.hmi.swing.bindings;
 
 import javax.swing.JList;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import org.skymarshall.hmi.mvc.IComponentLink;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
@@ -36,13 +34,9 @@ public class JListSelectionBinding<T> extends DefaultComponentBinding<T> {
 	@Override
 	public void addComponentValueChangeListener(final IComponentLink<T> fromLink) {
 		this.link = fromLink;
-		list.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(final ListSelectionEvent e) {
-				if (!e.getValueIsAdjusting()) {
-					fromLink.setValueFromComponent(list, clazz.cast(list.getSelectedValue()));
-				}
+		list.addListSelectionListener(e -> {
+			if (!e.getValueIsAdjusting()) {
+				fromLink.setValueFromComponent(list, clazz.cast(list.getSelectedValue()));
 			}
 		});
 	}

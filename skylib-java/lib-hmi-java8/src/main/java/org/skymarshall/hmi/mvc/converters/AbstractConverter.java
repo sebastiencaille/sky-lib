@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above copyright notice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -15,10 +15,31 @@
  ******************************************************************************/
 package org.skymarshall.hmi.mvc.converters;
 
+import java.util.function.Supplier;
+
 public interface AbstractConverter<PropertyType, ComponentType> {
 
 	ComponentType convertPropertyValueToComponentValue(final PropertyType propertyValue);
 
 	PropertyType convertComponentValueToPropertyValue(ComponentType componentValue) throws ConversionException;
+
+	public static <C> AbstractConverter<Boolean, C> either(final Supplier<C> either, final Supplier<C> or) {
+		return new AbstractConverter<Boolean, C>() {
+
+			@Override
+			public C convertPropertyValueToComponentValue(final Boolean propertyValue) {
+				if (propertyValue) {
+					return either.get();
+				}
+				return or.get();
+			}
+
+			@Override
+			public Boolean convertComponentValueToPropertyValue(final C componentValue) throws ConversionException {
+				throw new IllegalStateException("Write only converter");
+			}
+
+		};
+	}
 
 }

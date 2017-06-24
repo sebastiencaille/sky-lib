@@ -1,9 +1,9 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -15,53 +15,50 @@
  ******************************************************************************/
 package org.skymarshall.hmi.model;
 
-public class ListModelAdapter<T> implements
-        IListModelListener<T> {
-    @Override
-    public void mutates() {
-        // TODO Auto-generated method stub
+public class ListModelAdapter<T> implements IListModelListener<T> {
+	@Override
+	public void mutates() {
+		// no op
+	}
 
-    }
+	@Override
+	public void valuesSet(final ListEvent<T> event) {
+		// no op
+	}
 
-    @Override
-    public void valuesSet(final ListEvent<T> event) {
-        // TODO Auto-generated method stub
+	@Override
+	public void valuesCleared(final ListEvent<T> event) {
+		// no op
+	}
 
-    }
+	@Override
+	public void valuesAdded(final ListEvent<T> event) {
+		// no op
+	}
 
-    @Override
-    public void valuesCleared(final ListEvent<T> event) {
-        // no op
-    }
+	@Override
+	public void valuesRemoved(final ListEvent<T> event) {
+		// no op
+	}
 
-    @Override
-    public void valuesAdded(final ListEvent<T> event) {
-        // no op
-    }
+	@Override
+	public void editionCancelled(final ListEvent<T> event) {
+		// no op
+	}
 
-    @Override
-    public void valuesRemoved(final ListEvent<T> event) {
-        // no op
-    }
+	@Override
+	public void editionsStarted(final ListEvent<T> event) {
+		// no op
+	}
 
-    @Override
-    public void editionCancelled(final ListEvent<T> event) {
-        // no op
-    }
+	@Override
+	public void editionsStopping(final ListEvent<T> event) {
+		// no op
+	}
 
-    @Override
-    public void editionsStarted(final ListEvent<T> event) {
-        // no op
-    }
-
-    @Override
-    public void editionsStopping(final ListEvent<T> event) {
-        // no op
-    }
-
-    @Override
-    public void editionsStopped(final ListEvent<T> event) {
-        // no op
-    }
+	@Override
+	public void editionsStopped(final ListEvent<T> event) {
+		// no op
+	}
 
 }

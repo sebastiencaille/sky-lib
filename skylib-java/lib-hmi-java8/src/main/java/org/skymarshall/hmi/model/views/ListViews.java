@@ -1,9 +1,9 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -20,7 +20,8 @@ import java.util.function.Predicate;
 
 import org.skymarshall.hmi.mvc.properties.ObjectProperty;
 
-public class ListViews {
+public interface ListViews {
+
 	public static <U> IListView<U> sorted(final Comparator<U> comparator) {
 		return new ListView<>(comparator, null);
 	}

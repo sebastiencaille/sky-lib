@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -91,6 +91,12 @@ public class TextFormatter {
 	public TextFormatter appendIndented(final String string) throws IOException {
 		output.append(indentationManager.getIndentation());
 		output.append(string);
+		return this;
+	}
+
+	public TextFormatter appendAtOverride() throws IOException {
+		output.append(indentationManager.getIndentation());
+		output.append("@Override\n");
 		return this;
 	}
 

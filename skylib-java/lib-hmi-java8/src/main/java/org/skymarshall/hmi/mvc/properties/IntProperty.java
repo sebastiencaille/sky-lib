@@ -1,9 +1,9 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -20,7 +20,6 @@ import java.util.function.Consumer;
 import org.skymarshall.hmi.mvc.BindingChain;
 import org.skymarshall.hmi.mvc.BindingChain.EndOfChain;
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
-import org.skymarshall.hmi.mvc.converters.AbstractIntConverter;
 
 /**
  * Property containing an int value.
@@ -46,16 +45,13 @@ public class IntProperty extends AbstractTypedProperty<Integer> {
 
 	@Override
 	protected EndOfChain<Integer> createBindingChain() {
-		return new BindingChain(this, errorNotifier).<Integer>bindProperty((c, v) -> setObjectValueFromComponent(c, v));
-	}
-
-	public <C> EndOfChain<C> bind(final AbstractIntConverter<C> binding) {
-		return createBindingChain().bind(binding);
+		return new BindingChain(this, errorNotifier).<Integer>bindProperty(this::setObjectValueFromComponent);
 	}
 
 	@SafeVarargs
 	@Override
-	public final IntProperty setTypedConfiguration(final Consumer<AbstractTypedProperty<Integer>>... propertyConfigurer) {
+	public final IntProperty setTypedConfiguration(
+			final Consumer<AbstractTypedProperty<Integer>>... propertyConfigurer) {
 		super.setTypedConfiguration(propertyConfigurer);
 		return this;
 	}

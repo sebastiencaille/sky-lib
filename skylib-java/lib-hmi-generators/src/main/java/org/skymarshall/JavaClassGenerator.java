@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -82,9 +82,7 @@ public class JavaClassGenerator extends TextFormatter {
 			final boolean isNumeric = Character.isDigit(c);
 			if (isFirst) {
 				isFirst = false;
-			} else if (isNumeric ^ prevIsNumeric) {
-				builder.append('_');
-			} else if (isUpper && prevUpper == 0) {
+			} else if (isNumeric ^ prevIsNumeric || (isUpper && prevUpper == 0)) {
 				builder.append('_');
 			}
 			builder.append(Character.toUpperCase(c));

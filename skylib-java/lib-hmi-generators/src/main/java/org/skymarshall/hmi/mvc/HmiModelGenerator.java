@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -28,7 +28,7 @@ import org.skymarshall.hmi.HmiObject;
 public class HmiModelGenerator {
 
 	public static void main(final String[] args) throws ClassNotFoundException, IOException, URISyntaxException {
-		System.out.println("Running in " + new File(".").getAbsolutePath());
+		System.out.println("Running in " + new File(".").getAbsolutePath()); // NOSONAR
 		final File target;
 		if (args.length > 0) {
 			target = new File(args[0]);
@@ -43,7 +43,7 @@ public class HmiModelGenerator {
 		final ClassSelector selector = new ClassSelector((URLClassLoader) HmiModelGenerator.class.getClassLoader());
 		selector.addExpectedTag(HmiObject.class.getName(), ClassSelector.Policy.CLASS_ONLY);
 		selector.collect();
-		System.out.println(selector.getResult());
+		System.out.println(selector.getResult()); // NOSONAR
 
 		for (final Class<?> clazz : selector.getResult()) {
 			final String pkg = clazz.getPackage().getName();
@@ -53,11 +53,11 @@ public class HmiModelGenerator {
 			final HmiClassProcessor processor = new HmiClassProcessor(clazz);
 			processor.process(generator);
 			final File outputFile = new File(targetFolder, processor.getClassName() + ".java");
-			System.out.println("Generating " + outputFile.getAbsolutePath());
+			System.out.println("Generating " + outputFile.getAbsolutePath()); // NOSONAR
 			outputFile.getParentFile().mkdirs();
-			final FileOutputStream fout = new FileOutputStream(outputFile);
-			fout.write(generator.toString().getBytes());
-			fout.close();
+			try (FileOutputStream fout = new FileOutputStream(outputFile)) {
+				fout.write(generator.toString().getBytes());
+			}
 		}
 
 	}

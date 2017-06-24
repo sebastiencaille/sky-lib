@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -15,6 +15,7 @@
  ******************************************************************************/
 package org.skymarshall.hmi.mvc.converters;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 import org.skymarshall.hmi.Utils;
@@ -28,9 +29,9 @@ public final class Converters {
 
 	}
 
-	public static <T, C> AbstractObjectConverter<T, C> converter(final Function<T, C> prop2comp,
+	public static <T, C> AbstractConverter<T, C> converter(final Function<T, C> prop2comp,
 			final FunctionWithException<C, T, ConversionException> comp2prop) {
-		return new AbstractObjectConverter<T, C>() {
+		return new AbstractConverter<T, C>() {
 
 			@Override
 			public C convertPropertyValueToComponentValue(final T propertyValue) {
@@ -45,9 +46,9 @@ public final class Converters {
 		};
 	}
 
-	public static <C> AbstractIntConverter<C> intConverter(final Function<Integer, C> prop2comp,
+	public static <C> AbstractConverter<Integer, C> intConverter(final Function<Integer, C> prop2comp,
 			final FunctionWithException<C, Integer, ConversionException> comp2prop) {
-		return new AbstractIntConverter<C>() {
+		return new AbstractConverter<Integer, C>() {
 
 			@Override
 			public C convertPropertyValueToComponentValue(final Integer propertyValue) {
@@ -62,9 +63,9 @@ public final class Converters {
 		};
 	}
 
-	public static <C> AbstractLongConverter<C> longConverter(final Function<Long, C> prop2comp,
+	public static <C> AbstractConverter<Long, C> longConverter(final Function<Long, C> prop2comp,
 			final FunctionWithException<C, Long, ConversionException> comp2prop) {
-		return new AbstractLongConverter<C>() {
+		return new AbstractConverter<Long, C>() {
 
 			@Override
 			public C convertPropertyValueToComponentValue(final Long propertyValue) {
@@ -79,9 +80,9 @@ public final class Converters {
 		};
 	}
 
-	public static <C> AbstractBooleanConverter<C> booleanConverter(final Function<Boolean, C> prop2comp,
+	public static <C> AbstractConverter<Boolean, C> booleanConverter(final Function<Boolean, C> prop2comp,
 			final FunctionWithException<C, Boolean, ConversionException> comp2prop) {
-		return new AbstractBooleanConverter<C>() {
+		return new AbstractConverter<Boolean, C>() {
 
 			@Override
 			public C convertPropertyValueToComponentValue(final Boolean propertyValue) {
@@ -96,9 +97,9 @@ public final class Converters {
 		};
 	}
 
-	public static <C> AbstractFloatConverter<C> floatConverter(final Function<Float, C> prop2comp,
+	public static <C> AbstractConverter<Float, C> floatConverter(final Function<Float, C> prop2comp,
 			final FunctionWithException<C, Float, ConversionException> comp2prop) {
-		return new AbstractFloatConverter<C>() {
+		return new AbstractConverter<Float, C>() {
 
 			@Override
 			public C convertPropertyValueToComponentValue(final Float propertyValue) {
@@ -113,27 +114,27 @@ public final class Converters {
 		};
 	}
 
-	public static AbstractObjectConverter<HmiError, String> hmiErrorToString() {
+	public static AbstractConverter<HmiError, String> hmiErrorToString() {
 		return new HmiErrorToStringConverter();
 	}
 
-	public static <T> AbstractObjectConverter<T, T> identity() {
+	public static <T> AbstractConverter<T, T> identity() {
 		return converter(Function.identity(), Lambda.<T, ConversionException>identity());
 	}
 
-	public static AbstractIntConverter<Integer> intIdentity() {
+	public static AbstractConverter<Integer, Integer> intIdentity() {
 		return intConverter(Function.identity(), Lambda.<Integer, ConversionException>identity());
 	}
 
-	public static AbstractLongConverter<Long> longIdentity() {
+	public static AbstractConverter<Long, Long> longIdentity() {
 		return longConverter(Function.identity(), Lambda.<Long, ConversionException>identity());
 	}
 
-	public static AbstractBooleanConverter<Boolean> booleanIdentity() {
+	public static AbstractConverter<Boolean, Boolean> booleanIdentity() {
 		return booleanConverter(Function.identity(), Lambda.<Boolean, ConversionException>identity());
 	}
 
-	public static AbstractFloatConverter<Float> floatIdentity() {
+	public static AbstractConverter<Float, Float> floatIdentity() {
 		return floatConverter(Function.identity(), Lambda.<Float, ConversionException>identity());
 	}
 
@@ -155,30 +156,30 @@ public final class Converters {
 		};
 	}
 
-	public static <T> AbstractObjectConverter<String, String> stringToString() {
-		return converter((s) -> (s != null && !s.isEmpty()) ? s : null, s -> s != null ? s : "");
+	public static AbstractConverter<String, String> stringToString() {
+		return converter(s -> (s != null && !s.isEmpty()) ? s : null, s -> s != null ? s : "");
 	}
 
-	public static AbstractIntConverter<String> intToString() {
-		return intConverter(i -> Integer.toString(i), numberToString(Integer::parseInt));
+	public static AbstractConverter<Integer, String> intToString() {
+		return intConverter(i -> Integer.toString(i), numberToString(Integer::parseInt)); // NOSONAR
 	}
 
-	public static <T, U> AbstractObjectConverter<T, U> writeOnly(final Function<T, U> prop2comp) {
+	public static <T, U> AbstractConverter<T, U> writeOnly(final Function<T, U> prop2comp) {
 		return converter(prop2comp, o -> {
 			throw new IllegalStateException("Write only");
 		});
 	}
 
-	public static <T> AbstractObjectConverter<T, String> objectToString() {
+	public static <T> AbstractConverter<T, String> objectToString() {
 		return writeOnly(Object::toString);
 	}
 
-	public static <T extends Number> AbstractObjectConverter<T, String> numberToSize() {
+	public static <T extends Number> AbstractConverter<T, String> numberToSize() {
 		return writeOnly(Utils::toSize);
 	}
 
-	public static <T> AbstractObjectConverter<T, Boolean> isNotNull() {
-		return writeOnly((p) -> p != null);
+	public static <T> AbstractConverter<T, Boolean> isNotNull() {
+		return writeOnly(Objects::nonNull);
 	}
 
 }

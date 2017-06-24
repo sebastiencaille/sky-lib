@@ -1,9 +1,9 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -16,15 +16,19 @@
 package org.skymarshall.util;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 public class CollectionHelper {
 
-    public static void checkContent(final Collection<?> collection, final Class<?> clazz) {
-        for (final Object o : collection) {
-            if (!clazz.isInstance(o)) {
-                throw new IllegalArgumentException("Collection has an instance of " + o.getClass()
-                        + ", which doesn't inherit from " + clazz);
-            }
-        }
-    }
+	private CollectionHelper() {
+
+	}
+
+	public static void checkContent(final Collection<?> collection, final Class<?> clazz) {
+		if (!collection.stream().allMatch(clazz::isInstance)) {
+			throw new IllegalArgumentException("Collection has an instances of " + collection.stream()
+					.map(Object::getClass).filter(c -> !clazz.isAssignableFrom(c)).collect(Collectors.toSet())
+					+ ", which are not " + clazz);
+		}
+	}
 }

@@ -1,9 +1,9 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -17,10 +17,11 @@ package ch.skymarshall.dataflowmgr.generator;
 
 import java.util.UUID;
 
-public class UUIDGen {
+public interface UUIDGenTool {
+
 	public static void main(final String[] args) {
 		for (int i = 0; i < 10; i++) {
-			System.out.println(UUID.randomUUID());
+			System.out.println(UUID.randomUUID()); // NOSONAR
 		}
 	}
 }

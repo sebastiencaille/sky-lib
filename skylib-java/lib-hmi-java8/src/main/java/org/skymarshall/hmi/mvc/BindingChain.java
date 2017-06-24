@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -50,7 +50,7 @@ public class BindingChain implements IBindingController {
 		Object apply(Object value) throws ConversionException;
 	}
 
-	private static <T, NextType> Link link(final ConversionFunction prop2Comp, final ConversionFunction comp2Prop,
+	private static Link link(final ConversionFunction prop2Comp, final ConversionFunction comp2Prop,
 			final Consumer<ConversionException> exceptionConsumer) {
 		return new Link() {
 
@@ -72,6 +72,9 @@ public class BindingChain implements IBindingController {
 		};
 	}
 
+	/**
+	 * All the links (converters, ...)
+	 */
 	private final List<Link> links = new ArrayList<>();
 
 	private final AbstractProperty property;
@@ -82,7 +85,7 @@ public class BindingChain implements IBindingController {
 
 	private boolean transmit = true;
 
-	private IPropertyEventListener detachReattachListener;
+	private final IPropertyEventListener detachReattachListener;
 
 	private final ErrorNotifier errorNotifier;
 
@@ -98,17 +101,19 @@ public class BindingChain implements IBindingController {
 				newBinding.accept((T) v);
 				return null;
 			}, v -> {
-				throw new IllegalStateException("Read only");
+				throw readOnlyException();
 			}, e -> {
-				throw new IllegalStateException("Read only");
+				throw readOnlyException();
 			}));
 			return BindingChain.this;
 		}
 
+		private IllegalStateException readOnlyException() {
+			return new IllegalStateException("Read only");
+		}
+
 		public IBindingController bind(final IComponentBinding<T> newBinding) {
 			links.add(new Link() {
-
-				private final int pos = links.size();
 
 				{
 					newBinding.addComponentValueChangeListener(new IComponentLink<T>() {
@@ -117,15 +122,7 @@ public class BindingChain implements IBindingController {
 							if (!transmit) {
 								return;
 							}
-							Object value = componentValue;
-							for (int i = pos - 1; i >= 0; i--) {
-								try {
-									value = links.get(i).toProperty(component, value);
-								} catch (final ConversionException e) {
-									links.get(i).handleException(e);
-									return;
-								}
-							}
+							propagateComponentChange(component, componentValue);
 						}
 
 						@Override
@@ -134,7 +131,8 @@ public class BindingChain implements IBindingController {
 
 						@Override
 						public void reloadComponentValue() {
-
+							// should trigger the listeners
+							property.attach();
 						}
 					});
 				}
@@ -184,42 +182,51 @@ public class BindingChain implements IBindingController {
 	public BindingChain(final AbstractProperty prop, final ErrorNotifier errorNotifier) {
 		this.property = prop;
 		this.errorNotifier = errorNotifier;
-		this.valueUpdateListener = new PropertyChangeListener() {
+		// handle property change
+		this.valueUpdateListener = this::propagateProperyChange;
 
-			@Override
-			public void propertyChange(final PropertyChangeEvent evt) {
-				if (!transmit) {
-					return;
-				}
-				Object value = evt.getNewValue();
-				for (final Link link : links) {
-					try {
-						value = link.toComponent(value);
-					} catch (final ConversionException e) {
-						link.handleException(e);
-						return;
-					}
-				}
+		this.detachReattachListener = (caller, event) -> {
+
+			switch (event.getKind()) {
+			case BEFORE:
+				detach();
+				break;
+			case AFTER:
+				attach();
+				break;
+			default:
+				// ignore
+				break;
 			}
 		};
-		this.detachReattachListener = new IPropertyEventListener() {
+	}
 
-			@Override
-			public void propertyModified(final Object caller, final PropertyEvent event) {
-				switch (event.getKind()) {
-				case BEFORE:
-					detach();
-					break;
-				case AFTER:
-					attach();
-					break;
-				default:
-					// ignore
-					break;
-				}
-
+	private void propagateProperyChange(final PropertyChangeEvent evt) {
+		if (!transmit) {
+			return;
+		}
+		Object value = evt.getNewValue();
+		for (final Link link : links) {
+			try {
+				value = link.toComponent(value);
+			} catch (final ConversionException e) {
+				link.handleException(e);
+				return;
 			}
-		};
+		}
+	}
+
+	private void propagateComponentChange(final Object component, final Object componentValue) {
+		final int pos = links.size();
+		Object value = componentValue;
+		for (int i = pos - 1; i >= 0; i--) {
+			try {
+				value = links.get(i).toProperty(component, value);
+			} catch (final ConversionException e) {
+				links.get(i).handleException(e);
+				return;
+			}
+		}
 	}
 
 	public <T> EndOfChain<T> bindProperty(final BiConsumer<Object, T> propertySetter) {
@@ -238,6 +245,7 @@ public class BindingChain implements IBindingController {
 
 			@Override
 			public void handleException(final ConversionException e) {
+				// no conversion
 			}
 		});
 		return new EndOfChain<>();

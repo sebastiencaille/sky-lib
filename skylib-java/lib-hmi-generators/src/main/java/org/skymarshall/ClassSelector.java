@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -100,15 +100,15 @@ public class ClassSelector {
 
 	private void handleJarFile(final File file) throws IOException {
 		// System.out.println("Handling jar file " + file);
-		final JarFile jar = new JarFile(file);
-		final Enumeration<JarEntry> entries = jar.entries();
-		while (entries.hasMoreElements()) {
-			final JarEntry jarEntry = entries.nextElement();
-			if (jarEntry.getName().endsWith(CLASS_EXTENSION)) {
-				handleClass(jarEntry.getName());
+		try (final JarFile jar = new JarFile(file)) {
+			final Enumeration<JarEntry> entries = jar.entries();
+			while (entries.hasMoreElements()) {
+				final JarEntry jarEntry = entries.nextElement();
+				if (jarEntry.getName().endsWith(CLASS_EXTENSION)) {
+					handleClass(jarEntry.getName());
+				}
 			}
 		}
-		jar.close();
 	}
 
 	private void handleDirectory(final File directory, final int baseLength) throws MalformedURLException {
@@ -132,9 +132,7 @@ public class ClassSelector {
 		try {
 			final Class<?> clazz = Class.forName(className, true, loader);
 			processClass(clazz);
-		} catch (final Exception e) {
-			// ignore
-		} catch (final Error e) {
+		} catch (final Exception e) { // NOSONAR
 			// ignore
 		}
 	}

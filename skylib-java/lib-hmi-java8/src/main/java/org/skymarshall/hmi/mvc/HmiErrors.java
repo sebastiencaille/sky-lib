@@ -1,9 +1,9 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -16,26 +16,28 @@
 package org.skymarshall.hmi.mvc;
 
 public class HmiErrors {
+	private HmiErrors() {
+	}
 
-    /**
-     * Error container
-     * 
-     * @author Sebastien Caille
-     * 
-     */
-    public static class HmiError {
-        private final Object content;
+	/**
+	 * Error container
+	 *
+	 * @author Sebastien Caille
+	 *
+	 */
+	public static class HmiError {
+		private final Object content;
 
-        public HmiError(final Object content) {
-            this.content = content;
-        }
+		public HmiError(final Object content) {
+			this.content = content;
+		}
 
-        public Object getContent() {
-            return content;
-        }
-    }
+		public Object getContent() {
+			return content;
+		}
+	}
 
-    public static HmiError fromException(final Exception e) {
-        return new HmiError(e);
-    }
+	public static HmiError fromException(final Exception e) {
+		return new HmiError(e);
+	}
 }

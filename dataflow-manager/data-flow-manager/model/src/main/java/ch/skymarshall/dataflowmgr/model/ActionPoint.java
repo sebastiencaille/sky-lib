@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -67,7 +67,7 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 
 	/**
 	 * Add an inflow rule
-	 * 
+	 *
 	 * @param uuid
 	 * @param inputClass
 	 * @param activationPredicate
@@ -80,7 +80,7 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 			final Class<T> inputClass, final Predicate<T> activationPredicate,
 			final BiConsumer<T, InputDataType> collectFunction) {
 		final InFlowDecisionRule<T, InputDataType> rule = new InFlowDecisionRule<>(uuid, inputClass,
-				activationPredicate, this, new CollectorFunction<T, InputDataType>() {
+				activationPredicate, this, new CollectorFunction<T, InputDataType>() { // NOSONAR
 					@Override
 					public InputDataType apply(final T inputData, final ActionPoint<InputDataType, ?> ap,
 							final Registry reg) {
@@ -243,13 +243,13 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 		return new ExecutionSteps(inputData);
 	}
 
-	public static <InputDataType extends FlowData, OutputDataType extends FlowData, APRef extends ActionPointReference<?>> ActionPoint<InputDataType, OutputDataType> simple(
+	public static <InputDataType extends FlowData, OutputDataType extends FlowData> ActionPoint<InputDataType, OutputDataType> simple(
 			final UUID uuid, final FlowAction<InputDataType, OutputDataType> action) {
 		return new ActionPoint<>(uuid, action);
 	}
 
-	public static <InputDataType extends FlowData, APRef extends ActionPointReference<NoData>> ActionPoint<InputDataType, ?> terminal(
-			final UUID uuid, final FlowAction<InputDataType, NoData> action) {
+	public static <InputDataType extends FlowData> ActionPoint<InputDataType, ?> terminal(final UUID uuid,
+			final FlowAction<InputDataType, NoData> action) {
 		final ActionPoint<InputDataType, NoData> decisionPoint = new ActionPoint<>(uuid, action);
 		decisionPoint.addOutputRule(new OutFlowDecisionRule<NoData, NoData>(NoData.NO_DATA.uuid(), d -> true,
 				FlowActionType.STOP, null, null));

@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms are permitted
- *  provided that the above copyright notice and this paragraph are
+ *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
  *  advertising materials, and other materials related to such
  *  distribution and use acknowledge that the software was developed
@@ -17,7 +17,6 @@ package org.skymarshall.hmi.swing.bindings;
 
 import java.awt.ItemSelectable;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -35,7 +34,7 @@ import org.skymarshall.hmi.mvc.IComponentLink;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 import org.skymarshall.hmi.swing.model.ListModelTableModel;
 
-public class SwingBindings {
+public interface SwingBindings {
 
 	public static <T, C extends JComponent> IComponentBinding<T> rw(final C component,
 			final Consumer<IComponentLink<T>> readerListener, final Consumer<T> writer, final T defaultValue) {
@@ -58,24 +57,16 @@ public class SwingBindings {
 
 	public static <C extends ItemSelectable, T> Consumer<IComponentLink<T>> itemListener(final C component,
 			final Function<ItemEvent, T> reader, final Function<ItemEvent, Boolean> activator) {
-		return new Consumer<IComponentLink<T>>() {
-			@Override
-			public void accept(final IComponentLink<T> l) {
-				component.addItemListener(new ItemListener() {
-
-					@Override
-					public void itemStateChanged(final ItemEvent e) {
-						if (activator.apply(e)) {
-							l.setValueFromComponent(component, reader.apply(e));
-						}
-					}
-				});
+		return link -> component.addItemListener(e -> {
+			if (activator.apply(e)) {
+				link.setValueFromComponent(component, reader.apply(e));
 			}
-		};
+		});
+
 	}
 
 	public static IComponentBinding<Boolean> value(final JCheckBox cb) {
-		return rw(cb, itemListener(cb, e -> e.getStateChange() == ItemEvent.SELECTED, (e) -> true), cb::setSelected,
+		return rw(cb, itemListener(cb, e -> e.getStateChange() == ItemEvent.SELECTED, e -> true), cb::setSelected,
 				false);
 	}
 

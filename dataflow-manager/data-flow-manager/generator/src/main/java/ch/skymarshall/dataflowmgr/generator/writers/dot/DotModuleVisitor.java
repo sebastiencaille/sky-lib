@@ -55,11 +55,13 @@ public class DotModuleVisitor extends ModuleVisitor<DotModuleVisitor.Graph> {
 		final UUID from;
 		final UUID to;
 		final String label;
+		String activator;
 
-		public Link(final UUID from, final UUID to, final String label) {
+		public Link(final UUID from, final UUID to, final String label, final String activator) {
 			this.from = from;
 			this.to = to;
 			this.label = label;
+			this.activator = activator;
 		}
 
 	}
@@ -79,16 +81,16 @@ public class DotModuleVisitor extends ModuleVisitor<DotModuleVisitor.Graph> {
 	@Override
 	public Graph visit(final Module module, final ActionPoint ap, final InFlowRule rule, final Graph context) {
 		context.nodes.add(new Node(rule.uuid, rule.input + "\\n" + rule.activator, Shape.box));
-		context.links.add(new Link(rule.uuid, ap.uuid, ap.input));
+		context.links.add(new Link(rule.uuid, ap.uuid, ap.input, ap.activator));
 		return super.visit(module, ap, rule, context);
 	}
 
 	@Override
 	public Graph visit(final Module module, final ActionPoint ap, final OutFlowRule rule, final Graph context) {
-		context.links.add(new Link(ap.uuid, rule.uuid, ap.output));
+		context.links.add(new Link(ap.uuid, rule.uuid, ap.output, ap.activator));
 
 		context.nodes.add(new Node(rule.uuid, rule.output + "\\n" + rule.activator, Shape.box));
-		context.links.add(new Link(rule.uuid, findAction(module, rule.nextAction).uuid, rule.output));
+		context.links.add(new Link(rule.uuid, findAction(module, rule.nextAction).uuid, rule.output, rule.activator));
 		return super.visit(module, ap, rule, context);
 	}
 
@@ -120,8 +122,8 @@ public class DotModuleVisitor extends ModuleVisitor<DotModuleVisitor.Graph> {
 						node.label, node.shape.name(), extra)).newLine();
 			}
 			for (final Link link : context.links) {
-				output.appendIndented(
-						String.format("\"%s\" -> \"%s\" [ label=\"%s\" ];", link.from, link.to, link.label)).newLine();
+				output.appendIndented(String.format("\"%s\" -> \"%s\" [ label=\"%s\\n%s\" ];", link.from, link.to,
+						link.label, link.activator)).newLine(); // NOSONAR
 			}
 			output.unindent();
 			output.appendIndented("}");
@@ -147,7 +149,7 @@ public class DotModuleVisitor extends ModuleVisitor<DotModuleVisitor.Graph> {
 			} else if (executed) {
 				color = "red";
 			} else if (expected) {
-				color = "blue";
+				color = "lightblue";
 			}
 		}
 		return color;

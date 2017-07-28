@@ -145,7 +145,7 @@ public class BindingChain implements IBindingController {
 
 				@Override
 				public Object toProperty(final Object component, final Object value) {
-					throw new IllegalStateException("Component endpoint");
+					return value;
 				}
 
 				@Override
@@ -153,6 +153,7 @@ public class BindingChain implements IBindingController {
 					// nope
 				}
 			});
+			property.attach();
 			return BindingChain.this;
 		}
 

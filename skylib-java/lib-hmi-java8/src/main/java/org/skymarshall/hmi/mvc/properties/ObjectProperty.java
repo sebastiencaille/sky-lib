@@ -88,7 +88,7 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 	}
 
 	public Optional<T> optional() {
-		return Optional.of(value);
+		return Optional.ofNullable(value);
 	}
 
 	@Override

@@ -29,11 +29,11 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import ch.skymarshall.dataflowmgr.model.InFlowDecisionRule.CollectorFunction;
+import ch.skymarshall.dataflowmgr.model.InputDecisionRule.CollectorFunction;
 
 /**
- * A decision point calls an action (eg a microservice) and takes a decision
- * according to the action's result
+ * An action point calls an action (eg a microservice) and takes a decision
+ * according to the action's output
  *
  * @author scaille
  *
@@ -49,8 +49,8 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 
 	private final FlowAction<InputDataType, OutputDataType> action;
 
-	private final List<InFlowDecisionRule<?, InputDataType>> inputDecisionRules = new ArrayList<>();
-	private final List<OutFlowDecisionRule<OutputDataType, ?>> outputDecisionRules = new ArrayList<>();
+	private final List<InputDecisionRule<?, InputDataType>> inputDecisionRules = new ArrayList<>();
+	private final List<OutputDecisionRule<OutputDataType, ?>> outputDecisionRules = new ArrayList<>();
 
 	public ActionPoint(final UUID uuid, final FlowAction<InputDataType, OutputDataType> action) {
 		super(uuid);
@@ -66,7 +66,7 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 	}
 
 	/**
-	 * Add an inflow rule
+	 * Adds an input rule
 	 *
 	 * @param uuid
 	 * @param inputClass
@@ -76,11 +76,11 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 	 *            input
 	 * @return
 	 */
-	public final <T extends FlowData> InFlowDecisionRule<T, InputDataType> addInFlowRule(final UUID uuid,
+	public final <T extends FlowData> InputDecisionRule<T, InputDataType> addInputRule(final UUID uuid,
 			final Class<T> inputClass, final Predicate<T> activationPredicate,
 			final BiConsumer<T, InputDataType> collectFunction) {
-		final InFlowDecisionRule<T, InputDataType> rule = new InFlowDecisionRule<>(uuid, inputClass,
-				activationPredicate, this, new CollectorFunction<T, InputDataType>() { // NOSONAR
+		final InputDecisionRule<T, InputDataType> rule = new InputDecisionRule<>(uuid, inputClass, activationPredicate,
+				this, new CollectorFunction<T, InputDataType>() { // NOSONAR
 					@Override
 					public InputDataType apply(final T inputData, final ActionPoint<InputDataType, ?> ap,
 							final Registry reg) {
@@ -93,25 +93,34 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 		return rule;
 	}
 
-	public final <T extends FlowData> InFlowDecisionRule<T, InputDataType> addInFlowRule(final UUID uuid,
+	/**
+	 * Adds an input rule
+	 * 
+	 * @param uuid
+	 * @param inputClass
+	 * @param activationPredicate
+	 * @param collectFunction
+	 * @return
+	 */
+	public final <T extends FlowData> InputDecisionRule<T, InputDataType> addInputRule(final UUID uuid,
 			final Class<T> inputClass, final Predicate<T> activationPredicate,
 			final Function<T, InputDataType> collectFunction) {
-		final InFlowDecisionRule<T, InputDataType> rule = new InFlowDecisionRule<>(uuid, inputClass,
-				activationPredicate, this, (inputData, ap, reg) -> collectFunction.apply(inputData));
+		final InputDecisionRule<T, InputDataType> rule = new InputDecisionRule<>(uuid, inputClass, activationPredicate,
+				this, (inputData, ap, reg) -> collectFunction.apply(inputData));
 		inputDecisionRules.add(rule);
 		return rule;
 	}
 
-	public void addOutputRule(final List<OutFlowDecisionRule<OutputDataType, ? extends FlowData>> newRules) {
+	public void addOutputRule(final List<OutputDecisionRule<OutputDataType, ? extends FlowData>> newRules) {
 		outputDecisionRules.addAll(newRules);
 	}
 
 	@SafeVarargs
-	public final void addOutputRule(final OutFlowDecisionRule<OutputDataType, ? extends FlowData>... newRules) {
+	public final void addOutputRule(final OutputDecisionRule<OutputDataType, ? extends FlowData>... newRules) {
 		outputDecisionRules.addAll(Arrays.asList(newRules));
 	}
 
-	public List<OutFlowDecisionRule<OutputDataType, ?>> getOutputRules() {
+	public List<OutputDecisionRule<OutputDataType, ?>> getOutputRules() {
 		return outputDecisionRules;
 	}
 
@@ -130,7 +139,7 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 		private final FlowData untypedInputData;
 		private InputDataType inputData;
 		private OutputDataType outputData;
-		private List<OutFlowDecisionRule<OutputDataType, ?>> selectedRules;
+		private List<OutputDecisionRule<OutputDataType, ?>> selectedRules;
 
 		private ExecutionSteps(final FlowData untypedInputData) {
 			this.untypedInputData = untypedInputData;
@@ -144,7 +153,7 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 		 *            consumer executed in case of error
 		 */
 		public UUID executeInputRule(final Registry registry, final Consumer<String> orElse) {
-			final List<InFlowDecisionRule<?, InputDataType>> inputSelectedRules = inputDecisionRules.stream()
+			final List<InputDecisionRule<?, InputDataType>> inputSelectedRules = inputDecisionRules.stream()
 					.filter(rule -> rule.matches(untypedInputData)).collect(toList());
 			if (inputSelectedRules.size() == 1) {
 				inputData = inputSelectedRules.get(0).convertData(untypedInputData, registry);
@@ -189,13 +198,13 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 		 *            consumer executed in case of error
 		 * @return
 		 */
-		public List<OutFlowDecisionRule<?, ?>> selectOutputRules(final Consumer<String> orElse) {
+		public List<OutputDecisionRule<?, ?>> selectOutputRules(final Consumer<String> orElse) {
 			selectedRules = outputDecisionRules.stream().filter(rule -> rule.getActivationPredicate().test(outputData))
 					.collect(toList());
 			if (selectedRules.isEmpty()) {
 				orElse.accept("NoOutputRule");
 			}
-			return selectedRules.stream().map(r -> (OutFlowDecisionRule<?, ?>) r).collect(Collectors.toList());
+			return selectedRules.stream().map(r -> (OutputDecisionRule<?, ?>) r).collect(Collectors.toList());
 		}
 
 		/**
@@ -251,7 +260,7 @@ public class ActionPoint<InputDataType extends FlowData, OutputDataType extends 
 	public static <InputDataType extends FlowData> ActionPoint<InputDataType, ?> terminal(final UUID uuid,
 			final FlowAction<InputDataType, NoData> action) {
 		final ActionPoint<InputDataType, NoData> decisionPoint = new ActionPoint<>(uuid, action);
-		decisionPoint.addOutputRule(new OutFlowDecisionRule<NoData, NoData>(NoData.NO_DATA.uuid(), d -> true,
+		decisionPoint.addOutputRule(new OutputDecisionRule<NoData, NoData>(NoData.NO_DATA.uuid(), d -> true,
 				FlowActionType.STOP, null, null));
 		return decisionPoint;
 	}

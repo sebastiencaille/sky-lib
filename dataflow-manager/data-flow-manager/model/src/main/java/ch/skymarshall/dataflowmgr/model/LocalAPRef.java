@@ -31,7 +31,7 @@ public class LocalAPRef<T extends FlowData> implements ActionPointReference<T> {
 		return new LocalAPRef<>(ap);
 	}
 
-	public static <T extends FlowData> ActionPointReference<T> local(final InFlowDecisionRule<T, ?> in) {
+	public static <T extends FlowData> ActionPointReference<T> local(final InputDecisionRule<T, ?> in) {
 		return new LocalAPRef<>(in.getActionPointToExecute());
 	}
 

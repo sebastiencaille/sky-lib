@@ -26,7 +26,7 @@ import ch.skymarshall.dataflowmgr.model.FlowAction;
 import ch.skymarshall.dataflowmgr.model.FlowActionType;
 import ch.skymarshall.dataflowmgr.model.FlowData;
 import ch.skymarshall.dataflowmgr.model.NoData;
-import ch.skymarshall.dataflowmgr.model.OutFlowDecisionRule;
+import ch.skymarshall.dataflowmgr.model.OutputDecisionRule;
 import ch.skymarshall.dataflowmgr.model.Registry;
 
 public class SimpleFlowFactory {
@@ -83,7 +83,7 @@ public class SimpleFlowFactory {
 		final ActionPoint<IntTransfer, IntTransfer> action1 = ActionPoint.simple(uuid(), new IntTransferIdentity());
 		final ActionPoint<IntTransfer, ?> action2 = ActionPoint.terminal(uuid(), new DumpIntTransfer());
 
-		final OutFlowDecisionRule<IntTransfer, IntTransfer> a1Toa2 = OutFlowDecisionRule.output(uuid(), (t) -> true,
+		final OutputDecisionRule<IntTransfer, IntTransfer> a1Toa2 = OutputDecisionRule.output(uuid(), (t) -> true,
 				FlowActionType.CONTINUE, action2, (d) -> d);
 		action1.addOutputRule(a1Toa2);
 

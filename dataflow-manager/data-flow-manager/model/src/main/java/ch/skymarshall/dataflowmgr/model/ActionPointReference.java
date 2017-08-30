@@ -16,7 +16,8 @@
 package ch.skymarshall.dataflowmgr.model;
 
 /**
- * An engine implementation specific reference to a service
+ * An engine implementation specific reference to a service (could be a specific
+ * reference, a broadcast, ...)
  *
  * @author scaille
  *

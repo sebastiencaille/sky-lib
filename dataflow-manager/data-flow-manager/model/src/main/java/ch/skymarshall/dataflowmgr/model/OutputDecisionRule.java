@@ -27,7 +27,7 @@ import java.util.function.Predicate;
  * @param <OutActionPointType>
  * @param <OutFlowType>
  */
-public class OutFlowDecisionRule<OutActionPointType extends FlowData, OutFlowType extends FlowData> extends IDData {
+public class OutputDecisionRule<OutActionPointType extends FlowData, OutFlowType extends FlowData> extends IDData {
 
 	private final Predicate<OutActionPointType> activationPredicate;
 	private final FlowActionType actionType;
@@ -48,10 +48,10 @@ public class OutFlowDecisionRule<OutActionPointType extends FlowData, OutFlowTyp
 	 *            the conversion of the action point's output to the data flow
 	 * @return
 	 */
-	public static <OutActionPointType extends FlowData, OutFlowType extends FlowData> OutFlowDecisionRule<OutActionPointType, OutFlowType> output(
+	public static <OutActionPointType extends FlowData, OutFlowType extends FlowData> OutputDecisionRule<OutActionPointType, OutFlowType> output(
 			final UUID uuid, final Predicate<OutActionPointType> activationPredicate, final FlowActionType actionType,
 			final ActionPoint<OutFlowType, ?> ap, final Function<OutActionPointType, OutFlowType> apToFlow) {
-		return new OutFlowDecisionRule<>(uuid, activationPredicate, actionType, LocalAPRef.local(ap), apToFlow);
+		return new OutputDecisionRule<>(uuid, activationPredicate, actionType, LocalAPRef.local(ap), apToFlow);
 	}
 
 	/**
@@ -68,10 +68,10 @@ public class OutFlowDecisionRule<OutActionPointType extends FlowData, OutFlowTyp
 	 *            the conversion of the action point's output to the data flow
 	 * @return
 	 */
-	public static <OutActionPointType extends FlowData, OutFlowType extends FlowData> OutFlowDecisionRule<OutActionPointType, OutFlowType> output(
+	public static <OutActionPointType extends FlowData, OutFlowType extends FlowData> OutputDecisionRule<OutActionPointType, OutFlowType> output(
 			final UUID uuid, final Predicate<OutActionPointType> activationPredicate, final FlowActionType actionType,
-			final InFlowDecisionRule<OutFlowType, ?> ap, final Function<OutActionPointType, OutFlowType> apToFlow) {
-		return new OutFlowDecisionRule<>(uuid, activationPredicate, actionType, LocalAPRef.local(ap), apToFlow);
+			final InputDecisionRule<OutFlowType, ?> ap, final Function<OutActionPointType, OutFlowType> apToFlow) {
+		return new OutputDecisionRule<>(uuid, activationPredicate, actionType, LocalAPRef.local(ap), apToFlow);
 	}
 
 	/**
@@ -88,14 +88,14 @@ public class OutFlowDecisionRule<OutActionPointType extends FlowData, OutFlowTyp
 	 *            the conversion of the action point's output to the data flow
 	 * @return
 	 */
-	public static <OutActionPointType extends FlowData, OutFlowType extends FlowData> OutFlowDecisionRule<OutActionPointType, OutFlowType> output(
+	public static <OutActionPointType extends FlowData, OutFlowType extends FlowData> OutputDecisionRule<OutActionPointType, OutFlowType> output(
 			final UUID uuid, final Predicate<OutActionPointType> activationPredicate, final FlowActionType actionType,
 			final ActionPointReference<OutFlowType> actionPointReference,
 			final Function<OutActionPointType, OutFlowType> apToFlow) {
-		return new OutFlowDecisionRule<>(uuid, activationPredicate, actionType, actionPointReference, apToFlow);
+		return new OutputDecisionRule<>(uuid, activationPredicate, actionType, actionPointReference, apToFlow);
 	}
 
-	protected OutFlowDecisionRule(final UUID uuid, final Predicate<OutActionPointType> activationPredicate,
+	protected OutputDecisionRule(final UUID uuid, final Predicate<OutActionPointType> activationPredicate,
 			final FlowActionType actionType, final ActionPointReference<OutFlowType> nextActionPointRef,
 			final Function<OutActionPointType, OutFlowType> extractionFunction) {
 		super(uuid);

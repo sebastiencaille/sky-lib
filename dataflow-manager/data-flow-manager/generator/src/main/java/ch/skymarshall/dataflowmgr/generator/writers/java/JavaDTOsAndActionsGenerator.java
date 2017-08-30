@@ -105,7 +105,7 @@ public abstract class JavaDTOsAndActionsGenerator extends ModuleVisitor<Map<Stri
 		}
 
 		final String code = String.format(
-				"final InFlowDecisionRule<%s,%s> %s = %s.addInFlowRule(%s, %s, (flowIn) -> %s, %s);\n", rule.input,
+				"final InputDecisionRule<%s,%s> %s = %s.addInputRule(%s, %s, (flowIn) -> %s, %s);\n", rule.input,
 				ap.input, variableName(ap, rule), variableName(ap), uuid(rule.uuid), rule.input + ".class",
 				rule.activator, transform); // NOSONAR
 		append(context, "flow.inputRules", code);
@@ -121,7 +121,7 @@ public abstract class JavaDTOsAndActionsGenerator extends ModuleVisitor<Map<Stri
 
 		final String nextActionRef = createActionCaller(context, nextAP);
 		String code = String.format(
-				"final OutFlowDecisionRule<%s, %s> %s = OutFlowDecisionRule.output(%s, (apOut) -> %s, %s, %s, (apOut) ->  %s);%n",
+				"final OutputDecisionRule<%s, %s> %s = OutputDecisionRule.output(%s, (apOut) -> %s, %s, %s, (apOut) ->  %s);%n",
 				ap.output, rule.output, variableName(ap, rule), uuid(rule.uuid), rule.activator,
 				"FlowActionType.CONTINUE", nextActionRef, rule.transformFunction);
 		code += variableName(ap) + ".addOutputRule(" + variableName(ap, rule) + ");\n";

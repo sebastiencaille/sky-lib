@@ -31,7 +31,7 @@ import ch.skymarshall.dataflowmgr.model.ExecutorFactory;
 import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.FlowData;
 import ch.skymarshall.dataflowmgr.model.LocalAPRef;
-import ch.skymarshall.dataflowmgr.model.OutFlowDecisionRule;
+import ch.skymarshall.dataflowmgr.model.OutputDecisionRule;
 import ch.skymarshall.dataflowmgr.model.Registry;
 
 /**
@@ -110,7 +110,7 @@ public class FlowExecution<InputDataType extends FlowData> {
 			}
 
 			report.add(Event.SELECT_OUTPUT_RULES, apExecution.uuid(), apExecution.currentFlowExecution());
-			final List<OutFlowDecisionRule<?, ?>> selectRules = apExecution.selectOutputRules(handleError);
+			final List<OutputDecisionRule<?, ?>> selectRules = apExecution.selectOutputRules(handleError);
 			if (apExecution.stop()) {
 				report.add(Event.STOP_RULE, apExecution.uuid(), apExecution.currentFlowExecution());
 				return Collections.emptySet();

@@ -25,9 +25,9 @@ import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.FlowAction;
 import ch.skymarshall.dataflowmgr.model.FlowActionType;
 import ch.skymarshall.dataflowmgr.model.FlowData;
-import ch.skymarshall.dataflowmgr.model.InFlowDecisionRule;
+import ch.skymarshall.dataflowmgr.model.InputDecisionRule;
 import ch.skymarshall.dataflowmgr.model.NoData;
-import ch.skymarshall.dataflowmgr.model.OutFlowDecisionRule;
+import ch.skymarshall.dataflowmgr.model.OutputDecisionRule;
 import ch.skymarshall.dataflowmgr.model.Registry;
 
 public class DispatchJoinFlowFactory {
@@ -139,23 +139,23 @@ public class DispatchJoinFlowFactory {
 		registry.registerObject(joinPoint, "joinPoint");
 
 		// All in
-		final InFlowDecisionRule<IntTransfer, Data2ab> joinIn2a = joinPoint.addInFlowRule(uuid(), IntTransfer.class,
+		final InputDecisionRule<IntTransfer, Data2ab> joinIn2a = joinPoint.addInputRule(uuid(), IntTransfer.class,
 				(in) -> in.getSource().equals(ap2a.uuid()), (in, d) -> d.data2a = in);
-		final InFlowDecisionRule<IntTransfer, Data2ab> joinIn2b = joinPoint.addInFlowRule(uuid(), IntTransfer.class,
+		final InputDecisionRule<IntTransfer, Data2ab> joinIn2b = joinPoint.addInputRule(uuid(), IntTransfer.class,
 				(in) -> in.getSource().equals(ap2b.uuid()), (in, d) -> d.data2b = in);
 		registry.registerObject(joinIn2a, "joinIn2a");
 		registry.registerObject(joinIn2b, "joinIn2b");
 
 		// All out
-		final OutFlowDecisionRule<Data2ab, IntTransfer> ap1ToAp2a = OutFlowDecisionRule.output(uuid(),
+		final OutputDecisionRule<Data2ab, IntTransfer> ap1ToAp2a = OutputDecisionRule.output(uuid(),
 				d -> d.getData2a() != null, FlowActionType.CONTINUE, ap2a, (d) -> d.data2a);
-		final OutFlowDecisionRule<Data2ab, IntTransfer> ap1ToAp2b = OutFlowDecisionRule.output(uuid(),
+		final OutputDecisionRule<Data2ab, IntTransfer> ap1ToAp2b = OutputDecisionRule.output(uuid(),
 				d -> d.getData2b() != null, FlowActionType.CONTINUE, ap2b, (d) -> d.data2b);
 		ap1.addOutputRule(ap1ToAp2a, ap1ToAp2b);
 
-		final OutFlowDecisionRule<IntTransfer, IntTransfer> ap2aToJoin = OutFlowDecisionRule.output(uuid(),
+		final OutputDecisionRule<IntTransfer, IntTransfer> ap2aToJoin = OutputDecisionRule.output(uuid(),
 				(out) -> true, FlowActionType.CONTINUE, joinIn2a, (out) -> out);
-		final OutFlowDecisionRule<IntTransfer, IntTransfer> ap2bToJoin = OutFlowDecisionRule.output(uuid(),
+		final OutputDecisionRule<IntTransfer, IntTransfer> ap2bToJoin = OutputDecisionRule.output(uuid(),
 				(out) -> true, FlowActionType.CONTINUE, joinIn2b, (out) -> out);
 		ap2a.addOutputRule(ap2aToJoin);
 		ap2b.addOutputRule(ap2bToJoin);

@@ -27,7 +27,7 @@ import java.util.function.Predicate;
  * @param <InFlowType>
  * @param <InActionPointType>
  */
-public class InFlowDecisionRule<InFlowType extends FlowData, InActionPointType extends FlowData> extends IDData {
+public class InputDecisionRule<InFlowType extends FlowData, InActionPointType extends FlowData> extends IDData {
 
 	@FunctionalInterface
 	public static interface CollectorFunction<InputDataType, DecisionPointDataType extends FlowData> {
@@ -39,10 +39,10 @@ public class InFlowDecisionRule<InFlowType extends FlowData, InActionPointType e
 	private final CollectorFunction<InFlowType, InActionPointType> dataMuxFunction;
 	private final Class<InFlowType> inputClass;
 
-	public static <InFlow extends FlowData, ActPointInType extends FlowData> InFlowDecisionRule<InFlow, ActPointInType> input(
+	public static <InFlow extends FlowData, ActPointInType extends FlowData> InputDecisionRule<InFlow, ActPointInType> input(
 			final UUID uuid, final Class<InFlow> inputClass, final ActionPoint<ActPointInType, ?> actionPoint,
 			final CollectorFunction<InFlow, ActPointInType> fillFunction, final Predicate<InFlow> activationPredicate) {
-		return new InFlowDecisionRule<>(uuid, inputClass, activationPredicate, actionPoint, fillFunction);
+		return new InputDecisionRule<>(uuid, inputClass, activationPredicate, actionPoint, fillFunction);
 	}
 
 	/**
@@ -55,11 +55,11 @@ public class InFlowDecisionRule<InFlowType extends FlowData, InActionPointType e
 	 * @param dataMuxFunction
 	 * @return
 	 */
-	public static <InFlow extends FlowData, InActPointType extends FlowData> InFlowDecisionRule<InFlow, InActPointType> input(
+	public static <InFlow extends FlowData, InActPointType extends FlowData> InputDecisionRule<InFlow, InActPointType> input(
 			final UUID uuid, final Class<InFlow> inputClass, final Predicate<InFlow> activationPredicate,
 			final ActionPoint<InActPointType, ?> actionPoint,
 			final BiConsumer<InFlow, InActPointType> dataMuxFunction) {
-		return new InFlowDecisionRule<>(uuid, inputClass, activationPredicate, actionPoint,
+		return new InputDecisionRule<>(uuid, inputClass, activationPredicate, actionPoint,
 				new CollectorFunction<InFlow, InActPointType>() { // NOSONAR
 					@Override
 					public InActPointType apply(final InFlow incomingData, final ActionPoint<InActPointType, ?> ap,
@@ -71,7 +71,7 @@ public class InFlowDecisionRule<InFlowType extends FlowData, InActionPointType e
 				});
 	}
 
-	protected InFlowDecisionRule(final UUID uuid, final Class<InFlowType> inputClass,
+	protected InputDecisionRule(final UUID uuid, final Class<InFlowType> inputClass,
 			final Predicate<InFlowType> activationPredicate, final ActionPoint<InActionPointType, ?> ap,
 			final CollectorFunction<InFlowType, InActionPointType> dataMuxFunction) {
 		super(uuid);

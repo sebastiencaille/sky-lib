@@ -18,6 +18,13 @@ package ch.skymarshall.dataflowmgr.model;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+/**
+ * An abstract representation of a flow's action.
+ * @author scaille
+ *
+ * @param <InputDataType>
+ * @param <OutputDataType>
+ */
 public abstract class FlowAction<InputDataType extends FlowData, OutputDataType extends FlowData>
 		implements Function<InputDataType, OutputDataType> {
 

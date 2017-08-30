@@ -18,7 +18,7 @@ package ch.skymarshall.dataflowmgr.model;
 import java.util.UUID;
 
 /**
- * Data received / send by decision point
+ * Data received / sent by an action point
  *
  * @author scaille
  *

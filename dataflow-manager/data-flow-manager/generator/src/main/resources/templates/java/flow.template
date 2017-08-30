@@ -3,8 +3,8 @@ package ${package};
 import ch.skymarshall.dataflowmgr.model.ActionPoint;
 import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.FlowActionType;
-import ch.skymarshall.dataflowmgr.model.InFlowDecisionRule;
-import ch.skymarshall.dataflowmgr.model.OutFlowDecisionRule;
+import ch.skymarshall.dataflowmgr.model.InputDecisionRule;
+import ch.skymarshall.dataflowmgr.model.OutputDecisionRule;
 import ch.skymarshall.dataflowmgr.model.Registry;
 
 import java.util.UUID;

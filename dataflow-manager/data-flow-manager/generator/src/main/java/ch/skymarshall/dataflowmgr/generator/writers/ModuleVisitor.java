@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
+import org.skymarshall.util.generators.Template;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,8 +31,7 @@ import ch.skymarshall.dataflowmgr.generator.model.Flow;
 import ch.skymarshall.dataflowmgr.generator.model.InFlowRule;
 import ch.skymarshall.dataflowmgr.generator.model.Module;
 import ch.skymarshall.dataflowmgr.generator.model.OutFlowRule;
-import ch.skymarshall.dataflowmgr.generator.model.Template;
-import ch.skymarshall.dataflowmgr.generator.model.Template.TEMPLATE;
+import ch.skymarshall.dataflowmgr.generator.model.TEMPLATE;
 
 public class ModuleVisitor<T> {
 
@@ -47,9 +47,7 @@ public class ModuleVisitor<T> {
 	}
 
 	protected Template getTemplate(final TEMPLATE template, final Map<String, String> context) {
-		final Template newTemplate = writer.registry.getTemplate(template);
-		newTemplate.setContext(context);
-		return newTemplate;
+		return writer.registry.getTemplate(template, context);
 	}
 
 	protected void writeFile(final String filename, final Template template) throws IOException {

@@ -15,6 +15,9 @@
  ******************************************************************************/
 package ch.skymarshall.dataflowmgr.generator.writers.java;
 
+import static org.skymarshall.util.generators.JavaCodeGenerator.toImports;
+import static org.skymarshall.util.generators.Template.append;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,6 +26,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
+import org.skymarshall.util.generators.Template;
+
 import ch.skymarshall.dataflowmgr.generator.Utils;
 import ch.skymarshall.dataflowmgr.generator.exceptions.GeneratorException;
 import ch.skymarshall.dataflowmgr.generator.model.ActionPoint;
@@ -30,8 +35,7 @@ import ch.skymarshall.dataflowmgr.generator.model.Dto;
 import ch.skymarshall.dataflowmgr.generator.model.InFlowRule;
 import ch.skymarshall.dataflowmgr.generator.model.Module;
 import ch.skymarshall.dataflowmgr.generator.model.OutFlowRule;
-import ch.skymarshall.dataflowmgr.generator.model.Template;
-import ch.skymarshall.dataflowmgr.generator.model.Template.TEMPLATE;
+import ch.skymarshall.dataflowmgr.generator.model.TEMPLATE;
 import ch.skymarshall.dataflowmgr.generator.writers.AbstractWriter;
 import ch.skymarshall.dataflowmgr.generator.writers.ModuleVisitor;
 
@@ -185,24 +189,6 @@ public abstract class JavaDTOsAndActionsGenerator extends ModuleVisitor<Map<Stri
 		return scoped;
 	}
 
-	/**
-	 * Append value to the value of a context key
-	 *
-	 * @param context
-	 * @param key
-	 * @param valueJavaDTOVisitor
-	 * @return
-	 */
-	protected Map<String, String> append(final Map<String, String> context, final String key, final String value) {
-		final String current = context.get(key);
-		if (current != null) {
-			context.put(key, current + value);
-		} else {
-			context.put(key, value);
-		}
-		return context;
-	}
-
 	protected String className(final ActionPoint ap) {
 		return Utils.firstUpperCase(ap.name);
 	}
@@ -225,14 +211,6 @@ public abstract class JavaDTOsAndActionsGenerator extends ModuleVisitor<Map<Stri
 			addImportOfClass(module, toImport, clazz);
 		}
 		return toImport;
-	}
-
-	protected String toImports(final Set<String> toImport) {
-		final StringBuilder imports = new StringBuilder();
-		for (final String imp : toImport) {
-			imports.append("import ").append(imp).append(";\n");
-		}
-		return imports.toString();
 	}
 
 	/**

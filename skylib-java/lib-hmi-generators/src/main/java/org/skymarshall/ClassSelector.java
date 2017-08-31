@@ -32,6 +32,12 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+/**
+ * To select some classes
+ *
+ * @author scaille
+ *
+ */
 public class ClassSelector {
 
 	public enum Policy {
@@ -59,10 +65,17 @@ public class ClassSelector {
 		result.put(Object.class, null);
 	}
 
-	public void addExpectedTag(final String tagClassName, final Policy policy) throws ClassNotFoundException {
+	public void addExpectedAnnotation(final String tagClassName, final Policy policy) throws ClassNotFoundException {
 		final Class<?> tag = Class.forName(tagClassName, true, loader);
 		if (!tag.isAnnotation()) {
 			throw new IllegalArgumentException("Class is not an annotation: " + tagClassName);
+		}
+		expectedTags.put(tag, policy);
+	}
+
+	public void addExpectedAnnotation(final Class<?> tag, final Policy policy) throws ClassNotFoundException {
+		if (!tag.isAnnotation()) {
+			throw new IllegalArgumentException("Class is not an annotation: " + tag.getName());
 		}
 		expectedTags.put(tag, policy);
 	}
@@ -78,6 +91,7 @@ public class ClassSelector {
 			if (!file.exists()) {
 				continue;
 			}
+			System.out.println("Handling " + file);
 			final int lastDot = file.getName().lastIndexOf('.');
 			if (file.isDirectory()) {
 				final File folder = file.getAbsoluteFile().getCanonicalFile();
@@ -99,7 +113,7 @@ public class ClassSelector {
 	}
 
 	private void handleJarFile(final File file) throws IOException {
-		// System.out.println("Handling jar file " + file);
+		System.out.println("Handling jar file " + file);
 		try (final JarFile jar = new JarFile(file)) {
 			final Enumeration<JarEntry> entries = jar.entries();
 			while (entries.hasMoreElements()) {
@@ -128,11 +142,11 @@ public class ClassSelector {
 		// System.out.println("Handling " + classFileName);
 
 		final String className = classFileName.substring(0, classFileName.length() - CLASS_EXTENSION.length())
-				.replace('/', '.');
+				.replaceAll("/", ".");
 		try {
-			final Class<?> clazz = Class.forName(className, true, loader);
+			final Class<?> clazz = Class.forName(className, false, loader);
 			processClass(clazz);
-		} catch (final Exception e) { // NOSONAR
+		} catch (final Exception | NoClassDefFoundError e) { // NOSONAR
 			// ignore
 		}
 	}
@@ -176,4 +190,5 @@ public class ClassSelector {
 	public Set<Class<?>> getResult() {
 		return result.keySet();
 	}
+
 }

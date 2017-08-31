@@ -15,28 +15,44 @@
  ******************************************************************************/
 package org.skymarshall.hmi.mvc;
 
+import static org.skymarshall.util.generators.JavaCodeGenerator.toConstant;
+
 import java.io.IOException;
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
-import org.skymarshall.JavaClassGenerator;
-import org.skymarshall.hmi.mvc.persisters.FieldAccess;
-import org.skymarshall.hmi.mvc.persisters.ObjectProviderPersister;
-import org.skymarshall.hmi.mvc.persisters.Persisters;
-import org.skymarshall.hmi.mvc.properties.AbstractProperty;
-import org.skymarshall.hmi.mvc.properties.ErrorProperty;
-import org.skymarshall.hmi.mvc.properties.Properties;
 import org.skymarshall.util.dao.metadata.AbstractAttributeMetaData;
 import org.skymarshall.util.dao.metadata.UntypedDataObjectMetaData;
+import org.skymarshall.util.generators.JavaCodeGenerator;
+import org.skymarshall.util.generators.Template;
+import org.skymarshall.util.helpers.ClassLoaderHelper;
 
 public class HmiClassProcessor {
 
 	private static final String ATTRIB_PUBLIC = "public ";
+
+	public static class Context {
+		public Map<String, String> context = new HashMap<>();
+		final Set<String> imports = new HashSet<>();
+
+		public void addImport(final Class<?> class1) {
+			imports.add(class1.getName());
+		}
+
+		public void append(final String key, final String value) {
+			Template.append(context, key, value);
+		}
+
+		public void addImport(final String className) {
+			imports.add(HmiModelGenerator.findClass(className).getName());
+		}
+
+	}
 
 	static String typeToString(final Type type) {
 		if (type instanceof Class) {
@@ -79,158 +95,49 @@ public class HmiClassProcessor {
 
 	private final Map<String, String> fieldConstants = new HashMap<>();
 
-	private final String defaultPrefixInQuotes;
+	private final Context context;
 
 	public HmiClassProcessor(final Class<?> clazz) {
 		this.clazz = clazz;
-		this.defaultPrefixInQuotes = "\"" + clazz.getSimpleName() + "\"";
-
+		this.context = new Context();
 	}
 
 	public String getClassName() {
 		return clazz.getSimpleName() + "HmiModel";
 	}
 
-	private void beforePreprocessAttribs(final JavaClassGenerator gen) {
-		gen.addImport(Field.class);
-	}
-
 	protected boolean ignore(final AbstractAttributeMetaData<?> attrib) {
 		return Modifier.isStatic(attrib.getModifier());
 	}
 
-	protected void process(final JavaClassGenerator gen) throws IOException {
+	protected Template process() throws IOException {
 
 		final UntypedDataObjectMetaData metaData = new UntypedDataObjectMetaData(clazz, true);
 
-		addDefaultImports(gen);
-
 		final String strType = typeToString(metaData.getDataType());
 
-		openClass(gen, strType);
-
-		// persistence
-		addPersistenceUtils(gen);
-		gen.newLine();
+		context.context.put("modelClass", getClassName());
+		context.context.put("objectClass", strType);
+		context.context.put("objectClassSimpleName", metaData.getDataType().getSimpleName());
 
 		// attributes
-		addAttributesDeclarations(gen, metaData);
-		gen.newLine();
+		addAttributesDeclarations(metaData);
 
-		addConstructor(gen, metaData);
+		addAttributesGetters(metaData);
 
-		addAttributesGetters(gen, metaData);
+		addAttributePersistenceMethods(metaData);
 
-		addAttributePersistenceMethods(gen, metaData);
-
-		addCurrentObjectMethods(gen, strType);
-		gen.closeBlock();
-		gen.closeBlock();
-
+		context.context.put("imports", JavaCodeGenerator.toImports(context.imports));
+		return new Template(ClassLoaderHelper.readUTF8Resource("templates/hmiModel.template")).apply(context.context);
 	}
 
-	protected void addCurrentObjectMethods(final JavaClassGenerator gen, final String strType) throws IOException {
-		gen.newLine();
-		gen.appendAtOverride();
-		gen.openBlock("public void setCurrentObject(final " + strType + " value)");
-		gen.appendIndentedLine("currentObjectProvider.setObject(value);");
-		gen.closeBlock();
-		gen.newLine();
-
-		gen.addImport(IComponentLink.class);
-		gen.addImport(IComponentBinding.class);
-		gen.addImport(AbstractProperty.class);
-		gen.openBlock("public IComponentBinding<", strType, "> binding()");
-		gen.openBlock("return new IComponentBinding<" + strType + ">()");
-		gen.appendAtOverride();
-		gen.openBlock("public void addComponentValueChangeListener(final IComponentLink<", strType, "> link)");
-		gen.appendIndentedLine("// nope");
-		gen.closeBlock();
-		gen.appendAtOverride();
-		gen.openBlock("public void setComponentValue(final AbstractProperty source, final ", strType, " value)");
-		gen.openBlock("if (value != null)");
-		gen.appendIndentedLine("setCurrentObject(value);");
-		gen.appendIndentedLine("load();");
-		gen.closeBlock();
-		gen.closeBlock();
-		gen.closeBlock(";");
+	protected void addAttributesGetters(final UntypedDataObjectMetaData metaData) throws IOException {
+		forEachAttribute(metaData, attrib -> context.append("fields.getters", generateGetter(attrib)));
 	}
 
-	protected void addAttributesGetters(final JavaClassGenerator gen, final UntypedDataObjectMetaData metaData)
-			throws IOException {
-		forEachAttribute(metaData, attrib -> generateGetter(gen, attrib));
-	}
-
-	protected void addAttributePersistenceMethods(final JavaClassGenerator gen,
-			final UntypedDataObjectMetaData metaData) throws IOException {
-		gen.newLine();
-		gen.appendAtOverride();
-		gen.openBlock("public void load()");
-		forEachAttribute(metaData, attrib -> processLoadFrom(gen, attrib));
-		gen.closeBlock();
-
-		gen.newLine();
-		gen.appendAtOverride();
-		gen.openBlock("public void save()");
-		forEachAttribute(metaData, attrib -> processSaveInto(gen, attrib));
-		gen.closeBlock();
-	}
-
-	protected void addConstructor(final JavaClassGenerator gen, final UntypedDataObjectMetaData metaData)
-			throws IOException {
-		gen.openBlock(ATTRIB_PUBLIC, getClassName(),
-				"(final String prefix, final ControllerPropertyChangeSupport propertySupport, final ErrorProperty errorProperty)");
-		gen.appendIndentedLine("super(propertySupport, errorProperty);");
-		forEachAttribute(metaData, attrib -> FieldProcessor.create(gen, attrib).generateInitialization());
-		gen.closeBlock();
-
-		gen.newLine();
-
-		gen.addImport(HmiController.class);
-		gen.openBlock(ATTRIB_PUBLIC, getClassName(), "(final String prefix, final HmiController controller)");
-		gen.appendIndentedLine(
-				"this(prefix, controller.getPropertySupport(), HmiModel.createErrorProperty(prefix + \"-Error\", controller.getPropertySupport()));");
-		gen.closeBlock();
-		gen.newLine();
-
-		gen.openBlock(ATTRIB_PUBLIC, getClassName(), "(final HmiController controller)");
-		gen.appendIndentedLine(
-				"this(" + defaultPrefixInQuotes + ", controller.getPropertySupport(), HmiModel.createErrorProperty(\""
-						+ clazz.getSimpleName() + "-Error\", controller.getPropertySupport()));");
-		gen.closeBlock();
-		gen.newLine();
-
-		gen.openBlock(ATTRIB_PUBLIC, getClassName(),
-				"(final String prefix, final ControllerPropertyChangeSupport propertySupport)");
-		gen.appendIndentedLine(
-				"this(prefix, propertySupport, HmiModel.createErrorProperty(prefix + \"-Error\", propertySupport));");
-		gen.closeBlock();
-		gen.newLine();
-
-		gen.openBlock(ATTRIB_PUBLIC, getClassName(), "(final ControllerPropertyChangeSupport propertySupport)");
-		gen.appendIndentedLine("this(" + defaultPrefixInQuotes + ", propertySupport, HmiModel.createErrorProperty(\""
-				+ clazz.getSimpleName() + "-Error\", propertySupport));");
-		gen.closeBlock();
-		gen.newLine();
-	}
-
-	protected void addPersistenceUtils(final JavaClassGenerator gen) throws IOException {
-		gen.addImport(ObjectProviderPersister.class);
-		gen.appendIndentedLine(
-				"private final ObjectProviderPersister.CurrentObjectProvider currentObjectProvider = new ObjectProviderPersister.CurrentObjectProvider();");
-	}
-
-	protected void openClass(final JavaClassGenerator gen, final String strType) throws IOException {
-		gen.openBlock("public class ", getClassName(), " extends HmiModel implements IObjectHmiModel<", strType, ">");
-	}
-
-	protected void addDefaultImports(final JavaClassGenerator gen) {
-		gen.addImport(HmiModel.class);
-		gen.addImport(IObjectHmiModel.class);
-		gen.addImport(IComponentBinding.class);
-		gen.addImport(ErrorProperty.class);
-		gen.addImport(org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport.class);
-		gen.addImport(Properties.class);
+	protected void addAttributePersistenceMethods(final UntypedDataObjectMetaData metaData) throws IOException {
+		forEachAttribute(metaData, attrib -> context.append("fields.load", generateLoadFrom(attrib)));
+		forEachAttribute(metaData, attrib -> context.append("fields.save", generateSaveInto(attrib)));
 	}
 
 	/**
@@ -240,14 +147,15 @@ public class HmiClassProcessor {
 	 * @param metaData
 	 * @throws IOException
 	 */
-	protected void addAttributesDeclarations(final JavaClassGenerator gen, final UntypedDataObjectMetaData metaData)
-			throws IOException {
-		beforePreprocessAttribs(gen);
-		forEachAttribute(metaData, attrib -> preprocess(gen, attrib));
-		afterPreprocessAttribs(gen);
+	protected void addAttributesDeclarations(final UntypedDataObjectMetaData metaData) throws IOException {
+		forEachAttribute(metaData, attrib -> context.append("fields.declareStatic", generateAccessConstants(attrib)));
+		context.append("fields.initStatic", afterPreprocessAttribs());
 
-		gen.addImport(Persisters.class);
-		forEachAttribute(metaData, attrib -> FieldProcessor.create(gen, attrib).addImport().generateDeclaration());
+		forEachAttribute(metaData, attrib -> context.append("fields.declare",
+				FieldProcessor.create(context, attrib).addImport().generateDeclaration()));
+
+		forEachAttribute(metaData, attrib -> context.append("fields.init",
+				FieldProcessor.create(context, attrib).addImport().generateInitialization()));
 	}
 
 	@FunctionalInterface
@@ -266,19 +174,17 @@ public class HmiClassProcessor {
 
 	}
 
-	protected void processLoadFrom(final JavaClassGenerator gen, final AbstractAttributeMetaData<?> attrib)
-			throws IOException {
-		gen.appendIndentedLine(FieldProcessor.create(gen, attrib).getPropertyName() + ".load(this);");
+	protected String generateLoadFrom(final AbstractAttributeMetaData<?> attrib) throws IOException {
+		return FieldProcessor.create(context, attrib).getPropertyName() + ".load(this);";
 	}
 
-	protected void processSaveInto(final JavaClassGenerator gen, final AbstractAttributeMetaData<?> attrib)
-			throws IOException {
-		gen.appendIndentedLine(FieldProcessor.create(gen, attrib).getPropertyName() + ".save();");
+	protected String generateSaveInto(final AbstractAttributeMetaData<?> attrib) throws IOException {
+		return FieldProcessor.create(context, attrib).getPropertyName() + ".save();";
 	}
 
-	protected void preprocess(final JavaClassGenerator gen, final AbstractAttributeMetaData<?> attrib)
-			throws IOException {
-		final String constant = gen.toConstant(attrib.getName());
+	protected String generateAccessConstants(final AbstractAttributeMetaData<?> attrib) throws IOException {
+		final JavaCodeGenerator gen = new JavaCodeGenerator();
+		final String constant = toConstant(attrib.getName());
 		gen.appendIndentedLine("public static final String " + constant + " = \"" + attrib.getName() + "\";");
 		gen.newLine();
 
@@ -286,42 +192,35 @@ public class HmiClassProcessor {
 		fieldConstants.put(fieldConstant, attrib.getCodeName());
 		gen.appendIndentedLine("private static final Field " + fieldConstant + ';');
 		gen.newLine();
+
+		return gen.toString();
 	}
 
-	protected void afterPreprocessAttribs(final JavaClassGenerator gen) throws IOException {
-		gen.openBlock("static");
-		gen.openBlock("try");
+	protected String afterPreprocessAttribs() throws IOException {
 
-		final StringBuilder list = new StringBuilder();
+		final JavaCodeGenerator gen = new JavaCodeGenerator();
+		final StringBuilder fieldsList = new StringBuilder();
+
 		for (final Map.Entry<String, String> entry : fieldConstants.entrySet()) {
 			gen.appendIndentedLine(entry.getKey() + " = " + typeToString(clazz) + ".class.getDeclaredField(\""
 					+ entry.getValue() + "\");");
-			list.append(", ");
-			list.append(entry.getKey());
+			fieldsList.append(", ");
+			fieldsList.append(entry.getKey());
 		}
 
-		gen.addImport(AccessibleObject.class);
-		gen.appendIndentedLine(
-				"AccessibleObject.setAccessible(new AccessibleObject[]{" + list.toString().substring(2) + "}, true);");
-		gen.unindent();
-		gen.appendIndentedLine("} catch (final Exception e) {");
-		gen.indent();
-		gen.appendIndentedLine("throw new IllegalStateException(\"Cannot initialize class\", e);");
-		gen.closeBlock();
-		gen.closeBlock();
+		gen.appendIndentedLine("AccessibleObject.setAccessible(new AccessibleObject[]{"
+				+ fieldsList.toString().substring(2) + "}, true);");
 
-		gen.addImport(FieldAccess.class);
+		return gen.toString();
 	}
 
-	protected void generateGetter(final JavaClassGenerator gen, final AbstractAttributeMetaData<?> attrib)
-			throws IOException {
-		gen.newLine();
-		final FieldProcessor processor = FieldProcessor.create(gen, attrib);
+	protected String generateGetter(final AbstractAttributeMetaData<?> attrib) throws IOException {
+		final FieldProcessor processor = FieldProcessor.create(context, attrib);
 
+		final JavaCodeGenerator gen = new JavaCodeGenerator();
 		gen.openBlock(ATTRIB_PUBLIC, processor.getPropertyType(), " get", attrib.getName(), "Property()");
 		gen.appendIndentedLine("return " + processor.getPropertyName() + ";");
 		gen.closeBlock();
-
+		return gen.toString();
 	}
-
 }

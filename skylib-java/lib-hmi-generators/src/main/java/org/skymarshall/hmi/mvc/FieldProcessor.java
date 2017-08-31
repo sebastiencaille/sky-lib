@@ -15,164 +15,141 @@
  ******************************************************************************/
 package org.skymarshall.hmi.mvc;
 
+import static org.skymarshall.util.generators.JavaCodeGenerator.toConstant;
+import static org.skymarshall.util.generators.JavaCodeGenerator.toFirstLetterInLowerCase;
+import static org.skymarshall.util.generators.JavaCodeGenerator.toFirstLetterInUpperCase;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.skymarshall.JavaClassGenerator;
-import org.skymarshall.hmi.mvc.properties.AbstractProperty;
-import org.skymarshall.hmi.mvc.properties.ListProperty;
-import org.skymarshall.hmi.mvc.properties.MapProperty;
-import org.skymarshall.hmi.mvc.properties.ObjectProperty;
-import org.skymarshall.hmi.mvc.properties.SetProperty;
+import org.skymarshall.hmi.mvc.HmiClassProcessor.Context;
 import org.skymarshall.util.dao.metadata.AbstractAttributeMetaData;
 
 abstract class FieldProcessor {
 
 	final AbstractAttributeMetaData<?> attrib;
-	final JavaClassGenerator gen;
+	final Context context;
 
 	protected abstract String getPropertyType();
 
 	abstract FieldProcessor addImport();
 
-	public FieldProcessor(final JavaClassGenerator gen, final AbstractAttributeMetaData<?> attrib) {
-		this.gen = gen;
+	public FieldProcessor(final Context context, final AbstractAttributeMetaData<?> attrib) {
+		this.context = context;
 		this.attrib = attrib;
 	}
 
 	String getPropertyName() {
-		return gen.toFirstLetterInLowerCase(attrib.getName()) + "Property";
+		return toFirstLetterInLowerCase(attrib.getName()) + "Property";
 	}
 
 	protected String getFieldCreation() {
-		return "FieldAccess.<" + getTypeAsString() + ">create(" + gen.toConstant(attrib.getName()) + "_FIELD)";
+		return "FieldAccess.<" + getTypeAsString() + ">create(" + toConstant(attrib.getName()) + "_FIELD)";
 	}
 
 	protected String getTypeAsString() {
 		return HmiClassProcessor.typeToString(attrib.getGenericType());
 	}
 
-	static FieldProcessor create(final JavaClassGenerator gen, final AbstractAttributeMetaData<?> attrib) {
+	static FieldProcessor create(final Context context, final AbstractAttributeMetaData<?> attrib) {
 		final Class<?> type = attrib.getType();
 		if (type.isPrimitive()) {
-			return new PrimitiveProcessor(gen, attrib);
+			return new PrimitiveProcessor(context, attrib);
 		} else if (Set.class.isAssignableFrom(type)) {
-			return new SetProcessor(gen, attrib);
+			return new SetProcessor(context, attrib);
 		} else if (Map.class.isAssignableFrom(type)) {
-			return new MapProcessor(gen, attrib);
+			return new MapProcessor(context, attrib);
 		} else if (List.class.isAssignableFrom(type)) {
-			return new ListProcessor(gen, attrib);
+			return new ListProcessor(context, attrib);
 		}
-		return new ObjectProcessor(gen, attrib);
+		return new ObjectProcessor(context, attrib);
 
 	}
 
 	static class PrimitiveProcessor extends FieldProcessor {
 
-		public PrimitiveProcessor(final JavaClassGenerator gen, final AbstractAttributeMetaData<?> attrib) {
-			super(gen, attrib);
+		public PrimitiveProcessor(final Context context, final AbstractAttributeMetaData<?> attrib) {
+			super(context, attrib);
 		}
 
 		@Override
 		protected String getPropertyType() {
-			return gen.toFirstLetterInUpperCase(attrib.getType().getName() + "Property");
+			return toFirstLetterInUpperCase(attrib.getType().getName() + "Property");
 		}
 
 		@Override
 		protected String getFieldCreation() {
-			return "FieldAccess." + attrib.getType().getName() + "Access(" + gen.toConstant(attrib.getName())
-					+ "_FIELD)";
+			return "FieldAccess." + attrib.getType().getName() + "Access(" + toConstant(attrib.getName()) + "_FIELD)";
 		}
 
 		@Override
 		FieldProcessor addImport() {
-			gen.addImport(AbstractProperty.class.getPackage().getName() + '.' + getPropertyType());
+			context.addImport(getPropertyType());
 			return this;
 		}
 
 	}
 
-	static class SetProcessor extends FieldProcessor {
+	static class ContainerProcessorWithType extends FieldProcessor {
 
-		public SetProcessor(final JavaClassGenerator gen, final AbstractAttributeMetaData<?> attrib) {
-			super(gen, attrib);
+		private final String objectName;
+
+		public ContainerProcessorWithType(final Context context, final AbstractAttributeMetaData<?> attrib,
+				final String objectName) {
+			super(context, attrib);
+			this.objectName = objectName;
 		}
 
 		@Override
 		protected String getPropertyType() {
-			return "SetProperty" + HmiClassProcessor.typeParametersToString(attrib.getGenericType());
+			return objectName + HmiClassProcessor.typeParametersToString(attrib.getGenericType());
 		}
 
 		@Override
 		protected FieldProcessor addImport() {
-			gen.addImport(SetProperty.class);
+			context.addImport(objectName);
 			return this;
 		}
 
 		@Override
-		void generateInitialization() throws IOException {
-			generateInitializationWithType();
+		String generateInitialization() throws IOException {
+			return generateInitializationWithType();
 		}
 	}
 
-	static class MapProcessor extends FieldProcessor {
+	static class SetProcessor extends ContainerProcessorWithType {
 
-		public MapProcessor(final JavaClassGenerator gen, final AbstractAttributeMetaData<?> attrib) {
-			super(gen, attrib);
+		public SetProcessor(final Context context, final AbstractAttributeMetaData<?> attrib) {
+			super(context, attrib, "SetProperty");
 		}
 
-		@Override
-		protected String getPropertyType() {
-			return "MapProperty" + HmiClassProcessor.typeParametersToString(attrib.getGenericType());
-		}
+	}
 
-		@Override
-		protected FieldProcessor addImport() {
-			gen.addImport(MapProperty.class);
-			return this;
-		}
+	static class MapProcessor extends ContainerProcessorWithType {
 
-		@Override
-		void generateInitialization() throws IOException {
-			generateInitializationWithType();
+		public MapProcessor(final Context context, final AbstractAttributeMetaData<?> attrib) {
+			super(context, attrib, "MapProperty");
 		}
 	}
 
-	static class ListProcessor extends FieldProcessor {
+	static class ListProcessor extends ContainerProcessorWithType {
 
-		public ListProcessor(final JavaClassGenerator gen, final AbstractAttributeMetaData<?> attrib) {
-			super(gen, attrib);
+		public ListProcessor(final Context context, final AbstractAttributeMetaData<?> attrib) {
+			super(context, attrib, "ListProperty");
 		}
-
-		@Override
-		protected String getPropertyType() {
-			return "ListProperty" + HmiClassProcessor.typeParametersToString(attrib.getGenericType());
-		}
-
-		@Override
-		FieldProcessor addImport() {
-			gen.addImport(ListProperty.class);
-			return this;
-		}
-
-		@Override
-		void generateInitialization() throws IOException {
-			generateInitializationWithType();
-		}
-
 	}
 
 	static class ObjectProcessor extends FieldProcessor {
 
-		public ObjectProcessor(final JavaClassGenerator gen, final AbstractAttributeMetaData<?> attrib) {
-			super(gen, attrib);
+		public ObjectProcessor(final Context context, final AbstractAttributeMetaData<?> attrib) {
+			super(context, attrib);
 		}
 
 		@Override
 		FieldProcessor addImport() {
-			gen.addImport(ObjectProperty.class);
+			context.addImport("ObjectProperty");
 			return this;
 		}
 
@@ -183,20 +160,21 @@ abstract class FieldProcessor {
 
 	}
 
-	void generateDeclaration() throws IOException {
-		gen.appendIndentedLine(String.format("protected final %s %s;", getPropertyType(), getPropertyName()));
+	String generateDeclaration() throws IOException {
+		return String.format("protected final %s %s;", getPropertyType(), getPropertyName());
 	}
 
-	void generateInitializationWithType() throws IOException {
-		gen.appendIndentedLine(String.format(
+	String generateInitializationWithType() throws IOException {
+		return String.format(
 				"%s = Properties.<%s, %s>of(new %s(prefix + \"-%s\",  propertySupport)).persistent(Persisters.from(currentObjectProvider, %s)).setErrorNotifier(errorProperty).getProperty();",
 				getPropertyName(), getTypeAsString(), getPropertyType(), getPropertyType(), attrib.getName(),
-				getFieldCreation()));
+				getFieldCreation());
 	}
 
-	void generateInitialization() throws IOException {
-		gen.appendIndentedLine(String.format(
+	String generateInitialization() throws IOException {
+		return String.format(
 				"%s = Properties.of(new %s(prefix + \"-%s\",  propertySupport)).persistent(Persisters.from(currentObjectProvider, %s)).setErrorNotifier(errorProperty).getProperty();",
-				getPropertyName(), getPropertyType(), attrib.getName(), getFieldCreation()));
+				getPropertyName(), getPropertyType(), attrib.getName(), getFieldCreation());
 	}
+
 }

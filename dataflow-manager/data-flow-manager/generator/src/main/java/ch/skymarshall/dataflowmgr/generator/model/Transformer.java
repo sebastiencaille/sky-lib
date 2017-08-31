@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import ch.skymarshall.dataflowmgr.generator.exceptions.TransformerException;
 
+/** To turn some high level representation into code */
 public class Transformer {
 
 	@JsonIgnore

@@ -28,11 +28,6 @@
 			<artifactId>lib-utils</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>org.skymarshall</groupId>
-			<artifactId>lib-hmi-java</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 	
 	<build>

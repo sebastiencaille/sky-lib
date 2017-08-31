@@ -45,11 +45,11 @@
 					<mainClass>ch.skymarshall.dataflowmgr.generator.writers.singlenode.SingleNodeWriter</mainClass>
 					<arguments>
 						<argument>-c</argument>
-						<argument>${project.basedir}/src/test/resources/data/config.json</argument>
+						<argument>${project.basedir}/src/main/resources/data/config.json</argument>
 						<argument>-o</argument>
 						<argument>${project.basedir}/src/main/java </argument>
 						<argument>-f</argument>
-						<argument>${project.basedir}/src/test/resources/data/simple-flow.json</argument>
+						<argument>${project.basedir}/src/main/resources/data/simple-flow.json</argument>
 					</arguments>
 				</configuration>
 				<dependencies>

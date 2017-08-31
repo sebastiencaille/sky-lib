@@ -20,11 +20,12 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.skymarshall.util.generators.Template;
+
 import ch.skymarshall.dataflowmgr.generator.model.ActionPoint;
 import ch.skymarshall.dataflowmgr.generator.model.Dto;
 import ch.skymarshall.dataflowmgr.generator.model.Flow;
-import ch.skymarshall.dataflowmgr.generator.model.Template;
-import ch.skymarshall.dataflowmgr.generator.model.Template.TEMPLATE;
+import ch.skymarshall.dataflowmgr.generator.model.TEMPLATE;
 import ch.skymarshall.dataflowmgr.generator.model.Transformer;
 
 public class Registry {
@@ -63,8 +64,8 @@ public class Registry {
 		templates.put(templateName, content);
 	}
 
-	public Template getTemplate(final TEMPLATE templateName) {
-		return templates.get(templateName).clone();
+	public Template getTemplate(final TEMPLATE templateName, final Map<String, String> context) {
+		return templates.get(templateName).apply(context);
 	}
 
 }

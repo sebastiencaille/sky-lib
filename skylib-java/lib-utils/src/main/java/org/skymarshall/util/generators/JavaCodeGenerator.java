@@ -13,66 +13,39 @@
  *  IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  ******************************************************************************/
-package org.skymarshall;
+package org.skymarshall.util.generators;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.skymarshall.util.text.TextFormatter;
 
-public class JavaClassGenerator extends TextFormatter {
+public class JavaCodeGenerator extends TextFormatter {
 
-	private final String pkg;
-
-	private final Set<String> imports = new HashSet<>();
-
-	public JavaClassGenerator(final String pkg) {
-		super(TextFormatter.output(new StringBuilder()));
-		this.pkg = pkg;
+	public JavaCodeGenerator() {
+		super(output(new StringBuilder()));
 	}
 
 	@Override
 	public String toString() {
-		final StringBuilder builder = new StringBuilder();
-		builder.append("package ").append(pkg).append(";\n\n");
-
-		for (final String imp : imports) {
-			builder.append("import ").append(imp).append(";\n");
-		}
-
-		builder.append('\n');
-		builder.append(getOutput().toString());
-
-		return builder.toString();
+		return getOutput().toString();
 	}
 
-	public void addImport(final Class<?> class1) {
-		if (class1.isArray() || class1.isPrimitive()) {
-			return;
-		}
-		imports.add(class1.getName());
-	}
-
-	public void addImport(final String className) {
-		imports.add(className);
-	}
-
-	public String toFirstLetterInUpperCase(final String str) {
+	public static String toFirstLetterInUpperCase(final String str) {
 		if (str == null) {
 			return null;
 		}
 		return Character.toUpperCase(str.charAt(0)) + str.substring(1);
 	}
 
-	public String toFirstLetterInLowerCase(final String str) {
+	public static String toFirstLetterInLowerCase(final String str) {
 		if (str == null) {
 			return null;
 		}
 		return Character.toLowerCase(str.charAt(0)) + str.substring(1);
 	}
 
-	public String toConstant(final String str) {
+	public static String toConstant(final String str) {
 		final StringBuilder builder = new StringBuilder(str.length());
 		int prevUpper = 0;
 		boolean prevIsNumeric = true;
@@ -95,6 +68,14 @@ public class JavaClassGenerator extends TextFormatter {
 			prevIsNumeric = isNumeric;
 		}
 		return builder.toString();
+	}
+
+	public static String toImports(final Set<String> toImport) {
+		final StringBuilder imports = new StringBuilder();
+		for (final String imp : toImport) {
+			imports.append("import ").append(imp).append(";\n");
+		}
+		return imports.toString();
 	}
 
 	public void openBlock(final String... extra) throws IOException {

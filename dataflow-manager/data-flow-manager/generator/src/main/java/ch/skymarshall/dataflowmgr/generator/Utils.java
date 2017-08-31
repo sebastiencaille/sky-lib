@@ -15,9 +15,6 @@
  ******************************************************************************/
 package ch.skymarshall.dataflowmgr.generator;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
 public abstract class Utils {
@@ -53,18 +50,6 @@ public abstract class Utils {
 		}
 		final char firstUpper = Character.toLowerCase(str.charAt(0));
 		return firstUpper + str.substring(1);
-	}
-
-	public static String read(final InputStream in) throws IOException {
-		final StringBuilder result = new StringBuilder();
-
-		final InputStreamReader inReader = new InputStreamReader(in, UTF8);
-		final char[] buffer = new char[1024 * 1024];
-		int read;
-		while ((read = inReader.read(buffer)) > 0) {
-			result.append(buffer, 0, read);
-		}
-		return result.toString();
 	}
 
 }

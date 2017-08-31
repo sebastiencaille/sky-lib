@@ -1,0 +1,88 @@
+package ${package};
+
+import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
+import org.skymarshall.hmi.mvc.HmiModel;
+import org.skymarshall.hmi.mvc.IObjectHmiModel;
+import java.lang.reflect.AccessibleObject;
+import org.skymarshall.hmi.mvc.persisters.ObjectProviderPersister;
+import org.skymarshall.hmi.mvc.IComponentBinding;
+import org.skymarshall.hmi.mvc.HmiController;
+import java.lang.reflect.Field;
+import org.skymarshall.hmi.mvc.persisters.Persisters;
+import org.skymarshall.hmi.mvc.persisters.FieldAccess;
+import org.skymarshall.hmi.mvc.properties.Properties;
+import org.skymarshall.hmi.mvc.properties.ErrorProperty;
+import org.skymarshall.hmi.mvc.IComponentLink;
+import org.skymarshall.hmi.mvc.properties.AbstractProperty;
+${imports}
+
+public class ${modelClass} extends HmiModel implements IObjectHmiModel<${objectClass}> {
+   
+    private final ObjectProviderPersister.CurrentObjectProvider currentObjectProvider = new ObjectProviderPersister.CurrentObjectProvider();
+
+${fields.declareStatic}
+
+    static {
+        try {
+			${fields.initStatic}
+        } catch (final Exception e) {
+            throw new IllegalStateException("Cannot initialize class", e);
+        }
+    }
+${fields.declare}
+
+    public ${modelClass}(final String prefix, final ControllerPropertyChangeSupport propertySupport, final ErrorProperty errorProperty) {
+        super(propertySupport, errorProperty);
+${fields.init}
+    }
+
+    public ${modelClass}(final String prefix, final HmiController controller) {
+        this(prefix, controller.getPropertySupport(), HmiModel.createErrorProperty(prefix + "-Error", controller.getPropertySupport()));
+    }
+
+    public ${modelClass}(final HmiController controller) {
+        this("${objectClassSimpleName}", controller.getPropertySupport(), HmiModel.createErrorProperty("${objectClassSimpleName}-Error", controller.getPropertySupport()));
+    }
+
+    public ${modelClass}(final String prefix, final ControllerPropertyChangeSupport propertySupport) {
+        this(prefix, propertySupport, HmiModel.createErrorProperty(prefix + "-Error", propertySupport));
+    }
+
+    public ${modelClass}(final ControllerPropertyChangeSupport propertySupport) {
+        this("${objectClassSimpleName}", propertySupport, HmiModel.createErrorProperty("${objectClassSimpleName}-Error", propertySupport));
+    }
+
+
+${fields.getters}
+
+    @Override
+    public void load() {
+${fields.load}
+    }
+
+    @Override
+    public void save() {
+${fields.save}
+    }
+
+    @Override
+    public void setCurrentObject(final ${objectClass} value) {
+        currentObjectProvider.setObject(value);
+    }
+
+    public IComponentBinding<${objectClass}> binding() {
+        return new IComponentBinding<${objectClass}>() {
+            @Override
+            public void addComponentValueChangeListener(final IComponentLink<${objectClass}> link) {
+                // nope
+            }
+            @Override
+            public void setComponentValue(final AbstractProperty source, final ${objectClass} value) {
+                if (value != null) {
+                    setCurrentObject(value);
+                    load();
+                }
+            }
+        };
+    }
+}

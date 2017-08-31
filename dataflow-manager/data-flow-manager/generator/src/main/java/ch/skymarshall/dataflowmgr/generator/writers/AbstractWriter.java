@@ -15,6 +15,9 @@
  ******************************************************************************/
 package ch.skymarshall.dataflowmgr.generator.writers;
 
+import static org.skymarshall.util.helpers.ClassLoaderHelper.openResourceStream;
+import static org.skymarshall.util.helpers.ClassLoaderHelper.readUTF8Resource;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,18 +27,18 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.skymarshall.util.generators.Template;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import ch.skymarshall.dataflowmgr.generator.JsonAdapter;
-import ch.skymarshall.dataflowmgr.generator.Utils;
 import ch.skymarshall.dataflowmgr.generator.exceptions.TransformerException;
 import ch.skymarshall.dataflowmgr.generator.model.ActionPoint;
 import ch.skymarshall.dataflowmgr.generator.model.Dto;
 import ch.skymarshall.dataflowmgr.generator.model.Flow;
 import ch.skymarshall.dataflowmgr.generator.model.Module;
-import ch.skymarshall.dataflowmgr.generator.model.Template;
-import ch.skymarshall.dataflowmgr.generator.model.Template.TEMPLATE;
+import ch.skymarshall.dataflowmgr.generator.model.TEMPLATE;
 import ch.skymarshall.dataflowmgr.generator.model.Transformer;
 
 public abstract class AbstractWriter {
@@ -78,14 +81,8 @@ public abstract class AbstractWriter {
 
 	}
 
-	private InputStream openResourceStream(final String filename) {
-		final ClassLoader cl = Thread.currentThread().getContextClassLoader();
-		final String resourceName = "templates/" + config.language + "/" + filename;
-		final InputStream in = cl.getResourceAsStream(resourceName);
-		if (in == null) {
-			throw new IllegalArgumentException("No such file: " + resourceName);
-		}
-		return in;
+	protected void loadTransformers() throws TransformerException {
+		registry.getActions().stream().map(a -> a.action.template).allMatch(t -> getOrLoadTransformer(t) != null);
 	}
 
 	private Transformer getOrLoadTransformer(final String transformerName) throws TransformerException {
@@ -94,7 +91,7 @@ public abstract class AbstractWriter {
 			return template;
 		}
 
-		try (InputStream in = openResourceStream(transformerName + ".json")) {
+		try (InputStream in = openResourceStream(templateResourcePath(transformerName + ".transformer"))) {
 			template = jsonAdapter.readTransformer(transformerName, in);
 			template.init();
 			registry.addTransformer(template);
@@ -105,19 +102,17 @@ public abstract class AbstractWriter {
 
 	}
 
-	protected void loadTransformers() throws TransformerException {
-
-		registry.getActions().stream().map(a -> a.action.template).allMatch(t -> getOrLoadTransformer(t) != null);
-	}
-
 	protected void loadTemplates() throws IOException {
 		for (final TEMPLATE template : TEMPLATE.values()) {
-			try (InputStream in = openResourceStream(template.name().toLowerCase() + ".template")) {
-				final Template newTemplate = new Template(Utils.read(in));
-				newTemplate.setCommandLine(commandLine);
-				registry.addTemplate(template, newTemplate);
-			}
+			final String resourceName = templateResourcePath(template.name() + ".template");
+			final Template newTemplate = new Template(readUTF8Resource(resourceName));
+			newTemplate.setCommandLine(commandLine);
+			registry.addTemplate(template, newTemplate);
 		}
+	}
+
+	private String templateResourcePath(final String name) {
+		return "templates/" + config.language + "/" + name.toLowerCase();
 	}
 
 	public abstract File getModuleLocation(Module module);

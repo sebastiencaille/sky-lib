@@ -1,19 +1,4 @@
-/*******************************************************************************
- * Copyright (c) 2017 Sebastien Caille.
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms are permitted
- *  provided that the above Copyrightnotice and this paragraph are
- *  duplicated in all such forms and that any documentation,
- *  advertising materials, and other materials related to such
- *  distribution and use acknowledge that the software was developed
- *  by Sebastien Caille.  The name of Sebastien Caille may not be used to endorse or promote products derived
- *  from this software without specific prior written permission.
- *  THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
- *  IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
- *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
- ******************************************************************************/
-package ch.skymarshall.dataflowmgr.generator.model;
+package org.skymarshall.util.generators;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -21,33 +6,26 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import ch.skymarshall.dataflowmgr.generator.exceptions.TemplateException;
-
 public class Template {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(Template.class);
-
 	private final String content;
-	private final Map<String, String> properties = new HashMap<>();
+	private final Map<String, String> properties = new HashMap<String, String>();
 
 	private String commandLine;
-
-	public enum TEMPLATE {
-		DTO, FIELD, ACTION, FLOW
-	}
 
 	public Template(final String content) {
 		this.content = content;
 	}
 
-	@Override
-	public Template clone() {
-		final Template newTemplate = new Template(content);
+	public Template apply(final Map<String, String> properties) {
+		final Template newTemplate = create(content);
 		newTemplate.setCommandLine(commandLine);
+		newTemplate.setContext(properties);
 		return newTemplate;
+	}
+
+	protected Template create(final String content) {
+		return new Template(content);
 	}
 
 	public void setCommandLine(final String commandLine) {
@@ -55,7 +33,6 @@ public class Template {
 	}
 
 	public String generate() {
-		LOGGER.info("Generating with properties {}", properties);
 		final StringBuilder result = new StringBuilder("// File generated from template").append("\n");
 		if (commandLine != null) {
 			result.append("// ").append(commandLine).append("\n");
@@ -73,7 +50,6 @@ public class Template {
 			if (value == null) {
 				throw new TemplateException("No value for property " + variable);
 			}
-			LOGGER.debug("replacing {} with {}", variable, value);
 			result.append(content.substring(pos, nextVariable)).append(value);
 			nextVariable = nextVariable + variable.length() + 3;
 			pos = nextVariable;
@@ -83,10 +59,12 @@ public class Template {
 	}
 
 	public void write(final File file) throws IOException {
-		LOGGER.info("Writing {}", file);
 		file.getParentFile().mkdirs();
-		try (FileWriter out = new FileWriter(file)) {
+		final FileWriter out = new FileWriter(file);
+		try {
 			out.write(generate());
+		} finally {
+			out.close();
 		}
 	}
 
@@ -94,4 +72,25 @@ public class Template {
 		properties.putAll(context);
 	}
 
+	public void add(final String key, final String value) {
+		properties.put(key, value);
+	}
+
+	/**
+	 * Append value to the value of a context key
+	 *
+	 * @param context
+	 * @param key
+	 * @param valueJavaDTOVisitor
+	 * @return
+	 */
+	public static Map<String, String> append(final Map<String, String> context, final String key, final String value) {
+		final String current = context.get(key);
+		if (current != null) {
+			context.put(key, current + value);
+		} else {
+			context.put(key, value);
+		}
+		return context;
+	}
 }

@@ -1,5 +1,5 @@
 // File generated from template
-// SingleNodeWriter -c /home/scaille/src/github/sky-lib/dataflow-manager/data-flow-manager/examples/src/test/resources/data/config.json -o /home/scaille/src/github/sky-lib/dataflow-manager/data-flow-manager/examples/src/main/java -f /home/scaille/src/github/sky-lib/dataflow-manager/data-flow-manager/examples/src/test/resources/data/simple-flow.json
+// SingleNodeWriter -c /home/scaille/src/github/sky-lib/dataflow-manager/data-flow-manager/examples/src/main/resources/data/config.json -o /home/scaille/src/github/sky-lib/dataflow-manager/data-flow-manager/examples/src/main/java -f /home/scaille/src/github/sky-lib/dataflow-manager/data-flow-manager/examples/src/main/resources/data/simple-flow.json
 package ch.skymarshall.dataflowmgr.engine.examples.actions;
 
 import ch.skymarshall.dataflowmgr.model.FlowAction;

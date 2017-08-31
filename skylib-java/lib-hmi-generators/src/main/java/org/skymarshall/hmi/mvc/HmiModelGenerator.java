@@ -16,14 +16,12 @@
 package org.skymarshall.hmi.mvc;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URLClassLoader;
 
 import org.skymarshall.ClassSelector;
-import org.skymarshall.JavaClassGenerator;
-import org.skymarshall.hmi.HmiObject;
+import org.skymarshall.util.generators.Template;
 
 public class HmiModelGenerator {
 
@@ -39,9 +37,38 @@ public class HmiModelGenerator {
 		new HmiModelGenerator().process(target);
 	}
 
+	public static Class<?> findClass(final String className) {
+		final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		Class<?> found = null;
+
+		try {
+			found = loader.loadClass(className);
+		} catch (final ClassNotFoundException e) {
+			// ignore
+		}
+
+		if (found == null) {
+			final String[] defaultPackages = { "org.skymarshall.hmi.mvc.properties.",
+					"org.skymarshall.hmi.mvc.persisters.", "org.skymarshall.hmi." };
+			for (final String pkg : defaultPackages) {
+				try {
+					found = loader.loadClass(pkg + className);
+					break;
+				} catch (final ClassNotFoundException e) {
+					// ignore
+				}
+			}
+		}
+		if (found == null) {
+			throw new IllegalStateException("Not found: " + className);
+		}
+		return found;
+	}
+
 	private void process(final File targetSrcFolder) throws ClassNotFoundException, IOException, URISyntaxException {
-		final ClassSelector selector = new ClassSelector((URLClassLoader) HmiModelGenerator.class.getClassLoader());
-		selector.addExpectedTag(HmiObject.class.getName(), ClassSelector.Policy.CLASS_ONLY);
+		final ClassSelector selector = new ClassSelector(
+				(URLClassLoader) Thread.currentThread().getContextClassLoader());
+		selector.addExpectedAnnotation(findClass("HmiObject"), ClassSelector.Policy.CLASS_ONLY);
 		selector.collect();
 		System.out.println(selector.getResult()); // NOSONAR
 
@@ -49,16 +76,14 @@ public class HmiModelGenerator {
 			final String pkg = clazz.getPackage().getName();
 			final File targetFolder = new File(targetSrcFolder, pkg.replace('.', '/'));
 
-			final JavaClassGenerator generator = new JavaClassGenerator(pkg);
 			final HmiClassProcessor processor = new HmiClassProcessor(clazz);
-			processor.process(generator);
+			final Template result = processor.process();
+			result.add("package", pkg);
 			final File outputFile = new File(targetFolder, processor.getClassName() + ".java");
 			System.out.println("Generating " + outputFile.getAbsolutePath()); // NOSONAR
-			outputFile.getParentFile().mkdirs();
-			try (FileOutputStream fout = new FileOutputStream(outputFile)) {
-				fout.write(generator.toString().getBytes());
-			}
+			result.write(outputFile);
 		}
 
 	}
+
 }

@@ -21,16 +21,12 @@ import static org.skymarshall.util.helpers.ClassLoaderHelper.readUTF8Resource;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.skymarshall.util.generators.Template;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 
 import ch.skymarshall.dataflowmgr.generator.JsonAdapter;
 import ch.skymarshall.dataflowmgr.generator.exceptions.TransformerException;
@@ -53,8 +49,7 @@ public abstract class AbstractWriter {
 		jsonAdapter = new JsonAdapter();
 	}
 
-	public void configure(final File configFile, final String commandLine)
-			throws JsonParseException, JsonMappingException, IOException, FileNotFoundException {
+	public void configure(final File configFile, final String commandLine) throws IOException {
 		try (FileInputStream configIn = new FileInputStream(configFile)) {
 			config = jsonAdapter.readConfig(configIn);
 			this.commandLine = commandLine;
@@ -63,7 +58,7 @@ public abstract class AbstractWriter {
 		registry.addTransformer(new Transformer());
 	}
 
-	protected void loadModule(final File file) throws FileNotFoundException, IOException {
+	protected void loadModule(final File file) throws IOException {
 
 		try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(file))) {
 			final Module module = jsonAdapter.readApplication(in);
@@ -81,7 +76,7 @@ public abstract class AbstractWriter {
 
 	}
 
-	protected void loadTransformers() throws TransformerException {
+	protected void loadTransformers() {
 		registry.getActions().stream().map(a -> a.action.template).allMatch(t -> getOrLoadTransformer(t) != null);
 	}
 

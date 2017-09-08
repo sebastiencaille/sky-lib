@@ -14,7 +14,7 @@ public class Template {
 	private String commandLine;
 
 	public Template(final String content) {
-		this.content = content;
+		this.content = content.replaceAll("\r", "");
 	}
 
 	public Template apply(final Map<String, String> properties) {
@@ -37,24 +37,40 @@ public class Template {
 		if (commandLine != null) {
 			result.append("// ").append(commandLine).append("\n");
 		}
-		int nextVariable = 0;
-		int pos = 0;
-		while ((nextVariable = content.indexOf("${", nextVariable)) > 0) {
-			if (nextVariable > 0 && content.charAt(nextVariable - 1) == '$') {
+		int nextVariablePos = 0;
+		int currentPos = 0;
+		while ((nextVariablePos = content.indexOf("${", nextVariablePos)) > 0) {
+			if (nextVariablePos > 0 && content.charAt(nextVariablePos - 1) == '$') {
 				// it's a $$, skip
-				nextVariable++;
+				nextVariablePos++;
 				continue;
 			}
-			final String variable = content.substring(nextVariable + 2, content.indexOf('}', nextVariable));
+			final String variable = content.substring(nextVariablePos + 2, content.indexOf('}', nextVariablePos));
+			int prevEol = nextVariablePos;
+			int startOfText = nextVariablePos;
+			while (prevEol >= 0 && content.charAt(prevEol) != '\n') {
+				if (content.charAt(prevEol) != ' ' && content.charAt(prevEol) != '\t') {
+					startOfText = prevEol;
+				}
+				prevEol--;
+			}
+
+			final String indent;
+			if (prevEol >= 0 && startOfText > prevEol) {
+				indent = content.substring(prevEol, startOfText);
+			} else {
+				indent = "";
+			}
+
 			final String value = properties.get(variable);
 			if (value == null) {
 				throw new TemplateException("No value for property " + variable);
 			}
-			result.append(content.substring(pos, nextVariable)).append(value);
-			nextVariable = nextVariable + variable.length() + 3;
-			pos = nextVariable;
+			result.append(content.substring(currentPos, nextVariablePos)).append(value.replaceAll("\n", indent));
+			nextVariablePos = nextVariablePos + variable.length() + 3;
+			currentPos = nextVariablePos;
 		}
-		result.append(content.substring(pos, content.length()));
+		result.append(content.substring(currentPos, content.length()));
 		return result.toString();
 	}
 

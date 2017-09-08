@@ -15,7 +15,7 @@
  ******************************************************************************/
 package ch.skymarshall.dataflowmgr.model;
 
-public class LocalAPRef<T extends FlowData> implements ActionPointReference<T> {
+public class LocalAPRef<IDT extends FlowData> implements ActionPointReference<IDT> {
 
 	private final ActionPoint<?, ?> actionPoint;
 

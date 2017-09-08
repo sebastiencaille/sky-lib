@@ -48,8 +48,6 @@ public class JTabbedPaneSelectionBinding<T> extends DefaultComponentBinding<T> {
 
 				final Object clientProperty = pane.getClientProperty(pane.getComponentAt(index));
 				if (clientProperty == null) {
-					// throw new IllegalStateException("Object for tab " +
-					// index + " does not exist");
 					return;
 				}
 				if (!clazz.isInstance(clientProperty)) {

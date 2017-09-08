@@ -117,13 +117,6 @@ public abstract class ListModelTableModel<T, C extends Enum<C>> extends Abstract
 
 	@Override
 	public void intervalRemoved(final ListDataEvent event) {
-		// if (verbose()) {
-		// log("Deleted range: " + event.getIndex0() + "/" + event.getIndex1());
-		//
-		// fireTableChanged(new TableModelEvent(this, event.getIndex0(),
-		// event.getIndex1(),
-		// TableModelEvent.ALL_COLUMNS, TABLE_ABOUT_TO_CHANGE));
-		// }
 		fireTableRowsDeleted(event.getIndex0(), event.getIndex1());
 		fireTableChanged(new TableModelEvent(this, event.getIndex0(), event.getIndex1(), TableModelEvent.ALL_COLUMNS,
 				TABLE_CHANGE_DONE));

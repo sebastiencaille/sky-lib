@@ -80,7 +80,7 @@ public class DotModuleVisitor extends ModuleVisitor<DotModuleVisitor.Graph> {
 
 	@Override
 	public Graph visit(final Module module, final ActionPoint ap, final InFlowRule rule, final Graph context) {
-		context.nodes.add(new Node(rule.uuid, rule.input + "\\n" + rule.activator, Shape.box));
+		context.nodes.add(new Node(rule.uuid, rule.input + "\\n" + rule.activator, Shape.BOX));
 		context.links.add(new Link(rule.uuid, ap.uuid, ap.input, ap.activator));
 		return super.visit(module, ap, rule, context);
 	}
@@ -89,7 +89,7 @@ public class DotModuleVisitor extends ModuleVisitor<DotModuleVisitor.Graph> {
 	public Graph visit(final Module module, final ActionPoint ap, final OutFlowRule rule, final Graph context) {
 		context.links.add(new Link(ap.uuid, rule.uuid, ap.output, ap.activator));
 
-		context.nodes.add(new Node(rule.uuid, rule.output + "\\n" + rule.activator, Shape.box));
+		context.nodes.add(new Node(rule.uuid, rule.output + "\\n" + rule.activator, Shape.BOX));
 		context.links.add(new Link(rule.uuid, findAction(module, rule.nextAction).uuid, rule.output, rule.activator));
 		return super.visit(module, ap, rule, context);
 	}
@@ -97,7 +97,7 @@ public class DotModuleVisitor extends ModuleVisitor<DotModuleVisitor.Graph> {
 	@Override
 	public Graph visit(final Module module, final ActionPoint ap, final Graph context) {
 		final Graph c = super.visit(module, ap, context);
-		c.nodes.add(new Node(ap.uuid, ap.name, Shape.ellipse));
+		c.nodes.add(new Node(ap.uuid, ap.name, Shape.ELLIPSE));
 		return c;
 	}
 

@@ -24,24 +24,24 @@ import java.util.function.Predicate;
  *
  * @author scaille
  *
- * @param <InFlowType>
- * @param <InActionPointType>
+ * @param <IDT>
+ * @param <ACTIDT>
  */
-public class InputDecisionRule<InFlowType extends FlowData, InActionPointType extends FlowData> extends IDData {
+public class InputDecisionRule<IDT extends FlowData, ACTIDT extends FlowData> extends IDData {
 
 	@FunctionalInterface
-	public static interface CollectorFunction<InputDataType, DecisionPointDataType extends FlowData> {
-		DecisionPointDataType apply(InputDataType inputData, ActionPoint<DecisionPointDataType, ?> ap, Registry reg);
+	public static interface CollectorFunction<IDT extends FlowData, DecisionPointDataType extends FlowData> {
+		DecisionPointDataType apply(IDT inputData, ActionPoint<DecisionPointDataType, ?> ap, Registry reg);
 	}
 
-	private final Predicate<InFlowType> activationPredicate;
-	private final ActionPoint<InActionPointType, ?> actionPointToExecute;
-	private final CollectorFunction<InFlowType, InActionPointType> dataMuxFunction;
-	private final Class<InFlowType> inputClass;
+	private final Predicate<IDT> activationPredicate;
+	private final ActionPoint<ACTIDT, ?> actionPointToExecute;
+	private final CollectorFunction<IDT, ACTIDT> dataMuxFunction;
+	private final Class<IDT> inputClass;
 
-	public static <InFlow extends FlowData, ActPointInType extends FlowData> InputDecisionRule<InFlow, ActPointInType> input(
-			final UUID uuid, final Class<InFlow> inputClass, final ActionPoint<ActPointInType, ?> actionPoint,
-			final CollectorFunction<InFlow, ActPointInType> fillFunction, final Predicate<InFlow> activationPredicate) {
+	public static <IDT extends FlowData, ACTIDT extends FlowData> InputDecisionRule<IDT, ACTIDT> input(
+			final UUID uuid, final Class<IDT> inputClass, final ActionPoint<ACTIDT, ?> actionPoint,
+			final CollectorFunction<IDT, ACTIDT> fillFunction, final Predicate<IDT> activationPredicate) {
 		return new InputDecisionRule<>(uuid, inputClass, activationPredicate, actionPoint, fillFunction);
 	}
 
@@ -55,25 +55,25 @@ public class InputDecisionRule<InFlowType extends FlowData, InActionPointType ex
 	 * @param dataMuxFunction
 	 * @return
 	 */
-	public static <InFlow extends FlowData, InActPointType extends FlowData> InputDecisionRule<InFlow, InActPointType> input(
-			final UUID uuid, final Class<InFlow> inputClass, final Predicate<InFlow> activationPredicate,
-			final ActionPoint<InActPointType, ?> actionPoint,
-			final BiConsumer<InFlow, InActPointType> dataMuxFunction) {
+	public static <IDT extends FlowData, ACTIDT extends FlowData> InputDecisionRule<IDT, ACTIDT> input(
+			final UUID uuid, final Class<IDT> inputClass, final Predicate<IDT> activationPredicate,
+			final ActionPoint<ACTIDT, ?> actionPoint,
+			final BiConsumer<IDT, ACTIDT> dataMuxFunction) {
 		return new InputDecisionRule<>(uuid, inputClass, activationPredicate, actionPoint,
-				new CollectorFunction<InFlow, InActPointType>() { // NOSONAR
+				new CollectorFunction<IDT, ACTIDT>() { // NOSONAR
 					@Override
-					public InActPointType apply(final InFlow incomingData, final ActionPoint<InActPointType, ?> ap,
+					public ACTIDT apply(final IDT incomingData, final ActionPoint<ACTIDT, ?> ap,
 							final Registry reg) {
-						final InActPointType in = ap.get(reg, incomingData);
+						final ACTIDT in = ap.get(reg, incomingData);
 						dataMuxFunction.accept(incomingData, in);
 						return in;
 					}
 				});
 	}
 
-	protected InputDecisionRule(final UUID uuid, final Class<InFlowType> inputClass,
-			final Predicate<InFlowType> activationPredicate, final ActionPoint<InActionPointType, ?> ap,
-			final CollectorFunction<InFlowType, InActionPointType> dataMuxFunction) {
+	protected InputDecisionRule(final UUID uuid, final Class<IDT> inputClass, final Predicate<IDT> activationPredicate,
+			final ActionPoint<ACTIDT, ?> ap,
+			final CollectorFunction<IDT, ACTIDT> dataMuxFunction) {
 		super(uuid);
 		this.inputClass = inputClass;
 		this.activationPredicate = activationPredicate;
@@ -85,8 +85,8 @@ public class InputDecisionRule<InFlowType extends FlowData, InActionPointType ex
 		return actionPointToExecute;
 	}
 
-	protected InActionPointType convertData(final FlowData inFlow, final Registry registry) {
-		final InActionPointType apValue = dataMuxFunction.apply(inputClass.cast(inFlow), actionPointToExecute,
+	protected ACTIDT convertData(final FlowData inFlow, final Registry registry) {
+		final ACTIDT apValue = dataMuxFunction.apply(inputClass.cast(inFlow), actionPointToExecute,
 				registry);
 		apValue.setContext(inFlow, actionPointToExecute.uuid());
 		return apValue;

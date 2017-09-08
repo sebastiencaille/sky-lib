@@ -23,31 +23,31 @@ public class TestObjectHmiModel extends HmiModel implements IObjectHmiModel<org.
    
     private final ObjectProviderPersister.CurrentObjectProvider currentObjectProvider = new ObjectProviderPersister.CurrentObjectProvider();
 
-public static final String ASECOND_VALUE = "ASecondValue";
-
-private static final Field ASECOND_VALUE_FIELD;
-
-public static final String AFIRST_VALUE = "AFirstValue";
-
-private static final Field AFIRST_VALUE_FIELD;
-
-
+	public static final String ASECOND_VALUE = "ASecondValue";
+	
+	private static final Field ASECOND_VALUE_FIELD;
+	
+	public static final String AFIRST_VALUE = "AFirstValue";
+	
+	private static final Field AFIRST_VALUE_FIELD;
+	
+	
 
     static {
         try {
 			AFIRST_VALUE_FIELD = org.skymarshall.example.hmi.TestObject.class.getDeclaredField("aFirstValue");
-ASECOND_VALUE_FIELD = org.skymarshall.example.hmi.TestObject.class.getDeclaredField("aSecondValue");
-AccessibleObject.setAccessible(new AccessibleObject[]{AFIRST_VALUE_FIELD, ASECOND_VALUE_FIELD}, true);
-
+			ASECOND_VALUE_FIELD = org.skymarshall.example.hmi.TestObject.class.getDeclaredField("aSecondValue");
+			AccessibleObject.setAccessible(new AccessibleObject[]{AFIRST_VALUE_FIELD, ASECOND_VALUE_FIELD}, true);
+			
         } catch (final Exception e) {
             throw new IllegalStateException("Cannot initialize class", e);
         }
     }
-protected final IntProperty aSecondValueProperty;protected final ObjectProperty<java.lang.String> aFirstValueProperty;
+	protected final IntProperty aSecondValueProperty;protected final ObjectProperty<java.lang.String> aFirstValueProperty;
 
     public TestObjectHmiModel(final String prefix, final ControllerPropertyChangeSupport propertySupport, final ErrorProperty errorProperty) {
         super(propertySupport, errorProperty);
-aSecondValueProperty = Properties.of(new IntProperty(prefix + "-ASecondValue",  propertySupport)).persistent(Persisters.from(currentObjectProvider, FieldAccess.intAccess(ASECOND_VALUE_FIELD))).setErrorNotifier(errorProperty).getProperty();aFirstValueProperty = Properties.of(new ObjectProperty<java.lang.String>(prefix + "-AFirstValue",  propertySupport)).persistent(Persisters.from(currentObjectProvider, FieldAccess.<java.lang.String>create(AFIRST_VALUE_FIELD))).setErrorNotifier(errorProperty).getProperty();
+		aSecondValueProperty = Properties.of(new IntProperty(prefix + "-ASecondValue",  propertySupport)).persistent(Persisters.from(currentObjectProvider, FieldAccess.intAccess(ASECOND_VALUE_FIELD))).setErrorNotifier(errorProperty).getProperty();aFirstValueProperty = Properties.of(new ObjectProperty<java.lang.String>(prefix + "-AFirstValue",  propertySupport)).persistent(Persisters.from(currentObjectProvider, FieldAccess.<java.lang.String>create(AFIRST_VALUE_FIELD))).setErrorNotifier(errorProperty).getProperty();
     }
 
     public TestObjectHmiModel(final String prefix, final HmiController controller) {
@@ -67,22 +67,22 @@ aSecondValueProperty = Properties.of(new IntProperty(prefix + "-ASecondValue",  
     }
 
 
-public IntProperty getASecondValueProperty() {
-    return aSecondValueProperty;
-}
-public ObjectProperty<java.lang.String> getAFirstValueProperty() {
-    return aFirstValueProperty;
-}
-
+	public IntProperty getASecondValueProperty() {
+	    return aSecondValueProperty;
+	}
+	public ObjectProperty<java.lang.String> getAFirstValueProperty() {
+	    return aFirstValueProperty;
+	}
+	
 
     @Override
     public void load() {
-aSecondValueProperty.load(this);aFirstValueProperty.load(this);
+		aSecondValueProperty.load(this);aFirstValueProperty.load(this);
     }
 
     @Override
     public void save() {
-aSecondValueProperty.save();aFirstValueProperty.save();
+		aSecondValueProperty.save();aFirstValueProperty.save();
     }
 
     @Override
@@ -92,10 +92,12 @@ aSecondValueProperty.save();aFirstValueProperty.save();
 
     public IComponentBinding<org.skymarshall.example.hmi.TestObject> binding() {
         return new IComponentBinding<org.skymarshall.example.hmi.TestObject>() {
+        
             @Override
             public void addComponentValueChangeListener(final IComponentLink<org.skymarshall.example.hmi.TestObject> link) {
                 // nope
             }
+            
             @Override
             public void setComponentValue(final AbstractProperty source, final org.skymarshall.example.hmi.TestObject value) {
                 if (value != null) {

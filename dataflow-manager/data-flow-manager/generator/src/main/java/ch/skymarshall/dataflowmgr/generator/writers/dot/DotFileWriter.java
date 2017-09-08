@@ -16,15 +16,12 @@
 package ch.skymarshall.dataflowmgr.generator.writers.dot;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
@@ -54,7 +51,7 @@ public class DotFileWriter extends AbstractWriter {
 		return new File(outputFolder, config.modulePattern.replaceAll(Pattern.quote("${module.name}"), module.name));
 	}
 
-	private void loadStepsReport(final File report) throws JsonParseException, JsonMappingException, IOException {
+	private void loadStepsReport(final File report) throws IOException {
 		final byte[] json = Files.readAllBytes(report.toPath());
 		this.steps = mapper.readValue(json,
 				TypeFactory.defaultInstance().constructCollectionLikeType(HashSet.class, Step.class));
@@ -79,7 +76,7 @@ public class DotFileWriter extends AbstractWriter {
 		}
 	}
 
-	public static void main(final String[] args) throws FileNotFoundException, IOException {
+	public static void main(final String[] args) throws IOException {
 
 		final BasicArgsParser argsParser = new BasicArgsParser();
 		final ArgumentAcceptingOptionSpec<File> stepsReportOpt = argsParser.getParser().accepts("r", "steps report")

@@ -15,9 +15,9 @@
  ******************************************************************************/
 package ch.skymarshall.dataflowmgr.model;
 
-public interface ExecutorFactory<ExecType> {
+public interface ExecutorFactory<EXECTYPE> {
 
-	<T extends FlowData> ExecType createNextDecisionPointExecution(final ActionPointReference<T> nextDp,
+	<T extends FlowData> EXECTYPE createNextDecisionPointExecution(final ActionPointReference<T> nextDp,
 			final T nextDpInputData);
 
 }

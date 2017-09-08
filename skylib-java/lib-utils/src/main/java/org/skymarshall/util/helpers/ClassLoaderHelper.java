@@ -6,6 +6,10 @@ import java.io.InputStreamReader;
 
 public class ClassLoaderHelper {
 
+	private ClassLoaderHelper() {
+
+	}
+
 	public static InputStream openResourceStream(final String resourceName) {
 		final ClassLoader cl = Thread.currentThread().getContextClassLoader();
 		final InputStream in = cl.getResourceAsStream(resourceName);

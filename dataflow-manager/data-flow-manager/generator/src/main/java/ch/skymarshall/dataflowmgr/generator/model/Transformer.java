@@ -50,7 +50,7 @@ public class Transformer {
 	@JsonIgnore
 	private Pattern compile;
 
-	public void init() throws TransformerException {
+	public void init() {
 		if (!regexp.isEmpty()) {
 			if (variables == null) {
 				throw new TransformerException("regexp is set -> variables must not be empty");
@@ -66,7 +66,7 @@ public class Transformer {
 		}
 	}
 
-	public String transform(final String in) throws TransformerException {
+	public String transform(final String in) {
 		if (identity) {
 			return in;
 		} else if (!regexp.isEmpty()) {

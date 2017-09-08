@@ -39,23 +39,23 @@ import ch.skymarshall.dataflowmgr.model.Registry;
  *
  * @author scaille
  *
- * @param <InputDataType>
+ * @param <IDT>
  */
-public class FlowExecution<InputDataType extends FlowData> {
+public class FlowExecution<IDT extends FlowData> {
 
 	/**
 	 *
 	 */
-	private final Flow<InputDataType> flow;
+	private final Flow<IDT> flow;
 
 	/**
 	 * @param flow
 	 */
-	public FlowExecution(final Flow<InputDataType> flow) {
+	public FlowExecution(final Flow<IDT> flow) {
 		this.flow = flow;
 	}
 
-	public void execute(final InputDataType inputData, final ExecutionReport report, final Registry registry) {
+	public void execute(final IDT inputData, final ExecutionReport report, final Registry registry) {
 		final UUID flowExecution = UUID.randomUUID();
 		report.add(Event.START_FLOW, this.flow.uuid(), flowExecution);
 
@@ -117,7 +117,7 @@ public class FlowExecution<InputDataType extends FlowData> {
 			}
 			selectRules.stream()
 					.forEach(r -> report.add(Event.SELECTED_OUTPUT_RULE, r.uuid(), apExecution.currentFlowExecution()));
-			return apExecution.createExecutions(registry, new ExecutorFactory<ActionPoint<?, ?>.ExecutionSteps>() { // NOSONAR
+			return apExecution.createExecutions(new ExecutorFactory<ActionPoint<?, ?>.ExecutionSteps>() { // NOSONAR
 
 				@Override
 				public <T extends FlowData> ActionPoint<?, ?>.ExecutionSteps createNextDecisionPointExecution(

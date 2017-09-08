@@ -55,7 +55,7 @@ public class Timeout {
 		try {
 			Thread.sleep(100);
 		} catch (final InterruptedException e) {
-			// Just let it go
+			throw new TimeoutException("Time out (interrupted): " + info);
 		}
 	}
 

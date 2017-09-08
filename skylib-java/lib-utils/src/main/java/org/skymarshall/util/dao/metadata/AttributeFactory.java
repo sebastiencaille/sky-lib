@@ -90,10 +90,6 @@ abstract class AttributeFactory {
 		default:
 			throw new IllegalStateException("Unhandled mode " + mode);
 		}
-		// throw new
-		// IllegalStateException("Unable to find any suitable Attribute handler for "
-		// + _name + " of "
-		// + _currentClass.getName());
 		return null;
 	}
 

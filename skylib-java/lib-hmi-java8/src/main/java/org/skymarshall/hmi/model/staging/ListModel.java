@@ -528,9 +528,6 @@ public class ListModel<T> extends AbstractListModel<T> implements Iterable<T> {
 	 * Process the current edition and
 	 */
 	public void stopEditingValue() {
-		// if (verbose()) {
-		// log("edition stopping");
-		// }
 		fireEditionStopping();
 		if (objectEdition == null) {
 			return;

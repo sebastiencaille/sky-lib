@@ -37,7 +37,7 @@ public class HmiClassProcessor {
 	private static final String ATTRIB_PUBLIC = "public ";
 
 	public static class Context {
-		public Map<String, String> context = new HashMap<>();
+		final Map<String, String> context = new HashMap<>();
 		final Set<String> imports = new HashSet<>();
 
 		public void addImport(final Class<?> class1) {

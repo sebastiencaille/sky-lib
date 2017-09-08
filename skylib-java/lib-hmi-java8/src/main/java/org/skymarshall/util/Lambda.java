@@ -32,11 +32,13 @@ public class Lambda {
 
 	public static <T> Consumer<T> emptyConsumer() {
 		return t -> {
+			// empty
 		};
 	}
 
 	public static <T, U> BiConsumer<T, U> emptyBiConsumer() {
 		return (t, u) -> {
+			// empty
 		};
 	}
 

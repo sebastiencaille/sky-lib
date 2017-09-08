@@ -26,7 +26,7 @@ public interface ListViews {
 		return new ListView<>(comparator, null);
 	}
 
-	public static <U extends Comparable<U>> IListView<U> sorted(final Class<U> clazz) {
+	public static <U extends Comparable<U>> IListView<U> sorted() {
 		return new ListView<>((u1, u2) -> u1.compareTo(u2), null);
 	}
 

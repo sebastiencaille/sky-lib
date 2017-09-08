@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
@@ -39,15 +38,14 @@ public class JsonAdapter {
 		mapper.registerModule(module);
 	}
 
-	public Module readApplication(final InputStream in) throws JsonParseException, JsonMappingException, IOException {
+	public Module readApplication(final InputStream in) throws IOException {
 		if (in == null) {
 			throw new IllegalArgumentException("in == null");
 		}
 		return mapper.readValue(in, Module.class);
 	}
 
-	public Transformer readTransformer(final String templateName, final InputStream in)
-			throws JsonParseException, JsonMappingException, IOException {
+	public Transformer readTransformer(final String templateName, final InputStream in) throws IOException {
 		if (in == null) {
 			throw new IllegalArgumentException("in == null");
 		}
@@ -56,7 +54,7 @@ public class JsonAdapter {
 		return readValue;
 	}
 
-	public Config readConfig(final InputStream in) throws JsonParseException, JsonMappingException, IOException {
+	public Config readConfig(final InputStream in) throws JsonParseException, IOException {
 		return mapper.readValue(in, Config.class);
 	}
 

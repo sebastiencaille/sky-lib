@@ -16,7 +16,7 @@ public class DumpIntTransfer extends FlowAction<IntTransfer, NoData> {
 	@Override
 	public NoData apply(final IntTransfer input) {
 		System.out.println(input);
-			return NO_DATA;
+					return NO_DATA;
 	}
 
 }

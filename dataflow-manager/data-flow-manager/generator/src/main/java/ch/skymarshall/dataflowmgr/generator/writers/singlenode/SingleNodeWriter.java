@@ -16,7 +16,6 @@
 package ch.skymarshall.dataflowmgr.generator.writers.singlenode;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.regex.Pattern;
@@ -44,7 +43,7 @@ public class SingleNodeWriter extends AbstractWriter {
 		}
 	}
 
-	public static void main(final String[] args) throws FileNotFoundException, IOException {
+	public static void main(final String[] args) throws IOException {
 
 		final BasicArgsParser argsParser = new BasicArgsParser().parse(args);
 

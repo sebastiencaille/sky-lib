@@ -22,7 +22,6 @@ import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -45,8 +44,7 @@ public interface ActionJson {
 		}
 
 		@Override
-		public ActionPoint deserialize(final JsonParser jp, final DeserializationContext ctxt)
-				throws IOException, JsonProcessingException {
+		public ActionPoint deserialize(final JsonParser jp, final DeserializationContext ctxt) throws IOException {
 
 			final TreeNode node = jp.getCodec().readTree(jp);
 

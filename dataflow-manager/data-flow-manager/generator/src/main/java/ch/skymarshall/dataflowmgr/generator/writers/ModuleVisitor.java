@@ -63,7 +63,7 @@ public class ModuleVisitor<T> {
 		return result;
 	}
 
-	public T visitField(final Module module2, final Dto dto, final Entry<String, String> field, final T context) {
+	public T visitField(final Module module, final Dto dto, final Entry<String, String> field, final T context) {
 		return context;
 	}
 

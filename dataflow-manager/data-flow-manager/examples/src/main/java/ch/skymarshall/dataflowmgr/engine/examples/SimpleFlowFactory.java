@@ -14,14 +14,13 @@ import ch.skymarshall.dataflowmgr.engine.examples.actions.IntTransferIdentity;
 import ch.skymarshall.dataflowmgr.engine.examples.actions.DumpIntTransfer;
 import ch.skymarshall.dataflowmgr.model.LocalAPRef;
 import ch.skymarshall.dataflowmgr.engine.examples.dto.IntTransfer;
-import ch.skymarshall.dataflowmgr.model.NoData;
 
 
 public class SimpleFlowFactory {
 
 	public static Flow<IntTransfer> create(final Registry registry) {
-		ActionPoint<IntTransfer, IntTransfer> intTransferIdentity = ActionPoint.simple(UUID.fromString("252663c7-305a-4867-ba24-855656d1e2f9"), new IntTransferIdentity());
-		ActionPoint<IntTransfer, ?> dumpIntTransfer = ActionPoint.terminal(UUID.fromString("6c072b83-e71f-4307-8a0d-86724e014bd6"), new DumpIntTransfer());
+		final ActionPoint<IntTransfer, IntTransfer> intTransferIdentity = ActionPoint.simple(UUID.fromString("252663c7-305a-4867-ba24-855656d1e2f9"), new IntTransferIdentity());
+		final ActionPoint<IntTransfer, ?> dumpIntTransfer = ActionPoint.terminal(UUID.fromString("6c072b83-e71f-4307-8a0d-86724e014bd6"), new DumpIntTransfer());
 		
 		final InputDecisionRule<IntTransfer,IntTransfer> intTransferIdentity_in_45d3a926_6e9c_48d1_95d9_6ffc071b8f3d = intTransferIdentity.addInputRule(UUID.fromString("45d3a926-6e9c-48d1-95d9-6ffc071b8f3d"), IntTransfer.class, (flowIn) -> true, (flowIn) -> flowIn);
 		

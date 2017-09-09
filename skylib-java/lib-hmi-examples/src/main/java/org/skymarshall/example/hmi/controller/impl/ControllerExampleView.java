@@ -16,6 +16,7 @@
 package org.skymarshall.example.hmi.controller.impl;
 
 import static org.skymarshall.example.hmi.TestObject.testObjectToString;
+import static org.skymarshall.hmi.mvc.ModelBindings.detachOnUpdateOf;
 import static org.skymarshall.hmi.mvc.converters.Converters.hmiErrorToString;
 import static org.skymarshall.hmi.mvc.converters.Converters.intToString;
 import static org.skymarshall.hmi.swing.bindings.SwingBindings.selection;
@@ -81,7 +82,7 @@ public class ControllerExampleView extends JFrame {
 		final JCheckBox booleanEditor = new JCheckBox();
 		final JLabel label = new JLabel("Am I enabled?");
 		final JLabel booleanCounter = new JLabel();
-		booleanProperty.bind(value(booleanEditor));
+		booleanProperty.bind(selection(booleanEditor));
 		booleanProperty.bindWO(label::setEnabled);
 		booleanProperty.bind(counter()).bindWO(booleanCounter::setText);
 		addGuiLineItem(booleanProperty, booleanEditor, label, booleanCounter);
@@ -132,7 +133,7 @@ public class ControllerExampleView extends JFrame {
 
 		final ObjectProperty<String> dynamicListSelectionProperty = model.getDynamicListObjectProperty();
 		dynamicListSelectionProperty.bind(selection(dynamicListSelectionEditor, String.class))
-				.detachOnUpdateOf(model.getListObjectProperty());
+				.addDependency(detachOnUpdateOf(model.getListObjectProperty()));
 		dynamicListSelectionProperty.bindWO(dynamicListSelectionCheck::setText);
 		dynamicListSelectionProperty.bind(counter()).bindWO(dynamicListSelectionCounter::setText);
 

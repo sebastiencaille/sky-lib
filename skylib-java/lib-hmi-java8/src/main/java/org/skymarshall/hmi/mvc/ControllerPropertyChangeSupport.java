@@ -15,6 +15,8 @@
  ******************************************************************************/
 package org.skymarshall.hmi.mvc;
 
+import static java.util.Arrays.stream;
+
 import java.awt.EventQueue;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -108,6 +110,10 @@ public class ControllerPropertyChangeSupport {
 
 	public void removePropertyChangeListener(final String name, final PropertyChangeListener propertyChangeListener) {
 		support.removePropertyChangeListener(name, propertyChangeListener);
+	}
+
+	public void removeAllPropertyChangeListener(final String name) {
+		stream(support.getPropertyChangeListeners(name)).forEach(support::removePropertyChangeListener);
 	}
 
 	/**

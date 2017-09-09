@@ -15,6 +15,8 @@
  ******************************************************************************/
 package org.skymarshall.example.hmi.model.impl;
 
+import static org.skymarshall.hmi.swing.bindings.SwingBindings.selection;
+
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.util.Comparator;
@@ -30,7 +32,7 @@ import org.skymarshall.example.hmi.TestObjectTableModel;
 import org.skymarshall.hmi.model.ListModel;
 import org.skymarshall.hmi.model.ListModelBindings;
 import org.skymarshall.hmi.model.views.ListViews;
-import org.skymarshall.hmi.mvc.Actions;
+import org.skymarshall.hmi.mvc.ModelBindings;
 import org.skymarshall.hmi.swing.bindings.SwingBindings;
 
 @SuppressWarnings("serial")
@@ -53,8 +55,8 @@ public class TableModelExampleView extends JFrame {
 		final TestObjectTableModel tableModel = new TestObjectTableModel(filteredModel);
 
 		final JTable table = new JTable(tableModel);
-		controller.objectSelection.bind(SwingBindings.selection(table, tableModel));
-		controller.listChangers.addListener(Actions.restoreAfterUpdate(controller.objectSelection));
+		controller.objectSelection.bind(SwingBindings.selection(table, tableModel))
+				.addDependency(ModelBindings.detachOnUpdateOf(filteredModel));
 		getContentPane().add(table, BorderLayout.CENTER);
 
 		controller.reverseOrder.bind(Converters.booleanToOrder()).bind(ListModelBindings.view(model));
@@ -78,13 +80,13 @@ public class TableModelExampleView extends JFrame {
 
 	private void addFilter(final JPanel optionsPanel) {
 		final JCheckBox filter = new JCheckBox("Filter");
-		controller.enableFilter.bindWO(filter::setEnabled);
+		controller.enableFilter.bind(selection(filter));
 		optionsPanel.add(filter);
 	}
 
 	private void addRevOrder(final JPanel optionsPanel) {
 		final JCheckBox reverse = new JCheckBox("Rev. Order");
-		controller.reverseOrder.bindWO(reverse::setEnabled);
+		controller.reverseOrder.bind(selection(reverse));
 		optionsPanel.add(reverse);
 	}
 }

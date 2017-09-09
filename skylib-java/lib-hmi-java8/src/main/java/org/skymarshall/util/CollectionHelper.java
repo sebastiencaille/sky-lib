@@ -18,11 +18,7 @@ package org.skymarshall.util;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class CollectionHelper {
-
-	private CollectionHelper() {
-
-	}
+public interface CollectionHelper {
 
 	public static void checkContent(final Collection<?> collection, final Class<?> clazz) {
 		if (!collection.stream().allMatch(clazz::isInstance)) {

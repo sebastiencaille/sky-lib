@@ -117,6 +117,10 @@ public abstract class AbstractProperty {
 		toRemove.forEach(this::removeListener);
 	}
 
+	public void removeAllListeners() {
+		propertySupport.removeAllPropertyChangeListener(name);
+	}
+
 	public boolean isModifiedBy(final Object caller) {
 		return propertySupport.isModifiedBy(name, caller);
 	}

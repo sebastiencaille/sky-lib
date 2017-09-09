@@ -22,9 +22,7 @@ import javax.swing.table.TableColumn;
 
 import org.skymarshall.hmi.swing.model.ListModelTableModel;
 
-public class JTableHelper {
-	private JTableHelper() {
-	}
+public interface JTableHelper {
 
 	public static <C extends Enum<C>> TableColumn getColumn(final JTable table, final C col) {
 		return table.getColumnModel().getColumn(((ListModelTableModel<?, C>) table.getModel()).getIndexOf(col));

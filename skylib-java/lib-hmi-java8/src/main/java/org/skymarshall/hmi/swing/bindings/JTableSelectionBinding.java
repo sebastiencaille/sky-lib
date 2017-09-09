@@ -27,6 +27,7 @@ public class JTableSelectionBinding<T> extends DefaultComponentBinding<T> {
 	private final ListModelTableModel<T, ?> model;
 
 	private boolean modelChange = false;
+	private IComponentLink<T> converter;
 
 	public JTableSelectionBinding(final JTable component, final ListModelTableModel<T, ?> model) {
 		this.table = component;
@@ -35,6 +36,7 @@ public class JTableSelectionBinding<T> extends DefaultComponentBinding<T> {
 
 	@Override
 	public void addComponentValueChangeListener(final IComponentLink<T> converter) {
+		this.converter = converter;
 		table.getSelectionModel().addListSelectionListener(e -> {
 			if (!e.getValueIsAdjusting() && !modelChange) {
 				updateSelection(converter);
@@ -61,6 +63,9 @@ public class JTableSelectionBinding<T> extends DefaultComponentBinding<T> {
 				final int index = model.getRowOf(value);
 				if (table.getSelectedRow() != index && index >= 0) {
 					table.getSelectionModel().setSelectionInterval(index, index);
+				}
+				if (index < 0) {
+					converter.setValueFromComponent(this, null);
 				}
 			}
 		}

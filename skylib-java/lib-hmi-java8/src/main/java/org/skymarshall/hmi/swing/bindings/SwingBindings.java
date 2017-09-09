@@ -65,7 +65,7 @@ public interface SwingBindings {
 
 	}
 
-	public static IComponentBinding<Boolean> value(final JCheckBox cb) {
+	public static IComponentBinding<Boolean> selection(final JCheckBox cb) {
 		return rw(cb, itemListener(cb, e -> e.getStateChange() == ItemEvent.SELECTED, e -> true), cb::setSelected,
 				false);
 	}

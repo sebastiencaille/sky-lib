@@ -42,6 +42,8 @@ public class DotFileWriter extends AbstractWriter {
 
 	private final ObjectMapper mapper = new ObjectMapper();
 
+	private String outputName;
+
 	public DotFileWriter(final File outputFolder) {
 		this.outputFolder = outputFolder;
 	}
@@ -51,16 +53,28 @@ public class DotFileWriter extends AbstractWriter {
 		return new File(outputFolder, config.modulePattern.replaceAll(Pattern.quote("${module.name}"), module.name));
 	}
 
-	private void loadStepsReport(final File report) throws IOException {
+	public void loadStepsReport(final File report) throws IOException {
 		final byte[] json = Files.readAllBytes(report.toPath());
 		this.steps = mapper.readValue(json,
 				TypeFactory.defaultInstance().constructCollectionLikeType(HashSet.class, Step.class));
 	}
 
-	private void loadExpectedSteps(final File expectedSteps) throws IOException {
+	public void loadExpectedSteps(final File expectedSteps) throws IOException {
 		final byte[] json = Files.readAllBytes(expectedSteps.toPath());
 		this.expectedSteps = mapper.readValue(json,
 				TypeFactory.defaultInstance().constructCollectionLikeType(HashSet.class, Step.class));
+	}
+
+	private void setOutputName(final String outputName) {
+		this.outputName = outputName;
+	}
+
+	@Override
+	public File getOutputFile(final Module module, final String flowname, final String ext) {
+		if (outputName != null) {
+			return super.getOutputFile(module, outputName, ext);
+		}
+		return super.getOutputFile(module, flowname, ext);
 	}
 
 	public void generate() {
@@ -76,18 +90,39 @@ public class DotFileWriter extends AbstractWriter {
 		}
 	}
 
+	public void toPng(final String flowName, final String postfix) throws IOException, InterruptedException {
+		final Module module = modules.stream().filter(m -> m.flows.stream().anyMatch(f -> flowName.equals(f.name)))
+				.findFirst().get();
+		final String[] cmdarray = new String[] { "dot", "-Tpng",
+				"-o" + getOutputFile(module, flowName + "-" + postfix, "png").toString(),
+				getOutputFile(module, flowName, "dot").toString() };
+		final Process exec = Runtime.getRuntime().exec(cmdarray);
+		int len;
+		final byte[] buffer = new byte[1024];
+		while ((len = exec.getErrorStream().read(buffer)) > 0) {
+			System.err.write(buffer, 0, len);
+		}
+		if (exec.waitFor() != 0) {
+			throw new IllegalStateException("Png generation failed");
+		}
+
+	}
+
 	public static void main(final String[] args) throws IOException {
 
 		final BasicArgsParser argsParser = new BasicArgsParser();
 		final ArgumentAcceptingOptionSpec<File> stepsReportOpt = argsParser.getParser().accepts("r", "steps report")
 				.withRequiredArg().ofType(File.class);
-		final ArgumentAcceptingOptionSpec<File> expectedStepsOpt = argsParser.getParser().accepts("e", "expected steps")
-				.availableIf(stepsReportOpt).withRequiredArg().ofType(File.class);
+		final ArgumentAcceptingOptionSpec<File> expectedStepsOpt = argsParser.getParser()
+				.accepts("e", "expected steps report").availableIf(stepsReportOpt).withRequiredArg().ofType(File.class);
+		final ArgumentAcceptingOptionSpec<String> outputOpt = argsParser.getParser()
+				.accepts("o", "output filename (no extension)").withRequiredArg().ofType(String.class);
 		argsParser.parse(args);
 
 		final File configFile = argsParser.getConfigFile();
 		final File outputFolder = argsParser.getOutputFolder();
 		final File stepsReport = argsParser.getOptions().valueOf(stepsReportOpt);
+		final String outputFile = argsParser.getOptions().valueOf(outputOpt);
 		final File expectedSteps = argsParser.getOptions().valueOf(expectedStepsOpt);
 		outputFolder.mkdirs();
 
@@ -100,6 +135,10 @@ public class DotFileWriter extends AbstractWriter {
 
 		if (expectedSteps != null) {
 			writer.loadExpectedSteps(expectedSteps);
+		}
+
+		if (outputFile != null) {
+			writer.setOutputName(outputFile);
 		}
 
 		for (final File flow : argsParser.getFlows()) {

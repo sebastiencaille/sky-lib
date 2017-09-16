@@ -21,10 +21,12 @@ import static org.skymarshall.util.helpers.ClassLoaderHelper.readUTF8Resource;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.skymarshall.util.generators.Template;
 
@@ -50,17 +52,34 @@ public abstract class AbstractWriter {
 	}
 
 	public void configure(final File configFile, final String commandLine) throws IOException {
-		try (FileInputStream configIn = new FileInputStream(configFile)) {
+		configure(() -> getFileStream(configFile), commandLine);
+	}
+
+	private InputStream getFileStream(final File configFile) {
+		try {
+			return new BufferedInputStream(new FileInputStream(configFile));
+		} catch (final FileNotFoundException e) {
+			throw new IllegalStateException("unable to load config file", e);
+		}
+	}
+
+	public void configure(final Supplier<InputStream> streamSupplier, final String commandLine) throws IOException {
+		try (InputStream configIn = streamSupplier.get()) {
 			config = jsonAdapter.readConfig(configIn);
 			this.commandLine = commandLine;
 		}
 		registry = new Registry();
 		registry.addTransformer(new Transformer());
+
 	}
 
-	protected void loadModule(final File file) throws IOException {
+	public void loadModule(final File file) throws IOException {
+		loadModule(() -> getFileStream(file));
+	}
 
-		try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(file))) {
+	public void loadModule(final Supplier<InputStream> streamSupplier) throws IOException {
+
+		try (InputStream in = streamSupplier.get()) {
 			final Module module = jsonAdapter.readApplication(in);
 			for (final Dto dto : module.dtos) {
 				registry.addDto(dto);
@@ -114,5 +133,9 @@ public abstract class AbstractWriter {
 
 	public String getCommandLine() {
 		return commandLine;
+	}
+
+	public File getOutputFile(final Module module, final String flowname, final String ext) {
+		return new File(getModuleLocation(module), flowname + "." + ext);
 	}
 }

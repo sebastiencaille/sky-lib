@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -29,12 +29,13 @@ import ch.skymarshall.dataflowmgr.engine.examples.dto.IntTransfer;
 import ch.skymarshall.dataflowmgr.engine.model.ExecutionReport;
 import ch.skymarshall.dataflowmgr.engine.sequential.FlowExecution;
 import ch.skymarshall.dataflowmgr.engine.sequential.MemRegistry;
+import ch.skymarshall.dataflowmgr.generator.writers.dot.DotFileWriter;
 import ch.skymarshall.dataflowmgr.model.Flow;
 
 public class DataFlowTest {
 
 	@Test
-	public void testNominal() throws JsonProcessingException, IOException {
+	public void testNominal() throws JsonProcessingException, IOException, InterruptedException {
 
 		final MemRegistry registry = new MemRegistry();
 		final Flow<IntTransfer> simpleFlow = SimpleFlowFactory.create(registry);
@@ -49,10 +50,19 @@ public class DataFlowTest {
 		inputData2.setIntValue(2);
 		new FlowExecution<>(simpleFlow).execute(inputData2, report, registry);
 
-		final File out = new File("src/main/reports/simple-flow-report.json");
+		final File out = new File("src/test/reports/simple-flow-report.json");
 		final ObjectMapper mapper = new ObjectMapper();
 		out.getParentFile().mkdirs();
 		Files.write(out.toPath(), mapper.writeValueAsString(report.getSteps()).getBytes());
+
+		final DotFileWriter dotFileWriter = new DotFileWriter(new File("src/test/reports"));
+		dotFileWriter.configure(
+				() -> Thread.currentThread().getContextClassLoader().getResourceAsStream("data/config.json"), "");
+		dotFileWriter.loadModule(
+				() -> Thread.currentThread().getContextClassLoader().getResourceAsStream("data/simple-flow.json"));
+		dotFileWriter.loadStepsReport(out);
+		dotFileWriter.generate();
+		dotFileWriter.toPng("SimpleFlow", "mainflow");
 
 	}
 

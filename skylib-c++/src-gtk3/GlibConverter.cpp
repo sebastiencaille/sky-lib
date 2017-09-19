@@ -36,10 +36,11 @@ string_to_ustring_converter::~string_to_ustring_converter() {
 
 }
 
-string string_to_ustring_converter::convert_component_value_to_property_value(const Glib::ustring _componentValue) {
+const string string_to_ustring_converter::convert_component_value_to_property_value(const Glib::ustring _componentValue) {
 	return _componentValue;
 }
-Glib::ustring string_to_ustring_converter::convert_property_value_to_component_value(const string _propertyValue) {
+
+const Glib::ustring string_to_ustring_converter::convert_property_value_to_component_value(const string _propertyValue) {
 	return ustring(_propertyValue);
 }
 

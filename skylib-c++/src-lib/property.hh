@@ -36,7 +36,7 @@ namespace org_skymarshall_util_hmi {
 class property {
 
 private:
-	bool attached;
+	bool m_attached;
 
 protected:
 	const string m_name;
@@ -54,6 +54,7 @@ public:
 	void remove_listener(property_listener* _listener);
 	void remove_listener(property_listener_ref _listener);
 
+	void attach();
 };
 }
 

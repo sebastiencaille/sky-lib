@@ -33,23 +33,25 @@ using namespace std;
 /**
  * Property with type
  */
-template<typename _Pt> class typed_property:
-		public property {
-private:
+template<typename _Pt> class typed_property: public property {
+
+public:
 	typedef _Pt value_type;
+
+private:
 	typedef const _Pt value_const_type;
 	value_type m_value;
 
 public:
 
-	typed_property(const string& _name, property_manager& _manager, value_type _defaultValue) :
-					property(_name, _manager),
-					m_value(_defaultValue) {
+	typed_property(const string& _name, property_manager& _manager,
+			value_type _defaultValue) :
+			property(_name, _manager), m_value(_defaultValue) {
 	}
 
-	typed_property(const char* _name, property_manager& _manager, value_type _defaultValue) :
-					property(_name, _manager),
-					m_value(_defaultValue) {
+	typed_property(const char* _name, property_manager& _manager,
+			value_type _defaultValue) :
+			property(_name, _manager), m_value(_defaultValue) {
 	}
 
 	~typed_property() {
@@ -69,9 +71,16 @@ public:
 			m_manager.fire_before_property_changed(_caller, this);
 			value_type oldValue = m_value;
 			m_value = _newValue;
-			m_manager.fire_property_changed(_caller, m_name, (const void*) &oldValue, (const void*) &_newValue);
+			m_manager.fire_property_changed(_caller, m_name,
+					(const void*) &oldValue, (const void*) &_newValue);
 			m_manager.fire_after_property_changed(_caller, this);
 		}
+	}
+
+	void attach() {
+		const _Pt current = m_value;
+		m_value = NULL;
+		set(this, current);
 	}
 
 	void force_changed(const void* _caller) {

@@ -38,12 +38,16 @@ void EntryBinding::on_changed_signal() {
 	m_converter->set_value_from_component(get_component(), text);
 }
 
-void EntryBinding::add_component_value_change_listener(converter_to<Glib::ustring>* _converter) {
+void EntryBinding::add_component_value_change_listener(component_link<Glib::ustring>* _converter) {
 	m_converter = _converter;
 	m_entry.signal_changed().connect(sigc::mem_fun(*this, &EntryBinding::on_changed_signal));
 }
 
-void EntryBinding::set_component_value(property* _source, Glib::ustring _value) {
+void EntryBinding::remove_component_value_change_listener() {
+	//m_entry.signal_changed().disconnect(sigc::mem_fun(*this));
+}
+
+void EntryBinding::set_component_value(property& _source, Glib::ustring _value) {
 	m_entry.set_text(_value);
 }
 
@@ -58,10 +62,14 @@ LabelBinding::LabelBinding(Gtk::Label& _label) :
 LabelBinding::~LabelBinding() {
 }
 
-void LabelBinding::add_component_value_change_listener(converter_to<Glib::ustring>* _converter) {
+void LabelBinding::add_component_value_change_listener(component_link<Glib::ustring>* _converter) {
 }
 
-void LabelBinding::set_component_value(property* _source, Glib::ustring _value) {
+void LabelBinding::remove_component_value_change_listener() {
+}
+
+
+void LabelBinding::set_component_value(property& _source, Glib::ustring _value) {
 	m_label.set_text(_value);
 }
 

@@ -31,6 +31,10 @@ property::~property() {
 
 }
 
+void property::attach() {
+	m_attached = true;
+}
+
 const string& property::name() const {
 	return m_name;
 }

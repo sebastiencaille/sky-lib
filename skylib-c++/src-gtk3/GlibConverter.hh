@@ -23,9 +23,10 @@
 #ifndef GLIBCONVERTER_HH_
 #define GLIBCONVERTER_HH_
 
-#include <converter.hh>
 #include <glibmm.h>
 #include <string>
+
+#include <converter_interface.hh>
 
 namespace org_skymarshall_util_hmi_glib {
 
@@ -42,8 +43,8 @@ protected:
 
 public:
 	string_to_ustring_converter();
-	string convert_component_value_to_property_value(const Glib::ustring _componentValue);
-	Glib::ustring convert_property_value_to_component_value(const string _propertyValue);
+	const string convert_component_value_to_property_value(const Glib::ustring _componentValue);
+	const Glib::ustring convert_property_value_to_component_value(const string _propertyValue);
 
 };
 

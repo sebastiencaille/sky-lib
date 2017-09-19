@@ -39,18 +39,14 @@ using namespace std;
 using namespace __gnu_cxx;
 
 class HelloWorld:
-		public Gtk::Window,
-		public binding_registry {
+		public Gtk::Window {
 
 private:
-	vector<anonymous_binding_controller*> m_controllers;
 
 public:
 	HelloWorld(controller_property<string>& _testProperty1);
 
-	virtual ~HelloWorld();
-
-	void register_binding(anonymous_binding_controller* _controller);
+	~HelloWorld();
 
 	void apply_action(property_group_actions _action, const property* _property);
 
@@ -71,10 +67,10 @@ HelloWorld::HelloWorld(controller_property<string>& _testProperty1) :
 
 	add(m_box);
 
-	_testProperty1.bind(new string_to_ustring_converter())->register_binding(this)->bind(new EntryBinding(m_entry));
+	_testProperty1.bind(new string_to_ustring_converter())->bind(new EntryBinding(m_entry));
 	m_box.pack_start(m_entry);
 
-	_testProperty1.bind(new string_to_ustring_converter())->register_binding(this)->bind(new LabelBinding(m_label));
+	_testProperty1.bind(new string_to_ustring_converter())->bind(new LabelBinding(m_label));
 	m_box.pack_start(m_label);
 
 	m_label.show();
@@ -83,9 +79,7 @@ HelloWorld::HelloWorld(controller_property<string>& _testProperty1) :
 }
 
 HelloWorld::~HelloWorld() {
-	for (int i = 0; i < m_controllers.size(); i++) {
-		delete m_controllers[i];
-	}
+
 }
 
 void HelloWorld::apply_action(property_group_actions _action, const property* _property) {
@@ -97,10 +91,6 @@ void HelloWorld::apply_action(property_group_actions _action, const property* _p
 		cout << "AFTER: " << _property->name() << endl;
 		break;
 	}
-}
-
-void HelloWorld::register_binding(anonymous_binding_controller* _controller) {
-	m_controllers.push_back(_controller);
 }
 
 void HelloWorld::on_button_clicked() {

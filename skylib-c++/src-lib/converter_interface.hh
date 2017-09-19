@@ -37,18 +37,41 @@ public:
 	virtual void set_error(const void *_source, void* _value) = 0;
 };
 
-
-/**
- * Object-side definition of the converter
- */
-template<class _CT> class converter_to {
-
-protected:
-	virtual ~converter_to() {
+class conversion_exception: logic_error {
+	conversion_exception(const string& msg) :
+			logic_error(msg) {
 	}
 
+};
+
+/**
+ * Converters
+ */
+
+template<class _FT, class _TT> class binding_converter {
 public:
-	virtual void set_value_from_component(void * _source, _CT& _componentValue) = 0;
+	virtual const _FT convert_component_value_to_property_value(
+			const _TT _componentValue) = 0;
+	virtual const _TT convert_property_value_to_component_value(
+			const _FT _propertyValue) = 0;
+
+protected:
+	virtual ~binding_converter() {
+	}
+
+};
+
+/** Binding to component */
+
+template<class _CT> class component_link {
+public:
+	virtual void set_value_from_component(void* component,
+			_CT _componentValue) = 0;
+	virtual void reload_component_value() = 0;
+	virtual void unbind() = 0;
+protected:
+	~component_link() {
+	}
 
 };
 
@@ -56,17 +79,22 @@ public:
  * Definition of component bindings
  */
 template<class _CT> class component_binding {
-protected:
-	virtual ~component_binding() {
-	}
+
 public:
 
-	virtual void add_component_value_change_listener(converter_to<_CT>* _converter) = 0;
-	virtual void set_component_value(property* _source, _CT _value) = 0;
+	virtual void add_component_value_change_listener(
+			component_link<_CT>* _converter) = 0;
+
+	virtual void remove_component_value_change_listener() = 0;
+
+
+	virtual void set_component_value(property& _source, _CT _value) = 0;
+
 	virtual void* get_component() = 0;
 
+	virtual ~component_binding() {
+	}
 };
-
 
 }
 

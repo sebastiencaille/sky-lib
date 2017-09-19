@@ -23,8 +23,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import org.skymarshall.hmi.mvc.converters.AbstractConverter;
 import org.skymarshall.hmi.mvc.converters.ConversionException;
+import org.skymarshall.hmi.mvc.converters.IConverter;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty.ErrorNotifier;
 
@@ -125,6 +125,7 @@ public class BindingChain implements IBindingController {
 
 						@Override
 						public void unbind() {
+							newBinding.removeComponentValueChangeListener();
 						}
 
 						@Override
@@ -155,7 +156,7 @@ public class BindingChain implements IBindingController {
 			return BindingChain.this;
 		}
 
-		public <NextType> EndOfChain<NextType> bind(final AbstractConverter<T, NextType> link) {
+		public <NextType> EndOfChain<NextType> bind(final IConverter<T, NextType> link) {
 			links.add(link(value -> link.convertPropertyValueToComponentValue((T) value),
 					value -> link.convertComponentValueToPropertyValue((NextType) value),
 					e -> errorNotifier.notifyError(property, HmiErrors.fromException(e))));

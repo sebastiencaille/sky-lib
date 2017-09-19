@@ -35,6 +35,11 @@ public abstract class DefaultComponentBinding<T> implements IComponentBinding<T>
 	}
 
 	@Override
+	public void removeComponentValueChangeListener() {
+		// no op
+	}
+
+	@Override
 	public void setComponentValue(final AbstractProperty source, final T value) {
 		// no op
 	}

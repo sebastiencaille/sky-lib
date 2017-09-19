@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -16,7 +16,7 @@
 package org.skymarshall.hmi.mvc;
 
 /**
- * Interface provided to the Component binding.
+ * Interface to the Component binding.
  * <p>
  *
  * @author Sebastien Caille

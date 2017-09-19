@@ -24,7 +24,7 @@ import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
 import org.skymarshall.hmi.mvc.IBindingController;
 import org.skymarshall.hmi.mvc.IComponentBinding;
 import org.skymarshall.hmi.mvc.PropertyEvent.EventKind;
-import org.skymarshall.hmi.mvc.converters.AbstractConverter;
+import org.skymarshall.hmi.mvc.converters.IConverter;
 
 /**
  * A property with a typed value.
@@ -71,7 +71,7 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 		return this;
 	}
 
-	public <C> EndOfChain<C> bind(final AbstractConverter<T, C> binding) {
+	public <C> EndOfChain<C> bind(final IConverter<T, C> binding) {
 		return createBindingChain().bind(binding);
 	}
 

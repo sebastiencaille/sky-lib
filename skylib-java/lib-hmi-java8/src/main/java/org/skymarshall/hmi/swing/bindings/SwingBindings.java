@@ -48,6 +48,12 @@ public interface SwingBindings {
 			public void addComponentValueChangeListener(final IComponentLink<T> converter) {
 				readerListener.accept(converter);
 			}
+
+			@Override
+			public void removeComponentValueChangeListener() {
+				// TODO Auto-generated method stub
+
+			}
 		};
 	}
 

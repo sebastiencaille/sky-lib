@@ -18,17 +18,17 @@ package org.skymarshall.example.hmi.model.impl;
 import org.skymarshall.example.hmi.TestObject;
 import org.skymarshall.hmi.model.views.IListView;
 import org.skymarshall.hmi.model.views.ListViews;
-import org.skymarshall.hmi.mvc.converters.AbstractConverter;
+import org.skymarshall.hmi.mvc.converters.IConverter;
 
 public interface Converters {
 
-	public static AbstractConverter<Boolean, IListView<TestObject>> booleanToFilter() {
-		return AbstractConverter.<IListView<TestObject>>either(() -> ListViews.filtered(TableModelExampleView.FILTER),
+	public static IConverter<Boolean, IListView<TestObject>> booleanToFilter() {
+		return IConverter.<IListView<TestObject>>either(() -> ListViews.filtered(TableModelExampleView.FILTER),
 				() -> ListViews.<TestObject>inherited()); // NOSONAR
 	}
 
-	public static AbstractConverter<Boolean, IListView<TestObject>> booleanToOrder() {
-		return AbstractConverter.<IListView<TestObject>>either(
+	public static IConverter<Boolean, IListView<TestObject>> booleanToOrder() {
+		return IConverter.<IListView<TestObject>>either(
 				() -> ListViews.sorted(TableModelExampleView.NORMAL_ORDER),
 				() -> ListViews.sorted(TableModelExampleView.REVERSE_ORDER));
 	}

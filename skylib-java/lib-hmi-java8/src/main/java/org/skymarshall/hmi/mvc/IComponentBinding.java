@@ -62,6 +62,12 @@ public interface IComponentBinding<T> {
 			public void setComponentValue(final AbstractProperty source, final T value) {
 				setComponentValue.setComponentValue(component, source, value);
 			}
+
+			@Override
+			public void removeComponentValueChangeListener() {
+				// TODO Auto-generated method stub
+
+			}
 		};
 	}
 
@@ -80,9 +86,17 @@ public interface IComponentBinding<T> {
 			}
 
 			@Override
+			public void removeComponentValueChangeListener() {
+				// component value never read
+			}
+
+			@Override
 			public void setComponentValue(final AbstractProperty source, final T value) {
 				setComponentValue.accept(source, value);
 			}
+
 		};
 	}
+
+	public void removeComponentValueChangeListener();
 }

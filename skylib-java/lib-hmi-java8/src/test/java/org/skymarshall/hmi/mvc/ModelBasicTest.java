@@ -72,6 +72,11 @@ public class ModelBasicTest extends Assert {
 			this.onlyConverter = converter;
 		}
 
+		@Override
+		public void removeComponentValueChangeListener() {
+			// nope
+		}
+
 		public void setValue(final String value) {
 			onlyConverter.setValueFromComponent(this, value);
 		}

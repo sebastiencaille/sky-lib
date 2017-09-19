@@ -105,6 +105,11 @@ public abstract class ObjectControllerTableModel<ObjectType, ModelType extends I
 		}
 
 		@Override
+		public void removeComponentValueChangeListener() {
+			this.singleListener = null;
+		}
+
+		@Override
 		public void setComponentValue(final org.skymarshall.hmi.mvc.properties.AbstractProperty source, final U value) {
 			this.loadedValue = value;
 		}

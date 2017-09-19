@@ -40,7 +40,7 @@ public abstract class AbstractProperty {
 	@FunctionalInterface
 	public interface ErrorNotifier {
 		void notifyError(Object source, HmiError error);
-	};
+	}
 
 	public static ErrorNotifier emptyErrorNotifier() {
 		return (s, e) -> {

@@ -19,10 +19,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.skymarshall.hmi.mvc.converters.AbstractConverter;
+import org.skymarshall.hmi.mvc.converters.IConverter;
 import org.skymarshall.hmi.mvc.converters.ConversionException;
 
-public class DynamicListContentConverter implements AbstractConverter<String, List<String>> {
+public class DynamicListContentConverter implements IConverter<String, List<String>> {
 
 	@Override
 	public List<String> convertPropertyValueToComponentValue(final String propertyValue) {
@@ -38,8 +38,9 @@ public class DynamicListContentConverter implements AbstractConverter<String, Li
 			return Arrays.asList("B", "C", "D");
 		case "C":
 			return Arrays.asList("C", "D", "E");
+		default:
+			return Collections.emptyList();
 		}
-		return Collections.emptyList();
 	}
 
 	@Override

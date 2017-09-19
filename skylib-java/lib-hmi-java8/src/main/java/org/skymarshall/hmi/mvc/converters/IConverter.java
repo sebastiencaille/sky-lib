@@ -17,14 +17,14 @@ package org.skymarshall.hmi.mvc.converters;
 
 import java.util.function.Supplier;
 
-public interface AbstractConverter<PropertyType, ComponentType> {
+public interface IConverter<PropertyType, ComponentType> {
 
 	ComponentType convertPropertyValueToComponentValue(final PropertyType propertyValue);
 
 	PropertyType convertComponentValueToPropertyValue(ComponentType componentValue) throws ConversionException;
 
-	public static <C> AbstractConverter<Boolean, C> either(final Supplier<C> either, final Supplier<C> or) {
-		return new AbstractConverter<Boolean, C>() {
+	public static <C> IConverter<Boolean, C> either(final Supplier<C> either, final Supplier<C> or) {
+		return new IConverter<Boolean, C>() {
 
 			@Override
 			public C convertPropertyValueToComponentValue(final Boolean propertyValue) {

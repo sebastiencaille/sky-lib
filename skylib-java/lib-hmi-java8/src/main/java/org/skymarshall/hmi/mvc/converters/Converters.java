@@ -29,9 +29,9 @@ public final class Converters {
 
 	}
 
-	public static <T, C> AbstractConverter<T, C> converter(final Function<T, C> prop2comp,
+	public static <T, C> IConverter<T, C> converter(final Function<T, C> prop2comp,
 			final FunctionWithException<C, T, ConversionException> comp2prop) {
-		return new AbstractConverter<T, C>() {
+		return new IConverter<T, C>() {
 
 			@Override
 			public C convertPropertyValueToComponentValue(final T propertyValue) {
@@ -46,9 +46,9 @@ public final class Converters {
 		};
 	}
 
-	public static <C> AbstractConverter<Integer, C> intConverter(final Function<Integer, C> prop2comp,
+	public static <C> IConverter<Integer, C> intConverter(final Function<Integer, C> prop2comp,
 			final FunctionWithException<C, Integer, ConversionException> comp2prop) {
-		return new AbstractConverter<Integer, C>() {
+		return new IConverter<Integer, C>() {
 
 			@Override
 			public C convertPropertyValueToComponentValue(final Integer propertyValue) {
@@ -63,9 +63,9 @@ public final class Converters {
 		};
 	}
 
-	public static <C> AbstractConverter<Long, C> longConverter(final Function<Long, C> prop2comp,
+	public static <C> IConverter<Long, C> longConverter(final Function<Long, C> prop2comp,
 			final FunctionWithException<C, Long, ConversionException> comp2prop) {
-		return new AbstractConverter<Long, C>() {
+		return new IConverter<Long, C>() {
 
 			@Override
 			public C convertPropertyValueToComponentValue(final Long propertyValue) {
@@ -80,9 +80,9 @@ public final class Converters {
 		};
 	}
 
-	public static <C> AbstractConverter<Boolean, C> booleanConverter(final Function<Boolean, C> prop2comp,
+	public static <C> IConverter<Boolean, C> booleanConverter(final Function<Boolean, C> prop2comp,
 			final FunctionWithException<C, Boolean, ConversionException> comp2prop) {
-		return new AbstractConverter<Boolean, C>() {
+		return new IConverter<Boolean, C>() {
 
 			@Override
 			public C convertPropertyValueToComponentValue(final Boolean propertyValue) {
@@ -97,9 +97,9 @@ public final class Converters {
 		};
 	}
 
-	public static <C> AbstractConverter<Float, C> floatConverter(final Function<Float, C> prop2comp,
+	public static <C> IConverter<Float, C> floatConverter(final Function<Float, C> prop2comp,
 			final FunctionWithException<C, Float, ConversionException> comp2prop) {
-		return new AbstractConverter<Float, C>() {
+		return new IConverter<Float, C>() {
 
 			@Override
 			public C convertPropertyValueToComponentValue(final Float propertyValue) {
@@ -114,27 +114,27 @@ public final class Converters {
 		};
 	}
 
-	public static AbstractConverter<HmiError, String> hmiErrorToString() {
+	public static IConverter<HmiError, String> hmiErrorToString() {
 		return new HmiErrorToStringConverter();
 	}
 
-	public static <T> AbstractConverter<T, T> identity() {
+	public static <T> IConverter<T, T> identity() {
 		return converter(Function.identity(), Lambda.<T, ConversionException>identity());
 	}
 
-	public static AbstractConverter<Integer, Integer> intIdentity() {
+	public static IConverter<Integer, Integer> intIdentity() {
 		return intConverter(Function.identity(), Lambda.<Integer, ConversionException>identity());
 	}
 
-	public static AbstractConverter<Long, Long> longIdentity() {
+	public static IConverter<Long, Long> longIdentity() {
 		return longConverter(Function.identity(), Lambda.<Long, ConversionException>identity());
 	}
 
-	public static AbstractConverter<Boolean, Boolean> booleanIdentity() {
+	public static IConverter<Boolean, Boolean> booleanIdentity() {
 		return booleanConverter(Function.identity(), Lambda.<Boolean, ConversionException>identity());
 	}
 
-	public static AbstractConverter<Float, Float> floatIdentity() {
+	public static IConverter<Float, Float> floatIdentity() {
 		return floatConverter(Function.identity(), Lambda.<Float, ConversionException>identity());
 	}
 
@@ -156,29 +156,29 @@ public final class Converters {
 		};
 	}
 
-	public static AbstractConverter<String, String> stringToString() {
+	public static IConverter<String, String> stringToString() {
 		return converter(s -> (s != null && !s.isEmpty()) ? s : null, s -> s != null ? s : "");
 	}
 
-	public static AbstractConverter<Integer, String> intToString() {
+	public static IConverter<Integer, String> intToString() {
 		return intConverter(i -> Integer.toString(i), numberToString(Integer::parseInt)); // NOSONAR
 	}
 
-	public static <T, U> AbstractConverter<T, U> writeOnly(final Function<T, U> prop2comp) {
+	public static <T, U> IConverter<T, U> writeOnly(final Function<T, U> prop2comp) {
 		return converter(prop2comp, o -> {
 			throw new IllegalStateException("Write only");
 		});
 	}
 
-	public static <T> AbstractConverter<T, String> objectToString() {
+	public static <T> IConverter<T, String> objectToString() {
 		return writeOnly(Object::toString);
 	}
 
-	public static <T extends Number> AbstractConverter<T, String> numberToSize() {
+	public static <T extends Number> IConverter<T, String> numberToSize() {
 		return writeOnly(Utils::toSize);
 	}
 
-	public static <T> AbstractConverter<T, Boolean> isNotNull() {
+	public static <T> IConverter<T, Boolean> isNotNull() {
 		return writeOnly(Objects::nonNull);
 	}
 

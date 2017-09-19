@@ -16,7 +16,7 @@
 package org.skymarshall.example.hmi;
 
 import org.skymarshall.hmi.HmiObject;
-import org.skymarshall.hmi.mvc.converters.AbstractConverter;
+import org.skymarshall.hmi.mvc.converters.IConverter;
 import org.skymarshall.hmi.mvc.converters.Converters;
 
 @HmiObject
@@ -36,7 +36,7 @@ public class TestObject {
 		return aFirstValue + " / " + aSecondValue;
 	}
 
-	public static AbstractConverter<TestObject, String> testObjectToString() {
+	public static IConverter<TestObject, String> testObjectToString() {
 		return Converters.writeOnly(o -> o.aFirstValue != null ? o.aFirstValue : "");
 	}
 }

@@ -46,7 +46,7 @@ import javax.swing.JTextField;
 
 import org.skymarshall.example.hmi.TestObject;
 import org.skymarshall.example.hmi.TestObjectTableModel;
-import org.skymarshall.hmi.mvc.converters.AbstractConverter;
+import org.skymarshall.hmi.mvc.converters.IConverter;
 import org.skymarshall.hmi.mvc.converters.ConversionException;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 import org.skymarshall.hmi.mvc.properties.BooleanProperty;
@@ -182,7 +182,7 @@ public class ControllerExampleView extends JFrame {
 		pack();
 	}
 
-	private static class CounterBinding<T> implements AbstractConverter<T, String> {
+	private static class CounterBinding<T> implements IConverter<T, String> {
 
 		private int count = 0;
 
@@ -221,7 +221,7 @@ public class ControllerExampleView extends JFrame {
 				final Rectangle clipBounds = g.getClipBounds();
 				final int y = clipBounds.height / 2;
 				g.drawLine(5, y, getWidth() - 10, y);
-			};
+			}
 
 			@Override
 			protected void paintChildren(final Graphics g) {

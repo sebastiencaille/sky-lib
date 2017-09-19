@@ -53,6 +53,11 @@ public abstract class BoundFilter<DataType, FilterObjectType> extends AbstractDy
 	}
 
 	@Override
+	public void removeComponentValueChangeListener() {
+		// Read only
+	}
+
+	@Override
 	public void setComponentValue(final AbstractProperty source, final FilterObjectType value) {
 		filterObject = value;
 		owner.viewUpdated();

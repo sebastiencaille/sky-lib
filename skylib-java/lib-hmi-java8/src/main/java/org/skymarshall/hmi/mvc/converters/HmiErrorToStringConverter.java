@@ -17,7 +17,7 @@ package org.skymarshall.hmi.mvc.converters;
 
 import org.skymarshall.hmi.mvc.HmiErrors.HmiError;
 
-public class HmiErrorToStringConverter implements AbstractConverter<HmiError, String> {
+public class HmiErrorToStringConverter implements IConverter<HmiError, String> {
 
 	@Override
 	public HmiError convertComponentValueToPropertyValue(final String text) {

@@ -24,7 +24,7 @@
 #define CONVERTERINTERFACE_HH_
 
 #include <string>
-#include <typed_property.hh>
+#include "typed_property.hh"
 
 namespace org_skymarshall_util_hmi {
 
@@ -38,8 +38,8 @@ public:
 };
 
 class conversion_exception: logic_error {
-	conversion_exception(const string& msg) :
-			logic_error(msg) {
+	conversion_exception(const string& _msg) :
+			logic_error(_msg) {
 	}
 
 };
@@ -48,12 +48,12 @@ class conversion_exception: logic_error {
  * Converters
  */
 
-template<class _FT, class _TT> class binding_converter {
+template<class _Ft, class _Tt> class binding_converter {
 public:
-	virtual const _FT convert_component_value_to_property_value(
-			const _TT _componentValue) = 0;
-	virtual const _TT convert_property_value_to_component_value(
-			const _FT _propertyValue) = 0;
+	virtual const _Ft convert_component_value_to_property_value(
+			const _Tt _componentValue) = 0;
+	virtual const _Tt convert_property_value_to_component_value(
+			const _Ft _propertyValue) = 0;
 
 protected:
 	virtual ~binding_converter() {
@@ -65,7 +65,7 @@ protected:
 
 template<class _CT> class component_link {
 public:
-	virtual void set_value_from_component(void* component,
+	virtual void set_value_from_component(void* _component,
 			_CT _componentValue) = 0;
 	virtual void reload_component_value() = 0;
 	virtual void unbind() = 0;

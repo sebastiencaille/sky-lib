@@ -33,16 +33,16 @@ namespace org_skymarshall_util_hmi {
  * Property intended to be used with a controller.<p>
  * Basically includes an error property.
  */
-template<class _PT> class controller_property: public typed_property<_PT> {
+template<class _Pt> class controller_property: public typed_property<_Pt> {
 private:
-	_PT m_value;
+	_Pt m_value;
 	error_notifier* m_errorNotifier;
 
 public:
 
 	controller_property(const string& _name, property_manager& _manager,
-			_PT _defaultValue, error_notifier* _errorNotifier) :
-			typed_property<_PT>(_name, _manager, _defaultValue), m_errorNotifier(
+			_Pt _defaultValue, error_notifier* _errorNotifier) :
+			typed_property<_Pt>(_name, _manager, _defaultValue), m_errorNotifier(
 					_errorNotifier) {
 	}
 
@@ -50,19 +50,19 @@ public:
 		// todo
 	}
 
-	template<class _NT> binding_chain<_PT>::end_of_chain<_NT>* bind(
-			binding_converter<_PT, _NT>* _converter) {
-		binding_chain<_PT>* chain = new binding_chain<_PT>(*this);
+	template<class _Nt> binding_chain<_Pt>::end_of_chain<_Nt>* bind(
+			binding_converter<_Pt, _Nt>* const _converter) {
+		binding_chain<_Pt>* chain = new binding_chain<_Pt>(*this);
 		return chain->bindProperty(
-				property_setter_func_type<typed_property<_PT>, _PT>(this,
-						&typed_property<_PT>::set))->bind(_converter);
+				property_setter_func_type<typed_property<_Pt>, _Pt>(this,
+						&typed_property<_Pt>::set))->bind(_converter);
 	}
 
-	template<class _Ct> void* bind(component_binding<_Ct>* _componentBinding) {
-		binding_chain<_PT>* chain = new binding_chain<_PT>(*this);
+	template<class _Ct> component_link<_Ct>* bind(component_binding<_Ct>* const _componentBinding) {
+		binding_chain<_Pt>* chain = new binding_chain<_Pt>(*this);
 		return chain->bindProperty(
-				property_setter_func_type<typed_property<_PT>, _PT>(this,
-						&typed_property<_PT>::set))->bind(_componentBinding);
+				property_setter_func_type<typed_property<_Pt>, _Pt>(this,
+						&typed_property<_Pt>::set))->bind(_componentBinding);
 	}
 
 };

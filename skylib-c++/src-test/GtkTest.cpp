@@ -26,8 +26,8 @@
 #include <GlibConverter.hh>
 #include <GtkBindings.hh>
 
-#include <controller_property.hh>
-#include <input_error_property_impl.hh>
+#include "controller_property.hh"
+#include "input_error_property_impl.hh"
 
 #include <property_group.hh>
 

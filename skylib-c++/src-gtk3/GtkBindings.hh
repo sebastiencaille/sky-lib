@@ -35,12 +35,12 @@ class EntryBinding:
 		public component_binding<Glib::ustring> {
 private:
 	Gtk::Entry& m_entry;
-	component_link<Glib::ustring>* m_converter;
+	component_link<Glib::ustring>* m_componentLink;
 	void on_changed_signal();
 public:
 	EntryBinding(Gtk::Entry& entry);
 	virtual ~EntryBinding();
-	virtual void add_component_value_change_listener(component_link<Glib::ustring>* _converter);
+	virtual void add_component_value_change_listener(component_link<Glib::ustring>* _componentLink);
 	virtual void remove_component_value_change_listener();
 	virtual void set_component_value(property& _source, Glib::ustring _value);
 	virtual void* get_component();
@@ -50,12 +50,12 @@ class LabelBinding:
 		public component_binding<Glib::ustring> {
 private:
 	Gtk::Label& m_label;
-	component_link<Glib::ustring>* m_converter;
+	component_link<Glib::ustring>* m_componentLink;
 	void on_changed_signal();
 public:
 	LabelBinding(Gtk::Label& entry);
 	virtual ~LabelBinding();
-	virtual void add_component_value_change_listener(component_link<Glib::ustring>* _converter);
+	virtual void add_component_value_change_listener(component_link<Glib::ustring>* _componentLink);
 	virtual void remove_component_value_change_listener();
 	virtual void set_component_value(property& _source, Glib::ustring _value);
 	virtual void* get_component();

@@ -26,54 +26,54 @@ namespace org_skymarshall_util_hmi_gtk {
 
 using namespace org_skymarshall_util_hmi;
 
-EntryBinding::EntryBinding(Gtk::Entry& _entry) :
+entry_binding::entry_binding(Gtk::Entry& _entry) :
 				m_entry(_entry) {
 }
 
-EntryBinding::~EntryBinding() {
+entry_binding::~entry_binding() {
 }
 
-void EntryBinding::on_changed_signal() {
+void entry_binding::on_changed_signal() {
 	Glib::ustring text(m_entry.get_text());
 	m_componentLink->set_value_from_component(get_component(), text);
 }
 
-void EntryBinding::add_component_value_change_listener(component_link<Glib::ustring>* _componentLink) {
+void entry_binding::add_component_value_change_listener(component_link<Glib::ustring>* _componentLink) {
 	m_componentLink = _componentLink;
-	m_entry.signal_changed().connect(sigc::mem_fun(*this, &EntryBinding::on_changed_signal));
+	m_entry.signal_changed().connect(sigc::mem_fun(*this, &entry_binding::on_changed_signal));
 }
 
-void EntryBinding::remove_component_value_change_listener() {
+void entry_binding::remove_component_value_change_listener() {
 	//m_entry.signal_changed().disconnect(sigc::mem_fun(*this));
 }
 
-void EntryBinding::set_component_value(property& _source, Glib::ustring _value) {
+void entry_binding::set_component_value(property& _source, Glib::ustring _value) {
 	m_entry.set_text(_value);
 }
 
-void* EntryBinding::get_component() {
+void* entry_binding::get_component() {
 	return (void*) &m_entry;
 }
 
-LabelBinding::LabelBinding(Gtk::Label& _label) :
+label_binding::label_binding(Gtk::Label& _label) :
 				m_label(_label) {
 }
 
-LabelBinding::~LabelBinding() {
+label_binding::~label_binding() {
 }
 
-void LabelBinding::add_component_value_change_listener(component_link<Glib::ustring>* _componentLink) {
+void label_binding::add_component_value_change_listener(component_link<Glib::ustring>* _componentLink) {
 }
 
-void LabelBinding::remove_component_value_change_listener() {
+void label_binding::remove_component_value_change_listener() {
 }
 
 
-void LabelBinding::set_component_value(property& _source, Glib::ustring _value) {
+void label_binding::set_component_value(property& _source, Glib::ustring _value) {
 	m_label.set_text(_value);
 }
 
-void* LabelBinding::get_component() {
+void* label_binding::get_component() {
 	return (void*) &m_label;
 }
 

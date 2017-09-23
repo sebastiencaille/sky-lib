@@ -23,7 +23,7 @@
 #ifndef GTKBINDINGS_H_
 #define GTKBINDINGS_H_
 
-#include <converter_interface.hh>
+#include <binding_interface.hh>
 #include <glibmm.h>
 #include <gtkmm.h>
 
@@ -31,30 +31,29 @@ namespace org_skymarshall_util_hmi_gtk {
 
 using namespace org_skymarshall_util_hmi;
 
-class EntryBinding:
+class entry_binding:
 		public component_binding<Glib::ustring> {
 private:
 	Gtk::Entry& m_entry;
-	component_link<Glib::ustring>* m_componentLink;
+	component_link<Glib::ustring>* m_componentLink = NULL;
 	void on_changed_signal();
 public:
-	EntryBinding(Gtk::Entry& entry);
-	virtual ~EntryBinding();
+	entry_binding(Gtk::Entry& entry);
+	virtual ~entry_binding();
 	virtual void add_component_value_change_listener(component_link<Glib::ustring>* _componentLink);
 	virtual void remove_component_value_change_listener();
 	virtual void set_component_value(property& _source, Glib::ustring _value);
 	virtual void* get_component();
 };
 
-class LabelBinding:
+class label_binding:
 		public component_binding<Glib::ustring> {
 private:
 	Gtk::Label& m_label;
-	component_link<Glib::ustring>* m_componentLink;
 	void on_changed_signal();
 public:
-	LabelBinding(Gtk::Label& entry);
-	virtual ~LabelBinding();
+	label_binding(Gtk::Label& entry);
+	virtual ~label_binding();
 	virtual void add_component_value_change_listener(component_link<Glib::ustring>* _componentLink);
 	virtual void remove_component_value_change_listener();
 	virtual void set_component_value(property& _source, Glib::ustring _value);

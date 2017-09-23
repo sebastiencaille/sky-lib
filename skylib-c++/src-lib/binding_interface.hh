@@ -96,6 +96,35 @@ public:
 	}
 };
 
+class binding_chain_dependency;
+
+class binding_chain_controller {
+public:
+	virtual void attach() = 0;
+
+	virtual void detach() = 0;
+
+	virtual property& get_property() = 0;
+
+	virtual void unbind() = 0;
+
+	virtual binding_chain_controller* add_dependency(binding_chain_dependency* dependency) = 0;
+
+	virtual ~binding_chain_controller() {
+
+	}
+};
+
+class binding_chain_dependency {
+public:
+	virtual void register_dep(binding_chain_controller* chain) = 0;
+
+	virtual void unbind() = 0;
+
+	virtual ~binding_chain_dependency() {
+	}
+};
+
 }
 
 #endif /* CONVERTERINTERFACE_HH_ */

@@ -38,17 +38,58 @@ using namespace org_skymarshall_util_hmi_gtk;
 using namespace std;
 using namespace __gnu_cxx;
 
-class HelloWorld:
-		public Gtk::Window {
+class HelloWorld: public Gtk::Window {
 
 private:
 
+	class TestStringPropertyListener {
+
+		int m_i;
+
+	public:
+		TestStringPropertyListener(int _i) {
+			m_i = _i;
+		}
+
+		void propertyChanged(const void* _source, const string& _name,
+				const void* _oldValue, const void* _newValue) {
+			cout << " TestStringPropertyListener " << m_i << " - "
+					<< *(string*) _oldValue << " -> " << *(string*) _newValue
+					<< endl;
+		}
+
+	};
+
+	class dep_test: public binding_chain_dependency {
+
+		TestStringPropertyListener m_testListener;
+		property_listener_func_type<TestStringPropertyListener> m_listener;
+		binding_chain_controller* m_controller;
+
+	public:
+		dep_test() :
+				m_testListener(1), m_listener(m_testListener,
+						&TestStringPropertyListener::propertyChanged), m_controller(
+				NULL) {
+		}
+
+		void register_dep(binding_chain_controller *_controller) {
+			m_controller = _controller;
+			_controller->get_property().add_listener(&m_listener);
+		}
+
+		void unbind() {
+			m_controller->get_property().remove_listener(&m_listener);
+		}
+
+	};
 public:
 	HelloWorld(controller_property<string>& _testProperty1);
 
-	~HelloWorld();
+	virtual ~HelloWorld();
 
-	void apply_action(property_group_actions _action, const property* _property);
+	void apply_action(property_group_actions _action,
+			const property* _property);
 
 protected:
 	//Signal handlers:
@@ -58,19 +99,27 @@ protected:
 	Gtk::Entry m_entry;
 	Gtk::Label m_label;
 	Gtk::Box m_box;
+
+	typedef list<binding_chain_controller*>::iterator binding_chain_controller_iter;
+	list<binding_chain_controller*> m_bindings;
 };
 
 HelloWorld::HelloWorld(controller_property<string>& _testProperty1) :
-				m_box(Gtk::ORIENTATION_VERTICAL) {
+		m_box(Gtk::ORIENTATION_VERTICAL) {
 	// Sets the border width of the window.
 	set_border_width(10);
 
 	add(m_box);
 
-	_testProperty1.bind(new string_to_ustring_converter())->bind(new EntryBinding(m_entry));
+	m_bindings.push_back(
+			_testProperty1.bind(new string_to_ustring_converter())->bind(
+					new entry_binding(m_entry))->add_dependency(
+					new dep_test()));
 	m_box.pack_start(m_entry);
 
-	_testProperty1.bind(new string_to_ustring_converter())->bind(new LabelBinding(m_label));
+	m_bindings.push_back(
+			_testProperty1.bind(new string_to_ustring_converter())->bind(
+					new label_binding(m_label)));
 	m_box.pack_start(m_label);
 
 	m_label.show();
@@ -79,10 +128,15 @@ HelloWorld::HelloWorld(controller_property<string>& _testProperty1) :
 }
 
 HelloWorld::~HelloWorld() {
-
+	for (binding_chain_controller_iter iter = m_bindings.begin();
+			iter != m_bindings.end(); iter++) {
+		(*iter)->unbind();
+	}
+	m_bindings.clear();
 }
 
-void HelloWorld::apply_action(property_group_actions _action, const property* _property) {
+void HelloWorld::apply_action(property_group_actions _action,
+		const property* _property) {
 	switch (_action) {
 	case BEFORE_FIRE:
 		cout << "BEFORE: " << _property->name() << endl;
@@ -97,43 +151,29 @@ void HelloWorld::on_button_clicked() {
 	std::cout << "Hello World" << std::endl;
 }
 
-class TestStringPropertyListener {
-
-	int m_i;
-
-public:
-	TestStringPropertyListener(int _i) {
-		m_i = _i;
-	}
-
-	void propertyChanged(const void* _source, const string& _name, const void* _oldValue, const void* _newValue) {
-		cout << m_i << " - " << *(string*) _oldValue << " -> " << *(string*) _newValue << endl;
-	}
-
-};
-
 int main(int argc, char *argv[]) {
 
-	Glib::RefPtr < Gtk::Application > app = Gtk::Application::create(argc, argv, "org.gtkmm.example");
+	Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(argc, argv,
+			"org.gtkmm.example");
 
 	property_manager manager;
-	input_error_property* errorProperty = new input_error_property(string("Errors"), manager);
+	input_error_property* errorProperty = new input_error_property(
+			string("Errors"), manager);
 
-	controller_property<string> testProperty1(string("TestProp1"), manager, string(""), errorProperty);
+	controller_property<string> testProperty1(string("TestProp1"), manager,
+			string(""), errorProperty);
 	HelloWorld helloworld(testProperty1);
 
-	controller_property<int> testProperty2("TestProp2", manager, 0, errorProperty);
-
-	property_group propGroup;
-	propGroup.add_property(testProperty1);
-	propGroup.add_action(new action_func_type<HelloWorld>(&helloworld, &HelloWorld::apply_action));
+	controller_property<int> testProperty2("TestProp2", manager, 0,
+			errorProperty);
+//
+//	property_group propGroup;
+//	propGroup.add_property(testProperty1);
+//	propGroup.add_action(
+//			new action_func_type<HelloWorld>(&helloworld,
+//					&HelloWorld::apply_action));
 
 	testProperty2.set(NULL, 1);
-
-	TestStringPropertyListener testListener(1);
-	property_listener_func_type<TestStringPropertyListener> listener(testListener,
-			&TestStringPropertyListener::propertyChanged);
-	testProperty1.add_listener(&listener);
 
 	//Shows the window and returns when it is closed.
 	return app->run(helloworld);

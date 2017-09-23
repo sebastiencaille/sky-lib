@@ -10,15 +10,15 @@ public interface ModelBindings {
 	public static class DetachOnPropertyUpdate implements IBindingChainDependency, IPropertyEventListener {
 
 		private final AbstractProperty property;
-		private BindingChain chain;
+		private IBindingController controller;
 
 		public DetachOnPropertyUpdate(final AbstractProperty property) {
 			this.property = property;
 		}
 
 		@Override
-		public void register(final BindingChain chain) {
-			this.chain = chain;
+		public void register(final IBindingController controller) {
+			this.controller = controller;
 			property.addListener(this);
 		}
 
@@ -31,10 +31,10 @@ public interface ModelBindings {
 		public void propertyModified(final Object caller, final PropertyEvent event) {
 			switch (event.getKind()) {
 			case BEFORE:
-				chain.detach();
+				controller.detach();
 				break;
 			case AFTER:
-				chain.attach();
+				controller.attach();
 				break;
 			default:
 				// ignore
@@ -61,15 +61,15 @@ public interface ModelBindings {
 			implements IBindingChainDependency {
 
 		private final org.skymarshall.hmi.model.ListModel<T> model;
-		private BindingChain chain;
+		private IBindingController controller;
 
 		public DetachOnUpdateOfListModelUpdate(final ListModel<T> model) {
 			this.model = model;
 		}
 
 		@Override
-		public void register(final BindingChain chain) {
-			this.chain = chain;
+		public void register(final IBindingController controller) {
+			this.controller = controller;
 			model.addListener(this);
 		}
 
@@ -80,27 +80,27 @@ public interface ModelBindings {
 
 		@Override
 		public void mutates() {
-			chain.detach();
+			controller.detach();
 		}
 
 		@Override
 		public void valuesSet(final ListEvent<T> event) {
-			chain.attach();
+			controller.attach();
 		}
 
 		@Override
 		public void valuesCleared(final ListEvent<T> event) {
-			chain.attach();
+			controller.attach();
 		}
 
 		@Override
 		public void valuesAdded(final ListEvent<T> event) {
-			chain.attach();
+			controller.attach();
 		}
 
 		@Override
 		public void valuesRemoved(final ListEvent<T> event) {
-			chain.attach();
+			controller.attach();
 		}
 
 	}

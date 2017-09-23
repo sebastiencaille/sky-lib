@@ -23,10 +23,10 @@
 #ifndef GLIBCONVERTER_HH_
 #define GLIBCONVERTER_HH_
 
+#include <binding_interface.hh>
 #include <glibmm.h>
 #include <string>
 
-#include <converter_interface.hh>
 
 namespace org_skymarshall_util_hmi_glib {
 

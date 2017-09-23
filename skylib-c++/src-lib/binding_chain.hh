@@ -8,12 +8,13 @@
 #ifndef BINDING_CHAIN_HH_
 #define BINDING_CHAIN_HH_
 
-#include<vector>
+#include <vector>
+#include <vector>
 
-#include <property.hh>
-#include <property_listener.hh>
+#include "binding_interface.hh"
+#include "property.hh"
+#include "property_listener.hh"
 
-#include <converter_interface.hh>
 
 namespace org_skymarshall_util_hmi {
 
@@ -81,7 +82,7 @@ public:
 	}
 };
 
-template<class _Pt> class binding_chain {
+template<class _Pt> class binding_chain: public binding_chain_controller {
 
 private:
 	vector<binding_storage*> m_links;
@@ -92,9 +93,40 @@ private:
 
 	bool m_transmit = true;
 
-	//private ErrorNotifier errorNotifier;
+	error_notifier* m_errorNotifier;
 
-	//private List<IBindingChainDependency> dependencies = new ArrayList<>();
+	typedef list<binding_chain_dependency*>::iterator binding_chain_dependency_iter;
+	list<binding_chain_dependency*> m_dependencies;
+
+
+	void attach() {
+		m_transmit = true;
+		m_property.attach();
+	}
+
+
+	void detach() {
+		m_transmit = false;
+	}
+
+	property& get_property() {
+		return m_property;
+	}
+
+
+	binding_chain_controller* add_dependency(binding_chain_dependency* _dependency) {
+		m_dependencies.push_back(_dependency);
+		_dependency->register_dep(this);
+		return this;
+	}
+
+	void unbind() {
+		for (binding_chain_dependency_iter iter = m_dependencies.begin();iter != m_dependencies.end(); iter++) {
+			(*iter)->unbind();
+		}
+		m_dependencies.clear();
+	}
+
 
 	/**
 	 * Endpoint connected to a property
@@ -241,14 +273,14 @@ private:
 				*(_Pt*) new_value);
 	}
 public:
-	binding_chain(property& c_property) :
-			m_property(c_property), m_valueUpdateListener(this,
+	binding_chain(property& _property, error_notifier* _notifier) :
+			m_property(_property), m_errorNotifier(_notifier), m_valueUpdateListener(this,
 					&binding_chain::propagate_property_change) {
 	}
 
 	template<class _T> class end_of_chain;
 
-	end_of_chain<_Pt>* bindProperty(
+	end_of_chain<_Pt>* bind_property(
 			property_setter_func_type<typed_property<_Pt>, _Pt> _setter) {
 		m_property.add_listener(&m_valueUpdateListener);
 		property_link* const link = new property_link(*this, _setter);
@@ -270,7 +302,7 @@ public:
 		return new end_of_chain<_TT>(*this);
 	}
 
-	template<class _Ct> component_link<_Ct>* bind(
+	template<class _Ct> binding_chain_controller* bind(
 			component_binding<_Ct>* _componentBinding) {
 		chain_component_link<_Ct>* const link = new chain_component_link<_Ct>(
 				*this, _componentBinding);
@@ -278,7 +310,7 @@ public:
 				new binding_storage(
 						(void*) static_cast<binding_forward<_Ct>*>(link),
 						(void*) static_cast<binding_backward<_Ct>*>(link)));
-		return link->m_componentLink;
+		return this;
 	}
 
 	template<class _T> class end_of_chain {
@@ -295,7 +327,7 @@ public:
 			return m_bindingChain.bind<_T, _NT>(converter);
 		}
 
-		template<class _Ct> component_link<_Ct>* bind(
+		template<class _Ct> binding_chain_controller* bind(
 				component_binding<_Ct>* _componentBinding) {
 			// delete itself ?
 			return m_bindingChain.bind(_componentBinding);

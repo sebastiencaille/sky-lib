@@ -24,8 +24,8 @@
 								<option id="gnu.cpp.compiler.exe.debug.option.optimization.level.1892626411" name="Optimization Level" superClass="gnu.cpp.compiler.exe.debug.option.optimization.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.exe.debug.option.debugging.level.675820641" name="Debug Level" superClass="gnu.cpp.compiler.exe.debug.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.include.paths.196011170" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="/usr/include/glibmm-2.4/glibmm"/>
-									<listOptionValue builtIn="false" value="/usr/include/gtkmm-3.0/gtkmm"/>
+									<listOptionValue builtIn="false" value="/usr/include/glibmm-2.4/"/>
+									<listOptionValue builtIn="false" value="/usr/include/gtkmm-3.0/"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src-lib}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src-hmicontroller}&quot;"/>
 								</option>

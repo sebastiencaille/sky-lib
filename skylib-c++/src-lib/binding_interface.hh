@@ -20,8 +20,8 @@
  *      Author: scaille
  */
 
-#ifndef CONVERTERINTERFACE_HH_
-#define CONVERTERINTERFACE_HH_
+#ifndef BINDINGINTERFACE_HH_
+#define BINDINGINTERFACE_HH_
 
 #include <string>
 #include "typed_property.hh"
@@ -87,7 +87,6 @@ public:
 
 	virtual void remove_component_value_change_listener() = 0;
 
-
 	virtual void set_component_value(property& _source, _CT _value) = 0;
 
 	virtual void* get_component() = 0;
@@ -108,7 +107,8 @@ public:
 
 	virtual void unbind() = 0;
 
-	virtual binding_chain_controller* add_dependency(binding_chain_dependency* dependency) = 0;
+	virtual binding_chain_controller* add_dependency(
+			binding_chain_dependency* dependency) = 0;
 
 	virtual ~binding_chain_controller() {
 
@@ -125,6 +125,75 @@ public:
 	}
 };
 
-}
+/** Actions */
 
-#endif /* CONVERTERINTERFACE_HH_ */
+enum property_group_actions {
+	BEFORE_FIRE, AFTER_FIRE
+};
+
+class action {
+public:
+	virtual ~action() {
+	}
+
+	virtual void apply(property_group_actions _action,
+			const property* _property) = 0;
+
+};
+
+template<class _T> class action_func_type: public action {
+public:
+	typedef void (_T::*action_function)(property_group_actions _action,
+			const property* _property);
+
+private:
+	action_function const m_action;
+	_T* const m_object;
+
+public:
+	action_func_type(_T* _object, action_function _action) :
+			m_object(_object), m_action(_action) {
+	}
+
+	void apply(property_group_actions _action, const property* _property) {
+		(m_object->*m_action)(_action, _property);
+	}
+
+};
+
+template<class _T> class action_dependency: public binding_chain_dependency {
+private:
+	property* m_targetProperty;
+	action_func_type<_T>* m_action;
+	property_listener_func_type<action_dependency<_T>>* m_listener = NULL;
+
+	void action_before(const void* caller, const property* _property) {
+		m_action->apply(BEFORE_FIRE, _property);
+	}
+
+	void action_after(const void* caller, const property* _property) {
+		m_action->apply(AFTER_FIRE, _property);
+	}
+
+public:
+
+	action_dependency(property* _targetProperty, action_func_type<_T>* _action) :
+			m_targetProperty(_targetProperty), m_action(_action) {
+	}
+
+	void register_dep(binding_chain_controller* _chain) {
+		m_listener = new property_listener_func_type<action_dependency<_T>>(
+				*this, &action_dependency<_T>::action_before,
+				&action_dependency<_T>::action_after);
+		m_targetProperty->add_listener(m_listener);
+	}
+
+	virtual void unbind() {
+		m_targetProperty->remove_listener(m_listener);
+	}
+
+	virtual ~action_dependency() {
+	}
+};
+}
+#endif /* BINDINGINTERFACE_HH_ */

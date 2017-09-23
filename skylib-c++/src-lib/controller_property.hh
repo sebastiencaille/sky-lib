@@ -23,8 +23,8 @@
 #ifndef CONTROLLERPROPERTY_HH_
 #define CONTROLLERPROPERTY_HH_
 
-#include <binding_interface.hh>
-#include <typed_property.hh>
+#include "binding_interface.hh"
+#include "typed_property.hh"
 #include "binding_chain.hh"
 
 namespace org_skymarshall_util_hmi {
@@ -44,10 +44,6 @@ public:
 			_Pt _defaultValue, error_notifier* _errorNotifier) :
 			typed_property<_Pt>(_name, _manager, _defaultValue), m_errorNotifier(
 					_errorNotifier) {
-	}
-
-	void attach() {
-		// todo
 	}
 
 	template<class _Nt> binding_chain<_Pt>::end_of_chain<_Nt>* bind(

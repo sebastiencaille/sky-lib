@@ -32,8 +32,8 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-#include <property_manager.hh>
-#include <typed_property.hh>
+#include "property_manager.hh"
+#include "typed_property.hh""
 #include "list_model_interfaces.hh"
 
 namespace org_skymarshall_util_hmi {

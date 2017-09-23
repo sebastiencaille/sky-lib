@@ -29,8 +29,6 @@
 #include "controller_property.hh"
 #include "input_error_property_impl.hh"
 
-#include <property_group.hh>
-
 using namespace org_skymarshall_util_hmi;
 using namespace org_skymarshall_util_hmi_glib;
 using namespace org_skymarshall_util_hmi_gtk;
@@ -117,9 +115,12 @@ HelloWorld::HelloWorld(controller_property<string>& _testProperty1) :
 					new dep_test()));
 	m_box.pack_start(m_entry);
 
+	action_dependency<HelloWorld>* dep = new action_dependency<HelloWorld>(
+			&_testProperty1,
+			new action_func_type<HelloWorld>(this, &HelloWorld::apply_action));
 	m_bindings.push_back(
 			_testProperty1.bind(new string_to_ustring_converter())->bind(
-					new label_binding(m_label)));
+					new label_binding(m_label))->add_dependency(dep));
 	m_box.pack_start(m_label);
 
 	m_label.show();
@@ -165,17 +166,9 @@ int main(int argc, char *argv[]) {
 	HelloWorld helloworld(testProperty1);
 
 	controller_property<int> testProperty2("TestProp2", manager, 0,
-			errorProperty);
-//
-//	property_group propGroup;
-//	propGroup.add_property(testProperty1);
-//	propGroup.add_action(
-//			new action_func_type<HelloWorld>(&helloworld,
-//					&HelloWorld::apply_action));
-
+			errorProperty)		;
 	testProperty2.set(NULL, 1);
 
-	//Shows the window and returns when it is closed.
 	return app->run(helloworld);
 }
 

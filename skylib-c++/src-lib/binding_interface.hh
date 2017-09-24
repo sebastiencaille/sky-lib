@@ -30,19 +30,15 @@ namespace org_skymarshall_util_hmi {
 
 using namespace std;
 
+typedef logic_error* logic_error_ptr;
+
 class error_notifier {
 public:
 	virtual ~error_notifier() {
 	}
-	virtual void set_error(const void *_source, void* _value) = 0;
+	virtual void set_error(const void *_source, const logic_error_ptr _e) = 0;
 };
 
-class conversion_exception: logic_error {
-	conversion_exception(const string& _msg) :
-			logic_error(_msg) {
-	}
-
-};
 
 /**
  * Converters
@@ -51,14 +47,30 @@ class conversion_exception: logic_error {
 template<class _Ft, class _Tt> class binding_converter {
 public:
 	virtual const _Ft convert_component_value_to_property_value(
-			const _Tt _componentValue) = 0;
+			const _Tt _componentValue) throw (logic_error_ptr) = 0;
 	virtual const _Tt convert_property_value_to_component_value(
-			const _Ft _propertyValue) = 0;
+			const _Ft _propertyValue) throw (logic_error_ptr) = 0;
 
 protected:
 	virtual ~binding_converter() {
 	}
 
+};
+
+class logic_error_to_string: public binding_converter<logic_error_ptr, string> {
+public:
+	const logic_error_ptr convert_component_value_to_property_value(
+			const string _componentValue) throw (logic_error_ptr) {
+		// nonsense
+		return NULL;
+	}
+	const string convert_property_value_to_component_value(
+			const logic_error_ptr _propertyValue) throw (logic_error_ptr) {
+		return string(_propertyValue->what());
+	}
+	~logic_error_to_string() {
+
+	}
 };
 
 /** Binding to component */

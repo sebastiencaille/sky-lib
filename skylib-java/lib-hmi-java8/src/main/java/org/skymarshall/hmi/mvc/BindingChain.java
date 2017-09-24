@@ -41,8 +41,6 @@ public class BindingChain implements IBindingController {
 		Object toComponent(Object value) throws ConversionException;
 
 		Object toProperty(Object component, Object value) throws ConversionException;
-
-		void handleException(ConversionException e);
 	}
 
 	@FunctionalInterface
@@ -50,8 +48,7 @@ public class BindingChain implements IBindingController {
 		Object apply(Object value) throws ConversionException;
 	}
 
-	private static Link link(final ConversionFunction prop2Comp, final ConversionFunction comp2Prop,
-			final Consumer<ConversionException> exceptionConsumer) {
+	private static Link link(final ConversionFunction prop2Comp, final ConversionFunction comp2Prop) {
 		return new Link() {
 
 			@Override
@@ -62,11 +59,6 @@ public class BindingChain implements IBindingController {
 			@Override
 			public Object toProperty(final Object component, final Object value) throws ConversionException {
 				return comp2Prop.apply(value);
-			}
-
-			@Override
-			public void handleException(final ConversionException e) {
-				exceptionConsumer.accept(e);
 			}
 
 		};
@@ -99,8 +91,6 @@ public class BindingChain implements IBindingController {
 				newBinding.accept((T) v);
 				return null;
 			}, v -> {
-				throw readOnlyException();
-			}, e -> {
 				throw readOnlyException();
 			}));
 			return BindingChain.this;
@@ -147,10 +137,6 @@ public class BindingChain implements IBindingController {
 					return value;
 				}
 
-				@Override
-				public void handleException(final ConversionException e) {
-					// nope
-				}
 			});
 			property.attach();
 			return BindingChain.this;
@@ -158,22 +144,20 @@ public class BindingChain implements IBindingController {
 
 		public <NextType> EndOfChain<NextType> bind(final IConverter<T, NextType> link) {
 			links.add(link(value -> link.convertPropertyValueToComponentValue((T) value),
-					value -> link.convertComponentValueToPropertyValue((NextType) value),
-					e -> errorNotifier.notifyError(property, HmiErrors.fromException(e))));
+					value -> link.convertComponentValueToPropertyValue((NextType) value)));
 			return new EndOfChain<>();
 		}
 
 		public <NextType> EndOfChain<NextType> bind(final Function<T, NextType> prop2Comp,
 				final Function<NextType, T> comp2Prop) {
-			links.add(link(value -> prop2Comp.apply((T) value), value -> comp2Prop.apply((NextType) value),
-					e -> errorNotifier.notifyError(property, HmiErrors.fromException(e))));
+			links.add(link(value -> prop2Comp.apply((T) value), value -> comp2Prop.apply((NextType) value)));
 			return new EndOfChain<>();
 		}
 
 		public <NextType> EndOfChain<NextType> bind(final Function<T, NextType> prop2Comp) {
 			links.add(link(value -> prop2Comp.apply((T) value), value -> {
 				throw new ConversionException("Read only");
-			}, e -> errorNotifier.notifyError(property, HmiErrors.fromException(e))));
+			}));
 			return new EndOfChain<>();
 		}
 
@@ -195,7 +179,7 @@ public class BindingChain implements IBindingController {
 			try {
 				value = link.toComponent(value);
 			} catch (final ConversionException e) {
-				link.handleException(e);
+				errorNotifier.notifyError(property, HmiErrors.fromException(e));
 				return;
 			}
 		}
@@ -208,7 +192,7 @@ public class BindingChain implements IBindingController {
 			try {
 				value = links.get(i).toProperty(component, value);
 			} catch (final ConversionException e) {
-				links.get(i).handleException(e);
+				errorNotifier.notifyError(property, HmiErrors.fromException(e));
 				return;
 			}
 		}
@@ -228,10 +212,6 @@ public class BindingChain implements IBindingController {
 				return value;
 			}
 
-			@Override
-			public void handleException(final ConversionException e) {
-				// no conversion
-			}
 		});
 		return new EndOfChain<>();
 	}

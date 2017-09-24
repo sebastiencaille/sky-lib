@@ -27,20 +27,22 @@ using namespace std;
 using namespace Glib;
 using namespace org_skymarshall_util_hmi;
 
-string_to_ustring_converter::string_to_ustring_converter() :
-				binding_converter() {
+string_to_ustring::string_to_ustring() :
+		binding_converter() {
 
 }
 
-string_to_ustring_converter::~string_to_ustring_converter() {
+string_to_ustring::~string_to_ustring() {
 
 }
 
-const string string_to_ustring_converter::convert_component_value_to_property_value(const Glib::ustring _componentValue) {
+const string string_to_ustring::convert_component_value_to_property_value(
+		const Glib::ustring _componentValue) throw (logic_error*) {
 	return _componentValue;
 }
 
-const Glib::ustring string_to_ustring_converter::convert_property_value_to_component_value(const string _propertyValue) {
+const Glib::ustring string_to_ustring::convert_property_value_to_component_value(
+		const string _propertyValue) throw (logic_error*) {
 	return ustring(_propertyValue);
 }
 

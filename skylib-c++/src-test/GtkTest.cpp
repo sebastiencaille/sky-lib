@@ -28,6 +28,7 @@
 
 #include "controller_property.hh"
 #include "input_error_property_impl.hh"
+#include "int_converters.hh"
 
 using namespace org_skymarshall_util_hmi;
 using namespace org_skymarshall_util_hmi_glib;
@@ -82,7 +83,9 @@ private:
 
 	};
 public:
-	HelloWorld(controller_property<string>& _testProperty1);
+	HelloWorld(controller_property<string>& _testProperty1,
+			controller_property<int>& _testProperty2,
+			input_error_property& _errorProperty);
 
 	virtual ~HelloWorld();
 
@@ -95,14 +98,18 @@ protected:
 
 	//Member widgets:
 	Gtk::Entry m_entry;
+	Gtk::Entry m_intEntry;
 	Gtk::Label m_label;
+	Gtk::Label m_error;
 	Gtk::Box m_box;
 
 	typedef list<binding_chain_controller*>::iterator binding_chain_controller_iter;
 	list<binding_chain_controller*> m_bindings;
 };
 
-HelloWorld::HelloWorld(controller_property<string>& _testProperty1) :
+HelloWorld::HelloWorld(controller_property<string>& _testProperty1,
+		controller_property<int>& _testProperty2,
+		input_error_property& _errorProperty) :
 		m_box(Gtk::ORIENTATION_VERTICAL) {
 	// Sets the border width of the window.
 	set_border_width(10);
@@ -110,7 +117,7 @@ HelloWorld::HelloWorld(controller_property<string>& _testProperty1) :
 	add(m_box);
 
 	m_bindings.push_back(
-			_testProperty1.bind(new string_to_ustring_converter())->bind(
+			_testProperty1.bind(new string_to_ustring())->bind(
 					new entry_binding(m_entry))->add_dependency(
 					new dep_test()));
 	m_box.pack_start(m_entry);
@@ -119,12 +126,26 @@ HelloWorld::HelloWorld(controller_property<string>& _testProperty1) :
 			&_testProperty1,
 			new action_func_type<HelloWorld>(this, &HelloWorld::apply_action));
 	m_bindings.push_back(
-			_testProperty1.bind(new string_to_ustring_converter())->bind(
+			_testProperty1.bind(new string_to_ustring())->bind(
 					new label_binding(m_label))->add_dependency(dep));
 	m_box.pack_start(m_label);
 
+	m_bindings.push_back(
+			_testProperty2.bind(new int_to_string())->bind(
+					new string_to_ustring())->bind(
+					new entry_binding(m_intEntry)));
+	m_box.pack_start(m_intEntry);
+
+	m_bindings.push_back(
+			_errorProperty.bind(new logic_error_to_string())->bind(
+					new string_to_ustring())->bind(
+					new label_binding(m_error)));
+	m_box.pack_start(m_error);
+
 	m_label.show();
 	m_entry.show();
+	m_intEntry.show();
+	m_error.show();
 	m_box.show();
 }
 
@@ -158,16 +179,15 @@ int main(int argc, char *argv[]) {
 			"org.gtkmm.example");
 
 	property_manager manager;
-	input_error_property* errorProperty = new input_error_property(
-			string("Errors"), manager);
+	input_error_property errorProperty(string("Errors"), manager);
 
 	controller_property<string> testProperty1(string("TestProp1"), manager,
-			string(""), errorProperty);
-	HelloWorld helloworld(testProperty1);
+			string(""), &errorProperty);
 
 	controller_property<int> testProperty2("TestProp2", manager, 0,
-			errorProperty)		;
+			&errorProperty);
 	testProperty2.set(NULL, 1);
+	HelloWorld helloworld(testProperty1, testProperty2, errorProperty);
 
 	return app->run(helloworld);
 }

@@ -50,10 +50,9 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src-lib"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src-hmicontroller"/>
-						<entry excluding="GtkTest.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src-test"/>
 						<entry excluding="GtkBindings.cpp|GlibConverter.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src-gtk3"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src-lib"/>
+						<entry excluding="GtkTest.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src-test"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -101,10 +100,9 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src-hmicontroller"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src-lib"/>
 						<entry excluding="src-test/GtkTest.cpp|src-gtk3|src-hmicontroller|src-impl|src-lib" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry excluding="GtkBindings.cpp|GlibConverter.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src-gtk3"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src-lib"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

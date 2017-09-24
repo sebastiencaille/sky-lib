@@ -15,7 +15,6 @@
 #include "property.hh"
 #include "property_listener.hh"
 
-
 namespace org_skymarshall_util_hmi {
 
 using namespace std;
@@ -23,7 +22,7 @@ using namespace std;
 template<class _Tt> class binding_backward {
 public:
 	virtual void to_property(int index, const void* component, const _Tt value)
-			throw (conversion_exception) = 0;
+			throw (logic_error_ptr) = 0;
 	virtual ~binding_backward() {
 	}
 
@@ -31,8 +30,7 @@ public:
 
 template<class _Ft> class binding_forward {
 public:
-	virtual void to_component(int index, const _Ft value)
-			throw (conversion_exception) = 0;
+	virtual void to_component(int index, const _Ft value) throw (logic_error_ptr) = 0;
 	virtual ~binding_forward() {
 	}
 
@@ -48,17 +46,6 @@ public:
 	}
 
 	~binding_storage() {
-	}
-};
-
-template<class _Ft, class _Tt> class abstract_binding_link: public binding_forward<
-		_Ft>,
-		public binding_backward<_Tt> {
-public:
-
-	virtual void handle_exception(const conversion_exception& e) = 0;
-
-	virtual ~abstract_binding_link() {
 	}
 };
 
@@ -98,12 +85,10 @@ private:
 	typedef list<binding_chain_dependency*>::iterator binding_chain_dependency_iter;
 	list<binding_chain_dependency*> m_dependencies;
 
-
 	void attach() {
 		m_transmit = true;
 		m_property.attach();
 	}
-
 
 	void detach() {
 		m_transmit = false;
@@ -113,25 +98,26 @@ private:
 		return m_property;
 	}
 
-
-	binding_chain_controller* add_dependency(binding_chain_dependency* _dependency) {
+	binding_chain_controller* add_dependency(
+			binding_chain_dependency* _dependency) {
 		m_dependencies.push_back(_dependency);
 		_dependency->register_dep(this);
 		return this;
 	}
 
 	void unbind() {
-		for (binding_chain_dependency_iter iter = m_dependencies.begin();iter != m_dependencies.end(); iter++) {
+		for (binding_chain_dependency_iter iter = m_dependencies.begin();
+				iter != m_dependencies.end(); iter++) {
 			(*iter)->unbind();
 		}
 		m_dependencies.clear();
 	}
 
-
 	/**
-	 * Endpoint connected to a property
+	 * Link connected to a property (first of the list)
 	 */
-	class property_link: public abstract_binding_link<_Pt, _Pt> {
+	class property_link: public binding_forward<_Pt>, public binding_backward<
+			_Pt> {
 		binding_chain& m_chain;
 		property_setter_func_type<typed_property<_Pt>, _Pt> m_setter;
 	public:
@@ -141,18 +127,13 @@ private:
 		}
 
 		void to_property(int _index, const void* _component, const _Pt _value)
-				throw (conversion_exception) {
+				throw (logic_error_ptr) {
 			m_setter.set(_component, _value);
 		}
 
-		void to_component(int _index, const _Pt _value)
-				throw (conversion_exception) {
+		void to_component(int _index, const _Pt _value) throw (logic_error_ptr) {
 			((binding_forward<_Pt>*) m_chain.m_links[_index + 1]->m_binding_forward)->to_component(
 					_index + 1, _value);
-		}
-
-		void handle_exception(const conversion_exception& e) {
-			// no conversion
 		}
 
 		~property_link() {
@@ -160,8 +141,9 @@ private:
 		}
 	};
 
-	template<class _Ft, class _Tt> class converter_link: public abstract_binding_link<
-			_Ft, _Tt> {
+	/** Link that convert some values */
+	template<class _Ft, class _Tt> class converter_link: public binding_forward<
+			_Ft>, public binding_backward<_Tt> {
 		binding_chain& m_chain;
 		binding_converter<_Ft, _Tt>* m_converter;
 	public:
@@ -171,15 +153,14 @@ private:
 		}
 
 		void to_property(int _index, const void* _component, const _Tt _value)
-				throw (conversion_exception) {
+				throw (logic_error_ptr) {
 			((binding_backward<_Ft>*) m_chain.m_links[_index - 1]->m_binding_backward)->to_property(
 					_index - 1, _component,
 					m_converter->convert_component_value_to_property_value(
 							_value));
 		}
 
-		void to_component(int _index, const _Ft _value)
-				throw (conversion_exception) {
+		void to_component(int _index, const _Ft _value) throw (logic_error_ptr) {
 
 			((binding_forward<_Tt>*) m_chain.m_links[_index + 1]->m_binding_forward)->to_component(
 					_index + 1,
@@ -187,15 +168,14 @@ private:
 							_value));
 		}
 
-		void handle_exception(const conversion_exception& e) {
-			// no conversion
-		}
-
 		~converter_link() {
 
 		}
 	};
 
+	/**
+	 * Interface given to the component's link, allowing the component binding to interact with the chain
+	 */
 	template<class _Ct> class component_link_impl: public component_link<_Ct> {
 		binding_chain& m_chain;
 
@@ -207,13 +187,17 @@ private:
 				m_chain(_chain), m_componentBinding(_componentBinding) {
 		}
 
-		void set_value_from_component(void* component, _Ct componentValue) {
+		void set_value_from_component(void* _component, _Ct _componentValue) {
 			if (!m_chain.m_transmit) {
 				return;
 			}
 			const int lastIndex = m_chain.m_links.size() - 1;
-			((binding_backward<_Ct>*) m_chain.m_links[lastIndex]->m_binding_backward)->to_property(
-					lastIndex, component, componentValue);
+			try {
+				((binding_backward<_Ct>*) m_chain.m_links[lastIndex]->m_binding_backward)->to_property(
+						lastIndex, _component, _componentValue);
+			} catch (const logic_error_ptr _e) {
+				m_chain.m_errorNotifier->set_error(_component, _e);
+			}
 		}
 
 		void unbind() {
@@ -230,8 +214,8 @@ private:
 		}
 	};
 
-	template<class _Ct> class chain_component_link: public abstract_binding_link<
-			_Ct, _Ct> {
+	template<class _Ct> class chain_component_link: public binding_forward<_Ct>,
+			public binding_backward<_Ct> {
 
 		friend class binding_chain;
 
@@ -249,33 +233,33 @@ private:
 					m_componentLink);
 		}
 
-		void to_component(int index, _Ct value) throw (conversion_exception) {
+		void to_component(int index, _Ct value) throw (logic_error_ptr) {
 			m_componentBinding->set_component_value(m_chain.m_property, value);
 		}
 
 		void to_property(int index, const void* component, const _Ct value)
-				throw (conversion_exception) {
+				throw (logic_error_ptr) {
 			((binding_backward<_Ct>*) m_chain.m_links[index - 1]->m_binding_backward)->to_property(
 					index - 1, component, value);
 		}
-
-		void handle_exception(const conversion_exception& e) {
-			// nope
-		}
 	};
 
-	void propagate_property_change(const void* property, const string& name,
-			const void* old_value, const void* new_value) {
+	void propagate_property_change(const void* _property, const string& _name,
+			const void* old_value, const void* _new_value) {
 		if (!m_transmit) {
 			return;
 		}
-		((binding_forward<_Pt>*) m_links[0]->m_binding_forward)->to_component(0,
-				*(_Pt*) new_value);
+		try {
+			((binding_forward<_Pt>*) m_links[0]->m_binding_forward)->to_component(
+					0, *(_Pt*) _new_value);
+		} catch (const logic_error_ptr _e) {
+			m_errorNotifier->set_error(_property, _e);
+		}
 	}
 public:
 	binding_chain(property& _property, error_notifier* _notifier) :
-			m_property(_property), m_errorNotifier(_notifier), m_valueUpdateListener(this,
-					&binding_chain::propagate_property_change) {
+			m_property(_property), m_errorNotifier(_notifier), m_valueUpdateListener(
+					this, &binding_chain::propagate_property_change) {
 	}
 
 	template<class _T> class end_of_chain;

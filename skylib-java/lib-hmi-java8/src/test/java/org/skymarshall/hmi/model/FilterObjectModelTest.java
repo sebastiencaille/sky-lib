@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -34,8 +34,8 @@ public class FilterObjectModelTest extends Assert {
 
 	@Test
 	public void testInsert() {
-		final ListModel<TestObject> baseModel = new ListModel<>(ListViews.sorted(COMPARATOR));
-		final ListModel<TestObject> model = new ListModel<>(baseModel, ListViews.filtered(FILTER));
+		final ListModel<TestObject> baseModel = new RootListModel<>(ListViews.sorted(COMPARATOR));
+		final ListModel<TestObject> model = new ChildListModel<>(baseModel, ListViews.filtered(FILTER));
 
 		baseModel.insert(new TestObject(1));
 		baseModel.insert(new TestObject(3));
@@ -47,7 +47,7 @@ public class FilterObjectModelTest extends Assert {
 
 	@Test
 	public void testFind() {
-		final ListModel<TestObject> baseModel = new ListModel<>(ListViews.sorted(COMPARATOR));
+		final ListModel<TestObject> baseModel = new RootListModel<>(ListViews.sorted(COMPARATOR));
 
 		baseModel.insert(new TestObject(1));
 		baseModel.insert(new TestObject(4));
@@ -57,8 +57,8 @@ public class FilterObjectModelTest extends Assert {
 
 	@Test
 	public void testUpdate() {
-		final ListModel<TestObject> baseModel = new ListModel<>(ListViews.sorted(COMPARATOR));
-		final ListModel<TestObject> model = new ListModel<>(baseModel, ListViews.filtered(FILTER));
+		final ListModel<TestObject> baseModel = new RootListModel<>(ListViews.sorted(COMPARATOR));
+		final ListModel<TestObject> model = new ChildListModel<>(baseModel, ListViews.filtered(FILTER));
 
 		baseModel.insert(new TestObject(1));
 		baseModel.insert(new TestObject(4));
@@ -77,39 +77,39 @@ public class FilterObjectModelTest extends Assert {
 
 	@Test
 	public void testFindForEdition() {
-		final ListModel<TestObject> baseModel = new ListModel<>(ListViews.sorted(COMPARATOR));
+		final ListModel<TestObject> baseModel = new RootListModel<>(ListViews.sorted(COMPARATOR));
 
 		baseModel.insert(new TestObject(1));
 		baseModel.insert(new TestObject(4));
 
-		final TestObject edition = baseModel.findForEdition(new TestObject(1));
-		assertSame(baseModel.getValueAt(0), edition);
-		edition.val = 5;
-		baseModel.stopEditingValue();
+		try (IEdition<TestObject> edition = baseModel.findForEdition(new TestObject(1))) {
+			assertSame(baseModel.getValueAt(0), edition.edited());
+			edition.edited().val = 5;
+		}
 		checkModel(baseModel, 4, 5);
 	}
 
 	@Test
 	public void testFindOrCreateForEdition() {
-		final ListModel<TestObject> baseModel = new ListModel<>(ListViews.sorted(COMPARATOR));
+		final ListModel<TestObject> baseModel = new RootListModel<>(ListViews.sorted(COMPARATOR));
 
 		baseModel.insert(new TestObject(4));
 
-		final TestObject edition = baseModel.findOrCreateForEdition(new TestObject(1));
-		edition.val = 5;
-		baseModel.stopEditingValue();
+		try (IEdition<TestObject> edition = baseModel.findOrCreateForEdition(new TestObject(1))) {
+			edition.edited().val = 5;
+		}
 		checkModel(baseModel, 4, 5);
 
-		final TestObject edition2 = baseModel.findOrCreateForEdition(new TestObject(5));
-		edition2.val = 3;
-		baseModel.stopEditingValue();
+		try (final IEdition<TestObject> edition2 = baseModel.findOrCreateForEdition(new TestObject(5))) {
+			edition2.edited().val = 3;
+		}
 		checkModel(baseModel, 3, 4);
 	}
 
 	@Test
 	public void testDelete() {
-		final ListModel<TestObject> baseModel = new ListModel<>(ListViews.sorted(COMPARATOR));
-		final ListModel<TestObject> model = new ListModel<>(baseModel, ListViews.filtered(FILTER));
+		final ListModel<TestObject> baseModel = new RootListModel<>(ListViews.sorted(COMPARATOR));
+		final ListModel<TestObject> model = new ChildListModel<>(baseModel, ListViews.filtered(FILTER));
 
 		model.insert(new TestObject(1));
 		final TestObject toAddAndRemove = new TestObject(2);
@@ -123,8 +123,8 @@ public class FilterObjectModelTest extends Assert {
 
 	@Test
 	public void testChangeFilter() {
-		final ListModel<TestObject> baseModel = new ListModel<>(ListViews.sorted(COMPARATOR));
-		final ListModel<TestObject> model = new ListModel<>(baseModel, ListViews.filtered(FILTER));
+		final ListModel<TestObject> baseModel = new RootListModel<>(ListViews.sorted(COMPARATOR));
+		final ListModel<TestObject> model = new ChildListModel<>(baseModel, ListViews.filtered(FILTER));
 
 		baseModel.insert(new TestObject(1));
 		baseModel.insert(new TestObject(3));

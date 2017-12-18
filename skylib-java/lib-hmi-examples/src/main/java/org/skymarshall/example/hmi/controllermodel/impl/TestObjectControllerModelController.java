@@ -15,17 +15,19 @@
  ******************************************************************************/
 package org.skymarshall.example.hmi.controllermodel.impl;
 
+import static org.skymarshall.hmi.swing.SwingHelper.actionListener;
+
 import java.awt.event.ActionListener;
 
 import org.skymarshall.example.hmi.TestObject;
 import org.skymarshall.hmi.model.ListModel;
+import org.skymarshall.hmi.model.RootListModel;
 import org.skymarshall.hmi.model.views.ListViews;
 import org.skymarshall.hmi.mvc.HmiController;
-import org.skymarshall.hmi.swing.SwingHelper;
 
 public class TestObjectControllerModelController extends HmiController {
 
-	final ListModel<TestObject> model = new ListModel<>(
+	final ListModel<TestObject> model = new RootListModel<>(
 			ListViews.sorted((o1, o2) -> o1.aSecondValue - o2.aSecondValue));
 	private final TestObjectControllerModelFrameModel tableModel;
 
@@ -45,7 +47,7 @@ public class TestObjectControllerModelController extends HmiController {
 	}
 
 	public ActionListener getCommitAction() {
-		return SwingHelper.actionListener(e -> {
+		return actionListener(e -> {
 			tableModel.commit();
 			model.forEach(System.out::println); // NOSONAR
 		});

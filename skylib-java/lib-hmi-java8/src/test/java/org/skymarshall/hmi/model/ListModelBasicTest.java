@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -44,8 +44,8 @@ public class ListModelBasicTest extends Assert {
 
 	@Test
 	public void testInsert() {
-		final ListModel<TestObject> model = new ListModel<>(VIEW);
-		final ListModel<TestObject> model2 = new ListModel<>(model);
+		final ListModel<TestObject> model = new RootListModel<>(VIEW);
+		final ListModel<TestObject> model2 = new ChildListModel<>(model);
 
 		model.insert(new TestObject(1));
 		model.insert(new TestObject(3));
@@ -57,8 +57,8 @@ public class ListModelBasicTest extends Assert {
 
 	@Test
 	public void testUpdate() {
-		final ListModel<TestObject> model = new ListModel<>(VIEW);
-		final ListModel<TestObject> model2 = new ListModel<>(model);
+		final ListModel<TestObject> model = new RootListModel<>(VIEW);
+		final ListModel<TestObject> model2 = new ChildListModel<>(model);
 
 		model.insert(new TestObject(1));
 		model.insert(new TestObject(3));
@@ -78,8 +78,8 @@ public class ListModelBasicTest extends Assert {
 
 	@Test
 	public void testDelete() {
-		final ListModel<TestObject> model = new ListModel<>(VIEW);
-		final ListModel<TestObject> model2 = new ListModel<>(model);
+		final ListModel<TestObject> model = new RootListModel<>(VIEW);
+		final ListModel<TestObject> model2 = new ChildListModel<>(model);
 
 		model.insert(new TestObject(1));
 		final TestObject toAddAndRemove = new TestObject(2);
@@ -93,8 +93,8 @@ public class ListModelBasicTest extends Assert {
 
 	@Test
 	public void testChangeSorting() {
-		final ListModel<TestObject> model = new ListModel<>(VIEW);
-		final ListModel<TestObject> model2 = new ListModel<>(model);
+		final ListModel<TestObject> model = new RootListModel<>(VIEW);
+		final ListModel<TestObject> model2 = new ChildListModel<>(model);
 
 		model.insert(new TestObject(1));
 		model.insert(new TestObject(2));

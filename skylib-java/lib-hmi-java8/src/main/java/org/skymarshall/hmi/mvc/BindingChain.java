@@ -137,6 +137,19 @@ public class BindingChain implements IBindingController {
 					return value;
 				}
 
+				private void propagateComponentChange(final Object component, final Object componentValue) {
+					final int pos = links.size();
+					Object value = componentValue;
+					for (int i = pos - 1; i >= 0; i--) {
+						try {
+							value = links.get(i).toProperty(component, value);
+						} catch (final ConversionException e) {
+							errorNotifier.notifyError(property, HmiErrors.fromException(e));
+							return;
+						}
+					}
+				}
+
 			});
 			property.attach();
 			return BindingChain.this;
@@ -178,19 +191,6 @@ public class BindingChain implements IBindingController {
 		for (final Link link : links) {
 			try {
 				value = link.toComponent(value);
-			} catch (final ConversionException e) {
-				errorNotifier.notifyError(property, HmiErrors.fromException(e));
-				return;
-			}
-		}
-	}
-
-	private void propagateComponentChange(final Object component, final Object componentValue) {
-		final int pos = links.size();
-		Object value = componentValue;
-		for (int i = pos - 1; i >= 0; i--) {
-			try {
-				value = links.get(i).toProperty(component, value);
 			} catch (final ConversionException e) {
 				errorNotifier.notifyError(property, HmiErrors.fromException(e));
 				return;

@@ -15,12 +15,12 @@
  ******************************************************************************/
 package org.skymarshall.example.hmi.model.impl;
 
+import static org.skymarshall.hmi.mvc.ModelBindings.detachOnUpdateOf;
 import static org.skymarshall.hmi.swing.bindings.SwingBindings.selection;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.util.Comparator;
-import java.util.function.Predicate;
 
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -29,18 +29,16 @@ import javax.swing.JTable;
 
 import org.skymarshall.example.hmi.TestObject;
 import org.skymarshall.example.hmi.TestObjectTableModel;
+import org.skymarshall.hmi.model.ChildListModel;
 import org.skymarshall.hmi.model.ListModel;
-import org.skymarshall.hmi.model.ListModelBindings;
+import org.skymarshall.hmi.model.RootListModel;
 import org.skymarshall.hmi.model.views.ListViews;
-import org.skymarshall.hmi.mvc.ModelBindings;
-import org.skymarshall.hmi.swing.bindings.SwingBindings;
 
 @SuppressWarnings("serial")
 public class TableModelExampleView extends JFrame {
 
 	static final Comparator<TestObject> NORMAL_ORDER = (o1, o2) -> o1.aSecondValue - o2.aSecondValue;
 	static final Comparator<TestObject> REVERSE_ORDER = (o1, o2) -> o2.aSecondValue - o1.aSecondValue;
-	static final Predicate<TestObject> FILTER = (value -> value.aSecondValue % 2 == 0);
 
 	private final TableModelExampleController controller = new TableModelExampleController();
 	private final ListModel<TestObject> model;
@@ -48,19 +46,31 @@ public class TableModelExampleView extends JFrame {
 	public TableModelExampleView() {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-		model = new ListModel<>(ListViews.sorted(NORMAL_ORDER));
+		model = new RootListModel<>(ListViews.sorted(NORMAL_ORDER));
 
-		final ListModel<TestObject> filteredModel = new ListModel<>(model,
-				ListViews.filtered(TableModelExampleView.FILTER));
+		final DynamicView view = new DynamicView();
+		final ListModel<TestObject> filteredModel = new ChildListModel<>(model, view);
+
+		// We could use a separate filter
+		// final BoundFilter<TestObject, Boolean> filter = BoundFilter.filter((value,
+		// filtered) -> !filtered || value.aSecondValue % 2 == 0);
+		// final ListModel<TestObject> filteredModel = new ChildListModel<>(model,
+		// filtered(filter));
 		final TestObjectTableModel tableModel = new TestObjectTableModel(filteredModel);
 
 		final JTable table = new JTable(tableModel);
-		controller.objectSelection.bind(SwingBindings.selection(table, tableModel))
-				.addDependency(ModelBindings.detachOnUpdateOf(filteredModel));
+		controller.objectSelection.bind(selection(table, tableModel)).addDependency(detachOnUpdateOf(filteredModel));
 		getContentPane().add(table, BorderLayout.CENTER);
 
-		controller.reverseOrder.bind(Converters.booleanToOrder()).bind(ListModelBindings.view(model));
-		controller.enableFilter.bind(Converters.booleanToFilter()).bind(ListModelBindings.view(filteredModel));
+		controller.reverseOrder.bind(view.reverseOrder());
+		controller.enableFilter.bind(view.enableFilter());
+
+		// One can also use a converter to change the model's view, or a
+		// BoundComparator, too
+		// controller.reverseOrder.bind(booleanToOrder()).bind(view(model));
+
+		// Bind the separate filter
+		// controller.enableFilter.bind(filter);
 
 		final JPanel optionsPanel = new JPanel(new FlowLayout());
 		addRevOrder(optionsPanel);

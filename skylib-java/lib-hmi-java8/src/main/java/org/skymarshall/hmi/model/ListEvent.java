@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -22,33 +22,33 @@ import java.util.List;
 /**
  * Event on dynamic list.
  * <p>
- * 
+ *
  * @author Sebastien Caille
- * 
+ *
  * @param <T>
  */
 public class ListEvent<T> {
 
-	private final ListModel<T>	source;
+	private final ListModelImpl<T> source;
 
-	private final List<T>				objects;
+	private final List<T> objects;
 
-	public ListEvent(final ListModel<T> source) {
+	public ListEvent(final ListModelImpl<T> source) {
 		this.source = source;
 		objects = null;
 	}
 
-	public ListEvent(final ListModel<T> source, final T object) {
+	public ListEvent(final ListModelImpl<T> source, final T object) {
 		this.source = source;
 		this.objects = Collections.singletonList(object);
 	}
 
-	public ListEvent(final ListModel<T> source, final List<T> objects) {
+	public ListEvent(final ListModelImpl<T> source, final List<T> objects) {
 		this.source = source;
 		this.objects = objects;
 	}
 
-	public ListModel<T> getSource() {
+	public ListModelImpl<T> getSource() {
 		return source;
 	}
 

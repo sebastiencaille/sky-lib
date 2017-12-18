@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -16,12 +16,11 @@
 package org.skymarshall.hmi.model.views;
 
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 import org.skymarshall.hmi.mvc.IComponentBinding;
 import org.skymarshall.util.Lambda;
 
-public abstract class AbstractDynamicFilter<T> implements Predicate<T> {
+public abstract class AbstractDynamicView<T> {
 
 	private IListViewOwner<T> viewOwner;
 
@@ -29,8 +28,21 @@ public abstract class AbstractDynamicFilter<T> implements Predicate<T> {
 		this.viewOwner = aViewOwner;
 	}
 
-	public <U> IComponentBinding<U> filterUpdate(final Consumer<U> c) {
-		return IComponentBinding.<AbstractDynamicFilter<T>, U>component(AbstractDynamicFilter.this,
+	public void detach(final IListViewOwner<T> aViewOwner) {
+		if (viewOwner == aViewOwner) {
+			this.viewOwner = null;
+		}
+	}
+
+	/**
+	 * Returns a component binding that calls c with the new value and refreshes the
+	 * view
+	 *
+	 * @param c
+	 * @return
+	 */
+	public <U> IComponentBinding<U> viewUpdate(final Consumer<U> c) {
+		return IComponentBinding.<AbstractDynamicView<T>, U>component(AbstractDynamicView.this,
 				Lambda.emptyBiConsumer(), (f, p, v) -> {
 					c.accept(v);
 					if (viewOwner != null) {

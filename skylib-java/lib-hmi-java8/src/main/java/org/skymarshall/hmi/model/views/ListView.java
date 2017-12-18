@@ -74,8 +74,8 @@ public class ListView<T> implements IListView<T>, Serializable {
 	@Override
 	public void attach(final IListViewOwner<T> owner) {
 		parentView = owner.getParentView();
-		if (filter instanceof AbstractDynamicFilter) {
-			((AbstractDynamicFilter<T>) filter).attach(owner);
+		if (filter instanceof AbstractDynamicView) {
+			((AbstractDynamicView<T>) filter).attach(owner);
 		}
 	}
 

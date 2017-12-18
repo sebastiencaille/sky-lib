@@ -15,45 +15,48 @@
  ******************************************************************************/
 package org.skymarshall.hmi.model.views;
 
-import java.util.function.BiPredicate;
-import java.util.function.Predicate;
+import java.util.Comparator;
 
 import org.skymarshall.hmi.mvc.IComponentBinding;
 import org.skymarshall.hmi.mvc.IComponentLink;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 
 /**
- * Filter that can be used as a component Binding
+ * Comparator that can be used as a component Binding
  *
  * @author scaille
  *
  * @param <DataType>
- * @param <FilterPropertyType>
+ * @param <ComparatorPropertyType>
  */
-public abstract class BoundFilter<DataType, FilterPropertyType> extends AbstractDynamicView<DataType>
-		implements IComponentBinding<FilterPropertyType>, Predicate<DataType> {
+public abstract class BoundComparator<DataType, ComparatorPropertyType> extends AbstractDynamicView<DataType>
+		implements IComponentBinding<ComparatorPropertyType>, Comparator<DataType> {
 
-	private FilterPropertyType filterPropertyValue;
+	private ComparatorPropertyType sorterPropertyValue;
 	private IListViewOwner<DataType> owner;
 
-	protected abstract boolean accept(DataType value, FilterPropertyType filter);
+	protected abstract int compare(DataType value1, DataType value2, ComparatorPropertyType filter);
 
-	public static <DataType, FilterObjectType> BoundFilter<DataType, FilterObjectType> filter(
-			final BiPredicate<DataType, FilterObjectType> consumer) {
-		return new BoundFilter<DataType, FilterObjectType>() {
+	@FunctionalInterface
+	public interface BoundComparatorFunc<DataType, SorterPropertyType> {
+		int compare(DataType data1, DataType data2, SorterPropertyType propertyValue);
+	}
 
+	public static <DataType, SorterPropertyType> BoundComparator<DataType, SorterPropertyType> comparator(
+			final BoundComparatorFunc<DataType, SorterPropertyType> comparator) {
+		return new BoundComparator<DataType, SorterPropertyType>() {
 			@Override
-			protected boolean accept(final DataType value, final FilterObjectType filter) {
-				return consumer.test(value, filter);
+			protected int compare(final DataType value1, final DataType value2, final SorterPropertyType filter) {
+				return comparator.compare(value1, value2, filter);
 			}
 		};
 	}
 
-	public BoundFilter() {
+	public BoundComparator() {
 	}
 
-	protected FilterPropertyType getFilterPropertyValue() {
-		return filterPropertyValue;
+	protected ComparatorPropertyType getSorterPropertyValue() {
+		return sorterPropertyValue;
 	}
 
 	@Override
@@ -62,7 +65,7 @@ public abstract class BoundFilter<DataType, FilterPropertyType> extends Abstract
 	}
 
 	@Override
-	public void addComponentValueChangeListener(final IComponentLink<FilterPropertyType> link) {
+	public void addComponentValueChangeListener(final IComponentLink<ComparatorPropertyType> link) {
 		// Read only
 	}
 
@@ -72,18 +75,14 @@ public abstract class BoundFilter<DataType, FilterPropertyType> extends Abstract
 	}
 
 	@Override
-	public void setComponentValue(final AbstractProperty source, final FilterPropertyType value) {
-		filterPropertyValue = value;
+	public void setComponentValue(final AbstractProperty source, final ComparatorPropertyType value) {
+		sorterPropertyValue = value;
 		owner.viewUpdated();
 	}
 
 	@Override
-	public boolean test(final DataType value) {
-		if (filterPropertyValue == null) {
-			// not yet initialized
-			return false;
-		}
-		return accept(value, filterPropertyValue);
+	public int compare(final DataType value1, final DataType value2) {
+		return compare(value1, value2, sorterPropertyValue);
 	}
 
 }

@@ -24,6 +24,7 @@ import javax.swing.JTable;
 import org.junit.Assert;
 import org.junit.Test;
 import org.skymarshall.hmi.model.ListModel;
+import org.skymarshall.hmi.model.RootListModel;
 import org.skymarshall.hmi.model.views.IListView;
 import org.skymarshall.hmi.model.views.ListViews;
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
@@ -71,7 +72,7 @@ public class TableTest extends Assert {
 		final Model model = new Model(support);
 		support.attachAll();
 
-		final ListModel<TestObject> listModel = new ListModel<>(VIEW);
+		final ListModel<TestObject> listModel = new RootListModel<>(VIEW);
 		final TestTableModel tableModel = new TestTableModel(listModel);
 		final JTable table = new JTable();
 		model.selection.bind(new org.skymarshall.hmi.swing.bindings.JTableMultiSelectionBinding<>(table, tableModel));

@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -19,6 +19,7 @@ import java.util.Comparator;
 
 import org.skymarshall.example.hmi.TestObject;
 import org.skymarshall.hmi.model.ListModel;
+import org.skymarshall.hmi.model.RootListModel;
 import org.skymarshall.hmi.model.views.ListViews;
 import org.skymarshall.hmi.mvc.HmiController;
 import org.skymarshall.hmi.mvc.properties.ObjectProperty;
@@ -39,7 +40,7 @@ public class ControllerExampleModel extends ControllerExampleObjectHmiModel {
 
 	private final ObjectProperty<TestObject> complexProperty = new ObjectProperty<>("ComplexObject", propertySupport);
 
-	final ListModel<TestObject> tableModel = new ListModel<>(ListViews.sorted(TEST_COMPARATOR));
+	final ListModel<TestObject> tableModel = new RootListModel<>(ListViews.sorted(TEST_COMPARATOR));
 
 	public ObjectProperty<String> getListObjectProperty() {
 		return listObjectProperty;

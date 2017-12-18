@@ -93,12 +93,8 @@ public abstract class ListModelTableModel<T, C extends Enum<C>> extends Abstract
 	public void setValueAt(final Object aValue, final int row, final int column) {
 		super.setValueAt(aValue, row, column);
 		final T editedValue = model.getValueAt(row);
-		model.startEditingValue(editedValue);
-		try {
-			setValueAtColumn(model.getValueAt(row), columnsEnumClass.cast(columnsEnum[column]), aValue);
-		} finally {
-			model.stopEditingValue();
-		}
+		model.editValue(editedValue,
+				v -> setValueAtColumn(model.getValueAt(row), columnsEnumClass.cast(columnsEnum[column]), aValue));
 	}
 
 	@Override

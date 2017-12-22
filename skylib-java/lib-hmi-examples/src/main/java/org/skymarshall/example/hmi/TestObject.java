@@ -16,8 +16,8 @@
 package org.skymarshall.example.hmi;
 
 import org.skymarshall.hmi.HmiObject;
-import org.skymarshall.hmi.mvc.converters.IConverter;
 import org.skymarshall.hmi.mvc.converters.Converters;
+import org.skymarshall.hmi.mvc.converters.IConverter;
 
 @HmiObject
 public class TestObject {
@@ -30,6 +30,22 @@ public class TestObject {
 	public String aFirstValue;
 
 	public int aSecondValue;
+
+	public String getAFirstValue() {
+		return aFirstValue;
+	}
+
+	public void setAFirstValue(final String aFirstValue) {
+		this.aFirstValue = aFirstValue;
+	}
+
+	public int getASecondValue() {
+		return aSecondValue;
+	}
+
+	public void setASecondValue(final int aSecondValue) {
+		this.aSecondValue = aSecondValue;
+	}
 
 	@Override
 	public String toString() {

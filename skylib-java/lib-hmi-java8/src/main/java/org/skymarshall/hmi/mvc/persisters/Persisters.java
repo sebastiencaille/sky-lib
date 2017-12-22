@@ -27,4 +27,13 @@ public interface Persisters {
 	public static <T> IPersister<T> from(final IObjectProvider objectProvider, final FieldAccess<T> fieldAccess) {
 		return new ObjectProviderPersister<>(objectProvider, fieldAccess);
 	}
+
+	public static <T> IPersister<T> from(final Object object, final GetSetAccess<?, T> getSetAccess) {
+		return getSetAccess.asPersister(object);
+	}
+
+	public static <T> IPersister<T> from(final IObjectProvider objectProvider, final GetSetAccess<?, T> getSetAccess) {
+		return new ObjectProviderPersister<>(objectProvider, getSetAccess);
+	}
+
 }

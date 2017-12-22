@@ -9,7 +9,7 @@ import java.util.Map;
 public class Template {
 
 	private final String content;
-	private final Map<String, String> properties = new HashMap<String, String>();
+	private final Map<String, String> properties = new HashMap<>();
 
 	private String commandLine;
 
@@ -76,11 +76,9 @@ public class Template {
 
 	public void write(final File file) throws IOException {
 		file.getParentFile().mkdirs();
-		final FileWriter out = new FileWriter(file);
-		try {
+
+		try (final FileWriter out = new FileWriter(file)) {
 			out.write(generate());
-		} finally {
-			out.close();
 		}
 	}
 

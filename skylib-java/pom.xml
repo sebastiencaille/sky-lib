@@ -16,8 +16,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.6.1</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -41,9 +41,6 @@
 
 	<modules>
 		<module>lib-utils</module>
-		<module>lib-hmi-java</module>
-		<module>lib-hmi-java6</module>
-		<module>lib-hmi-java7</module>
 		<module>lib-hmi-java8</module>
 		<module>lib-hmi-generators</module>
 		<module>lib-hmi-examples</module>

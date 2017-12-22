@@ -32,12 +32,8 @@ public class ClassLoaderHelper {
 	}
 
 	public static String readUTF8Resource(final String resourceName) throws IOException {
-		final InputStream in = openResourceStream(resourceName);
-		try {
+		try (final InputStream in = openResourceStream(resourceName)) {
 			return readResource(in);
-		} finally {
-			in.close();
 		}
-
 	}
 }

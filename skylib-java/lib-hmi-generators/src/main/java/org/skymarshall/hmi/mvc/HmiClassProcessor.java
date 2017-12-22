@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.skymarshall.hmi.mvc.AttributeProcessor.AttributeProcessorDelegate;
 import org.skymarshall.util.dao.metadata.AbstractAttributeMetaData;
 import org.skymarshall.util.dao.metadata.UntypedDataObjectMetaData;
 import org.skymarshall.util.generators.JavaCodeGenerator;
@@ -35,6 +36,8 @@ import org.skymarshall.util.helpers.ClassLoaderHelper;
 public class HmiClassProcessor {
 
 	private static final String ATTRIB_PUBLIC = "public ";
+
+	private final boolean java8 = !Boolean.valueOf("preJava8");
 
 	public static class Context {
 		final Map<String, String> context = new HashMap<>();
@@ -97,9 +100,17 @@ public class HmiClassProcessor {
 
 	private final Context context;
 
+	private AttributeProcessorDelegate delegate;
+
 	public HmiClassProcessor(final Class<?> clazz) {
 		this.clazz = clazz;
 		this.context = new Context();
+
+		if (java8) {
+			delegate = new AttributeProcessor.GetSetAttributeDelegate();
+		} else {
+			delegate = new AttributeProcessor.FieldAttributeDelegate();
+		}
 	}
 
 	public String getClassName() {
@@ -148,14 +159,21 @@ public class HmiClassProcessor {
 	 * @throws IOException
 	 */
 	protected void addAttributesDeclarations(final UntypedDataObjectMetaData metaData) throws IOException {
+
 		forEachAttribute(metaData, attrib -> context.append("fields.declareStatic", generateAccessConstants(attrib)));
-		context.append("fields.initStatic", afterPreprocessAttribs());
+		if (!java8) {
+			forEachAttribute(metaData,
+					attrib -> context.append("fields.declareStatic", generateFieldConstants(attrib)));
+			context.append("fields.initStatic", afterPreprocessAttribs());
+		} else {
+			context.append("fields.initStatic", "");
+		}
 
 		forEachAttribute(metaData, attrib -> context.append("fields.declare",
-				FieldProcessor.create(context, attrib).addImport().generateDeclaration()));
+				AttributeProcessor.create(context, attrib, delegate).addImports().generateDeclaration()));
 
 		forEachAttribute(metaData, attrib -> context.append("fields.init",
-				FieldProcessor.create(context, attrib).addImport().generateInitialization()));
+				AttributeProcessor.create(context, attrib, delegate).addImports().generateInitialization()));
 	}
 
 	@FunctionalInterface
@@ -175,19 +193,25 @@ public class HmiClassProcessor {
 	}
 
 	protected String generateLoadFrom(final AbstractAttributeMetaData<?> attrib) throws IOException {
-		return FieldProcessor.create(context, attrib).getPropertyName() + ".load(this);";
+		return AttributeProcessor.create(context, attrib, delegate).getPropertyName() + ".load(this);";
 	}
 
 	protected String generateSaveInto(final AbstractAttributeMetaData<?> attrib) throws IOException {
-		return FieldProcessor.create(context, attrib).getPropertyName() + ".save();";
+		return AttributeProcessor.create(context, attrib, delegate).getPropertyName() + ".save();";
 	}
 
 	protected String generateAccessConstants(final AbstractAttributeMetaData<?> attrib) throws IOException {
 		final JavaCodeGenerator gen = new JavaCodeGenerator();
-		final String constant = toConstant(attrib.getName());
-		gen.appendIndentedLine("public static final String " + constant + " = \"" + attrib.getName() + "\";");
+		gen.appendIndentedLine(
+				"public static final String " + toConstant(attrib.getName()) + " = \"" + attrib.getName() + "\";");
 		gen.newLine();
 
+		return gen.toString();
+	}
+
+	protected String generateFieldConstants(final AbstractAttributeMetaData<?> attrib) throws IOException {
+		final JavaCodeGenerator gen = new JavaCodeGenerator();
+		final String constant = toConstant(attrib.getName());
 		final String fieldConstant = constant + "_FIELD";
 		fieldConstants.put(fieldConstant, attrib.getCodeName());
 		gen.appendIndentedLine("private static final Field " + fieldConstant + ';');
@@ -215,7 +239,7 @@ public class HmiClassProcessor {
 	}
 
 	protected String generateGetter(final AbstractAttributeMetaData<?> attrib) throws IOException {
-		final FieldProcessor processor = FieldProcessor.create(context, attrib);
+		final AttributeProcessor processor = AttributeProcessor.create(context, attrib, delegate);
 
 		final JavaCodeGenerator gen = new JavaCodeGenerator();
 		gen.openBlock(ATTRIB_PUBLIC, processor.getPropertyType(), " get", attrib.getName(), "Property()");

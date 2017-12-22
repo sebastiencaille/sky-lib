@@ -17,13 +17,13 @@ package org.skymarshall.hmi.mvc.persisters;
 
 import org.skymarshall.hmi.mvc.properties.IPersister;
 
-public class RandomObjectPersister<T> implements
+public class AnyObjectPersister<T> implements
         IPersister<T> {
 
     private final FieldAccess<T> fieldAccess;
     private Object               target;
 
-    public RandomObjectPersister(final FieldAccess<T> fieldAccess) {
+    public AnyObjectPersister(final FieldAccess<T> fieldAccess) {
         this.fieldAccess = fieldAccess;
     }
 

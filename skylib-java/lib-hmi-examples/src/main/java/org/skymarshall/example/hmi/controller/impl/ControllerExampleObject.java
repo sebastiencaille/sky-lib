@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -21,8 +21,41 @@ import org.skymarshall.hmi.HmiObject;
 @HmiObject
 public class ControllerExampleObject {
 
-    boolean    booleanProp;
-    int        intProp;
-    String     stringProp;
-    TestObject testObjectProp;
+	boolean booleanProp;
+	int intProp;
+	String stringProp;
+	TestObject testObjectProp;
+
+	public boolean isBooleanProp() {
+		return booleanProp;
+	}
+
+	public void setBooleanProp(final boolean booleanProp) {
+		this.booleanProp = booleanProp;
+	}
+
+	public int getIntProp() {
+		return intProp;
+	}
+
+	public void setIntProp(final int intProp) {
+		this.intProp = intProp;
+	}
+
+	public String getStringProp() {
+		return stringProp;
+	}
+
+	public void setStringProp(final String stringProp) {
+		this.stringProp = stringProp;
+	}
+
+	public TestObject getTestObjectProp() {
+		return testObjectProp;
+	}
+
+	public void setTestObjectProp(final TestObject testObjectProp) {
+		this.testObjectProp = testObjectProp;
+	}
+
 }

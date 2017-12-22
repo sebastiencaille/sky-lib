@@ -3,13 +3,10 @@ package ${package};
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
 import org.skymarshall.hmi.mvc.HmiModel;
 import org.skymarshall.hmi.mvc.IObjectHmiModel;
-import java.lang.reflect.AccessibleObject;
 import org.skymarshall.hmi.mvc.persisters.ObjectProviderPersister;
 import org.skymarshall.hmi.mvc.IComponentBinding;
 import org.skymarshall.hmi.mvc.HmiController;
-import java.lang.reflect.Field;
 import org.skymarshall.hmi.mvc.persisters.Persisters;
-import org.skymarshall.hmi.mvc.persisters.FieldAccess;
 import org.skymarshall.hmi.mvc.properties.Properties;
 import org.skymarshall.hmi.mvc.properties.ErrorProperty;
 import org.skymarshall.hmi.mvc.IComponentLink;
@@ -77,6 +74,11 @@ public class ${modelClass} extends HmiModel implements IObjectHmiModel<${objectC
             public void addComponentValueChangeListener(final IComponentLink<${objectClass}> link) {
                 // nope
             }
+            
+            @Override
+			public void removeComponentValueChangeListener() {
+				  // nope
+			}
             
             @Override
             public void setComponentValue(final AbstractProperty source, final ${objectClass} value) {

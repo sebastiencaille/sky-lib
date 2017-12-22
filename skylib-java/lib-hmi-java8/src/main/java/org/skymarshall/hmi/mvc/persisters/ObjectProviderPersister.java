@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -19,7 +19,7 @@ import org.skymarshall.hmi.mvc.properties.IPersister;
 
 /**
  * Allows to persist a property in an attribute of an object
- * 
+ *
  * @author scaille
  *
  * @param <T>
@@ -46,29 +46,43 @@ public class ObjectProviderPersister<T> implements IPersister<T> {
 	}
 
 	private final FieldAccess<T> fieldAccess;
+	private final GetSetAccess<?, T> getSetAccess;
 	private final IObjectProvider target;
 
 	public ObjectProviderPersister(final IObjectProvider target, final FieldAccess<T> fieldAccess) {
 		this.target = target;
 		this.fieldAccess = fieldAccess;
+		this.getSetAccess = null;
+	}
+
+	public ObjectProviderPersister(final IObjectProvider target, final GetSetAccess<?, T> getSetAccess) {
+		this.target = target;
+		this.fieldAccess = null;
+		this.getSetAccess = getSetAccess;
 	}
 
 	@Override
 	public T get() {
-		final Object targetObject = target.getObject();
-		if (targetObject == null) {
-			throw new IllegalStateException("No target object defined");
-		}
-		return fieldAccess.get(targetObject);
+		return persister().get();
 	}
 
 	@Override
 	public void set(final T value) {
+		persister().set(value);
+	}
+
+	private IPersister<T> persister() {
 		final Object targetObject = target.getObject();
 		if (targetObject == null) {
 			throw new IllegalStateException("No target object defined");
 		}
-		fieldAccess.set(targetObject, value);
+		IPersister<T> persister;
+		if (getSetAccess != null) {
+			persister = getSetAccess.asPersister(targetObject);
+		} else {
+			persister = fieldAccess.asPersister(targetObject);
+		}
+		return persister;
 	}
 
 }

@@ -76,11 +76,12 @@ private:
 
 	property& m_property;
 
+	error_notifier* m_errorNotifier;
+
 	property_listener_func_type<binding_chain> m_valueUpdateListener;
 
 	bool m_transmit = true;
 
-	error_notifier* m_errorNotifier;
 
 	typedef list<binding_chain_dependency*>::iterator binding_chain_dependency_iter;
 	list<binding_chain_dependency*> m_dependencies;
@@ -326,7 +327,7 @@ private:
 
 	~binding_chain() {
 		m_property.remove_listener(&m_valueUpdateListener);
-		for (int i = 0; i < m_links.size(); i++) {
+		for (unsigned int i = 0; i < m_links.size(); i++) {
 			delete m_links[i];
 		}
 		m_links.clear();

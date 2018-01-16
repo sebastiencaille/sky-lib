@@ -164,7 +164,7 @@ private:
 
 public:
 	action_func_type(_T* _object, action_function _action) :
-			m_object(_object), m_action(_action) {
+		m_action(_action), m_object(_object) {
 	}
 
 	void apply(property_group_actions _action, const property* _property) {

@@ -23,12 +23,11 @@
 #include <gtkmm.h>
 #include <iostream>
 
-#include <GlibConverter.hh>
-#include <GtkBindings.hh>
-
 #include "controller_property.hh"
 #include "input_error_property_impl.hh"
 #include "int_converters.hh"
+#include "glib_converter.hh"
+#include "gtk_bindings.hh"
 
 using namespace org_skymarshall_util_hmi;
 using namespace org_skymarshall_util_hmi_glib;
@@ -83,7 +82,9 @@ private:
 
 	};
 public:
-	HelloWorld(controller_property<string>& _testProperty1,
+	HelloWorld();
+
+	void init(controller_property<string>& _testProperty1,
 			controller_property<int>& _testProperty2,
 			input_error_property& _errorProperty);
 
@@ -107,10 +108,13 @@ protected:
 	list<binding_chain_controller*> m_bindings;
 };
 
-HelloWorld::HelloWorld(controller_property<string>& _testProperty1,
-		controller_property<int>& _testProperty2,
-		input_error_property& _errorProperty) :
+HelloWorld::HelloWorld() :
 		m_box(Gtk::ORIENTATION_VERTICAL) {
+}
+
+void HelloWorld::init(controller_property<string>& _testProperty1,
+		controller_property<int>& _testProperty2,
+		input_error_property& _errorProperty) {
 	// Sets the border width of the window.
 	set_border_width(10);
 
@@ -187,7 +191,8 @@ int main(int argc, char *argv[]) {
 	controller_property<int> testProperty2("TestProp2", manager, 0,
 			&errorProperty);
 	testProperty2.set(NULL, 1);
-	HelloWorld helloworld(testProperty1, testProperty2, errorProperty);
+	HelloWorld helloworld;
+	helloworld.init(testProperty1, testProperty2, errorProperty);
 
 	return app->run(helloworld);
 }

@@ -123,7 +123,7 @@ public class HmiClassProcessor {
 
 	protected Template process() throws IOException {
 
-		final UntypedDataObjectMetaData metaData = new UntypedDataObjectMetaData(clazz, true);
+		final UntypedDataObjectMetaData metaData = new UntypedDataObjectMetaData(clazz, false);
 
 		final String strType = typeToString(metaData.getDataType());
 

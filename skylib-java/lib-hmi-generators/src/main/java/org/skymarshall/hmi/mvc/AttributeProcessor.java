@@ -204,7 +204,7 @@ public abstract class AttributeProcessor {
 
 	String generateInitialization() throws IOException {
 		return String.format(
-				"%s = Properties.of(new %s(prefix + \"-%s\",  propertySupport)).persistent(Persisters.from(currentObjectProvider, %s)).setErrorNotifier(errorProperty).getProperty();",
+				"%s = Properties.of(new %s(prefix + \"-%s\",  propertySupport)).persistent(Persisters.from(currentObjectProvider, %s)).setErrorNotifier(errorProperty).getProperty();\n",
 				getPropertyName(), getPropertyType(), attrib.getName(), getFieldCreation());
 	}
 
@@ -237,9 +237,17 @@ public abstract class AttributeProcessor {
 		@Override
 		public String getFieldCreation(final AttributeProcessor attributeProcessor) {
 			final AbstractAttributeMetaData<?> attr = attributeProcessor.attrib;
+
+			String setter;
+			if (!attributeProcessor.attrib.isReadOnly()) {
+				setter = "o::" + attributeProcessor.setter();
+			} else {
+				setter = "null";
+			}
+
 			return "GetSetAccess.<" + attr.getDeclaringType().getName() + ","
 					+ attributeProcessor.getObjectTypeAsString() + ">access(" + "(o) -> o::"
-					+ attributeProcessor.getter() + ", (o) -> o::" + attributeProcessor.setter() + ")";
+					+ attributeProcessor.getter() + ", (o) ->" + setter + ")";
 		}
 
 		@Override

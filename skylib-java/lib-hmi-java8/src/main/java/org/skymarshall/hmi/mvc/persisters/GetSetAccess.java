@@ -27,7 +27,10 @@ public class GetSetAccess<Container, Attrib> {
 
 			@Override
 			public void set(final Attrib value) {
-				setter.apply((Container) object).accept(value);
+				final Consumer<Attrib> setterAccess = setter.apply((Container) object);
+				if (setterAccess != null) {
+					setterAccess.accept(value);
+				}
 			}
 		};
 	}

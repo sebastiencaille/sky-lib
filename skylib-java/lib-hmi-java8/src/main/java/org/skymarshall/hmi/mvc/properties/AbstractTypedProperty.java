@@ -56,7 +56,11 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 
 	@Override
 	public void save() {
-		persister.set(getObjectValue());
+		try {
+			persister.set(getObjectValue());
+		} catch (final RuntimeException e) {
+			throw new IllegalStateException("Failed to set property " + getName(), e);
+		}
 	}
 
 	public void setObjectValueFromComponent(final Object caller, final T newValue) {

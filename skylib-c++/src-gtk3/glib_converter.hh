@@ -14,37 +14,39 @@
  *WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  */
 /*
- * GlibConverter.cpp
+ * GlibConverter.hh
  *
  *  Created on: Apr 4, 2012
  *      Author: scaille
  */
 
-#include "GlibConverter.hh"
+#ifndef GLIB_CONVERTER_HH_
+#define GLIB_CONVERTER_HH_
+
+#include "binding_interface.hh"
+#include <glibmm.h>
+#include <string>
 
 namespace org_skymarshall_util_hmi_glib {
+
 using namespace std;
 using namespace Glib;
 using namespace org_skymarshall_util_hmi;
 
-string_to_ustring::string_to_ustring() :
-		binding_converter() {
+class string_to_ustring: public binding_converter<string, Glib::ustring> {
+
+protected:
+
+	virtual ~string_to_ustring();
+
+public:
+	string_to_ustring();
+	const string convert_component_value_to_property_value(
+			const Glib::ustring _componentValue) throw (logic_error*);
+	const Glib::ustring convert_property_value_to_component_value(
+			const string _propertyValue) throw (logic_error*);
+
+};
 
 }
-
-string_to_ustring::~string_to_ustring() {
-
-}
-
-const string string_to_ustring::convert_component_value_to_property_value(
-		const Glib::ustring _componentValue) throw (logic_error*) {
-	return _componentValue;
-}
-
-const Glib::ustring string_to_ustring::convert_property_value_to_component_value(
-		const string _propertyValue) throw (logic_error*) {
-	return ustring(_propertyValue);
-}
-
-}
-
+#endif /* GLIB_CONVERTER_HH_ */

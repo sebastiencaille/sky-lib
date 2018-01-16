@@ -20,7 +20,7 @@
  *      Author: scaille
  */
 
-#include "GtkBindings.hh"
+#include "gtk_bindings.hh"
 
 namespace org_skymarshall_util_hmi_gtk {
 

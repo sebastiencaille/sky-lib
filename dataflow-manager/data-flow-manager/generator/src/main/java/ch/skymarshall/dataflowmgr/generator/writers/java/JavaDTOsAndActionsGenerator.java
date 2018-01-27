@@ -53,10 +53,12 @@ public abstract class JavaDTOsAndActionsGenerator extends ModuleVisitor<Map<Stri
 	 * Generates the code that allows calling an action point
 	 *
 	 * @param context
+	 * @param output
 	 * @param nextAP
 	 * @return
 	 */
-	protected abstract String createActionCaller(final Map<String, String> context, final ActionPoint next);
+	protected abstract String createActionCaller(final Map<String, String> context, String output,
+			String[] nextActions);
 
 	public JavaDTOsAndActionsGenerator(final Module module, final AbstractWriter abstractWriter) {
 		super(module, abstractWriter);
@@ -66,11 +68,11 @@ public abstract class JavaDTOsAndActionsGenerator extends ModuleVisitor<Map<Stri
 	 * Creates the dto file
 	 */
 	@Override
-	public Map<String, String> visit(final Module module, final Dto dto, final Map<String, String> context) {
+	public Map<String, String> visit(final Dto dto, final Map<String, String> context) {
 		final Map<String, String> scoped = createClassContext(context, module.packageName);
 		scoped.put("dto.name", dto.name);
 
-		super.visit(module, dto, scoped);
+		super.visit(dto, scoped);
 		final Template template = getTemplate(TEMPLATE.DTO, scoped);
 
 		try {
@@ -90,7 +92,7 @@ public abstract class JavaDTOsAndActionsGenerator extends ModuleVisitor<Map<Stri
 	}
 
 	@Override
-	public Map<String, String> visitField(final Module module, final Dto dto, final Entry<String, String> field,
+	public Map<String, String> visitField(final Dto dto, final Entry<String, String> field,
 			final Map<String, String> context) {
 		final Map<String, String> scoped = setFieldInfo(context, field.getKey(), field.getValue());
 		final Template template = getTemplate(TEMPLATE.FIELD, scoped);
@@ -98,8 +100,7 @@ public abstract class JavaDTOsAndActionsGenerator extends ModuleVisitor<Map<Stri
 	}
 
 	@Override
-	public Map<String, String> visit(final Module module, final ActionPoint ap, final InFlowRule rule,
-			final Map<String, String> context) {
+	public Map<String, String> visit(final ActionPoint ap, final InFlowRule rule, final Map<String, String> context) {
 
 		String transform;
 		if (rule.transformFunction != null) {
@@ -118,14 +119,11 @@ public abstract class JavaDTOsAndActionsGenerator extends ModuleVisitor<Map<Stri
 	}
 
 	@Override
-	public Map<String, String> visit(final Module module, final ActionPoint ap, final OutFlowRule rule,
-			final Map<String, String> context) {
+	public Map<String, String> visit(final ActionPoint ap, final OutFlowRule rule, final Map<String, String> context) {
 
-		final ActionPoint nextAP = findAction(module, rule.nextAction);
-
-		final String nextActionRef = createActionCaller(context, nextAP);
+		final String nextActionRef = createActionCaller(context, rule.output, rule.nextAction);
 		String code = String.format(
-				"final OutputDecisionRule<%s, %s> %s = OutputDecisionRule.output(%s, (apOut) -> %s, %s, %s, (apOut) ->  %s);%n",
+				"final OutputDecisionRule<%s, %s> %s = OutputDecisionRule.output(%s,%n\t(apOut) -> %s,%n\t%s,%n\t%s,%n\t(apOut) ->  %s);%n",
 				ap.output, rule.output, variableName(ap, rule), uuid(rule.uuid), rule.activator,
 				"FlowActionType.CONTINUE", nextActionRef, rule.transformFunction);
 		code += variableName(ap) + ".addOutputRule(" + variableName(ap, rule) + ");\n";
@@ -138,20 +136,20 @@ public abstract class JavaDTOsAndActionsGenerator extends ModuleVisitor<Map<Stri
 	 * Writes the action class
 	 */
 	@Override
-	public Map<String, String> visit(final Module module, final ActionPoint ap, final Map<String, String> context) {
+	public Map<String, String> visit(final ActionPoint ap, final Map<String, String> context) {
 		final Map<String, String> scoped = createClassContext(context, module.packageName);
-		super.visit(module, ap, context);
+		super.visit(ap, context);
 		scoped.put("action.name", ap.name);
 		scoped.put("action.input", ap.input);
 
-		final Set<String> imported = packages(module, ap.input, ap.output);
+		final Set<String> imported = packages(ap.input, ap.output);
 
 		final String body;
 		final String output;
 		if (ap.terminal) {
 			body = ap.action.content + ";\n\t\t\treturn NO_DATA";
 			output = "NoData";
-			imported.addAll(packages(module, "NoData"));
+			imported.addAll(packages("NoData"));
 		} else {
 			body = "return " + ap.action.content;
 			output = ap.output;
@@ -205,10 +203,10 @@ public abstract class JavaDTOsAndActionsGenerator extends ModuleVisitor<Map<Stri
 		return Utils.firstLowerCase(ap.name + "_out_" + out.uuid).replaceAll("-", "_");
 	}
 
-	protected Set<String> packages(final Module module, final String... classes) {
+	protected Set<String> packages(final String... classes) {
 		final Set<String> toImport = new HashSet<>();
 		for (final String clazz : classes) {
-			addImportOfClass(module, toImport, clazz);
+			addImportOfClass(toImport, clazz);
 		}
 		return toImport;
 	}
@@ -220,12 +218,13 @@ public abstract class JavaDTOsAndActionsGenerator extends ModuleVisitor<Map<Stri
 	 * @param toImport
 	 * @param clazz
 	 */
-	protected void addImportOfClass(final Module module, final Set<String> toImport, final String clazz) {
+	protected void addImportOfClass(final Set<String> toImport, final String clazz) {
 		if (clazz == null) {
 			return;
 		}
 		try {
 			Class.forName(clazz);
+			toImport.add(clazz);
 			return;
 		} catch (final ClassNotFoundException e) { // NOSONAR
 			// ignore failure

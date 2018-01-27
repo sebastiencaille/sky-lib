@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -20,6 +20,7 @@ import static ch.skymarshall.dataflowmgr.engine.data.UUIDFactory.uuid;
 
 import ch.skymarshall.dataflowmgr.engine.data.SimpleFlowFactory.IntTransfer;
 import ch.skymarshall.dataflowmgr.engine.data.SimpleFlowFactory.IntTransferIdentity;
+import ch.skymarshall.dataflowmgr.local.LocalAPRef;
 import ch.skymarshall.dataflowmgr.model.ActionPoint;
 import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.FlowAction;
@@ -128,6 +129,7 @@ public class DispatchJoinFlowFactory {
 	}
 
 	public static Flow<IntTransfer> dispatchJoinFlow(final Registry registry) {
+
 		final ActionPoint<IntTransfer, Data2ab> ap1 = ActionPoint.simple(uuid(), new SetOutputData2aAnd2b());
 		final ActionPoint<IntTransfer, IntTransfer> ap2a = ActionPoint.simple(uuid(), new IntTransferIdentity());
 		final ActionPoint<IntTransfer, IntTransfer> ap2b = ActionPoint.simple(uuid(), new IntTransferIdentity());
@@ -148,15 +150,15 @@ public class DispatchJoinFlowFactory {
 
 		// All out
 		final OutputDecisionRule<Data2ab, IntTransfer> ap1ToAp2a = OutputDecisionRule.output(uuid(),
-				d -> d.getData2a() != null, FlowActionType.CONTINUE, ap2a, (d) -> d.data2a);
+				d -> d.getData2a() != null, FlowActionType.CONTINUE, LocalAPRef.refTo(ap2a), (d) -> d.data2a);
 		final OutputDecisionRule<Data2ab, IntTransfer> ap1ToAp2b = OutputDecisionRule.output(uuid(),
-				d -> d.getData2b() != null, FlowActionType.CONTINUE, ap2b, (d) -> d.data2b);
+				d -> d.getData2b() != null, FlowActionType.CONTINUE, LocalAPRef.refTo(ap2b), (d) -> d.data2b);
 		ap1.addOutputRule(ap1ToAp2a, ap1ToAp2b);
 
-		final OutputDecisionRule<IntTransfer, IntTransfer> ap2aToJoin = OutputDecisionRule.output(uuid(),
-				(out) -> true, FlowActionType.CONTINUE, joinIn2a, (out) -> out);
-		final OutputDecisionRule<IntTransfer, IntTransfer> ap2bToJoin = OutputDecisionRule.output(uuid(),
-				(out) -> true, FlowActionType.CONTINUE, joinIn2b, (out) -> out);
+		final OutputDecisionRule<IntTransfer, IntTransfer> ap2aToJoin = OutputDecisionRule.output(uuid(), (out) -> true,
+				FlowActionType.CONTINUE, LocalAPRef.refToApOf(joinIn2a), (out) -> out);
+		final OutputDecisionRule<IntTransfer, IntTransfer> ap2bToJoin = OutputDecisionRule.output(uuid(), (out) -> true,
+				FlowActionType.CONTINUE, LocalAPRef.refToApOf(joinIn2b), (out) -> out);
 		ap2a.addOutputRule(ap2aToJoin);
 		ap2b.addOutputRule(ap2bToJoin);
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Sebastien Caille.
+O * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms are permitted
@@ -15,6 +15,7 @@
  ******************************************************************************/
 package ch.skymarshall.dataflowmgr.engine.sequential;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -25,12 +26,12 @@ import java.util.function.Consumer;
 
 import ch.skymarshall.dataflowmgr.engine.model.ExecutionReport;
 import ch.skymarshall.dataflowmgr.engine.model.ExecutionReport.Event;
+import ch.skymarshall.dataflowmgr.local.LocalAPRef;
 import ch.skymarshall.dataflowmgr.model.ActionPoint;
 import ch.skymarshall.dataflowmgr.model.ActionPointReference;
 import ch.skymarshall.dataflowmgr.model.ExecutorFactory;
 import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.FlowData;
-import ch.skymarshall.dataflowmgr.model.LocalAPRef;
 import ch.skymarshall.dataflowmgr.model.OutputDecisionRule;
 import ch.skymarshall.dataflowmgr.model.Registry;
 
@@ -62,7 +63,8 @@ public class FlowExecution<IDT extends FlowData> {
 		final Set<ActionPoint<?, ?>.ExecutionSteps> dpExecutions = new HashSet<>();
 
 		inputData.setCurrentFlowExecution(flowExecution);
-		dpExecutions.addAll(new ActionPointExecutor(flow.getEntryPoint().invoke(inputData), report).execute(registry));
+		dpExecutions.addAll(
+				new ActionPointExecutor(flow.getEntryPoint().createExecution(inputData), report).execute(registry));
 
 		while (!dpExecutions.isEmpty()) {
 			final Iterator<ActionPoint<?, ?>.ExecutionSteps> iterator = dpExecutions.iterator();
@@ -120,9 +122,9 @@ public class FlowExecution<IDT extends FlowData> {
 			return apExecution.createExecutions(new ExecutorFactory<ActionPoint<?, ?>.ExecutionSteps>() { // NOSONAR
 
 				@Override
-				public <T extends FlowData> ActionPoint<?, ?>.ExecutionSteps createNextDecisionPointExecution(
+				public <T extends FlowData> Collection<ActionPoint<?, ?>.ExecutionSteps> createNextDecisionPointExecution(
 						final ActionPointReference<T> nextDp, final T nextData) {
-					return LocalAPRef.invoke(nextDp, nextData);
+					return LocalAPRef.createExecution(nextDp, nextData);
 
 				}
 			});

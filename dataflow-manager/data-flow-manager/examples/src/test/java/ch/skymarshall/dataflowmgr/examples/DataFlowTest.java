@@ -39,7 +39,29 @@ public class DataFlowTest {
 
 		final MemRegistry registry = new MemRegistry();
 		final Flow<IntTransfer> simpleFlow = SimpleFlowFactory.create(registry);
+		final String jsonFlow = "data/simple-flow.json";
+		final File out = new File("src/test/reports/simple-flow-report.json");
+		final String flowName = "SimpleFlow";
 
+		testFlow(registry, simpleFlow, jsonFlow, out, flowName);
+
+	}
+
+	@Test
+	public void testBroadcast() throws JsonProcessingException, IOException, InterruptedException {
+
+		final MemRegistry registry = new MemRegistry();
+		final Flow<IntTransfer> simpleFlow = SimpleFlowFactory.create(registry);
+		final String jsonFlow = "data/broadcast-flow.json";
+		final File out = new File("src/test/reports/broadcast-flow-report.json");
+		final String flowName = "BroadcastFlow";
+
+		testFlow(registry, simpleFlow, jsonFlow, out, flowName);
+
+	}
+
+	private void testFlow(final MemRegistry registry, final Flow<IntTransfer> simpleFlow, final String jsonFlow,
+			final File out, final String flowName) throws IOException, JsonProcessingException, InterruptedException {
 		final ExecutionReport report = new ExecutionReport(registry);
 
 		final IntTransfer inputData1 = new IntTransfer();
@@ -50,7 +72,6 @@ public class DataFlowTest {
 		inputData2.setIntValue(2);
 		new FlowExecution<>(simpleFlow).execute(inputData2, report, registry);
 
-		final File out = new File("src/test/reports/simple-flow-report.json");
 		final ObjectMapper mapper = new ObjectMapper();
 		out.getParentFile().mkdirs();
 		Files.write(out.toPath(), mapper.writeValueAsString(report.getSteps()).getBytes());
@@ -58,12 +79,11 @@ public class DataFlowTest {
 		final DotFileWriter dotFileWriter = new DotFileWriter(new File("src/test/reports"));
 		dotFileWriter.configure(
 				() -> Thread.currentThread().getContextClassLoader().getResourceAsStream("data/config.json"), "");
-		dotFileWriter.loadModule(
-				() -> Thread.currentThread().getContextClassLoader().getResourceAsStream("data/simple-flow.json"));
+		dotFileWriter.loadModule(() -> Thread.currentThread().getContextClassLoader().getResourceAsStream(jsonFlow));
 		dotFileWriter.loadStepsReport(out);
 		dotFileWriter.generate();
-		dotFileWriter.toPng("SimpleFlow", "mainflow");
 
+		dotFileWriter.toPng(flowName, "mainflow");
 	}
 
 }

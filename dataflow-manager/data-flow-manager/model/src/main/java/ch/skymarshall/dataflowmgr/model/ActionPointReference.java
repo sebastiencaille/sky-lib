@@ -23,6 +23,8 @@ package ch.skymarshall.dataflowmgr.model;
  *
  * @param <T>
  */
-public interface ActionPointReference<T extends FlowData> { // NOSONAR
+public interface ActionPointReference<T extends FlowData> {
+
+	ActionPointReference<T> addAll(ActionPointReference<T> refs); // NOSONAR
 
 }

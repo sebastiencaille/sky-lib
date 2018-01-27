@@ -36,6 +36,7 @@ import ch.skymarshall.dataflowmgr.generator.model.OutFlowRule;
 import ch.skymarshall.dataflowmgr.generator.model.TEMPLATE;
 import ch.skymarshall.dataflowmgr.generator.writers.AbstractWriter;
 import ch.skymarshall.dataflowmgr.generator.writers.java.JavaDTOsAndActionsGenerator;
+import ch.skymarshall.dataflowmgr.local.LocalAPRef;
 
 /**
  * Writes the flow factory (+DTOs and actions) that can be used with the single
@@ -53,32 +54,38 @@ public class SingleNodeJavaModuleGenerator extends JavaDTOsAndActionsGenerator {
 	}
 
 	@Override
-	protected String createActionCaller(final Map<String, String> context, final ActionPoint ap) {
-		return "LocalAPRef.local(" + variableName(ap) + ")";
+	protected String createActionCaller(final Map<String, String> context, final String flowType,
+			final String[] nextActions) {
+
+		final Set<String> actionPointRef = forEachActionPoint(flowType, nextActions, this::variableName);
+		final Set<String> inputFlowRef = forEachInputFlow(flowType, nextActions, this::variableName);
+
+		String result = "LocalAPRef.refTo(" + String.join(",", actionPointRef) + ")";
+		if (!inputFlowRef.isEmpty()) {
+			result += ".addAll(LocalAPRef.refToApOf(" + String.join(",", inputFlowRef) + "))";
+		}
+		return result;
 	}
 
 	@Override
-	public Map<String, String> visit(final Module module, final ActionPoint ap, final InFlowRule rule,
-			final Map<String, String> context) {
-		flowImportPackages.addAll(packages(module, rule.input, ap.input));
-		return super.visit(module, ap, rule, context);
+	public Map<String, String> visit(final ActionPoint ap, final InFlowRule rule, final Map<String, String> context) {
+		flowImportPackages.addAll(packages(rule.input, ap.input));
+		return super.visit(ap, rule, context);
 	}
 
 	@Override
-	public Map<String, String> visit(final Module module, final ActionPoint ap, final OutFlowRule rule,
-			final Map<String, String> context) {
-		flowImportPackages.add("ch.skymarshall.dataflowmgr.model.LocalAPRef");
-		flowImportPackages.addAll(packages(module, rule.output, ap.output));
-		return super.visit(module, ap, rule, context);
+	public Map<String, String> visit(final ActionPoint ap, final OutFlowRule rule, final Map<String, String> context) {
+		flowImportPackages.addAll(packages(rule.output, ap.output));
+		return super.visit(ap, rule, context);
 	}
 
 	@Override
-	public Map<String, String> visit(final Module module, final ActionPoint ap, final Map<String, String> context) {
-		super.visit(module, ap, context);
+	public Map<String, String> visit(final ActionPoint ap, final Map<String, String> context) {
+		super.visit(ap, context);
 
-		final Set<String> imported = packages(module, ap.input, ap.output);
+		final Set<String> imported = packages(ap.input, ap.output);
 		flowImportPackages.addAll(imported);
-		flowImportPackages.addAll(packages(module, ap.name));
+		flowImportPackages.addAll(packages(ap.name));
 
 		final String code;
 		if (ap.terminal) {
@@ -95,18 +102,25 @@ public class SingleNodeJavaModuleGenerator extends JavaDTOsAndActionsGenerator {
 	}
 
 	@Override
-	public Map<String, String> visit(final Module module, final Flow flow, final Map<String, String> context) {
+	public Map<String, String> visit(final Flow flow, final Map<String, String> context) {
 		registry.clear();
+		flowImportPackages.clear();
+
+		context.put("flow.init", "");
+
 		final Map<String, String> scoped = createClassContext(context, module.packageName);
 
-		super.visit(module, flow, scoped);
+		super.visit(flow, scoped);
+
+		addImportOfClass(flowImportPackages, LocalAPRef.class.getName());
+
 		scoped.put("flow.name", flow.name);
 		scoped.put("flow.uuid", uuid(flow.uuid));
 		scoped.put("flow.input", flow.input);
-		scoped.put("flow.firstAction", variableName(findAction(module, flow.action)));
+		scoped.put("flow.firstAction", variableName(findActionPoints(flow.action).get(0)));
 
 		// Imports
-		final Set<String> depPackages = packages(module, flow.input);
+		final Set<String> depPackages = packages(flow.input);
 		depPackages.addAll(flowImportPackages);
 		scoped.put("imports", toImports(depPackages));
 

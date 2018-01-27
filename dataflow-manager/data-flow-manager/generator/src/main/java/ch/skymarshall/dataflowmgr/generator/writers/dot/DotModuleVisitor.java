@@ -78,31 +78,37 @@ public class DotModuleVisitor extends ModuleVisitor<DotModuleVisitor.Graph> {
 	}
 
 	@Override
-	public Graph visit(final Module module, final ActionPoint ap, final InFlowRule rule, final Graph context) {
+	public Graph visit(final ActionPoint ap, final InFlowRule rule, final Graph context) {
 		context.nodes.add(new Node(rule.uuid, rule.input + "\\n" + rule.activator, Shape.BOX));
 		context.links.add(new Link(rule.uuid, ap.uuid, ap.input, ap.activator));
-		return super.visit(module, ap, rule, context);
+		return super.visit(ap, rule, context);
 	}
 
 	@Override
-	public Graph visit(final Module module, final ActionPoint ap, final OutFlowRule rule, final Graph context) {
+	public Graph visit(final ActionPoint ap, final OutFlowRule rule, final Graph context) {
 		context.links.add(new Link(ap.uuid, rule.uuid, ap.output, ap.activator));
 
 		context.nodes.add(new Node(rule.uuid, rule.output + "\\n" + rule.activator, Shape.BOX));
-		context.links.add(new Link(rule.uuid, findAction(module, rule.nextAction).uuid, rule.output, rule.activator));
-		return super.visit(module, ap, rule, context);
+		for (final UUID nextUuid : forEachActionPoint(rule.output, rule.nextAction, a -> a.uuid)) {
+			context.links.add(new Link(rule.uuid, nextUuid, rule.output, rule.activator));
+		}
+		for (final UUID nextUuid : forEachInputFlow(rule.output, rule.nextAction, (a, r) -> r.uuid)) {
+			context.links.add(new Link(rule.uuid, nextUuid, rule.output, rule.activator));
+		}
+
+		return super.visit(ap, rule, context);
 	}
 
 	@Override
-	public Graph visit(final Module module, final ActionPoint ap, final Graph context) {
-		final Graph c = super.visit(module, ap, context);
+	public Graph visit(final ActionPoint ap, final Graph context) {
+		final Graph c = super.visit(ap, context);
 		c.nodes.add(new Node(ap.uuid, ap.name, Shape.ELLIPSE));
 		return c;
 	}
 
 	@Override
-	public Graph visit(final Module module, final Flow flow, final Graph context) {
-		super.visit(module, flow, context);
+	public Graph visit(final Flow flow, final Graph context) {
+		super.visit(flow, context);
 
 		try {
 			final TextFormatter output = new TextFormatter(TextFormatter.output(new StringBuilder()));
@@ -118,7 +124,7 @@ public class DotModuleVisitor extends ModuleVisitor<DotModuleVisitor.Graph> {
 					extra = "";
 				}
 				output.appendIndented(String.format("\"%s\" [ label=\"%s\", shape=\"%s\" %s ];", node.uuid.toString(),
-						node.label, node.shape.name(), extra)).newLine();
+						node.label, node.shape.name().toLowerCase(), extra)).newLine();
 			}
 			for (final Link link : context.links) {
 				output.appendIndented(String.format("\"%s\" -> \"%s\" [ label=\"%s\\n%s\" ];", link.from, link.to,

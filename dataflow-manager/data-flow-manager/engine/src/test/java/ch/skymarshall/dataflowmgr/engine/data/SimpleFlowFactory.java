@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -20,6 +20,7 @@ import static ch.skymarshall.dataflowmgr.engine.data.UUIDFactory.uuid;
 
 import java.util.function.Supplier;
 
+import ch.skymarshall.dataflowmgr.local.LocalAPRef;
 import ch.skymarshall.dataflowmgr.model.ActionPoint;
 import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.FlowAction;
@@ -80,11 +81,12 @@ public class SimpleFlowFactory {
 	}
 
 	public static Flow<IntTransfer> simpleFlow(final Registry registry) {
+
 		final ActionPoint<IntTransfer, IntTransfer> action1 = ActionPoint.simple(uuid(), new IntTransferIdentity());
 		final ActionPoint<IntTransfer, ?> action2 = ActionPoint.terminal(uuid(), new DumpIntTransfer());
 
 		final OutputDecisionRule<IntTransfer, IntTransfer> a1Toa2 = OutputDecisionRule.output(uuid(), (t) -> true,
-				FlowActionType.CONTINUE, action2, (d) -> d);
+				FlowActionType.CONTINUE, LocalAPRef.refTo(action2), (d) -> d);
 		action1.addOutputRule(a1Toa2);
 
 		registry.registerObject(action1, "action1");

@@ -64,9 +64,9 @@ public abstract class AbstractWriter {
 	}
 
 	public void configure(final Supplier<InputStream> streamSupplier, final String commandLine) throws IOException {
+		this.commandLine = commandLine;
 		try (InputStream configIn = streamSupplier.get()) {
 			config = jsonAdapter.readConfig(configIn);
-			this.commandLine = commandLine;
 		}
 		registry = new Registry();
 		registry.addTransformer(new Transformer());

@@ -212,7 +212,7 @@ public class ActionPoint<IDT extends FlowData, ODT extends FlowData> extends IDD
 		 * @return the next action points
 		 */
 		public <ExecType> Set<ExecType> createExecutions(final ExecutorFactory<ExecType> executorFactory) {
-			return selectedRules.stream().map(dr -> dr.createExecutor(outputData, executorFactory))
+			return selectedRules.stream().flatMap(dr -> dr.createExecutor(outputData, executorFactory).stream())
 					.collect(Collectors.toSet());
 		}
 
@@ -244,12 +244,12 @@ public class ActionPoint<IDT extends FlowData, ODT extends FlowData> extends IDD
 	 * @param inputData
 	 * @return
 	 */
-	public ActionPoint<IDT, ODT>.ExecutionSteps invoke(final FlowData inputData) {
+	public ActionPoint<IDT, ODT>.ExecutionSteps createExecution(final FlowData inputData) {
 		return new ExecutionSteps(inputData);
 	}
 
-	public static <IDT extends FlowData, ODT extends FlowData> ActionPoint<IDT, ODT> simple(
-			final UUID uuid, final FlowAction<IDT, ODT> action) {
+	public static <IDT extends FlowData, ODT extends FlowData> ActionPoint<IDT, ODT> simple(final UUID uuid,
+			final FlowAction<IDT, ODT> action) {
 		return new ActionPoint<>(uuid, action);
 	}
 

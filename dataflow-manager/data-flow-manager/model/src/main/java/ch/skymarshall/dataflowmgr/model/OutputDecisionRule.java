@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -15,6 +15,7 @@
  ******************************************************************************/
 package ch.skymarshall.dataflowmgr.model;
 
+import java.util.Collection;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -33,46 +34,6 @@ public class OutputDecisionRule<OutActionPointType extends FlowData, OutFlowType
 	private final FlowActionType actionType;
 	private final ActionPointReference<OutFlowType> nextActionPointRef;
 	private final Function<OutActionPointType, OutFlowType> extractionFunction;
-
-	/**
-	 * Send rule to send output to next action point
-	 *
-	 * @param uuid
-	 *            the rule's uuid
-	 * @param activationPredicate
-	 *            the predicate that enables this rule
-	 * @param actionType
-	 *            the flow action type
-	 * @param actionPointReference
-	 * @param apToFlow
-	 *            the conversion of the action point's output to the data flow
-	 * @return
-	 */
-	public static <OutActionPointType extends FlowData, OutFlowType extends FlowData> OutputDecisionRule<OutActionPointType, OutFlowType> output(
-			final UUID uuid, final Predicate<OutActionPointType> activationPredicate, final FlowActionType actionType,
-			final ActionPoint<OutFlowType, ?> ap, final Function<OutActionPointType, OutFlowType> apToFlow) {
-		return new OutputDecisionRule<>(uuid, activationPredicate, actionType, LocalAPRef.local(ap), apToFlow);
-	}
-
-	/**
-	 * Send rule to send output to next action point
-	 *
-	 * @param uuid
-	 *            the rule's uuid
-	 * @param activationPredicate
-	 *            the predicate that enables this rule
-	 * @param actionType
-	 *            the flow action type
-	 * @param actionPointReference
-	 * @param apToFlow
-	 *            the conversion of the action point's output to the data flow
-	 * @return
-	 */
-	public static <OutActionPointType extends FlowData, OutFlowType extends FlowData> OutputDecisionRule<OutActionPointType, OutFlowType> output(
-			final UUID uuid, final Predicate<OutActionPointType> activationPredicate, final FlowActionType actionType,
-			final InputDecisionRule<OutFlowType, ?> ap, final Function<OutActionPointType, OutFlowType> apToFlow) {
-		return new OutputDecisionRule<>(uuid, activationPredicate, actionType, LocalAPRef.local(ap), apToFlow);
-	}
 
 	/**
 	 * Send rule to send output to next action point
@@ -114,15 +75,17 @@ public class OutputDecisionRule<OutActionPointType extends FlowData, OutFlowType
 	}
 
 	/**
-	 * Creates an executor that will execute the next decision point, according
-	 * to the output of this decision point
+	 * Creates an executor that will execute the next decision point, according to
+	 * the output of this decision point
 	 *
+	 * @param E
+	 *            the step executor type
 	 * @param actionPointData
 	 * @param registry
 	 * @return
 	 */
-	public <ExecutorType> ExecutorType createExecutor(final OutActionPointType actionPointData,
-			final ExecutorFactory<ExecutorType> executorFactory) {
+	public <E> Collection<E> createExecutor(final OutActionPointType actionPointData,
+			final ExecutorFactory<E> executorFactory) {
 		final OutFlowType nextDPData = convertData(actionPointData);
 		return executorFactory.createNextDecisionPointExecution(nextActionPointRef, nextDPData);
 	}

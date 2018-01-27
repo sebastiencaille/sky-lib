@@ -13,6 +13,7 @@ ${imports}
 public class ${flow.name}Factory {
 
 	public static Flow<${flow.input}> create(final Registry registry) {
+	    ${flow.init}
 		${flow.actions}
 		${flow.inputRules}
 		${flow.outputRules}

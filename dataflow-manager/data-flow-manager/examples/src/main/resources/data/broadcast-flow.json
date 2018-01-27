@@ -1,5 +1,5 @@
 {	
-	"name" : "simpleFlow",
+	"name" : "broadcastFlow",
 	"package-name": "ch.skymarshall.dataflowmgr.engine.examples",
 	"dtos": [
 		{
@@ -34,9 +34,9 @@
 					"output": "IntTransfer",
 					"activator": "true",
 					"transform-function": "apOut",
-					"nextAction": [ "DumpIntTransfer" ]
+					"nextAction": [ "broadcast-type" ]
 				}
-	 		]
+			]
 			
 		},
 		{
@@ -50,8 +50,8 @@
 	"flows": [
 		{
 			"uuid": "f35b780b-bb4d-4010-83eb-6222ac947a0f",
-			"name": "SimpleFlow",
-			"description": "Simple Test Flow",
+			"name": "BroadcastFlow",
+			"description": "Broadcast Test Flow",
 			"input": "IntTransfer",
 			"action": "IntTransferIdentity"
 		}

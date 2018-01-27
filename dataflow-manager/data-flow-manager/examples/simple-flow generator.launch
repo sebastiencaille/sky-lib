@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+        <listEntry value="/data-flow-generator/src/main/java/ch/skymarshall/dataflowmgr/generator/writers/singlenode/SingleNodeWriter.java"/>
+    </listAttribute>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+        <listEntry value="1"/>
+    </listAttribute>
+    <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.m2e.launchconfig.classpathProvider"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="ch.skymarshall.dataflowmgr.generator.writers.singlenode.SingleNodeWriter"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-c ${resource_loc:/data-flow-examples/src/main/resources/data/config.json} -o ${project_loc:data-flow-examples}/src/main/java -f ${resource_loc:/data-flow-examples/src/main/resources/data/simple-flow.json}"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="data-flow-examples"/>
+    <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
+</launchConfiguration>

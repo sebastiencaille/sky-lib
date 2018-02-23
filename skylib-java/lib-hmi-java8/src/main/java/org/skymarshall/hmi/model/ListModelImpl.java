@@ -528,44 +528,46 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 		if (objectEdition == null) {
 			return;
 		}
-
-		objectEdition.updateAccepted();
-		if (!objectEdition.isAccepted() && objectEdition.oldIndex < 0) {
-			// Edited object was not in the model and is still not in the model
-			// Same assertion valid for child models
-			fireEditionCancelled(objectEdition.value);
-		} else if (!objectEdition.isAccepted()) {
-			// Edited object is removed from the model, and potentially from
-			// child models
-			fireEditionCancelled(objectEdition.value);
-			fireMutating();
-			data.remove(objectEdition.oldIndex);
-			fireIntervalRemoved(this, objectEdition.oldIndex, objectEdition.oldIndex);
-			fireValueRemoved(objectEdition.value);
-		} else if (objectEdition.oldIndex < 0) {
-			// Edited object is added to the model, and potentially to child
-			// models
-			fireEditionCancelled(objectEdition.value);
-			fireMutating();
-			final int newIndex = computeInsertionPoint(objectEdition.value);
-			data.add(newIndex, objectEdition.value);
-			fireIntervalAdded(this, newIndex, newIndex);
-			fireValueAdded(objectEdition.value);
-		} else {
-			// Edited object may have moved. First remove the data, since it may
-			// be at wrong location and this may confuse computeInsertionPoint
-			data.remove(objectEdition.oldIndex);
-			final int newIndex = computeInsertionPoint(objectEdition.value);
-			data.add(newIndex, objectEdition.value);
-			if (objectEdition.oldIndex == newIndex) {
-				fireContentsChanged(this, newIndex, newIndex);
-			} else {
+		try {
+			objectEdition.updateAccepted();
+			if (!objectEdition.isAccepted() && objectEdition.oldIndex < 0) {
+				// Edited object was not in the model and is still not in the model
+				// Same assertion valid for child models
+				fireEditionCancelled(objectEdition.value);
+			} else if (!objectEdition.isAccepted()) {
+				// Edited object is removed from the model, and potentially from
+				// child models
+				fireEditionCancelled(objectEdition.value);
+				fireMutating();
+				data.remove(objectEdition.oldIndex);
 				fireIntervalRemoved(this, objectEdition.oldIndex, objectEdition.oldIndex);
+				fireValueRemoved(objectEdition.value);
+			} else if (objectEdition.oldIndex < 0) {
+				// Edited object is added to the model, and potentially to child
+				// models
+				fireEditionCancelled(objectEdition.value);
+				fireMutating();
+				final int newIndex = computeInsertionPoint(objectEdition.value);
+				data.add(newIndex, objectEdition.value);
 				fireIntervalAdded(this, newIndex, newIndex);
+				fireValueAdded(objectEdition.value);
+			} else {
+				// Edited object may have moved. First remove the data, since it may
+				// be at wrong location and this may confuse computeInsertionPoint
+				data.remove(objectEdition.oldIndex);
+				final int newIndex = computeInsertionPoint(objectEdition.value);
+				data.add(newIndex, objectEdition.value);
+				if (objectEdition.oldIndex == newIndex) {
+					fireContentsChanged(this, newIndex, newIndex);
+				} else {
+					fireIntervalRemoved(this, objectEdition.oldIndex, objectEdition.oldIndex);
+					fireIntervalAdded(this, newIndex, newIndex);
+				}
+				fireEditionStopped();
 			}
-			fireEditionStopped();
+		} finally {
+			objectEdition = null;
 		}
-		objectEdition = null;
 	}
 
 	public int getRowOf(final T value) {

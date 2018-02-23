@@ -27,18 +27,15 @@ public class TestObjectHmiModel extends HmiModel implements IObjectHmiModel<org.
 	
 	
 
-    static {
-        try {
-			
-        } catch (final Exception e) {
-            throw new IllegalStateException("Cannot initialize class", e);
-        }
-    }
-	protected final IntProperty aSecondValueProperty;protected final ObjectProperty<java.lang.String> aFirstValueProperty;
+	protected final IntProperty aSecondValueProperty;
+	protected final ObjectProperty<java.lang.String> aFirstValueProperty;
+	
 
     public TestObjectHmiModel(final String prefix, final ControllerPropertyChangeSupport propertySupport, final ErrorProperty errorProperty) {
         super(propertySupport, errorProperty);
-		aSecondValueProperty = Properties.of(new IntProperty(prefix + "-ASecondValue",  propertySupport)).persistent(Persisters.from(currentObjectProvider, GetSetAccess.<org.skymarshall.example.hmi.TestObject,java.lang.Integer>access((o) -> o::getASecondValue, (o) -> o::setASecondValue))).setErrorNotifier(errorProperty).getProperty();aFirstValueProperty = Properties.of(new ObjectProperty<java.lang.String>(prefix + "-AFirstValue",  propertySupport)).persistent(Persisters.from(currentObjectProvider, GetSetAccess.<org.skymarshall.example.hmi.TestObject,java.lang.String>access((o) -> o::getAFirstValue, (o) -> o::setAFirstValue))).setErrorNotifier(errorProperty).getProperty();
+		aSecondValueProperty = Properties.of(new IntProperty(prefix + "-ASecondValue",  propertySupport)).persistent(Persisters.from(currentObjectProvider, GetSetAccess.<org.skymarshall.example.hmi.TestObject,java.lang.Integer>access((o) -> o::getASecondValue, (o) ->o::setASecondValue))).setErrorNotifier(errorProperty).getProperty();
+		aFirstValueProperty = Properties.of(new ObjectProperty<java.lang.String>(prefix + "-AFirstValue",  propertySupport)).persistent(Persisters.from(currentObjectProvider, GetSetAccess.<org.skymarshall.example.hmi.TestObject,java.lang.String>access((o) -> o::getAFirstValue, (o) ->o::setAFirstValue))).setErrorNotifier(errorProperty).getProperty();
+		
     }
 
     public TestObjectHmiModel(final String prefix, final HmiController controller) {

@@ -68,7 +68,7 @@ public class AbstractObjectMetaData<DataType> {
 	/**
 	 * Object attributes
 	 */
-	protected final Map<String, AbstractAttributeMetaData<DataType>> attributes = new HashMap<String, AbstractAttributeMetaData<DataType>>();
+	protected final Map<String, AbstractAttributeMetaData<DataType>> attributes = new HashMap<>();
 
 	/**
 	 * Type of the object
@@ -102,15 +102,15 @@ public class AbstractObjectMetaData<DataType> {
 	}
 
 	public Collection<AbstractAttributeMetaData<DataType>> getAttributes() {
-		return new HashSet<AbstractAttributeMetaData<DataType>>(attributes.values());
+		return new HashSet<>(attributes.values());
 	}
 
 	public DataObjectManager<DataType> createAccessorTo(final DataType _object) {
-		return new DataObjectManager<DataType>(this, _object);
+		return new DataObjectManager<>(this, _object);
 	}
 
 	public UntypedDataObjectManager<?> createUntypedAccessorTo(final DataType _object) {
-		return new UntypedDataObjectManager<DataType>(this, _object);
+		return new UntypedDataObjectManager<>(this, _object);
 	}
 
 	public UntypedDataObjectMetaData createUntypedMetaData() {
@@ -119,7 +119,7 @@ public class AbstractObjectMetaData<DataType> {
 
 	protected void introspectClass(final Class<?> _clazz, final boolean accessPrivateFields) {
 
-		final Set<String> attribNames = new HashSet<String>();
+		final Set<String> attribNames = new HashSet<>();
 
 		for (final Method method : _clazz.getMethods()) {
 			final String name = method.getName();
@@ -129,6 +129,10 @@ public class AbstractObjectMetaData<DataType> {
 			if (name.startsWith("get") && name.length() > 3 && method.getParameterTypes().length == 0
 					&& method.getReturnType() != Void.TYPE) {
 				attribNames.add(name.substring(3));
+			}
+			if (name.startsWith("is") && name.length() > 2 && method.getParameterTypes().length == 0
+					&& (method.getReturnType() == Boolean.TYPE || method.getReturnType() == Boolean.class)) {
+				attribNames.add(name.substring(2));
 			}
 		}
 

@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -32,5 +32,10 @@ public class TestObject {
 	@Override
 	public String toString() {
 		return String.valueOf(val);
+	}
+
+	@Override
+	public int hashCode() {
+		return val;
 	}
 }

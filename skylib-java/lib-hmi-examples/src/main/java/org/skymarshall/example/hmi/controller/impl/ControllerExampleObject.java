@@ -21,10 +21,10 @@ import org.skymarshall.hmi.HmiObject;
 @HmiObject
 public class ControllerExampleObject {
 
-	boolean booleanProp;
-	int intProp;
-	String stringProp;
-	TestObject testObjectProp;
+	private boolean booleanProp;
+	private int intProp;
+	private String stringProp;
+	private TestObject testObjectProp;
 
 	public boolean isBooleanProp() {
 		return booleanProp;

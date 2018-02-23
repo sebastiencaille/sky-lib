@@ -96,25 +96,29 @@ abstract class AttributeFactory {
 	private static <T> AbstractAttributeMetaData<T> createGetSetAttribute(final Class<?> _currentClass,
 			final String _property, final String _name) throws NoSuchMethodException {
 		Method getter;
-		getter = _currentClass.getMethod("get" + _property);
+		try {
+			getter = _currentClass.getMethod("get" + _property);
+		} catch (final NoSuchMethodException e) {
+			getter = _currentClass.getMethod("is" + _property);
+		}
 
 		final Class<?> type = getter.getReturnType();
 
 		Method setter = null;
 		try {
 			setter = _currentClass.getMethod("set" + _property, type);
-			return new GetSetAttribute<T>(_name, getter, setter);
+			return new GetSetAttribute<>(_name, getter, setter);
 
 		} catch (final Exception e) { // NOSONAR
 			Logger.getAnonymousLogger().finest("No setter for " + _name);
-			return new ReadOnlyAttribute<T>(_name, getter);
+			return new ReadOnlyAttribute<>(_name, getter);
 		}
 	}
 
 	private static <T> FieldAttribute<T> createFieldAttribute(final Class<?> _currentClass, final String _property,
 			final String _name) {
 		try {
-			return new FieldAttribute<T>(_name, findField(_currentClass, _property));
+			return new FieldAttribute<>(_name, findField(_currentClass, _property));
 		} catch (final NoSuchFieldException e) { // NOSONAR
 			Logger.getAnonymousLogger().finest("Cannot access field " + _name);
 			return null;

@@ -43,7 +43,7 @@ public abstract class AbstractProperty {
 	}
 
 	public static ErrorNotifier emptyErrorNotifier() {
-		return (s, e) -> {
+		return (s, e) -> { // nope
 		};
 	}
 

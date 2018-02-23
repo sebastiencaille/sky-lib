@@ -170,10 +170,10 @@ public class HmiClassProcessor {
 		}
 
 		forEachAttribute(metaData, attrib -> context.append("fields.declare",
-				AttributeProcessor.create(context, attrib, delegate).addImports().generateDeclaration()));
+				AttributeProcessor.create(context, attrib, delegate).addImports().generateDeclaration() + "\n"));
 
 		forEachAttribute(metaData, attrib -> context.append("fields.init",
-				AttributeProcessor.create(context, attrib, delegate).addImports().generateInitialization()));
+				AttributeProcessor.create(context, attrib, delegate).addImports().generateInitialization() + "\n"));
 	}
 
 	@FunctionalInterface

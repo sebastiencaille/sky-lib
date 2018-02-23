@@ -19,13 +19,6 @@ public class ${modelClass} extends HmiModel implements IObjectHmiModel<${objectC
 
 	${fields.declareStatic}
 
-    static {
-        try {
-			${fields.initStatic}
-        } catch (final Exception e) {
-            throw new IllegalStateException("Cannot initialize class", e);
-        }
-    }
 	${fields.declare}
 
     public ${modelClass}(final String prefix, final ControllerPropertyChangeSupport propertySupport, final ErrorProperty errorProperty) {

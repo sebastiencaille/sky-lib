@@ -32,18 +32,19 @@ public class ControllerExampleObjectHmiModel extends HmiModel implements IObject
 	
 	
 
-    static {
-        try {
-			
-        } catch (final Exception e) {
-            throw new IllegalStateException("Cannot initialize class", e);
-        }
-    }
-	protected final BooleanProperty booleanPropProperty;protected final IntProperty intPropProperty;protected final ObjectProperty<org.skymarshall.example.hmi.TestObject> testObjectPropProperty;protected final ObjectProperty<java.lang.String> stringPropProperty;
+	protected final BooleanProperty booleanPropProperty;
+	protected final IntProperty intPropProperty;
+	protected final ObjectProperty<org.skymarshall.example.hmi.TestObject> testObjectPropProperty;
+	protected final ObjectProperty<java.lang.String> stringPropProperty;
+	
 
     public ControllerExampleObjectHmiModel(final String prefix, final ControllerPropertyChangeSupport propertySupport, final ErrorProperty errorProperty) {
         super(propertySupport, errorProperty);
-		booleanPropProperty = Properties.of(new BooleanProperty(prefix + "-BooleanProp",  propertySupport)).persistent(Persisters.from(currentObjectProvider, GetSetAccess.<org.skymarshall.example.hmi.controller.impl.ControllerExampleObject,java.lang.Boolean>access((o) -> o::isBooleanProp, (o) -> o::setBooleanProp))).setErrorNotifier(errorProperty).getProperty();intPropProperty = Properties.of(new IntProperty(prefix + "-IntProp",  propertySupport)).persistent(Persisters.from(currentObjectProvider, GetSetAccess.<org.skymarshall.example.hmi.controller.impl.ControllerExampleObject,java.lang.Integer>access((o) -> o::getIntProp, (o) -> o::setIntProp))).setErrorNotifier(errorProperty).getProperty();testObjectPropProperty = Properties.of(new ObjectProperty<org.skymarshall.example.hmi.TestObject>(prefix + "-TestObjectProp",  propertySupport)).persistent(Persisters.from(currentObjectProvider, GetSetAccess.<org.skymarshall.example.hmi.controller.impl.ControllerExampleObject,org.skymarshall.example.hmi.TestObject>access((o) -> o::getTestObjectProp, (o) -> o::setTestObjectProp))).setErrorNotifier(errorProperty).getProperty();stringPropProperty = Properties.of(new ObjectProperty<java.lang.String>(prefix + "-StringProp",  propertySupport)).persistent(Persisters.from(currentObjectProvider, GetSetAccess.<org.skymarshall.example.hmi.controller.impl.ControllerExampleObject,java.lang.String>access((o) -> o::getStringProp, (o) -> o::setStringProp))).setErrorNotifier(errorProperty).getProperty();
+		booleanPropProperty = Properties.of(new BooleanProperty(prefix + "-BooleanProp",  propertySupport)).persistent(Persisters.from(currentObjectProvider, GetSetAccess.<org.skymarshall.example.hmi.controller.impl.ControllerExampleObject,java.lang.Boolean>access((o) -> o::isBooleanProp, (o) ->o::setBooleanProp))).setErrorNotifier(errorProperty).getProperty();
+		intPropProperty = Properties.of(new IntProperty(prefix + "-IntProp",  propertySupport)).persistent(Persisters.from(currentObjectProvider, GetSetAccess.<org.skymarshall.example.hmi.controller.impl.ControllerExampleObject,java.lang.Integer>access((o) -> o::getIntProp, (o) ->o::setIntProp))).setErrorNotifier(errorProperty).getProperty();
+		testObjectPropProperty = Properties.of(new ObjectProperty<org.skymarshall.example.hmi.TestObject>(prefix + "-TestObjectProp",  propertySupport)).persistent(Persisters.from(currentObjectProvider, GetSetAccess.<org.skymarshall.example.hmi.controller.impl.ControllerExampleObject,org.skymarshall.example.hmi.TestObject>access((o) -> o::getTestObjectProp, (o) ->o::setTestObjectProp))).setErrorNotifier(errorProperty).getProperty();
+		stringPropProperty = Properties.of(new ObjectProperty<java.lang.String>(prefix + "-StringProp",  propertySupport)).persistent(Persisters.from(currentObjectProvider, GetSetAccess.<org.skymarshall.example.hmi.controller.impl.ControllerExampleObject,java.lang.String>access((o) -> o::getStringProp, (o) ->o::setStringProp))).setErrorNotifier(errorProperty).getProperty();
+		
     }
 
     public ControllerExampleObjectHmiModel(final String prefix, final HmiController controller) {

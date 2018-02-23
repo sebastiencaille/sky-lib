@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class Template {
 
@@ -75,6 +76,7 @@ public class Template {
 	}
 
 	public void write(final File file) throws IOException {
+		Logger.getLogger(Template.class.getName()).info("Write " + file);
 		file.getParentFile().mkdirs();
 
 		try (final FileWriter out = new FileWriter(file)) {

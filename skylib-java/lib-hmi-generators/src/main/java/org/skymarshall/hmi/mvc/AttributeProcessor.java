@@ -93,8 +93,20 @@ public abstract class AttributeProcessor {
 		@Override
 		protected String getObjectTypeAsString() {
 			switch (attrib.getType().getSimpleName()) {
+			case "short":
+				return Short.class.getName();
 			case "int":
 				return Integer.class.getName();
+			case "long":
+				return Long.class.getName();
+			case "float":
+				return Float.class.getName();
+			case "double":
+				return Double.class.getName();
+			case "char":
+				return Character.class.getName();
+			case "boolean":
+				return Boolean.class.getName();
 			default:
 				return "java.lang." + toFirstLetterInUpperCase(attrib.getType().getSimpleName());
 			}
@@ -204,7 +216,7 @@ public abstract class AttributeProcessor {
 
 	String generateInitialization() throws IOException {
 		return String.format(
-				"%s = Properties.of(new %s(prefix + \"-%s\",  propertySupport)).persistent(Persisters.from(currentObjectProvider, %s)).setErrorNotifier(errorProperty).getProperty();\n",
+				"%s = Properties.of(new %s(prefix + \"-%s\",  propertySupport)).persistent(Persisters.from(currentObjectProvider, %s)).setErrorNotifier(errorProperty).getProperty();",
 				getPropertyName(), getPropertyType(), attrib.getName(), getFieldCreation());
 	}
 

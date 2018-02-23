@@ -83,7 +83,7 @@ public class RootListModel<T> extends ListModel<T> {
 	}
 
 	@Override
-	public IEdition startEditingValue(final T value) {
+	public IEdition<T> startEditingValue(final T value) {
 		return impl.startEditingValue(value);
 	}
 

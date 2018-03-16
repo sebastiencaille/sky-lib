@@ -27,23 +27,31 @@ import org.skymarshall.hmi.mvc.properties.AbstractProperty;
  *
  * @author scaille
  *
- * @param <DataType>
- * @param <FilterPropertyType>
+ * @param <D>
+ *            the type of the filtered data
+ * @param <F>
+ *            the type of the property that filters the data
  */
-public abstract class BoundFilter<DataType, FilterPropertyType> extends AbstractDynamicView<DataType>
-		implements IComponentBinding<FilterPropertyType>, Predicate<DataType> {
+public abstract class BoundFilter<D, F> extends AbstractDynamicView<D> implements IComponentBinding<F>, Predicate<D> {
 
-	private FilterPropertyType filterPropertyValue;
-	private IListViewOwner<DataType> owner;
+	private F filterPropertyValue;
+	private IListViewOwner<D> owner;
 
-	protected abstract boolean accept(DataType value, FilterPropertyType filter);
+	protected abstract boolean accept(D value, F filter);
 
-	public static <DataType, FilterObjectType> BoundFilter<DataType, FilterObjectType> filter(
-			final BiPredicate<DataType, FilterObjectType> consumer) {
-		return new BoundFilter<DataType, FilterObjectType>() {
+	/**
+	 * * @param <D> the type of the filtered data
+	 * 
+	 * @param <F>
+	 *            the type of the property that filters the data
+	 * @param consumer
+	 * @return
+	 */
+	public static <D, F> BoundFilter<D, F> filter(final BiPredicate<D, F> consumer) {
+		return new BoundFilter<D, F>() {
 
 			@Override
-			protected boolean accept(final DataType value, final FilterObjectType filter) {
+			protected boolean accept(final D value, final F filter) {
 				return consumer.test(value, filter);
 			}
 		};
@@ -52,17 +60,17 @@ public abstract class BoundFilter<DataType, FilterPropertyType> extends Abstract
 	public BoundFilter() {
 	}
 
-	protected FilterPropertyType getFilterPropertyValue() {
+	protected F getFilterPropertyValue() {
 		return filterPropertyValue;
 	}
 
 	@Override
-	public void attach(final IListViewOwner<DataType> viewOwner) {
+	public void attach(final IListViewOwner<D> viewOwner) {
 		this.owner = viewOwner;
 	}
 
 	@Override
-	public void addComponentValueChangeListener(final IComponentLink<FilterPropertyType> link) {
+	public void addComponentValueChangeListener(final IComponentLink<F> link) {
 		// Read only
 	}
 
@@ -72,13 +80,13 @@ public abstract class BoundFilter<DataType, FilterPropertyType> extends Abstract
 	}
 
 	@Override
-	public void setComponentValue(final AbstractProperty source, final FilterPropertyType value) {
+	public void setComponentValue(final AbstractProperty source, final F value) {
 		filterPropertyValue = value;
 		owner.viewUpdated();
 	}
 
 	@Override
-	public boolean test(final DataType value) {
+	public boolean test(final D value) {
 		if (filterPropertyValue == null) {
 			// not yet initialized
 			return false;

@@ -6,28 +6,36 @@ import java.util.function.Supplier;
 
 import org.skymarshall.hmi.mvc.properties.IPersister;
 
-public class GetSetAccess<Container, Attrib> {
+/**
+ *
+ * @author scaille
+ *
+ * @param <C>
+ *            Type of the container object
+ * @param <A>
+ *            Type of the object's attribute
+ */
+public class GetSetAccess<C, A> {
 
-	private final Function<Container, Supplier<Attrib>> getter;
-	private final Function<Container, Consumer<Attrib>> setter;
+	private final Function<C, Supplier<A>> getter;
+	private final Function<C, Consumer<A>> setter;
 
-	public GetSetAccess(final Function<Container, Supplier<Attrib>> getter,
-			final Function<Container, Consumer<Attrib>> setter) {
+	public GetSetAccess(final Function<C, Supplier<A>> getter, final Function<C, Consumer<A>> setter) {
 		this.getter = getter;
 		this.setter = setter;
 
 	}
 
-	public IPersister<Attrib> asPersister(final Object object) {
-		return new IPersister<Attrib>() {
+	public IPersister<A> asPersister(final Object object) {
+		return new IPersister<A>() {
 			@Override
-			public Attrib get() {
-				return getter.apply((Container) object).get();
+			public A get() {
+				return getter.apply((C) object).get();
 			}
 
 			@Override
-			public void set(final Attrib value) {
-				final Consumer<Attrib> setterAccess = setter.apply((Container) object);
+			public void set(final A value) {
+				final Consumer<A> setterAccess = setter.apply((C) object);
 				if (setterAccess != null) {
 					setterAccess.accept(value);
 				}
@@ -35,8 +43,20 @@ public class GetSetAccess<Container, Attrib> {
 		};
 	}
 
-	public static <Container, Attrib> GetSetAccess<Container, Attrib> access(
-			final Function<Container, Supplier<Attrib>> getter, final Function<Container, Consumer<Attrib>> setter) {
+	/**
+	 * *
+	 * 
+	 * @param <C>
+	 *            Type of the container object
+	 * @param <A>
+	 *            Type of the object's attribute
+	 * 
+	 * @param getter
+	 * @param setter
+	 * @return
+	 */
+	public static <C, A> GetSetAccess<C, A> access(
+			final Function<C, Supplier<A>> getter, final Function<C, Consumer<A>> setter) {
 		return new GetSetAccess<>(getter, setter);
 	}
 

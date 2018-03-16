@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -45,15 +45,8 @@ public class MemRegistry implements Registry {
 
 	@Override
 	public <T> T get(final UUID apUuid, final UUID flowUuid, final Supplier<T> newData) {
-		@SuppressWarnings("unchecked")
 		final String id = apUuid + "-" + flowUuid;
-		T value = (T) data.get(id);
-		if (value == null) {
-			value = newData.get();
-			data.put(id, value);
-			return value;
-		}
-		return value;
+		return (T) data.computeIfAbsent(id, k -> newData.get());
 	}
 
 }

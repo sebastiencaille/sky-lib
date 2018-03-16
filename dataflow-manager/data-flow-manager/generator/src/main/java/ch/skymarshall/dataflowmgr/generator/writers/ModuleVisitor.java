@@ -178,12 +178,7 @@ public class ModuleVisitor<T> {
 	}
 
 	private void addToBroadcastGroup(final String group, final ActionPoint ap) {
-		List<ActionPoint> actions = broadcastGroups.get(group);
-		if (actions == null) {
-			actions = new ArrayList<>();
-			broadcastGroups.put(group, actions);
-		}
-		actions.add(ap);
+		broadcastGroups.computeIfAbsent(group, k -> new ArrayList<>()).add(ap);
 	}
 
 }

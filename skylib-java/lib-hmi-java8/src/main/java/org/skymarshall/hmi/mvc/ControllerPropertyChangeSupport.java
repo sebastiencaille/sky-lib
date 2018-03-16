@@ -46,7 +46,11 @@ public class ControllerPropertyChangeSupport {
 	private final PropertyChangeSupport support;
 
 	private static class CallInfo {
-		private Object caller;
+		public CallInfo(final Object caller) {
+			this.caller = caller;
+		}
+
+		private final Object caller;
 		private int count;
 	}
 
@@ -82,12 +86,7 @@ public class ControllerPropertyChangeSupport {
 		if (checkSwingThread && !EventQueue.isDispatchThread()) {
 			throw new IllegalStateException("Property " + propertyName + " fired out of Swing thread");
 		}
-		CallInfo info = callInfo.get(propertyName);
-		if (info == null) {
-			info = new CallInfo();
-			info.caller = caller;
-			callInfo.put(propertyName, info);
-		}
+		final CallInfo info = callInfo.computeIfAbsent(propertyName, k -> new CallInfo(caller));
 		info.count++;
 
 		if (info.count > 5) {

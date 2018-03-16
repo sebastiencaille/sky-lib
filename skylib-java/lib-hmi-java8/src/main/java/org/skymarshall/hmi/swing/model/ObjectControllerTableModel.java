@@ -60,17 +60,29 @@ import org.skymarshall.hmi.mvc.properties.AbstractProperty;
  *
  * @author Sebastien Caille
  *
- * @param <ObjectType>
- * @param <ModelType>
- * @param <ColumnsType>
+ * @param <O>
+ *            type of the displayed object
+ * @param <M>
+ *            type of the object's hmi model
+ * @param <C>
+ *            type that enums the columns
  */
 @SuppressWarnings("serial")
-public abstract class ObjectControllerTableModel<ObjectType, ModelType extends IObjectHmiModel<ObjectType>, ColumnsType extends Enum<ColumnsType>>
-		extends ListModelTableModel<ObjectType, ColumnsType> {
+public abstract class ObjectControllerTableModel<O, M extends IObjectHmiModel<O>, C extends Enum<C>>
+		extends ListModelTableModel<O, C> {
 
-	static class TableBinding<ObjectType, U> implements IComponentBinding<U> {
+	/**
+	 *
+	 * @author scaille
+	 *
+	 * @param <O>
+	 *            type of the displayed object
+	 * @param <U>
+	 *            type of the column's data
+	 */
+	static class TableBinding<O, U> implements IComponentBinding<U> {
 
-		private final Map<ObjectType, U> changes = new HashMap<>();
+		private final Map<O, U> changes = new HashMap<>();
 
 		private AbstractProperty property;
 
@@ -79,7 +91,7 @@ public abstract class ObjectControllerTableModel<ObjectType, ModelType extends I
 		private Object loadedValue;
 
 		@SuppressWarnings("unchecked")
-		void addChange(final ObjectType object, final Object newValue) {
+		void addChange(final O object, final Object newValue) {
 			changes.put(object, (U) newValue);
 		}
 
@@ -116,54 +128,54 @@ public abstract class ObjectControllerTableModel<ObjectType, ModelType extends I
 
 	}
 
-	private final TableBinding<ObjectType, ?>[] bindings;
-	private final ModelType objectModel;
+	private final TableBinding<O, ?>[] bindings;
+	private final M objectModel;
 
 	/**
 	 * Binds all model properties with this model's bindings
 	 *
 	 * @param aModel
 	 */
-	protected abstract void bindModel(ModelType anObjectModel);
+	protected abstract void bindModel(M anObjectModel);
 
-	protected abstract AbstractProperty getPropertyAt(ModelType anObjectModel, ColumnsType column);
+	protected abstract AbstractProperty getPropertyAt(M anObjectModel, C column);
 
-	public ObjectControllerTableModel(final ListModel<ObjectType> listModel, final ModelType objectModel,
-			final Class<ColumnsType> columnsEnumClass) {
+	public ObjectControllerTableModel(final ListModel<O> listModel, final M objectModel,
+			final Class<C> columnsEnumClass) {
 		super(listModel, columnsEnumClass);
 		this.objectModel = objectModel;
 		bindings = new TableBinding[columnsEnumClass.getEnumConstants().length];
 		bindModel(objectModel);
 
-		for (final ColumnsType column : columnsEnumClass.getEnumConstants()) {
+		for (final C column : columnsEnumClass.getEnumConstants()) {
 			bindings[column.ordinal()].property = getPropertyAt(objectModel, column);
 		}
 	}
 
-	protected <U> IComponentBinding<U> getColumnBinding(final ColumnsType column) {
-		final TableBinding<ObjectType, U> binding = new TableBinding<>();
+	protected <U> IComponentBinding<U> getColumnBinding(final C column) {
+		final TableBinding<O, U> binding = new TableBinding<>();
 		bindings[column.ordinal()] = binding;
 		return binding;
 	}
 
 	@Override
-	protected Object getValueAtColumn(final ObjectType object, final ColumnsType column) {
-		final TableBinding<ObjectType, ?> binding = bindings[column.ordinal()];
+	protected Object getValueAtColumn(final O object, final C column) {
+		final TableBinding<O, ?> binding = bindings[column.ordinal()];
 		objectModel.setCurrentObject(object);
 		return binding.getDisplayValue(object);
 	}
 
 	@Override
-	protected void setValueAtColumn(final ObjectType object, final ColumnsType column, final Object value) {
+	protected void setValueAtColumn(final O object, final C column, final Object value) {
 		bindings[column.ordinal()].addChange(object, value);
 	}
 
 	public void commit() {
-		final Set<ObjectType> modified = new HashSet<>();
-		for (final TableBinding<ObjectType, ?> binding : bindings) {
+		final Set<O> modified = new HashSet<>();
+		for (final TableBinding<O, ?> binding : bindings) {
 			modified.addAll(binding.changes.keySet());
 		}
-		for (final ObjectType object : modified) {
+		for (final O object : modified) {
 			objectModel.setCurrentObject(object);
 			for (final TableBinding<?, ?> binding : bindings) {
 				binding.commit(object);

@@ -66,7 +66,7 @@ public class FloatProperty extends AbstractTypedProperty<Float> {
 
 	@Override
 	public Float getObjectValue() {
-		return value;
+		return getValue();
 	}
 
 	@Override

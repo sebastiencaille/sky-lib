@@ -169,9 +169,10 @@ public class ClassSelector {
 
 	private Policy processClass(final Class<?> clazz) {
 		Policy policy = result.get(clazz);
-		if (policy == null) {
-			policy = match(clazz);
+		if (policy != null) {
+			return policy;
 		}
+		policy = match(clazz);
 		if (policy == null && clazz.getSuperclass() != null) {
 			policy = processClass(clazz.getSuperclass());
 		}

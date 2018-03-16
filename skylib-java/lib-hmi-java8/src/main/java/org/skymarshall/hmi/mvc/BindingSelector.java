@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -43,11 +43,7 @@ public class BindingSelector<T> implements PropertyChangeListener {
 	}
 
 	public void add(final T object, final IBindingController... controllers) {
-		List<IBindingController> ctrls = objectControllers.get(object);
-		if (ctrls == null) {
-			ctrls = new ArrayList<>();
-			objectControllers.put(object, ctrls);
-		}
+		final List<IBindingController> ctrls = objectControllers.computeIfAbsent(object, k -> new ArrayList<>());
 		ctrls.addAll(Arrays.asList(controllers));
 	}
 
@@ -56,19 +52,17 @@ public class BindingSelector<T> implements PropertyChangeListener {
 
 		final Object oldValue = evt.getOldValue();
 		if (oldValue != null) {
-			final List<IBindingController> toDetach = objectControllers.get(oldValue);
-			for (final IBindingController controller : toDetach) {
-				controller.detach();
+			final List<IBindingController> oldControllers = objectControllers.get(oldValue);
+			if (oldControllers != null) {
+				oldControllers.forEach(IBindingController::detach);
 			}
 		}
 
 		final Object newValue = evt.getNewValue();
 		if (newValue != null) {
-			final List<IBindingController> toAttach = objectControllers.get(newValue);
-			if (toAttach != null) {
-				for (final IBindingController controller : toAttach) {
-					controller.attach();
-				}
+			final List<IBindingController> newController = objectControllers.get(newValue);
+			if (newController != null) {
+				newController.forEach(IBindingController::attach);
 			}
 		}
 

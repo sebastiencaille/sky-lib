@@ -62,7 +62,7 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 
 	private transient EventListenerList listeners = new EventListenerList();
 
-	private class Edition implements IEdition<T>, Serializable {
+	private class Edition implements IEdition<T> {
 		final T value;
 		int oldIndex;
 		/**
@@ -102,9 +102,10 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 	}
 
 	/**
-	 * Current edition
+	 * Current edition. If edition is in progress serialization may store a list
+	 * with inconsistent order
 	 */
-	private Edition objectEdition = null;
+	private transient Edition objectEdition = null;
 
 	private transient ControllerPropertyChangeSupport propertyChange = new ControllerPropertyChangeSupport(this, false);
 
@@ -413,6 +414,9 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 	protected List<T> addToModel(final Collection<T> newData) {
 		final List<T> addedData = new ArrayList<>(newData.size());
 		final int oldSize = data.size();
+		newData.stream().filter(v -> v == null).findAny().ifPresent(v -> {
+			throw new IllegalArgumentException("Null value");
+		});
 		newData.stream().filter(viewProperty.getValue()::accept).forEach(value -> {
 			data.add(value);
 			addedData.add(value);
@@ -470,6 +474,9 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 
 	public int insert(final T value) {
 		checkNoEdition();
+		if (value == null) {
+			throw new IllegalArgumentException("Null value");
+		}
 		if (viewProperty.getValue().accept(value)) {
 			fireMutating();
 			final int row = computeInsertionPoint(value);
@@ -501,9 +508,10 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 	public IEdition<T> startEditingValue(final T value) {
 		checkNoEdition();
 		final int oldIndex = getRowOf(value);
-		objectEdition = new Edition(value, oldIndex);
+		final Edition newEdition = new Edition(value, oldIndex);
 		editionStack = Thread.currentThread().getStackTrace();
 		fireEditionsStarted(value);
+		objectEdition = newEdition;
 		return objectEdition;
 	}
 

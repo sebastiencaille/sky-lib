@@ -56,7 +56,7 @@ public class LocalAPRef<I extends FlowData> implements ActionPointReference<I> {
 
 	@Override
 	public LocalAPRef<I> addAll(final ActionPointReference<I> actionPointRefs) {
-		actionPoints.addAll(((LocalAPRef) actionPointRefs).getActionPoints());
+		actionPoints.addAll(((LocalAPRef<I>) actionPointRefs).getActionPoints());
 		return this;
 	}
 

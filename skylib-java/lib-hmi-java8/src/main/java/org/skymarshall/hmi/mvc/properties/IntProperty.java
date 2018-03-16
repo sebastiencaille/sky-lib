@@ -76,7 +76,7 @@ public class IntProperty extends AbstractTypedProperty<Integer> {
 
 	@Override
 	public Integer getObjectValue() {
-		return value;
+		return getValue();
 	}
 
 	@Override

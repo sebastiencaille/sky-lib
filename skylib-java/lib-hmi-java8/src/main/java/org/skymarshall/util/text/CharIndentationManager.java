@@ -17,7 +17,7 @@ package org.skymarshall.util.text;
 
 public class CharIndentationManager implements IIndentationManager {
 
-	private final String indentation;
+	private final String indentationString;
 
 	private String currentIndentation = "";
 
@@ -30,17 +30,17 @@ public class CharIndentationManager implements IIndentationManager {
 		for (int i = 0; i < length; i++) {
 			builder.append(c);
 		}
-		indentation = builder.toString();
+		indentationString = builder.toString();
 	}
 
 	@Override
 	public void indent() {
-		currentIndentation += indentation;
+		currentIndentation += indentationString;
 	}
 
 	@Override
 	public void unindent() {
-		currentIndentation = currentIndentation.substring(indentation.length());
+		currentIndentation = currentIndentation.substring(indentationString.length());
 	}
 
 	@Override

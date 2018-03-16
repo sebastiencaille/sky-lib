@@ -15,6 +15,7 @@
  ******************************************************************************/
 package org.skymarshall.hmi.mvc;
 
+import static java.util.stream.Collectors.toList;
 import static org.skymarshall.util.generators.JavaCodeGenerator.toConstant;
 
 import java.io.IOException;
@@ -183,13 +184,10 @@ public class HmiClassProcessor {
 
 	protected void forEachAttribute(final UntypedDataObjectMetaData metaData, final AttributeApplier attributeApplier)
 			throws IOException {
-		for (final AbstractAttributeMetaData<?> attrib : metaData.getAttributes()) {
-			if (ignore(attrib)) {
-				continue;
-			}
+		for (final AbstractAttributeMetaData<?> attrib : metaData.getAttributes().stream().filter(this::ignore)
+				.collect(toList())) {
 			attributeApplier.apply(attrib);
 		}
-
 	}
 
 	protected String generateLoadFrom(final AbstractAttributeMetaData<?> attrib) throws IOException {

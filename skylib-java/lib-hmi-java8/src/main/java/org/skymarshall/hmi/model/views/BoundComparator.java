@@ -26,27 +26,42 @@ import org.skymarshall.hmi.mvc.properties.AbstractProperty;
  *
  * @author scaille
  *
- * @param <DataType>
- * @param <ComparatorPropertyType>
+ * @param <D>
+ *            type of the compared data
+ * @param <C>
+ *            type of the comparator
  */
-public abstract class BoundComparator<DataType, ComparatorPropertyType> extends AbstractDynamicView<DataType>
-		implements IComponentBinding<ComparatorPropertyType>, Comparator<DataType> {
+public abstract class BoundComparator<D, C> extends AbstractDynamicView<D>
+		implements IComponentBinding<C>, Comparator<D> {
 
-	private ComparatorPropertyType sorterPropertyValue;
-	private IListViewOwner<DataType> owner;
+	private C sorterPropertyValue;
+	private IListViewOwner<D> owner;
 
-	protected abstract int compare(DataType value1, DataType value2, ComparatorPropertyType filter);
+	protected abstract int compare(D value1, D value2, C filter);
 
+	/**
+	 * @param <D>
+	 *            Type of the sorted data
+	 * @param <C>
+	 *            Type of the comparator property
+	 */
 	@FunctionalInterface
-	public interface BoundComparatorFunc<DataType, SorterPropertyType> {
-		int compare(DataType data1, DataType data2, SorterPropertyType propertyValue);
+	public interface BoundComparatorFunc<D, C> {
+		int compare(D data1, D data2, C propertyValue);
 	}
 
-	public static <DataType, SorterPropertyType> BoundComparator<DataType, SorterPropertyType> comparator(
-			final BoundComparatorFunc<DataType, SorterPropertyType> comparator) {
-		return new BoundComparator<DataType, SorterPropertyType>() {
+	/**
+	 * @param <D>
+	 *            Type of the sorted data
+	 * @param <C>
+	 *            Type of the comparator property
+	 * @param comparator
+	 * @return
+	 */
+	public static <D, C> BoundComparator<D, C> comparator(final BoundComparatorFunc<D, C> comparator) {
+		return new BoundComparator<D, C>() {
 			@Override
-			protected int compare(final DataType value1, final DataType value2, final SorterPropertyType filter) {
+			protected int compare(final D value1, final D value2, final C filter) {
 				return comparator.compare(value1, value2, filter);
 			}
 		};
@@ -55,17 +70,17 @@ public abstract class BoundComparator<DataType, ComparatorPropertyType> extends 
 	public BoundComparator() {
 	}
 
-	protected ComparatorPropertyType getSorterPropertyValue() {
+	protected C getSorterPropertyValue() {
 		return sorterPropertyValue;
 	}
 
 	@Override
-	public void attach(final IListViewOwner<DataType> viewOwner) {
+	public void attach(final IListViewOwner<D> viewOwner) {
 		this.owner = viewOwner;
 	}
 
 	@Override
-	public void addComponentValueChangeListener(final IComponentLink<ComparatorPropertyType> link) {
+	public void addComponentValueChangeListener(final IComponentLink<C> link) {
 		// Read only
 	}
 
@@ -75,13 +90,13 @@ public abstract class BoundComparator<DataType, ComparatorPropertyType> extends 
 	}
 
 	@Override
-	public void setComponentValue(final AbstractProperty source, final ComparatorPropertyType value) {
+	public void setComponentValue(final AbstractProperty source, final C value) {
 		sorterPropertyValue = value;
 		owner.viewUpdated();
 	}
 
 	@Override
-	public int compare(final DataType value1, final DataType value2) {
+	public int compare(final D value1, final D value2) {
 		return compare(value1, value2, sorterPropertyValue);
 	}
 

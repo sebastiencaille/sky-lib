@@ -48,38 +48,77 @@ public class BindingChain implements IBindingController {
 		Object apply(Object value) throws ConversionException;
 	}
 
-	private static Link link(final ConversionFunction prop2Comp, final ConversionFunction comp2Prop) {
-		return new Link() {
-
-			@Override
-			public Object toComponent(final Object value) throws ConversionException {
-				return prop2Comp.apply(value);
-			}
-
-			@Override
-			public Object toProperty(final Object component, final Object value) throws ConversionException {
-				return comp2Prop.apply(value);
-			}
-
-		};
-	}
-
 	/**
+	 *
 	 * All the links (converters, ...)
 	 */
+
 	private final List<Link> links = new ArrayList<>();
 
 	private final AbstractProperty property;
 
 	private final PropertyChangeListener valueUpdateListener;
 
-	private boolean transmit = true;
-
 	private final ErrorNotifier errorNotifier;
 
 	private final List<IBindingChainDependency> dependencies = new ArrayList<>();
 
+	private boolean transmit = true;
+
 	public class EndOfChain<T> {
+
+		private final class LinkToComponent implements Link {
+			private final IComponentBinding<T> newBinding;
+
+			private LinkToComponent(final IComponentBinding<T> newBinding) {
+				this.newBinding = newBinding;
+
+				newBinding.addComponentValueChangeListener(new IComponentLink<T>() {
+					@Override
+					public void setValueFromComponent(final Object component, final T componentValue) {
+						if (!transmit) {
+							return;
+						}
+						propagateComponentChange(component, componentValue);
+					}
+
+					@Override
+					public void unbind() {
+						newBinding.removeComponentValueChangeListener();
+					}
+
+					@Override
+					public void reloadComponentValue() {
+						// should trigger the listeners
+						property.attach();
+					}
+				});
+			}
+
+			@Override
+			public Object toComponent(final Object value) {
+				newBinding.setComponentValue(property, (T) value);
+				return value;
+			}
+
+			@Override
+			public Object toProperty(final Object component, final Object value) {
+				return value;
+			}
+
+			private void propagateComponentChange(final Object component, final Object componentValue) {
+				final int pos = links.size();
+				Object value = componentValue;
+				for (int i = pos - 1; i >= 0; i--) {
+					try {
+						value = links.get(i).toProperty(component, value);
+					} catch (final ConversionException e) {
+						errorNotifier.notifyError(property, HmiErrors.fromException(e));
+						return;
+					}
+				}
+			}
+		}
 
 		public EndOfChain<T> addDependency(final IBindingChainDependency dependency) {
 			BindingChain.this.addDependency(dependency);
@@ -101,77 +140,64 @@ public class BindingChain implements IBindingController {
 		}
 
 		public IBindingController bind(final IComponentBinding<T> newBinding) {
-			links.add(new Link() {
-
-				{
-					newBinding.addComponentValueChangeListener(new IComponentLink<T>() {
-						@Override
-						public void setValueFromComponent(final Object component, final T componentValue) {
-							if (!transmit) {
-								return;
-							}
-							propagateComponentChange(component, componentValue);
-						}
-
-						@Override
-						public void unbind() {
-							newBinding.removeComponentValueChangeListener();
-						}
-
-						@Override
-						public void reloadComponentValue() {
-							// should trigger the listeners
-							property.attach();
-						}
-					});
-				}
-
-				@Override
-				public Object toComponent(final Object value) {
-					newBinding.setComponentValue(property, (T) value);
-					return value;
-				}
-
-				@Override
-				public Object toProperty(final Object component, final Object value) {
-					return value;
-				}
-
-				private void propagateComponentChange(final Object component, final Object componentValue) {
-					final int pos = links.size();
-					Object value = componentValue;
-					for (int i = pos - 1; i >= 0; i--) {
-						try {
-							value = links.get(i).toProperty(component, value);
-						} catch (final ConversionException e) {
-							errorNotifier.notifyError(property, HmiErrors.fromException(e));
-							return;
-						}
-					}
-				}
-
-			});
+			links.add(new LinkToComponent(newBinding));
 			property.attach();
 			return BindingChain.this;
 		}
 
-		public <NextType> EndOfChain<NextType> bind(final IConverter<T, NextType> link) {
+		/**
+		 * @param<N> type
+		 *               of the next converter
+		 * 
+		 * @param link
+		 * @return
+		 */
+		public <N> EndOfChain<N> bind(final IConverter<T, N> link) {
 			links.add(link(value -> link.convertPropertyValueToComponentValue((T) value),
-					value -> link.convertComponentValueToPropertyValue((NextType) value)));
+					value -> link.convertComponentValueToPropertyValue((N) value)));
 			return new EndOfChain<>();
 		}
 
-		public <NextType> EndOfChain<NextType> bind(final Function<T, NextType> prop2Comp,
-				final Function<NextType, T> comp2Prop) {
-			links.add(link(value -> prop2Comp.apply((T) value), value -> comp2Prop.apply((NextType) value)));
+		/**
+		 * @param N
+		 *            next type
+		 * @param prop2Comp
+		 * @param comp2Prop
+		 * @return
+		 */
+		public <N> EndOfChain<N> bind(final Function<T, N> prop2Comp, final Function<N, T> comp2Prop) {
+			links.add(link(value -> prop2Comp.apply((T) value), value -> comp2Prop.apply((N) value)));
 			return new EndOfChain<>();
 		}
 
-		public <NextType> EndOfChain<NextType> bind(final Function<T, NextType> prop2Comp) {
+		/**
+		 * @param N
+		 *            next type
+		 * @param prop2Comp
+		 * @param comp2Prop
+		 * @return
+		 */
+		public <N> EndOfChain<N> bind(final Function<T, N> prop2Comp) {
 			links.add(link(value -> prop2Comp.apply((T) value), value -> {
 				throw new ConversionException("Read only");
 			}));
 			return new EndOfChain<>();
+		}
+
+		private Link link(final ConversionFunction prop2Comp, final ConversionFunction comp2Prop) {
+			return new Link() {
+
+				@Override
+				public Object toComponent(final Object value) throws ConversionException {
+					return prop2Comp.apply(value);
+				}
+
+				@Override
+				public Object toProperty(final Object component, final Object value) throws ConversionException {
+					return comp2Prop.apply(value);
+				}
+
+			};
 		}
 
 	}

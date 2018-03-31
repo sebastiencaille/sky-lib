@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.skymarshall.hmi.mvc.converters.IConverter;
-import org.skymarshall.hmi.mvc.converters.ConversionException;
 
 public class DynamicListContentConverter implements IConverter<String, List<String>> {
 
@@ -44,7 +43,7 @@ public class DynamicListContentConverter implements IConverter<String, List<Stri
 	}
 
 	@Override
-	public String convertComponentValueToPropertyValue(final List<String> componentValue) throws ConversionException {
+	public String convertComponentValueToPropertyValue(final List<String> componentValue) {
 		return null;
 	}
 

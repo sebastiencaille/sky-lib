@@ -31,7 +31,6 @@ import java.util.function.Supplier;
 import org.skymarshall.util.generators.Template;
 
 import ch.skymarshall.dataflowmgr.generator.JsonAdapter;
-import ch.skymarshall.dataflowmgr.generator.exceptions.TransformerException;
 import ch.skymarshall.dataflowmgr.generator.model.ActionPoint;
 import ch.skymarshall.dataflowmgr.generator.model.Dto;
 import ch.skymarshall.dataflowmgr.generator.model.Flow;
@@ -99,7 +98,7 @@ public abstract class AbstractWriter {
 		registry.getActions().stream().map(a -> a.action.template).allMatch(t -> getOrLoadTransformer(t) != null);
 	}
 
-	private Transformer getOrLoadTransformer(final String transformerName) throws TransformerException {
+	private Transformer getOrLoadTransformer(final String transformerName) {
 		Transformer template = registry.getTransformer(transformerName);
 		if (template != null) {
 			return template;

@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -16,19 +16,19 @@
 /*
  * Copyright (c) 2008, Caille Sebastien
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification,are permitted provided that the following conditions are met:
- * 
+ *
  *  * Redistributions of source code must retain the above Copyrightnotice,
  *    this list of conditions and the following disclaimer.
  *  * Redistributions in binary form must reproduce the above Copyrightnotice,
- *    this list of conditions and the following disclaimer in the documentation 
+ *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *  * Neither the name of the owner nor the names of its contributors may be 
- *    used to endorse or promote products derived from this software without 
+ *  * Neither the name of the owner nor the names of its contributors may be
+ *    used to endorse or promote products derived from this software without
  *    specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE CopyrightHOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -45,9 +45,9 @@ package org.skymarshall.util.dao.metadata;
 
 /**
  * This class allows to create DO's accessors
- * 
+ *
  * @author Sebastien Caille
- * 
+ *
  */
 public class DataObjectManagerFactory {
 
@@ -55,19 +55,19 @@ public class DataObjectManagerFactory {
 	}
 
 	/*
-	 * Creates an Accessor that does not enforce the data types in its methods.
-	 * The meta-data are extracted from the data's class.
+	 * Creates an Accessor that does not enforce the data types in its methods. The
+	 * meta-data are extracted from the data's class.
 	 */
 	public static <T> UntypedDataObjectManager<?> createFor(final T _data) {
 		return new UntypedDataObjectMetaData(_data.getClass()).createUntypedAccessorTo(_data);
 	}
 
 	/*
-	 * Creates an Accessor that enforce the data types in its methods. The
-	 * meta-data are extracted from the class _clazz.
+	 * Creates an Accessor that enforce the data types in its methods. The meta-data
+	 * are extracted from the class _clazz.
 	 */
 	public static <ADataType> DataObjectManager<ADataType> createFor(final Class<ADataType> _clazz,
 			final ADataType _data) {
-		return new DataObjectMetaData<ADataType>(_clazz).createAccessorTo(_data);
+		return new DataObjectMetaData<>(_clazz).createAccessorTo(_data);
 	}
 }

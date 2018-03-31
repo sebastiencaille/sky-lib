@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -21,8 +21,8 @@ import java.util.UUID;
  * One step of an execution(used to trace the flow execution)
  */
 public class Step {
-	public UUID uuid;
-	public UUID flowId;
+	public final UUID uuid;
+	public final UUID flowId;
 
 	public Step() {
 		uuid = null;

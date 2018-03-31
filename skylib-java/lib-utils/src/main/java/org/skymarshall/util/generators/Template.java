@@ -18,15 +18,15 @@ public class Template {
 		this.content = content.replaceAll("\r", "");
 	}
 
-	public Template apply(final Map<String, String> properties) {
+	public Template apply(final Map<String, String> newProperties) {
 		final Template newTemplate = create(content);
 		newTemplate.setCommandLine(commandLine);
-		newTemplate.setContext(properties);
+		newTemplate.setContext(newProperties);
 		return newTemplate;
 	}
 
-	protected Template create(final String content) {
-		return new Template(content);
+	protected Template create(final String newContent) {
+		return new Template(newContent);
 	}
 
 	public void setCommandLine(final String commandLine) {

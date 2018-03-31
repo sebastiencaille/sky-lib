@@ -146,9 +146,8 @@ public class BindingChain implements IBindingController {
 		}
 
 		/**
-		 * @param<N> type
-		 *               of the next converter
-		 * 
+		 * @param<N> type of the next converter
+		 *
 		 * @param link
 		 * @return
 		 */
@@ -159,8 +158,7 @@ public class BindingChain implements IBindingController {
 		}
 
 		/**
-		 * @param N
-		 *            next type
+		 * @param N         next type
 		 * @param prop2Comp
 		 * @param comp2Prop
 		 * @return
@@ -171,8 +169,7 @@ public class BindingChain implements IBindingController {
 		}
 
 		/**
-		 * @param N
-		 *            next type
+		 * @param N         next type
 		 * @param prop2Comp
 		 * @param comp2Prop
 		 * @return
@@ -228,13 +225,13 @@ public class BindingChain implements IBindingController {
 		property.addListener(valueUpdateListener);
 		links.add(new Link() {
 			@Override
-			public Object toProperty(final Object component, final Object value) throws ConversionException {
+			public Object toProperty(final Object component, final Object value) {
 				propertySetter.accept(component, (T) value);
 				return null;
 			}
 
 			@Override
-			public Object toComponent(final Object value) throws ConversionException {
+			public Object toComponent(final Object value) {
 				return value;
 			}
 

@@ -25,7 +25,7 @@ import org.skymarshall.util.generators.Template;
 
 public class HmiModelGenerator {
 
-	public static void main(final String[] args) throws ClassNotFoundException, IOException, URISyntaxException {
+	public static void main(final String[] args) throws IOException, URISyntaxException {
 		System.out.println("Running in " + new File(".").getAbsolutePath()); // NOSONAR
 		final File target;
 		if (args.length > 0) {
@@ -65,7 +65,7 @@ public class HmiModelGenerator {
 		return found;
 	}
 
-	private void process(final File targetSrcFolder) throws ClassNotFoundException, IOException, URISyntaxException {
+	private void process(final File targetSrcFolder) throws IOException, URISyntaxException {
 		final ClassSelector selector = new ClassSelector(
 				(URLClassLoader) Thread.currentThread().getContextClassLoader());
 		selector.addExpectedAnnotation(findClass("HmiObject"), ClassSelector.Policy.CLASS_ONLY);

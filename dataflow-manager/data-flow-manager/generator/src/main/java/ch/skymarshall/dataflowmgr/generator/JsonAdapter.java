@@ -18,7 +18,6 @@ package ch.skymarshall.dataflowmgr.generator;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
@@ -54,7 +53,7 @@ public class JsonAdapter {
 		return readValue;
 	}
 
-	public Config readConfig(final InputStream in) throws JsonParseException, IOException {
+	public Config readConfig(final InputStream in) throws IOException {
 		return mapper.readValue(in, Config.class);
 	}
 

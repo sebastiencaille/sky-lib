@@ -72,8 +72,7 @@ public class LocalAPRef<I extends FlowData> implements ActionPointReference<I> {
 	public static <T extends FlowData> List<ActionPoint<?, ?>.ExecutionSteps> createExecution(
 			final ActionPointReference<T> nextDp, final T nextData) {
 		final Set<ActionPoint<?, ?>> actionPoints = LocalAPRef.class.cast(nextDp).getActionPoints();
-		final List<ActionPoint<?, ?>.ExecutionSteps> collect = actionPoints.stream()
+		return actionPoints.stream()
 				.map(dp -> dp.createExecution(nextData)).collect(toList());
-		return collect;
 	}
 }

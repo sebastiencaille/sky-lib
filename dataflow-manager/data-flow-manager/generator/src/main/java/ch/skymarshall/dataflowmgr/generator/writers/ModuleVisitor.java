@@ -54,7 +54,7 @@ public class ModuleVisitor<T> {
 	public ModuleVisitor(final Module module, final AbstractWriter abstractWriter) {
 		this.module = module;
 		this.writer = abstractWriter;
-		LOGGER.info("Module location: " + writer.getModuleLocation(module));
+		LOGGER.info("Module location: {}", writer.getModuleLocation(module));
 
 		for (final ActionPoint action : module.actions) {
 			addToBroadcastGroups(action.broadcastGroups, action);

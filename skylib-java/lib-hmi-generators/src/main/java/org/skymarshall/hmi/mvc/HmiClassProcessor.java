@@ -190,11 +190,11 @@ public class HmiClassProcessor {
 		}
 	}
 
-	protected String generateLoadFrom(final AbstractAttributeMetaData<?> attrib) throws IOException {
+	protected String generateLoadFrom(final AbstractAttributeMetaData<?> attrib) {
 		return AttributeProcessor.create(context, attrib, delegate).getPropertyName() + ".load(this);";
 	}
 
-	protected String generateSaveInto(final AbstractAttributeMetaData<?> attrib) throws IOException {
+	protected String generateSaveInto(final AbstractAttributeMetaData<?> attrib) {
 		return AttributeProcessor.create(context, attrib, delegate).getPropertyName() + ".save();";
 	}
 

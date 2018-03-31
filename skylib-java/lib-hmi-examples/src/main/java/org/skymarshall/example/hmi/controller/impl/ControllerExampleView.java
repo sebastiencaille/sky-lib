@@ -47,7 +47,6 @@ import javax.swing.JTextField;
 import org.skymarshall.example.hmi.TestObject;
 import org.skymarshall.example.hmi.TestObjectTableModel;
 import org.skymarshall.hmi.mvc.converters.IConverter;
-import org.skymarshall.hmi.mvc.converters.ConversionException;
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 import org.skymarshall.hmi.mvc.properties.BooleanProperty;
 import org.skymarshall.hmi.mvc.properties.ErrorProperty;
@@ -187,7 +186,7 @@ public class ControllerExampleView extends JFrame {
 		private int count = 0;
 
 		@Override
-		public T convertComponentValueToPropertyValue(final String componentValue) throws ConversionException {
+		public T convertComponentValueToPropertyValue(final String componentValue) {
 			return null;
 		}
 

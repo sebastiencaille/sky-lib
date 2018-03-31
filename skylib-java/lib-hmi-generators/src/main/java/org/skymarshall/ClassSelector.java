@@ -73,7 +73,7 @@ public class ClassSelector {
 		expectedTags.put(tag, policy);
 	}
 
-	public void addExpectedAnnotation(final Class<?> tag, final Policy policy) throws ClassNotFoundException {
+	public void addExpectedAnnotation(final Class<?> tag, final Policy policy) {
 		if (!tag.isAnnotation()) {
 			throw new IllegalArgumentException("Class is not an annotation: " + tag.getName());
 		}

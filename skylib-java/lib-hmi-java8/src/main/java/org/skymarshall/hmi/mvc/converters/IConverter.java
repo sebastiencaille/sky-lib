@@ -34,6 +34,9 @@ public interface IConverter<PropertyType, ComponentType> {
 				return or.get();
 			}
 
+			/**
+			 * @throws ConversionException exception thrown when a conversion error occurs
+			 */
 			@Override
 			public Boolean convertComponentValueToPropertyValue(final C componentValue) throws ConversionException {
 				throw new IllegalStateException("Write only converter");

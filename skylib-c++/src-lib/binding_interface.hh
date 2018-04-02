@@ -47,9 +47,9 @@ public:
 template<class _Ft, class _Tt> class binding_converter {
 public:
 	virtual const _Ft convert_component_value_to_property_value(
-			const _Tt _componentValue) throw (logic_error_ptr) = 0;
+			const _Tt _componentValue) = 0;
 	virtual const _Tt convert_property_value_to_component_value(
-			const _Ft _propertyValue) throw (logic_error_ptr) = 0;
+			const _Ft _propertyValue) = 0;
 
 protected:
 	virtual ~binding_converter() {
@@ -60,12 +60,12 @@ protected:
 class logic_error_to_string: public binding_converter<logic_error_ptr, string> {
 public:
 	const logic_error_ptr convert_component_value_to_property_value(
-			const string _componentValue) throw (logic_error_ptr) {
+			const string _componentValue) {
 		// nonsense
 		return NULL;
 	}
 	const string convert_property_value_to_component_value(
-			const logic_error_ptr _propertyValue) throw (logic_error_ptr) {
+			const logic_error_ptr _propertyValue) {
 		return string(_propertyValue->what());
 	}
 	~logic_error_to_string() {

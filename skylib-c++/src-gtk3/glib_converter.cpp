@@ -37,12 +37,12 @@ string_to_ustring::~string_to_ustring() {
 }
 
 const string string_to_ustring::convert_component_value_to_property_value(
-		const Glib::ustring _componentValue) throw (logic_error*) {
+		const Glib::ustring _componentValue) {
 	return _componentValue;
 }
 
 const Glib::ustring string_to_ustring::convert_property_value_to_component_value(
-		const string _propertyValue) throw (logic_error*) {
+		const string _propertyValue) {
 	return ustring(_propertyValue);
 }
 

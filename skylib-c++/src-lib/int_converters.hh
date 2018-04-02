@@ -48,7 +48,7 @@ public:
 	}
 
 	const int convert_component_value_to_property_value(
-			const string _componentValue) throw (logic_error*) {
+			const string _componentValue) {
 		char* endPtr;
 		errno = 0;
 		long result = strtol(_componentValue.c_str(), &endPtr, 10);
@@ -58,7 +58,7 @@ public:
 		return (int) result;
 	}
 	const string convert_property_value_to_component_value(
-			const int _propertyValue) throw (logic_error*) {
+			const int _propertyValue) {
 		std::stringstream ss;
 		ss << _propertyValue;
 		return ss.str();

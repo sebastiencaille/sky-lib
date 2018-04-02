@@ -42,9 +42,9 @@ protected:
 public:
 	string_to_ustring();
 	const string convert_component_value_to_property_value(
-			const Glib::ustring _componentValue) throw (logic_error*);
+			const Glib::ustring _componentValue);
 	const Glib::ustring convert_property_value_to_component_value(
-			const string _propertyValue) throw (logic_error*);
+			const string _propertyValue);
 
 };
 

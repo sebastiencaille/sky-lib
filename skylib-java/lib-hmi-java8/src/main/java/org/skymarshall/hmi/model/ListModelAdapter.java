@@ -47,17 +47,17 @@ public class ListModelAdapter<T> implements IListModelListener<T> {
 	}
 
 	@Override
-	public void editionsStarted(final ListEvent<T> event) {
+	public void editionStarted(final ListEvent<T> event) {
 		// no op
 	}
 
 	@Override
-	public void editionsStopping(final ListEvent<T> event) {
+	public void editionStopping(final ListEvent<T> event) {
 		// no op
 	}
 
 	@Override
-	public void editionsStopped(final ListEvent<T> event) {
+	public void editionStopped(final ListEvent<T> event) {
 		// no op
 	}
 

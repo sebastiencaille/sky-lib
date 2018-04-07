@@ -51,10 +51,9 @@ import org.skymarshall.hmi.mvc.properties.ObjectProperty;
  *
  * @author Sebastien Caille
  *
- * @param <T>
- *            the type of the list's content. T must have an implementation of
- *            the Object.equals method. It is better if an element of the list
- *            can be uniquely identified using Object.equals.
+ * @param <T> the type of the list's content. T must have an implementation of
+ *        the Object.equals method. It is better if an element of the list can
+ *        be uniquely identified using Object.equals.
  */
 public class ListModel<T> extends AbstractListModel<T> implements Iterable<T> {
 
@@ -261,7 +260,6 @@ public class ListModel<T> extends AbstractListModel<T> implements Iterable<T> {
 		listeners.remove(IListModelListener.class, listener);
 	}
 
-	@SuppressWarnings("unchecked")
 	private IListModelListener<T>[] listeners() {
 		return listeners.getListeners(IListModelListener.class);
 	}
@@ -627,9 +625,8 @@ public class ListModel<T> extends AbstractListModel<T> implements Iterable<T> {
 	/**
 	 * Finds an object in the model, and starts its edition if found
 	 *
-	 * @param sample
-	 *            a sample of the object (must contains the values required to find
-	 *            the object)
+	 * @param sample a sample of the object (must contains the values required to
+	 *               find the object)
 	 * @return an object if found, null if not
 	 */
 	public IEdition<T> findForEdition(final T sample) {
@@ -643,9 +640,8 @@ public class ListModel<T> extends AbstractListModel<T> implements Iterable<T> {
 	/**
 	 * Finds an object in the model, or insert the sample if not found.
 	 *
-	 * @param sample
-	 *            a sample of the object (must contains the values required to find
-	 *            the object)
+	 * @param sample a sample of the object (must contains the values required to
+	 *               find the object)
 	 * @return an object if found, the sample if not found
 	 */
 	public T findOrCreate(final T sample) {
@@ -661,9 +657,8 @@ public class ListModel<T> extends AbstractListModel<T> implements Iterable<T> {
 	 * Finds an object in the model, starting it's edition, or insert the sample if
 	 * not found.
 	 *
-	 * @param sample
-	 *            a sample of the object (must contains the values required to find
-	 *            the object)
+	 * @param sample a sample of the object (must contains the values required to
+	 *               find the object)
 	 * @return an object if found, the sample if not found
 	 */
 	public IEdition<T> findOrCreateForEdition(final T sample) {

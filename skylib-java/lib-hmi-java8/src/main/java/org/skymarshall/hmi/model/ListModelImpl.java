@@ -51,10 +51,9 @@ import org.skymarshall.hmi.mvc.properties.ObjectProperty;
  *
  * @author Sebastien Caille
  *
- * @param <T>
- *            the type of the list's content. T must have an implementation of
- *            the Object.equals method. It is better if an element of the list
- *            can be uniquely identified using Object.equals.
+ * @param <T> the type of the list's content. T must have an implementation of
+ *        the Object.equals method. It is better if an element of the list can
+ *        be uniquely identified using Object.equals.
  */
 public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T>, ListModelRef<T> {
 
@@ -182,17 +181,17 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 		}
 
 		@Override
-		public void editionsStarted(final ListEvent<T> event) {
+		public void editionStarted(final ListEvent<T> event) {
 			startEditingValue(event.getObject());
 		}
 
 		@Override
-		public void editionsStopping(final ListEvent<T> event) {
+		public void editionStopping(final ListEvent<T> event) {
 			// no op
 		}
 
 		@Override
-		public void editionsStopped(final ListEvent<T> event) {
+		public void editionStopped(final ListEvent<T> event) {
 			stopEditingValue();
 		}
 
@@ -315,7 +314,7 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 	protected void fireEditionsStarted(final T value) {
 		final ListEvent<T> event = new ListEvent<>(this, value);
 		for (final IListModelListener<T> listener : listeners()) {
-			listener.editionsStarted(event);
+			listener.editionStarted(event);
 		}
 	}
 
@@ -325,14 +324,14 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 		}
 		final ListEvent<T> event = new ListEvent<>(this, objectEdition.value);
 		for (final IListModelListener<T> listener : listeners()) {
-			listener.editionsStopping(event);
+			listener.editionStopping(event);
 		}
 	}
 
 	protected void fireEditionStopped() {
 		final ListEvent<T> event = new ListEvent<>(this, objectEdition.value);
 		for (final IListModelListener<T> listener : listeners()) {
-			listener.editionsStopped(event);
+			listener.editionStopped(event);
 		}
 	}
 
@@ -633,9 +632,8 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 	/**
 	 * Finds an object in the model, and starts its edition if found
 	 *
-	 * @param sample
-	 *            a sample of the object (must contains the values required to find
-	 *            the object)
+	 * @param sample a sample of the object (must contains the values required to
+	 *               find the object)
 	 * @return an object if found, null if not
 	 */
 	public IEdition<T> findForEdition(final T sample) {
@@ -649,9 +647,8 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 	/**
 	 * Finds an object in the model, or insert the sample if not found.
 	 *
-	 * @param sample
-	 *            a sample of the object (must contains the values required to find
-	 *            the object)
+	 * @param sample a sample of the object (must contains the values required to
+	 *               find the object)
 	 * @return an object if found, the sample if not found
 	 */
 	public T findOrCreate(final T sample) {
@@ -667,9 +664,8 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 	 * Finds an object in the model, starting it's edition, or insert the sample if
 	 * not found.
 	 *
-	 * @param sample
-	 *            a sample of the object (must contains the values required to find
-	 *            the object)
+	 * @param sample a sample of the object (must contains the values required to
+	 *               find the object)
 	 * @return an object if found, the sample if not found
 	 */
 	public IEdition<T> findOrCreateForEdition(final T sample) {

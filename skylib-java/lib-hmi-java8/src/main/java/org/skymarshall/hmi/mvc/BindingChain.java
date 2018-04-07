@@ -80,8 +80,8 @@ public class BindingChain implements IBindingController {
 						if (!transmit) {
 							return;
 						}
-						Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE,
-								"Component change: " + component.getClass().getSimpleName() + ": " + componentValue);
+						Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE, () -> "Component change: "
+								+ component.getClass().getSimpleName() + ": " + componentValue);
 						propagateComponentChange(component, componentValue);
 					}
 
@@ -100,7 +100,7 @@ public class BindingChain implements IBindingController {
 
 			@Override
 			public Object toComponent(final Object value) {
-				Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE, "Setting component value: " + value);
+				Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE, () -> "Setting component value: " + value);
 				newBinding.setComponentValue(property, (T) value);
 				return value;
 			}
@@ -215,8 +215,8 @@ public class BindingChain implements IBindingController {
 			return;
 		}
 		Object value = evt.getNewValue();
-		Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE,
-				"Property change: " + evt.getPropertyName() + ": " + evt.getOldValue() + " -> " + evt.getNewValue());
+		Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE, () -> "Property change: " + evt.getPropertyName() + ": "
+				+ evt.getOldValue() + " -> " + evt.getNewValue());
 		for (final Link link : links) {
 			try {
 				value = link.toComponent(value);
@@ -232,7 +232,7 @@ public class BindingChain implements IBindingController {
 		links.add(new Link() {
 			@Override
 			public Object toProperty(final Object component, final Object value) {
-				Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE, "Setting property value: " + value);
+				Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE, () -> "Setting property value: " + value);
 				propertySetter.accept(component, (T) value);
 				return null;
 			}

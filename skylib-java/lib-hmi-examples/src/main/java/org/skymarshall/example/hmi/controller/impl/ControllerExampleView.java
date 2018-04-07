@@ -83,7 +83,7 @@ public class ControllerExampleView extends JFrame {
 		final JLabel booleanCounter = new JLabel();
 		booleanProperty.bind(selection(booleanEditor));
 		booleanProperty.bindWO(label::setEnabled);
-		booleanProperty.bind(counter()).bindWO(booleanCounter::setText);
+		booleanProperty.bind(counter()).bindSetter(booleanCounter::setText);
 		addGuiLineItem(booleanProperty, booleanEditor, label, booleanCounter);
 
 		// Int input field
@@ -93,8 +93,8 @@ public class ControllerExampleView extends JFrame {
 		final JLabel intCounter = new JLabel();
 
 		intProperty.bind(intToString()).bind(value(intEditor));
-		intProperty.bind(intToString()).bindWO(intCheck::setText);
-		intProperty.bind(counter()).bindWO(intCounter::setText);
+		intProperty.bind(intToString()).bindSetter(intCheck::setText);
+		intProperty.bind(counter()).bindSetter(intCounter::setText);
 
 		addGuiLineItem(intProperty, intEditor, intCheck, intCounter);
 
@@ -105,7 +105,7 @@ public class ControllerExampleView extends JFrame {
 		final JLabel stringCounter = new JLabel();
 		stringProperty.bind(value(stringEditor));
 		stringProperty.bindWO(stringCheck::setText);
-		stringProperty.bind(counter()).bindWO(stringCounter::setText);
+		stringProperty.bind(counter()).bindSetter(stringCounter::setText);
 		addGuiLineItem(stringProperty, stringEditor, stringCheck, stringCounter);
 
 		// Item selection
@@ -116,7 +116,7 @@ public class ControllerExampleView extends JFrame {
 		final ObjectProperty<String> listObjectProperty = model.getListObjectProperty();
 		listObjectProperty.bind(selection(selectionEditor, String.class));
 		listObjectProperty.bindWO(selectionCheck::setText);
-		listObjectProperty.bind(counter()).bindWO(selectionCounter::setText);
+		listObjectProperty.bind(counter()).bindSetter(selectionCounter::setText);
 
 		final JScrollPane itemEditorPane = new JScrollPane(selectionEditor);
 		itemEditorPane.setPreferredSize(new Dimension(200, 100));
@@ -134,7 +134,7 @@ public class ControllerExampleView extends JFrame {
 		dynamicListSelectionProperty.bind(selection(dynamicListSelectionEditor, String.class))
 				.addDependency(detachOnUpdateOf(model.getListObjectProperty()));
 		dynamicListSelectionProperty.bindWO(dynamicListSelectionCheck::setText);
-		dynamicListSelectionProperty.bind(counter()).bindWO(dynamicListSelectionCounter::setText);
+		dynamicListSelectionProperty.bind(counter()).bindSetter(dynamicListSelectionCounter::setText);
 
 		final JScrollPane dynamicListPane = new JScrollPane(dynamicListSelectionEditor);
 		dynamicListPane.setPreferredSize(new Dimension(200, 100));
@@ -149,8 +149,8 @@ public class ControllerExampleView extends JFrame {
 
 		final ObjectProperty<TestObject> tableObjectProperty = model.getComplexProperty();
 		tableObjectProperty.bind(selection(tableSelectionEditor, tableSelectionTableModel));
-		tableObjectProperty.bind(testObjectToString()).bindWO(tableSelectionCheck::setText);
-		tableObjectProperty.bind(counter()).bindWO(tableSelectionCounter::setText);
+		tableObjectProperty.bind(testObjectToString()).bindSetter(tableSelectionCheck::setText);
+		tableObjectProperty.bind(counter()).bindSetter(tableSelectionCounter::setText);
 
 		final JScrollPane tableEditorPane = new JScrollPane(tableSelectionEditor);
 		tableEditorPane.setPreferredSize(new Dimension(200, 70));
@@ -160,8 +160,8 @@ public class ControllerExampleView extends JFrame {
 		final ErrorProperty errorProperty = model.getErrorProperty();
 		final JLabel errorLabel = new JLabel("No Error");
 		final JLabel errorCounter = new JLabel();
-		errorProperty.bind(hmiErrorToString()).bindWO(errorLabel::setText);
-		errorProperty.bind(counter()).bindWO(errorCounter::setText);
+		errorProperty.bind(hmiErrorToString()).bindSetter(errorLabel::setText);
+		errorProperty.bind(counter()).bindSetter(errorCounter::setText);
 		addGuiLineItem(errorProperty, errorLabel, null, errorCounter);
 
 		final GridBagConstraints fillerConstraints = new GridBagConstraints();

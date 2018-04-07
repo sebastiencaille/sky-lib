@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.logging.Level;
 
 import org.skymarshall.hmi.mvc.converters.ConversionException;
 import org.skymarshall.hmi.mvc.converters.IConverter;
@@ -79,6 +80,8 @@ public class BindingChain implements IBindingController {
 						if (!transmit) {
 							return;
 						}
+						Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE,
+								"Component change: " + component.getClass().getSimpleName() + ": " + componentValue);
 						propagateComponentChange(component, componentValue);
 					}
 
@@ -97,6 +100,7 @@ public class BindingChain implements IBindingController {
 
 			@Override
 			public Object toComponent(final Object value) {
+				Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE, "Setting component value: " + value);
 				newBinding.setComponentValue(property, (T) value);
 				return value;
 			}
@@ -125,18 +129,18 @@ public class BindingChain implements IBindingController {
 			return this;
 		}
 
-		public IBindingController bindWO(final Consumer<T> newBinding) {
+		public IBindingController bindSetter(final Consumer<T> newBinding) {
 			links.add(link(v -> {
 				newBinding.accept((T) v);
 				return null;
 			}, v -> {
-				throw readOnlyException();
+				throw setOnlyException();
 			}));
 			return BindingChain.this;
 		}
 
-		private IllegalStateException readOnlyException() {
-			return new IllegalStateException("Read only");
+		private IllegalStateException setOnlyException() {
+			return new IllegalStateException("Binding can only call setters");
 		}
 
 		public IBindingController bind(final IComponentBinding<T> newBinding) {
@@ -211,6 +215,8 @@ public class BindingChain implements IBindingController {
 			return;
 		}
 		Object value = evt.getNewValue();
+		Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE,
+				"Property change: " + evt.getPropertyName() + ": " + evt.getOldValue() + " -> " + evt.getNewValue());
 		for (final Link link : links) {
 			try {
 				value = link.toComponent(value);
@@ -226,6 +232,7 @@ public class BindingChain implements IBindingController {
 		links.add(new Link() {
 			@Override
 			public Object toProperty(final Object component, final Object value) {
+				Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE, "Setting property value: " + value);
 				propertySetter.accept(component, (T) value);
 				return null;
 			}

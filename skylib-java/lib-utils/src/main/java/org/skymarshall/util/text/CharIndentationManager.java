@@ -17,9 +17,9 @@ package org.skymarshall.util.text;
 
 public class CharIndentationManager implements IIndentationManager {
 
-	private final String indentation;
+	private final String indentationLevel;
 
-	private String currentIndentation = "";
+	private String indentation = "";
 
 	public CharIndentationManager() {
 		this(' ', 4);
@@ -30,22 +30,22 @@ public class CharIndentationManager implements IIndentationManager {
 		for (int i = 0; i < length; i++) {
 			builder.append(c);
 		}
-		indentation = builder.toString();
+		indentationLevel = builder.toString();
 	}
 
 	@Override
 	public void indent() {
-		currentIndentation += indentation;
+		indentation += indentationLevel;
 	}
 
 	@Override
 	public void unindent() {
-		currentIndentation = currentIndentation.substring(indentation.length());
+		indentation = indentation.substring(indentationLevel.length());
 	}
 
 	@Override
 	public String getIndentation() {
-		return currentIndentation;
+		return indentation;
 	}
 
 }

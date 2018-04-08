@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -21,26 +21,27 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.WindowConstants;
 
 @SuppressWarnings("serial")
 public class TestObjectControllerModelFrameView extends JFrame {
 
-    public TestObjectControllerModelFrameView(final TestObjectControllerModelController controller) {
+	public TestObjectControllerModelFrameView(final TestObjectControllerModelController controller) {
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        final JTable table = new JTable(controller.getTableModel());
-        getContentPane().add(new JScrollPane(table), BorderLayout.CENTER);
+		final JTable table = new JTable(controller.getTableModel());
+		getContentPane().add(new JScrollPane(table), BorderLayout.CENTER);
 
-        final JButton button = new JButton("Commit");
-        button.addActionListener(controller.getCommitAction());
-        getContentPane().add(button, BorderLayout.SOUTH);
+		final JButton button = new JButton("Commit");
+		button.addActionListener(controller.getCommitAction());
+		getContentPane().add(button, BorderLayout.SOUTH);
 
-        controller.getPropertySupport().attachAll();
+		controller.getPropertySupport().attachAll();
 
-        validate();
-        pack();
+		validate();
+		pack();
 
-    }
+	}
 
 }

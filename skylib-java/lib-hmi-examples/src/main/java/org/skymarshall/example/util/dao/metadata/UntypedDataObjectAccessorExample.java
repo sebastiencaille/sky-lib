@@ -83,13 +83,13 @@ public interface UntypedDataObjectAccessorExample {
 
 		log.appendIndentedLine("Read/Write access using the DO's Accessor");
 		log.indent();
-		doAccessor.setValueOf("AnAttribute", "data1");
-		log.appendIndentedLine(AN_ATTRIBUTE + ":" + doAccessor.getValueOf("AnAttribute"));
+		doAccessor.setValueOf(AN_ATTRIBUTE, "data1");
+		log.appendIndentedLine(AN_ATTRIBUTE + ":" + doAccessor.getValueOf(AN_ATTRIBUTE));
 		log.unindent();
 
 		log.appendIndentedLine("Read/Write access using the DO's Attribute Accessor");
 		log.indent();
-		final DataObjectAttribute attribAccessor = doAccessor.getAttributeAccessor("AnAttribute");
+		final DataObjectAttribute attribAccessor = doAccessor.getAttributeAccessor(AN_ATTRIBUTE);
 		attribAccessor.setValue("data2");
 		log.appendIndentedLine(AN_ATTRIBUTE + ":" + attribAccessor.getValue());
 		log.unindent();
@@ -98,7 +98,7 @@ public interface UntypedDataObjectAccessorExample {
 		log.indent();
 		final ADataObject do2 = new ADataObject();
 		doAccessor.copyInto(do2);
-		log.appendIndentedLine(AN_ATTRIBUTE + ":" + metadata.getAttribute("AnAttribute").getValueOf(do2));
+		log.appendIndentedLine(AN_ATTRIBUTE + ":" + metadata.getAttribute(AN_ATTRIBUTE).getValueOf(do2));
 		log.unindent();
 	}
 }

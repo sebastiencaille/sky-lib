@@ -46,33 +46,37 @@ public class Template {
 				nextVariablePos++;
 				continue;
 			}
+
 			final String variable = content.substring(nextVariablePos + 2, content.indexOf('}', nextVariablePos));
-			int prevEol = nextVariablePos;
-			int startOfText = nextVariablePos;
-			while (prevEol >= 0 && content.charAt(prevEol) != '\n') {
-				if (content.charAt(prevEol) != ' ' && content.charAt(prevEol) != '\t') {
-					startOfText = prevEol;
-				}
-				prevEol--;
-			}
-
-			final String indent;
-			if (prevEol >= 0 && startOfText > prevEol) {
-				indent = content.substring(prevEol, startOfText);
-			} else {
-				indent = "";
-			}
-
 			final String value = properties.get(variable);
 			if (value == null) {
 				throw new TemplateException("No value for property " + variable);
 			}
+			final String indent = getIndentation(nextVariablePos);
 			result.append(content.substring(currentPos, nextVariablePos)).append(value.replaceAll("\n", indent));
 			nextVariablePos = nextVariablePos + variable.length() + 3;
 			currentPos = nextVariablePos;
 		}
 		result.append(content.substring(currentPos, content.length()));
 		return result.toString();
+	}
+
+	private String getIndentation(final int nextVariablePos) {
+		int prevEol = nextVariablePos;
+		int startOfText = nextVariablePos;
+		while (prevEol >= 0 && content.charAt(prevEol) != '\n') {
+			if (content.charAt(prevEol) != ' ' && content.charAt(prevEol) != '\t') {
+				startOfText = prevEol;
+			}
+			prevEol--;
+		}
+		final String indent;
+		if (prevEol >= 0 && startOfText > prevEol) {
+			indent = content.substring(prevEol, startOfText);
+		} else {
+			indent = "";
+		}
+		return indent;
 	}
 
 	public void write(final File file) throws IOException {

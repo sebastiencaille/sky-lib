@@ -121,6 +121,27 @@ public class AbstractObjectMetaData<DataType> {
 
 		final Set<String> attribNames = new HashSet<>();
 
+		scanMethods(_clazz, attribNames);
+
+		scanFields(_clazz, accessPrivateFields, attribNames);
+
+		createAttributesMetaData(_clazz, attribNames);
+		if (_clazz.getSuperclass() != null && !Object.class.equals(_clazz.getSuperclass())) {
+			introspectClass(_clazz.getSuperclass(), accessPrivateFields);
+		}
+
+	}
+
+	private void scanFields(final Class<?> _clazz, final boolean accessPrivateFields, final Set<String> attribNames) {
+		for (final Field field : _clazz.getDeclaredFields()) {
+			final boolean canAccess = Modifier.isPublic(field.getModifiers()) || accessPrivateFields;
+			if (canAccess && !field.getDeclaringClass().equals(Object.class)) {
+				attribNames.add(field.getName());
+			}
+		}
+	}
+
+	private void scanMethods(final Class<?> _clazz, final Set<String> attribNames) {
 		for (final Method method : _clazz.getMethods()) {
 			final String name = method.getName();
 			if (method.getDeclaringClass().equals(Object.class)) {
@@ -135,19 +156,6 @@ public class AbstractObjectMetaData<DataType> {
 				attribNames.add(name.substring(2));
 			}
 		}
-
-		for (final Field field : _clazz.getDeclaredFields()) {
-			final boolean canAccess = Modifier.isPublic(field.getModifiers()) || accessPrivateFields;
-			if (canAccess && !field.getDeclaringClass().equals(Object.class)) {
-				attribNames.add(field.getName());
-			}
-		}
-
-		createAttributesMetaData(_clazz, attribNames);
-		if (_clazz.getSuperclass() != null && !Object.class.equals(_clazz.getSuperclass())) {
-			introspectClass(_clazz.getSuperclass(), accessPrivateFields);
-		}
-
 	}
 
 	protected void createAttributesMetaData(final Class<?> _clazz, final Set<String> attribNames) {

@@ -28,7 +28,7 @@ import org.skymarshall.hmi.mvc.HmiController;
 public class TestObjectControllerModelController extends HmiController {
 
 	final ListModel<TestObject> model = new RootListModel<>(
-			ListViews.sorted((o1, o2) -> o1.aSecondValue - o2.aSecondValue));
+			ListViews.sorted((o1, o2) -> o1.getASecondValue() - o2.getASecondValue()));
 	private final TestObjectControllerModelFrameModel tableModel;
 
 	public TestObjectControllerModelController() {

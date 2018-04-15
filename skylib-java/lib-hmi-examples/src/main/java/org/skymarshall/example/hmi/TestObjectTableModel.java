@@ -40,9 +40,9 @@ public class TestObjectTableModel extends ListModelTableModel<TestObject, Column
 	protected Object getValueAtColumn(final TestObject object, final Columns column) {
 		switch (column) {
 		case A_FIRST_VALUE:
-			return object.aFirstValue;
+			return object.getAFirstValue();
 		case A_SECOND_VALUE:
-			return Integer.valueOf(object.aSecondValue);
+			return Integer.valueOf(object.getASecondValue());
 		default:
 			throw new IllegalArgumentException("Unknown column " + column);
 		}
@@ -52,7 +52,7 @@ public class TestObjectTableModel extends ListModelTableModel<TestObject, Column
 	protected void setValueAtColumn(final TestObject object, final Columns column, final Object value) {
 		switch (column) {
 		case A_FIRST_VALUE:
-			object.aFirstValue = (String) value;
+			object.setAFirstValue((String) value);
 			break;
 		case A_SECOND_VALUE:
 			break;

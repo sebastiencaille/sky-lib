@@ -16,12 +16,13 @@ public class DynamicView extends AbstractDynamicView<TestObject> implements ILis
 
 	@Override
 	public boolean accept(final TestObject object) {
-		return !filter || object.aSecondValue % 2 == 0;
+		return !filter || object.getASecondValue() % 2 == 0;
 	}
 
 	@Override
 	public int compare(final TestObject o1, final TestObject o2) {
-		return (sortReverseOrder) ? o2.aSecondValue - o1.aSecondValue : o1.aSecondValue - o2.aSecondValue;
+		return (sortReverseOrder) ? o2.getASecondValue() - o1.getASecondValue()
+				: o1.getASecondValue() - o2.getASecondValue();
 	}
 
 	public IComponentBinding<Boolean> enableFilter() {

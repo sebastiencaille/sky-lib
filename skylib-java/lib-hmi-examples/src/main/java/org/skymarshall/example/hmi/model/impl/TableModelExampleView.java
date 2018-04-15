@@ -37,8 +37,8 @@ import org.skymarshall.hmi.model.views.ListViews;
 @SuppressWarnings("serial")
 public class TableModelExampleView extends JFrame {
 
-	static final Comparator<TestObject> NORMAL_ORDER = (o1, o2) -> o1.aSecondValue - o2.aSecondValue;
-	static final Comparator<TestObject> REVERSE_ORDER = (o1, o2) -> o2.aSecondValue - o1.aSecondValue;
+	static final Comparator<TestObject> NORMAL_ORDER = (o1, o2) -> o1.getASecondValue() - o2.getASecondValue();
+	static final Comparator<TestObject> REVERSE_ORDER = (o1, o2) -> o2.getASecondValue() - o1.getASecondValue();
 
 	private transient final TableModelExampleController controller = new TableModelExampleController();
 	private transient final ListModel<TestObject> model;

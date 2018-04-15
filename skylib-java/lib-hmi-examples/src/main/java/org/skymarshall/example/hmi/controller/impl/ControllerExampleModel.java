@@ -26,7 +26,8 @@ import org.skymarshall.hmi.mvc.properties.ObjectProperty;
 
 public class ControllerExampleModel extends ControllerExampleObjectHmiModel {
 
-	private static final Comparator<TestObject> TEST_COMPARATOR = (o1, o2) -> o1.aFirstValue.compareTo(o2.aFirstValue);
+	private static final Comparator<TestObject> TEST_COMPARATOR = (o1, o2) -> o1.getAFirstValue()
+			.compareTo(o2.getAFirstValue());
 
 	public ControllerExampleModel(final HmiController controller) {
 		super(controller);

@@ -54,7 +54,7 @@ public class Timeout {
 		}
 		try {
 			Thread.sleep(100);
-		} catch (final InterruptedException e) {
+		} catch (final InterruptedException e) { // NOSONAR
 			throw new TimeoutException("Time out (interrupted): " + info);
 		}
 	}

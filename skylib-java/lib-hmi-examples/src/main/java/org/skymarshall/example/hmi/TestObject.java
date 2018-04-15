@@ -22,14 +22,14 @@ import org.skymarshall.hmi.mvc.converters.IConverter;
 @HmiObject
 public class TestObject {
 
-	public TestObject(final String string, final int i) {
-		aFirstValue = string;
+	public TestObject(final String afirstValue, final int i) {
+		this.aFirstValue = afirstValue;
 		aSecondValue = i;
 	}
 
-	public String aFirstValue;
+	private String aFirstValue;
 
-	public int aSecondValue;
+	private int aSecondValue;
 
 	public String getAFirstValue() {
 		return aFirstValue;

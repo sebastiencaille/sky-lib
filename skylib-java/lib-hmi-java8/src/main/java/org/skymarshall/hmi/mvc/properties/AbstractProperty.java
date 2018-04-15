@@ -16,6 +16,7 @@
 package org.skymarshall.hmi.mvc.properties;
 
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -35,7 +36,7 @@ import org.skymarshall.hmi.mvc.PropertyEvent.EventKind;
  * @author Sebastien Caille
  *
  */
-public abstract class AbstractProperty {
+public abstract class AbstractProperty implements Serializable {
 
 	@FunctionalInterface
 	public interface ErrorNotifier {
@@ -55,17 +56,17 @@ public abstract class AbstractProperty {
 	/**
 	 * Support to trigger property change
 	 */
-	protected final ControllerPropertyChangeSupport propertySupport;
+	protected transient final ControllerPropertyChangeSupport propertySupport;
 
 	/**
 	 * Property related events (before firing, after firing, ...)
 	 */
-	protected EventListenerList eventListeners = new EventListenerList();
+	protected transient EventListenerList eventListeners = new EventListenerList();
 
 	/**
 	 * Error property
 	 */
-	protected ErrorNotifier errorNotifier = emptyErrorNotifier();
+	protected transient ErrorNotifier errorNotifier = emptyErrorNotifier();
 
 	protected boolean attached = false;
 

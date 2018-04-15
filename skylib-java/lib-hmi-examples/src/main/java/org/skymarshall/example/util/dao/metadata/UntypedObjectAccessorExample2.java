@@ -43,6 +43,8 @@
  */
 package org.skymarshall.example.util.dao.metadata;
 
+import static org.skymarshall.example.util.dao.metadata.ADataObject.AN_ATTRIBUTE;
+
 import java.io.IOException;
 
 import org.skymarshall.util.dao.metadata.DataObjectManager;
@@ -74,7 +76,7 @@ public interface UntypedObjectAccessorExample2 {
 	}
 
 	public static String getAttributeOf(final UntypedDataObjectManager<?> _accessor) {
-		return _accessor.getValueOf("AnAttribute", String.class);
+		return _accessor.getValueOf(AN_ATTRIBUTE, String.class);
 	}
 
 	public static void main(final String[] args) throws IOException {

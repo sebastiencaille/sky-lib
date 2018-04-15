@@ -43,6 +43,8 @@
  */
 package org.skymarshall.example.util.dao.metadata;
 
+import static org.skymarshall.example.util.dao.metadata.ADataObject.AN_ATTRIBUTE;
+
 import java.io.IOException;
 
 import org.skymarshall.util.dao.metadata.DataObjectAttribute;
@@ -82,21 +84,21 @@ public interface UntypedDataObjectAccessorExample {
 		log.appendIndentedLine("Read/Write access using the DO's Accessor");
 		log.indent();
 		doAccessor.setValueOf("AnAttribute", "data1");
-		log.appendIndentedLine("anAttribute:" + doAccessor.getValueOf("AnAttribute"));
+		log.appendIndentedLine(AN_ATTRIBUTE + ":" + doAccessor.getValueOf("AnAttribute"));
 		log.unindent();
 
 		log.appendIndentedLine("Read/Write access using the DO's Attribute Accessor");
 		log.indent();
 		final DataObjectAttribute attribAccessor = doAccessor.getAttributeAccessor("AnAttribute");
 		attribAccessor.setValue("data2");
-		log.appendIndentedLine("anAttribute:" + attribAccessor.getValue());
+		log.appendIndentedLine(AN_ATTRIBUTE + ":" + attribAccessor.getValue());
 		log.unindent();
 
 		log.appendIndentedLine("One can also copy the content of the DO...");
 		log.indent();
 		final ADataObject do2 = new ADataObject();
 		doAccessor.copyInto(do2);
-		log.appendIndentedLine("anAttribute:" + metadata.getAttribute("AnAttribute").getValueOf(do2));
+		log.appendIndentedLine(AN_ATTRIBUTE + ":" + metadata.getAttribute("AnAttribute").getValueOf(do2));
 		log.unindent();
 	}
 }

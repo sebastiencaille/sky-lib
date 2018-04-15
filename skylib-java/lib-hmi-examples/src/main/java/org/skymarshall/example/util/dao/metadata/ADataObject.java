@@ -17,6 +17,8 @@ package org.skymarshall.example.util.dao.metadata;
 
 public class ADataObject {
 
+	public static final String AN_ATTRIBUTE = "AnAttribute";
+
 	private String anAttribute = "data1";
 
 	private static final String READ_ONLY_ATTRIBUTE = "ReadOnlyData";

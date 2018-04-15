@@ -32,12 +32,11 @@ import org.skymarshall.hmi.mvc.converters.IConverter;
  *
  * @author Sebastien Caille
  *
- * @param <T>
- *            the type of the object contained int the property
+ * @param <T> the type of the object contained int the property
  */
 public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 
-	private IPersister<T> persister;
+	private transient IPersister<T> persister;
 
 	public AbstractTypedProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {
 		super(name, propertySupport);

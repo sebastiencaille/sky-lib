@@ -1,5 +1,6 @@
 package org.skymarshall.hmi.model;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.function.Consumer;
@@ -8,7 +9,7 @@ import javax.swing.event.ListDataListener;
 
 import org.skymarshall.hmi.model.views.IListView;
 
-public abstract class ListModel<T> implements Iterable<T> {
+public abstract class ListModel<T> implements Iterable<T>, Serializable {
 
 	protected ListModelImpl<T> impl;
 
@@ -105,9 +106,8 @@ public abstract class ListModel<T> implements Iterable<T> {
 	/**
 	 * Finds an object in the model, and starts its edition if found
 	 *
-	 * @param sample
-	 *            a sample of the object (must contains the values required to find
-	 *            the object)
+	 * @param sample a sample of the object (must contains the values required to
+	 *               find the object)
 	 * @return an object if found, null if not
 	 */
 	public IEdition<T> findForEdition(final T sample) {
@@ -117,9 +117,8 @@ public abstract class ListModel<T> implements Iterable<T> {
 	/**
 	 * Finds an object in the model, and starts its edition if found
 	 *
-	 * @param sample
-	 *            a sample of the object (must contains the values required to find
-	 *            the object)
+	 * @param sample a sample of the object (must contains the values required to
+	 *               find the object)
 	 * @return an object if found, null if not
 	 */
 	public void findAndEdit(final T sample, final Consumer<T> editor) {
@@ -131,9 +130,8 @@ public abstract class ListModel<T> implements Iterable<T> {
 	/**
 	 * Finds an object in the model, or insert the sample if not found.
 	 *
-	 * @param sample
-	 *            a sample of the object (must contains the values required to find
-	 *            the object)
+	 * @param sample a sample of the object (must contains the values required to
+	 *               find the object)
 	 * @return an object if found, the sample if not found
 	 */
 	public T findOrCreate(final T sample) {
@@ -144,9 +142,8 @@ public abstract class ListModel<T> implements Iterable<T> {
 	 * Finds an object in the model, starting it's edition, or insert the sample if
 	 * not found.
 	 *
-	 * @param sample
-	 *            a sample of the object (must contains the values required to find
-	 *            the object)
+	 * @param sample a sample of the object (must contains the values required to
+	 *               find the object)
 	 * @return an object if found, the sample if not found
 	 */
 	public IEdition<T> findOrCreateForEdition(final T sample) {
@@ -157,9 +154,8 @@ public abstract class ListModel<T> implements Iterable<T> {
 	 * Finds an object in the model, starting it's edition, or insert the sample if
 	 * not found.
 	 *
-	 * @param sample
-	 *            a sample of the object (must contains the values required to find
-	 *            the object)
+	 * @param sample a sample of the object (must contains the values required to
+	 *               find the object)
 	 * @return an object if found, the sample if not found
 	 */
 	public void findOrCreateAndEdit(final T sample, final Consumer<T> editor) {

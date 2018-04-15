@@ -43,6 +43,8 @@
  */
 package org.skymarshall.example.util.dao.metadata;
 
+import static org.skymarshall.example.util.dao.metadata.ADataObject.AN_ATTRIBUTE;
+
 import java.io.IOException;
 
 import org.skymarshall.util.dao.metadata.DataObjectAttribute;
@@ -59,8 +61,6 @@ import org.skymarshall.util.text.TextFormatter;
  *
  */
 public interface TypedDataObjectAccessorExample {
-
-	public static final String AN_ATTRIBUTE = "AnAttribute";
 
 	public static void main(final String[] args) throws IOException {
 
@@ -85,21 +85,21 @@ public interface TypedDataObjectAccessorExample {
 		log.appendIndentedLine("Read/Write access using the DO's Accessor");
 		log.indent();
 		doAccessor.setValueOf(AN_ATTRIBUTE, "data1");
-		log.appendIndentedLine("anAttribute:" + doAccessor.getValueOf(AN_ATTRIBUTE));
+		log.appendIndentedLine(AN_ATTRIBUTE + ":" + doAccessor.getValueOf(AN_ATTRIBUTE));
 		log.unindent();
 
 		log.appendIndentedLine("Read/Write access using the DO's Attribute Accessor");
 		log.indent();
 		final DataObjectAttribute attribAccessor = doAccessor.getAttributeAccessor(AN_ATTRIBUTE);
 		attribAccessor.setValue("data2");
-		log.appendIndentedLine("anAttribute:" + attribAccessor.getValue());
+		log.appendIndentedLine(AN_ATTRIBUTE + ":" + attribAccessor.getValue());
 		log.unindent();
 
 		log.appendIndentedLine("One can also copy the content of the DO...");
 		log.indent();
 		final ADataObject do2 = new ADataObject();
 		doAccessor.copyInto(do2);
-		log.appendIndentedLine("anAttribute:" + metadata.getAttribute(AN_ATTRIBUTE).getValueOf(do2));
+		log.appendIndentedLine(AN_ATTRIBUTE + ":" + metadata.getAttribute(AN_ATTRIBUTE).getValueOf(do2));
 		log.unindent();
 
 	}

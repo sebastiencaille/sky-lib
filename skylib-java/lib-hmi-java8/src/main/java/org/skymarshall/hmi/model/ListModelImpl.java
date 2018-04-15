@@ -108,7 +108,7 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 
 	private transient ControllerPropertyChangeSupport propertyChange = new ControllerPropertyChangeSupport(this, false);
 
-	private final List<T> data = new ArrayList<>();
+	private final ArrayList<T> data = new ArrayList<>();
 
 	/**
 	 * The current view

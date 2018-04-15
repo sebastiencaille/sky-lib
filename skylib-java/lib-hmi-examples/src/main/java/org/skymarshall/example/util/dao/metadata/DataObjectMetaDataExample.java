@@ -81,14 +81,14 @@ public class DataObjectMetaDataExample {
 		log.appendIndentedLine("Read/Write access using the DO's MetaData");
 		log.indent();
 		metadata.getAttribute(AN_ATTRIBUTE).setValueOf(do1, "data1");
-		log.appendIndentedLine("anAttribute:" + metadata.getAttribute(AN_ATTRIBUTE).getValueOf(do1));
+		log.appendIndentedLine(AN_ATTRIBUTE + ":" + metadata.getAttribute(AN_ATTRIBUTE).getValueOf(do1));
 		log.unindent();
 
 		log.appendIndentedLine("One can also copy the content of the DO...");
 		log.indent();
 		final ADataObject do2 = new ADataObject();
 		metadata.copy(do1, do2);
-		log.appendIndentedLine("anAttribute:" + metadata.getAttribute(AN_ATTRIBUTE).getValueOf(do2));
+		log.appendIndentedLine(AN_ATTRIBUTE + ":" + metadata.getAttribute(AN_ATTRIBUTE).getValueOf(do2));
 		log.unindent();
 	}
 }

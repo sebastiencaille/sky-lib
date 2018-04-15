@@ -60,6 +60,8 @@ import org.skymarshall.util.text.TextFormatter;
  */
 public interface TypedDataObjectAccessorExample {
 
+	public static final String AN_ATTRIBUTE = "AnAttribute";
+
 	public static void main(final String[] args) throws IOException {
 
 		final TextFormatter log = new TextFormatter(TextFormatter.output(System.out)); // NOSONAR
@@ -82,13 +84,13 @@ public interface TypedDataObjectAccessorExample {
 
 		log.appendIndentedLine("Read/Write access using the DO's Accessor");
 		log.indent();
-		doAccessor.setValueOf("AnAttribute", "data1");
-		log.appendIndentedLine("anAttribute:" + doAccessor.getValueOf("AnAttribute"));
+		doAccessor.setValueOf(AN_ATTRIBUTE, "data1");
+		log.appendIndentedLine("anAttribute:" + doAccessor.getValueOf(AN_ATTRIBUTE));
 		log.unindent();
 
 		log.appendIndentedLine("Read/Write access using the DO's Attribute Accessor");
 		log.indent();
-		final DataObjectAttribute attribAccessor = doAccessor.getAttributeAccessor("AnAttribute");
+		final DataObjectAttribute attribAccessor = doAccessor.getAttributeAccessor(AN_ATTRIBUTE);
 		attribAccessor.setValue("data2");
 		log.appendIndentedLine("anAttribute:" + attribAccessor.getValue());
 		log.unindent();
@@ -97,7 +99,7 @@ public interface TypedDataObjectAccessorExample {
 		log.indent();
 		final ADataObject do2 = new ADataObject();
 		doAccessor.copyInto(do2);
-		log.appendIndentedLine("anAttribute:" + metadata.getAttribute("AnAttribute").getValueOf(do2));
+		log.appendIndentedLine("anAttribute:" + metadata.getAttribute(AN_ATTRIBUTE).getValueOf(do2));
 		log.unindent();
 
 	}

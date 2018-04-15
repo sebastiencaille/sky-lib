@@ -55,7 +55,7 @@ import org.skymarshall.hmi.mvc.properties.ObjectProperty;
  *        the Object.equals method. It is better if an element of the list can
  *        be uniquely identified using Object.equals.
  */
-public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T>, ListModelRef<T> {
+public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T>, ListModelRef<T>, Serializable {
 
 	private static final long serialVersionUID = 5327890361188939439L;
 

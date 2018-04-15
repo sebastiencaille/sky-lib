@@ -41,7 +41,7 @@ public class HmiClassProcessor {
 	private final boolean java8 = !Boolean.valueOf("preJava8");
 
 	public static class Context {
-		final Map<String, String> context = new HashMap<>();
+		final Map<String, String> properties = new HashMap<>();
 		final Set<String> imports = new HashSet<>();
 
 		public void addImport(final Class<?> class1) {
@@ -49,7 +49,7 @@ public class HmiClassProcessor {
 		}
 
 		public void append(final String key, final String value) {
-			Template.append(context, key, value);
+			Template.append(properties, key, value);
 		}
 
 		public void addImport(final String className) {
@@ -128,9 +128,9 @@ public class HmiClassProcessor {
 
 		final String strType = typeToString(metaData.getDataType());
 
-		context.context.put("modelClass", getClassName());
-		context.context.put("objectClass", strType);
-		context.context.put("objectClassSimpleName", metaData.getDataType().getSimpleName());
+		context.properties.put("modelClass", getClassName());
+		context.properties.put("objectClass", strType);
+		context.properties.put("objectClassSimpleName", metaData.getDataType().getSimpleName());
 
 		// attributes
 		addAttributesDeclarations(metaData);
@@ -139,8 +139,8 @@ public class HmiClassProcessor {
 
 		addAttributePersistenceMethods(metaData);
 
-		context.context.put("imports", JavaCodeGenerator.toImports(context.imports));
-		return new Template(ClassLoaderHelper.readUTF8Resource("templates/hmiModel.template")).apply(context.context);
+		context.properties.put("imports", JavaCodeGenerator.toImports(context.imports));
+		return new Template(ClassLoaderHelper.readUTF8Resource("templates/hmiModel.template")).apply(context.properties);
 	}
 
 	protected void addAttributesGetters(final UntypedDataObjectMetaData metaData) throws IOException {

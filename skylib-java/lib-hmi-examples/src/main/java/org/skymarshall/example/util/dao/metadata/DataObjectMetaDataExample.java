@@ -58,6 +58,8 @@ import org.skymarshall.util.text.TextFormatter;
  */
 public class DataObjectMetaDataExample {
 
+	private static final String AN_ATTRIBUTE = "AnAttribute";
+
 	private DataObjectMetaDataExample() {
 	}
 
@@ -78,15 +80,15 @@ public class DataObjectMetaDataExample {
 
 		log.appendIndentedLine("Read/Write access using the DO's MetaData");
 		log.indent();
-		metadata.getAttribute("AnAttribute").setValueOf(do1, "data1");
-		log.appendIndentedLine("anAttribute:" + metadata.getAttribute("AnAttribute").getValueOf(do1));
+		metadata.getAttribute(AN_ATTRIBUTE).setValueOf(do1, "data1");
+		log.appendIndentedLine("anAttribute:" + metadata.getAttribute(AN_ATTRIBUTE).getValueOf(do1));
 		log.unindent();
 
 		log.appendIndentedLine("One can also copy the content of the DO...");
 		log.indent();
 		final ADataObject do2 = new ADataObject();
 		metadata.copy(do1, do2);
-		log.appendIndentedLine("anAttribute:" + metadata.getAttribute("AnAttribute").getValueOf(do2));
+		log.appendIndentedLine("anAttribute:" + metadata.getAttribute(AN_ATTRIBUTE).getValueOf(do2));
 		log.unindent();
 	}
 }

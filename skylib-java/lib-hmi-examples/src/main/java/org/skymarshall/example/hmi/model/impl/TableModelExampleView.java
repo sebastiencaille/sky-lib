@@ -40,8 +40,8 @@ public class TableModelExampleView extends JFrame {
 	static final Comparator<TestObject> NORMAL_ORDER = (o1, o2) -> o1.aSecondValue - o2.aSecondValue;
 	static final Comparator<TestObject> REVERSE_ORDER = (o1, o2) -> o2.aSecondValue - o1.aSecondValue;
 
-	private final TableModelExampleController controller = new TableModelExampleController();
-	private final ListModel<TestObject> model;
+	private transient final TableModelExampleController controller = new TableModelExampleController();
+	private transient final ListModel<TestObject> model;
 
 	public TableModelExampleView() {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -51,11 +51,11 @@ public class TableModelExampleView extends JFrame {
 		final DynamicView view = new DynamicView();
 		final ListModel<TestObject> filteredModel = new ChildListModel<>(model, view);
 
-		// We could use a separate filter
-		// final BoundFilter<TestObject, Boolean> filter = BoundFilter.filter((value,
-		// filtered) -> !filtered || value.aSecondValue % 2 == 0);
-		// final ListModel<TestObject> filteredModel = new ChildListModel<>(model,
-		// filtered(filter));
+		// We could use a separate filter:
+		// > final BoundFilter<TestObject, Boolean> filter = BoundFilter.filter((value,
+		// > filtered) -> !filtered || value.aSecondValue % 2 == 0);
+		// > final ListModel<TestObject> filteredModel = new ChildListModel<>(model,
+		// > filtered(filter));
 		final TestObjectTableModel tableModel = new TestObjectTableModel(filteredModel);
 
 		final JTable table = new JTable(tableModel);
@@ -66,11 +66,11 @@ public class TableModelExampleView extends JFrame {
 		controller.enableFilter.bind(view.enableFilter());
 
 		// One can also use a converter to change the model's view, or a
-		// BoundComparator, too
-		// controller.reverseOrder.bind(booleanToOrder()).bind(view(model));
+		// BoundComparator, too:
+		// > controller.reverseOrder.bind(booleanToOrder()).bind(view(model));
 
 		// Bind the separate filter
-		// controller.enableFilter.bind(filter);
+		// > controller.enableFilter.bind(filter);
 
 		final JPanel optionsPanel = new JPanel(new FlowLayout());
 		addRevOrder(optionsPanel);

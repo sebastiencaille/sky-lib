@@ -11,6 +11,7 @@ public class DynamicView extends AbstractDynamicView<TestObject> implements ILis
 	private boolean sortReverseOrder;
 
 	public DynamicView() {
+		super();
 	}
 
 	@Override

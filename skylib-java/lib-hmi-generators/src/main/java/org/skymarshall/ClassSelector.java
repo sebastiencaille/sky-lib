@@ -31,6 +31,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.logging.Logger;
 
 /**
  * To select some classes
@@ -39,6 +40,8 @@ import java.util.jar.JarFile;
  *
  */
 public class ClassSelector {
+
+	private static final Logger LOGGER = Logger.getLogger(ClassSelector.class.getName());
 
 	public enum Policy {
 		ALL_SUBCLASSES, CLASS_ONLY
@@ -91,7 +94,7 @@ public class ClassSelector {
 			if (!file.exists()) {
 				continue;
 			}
-			System.out.println("Handling " + file);
+			LOGGER.info("Handling " + file);
 			final int lastDot = file.getName().lastIndexOf('.');
 			if (file.isDirectory()) {
 				final File folder = file.getAbsoluteFile().getCanonicalFile();
@@ -113,7 +116,7 @@ public class ClassSelector {
 	}
 
 	private void handleJarFile(final File file) throws IOException {
-		System.out.println("Handling jar file " + file);
+		LOGGER.info("Handling jar file " + file);
 		try (final JarFile jar = new JarFile(file)) {
 			final Enumeration<JarEntry> entries = jar.entries();
 			while (entries.hasMoreElements()) {
@@ -139,8 +142,6 @@ public class ClassSelector {
 	}
 
 	private void handleClass(final String classFileName) {
-		// System.out.println("Handling " + classFileName);
-
 		final String className = classFileName.substring(0, classFileName.length() - CLASS_EXTENSION.length())
 				.replaceAll("/", ".");
 		try {

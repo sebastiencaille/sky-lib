@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -20,18 +20,16 @@ import java.util.Comparator;
 /**
  * To customize the view on the list (filtering and sorting).
  * <p>
- * 
+ *
  * @author Sebastien Caille
- * 
- * @param <T>
- *            the type of the element to sort/filter
+ *
+ * @param <T> the type of the element to sort/filter
  */
-public interface IListView<T> extends
-        Comparator<T> {
+public interface IListView<T> extends Comparator<T> {
 
-    boolean accept(final T object);
+	boolean accept(final T object);
 
-    void attach(final IListViewOwner<T> owner);
+	void attach(final IListViewOwner<T> owner);
 
-    void detach(final IListViewOwner<T> owner);
+	void detach(final IListViewOwner<T> owner);
 }

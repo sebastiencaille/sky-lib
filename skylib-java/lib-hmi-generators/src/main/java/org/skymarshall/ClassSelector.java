@@ -31,6 +31,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -94,7 +95,7 @@ public class ClassSelector {
 			if (!file.exists()) {
 				continue;
 			}
-			LOGGER.info("Handling " + file);
+			LOGGER.log(Level.INFO, "Handling {0}", file);
 			final int lastDot = file.getName().lastIndexOf('.');
 			if (file.isDirectory()) {
 				final File folder = file.getAbsoluteFile().getCanonicalFile();
@@ -116,7 +117,7 @@ public class ClassSelector {
 	}
 
 	private void handleJarFile(final File file) throws IOException {
-		LOGGER.info("Handling jar file " + file);
+		LOGGER.log(Level.INFO, "Handling jar file {0}", file);
 		try (final JarFile jar = new JarFile(file)) {
 			final Enumeration<JarEntry> entries = jar.entries();
 			while (entries.hasMoreElements()) {

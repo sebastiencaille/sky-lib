@@ -17,7 +17,6 @@ package org.skymarshall.hmi.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 
 public abstract class ThreadedActionListener implements ActionListener {
@@ -30,16 +29,13 @@ public abstract class ThreadedActionListener implements ActionListener {
 
 	@Override
 	public void actionPerformed(final ActionEvent e) {
-		futureTask = new FutureTask<>(new Callable<Void>() {
-			@Override
-			public Void call() {
-				try {
-					actionPerformedInThread(e);
-				} catch (final RuntimeException e2) {
-					handleRuntimeException(e2);
-				}
-				return null;
+		futureTask = new FutureTask<>(() -> {
+			try {
+				actionPerformedInThread(e);
+			} catch (final RuntimeException e2) {
+				handleRuntimeException(e2);
 			}
+			return null;
 		});
 		run();
 	}

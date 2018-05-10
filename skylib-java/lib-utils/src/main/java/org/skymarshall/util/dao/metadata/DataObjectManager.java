@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -13,43 +13,16 @@
  *  IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  ******************************************************************************/
-/*
- * Copyright (c) 2008, Caille Sebastien
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification,are permitted provided that the following conditions are met:
- * 
- *  * Redistributions of source code must retain the above Copyrightnotice,
- *    this list of conditions and the following disclaimer.
- *  * Redistributions in binary form must reproduce the above Copyrightnotice,
- *    this list of conditions and the following disclaimer in the documentation 
- *    and/or other materials provided with the distribution.
- *  * Neither the name of the owner nor the names of its contributors may be 
- *    used to endorse or promote products derived from this software without 
- *    specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE CopyrightHOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE CopyrightOWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- */
+
 package org.skymarshall.util.dao.metadata;
 
 import java.lang.reflect.InvocationTargetException;
 
 /**
  * This class gives access to the attributes of a class.
- * 
+ *
  * @author Sebastien Caille
- * 
+ *
  * @param <DataType>
  */
 public class DataObjectManager<DataType> {
@@ -58,8 +31,8 @@ public class DataObjectManager<DataType> {
 
 		private final String name;
 
-		public ObjectAttributeAccessor(final String _name) {
-			name = _name;
+		public ObjectAttributeAccessor(final String name) {
+			this.name = name;
 		}
 
 		@Override
@@ -68,13 +41,13 @@ public class DataObjectManager<DataType> {
 		}
 
 		@Override
-		public <T> T getValue(final Class<T> _clazz) {
-			return DataObjectManager.this.getValueOf(name, _clazz);
+		public <T> T getValue(final Class<T> clazz) {
+			return DataObjectManager.this.getValueOf(name, clazz);
 		}
 
 		@Override
-		public void setValue(final Object _value) {
-			DataObjectManager.this.setValueOf(name, _value);
+		public void setValue(final Object value) {
+			DataObjectManager.this.setValueOf(name, value);
 		}
 
 	}
@@ -83,9 +56,9 @@ public class DataObjectManager<DataType> {
 
 	protected final DataType object;
 
-	public DataObjectManager(final AbstractObjectMetaData<DataType> objectMetaData, final DataType _object) {
+	public DataObjectManager(final AbstractObjectMetaData<DataType> objectMetaData, final DataType object) {
 		metaData = objectMetaData;
-		object = _object;
+		this.object = object;
 	}
 
 	public AbstractObjectMetaData<DataType> getMetaData() {
@@ -96,27 +69,27 @@ public class DataObjectManager<DataType> {
 		return new UntypedDataObjectMetaData(metaData.getDataType(), accessPrivateFields);
 	}
 
-	public Object getValueOf(final String _name) {
-		return metaData.getAttribute(_name).getValueOf(object);
+	public Object getValueOf(final String name) {
+		return metaData.getAttribute(name).getValueOf(object);
 	}
 
-	public void setValueOf(final String _name, final Object _o) {
-		metaData.getAttribute(_name).setValueOf(object, _o);
+	public void setValueOf(final String name, final Object o) {
+		metaData.getAttribute(name).setValueOf(object, o);
 	}
 
-	public <T> T getValueOf(final String _name, final Class<T> _clazz) {
-		return _clazz.cast(metaData.getAttribute(_name).getValueOf(object));
+	public <T> T getValueOf(final String name, final Class<T> clazz) {
+		return clazz.cast(metaData.getAttribute(name).getValueOf(object));
 	}
 
-	public DataObjectAttribute getAttributeAccessor(final String _name) {
-		if (!metaData.hasAttribute(_name)) {
-			throw new IllegalArgumentException("No such attribute: " + _name);
+	public DataObjectAttribute getAttributeAccessor(final String name) {
+		if (!metaData.hasAttribute(name)) {
+			throw new IllegalArgumentException("No such attribute: " + name);
 		}
-		return new ObjectAttributeAccessor(_name);
+		return new ObjectAttributeAccessor(name);
 	}
 
-	public void copyInto(final DataType _object) {
-		metaData.copy(object, _object);
+	public void copyInto(final DataType object) {
+		metaData.copy(object, object);
 	}
 
 	public UntypedDataObjectManager<?> getUntypedAccessor() {

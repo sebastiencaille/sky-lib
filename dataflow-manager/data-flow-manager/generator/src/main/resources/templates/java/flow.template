@@ -10,7 +10,7 @@ import ch.skymarshall.dataflowmgr.model.Registry;
 import java.util.UUID;
 ${imports}
 
-public class ${flow.name}Factory {
+public interface ${flow.name}Factory {
 
 	public static Flow<${flow.input}> create(final Registry registry) {
 	    ${flow.init}

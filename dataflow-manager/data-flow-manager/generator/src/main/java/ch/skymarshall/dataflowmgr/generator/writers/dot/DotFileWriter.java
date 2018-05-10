@@ -59,8 +59,8 @@ public class DotFileWriter extends AbstractWriter {
 				TypeFactory.defaultInstance().constructCollectionLikeType(HashSet.class, Step.class));
 	}
 
-	public void loadExpectedSteps(final File expectedSteps) throws IOException {
-		final byte[] json = Files.readAllBytes(expectedSteps.toPath());
+	public void loadExpectedSteps(final File expectedStepsFile) throws IOException {
+		final byte[] json = Files.readAllBytes(expectedStepsFile.toPath());
 		this.expectedSteps = mapper.readValue(json,
 				TypeFactory.defaultInstance().constructCollectionLikeType(HashSet.class, Step.class));
 	}
@@ -92,7 +92,7 @@ public class DotFileWriter extends AbstractWriter {
 
 	public void toPng(final String flowName, final String postfix) throws IOException, InterruptedException {
 		final Module module = modules.stream().filter(m -> m.flows.stream().anyMatch(f -> flowName.equals(f.name)))
-				.findFirst().get();
+				.findFirst().orElseThrow(() -> new IllegalArgumentException("flowName not found in flows"));
 		final String[] cmdarray = new String[] { "dot", "-Tpng",
 				"-o" + getOutputFile(module, flowName + "-" + postfix, "png").toString(),
 				getOutputFile(module, flowName, "dot").toString() };

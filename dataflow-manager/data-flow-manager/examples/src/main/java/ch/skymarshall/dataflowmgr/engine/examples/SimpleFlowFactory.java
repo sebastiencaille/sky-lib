@@ -16,7 +16,7 @@ import ch.skymarshall.dataflowmgr.local.LocalAPRef;
 import ch.skymarshall.dataflowmgr.engine.examples.dto.IntTransfer;
 
 
-public class SimpleFlowFactory {
+public interface SimpleFlowFactory {
 
 	public static Flow<IntTransfer> create(final Registry registry) {
 	    

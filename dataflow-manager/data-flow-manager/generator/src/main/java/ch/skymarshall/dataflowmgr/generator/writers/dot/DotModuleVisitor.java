@@ -79,7 +79,7 @@ public class DotModuleVisitor extends ModuleVisitor<DotModuleVisitor.Graph> {
 
 	@Override
 	public Graph visit(final ActionPoint ap, final InFlowRule rule, final Graph context) {
-		context.nodes.add(new Node(rule.uuid, rule.input + "\\n" + rule.activator, Shape.BOX));
+		context.nodes.add(new Node(rule.uuid, rule.input + "%n" + rule.activator, Shape.BOX));
 		context.links.add(new Link(rule.uuid, ap.uuid, ap.input, ap.activator));
 		return super.visit(ap, rule, context);
 	}
@@ -88,7 +88,7 @@ public class DotModuleVisitor extends ModuleVisitor<DotModuleVisitor.Graph> {
 	public Graph visit(final ActionPoint ap, final OutFlowRule rule, final Graph context) {
 		context.links.add(new Link(ap.uuid, rule.uuid, ap.output, ap.activator));
 
-		context.nodes.add(new Node(rule.uuid, rule.output + "\\n" + rule.activator, Shape.BOX));
+		context.nodes.add(new Node(rule.uuid, rule.output + "%n" + rule.activator, Shape.BOX));
 		for (final UUID nextUuid : forEachActionPoint(rule.output, rule.nextAction, a -> a.uuid)) {
 			context.links.add(new Link(rule.uuid, nextUuid, rule.output, rule.activator));
 		}
@@ -127,7 +127,7 @@ public class DotModuleVisitor extends ModuleVisitor<DotModuleVisitor.Graph> {
 						node.label, node.shape.name().toLowerCase(), extra)).newLine();
 			}
 			for (final Link link : context.links) {
-				output.appendIndented(String.format("\"%s\" -> \"%s\" [ label=\"%s\\n%s\" ];", link.from, link.to,
+				output.appendIndented(String.format("\"%s\" -> \"%s\" [ label=\"%s%n%s\" ];", link.from, link.to,
 						link.label, link.activator)).newLine(); // NOSONAR
 			}
 			output.unindent();

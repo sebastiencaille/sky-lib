@@ -16,7 +16,7 @@ import ch.skymarshall.dataflowmgr.local.LocalAPRef;
 import ch.skymarshall.dataflowmgr.engine.examples.dto.IntTransfer;
 
 
-public class BroadcastFlowFactory {
+public interface BroadcastFlowFactory {
 
 	public static Flow<IntTransfer> create(final Registry registry) {
 	    
@@ -28,7 +28,7 @@ public class BroadcastFlowFactory {
 		final OutputDecisionRule<IntTransfer, IntTransfer> intTransferIdentity_out_8a3152fb_4d16_4ff7_92a4_bce11cc30987 = OutputDecisionRule.output(UUID.fromString("8a3152fb-4d16-4ff7-92a4-bce11cc30987"),
 			(apOut) -> true,
 			FlowActionType.CONTINUE,
-			LocalAPRef.refTo(intTransferIdentity).addAll(LocalAPRef.refToApOf(intTransferIdentity_in_45d3a926_6e9c_48d1_95d9_6ffc071b8f3d)),
+			LocalAPRef.refTo(dumpIntTransfer).addAll(LocalAPRef.refToApOf(intTransferIdentity_in_45d3a926_6e9c_48d1_95d9_6ffc071b8f3d)),
 			(apOut) ->  apOut);
 		intTransferIdentity.addOutputRule(intTransferIdentity_out_8a3152fb_4d16_4ff7_92a4_bce11cc30987);
 		

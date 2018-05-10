@@ -89,10 +89,10 @@ public class SingleNodeJavaModuleGenerator extends JavaDTOsAndActionsGenerator {
 
 		final String code;
 		if (ap.terminal) {
-			code = String.format("final ActionPoint<%s, ?> %s = ActionPoint.terminal(%s, new %s());\n", ap.input,
+			code = String.format("final ActionPoint<%s, ?> %s = ActionPoint.terminal(%s, new %s());%n", ap.input,
 					variableName(ap), uuid(ap.uuid), className(ap)); // NOSONAR
 		} else {
-			code = String.format("final ActionPoint<%s, %s> %s = ActionPoint.simple(%s, new %s());\n", ap.input,
+			code = String.format("final ActionPoint<%s, %s> %s = ActionPoint.simple(%s, new %s());%n", ap.input,
 					ap.output, variableName(ap), uuid(ap.uuid), className(ap)); // NOSONAR
 		}
 		append(context, "flow.actions", code);

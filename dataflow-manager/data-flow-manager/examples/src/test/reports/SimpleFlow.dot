@@ -1,10 +1,13 @@
 // 
 digraph "SimpleFlow" {
-    "45d3a926-6e9c-48d1-95d9-6ffc071b8f3d" [ label="IntTransfer\ntrue", shape="box" , fillcolor=yellow, style=filled ];
-    "8a3152fb-4d16-4ff7-92a4-bce11cc30987" [ label="IntTransfer\ntrue", shape="box" , fillcolor=yellow, style=filled ];
+    "45d3a926-6e9c-48d1-95d9-6ffc071b8f3d" [ label="IntTransfer%ntrue", shape="box" , fillcolor=yellow, style=filled ];
+    "8a3152fb-4d16-4ff7-92a4-bce11cc30987" [ label="IntTransfer%ntrue", shape="box" , fillcolor=yellow, style=filled ];
     "252663c7-305a-4867-ba24-855656d1e2f9" [ label="IntTransferIdentity", shape="ellipse" , fillcolor=yellow, style=filled ];
     "6c072b83-e71f-4307-8a0d-86724e014bd6" [ label="DumpIntTransfer", shape="ellipse" , fillcolor=yellow, style=filled ];
-    "45d3a926-6e9c-48d1-95d9-6ffc071b8f3d" -> "252663c7-305a-4867-ba24-855656d1e2f9" [ label="IntTransfer\ntrue" ];
-    "252663c7-305a-4867-ba24-855656d1e2f9" -> "8a3152fb-4d16-4ff7-92a4-bce11cc30987" [ label="IntTransfer\ntrue" ];
-    "8a3152fb-4d16-4ff7-92a4-bce11cc30987" -> "6c072b83-e71f-4307-8a0d-86724e014bd6" [ label="IntTransfer\ntrue" ];
+    "45d3a926-6e9c-48d1-95d9-6ffc071b8f3d" -> "252663c7-305a-4867-ba24-855656d1e2f9" [ label="IntTransfer
+true" ];
+    "252663c7-305a-4867-ba24-855656d1e2f9" -> "8a3152fb-4d16-4ff7-92a4-bce11cc30987" [ label="IntTransfer
+true" ];
+    "8a3152fb-4d16-4ff7-92a4-bce11cc30987" -> "6c072b83-e71f-4307-8a0d-86724e014bd6" [ label="IntTransfer
+true" ];
 }

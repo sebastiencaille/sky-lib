@@ -110,7 +110,7 @@ public abstract class JavaDTOsAndActionsGenerator extends ModuleVisitor<Map<Stri
 		}
 
 		final String code = String.format(
-				"final InputDecisionRule<%s,%s> %s = %s.addInputRule(%s, %s, (flowIn) -> %s, %s);\n", rule.input,
+				"final InputDecisionRule<%s,%s> %s = %s.addInputRule(%s, %s, (flowIn) -> %s, %s);%n", rule.input,
 				ap.input, variableName(ap, rule), variableName(ap), uuid(rule.uuid), rule.input + ".class",
 				rule.activator, transform); // NOSONAR
 		append(context, "flow.inputRules", code);

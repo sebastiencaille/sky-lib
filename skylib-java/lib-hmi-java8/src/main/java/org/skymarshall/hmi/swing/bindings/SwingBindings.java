@@ -20,6 +20,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -39,12 +40,12 @@ import org.skymarshall.hmi.swing.model.ListModelTableModel;
 public interface SwingBindings {
 
 	public static class ListenerRegistration<T, C, L> {
-		private final Function<IComponentLink<T>, L> listenerFactory;
+		private final BiFunction<IComponentLink<T>, C, L> listenerFactory;
 		private final BiConsumer<C, L> addListener;
 		private final BiConsumer<C, L> removeListener;
 		private L listener;
 
-		public ListenerRegistration(final Function<IComponentLink<T>, L> listenerFactory,
+		public ListenerRegistration(final BiFunction<IComponentLink<T>, C, L> listenerFactory,
 				final BiConsumer<C, L> addListener, final BiConsumer<C, L> removeListener) {
 			this.listenerFactory = listenerFactory;
 			this.addListener = addListener;
@@ -55,7 +56,7 @@ public interface SwingBindings {
 			if (listener != null) {
 				throw new IllegalStateException("Listener already added");
 			}
-			listener = listenerFactory.apply(toProperty);
+			listener = listenerFactory.apply(toProperty, component);
 			addListener.accept(component, listener);
 		}
 
@@ -66,21 +67,22 @@ public interface SwingBindings {
 	}
 
 	public static <T, C extends JComponent> IComponentBinding<T> rw(final C component,
-			final ListenerRegistration<T, C, ?> readerListener, final Consumer<T> writer, final T defaultValue) {
+			final ListenerRegistration<T, C, ?> componentReaderListener, final Consumer<T> componentWriter,
+			final T defaultValue) {
 		return new IComponentBinding<T>() {
 			@Override
 			public void setComponentValue(final AbstractProperty source, final T value) {
-				writer.accept(value != null ? value : defaultValue);
+				componentWriter.accept(value != null ? value : defaultValue);
 			}
 
 			@Override
 			public void addComponentValueChangeListener(final IComponentLink<T> converter) {
-				readerListener.addListener(component, converter);
+				componentReaderListener.addListener(component, converter);
 			}
 
 			@Override
 			public void removeComponentValueChangeListener() {
-				readerListener.removeListener(component);
+				componentReaderListener.removeListener(component);
 			}
 		};
 	}
@@ -89,9 +91,9 @@ public interface SwingBindings {
 		return val != null ? val : "<null>";
 	}
 
-	public static <C extends ItemSelectable, T> ListenerRegistration<T, C, ?> itemListener(final C component,
+	public static <C extends ItemSelectable, T> ListenerRegistration<T, C, ?> itemListener(
 			final Function<ItemEvent, T> valueExtractor, final Function<ItemEvent, Boolean> activator) {
-		return new ListenerRegistration<T, C, ItemListener>(link -> {
+		return new ListenerRegistration<T, C, ItemListener>((link, component) -> {
 			return event -> {
 				if (activator.apply(event)) {
 					link.setValueFromComponent(component, valueExtractor.apply(event));
@@ -101,8 +103,7 @@ public interface SwingBindings {
 	}
 
 	public static IComponentBinding<Boolean> selection(final JCheckBox cb) {
-		return rw(cb, itemListener(cb, e -> e.getStateChange() == ItemEvent.SELECTED, e -> true), cb::setSelected,
-				false);
+		return rw(cb, itemListener(e -> e.getStateChange() == ItemEvent.SELECTED, e -> true), cb::setSelected, false);
 	}
 
 	public static JTextFieldBinding value(final JTextField component) {
@@ -135,8 +136,7 @@ public interface SwingBindings {
 	}
 
 	public static <T> IComponentBinding<T> selection(final JComboBox<T> component) {
-		return rw(component,
-				itemListener(component, e -> (T) e.getItem(), e -> e.getStateChange() == ItemEvent.SELECTED),
+		return rw(component, itemListener(e -> (T) e.getItem(), e -> e.getStateChange() == ItemEvent.SELECTED),
 				component::setSelectedItem, null);
 	}
 

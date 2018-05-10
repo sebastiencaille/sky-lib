@@ -19,7 +19,6 @@ import static org.skymarshall.util.generators.JavaCodeGenerator.toConstant;
 import static org.skymarshall.util.generators.JavaCodeGenerator.toFirstLetterInLowerCase;
 import static org.skymarshall.util.generators.JavaCodeGenerator.toFirstLetterInUpperCase;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -114,7 +113,7 @@ abstract class FieldProcessor {
 		}
 
 		@Override
-		String generateInitialization() throws IOException {
+		String generateInitialization() {
 			return generateInitializationWithType();
 		}
 	}
@@ -160,18 +159,18 @@ abstract class FieldProcessor {
 
 	}
 
-	String generateDeclaration() throws IOException {
+	String generateDeclaration() {
 		return String.format("protected final %s %s;", getPropertyType(), getPropertyName());
 	}
 
-	String generateInitializationWithType() throws IOException {
+	String generateInitializationWithType() {
 		return String.format(
 				"%s = Properties.<%s, %s>of(new %s(prefix + \"-%s\",  propertySupport)).persistent(Persisters.from(currentObjectProvider, %s)).setErrorNotifier(errorProperty).getProperty();",
 				getPropertyName(), getTypeAsString(), getPropertyType(), getPropertyType(), attrib.getName(),
 				getFieldCreation());
 	}
 
-	String generateInitialization() throws IOException {
+	String generateInitialization() {
 		return String.format(
 				"%s = Properties.of(new %s(prefix + \"-%s\",  propertySupport)).persistent(Persisters.from(currentObjectProvider, %s)).setErrorNotifier(errorProperty).getProperty();",
 				getPropertyName(), getPropertyType(), attrib.getName(), getFieldCreation());

@@ -42,6 +42,8 @@ public class BindingChain implements IBindingController {
 		Object toComponent(Object value) throws ConversionException;
 
 		Object toProperty(Object component, Object value) throws ConversionException;
+
+		void unbind();
 	}
 
 	@FunctionalInterface
@@ -108,6 +110,11 @@ public class BindingChain implements IBindingController {
 			@Override
 			public Object toProperty(final Object component, final Object value) {
 				return value;
+			}
+
+			@Override
+			public void unbind() {
+				newBinding.removeComponentValueChangeListener();
 			}
 
 			private void propagateComponentChange(final Object component, final Object componentValue) {
@@ -198,6 +205,11 @@ public class BindingChain implements IBindingController {
 					return comp2Prop.apply(value);
 				}
 
+				@Override
+				public void unbind() {
+					// nothing to do
+				}
+
 			};
 		}
 
@@ -242,6 +254,11 @@ public class BindingChain implements IBindingController {
 				return value;
 			}
 
+			@Override
+			public void unbind() {
+				// nothing to do
+			}
+
 		});
 		return new EndOfChain<>();
 	}
@@ -273,6 +290,7 @@ public class BindingChain implements IBindingController {
 	public void unbind() {
 		property.removeListener(valueUpdateListener);
 		dependencies.stream().forEach(IBindingChainDependency::unbind);
+		links.stream().forEach(Link::unbind);
 	}
 
 }

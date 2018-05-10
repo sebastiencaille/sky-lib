@@ -13,11 +13,12 @@
  *  IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  ******************************************************************************/
-package ch.skymarshall.dataflowmgr.engine;
+package org.skymarshall.util.helpers;
 
 import java.util.Optional;
 import java.util.function.IntFunction;
 import java.util.stream.Collector;
+import java.util.stream.Stream;
 
 public interface StreamHelper {
 
@@ -59,4 +60,8 @@ public interface StreamHelper {
 		});
 	}
 
+	public static <T, X> void throwIfContainsNull(final Stream<T> stream) {
+		stream.filter(v -> v == null).findAny()
+				.ifPresent((t) -> new IllegalArgumentException("No null value alllowed"));
+	}
 }

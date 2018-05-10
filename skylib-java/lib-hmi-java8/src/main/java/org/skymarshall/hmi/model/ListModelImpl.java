@@ -33,6 +33,7 @@ import org.skymarshall.hmi.model.views.IListViewOwner;
 import org.skymarshall.hmi.model.views.ListViews;
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
 import org.skymarshall.hmi.mvc.properties.ObjectProperty;
+import org.skymarshall.util.helpers.StreamHelper;
 
 /**
  * List Model with log(n) access.
@@ -64,6 +65,10 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 	private class Edition implements IEdition<T> {
 		final T value;
 		int oldIndex;
+
+		// Debug information
+		private transient StackTraceElement[] editionStack;
+
 		/**
 		 * True if object is not filtered out by the filter
 		 */
@@ -73,6 +78,7 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 			this.value = value;
 			this.oldIndex = oldIndex;
 			accepted = viewProperty.getValue().accept(value);
+			editionStack = Thread.currentThread().getStackTrace();
 		}
 
 		public boolean isAccepted() {
@@ -198,11 +204,6 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 	}
 
 	private final LocalImpl localImpl = new LocalImpl();
-
-	/**
-	 * Keep information about
-	 */
-	private transient StackTraceElement[] editionStack;
 
 	private ListModel<T> base;
 
@@ -413,9 +414,7 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 	protected List<T> addToModel(final Collection<T> newData) {
 		final List<T> addedData = new ArrayList<>(newData.size());
 		final int oldSize = data.size();
-		newData.stream().filter(v -> v == null).findAny().ifPresent(v -> {
-			throw new IllegalArgumentException("Null value");
-		});
+		StreamHelper.throwIfContainsNull(newData.stream());
 		newData.stream().filter(viewProperty.getValue()::accept).forEach(value -> {
 			data.add(value);
 			addedData.add(value);
@@ -505,10 +504,12 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 	}
 
 	public IEdition<T> startEditingValue(final T value) {
+		if (value == null) {
+			throw new IllegalArgumentException("value must not be null");
+		}
 		checkNoEdition();
 		final int oldIndex = getRowOf(value);
 		final Edition newEdition = new Edition(value, oldIndex);
-		editionStack = Thread.currentThread().getStackTrace();
 		fireEditionsStarted(value);
 		objectEdition = newEdition;
 		return objectEdition;
@@ -519,7 +520,7 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 			return;
 		}
 		final StringBuilder builder = new StringBuilder();
-		for (final StackTraceElement stack : editionStack) {
+		for (final StackTraceElement stack : objectEdition.editionStack) {
 			builder.append(stack.toString());
 			builder.append('\n');
 		}

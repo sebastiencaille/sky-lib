@@ -87,11 +87,11 @@ public class ControllerPropertyChangeSupport {
 			throw new IllegalStateException("Property " + propertyName + " fired out of Swing thread");
 		}
 		final CallInfo info = callInfo.computeIfAbsent(propertyName, k -> new CallInfo(caller));
-		info.count++;
 
 		if (info.count > 5) {
 			throw new IllegalStateException(propertyName + " is already fired");
 		}
+		info.count++;
 	}
 
 	public boolean isBeingFired(final String propertyName) {
@@ -118,14 +118,10 @@ public class ControllerPropertyChangeSupport {
 	/**
 	 * Triggers a property change
 	 *
-	 * @param propertyName
-	 *            name of the property
-	 * @param caller
-	 *            identification of the method's caller
-	 * @param oldValue
-	 *            the old value of the property
-	 * @param newValue
-	 *            the new value of the property
+	 * @param propertyName name of the property
+	 * @param caller       identification of the method's caller
+	 * @param oldValue     the old value of the property
+	 * @param newValue     the new value of the property
 	 */
 	public void firePropertyChange(final String propertyName, final Object caller, final Object oldValue,
 			final Object newValue) {
@@ -143,8 +139,7 @@ public class ControllerPropertyChangeSupport {
 	/**
 	 * Registers a property
 	 *
-	 * @param abstractProperty
-	 *            the property to register
+	 * @param abstractProperty the property to register
 	 */
 	public void register(final AbstractProperty abstractProperty) {
 		properties.add(abstractProperty);

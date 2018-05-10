@@ -92,7 +92,7 @@ public interface SwingBindings {
 	}
 
 	public static <C extends ItemSelectable, T> ListenerRegistration<T, C, ?> itemListener(
-			final Function<ItemEvent, T> valueExtractor, final Function<ItemEvent, Boolean> activator) {
+			final Function<ItemEvent, Boolean> activator, final Function<ItemEvent, T> valueExtractor) {
 		return new ListenerRegistration<T, C, ItemListener>((link, component) -> {
 			return event -> {
 				if (activator.apply(event)) {
@@ -103,7 +103,7 @@ public interface SwingBindings {
 	}
 
 	public static IComponentBinding<Boolean> selection(final JCheckBox cb) {
-		return rw(cb, itemListener(e -> e.getStateChange() == ItemEvent.SELECTED, e -> true), cb::setSelected, false);
+		return rw(cb, itemListener(e -> true, e -> e.getStateChange() == ItemEvent.SELECTED), cb::setSelected, false);
 	}
 
 	public static JTextFieldBinding value(final JTextField component) {
@@ -136,7 +136,7 @@ public interface SwingBindings {
 	}
 
 	public static <T> IComponentBinding<T> selection(final JComboBox<T> component) {
-		return rw(component, itemListener(e -> (T) e.getItem(), e -> e.getStateChange() == ItemEvent.SELECTED),
+		return rw(component, itemListener(e -> e.getStateChange() == ItemEvent.SELECTED, e -> (T) e.getItem()),
 				component::setSelectedItem, null);
 	}
 

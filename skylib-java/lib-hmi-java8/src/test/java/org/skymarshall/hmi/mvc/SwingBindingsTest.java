@@ -11,7 +11,7 @@ import org.skymarshall.hmi.mvc.converters.Converters;
 import org.skymarshall.hmi.mvc.properties.ObjectProperty;
 import org.skymarshall.hmi.swing.bindings.SwingBindings;
 
-public class SwingBindingsTests extends Assert {
+public class SwingBindingsTest extends Assert {
 	private class TestHmiModel extends HmiModel {
 
 		private final ObjectProperty<String> stringProperty;

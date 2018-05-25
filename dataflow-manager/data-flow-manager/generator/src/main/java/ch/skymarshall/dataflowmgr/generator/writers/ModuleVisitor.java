@@ -81,6 +81,13 @@ public class ModuleVisitor<T> {
 		return result;
 	}
 
+	/**
+	 *
+	 * @param dto     the dto
+	 * @param field   the dto fields
+	 * @param context the visitor's context
+	 * @return
+	 */
 	public T visitField(final Dto dto, final Entry<String, String> field, final T context) {
 		return context;
 	}

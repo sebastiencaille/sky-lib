@@ -40,23 +40,23 @@ import ch.skymarshall.dataflowmgr.model.Registry;
  *
  * @author scaille
  *
- * @param <IDT>
+ * @param <I> the input flow type
  */
-public class FlowExecution<IDT extends FlowData> {
+public class FlowExecution<I extends FlowData> {
 
 	/**
 	 *
 	 */
-	private final Flow<IDT> flow;
+	private final Flow<I> flow;
 
 	/**
 	 * @param flow
 	 */
-	public FlowExecution(final Flow<IDT> flow) {
+	public FlowExecution(final Flow<I> flow) {
 		this.flow = flow;
 	}
 
-	public void execute(final IDT inputData, final ExecutionReport report, final Registry registry) {
+	public void execute(final I inputData, final ExecutionReport report, final Registry registry) {
 		final UUID flowExecution = UUID.randomUUID();
 		report.add(Event.START_FLOW, this.flow.uuid(), flowExecution);
 

@@ -244,9 +244,7 @@ public abstract class JavaDTOsAndActionsGenerator extends ModuleVisitor<Map<Stri
 		if (tryImport(toImport, "ch.skymarshall.dataflowmgr.model." + clazz)) {
 			return;
 		}
-		if (tryImport(toImport, "java.lang." + clazz)) {
-			return;
-		}
+		tryImport(toImport, "java.lang." + clazz);
 
 	}
 

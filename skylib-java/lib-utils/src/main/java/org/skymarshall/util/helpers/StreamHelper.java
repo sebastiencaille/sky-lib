@@ -15,6 +15,7 @@
  ******************************************************************************/
 package org.skymarshall.util.helpers;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.IntFunction;
 import java.util.stream.Collector;
@@ -60,8 +61,7 @@ public interface StreamHelper {
 		});
 	}
 
-	public static <T, X> void throwIfContainsNull(final Stream<T> stream) {
-		stream.filter(v -> v == null).findAny()
-				.ifPresent((t) -> new IllegalArgumentException("No null value alllowed"));
+	public static <T> void throwIfContainsNull(final Stream<T> stream) {
+		stream.filter(Objects::isNull).findAny().ifPresent(t -> new IllegalArgumentException("No null value allowed"));
 	}
 }

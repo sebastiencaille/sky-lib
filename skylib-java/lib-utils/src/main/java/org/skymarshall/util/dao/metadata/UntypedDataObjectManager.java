@@ -19,11 +19,11 @@ package org.skymarshall.util.dao.metadata;
  * This class allows accessing a data object without enforcing the data types in
  * the methods parameters
  *
- * @param <DataType>
+ * @param <D>
  */
-public class UntypedDataObjectManager<DataType> extends DataObjectManager<DataType> {
+public class UntypedDataObjectManager<D> extends DataObjectManager<D> {
 
-	public UntypedDataObjectManager(final AbstractObjectMetaData<DataType> objectMetaData, final DataType object) {
+	public UntypedDataObjectManager(final AbstractObjectMetaData<D> objectMetaData, final D object) {
 		super(objectMetaData, object);
 	}
 

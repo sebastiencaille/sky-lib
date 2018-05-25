@@ -39,8 +39,8 @@ public class DataObjectManagerFactory {
 	 * Creates an Accessor that enforce the data types in its methods. The meta-data
 	 * are extracted from the class clazz.
 	 */
-	public static <ADataType> DataObjectManager<ADataType> createFor(final Class<ADataType> clazz,
-			final ADataType data) {
+	public static <D> DataObjectManager<D> createFor(final Class<D> clazz,
+			final D data) {
 		return new DataObjectMetaData<> (clazz).createAccessorTo (data);
 	}
 }

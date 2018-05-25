@@ -18,11 +18,11 @@ package org.skymarshall.util.dao.metadata;
 /**
  * This Class contains the meta-data of Class<DataType>.
  *
- * @param <DataType>
+ * @param <D>
  */
-public class DataObjectMetaData<DataType> extends AbstractObjectMetaData<DataType> {
+public class DataObjectMetaData<D> extends AbstractObjectMetaData<D> {
 
-	public DataObjectMetaData(final Class<DataType> clazz) {
+	public DataObjectMetaData(final Class<D> clazz) {
 		super(clazz);
 	}
 

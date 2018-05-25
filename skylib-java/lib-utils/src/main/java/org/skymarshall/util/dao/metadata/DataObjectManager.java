@@ -23,9 +23,9 @@ import java.lang.reflect.InvocationTargetException;
  *
  * @author Sebastien Caille
  *
- * @param <DataType>
+ * @param <D>
  */
-public class DataObjectManager<DataType> {
+public class DataObjectManager<D> {
 
 	private class ObjectAttributeAccessor implements DataObjectAttribute {
 
@@ -52,16 +52,16 @@ public class DataObjectManager<DataType> {
 
 	}
 
-	protected final AbstractObjectMetaData<DataType> metaData;
+	protected final AbstractObjectMetaData<D> metaData;
 
-	protected final DataType object;
+	protected final D object;
 
-	public DataObjectManager(final AbstractObjectMetaData<DataType> objectMetaData, final DataType object) {
+	public DataObjectManager(final AbstractObjectMetaData<D> objectMetaData, final D object) {
 		metaData = objectMetaData;
 		this.object = object;
 	}
 
-	public AbstractObjectMetaData<DataType> getMetaData() {
+	public AbstractObjectMetaData<D> getMetaData() {
 		return metaData;
 	}
 
@@ -88,7 +88,7 @@ public class DataObjectManager<DataType> {
 		return new ObjectAttributeAccessor(name);
 	}
 
-	public void copyInto(final DataType object) {
+	public void copyInto(final D object) {
 		metaData.copy(object, object);
 	}
 
@@ -96,15 +96,15 @@ public class DataObjectManager<DataType> {
 		return metaData.createUntypedAccessorTo(object);
 	}
 
-	public DataType createNewObject() throws InstantiationException, IllegalAccessException, IllegalArgumentException,
-			InvocationTargetException, NoSuchMethodException, SecurityException {
+	public D createNewObject()
+			throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		return metaData.getConstructor().newInstance();
 	}
 
-	public DataType cloneObject() {
+	public D cloneObject() {
 		try {
-			final DataType newObject = createNewObject();
-			for (final AbstractAttributeMetaData<DataType> attribute : metaData.attributes.values()) {
+			final D newObject = createNewObject();
+			for (final AbstractAttributeMetaData<D> attribute : metaData.attributes.values()) {
 				attribute.copy(object, newObject);
 			}
 			return newObject;

@@ -80,7 +80,7 @@ public class Template {
 	}
 
 	public void write(final File file) throws IOException {
-		Logger.getLogger(Template.class.getName()).info("Write " + file);
+		Logger.getLogger(Template.class.getName()).info(() -> "Write " + file);
 		file.getParentFile().mkdirs();
 
 		try (final FileWriter out = new FileWriter(file)) {

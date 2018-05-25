@@ -33,30 +33,30 @@ import org.skymarshall.util.dao.metadata.AttributeFactory.Mode;
  * <p>
  *
  *
- * @param <DataType> a data type
+ * @param <D> a data type
  */
-public class AbstractObjectMetaData<DataType> {
+public class AbstractObjectMetaData<D> {
 
 	/**
 	 * Object attributes
 	 */
-	protected final Map<String, AbstractAttributeMetaData<DataType>> attributes = new HashMap<>();
+	protected final Map<String, AbstractAttributeMetaData<D>> attributes = new HashMap<>();
 
 	/**
 	 * Type of the object
 	 */
-	private final Class<? extends DataType> dataType;
+	private final Class<? extends D> dataType;
 
 	/**
 	 * Access mode
 	 */
 	private Mode attributeMode = Mode.AUTOMATIC;
 
-	protected AbstractObjectMetaData(final Class<? extends DataType> clazz) {
+	protected AbstractObjectMetaData(final Class<? extends D> clazz) {
 		this(clazz, false);
 	}
 
-	protected AbstractObjectMetaData(final Class<? extends DataType> clazz, final boolean accessPrivateFields) {
+	protected AbstractObjectMetaData(final Class<? extends D> clazz, final boolean accessPrivateFields) {
 		dataType = clazz;
 		if (accessPrivateFields) {
 			attributeMode = Mode.FIELD;
@@ -64,24 +64,24 @@ public class AbstractObjectMetaData<DataType> {
 		introspectClass(clazz, accessPrivateFields);
 	}
 
-	protected AbstractObjectMetaData(final Class<? extends DataType> clazz, final Set<String> attribNames) {
+	protected AbstractObjectMetaData(final Class<? extends D> clazz, final Set<String> attribNames) {
 		dataType = clazz;
 		createAttributesMetaData(clazz, attribNames);
 	}
 
-	public Class<? extends DataType> getDataType() {
+	public Class<? extends D> getDataType() {
 		return dataType;
 	}
 
-	public Collection<AbstractAttributeMetaData<DataType>> getAttributes() {
+	public Collection<AbstractAttributeMetaData<D>> getAttributes() {
 		return new HashSet<>(attributes.values());
 	}
 
-	public DataObjectManager<DataType> createAccessorTo(final DataType object) {
+	public DataObjectManager<D> createAccessorTo(final D object) {
 		return new DataObjectManager<>(this, object);
 	}
 
-	public UntypedDataObjectManager<?> createUntypedAccessorTo(final DataType object) {
+	public UntypedDataObjectManager<?> createUntypedAccessorTo(final D object) {
 		return new UntypedDataObjectManager<>(this, object);
 	}
 
@@ -133,8 +133,8 @@ public class AbstractObjectMetaData<DataType> {
 	protected void createAttributesMetaData(final Class<?> clazz, final Set<String> attribNames) {
 		for (final String name : attribNames) {
 			final String attribName = Character.toUpperCase(name.charAt(0)) + name.substring(1);
-			final AbstractAttributeMetaData<DataType> access = AttributeFactory.<DataType>create(clazz, name,
-					attribName, attributeMode);
+			final AbstractAttributeMetaData<D> access = AttributeFactory.<D>create(clazz, name, attribName,
+					attributeMode);
 			if (access != null) {
 				attributes.put(attribName, access);
 			}
@@ -151,19 +151,19 @@ public class AbstractObjectMetaData<DataType> {
 		return attributes.containsKey(name);
 	}
 
-	public AbstractAttributeMetaData<DataType> getAttribute(final String name) {
+	public AbstractAttributeMetaData<D> getAttribute(final String name) {
 
-		final AbstractAttributeMetaData<DataType> attrib = attributes.get(name);
+		final AbstractAttributeMetaData<D> attrib = attributes.get(name);
 		if (attrib == null) {
 			throw new IllegalArgumentException("No such attribute:" + name);
 		}
 		return attrib;
 	}
 
-	public void copy(final DataType from, final DataType to) {
-		for (final AbstractAttributeMetaData<DataType> attrib : attributes.values()) {
+	public void copy(final D from, final D to) {
+		for (final AbstractAttributeMetaData<D> attrib : attributes.values()) {
 			if (!attrib.isReadOnly()) {
-				attrib.copy (from, to);
+				attrib.copy(from, to);
 			}
 		}
 	}
@@ -185,7 +185,7 @@ public class AbstractObjectMetaData<DataType> {
 		return "MetaData of " + dataType.getName();
 	}
 
-	public Constructor<? extends DataType> getConstructor() throws NoSuchMethodException, SecurityException {
+	public Constructor<? extends D> getConstructor() throws NoSuchMethodException {
 		return getDataType().getConstructor();
 	}
 }

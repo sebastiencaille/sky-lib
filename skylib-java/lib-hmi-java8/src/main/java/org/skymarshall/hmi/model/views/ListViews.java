@@ -44,8 +44,8 @@ public interface ListViews {
 	 * @param filter
 	 * @return
 	 */
-	public static <DataType, FilterType extends Predicate<DataType>> Predicate<DataType> filter(
-			final ObjectProperty<FilterType> filter) {
+	public static <D, F extends Predicate<D>> Predicate<D> filter(
+			final ObjectProperty<F> filter) {
 		return new PropertyFilter<>(filter);
 	}
 

@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -26,11 +26,14 @@ import org.skymarshall.hmi.Utils;
 public class SizeRenderer extends DefaultTableCellRenderer {
 
 	@Override
-	public Component getTableCellRendererComponent(final JTable table,
-			final Object value, final boolean isSelected,
+	public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
 			final boolean hasFocus, final int row, final int column) {
-		final String res = Utils.toSize((Number) value);
-		return super.getTableCellRendererComponent(table, res, isSelected,
-				hasFocus, row, column);
+		final String sizeAsString;
+		if (value != null) {
+			sizeAsString = Utils.toSize((Number) value);
+		} else {
+			sizeAsString = "";
+		}
+		return super.getTableCellRendererComponent(table, sizeAsString, isSelected, hasFocus, row, column);
 	}
 }

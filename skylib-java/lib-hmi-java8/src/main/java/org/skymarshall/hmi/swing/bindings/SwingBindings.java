@@ -39,6 +39,14 @@ import org.skymarshall.hmi.swing.model.ListModelTableModel;
 
 public interface SwingBindings {
 
+	/**
+	 *
+	 * @author scaille
+	 *
+	 * @param <T> incoming data type
+	 * @param <C> component type
+	 * @param <L> listener type
+	 */
 	public static class ListenerRegistration<T, C, L> {
 		private final BiFunction<IComponentLink<T>, C, L> listenerFactory;
 		private final BiConsumer<C, L> addListener;
@@ -66,6 +74,16 @@ public interface SwingBindings {
 
 	}
 
+	/**
+	 * 
+	 * @param component               an awt component
+	 * @param componentReaderListener the listener registration that propagate value
+	 *                                changed by the component
+	 * @param componentWriter         the consumer that sets the value of the
+	 *                                component based on the incoming value
+	 * @param defaultValue            a default value for null incoming value
+	 * @return
+	 */
 	public static <T, C extends JComponent> IComponentBinding<T> rw(final C component,
 			final ListenerRegistration<T, C, ?> componentReaderListener, final Consumer<T> componentWriter,
 			final T defaultValue) {

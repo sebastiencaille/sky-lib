@@ -19,17 +19,17 @@ import java.util.function.Predicate;
 
 import org.skymarshall.hmi.mvc.properties.ObjectProperty;
 
-public class PropertyFilter<DataType, FilterType extends Predicate<DataType>>
-		implements Predicate<DataType> {
+public class PropertyFilter<D, F extends Predicate<D>>
+		implements Predicate<D> {
 
-	private final ObjectProperty<FilterType> filter;
+	private final ObjectProperty<F> filter;
 
-	public PropertyFilter(final ObjectProperty<FilterType> filter) {
+	public PropertyFilter(final ObjectProperty<F> filter) {
 		this.filter = filter;
 	}
 
 	@Override
-	public boolean test(final DataType object) {
+	public boolean test(final D object) {
 		return filter.getValue().test(object);
 	}
 

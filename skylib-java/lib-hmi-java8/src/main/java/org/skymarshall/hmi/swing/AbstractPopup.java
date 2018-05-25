@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -25,26 +25,31 @@ import org.skymarshall.hmi.mvc.properties.ObjectProperty;
 
 public abstract class AbstractPopup<T> extends MouseAdapter {
 
-    private final JPopupMenu          componentPopupMenu = new JPopupMenu();
-    protected final ObjectProperty<T> lastSelected;
+	private final JPopupMenu componentPopupMenu = new JPopupMenu();
+	protected final ObjectProperty<T> lastSelected;
 
-    protected abstract void buildPopup(JPopupMenu popupMenu, T selected);
+	protected abstract void buildPopup(JPopupMenu popupMenu, T selected);
 
-    public AbstractPopup(final ObjectProperty<T> lastSelected) {
-        this.lastSelected = lastSelected;
-    }
+	public AbstractPopup(final ObjectProperty<T> lastSelected) {
+		this.lastSelected = lastSelected;
+	}
 
-    protected T getValueForPopup(final Point p) {
-        return lastSelected.getValue();
-    }
+	/**
+	 * 
+	 * @param p location of the popup
+	 * @return
+	 */
+	protected T getValueForPopup(final Point p) {
+		return lastSelected.getValue();
+	}
 
-    @Override
-    public void mousePressed(final MouseEvent e) {
-        if (e.isPopupTrigger()) {
-            final T selected = getValueForPopup(e.getPoint());
-            buildPopup(componentPopupMenu, selected);
-            componentPopupMenu.show(e.getComponent(), e.getX(), e.getY());
-        }
-    }
+	@Override
+	public void mousePressed(final MouseEvent e) {
+		if (e.isPopupTrigger()) {
+			final T selected = getValueForPopup(e.getPoint());
+			buildPopup(componentPopupMenu, selected);
+			componentPopupMenu.show(e.getComponent(), e.getX(), e.getY());
+		}
+	}
 
 }

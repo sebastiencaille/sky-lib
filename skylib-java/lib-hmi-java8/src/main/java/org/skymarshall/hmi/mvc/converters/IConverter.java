@@ -17,11 +17,11 @@ package org.skymarshall.hmi.mvc.converters;
 
 import java.util.function.Supplier;
 
-public interface IConverter<PropertyType, ComponentType> {
+public interface IConverter<P, C> {
 
-	ComponentType convertPropertyValueToComponentValue(final PropertyType propertyValue);
+	C convertPropertyValueToComponentValue(final P propertyValue);
 
-	PropertyType convertComponentValueToPropertyValue(ComponentType componentValue) throws ConversionException;
+	P convertComponentValueToPropertyValue(C componentValue) throws ConversionException;
 
 	public static <C> IConverter<Boolean, C> either(final Supplier<C> either, final Supplier<C> or) {
 		return new IConverter<Boolean, C>() {

@@ -25,6 +25,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Deque;
+import java.util.ArrayDeque;
 
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 
@@ -46,16 +48,24 @@ public class ControllerPropertyChangeSupport {
 	private final PropertyChangeSupport support;
 
 	private static class CallInfo {
-		public CallInfo(final Object caller) {
-			this.caller = caller;
-		}
 
 		private final Object caller;
-		private int count;
+		private final Object newValue;
+
+		public CallInfo(final Object caller, final Object newValue) {
+			this.caller = caller;
+			this.newValue = newValue;
+		}
+
+		@Override
+		public String toString() {
+			return caller + "->" + newValue;
+		}
+
 	}
 
 	/** Information about properties currently called */
-	private final Map<String, CallInfo> callInfo = new HashMap<>();
+	private final Map<String, Deque<CallInfo>> callInfo = new HashMap<>();
 
 	/** All the properties */
 	private final Collection<AbstractProperty> properties = new ArrayList<>();
@@ -75,23 +85,25 @@ public class ControllerPropertyChangeSupport {
 	}
 
 	private void endFire(final String propertyName) {
-		final CallInfo info = callInfo.get(propertyName);
-		info.count--;
-		if (info.count == 0) {
+		final Deque<CallInfo> info = callInfo.get(propertyName);
+		info.pop();
+		if (info.isEmpty()) {
 			callInfo.remove(propertyName);
 		}
 	}
 
-	private void prepareFire(final String propertyName, final Object caller) {
+	private void prepareFire(final String propertyName, final Object caller, final Object newValue) {
 		if (checkSwingThread && !EventQueue.isDispatchThread()) {
 			throw new IllegalStateException("Property " + propertyName + " fired out of Swing thread");
 		}
-		final CallInfo info = callInfo.computeIfAbsent(propertyName, k -> new CallInfo(caller));
+		final Deque<CallInfo> info = callInfo.computeIfAbsent(propertyName, k -> new ArrayDeque<>(5));
 
-		if (info.count > 5) {
-			throw new IllegalStateException(propertyName + " is already fired");
+		if (info.size() > 5) {
+			final StringBuilder stack = new StringBuilder();
+			info.stream().forEach(i -> stack.append(i).append(";"));
+			throw new IllegalStateException(propertyName + " is already fired:" + stack.toString());
 		}
-		info.count++;
+		info.push(new CallInfo(caller, newValue));
 	}
 
 	public boolean isBeingFired(final String propertyName) {
@@ -99,8 +111,11 @@ public class ControllerPropertyChangeSupport {
 	}
 
 	public boolean isModifiedBy(final String name, final Object caller) {
-		final CallInfo info = callInfo.get(name);
-		return info != null && info.caller == caller;
+		final Deque<CallInfo> info = callInfo.get(name);
+		if (info == null) {
+			return false;
+		}
+		return info.stream().anyMatch(i -> i.caller == caller);
 	}
 
 	public void addPropertyChangeListener(final String name, final PropertyChangeListener propertyChangeListener) {
@@ -128,7 +143,7 @@ public class ControllerPropertyChangeSupport {
 		if (Objects.equals(oldValue, newValue)) {
 			return;
 		}
-		prepareFire(propertyName, caller);
+		prepareFire(propertyName, caller, newValue);
 		try {
 			support.firePropertyChange(propertyName, oldValue, newValue);
 		} finally {

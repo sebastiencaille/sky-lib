@@ -5,17 +5,12 @@ import static java.util.stream.Collectors.joining;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestMethod {
+public class TestMethod extends IdObject {
 
-	private final String id;
 	private final List<TestObjectParameter> parameters = new ArrayList<>();
 
 	public TestMethod(final String id) {
-		this.id = id;
-	}
-
-	public String getId() {
-		return id;
+		super(id);
 	}
 
 	public List<TestObjectParameter> getParameters() {
@@ -24,7 +19,7 @@ public class TestMethod {
 
 	@Override
 	public String toString() {
-		return id + ": " + parameters.stream().map(TestObjectParameter::getType).collect(joining(","));
+		return getId() + ": " + parameters.stream().map(TestObjectParameter::getType).collect(joining(","));
 	}
 
 }

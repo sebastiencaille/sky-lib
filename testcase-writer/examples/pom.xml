@@ -26,6 +26,10 @@
 			<artifactId>testcase-writer-annotations</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>ch.skymarshall.tcwriter</groupId>
+			<artifactId>testcase-writer-hmi</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>

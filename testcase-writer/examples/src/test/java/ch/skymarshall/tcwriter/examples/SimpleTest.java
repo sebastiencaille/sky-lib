@@ -8,22 +8,23 @@ import static ch.skymarshall.tcwriter.examples.api.interfaces.selectors.HandleAc
 import org.junit.Before;
 import org.junit.Test;
 
-import ch.skymarshall.tcwriter.examples.api.interfaces.CustomerTestApi;
-import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestApi;
+import ch.skymarshall.tcwriter.examples.ExampleService;
+import ch.skymarshall.tcwriter.examples.api.interfaces.CustomerTestActor;
+import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestActor;
 import ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem;
 
 public class SimpleTest {
 
 	private final TestItem coffeeMachine = TestItem.coffeeMachine();
 	private final TestItem teaPot = TestItem.teaPot();
-	private CustomerTestApi customer;
-	private DeliveryTestApi delivery;
+	private CustomerTestActor customer;
+	private DeliveryTestActor delivery;
 
 	@Before
 	public void prepareApis() {
 		final ExampleService testedService = new ExampleService();
-		customer = new CustomerTestApi(testedService);
-		delivery = new DeliveryTestApi(testedService);
+		customer = new CustomerTestActor(testedService);
+		delivery = new DeliveryTestActor(testedService);
 	}
 
 	@Test
@@ -41,7 +42,7 @@ public class SimpleTest {
 
 	@Test
 	public void testFailureCase() {
-		final CustomerTestApi api = new CustomerTestApi(new ExampleService());
+		final CustomerTestActor api = new CustomerTestActor(new ExampleService());
 
 		api.buy(inLocalShop(), coffeeMachine);
 		api.handleAndCheckPackage(fromShop(), teaPot);

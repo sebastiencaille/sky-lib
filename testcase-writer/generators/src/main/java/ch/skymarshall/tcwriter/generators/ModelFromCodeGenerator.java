@@ -1,5 +1,9 @@
 package ch.skymarshall.tcwriter.generators;
 
+import static ch.skymarshall.tcwriter.generators.Helper.actorKey;
+import static ch.skymarshall.tcwriter.generators.Helper.methodKey;
+import static ch.skymarshall.tcwriter.generators.Helper.paramKey;
+
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -21,7 +25,7 @@ import ch.skymarshall.tcwriter.generators.model.TestModel;
 import ch.skymarshall.tcwriter.generators.model.TestObject;
 import ch.skymarshall.tcwriter.generators.model.TestObjectParameter;
 
-public class JsonModelGenerator {
+public class ModelFromCodeGenerator {
 
 	private final Set<Class<?>> unprocessedActorClasses = new HashSet<>();
 	private final Set<Class<?>> unprocessedApiClasses = new HashSet<>();
@@ -31,7 +35,7 @@ public class JsonModelGenerator {
 
 	private final TestModel model;
 
-	public JsonModelGenerator(final TestModel model) {
+	public ModelFromCodeGenerator(final TestModel model) {
 		this.model = model;
 	}
 
@@ -114,7 +118,7 @@ public class JsonModelGenerator {
 			}
 			final Type apiMethodParamType = apiMethodParam.getType();
 			final TestObjectParameter testObjectParameter = new TestObjectParameter(paramKey(apiMethod, i),
-					apiMethodParamType.toString());
+					apiMethodParamType.getTypeName());
 			if (apiMethodParamType instanceof Class) {
 				unprocessedApiClasses.add((Class<?>) apiMethodParamType);
 			}
@@ -143,18 +147,6 @@ public class JsonModelGenerator {
 
 	private boolean isActor(final Class<?> tcApiClazz) {
 		return tcApiClazz.getAnnotation(TCActor.class) != null;
-	}
-
-	private String paramKey(final Method apiMethod, final int i) {
-		return "param-" + apiMethod.getDeclaringClass().getName() + "." + apiMethod.getName() + "-" + i;
-	}
-
-	protected String actorKey(final Class<?> clazz) {
-		return "actor-" + clazz.getName();
-	}
-
-	protected String methodKey(final Method method) {
-		return "method-" + method.getDeclaringClass().getName() + "." + method.getName();
 	}
 
 	private void accumulateApiMethods(final Class<?> tcClazz, final Set<Method> methods) {

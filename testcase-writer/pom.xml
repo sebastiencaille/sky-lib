@@ -46,7 +46,7 @@
 				<version>${tcwriter-version}</version>
 			</dependency>
 			<dependency>
-				<groupId>ch.skymarshall.dataflowmgr</groupId>
+				<groupId>ch.skymarshall.tcwriter</groupId>
 				<artifactId>testcase-writer-hmi</artifactId>
 				<version>${tcwriter-version}</version>
 			</dependency>

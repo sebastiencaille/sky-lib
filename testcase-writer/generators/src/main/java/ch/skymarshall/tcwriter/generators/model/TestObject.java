@@ -3,18 +3,13 @@ package ch.skymarshall.tcwriter.generators.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestObject {
+public class TestObject extends IdObject {
 
-	private final String id;
 	private final List<TestObjectParameter> mandatoryParameters = new ArrayList<>();
 	private final List<TestObjectParameter> optionalParameters = new ArrayList<>();
 
 	public TestObject(final String id) {
-		this.id = id;
-	}
-
-	public String getId() {
-		return id;
+		super(id);
 	}
 
 	public List<TestObjectParameter> getMandatoryParameters() {

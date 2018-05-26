@@ -5,11 +5,11 @@ import ch.skymarshall.tcwriter.annotations.TCApi;
 import ch.skymarshall.tcwriter.examples.ExampleService;
 
 @TCActor(description = "Delivery company")
-public class DeliveryTestActor {
+public class DeliveryTestRole {
 
 	private final ExampleService testedService;
 
-	public DeliveryTestActor(final ExampleService testedService) {
+	public DeliveryTestRole(final ExampleService testedService) {
 		this.testedService = testedService;
 	}
 

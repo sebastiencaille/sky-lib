@@ -9,22 +9,22 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ch.skymarshall.tcwriter.examples.ExampleService;
-import ch.skymarshall.tcwriter.examples.api.interfaces.CustomerTestActor;
-import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestActor;
+import ch.skymarshall.tcwriter.examples.api.interfaces.CustomerTestRole;
+import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem;
 
 public class SimpleTest {
 
 	private final TestItem coffeeMachine = TestItem.coffeeMachine();
 	private final TestItem teaPot = TestItem.teaPot();
-	private CustomerTestActor customer;
-	private DeliveryTestActor delivery;
+	private CustomerTestRole customer;
+	private DeliveryTestRole delivery;
 
 	@Before
 	public void prepareApis() {
 		final ExampleService testedService = new ExampleService();
-		customer = new CustomerTestActor(testedService);
-		delivery = new DeliveryTestActor(testedService);
+		customer = new CustomerTestRole(testedService);
+		delivery = new DeliveryTestRole(testedService);
 	}
 
 	@Test
@@ -42,7 +42,7 @@ public class SimpleTest {
 
 	@Test
 	public void testFailureCase() {
-		final CustomerTestActor api = new CustomerTestActor(new ExampleService());
+		final CustomerTestRole api = new CustomerTestRole(new ExampleService());
 
 		api.buy(inLocalShop(), coffeeMachine);
 		api.handleAndCheckPackage(fromShop(), teaPot);

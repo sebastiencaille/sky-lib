@@ -6,7 +6,8 @@ import java.util.List;
 public class TestStep {
 
 	private int ordinal;
-	private TestActor stepActor;
+	private String actor;
+	private TestRole role;
 	private TestMethod stepMethod;
 	private final List<TestValue> stepParameters = new ArrayList<>();
 
@@ -18,12 +19,20 @@ public class TestStep {
 		this.ordinal = ordinal;
 	}
 
-	public TestActor getActor() {
-		return stepActor;
+	public String getActor() {
+		return actor;
 	}
 
-	public void setActor(final TestActor stepActor) {
-		this.stepActor = stepActor;
+	public void setActor(final String actor) {
+		this.actor = actor;
+	}
+
+	public TestRole getRole() {
+		return role;
+	}
+
+	public void setRole(final TestRole role) {
+		this.role = role;
 	}
 
 	public TestMethod getMethod() {

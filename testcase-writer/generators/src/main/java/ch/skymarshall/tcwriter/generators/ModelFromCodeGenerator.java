@@ -1,6 +1,6 @@
 package ch.skymarshall.tcwriter.generators;
 
-import static ch.skymarshall.tcwriter.generators.Helper.actorKey;
+import static ch.skymarshall.tcwriter.generators.Helper.roleKey;
 import static ch.skymarshall.tcwriter.generators.Helper.methodKey;
 import static ch.skymarshall.tcwriter.generators.Helper.paramKey;
 
@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 
 import ch.skymarshall.tcwriter.annotations.TCActor;
 import ch.skymarshall.tcwriter.annotations.TCApi;
-import ch.skymarshall.tcwriter.generators.model.TestActor;
+import ch.skymarshall.tcwriter.generators.model.TestRole;
 import ch.skymarshall.tcwriter.generators.model.TestMethod;
 import ch.skymarshall.tcwriter.generators.model.TestModel;
 import ch.skymarshall.tcwriter.generators.model.TestObject;
@@ -46,10 +46,10 @@ public class ModelFromCodeGenerator {
 
 	private void processActors() {
 		for (final Class<?> actorClass : unprocessedActorClasses) {
-			final TestActor testActor = new TestActor(actorKey(actorClass));
+			final TestRole testActor = new TestRole(roleKey(actorClass));
 			final TCActor actorAnnotation = actorClass.getAnnotation(TCActor.class);
-			model.getDescriptions().put(actorKey(actorClass), actorAnnotation.description());
-			model.getActors().put(testActor.getId(), testActor);
+			model.getDescriptions().put(roleKey(actorClass), actorAnnotation.description());
+			model.getRoles().put(testActor.getId(), testActor);
 
 			final HashSet<Method> apiMethods = new HashSet<>();
 			accumulateApiMethods(actorClass, apiMethods);
@@ -80,7 +80,7 @@ public class ModelFromCodeGenerator {
 			for (final Method apiMethod : apiMethods) {
 
 				processMethodAnnotation(apiMethod);
-				final TestObject testObject = new TestObject(methodKey(apiMethod));
+				final TestObject testObject = new TestObject(methodKey(apiMethod), apiMethod.getReturnType().getName());
 				testObject.getMandatoryParameters().addAll(processParameters(apiMethod));
 
 				final HashSet<Method> returnTypeApiMethods = new HashSet<>();

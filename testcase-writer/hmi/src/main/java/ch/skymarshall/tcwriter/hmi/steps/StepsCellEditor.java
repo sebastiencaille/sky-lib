@@ -1,17 +1,21 @@
 package ch.skymarshall.tcwriter.hmi.steps;
 
 import static ch.skymarshall.tcwriter.generators.Helper.toDescription;
+import static java.util.stream.Collectors.toList;
 
 import java.awt.Component;
 import java.util.Collection;
 import java.util.Vector;
 
 import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 
 import org.skymarshall.hmi.swing.model.ListModelTableModel;
 
+import ch.skymarshall.tcwriter.generators.Helper.Reference;
+import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.TestCase;
 import ch.skymarshall.tcwriter.generators.model.TestObject;
 import ch.skymarshall.tcwriter.generators.model.TestStep;
@@ -30,16 +34,36 @@ public class StepsCellEditor extends DefaultCellEditor {
 			final int row, final int column) {
 		final TestStep step = ((ListModelTableModel<TestStep, ?>) table.getModel()).getObjectAtRow(row);
 		final Column columnEnum = Column.valueOf(table.getColumnName(column));
+
+		DefaultComboBoxModel<Reference> cbModel;
 		switch (columnEnum) {
 		case ACTOR:
-			return new JComboBox<>(new Vector<>(toDescription(tc.getModel(), tc.getModel().getActors().values())));
+			cbModel = new DefaultComboBoxModel<>(new Vector<>(
+					tc.getModel().getActorToRole().keySet().stream().map(r -> new Reference(r, r)).collect(toList())));
+			break;
 		case METHOD:
-			return new JComboBox<>(new Vector<>(toDescription(tc.getModel(), step.getActor().getApis())));
+			cbModel = comboBoxOf(step.getRole().getApis());
+			break;
 		case SELECTOR:
-			final Collection<TestObject> testObjects = tc.getModel().getTestObjects()
-					.get(step.getMethod().getParameters().get(0).getType());
-			return new JComboBox<>(new Vector<>(toDescription(tc.getModel(), testObjects)));
+			cbModel = comboBoxOf(getTestObjectsForParameter(step, 0));
+			break;
+		case PARAMS:
+			cbModel = comboBoxOf(getTestObjectsForParameter(step, 1));
+			break;
+		default:
+			cbModel = new DefaultComboBoxModel<>();
 		}
-		return null;
+		final JComboBox<Reference> cb = (JComboBox<Reference>) editorComponent;
+		cb.setModel(cbModel);
+
+		return editorComponent;
+	}
+
+	private Collection<TestObject> getTestObjectsForParameter(final TestStep step, final int paramIndex) {
+		return tc.getModel().getTestObjects().get(step.getMethod().getParameters().get(paramIndex).getType());
+	}
+
+	private DefaultComboBoxModel<Reference> comboBoxOf(final Collection<? extends IdObject> tcObjects) {
+		return new DefaultComboBoxModel<>(new Vector<>(toDescription(tc.getModel(), tcObjects)));
 	}
 }

@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ch.skymarshall.tcwriter.generators.model.IdObject;
-import ch.skymarshall.tcwriter.generators.model.TestActor;
+import ch.skymarshall.tcwriter.generators.model.TestRole;
 import ch.skymarshall.tcwriter.generators.model.TestModel;
 import ch.skymarshall.tcwriter.generators.model.TestObject;
 
 public class Helper {
 	public static void dumpModel(final TestModel model) {
 		System.out.println(model.toString());
-		for (final TestActor actor : model.getActors().values()) {
+		for (final TestRole actor : model.getRoles().values()) {
 			System.out.println("  " + model.getDescriptions().get(actor.getId()) + ": " + actor);
 			actor.getApis()
 					.forEach(api -> System.out.println("    " + model.getDescriptions().get(api.getId()) + ": " + api));
@@ -44,7 +44,7 @@ public class Helper {
 		return "param-" + apiMethod.getDeclaringClass().getName() + "." + apiMethod.getName() + "-" + i;
 	}
 
-	public static String actorKey(final Class<?> clazz) {
+	public static String roleKey(final Class<?> clazz) {
 		return "actor-" + clazz.getName();
 	}
 
@@ -67,9 +67,14 @@ public class Helper {
 			return display;
 		}
 
+		public String getId() {
+			return id;
+		}
+
 	}
 
-	public static List<Reference> toDescription(final TestModel model, final Collection<? extends IdObject> idElements) {
+	public static List<Reference> toDescription(final TestModel model,
+			final Collection<? extends IdObject> idElements) {
 		return idElements.stream()
 				.map(idElement -> new Reference(idElement.getId(), model.getDescriptions().get(idElement.getId())))
 				.collect(Collectors.toList());

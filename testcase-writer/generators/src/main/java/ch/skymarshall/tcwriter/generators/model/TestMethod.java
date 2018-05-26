@@ -7,6 +7,8 @@ import java.util.List;
 
 public class TestMethod extends IdObject {
 
+	public static TestMethod NO_METHOD = new TestMethod(IdObject.ID_NOT_SET);
+
 	private final List<TestObjectParameter> parameters = new ArrayList<>();
 
 	public TestMethod(final String id) {

@@ -3,11 +3,11 @@ package ch.skymarshall.tcwriter.generators.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestActor extends IdObject {
+public class TestRole extends IdObject {
 
 	private final List<TestMethod> apis = new ArrayList<>();
 
-	public TestActor(final String id) {
+	public TestRole(final String id) {
 		super(id);
 	}
 
@@ -18,5 +18,10 @@ public class TestActor extends IdObject {
 	@Override
 	public String toString() {
 		return getId() + ": " + apis.size() + " apis";
+	}
+
+	public TestMethod getApi(final String newId) {
+		return apis.stream().filter(api -> api.getId().equals(newId)).findFirst()
+				.orElseThrow(() -> new IllegalArgumentException("No api with id " + newId));
 	}
 }

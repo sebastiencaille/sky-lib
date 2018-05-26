@@ -10,11 +10,11 @@ import ch.skymarshall.tcwriter.examples.api.interfaces.selectors.BuyActionSelect
 import ch.skymarshall.tcwriter.examples.api.interfaces.selectors.HandleActionSelector;
 
 @TCActor(description = "Customer")
-public class CustomerTestActor extends Assert {
+public class CustomerTestRole extends Assert {
 
 	private final ExampleService testedService;
 
-	public CustomerTestActor(final ExampleService testedService) {
+	public CustomerTestRole(final ExampleService testedService) {
 		this.testedService = testedService;
 	}
 

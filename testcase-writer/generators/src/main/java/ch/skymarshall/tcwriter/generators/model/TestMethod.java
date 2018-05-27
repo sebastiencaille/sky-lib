@@ -7,21 +7,28 @@ import java.util.List;
 
 public class TestMethod extends IdObject {
 
-	public static TestMethod NO_METHOD = new TestMethod(IdObject.ID_NOT_SET);
+	public static TestMethod NO_METHOD = new TestMethod(IdObject.ID_NOT_SET, "");
 
 	private final List<TestObjectParameter> parameters = new ArrayList<>();
 
-	public TestMethod(final String id) {
+	private final String name;
+
+	public TestMethod(final String id, final String name) {
 		super(id);
+		this.name = name;
 	}
 
 	public List<TestObjectParameter> getParameters() {
 		return parameters;
 	}
 
+	public String getName() {
+		return name;
+	}
+
 	@Override
 	public String toString() {
-		return getId() + ": " + parameters.stream().map(TestObjectParameter::getType).collect(joining(","));
+		return name + ": " + parameters.stream().map(TestObjectParameter::getType).collect(joining(","));
 	}
 
 }

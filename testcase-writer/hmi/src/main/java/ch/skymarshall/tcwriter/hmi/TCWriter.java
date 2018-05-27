@@ -2,6 +2,7 @@ package ch.skymarshall.tcwriter.hmi;
 
 import java.awt.BorderLayout;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import org.skymarshall.hmi.model.ListModel;
@@ -12,10 +13,11 @@ import ch.skymarshall.tcwriter.generators.model.TestCase;
 import ch.skymarshall.tcwriter.generators.model.TestStep;
 import ch.skymarshall.tcwriter.hmi.steps.StepTable;
 
-public class TCWriter extends JFrame {
+public abstract class TCWriter extends JFrame {
 
-	private final TestCase testCase;
 	private final ListModel<TestStep> steps = new RootListModel<>(ListViews.sorted(TestStep::getOrdinal));
+
+	public abstract void generateCode(TestCase tc);
 
 	public TCWriter(final TestCase tc) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -25,10 +27,13 @@ public class TCWriter extends JFrame {
 		}
 
 		this.getContentPane().setLayout(new BorderLayout());
-		this.testCase = tc;
 		this.steps.addValues(tc.getSteps());
 
+		final JButton generateButton = new JButton("Generate");
+		generateButton.addActionListener(e -> generateCode(tc));
+
 		this.getContentPane().add(new StepTable(steps, tc), BorderLayout.CENTER);
+		this.getContentPane().add(generateButton, BorderLayout.SOUTH);
 
 		this.pack();
 		this.setSize(1600, 1200);

@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ch.skymarshall.tcwriter.generators.model.IdObject;
-import ch.skymarshall.tcwriter.generators.model.TestRole;
 import ch.skymarshall.tcwriter.generators.model.TestModel;
 import ch.skymarshall.tcwriter.generators.model.TestObject;
+import ch.skymarshall.tcwriter.generators.model.TestRole;
 
 public class Helper {
 	public static void dumpModel(final TestModel model) {
@@ -73,8 +73,7 @@ public class Helper {
 
 	}
 
-	public static List<Reference> toDescription(final TestModel model,
-			final Collection<? extends IdObject> idElements) {
+	public static List<Reference> toReference(final TestModel model, final Collection<? extends IdObject> idElements) {
 		return idElements.stream()
 				.map(idElement -> new Reference(idElement.getId(), model.getDescriptions().get(idElement.getId())))
 				.collect(Collectors.toList());

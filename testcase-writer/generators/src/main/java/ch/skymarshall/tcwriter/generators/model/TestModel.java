@@ -6,15 +6,13 @@ import java.util.Map;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 
-import ch.skymarshall.tcwriter.generators.Helper;
-
 public class TestModel {
 
 	private final Map<String, String> descriptions = new HashMap<>();
 
 	private final Map<String, TestRole> roles = new HashMap<>();
 
-	private final Map<String, String> actorToRole = new HashMap<>();
+	private final Map<String, TestActor> actors = new HashMap<>();
 
 	private final Multimap<String, TestObject> testObjects = MultimapBuilder.hashKeys().arrayListValues().build();
 
@@ -30,12 +28,8 @@ public class TestModel {
 		return roles;
 	}
 
-	public Map<String, String> getActorToRole() {
-		return actorToRole;
-	}
-
-	public TestRole getRoleOfActor(final String actor) {
-		return roles.get(actorToRole.get(actor));
+	public Map<String, TestActor> getActors() {
+		return actors;
 	}
 
 	public Multimap<String, TestObject> getTestObjects() {
@@ -44,6 +38,10 @@ public class TestModel {
 
 	public String descriptionOf(final String key) {
 		return descriptions.get(key);
+	}
+
+	public String descriptionOf(final IdObject idObject) {
+		return descriptionOf(idObject.getId());
 	}
 
 	public TestObject getTestObject(final TestObjectParameter testObjectParameter, final String id) {
@@ -56,10 +54,6 @@ public class TestModel {
 	public String toString() {
 		return "Model: " + descriptions.size() + " descriptions, " + roles.size() + " actors, " + testObjects.size()
 				+ " test Objects";
-	}
-
-	public void setActorRole(final String actor, final Class<?> roleClass) {
-		actorToRole.put(actor, Helper.roleKey(roleClass));
 	}
 
 }

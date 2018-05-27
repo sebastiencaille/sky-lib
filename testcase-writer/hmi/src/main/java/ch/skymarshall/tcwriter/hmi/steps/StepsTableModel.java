@@ -4,8 +4,10 @@ import org.skymarshall.hmi.model.ListModel;
 import org.skymarshall.hmi.swing.model.ListModelTableModel;
 
 import ch.skymarshall.tcwriter.generators.Helper.Reference;
+import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.TestMethod;
 import ch.skymarshall.tcwriter.generators.model.TestModel;
+import ch.skymarshall.tcwriter.generators.model.TestObjectParameter;
 import ch.skymarshall.tcwriter.generators.model.TestStep;
 import ch.skymarshall.tcwriter.generators.model.TestValue;
 
@@ -26,24 +28,30 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 
 	@Override
 	protected Object getValueAtColumn(final TestStep testStep, final Column column) {
+		IdObject tcObject;
 		switch (column) {
 		case ACTOR:
-			return testStep.getActor();
+			tcObject = testStep.getActor();
+			break;
 		case METHOD:
-			return model.descriptionOf(testStep.getMethod().getId());
+			tcObject = testStep.getMethod();
+			break;
 		case SELECTOR:
 			if (testStep.getParameters().isEmpty()) {
 				return "";
 			}
-			return model.descriptionOf(testStep.getParameters().get(0).getTestObject().getId());
+			tcObject = testStep.getParameters().get(0).getTestObject();
+			break;
 		case PARAMS:
 			if (testStep.getParameters().size() < 2) {
 				return "N/A";
 			}
-			return model.descriptionOf(testStep.getParameters().get(1).getTestObject().getId());
+			tcObject = testStep.getParameters().get(1).getTestObject();
+			break;
 		default:
 			return "N/A";
 		}
+		return model.descriptionOf(tcObject);
 	}
 
 	@Override
@@ -75,8 +83,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		final Column column = columnOf(columnIndex);
 		switch (column) {
 		case ACTOR:
-			step.setActor(reference.toString());
-			step.setRole(model.getRoleOfActor(step.getActor()));
+			step.setActor(model.getActors().get(newId));
 			step.setMethod(TestMethod.NO_METHOD);
 			step.getParameters().clear();
 			return;
@@ -98,13 +105,15 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 			}
 			return;
 		case SELECTOR:
-			final TestValue newTestValue0 = new TestValue(
-					model.getTestObject(step.getMethod().getParameters().get(0), newId));
+			TestObjectParameter ObjectParam0 = step.getMethod().getParameters().get(0);
+			final TestValue newTestValue0 = new TestValue(ObjectParam0.getId(),
+					model.getTestObject(ObjectParam0, newId));
 			step.getParameters().set(0, newTestValue0);
 			return;
 		case PARAMS:
-			final TestValue newTestValue1 = new TestValue(
-					model.getTestObject(step.getMethod().getParameters().get(1), newId));
+			TestObjectParameter objectParam1 = step.getMethod().getParameters().get(1);
+			final TestValue newTestValue1 = new TestValue(objectParam1.getId(),
+					model.getTestObject(objectParam1, newId));
 			step.getParameters().set(1, newTestValue1);
 			return;
 		default:

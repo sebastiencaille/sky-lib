@@ -1,7 +1,6 @@
 package ch.skymarshall.tcwriter.hmi.steps;
 
-import static ch.skymarshall.tcwriter.generators.Helper.toDescription;
-import static java.util.stream.Collectors.toList;
+import static ch.skymarshall.tcwriter.generators.Helper.toReference;
 
 import java.awt.Component;
 import java.util.Collection;
@@ -38,8 +37,7 @@ public class StepsCellEditor extends DefaultCellEditor {
 		DefaultComboBoxModel<Reference> cbModel;
 		switch (columnEnum) {
 		case ACTOR:
-			cbModel = new DefaultComboBoxModel<>(new Vector<>(
-					tc.getModel().getActorToRole().keySet().stream().map(r -> new Reference(r, r)).collect(toList())));
+			cbModel = comboBoxOf(tc.getModel().getActors().values());
 			break;
 		case METHOD:
 			cbModel = comboBoxOf(step.getRole().getApis());
@@ -64,6 +62,6 @@ public class StepsCellEditor extends DefaultCellEditor {
 	}
 
 	private DefaultComboBoxModel<Reference> comboBoxOf(final Collection<? extends IdObject> tcObjects) {
-		return new DefaultComboBoxModel<>(new Vector<>(toDescription(tc.getModel(), tcObjects)));
+		return new DefaultComboBoxModel<>(new Vector<>(toReference(tc.getModel(), tcObjects)));
 	}
 }

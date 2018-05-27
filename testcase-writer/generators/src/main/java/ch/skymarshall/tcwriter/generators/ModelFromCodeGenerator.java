@@ -1,8 +1,8 @@
 package ch.skymarshall.tcwriter.generators;
 
-import static ch.skymarshall.tcwriter.generators.Helper.roleKey;
 import static ch.skymarshall.tcwriter.generators.Helper.methodKey;
 import static ch.skymarshall.tcwriter.generators.Helper.paramKey;
+import static ch.skymarshall.tcwriter.generators.Helper.roleKey;
 
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Method;
@@ -19,11 +19,11 @@ import java.util.function.Consumer;
 
 import ch.skymarshall.tcwriter.annotations.TCActor;
 import ch.skymarshall.tcwriter.annotations.TCApi;
-import ch.skymarshall.tcwriter.generators.model.TestRole;
 import ch.skymarshall.tcwriter.generators.model.TestMethod;
 import ch.skymarshall.tcwriter.generators.model.TestModel;
 import ch.skymarshall.tcwriter.generators.model.TestObject;
 import ch.skymarshall.tcwriter.generators.model.TestObjectParameter;
+import ch.skymarshall.tcwriter.generators.model.TestRole;
 
 public class ModelFromCodeGenerator {
 
@@ -55,7 +55,7 @@ public class ModelFromCodeGenerator {
 			accumulateApiMethods(actorClass, apiMethods);
 
 			for (final Method apiMethod : apiMethods) {
-				final TestMethod testMethod = new TestMethod(methodKey(apiMethod));
+				final TestMethod testMethod = new TestMethod(methodKey(apiMethod), apiMethod.getName());
 				final List<TestObjectParameter> processParameters = processParameters(apiMethod);
 				testMethod.getParameters().addAll(processParameters);
 				testActor.getApis().add(testMethod);
@@ -80,9 +80,12 @@ public class ModelFromCodeGenerator {
 			for (final Method apiMethod : apiMethods) {
 
 				processMethodAnnotation(apiMethod);
-				final TestObject testObject = new TestObject(methodKey(apiMethod), apiMethod.getReturnType().getName());
+				final TestObject testObject = new TestObject(methodKey(apiMethod),
+						apiMethod.getDeclaringClass().getSimpleName() + "." + apiMethod.getName(),
+						apiMethod.getReturnType().getName());
 				testObject.getMandatoryParameters().addAll(processParameters(apiMethod));
 
+				// Add optional parameters: non static methods of the return type
 				final HashSet<Method> returnTypeApiMethods = new HashSet<>();
 				accumulateApiMethods(apiMethod.getReturnType(), returnTypeApiMethods);
 				returnTypeApiMethods.removeIf(m -> Modifier.isStatic(m.getModifiers()) || m.getParameterCount() != 1);

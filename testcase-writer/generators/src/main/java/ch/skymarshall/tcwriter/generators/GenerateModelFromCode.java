@@ -4,10 +4,10 @@ import java.util.List;
 
 import ch.skymarshall.tcwriter.generators.model.TestModel;
 
-public class GenerateFromCode {
+public class GenerateModelFromCode {
 	private final List<Class<?>> tcClasses;
 
-	public GenerateFromCode(final List<Class<?>> tcClasses) {
+	public GenerateModelFromCode(final List<Class<?>> tcClasses) {
 		this.tcClasses = tcClasses;
 	}
 
@@ -21,7 +21,7 @@ public class GenerateFromCode {
 	}
 
 	public static void main(final String[] args) throws ClassNotFoundException {
-		final GenerateFromCode generateFromCode = new GenerateFromCode(Helper.toClasses(args));
+		final GenerateModelFromCode generateFromCode = new GenerateModelFromCode(Helper.toClasses(args));
 		final TestModel model = generateFromCode.generateModel();
 		Helper.dumpModel(model);
 	}

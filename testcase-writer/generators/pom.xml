@@ -26,6 +26,11 @@
 			<artifactId>testcase-writer-annotations</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.skymarshall</groupId>
+			<artifactId>lib-utils</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>

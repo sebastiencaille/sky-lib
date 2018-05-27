@@ -1,0 +1,27 @@
+package ${package};
+
+import ch.skymarshall.tcwriter.examples.api.interfaces.dto.*;
+import ch.skymarshall.tcwriter.examples.api.interfaces.selectors.*;
+import ch.skymarshall.tcwriter.examples.api.interfaces.*;
+
+import org.junit.Before;
+import org.junit.Test;
+
+public class ${testName} {
+
+	private CustomerTestRole customer;
+	private DeliveryTestRole delivery;
+
+	@Before
+	public void prepareApis() {
+		final ExampleService testedService = new ExampleService();
+		customer = new CustomerTestRole(testedService);
+		delivery = new DeliveryTestRole(testedService);
+	}
+	
+	@Test
+	public void testCase() {
+		${testContent}
+	}
+
+}

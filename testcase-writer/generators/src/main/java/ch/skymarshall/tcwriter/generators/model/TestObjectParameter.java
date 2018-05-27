@@ -1,17 +1,18 @@
 package ch.skymarshall.tcwriter.generators.model;
 
-public class TestObjectParameter {
+public class TestObjectParameter extends IdObject {
 
-	private final String id;
 	private final String type;
+	private final String name;
 
-	public TestObjectParameter(final String id, final String type) {
-		this.id = id;
+	public TestObjectParameter(final String id, final String name, final String type) {
+		super(id);
+		this.name = name;
 		this.type = type;
 	}
 
-	public String getId() {
-		return id;
+	public String getName() {
+		return name;
 	}
 
 	public String getType() {
@@ -20,6 +21,6 @@ public class TestObjectParameter {
 
 	@Override
 	public String toString() {
-		return id + "->" + type;
+		return name + "->" + type;
 	}
 }

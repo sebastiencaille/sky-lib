@@ -92,7 +92,8 @@ public class ModelFromCodeGenerator {
 				for (final Method returnTypeApiMethod : returnTypeApiMethods) {
 					processMethodAnnotation(returnTypeApiMethod);
 					final TestObjectParameter optionalParameter = new TestObjectParameter(
-							methodKey(returnTypeApiMethod), returnTypeApiMethod.getParameterTypes()[0].getName());
+							methodKey(returnTypeApiMethod), returnTypeApiMethod.getName(),
+							returnTypeApiMethod.getParameterTypes()[0].getName());
 					testObject.getOptionalParameters().add(optionalParameter);
 				}
 
@@ -121,7 +122,7 @@ public class ModelFromCodeGenerator {
 			}
 			final Type apiMethodParamType = apiMethodParam.getType();
 			final TestObjectParameter testObjectParameter = new TestObjectParameter(paramKey(apiMethod, i),
-					apiMethodParamType.getTypeName());
+					apiMethod.getName(), apiMethodParamType.getTypeName());
 			if (apiMethodParamType instanceof Class) {
 				unprocessedApiClasses.add((Class<?>) apiMethodParamType);
 			}

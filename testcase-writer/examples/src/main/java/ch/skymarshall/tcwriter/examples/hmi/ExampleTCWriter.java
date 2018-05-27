@@ -76,7 +76,11 @@ public class ExampleTCWriter extends TCWriter {
 		step1.setActor(customer);
 		step1.setMethod(method1);
 		step1.addParameter(new TestValue(methodParamId(method1, 0), findTestObject(model, "inLocalShop")));
-		step1.addParameter(new TestValue(methodParamId(method1, 1), findTestObject(model, "coffeeMachine")));
+		final TestValue coffeeMachine = new TestValue(methodParamId(method1, 1),
+				findTestObject(model, "coffeeMachine"));
+		step1.addParameter(coffeeMachine);
+		final String brandId = coffeeMachine.getTestObject().getOptionalParameters().get(0).getId();
+		coffeeMachine.getTestObjectParameters().put(brandId, new TestValue(brandId, null).setSimpleValue("Plouf"));
 		tc.addStep(step1);
 
 		final TestStep step2 = new TestStep();

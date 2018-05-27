@@ -73,18 +73,17 @@ public class JavaGenerationVisitor {
 
 		final JavaCodeGenerator parametersContent = new JavaCodeGenerator();
 
-		visitParams(parametersContent, comment, model, param.getTestObjectValues());
+		visitParams(parametersContent, comment, model, param.getTestObjectParameters());
 
 		comment.append("//    ").append(model.descriptionOf(param.getTestObject())).append("\n");
-		;
 
 		final String parameterVarName = varNameFor(param);
 		parametersContent.append(param.getTestObject().getType()).append(" ").append(parameterVarName).append(" = ")
 				.append(param.getTestObject().getName()).append("(");
-		addParametersToCall(parametersContent, param.getTestObjectValues().values(),
+		addParametersToCall(parametersContent, param.getTestObjectParameters().values(),
 				param.getTestObject().getMandatoryParameters());
 		parametersContent.append(");").newLine();
-		addSetters(parametersContent, comment, model, parameterVarName, param.getTestObjectValues().values(),
+		addSetters(parametersContent, comment, model, parameterVarName, param.getTestObjectParameters().values(),
 				param.getTestObject().getOptionalParameters());
 		javaContent.append(parametersContent.toString());
 	}
@@ -93,7 +92,8 @@ public class JavaGenerationVisitor {
 			final TestModel model, final Map<String, TestValue> testObjectValues) throws IOException {
 		for (final TestValue testObjectValue : testObjectValues.values()) {
 			// No need to define a variable
-			if (testObjectValue.getTestObject().isSimpleType()) {
+			if (testObjectValue.getTestObject() == null) {
+				// Simple value
 				continue;
 			}
 			visitParameter(parametersContent, comment, model, testObjectValue);
@@ -121,17 +121,30 @@ public class JavaGenerationVisitor {
 	private void addSetters(final JavaCodeGenerator parametersContent, final StringBuilder comment,
 			final TestModel model, final String parameterVarName, final Collection<TestValue> parameterValues,
 			final List<TestObjectParameter> filter) throws IOException {
-		final Set<String> filteredIds = filter.stream().map(f -> f.getId()).collect(Collectors.toSet());
+		final Map<String, TestObjectParameter> filteredMap = filter.stream()
+				.collect(Collectors.toMap(t -> t.getId(), t -> t));
 		for (final TestValue parameterValue : parameterValues) {
-			if (!filteredIds.contains(parameterValue.getTestObject().getId())) {
+			if (!filteredMap.containsKey(parameterValue.getId())) {
 				continue;
 			}
-			parametersContent.append(parameterVarName).append(".").append(parameterValue.getTestObject().getName())
-					.append("(");
-			if (parameterValue.getTestObject().isSimpleType()) {
-				parametersContent.append(parameterValue.getSimpleValue());
-			} else {
+			final TestObjectParameter testObjectParameter = filteredMap.get(parameterValue.getId());
+			parametersContent.append(parameterVarName).append(".").append(testObjectParameter.getName()).append("(");
+			if (parameterValue.getTestObject() != null) {
 				parametersContent.append(varNameFor(parameterValue));
+			} else {
+				final String valueType = testObjectParameter.getType();
+				final boolean isString = String.class.getName().equals(valueType);
+				final boolean isLong = Long.class.getName().equals(valueType) || Long.TYPE.getName().equals(valueType);
+				if (isString) {
+					parametersContent.append("\"");
+				}
+				parametersContent.append(parameterValue.getSimpleValue());
+				if (isString) {
+					parametersContent.append("\"");
+				} else if (isLong) {
+					parametersContent.append("L");
+				}
+
 			}
 			parametersContent.append(");").newLine();
 		}

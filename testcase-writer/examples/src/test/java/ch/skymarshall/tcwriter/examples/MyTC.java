@@ -22,21 +22,22 @@ public class MyTC {
 	
 	@Test
 	public void testCase() {
-		// Step 0 - ch.skymarshall.tcwriter.generators.model.TestActor@6a425edb: Buy an item
+		// Step 0 - ch.skymarshall.tcwriter.generators.model.TestActor@6d4af23e: Buy an item
 		//    in a local shop
 		//    a coffee machine
 		ch.skymarshall.tcwriter.examples.api.interfaces.selectors.BuyActionSelector var0 = BuyActionSelector.inLocalShop();
 		ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem var1 = TestItem.coffeeMachine();
+		var1.setBrandName("Plouf");
 		customer.buy(var0, var1);
 		
-		// Step 1 - ch.skymarshall.tcwriter.generators.model.TestActor@6a425edb: handle the item package and check it's content
+		// Step 1 - ch.skymarshall.tcwriter.generators.model.TestActor@6d4af23e: handle the item package and check it's content
 		//    already took it at the shop
 		//    a coffee machine
 		ch.skymarshall.tcwriter.examples.api.interfaces.selectors.HandleActionSelector var2 = HandleActionSelector.fromShop();
 		ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem var3 = TestItem.coffeeMachine();
 		customer.handleAndCheckPackage(var2, var3);
 		
-		// Step 2 - ch.skymarshall.tcwriter.generators.model.TestActor@6a425edb: Resell the item
+		// Step 2 - ch.skymarshall.tcwriter.generators.model.TestActor@6d4af23e: Resell the item
 		customer.resellOwnedItem();
 		
 		

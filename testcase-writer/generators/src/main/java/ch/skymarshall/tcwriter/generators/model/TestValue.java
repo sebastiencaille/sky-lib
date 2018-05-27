@@ -9,7 +9,7 @@ public class TestValue extends IdObject {
 	public static final TestValue NO_VALUE = new TestValue("", TestObject.NO_VALUE);
 
 	private final TestObject testObject;
-	private final Map<String, TestValue> testObjectValues = new HashMap<>();
+	private final Map<String, TestValue> testObjectParameters = new HashMap<>();
 	private String simpleValue;
 
 	public TestValue(final String id, final TestObject testObject) {
@@ -21,16 +21,17 @@ public class TestValue extends IdObject {
 		return testObject;
 	}
 
-	public Map<String, TestValue> getTestObjectValues() {
-		return testObjectValues;
+	public Map<String, TestValue> getTestObjectParameters() {
+		return testObjectParameters;
 	}
 
 	public String getSimpleValue() {
 		return simpleValue;
 	}
 
-	public void setSimpleValue(final String simpleValue) {
+	public TestValue setSimpleValue(final String simpleValue) {
 		this.simpleValue = simpleValue;
+		return this;
 	}
 
 }

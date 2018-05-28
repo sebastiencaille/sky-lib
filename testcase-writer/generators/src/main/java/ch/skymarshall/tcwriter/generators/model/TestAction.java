@@ -7,7 +7,7 @@ import java.util.List;
 
 public class TestAction extends IdObject {
 
-	public static TestAction NO_METHOD = new TestAction(IdObject.ID_NOT_SET, "");
+	public static final TestAction NO_METHOD = new TestAction(IdObject.ID_NOT_SET, "");
 
 	private final List<TestParameterType> parameterTypes = new ArrayList<>();
 

@@ -6,11 +6,15 @@ import ch.skymarshall.tcwriter.examples.ExampleService.ItemKind;
 @TCApi(description = "the item you need")
 public class TestItem {
 
-	public ItemKind itemKind;
+	public final ItemKind itemKind;
 	private String brand;
 
 	private TestItem(final ItemKind itemKind) {
 		this.itemKind = itemKind;
+	}
+
+	public String getBrand() {
+		return brand;
 	}
 
 	@TCApi(description = "a coffee machine")

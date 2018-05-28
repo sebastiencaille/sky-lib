@@ -11,7 +11,6 @@ import org.junit.Test;
 import ch.skymarshall.tcwriter.examples.api.interfaces.CustomerTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem;
-import junit.framework.AssertionFailedError;
 
 public class SimpleTest {
 
@@ -40,7 +39,7 @@ public class SimpleTest {
 		customer.resellOwnedItem();
 	}
 
-	@Test(expected = AssertionFailedError.class)
+	@Test(expected = AssertionError.class)
 	public void testFailureCase() {
 		final CustomerTestRole api = new CustomerTestRole(new ExampleService());
 

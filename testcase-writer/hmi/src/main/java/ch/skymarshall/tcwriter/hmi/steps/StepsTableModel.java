@@ -5,11 +5,11 @@ import org.skymarshall.hmi.swing.model.ListModelTableModel;
 
 import ch.skymarshall.tcwriter.generators.Helper.Reference;
 import ch.skymarshall.tcwriter.generators.model.IdObject;
-import ch.skymarshall.tcwriter.generators.model.TestMethod;
+import ch.skymarshall.tcwriter.generators.model.TestAction;
 import ch.skymarshall.tcwriter.generators.model.TestModel;
-import ch.skymarshall.tcwriter.generators.model.TestObjectParameter;
+import ch.skymarshall.tcwriter.generators.model.TestParameterType;
+import ch.skymarshall.tcwriter.generators.model.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.TestStep;
-import ch.skymarshall.tcwriter.generators.model.TestValue;
 
 public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableModel.Column> {
 
@@ -17,7 +17,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 	private final ListModel<TestStep> steps;
 
 	public enum Column {
-		ACTOR, METHOD, SELECTOR, PARAMS
+		ACTOR, METHOD, PARAM0, PARAM1
 	}
 
 	public StepsTableModel(final ListModel<TestStep> steps, final TestModel model) {
@@ -34,19 +34,19 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 			tcObject = testStep.getActor();
 			break;
 		case METHOD:
-			tcObject = testStep.getMethod();
+			tcObject = testStep.getAction();
 			break;
-		case SELECTOR:
-			if (testStep.getParameters().isEmpty()) {
+		case PARAM0:
+			if (testStep.getParametersValue().isEmpty()) {
 				return "";
 			}
-			tcObject = testStep.getParameters().get(0).getTestObject();
+			tcObject = testStep.getParametersValue().get(0).getTestParameter();
 			break;
-		case PARAMS:
-			if (testStep.getParameters().size() < 2) {
+		case PARAM1:
+			if (testStep.getParametersValue().size() < 2) {
 				return "N/A";
 			}
-			tcObject = testStep.getParameters().get(1).getTestObject();
+			tcObject = testStep.getParametersValue().get(1).getTestParameter();
 			break;
 		default:
 			return "N/A";
@@ -62,10 +62,10 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		case ACTOR:
 		case METHOD:
 			return true;
-		case SELECTOR:
-			return step.getParameters().size() > 0;
-		case PARAMS:
-			return step.getParameters().size() > 1;
+		case PARAM0:
+			return step.getParametersValue().size() > 0;
+		case PARAM1:
+			return step.getParametersValue().size() > 1;
 		default:
 			return false;
 		}
@@ -84,37 +84,37 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		switch (column) {
 		case ACTOR:
 			step.setActor(model.getActors().get(newId));
-			step.setMethod(TestMethod.NO_METHOD);
-			step.getParameters().clear();
+			step.setMethod(TestAction.NO_METHOD);
+			step.getParametersValue().clear();
 			return;
 		case METHOD:
-			final TestMethod oldMethod = step.getMethod();
+			final TestAction oldMethod = step.getAction();
 			step.setMethod(step.getRole().getApi(newId));
 
-			for (int i = 0; i < step.getParameters().size(); i++) {
-				final TestValue newMethodParameter = step.getParameters().get(i);
+			for (int i = 0; i < step.getParametersValue().size(); i++) {
+				final TestParameterValue newMethodParameter = step.getParametersValue().get(i);
 				if (i >= oldMethod.getParameters().size()) {
-					step.addParameter(TestValue.NO_VALUE);
-				} else if (newMethodParameter.getTestObject().getType()
+					step.addParameter(TestParameterValue.NO_VALUE);
+				} else if (newMethodParameter.getTestParameter().getType()
 						.equals(oldMethod.getParameters().get(i).getType())) {
-					step.getParameters().set(i, TestValue.NO_VALUE);
+					step.getParametersValue().set(i, TestParameterValue.NO_VALUE);
 				}
 			}
-			for (int i = step.getParameters().size(); i < step.getMethod().getParameters().size(); i++) {
-				step.getParameters().add(TestValue.NO_VALUE);
+			for (int i = step.getParametersValue().size(); i < step.getAction().getParameters().size(); i++) {
+				step.getParametersValue().add(TestParameterValue.NO_VALUE);
 			}
 			return;
-		case SELECTOR:
-			TestObjectParameter ObjectParam0 = step.getMethod().getParameters().get(0);
-			final TestValue newTestValue0 = new TestValue(ObjectParam0.getId(),
-					model.getTestObject(ObjectParam0, newId));
-			step.getParameters().set(0, newTestValue0);
+		case PARAM0:
+			final TestParameterType objectParam0 = step.getAction().getParameters().get(0);
+			final TestParameterValue newTestValue0 = new TestParameterValue(objectParam0.getId(),
+					model.getTestParameter(newId));
+			step.getParametersValue().set(0, newTestValue0);
 			return;
-		case PARAMS:
-			TestObjectParameter objectParam1 = step.getMethod().getParameters().get(1);
-			final TestValue newTestValue1 = new TestValue(objectParam1.getId(),
-					model.getTestObject(objectParam1, newId));
-			step.getParameters().set(1, newTestValue1);
+		case PARAM1:
+			final TestParameterType objectParam1 = step.getAction().getParameters().get(1);
+			final TestParameterValue newTestValue1 = new TestParameterValue(objectParam1.getId(),
+					model.getTestParameter(newId));
+			step.getParametersValue().set(1, newTestValue1);
 			return;
 		default:
 		}

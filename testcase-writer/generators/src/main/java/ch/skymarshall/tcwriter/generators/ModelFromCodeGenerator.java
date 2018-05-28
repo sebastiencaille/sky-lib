@@ -17,19 +17,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import ch.skymarshall.tcwriter.annotations.TCActor;
 import ch.skymarshall.tcwriter.annotations.TCApi;
-import ch.skymarshall.tcwriter.generators.model.TestMethod;
+import ch.skymarshall.tcwriter.annotations.TCRole;
+import ch.skymarshall.tcwriter.generators.model.TestAction;
 import ch.skymarshall.tcwriter.generators.model.TestModel;
-import ch.skymarshall.tcwriter.generators.model.TestObject;
-import ch.skymarshall.tcwriter.generators.model.TestObjectParameter;
+import ch.skymarshall.tcwriter.generators.model.TestParameter;
 import ch.skymarshall.tcwriter.generators.model.TestRole;
 
 public class ModelFromCodeGenerator {
 
 	private final Set<Class<?>> unprocessedActorClasses = new HashSet<>();
-	private final Set<Class<?>> unprocessedApiClasses = new HashSet<>();
-	private final Set<Class<?>> processedApiClasses = new HashSet<>();
+	private final Set<Class<?>> unprocessedParameterFactoryClasses = new HashSet<>();
+	private final Set<Class<?>> processedParameterFactoryClasses = new HashSet<>();
 
 	private final Map<Class<?>, Set<Method>> apiClassIntrospectionCache = new HashMap<>();
 
@@ -41,64 +40,67 @@ public class ModelFromCodeGenerator {
 
 	public void visit() {
 		processActors();
-		processApis();
+		processParameterFactories();
 	}
 
 	private void processActors() {
-		for (final Class<?> actorClass : unprocessedActorClasses) {
-			final TestRole testActor = new TestRole(roleKey(actorClass));
-			final TCActor actorAnnotation = actorClass.getAnnotation(TCActor.class);
-			model.getDescriptions().put(roleKey(actorClass), actorAnnotation.description());
-			model.getRoles().put(testActor.getId(), testActor);
+		for (final Class<?> roleClass : unprocessedActorClasses) {
+			final TestRole testRole = new TestRole(roleKey(roleClass));
+			final TCRole roleAnnotation = roleClass.getAnnotation(TCRole.class);
+			model.getDescriptions().put(roleKey(roleClass), roleAnnotation.description());
+			model.getRoles().put(testRole.getId(), testRole);
 
-			final HashSet<Method> apiMethods = new HashSet<>();
-			accumulateApiMethods(actorClass, apiMethods);
+			final HashSet<Method> roleMethods = new HashSet<>();
+			accumulateApiMethods(roleClass, roleMethods);
 
-			for (final Method apiMethod : apiMethods) {
-				final TestMethod testMethod = new TestMethod(methodKey(apiMethod), apiMethod.getName());
-				final List<TestObjectParameter> processParameters = processParameters(apiMethod);
-				testMethod.getParameters().addAll(processParameters);
-				testActor.getApis().add(testMethod);
+			for (final Method actionMethod : roleMethods) {
+				final TestAction testAction = new TestAction(methodKey(actionMethod), actionMethod.getName());
+				final List<TestParameter> roleActionParameters = processParameters(actionMethod);
+				testAction.getParameters().addAll(roleActionParameters);
+				testRole.getApis().add(testAction);
 			}
 
 		}
 	}
 
-	private void processApis() {
-		while (!unprocessedApiClasses.isEmpty()) {
-			final Iterator<Class<?>> firstElementIterator = unprocessedApiClasses.iterator();
-			final Class<?> tcClazz = firstElementIterator.next();
+	private void processParameterFactories() {
+		while (!unprocessedParameterFactoryClasses.isEmpty()) {
+			final Iterator<Class<?>> firstElementIterator = unprocessedParameterFactoryClasses.iterator();
+			final Class<?> apiClass = firstElementIterator.next();
 			firstElementIterator.remove();
-			if (processedApiClasses.contains(tcClazz)) {
+			if (processedParameterFactoryClasses.contains(apiClass)) {
 				continue;
 			}
-			processedApiClasses.add(tcClazz);
+			processedParameterFactoryClasses.add(apiClass);
 
-			final HashSet<Method> apiMethods = new HashSet<>();
-			accumulateApiMethods(tcClazz, apiMethods);
-			apiMethods.removeIf(m -> !Modifier.isStatic(m.getModifiers()));
-			for (final Method apiMethod : apiMethods) {
+			final HashSet<Method> parameterFactoryMethods = new HashSet<>();
+			accumulateApiMethods(apiClass, parameterFactoryMethods);
+			parameterFactoryMethods.removeIf(m -> !Modifier.isStatic(m.getModifiers()));
 
-				processMethodAnnotation(apiMethod);
-				final TestObject testObject = new TestObject(methodKey(apiMethod),
-						apiMethod.getDeclaringClass().getSimpleName() + "." + apiMethod.getName(),
-						apiMethod.getReturnType().getName());
-				testObject.getMandatoryParameters().addAll(processParameters(apiMethod));
+			for (final Method parameterFactoryMethod : parameterFactoryMethods) {
+
+				processMethodAnnotation(parameterFactoryMethod);
+				final TestParameter testParameter = new TestParameter(
+						methodKey(parameterFactoryMethod), parameterFactoryMethod.getDeclaringClass().getSimpleName()
+								+ "." + parameterFactoryMethod.getName(),
+						parameterFactoryMethod.getReturnType().getName());
+				testParameter.getMandatoryParameters().addAll(processParameters(parameterFactoryMethod));
 
 				// Add optional parameters: non static methods of the return type
-				final HashSet<Method> returnTypeApiMethods = new HashSet<>();
-				accumulateApiMethods(apiMethod.getReturnType(), returnTypeApiMethods);
-				returnTypeApiMethods.removeIf(m -> Modifier.isStatic(m.getModifiers()) || m.getParameterCount() != 1);
-				for (final Method returnTypeApiMethod : returnTypeApiMethods) {
-					processMethodAnnotation(returnTypeApiMethod);
-					final TestObjectParameter optionalParameter = new TestObjectParameter(
-							methodKey(returnTypeApiMethod), returnTypeApiMethod.getName(),
-							returnTypeApiMethod.getParameterTypes()[0].getName());
-					testObject.getOptionalParameters().add(optionalParameter);
+				final HashSet<Method> factoryReturnTypeMethods = new HashSet<>();
+				accumulateApiMethods(parameterFactoryMethod.getReturnType(), factoryReturnTypeMethods);
+				factoryReturnTypeMethods
+						.removeIf(m -> Modifier.isStatic(m.getModifiers()) || m.getParameterCount() != 1);
+				for (final Method factoryReturnTypeMethod : factoryReturnTypeMethods) {
+					processMethodAnnotation(factoryReturnTypeMethod);
+					final TestParameter optionalParameter = new TestParameter(methodKey(factoryReturnTypeMethod),
+							factoryReturnTypeMethod.getName(),
+							factoryReturnTypeMethod.getParameterTypes()[0].getName());
+					testParameter.getOptionalParameters().add(optionalParameter);
 				}
 
-				forEachSuper(apiMethod.getReturnType(),
-						apiClazz -> model.getTestObjects().put(apiClazz.getName(), testObject));
+				forEachSuper(parameterFactoryMethod.getReturnType(),
+						apiClazz -> model.getParameterFactories().put(apiClazz.getName(), testParameter));
 			}
 		}
 	}
@@ -108,11 +110,11 @@ public class ModelFromCodeGenerator {
 		model.getDescriptions().put(methodKey(apiMethod), methodAnnotation.description());
 	}
 
-	private List<TestObjectParameter> processParameters(final Method apiMethod) {
+	private List<TestParameter> processParameters(final Method apiMethod) {
 		processMethodAnnotation(apiMethod);
 
 		final AnnotatedType[] annotatedParameterTypes = apiMethod.getAnnotatedParameterTypes();
-		final List<TestObjectParameter> processedParameters = new ArrayList<>();
+		final List<TestParameter> processedParameters = new ArrayList<>();
 		for (int i = 0; i < annotatedParameterTypes.length; i++) {
 			final AnnotatedType apiMethodParam = annotatedParameterTypes[i];
 
@@ -121,10 +123,10 @@ public class ModelFromCodeGenerator {
 				model.getDescriptions().put(paramKey(apiMethod, i), apiMethodAnnotation.description());
 			}
 			final Type apiMethodParamType = apiMethodParam.getType();
-			final TestObjectParameter testObjectParameter = new TestObjectParameter(paramKey(apiMethod, i),
-					apiMethod.getName(), apiMethodParamType.getTypeName());
+			final TestParameter testObjectParameter = new TestParameter(paramKey(apiMethod, i), apiMethod.getName(),
+					apiMethodParamType.getTypeName());
 			if (apiMethodParamType instanceof Class) {
-				unprocessedApiClasses.add((Class<?>) apiMethodParamType);
+				unprocessedParameterFactoryClasses.add((Class<?>) apiMethodParamType);
 			}
 			processedParameters.add(testObjectParameter);
 		}
@@ -137,12 +139,12 @@ public class ModelFromCodeGenerator {
 			return;
 		}
 		if (isTestObject(tcApiClazz)) {
-			unprocessedApiClasses.add(tcApiClazz);
+			unprocessedParameterFactoryClasses.add(tcApiClazz);
 			return;
 		}
 
 		throw new IllegalStateException(
-				"Class " + tcApiClazz.getName() + " must have @" + TCActor.class.getSimpleName());
+				"Class " + tcApiClazz.getName() + " must have @" + TCRole.class.getSimpleName());
 	}
 
 	private boolean isTestObject(final Class<?> tcApiClazz) {
@@ -150,7 +152,7 @@ public class ModelFromCodeGenerator {
 	}
 
 	private boolean isActor(final Class<?> tcApiClazz) {
-		return tcApiClazz.getAnnotation(TCActor.class) != null;
+		return tcApiClazz.getAnnotation(TCRole.class) != null;
 	}
 
 	private void accumulateApiMethods(final Class<?> tcClazz, final Set<Method> methods) {

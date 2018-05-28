@@ -5,13 +5,13 @@ import java.util.List;
 
 public class TestRole extends IdObject {
 
-	private final List<TestMethod> apis = new ArrayList<>();
+	private final List<TestAction> apis = new ArrayList<>();
 
 	public TestRole(final String id) {
 		super(id);
 	}
 
-	public List<TestMethod> getApis() {
+	public List<TestAction> getApis() {
 		return apis;
 	}
 
@@ -20,7 +20,7 @@ public class TestRole extends IdObject {
 		return getId() + ": " + apis.size() + " apis";
 	}
 
-	public TestMethod getApi(final String newId) {
+	public TestAction getApi(final String newId) {
 		return apis.stream().filter(api -> api.getId().equals(newId)).findFirst()
 				.orElseThrow(() -> new IllegalArgumentException("No api with id " + newId));
 	}

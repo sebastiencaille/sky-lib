@@ -16,6 +16,7 @@
 package org.skymarshall.hmi.model.views;
 
 import java.util.Comparator;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.skymarshall.hmi.mvc.properties.ObjectProperty;
@@ -24,6 +25,10 @@ public interface ListViews {
 
 	public static <U> IListView<U> sorted(final Comparator<U> comparator) {
 		return new ListView<>(comparator, null);
+	}
+
+	public static <U, V extends Comparable<V>> IListView<U> sorted(final Function<U, V> comparator) {
+		return new ListView<>((o1, o2) -> comparator.apply(o1).compareTo(comparator.apply(o2)), null);
 	}
 
 	public static <U extends Comparable<U>> IListView<U> sorted() {
@@ -44,8 +49,7 @@ public interface ListViews {
 	 * @param filter
 	 * @return
 	 */
-	public static <D, F extends Predicate<D>> Predicate<D> filter(
-			final ObjectProperty<F> filter) {
+	public static <D, F extends Predicate<D>> Predicate<D> filter(final ObjectProperty<F> filter) {
 		return new PropertyFilter<>(filter);
 	}
 

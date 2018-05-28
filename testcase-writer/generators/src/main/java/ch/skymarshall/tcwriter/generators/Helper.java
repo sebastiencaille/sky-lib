@@ -10,7 +10,8 @@ import java.util.stream.Collectors;
 
 import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.TestModel;
-import ch.skymarshall.tcwriter.generators.model.TestObject;
+import ch.skymarshall.tcwriter.generators.model.TestParameter;
+import ch.skymarshall.tcwriter.generators.model.TestParameterType;
 import ch.skymarshall.tcwriter.generators.model.TestRole;
 
 public class Helper {
@@ -21,7 +22,7 @@ public class Helper {
 			actor.getApis()
 					.forEach(api -> System.out.println("    " + model.getDescriptions().get(api.getId()) + ": " + api));
 		}
-		for (final TestObject testObject : model.getTestObjects().values()) {
+		for (final TestParameter testObject : model.getParameterFactories().values()) {
 			System.out.println("  " + model.getDescriptions().get(testObject.getId()) + ": " + testObject);
 			testObject.getMandatoryParameters().forEach(api -> System.out
 					.println("    mandatory: " + model.getDescriptions().get(api.getId()) + ": " + api));
@@ -77,6 +78,10 @@ public class Helper {
 		return idElements.stream()
 				.map(idElement -> new Reference(idElement.getId(), model.getDescriptions().get(idElement.getId())))
 				.collect(Collectors.toList());
+	}
+
+	public static TestParameter simpleType(final TestParameterType parameterType) {
+		return TestParameter.simpleType(parameterType.getType());
 	}
 
 }

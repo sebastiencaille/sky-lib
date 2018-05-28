@@ -26,8 +26,7 @@ import org.skymarshall.hmi.swing.model.ListModelTableModel;
  *
  * @author Sebastien Caille
  *
- * @param <C>
- *            enum that defines the columns (see {@link ListModelTableModel}
+ * @param <C> enum that defines the columns (see {@link ListModelTableModel}
  */
 public abstract class ContributionTableColumn<C extends Enum<C>> extends TableColumn {
 
@@ -63,12 +62,9 @@ public abstract class ContributionTableColumn<C extends Enum<C>> extends TableCo
 	/**
 	 * Column that occupies the gap left open by the other columns
 	 *
-	 * @param columnIdentifier
-	 *            identifier of the column
-	 * @param percent
-	 *            percent of the gap used by this column
-	 * @param renderer
-	 *            column renderer
+	 * @param columnIdentifier identifier of the column
+	 * @param percent          percent of the gap used by this column
+	 * @param renderer         column renderer
 	 * @return a table column
 	 */
 	public static <C extends Enum<C>> ContributionTableColumn<C> gapColumn(final C columnIdentifier, final int percent,
@@ -93,12 +89,9 @@ public abstract class ContributionTableColumn<C extends Enum<C>> extends TableCo
 	/**
 	 * Column with fixed length
 	 *
-	 * @param columnIdentifier
-	 *            identifier of the column
-	 * @param fixedWidth
-	 *            with of the column
-	 * @param renderer
-	 *            column renderer
+	 * @param columnIdentifier identifier of the column
+	 * @param fixedWidth       with of the column
+	 * @param renderer         column renderer
 	 * @return a table column
 	 */
 	public static <C extends Enum<C>> ContributionTableColumn<C> fixedColumn(final C columnIdentifier,

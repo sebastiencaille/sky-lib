@@ -16,7 +16,7 @@ import org.skymarshall.hmi.swing.model.ListModelTableModel;
 import ch.skymarshall.tcwriter.generators.Helper.Reference;
 import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.TestCase;
-import ch.skymarshall.tcwriter.generators.model.TestObject;
+import ch.skymarshall.tcwriter.generators.model.TestParameter;
 import ch.skymarshall.tcwriter.generators.model.TestStep;
 import ch.skymarshall.tcwriter.hmi.steps.StepsTableModel.Column;
 
@@ -42,11 +42,11 @@ public class StepsCellEditor extends DefaultCellEditor {
 		case METHOD:
 			cbModel = comboBoxOf(step.getRole().getApis());
 			break;
-		case SELECTOR:
-			cbModel = comboBoxOf(getTestObjectsForParameter(step, 0));
+		case PARAM0:
+			cbModel = comboBoxOf(getTestParameterForType(step, 0));
 			break;
-		case PARAMS:
-			cbModel = comboBoxOf(getTestObjectsForParameter(step, 1));
+		case PARAM1:
+			cbModel = comboBoxOf(getTestParameterForType(step, 1));
 			break;
 		default:
 			cbModel = new DefaultComboBoxModel<>();
@@ -57,8 +57,8 @@ public class StepsCellEditor extends DefaultCellEditor {
 		return editorComponent;
 	}
 
-	private Collection<TestObject> getTestObjectsForParameter(final TestStep step, final int paramIndex) {
-		return tc.getModel().getTestObjects().get(step.getMethod().getParameters().get(paramIndex).getType());
+	private Collection<TestParameter> getTestParameterForType(final TestStep step, final int paramIndex) {
+		return tc.getModel().getParameterFactories().get(step.getAction().getParameters().get(paramIndex).getType());
 	}
 
 	private DefaultComboBoxModel<Reference> comboBoxOf(final Collection<? extends IdObject> tcObjects) {

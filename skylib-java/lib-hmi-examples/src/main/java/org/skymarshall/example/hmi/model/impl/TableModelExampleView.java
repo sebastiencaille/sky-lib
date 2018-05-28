@@ -40,8 +40,8 @@ public class TableModelExampleView extends JFrame {
 	static final Comparator<TestObject> NORMAL_ORDER = (o1, o2) -> o1.getASecondValue() - o2.getASecondValue();
 	static final Comparator<TestObject> REVERSE_ORDER = (o1, o2) -> o2.getASecondValue() - o1.getASecondValue();
 
-	private transient final TableModelExampleController controller = new TableModelExampleController();
-	private transient final ListModel<TestObject> model;
+	private final transient TableModelExampleController controller = new TableModelExampleController();
+	private final transient ListModel<TestObject> model;
 
 	public TableModelExampleView() {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);

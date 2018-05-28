@@ -1,10 +1,10 @@
 package ch.skymarshall.tcwriter.examples.api.interfaces;
 
-import ch.skymarshall.tcwriter.annotations.TCActor;
+import ch.skymarshall.tcwriter.annotations.TCRole;
 import ch.skymarshall.tcwriter.annotations.TCApi;
 import ch.skymarshall.tcwriter.examples.ExampleService;
 
-@TCActor(description = "Delivery company")
+@TCRole(description = "Delivery company")
 public class DeliveryTestRole {
 
 	private final ExampleService testedService;

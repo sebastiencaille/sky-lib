@@ -8,7 +8,7 @@ import java.util.Map;
 public class TestCase {
 
 	private final TestModel testModel;
-	private final Map<String, TestValue> references = new HashMap<>();
+	private final Map<String, TestParameterValue> references = new HashMap<>();
 
 	private final List<TestStep> steps = new ArrayList<>();
 	private final String path;

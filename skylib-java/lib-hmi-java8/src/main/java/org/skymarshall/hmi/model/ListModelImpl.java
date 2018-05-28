@@ -532,11 +532,11 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 	 * Process the current edition and
 	 */
 	public void stopEditingValue() {
-		fireEditionStopping();
 		if (objectEdition == null) {
 			return;
 		}
 		try {
+			fireEditionStopping();
 			objectEdition.updateAccepted();
 			if (!objectEdition.isAccepted() && objectEdition.oldIndex < 0) {
 				// Edited object was not in the model and is still not in the model

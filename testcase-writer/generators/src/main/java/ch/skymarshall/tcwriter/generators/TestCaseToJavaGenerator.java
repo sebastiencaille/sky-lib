@@ -20,6 +20,6 @@ public class TestCaseToJavaGenerator {
 
 	public void generate(final TestCase tc, final Path targetPath) throws IOException {
 		Files.write(targetPath.resolve(tc.getPath().replace(".", "/") + ".java"),
-				new JavaGenerationVisitor(testCaseTemplate).visit(tc).getBytes(StandardCharsets.UTF_8));
+				new JavaGenerationVisitor(testCaseTemplate).visitTestCase(tc).getBytes(StandardCharsets.UTF_8));
 	}
 }

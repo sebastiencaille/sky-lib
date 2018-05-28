@@ -30,8 +30,7 @@ import org.skymarshall.hmi.swing.model.ListModelTableModel;
  *
  * @author Sebastien Caille
  *
- * @param <C>
- *            enum that defines the columns (see {@link ListModelTableModel}
+ * @param <C> enum that defines the columns (see {@link ListModelTableModel}
  */
 public class ContributionTableColumnModel<C extends Enum<C>> extends DefaultTableColumnModel {
 
@@ -44,6 +43,8 @@ public class ContributionTableColumnModel<C extends Enum<C>> extends DefaultTabl
 
 	public ContributionTableColumnModel<C> install() {
 		table.setColumnModel(this);
+		table.createDefaultColumnsFromModel();
+		table.setAutoCreateColumnsFromModel(false);
 		return this;
 	}
 
@@ -99,6 +100,11 @@ public class ContributionTableColumnModel<C extends Enum<C>> extends DefaultTabl
 		column.setModel(this);
 		tableColumns.add(index, column);
 		update();
+	}
+
+	@Override
+	public int getColumnIndex(final Object identifier) {
+		return ((C) identifier).ordinal();
 	}
 
 	@Override

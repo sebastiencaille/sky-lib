@@ -8,8 +8,8 @@ public class TestStep {
 	private int ordinal;
 	private TestActor actor;
 	private TestRole role;
-	private TestMethod stepMethod;
-	private final List<TestValue> stepParameters = new ArrayList<>();
+	private TestAction stepMethod;
+	private final List<TestParameterValue> parametersValue = new ArrayList<>();
 
 	public int getOrdinal() {
 		return ordinal;
@@ -35,20 +35,20 @@ public class TestStep {
 		this.role = role;
 	}
 
-	public TestMethod getMethod() {
+	public TestAction getAction() {
 		return stepMethod;
 	}
 
-	public void setMethod(final TestMethod stepMethod) {
+	public void setMethod(final TestAction stepMethod) {
 		this.stepMethod = stepMethod;
 	}
 
-	public List<TestValue> getParameters() {
-		return stepParameters;
+	public List<TestParameterValue> getParametersValue() {
+		return parametersValue;
 	}
 
-	public void addParameter(final TestValue testValue) {
-		this.stepParameters.add(testValue);
+	public void addParameter(final TestParameterValue testValue) {
+		this.parametersValue.add(testValue);
 	}
 
 }

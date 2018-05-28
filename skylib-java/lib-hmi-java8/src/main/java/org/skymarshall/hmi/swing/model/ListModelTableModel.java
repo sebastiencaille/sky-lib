@@ -29,10 +29,8 @@ import org.skymarshall.hmi.model.ListModel;
  *
  * @author Sebastien Caille
  *
- * @param <T>
- *            type of data contained in the model
- * @param <C>
- *            enum of columns describing the model
+ * @param <T> type of data contained in the model
+ * @param <C> enum of columns describing the model
  */
 public abstract class ListModelTableModel<T, C extends Enum<C>> extends AbstractTableModel implements ListDataListener {
 
@@ -86,7 +84,7 @@ public abstract class ListModelTableModel<T, C extends Enum<C>> extends Abstract
 
 	@Override
 	public Object getValueAt(final int row, final int column) {
-		return getValueAtColumn(model.getValueAt(row), columnsEnumClass.cast(columnsEnum[column]));
+		return getValueAtColumn(model.getValueAt(row), columnOf(column));
 	}
 
 	@Override
@@ -94,7 +92,10 @@ public abstract class ListModelTableModel<T, C extends Enum<C>> extends Abstract
 		super.setValueAt(aValue, row, column);
 		final T editedValue = model.getValueAt(row);
 		model.editValue(editedValue,
-				v -> setValueAtColumn(model.getValueAt(row), columnsEnumClass.cast(columnsEnum[column]), aValue));
+
+				v -> setValueAtColumn(model.getValueAt(row),
+
+						columnOf(column), aValue));
 	}
 
 	@Override
@@ -133,6 +134,10 @@ public abstract class ListModelTableModel<T, C extends Enum<C>> extends Abstract
 
 	protected boolean verbose() {
 		return false;
+	}
+
+	protected C columnOf(final int column) {
+		return columnsEnumClass.cast(columnsEnum[column]);
 	}
 
 }

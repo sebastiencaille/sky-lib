@@ -18,6 +18,13 @@ public class TestItem {
 		return new TestItem(ItemKind.COFFE_MACHINE);
 	}
 
+	@TCApi(description = "a coffee machine of a specific brand")
+	public static TestItem coffeeMachineOfBrand(final String brandName) {
+		final TestItem testItem = new TestItem(ItemKind.COFFE_MACHINE);
+		testItem.setBrandName(brandName);
+		return testItem;
+	}
+
 	@TCApi(description = "a tea pot")
 	public static TestItem teaPot() {
 		return new TestItem(ItemKind.TEA_POT);

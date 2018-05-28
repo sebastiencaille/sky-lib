@@ -14,7 +14,7 @@ public class TestModel {
 
 	private final Map<String, TestActor> actors = new HashMap<>();
 
-	private final Multimap<String, TestObject> testObjects = MultimapBuilder.hashKeys().arrayListValues().build();
+	private final Multimap<String, TestParameter> testObjects = MultimapBuilder.hashKeys().arrayListValues().build();
 
 	{
 		descriptions.put(IdObject.ID_NOT_SET, "N/A");
@@ -32,7 +32,7 @@ public class TestModel {
 		return actors;
 	}
 
-	public Multimap<String, TestObject> getTestObjects() {
+	public Multimap<String, TestParameter> getParameterFactories() {
 		return testObjects;
 	}
 
@@ -44,10 +44,9 @@ public class TestModel {
 		return descriptionOf(idObject.getId());
 	}
 
-	public TestObject getTestObject(final TestObjectParameter testObjectParameter, final String id) {
-		return testObjects.get(testObjectParameter.getType()).stream().filter(tObj -> tObj.getId().equals(id))
-				.findFirst().orElseThrow(() -> new IllegalArgumentException(
-						"No test object for type " + testObjectParameter.getType() + " and id " + id));
+	public TestParameter getTestParameter(final String factoryId) {
+		return testObjects.values().stream().filter(tObj -> tObj.getId().equals(factoryId)).findFirst()
+				.orElseThrow(() -> new IllegalArgumentException("No test object found with id " + factoryId));
 	}
 
 	@Override

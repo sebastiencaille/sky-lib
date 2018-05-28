@@ -51,6 +51,12 @@ public class ExampleTCWriter extends TCWriter {
 
 	public static void main(final String[] args) {
 
+		final TestCase tc = createTestCase();
+
+		new ExampleTCWriter(tc).show();
+	}
+
+	public static TestCase createTestCase() {
 		final GenerateModelFromCode generateFromCode = new GenerateModelFromCode(
 				Arrays.asList(CustomerTestRole.class, DeliveryTestRole.class));
 		final TestModel model = generateFromCode.generateModel();
@@ -102,8 +108,7 @@ public class ExampleTCWriter extends TCWriter {
 		step3.setActor(customer);
 		step3.setMethod(find(customer.getRole(), "resellOwnedItem"));
 		tc.addStep(step3);
-
-		new ExampleTCWriter(tc).show();
+		return tc;
 	}
 
 	private static String actionParamIdOf(final TestAction testMethod, final int paramIndex) {

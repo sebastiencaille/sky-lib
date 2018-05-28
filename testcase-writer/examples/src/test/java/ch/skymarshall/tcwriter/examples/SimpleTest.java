@@ -8,10 +8,10 @@ import static ch.skymarshall.tcwriter.examples.api.interfaces.selectors.HandleAc
 import org.junit.Before;
 import org.junit.Test;
 
-import ch.skymarshall.tcwriter.examples.ExampleService;
 import ch.skymarshall.tcwriter.examples.api.interfaces.CustomerTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem;
+import junit.framework.AssertionFailedError;
 
 public class SimpleTest {
 
@@ -40,7 +40,7 @@ public class SimpleTest {
 		customer.resellOwnedItem();
 	}
 
-	@Test
+	@Test(expected = AssertionFailedError.class)
 	public void testFailureCase() {
 		final CustomerTestRole api = new CustomerTestRole(new ExampleService());
 

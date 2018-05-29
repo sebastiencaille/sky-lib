@@ -12,6 +12,7 @@ import org.skymarshall.util.generators.JavaCodeGenerator;
 import org.skymarshall.util.generators.Template;
 
 import ch.skymarshall.tcwriter.generators.model.TestCase;
+import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.TestModel;
 import ch.skymarshall.tcwriter.generators.model.TestParameter;
 import ch.skymarshall.tcwriter.generators.model.TestParameterType;
@@ -30,7 +31,7 @@ public class JavaGenerationVisitor {
 		this.template = template;
 	}
 
-	public String visitTestCase(final TestCase tc) throws IOException {
+	public String visitTestCase(final TestCase tc) throws IOException, TestCaseException {
 		final JavaCodeGenerator javaContent = new JavaCodeGenerator();
 		for (final TestStep step : tc.getSteps()) {
 			visitTestStep(javaContent, tc.getModel(), step);
@@ -44,7 +45,7 @@ public class JavaGenerationVisitor {
 	}
 
 	private void visitTestStep(final JavaCodeGenerator javaContent, final TestModel model, final TestStep step)
-			throws IOException {
+			throws IOException, TestCaseException {
 		final StringBuilder comment = new StringBuilder();
 		comment.append(
 				"// Step " + step.getOrdinal() + " - " + step.getActor() + ": " + model.descriptionOf(step.getAction()))
@@ -56,6 +57,10 @@ public class JavaGenerationVisitor {
 			visitTestValue(stepContent, comment, model, stepParamValue);
 		}
 
+		if (step.getReference() != null) {
+			stepContent.append(step.getReference().getType()).append(" ").append(step.getReference().getName())
+					.append(" = ");
+		}
 		stepContent.append(step.getActor().getName()).append(".").append(step.getAction().getName()).append("(");
 
 		addParameterValuesToCall(stepContent, step.getParametersValue(), step.getAction().getParameters());
@@ -66,10 +71,10 @@ public class JavaGenerationVisitor {
 	}
 
 	private void visitTestValue(final JavaCodeGenerator javaContent, final StringBuilder comment, final TestModel model,
-			final TestParameterValue paramValue) throws IOException {
+			final TestParameterValue paramValue) throws IOException, TestCaseException {
 
 		final TestParameter param = paramValue.getTestParameter();
-		if (param.isSimpleType()) {
+		if (param.getNature().isSimpleValue()) {
 			return;
 		}
 
@@ -91,10 +96,11 @@ public class JavaGenerationVisitor {
 	}
 
 	private void visitTestValueParams(final JavaCodeGenerator parametersContent, final StringBuilder comment,
-			final TestModel model, final Map<String, TestParameterValue> testObjectValues) throws IOException {
+			final TestModel model, final Map<String, TestParameterValue> testObjectValues)
+			throws IOException, TestCaseException {
 		for (final TestParameterValue testObjectValue : testObjectValues.values()) {
 			// No need to define a variable
-			if (testObjectValue.getTestParameter().isSimpleType()) {
+			if (testObjectValue.getTestParameter().getNature().isSimpleValue()) {
 				// Simple value
 				continue;
 			}
@@ -104,7 +110,7 @@ public class JavaGenerationVisitor {
 
 	private void addParameterValuesToCall(final JavaCodeGenerator parametersContent,
 			final Collection<TestParameterValue> parameterValues, final List<TestParameterType> filter)
-			throws IOException {
+			throws IOException, TestCaseException {
 		final Set<String> filterIds = filter.stream().map(f -> f.getId()).collect(Collectors.toSet());
 		String sep = "";
 		for (final TestParameterValue parameterValue : parameterValues) {
@@ -119,7 +125,7 @@ public class JavaGenerationVisitor {
 
 	private void addSetters(final JavaCodeGenerator parametersContent, final StringBuilder comment,
 			final TestModel model, final String parameterVarName, final Collection<TestParameterValue> parameterValues,
-			final List<TestParameterType> filter) throws IOException {
+			final List<TestParameterType> filter) throws IOException, TestCaseException {
 		final Map<String, TestParameterType> filteredMap = filter.stream()
 				.collect(Collectors.toMap(t -> t.getId(), t -> t));
 		for (final TestParameterValue parameterValue : parameterValues) {
@@ -134,8 +140,12 @@ public class JavaGenerationVisitor {
 	}
 
 	private void inlineValue(final JavaCodeGenerator parametersContent, final TestParameterValue parameterValue)
-			throws IOException {
-		if (parameterValue.getTestParameter().isSimpleType()) {
+			throws IOException, TestCaseException {
+		switch (parameterValue.getTestParameter().getNature()) {
+		case TEST_API_TYPE:
+			parametersContent.append(varNameFor(parameterValue));
+			break;
+		case SIMPLE_TYPE:
 			final String valueType = parameterValue.getTestParameter().getType();
 			final boolean isString = String.class.getName().equals(valueType);
 			final boolean isLong = Long.class.getName().equals(valueType) || Long.TYPE.getName().equals(valueType);
@@ -148,8 +158,12 @@ public class JavaGenerationVisitor {
 			} else if (isLong) {
 				parametersContent.append("L");
 			}
-		} else {
-			parametersContent.append(varNameFor(parameterValue));
+			break;
+		case REFERENCE:
+			parametersContent.append(parameterValue.getSimpleValue());
+			break;
+		default:
+			throw new TestCaseException("Parameter value is not set");
 		}
 	}
 

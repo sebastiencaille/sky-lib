@@ -24,4 +24,8 @@ public class TestParameterType extends IdObject {
 	public String toString() {
 		return getName() + ": " + type;
 	}
+
+	public TestParameter asParameter() {
+		return TestParameter.simpleType(getType());
+	}
 }

@@ -7,15 +7,18 @@ import java.util.List;
 
 public class TestAction extends IdObject {
 
-	public static final TestAction NO_METHOD = new TestAction(IdObject.ID_NOT_SET, "");
+	public static final TestAction NO_METHOD = new TestAction(IdObject.ID_NOT_SET, "", "");
 
 	private final List<TestParameterType> parameterTypes = new ArrayList<>();
 
 	private final String name;
 
-	public TestAction(final String id, final String name) {
+	private final String returnType;
+
+	public TestAction(final String id, final String name, final String returnType) {
 		super(id);
 		this.name = name;
+		this.returnType = returnType;
 	}
 
 	public List<TestParameterType> getParameters() {
@@ -28,6 +31,10 @@ public class TestAction extends IdObject {
 
 	public String getName() {
 		return name;
+	}
+
+	public String getReturnType() {
+		return returnType;
 	}
 
 	@Override

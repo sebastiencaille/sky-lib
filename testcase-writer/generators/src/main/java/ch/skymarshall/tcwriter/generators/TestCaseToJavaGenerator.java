@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import org.skymarshall.util.generators.Template;
 
 import ch.skymarshall.tcwriter.generators.model.TestCase;
+import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 
 public class TestCaseToJavaGenerator {
 
@@ -18,7 +19,7 @@ public class TestCaseToJavaGenerator {
 
 	}
 
-	public void generate(final TestCase tc, final Path targetPath) throws IOException {
+	public void generate(final TestCase tc, final Path targetPath) throws IOException, TestCaseException {
 		Files.write(targetPath.resolve(tc.getPath().replace(".", "/") + ".java"),
 				new JavaGenerationVisitor(testCaseTemplate).visitTestCase(tc).getBytes(StandardCharsets.UTF_8));
 	}

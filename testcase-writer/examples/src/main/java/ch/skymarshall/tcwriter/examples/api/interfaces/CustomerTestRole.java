@@ -38,4 +38,14 @@ public class CustomerTestRole extends Assert {
 		testedService.reset();
 	}
 
+	@TCApi(description = "Look for another brand")
+	public String findAnotherBrand() {
+		return "MidClass";
+	}
+
+	@TCApi(description = "Keep a note")
+	public void keepNote(final String note) {
+		// naah
+	}
+
 }

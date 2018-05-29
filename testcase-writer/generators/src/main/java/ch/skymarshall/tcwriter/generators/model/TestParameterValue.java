@@ -29,8 +29,8 @@ public class TestParameterValue extends IdObject {
 		super(id);
 		this.valueDefinition = valueDefinition;
 		this.simpleValue = simpleValue;
-		if (valueDefinition.isSimpleType() ^ simpleValue != null) {
-			throw new IllegalArgumentException("mismatch between simpleType and valueDefinition");
+		if (valueDefinition.getNature().isSimpleValue() ^ simpleValue != null) {
+			throw new IllegalArgumentException("mismatch between simpleType and nature");
 		}
 	}
 
@@ -53,7 +53,7 @@ public class TestParameterValue extends IdObject {
 	@Override
 	public String toString() {
 		return "Value " + valueDefinition.getName() + ":"
-				+ (valueDefinition.isSimpleType() ? getSimpleValue() : getComplexTypeValues());
+				+ (valueDefinition.getNature().isSimpleValue() ? getSimpleValue() : getComplexTypeValues());
 	}
 
 }

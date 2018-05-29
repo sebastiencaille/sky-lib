@@ -1,17 +1,19 @@
 package ch.skymarshall.tcwriter.generators.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
 
 public class TestCase {
 
 	private final TestModel testModel;
-	private final Map<String, TestParameterValue> references = new HashMap<>();
 
 	private final List<TestStep> steps = new ArrayList<>();
 	private final String path;
+	private final Multimap<String, TestParameter> dynamicReferences = MultimapBuilder.hashKeys().arrayListValues()
+			.build();
 
 	public TestCase(final String path, final TestModel testModel) {
 		this.path = path;
@@ -40,6 +42,15 @@ public class TestCase {
 
 	public String getPath() {
 		return path;
+	}
+
+	public void publishReference(final TestParameter reference) {
+		dynamicReferences.put(reference.getType(), reference);
+	}
+
+	public TestParameter getReference(final String reference) {
+		return dynamicReferences.values().stream().filter(ref -> ref.getName().equals(reference)).findFirst()
+				.orElseThrow(() -> new IllegalArgumentException("Unable to find reference " + reference));
 	}
 
 }

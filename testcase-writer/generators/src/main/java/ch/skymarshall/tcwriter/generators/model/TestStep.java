@@ -3,6 +3,8 @@ package ch.skymarshall.tcwriter.generators.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.skymarshall.tcwriter.generators.model.TestParameter.ParameterNature;
+
 public class TestStep {
 
 	private int ordinal;
@@ -10,6 +12,7 @@ public class TestStep {
 	private TestRole role;
 	private TestAction action;
 	private final List<TestParameterValue> parametersValue = new ArrayList<>();
+	private TestParameter reference;
 
 	public int getOrdinal() {
 		return ordinal;
@@ -49,6 +52,16 @@ public class TestStep {
 
 	public void addParameter(final TestParameterValue parameterValue) {
 		this.parametersValue.add(parameterValue);
+	}
+
+	public TestParameter asNamedReference(final String namedReference) {
+		reference = new TestParameter(namedReference, namedReference, ParameterNature.REFERENCE,
+				getAction().getReturnType());
+		return reference;
+	}
+
+	public TestParameter getReference() {
+		return reference;
 	}
 
 }

@@ -22,9 +22,10 @@ import ch.skymarshall.tcwriter.annotations.TCRole;
 import ch.skymarshall.tcwriter.generators.model.TestAction;
 import ch.skymarshall.tcwriter.generators.model.TestModel;
 import ch.skymarshall.tcwriter.generators.model.TestParameter;
+import ch.skymarshall.tcwriter.generators.model.TestParameter.ParameterNature;
 import ch.skymarshall.tcwriter.generators.model.TestRole;
 
-public class ModelFromCodeGenerator {
+public class ModelFromClassVisitor {
 
 	private final Set<Class<?>> unprocessedActorClasses = new HashSet<>();
 	private final Set<Class<?>> unprocessedParameterFactoryClasses = new HashSet<>();
@@ -34,7 +35,7 @@ public class ModelFromCodeGenerator {
 
 	private final TestModel model;
 
-	public ModelFromCodeGenerator(final TestModel model) {
+	public ModelFromClassVisitor(final TestModel model) {
 		this.model = model;
 	}
 
@@ -54,7 +55,11 @@ public class ModelFromCodeGenerator {
 			accumulateApiMethods(roleClass, roleMethods);
 
 			for (final Method actionMethod : roleMethods) {
-				final TestAction testAction = new TestAction(methodKey(actionMethod), actionMethod.getName());
+				final String returnType = (actionMethod.getReturnType() != Void.class)
+						? actionMethod.getReturnType().getName()
+						: null;
+				final TestAction testAction = new TestAction(methodKey(actionMethod), actionMethod.getName(),
+						returnType);
 				final List<TestParameter> roleActionParameters = processParameters(actionMethod);
 				testAction.getParameters().addAll(roleActionParameters);
 				testRole.getApis().add(testAction);
@@ -80,10 +85,10 @@ public class ModelFromCodeGenerator {
 			for (final Method parameterFactoryMethod : parameterFactoryMethods) {
 
 				processMethodAnnotation(parameterFactoryMethod);
-				final TestParameter testParameter = new TestParameter(
-						methodKey(parameterFactoryMethod), parameterFactoryMethod.getDeclaringClass().getSimpleName()
-								+ "." + parameterFactoryMethod.getName(),
-						parameterFactoryMethod.getReturnType().getName());
+				final TestParameter testParameter = new TestParameter(methodKey(parameterFactoryMethod),
+						parameterFactoryMethod.getDeclaringClass().getSimpleName() + "."
+								+ parameterFactoryMethod.getName(),
+						ParameterNature.TEST_API_TYPE, parameterFactoryMethod.getReturnType().getName());
 				testParameter.getMandatoryParameters().addAll(processParameters(parameterFactoryMethod));
 
 				// Add optional parameters: non static methods of the return type
@@ -94,7 +99,7 @@ public class ModelFromCodeGenerator {
 				for (final Method factoryReturnTypeMethod : factoryReturnTypeMethods) {
 					processMethodAnnotation(factoryReturnTypeMethod);
 					final TestParameter optionalParameter = new TestParameter(methodKey(factoryReturnTypeMethod),
-							factoryReturnTypeMethod.getName(),
+							factoryReturnTypeMethod.getName(), ParameterNature.TEST_API_TYPE,
 							factoryReturnTypeMethod.getParameterTypes()[0].getName());
 					testParameter.getOptionalParameters().add(optionalParameter);
 				}
@@ -124,7 +129,7 @@ public class ModelFromCodeGenerator {
 			}
 			final Type apiMethodParamType = apiMethodParam.getType();
 			final TestParameter testObjectParameter = new TestParameter(paramKey(apiMethod, i), apiMethod.getName(),
-					apiMethodParamType.getTypeName());
+					ParameterNature.TEST_API_TYPE, apiMethodParamType.getTypeName());
 			if (apiMethodParamType instanceof Class) {
 				unprocessedParameterFactoryClasses.add((Class<?>) apiMethodParamType);
 			}
@@ -160,18 +165,14 @@ public class ModelFromCodeGenerator {
 			methods.addAll(apiClassIntrospectionCache.get(tcClazz));
 		}
 
-		forEachSuper(tcClazz, new HashSet<>(),
-
-				apiClazz -> {
-					for (
-
-				final Method apiMethod : tcClazz.getMethods()) {
-						final TCApi annotation = apiMethod.getAnnotation(TCApi.class);
-						if (annotation != null) {
-							methods.add(apiMethod);
-						}
-					}
-				});
+		forEachSuper(tcClazz, new HashSet<>(), apiClazz -> {
+			for (final Method apiMethod : tcClazz.getMethods()) {
+				final TCApi annotation = apiMethod.getAnnotation(TCApi.class);
+				if (annotation != null) {
+					methods.add(apiMethod);
+				}
+			}
+		});
 		apiClassIntrospectionCache.put(tcClazz, methods);
 	}
 

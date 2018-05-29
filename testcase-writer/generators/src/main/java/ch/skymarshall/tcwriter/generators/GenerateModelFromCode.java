@@ -14,13 +14,13 @@ public class GenerateModelFromCode {
 	public TestModel generateModel() {
 
 		final TestModel model = new TestModel();
-		final ModelFromCodeGenerator gen = new ModelFromCodeGenerator(model);
+		final ModelFromClassVisitor gen = new ModelFromClassVisitor(model);
 		tcClasses.forEach(gen::addClass);
 		gen.visit();
 		return model;
 	}
 
-	public static void main(final String[] args) throws ClassNotFoundException {
+	public static void main(final String[] args) {
 		final GenerateModelFromCode generateFromCode = new GenerateModelFromCode(Helper.toClasses(args));
 		final TestModel model = generateFromCode.generateModel();
 		Helper.dumpModel(model);

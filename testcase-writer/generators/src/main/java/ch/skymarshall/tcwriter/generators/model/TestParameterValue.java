@@ -8,17 +8,34 @@ public class TestParameterValue extends IdObject {
 
 	public static final TestParameterValue NO_VALUE = new TestParameterValue("", TestParameter.NO_VALUE);
 
-	private final TestParameter testParameter;
+	private final TestParameter valueDefinition;
 	private final Map<String, TestParameterValue> complexTypeValues = new HashMap<>();
-	private String simpleValue;
+	private final String simpleValue;
 
-	public TestParameterValue(final String id, final TestParameter testParameter) {
+	public TestParameterValue(final TestParameterType parameterOfValue, final TestParameter valueDefinition) {
+		this(parameterOfValue.getId(), valueDefinition, null);
+	}
+
+	public TestParameterValue(final TestParameterType parameterOfValue, final TestParameter valueDefinition,
+			final String simpleValue) {
+		this(parameterOfValue.getId(), valueDefinition, simpleValue);
+	}
+
+	public TestParameterValue(final String id, final TestParameter valueDefinition) {
+		this(id, valueDefinition, null);
+	}
+
+	public TestParameterValue(final String id, final TestParameter valueDefinition, final String simpleValue) {
 		super(id);
-		this.testParameter = testParameter;
+		this.valueDefinition = valueDefinition;
+		this.simpleValue = simpleValue;
+		if (valueDefinition.isSimpleType() ^ simpleValue != null) {
+			throw new IllegalArgumentException("mismatch between simpleType and valueDefinition");
+		}
 	}
 
 	public TestParameter getTestParameter() {
-		return testParameter;
+		return valueDefinition;
 	}
 
 	public Map<String, TestParameterValue> getComplexTypeValues() {
@@ -33,15 +50,10 @@ public class TestParameterValue extends IdObject {
 		return simpleValue;
 	}
 
-	public TestParameterValue setSimpleValue(final String simpleValue) {
-		this.simpleValue = simpleValue;
-		return this;
-	}
-
 	@Override
 	public String toString() {
-		return "Value " + testParameter.getName() + ":"
-				+ (testParameter.isSimpleType() ? getSimpleValue() : getComplexTypeValues());
+		return "Value " + valueDefinition.getName() + ":"
+				+ (valueDefinition.isSimpleType() ? getSimpleValue() : getComplexTypeValues());
 	}
 
 }

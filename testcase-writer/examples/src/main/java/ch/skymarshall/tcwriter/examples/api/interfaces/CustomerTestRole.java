@@ -2,8 +2,8 @@ package ch.skymarshall.tcwriter.examples.api.interfaces;
 
 import org.junit.Assert;
 
-import ch.skymarshall.tcwriter.annotations.TCRole;
 import ch.skymarshall.tcwriter.annotations.TCApi;
+import ch.skymarshall.tcwriter.annotations.TCRole;
 import ch.skymarshall.tcwriter.examples.ExampleService;
 import ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem;
 import ch.skymarshall.tcwriter.examples.api.interfaces.selectors.BuyActionSelector;
@@ -34,7 +34,7 @@ public class CustomerTestRole extends Assert {
 	}
 
 	@TCApi(description = "Resell the item")
-	public void resellOwnedItem() {
+	public void resellOwnedItem(final int price) {
 		testedService.reset();
 	}
 

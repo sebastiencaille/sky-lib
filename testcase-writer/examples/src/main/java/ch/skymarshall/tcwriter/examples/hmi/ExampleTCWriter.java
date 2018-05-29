@@ -57,17 +57,20 @@ public class ExampleTCWriter extends TCWriter {
 	}
 
 	public static TestCase createTestCase() {
+
 		final GenerateModelFromCode generateFromCode = new GenerateModelFromCode(
 				Arrays.asList(CustomerTestRole.class, DeliveryTestRole.class));
 		final TestModel model = generateFromCode.generateModel();
+
 		final TestActor customer = new TestActor("customer", "customer",
 				model.getRoles().get(Helper.roleKey(CustomerTestRole.class)));
 		final TestActor deliveryGuy = new TestActor("delivery", "delivery",
 				model.getRoles().get(Helper.roleKey(DeliveryTestRole.class)));
+
 		model.getActors().put(customer.getId(), customer);
 		model.getActors().put(deliveryGuy.getId(), deliveryGuy);
 		model.getDescriptions().put(customer.getId(), "A customer");
-		model.getDescriptions().put(deliveryGuy.getId(), "Delivery gux");
+		model.getDescriptions().put(deliveryGuy.getId(), "Delivery guy");
 		Helper.dumpModel(model);
 
 		final TestCase tc = new TestCase("ch.skymarshall.tcwriter.examples.MyTC", model);
@@ -75,44 +78,44 @@ public class ExampleTCWriter extends TCWriter {
 		final TestParameter coffeeMachineOfBrand = findValueFactory(model, "coffeeMachineOfBrand");
 
 		// Step 1
-		final TestAction action1 = find(customer.getRole(), "buy");
-
 		final TestStep step1 = new TestStep();
+		final TestAction action1 = find(customer.getRole(), "buy");
+		final TestParameterType action1Param1 = action1.getParameter(1);
 		step1.setActor(customer);
-		step1.setMethod(action1);
-		final TestParameterValue step1val1 = new TestParameterValue(actionParamIdOf(action1, 0),
+		step1.setAction(action1);
+		final TestParameterValue action1Val1 = new TestParameterValue(action1Param1,
 				findValueFactory(model, "inLocalShop"));
-		step1.addParameter(step1val1);
-		final TestParameterValue step1P2Value = new TestParameterValue(actionParamIdOf(action1, 1), coffeeMachine);
-		final TestParameterType step1P2Op1 = coffeeMachine.getOptionalParameters().get(0);
-		step1P2Value.addComplexTypeValue(
-				new TestParameterValue(step1P2Op1.getId(), simpleType(step1P2Op1)).setSimpleValue("Plouf"));
-		step1.addParameter(step1P2Value);
+		step1.addParameter(action1Val1);
+		final TestParameterValue action1Val2 = new TestParameterValue(action1Param1, coffeeMachine);
+		final TestParameterType action1Param1Opt0 = coffeeMachine.getOptionalParameter(0);
+		action1Val2
+				.addComplexTypeValue(new TestParameterValue(action1Param1Opt0, simpleType(action1Param1Opt0), "Cheap"));
+		step1.addParameter(action1Val2);
 		tc.addStep(step1);
 
 		// Step 2
 		final TestStep step2 = new TestStep();
-		final TestAction method2 = find(customer.getRole(), "handleAndCheckPackage");
+		final TestAction action2 = find(customer.getRole(), "handleAndCheckPackage");
+		final TestParameterType action2Param0 = action2.getParameter(0);
+		final TestParameterType action2Param1 = action2.getParameter(1);
 		step2.setActor(customer);
-		step2.setMethod(method2);
-		step2.addParameter(new TestParameterValue(actionParamIdOf(method2, 0), findValueFactory(model, "fromShop")));
-		final TestParameterValue step2P2Value = new TestParameterValue(actionParamIdOf(method2, 1),
-				coffeeMachineOfBrand);
-		final TestParameterType step2P2P1 = coffeeMachineOfBrand.getMandatoryParameters().get(0);
-		step2P2Value.addComplexTypeValue(
-				new TestParameterValue(step2P2P1.getId(), simpleType(step2P2P1)).setSimpleValue("Blux"));
-		step2.addParameter(step2P2Value);
+		step2.setAction(action2);
+		step2.addParameter(new TestParameterValue(action2Param0, findValueFactory(model, "fromShop")));
+		final TestParameterValue action2Param1Value = new TestParameterValue(action2Param1, coffeeMachineOfBrand);
+		final TestParameterType action2Param1Mand = coffeeMachineOfBrand.getMandatoryParameter(0);
+		action2Param1Value.addComplexTypeValue(
+				new TestParameterValue(action2Param1Mand, simpleType(action2Param1Mand), "DeLuxe"));
+		step2.addParameter(action2Param1Value);
 		tc.addStep(step2);
 
 		final TestStep step3 = new TestStep();
+		final TestAction action3 = find(customer.getRole(), "resellOwnedItem");
+		final TestParameterType action3Param0 = action3.getParameter(0);
 		step3.setActor(customer);
-		step3.setMethod(find(customer.getRole(), "resellOwnedItem"));
+		step3.setAction(action3);
+		step3.addParameter(new TestParameterValue(action3Param0, simpleType(action3Param0), "10"));
 		tc.addStep(step3);
 		return tc;
-	}
-
-	private static String actionParamIdOf(final TestAction testMethod, final int paramIndex) {
-		return testMethod.getParameters().get(paramIndex).getId();
 	}
 
 }

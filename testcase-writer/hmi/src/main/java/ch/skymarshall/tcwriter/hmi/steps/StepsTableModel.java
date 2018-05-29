@@ -84,12 +84,12 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		switch (column) {
 		case ACTOR:
 			step.setActor(model.getActors().get(newId));
-			step.setMethod(TestAction.NO_METHOD);
+			step.setAction(TestAction.NO_METHOD);
 			step.getParametersValue().clear();
 			return;
 		case METHOD:
 			final TestAction oldMethod = step.getAction();
-			step.setMethod(step.getRole().getApi(newId));
+			step.setAction(step.getRole().getApi(newId));
 
 			for (int i = 0; i < step.getParametersValue().size(); i++) {
 				final TestParameterValue newMethodParameter = step.getParametersValue().get(i);

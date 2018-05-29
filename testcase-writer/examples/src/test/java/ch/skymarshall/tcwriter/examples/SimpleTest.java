@@ -32,11 +32,11 @@ public class SimpleTest {
 		customer.buy(fromInternet(), coffeeMachine);
 		delivery.deliverItem();
 		customer.handleAndCheckPackage(deliveredItem(), coffeeMachine);
-		customer.resellOwnedItem();
+		customer.resellOwnedItem(10);
 
 		customer.buy(inLocalShop(), teaPot);
 		customer.handleAndCheckPackage(fromShop(), teaPot);
-		customer.resellOwnedItem();
+		customer.resellOwnedItem(10);
 	}
 
 	@Test(expected = AssertionError.class)
@@ -45,7 +45,7 @@ public class SimpleTest {
 
 		api.buy(inLocalShop(), coffeeMachine);
 		api.handleAndCheckPackage(fromShop(), teaPot);
-		api.resellOwnedItem();
+		api.resellOwnedItem(10);
 
 	}
 

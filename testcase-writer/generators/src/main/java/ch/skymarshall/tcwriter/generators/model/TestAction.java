@@ -22,6 +22,10 @@ public class TestAction extends IdObject {
 		return parameterTypes;
 	}
 
+	public TestParameterType getParameter(final int index) {
+		return parameterTypes.get(index);
+	}
+
 	public String getName() {
 		return name;
 	}

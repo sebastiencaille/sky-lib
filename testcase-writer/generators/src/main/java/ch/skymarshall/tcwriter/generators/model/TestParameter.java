@@ -18,8 +18,16 @@ public class TestParameter extends TestParameterType {
 		return SIMPLE_TYPE.equals(getId());
 	}
 
+	public TestParameterType getMandatoryParameter(final int index) {
+		return mandatoryParameters.get(index);
+	}
+
 	public List<TestParameterType> getMandatoryParameters() {
 		return mandatoryParameters;
+	}
+
+	public TestParameterType getOptionalParameter(final int index) {
+		return optionalParameters.get(index);
 	}
 
 	public List<TestParameterType> getOptionalParameters() {
@@ -33,6 +41,6 @@ public class TestParameter extends TestParameterType {
 	}
 
 	public static TestParameter simpleType(final String type) {
-		return new TestParameter(SIMPLE_TYPE, "", type);
+		return new TestParameter(SIMPLE_TYPE, SIMPLE_TYPE, type);
 	}
 }

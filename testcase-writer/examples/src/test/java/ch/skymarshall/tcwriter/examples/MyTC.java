@@ -22,23 +22,23 @@ public class MyTC {
 	
 	@Test
 	public void testCase() {
-		// Step 0 - ch.skymarshall.tcwriter.generators.model.TestActor@769c9116: Buy an item
+		// Step 0 - ch.skymarshall.tcwriter.generators.model.TestActor@16aa0a0a: Buy an item
 		//    null
 		//    null
 		ch.skymarshall.tcwriter.examples.api.interfaces.selectors.BuyActionSelector var0 = BuyActionSelector.inLocalShop();
 		ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem var1 = TestItem.coffeeMachine();
-		var1.setBrandName("Plouf");
+		var1.setBrandName("Cheap");
 		customer.buy(var0, var1);
 		
-		// Step 0 - ch.skymarshall.tcwriter.generators.model.TestActor@769c9116: handle the item package and check it's content
+		// Step 0 - ch.skymarshall.tcwriter.generators.model.TestActor@16aa0a0a: handle the item package and check it's content
 		//    null
 		//    null
 		ch.skymarshall.tcwriter.examples.api.interfaces.selectors.HandleActionSelector var2 = HandleActionSelector.fromShop();
-		ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem var3 = TestItem.coffeeMachineOfBrand("Blux");
+		ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem var3 = TestItem.coffeeMachineOfBrand("DeLuxe");
 		customer.handleAndCheckPackage(var2, var3);
 		
-		// Step 0 - ch.skymarshall.tcwriter.generators.model.TestActor@769c9116: Resell the item
-		customer.resellOwnedItem();
+		// Step 0 - ch.skymarshall.tcwriter.generators.model.TestActor@16aa0a0a: Resell the item
+		customer.resellOwnedItem(10);
 		
 		
 	}

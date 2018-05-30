@@ -44,9 +44,9 @@ public class TestModel {
 		return descriptionOf(idObject.getId());
 	}
 
-	public TestParameter getTestParameter(final String factoryId) {
-		return testObjects.values().stream().filter(tObj -> tObj.getId().equals(factoryId)).findFirst()
-				.orElseThrow(() -> new IllegalArgumentException("No test object found with id " + factoryId));
+	public TestParameter getTestParameterFactory(final String factoryId) {
+		return testObjects.values().stream().filter(tObj -> tObj.getId().equals(factoryId)).findFirst().orElseThrow(
+				() -> new IllegalArgumentException("No test parameter factory found with id " + factoryId));
 	}
 
 	@Override

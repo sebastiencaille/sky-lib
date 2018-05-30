@@ -59,4 +59,12 @@ public class TestParameter extends TestParameterType {
 	public static TestParameter simpleType(final String type) {
 		return new TestParameter("", "", ParameterNature.SIMPLE_TYPE, type);
 	}
+
+	public void rename(final String newName) {
+		if (nature != ParameterNature.REFERENCE) {
+			throw new IllegalStateException("Cannot rename a " + nature);
+		}
+		super.setName(newName);
+
+	}
 }

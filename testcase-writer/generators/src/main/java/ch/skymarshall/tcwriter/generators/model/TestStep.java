@@ -8,9 +8,9 @@ import ch.skymarshall.tcwriter.generators.model.TestParameter.ParameterNature;
 public class TestStep {
 
 	private int ordinal;
-	private TestActor actor;
-	private TestRole role;
-	private TestAction action;
+	private TestActor actor = TestActor.NOT_SET;
+	private TestRole role = TestRole.NOT_SET;
+	private TestAction action = TestAction.NOT_SET;
 	private final List<TestParameterValue> parametersValue = new ArrayList<>();
 	private TestParameter reference;
 
@@ -28,14 +28,11 @@ public class TestStep {
 
 	public void setActor(final TestActor actor) {
 		this.actor = actor;
+		this.role = actor.getRole();
 	}
 
 	public TestRole getRole() {
 		return role;
-	}
-
-	public void setRole(final TestRole role) {
-		this.role = role;
 	}
 
 	public TestAction getAction() {

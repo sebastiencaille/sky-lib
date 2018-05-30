@@ -1,6 +1,7 @@
 package ch.skymarshall.tcwriter.generators.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.google.common.collect.Multimap;
@@ -51,6 +52,10 @@ public class TestCase {
 	public TestParameter getReference(final String reference) {
 		return dynamicReferences.values().stream().filter(ref -> ref.getName().equals(reference)).findFirst()
 				.orElseThrow(() -> new IllegalArgumentException("Unable to find reference " + reference));
+	}
+
+	public Collection<? extends IdObject> getReferences(final String returnType) {
+		return dynamicReferences.get(returnType);
 	}
 
 }

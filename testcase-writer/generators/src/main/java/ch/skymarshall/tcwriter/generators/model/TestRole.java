@@ -5,6 +5,7 @@ import java.util.List;
 
 public class TestRole extends IdObject {
 
+	public static final TestRole NOT_SET = new TestRole(ID_NOT_SET);
 	private final List<TestAction> apis = new ArrayList<>();
 
 	public TestRole(final String id) {

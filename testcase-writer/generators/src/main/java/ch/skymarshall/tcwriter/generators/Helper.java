@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.TestModel;
 import ch.skymarshall.tcwriter.generators.model.TestParameter;
+import ch.skymarshall.tcwriter.generators.model.TestParameter.ParameterNature;
 import ch.skymarshall.tcwriter.generators.model.TestRole;
 
 public class Helper {
@@ -55,11 +56,23 @@ public class Helper {
 	public static class Reference {
 		private final String display;
 		private final String id;
+		private final ParameterNature nature;
 
-		public Reference(final String id, final String display) {
+		public Reference(final String id, final String display, final ParameterNature nature) {
 			super();
 			this.display = display;
 			this.id = id;
+			this.nature = nature;
+		}
+
+		@Override
+		public int hashCode() {
+			return id.hashCode();
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			return (obj instanceof Reference) && id == ((Reference) obj).id;
 		}
 
 		@Override
@@ -71,11 +84,19 @@ public class Helper {
 			return id;
 		}
 
+		public String getDisplay() {
+			return display;
+		}
+
+		public ParameterNature getNature() {
+			return nature;
+		}
 	}
 
-	public static List<Reference> toReference(final TestModel model, final Collection<? extends IdObject> idElements) {
-		return idElements.stream()
-				.map(idElement -> new Reference(idElement.getId(), model.getDescriptions().get(idElement.getId())))
+	public static List<Reference> toReference(final TestModel model, final Collection<? extends IdObject> idElements,
+			final ParameterNature nature) {
+		return idElements.stream().map(
+				idElement -> new Reference(idElement.getId(), model.getDescriptions().get(idElement.getId()), nature))
 				.collect(Collectors.toList());
 	}
 

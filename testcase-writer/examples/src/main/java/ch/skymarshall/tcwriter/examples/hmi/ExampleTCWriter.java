@@ -124,7 +124,7 @@ public class ExampleTCWriter extends TCWriter {
 		step4.setActor(customer);
 		step4.setAction(action4);
 		tc.publishReference(step4.asNamedReference(REF_ANOTHER_BRAND));
-		model.getDescriptions().put(REF_ANOTHER_BRAND, "An other brand");
+		model.getDescriptions().put(REF_ANOTHER_BRAND, "Another brand");
 		tc.addStep(step4);
 
 		// Step 5

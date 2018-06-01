@@ -70,10 +70,11 @@ deliveryGuy.deliverItem(); // Another actor of the system
 customer.checkPackage(deliveredItem(), coffeeMachine);
 ````
 You can actually read
-Actor | Action | Parameter | Navigator |
------ | ------ | --------- | --------- |
-A customer     | buys | a coffee machine | from internet |
-A delivery guy | delivers an item | | |
+
+Actor | Action | Parameter | Navigator
+----- | ------ | --------- | ---------
+A customer     | buys                              | a coffee machine | from internet
+A delivery guy | delivers an item                  | ||
 A customer     | checks that the delivered item is | a coffee machine |
 
 This way of structuring the api should be suitable to
@@ -176,7 +177,7 @@ public class TestObjectTableModel extends ListModelTableModel<TestObject, Column
 		switch (column) {
 			case A_FIRST_VALUE: ...
 ````
-Adding columns
+Tuning columns
 ````
 final ContributionTableColumnModel<StepsTableModel.Column> columnModel = new ContributionTableColumnModel<>(table);
 columnModel.install();

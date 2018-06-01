@@ -6,10 +6,10 @@ import ch.skymarshall.tcwriter.annotations.TCApi;
 import ch.skymarshall.tcwriter.annotations.TCRole;
 import ch.skymarshall.tcwriter.examples.ExampleService;
 import ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem;
-import ch.skymarshall.tcwriter.examples.api.interfaces.selectors.BuyActionSelector;
-import ch.skymarshall.tcwriter.examples.api.interfaces.selectors.HandleActionSelector;
+import ch.skymarshall.tcwriter.examples.api.interfaces.navigators.BuyActionNavigator;
+import ch.skymarshall.tcwriter.examples.api.interfaces.navigators.HandleActionNavigator;
 
-@TCRole(description = "Customer")
+@TCRole(description = "A customer")
 public class CustomerTestRole extends Assert {
 
 	private final ExampleService testedService;
@@ -18,32 +18,32 @@ public class CustomerTestRole extends Assert {
 		this.testedService = testedService;
 	}
 
-	@TCApi(description = "Buy an item")
-	public void buy(final BuyActionSelector selector, final TestItem newItem) {
+	@TCApi(description = "Buy an item", stepSummary = "buys")
+	public void buy(final BuyActionNavigator navigator, final TestItem newItem) {
 		// the selector defines all the actions required to apply/check you data (could
 		// be button clicks on some
 		// hmi, ...)
-		selector.apply(testedService);
+		navigator.apply(testedService);
 		testedService.buy(newItem.itemKind);
 	}
 
-	@TCApi(description = "handle the item package and check it's content")
-	public void handleAndCheckPackage(final HandleActionSelector selector, final TestItem handledItem) {
-		selector.apply(testedService);
+	@TCApi(description = "check the delivered package", stepSummary = "checks that the delivered item is")
+	public void checkPackage(final HandleActionNavigator navigator, final TestItem handledItem) {
+		navigator.apply(testedService);
 		assertEquals(testedService.getOwnedItem(), handledItem.itemKind);
 	}
 
-	@TCApi(description = "Resell the item")
+	@TCApi(description = "Resell the item", stepSummary = "resels the item for {0}$")
 	public void resellOwnedItem(final int price) {
 		testedService.reset();
 	}
 
-	@TCApi(description = "Look for another brand")
+	@TCApi(description = "Look for another brand", stepSummary = "finds another brand")
 	public String findAnotherBrand() {
 		return "MidClass";
 	}
 
-	@TCApi(description = "Keep a note")
+	@TCApi(description = "Keep a note", stepSummary = "keeps a note ({0})")
 	public void keepNote(final String note) {
 		// naah
 	}

@@ -43,7 +43,7 @@ public class SwingBindingsTest extends Assert {
 		model.stringProperty.setValue(this, Boolean.FALSE.toString());
 		final IBindingController cbBinding = model.stringProperty
 				.bind(Converters.<String, Boolean>converter(Boolean::valueOf, (b) -> b.toString()))
-				.bind(SwingBindings.selection(cb));
+				.bind(SwingBindings.selected(cb));
 		model.stringProperty.attach();
 
 		assertEquals(Boolean.FALSE.toString(), model.stringProperty.getValue());

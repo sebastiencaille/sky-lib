@@ -2,7 +2,7 @@
 package ch.skymarshall.tcwriter.examples;
 
 import ch.skymarshall.tcwriter.examples.api.interfaces.dto.*;
-import ch.skymarshall.tcwriter.examples.api.interfaces.selectors.*;
+import ch.skymarshall.tcwriter.examples.api.interfaces.navigators.*;
 import ch.skymarshall.tcwriter.examples.api.interfaces.*;
 
 import org.junit.Before;

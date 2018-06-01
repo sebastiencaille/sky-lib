@@ -44,7 +44,6 @@ public class ContributionTableColumnModel<C extends Enum<C>> extends DefaultTabl
 	public ContributionTableColumnModel<C> install() {
 		table.setColumnModel(this);
 		table.createDefaultColumnsFromModel();
-		table.setAutoCreateColumnsFromModel(false);
 		return this;
 	}
 

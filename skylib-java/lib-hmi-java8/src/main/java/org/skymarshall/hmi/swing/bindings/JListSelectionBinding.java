@@ -23,12 +23,10 @@ import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 public class JListSelectionBinding<T> extends DefaultComponentBinding<T> {
 
 	private final JList<T> list;
-	private final Class<T> clazz;
 	private IComponentLink<T> link;
 
-	public JListSelectionBinding(final JList<T> component, final Class<T> clazz) {
+	public JListSelectionBinding(final JList<T> component) {
 		this.list = component;
-		this.clazz = clazz;
 	}
 
 	@Override
@@ -36,7 +34,7 @@ public class JListSelectionBinding<T> extends DefaultComponentBinding<T> {
 		this.link = fromLink;
 		list.addListSelectionListener(e -> {
 			if (!e.getValueIsAdjusting()) {
-				fromLink.setValueFromComponent(list, clazz.cast(list.getSelectedValue()));
+				fromLink.setValueFromComponent(list, list.getSelectedValue());
 			}
 		});
 	}

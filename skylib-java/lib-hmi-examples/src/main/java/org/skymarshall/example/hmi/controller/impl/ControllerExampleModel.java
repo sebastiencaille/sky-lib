@@ -33,7 +33,7 @@ public class ControllerExampleModel extends ControllerExampleObjectHmiModel {
 		super(controller);
 	}
 
-	private final ObjectProperty<String> listObjectProperty = new ObjectProperty<>("ListObjectProperty",
+	private final ObjectProperty<String> listSelectedObjectProperty = new ObjectProperty<>("ListObjectProperty",
 			propertySupport);
 
 	private final ObjectProperty<String> dynamicListObjectProperty = new ObjectProperty<>("DynamicListObjectProperty",
@@ -43,8 +43,8 @@ public class ControllerExampleModel extends ControllerExampleObjectHmiModel {
 
 	final ListModel<TestObject> tableModel = new RootListModel<>(ListViews.sorted(TEST_COMPARATOR));
 
-	public ObjectProperty<String> getListObjectProperty() {
-		return listObjectProperty;
+	public ObjectProperty<String> getListSelectedObjectProperty() {
+		return listSelectedObjectProperty;
 	}
 
 	public ObjectProperty<String> getDynamicListObjectProperty() {

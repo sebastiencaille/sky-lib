@@ -16,7 +16,6 @@
 package org.skymarshall.hmi.model;
 
 import java.util.Arrays;
-import java.util.Comparator;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -26,21 +25,9 @@ import org.skymarshall.hmi.model.views.ListViews;
 
 public class ListModelBasicTest extends Assert {
 
-	private static final IListView<TestObject> VIEW = ListViews.sorted(new Comparator<TestObject>() {
-		@Override
-		public int compare(final TestObject o1, final TestObject o2) {
-			return o1.val - o2.val;
-		}
+	private static final IListView<TestObject> VIEW = ListViews.sorted((o1, o2) -> o1.val - o2.val);
 
-	});
-
-	private static final IListView<TestObject> REVERTED_VIEW = ListViews.sorted(new Comparator<TestObject>() {
-		@Override
-		public int compare(final TestObject o1, final TestObject o2) {
-			return o2.val - o1.val;
-		}
-
-	});
+	private static final IListView<TestObject> REVERTED_VIEW = ListViews.sorted((o1, o2) -> o2.val - o1.val);
 
 	@Test
 	public void testInsert() {
@@ -58,7 +45,7 @@ public class ListModelBasicTest extends Assert {
 	@Test
 	public void testUpdate() {
 		final ListModel<TestObject> model = new RootListModel<>(VIEW);
-		final ListModel<TestObject> model2 = new ChildListModel<>(model);
+		final ListModel<TestObject> childModel = new ChildListModel<>(model);
 
 		model.insert(new TestObject(1));
 		model.insert(new TestObject(3));
@@ -66,14 +53,14 @@ public class ListModelBasicTest extends Assert {
 		final TestObject toMove = new TestObject(4);
 		model.insert(toMove);
 		checkModel(model, 1, 3, 4);
-		checkModel(model2, 1, 3, 4);
+		checkModel(childModel, 1, 3, 4);
 
 		model.startEditingValue(toMove);
 		toMove.val = 2;
 		model.stopEditingValue();
 
 		checkModel(model, 1, 2, 3);
-		checkModel(model2, 1, 2, 3);
+		checkModel(childModel, 1, 2, 3);
 	}
 
 	@Test

@@ -75,7 +75,7 @@ public interface SwingBindings {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param component               an awt component
 	 * @param componentReaderListener the listener registration that propagate value
 	 *                                changed by the component
@@ -120,7 +120,7 @@ public interface SwingBindings {
 		}, (c, l) -> c.addItemListener(l), (c, l) -> c.removeItemListener(l));
 	}
 
-	public static IComponentBinding<Boolean> selection(final JCheckBox cb) {
+	public static IComponentBinding<Boolean> selected(final JCheckBox cb) {
 		return rw(cb, itemListener(e -> true, e -> e.getStateChange() == ItemEvent.SELECTED), cb::setSelected, false);
 	}
 
@@ -132,8 +132,8 @@ public interface SwingBindings {
 		return new JTextAreaBinding(component, readOnly);
 	}
 
-	public static <T> IComponentBinding<T> selection(final JList<T> editor, final Class<T> contentType) {
-		return new JListSelectionBinding<>(editor, contentType);
+	public static <T> IComponentBinding<T> selection(final JList<T> editor) {
+		return new JListSelectionBinding<>(editor);
 	}
 
 	public static <T> IComponentBinding<List<T>> values(final JList<T> editor) {

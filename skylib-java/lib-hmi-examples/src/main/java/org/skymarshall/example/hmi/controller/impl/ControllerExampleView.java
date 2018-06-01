@@ -19,6 +19,7 @@ import static org.skymarshall.example.hmi.TestObject.testObjectToString;
 import static org.skymarshall.hmi.mvc.ModelBindings.detachOnUpdateOf;
 import static org.skymarshall.hmi.mvc.converters.Converters.hmiErrorToString;
 import static org.skymarshall.hmi.mvc.converters.Converters.intToString;
+import static org.skymarshall.hmi.swing.bindings.SwingBindings.selected;
 import static org.skymarshall.hmi.swing.bindings.SwingBindings.selection;
 import static org.skymarshall.hmi.swing.bindings.SwingBindings.value;
 import static org.skymarshall.hmi.swing.bindings.SwingBindings.values;
@@ -81,22 +82,22 @@ public class ControllerExampleView extends JFrame {
 		final JCheckBox booleanEditor = new JCheckBox();
 		final JLabel label = new JLabel("Am I enabled?");
 		final JLabel booleanCounter = new JLabel();
-		booleanProperty.bind(selection(booleanEditor));
+		booleanProperty.bind(selected(booleanEditor));
 		booleanProperty.bindWO(label::setEnabled);
 		booleanProperty.bind(counter()).bindSetter(booleanCounter::setText);
 		addGuiLineItem(booleanProperty, booleanEditor, label, booleanCounter);
 
 		// Int input field
 		final IntProperty intProperty = model.getIntPropProperty();
-		final JTextField intEditor = new JTextField();
+		final JTextField intStringEditor = new JTextField();
 		final JLabel intCheck = new JLabel();
 		final JLabel intCounter = new JLabel();
 
-		intProperty.bind(intToString()).bind(value(intEditor));
+		intProperty.bind(intToString()).bind(value(intStringEditor));
 		intProperty.bind(intToString()).bindSetter(intCheck::setText);
 		intProperty.bind(counter()).bindSetter(intCounter::setText);
 
-		addGuiLineItem(intProperty, intEditor, intCheck, intCounter);
+		addGuiLineItem(intProperty, intStringEditor, intCheck, intCounter);
 
 		// String input field
 		final ObjectProperty<String> stringProperty = model.getStringPropProperty();
@@ -109,18 +110,18 @@ public class ControllerExampleView extends JFrame {
 		addGuiLineItem(stringProperty, stringEditor, stringCheck, stringCounter);
 
 		// Item selection
-		final JList<String> selectionEditor = new JList<>(new String[] { "A", "B", "C" });
+		final JList<String> listSelectionEditor = new JList<>(new String[] { "A", "B", "C" });
 		final JLabel selectionCheck = new JLabel();
 		final JLabel selectionCounter = new JLabel();
 
-		final ObjectProperty<String> listObjectProperty = model.getListObjectProperty();
-		listObjectProperty.bind(selection(selectionEditor, String.class));
-		listObjectProperty.bindWO(selectionCheck::setText);
-		listObjectProperty.bind(counter()).bindSetter(selectionCounter::setText);
+		final ObjectProperty<String> listSelectedObjectProperty = model.getListSelectedObjectProperty();
+		listSelectedObjectProperty.bind(selection(listSelectionEditor));
+		listSelectedObjectProperty.bindWO(selectionCheck::setText);
+		listSelectedObjectProperty.bind(counter()).bindSetter(selectionCounter::setText);
 
-		final JScrollPane itemEditorPane = new JScrollPane(selectionEditor);
+		final JScrollPane itemEditorPane = new JScrollPane(listSelectionEditor);
 		itemEditorPane.setPreferredSize(new Dimension(200, 100));
-		addGuiLineItem(listObjectProperty, itemEditorPane, selectionCheck, selectionCounter);
+		addGuiLineItem(listSelectedObjectProperty, itemEditorPane, selectionCheck, selectionCounter);
 
 		// Selection of list which content is based on "Item selection"
 
@@ -128,11 +129,11 @@ public class ControllerExampleView extends JFrame {
 		final JLabel dynamicListSelectionCheck = new JLabel();
 		final JLabel dynamicListSelectionCounter = new JLabel();
 
-		listObjectProperty.bind(new DynamicListContentConverter()).bind(values(dynamicListSelectionEditor));
+		listSelectedObjectProperty.bind(new DynamicListContentConverter()).bind(values(dynamicListSelectionEditor));
 
 		final ObjectProperty<String> dynamicListSelectionProperty = model.getDynamicListObjectProperty();
-		dynamicListSelectionProperty.bind(selection(dynamicListSelectionEditor, String.class))
-				.addDependency(detachOnUpdateOf(model.getListObjectProperty()));
+		dynamicListSelectionProperty.bind(selection(dynamicListSelectionEditor))
+				.addDependency(detachOnUpdateOf(listSelectedObjectProperty));
 		dynamicListSelectionProperty.bindWO(dynamicListSelectionCheck::setText);
 		dynamicListSelectionProperty.bind(counter()).bindSetter(dynamicListSelectionCounter::setText);
 

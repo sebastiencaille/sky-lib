@@ -12,7 +12,7 @@ import org.skymarshall.hmi.model.views.ListViews;
 import ch.skymarshall.tcwriter.generators.model.TestCase;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.TestStep;
-import ch.skymarshall.tcwriter.hmi.steps.StepTable;
+import ch.skymarshall.tcwriter.hmi.steps.StepsTable;
 
 public abstract class TCWriter extends JFrame {
 
@@ -39,7 +39,7 @@ public abstract class TCWriter extends JFrame {
 			}
 		});
 
-		this.getContentPane().add(new StepTable(steps, tc), BorderLayout.CENTER);
+		this.getContentPane().add(new StepsTable(steps, tc), BorderLayout.CENTER);
 		this.getContentPane().add(generateButton, BorderLayout.SOUTH);
 
 		this.pack();

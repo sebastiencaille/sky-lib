@@ -16,11 +16,11 @@ import ch.skymarshall.tcwriter.generators.model.TestCase;
 import ch.skymarshall.tcwriter.generators.model.TestStep;
 import ch.skymarshall.tcwriter.hmi.steps.StepsTableModel.Column;
 
-public class StepTable extends JPanel {
+public class StepsTable extends JPanel {
 
 	private final StepsTableModel stepsTableModel;
 
-	public StepTable(final ListModel<TestStep> steps, final TestCase tc) {
+	public StepsTable(final ListModel<TestStep> steps, final TestCase tc) {
 		setLayout(new BorderLayout());
 		this.stepsTableModel = new StepsTableModel(steps, tc);
 
@@ -32,6 +32,8 @@ public class StepTable extends JPanel {
 				.configureColumn(ContributionTableColumn.fixedColumn(Column.STEP, 20, new DefaultTableCellRenderer()));
 		columnModel.configureColumn(
 				ContributionTableColumn.fixedColumn(Column.ACTOR, 120, new DefaultTableCellRenderer()));
+		columnModel.configureColumn(
+				ContributionTableColumn.gapColumn(Column.TO_VALUE, 100, new DefaultTableCellRenderer()));
 
 		Arrays.stream(Column.values()).forEach(c -> stepsTable.getColumn(c).setCellEditor(new StepsCellEditor(tc)));
 

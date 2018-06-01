@@ -164,6 +164,10 @@ public final class Converters {
 		return intConverter(i -> Integer.toString(i), numberToString(Integer::parseInt)); // NOSONAR
 	}
 
+	public static IConverter<Boolean, String> booleanToString() {
+		return booleanConverter(b -> Boolean.toString(b), Boolean::parseBoolean); // NOSONAR
+	}
+
 	public static <T, U> IConverter<T, U> writeOnly(final Function<T, U> prop2comp) {
 		return converter(prop2comp, o -> {
 			throw new IllegalStateException("Write only");

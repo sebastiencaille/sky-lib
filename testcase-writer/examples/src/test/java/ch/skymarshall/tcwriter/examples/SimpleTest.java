@@ -1,9 +1,9 @@
 package ch.skymarshall.tcwriter.examples;
 
-import static ch.skymarshall.tcwriter.examples.api.interfaces.selectors.BuyActionSelector.fromInternet;
-import static ch.skymarshall.tcwriter.examples.api.interfaces.selectors.BuyActionSelector.inLocalShop;
-import static ch.skymarshall.tcwriter.examples.api.interfaces.selectors.HandleActionSelector.deliveredItem;
-import static ch.skymarshall.tcwriter.examples.api.interfaces.selectors.HandleActionSelector.fromShop;
+import static ch.skymarshall.tcwriter.examples.api.interfaces.navigators.BuyActionNavigator.fromInternet;
+import static ch.skymarshall.tcwriter.examples.api.interfaces.navigators.BuyActionNavigator.inLocalShop;
+import static ch.skymarshall.tcwriter.examples.api.interfaces.navigators.HandleActionNavigator.deliveredItem;
+import static ch.skymarshall.tcwriter.examples.api.interfaces.navigators.HandleActionNavigator.fromShop;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,25 +17,25 @@ public class SimpleTest {
 	private final TestItem coffeeMachine = TestItem.coffeeMachine();
 	private final TestItem teaPot = TestItem.teaPot();
 	private CustomerTestRole customer;
-	private DeliveryTestRole delivery;
+	private DeliveryTestRole deliveryGuy;
 
 	@Before
 	public void prepareApis() {
 		final ExampleService testedService = new ExampleService();
 		customer = new CustomerTestRole(testedService);
-		delivery = new DeliveryTestRole(testedService);
+		deliveryGuy = new DeliveryTestRole(testedService);
 	}
 
 	@Test
 	public void testNormalCase() {
 
 		customer.buy(fromInternet(), coffeeMachine);
-		delivery.deliverItem();
-		customer.handleAndCheckPackage(deliveredItem(), coffeeMachine);
+		deliveryGuy.deliverItem();
+		customer.checkPackage(deliveredItem(), coffeeMachine);
 		customer.resellOwnedItem(10);
 
 		customer.buy(inLocalShop(), teaPot);
-		customer.handleAndCheckPackage(fromShop(), teaPot);
+		customer.checkPackage(fromShop(), teaPot);
 		customer.resellOwnedItem(10);
 	}
 
@@ -44,7 +44,7 @@ public class SimpleTest {
 		final CustomerTestRole api = new CustomerTestRole(new ExampleService());
 
 		api.buy(inLocalShop(), coffeeMachine);
-		api.handleAndCheckPackage(fromShop(), teaPot);
+		api.checkPackage(fromShop(), teaPot);
 		api.resellOwnedItem(10);
 
 	}

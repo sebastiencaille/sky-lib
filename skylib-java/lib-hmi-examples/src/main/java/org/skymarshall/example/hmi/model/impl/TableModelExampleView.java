@@ -16,6 +16,7 @@
 package org.skymarshall.example.hmi.model.impl;
 
 import static org.skymarshall.hmi.mvc.ModelBindings.detachOnUpdateOf;
+import static org.skymarshall.hmi.swing.bindings.SwingBindings.selected;
 import static org.skymarshall.hmi.swing.bindings.SwingBindings.selection;
 
 import java.awt.BorderLayout;
@@ -41,14 +42,15 @@ public class TableModelExampleView extends JFrame {
 	static final Comparator<TestObject> REVERSE_ORDER = (o1, o2) -> o2.getASecondValue() - o1.getASecondValue();
 
 	private final transient TableModelExampleController controller = new TableModelExampleController();
-	private final transient ListModel<TestObject> model;
 
 	public TableModelExampleView() {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-		model = new RootListModel<>(ListViews.sorted(NORMAL_ORDER));
-
 		final DynamicView view = new DynamicView();
+		controller.reverseOrder.bind(view.reverseOrder());
+		controller.enableFilter.bind(view.enableFilter());
+
+		final ListModel<TestObject> model = new RootListModel<>(ListViews.sorted(NORMAL_ORDER));
 		final ListModel<TestObject> filteredModel = new ChildListModel<>(model, view);
 
 		// We could use a separate filter:
@@ -61,9 +63,6 @@ public class TableModelExampleView extends JFrame {
 		final JTable table = new JTable(tableModel);
 		controller.objectSelection.bind(selection(table, tableModel)).addDependency(detachOnUpdateOf(filteredModel));
 		getContentPane().add(table, BorderLayout.CENTER);
-
-		controller.reverseOrder.bind(view.reverseOrder());
-		controller.enableFilter.bind(view.enableFilter());
 
 		// One can also use a converter to change the model's view, or a
 		// BoundComparator, too:
@@ -90,13 +89,13 @@ public class TableModelExampleView extends JFrame {
 
 	private void addFilter(final JPanel optionsPanel) {
 		final JCheckBox filter = new JCheckBox("Filter");
-		controller.enableFilter.bind(selection(filter));
+		controller.enableFilter.bind(selected(filter));
 		optionsPanel.add(filter);
 	}
 
 	private void addRevOrder(final JPanel optionsPanel) {
 		final JCheckBox reverse = new JCheckBox("Rev. Order");
-		controller.reverseOrder.bind(selection(reverse));
+		controller.reverseOrder.bind(selected(reverse));
 		optionsPanel.add(reverse);
 	}
 }

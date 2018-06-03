@@ -85,7 +85,24 @@ This way of structuring the api should be suitable to
   * Then, from the action, the navigator "from internet"
   * Then, from the action, the parameter "a coffee machine"
 
+**Data flow management concept**
 
+The idea is to provide tools to help keeping control of the software's structure
+
+The concept is the following: 
+* The description of the structure is based on the concept of flows
+* A flow describes the structure of the information's exchange in the application 
+* A service is basically structured the following way:
+  * A data multiplexer: the service may receive different types of input data, which are multiplexed in a type supported by the service
+  * At some point, the multiplexed data is sent to the service's processing unit (the Action)
+  * the output of the Action is de-multiplexed into many output data
+* The services are exchanging information through the input/output data
+* The description is written in a description language (json, xml, ...)
+* Generators are used to 
+  * Create the operational code
+  * Create unit tests (to test the structure, using mock objects)
+  * Create a visual description of the structure (eg dependency graphs using dot)
+* The description of the structure may show the input/output data and actions used during a specific execution (test case or application) 
 
 **MVC concept**
 

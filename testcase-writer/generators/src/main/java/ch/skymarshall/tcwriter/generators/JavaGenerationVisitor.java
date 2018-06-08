@@ -82,7 +82,7 @@ public class JavaGenerationVisitor {
 
 		visitTestValueParams(parametersContent, comment, model, paramValue.getComplexTypeValues());
 
-		comment.append("//    ").append(model.descriptionOf(param.getType())).append("\n");
+		comment.append("//    ").append(param.getType()).append("\n");
 
 		final String parameterVarName = varNameFor(paramValue);
 		parametersContent.append(param.getType()).append(" ").append(parameterVarName).append(" = ")

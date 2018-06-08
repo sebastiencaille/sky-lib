@@ -1,5 +1,5 @@
 package ch.skymarshall.dataflowmgr.generator.model;
 
-public enum TEMPLATE {
+public enum TemplateType {
 	DTO, FIELD, ACTION, FLOW
 }

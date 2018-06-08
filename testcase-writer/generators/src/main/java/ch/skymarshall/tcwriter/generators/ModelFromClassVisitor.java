@@ -19,6 +19,7 @@ import java.util.function.Consumer;
 
 import ch.skymarshall.tcwriter.annotations.TCApi;
 import ch.skymarshall.tcwriter.annotations.TCRole;
+import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.TestAction;
 import ch.skymarshall.tcwriter.generators.model.TestModel;
 import ch.skymarshall.tcwriter.generators.model.TestParameter;
@@ -48,7 +49,7 @@ public class ModelFromClassVisitor {
 		for (final Class<?> roleClass : unprocessedActorClasses) {
 			final TestRole testRole = new TestRole(roleKey(roleClass));
 			final TCRole roleAnnotation = roleClass.getAnnotation(TCRole.class);
-			model.getDescriptions().put(roleKey(roleClass), roleAnnotation.description());
+			model.addDescription(testRole, roleAnnotation.description());
 			model.getRoles().put(testRole.getId(), testRole);
 
 			final HashSet<Method> roleMethods = new HashSet<>();
@@ -60,7 +61,7 @@ public class ModelFromClassVisitor {
 						: null;
 				final TestAction testAction = new TestAction(methodKey(actionMethod), actionMethod.getName(),
 						returnType);
-				final List<TestParameter> roleActionParameters = processParameters(actionMethod);
+				final List<TestParameter> roleActionParameters = processParameters(testAction, actionMethod);
 				testAction.getParameters().addAll(roleActionParameters);
 				testRole.getApis().add(testAction);
 			}
@@ -78,29 +79,39 @@ public class ModelFromClassVisitor {
 			}
 			processedParameterFactoryClasses.add(apiClass);
 
+			// Process the api class
 			final HashSet<Method> parameterFactoryMethods = new HashSet<>();
+
+			final TCApi tcApi = apiClass.getAnnotation(TCApi.class);
+			if (tcApi != null && tcApi.isNavigation()) {
+				model.addNavigationType(apiClass);
+			}
+
 			accumulateApiMethods(apiClass, parameterFactoryMethods);
 			parameterFactoryMethods.removeIf(m -> !Modifier.isStatic(m.getModifiers()));
 
 			for (final Method parameterFactoryMethod : parameterFactoryMethods) {
+				// Process each method of the class
 
-				processMethodAnnotation(parameterFactoryMethod);
 				final TestParameter testParameter = new TestParameter(methodKey(parameterFactoryMethod),
 						parameterFactoryMethod.getDeclaringClass().getSimpleName() + "."
 								+ parameterFactoryMethod.getName(),
 						ParameterNature.TEST_API_TYPE, parameterFactoryMethod.getReturnType().getName());
-				testParameter.getMandatoryParameters().addAll(processParameters(parameterFactoryMethod));
+				processMethodAnnotation(testParameter, parameterFactoryMethod);
 
-				// Add optional parameters: non static methods of the return type
+				// Add mandatory parameters (parameters of the method)
+				testParameter.getMandatoryParameters().addAll(processParameters(testParameter, parameterFactoryMethod));
+
+				// Add optional parameters: instance methods of the return type
 				final HashSet<Method> factoryReturnTypeMethods = new HashSet<>();
 				accumulateApiMethods(parameterFactoryMethod.getReturnType(), factoryReturnTypeMethods);
 				factoryReturnTypeMethods
 						.removeIf(m -> Modifier.isStatic(m.getModifiers()) || m.getParameterCount() != 1);
 				for (final Method factoryReturnTypeMethod : factoryReturnTypeMethods) {
-					processMethodAnnotation(factoryReturnTypeMethod);
 					final TestParameter optionalParameter = new TestParameter(methodKey(factoryReturnTypeMethod),
 							factoryReturnTypeMethod.getName(), ParameterNature.TEST_API_TYPE,
 							factoryReturnTypeMethod.getParameterTypes()[0].getName());
+					processMethodAnnotation(optionalParameter, factoryReturnTypeMethod);
 					testParameter.getOptionalParameters().add(optionalParameter);
 				}
 
@@ -110,13 +121,13 @@ public class ModelFromClassVisitor {
 		}
 	}
 
-	private void processMethodAnnotation(final Method apiMethod) {
+	private void processMethodAnnotation(final IdObject idObject, final Method apiMethod) {
 		final TCApi methodAnnotation = apiMethod.getAnnotation(TCApi.class);
-		model.getDescriptions().put(methodKey(apiMethod), methodAnnotation.description());
+		model.addDescription(idObject, methodAnnotation.description());
 	}
 
-	private List<TestParameter> processParameters(final Method apiMethod) {
-		processMethodAnnotation(apiMethod);
+	private List<TestParameter> processParameters(final IdObject methodIdObject, final Method apiMethod) {
+		processMethodAnnotation(methodIdObject, apiMethod);
 
 		final AnnotatedType[] annotatedParameterTypes = apiMethod.getAnnotatedParameterTypes();
 		final List<TestParameter> processedParameters = new ArrayList<>();
@@ -124,12 +135,12 @@ public class ModelFromClassVisitor {
 			final AnnotatedType apiMethodParam = annotatedParameterTypes[i];
 
 			final TCApi apiMethodAnnotation = apiMethodParam.getAnnotation(TCApi.class);
-			if (apiMethodAnnotation != null) {
-				model.getDescriptions().put(paramKey(apiMethod, i), apiMethodAnnotation.description());
-			}
 			final Type apiMethodParamType = apiMethodParam.getType();
 			final TestParameter testObjectParameter = new TestParameter(paramKey(apiMethod, i), apiMethod.getName(),
 					ParameterNature.TEST_API_TYPE, apiMethodParamType.getTypeName());
+			if (apiMethodAnnotation != null) {
+				model.addDescription(testObjectParameter, apiMethodAnnotation.description());
+			}
 			if (apiMethodParamType instanceof Class) {
 				unprocessedParameterFactoryClasses.add((Class<?>) apiMethodParamType);
 			}

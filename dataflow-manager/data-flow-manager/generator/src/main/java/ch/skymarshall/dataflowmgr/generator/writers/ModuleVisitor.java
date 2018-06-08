@@ -40,7 +40,7 @@ import ch.skymarshall.dataflowmgr.generator.model.Flow;
 import ch.skymarshall.dataflowmgr.generator.model.InFlowRule;
 import ch.skymarshall.dataflowmgr.generator.model.Module;
 import ch.skymarshall.dataflowmgr.generator.model.OutFlowRule;
-import ch.skymarshall.dataflowmgr.generator.model.TEMPLATE;
+import ch.skymarshall.dataflowmgr.generator.model.TemplateType;
 
 public class ModuleVisitor<T> {
 
@@ -64,7 +64,7 @@ public class ModuleVisitor<T> {
 
 	}
 
-	protected Template getTemplate(final TEMPLATE template, final Map<String, String> context) {
+	protected Template getTemplate(final TemplateType template, final Map<String, String> context) {
 		return writer.registry.getTemplate(template, context);
 	}
 

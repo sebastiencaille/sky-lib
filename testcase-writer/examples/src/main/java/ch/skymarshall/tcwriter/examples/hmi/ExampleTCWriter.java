@@ -70,8 +70,8 @@ public class ExampleTCWriter extends TCWriter {
 
 		model.getActors().put(customer.getId(), customer);
 		model.getActors().put(deliveryGuy.getId(), deliveryGuy);
-		model.getDescriptions().put(customer.getId(), "A customer");
-		model.getDescriptions().put(deliveryGuy.getId(), "Delivery guy");
+		model.addDescription(customer, "A customer");
+		model.addDescription(deliveryGuy, "Delivery guy");
 		Helper.dumpModel(model);
 
 		final TestCase tc = new TestCase("ch.skymarshall.tcwriter.examples.MyTC", model);
@@ -96,7 +96,7 @@ public class ExampleTCWriter extends TCWriter {
 
 		// Step 2
 		final TestStep step2 = new TestStep();
-		final TestAction action2 = find(customer.getRole(), "handleAndCheckPackage");
+		final TestAction action2 = find(customer.getRole(), "checkPackage");
 		final TestParameterType action2Param0 = action2.getParameter(0);
 		final TestParameterType action2Param1 = action2.getParameter(1);
 		step2.setActor(customer);
@@ -124,7 +124,6 @@ public class ExampleTCWriter extends TCWriter {
 		step4.setActor(customer);
 		step4.setAction(action4);
 		tc.publishReference(step4.asNamedReference(REF_ANOTHER_BRAND));
-		model.getDescriptions().put(REF_ANOTHER_BRAND, "Another brand");
 		tc.addStep(step4);
 
 		// Step 5

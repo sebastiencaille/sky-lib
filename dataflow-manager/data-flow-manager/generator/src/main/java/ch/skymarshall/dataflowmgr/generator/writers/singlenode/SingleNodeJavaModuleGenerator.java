@@ -33,7 +33,7 @@ import ch.skymarshall.dataflowmgr.generator.model.Flow;
 import ch.skymarshall.dataflowmgr.generator.model.InFlowRule;
 import ch.skymarshall.dataflowmgr.generator.model.Module;
 import ch.skymarshall.dataflowmgr.generator.model.OutFlowRule;
-import ch.skymarshall.dataflowmgr.generator.model.TEMPLATE;
+import ch.skymarshall.dataflowmgr.generator.model.TemplateType;
 import ch.skymarshall.dataflowmgr.generator.writers.AbstractWriter;
 import ch.skymarshall.dataflowmgr.generator.writers.java.JavaDTOsAndActionsGenerator;
 import ch.skymarshall.dataflowmgr.local.LocalAPRef;
@@ -130,7 +130,7 @@ public class SingleNodeJavaModuleGenerator extends JavaDTOsAndActionsGenerator {
 			regs.append(String.format("registry.registerObject(%s, \"%s\");\n", reg.getKey(), reg.getValue())); // NOSONAR
 		}
 		scoped.put("flow.registry", regs.toString());
-		final Template template = getTemplate(TEMPLATE.FLOW, scoped);
+		final Template template = getTemplate(TemplateType.FLOW, scoped);
 
 		try {
 			writeFile("/" + Utils.firstUpperCase(flow.name) + "Factory.java", template);

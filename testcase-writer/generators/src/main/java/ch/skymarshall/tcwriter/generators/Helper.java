@@ -18,16 +18,15 @@ public class Helper {
 	public static void dumpModel(final TestModel model) {
 		System.out.println(model.toString());
 		for (final TestRole actor : model.getRoles().values()) {
-			System.out.println("  " + model.getDescriptions().get(actor.getId()) + ": " + actor);
-			actor.getApis()
-					.forEach(api -> System.out.println("    " + model.getDescriptions().get(api.getId()) + ": " + api));
+			System.out.println("  " + model.descriptionOf(actor) + ": " + actor);
+			actor.getApis().forEach(api -> System.out.println("    " + model.descriptionOf(api) + ": " + api));
 		}
 		for (final TestParameter testObject : model.getParameterFactories().values()) {
-			System.out.println("  " + model.getDescriptions().get(testObject.getId()) + ": " + testObject);
-			testObject.getMandatoryParameters().forEach(api -> System.out
-					.println("    mandatory: " + model.getDescriptions().get(api.getId()) + ": " + api));
-			testObject.getOptionalParameters().forEach(api -> System.out
-					.println("    optional: " + model.getDescriptions().get(api.getId()) + ": " + api));
+			System.out.println("  " + model.descriptionOf(testObject) + ": " + testObject);
+			testObject.getMandatoryParameters()
+					.forEach(api -> System.out.println("    mandatory: " + model.descriptionOf(api) + ": " + api));
+			testObject.getOptionalParameters()
+					.forEach(api -> System.out.println("    optional: " + model.descriptionOf(api) + ": " + api));
 		}
 	}
 
@@ -93,10 +92,10 @@ public class Helper {
 		}
 	}
 
-	public static List<Reference> toReference(final TestModel model, final Collection<? extends IdObject> idElements,
+	public static List<Reference> toReference(final TestModel model, final Collection<? extends IdObject> idObjects,
 			final ParameterNature nature) {
-		return idElements.stream().map(
-				idElement -> new Reference(idElement.getId(), model.getDescriptions().get(idElement.getId()), nature))
+		return idObjects.stream()
+				.map(idObject -> new Reference(idObject.getId(), model.descriptionOf(idObject), nature))
 				.collect(Collectors.toList());
 	}
 

@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TestParameterType extends IdObject {
+
 	public static final TestParameterType NO_VALUE = new TestParameterType(IdObject.ID_NOT_SET, "", "");
 
 	private final String type;

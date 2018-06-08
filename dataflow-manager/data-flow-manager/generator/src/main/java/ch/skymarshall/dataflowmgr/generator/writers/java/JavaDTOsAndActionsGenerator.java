@@ -35,7 +35,7 @@ import ch.skymarshall.dataflowmgr.generator.model.Dto;
 import ch.skymarshall.dataflowmgr.generator.model.InFlowRule;
 import ch.skymarshall.dataflowmgr.generator.model.Module;
 import ch.skymarshall.dataflowmgr.generator.model.OutFlowRule;
-import ch.skymarshall.dataflowmgr.generator.model.TEMPLATE;
+import ch.skymarshall.dataflowmgr.generator.model.TemplateType;
 import ch.skymarshall.dataflowmgr.generator.writers.AbstractWriter;
 import ch.skymarshall.dataflowmgr.generator.writers.ModuleVisitor;
 
@@ -73,7 +73,7 @@ public abstract class JavaDTOsAndActionsGenerator extends ModuleVisitor<Map<Stri
 		scoped.put("dto.name", dto.name);
 
 		super.visit(dto, scoped);
-		final Template template = getTemplate(TEMPLATE.DTO, scoped);
+		final Template template = getTemplate(TemplateType.DTO, scoped);
 
 		try {
 			writeFile("/dto/" + Utils.firstUpperCase(dto.name) + ".java", template);
@@ -95,7 +95,7 @@ public abstract class JavaDTOsAndActionsGenerator extends ModuleVisitor<Map<Stri
 	public Map<String, String> visitField(final Dto dto, final Entry<String, String> field,
 			final Map<String, String> context) {
 		final Map<String, String> scoped = setFieldInfo(context, field.getKey(), field.getValue());
-		final Template template = getTemplate(TEMPLATE.FIELD, scoped);
+		final Template template = getTemplate(TemplateType.FIELD, scoped);
 		return append(context, "fields", template.generate());
 	}
 
@@ -159,7 +159,7 @@ public abstract class JavaDTOsAndActionsGenerator extends ModuleVisitor<Map<Stri
 
 		scoped.put("imports", toImports(imported));
 
-		final Template template = getTemplate(TEMPLATE.ACTION, scoped);
+		final Template template = getTemplate(TemplateType.ACTION, scoped);
 
 		try {
 			writeFile("/actions/" + className(ap) + ".java", template);

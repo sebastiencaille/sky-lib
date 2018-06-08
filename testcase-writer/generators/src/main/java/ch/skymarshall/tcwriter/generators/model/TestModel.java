@@ -1,7 +1,9 @@
 package ch.skymarshall.tcwriter.generators.model;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
@@ -16,12 +18,18 @@ public class TestModel {
 
 	private final Multimap<String, TestParameter> testObjects = MultimapBuilder.hashKeys().arrayListValues().build();
 
-	{
+	private final Set<String> navigationTypes = new HashSet<>();
+
+	public TestModel() {
 		descriptions.put(IdObject.ID_NOT_SET, "N/A");
 	}
 
-	public Map<String, String> getDescriptions() {
+	Map<String, String> getDescriptions() {
 		return descriptions;
+	}
+
+	public void addDescription(final IdObject idObject, final String description) {
+		descriptions.put(idObject.getId(), description);
 	}
 
 	public Map<String, TestRole> getRoles() {
@@ -36,12 +44,12 @@ public class TestModel {
 		return testObjects;
 	}
 
-	public String descriptionOf(final String key) {
-		return descriptions.get(key);
+	public void addNavigationType(final Class<?> type) {
+		navigationTypes.add(type.getName());
 	}
 
 	public String descriptionOf(final IdObject idObject) {
-		return descriptionOf(idObject.getId());
+		return descriptions.get(idObject.getId());
 	}
 
 	public TestParameter getTestParameterFactory(final String factoryId) {
@@ -53,6 +61,10 @@ public class TestModel {
 	public String toString() {
 		return "Model: " + descriptions.size() + " descriptions, " + roles.size() + " actors, " + testObjects.size()
 				+ " test Objects";
+	}
+
+	public boolean isNavigation(final TestParameterType testParameterType) {
+		return navigationTypes.contains(testParameterType.getType());
 	}
 
 }

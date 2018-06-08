@@ -35,7 +35,7 @@ import ch.skymarshall.dataflowmgr.generator.model.ActionPoint;
 import ch.skymarshall.dataflowmgr.generator.model.Dto;
 import ch.skymarshall.dataflowmgr.generator.model.Flow;
 import ch.skymarshall.dataflowmgr.generator.model.Module;
-import ch.skymarshall.dataflowmgr.generator.model.TEMPLATE;
+import ch.skymarshall.dataflowmgr.generator.model.TemplateType;
 import ch.skymarshall.dataflowmgr.generator.model.Transformer;
 
 public abstract class AbstractWriter {
@@ -116,7 +116,7 @@ public abstract class AbstractWriter {
 	}
 
 	protected void loadTemplates() throws IOException {
-		for (final TEMPLATE template : TEMPLATE.values()) {
+		for (final TemplateType template : TemplateType.values()) {
 			final String resourceName = templateResourcePath(template.name() + ".template");
 			final Template newTemplate = new Template(readUTF8Resource(resourceName));
 			newTemplate.setCommandLine(commandLine);

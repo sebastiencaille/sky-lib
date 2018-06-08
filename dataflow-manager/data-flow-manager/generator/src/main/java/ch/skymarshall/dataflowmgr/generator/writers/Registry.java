@@ -25,7 +25,7 @@ import org.skymarshall.util.generators.Template;
 import ch.skymarshall.dataflowmgr.generator.model.ActionPoint;
 import ch.skymarshall.dataflowmgr.generator.model.Dto;
 import ch.skymarshall.dataflowmgr.generator.model.Flow;
-import ch.skymarshall.dataflowmgr.generator.model.TEMPLATE;
+import ch.skymarshall.dataflowmgr.generator.model.TemplateType;
 import ch.skymarshall.dataflowmgr.generator.model.Transformer;
 
 public class Registry {
@@ -34,7 +34,7 @@ public class Registry {
 	private final Map<String, Dto> dtos = new HashMap<>();
 	private final Map<String, ActionPoint> actions = new HashMap<>();
 	private final Map<String, Flow> flows = new HashMap<>();
-	private final Map<TEMPLATE, Template> templates = new EnumMap<>(TEMPLATE.class);
+	private final Map<TemplateType, Template> templates = new EnumMap<>(TemplateType.class);
 
 	public void addTransformer(final Transformer template) {
 		transformers.put(template.name, template);
@@ -60,11 +60,11 @@ public class Registry {
 		return actions.values();
 	}
 
-	public void addTemplate(final TEMPLATE templateName, final Template content) {
+	public void addTemplate(final TemplateType templateName, final Template content) {
 		templates.put(templateName, content);
 	}
 
-	public Template getTemplate(final TEMPLATE templateName, final Map<String, String> context) {
+	public Template getTemplate(final TemplateType templateName, final Map<String, String> context) {
 		return templates.get(templateName).apply(context);
 	}
 

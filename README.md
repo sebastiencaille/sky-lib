@@ -86,7 +86,7 @@ This way of structuring the api should be suitable to
 * generate "readable" test reports
 ````
 Step 1: As customer, I buy in a local shop: a coffee machine of brand: DeLuxeBrand
-Step 2: As customer, I check that the delivered item is the item bought at the shop: a coffee machine of brand DeLuxeBrand
+Step 2: As customer, I check that the packaged item is the item bought at the shop: a coffee machine of brand DeLuxeBrand
 Step 3: As customer, I resell the item: 10
 Step 4: As customer, I find another brand
 Step 5: As customer, I keep a note: another brand (from step 4)

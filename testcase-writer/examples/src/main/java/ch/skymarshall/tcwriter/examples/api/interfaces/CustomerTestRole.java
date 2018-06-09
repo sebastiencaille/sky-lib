@@ -33,7 +33,7 @@ public class CustomerTestRole extends Assert {
 		assertEquals(testedService.getOwnedItem(), handledItem.itemKind);
 	}
 
-	@TCApi(description = "Resell the item", stepSummary = "resell the item")
+	@TCApi(description = "Resell the item", stepSummary = "resell the item (in $)")
 	public void resellOwnedItem(final int price) {
 		testedService.reset();
 	}

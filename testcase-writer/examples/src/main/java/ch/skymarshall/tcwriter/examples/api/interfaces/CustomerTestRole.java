@@ -27,7 +27,7 @@ public class CustomerTestRole extends Assert {
 		testedService.buy(newItem.itemKind);
 	}
 
-	@TCApi(description = "check the delivered package", stepSummary = "check that the delivered item is")
+	@TCApi(description = "check the packaged item", stepSummary = "check that the packaged item is")
 	public void checkPackage(final HandleActionNavigator navigator, final TestItem handledItem) {
 		navigator.apply(testedService);
 		assertEquals(testedService.getOwnedItem(), handledItem.itemKind);

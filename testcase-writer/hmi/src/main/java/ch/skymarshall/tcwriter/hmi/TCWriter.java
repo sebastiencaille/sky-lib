@@ -1,5 +1,7 @@
 package ch.skymarshall.tcwriter.hmi;
 
+import static java.util.stream.Collectors.joining;
+
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.io.File;
@@ -7,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLClassLoader;
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -117,7 +118,7 @@ public abstract class TCWriter extends JFrame {
 
 		final String currentClassPath = Arrays
 				.stream(((URLClassLoader) Thread.currentThread().getContextClassLoader()).getURLs())
-				.map(cp -> cp.toString()).collect(Collectors.joining(":"));
+				.map(Object::toString).collect(joining(":"));
 
 		final Process testCompiler = new ProcessBuilder("javac", "-cp", currentClassPath, "-d", "/tmp/tc",
 				file.toString()).redirectErrorStream(true).start();

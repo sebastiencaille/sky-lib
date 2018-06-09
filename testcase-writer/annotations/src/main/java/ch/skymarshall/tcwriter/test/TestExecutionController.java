@@ -54,8 +54,7 @@ public class TestExecutionController {
 			if (!remoteControlConnection.isConnected()) {
 				throw new IllegalStateException("Cannot connect to remote control: " + remoteControlAddress);
 			}
-			handleCommands(remoteControlConnection, (connection, command) -> commandHandler(connection, command),
-					() -> System.exit(1));
+			handleCommands(remoteControlConnection, this::commandHandler, () -> System.exit(1));
 		} else {
 			remoteControlConnection = null;
 		}

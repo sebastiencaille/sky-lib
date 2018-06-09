@@ -26,7 +26,7 @@ public class StepsTable extends JPanel {
 
 	private final TestSummaryVisitor summaryVisitor;
 
-	private final JTable stepsTable;
+	private final JTable stepsJTable;
 
 	public StepsTable(final ListModel<TestStep> steps, final TestCase tc, final TestRemoteControl testControl) {
 
@@ -37,9 +37,9 @@ public class StepsTable extends JPanel {
 
 		testControl.setStepListener(stepsTableModel::stepUpdated);
 
-		stepsTable = new JTable(stepsTableModel);
+		stepsJTable = new JTable(stepsTableModel);
 		final ContributionTableColumnModel<StepsTableModel.Column> columnModel = new ContributionTableColumnModel<>(
-				stepsTable);
+				stepsJTable);
 		columnModel.install();
 		columnModel.configureColumn(
 				ContributionTableColumn.fixedColumn(Column.BREAKPOINT, 20, new DefaultTableCellRenderer()));
@@ -51,15 +51,15 @@ public class StepsTable extends JPanel {
 				ContributionTableColumn.gapColumn(Column.TO_VALUE, 100, new DefaultTableCellRenderer()));
 
 		Arrays.stream(Column.values()).forEach(c -> {
-			stepsTable.getColumn(c).setCellRenderer(new StepsCellRenderer(summaryVisitor));
-			stepsTable.getColumn(c).setCellEditor(new StepsCellEditor(tc));
+			stepsJTable.getColumn(c).setCellRenderer(new StepsCellRenderer(summaryVisitor));
+			stepsJTable.getColumn(c).setCellEditor(new StepsCellEditor(tc));
 		});
 
-		stepsTable.getColumn(Column.BREAKPOINT).setCellRenderer(new BreakpointRenderer(testControl));
-		stepsTable.getColumn(Column.BREAKPOINT).setCellEditor(new DefaultCellEditor(new JCheckBox()));
-		stepsTable.getColumn(Column.TO_VALUE).setCellEditor(new StepsTextEditor());
+		stepsJTable.getColumn(Column.BREAKPOINT).setCellRenderer(new BreakpointRenderer(testControl));
+		stepsJTable.getColumn(Column.BREAKPOINT).setCellEditor(new DefaultCellEditor(new JCheckBox()));
+		stepsJTable.getColumn(Column.TO_VALUE).setCellEditor(new StepsTextEditor());
 
-		add(new JScrollPane(stepsTable), BorderLayout.CENTER);
+		add(new JScrollPane(stepsJTable), BorderLayout.CENTER);
 	}
 
 }

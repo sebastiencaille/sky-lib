@@ -49,7 +49,7 @@ public class StepsCellEditor extends DefaultCellEditor {
 			editorComponent = prepareFastListEditor(value,
 					toReference(tc.getModel(), values, ParameterNature.TEST_API_TYPE));
 			break;
-		case METHOD:
+		case ACTION:
 			values = step.getRole().getApis();
 			editorComponent = prepareFastListEditor(value,
 					toReference(tc.getModel(), values, ParameterNature.TEST_API_TYPE));
@@ -97,7 +97,7 @@ public class StepsCellEditor extends DefaultCellEditor {
 	}
 
 	public static JComboBox<Reference> prepareFastListEditor(final Object value, final List<Reference>... references) {
-		final JComboBox<Reference> cb = new JComboBox<>(Arrays.stream(references).flatMap(a -> a.stream())
+		final JComboBox<Reference> cb = new JComboBox<>(Arrays.stream(references).flatMap(Collection::stream)
 				.collect(Collectors.toList()).toArray(new Reference[0]));
 		cb.setSelectedItem(value);
 		return cb;

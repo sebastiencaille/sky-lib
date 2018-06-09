@@ -14,8 +14,8 @@ import ch.skymarshall.tcwriter.generators.model.TestParameter;
 import ch.skymarshall.tcwriter.generators.model.TestParameter.ParameterNature;
 import ch.skymarshall.tcwriter.generators.model.TestRole;
 
-public class Helper {
-	public static void dumpModel(final TestModel model) {
+public interface Helper {
+	static void dumpModel(final TestModel model) {
 		System.out.println(model.toString());
 		for (final TestRole actor : model.getRoles().values()) {
 			System.out.println("  " + model.descriptionOf(actor) + ": " + actor);
@@ -30,7 +30,7 @@ public class Helper {
 		}
 	}
 
-	public static List<Class<?>> toClasses(final String[] args) {
+	static List<Class<?>> toClasses(final String[] args) {
 		return Arrays.stream(args).map(t -> {
 			try {
 				return Class.forName(t);
@@ -40,19 +40,19 @@ public class Helper {
 		}).collect(toList());
 	}
 
-	public static String paramKey(final Method apiMethod, final int i) {
+	static String paramKey(final Method apiMethod, final int i) {
 		return "param-" + apiMethod.getDeclaringClass().getName() + "." + apiMethod.getName() + "-" + i;
 	}
 
-	public static String roleKey(final Class<?> clazz) {
+	static String roleKey(final Class<?> clazz) {
 		return "actor-" + clazz.getName();
 	}
 
-	public static String methodKey(final Method method) {
+	static String methodKey(final Method method) {
 		return "method-" + method.getDeclaringClass().getName() + "." + method.getName();
 	}
 
-	public static class Reference {
+	class Reference {
 		private final String display;
 		private final String id;
 		private final ParameterNature nature;
@@ -92,7 +92,7 @@ public class Helper {
 		}
 	}
 
-	public static List<Reference> toReference(final TestModel model, final Collection<? extends IdObject> idObjects,
+	static List<Reference> toReference(final TestModel model, final Collection<? extends IdObject> idObjects,
 			final ParameterNature nature) {
 		return idObjects.stream().map(
 				idObject -> new Reference(idObject.getId(), model.descriptionOf(idObject).getDescription(), nature))

@@ -25,7 +25,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 	private final TestRemoteControl testControl;
 
 	public enum Column {
-		BREAKPOINT, STEP, ACTOR, METHOD, NAVIGATOR, PARAM0, TO_VALUE
+		BREAKPOINT, STEP, ACTOR, ACTION, NAVIGATOR, PARAM0, TO_VALUE
 	}
 
 	public StepsTableModel(final ListModel<TestStep> steps, final TestCase tc, final TestRemoteControl testControl) {
@@ -48,7 +48,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		case ACTOR:
 			tcObject = testStep.getActor();
 			break;
-		case METHOD:
+		case ACTION:
 			tcObject = testStep.getAction();
 			break;
 		case NAVIGATOR:
@@ -98,7 +98,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		switch (column) {
 		case BREAKPOINT:
 		case ACTOR:
-		case METHOD:
+		case ACTION:
 			return true;
 		case NAVIGATOR:
 			return hasNavigationParam(testStep);
@@ -162,38 +162,41 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 			testStep.setAction(TestAction.NOT_SET);
 			testStep.getParametersValue().clear();
 			return;
-		case METHOD:
-			final TestAction oldMethod = testStep.getAction();
+		case ACTION:
+			final TestAction oldAction = testStep.getAction();
 			testStep.setAction(testStep.getRole().getApi(newId));
-
-			for (int i = 0; i < testStep.getParametersValue().size(); i++) {
-				final TestParameterValue newMethodParameter = testStep.getParametersValue().get(i);
-				if (i >= oldMethod.getParameters().size()) {
-					testStep.addParameter(TestParameterValue.NO_VALUE);
-				} else if (newMethodParameter.getTestParameter().getType()
-						.equals(oldMethod.getParameters().get(i).getType())) {
-					testStep.getParametersValue().set(i, TestParameterValue.NO_VALUE);
-				}
-			}
-			for (int i = testStep.getParametersValue().size(); i < testStep.getAction().getParameters().size(); i++) {
-				testStep.getParametersValue().add(TestParameterValue.NO_VALUE);
-			}
+			migrateOldAction(testStep, oldAction);
 			return;
 		case NAVIGATOR:
-			if (hasNavigationParam(testStep)) {
-				testStep.getParametersValue().set(0,
-						createParameterValue(reference, testStep.getAction().getParameter(0)));
+			if (!hasNavigationParam(testStep)) {
+				return;
 			}
+			testStep.getParametersValue().set(0, createParameterValue(reference, testStep.getAction().getParameter(0)));
 			return;
 		case PARAM0:
-			if (hasParam(testStep, 0)) {
-				final int paramIndex = paramIndexOf(testStep, 0);
-				testStep.getParametersValue().set(paramIndex,
-						createParameterValue(reference, testStep.getAction().getParameter(paramIndex)));
+			if (!hasParam(testStep, 0)) {
+				return;
 			}
+			final int paramIndex = paramIndexOf(testStep, 0);
+			testStep.getParametersValue().set(paramIndex,
+					createParameterValue(reference, testStep.getAction().getParameter(paramIndex)));
 			return;
 		default:
+		}
+	}
 
+	private void migrateOldAction(final TestStep testStep, final TestAction oldAction) {
+		for (int i = 0; i < testStep.getParametersValue().size(); i++) {
+			final TestParameterValue newMethodParameter = testStep.getParametersValue().get(i);
+			if (i >= oldAction.getParameters().size()) {
+				testStep.addParameter(TestParameterValue.NO_VALUE);
+			} else if (newMethodParameter.getTestParameter().getType()
+					.equals(oldAction.getParameters().get(i).getType())) {
+				testStep.getParametersValue().set(i, TestParameterValue.NO_VALUE);
+			}
+		}
+		for (int i = testStep.getParametersValue().size(); i < testStep.getAction().getParameters().size(); i++) {
+			testStep.getParametersValue().add(TestParameterValue.NO_VALUE);
 		}
 	}
 

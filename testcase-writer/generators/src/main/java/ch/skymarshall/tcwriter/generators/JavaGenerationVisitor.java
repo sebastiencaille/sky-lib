@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.skymarshall.util.generators.JavaCodeGenerator;
 import org.skymarshall.util.generators.Template;
 
+import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.TestCase;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.TestModel;
@@ -131,7 +132,7 @@ public class JavaGenerationVisitor {
 	private void addParameterValuesToCall(final JavaCodeGenerator parametersContent,
 			final Collection<TestParameterValue> parameterValues, final List<TestParameterType> filter)
 			throws IOException, TestCaseException {
-		final Set<String> filterIds = filter.stream().map(f -> f.getId()).collect(Collectors.toSet());
+		final Set<String> filterIds = filter.stream().map(IdObject::getId).collect(Collectors.toSet());
 		String sep = "";
 		for (final TestParameterValue parameterValue : parameterValues) {
 			if (!filterIds.contains(parameterValue.getId())) {
@@ -147,7 +148,7 @@ public class JavaGenerationVisitor {
 			final TestModel model, final String parameterVarName, final Collection<TestParameterValue> parameterValues,
 			final List<TestParameterType> filter) throws IOException, TestCaseException {
 		final Map<String, TestParameterType> filteredMap = filter.stream()
-				.collect(Collectors.toMap(t -> t.getId(), t -> t));
+				.collect(Collectors.toMap(IdObject::getId, t -> t));
 		for (final TestParameterValue parameterValue : parameterValues) {
 			if (!filteredMap.containsKey(parameterValue.getId())) {
 				continue;

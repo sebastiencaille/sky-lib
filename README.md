@@ -77,8 +77,6 @@ A customer     | buy an item                              | a coffee machine | f
 A delivery guy | deliver an item                  | ||
 A customer     | check that the delivered item is | a coffee machine |
 
-
-
 This way of structuring the api should be suitable to
 * write test cases using some high level application. That is, the application may allow the user to select (based on the data type)
   * First the actor ("A customer")
@@ -86,7 +84,8 @@ This way of structuring the api should be suitable to
   * Then, from the action, the navigator "from internet"
   * Then, from the action, the parameter "a coffee machine"
 * generate "readable" test reports
-````Step 1: As customer, I buy in a local shop: a coffee machine of brand: DeLuxeBrand
+````
+Step 1: As customer, I buy in a local shop: a coffee machine of brand: DeLuxeBrand
 Step 2: As customer, I check that the delivered item is the item bought at the shop: a coffee machine of brand DeLuxeBrand
 Step 3: As customer, I resell the item: 10
 Step 4: As customer, I find another brand

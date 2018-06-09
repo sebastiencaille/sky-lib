@@ -24,8 +24,6 @@ import ch.skymarshall.tcwriter.hmi.steps.StepsTable;
 
 public abstract class TCWriter extends JFrame {
 
-	private static final int TCP_PORT = 9998;
-
 	private final ListModel<TestStep> steps = new RootListModel<>(ListViews.sorted(TestStep::getOrdinal));
 
 	public abstract File generateCode(TestCase tc) throws TestCaseException, IOException;
@@ -33,7 +31,7 @@ public abstract class TCWriter extends JFrame {
 	public TCWriter(final TestCase tc) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		final TestControl testControl = new TestControl(TCP_PORT);
+		final TestRemoteControl testRemoteControl = new TestRemoteControl(9998);
 
 		for (int i = 0; i < tc.getSteps().size(); i++) {
 			final TestStep testStep = tc.getSteps().get(i);
@@ -57,9 +55,12 @@ public abstract class TCWriter extends JFrame {
 		final JButton runButton = new JButton("Run");
 		runButton.addActionListener(e -> {
 			try {
+				testRemoteControl.reset();
+				final int port = testRemoteControl.prepare();
+				System.out.println("Using port " + port);
 				final File file = generateCode(tc);
-				startTestCase(file, tc.getFolder() + "." + tc.getName(), TCP_PORT);
-				testControl.start();
+				startTestCase(file, tc.getFolder() + "." + tc.getName(), port);
+				testRemoteControl.start();
 			} catch (final TestCaseException | IOException | InterruptedException e1) {
 				throw new IllegalStateException("Unable to run test case", e1);
 			}
@@ -68,13 +69,13 @@ public abstract class TCWriter extends JFrame {
 		final JButton resumeButton = new JButton("Resume");
 		resumeButton.addActionListener(e -> {
 			try {
-				testControl.resume();
+				testRemoteControl.resume();
 			} catch (final IOException e1) {
 				throw new IllegalStateException("Unable to resume test case", e1);
 			}
 		});
 
-		final StepsTable stepsTable = new StepsTable(steps, tc, testControl);
+		final StepsTable stepsTable = new StepsTable(steps, tc, testRemoteControl);
 		this.getContentPane().add(stepsTable, BorderLayout.CENTER);
 		final JPanel buttons = new JPanel(new FlowLayout());
 		buttons.add(generateButton);
@@ -113,6 +114,7 @@ public abstract class TCWriter extends JFrame {
 
 	public void startTestCase(final File file, final String className, final int tcpPort)
 			throws IOException, InterruptedException {
+
 		final String currentClassPath = Arrays
 				.stream(((URLClassLoader) Thread.currentThread().getContextClassLoader()).getURLs())
 				.map(cp -> cp.toString()).collect(Collectors.joining(":"));

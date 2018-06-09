@@ -7,14 +7,14 @@ import javax.swing.JCheckBox;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import ch.skymarshall.tcwriter.hmi.TestControl;
+import ch.skymarshall.tcwriter.hmi.TestRemoteControl;
 
 public class BreakpointRenderer extends DefaultTableCellRenderer {
 
-	private final TestControl testControl;
+	private final TestRemoteControl testControl;
 	final JCheckBox renderer = new JCheckBox();
 
-	public BreakpointRenderer(final TestControl testControl) {
+	public BreakpointRenderer(final TestRemoteControl testControl) {
 		this.testControl = testControl;
 	}
 

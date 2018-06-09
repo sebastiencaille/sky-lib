@@ -2,13 +2,14 @@ package ch.skymarshall.tcwriter.test;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.ServerSocket;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Semaphore;
 
-public class TestExecutionController implements Runnable {
+public class TestExecutionController {
 
 	public enum Command {
 		SET_BREAKPOINT('b'), REMOVE_BREAKPOINT('c'), RUN('r'), STEP('s'), EXIT((char) 255);
@@ -28,50 +29,56 @@ public class TestExecutionController implements Runnable {
 		}
 	}
 
-	private ServerSocket serverSocket;
-
 	private final Semaphore pauseSemaphore = new Semaphore(0);
 
 	private final Set<Integer> breakpoints = new HashSet<>();
 
-	private Socket connection;
+	private final Socket remoteControlConnection;
 
 	public TestExecutionController() throws IOException {
-		final Integer port = Integer.getInteger("test.port");
-		if (port != null) {
-			serverSocket = new ServerSocket(port);
-			new Thread(this).start();
+		final String host = System.getProperty("test.host", "127.0.0.1");
+		final Integer tcpPort = Integer.getInteger("test.port");
+		if (tcpPort != null) {
+			final InetSocketAddress remoteControlAddress = new InetSocketAddress(host, tcpPort);
+			System.out.println("Connecting to " + remoteControlAddress);
+
+			remoteControlConnection = new Socket();
+			int retry = 5;
+			while (!remoteControlConnection.isConnected() && retry > 0) {
+				try {
+					remoteControlConnection.connect(remoteControlAddress, 5000);
+				} catch (final SocketTimeoutException e) {
+					retry--;
+				}
+			}
+			if (!remoteControlConnection.isConnected()) {
+				throw new IllegalStateException("Cannot connect to remote control: " + remoteControlAddress);
+			}
+			handleCommands(remoteControlConnection, (connection, command) -> commandHandler(connection, command),
+					() -> System.exit(1));
+		} else {
+			remoteControlConnection = null;
 		}
 	}
 
-	@Override
-	public void run() {
-		try {
-			while ((connection = serverSocket.accept()) != null) {
-				handleCommands(connection, command -> {
-					switch (command) {
-					case RUN:
-						pauseSemaphore.release();
-						break;
-					case SET_BREAKPOINT:
-						breakpoints.add(readInt(connection.getInputStream()));
-						break;
-					case REMOVE_BREAKPOINT:
-						breakpoints.remove(readInt(connection.getInputStream()));
-						break;
-					default:
-						break;
-					}
-
-				}, null);
-			}
-		} catch (final IOException e) {
-			// ignore
+	private void commandHandler(final Socket connection, final Command command) throws IOException {
+		switch (command) {
+		case RUN:
+			pauseSemaphore.release();
+			break;
+		case SET_BREAKPOINT:
+			breakpoints.add(readInt(connection.getInputStream()));
+			break;
+		case REMOVE_BREAKPOINT:
+			breakpoints.remove(readInt(connection.getInputStream()));
+			break;
+		default:
+			break;
 		}
 	}
 
 	public void beforeTestExecution() throws InterruptedException {
-		if (serverSocket != null) {
+		if (remoteControlConnection != null) {
 			pauseSemaphore.acquire();
 		}
 		System.out.println("Breakpoints: " + breakpoints);
@@ -91,10 +98,10 @@ public class TestExecutionController implements Runnable {
 	}
 
 	private void writeStep(final int index) {
-		if (serverSocket != null) {
+		if (remoteControlConnection != null) {
 			try {
-				connection.getOutputStream().write(Command.STEP.cmd);
-				writeInt(connection, index);
+				remoteControlConnection.getOutputStream().write(Command.STEP.cmd);
+				writeInt(remoteControlConnection, index);
 			} catch (final IOException e) {
 				// ignore
 			}
@@ -103,16 +110,16 @@ public class TestExecutionController implements Runnable {
 
 	@FunctionalInterface
 	public interface CommandHandler {
-		void execute(Command command) throws IOException;
+		void execute(Socket connection, Command command) throws IOException;
 	}
 
 	public static void handleCommands(final Socket connection, final CommandHandler commandHandler,
 			final Runnable disconnectionHandler) {
 		new Thread(() -> {
-			try {
+			try (InputStream inputStream = connection.getInputStream()) {
 				Command receivedCommand;
-				while ((receivedCommand = Command.from(connection.getInputStream().read())) != Command.EXIT) {
-					commandHandler.execute(receivedCommand);
+				while ((receivedCommand = Command.from(inputStream.read())) != Command.EXIT) {
+					commandHandler.execute(connection, receivedCommand);
 				}
 			} catch (final IOException e) {
 				// ignore

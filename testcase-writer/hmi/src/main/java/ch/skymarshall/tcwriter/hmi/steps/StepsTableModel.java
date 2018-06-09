@@ -16,19 +16,19 @@ import ch.skymarshall.tcwriter.generators.model.TestParameter.ParameterNature;
 import ch.skymarshall.tcwriter.generators.model.TestParameterType;
 import ch.skymarshall.tcwriter.generators.model.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.TestStep;
-import ch.skymarshall.tcwriter.hmi.TestControl;
+import ch.skymarshall.tcwriter.hmi.TestRemoteControl;
 
 public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableModel.Column> {
 
 	private final ListModel<TestStep> steps;
 	private final TestCase tc;
-	private final TestControl testControl;
+	private final TestRemoteControl testControl;
 
 	public enum Column {
 		BREAKPOINT, STEP, ACTOR, METHOD, NAVIGATOR, PARAM0, TO_VALUE
 	}
 
-	public StepsTableModel(final ListModel<TestStep> steps, final TestCase tc, final TestControl testControl) {
+	public StepsTableModel(final ListModel<TestStep> steps, final TestCase tc, final TestRemoteControl testControl) {
 		super(steps, Column.class);
 		this.steps = steps;
 		this.tc = tc;

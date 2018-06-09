@@ -1,22 +1,19 @@
 package ch.skymarshall.tcwriter.hmi;
 
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
-
-import org.skymarshall.util.helpers.Timeout;
-import org.skymarshall.util.helpers.Timeout.TimeoutFactory;
 
 import ch.skymarshall.tcwriter.generators.model.TestStep;
 import ch.skymarshall.tcwriter.test.TestExecutionController;
 import ch.skymarshall.tcwriter.test.TestExecutionController.Command;
 
-public class TestControl {
+public class TestRemoteControl {
 
-	private final int tcpPort;
+	private final int baseTcpPort;
 
 	private final Set<Integer> breakPoints = new HashSet<>();
 
@@ -26,8 +23,10 @@ public class TestControl {
 
 	private BiConsumer<Integer, Integer> stepChangedListener;
 
-	public TestControl(final int tcpPort) {
-		this.tcpPort = tcpPort;
+	private ServerSocket controlServer;
+
+	public TestRemoteControl(final int baseTcpPort) {
+		this.baseTcpPort = baseTcpPort;
 	}
 
 	public void addBreakpoint(final TestStep testStep) {
@@ -42,35 +41,52 @@ public class TestControl {
 		return breakPoints.contains(testStep.getOrdinal());
 	}
 
-	public void start() throws InterruptedException, IOException {
-		controlConnection = null;
-
-		final Timeout timeout = new TimeoutFactory(5, TimeUnit.SECONDS).createTimeout();
-		while (controlConnection == null && !timeout.hasTimedOut()) {
+	public int prepare() {
+		controlServer = null;
+		int controlPort = baseTcpPort;
+		while (controlServer == null && controlPort < baseTcpPort + 10) {
 			try {
-				controlConnection = new Socket("127.0.0.1", tcpPort);
+				controlServer = new ServerSocket(controlPort);
 			} catch (final IOException e) {
-				Thread.sleep(500);
-				System.out.println(e.getMessage());
+				controlPort++;
 			}
 		}
-		if (timeout.hasTimedOut()) {
-			throw new IllegalStateException("Cannot connect to test case");
+
+		if (controlServer == null) {
+			throw new IllegalStateException("Unable to open control port");
 		}
+		return controlPort;
+	}
+
+	public void start() throws IOException {
+
+		controlServer.setSoTimeout(20000);
+		controlConnection = controlServer.accept();
 		System.out.println("Connected");
-		TestExecutionController.handleCommands(controlConnection, command -> {
+		TestExecutionController.handleCommands(controlConnection, (connection, command) -> {
 			if (command == Command.STEP) {
-				updateStep(TestExecutionController.readInt(controlConnection.getInputStream()));
+				updateStep(TestExecutionController.readInt(connection.getInputStream()));
 			}
-		}, () -> updateStep(-1));
+		}, this::reset);
 
-		for (
-
-		final Integer breakPoint : breakPoints) {
+		for (final Integer breakPoint : breakPoints) {
 			controlConnection.getOutputStream().write(TestExecutionController.Command.SET_BREAKPOINT.cmd);
 			TestExecutionController.writeInt(controlConnection, breakPoint);
 		}
 		controlConnection.getOutputStream().write(TestExecutionController.Command.RUN.cmd);
+	}
+
+	public void reset() {
+		updateStep(-1);
+		if (controlConnection != null) {
+			try {
+				controlConnection.close();
+			} catch (final IOException e) {
+				// ignore
+			}
+			controlConnection = null;
+		}
+
 	}
 
 	public void resume() throws IOException {

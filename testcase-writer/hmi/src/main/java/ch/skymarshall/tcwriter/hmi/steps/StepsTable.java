@@ -17,7 +17,7 @@ import org.skymarshall.hmi.swing.ContributionTableColumnModel;
 import ch.skymarshall.tcwriter.generators.TestSummaryVisitor;
 import ch.skymarshall.tcwriter.generators.model.TestCase;
 import ch.skymarshall.tcwriter.generators.model.TestStep;
-import ch.skymarshall.tcwriter.hmi.TestControl;
+import ch.skymarshall.tcwriter.hmi.TestRemoteControl;
 import ch.skymarshall.tcwriter.hmi.steps.StepsTableModel.Column;
 
 public class StepsTable extends JPanel {
@@ -28,7 +28,7 @@ public class StepsTable extends JPanel {
 
 	private final JTable stepsTable;
 
-	public StepsTable(final ListModel<TestStep> steps, final TestCase tc, final TestControl testControl) {
+	public StepsTable(final ListModel<TestStep> steps, final TestCase tc, final TestRemoteControl testControl) {
 
 		summaryVisitor = new TestSummaryVisitor(tc);
 

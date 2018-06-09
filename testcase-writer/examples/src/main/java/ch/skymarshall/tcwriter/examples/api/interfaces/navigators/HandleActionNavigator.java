@@ -28,7 +28,7 @@ public class HandleActionNavigator {
 		return new HandleActionNavigator(svc -> svc.getPackage());
 	}
 
-	@TCApi(description = "item taken at the shop", stepSummary = "the item taken at the shop")
+	@TCApi(description = "item bought at the shop", stepSummary = "the item bought at the shop")
 	public static HandleActionNavigator fromShop() {
 		return new HandleActionNavigator(svc -> {
 			// do nothing, we already have it

@@ -9,7 +9,6 @@ import ch.skymarshall.tcwriter.generators.model.TestStep;
 
 public class TestSummaryVisitor {
 
-	private static final String OPEN_PARAM_DESCR = " (";
 	private StringBuilder builder;
 	private final TestCase tc;
 
@@ -53,24 +52,11 @@ public class TestSummaryVisitor {
 		case TEST_API_TYPE:
 			String sep = " ";
 			for (final TestParameterType mandatoryParam : parameterValue.getTestParameter().getMandatoryParameters()) {
-				final TestParameterValue mandatoryValue = parameterValue.getComplexTypeValues()
-						.get(mandatoryParam.getId());
-
-				final String mandatoryParamNameSummary = summaryOf(mandatoryParam);
-				builder.append(sep);
-				if (!mandatoryParamNameSummary.isEmpty()) {
-					builder.append(mandatoryParamNameSummary).append(" ");
-				}
-				processTestParameter("", mandatoryValue);
+				processMandatoryParameter(parameterValue, sep, mandatoryParam);
 				sep = ", ";
 			}
-			for (final TestParameterType mandatoryParam : parameterValue.getTestParameter().getOptionalParameters()) {
-				final TestParameterValue optionalValue = parameterValue.getComplexTypeValues()
-						.get(mandatoryParam.getId());
-				if (optionalValue != null) {
-					builder.append(sep).append(summaryOf(mandatoryParam)).append(": ");
-					processTestParameter("", optionalValue);
-				}
+			for (final TestParameterType optionalParam : parameterValue.getTestParameter().getOptionalParameters()) {
+				processOptionalParameter(parameterValue, sep, optionalParam);
 				sep = ", ";
 			}
 			break;
@@ -78,6 +64,27 @@ public class TestSummaryVisitor {
 			break;
 		}
 
+	}
+
+	private void processOptionalParameter(final TestParameterValue parameterValue, final String sep,
+			final TestParameterType optionalParam) {
+		final TestParameterValue optionalValue = parameterValue.getComplexTypeValues().get(optionalParam.getId());
+		if (optionalValue != null) {
+			builder.append(sep).append(summaryOf(optionalParam)).append(": ");
+			processTestParameter("", optionalValue);
+		}
+	}
+
+	private void processMandatoryParameter(final TestParameterValue parameterValue, final String sep,
+			final TestParameterType mandatoryParam) {
+		final TestParameterValue mandatoryValue = parameterValue.getComplexTypeValues().get(mandatoryParam.getId());
+
+		final String mandatoryParamNameSummary = summaryOf(mandatoryParam);
+		builder.append(sep);
+		if (!mandatoryParamNameSummary.isEmpty()) {
+			builder.append(mandatoryParamNameSummary).append(" ");
+		}
+		processTestParameter("", mandatoryValue);
 	}
 
 	private String summaryOf(final IdObject idObject) {

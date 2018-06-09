@@ -79,7 +79,7 @@ public class ExampleTCWriter extends TCWriter {
 		final TestParameter coffeeMachine = findValueFactory(model, "coffeeMachine");
 		final TestParameter coffeeMachineOfBrand = findValueFactory(model, "coffeeMachineOfBrand");
 
-		int stepIndex = 0;
+		int stepIndex = 1;
 
 		//
 		final TestStep step1 = new TestStep(stepIndex++);
@@ -93,7 +93,7 @@ public class ExampleTCWriter extends TCWriter {
 		final TestParameterValue action1Val2 = new TestParameterValue(action1Param1, coffeeMachine);
 		final TestParameterType action1Param1Opt0 = coffeeMachine.getOptionalParameter(0);
 		action1Val2.addComplexTypeValue(
-				new TestParameterValue(action1Param1Opt0, action1Param1Opt0.asParameter(), "Cheap"));
+				new TestParameterValue(action1Param1Opt0, action1Param1Opt0.asParameter(), "DeLuxeBrand"));
 		step1.addParameter(action1Val2);
 		tc.addStep(step1);
 
@@ -108,7 +108,7 @@ public class ExampleTCWriter extends TCWriter {
 		final TestParameterValue action2Param1Value = new TestParameterValue(action2Param1, coffeeMachineOfBrand);
 		final TestParameterType action2Param1Mand = coffeeMachineOfBrand.getMandatoryParameter(0);
 		action2Param1Value.addComplexTypeValue(
-				new TestParameterValue(action2Param1Mand, action2Param1Mand.asParameter(), "DeLuxe"));
+				new TestParameterValue(action2Param1Mand, action2Param1Mand.asParameter(), "DeLuxeBrand"));
 		step2.addParameter(action2Param1Value);
 		tc.addStep(step2);
 

@@ -58,7 +58,7 @@ public class SimpleTest {
 		final TestCase testCase = ExampleTCWriter.createTestCase();
 		final TestSummaryVisitor testSummaryVisitor = new TestSummaryVisitor(testCase);
 		for (final TestStep step : testCase.getSteps()) {
-			System.out.println(step.getOrdinal() + ":" + testSummaryVisitor.process(step));
+			System.out.println("Step " + step.getOrdinal() + ": " + testSummaryVisitor.process(step));
 		}
 	}
 

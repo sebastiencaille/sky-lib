@@ -11,6 +11,10 @@ import org.junit.Test;
 import ch.skymarshall.tcwriter.examples.api.interfaces.CustomerTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem;
+import ch.skymarshall.tcwriter.examples.hmi.ExampleTCWriter;
+import ch.skymarshall.tcwriter.generators.TestSummaryVisitor;
+import ch.skymarshall.tcwriter.generators.model.TestCase;
+import ch.skymarshall.tcwriter.generators.model.TestStep;
 
 public class SimpleTest {
 
@@ -47,6 +51,15 @@ public class SimpleTest {
 		api.checkPackage(fromShop(), teaPot);
 		api.resellOwnedItem(10);
 
+	}
+
+	@Test
+	public void testSummary() {
+		final TestCase testCase = ExampleTCWriter.createTestCase();
+		final TestSummaryVisitor testSummaryVisitor = new TestSummaryVisitor(testCase);
+		for (final TestStep step : testCase.getSteps()) {
+			System.out.println(step.getOrdinal() + ":" + testSummaryVisitor.process(step));
+		}
 	}
 
 }

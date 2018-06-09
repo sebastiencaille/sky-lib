@@ -9,6 +9,7 @@ import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestRole;
 import ch.skymarshall.tcwriter.generators.GenerateModelFromCode;
 import ch.skymarshall.tcwriter.generators.Helper;
 import ch.skymarshall.tcwriter.generators.TestCaseToJavaGenerator;
+import ch.skymarshall.tcwriter.generators.model.ObjectDescription;
 import ch.skymarshall.tcwriter.generators.model.TestAction;
 import ch.skymarshall.tcwriter.generators.model.TestActor;
 import ch.skymarshall.tcwriter.generators.model.TestCase;
@@ -70,16 +71,18 @@ public class ExampleTCWriter extends TCWriter {
 
 		model.getActors().put(customer.getId(), customer);
 		model.getActors().put(deliveryGuy.getId(), deliveryGuy);
-		model.addDescription(customer, "A customer");
-		model.addDescription(deliveryGuy, "Delivery guy");
+		model.addDescription(customer, new ObjectDescription("A customer", "a customer"));
+		model.addDescription(deliveryGuy, new ObjectDescription("Delivery guy", "a delivery guy"));
 		Helper.dumpModel(model);
 
 		final TestCase tc = new TestCase("ch.skymarshall.tcwriter.examples.MyTC", model);
 		final TestParameter coffeeMachine = findValueFactory(model, "coffeeMachine");
 		final TestParameter coffeeMachineOfBrand = findValueFactory(model, "coffeeMachineOfBrand");
 
-		// Step 1
-		final TestStep step1 = new TestStep();
+		int stepIndex = 0;
+
+		//
+		final TestStep step1 = new TestStep(stepIndex++);
 		final TestAction action1 = find(customer.getRole(), "buy");
 		final TestParameterType action1Param1 = action1.getParameter(1);
 		step1.setActor(customer);
@@ -94,8 +97,8 @@ public class ExampleTCWriter extends TCWriter {
 		step1.addParameter(action1Val2);
 		tc.addStep(step1);
 
-		// Step 2
-		final TestStep step2 = new TestStep();
+		//
+		final TestStep step2 = new TestStep(stepIndex++);
 		final TestAction action2 = find(customer.getRole(), "checkPackage");
 		final TestParameterType action2Param0 = action2.getParameter(0);
 		final TestParameterType action2Param1 = action2.getParameter(1);
@@ -110,7 +113,7 @@ public class ExampleTCWriter extends TCWriter {
 		tc.addStep(step2);
 
 		// Step 3
-		final TestStep step3 = new TestStep();
+		final TestStep step3 = new TestStep(stepIndex++);
 		final TestAction action3 = find(customer.getRole(), "resellOwnedItem");
 		final TestParameterType action3Param0 = action3.getParameter(0);
 		step3.setActor(customer);
@@ -119,15 +122,15 @@ public class ExampleTCWriter extends TCWriter {
 		tc.addStep(step3);
 
 		// Step 4
-		final TestStep step4 = new TestStep();
+		final TestStep step4 = new TestStep(stepIndex++);
 		final TestAction action4 = find(customer.getRole(), "findAnotherBrand");
 		step4.setActor(customer);
 		step4.setAction(action4);
-		tc.publishReference(step4.asNamedReference(REF_ANOTHER_BRAND));
+		tc.publishReference(step4.asNamedReference(REF_ANOTHER_BRAND, "another brand"));
 		tc.addStep(step4);
 
 		// Step 5
-		final TestStep step5 = new TestStep();
+		final TestStep step5 = new TestStep(stepIndex++);
 		final TestAction action5 = find(customer.getRole(), "keepNote");
 		step5.setActor(customer);
 		step5.setAction(action5);

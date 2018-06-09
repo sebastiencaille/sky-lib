@@ -14,7 +14,6 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 
 import org.skymarshall.hmi.swing.model.ListModelTableModel;
 
@@ -28,6 +27,7 @@ import ch.skymarshall.tcwriter.hmi.editors.ReferenceEditor;
 import ch.skymarshall.tcwriter.hmi.steps.StepsTableModel.Column;
 
 public class StepsCellEditor extends DefaultCellEditor {
+
 	private final TestCase tc;
 
 	public StepsCellEditor(final TestCase tc) {
@@ -38,6 +38,7 @@ public class StepsCellEditor extends DefaultCellEditor {
 	@Override
 	public Component getTableCellEditorComponent(final JTable table, final Object value, final boolean isSelected,
 			final int row, final int column) {
+		final StepsTableModel stepsTableModel = (StepsTableModel) table.getModel();
 		final TestStep step = ((ListModelTableModel<TestStep, ?>) table.getModel()).getObjectAtRow(row);
 		final Column columnEnum = Column.valueOf(table.getColumnName(column));
 
@@ -45,30 +46,28 @@ public class StepsCellEditor extends DefaultCellEditor {
 		switch (columnEnum) {
 		case ACTOR:
 			values = tc.getModel().getActors().values();
+			editorComponent = prepareFastListEditor(value,
+					toReference(tc.getModel(), values, ParameterNature.TEST_API_TYPE));
 			break;
 		case METHOD:
 			values = step.getRole().getApis();
+			editorComponent = prepareFastListEditor(value,
+					toReference(tc.getModel(), values, ParameterNature.TEST_API_TYPE));
 			break;
 		case NAVIGATOR:
-			editorComponent = getParamEditor(table, step, 0, (Reference) value);
-			return editorComponent;
+			editorComponent = getParamEditor(step, 0, (Reference) value);
+			break;
 		case PARAM0:
-			editorComponent = getParamEditor(table, step, 1, (Reference) value);
-			return editorComponent;
-		case TO_VALUE:
-			values = tc.getReferences(step.getAction().getReturnType());
+			editorComponent = getParamEditor(step, stepsTableModel.paramIndexOf(step, 0), (Reference) value);
 			break;
 		default:
-			return new JTextField((String) value);
+			throw new IllegalStateException("Column not handled:" + columnEnum);
 		}
 
-		final JComponent cb = prepareFastListEditor(value,
-				toReference(tc.getModel(), values, ParameterNature.TEST_API_TYPE));
-		editorComponent = cb;
 		return editorComponent;
 	}
 
-	private JComponent getParamEditor(final JTable table, final TestStep step, final int index, final Reference value) {
+	private JComponent getParamEditor(final TestStep step, final int index, final Reference value) {
 		final TestParameterType parameter = step.getAction().getParameter(index);
 		final List<Reference> refsReferences = toReference(tc.getModel(), tc.getReferences(parameter.getType()),
 				ParameterNature.REFERENCE);

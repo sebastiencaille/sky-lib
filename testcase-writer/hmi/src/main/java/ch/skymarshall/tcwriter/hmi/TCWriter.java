@@ -24,7 +24,10 @@ public abstract class TCWriter extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		for (int i = 0; i < tc.getSteps().size(); i++) {
-			tc.getSteps().get(i).setOrdinal(i);
+			final TestStep testStep = tc.getSteps().get(i);
+			if (testStep.getOrdinal() != i) {
+				throw new IllegalStateException("Step " + i + ": wrong ordinal " + testStep.getOrdinal());
+			}
 		}
 
 		this.getContentPane().setLayout(new BorderLayout());

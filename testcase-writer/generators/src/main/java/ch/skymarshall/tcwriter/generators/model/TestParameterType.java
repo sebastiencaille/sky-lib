@@ -4,21 +4,15 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class TestParameterType extends IdObject {
+public class TestParameterType extends NamedObject {
 
 	public static final TestParameterType NO_VALUE = new TestParameterType(IdObject.ID_NOT_SET, "", "");
 
 	private final String type;
-	private String name;
 
 	public TestParameterType(final String id, final String name, final String type) {
-		super(id);
-		this.name = name;
+		super(id, name);
 		this.type = type;
-	}
-
-	public String getName() {
-		return name;
 	}
 
 	public String getType() {
@@ -32,10 +26,6 @@ public class TestParameterType extends IdObject {
 
 	public TestParameter asParameter() {
 		return TestParameter.simpleType(getType());
-	}
-
-	protected void setName(final String newName) {
-		this.name = newName;
 	}
 
 	private static final Set<String> SIMPLE_TYPES = Arrays

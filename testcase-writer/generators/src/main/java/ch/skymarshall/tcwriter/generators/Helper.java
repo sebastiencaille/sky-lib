@@ -94,8 +94,8 @@ public class Helper {
 
 	public static List<Reference> toReference(final TestModel model, final Collection<? extends IdObject> idObjects,
 			final ParameterNature nature) {
-		return idObjects.stream()
-				.map(idObject -> new Reference(idObject.getId(), model.descriptionOf(idObject), nature))
+		return idObjects.stream().map(
+				idObject -> new Reference(idObject.getId(), model.descriptionOf(idObject).getDescription(), nature))
 				.collect(Collectors.toList());
 	}
 

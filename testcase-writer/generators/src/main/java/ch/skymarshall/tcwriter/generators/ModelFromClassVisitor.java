@@ -20,6 +20,7 @@ import java.util.function.Consumer;
 import ch.skymarshall.tcwriter.annotations.TCApi;
 import ch.skymarshall.tcwriter.annotations.TCRole;
 import ch.skymarshall.tcwriter.generators.model.IdObject;
+import ch.skymarshall.tcwriter.generators.model.ObjectDescription;
 import ch.skymarshall.tcwriter.generators.model.TestAction;
 import ch.skymarshall.tcwriter.generators.model.TestModel;
 import ch.skymarshall.tcwriter.generators.model.TestParameter;
@@ -49,7 +50,7 @@ public class ModelFromClassVisitor {
 		for (final Class<?> roleClass : unprocessedActorClasses) {
 			final TestRole testRole = new TestRole(roleKey(roleClass));
 			final TCRole roleAnnotation = roleClass.getAnnotation(TCRole.class);
-			model.addDescription(testRole, roleAnnotation.description());
+			model.addDescription(testRole, descriptionFrom(roleAnnotation));
 			model.getRoles().put(testRole.getId(), testRole);
 
 			final HashSet<Method> roleMethods = new HashSet<>();
@@ -123,7 +124,7 @@ public class ModelFromClassVisitor {
 
 	private void processMethodAnnotation(final IdObject idObject, final Method apiMethod) {
 		final TCApi methodAnnotation = apiMethod.getAnnotation(TCApi.class);
-		model.addDescription(idObject, methodAnnotation.description());
+		model.addDescription(idObject, descriptionFrom(methodAnnotation));
 	}
 
 	private List<TestParameter> processParameters(final IdObject methodIdObject, final Method apiMethod) {
@@ -139,7 +140,7 @@ public class ModelFromClassVisitor {
 			final TestParameter testObjectParameter = new TestParameter(paramKey(apiMethod, i), apiMethod.getName(),
 					ParameterNature.TEST_API_TYPE, apiMethodParamType.getTypeName());
 			if (apiMethodAnnotation != null) {
-				model.addDescription(testObjectParameter, apiMethodAnnotation.description());
+				model.addDescription(testObjectParameter, descriptionFrom(apiMethodAnnotation));
 			}
 			if (apiMethodParamType instanceof Class) {
 				unprocessedParameterFactoryClasses.add((Class<?>) apiMethodParamType);
@@ -207,4 +208,11 @@ public class ModelFromClassVisitor {
 		}
 	}
 
+	private ObjectDescription descriptionFrom(final TCRole tcrole) {
+		return new ObjectDescription(tcrole.description(), tcrole.stepSummary());
+	}
+
+	private ObjectDescription descriptionFrom(final TCApi tcApi) {
+		return new ObjectDescription(tcApi.description(), tcApi.stepSummary());
+	}
 }

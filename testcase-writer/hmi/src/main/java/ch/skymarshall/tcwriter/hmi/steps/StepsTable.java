@@ -36,6 +36,7 @@ public class StepsTable extends JPanel {
 				ContributionTableColumn.gapColumn(Column.TO_VALUE, 100, new DefaultTableCellRenderer()));
 
 		Arrays.stream(Column.values()).forEach(c -> stepsTable.getColumn(c).setCellEditor(new StepsCellEditor(tc)));
+		stepsTable.getColumn(Column.TO_VALUE).setCellEditor(new StepsTextEditor());
 
 		add(new JScrollPane(stepsTable), BorderLayout.CENTER);
 	}

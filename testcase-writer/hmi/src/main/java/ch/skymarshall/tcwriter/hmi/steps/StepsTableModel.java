@@ -62,7 +62,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		default:
 			return "";
 		}
-		return new Reference(tcObject.getId(), tc.descriptionOf(tcObject), nature);
+		return new Reference(tcObject.getId(), tc.descriptionOf(tcObject).getDescription(), nature);
 	}
 
 	private Object createReferenceFromParam(final TestParameterValue parameterValue) {
@@ -70,13 +70,13 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		String display;
 		switch (parameterDef.getNature()) {
 		case REFERENCE:
-			display = tc.descriptionOf(parameterValue.getSimpleValue());
+			display = tc.descriptionOf(parameterValue.getSimpleValue()).getDescription();
 			break;
 		case SIMPLE_TYPE:
 			display = parameterValue.getSimpleValue();
 			break;
 		case TEST_API_TYPE:
-			display = tc.descriptionOf(parameterDef);
+			display = tc.descriptionOf(parameterDef).getDescription();
 			break;
 		default:
 			display = "N/A";
@@ -86,16 +86,16 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 
 	@Override
 	public boolean isCellEditable(final int rowIndex, final int columnIndex) {
-		final TestStep step = steps.getValueAt(rowIndex);
+		final TestStep testStep = steps.getValueAt(rowIndex);
 		final Column column = columnOf(columnIndex);
 		switch (column) {
 		case ACTOR:
 		case METHOD:
 			return true;
 		case NAVIGATOR:
-			return step.getParametersValue().size() > 0;
+			return hasNavigationParam(testStep);
 		case PARAM0:
-			return step.getParametersValue().size() > 1;
+			return hasParam(testStep, 0);
 		case TO_VALUE:
 			return true;
 		default:
@@ -128,6 +128,11 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 	@Override
 	protected void setValueAtColumn(final TestStep testStep, final Column column, final Object value) {
 		if (value == null) {
+			return;
+		}
+
+		if (column == Column.TO_VALUE) {
+			tc.publishReference(testStep.getReference().rename((String) value, "TODO"));
 			return;
 		}
 
@@ -169,15 +174,12 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 						createParameterValue(reference, testStep.getAction().getParameter(paramIndex)));
 			}
 			return;
-		case TO_VALUE:
-			testStep.getReference().rename((String) value);
-			break;
 		default:
 
 		}
 	}
 
-	private int paramIndexOf(final TestStep testStep, final int index) {
+	int paramIndexOf(final TestStep testStep, final int index) {
 		int paramIndex;
 		if (hasNavigationParam(testStep)) {
 			paramIndex = 1;
@@ -187,12 +189,12 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		return paramIndex + index;
 	}
 
-	private boolean hasNavigationParam(final TestStep testStep) {
+	boolean hasNavigationParam(final TestStep testStep) {
 		return !testStep.getAction().getParameters().isEmpty()
 				&& tc.getModel().isNavigation(testStep.getAction().getParameter(0));
 	}
 
-	private boolean hasParam(final TestStep testStep, final int index) {
+	boolean hasParam(final TestStep testStep, final int index) {
 		return paramIndexOf(testStep, index) < testStep.getAction().getParameters().size();
 	}
 

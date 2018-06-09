@@ -15,10 +15,10 @@ public class TestCase {
 
 	private final List<TestStep> steps = new ArrayList<>();
 	private final String path;
-	private final Multimap<String, TestParameter> dynamicReferences = MultimapBuilder.hashKeys().arrayListValues()
+	private final Multimap<String, TestReference> dynamicReferences = MultimapBuilder.hashKeys().arrayListValues()
 			.build();
 
-	private final Map<String, String> dynamicDescriptions = new HashMap<>();
+	private final Map<String, ObjectDescription> dynamicDescriptions = new HashMap<>();
 
 	public TestCase(final String path, final TestModel testModel) {
 		this.path = path;
@@ -49,34 +49,34 @@ public class TestCase {
 		return path;
 	}
 
-	public void publishReference(final TestParameter reference) {
+	public void publishReference(final TestReference reference) {
 		dynamicReferences.put(reference.getType(), reference);
-		dynamicDescriptions.put(reference.getId(), "another brand: " + reference.getName());
+		dynamicDescriptions.put(reference.getId(), reference.toDescription());
 	}
 
-	public String descriptionOf(final IdObject idObject) {
+	public ObjectDescription descriptionOf(final IdObject idObject) {
 		final String id = idObject.getId();
 		return descriptionOf(id);
 	}
 
-	public String descriptionOf(final String id) {
-		final String modelDescr = testModel.getDescriptions().get(id);
+	public ObjectDescription descriptionOf(final String id) {
+		final ObjectDescription modelDescr = testModel.getDescriptions().get(id);
 		if (modelDescr != null) {
 			return modelDescr;
 		}
-		final String dynamicDescr = dynamicDescriptions.get(id);
+		final ObjectDescription dynamicDescr = dynamicDescriptions.get(id);
 		if (dynamicDescr != null) {
 			return dynamicDescr;
 		}
-		return id;
+		return new ObjectDescription(id, "");
 	}
 
-	public TestParameter getReference(final String reference) {
+	public TestReference getReference(final String reference) {
 		return dynamicReferences.values().stream().filter(ref -> ref.getName().equals(reference)).findFirst()
 				.orElseThrow(() -> new IllegalArgumentException("Unable to find reference " + reference));
 	}
 
-	public Collection<? extends IdObject> getReferences(final String returnType) {
+	public Collection<TestReference> getReferences(final String returnType) {
 		return dynamicReferences.get(returnType);
 	}
 

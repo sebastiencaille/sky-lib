@@ -10,7 +10,7 @@ import com.google.common.collect.MultimapBuilder;
 
 public class TestModel {
 
-	private final Map<String, String> descriptions = new HashMap<>();
+	private final Map<String, ObjectDescription> descriptions = new HashMap<>();
 
 	private final Map<String, TestRole> roles = new HashMap<>();
 
@@ -21,14 +21,14 @@ public class TestModel {
 	private final Set<String> navigationTypes = new HashSet<>();
 
 	public TestModel() {
-		descriptions.put(IdObject.ID_NOT_SET, "N/A");
+		descriptions.put(IdObject.ID_NOT_SET, ObjectDescription.NOT_SET);
 	}
 
-	Map<String, String> getDescriptions() {
+	Map<String, ObjectDescription> getDescriptions() {
 		return descriptions;
 	}
 
-	public void addDescription(final IdObject idObject, final String description) {
+	public void addDescription(final IdObject idObject, final ObjectDescription description) {
 		descriptions.put(idObject.getId(), description);
 	}
 
@@ -48,7 +48,7 @@ public class TestModel {
 		navigationTypes.add(type.getName());
 	}
 
-	public String descriptionOf(final IdObject idObject) {
+	public ObjectDescription descriptionOf(final IdObject idObject) {
 		return descriptions.get(idObject.getId());
 	}
 

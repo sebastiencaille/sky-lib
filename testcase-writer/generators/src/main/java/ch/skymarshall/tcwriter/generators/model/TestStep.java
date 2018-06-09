@@ -3,23 +3,21 @@ package ch.skymarshall.tcwriter.generators.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.skymarshall.tcwriter.generators.model.TestParameter.ParameterNature;
-
 public class TestStep {
 
-	private int ordinal;
+	private final int ordinal;
 	private TestActor actor = TestActor.NOT_SET;
 	private TestRole role = TestRole.NOT_SET;
 	private TestAction action = TestAction.NOT_SET;
 	private final List<TestParameterValue> parametersValue = new ArrayList<>();
-	private TestParameter reference;
+	private TestReference reference;
+
+	public TestStep(final int ordinal) {
+		this.ordinal = ordinal;
+	}
 
 	public int getOrdinal() {
 		return ordinal;
-	}
-
-	public void setOrdinal(final int ordinal) {
-		this.ordinal = ordinal;
 	}
 
 	public TestActor getActor() {
@@ -51,13 +49,12 @@ public class TestStep {
 		this.parametersValue.add(parameterValue);
 	}
 
-	public TestParameter asNamedReference(final String namedReference) {
-		reference = new TestParameter(namedReference, namedReference, ParameterNature.REFERENCE,
-				getAction().getReturnType());
+	public TestReference asNamedReference(final String namedReference, final String description) {
+		reference = new TestReference(this, namedReference, getAction().getReturnType(), description);
 		return reference;
 	}
 
-	public TestParameter getReference() {
+	public TestReference getReference() {
 		return reference;
 	}
 

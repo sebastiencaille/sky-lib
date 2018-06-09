@@ -2,6 +2,7 @@ package ch.skymarshall.tcwriter.hmi.editors;
 
 import static ch.skymarshall.tcwriter.hmi.steps.StepsCellEditor.prepareFastListEditor;
 
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.util.List;
@@ -12,6 +13,7 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 
 import ch.skymarshall.tcwriter.generators.Helper.Reference;
 import ch.skymarshall.tcwriter.generators.model.TestParameter.ParameterNature;
@@ -22,31 +24,32 @@ public class ReferenceEditor extends JDialog {
 	private final JComboBox<Reference> fastRefEditor;
 	private final JButton ok;
 
-	public ReferenceEditor(final List<Reference> refsReferences, final Reference value) {
+	public ReferenceEditor(final List<Reference> refsReferences, final Reference simpleValue) {
 
-		fastRefEditor = prepareFastListEditor(value, refsReferences);
-		final JDialog dialog = new JDialog();
-		dialog.getContentPane().setLayout(new BoxLayout(dialog.getContentPane(), BoxLayout.Y_AXIS));
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 		freeTyping = new JTextField();
-		if (value.getNature() == ParameterNature.SIMPLE_TYPE) {
-			freeTyping.setText(value.getDisplay());
+		if (simpleValue.getNature() == ParameterNature.SIMPLE_TYPE) {
+			freeTyping.setText(simpleValue.getDisplay());
 		}
-		dialog.getContentPane().add(freeTyping);
+		getContentPane().add(freeTyping);
 
-		dialog.getContentPane().add(fastRefEditor);
+		fastRefEditor = prepareFastListEditor(simpleValue, refsReferences);
+		getContentPane().add(fastRefEditor);
 		fastRefEditor.addItemListener(e -> {
 			if (e.getStateChange() == ItemEvent.SELECTED) {
 				freeTyping.setText("");
 			}
 		});
 		ok = new JButton("OK");
+		add(ok);
 
-		SwingUtilities.invokeLater(() -> {
-			dialog.add(ok);
-			dialog.pack();
-			dialog.setModal(true);
-			dialog.setVisible(true);
-		});
+		setMinimumSize(new Dimension(300, 100));
+		pack();
+		setModal(true);
+
+		SwingUtilities.invokeLater(() -> setVisible(true));
 	}
 
 	public Reference getValue() {

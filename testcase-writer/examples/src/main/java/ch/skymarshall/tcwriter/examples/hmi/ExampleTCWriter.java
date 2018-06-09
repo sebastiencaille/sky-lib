@@ -31,14 +31,9 @@ public class ExampleTCWriter extends TCWriter {
 	}
 
 	@Override
-	public void generateCode(final TestCase tc) throws TestCaseException {
-		try {
-			new TestCaseToJavaGenerator(new File("./src/main/resources/templates/TC.template").toPath()).generate(tc,
-					new File("./src/test/java").toPath());
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
-
+	public File generateCode(final TestCase tc) throws TestCaseException, IOException {
+		return new TestCaseToJavaGenerator(new File("./src/main/resources/templates/TC.template").toPath()).generate(tc,
+				new File("./src/test/java").toPath());
 	}
 
 	private static TestAction find(final TestRole actor, final String name) {

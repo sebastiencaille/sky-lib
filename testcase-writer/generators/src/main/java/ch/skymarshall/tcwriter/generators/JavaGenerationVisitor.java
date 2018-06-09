@@ -27,12 +27,22 @@ public class JavaGenerationVisitor {
 
 	private final Map<TestParameterValue, String> varNames = new HashMap<>();
 
-	public JavaGenerationVisitor(final Template template) {
+	private final boolean withController;
+
+	public JavaGenerationVisitor(final Template template, final boolean withController) {
 		this.template = template;
+		this.withController = withController;
 	}
 
 	public String visitTestCase(final TestCase tc) throws IOException, TestCaseException {
 		final JavaCodeGenerator javaContent = new JavaCodeGenerator();
+
+		if (withController) {
+			javaContent.add("TestExecutionController testExecutionController = new TestExecutionController();")
+					.newLine();
+			javaContent.add("testExecutionController.beforeTestExecution();").newLine();
+		}
+
 		for (final TestStep step : tc.getSteps()) {
 			visitTestStep(javaContent, tc.getModel(), step);
 		}
@@ -47,6 +57,11 @@ public class JavaGenerationVisitor {
 	private void visitTestStep(final JavaCodeGenerator javaContent, final TestModel model, final TestStep step)
 			throws IOException, TestCaseException {
 		final StringBuilder comment = new StringBuilder();
+
+		if (withController) {
+			javaContent.add("testExecutionController.beforeStepExecution(" + step.getOrdinal() + ");").newLine();
+		}
+
 		comment.append(
 				"// Step " + step.getOrdinal() + " - " + step.getActor() + ": " + model.descriptionOf(step.getAction()))
 				.append("\n");
@@ -68,6 +83,11 @@ public class JavaGenerationVisitor {
 
 		javaContent.append(comment.toString());
 		javaContent.append(stepContent.toString());
+
+		if (withController) {
+			javaContent.add("testExecutionController.afterStepExecution(" + step.getOrdinal() + ");").newLine();
+		}
+
 	}
 
 	private void visitTestValue(final JavaCodeGenerator javaContent, final StringBuilder comment, final TestModel model,

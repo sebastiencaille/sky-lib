@@ -3,9 +3,12 @@ package ch.skymarshall.tcwriter.hmi.steps;
 import java.awt.BorderLayout;
 import java.util.Arrays;
 
+import javax.swing.DefaultCellEditor;
+import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.skymarshall.hmi.model.ListModel;
@@ -15,6 +18,7 @@ import org.skymarshall.hmi.swing.ContributionTableColumnModel;
 import ch.skymarshall.tcwriter.generators.TestSummaryVisitor;
 import ch.skymarshall.tcwriter.generators.model.TestCase;
 import ch.skymarshall.tcwriter.generators.model.TestStep;
+import ch.skymarshall.tcwriter.hmi.TestControl;
 import ch.skymarshall.tcwriter.hmi.steps.StepsTableModel.Column;
 
 public class StepsTable extends JPanel {
@@ -23,17 +27,21 @@ public class StepsTable extends JPanel {
 
 	private final TestSummaryVisitor summaryVisitor;
 
-	public StepsTable(final ListModel<TestStep> steps, final TestCase tc) {
+	private final JTable stepsTable;
+
+	public StepsTable(final ListModel<TestStep> steps, final TestCase tc, final TestControl testControl) {
 
 		summaryVisitor = new TestSummaryVisitor(tc);
 
 		setLayout(new BorderLayout());
-		this.stepsTableModel = new StepsTableModel(steps, tc);
+		this.stepsTableModel = new StepsTableModel(steps, tc, testControl);
 
-		final JTable stepsTable = new JTable(this.stepsTableModel);
+		stepsTable = new JTable(this.stepsTableModel);
 		final ContributionTableColumnModel<StepsTableModel.Column> columnModel = new ContributionTableColumnModel<>(
 				stepsTable);
 		columnModel.install();
+		columnModel.configureColumn(
+				ContributionTableColumn.fixedColumn(Column.BREAKPOINT, 20, new DefaultTableCellRenderer()));
 		columnModel
 				.configureColumn(ContributionTableColumn.fixedColumn(Column.STEP, 20, new DefaultTableCellRenderer()));
 		columnModel.configureColumn(
@@ -45,9 +53,16 @@ public class StepsTable extends JPanel {
 			stepsTable.getColumn(c).setCellRenderer(new StepsCellRenderer(summaryVisitor));
 			stepsTable.getColumn(c).setCellEditor(new StepsCellEditor(tc));
 		});
+
+		stepsTable.getColumn(Column.BREAKPOINT).setCellRenderer(new BreakpointRenderer(testControl));
+		stepsTable.getColumn(Column.BREAKPOINT).setCellEditor(new DefaultCellEditor(new JCheckBox()));
 		stepsTable.getColumn(Column.TO_VALUE).setCellEditor(new StepsTextEditor());
 
 		add(new JScrollPane(stepsTable), BorderLayout.CENTER);
 	}
 
+	public void stepUpdated() {
+		stepsTable.tableChanged(
+				new TableModelEvent(stepsTableModel, 0, stepsTable.getRowCount(), Column.BREAKPOINT.ordinal()));
+	}
 }

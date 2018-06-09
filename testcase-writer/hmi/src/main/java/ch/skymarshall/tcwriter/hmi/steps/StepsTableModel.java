@@ -14,20 +14,23 @@ import ch.skymarshall.tcwriter.generators.model.TestParameter.ParameterNature;
 import ch.skymarshall.tcwriter.generators.model.TestParameterType;
 import ch.skymarshall.tcwriter.generators.model.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.TestStep;
+import ch.skymarshall.tcwriter.hmi.TestControl;
 
 public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableModel.Column> {
 
 	private final ListModel<TestStep> steps;
 	private final TestCase tc;
+	private final TestControl testControl;
 
 	public enum Column {
-		STEP, ACTOR, METHOD, NAVIGATOR, PARAM0, TO_VALUE
+		BREAKPOINT, STEP, ACTOR, METHOD, NAVIGATOR, PARAM0, TO_VALUE
 	}
 
-	public StepsTableModel(final ListModel<TestStep> steps, final TestCase tc) {
+	public StepsTableModel(final ListModel<TestStep> steps, final TestCase tc, final TestControl testControl) {
 		super(steps, Column.class);
 		this.steps = steps;
 		this.tc = tc;
+		this.testControl = testControl;
 	}
 
 	@Override
@@ -36,6 +39,8 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		final ParameterNature nature = ParameterNature.TEST_API_TYPE;
 		final List<TestParameterValue> parametersValue = testStep.getParametersValue();
 		switch (column) {
+		case BREAKPOINT:
+			return testControl.hasBreakpoint(testStep);
 		case STEP:
 			return testStep.getOrdinal();
 		case ACTOR:
@@ -89,6 +94,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		final TestStep testStep = steps.getValueAt(rowIndex);
 		final Column column = columnOf(columnIndex);
 		switch (column) {
+		case BREAKPOINT:
 		case ACTOR:
 		case METHOD:
 			return true;
@@ -131,7 +137,15 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 			return;
 		}
 
-		if (column == Column.TO_VALUE) {
+		switch (column) {
+		case BREAKPOINT:
+			if ((Boolean) value) {
+				testControl.addBreakpoint(testStep);
+			} else {
+				testControl.removeBreakpoint(testStep);
+			}
+			return;
+		case TO_VALUE:
 			tc.publishReference(testStep.getReference().rename((String) value, "TODO"));
 			return;
 		}

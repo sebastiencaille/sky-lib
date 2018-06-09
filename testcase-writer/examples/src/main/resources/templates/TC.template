@@ -3,6 +3,7 @@ package ${package};
 import ch.skymarshall.tcwriter.examples.api.interfaces.dto.*;
 import ch.skymarshall.tcwriter.examples.api.interfaces.navigators.*;
 import ch.skymarshall.tcwriter.examples.api.interfaces.*;
+import ch.skymarshall.tcwriter.test.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +21,7 @@ public class ${testName} {
 	}
 	
 	@Test
-	public void testCase() {
+	public void testCase() throws Exception {
 		${testContent}
 	}
 

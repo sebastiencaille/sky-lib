@@ -1,5 +1,6 @@
 package ch.skymarshall.tcwriter.generators;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -19,8 +20,10 @@ public class TestCaseToJavaGenerator {
 
 	}
 
-	public void generate(final TestCase tc, final Path targetPath) throws IOException, TestCaseException {
-		Files.write(targetPath.resolve(tc.getPath().replace(".", "/") + ".java"),
-				new JavaGenerationVisitor(testCaseTemplate).visitTestCase(tc).getBytes(StandardCharsets.UTF_8));
+	public File generate(final TestCase tc, final Path targetPath) throws IOException, TestCaseException {
+		final Path targetFile = targetPath.resolve(tc.getPath().replace(".", "/") + ".java");
+		Files.write(targetFile,
+				new JavaGenerationVisitor(testCaseTemplate, true).visitTestCase(tc).getBytes(StandardCharsets.UTF_8));
+		return targetFile.toFile();
 	}
 }

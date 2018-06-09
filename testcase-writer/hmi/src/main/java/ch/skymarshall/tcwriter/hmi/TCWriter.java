@@ -75,7 +75,6 @@ public abstract class TCWriter extends JFrame {
 		});
 
 		final StepsTable stepsTable = new StepsTable(steps, tc, testControl);
-		testControl.setStepListener(stepsTable::stepUpdated);
 		this.getContentPane().add(stepsTable, BorderLayout.CENTER);
 		final JPanel buttons = new JPanel(new FlowLayout());
 		buttons.add(generateButton);

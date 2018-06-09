@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiConsumer;
 
 import org.skymarshall.util.helpers.Timeout;
 import org.skymarshall.util.helpers.Timeout.TimeoutFactory;
@@ -13,7 +14,7 @@ import ch.skymarshall.tcwriter.generators.model.TestStep;
 import ch.skymarshall.tcwriter.test.TestExecutionController;
 import ch.skymarshall.tcwriter.test.TestExecutionController.Command;
 
-public class TestControl implements Runnable {
+public class TestControl {
 
 	private final int tcpPort;
 
@@ -23,7 +24,7 @@ public class TestControl implements Runnable {
 
 	private int currentStep = -1;
 
-	private Runnable stepChangedListener;
+	private BiConsumer<Integer, Integer> stepChangedListener;
 
 	public TestControl(final int tcpPort) {
 		this.tcpPort = tcpPort;
@@ -57,9 +58,15 @@ public class TestControl implements Runnable {
 			throw new IllegalStateException("Cannot connect to test case");
 		}
 		System.out.println("Connected");
-		new Thread(this).start();
+		TestExecutionController.handleCommands(controlConnection, command -> {
+			if (command == Command.STEP) {
+				updateStep(TestExecutionController.readInt(controlConnection.getInputStream()));
+			}
+		}, () -> updateStep(-1));
 
-		for (final Integer breakPoint : breakPoints) {
+		for (
+
+		final Integer breakPoint : breakPoints) {
 			controlConnection.getOutputStream().write(TestExecutionController.Command.SET_BREAKPOINT.cmd);
 			TestExecutionController.writeInt(controlConnection, breakPoint);
 		}
@@ -74,25 +81,13 @@ public class TestControl implements Runnable {
 		return currentStep == stepIndex;
 	}
 
-	@Override
-	public void run() {
-		try {
-			Command receivedCommand;
-			while ((receivedCommand = Command.from(controlConnection.getInputStream().read())) != Command.EXIT) {
-				if (receivedCommand == Command.STEP) {
-					currentStep = TestExecutionController.readInt(controlConnection.getInputStream());
-				}
-				stepChangedListener.run();
-			}
-		} catch (final IOException e) {
-			// ignore
-		} finally {
-			currentStep = -1;
-			stepChangedListener.run();
-		}
+	private void updateStep(final int newStep) {
+		final int oldStep = currentStep;
+		currentStep = newStep;
+		stepChangedListener.accept(oldStep, currentStep);
 	}
 
-	public void setStepListener(final Runnable stepChangedListener) {
+	public void setStepListener(final BiConsumer<Integer, Integer> stepChangedListener) {
 		this.stepChangedListener = stepChangedListener;
 	}
 

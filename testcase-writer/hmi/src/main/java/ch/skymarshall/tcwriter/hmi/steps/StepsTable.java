@@ -8,7 +8,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.skymarshall.hmi.model.ListModel;
@@ -34,9 +33,11 @@ public class StepsTable extends JPanel {
 		summaryVisitor = new TestSummaryVisitor(tc);
 
 		setLayout(new BorderLayout());
-		this.stepsTableModel = new StepsTableModel(steps, tc, testControl);
+		stepsTableModel = new StepsTableModel(steps, tc, testControl);
 
-		stepsTable = new JTable(this.stepsTableModel);
+		testControl.setStepListener(stepsTableModel::stepUpdated);
+
+		stepsTable = new JTable(stepsTableModel);
 		final ContributionTableColumnModel<StepsTableModel.Column> columnModel = new ContributionTableColumnModel<>(
 				stepsTable);
 		columnModel.install();
@@ -61,8 +62,4 @@ public class StepsTable extends JPanel {
 		add(new JScrollPane(stepsTable), BorderLayout.CENTER);
 	}
 
-	public void stepUpdated() {
-		stepsTable.tableChanged(
-				new TableModelEvent(stepsTableModel, 0, stepsTable.getRowCount(), Column.BREAKPOINT.ordinal()));
-	}
 }

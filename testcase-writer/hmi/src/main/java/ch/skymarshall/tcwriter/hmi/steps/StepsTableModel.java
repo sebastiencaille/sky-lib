@@ -2,6 +2,8 @@ package ch.skymarshall.tcwriter.hmi.steps;
 
 import java.util.List;
 
+import javax.swing.event.TableModelEvent;
+
 import org.skymarshall.hmi.model.ListModel;
 import org.skymarshall.hmi.swing.model.ListModelTableModel;
 
@@ -148,6 +150,8 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		case TO_VALUE:
 			tc.publishReference(testStep.getReference().rename((String) value, "TODO"));
 			return;
+		default:
+			break;
 		}
 
 		final Reference reference = (Reference) value;
@@ -212,4 +216,14 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		return paramIndexOf(testStep, index) < testStep.getAction().getParameters().size();
 	}
 
+	public void stepUpdated(final int oldStep, final int newStep) {
+		int min = oldStep - 1;
+		int max = newStep - 1;
+		if (min < 0) {
+			min = max;
+		} else if (max < 0) {
+			max = min;
+		}
+		fireTableChanged(new TableModelEvent(this, min, max, Column.BREAKPOINT.ordinal()));
+	}
 }

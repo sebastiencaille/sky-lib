@@ -48,44 +48,26 @@ public class TestExecutionController implements Runnable {
 	public void run() {
 		try {
 			while ((connection = serverSocket.accept()) != null) {
-				handleConnection();
+				handleCommands(connection, command -> {
+					switch (command) {
+					case RUN:
+						pauseSemaphore.release();
+						break;
+					case SET_BREAKPOINT:
+						breakpoints.add(readInt(connection.getInputStream()));
+						break;
+					case REMOVE_BREAKPOINT:
+						breakpoints.remove(readInt(connection.getInputStream()));
+						break;
+					default:
+						break;
+					}
+
+				}, null);
 			}
 		} catch (final IOException e) {
 			// ignore
 		}
-	}
-
-	private void handleConnection() {
-		try {
-			Command receivedCommand;
-			while ((receivedCommand = Command.from(connection.getInputStream().read())) != Command.EXIT) {
-				System.out.println("Got command " + receivedCommand);
-				switch (receivedCommand) {
-				case RUN:
-					pauseSemaphore.release();
-					break;
-				case SET_BREAKPOINT:
-					breakpoints.add(readInt(connection.getInputStream()));
-					break;
-				case REMOVE_BREAKPOINT:
-					breakpoints.remove(readInt(connection.getInputStream()));
-					break;
-				}
-			}
-		} catch (final IOException e) {
-			// ignore
-		}
-	}
-
-	public static int readInt(final InputStream inputStream) throws IOException {
-		final int high = inputStream.read();
-		final int low = inputStream.read();
-		return ((high & 0xFF) << 8) | (low & 0xFF);
-	}
-
-	public static void writeInt(final Socket connection, final int value) throws IOException {
-		connection.getOutputStream().write(value >> 8 & 0xFF);
-		connection.getOutputStream().write(value & 0xFF);
 	}
 
 	public void beforeTestExecution() throws InterruptedException {
@@ -117,6 +99,40 @@ public class TestExecutionController implements Runnable {
 				// ignore
 			}
 		}
+	}
+
+	@FunctionalInterface
+	public interface CommandHandler {
+		void execute(Command command) throws IOException;
+	}
+
+	public static void handleCommands(final Socket connection, final CommandHandler commandHandler,
+			final Runnable disconnectionHandler) {
+		new Thread(() -> {
+			try {
+				Command receivedCommand;
+				while ((receivedCommand = Command.from(connection.getInputStream().read())) != Command.EXIT) {
+					commandHandler.execute(receivedCommand);
+				}
+			} catch (final IOException e) {
+				// ignore
+			} finally {
+				if (disconnectionHandler != null) {
+					disconnectionHandler.run();
+				}
+			}
+		}).start();
+	}
+
+	public static int readInt(final InputStream inputStream) throws IOException {
+		final int high = inputStream.read();
+		final int low = inputStream.read();
+		return ((high & 0xFF) << 8) | (low & 0xFF);
+	}
+
+	public static void writeInt(final Socket connection, final int value) throws IOException {
+		connection.getOutputStream().write(value >> 8 & 0xFF);
+		connection.getOutputStream().write(value & 0xFF);
 	}
 
 }

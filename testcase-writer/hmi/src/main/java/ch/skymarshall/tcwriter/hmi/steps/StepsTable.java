@@ -12,6 +12,7 @@ import org.skymarshall.hmi.model.ListModel;
 import org.skymarshall.hmi.swing.ContributionTableColumn;
 import org.skymarshall.hmi.swing.ContributionTableColumnModel;
 
+import ch.skymarshall.tcwriter.generators.TestSummaryVisitor;
 import ch.skymarshall.tcwriter.generators.model.TestCase;
 import ch.skymarshall.tcwriter.generators.model.TestStep;
 import ch.skymarshall.tcwriter.hmi.steps.StepsTableModel.Column;
@@ -20,7 +21,12 @@ public class StepsTable extends JPanel {
 
 	private final StepsTableModel stepsTableModel;
 
+	private final TestSummaryVisitor summaryVisitor;
+
 	public StepsTable(final ListModel<TestStep> steps, final TestCase tc) {
+
+		summaryVisitor = new TestSummaryVisitor(tc);
+
 		setLayout(new BorderLayout());
 		this.stepsTableModel = new StepsTableModel(steps, tc);
 
@@ -35,7 +41,10 @@ public class StepsTable extends JPanel {
 		columnModel.configureColumn(
 				ContributionTableColumn.gapColumn(Column.TO_VALUE, 100, new DefaultTableCellRenderer()));
 
-		Arrays.stream(Column.values()).forEach(c -> stepsTable.getColumn(c).setCellEditor(new StepsCellEditor(tc)));
+		Arrays.stream(Column.values()).forEach(c -> {
+			stepsTable.getColumn(c).setCellRenderer(new StepsCellRenderer(summaryVisitor));
+			stepsTable.getColumn(c).setCellEditor(new StepsCellEditor(tc));
+		});
 		stepsTable.getColumn(Column.TO_VALUE).setCellEditor(new StepsTextEditor());
 
 		add(new JScrollPane(stepsTable), BorderLayout.CENTER);

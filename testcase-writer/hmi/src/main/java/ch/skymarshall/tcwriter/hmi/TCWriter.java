@@ -25,7 +25,7 @@ public abstract class TCWriter extends JFrame {
 
 		for (int i = 0; i < tc.getSteps().size(); i++) {
 			final TestStep testStep = tc.getSteps().get(i);
-			if (testStep.getOrdinal() != i) {
+			if (testStep.getOrdinal() != i + 1) {
 				throw new IllegalStateException("Step " + i + ": wrong ordinal " + testStep.getOrdinal());
 			}
 		}

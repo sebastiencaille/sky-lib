@@ -20,7 +20,7 @@ _Api_
 public class CustomerTestRole extends Assert {
    ...
 
-@TCApi(description = "Buy an item", stepSummary = "buys")
+@TCApi(description = "Buy an item", stepSummary = "buy")
 
 	public void buy(final BuyActionNavigator navigator, final TestItem newItem) {
 		navigator.apply(testedService);
@@ -50,7 +50,7 @@ public class BuyActionNavigator {
 }
 
 
-@TCApi(description = "the item you need", stepSummary = "An item")
+@TCApi(description = "the item you need", stepSummary = "an item")
 public class TestItem {
 ...
 	@TCApi(description = "a coffee machine", stepSummary = "a coffee machine")
@@ -73,17 +73,24 @@ You can actually read
 
 Actor | Action | Parameter | Navigator
 ----- | ------ | --------- | ---------
-A customer     | buys                              | a coffee machine | from internet
-A delivery guy | delivers an item                  | ||
-A customer     | checks that the delivered item is | a coffee machine |
+A customer     | buy an item                              | a coffee machine | from internet
+A delivery guy | deliver an item                  | ||
+A customer     | check that the delivered item is | a coffee machine |
+
+
 
 This way of structuring the api should be suitable to
-* generate "readable" test reports
-* write test cases using some test writing application. That is, the application may allow the user to select (based on the data type)
-  * First the actor "A customer"
+* write test cases using some high level application. That is, the application may allow the user to select (based on the data type)
+  * First the actor ("A customer")
   * Then, from the actor's role, the action "Buy an item"
   * Then, from the action, the navigator "from internet"
   * Then, from the action, the parameter "a coffee machine"
+* generate "readable" test reports
+````Step 1: As customer, I buy in a local shop: a coffee machine of brand: DeLuxeBrand
+Step 2: As customer, I check that the delivered item is the item bought at the shop: a coffee machine of brand DeLuxeBrand
+Step 3: As customer, I resell the item: 10
+Step 4: As customer, I find another brand
+Step 5: As customer, I keep a note: another brand (from step 4)````
 
 **Data flow management concept**
 

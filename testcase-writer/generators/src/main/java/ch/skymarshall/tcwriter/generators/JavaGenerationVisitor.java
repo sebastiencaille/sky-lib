@@ -12,13 +12,13 @@ import org.skymarshall.util.generators.JavaCodeGenerator;
 import org.skymarshall.util.generators.Template;
 
 import ch.skymarshall.tcwriter.generators.model.IdObject;
-import ch.skymarshall.tcwriter.generators.model.TestCase;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
-import ch.skymarshall.tcwriter.generators.model.TestModel;
-import ch.skymarshall.tcwriter.generators.model.TestParameter;
-import ch.skymarshall.tcwriter.generators.model.TestParameterType;
-import ch.skymarshall.tcwriter.generators.model.TestParameterValue;
-import ch.skymarshall.tcwriter.generators.model.TestStep;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterType;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 
 public class JavaGenerationVisitor {
 

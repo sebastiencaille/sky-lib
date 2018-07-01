@@ -2,7 +2,7 @@ package ch.skymarshall.tcwriter.generators;
 
 import java.util.List;
 
-import ch.skymarshall.tcwriter.generators.model.TestModel;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 
 public class GenerateModelFromCode {
 	private final List<Class<?>> tcClasses;

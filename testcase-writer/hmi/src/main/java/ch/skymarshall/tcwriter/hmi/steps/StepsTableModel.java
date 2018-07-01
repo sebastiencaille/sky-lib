@@ -5,38 +5,42 @@ import java.util.List;
 import javax.swing.event.TableModelEvent;
 
 import org.skymarshall.hmi.model.ListModel;
+import org.skymarshall.hmi.mvc.properties.ObjectProperty;
 import org.skymarshall.hmi.swing.model.ListModelTableModel;
 
 import ch.skymarshall.tcwriter.generators.Helper.Reference;
 import ch.skymarshall.tcwriter.generators.model.IdObject;
-import ch.skymarshall.tcwriter.generators.model.TestAction;
-import ch.skymarshall.tcwriter.generators.model.TestCase;
-import ch.skymarshall.tcwriter.generators.model.TestParameter;
-import ch.skymarshall.tcwriter.generators.model.TestParameter.ParameterNature;
-import ch.skymarshall.tcwriter.generators.model.TestParameterType;
-import ch.skymarshall.tcwriter.generators.model.TestParameterValue;
-import ch.skymarshall.tcwriter.generators.model.TestStep;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter.ParameterNature;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterType;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 import ch.skymarshall.tcwriter.hmi.TestRemoteControl;
 
 public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableModel.Column> {
 
 	private final ListModel<TestStep> steps;
-	private final TestCase tc;
 	private final TestRemoteControl testControl;
+	private final ObjectProperty<TestCase> testCaseProperty;
 
 	public enum Column {
 		BREAKPOINT, STEP, ACTOR, ACTION, NAVIGATOR, PARAM0, TO_VALUE
 	}
 
-	public StepsTableModel(final ListModel<TestStep> steps, final TestCase tc, final TestRemoteControl testControl) {
+	public StepsTableModel(final ObjectProperty<TestCase> testCaseProperty, final ListModel<TestStep> steps,
+			final TestRemoteControl testControl) {
 		super(steps, Column.class);
+		this.testCaseProperty = testCaseProperty;
 		this.steps = steps;
-		this.tc = tc;
 		this.testControl = testControl;
 	}
 
 	@Override
 	protected Object getValueAtColumn(final TestStep testStep, final Column column) {
+		final TestCase tc = testCaseProperty.getValue();
+
 		IdObject tcObject;
 		final ParameterNature nature = ParameterNature.TEST_API_TYPE;
 		final List<TestParameterValue> parametersValue = testStep.getParametersValue();
@@ -52,13 +56,13 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 			tcObject = testStep.getAction();
 			break;
 		case NAVIGATOR:
-			if (!hasNavigationParam(testStep)) {
+			if (!hasNavigationParam(tc, testStep)) {
 				return "";
 			}
-			return createReferenceFromParam(parametersValue.get(0));
+			return createReferenceFromParam(tc, parametersValue.get(0));
 		case PARAM0:
-			if (hasParam(testStep, 0)) {
-				return createReferenceFromParam(parametersValue.get(paramIndexOf(testStep, 0)));
+			if (hasParam(tc, testStep, 0)) {
+				return createReferenceFromParam(tc, parametersValue.get(paramIndexOf(tc, testStep, 0)));
 			}
 			return "";
 		case TO_VALUE:
@@ -72,7 +76,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		return new Reference(tcObject.getId(), tc.descriptionOf(tcObject).getDescription(), nature);
 	}
 
-	private Object createReferenceFromParam(final TestParameterValue parameterValue) {
+	private Object createReferenceFromParam(final TestCase tc, final TestParameterValue parameterValue) {
 		final TestParameter parameterDef = parameterValue.getTestParameter();
 		String display;
 		switch (parameterDef.getNature()) {
@@ -93,6 +97,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 
 	@Override
 	public boolean isCellEditable(final int rowIndex, final int columnIndex) {
+		final TestCase tc = testCaseProperty.getValue();
 		final TestStep testStep = steps.getValueAt(rowIndex);
 		final Column column = columnOf(columnIndex);
 		switch (column) {
@@ -101,9 +106,9 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		case ACTION:
 			return true;
 		case NAVIGATOR:
-			return hasNavigationParam(testStep);
+			return hasNavigationParam(tc, testStep);
 		case PARAM0:
-			return hasParam(testStep, 0);
+			return hasParam(tc, testStep, 0);
 		case TO_VALUE:
 			return true;
 		default:
@@ -111,7 +116,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		}
 	}
 
-	private TestParameterValue createParameterValue(final Reference reference,
+	private TestParameterValue createParameterValue(final TestCase tc, final Reference reference,
 			final TestParameterType testParameterType) {
 		switch (reference.getNature()) {
 		case SIMPLE_TYPE:
@@ -138,6 +143,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		if (value == null) {
 			return;
 		}
+		final TestCase tc = testCaseProperty.getValue();
 
 		switch (column) {
 		case BREAKPOINT:
@@ -168,18 +174,19 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 			migrateOldAction(testStep, oldAction);
 			return;
 		case NAVIGATOR:
-			if (!hasNavigationParam(testStep)) {
+			if (!hasNavigationParam(tc, testStep)) {
 				return;
 			}
-			testStep.getParametersValue().set(0, createParameterValue(reference, testStep.getAction().getParameter(0)));
+			testStep.getParametersValue().set(0,
+					createParameterValue(tc, reference, testStep.getAction().getParameter(0)));
 			return;
 		case PARAM0:
-			if (!hasParam(testStep, 0)) {
+			if (!hasParam(tc, testStep, 0)) {
 				return;
 			}
-			final int paramIndex = paramIndexOf(testStep, 0);
+			final int paramIndex = paramIndexOf(tc, testStep, 0);
 			testStep.getParametersValue().set(paramIndex,
-					createParameterValue(reference, testStep.getAction().getParameter(paramIndex)));
+					createParameterValue(tc, reference, testStep.getAction().getParameter(paramIndex)));
 			return;
 		default:
 		}
@@ -200,9 +207,9 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		}
 	}
 
-	int paramIndexOf(final TestStep testStep, final int index) {
+	int paramIndexOf(final TestCase tc, final TestStep testStep, final int index) {
 		int paramIndex;
-		if (hasNavigationParam(testStep)) {
+		if (hasNavigationParam(tc, testStep)) {
 			paramIndex = 1;
 		} else {
 			paramIndex = 0;
@@ -210,13 +217,13 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		return paramIndex + index;
 	}
 
-	boolean hasNavigationParam(final TestStep testStep) {
+	boolean hasNavigationParam(final TestCase tc, final TestStep testStep) {
 		return !testStep.getAction().getParameters().isEmpty()
 				&& tc.getModel().isNavigation(testStep.getAction().getParameter(0));
 	}
 
-	boolean hasParam(final TestStep testStep, final int index) {
-		return paramIndexOf(testStep, index) < testStep.getAction().getParameters().size();
+	boolean hasParam(final TestCase tc, final TestStep testStep, final int index) {
+		return paramIndexOf(tc, testStep, index) < testStep.getAction().getParameters().size();
 	}
 
 	public void stepUpdated(final int oldStep, final int newStep) {

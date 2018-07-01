@@ -1,11 +1,11 @@
 package ch.skymarshall.tcwriter.generators;
 
 import ch.skymarshall.tcwriter.generators.model.IdObject;
-import ch.skymarshall.tcwriter.generators.model.TestCase;
-import ch.skymarshall.tcwriter.generators.model.TestParameterType;
-import ch.skymarshall.tcwriter.generators.model.TestParameterValue;
-import ch.skymarshall.tcwriter.generators.model.TestReference;
-import ch.skymarshall.tcwriter.generators.model.TestStep;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterType;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestReference;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 
 public class TestSummaryVisitor {
 

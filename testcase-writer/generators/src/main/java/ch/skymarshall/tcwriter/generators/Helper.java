@@ -9,12 +9,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ch.skymarshall.tcwriter.generators.model.IdObject;
-import ch.skymarshall.tcwriter.generators.model.TestModel;
-import ch.skymarshall.tcwriter.generators.model.TestParameter;
-import ch.skymarshall.tcwriter.generators.model.TestParameter.ParameterNature;
-import ch.skymarshall.tcwriter.generators.model.TestRole;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter.ParameterNature;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestRole;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 
 public interface Helper {
+
 	static void dumpModel(final TestModel model) {
 		System.out.println(model.toString());
 		for (final TestRole actor : model.getRoles().values()) {
@@ -27,6 +30,13 @@ public interface Helper {
 					.forEach(api -> System.out.println("    mandatory: " + model.descriptionOf(api) + ": " + api));
 			testObject.getOptionalParameters()
 					.forEach(api -> System.out.println("    optional: " + model.descriptionOf(api) + ": " + api));
+		}
+	}
+
+	static void dumpTestCase(final TestCase testCase) {
+		for (final TestStep step : testCase.getSteps()) {
+			System.out.println(step.getOrdinal() + ": " + step.getActor().getName() + " " + step.getAction().getName());
+			step.getParametersValue().forEach(System.out::println);
 		}
 	}
 
@@ -92,10 +102,10 @@ public interface Helper {
 		}
 	}
 
-	static List<Reference> toReference(final TestModel model, final Collection<? extends IdObject> idObjects,
+	static List<Reference> toReference(final TestCase tc, final Collection<? extends IdObject> idObjects,
 			final ParameterNature nature) {
-		return idObjects.stream().map(
-				idObject -> new Reference(idObject.getId(), model.descriptionOf(idObject).getDescription(), nature))
+		return idObjects.stream()
+				.map(idObject -> new Reference(idObject.getId(), tc.descriptionOf(idObject).getDescription(), nature))
 				.collect(Collectors.toList());
 	}
 

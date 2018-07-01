@@ -13,8 +13,8 @@ import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem;
 import ch.skymarshall.tcwriter.examples.hmi.ExampleTCWriter;
 import ch.skymarshall.tcwriter.generators.TestSummaryVisitor;
-import ch.skymarshall.tcwriter.generators.model.TestCase;
-import ch.skymarshall.tcwriter.generators.model.TestStep;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 
 public class SimpleTest {
 

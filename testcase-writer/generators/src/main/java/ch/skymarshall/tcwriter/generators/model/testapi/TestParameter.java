@@ -1,7 +1,9 @@
-package ch.skymarshall.tcwriter.generators.model;
+package ch.skymarshall.tcwriter.generators.model.testapi;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ch.skymarshall.tcwriter.generators.model.IdObject;
 
 public class TestParameter extends TestParameterType {
 
@@ -24,6 +26,11 @@ public class TestParameter extends TestParameterType {
 	private final List<TestParameterType> mandatoryParameters = new ArrayList<>();
 	private final List<TestParameterType> optionalParameters = new ArrayList<>();
 	private final ParameterNature nature;
+
+	protected TestParameter() {
+		super();
+		this.nature = null;
+	}
 
 	public TestParameter(final String id, final String name, final ParameterNature nature, final String type) {
 		super(id, name, type);

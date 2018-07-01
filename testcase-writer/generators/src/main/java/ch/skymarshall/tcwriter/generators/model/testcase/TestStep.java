@@ -1,19 +1,61 @@
-package ch.skymarshall.tcwriter.generators.model;
+package ch.skymarshall.tcwriter.generators.model.testcase;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import ch.skymarshall.tcwriter.generators.model.ExportReference;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestRole;
+
 public class TestStep {
 
 	private final int ordinal;
+	@JsonIgnore
 	private TestActor actor = TestActor.NOT_SET;
+	@JsonIgnore
 	private TestRole role = TestRole.NOT_SET;
+	@JsonIgnore
 	private TestAction action = TestAction.NOT_SET;
 	private final List<TestParameterValue> parametersValue = new ArrayList<>();
 	private TestReference reference;
 
+	protected TestStep() {
+		this.ordinal = -1;
+	}
+
 	public TestStep(final int ordinal) {
 		this.ordinal = ordinal;
+	}
+
+	@JsonProperty
+	public ExportReference getActorRef() {
+		return new ExportReference(actor);
+	}
+
+	public void setActorRef(final ExportReference ref) {
+		ref.setRestoreAction((tc, id) -> actor = tc.getModel().getActors().get(id));
+	}
+
+	@JsonProperty
+	public ExportReference getRoleRef() {
+		return new ExportReference(role);
+	}
+
+	public void setRoleRef(final ExportReference ref) {
+		ref.setRestoreAction((tc, id) -> role = tc.getModel().getRoles().get(id));
+	}
+
+	@JsonProperty
+	public ExportReference getActionRef() {
+		return new ExportReference(action);
+	}
+
+	public void setActionRef(final ExportReference ref) {
+		ref.setRestoreAction((tc, id) -> action = (TestAction) tc.getRestoreValue(id));
 	}
 
 	public int getOrdinal() {

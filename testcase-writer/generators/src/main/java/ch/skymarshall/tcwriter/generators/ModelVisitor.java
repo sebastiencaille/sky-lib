@@ -1,6 +1,6 @@
 package ch.skymarshall.tcwriter.generators;
 
-import ch.skymarshall.tcwriter.generators.model.TestModel;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 
 public class ModelVisitor {
 

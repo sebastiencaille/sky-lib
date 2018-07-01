@@ -6,6 +6,11 @@ public class ObjectDescription {
 	private final String description;
 	private final String stepSummary;
 
+	protected ObjectDescription() {
+		description = null;
+		stepSummary = null;
+	}
+
 	public ObjectDescription(final String description, final String stepSummary) {
 		this.description = description;
 		this.stepSummary = stepSummary;

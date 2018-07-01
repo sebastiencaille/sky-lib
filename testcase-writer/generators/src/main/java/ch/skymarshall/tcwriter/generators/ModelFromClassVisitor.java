@@ -21,11 +21,11 @@ import ch.skymarshall.tcwriter.annotations.TCApi;
 import ch.skymarshall.tcwriter.annotations.TCRole;
 import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.ObjectDescription;
-import ch.skymarshall.tcwriter.generators.model.TestAction;
-import ch.skymarshall.tcwriter.generators.model.TestModel;
-import ch.skymarshall.tcwriter.generators.model.TestParameter;
-import ch.skymarshall.tcwriter.generators.model.TestParameter.ParameterNature;
-import ch.skymarshall.tcwriter.generators.model.TestRole;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestRole;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter.ParameterNature;
 
 public class ModelFromClassVisitor {
 

@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
-import ch.skymarshall.tcwriter.generators.model.TestStep;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 import ch.skymarshall.tcwriter.test.TestExecutionController;
 import ch.skymarshall.tcwriter.test.TestExecutionController.Command;
 

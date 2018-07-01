@@ -8,8 +8,8 @@ import java.nio.file.Path;
 
 import org.skymarshall.util.generators.Template;
 
-import ch.skymarshall.tcwriter.generators.model.TestCase;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 
 public class TestCaseToJavaGenerator {
 

@@ -1,17 +1,24 @@
-package ch.skymarshall.tcwriter.generators.model;
+package ch.skymarshall.tcwriter.generators.model.testcase;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 
+import ch.skymarshall.tcwriter.generators.model.IdObject;
+import ch.skymarshall.tcwriter.generators.model.ObjectDescription;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
+
 public class TestCase {
 
-	private final TestModel testModel;
+	@JsonIgnore
+	private TestModel testModel;
 
 	private final List<TestStep> steps = new ArrayList<>();
 	private final String path;
@@ -20,8 +27,20 @@ public class TestCase {
 
 	private final Map<String, ObjectDescription> dynamicDescriptions = new HashMap<>();
 
+	@JsonIgnore
+	private Map<String, IdObject> cachedValues = null;
+
+	public TestCase() {
+		this.path = null;
+		this.testModel = null;
+	}
+
 	public TestCase(final String path, final TestModel testModel) {
 		this.path = path;
+		this.testModel = testModel;
+	}
+
+	public void setModel(final TestModel testModel) {
 		this.testModel = testModel;
 	}
 
@@ -55,8 +74,7 @@ public class TestCase {
 	}
 
 	public ObjectDescription descriptionOf(final IdObject idObject) {
-		final String id = idObject.getId();
-		return descriptionOf(id);
+		return descriptionOf(idObject.getId());
 	}
 
 	public ObjectDescription descriptionOf(final String id) {
@@ -80,4 +98,21 @@ public class TestCase {
 		return dynamicReferences.get(returnType);
 	}
 
+	public synchronized IdObject getRestoreValue(final String id) {
+		if (cachedValues == null) {
+			cachedValues = testModel.getRoles().values().stream().flatMap(r -> r.getApis().stream())
+					.collect(Collectors.toMap(IdObject::getId, a -> a));
+			cachedValues.putAll(testModel.getParameterFactories().values().stream()
+					.collect(Collectors.toMap(IdObject::getId, a -> a)));
+		}
+
+		IdObject restoredObject = cachedValues.get(id);
+		if (restoredObject == null) {
+			restoredObject = getReference(id);
+		}
+		if (restoredObject == null) {
+			throw new IllegalArgumentException("No cached value for " + id);
+		}
+		return restoredObject;
+	}
 }

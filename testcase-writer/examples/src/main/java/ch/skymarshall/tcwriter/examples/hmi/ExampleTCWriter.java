@@ -2,32 +2,41 @@ package ch.skymarshall.tcwriter.examples.hmi;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
+
+import javax.swing.SwingUtilities;
 
 import ch.skymarshall.tcwriter.examples.api.interfaces.CustomerTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestRole;
 import ch.skymarshall.tcwriter.generators.GenerateModelFromCode;
 import ch.skymarshall.tcwriter.generators.Helper;
+import ch.skymarshall.tcwriter.generators.JsonHelper;
 import ch.skymarshall.tcwriter.generators.TestCaseToJavaGenerator;
 import ch.skymarshall.tcwriter.generators.model.ObjectDescription;
-import ch.skymarshall.tcwriter.generators.model.TestAction;
-import ch.skymarshall.tcwriter.generators.model.TestActor;
-import ch.skymarshall.tcwriter.generators.model.TestCase;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
-import ch.skymarshall.tcwriter.generators.model.TestModel;
-import ch.skymarshall.tcwriter.generators.model.TestParameter;
-import ch.skymarshall.tcwriter.generators.model.TestParameterType;
-import ch.skymarshall.tcwriter.generators.model.TestParameterValue;
-import ch.skymarshall.tcwriter.generators.model.TestRole;
-import ch.skymarshall.tcwriter.generators.model.TestStep;
-import ch.skymarshall.tcwriter.hmi.TCWriter;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterType;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestRole;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
+import ch.skymarshall.tcwriter.hmi.TCWriterHmi;
 
-public class ExampleTCWriter extends TCWriter {
+public class ExampleTCWriter extends TCWriterHmi {
 
 	private static final String REF_ANOTHER_BRAND = "anotherBrand";
 
-	public ExampleTCWriter(final TestCase tc) {
-		super(tc);
+	private static final File RESOURCE_FOLDER = new File("src/main/resources/models");
+
+	public ExampleTCWriter(final Path modelPath) throws IOException {
+		super(modelPath);
 	}
 
 	@Override
@@ -46,11 +55,31 @@ public class ExampleTCWriter extends TCWriter {
 				.orElseThrow(() -> new IllegalArgumentException("No parameter factory with name: " + name));
 	}
 
-	public static void main(final String[] args) {
+	public static void main(final String[] args) throws IOException {
 
-		final TestCase tc = createTestCase();
+		RESOURCE_FOLDER.mkdirs();
 
-		new ExampleTCWriter(tc).show();
+		final TestCase testCase = createTestCase();
+
+		final String jsonModel = JsonHelper.toJson(testCase.getModel());
+		final Path modelPath = new File(RESOURCE_FOLDER, "testModel.json").toPath();
+		final Path testCasePath = new File(RESOURCE_FOLDER, "testCase.json").toPath();
+		Files.write(modelPath, jsonModel.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE,
+				StandardOpenOption.TRUNCATE_EXISTING);
+
+		final String jsonTestCase = JsonHelper.toJson(testCase);
+		Files.write(testCasePath, jsonTestCase.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE,
+				StandardOpenOption.TRUNCATE_EXISTING);
+
+		final ExampleTCWriter exampleTCWriter = new ExampleTCWriter(modelPath);
+		SwingUtilities.invokeLater(() -> {
+			exampleTCWriter.run();
+			try {
+				exampleTCWriter.loadTestCase(testCasePath);
+			} catch (final IOException e) {
+				e.printStackTrace();
+			}
+		});
 	}
 
 	public static TestCase createTestCase() {
@@ -133,6 +162,8 @@ public class ExampleTCWriter extends TCWriter {
 		step5.addParameter(
 				new TestParameterValue(action5param0, tc.getReference(REF_ANOTHER_BRAND), REF_ANOTHER_BRAND));
 		tc.addStep(step5);
+
+		Helper.dumpTestCase(tc);
 
 		return tc;
 	}

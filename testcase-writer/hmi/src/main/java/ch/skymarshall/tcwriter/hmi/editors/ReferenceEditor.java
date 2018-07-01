@@ -16,7 +16,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import ch.skymarshall.tcwriter.generators.Helper.Reference;
-import ch.skymarshall.tcwriter.generators.model.TestParameter.ParameterNature;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter.ParameterNature;
 
 public class ReferenceEditor extends JDialog {
 

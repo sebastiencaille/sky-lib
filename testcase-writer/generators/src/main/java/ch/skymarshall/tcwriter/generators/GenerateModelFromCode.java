@@ -23,7 +23,7 @@ public class GenerateModelFromCode {
 	public static void main(final String[] args) {
 		final GenerateModelFromCode generateFromCode = new GenerateModelFromCode(Helper.toClasses(args));
 		final TestModel model = generateFromCode.generateModel();
-		Helper.dumpModel(model);
+		System.out.println(Helper.dumpModel(model));
 	}
 
 }

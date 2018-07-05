@@ -97,7 +97,7 @@ public class ExampleTCWriter extends TCWriterHmi {
 		model.getActors().put(deliveryGuy.getId(), deliveryGuy);
 		model.addDescription(customer, new ObjectDescription("A customer", "a customer"));
 		model.addDescription(deliveryGuy, new ObjectDescription("Delivery guy", "a delivery guy"));
-		Helper.dumpModel(model);
+		System.out.println(Helper.dumpModel(model));
 
 		final TestCase tc = new TestCase("ch.skymarshall.tcwriter.examples.MyTC", model);
 		final TestParameter coffeeMachine = findValueFactory(model, "coffeeMachine");

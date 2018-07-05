@@ -18,19 +18,25 @@ import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 
 public interface Helper {
 
-	static void dumpModel(final TestModel model) {
-		System.out.println(model.toString());
+	public static final char EOL = '\n';
+
+	static String dumpModel(final TestModel model) {
+		final StringBuilder builder = new StringBuilder();
+		builder.append(model.toString()).append('\n');
 		for (final TestRole actor : model.getRoles().values()) {
-			System.out.println("  " + model.descriptionOf(actor) + ": " + actor);
-			actor.getApis().forEach(api -> System.out.println("    " + model.descriptionOf(api) + ": " + api));
+			builder.append("  ").append(model.descriptionOf(actor)).append(": ").append(actor).append(EOL);
+			actor.getApis().forEach(api -> builder.append("    ").append(model.descriptionOf(api)).append(": ")
+					.append(api).append('\n'));
+
 		}
 		for (final TestParameter testObject : model.getParameterFactories().values()) {
-			System.out.println("  " + model.descriptionOf(testObject) + ": " + testObject);
-			testObject.getMandatoryParameters()
-					.forEach(api -> System.out.println("    mandatory: " + model.descriptionOf(api) + ": " + api));
-			testObject.getOptionalParameters()
-					.forEach(api -> System.out.println("    optional: " + model.descriptionOf(api) + ": " + api));
+			builder.append("  ").append(model.descriptionOf(testObject)).append(": ").append(testObject).append(EOL);
+			testObject.getMandatoryParameters().forEach(api -> builder.append("    mandatory: ")
+					.append(model.descriptionOf(api)).append(": ").append(api).append(EOL));
+			testObject.getOptionalParameters().forEach(api -> builder.append("    optional: ")
+					.append(model.descriptionOf(api)).append(": ").append(api).append(EOL));
 		}
+		return builder.toString();
 	}
 
 	static void dumpTestCase(final TestCase testCase) {

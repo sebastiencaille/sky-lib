@@ -27,12 +27,12 @@ public class BuyActionNavigator {
 	 */
 	@TCApi(description = "from internet", stepSummary = "from internet")
 	public static BuyActionNavigator fromInternet() {
-		return new BuyActionNavigator(svc -> svc.openBrowser());
+		return new BuyActionNavigator(ExampleService::openBrowser);
 	}
 
 	@TCApi(description = "in a local shop", stepSummary = "in a local shop")
 	public static BuyActionNavigator inLocalShop() {
-		return new BuyActionNavigator(svc -> svc.goToShop());
+		return new BuyActionNavigator(ExampleService::goToShop);
 	}
 
 	public void apply(final ExampleService svc) {

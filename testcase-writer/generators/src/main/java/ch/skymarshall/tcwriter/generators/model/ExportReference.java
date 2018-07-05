@@ -21,7 +21,7 @@ public class ExportReference extends IdObject {
 		super(exportedId);
 	}
 
-	public <T extends IdObject> void setRestoreAction(final BiConsumer<TestCase, String> restoreAction) {
+	public void setRestoreAction(final BiConsumer<TestCase, String> restoreAction) {
 		this.restoreAction = testCase -> restoreAction.accept(testCase, getId());
 	}
 

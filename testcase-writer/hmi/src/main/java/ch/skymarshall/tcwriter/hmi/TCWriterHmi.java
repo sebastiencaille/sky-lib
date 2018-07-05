@@ -13,6 +13,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
+import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -32,6 +35,8 @@ import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 import ch.skymarshall.tcwriter.hmi.steps.StepsTable;
 
 public abstract class TCWriterHmi extends JFrame {
+
+	private static final Logger LOGGER = Logger.getLogger(TCWriterHmi.class.getName());
 
 	private final ControllerPropertyChangeSupport changeSupport = new ControllerPropertyChangeSupport(this);
 
@@ -58,10 +63,10 @@ public abstract class TCWriterHmi extends JFrame {
 		this.getContentPane().setLayout(new BorderLayout());
 
 		final JButton loadButton = new JButton("Load");
-		loadButton.addActionListener(e -> withException(() -> loadTestCase()));
+		loadButton.addActionListener(e -> withException(this::loadTestCase));
 
 		final JButton saveButton = new JButton("Save");
-		saveButton.addActionListener(e -> withException(() -> save()));
+		saveButton.addActionListener(e -> withException(this::save));
 
 		final JButton generateButton = new JButton("Generate");
 		generateButton.addActionListener(e -> withException(() -> generateCode(testCaseProperty.getValue())));
@@ -70,7 +75,7 @@ public abstract class TCWriterHmi extends JFrame {
 		runButton.addActionListener(e -> withException(() -> {
 			testRemoteControl.reset();
 			final int port = testRemoteControl.prepare();
-			System.out.println("Using port " + port);
+			LOGGER.log(Level.INFO, "Using port " + port);
 			final TestCase testCase = testCaseProperty.getValue();
 			final File file = generateCode(testCase);
 			startTestCase(file, testCase.getFolder() + "." + testCase.getName(), port);
@@ -78,7 +83,7 @@ public abstract class TCWriterHmi extends JFrame {
 		}));
 
 		final JButton resumeButton = new JButton("Resume");
-		resumeButton.addActionListener(e -> withException(() -> testRemoteControl.resume()));
+		resumeButton.addActionListener(e -> withException(testRemoteControl::resume));
 
 		final StepsTable stepsTable = new StepsTable(testCaseProperty, testRemoteControl);
 		this.getContentPane().add(stepsTable, BorderLayout.CENTER);
@@ -145,17 +150,20 @@ public abstract class TCWriterHmi extends JFrame {
 		try {
 			e.execute();
 		} catch (final Exception ex) {
-			System.out.println(ex);
+			LOGGER.log(Level.WARNING, "Unable to start testcase", ex);
 			JOptionPane.showMessageDialog(this, "Unable to execution action: " + ex.getMessage());
 		}
 
 	}
 
 	private static class StreamHandler implements Runnable {
-		private final InputStream in;
 
-		public StreamHandler(final InputStream in) {
+		private final InputStream in;
+		private final Consumer<String> flow;
+
+		public StreamHandler(final InputStream in, final Consumer<String> flow) {
 			this.in = in;
+			this.flow = flow;
 		}
 
 		public void start() {
@@ -168,7 +176,7 @@ public abstract class TCWriterHmi extends JFrame {
 				final byte[] buffer = new byte[1024 * 1024];
 				int read;
 				while ((read = in.read(buffer, 0, buffer.length)) >= 0) {
-					System.out.println(new String(buffer, 0, read));
+					flow.accept(new String(buffer, 0, read));
 				}
 			} catch (final IOException e) {
 				// ignore
@@ -185,14 +193,14 @@ public abstract class TCWriterHmi extends JFrame {
 
 		final Process testCompiler = new ProcessBuilder("javac", "-cp", currentClassPath, "-d", "/tmp/tc",
 				file.toString()).redirectErrorStream(true).start();
-		new StreamHandler(testCompiler.getInputStream()).start();
+		new StreamHandler(testCompiler.getInputStream(), LOGGER::info).start();
 		if (testCompiler.waitFor() != 0) {
 			throw new IllegalStateException("Compiler failed with status " + testCompiler.exitValue());
 		}
 
 		final Process runTest = new ProcessBuilder("java", "-cp", currentClassPath + ":/tmp/tc",
 				"-Dtest.port=" + tcpPort, "org.junit.runner.JUnitCore", className).redirectErrorStream(true).start();
-		new StreamHandler(runTest.getInputStream()).start();
+		new StreamHandler(runTest.getInputStream(), LOGGER::info).start();
 	}
 
 }

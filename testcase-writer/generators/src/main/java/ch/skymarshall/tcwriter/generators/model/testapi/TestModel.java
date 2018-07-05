@@ -1,5 +1,6 @@
 package ch.skymarshall.tcwriter.generators.model.testapi;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -11,7 +12,7 @@ import com.google.common.collect.MultimapBuilder;
 import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.ObjectDescription;
 
-public class TestModel {
+public class TestModel implements Serializable {
 
 	private final Map<String, ObjectDescription> descriptions = new HashMap<>();
 

@@ -6,6 +6,8 @@ import java.net.Socket;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 import ch.skymarshall.tcwriter.test.TestExecutionController;
@@ -62,7 +64,7 @@ public class TestRemoteControl {
 
 		controlServer.setSoTimeout(20000);
 		controlConnection = controlServer.accept();
-		System.out.println("Connected");
+		Logger.getLogger(TCWriterHmi.class.getName()).log(Level.INFO, "Connected");
 		TestExecutionController.handleCommands(controlConnection, (connection, command) -> {
 			if (command == Command.STEP) {
 				updateStep(TestExecutionController.readInt(connection.getInputStream()));

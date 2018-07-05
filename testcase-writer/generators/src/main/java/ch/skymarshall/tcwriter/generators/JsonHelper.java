@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
@@ -39,7 +38,7 @@ public class JsonHelper {
 		testCaseWriterModule.addDeserializer(ExportReference.class, new JsonDeserializer<ExportReference>() {
 			@Override
 			public ExportReference deserialize(final JsonParser p, final DeserializationContext ctxt)
-					throws IOException, JsonProcessingException {
+					throws IOException {
 				if (!ExportReference.class.getName().equals(p.getCurrentName())) {
 					throw new IllegalStateException("Unexpected type in ExportReference: " + p.getCurrentName());
 				}
@@ -56,6 +55,9 @@ public class JsonHelper {
 
 		mapper.registerModules(new GuavaModule(), testCaseWriterModule);
 
+	}
+
+	private JsonHelper() {
 	}
 
 	public static String toJson(final TestCase tc) throws IOException {

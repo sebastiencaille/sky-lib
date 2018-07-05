@@ -25,7 +25,7 @@ public class HandleActionNavigator {
 	 */
 	@TCApi(description = "item delivered by company", stepSummary = "the delivered item")
 	public static HandleActionNavigator deliveredItem() {
-		return new HandleActionNavigator(svc -> svc.getPackage());
+		return new HandleActionNavigator(ExampleService::getPackage);
 	}
 
 	@TCApi(description = "item bought at the shop", stepSummary = "the item bought at the shop")

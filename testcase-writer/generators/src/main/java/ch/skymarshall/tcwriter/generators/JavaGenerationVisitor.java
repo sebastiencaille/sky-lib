@@ -36,6 +36,9 @@ public class JavaGenerationVisitor {
 	}
 
 	public String visitTestCase(final TestCase tc) throws IOException, TestCaseException {
+
+		final TestSummaryVisitor testSummaryVisitor = new TestSummaryVisitor(tc);
+
 		final JavaCodeGenerator javaContent = new JavaCodeGenerator();
 
 		if (withController) {
@@ -45,6 +48,8 @@ public class JavaGenerationVisitor {
 		}
 
 		for (final TestStep step : tc.getSteps()) {
+			javaContent.append("// Step ").append(Integer.toString(step.getOrdinal())).append(": ")
+					.append(testSummaryVisitor.process(step)).newLine();
 			visitTestStep(javaContent, tc.getModel(), step);
 		}
 
@@ -63,14 +68,10 @@ public class JavaGenerationVisitor {
 			javaContent.add("testExecutionController.beforeStepExecution(" + step.getOrdinal() + ");").newLine();
 		}
 
-		comment.append(
-				"// Step " + step.getOrdinal() + " - " + step.getActor() + ": " + model.descriptionOf(step.getAction()))
-				.append("\n");
-
 		final JavaCodeGenerator stepContent = new JavaCodeGenerator();
 
 		for (final TestParameterValue stepParamValue : step.getParametersValue()) {
-			visitTestValue(stepContent, comment, model, stepParamValue);
+			visitTestValue(stepContent, model, stepParamValue);
 		}
 
 		if (step.getReference() != null) {
@@ -86,12 +87,13 @@ public class JavaGenerationVisitor {
 		javaContent.append(stepContent.toString());
 
 		if (withController) {
-			javaContent.add("testExecutionController.afterStepExecution(" + step.getOrdinal() + ");").newLine();
+			javaContent.add("testExecutionController.afterStepExecution(" + step.getOrdinal() + ");").newLine()
+					.newLine();
 		}
 
 	}
 
-	private void visitTestValue(final JavaCodeGenerator javaContent, final StringBuilder comment, final TestModel model,
+	private void visitTestValue(final JavaCodeGenerator javaContent, final TestModel model,
 			final TestParameterValue paramValue) throws IOException, TestCaseException {
 
 		final TestParameter param = paramValue.getTestParameter();
@@ -101,9 +103,7 @@ public class JavaGenerationVisitor {
 
 		final JavaCodeGenerator parametersContent = new JavaCodeGenerator();
 
-		visitTestValueParams(parametersContent, comment, model, paramValue.getComplexTypeValues());
-
-		comment.append("//    ").append(param.getType()).append("\n");
+		visitTestValueParams(parametersContent, model, paramValue.getComplexTypeValues());
 
 		final String parameterVarName = varNameFor(paramValue);
 		parametersContent.append(param.getType()).append(" ").append(parameterVarName).append(" = ")
@@ -111,21 +111,20 @@ public class JavaGenerationVisitor {
 		addParameterValuesToCall(parametersContent, paramValue.getComplexTypeValues().values(),
 				param.getMandatoryParameters());
 		parametersContent.append(");").newLine();
-		addSetters(parametersContent, comment, model, parameterVarName, paramValue.getComplexTypeValues().values(),
+		addSetters(parametersContent, model, parameterVarName, paramValue.getComplexTypeValues().values(),
 				param.getOptionalParameters());
 		javaContent.append(parametersContent.toString());
 	}
 
-	private void visitTestValueParams(final JavaCodeGenerator parametersContent, final StringBuilder comment,
-			final TestModel model, final Map<String, TestParameterValue> testObjectValues)
-			throws IOException, TestCaseException {
+	private void visitTestValueParams(final JavaCodeGenerator parametersContent, final TestModel model,
+			final Map<String, TestParameterValue> testObjectValues) throws IOException, TestCaseException {
 		for (final TestParameterValue testObjectValue : testObjectValues.values()) {
 			// No need to define a variable
 			if (testObjectValue.getTestParameter().getNature().isSimpleValue()) {
 				// Simple value
 				continue;
 			}
-			visitTestValue(parametersContent, comment, model, testObjectValue);
+			visitTestValue(parametersContent, model, testObjectValue);
 		}
 	}
 
@@ -144,8 +143,8 @@ public class JavaGenerationVisitor {
 		}
 	}
 
-	private void addSetters(final JavaCodeGenerator parametersContent, final StringBuilder comment,
-			final TestModel model, final String parameterVarName, final Collection<TestParameterValue> parameterValues,
+	private void addSetters(final JavaCodeGenerator parametersContent, final TestModel model,
+			final String parameterVarName, final Collection<TestParameterValue> parameterValues,
 			final List<TestParameterType> filter) throws IOException, TestCaseException {
 		final Map<String, TestParameterType> filteredMap = filter.stream()
 				.collect(Collectors.toMap(IdObject::getId, t -> t));

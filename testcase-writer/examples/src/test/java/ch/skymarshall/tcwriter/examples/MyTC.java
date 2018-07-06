@@ -33,6 +33,7 @@ public class MyTC {
 		customer.buy(var0, var1);
 		
 		testExecutionController.afterStepExecution(1);
+		
 		// Step 2: As customer, I check that the packaged item is the item bought at the shop: a coffee machine of brand DeLuxeBrand
 		testExecutionController.beforeStepExecution(2);
 		ch.skymarshall.tcwriter.examples.api.interfaces.navigators.HandleActionNavigator var2 = HandleActionNavigator.fromShop();
@@ -40,21 +41,25 @@ public class MyTC {
 		customer.checkPackage(var2, var3);
 		
 		testExecutionController.afterStepExecution(2);
+		
 		// Step 3: As customer, I resell the item (in $): 10
 		testExecutionController.beforeStepExecution(3);
 		customer.resellOwnedItem(10);
 		
 		testExecutionController.afterStepExecution(3);
+		
 		// Step 4: As customer, I find another brand
 		testExecutionController.beforeStepExecution(4);
 		java.lang.String anotherBrand = customer.findAnotherBrand();
 		
 		testExecutionController.afterStepExecution(4);
+		
 		// Step 5: As customer, I keep a note: another brand (from step 4)
 		testExecutionController.beforeStepExecution(5);
 		customer.keepNote(anotherBrand);
 		
 		testExecutionController.afterStepExecution(5);
+		
 		
 	}
 

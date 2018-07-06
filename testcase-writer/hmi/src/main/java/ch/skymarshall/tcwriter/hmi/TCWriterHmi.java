@@ -73,13 +73,15 @@ public abstract class TCWriterHmi extends JFrame {
 
 		final JButton runButton = new JButton("Run");
 		runButton.addActionListener(e -> withException(() -> {
-			testRemoteControl.reset();
-			final int port = testRemoteControl.prepare();
-			LOGGER.log(Level.INFO, "Using port " + port);
-			final TestCase testCase = testCaseProperty.getValue();
-			final File file = generateCode(testCase);
-			startTestCase(file, testCase.getFolder() + "." + testCase.getName(), port);
-			testRemoteControl.start();
+			testRemoteControl.resetConnection();
+			new Thread(() -> withException(() -> {
+				final int port = testRemoteControl.prepare();
+				LOGGER.log(Level.INFO, "Using port " + port);
+				final TestCase testCase = testCaseProperty.getValue();
+				final File file = generateCode(testCase);
+				startTestCase(file, testCase.getFolder() + "." + testCase.getName(), port);
+				testRemoteControl.start();
+			}), "Test execution").start();
 		}));
 
 		final JButton resumeButton = new JButton("Resume");

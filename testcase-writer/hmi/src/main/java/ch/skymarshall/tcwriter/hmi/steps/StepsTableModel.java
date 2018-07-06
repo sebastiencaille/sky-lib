@@ -46,7 +46,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		final List<TestParameterValue> parametersValue = testStep.getParametersValue();
 		switch (column) {
 		case BREAKPOINT:
-			return testControl.hasBreakpoint(testStep);
+			return testControl.stepStatus(testStep.getOrdinal());
 		case STEP:
 			return testStep.getOrdinal();
 		case ACTOR:
@@ -226,14 +226,9 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		return paramIndexOf(tc, testStep, index) < testStep.getAction().getParameters().size();
 	}
 
-	public void stepUpdated(final int oldStep, final int newStep) {
-		int min = oldStep - 1;
-		int max = newStep - 1;
-		if (min < 0) {
-			min = max;
-		} else if (max < 0) {
-			max = min;
-		}
+	public void stepExecutionUpdated(final int first, final int last) {
+		final int min = first - 1;
+		final int max = Math.max(last - 1, steps.getSize());
 		fireTableChanged(new TableModelEvent(this, min, max, Column.BREAKPOINT.ordinal()));
 	}
 }

@@ -57,7 +57,7 @@ public class StepsTable extends JPanel {
 		setLayout(new BorderLayout());
 		stepsTableModel = new StepsTableModel(testCaseProperty, steps, testControl);
 
-		testControl.setStepListener(stepsTableModel::stepUpdated);
+		testControl.setStepListener(stepsTableModel::stepExecutionUpdated);
 
 		stepsJTable = new JTable(stepsTableModel);
 		final ContributionTableColumnModel<StepsTableModel.Column> columnModel = new ContributionTableColumnModel<>(

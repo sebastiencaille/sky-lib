@@ -12,7 +12,8 @@ import java.util.concurrent.Semaphore;
 public class TestExecutionController {
 
 	public enum Command {
-		SET_BREAKPOINT('b'), REMOVE_BREAKPOINT('c'), RUN('r'), STEP('s'), EXIT((char) 255);
+		SET_BREAKPOINT('b'), REMOVE_BREAKPOINT('c'), RUN('r'), STEP_START('s'), STEP_OK('o'), TEST_FAILED('f'),
+		EXIT((char) 255);
 		public final char cmd;
 
 		private Command(final char cmd) {
@@ -80,26 +81,23 @@ public class TestExecutionController {
 		if (remoteControlConnection != null) {
 			pauseSemaphore.acquire();
 		}
-		System.out.println("Breakpoints: " + breakpoints);
 	}
 
 	public void beforeStepExecution(final int index) throws InterruptedException {
-		writeStep(index);
+		writeStep(index, Command.STEP_START);
 		if (breakpoints.contains(index)) {
-			System.out.println("Breakpoint");
 			pauseSemaphore.acquire();
-			System.out.println("Released");
 		}
 	}
 
 	public void afterStepExecution(final int index) {
-		// nothing for now
+		writeStep(index, Command.STEP_OK);
 	}
 
-	private void writeStep(final int index) {
+	private void writeStep(final int index, final Command command) {
 		if (remoteControlConnection != null) {
 			try {
-				remoteControlConnection.getOutputStream().write(Command.STEP.cmd);
+				remoteControlConnection.getOutputStream().write(command.cmd);
 				writeInt(remoteControlConnection, index);
 			} catch (final IOException e) {
 				// ignore
@@ -128,6 +126,10 @@ public class TestExecutionController {
 				}
 			}
 		}).start();
+	}
+
+	public static int readStepNumber(final Socket connection) throws IOException {
+		return readInt(connection.getInputStream());
 	}
 
 	public static int readInt(final InputStream inputStream) throws IOException {

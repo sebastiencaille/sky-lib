@@ -20,7 +20,7 @@ import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 
-public class JavaGenerationVisitor {
+public class JunitTestCaseVisitor {
 
 	private final Template template;
 
@@ -30,20 +30,42 @@ public class JavaGenerationVisitor {
 
 	private final boolean withController;
 
-	public JavaGenerationVisitor(final Template template, final boolean withController) {
+	public JunitTestCaseVisitor(final Template template, final boolean withController) {
 		this.template = template;
 		this.withController = withController;
 	}
 
 	public String visitTestCase(final TestCase tc) throws IOException, TestCaseException {
 
+		final Map<String, String> properties = new HashMap<>();
+		if (withController) {
+			final JavaCodeGenerator remoteControlCode = new JavaCodeGenerator();
+
+			remoteControlCode.append("private ITestExecutionController testExecutionController;").newLine().newLine()
+					.append("@org.junit.Rule").newLine()//
+					.append("public org.junit.rules.TestWatcher testWatcher = new org.junit.rules.TestWatcher() {")
+					.newLine() //
+					.append("	@Override").newLine() //
+					.append("	protected void failed(final Throwable e, final org.junit.runner.Description description) {")
+					.newLine() //
+					.append("		super.failed(e, description);").newLine() //
+					.append("		testExecutionController.notifyError(e);").newLine() //
+					.append("	}").newLine() //
+					.append("};").newLine() //
+					.append("@org.junit.Before").newLine() //
+					.append("public void prepareController() throws IOException {").newLine() //
+					.append("	testExecutionController = TestExecutionController.controller();").newLine() //
+					.append("}").newLine();
+			properties.put("remoteControl", remoteControlCode.toString());
+		} else {
+			properties.put("remoteControl", "");
+		}
+
 		final TestSummaryVisitor testSummaryVisitor = new TestSummaryVisitor(tc);
 
 		final JavaCodeGenerator javaContent = new JavaCodeGenerator();
 
 		if (withController) {
-			javaContent.add("TestExecutionController testExecutionController = new TestExecutionController();")
-					.newLine();
 			javaContent.add("testExecutionController.beforeTestExecution();").newLine();
 		}
 
@@ -53,7 +75,6 @@ public class JavaGenerationVisitor {
 			visitTestStep(javaContent, tc.getModel(), step);
 		}
 
-		final Map<String, String> properties = new HashMap<>();
 		properties.put("package", tc.getFolder());
 		properties.put("testName", tc.getName());
 		properties.put("testContent", javaContent.toString());

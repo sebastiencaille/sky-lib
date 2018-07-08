@@ -193,15 +193,16 @@ public abstract class TCWriterHmi extends JFrame {
 				.stream(((URLClassLoader) Thread.currentThread().getContextClassLoader()).getURLs())
 				.map(Object::toString).collect(joining(":"));
 
-		final Process testCompiler = new ProcessBuilder("javac", "-cp", currentClassPath, "-d", "/tmp/tc",
-				file.toString()).redirectErrorStream(true).start();
+		final Process testCompiler = new ProcessBuilder("javac", "-cp", currentClassPath, "-d",
+				System.getProperty("java.io.tmpdir") + "/tc", file.toString()).redirectErrorStream(true).start();
 		new StreamHandler(testCompiler.getInputStream(), LOGGER::info).start();
 		if (testCompiler.waitFor() != 0) {
 			throw new IllegalStateException("Compiler failed with status " + testCompiler.exitValue());
 		}
 
 		final Process runTest = new ProcessBuilder("java", "-cp", currentClassPath + ":/tmp/tc",
-				"-Dtest.port=" + tcpPort, "org.junit.runner.JUnitCore", className).redirectErrorStream(true).start();
+				"-Dtest.port=" + tcpPort, "-Dremote.controller=true", "org.junit.runner.JUnitCore", className)
+						.redirectErrorStream(true).start();
 		new StreamHandler(runTest.getInputStream(), LOGGER::info).start();
 	}
 

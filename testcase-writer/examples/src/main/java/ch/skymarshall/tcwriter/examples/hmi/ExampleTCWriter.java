@@ -12,7 +12,7 @@ import javax.swing.SwingUtilities;
 
 import ch.skymarshall.tcwriter.examples.api.interfaces.CustomerTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestRole;
-import ch.skymarshall.tcwriter.generators.GenerateModelFromCode;
+import ch.skymarshall.tcwriter.generators.ModelFromClassGenerator;
 import ch.skymarshall.tcwriter.generators.Helper;
 import ch.skymarshall.tcwriter.generators.JsonHelper;
 import ch.skymarshall.tcwriter.generators.TestCaseToJavaGenerator;
@@ -84,7 +84,7 @@ public class ExampleTCWriter extends TCWriterHmi {
 
 	public static TestCase createTestCase() {
 
-		final GenerateModelFromCode generateFromCode = new GenerateModelFromCode(
+		final ModelFromClassGenerator generateFromCode = new ModelFromClassGenerator(
 				Arrays.asList(CustomerTestRole.class, DeliveryTestRole.class));
 		final TestModel model = generateFromCode.generateModel();
 

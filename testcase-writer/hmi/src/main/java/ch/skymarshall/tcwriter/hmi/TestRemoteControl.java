@@ -1,6 +1,7 @@
 package ch.skymarshall.tcwriter.hmi;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -11,17 +12,19 @@ import java.util.logging.Logger;
 
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 import ch.skymarshall.tcwriter.test.TestExecutionController;
+import ch.skymarshall.tcwriter.test.TestExecutionController.TestCaseError;
 
 public class TestRemoteControl {
 
 	public enum StepState {
-		STARTED, OK
+		STARTED, OK, FAILED
 	}
 
 	public static class StepStatus {
 		public final int ordinal;
 		public boolean breakPoint = false;
 		public StepState state = null;
+		public String message;
 
 		public StepStatus(final int ordinal) {
 			this.ordinal = ordinal;
@@ -77,16 +80,27 @@ public class TestRemoteControl {
 		controlConnection = controlServer.accept();
 		Logger.getLogger(TCWriterHmi.class.getName()).log(Level.INFO, "Connected");
 		TestExecutionController.handleCommands(controlConnection, (connection, command) -> {
+			final InputStream inputStream = controlConnection.getInputStream();
 			switch (command) {
 			case STEP_START:
-				final int startStepNumber = TestExecutionController.readStepNumber(controlConnection);
+				final int startStepNumber = TestExecutionController.readStepNumber(inputStream);
 				stepStatus(startStepNumber).state = StepState.STARTED;
 				stepChangedListener.accept(startStepNumber, startStepNumber);
 				break;
-			case STEP_OK:
-				final int stopStepNumber = TestExecutionController.readStepNumber(controlConnection);
-				stepStatus(stopStepNumber).state = StepState.OK;
+			case STEP_DONE:
+				final int stopStepNumber = TestExecutionController.readStepNumber(inputStream);
+				final StepStatus stepStatus = stepStatus(stopStepNumber);
+				if (stepStatus.state == StepState.STARTED) {
+					stepStatus.state = StepState.OK;
+				}
 				stepChangedListener.accept(stopStepNumber, stopStepNumber);
+				break;
+			case ERROR:
+				final TestCaseError errorMessage = TestExecutionController.readErrorMessage(inputStream);
+				final int errStepNumber = errorMessage.stepNumber;
+				stepStatus(errStepNumber).state = StepState.FAILED;
+				stepStatus(errStepNumber).message = errorMessage.message;
+				stepChangedListener.accept(errStepNumber, errStepNumber);
 				break;
 			default:
 				break;

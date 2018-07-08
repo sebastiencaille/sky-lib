@@ -5,10 +5,14 @@ import ch.skymarshall.tcwriter.examples.api.interfaces.navigators.*;
 import ch.skymarshall.tcwriter.examples.api.interfaces.*;
 import ch.skymarshall.tcwriter.test.*;
 
+import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Test;
 
 public class ${testName} {
+
+	${remoteControl}
 
 	private CustomerTestRole customer;
 	private DeliveryTestRole delivery;

@@ -6,10 +6,28 @@ import ch.skymarshall.tcwriter.examples.api.interfaces.navigators.*;
 import ch.skymarshall.tcwriter.examples.api.interfaces.*;
 import ch.skymarshall.tcwriter.test.*;
 
+import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Test;
 
 public class MyTC {
+
+	private ITestExecutionController testExecutionController;
+	
+	@org.junit.Rule
+	public org.junit.rules.TestWatcher testWatcher = new org.junit.rules.TestWatcher() {
+		@Override
+		protected void failed(final Throwable e, final org.junit.runner.Description description) {
+			super.failed(e, description);
+			testExecutionController.notifyError(e);
+		}
+	};
+	@org.junit.Before
+	public void prepareController() throws IOException {
+		testExecutionController = TestExecutionController.controller();
+	}
+	
 
 	private CustomerTestRole customer;
 	private DeliveryTestRole delivery;
@@ -23,7 +41,6 @@ public class MyTC {
 	
 	@Test
 	public void testCase() throws Exception {
-		TestExecutionController testExecutionController = new TestExecutionController();
 		testExecutionController.beforeTestExecution();
 		// Step 1: As customer, I buy in a local shop: a coffee machine of brand: DeLuxeBrand
 		testExecutionController.beforeStepExecution(1);

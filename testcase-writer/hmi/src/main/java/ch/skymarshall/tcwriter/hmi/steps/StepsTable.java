@@ -77,7 +77,7 @@ public class StepsTable extends JPanel {
 			stepsJTable.getColumn(c).setCellEditor(new StepsCellEditor(testCaseProperty));
 		});
 
-		stepsJTable.getColumn(Column.BREAKPOINT).setCellRenderer(new BreakpointRenderer(testControl));
+		stepsJTable.getColumn(Column.BREAKPOINT).setCellRenderer(new StepStatusRenderer());
 		stepsJTable.getColumn(Column.BREAKPOINT).setCellEditor(new DefaultCellEditor(new JCheckBox()));
 		stepsJTable.getColumn(Column.TO_VALUE).setCellEditor(new StepsTextEditor());
 

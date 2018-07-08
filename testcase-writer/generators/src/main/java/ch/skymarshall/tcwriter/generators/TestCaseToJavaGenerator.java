@@ -23,7 +23,7 @@ public class TestCaseToJavaGenerator {
 	public File generate(final TestCase tc, final Path targetPath) throws IOException, TestCaseException {
 		final Path targetFile = targetPath.resolve(tc.getPath().replace(".", "/") + ".java");
 		Files.write(targetFile,
-				new JavaGenerationVisitor(testCaseTemplate, true).visitTestCase(tc).getBytes(StandardCharsets.UTF_8));
+				new JunitTestCaseVisitor(testCaseTemplate, true).visitTestCase(tc).getBytes(StandardCharsets.UTF_8));
 		return targetFile.toFile();
 	}
 }

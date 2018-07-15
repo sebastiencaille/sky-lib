@@ -27,6 +27,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import org.skymarshall.example.hmi.TestObject;
 import org.skymarshall.example.hmi.TestObjectTableModel;
@@ -34,6 +35,8 @@ import org.skymarshall.hmi.model.ChildListModel;
 import org.skymarshall.hmi.model.ListModel;
 import org.skymarshall.hmi.model.RootListModel;
 import org.skymarshall.hmi.model.views.ListViews;
+import org.skymarshall.hmi.swing.ContributionTableColumn;
+import org.skymarshall.hmi.swing.ContributionTableColumnModel;
 
 @SuppressWarnings("serial")
 public class TableModelExampleView extends JFrame {
@@ -60,9 +63,20 @@ public class TableModelExampleView extends JFrame {
 		// > filtered(filter));
 		final TestObjectTableModel tableModel = new TestObjectTableModel(filteredModel);
 
-		final JTable table = new JTable(tableModel);
-		controller.objectSelection.bind(selection(table, tableModel)).addDependency(detachOnUpdateOf(filteredModel));
-		getContentPane().add(table, BorderLayout.CENTER);
+		final JTable jtable = new JTable(tableModel);
+
+		// The first row will fills the remaining space up to 100% of the width, the
+		// second one will have a fixed width of 50px
+		final ContributionTableColumnModel<TestObjectTableModel.Columns> columnModel = new ContributionTableColumnModel<>(
+				jtable);
+		columnModel.install();
+		columnModel.configureColumn(ContributionTableColumn.gapColumn(TestObjectTableModel.Columns.A_FIRST_VALUE, 100,
+				new DefaultTableCellRenderer()));
+		columnModel.configureColumn(ContributionTableColumn.fixedColumn(TestObjectTableModel.Columns.A_SECOND_VALUE, 50,
+				new DefaultTableCellRenderer()));
+
+		controller.objectSelection.bind(selection(jtable, tableModel)).addDependency(detachOnUpdateOf(filteredModel));
+		getContentPane().add(jtable, BorderLayout.CENTER);
 
 		// One can also use a converter to change the model's view, or a
 		// BoundComparator, too:

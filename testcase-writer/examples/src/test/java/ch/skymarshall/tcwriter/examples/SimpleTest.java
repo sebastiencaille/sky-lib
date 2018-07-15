@@ -1,9 +1,9 @@
 package ch.skymarshall.tcwriter.examples;
 
-import static ch.skymarshall.tcwriter.examples.api.interfaces.navigators.BuyActionNavigator.fromInternet;
-import static ch.skymarshall.tcwriter.examples.api.interfaces.navigators.BuyActionNavigator.inLocalShop;
-import static ch.skymarshall.tcwriter.examples.api.interfaces.navigators.HandleActionNavigator.deliveredItem;
-import static ch.skymarshall.tcwriter.examples.api.interfaces.navigators.HandleActionNavigator.fromShop;
+import static ch.skymarshall.tcwriter.examples.api.interfaces.navigators.BuyItemNavigator.fromInternet;
+import static ch.skymarshall.tcwriter.examples.api.interfaces.navigators.BuyItemNavigator.inLocalShop;
+import static ch.skymarshall.tcwriter.examples.api.interfaces.navigators.HandleItemNavigator.deliveredItem;
+import static ch.skymarshall.tcwriter.examples.api.interfaces.navigators.HandleItemNavigator.fromShop;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,9 +12,9 @@ import ch.skymarshall.tcwriter.examples.api.interfaces.CustomerTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem;
 import ch.skymarshall.tcwriter.examples.hmi.ExampleTCWriter;
-import ch.skymarshall.tcwriter.generators.TestSummaryVisitor;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
+import ch.skymarshall.tcwriter.generators.visitors.HumanReadableVisitor;
 
 public class SimpleTest {
 
@@ -56,7 +56,7 @@ public class SimpleTest {
 	@Test
 	public void testSummary() {
 		final TestCase testCase = ExampleTCWriter.createTestCase();
-		final TestSummaryVisitor testSummaryVisitor = new TestSummaryVisitor(testCase);
+		final HumanReadableVisitor testSummaryVisitor = new HumanReadableVisitor(testCase);
 		for (final TestStep step : testCase.getSteps()) {
 			System.out.println("Step " + step.getOrdinal() + ": " + testSummaryVisitor.process(step));
 		}

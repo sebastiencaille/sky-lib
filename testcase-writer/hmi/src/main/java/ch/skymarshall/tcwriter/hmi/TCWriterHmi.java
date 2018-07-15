@@ -27,11 +27,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
 import org.skymarshall.hmi.mvc.properties.ObjectProperty;
 
-import ch.skymarshall.tcwriter.generators.JsonHelper;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
+import ch.skymarshall.tcwriter.generators.visitors.JsonHelper;
 import ch.skymarshall.tcwriter.hmi.steps.StepsTable;
 
 public abstract class TCWriterHmi extends JFrame {

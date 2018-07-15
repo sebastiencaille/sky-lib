@@ -4,10 +4,8 @@ import static ch.skymarshall.tcwriter.generators.Helper.toReference;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.EventObject;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,8 +25,10 @@ import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter.ParameterNature;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterType;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 import ch.skymarshall.tcwriter.hmi.editors.ReferenceEditor;
+import ch.skymarshall.tcwriter.hmi.editors.TestParameterValueEditor;
 import ch.skymarshall.tcwriter.hmi.steps.StepsTableModel.Column;
 
 public class StepsCellEditor extends DefaultCellEditor {
@@ -53,11 +53,31 @@ public class StepsCellEditor extends DefaultCellEditor {
 		switch (columnEnum) {
 		case ACTOR:
 			values = tc.getModel().getActors().values();
-			editorComponent = prepareFastListEditor(value, toReference(tc, values, ParameterNature.TEST_API_TYPE));
+			final JComboBox<Reference> actorEditor = prepareFastListEditor(
+					toReference(tc, values, ParameterNature.TEST_API_TYPE));
+			actorEditor.setSelectedItem(value);
+			delegate = new EditorDelegate() {
+				@Override
+				public Object getCellEditorValue() {
+					return actorEditor.getSelectedItem();
+				}
+			};
+			actorEditor.addActionListener(delegate);
+			editorComponent = actorEditor;
 			break;
 		case ACTION:
 			values = step.getRole().getApis();
-			editorComponent = prepareFastListEditor(value, toReference(tc, values, ParameterNature.TEST_API_TYPE));
+			final JComboBox<Reference> actionEditor = prepareFastListEditor(
+					toReference(tc, values, ParameterNature.TEST_API_TYPE));
+			actionEditor.setSelectedItem(value);
+			delegate = new EditorDelegate() {
+				@Override
+				public Object getCellEditorValue() {
+					return actionEditor.getSelectedItem();
+				}
+			};
+			actionEditor.addActionListener(delegate);
+			editorComponent = actionEditor;
 			break;
 		case NAVIGATOR:
 			editorComponent = getParamEditor(tc, step, 0, (Reference) value);
@@ -75,73 +95,66 @@ public class StepsCellEditor extends DefaultCellEditor {
 	private static final Set<String> SIMPLE_TYPES = new HashSet<>(
 			Arrays.asList(Integer.TYPE.getName(), Integer.class.getName(), String.class.getName()));
 
+	public static class EditorValue {
+		public final Reference testFactoryReference;
+		public final TestParameterValue factorParameterValue;
+
+		public EditorValue(final Reference testFactoryReference, final TestParameterValue factorParameterValue) {
+			super();
+			this.testFactoryReference = testFactoryReference;
+			this.factorParameterValue = factorParameterValue;
+		}
+
+	}
+
 	private JComponent getParamEditor(final TestCase tc, final TestStep step, final int index, final Reference value) {
-		final TestParameterType parameter = step.getAction().getParameter(index);
-		final List<Reference> refsReferences = toReference(tc, tc.getReferences(parameter.getType()),
+		final TestParameterType parameterType = step.getAction().getParameter(index);
+		final List<Reference> refsReferences = toReference(tc, tc.getReferences(parameterType.getType()),
 				ParameterNature.REFERENCE);
 
-		if (!SIMPLE_TYPES.contains(parameter.getType())) {
-			final List<Reference> apiReferences = toReference(tc,
-					tc.getModel().getParameterFactories().get(parameter.getType()), ParameterNature.TEST_API_TYPE);
-			final JComboBox<Reference> fastListEditor = StepsCellEditor.prepareFastListEditor(value, refsReferences,
-					apiReferences);
-			fastListEditor.putClientProperty("JComboBox.isTableCellEditor", Boolean.TRUE);
+		if (SIMPLE_TYPES.contains(parameterType.getType())) {
+			final ReferenceEditor editor = new ReferenceEditor(refsReferences, value);
 			delegate = new EditorDelegate() {
-				@Override
-				public void setValue(final Object value) {
-					fastListEditor.setSelectedItem(value);
-				}
 
 				@Override
 				public Object getCellEditorValue() {
-					return fastListEditor.getSelectedItem();
+					return editor.getValue();
 				}
 
 				@Override
-				public boolean shouldSelectCell(final EventObject anEvent) {
-					if (anEvent instanceof MouseEvent) {
-						final MouseEvent e = (MouseEvent) anEvent;
-						return e.getID() != MouseEvent.MOUSE_DRAGGED;
-					}
-					return true;
+				public void actionPerformed(final ActionEvent e) {
+					super.actionPerformed(e);
+					editor.close();
 				}
 
-				@Override
-				public boolean stopCellEditing() {
-					if (fastListEditor.isEditable()) {
-						// Commit edited value.
-						fastListEditor.actionPerformed(new ActionEvent(this, 0, ""));
-					}
-					return super.stopCellEditing();
-				}
 			};
-			fastListEditor.addActionListener(delegate);
-			return fastListEditor;
+			editor.setOkAction(delegate);
+		} else {
+			final TestParameterValueEditor editor = new TestParameterValueEditor(tc, parameterType, value,
+					step.getParametersValue().get(index));
+			delegate = new EditorDelegate() {
+
+				@Override
+				public Object getCellEditorValue() {
+					return new EditorValue(editor.getCurrentReference(), editor.committedEditedParameterValue());
+				}
+
+				@Override
+				public void actionPerformed(final ActionEvent e) {
+					super.actionPerformed(e);
+					editor.close();
+				}
+
+			};
+			editor.setOkAction(delegate);
 		}
-		final ReferenceEditor editor = new ReferenceEditor(refsReferences, value);
-		delegate = new EditorDelegate() {
 
-			@Override
-			public Object getCellEditorValue() {
-				return editor.getValue();
-			}
-
-			@Override
-			public void actionPerformed(final ActionEvent e) {
-				super.actionPerformed(e);
-				editor.close();
-			}
-
-		};
-		editor.setOkAction(delegate);
 		return new JPanel();
 	}
 
-	public static JComboBox<Reference> prepareFastListEditor(final Object value, final List<Reference>... references) {
-		final JComboBox<Reference> cb = new JComboBox<>(Arrays.stream(references).flatMap(Collection::stream)
-				.collect(Collectors.toList()).toArray(new Reference[0]));
-		cb.setSelectedItem(value);
-		return cb;
+	public static JComboBox<Reference> prepareFastListEditor(final List<Reference>... references) {
+		return new JComboBox<>(Arrays.stream(references).flatMap(Collection::stream).collect(Collectors.toList())
+				.toArray(new Reference[0]));
 	}
 
 }

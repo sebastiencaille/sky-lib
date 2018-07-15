@@ -1,4 +1,4 @@
-package ch.skymarshall.tcwriter.generators;
+package ch.skymarshall.tcwriter.generators.visitors;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -61,7 +61,7 @@ public class JunitTestCaseVisitor {
 			properties.put("remoteControl", "");
 		}
 
-		final TestSummaryVisitor testSummaryVisitor = new TestSummaryVisitor(tc);
+		final HumanReadableVisitor testSummaryVisitor = new HumanReadableVisitor(tc);
 
 		final JavaCodeGenerator javaContent = new JavaCodeGenerator();
 

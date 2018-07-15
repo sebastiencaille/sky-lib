@@ -3,6 +3,7 @@ package ch.skymarshall.tcwriter.generators;
 import java.util.List;
 
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
+import ch.skymarshall.tcwriter.generators.visitors.ClassToModelVisitor;
 
 public class ModelFromClassGenerator {
 	private final List<Class<?>> tcClasses;
@@ -14,7 +15,7 @@ public class ModelFromClassGenerator {
 	public TestModel generateModel() {
 
 		final TestModel model = new TestModel();
-		final ModelFromClassVisitor gen = new ModelFromClassVisitor(model);
+		final ClassToModelVisitor gen = new ClassToModelVisitor(model);
 		tcClasses.forEach(gen::addClass);
 		gen.visit();
 		return model;

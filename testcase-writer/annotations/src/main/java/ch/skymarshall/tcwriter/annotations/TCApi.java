@@ -15,7 +15,7 @@ public @interface TCApi {
 
 	String description();
 
-	String stepSummary();
+	String humanReadable();
 
 	boolean isNavigation() default false;
 

@@ -14,7 +14,6 @@ import ch.skymarshall.tcwriter.examples.api.interfaces.CustomerTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestRole;
 import ch.skymarshall.tcwriter.generators.ModelFromClassGenerator;
 import ch.skymarshall.tcwriter.generators.Helper;
-import ch.skymarshall.tcwriter.generators.JsonHelper;
 import ch.skymarshall.tcwriter.generators.TestCaseToJavaGenerator;
 import ch.skymarshall.tcwriter.generators.model.ObjectDescription;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
@@ -27,6 +26,7 @@ import ch.skymarshall.tcwriter.generators.model.testapi.TestRole;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
+import ch.skymarshall.tcwriter.generators.visitors.JsonHelper;
 import ch.skymarshall.tcwriter.hmi.TCWriterHmi;
 
 public class ExampleTCWriter extends TCWriterHmi {

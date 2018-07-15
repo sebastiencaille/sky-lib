@@ -13,11 +13,11 @@ import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter.ParameterNature;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterType;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 import ch.skymarshall.tcwriter.hmi.TestRemoteControl;
+import ch.skymarshall.tcwriter.hmi.steps.StepsCellEditor.EditorValue;
 
 public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableModel.Column> {
 
@@ -116,23 +116,6 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		}
 	}
 
-	private TestParameterValue createParameterValue(final TestCase tc, final Reference reference,
-			final TestParameterType testParameterType) {
-		switch (reference.getNature()) {
-		case SIMPLE_TYPE:
-			return new TestParameterValue(testParameterType.getId(), testParameterType.asParameter(),
-					reference.getDisplay());
-		case REFERENCE:
-			return new TestParameterValue(reference.getId(), tc.getReference(reference.getId()),
-					reference.getDisplay());
-		case TEST_API_TYPE:
-			return new TestParameterValue(reference.getId(), tc.getModel().getTestParameterFactory(reference.getId()));
-		default:
-			return TestParameterValue.NO_VALUE;
-		}
-
-	}
-
 	@Override
 	public String getColumnName(final int column) {
 		return Column.values()[column].name();
@@ -160,7 +143,12 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 			break;
 		}
 
-		final Reference reference = (Reference) value;
+		final Reference reference;
+		if (value instanceof EditorValue) {
+			reference = ((EditorValue) value).testFactoryReference;
+		} else {
+			reference = (Reference) value;
+		}
 		final String newId = reference.getId();
 		switch (column) {
 		case ACTOR:
@@ -177,16 +165,14 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 			if (!hasNavigationParam(tc, testStep)) {
 				return;
 			}
-			testStep.getParametersValue().set(0,
-					createParameterValue(tc, reference, testStep.getAction().getParameter(0)));
+			testStep.getParametersValue().set(0, ((EditorValue) value).factorParameterValue);
 			return;
 		case PARAM0:
 			if (!hasParam(tc, testStep, 0)) {
 				return;
 			}
 			final int paramIndex = paramIndexOf(tc, testStep, 0);
-			testStep.getParametersValue().set(paramIndex,
-					createParameterValue(tc, reference, testStep.getAction().getParameter(paramIndex)));
+			testStep.getParametersValue().set(paramIndex, ((EditorValue) value).factorParameterValue);
 			return;
 		default:
 		}

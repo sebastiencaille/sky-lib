@@ -51,6 +51,10 @@ public class TestParameterValue extends IdObject {
 		}
 	}
 
+	public TestParameter getValueDefinition() {
+		return valueDefinition;
+	}
+
 	@JsonProperty
 	public ExportReference getTestParameterRef() {
 		if (valueDefinition.getNature() == ParameterNature.SIMPLE_TYPE) {

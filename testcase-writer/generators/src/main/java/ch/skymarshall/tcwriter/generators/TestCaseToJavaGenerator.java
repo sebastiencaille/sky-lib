@@ -10,6 +10,7 @@ import org.skymarshall.util.generators.Template;
 
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
+import ch.skymarshall.tcwriter.generators.visitors.JunitTestCaseVisitor;
 
 public class TestCaseToJavaGenerator {
 

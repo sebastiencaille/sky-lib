@@ -35,7 +35,8 @@ public class ReferenceEditor extends JDialog {
 		}
 		getContentPane().add(freeTyping);
 
-		fastRefEditor = prepareFastListEditor(simpleValue, refsReferences);
+		fastRefEditor = prepareFastListEditor(refsReferences);
+		fastRefEditor.setSelectedItem(simpleValue);
 		getContentPane().add(fastRefEditor);
 		fastRefEditor.addItemListener(e -> {
 			if (e.getStateChange() == ItemEvent.SELECTED) {

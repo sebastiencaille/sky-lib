@@ -1,12 +1,12 @@
-package ch.skymarshall.tcwriter.generators;
+package ch.skymarshall.tcwriter.generators.visitors;
 
 import static ch.skymarshall.tcwriter.generators.Helper.methodKey;
 import static ch.skymarshall.tcwriter.generators.Helper.paramKey;
 import static ch.skymarshall.tcwriter.generators.Helper.roleKey;
 
-import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,10 +24,10 @@ import ch.skymarshall.tcwriter.generators.model.ObjectDescription;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestRole;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter.ParameterNature;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestRole;
 
-public class ModelFromClassVisitor {
+public class ClassToModelVisitor {
 
 	private final Set<Class<?>> unprocessedActorClasses = new HashSet<>();
 	private final Set<Class<?>> unprocessedParameterFactoryClasses = new HashSet<>();
@@ -37,7 +37,7 @@ public class ModelFromClassVisitor {
 
 	private final TestModel model;
 
-	public ModelFromClassVisitor(final TestModel model) {
+	public ClassToModelVisitor(final TestModel model) {
 		this.model = model;
 	}
 
@@ -130,10 +130,10 @@ public class ModelFromClassVisitor {
 	private List<TestParameter> processParameters(final IdObject methodIdObject, final Method apiMethod) {
 		processMethodAnnotation(methodIdObject, apiMethod);
 
-		final AnnotatedType[] annotatedParameterTypes = apiMethod.getAnnotatedParameterTypes();
+		final Parameter[] methodParameters = apiMethod.getParameters();
 		final List<TestParameter> processedParameters = new ArrayList<>();
-		for (int i = 0; i < annotatedParameterTypes.length; i++) {
-			final AnnotatedType apiMethodParam = annotatedParameterTypes[i];
+		for (int i = 0; i < methodParameters.length; i++) {
+			final Parameter apiMethodParam = methodParameters[i];
 
 			final TCApi apiMethodAnnotation = apiMethodParam.getAnnotation(TCApi.class);
 			final Type apiMethodParamType = apiMethodParam.getType();
@@ -213,6 +213,6 @@ public class ModelFromClassVisitor {
 	}
 
 	private ObjectDescription descriptionFrom(final TCApi tcApi) {
-		return new ObjectDescription(tcApi.description(), tcApi.stepSummary());
+		return new ObjectDescription(tcApi.description(), tcApi.humanReadable());
 	}
 }

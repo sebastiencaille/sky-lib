@@ -44,7 +44,7 @@ public class MyTC {
 		testExecutionController.beforeTestExecution();
 		// Step 1: As customer, I buy in a local shop: a coffee machine of brand: DeLuxeBrand
 		testExecutionController.beforeStepExecution(1);
-		ch.skymarshall.tcwriter.examples.api.interfaces.navigators.BuyActionNavigator var0 = BuyActionNavigator.inLocalShop();
+		ch.skymarshall.tcwriter.examples.api.interfaces.navigators.BuyItemNavigator var0 = BuyItemNavigator.inLocalShop();
 		ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem var1 = TestItem.coffeeMachine();
 		var1.setBrandName("DeLuxeBrand");
 		customer.buy(var0, var1);
@@ -53,7 +53,7 @@ public class MyTC {
 		
 		// Step 2: As customer, I check that the packaged item is the item bought at the shop: a coffee machine of brand DeLuxeBrand
 		testExecutionController.beforeStepExecution(2);
-		ch.skymarshall.tcwriter.examples.api.interfaces.navigators.HandleActionNavigator var2 = HandleActionNavigator.fromShop();
+		ch.skymarshall.tcwriter.examples.api.interfaces.navigators.HandleItemNavigator var2 = HandleItemNavigator.fromShop();
 		ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem var3 = TestItem.coffeeMachineOfBrand("DeLuxeBrand");
 		customer.checkPackage(var2, var3);
 		

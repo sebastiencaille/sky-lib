@@ -1,4 +1,4 @@
-package ch.skymarshall.tcwriter.generators;
+package ch.skymarshall.tcwriter.generators.visitors;
 
 import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterType;
@@ -7,12 +7,12 @@ import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestReference;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 
-public class TestSummaryVisitor {
+public class HumanReadableVisitor {
 
 	private StringBuilder builder;
 	private final TestCase tc;
 
-	public TestSummaryVisitor(final TestCase tc) {
+	public HumanReadableVisitor(final TestCase tc) {
 		this.tc = tc;
 	}
 

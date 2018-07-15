@@ -18,10 +18,10 @@ import org.skymarshall.hmi.mvc.properties.ObjectProperty;
 import org.skymarshall.hmi.swing.ContributionTableColumn;
 import org.skymarshall.hmi.swing.ContributionTableColumnModel;
 
-import ch.skymarshall.tcwriter.generators.TestSummaryVisitor;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
+import ch.skymarshall.tcwriter.generators.visitors.HumanReadableVisitor;
 import ch.skymarshall.tcwriter.hmi.TestRemoteControl;
 import ch.skymarshall.tcwriter.hmi.steps.StepsTableModel.Column;
 
@@ -35,7 +35,7 @@ public class StepsTable extends JPanel {
 
 	private final StepsTableModel stepsTableModel;
 
-	private TestSummaryVisitor summaryVisitor = new TestSummaryVisitor(NO_TC);
+	private HumanReadableVisitor summaryVisitor = new HumanReadableVisitor(NO_TC);
 
 	private final JTable stepsJTable;
 
@@ -48,7 +48,7 @@ public class StepsTable extends JPanel {
 
 			@Override
 			public void propertyChange(final PropertyChangeEvent evt) {
-				summaryVisitor = new TestSummaryVisitor(testCaseProperty.getValue());
+				summaryVisitor = new HumanReadableVisitor(testCaseProperty.getValue());
 				steps.setValues(testCaseProperty.getValue().getSteps());
 
 			}
@@ -73,7 +73,7 @@ public class StepsTable extends JPanel {
 				ContributionTableColumn.gapColumn(Column.TO_VALUE, 100, new DefaultTableCellRenderer()));
 
 		Arrays.stream(Column.values()).forEach(c -> {
-			stepsJTable.getColumn(c).setCellRenderer(new StepsCellRenderer(summaryVisitor));
+			stepsJTable.getColumn(c).setCellRenderer(new StepsCellRenderer(testCaseProperty));
 			stepsJTable.getColumn(c).setCellEditor(new StepsCellEditor(testCaseProperty));
 		});
 

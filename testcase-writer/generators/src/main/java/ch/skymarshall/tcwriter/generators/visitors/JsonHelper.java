@@ -1,4 +1,4 @@
-package ch.skymarshall.tcwriter.generators;
+package ch.skymarshall.tcwriter.generators.visitors;
 
 import java.io.IOException;
 import java.util.ArrayList;

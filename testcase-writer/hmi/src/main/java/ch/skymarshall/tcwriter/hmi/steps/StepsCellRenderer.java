@@ -1,20 +1,31 @@
 package ch.skymarshall.tcwriter.hmi.steps;
 
 import java.awt.Component;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import ch.skymarshall.tcwriter.generators.TestSummaryVisitor;
+import org.skymarshall.hmi.mvc.properties.ObjectProperty;
+
+import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
+import ch.skymarshall.tcwriter.generators.visitors.HumanReadableVisitor;
 
 public class StepsCellRenderer extends DefaultTableCellRenderer {
 
-	private final TestSummaryVisitor summaryVisitor;
+	private HumanReadableVisitor summaryVisitor;
 
-	public StepsCellRenderer(final TestSummaryVisitor summaryVisitor) {
+	public StepsCellRenderer(final ObjectProperty<TestCase> testCaseProperty) {
 		super();
-		this.summaryVisitor = summaryVisitor;
+		testCaseProperty.addListener(new PropertyChangeListener() {
+
+			@Override
+			public void propertyChange(final PropertyChangeEvent evt) {
+				summaryVisitor = new HumanReadableVisitor(testCaseProperty.getObjectValue());
+			}
+		});
 	}
 
 	@Override

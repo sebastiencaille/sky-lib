@@ -70,7 +70,7 @@ public class TestParameterValueEditor extends JDialog {
 					return;
 				}
 
-				final TestParameterValue testParameterValue = new TestParameterValue(reference.getId(),
+				final TestParameterValue testParameterValue = new TestParameterValue(parameterType.getId(),
 						tc.getModel().getTestParameterFactory(reference.getId()));
 				testParameterValue.getComplexTypeValues().putAll(editedParameterValue.getComplexTypeValues());
 				editedParameterValue = testParameterValue;

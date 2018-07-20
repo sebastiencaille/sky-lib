@@ -42,7 +42,6 @@ public class TestParameterValueTableModel
 	private static ParameterValue asParam(final TestCase tc, final TestParameter parameterFactory,
 			final TestParameterType complexParameter, final TestParameterValue complexParameterValue,
 			final boolean mandatory) {
-		final String parameterFactoryId = parameterFactory.getId();
 		final String complexParameterId = complexParameter.getId();
 		final TestParameterValue testParameterValue = complexParameterValue.getComplexTypeValues()
 				.get(complexParameterId);

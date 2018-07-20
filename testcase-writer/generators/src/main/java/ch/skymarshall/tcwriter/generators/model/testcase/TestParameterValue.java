@@ -42,6 +42,12 @@ public class TestParameterValue extends IdObject {
 		this(id, valueDefinition, null);
 	}
 
+	/**
+	 *
+	 * @param id              either the id of the action's parameter
+	 * @param valueDefinition
+	 * @param simpleValue
+	 */
 	public TestParameterValue(final String id, final TestParameter valueDefinition, final String simpleValue) {
 		super(id);
 		this.valueDefinition = valueDefinition;
@@ -72,10 +78,6 @@ public class TestParameterValue extends IdObject {
 				valueDefinition = (TestParameter) tc.getRestoreValue(id);
 			}
 		});
-	}
-
-	public TestParameter getTestParameter() {
-		return valueDefinition;
 	}
 
 	public Map<String, TestParameterValue> getComplexTypeValues() {

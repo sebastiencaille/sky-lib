@@ -12,8 +12,8 @@ import javax.swing.SwingUtilities;
 
 import ch.skymarshall.tcwriter.examples.api.interfaces.CustomerTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestRole;
-import ch.skymarshall.tcwriter.generators.ModelFromClassGenerator;
 import ch.skymarshall.tcwriter.generators.Helper;
+import ch.skymarshall.tcwriter.generators.ModelFromClassGenerator;
 import ch.skymarshall.tcwriter.generators.TestCaseToJavaGenerator;
 import ch.skymarshall.tcwriter.generators.model.ObjectDescription;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
@@ -41,6 +41,7 @@ public class ExampleTCWriter extends TCWriterHmi {
 
 	@Override
 	public File generateCode(final TestCase tc) throws TestCaseException, IOException {
+		Helper.dumpTestCase(tc);
 		return new TestCaseToJavaGenerator(new File("./src/main/resources/templates/TC.template").toPath()).generate(tc,
 				new File("./src/test/java").toPath());
 	}
@@ -115,7 +116,7 @@ public class ExampleTCWriter extends TCWriterHmi {
 				findValueFactory(model, "inLocalShop"));
 		step1.addParameter(action1Val1);
 		final TestParameterValue action1Val2 = new TestParameterValue(action1Param1, coffeeMachine);
-		final TestParameterType action1Param1Opt0 = coffeeMachine.getOptionalParameter(0);
+		final TestParameterType action1Param1Opt0 = coffeeMachine.getOptionalParameter(1);
 		action1Val2.addComplexTypeValue(
 				new TestParameterValue(action1Param1Opt0, action1Param1Opt0.asParameter(), "DeLuxeBrand"));
 		step1.addParameter(action1Val2);

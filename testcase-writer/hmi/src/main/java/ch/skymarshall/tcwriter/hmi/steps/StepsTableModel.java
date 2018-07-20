@@ -77,7 +77,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 	}
 
 	private Object createReferenceFromParam(final TestCase tc, final TestParameterValue parameterValue) {
-		final TestParameter parameterDef = parameterValue.getTestParameter();
+		final TestParameter parameterDef = parameterValue.getValueDefinition();
 		String display;
 		switch (parameterDef.getNature()) {
 		case REFERENCE:
@@ -172,7 +172,14 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 				return;
 			}
 			final int paramIndex = paramIndexOf(tc, testStep, 0);
-			testStep.getParametersValue().set(paramIndex, ((EditorValue) value).factorParameterValue);
+			final TestParameter testParameter = testStep.getParametersValue().get(paramIndex).getValueDefinition();
+			if (testParameter.getNature() == ParameterNature.SIMPLE_TYPE) {
+				testStep.getParametersValue().set(paramIndex,
+						new TestParameterValue(testStep.getAction().getParameter(paramIndex).getId(), testParameter,
+								((Reference) value).getDisplay()));
+			} else {
+				testStep.getParametersValue().set(paramIndex, ((EditorValue) value).factorParameterValue);
+			}
 			return;
 		default:
 		}
@@ -183,7 +190,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 			final TestParameterValue newMethodParameter = testStep.getParametersValue().get(i);
 			if (i >= oldAction.getParameters().size()) {
 				testStep.addParameter(TestParameterValue.NO_VALUE);
-			} else if (newMethodParameter.getTestParameter().getType()
+			} else if (newMethodParameter.getValueDefinition().getType()
 					.equals(oldAction.getParameters().get(i).getType())) {
 				testStep.getParametersValue().set(i, TestParameterValue.NO_VALUE);
 			}

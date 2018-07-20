@@ -42,7 +42,7 @@ public class MyTC {
 	@Test
 	public void testCase() throws Exception {
 		testExecutionController.beforeTestExecution();
-		// Step 1: As customer, I buy in a local shop: a coffee machine of brand: DeLuxeBrand
+		// Step 1: As customer, I buy in a local shop: a coffee machine, of brand: DeLuxeBrand
 		testExecutionController.beforeStepExecution(1);
 		ch.skymarshall.tcwriter.examples.api.interfaces.navigators.BuyItemNavigator var0 = BuyItemNavigator.inLocalShop();
 		ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem var1 = TestItem.coffeeMachine();
@@ -51,7 +51,7 @@ public class MyTC {
 		
 		testExecutionController.afterStepExecution(1);
 		
-		// Step 2: As customer, I check that the packaged item is the item bought at the shop: a coffee machine of brand DeLuxeBrand
+		// Step 2: As customer, I check that the packaged item is the item bought at the shop: a coffee machine of brand brand's name DeLuxeBrand
 		testExecutionController.beforeStepExecution(2);
 		ch.skymarshall.tcwriter.examples.api.interfaces.navigators.HandleItemNavigator var2 = HandleItemNavigator.fromShop();
 		ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem var3 = TestItem.coffeeMachineOfBrand("DeLuxeBrand");

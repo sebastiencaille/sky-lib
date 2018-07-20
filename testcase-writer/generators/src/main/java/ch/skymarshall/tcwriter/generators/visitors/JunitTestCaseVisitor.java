@@ -117,7 +117,7 @@ public class JunitTestCaseVisitor {
 	private void visitTestValue(final JavaCodeGenerator javaContent, final TestModel model,
 			final TestParameterValue paramValue) throws IOException, TestCaseException {
 
-		final TestParameter param = paramValue.getTestParameter();
+		final TestParameter param = paramValue.getValueDefinition();
 		if (param.getNature().isSimpleValue()) {
 			return;
 		}
@@ -141,7 +141,7 @@ public class JunitTestCaseVisitor {
 			final Map<String, TestParameterValue> testObjectValues) throws IOException, TestCaseException {
 		for (final TestParameterValue testObjectValue : testObjectValues.values()) {
 			// No need to define a variable
-			if (testObjectValue.getTestParameter().getNature().isSimpleValue()) {
+			if (testObjectValue.getValueDefinition().getNature().isSimpleValue()) {
 				// Simple value
 				continue;
 			}
@@ -182,12 +182,12 @@ public class JunitTestCaseVisitor {
 
 	private void inlineValue(final JavaCodeGenerator parametersContent, final TestParameterValue parameterValue)
 			throws IOException, TestCaseException {
-		switch (parameterValue.getTestParameter().getNature()) {
+		switch (parameterValue.getValueDefinition().getNature()) {
 		case TEST_API_TYPE:
 			parametersContent.append(varNameFor(parameterValue));
 			break;
 		case SIMPLE_TYPE:
-			final String valueType = parameterValue.getTestParameter().getType();
+			final String valueType = parameterValue.getValueDefinition().getType();
 			final boolean isString = String.class.getName().equals(valueType);
 			final boolean isLong = Long.class.getName().equals(valueType) || Long.TYPE.getName().equals(valueType);
 			if (isString) {

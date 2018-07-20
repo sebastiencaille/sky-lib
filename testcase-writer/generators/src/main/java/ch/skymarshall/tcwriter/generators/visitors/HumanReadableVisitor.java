@@ -40,22 +40,23 @@ public class HumanReadableVisitor {
 	}
 
 	private void processTestParameter(final String paramSep, final TestParameterValue parameterValue) {
-		builder.append(paramSep).append(summaryOf(parameterValue.getTestParameter()));
-		switch (parameterValue.getTestParameter().getNature()) {
+		builder.append(paramSep).append(summaryOf(parameterValue.getValueDefinition()));
+		switch (parameterValue.getValueDefinition().getNature()) {
 		case REFERENCE:
 			builder.append(" (from step ")
-					.append(((TestReference) parameterValue.getTestParameter()).getStep().getOrdinal()).append(")");
+					.append(((TestReference) parameterValue.getValueDefinition()).getStep().getOrdinal()).append(")");
 			break;
 		case SIMPLE_TYPE:
 			builder.append(parameterValue.getSimpleValue());
 			break;
 		case TEST_API_TYPE:
 			String sep = " ";
-			for (final TestParameterType mandatoryParam : parameterValue.getTestParameter().getMandatoryParameters()) {
+			for (final TestParameterType mandatoryParam : parameterValue.getValueDefinition()
+					.getMandatoryParameters()) {
 				processMandatoryParameter(parameterValue, sep, mandatoryParam);
 				sep = ", ";
 			}
-			for (final TestParameterType optionalParam : parameterValue.getTestParameter().getOptionalParameters()) {
+			for (final TestParameterType optionalParam : parameterValue.getValueDefinition().getOptionalParameters()) {
 				processOptionalParameter(parameterValue, sep, optionalParam);
 				sep = ", ";
 			}

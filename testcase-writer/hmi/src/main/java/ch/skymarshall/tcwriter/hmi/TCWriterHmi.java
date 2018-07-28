@@ -3,10 +3,10 @@ package ch.skymarshall.tcwriter.hmi;
 import static java.util.stream.Collectors.joining;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -17,11 +17,12 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.JToolBar;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
@@ -62,16 +63,16 @@ public abstract class TCWriterHmi extends JFrame {
 
 		this.getContentPane().setLayout(new BorderLayout());
 
-		final JButton loadButton = new JButton("Load");
+		final JButton loadButton = new JButton(icon("general/Open24"));
 		loadButton.addActionListener(e -> withException(this::loadTestCase));
 
-		final JButton saveButton = new JButton("Save");
+		final JButton saveButton = new JButton(icon("general/Save24"));
 		saveButton.addActionListener(e -> withException(this::save));
 
-		final JButton generateButton = new JButton("Generate");
+		final JButton generateButton = new JButton(icon("general/Export24"));
 		generateButton.addActionListener(e -> withException(() -> generateCode(testCaseProperty.getValue())));
 
-		final JButton runButton = new JButton("Run");
+		final JButton runButton = new JButton(icon("media/Play24"));
 		runButton.addActionListener(e -> withException(() -> {
 			testRemoteControl.resetConnection();
 			new Thread(() -> withException(() -> {
@@ -84,24 +85,33 @@ public abstract class TCWriterHmi extends JFrame {
 			}), "Test execution").start();
 		}));
 
-		final JButton resumeButton = new JButton("Resume");
+		final JButton resumeButton = new JButton(icon("media/StepForward24"));
 		resumeButton.addActionListener(e -> withException(testRemoteControl::resume));
 
 		final StepsTable stepsTable = new StepsTable(testCaseProperty, testRemoteControl);
 		this.getContentPane().add(stepsTable, BorderLayout.CENTER);
-		final JPanel buttons = new JPanel(new FlowLayout());
+		final JToolBar buttons = new JToolBar();
 		buttons.add(loadButton);
 		buttons.add(saveButton);
 		buttons.add(generateButton);
 		buttons.add(runButton);
 		buttons.add(resumeButton);
-		this.getContentPane().add(buttons, BorderLayout.SOUTH);
+		this.getContentPane().add(buttons, BorderLayout.NORTH);
 
 		changeSupport.attachAll();
 
 		this.pack();
 		this.setSize(1600, 1200);
 		this.setVisible(true);
+	}
+
+	private ImageIcon icon(final String name) {
+		final String resourceName = "toolbarButtonGraphics/" + name + ".gif";
+		final URL resource = Thread.currentThread().getContextClassLoader().getResource(resourceName);
+		if (resource == null) {
+			throw new IllegalStateException("Unable to find resource " + resourceName);
+		}
+		return new ImageIcon(resource);
 	}
 
 	public void loadTestCase(final TestCase testCase) {

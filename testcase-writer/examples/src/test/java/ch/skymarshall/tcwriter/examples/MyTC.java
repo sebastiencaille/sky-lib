@@ -53,7 +53,7 @@ public class MyTC {
 		
 		// Step 2: As customer, I check that the packaged item is the item bought at the shop: a coffee machine of brand brand's name DeLuxeBrand
 		testExecutionController.beforeStepExecution(2);
-		ch.skymarshall.tcwriter.examples.api.interfaces.navigators.HandleItemNavigator var2 = HandleItemNavigator.fromShop();
+		ch.skymarshall.tcwriter.examples.api.interfaces.navigators.HandlepackageNavigator var2 = HandlepackageNavigator.fromShop();
 		ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem var3 = TestItem.coffeeMachineOfBrand("DeLuxeBrand");
 		customer.checkPackage(var2, var3);
 		

@@ -2,8 +2,8 @@ package ch.skymarshall.tcwriter.examples;
 
 import static ch.skymarshall.tcwriter.examples.api.interfaces.navigators.BuyItemNavigator.fromInternet;
 import static ch.skymarshall.tcwriter.examples.api.interfaces.navigators.BuyItemNavigator.inLocalShop;
-import static ch.skymarshall.tcwriter.examples.api.interfaces.navigators.HandleItemNavigator.deliveredItem;
-import static ch.skymarshall.tcwriter.examples.api.interfaces.navigators.HandleItemNavigator.fromShop;
+import static ch.skymarshall.tcwriter.examples.api.interfaces.navigators.HandlepackageNavigator.deliveredItem;
+import static ch.skymarshall.tcwriter.examples.api.interfaces.navigators.HandlepackageNavigator.fromShop;
 
 import org.junit.Before;
 import org.junit.Test;

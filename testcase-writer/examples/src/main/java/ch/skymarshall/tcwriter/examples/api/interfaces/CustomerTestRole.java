@@ -7,7 +7,7 @@ import ch.skymarshall.tcwriter.annotations.TCRole;
 import ch.skymarshall.tcwriter.examples.ExampleService;
 import ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem;
 import ch.skymarshall.tcwriter.examples.api.interfaces.navigators.BuyItemNavigator;
-import ch.skymarshall.tcwriter.examples.api.interfaces.navigators.HandleItemNavigator;
+import ch.skymarshall.tcwriter.examples.api.interfaces.navigators.HandlepackageNavigator;
 
 @TCRole(description = "A customer", stepSummary = "customer")
 public class CustomerTestRole extends Assert {
@@ -18,7 +18,7 @@ public class CustomerTestRole extends Assert {
 		this.testedService = testedService;
 	}
 
-	@TCApi(description = "Buy an item", humanReadable = "buy")
+	@TCApi(description = "Buy an item", humanReadable = "go %s and buy %s")
 	public void buy(final BuyItemNavigator navigator, final TestItem newItem) {
 		// the selector defines all the actions required to apply/check you data (could
 		// be button clicks on some
@@ -27,13 +27,13 @@ public class CustomerTestRole extends Assert {
 		testedService.buy(newItem.itemKind);
 	}
 
-	@TCApi(description = "check the packaged item", humanReadable = "check that the packaged item is")
-	public void checkPackage(final HandleItemNavigator navigator, final TestItem handledItem) {
+	@TCApi(description = "check the packaged item", humanReadable = "get %s and check that the packaged item is %s")
+	public void checkPackage(final HandlepackageNavigator navigator, final TestItem handledItem) {
 		navigator.apply(testedService);
 		assertEquals(testedService.getOwnedItem(), handledItem.itemKind);
 	}
 
-	@TCApi(description = "Resell the item", humanReadable = "resell the item (in $)")
+	@TCApi(description = "Resell the item", humanReadable = "resell the item for %s$")
 	public void resellOwnedItem(final int price) {
 		testedService.reset();
 	}
@@ -43,7 +43,7 @@ public class CustomerTestRole extends Assert {
 		return "MidClass";
 	}
 
-	@TCApi(description = "Keep a note", humanReadable = "keep a note")
+	@TCApi(description = "Keep a note", humanReadable = "keep the note \"%s\"")
 	public void keepNote(@TCApi(description = "a note", humanReadable = "a note") final String note) {
 		// naah
 	}

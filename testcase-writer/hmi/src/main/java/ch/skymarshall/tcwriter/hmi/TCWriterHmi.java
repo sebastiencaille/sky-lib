@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,6 +23,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JSeparator;
 import javax.swing.JToolBar;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -45,6 +47,8 @@ public abstract class TCWriterHmi extends JFrame {
 
 	private final TestModel testModel;
 
+	private final ObjectProperty<TestStep> selectedStep = new ObjectProperty<>("SelectedStep", changeSupport);
+
 	public abstract File generateCode(TestCase tc) throws TestCaseException, IOException;
 
 	public TCWriterHmi(final TestModel testModel) {
@@ -62,6 +66,9 @@ public abstract class TCWriterHmi extends JFrame {
 		final TestRemoteControl testRemoteControl = new TestRemoteControl(9998);
 
 		this.getContentPane().setLayout(new BorderLayout());
+
+		final JButton newTCButton = new JButton(icon("general/New24"));
+		newTCButton.addActionListener(e -> withException(this::newTestCase));
 
 		final JButton loadButton = new JButton(icon("general/Open24"));
 		loadButton.addActionListener(e -> withException(this::loadTestCase));
@@ -88,14 +95,27 @@ public abstract class TCWriterHmi extends JFrame {
 		final JButton resumeButton = new JButton(icon("media/StepForward24"));
 		resumeButton.addActionListener(e -> withException(testRemoteControl::resume));
 
-		final StepsTable stepsTable = new StepsTable(testCaseProperty, testRemoteControl);
+		final JSeparator sep = new JSeparator(JSeparator.VERTICAL);
+
+		final JButton addStepButton = new JButton(icon("table/RowInsertAfter24"));
+		addStepButton.addActionListener(e -> withException(this::addStep));
+
+		final JButton removeStepButton = new JButton(icon("table/RowDelete24"));
+		removeStepButton.addActionListener(e -> withException(this::removeStep));
+
+		final StepsTable stepsTable = new StepsTable(testCaseProperty, selectedStep, testRemoteControl);
 		this.getContentPane().add(stepsTable, BorderLayout.CENTER);
+
 		final JToolBar buttons = new JToolBar();
+		buttons.add(newTCButton);
 		buttons.add(loadButton);
 		buttons.add(saveButton);
 		buttons.add(generateButton);
 		buttons.add(runButton);
 		buttons.add(resumeButton);
+		buttons.add(sep);
+		buttons.add(addStepButton);
+		buttons.add(removeStepButton);
 		this.getContentPane().add(buttons, BorderLayout.NORTH);
 
 		changeSupport.attachAll();
@@ -112,6 +132,43 @@ public abstract class TCWriterHmi extends JFrame {
 			throw new IllegalStateException("Unable to find resource " + resourceName);
 		}
 		return new ImageIcon(resource);
+	}
+
+	public void newTestCase() {
+		final TestCase newTestCase = new TestCase();
+		newTestCase.setModel(testModel);
+		newTestCase.addStep(new TestStep(1));
+		testCaseProperty.setValue(this, newTestCase);
+	}
+
+	public void addStep() {
+		final TestCase testCase = testCaseProperty.getValue();
+
+		TestStep addAfter;
+		if (selectedStep.getValue() != null) {
+			addAfter = selectedStep.getValue();
+		} else {
+			final List<TestStep> steps = testCase.getSteps();
+			addAfter = steps.get(steps.size() - 1);
+		}
+
+		final TestStep newStep = addAfter.duplicate();
+		testCase.getSteps().add(addAfter.getOrdinal(), newStep);
+		testCase.fixOrdinals();
+		testCaseProperty.forceChanged(this);
+	}
+
+	public void removeStep() {
+		final TestCase testCase = testCaseProperty.getValue();
+		if (testCase.getSteps().size() == 1) {
+			return;
+		}
+		if (selectedStep.getValue() == null) {
+			return;
+		}
+		testCase.getSteps().remove(selectedStep.getValue().getOrdinal() - 1);
+		testCase.fixOrdinals();
+		testCaseProperty.forceChanged(this);
 	}
 
 	public void loadTestCase(final TestCase testCase) {

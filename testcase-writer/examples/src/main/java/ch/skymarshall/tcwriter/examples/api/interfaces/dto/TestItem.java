@@ -32,9 +32,9 @@ public class TestItem {
 		return new TestItem(ItemKind.COFFE_MACHINE);
 	}
 
-	@TCApi(description = "a coffee machine of a specific brand", humanReadable = "a coffee machine of brand")
+	@TCApi(description = "a coffee machine of a specific brand", humanReadable = "a coffee machine of brand \"%s\"")
 	public static TestItem coffeeMachineOfBrand(
-			@TCApi(description = "name of brand", humanReadable = "brand's name") final String brandName) {
+			@TCApi(description = "name of brand", humanReadable = "") final String brandName) {
 		final TestItem testItem = new TestItem(ItemKind.COFFE_MACHINE);
 		testItem.setBrandName(brandName);
 		return testItem;

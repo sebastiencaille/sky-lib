@@ -1,5 +1,8 @@
 package ch.skymarshall.tcwriter.generators.visitors;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterType;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
@@ -9,7 +12,6 @@ import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 
 public class HumanReadableVisitor {
 
-	private StringBuilder builder;
 	private final TestCase tc;
 
 	public HumanReadableVisitor(final TestCase tc) {
@@ -17,79 +19,56 @@ public class HumanReadableVisitor {
 	}
 
 	public String process(final TestStep step) {
-		builder = new StringBuilder();
-		builder.append("As ").append(summaryOf(step.getRole())).append(", I ").append(summaryOf(step.getAction()));
-		String paramSep = ": ";
-		for (int i = 0; i < step.getAction().getParameters().size(); i++) {
-			final TestParameterType parameterType = step.getAction().getParameter(i);
-			final boolean isNavigation = tc.getModel().isNavigation(parameterType);
-			if (isNavigation) {
-				paramSep = " ";
-			}
-
-			final TestParameterValue parameterValue = step.getParametersValue().get(i);
-			processTestParameter(paramSep, parameterValue);
-			if (isNavigation) {
-				paramSep = ": ";
-			} else {
-				paramSep = " and ";
-			}
-
-		}
-		return builder.toString();
+		return "As " + summaryOf(step.getRole(), null) + ", I " + summaryOf(step.getAction(),
+				step.getParametersValue().stream().map(p -> processTestParameter(p)).collect(Collectors.toList()));
 	}
 
-	private void processTestParameter(final String paramSep, final TestParameterValue parameterValue) {
-		builder.append(paramSep).append(summaryOf(parameterValue.getValueDefinition()));
+	private String processTestParameter(final TestParameterValue parameterValue) {
 		switch (parameterValue.getValueDefinition().getNature()) {
 		case REFERENCE:
-			builder.append(" (from step ")
-					.append(((TestReference) parameterValue.getValueDefinition()).getStep().getOrdinal()).append(")");
-			break;
+			return "<the value " + parameterValue.getSimpleValue() + " provided by step "
+					+ ((TestReference) parameterValue.getValueDefinition()).getStep().getOrdinal() + ">";
 		case SIMPLE_TYPE:
-			builder.append(parameterValue.getSimpleValue());
-			break;
+			return parameterValue.getSimpleValue();
 		case TEST_API_TYPE:
-			String sep = " ";
-			for (final TestParameterType mandatoryParam : parameterValue.getValueDefinition()
-					.getMandatoryParameters()) {
-				processMandatoryParameter(parameterValue, sep, mandatoryParam);
+			final List<String> mandatoryParams = parameterValue.getValueDefinition().getMandatoryParameters().stream()
+					.map(p -> processTestParameter(parameterValue.getComplexTypeValues().get(p.getId())))
+					.collect(Collectors.toList());
+			final StringBuilder optionals = new StringBuilder();
+			String sep = "(";
+			boolean hasOptionals = false;
+			for (final TestParameterType optionalParameter : parameterValue.getValueDefinition()
+					.getOptionalParameters()) {
+				final TestParameterValue optionalParameterValue = parameterValue.getComplexTypeValues()
+						.get(optionalParameter.getId());
+				if (optionalParameterValue == null) {
+					continue;
+				}
+				optionals.append(sep).append(summaryOf(optionalParameter, null)).append(": ")
+						.append(processTestParameter(optionalParameterValue));
 				sep = ", ";
+				hasOptionals = true;
 			}
-			for (final TestParameterType optionalParam : parameterValue.getValueDefinition().getOptionalParameters()) {
-				processOptionalParameter(parameterValue, sep, optionalParam);
-				sep = ", ";
-			}
-			break;
+			optionals.append(")");
+			return summaryOf(parameterValue.getValueDefinition(), mandatoryParams)
+					+ ((hasOptionals) ? " " + optionals.toString() : "");
 		default:
-			break;
+			return "";
 		}
 
 	}
 
-	private void processOptionalParameter(final TestParameterValue parameterValue, final String sep,
-			final TestParameterType optionalParam) {
-		final TestParameterValue optionalValue = parameterValue.getComplexTypeValues().get(optionalParam.getId());
-		if (optionalValue != null) {
-			builder.append(sep).append(summaryOf(optionalParam)).append(": ");
-			processTestParameter("", optionalValue);
-		}
-	}
+//	private void processOptionalParameter(final TestParameterValue parameterValue, final String sep,
+//			final TestParameterType optionalParam) {
+//		final TestParameterValue optionalValue = parameterValue.getComplexTypeValues().get(optionalParam.getId());
+//		if (optionalValue != null) {
+//			builder.append(sep).append(summaryOf(optionalParam, null)).append(": ");
+//			processTestParameter(optionalValue);
+//		}
+//	}
 
-	private void processMandatoryParameter(final TestParameterValue parameterValue, final String sep,
-			final TestParameterType mandatoryParam) {
-		final TestParameterValue mandatoryValue = parameterValue.getComplexTypeValues().get(mandatoryParam.getId());
-
-		final String mandatoryParamNameSummary = summaryOf(mandatoryParam);
-		builder.append(sep);
-		if (!mandatoryParamNameSummary.isEmpty()) {
-			builder.append(mandatoryParamNameSummary).append(" ");
-		}
-		processTestParameter("", mandatoryValue);
-	}
-
-	private String summaryOf(final IdObject idObject) {
-		return tc.descriptionOf(idObject).getStepSummary();
+	private String summaryOf(final IdObject idObject, final List<String> list) {
+		return String.format(tc.descriptionOf(idObject).getStepSummary(), (list != null) ? list.toArray() : null);
 	}
 
 }

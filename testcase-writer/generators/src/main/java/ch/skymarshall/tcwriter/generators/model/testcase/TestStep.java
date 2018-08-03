@@ -13,7 +13,7 @@ import ch.skymarshall.tcwriter.generators.model.testapi.TestRole;
 
 public class TestStep {
 
-	private final int ordinal;
+	private int ordinal;
 	@JsonIgnore
 	private TestActor actor = TestActor.NOT_SET;
 	@JsonIgnore
@@ -62,6 +62,10 @@ public class TestStep {
 		return ordinal;
 	}
 
+	public void setOrdinal(final int ordinal) {
+		this.ordinal = ordinal;
+	}
+
 	public TestActor getActor() {
 		return actor;
 	}
@@ -98,6 +102,14 @@ public class TestStep {
 
 	public TestReference getReference() {
 		return reference;
+	}
+
+	public TestStep duplicate() {
+		final TestStep newTestStep = new TestStep();
+		newTestStep.setActor(actor);
+		newTestStep.setAction(action);
+		parametersValue.stream().forEach(p -> newTestStep.addParameter(p.duplicate()));
+		return newTestStep;
 	}
 
 }

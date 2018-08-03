@@ -115,4 +115,10 @@ public class TestCase {
 		}
 		return restoredObject;
 	}
+
+	public void fixOrdinals() {
+		for (int i = 0; i < steps.size(); i++) {
+			steps.get(i).setOrdinal(i + 1);
+		}
+	}
 }

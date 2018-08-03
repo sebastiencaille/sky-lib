@@ -1,22 +1,30 @@
 package ch.skymarshall.tcwriter.hmi.steps;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 
+import javax.swing.CellRendererPane;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 
 import org.skymarshall.hmi.model.RootListModel;
 import org.skymarshall.hmi.model.views.ListViews;
 import org.skymarshall.hmi.mvc.properties.ObjectProperty;
 import org.skymarshall.hmi.swing.ContributionTableColumn;
 import org.skymarshall.hmi.swing.ContributionTableColumnModel;
+import org.skymarshall.hmi.swing.bindings.SwingBindings;
 
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
@@ -27,6 +35,8 @@ import ch.skymarshall.tcwriter.hmi.steps.StepsTableModel.Column;
 
 public class StepsTable extends JPanel {
 
+	private static final JPanel EMPTY_PANEL = new JPanel();
+
 	private static final TestCase NO_TC = new TestCase();
 
 	static {
@@ -35,20 +45,22 @@ public class StepsTable extends JPanel {
 
 	private final StepsTableModel stepsTableModel;
 
-	private HumanReadableVisitor summaryVisitor = new HumanReadableVisitor(NO_TC);
+	private HumanReadableVisitor humanReadableVisitor;
 
 	private final JTable stepsJTable;
 
-	public StepsTable(final ObjectProperty<TestCase> testCaseProperty, final TestRemoteControl testControl) {
+	public StepsTable(final ObjectProperty<TestCase> testCaseProperty, final ObjectProperty<TestStep> selectedStep,
+			final TestRemoteControl testControl) {
 
 		final org.skymarshall.hmi.model.ListModel<TestStep> steps = new RootListModel<>(
 				ListViews.sorted((s1, s2) -> s1.getOrdinal() - s2.getOrdinal()));
 
+		humanReadableVisitor = new HumanReadableVisitor(NO_TC);
 		testCaseProperty.addListener(new PropertyChangeListener() {
 
 			@Override
 			public void propertyChange(final PropertyChangeEvent evt) {
-				summaryVisitor = new HumanReadableVisitor(testCaseProperty.getValue());
+				humanReadableVisitor = new HumanReadableVisitor(testCaseProperty.getValue());
 				steps.setValues(testCaseProperty.getValue().getSteps());
 
 			}
@@ -59,7 +71,50 @@ public class StepsTable extends JPanel {
 
 		testControl.setStepListener(stepsTableModel::stepExecutionUpdated);
 
-		stepsJTable = new JTable(stepsTableModel);
+		stepsJTable = new JTable(stepsTableModel) {
+
+			@Override
+			protected void paintChildren(final Graphics g) {
+				super.paintChildren(g);
+				CellRendererPane toDraw = null;
+				for (final Component component : getComponents()) {
+					if (component instanceof CellRendererPane) {
+						toDraw = (CellRendererPane) component;
+					}
+				}
+				if (toDraw == null) {
+					throw new IllegalStateException("No renderer pane");
+				}
+				for (int i = 0; i < getRowCount(); i += 2) {
+					final Rectangle toPaint0 = getCellRect(i, 0, true);
+					toPaint0.width = getColumnModel().getTotalColumnWidth();
+					final Rectangle toPaint = getCellRect(i, 2, true);
+					toPaint.width = getColumnModel().getTotalColumnWidth();
+
+					toDraw.paintComponent(g, EMPTY_PANEL, this, toPaint0.x, toPaint0.y, toPaint0.width, toPaint0.height,
+							true);
+
+					final TableCellRenderer renderer = new DefaultTableCellRenderer() {
+						@Override
+						public Component getTableCellRendererComponent(final JTable table, final Object value,
+								final boolean isSelected, final boolean hasFocus, final int row, final int column) {
+							super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+							setBackground(new Color(0xFFFF99));
+							setFont(getFont().deriveFont(Font.ITALIC));
+							return this;
+
+						}
+
+					};
+					final Component component = prepareRenderer(renderer, i, 2);
+					component.setSize(toPaint.getSize());
+					component.setPreferredSize(toPaint.getSize());
+					toDraw.paintComponent(g, component, this, toPaint.x, toPaint.y, toPaint.width, toPaint.height,
+							true);
+				}
+
+			}
+		};
 		final ContributionTableColumnModel<StepsTableModel.Column> columnModel = new ContributionTableColumnModel<>(
 				stepsJTable);
 		columnModel.install();
@@ -80,6 +135,8 @@ public class StepsTable extends JPanel {
 		stepsJTable.getColumn(Column.BREAKPOINT).setCellRenderer(new StepStatusRenderer());
 		stepsJTable.getColumn(Column.BREAKPOINT).setCellEditor(new DefaultCellEditor(new JCheckBox()));
 		stepsJTable.getColumn(Column.TO_VALUE).setCellEditor(new StepsTextEditor());
+
+		selectedStep.bind(SwingBindings.selection(stepsJTable, stepsTableModel));
 
 		add(new JScrollPane(stepsJTable), BorderLayout.CENTER);
 	}

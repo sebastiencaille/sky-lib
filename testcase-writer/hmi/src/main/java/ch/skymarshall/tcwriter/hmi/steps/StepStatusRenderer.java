@@ -17,19 +17,25 @@ public class StepStatusRenderer extends DefaultTableCellRenderer {
 	@Override
 	public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
 			final boolean hasFocus, final int row, final int column) {
+		if (value == null || !(value instanceof StepStatus)) {
+			renderer.setText("");
+			renderer.setToolTipText("");
+			renderer.setBackground(table.getBackground());
+			return renderer;
+		}
 		final StepStatus status = (StepStatus) value;
-		renderer.setSelected(status != null && status.breakPoint);
+		renderer.setSelected(status.breakPoint);
 
-		if (status != null && status.state == StepState.STARTED) {
+		if (status.state == StepState.STARTED) {
 			renderer.setBackground(Color.CYAN);
-		} else if (status != null && status.state == StepState.OK) {
+		} else if (status.state == StepState.OK) {
 			renderer.setBackground(Color.GREEN.darker());
-		} else if (status != null && status.state == StepState.FAILED) {
+		} else if (status.state == StepState.FAILED) {
 			renderer.setBackground(Color.RED.darker());
 		} else {
 			renderer.setBackground(table.getBackground());
 		}
-		if (status != null && status.message != null) {
+		if (status.message != null) {
 			renderer.setToolTipText(status.message);
 		}
 		return renderer;

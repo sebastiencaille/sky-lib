@@ -91,7 +91,9 @@ public class TestParameterValueEditor extends JDialog {
 		ok = new JButton("OK");
 		add(ok, BorderLayout.SOUTH);
 
-		selectedReferenceProperty.setValue(this, current);
+		if (current != null) {
+			selectedReferenceProperty.setValue(this, current);
+		}
 
 		setMinimumSize(new Dimension(300, 100));
 		pack();

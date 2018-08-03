@@ -1,5 +1,7 @@
 package ch.skymarshall.tcwriter.hmi.steps;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import javax.swing.event.TableModelEvent;
@@ -16,6 +18,7 @@ import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter.ParameterN
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
+import ch.skymarshall.tcwriter.generators.visitors.HumanReadableVisitor;
 import ch.skymarshall.tcwriter.hmi.TestRemoteControl;
 import ch.skymarshall.tcwriter.hmi.steps.StepsCellEditor.EditorValue;
 
@@ -29,12 +32,21 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		BREAKPOINT, STEP, ACTOR, ACTION, NAVIGATOR, PARAM0, TO_VALUE
 	}
 
+	private HumanReadableVisitor summaryVisitor;
+
 	public StepsTableModel(final ObjectProperty<TestCase> testCaseProperty, final ListModel<TestStep> steps,
 			final TestRemoteControl testControl) {
 		super(steps, Column.class);
 		this.testCaseProperty = testCaseProperty;
 		this.steps = steps;
 		this.testControl = testControl;
+		testCaseProperty.addListener(new PropertyChangeListener() {
+
+			@Override
+			public void propertyChange(final PropertyChangeEvent evt) {
+				summaryVisitor = new HumanReadableVisitor(testCaseProperty.getObjectValue());
+			}
+		});
 	}
 
 	@Override
@@ -97,8 +109,11 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 
 	@Override
 	public boolean isCellEditable(final int rowIndex, final int columnIndex) {
+		if (rowIndex % 2 == 0) {
+			return false;
+		}
 		final TestCase tc = testCaseProperty.getValue();
-		final TestStep testStep = steps.getValueAt(rowIndex);
+		final TestStep testStep = getObjectAtRow(rowIndex);
 		final Column column = columnOf(columnIndex);
 		switch (column) {
 		case BREAKPOINT:
@@ -119,6 +134,25 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 	@Override
 	public String getColumnName(final int column) {
 		return Column.values()[column].name();
+	}
+
+	@Override
+	public Object getValueAt(final int row, final int column) {
+		final TestStep step = getObjectAtRow(row);
+		if (row % 2 == 0) {
+			return summaryVisitor.process(step);
+		}
+		return getValueAtColumn(step, columnOf(column));
+	}
+
+	@Override
+	public TestStep getObjectAtRow(final int row) {
+		return super.getObjectAtRow(row / 2);
+	}
+
+	@Override
+	public void setValueAt(final Object aValue, final int row, final int column) {
+		setValueAtColumn(getObjectAtRow(row), columnOf(column), aValue);
 	}
 
 	@Override
@@ -173,12 +207,20 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 			}
 			final int paramIndex = paramIndexOf(tc, testStep, 0);
 			final TestParameter testParameter = testStep.getParametersValue().get(paramIndex).getValueDefinition();
-			if (testParameter.getNature() == ParameterNature.SIMPLE_TYPE) {
+			switch (testParameter.getNature()) {
+			case SIMPLE_TYPE:
 				testStep.getParametersValue().set(paramIndex,
 						new TestParameterValue(testStep.getAction().getParameter(paramIndex).getId(), testParameter,
 								((Reference) value).getDisplay()));
-			} else {
+				break;
+			case REFERENCE:
+				testStep.getParametersValue().set(paramIndex,
+						new TestParameterValue(testStep.getAction().getParameter(paramIndex).getId(), testParameter,
+								((Reference) value).getDisplay()));
+				break;
+			case TEST_API_TYPE:
 				testStep.getParametersValue().set(paramIndex, ((EditorValue) value).factorParameterValue);
+				break;
 			}
 			return;
 		default:
@@ -223,5 +265,10 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		final int min = first - 1;
 		final int max = Math.max(last - 1, steps.getSize());
 		fireTableChanged(new TableModelEvent(this, min, max, Column.BREAKPOINT.ordinal()));
+	}
+
+	@Override
+	public int getRowCount() {
+		return getBaseModel().getSize() * 2;
 	}
 }

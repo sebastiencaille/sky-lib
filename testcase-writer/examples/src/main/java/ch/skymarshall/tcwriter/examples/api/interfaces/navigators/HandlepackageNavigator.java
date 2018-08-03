@@ -10,11 +10,11 @@ import ch.skymarshall.tcwriter.examples.ExampleService;
  *
  */
 @TCApi(description = "how to handle the item once bought", humanReadable = "how to handle the item once bought", isNavigation = true)
-public class HandleItemNavigator {
+public class HandlepackageNavigator {
 
 	private final Consumer<ExampleService> applier;
 
-	public HandleItemNavigator(final Consumer<ExampleService> applier) {
+	public HandlepackageNavigator(final Consumer<ExampleService> applier) {
 		this.applier = applier;
 	}
 
@@ -23,14 +23,14 @@ public class HandleItemNavigator {
 	 *
 	 * @return
 	 */
-	@TCApi(description = "item delivered by company", humanReadable = "the delivered item")
-	public static HandleItemNavigator deliveredItem() {
-		return new HandleItemNavigator(ExampleService::getPackage);
+	@TCApi(description = "item delivered by company", humanReadable = "the delivered package")
+	public static HandlepackageNavigator deliveredItem() {
+		return new HandlepackageNavigator(ExampleService::getPackage);
 	}
 
-	@TCApi(description = "item bought at the shop", humanReadable = "the item bought at the shop")
-	public static HandleItemNavigator fromShop() {
-		return new HandleItemNavigator(svc -> {
+	@TCApi(description = "item bought at the shop", humanReadable = "the package bought at the shop")
+	public static HandlepackageNavigator fromShop() {
+		return new HandlepackageNavigator(svc -> {
 			// do nothing, we already have it
 		});
 	}

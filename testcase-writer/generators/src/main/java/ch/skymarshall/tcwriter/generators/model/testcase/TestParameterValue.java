@@ -2,6 +2,7 @@ package ch.skymarshall.tcwriter.generators.model.testcase;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -90,6 +91,14 @@ public class TestParameterValue extends IdObject {
 
 	public String getSimpleValue() {
 		return simpleValue;
+	}
+
+	public TestParameterValue duplicate() {
+		final TestParameterValue newValue = new TestParameterValue(getId(), valueDefinition, simpleValue);
+		for (final Entry<String, TestParameterValue> complexValue : complexTypeValues.entrySet()) {
+			newValue.complexTypeValues.put(complexValue.getKey(), complexValue.getValue().duplicate());
+		}
+		return newValue;
 	}
 
 	@Override

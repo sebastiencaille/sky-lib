@@ -25,6 +25,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
@@ -95,7 +96,7 @@ public abstract class TCWriterHmi extends JFrame {
 		final JButton resumeButton = new JButton(icon("media/StepForward24"));
 		resumeButton.addActionListener(e -> withException(testRemoteControl::resume));
 
-		final JSeparator sep = new JSeparator(JSeparator.VERTICAL);
+		final JSeparator sep = new JSeparator(SwingConstants.VERTICAL);
 
 		final JButton addStepButton = new JButton(icon("table/RowInsertAfter24"));
 		addStepButton.addActionListener(e -> withException(this::addStep));

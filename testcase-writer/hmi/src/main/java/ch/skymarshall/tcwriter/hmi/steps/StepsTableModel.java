@@ -153,6 +153,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 	@Override
 	public void setValueAt(final Object aValue, final int row, final int column) {
 		setValueAtColumn(getObjectAtRow(row), columnOf(column), aValue);
+		fireTableRowsUpdated(row - 1, row);
 	}
 
 	@Override
@@ -221,6 +222,11 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 			case TEST_API_TYPE:
 				testStep.getParametersValue().set(paramIndex, ((EditorValue) value).factorParameterValue);
 				break;
+			case NOT_SET:
+				testStep.getParametersValue().set(paramIndex, null);
+				break;
+			default:
+				throw new IllegalStateException("Unhandled: " + column);
 			}
 			return;
 		default:

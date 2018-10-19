@@ -77,11 +77,8 @@ public class TestParameterValueTableModel
 		return paramList;
 	}
 
-	private final ListModel<ParameterValue> paramList;
-
 	public TestParameterValueTableModel(final ListModel<ParameterValue> paramList) {
 		super(paramList, Columns.class);
-		this.paramList = paramList;
 	}
 
 	@Override

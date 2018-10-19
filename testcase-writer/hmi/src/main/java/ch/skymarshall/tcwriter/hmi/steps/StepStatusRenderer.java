@@ -17,10 +17,10 @@ public class StepStatusRenderer extends DefaultTableCellRenderer {
 	@Override
 	public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
 			final boolean hasFocus, final int row, final int column) {
-		if (value == null || !(value instanceof StepStatus)) {
+		if (value == null || row % 2 == 0) {
 			renderer.setText("");
 			renderer.setToolTipText("");
-			renderer.setBackground(table.getBackground());
+			renderer.setBackground(StepsTable.HUMAN_READABLE_BG_COLOR);
 			return renderer;
 		}
 		final StepStatus status = (StepStatus) value;

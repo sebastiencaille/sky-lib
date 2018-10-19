@@ -80,30 +80,31 @@ public class TestRemoteControl {
 		controlConnection = controlServer.accept();
 		Logger.getLogger(TCWriterHmi.class.getName()).log(Level.INFO, "Connected");
 		TestExecutionController.handleCommands(controlConnection, (connection, command) -> {
-			final InputStream inputStream = controlConnection.getInputStream();
-			switch (command) {
-			case STEP_START:
-				final int startStepNumber = TestExecutionController.readStepNumber(inputStream);
-				stepStatus(startStepNumber).state = StepState.STARTED;
-				stepChangedListener.accept(startStepNumber, startStepNumber);
-				break;
-			case STEP_DONE:
-				final int stopStepNumber = TestExecutionController.readStepNumber(inputStream);
-				final StepStatus stepStatus = stepStatus(stopStepNumber);
-				if (stepStatus.state == StepState.STARTED) {
-					stepStatus.state = StepState.OK;
+			try (final InputStream inputStream = controlConnection.getInputStream()) {
+				switch (command) {
+				case STEP_START:
+					final int startStepNumber = TestExecutionController.readStepNumber(inputStream);
+					stepStatus(startStepNumber).state = StepState.STARTED;
+					stepChangedListener.accept(startStepNumber, startStepNumber);
+					break;
+				case STEP_DONE:
+					final int stopStepNumber = TestExecutionController.readStepNumber(inputStream);
+					final StepStatus stepStatus = stepStatus(stopStepNumber);
+					if (stepStatus.state == StepState.STARTED) {
+						stepStatus.state = StepState.OK;
+					}
+					stepChangedListener.accept(stopStepNumber, stopStepNumber);
+					break;
+				case ERROR:
+					final TestCaseError errorMessage = TestExecutionController.readErrorMessage(inputStream);
+					final int errStepNumber = errorMessage.stepNumber;
+					stepStatus(errStepNumber).state = StepState.FAILED;
+					stepStatus(errStepNumber).message = errorMessage.message;
+					stepChangedListener.accept(errStepNumber, errStepNumber);
+					break;
+				default:
+					break;
 				}
-				stepChangedListener.accept(stopStepNumber, stopStepNumber);
-				break;
-			case ERROR:
-				final TestCaseError errorMessage = TestExecutionController.readErrorMessage(inputStream);
-				final int errStepNumber = errorMessage.stepNumber;
-				stepStatus(errStepNumber).state = StepState.FAILED;
-				stepStatus(errStepNumber).message = errorMessage.message;
-				stepChangedListener.accept(errStepNumber, errStepNumber);
-				break;
-			default:
-				break;
 			}
 		}, this::resetConnection);
 

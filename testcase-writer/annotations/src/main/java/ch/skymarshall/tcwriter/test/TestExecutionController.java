@@ -48,12 +48,12 @@ public class TestExecutionController implements ITestExecutionController {
 			return new ITestExecutionController() {
 
 				@Override
-				public void beforeTestExecution() throws InterruptedException {
+				public void beforeTestExecution() {
 					// dummy
 				}
 
 				@Override
-				public void beforeStepExecution(final int i) throws InterruptedException {
+				public void beforeStepExecution(final int i) {
 					// dummy
 				}
 

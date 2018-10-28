@@ -6,8 +6,6 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 
 import javax.swing.CellRendererPane;
@@ -129,13 +127,9 @@ public class StepsTable extends JPanel {
 
 		add(new JScrollPane(stepsJTable), BorderLayout.CENTER);
 
-		testCaseProperty.addListener(new PropertyChangeListener() {
-
-			@Override
-			public void propertyChange(final PropertyChangeEvent evt) {
-				steps.clear();
-				steps.setValues(testCaseProperty.getObjectValue().getSteps());
-			}
+		testCaseProperty.addListener(e -> {
+			steps.clear();
+			steps.setValues(testCaseProperty.getObjectValue().getSteps());
 		});
 	}
 

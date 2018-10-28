@@ -1,8 +1,6 @@
 package ch.skymarshall.tcwriter.hmi.steps;
 
 import java.awt.Component;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -22,13 +20,8 @@ public class StepsCellRenderer extends DefaultTableCellRenderer {
 
 	public StepsCellRenderer(final ObjectProperty<TestCase> testCaseProperty) {
 		super();
-		testCaseProperty.addListener(new PropertyChangeListener() {
-
-			@Override
-			public void propertyChange(final PropertyChangeEvent evt) {
-				summaryVisitor = new HumanReadableVisitor(testCaseProperty.getObjectValue());
-			}
-		});
+		testCaseProperty
+				.addListener(evt -> summaryVisitor = new HumanReadableVisitor(testCaseProperty.getObjectValue()));
 		noRendering.setSize(0, 0);
 	}
 

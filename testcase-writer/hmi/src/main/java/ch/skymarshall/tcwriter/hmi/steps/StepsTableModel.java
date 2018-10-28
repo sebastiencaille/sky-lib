@@ -1,7 +1,5 @@
 package ch.skymarshall.tcwriter.hmi.steps;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import javax.swing.event.TableModelEvent;
@@ -40,13 +38,8 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		this.testCaseProperty = testCaseProperty;
 		this.steps = steps;
 		this.testControl = testControl;
-		testCaseProperty.addListener(new PropertyChangeListener() {
-
-			@Override
-			public void propertyChange(final PropertyChangeEvent evt) {
-				summaryVisitor = new HumanReadableVisitor(testCaseProperty.getObjectValue());
-			}
-		});
+		testCaseProperty
+				.addListener(evt -> summaryVisitor = new HumanReadableVisitor(testCaseProperty.getObjectValue()));
 	}
 
 	@Override

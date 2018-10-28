@@ -56,7 +56,7 @@ public abstract class AbstractProperty implements Serializable {
 	/**
 	 * Support to trigger property change
 	 */
-	protected transient final ControllerPropertyChangeSupport propertySupport;
+	protected final transient ControllerPropertyChangeSupport propertySupport;
 
 	/**
 	 * Property related events (before firing, after firing, ...)
@@ -156,12 +156,8 @@ public abstract class AbstractProperty implements Serializable {
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null || !this.getClass().isInstance(obj)) {
-			return false;
-		}
-
-		return name.equals(((AbstractProperty) obj).name);
+	public final boolean equals(final Object obj) {
+		return obj != null && this.getClass().isInstance(obj) && name.equals(((AbstractProperty) obj).name);
 	}
 
 	@Override

@@ -20,7 +20,7 @@ public class HumanReadableVisitor {
 
 	public String process(final TestStep step) {
 		return "As " + summaryOf(step.getRole(), null) + ", I " + summaryOf(step.getAction(),
-				step.getParametersValue().stream().map(p -> processTestParameter(p)).collect(Collectors.toList()));
+				step.getParametersValue().stream().map(this::processTestParameter).collect(Collectors.toList()));
 	}
 
 	private String processTestParameter(final TestParameterValue parameterValue) {

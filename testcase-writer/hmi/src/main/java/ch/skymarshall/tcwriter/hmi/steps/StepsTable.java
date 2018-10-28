@@ -6,6 +6,8 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 
 import javax.swing.CellRendererPane;
@@ -32,7 +34,7 @@ import ch.skymarshall.tcwriter.hmi.steps.StepsTableModel.Column;
 
 public class StepsTable extends JPanel {
 
-	static final Color HUMAN_READABLE_BG_COLOR = new Color(0xFFFF99);
+	static final Color HUMAN_READABLE_BG_COLOR = new Color(0xDDDDDD);
 
 	private static final TestCase NO_TC = new TestCase();
 
@@ -126,6 +128,15 @@ public class StepsTable extends JPanel {
 		selectedStep.bind(SwingBindings.selection(stepsJTable, stepsTableModel));
 
 		add(new JScrollPane(stepsJTable), BorderLayout.CENTER);
+
+		testCaseProperty.addListener(new PropertyChangeListener() {
+
+			@Override
+			public void propertyChange(final PropertyChangeEvent evt) {
+				steps.clear();
+				steps.setValues(testCaseProperty.getObjectValue().getSteps());
+			}
+		});
 	}
 
 }

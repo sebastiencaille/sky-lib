@@ -63,11 +63,11 @@ public abstract class AbstractAttributeMetaData<T> {
 	}
 
 	@Override
-	public boolean equals(final Object o) {
-		if (!(o instanceof GetSetAttribute)) {
+	public final boolean equals(final Object o) {
+		if (!(o instanceof AbstractAttributeMetaData)) {
 			return false;
 		}
-		return name.equals(((GetSetAttribute<?>) o).name);
+		return name.equals(((AbstractAttributeMetaData<?>) o).name);
 	}
 
 	@Override

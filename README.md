@@ -83,9 +83,9 @@ A customer     | check that the delivered item is | a coffee machine |
 This way of structuring the api should be suitable for
 * writing test cases using some high level applications. That is, the application may allow the user to select (based on the data types)
   1. The Actor ("A customer")
-  1. Based on the selected Actor's role, the Action "Buy an item"
-  1. Based on the selected Action, the Navigator "from internet"
-  1. Based on the selected Action, the parameter "a coffee machine"
+  2. Based on the selected Actor's role, the Action "Buy an item"
+  3. Based on the selected Action, the Navigator "from internet"
+  4. Based on the selected Action, the parameter "a coffee machine"
 * generating "readable" test reports
 
 ```
@@ -128,10 +128,10 @@ A simple flow would look like
 [Json](dataflow-manager/data-flow-manager/examples/src/main/resources/data/simple-flow.json)
 * A test case that is [Code](dataflow-manager/data-flow-manager/examples/src/test/java/ch/skymarshall/dataflowmgr/examples/DataFlowTest.java) 
 	1. loading the java flavor of the flow generated from the json file
-	1. running a test case
-	1. generating a json that contains the list of executed services
-	1. generating an image showing all the actions/input rules/output rules
-	1. it could generate an image showing the mismatches between the actions/input rules/output rules activated during the flow's execution and the expected ones   
+	2. running a test case
+	3. generating a json that contains the list of executed services
+	4. generating an image showing all the actions/input rules/output rules
+	5. it could generate an image showing the mismatches between the actions/input rules/output rules activated during the flow's execution and the expected ones   
 
 **MVC concept**
 

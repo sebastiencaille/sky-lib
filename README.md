@@ -15,7 +15,9 @@ The concept is to have
 Example
 
 _Api_
-````
+[Code](testcase-writer/examples/src/main/java/ch/skymarshall/tcwriter/examples/api/interfaces)
+
+```java
 @TCRole(description = "Customer")
 public class CustomerTestRole extends Assert {
    ...
@@ -59,16 +61,17 @@ public class TestItem {
 	}
 ...
 }
-````
+```
 
-_Test_
-````
+_Java test case_
+[Code](testcase-writer/examples/src/test/java/ch/skymarshall/tcwriter/examples/SimpleTest.java)
+
+```java
 CustomerTestRole customer = new CustomerTestRole(testedService); // Aka A customer
-TestItem coffeeMachine = TestItem.coffeeMachine();
-customer.buy(fromInternet(), coffeeMachine);
+customer.buy(fromInternet(), coffeeMachine());
 deliveryGuy.deliverItem(); // Another actor of the system
-customer.checkPackage(deliveredItem(), coffeeMachine);
-````
+customer.checkPackage(deliveredItem(), coffeeMachine());
+```
 You can actually read
 
 Actor | Action | Parameter | Navigator
@@ -77,20 +80,27 @@ A customer     | buy an item                              | a coffee machine | f
 A delivery guy | deliver an item                  | ||
 A customer     | check that the delivered item is | a coffee machine |
 
-This way of structuring the api should be suitable to
-* write test cases using some high level application. That is, the application may allow the user to select (based on the data type)
-  * First the actor ("A customer")
-  * Then, from the actor's role, the action "Buy an item"
-  * Then, from the action, the navigator "from internet"
-  * Then, from the action, the parameter "a coffee machine"
-* generate "readable" test reports
-````
+This way of structuring the api should be suitable for
+* writing test cases using some high level applications. That is, the application may allow the user to select (based on the data types)
+  1. The Actor ("A customer")
+  1. Based on the selected Actor's role, the Action "Buy an item"
+  1. Based on the selected Action, the Navigator "from internet"
+  1. Based on the selected Action, the parameter "a coffee machine"
+* generating "readable" test reports
+
+```
 Step 1: As customer, I buy in a local shop: a coffee machine of brand: DeLuxeBrand
 Step 2: As customer, I check that the packaged item is the item bought at the shop: a coffee machine of brand DeLuxeBrand
 Step 3: As customer, I resell the item (in $): 10
 Step 4: As customer, I find another brand
 Step 5: As customer, I keep a note: another brand (from step 4)
-````
+```
+
+* generating java test cases
+[Code](testcase-writer/examples/src/test/java/ch/skymarshall/tcwriter/examples/MyTC.java)
+
+* storing the test in a "human readable" format (JSON, XML, ...)
+[Code](testcase-writer/examples/src/main/resources/models)
 
 **Data flow management concept**
 
@@ -100,16 +110,28 @@ The concept is the following:
 * The description of the structure is based on the concept of flows
 * A flow describes the structure of the information's exchange in the application 
 * A service is basically structured the following way:
-  * A data multiplexer: the service may receive different types of input data, which are multiplexed in a type supported by the service
-  * At some point, the multiplexed data is sent to the service's processing unit (the Action)
-  * the output of the Action is de-multiplexed into many output data
+  * A data multiplexer receives different types of input data, which are multiplexed by an "input rule" to produce a data type supported by the service
+  * At some point, the multiplexed data is sent to the service (aka the Action)
+  * the output of the Action is de-multiplexed into many output data by the "output rule"
 * The services are exchanging information through the input/output data
-* The description is written in a description language (json, xml, ...)
+* The description of the system is written in a "human readable" language (json, xml, ...)
 * Generators are used to 
   * Create the operational code
   * Create unit tests (to test the structure, using mock objects)
   * Create a visual description of the structure (eg dependency graphs using dot)
 * The description of the structure may show the input/output data and actions used during a specific execution (test case or application) 
+
+A simple flow would look like
+* Generated image (ellipses are services, boxes are data transfer types)
+[Image](dataflow-manager/data-flow-manager/examples/src/test/reports/SimpleFlow-mainflow.png) 
+* json that describes the flow
+[Json](dataflow-manager/data-flow-manager/examples/src/main/resources/data/simple-flow.json)
+* A test case that is [Code](dataflow-manager/data-flow-manager/examples/src/test/java/ch/skymarshall/dataflowmgr/examples/DataFlowTest.java) 
+	1. loading the java flavor of the flow generated from the json file
+	1. running a test case
+	1. generating a json that contains the list of executed services
+	1. generating an image showing all the actions/input rules/output rules
+	1. it could generate an image showing the mismatches between the actions/input rules/output rules activated during the flow's execution and the expected ones   
 
 **MVC concept**
 
@@ -121,7 +143,8 @@ Key points
 * The MVC model can be generated from the application model
 
 Example
-````
+
+```java
 protected final BooleanProperty booleanProperty = ...;
 
 JCheckBox booleanEditor = new JCheckBox();
@@ -129,7 +152,7 @@ booleanProperty.bind(selected(booleanEditor));
 
 JTextField stringEditor = new JTextField();
 booleanProperty.bind(booleanToString()).bind(value(stringEditor));
-````
+```
 Working with selections
 
 _When propertyThatDrivesTheListValues is updated_
@@ -137,14 +160,15 @@ _When propertyThatDrivesTheListValues is updated_
 1. dynamicListSelectionEditor is updated
 1. dynamicListSelectionProperty is re-applied to restore the selection
 1. dynamicListSelectionProperty is re-attached
-````
+
+```java
 JList<String> dynamicListSelectionEditor = new JList<>();
 ObjectProperty<String> propertyThatDrivesTheListValues = ... 
 propertyThatDrivesTheListValues.bind(...some converter...).bind(values(dynamicListSelectionEditor));
 
 ObjectProperty<String> dynamicListSelectionProperty = ...;
 dynamicListSelectionProperty.bind(selection(dynamicListSelectionEditor)).addDependency(detachOnUpdateOf(propertyThatDrivesTheListValues)); 
-````
+```
 
 **List Model**
 
@@ -156,7 +180,8 @@ Key points
 * stopEditingValue() must be called to validate the edition and propagate the change
 
 Example
-````
+
+```java
 IListView<TestObject> VIEW = ListViews.sorted((o1, o2) -> o1.val - o2.val);
 ListModel<TestObject> model = new RootListModel<>(VIEW);
 ListModel<TestObject> childModel = new ChildListModel<>(model);
@@ -169,16 +194,17 @@ model.startEditingValue(toMove);
 toMove.val = 2;
 model.stopEditingValue();
 checkModel(childModel, 1, 2, 3);
-````
+```
 Controlling filter using the MVC concept (TableModelExampleView.java)
-````
+
+```java
 final DynamicView view = new DynamicView();
 BooleanProperty reverseOrder = ...
 reverseOrder.bind(selected(... some checkbox ...));
 reverseOrder.bind(view.reverseOrder());
 ListModel<TestObject> model = new RootListModel<>(ListViews.sorted(NORMAL_ORDER));
 ListModel<TestObject> filteredModel = new ChildListModel<>(model, view);
-````
+```
 
 **Table model handling**
 
@@ -188,7 +214,8 @@ Key points
 * The column can have a fixed size or fill the size of the table
  
 Example
-````
+
+```java
 public class TestObjectTableModel extends ListModelTableModel<TestObject, Columns> {
 
 	public enum Columns { A_FIRST_VALUE, A_SECOND_VALUE	}
@@ -200,9 +227,10 @@ public class TestObjectTableModel extends ListModelTableModel<TestObject, Column
    	protected Object getValueAtColumn(final TestObject object, final Columns column) {
 		switch (column) {
 			case A_FIRST_VALUE: ...
-````
+```
 Tuning columns
-````
+
+```java
 final ContributionTableColumnModel<StepsTableModel.Column> columnModel = new ContributionTableColumnModel<>(table);
 columnModel.install();
 columnModel.configureColumn(ContributionTableColumn.fixedColumn(Column.STEP, 20, new DefaultTableCellRenderer()));
@@ -210,6 +238,6 @@ columnModel.configureColumn(ContributionTableColumn.fixedColumn(Column.ACTOR, 12
 columnModel.configureColumn(ContributionTableColumn.gapColumn(...)); // Will fill the rest of the table 
 
 Arrays.stream(Column.values()).forEach(c -> stepsTable.getColumn(c).setCellEditor(new Editor()));
-````
+```
 
 

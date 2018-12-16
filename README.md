@@ -14,7 +14,7 @@ The concept is to have
 
 Example
 
-![Test Case](screenshots/TC.png)
+![Test Case](screenshots/TC_Writer.png)
 
 
 _Api_ [[Code](testcase-writer/examples/src/main/java/ch/skymarshall/tcwriter/examples/api/interfaces)]
@@ -142,7 +142,7 @@ Key points
 * Properties of the model and properties of the graphical components are bound through converters
 * The MVC model can be generated from the application model
 
-Complete example [[Model](skylib-java/lib-hmi-examples/src/main/java/org/skymarshall/example/hmi/controller/impl/ControllerExampleModel.java)] [[View](skylib-java/lib-hmi-examples/src/main/java/org/skymarshall/example/hmi/controller/impl/ControllerExampleView.java)] 
+Complete example [[Screenshot][(screenshots/MVC_Full_TC)][[Model](skylib-java/lib-hmi-examples/src/main/java/org/skymarshall/example/hmi/controller/impl/ControllerExampleModel.java)] [[View](skylib-java/lib-hmi-examples/src/main/java/org/skymarshall/example/hmi/controller/impl/ControllerExampleView.java)] 
 
 Example
 

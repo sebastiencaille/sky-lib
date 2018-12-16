@@ -142,6 +142,8 @@ Key points
 * Properties of the model and properties of the graphical components are bound through converters
 * The MVC model can be generated from the application model
 
+Complete example [[Model](lib-hmi-examples/src/main/java/org/skymarshall/example/hmi/controller/impl/ControllerExampleModel.java)] [[View](lib-hmi-examples/src/main/java/org/skymarshall/example/hmi/controller/impl/ControllerExampleView.java)] 
+
 Example
 
 ```java
@@ -179,7 +181,7 @@ Key points
 * startEditingValue(editedValue) must be called before editing the value (editedValue only containing the values required for sorting)
 * stopEditingValue() must be called to validate the edition and propagate the change
 
-Example
+Example [[Code](lib-hmi-java8/src/test/java/org/skymarshall/hmi/model/ListModelBasicTest.java)] [[Filters Example](lib-hmi-java8/src/test/java/org/skymarshall/hmi/model/FilterObjectModelTest.java)]
 
 ```java
 IListView<TestObject> VIEW = ListViews.sorted((o1, o2) -> o1.val - o2.val);
@@ -206,14 +208,14 @@ ListModel<TestObject> model = new RootListModel<>(ListViews.sorted(NORMAL_ORDER)
 ListModel<TestObject> filteredModel = new ChildListModel<>(model, view);
 ```
 
-**Table model handling**
+**Table Model**
 
 Key points
 * The columns are defined by an Enum
 * The model is a ListModel
 * The column can have a fixed size or fill the size of the table
  
-Example
+Model Example [[Model](lib-hmi-examples/src/main/java/org/skymarshall/example/hmi/TestObjectTableModel.java)] [[View](lib-hmi-examples/src/main/java/org/skymarshall/example/hmi/model/impl/TableModelExampleView.java)]
 
 ```java
 public class TestObjectTableModel extends ListModelTableModel<TestObject, Columns> {

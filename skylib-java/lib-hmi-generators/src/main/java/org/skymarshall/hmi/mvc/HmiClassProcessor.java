@@ -79,20 +79,18 @@ public class HmiClassProcessor {
 	}
 
 	static String typeParametersToString(final Type type) {
-		if (type instanceof ParameterizedType) {
-			final ParameterizedType p = (ParameterizedType) type;
-			final StringBuilder builder = new StringBuilder();
-			char sep = '<';
-			for (final Type st : p.getActualTypeArguments()) {
-				builder.append(sep).append(typeToString(st));
-				sep = ',';
-			}
-			builder.append('>');
-			return builder.toString();
-		} else {
+		if (!(type instanceof ParameterizedType)) {
 			throw new IllegalArgumentException("Unhandled type " + type);
 		}
-
+		final ParameterizedType p = (ParameterizedType) type;
+		final StringBuilder builder = new StringBuilder();
+		char sep = '<';
+		for (final Type st : p.getActualTypeArguments()) {
+			builder.append(sep).append(typeToString(st));
+			sep = ',';
+		}
+		builder.append('>');
+		return builder.toString();
 	}
 
 	private final Class<?> clazz;
@@ -140,7 +138,8 @@ public class HmiClassProcessor {
 		addAttributePersistenceMethods(metaData);
 
 		context.properties.put("imports", JavaCodeGenerator.toImports(context.imports));
-		return new Template(ClassLoaderHelper.readUTF8Resource("templates/hmiModel.template")).apply(context.properties);
+		return new Template(ClassLoaderHelper.readUTF8Resource("templates/hmiModel.template"))
+				.apply(context.properties);
 	}
 
 	protected void addAttributesGetters(final UntypedDataObjectMetaData metaData) throws IOException {

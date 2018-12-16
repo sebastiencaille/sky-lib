@@ -125,7 +125,9 @@ The concept is the following:
 * The description of the structure may show the input/output data and actions used during a specific execution (test case or application) 
 
 A simple flow would look like
+
 ![Image](dataflow-manager/data-flow-manager/examples/src/test/reports/SimpleFlow-mainflow.png) 
+
 (ellipses are services - or actions, boxes are data transfer types)
 * json that describes the flow
 [Json](dataflow-manager/data-flow-manager/examples/src/main/resources/data/simple-flow.json)

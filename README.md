@@ -142,7 +142,7 @@ Key points
 * Properties of the model and properties of the graphical components are bound through converters
 * The MVC model can be generated from the application model
 
-Complete example [[Model](lib-hmi-examples/src/main/java/org/skymarshall/example/hmi/controller/impl/ControllerExampleModel.java)] [[View](lib-hmi-examples/src/main/java/org/skymarshall/example/hmi/controller/impl/ControllerExampleView.java)] 
+Complete example [[Model](skylib-java/lib-hmi-examples/src/main/java/org/skymarshall/example/hmi/controller/impl/ControllerExampleModel.java)] [[View](skylib-java/lib-hmi-examples/src/main/java/org/skymarshall/example/hmi/controller/impl/ControllerExampleView.java)] 
 
 Example
 
@@ -181,7 +181,7 @@ Key points
 * startEditingValue(editedValue) must be called before editing the value (editedValue only containing the values required for sorting)
 * stopEditingValue() must be called to validate the edition and propagate the change
 
-Example [[Code](lib-hmi-java8/src/test/java/org/skymarshall/hmi/model/ListModelBasicTest.java)] [[Filters Example](lib-hmi-java8/src/test/java/org/skymarshall/hmi/model/FilterObjectModelTest.java)]
+Example [[Code](skylib-java/lib-hmi-java8/src/test/java/org/skymarshall/hmi/model/ListModelBasicTest.java)] [[Filters Example](skylib-java/lib-hmi-java8/src/test/java/org/skymarshall/hmi/model/FilterObjectModelTest.java)]
 
 ```java
 IListView<TestObject> VIEW = ListViews.sorted((o1, o2) -> o1.val - o2.val);
@@ -215,7 +215,7 @@ Key points
 * The model is a ListModel
 * The column can have a fixed size or fill the size of the table
  
-Model Example [[Model](lib-hmi-examples/src/main/java/org/skymarshall/example/hmi/TestObjectTableModel.java)] [[View](lib-hmi-examples/src/main/java/org/skymarshall/example/hmi/model/impl/TableModelExampleView.java)]
+Model Example [[Model](skylib-java/lib-hmi-examples/src/main/java/org/skymarshall/example/hmi/TestObjectTableModel.java)] [[View](skylib-java/lib-hmi-examples/src/main/java/org/skymarshall/example/hmi/model/impl/TableModelExampleView.java)]
 
 ```java
 public class TestObjectTableModel extends ListModelTableModel<TestObject, Columns> {

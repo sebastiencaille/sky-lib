@@ -28,14 +28,14 @@ public class FilterObjectModelTest extends Assert {
 
 	private static final IListView<TestObject> COMPARATOR = ListViews.sorted((o1, o2) -> o1.val - o2.val);
 
-	private static final Predicate<TestObject> FILTER = value -> value.val % 2 == 0;
+	private static final Predicate<TestObject> EVEN_FILTER = value -> value.val % 2 == 0;
 
-	private static final Predicate<TestObject> IMPAIR_FILTER = value -> value.val % 2 == 1;
+	private static final Predicate<TestObject> ODD_FILTER = value -> value.val % 2 == 1;
 
 	@Test
 	public void testInsert() {
 		final ListModel<TestObject> baseModel = new RootListModel<>(ListViews.sorted(COMPARATOR));
-		final ListModel<TestObject> model = new ChildListModel<>(baseModel, ListViews.filtered(FILTER));
+		final ListModel<TestObject> model = new ChildListModel<>(baseModel, ListViews.filtered(EVEN_FILTER));
 
 		baseModel.insert(new TestObject(1));
 		baseModel.insert(new TestObject(3));
@@ -58,7 +58,7 @@ public class FilterObjectModelTest extends Assert {
 	@Test
 	public void testUpdate() {
 		final ListModel<TestObject> baseModel = new RootListModel<>(ListViews.sorted(COMPARATOR));
-		final ListModel<TestObject> model = new ChildListModel<>(baseModel, ListViews.filtered(FILTER));
+		final ListModel<TestObject> model = new ChildListModel<>(baseModel, ListViews.filtered(EVEN_FILTER));
 
 		baseModel.insert(new TestObject(1));
 		baseModel.insert(new TestObject(4));
@@ -109,7 +109,7 @@ public class FilterObjectModelTest extends Assert {
 	@Test
 	public void testDelete() {
 		final ListModel<TestObject> baseModel = new RootListModel<>(ListViews.sorted(COMPARATOR));
-		final ListModel<TestObject> model = new ChildListModel<>(baseModel, ListViews.filtered(FILTER));
+		final ListModel<TestObject> model = new ChildListModel<>(baseModel, ListViews.filtered(EVEN_FILTER));
 
 		model.insert(new TestObject(1));
 		final TestObject toAddAndRemove = new TestObject(2);
@@ -124,14 +124,14 @@ public class FilterObjectModelTest extends Assert {
 	@Test
 	public void testChangeFilter() {
 		final ListModel<TestObject> baseModel = new RootListModel<>(ListViews.sorted(COMPARATOR));
-		final ListModel<TestObject> model = new ChildListModel<>(baseModel, ListViews.filtered(FILTER));
+		final ListModel<TestObject> model = new ChildListModel<>(baseModel, ListViews.filtered(EVEN_FILTER));
 
 		baseModel.insert(new TestObject(1));
 		baseModel.insert(new TestObject(3));
 		baseModel.insert(new TestObject(2));
 		baseModel.insert(new TestObject(4));
 
-		model.setView(ListViews.filtered(IMPAIR_FILTER));
+		model.setView(ListViews.filtered(ODD_FILTER));
 
 		checkModel(model, 1, 3);
 

@@ -41,20 +41,20 @@ import org.skymarshall.hmi.swing.ContributionTableColumnModel;
 @SuppressWarnings("serial")
 public class TableModelExampleView extends JFrame {
 
-	static final Comparator<TestObject> NORMAL_ORDER = (o1, o2) -> o1.getASecondValue() - o2.getASecondValue();
+	static final Comparator<TestObject> NATURAL_ORDER = (o1, o2) -> o1.getASecondValue() - o2.getASecondValue();
 	static final Comparator<TestObject> REVERSE_ORDER = (o1, o2) -> o2.getASecondValue() - o1.getASecondValue();
 
-	private final transient TableModelExampleController controller = new TableModelExampleController();
+	private final transient TableModelExampleModel model = new TableModelExampleModel();
 
 	public TableModelExampleView() {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-		final DynamicView view = new DynamicView();
-		controller.reverseOrder.bind(view.reverseOrder());
-		controller.enableFilter.bind(view.enableFilter());
+		final DynamicView listDynamicView = new DynamicView();
+		model.reverseOrder.bind(listDynamicView.reverseOrder());
+		model.enableFilter.bind(listDynamicView.enableFilter());
 
-		final ListModel<TestObject> model = new RootListModel<>(ListViews.sorted(NORMAL_ORDER));
-		final ListModel<TestObject> filteredModel = new ChildListModel<>(model, view);
+		final ListModel<TestObject> listModel = new RootListModel<>(ListViews.sorted(NATURAL_ORDER));
+		final ListModel<TestObject> filteredModel = new ChildListModel<>(listModel, listDynamicView);
 
 		// We could use a separate filter:
 		// > final BoundFilter<TestObject, Boolean> filter = BoundFilter.filter((value,
@@ -75,7 +75,7 @@ public class TableModelExampleView extends JFrame {
 		columnModel.configureColumn(ContributionTableColumn.fixedColumn(TestObjectTableModel.Columns.A_SECOND_VALUE, 50,
 				new DefaultTableCellRenderer()));
 
-		controller.objectSelection.bind(selection(jtable, tableModel)).addDependency(detachOnUpdateOf(filteredModel));
+		model.objectSelection.bind(selection(jtable, tableModel)).addDependency(detachOnUpdateOf(filteredModel));
 		getContentPane().add(jtable, BorderLayout.CENTER);
 
 		// One can also use a converter to change the model's view, or a
@@ -90,12 +90,12 @@ public class TableModelExampleView extends JFrame {
 		addFilter(optionsPanel);
 		getContentPane().add(optionsPanel, BorderLayout.SOUTH);
 
-		controller.setCreated();
+		model.setCreated();
 
-		model.insert(new TestObject("One", 1));
-		model.insert(new TestObject("Two", 2));
-		model.insert(new TestObject("Three", 3));
-		model.insert(new TestObject("Four", 4));
+		listModel.insert(new TestObject("One", 1));
+		listModel.insert(new TestObject("Two", 2));
+		listModel.insert(new TestObject("Three", 3));
+		listModel.insert(new TestObject("Four", 4));
 
 		validate();
 		pack();
@@ -103,13 +103,13 @@ public class TableModelExampleView extends JFrame {
 
 	private void addFilter(final JPanel optionsPanel) {
 		final JCheckBox filter = new JCheckBox("Filter");
-		controller.enableFilter.bind(selected(filter));
+		model.enableFilter.bind(selected(filter));
 		optionsPanel.add(filter);
 	}
 
 	private void addRevOrder(final JPanel optionsPanel) {
 		final JCheckBox reverse = new JCheckBox("Rev. Order");
-		controller.reverseOrder.bind(selected(reverse));
+		model.reverseOrder.bind(selected(reverse));
 		optionsPanel.add(reverse);
 	}
 }

@@ -17,8 +17,7 @@ Example
 ![Test Case](screenshots/TC.png)
 
 
-_Api_
-[Code](testcase-writer/examples/src/main/java/ch/skymarshall/tcwriter/examples/api/interfaces)
+_Api_ [[Code](testcase-writer/examples/src/main/java/ch/skymarshall/tcwriter/examples/api/interfaces)]
 
 ```java
 @TCRole(description = "Customer")
@@ -66,8 +65,7 @@ public class TestItem {
 }
 ```
 
-_Java test case_
-[Code](testcase-writer/examples/src/test/java/ch/skymarshall/tcwriter/examples/SimpleTest.java)
+_Java test case_ [[Code](testcase-writer/examples/src/test/java/ch/skymarshall/tcwriter/examples/SimpleTest.java)]
 
 ```java
 CustomerTestRole customer = new CustomerTestRole(testedService); // Aka A customer
@@ -99,11 +97,9 @@ Step 4: As customer, I find another brand
 Step 5: As customer, I keep a note: another brand (from step 4)
 ```
 
-* generating java test cases
-[Code](testcase-writer/examples/src/test/java/ch/skymarshall/tcwriter/examples/MyTC.java)
+* generating java test cases [[Code](testcase-writer/examples/src/test/java/ch/skymarshall/tcwriter/examples/MyTC.java)]
 
-* storing the test in a "human readable" format (JSON, XML, ...)
-[Code](testcase-writer/examples/src/main/resources/models)
+* storing the test in a "human readable" format (JSON, XML, ...) [[Code](testcase-writer/examples/src/main/resources/models)]
 
 **Data flow management concept**
 
@@ -129,9 +125,8 @@ A simple flow would look like
 ![Image](dataflow-manager/data-flow-manager/examples/src/test/reports/SimpleFlow-mainflow.png) 
 
 (ellipses are services - or actions, boxes are data transfer types)
-* json that describes the flow
-[Json](dataflow-manager/data-flow-manager/examples/src/main/resources/data/simple-flow.json)
-* A test case that is [Code](dataflow-manager/data-flow-manager/examples/src/test/java/ch/skymarshall/dataflowmgr/examples/DataFlowTest.java) 
+* json that describes the flow [[Json](dataflow-manager/data-flow-manager/examples/src/main/resources/data/simple-flow.json)]
+* A test case [[Code](dataflow-manager/data-flow-manager/examples/src/test/java/ch/skymarshall/dataflowmgr/examples/DataFlowTest.java)] that is  
 	1. loading the java flavor of the flow generated from the json file
 	1. running a test case
 	1. generating a json that contains the list of executed services

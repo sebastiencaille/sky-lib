@@ -24,7 +24,7 @@ import org.skymarshall.hmi.mvc.converters.IConverter;
 public interface Converters {
 
 	public static IConverter<Boolean, IListView<TestObject>> booleanToOrder() {
-		return IConverter.<IListView<TestObject>>either(() -> sorted(TableModelExampleView.NORMAL_ORDER),
+		return IConverter.<IListView<TestObject>>either(() -> sorted(TableModelExampleView.NATURAL_ORDER),
 				() -> sorted(TableModelExampleView.REVERSE_ORDER));
 	}
 

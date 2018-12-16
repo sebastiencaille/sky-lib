@@ -21,7 +21,7 @@ import org.skymarshall.hmi.mvc.PropertyGroup;
 import org.skymarshall.hmi.mvc.properties.BooleanProperty;
 import org.skymarshall.hmi.mvc.properties.ObjectProperty;
 
-public class TableModelExampleController {
+public class TableModelExampleModel {
 
 	private final ControllerPropertyChangeSupport propertySupport = new ControllerPropertyChangeSupport(this);
 
@@ -33,7 +33,7 @@ public class TableModelExampleController {
 
 	public final PropertyGroup listChangers = new PropertyGroup();
 
-	public TableModelExampleController() {
+	public TableModelExampleModel() {
 		listChangers.addProperty(reverseOrder);
 		listChangers.addProperty(enableFilter);
 	}

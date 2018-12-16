@@ -142,7 +142,7 @@ Key points
 * Properties of the model and properties of the graphical components are bound through converters
 * The MVC model can be generated from the application model
 
-Complete example [[Screenshot][(screenshots/MVC_Full_TC)][[Model](skylib-java/lib-hmi-examples/src/main/java/org/skymarshall/example/hmi/controller/impl/ControllerExampleModel.java)] [[View](skylib-java/lib-hmi-examples/src/main/java/org/skymarshall/example/hmi/controller/impl/ControllerExampleView.java)] 
+Complete example [[Screenshot](screenshots/MVC_Full_TC)][[Model](skylib-java/lib-hmi-examples/src/main/java/org/skymarshall/example/hmi/controller/impl/ControllerExampleModel.java)] [[View](skylib-java/lib-hmi-examples/src/main/java/org/skymarshall/example/hmi/controller/impl/ControllerExampleView.java)] 
 
 Example
 

@@ -42,7 +42,7 @@ public class MyTC {
 	@Test
 	public void testCase() throws Exception {
 		testExecutionController.beforeTestExecution();
-		// Step 1: As customer, I buy in a local shop: a coffee machine, of brand: DeLuxeBrand
+		// Step 1: As customer, I go in a local shop and buy a coffee machine (of brand: DeLuxeBrand)
 		testExecutionController.beforeStepExecution(1);
 		ch.skymarshall.tcwriter.examples.api.interfaces.navigators.BuyItemNavigator var0 = BuyItemNavigator.inLocalShop();
 		ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem var1 = TestItem.coffeeMachine();
@@ -51,7 +51,7 @@ public class MyTC {
 		
 		testExecutionController.afterStepExecution(1);
 		
-		// Step 2: As customer, I check that the packaged item is the item bought at the shop: a coffee machine of brand brand's name DeLuxeBrand
+		// Step 2: As customer, I get the package bought at the shop and check that the packaged item is a coffee machine of brand "DeLuxeBrand"
 		testExecutionController.beforeStepExecution(2);
 		ch.skymarshall.tcwriter.examples.api.interfaces.navigators.HandlepackageNavigator var2 = HandlepackageNavigator.fromShop();
 		ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem var3 = TestItem.coffeeMachineOfBrand("DeLuxeBrand");
@@ -59,7 +59,7 @@ public class MyTC {
 		
 		testExecutionController.afterStepExecution(2);
 		
-		// Step 3: As customer, I resell the item (in $): 10
+		// Step 3: As customer, I resell the item for 10$
 		testExecutionController.beforeStepExecution(3);
 		customer.resellOwnedItem(10);
 		
@@ -71,7 +71,7 @@ public class MyTC {
 		
 		testExecutionController.afterStepExecution(4);
 		
-		// Step 5: As customer, I keep a note: another brand (from step 4)
+		// Step 5: As customer, I keep the note "<the value anotherBrand provided by step 4>"
 		testExecutionController.beforeStepExecution(5);
 		customer.keepNote(anotherBrand);
 		

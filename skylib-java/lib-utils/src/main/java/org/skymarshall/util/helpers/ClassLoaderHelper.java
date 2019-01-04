@@ -3,6 +3,7 @@ package org.skymarshall.util.helpers;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 public class ClassLoaderHelper {
 
@@ -22,7 +23,7 @@ public class ClassLoaderHelper {
 	public static String readResource(final InputStream in) throws IOException {
 		final StringBuilder result = new StringBuilder();
 
-		final InputStreamReader inReader = new InputStreamReader(in, "UTF-8");
+		final InputStreamReader inReader = new InputStreamReader(in, StandardCharsets.UTF_8);
 		final char[] buffer = new char[1024 * 1024];
 		int read;
 		while ((read = inReader.read(buffer)) > 0) {

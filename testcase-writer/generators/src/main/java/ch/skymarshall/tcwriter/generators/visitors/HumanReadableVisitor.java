@@ -58,15 +58,6 @@ public class HumanReadableVisitor {
 
 	}
 
-//	private void processOptionalParameter(final TestParameterValue parameterValue, final String sep,
-//			final TestParameterType optionalParam) {
-//		final TestParameterValue optionalValue = parameterValue.getComplexTypeValues().get(optionalParam.getId());
-//		if (optionalValue != null) {
-//			builder.append(sep).append(summaryOf(optionalParam, null)).append(": ");
-//			processTestParameter(optionalValue);
-//		}
-//	}
-
 	private String summaryOf(final IdObject idObject, final List<String> list) {
 		return String.format(tc.descriptionOf(idObject).getStepSummary(), (list != null) ? list.toArray() : null);
 	}

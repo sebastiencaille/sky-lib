@@ -16,6 +16,7 @@
 package ch.skymarshall.dataflowmgr.generator.writers.dot;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -134,7 +135,7 @@ public class DotModuleVisitor extends ModuleVisitor<DotModuleVisitor.Graph> {
 			output.appendIndented("}");
 
 			Files.write(writer.getOutputFile(module, flow.name, "dot").toPath(),
-					output.getOutput().toString().getBytes("UTF-8"));
+					output.getOutput().toString().getBytes(StandardCharsets.UTF_8));
 		} catch (final IOException e) {
 			throw new IllegalStateException("Unable to write file", e);
 		}

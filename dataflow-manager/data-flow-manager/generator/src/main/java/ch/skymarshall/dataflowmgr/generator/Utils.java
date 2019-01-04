@@ -15,13 +15,9 @@
  ******************************************************************************/
 package ch.skymarshall.dataflowmgr.generator;
 
-import java.nio.charset.Charset;
-
 public abstract class Utils {
 	private Utils() {
 	}
-
-	public static final Charset UTF8 = Charset.forName("UTF-8");
 
 	public static String toCamelCase(final String str) {
 		final StringBuilder result = new StringBuilder();

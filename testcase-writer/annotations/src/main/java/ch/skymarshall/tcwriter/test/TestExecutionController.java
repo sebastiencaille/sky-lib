@@ -44,30 +44,29 @@ public class TestExecutionController implements ITestExecutionController {
 	public static ITestExecutionController controller() throws IOException {
 		if (Boolean.getBoolean("remote.controller")) {
 			return new TestExecutionController();
-		} else {
-			return new ITestExecutionController() {
-
-				@Override
-				public void beforeTestExecution() {
-					// dummy
-				}
-
-				@Override
-				public void beforeStepExecution(final int i) {
-					// dummy
-				}
-
-				@Override
-				public void afterStepExecution(final int i) {
-					// dummy
-				}
-
-				@Override
-				public void notifyError(final Throwable error) {
-					// dummy
-				}
-			};
 		}
+		return new ITestExecutionController() {
+
+			@Override
+			public void beforeTestExecution() {
+				// dummy
+			}
+
+			@Override
+			public void beforeStepExecution(final int i) {
+				// dummy
+			}
+
+			@Override
+			public void afterStepExecution(final int i) {
+				// dummy
+			}
+
+			@Override
+			public void notifyError(final Throwable error) {
+				// dummy
+			}
+		};
 	}
 
 	public TestExecutionController() throws IOException {

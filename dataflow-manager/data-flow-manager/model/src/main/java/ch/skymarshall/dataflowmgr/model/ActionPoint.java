@@ -208,7 +208,7 @@ public class ActionPoint<I extends FlowData, O extends FlowData> extends IDData 
 		 * @param executorFactory
 		 * @return the next action points
 		 */
-		public <ExecType> Set<ExecType> createExecutions(final ExecutorFactory<ExecType> executorFactory) {
+		public <E> Set<E> createExecutions(final ExecutorFactory<E> executorFactory) {
 			return selectedRules.stream().flatMap(dr -> dr.createExecutor(outputData, executorFactory).stream())
 					.collect(Collectors.toSet());
 		}

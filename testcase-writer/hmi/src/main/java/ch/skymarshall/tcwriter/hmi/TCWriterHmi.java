@@ -210,13 +210,13 @@ public abstract class TCWriterHmi extends JFrame {
 		}
 	}
 
-	private interface EventWithException {
+	private interface EventWithException<E extends Exception> {
 
-		void execute() throws Exception;
+		void execute() throws E;
 
 	}
 
-	private void withException(final EventWithException e) {
+	private <E extends Exception> void withException(final EventWithException<E> e) {
 		try {
 			e.execute();
 		} catch (final Exception ex) {

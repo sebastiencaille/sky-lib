@@ -16,7 +16,7 @@ import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterType;
 /** A value in the test case */
 public class TestParameterValue extends IdObject {
 
-	public static final TestParameterValue NO_VALUE = new TestParameterValue("", TestParameter.NO_VALUE);
+	public static final TestParameterValue NO_VALUE = new TestParameterValue("", TestParameter.NO_PARAMETER);
 
 	@JsonIgnore
 	private TestParameter valueDefinition;

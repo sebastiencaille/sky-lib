@@ -21,7 +21,7 @@ public class TestParameter extends TestParameterType {
 		}
 	}
 
-	public static final TestParameter NO_VALUE = new TestParameter(IdObject.ID_NOT_SET, IdObject.ID_NOT_SET,
+	public static final TestParameter NO_PARAMETER = new TestParameter(IdObject.ID_NOT_SET, IdObject.ID_NOT_SET,
 			ParameterNature.NOT_SET, "");
 	private final List<TestParameterType> mandatoryParameters = new ArrayList<>();
 	private final List<TestParameterType> optionalParameters = new ArrayList<>();

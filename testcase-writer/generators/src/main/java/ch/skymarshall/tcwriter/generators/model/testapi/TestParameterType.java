@@ -7,7 +7,7 @@ import ch.skymarshall.tcwriter.generators.model.NamedObject;
 
 public class TestParameterType extends NamedObject {
 
-	public static final TestParameterType NO_VALUE = new TestParameterType(IdObject.ID_NOT_SET, "", "");
+	public static final TestParameterType NO_PARAMETER_TYPE = new TestParameterType(IdObject.ID_NOT_SET, "", "");
 
 	private final String parameterType;
 

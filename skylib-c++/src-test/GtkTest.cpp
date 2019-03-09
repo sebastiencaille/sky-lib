@@ -29,6 +29,8 @@
 #include "glib_converter.hh"
 #include "gtk_bindings.hh"
 
+#include "list_model.hh"
+
 using namespace org_skymarshall_util_hmi;
 using namespace org_skymarshall_util_hmi_glib;
 using namespace org_skymarshall_util_hmi_gtk;
@@ -45,11 +47,10 @@ private:
 		int m_i;
 
 	public:
-		TestStringPropertyListener(int _i) {
-			m_i = _i;
+		TestStringPropertyListener(int _i):	m_i(_i) {
 		}
 
-		void propertyChanged(const void* _source, const string& _name,
+		void propertyChanged(source_ptr _source, const string& _name,
 				const void* _oldValue, const void* _newValue) {
 			cout << " TestStringPropertyListener " << m_i << " - "
 					<< *(string*) _oldValue << " -> " << *(string*) _newValue
@@ -61,14 +62,16 @@ private:
 	class dep_test: public binding_chain_dependency {
 
 		TestStringPropertyListener m_testListener;
-		property_listener_func_type<TestStringPropertyListener> m_listener;
+		property_listener_dispatcher m_listener;
 		binding_chain_controller* m_controller;
 
 	public:
 		dep_test() :
-				m_testListener(1), m_listener(m_testListener,
-						&TestStringPropertyListener::propertyChanged), m_controller(
-				NULL) {
+				m_testListener(1),
+				m_listener([this] (source_ptr source, const string& name,
+						const void* oldValue, const void* newValue)
+						{ this->m_testListener.propertyChanged(source,name,oldValue, newValue);}),
+				m_controller(NULL) {
 		}
 
 		void register_dep(binding_chain_controller *_controller) {
@@ -90,8 +93,7 @@ public:
 
 	virtual ~HelloWorld();
 
-	void apply_action(property_group_actions _action,
-			const property* _property);
+	void apply_action(property_group_actions _action, const property* _property);
 
 protected:
 	//Signal handlers:
@@ -127,8 +129,8 @@ void HelloWorld::init(controller_property<string>& _testProperty1,
 	m_box.pack_start(m_entry);
 
 	action_dependency<HelloWorld>* dep = new action_dependency<HelloWorld>(
-			&_testProperty1,
-			new action_func_type<HelloWorld>(this, &HelloWorld::apply_action));
+			&_testProperty1, [this](property_group_actions group, const property* action) { this->apply_action(group, action); } );
+
 	m_bindings.push_back(
 			_testProperty1.bind(new string_to_ustring())->bind(
 					new label_binding(m_label))->add_dependency(dep));
@@ -177,7 +179,14 @@ void HelloWorld::on_button_clicked() {
 	std::cout << "Hello World" << std::endl;
 }
 
+typedef list_model<int> int_model;
+
 int main(int argc, char *argv[]) {
+
+	int_model int_list(int_model::sorted([](int i1, int i2) { return i1 - i2; }));
+	int_list.insert(2);
+	int_list.insert(1);
+	cout << int_list.get_element_at(0) << " " << int_list.get_element_at(1) << std::endl;
 
 	Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(argc, argv,
 			"org.gtkmm.example");

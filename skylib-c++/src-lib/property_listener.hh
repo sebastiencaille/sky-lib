@@ -24,6 +24,9 @@
 #define PROPERTYLISTENER_HH_
 
 #include <string>
+#include <functional>
+
+#include "types.hh"
 
 namespace org_skymarshall_util_hmi {
 
@@ -34,98 +37,70 @@ using namespace std;
  */
 typedef void* property_listener_ref;
 
-class property;
-
 class property_listener {
 public:
 
 	virtual ~property_listener() {
 	}
 
-	virtual void fire(const void* _source, const string& _name, const void* _oldValue, const void* _newValue) = 0;
+	virtual void fire(source_ptr _source, const string& _name, const void* _oldValue, const void* _newValue) = 0;
 
-	virtual void before_change(const void* _source, const property* _property) = 0;
+	virtual void before_change(source_ptr _source, const property* _property) = 0;
 
-	virtual void after_change(const void* _source, const property* _property) = 0;
+	virtual void after_change(source_ptr _source, const property* _property) = 0;
 
 };
 
 /**
  *  Container used to provide both instance and instance method so one can method on correct instance
  */
-template<class C> class property_listener_func_type:
+class property_listener_dispatcher:
 		public property_listener {
 public:
-	typedef void (C::*fire_function)(const void*, const string&, const void*, const void*);
-	typedef void (C::*before_after_function)(const void*, const property*);
+	typedef std::function< void (source_ptr, const string&, const void*, const void*)> fire_function;
+	typedef std::function<void (source_ptr, const property*)> before_after_function;
 private:
-	C* m_obj;
 	fire_function m_func_fire;
 	before_after_function m_func_before;
 	before_after_function m_func_after;
 
 public:
-	property_listener_func_type(C* _obj, fire_function _fireFunction) :
-					m_obj(_obj),
+	property_listener_dispatcher(fire_function _fireFunction) :
 					m_func_fire(_fireFunction),
 					m_func_before(NULL),
 					m_func_after(NULL) {
 	}
 
-	property_listener_func_type(C& _obj, fire_function _fireFunction) :
-					m_obj(&_obj),
-					m_func_fire(_fireFunction),
-					m_func_before(NULL),
-					m_func_after(NULL) {
-	}
-
-	property_listener_func_type(C* _obj, before_after_function _beforeFireFunction, before_after_function _afterFireFunction) :
-					m_obj(_obj),
+	property_listener_dispatcher(before_after_function _beforeFireFunction, before_after_function _afterFireFunction) :
 					m_func_fire(NULL),
 					m_func_before(_beforeFireFunction),
 					m_func_after(_afterFireFunction) {
 	}
 
-	property_listener_func_type(C& _obj, before_after_function _beforeFireFunction, before_after_function _afterFireFunction) :
-					m_obj(&_obj),
-					m_func_fire(NULL),
-					m_func_before(_beforeFireFunction),
-					m_func_after(_afterFireFunction) {
-	}
-
-	property_listener_func_type(property_listener_func_type<C>& _p) :
-					m_obj(_p.m_obj),
+	property_listener_dispatcher(property_listener_dispatcher& _p) :
 					m_func_fire(_p.m_func_fire),
 					m_func_before(_p.m_func_before),
 					m_func_after(_p.m_func_after) {
 	}
 
-	void fire(const void* _source, const string& _name, const void* _oldValue, const void* _newValue) {
+	void fire(source_ptr _source, const string& _name, const void* _oldValue, const void* _newValue) {
 		if (m_func_fire != NULL) {
-			(m_obj->*m_func_fire)(_source, _name, _oldValue, _newValue);
+			m_func_fire(_source, _name, _oldValue, _newValue);
 		}
 	}
 
-	void before_change(const void* _source, const property* _property) {
+	void before_change(source_ptr _source, const property* _property) {
 		if (m_func_before != NULL) {
-			(m_obj->*m_func_before)(_source, _property);
+			m_func_before(_source, _property);
 		}
 	}
 
-	void after_change(const void* _source, const property* _property) {
+	void after_change(source_ptr _source, const property* _property) {
 		if (m_func_after != NULL) {
-			(m_obj->*m_func_after)(_source, _property);
+			m_func_after(_source, _property);
 		}
 	}
-
 };
-
-template<class C> property_listener_func_type<C>* property_listener_func(C*_obj,
-		void (C::*_func)(const void*, const string&, const void*, const void*));
-
-template<class C> property_listener_func_type<C>* property_listener_func(C& _obj,
-		void (C::*_func)(const void*, const string&, const void*, const void*));
-
 }
 
 #endif /* PROPERTYLISTENER_HH_ */

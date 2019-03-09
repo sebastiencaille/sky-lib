@@ -20,13 +20,13 @@ import static java.util.Arrays.stream;
 import java.awt.EventQueue;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Deque;
-import java.util.ArrayDeque;
 
 import org.skymarshall.hmi.mvc.properties.AbstractProperty;
 
@@ -59,7 +59,7 @@ public class ControllerPropertyChangeSupport {
 
 		@Override
 		public String toString() {
-			return caller + "->" + newValue;
+			return caller + " -> " + newValue + "\n";
 		}
 
 	}
@@ -107,7 +107,7 @@ public class ControllerPropertyChangeSupport {
 	}
 
 	public boolean isBeingFired(final String propertyName) {
-		return propertyName.contains(propertyName);
+		return callInfo.containsKey(propertyName);
 	}
 
 	public boolean isModifiedBy(final String name, final Object caller) {

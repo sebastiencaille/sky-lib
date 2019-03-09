@@ -66,14 +66,14 @@ public:
 		return m_value;
 	}
 
-	void set(const void * _caller, value_type const _newValue) {
+	void set(source_ptr _source, value_type const _newValue) {
 		if (m_value != _newValue) {
-			m_manager.fire_before_property_changed(_caller, this);
+			m_manager.fire_before_property_changed(_source, this);
 			value_type oldValue = m_value;
 			m_value = _newValue;
-			m_manager.fire_property_changed(_caller, m_name,
+			m_manager.fire_property_changed(_source, m_name,
 					(const void*) &oldValue, (const void*) &_newValue);
-			m_manager.fire_after_property_changed(_caller, this);
+			m_manager.fire_after_property_changed(_source, this);
 		}
 	}
 
@@ -83,8 +83,8 @@ public:
 		set(this, current);
 	}
 
-	void force_changed(const void* _caller) {
-		m_manager.fire_property_changed(_caller, m_name, NULL, m_value);
+	void force_changed(source_ptr _source) {
+		m_manager.fire_property_changed(_source, m_name, NULL, m_value);
 	}
 
 };

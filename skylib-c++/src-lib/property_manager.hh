@@ -33,7 +33,6 @@
 namespace org_skymarshall_util_hmi {
 
 using namespace std;
-using namespace __gnu_cxx;
 
 
 /**
@@ -46,9 +45,9 @@ public:
 	void remove_listener(const string& _name, property_listener* _listener);
 	void remove_listener(const string& _name, property_listener_ref _listener);
 
-	void fire_property_changed(const void* _source, const string& _name, const void* _oldValue, const void* _newValue) const;
-	void fire_before_property_changed(const void* _source, property* _property) const;
-	void fire_after_property_changed(const void* _source, property* _property) const;
+	void fire_property_changed(source_ptr _source, const string& _name, const void* _oldValue, const void* _newValue) const;
+	void fire_before_property_changed(source_ptr _source, property* _property) const;
+	void fire_after_property_changed(source_ptr _source, property* _property) const;
 	void dump() const;
 private:
 	typedef list<property_listener*> listener_list_type;

@@ -13,10 +13,13 @@
  *IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  *WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  */
-#include<property_manager.hh>
-#include<property.hh>
 
 #include <iostream>
+
+#include "property_manager.hh"
+#include "property.hh"
+
+
 
 namespace org_skymarshall_util_hmi {
 
@@ -55,7 +58,7 @@ void property_manager::remove_listener(const string& _name, property_listener_re
 	remove_listener(_name, (property_listener*) _listener);
 }
 
-void property_manager::fire_property_changed(const void* _source, const string& _name, const void* _oldValue,
+void property_manager::fire_property_changed(source_ptr _source, const string& _name, const void* _oldValue,
 		const void* _newValue) const {
 	const listeners_const_iter iter = m_propertyListeners.find(_name);
 	if (iter == m_propertyListeners.end()) {
@@ -69,7 +72,7 @@ void property_manager::fire_property_changed(const void* _source, const string& 
 	}
 }
 
-void property_manager::fire_before_property_changed(const void* _source, property* _property) const {
+void property_manager::fire_before_property_changed(source_ptr _source, property* _property) const {
 	const listeners_const_iter iter = m_propertyListeners.find(_property->name());
 	if (iter == m_propertyListeners.end()) {
 		return;
@@ -82,7 +85,7 @@ void property_manager::fire_before_property_changed(const void* _source, propert
 	}
 }
 
-void property_manager::fire_after_property_changed(const void* _source, property* _property) const {
+void property_manager::fire_after_property_changed(source_ptr _source, property* _property) const {
 	const listeners_const_iter iter = m_propertyListeners.find(_property->name());
 	if (iter == m_propertyListeners.end()) {
 		return;

@@ -17,6 +17,8 @@ package org.skymarshall.hmi.mvc.converters;
 
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.IntFunction;
+import java.util.function.LongFunction;
 
 import org.skymarshall.hmi.Utils;
 import org.skymarshall.hmi.mvc.HmiErrors.HmiError;
@@ -46,7 +48,7 @@ public final class Converters {
 		};
 	}
 
-	public static <C> IConverter<Integer, C> intConverter(final Function<Integer, C> prop2comp,
+	public static <C> IConverter<Integer, C> intConverter(final IntFunction<C> prop2comp,
 			final FunctionWithException<C, Integer, ConversionException> comp2prop) {
 		return new IConverter<Integer, C>() {
 
@@ -63,7 +65,7 @@ public final class Converters {
 		};
 	}
 
-	public static <C> IConverter<Long, C> longConverter(final Function<Long, C> prop2comp,
+	public static <C> IConverter<Long, C> longConverter(final LongFunction<C> prop2comp,
 			final FunctionWithException<C, Long, ConversionException> comp2prop) {
 		return new IConverter<Long, C>() {
 
@@ -123,11 +125,11 @@ public final class Converters {
 	}
 
 	public static IConverter<Integer, Integer> intIdentity() {
-		return intConverter(Function.identity(), Lambda.<Integer, ConversionException>identity());
+		return intConverter(i -> i, Lambda.<Integer, ConversionException>identity());
 	}
 
 	public static IConverter<Long, Long> longIdentity() {
-		return longConverter(Function.identity(), Lambda.<Long, ConversionException>identity());
+		return longConverter(l -> l, Lambda.<Long, ConversionException>identity());
 	}
 
 	public static IConverter<Boolean, Boolean> booleanIdentity() {

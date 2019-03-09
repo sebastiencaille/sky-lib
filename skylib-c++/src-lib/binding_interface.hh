@@ -24,19 +24,20 @@
 #define BINDINGINTERFACE_HH_
 
 #include <string>
+#include <functional>
+
+#include "types.hh"
 #include "typed_property.hh"
 
 namespace org_skymarshall_util_hmi {
 
 using namespace std;
 
-typedef logic_error* logic_error_ptr;
-
 class error_notifier {
 public:
 	virtual ~error_notifier() {
 	}
-	virtual void set_error(const void *_source, const logic_error_ptr _e) = 0;
+	virtual void set_error(source_ptr _source, logic_error_ptr _e) = 0;
 };
 
 
@@ -57,7 +58,7 @@ protected:
 
 };
 
-class logic_error_to_string: public binding_converter<logic_error_ptr, string> {
+class logic_error_to_string: public binding_converter<logic_error*, string> {
 public:
 	const logic_error_ptr convert_component_value_to_property_value(
 			const string _componentValue) {
@@ -77,7 +78,7 @@ public:
 
 template<class _CT> class component_link {
 public:
-	virtual void set_value_from_component(void* _component,
+	virtual void set_value_from_component(source_ptr _component,
 			_CT _componentValue) = 0;
 	virtual void reload_component_value() = 0;
 	virtual void unbind() = 0;
@@ -101,7 +102,7 @@ public:
 
 	virtual void set_component_value(property& _source, _CT _value) = 0;
 
-	virtual void* get_component() = 0;
+	virtual source_ptr get_component() = 0;
 
 	virtual ~component_binding() {
 	}
@@ -153,50 +154,30 @@ public:
 
 };
 
-template<class _T> class action_func_type: public action {
-public:
-	typedef void (_T::*action_function)(property_group_actions _action,
-			const property* _property);
-
-private:
-	action_function const m_action;
-	_T* const m_object;
-
-public:
-	action_func_type(_T* _object, action_function _action) :
-		m_action(_action), m_object(_object) {
-	}
-
-	void apply(property_group_actions _action, const property* _property) {
-		(m_object->*m_action)(_action, _property);
-	}
-
-};
-
 template<class _T> class action_dependency: public binding_chain_dependency {
 private:
 	property* m_targetProperty;
-	action_func_type<_T>* m_action;
-	property_listener_func_type<action_dependency<_T>>* m_listener = NULL;
+	std::function<void(property_group_actions _action, const property* _property)> m_action;
+	property_listener_dispatcher* m_listener = NULL;
 
-	void action_before(const void* caller, const property* _property) {
-		m_action->apply(BEFORE_FIRE, _property);
+	void action_before(const source_ptr caller, const property* _property) {
+		m_action(BEFORE_FIRE, _property);
 	}
 
-	void action_after(const void* caller, const property* _property) {
-		m_action->apply(AFTER_FIRE, _property);
+	void action_after(const source_ptr caller, const property* _property) {
+		m_action(AFTER_FIRE, _property);
 	}
 
 public:
 
-	action_dependency(property* _targetProperty, action_func_type<_T>* _action) :
+	action_dependency(property* _targetProperty, std::function<void(property_group_actions _action, const property* _property)> _action) :
 			m_targetProperty(_targetProperty), m_action(_action) {
 	}
 
 	void register_dep(binding_chain_controller* _chain) {
-		m_listener = new property_listener_func_type<action_dependency<_T>>(
-				*this, &action_dependency<_T>::action_before,
-				&action_dependency<_T>::action_after);
+		m_listener = new property_listener_dispatcher(
+				[this](source_ptr source, const property* prop) {this->action_before(source, prop); },
+				[this](source_ptr source, const property* prop) {this->action_after(source, prop); });
 		m_targetProperty->add_listener(m_listener);
 	}
 

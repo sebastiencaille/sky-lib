@@ -9,7 +9,7 @@
 #define BINDING_CHAIN_HH_
 
 #include <vector>
-#include <vector>
+#include <functional>
 
 #include "binding_interface.hh"
 #include "property.hh"
@@ -21,8 +21,7 @@ using namespace std;
 
 template<class _Tt> class binding_backward {
 public:
-	virtual void to_property(int index, const void* component, const _Tt value)
-			throw (logic_error_ptr) = 0;
+	virtual void to_property(int index, const source_ptr component, const _Tt value) = 0;
 	virtual ~binding_backward() {
 	}
 
@@ -30,7 +29,7 @@ public:
 
 template<class _Ft> class binding_forward {
 public:
-	virtual void to_component(int index, const _Ft value) throw (logic_error_ptr) = 0;
+	virtual void to_component(int index, const _Ft value) = 0;
 	virtual ~binding_forward() {
 	}
 
@@ -53,21 +52,6 @@ public:
 
 /** Binding chain */
 
-template<class C, class _Pt> class property_setter_func_type {
-public:
-	typedef void (C::*setter_function)(const void*, const _Pt);
-private:
-	C* m_obj;
-	setter_function m_setter_func;
-public:
-	property_setter_func_type(C* _obj, setter_function _setter_func) :
-			m_obj(_obj), m_setter_func(_setter_func) {
-	}
-
-	void set(const void* _source, _Pt _newValue) {
-		(m_obj->*m_setter_func)(_source, _newValue);
-	}
-};
 
 template<class _Pt> class binding_chain: public binding_chain_controller {
 
@@ -78,7 +62,7 @@ private:
 
 	error_notifier* m_errorNotifier;
 
-	property_listener_func_type<binding_chain> m_valueUpdateListener;
+	property_listener_dispatcher m_valueUpdateListener;
 
 	bool m_transmit = true;
 
@@ -120,19 +104,18 @@ private:
 	class property_link: public binding_forward<_Pt>, public binding_backward<
 			_Pt> {
 		binding_chain& m_chain;
-		property_setter_func_type<typed_property<_Pt>, _Pt> m_setter;
+		std::function<void(source_ptr, _Pt)> m_setter;
 	public:
 		property_link(binding_chain& _chain,
-				property_setter_func_type<typed_property<_Pt>, _Pt> _setter) :
+				std::function<void(source_ptr, _Pt)> _setter) :
 				m_chain(_chain), m_setter(_setter) {
 		}
 
-		void to_property(int _index, const void* _component, const _Pt _value)
-				throw (logic_error_ptr) {
-			m_setter.set(_component, _value);
+		void to_property(int _index, source_ptr _component, const _Pt _value) {
+			m_setter(_component, _value);
 		}
 
-		void to_component(int _index, const _Pt _value) throw (logic_error_ptr) {
+		void to_component(int _index, const _Pt _value) {
 			((binding_forward<_Pt>*) m_chain.m_links[_index + 1]->m_binding_forward)->to_component(
 					_index + 1, _value);
 		}
@@ -153,15 +136,14 @@ private:
 				m_chain(_chain), m_converter(_converter) {
 		}
 
-		void to_property(int _index, const void* _component, const _Tt _value)
-				throw (logic_error_ptr) {
+		void to_property(int _index, source_ptr _component, const _Tt _value) {
 			((binding_backward<_Ft>*) m_chain.m_links[_index - 1]->m_binding_backward)->to_property(
 					_index - 1, _component,
 					m_converter->convert_component_value_to_property_value(
 							_value));
 		}
 
-		void to_component(int _index, const _Ft _value) throw (logic_error_ptr) {
+		void to_component(int _index, const _Ft _value) {
 
 			((binding_forward<_Tt>*) m_chain.m_links[_index + 1]->m_binding_forward)->to_component(
 					_index + 1,
@@ -188,7 +170,7 @@ private:
 				m_chain(_chain), m_componentBinding(_componentBinding) {
 		}
 
-		void set_value_from_component(void* _component, _Ct _componentValue) {
+		void set_value_from_component(source_ptr _component, _Ct _componentValue) {
 			if (!m_chain.m_transmit) {
 				return;
 			}
@@ -234,19 +216,20 @@ private:
 					m_componentLink);
 		}
 
-		void to_component(int index, _Ct value) throw (logic_error_ptr) {
+		void to_component(int index, _Ct value) {
 			m_componentBinding->set_component_value(m_chain.m_property, value);
 		}
 
-		void to_property(int index, const void* component, const _Ct value)
-				throw (logic_error_ptr) {
+		void to_property(int index, source_ptr component, const _Ct value) {
 			((binding_backward<_Ct>*) m_chain.m_links[index - 1]->m_binding_backward)->to_property(
 					index - 1, component, value);
 		}
 	};
 
-	void propagate_property_change(const void* _property, const string& _name,
-			const void* old_value, const void* _new_value) {
+	void propagate_property_change(source_ptr _property,
+									const string& _name,
+									const void* _old_value,
+									const void* _new_value) {
 		if (!m_transmit) {
 			return;
 		}
@@ -259,14 +242,13 @@ private:
 	}
 public:
 	binding_chain(property& _property, error_notifier* _notifier) :
-			m_property(_property), m_errorNotifier(_notifier), m_valueUpdateListener(
-					this, &binding_chain::propagate_property_change) {
+			m_property(_property), m_errorNotifier(_notifier),
+			m_valueUpdateListener([this](source_ptr src, const string& name, const void* oldValue, const void* newValue) { this->propagate_property_change(src,name,oldValue,newValue); }) {
 	}
 
 	template<class _T> class end_of_chain;
 
-	end_of_chain<_Pt>* bind_property(
-			property_setter_func_type<typed_property<_Pt>, _Pt> _setter) {
+	end_of_chain<_Pt>* bind_property(std::function<void(source_ptr, _Pt)> _setter) {
 		m_property.add_listener(&m_valueUpdateListener);
 		property_link* const link = new property_link(*this, _setter);
 		m_links.push_back(

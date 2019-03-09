@@ -51,8 +51,8 @@ void entry_binding::set_component_value(property& _source, Glib::ustring _value)
 	m_entry.set_text(_value);
 }
 
-void* entry_binding::get_component() {
-	return (void*) &m_entry;
+source_ptr entry_binding::get_component() {
+	return (source_ptr) &m_entry;
 }
 
 label_binding::label_binding(Gtk::Label& _label) :
@@ -73,8 +73,8 @@ void label_binding::set_component_value(property& _source, Glib::ustring _value)
 	m_label.set_text(_value);
 }
 
-void* label_binding::get_component() {
-	return (void*) &m_label;
+source_ptr label_binding::get_component() {
+	return (source_ptr) &m_label;
 }
 
 }

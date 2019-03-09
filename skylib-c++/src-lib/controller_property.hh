@@ -49,16 +49,12 @@ public:
 	template<class _Nt> binding_chain<_Pt>::end_of_chain<_Nt>* bind(
 			binding_converter<_Pt, _Nt>* const _converter) {
 		binding_chain<_Pt>* chain = new binding_chain<_Pt>(*this, m_errorNotifier);
-		return chain->bind_property(
-				property_setter_func_type<typed_property<_Pt>, _Pt>(this,
-						&typed_property<_Pt>::set))->bind(_converter);
+		return chain->bind_property([this](source_ptr source, _Pt value) { this->set(source, value); } )->bind(_converter);
 	}
 
 	template<class _Ct> binding_chain_controller* bind(component_binding<_Ct>* const _componentBinding) {
 		binding_chain<_Pt>* chain = new binding_chain<_Pt>(*this, m_errorNotifier);
-		return chain->bind_property(
-				property_setter_func_type<typed_property<_Pt>, _Pt>(this,
-						&typed_property<_Pt>::set))->bind(_componentBinding);
+		return chain->bind_property([this](source_ptr source, _Pt value) { this->set(value); } )->bind(_componentBinding);
 	}
 
 };

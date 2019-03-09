@@ -43,7 +43,7 @@ public:
 	virtual void add_component_value_change_listener(component_link<Glib::ustring>* _componentLink);
 	virtual void remove_component_value_change_listener();
 	virtual void set_component_value(property& _source, Glib::ustring _value);
-	virtual void* get_component();
+	virtual source_ptr get_component();
 };
 
 class label_binding:
@@ -57,7 +57,7 @@ public:
 	virtual void add_component_value_change_listener(component_link<Glib::ustring>* _componentLink);
 	virtual void remove_component_value_change_listener();
 	virtual void set_component_value(property& _source, Glib::ustring _value);
-	virtual void* get_component();
+	virtual source_ptr get_component();
 };
 
 }

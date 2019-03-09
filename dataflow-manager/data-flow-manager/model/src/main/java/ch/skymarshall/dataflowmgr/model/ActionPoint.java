@@ -245,14 +245,14 @@ public class ActionPoint<I extends FlowData, O extends FlowData> extends IDData 
 		return new ExecutionSteps(inputData);
 	}
 
-	public static <IDT extends FlowData, ODT extends FlowData> ActionPoint<IDT, ODT> simple(final UUID uuid,
-			final FlowAction<IDT, ODT> action) {
+	public static <I extends FlowData, O extends FlowData> ActionPoint<I, O> simple(final UUID uuid,
+			final FlowAction<I, O> action) {
 		return new ActionPoint<>(uuid, action);
 	}
 
-	public static <IDT extends FlowData> ActionPoint<IDT, ?> terminal(final UUID uuid,
-			final FlowAction<IDT, NoData> action) {
-		final ActionPoint<IDT, NoData> decisionPoint = new ActionPoint<>(uuid, action);
+	public static <I extends FlowData> ActionPoint<I, ?> terminal(final UUID uuid,
+			final FlowAction<I, NoData> action) {
+		final ActionPoint<I, NoData> decisionPoint = new ActionPoint<>(uuid, action);
 		decisionPoint.addOutputRule(new OutputDecisionRule<NoData, NoData>(NoData.NO_DATA.uuid(), d -> true,
 				FlowActionType.STOP, null, null));
 		return decisionPoint;

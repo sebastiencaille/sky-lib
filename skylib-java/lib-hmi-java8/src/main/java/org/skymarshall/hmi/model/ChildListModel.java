@@ -11,11 +11,17 @@ public class ChildListModel<T> extends ListModel<T> {
 	public ChildListModel(final ListModel<T> parent, final IListView<T> view) {
 		super(new ListModelImpl<>(parent.impl, view));
 		this.parent = parent;
+		reload();
 	}
 
 	public ChildListModel(final ListModel<T> parent) {
 		super(new ListModelImpl<>(parent.impl));
 		this.parent = parent;
+	}
+
+	public void reload() {
+		impl.clear();
+		impl.addValues(parent.values());
 	}
 
 	@Override
@@ -60,6 +66,6 @@ public class ChildListModel<T> extends ListModel<T> {
 
 	@Override
 	public void stopEditingValue() {
-		stopEditingValue();
+		parent.stopEditingValue();
 	}
 }

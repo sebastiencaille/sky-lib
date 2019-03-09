@@ -44,6 +44,7 @@ protected:
 
 
 public:
+
 	property(const string& _name, property_manager& _manager);
 	property(const char* _name, property_manager& _manager);
 	virtual ~property();

@@ -79,7 +79,7 @@ public:
 
 		value_type get_object() {
 			if (m_objects.size() > 1) {
-				throw new string("Event has more than one object");
+				throw string("Event has more than one object");
 			}
 			return *m_objects.begin();
 		}
@@ -114,26 +114,12 @@ public:
 	/**
 	 *
 	 */
-	class filter {
-
-	public:
-		virtual ~filter() {
-		}
-		virtual bool accept(const value_type _value) const = 0;
-
-	};
+	typedef function<bool(const value_type)> filter;
 
 	/**
 	 *
 	 */
-	class comparator {
-
-	public:
-		virtual ~comparator() {
-		}
-		virtual int compare(const value_type _value1, const value_type value2) const = 0;
-
-	};
+	typedef function<int(const value_type _value1, const value_type value2)> comparator;
 
 	/**
 	 *

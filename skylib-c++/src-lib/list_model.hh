@@ -1,18 +1,18 @@
 /*
-*Copyright (c) 2013 Sebastien Caille.
-*All rights reserved.
-*
-*Redistribution and use in source and binary forms are permitted
-*provided that the above copyright notice and this paragraph are
-*duplicated in all such forms and that any documentation,
-*advertising materials, and other materials related to such
-*distribution and use acknowledge that the software was developed
-*by Sebastien Caille.  The name of Sebastien Caille may not be used to endorse or promote products derived
-*from this software without specific prior written permission.
-*THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
-*IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
-*WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
-*/
+ *Copyright (c) 2013 Sebastien Caille.
+ *All rights reserved.
+ *
+ *Redistribution and use in source and binary forms are permitted
+ *provided that the above copyright notice and this paragraph are
+ *duplicated in all such forms and that any documentation,
+ *advertising materials, and other materials related to such
+ *distribution and use acknowledge that the software was developed
+ *by Sebastien Caille.  The name of Sebastien Caille may not be used to endorse or promote products derived
+ *from this software without specific prior written permission.
+ *THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
+ *IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+ *WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ */
 /*
  * DynamicList.hh
  *
@@ -26,8 +26,8 @@
 #include <map>
 #include <iostream>
 #include <sstream>
-#include <algorithm>
 #include <tr1/memory>
+#include <functional>
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -70,40 +70,40 @@ private:
 	/*
 	 * A sorted and filtered view on the model
 	 */
-	class view_impl:
-			public view_type {
+	class view_impl: public view_type {
 
 		friend class list_model<value_type> ;
 
 	private:
-		view_filter* m_filter;
-		view_comparator* m_comparator;
+		view_filter m_filter;
+		view_comparator m_comparator;
 		view_type* m_parentView;
 
-		view_impl(view_comparator* _comparator, view_filter* _filter) :
-						m_filter(_filter),
-						m_comparator(_comparator),
-						m_parentView(NULL) {
+		view_impl(view_comparator _comparator, view_filter _filter) :
+				m_filter(_filter), m_comparator(_comparator), m_parentView(NULL) {
 		}
 
 		view_impl(view_impl& _view) :
-						m_filter(_view.m_filter),
-						m_comparator(_view.m_comparator),
-						m_parentView(_view.m_parentView) {
+				m_filter(_view.m_filter), m_comparator(_view.m_comparator), m_parentView(
+						_view.m_parentView) {
 		}
+
+	protected:
+		~view_impl() = default;
 
 	public:
 
 		bool accept(const value_type _object) const {
-			return m_filter == NULL || m_filter->accept(_object);
+			return m_filter == NULL || m_filter(_object);
 		}
 
 		int compare(const value_type _o1, const value_type _o2) const {
 			int compare;
 			if (m_comparator == NULL && m_parentView == NULL) {
-				throw string("You must either set a comparator or override this method");
+				throw string(
+						"You must either set a comparator or override this method");
 			} else if (m_comparator != NULL) {
-				compare = m_comparator->compare(_o1, _o2);
+				compare = m_comparator(_o1, _o2);
 			} else {
 				compare = 0;
 			}
@@ -122,7 +122,8 @@ private:
 
 		string str() const {
 			stringstream ss;
-			ss << "ListView:[comparator=" << m_comparator << ", filter=" << m_filter << ']';
+			ss << "ListView:[comparator=" << m_comparator << ", filter="
+					<< m_filter << ']';
 			return ss.str();
 		}
 
@@ -130,15 +131,16 @@ private:
 
 public:
 
-	static view_type* sorted(view_comparator* comparator) {
+	static view_type* sorted(view_comparator comparator) {
 		return new view_impl(comparator, NULL);
 	}
 
-	static view_type* sorted_filtered(view_comparator* comparator, view_filter* filter) {
+	static view_type* sorted_filtered(view_comparator comparator,
+			view_filter* filter) {
 		return new view_impl(comparator, filter);
 	}
 
-	static view_type* filtered(view_filter* filter) {
+	static view_type* filtered(view_filter filter) {
 		return new view_impl(NULL, filter);
 	}
 
@@ -156,9 +158,7 @@ public:
 		object_tunings() {
 		}
 
-		virtual ~object_tunings() {
-			cout << "Deleting an object tuning" << endl;
-		}
+		virtual ~object_tunings() = default;
 
 		virtual string str(const value_type _value) const {
 			stringstream ss;
@@ -178,28 +178,6 @@ public:
 
 private:
 
-	/**
-	 * Value Comparator
-	 */
-	template<class _Compared> class view_comparator_func {
-
-	private:
-		const model_type * const m_obj;
-		const view_type * const m_view;
-		bool (model_type::* const m_func)(const view_type*, _Compared _o1, _Compared _o2) const;
-	public:
-		view_comparator_func(const model_type* const _obj,
-				bool (model_type::*_func)(const view_type*, _Compared _o1, _Compared _o2) const) :
-						m_obj(_obj),
-						m_view(_obj->get_view()),
-						m_func(_func) {
-		}
-
-		bool operator()(_Compared _o1, _Compared _o2) const {
-			return (m_obj->*m_func)(m_view, _o1, _o2);
-		}
-
-	};
 
 	/**
 	 *
@@ -218,24 +196,20 @@ private:
 
 	public:
 		value_edition() :
-						m_model(NULL),
-						m_value(),
-						m_accepted(false),
-						m_oldIndex(-1),
-						m_newIndex(-1) {
+				m_model(NULL), m_value(), m_accepted(false), m_oldIndex(-1), m_newIndex(
+						-1) {
 
 		}
 
 		value_edition(model_type* _model, value_type _value, int _oldIndex) :
-						m_model(_model),
-						m_value(_value),
-						m_oldIndex(_oldIndex),
-						m_newIndex(-1) {
+				m_model(_model), m_value(_value), m_oldIndex(_oldIndex), m_newIndex(
+						-1) {
 			m_accepted = m_model->get_view()->accept(m_value);
 		}
 
 		void compute_new_index() const {
-			m_newIndex = m_model->compute_insertion_point(m_value) - m_model->m_data.begin();
+			m_newIndex = m_model->compute_insertion_point(m_value)
+					- m_model->m_data.begin();
 			//cout << "insertion point of " << m_model->m_tunings->str(m_value) << ":  " << m_newIndex << endl;
 		}
 
@@ -246,7 +220,7 @@ private:
 		string str() const {
 			stringstream ss;
 			ss << "index=" << m_oldIndex << "->" << m_newIndex;
-			return ss;
+			return ss.str();
 		}
 
 		void update_accepted() {
@@ -277,8 +251,7 @@ private:
 	/**
 	 * Local listeners
 	 */
-	class private_listeners_impl:
-			public list_model_view<value_type>::owner,
+	class private_listeners_impl: public list_model_view<value_type>::owner,
 			public property_listener,
 			public list_model_listener<value_type> {
 
@@ -287,7 +260,7 @@ private:
 		friend class list_model;
 
 		private_listeners_impl(model_type* _model) :
-						m_model(_model) {
+				m_model(_model) {
 		}
 
 		list_model_view<value_type>* get_parent_view() {
@@ -295,10 +268,6 @@ private:
 				return m_model->m_source->get_view();
 			}
 			return NULL;
-		}
-
-		virtual void fire(const void* _source, const string& _name, const void* _oldValue, const void* _newValue) {
-			m_model->view_updated();
 		}
 
 		void values_cleared(model_listener_event& event) {
@@ -340,39 +309,43 @@ private:
 			m_model->stop_editing_value();
 		}
 
-		void before_change(const void* _source, const property* _property) {
+		void fire(source_ptr _source, const string& _name,
+					const void* _oldValue, const void* _newValue) {
+				m_model->view_updated();
+		}
+
+		void before_change(source_ptr _source, const property* _property) {
 			// nope
 		}
 
-		void after_change(const void* _source, const property* _property) {
+		void after_change(source_ptr _source, const property* _property) {
 			// nope
 		}
 
-	} m_privateListenersImpl;
+	};
+
+	private_listeners_impl m_privateListenersImpl;
 
 	object_tuning_ptr m_tunings;
 
-	void view_updated(const void* _source, const string& _name, const void* _oldValue, const void* _newValue) {
+	void view_updated(const void* _source, const string& _name,
+			const void* _oldValue, const void* _newValue) {
 		fire_view_updated();
 	}
 
-	bool compare_data(const view_type* _view, const value_type _o1, const value_type _o2) const {
-		return _view->compare(_o1, _o2) < 0;
+	bool compare_data(const value_type _o1, const value_type _o2) const {
+		return m_viewProperty.get()->compare(_o1, _o2) < 0;
 	}
 
 	value_list_iterator compute_insertion_point(const value_type _value) {
-		return lower_bound(m_data.begin(), m_data.end(), _value,
-				view_comparator_func<value_type>(this, &list_model::compare_data));
+		return lower_bound(m_data.begin(), m_data.end(), _value, [this](value_type o1, value_type o2) { return this->compare_data(o1, o2); });
 	}
-
 
 public:
 
 	list_model(list_model_view<value_type>* _view) :
-					m_objectEdition(NULL),
-					m_source(NULL),
-					m_viewProperty("View", m_propertyManager, NULL),
-					m_privateListenersImpl(this) {
+			m_objectEdition(NULL), m_source(NULL), m_viewProperty("View",
+					m_propertyManager, NULL), m_privateListenersImpl(this) {
 		m_tunings = make_ptr(new object_tunings());
 		if (_view == NULL) {
 			throw string("View must not be NULL");
@@ -381,10 +354,8 @@ public:
 	}
 
 	list_model(model_type& _source) :
-					m_objectEdition(NULL),
-					m_source(&_source),
-					m_viewProperty("View", m_propertyManager, NULL),
-					m_privateListenersImpl(this) {
+			m_objectEdition(NULL), m_source(&_source), m_viewProperty("View",
+					m_propertyManager, NULL), m_privateListenersImpl(this) {
 		m_tunings = _source.m_tunings;
 		attach_to_source();
 		set_view(inherited());
@@ -392,10 +363,8 @@ public:
 	}
 
 	list_model(model_type& _source, list_model_view<value_type>& _view) :
-					m_objectEdition(NULL),
-					m_source(_source),
-					m_viewProperty("View", m_propertyManager, NULL),
-					m_privateListenersImpl(this) {
+			m_objectEdition(NULL), m_source(_source), m_viewProperty("View",
+					m_propertyManager, NULL), m_privateListenersImpl(this) {
 		m_tunings = _source.m_tunings;
 		attach_to_source();
 		set_view(_view);
@@ -486,7 +455,8 @@ public:
 		}
 		model_listener_event event(this, m_objectEdition->m_value);
 		model_listener_iterator listenerIter;
-		for (listenerIter = m_listeners.begin(); listenerIter != m_listeners.end(); listenerIter++) {
+		for (listenerIter = m_listeners.begin();
+				listenerIter != m_listeners.end(); listenerIter++) {
 			(*listenerIter)->editions_stopping(event);
 		}
 	}
@@ -497,7 +467,8 @@ public:
 		}
 		model_listener_event event(this, m_objectEdition->m_value);
 		model_listener_iterator listenerIter;
-		for (listenerIter = m_listeners.begin(); listenerIter != m_listeners.end(); listenerIter++) {
+		for (listenerIter = m_listeners.begin();
+				listenerIter != m_listeners.end(); listenerIter++) {
 			(*listenerIter)->editions_stopped(event);
 		}
 	}
@@ -571,7 +542,7 @@ public:
 				addedData.push_back(value);
 			}
 		}
-		sort(m_data.begin(), m_data.end(), view_comparator_func<const value_type>(this, &model_type::compare_data));
+		sort(m_data.begin(), m_data.end(), [this](value_type o1, value_type o2) { return this->compare_data(o1, o2); });
 		if (addedData.size() > 0) {
 			fire_values_added(addedData);
 		}
@@ -605,7 +576,8 @@ public:
 	int insert(value_type _value) {
 		check_no_edition();
 		if (m_viewProperty.get()->accept(_value)) {
-			const value_list_iterator insertPoint = compute_insertion_point(_value);
+			const value_list_iterator insertPoint = compute_insertion_point(
+					_value);
 			m_data.insert(insertPoint, _value);
 			fire_value_added(_value);
 			return insertPoint - m_data.begin();
@@ -617,7 +589,7 @@ public:
 		return remove_from_model(_sample, _removed);
 	}
 
-	int remove(int _row, value_type* _removed) {
+	int remove_at_index(int _row, value_type* _removed) {
 		value_type value = this[_row];
 		remove_from_model(value, _removed);
 		return value;
@@ -638,12 +610,14 @@ public:
 
 private:
 
-	bool compare_edition_index(const view_type* const _view, const value_edition* const _o1,
+	bool compare_edition_index(const view_type* const _view,
+			const value_edition* const _o1,
 			const value_edition* const _o2) const {
 		return _o2->m_oldIndex > _o1->m_oldIndex;
 	}
 
-	bool compare_edition_value(const view_type* const _view, const value_edition* const _o1,
+	bool compare_edition_value(const view_type* const _view,
+			const value_edition* const _o1,
 			const value_edition* const _o2) const {
 		return _view->compare(_o2->m_value, _o1->m_value);
 	}
@@ -651,8 +625,9 @@ private:
 	void check_no_edition() const {
 		if (m_objectEdition != NULL) {
 			stringstream ss;
-			ss << "Edition already in progress: " << m_tunings->str(m_objectEdition->m_value);
-			throw new string(ss.str());
+			ss << "Edition already in progress: "
+					<< m_tunings->str(m_objectEdition->m_value);
+			throw string(ss.str());
 		}
 	}
 
@@ -668,7 +643,8 @@ public:
 			//cout << "Removing " << m_tunings->str(m_objectEdition->m_value) << endl;
 			m_data.erase(m_data.begin() + m_objectEdition->m_oldIndex);
 		}
-		const value_list_iterator insertionPoint = compute_insertion_point(m_objectEdition->m_value);
+		const value_list_iterator insertionPoint = compute_insertion_point(
+				m_objectEdition->m_value);
 
 		m_objectEdition->update_accepted();
 		if (!m_objectEdition->accepted() && m_objectEdition->m_oldIndex < 0) {
@@ -693,8 +669,7 @@ public:
 public:
 	int row_of(value_type value) const {
 		const value_list_citerator& begin = m_data.begin();
-		value_list_citerator found = lower_bound(begin, m_data.end(), value,
-				view_comparator_func<const value_type>(this, &list_model::compare_data));
+		value_list_citerator found = lower_bound(begin, m_data.end(), value, [this](value_type o1, value_type o2) { return this->compare_data(o1, o2); });
 		if (found == m_data.end()) {
 			return -1;
 		}
@@ -706,7 +681,8 @@ public:
 			return index;
 		}
 		unsigned int max = index + 1;
-		while (max < m_data.size() && m_viewProperty.get()->compare(value, m_data[max]) == 0) {
+		while (max < m_data.size()
+				&& m_viewProperty.get()->compare(value, m_data[max]) == 0) {
 			if (m_tunings->equals(m_data[max], value)) {
 				return max;
 			}
@@ -719,10 +695,11 @@ public:
 		return m_data[row];
 	}
 
-	string & str() const {
+	const string & str() const {
 		stringstream ss;
-		ss << "Model[" << hex << this << ", " << m_viewProperty.get_value().str() << ']';
-		return ss;
+		ss << "Model[" << hex << this << ", "
+				<< m_viewProperty.get_value().str() << ']';
+		return ss.str();
 	}
 
 	int find(value_type _sample, value_type* _found) const {
@@ -764,8 +741,6 @@ public:
 	string str(const value_type _object) const {
 		return m_tunings.get()->str(_object);
 	}
-
-private:
 
 };
 

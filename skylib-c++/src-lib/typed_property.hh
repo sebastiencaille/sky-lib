@@ -67,14 +67,15 @@ public:
 	}
 
 	void set(source_ptr _source, value_type const _newValue) {
-		if (m_value != _newValue) {
-			m_manager.fire_before_property_changed(_source, this);
-			value_type oldValue = m_value;
-			m_value = _newValue;
-			m_manager.fire_property_changed(_source, m_name,
-					(const void*) &oldValue, (const void*) &_newValue);
-			m_manager.fire_after_property_changed(_source, this);
+		if (m_value == _newValue) {
+			return;
 		}
+		m_manager.fire_before_property_changed(_source, this);
+		value_type oldValue = m_value;
+		m_value = _newValue;
+		m_manager.fire_property_changed(_source, m_name,
+				(const void*) &oldValue, (const void*) &_newValue);
+		m_manager.fire_after_property_changed(_source, this);
 	}
 
 	void attach() {

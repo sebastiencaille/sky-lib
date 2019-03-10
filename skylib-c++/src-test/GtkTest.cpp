@@ -101,8 +101,9 @@ protected:
 
 	//Member widgets:
 	Gtk::Entry m_entry;
-	Gtk::Entry m_intEntry;
 	Gtk::Label m_label;
+	Gtk::Entry m_intEntry;
+	Gtk::Label m_intLabel;
 	Gtk::Label m_error;
 	Gtk::Box m_box;
 
@@ -141,6 +142,11 @@ void HelloWorld::init(controller_property<string>& _testProperty1,
 					new string_to_ustring())->bind(
 					new entry_binding(m_intEntry)));
 	m_box.pack_start(m_intEntry);
+	m_bindings.push_back(
+			_testProperty2.bind(new int_to_string())->bind(
+					new string_to_ustring())->bind(
+					new label_binding(m_intLabel)));
+	m_box.pack_start(m_intLabel);
 
 	m_bindings.push_back(
 			_errorProperty.bind(new logic_error_to_string())->bind(
@@ -148,11 +154,14 @@ void HelloWorld::init(controller_property<string>& _testProperty1,
 					new label_binding(m_error)));
 	m_box.pack_start(m_error);
 
+
 	m_label.show();
 	m_entry.show();
 	m_intEntry.show();
+	m_intLabel.show();
 	m_error.show();
 	m_box.show();
+
 }
 
 HelloWorld::~HelloWorld() {
@@ -199,10 +208,10 @@ int main(int argc, char *argv[]) {
 
 	controller_property<int> testProperty2("TestProp2", manager, 0,
 			&errorProperty);
-	testProperty2.set(NULL, 1);
 	HelloWorld helloworld;
 	helloworld.init(testProperty1, testProperty2, errorProperty);
 
+	testProperty2.set(NULL, 1);
 	return app->run(helloworld);
 }
 

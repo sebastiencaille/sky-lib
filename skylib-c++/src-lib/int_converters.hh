@@ -53,7 +53,7 @@ public:
 		errno = 0;
 		long result = strtol(_componentValue.c_str(), &endPtr, 10);
 		if (result == 0 && (errno != 0 || *endPtr != '\0' || _componentValue.empty())) {
-			throw logic_error(string("Invalid number: " + _componentValue));
+			throw new logic_error(string("Invalid number: " + _componentValue));
 		}
 		return (int) result;
 	}

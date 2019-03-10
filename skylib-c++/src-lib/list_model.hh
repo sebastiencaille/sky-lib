@@ -40,6 +40,7 @@ namespace org_skymarshall_util_hmi {
 
 using namespace std;
 using namespace __gnu_cxx;
+using namespace std::placeholders;
 
 /**
  * @param <_Tp>
@@ -338,7 +339,7 @@ private:
 	}
 
 	value_list_iterator compute_insertion_point(const value_type _value) {
-		return lower_bound(m_data.begin(), m_data.end(), _value, [this](value_type o1, value_type o2) { return this->compare_data(o1, o2); });
+		return lower_bound(m_data.begin(), m_data.end(), _value, std::bind(&list_model::compare_data, this, _1, _2));
 	}
 
 public:
@@ -542,7 +543,7 @@ public:
 				addedData.push_back(value);
 			}
 		}
-		sort(m_data.begin(), m_data.end(), [this](value_type o1, value_type o2) { return this->compare_data(o1, o2); });
+		sort(m_data.begin(), m_data.end(), std::bind(&list_model::compare_data, this, _1, _2));
 		if (addedData.size() > 0) {
 			fire_values_added(addedData);
 		}
@@ -669,7 +670,7 @@ public:
 public:
 	int row_of(value_type value) const {
 		const value_list_citerator& begin = m_data.begin();
-		value_list_citerator found = lower_bound(begin, m_data.end(), value, [this](value_type o1, value_type o2) { return this->compare_data(o1, o2); });
+		value_list_citerator found = lower_bound(begin, m_data.end(), value, std::bind(&list_model::compare_data, this, _1, _2));
 		if (found == m_data.end()) {
 			return -1;
 		}

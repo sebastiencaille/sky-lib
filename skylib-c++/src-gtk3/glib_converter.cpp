@@ -20,6 +20,7 @@
  *      Author: scaille
  */
 
+#include<iostream>
 #include "glib_converter.hh"
 
 namespace org_skymarshall_util_hmi_glib {

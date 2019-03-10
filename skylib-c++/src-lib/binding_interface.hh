@@ -128,6 +128,8 @@ public:
 	}
 };
 
+using namespace std::placeholders;
+
 class binding_chain_dependency {
 public:
 	virtual void register_dep(binding_chain_controller* chain) = 0;
@@ -175,9 +177,7 @@ public:
 	}
 
 	void register_dep(binding_chain_controller* _chain) {
-		m_listener = new property_listener_dispatcher(
-				[this](source_ptr source, const property* prop) {this->action_before(source, prop); },
-				[this](source_ptr source, const property* prop) {this->action_after(source, prop); });
+		m_listener = new property_listener_dispatcher(std::bind(&action_dependency::action_before, this, _1, _2), std::bind(&action_dependency::action_after, this, _1, _2));
 		m_targetProperty->add_listener(m_listener);
 	}
 

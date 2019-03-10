@@ -19,7 +19,7 @@
  *  Created on: Apr 4, 2012
  *      Author: scaille
  */
-
+#include <iostream>
 #include "gtk_bindings.hh"
 
 namespace org_skymarshall_util_hmi_gtk {
@@ -48,6 +48,7 @@ void entry_binding::remove_component_value_change_listener() {
 }
 
 void entry_binding::set_component_value(property& _source, Glib::ustring _value) {
+	cout << _value << endl;
 	m_entry.set_text(_value);
 }
 

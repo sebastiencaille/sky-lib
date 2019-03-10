@@ -29,6 +29,8 @@
 
 namespace org_skymarshall_util_hmi {
 
+
+using namespace std::placeholders;
 /**
  * Property intended to be used with a controller.<p>
  * Basically includes an error property.
@@ -49,12 +51,12 @@ public:
 	template<class _Nt> binding_chain<_Pt>::end_of_chain<_Nt>* bind(
 			binding_converter<_Pt, _Nt>* const _converter) {
 		binding_chain<_Pt>* chain = new binding_chain<_Pt>(*this, m_errorNotifier);
-		return chain->bind_property([this](source_ptr source, _Pt value) { this->set(source, value); } )->bind(_converter);
+		return chain->bind_property(std::bind(&controller_property::set, this, _1, _2))->bind(_converter);
 	}
 
 	template<class _Ct> binding_chain_controller* bind(component_binding<_Ct>* const _componentBinding) {
 		binding_chain<_Pt>* chain = new binding_chain<_Pt>(*this, m_errorNotifier);
-		return chain->bind_property([this](source_ptr source, _Pt value) { this->set(value); } )->bind(_componentBinding);
+		return chain->bind_property(std::bind(&controller_property::set, this, _1, _2))->bind(_componentBinding);
 	}
 
 };

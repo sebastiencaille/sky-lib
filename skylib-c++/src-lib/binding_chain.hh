@@ -18,6 +18,7 @@
 namespace org_skymarshall_util_hmi {
 
 using namespace std;
+using namespace std::placeholders;
 
 template<class _Tt> class binding_backward {
 public:
@@ -243,7 +244,7 @@ private:
 public:
 	binding_chain(property& _property, error_notifier* _notifier) :
 			m_property(_property), m_errorNotifier(_notifier),
-			m_valueUpdateListener([this](source_ptr src, const string& name, const void* oldValue, const void* newValue) { this->propagate_property_change(src,name,oldValue,newValue); }) {
+			m_valueUpdateListener(std::bind(&binding_chain::propagate_property_change, this, _1, _2, _3, _4)) {
 	}
 
 	template<class _T> class end_of_chain;

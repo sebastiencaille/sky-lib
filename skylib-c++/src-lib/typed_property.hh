@@ -79,13 +79,11 @@ public:
 	}
 
 	void attach() {
-		const _Pt current = m_value;
-		m_value = NULL;
-		set(this, current);
+		force_changed(this);
 	}
 
 	void force_changed(source_ptr _source) {
-		m_manager.fire_property_changed(_source, m_name, NULL, m_value);
+		m_manager.fire_property_changed(_source, m_name, NULL, (const void*) &m_value);
 	}
 
 };

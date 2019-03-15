@@ -55,7 +55,7 @@ public:
 	void remove_listener(property_listener* _listener);
 	void remove_listener(property_listener_ref _listener);
 
-	void attach();
+	virtual void attach() = 0;
 };
 }
 

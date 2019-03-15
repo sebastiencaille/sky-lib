@@ -37,7 +37,7 @@ class error_notifier {
 public:
 	virtual ~error_notifier() {
 	}
-	virtual void set_error(source_ptr _source, logic_error_ptr _e) = 0;
+	virtual void set_error(source_ptr _source, const logic_error& _e) = 0;
 };
 
 

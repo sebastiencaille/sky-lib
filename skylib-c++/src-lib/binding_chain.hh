@@ -179,7 +179,7 @@ private:
 			try {
 				((binding_backward<_Ct>*) m_chain.m_links[lastIndex]->m_binding_backward)->to_property(
 						lastIndex, _component, _componentValue);
-			} catch (const logic_error_ptr _e) {
+			} catch (const logic_error& _e) {
 				m_chain.m_errorNotifier->set_error(_component, _e);
 			}
 		}
@@ -237,7 +237,7 @@ private:
 		try {
 			((binding_forward<_Pt>*) m_links[0]->m_binding_forward)->to_component(
 					0, *(_Pt*) _new_value);
-		} catch (const logic_error_ptr _e) {
+		} catch (const logic_error& _e) {
 			m_errorNotifier->set_error(_property, _e);
 		}
 	}

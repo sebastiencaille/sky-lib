@@ -38,9 +38,9 @@ public:
 					this) {
 	}
 
-	void set_error(source_ptr _source, logic_error_ptr _value) {
+	void set_error(source_ptr _source, const logic_error& _value) {
 		logic_error_ptr oldValue = get();
-		this->set(_source, new logic_error(*_value));
+		this->set(_source, new logic_error(_value));
 		if (oldValue != NULL) {
 			delete oldValue;
 		}

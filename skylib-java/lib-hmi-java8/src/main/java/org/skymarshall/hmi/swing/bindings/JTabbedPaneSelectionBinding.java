@@ -46,14 +46,14 @@ public class JTabbedPaneSelectionBinding<T> extends DefaultComponentBinding<T> {
 
 			if (index >= 0) {
 
-				final Object clientProperty = pane.getClientProperty(pane.getComponentAt(index));
-				if (clientProperty == null) {
+				final Object tabClientProperty = pane.getClientProperty(pane.getComponentAt(index));
+				if (tabClientProperty == null) {
 					return;
 				}
-				if (!clazz.isInstance(clientProperty)) {
-					throw new IllegalStateException("Object for tab " + index + " must be a " + clazz.getName());
+				if (!clazz.isInstance(tabClientProperty)) {
+					throw new IllegalStateException("Property of tab " + index + " must be a " + clazz.getName());
 				}
-				converter.setValueFromComponent(pane, clazz.cast(clientProperty));
+				converter.setValueFromComponent(pane, clazz.cast(tabClientProperty));
 			}
 
 		});
@@ -69,8 +69,9 @@ public class JTabbedPaneSelectionBinding<T> extends DefaultComponentBinding<T> {
 		}
 	}
 
-	public static void setValueForComponent(final JTabbedPane pane, final JComponent component, final Object value) {
-		pane.putClientProperty(component, value);
+	public static void setValueForTab(final JTabbedPane pane, final JComponent tabPanel,
+			final Object tabClientProperty) {
+		pane.putClientProperty(tabPanel, tabClientProperty);
 	}
 
 }

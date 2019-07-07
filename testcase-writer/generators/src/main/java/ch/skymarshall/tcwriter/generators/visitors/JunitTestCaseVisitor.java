@@ -132,7 +132,7 @@ public class JunitTestCaseVisitor {
 		addParameterValuesToCall(parametersContent, paramValue.getComplexTypeValues().values(),
 				param.getMandatoryParameters());
 		parametersContent.append(");").newLine();
-		addSetters(parametersContent, model, parameterVarName, paramValue.getComplexTypeValues().values(),
+		addSetters(parametersContent, parameterVarName, paramValue.getComplexTypeValues().values(),
 				param.getOptionalParameters());
 		javaContent.append(parametersContent.toString());
 	}
@@ -164,9 +164,9 @@ public class JunitTestCaseVisitor {
 		}
 	}
 
-	private void addSetters(final JavaCodeGenerator parametersContent, final TestModel model,
-			final String parameterVarName, final Collection<TestParameterValue> parameterValues,
-			final List<TestParameterType> filter) throws IOException, TestCaseException {
+	private void addSetters(final JavaCodeGenerator parametersContent, final String parameterVarName,
+			final Collection<TestParameterValue> parameterValues, final List<TestParameterType> filter)
+			throws IOException, TestCaseException {
 		final Map<String, TestParameterType> filteredMap = filter.stream()
 				.collect(Collectors.toMap(IdObject::getId, t -> t));
 		for (final TestParameterValue parameterValue : parameterValues) {

@@ -44,31 +44,31 @@ public class JTableMultiSelectionBinding<T> extends DefaultComponentBinding<List
 		table.setModel(model);
 	}
 
-	private void updateSelection(final IComponentLink<List<T>> converter) {
+	private void updateSelection(final IComponentLink<List<T>> componentlink) {
 		final List<T> selected = new ArrayList<>();
 		for (final int row : table.getSelectedRows()) {
 			if (row >= 0 && row < model.getRowCount()) {
 				selected.add(model.getObjectAtRow(row));
 			}
 		}
-		converter.setValueFromComponent(table, selected);
+		componentlink.setValueFromComponent(table, selected);
 	}
 
 	@Override
-	public void addComponentValueChangeListener(final IComponentLink<List<T>> converter) {
+	public void addComponentValueChangeListener(final IComponentLink<List<T>> componentlink) {
 		table.getSelectionModel().addListSelectionListener(e -> {
 			if (!e.getValueIsAdjusting() && !modelChange) {
-				updateSelection(converter);
+				updateSelection(componentlink);
 			}
 		});
 		model.addTableModelListener(event -> {
 			if (event.getType() == ListModelTableModel.TABLE_CHANGE_DONE) {
 				modelChange = false;
-				converter.reloadComponentValue();
+				componentlink.reloadComponentValue();
 			} else if (event.getType() == ListModelTableModel.TABLE_ABOUT_TO_CHANGE) {
 				modelChange = true;
 			} else if (!modelChange) {
-				updateSelection(converter);
+				updateSelection(componentlink);
 			}
 		});
 

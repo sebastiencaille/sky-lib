@@ -39,9 +39,8 @@ public class TestParameterValueTableModel
 		}
 	}
 
-	private static ParameterValue asParam(final TestCase tc, final TestParameter parameterFactory,
-			final TestParameterType complexParameter, final TestParameterValue complexParameterValue,
-			final boolean mandatory) {
+	private static ParameterValue asParam(final TestCase tc, final TestParameterType complexParameter,
+			final TestParameterValue complexParameterValue, final boolean mandatory) {
 		final String complexParameterId = complexParameter.getId();
 		final TestParameterValue testParameterValue = complexParameterValue.getComplexTypeValues()
 				.get(complexParameterId);
@@ -68,11 +67,11 @@ public class TestParameterValueTableModel
 		final ListModel<ParameterValue> paramList = new RootListModel<>(ListViews.sorted(new ParamValueComparator()));
 
 		for (final TestParameterType mandatoryParameter : parameter.getMandatoryParameters()) {
-			paramList.insert(asParam(tc, parameter, mandatoryParameter, parameterValue, true));
+			paramList.insert(asParam(tc, mandatoryParameter, parameterValue, true));
 		}
 
 		for (final TestParameterType optionalParameter : parameter.getOptionalParameters()) {
-			paramList.insert(asParam(tc, parameter, optionalParameter, parameterValue, false));
+			paramList.insert(asParam(tc, optionalParameter, parameterValue, false));
 		}
 		return paramList;
 	}

@@ -100,7 +100,7 @@ public class TestCase {
 
 	public synchronized IdObject getRestoreValue(final String id) {
 		if (cachedValues == null) {
-			cachedValues = testModel.getRoles().values().stream().flatMap(r -> r.getApis().stream())
+			cachedValues = testModel.getRoles().values().stream().flatMap(r -> r.getActions().stream())
 					.collect(Collectors.toMap(IdObject::getId, a -> a));
 			cachedValues.putAll(testModel.getParameterFactories().values().stream()
 					.collect(Collectors.toMap(IdObject::getId, a -> a)));

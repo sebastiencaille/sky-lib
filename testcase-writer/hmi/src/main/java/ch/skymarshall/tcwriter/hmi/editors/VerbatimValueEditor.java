@@ -15,16 +15,16 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
-import ch.skymarshall.tcwriter.generators.Helper.Reference;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter.ParameterNature;
+import ch.skymarshall.tcwriter.generators.Helper.VerbatimValue;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition.ParameterNature;
 
-public class ReferenceEditor extends JDialog {
+public class VerbatimValueEditor extends JDialog {
 
 	private final JTextField freeTyping;
-	private final JComboBox<Reference> fastRefEditor;
+	private final JComboBox<VerbatimValue> fastRefEditor;
 	private final JButton ok;
 
-	public ReferenceEditor(final List<Reference> refsReferences, final Reference simpleValue) {
+	public VerbatimValueEditor(final List<VerbatimValue> refsReferences, final VerbatimValue simpleValue) {
 
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
@@ -53,11 +53,11 @@ public class ReferenceEditor extends JDialog {
 		SwingUtilities.invokeLater(() -> setVisible(true));
 	}
 
-	public Reference getValue() {
+	public VerbatimValue getValue() {
 		if (freeTyping.getText().isEmpty()) {
-			return (Reference) fastRefEditor.getSelectedItem();
+			return (VerbatimValue) fastRefEditor.getSelectedItem();
 		}
-		return new Reference("", freeTyping.getText(), ParameterNature.SIMPLE_TYPE);
+		return new VerbatimValue("", freeTyping.getText(), ParameterNature.SIMPLE_TYPE);
 	}
 
 	public void close() {

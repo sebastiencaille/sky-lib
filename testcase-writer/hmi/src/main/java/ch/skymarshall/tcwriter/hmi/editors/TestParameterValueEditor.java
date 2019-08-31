@@ -21,10 +21,10 @@ import org.skymarshall.hmi.mvc.ControllerPropertyChangeSupport;
 import org.skymarshall.hmi.mvc.properties.ObjectProperty;
 import org.skymarshall.hmi.swing.bindings.SwingBindings;
 
-import ch.skymarshall.tcwriter.generators.Helper.Reference;
+import ch.skymarshall.tcwriter.generators.Helper.VerbatimValue;
 import ch.skymarshall.tcwriter.generators.model.IdObject;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter.ParameterNature;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition.ParameterNature;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterType;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
@@ -36,10 +36,10 @@ public class TestParameterValueEditor extends JDialog {
 	private final ControllerPropertyChangeSupport support = new ControllerPropertyChangeSupport(this);
 	private final JButton ok;
 	private TestParameterValue editedParameterValue;
-	private final ObjectProperty<Reference> selectedReferenceProperty;
+	private final ObjectProperty<VerbatimValue> selectedReferenceProperty;
 	private ListModel<ParameterValue> editedParameters;
 
-	public TestParameterValueEditor(final TestCase tc, final TestParameterType parameterType, final Reference current,
+	public TestParameterValueEditor(final TestCase tc, final TestParameterType parameterType, final VerbatimValue current,
 			final TestParameterValue parameterValue) {
 
 		editedParameterValue = parameterValue;
@@ -48,9 +48,9 @@ public class TestParameterValueEditor extends JDialog {
 
 		getContentPane().setLayout(new BorderLayout());
 
-		final List<Reference> apiReferences = toReference(tc,
+		final List<VerbatimValue> apiReferences = toReference(tc,
 				tc.getModel().getParameterFactories().get(parameterType.getType()), ParameterNature.TEST_API_TYPE);
-		final JComboBox<Reference> referenceEditor = StepsCellEditor.prepareFastListEditor(apiReferences);
+		final JComboBox<VerbatimValue> referenceEditor = StepsCellEditor.prepareFastListEditor(apiReferences);
 		selectedReferenceProperty = new ObjectProperty<>("selectedReference", support);
 		selectedReferenceProperty.bind(SwingBindings.selection(referenceEditor));
 		getContentPane().add(referenceEditor, BorderLayout.NORTH);
@@ -65,7 +65,7 @@ public class TestParameterValueEditor extends JDialog {
 					getContentPane().remove(currentTable);
 				}
 
-				final Reference reference = selectedReferenceProperty.getValue();
+				final VerbatimValue reference = selectedReferenceProperty.getValue();
 				if (IdObject.ID_NOT_SET.equals(reference.getId())) {
 					return;
 				}
@@ -75,7 +75,7 @@ public class TestParameterValueEditor extends JDialog {
 				testParameterValue.getComplexTypeValues().putAll(editedParameterValue.getComplexTypeValues());
 				editedParameterValue = testParameterValue;
 
-				final TestParameter parameter = tc.getModel().getTestParameterFactory(reference.getId());
+				final TestParameterDefinition parameter = tc.getModel().getTestParameterFactory(reference.getId());
 				editedParameters = TestParameterValueTableModel.toListModel(tc, parameter, editedParameterValue);
 				final TestParameterValueTable view = new TestParameterValueTable(
 						new TestParameterValueTableModel(editedParameters));
@@ -122,7 +122,7 @@ public class TestParameterValueEditor extends JDialog {
 		ok.addActionListener(delegate);
 	}
 
-	public Reference getCurrentReference() {
+	public VerbatimValue getCurrentReference() {
 		return selectedReferenceProperty.getValue();
 	}
 }

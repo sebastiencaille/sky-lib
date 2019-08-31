@@ -23,8 +23,8 @@ import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.ObjectDescription;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter.ParameterNature;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition.ParameterNature;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestRole;
 
 public class ClassToModelVisitor {
@@ -62,9 +62,9 @@ public class ClassToModelVisitor {
 						: null;
 				final TestAction testAction = new TestAction(methodKey(actionMethod), actionMethod.getName(),
 						returnType);
-				final List<TestParameter> roleActionParameters = processParameters(testAction, actionMethod);
+				final List<TestParameterDefinition> roleActionParameters = processParameters(testAction, actionMethod);
 				testAction.getParameters().addAll(roleActionParameters);
-				testRole.getApis().add(testAction);
+				testRole.getActions().add(testAction);
 			}
 
 		}
@@ -94,7 +94,7 @@ public class ClassToModelVisitor {
 			for (final Method parameterFactoryMethod : parameterFactoryMethods) {
 				// Process each method of the class
 
-				final TestParameter testParameter = new TestParameter(methodKey(parameterFactoryMethod),
+				final TestParameterDefinition testParameter = new TestParameterDefinition(methodKey(parameterFactoryMethod),
 						parameterFactoryMethod.getDeclaringClass().getSimpleName() + "."
 								+ parameterFactoryMethod.getName(),
 						ParameterNature.TEST_API_TYPE, parameterFactoryMethod.getReturnType().getName());
@@ -109,7 +109,7 @@ public class ClassToModelVisitor {
 				factoryReturnTypeMethods
 						.removeIf(m -> Modifier.isStatic(m.getModifiers()) || m.getParameterCount() != 1);
 				for (final Method factoryReturnTypeMethod : factoryReturnTypeMethods) {
-					final TestParameter optionalParameter = new TestParameter(methodKey(factoryReturnTypeMethod),
+					final TestParameterDefinition optionalParameter = new TestParameterDefinition(methodKey(factoryReturnTypeMethod),
 							factoryReturnTypeMethod.getName(), ParameterNature.TEST_API_TYPE,
 							factoryReturnTypeMethod.getParameterTypes()[0].getName());
 					processMethodAnnotation(optionalParameter, factoryReturnTypeMethod);
@@ -127,17 +127,17 @@ public class ClassToModelVisitor {
 		model.addDescription(idObject, descriptionFrom(methodAnnotation));
 	}
 
-	private List<TestParameter> processParameters(final IdObject methodIdObject, final Method apiMethod) {
+	private List<TestParameterDefinition> processParameters(final IdObject methodIdObject, final Method apiMethod) {
 		processMethodAnnotation(methodIdObject, apiMethod);
 
 		final Parameter[] methodParameters = apiMethod.getParameters();
-		final List<TestParameter> processedParameters = new ArrayList<>();
+		final List<TestParameterDefinition> processedParameters = new ArrayList<>();
 		for (int i = 0; i < methodParameters.length; i++) {
 			final Parameter apiMethodParam = methodParameters[i];
 
 			final TCApi apiMethodAnnotation = apiMethodParam.getAnnotation(TCApi.class);
 			final Type apiMethodParamType = apiMethodParam.getType();
-			final TestParameter testObjectParameter = new TestParameter(paramKey(apiMethod, i), apiMethod.getName(),
+			final TestParameterDefinition testObjectParameter = new TestParameterDefinition(paramKey(apiMethod, i), apiMethod.getName(),
 					ParameterNature.TEST_API_TYPE, apiMethodParamType.getTypeName());
 			if (apiMethodAnnotation != null) {
 				model.addDescription(testObjectParameter, descriptionFrom(apiMethodAnnotation));

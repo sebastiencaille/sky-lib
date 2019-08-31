@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 
 import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter.ParameterNature;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition.ParameterNature;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestRole;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
@@ -25,11 +25,11 @@ public interface Helper {
 		builder.append(model.toString()).append('\n');
 		for (final TestRole actor : model.getRoles().values()) {
 			builder.append("  ").append(model.descriptionOf(actor)).append(": ").append(actor).append(EOL);
-			actor.getApis().forEach(api -> builder.append("    ").append(model.descriptionOf(api)).append(": ")
+			actor.getActions().forEach(api -> builder.append("    ").append(model.descriptionOf(api)).append(": ")
 					.append(api).append('\n'));
 
 		}
-		for (final TestParameter testObject : model.getParameterFactories().values()) {
+		for (final TestParameterDefinition testObject : model.getParameterFactories().values()) {
 			builder.append("  ").append(model.descriptionOf(testObject)).append(": ").append(testObject).append(EOL);
 			testObject.getMandatoryParameters().forEach(api -> builder.append("    mandatory: ")
 					.append(model.descriptionOf(api)).append(": ").append(api).append(EOL));
@@ -60,20 +60,24 @@ public interface Helper {
 		return "param-" + apiMethod.getDeclaringClass().getName() + "." + apiMethod.getName() + "-" + i;
 	}
 
-	static String roleKey(final Class<?> clazz) {
-		return "actor-" + clazz.getName();
+	public static String roleKey(final Class<?> clazz) {
+		return "role-" + clazz.getName();
 	}
 
-	static String methodKey(final Method method) {
+	public static String methodKey(final Method method) {
 		return "method-" + method.getDeclaringClass().getName() + "." + method.getName();
 	}
 
-	class Reference {
+	public static String methodKey(final Class<?> declaringClass, final String methodName) {
+		return "method-" + declaringClass.getName() + "." + methodName;
+	}
+
+	class VerbatimValue {
 		private final String display;
 		private final String id;
 		private final ParameterNature nature;
 
-		public Reference(final String id, final String display, final ParameterNature nature) {
+		public VerbatimValue(final String id, final String display, final ParameterNature nature) {
 			super();
 			this.display = display;
 			this.id = id;
@@ -87,7 +91,7 @@ public interface Helper {
 
 		@Override
 		public boolean equals(final Object obj) {
-			return (obj instanceof Reference) && id == ((Reference) obj).id;
+			return (obj instanceof VerbatimValue) && id == ((VerbatimValue) obj).id;
 		}
 
 		@Override
@@ -108,10 +112,10 @@ public interface Helper {
 		}
 	}
 
-	static List<Reference> toReference(final TestCase tc, final Collection<? extends IdObject> idObjects,
+	static List<VerbatimValue> toReference(final TestCase tc, final Collection<? extends IdObject> idObjects,
 			final ParameterNature nature) {
-		return idObjects.stream()
-				.map(idObject -> new Reference(idObject.getId(), tc.descriptionOf(idObject).getDescription(), nature))
+		return idObjects.stream().map(
+				idObject -> new VerbatimValue(idObject.getId(), tc.descriptionOf(idObject).getDescription(), nature))
 				.collect(Collectors.toList());
 	}
 

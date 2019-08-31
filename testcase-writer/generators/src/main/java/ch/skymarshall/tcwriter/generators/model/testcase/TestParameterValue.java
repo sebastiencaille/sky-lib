@@ -9,17 +9,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import ch.skymarshall.tcwriter.generators.model.ExportReference;
 import ch.skymarshall.tcwriter.generators.model.IdObject;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter.ParameterNature;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition.ParameterNature;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterType;
 
 /** A value in the test case */
 public class TestParameterValue extends IdObject {
 
-	public static final TestParameterValue NO_VALUE = new TestParameterValue("", TestParameter.NO_PARAMETER);
+	public static final TestParameterValue NO_VALUE = new TestParameterValue("", TestParameterDefinition.NO_PARAMETER);
 
 	@JsonIgnore
-	private TestParameter valueDefinition;
+	private TestParameterDefinition valueDefinition;
 
 	private final Map<String, TestParameterValue> complexTypeValues = new HashMap<>();
 	private final String simpleValue;
@@ -30,16 +30,16 @@ public class TestParameterValue extends IdObject {
 		simpleValue = null;
 	}
 
-	public TestParameterValue(final TestParameterType parameterOfValue, final TestParameter valueDefinition) {
+	public TestParameterValue(final TestParameterType parameterOfValue, final TestParameterDefinition valueDefinition) {
 		this(parameterOfValue.getId(), valueDefinition, null);
 	}
 
-	public TestParameterValue(final TestParameterType parameterOfValue, final TestParameter valueDefinition,
+	public TestParameterValue(final TestParameterType parameterOfValue, final TestParameterDefinition valueDefinition,
 			final String simpleValue) {
 		this(parameterOfValue.getId(), valueDefinition, simpleValue);
 	}
 
-	public TestParameterValue(final String id, final TestParameter valueDefinition) {
+	public TestParameterValue(final String id, final TestParameterDefinition valueDefinition) {
 		this(id, valueDefinition, null);
 	}
 
@@ -49,7 +49,7 @@ public class TestParameterValue extends IdObject {
 	 * @param valueDefinition
 	 * @param simpleValue
 	 */
-	public TestParameterValue(final String id, final TestParameter valueDefinition, final String simpleValue) {
+	public TestParameterValue(final String id, final TestParameterDefinition valueDefinition, final String simpleValue) {
 		super(id);
 		this.valueDefinition = valueDefinition;
 		this.simpleValue = simpleValue;
@@ -58,7 +58,7 @@ public class TestParameterValue extends IdObject {
 		}
 	}
 
-	public TestParameter getValueDefinition() {
+	public TestParameterDefinition getValueDefinition() {
 		return valueDefinition;
 	}
 
@@ -73,10 +73,10 @@ public class TestParameterValue extends IdObject {
 	public void setTestParameterRef(final ExportReference ref) {
 		ref.setRestoreAction((tc, id) -> {
 			if (id.startsWith(ParameterNature.SIMPLE_TYPE.name())) {
-				valueDefinition = TestParameter
+				valueDefinition = TestParameterDefinition
 						.simpleType(id.substring(ParameterNature.SIMPLE_TYPE.name().length() + 1));
 			} else {
-				valueDefinition = (TestParameter) tc.getRestoreValue(id);
+				valueDefinition = (TestParameterDefinition) tc.getRestoreValue(id);
 			}
 		});
 	}

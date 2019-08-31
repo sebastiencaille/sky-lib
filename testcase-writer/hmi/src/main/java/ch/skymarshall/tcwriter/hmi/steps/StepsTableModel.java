@@ -8,17 +8,18 @@ import org.skymarshall.hmi.model.ListModel;
 import org.skymarshall.hmi.mvc.properties.ObjectProperty;
 import org.skymarshall.hmi.swing.model.ListModelTableModel;
 
-import ch.skymarshall.tcwriter.generators.Helper.Reference;
+import ch.skymarshall.tcwriter.generators.Helper.VerbatimValue;
 import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter.ParameterNature;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition.ParameterNature;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterType;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 import ch.skymarshall.tcwriter.generators.visitors.HumanReadableVisitor;
 import ch.skymarshall.tcwriter.hmi.TestRemoteControl;
-import ch.skymarshall.tcwriter.hmi.steps.StepsCellEditor.EditorValue;
+import ch.skymarshall.tcwriter.hmi.steps.StepsCellEditor.ParameterFactoryEditor;
 
 public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableModel.Column> {
 
@@ -78,11 +79,11 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		default:
 			return "";
 		}
-		return new Reference(tcObject.getId(), tc.descriptionOf(tcObject).getDescription(), nature);
+		return new VerbatimValue(tcObject.getId(), tc.descriptionOf(tcObject).getDescription(), nature);
 	}
 
 	private Object createReferenceFromParam(final TestCase tc, final TestParameterValue parameterValue) {
-		final TestParameter parameterDef = parameterValue.getValueDefinition();
+		final TestParameterDefinition parameterDef = parameterValue.getValueDefinition();
 		String display;
 		switch (parameterDef.getNature()) {
 		case REFERENCE:
@@ -97,7 +98,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		default:
 			display = "N/A";
 		}
-		return new Reference(parameterDef.getId(), display, parameterDef.getNature());
+		return new VerbatimValue(parameterDef.getId(), display, parameterDef.getNature());
 	}
 
 	@Override
@@ -171,13 +172,12 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 			break;
 		}
 
-		final Reference reference;
-		if (value instanceof EditorValue) {
-			reference = ((EditorValue) value).testFactoryReference;
+		final String newId;
+		if (value instanceof VerbatimValue) {
+			newId = ((VerbatimValue) value).getId();
 		} else {
-			reference = (Reference) value;
+			newId = null;
 		}
-		final String newId = reference.getId();
 		switch (column) {
 		case ACTOR:
 			testStep.setActor(tc.getModel().getActors().get(newId));
@@ -186,40 +186,35 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 			return;
 		case ACTION:
 			final TestAction oldAction = testStep.getAction();
-			testStep.setAction(testStep.getRole().getApi(newId));
+			testStep.setAction(testStep.getRole().getAction(newId));
 			migrateOldAction(testStep, oldAction);
 			return;
 		case NAVIGATOR:
 			if (!hasNavigationParam(tc, testStep)) {
 				return;
 			}
-			testStep.getParametersValue().set(0, ((EditorValue) value).factorParameterValue);
+			testStep.getParametersValue().set(0, ((ParameterFactoryEditor) value).factoryParameterValue);
 			return;
 		case PARAM0:
 			if (!hasParam(tc, testStep, 0)) {
 				return;
 			}
 			final int paramIndex = paramIndexOf(tc, testStep, 0);
-			final TestParameter testParameter = testStep.getParametersValue().get(paramIndex).getValueDefinition();
-			switch (testParameter.getNature()) {
-			case SIMPLE_TYPE:
-				testStep.getParametersValue().set(paramIndex,
-						new TestParameterValue(testStep.getAction().getParameter(paramIndex).getId(), testParameter,
-								((Reference) value).getDisplay()));
-				break;
-			case REFERENCE:
-				testStep.getParametersValue().set(paramIndex,
-						new TestParameterValue(testStep.getAction().getParameter(paramIndex).getId(), testParameter,
-								((Reference) value).getDisplay()));
-				break;
-			case TEST_API_TYPE:
-				testStep.getParametersValue().set(paramIndex, ((EditorValue) value).factorParameterValue);
-				break;
-			case NOT_SET:
-				testStep.getParametersValue().set(paramIndex, null);
-				break;
-			default:
-				throw new IllegalStateException("Unhandled: " + column);
+			final TestParameterType testParameterType = testStep.getAction().getParameters().get(paramIndex);
+
+			if (value instanceof ParameterFactoryEditor) {
+				testStep.getParametersValue().set(paramIndex, ((ParameterFactoryEditor) value).factoryParameterValue);
+			} else {
+				final VerbatimValue verbatimValue = (VerbatimValue) value;
+				final TestParameterDefinition def = new TestParameterDefinition(newId, newId, verbatimValue.getNature(),
+						testParameterType.getType());
+				TestParameterValue newParameterValue;
+				if (def.getNature() == ParameterNature.REFERENCE) {
+					newParameterValue = new TestParameterValue(testParameterType, def, verbatimValue.getId());
+				} else {
+					newParameterValue = new TestParameterValue(testParameterType, def, verbatimValue.getDisplay());
+				}
+				testStep.getParametersValue().set(paramIndex, newParameterValue);
 			}
 			return;
 		default:

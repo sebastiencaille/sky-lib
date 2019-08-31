@@ -25,7 +25,7 @@ public class BuyItemNavigator {
 	 *
 	 * @return
 	 */
-	@TCApi(description = "from internet", humanReadable = "from internet")
+	@TCApi(description = "on internet", humanReadable = "on internet")
 	public static BuyItemNavigator fromInternet() {
 		return new BuyItemNavigator(ExampleService::openBrowser);
 	}

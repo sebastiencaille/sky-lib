@@ -20,7 +20,7 @@ import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterType;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestRole;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
@@ -47,11 +47,11 @@ public class ExampleTCWriter extends TCWriterHmi {
 	}
 
 	private static TestAction find(final TestRole actor, final String name) {
-		return actor.getApis().stream().filter(m -> m.getId().contains(name)).findFirst()
+		return actor.getActions().stream().filter(m -> m.getId().contains(name)).findFirst()
 				.orElseThrow(() -> new IllegalArgumentException("No such method: " + name));
 	}
 
-	private static TestParameter findValueFactory(final TestModel model, final String name) {
+	private static TestParameterDefinition findValueFactory(final TestModel model, final String name) {
 		return model.getParameterFactories().values().stream().filter(m -> m.getId().contains(name)).findFirst()
 				.orElseThrow(() -> new IllegalArgumentException("No parameter factory with name: " + name));
 	}
@@ -101,8 +101,8 @@ public class ExampleTCWriter extends TCWriterHmi {
 		System.out.println(Helper.dumpModel(model));
 
 		final TestCase tc = new TestCase("ch.skymarshall.tcwriter.examples.MyTC", model);
-		final TestParameter coffeeMachine = findValueFactory(model, "coffeeMachine");
-		final TestParameter coffeeMachineOfBrand = findValueFactory(model, "coffeeMachineOfBrand");
+		final TestParameterDefinition coffeeMachine = findValueFactory(model, "coffeeMachine");
+		final TestParameterDefinition coffeeMachineOfBrand = findValueFactory(model, "coffeeMachineOfBrand");
 
 		int stepIndex = 1;
 
@@ -118,7 +118,7 @@ public class ExampleTCWriter extends TCWriterHmi {
 		final TestParameterValue action1Val2 = new TestParameterValue(action1Param1, coffeeMachine);
 		final TestParameterType action1Param1Opt0 = coffeeMachine.getOptionalParameter(1);
 		action1Val2.addComplexTypeValue(
-				new TestParameterValue(action1Param1Opt0, action1Param1Opt0.asParameter(), "DeLuxeBrand"));
+				new TestParameterValue(action1Param1Opt0, action1Param1Opt0.asSimpleParameter(), "DeLuxeBrand"));
 		step1.addParameter(action1Val2);
 		tc.addStep(step1);
 
@@ -133,7 +133,7 @@ public class ExampleTCWriter extends TCWriterHmi {
 		final TestParameterValue action2Param1Value = new TestParameterValue(action2Param1, coffeeMachineOfBrand);
 		final TestParameterType action2Param1Mand = coffeeMachineOfBrand.getMandatoryParameter(0);
 		action2Param1Value.addComplexTypeValue(
-				new TestParameterValue(action2Param1Mand, action2Param1Mand.asParameter(), "DeLuxeBrand"));
+				new TestParameterValue(action2Param1Mand, action2Param1Mand.asSimpleParameter(), "DeLuxeBrand"));
 		step2.addParameter(action2Param1Value);
 		tc.addStep(step2);
 
@@ -143,7 +143,7 @@ public class ExampleTCWriter extends TCWriterHmi {
 		final TestParameterType action3Param0 = action3.getParameter(0);
 		step3.setActor(customer);
 		step3.setAction(action3);
-		step3.addParameter(new TestParameterValue(action3Param0, action3Param0.asParameter(), "10"));
+		step3.addParameter(new TestParameterValue(action3Param0, action3Param0.asSimpleParameter(), "10"));
 		tc.addStep(step3);
 
 		// Step 4

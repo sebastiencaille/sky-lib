@@ -112,4 +112,9 @@ public class TestStep {
 		return newTestStep;
 	}
 
+	@Override
+	public String toString() {
+		return actor.getName() + "." + action.getName();
+	}
+
 }

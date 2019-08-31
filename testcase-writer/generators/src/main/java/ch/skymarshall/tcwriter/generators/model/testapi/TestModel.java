@@ -9,6 +9,7 @@ import java.util.Set;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 
+import ch.skymarshall.tcwriter.generators.Helper;
 import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.ObjectDescription;
 
@@ -20,8 +21,8 @@ public class TestModel implements Serializable {
 
 	private final Map<String, TestActor> actors = new HashMap<>();
 
-	private final Multimap<String, TestParameter> testObjectFactories = MultimapBuilder.hashKeys().arrayListValues()
-			.build();
+	private final Multimap<String, TestParameterDefinition> testObjectFactories = MultimapBuilder.hashKeys()
+			.arrayListValues().build();
 
 	private final Set<String> navigationTypes = new HashSet<>();
 
@@ -41,11 +42,19 @@ public class TestModel implements Serializable {
 		return roles;
 	}
 
+	public TestRole getRole(final Class<?> clazz) {
+		return roles.get(Helper.roleKey(clazz));
+	}
+
 	public Map<String, TestActor> getActors() {
 		return actors;
 	}
 
-	public Multimap<String, TestParameter> getParameterFactories() {
+	public void addActor(final TestActor actor) {
+		actors.put(actor.getId(), actor);
+	}
+
+	public Multimap<String, TestParameterDefinition> getParameterFactories() {
 		return testObjectFactories;
 	}
 
@@ -57,7 +66,7 @@ public class TestModel implements Serializable {
 		return descriptions.get(idObject.getId());
 	}
 
-	public TestParameter getTestParameterFactory(final String factoryId) {
+	public TestParameterDefinition getTestParameterFactory(final String factoryId) {
 		return testObjectFactories.values().stream().filter(tObj -> tObj.getId().equals(factoryId)).findFirst()
 				.orElseThrow(
 						() -> new IllegalArgumentException("No test parameter factory found with id " + factoryId));

@@ -20,14 +20,14 @@ import javax.swing.JTable;
 import org.skymarshall.hmi.mvc.properties.ObjectProperty;
 import org.skymarshall.hmi.swing.model.ListModelTableModel;
 
-import ch.skymarshall.tcwriter.generators.Helper.Reference;
+import ch.skymarshall.tcwriter.generators.Helper.VerbatimValue;
 import ch.skymarshall.tcwriter.generators.model.IdObject;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter.ParameterNature;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition.ParameterNature;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterType;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
-import ch.skymarshall.tcwriter.hmi.editors.ReferenceEditor;
+import ch.skymarshall.tcwriter.hmi.editors.VerbatimValueEditor;
 import ch.skymarshall.tcwriter.hmi.editors.TestParameterValueEditor;
 import ch.skymarshall.tcwriter.hmi.steps.StepsTableModel.Column;
 
@@ -53,7 +53,7 @@ public class StepsCellEditor extends DefaultCellEditor {
 		switch (columnEnum) {
 		case ACTOR:
 			values = tc.getModel().getActors().values();
-			final JComboBox<Reference> actorEditor = prepareFastListEditor(
+			final JComboBox<VerbatimValue> actorEditor = prepareFastListEditor(
 					toReference(tc, values, ParameterNature.TEST_API_TYPE));
 			actorEditor.setSelectedItem(value);
 			delegate = new EditorDelegate() {
@@ -66,8 +66,8 @@ public class StepsCellEditor extends DefaultCellEditor {
 			editorComponent = actorEditor;
 			break;
 		case ACTION:
-			values = step.getRole().getApis();
-			final JComboBox<Reference> actionEditor = prepareFastListEditor(
+			values = step.getRole().getActions();
+			final JComboBox<VerbatimValue> actionEditor = prepareFastListEditor(
 					toReference(tc, values, ParameterNature.TEST_API_TYPE));
 			actionEditor.setSelectedItem(value);
 			delegate = new EditorDelegate() {
@@ -80,10 +80,10 @@ public class StepsCellEditor extends DefaultCellEditor {
 			editorComponent = actionEditor;
 			break;
 		case NAVIGATOR:
-			editorComponent = getParamEditor(tc, step, 0, (Reference) value);
+			editorComponent = getParamEditor(tc, step, 0, (VerbatimValue) value);
 			break;
 		case PARAM0:
-			editorComponent = getParamEditor(tc, step, stepsTableModel.paramIndexOf(tc, step, 0), (Reference) value);
+			editorComponent = getParamEditor(tc, step, stepsTableModel.paramIndexOf(tc, step, 0), (VerbatimValue) value);
 			break;
 		default:
 			throw new IllegalStateException("Column not handled:" + columnEnum);
@@ -95,25 +95,24 @@ public class StepsCellEditor extends DefaultCellEditor {
 	private static final Set<String> SIMPLE_TYPES = new HashSet<>(
 			Arrays.asList(Integer.TYPE.getName(), Integer.class.getName(), String.class.getName()));
 
-	public static class EditorValue {
-		public final Reference testFactoryReference;
-		public final TestParameterValue factorParameterValue;
+	public static class ParameterFactoryEditor {
+		public final VerbatimValue testFactoryReference;
+		public final TestParameterValue factoryParameterValue;
 
-		public EditorValue(final Reference testFactoryReference, final TestParameterValue factorParameterValue) {
-			super();
+		public ParameterFactoryEditor(final VerbatimValue testFactoryReference, final TestParameterValue factorParameterValue) {
 			this.testFactoryReference = testFactoryReference;
-			this.factorParameterValue = factorParameterValue;
+			this.factoryParameterValue = factorParameterValue;
 		}
 
 	}
 
-	private JComponent getParamEditor(final TestCase tc, final TestStep step, final int index, final Reference value) {
+	private JComponent getParamEditor(final TestCase tc, final TestStep step, final int index, final VerbatimValue value) {
 		final TestParameterType parameterType = step.getAction().getParameter(index);
-		final List<Reference> refsReferences = toReference(tc, tc.getReferences(parameterType.getType()),
+		final List<VerbatimValue> refsReferences = toReference(tc, tc.getReferences(parameterType.getType()),
 				ParameterNature.REFERENCE);
 
 		if (SIMPLE_TYPES.contains(parameterType.getType())) {
-			final ReferenceEditor editor = new ReferenceEditor(refsReferences, value);
+			final VerbatimValueEditor editor = new VerbatimValueEditor(refsReferences, value);
 			delegate = new EditorDelegate() {
 
 				@Override
@@ -136,7 +135,7 @@ public class StepsCellEditor extends DefaultCellEditor {
 
 				@Override
 				public Object getCellEditorValue() {
-					return new EditorValue(editor.getCurrentReference(), editor.committedEditedParameterValue());
+					return new ParameterFactoryEditor(editor.getCurrentReference(), editor.committedEditedParameterValue());
 				}
 
 				@Override
@@ -152,9 +151,9 @@ public class StepsCellEditor extends DefaultCellEditor {
 		return new JPanel();
 	}
 
-	public static JComboBox<Reference> prepareFastListEditor(final List<Reference>... references) {
+	public static JComboBox<VerbatimValue> prepareFastListEditor(final List<VerbatimValue>... references) {
 		return new JComboBox<>(Arrays.stream(references).flatMap(Collection::stream).collect(Collectors.toList())
-				.toArray(new Reference[0]));
+				.toArray(new VerbatimValue[0]));
 	}
 
 }

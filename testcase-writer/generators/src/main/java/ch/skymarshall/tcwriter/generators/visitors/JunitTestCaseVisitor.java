@@ -14,7 +14,7 @@ import org.skymarshall.util.generators.Template;
 import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterType;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
@@ -117,7 +117,7 @@ public class JunitTestCaseVisitor {
 	private void visitTestValue(final JavaCodeGenerator javaContent, final TestModel model,
 			final TestParameterValue paramValue) throws IOException, TestCaseException {
 
-		final TestParameter param = paramValue.getValueDefinition();
+		final TestParameterDefinition param = paramValue.getValueDefinition();
 		if (param.getNature().isSimpleValue()) {
 			return;
 		}

@@ -7,7 +7,7 @@ import org.skymarshall.hmi.model.RootListModel;
 import org.skymarshall.hmi.model.views.ListViews;
 import org.skymarshall.hmi.swing.model.ListModelTableModel;
 
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameter;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterType;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
@@ -21,13 +21,13 @@ public class TestParameterValueTableModel
 
 	static class ParameterValue {
 		final String id;
-		final TestParameter parameterDefinition;
+		final TestParameterDefinition parameterDefinition;
 		final String description;
 		final boolean mandatory;
 		boolean enabled;
 		String value;
 
-		ParameterValue(final String id, final TestParameter parameterDefinition, final boolean enabled,
+		ParameterValue(final String id, final TestParameterDefinition parameterDefinition, final boolean enabled,
 				final String description, final String value, final boolean mandatory) {
 			this.id = id;
 			this.parameterDefinition = parameterDefinition;
@@ -44,7 +44,7 @@ public class TestParameterValueTableModel
 		final String complexParameterId = complexParameter.getId();
 		final TestParameterValue testParameterValue = complexParameterValue.getComplexTypeValues()
 				.get(complexParameterId);
-		return new ParameterValue(complexParameterId, complexParameter.asParameter(),
+		return new ParameterValue(complexParameterId, complexParameter.asSimpleParameter(),
 				complexParameterValue.getComplexTypeValues().containsKey(complexParameterId),
 				tc.descriptionOf(complexParameterId).getDescription(),
 				(testParameterValue != null) ? testParameterValue.getSimpleValue() : "", mandatory);
@@ -62,7 +62,7 @@ public class TestParameterValueTableModel
 		}
 	}
 
-	public static final ListModel<ParameterValue> toListModel(final TestCase tc, final TestParameter parameter,
+	public static final ListModel<ParameterValue> toListModel(final TestCase tc, final TestParameterDefinition parameter,
 			final TestParameterValue parameterValue) {
 		final ListModel<ParameterValue> paramList = new RootListModel<>(ListViews.sorted(new ParamValueComparator()));
 

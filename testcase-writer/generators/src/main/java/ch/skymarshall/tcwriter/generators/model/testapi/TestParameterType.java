@@ -5,6 +5,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.NamedObject;
 
+/**
+ * A typed parameter of the test action or parameter factory. Used to link the
+ * expected type of parameter with the effective type of parameter
+ *
+ * @author scaille
+ *
+ */
 public class TestParameterType extends NamedObject {
 
 	public static final TestParameterType NO_PARAMETER_TYPE = new TestParameterType(IdObject.ID_NOT_SET, "", "");
@@ -31,8 +38,8 @@ public class TestParameterType extends NamedObject {
 	}
 
 	@JsonIgnore
-	public TestParameter asParameter() {
-		return TestParameter.simpleType(getType());
+	public TestParameterDefinition asSimpleParameter() {
+		return TestParameterDefinition.simpleType(getType());
 	}
 
 }

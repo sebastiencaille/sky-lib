@@ -40,44 +40,6 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>aspectj-maven-plugin</artifactId>
-				<version>1.11</version>
-				<configuration>
-					<source>${java.source-target.version}</source>
-					<target>${java.source-target.version}</target>
-					<Xlint>ignore</Xlint>
-					<complianceLevel>${java.source-target.version}</complianceLevel>
-					<encoding>${project.build.sourceEncoding}</encoding>
-					<aspectLibraries>
-						<aspectLibrary>
-							<groupId>ch.skymarshall.tcwriter</groupId>
-							<artifactId>testcase-writer-generators</artifactId>
-						</aspectLibrary>
-					</aspectLibraries>
-				</configuration>
-				<executions>
-					<execution>
-						<!-- IMPORTANT -->
-						<phase>process-sources</phase>
-						<goals>
-							<goal>compile</goal>
-							<goal>test-compile</goal>
-						</goals>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>org.aspectj</groupId>
-						<artifactId>aspectjtools</artifactId>
-						<version>${aspectj.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>com.sun</groupId>
-						<artifactId>tools</artifactId>
-						<version>${java.version}</version>
-						<scope>system</scope>
-						<systemPath>${project.basedir}/pom.xml</systemPath>
-					</dependency>
-				</dependencies>
 			</plugin>
 		</plugins>
 	</build>

@@ -27,7 +27,7 @@
 		</dependency>
 		<dependency>
 			<groupId>ch.skymarshall.tcwriter</groupId>
-			<artifactId>testcase-writer-hmi</artifactId>
+			<artifactId>testcase-writer-gui</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

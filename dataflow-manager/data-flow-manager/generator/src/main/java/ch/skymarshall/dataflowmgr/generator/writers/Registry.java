@@ -20,7 +20,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.skymarshall.util.generators.Template;
+import ch.skymarshall.util.generators.Template;
 
 import ch.skymarshall.dataflowmgr.generator.model.ActionPoint;
 import ch.skymarshall.dataflowmgr.generator.model.Dto;

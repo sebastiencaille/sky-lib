@@ -1,0 +1,85 @@
+package ${package};
+
+import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
+import ch.skymarshall.gui.mvc.GuiModel;
+import ch.skymarshall.gui.mvc.IObjectGuiModel;
+import ch.skymarshall.gui.mvc.persisters.ObjectProviderPersister;
+import ch.skymarshall.gui.mvc.IComponentBinding;
+import ch.skymarshall.gui.mvc.GuiController;
+import ch.skymarshall.gui.mvc.persisters.Persisters;
+import ch.skymarshall.gui.mvc.properties.Properties;
+import ch.skymarshall.gui.mvc.properties.ErrorProperty;
+import ch.skymarshall.gui.mvc.IComponentLink;
+import ch.skymarshall.gui.mvc.properties.AbstractProperty;
+${imports}
+
+public class ${modelClass} extends GuiModel implements IObjectGuiModel<${objectClass}> {
+   
+    private final ObjectProviderPersister.CurrentObjectProvider currentObjectProvider = new ObjectProviderPersister.CurrentObjectProvider();
+
+	${fields.declareStatic}
+
+	${fields.declare}
+
+    public ${modelClass}(final String prefix, final ControllerPropertyChangeSupport propertySupport, final ErrorProperty errorProperty) {
+        super(propertySupport, errorProperty);
+		${fields.init}
+    }
+
+    public ${modelClass}(final String prefix, final GuiController controller) {
+        this(prefix, controller.getPropertySupport(), GuiModel.createErrorProperty(prefix + "-Error", controller.getPropertySupport()));
+    }
+
+    public ${modelClass}(final GuiController controller) {
+        this("${objectClassSimpleName}", controller.getPropertySupport(), GuiModel.createErrorProperty("${objectClassSimpleName}-Error", controller.getPropertySupport()));
+    }
+
+    public ${modelClass}(final String prefix, final ControllerPropertyChangeSupport propertySupport) {
+        this(prefix, propertySupport, GuiModel.createErrorProperty(prefix + "-Error", propertySupport));
+    }
+
+    public ${modelClass}(final ControllerPropertyChangeSupport propertySupport) {
+        this("${objectClassSimpleName}", propertySupport, GuiModel.createErrorProperty("${objectClassSimpleName}-Error", propertySupport));
+    }
+
+
+	${fields.getters}
+
+    @Override
+    public void load() {
+		${fields.load}
+    }
+
+    @Override
+    public void save() {
+		${fields.save}
+    }
+
+    @Override
+    public void setCurrentObject(final ${objectClass} value) {
+        currentObjectProvider.setObject(value);
+    }
+
+    public IComponentBinding<${objectClass}> binding() {
+        return new IComponentBinding<${objectClass}>() {
+        
+            @Override
+            public void addComponentValueChangeListener(final IComponentLink<${objectClass}> link) {
+                // nope
+            }
+            
+            @Override
+			public void removeComponentValueChangeListener() {
+				  // nope
+			}
+            
+            @Override
+            public void setComponentValue(final AbstractProperty source, final ${objectClass} value) {
+                if (value != null) {
+                    setCurrentObject(value);
+                    load();
+                }
+            }
+        };
+    }
+}

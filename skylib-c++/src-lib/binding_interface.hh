@@ -34,47 +34,45 @@ namespace org_skymarshall_util_hmi {
 using namespace std;
 
 class error_notifier {
-public:
-	virtual ~error_notifier() {
-	}
-	virtual void set_error(source_ptr _source, const logic_error& _e) = 0;
-};
+	protected:
+	virtual ~error_notifier() = default;
 
+public:
+	virtual void set_error(source_ptr _source, const hmi_exception& _e) = 0;
+};
 
 /**
  * Converters
  */
 
-template<class _Ft, class _Tt> class binding_converter {
+template<class _Pt, class _Ct> class binding_converter {
 public:
-	virtual const _Ft convert_component_value_to_property_value(
-			const _Tt _componentValue) = 0;
-	virtual const _Tt convert_property_value_to_component_value(
-			const _Ft _propertyValue) = 0;
+	virtual const _Pt convert_component_value_to_property_value(
+			const _Ct _componentValue) = 0;
+	virtual const _Ct convert_property_value_to_component_value(
+			const _Pt _propertyValue) = 0;
 
 protected:
-	virtual ~binding_converter() {
-	}
+	virtual ~binding_converter() = default;
 
 };
 
-class logic_error_to_string: public binding_converter<logic_error*, string> {
+class logic_error_to_string: public binding_converter<hmi_exception_ptr, string> {
 public:
-	const logic_error_ptr convert_component_value_to_property_value(
+	const hmi_exception_ptr convert_component_value_to_property_value(
 			const string _componentValue) {
 		// nonsense
 		return NULL;
 	}
+
 	const string convert_property_value_to_component_value(
-			const logic_error_ptr _propertyValue) {
+			hmi_exception_ptr _propertyValue) {
 		return string(_propertyValue->what());
 	}
-	~logic_error_to_string() {
 
-	}
 };
 
-/** Binding to component */
+/** Link from component binding to chain */
 
 template<class _CT> class component_link {
 public:
@@ -159,7 +157,8 @@ public:
 template<class _T> class action_dependency: public binding_chain_dependency {
 private:
 	property* m_targetProperty;
-	std::function<void(property_group_actions _action, const property* _property)> m_action;
+	std::function<
+			void(property_group_actions _action, const property* _property)> m_action;
 	property_listener_dispatcher* m_listener = NULL;
 
 	void action_before(const source_ptr caller, const property* _property) {
@@ -172,12 +171,17 @@ private:
 
 public:
 
-	action_dependency(property* _targetProperty, std::function<void(property_group_actions _action, const property* _property)> _action) :
+	action_dependency(property* _targetProperty,
+			std::function<
+					void(property_group_actions _action,
+							const property* _property)> _action) :
 			m_targetProperty(_targetProperty), m_action(_action) {
 	}
 
 	void register_dep(binding_chain_controller* _chain) {
-		m_listener = new property_listener_dispatcher(std::bind(&action_dependency::action_before, this, _1, _2), std::bind(&action_dependency::action_after, this, _1, _2));
+		m_listener = new property_listener_dispatcher(
+				std::bind(&action_dependency::action_before, this, _1, _2),
+				std::bind(&action_dependency::action_after, this, _1, _2));
 		m_targetProperty->add_listener(m_listener);
 	}
 

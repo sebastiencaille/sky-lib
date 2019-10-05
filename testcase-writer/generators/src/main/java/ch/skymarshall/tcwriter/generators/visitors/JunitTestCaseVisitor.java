@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.skymarshall.util.generators.JavaCodeGenerator;
-import org.skymarshall.util.generators.Template;
+import ch.skymarshall.util.generators.JavaCodeGenerator;
+import ch.skymarshall.util.generators.Template;
 
 import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;

@@ -99,7 +99,7 @@
 			</dependency>
 			<dependency>
 				<groupId>ch.skymarshall.tcwriter</groupId>
-				<artifactId>testcase-writer-hmi</artifactId>
+				<artifactId>testcase-writer-gui</artifactId>
 				<version>${tcwriter.version}</version>
 			</dependency>
 			<dependency>
@@ -144,7 +144,7 @@
 	<modules>
 		<module>annotations</module>
 		<module>generators</module>
-		<module>hmi</module>
+		<module>gui</module>
 		<module>examples</module>
 	</modules>
 </project>

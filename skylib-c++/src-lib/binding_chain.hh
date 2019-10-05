@@ -22,18 +22,15 @@ using namespace std::placeholders;
 
 template<class _Tt> class binding_backward {
 public:
-	virtual void to_property(int index, const source_ptr component, const _Tt value) = 0;
-	virtual ~binding_backward() {
-	}
-
+	virtual void to_property(int index, const source_ptr component,
+			const _Tt value) = 0;
+	virtual ~binding_backward() = default;
 };
 
 template<class _Ft> class binding_forward {
 public:
 	virtual void to_component(int index, const _Ft value) = 0;
-	virtual ~binding_forward() {
-	}
-
+	virtual ~binding_forward() = default;
 };
 
 class binding_storage {
@@ -45,14 +42,12 @@ public:
 					_binding_backward) {
 	}
 
-	~binding_storage() {
-	}
+	~binding_storage() = default;
 };
 
 /** End of chain */
 
 /** Binding chain */
-
 
 template<class _Pt> class binding_chain: public binding_chain_controller {
 
@@ -66,7 +61,6 @@ private:
 	property_listener_dispatcher m_valueUpdateListener;
 
 	bool m_transmit = true;
-
 
 	typedef list<binding_chain_dependency*>::iterator binding_chain_dependency_iter;
 	list<binding_chain_dependency*> m_dependencies;
@@ -171,7 +165,8 @@ private:
 				m_chain(_chain), m_componentBinding(_componentBinding) {
 		}
 
-		void set_value_from_component(source_ptr _component, _Ct _componentValue) {
+		void set_value_from_component(source_ptr _component,
+				_Ct _componentValue) {
 			if (!m_chain.m_transmit) {
 				return;
 			}
@@ -179,7 +174,7 @@ private:
 			try {
 				((binding_backward<_Ct>*) m_chain.m_links[lastIndex]->m_binding_backward)->to_property(
 						lastIndex, _component, _componentValue);
-			} catch (const logic_error& _e) {
+			} catch (const hmi_exception& _e) {
 				m_chain.m_errorNotifier->set_error(_component, _e);
 			}
 		}
@@ -227,29 +222,29 @@ private:
 		}
 	};
 
-	void propagate_property_change(source_ptr _property,
-									const string& _name,
-									const void* _old_value,
-									const void* _new_value) {
+	void propagate_property_change(source_ptr _property, const string& _name,
+			const void* _old_value, const void* _new_value) {
 		if (!m_transmit) {
 			return;
 		}
 		try {
 			((binding_forward<_Pt>*) m_links[0]->m_binding_forward)->to_component(
 					0, *(_Pt*) _new_value);
-		} catch (const logic_error& _e) {
+		} catch (const hmi_exception& _e) {
 			m_errorNotifier->set_error(_property, _e);
 		}
 	}
 public:
 	binding_chain(property& _property, error_notifier* _notifier) :
-			m_property(_property), m_errorNotifier(_notifier),
-			m_valueUpdateListener(std::bind(&binding_chain::propagate_property_change, this, _1, _2, _3, _4)) {
+			m_property(_property), m_errorNotifier(_notifier), m_valueUpdateListener(
+					std::bind(&binding_chain::propagate_property_change, this,
+							_1, _2, _3, _4)) {
 	}
 
 	template<class _T> class end_of_chain;
 
-	end_of_chain<_Pt>* bind_property(std::function<void(source_ptr, _Pt)> _setter) {
+	end_of_chain<_Pt>* bind_property(
+			std::function<void(source_ptr, _Pt)> _setter) {
 		m_property.add_listener(&m_valueUpdateListener);
 		property_link* const link = new property_link(*this, _setter);
 		m_links.push_back(
@@ -301,8 +296,7 @@ public:
 			return m_bindingChain.bind(_componentBinding);
 		}
 
-		~end_of_chain() {
-		}
+		~end_of_chain() = default;
 
 	};
 

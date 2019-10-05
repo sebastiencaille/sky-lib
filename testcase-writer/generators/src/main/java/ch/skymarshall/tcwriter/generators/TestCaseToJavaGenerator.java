@@ -6,7 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.skymarshall.util.generators.Template;
+import ch.skymarshall.util.generators.Template;
 
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;

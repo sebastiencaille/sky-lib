@@ -17,16 +17,16 @@ package ch.skymarshall.dataflowmgr.model;
 
 import java.util.UUID;
 
-public class Flow<IDT extends FlowData> extends IDData {
+public class Flow<I extends FlowData> extends IDData {
 
-	private final ActionPoint<IDT, ?> entryPoint;
+	private final ActionPoint<I, ?> entryPoint;
 
-	public Flow(final UUID uuid, final ActionPoint<IDT, ?> entryPoint) {
+	public Flow(final UUID uuid, final ActionPoint<I, ?> entryPoint) {
 		super(uuid);
 		this.entryPoint = entryPoint;
 	}
 
-	public ActionPoint<IDT, ?> getEntryPoint() {
+	public ActionPoint<I, ?> getEntryPoint() {
 		return entryPoint;
 	}
 

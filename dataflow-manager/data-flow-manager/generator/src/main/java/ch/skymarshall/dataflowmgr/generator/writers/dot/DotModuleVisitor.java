@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import org.skymarshall.util.text.TextFormatter;
+import ch.skymarshall.util.text.TextFormatter;
 
 import ch.skymarshall.dataflowmgr.generator.model.ActionPoint;
 import ch.skymarshall.dataflowmgr.generator.model.Flow;

@@ -15,8 +15,8 @@
  ******************************************************************************/
 package ch.skymarshall.dataflowmgr.generator.writers.singlenode;
 
-import static org.skymarshall.util.generators.JavaCodeGenerator.toImports;
-import static org.skymarshall.util.generators.Template.append;
+import static ch.skymarshall.util.generators.JavaCodeGenerator.toImports;
+import static ch.skymarshall.util.generators.Template.append;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.skymarshall.util.generators.Template;
+import ch.skymarshall.util.generators.Template;
 
 import ch.skymarshall.dataflowmgr.generator.Utils;
 import ch.skymarshall.dataflowmgr.generator.exceptions.GeneratorException;

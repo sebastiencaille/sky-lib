@@ -15,8 +15,8 @@
  ******************************************************************************/
 package ch.skymarshall.dataflowmgr.generator.writers;
 
-import static org.skymarshall.util.helpers.ClassLoaderHelper.openResourceStream;
-import static org.skymarshall.util.helpers.ClassLoaderHelper.readUTF8Resource;
+import static ch.skymarshall.util.helpers.ClassLoaderHelper.openResourceStream;
+import static ch.skymarshall.util.helpers.ClassLoaderHelper.readUTF8Resource;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import org.skymarshall.util.generators.Template;
+import ch.skymarshall.util.generators.Template;
 
 import ch.skymarshall.dataflowmgr.generator.JsonAdapter;
 import ch.skymarshall.dataflowmgr.generator.model.ActionPoint;

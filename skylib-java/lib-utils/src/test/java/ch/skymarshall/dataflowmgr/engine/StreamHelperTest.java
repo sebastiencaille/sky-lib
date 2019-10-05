@@ -21,7 +21,7 @@ import java.util.Optional;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.skymarshall.util.helpers.StreamHelper;
+import ch.skymarshall.util.helpers.StreamHelper;
 
 public class StreamHelperTest extends Assert {
 

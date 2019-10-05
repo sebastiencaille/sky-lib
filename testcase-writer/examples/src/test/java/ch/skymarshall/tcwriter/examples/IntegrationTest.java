@@ -9,7 +9,7 @@ import java.nio.file.StandardOpenOption;
 
 import org.junit.Test;
 
-import ch.skymarshall.tcwriter.examples.hmi.ExampleTCWriter;
+import ch.skymarshall.tcwriter.examples.gui.ExampleTCWriter;
 import ch.skymarshall.tcwriter.generators.TestCaseToJavaGenerator;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;

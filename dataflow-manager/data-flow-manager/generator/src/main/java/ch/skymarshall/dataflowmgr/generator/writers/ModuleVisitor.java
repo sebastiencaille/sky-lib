@@ -30,7 +30,7 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.skymarshall.util.generators.Template;
+import ch.skymarshall.util.generators.Template;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

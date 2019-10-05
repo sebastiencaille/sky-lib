@@ -22,7 +22,7 @@ public class CustomerTestRole extends Assert {
 	public void buy(final BuyItemNavigator navigator, final TestItem newItem) {
 		// the selector defines all the actions required to apply/check you data (could
 		// be button clicks on some
-		// hmi, ...)
+		// gui, ...)
 		navigator.apply(testedService);
 		testedService.buy(newItem.itemKind);
 	}

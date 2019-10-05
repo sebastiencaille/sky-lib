@@ -22,26 +22,26 @@ import java.util.function.Supplier;
  * An abstract representation of a flow's action.
  * @author scaille
  *
- * @param <IDT>
- * @param <ODT>
+ * @param <I>
+ * @param <O>
  */
-public abstract class FlowAction<IDT extends FlowData, ODT extends FlowData>
-		implements Function<IDT, ODT> {
+public abstract class FlowAction<I extends FlowData, O extends FlowData>
+		implements Function<I, O> {
 
 	protected static final NoData NO_DATA = NoData.NO_DATA;
-	private final Class<IDT> inputClass;
-	private final Supplier<IDT> inputDataSupplier;
+	private final Class<I> inputClass;
+	private final Supplier<I> inputDataSupplier;
 
-	public FlowAction(final Class<IDT> inputClass, final Supplier<IDT> inputDataSupplier) {
+	public FlowAction(final Class<I> inputClass, final Supplier<I> inputDataSupplier) {
 		this.inputClass = inputClass;
 		this.inputDataSupplier = inputDataSupplier;
 	}
 
-	public Class<IDT> getInputClass() {
+	public Class<I> getInputClass() {
 		return inputClass;
 	}
 
-	public Supplier<IDT> getInputDataSupplier() {
+	public Supplier<I> getInputDataSupplier() {
 		return inputDataSupplier;
 	}
 

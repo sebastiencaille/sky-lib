@@ -1,7 +1,5 @@
 package ch.skymarshall.tcwriter.gui.editors.params;
 
-import java.util.Comparator;
-
 import ch.skymarshall.gui.model.ListModel;
 import ch.skymarshall.gui.swing.model.ListModelTableModel;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
@@ -40,18 +38,6 @@ public class TestParameterValueTableModel
 				return 1;
 			}
 			return description.compareTo(other.description);
-		}
-	}
-
-	private static class ParamValueComparator implements Comparator<ParameterValue> {
-		@Override
-		public int compare(final ParameterValue o1, final ParameterValue o2) {
-			if (o1.mandatory && !o2.mandatory) {
-				return -1;
-			} else if (!o1.mandatory && o2.mandatory) {
-				return 1;
-			}
-			return o1.description.compareTo(o2.description);
 		}
 	}
 

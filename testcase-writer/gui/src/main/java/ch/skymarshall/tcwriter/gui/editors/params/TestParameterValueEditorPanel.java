@@ -7,9 +7,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 import ch.skymarshall.gui.model.ListModel;
 import ch.skymarshall.gui.model.ListModelBindings;
@@ -32,10 +35,19 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 		setLayout(new BorderLayout());
 
+		final JPanel topPanel = new JPanel();
+		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.PAGE_AXIS));
+
+		topPanel.add(new JLabel("Raw value: "));
+		final JTextField simpleValueEditor = new JTextField();
+		topPanel.add(simpleValueEditor);
+
+		topPanel.add(new JLabel("Reference: "));
 		final JComboBox<VerbatimValue> referenceEditor = new JComboBox<>();
 		editedParameterValue.bind(Converters.converter(VerbatimValue::new, VerbatimValue::getValue))
 				.bind(SwingBindings.selection(referenceEditor));
-		add(referenceEditor, BorderLayout.NORTH);
+		topPanel.add(referenceEditor);
+		add(topPanel, BorderLayout.NORTH);
 
 		final ListModel<ParameterValue> editedParameters = new RootListModel<>(ListViews.<ParameterValue>sorted());
 		final TestParameterValueTable view = new TestParameterValueTable(
@@ -43,7 +55,6 @@ public class TestParameterValueEditorPanel extends JPanel {
 		editedParameterValue.bind(v -> toListModel(tc, v)).bind(ListModelBindings.values(editedParameters));
 
 		add(new JScrollPane(view), BorderLayout.CENTER);
-
 	}
 
 	public static final Collection<ParameterValue> toListModel(final TestCase tc,

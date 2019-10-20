@@ -27,7 +27,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 	private final ObjectProperty<TestCase> testCaseProperty;
 
 	public enum Column {
-		BREAKPOINT, STEP, ACTOR, ACTION, NAVIGATOR, PARAM0, TO_VALUE
+		BREAKPOINT, STEP, ACTOR, ACTION, SELECTOR, PARAM0, TO_VALUE
 	}
 
 	private HumanReadableVisitor summaryVisitor;
@@ -62,7 +62,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		case ACTION:
 			tcObject = testAction;
 			break;
-		case NAVIGATOR:
+		case SELECTOR:
 			if (!actionUtils.hasSelector()) {
 				return "";
 			}

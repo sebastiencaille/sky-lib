@@ -25,6 +25,7 @@ public class TestCase {
 	private final Multimap<String, TestReference> dynamicReferences = MultimapBuilder.hashKeys().arrayListValues()
 			.build();
 
+	// description of test variables
 	private final Map<String, ObjectDescription> dynamicDescriptions = new HashMap<>();
 
 	@JsonIgnore

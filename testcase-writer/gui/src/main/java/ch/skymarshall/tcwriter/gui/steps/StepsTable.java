@@ -6,8 +6,6 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.Arrays;
 
 import javax.swing.CellRendererPane;
@@ -21,6 +19,7 @@ import javax.swing.table.TableCellRenderer;
 
 import ch.skymarshall.gui.model.RootListModel;
 import ch.skymarshall.gui.model.views.ListViews;
+import ch.skymarshall.gui.mvc.IBindingController;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.gui.swing.ContributionTableColumn;
 import ch.skymarshall.gui.swing.ContributionTableColumnModel;
@@ -29,7 +28,6 @@ import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 import ch.skymarshall.tcwriter.gui.TestRemoteControl;
-import ch.skymarshall.tcwriter.gui.editors.steps.StepEditorController;
 import ch.skymarshall.tcwriter.gui.steps.StepsTableModel.Column;
 
 public class StepsTable extends JPanel {
@@ -121,9 +119,18 @@ public class StepsTable extends JPanel {
 
 		stepsJTable.getColumn(Column.BREAKPOINT).setCellRenderer(new StepStatusRenderer());
 		stepsJTable.getColumn(Column.BREAKPOINT).setCellEditor(new DefaultCellEditor(new JCheckBox()));
-		stepsJTable.getColumn(Column.TO_VALUE).setCellEditor(new StepsTextEditor());
 
-		selectedStep.bind(SwingBindings.selection(stepsJTable, stepsTableModel));
+		final IBindingController selectedStepCtrl = selectedStep
+				.bind(SwingBindings.selection(stepsJTable, stepsTableModel));
+		selectedStep.addListener(l -> {
+			if (l.getOldValue() != null) {
+				return;
+			}
+			selectedStepCtrl.detach();
+			final int row = stepsTableModel.getRowOf(selectedStep.getValue());
+			stepsTableModel.fireTableRowsUpdated(row, row + 1);
+			selectedStepCtrl.attach();
+		});
 
 		add(new JScrollPane(stepsJTable), BorderLayout.CENTER);
 
@@ -132,18 +139,6 @@ public class StepsTable extends JPanel {
 			steps.setValues(testCaseProperty.getObjectValue().getSteps());
 		});
 
-		stepsJTable.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(final MouseEvent e) {
-				if (e.getClickCount() == 2) {
-					final int row = stepsJTable.rowAtPoint(e.getPoint());
-					final StepEditorController editor = new StepEditorController(testCaseProperty.getValue(),
-							stepsTableModel.getObjectAtRow(row));
-					editor.load();
-					editor.activate();
-				}
-			}
-		});
 	}
 
 }

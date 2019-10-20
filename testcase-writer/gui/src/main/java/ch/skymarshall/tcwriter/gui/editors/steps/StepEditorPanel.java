@@ -3,7 +3,7 @@ package ch.skymarshall.tcwriter.gui.editors.steps;
 import java.awt.BorderLayout;
 
 import javax.swing.BoxLayout;
-import javax.swing.JDialog;
+import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -12,6 +12,7 @@ import javax.swing.JTabbedPane;
 import ch.skymarshall.gui.mvc.ChainDependencies;
 import ch.skymarshall.gui.mvc.converters.Converters;
 import ch.skymarshall.gui.mvc.converters.IConverter;
+import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.gui.swing.bindings.SwingBindings;
 import ch.skymarshall.tcwriter.generators.model.NamedObject;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
@@ -19,11 +20,11 @@ import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 import ch.skymarshall.tcwriter.gui.editors.params.TestParameterValueEditorPanel;
 
-public class StepEditorFrame extends JDialog {
+public class StepEditorPanel extends JPanel {
 
-	private final StepEditorController controller;
 	private final StepEditorModel model;
 
 	private static class NamedObjectRenderer<T extends NamedObject> {
@@ -57,7 +58,7 @@ public class StepEditorFrame extends JDialog {
 	}
 
 	public static <T extends NamedObject> IConverter<T, NamedObjectRenderer<T>> converter(final TestModel tm) {
-		return Converters.converter(p -> new NamedObjectRenderer<>(tm, p), c -> StepEditorFrame.<T>from(c));
+		return Converters.converter(p -> new NamedObjectRenderer<>(tm, p), c -> StepEditorPanel.<T>from(c));
 	}
 
 	public static <U extends NamedObject> U from(final NamedObjectRenderer<U> renderer) {
@@ -67,14 +68,24 @@ public class StepEditorFrame extends JDialog {
 		return renderer.testObject;
 	}
 
-	public StepEditorFrame(final StepEditorController controller, final TestCase tc) {
-		this.controller = controller;
+	public StepEditorPanel(final TestModel tm, final ObjectProperty<TestCase> tc,
+			final ObjectProperty<TestStep> testStep) {
+
+		final StepEditorController controller = new StepEditorController(tm, testStep);
 		this.model = controller.getModel();
+
+		final JButton apply = new JButton("Apply");
+		apply.addActionListener(l -> controller.applyChanges());
+		final JButton cancel = new JButton("Cancel");
+		cancel.addActionListener(l -> controller.cancelChanges());
+
+		final JPanel topPanel = new JPanel();
+		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+		topPanel.add(apply);
+		topPanel.add(cancel);
 
 		final JPanel stepEditors = new JPanel();
 		stepEditors.setLayout(new BoxLayout(stepEditors, BoxLayout.X_AXIS));
-
-		final TestModel tm = tc.getModel();
 
 		final JList<NamedObjectRenderer<TestActor>> actorsList = new JList<>();
 		model.getPossibleActors().bind(Converters.listConverter(c -> new NamedObjectRenderer<>(tm, c)))
@@ -104,22 +115,23 @@ public class StepEditorFrame extends JDialog {
 				.addDependency(ChainDependencies.detachOnUpdateOf(model.getPossibleSelectors()));
 		stepEditors.add(new JScrollPane(actionParameterList));
 
-		final TestParameterValueEditorPanel selectorEditor = new TestParameterValueEditorPanel(tc, controller,
-				model.getSelectorValue());
-		final TestParameterValueEditorPanel param0Editor = new TestParameterValueEditorPanel(tc, controller,
-				model.getActionParameterValue());
-
-		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(stepEditors, BorderLayout.CENTER);
-
 		final JTabbedPane editors = new JTabbedPane();
-		editors.add(selectorEditor, "Selector");
-		editors.add(param0Editor, "Parameter 0");
+		tc.addListener(l -> {
+			editors.removeAll();
+			final TestParameterValueEditorPanel selectorEditor = new TestParameterValueEditorPanel(tc.getValue(),
+					controller, model.getSelectorValue());
+			final TestParameterValueEditorPanel param0Editor = new TestParameterValueEditorPanel(tc.getValue(),
+					controller, model.getActionParameterValue());
+			editors.add(selectorEditor, "Selector");
+			editors.add(param0Editor, "Parameter 0");
+		});
 
-		getContentPane().add(editors, BorderLayout.SOUTH);
+		setLayout(new BorderLayout());
+		add(topPanel, BorderLayout.NORTH);
+		add(stepEditors, BorderLayout.CENTER);
+		add(editors, BorderLayout.SOUTH);
 
-		validate();
-		pack();
+		controller.init();
 
 	}
 

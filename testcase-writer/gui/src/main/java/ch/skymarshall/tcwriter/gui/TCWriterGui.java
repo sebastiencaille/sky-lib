@@ -24,18 +24,19 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
+import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
-
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 import ch.skymarshall.tcwriter.generators.visitors.JsonHelper;
+import ch.skymarshall.tcwriter.gui.editors.steps.StepEditorPanel;
 import ch.skymarshall.tcwriter.gui.steps.StepsTable;
 
 public abstract class TCWriterGui extends JFrame {
@@ -44,11 +45,10 @@ public abstract class TCWriterGui extends JFrame {
 
 	private final ControllerPropertyChangeSupport changeSupport = new ControllerPropertyChangeSupport(this);
 
-	private final ObjectProperty<TestCase> testCaseProperty = new ObjectProperty<>("TestCase", changeSupport);
-
-	private final TestModel testModel;
+	private final ObjectProperty<TestCase> tc = new ObjectProperty<>("TestCase", changeSupport);
 
 	private final ObjectProperty<TestStep> selectedStep = new ObjectProperty<>("SelectedStep", changeSupport);
+	private final TestModel testModel;
 
 	public abstract File generateCode(TestCase tc) throws TestCaseException, IOException;
 
@@ -78,7 +78,7 @@ public abstract class TCWriterGui extends JFrame {
 		saveButton.addActionListener(e -> withException(this::save));
 
 		final JButton generateButton = new JButton(icon("general/Export24"));
-		generateButton.addActionListener(e -> withException(() -> generateCode(testCaseProperty.getValue())));
+		generateButton.addActionListener(e -> withException(() -> generateCode(tc.getValue())));
 
 		final JButton runButton = new JButton(icon("media/Play24"));
 		runButton.addActionListener(e -> withException(() -> {
@@ -86,7 +86,7 @@ public abstract class TCWriterGui extends JFrame {
 			new Thread(() -> withException(() -> {
 				final int port = testRemoteControl.prepare();
 				LOGGER.log(Level.INFO, "Using port " + port);
-				final TestCase testCase = testCaseProperty.getValue();
+				final TestCase testCase = tc.getValue();
 				final File file = generateCode(testCase);
 				startTestCase(file, testCase.getFolder() + "." + testCase.getName(), port);
 				testRemoteControl.start();
@@ -104,8 +104,7 @@ public abstract class TCWriterGui extends JFrame {
 		final JButton removeStepButton = new JButton(icon("table/RowDelete24"));
 		removeStepButton.addActionListener(e -> withException(this::removeStep));
 
-		final StepsTable stepsTable = new StepsTable(testCaseProperty, selectedStep, testRemoteControl);
-		this.getContentPane().add(stepsTable, BorderLayout.CENTER);
+		final StepsTable stepsTable = new StepsTable(tc, selectedStep, testRemoteControl);
 
 		final JToolBar buttons = new JToolBar();
 		buttons.add(newTCButton);
@@ -118,6 +117,10 @@ public abstract class TCWriterGui extends JFrame {
 		buttons.add(addStepButton);
 		buttons.add(removeStepButton);
 		this.getContentPane().add(buttons, BorderLayout.NORTH);
+
+		final JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, stepsTable,
+				new StepEditorPanel(testModel, tc, selectedStep));
+		this.getContentPane().add(splitPane, BorderLayout.CENTER);
 
 		changeSupport.attachAll();
 
@@ -139,11 +142,11 @@ public abstract class TCWriterGui extends JFrame {
 		final TestCase newTestCase = new TestCase();
 		newTestCase.setModel(testModel);
 		newTestCase.addStep(new TestStep(1));
-		testCaseProperty.setValue(this, newTestCase);
+		tc.setValue(this, newTestCase);
 	}
 
 	public void addStep() {
-		final TestCase testCase = testCaseProperty.getValue();
+		final TestCase testCase = tc.getValue();
 
 		TestStep addAfter;
 		if (selectedStep.getValue() != null) {
@@ -156,11 +159,11 @@ public abstract class TCWriterGui extends JFrame {
 		final TestStep newStep = addAfter.duplicate();
 		testCase.getSteps().add(addAfter.getOrdinal(), newStep);
 		testCase.fixOrdinals();
-		testCaseProperty.forceChanged(this);
+		tc.forceChanged(this);
 	}
 
 	public void removeStep() {
-		final TestCase testCase = testCaseProperty.getValue();
+		final TestCase testCase = tc.getValue();
 		if (testCase.getSteps().size() == 1) {
 			return;
 		}
@@ -169,7 +172,7 @@ public abstract class TCWriterGui extends JFrame {
 		}
 		testCase.getSteps().remove(selectedStep.getValue().getOrdinal() - 1);
 		testCase.fixOrdinals();
-		testCaseProperty.forceChanged(this);
+		tc.forceChanged(this);
 	}
 
 	public void loadTestCase(final TestCase testCase) {
@@ -179,7 +182,7 @@ public abstract class TCWriterGui extends JFrame {
 				throw new IllegalStateException("Step " + i + ": wrong ordinal " + testStep.getOrdinal());
 			}
 		}
-		testCaseProperty.setValue(this, testCase);
+		tc.setValue(this, testCase);
 	}
 
 	public void loadTestCase(final Path testFile) throws IOException {
@@ -194,8 +197,7 @@ public abstract class TCWriterGui extends JFrame {
 		final int dialogResult = testFileChooser.showSaveDialog(this);
 		if (dialogResult == 0) {
 			final File testFile = testFileChooser.getSelectedFile();
-			Files.write(testFile.toPath(),
-					JsonHelper.toJson(testCaseProperty.getValue()).getBytes(StandardCharsets.UTF_8),
+			Files.write(testFile.toPath(), JsonHelper.toJson(tc.getValue()).getBytes(StandardCharsets.UTF_8),
 					StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		}
 	}

@@ -19,17 +19,17 @@ public class CustomerTestRole extends Assert {
 	}
 
 	@TCApi(description = "Buy an item", humanReadable = "go %s and buy %s")
-	public void buy(final BuyItemSelector navigator, final TestItem newItem) {
+	public void buy(final BuyItemSelector selector, final TestItem newItem) {
 		// the selector defines all the actions required to apply/check you data (could
 		// be button clicks on some
 		// gui, ...)
-		navigator.apply(testedService);
+		selector.apply(testedService);
 		testedService.buy(newItem.itemKind);
 	}
 
 	@TCApi(description = "Check the packaged item", humanReadable = "get %s and check that the packaged item is %s")
-	public void checkPackage(final HandlePackageSelector navigator, final TestItem handledItem) {
-		navigator.apply(testedService);
+	public void checkPackage(final HandlePackageSelector selector, final TestItem handledItem) {
+		selector.apply(testedService);
 		assertEquals(testedService.getOwnedItem(), handledItem.itemKind);
 	}
 

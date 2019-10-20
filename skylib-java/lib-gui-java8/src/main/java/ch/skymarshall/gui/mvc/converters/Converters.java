@@ -15,10 +15,13 @@
  ******************************************************************************/
 package ch.skymarshall.gui.mvc.converters;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.LongFunction;
+import java.util.stream.Collectors;
 
 import ch.skymarshall.gui.Utils;
 import ch.skymarshall.gui.mvc.GuiErrors.GuiError;
@@ -43,6 +46,44 @@ public final class Converters {
 			@Override
 			public T convertComponentValueToPropertyValue(final C componentValue) throws ConversionException {
 				return comp2prop.apply(componentValue);
+			}
+
+		};
+	}
+
+	public static <T, C> IConverter<List<T>, List<C>> listConverter(final Function<T, C> prop2comp,
+			final FunctionWithException<C, T, ConversionException> comp2prop) {
+		return new IConverter<List<T>, List<C>>() {
+
+			@Override
+			public List<C> convertPropertyValueToComponentValue(final List<T> propertyValue) {
+				return propertyValue.stream().map(prop2comp::apply).collect(Collectors.toList());
+			}
+
+			@Override
+			public List<T> convertComponentValueToPropertyValue(final List<C> componentValue)
+					throws ConversionException {
+				final List<T> result = new ArrayList<>(componentValue.size());
+				for (final C compValue : componentValue) {
+					result.add(comp2prop.apply(compValue));
+				}
+				return result;
+			}
+
+		};
+	}
+
+	public static <T, C> IConverter<List<T>, List<C>> listConverter(final Function<T, C> prop2comp) {
+		return new IConverter<List<T>, List<C>>() {
+
+			@Override
+			public List<C> convertPropertyValueToComponentValue(final List<T> propertyValue) {
+				return propertyValue.stream().map(prop2comp::apply).collect(Collectors.toList());
+			}
+
+			@Override
+			public List<T> convertComponentValueToPropertyValue(final List<C> componentValue) {
+				throw new IllegalStateException("Write only");
 			}
 
 		};

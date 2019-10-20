@@ -1,6 +1,4 @@
-package ch.skymarshall.tcwriter.gui.editors;
-
-import static ch.skymarshall.tcwriter.gui.steps.StepsCellEditor.prepareFastListEditor;
+package ch.skymarshall.tcwriter.gui.editors.params;
 
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
@@ -35,7 +33,7 @@ public class VerbatimValueEditor extends JDialog {
 		}
 		getContentPane().add(freeTyping);
 
-		fastRefEditor = prepareFastListEditor(refsReferences);
+		fastRefEditor = TestParameterValueEditorPanel.prepareFastListEditor(refsReferences);
 		fastRefEditor.setSelectedItem(simpleValue);
 		getContentPane().add(fastRefEditor);
 		fastRefEditor.addItemListener(e -> {

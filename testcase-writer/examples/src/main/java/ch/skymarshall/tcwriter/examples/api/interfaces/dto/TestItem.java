@@ -27,25 +27,25 @@ public class TestItem {
 		this.numberOfItems = numberOfItems;
 	}
 
-	@TCApi(description = "a coffee machine", humanReadable = "a coffee machine")
+	@TCApi(description = "A coffee machine", humanReadable = "a coffee machine")
 	public static TestItem coffeeMachine() {
 		return new TestItem(ItemKind.COFFE_MACHINE);
 	}
 
-	@TCApi(description = "a coffee machine of a specific brand", humanReadable = "a coffee machine of brand \"%s\"")
+	@TCApi(description = "A coffee machine of a specific brand", humanReadable = "a coffee machine of brand \"%s\"")
 	public static TestItem coffeeMachineOfBrand(
-			@TCApi(description = "name of brand", humanReadable = "") final String brandName) {
+			@TCApi(description = "Name of brand", humanReadable = "") final String brandName) {
 		final TestItem testItem = new TestItem(ItemKind.COFFE_MACHINE);
 		testItem.setBrandName(brandName);
 		return testItem;
 	}
 
-	@TCApi(description = "a tea pot", humanReadable = "a tea pot")
+	@TCApi(description = "A tea pot", humanReadable = "a tea pot")
 	public static TestItem teaPot() {
 		return new TestItem(ItemKind.TEA_POT);
 	}
 
-	@TCApi(description = "a brand", humanReadable = "of brand")
+	@TCApi(description = "A brand", humanReadable = "of brand")
 	public void setBrandName(final String brand) {
 		this.brand = brand;
 	}

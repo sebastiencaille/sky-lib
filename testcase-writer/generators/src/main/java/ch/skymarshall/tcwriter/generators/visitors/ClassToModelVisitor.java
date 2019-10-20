@@ -22,6 +22,7 @@ import ch.skymarshall.tcwriter.annotations.TCRole;
 import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.ObjectDescription;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition.ParameterNature;
@@ -62,7 +63,7 @@ public class ClassToModelVisitor {
 						: null;
 				final TestAction testAction = new TestAction(methodKey(actionMethod), actionMethod.getName(),
 						returnType);
-				final List<TestParameterDefinition> roleActionParameters = processParameters(testAction, actionMethod);
+				final List<TestApiParameter> roleActionParameters = processParameters(testAction, actionMethod);
 				testAction.getParameters().addAll(roleActionParameters);
 				testRole.getActions().add(testAction);
 			}
@@ -84,7 +85,7 @@ public class ClassToModelVisitor {
 			final HashSet<Method> parameterFactoryMethods = new HashSet<>();
 
 			final TCApi tcApi = apiClass.getAnnotation(TCApi.class);
-			if (tcApi != null && tcApi.isNavigation()) {
+			if (tcApi != null && tcApi.isSelector()) {
 				model.addNavigationType(apiClass);
 			}
 
@@ -94,7 +95,8 @@ public class ClassToModelVisitor {
 			for (final Method parameterFactoryMethod : parameterFactoryMethods) {
 				// Process each method of the class
 
-				final TestParameterDefinition testParameter = new TestParameterDefinition(methodKey(parameterFactoryMethod),
+				final TestParameterDefinition testParameter = new TestParameterDefinition(
+						methodKey(parameterFactoryMethod),
 						parameterFactoryMethod.getDeclaringClass().getSimpleName() + "."
 								+ parameterFactoryMethod.getName(),
 						ParameterNature.TEST_API_TYPE, parameterFactoryMethod.getReturnType().getName());
@@ -109,8 +111,8 @@ public class ClassToModelVisitor {
 				factoryReturnTypeMethods
 						.removeIf(m -> Modifier.isStatic(m.getModifiers()) || m.getParameterCount() != 1);
 				for (final Method factoryReturnTypeMethod : factoryReturnTypeMethods) {
-					final TestParameterDefinition optionalParameter = new TestParameterDefinition(methodKey(factoryReturnTypeMethod),
-							factoryReturnTypeMethod.getName(), ParameterNature.TEST_API_TYPE,
+					final TestApiParameter optionalParameter = new TestApiParameter(methodKey(factoryReturnTypeMethod),
+							factoryReturnTypeMethod.getName(),
 							factoryReturnTypeMethod.getParameterTypes()[0].getName());
 					processMethodAnnotation(optionalParameter, factoryReturnTypeMethod);
 					testParameter.getOptionalParameters().add(optionalParameter);
@@ -127,18 +129,18 @@ public class ClassToModelVisitor {
 		model.addDescription(idObject, descriptionFrom(methodAnnotation));
 	}
 
-	private List<TestParameterDefinition> processParameters(final IdObject methodIdObject, final Method apiMethod) {
+	private List<TestApiParameter> processParameters(final IdObject methodIdObject, final Method apiMethod) {
 		processMethodAnnotation(methodIdObject, apiMethod);
 
 		final Parameter[] methodParameters = apiMethod.getParameters();
-		final List<TestParameterDefinition> processedParameters = new ArrayList<>();
+		final List<TestApiParameter> processedParameters = new ArrayList<>();
 		for (int i = 0; i < methodParameters.length; i++) {
 			final Parameter apiMethodParam = methodParameters[i];
 
 			final TCApi apiMethodAnnotation = apiMethodParam.getAnnotation(TCApi.class);
 			final Type apiMethodParamType = apiMethodParam.getType();
-			final TestParameterDefinition testObjectParameter = new TestParameterDefinition(paramKey(apiMethod, i), apiMethod.getName(),
-					ParameterNature.TEST_API_TYPE, apiMethodParamType.getTypeName());
+			final TestApiParameter testObjectParameter = new TestApiParameter(paramKey(apiMethod, i),
+					apiMethod.getName(), apiMethodParamType.getTypeName());
 			if (apiMethodAnnotation != null) {
 				model.addDescription(testObjectParameter, descriptionFrom(apiMethodAnnotation));
 			}

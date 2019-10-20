@@ -1,4 +1,4 @@
-package ch.skymarshall.tcwriter.gui.editors;
+package ch.skymarshall.tcwriter.gui.editors.params;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;

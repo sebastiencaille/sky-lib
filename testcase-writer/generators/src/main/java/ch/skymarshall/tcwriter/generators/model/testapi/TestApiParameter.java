@@ -12,18 +12,18 @@ import ch.skymarshall.tcwriter.generators.model.NamedObject;
  * @author scaille
  *
  */
-public class TestParameterType extends NamedObject {
+public class TestApiParameter extends NamedObject {
 
-	public static final TestParameterType NO_PARAMETER_TYPE = new TestParameterType(IdObject.ID_NOT_SET, "", "");
+	public static final TestApiParameter NO_PARAMETER_TYPE = new TestApiParameter(IdObject.ID_NOT_SET, "", "");
 
 	private final String parameterType;
 
-	protected TestParameterType() {
+	protected TestApiParameter() {
 		super(null, null);
 		parameterType = null;
 	}
 
-	public TestParameterType(final String id, final String name, final String type) {
+	public TestApiParameter(final String id, final String name, final String type) {
 		super(id, name);
 		this.parameterType = type;
 	}

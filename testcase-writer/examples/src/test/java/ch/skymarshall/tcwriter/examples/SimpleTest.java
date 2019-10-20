@@ -1,9 +1,9 @@
 package ch.skymarshall.tcwriter.examples;
 
-import static ch.skymarshall.tcwriter.examples.api.interfaces.navigators.BuyItemNavigator.fromInternet;
-import static ch.skymarshall.tcwriter.examples.api.interfaces.navigators.BuyItemNavigator.inLocalShop;
-import static ch.skymarshall.tcwriter.examples.api.interfaces.navigators.HandlepackageNavigator.deliveredItem;
-import static ch.skymarshall.tcwriter.examples.api.interfaces.navigators.HandlepackageNavigator.fromShop;
+import static ch.skymarshall.tcwriter.examples.api.interfaces.selectors.BuyItemSelector.fromInternet;
+import static ch.skymarshall.tcwriter.examples.api.interfaces.selectors.BuyItemSelector.inLocalShop;
+import static ch.skymarshall.tcwriter.examples.api.interfaces.selectors.HandlePackageSelector.deliveredItem;
+import static ch.skymarshall.tcwriter.examples.api.interfaces.selectors.HandlePackageSelector.fromShop;
 
 import java.util.Arrays;
 
@@ -14,7 +14,7 @@ import org.junit.Test;
 import ch.skymarshall.tcwriter.examples.api.interfaces.CustomerTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem;
-import ch.skymarshall.tcwriter.generators.ModelFromClassGenerator;
+import ch.skymarshall.tcwriter.generators.ClassToModelGenerator;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
@@ -31,7 +31,7 @@ public class SimpleTest {
 	private static AspectjRecorder recorder;
 
 	static {
-		final ModelFromClassGenerator generateFromCode = new ModelFromClassGenerator(
+		final ClassToModelGenerator generateFromCode = new ClassToModelGenerator(
 				Arrays.asList(CustomerTestRole.class, DeliveryTestRole.class));
 		final TestModel model = generateFromCode.generateModel();
 		model.addActor(new TestActor("customer", "customer", model.getRole(CustomerTestRole.class)));

@@ -14,4 +14,14 @@ public class IdObject {
 		return id;
 	}
 
+	@Override
+	public boolean equals(final Object obj) {
+		return obj instanceof IdObject && id.equals(((IdObject) obj).id);
+	}
+
+	@Override
+	public int hashCode() {
+		return id.hashCode();
+	}
+
 }

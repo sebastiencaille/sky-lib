@@ -6,6 +6,8 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Arrays;
 
 import javax.swing.CellRendererPane;
@@ -23,11 +25,11 @@ import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.gui.swing.ContributionTableColumn;
 import ch.skymarshall.gui.swing.ContributionTableColumnModel;
 import ch.skymarshall.gui.swing.bindings.SwingBindings;
-
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 import ch.skymarshall.tcwriter.gui.TestRemoteControl;
+import ch.skymarshall.tcwriter.gui.editors.steps.StepEditorController;
 import ch.skymarshall.tcwriter.gui.steps.StepsTableModel.Column;
 
 public class StepsTable extends JPanel {
@@ -114,10 +116,8 @@ public class StepsTable extends JPanel {
 		columnModel.configureColumn(
 				ContributionTableColumn.fixedColumn(Column.TO_VALUE, 150, new DefaultTableCellRenderer()));
 
-		Arrays.stream(Column.values()).forEach(c -> {
-			stepsJTable.getColumn(c).setCellRenderer(new StepsCellRenderer(testCaseProperty));
-			stepsJTable.getColumn(c).setCellEditor(new StepsCellEditor(testCaseProperty));
-		});
+		Arrays.stream(Column.values())
+				.forEach(c -> stepsJTable.getColumn(c).setCellRenderer(new StepsCellRenderer(testCaseProperty)));
 
 		stepsJTable.getColumn(Column.BREAKPOINT).setCellRenderer(new StepStatusRenderer());
 		stepsJTable.getColumn(Column.BREAKPOINT).setCellEditor(new DefaultCellEditor(new JCheckBox()));
@@ -130,6 +130,19 @@ public class StepsTable extends JPanel {
 		testCaseProperty.addListener(e -> {
 			steps.clear();
 			steps.setValues(testCaseProperty.getObjectValue().getSteps());
+		});
+
+		stepsJTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(final MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					final int row = stepsJTable.rowAtPoint(e.getPoint());
+					final StepEditorController editor = new StepEditorController(testCaseProperty.getValue(),
+							stepsTableModel.getObjectAtRow(row));
+					editor.load();
+					editor.activate();
+				}
+			}
 		});
 	}
 

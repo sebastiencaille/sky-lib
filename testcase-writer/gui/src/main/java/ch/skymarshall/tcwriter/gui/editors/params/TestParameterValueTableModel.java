@@ -1,16 +1,10 @@
-package ch.skymarshall.tcwriter.gui.editors;
+package ch.skymarshall.tcwriter.gui.editors.params;
 
 import java.util.Comparator;
 
 import ch.skymarshall.gui.model.ListModel;
-import ch.skymarshall.gui.model.RootListModel;
-import ch.skymarshall.gui.model.views.ListViews;
 import ch.skymarshall.gui.swing.model.ListModelTableModel;
-
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterType;
-import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
-import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 
 public class TestParameterValueTableModel
 		extends ListModelTableModel<TestParameterValueTableModel.ParameterValue, TestParameterValueTableModel.Columns> {
@@ -19,7 +13,7 @@ public class TestParameterValueTableModel
 		ENABLED, DESCRIPTION, VALUE
 	}
 
-	static class ParameterValue {
+	static class ParameterValue implements Comparable<ParameterValue> {
 		final String id;
 		final TestParameterDefinition parameterDefinition;
 		final String description;
@@ -37,17 +31,16 @@ public class TestParameterValueTableModel
 			this.mandatory = mandatory;
 
 		}
-	}
 
-	private static ParameterValue asParam(final TestCase tc, final TestParameterType complexParameter,
-			final TestParameterValue complexParameterValue, final boolean mandatory) {
-		final String complexParameterId = complexParameter.getId();
-		final TestParameterValue testParameterValue = complexParameterValue.getComplexTypeValues()
-				.get(complexParameterId);
-		return new ParameterValue(complexParameterId, complexParameter.asSimpleParameter(),
-				complexParameterValue.getComplexTypeValues().containsKey(complexParameterId),
-				tc.descriptionOf(complexParameterId).getDescription(),
-				(testParameterValue != null) ? testParameterValue.getSimpleValue() : "", mandatory);
+		@Override
+		public int compareTo(final ParameterValue other) {
+			if (mandatory && !other.mandatory) {
+				return -1;
+			} else if (!mandatory && other.mandatory) {
+				return 1;
+			}
+			return description.compareTo(other.description);
+		}
 	}
 
 	private static class ParamValueComparator implements Comparator<ParameterValue> {
@@ -60,20 +53,6 @@ public class TestParameterValueTableModel
 			}
 			return o1.description.compareTo(o2.description);
 		}
-	}
-
-	public static final ListModel<ParameterValue> toListModel(final TestCase tc, final TestParameterDefinition parameter,
-			final TestParameterValue parameterValue) {
-		final ListModel<ParameterValue> paramList = new RootListModel<>(ListViews.sorted(new ParamValueComparator()));
-
-		for (final TestParameterType mandatoryParameter : parameter.getMandatoryParameters()) {
-			paramList.insert(asParam(tc, mandatoryParameter, parameterValue, true));
-		}
-
-		for (final TestParameterType optionalParameter : parameter.getOptionalParameters()) {
-			paramList.insert(asParam(tc, optionalParameter, parameterValue, false));
-		}
-		return paramList;
 	}
 
 	public TestParameterValueTableModel(final ListModel<ParameterValue> paramList) {

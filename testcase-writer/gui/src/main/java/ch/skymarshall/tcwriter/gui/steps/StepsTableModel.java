@@ -7,19 +7,18 @@ import javax.swing.event.TableModelEvent;
 import ch.skymarshall.gui.model.ListModel;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.gui.swing.model.ListModelTableModel;
-
 import ch.skymarshall.tcwriter.generators.Helper.VerbatimValue;
 import ch.skymarshall.tcwriter.generators.model.IdObject;
+import ch.skymarshall.tcwriter.generators.model.ModelUtils;
+import ch.skymarshall.tcwriter.generators.model.ModelUtils.ActionUtils;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition.ParameterNature;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterType;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 import ch.skymarshall.tcwriter.generators.visitors.HumanReadableVisitor;
 import ch.skymarshall.tcwriter.gui.TestRemoteControl;
-import ch.skymarshall.tcwriter.gui.steps.StepsCellEditor.ParameterFactoryEditor;
 
 public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableModel.Column> {
 
@@ -50,6 +49,8 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		IdObject tcObject;
 		final ParameterNature nature = ParameterNature.TEST_API_TYPE;
 		final List<TestParameterValue> parametersValue = testStep.getParametersValue();
+		final TestAction testAction = testStep.getAction();
+		final ActionUtils actionUtils = ModelUtils.actionUtils(tc.getModel(), testAction);
 		switch (column) {
 		case BREAKPOINT:
 			return testControl.stepStatus(testStep.getOrdinal());
@@ -59,16 +60,16 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 			tcObject = testStep.getActor();
 			break;
 		case ACTION:
-			tcObject = testStep.getAction();
+			tcObject = testAction;
 			break;
 		case NAVIGATOR:
-			if (!hasNavigationParam(tc, testStep)) {
+			if (!actionUtils.hasSelector()) {
 				return "";
 			}
-			return createReferenceFromParam(tc, parametersValue.get(0));
+			return createReferenceFromParam(tc, parametersValue.get(actionUtils.selectorIndex()));
 		case PARAM0:
-			if (hasParam(tc, testStep, 0)) {
-				return createReferenceFromParam(tc, parametersValue.get(paramIndexOf(tc, testStep, 0)));
+			if (actionUtils.hasActionParameter(0)) {
+				return createReferenceFromParam(tc, parametersValue.get(actionUtils.actionParameterIndex(0)));
 			}
 			return "";
 		case TO_VALUE:
@@ -106,23 +107,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		if (rowIndex % 2 == 0) {
 			return false;
 		}
-		final TestCase tc = testCaseProperty.getValue();
-		final TestStep testStep = getObjectAtRow(rowIndex);
-		final Column column = columnOf(columnIndex);
-		switch (column) {
-		case BREAKPOINT:
-		case ACTOR:
-		case ACTION:
-			return true;
-		case NAVIGATOR:
-			return hasNavigationParam(tc, testStep);
-		case PARAM0:
-			return hasParam(tc, testStep, 0);
-		case TO_VALUE:
-			return true;
-		default:
-			return false;
-		}
+		return columnOf(columnIndex) == Column.BREAKPOINT;
 	}
 
 	@Override
@@ -171,88 +156,6 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		default:
 			break;
 		}
-
-		final String newId;
-		if (value instanceof VerbatimValue) {
-			newId = ((VerbatimValue) value).getId();
-		} else {
-			newId = null;
-		}
-		switch (column) {
-		case ACTOR:
-			testStep.setActor(tc.getModel().getActors().get(newId));
-			testStep.setAction(TestAction.NOT_SET);
-			testStep.getParametersValue().clear();
-			return;
-		case ACTION:
-			final TestAction oldAction = testStep.getAction();
-			testStep.setAction(testStep.getRole().getAction(newId));
-			migrateOldAction(testStep, oldAction);
-			return;
-		case NAVIGATOR:
-			if (!hasNavigationParam(tc, testStep)) {
-				return;
-			}
-			testStep.getParametersValue().set(0, ((ParameterFactoryEditor) value).factoryParameterValue);
-			return;
-		case PARAM0:
-			if (!hasParam(tc, testStep, 0)) {
-				return;
-			}
-			final int paramIndex = paramIndexOf(tc, testStep, 0);
-			final TestParameterType testParameterType = testStep.getAction().getParameters().get(paramIndex);
-
-			if (value instanceof ParameterFactoryEditor) {
-				testStep.getParametersValue().set(paramIndex, ((ParameterFactoryEditor) value).factoryParameterValue);
-			} else {
-				final VerbatimValue verbatimValue = (VerbatimValue) value;
-				final TestParameterDefinition def = new TestParameterDefinition(newId, newId, verbatimValue.getNature(),
-						testParameterType.getType());
-				TestParameterValue newParameterValue;
-				if (def.getNature() == ParameterNature.REFERENCE) {
-					newParameterValue = new TestParameterValue(testParameterType, def, verbatimValue.getId());
-				} else {
-					newParameterValue = new TestParameterValue(testParameterType, def, verbatimValue.getDisplay());
-				}
-				testStep.getParametersValue().set(paramIndex, newParameterValue);
-			}
-			return;
-		default:
-		}
-	}
-
-	private void migrateOldAction(final TestStep testStep, final TestAction oldAction) {
-		for (int i = 0; i < testStep.getParametersValue().size(); i++) {
-			final TestParameterValue newMethodParameter = testStep.getParametersValue().get(i);
-			if (i >= oldAction.getParameters().size()) {
-				testStep.addParameter(TestParameterValue.NO_VALUE);
-			} else if (newMethodParameter.getValueDefinition().getType()
-					.equals(oldAction.getParameters().get(i).getType())) {
-				testStep.getParametersValue().set(i, TestParameterValue.NO_VALUE);
-			}
-		}
-		for (int i = testStep.getParametersValue().size(); i < testStep.getAction().getParameters().size(); i++) {
-			testStep.getParametersValue().add(TestParameterValue.NO_VALUE);
-		}
-	}
-
-	int paramIndexOf(final TestCase tc, final TestStep testStep, final int index) {
-		int paramIndex;
-		if (hasNavigationParam(tc, testStep)) {
-			paramIndex = 1;
-		} else {
-			paramIndex = 0;
-		}
-		return paramIndex + index;
-	}
-
-	boolean hasNavigationParam(final TestCase tc, final TestStep testStep) {
-		return !testStep.getAction().getParameters().isEmpty()
-				&& tc.getModel().isNavigation(testStep.getAction().getParameter(0));
-	}
-
-	boolean hasParam(final TestCase tc, final TestStep testStep, final int index) {
-		return paramIndexOf(tc, testStep, index) < testStep.getAction().getParameters().size();
 	}
 
 	public void stepExecutionUpdated(final int first, final int last) {

@@ -6,8 +6,8 @@ import ch.skymarshall.tcwriter.annotations.TCApi;
 import ch.skymarshall.tcwriter.annotations.TCRole;
 import ch.skymarshall.tcwriter.examples.ExampleService;
 import ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem;
-import ch.skymarshall.tcwriter.examples.api.interfaces.navigators.BuyItemNavigator;
-import ch.skymarshall.tcwriter.examples.api.interfaces.navigators.HandlepackageNavigator;
+import ch.skymarshall.tcwriter.examples.api.interfaces.selectors.BuyItemSelector;
+import ch.skymarshall.tcwriter.examples.api.interfaces.selectors.HandlePackageSelector;
 
 @TCRole(description = "A customer", stepSummary = "customer")
 public class CustomerTestRole extends Assert {
@@ -19,7 +19,7 @@ public class CustomerTestRole extends Assert {
 	}
 
 	@TCApi(description = "Buy an item", humanReadable = "go %s and buy %s")
-	public void buy(final BuyItemNavigator navigator, final TestItem newItem) {
+	public void buy(final BuyItemSelector navigator, final TestItem newItem) {
 		// the selector defines all the actions required to apply/check you data (could
 		// be button clicks on some
 		// gui, ...)
@@ -28,7 +28,7 @@ public class CustomerTestRole extends Assert {
 	}
 
 	@TCApi(description = "check the packaged item", humanReadable = "get %s and check that the packaged item is %s")
-	public void checkPackage(final HandlepackageNavigator navigator, final TestItem handledItem) {
+	public void checkPackage(final HandlePackageSelector navigator, final TestItem handledItem) {
 		navigator.apply(testedService);
 		assertEquals(testedService.getOwnedItem(), handledItem.itemKind);
 	}

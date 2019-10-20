@@ -19,8 +19,8 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import ch.skymarshall.gui.mvc.BindingChain;
-import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
 import ch.skymarshall.gui.mvc.BindingChain.EndOfChain;
+import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
 
 /**
  * A property that contains an object.
@@ -79,10 +79,6 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 		propertySupport.firePropertyChange(getName(), caller, null, getValue());
 	}
 
-	protected boolean valueEquals(final T newValue) {
-		return newValue == value || (newValue != null && value != null && newValue.equals(value));
-	}
-
 	public T getValue() {
 		return value;
 	}
@@ -93,6 +89,9 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 
 	@Override
 	public void attach() {
+		if (attached) {
+			return;
+		}
 		super.attach();
 		propertySupport.firePropertyChange(getName(), this, null, getValue());
 	}

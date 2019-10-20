@@ -14,6 +14,7 @@ import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition.ParameterNature;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestRole;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 
 public interface Helper {
@@ -72,16 +73,33 @@ public interface Helper {
 		return "method-" + declaringClass.getName() + "." + methodName;
 	}
 
+	public static String valueId(final TestStep step, final int index) {
+		return "step_" + step.getOrdinal() + "-val_" + index;
+	}
+
 	class VerbatimValue {
 		private final String display;
 		private final String id;
 		private final ParameterNature nature;
+		private final TestParameterValue value;
 
 		public VerbatimValue(final String id, final String display, final ParameterNature nature) {
-			super();
 			this.display = display;
 			this.id = id;
 			this.nature = nature;
+			this.value = null;
+		}
+
+		public VerbatimValue(final TestParameterValue value) {
+
+			this.display = value.getSimpleValue();
+			this.id = value.getId();
+			this.nature = value.getValueDefinition().getNature();
+			this.value = value;
+		}
+
+		public TestParameterValue getValue() {
+			return value;
 		}
 
 		@Override

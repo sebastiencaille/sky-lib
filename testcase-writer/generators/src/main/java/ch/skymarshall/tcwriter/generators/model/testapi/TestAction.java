@@ -12,7 +12,7 @@ public class TestAction extends NamedObject {
 
 	public static final TestAction NOT_SET = new TestAction(IdObject.ID_NOT_SET, "", "");
 
-	private final List<TestParameterType> parameterTypes = new ArrayList<>();
+	private final List<TestApiParameter> parameterTypes = new ArrayList<>();
 
 	private final String returnType;
 
@@ -26,11 +26,11 @@ public class TestAction extends NamedObject {
 		this.returnType = returnType;
 	}
 
-	public List<TestParameterType> getParameters() {
+	public List<TestApiParameter> getParameters() {
 		return parameterTypes;
 	}
 
-	public TestParameterType getParameter(final int index) {
+	public TestApiParameter getParameter(final int index) {
 		return parameterTypes.get(index);
 	}
 
@@ -40,7 +40,7 @@ public class TestAction extends NamedObject {
 
 	@Override
 	public String toString() {
-		return getName() + ": " + parameterTypes.stream().map(TestParameterType::getType).collect(joining(","));
+		return getName() + ": " + parameterTypes.stream().map(TestApiParameter::getType).collect(joining(","));
 	}
 
 }

@@ -3,30 +3,30 @@ package ch.skymarshall.tcwriter.generators.visitors;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import ch.skymarshall.util.generators.JavaCodeGenerator;
-import ch.skymarshall.util.generators.Template;
-
 import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterType;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
+import ch.skymarshall.util.generators.JavaCodeGenerator;
+import ch.skymarshall.util.generators.Template;
 
 public class JunitTestCaseVisitor {
 
 	private final Template template;
 
-	private int varCount = 0;
+	private int varIndex = 0;
 
-	private final Map<TestParameterValue, String> varNames = new HashMap<>();
+	private final Map<TestParameterValue, String> varNames = new IdentityHashMap<>();
 
 	private final boolean withController;
 
@@ -150,12 +150,12 @@ public class JunitTestCaseVisitor {
 	}
 
 	private void addParameterValuesToCall(final JavaCodeGenerator parametersContent,
-			final Collection<TestParameterValue> parameterValues, final List<TestParameterType> filter)
+			final Collection<TestParameterValue> parameterValues, final List<TestApiParameter> filter)
 			throws IOException, TestCaseException {
 		final Set<String> filterIds = filter.stream().map(IdObject::getId).collect(Collectors.toSet());
 		String sep = "";
 		for (final TestParameterValue parameterValue : parameterValues) {
-			if (!filterIds.contains(parameterValue.getId())) {
+			if (!filterIds.contains(parameterValue.getApiParameterId())) {
 				continue;
 			}
 			parametersContent.add(sep);
@@ -165,15 +165,15 @@ public class JunitTestCaseVisitor {
 	}
 
 	private void addSetters(final JavaCodeGenerator parametersContent, final String parameterVarName,
-			final Collection<TestParameterValue> parameterValues, final List<TestParameterType> filter)
+			final Collection<TestParameterValue> parameterValues, final List<TestApiParameter> filter)
 			throws IOException, TestCaseException {
-		final Map<String, TestParameterType> filteredMap = filter.stream()
+		final Map<String, TestApiParameter> filteredMap = filter.stream()
 				.collect(Collectors.toMap(IdObject::getId, t -> t));
 		for (final TestParameterValue parameterValue : parameterValues) {
-			if (!filteredMap.containsKey(parameterValue.getId())) {
+			if (!filteredMap.containsKey(parameterValue.getApiParameterId())) {
 				continue;
 			}
-			final TestParameterType parameterType = filteredMap.get(parameterValue.getId());
+			final TestApiParameter parameterType = filteredMap.get(parameterValue.getApiParameterId());
 			parametersContent.append(parameterVarName).append(".").append(parameterType.getName()).append("(");
 			inlineValue(parametersContent, parameterValue);
 			parametersContent.append(");").newLine();
@@ -209,6 +209,7 @@ public class JunitTestCaseVisitor {
 	}
 
 	private String varNameFor(final TestParameterValue testValue) {
-		return varNames.computeIfAbsent(testValue, v -> "var" + (varCount++));
+		varIndex++;
+		return varNames.computeIfAbsent(testValue, v -> "var" + varIndex);
 	}
 }

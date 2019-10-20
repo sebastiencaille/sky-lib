@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ch.skymarshall.tcwriter.generators.model.IdObject;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterType;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestReference;
@@ -37,7 +37,7 @@ public class HumanReadableVisitor {
 			final StringBuilder optionals = new StringBuilder();
 			String sep = "(";
 			boolean hasOptionals = false;
-			for (final TestParameterType optionalParameter : parameterValue.getValueDefinition()
+			for (final TestApiParameter optionalParameter : parameterValue.getValueDefinition()
 					.getOptionalParameters()) {
 				final TestParameterValue optionalParameterValue = parameterValue.getComplexTypeValues()
 						.get(optionalParameter.getId());

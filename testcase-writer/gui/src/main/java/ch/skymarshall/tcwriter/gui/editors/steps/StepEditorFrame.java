@@ -1,8 +1,8 @@
 package ch.skymarshall.tcwriter.gui.editors.steps;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 
+import javax.swing.BoxLayout;
 import javax.swing.JDialog;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -72,7 +72,7 @@ public class StepEditorFrame extends JDialog {
 		this.model = controller.getModel();
 
 		final JPanel stepEditors = new JPanel();
-		stepEditors.setLayout(new FlowLayout(FlowLayout.LEFT));
+		stepEditors.setLayout(new BoxLayout(stepEditors, BoxLayout.X_AXIS));
 
 		final TestModel tm = tc.getModel();
 

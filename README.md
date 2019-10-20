@@ -3,14 +3,14 @@
 **Business oriented test concept**
 
 The key to write business oriented test cases is to have an adapted test api
-The concept is to have 
+The idea is to have 
 * Actors, each actor having a Role
 * Role contains Actions
 * Actions are made of
   * an action
-  * a navigation operation
+  * a selection operation (a Selector, to select the action's target)
   * the action parameters (usually one, maybe two)
-* Factories to creation navigation operations and action parameters
+* Factories to create business oriented selection operations and action parameters
 
 Example
 
@@ -31,14 +31,14 @@ public class CustomerTestRole extends Assert {
 		testedService.buy(newItem.itemKind); // Then use application api
 	}
 
-	@TCApi(description = "check the delivered package", stepSummary = "checks that the delivered item is")
+	@TCApi(description = "Check the delivered package", stepSummary = "checks that the delivered item is")
 	public void checkPackage(final HandleActionNavigator navigator, final TestItem handledItem) {
 		navigator.apply(testedService);
 		assertEquals(testedService.getOwnedItem(), handledItem.itemKind); // Then use application api	
 	} 
 }
 
-@TCApi(description = "how to buy an item", stepSummary = "how to buy an item", isNavigation = true)
+@TCApi(description = "How to buy an item", stepSummary = "how to buy an item", isNavigation = true)
 public class BuyActionNavigator {
 
 	private final Consumer<ExampleService> applier;
@@ -47,17 +47,17 @@ public class BuyActionNavigator {
 		this.applier = applier;
 	}
 
-	@TCApi(description = "from internet", stepSummary = "from internet")
+	@TCApi(description = "From internet", stepSummary = "from internet")
 	public static BuyActionNavigator fromInternet() {
 		return new BuyActionNavigator(svc -> svc.openBrowser()); // Use application api
 	}
 }
 
 
-@TCApi(description = "the item you need", stepSummary = "an item")
+@TCApi(description = "The item you need", stepSummary = "an item")
 public class TestItem {
 ...
-	@TCApi(description = "a coffee machine", stepSummary = "a coffee machine")
+	@TCApi(description = "A coffee machine", stepSummary = "a coffee machine")
 	public static TestItem coffeeMachine() {
 		...		
 	}
@@ -75,18 +75,18 @@ customer.checkPackage(deliveredItem(), coffeeMachine());
 ```
 You can actually read
 
-Actor | Action | Parameter | Navigator
+Actor | Action | Selector | Parameter
 ----- | ------ | --------- | ---------
-A customer     | buy an item                              | a coffee machine | from internet
-A delivery guy | deliver an item                  | ||
-A customer     | check that the delivered item is | a coffee machine |
+A customer     | Buy an item                              | From internet| A coffee machine 
+A delivery guy | Deliver an item                  | ||
+A customer     | Check that the delivered item is || A coffee machine |
 
 This way of structuring the api should be suitable for
 * writing test cases using some high level applications. That is, the application may allow the user to select (based on the data types)
   1. The Actor ("A customer")
   1. Based on the selected Actor's role, the Action "Buy an item"
-  1. Based on the selected Action, the Navigator "from internet"
-  1. Based on the selected Action, the parameter "a coffee machine"
+  1. Based on the selected Action, the Selector "From internet"
+  1. Based on the selected Action, the parameter "A coffee machine"
 * generating "readable" test reports
 
 ```
@@ -100,38 +100,6 @@ Step 5: As customer, I keep a note: another brand (from step 4)
 * generating java test cases [[Code](testcase-writer/examples/src/test/java/ch/skymarshall/tcwriter/examples/MyTC.java)]
 
 * storing the test in a "human readable" format (JSON, XML, ...) [[Code](testcase-writer/examples/src/main/resources/models)]
-
-**Data flow management concept**
-
-The idea is to provide tools to help keeping control of the software's structure
-
-The concept is the following: 
-* The description of the structure is based on the concept of flows
-* A flow describes the structure of the information's exchange in the application 
-* A service is basically structured the following way:
-  * A data multiplexer receives different types of input data, which are multiplexed by an "input rule" to produce a data type supported by the service
-  * At some point, the multiplexed data is sent to the service (aka the Action)
-  * the output of the Action is de-multiplexed into many output data by the "output rule"
-* The services are exchanging information through the input/output data
-* The description of the system is written in a "human readable" language (json, xml, ...)
-* Generators are used to 
-  * Create the operational code
-  * Create unit tests (to test the structure, using mock objects)
-  * Create a visual description of the structure (eg dependency graphs using dot)
-* The description of the structure may show the input/output data and actions used during a specific execution (test case or application) 
-
-A simple flow would look like
-
-![Image](dataflow-manager/data-flow-manager/examples/src/test/reports/SimpleFlow-mainflow.png) 
-
-(ellipses are services - or actions, boxes are data transfer types)
-* json that describes the flow [[Json](dataflow-manager/data-flow-manager/examples/src/main/resources/data/simple-flow.json)]
-* A test case [[Code](dataflow-manager/data-flow-manager/examples/src/test/java/ch/skymarshall/dataflowmgr/examples/DataFlowTest.java)] that is  
-	1. loading the java flavor of the flow generated from the json file
-	1. running a test case
-	1. generating a json that contains the list of executed services
-	1. generating an image showing all the actions/input rules/output rules
-	1. it could generate an image showing the mismatches between the actions/input rules/output rules activated during the flow's execution and the expected ones   
 
 **MVC concept**
 
@@ -230,14 +198,14 @@ public class TestObjectTableModel extends ListModelTableModel<TestObject, Column
 		switch (column) {
 			case A_FIRST_VALUE: ...
 ```
-Tuning columns
+Tuning column size
 
 ```java
 final ContributionTableColumnModel<StepsTableModel.Column> columnModel = new ContributionTableColumnModel<>(table);
 columnModel.install();
 columnModel.configureColumn(ContributionTableColumn.fixedColumn(Column.STEP, 20, new DefaultTableCellRenderer()));
 columnModel.configureColumn(ContributionTableColumn.fixedColumn(Column.ACTOR, 120, new DefaultTableCellRenderer()));
-columnModel.configureColumn(ContributionTableColumn.gapColumn(...)); // Will fill the rest of the table 
+columnModel.configureColumn(ContributionTableColumn.gapColumn(...)); // Fills the rest of the table 
 
 Arrays.stream(Column.values()).forEach(c -> stepsTable.getColumn(c).setCellEditor(new Editor()));
 ```

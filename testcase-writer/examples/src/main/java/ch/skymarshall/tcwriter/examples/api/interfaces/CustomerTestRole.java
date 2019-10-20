@@ -27,7 +27,7 @@ public class CustomerTestRole extends Assert {
 		testedService.buy(newItem.itemKind);
 	}
 
-	@TCApi(description = "check the packaged item", humanReadable = "get %s and check that the packaged item is %s")
+	@TCApi(description = "Check the packaged item", humanReadable = "get %s and check that the packaged item is %s")
 	public void checkPackage(final HandlePackageSelector navigator, final TestItem handledItem) {
 		navigator.apply(testedService);
 		assertEquals(testedService.getOwnedItem(), handledItem.itemKind);
@@ -45,7 +45,7 @@ public class CustomerTestRole extends Assert {
 
 	@TCApi(description = "Keep a note", humanReadable = "keep the note \"%s\"")
 	public void keepNote(@TCApi(description = "a note", humanReadable = "a note") final String note) {
-		// naah
+		// noop
 	}
 
 }

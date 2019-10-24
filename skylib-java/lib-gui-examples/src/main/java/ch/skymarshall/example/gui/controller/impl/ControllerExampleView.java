@@ -16,7 +16,7 @@
 package ch.skymarshall.example.gui.controller.impl;
 
 import static ch.skymarshall.example.gui.TestObject.testObjectToString;
-import static ch.skymarshall.gui.mvc.ModelBindings.detachOnUpdateOf;
+import static ch.skymarshall.gui.mvc.ChainDependencies.detachOnUpdateOf;
 import static ch.skymarshall.gui.mvc.converters.Converters.guiErrorToString;
 import static ch.skymarshall.gui.mvc.converters.Converters.intToString;
 import static ch.skymarshall.gui.swing.bindings.SwingBindings.selected;
@@ -176,7 +176,7 @@ public class ControllerExampleView extends JFrame {
 		filler.setOpaque(false);
 		getContentPane().add(filler, fillerConstraints);
 
-		controller.start();
+		controller.activate();
 
 		validate();
 		pack();

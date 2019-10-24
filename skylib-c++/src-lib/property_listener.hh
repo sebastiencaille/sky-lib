@@ -57,7 +57,7 @@ public:
 class property_listener_dispatcher:
 		public property_listener {
 public:
-	typedef std::function< void (source_ptr, const string&, const void*, const void*)> fire_function;
+	typedef std::function<void (source_ptr, const string&, const void*, const void*)> fire_function;
 	typedef std::function<void (source_ptr, const property*)> before_after_function;
 private:
 	fire_function m_func_fire;
@@ -100,6 +100,8 @@ public:
 			m_func_after(_source, _property);
 		}
 	}
+
+	~property_listener_dispatcher() = default;
 };
 }
 

@@ -1,6 +1,7 @@
 package ch.skymarshall.tcwriter.generators.model.testapi;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class TestModel implements Serializable {
 	private final Multimap<String, TestParameterDefinition> testObjectFactories = MultimapBuilder.hashKeys()
 			.arrayListValues().build();
 
-	private final Set<String> navigationTypes = new HashSet<>();
+	private final Set<String> selectorTypes = new HashSet<>();
 
 	public TestModel() {
 		descriptions.put(IdObject.ID_NOT_SET, ObjectDescription.NOT_SET);
@@ -58,8 +59,12 @@ public class TestModel implements Serializable {
 		return testObjectFactories;
 	}
 
+	public Collection<TestParameterDefinition> getParameterFactories(final TestApiParameter paramType) {
+		return testObjectFactories.get(paramType.getType());
+	}
+
 	public void addNavigationType(final Class<?> type) {
-		navigationTypes.add(type.getName());
+		selectorTypes.add(type.getName());
 	}
 
 	public ObjectDescription descriptionOf(final IdObject idObject) {
@@ -78,8 +83,8 @@ public class TestModel implements Serializable {
 				+ testObjectFactories.size() + " test Objects";
 	}
 
-	public boolean isNavigation(final TestParameterType testParameterType) {
-		return navigationTypes.contains(testParameterType.getType());
+	public boolean isSelector(final TestApiParameter testParameterType) {
+		return selectorTypes.contains(testParameterType.getType());
 	}
 
 }

@@ -19,11 +19,11 @@ import javax.swing.table.TableCellRenderer;
 
 import ch.skymarshall.gui.model.RootListModel;
 import ch.skymarshall.gui.model.views.ListViews;
+import ch.skymarshall.gui.mvc.IBindingController;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.gui.swing.ContributionTableColumn;
 import ch.skymarshall.gui.swing.ContributionTableColumnModel;
 import ch.skymarshall.gui.swing.bindings.SwingBindings;
-
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
@@ -114,16 +114,23 @@ public class StepsTable extends JPanel {
 		columnModel.configureColumn(
 				ContributionTableColumn.fixedColumn(Column.TO_VALUE, 150, new DefaultTableCellRenderer()));
 
-		Arrays.stream(Column.values()).forEach(c -> {
-			stepsJTable.getColumn(c).setCellRenderer(new StepsCellRenderer(testCaseProperty));
-			stepsJTable.getColumn(c).setCellEditor(new StepsCellEditor(testCaseProperty));
-		});
+		Arrays.stream(Column.values())
+				.forEach(c -> stepsJTable.getColumn(c).setCellRenderer(new StepsCellRenderer(testCaseProperty)));
 
 		stepsJTable.getColumn(Column.BREAKPOINT).setCellRenderer(new StepStatusRenderer());
 		stepsJTable.getColumn(Column.BREAKPOINT).setCellEditor(new DefaultCellEditor(new JCheckBox()));
-		stepsJTable.getColumn(Column.TO_VALUE).setCellEditor(new StepsTextEditor());
 
-		selectedStep.bind(SwingBindings.selection(stepsJTable, stepsTableModel));
+		final IBindingController selectedStepCtrl = selectedStep
+				.bind(SwingBindings.selection(stepsJTable, stepsTableModel));
+		selectedStep.addListener(l -> {
+			if (l.getOldValue() != null) {
+				return;
+			}
+			selectedStepCtrl.detach();
+			final int row = stepsTableModel.getRowOf(selectedStep.getValue());
+			stepsTableModel.fireTableRowsUpdated(row, row + 1);
+			selectedStepCtrl.attach();
+		});
 
 		add(new JScrollPane(stepsJTable), BorderLayout.CENTER);
 
@@ -131,6 +138,7 @@ public class StepsTable extends JPanel {
 			steps.clear();
 			steps.setValues(testCaseProperty.getObjectValue().getSteps());
 		});
+
 	}
 
 }

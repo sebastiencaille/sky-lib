@@ -75,7 +75,6 @@ private:
 
 		friend class list_model<value_type> ;
 
-	private:
 		view_filter m_filter;
 		view_comparator m_comparator;
 		view_type* m_parentView;
@@ -101,7 +100,7 @@ private:
 		int compare(const value_type _o1, const value_type _o2) const {
 			int compare;
 			if (m_comparator == NULL && m_parentView == NULL) {
-				throw string(
+				throw hmi_exception(
 						"You must either set a comparator or override this method");
 			} else if (m_comparator != NULL) {
 				compare = m_comparator(_o1, _o2);
@@ -149,8 +148,6 @@ public:
 		return new view_impl(NULL, NULL);
 	}
 
-public:
-
 	/**
 	 * To provide str and equals for a given object
 	 */
@@ -176,9 +173,6 @@ public:
 	static object_tuning_ptr make_ptr(object_tunings* _tuning) {
 		return object_tuning_ptr(_tuning);
 	}
-
-private:
-
 
 	/**
 	 *
@@ -349,7 +343,7 @@ public:
 					m_propertyManager, NULL), m_privateListenersImpl(this) {
 		m_tunings = make_ptr(new object_tunings());
 		if (_view == NULL) {
-			throw string("View must not be NULL");
+			throw hmi_exception("View must not be NULL");
 		}
 		set_view(_view);
 	}
@@ -628,7 +622,7 @@ private:
 			stringstream ss;
 			ss << "Edition already in progress: "
 					<< m_tunings->str(m_objectEdition->m_value);
-			throw string(ss.str());
+			throw hmi_exception(ss.str());
 		}
 	}
 

@@ -12,16 +12,16 @@ import javax.swing.SwingUtilities;
 
 import ch.skymarshall.tcwriter.examples.api.interfaces.CustomerTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestRole;
+import ch.skymarshall.tcwriter.generators.ClassToModelGenerator;
 import ch.skymarshall.tcwriter.generators.Helper;
-import ch.skymarshall.tcwriter.generators.ModelFromClassGenerator;
 import ch.skymarshall.tcwriter.generators.TestCaseToJavaGenerator;
 import ch.skymarshall.tcwriter.generators.model.ObjectDescription;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterType;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestRole;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
@@ -85,7 +85,7 @@ public class ExampleTCWriter extends TCWriterGui {
 
 	public static TestCase createTestCase() {
 
-		final ModelFromClassGenerator generateFromCode = new ModelFromClassGenerator(
+		final ClassToModelGenerator generateFromCode = new ClassToModelGenerator(
 				Arrays.asList(CustomerTestRole.class, DeliveryTestRole.class));
 		final TestModel model = generateFromCode.generateModel();
 
@@ -109,14 +109,14 @@ public class ExampleTCWriter extends TCWriterGui {
 		//
 		final TestStep step1 = new TestStep(stepIndex++);
 		final TestAction action1 = find(customer.getRole(), "buy");
-		final TestParameterType action1Param1 = action1.getParameter(1);
+		final TestApiParameter action1Param1 = action1.getParameter(1);
 		step1.setActor(customer);
 		step1.setAction(action1);
 		final TestParameterValue action1Val1 = new TestParameterValue(action1Param1,
 				findValueFactory(model, "inLocalShop"));
 		step1.addParameter(action1Val1);
 		final TestParameterValue action1Val2 = new TestParameterValue(action1Param1, coffeeMachine);
-		final TestParameterType action1Param1Opt0 = coffeeMachine.getOptionalParameter(1);
+		final TestApiParameter action1Param1Opt0 = coffeeMachine.getOptionalParameter(1);
 		action1Val2.addComplexTypeValue(
 				new TestParameterValue(action1Param1Opt0, action1Param1Opt0.asSimpleParameter(), "DeLuxeBrand"));
 		step1.addParameter(action1Val2);
@@ -125,13 +125,13 @@ public class ExampleTCWriter extends TCWriterGui {
 		//
 		final TestStep step2 = new TestStep(stepIndex++);
 		final TestAction action2 = find(customer.getRole(), "checkPackage");
-		final TestParameterType action2Param0 = action2.getParameter(0);
-		final TestParameterType action2Param1 = action2.getParameter(1);
+		final TestApiParameter action2Param0 = action2.getParameter(0);
+		final TestApiParameter action2Param1 = action2.getParameter(1);
 		step2.setActor(customer);
 		step2.setAction(action2);
 		step2.addParameter(new TestParameterValue(action2Param0, findValueFactory(model, "fromShop")));
 		final TestParameterValue action2Param1Value = new TestParameterValue(action2Param1, coffeeMachineOfBrand);
-		final TestParameterType action2Param1Mand = coffeeMachineOfBrand.getMandatoryParameter(0);
+		final TestApiParameter action2Param1Mand = coffeeMachineOfBrand.getMandatoryParameter(0);
 		action2Param1Value.addComplexTypeValue(
 				new TestParameterValue(action2Param1Mand, action2Param1Mand.asSimpleParameter(), "DeLuxeBrand"));
 		step2.addParameter(action2Param1Value);
@@ -140,7 +140,7 @@ public class ExampleTCWriter extends TCWriterGui {
 		// Step 3
 		final TestStep step3 = new TestStep(stepIndex++);
 		final TestAction action3 = find(customer.getRole(), "resellOwnedItem");
-		final TestParameterType action3Param0 = action3.getParameter(0);
+		final TestApiParameter action3Param0 = action3.getParameter(0);
 		step3.setActor(customer);
 		step3.setAction(action3);
 		step3.addParameter(new TestParameterValue(action3Param0, action3Param0.asSimpleParameter(), "10"));
@@ -159,7 +159,7 @@ public class ExampleTCWriter extends TCWriterGui {
 		final TestAction action5 = find(customer.getRole(), "keepNote");
 		step5.setActor(customer);
 		step5.setAction(action5);
-		final TestParameterType action5param0 = action5.getParameter(0);
+		final TestApiParameter action5param0 = action5.getParameter(0);
 		step5.addParameter(
 				new TestParameterValue(action5param0, tc.getReference(REF_ANOTHER_BRAND), REF_ANOTHER_BRAND));
 		tc.addStep(step5);

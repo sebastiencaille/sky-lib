@@ -2,21 +2,20 @@ package ch.skymarshall.tcwriter.generators.model.testapi;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 import ch.skymarshall.tcwriter.generators.model.IdObject;
-import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
+import ch.skymarshall.tcwriter.generators.model.NamedObject;
 
 /**
  * Definition of a test parameter value
- * 
+ *
  * @author scaille
  *
  */
-public class TestParameterDefinition extends TestParameterType {
+public class TestParameterDefinition extends NamedObject {
 
 	public enum ParameterNature {
-		SIMPLE_TYPE(true), TEST_API_TYPE(false), REFERENCE(true), NOT_SET(false);
+		SIMPLE_TYPE(true), TEST_API(false), REFERENCE(true), NOT_SET(false);
 
 		private final boolean requiresSimpleValue;
 
@@ -31,56 +30,46 @@ public class TestParameterDefinition extends TestParameterType {
 
 	public static final TestParameterDefinition NO_PARAMETER = new TestParameterDefinition(IdObject.ID_NOT_SET,
 			IdObject.ID_NOT_SET, ParameterNature.NOT_SET, "");
-	private final List<TestParameterType> mandatoryParameters = new ArrayList<>();
-	private final List<TestParameterType> optionalParameters = new ArrayList<>();
+	private final List<TestApiParameter> mandatoryParameters = new ArrayList<>();
+	private final List<TestApiParameter> optionalParameters = new ArrayList<>();
 	private final ParameterNature nature;
+	private final String parameterType;
 
 	protected TestParameterDefinition() {
-		super();
+		super(null, null);
 		this.nature = null;
+		this.parameterType = null;
 	}
 
 	public TestParameterDefinition(final String id, final String name, final ParameterNature nature,
 			final String type) {
-		super(id, name, type);
+		super(id, name);
+		this.parameterType = type;
 		this.nature = nature;
+	}
+
+	public String getType() {
+		return parameterType;
 	}
 
 	public ParameterNature getNature() {
 		return nature;
 	}
 
-	public TestParameterType getMandatoryParameter(final int index) {
+	public TestApiParameter getMandatoryParameter(final int index) {
 		return mandatoryParameters.get(index);
 	}
 
-	public List<TestParameterType> getMandatoryParameters() {
+	public List<TestApiParameter> getMandatoryParameters() {
 		return mandatoryParameters;
 	}
 
-	public TestParameterType getOptionalParameter(final int index) {
+	public TestApiParameter getOptionalParameter(final int index) {
 		return optionalParameters.get(index);
 	}
 
-	public List<TestParameterType> getOptionalParameters() {
+	public List<TestApiParameter> getOptionalParameters() {
 		return optionalParameters;
-	}
-
-	public TestParameterValue createTestParameterValue(final Supplier<TestParameterValue> factoryParameterValue,
-			final Supplier<String> verbatimValue) {
-
-		switch (getNature()) {
-		case SIMPLE_TYPE:
-			return new TestParameterValue(getId(), this, verbatimValue.get());
-		case REFERENCE:
-			return new TestParameterValue(getId(), this, verbatimValue.get());
-		case TEST_API_TYPE:
-			return factoryParameterValue.get();
-		case NOT_SET:
-			return null;
-		default:
-			throw new IllegalStateException("Unhandled: " + this.getNature());
-		}
 	}
 
 	@Override

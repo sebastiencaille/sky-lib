@@ -91,6 +91,10 @@ public class TestStep {
 		return parametersValue;
 	}
 
+	public TestParameterValue getParametersValue(final int index) {
+		return parametersValue.get(index);
+	}
+
 	public void addParameter(final TestParameterValue parameterValue) {
 		this.parametersValue.add(parameterValue);
 	}

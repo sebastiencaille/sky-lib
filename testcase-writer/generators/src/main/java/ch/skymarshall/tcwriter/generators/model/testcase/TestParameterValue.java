@@ -3,15 +3,16 @@ package ch.skymarshall.tcwriter.generators.model.testcase;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import ch.skymarshall.tcwriter.generators.model.ExportReference;
 import ch.skymarshall.tcwriter.generators.model.IdObject;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition.ParameterNature;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterType;
 
 /** A value in the test case */
 public class TestParameterValue extends IdObject {
@@ -22,25 +23,32 @@ public class TestParameterValue extends IdObject {
 	private TestParameterDefinition valueDefinition;
 
 	private final Map<String, TestParameterValue> complexTypeValues = new HashMap<>();
-	private final String simpleValue;
+	private final String apiParameterId;
+	private String simpleValue;
 
 	protected TestParameterValue() {
 		super(null);
 		valueDefinition = null;
 		simpleValue = null;
+		apiParameterId = null;
 	}
 
-	public TestParameterValue(final TestParameterType parameterOfValue, final TestParameterDefinition valueDefinition) {
-		this(parameterOfValue.getId(), valueDefinition, null);
+	public TestParameterValue(final TestApiParameter apiParameter, final TestParameterDefinition valueDefinition) {
+		this(UUID.randomUUID().toString(), apiParameter.getId(), valueDefinition, null);
 	}
 
-	public TestParameterValue(final TestParameterType parameterOfValue, final TestParameterDefinition valueDefinition,
+	public TestParameterValue(final TestApiParameter apiParameter, final TestParameterDefinition valueDefinition,
 			final String simpleValue) {
-		this(parameterOfValue.getId(), valueDefinition, simpleValue);
+		this(UUID.randomUUID().toString(), apiParameter.getId(), valueDefinition, simpleValue);
 	}
 
-	public TestParameterValue(final String id, final TestParameterDefinition valueDefinition) {
-		this(id, valueDefinition, null);
+	public TestParameterValue(final String apiParameterId, final TestParameterDefinition valueDefinition,
+			final String simpleValue) {
+		this(UUID.randomUUID().toString(), apiParameterId, valueDefinition, simpleValue);
+	}
+
+	public TestParameterValue(final String apiParameterId, final TestParameterDefinition valueDefinition) {
+		this(UUID.randomUUID().toString(), apiParameterId, valueDefinition, null);
 	}
 
 	/**
@@ -49,17 +57,24 @@ public class TestParameterValue extends IdObject {
 	 * @param valueDefinition
 	 * @param simpleValue
 	 */
-	public TestParameterValue(final String id, final TestParameterDefinition valueDefinition, final String simpleValue) {
+	public TestParameterValue(final String id, final String apiParameterId,
+			final TestParameterDefinition valueDefinition, final String simpleValue) {
 		super(id);
+		this.apiParameterId = apiParameterId;
 		this.valueDefinition = valueDefinition;
 		this.simpleValue = simpleValue;
-		if (valueDefinition.getNature().isSimpleValue() ^ simpleValue != null) {
-			throw new IllegalArgumentException("mismatch between simpleType and nature");
-		}
+	}
+
+	public String getApiParameterId() {
+		return apiParameterId;
 	}
 
 	public TestParameterDefinition getValueDefinition() {
 		return valueDefinition;
+	}
+
+	public void setValueDefinition(final TestParameterDefinition valueDefinition) {
+		this.valueDefinition = valueDefinition;
 	}
 
 	@JsonProperty
@@ -86,15 +101,20 @@ public class TestParameterValue extends IdObject {
 	}
 
 	public void addComplexTypeValue(final TestParameterValue value) {
-		complexTypeValues.put(value.getId(), value);
+		complexTypeValues.put(value.getApiParameterId(), value);
 	}
 
 	public String getSimpleValue() {
 		return simpleValue;
 	}
 
+	public void setSimpleValue(final String simpleValue) {
+		this.simpleValue = simpleValue;
+	}
+
 	public TestParameterValue duplicate() {
-		final TestParameterValue newValue = new TestParameterValue(getId(), valueDefinition, simpleValue);
+		final TestParameterValue newValue = new TestParameterValue(getId(), getApiParameterId(), valueDefinition,
+				simpleValue);
 		for (final Entry<String, TestParameterValue> complexValue : complexTypeValues.entrySet()) {
 			newValue.complexTypeValues.put(complexValue.getKey(), complexValue.getValue().duplicate());
 		}

@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -19,36 +19,36 @@ package ch.skymarshall.gui.mvc;
  * Base of MVC controller.
  * <p>
  * This class gives access of basic components used by the controller
- * 
+ *
  * @author Sebastien Caille
- * 
+ *
  */
 public class GuiController {
 
-    /**
-     * The associated support
-     */
-    protected final ControllerPropertyChangeSupport propertySupport;
+	/**
+	 * The associated support
+	 */
+	protected final ControllerPropertyChangeSupport propertySupport;
 
-    public GuiController() {
-        this.propertySupport = new ControllerPropertyChangeSupport(this);
-    }
+	public GuiController() {
+		this.propertySupport = new ControllerPropertyChangeSupport(this);
+	}
 
-    public GuiController(final ControllerPropertyChangeSupport propertySupport) {
-        this.propertySupport = propertySupport;
-    }
+	public GuiController(final ControllerPropertyChangeSupport propertySupport) {
+		this.propertySupport = propertySupport;
+	}
 
-    public ControllerPropertyChangeSupport getPropertySupport() {
-        return propertySupport;
-    }
+	public ControllerPropertyChangeSupport getPropertySupport() {
+		return propertySupport;
+	}
 
-    /**
-     * Starts the controller, to be called once once all the GUIs component are
-     * bound to the controller. It actually attachs all the properties, causing
-     * the values to be sent to the components
-     */
-    public void start() {
-        propertySupport.attachAll();
-    }
+	/**
+	 * Starts the controller, to be called once once all the GUIs component are
+	 * bound to the controller. It actually attaches all the properties, causing the
+	 * values to be sent to the components
+	 */
+	public void activate() {
+		propertySupport.attachAll();
+	}
 
 }

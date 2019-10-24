@@ -10,9 +10,9 @@ import java.util.Optional;
 import ch.skymarshall.tcwriter.generators.Helper;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterType;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestRole;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
@@ -70,7 +70,7 @@ public class AbstractRecorder {
 			if (parameterValue != null) {
 				step.getParametersValue().add(parameterValue);
 			} else {
-				final TestParameterType actionParameter = step.getAction().getParameter(i);
+				final TestApiParameter actionParameter = step.getAction().getParameter(i);
 				final TestParameterDefinition def = actionParameter.asSimpleParameter();
 				step.getParametersValue().add(new TestParameterValue(actionParameter, def, Objects.toString(apiArg)));
 			}
@@ -85,14 +85,21 @@ public class AbstractRecorder {
 				.getTestParameterFactory(Helper.methodKey(apiFactoryClass, apiName));
 		final TestParameterValue testParameterValue = new TestParameterValue("Recorded", testParameter);
 		for (int i = 0; i < testParameter.getMandatoryParameters().size(); i++) {
-			final TestParameterDefinition mandatoryTestParameter = (TestParameterDefinition) testParameter
-					.getMandatoryParameters().get(i);
 			final Object apiArg = apiArgs[i];
-			final TestParameterValue mandatoryTestParameterValue = mandatoryTestParameter
-					.createTestParameterValue(() -> testParameterValues.get(apiArg), () -> Objects.toString(apiArgs));
+			final TestParameterValue mandatoryTestParameterValue = createTestParameterValue(
+					testParameter.getMandatoryParameter(i), testParameterValues.get(apiArg), Objects.toString(apiArgs));
 			testParameterValue.addComplexTypeValue(mandatoryTestParameterValue);
 		}
 		testParameterValues.put(returnValue, testParameterValue);
+	}
+
+	public TestParameterValue createTestParameterValue(final TestApiParameter param,
+			final TestParameterValue factoryParameterValue, final String verbatimValue) {
+
+		if (factoryParameterValue != null) {
+			return factoryParameterValue;
+		}
+		return new TestParameterValue(param, null, verbatimValue);
 	}
 
 	protected static boolean matches(final TestAction action, final String apiName, final Object[] apiArgs) {
@@ -100,7 +107,7 @@ public class AbstractRecorder {
 			return false;
 		}
 		for (int i = 0; i < action.getParameters().size(); i++) {
-			final TestParameterType expected = action.getParameters().get(i);
+			final TestApiParameter expected = action.getParameters().get(i);
 			final Object actual = apiArgs[i];
 			if (!expected.getType().equals(actual.getClass().getName())
 					&& !expected.getType().equals(asPrimitive(actual.getClass()).getName())) {

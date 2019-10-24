@@ -17,6 +17,6 @@ public @interface TCApi {
 
 	String humanReadable();
 
-	boolean isNavigation() default false;
+	boolean isSelector() default false;
 
 }

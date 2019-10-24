@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ch.skymarshall.tcwriter.generators.model.IdObject;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterType;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestReference;
@@ -30,14 +30,14 @@ public class HumanReadableVisitor {
 					+ ((TestReference) parameterValue.getValueDefinition()).getStep().getOrdinal() + ">";
 		case SIMPLE_TYPE:
 			return parameterValue.getSimpleValue();
-		case TEST_API_TYPE:
+		case TEST_API:
 			final List<String> mandatoryParams = parameterValue.getValueDefinition().getMandatoryParameters().stream()
 					.map(p -> processTestParameter(parameterValue.getComplexTypeValues().get(p.getId())))
 					.collect(Collectors.toList());
 			final StringBuilder optionals = new StringBuilder();
 			String sep = "(";
 			boolean hasOptionals = false;
-			for (final TestParameterType optionalParameter : parameterValue.getValueDefinition()
+			for (final TestApiParameter optionalParameter : parameterValue.getValueDefinition()
 					.getOptionalParameters()) {
 				final TestParameterValue optionalParameterValue = parameterValue.getComplexTypeValues()
 						.get(optionalParameter.getId());

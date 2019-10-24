@@ -16,14 +16,20 @@
 package ch.skymarshall.gui.swing.bindings;
 
 import java.awt.ItemSelectable;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import javax.swing.AbstractButton;
+import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -37,7 +43,7 @@ import ch.skymarshall.gui.mvc.IComponentLink;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 import ch.skymarshall.gui.swing.model.ListModelTableModel;
 
-public interface SwingBindings {
+public class SwingBindings {
 
 	/**
 	 *
@@ -47,7 +53,7 @@ public interface SwingBindings {
 	 * @param <C> component type
 	 * @param <L> listener type
 	 */
-	public static class ListenerRegistration<T, C, L> {
+	private static class ListenerRegistration<T, C, L> {
 		private final BiFunction<IComponentLink<T>, C, L> listenerFactory;
 		private final BiConsumer<C, L> addListener;
 		private final BiConsumer<C, L> removeListener;
@@ -156,6 +162,62 @@ public interface SwingBindings {
 	public static <T> IComponentBinding<T> selection(final JComboBox<T> component) {
 		return rw(component, itemListener(e -> e.getStateChange() == ItemEvent.SELECTED, e -> (T) e.getItem()),
 				component::setSelectedItem, null);
+	}
+
+	private static final class ActionListenerImplementation<T> implements ActionListener {
+		private final IComponentLink<T> link;
+		private final Object[] mapping;
+		private final ButtonGroup group;
+
+		private ActionListenerImplementation(final IComponentLink<T> link, final Object[] mapping,
+				final ButtonGroup group) {
+			this.link = link;
+			this.mapping = mapping;
+			this.group = group;
+		}
+
+		@Override
+		public void actionPerformed(final ActionEvent e) {
+			for (int i = 0; i < mapping.length; i += 2) {
+				if (Objects.equals(mapping[i + 1], e.getSource())) {
+					link.setValueFromComponent(group, (T) mapping[i]);
+				}
+			}
+		}
+	}
+
+	public static <T> IComponentBinding<T> group(final ButtonGroup group, final Object... mapping) {
+		return new IComponentBinding<T>() {
+			ActionListenerImplementation<T> actionListener;
+
+			@Override
+			public void addComponentValueChangeListener(final IComponentLink<T> link) {
+				actionListener = new ActionListenerImplementation<>(link, mapping, group);
+				final Enumeration<AbstractButton> elements = group.getElements();
+				while (elements.hasMoreElements()) {
+					elements.nextElement().addActionListener(actionListener);
+				}
+			}
+
+			@Override
+			public void setComponentValue(final AbstractProperty source, final T value) {
+				for (int i = 0; i < mapping.length; i += 2) {
+					if (Objects.equals(mapping[i], value)) {
+						group.setSelected(((AbstractButton) mapping[i + 1]).getModel(), true);
+					}
+				}
+
+			}
+
+			@Override
+			public void removeComponentValueChangeListener() {
+				final Enumeration<AbstractButton> elements = group.getElements();
+				while (elements.hasMoreElements()) {
+					elements.nextElement().removeActionListener(actionListener);
+				}
+			}
+
+		};
 	}
 
 }

@@ -97,7 +97,7 @@ public class ModelBasicTest extends Assert {
 	public void testChain() throws NoSuchFieldException {
 		final TestBinding binding = new TestBinding();
 		model.integerProperty.bind(Converters.intToString()).bind(binding);
-		controller.start();
+		controller.activate();
 
 		final TestObject testObject = new TestObject(321);
 		model.integerProperty.setTypedConfiguration(persistent(testObject, testObjectValAccess()));
@@ -125,7 +125,7 @@ public class ModelBasicTest extends Assert {
 	public void testIdentityChain() {
 		final TestBinding binding = new TestBinding();
 		model.stringProperty.bind(binding);
-		controller.start();
+		controller.activate();
 
 		model.stringProperty.setValue(this, "123");
 		assertEquals("123", binding.value);

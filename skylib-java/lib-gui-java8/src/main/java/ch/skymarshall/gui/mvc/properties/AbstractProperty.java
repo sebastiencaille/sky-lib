@@ -24,9 +24,9 @@ import java.util.stream.Stream;
 import javax.swing.event.EventListenerList;
 
 import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
+import ch.skymarshall.gui.mvc.GuiErrors.GuiError;
 import ch.skymarshall.gui.mvc.IPropertyEventListener;
 import ch.skymarshall.gui.mvc.PropertyEvent;
-import ch.skymarshall.gui.mvc.GuiErrors.GuiError;
 import ch.skymarshall.gui.mvc.PropertyEvent.EventKind;
 
 /**

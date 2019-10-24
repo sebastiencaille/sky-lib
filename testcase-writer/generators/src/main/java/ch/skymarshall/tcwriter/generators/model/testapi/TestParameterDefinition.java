@@ -15,7 +15,7 @@ import ch.skymarshall.tcwriter.generators.model.NamedObject;
 public class TestParameterDefinition extends NamedObject {
 
 	public enum ParameterNature {
-		SIMPLE_TYPE(true), TEST_API_TYPE(false), REFERENCE(true), NOT_SET(false);
+		SIMPLE_TYPE(true), TEST_API(false), REFERENCE(true), NOT_SET(false);
 
 		private final boolean requiresSimpleValue;
 

@@ -15,8 +15,11 @@
  ******************************************************************************/
 package ch.skymarshall.gui.mvc.properties;
 
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import ch.skymarshall.gui.mvc.BindingChain;
 import ch.skymarshall.gui.mvc.BindingChain.EndOfChain;
@@ -57,6 +60,24 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 	public final ObjectProperty<T> setTypedConfiguration(final Consumer<AbstractTypedProperty<T>>... properties) {
 		super.setTypedConfiguration(properties);
 		return this;
+	}
+
+	public <U> ObjectProperty<U> child(final String name, final Function<T, U> getter, final BiConsumer<T, U> setter) {
+		final ObjectProperty<U> child = new ObjectProperty<>(getName() + "-" + name, propertySupport);
+		asChild(child, getter, setter);
+		return child;
+	}
+
+	public <U> void asChild(final ObjectProperty<U> child, final Function<T, U> getter, final BiConsumer<T, U> setter) {
+		this.addListener(p -> child.setValue(this, getter.apply(this.getValue())));
+		child.addListener(c -> {
+			final U oldValue = getter.apply(this.getValue());
+			final U newValue = child.getValue();
+			if (!Objects.equals(oldValue, newValue)) {
+				setter.accept(getValue(), newValue);
+				this.forceChanged(c.getSource());
+			}
+		});
 	}
 
 	@Override

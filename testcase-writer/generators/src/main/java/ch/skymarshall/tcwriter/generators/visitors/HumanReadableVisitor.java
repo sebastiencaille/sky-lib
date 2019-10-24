@@ -30,7 +30,7 @@ public class HumanReadableVisitor {
 					+ ((TestReference) parameterValue.getValueDefinition()).getStep().getOrdinal() + ">";
 		case SIMPLE_TYPE:
 			return parameterValue.getSimpleValue();
-		case TEST_API_TYPE:
+		case TEST_API:
 			final List<String> mandatoryParams = parameterValue.getValueDefinition().getMandatoryParameters().stream()
 					.map(p -> processTestParameter(parameterValue.getComplexTypeValues().get(p.getId())))
 					.collect(Collectors.toList());

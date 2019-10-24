@@ -23,8 +23,8 @@ public class TestParameterValue extends IdObject {
 	private TestParameterDefinition valueDefinition;
 
 	private final Map<String, TestParameterValue> complexTypeValues = new HashMap<>();
-	private final String simpleValue;
 	private final String apiParameterId;
+	private String simpleValue;
 
 	protected TestParameterValue() {
 		super(null);
@@ -42,8 +42,13 @@ public class TestParameterValue extends IdObject {
 		this(UUID.randomUUID().toString(), apiParameter.getId(), valueDefinition, simpleValue);
 	}
 
-	public TestParameterValue(final String apiParameter, final TestParameterDefinition valueDefinition) {
-		this(UUID.randomUUID().toString(), apiParameter, valueDefinition, null);
+	public TestParameterValue(final String apiParameterId, final TestParameterDefinition valueDefinition,
+			final String simpleValue) {
+		this(UUID.randomUUID().toString(), apiParameterId, valueDefinition, simpleValue);
+	}
+
+	public TestParameterValue(final String apiParameterId, final TestParameterDefinition valueDefinition) {
+		this(UUID.randomUUID().toString(), apiParameterId, valueDefinition, null);
 	}
 
 	/**
@@ -66,6 +71,10 @@ public class TestParameterValue extends IdObject {
 
 	public TestParameterDefinition getValueDefinition() {
 		return valueDefinition;
+	}
+
+	public void setValueDefinition(final TestParameterDefinition valueDefinition) {
+		this.valueDefinition = valueDefinition;
 	}
 
 	@JsonProperty
@@ -97,6 +106,10 @@ public class TestParameterValue extends IdObject {
 
 	public String getSimpleValue() {
 		return simpleValue;
+	}
+
+	public void setSimpleValue(final String simpleValue) {
+		this.simpleValue = simpleValue;
 	}
 
 	public TestParameterValue duplicate() {

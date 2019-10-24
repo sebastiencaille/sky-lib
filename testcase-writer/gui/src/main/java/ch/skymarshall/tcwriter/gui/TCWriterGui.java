@@ -23,8 +23,10 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -36,6 +38,8 @@ import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 import ch.skymarshall.tcwriter.generators.visitors.JsonHelper;
+import ch.skymarshall.tcwriter.gui.editors.params.TestParameterValueEditorPanel;
+import ch.skymarshall.tcwriter.gui.editors.steps.StepEditorModel;
 import ch.skymarshall.tcwriter.gui.editors.steps.StepEditorPanel;
 import ch.skymarshall.tcwriter.gui.steps.StepsTable;
 
@@ -118,14 +122,42 @@ public abstract class TCWriterGui extends JFrame {
 		buttons.add(removeStepButton);
 		this.getContentPane().add(buttons, BorderLayout.NORTH);
 
-		final JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, stepsTable,
-				new StepEditorPanel(testModel, tc, selectedStep));
-		this.getContentPane().add(splitPane, BorderLayout.CENTER);
+		final StepEditorModel stepEditorModel = new StepEditorModel(changeSupport);
+		final StepEditorPanel stepEditor = new StepEditorPanel(stepEditorModel, testModel, tc, selectedStep);
+
+		final JTabbedPane paramEditors = new JTabbedPane();
+
+		tc.addListener(l -> {
+			paramEditors.removeAll();
+			final TestParameterValueEditorPanel selectorEditor = new TestParameterValueEditorPanel("selector",
+					changeSupport, tc, stepEditorModel.getSelectorValue(), stepEditorModel.getSelector());
+			final TestParameterValueEditorPanel param0Editor = new TestParameterValueEditorPanel("param0",
+					changeSupport, tc, stepEditorModel.getActionParameterValue(), stepEditorModel.getActionParameter());
+			paramEditors.add(selectorEditor, "Selector");
+			paramEditors.add(param0Editor, "Parameter 0");
+		});
+
+		final JScrollPane stepsPane = new JScrollPane(stepsTable);
+		final JScrollPane stepPane = new JScrollPane(stepEditor);
+		final JScrollPane paramPane = new JScrollPane(paramEditors);
+		stepsPane.doLayout();
+		stepPane.doLayout();
+		paramPane.doLayout();
+
+		final int height = 1200;
+
+		final JSplitPane topSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, stepsPane, stepPane);
+		final JSplitPane bottomSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topSplit, paramPane);
+		topSplit.setDividerLocation(height / 3);
+		bottomSplit.setDividerLocation(height / 2);
+
+		this.getContentPane().add(bottomSplit, BorderLayout.CENTER);
 
 		changeSupport.attachAll();
 
+		this.validate();
 		this.pack();
-		this.setSize(1600, 1200);
+		this.setSize(1600, height);
 		this.setVisible(true);
 	}
 

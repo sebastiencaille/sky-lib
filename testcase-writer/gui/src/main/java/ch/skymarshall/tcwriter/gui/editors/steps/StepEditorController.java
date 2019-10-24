@@ -18,11 +18,14 @@ import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 
 public class StepEditorController extends GuiController {
 
-	private final StepEditorModel model = new StepEditorModel(this);
+	private final StepEditorModel model;
+
 	private final TestModel tm;
 	private final ObjectProperty<TestStep> testStep;
 
-	public StepEditorController(final TestModel tm, final ObjectProperty<TestStep> testStep) {
+	public StepEditorController(final StepEditorModel model, final TestModel tm,
+			final ObjectProperty<TestStep> testStep) {
+		this.model = model;
 		this.tm = tm;
 		this.testStep = testStep;
 	}

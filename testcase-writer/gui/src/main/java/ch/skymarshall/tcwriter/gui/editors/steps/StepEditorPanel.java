@@ -7,7 +7,6 @@ import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 
 import ch.skymarshall.gui.mvc.ChainDependencies;
 import ch.skymarshall.gui.mvc.converters.Converters;
@@ -21,7 +20,6 @@ import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
-import ch.skymarshall.tcwriter.gui.editors.params.TestParameterValueEditorPanel;
 
 public class StepEditorPanel extends JPanel {
 
@@ -68,10 +66,10 @@ public class StepEditorPanel extends JPanel {
 		return renderer.testObject;
 	}
 
-	public StepEditorPanel(final TestModel tm, final ObjectProperty<TestCase> tc,
+	public StepEditorPanel(final StepEditorModel stepEditorModel, final TestModel tm, final ObjectProperty<TestCase> tc,
 			final ObjectProperty<TestStep> testStep) {
 
-		final StepEditorController controller = new StepEditorController(tm, testStep);
+		final StepEditorController controller = new StepEditorController(stepEditorModel, tm, testStep);
 		this.model = controller.getModel();
 
 		final JButton apply = new JButton("Apply");
@@ -115,21 +113,9 @@ public class StepEditorPanel extends JPanel {
 				.addDependency(ChainDependencies.detachOnUpdateOf(model.getPossibleSelectors()));
 		stepEditors.add(new JScrollPane(actionParameterList));
 
-		final JTabbedPane editors = new JTabbedPane();
-		tc.addListener(l -> {
-			editors.removeAll();
-			final TestParameterValueEditorPanel selectorEditor = new TestParameterValueEditorPanel(tc.getValue(),
-					controller, model.getSelectorValue());
-			final TestParameterValueEditorPanel param0Editor = new TestParameterValueEditorPanel(tc.getValue(),
-					controller, model.getActionParameterValue());
-			editors.add(selectorEditor, "Selector");
-			editors.add(param0Editor, "Parameter 0");
-		});
-
 		setLayout(new BorderLayout());
 		add(topPanel, BorderLayout.NORTH);
 		add(stepEditors, BorderLayout.CENTER);
-		add(editors, BorderLayout.SOUTH);
 
 		controller.init();
 

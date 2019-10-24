@@ -2,6 +2,7 @@ package ch.skymarshall.tcwriter.generators.model.testcase;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import com.google.common.collect.MultimapBuilder;
 
 import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.ObjectDescription;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 
 public class TestCase {
@@ -96,7 +98,15 @@ public class TestCase {
 	}
 
 	public Collection<TestReference> getReferences(final String returnType) {
-		return dynamicReferences.get(returnType);
+		final Collection<TestReference> result = dynamicReferences.get(returnType);
+		if (result == null) {
+			return Collections.emptyList();
+		}
+		return result;
+	}
+
+	public Collection<TestReference> getReferences(final TestApiParameter param) {
+		return getReferences(param.getType());
 	}
 
 	public synchronized IdObject getRestoreValue(final String id) {
@@ -122,4 +132,11 @@ public class TestCase {
 			steps.get(i).setOrdinal(i + 1);
 		}
 	}
+
+	public TestApiParameter getTypeOf(final String apiParameterId) {
+		return steps.stream().flatMap(s -> s.getAction().getParameters().stream())
+				.filter(p -> p.getId().equals(apiParameterId)).findFirst()
+				.orElseThrow(() -> new IllegalStateException("Unable to find " + apiParameterId));
+	}
+
 }

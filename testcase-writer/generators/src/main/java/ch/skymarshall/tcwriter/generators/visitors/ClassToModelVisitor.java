@@ -99,7 +99,7 @@ public class ClassToModelVisitor {
 						methodKey(parameterFactoryMethod),
 						parameterFactoryMethod.getDeclaringClass().getSimpleName() + "."
 								+ parameterFactoryMethod.getName(),
-						ParameterNature.TEST_API_TYPE, parameterFactoryMethod.getReturnType().getName());
+						ParameterNature.TEST_API, parameterFactoryMethod.getReturnType().getName());
 				processMethodAnnotation(testParameter, parameterFactoryMethod);
 
 				// Add mandatory parameters (parameters of the method)

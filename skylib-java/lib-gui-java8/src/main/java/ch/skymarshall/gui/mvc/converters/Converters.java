@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.LongFunction;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import ch.skymarshall.gui.Utils;
@@ -73,12 +74,43 @@ public final class Converters {
 		};
 	}
 
+	public static <V> IConverter<List<V>, List<V>> filter(final Predicate<V> filter) {
+		return new IConverter<List<V>, List<V>>() {
+			@Override
+			public List<V> convertPropertyValueToComponentValue(final List<V> propertyValue) {
+				return propertyValue.stream().filter(filter::test).collect(Collectors.toList());
+			}
+
+			@Override
+			public List<V> convertComponentValueToPropertyValue(final List<V> componentValue) {
+				throw new IllegalStateException("Write only");
+			}
+		};
+	}
+
 	public static <T, C> IConverter<List<T>, List<C>> listConverter(final Function<T, C> prop2comp) {
 		return new IConverter<List<T>, List<C>>() {
 
 			@Override
 			public List<C> convertPropertyValueToComponentValue(final List<T> propertyValue) {
 				return propertyValue.stream().map(prop2comp::apply).collect(Collectors.toList());
+			}
+
+			@Override
+			public List<T> convertComponentValueToPropertyValue(final List<C> componentValue) {
+				throw new IllegalStateException("Write only");
+			}
+
+		};
+	}
+
+	public static <T, C> IConverter<List<T>, List<C>> listConverter(final IConverter<T, C> prop2comp) {
+		return new IConverter<List<T>, List<C>>() {
+
+			@Override
+			public List<C> convertPropertyValueToComponentValue(final List<T> propertyValue) {
+				return propertyValue.stream().map(prop2comp::convertPropertyValueToComponentValue)
+						.collect(Collectors.toList());
 			}
 
 			@Override

@@ -183,7 +183,7 @@ public class JunitTestCaseVisitor {
 	private void inlineValue(final JavaCodeGenerator parametersContent, final TestParameterValue parameterValue)
 			throws IOException, TestCaseException {
 		switch (parameterValue.getValueDefinition().getNature()) {
-		case TEST_API_TYPE:
+		case TEST_API:
 			parametersContent.append(varNameFor(parameterValue));
 			break;
 		case SIMPLE_TYPE:

@@ -47,7 +47,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		final TestCase tc = testCaseProperty.getValue();
 
 		IdObject tcObject;
-		final ParameterNature nature = ParameterNature.TEST_API_TYPE;
+		final ParameterNature nature = ParameterNature.TEST_API;
 		final List<TestParameterValue> parametersValue = testStep.getParametersValue();
 		final TestAction testAction = testStep.getAction();
 		final ActionUtils actionUtils = ModelUtils.actionUtils(tc.getModel(), testAction);
@@ -93,7 +93,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		case SIMPLE_TYPE:
 			display = parameterValue.getSimpleValue();
 			break;
-		case TEST_API_TYPE:
+		case TEST_API:
 			display = tc.descriptionOf(parameterDef).getDescription();
 			break;
 		default:

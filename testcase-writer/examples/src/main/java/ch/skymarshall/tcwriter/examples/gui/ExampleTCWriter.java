@@ -12,9 +12,9 @@ import javax.swing.SwingUtilities;
 
 import ch.skymarshall.tcwriter.examples.api.interfaces.CustomerTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestRole;
-import ch.skymarshall.tcwriter.generators.ClassToModelGenerator;
 import ch.skymarshall.tcwriter.generators.Helper;
-import ch.skymarshall.tcwriter.generators.TestCaseToJavaGenerator;
+import ch.skymarshall.tcwriter.generators.JavaToModel;
+import ch.skymarshall.tcwriter.generators.TestCaseToJava;
 import ch.skymarshall.tcwriter.generators.model.ObjectDescription;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
@@ -36,13 +36,13 @@ public class ExampleTCWriter extends TCWriterGui {
 	private static final File RESOURCE_FOLDER = new File("src/main/resources/models");
 
 	public ExampleTCWriter(final Path modelPath) throws IOException {
-		super(modelPath);
+		super(JsonHelper.testModelFromJson(Files.readAllLines(modelPath).get(0)));
 	}
 
 	@Override
 	public File generateCode(final TestCase tc) throws TestCaseException, IOException {
 		Helper.dumpTestCase(tc);
-		return new TestCaseToJavaGenerator(new File("./src/main/resources/templates/TC.template").toPath()).generate(tc,
+		return new TestCaseToJava(new File("./src/main/resources/templates/TC.template").toPath()).generateAndWrite(tc,
 				new File("./src/test/java").toPath());
 	}
 
@@ -85,7 +85,7 @@ public class ExampleTCWriter extends TCWriterGui {
 
 	public static TestCase createTestCase() {
 
-		final ClassToModelGenerator generateFromCode = new ClassToModelGenerator(
+		final JavaToModel generateFromCode = new JavaToModel(
 				Arrays.asList(CustomerTestRole.class, DeliveryTestRole.class));
 		final TestModel model = generateFromCode.generateModel();
 

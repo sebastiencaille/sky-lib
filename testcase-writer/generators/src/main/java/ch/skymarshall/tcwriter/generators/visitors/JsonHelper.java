@@ -1,6 +1,9 @@
 package ch.skymarshall.tcwriter.generators.visitors;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +61,10 @@ public class JsonHelper {
 	}
 
 	private JsonHelper() {
+	}
+
+	public static String readFile(final Path path) throws IOException {
+		return String.join(" ", Files.readAllLines(path, StandardCharsets.UTF_8));
 	}
 
 	public static String toJson(final TestCase tc) throws IOException {

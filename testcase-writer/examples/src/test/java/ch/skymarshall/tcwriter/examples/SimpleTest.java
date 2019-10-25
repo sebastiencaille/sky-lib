@@ -14,7 +14,7 @@ import org.junit.Test;
 import ch.skymarshall.tcwriter.examples.api.interfaces.CustomerTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem;
-import ch.skymarshall.tcwriter.generators.ClassToModelGenerator;
+import ch.skymarshall.tcwriter.generators.JavaToModel;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
@@ -31,7 +31,7 @@ public class SimpleTest {
 	private static AspectjRecorder recorder;
 
 	static {
-		final ClassToModelGenerator generateFromCode = new ClassToModelGenerator(
+		final JavaToModel generateFromCode = new JavaToModel(
 				Arrays.asList(CustomerTestRole.class, DeliveryTestRole.class));
 		final TestModel model = generateFromCode.generateModel();
 		model.addActor(new TestActor("customer", "customer", model.getRole(CustomerTestRole.class)));

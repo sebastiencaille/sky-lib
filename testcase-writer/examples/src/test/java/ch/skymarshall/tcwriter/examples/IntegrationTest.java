@@ -10,7 +10,7 @@ import java.nio.file.StandardOpenOption;
 import org.junit.Test;
 
 import ch.skymarshall.tcwriter.examples.gui.ExampleTCWriter;
-import ch.skymarshall.tcwriter.generators.TestCaseToJavaGenerator;
+import ch.skymarshall.tcwriter.generators.TestCaseToJava;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
@@ -21,7 +21,7 @@ public class IntegrationTest {
 	@Test
 	public void generateModelAndTC() throws IOException, TestCaseException {
 		final TestCase testCase = ExampleTCWriter.createTestCase();
-		new TestCaseToJavaGenerator(new File("./src/main/resources/templates/TC.template").toPath()).generate(testCase,
+		new TestCaseToJava(new File("./src/main/resources/templates/TC.template").toPath()).generateAndWrite(testCase,
 				new File("./src/test/java").toPath());
 	}
 

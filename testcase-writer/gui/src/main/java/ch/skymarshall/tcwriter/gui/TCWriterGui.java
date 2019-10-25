@@ -61,10 +61,6 @@ public abstract class TCWriterGui extends JFrame {
 		this.testModel = testModel;
 	}
 
-	public TCWriterGui(final Path modelPath) throws IOException {
-		testModel = JsonHelper.testModelFromJson(Files.readAllLines(modelPath).get(0));
-	}
-
 	public void run() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -57,7 +57,12 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 		@Override
 		public boolean equals(final Object obj) {
-			return obj instanceof TestReference && ((TestReference) obj).getId().equals(reference.getId());
+			return obj instanceof TestReference && ((TestReference) obj).equals(reference);
+		}
+
+		@Override
+		public int hashCode() {
+			return reference.hashCode();
 		}
 
 		@Override

@@ -172,7 +172,7 @@ final DynamicView view = new DynamicView();
 BooleanProperty reverseOrder = ...
 reverseOrder.bind(selected(... some checkbox ...));
 reverseOrder.bind(view.reverseOrder());
-ListModel<TestObject> model = new RootListModel<>(ListViews.sorted(NORMAL_ORDER));
+ListModel<TestObject> model = new RootListModel<>(ListViews.sorted(NATURAL_ORDER));
 ListModel<TestObject> filteredModel = new ChildListModel<>(model, view);
 ```
 

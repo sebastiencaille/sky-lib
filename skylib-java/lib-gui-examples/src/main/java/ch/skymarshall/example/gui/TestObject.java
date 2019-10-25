@@ -53,6 +53,6 @@ public class TestObject {
 	}
 
 	public static IConverter<TestObject, String> testObjectToString() {
-		return Converters.writeOnly(o -> o.aFirstValue != null ? o.aFirstValue : "");
+		return Converters.wo(o -> o.aFirstValue != null ? o.aFirstValue : "");
 	}
 }

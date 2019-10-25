@@ -18,6 +18,8 @@ public class TestParameterValueTable extends JTable {
 		final ContributionTableColumnModel<TestParameterValueTableModel.Columns> columnModel = new ContributionTableColumnModel<>(
 				this);
 		columnModel.install();
+		columnModel.configureColumn(ContributionTableColumn.fixedColumn(TestParameterValueTableModel.Columns.MANDATORY,
+				50, new DefaultTableCellRenderer()));
 		columnModel.configureColumn(ContributionTableColumn.fixedColumn(TestParameterValueTableModel.Columns.ENABLED,
 				50, new DefaultTableCellRenderer()));
 		columnModel.configureColumn(ContributionTableColumn
@@ -28,12 +30,12 @@ public class TestParameterValueTable extends JTable {
 
 	@Override
 	public boolean isCellEditable(final int row, final int column) {
-		return (column == 0 && !testParameterValueTableModel.getObjectAtRow(row).mandatory) || column == 2;
+		return (column == 1 && !testParameterValueTableModel.getObjectAtRow(row).mandatory) || column == 2;
 	}
 
 	@Override
 	public TableCellRenderer getCellRenderer(final int row, final int column) {
-		if (column == 0) {
+		if (column == 0 || column == 1) {
 			return getDefaultRenderer(Boolean.class);
 		}
 		return super.getCellRenderer(row, column);
@@ -41,7 +43,7 @@ public class TestParameterValueTable extends JTable {
 
 	@Override
 	public TableCellEditor getCellEditor(final int row, final int column) {
-		if (column == 0) {
+		if (column == 1) {
 			return getDefaultEditor(Boolean.class);
 		}
 		return super.getCellEditor(row, column);

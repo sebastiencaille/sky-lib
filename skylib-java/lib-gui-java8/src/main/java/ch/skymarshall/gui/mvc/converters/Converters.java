@@ -18,6 +18,7 @@ package ch.skymarshall.gui.mvc.converters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.LongFunction;
@@ -243,22 +244,39 @@ public final class Converters {
 		return booleanConverter(b -> Boolean.toString(b), Boolean::parseBoolean); // NOSONAR
 	}
 
-	public static <T, U> IConverter<T, U> writeOnly(final Function<T, U> prop2comp) {
+	public static <T, U> IConverter<T, U> wo(final Function<T, U> prop2comp) {
 		return converter(prop2comp, o -> {
 			throw new IllegalStateException("Write only");
 		});
 	}
 
 	public static <T> IConverter<T, String> objectToString() {
-		return writeOnly(Object::toString);
+		return wo(Object::toString);
 	}
 
 	public static <T extends Number> IConverter<T, String> numberToSize() {
-		return writeOnly(Utils::toSize);
+		return wo(Utils::toSize);
 	}
 
 	public static <T> IConverter<T, Boolean> isNotNull() {
-		return writeOnly(Objects::nonNull);
+		return wo(Objects::nonNull);
+	}
+
+	public static <T> IConverter<T, T> noOp(final BiConsumer<Boolean, T> consumer) {
+		return new IConverter<T, T>() {
+
+			@Override
+			public T convertPropertyValueToComponentValue(final T propertyValue) {
+				consumer.accept(true, propertyValue);
+				return propertyValue;
+			}
+
+			@Override
+			public T convertComponentValueToPropertyValue(final T componentValue) {
+				consumer.accept(false, componentValue);
+				return componentValue;
+			}
+		};
 	}
 
 }

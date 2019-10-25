@@ -1,5 +1,7 @@
 package ch.skymarshall.tcwriter.gui;
 
+import static ch.skymarshall.gui.mvc.Bindings.set;
+import static ch.skymarshall.gui.mvc.converters.Converters.wo;
 import static java.util.stream.Collectors.joining;
 
 import java.awt.BorderLayout;
@@ -20,23 +22,23 @@ import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
-import ch.skymarshall.tcwriter.generators.model.ModelUtils.ActionUtils;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 import ch.skymarshall.tcwriter.generators.visitors.JsonHelper;
 import ch.skymarshall.tcwriter.gui.editors.params.TestParameterValueEditorPanel;
@@ -122,33 +124,23 @@ public abstract class TCWriterGui extends JFrame {
 		final StepEditorModel stepEditorModel = new StepEditorModel(changeSupport);
 		final StepEditorPanel stepEditor = new StepEditorPanel(stepEditorModel, testModel, tc, selectedStep);
 
-		final JTabbedPane paramEditors = new JTabbedPane();
+		final JComponent selectorEditor = new TestParameterValueEditorPanel("selector", changeSupport, tc,
+				stepEditorModel.getSelectorValue(), stepEditorModel.getSelector());
+		final JComponent param0Editor = new TestParameterValueEditorPanel("param0", changeSupport, tc,
+				stepEditorModel.getActionParameterValue(), stepEditorModel.getActionParameter());
 
-		stepEditorModel.getAction().addListener(l -> {
-			paramEditors.removeAll();
-			if (!stepEditorModel.getAction().isSet()) {
-				return;
-			}
-			final ActionUtils actionUtils = new ActionUtils(testModel, stepEditorModel.getAction().getValue());
-			if (actionUtils.hasSelector()) {
-				final TestParameterValueEditorPanel editor0 = new TestParameterValueEditorPanel("editor0",
-						changeSupport, tc, stepEditorModel.getSelectorValue(), stepEditorModel.getSelector());
-				paramEditors.add(editor0, "Selector");
-			}
-			if (actionUtils.hasActionParameter(0)) {
-				final TestParameterValueEditorPanel editor1 = new TestParameterValueEditorPanel("editor1",
-						changeSupport, tc, stepEditorModel.getActionParameterValue(),
-						stepEditorModel.getActionParameter());
-				paramEditors.add(editor1, "Parameter 1");
-			}
-		});
+		final JSplitPane paramsPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(selectorEditor),
+				new JScrollPane(param0Editor));
+
+		stepEditorModel.getSelectorValue().bind(wo(v -> !v.equals(TestParameterValue.NO_VALUE))) //
+				.bind(set(selectorEditor::setVisible));
+
+		stepEditorModel.getActionParameterValue().bind(wo(v -> !v.equals(TestParameterValue.NO_VALUE)))
+				.bind(set(param0Editor::setVisible));
 
 		final JScrollPane stepsPane = new JScrollPane(stepsTable);
 		final JScrollPane stepPane = new JScrollPane(stepEditor);
-		final JScrollPane paramPane = new JScrollPane(paramEditors);
-		stepsPane.doLayout();
-		stepPane.doLayout();
-		paramPane.doLayout();
+		final JScrollPane paramPane = new JScrollPane(paramsPane);
 
 		final int height = 1200;
 

@@ -1,10 +1,12 @@
 package ch.skymarshall.tcwriter.gui.editors.params;
 
+import static ch.skymarshall.gui.mvc.Bindings.set;
 import static ch.skymarshall.gui.mvc.ChainDependencies.detachOnUpdateOf;
 import static ch.skymarshall.gui.mvc.converters.Converters.filter;
 import static ch.skymarshall.gui.mvc.converters.Converters.listConverter;
-import static ch.skymarshall.gui.swing.bindings.ActionBindings.applier;
 import static ch.skymarshall.gui.swing.bindings.SwingBindings.selection;
+import static ch.skymarshall.gui.swing.bindings.SwingBindings.value;
+import static ch.skymarshall.gui.swing.bindings.SwingBindings.values;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;
@@ -80,11 +82,11 @@ public class TestParameterValueEditorPanel extends JPanel {
 		if (testParameterValue.getApiParameterId().isEmpty()) {
 			return Collections.emptyList();
 		}
-		return new ArrayList<>(testCase.getReferences(typeOf(testCase, testParameterValue)));
+		return new ArrayList<>(testCase.getSuitableReferences(apiOf(testCase, testParameterValue)));
 	}
 
-	private TestApiParameter typeOf(final TestCase testCase, final TestParameterValue testParameterValue) {
-		return testCase.getTypeOf(testParameterValue.getApiParameterId());
+	private TestApiParameter apiOf(final TestCase testCase, final TestParameterValue testParameterValue) {
+		return testCase.getTestApi(testParameterValue.getApiParameterId());
 	}
 
 	public TestParameterValueEditorPanel(final String name, final ControllerPropertyChangeSupport propertyChangeSupport,
@@ -112,19 +114,21 @@ public class TestParameterValueEditorPanel extends JPanel {
 		final JRadioButton useRawValue = new JRadioButton("Raw value");
 		topPanel.add(useRawValue);
 		final JTextField simpleValueEditor = new JTextField();
-		simpleValue.bind(SwingBindings.value(simpleValueEditor));
+		simpleValue.bind(value(simpleValueEditor));
 		topPanel.add(simpleValueEditor);
 
 		final JRadioButton useReference = new JRadioButton("Reference: ");
 		topPanel.add(useReference);
 		final JComboBox<ReferenceView> referenceEditor = new JComboBox<>();
-		references.bind(filter(r -> r.getType().equals(editedParameterValue.getValue().getValueDefinition().getType())))
-				.bind(listConverter(ReferenceView.converter())).bind(SwingBindings.values(referenceEditor));
-		reference.bind(ReferenceView.converter()).bind(selection(referenceEditor))
+		references.bind(filter(r -> r.getType().equals(editedParameterValue.getValue().getValueDefinition().getType()))) //
+				.bind(listConverter(ReferenceView.converter())) //
+				.bind(values(referenceEditor));
+		reference.bind(ReferenceView.converter())//
+				.bind(selection(referenceEditor)) //
 				.addDependency(detachOnUpdateOf(references));
 		topPanel.add(referenceEditor);
 
-		final JRadioButton useComplexType = new JRadioButton("Parameters: ");
+		final JRadioButton useComplexType = new JRadioButton("Test Api: ");
 		topPanel.add(useComplexType);
 		add(topPanel, BorderLayout.NORTH);
 
@@ -152,17 +156,17 @@ public class TestParameterValueEditorPanel extends JPanel {
 			}
 		});
 
-		reference.bind(applier(ref -> {
+		reference.bind(set(ref -> {
 			if (valueNature.getValue() == ParameterNature.REFERENCE) {
 				editedParameterValue.getValue().setValueDefinition(ref);
 			}
 		}));
 
-		valueNature.bind(applier(v -> {
+		valueNature.bind(set(v -> {
 			final TestParameterValue paramValue = editedParameterValue.getValue();
 			switch (v) {
 			case SIMPLE_TYPE:
-				paramValue.setValueDefinition(typeOf(tc.getValue(), paramValue).asSimpleParameter());
+				paramValue.setValueDefinition(apiOf(tc.getValue(), paramValue).asSimpleParameter());
 				break;
 			case REFERENCE:
 				paramValue.setValueDefinition(reference.getObjectValue());

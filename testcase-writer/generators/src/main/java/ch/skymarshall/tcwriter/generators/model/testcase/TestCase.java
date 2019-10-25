@@ -105,7 +105,7 @@ public class TestCase {
 		return result;
 	}
 
-	public Collection<TestReference> getReferences(final TestApiParameter param) {
+	public Collection<TestReference> getSuitableReferences(final TestApiParameter param) {
 		return getReferences(param.getType());
 	}
 
@@ -133,7 +133,7 @@ public class TestCase {
 		}
 	}
 
-	public TestApiParameter getTypeOf(final String apiParameterId) {
+	public TestApiParameter getTestApi(final String apiParameterId) {
 		return steps.stream().flatMap(s -> s.getAction().getParameters().stream())
 				.filter(p -> p.getId().equals(apiParameterId)).findFirst()
 				.orElseThrow(() -> new IllegalStateException("Unable to find " + apiParameterId));

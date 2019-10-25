@@ -8,7 +8,7 @@ public class TestParameterValueTableModel
 		extends ListModelTableModel<TestParameterValueTableModel.ParameterValue, TestParameterValueTableModel.Columns> {
 
 	public enum Columns {
-		ENABLED, DESCRIPTION, VALUE
+		MANDATORY, ENABLED, DESCRIPTION, VALUE
 	}
 
 	static class ParameterValue implements Comparable<ParameterValue> {
@@ -48,6 +48,8 @@ public class TestParameterValueTableModel
 	@Override
 	protected Object getValueAtColumn(final ParameterValue object, final Columns column) {
 		switch (column) {
+		case MANDATORY:
+			return object.mandatory;
 		case ENABLED:
 			return object.enabled || object.mandatory;
 		case DESCRIPTION:

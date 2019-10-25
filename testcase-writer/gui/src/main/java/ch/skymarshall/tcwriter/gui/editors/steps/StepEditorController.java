@@ -44,8 +44,8 @@ public class StepEditorController extends GuiController {
 
 		model.getAction().addListener(l -> {
 			if (model.getAction().getValue() == null) {
-				model.getPossibleSelectors().setValue(this, Collections.emptyList());
-				model.getPossibleActionParameters().setValue(this, Collections.emptyList());
+				emptySelectors();
+				emptyParam0();
 				return;
 			}
 			final ActionUtils actionUtils = ModelUtils.actionUtils(tm, model.getAction().getValue());
@@ -58,7 +58,7 @@ public class StepEditorController extends GuiController {
 				model.getSelectorValue().setValue(this,
 						createParameter(selectorValue, selectorValue.getValueDefinition()));
 			} else {
-				model.getPossibleSelectors().setValue(this, Collections.emptyList());
+				emptySelectors();
 			}
 			if (actionUtils.hasActionParameter(0)) {
 				final TestParameterValue param0Value = testStep.getValue()
@@ -69,7 +69,7 @@ public class StepEditorController extends GuiController {
 				model.getActionParameterValue().setValue(this,
 						createParameter(param0Value, param0Value.getValueDefinition()));
 			} else {
-				model.getPossibleActionParameters().setValue(this, Collections.emptyList());
+				emptyParam0();
 			}
 
 		});
@@ -85,6 +85,16 @@ public class StepEditorController extends GuiController {
 		model.getSelectorValue().setValue(this, new TestParameterValue("", TestParameterDefinition.NO_PARAMETER));
 		model.getActionParameterValue().setValue(this,
 				new TestParameterValue("", TestParameterDefinition.NO_PARAMETER));
+	}
+
+	private void emptyParam0() {
+		model.getActionParameterValue().setValue(this, TestParameterValue.NO_VALUE);
+		model.getPossibleActionParameters().setValue(this, Collections.emptyList());
+	}
+
+	private void emptySelectors() {
+		model.getSelectorValue().setValue(this, TestParameterValue.NO_VALUE);
+		model.getPossibleSelectors().setValue(this, Collections.emptyList());
 	}
 
 	public TestParameterValue createParameter(final TestParameterValue oldValue,

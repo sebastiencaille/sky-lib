@@ -32,7 +32,7 @@ import ch.skymarshall.tcwriter.gui.steps.StepsTableModel.Column;
 
 public class StepsTable extends JPanel {
 
-	static final Color HUMAN_READABLE_BG_COLOR = new Color(0xDDDDDD);
+	static final Color HUMAN_READABLE_BG_COLOR = new Color(0x87CEFA);
 
 	private static final TestCase NO_TC = new TestCase();
 

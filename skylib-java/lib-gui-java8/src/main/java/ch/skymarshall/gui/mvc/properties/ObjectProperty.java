@@ -122,4 +122,8 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 		setObjectValue(this, defaultValue);
 	}
 
+	public boolean isSet() {
+		return getObjectValue() != null;
+	}
+
 }

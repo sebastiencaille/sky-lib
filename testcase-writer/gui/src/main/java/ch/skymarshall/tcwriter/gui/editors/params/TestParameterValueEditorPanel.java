@@ -3,6 +3,7 @@ package ch.skymarshall.tcwriter.gui.editors.params;
 import static ch.skymarshall.gui.mvc.ChainDependencies.detachOnUpdateOf;
 import static ch.skymarshall.gui.mvc.converters.Converters.filter;
 import static ch.skymarshall.gui.mvc.converters.Converters.listConverter;
+import static ch.skymarshall.gui.swing.bindings.ActionBindings.applier;
 import static ch.skymarshall.gui.swing.bindings.SwingBindings.selection;
 
 import java.awt.BorderLayout;
@@ -25,6 +26,7 @@ import ch.skymarshall.gui.model.ListModel;
 import ch.skymarshall.gui.model.ListModelBindings;
 import ch.skymarshall.gui.model.RootListModel;
 import ch.skymarshall.gui.model.views.ListViews;
+import ch.skymarshall.gui.mvc.ChainDependencies;
 import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
 import ch.skymarshall.gui.mvc.converters.Converters;
 import ch.skymarshall.gui.mvc.converters.IConverter;
@@ -139,15 +141,21 @@ public class TestParameterValueEditorPanel extends JPanel {
 		editedParameterValue.addListener(
 				l -> valueNature.setValue(this, editedParameterValue.getValue().getValueDefinition().getNature()));
 
-		reference.addListener(l -> {
-			if (valueNature.getValue() == ParameterNature.REFERENCE) {
-				editedParameterValue.getValue().setValueDefinition(reference.getObjectValue());
+		editedParameterValue.addListener(l -> {
+			if (editedParameterValue.getValue().getValueDefinition().getNature() == ParameterNature.REFERENCE) {
+				reference.setValue(this, (TestReference) editedParameterValue.getValue().getValueDefinition());
 			}
 		});
 
-		valueNature.addListener(l -> {
+		reference.bind(applier(ref -> {
+			if (valueNature.getValue() == ParameterNature.REFERENCE) {
+				editedParameterValue.getValue().setValueDefinition(ref);
+			}
+		}));
+
+		valueNature.bind(applier(v -> {
 			final TestParameterValue paramValue = editedParameterValue.getValue();
-			switch (valueNature.getValue()) {
+			switch (v) {
 			case SIMPLE_TYPE:
 				paramValue.setValueDefinition(typeOf(tc.getValue(), paramValue).asSimpleParameter());
 				break;
@@ -160,7 +168,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 			default:
 				break;
 			}
-		});
+		})).addDependency(ChainDependencies.detachOnUpdateOf(editedParameterValue));
 
 	}
 

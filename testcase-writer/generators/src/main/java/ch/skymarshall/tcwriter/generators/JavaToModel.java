@@ -29,9 +29,9 @@ public class JavaToModel {
 	public static void main(final String[] args) throws IOException {
 
 		final String target = args[0];
-		final String[] classes = new String[args.length - 1];
-		System.arraycopy(args, 0, classes, 0, classes.length);
-		final TestModel model = new JavaToModel(Helper.toClasses(classes)).generateModel();
+		final String[] roleClasses = new String[args.length - 1];
+		System.arraycopy(args, 0, roleClasses, 0, roleClasses.length);
+		final TestModel model = new JavaToModel(Helper.toClasses(roleClasses)).generateModel();
 		Files.write(new File(target).toPath(), JsonHelper.toJson(model).getBytes(StandardCharsets.UTF_8));
 
 	}

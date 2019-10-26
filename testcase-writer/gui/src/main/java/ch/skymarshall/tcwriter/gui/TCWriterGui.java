@@ -91,7 +91,7 @@ public abstract class TCWriterGui extends JFrame {
 				LOGGER.log(Level.INFO, "Using port " + port);
 				final TestCase testCase = tc.getValue();
 				final File file = generateCode(testCase);
-				startTestCase(file, testCase.getFolder() + "." + testCase.getName(), port);
+				startTestCase(file, testCase.getFolderinSrc() + "." + testCase.getName(), port);
 				testRemoteControl.start();
 			}), "Test execution").start();
 		}));

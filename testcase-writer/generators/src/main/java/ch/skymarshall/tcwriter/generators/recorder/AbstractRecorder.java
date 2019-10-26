@@ -17,14 +17,19 @@ import ch.skymarshall.tcwriter.generators.model.testapi.TestRole;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
+import ch.skymarshall.tcwriter.test.TestActors;
+import ch.skymarshall.tcwriter.test.TestObjectDescription;
 
 public class AbstractRecorder {
 
+	public static int actorIndex = 0;
+
 	private final TestModel testModel;
-	private final Map<Object, String> actorsNames = new HashMap<>();
 
 	private final List<TestStep> testSteps = new ArrayList<>();
 	private final Map<Object, TestParameterValue> testParameterValues = new HashMap<>();
+
+	private final Map<Object, TestActor> actors = new HashMap<>();
 
 	public AbstractRecorder(final TestModel model) {
 		this.testModel = model;
@@ -38,21 +43,34 @@ public class AbstractRecorder {
 		return testParameterValues;
 	}
 
-	public void addActor(final String name, final Object actor) {
-		actorsNames.put(actor, name);
+	public void reset() {
+		actorIndex = 0;
+		testSteps.clear();
+		actors.clear();
 	}
 
-	public void reset() {
-		testSteps.clear();
-		actorsNames.clear();
+	protected TestActor recordActor(final Object actor) {
+		final Class<?> roleType = actor.getClass();
+		final TestActor testActor = new TestActor((++actorIndex) + "_" + roleType.getSimpleName(),
+				roleType.getSimpleName(), testModel.getRole(roleType));
+		actors.put(actor, testActor);
+		return testActor;
 	}
 
 	protected void recordStep(final String description, final Object recordedActor, final String apiName,
 			final Object[] apiArgs) {
 		final TestStep step = new TestStep(testSteps.size() + 1);
-		final TestActor actor = testModel.getActors().get(actorsNames.get(recordedActor));
+
+		TestActor actor = null;
+		final String actorName = TestActors.getNames().get(recordedActor);
+		if (actorName != null) {
+			actor = testModel.getActors().get(actorName);
+		}
 		if (actor == null) {
-			throw new IllegalStateException("No actor found for " + description);
+			actor = actors.get(recordedActor);
+		}
+		if (actor == null) {
+			actor = recordActor(recordedActor);
 		}
 		final TestRole role = actor.getRole();
 		if (role == null) {
@@ -126,6 +144,8 @@ public class AbstractRecorder {
 
 	public TestCase getTestCase(final String path) {
 		final TestCase testCase = new TestCase(path, testModel);
+		actors.forEach((a, ta) -> testModel.addActor(ta,
+				TestActors.getDescriptions().getOrDefault(a, new TestObjectDescription(ta.getId(), ta.getId()))));
 		testCase.getSteps().addAll(testSteps);
 		return testCase;
 	}

@@ -20,13 +20,13 @@ import java.util.function.Consumer;
 import ch.skymarshall.tcwriter.annotations.TCApi;
 import ch.skymarshall.tcwriter.annotations.TCRole;
 import ch.skymarshall.tcwriter.generators.model.IdObject;
-import ch.skymarshall.tcwriter.generators.model.ObjectDescription;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition.ParameterNature;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestRole;
+import ch.skymarshall.tcwriter.test.TestObjectDescription;
 
 public class ClassToModelVisitor {
 
@@ -210,11 +210,11 @@ public class ClassToModelVisitor {
 		}
 	}
 
-	private ObjectDescription descriptionFrom(final TCRole tcrole) {
-		return new ObjectDescription(tcrole.description(), tcrole.stepSummary());
+	private TestObjectDescription descriptionFrom(final TCRole tcrole) {
+		return new TestObjectDescription(tcrole.description(), tcrole.stepSummary());
 	}
 
-	private ObjectDescription descriptionFrom(final TCApi tcApi) {
-		return new ObjectDescription(tcApi.description(), tcApi.humanReadable());
+	private TestObjectDescription descriptionFrom(final TCApi tcApi) {
+		return new TestObjectDescription(tcApi.description(), tcApi.humanReadable());
 	}
 }

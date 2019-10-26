@@ -13,9 +13,9 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 
 import ch.skymarshall.tcwriter.generators.model.IdObject;
-import ch.skymarshall.tcwriter.generators.model.ObjectDescription;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
+import ch.skymarshall.tcwriter.test.TestObjectDescription;
 
 public class TestCase {
 
@@ -23,23 +23,23 @@ public class TestCase {
 	private TestModel testModel;
 
 	private final List<TestStep> steps = new ArrayList<>();
-	private final String path;
+	private final String pathInSrcFolder;
 	private final Multimap<String, TestReference> dynamicReferences = MultimapBuilder.hashKeys().arrayListValues()
 			.build();
 
 	// description of test variables
-	private final Map<String, ObjectDescription> dynamicDescriptions = new HashMap<>();
+	private final Map<String, TestObjectDescription> dynamicDescriptions = new HashMap<>();
 
 	@JsonIgnore
 	private Map<String, IdObject> cachedValues = null;
 
 	public TestCase() {
-		this.path = null;
+		this.pathInSrcFolder = null;
 		this.testModel = null;
 	}
 
 	public TestCase(final String path, final TestModel testModel) {
-		this.path = path;
+		this.pathInSrcFolder = path;
 		this.testModel = testModel;
 	}
 
@@ -59,16 +59,16 @@ public class TestCase {
 		return steps;
 	}
 
-	public String getFolder() {
-		return path.substring(0, path.lastIndexOf('.'));
+	public String getFolderinSrc() {
+		return pathInSrcFolder.substring(0, pathInSrcFolder.lastIndexOf('.'));
 	}
 
 	public String getName() {
-		return path.substring(path.lastIndexOf('.') + 1);
+		return pathInSrcFolder.substring(pathInSrcFolder.lastIndexOf('.') + 1);
 	}
 
-	public String getPath() {
-		return path;
+	public String getPathInSrc() {
+		return pathInSrcFolder;
 	}
 
 	public void publishReference(final TestReference reference) {
@@ -76,20 +76,20 @@ public class TestCase {
 		dynamicDescriptions.put(reference.getId(), reference.toDescription());
 	}
 
-	public ObjectDescription descriptionOf(final IdObject idObject) {
+	public TestObjectDescription descriptionOf(final IdObject idObject) {
 		return descriptionOf(idObject.getId());
 	}
 
-	public ObjectDescription descriptionOf(final String id) {
-		final ObjectDescription modelDescr = testModel.getDescriptions().get(id);
+	public TestObjectDescription descriptionOf(final String id) {
+		final TestObjectDescription modelDescr = testModel.getDescriptions().get(id);
 		if (modelDescr != null) {
 			return modelDescr;
 		}
-		final ObjectDescription dynamicDescr = dynamicDescriptions.get(id);
+		final TestObjectDescription dynamicDescr = dynamicDescriptions.get(id);
 		if (dynamicDescr != null) {
 			return dynamicDescr;
 		}
-		return new ObjectDescription(id, "");
+		return new TestObjectDescription(id, "");
 	}
 
 	public TestReference getReference(final String reference) {

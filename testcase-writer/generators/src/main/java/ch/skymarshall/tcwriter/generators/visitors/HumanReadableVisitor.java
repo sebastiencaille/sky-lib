@@ -9,6 +9,7 @@ import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestReference;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
+import ch.skymarshall.tcwriter.test.TestObjectDescription;
 
 public class HumanReadableVisitor {
 
@@ -19,7 +20,11 @@ public class HumanReadableVisitor {
 	}
 
 	public String process(final TestStep step) {
-		return "As " + summaryOf(step.getRole(), null) + ", I " + summaryOf(step.getAction(),
+		String actorSummary = summaryOf(step.getActor(), null);
+		if (actorSummary == null) {
+			actorSummary = summaryOf(step.getRole(), null);
+		}
+		return "As " + actorSummary + ", I " + summaryOf(step.getAction(),
 				step.getParametersValue().stream().map(this::processTestParameter).collect(Collectors.toList()));
 	}
 
@@ -59,7 +64,11 @@ public class HumanReadableVisitor {
 	}
 
 	private String summaryOf(final IdObject idObject, final List<String> list) {
-		return String.format(tc.descriptionOf(idObject).getStepSummary(), (list != null) ? list.toArray() : null);
+		final TestObjectDescription description = tc.descriptionOf(idObject);
+		if (description == null) {
+			return null;
+		}
+		return String.format(description.getStepSummary(), (list != null) ? list.toArray() : null);
 	}
 
 }

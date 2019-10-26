@@ -1,17 +1,17 @@
-package ch.skymarshall.tcwriter.generators.model;
+package ch.skymarshall.tcwriter.test;
 
-public class ObjectDescription {
+public class TestObjectDescription {
 
-	public static final ObjectDescription NOT_SET = new ObjectDescription("N/A", "N/A");
+	public static final TestObjectDescription NOT_SET = new TestObjectDescription("N/A", "N/A");
 	private final String description;
 	private final String stepSummary;
 
-	protected ObjectDescription() {
+	protected TestObjectDescription() {
 		description = null;
 		stepSummary = null;
 	}
 
-	public ObjectDescription(final String description, final String stepSummary) {
+	public TestObjectDescription(final String description, final String stepSummary) {
 		this.description = description;
 		this.stepSummary = stepSummary;
 	}

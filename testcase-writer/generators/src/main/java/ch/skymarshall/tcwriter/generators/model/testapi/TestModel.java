@@ -12,11 +12,11 @@ import com.google.common.collect.MultimapBuilder;
 
 import ch.skymarshall.tcwriter.generators.Helper;
 import ch.skymarshall.tcwriter.generators.model.IdObject;
-import ch.skymarshall.tcwriter.generators.model.ObjectDescription;
+import ch.skymarshall.tcwriter.test.TestObjectDescription;
 
 public class TestModel implements Serializable {
 
-	private final Map<String, ObjectDescription> descriptions = new HashMap<>();
+	private final Map<String, TestObjectDescription> descriptions = new HashMap<>();
 
 	private final Map<String, TestRole> roles = new HashMap<>();
 
@@ -28,14 +28,14 @@ public class TestModel implements Serializable {
 	private final Set<String> selectorTypes = new HashSet<>();
 
 	public TestModel() {
-		descriptions.put(IdObject.ID_NOT_SET, ObjectDescription.NOT_SET);
+		descriptions.put(IdObject.ID_NOT_SET, TestObjectDescription.NOT_SET);
 	}
 
-	public Map<String, ObjectDescription> getDescriptions() {
+	public Map<String, TestObjectDescription> getDescriptions() {
 		return descriptions;
 	}
 
-	public void addDescription(final IdObject idObject, final ObjectDescription description) {
+	public void addDescription(final IdObject idObject, final TestObjectDescription description) {
 		descriptions.put(idObject.getId(), description);
 	}
 
@@ -51,8 +51,13 @@ public class TestModel implements Serializable {
 		return actors;
 	}
 
-	public void addActor(final TestActor actor) {
+	public void addActor(final TestActor actor, final TestObjectDescription actorDescription) {
 		actors.put(actor.getId(), actor);
+		if (actorDescription != null) {
+			descriptions.put(actor.getId(), actorDescription);
+		} else {
+			descriptions.put(actor.getId(), descriptions.get(actor.getRole().getId()));
+		}
 	}
 
 	public Multimap<String, TestParameterDefinition> getParameterFactories() {
@@ -67,7 +72,7 @@ public class TestModel implements Serializable {
 		selectorTypes.add(type.getName());
 	}
 
-	public ObjectDescription descriptionOf(final IdObject idObject) {
+	public TestObjectDescription descriptionOf(final IdObject idObject) {
 		return descriptions.get(idObject.getId());
 	}
 

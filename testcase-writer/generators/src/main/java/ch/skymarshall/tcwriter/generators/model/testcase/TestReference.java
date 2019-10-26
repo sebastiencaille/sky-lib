@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import ch.skymarshall.tcwriter.generators.model.ExportReference;
-import ch.skymarshall.tcwriter.generators.model.ObjectDescription;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
+import ch.skymarshall.tcwriter.test.TestObjectDescription;
 
 public class TestReference extends TestParameterDefinition {
 
@@ -43,7 +43,7 @@ public class TestReference extends TestParameterDefinition {
 		return step;
 	}
 
-	public ObjectDescription toDescription() {
-		return new ObjectDescription(getName() + ": (step " + step.getOrdinal() + ") ", description);
+	public TestObjectDescription toDescription() {
+		return new TestObjectDescription(getName() + ": (step " + step.getOrdinal() + ") ", description);
 	}
 }

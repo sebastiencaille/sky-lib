@@ -1,7 +1,6 @@
 package ch.skymarshall.tcwriter.gui.steps;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -19,6 +18,7 @@ import javax.swing.table.TableCellRenderer;
 
 import ch.skymarshall.gui.model.RootListModel;
 import ch.skymarshall.gui.model.views.ListViews;
+import ch.skymarshall.gui.mvc.Bindings;
 import ch.skymarshall.gui.mvc.IBindingController;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.gui.swing.ContributionTableColumn;
@@ -31,8 +31,6 @@ import ch.skymarshall.tcwriter.gui.TestRemoteControl;
 import ch.skymarshall.tcwriter.gui.steps.StepsTableModel.Column;
 
 public class StepsTable extends JPanel {
-
-	static final Color HUMAN_READABLE_BG_COLOR = new Color(0x87BEEA);
 
 	private static final TestCase NO_TC = new TestCase();
 
@@ -70,30 +68,33 @@ public class StepsTable extends JPanel {
 					throw new IllegalStateException("No renderer pane");
 				}
 				for (int i = 0; i < getRowCount(); i += 2) {
-					final Rectangle toPaint0 = getCellRect(i, 0, true);
-					toPaint0.width = getColumnModel().getTotalColumnWidth();
+					final Rectangle toPaintHR = getCellRect(i, 2, true);
+					toPaintHR.width = getColumnModel().getTotalColumnWidth();
 					final Rectangle toPaint = getCellRect(i, 2, true);
 					toPaint.width = getColumnModel().getTotalColumnWidth();
 
-					g.setColor(HUMAN_READABLE_BG_COLOR);
-					g.setClip(toPaint0.x, toPaint0.y, toPaint0.width, toPaint0.height);
-					g.fillRect(toPaint0.x, toPaint0.y, toPaint0.width, toPaint0.height);
+					g.setColor(getBackground());
+					g.setClip(toPaintHR.x, toPaintHR.y, toPaintHR.width - toPaintHR.x, toPaintHR.height);
+					g.fillRect(toPaintHR.x, toPaintHR.y, toPaintHR.width - toPaintHR.x, toPaintHR.height);
+					g.setColor(getGridColor().brighter());
+					g.drawLine(toPaintHR.x, toPaintHR.y + toPaintHR.height - 1, toPaintHR.width,
+							toPaintHR.y + toPaintHR.height - 1);
 
 					final TableCellRenderer renderer = new DefaultTableCellRenderer() {
 						@Override
 						public Component getTableCellRendererComponent(final JTable table, final Object value,
 								final boolean isSelected, final boolean hasFocus, final int row, final int column) {
 							super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-							setBackground(HUMAN_READABLE_BG_COLOR);
-							setFont(getFont().deriveFont(Font.ITALIC));
+							setFont(getFont().deriveFont(Font.BOLD));
 							return this;
-
 						}
 
 					};
 					final Component component = prepareRenderer(renderer, i, 2);
 					component.setSize(toPaint.getSize());
 					component.setPreferredSize(toPaint.getSize());
+					g.setColor(getGridColor().brighter());
+
 					toDraw.paintComponent(g, component, this, toPaint.x, toPaint.y, toPaint.width, toPaint.height,
 							true);
 				}
@@ -134,11 +135,15 @@ public class StepsTable extends JPanel {
 
 		add(new JScrollPane(stepsJTable), BorderLayout.CENTER);
 
-		testCaseProperty.addListener(e -> {
+		testCaseProperty.bind(Bindings.set(tc -> {
 			steps.clear();
-			steps.setValues(testCaseProperty.getObjectValue().getSteps());
-		});
+			steps.setValues(tc.getSteps());
+		}));
 
+	}
+
+	static boolean displayBreakPoint(final int row) {
+		return row % 2 == 0;
 	}
 
 }

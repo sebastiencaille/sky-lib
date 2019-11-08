@@ -93,8 +93,8 @@ public class TestParameterValueEditorPanel extends JPanel {
 			final ObjectProperty<TestCase> tc, final ObjectProperty<TestParameterValue> editedParameterValue,
 			final ObjectProperty<TestParameterFactory> testApi) {
 
-		final ObjectProperty<TestParameterFactory.ParameterNature> valueNature = new ObjectProperty<>(
-				name + "-nature", propertyChangeSupport);
+		final ObjectProperty<TestParameterFactory.ParameterNature> valueNature = new ObjectProperty<>(name + "-nature",
+				propertyChangeSupport);
 		final ObjectProperty<String> simpleValue = editedParameterValue.child(name + "-simpleValue",
 				TestParameterValue::getSimpleValue, TestParameterValue::setSimpleValue);
 		final ObjectProperty<TestReference> reference = new ObjectProperty<>(name + "-reference",
@@ -102,9 +102,8 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 		final ListProperty<TestReference> references = new ListProperty<>(name + "-references", propertyChangeSupport);
 
-		tc.addListener(l -> references.setValue(this, getReferences(tc.getValue(), editedParameterValue.getValue())));
-		editedParameterValue.addListener(
-				l -> references.setValue(this, getReferences(tc.getValue(), editedParameterValue.getValue())));
+		tc.bind(set(test -> references.setValue(this, getReferences(test, editedParameterValue.getValue()))));
+		editedParameterValue.bind(set(values -> references.setValue(this, getReferences(tc.getValue(), values))));
 
 		setLayout(new BorderLayout());
 
@@ -147,14 +146,12 @@ public class TestParameterValueEditorPanel extends JPanel {
 		valueNature.bind(SwingBindings.group(group, ParameterNature.REFERENCE, useReference,
 				ParameterNature.SIMPLE_TYPE, useRawValue, ParameterNature.TEST_API, useComplexType));
 
-		editedParameterValue.addListener(
-				l -> valueNature.setValue(this, editedParameterValue.getValue().getValueFactory().getNature()));
-
-		editedParameterValue.addListener(l -> {
-			if (editedParameterValue.getValue().getValueFactory().getNature() == ParameterNature.REFERENCE) {
-				reference.setValue(this, (TestReference) editedParameterValue.getValue().getValueFactory());
+		editedParameterValue.bind(set(value -> {
+			valueNature.setValue(this, value.getValueFactory().getNature());
+			if (value.getValueFactory().getNature() == ParameterNature.REFERENCE) {
+				reference.setValue(this, (TestReference) value.getValueFactory());
 			}
-		});
+		}));
 
 		reference.bind(set(ref -> {
 			if (valueNature.getValue() == ParameterNature.REFERENCE) {

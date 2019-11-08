@@ -2,26 +2,19 @@ package ch.skymarshall.tcwriter.gui.steps;
 
 import java.awt.Component;
 
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
-
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
-import ch.skymarshall.tcwriter.generators.visitors.HumanReadableVisitor;
 
 public class StepsCellRenderer extends DefaultTableCellRenderer {
-
-	private HumanReadableVisitor summaryVisitor;
 
 	private final JPanel noRendering = new JPanel();
 
 	public StepsCellRenderer(final ObjectProperty<TestCase> testCaseProperty) {
 		super();
-		testCaseProperty
-				.addListener(evt -> summaryVisitor = new HumanReadableVisitor(testCaseProperty.getObjectValue()));
 		noRendering.setSize(0, 0);
 	}
 
@@ -29,16 +22,12 @@ public class StepsCellRenderer extends DefaultTableCellRenderer {
 	public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
 			final boolean hasFocus, final int row, final int column) {
 
-		if (row % 2 == 0) {
+		if ((column <= 1 && !StepsTable.displayBreakPoint(row)) || (row % 2 == 0 && column > 1)) {
+			noRendering.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
 			return noRendering;
 		}
 
-		final Component rendererComponent = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row,
-				column);
-
-		((JComponent) rendererComponent)
-				.setToolTipText(summaryVisitor.process(((StepsTableModel) table.getModel()).getObjectAtRow(row / 2)));
-		return rendererComponent;
+		return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 	}
 
 }

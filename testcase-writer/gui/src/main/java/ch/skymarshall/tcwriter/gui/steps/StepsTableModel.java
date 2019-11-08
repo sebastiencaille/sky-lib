@@ -5,6 +5,7 @@ import java.util.List;
 import javax.swing.event.TableModelEvent;
 
 import ch.skymarshall.gui.model.ListModel;
+import ch.skymarshall.gui.mvc.Bindings;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.gui.swing.model.ListModelTableModel;
 import ch.skymarshall.tcwriter.generators.Helper.VerbatimValue;
@@ -38,8 +39,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		this.testCaseProperty = testCaseProperty;
 		this.steps = steps;
 		this.testControl = testControl;
-		testCaseProperty
-				.addListener(evt -> summaryVisitor = new HumanReadableVisitor(testCaseProperty.getObjectValue()));
+		testCaseProperty.bind(Bindings.set(tc -> summaryVisitor = new HumanReadableVisitor(tc)));
 	}
 
 	@Override
@@ -66,10 +66,10 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 			if (!actionUtils.hasSelector()) {
 				return "";
 			}
-			return createReferenceFromParam(tc, parametersValue.get(actionUtils.selectorIndex()));
+			return display(tc, parametersValue.get(actionUtils.selectorIndex()));
 		case PARAM0:
 			if (actionUtils.hasActionParameter(0)) {
-				return createReferenceFromParam(tc, parametersValue.get(actionUtils.actionParameterIndex(0)));
+				return display(tc, parametersValue.get(actionUtils.actionParameterIndex(0)));
 			}
 			return "";
 		case TO_VALUE:
@@ -83,7 +83,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		return new VerbatimValue(tcObject.getId(), tc.descriptionOf(tcObject).getDescription(), nature);
 	}
 
-	private Object createReferenceFromParam(final TestCase tc, final TestParameterValue parameterValue) {
+	private String display(final TestCase tc, final TestParameterValue parameterValue) {
 		final TestParameterFactory parameterDef = parameterValue.getValueFactory();
 		String display;
 		switch (parameterDef.getNature()) {
@@ -99,12 +99,12 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		default:
 			display = "N/A";
 		}
-		return new VerbatimValue(parameterDef.getId(), display, parameterDef.getNature());
+		return display;
 	}
 
 	@Override
 	public boolean isCellEditable(final int rowIndex, final int columnIndex) {
-		if (rowIndex % 2 == 0) {
+		if (rowIndex % 2 == 1) {
 			return false;
 		}
 		return columnOf(columnIndex) == Column.BREAKPOINT;
@@ -118,7 +118,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 	@Override
 	public Object getValueAt(final int row, final int column) {
 		final TestStep step = getObjectAtRow(row);
-		if (row % 2 == 0) {
+		if (row % 2 == 0 && columnOf(column) != Column.BREAKPOINT && columnOf(column) != Column.STEP) {
 			return summaryVisitor.process(step);
 		}
 		return getValueAtColumn(step, columnOf(column));

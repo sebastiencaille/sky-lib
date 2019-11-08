@@ -46,7 +46,7 @@ public class TestRemoteControl {
 	}
 
 	public StepStatus stepStatus(final int ordinal) {
-		return stepStates.putIfAbsent(ordinal, new StepStatus(ordinal));
+		return stepStates.computeIfAbsent(ordinal, o -> new StepStatus(o));
 	}
 
 	public void addBreakpoint(final TestStep testStep) {

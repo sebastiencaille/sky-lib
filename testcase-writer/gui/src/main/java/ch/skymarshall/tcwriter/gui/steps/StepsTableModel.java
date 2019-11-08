@@ -28,7 +28,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 	private final ObjectProperty<TestCase> testCaseProperty;
 
 	public enum Column {
-		BREAKPOINT, STEP, ACTOR, ACTION, SELECTOR, PARAM0, TO_VALUE
+		BREAKPOINT, STEP, ACTOR, ACTION, SELECTOR, PARAM0, TO_VAR
 	}
 
 	private HumanReadableVisitor summaryVisitor;
@@ -72,7 +72,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 				return display(tc, parametersValue.get(actionUtils.actionParameterIndex(0)));
 			}
 			return "";
-		case TO_VALUE:
+		case TO_VAR:
 			if (testStep.getReference() != null) {
 				return testStep.getReference().getName();
 			}
@@ -150,7 +150,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 				testControl.removeBreakpoint(testStep);
 			}
 			return;
-		case TO_VALUE:
+		case TO_VAR:
 			tc.publishReference(testStep.getReference().rename((String) value, "TODO"));
 			return;
 		default:

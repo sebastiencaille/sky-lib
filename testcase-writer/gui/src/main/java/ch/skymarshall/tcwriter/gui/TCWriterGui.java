@@ -35,12 +35,12 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
+import ch.skymarshall.tcwriter.generators.JsonHelper;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
-import ch.skymarshall.tcwriter.generators.visitors.JsonHelper;
 import ch.skymarshall.tcwriter.gui.editors.params.TestParameterValueEditorPanel;
 import ch.skymarshall.tcwriter.gui.editors.steps.StepEditorModel;
 import ch.skymarshall.tcwriter.gui.editors.steps.StepEditorPanel;

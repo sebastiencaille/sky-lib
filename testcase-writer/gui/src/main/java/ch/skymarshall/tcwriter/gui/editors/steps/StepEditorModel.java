@@ -7,7 +7,7 @@ import ch.skymarshall.gui.mvc.GuiModel;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 
 public class StepEditorModel extends GuiModel {
@@ -18,14 +18,14 @@ public class StepEditorModel extends GuiModel {
 	private final ObjectProperty<List<TestAction>> possibleActions = new ObjectProperty<>("possibleActions",
 			propertySupport);
 	private final ObjectProperty<TestAction> action = new ObjectProperty<>("action", propertySupport);
-	private final ObjectProperty<List<TestParameterDefinition>> possibleSelectors = new ObjectProperty<>(
+	private final ObjectProperty<List<TestParameterFactory>> possibleSelectors = new ObjectProperty<>(
 			"possibleSelectors", propertySupport);
-	private final ObjectProperty<TestParameterDefinition> selector = new ObjectProperty<>("selector", propertySupport);
+	private final ObjectProperty<TestParameterFactory> selector = new ObjectProperty<>("selector", propertySupport);
 	private final ObjectProperty<TestParameterValue> selectorValues = new ObjectProperty<>("selectorValues",
 			propertySupport);
-	private final ObjectProperty<List<TestParameterDefinition>> possibleActionParameters = new ObjectProperty<>(
+	private final ObjectProperty<List<TestParameterFactory>> possibleActionParameters = new ObjectProperty<>(
 			"possibleActionParameters", propertySupport);
-	private final ObjectProperty<TestParameterDefinition> actionParameter = new ObjectProperty<>("actionParameter",
+	private final ObjectProperty<TestParameterFactory> actionParameter = new ObjectProperty<>("actionParameter",
 			propertySupport);
 	private final ObjectProperty<TestParameterValue> actionParameterValues = new ObjectProperty<>(
 			"actionParameterValues", propertySupport);
@@ -50,11 +50,11 @@ public class StepEditorModel extends GuiModel {
 		return action;
 	}
 
-	public ObjectProperty<List<TestParameterDefinition>> getPossibleSelectors() {
+	public ObjectProperty<List<TestParameterFactory>> getPossibleSelectors() {
 		return possibleSelectors;
 	}
 
-	public ObjectProperty<TestParameterDefinition> getSelector() {
+	public ObjectProperty<TestParameterFactory> getSelector() {
 		return selector;
 	}
 
@@ -62,11 +62,11 @@ public class StepEditorModel extends GuiModel {
 		return selectorValues;
 	}
 
-	public ObjectProperty<List<TestParameterDefinition>> getPossibleActionParameters() {
+	public ObjectProperty<List<TestParameterFactory>> getPossibleActionParameters() {
 		return possibleActionParameters;
 	}
 
-	public ObjectProperty<TestParameterDefinition> getActionParameter() {
+	public ObjectProperty<TestParameterFactory> getActionParameter() {
 		return actionParameter;
 	}
 

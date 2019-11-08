@@ -1,4 +1,4 @@
-package ch.skymarshall.tcwriter.generators.visitors;
+package ch.skymarshall.tcwriter.generators;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

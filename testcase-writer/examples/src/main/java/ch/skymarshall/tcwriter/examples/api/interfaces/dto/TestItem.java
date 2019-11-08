@@ -9,6 +9,7 @@ public class TestItem {
 	public final ItemKind itemKind;
 	private String brand;
 	private int numberOfItems;
+	private boolean iso;
 
 	private TestItem(final ItemKind itemKind) {
 		this.itemKind = itemKind;
@@ -22,9 +23,23 @@ public class TestItem {
 		return numberOfItems;
 	}
 
+	public boolean isIso() {
+		return iso;
+	}
+
 	@TCApi(description = "Number of items", humanReadable = "count")
 	public void setNumberOfItems(final int numberOfItems) {
 		this.numberOfItems = numberOfItems;
+	}
+
+	@TCApi(description = "A brand", humanReadable = "of brand")
+	public void setBrandName(final String brand) {
+		this.brand = brand;
+	}
+
+	@TCApi(description = "ISO", humanReadable = "ISO")
+	public void setISO() {
+		this.iso = true;
 	}
 
 	@TCApi(description = "A coffee machine", humanReadable = "a coffee machine")
@@ -45,8 +60,4 @@ public class TestItem {
 		return new TestItem(ItemKind.TEA_POT);
 	}
 
-	@TCApi(description = "A brand", humanReadable = "of brand")
-	public void setBrandName(final String brand) {
-		this.brand = brand;
-	}
 }

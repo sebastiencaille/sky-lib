@@ -17,7 +17,7 @@ import ch.skymarshall.tcwriter.generators.model.NamedObject;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 
@@ -99,14 +99,14 @@ public class StepEditorPanel extends JPanel {
 				.addDependency(ChainDependencies.detachOnUpdateOf(model.getPossibleActionParameters()));
 		stepEditors.add(new JScrollPane(actionsList));
 
-		final JList<NamedObjectRenderer<TestParameterDefinition>> selectorList = new JList<>();
+		final JList<NamedObjectRenderer<TestParameterFactory>> selectorList = new JList<>();
 		model.getPossibleSelectors().bind(Converters.listConverter(c -> new NamedObjectRenderer<>(tm, c)))
 				.bind(SwingBindings.values(selectorList));
 		model.getSelector().bind(converter(tm)).bind(SwingBindings.selection(selectorList))
 				.addDependency(ChainDependencies.detachOnUpdateOf(model.getPossibleSelectors()));
 		stepEditors.add(new JScrollPane(selectorList));
 
-		final JList<NamedObjectRenderer<TestParameterDefinition>> actionParameterList = new JList<>();
+		final JList<NamedObjectRenderer<TestParameterFactory>> actionParameterList = new JList<>();
 		model.getPossibleActionParameters().bind(Converters.listConverter(c -> new NamedObjectRenderer<>(tm, c)))
 				.bind(SwingBindings.values(actionParameterList));
 		model.getActionParameter().bind(converter(tm)).bind(SwingBindings.selection(actionParameterList))

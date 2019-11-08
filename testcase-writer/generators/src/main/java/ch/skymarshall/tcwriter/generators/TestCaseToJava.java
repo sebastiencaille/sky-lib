@@ -1,8 +1,8 @@
 package ch.skymarshall.tcwriter.generators;
 
-import static ch.skymarshall.tcwriter.generators.visitors.JsonHelper.readFile;
-import static ch.skymarshall.tcwriter.generators.visitors.JsonHelper.testCaseFromJson;
-import static ch.skymarshall.tcwriter.generators.visitors.JsonHelper.testModelFromJson;
+import static ch.skymarshall.tcwriter.generators.JsonHelper.readFile;
+import static ch.skymarshall.tcwriter.generators.JsonHelper.testCaseFromJson;
+import static ch.skymarshall.tcwriter.generators.JsonHelper.testModelFromJson;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +13,7 @@ import java.nio.file.Path;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
-import ch.skymarshall.tcwriter.generators.visitors.JunitTestCaseVisitor;
+import ch.skymarshall.tcwriter.generators.visitors.TestCaseToJunitVisitor;
 import ch.skymarshall.util.generators.Template;
 
 public class TestCaseToJava {
@@ -32,7 +32,7 @@ public class TestCaseToJava {
 	}
 
 	private String generate(final TestCase tc) throws IOException, TestCaseException {
-		return new JunitTestCaseVisitor(testCaseTemplate, true).visitTestCase(tc);
+		return new TestCaseToJunitVisitor(testCaseTemplate, true).visitTestCase(tc);
 	}
 
 	public static void main(final String[] args) throws IOException, TestCaseException {

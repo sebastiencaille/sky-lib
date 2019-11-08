@@ -8,10 +8,10 @@ import java.nio.file.Path;
 import javax.swing.SwingUtilities;
 
 import ch.skymarshall.tcwriter.examples.ExampleHelper;
+import ch.skymarshall.tcwriter.generators.JsonHelper;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
-import ch.skymarshall.tcwriter.generators.visitors.JsonHelper;
 import ch.skymarshall.tcwriter.gui.TCWriterGui;
 
 public class ExampleTCEditor extends TCWriterGui {

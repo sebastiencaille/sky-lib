@@ -14,7 +14,9 @@ import ch.skymarshall.tcwriter.generators.model.NamedObject;
  */
 public class TestApiParameter extends NamedObject {
 
-	public static final TestApiParameter NO_PARAMETER_TYPE = new TestApiParameter(IdObject.ID_NOT_SET, "", "");
+	public static final TestApiParameter NO_PARAMETER = new TestApiParameter(IdObject.ID_NOT_SET, "", "");
+
+	public static final String NO_TYPE = Void.TYPE.getName();
 
 	private final String parameterType;
 
@@ -38,8 +40,8 @@ public class TestApiParameter extends NamedObject {
 	}
 
 	@JsonIgnore
-	public TestParameterDefinition asSimpleParameter() {
-		return TestParameterDefinition.simpleType(getType());
+	public TestParameterFactory asSimpleParameter() {
+		return TestParameterFactory.simpleType(getType());
 	}
 
 }

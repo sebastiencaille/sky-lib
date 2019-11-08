@@ -15,10 +15,14 @@ import ch.skymarshall.tcwriter.test.TestActors;
 
 public class ExampleTest {
 
-	private final TestItem coffeeMachine = TestItem.coffeeMachine();
+	private final TestItem coffeeMachine = TestItem.coffeeMachineOfBrand("OldSchool");
 	private final TestItem teaPot = TestItem.teaPot();
 	private CustomerTestRole customer;
 	private DeliveryTestRole deliveryGuy;
+
+	{
+		coffeeMachine.setISO();
+	}
 
 	@Before
 	public void initActors() {

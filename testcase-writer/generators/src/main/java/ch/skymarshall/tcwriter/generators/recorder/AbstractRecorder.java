@@ -1,5 +1,7 @@
 package ch.skymarshall.tcwriter.generators.recorder;
 
+import static ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory.simpleType;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +14,7 @@ import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestRole;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
@@ -86,10 +88,10 @@ public class AbstractRecorder {
 			final Object apiArg = apiArgs[i];
 			final TestParameterValue parameterValue = testParameterValues.get(apiArg);
 			if (parameterValue != null) {
-				step.getParametersValue().add(parameterValue);
+				step.getParametersValue().add(parameterValue.derivate(action.get().getParameter(i)));
 			} else {
 				final TestApiParameter actionParameter = step.getAction().getParameter(i);
-				final TestParameterDefinition def = actionParameter.asSimpleParameter();
+				final TestParameterFactory def = actionParameter.asSimpleParameter();
 				step.getParametersValue().add(new TestParameterValue(actionParameter, def, Objects.toString(apiArg)));
 			}
 		}
@@ -99,25 +101,36 @@ public class AbstractRecorder {
 
 	protected void recordParamFactory(final Class<?> apiFactoryClass, final String apiName, final Object[] apiArgs,
 			final Object returnValue) {
-		final TestParameterDefinition testParameter = testModel
+		final TestParameterFactory testParameterFactory = testModel
 				.getTestParameterFactory(Helper.methodKey(apiFactoryClass, apiName));
-		final TestParameterValue testParameterValue = new TestParameterValue("Recorded", testParameter);
-		for (int i = 0; i < testParameter.getMandatoryParameters().size(); i++) {
-			final Object apiArg = apiArgs[i];
-			final TestParameterValue mandatoryTestParameterValue = createTestParameterValue(
-					testParameter.getMandatoryParameter(i), testParameterValues.get(apiArg), Objects.toString(apiArgs));
-			testParameterValue.addComplexTypeValue(mandatoryTestParameterValue);
+		final TestParameterValue testParameterValue = new TestParameterValue("<PlaceHolder>", testParameterFactory);
+		for (int i = 0; i < testParameterFactory.getMandatoryParameters().size(); i++) {
+			testParameterValue.addComplexTypeValue(
+					createFactoryParameterValue(testParameterFactory.getMandatoryParameter(i), apiArgs[i]));
 		}
 		testParameterValues.put(returnValue, testParameterValue);
 	}
 
-	public TestParameterValue createTestParameterValue(final TestApiParameter param,
-			final TestParameterValue factoryParameterValue, final String verbatimValue) {
-
-		if (factoryParameterValue != null) {
-			return factoryParameterValue;
+	protected void recordParamFactoryCall(final String info, final Object factory, final String callName,
+			final Object[] args) {
+		final TestParameterValue testParameterValue = testParameterValues.get(factory);
+		if (testParameterValue == null) {
+			// we are being called during the factory's call
+			return;
 		}
-		return new TestParameterValue(param, null, verbatimValue);
+		final TestParameterFactory testParameterFactory = testParameterValue.getValueFactory();
+		Object apiArg;
+		if (args.length > 0) {
+			apiArg = args[0];
+		} else {
+			apiArg = null;
+		}
+		testParameterValue.addComplexTypeValue(
+				createFactoryParameterValue(testParameterFactory.getOptionalParameter(callName), apiArg));
+	}
+
+	private TestParameterValue createFactoryParameterValue(final TestApiParameter param, final Object apiArg) {
+		return new TestParameterValue(param, simpleType(param.getType()), Objects.toString(apiArg));
 	}
 
 	protected static boolean matches(final TestAction action, final String apiName, final Object[] apiArgs) {

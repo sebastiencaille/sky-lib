@@ -1,15 +1,15 @@
 package ch.skymarshall.tcwriter.gui;
 
-import static ch.skymarshall.tcwriter.generators.visitors.JsonHelper.testModelFromJson;
+import static ch.skymarshall.tcwriter.generators.JsonHelper.testModelFromJson;
 
 import java.io.File;
 import java.io.IOException;
 
+import ch.skymarshall.tcwriter.generators.JsonHelper;
 import ch.skymarshall.tcwriter.generators.TestCaseToJava;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
-import ch.skymarshall.tcwriter.generators.visitors.JsonHelper;
 
 public class TCEditor {
 

@@ -8,7 +8,6 @@ import java.util.List;
 
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.visitors.ClassToModelVisitor;
-import ch.skymarshall.tcwriter.generators.visitors.JsonHelper;
 
 public class JavaToModel {
 	private final List<Class<?>> tcClasses;

@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import ch.skymarshall.tcwriter.generators.model.ExportReference;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
 import ch.skymarshall.tcwriter.test.TestObjectDescription;
 
-public class TestReference extends TestParameterDefinition {
+public class TestReference extends TestParameterFactory {
 
 	@JsonIgnore
 	private TestStep step;

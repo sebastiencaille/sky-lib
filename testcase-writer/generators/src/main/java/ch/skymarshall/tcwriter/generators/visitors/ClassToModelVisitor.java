@@ -23,8 +23,8 @@ import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition.ParameterNature;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory.ParameterNature;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestRole;
 import ch.skymarshall.tcwriter.test.TestObjectDescription;
 
@@ -82,44 +82,47 @@ public class ClassToModelVisitor {
 			processedParameterFactoryClasses.add(apiClass);
 
 			// Process the api class
-			final HashSet<Method> parameterFactoryMethods = new HashSet<>();
+			final HashSet<Method> valueFactoryMethods = new HashSet<>();
 
 			final TCApi tcApi = apiClass.getAnnotation(TCApi.class);
 			if (tcApi != null && tcApi.isSelector()) {
 				model.addNavigationType(apiClass);
 			}
 
-			accumulateApiMethods(apiClass, parameterFactoryMethods);
-			parameterFactoryMethods.removeIf(m -> !Modifier.isStatic(m.getModifiers()));
+			accumulateApiMethods(apiClass, valueFactoryMethods);
+			valueFactoryMethods.removeIf(m -> !Modifier.isStatic(m.getModifiers()));
 
-			for (final Method parameterFactoryMethod : parameterFactoryMethods) {
+			for (final Method valueFactoryMethod : valueFactoryMethods) {
 				// Process each method of the class
 
-				final TestParameterDefinition testParameter = new TestParameterDefinition(
-						methodKey(parameterFactoryMethod),
-						parameterFactoryMethod.getDeclaringClass().getSimpleName() + "."
-								+ parameterFactoryMethod.getName(),
-						ParameterNature.TEST_API, parameterFactoryMethod.getReturnType().getName());
-				processMethodAnnotation(testParameter, parameterFactoryMethod);
+				final TestParameterFactory valueFactory = new TestParameterFactory(
+						methodKey(valueFactoryMethod),
+						valueFactoryMethod.getDeclaringClass().getSimpleName() + "." + valueFactoryMethod.getName(),
+						ParameterNature.TEST_API, valueFactoryMethod.getReturnType().getName());
+				processMethodAnnotation(valueFactory, valueFactoryMethod);
 
 				// Add mandatory parameters (parameters of the method)
-				testParameter.getMandatoryParameters().addAll(processParameters(testParameter, parameterFactoryMethod));
+				valueFactory.getMandatoryParameters().addAll(processParameters(valueFactory, valueFactoryMethod));
 
 				// Add optional parameters: instance methods of the return type
-				final HashSet<Method> factoryReturnTypeMethods = new HashSet<>();
-				accumulateApiMethods(parameterFactoryMethod.getReturnType(), factoryReturnTypeMethods);
-				factoryReturnTypeMethods
-						.removeIf(m -> Modifier.isStatic(m.getModifiers()) || m.getParameterCount() != 1);
-				for (final Method factoryReturnTypeMethod : factoryReturnTypeMethods) {
+				final HashSet<Method> factoryApiMethods = new HashSet<>();
+				accumulateApiMethods(valueFactoryMethod.getReturnType(), factoryApiMethods);
+				factoryApiMethods.removeIf(m -> Modifier.isStatic(m.getModifiers()) || m.getParameterCount() > 1);
+				for (final Method factoryReturnTypeMethod : factoryApiMethods) {
+					String type;
+					if (factoryReturnTypeMethod.getParameterTypes().length > 0) {
+						type = factoryReturnTypeMethod.getParameterTypes()[0].getName();
+					} else {
+						type = TestApiParameter.NO_TYPE;
+					}
 					final TestApiParameter optionalParameter = new TestApiParameter(methodKey(factoryReturnTypeMethod),
-							factoryReturnTypeMethod.getName(),
-							factoryReturnTypeMethod.getParameterTypes()[0].getName());
+							factoryReturnTypeMethod.getName(), type);
 					processMethodAnnotation(optionalParameter, factoryReturnTypeMethod);
-					testParameter.getOptionalParameters().add(optionalParameter);
+					valueFactory.getOptionalParameters().add(optionalParameter);
 				}
 
-				forEachSuper(parameterFactoryMethod.getReturnType(),
-						apiClazz -> model.getParameterFactories().put(apiClazz.getName(), testParameter));
+				forEachSuper(valueFactoryMethod.getReturnType(),
+						apiClazz -> model.getParameterFactories().put(apiClazz.getName(), valueFactory));
 			}
 		}
 	}

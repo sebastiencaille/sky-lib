@@ -7,6 +7,7 @@ import javax.swing.table.TableCellRenderer;
 
 import ch.skymarshall.gui.swing.ContributionTableColumn;
 import ch.skymarshall.gui.swing.ContributionTableColumnModel;
+import ch.skymarshall.tcwriter.gui.editors.params.TestParameterValueTableModel.Columns;
 
 public class TestParameterValueTable extends JTable {
 
@@ -29,13 +30,9 @@ public class TestParameterValueTable extends JTable {
 	}
 
 	@Override
-	public boolean isCellEditable(final int row, final int column) {
-		return (column == 1 && !testParameterValueTableModel.getObjectAtRow(row).mandatory) || column == 2;
-	}
-
-	@Override
 	public TableCellRenderer getCellRenderer(final int row, final int column) {
-		if (column == 0 || column == 1) {
+		if (column == testParameterValueTableModel.getIndexOf(Columns.MANDATORY)
+				|| column == testParameterValueTableModel.getIndexOf(Columns.ENABLED)) {
 			return getDefaultRenderer(Boolean.class);
 		}
 		return super.getCellRenderer(row, column);

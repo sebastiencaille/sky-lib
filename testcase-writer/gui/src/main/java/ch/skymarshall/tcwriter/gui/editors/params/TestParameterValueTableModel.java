@@ -2,7 +2,7 @@ package ch.skymarshall.tcwriter.gui.editors.params;
 
 import ch.skymarshall.gui.model.ListModel;
 import ch.skymarshall.gui.swing.model.ListModelTableModel;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
 
 public class TestParameterValueTableModel
 		extends ListModelTableModel<TestParameterValueTableModel.ParameterValue, TestParameterValueTableModel.Columns> {
@@ -13,16 +13,16 @@ public class TestParameterValueTableModel
 
 	static class ParameterValue implements Comparable<ParameterValue> {
 		final String id;
-		final TestParameterDefinition parameterDefinition;
+		final TestParameterFactory factory;
 		final String description;
 		final boolean mandatory;
 		boolean enabled;
 		String value;
 
-		ParameterValue(final String id, final TestParameterDefinition parameterDefinition, final boolean enabled,
+		ParameterValue(final String id, final TestParameterFactory parameterFactory, final boolean enabled,
 				final String description, final String value, final boolean mandatory) {
 			this.id = id;
-			this.parameterDefinition = parameterDefinition;
+			this.factory = parameterFactory;
 			this.enabled = enabled || mandatory;
 			this.description = description;
 			this.value = value;
@@ -46,6 +46,12 @@ public class TestParameterValueTableModel
 	}
 
 	@Override
+	public boolean isCellEditable(final int rowIndex, final int columnIndex) {
+		return columnIndex == getIndexOf(Columns.ENABLED)
+				|| (columnIndex == getIndexOf(Columns.VALUE) && getObjectAtRow(rowIndex).factory.hasType());
+	}
+
+	@Override
 	protected Object getValueAtColumn(final ParameterValue object, final Columns column) {
 		switch (column) {
 		case MANDATORY:
@@ -55,6 +61,9 @@ public class TestParameterValueTableModel
 		case DESCRIPTION:
 			return object.description;
 		case VALUE:
+			if (!object.factory.hasType()) {
+				return "<no value>";
+			}
 			return object.value;
 		default:
 			throw new IllegalStateException("Unknown column " + column);

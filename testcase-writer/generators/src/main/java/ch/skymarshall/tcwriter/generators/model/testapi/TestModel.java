@@ -22,7 +22,7 @@ public class TestModel implements Serializable {
 
 	private final Map<String, TestActor> actors = new HashMap<>();
 
-	private final Multimap<String, TestParameterDefinition> testObjectFactories = MultimapBuilder.hashKeys()
+	private final Multimap<String, TestParameterFactory> testObjectFactories = MultimapBuilder.hashKeys()
 			.arrayListValues().build();
 
 	private final Set<String> selectorTypes = new HashSet<>();
@@ -60,11 +60,11 @@ public class TestModel implements Serializable {
 		}
 	}
 
-	public Multimap<String, TestParameterDefinition> getParameterFactories() {
+	public Multimap<String, TestParameterFactory> getParameterFactories() {
 		return testObjectFactories;
 	}
 
-	public Collection<TestParameterDefinition> getParameterFactories(final TestApiParameter paramType) {
+	public Collection<TestParameterFactory> getParameterFactories(final TestApiParameter paramType) {
 		return testObjectFactories.get(paramType.getType());
 	}
 
@@ -76,7 +76,7 @@ public class TestModel implements Serializable {
 		return descriptions.get(idObject.getId());
 	}
 
-	public TestParameterDefinition getTestParameterFactory(final String factoryId) {
+	public TestParameterFactory getTestParameterFactory(final String factoryId) {
 		return testObjectFactories.values().stream().filter(tObj -> tObj.getId().equals(factoryId)).findFirst()
 				.orElseThrow(
 						() -> new IllegalArgumentException("No test parameter factory found with id " + factoryId));

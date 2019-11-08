@@ -12,13 +12,13 @@ import java.nio.file.StandardOpenOption;
 import ch.skymarshall.tcwriter.examples.api.interfaces.CustomerTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestRole;
 import ch.skymarshall.tcwriter.generators.JavaToModel;
+import ch.skymarshall.tcwriter.generators.JsonHelper;
 import ch.skymarshall.tcwriter.generators.TestCaseToJava;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.recorder.aspectj.AspectjRecorder;
-import ch.skymarshall.tcwriter.generators.visitors.JsonHelper;
 
 public interface ExampleHelper {
 
@@ -66,7 +66,7 @@ public interface ExampleHelper {
 		final ExampleTest test = new ExampleTest();
 		test.initActors();
 		test.testNormalCase();
-		final TestCase tc = recorder.getTestCase("ch.skymarshall.tcwriters.GeneratedTest");
+		final TestCase tc = recorder.getTestCase("ch.skymarshall.tcwriter.examples.GeneratedTest");
 
 		return tc;
 	}

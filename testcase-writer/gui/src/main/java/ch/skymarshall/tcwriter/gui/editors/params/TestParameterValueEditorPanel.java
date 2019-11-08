@@ -37,8 +37,8 @@ import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.gui.swing.bindings.SwingBindings;
 import ch.skymarshall.tcwriter.generators.Helper.VerbatimValue;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition.ParameterNature;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory.ParameterNature;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestReference;
@@ -91,9 +91,9 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 	public TestParameterValueEditorPanel(final String name, final ControllerPropertyChangeSupport propertyChangeSupport,
 			final ObjectProperty<TestCase> tc, final ObjectProperty<TestParameterValue> editedParameterValue,
-			final ObjectProperty<TestParameterDefinition> testApi) {
+			final ObjectProperty<TestParameterFactory> testApi) {
 
-		final ObjectProperty<TestParameterDefinition.ParameterNature> valueNature = new ObjectProperty<>(
+		final ObjectProperty<TestParameterFactory.ParameterNature> valueNature = new ObjectProperty<>(
 				name + "-nature", propertyChangeSupport);
 		final ObjectProperty<String> simpleValue = editedParameterValue.child(name + "-simpleValue",
 				TestParameterValue::getSimpleValue, TestParameterValue::setSimpleValue);
@@ -120,7 +120,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 		final JRadioButton useReference = new JRadioButton("Reference: ");
 		topPanel.add(useReference);
 		final JComboBox<ReferenceView> referenceEditor = new JComboBox<>();
-		references.bind(filter(r -> r.getType().equals(editedParameterValue.getValue().getValueDefinition().getType()))) //
+		references.bind(filter(r -> r.getType().equals(editedParameterValue.getValue().getValueFactory().getType()))) //
 				.bind(listConverter(ReferenceView.converter())) //
 				.bind(values(referenceEditor));
 		reference.bind(ReferenceView.converter())//
@@ -148,17 +148,17 @@ public class TestParameterValueEditorPanel extends JPanel {
 				ParameterNature.SIMPLE_TYPE, useRawValue, ParameterNature.TEST_API, useComplexType));
 
 		editedParameterValue.addListener(
-				l -> valueNature.setValue(this, editedParameterValue.getValue().getValueDefinition().getNature()));
+				l -> valueNature.setValue(this, editedParameterValue.getValue().getValueFactory().getNature()));
 
 		editedParameterValue.addListener(l -> {
-			if (editedParameterValue.getValue().getValueDefinition().getNature() == ParameterNature.REFERENCE) {
-				reference.setValue(this, (TestReference) editedParameterValue.getValue().getValueDefinition());
+			if (editedParameterValue.getValue().getValueFactory().getNature() == ParameterNature.REFERENCE) {
+				reference.setValue(this, (TestReference) editedParameterValue.getValue().getValueFactory());
 			}
 		});
 
 		reference.bind(set(ref -> {
 			if (valueNature.getValue() == ParameterNature.REFERENCE) {
-				editedParameterValue.getValue().setValueDefinition(ref);
+				editedParameterValue.getValue().setvalueFactory(ref);
 			}
 		}));
 
@@ -166,13 +166,13 @@ public class TestParameterValueEditorPanel extends JPanel {
 			final TestParameterValue paramValue = editedParameterValue.getValue();
 			switch (v) {
 			case SIMPLE_TYPE:
-				paramValue.setValueDefinition(apiOf(tc.getValue(), paramValue).asSimpleParameter());
+				paramValue.setvalueFactory(apiOf(tc.getValue(), paramValue).asSimpleParameter());
 				break;
 			case REFERENCE:
-				paramValue.setValueDefinition(reference.getObjectValue());
+				paramValue.setvalueFactory(reference.getObjectValue());
 				break;
 			case TEST_API:
-				paramValue.setValueDefinition(testApi.getValue());
+				paramValue.setvalueFactory(testApi.getValue());
 				break;
 			default:
 				break;
@@ -185,11 +185,11 @@ public class TestParameterValueEditorPanel extends JPanel {
 			final TestParameterValue parameterValue) {
 		final List<ParameterValue> paramList = new ArrayList<>();
 
-		for (final TestApiParameter mandatoryParameter : parameterValue.getValueDefinition().getMandatoryParameters()) {
+		for (final TestApiParameter mandatoryParameter : parameterValue.getValueFactory().getMandatoryParameters()) {
 			paramList.add(asParam(tc, mandatoryParameter, parameterValue, true));
 		}
 
-		for (final TestApiParameter optionalParameter : parameterValue.getValueDefinition().getOptionalParameters()) {
+		for (final TestApiParameter optionalParameter : parameterValue.getValueFactory().getOptionalParameters()) {
 			paramList.add(asParam(tc, optionalParameter, parameterValue, false));
 		}
 		return paramList;

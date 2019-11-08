@@ -15,13 +15,13 @@ public class ${testName} {
 	${remoteControl}
 
 	private CustomerTestRole customer;
-	private DeliveryTestRole delivery;
+	private DeliveryTestRole deliveryGuy;
 
 	@Before
 	public void prepareApis() {
 		final ExampleService testedService = new ExampleService();
 		customer = new CustomerTestRole(testedService);
-		delivery = new DeliveryTestRole(testedService);
+		deliveryGuy = new DeliveryTestRole(testedService);
 	}
 	
 	@Test

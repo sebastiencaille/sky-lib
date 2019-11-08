@@ -12,8 +12,8 @@ import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.ModelUtils;
 import ch.skymarshall.tcwriter.generators.model.ModelUtils.ActionUtils;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition.ParameterNature;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory.ParameterNature;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
@@ -84,7 +84,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 	}
 
 	private Object createReferenceFromParam(final TestCase tc, final TestParameterValue parameterValue) {
-		final TestParameterDefinition parameterDef = parameterValue.getValueDefinition();
+		final TestParameterFactory parameterDef = parameterValue.getValueFactory();
 		String display;
 		switch (parameterDef.getNature()) {
 		case REFERENCE:

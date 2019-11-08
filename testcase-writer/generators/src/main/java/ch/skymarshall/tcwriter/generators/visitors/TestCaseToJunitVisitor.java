@@ -13,14 +13,14 @@ import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 import ch.skymarshall.util.generators.JavaCodeGenerator;
 import ch.skymarshall.util.generators.Template;
 
-public class JunitTestCaseVisitor {
+public class TestCaseToJunitVisitor {
 
 	private final Template template;
 
@@ -28,17 +28,17 @@ public class JunitTestCaseVisitor {
 
 	private final Map<TestParameterValue, String> varNames = new IdentityHashMap<>();
 
-	private final boolean withController;
+	private final boolean withRemoteControl;
 
-	public JunitTestCaseVisitor(final Template template, final boolean withController) {
+	public TestCaseToJunitVisitor(final Template template, final boolean withRemoteControl) {
 		this.template = template;
-		this.withController = withController;
+		this.withRemoteControl = withRemoteControl;
 	}
 
 	public String visitTestCase(final TestCase tc) throws IOException, TestCaseException {
 
 		final Map<String, String> properties = new HashMap<>();
-		if (withController) {
+		if (withRemoteControl) {
 			final JavaCodeGenerator remoteControlCode = new JavaCodeGenerator();
 
 			remoteControlCode.append("private ITestExecutionController testExecutionController;").newLine().newLine()
@@ -65,7 +65,7 @@ public class JunitTestCaseVisitor {
 
 		final JavaCodeGenerator javaContent = new JavaCodeGenerator();
 
-		if (withController) {
+		if (withRemoteControl) {
 			javaContent.add("testExecutionController.beforeTestExecution();").newLine();
 		}
 
@@ -85,14 +85,14 @@ public class JunitTestCaseVisitor {
 			throws IOException, TestCaseException {
 		final StringBuilder comment = new StringBuilder();
 
-		if (withController) {
+		if (withRemoteControl) {
 			javaContent.add("testExecutionController.beforeStepExecution(" + step.getOrdinal() + ");").newLine();
 		}
 
 		final JavaCodeGenerator stepContent = new JavaCodeGenerator();
 
 		for (final TestParameterValue stepParamValue : step.getParametersValue()) {
-			visitTestValue(stepContent, model, stepParamValue);
+			visitTestParameterValue(stepContent, model, stepParamValue);
 		}
 
 		if (step.getReference() != null) {
@@ -107,18 +107,18 @@ public class JunitTestCaseVisitor {
 		javaContent.append(comment.toString());
 		javaContent.append(stepContent.toString());
 
-		if (withController) {
+		if (withRemoteControl) {
 			javaContent.add("testExecutionController.afterStepExecution(" + step.getOrdinal() + ");").newLine()
 					.newLine();
 		}
 
 	}
 
-	private void visitTestValue(final JavaCodeGenerator javaContent, final TestModel model,
+	private void visitTestParameterValue(final JavaCodeGenerator javaContent, final TestModel model,
 			final TestParameterValue paramValue) throws IOException, TestCaseException {
 
-		final TestParameterDefinition param = paramValue.getValueDefinition();
-		if (param.getNature().isSimpleValue()) {
+		final TestParameterFactory factory = paramValue.getValueFactory();
+		if (factory.getNature().isSimpleValue()) {
 			return;
 		}
 
@@ -127,13 +127,13 @@ public class JunitTestCaseVisitor {
 		visitTestValueParams(parametersContent, model, paramValue.getComplexTypeValues());
 
 		final String parameterVarName = varNameFor(paramValue);
-		parametersContent.append(param.getType()).append(" ").append(parameterVarName).append(" = ")
-				.append(param.getName()).append("(");
+		parametersContent.append(factory.getType()).append(" ").append(parameterVarName).append(" = ")
+				.append(factory.getName()).append("(");
 		addParameterValuesToCall(parametersContent, paramValue.getComplexTypeValues().values(),
-				param.getMandatoryParameters());
+				factory.getMandatoryParameters());
 		parametersContent.append(");").newLine();
-		addSetters(parametersContent, parameterVarName, paramValue.getComplexTypeValues().values(),
-				param.getOptionalParameters());
+		addOptionalParameters(parametersContent, parameterVarName, paramValue.getComplexTypeValues().values(),
+				factory.getOptionalParameters());
 		javaContent.append(parametersContent.toString());
 	}
 
@@ -141,11 +141,11 @@ public class JunitTestCaseVisitor {
 			final Map<String, TestParameterValue> testObjectValues) throws IOException, TestCaseException {
 		for (final TestParameterValue testObjectValue : testObjectValues.values()) {
 			// No need to define a variable
-			if (testObjectValue.getValueDefinition().getNature().isSimpleValue()) {
+			if (testObjectValue.getValueFactory().getNature().isSimpleValue()) {
 				// Simple value
 				continue;
 			}
-			visitTestValue(parametersContent, model, testObjectValue);
+			visitTestParameterValue(parametersContent, model, testObjectValue);
 		}
 	}
 
@@ -164,7 +164,7 @@ public class JunitTestCaseVisitor {
 		}
 	}
 
-	private void addSetters(final JavaCodeGenerator parametersContent, final String parameterVarName,
+	private void addOptionalParameters(final JavaCodeGenerator parametersContent, final String parameterVarName,
 			final Collection<TestParameterValue> parameterValues, final List<TestApiParameter> filter)
 			throws IOException, TestCaseException {
 		final Map<String, TestApiParameter> filteredMap = filter.stream()
@@ -175,19 +175,21 @@ public class JunitTestCaseVisitor {
 			}
 			final TestApiParameter parameterType = filteredMap.get(parameterValue.getApiParameterId());
 			parametersContent.append(parameterVarName).append(".").append(parameterType.getName()).append("(");
-			inlineValue(parametersContent, parameterValue);
+			if (parameterValue.getValueFactory().hasType()) {
+				inlineValue(parametersContent, parameterValue);
+			}
 			parametersContent.append(");").newLine();
 		}
 	}
 
 	private void inlineValue(final JavaCodeGenerator parametersContent, final TestParameterValue parameterValue)
 			throws IOException, TestCaseException {
-		switch (parameterValue.getValueDefinition().getNature()) {
+		switch (parameterValue.getValueFactory().getNature()) {
 		case TEST_API:
 			parametersContent.append(varNameFor(parameterValue));
 			break;
 		case SIMPLE_TYPE:
-			final String valueType = parameterValue.getValueDefinition().getType();
+			final String valueType = parameterValue.getValueFactory().getType();
 			final boolean isString = String.class.getName().equals(valueType);
 			final boolean isLong = Long.class.getName().equals(valueType) || Long.TYPE.getName().equals(valueType);
 			if (isString) {

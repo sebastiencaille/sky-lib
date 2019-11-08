@@ -1,10 +1,11 @@
 package ch.skymarshall.tcwriter.gui.editors.steps;
 
+import static ch.skymarshall.gui.mvc.Bindings.set;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 import ch.skymarshall.gui.mvc.GuiController;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
@@ -12,7 +13,7 @@ import ch.skymarshall.tcwriter.generators.model.ModelUtils;
 import ch.skymarshall.tcwriter.generators.model.ModelUtils.ActionUtils;
 import ch.skymarshall.tcwriter.generators.model.NamedObject;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 
@@ -31,32 +32,31 @@ public class StepEditorController extends GuiController {
 	}
 
 	public void init() {
-		testStep.addListener(l -> {
-			if (testStep.getValue() == null) {
+		testStep.bind(set(step -> {
+			if (step == null) {
 				return;
 			}
-			model.getActor().setValue(this, testStep.getValue().getActor());
-			model.getAction().setValue(this, testStep.getValue().getAction());
-		});
+			model.getActor().setValue(this, step.getActor());
+			model.getAction().setValue(this, step.getAction());
+		}));
 
-		model.getActor().addListener(l -> model.getPossibleActions().setValue(this,
-				sorted(model.getActor().getValue().getRole().getActions())));
+		model.getActor()
+				.bind(set(actor -> model.getPossibleActions().setValue(this, sorted(actor.getRole().getActions()))));
 
-		model.getAction().addListener(l -> {
-			if (model.getAction().getValue() == null) {
+		model.getAction().bind(set(action -> {
+			if (action == null) {
 				emptySelectors();
 				emptyParam0();
 				return;
 			}
-			final ActionUtils actionUtils = ModelUtils.actionUtils(tm, model.getAction().getValue());
+			final ActionUtils actionUtils = ModelUtils.actionUtils(tm, action);
 			if (actionUtils.hasSelector()) {
 				final TestParameterValue selectorValue = testStep.getValue()
 						.getParametersValue(actionUtils.selectorIndex());
 				model.getPossibleSelectors().setValue(this,
 						sorted(tm.getParameterFactories(actionUtils.selectorType())));
-				model.getSelector().setValue(this, selectorValue.getValueDefinition());
-				model.getSelectorValue().setValue(this,
-						createParameter(selectorValue, selectorValue.getValueDefinition()));
+				model.getSelector().setValue(this, selectorValue.getValueFactory());
+				model.getSelectorValue().setValue(this, selectorValue.derivate(selectorValue.getValueFactory()));
 			} else {
 				emptySelectors();
 			}
@@ -65,26 +65,25 @@ public class StepEditorController extends GuiController {
 						.getParametersValue(actionUtils.actionParameterIndex(0));
 				model.getPossibleActionParameters().setValue(this,
 						sorted(tm.getParameterFactories(actionUtils.parameterType(0))));
-				model.getActionParameter().setValue(this, param0Value.getValueDefinition());
-				model.getActionParameterValue().setValue(this,
-						createParameter(param0Value, param0Value.getValueDefinition()));
+				model.getActionParameter().setValue(this, param0Value.getValueFactory());
+				model.getActionParameterValue().setValue(this, param0Value.derivate(param0Value.getValueFactory()));
 			} else {
 				emptyParam0();
 			}
 
-		});
-		model.getSelector().addListener(l -> {
-			model.getSelectorValue().setValue(this,
-					createParameter(model.getSelectorValue().getValue(), model.getSelector().getValue()));
-		});
-		model.getActionParameter().addListener(l -> {
-			model.getActionParameterValue().setValue(this,
-					createParameter(model.getActionParameterValue().getValue(), model.getActionParameter().getValue()));
-		});
+		}));
+
+		model.getSelector().bind(set(selector -> model.getSelectorValue().setValue(this,
+				model.getSelectorValue().getValue().derivate(selector))));
+
+		model.getActionParameter().bind(set(param -> model.getActionParameterValue().setValue(this,
+				model.getActionParameterValue().getValue().derivate(param))));
+
 		model.getPossibleActors().setValue(this, sorted(tm.getActors().values()));
-		model.getSelectorValue().setValue(this, new TestParameterValue("", TestParameterDefinition.NO_PARAMETER));
+
+		model.getSelectorValue().setValue(this, new TestParameterValue("", TestParameterFactory.NO_FACTORY));
 		model.getActionParameterValue().setValue(this,
-				new TestParameterValue("", TestParameterDefinition.NO_PARAMETER));
+				new TestParameterValue("", TestParameterFactory.NO_FACTORY));
 	}
 
 	private void emptyParam0() {
@@ -95,18 +94,6 @@ public class StepEditorController extends GuiController {
 	private void emptySelectors() {
 		model.getSelectorValue().setValue(this, TestParameterValue.NO_VALUE);
 		model.getPossibleSelectors().setValue(this, Collections.emptyList());
-	}
-
-	public TestParameterValue createParameter(final TestParameterValue oldValue,
-			final TestParameterDefinition newDefinition) {
-		TestParameterDefinition definition = newDefinition;
-		if (definition == null) {
-			definition = TestParameterDefinition.NO_PARAMETER;
-		}
-		final TestParameterValue newValue = new TestParameterValue(UUID.randomUUID().toString(),
-				oldValue.getApiParameterId(), definition, oldValue.getSimpleValue());
-		newValue.getComplexTypeValues().putAll(oldValue.getComplexTypeValues());
-		return newValue;
 	}
 
 	public StepEditorModel getModel() {

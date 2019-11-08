@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 
 import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterDefinition.ParameterNature;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory.ParameterNature;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestRole;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
@@ -30,7 +30,7 @@ public interface Helper {
 					.append(api).append('\n'));
 
 		}
-		for (final TestParameterDefinition testObject : model.getParameterFactories().values()) {
+		for (final TestParameterFactory testObject : model.getParameterFactories().values()) {
 			builder.append("  ").append(model.descriptionOf(testObject)).append(": ").append(testObject).append(EOL);
 			testObject.getMandatoryParameters().forEach(api -> builder.append("    mandatory: ")
 					.append(model.descriptionOf(api)).append(": ").append(api).append(EOL));
@@ -94,7 +94,7 @@ public interface Helper {
 
 			this.display = value.getSimpleValue();
 			this.id = value.getId();
-			this.nature = value.getValueDefinition().getNature();
+			this.nature = value.getValueFactory().getNature();
 			this.value = value;
 		}
 

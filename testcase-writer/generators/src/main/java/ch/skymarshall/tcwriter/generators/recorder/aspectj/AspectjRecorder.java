@@ -21,13 +21,18 @@ public class AspectjRecorder extends AbstractRecorder {
 		super.recordActor(actor);
 	}
 
-	public void recordStep(final JoinPoint jp, final Object target, final String apiName, final Object[] apiArgs) {
-		recordStep(jp.toString(), target, apiName, apiArgs);
+	public void recordStep(final JoinPoint jp, final Object actor, final String apiName, final Object[] apiArgs) {
+		recordStep(jp.toString(), actor, apiName, apiArgs);
 	}
 
 	public void recordParamFactory(final JoinPoint jp, final Class<?> apiFactoryClass, final String apiName,
 			final Object[] apiArgs, final Object returnValue) {
 		recordParamFactory(apiFactoryClass, apiName, apiArgs, returnValue);
+	}
+
+	public void recordParamFactoryCall(final ProceedingJoinPoint jp, final Object factory, final String callName,
+			final Object[] args) {
+		recordParamFactoryCall(jp.toString(), factory, callName, args);
 	}
 
 }

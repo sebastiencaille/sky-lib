@@ -4,6 +4,8 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 
+import ch.skymarshall.tcwriter.annotations.TCRole;
+
 @Aspect
 public class TCApiAspect {
 
@@ -19,7 +21,11 @@ public class TCApiAspect {
 			throw new IllegalStateException("recorder not set");
 		}
 		if (jp.getTarget() != null) {
-			recorder.recordStep(jp, jp.getTarget(), jp.getSignature().getName(), jp.getArgs());
+			if (jp.getSignature().getDeclaringType().getAnnotation(TCRole.class) != null) {
+				recorder.recordStep(jp, jp.getTarget(), jp.getSignature().getName(), jp.getArgs());
+			} else {
+				recorder.recordParamFactoryCall(jp, jp.getTarget(), jp.getSignature().getName(), jp.getArgs());
+			}
 		}
 		final Object returnValue = jp.proceed();
 		if (jp.getTarget() == null) {

@@ -5,18 +5,20 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import ch.skymarshall.tcwriter.generators.JsonHelper;
+import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
-import ch.skymarshall.tcwriter.generators.visitors.JsonHelper;
 
 public class IntegrationTest {
 
 	@Test
-	public void generateModelAndTC() throws IOException {
+	public void generateModelAndTC() throws IOException, TestCaseException {
 		final TestModel model = ExampleHelper.generateModel();
 		final TestCase testCase = ExampleHelper.recordTestCase(model);
 		ExampleHelper.saveModel(model);
 		ExampleHelper.saveTC(testCase);
+		ExampleHelper.generateCode(testCase);
 	}
 
 	@Test
@@ -33,6 +35,9 @@ public class IntegrationTest {
 
 		final TestModel readModel = JsonHelper.testModelFromJson(JsonHelper.readFile(ExampleHelper.MODEL_PATH));
 		final TestCase readTC = JsonHelper.testCaseFromJson(JsonHelper.readFile(ExampleHelper.TC_PATH), readModel);
+
+		ExampleHelper.saveModel(tmpModel.toPath(), model);
+		ExampleHelper.saveTC(tmpTC.toPath(), rc);
 
 		// TODO: find a way to compare both
 	}

@@ -7,12 +7,12 @@ import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.NamedObject;
 
 /**
- * Definition of a test parameter value
+ * Factory to create test parameter values
  *
  * @author scaille
  *
  */
-public class TestParameterDefinition extends NamedObject {
+public class TestParameterFactory extends NamedObject {
 
 	public enum ParameterNature {
 		SIMPLE_TYPE(true), TEST_API(false), REFERENCE(true), NOT_SET(false);
@@ -28,20 +28,20 @@ public class TestParameterDefinition extends NamedObject {
 		}
 	}
 
-	public static final TestParameterDefinition NO_PARAMETER = new TestParameterDefinition(IdObject.ID_NOT_SET,
+	public static final TestParameterFactory NO_FACTORY = new TestParameterFactory(IdObject.ID_NOT_SET,
 			IdObject.ID_NOT_SET, ParameterNature.NOT_SET, "");
 	private final List<TestApiParameter> mandatoryParameters = new ArrayList<>();
 	private final List<TestApiParameter> optionalParameters = new ArrayList<>();
 	private final ParameterNature nature;
 	private final String parameterType;
 
-	protected TestParameterDefinition() {
+	protected TestParameterFactory() {
 		super(null, null);
 		this.nature = null;
 		this.parameterType = null;
 	}
 
-	public TestParameterDefinition(final String id, final String name, final ParameterNature nature,
+	public TestParameterFactory(final String id, final String name, final ParameterNature nature,
 			final String type) {
 		super(id, name);
 		this.parameterType = type;
@@ -64,12 +64,17 @@ public class TestParameterDefinition extends NamedObject {
 		return mandatoryParameters;
 	}
 
-	public TestApiParameter getOptionalParameter(final int index) {
-		return optionalParameters.get(index);
+	public TestApiParameter getOptionalParameter(final String name) {
+		return optionalParameters.stream().filter(p -> p.getName().equals(name)).findFirst()
+				.orElseThrow(() -> new IllegalStateException("Can't find optional parameter " + name));
 	}
 
 	public List<TestApiParameter> getOptionalParameters() {
 		return optionalParameters;
+	}
+
+	public boolean hasType() {
+		return !TestApiParameter.NO_TYPE.equals(parameterType);
 	}
 
 	@Override
@@ -78,8 +83,8 @@ public class TestParameterDefinition extends NamedObject {
 				+ " optional";
 	}
 
-	public static TestParameterDefinition simpleType(final String type) {
-		return new TestParameterDefinition("", "", ParameterNature.SIMPLE_TYPE, type);
+	public static TestParameterFactory simpleType(final String type) {
+		return new TestParameterFactory("", "", ParameterNature.SIMPLE_TYPE, type);
 	}
 
 }

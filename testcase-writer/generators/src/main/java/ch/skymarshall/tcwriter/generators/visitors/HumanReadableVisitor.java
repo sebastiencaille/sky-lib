@@ -29,21 +29,24 @@ public class HumanReadableVisitor {
 	}
 
 	private String processTestParameter(final TestParameterValue parameterValue) {
-		switch (parameterValue.getValueDefinition().getNature()) {
+		switch (parameterValue.getValueFactory().getNature()) {
 		case REFERENCE:
 			return "<the value " + parameterValue.getSimpleValue() + " provided by step "
-					+ ((TestReference) parameterValue.getValueDefinition()).getStep().getOrdinal() + ">";
+					+ ((TestReference) parameterValue.getValueFactory()).getStep().getOrdinal() + ">";
 		case SIMPLE_TYPE:
+			final String type = parameterValue.getValueFactory().getType();
+			if (Boolean.class.getName().equals(type) || Boolean.TYPE.getName().equals(type)) {
+				return Boolean.TRUE.toString().equals(parameterValue.getSimpleValue()) ? "yes" : "no";
+			}
 			return parameterValue.getSimpleValue();
 		case TEST_API:
-			final List<String> mandatoryParams = parameterValue.getValueDefinition().getMandatoryParameters().stream()
+			final List<String> mandatoryParams = parameterValue.getValueFactory().getMandatoryParameters().stream()
 					.map(p -> processTestParameter(parameterValue.getComplexTypeValues().get(p.getId())))
 					.collect(Collectors.toList());
 			final StringBuilder optionals = new StringBuilder();
 			String sep = "(";
 			boolean hasOptionals = false;
-			for (final TestApiParameter optionalParameter : parameterValue.getValueDefinition()
-					.getOptionalParameters()) {
+			for (final TestApiParameter optionalParameter : parameterValue.getValueFactory().getOptionalParameters()) {
 				final TestParameterValue optionalParameterValue = parameterValue.getComplexTypeValues()
 						.get(optionalParameter.getId());
 				if (optionalParameterValue == null) {
@@ -55,7 +58,7 @@ public class HumanReadableVisitor {
 				hasOptionals = true;
 			}
 			optionals.append(")");
-			return summaryOf(parameterValue.getValueDefinition(), mandatoryParams)
+			return summaryOf(parameterValue.getValueFactory(), mandatoryParams)
 					+ ((hasOptionals) ? " " + optionals.toString() : "");
 		default:
 			return "";

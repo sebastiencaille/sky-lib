@@ -34,6 +34,10 @@ public class TestApiParameter extends NamedObject {
 		return parameterType;
 	}
 
+	public boolean hasType() {
+		return !TestApiParameter.NO_TYPE.equals(parameterType);
+	}
+
 	@Override
 	public String toString() {
 		return getName() + ": " + parameterType;

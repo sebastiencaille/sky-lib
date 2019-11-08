@@ -52,8 +52,12 @@ public class HumanReadableVisitor {
 				if (optionalParameterValue == null) {
 					continue;
 				}
-				optionals.append(sep).append(summaryOf(optionalParameter, null)).append(": ")
-						.append(processTestParameter(optionalParameterValue));
+				optionals.append(sep).append(summaryOf(optionalParameter, null)).append(": ");
+				if (optionalParameter.hasType()) {
+					optionals.append(processTestParameter(optionalParameterValue));
+				} else {
+					optionals.append("yes");
+				}
 				sep = ", ";
 				hasOptionals = true;
 			}

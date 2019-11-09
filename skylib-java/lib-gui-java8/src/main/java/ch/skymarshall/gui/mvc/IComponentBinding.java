@@ -16,6 +16,7 @@
 package ch.skymarshall.gui.mvc;
 
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 
@@ -25,8 +26,7 @@ import ch.skymarshall.gui.mvc.properties.AbstractProperty;
  *
  * @author Sebastien Caille
  *
- * @param <T>
- *            the type of the component's property
+ * @param <T> the type of the component's property
  */
 public interface IComponentBinding<T> {
 
@@ -48,14 +48,16 @@ public interface IComponentBinding<T> {
 		void setComponentValue(C component, AbstractProperty property, T value);
 	}
 
-	public static <C, T> IComponentBinding<T> component(final C component,
-			final BiConsumer<C, IComponentLink<T>> addValueChangeListener, final ValueSetter<C, T> setComponentValue) {
+	public static <C, T, L> IComponentBinding<T> component(final C component,
+			final BiFunction<C, IComponentLink<T>, L> addValueChangeListener,
+			final BiConsumer<C, L> removeValueChangeListener, final ValueSetter<C, T> setComponentValue) {
 		return new IComponentBinding<T>() {
+
+			private L listener;
 
 			@Override
 			public void addComponentValueChangeListener(final IComponentLink<T> link) {
-				addValueChangeListener.accept(component, link);
-
+				listener = addValueChangeListener.apply(component, link);
 			}
 
 			@Override
@@ -65,19 +67,19 @@ public interface IComponentBinding<T> {
 
 			@Override
 			public void removeComponentValueChangeListener() {
-				// TODO Auto-generated method stub
-
+				if (listener != null) {
+					removeValueChangeListener.accept(component, listener);
+				}
 			}
 		};
 	}
 
 	/**
 	 *
-	 * @param setComponentValue
-	 *            (source, value)
+	 * @param setComponentValue (source, value)
 	 * @return
 	 */
-	public static <T> IComponentBinding<T> writeOnly(final BiConsumer<AbstractProperty, T> setComponentValue) {
+	public static <T> IComponentBinding<T> wo(final BiConsumer<AbstractProperty, T> setComponentValue) {
 		return new IComponentBinding<T>() {
 
 			@Override
@@ -93,6 +95,32 @@ public interface IComponentBinding<T> {
 			@Override
 			public void setComponentValue(final AbstractProperty source, final T value) {
 				setComponentValue.accept(source, value);
+			}
+
+		};
+	}
+
+	/**
+	 *
+	 * @param setComponentValue (source, value)
+	 * @return
+	 */
+	public static <C, T> IComponentBinding<T> wo(final C component, final ValueSetter<C, T> setComponentValue) {
+		return new IComponentBinding<T>() {
+
+			@Override
+			public void addComponentValueChangeListener(final IComponentLink<T> link) {
+				// component value never read
+			}
+
+			@Override
+			public void removeComponentValueChangeListener() {
+				// component value never read
+			}
+
+			@Override
+			public void setComponentValue(final AbstractProperty source, final T value) {
+				setComponentValue.setComponentValue(component, source, value);
 			}
 
 		};

@@ -18,7 +18,6 @@ package ch.skymarshall.gui.model.views;
 import java.util.function.Consumer;
 
 import ch.skymarshall.gui.mvc.IComponentBinding;
-import ch.skymarshall.util.Lambda;
 
 public abstract class AbstractDynamicView<T> {
 
@@ -42,13 +41,12 @@ public abstract class AbstractDynamicView<T> {
 	 * @return
 	 */
 	public <U> IComponentBinding<U> viewUpdate(final Consumer<U> c) {
-		return IComponentBinding.<AbstractDynamicView<T>, U>component(AbstractDynamicView.this,
-				Lambda.emptyBiConsumer(), (f, p, v) -> {
-					c.accept(v);
-					if (viewOwner != null) {
-						viewOwner.viewUpdated();
-					}
-				});
+		return IComponentBinding.wo((s, v) -> {
+			c.accept(v);
+			if (viewOwner != null) {
+				viewOwner.viewUpdated();
+			}
+		});
 	}
 
 }

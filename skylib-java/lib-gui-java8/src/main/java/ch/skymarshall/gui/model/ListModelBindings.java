@@ -19,17 +19,14 @@ import java.util.Collection;
 
 import ch.skymarshall.gui.model.views.IListView;
 import ch.skymarshall.gui.mvc.IComponentBinding;
-import ch.skymarshall.util.Lambda;
 
 public interface ListModelBindings {
 
 	public static <T> IComponentBinding<IListView<T>> view(final ListModel<T> model) {
-		return IComponentBinding.<ListModel<T>, IListView<T>>component(model, Lambda.emptyBiConsumer(),
-				(c, p, t) -> c.setView(t));
+		return IComponentBinding.<ListModel<T>, IListView<T>>wo(model, (c, p, t) -> c.setView(t));
 	}
 
 	public static <T> IComponentBinding<Collection<T>> values(final ListModel<T> model) {
-		return IComponentBinding.<ListModel<T>, Collection<T>>component(model, Lambda.emptyBiConsumer(),
-				(c, p, t) -> c.setValues(t));
+		return IComponentBinding.<ListModel<T>, Collection<T>>wo(model, (c, p, t) -> c.setValues(t));
 	}
 }

@@ -84,7 +84,7 @@ public final class Converters {
 
 			@Override
 			public List<V> convertComponentValueToPropertyValue(final List<V> componentValue) {
-				throw new IllegalStateException("Write only");
+				throw new WriteOnlyException();
 			}
 		};
 	}
@@ -99,7 +99,7 @@ public final class Converters {
 
 			@Override
 			public List<T> convertComponentValueToPropertyValue(final List<C> componentValue) {
-				throw new IllegalStateException("Write only");
+				throw new WriteOnlyException();
 			}
 
 		};
@@ -116,7 +116,7 @@ public final class Converters {
 
 			@Override
 			public List<T> convertComponentValueToPropertyValue(final List<C> componentValue) {
-				throw new IllegalStateException("Write only");
+				throw new WriteOnlyException();
 			}
 
 		};
@@ -246,7 +246,7 @@ public final class Converters {
 
 	public static <T, U> IConverter<T, U> wo(final Function<T, U> prop2comp) {
 		return converter(prop2comp, o -> {
-			throw new IllegalStateException("Write only");
+			throw new WriteOnlyException();
 		});
 	}
 

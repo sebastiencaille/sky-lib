@@ -16,6 +16,7 @@
 package ch.skymarshall.util;
 
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 public class Lambda {
@@ -34,6 +35,10 @@ public class Lambda {
 		return t -> {
 			// empty
 		};
+	}
+
+	public static <T, U, V> BiFunction<T, U, V> emptyBiFunction() {
+		return (t, u) -> null;
 	}
 
 	public static <T, U> BiConsumer<T, U> emptyBiConsumer() {

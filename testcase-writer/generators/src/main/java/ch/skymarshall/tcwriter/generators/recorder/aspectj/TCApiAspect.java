@@ -22,15 +22,15 @@ public class TCApiAspect {
 		}
 		if (jp.getTarget() != null) {
 			if (jp.getSignature().getDeclaringType().getAnnotation(TCRole.class) != null) {
-				recorder.recordStep(jp, jp.getTarget(), jp.getSignature().getName(), jp.getArgs());
+				recorder.recordStep(jp.toString(), jp.getTarget(), jp.getSignature().getName(), jp.getArgs());
 			} else {
-				recorder.recordParamFactoryCall(jp, jp.getTarget(), jp.getSignature().getName(), jp.getArgs());
+				recorder.recordParamFactoryCall(jp.getTarget(), jp.getSignature().getName(), jp.getArgs());
 			}
 		}
 		final Object returnValue = jp.proceed();
 		if (jp.getTarget() == null) {
-			recorder.recordParamFactory(jp, jp.getSignature().getDeclaringType(), jp.getSignature().getName(),
-					jp.getArgs(), returnValue);
+			recorder.recordParamFactory(jp.getSignature().getDeclaringType(), jp.getSignature().getName(), jp.getArgs(),
+					returnValue);
 		}
 		return returnValue;
 	}

@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 import ch.skymarshall.tcwriter.generators.Helper;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
@@ -24,7 +23,7 @@ import ch.skymarshall.tcwriter.test.TestObjectDescription;
 
 public class AbstractRecorder {
 
-	public static int actorIndex = 0;
+	private static int actorIndex = 0;
 
 	private final TestModel testModel;
 
@@ -37,6 +36,14 @@ public class AbstractRecorder {
 		this.testModel = model;
 	}
 
+	private static void resetActorIndex() {
+		actorIndex = 0;
+	}
+
+	private static int nextActorIndex() {
+		return actorIndex++;
+	}
+
 	public List<TestStep> getSteps() {
 		return testSteps;
 	}
@@ -46,20 +53,20 @@ public class AbstractRecorder {
 	}
 
 	public void reset() {
-		actorIndex = 0;
+		resetActorIndex();
 		testSteps.clear();
 		actors.clear();
 	}
 
-	protected TestActor recordActor(final Object actor) {
+	public TestActor recordActor(final Object actor) {
 		final Class<?> roleType = actor.getClass();
-		final TestActor testActor = new TestActor((++actorIndex) + "_" + roleType.getSimpleName(),
+		final TestActor testActor = new TestActor(nextActorIndex() + "_" + roleType.getSimpleName(),
 				roleType.getSimpleName(), testModel.getRole(roleType));
 		actors.put(actor, testActor);
 		return testActor;
 	}
 
-	protected void recordStep(final String description, final Object recordedActor, final String apiName,
+	public void recordStep(final String description, final Object recordedActor, final String apiName,
 			final Object[] apiArgs) {
 		final TestStep step = new TestStep(testSteps.size() + 1);
 
@@ -80,15 +87,15 @@ public class AbstractRecorder {
 		}
 		step.setActor(actor);
 
-		final Optional<TestAction> action = role.getActions().stream().filter(a -> matches(a, apiName, apiArgs))
-				.findFirst();
-		step.setAction(action.orElseThrow(() -> new IllegalStateException("No action found for " + description)));
+		final TestAction action = role.getActions().stream().filter(a -> matches(a, apiName, apiArgs)).findFirst()
+				.orElseThrow(() -> new IllegalStateException("No action found for " + description));
+		step.setAction(action);
 
 		for (int i = 0; i < apiArgs.length; i++) {
 			final Object apiArg = apiArgs[i];
 			final TestParameterValue parameterValue = testParameterValues.get(apiArg);
 			if (parameterValue != null) {
-				step.getParametersValue().add(parameterValue.derivate(action.get().getParameter(i)));
+				step.getParametersValue().add(parameterValue.derivate(action.getParameter(i)));
 			} else {
 				final TestApiParameter actionParameter = step.getAction().getParameter(i);
 				final TestParameterFactory def = actionParameter.asSimpleParameter();
@@ -99,7 +106,7 @@ public class AbstractRecorder {
 		testSteps.add(step);
 	}
 
-	protected void recordParamFactory(final Class<?> apiFactoryClass, final String apiName, final Object[] apiArgs,
+	public void recordParamFactory(final Class<?> apiFactoryClass, final String apiName, final Object[] apiArgs,
 			final Object returnValue) {
 		final TestParameterFactory testParameterFactory = testModel
 				.getTestParameterFactory(Helper.methodKey(apiFactoryClass, apiName));
@@ -111,8 +118,7 @@ public class AbstractRecorder {
 		testParameterValues.put(returnValue, testParameterValue);
 	}
 
-	protected void recordParamFactoryCall(final String info, final Object factory, final String callName,
-			final Object[] args) {
+	public void recordParamFactoryCall(final Object factory, final String callName, final Object[] args) {
 		final TestParameterValue testParameterValue = testParameterValues.get(factory);
 		if (testParameterValue == null) {
 			// we are being called during the factory's call

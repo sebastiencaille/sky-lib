@@ -160,7 +160,7 @@ public class ClassToModelVisitor {
 			unprocessedActorClasses.add(tcApiClazz);
 			return;
 		}
-		if (isTestObject(tcApiClazz)) {
+		if (isTestApi(tcApiClazz)) {
 			unprocessedParameterFactoryClasses.add(tcApiClazz);
 			return;
 		}
@@ -169,7 +169,7 @@ public class ClassToModelVisitor {
 				"Class " + tcApiClazz.getName() + " must have @" + TCRole.class.getSimpleName());
 	}
 
-	private boolean isTestObject(final Class<?> tcApiClazz) {
+	private boolean isTestApi(final Class<?> tcApiClazz) {
 		return tcApiClazz.getAnnotation(TCApi.class) != null;
 	}
 
@@ -202,7 +202,7 @@ public class ClassToModelVisitor {
 		if (tcClazz == Object.class) {
 			return;
 		}
-		if (!isActor(tcClazz) && !isTestObject(tcClazz)) {
+		if (!isActor(tcClazz) && !isTestApi(tcClazz)) {
 			return;
 		}
 		processed.add(tcClazz);

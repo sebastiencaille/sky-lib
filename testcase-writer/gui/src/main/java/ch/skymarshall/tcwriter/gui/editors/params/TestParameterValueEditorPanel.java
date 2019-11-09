@@ -9,11 +9,9 @@ import static ch.skymarshall.gui.swing.bindings.SwingBindings.values;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -34,7 +32,6 @@ import ch.skymarshall.gui.mvc.converters.IConverter;
 import ch.skymarshall.gui.mvc.properties.ListProperty;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.gui.swing.bindings.SwingBindings;
-import ch.skymarshall.tcwriter.generators.Helper.VerbatimValue;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory.ParameterNature;
@@ -202,8 +199,4 @@ public class TestParameterValueEditorPanel extends JPanel {
 				(testParameterValue != null) ? testParameterValue.getSimpleValue() : "", mandatory);
 	}
 
-	public static JComboBox<VerbatimValue> prepareFastListEditor(final List<VerbatimValue>... references) {
-		return new JComboBox<>(Arrays.stream(references).flatMap(Collection::stream).collect(Collectors.toList())
-				.toArray(new VerbatimValue[0]));
-	}
 }

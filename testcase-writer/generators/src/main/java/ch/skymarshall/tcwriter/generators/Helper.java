@@ -4,30 +4,25 @@ import static java.util.stream.Collectors.toList;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory.ParameterNature;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestRole;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
-import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 
-public interface Helper {
+public class Helper {
 
-	final char EOL = '\n';
+	private static final char EOL = '\n';
 
 	static String dumpModel(final TestModel model) {
 		final StringBuilder builder = new StringBuilder();
-		builder.append(model.toString()).append('\n');
+		builder.append(model.toString()).append(EOL);
 		for (final TestRole actor : model.getRoles().values()) {
 			builder.append("  ").append(model.descriptionOf(actor)).append(": ").append(actor).append(EOL);
 			actor.getActions().forEach(api -> builder.append("    ").append(model.descriptionOf(api)).append(": ")
-					.append(api).append('\n'));
+					.append(api).append(EOL));
 
 		}
 		for (final TestParameterFactory testObject : model.getParameterFactories().values()) {
@@ -40,11 +35,14 @@ public interface Helper {
 		return builder.toString();
 	}
 
-	static void dumpTestCase(final TestCase testCase) {
+	static String dumpTestCase(final TestCase testCase) {
+		final StringBuilder result = new StringBuilder();
 		for (final TestStep step : testCase.getSteps()) {
-			System.out.println(step.getOrdinal() + ": " + step.getActor().getName() + " " + step.getAction().getName());
-			step.getParametersValue().forEach(System.out::println);
+			result.append(step.getOrdinal()).append(": ").append(step.getActor().getName()).append(" ")
+					.append(step.getAction().getName()).append(EOL);
+			step.getParametersValue().forEach(v -> result.append(v).append(EOL));
 		}
+		return result.toString();
 	}
 
 	static List<Class<?>> toClasses(final String[] args) {
@@ -57,7 +55,7 @@ public interface Helper {
 		}).collect(toList());
 	}
 
-	static String paramKey(final Method apiMethod, final int i) {
+	public static String paramKey(final Method apiMethod, final int i) {
 		return "param-" + apiMethod.getDeclaringClass().getName() + "." + apiMethod.getName() + "-" + i;
 	}
 
@@ -75,66 +73,6 @@ public interface Helper {
 
 	public static String valueId(final TestStep step, final int index) {
 		return "step_" + step.getOrdinal() + "-val_" + index;
-	}
-
-	class VerbatimValue {
-		private final String display;
-		private final String id;
-		private final ParameterNature nature;
-		private final TestParameterValue value;
-
-		public VerbatimValue(final String id, final String display, final ParameterNature nature) {
-			this.display = display;
-			this.id = id;
-			this.nature = nature;
-			this.value = null;
-		}
-
-		public VerbatimValue(final TestParameterValue value) {
-
-			this.display = value.getSimpleValue();
-			this.id = value.getId();
-			this.nature = value.getValueFactory().getNature();
-			this.value = value;
-		}
-
-		public TestParameterValue getValue() {
-			return value;
-		}
-
-		@Override
-		public int hashCode() {
-			return id.hashCode();
-		}
-
-		@Override
-		public boolean equals(final Object obj) {
-			return (obj instanceof VerbatimValue) && id == ((VerbatimValue) obj).id;
-		}
-
-		@Override
-		public String toString() {
-			return display;
-		}
-
-		public String getId() {
-			return id;
-		}
-
-		public String getDisplay() {
-			return display;
-		}
-
-		public ParameterNature getNature() {
-			return nature;
-		}
-	}
-
-	static List<VerbatimValue> toReference(final TestCase tc, final Collection<? extends IdObject> idObjects,
-			final ParameterNature nature) {
-		return idObjects.stream().map(
-				idObject -> new VerbatimValue(idObject.getId(), tc.descriptionOf(idObject).getDescription(), nature))
-				.collect(Collectors.toList());
 	}
 
 }

@@ -7,7 +7,6 @@ import javax.swing.event.TableModelEvent;
 import ch.skymarshall.gui.model.ListModel;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.gui.swing.model.ListModelTableModel;
-import ch.skymarshall.tcwriter.generators.Helper.VerbatimValue;
 import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.ModelUtils;
 import ch.skymarshall.tcwriter.generators.model.ModelUtils.ActionUtils;
@@ -79,7 +78,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		default:
 			return "";
 		}
-		return new VerbatimValue(tcObject.getId(), tc.descriptionOf(tcObject).getDescription(), nature);
+		return tc.descriptionOf(tcObject).getDescription();
 	}
 
 	private String display(final TestCase tc, final TestParameterValue parameterValue) {

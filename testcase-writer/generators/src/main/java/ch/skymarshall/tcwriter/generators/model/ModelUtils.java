@@ -4,7 +4,7 @@ import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 
-public class ModelUtils {
+public interface ModelUtils {
 
 	public static class ActionUtils {
 		private final TestModel tm;

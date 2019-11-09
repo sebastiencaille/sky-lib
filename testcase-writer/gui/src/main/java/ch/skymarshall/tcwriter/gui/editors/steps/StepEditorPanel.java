@@ -18,7 +18,6 @@ import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
-import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 
 public class StepEditorPanel extends JPanel {
@@ -66,7 +65,7 @@ public class StepEditorPanel extends JPanel {
 		return renderer.testObject;
 	}
 
-	public StepEditorPanel(final StepEditorModel stepEditorModel, final TestModel tm, final ObjectProperty<TestCase> tc,
+	public StepEditorPanel(final StepEditorModel stepEditorModel, final TestModel tm,
 			final ObjectProperty<TestStep> testStep) {
 
 		final StepEditorController controller = new StepEditorController(stepEditorModel, tm, testStep);

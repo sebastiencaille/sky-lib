@@ -122,12 +122,12 @@ public class TestParameterValue extends IdObject {
 	}
 
 	public TestParameterValue derivate(final TestParameterFactory newFactory) {
-		TestParameterFactory factory = newFactory;
-		if (factory == null) {
-			factory = TestParameterFactory.NO_FACTORY;
+		TestParameterFactory newSafeFactory = newFactory;
+		if (newSafeFactory == null) {
+			newSafeFactory = TestParameterFactory.NO_FACTORY;
 		}
 		final TestParameterValue newValue = new TestParameterValue(UUID.randomUUID().toString(), getApiParameterId(),
-				factory, getSimpleValue());
+				newSafeFactory, getSimpleValue());
 		newValue.getComplexTypeValues().putAll(getComplexTypeValues());
 		return newValue;
 	}

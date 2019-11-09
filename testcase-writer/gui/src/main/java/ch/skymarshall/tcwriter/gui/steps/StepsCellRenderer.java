@@ -6,14 +6,11 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import ch.skymarshall.gui.mvc.properties.ObjectProperty;
-import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
-
 public class StepsCellRenderer extends DefaultTableCellRenderer {
 
 	private final JPanel noRendering = new JPanel();
 
-	public StepsCellRenderer(final ObjectProperty<TestCase> testCaseProperty) {
+	public StepsCellRenderer() {
 		super();
 		noRendering.setSize(0, 0);
 	}

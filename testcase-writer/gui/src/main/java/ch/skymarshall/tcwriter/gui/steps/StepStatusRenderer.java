@@ -16,7 +16,7 @@ public class StepStatusRenderer extends DefaultTableCellRenderer {
 	final JCheckBox renderer = new JCheckBox();
 	final JPanel jPanel = new JPanel();
 
-	{
+	public StepStatusRenderer() {
 		renderer.setText("");
 		renderer.setToolTipText("");
 	}

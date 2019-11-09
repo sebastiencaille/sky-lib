@@ -112,8 +112,7 @@ public class StepsTable extends JPanel {
 		columnModel.configureColumn(
 				ContributionTableColumn.fixedColumn(Column.TO_VAR, 150, new DefaultTableCellRenderer()));
 
-		Arrays.stream(Column.values())
-				.forEach(c -> stepsJTable.getColumn(c).setCellRenderer(new StepsCellRenderer(testCaseProperty)));
+		Arrays.stream(Column.values()).forEach(c -> stepsJTable.getColumn(c).setCellRenderer(new StepsCellRenderer()));
 
 		stepsJTable.getColumn(Column.BREAKPOINT).setCellRenderer(new StepStatusRenderer());
 		stepsJTable.getColumn(Column.BREAKPOINT).setCellEditor(new StepStatusEditor());

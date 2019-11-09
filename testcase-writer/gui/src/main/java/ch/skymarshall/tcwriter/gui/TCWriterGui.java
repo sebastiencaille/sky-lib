@@ -120,7 +120,7 @@ public abstract class TCWriterGui extends JFrame {
 		this.getContentPane().add(buttons, BorderLayout.NORTH);
 
 		final StepEditorModel stepEditorModel = new StepEditorModel(changeSupport);
-		final StepEditorPanel stepEditor = new StepEditorPanel(stepEditorModel, testModel, tc, selectedStep);
+		final StepEditorPanel stepEditor = new StepEditorPanel(stepEditorModel, testModel, selectedStep);
 
 		final JComponent selectorEditor = new TestParameterValueEditorPanel("selector", changeSupport, tc,
 				stepEditorModel.getSelectorValue(), stepEditorModel.getSelector());

@@ -20,7 +20,7 @@ public class ExampleTest {
 	private CustomerTestRole customer;
 	private DeliveryTestRole deliveryGuy;
 
-	{
+	public ExampleTest() {
 		coffeeMachine.setISO();
 	}
 

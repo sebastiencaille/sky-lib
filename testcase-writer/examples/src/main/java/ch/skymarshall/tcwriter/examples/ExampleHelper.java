@@ -20,41 +20,44 @@ import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.recorder.aspectj.AspectjRecorder;
 
-public interface ExampleHelper {
+public class ExampleHelper {
 
-	static final File RESOURCE_FOLDER = new File("src/main/resources/models");
+	private ExampleHelper() {
+	}
 
-	static Path MODEL_PATH = new File(RESOURCE_FOLDER, "testModel.json").toPath();
+	public static final File RESOURCE_FOLDER = new File("src/main/resources/models");
 
-	static Path TC_PATH = new File(RESOURCE_FOLDER, "testCase.json").toPath();
+	public static Path MODEL_PATH = new File(RESOURCE_FOLDER, "testModel.json").toPath();
 
-	static Path TEMPLATE_PATH = new File("./src/main/resources/templates/TC.template").toPath();
+	public static Path TC_PATH = new File(RESOURCE_FOLDER, "testCase.json").toPath();
 
-	static Path SRC_PATH = new File("./src/test/java").toPath();
+	public static Path TEMPLATE_PATH = new File("./src/main/resources/templates/TC.template").toPath();
 
-	static TestModel generateModel() {
+	public static Path SRC_PATH = new File("./src/test/java").toPath();
+
+	public static TestModel generateModel() {
 		final TestModel model = new JavaToModel(asList(CustomerTestRole.class, DeliveryTestRole.class)).generateModel();
 		model.addActor(new TestActor("customer", "customer", model.getRole(CustomerTestRole.class)), null);
 		model.addActor(new TestActor("deliveryGuy", "deliveryGuy", model.getRole(DeliveryTestRole.class)), null);
 		return model;
 	}
 
-	static void saveModel(final TestModel model) throws IOException {
+	public static void saveModel(final TestModel model) throws IOException {
 		final Path modelPath = ExampleHelper.MODEL_PATH;
 		saveModel(modelPath, model);
 	}
 
-	static void saveModel(final Path modelPath, final TestModel model) throws IOException {
+	public static void saveModel(final Path modelPath, final TestModel model) throws IOException {
 		final String jsonModel = JsonHelper.toJson(model);
 		Files.write(modelPath, jsonModel.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
 	}
 
-	static void saveTC(final TestCase testCase) throws IOException {
+	public static void saveTC(final TestCase testCase) throws IOException {
 		saveTC(ExampleHelper.TC_PATH, testCase);
 	}
 
-	static void saveTC(final Path tcPath, final TestCase testCase) throws IOException {
+	public static void saveTC(final Path tcPath, final TestCase testCase) throws IOException {
 		final String jsonTestCase = JsonHelper.toJson(testCase);
 		Files.write(tcPath, jsonTestCase.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
@@ -66,9 +69,7 @@ public interface ExampleHelper {
 		final ExampleTest test = new ExampleTest();
 		test.initActors();
 		test.testNormalCase();
-		final TestCase tc = recorder.getTestCase("ch.skymarshall.tcwriter.examples.GeneratedTest");
-
-		return tc;
+		return recorder.getTestCase("ch.skymarshall.tcwriter.examples.GeneratedTest");
 	}
 
 	public static File generateCode(final TestCase tc) throws IOException, TestCaseException {

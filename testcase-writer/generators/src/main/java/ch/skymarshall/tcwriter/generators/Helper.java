@@ -14,6 +14,9 @@ import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 
 public class Helper {
 
+	private Helper() {
+	}
+
 	private static final char EOL = '\n';
 
 	static String dumpModel(final TestModel model) {

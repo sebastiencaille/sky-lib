@@ -136,7 +136,7 @@ public class BindingChain implements IBindingController {
 			return this;
 		}
 
-		public IBindingController bindSetter(final Consumer<T> newBinding) {
+		public IBindingController listen(final Consumer<T> newBinding) {
 			links.add(link(v -> {
 				newBinding.accept((T) v);
 				return null;

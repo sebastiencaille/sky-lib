@@ -5,7 +5,6 @@ import java.util.List;
 import javax.swing.event.TableModelEvent;
 
 import ch.skymarshall.gui.model.ListModel;
-import ch.skymarshall.gui.mvc.Bindings;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.gui.swing.model.ListModelTableModel;
 import ch.skymarshall.tcwriter.generators.Helper.VerbatimValue;
@@ -39,7 +38,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		this.testCaseProperty = testCaseProperty;
 		this.steps = steps;
 		this.testControl = testControl;
-		testCaseProperty.bind(Bindings.set(tc -> summaryVisitor = new HumanReadableVisitor(tc)));
+		testCaseProperty.listen(tc -> summaryVisitor = new HumanReadableVisitor(tc));
 	}
 
 	@Override

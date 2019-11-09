@@ -1,7 +1,5 @@
 package ch.skymarshall.tcwriter.gui.editors.steps;
 
-import static ch.skymarshall.gui.mvc.Bindings.set;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -32,18 +30,18 @@ public class StepEditorController extends GuiController {
 	}
 
 	public void init() {
-		testStep.bind(set(step -> {
+		testStep.listen(step -> {
 			if (step == null) {
 				return;
 			}
 			model.getActor().setValue(this, step.getActor());
 			model.getAction().setValue(this, step.getAction());
-		}));
+		});
 
 		model.getActor()
-				.bind(set(actor -> model.getPossibleActions().setValue(this, sorted(actor.getRole().getActions()))));
+				.listen(actor -> model.getPossibleActions().setValue(this, sorted(actor.getRole().getActions())));
 
-		model.getAction().bind(set(action -> {
+		model.getAction().listen(action -> {
 			if (action == null) {
 				emptySelectors();
 				emptyParam0();
@@ -71,19 +69,18 @@ public class StepEditorController extends GuiController {
 				emptyParam0();
 			}
 
-		}));
+		});
 
-		model.getSelector().bind(set(selector -> model.getSelectorValue().setValue(this,
-				model.getSelectorValue().getValue().derivate(selector))));
+		model.getSelector().listen(selector -> model.getSelectorValue().setValue(this,
+				model.getSelectorValue().getValue().derivate(selector)));
 
-		model.getActionParameter().bind(set(param -> model.getActionParameterValue().setValue(this,
-				model.getActionParameterValue().getValue().derivate(param))));
+		model.getActionParameter().listen(param -> model.getActionParameterValue().setValue(this,
+				model.getActionParameterValue().getValue().derivate(param)));
 
 		model.getPossibleActors().setValue(this, sorted(tm.getActors().values()));
 
 		model.getSelectorValue().setValue(this, new TestParameterValue("", TestParameterFactory.NO_FACTORY));
-		model.getActionParameterValue().setValue(this,
-				new TestParameterValue("", TestParameterFactory.NO_FACTORY));
+		model.getActionParameterValue().setValue(this, new TestParameterValue("", TestParameterFactory.NO_FACTORY));
 	}
 
 	private void emptyParam0() {

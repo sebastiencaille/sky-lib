@@ -86,8 +86,8 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 		return createBindingChain().bind(binding);
 	}
 
-	public IBindingController bindWO(final Consumer<T> binding) {
-		return createBindingChain().bindSetter(binding);
+	public IBindingController listen(final Consumer<T> binding) {
+		return createBindingChain().listen(binding);
 	}
 
 	protected void setObjectValue(final Object caller, final T newValue) {

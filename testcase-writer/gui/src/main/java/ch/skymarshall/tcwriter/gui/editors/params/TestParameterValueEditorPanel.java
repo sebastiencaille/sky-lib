@@ -1,6 +1,5 @@
 package ch.skymarshall.tcwriter.gui.editors.params;
 
-import static ch.skymarshall.gui.mvc.Bindings.set;
 import static ch.skymarshall.gui.mvc.ChainDependencies.detachOnUpdateOf;
 import static ch.skymarshall.gui.mvc.converters.Converters.filter;
 import static ch.skymarshall.gui.mvc.converters.Converters.listConverter;
@@ -102,8 +101,8 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 		final ListProperty<TestReference> references = new ListProperty<>(name + "-references", propertyChangeSupport);
 
-		tc.bind(set(test -> references.setValue(this, getReferences(test, editedParameterValue.getValue()))));
-		editedParameterValue.bind(set(values -> references.setValue(this, getReferences(tc.getValue(), values))));
+		tc.listen(test -> references.setValue(this, getReferences(test, editedParameterValue.getValue())));
+		editedParameterValue.listen(values -> references.setValue(this, getReferences(tc.getValue(), values)));
 
 		setLayout(new BorderLayout());
 
@@ -146,20 +145,20 @@ public class TestParameterValueEditorPanel extends JPanel {
 		valueNature.bind(SwingBindings.group(group, ParameterNature.REFERENCE, useReference,
 				ParameterNature.SIMPLE_TYPE, useRawValue, ParameterNature.TEST_API, useComplexType));
 
-		editedParameterValue.bind(set(value -> {
+		editedParameterValue.listen(value -> {
 			valueNature.setValue(this, value.getValueFactory().getNature());
 			if (value.getValueFactory().getNature() == ParameterNature.REFERENCE) {
 				reference.setValue(this, (TestReference) value.getValueFactory());
 			}
-		}));
+		});
 
-		reference.bind(set(ref -> {
+		reference.listen(ref -> {
 			if (valueNature.getValue() == ParameterNature.REFERENCE) {
 				editedParameterValue.getValue().setvalueFactory(ref);
 			}
-		}));
+		});
 
-		valueNature.bind(set(v -> {
+		valueNature.listen(v -> {
 			final TestParameterValue paramValue = editedParameterValue.getValue();
 			switch (v) {
 			case SIMPLE_TYPE:
@@ -174,7 +173,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 			default:
 				break;
 			}
-		})).addDependency(ChainDependencies.detachOnUpdateOf(editedParameterValue));
+		}).addDependency(ChainDependencies.detachOnUpdateOf(editedParameterValue));
 
 	}
 

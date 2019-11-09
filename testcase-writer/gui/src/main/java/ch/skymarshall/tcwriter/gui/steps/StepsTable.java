@@ -18,7 +18,6 @@ import javax.swing.table.TableCellRenderer;
 
 import ch.skymarshall.gui.model.RootListModel;
 import ch.skymarshall.gui.model.views.ListViews;
-import ch.skymarshall.gui.mvc.Bindings;
 import ch.skymarshall.gui.mvc.IBindingController;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.gui.swing.ContributionTableColumn;
@@ -135,10 +134,10 @@ public class StepsTable extends JPanel {
 
 		add(new JScrollPane(stepsJTable), BorderLayout.CENTER);
 
-		testCaseProperty.bind(Bindings.set(tc -> {
+		testCaseProperty.listen(tc -> {
 			steps.clear();
 			steps.setValues(tc.getSteps());
-		}));
+		});
 
 	}
 

@@ -1,7 +1,5 @@
 package ch.skymarshall.tcwriter.gui;
 
-import static ch.skymarshall.gui.mvc.Bindings.set;
-import static ch.skymarshall.gui.mvc.converters.Converters.wo;
 import static java.util.stream.Collectors.joining;
 
 import java.awt.BorderLayout;
@@ -132,11 +130,11 @@ public abstract class TCWriterGui extends JFrame {
 		final JSplitPane paramsPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(selectorEditor),
 				new JScrollPane(param0Editor));
 
-		stepEditorModel.getSelectorValue().bind(wo(v -> !v.equals(TestParameterValue.NO_VALUE))) //
-				.bind(set(selectorEditor::setVisible));
+		stepEditorModel.getSelectorValue().bind(v -> !v.equals(TestParameterValue.NO_VALUE)) //
+				.listen(selectorEditor::setVisible);
 
-		stepEditorModel.getActionParameterValue().bind(wo(v -> !v.equals(TestParameterValue.NO_VALUE)))
-				.bind(set(param0Editor::setVisible));
+		stepEditorModel.getActionParameterValue().bind(v -> !v.equals(TestParameterValue.NO_VALUE))
+				.listen(param0Editor::setVisible);
 
 		final JScrollPane stepsPane = new JScrollPane(stepsTable);
 		final JScrollPane stepPane = new JScrollPane(stepEditor);

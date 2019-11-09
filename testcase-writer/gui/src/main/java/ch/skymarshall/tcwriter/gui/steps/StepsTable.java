@@ -8,8 +8,6 @@ import java.awt.Rectangle;
 import java.util.Arrays;
 
 import javax.swing.CellRendererPane;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -118,7 +116,7 @@ public class StepsTable extends JPanel {
 				.forEach(c -> stepsJTable.getColumn(c).setCellRenderer(new StepsCellRenderer(testCaseProperty)));
 
 		stepsJTable.getColumn(Column.BREAKPOINT).setCellRenderer(new StepStatusRenderer());
-		stepsJTable.getColumn(Column.BREAKPOINT).setCellEditor(new DefaultCellEditor(new JCheckBox()));
+		stepsJTable.getColumn(Column.BREAKPOINT).setCellEditor(new StepStatusEditor());
 
 		final IBindingController selectedStepCtrl = selectedStep
 				.bind(SwingBindings.selection(stepsJTable, stepsTableModel));

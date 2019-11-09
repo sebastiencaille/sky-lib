@@ -12,7 +12,6 @@ import ch.skymarshall.tcwriter.generators.model.ModelUtils;
 import ch.skymarshall.tcwriter.generators.model.ModelUtils.ActionUtils;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory.ParameterNature;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
@@ -45,7 +44,6 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		final TestCase tc = testCaseProperty.getValue();
 
 		IdObject tcObject;
-		final ParameterNature nature = ParameterNature.TEST_API;
 		final List<TestParameterValue> parametersValue = testStep.getParametersValue();
 		final TestAction testAction = testStep.getAction();
 		final ActionUtils actionUtils = ModelUtils.actionUtils(tc.getModel(), testAction);
@@ -64,10 +62,10 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 			if (!actionUtils.hasSelector()) {
 				return "";
 			}
-			return display(tc, parametersValue.get(actionUtils.selectorIndex()));
+			return toString(tc, parametersValue.get(actionUtils.selectorIndex()));
 		case PARAM0:
 			if (actionUtils.hasActionParameter(0)) {
-				return display(tc, parametersValue.get(actionUtils.actionParameterIndex(0)));
+				return toString(tc, parametersValue.get(actionUtils.actionParameterIndex(0)));
 			}
 			return "";
 		case TO_VAR:
@@ -81,7 +79,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		return tc.descriptionOf(tcObject).getDescription();
 	}
 
-	private String display(final TestCase tc, final TestParameterValue parameterValue) {
+	private String toString(final TestCase tc, final TestParameterValue parameterValue) {
 		final TestParameterFactory parameterDef = parameterValue.getValueFactory();
 		String display;
 		switch (parameterDef.getNature()) {
@@ -142,7 +140,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 
 		switch (column) {
 		case BREAKPOINT:
-			if ((Boolean) value) {
+			if ((boolean) value) {
 				testControl.addBreakpoint(testStep);
 			} else {
 				testControl.removeBreakpoint(testStep);

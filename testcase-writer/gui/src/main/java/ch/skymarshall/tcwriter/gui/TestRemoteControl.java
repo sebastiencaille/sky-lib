@@ -29,6 +29,11 @@ public class TestRemoteControl {
 		public StepStatus(final int ordinal) {
 			this.ordinal = ordinal;
 		}
+
+		@Override
+		public String toString() {
+			return ordinal + "/bp=" + breakPoint + ",state=" + state + ",message=" + message;
+		}
 	}
 
 	private final int baseTcpPort;

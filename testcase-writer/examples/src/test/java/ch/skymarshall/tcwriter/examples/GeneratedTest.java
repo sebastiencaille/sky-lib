@@ -42,7 +42,7 @@ public class GeneratedTest {
 	@Test
 	public void testCase() throws Exception {
 		testExecutionController.beforeTestExecution();
-		// Step 1: As customer, I go on internet and buy a coffee machine of brand "OldSchool" (ISO: yes)
+		// Step 1: Ascustomer, I go on internet and buy a coffee machine of brand "OldSchool" (ISO: yes)
 		testExecutionController.beforeStepExecution(1);
 		ch.skymarshall.tcwriter.examples.api.interfaces.selectors.BuyItemSelector var1 = BuyItemSelector.fromInternet();
 		ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem var2 = TestItem.coffeeMachineOfBrand("OldSchool");
@@ -51,13 +51,13 @@ public class GeneratedTest {
 		
 		testExecutionController.afterStepExecution(1);
 		
-		// Step 2: As delivery company, I delivers the item
+		// Step 2: Asdelivery company, I delivers the item
 		testExecutionController.beforeStepExecution(2);
 		deliveryGuy.deliverItem();
 		
 		testExecutionController.afterStepExecution(2);
 		
-		// Step 3: As customer, I get the delivered package and check that the packaged item is a coffee machine of brand "OldSchool" (ISO: yes)
+		// Step 3: Ascustomer, I get the delivered package and check that the packaged item is a coffee machine of brand "OldSchool" (ISO: yes)
 		testExecutionController.beforeStepExecution(3);
 		ch.skymarshall.tcwriter.examples.api.interfaces.selectors.HandlePackageSelector var5 = HandlePackageSelector.deliveredItem();
 		ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem var6 = TestItem.coffeeMachineOfBrand("OldSchool");
@@ -66,13 +66,13 @@ public class GeneratedTest {
 		
 		testExecutionController.afterStepExecution(3);
 		
-		// Step 4: As customer, I resell the item for 10$
+		// Step 4: Ascustomer, I resell the item for 10$
 		testExecutionController.beforeStepExecution(4);
 		customer.resellOwnedItem(10);
 		
 		testExecutionController.afterStepExecution(4);
 		
-		// Step 5: As customer, I go in a local shop and buy a tea pot
+		// Step 5: Ascustomer, I go in a local shop and buy a tea pot
 		testExecutionController.beforeStepExecution(5);
 		ch.skymarshall.tcwriter.examples.api.interfaces.selectors.BuyItemSelector var9 = BuyItemSelector.inLocalShop();
 		ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem var10 = TestItem.teaPot();
@@ -80,7 +80,7 @@ public class GeneratedTest {
 		
 		testExecutionController.afterStepExecution(5);
 		
-		// Step 6: As customer, I get the package bought at the shop and check that the packaged item is a tea pot
+		// Step 6: Ascustomer, I get the package bought at the shop and check that the packaged item is a tea pot
 		testExecutionController.beforeStepExecution(6);
 		ch.skymarshall.tcwriter.examples.api.interfaces.selectors.HandlePackageSelector var13 = HandlePackageSelector.fromShop();
 		ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem var14 = TestItem.teaPot();
@@ -88,11 +88,23 @@ public class GeneratedTest {
 		
 		testExecutionController.afterStepExecution(6);
 		
-		// Step 7: As customer, I resell the item for 10$
+		// Step 7: Ascustomer, I resell the item for 10$
 		testExecutionController.beforeStepExecution(7);
 		customer.resellOwnedItem(10);
 		
 		testExecutionController.afterStepExecution(7);
+		
+		// Step 8: Ascustomer, I find another brand
+		testExecutionController.beforeStepExecution(8);
+		java.lang.String ref8 = customer.findAnotherBrand();
+		
+		testExecutionController.afterStepExecution(8);
+		
+		// Step 9: Ascustomer, I keep the note "[Value of step 8: MidClass]"
+		testExecutionController.beforeStepExecution(9);
+		customer.keepNote(ref8);
+		
+		testExecutionController.afterStepExecution(9);
 		
 		
 	}

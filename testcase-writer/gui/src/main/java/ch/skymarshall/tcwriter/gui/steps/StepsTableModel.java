@@ -70,7 +70,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 			return "";
 		case TO_VAR:
 			if (testStep.getReference() != null) {
-				return testStep.getReference().getName();
+				return toString(tc, testStep.getReference());
 			}
 			return "";
 		default:
@@ -84,18 +84,22 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		String display;
 		switch (parameterDef.getNature()) {
 		case REFERENCE:
-			display = tc.descriptionOf(parameterValue.getSimpleValue()).getDescription();
+			display = toString(tc, parameterDef);
 			break;
 		case SIMPLE_TYPE:
 			display = parameterValue.getSimpleValue();
 			break;
 		case TEST_API:
-			display = tc.descriptionOf(parameterDef).getDescription();
+			display = toString(tc, parameterDef);
 			break;
 		default:
 			display = "N/A";
 		}
 		return display;
+	}
+
+	private String toString(final TestCase tc, final TestParameterFactory parameterDef) {
+		return tc.descriptionOf(parameterDef).getDescription();
 	}
 
 	@Override

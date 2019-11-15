@@ -31,6 +31,8 @@ public class TCApiAspect {
 		if (jp.getTarget() == null) {
 			recorder.recordParamFactory(jp.getSignature().getDeclaringType(), jp.getSignature().getName(), jp.getArgs(),
 					returnValue);
+		} else if (returnValue != null) {
+			recorder.recordReturnValue(returnValue);
 		}
 		return returnValue;
 	}

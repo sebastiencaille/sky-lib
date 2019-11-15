@@ -14,9 +14,11 @@ import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory.ParameterNature;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestRole;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestReference;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 import ch.skymarshall.tcwriter.test.TestActors;
 import ch.skymarshall.tcwriter.test.TestObjectDescription;
@@ -135,6 +137,16 @@ public class AbstractRecorder {
 				createFactoryParameterValue(testParameterFactory.getOptionalParameter(callName), apiArg));
 	}
 
+	public void recordReturnValue(final Object reference) {
+		final TestStep currentStep = testSteps.get(testSteps.size() - 1);
+
+		final TestParameterFactory paramFactory = currentStep.asNamedReference("ref" + currentStep.getOrdinal(),
+				"Value of step " + currentStep.getOrdinal());
+		final TestParameterValue paramValue = new TestParameterValue("<placeHolder>", paramFactory,
+				Objects.toString(reference));
+		testParameterValues.put(reference, paramValue);
+	}
+
 	private TestParameterValue createFactoryParameterValue(final TestApiParameter param, final Object apiArg) {
 		return new TestParameterValue(param, simpleType(param.getType()), Objects.toString(apiArg));
 	}
@@ -166,6 +178,10 @@ public class AbstractRecorder {
 		actors.forEach((a, ta) -> testModel.addActor(ta,
 				TestActors.getDescriptions().getOrDefault(a, new TestObjectDescription(ta.getId(), ta.getId()))));
 		testCase.getSteps().addAll(testSteps);
+		testParameterValues.values().stream().map(TestParameterValue::getValueFactory)
+				.filter(t -> t.getNature() == ParameterNature.REFERENCE)
+				.forEach(t -> testCase.publishReference(((TestReference) t)));
+
 		return testCase;
 	}
 

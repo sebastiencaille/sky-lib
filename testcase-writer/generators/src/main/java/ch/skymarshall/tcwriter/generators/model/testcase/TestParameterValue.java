@@ -73,7 +73,7 @@ public class TestParameterValue extends IdObject {
 		return factory;
 	}
 
-	public void setvalueFactory(final TestParameterFactory valueFactory) {
+	public void setValueFactory(final TestParameterFactory valueFactory) {
 		this.factory = valueFactory;
 	}
 

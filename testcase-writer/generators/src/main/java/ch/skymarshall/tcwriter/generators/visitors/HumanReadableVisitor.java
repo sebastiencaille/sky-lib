@@ -1,5 +1,7 @@
 package ch.skymarshall.tcwriter.generators.visitors;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,15 +26,18 @@ public class HumanReadableVisitor {
 		if (actorSummary == null) {
 			actorSummary = summaryOf(step.getRole(), null);
 		}
-		return "As " + actorSummary + ", I " + summaryOf(step.getAction(),
-				step.getParametersValue().stream().map(this::processTestParameter).collect(Collectors.toList()));
+		final StringBuilder result = new StringBuilder("As").append(actorSummary).append(", I ")
+				.append(summaryOf(step.getAction(),
+						step.getParametersValue().stream().map(this::processTestParameter).collect(toList())));
+
+		return result.toString();
 	}
 
 	private String processTestParameter(final TestParameterValue parameterValue) {
 		switch (parameterValue.getValueFactory().getNature()) {
 		case REFERENCE:
-			return "<the value " + parameterValue.getSimpleValue() + " provided by step "
-					+ ((TestReference) parameterValue.getValueFactory()).getStep().getOrdinal() + ">";
+			final TestReference ref = (TestReference) parameterValue.getValueFactory();
+			return "[" + ref.toDescription().getStepSummary() + ": " + parameterValue.getSimpleValue() + "]";
 		case SIMPLE_TYPE:
 			final String type = parameterValue.getValueFactory().getType();
 			if (Boolean.class.getName().equals(type) || Boolean.TYPE.getName().equals(type)) {

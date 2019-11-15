@@ -203,7 +203,7 @@ public class TestCaseToJunitVisitor {
 			}
 			break;
 		case REFERENCE:
-			parametersContent.append(parameterValue.getSimpleValue());
+			parametersContent.append(parameterValue.getValueFactory().getName());
 			break;
 		default:
 			throw new TestCaseException("Parameter value is not set");

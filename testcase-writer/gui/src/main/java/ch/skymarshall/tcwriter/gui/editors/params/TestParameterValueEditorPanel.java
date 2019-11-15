@@ -65,7 +65,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 		@Override
 		public String toString() {
-			return reference.toDescription().getStepSummary();
+			return reference.toDescription().getDescription();
 		}
 
 		public static IConverter<TestReference, ReferenceView> converter() {
@@ -151,7 +151,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 		reference.listen(ref -> {
 			if (valueNature.getValue() == ParameterNature.REFERENCE) {
-				editedParameterValue.getValue().setvalueFactory(ref);
+				editedParameterValue.getValue().setValueFactory(ref);
 			}
 		});
 
@@ -159,13 +159,13 @@ public class TestParameterValueEditorPanel extends JPanel {
 			final TestParameterValue paramValue = editedParameterValue.getValue();
 			switch (v) {
 			case SIMPLE_TYPE:
-				paramValue.setvalueFactory(apiOf(tc.getValue(), paramValue).asSimpleParameter());
+				paramValue.setValueFactory(apiOf(tc.getValue(), paramValue).asSimpleParameter());
 				break;
 			case REFERENCE:
-				paramValue.setvalueFactory(reference.getObjectValue());
+				paramValue.setValueFactory(reference.getObjectValue());
 				break;
 			case TEST_API:
-				paramValue.setvalueFactory(testApi.getValue());
+				paramValue.setValueFactory(testApi.getValue());
 				break;
 			default:
 				break;

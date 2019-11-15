@@ -44,6 +44,9 @@ public class ExampleTest {
 		customer.buy(inLocalShop(), teaPot);
 		customer.checkPackage(fromShop(), teaPot);
 		customer.resellOwnedItem(10);
+
+		final String newBrand = customer.findAnotherBrand();
+		customer.keepNote(newBrand);
 	}
 
 	@Test(expected = AssertionError.class)

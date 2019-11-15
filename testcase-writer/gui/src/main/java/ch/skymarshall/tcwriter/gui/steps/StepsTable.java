@@ -110,7 +110,7 @@ public class StepsTable extends JPanel {
 		columnModel
 				.configureColumn(ContributionTableColumn.gapColumn(Column.PARAM0, 100, new DefaultTableCellRenderer()));
 		columnModel.configureColumn(
-				ContributionTableColumn.fixedColumn(Column.TO_VAR, 150, new DefaultTableCellRenderer()));
+				ContributionTableColumn.fixedColumn(Column.TO_VAR, 250, new DefaultTableCellRenderer()));
 
 		Arrays.stream(Column.values()).forEach(c -> stepsJTable.getColumn(c).setCellRenderer(new StepsCellRenderer()));
 

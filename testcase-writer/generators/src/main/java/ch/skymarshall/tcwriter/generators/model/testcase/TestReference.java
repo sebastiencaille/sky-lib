@@ -44,6 +44,7 @@ public class TestReference extends TestParameterFactory {
 	}
 
 	public TestObjectDescription toDescription() {
-		return new TestObjectDescription(getName() + ": (step " + step.getOrdinal() + ") ", description);
+		return new TestObjectDescription("[" + getName() + " from step " + getStep().getOrdinal() + "] " + description,
+				description);
 	}
 }

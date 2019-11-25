@@ -11,7 +11,7 @@ import org.junit.Test;
 import ch.skymarshall.tcwriter.examples.api.interfaces.CustomerTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem;
-import ch.skymarshall.tcwriter.test.TestActors;
+import ch.skymarshall.tcwriter.recording.TestActors;
 
 public class ExampleTest {
 

@@ -8,8 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import ch.skymarshall.tcwriter.gui.TestRemoteControl.StepState;
-import ch.skymarshall.tcwriter.gui.TestRemoteControl.StepStatus;
+import ch.skymarshall.tcwriter.stepping.StepStatus;
+import ch.skymarshall.tcwriter.stepping.TestApi.StepState;
 
 public class StepStatusRenderer extends DefaultTableCellRenderer {
 

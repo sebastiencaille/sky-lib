@@ -28,46 +28,17 @@ public class TestCaseToJunitVisitor {
 
 	private final Map<TestParameterValue, String> varNames = new IdentityHashMap<>();
 
-	private final boolean withRemoteControl;
-
-	public TestCaseToJunitVisitor(final Template template, final boolean withRemoteControl) {
+	public TestCaseToJunitVisitor(final Template template) {
 		this.template = template;
-		this.withRemoteControl = withRemoteControl;
 	}
 
 	public String visitTestCase(final TestCase tc) throws IOException, TestCaseException {
 
 		final Map<String, String> properties = new HashMap<>();
-		if (withRemoteControl) {
-			final JavaCodeGenerator remoteControlCode = new JavaCodeGenerator();
-
-			remoteControlCode.append("private ITestExecutionController testExecutionController;").newLine().newLine()
-					.append("@org.junit.Rule").newLine()//
-					.append("public org.junit.rules.TestWatcher testWatcher = new org.junit.rules.TestWatcher() {")
-					.newLine() //
-					.append("	@Override").newLine() //
-					.append("	protected void failed(final Throwable e, final org.junit.runner.Description description) {")
-					.newLine() //
-					.append("		super.failed(e, description);").newLine() //
-					.append("		testExecutionController.notifyError(e);").newLine() //
-					.append("	}").newLine() //
-					.append("};").newLine() //
-					.append("@org.junit.Before").newLine() //
-					.append("public void prepareController() throws IOException {").newLine() //
-					.append("	testExecutionController = TestExecutionController.controller();").newLine() //
-					.append("}").newLine();
-			properties.put("remoteControl", remoteControlCode.toString());
-		} else {
-			properties.put("remoteControl", "");
-		}
 
 		final HumanReadableVisitor testSummaryVisitor = new HumanReadableVisitor(tc);
 
 		final JavaCodeGenerator javaContent = new JavaCodeGenerator();
-
-		if (withRemoteControl) {
-			javaContent.add("testExecutionController.beforeTestExecution();").newLine();
-		}
 
 		for (final TestStep step : tc.getSteps()) {
 			javaContent.append("// Step ").append(Integer.toString(step.getOrdinal())).append(": ")
@@ -75,7 +46,7 @@ public class TestCaseToJunitVisitor {
 			visitTestStep(javaContent, tc.getModel(), step);
 		}
 
-		properties.put("package", tc.getFolderinSrc());
+		properties.put("package", tc.getFolderInSrc());
 		properties.put("testName", tc.getName());
 		properties.put("testContent", javaContent.toString());
 		return template.apply(properties).generate();
@@ -84,10 +55,6 @@ public class TestCaseToJunitVisitor {
 	private void visitTestStep(final JavaCodeGenerator javaContent, final TestModel model, final TestStep step)
 			throws IOException, TestCaseException {
 		final StringBuilder comment = new StringBuilder();
-
-		if (withRemoteControl) {
-			javaContent.add("testExecutionController.beforeStepExecution(" + step.getOrdinal() + ");").newLine();
-		}
 
 		final JavaCodeGenerator stepContent = new JavaCodeGenerator();
 
@@ -106,12 +73,6 @@ public class TestCaseToJunitVisitor {
 
 		javaContent.append(comment.toString());
 		javaContent.append(stepContent.toString());
-
-		if (withRemoteControl) {
-			javaContent.add("testExecutionController.afterStepExecution(" + step.getOrdinal() + ");").newLine()
-					.newLine();
-		}
-
 	}
 
 	private void visitTestParameterValue(final JavaCodeGenerator javaContent, final TestModel model,

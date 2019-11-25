@@ -3,7 +3,7 @@ package ${package};
 import ch.skymarshall.tcwriter.examples.api.interfaces.dto.*;
 import ch.skymarshall.tcwriter.examples.api.interfaces.selectors.*;
 import ch.skymarshall.tcwriter.examples.api.interfaces.*;
-import ch.skymarshall.tcwriter.test.*;
+import ch.skymarshall.tcwriter.recording.*;
 
 import java.io.IOException;
 
@@ -12,8 +12,6 @@ import org.junit.Test;
 
 public class ${testName} {
 
-	${remoteControl}
-
 	private CustomerTestRole customer;
 	private DeliveryTestRole deliveryGuy;
 
@@ -21,7 +19,11 @@ public class ${testName} {
 	public void prepareApis() {
 		final ExampleService testedService = new ExampleService();
 		customer = new CustomerTestRole(testedService);
+		TestActors.register(customer, "customer", null);
 		deliveryGuy = new DeliveryTestRole(testedService);
+		TestActors.register(deliveryGuy, "deliveryGuy", null);
+		ch.skymarshall.tcwriter.TestFeature.aspectjRecorder().enable();
+		ch.skymarshall.tcwriter.TestFeature.aspectjStepping(); // don't enable by default
 	}
 	
 	@Test

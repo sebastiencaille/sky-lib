@@ -52,7 +52,7 @@
 						<aspectLibraries>
 							<aspectLibrary>
 								<groupId>ch.skymarshall.tcwriter</groupId>
-								<artifactId>testcase-writer-generators</artifactId>
+								<artifactId>testcase-writer-annotations</artifactId>
 							</aspectLibrary>
 						</aspectLibraries>
 					</configuration>

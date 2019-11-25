@@ -1,42 +1,30 @@
 package ch.skymarshall.tcwriter.gui;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
-import ch.skymarshall.tcwriter.test.TestExecutionController;
-import ch.skymarshall.tcwriter.test.TestExecutionController.TestCaseError;
+import ch.skymarshall.tcwriter.stepping.StepStatus;
+import ch.skymarshall.tcwriter.stepping.TestApi;
+import ch.skymarshall.tcwriter.stepping.TestApi.StepState;
+import ch.skymarshall.tcwriter.stepping.TestSteppingController.TestCaseError;
 
 public class TestRemoteControl {
 
-	public enum StepState {
-		STARTED, OK, FAILED
-	}
-
-	public static class StepStatus {
-		public final int ordinal;
-		public boolean breakPoint = false;
-		public StepState state = null;
-		public String message;
-
-		public StepStatus(final int ordinal) {
-			this.ordinal = ordinal;
-		}
-
-		@Override
-		public String toString() {
-			return ordinal + "/bp=" + breakPoint + ",state=" + state + ",message=" + message;
-		}
-	}
+	private static final Logger LOGGER = Logger.getLogger(TCWriterGui.class.getName());
 
 	private final int baseTcpPort;
+
+	private final Consumer<Boolean> testRunning;
+
+	private final Consumer<Boolean> testPaused;
 
 	private final Map<Integer, StepStatus> stepStates = new HashMap<>();
 
@@ -46,8 +34,13 @@ public class TestRemoteControl {
 
 	private ServerSocket controlServer;
 
-	public TestRemoteControl(final int baseTcpPort) {
+	private TestApi api;
+
+	public TestRemoteControl(final int baseTcpPort, final Consumer<Boolean> testRunning,
+			final Consumer<Boolean> testPaused) {
 		this.baseTcpPort = baseTcpPort;
+		this.testRunning = testRunning;
+		this.testPaused = testPaused;
 	}
 
 	public StepStatus stepStatus(final int ordinal) {
@@ -80,48 +73,48 @@ public class TestRemoteControl {
 	}
 
 	public void start() throws IOException {
+		testRunning.accept(true);
 		cleanSteps();
 		controlServer.setSoTimeout(20_000);
 		controlConnection = controlServer.accept();
-		Logger.getLogger(TCWriterGui.class.getName()).log(Level.INFO, "Connected");
-		TestExecutionController.handleCommands(controlConnection, (connection, command) -> {
-			try (final InputStream inputStream = controlConnection.getInputStream()) {
-				switch (command) {
-				case STEP_START:
-					final int startStepNumber = TestExecutionController.readStepNumber(inputStream);
-					stepStatus(startStepNumber).state = StepState.STARTED;
-					stepChangedListener.accept(startStepNumber, startStepNumber);
-					break;
-				case STEP_DONE:
-					final int stopStepNumber = TestExecutionController.readStepNumber(inputStream);
-					final StepStatus stepStatus = stepStatus(stopStepNumber);
-					if (stepStatus.state == StepState.STARTED) {
-						stepStatus.state = StepState.OK;
-					}
-					stepChangedListener.accept(stopStepNumber, stopStepNumber);
-					break;
-				case ERROR:
-					final TestCaseError errorMessage = TestExecutionController.readErrorMessage(inputStream);
-					final int errStepNumber = errorMessage.stepNumber;
-					stepStatus(errStepNumber).state = StepState.FAILED;
-					stepStatus(errStepNumber).message = errorMessage.message;
-					stepChangedListener.accept(errStepNumber, errStepNumber);
-					break;
-				default:
-					break;
-				}
-			}
-		}, this::resetConnection);
+		LOGGER.log(Level.INFO, "Connected");
+		api = new TestApi(controlConnection);
+		TestApi.handleCommands(api, command -> {
 
-		stepStates.values().stream().filter(s -> s.breakPoint).forEach(s -> {
-			try {
-				controlConnection.getOutputStream().write(TestExecutionController.Command.SET_BREAKPOINT.cmd);
-				TestExecutionController.writeInt(controlConnection, s.ordinal);
-			} catch (final IOException e) {
-				throw new IllegalStateException("Unable to setup connection", e);
+			switch (command) {
+			case STEP_START:
+				final int startStepNumber = api.readStart();
+				final StepStatus startStatus = stepStatus(startStepNumber);
+				startStatus.state = StepState.STARTED;
+				stepChangedListener.accept(startStepNumber, startStepNumber);
+				if (startStatus.breakPoint) {
+					testPaused.accept(true);
+				}
+				break;
+			case STEP_DONE:
+				final int stopStepNumber = api.readDone();
+				final StepStatus stopStepStatus = stepStatus(stopStepNumber);
+				if (stopStepStatus.state == StepState.STARTED) {
+					stopStepStatus.state = StepState.OK;
+				}
+				testPaused.accept(false);
+				stepChangedListener.accept(stopStepNumber, stopStepNumber);
+				break;
+			case ERROR:
+				final TestCaseError errorMessage = api.readErrorMessage();
+				final int errStepNumber = errorMessage.stepNumber;
+				final StepStatus errStepStatus = stepStatus(errStepNumber);
+				errStepStatus.state = StepState.FAILED;
+				errStepStatus.message = errorMessage.message;
+				stepChangedListener.accept(errStepNumber, errStepNumber);
+				break;
+			default:
+				break;
 			}
-		});
-		controlConnection.getOutputStream().write(TestExecutionController.Command.RUN.cmd);
+		}, this::resetConnection, () -> testRunning.accept(false));
+
+		stepStates.values().stream().filter(s -> s.breakPoint).forEach(api::setBreakPoint);
+		api.write(TestApi.Command.RUN);
 	}
 
 	public void cleanSteps() {
@@ -130,19 +123,21 @@ public class TestRemoteControl {
 	}
 
 	public void resetConnection() {
+		LOGGER.log(Level.INFO, "Disconnected");
 		if (controlConnection != null) {
 			try {
 				controlConnection.close();
 			} catch (final IOException e) {
 				// ignore
 			}
+			api = null;
 			controlConnection = null;
 		}
 
 	}
 
 	public void resume() throws IOException {
-		controlConnection.getOutputStream().write(TestExecutionController.Command.RUN.cmd);
+		api.write(TestApi.Command.RUN);
 	}
 
 	public void setStepListener(final BiConsumer<Integer, Integer> stepChangedListener) {

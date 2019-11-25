@@ -1,7 +1,14 @@
 package ch.skymarshall.tcwriter.generators.recorder;
 
+import static ch.skymarshall.tcwriter.generators.JsonHelper.classFile;
+import static ch.skymarshall.tcwriter.generators.JsonHelper.readFile;
+import static ch.skymarshall.tcwriter.generators.JsonHelper.testModelFromJson;
+import static ch.skymarshall.tcwriter.generators.JsonHelper.toJson;
+import static ch.skymarshall.tcwriter.generators.JsonHelper.writeFile;
 import static ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory.simpleType;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,10 +27,11 @@ import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestReference;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
-import ch.skymarshall.tcwriter.test.TestActors;
+import ch.skymarshall.tcwriter.recording.ITestCaseRecorder;
+import ch.skymarshall.tcwriter.recording.TestActors;
 import ch.skymarshall.tcwriter.test.TestObjectDescription;
 
-public class AbstractRecorder {
+public class TestCaseRecorder implements ITestCaseRecorder {
 
 	private static int actorIndex = 0;
 
@@ -34,7 +42,11 @@ public class AbstractRecorder {
 
 	private final Map<Object, TestActor> actors = new HashMap<>();
 
-	public AbstractRecorder(final TestModel model) {
+	public TestCaseRecorder(final Path modelPath) throws IOException {
+		this.testModel = testModelFromJson(readFile(modelPath));
+	}
+
+	public TestCaseRecorder(final TestModel model) {
 		this.testModel = model;
 	}
 
@@ -68,6 +80,7 @@ public class AbstractRecorder {
 		return testActor;
 	}
 
+	@Override
 	public void recordStep(final String description, final Object recordedActor, final String apiName,
 			final Object[] apiArgs) {
 		final TestStep step = new TestStep(testSteps.size() + 1);
@@ -108,6 +121,7 @@ public class AbstractRecorder {
 		testSteps.add(step);
 	}
 
+	@Override
 	public void recordParamFactory(final Class<?> apiFactoryClass, final String apiName, final Object[] apiArgs,
 			final Object returnValue) {
 		final TestParameterFactory testParameterFactory = testModel
@@ -120,6 +134,7 @@ public class AbstractRecorder {
 		testParameterValues.put(returnValue, testParameterValue);
 	}
 
+	@Override
 	public void recordParamFactoryCall(final Object factory, final String callName, final Object[] args) {
 		final TestParameterValue testParameterValue = testParameterValues.get(factory);
 		if (testParameterValue == null) {
@@ -137,6 +152,7 @@ public class AbstractRecorder {
 				createFactoryParameterValue(testParameterFactory.getOptionalParameter(callName), apiArg));
 	}
 
+	@Override
 	public void recordReturnValue(final Object reference) {
 		final TestStep currentStep = testSteps.get(testSteps.size() - 1);
 
@@ -173,8 +189,8 @@ public class AbstractRecorder {
 		return Object.class;
 	}
 
-	public TestCase getTestCase(final String path) {
-		final TestCase testCase = new TestCase(path, testModel);
+	public TestCase getTestCase(final String testClassName) {
+		final TestCase testCase = new TestCase(testClassName, testModel);
 		actors.forEach((a, ta) -> testModel.addActor(ta,
 				TestActors.getDescriptions().getOrDefault(a, new TestObjectDescription(ta.getId(), ta.getId()))));
 		testCase.getSteps().addAll(testSteps);
@@ -185,4 +201,8 @@ public class AbstractRecorder {
 		return testCase;
 	}
 
+	@Override
+	public void save(final Path testRoot, final String testClassName) throws IOException {
+		writeFile(classFile(testRoot, testClassName), toJson(getTestCase(testClassName)));
+	}
 }

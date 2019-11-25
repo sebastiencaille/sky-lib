@@ -38,6 +38,11 @@
 			<version>1_0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjtools</artifactId>
+			<version>${aspectj.version}</version>
+		</dependency>
 
 	</dependencies>
 </project>

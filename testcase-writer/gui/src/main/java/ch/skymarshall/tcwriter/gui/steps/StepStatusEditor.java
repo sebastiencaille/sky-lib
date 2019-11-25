@@ -6,7 +6,7 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
 import javax.swing.JTable;
 
-import ch.skymarshall.tcwriter.gui.TestRemoteControl.StepStatus;
+import ch.skymarshall.tcwriter.stepping.StepStatus;
 
 public class StepStatusEditor extends DefaultCellEditor {
 

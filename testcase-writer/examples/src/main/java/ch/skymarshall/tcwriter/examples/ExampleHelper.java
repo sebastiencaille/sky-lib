@@ -18,7 +18,8 @@ import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
-import ch.skymarshall.tcwriter.generators.recorder.aspectj.AspectjRecorder;
+import ch.skymarshall.tcwriter.generators.recorder.TestCaseRecorder;
+import ch.skymarshall.tcwriter.recording.TestCaseRecorderAspect;
 
 public class ExampleHelper {
 
@@ -64,8 +65,8 @@ public class ExampleHelper {
 	}
 
 	public static TestCase recordTestCase(final TestModel model) {
-		final AspectjRecorder recorder = new AspectjRecorder(model);
-		recorder.install();
+		final TestCaseRecorder recorder = new TestCaseRecorder(model);
+		TestCaseRecorderAspect.setRecorder(recorder);
 		final ExampleTest test = new ExampleTest();
 		test.initActors();
 		test.testNormalCase();

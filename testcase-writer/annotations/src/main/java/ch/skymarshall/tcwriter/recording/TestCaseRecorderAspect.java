@@ -1,4 +1,4 @@
-package ch.skymarshall.tcwriter.generators.recorder.aspectj;
+package ch.skymarshall.tcwriter.recording;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -7,18 +7,18 @@ import org.aspectj.lang.annotation.Aspect;
 import ch.skymarshall.tcwriter.annotations.TCRole;
 
 @Aspect
-public class TCApiAspect {
+public class TestCaseRecorderAspect {
 
-	private static AspectjRecorder recorder;
+	private static ITestCaseRecorder recorder;
 
-	public static void setRecorder(final AspectjRecorder recorder) {
-		TCApiAspect.recorder = recorder;
+	public static void setRecorder(final ITestCaseRecorder recorder) {
+		TestCaseRecorderAspect.recorder = recorder;
 	}
 
 	@Around("execution(@ch.skymarshall.tcwriter.annotations.TCApi * *.*(..))")
 	public Object recordApiCall(final ProceedingJoinPoint jp) throws Throwable {
 		if (recorder == null) {
-			throw new IllegalStateException("recorder not set");
+			return jp.proceed();
 		}
 		if (jp.getTarget() != null) {
 			if (jp.getSignature().getDeclaringType().getAnnotation(TCRole.class) != null) {

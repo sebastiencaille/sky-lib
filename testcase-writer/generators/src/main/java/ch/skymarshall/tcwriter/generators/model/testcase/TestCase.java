@@ -59,7 +59,7 @@ public class TestCase {
 		return steps;
 	}
 
-	public String getFolderinSrc() {
+	public String getFolderInSrc() {
 		return pathInSrcFolder.substring(0, pathInSrcFolder.lastIndexOf('.'));
 	}
 

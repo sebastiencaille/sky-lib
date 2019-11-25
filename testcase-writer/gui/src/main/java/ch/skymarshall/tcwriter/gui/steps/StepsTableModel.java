@@ -159,8 +159,8 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 	}
 
 	public void stepExecutionUpdated(final int first, final int last) {
-		final int min = first - 1;
-		final int max = Math.max(last - 1, steps.getSize());
+		final int min = (first - 1) * 2;
+		final int max = Math.max((last - 1) * 2 + 1, steps.getSize() * 2 + 1);
 		fireTableChanged(new TableModelEvent(this, min, max, Column.BREAKPOINT.ordinal()));
 	}
 

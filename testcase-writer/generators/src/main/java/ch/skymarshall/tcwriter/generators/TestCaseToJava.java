@@ -28,11 +28,11 @@ public class TestCaseToJava {
 	public File generateAndWrite(final TestCase tc, final Path targetPath) throws IOException, TestCaseException {
 		final Path targetFile = targetPath.resolve(tc.getPathInSrc().replace(".", "/") + ".java");
 		Files.write(targetFile, generate(tc).getBytes(StandardCharsets.UTF_8));
-		return targetFile.toFile();
+		return targetFile.toAbsolutePath().toFile();
 	}
 
 	private String generate(final TestCase tc) throws IOException, TestCaseException {
-		return new TestCaseToJunitVisitor(testCaseTemplate, true).visitTestCase(tc);
+		return new TestCaseToJunitVisitor(testCaseTemplate).visitTestCase(tc);
 	}
 
 	public static void main(final String[] args) throws IOException, TestCaseException {

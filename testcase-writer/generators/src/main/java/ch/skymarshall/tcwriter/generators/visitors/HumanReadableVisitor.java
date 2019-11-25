@@ -26,7 +26,7 @@ public class HumanReadableVisitor {
 		if (actorSummary == null) {
 			actorSummary = summaryOf(step.getRole(), null);
 		}
-		final StringBuilder result = new StringBuilder("As").append(actorSummary).append(", I ")
+		final StringBuilder result = new StringBuilder("As ").append(actorSummary).append(", I ")
 				.append(summaryOf(step.getAction(),
 						step.getParametersValue().stream().map(this::processTestParameter).collect(toList())));
 

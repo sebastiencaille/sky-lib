@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,8 +64,22 @@ public class JsonHelper {
 	private JsonHelper() {
 	}
 
+	public static Path classFile(final Path root, final String testClassName) {
+		Path result = root;
+		for (final String path : testClassName.split("\\.")) {
+			result = result.resolve(path);
+		}
+		result.getParent().resolve(result.getFileName().toString() + ".java");
+		return result;
+	}
+
 	public static String readFile(final Path path) throws IOException {
 		return String.join(" ", Files.readAllLines(path, StandardCharsets.UTF_8));
+	}
+
+	public static void writeFile(final Path testRoot, final String jsonTestCase) throws IOException {
+		Files.write(testRoot, jsonTestCase.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE,
+				StandardOpenOption.TRUNCATE_EXISTING);
 	}
 
 	public static String toJson(final TestCase tc) throws IOException {

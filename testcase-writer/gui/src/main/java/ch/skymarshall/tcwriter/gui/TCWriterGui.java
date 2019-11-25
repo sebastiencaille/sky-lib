@@ -55,6 +55,13 @@ public abstract class TCWriterGui extends JFrame {
 	private final ObjectProperty<TestStep> selectedStep = new ObjectProperty<>("SelectedStep", changeSupport);
 	private final TestModel testModel;
 
+	/**
+	 *
+	 * @param tc
+	 * @return the source file
+	 * @throws TestCaseException
+	 * @throws IOException
+	 */
 	public abstract File generateCode(TestCase tc) throws TestCaseException, IOException;
 
 	public TCWriterGui(final TestModel testModel) {
@@ -65,44 +72,54 @@ public abstract class TCWriterGui extends JFrame {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		final TestRemoteControl testRemoteControl = new TestRemoteControl(9998);
-
 		this.getContentPane().setLayout(new BorderLayout());
 
 		final JButton newTCButton = new JButton(icon("general/New24"));
+		newTCButton.setToolTipText("New test case");
 		newTCButton.addActionListener(e -> withException(this::newTestCase));
 
 		final JButton loadButton = new JButton(icon("general/Open24"));
+		loadButton.setToolTipText("Open test case");
 		loadButton.addActionListener(e -> withException(this::loadTestCase));
 
 		final JButton saveButton = new JButton(icon("general/Save24"));
+		saveButton.setToolTipText("Save test case");
 		saveButton.addActionListener(e -> withException(this::save));
 
 		final JButton generateButton = new JButton(icon("general/Export24"));
+		generateButton.setToolTipText("Export to Java");
 		generateButton.addActionListener(e -> withException(() -> generateCode(tc.getValue())));
 
 		final JButton runButton = new JButton(icon("media/Play24"));
+		runButton.setToolTipText("Start execution");
+
+		final JButton continueButton = new JButton(icon("media/StepForward24"));
+		continueButton.setToolTipText("Continue execution");
+
+		final TestRemoteControl testRemoteControl = new TestRemoteControl(9998, r -> runButton.setEnabled(!r),
+				continueButton::setEnabled);
 		runButton.addActionListener(e -> withException(() -> {
 			testRemoteControl.resetConnection();
 			new Thread(() -> withException(() -> {
 				final int port = testRemoteControl.prepare();
 				LOGGER.log(Level.INFO, "Using port " + port);
 				final TestCase testCase = tc.getValue();
-				final File file = generateCode(testCase);
-				startTestCase(file, testCase.getFolderinSrc() + "." + testCase.getName(), port);
+				final File testCaseSouceFolder = generateCode(testCase);
+				startTestCase(testCaseSouceFolder, testCase.getFolderInSrc() + "." + testCase.getName(), port);
 				testRemoteControl.start();
 			}), "Test execution").start();
 		}));
-
-		final JButton resumeButton = new JButton(icon("media/StepForward24"));
-		resumeButton.addActionListener(e -> withException(testRemoteControl::resume));
+		continueButton.addActionListener(e -> withException(testRemoteControl::resume));
+		continueButton.setEnabled(false);
 
 		final JSeparator sep = new JSeparator(SwingConstants.VERTICAL);
 
 		final JButton addStepButton = new JButton(icon("table/RowInsertAfter24"));
+		addStepButton.setToolTipText("Add step");
 		addStepButton.addActionListener(e -> withException(this::addStep));
 
 		final JButton removeStepButton = new JButton(icon("table/RowDelete24"));
+		removeStepButton.setToolTipText("Remove step");
 		removeStepButton.addActionListener(e -> withException(this::removeStep));
 
 		final StepsTable stepsTable = new StepsTable(tc, selectedStep, testRemoteControl);
@@ -113,7 +130,7 @@ public abstract class TCWriterGui extends JFrame {
 		buttons.add(saveButton);
 		buttons.add(generateButton);
 		buttons.add(runButton);
-		buttons.add(resumeButton);
+		buttons.add(continueButton);
 		buttons.add(sep);
 		buttons.add(addStepButton);
 		buttons.add(removeStepButton);
@@ -284,22 +301,34 @@ public abstract class TCWriterGui extends JFrame {
 		}
 	}
 
-	public void startTestCase(final File file, final String className, final int tcpPort)
+	public void startTestCase(final File sourceFile, final String className, final int tcpPort)
 			throws IOException, InterruptedException {
 
 		final String currentClassPath = Arrays
+				.stream(((URLClassLoader) Thread.currentThread().getContextClassLoader()).getURLs()).map(URL::getFile)
+				.collect(joining(":"));
+		final String waveClassPath = Arrays
 				.stream(((URLClassLoader) Thread.currentThread().getContextClassLoader()).getURLs())
-				.map(Object::toString).collect(joining(":"));
-
-		final Process testCompiler = new ProcessBuilder("javac", "-cp", currentClassPath, "-d",
-				System.getProperty("java.io.tmpdir") + "/tc", file.toString()).redirectErrorStream(true).start();
+				.filter(j -> j.toString().contains("testcase-writer") && j.toString().contains("annotations"))
+				.map(URL::getFile).collect(joining(":"));
+		final Path tmp = new File(System.getProperty("java.io.tmpdir")).toPath();
+		final Process testCompiler = new ProcessBuilder("java", //
+				"-cp", currentClassPath, //
+				"org.aspectj.tools.ajc.Main", //
+				"-aspectpath", waveClassPath, //
+				"-source", "1.8", //
+				"-target", "1.8", //
+				// "-verbose", "-showWeaveInfo", //
+				"-d", tmp.resolve("tc").toString(), //
+				sourceFile.toString() //
+		).redirectErrorStream(true).start();
 		new StreamHandler(testCompiler.getInputStream(), LOGGER::info).start();
 		if (testCompiler.waitFor() != 0) {
 			throw new IllegalStateException("Compiler failed with status " + testCompiler.exitValue());
 		}
 
-		final Process runTest = new ProcessBuilder("java", "-cp", currentClassPath + ":/tmp/tc",
-				"-Dtest.port=" + tcpPort, "-Dremote.controller=true", "org.junit.runner.JUnitCore", className)
+		final Process runTest = new ProcessBuilder("java", "-cp", tmp.resolve("tc") + ":" + currentClassPath,
+				"-Dtest.port=" + tcpPort, "-Dtc.stepping=true", "org.junit.runner.JUnitCore", className)
 						.redirectErrorStream(true).start();
 		new StreamHandler(runTest.getInputStream(), LOGGER::info).start();
 	}

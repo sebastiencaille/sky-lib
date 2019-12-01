@@ -18,7 +18,7 @@ public class IntegrationTest {
 		final TestCase testCase = ExampleHelper.recordTestCase(model);
 		ExampleHelper.saveModel(model);
 		ExampleHelper.saveTC(testCase);
-		ExampleHelper.generateCode(testCase);
+		ExampleHelper.testExecutor().generateCode(testCase);
 	}
 
 	@Test

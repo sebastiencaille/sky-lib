@@ -26,7 +26,7 @@ public class TestCaseToJava {
 	}
 
 	public File generateAndWrite(final TestCase tc, final Path targetPath) throws IOException, TestCaseException {
-		final Path targetFile = targetPath.resolve(tc.getPathInSrc().replace(".", "/") + ".java");
+		final Path targetFile = targetPath.resolve(tc.getPackageAndClassName().replace(".", "/") + ".java");
 		Files.write(targetFile, generate(tc).getBytes(StandardCharsets.UTF_8));
 		return targetFile.toAbsolutePath().toFile();
 	}

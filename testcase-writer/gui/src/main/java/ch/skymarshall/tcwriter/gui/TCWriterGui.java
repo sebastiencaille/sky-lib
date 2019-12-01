@@ -1,20 +1,15 @@
 package ch.skymarshall.tcwriter.gui;
 
-import static java.util.stream.Collectors.joining;
+import static ch.skymarshall.tcwriter.generators.JsonHelper.readFile;
+import static ch.skymarshall.tcwriter.generators.JsonHelper.testCaseFromJson;
+import static ch.skymarshall.tcwriter.generators.JsonHelper.toJson;
+import static ch.skymarshall.tcwriter.generators.JsonHelper.writeFile;
 
 import java.awt.BorderLayout;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.net.URLClassLoader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,8 +28,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
-import ch.skymarshall.tcwriter.generators.JsonHelper;
-import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
@@ -43,29 +36,25 @@ import ch.skymarshall.tcwriter.gui.editors.params.TestParameterValueEditorPanel;
 import ch.skymarshall.tcwriter.gui.editors.steps.StepEditorModel;
 import ch.skymarshall.tcwriter.gui.editors.steps.StepEditorPanel;
 import ch.skymarshall.tcwriter.gui.steps.StepsTable;
+import executors.ITestExecutor;
 
-public abstract class TCWriterGui extends JFrame {
+public class TCWriterGui extends JFrame {
 
 	private static final Logger LOGGER = Logger.getLogger(TCWriterGui.class.getName());
 
 	private final ControllerPropertyChangeSupport changeSupport = new ControllerPropertyChangeSupport(this);
 
+	private final TestModel testModel;
+
 	private final ObjectProperty<TestCase> tc = new ObjectProperty<>("TestCase", changeSupport);
 
 	private final ObjectProperty<TestStep> selectedStep = new ObjectProperty<>("SelectedStep", changeSupport);
-	private final TestModel testModel;
 
-	/**
-	 *
-	 * @param tc
-	 * @return the source file
-	 * @throws TestCaseException
-	 * @throws IOException
-	 */
-	public abstract File generateCode(TestCase tc) throws TestCaseException, IOException;
+	private final ITestExecutor testExecutor;
 
-	public TCWriterGui(final TestModel testModel) {
+	public TCWriterGui(final TestModel testModel, final ITestExecutor testExecutor) {
 		this.testModel = testModel;
+		this.testExecutor = testExecutor;
 	}
 
 	public void run() {
@@ -88,7 +77,7 @@ public abstract class TCWriterGui extends JFrame {
 
 		final JButton generateButton = new JButton(icon("general/Export24"));
 		generateButton.setToolTipText("Export to Java");
-		generateButton.addActionListener(e -> withException(() -> generateCode(tc.getValue())));
+		generateButton.addActionListener(e -> withException(() -> testExecutor.generateCode(tc.getValue())));
 
 		final JButton runButton = new JButton(icon("media/Play24"));
 		runButton.setToolTipText("Start execution");
@@ -101,11 +90,9 @@ public abstract class TCWriterGui extends JFrame {
 		runButton.addActionListener(e -> withException(() -> {
 			testRemoteControl.resetConnection();
 			new Thread(() -> withException(() -> {
-				final int port = testRemoteControl.prepare();
-				LOGGER.log(Level.INFO, "Using port " + port);
-				final TestCase testCase = tc.getValue();
-				final File testCaseSouceFolder = generateCode(testCase);
-				startTestCase(testCaseSouceFolder, testCase.getFolderInSrc() + "." + testCase.getName(), port);
+				final int rcPort = testRemoteControl.prepare();
+				LOGGER.log(Level.INFO, "Using port " + rcPort);
+				testExecutor.runTest(tc.getValue(), rcPort);
 				testRemoteControl.start();
 			}), "Test execution").start();
 		}));
@@ -230,20 +217,13 @@ public abstract class TCWriterGui extends JFrame {
 		tc.setValue(this, testCase);
 	}
 
-	public void loadTestCase(final Path testFile) throws IOException {
-		final TestCase testCase = JsonHelper
-				.testCaseFromJson(new String(Files.readAllBytes(testFile), StandardCharsets.UTF_8), testModel);
-		loadTestCase(testCase);
-	}
-
 	private void save() throws IOException {
 		final JFileChooser testFileChooser = new JFileChooser();
 		testFileChooser.setFileFilter(new FileNameExtensionFilter("JSon test", "json"));
 		final int dialogResult = testFileChooser.showSaveDialog(this);
 		if (dialogResult == 0) {
 			final File testFile = testFileChooser.getSelectedFile();
-			Files.write(testFile.toPath(), JsonHelper.toJson(tc.getValue()).getBytes(StandardCharsets.UTF_8),
-					StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+			writeFile(testFile.toPath(), toJson(tc.getValue()));
 		}
 	}
 
@@ -253,7 +233,7 @@ public abstract class TCWriterGui extends JFrame {
 		final int dialogResult = testFileChooser.showOpenDialog(this);
 		if (dialogResult == 0) {
 			final File testFile = testFileChooser.getSelectedFile();
-			loadTestCase(testFile.toPath());
+			loadTestCase(testCaseFromJson(readFile(testFile.toPath()), testModel));
 		}
 	}
 
@@ -271,66 +251,6 @@ public abstract class TCWriterGui extends JFrame {
 			JOptionPane.showMessageDialog(this, "Unable to execution action: " + ex.getMessage());
 		}
 
-	}
-
-	private static class StreamHandler implements Runnable {
-
-		private final InputStream in;
-		private final Consumer<String> flow;
-
-		public StreamHandler(final InputStream in, final Consumer<String> flow) {
-			this.in = in;
-			this.flow = flow;
-		}
-
-		public void start() {
-			new Thread(this).start();
-		}
-
-		@Override
-		public void run() {
-			try {
-				final byte[] buffer = new byte[1024 * 1024];
-				int read;
-				while ((read = in.read(buffer, 0, buffer.length)) >= 0) {
-					flow.accept(new String(buffer, 0, read));
-				}
-			} catch (final IOException e) {
-				// ignore
-			}
-		}
-	}
-
-	public void startTestCase(final File sourceFile, final String className, final int tcpPort)
-			throws IOException, InterruptedException {
-
-		final String currentClassPath = Arrays
-				.stream(((URLClassLoader) Thread.currentThread().getContextClassLoader()).getURLs()).map(URL::getFile)
-				.collect(joining(":"));
-		final String waveClassPath = Arrays
-				.stream(((URLClassLoader) Thread.currentThread().getContextClassLoader()).getURLs())
-				.filter(j -> j.toString().contains("testcase-writer") && j.toString().contains("annotations"))
-				.map(URL::getFile).collect(joining(":"));
-		final Path tmp = new File(System.getProperty("java.io.tmpdir")).toPath();
-		final Process testCompiler = new ProcessBuilder("java", //
-				"-cp", currentClassPath, //
-				"org.aspectj.tools.ajc.Main", //
-				"-aspectpath", waveClassPath, //
-				"-source", "1.8", //
-				"-target", "1.8", //
-				// "-verbose", "-showWeaveInfo", //
-				"-d", tmp.resolve("tc").toString(), //
-				sourceFile.toString() //
-		).redirectErrorStream(true).start();
-		new StreamHandler(testCompiler.getInputStream(), LOGGER::info).start();
-		if (testCompiler.waitFor() != 0) {
-			throw new IllegalStateException("Compiler failed with status " + testCompiler.exitValue());
-		}
-
-		final Process runTest = new ProcessBuilder("java", "-cp", tmp.resolve("tc") + ":" + currentClassPath,
-				"-Dtest.port=" + tcpPort, "-Dtc.stepping=true", "org.junit.runner.JUnitCore", className)
-						.redirectErrorStream(true).start();
-		new StreamHandler(runTest.getInputStream(), LOGGER::info).start();
 	}
 
 }

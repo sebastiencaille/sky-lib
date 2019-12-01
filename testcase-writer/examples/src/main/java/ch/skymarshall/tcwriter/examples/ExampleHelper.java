@@ -13,13 +13,13 @@ import ch.skymarshall.tcwriter.examples.api.interfaces.CustomerTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestRole;
 import ch.skymarshall.tcwriter.generators.JavaToModel;
 import ch.skymarshall.tcwriter.generators.JsonHelper;
-import ch.skymarshall.tcwriter.generators.TestCaseToJava;
-import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.recorder.TestCaseRecorder;
 import ch.skymarshall.tcwriter.recording.TestCaseRecorderAspect;
+import executors.ITestExecutor;
+import executors.JunitTestExecutor;
 
 public class ExampleHelper {
 
@@ -73,8 +73,8 @@ public class ExampleHelper {
 		return recorder.getTestCase("ch.skymarshall.tcwriter.examples.GeneratedTest");
 	}
 
-	public static File generateCode(final TestCase tc) throws IOException, TestCaseException {
-		return new TestCaseToJava(ExampleHelper.TEMPLATE_PATH).generateAndWrite(tc, ExampleHelper.SRC_PATH);
+	public static ITestExecutor testExecutor() throws IOException {
+		return new JunitTestExecutor(ExampleHelper.TEMPLATE_PATH, ExampleHelper.SRC_PATH);
 	}
 
 }

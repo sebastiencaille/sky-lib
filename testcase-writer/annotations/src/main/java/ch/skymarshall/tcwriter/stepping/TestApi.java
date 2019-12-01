@@ -84,7 +84,6 @@ public class TestApi {
 	}
 
 	public void write(final Command command) throws IOException {
-		System.out.println("Sending " + command);
 		outputStream.write(command.cmd);
 	}
 
@@ -131,10 +130,8 @@ public class TestApi {
 			try {
 				Command receivedCommand;
 				while ((receivedCommand = api.readCommand()) != Command.EXIT) {
-					System.out.println("Handling " + receivedCommand);
 					commandHandler.execute(receivedCommand);
 				}
-				System.out.println("EXIT");
 			} catch (final IOException e) {
 				// ignore
 			} finally {

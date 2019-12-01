@@ -23,7 +23,7 @@ public class TestCase {
 	private TestModel testModel;
 
 	private final List<TestStep> steps = new ArrayList<>();
-	private final String pathInSrcFolder;
+	private final String pkgAndClassName;
 	private final Multimap<String, TestReference> dynamicReferences = MultimapBuilder.hashKeys().arrayListValues()
 			.build();
 
@@ -34,12 +34,12 @@ public class TestCase {
 	private Map<String, IdObject> cachedValues = null;
 
 	public TestCase() {
-		this.pathInSrcFolder = null;
+		this.pkgAndClassName = null;
 		this.testModel = null;
 	}
 
 	public TestCase(final String path, final TestModel testModel) {
-		this.pathInSrcFolder = path;
+		this.pkgAndClassName = path;
 		this.testModel = testModel;
 	}
 
@@ -59,16 +59,16 @@ public class TestCase {
 		return steps;
 	}
 
-	public String getFolderInSrc() {
-		return pathInSrcFolder.substring(0, pathInSrcFolder.lastIndexOf('.'));
+	public String getPackage() {
+		return pkgAndClassName.substring(0, pkgAndClassName.lastIndexOf('.'));
 	}
 
 	public String getName() {
-		return pathInSrcFolder.substring(pathInSrcFolder.lastIndexOf('.') + 1);
+		return pkgAndClassName.substring(pkgAndClassName.lastIndexOf('.') + 1);
 	}
 
-	public String getPathInSrc() {
-		return pathInSrcFolder;
+	public String getPackageAndClassName() {
+		return pkgAndClassName;
 	}
 
 	public void publishReference(final TestReference reference) {

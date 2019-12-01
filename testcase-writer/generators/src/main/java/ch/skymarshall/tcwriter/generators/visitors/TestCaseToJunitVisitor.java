@@ -46,7 +46,7 @@ public class TestCaseToJunitVisitor {
 			visitTestStep(javaContent, tc.getModel(), step);
 		}
 
-		properties.put("package", tc.getFolderInSrc());
+		properties.put("package", tc.getPackage());
 		properties.put("testName", tc.getName());
 		properties.put("testContent", javaContent.toString());
 		return template.apply(properties).generate();

@@ -6,10 +6,9 @@ import java.io.File;
 import java.io.IOException;
 
 import ch.skymarshall.tcwriter.generators.JsonHelper;
-import ch.skymarshall.tcwriter.generators.TestCaseToJava;
-import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
-import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
+import executors.ITestExecutor;
+import executors.JunitTestExecutor;
 
 public class TCEditor {
 
@@ -18,14 +17,9 @@ public class TCEditor {
 		final String javaTemplate = args[1];
 		final String javaTargetPath = args[2];
 		final TestModel testModel = testModelFromJson(JsonHelper.readFile(new File(modelFile).toPath()));
-		new TCWriterGui(testModel) {
-
-			@Override
-			public File generateCode(final TestCase tc) throws TestCaseException, IOException {
-				return new TestCaseToJava(new File(javaTemplate).toPath()).generateAndWrite(tc,
-						new File(javaTargetPath).toPath());
-			}
-		}.setVisible(true);
+		final ITestExecutor testExecutor = new JunitTestExecutor(new File(javaTemplate).toPath(),
+				new File(javaTargetPath).toPath());
+		new TCWriterGui(testModel, testExecutor).setVisible(true);
 	}
 
 }

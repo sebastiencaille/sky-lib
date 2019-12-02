@@ -21,13 +21,10 @@ import java.lang.annotation.Annotation;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -35,7 +32,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
+
+import ch.skymarshall.util.helpers.ClassLoaderHelper;
 
 /**
  * To select some classes
@@ -92,22 +90,8 @@ public class ClassFinder {
 	}
 
 	public void collect() throws IOException, URISyntaxException {
-		final List<URL> urls;
-		if (loader instanceof URLClassLoader) {
-			urls = Arrays.asList(((URLClassLoader) loader).getURLs());
-		} else {
-			final String[] cp = System.getProperty("java.class.path").split(System.getProperty("path.separator"));
-			urls = Arrays.stream(cp).map(c -> {
-				try {
-					return new URL("file://" + c);
-				} catch (final MalformedURLException e) {
-					throw new IllegalStateException(e);
-				}
 
-			}).collect(Collectors.toList());
-		}
-
-		for (final URL url : urls) {
+		for (final URL url : ClassLoaderHelper.appClassPath()) {
 			final File file = new File(url.toURI());
 			if (!file.exists()) {
 				continue;

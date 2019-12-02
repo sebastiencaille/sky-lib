@@ -3,7 +3,12 @@ package ch.skymarshall.util.helpers;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ClassLoaderHelper {
 
@@ -36,5 +41,17 @@ public class ClassLoaderHelper {
 		try (final InputStream in = openResourceStream(resourceName)) {
 			return readResource(in);
 		}
+	}
+
+	public static List<URL> appClassPath() {
+		final String[] cp = System.getProperty("java.class.path").split(System.getProperty("path.separator"));
+		return Arrays.stream(cp).map(c -> {
+			try {
+				return new URL("file://" + c);
+			} catch (final MalformedURLException e) {
+				throw new IllegalStateException(e);
+			}
+
+		}).collect(Collectors.toList());
 	}
 }

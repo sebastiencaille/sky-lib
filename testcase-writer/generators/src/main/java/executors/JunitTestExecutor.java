@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import ch.skymarshall.tcwriter.generators.TestCaseToJava;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
+import ch.skymarshall.util.helpers.ClassLoaderHelper;
 
 public class JunitTestExecutor implements ITestExecutor {
 
@@ -43,8 +44,7 @@ public class JunitTestExecutor implements ITestExecutor {
 
 	@Override
 	public void compile(final File sourceFile) throws IOException, InterruptedException {
-		final String waveClassPath = Arrays
-				.stream(((URLClassLoader) Thread.currentThread().getContextClassLoader()).getURLs())
+		final String waveClassPath = ClassLoaderHelper.appClassPath().stream()
 				.filter(j -> j.toString().contains("testcase-writer") && j.toString().contains("annotations"))
 				.map(URL::getFile).collect(joining(":"));
 		final Process testCompiler = new ProcessBuilder("java", //

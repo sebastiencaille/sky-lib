@@ -1,6 +1,6 @@
 package ${package};
 
-import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
+import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.GuiModel;
 import ch.skymarshall.gui.mvc.IObjectGuiModel;
 import ch.skymarshall.gui.mvc.persisters.ObjectProviderPersister;
@@ -21,7 +21,7 @@ public class ${modelClass} extends GuiModel implements IObjectGuiModel<${objectC
 
 	${fields.declare}
 
-    public ${modelClass}(final String prefix, final ControllerPropertyChangeSupport propertySupport, final ErrorProperty errorProperty) {
+    public ${modelClass}(final String prefix, final IScopedSupport propertySupport, final ErrorProperty errorProperty) {
         super(propertySupport, errorProperty);
 		${fields.init}
     }
@@ -34,11 +34,11 @@ public class ${modelClass} extends GuiModel implements IObjectGuiModel<${objectC
         this("${objectClassSimpleName}", controller.getPropertySupport(), GuiModel.createErrorProperty("${objectClassSimpleName}-Error", controller.getPropertySupport()));
     }
 
-    public ${modelClass}(final String prefix, final ControllerPropertyChangeSupport propertySupport) {
+    public ${modelClass}(final String prefix, final IScopedSupport propertySupport) {
         this(prefix, propertySupport, GuiModel.createErrorProperty(prefix + "-Error", propertySupport));
     }
 
-    public ${modelClass}(final ControllerPropertyChangeSupport propertySupport) {
+    public ${modelClass}(final IScopedSupport propertySupport) {
         this("${objectClassSimpleName}", propertySupport, GuiModel.createErrorProperty("${objectClassSimpleName}-Error", propertySupport));
     }
 

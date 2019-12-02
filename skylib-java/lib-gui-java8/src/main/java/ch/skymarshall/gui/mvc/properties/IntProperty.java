@@ -18,8 +18,8 @@ package ch.skymarshall.gui.mvc.properties;
 import java.util.function.Consumer;
 
 import ch.skymarshall.gui.mvc.BindingChain;
-import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
 import ch.skymarshall.gui.mvc.BindingChain.EndOfChain;
+import ch.skymarshall.gui.mvc.IScopedSupport;
 
 /**
  * Property containing an int value.
@@ -33,13 +33,12 @@ public class IntProperty extends AbstractTypedProperty<Integer> {
 	private int value;
 	private final int defaultValue;
 
-	public IntProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-			final int defaultValue) {
+	public IntProperty(final String name, final IScopedSupport propertySupport, final int defaultValue) {
 		super(name, propertySupport);
 		this.defaultValue = defaultValue;
 	}
 
-	public IntProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {
+	public IntProperty(final String name, final IScopedSupport propertySupport) {
 		this(name, propertySupport, 0);
 	}
 
@@ -82,7 +81,7 @@ public class IntProperty extends AbstractTypedProperty<Integer> {
 	@Override
 	public void attach() {
 		super.attach();
-		propertySupport.firePropertyChange(getName(), this, null, Integer.valueOf(value));
+		propertySupport.getMain().firePropertyChange(getName(), this, null, Integer.valueOf(value));
 	}
 
 	@Override

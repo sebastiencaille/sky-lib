@@ -23,9 +23,9 @@ import java.util.stream.Stream;
 
 import javax.swing.event.EventListenerList;
 
-import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
 import ch.skymarshall.gui.mvc.GuiErrors.GuiError;
 import ch.skymarshall.gui.mvc.IPropertyEventListener;
+import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.PropertyEvent;
 import ch.skymarshall.gui.mvc.PropertyEvent.EventKind;
 
@@ -56,7 +56,7 @@ public abstract class AbstractProperty implements Serializable {
 	/**
 	 * Support to trigger property change
 	 */
-	protected final transient ControllerPropertyChangeSupport propertySupport;
+	protected final transient IScopedSupport propertySupport;
 
 	/**
 	 * Property related events (before firing, after firing, ...)
@@ -70,13 +70,15 @@ public abstract class AbstractProperty implements Serializable {
 
 	protected boolean attached = false;
 
-	public abstract void reset(final Object caller);
+	public abstract void reset(Object caller);
 
-	public abstract void load(final Object caller);
+	public abstract void load(Object caller);
 
 	public abstract void save();
 
-	public AbstractProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {
+	public abstract void fireArtificialChange(Object caller);
+
+	public AbstractProperty(final String name, final IScopedSupport propertySupport) {
 		this.name = name;
 		this.propertySupport = propertySupport;
 		propertySupport.register(this);
@@ -111,7 +113,7 @@ public abstract class AbstractProperty implements Serializable {
 	}
 
 	public void removeListener(final PropertyChangeListener propertyChangeListener) {
-		propertySupport.removePropertyChangeListener(name, propertyChangeListener);
+		propertySupport.getMain().removePropertyChangeListener(name, propertyChangeListener);
 	}
 
 	public void removeListeners(final List<IPropertyEventListener> toRemove) {
@@ -119,11 +121,11 @@ public abstract class AbstractProperty implements Serializable {
 	}
 
 	public void removeAllListeners() {
-		propertySupport.removeAllPropertyChangeListener(name);
+		propertySupport.getMain().removeAllPropertyChangeListener(name);
 	}
 
 	public boolean isModifiedBy(final Object caller) {
-		return propertySupport.isModifiedBy(name, caller);
+		return propertySupport.getMain().isModifiedBy(name, caller);
 	}
 
 	public void addListener(final IPropertyEventListener listener) {

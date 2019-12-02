@@ -22,10 +22,12 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -33,6 +35,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * To select some classes
@@ -62,9 +65,9 @@ public class ClassFinder {
 
 	private final Set<Class<?>> expectedSuperClasses = new HashSet<>();
 
-	private final URLClassLoader loader;
+	private final ClassLoader loader;
 
-	public ClassFinder(final URLClassLoader loader) {
+	public ClassFinder(final ClassLoader loader) {
 		this.loader = loader;
 		result.put(Object.class, null);
 	}
@@ -89,8 +92,22 @@ public class ClassFinder {
 	}
 
 	public void collect() throws IOException, URISyntaxException {
+		final List<URL> urls;
+		if (loader instanceof URLClassLoader) {
+			urls = Arrays.asList(((URLClassLoader) loader).getURLs());
+		} else {
+			final String[] cp = System.getProperty("java.class.path").split(System.getProperty("path.separator"));
+			urls = Arrays.stream(cp).map(c -> {
+				try {
+					return new URL("file://" + c);
+				} catch (final MalformedURLException e) {
+					throw new IllegalStateException(e);
+				}
 
-		for (final URL url : loader.getURLs()) {
+			}).collect(Collectors.toList());
+		}
+
+		for (final URL url : urls) {
 			final File file = new File(url.toURI());
 			if (!file.exists()) {
 				continue;

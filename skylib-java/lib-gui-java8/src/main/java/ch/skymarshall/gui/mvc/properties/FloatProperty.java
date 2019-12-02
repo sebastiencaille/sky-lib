@@ -16,8 +16,8 @@
 package ch.skymarshall.gui.mvc.properties;
 
 import ch.skymarshall.gui.mvc.BindingChain;
-import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
 import ch.skymarshall.gui.mvc.BindingChain.EndOfChain;
+import ch.skymarshall.gui.mvc.IScopedSupport;
 
 /**
  * Property containing a float value.
@@ -31,13 +31,12 @@ public class FloatProperty extends AbstractTypedProperty<Float> {
 	private float value;
 	private final float defaultValue;
 
-	public FloatProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-			final float defaultValue) {
+	public FloatProperty(final String name, final IScopedSupport propertySupport, final float defaultValue) {
 		super(name, propertySupport);
 		this.defaultValue = defaultValue;
 	}
 
-	public FloatProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {
+	public FloatProperty(final String name, final IScopedSupport propertySupport) {
 		this(name, propertySupport, 0.0f);
 	}
 
@@ -72,7 +71,7 @@ public class FloatProperty extends AbstractTypedProperty<Float> {
 	@Override
 	public void attach() {
 		super.attach();
-		propertySupport.firePropertyChange(getName(), this, null, Float.valueOf(value));
+		propertySupport.getMain().firePropertyChange(getName(), this, null, Float.valueOf(value));
 	}
 
 	@Override

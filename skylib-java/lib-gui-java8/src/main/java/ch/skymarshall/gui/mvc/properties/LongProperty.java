@@ -16,8 +16,8 @@
 package ch.skymarshall.gui.mvc.properties;
 
 import ch.skymarshall.gui.mvc.BindingChain;
-import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
 import ch.skymarshall.gui.mvc.BindingChain.EndOfChain;
+import ch.skymarshall.gui.mvc.IScopedSupport;
 
 /**
  * Property containing a long value.
@@ -31,13 +31,12 @@ public class LongProperty extends AbstractTypedProperty<Long> {
 	private long value;
 	private final long defaultValue;
 
-	public LongProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-			final long defaultValue) {
+	public LongProperty(final String name, final IScopedSupport propertySupport, final long defaultValue) {
 		super(name, propertySupport);
 		this.defaultValue = defaultValue;
 	}
 
-	public LongProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {
+	public LongProperty(final String name, final IScopedSupport propertySupport) {
 		this(name, propertySupport, 0);
 	}
 
@@ -72,7 +71,7 @@ public class LongProperty extends AbstractTypedProperty<Long> {
 	@Override
 	public void attach() {
 		super.attach();
-		propertySupport.firePropertyChange(getName(), this, null, Long.valueOf(value));
+		propertySupport.getMain().firePropertyChange(getName(), this, null, Long.valueOf(value));
 	}
 
 	@Override

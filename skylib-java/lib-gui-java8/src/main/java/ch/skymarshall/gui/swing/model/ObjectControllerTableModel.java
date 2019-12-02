@@ -48,6 +48,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import ch.skymarshall.gui.model.IEdition;
 import ch.skymarshall.gui.model.ListModel;
 import ch.skymarshall.gui.mvc.IComponentBinding;
 import ch.skymarshall.gui.mvc.IComponentLink;
@@ -166,18 +167,21 @@ public abstract class ObjectControllerTableModel<O, M extends IObjectGuiModel<O>
 	}
 
 	public void commit() {
-		final Set<O> modified = new HashSet<>();
+		final Set<O> changes = new HashSet<>();
 		for (final TableBinding<O, ?> binding : bindings) {
-			modified.addAll(binding.changes.keySet());
+			changes.addAll(binding.changes.keySet());
 		}
-		for (final O object : modified) {
-			objectModel.setCurrentObject(object);
-			for (final TableBinding<?, ?> binding : bindings) {
-				binding.commit(object);
+		for (final O change : changes) {
+			objectModel.setCurrentObject(change);
+			try (IEdition<O> edition = model.startEditingValue(change)) {
+				for (final TableBinding<?, ?> binding : bindings) {
+					binding.commit(change);
+				}
 			}
 		}
 		for (final TableBinding<?, ?> binding : bindings) {
 			binding.changes.clear();
 		}
+
 	}
 }

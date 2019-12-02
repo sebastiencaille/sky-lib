@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -17,13 +17,14 @@ package ch.skymarshall.example.gui.model.impl;
 
 import ch.skymarshall.example.gui.TestObject;
 import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
+import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.PropertyGroup;
 import ch.skymarshall.gui.mvc.properties.BooleanProperty;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 
 public class TableModelExampleModel {
 
-	private final ControllerPropertyChangeSupport propertySupport = new ControllerPropertyChangeSupport(this);
+	private final IScopedSupport propertySupport = new ControllerPropertyChangeSupport(this).byContainer(this);
 
 	public final BooleanProperty reverseOrder = new BooleanProperty("Order", propertySupport);
 

@@ -25,7 +25,7 @@ public class ModelChildTest {
 	@Test
 	public void testChildProperty() {
 
-		final ControllerPropertyChangeSupport propertySupport = new ControllerPropertyChangeSupport(this, false);
+		final IScopedSupport propertySupport = new ControllerPropertyChangeSupport(this, false).byContainer(this);
 		final ObjectProperty<Parent> parent = new ObjectProperty<>("parent", propertySupport);
 		final ObjectProperty<String> child = parent.child("child", Parent::getChild, Parent::setChild);
 		propertySupport.attachAll();

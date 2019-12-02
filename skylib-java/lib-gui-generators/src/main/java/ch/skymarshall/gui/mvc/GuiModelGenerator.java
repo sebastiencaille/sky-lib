@@ -18,7 +18,6 @@ package ch.skymarshall.gui.mvc;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URLClassLoader;
 
 import ch.skymarshall.ClassFinder;
 import ch.skymarshall.util.generators.Template;
@@ -66,7 +65,8 @@ public class GuiModelGenerator {
 	}
 
 	private void process(final File targetSrcFolder) throws IOException, URISyntaxException {
-		final ClassFinder finder = new ClassFinder((URLClassLoader) Thread.currentThread().getContextClassLoader());
+
+		final ClassFinder finder = new ClassFinder(Thread.currentThread().getContextClassLoader());
 		finder.addExpectedAnnotation(findClass("GuiObject"), ClassFinder.Policy.CLASS_ONLY);
 		finder.collect();
 		System.out.println(finder.getResult()); // NOSONAR

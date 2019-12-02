@@ -22,9 +22,11 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -67,8 +69,7 @@ public class ControllerPropertyChangeSupport {
 	/** Information about properties currently called */
 	private final Map<String, Deque<CallInfo>> callInfo = new HashMap<>();
 
-	/** All the properties */
-	private final Collection<AbstractProperty> properties = new ArrayList<>();
+	private final Map<Object, ScopedRegistration> scopedRegistrations = new IdentityHashMap<>();
 
 	/**
 	 * If true, swing thread will be checked
@@ -118,10 +119,6 @@ public class ControllerPropertyChangeSupport {
 		return info.stream().anyMatch(i -> i.caller == caller);
 	}
 
-	public void addPropertyChangeListener(final String name, final PropertyChangeListener propertyChangeListener) {
-		support.addPropertyChangeListener(name, propertyChangeListener);
-	}
-
 	public void removePropertyChangeListener(final String name, final PropertyChangeListener propertyChangeListener) {
 		support.removePropertyChangeListener(name, propertyChangeListener);
 	}
@@ -151,23 +148,70 @@ public class ControllerPropertyChangeSupport {
 		}
 	}
 
-	/**
-	 * Registers a property
-	 *
-	 * @param abstractProperty the property to register
-	 */
-	public void register(final AbstractProperty abstractProperty) {
-		properties.add(abstractProperty);
+	public void unregister(final AbstractProperty abstractProperty) {
+		final String propName = abstractProperty.getName();
+		final PropertyChangeListener[] properyListeners = support.getPropertyChangeListeners(propName);
+		Arrays.stream(properyListeners).forEach(l -> support.removePropertyChangeListener(propName, l));
 	}
 
-	/**
-	 * Attaches all the properties to the bindings. Should be called once all the
-	 * components are bound to the properties
-	 */
-	public void attachAll() {
-		for (final AbstractProperty property : properties) {
-			property.attach();
+	public void unregister(final AbstractProperty... abstractProperties) {
+		Arrays.stream(abstractProperties).forEach(this::unregister);
+	}
+
+	private static class ListenerRegistration {
+
+		private final String name;
+		private final PropertyChangeListener listener;
+
+		public ListenerRegistration(final String name, final PropertyChangeListener listener) {
+			this.name = name;
+			this.listener = listener;
 		}
+	}
+
+	public class ScopedRegistration implements IScopedSupport {
+		/** All the properties of the MVC */
+		private final List<AbstractProperty> properties = new ArrayList<>();
+		private final List<ListenerRegistration> listeners = new ArrayList<>();
+
+		public ScopedRegistration() {
+		}
+
+		@Override
+		public ControllerPropertyChangeSupport getMain() {
+			return ControllerPropertyChangeSupport.this;
+		}
+
+		@Override
+		public void register(final AbstractProperty abstractProperty) {
+			properties.add(abstractProperty);
+		}
+
+		/**
+		 * Attaches all the properties to the bindings. Should be called once all the
+		 * components are bound to the properties
+		 */
+		@Override
+		public void attachAll() {
+			properties.forEach(AbstractProperty::attach);
+		}
+
+		@Override
+		public void addPropertyChangeListener(final String name, final PropertyChangeListener propertyChangeListener) {
+			listeners.add(new ListenerRegistration(name, propertyChangeListener));
+			support.addPropertyChangeListener(name, propertyChangeListener);
+		}
+
+		@Override
+		public void disposeBindings() {
+			properties.forEach(ControllerPropertyChangeSupport.this::unregister);
+			listeners.forEach(
+					l -> ControllerPropertyChangeSupport.this.removePropertyChangeListener(l.name, l.listener));
+		}
+	}
+
+	public IScopedSupport byContainer(final Object mvc) {
+		return scopedRegistrations.computeIfAbsent(mvc, g -> new ScopedRegistration());
 	}
 
 }

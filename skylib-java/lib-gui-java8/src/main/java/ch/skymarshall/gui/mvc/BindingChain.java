@@ -266,7 +266,7 @@ public class BindingChain implements IBindingController {
 	@Override
 	public void attach() {
 		transmit = true;
-		property.attach();
+		property.fireArtificialChange(this);
 	}
 
 	@Override

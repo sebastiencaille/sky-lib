@@ -16,8 +16,8 @@
 package ch.skymarshall.gui.mvc.properties;
 
 import ch.skymarshall.gui.mvc.BindingChain;
-import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
 import ch.skymarshall.gui.mvc.BindingChain.EndOfChain;
+import ch.skymarshall.gui.mvc.IScopedSupport;
 
 /**
  * Property containing a boolean value.
@@ -30,13 +30,12 @@ public class BooleanProperty extends AbstractTypedProperty<Boolean> {
 	private boolean value;
 	private final boolean defaultValue;
 
-	public BooleanProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-			final boolean defaultValue) {
+	public BooleanProperty(final String name, final IScopedSupport propertySupport, final boolean defaultValue) {
 		super(name, propertySupport);
 		this.defaultValue = defaultValue;
 	}
 
-	public BooleanProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {
+	public BooleanProperty(final String name, final IScopedSupport propertySupport) {
 		this(name, propertySupport, false);
 	}
 
@@ -76,7 +75,7 @@ public class BooleanProperty extends AbstractTypedProperty<Boolean> {
 	@Override
 	public void attach() {
 		super.attach();
-		propertySupport.firePropertyChange(getName(), this, null, Boolean.valueOf(value));
+		propertySupport.getMain().firePropertyChange(getName(), this, null, Boolean.valueOf(value));
 	}
 
 }

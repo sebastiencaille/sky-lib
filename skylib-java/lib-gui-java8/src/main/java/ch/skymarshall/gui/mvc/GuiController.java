@@ -26,19 +26,25 @@ package ch.skymarshall.gui.mvc;
 public class GuiController {
 
 	/**
-	 * The associated support
+	 * The full support
 	 */
-	protected final ControllerPropertyChangeSupport propertySupport;
+	private ControllerPropertyChangeSupport mainSupport;
+
+	/**
+	 * The scoped support
+	 */
+	protected final IScopedSupport propertySupport;
 
 	public GuiController() {
-		this.propertySupport = new ControllerPropertyChangeSupport(this);
+		mainSupport = new ControllerPropertyChangeSupport(this);
+		this.propertySupport = mainSupport.byContainer(this);
 	}
 
 	public GuiController(final ControllerPropertyChangeSupport propertySupport) {
-		this.propertySupport = propertySupport;
+		this.propertySupport = propertySupport.byContainer(this);
 	}
 
-	public ControllerPropertyChangeSupport getPropertySupport() {
+	public IScopedSupport getPropertySupport() {
 		return propertySupport;
 	}
 

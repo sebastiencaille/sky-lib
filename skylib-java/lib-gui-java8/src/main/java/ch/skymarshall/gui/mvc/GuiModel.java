@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -19,29 +19,29 @@ import ch.skymarshall.gui.mvc.properties.ErrorProperty;
 
 public class GuiModel {
 
-    protected final ControllerPropertyChangeSupport propertySupport;
-    protected final ErrorProperty                   errorProperty;
+	protected final IScopedSupport propertySupport;
+	protected final ErrorProperty errorProperty;
 
-    public GuiModel(final GuiController controller) {
-        this.propertySupport = controller.getPropertySupport();
-        this.errorProperty = createErrorProperty("InputError", propertySupport);
-    }
+	public GuiModel(final GuiController controller) {
+		this.propertySupport = controller.getPropertySupport();
+		this.errorProperty = createErrorProperty("InputError", propertySupport);
+	}
 
-    public GuiModel(final ControllerPropertyChangeSupport propertySupport, final ErrorProperty errorProperty) {
-        this.propertySupport = propertySupport;
-        this.errorProperty = errorProperty;
-    }
+	public GuiModel(final IScopedSupport propertySupport, final ErrorProperty errorProperty) {
+		this.propertySupport = propertySupport;
+		this.errorProperty = errorProperty;
+	}
 
-    public GuiModel(final ControllerPropertyChangeSupport propertySupport) {
-        this.propertySupport = propertySupport;
-        this.errorProperty = createErrorProperty("InputError", propertySupport);
-    }
+	public GuiModel(final IScopedSupport propertySupport) {
+		this.propertySupport = propertySupport;
+		this.errorProperty = createErrorProperty("InputError", propertySupport);
+	}
 
-    public ErrorProperty getErrorProperty() {
-        return errorProperty;
-    }
+	public ErrorProperty getErrorProperty() {
+		return errorProperty;
+	}
 
-    protected static ErrorProperty createErrorProperty(final String name, final ControllerPropertyChangeSupport support) {
-        return new ErrorProperty(name, support);
-    }
+	protected static ErrorProperty createErrorProperty(final String name, final IScopedSupport support) {
+		return new ErrorProperty(name, support);
+	}
 }

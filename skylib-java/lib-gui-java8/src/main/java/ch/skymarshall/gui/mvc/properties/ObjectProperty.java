@@ -23,7 +23,7 @@ import java.util.function.Function;
 
 import ch.skymarshall.gui.mvc.BindingChain;
 import ch.skymarshall.gui.mvc.BindingChain.EndOfChain;
-import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
+import ch.skymarshall.gui.mvc.IScopedSupport;
 
 /**
  * A property that contains an object.
@@ -39,14 +39,13 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 
 	private T defaultValue;
 
-	public ObjectProperty(final String name, final ControllerPropertyChangeSupport propertySupport,
-			final T defaultValue) {
+	public ObjectProperty(final String name, final IScopedSupport propertySupport, final T defaultValue) {
 		super(name, propertySupport);
 		this.defaultValue = defaultValue;
 		value = defaultValue;
 	}
 
-	public ObjectProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {
+	public ObjectProperty(final String name, final IScopedSupport propertySupport) {
 		this(name, propertySupport, null);
 	}
 
@@ -97,7 +96,7 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 	}
 
 	public void forceChanged(final Object caller) {
-		propertySupport.firePropertyChange(getName(), caller, null, getValue());
+		propertySupport.getMain().firePropertyChange(getName(), caller, null, getValue());
 	}
 
 	public T getValue() {
@@ -114,7 +113,7 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 			return;
 		}
 		super.attach();
-		propertySupport.firePropertyChange(getName(), this, null, getValue());
+		propertySupport.getMain().firePropertyChange(getName(), this, null, getValue());
 	}
 
 	@Override

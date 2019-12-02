@@ -26,7 +26,7 @@ import ch.skymarshall.gui.model.ListModelBindings;
 import ch.skymarshall.gui.model.RootListModel;
 import ch.skymarshall.gui.model.views.ListViews;
 import ch.skymarshall.gui.mvc.ChainDependencies;
-import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
+import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.converters.Converters;
 import ch.skymarshall.gui.mvc.converters.IConverter;
 import ch.skymarshall.gui.mvc.properties.ListProperty;
@@ -85,7 +85,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 		return testCase.getTestApi(testParameterValue.getApiParameterId());
 	}
 
-	public TestParameterValueEditorPanel(final String name, final ControllerPropertyChangeSupport propertyChangeSupport,
+	public TestParameterValueEditorPanel(final String name, final IScopedSupport propertyChangeSupport,
 			final ObjectProperty<TestCase> tc, final ObjectProperty<TestParameterValue> editedParameterValue,
 			final ObjectProperty<TestParameterFactory> testApi) {
 

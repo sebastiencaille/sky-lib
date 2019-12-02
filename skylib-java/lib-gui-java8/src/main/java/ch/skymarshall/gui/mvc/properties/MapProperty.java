@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -17,12 +17,12 @@ package ch.skymarshall.gui.mvc.properties;
 
 import java.util.Map;
 
-import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
+import ch.skymarshall.gui.mvc.IScopedSupport;
 
 public class MapProperty<T, U> extends ObjectProperty<Map<T, U>> {
 
-    public MapProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {
-        super(name, propertySupport);
-    }
+	public MapProperty(final String name, final IScopedSupport propertySupport) {
+		super(name, propertySupport);
+	}
 
 }

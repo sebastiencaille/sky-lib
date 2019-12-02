@@ -2,8 +2,8 @@ package ch.skymarshall.tcwriter.gui.editors.steps;
 
 import java.util.List;
 
-import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
 import ch.skymarshall.gui.mvc.GuiModel;
+import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;
@@ -30,7 +30,7 @@ public class StepEditorModel extends GuiModel {
 	private final ObjectProperty<TestParameterValue> actionParameterValues = new ObjectProperty<>(
 			"actionParameterValues", propertySupport);
 
-	public StepEditorModel(final ControllerPropertyChangeSupport support) {
+	public StepEditorModel(final IScopedSupport support) {
 		super(support);
 	}
 

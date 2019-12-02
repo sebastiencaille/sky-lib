@@ -32,6 +32,7 @@ import ch.skymarshall.gui.model.views.IListView;
 import ch.skymarshall.gui.model.views.IListViewOwner;
 import ch.skymarshall.gui.model.views.ListViews;
 import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
+import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.util.helpers.StreamHelper;
 
@@ -112,7 +113,7 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 	 */
 	private transient Edition objectEdition = null;
 
-	private transient ControllerPropertyChangeSupport propertyChange = new ControllerPropertyChangeSupport(this, false);
+	private transient IScopedSupport propertyChange = new ControllerPropertyChangeSupport(this, false).byContainer(this);
 
 	private final ArrayList<T> data = new ArrayList<>();
 
@@ -617,7 +618,7 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 	private void readObject(final java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
 		stream.defaultReadObject();
 		listeners = new EventListenerList();
-		propertyChange = new ControllerPropertyChangeSupport(this);
+		propertyChange = new ControllerPropertyChangeSupport(this).byContainer(this);
 	}
 
 	public T find(final T sample) {

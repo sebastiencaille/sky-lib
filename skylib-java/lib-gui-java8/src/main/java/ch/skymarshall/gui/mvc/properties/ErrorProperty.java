@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -15,8 +15,8 @@
  ******************************************************************************/
 package ch.skymarshall.gui.mvc.properties;
 
-import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
 import ch.skymarshall.gui.mvc.GuiErrors.GuiError;
+import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty.ErrorNotifier;
 
 /**
@@ -28,7 +28,7 @@ import ch.skymarshall.gui.mvc.properties.AbstractProperty.ErrorNotifier;
  */
 public class ErrorProperty extends ObjectProperty<GuiError> implements ErrorNotifier {
 
-	public ErrorProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {
+	public ErrorProperty(final String name, final IScopedSupport propertySupport) {
 		super(name, propertySupport, null);
 	}
 

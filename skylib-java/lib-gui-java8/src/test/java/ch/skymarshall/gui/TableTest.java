@@ -23,12 +23,14 @@ import javax.swing.JTable;
 
 import org.junit.Assert;
 import org.junit.Test;
+
 import ch.skymarshall.gui.model.ListModel;
 import ch.skymarshall.gui.model.RootListModel;
 import ch.skymarshall.gui.model.views.IListView;
 import ch.skymarshall.gui.model.views.ListViews;
 import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
 import ch.skymarshall.gui.mvc.GuiModel;
+import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.properties.ListProperty;
 import ch.skymarshall.gui.swing.model.ListModelTableModel;
 
@@ -39,7 +41,7 @@ public class TableTest extends Assert {
 	private static class Model extends GuiModel {
 		ListProperty<TestObject> selection = new ListProperty<>("Selection", propertySupport);
 
-		public Model(final ControllerPropertyChangeSupport support) {
+		public Model(final IScopedSupport support) {
 			super(support);
 		}
 	}
@@ -68,7 +70,7 @@ public class TableTest extends Assert {
 	@Test
 	public void testSelectionOnInsert() throws InvocationTargetException, InterruptedException {
 
-		final ControllerPropertyChangeSupport support = new ControllerPropertyChangeSupport(this);
+		final IScopedSupport support = new ControllerPropertyChangeSupport(this).byContainer(this);
 		final Model model = new Model(support);
 		support.attachAll();
 

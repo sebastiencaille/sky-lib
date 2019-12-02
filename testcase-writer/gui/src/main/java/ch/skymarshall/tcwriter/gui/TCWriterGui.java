@@ -27,6 +27,7 @@ import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
+import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
@@ -42,7 +43,7 @@ public class TCWriterGui extends JFrame {
 
 	private static final Logger LOGGER = Logger.getLogger(TCWriterGui.class.getName());
 
-	private final ControllerPropertyChangeSupport changeSupport = new ControllerPropertyChangeSupport(this);
+	private final IScopedSupport changeSupport = new ControllerPropertyChangeSupport(this).byContainer(this);
 
 	private final TestModel testModel;
 

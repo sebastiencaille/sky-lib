@@ -1,7 +1,7 @@
 // File generated from template
 package ch.skymarshall.example.gui;
 
-import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
+import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.GuiModel;
 import ch.skymarshall.gui.mvc.IObjectGuiModel;
 import ch.skymarshall.gui.mvc.persisters.ObjectProviderPersister;
@@ -31,7 +31,7 @@ public class TestObjectGuiModel extends GuiModel implements IObjectGuiModel<ch.s
 	protected final ObjectProperty<java.lang.String> aFirstValueProperty;
 	
 
-    public TestObjectGuiModel(final String prefix, final ControllerPropertyChangeSupport propertySupport, final ErrorProperty errorProperty) {
+    public TestObjectGuiModel(final String prefix, final IScopedSupport propertySupport, final ErrorProperty errorProperty) {
         super(propertySupport, errorProperty);
 		aSecondValueProperty = Properties.of(new IntProperty(prefix + "-ASecondValue",  propertySupport)).persistent(Persisters.from(currentObjectProvider, GetSetAccess.<ch.skymarshall.example.gui.TestObject,java.lang.Integer>access((o) -> o::getASecondValue, (o) ->o::setASecondValue))).setErrorNotifier(errorProperty).getProperty();
 		aFirstValueProperty = Properties.of(new ObjectProperty<java.lang.String>(prefix + "-AFirstValue",  propertySupport)).persistent(Persisters.from(currentObjectProvider, GetSetAccess.<ch.skymarshall.example.gui.TestObject,java.lang.String>access((o) -> o::getAFirstValue, (o) ->o::setAFirstValue))).setErrorNotifier(errorProperty).getProperty();
@@ -46,11 +46,11 @@ public class TestObjectGuiModel extends GuiModel implements IObjectGuiModel<ch.s
         this("TestObject", controller.getPropertySupport(), GuiModel.createErrorProperty("TestObject-Error", controller.getPropertySupport()));
     }
 
-    public TestObjectGuiModel(final String prefix, final ControllerPropertyChangeSupport propertySupport) {
+    public TestObjectGuiModel(final String prefix, final IScopedSupport propertySupport) {
         this(prefix, propertySupport, GuiModel.createErrorProperty(prefix + "-Error", propertySupport));
     }
 
-    public TestObjectGuiModel(final ControllerPropertyChangeSupport propertySupport) {
+    public TestObjectGuiModel(final IScopedSupport propertySupport) {
         this("TestObject", propertySupport, GuiModel.createErrorProperty("TestObject-Error", propertySupport));
     }
 

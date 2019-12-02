@@ -19,10 +19,10 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
+import ch.skymarshall.gui.mvc.BindingChain.EndOfChain;
 import ch.skymarshall.gui.mvc.IBindingController;
 import ch.skymarshall.gui.mvc.IComponentBinding;
-import ch.skymarshall.gui.mvc.BindingChain.EndOfChain;
+import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.PropertyEvent.EventKind;
 import ch.skymarshall.gui.mvc.converters.IConverter;
 
@@ -38,7 +38,7 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 
 	private transient IPersister<T> persister;
 
-	public AbstractTypedProperty(final String name, final ControllerPropertyChangeSupport propertySupport) {
+	public AbstractTypedProperty(final String name, final IScopedSupport propertySupport) {
 		super(name, propertySupport);
 	}
 
@@ -99,11 +99,15 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 		try {
 			final T oldValue = replaceValue(newValue);
 			if (oldValue != null || newValue != null) {
-				propertySupport.firePropertyChange(getName(), caller, oldValue, newValue);
+				propertySupport.getMain().firePropertyChange(getName(), caller, oldValue, newValue);
 			}
 		} finally {
 			onValueSet(caller, EventKind.AFTER);
 		}
+	}
+
+	public void fireArtificialChange(final Object caller) {
+		propertySupport.getMain().firePropertyChange(getName(), caller, null, getObjectValue());
 	}
 
 	protected abstract T replaceValue(T newValue);

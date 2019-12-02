@@ -1,14 +1,14 @@
 package executors;
 
+import static ch.skymarshall.util.helpers.ClassLoaderHelper.cpToCommandLine;
 import static java.util.stream.Collectors.joining;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.file.Path;
-import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
@@ -23,17 +23,19 @@ public class JunitTestExecutor implements ITestExecutor {
 
 	private static final Path tmp = new File(System.getProperty("java.io.tmpdir")).toPath();
 
-	private static final String currentClassPath = classPath();
-
 	private final Path junitTemplate;
 
 	private final Path javaTargetPath;
 
 	private final TestCaseToJava testCaseToJava;
 
-	public JunitTestExecutor(final Path javaTemplate, final Path javaTargetPath) throws IOException {
+	private final List<URL> classPath;
+
+	public JunitTestExecutor(final Path javaTemplate, final Path javaTargetPath, final List<URL> classPath)
+			throws IOException {
 		this.junitTemplate = javaTemplate;
 		this.javaTargetPath = javaTargetPath;
+		this.classPath = classPath;
 		this.testCaseToJava = new TestCaseToJava(junitTemplate);
 	}
 
@@ -44,17 +46,17 @@ public class JunitTestExecutor implements ITestExecutor {
 
 	@Override
 	public void compile(final File sourceFile) throws IOException, InterruptedException {
-		final String waveClassPath = ClassLoaderHelper.appClassPath().stream()
+		final String waveClassPath = classPath.stream()
 				.filter(j -> j.toString().contains("testcase-writer") && j.toString().contains("annotations"))
 				.map(URL::getFile).collect(joining(":"));
 		final Process testCompiler = new ProcessBuilder("java", //
-				"-cp", currentClassPath, //
+				"-cp", ClassLoaderHelper.cpToCommandLine(classPath), //
 				"org.aspectj.tools.ajc.Main", //
 				"-aspectpath", waveClassPath, //
 				"-source", "1.8", //
 				"-target", "1.8", //
 				// "-verbose", "-showWeaveInfo", //
-				"-d", tmp.resolve("tc").toString(), //
+				"-d", targetFolder().toString(), //
 				sourceFile.toString() //
 		).redirectErrorStream(true).start();
 		new StreamHandler(testCompiler.getInputStream(), LOGGER::info).start();
@@ -65,15 +67,15 @@ public class JunitTestExecutor implements ITestExecutor {
 
 	@Override
 	public void execute(final String className, final int tcpPort) throws IOException {
-		final Process runTest = new ProcessBuilder("java", "-cp", tmp.resolve("tc") + ":" + currentClassPath,
+		final URL targetURL = targetFolder().toUri().toURL();
+		final Process runTest = new ProcessBuilder("java", "-cp", cpToCommandLine(classPath, targetURL),
 				"-Dtest.port=" + tcpPort, "-Dtc.stepping=true", "org.junit.runner.JUnitCore", className)
 						.redirectErrorStream(true).start();
 		new StreamHandler(runTest.getInputStream(), LOGGER::info).start();
 	}
 
-	public static String classPath() {
-		return Arrays.stream(((URLClassLoader) Thread.currentThread().getContextClassLoader()).getURLs())
-				.map(URL::getFile).collect(joining(":"));
+	protected Path targetFolder() {
+		return tmp.resolve("tc");
 	}
 
 	private class StreamHandler implements Runnable {

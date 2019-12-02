@@ -1,5 +1,7 @@
 package ch.skymarshall.util.helpers;
 
+import static java.util.stream.Collectors.joining;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -9,8 +11,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ClassLoaderHelper {
+
+	private static final String CP_SEPARATOR = System.getProperty("path.separator");
 
 	private ClassLoaderHelper() {
 
@@ -44,7 +49,7 @@ public class ClassLoaderHelper {
 	}
 
 	public static List<URL> appClassPath() {
-		final String[] cp = System.getProperty("java.class.path").split(System.getProperty("path.separator"));
+		final String[] cp = System.getProperty("java.class.path").split(CP_SEPARATOR);
 		return Arrays.stream(cp).map(c -> {
 			try {
 				return new URL("file://" + c);
@@ -53,5 +58,9 @@ public class ClassLoaderHelper {
 			}
 
 		}).collect(Collectors.toList());
+	}
+
+	public static String cpToCommandLine(final List<URL> classpath, final URL... extra) {
+		return Stream.concat(classpath.stream(), Stream.of(extra)).map(URL::getFile).collect(joining(CP_SEPARATOR));
 	}
 }

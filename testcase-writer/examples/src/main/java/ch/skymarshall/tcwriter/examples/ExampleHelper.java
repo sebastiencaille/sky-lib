@@ -18,6 +18,7 @@ import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.recorder.TestCaseRecorder;
 import ch.skymarshall.tcwriter.recording.TestCaseRecorderAspect;
+import ch.skymarshall.util.helpers.ClassLoaderHelper;
 import executors.ITestExecutor;
 import executors.JunitTestExecutor;
 
@@ -74,7 +75,8 @@ public class ExampleHelper {
 	}
 
 	public static ITestExecutor testExecutor() throws IOException {
-		return new JunitTestExecutor(ExampleHelper.TEMPLATE_PATH, ExampleHelper.SRC_PATH);
+		return new JunitTestExecutor(ExampleHelper.TEMPLATE_PATH, ExampleHelper.SRC_PATH,
+				ClassLoaderHelper.appClassPath());
 	}
 
 }

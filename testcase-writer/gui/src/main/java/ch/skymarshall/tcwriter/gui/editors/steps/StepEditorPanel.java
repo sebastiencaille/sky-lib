@@ -1,5 +1,7 @@
 package ch.skymarshall.tcwriter.gui.editors.steps;
 
+import static ch.skymarshall.gui.swing.bindings.SwingBindings.selection;
+
 import java.awt.BorderLayout;
 
 import javax.swing.BoxLayout;
@@ -95,7 +97,7 @@ public class StepEditorPanel extends JPanel {
 		model.getPossibleActions().bind(Converters.listConverter(c -> new NamedObjectRenderer<>(tm, c)))
 				.bind(SwingBindings.values(actionsList));
 		model.getAction().bind(converter(tm)).bind(SwingBindings.selection(actionsList))
-				.addDependency(ChainDependencies.detachOnUpdateOf(model.getPossibleActionParameters()));
+				.addDependency(ChainDependencies.detachOnUpdateOf(model.getPossibleActions()));
 		stepEditors.add(new JScrollPane(actionsList));
 
 		final JList<NamedObjectRenderer<TestParameterFactory>> selectorList = new JList<>();
@@ -108,8 +110,8 @@ public class StepEditorPanel extends JPanel {
 		final JList<NamedObjectRenderer<TestParameterFactory>> actionParameterList = new JList<>();
 		model.getPossibleActionParameters().bind(Converters.listConverter(c -> new NamedObjectRenderer<>(tm, c)))
 				.bind(SwingBindings.values(actionParameterList));
-		model.getActionParameter().bind(converter(tm)).bind(SwingBindings.selection(actionParameterList))
-				.addDependency(ChainDependencies.detachOnUpdateOf(model.getPossibleSelectors()));
+		model.getActionParameter().bind(converter(tm)).bind(selection(actionParameterList))
+				.addDependency(ChainDependencies.detachOnUpdateOf(model.getPossibleActionParameters()));
 		stepEditors.add(new JScrollPane(actionParameterList));
 
 		setLayout(new BorderLayout());

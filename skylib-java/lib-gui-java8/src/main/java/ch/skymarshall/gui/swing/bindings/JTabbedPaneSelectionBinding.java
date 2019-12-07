@@ -70,6 +70,11 @@ public class JTabbedPaneSelectionBinding<T> extends DefaultComponentBinding<T> {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return "Selection of " + SwingBindings.nameOf(pane);
+	}
+
 	public static void setValueForTab(final JTabbedPane pane, final Component tabPanel,
 			final Object tabClientProperty) {
 		pane.putClientProperty(tabPanel, tabClientProperty);

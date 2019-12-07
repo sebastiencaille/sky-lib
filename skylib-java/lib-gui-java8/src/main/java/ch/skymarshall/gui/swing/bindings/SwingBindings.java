@@ -15,6 +15,7 @@
  ******************************************************************************/
 package ch.skymarshall.gui.swing.bindings;
 
+import java.awt.Component;
 import java.awt.ItemSelectable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -44,6 +45,13 @@ import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 import ch.skymarshall.gui.swing.model.ListModelTableModel;
 
 public class SwingBindings {
+
+	public static String nameOf(final Component component) {
+		if (component.getName() != null) {
+			return component.getClass().getSimpleName() + ':' + component.getName();
+		}
+		return component.toString();
+	}
 
 	/**
 	 *
@@ -108,6 +116,11 @@ public class SwingBindings {
 			public void removeComponentValueChangeListener() {
 				componentReaderListener.removeListener(component);
 			}
+
+			@Override
+			public String toString() {
+				return "Binding to " + nameOf(component);
+			}
 		};
 	}
 
@@ -156,7 +169,7 @@ public class SwingBindings {
 	}
 
 	public static <T> IComponentBinding<List<T>> values(final JComboBox<T> component) {
-		return new JComboBoxValuesBinding<>(component);
+		return new JComboBoxContentBinding<>(component);
 	}
 
 	public static <T> IComponentBinding<T> selection(final JComboBox<T> component) {
@@ -217,6 +230,10 @@ public class SwingBindings {
 				}
 			}
 
+			@Override
+			public String toString() {
+				return "Binding to group of buttons " + group;
+			}
 		};
 	}
 

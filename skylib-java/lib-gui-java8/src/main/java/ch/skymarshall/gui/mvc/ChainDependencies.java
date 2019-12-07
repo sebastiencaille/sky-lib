@@ -20,6 +20,7 @@ public interface ChainDependencies {
 		public void register(final IBindingController controller) {
 			this.controller = controller;
 			property.addListener(this);
+			ScreenBuildingReport.addDependency(this, controller);
 		}
 
 		@Override
@@ -35,6 +36,7 @@ public interface ChainDependencies {
 				break;
 			case AFTER:
 				controller.attach();
+				controller.forceViewUpdate();
 				break;
 			default:
 				// ignore
@@ -42,6 +44,10 @@ public interface ChainDependencies {
 			}
 		}
 
+		@Override
+		public String toString() {
+			return "Detaching on update of " + property.getName();
+		}
 	}
 
 	public static IBindingChainDependency detachOnUpdateOf(final AbstractProperty property) {
@@ -52,8 +58,7 @@ public interface ChainDependencies {
 	 * Restores the selection once some properties are fired.
 	 * <p>
 	 *
-	 * @param property
-	 *            the property that contains the selection to restore
+	 * @param property the property that contains the selection to restore
 	 * @return an action
 	 */
 
@@ -101,6 +106,11 @@ public interface ChainDependencies {
 		@Override
 		public void valuesRemoved(final ListEvent<T> event) {
 			controller.attach();
+		}
+
+		@Override
+		public String toString() {
+			return "Detaching on update of " + model;
 		}
 
 	}

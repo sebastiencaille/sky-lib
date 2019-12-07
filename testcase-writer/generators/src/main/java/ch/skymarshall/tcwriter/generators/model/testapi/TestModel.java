@@ -12,6 +12,7 @@ import com.google.common.collect.MultimapBuilder;
 
 import ch.skymarshall.tcwriter.generators.Helper;
 import ch.skymarshall.tcwriter.generators.model.IdObject;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.test.TestObjectDescription;
 
 public class TestModel implements Serializable {
@@ -90,6 +91,10 @@ public class TestModel implements Serializable {
 
 	public boolean isSelector(final TestApiParameter testParameterType) {
 		return selectorTypes.contains(testParameterType.getType());
+	}
+
+	public boolean isSelector(final TestParameterValue value) {
+		return selectorTypes.contains(value.getValueFactory().getType());
 	}
 
 }

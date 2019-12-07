@@ -152,7 +152,7 @@ public class BindingChain implements IBindingController {
 
 		public IBindingController bind(final IComponentBinding<T> newBinding) {
 			links.add(new LinkToComponent(newBinding));
-			property.attach();
+			ScreenBuildingReport.addDependency(property, newBinding);
 			return BindingChain.this;
 		}
 
@@ -266,6 +266,10 @@ public class BindingChain implements IBindingController {
 	@Override
 	public void attach() {
 		transmit = true;
+	}
+
+	@Override
+	public void forceViewUpdate() {
 		property.fireArtificialChange(this);
 	}
 
@@ -293,4 +297,8 @@ public class BindingChain implements IBindingController {
 		links.stream().forEach(Link::unbind);
 	}
 
+	@Override
+	public String toString() {
+		return "Chain of " + property.getName();
+	}
 }

@@ -25,16 +25,16 @@ import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 
 public class JTextAreaBinding extends DefaultComponentBinding<String> {
 
-	private final JTextArea component;
+	private final JTextArea textArea;
 	private final boolean readOnly;
 
 	public JTextAreaBinding(final JTextArea component) {
-		this.component = component;
+		this.textArea = component;
 		readOnly = false;
 	}
 
 	public JTextAreaBinding(final JTextArea component, final boolean readOnly) {
-		this.component = component;
+		this.textArea = component;
 		this.readOnly = readOnly;
 	}
 
@@ -44,10 +44,10 @@ public class JTextAreaBinding extends DefaultComponentBinding<String> {
 		if (readOnly) {
 			return;
 		}
-		component.addFocusListener(new FocusAdapter() {
+		textArea.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(final FocusEvent e) {
-				converter.setValueFromComponent(component, component.getText());
+				converter.setValueFromComponent(textArea, textArea.getText());
 			}
 		});
 	}
@@ -55,10 +55,15 @@ public class JTextAreaBinding extends DefaultComponentBinding<String> {
 	@Override
 	public void setComponentValue(final AbstractProperty source, final String value) {
 		if (value != null) {
-			component.setText(value);
+			textArea.setText(value);
 		} else {
-			component.setText("");
+			textArea.setText("");
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "Content of " + SwingBindings.nameOf(textArea);
 	}
 
 }

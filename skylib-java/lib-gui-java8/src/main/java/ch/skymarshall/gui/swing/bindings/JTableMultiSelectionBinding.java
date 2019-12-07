@@ -90,4 +90,9 @@ public class JTableMultiSelectionBinding<T> extends DefaultComponentBinding<List
 			table.getSelectionModel().setValueIsAdjusting(false);
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "Multi-selection of " + SwingBindings.nameOf(table);
+	}
 }

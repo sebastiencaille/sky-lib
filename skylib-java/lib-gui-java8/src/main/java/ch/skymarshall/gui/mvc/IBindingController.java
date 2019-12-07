@@ -31,6 +31,8 @@ public interface IBindingController {
 
 	void detach();
 
+	void forceViewUpdate();
+
 	AbstractProperty getProperty();
 
 	void unbind();

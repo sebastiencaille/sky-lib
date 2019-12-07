@@ -27,10 +27,10 @@ import ch.skymarshall.gui.model.RootListModel;
 import ch.skymarshall.gui.model.views.ListViews;
 import ch.skymarshall.gui.mvc.ChainDependencies;
 import ch.skymarshall.gui.mvc.IScopedSupport;
-import ch.skymarshall.gui.mvc.converters.Converters;
 import ch.skymarshall.gui.mvc.converters.IConverter;
 import ch.skymarshall.gui.mvc.properties.ListProperty;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
+import ch.skymarshall.gui.swing.bindings.ObjectTextView;
 import ch.skymarshall.gui.swing.bindings.SwingBindings;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
@@ -42,36 +42,8 @@ import ch.skymarshall.tcwriter.gui.editors.params.TestParameterValueTableModel.P
 
 public class TestParameterValueEditorPanel extends JPanel {
 
-	public static class ReferenceView {
-		private final TestReference reference;
-
-		public ReferenceView(final TestReference reference) {
-			this.reference = reference;
-		}
-
-		public TestReference getReference() {
-			return reference;
-		}
-
-		@Override
-		public boolean equals(final Object obj) {
-			return obj instanceof TestReference && ((TestReference) obj).equals(reference);
-		}
-
-		@Override
-		public int hashCode() {
-			return reference.hashCode();
-		}
-
-		@Override
-		public String toString() {
-			return reference.toDescription().getDescription();
-		}
-
-		public static IConverter<TestReference, ReferenceView> converter() {
-			return Converters.converter(ReferenceView::new, ReferenceView::getReference);
-		}
-
+	public static IConverter<TestReference, ObjectTextView<TestReference>> refToTextConverter() {
+		return ObjectTextView.converter(ref -> ref.toDescription().getDescription());
 	}
 
 	private List<TestReference> getReferences(final TestCase testCase, final TestParameterValue testParameterValue) {
@@ -114,11 +86,11 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 		final JRadioButton useReference = new JRadioButton("Reference: ");
 		topPanel.add(useReference);
-		final JComboBox<ReferenceView> referenceEditor = new JComboBox<>();
+		final JComboBox<ObjectTextView<TestReference>> referenceEditor = new JComboBox<>();
 		references.bind(filter(r -> r.getType().equals(editedParameterValue.getValue().getValueFactory().getType()))) //
-				.bind(listConverter(ReferenceView.converter())) //
+				.bind(listConverter(refToTextConverter())) //
 				.bind(values(referenceEditor));
-		reference.bind(ReferenceView.converter())//
+		reference.bind(refToTextConverter())//
 				.bind(selection(referenceEditor)) //
 				.addDependency(detachOnUpdateOf(references));
 		topPanel.add(referenceEditor);

@@ -71,6 +71,12 @@ public interface IComponentBinding<T> {
 					removeValueChangeListener.accept(component, listener);
 				}
 			}
+
+			@Override
+			public String toString() {
+				return "Binding to component " + component;
+			}
+
 		};
 	}
 
@@ -95,6 +101,11 @@ public interface IComponentBinding<T> {
 			@Override
 			public void setComponentValue(final AbstractProperty source, final T value) {
 				setComponentValue.accept(source, value);
+			}
+
+			@Override
+			public String toString() {
+				return "Binding to write only component";
 			}
 
 		};
@@ -123,6 +134,10 @@ public interface IComponentBinding<T> {
 				setComponentValue.setComponentValue(component, source, value);
 			}
 
+			@Override
+			public String toString() {
+				return "Binding to write only component";
+			}
 		};
 	}
 

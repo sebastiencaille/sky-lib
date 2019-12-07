@@ -28,6 +28,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
 import ch.skymarshall.gui.mvc.IScopedSupport;
+import ch.skymarshall.gui.mvc.ScreenBuildingReport;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
@@ -59,6 +60,9 @@ public class TCWriterGui extends JFrame {
 	}
 
 	public void run() {
+
+		final ScreenBuildingReport screenBuildingReport = new ScreenBuildingReport();
+		ScreenBuildingReport.setScreenBuildingReport(screenBuildingReport);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -155,6 +159,8 @@ public class TCWriterGui extends JFrame {
 		this.getContentPane().add(bottomSplit, BorderLayout.CENTER);
 
 		changeSupport.attachAll();
+
+		System.out.println(screenBuildingReport.toString());
 
 		this.validate();
 		this.pack();

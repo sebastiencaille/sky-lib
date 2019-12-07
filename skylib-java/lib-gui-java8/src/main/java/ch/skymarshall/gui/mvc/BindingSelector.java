@@ -31,8 +31,7 @@ import ch.skymarshall.gui.mvc.properties.AbstractProperty;
  *
  * @author Sebastien Caille
  *
- * @param <T>
- *            type of the object according to which the properties are enabled
+ * @param <T> type of the object according to which the properties are enabled
  */
 public class BindingSelector<T> implements PropertyChangeListener {
 
@@ -63,6 +62,7 @@ public class BindingSelector<T> implements PropertyChangeListener {
 			final List<IBindingController> newController = objectControllers.get(newValue);
 			if (newController != null) {
 				newController.forEach(IBindingController::attach);
+				newController.forEach(IBindingController::forceViewUpdate);
 			}
 		}
 

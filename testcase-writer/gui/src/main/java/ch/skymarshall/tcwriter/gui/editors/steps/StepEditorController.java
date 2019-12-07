@@ -48,11 +48,12 @@ public class StepEditorController extends GuiController {
 				return;
 			}
 			final ActionUtils actionUtils = ModelUtils.actionUtils(tm, action);
+			actionUtils.synchronizeStep(testStep.getValue());
 			if (actionUtils.hasSelector()) {
 				final TestParameterValue selectorValue = testStep.getValue()
 						.getParametersValue(actionUtils.selectorIndex());
 				model.getPossibleSelectors().setValue(this,
-						sorted(tm.getParameterFactories(actionUtils.selectorType())));
+						sorted(tm.getParameterFactories(actionUtils.selector())));
 				model.getSelector().setValue(this, selectorValue.getValueFactory());
 				model.getSelectorValue().setValue(this, selectorValue.derivate(selectorValue.getValueFactory()));
 			} else {
@@ -60,9 +61,9 @@ public class StepEditorController extends GuiController {
 			}
 			if (actionUtils.hasActionParameter(0)) {
 				final TestParameterValue param0Value = testStep.getValue()
-						.getParametersValue(actionUtils.actionParameterIndex(0));
+						.getParametersValue(actionUtils.parameterIndex(0));
 				model.getPossibleActionParameters().setValue(this,
-						sorted(tm.getParameterFactories(actionUtils.parameterType(0))));
+						sorted(tm.getParameterFactories(actionUtils.parameter(0))));
 				model.getActionParameter().setValue(this, param0Value.getValueFactory());
 				model.getActionParameterValue().setValue(this, param0Value.derivate(param0Value.getValueFactory()));
 			} else {

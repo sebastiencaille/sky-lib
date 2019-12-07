@@ -53,12 +53,12 @@ public class TestParameterValue extends IdObject {
 
 	/**
 	 *
-	 * @param id              either the id of the action's parameter
+	 * @param id           either the id of the action's parameter
 	 * @param valueFactory
 	 * @param simpleValue
 	 */
-	public TestParameterValue(final String id, final String apiParameterId,
-			final TestParameterFactory valueFactory, final String simpleValue) {
+	public TestParameterValue(final String id, final String apiParameterId, final TestParameterFactory valueFactory,
+			final String simpleValue) {
 		super(id);
 		this.apiParameterId = apiParameterId;
 		this.factory = valueFactory;
@@ -113,8 +113,7 @@ public class TestParameterValue extends IdObject {
 	}
 
 	public TestParameterValue duplicate() {
-		final TestParameterValue newValue = new TestParameterValue(getId(), getApiParameterId(), factory,
-				simpleValue);
+		final TestParameterValue newValue = new TestParameterValue(getId(), getApiParameterId(), factory, simpleValue);
 		for (final Entry<String, TestParameterValue> complexValue : complexTypeValues.entrySet()) {
 			newValue.complexTypeValues.put(complexValue.getKey(), complexValue.getValue().duplicate());
 		}
@@ -136,6 +135,10 @@ public class TestParameterValue extends IdObject {
 		final TestParameterValue newValue = new TestParameterValue(parameter, factory, simpleValue);
 		newValue.getComplexTypeValues().putAll(getComplexTypeValues());
 		return newValue;
+	}
+
+	public boolean matches(final TestApiParameter param) {
+		return getValueFactory().matches(param);
 	}
 
 	@Override

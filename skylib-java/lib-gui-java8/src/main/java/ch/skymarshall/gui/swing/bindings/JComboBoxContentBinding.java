@@ -22,11 +22,11 @@ import javax.swing.JComboBox;
 
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 
-public class JComboBoxValuesBinding<T> extends DefaultComponentBinding<List<T>> {
+public class JComboBoxContentBinding<T> extends DefaultComponentBinding<List<T>> {
 
 	private final JComboBox<T> box;
 
-	public JComboBoxValuesBinding(final JComboBox<T> component) {
+	public JComboBoxContentBinding(final JComboBox<T> component) {
 		this.box = component;
 	}
 
@@ -37,5 +37,10 @@ public class JComboBoxValuesBinding<T> extends DefaultComponentBinding<List<T>> 
 			newModel.addElement(obj);
 		}
 		box.setModel(newModel);
+	}
+
+	@Override
+	public String toString() {
+		return "Content of " + SwingBindings.nameOf(box);
 	}
 }

@@ -106,6 +106,7 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 		}
 	}
 
+	@Override
 	public void fireArtificialChange(final Object caller) {
 		propertySupport.getMain().firePropertyChange(getName(), caller, null, getObjectValue());
 	}

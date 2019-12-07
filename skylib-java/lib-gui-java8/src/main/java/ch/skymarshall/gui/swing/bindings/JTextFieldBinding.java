@@ -28,31 +28,31 @@ import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 
 public class JTextFieldBinding extends DefaultComponentBinding<String> {
 
-	private final JTextField component;
+	private final JTextField textField;
 	private boolean withFocusLoss = true;
 
 	public JTextFieldBinding(final JTextField component) {
-		this.component = component;
+		this.textField = component;
 	}
 
 	@SuppressWarnings("serial")
 	@Override
 	public void addComponentValueChangeListener(final IComponentLink<String> converter) {
 
-		final Action original = component.getActionMap().get(JTextField.notifyAction);
-		component.getActionMap().put(JTextField.notifyAction, new AbstractAction() {
+		final Action original = textField.getActionMap().get(JTextField.notifyAction);
+		textField.getActionMap().put(JTextField.notifyAction, new AbstractAction() {
 
 			@Override
 			public void actionPerformed(final ActionEvent event) {
-				converter.setValueFromComponent(component, component.getText());
+				converter.setValueFromComponent(textField, textField.getText());
 				original.actionPerformed(event);
 			}
 		});
-		component.addFocusListener(new FocusAdapter() {
+		textField.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(final FocusEvent e) {
 				if (withFocusLoss) {
-					converter.setValueFromComponent(component, component.getText());
+					converter.setValueFromComponent(textField, textField.getText());
 				}
 			}
 		});
@@ -66,10 +66,14 @@ public class JTextFieldBinding extends DefaultComponentBinding<String> {
 	@Override
 	public void setComponentValue(final AbstractProperty source, final String value) {
 		if (value != null) {
-			component.setText(value);
+			textField.setText(value);
 		} else {
-			component.setText("");
+			textField.setText("");
 		}
 	}
 
+	@Override
+	public String toString() {
+		return "Content of " + textField;
+	}
 }

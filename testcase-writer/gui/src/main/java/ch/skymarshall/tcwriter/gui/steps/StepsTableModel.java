@@ -65,7 +65,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 			return toString(tc, parametersValue.get(actionUtils.selectorIndex()));
 		case PARAM0:
 			if (actionUtils.hasActionParameter(0)) {
-				return toString(tc, parametersValue.get(actionUtils.actionParameterIndex(0)));
+				return toString(tc, parametersValue.get(actionUtils.parameterIndex(0)));
 			}
 			return "";
 		case TO_VAR:

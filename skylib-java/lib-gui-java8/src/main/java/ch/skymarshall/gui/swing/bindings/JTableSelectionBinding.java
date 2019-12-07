@@ -81,4 +81,9 @@ public class JTableSelectionBinding<T> extends DefaultComponentBinding<T> {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return "Selection of " + table;
+	}
+
 }

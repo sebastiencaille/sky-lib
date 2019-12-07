@@ -48,4 +48,9 @@ public class JListSelectionBinding<T> extends DefaultComponentBinding<T> {
 			}
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "Selection of " + SwingBindings.nameOf(list);
+	}
 }

@@ -41,8 +41,7 @@ public class TestParameterFactory extends NamedObject {
 		this.parameterType = null;
 	}
 
-	public TestParameterFactory(final String id, final String name, final ParameterNature nature,
-			final String type) {
+	public TestParameterFactory(final String id, final String name, final ParameterNature nature, final String type) {
 		super(id, name);
 		this.parameterType = type;
 		this.nature = nature;
@@ -77,6 +76,10 @@ public class TestParameterFactory extends NamedObject {
 		return !TestApiParameter.NO_TYPE.equals(parameterType);
 	}
 
+	public boolean matches(final TestApiParameter param) {
+		return getType().equals(param.getType());
+	}
+
 	@Override
 	public String toString() {
 		return super.toString() + ", " + mandatoryParameters.size() + " mandatory, " + optionalParameters.size()
@@ -87,4 +90,7 @@ public class TestParameterFactory extends NamedObject {
 		return new TestParameterFactory("", "", ParameterNature.SIMPLE_TYPE, type);
 	}
 
+	public static TestParameterFactory unSet(final TestApiParameter param) {
+		return new TestParameterFactory("", "", ParameterNature.NOT_SET, param.getType());
+	}
 }

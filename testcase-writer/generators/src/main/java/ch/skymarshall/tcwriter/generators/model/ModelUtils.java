@@ -1,8 +1,15 @@
 package ch.skymarshall.tcwriter.generators.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
+import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 
 public interface ModelUtils {
 
@@ -20,7 +27,7 @@ public interface ModelUtils {
 		}
 
 		public boolean hasActionParameter(final int index) {
-			return actionParameterIndex(index) < testAction.getParameters().size();
+			return parameterIndex(index) < testAction.getParameters().size();
 		}
 
 		public int selectorIndex() {
@@ -30,7 +37,7 @@ public interface ModelUtils {
 			return 0;
 		}
 
-		public int actionParameterIndex(final int index) {
+		public int parameterIndex(final int index) {
 			int paramStartIndex;
 			if (hasSelector()) {
 				paramStartIndex = selectorIndex() + 1;
@@ -40,12 +47,45 @@ public interface ModelUtils {
 			return paramStartIndex + index;
 		}
 
-		public TestApiParameter selectorType() {
+		public TestApiParameter selector() {
 			return testAction.getParameter(selectorIndex());
 		}
 
-		public TestApiParameter parameterType(final int index) {
-			return testAction.getParameter(actionParameterIndex(index));
+		public TestApiParameter parameter(final int index) {
+			return testAction.getParameter(parameterIndex(index));
+		}
+
+		/**
+		 * In case of mismatch, when a new action is selected
+		 */
+		public void synchronizeStep(final TestStep step) {
+			final List<TestParameterValue> parametersValue = step.getParametersValue();
+			final List<TestParameterValue> newParametersValues = new ArrayList<>();
+
+			if (hasSelector()) {
+				final TestApiParameter selector = selector();
+				final Optional<TestParameterValue> selectorMatch = parametersValue.stream()
+						.filter(p -> p.matches(selector)).findFirst();
+				if (selectorMatch.isPresent()) {
+					newParametersValues.add(selectorMatch.get());
+				} else {
+					newParametersValues.add(new TestParameterValue(selector, TestParameterFactory.unSet(selector)));
+				}
+
+			}
+
+			if (hasActionParameter(0)) {
+				final TestApiParameter parameter = parameter(0);
+				final Optional<TestParameterValue> valueMatch = parametersValue.stream()
+						.filter(p -> p.matches(parameter)).findFirst();
+				if (valueMatch.isPresent()) {
+					newParametersValues.add(valueMatch.get());
+				} else {
+					newParametersValues.add(new TestParameterValue(parameter, TestParameterFactory.unSet(parameter)));
+				}
+			}
+			step.getParametersValue().clear();
+			step.getParametersValue().addAll(newParametersValues);
 		}
 
 	}

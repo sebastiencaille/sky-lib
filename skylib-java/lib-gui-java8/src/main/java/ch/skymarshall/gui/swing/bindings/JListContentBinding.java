@@ -38,4 +38,9 @@ public class JListContentBinding<T> extends DefaultComponentBinding<List<T>> {
 		}
 		list.setModel(newModel);
 	}
+
+	@Override
+	public String toString() {
+		return "Content of " + SwingBindings.nameOf(list);
+	}
 }

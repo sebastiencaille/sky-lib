@@ -17,6 +17,7 @@ package ch.skymarshall.gui.mvc;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 
@@ -101,6 +102,37 @@ public interface IComponentBinding<T> {
 			@Override
 			public void setComponentValue(final AbstractProperty source, final T value) {
 				setComponentValue.accept(source, value);
+			}
+
+			@Override
+			public String toString() {
+				return "Binding to write only component";
+			}
+
+		};
+	}
+
+	/**
+	 *
+	 * @param setComponentValue (source, value)
+	 * @return
+	 */
+	public static <T> IComponentBinding<T> wo(final Consumer<T> setComponentValue) {
+		return new IComponentBinding<T>() {
+
+			@Override
+			public void addComponentValueChangeListener(final IComponentLink<T> link) {
+				// component value never read
+			}
+
+			@Override
+			public void removeComponentValueChangeListener() {
+				// component value never read
+			}
+
+			@Override
+			public void setComponentValue(final AbstractProperty source, final T value) {
+				setComponentValue.accept(value);
 			}
 
 			@Override

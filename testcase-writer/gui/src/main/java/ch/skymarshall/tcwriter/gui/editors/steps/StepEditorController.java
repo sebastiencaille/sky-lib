@@ -14,22 +14,28 @@ import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
+import ch.skymarshall.tcwriter.gui.frame.TCWriterController;
+import ch.skymarshall.tcwriter.gui.frame.TCWriterModel;
 
 public class StepEditorController extends GuiController {
 
 	private final StepEditorModel model;
 
-	private final TestModel tm;
-	private final ObjectProperty<TestStep> testStep;
+	private final TCWriterModel guiModel;
 
-	public StepEditorController(final StepEditorModel model, final TestModel tm,
-			final ObjectProperty<TestStep> testStep) {
-		this.model = model;
-		this.tm = tm;
-		this.testStep = testStep;
+	public StepEditorController(final TCWriterController controller) {
+		this.model = new StepEditorModel(controller.getChangeSupport());
+		guiModel = controller.getModel();
 	}
 
-	public void init() {
+	public TCWriterModel getGuiModel() {
+		return guiModel;
+	}
+
+	public void load() {
+		final TestModel tm = guiModel.getTestModel();
+		final ObjectProperty<TestStep> testStep = guiModel.getSelectedStep();
+
 		testStep.listen(step -> {
 			if (step == null) {
 				return;
@@ -52,8 +58,7 @@ public class StepEditorController extends GuiController {
 			if (actionUtils.hasSelector()) {
 				final TestParameterValue selectorValue = testStep.getValue()
 						.getParametersValue(actionUtils.selectorIndex());
-				model.getPossibleSelectors().setValue(this,
-						sorted(tm.getParameterFactories(actionUtils.selector())));
+				model.getPossibleSelectors().setValue(this, sorted(tm.getParameterFactories(actionUtils.selector())));
 				model.getSelector().setValue(this, selectorValue.getValueFactory());
 				model.getSelectorValue().setValue(this, selectorValue.derivate(selectorValue.getValueFactory()));
 			} else {
@@ -105,11 +110,11 @@ public class StepEditorController extends GuiController {
 	}
 
 	public void applyChanges() {
-		final TestStep step = testStep.getValue();
+		final TestStep step = guiModel.getSelectedStep().getValue();
 		step.setActor(model.getActor().getValue());
 		step.setAction(model.getAction().getValue());
 		step.getParametersValue().clear();
-		final ActionUtils actionUtils = ModelUtils.actionUtils(tm, step.getAction());
+		final ActionUtils actionUtils = ModelUtils.actionUtils(guiModel.getTestModel(), step.getAction());
 		step.getParametersValue().clear();
 		if (actionUtils.hasSelector()) {
 			step.getParametersValue().add(model.getSelectorValue().getValue());
@@ -117,7 +122,7 @@ public class StepEditorController extends GuiController {
 		if (actionUtils.hasActionParameter(0)) {
 			step.getParametersValue().add(model.getActionParameterValue().getValue());
 		}
-		testStep.forceChanged(this);
+		guiModel.getSelectedStep().forceChanged(this);
 	}
 
 	public void cancelChanges() {

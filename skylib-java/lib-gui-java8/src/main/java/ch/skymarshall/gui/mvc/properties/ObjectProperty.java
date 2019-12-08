@@ -87,6 +87,7 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 	}
 
 	public void setValue(final Object caller, final T newValue) {
+		attached = true; // consider it's already attached
 		setObjectValue(caller, newValue);
 	}
 

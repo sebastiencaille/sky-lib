@@ -22,13 +22,13 @@ public class StepEditorModel extends GuiModel {
 			"possibleSelectors", propertySupport);
 	private final ObjectProperty<TestParameterFactory> selector = new ObjectProperty<>("selector", propertySupport);
 	private final ObjectProperty<TestParameterValue> selectorValues = new ObjectProperty<>("selectorValues",
-			propertySupport);
+			propertySupport, TestParameterValue.NO_VALUE);
 	private final ObjectProperty<List<TestParameterFactory>> possibleActionParameters = new ObjectProperty<>(
 			"possibleActionParameters", propertySupport);
 	private final ObjectProperty<TestParameterFactory> actionParameter = new ObjectProperty<>("actionParameter",
 			propertySupport);
 	private final ObjectProperty<TestParameterValue> actionParameterValues = new ObjectProperty<>(
-			"actionParameterValues", propertySupport);
+			"actionParameterValues", propertySupport, TestParameterValue.NO_VALUE);
 
 	public StepEditorModel(final IScopedSupport support) {
 		super(support);

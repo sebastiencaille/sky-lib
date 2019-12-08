@@ -1,5 +1,7 @@
 package ch.skymarshall.tcwriter.gui.steps;
 
+import static ch.skymarshall.gui.swing.bindings.SwingBindings.selection;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Font;
@@ -17,14 +19,13 @@ import javax.swing.table.TableCellRenderer;
 import ch.skymarshall.gui.model.RootListModel;
 import ch.skymarshall.gui.model.views.ListViews;
 import ch.skymarshall.gui.mvc.IBindingController;
-import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.gui.swing.ContributionTableColumn;
 import ch.skymarshall.gui.swing.ContributionTableColumnModel;
-import ch.skymarshall.gui.swing.bindings.SwingBindings;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
-import ch.skymarshall.tcwriter.gui.TestRemoteControl;
+import ch.skymarshall.tcwriter.gui.frame.TCWriterController;
+import ch.skymarshall.tcwriter.gui.frame.TCWriterModel;
 import ch.skymarshall.tcwriter.gui.steps.StepsTableModel.Column;
 
 public class StepsTable extends JPanel {
@@ -39,16 +40,17 @@ public class StepsTable extends JPanel {
 
 	private final JTable stepsJTable;
 
-	public StepsTable(final ObjectProperty<TestCase> testCaseProperty, final ObjectProperty<TestStep> selectedStep,
-			final TestRemoteControl testControl) {
+	public StepsTable(final TCWriterController controller) {
+
+		final TCWriterModel model = controller.getModel();
 
 		final ch.skymarshall.gui.model.ListModel<TestStep> steps = new RootListModel<>(
 				ListViews.sorted((s1, s2) -> s1.getOrdinal() - s2.getOrdinal()));
 
 		setLayout(new BorderLayout());
-		stepsTableModel = new StepsTableModel(testCaseProperty, steps, testControl);
+		stepsTableModel = new StepsTableModel(model.getTc(), steps, controller.getTestRemoteControl());
 
-		testControl.setStepListener(stepsTableModel::stepExecutionUpdated);
+		controller.getTestRemoteControl().setStepListener(stepsTableModel::stepExecutionUpdated);
 
 		stepsJTable = new JTable(stepsTableModel) {
 
@@ -117,21 +119,21 @@ public class StepsTable extends JPanel {
 		stepsJTable.getColumn(Column.BREAKPOINT).setCellRenderer(new StepStatusRenderer());
 		stepsJTable.getColumn(Column.BREAKPOINT).setCellEditor(new StepStatusEditor());
 
-		final IBindingController selectedStepCtrl = selectedStep
-				.bind(SwingBindings.selection(stepsJTable, stepsTableModel));
-		selectedStep.addListener(l -> {
+		final IBindingController selectedStepCtrl = model.getSelectedStep()
+				.bind(selection(stepsJTable, stepsTableModel));
+		model.getSelectedStep().addListener(l -> {
 			if (l.getOldValue() != null) {
 				return;
 			}
 			selectedStepCtrl.detach();
-			final int row = stepsTableModel.getRowOf(selectedStep.getValue());
+			final int row = stepsTableModel.getRowOf(model.getSelectedStep().getValue());
 			stepsTableModel.fireTableRowsUpdated(row, row + 1);
 			selectedStepCtrl.attach();
 		});
 
 		add(new JScrollPane(stepsJTable), BorderLayout.CENTER);
 
-		testCaseProperty.listen(tc -> {
+		model.getTc().listen(tc -> {
 			steps.clear();
 			steps.setValues(tc.getSteps());
 		});

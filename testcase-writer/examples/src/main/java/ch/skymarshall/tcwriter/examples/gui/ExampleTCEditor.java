@@ -11,7 +11,7 @@ import javax.swing.SwingUtilities;
 import ch.skymarshall.tcwriter.examples.ExampleHelper;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
-import ch.skymarshall.tcwriter.gui.TCWriterGui;
+import ch.skymarshall.tcwriter.gui.frame.TCWriterController;
 
 public class ExampleTCEditor {
 
@@ -25,11 +25,12 @@ public class ExampleTCEditor {
 		ExampleHelper.saveModel(testCase.getModel());
 		ExampleHelper.saveTC(testCase);
 
-		final TCWriterGui exampleTCWriter = new TCWriterGui(testModelFromJson(readFile(ExampleHelper.MODEL_PATH)),
-				testExecutor());
+		final TCWriterController controller = new TCWriterController(
+				testModelFromJson(readFile(ExampleHelper.MODEL_PATH)), testExecutor());
+
 		SwingUtilities.invokeLater(() -> {
-			exampleTCWriter.run();
-			exampleTCWriter.loadTestCase(testCase);
+			controller.run();
+			controller.loadTestCase(testCase);
 		});
 	}
 

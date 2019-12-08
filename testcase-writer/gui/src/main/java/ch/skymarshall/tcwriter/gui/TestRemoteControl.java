@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
+import ch.skymarshall.tcwriter.gui.frame.TCWriterGui;
 import ch.skymarshall.tcwriter.stepping.StepStatus;
 import ch.skymarshall.tcwriter.stepping.TestApi;
 import ch.skymarshall.tcwriter.stepping.TestApi.StepState;

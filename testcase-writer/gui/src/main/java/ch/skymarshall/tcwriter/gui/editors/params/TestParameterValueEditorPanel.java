@@ -26,19 +26,17 @@ import ch.skymarshall.gui.model.ListModelBindings;
 import ch.skymarshall.gui.model.RootListModel;
 import ch.skymarshall.gui.model.views.ListViews;
 import ch.skymarshall.gui.mvc.ChainDependencies;
-import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.converters.IConverter;
-import ch.skymarshall.gui.mvc.properties.ListProperty;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.gui.swing.bindings.ObjectTextView;
 import ch.skymarshall.gui.swing.bindings.SwingBindings;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory.ParameterNature;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestReference;
 import ch.skymarshall.tcwriter.gui.editors.params.TestParameterValueTableModel.ParameterValue;
+import ch.skymarshall.tcwriter.gui.frame.TCWriterController;
 
 public class TestParameterValueEditorPanel extends JPanel {
 
@@ -57,21 +55,15 @@ public class TestParameterValueEditorPanel extends JPanel {
 		return testCase.getTestApi(testParameterValue.getApiParameterId());
 	}
 
-	public TestParameterValueEditorPanel(final String name, final IScopedSupport propertyChangeSupport,
-			final ObjectProperty<TestCase> tc, final ObjectProperty<TestParameterValue> editedParameterValue,
-			final ObjectProperty<TestParameterFactory> testApi) {
+	public TestParameterValueEditorPanel(final TCWriterController controller, final TestParameterModel tpModel) {
+		final ObjectProperty<TestCase> tc = controller.getModel().getTc();
+		final ObjectProperty<TestParameterValue> editedParamValue = tpModel.getEditedParameterValue();
 
-		final ObjectProperty<TestParameterFactory.ParameterNature> valueNature = new ObjectProperty<>(name + "-nature",
-				propertyChangeSupport);
-		final ObjectProperty<String> simpleValue = editedParameterValue.child(name + "-simpleValue",
-				TestParameterValue::getSimpleValue, TestParameterValue::setSimpleValue);
-		final ObjectProperty<TestReference> reference = new ObjectProperty<>(name + "-reference",
-				propertyChangeSupport);
+		tpModel.getEditedParameterValue().bind(v -> !v.equals(TestParameterValue.NO_VALUE)) //
+				.listen(this::setVisible);
 
-		final ListProperty<TestReference> references = new ListProperty<>(name + "-references", propertyChangeSupport);
-
-		tc.listen(test -> references.setValue(this, getReferences(test, editedParameterValue.getValue())));
-		editedParameterValue.listen(values -> references.setValue(this, getReferences(tc.getValue(), values)));
+		tc.listen(test -> tpModel.getReferences().setValue(this, getReferences(test, editedParamValue.getValue())));
+		editedParamValue.listen(values -> tpModel.getReferences().setValue(this, getReferences(tc.getValue(), values)));
 
 		setLayout(new BorderLayout());
 
@@ -80,19 +72,21 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 		final JRadioButton useRawValue = new JRadioButton("Raw value");
 		topPanel.add(useRawValue);
+
 		final JTextField simpleValueEditor = new JTextField();
-		simpleValue.bind(value(simpleValueEditor));
+		tpModel.getSimpleValue().bind(value(simpleValueEditor));
 		topPanel.add(simpleValueEditor);
 
 		final JRadioButton useReference = new JRadioButton("Reference: ");
 		topPanel.add(useReference);
 		final JComboBox<ObjectTextView<TestReference>> referenceEditor = new JComboBox<>();
-		references.bind(filter(r -> r.getType().equals(editedParameterValue.getValue().getValueFactory().getType()))) //
+		tpModel.getReferences()
+				.bind(filter(r -> r.getType().equals(editedParamValue.getValue().getValueFactory().getType()))) //
 				.bind(listConverter(refToTextConverter())) //
 				.bind(values(referenceEditor));
-		reference.bind(refToTextConverter())//
+		tpModel.getSelectedReference().bind(refToTextConverter())//
 				.bind(selection(referenceEditor)) //
-				.addDependency(detachOnUpdateOf(references));
+				.addDependency(detachOnUpdateOf(tpModel.getReferences()));
 		topPanel.add(referenceEditor);
 
 		final JRadioButton useComplexType = new JRadioButton("Test Api: ");
@@ -102,7 +96,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 		final ListModel<ParameterValue> editedParameters = new RootListModel<>(ListViews.<ParameterValue>sorted());
 		final TestParameterValueTable view = new TestParameterValueTable(
 				new TestParameterValueTableModel(editedParameters));
-		editedParameterValue.bind(v -> toListModel(tc.getValue(), v)).bind(ListModelBindings.values(editedParameters));
+		editedParamValue.bind(v -> toListModel(tc.getValue(), v)).bind(ListModelBindings.values(editedParameters));
 
 		add(new JScrollPane(view), BorderLayout.CENTER);
 
@@ -111,38 +105,38 @@ public class TestParameterValueEditorPanel extends JPanel {
 		group.add(useReference);
 		group.add(useComplexType);
 
-		valueNature.bind(SwingBindings.group(group, ParameterNature.REFERENCE, useReference,
+		tpModel.getValueNature().bind(SwingBindings.group(group, ParameterNature.REFERENCE, useReference,
 				ParameterNature.SIMPLE_TYPE, useRawValue, ParameterNature.TEST_API, useComplexType));
 
-		editedParameterValue.listen(value -> {
-			valueNature.setValue(this, value.getValueFactory().getNature());
+		editedParamValue.listen(value -> {
+			tpModel.getValueNature().setValue(this, value.getValueFactory().getNature());
 			if (value.getValueFactory().getNature() == ParameterNature.REFERENCE) {
-				reference.setValue(this, (TestReference) value.getValueFactory());
+				tpModel.getSelectedReference().setValue(this, (TestReference) value.getValueFactory());
 			}
 		});
 
-		reference.listen(ref -> {
-			if (valueNature.getValue() == ParameterNature.REFERENCE) {
-				editedParameterValue.getValue().setValueFactory(ref);
+		tpModel.getSelectedReference().listen(ref -> {
+			if (tpModel.getValueNature().getValue() == ParameterNature.REFERENCE) {
+				editedParamValue.getValue().setValueFactory(ref);
 			}
 		});
 
-		valueNature.listen(v -> {
-			final TestParameterValue paramValue = editedParameterValue.getValue();
+		tpModel.getValueNature().listen(v -> {
+			final TestParameterValue paramValue = editedParamValue.getValue();
 			switch (v) {
 			case SIMPLE_TYPE:
 				paramValue.setValueFactory(apiOf(tc.getValue(), paramValue).asSimpleParameter());
 				break;
 			case REFERENCE:
-				paramValue.setValueFactory(reference.getObjectValue());
+				paramValue.setValueFactory(tpModel.getSelectedReference().getObjectValue());
 				break;
 			case TEST_API:
-				paramValue.setValueFactory(testApi.getValue());
+				paramValue.setValueFactory(tpModel.getTestApi().getValue());
 				break;
 			default:
 				break;
 			}
-		}).addDependency(ChainDependencies.detachOnUpdateOf(editedParameterValue));
+		}).addDependency(ChainDependencies.detachOnUpdateOf(editedParamValue));
 
 	}
 

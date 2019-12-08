@@ -13,14 +13,12 @@ import javax.swing.JScrollPane;
 import ch.skymarshall.gui.mvc.ChainDependencies;
 import ch.skymarshall.gui.mvc.converters.Converters;
 import ch.skymarshall.gui.mvc.converters.IConverter;
-import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.gui.swing.bindings.SwingBindings;
 import ch.skymarshall.tcwriter.generators.model.NamedObject;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
-import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 
 public class StepEditorPanel extends JPanel {
 
@@ -67,10 +65,9 @@ public class StepEditorPanel extends JPanel {
 		return renderer.testObject;
 	}
 
-	public StepEditorPanel(final StepEditorModel stepEditorModel, final TestModel tm,
-			final ObjectProperty<TestStep> testStep) {
+	public StepEditorPanel(final StepEditorController controller) {
+		final TestModel tm = controller.getGuiModel().getTestModel();
 
-		final StepEditorController controller = new StepEditorController(stepEditorModel, tm, testStep);
 		this.model = controller.getModel();
 
 		final JButton apply = new JButton("Apply");
@@ -117,9 +114,6 @@ public class StepEditorPanel extends JPanel {
 		setLayout(new BorderLayout());
 		add(topPanel, BorderLayout.NORTH);
 		add(stepEditors, BorderLayout.CENTER);
-
-		controller.init();
-
 	}
 
 }

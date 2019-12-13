@@ -1,4 +1,4 @@
-package ch.skymarshall.gui.generic;
+package ch.skymarshall.gui.swing.tools;
 
 import static ch.skymarshall.gui.mvc.converters.Converters.intToString;
 import static ch.skymarshall.gui.swing.bindings.SwingBindings.selected;
@@ -12,8 +12,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import ch.skymarshall.gui.generic.ClassAdapter.PropertyEntry;
 import ch.skymarshall.gui.mvc.IBindingController;
+import ch.skymarshall.gui.tools.ClassAdapter;
+import ch.skymarshall.gui.tools.GenericModelEditorAdapter;
+import ch.skymarshall.gui.tools.IGenericEditor;
+import ch.skymarshall.gui.tools.ClassAdapter.PropertyEntry;
 
 public class SwingGenericEditorPanel extends JPanel implements IGenericEditor {
 

@@ -1,7 +1,7 @@
-package ch.skymarshall.gui.generic;
+package ch.skymarshall.gui.tools;
 
-import ch.skymarshall.gui.generic.ClassAdapter.PropertyEntry;
 import ch.skymarshall.gui.mvc.IBindingController;
+import ch.skymarshall.gui.tools.ClassAdapter.PropertyEntry;
 
 public interface IGenericEditor {
 

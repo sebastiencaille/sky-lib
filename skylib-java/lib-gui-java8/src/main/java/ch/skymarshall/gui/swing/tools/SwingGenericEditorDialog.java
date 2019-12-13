@@ -1,4 +1,4 @@
-package ch.skymarshall.gui.generic;
+package ch.skymarshall.gui.swing.tools;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -8,8 +8,11 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
-import ch.skymarshall.gui.generic.ClassAdapter.PropertyEntry;
 import ch.skymarshall.gui.mvc.IBindingController;
+import ch.skymarshall.gui.tools.ClassAdapter;
+import ch.skymarshall.gui.tools.GenericModelEditorAdapter;
+import ch.skymarshall.gui.tools.IGenericEditor;
+import ch.skymarshall.gui.tools.ClassAdapter.PropertyEntry;
 
 public class SwingGenericEditorDialog extends JDialog implements IGenericEditor {
 

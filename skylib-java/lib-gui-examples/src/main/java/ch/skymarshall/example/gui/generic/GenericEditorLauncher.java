@@ -9,9 +9,10 @@ import java.util.ResourceBundle;
 
 import javax.swing.SwingUtilities;
 
-import ch.skymarshall.gui.generic.ClassAdapter;
-import ch.skymarshall.gui.generic.GenericModelEditorAdapter;
-import ch.skymarshall.gui.generic.SwingGenericEditorDialog;
+import ch.skymarshall.gui.swing.tools.SwingGenericEditorDialog;
+import ch.skymarshall.gui.tools.ClassAdapter;
+import ch.skymarshall.gui.tools.GenericModelEditorAdapter;
+import ch.skymarshall.gui.tools.Ordered;
 
 public class GenericEditorLauncher {
 
@@ -20,6 +21,7 @@ public class GenericEditorLauncher {
 
 		boolean bool;
 
+		@Ordered(order = 2)
 		public String getStr() {
 			return str;
 		}
@@ -28,6 +30,7 @@ public class GenericEditorLauncher {
 			this.str = str;
 		}
 
+		@Ordered(order = 1)
 		public boolean isBool() {
 			return bool;
 		}

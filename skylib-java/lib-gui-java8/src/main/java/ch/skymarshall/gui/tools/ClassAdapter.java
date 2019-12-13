@@ -1,7 +1,8 @@
-package ch.skymarshall.gui.generic;
+package ch.skymarshall.gui.tools;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -30,6 +31,14 @@ public class ClassAdapter<T> {
 			this.tooltip = tooltip;
 		}
 
+		public int index() {
+			final Ordered annotation = metadata.getAnnotation(Ordered.class);
+			if (annotation != null) {
+				return annotation.order();
+			}
+			return Integer.MAX_VALUE;
+		}
+
 		public <V> AbstractTypedProperty<V> getProperty(final Class<V> clazz) {
 			if (!clazz.equals(getPropertyType())) {
 				throw new InvalidParameterException(
@@ -52,20 +61,6 @@ public class ClassAdapter<T> {
 
 			});
 			property.load(caller);
-		}
-
-		public IPersister<?> persister(final U target) {
-			return new IPersister<Object>() {
-				@Override
-				public Object get() {
-					return metadata.getValueOf(target);
-				}
-
-				@Override
-				public void set(final Object value) {
-					metadata.setValueOf(target, value);
-				}
-			};
 		}
 
 		public void saveInCurrentObject() {
@@ -103,6 +98,7 @@ public class ClassAdapter<T> {
 			final ObjectProperty<Object> property = new ObjectProperty<>(attrib.getName(), propertySupport);
 			properties.add(new PropertyEntry<>(property, attrib, message, toolTip));
 		}
+		Collections.sort(properties, (p1, p2) -> Integer.compare(p1.index(), p2.index()));
 		propertySupport.attachAll();
 		return properties;
 	}

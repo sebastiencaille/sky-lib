@@ -1,8 +1,8 @@
-package ch.skymarshall.gui.generic;
+package ch.skymarshall.gui.tools;
 
 import java.util.List;
 
-import ch.skymarshall.gui.generic.ClassAdapter.PropertyEntry;
+import ch.skymarshall.gui.tools.ClassAdapter.PropertyEntry;
 
 /**
  *

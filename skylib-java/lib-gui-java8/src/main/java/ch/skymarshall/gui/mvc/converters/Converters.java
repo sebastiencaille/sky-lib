@@ -237,7 +237,11 @@ public final class Converters {
 	}
 
 	public static IConverter<Integer, String> intToString() {
-		return intConverter(i -> Integer.toString(i), numberToString(Integer::parseInt)); // NOSONAR
+		return intConverter(Integer::toString, numberToString(Integer::parseInt)); // NOSONAR
+	}
+
+	public static IConverter<Long, String> longToString() {
+		return longConverter(Long::toString, numberToString(Long::parseLong)); // NOSONAR
 	}
 
 	public static IConverter<Boolean, String> booleanToString() {

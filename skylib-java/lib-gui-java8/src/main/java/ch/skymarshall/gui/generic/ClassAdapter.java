@@ -1,0 +1,118 @@
+package ch.skymarshall.gui.generic;
+
+import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
+import ch.skymarshall.gui.mvc.IScopedSupport;
+import ch.skymarshall.gui.mvc.properties.AbstractTypedProperty;
+import ch.skymarshall.gui.mvc.properties.IPersister;
+import ch.skymarshall.gui.mvc.properties.ObjectProperty;
+import ch.skymarshall.util.dao.metadata.AbstractAttributeMetaData;
+import ch.skymarshall.util.dao.metadata.DataObjectMetaData;
+
+public class ClassAdapter<T> {
+
+	public static class PropertyEntry<U> {
+		private final AbstractTypedProperty<Object> property;
+		private final String label;
+		private final String tooltip;
+		private final AbstractAttributeMetaData<U> metadata;
+
+		public PropertyEntry(final AbstractTypedProperty<Object> property, final AbstractAttributeMetaData<U> metadata,
+				final String label, final String tooltip) {
+			super();
+			this.property = property;
+			this.metadata = metadata;
+			this.label = label;
+			this.tooltip = tooltip;
+		}
+
+		public <V> AbstractTypedProperty<V> getProperty(final Class<V> clazz) {
+			if (!clazz.equals(getPropertyType())) {
+				throw new InvalidParameterException(
+						"Expected " + clazz + ", but property type is " + getPropertyType());
+			}
+			return (AbstractTypedProperty<V>) property;
+		}
+
+		public void loadFromObject(final Object caller, final U obj) {
+			property.setPersister(new IPersister<Object>() {
+				@Override
+				public Object get() {
+					return metadata.getValueOf(obj);
+				}
+
+				@Override
+				public void set(final Object value) {
+					metadata.setValueOf(obj, value);
+				}
+
+			});
+			property.load(caller);
+		}
+
+		public IPersister<?> persister(final U target) {
+			return new IPersister<Object>() {
+				@Override
+				public Object get() {
+					return metadata.getValueOf(target);
+				}
+
+				@Override
+				public void set(final Object value) {
+					metadata.setValueOf(target, value);
+				}
+			};
+		}
+
+		public void saveInCurrentObject() {
+			property.save();
+		}
+
+		public Class<?> getPropertyType() {
+			return metadata.getClassType();
+		}
+
+		public String getLabel() {
+			return label;
+		}
+
+		public String getTooltip() {
+			return tooltip;
+		}
+
+	}
+
+	private final ResourceBundle bundle;
+	private final DataObjectMetaData<T> metaData;
+
+	public ClassAdapter(final ResourceBundle bundle, final Class<T> clazz) {
+		this.bundle = bundle;
+		this.metaData = new DataObjectMetaData<>(clazz);
+	}
+
+	public List<PropertyEntry<T>> getProperties() {
+		final IScopedSupport propertySupport = new ControllerPropertyChangeSupport(this).byContainer(this);
+		final List<PropertyEntry<T>> properties = new ArrayList<>();
+		for (final AbstractAttributeMetaData<T> attrib : metaData.getAttributes()) {
+			final String message = bundle.getString(descriptionKey(attrib.getName()));
+			final String toolTip = bundle.getString(tooltipKey(attrib.getName()));
+			final ObjectProperty<Object> property = new ObjectProperty<>(attrib.getName(), propertySupport);
+			properties.add(new PropertyEntry<>(property, attrib, message, toolTip));
+		}
+		propertySupport.attachAll();
+		return properties;
+	}
+
+	public static String descriptionKey(final String name) {
+		return name + ".description";
+	}
+
+	public static String tooltipKey(final String name) {
+		return name + ".tooltip";
+	}
+
+}

@@ -83,4 +83,18 @@ public abstract class AbstractAttributeMetaData<T> {
 		return type;
 	}
 
+	public Class<?> getClassType() {
+		if (!type.isPrimitive()) {
+			return type;
+		}
+		if (type == Boolean.TYPE) {
+			return Boolean.class;
+		} else if (type == Integer.TYPE) {
+			return Integer.class;
+		} else if (type == Long.TYPE) {
+			return Long.class;
+		}
+		throw new IllegalStateException("Unhandled type: " + type);
+	}
+
 }

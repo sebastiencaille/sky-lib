@@ -33,11 +33,13 @@ public class SwingGenericEditorPanel extends JPanel implements IGenericEditor {
 		final Class<?> propType = prop.getPropertyType();
 		if (propType == Boolean.class) {
 			final JCheckBox cb = new JCheckBox(prop.getLabel());
-			final GridBagConstraints labelConstraint = new GridBagConstraints();
-			labelConstraint.gridx = 1;
-			labelConstraint.gridwidth = 2;
-			labelConstraint.gridy = ++currentRow;
-			add(cb, labelConstraint);
+			final GridBagConstraints cbConstraint = new GridBagConstraints();
+			cbConstraint.gridx = 1;
+			cbConstraint.gridwidth = 2;
+			cbConstraint.gridy = ++currentRow;
+			cbConstraint.anchor = GridBagConstraints.WEST;
+			cbConstraint.insets = new Insets(5, 5, 0, 5);
+			add(cb, cbConstraint);
 			return prop.getProperty(Boolean.class).bind(selected(cb));
 		} else if (propType == Integer.class) {
 			currentRow++;
@@ -61,7 +63,7 @@ public class SwingGenericEditorPanel extends JPanel implements IGenericEditor {
 		final GridBagConstraints labelConstraint = new GridBagConstraints();
 		labelConstraint.gridx = 1;
 		labelConstraint.gridy = currentRow;
-		labelConstraint.insets = new Insets(0, 0, 0, 5);
+		labelConstraint.insets = new Insets(5, 5, 0, 5);
 		labelConstraint.anchor = GridBagConstraints.EAST;
 		add(label, labelConstraint);
 	}
@@ -69,11 +71,13 @@ public class SwingGenericEditorPanel extends JPanel implements IGenericEditor {
 	private JTextField addTextField(final PropertyEntry<?> prop) {
 		final JTextField tf = new JTextField();
 		tf.setToolTipText(prop.getTooltip());
-		final GridBagConstraints labelConstraint = new GridBagConstraints();
-		labelConstraint.gridx = 2;
-		labelConstraint.fill = GridBagConstraints.HORIZONTAL;
-		labelConstraint.gridy = currentRow;
-		add(tf, labelConstraint);
+		final GridBagConstraints fieldConstraint = new GridBagConstraints();
+		fieldConstraint.fill = GridBagConstraints.HORIZONTAL;
+		fieldConstraint.gridx = 2;
+		fieldConstraint.weightx = 1.0;
+		fieldConstraint.gridy = currentRow;
+		fieldConstraint.insets = new Insets(5, 0, 0, 5);
+		add(tf, fieldConstraint);
 		return tf;
 	}
 

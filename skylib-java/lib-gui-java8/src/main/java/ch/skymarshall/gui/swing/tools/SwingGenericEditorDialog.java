@@ -9,10 +9,9 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import ch.skymarshall.gui.mvc.IBindingController;
-import ch.skymarshall.gui.tools.ClassAdapter;
-import ch.skymarshall.gui.tools.GenericModelEditorAdapter;
-import ch.skymarshall.gui.tools.IGenericEditor;
 import ch.skymarshall.gui.tools.ClassAdapter.PropertyEntry;
+import ch.skymarshall.gui.tools.GenericEditorAdapter;
+import ch.skymarshall.gui.tools.IGenericEditor;
 
 public class SwingGenericEditorDialog extends JDialog implements IGenericEditor {
 
@@ -25,12 +24,12 @@ public class SwingGenericEditorDialog extends JDialog implements IGenericEditor 
 	}
 
 	@Override
-	public IBindingController bind(final PropertyEntry prop) {
+	public IBindingController bind(final PropertyEntry<?> prop) {
 		return panel.bind(prop);
 	}
 
 	@Override
-	public void finish(final GenericModelEditorAdapter<?, ?> adapter) {
+	public void finish(final GenericEditorAdapter<?, ?> adapter) {
 		add(panel, BorderLayout.CENTER);
 
 		final JPanel buttonPanel = new JPanel(new FlowLayout());

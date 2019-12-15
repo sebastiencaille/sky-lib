@@ -16,7 +16,7 @@ import javax.swing.JTextField;
 
 import ch.skymarshall.gui.mvc.IBindingController;
 import ch.skymarshall.gui.tools.ClassAdapter.PropertyEntry;
-import ch.skymarshall.gui.tools.GenericModelEditorAdapter;
+import ch.skymarshall.gui.tools.GenericEditorAdapter;
 import ch.skymarshall.gui.tools.IGenericEditor;
 
 public class SwingGenericEditorPanel extends JPanel implements IGenericEditor {
@@ -62,6 +62,7 @@ public class SwingGenericEditorPanel extends JPanel implements IGenericEditor {
 		labelConstraint.gridx = 1;
 		labelConstraint.gridy = currentRow;
 		labelConstraint.insets = new Insets(0, 0, 0, 5);
+		labelConstraint.anchor = GridBagConstraints.EAST;
 		add(label, labelConstraint);
 	}
 
@@ -77,7 +78,7 @@ public class SwingGenericEditorPanel extends JPanel implements IGenericEditor {
 	}
 
 	@Override
-	public void finish(final GenericModelEditorAdapter<?, ?> adapter) {
+	public void finish(final GenericEditorAdapter<?, ?> adapter) {
 		// nope
 	}
 }

@@ -4,15 +4,15 @@ import static java.util.Arrays.asList;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.Paths;
 
 import ch.skymarshall.tcwriter.examples.api.interfaces.CustomerTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestRole;
+import ch.skymarshall.tcwriter.generators.GeneratorConfig;
 import ch.skymarshall.tcwriter.generators.JavaToModel;
-import ch.skymarshall.tcwriter.generators.JsonHelper;
+import ch.skymarshall.tcwriter.generators.model.persistence.IModelPersister;
+import ch.skymarshall.tcwriter.generators.model.persistence.JsonModelPersister;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
@@ -27,15 +27,33 @@ public class ExampleHelper {
 	private ExampleHelper() {
 	}
 
-	public static final File RESOURCE_FOLDER = new File("src/main/resources/models");
+	public static final File RESOURCE_FOLDER = new File("./src/main/resources");
 
-	public static Path MODEL_PATH = new File(RESOURCE_FOLDER, "testModel.json").toPath();
+	public static Path SRC_PATH = Paths.get("./src/test/java");
 
-	public static Path TC_PATH = new File(RESOURCE_FOLDER, "testCase.json").toPath();
+	public static String TC_NAME = "testCase.json";
 
-	public static Path TEMPLATE_PATH = new File("./src/main/resources/templates/TC.template").toPath();
+	private static GeneratorConfig config;
+	private static IModelPersister persister;
 
-	public static Path SRC_PATH = new File("./src/test/java").toPath();
+	static {
+
+		config = new GeneratorConfig();
+		final File tcPath = new File(RESOURCE_FOLDER, "testCase");
+		tcPath.mkdirs();
+		final File modelPath = new File(RESOURCE_FOLDER, "models");
+		modelPath.mkdirs();
+
+		config.setTcPath(tcPath.toString());
+		config.setDefaultGeneratedTCPath("./src/tests/java");
+		config.setModelPath(modelPath + "/test-model.json");
+		config.setTemplatePath(new File("./src/main/resources/templates/TC.template").toString());
+		persister = new JsonModelPersister(config);
+	}
+
+	public static IModelPersister getPersister() {
+		return persister;
+	}
 
 	public static TestModel generateModel() {
 		final TestModel model = new JavaToModel(asList(CustomerTestRole.class, DeliveryTestRole.class)).generateModel();
@@ -45,28 +63,15 @@ public class ExampleHelper {
 	}
 
 	public static void saveModel(final TestModel model) throws IOException {
-		final Path modelPath = ExampleHelper.MODEL_PATH;
-		saveModel(modelPath, model);
+		persister.writeTestModel(model);
 	}
 
-	public static void saveModel(final Path modelPath, final TestModel model) throws IOException {
-		final String jsonModel = JsonHelper.toJson(model);
-		Files.write(modelPath, jsonModel.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE,
-				StandardOpenOption.TRUNCATE_EXISTING);
-	}
-
-	public static void saveTC(final TestCase testCase) throws IOException {
-		saveTC(ExampleHelper.TC_PATH, testCase);
-	}
-
-	public static void saveTC(final Path tcPath, final TestCase testCase) throws IOException {
-		final String jsonTestCase = JsonHelper.toJson(testCase);
-		Files.write(tcPath, jsonTestCase.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE,
-				StandardOpenOption.TRUNCATE_EXISTING);
+	public static void saveTC(final String name, final TestCase testCase) throws IOException {
+		persister.writeTestCase(name, testCase);
 	}
 
 	public static TestCase recordTestCase(final TestModel model) {
-		final TestCaseRecorder recorder = new TestCaseRecorder(model);
+		final TestCaseRecorder recorder = new TestCaseRecorder(persister, model);
 		TestCaseRecorderAspect.setRecorder(recorder);
 		final ExampleTest test = new ExampleTest();
 		test.initActors();
@@ -75,8 +80,11 @@ public class ExampleHelper {
 	}
 
 	public static ITestExecutor testExecutor() throws IOException {
-		return new JunitTestExecutor(ExampleHelper.TEMPLATE_PATH, ExampleHelper.SRC_PATH,
-				ClassLoaderHelper.appClassPath());
+		return new JunitTestExecutor(config, ClassLoaderHelper.appClassPath());
+	}
+
+	public static GeneratorConfig getConfig() {
+		return config;
 	}
 
 }

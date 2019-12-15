@@ -1,13 +1,10 @@
 package ch.skymarshall.tcwriter.gui.frame;
 
-import static ch.skymarshall.tcwriter.generators.JsonHelper.readFile;
-import static ch.skymarshall.tcwriter.generators.JsonHelper.testCaseFromJson;
-import static ch.skymarshall.tcwriter.generators.JsonHelper.toJson;
-import static ch.skymarshall.tcwriter.generators.JsonHelper.writeFile;
-
+import java.awt.Dialog.ModalityType;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,12 +14,17 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
 import ch.skymarshall.gui.mvc.IScopedSupport;
+import ch.skymarshall.gui.swing.tools.SwingGenericEditorDialog;
+import ch.skymarshall.gui.tools.ClassAdapter;
+import ch.skymarshall.gui.tools.GenericEditorAdapter;
+import ch.skymarshall.tcwriter.generators.GeneratorConfig;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
+import ch.skymarshall.tcwriter.generators.model.persistence.IModelPersister;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 import ch.skymarshall.tcwriter.gui.TestRemoteControl;
 import ch.skymarshall.tcwriter.gui.frame.TCWriterModel.TestExecutionState;
+import ch.skymarshall.util.PropertiesResourceBundle;
 import executors.ITestExecutor;
 
 public class TCWriterController {
@@ -35,10 +37,17 @@ public class TCWriterController {
 	private final IScopedSupport changeSupport;
 	private final ITestExecutor testExecutor;
 
-	public TCWriterController(final TestModel testModel, final ITestExecutor testExecutor) {
+	private final IModelPersister persister;
+
+	private final GeneratorConfig config;
+
+	public TCWriterController(final GeneratorConfig config, final IModelPersister persister,
+			final ITestExecutor testExecutor) throws IOException {
+		this.config = config;
+		this.persister = persister;
 		this.testExecutor = testExecutor;
 		changeSupport = new ControllerPropertyChangeSupport(this).byContainer(this);
-		model = new TCWriterModel(testModel, changeSupport);
+		model = new TCWriterModel(persister.readTestModel(), changeSupport);
 		gui = new TCWriterGui(this);
 		testRemoteControl = new TestRemoteControl(9998,
 				r -> SwingUtilities.invokeLater(() -> model.getExecutionState().setValue(this,
@@ -62,6 +71,25 @@ public class TCWriterController {
 
 	public TestRemoteControl getTestRemoteControl() {
 		return testRemoteControl;
+	}
+
+	public void editConfig() throws IOException {
+		final Properties props = new Properties();
+		props.put(ClassAdapter.descriptionKey("ModelPath"), "Models location");
+		props.put(ClassAdapter.descriptionKey("TcPath"), "Testcases location");
+		props.put(ClassAdapter.descriptionKey("DefaultGeneratedTCPath"), "Testcase export location");
+		props.put(ClassAdapter.descriptionKey("TemplatePath"), "Template location");
+		props.put(ClassAdapter.descriptionKey("Name"), "Name");
+
+		final SwingGenericEditorDialog dialog = new SwingGenericEditorDialog(gui, "Configuration",
+				ModalityType.DOCUMENT_MODAL);
+		final GenericEditorAdapter<GeneratorConfig, ?> editor = new GenericEditorAdapter<>(dialog,
+				new ClassAdapter<>(new PropertiesResourceBundle(props), GeneratorConfig.class));
+		editor.apply();
+		editor.load(config);
+		dialog.setSize(dialog.getWidth() + 400, dialog.getHeight() + 30);
+		dialog.setVisible(true);
+		persister.writeConfiguration(config);
 	}
 
 	public void newTestCase() {
@@ -117,7 +145,7 @@ public class TCWriterController {
 		final int dialogResult = testFileChooser.showSaveDialog(gui);
 		if (dialogResult == 0) {
 			final File testFile = testFileChooser.getSelectedFile();
-			writeFile(testFile.toPath(), toJson(model.getTc().getValue()));
+			persister.writeTestCase(testFile.toString(), model.getTc().getValue());
 		}
 	}
 
@@ -127,7 +155,7 @@ public class TCWriterController {
 		final int dialogResult = testFileChooser.showOpenDialog(gui);
 		if (dialogResult == 0) {
 			final File testFile = testFileChooser.getSelectedFile();
-			loadTestCase(testCaseFromJson(readFile(testFile.toPath()), model.getTestModel()));
+			loadTestCase(persister.readTestCase(testFile.toString(), model.getTestModel()));
 		}
 	}
 

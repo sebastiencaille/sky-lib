@@ -1,9 +1,9 @@
 package ch.skymarshall.tcwriter;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import ch.skymarshall.tcwriter.recording.ITestCaseRecorder;
 import ch.skymarshall.tcwriter.recording.TestCaseRecorderAspect;
@@ -40,7 +40,7 @@ public abstract class TestFeature {
 		}
 		try {
 			final ITestCaseRecorder recorder = (ITestCaseRecorder) recorderClass.getConstructor(Path.class)
-					.newInstance(new File(jsonModelPath).toPath());
+					.newInstance(Paths.get(jsonModelPath));
 			return new TestFeature() {
 				@Override
 				public void enable() {

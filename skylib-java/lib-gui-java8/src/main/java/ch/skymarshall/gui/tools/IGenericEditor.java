@@ -7,6 +7,6 @@ public interface IGenericEditor {
 
 	IBindingController bind(final PropertyEntry<?> prop);
 
-	void finish(GenericModelEditorAdapter<?, ?> adapter);
+	void finish(GenericEditorAdapter<?, ?> adapter);
 
 }

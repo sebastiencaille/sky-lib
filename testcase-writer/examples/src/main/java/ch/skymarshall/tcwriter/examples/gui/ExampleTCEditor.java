@@ -1,9 +1,5 @@
 package ch.skymarshall.tcwriter.examples.gui;
 
-import static ch.skymarshall.tcwriter.examples.ExampleHelper.testExecutor;
-import static ch.skymarshall.tcwriter.generators.JsonHelper.readFile;
-import static ch.skymarshall.tcwriter.generators.JsonHelper.testModelFromJson;
-
 import java.io.IOException;
 
 import javax.swing.SwingUtilities;
@@ -17,16 +13,14 @@ public class ExampleTCEditor {
 
 	public static void main(final String[] args) throws IOException {
 
-		ExampleHelper.RESOURCE_FOLDER.mkdirs();
-
 		final TestModel model = ExampleHelper.generateModel();
 		final TestCase testCase = ExampleHelper.recordTestCase(model);
 
 		ExampleHelper.saveModel(testCase.getModel());
-		ExampleHelper.saveTC(testCase);
+		ExampleHelper.saveTC(ExampleHelper.TC_NAME, testCase);
 
-		final TCWriterController controller = new TCWriterController(
-				testModelFromJson(readFile(ExampleHelper.MODEL_PATH)), testExecutor());
+		final TCWriterController controller = new TCWriterController(ExampleHelper.getConfig(),
+				ExampleHelper.getPersister(), ExampleHelper.testExecutor());
 
 		SwingUtilities.invokeLater(() -> {
 			controller.run();

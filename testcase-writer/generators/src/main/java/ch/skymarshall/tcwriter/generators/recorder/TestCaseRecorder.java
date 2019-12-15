@@ -1,10 +1,5 @@
 package ch.skymarshall.tcwriter.generators.recorder;
 
-import static ch.skymarshall.tcwriter.generators.JsonHelper.classFile;
-import static ch.skymarshall.tcwriter.generators.JsonHelper.readFile;
-import static ch.skymarshall.tcwriter.generators.JsonHelper.testModelFromJson;
-import static ch.skymarshall.tcwriter.generators.JsonHelper.toJson;
-import static ch.skymarshall.tcwriter.generators.JsonHelper.writeFile;
 import static ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory.simpleType;
 
 import java.io.IOException;
@@ -16,6 +11,8 @@ import java.util.Map;
 import java.util.Objects;
 
 import ch.skymarshall.tcwriter.generators.Helper;
+import ch.skymarshall.tcwriter.generators.model.persistence.IModelPersister;
+import ch.skymarshall.tcwriter.generators.model.persistence.JsonModelPersister;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
@@ -42,11 +39,15 @@ public class TestCaseRecorder implements ITestCaseRecorder {
 
 	private final Map<Object, TestActor> actors = new HashMap<>();
 
-	public TestCaseRecorder(final Path modelPath) throws IOException {
-		this.testModel = testModelFromJson(readFile(modelPath));
+	private final IModelPersister persister;
+
+	public TestCaseRecorder(final IModelPersister persister) throws IOException {
+		this.persister = persister;
+		this.testModel = persister.readTestModel();
 	}
 
-	public TestCaseRecorder(final TestModel model) {
+	public TestCaseRecorder(final IModelPersister persister, final TestModel model) {
+		this.persister = persister;
 		this.testModel = model;
 	}
 
@@ -203,6 +204,7 @@ public class TestCaseRecorder implements ITestCaseRecorder {
 
 	@Override
 	public void save(final Path testRoot, final String testClassName) throws IOException {
-		writeFile(classFile(testRoot, testClassName), toJson(getTestCase(testClassName)));
+		persister.writeTestCase(JsonModelPersister.classFile(testRoot, testClassName).toString(),
+				getTestCase(testClassName));
 	}
 }

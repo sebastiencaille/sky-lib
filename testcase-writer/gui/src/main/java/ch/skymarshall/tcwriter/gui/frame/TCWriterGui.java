@@ -52,6 +52,9 @@ public class TCWriterGui extends JFrame {
 
 		this.getContentPane().setLayout(new BorderLayout());
 
+		final JButton editConfigButton = button(icon("general/Information24"), "Edit configuration",
+				controller::editConfig);
+
 		final JButton newTCButton = button(icon("general/New24"), "New test case", controller::newTestCase);
 
 		final JButton loadButton = button(icon("general/Open24"), "Open test case", controller::loadTestCase);
@@ -79,6 +82,7 @@ public class TCWriterGui extends JFrame {
 		final StepsTable stepsTable = new StepsTable(controller);
 
 		final JToolBar buttons = new JToolBar();
+		buttons.add(editConfigButton);
 		buttons.add(newTCButton);
 		buttons.add(loadButton);
 		buttons.add(saveButton);

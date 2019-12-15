@@ -11,6 +11,7 @@ import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.properties.AbstractTypedProperty;
 import ch.skymarshall.gui.mvc.properties.IPersister;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
+import ch.skymarshall.util.annotations.Ordered;
 import ch.skymarshall.util.dao.metadata.AbstractAttributeMetaData;
 import ch.skymarshall.util.dao.metadata.DataObjectMetaData;
 
@@ -36,7 +37,7 @@ public class ClassAdapter<T> {
 			if (annotation != null) {
 				return annotation.order();
 			}
-			return Integer.MAX_VALUE;
+			return Integer.MAX_VALUE / 2;
 		}
 
 		public <V> AbstractTypedProperty<V> getProperty(final Class<V> clazz) {

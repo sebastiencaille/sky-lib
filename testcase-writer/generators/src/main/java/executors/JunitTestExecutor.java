@@ -7,11 +7,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
+import ch.skymarshall.tcwriter.generators.GeneratorConfig;
 import ch.skymarshall.tcwriter.generators.TestCaseToJava;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
@@ -21,9 +24,7 @@ public class JunitTestExecutor implements ITestExecutor {
 
 	private static final Logger LOGGER = Logger.getLogger(JunitTestExecutor.class.getName());
 
-	private static final Path tmp = new File(System.getProperty("java.io.tmpdir")).toPath();
-
-	private final Path junitTemplate;
+	private static final Path tmp = Paths.get(System.getProperty("java.io.tmpdir"));
 
 	private final Path javaTargetPath;
 
@@ -31,12 +32,11 @@ public class JunitTestExecutor implements ITestExecutor {
 
 	private final List<URL> classPath;
 
-	public JunitTestExecutor(final Path javaTemplate, final Path javaTargetPath, final List<URL> classPath)
-			throws IOException {
-		this.junitTemplate = javaTemplate;
-		this.javaTargetPath = javaTargetPath;
+	public JunitTestExecutor(final GeneratorConfig config, final List<URL> classPath) throws IOException {
+		this.javaTargetPath = Files.createTempDirectory("tcwriter");
+		this.javaTargetPath.toFile().deleteOnExit();
 		this.classPath = classPath;
-		this.testCaseToJava = new TestCaseToJava(junitTemplate);
+		this.testCaseToJava = new TestCaseToJava(config);
 	}
 
 	@Override

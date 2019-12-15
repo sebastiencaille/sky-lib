@@ -10,12 +10,12 @@ import ch.skymarshall.gui.tools.ClassAdapter.PropertyEntry;
  *
  * @param <C> base of components
  */
-public class GenericModelEditorAdapter<T, C> {
+public class GenericEditorAdapter<T, C> {
 
 	private final IGenericEditor editor;
 	private final List<PropertyEntry<T>> props;
 
-	public GenericModelEditorAdapter(final IGenericEditor editor, final ClassAdapter<T> modelAdapter) {
+	public GenericEditorAdapter(final IGenericEditor editor, final ClassAdapter<T> modelAdapter) {
 		this.editor = editor;
 		props = modelAdapter.getProperties();
 	}

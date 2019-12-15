@@ -4,7 +4,6 @@ import java.awt.Dialog.ModalityType;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,7 +23,6 @@ import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 import ch.skymarshall.tcwriter.gui.TestRemoteControl;
 import ch.skymarshall.tcwriter.gui.frame.TCWriterModel.TestExecutionState;
-import ch.skymarshall.util.PropertiesResourceBundle;
 import executors.ITestExecutor;
 
 public class TCWriterController {
@@ -74,17 +72,11 @@ public class TCWriterController {
 	}
 
 	public void editConfig() throws IOException {
-		final Properties props = new Properties();
-		props.put(ClassAdapter.descriptionKey("ModelPath"), "Models location");
-		props.put(ClassAdapter.descriptionKey("TcPath"), "Testcases location");
-		props.put(ClassAdapter.descriptionKey("DefaultGeneratedTCPath"), "Testcase export location");
-		props.put(ClassAdapter.descriptionKey("TemplatePath"), "Template location");
-		props.put(ClassAdapter.descriptionKey("Name"), "Name");
 
 		final SwingGenericEditorDialog dialog = new SwingGenericEditorDialog(gui, "Configuration",
 				ModalityType.DOCUMENT_MODAL);
 		final GenericEditorAdapter<GeneratorConfig, ?> editor = new GenericEditorAdapter<>(dialog,
-				new ClassAdapter<>(new PropertiesResourceBundle(props), GeneratorConfig.class));
+				new ClassAdapter<>(GeneratorConfig.class));
 		editor.apply();
 		editor.load(config);
 		dialog.setSize(dialog.getWidth() + 400, dialog.getHeight() + 30);

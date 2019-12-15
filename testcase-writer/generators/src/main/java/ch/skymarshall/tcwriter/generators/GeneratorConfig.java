@@ -1,5 +1,6 @@
 package ch.skymarshall.tcwriter.generators;
 
+import ch.skymarshall.util.annotations.Labeled;
 import ch.skymarshall.util.annotations.Ordered;
 
 public class GeneratorConfig {
@@ -15,6 +16,7 @@ public class GeneratorConfig {
 	private String templatePath;
 
 	@Ordered(order = 1)
+	@Labeled(label = "Name of the configuration")
 	public String getName() {
 		return name;
 	}
@@ -23,6 +25,8 @@ public class GeneratorConfig {
 		this.name = name;
 	}
 
+	@Ordered(order = 2)
+	@Labeled(label = "Location of the model")
 	public String getModelPath() {
 		return modelPath;
 	}
@@ -31,6 +35,8 @@ public class GeneratorConfig {
 		this.modelPath = modelPath;
 	}
 
+	@Ordered(order = 3)
+	@Labeled(label = "Location of the test cases")
 	public String getTcPath() {
 		return tcPath;
 	}
@@ -39,6 +45,8 @@ public class GeneratorConfig {
 		this.tcPath = tcPath;
 	}
 
+	@Ordered(order = 4)
+	@Labeled(label = "Location of the exported test cases")
 	public String getDefaultGeneratedTCPath() {
 		return defaultGeneratedTCPath;
 	}
@@ -47,6 +55,8 @@ public class GeneratorConfig {
 		this.defaultGeneratedTCPath = defaultGeneratedTCPath;
 	}
 
+	@Ordered(order = 5)
+	@Labeled(label = "Location of the test case template")
 	public String getTemplatePath() {
 		return templatePath;
 	}

@@ -2,15 +2,13 @@ package ch.skymarshall.example.gui.generic;
 
 import java.awt.Component;
 import java.awt.Dialog;
-import java.util.Properties;
-import java.util.ResourceBundle;
 
 import javax.swing.SwingUtilities;
 
 import ch.skymarshall.gui.swing.tools.SwingGenericEditorDialog;
 import ch.skymarshall.gui.tools.ClassAdapter;
 import ch.skymarshall.gui.tools.GenericEditorAdapter;
-import ch.skymarshall.util.PropertiesResourceBundle;
+import ch.skymarshall.util.annotations.Label;
 import ch.skymarshall.util.annotations.Ordered;
 
 public class GenericEditorLauncher {
@@ -21,6 +19,7 @@ public class GenericEditorLauncher {
 		boolean bool;
 
 		@Ordered(order = 2)
+		@Label(label = "A string value")
 		public String getStr() {
 			return str;
 		}
@@ -30,6 +29,7 @@ public class GenericEditorLauncher {
 		}
 
 		@Ordered(order = 1)
+		@Label(label = "A boolean value")
 		public boolean isBool() {
 			return bool;
 		}
@@ -50,15 +50,10 @@ public class GenericEditorLauncher {
 		obj.setBool(true);
 		obj.setStr("Hello");
 
-		final Properties props = new Properties();
-		props.put(ClassAdapter.descriptionKey("Str"), "A first value");
-		props.put(ClassAdapter.descriptionKey("Bool"), "A second value");
-		final ResourceBundle descr = new PropertiesResourceBundle(props);
-
 		final SwingGenericEditorDialog dialog = new SwingGenericEditorDialog(null, "Test",
 				Dialog.ModalityType.DOCUMENT_MODAL);
 		final GenericEditorAdapter<EditedObject, Component> editor = new GenericEditorAdapter<>(dialog,
-				new ClassAdapter<>(descr, EditedObject.class));
+				new ClassAdapter<>(EditedObject.class));
 		editor.apply();
 		SwingUtilities.invokeLater(() -> {
 			editor.load(obj);

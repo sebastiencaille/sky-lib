@@ -7,7 +7,7 @@ Key points
 * Properties of the model and properties of the graphical components are bound through converters
 * The MVC model can be generated from the application model
 
-Complete example [[Screenshot](screenshots/MVC_Full_TC.png)][[Model](skylib-java/lib-gui-examples/src/main/java/ch/skymarshall/example/gui/controller/impl/ControllerExampleModel.java)] [[View](skylib-java/lib-gui-examples/src/main/java/ch/skymarshall/example/gui/controller/impl/ControllerExampleView.java)] 
+Complete example [[Screenshot](../screenshots/MVC_Full_TC.png)][[Model](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/controller/impl/ControllerExampleModel.java)] [[View](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/controller/impl/ControllerExampleView.java)] 
 
 Example
 
@@ -46,7 +46,7 @@ Key points
 * startEditingValue(editedValue) must be called before editing the value (editedValue only containing the values required for sorting)
 * stopEditingValue() must be called to validate the edition and propagate the change
 
-Example [[Code](skylib-java/lib-gui-java8/src/test/java/ch/skymarshall/gui/model/ListModelBasicTest.java)] [[Filters Example](skylib-java/lib-gui-java8/src/test/java/ch/skymarshall/gui/model/FilterObjectModelTest.java)]
+Example [[Code](lib-gui-java8/src/test/java/ch/skymarshall/gui/model/ListModelBasicTest.java)] [[Filters Example](lib-gui-java8/src/test/java/ch/skymarshall/gui/model/FilterObjectModelTest.java)]
 
 ```java
 IListView<TestObject> VIEW = ListViews.sorted((o1, o2) -> o1.val - o2.val);
@@ -80,7 +80,7 @@ Key points
 * The model is a ListModel
 * The column can have a fixed size or fill the size of the table
  
-Model Example [[Model](skylib-java/lib-gui-examples/src/main/java/ch/skymarshall/example/gui/TestObjectTableModel.java)] [[View](skylib-java/lib-gui-examples/src/main/java/ch/skymarshall/example/gui/model/impl/TableModelExampleView.java)]
+Model Example [[Model](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/TestObjectTableModel.java)] [[View](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/model/impl/TableModelExampleView.java)]
 
 ```java
 public class TestObjectTableModel extends ListModelTableModel<TestObject, Columns> {

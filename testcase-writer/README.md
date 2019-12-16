@@ -13,10 +13,10 @@ The idea is to have
 
 Example
 
-![Test Case](screenshots/TC_Writer.png)
+![Test Case](../screenshots/TC_Writer.png)
 
 
-_Api_ [[Code](testcase-writer/examples/src/main/java/ch/skymarshall/tcwriter/examples/api/interfaces)]
+_Api_ [[Code](examples/src/main/java/ch/skymarshall/tcwriter/examples/api/interfaces)]
 
 ```java
 @TCRole(description = "Customer")
@@ -61,7 +61,7 @@ public class TestItem {
 }
 ```
 
-_Java test case_ [[Code](testcase-writer/examples/src/test/java/ch/skymarshall/tcwriter/examples/SimpleTest.java)]
+_Java test case_ [[Code](examples/src/test/java/ch/skymarshall/tcwriter/examples/SimpleTest.java)]
 
 ```java
 CustomerTestRole customer = new CustomerTestRole(testedService); // Aka A customer
@@ -98,13 +98,13 @@ As customer, I find another brand
 As customer, I keep the note "[Value of step 8: MidClass]"
 ```
 
-* generating java test cases [[Code](testcase-writer/examples/src/test/java/ch/skymarshall/tcwriter/examples/GeneratedTest.java)]
+* generating java test cases [[Code](examples/src/test/java/ch/skymarshall/tcwriter/examples/GeneratedTest.java)]
 
-* storing the test in a "data description" format (JSON, XML, ...) [[Code](testcase-writer/examples/src/main/resources/models)]  [[Code](testcase-writer/examples/src/main/resources/testCase.json)]
+* storing the test in a "data description" format (JSON, XML, ...) [[Code](examples/src/main/resources/models)]  [[Code](examples/src/main/resources/testCase.json)]
 
-* A demonstration GUI is available here [[Code](testcase-writer/examples/src/main/java/ch/skymarshall/tcwriter/examples/gui/ExampleTCEditor.java)
+* A demonstration GUI is available here [[Code](examples/src/main/java/ch/skymarshall/tcwriter/examples/gui/ExampleTCEditor.java)
   The test model is automatically built from the java classes.
-  The testcase is recorded from the execution of [[SimpleTest](testcase-writer/examples/src/test/java/ch/skymarshall/tcwriter/examples/SimpleTest.java)] (thanks to aspectj)
+  The testcase is recorded from the execution of [[SimpleTest](examples/src/test/java/ch/skymarshall/tcwriter/examples/SimpleTest.java)] (thanks to aspectj)
 
 
   

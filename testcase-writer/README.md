@@ -61,7 +61,7 @@ public class TestItem {
 }
 ```
 
-_Java test case_ [[Code](examples/src/test/java/ch/skymarshall/tcwriter/examples/SimpleTest.java)]
+_Java test case_ [[Code](examples/src/main/java/ch/skymarshall/tcwriter/examples/SimpleTest.java)]
 
 ```java
 CustomerTestRole customer = new CustomerTestRole(testedService); // Aka A customer
@@ -102,9 +102,9 @@ As customer, I keep the note "[Value of step 8: MidClass]"
 
 * storing the test in a "data description" format (JSON, XML, ...) [[Code](examples/src/main/resources/models)]  [[Code](examples/src/main/resources/testCase.json)]
 
-* A demonstration GUI is available here [[Code](examples/src/main/java/ch/skymarshall/tcwriter/examples/gui/ExampleTCEditor.java)
-  The test model is automatically built from the java classes.
-  The testcase is recorded from the execution of [[SimpleTest](examples/src/test/java/ch/skymarshall/tcwriter/examples/SimpleTest.java)] (thanks to aspectj)
+* A demonstration GUI is available here [[Code](examples/src/main/java/ch/skymarshall/tcwriter/examples/gui/ExampleTCEditor.java)]
+  * The test model is automatically built from the java classes.
+  * The testcase is recorded from the execution of [[SimpleTest](examples/src/main/java/ch/skymarshall/tcwriter/examples/SimpleTest.java)] (thanks to aspectj)
 
 
   

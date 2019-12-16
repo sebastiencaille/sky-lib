@@ -12,7 +12,7 @@ import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.properties.AbstractTypedProperty;
 import ch.skymarshall.gui.mvc.properties.IPersister;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
-import ch.skymarshall.util.annotations.Label;
+import ch.skymarshall.util.annotations.Labeled;
 import ch.skymarshall.util.annotations.Ordered;
 import ch.skymarshall.util.dao.metadata.AbstractAttributeMetaData;
 import ch.skymarshall.util.dao.metadata.DataObjectMetaData;
@@ -102,8 +102,8 @@ public class ClassAdapter<T> {
 		final List<PropertyEntry<T>> properties = new ArrayList<>();
 		for (final AbstractAttributeMetaData<T> attrib : metaData.getAttributes()) {
 
-			final String message = findText(attrib, Label::label, ClassAdapter::descriptionKey);
-			final String toolTip = findText(attrib, Label::tooltip, ClassAdapter::tooltipKey);
+			final String message = findText(attrib, Labeled::label, ClassAdapter::descriptionKey);
+			final String toolTip = findText(attrib, Labeled::tooltip, ClassAdapter::tooltipKey);
 			final ObjectProperty<Object> property = new ObjectProperty<>(attrib.getName(), propertySupport);
 			properties.add(new PropertyEntry<>(property, attrib, message, toolTip));
 		}
@@ -112,9 +112,9 @@ public class ClassAdapter<T> {
 		return properties;
 	}
 
-	private String findText(final AbstractAttributeMetaData<T> attrib, final Function<Label, String> fromLabel,
+	private String findText(final AbstractAttributeMetaData<T> attrib, final Function<Labeled, String> fromLabel,
 			final Function<String, String> nameToKey) {
-		final Label label = attrib.getAnnotation(Label.class);
+		final Labeled label = attrib.getAnnotation(Labeled.class);
 		String value = "";
 		if (label != null) {
 			value = fromLabel.apply(label);

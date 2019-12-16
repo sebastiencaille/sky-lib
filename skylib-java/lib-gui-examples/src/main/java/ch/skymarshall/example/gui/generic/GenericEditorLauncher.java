@@ -8,7 +8,7 @@ import javax.swing.SwingUtilities;
 import ch.skymarshall.gui.swing.tools.SwingGenericEditorDialog;
 import ch.skymarshall.gui.tools.ClassAdapter;
 import ch.skymarshall.gui.tools.GenericEditorAdapter;
-import ch.skymarshall.util.annotations.Label;
+import ch.skymarshall.util.annotations.Labeled;
 import ch.skymarshall.util.annotations.Ordered;
 
 public class GenericEditorLauncher {
@@ -19,7 +19,7 @@ public class GenericEditorLauncher {
 		boolean bool;
 
 		@Ordered(order = 2)
-		@Label(label = "A string value")
+		@Labeled(label = "A string value")
 		public String getStr() {
 			return str;
 		}
@@ -29,7 +29,7 @@ public class GenericEditorLauncher {
 		}
 
 		@Ordered(order = 1)
-		@Label(label = "A boolean value")
+		@Labeled(label = "A boolean value")
 		public boolean isBool() {
 			return bool;
 		}

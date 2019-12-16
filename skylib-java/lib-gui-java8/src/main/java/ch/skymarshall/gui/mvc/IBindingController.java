@@ -27,7 +27,11 @@ import ch.skymarshall.gui.mvc.properties.AbstractProperty;
  */
 public interface IBindingController {
 
-	void attach();
+	/**
+	 *
+	 * @return true if fully attached, false if any missing attach
+	 */
+	boolean attach();
 
 	void detach();
 

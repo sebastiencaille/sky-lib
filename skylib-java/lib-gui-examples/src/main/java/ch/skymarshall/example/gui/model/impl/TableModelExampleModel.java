@@ -24,7 +24,7 @@ import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 
 public class TableModelExampleModel {
 
-	private final IScopedSupport propertySupport = new ControllerPropertyChangeSupport(this).byContainer(this);
+	private final IScopedSupport propertySupport = new ControllerPropertyChangeSupport(this).scoped(this);
 
 	public final BooleanProperty reverseOrder = new BooleanProperty("Order", propertySupport);
 

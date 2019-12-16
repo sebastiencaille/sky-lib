@@ -44,7 +44,7 @@ public class TCWriterController {
 		this.config = config;
 		this.persister = persister;
 		this.testExecutor = testExecutor;
-		changeSupport = new ControllerPropertyChangeSupport(this).byContainer(this);
+		changeSupport = new ControllerPropertyChangeSupport(this).scoped(this);
 		model = new TCWriterModel(persister.readTestModel(), changeSupport);
 		gui = new TCWriterGui(this);
 		testRemoteControl = new TestRemoteControl(9998,

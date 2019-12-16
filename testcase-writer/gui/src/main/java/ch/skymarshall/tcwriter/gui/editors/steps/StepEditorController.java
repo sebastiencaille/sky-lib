@@ -1,11 +1,14 @@
 package ch.skymarshall.tcwriter.gui.editors.steps;
 
+import static ch.skymarshall.gui.mvc.BindingDependencies.detachOnUpdateOf;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import ch.skymarshall.gui.mvc.GuiController;
+import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.tcwriter.generators.model.ModelUtils;
 import ch.skymarshall.tcwriter.generators.model.ModelUtils.ActionUtils;
@@ -23,8 +26,11 @@ public class StepEditorController extends GuiController {
 
 	private final TCWriterModel guiModel;
 
+	private final IScopedSupport changeSupport;
+
 	public StepEditorController(final TCWriterController controller) {
-		this.model = new StepEditorModel(controller.getChangeSupport());
+		changeSupport = controller.getChangeSupport();
+		this.model = new StepEditorModel(changeSupport);
 		guiModel = controller.getModel();
 	}
 
@@ -36,28 +42,23 @@ public class StepEditorController extends GuiController {
 		final TestModel tm = guiModel.getTestModel();
 		final ObjectProperty<TestStep> testStep = guiModel.getSelectedStep();
 
+		model.getActor()
+				.listen(actor -> model.getPossibleActions().setValue(this, sorted(actor.getRole().getActions())));
+
 		testStep.listen(step -> {
 			if (step == null) {
+				emptySelectors();
+				emptyParam0();
+				changeSupport.attachAll();
 				return;
 			}
 			model.getActor().setValue(this, step.getActor());
 			model.getAction().setValue(this, step.getAction());
-		});
 
-		model.getActor()
-				.listen(actor -> model.getPossibleActions().setValue(this, sorted(actor.getRole().getActions())));
-
-		model.getAction().listen(action -> {
-			if (action == null) {
-				emptySelectors();
-				emptyParam0();
-				return;
-			}
-			final ActionUtils actionUtils = ModelUtils.actionUtils(tm, action);
+			final ActionUtils actionUtils = ModelUtils.actionUtils(tm, step.getAction());
 			actionUtils.synchronizeStep(testStep.getValue());
 			if (actionUtils.hasSelector()) {
-				final TestParameterValue selectorValue = testStep.getValue()
-						.getParametersValue(actionUtils.selectorIndex());
+				final TestParameterValue selectorValue = step.getParametersValue(actionUtils.selectorIndex());
 				model.getPossibleSelectors().setValue(this, sorted(tm.getParameterFactories(actionUtils.selector())));
 				model.getSelector().setValue(this, selectorValue.getValueFactory());
 				model.getSelectorValue().setValue(this, selectorValue.derivate(selectorValue.getValueFactory()));
@@ -65,8 +66,7 @@ public class StepEditorController extends GuiController {
 				emptySelectors();
 			}
 			if (actionUtils.hasActionParameter(0)) {
-				final TestParameterValue param0Value = testStep.getValue()
-						.getParametersValue(actionUtils.parameterIndex(0));
+				final TestParameterValue param0Value = step.getParametersValue(actionUtils.parameterIndex(0));
 				model.getPossibleActionParameters().setValue(this,
 						sorted(tm.getParameterFactories(actionUtils.parameter(0))));
 				model.getActionParameter().setValue(this, param0Value.getValueFactory());
@@ -74,28 +74,33 @@ public class StepEditorController extends GuiController {
 			} else {
 				emptyParam0();
 			}
-
 		});
 
-		model.getSelector().listen(selector -> model.getSelectorValue().setValue(this,
-				model.getSelectorValue().getValue().derivate(selector)));
+		model.getSelector()
+				.listen(selector -> model.getSelectorValue().setValue(this,
+						model.getSelectorValue().getValue().derivate(selector)))
+				.addDependency(detachOnUpdateOf(testStep));
 
-		model.getActionParameter().listen(param -> model.getActionParameterValue().setValue(this,
-				model.getActionParameterValue().getValue().derivate(param)));
+		model.getActionParameter()
+				.listen(param -> model.getActionParameterValue().setValue(this,
+						model.getActionParameterValue().getValue().derivate(param)))
+				.addDependency(detachOnUpdateOf(testStep));
 
 		model.getPossibleActors().setValue(this, sorted(tm.getActors().values()));
 
-		model.getSelectorValue().setValue(this, new TestParameterValue("", TestParameterFactory.NO_FACTORY));
-		model.getActionParameterValue().setValue(this, new TestParameterValue("", TestParameterFactory.NO_FACTORY));
+		model.getSelectorValue().setValue(this, TestParameterValue.NO_VALUE);
+		model.getActionParameterValue().setValue(this, TestParameterValue.NO_VALUE);
 	}
 
 	private void emptyParam0() {
 		model.getActionParameterValue().setValue(this, TestParameterValue.NO_VALUE);
+		model.getActionParameter().setValue(this, TestParameterFactory.NO_FACTORY);
 		model.getPossibleActionParameters().setValue(this, Collections.emptyList());
 	}
 
 	private void emptySelectors() {
 		model.getSelectorValue().setValue(this, TestParameterValue.NO_VALUE);
+		model.getSelector().setValue(this, TestParameterFactory.NO_FACTORY);
 		model.getPossibleSelectors().setValue(this, Collections.emptyList());
 	}
 

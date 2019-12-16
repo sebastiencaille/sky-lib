@@ -113,7 +113,7 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 	 */
 	private transient Edition objectEdition = null;
 
-	private transient IScopedSupport propertyChange = new ControllerPropertyChangeSupport(this, false).byContainer(this);
+	private transient IScopedSupport propertyChange = new ControllerPropertyChangeSupport(this, false).scoped(this);
 
 	private final ArrayList<T> data = new ArrayList<>();
 
@@ -618,7 +618,7 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 	private void readObject(final java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
 		stream.defaultReadObject();
 		listeners = new EventListenerList();
-		propertyChange = new ControllerPropertyChangeSupport(this).byContainer(this);
+		propertyChange = new ControllerPropertyChangeSupport(this).scoped(this);
 	}
 
 	public T find(final T sample) {

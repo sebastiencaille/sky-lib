@@ -15,7 +15,7 @@
  ******************************************************************************/
 package ch.skymarshall.example.gui.model.impl;
 
-import static ch.skymarshall.gui.mvc.ChainDependencies.detachOnUpdateOf;
+import static ch.skymarshall.gui.mvc.BindingDependencies.detachOnUpdateOf;
 import static ch.skymarshall.gui.swing.bindings.SwingBindings.selected;
 import static ch.skymarshall.gui.swing.bindings.SwingBindings.selection;
 

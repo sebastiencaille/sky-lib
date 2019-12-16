@@ -7,6 +7,12 @@ import ch.skymarshall.tcwriter.generators.GeneratorConfig;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 
+/**
+ * Methods used to load/save the configurations, models and test cases
+ *
+ * @author scaille
+ *
+ */
 public interface IModelPersister {
 
 	void setConfiguration(GeneratorConfig config);

@@ -11,12 +11,12 @@ import ch.skymarshall.tcwriter.examples.ExampleService;
  * @author scaille
  *
  */
-@TCApi(description = "how to buy an item", humanReadable = "how to buy an item", isSelector = true)
-public class BuyItemSelector {
+@TCApi(description = "where to buy the item", humanReadable = "", isSelector = true)
+public class BuyingLocationSelector {
 
 	private final Consumer<ExampleService> applier;
 
-	public BuyItemSelector(final Consumer<ExampleService> applier) {
+	public BuyingLocationSelector(final Consumer<ExampleService> applier) {
 		this.applier = applier;
 	}
 
@@ -26,13 +26,13 @@ public class BuyItemSelector {
 	 * @return
 	 */
 	@TCApi(description = "On internet", humanReadable = "on internet")
-	public static BuyItemSelector fromInternet() {
-		return new BuyItemSelector(ExampleService::openBrowser);
+	public static BuyingLocationSelector onInternet() {
+		return new BuyingLocationSelector(ExampleService::openBrowser);
 	}
 
 	@TCApi(description = "In a local shop", humanReadable = "in a local shop")
-	public static BuyItemSelector inLocalShop() {
-		return new BuyItemSelector(ExampleService::goToShop);
+	public static BuyingLocationSelector inLocalShop() {
+		return new BuyingLocationSelector(ExampleService::goToShop);
 	}
 
 	public void apply(final ExampleService svc) {

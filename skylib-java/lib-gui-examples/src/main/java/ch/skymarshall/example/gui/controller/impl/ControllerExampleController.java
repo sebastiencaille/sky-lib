@@ -25,7 +25,7 @@ public class ControllerExampleController extends GuiController {
     private final PropertyGroup          modelPropertiesGroup = new PropertyGroup();
 
     public ControllerExampleController() {
-        modelPropertiesGroup.addProperty(model.getListSelectedObjectProperty());
+        modelPropertiesGroup.addProperty(model.getStaticListSelectionProperty());
 
         model.getTableModel().insert(new TestObject("World", 2));
         model.getTableModel().insert(new TestObject("Hello", 1));

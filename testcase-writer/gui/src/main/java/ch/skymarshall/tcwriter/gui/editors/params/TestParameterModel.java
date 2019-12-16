@@ -17,8 +17,8 @@ public class TestParameterModel {
 	private final ObjectProperty<TestParameterValue> editedParameterValue;
 
 	public TestParameterModel(final String prefix, final TCWriterController guiController,
-			final ObjectProperty<TestParameterValue> editedParameterValue,
-			final ObjectProperty<TestParameterFactory> testApi) {
+			final ObjectProperty<TestParameterFactory> testApi,
+			final ObjectProperty<TestParameterValue> editedParameterValue) {
 		this.editedParameterValue = editedParameterValue;
 		this.testApi = testApi;
 		final IScopedSupport propertyChangeSupport = guiController.getChangeSupport();

@@ -98,7 +98,7 @@ public class ClassAdapter<T> {
 	}
 
 	public List<PropertyEntry<T>> getProperties() {
-		final IScopedSupport propertySupport = new ControllerPropertyChangeSupport(this).byContainer(this);
+		final IScopedSupport propertySupport = new ControllerPropertyChangeSupport(this).scoped(this);
 		final List<PropertyEntry<T>> properties = new ArrayList<>();
 		for (final AbstractAttributeMetaData<T> attrib : metaData.getAttributes()) {
 

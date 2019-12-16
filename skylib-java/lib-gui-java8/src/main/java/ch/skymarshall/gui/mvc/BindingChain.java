@@ -18,6 +18,7 @@ package ch.skymarshall.gui.mvc;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -66,7 +67,7 @@ public class BindingChain implements IBindingController {
 
 	private final List<IBindingChainDependency> dependencies = new ArrayList<>();
 
-	private boolean transmit = true;
+	private int detached = 0;
 
 	public class EndOfChain<T> {
 
@@ -79,7 +80,7 @@ public class BindingChain implements IBindingController {
 				newBinding.addComponentValueChangeListener(new IComponentLink<T>() {
 					@Override
 					public void setValueFromComponent(final Object component, final T componentValue) {
-						if (!transmit) {
+						if (detached > 0) {
 							return;
 						}
 						Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE, () -> "Component change: "
@@ -223,12 +224,14 @@ public class BindingChain implements IBindingController {
 	}
 
 	private void propagateProperyChange(final PropertyChangeEvent evt) {
-		if (!transmit) {
+		if (detached > 0) {
 			return;
 		}
 		Object value = evt.getNewValue();
 		Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE, () -> "Property change: " + evt.getPropertyName() + ": "
 				+ evt.getOldValue() + " -> " + evt.getNewValue());
+		Logging.MVC_EVENTS_DEBUGGER.log(Level.FINEST, () -> Arrays.toString(new Exception().getStackTrace()));
+
 		for (final Link link : links) {
 			try {
 				value = link.toComponent(value);
@@ -264,8 +267,11 @@ public class BindingChain implements IBindingController {
 	}
 
 	@Override
-	public void attach() {
-		transmit = true;
+	public boolean attach() {
+		if (detached > 0) {
+			detached--;
+		}
+		return detached == 0;
 	}
 
 	@Override
@@ -275,7 +281,7 @@ public class BindingChain implements IBindingController {
 
 	@Override
 	public void detach() {
-		transmit = false;
+		detached++;
 	}
 
 	@Override

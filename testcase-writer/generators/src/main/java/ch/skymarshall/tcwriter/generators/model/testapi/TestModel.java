@@ -17,6 +17,8 @@ import ch.skymarshall.tcwriter.test.TestObjectDescription;
 
 public class TestModel implements Serializable {
 
+	private static final TestObjectDescription NO_ID_DESCRIPTION = new TestObjectDescription("", "");
+
 	private final Map<String, TestObjectDescription> descriptions = new HashMap<>();
 
 	private final Map<String, TestRole> roles = new HashMap<>();
@@ -74,7 +76,11 @@ public class TestModel implements Serializable {
 	}
 
 	public TestObjectDescription descriptionOf(final IdObject idObject) {
-		return descriptions.get(idObject.getId());
+		final TestObjectDescription description = descriptions.get(idObject.getId());
+		if (description == null) {
+			return NO_ID_DESCRIPTION;
+		}
+		return description;
 	}
 
 	public TestParameterFactory getTestParameterFactory(final String factoryId) {

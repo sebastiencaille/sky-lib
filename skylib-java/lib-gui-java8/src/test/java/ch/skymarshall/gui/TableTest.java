@@ -70,7 +70,7 @@ public class TableTest extends Assert {
 	@Test
 	public void testSelectionOnInsert() throws InvocationTargetException, InterruptedException {
 
-		final IScopedSupport support = new ControllerPropertyChangeSupport(this).byContainer(this);
+		final IScopedSupport support = new ControllerPropertyChangeSupport(this).scoped(this);
 		final Model model = new Model(support);
 		support.attachAll();
 

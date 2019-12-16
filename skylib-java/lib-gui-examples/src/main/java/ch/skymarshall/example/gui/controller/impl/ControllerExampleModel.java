@@ -33,7 +33,7 @@ public class ControllerExampleModel extends ControllerExampleObjectGuiModel {
 		super(controller);
 	}
 
-	private final ObjectProperty<String> listSelectedObjectProperty = new ObjectProperty<>("ListObjectProperty",
+	private final ObjectProperty<String> staticListSelection = new ObjectProperty<>("StaticListSelection",
 			propertySupport);
 
 	private final ObjectProperty<String> dynamicListObjectProperty = new ObjectProperty<>("DynamicListObjectProperty",
@@ -43,8 +43,8 @@ public class ControllerExampleModel extends ControllerExampleObjectGuiModel {
 
 	final ListModel<TestObject> tableModel = new RootListModel<>(ListViews.sorted(TEST_COMPARATOR));
 
-	public ObjectProperty<String> getListSelectedObjectProperty() {
-		return listSelectedObjectProperty;
+	public ObjectProperty<String> getStaticListSelectionProperty() {
+		return staticListSelection;
 	}
 
 	public ObjectProperty<String> getDynamicListObjectProperty() {

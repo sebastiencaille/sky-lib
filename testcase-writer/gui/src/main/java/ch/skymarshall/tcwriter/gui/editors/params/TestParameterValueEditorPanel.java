@@ -1,8 +1,9 @@
 package ch.skymarshall.tcwriter.gui.editors.params;
 
-import static ch.skymarshall.gui.mvc.ChainDependencies.detachOnUpdateOf;
+import static ch.skymarshall.gui.mvc.BindingDependencies.detachOnUpdateOf;
 import static ch.skymarshall.gui.mvc.converters.Converters.filter;
 import static ch.skymarshall.gui.mvc.converters.Converters.listConverter;
+import static ch.skymarshall.gui.swing.bindings.SwingBindings.group;
 import static ch.skymarshall.gui.swing.bindings.SwingBindings.selection;
 import static ch.skymarshall.gui.swing.bindings.SwingBindings.value;
 import static ch.skymarshall.gui.swing.bindings.SwingBindings.values;
@@ -25,11 +26,9 @@ import ch.skymarshall.gui.model.ListModel;
 import ch.skymarshall.gui.model.ListModelBindings;
 import ch.skymarshall.gui.model.RootListModel;
 import ch.skymarshall.gui.model.views.ListViews;
-import ch.skymarshall.gui.mvc.ChainDependencies;
 import ch.skymarshall.gui.mvc.converters.IConverter;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.gui.swing.bindings.ObjectTextView;
-import ch.skymarshall.gui.swing.bindings.SwingBindings;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory.ParameterNature;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
@@ -37,6 +36,7 @@ import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestReference;
 import ch.skymarshall.tcwriter.gui.editors.params.TestParameterValueTableModel.ParameterValue;
 import ch.skymarshall.tcwriter.gui.frame.TCWriterController;
+import ch.skymarshall.tcwriter.gui.frame.TCWriterModel;
 
 public class TestParameterValueEditorPanel extends JPanel {
 
@@ -55,7 +55,8 @@ public class TestParameterValueEditorPanel extends JPanel {
 		return testCase.getTestApi(testParameterValue.getApiParameterId());
 	}
 
-	public TestParameterValueEditorPanel(final TCWriterController controller, final TestParameterModel tpModel) {
+	public TestParameterValueEditorPanel(final TCWriterController controller, final TCWriterModel tcWriterModel,
+			final TestParameterModel tpModel) {
 		final ObjectProperty<TestCase> tc = controller.getModel().getTc();
 		final ObjectProperty<TestParameterValue> editedParamValue = tpModel.getEditedParameterValue();
 
@@ -105,30 +106,37 @@ public class TestParameterValueEditorPanel extends JPanel {
 		group.add(useReference);
 		group.add(useComplexType);
 
-		tpModel.getValueNature().bind(SwingBindings.group(group, ParameterNature.REFERENCE, useReference,
-				ParameterNature.SIMPLE_TYPE, useRawValue, ParameterNature.TEST_API, useComplexType));
+		tpModel.getValueNature().bind(group(group, ParameterNature.REFERENCE, useReference, ParameterNature.SIMPLE_TYPE,
+				useRawValue, ParameterNature.TEST_API, useComplexType));
 
 		editedParamValue.listen(value -> {
 			tpModel.getValueNature().setValue(this, value.getValueFactory().getNature());
 			if (value.getValueFactory().getNature() == ParameterNature.REFERENCE) {
 				tpModel.getSelectedReference().setValue(this, (TestReference) value.getValueFactory());
+			} else {
+				tpModel.getSelectedReference().setValue(this, null);
 			}
 		});
 
 		tpModel.getSelectedReference().listen(ref -> {
-			if (tpModel.getValueNature().getValue() == ParameterNature.REFERENCE) {
+			if (tpModel.getEditedParameterValue().getObjectValue().getValueFactory()
+					.getNature() == ParameterNature.REFERENCE) {
 				editedParamValue.getValue().setValueFactory(ref);
 			}
-		});
+		}).addDependency(detachOnUpdateOf(editedParamValue));
 
 		tpModel.getValueNature().listen(v -> {
 			final TestParameterValue paramValue = editedParamValue.getValue();
+
 			switch (v) {
 			case SIMPLE_TYPE:
 				paramValue.setValueFactory(apiOf(tc.getValue(), paramValue).asSimpleParameter());
 				break;
 			case REFERENCE:
-				paramValue.setValueFactory(tpModel.getSelectedReference().getObjectValue());
+				final TestReference ref = tpModel.getSelectedReference().getValue();
+				if (ref != null) {
+					paramValue.setValueFactory(ref);
+				}
 				break;
 			case TEST_API:
 				paramValue.setValueFactory(tpModel.getTestApi().getValue());
@@ -136,7 +144,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 			default:
 				break;
 			}
-		}).addDependency(ChainDependencies.detachOnUpdateOf(editedParamValue));
+		}).addDependency(detachOnUpdateOf(editedParamValue));
 
 	}
 

@@ -100,12 +100,14 @@ public class TCWriterGui extends JFrame {
 		stepEditorController.load();
 
 		final TestParameterModel selectorModel = new TestParameterModel("selector", controller,
-				stepEditorModel.getSelectorValue(), stepEditorModel.getSelector());
-		final JComponent selectorEditor = new TestParameterValueEditorPanel(controller, selectorModel);
+				stepEditorModel.getSelector(), stepEditorModel.getSelectorValue());
+		final JComponent selectorEditor = new TestParameterValueEditorPanel(controller, controller.getModel(),
+				selectorModel);
 
 		final TestParameterModel param0Model = new TestParameterModel("param0", controller,
-				stepEditorModel.getActionParameterValue(), stepEditorModel.getActionParameter());
-		final JComponent param0Editor = new TestParameterValueEditorPanel(controller, param0Model);
+				stepEditorModel.getActionParameter(), stepEditorModel.getActionParameterValue());
+		final JComponent param0Editor = new TestParameterValueEditorPanel(controller, controller.getModel(),
+				param0Model);
 
 		final JSplitPane paramsPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(selectorEditor),
 				new JScrollPane(param0Editor));

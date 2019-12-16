@@ -93,4 +93,5 @@ public class TestParameterFactory extends NamedObject {
 	public static TestParameterFactory unSet(final TestApiParameter param) {
 		return new TestParameterFactory("", "", ParameterNature.NOT_SET, param.getType());
 	}
+
 }

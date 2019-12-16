@@ -4,8 +4,6 @@ import static java.util.Arrays.asList;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import ch.skymarshall.tcwriter.examples.api.interfaces.CustomerTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestRole;
@@ -17,6 +15,7 @@ import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.recorder.TestCaseRecorder;
+import ch.skymarshall.tcwriter.generators.visitors.HumanReadableVisitor;
 import ch.skymarshall.tcwriter.recording.TestCaseRecorderAspect;
 import ch.skymarshall.util.helpers.ClassLoaderHelper;
 import executors.ITestExecutor;
@@ -28,8 +27,6 @@ public class ExampleHelper {
 	}
 
 	public static final File RESOURCE_FOLDER = new File("./src/main/resources");
-
-	public static Path SRC_PATH = Paths.get("./src/test/java");
 
 	public static String TC_NAME = "testCase.json";
 
@@ -45,7 +42,7 @@ public class ExampleHelper {
 		modelPath.mkdirs();
 
 		config.setTcPath(tcPath.toString());
-		config.setDefaultGeneratedTCPath("./src/tests/java");
+		config.setDefaultGeneratedTCPath("./src/test/java");
 		config.setModelPath(modelPath + "/test-model.json");
 		config.setTemplatePath(new File("./src/main/resources/templates/TC.template").toString());
 		persister = new JsonModelPersister(config);
@@ -73,10 +70,12 @@ public class ExampleHelper {
 	public static TestCase recordTestCase(final TestModel model) {
 		final TestCaseRecorder recorder = new TestCaseRecorder(persister, model);
 		TestCaseRecorderAspect.setRecorder(recorder);
-		final ExampleTest test = new ExampleTest();
+		final SimpleTest test = new SimpleTest();
 		test.initActors();
 		test.testNormalCase();
-		return recorder.getTestCase("ch.skymarshall.tcwriter.examples.GeneratedTest");
+		final TestCase testCase = recorder.getTestCase("ch.skymarshall.tcwriter.examples.GeneratedTest");
+		System.out.println(new HumanReadableVisitor(testCase).processAllSteps());
+		return testCase;
 	}
 
 	public static ITestExecutor testExecutor() throws IOException {

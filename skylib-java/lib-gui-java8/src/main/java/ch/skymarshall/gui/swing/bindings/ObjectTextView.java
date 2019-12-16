@@ -1,5 +1,6 @@
 package ch.skymarshall.gui.swing.bindings;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 import ch.skymarshall.gui.mvc.converters.Converters;
@@ -19,7 +20,7 @@ public abstract class ObjectTextView<T> {
 
 	@Override
 	public boolean equals(final Object obj) {
-		return obj.equals(object);
+		return Objects.equals(obj, object);
 	}
 
 	@Override
@@ -37,12 +38,16 @@ public abstract class ObjectTextView<T> {
 
 		@Override
 		public String toString() {
+			if (getObject() == null) {
+				return "";
+			}
 			return objToText.apply(getObject());
 		}
 
 	}
 
 	public static <T> IConverter<T, ObjectTextView<T>> converter(final Function<T, String> objToText) {
-		return Converters.converter(o -> new FunctionObjectTextView<>(o, objToText), ObjectTextView::getObject);
+		return Converters.converter(o -> new FunctionObjectTextView<>(o, objToText),
+				tv -> tv != null ? tv.getObject() : null);
 	}
 }

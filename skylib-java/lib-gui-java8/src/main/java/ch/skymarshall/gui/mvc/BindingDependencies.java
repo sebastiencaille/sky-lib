@@ -5,7 +5,7 @@ import ch.skymarshall.gui.model.ListModel;
 import ch.skymarshall.gui.model.ListModelAdapter;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 
-public interface ChainDependencies {
+public interface BindingDependencies {
 
 	public static class DetachOnPropertyUpdate implements IBindingChainDependency, IPropertyEventListener {
 

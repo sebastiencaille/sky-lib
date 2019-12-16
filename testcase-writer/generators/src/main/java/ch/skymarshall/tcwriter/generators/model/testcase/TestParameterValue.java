@@ -1,5 +1,6 @@
 package ch.skymarshall.tcwriter.generators.model.testcase;
 
+import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -61,7 +62,7 @@ public class TestParameterValue extends IdObject {
 			final String simpleValue) {
 		super(id);
 		this.apiParameterId = apiParameterId;
-		this.factory = valueFactory;
+		setValueFactory(valueFactory);
 		this.simpleValue = simpleValue;
 	}
 
@@ -74,6 +75,9 @@ public class TestParameterValue extends IdObject {
 	}
 
 	public void setValueFactory(final TestParameterFactory valueFactory) {
+		if (valueFactory == null) {
+			throw new InvalidParameterException("Factory must not be null");
+		}
 		this.factory = valueFactory;
 	}
 
@@ -88,10 +92,10 @@ public class TestParameterValue extends IdObject {
 	public void setTestParameterRef(final ExportReference ref) {
 		ref.setRestoreAction((tc, id) -> {
 			if (id.startsWith(ParameterNature.SIMPLE_TYPE.name())) {
-				factory = TestParameterFactory
-						.simpleType(id.substring(ParameterNature.SIMPLE_TYPE.name().length() + 1));
+				setValueFactory(factory = TestParameterFactory
+						.simpleType(id.substring(ParameterNature.SIMPLE_TYPE.name().length() + 1)));
 			} else {
-				factory = (TestParameterFactory) tc.getRestoreValue(id);
+				setValueFactory((TestParameterFactory) tc.getRestoreValue(id));
 			}
 		});
 	}

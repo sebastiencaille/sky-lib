@@ -15,6 +15,11 @@ public class IdObject {
 	}
 
 	@Override
+	public String toString() {
+		return super.toString() + ": " + id;
+	}
+
+	@Override
 	public boolean equals(final Object obj) {
 		return obj instanceof IdObject && id.equals(((IdObject) obj).id);
 	}

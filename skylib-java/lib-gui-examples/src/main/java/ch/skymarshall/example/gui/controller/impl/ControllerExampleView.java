@@ -16,7 +16,7 @@
 package ch.skymarshall.example.gui.controller.impl;
 
 import static ch.skymarshall.example.gui.TestObject.testObjectToString;
-import static ch.skymarshall.gui.mvc.ChainDependencies.detachOnUpdateOf;
+import static ch.skymarshall.gui.mvc.BindingDependencies.detachOnUpdateOf;
 import static ch.skymarshall.gui.mvc.converters.Converters.guiErrorToString;
 import static ch.skymarshall.gui.mvc.converters.Converters.intToString;
 import static ch.skymarshall.gui.swing.bindings.SwingBindings.selected;
@@ -77,87 +77,115 @@ public class ControllerExampleView extends JFrame {
 		constraints.weighty = 0.0;
 		getContentPane().add(container, constraints);
 
+		// ------------------------------------------
 		// Checkbox input
+		// ------------------------------------------
 		final BooleanProperty booleanProperty = model.getBooleanPropProperty();
+
 		final JCheckBox booleanEditor = new JCheckBox();
-		final JLabel label = new JLabel("Am I enabled?");
-		final JLabel booleanCounter = new JLabel();
 		booleanProperty.bind(selected(booleanEditor));
+		final JLabel label = new JLabel("Am I enabled?");
 		booleanProperty.listen(label::setEnabled);
+		final JLabel booleanCounter = new JLabel();
 		booleanProperty.bind(counter()).listen(booleanCounter::setText);
+
 		addGuiLineItem(booleanProperty, booleanEditor, label, booleanCounter);
 
+		// ------------------------------------------
 		// Int input field
+		// ------------------------------------------
 		final IntProperty intProperty = model.getIntPropProperty();
-		final JTextField intStringEditor = new JTextField();
-		final JLabel intCheck = new JLabel();
-		final JLabel intCounter = new JLabel();
 
+		final JTextField intStringEditor = new JTextField();
 		intProperty.bind(intToString()).bind(value(intStringEditor));
+
+		final JLabel intCheck = new JLabel();
 		intProperty.bind(intToString()).listen(intCheck::setText);
+
+		final JLabel intCounter = new JLabel();
 		intProperty.bind(counter()).listen(intCounter::setText);
 
 		addGuiLineItem(intProperty, intStringEditor, intCheck, intCounter);
 
+		// ------------------------------------------
 		// String input field
+		// ------------------------------------------
 		final ObjectProperty<String> stringProperty = model.getStringPropProperty();
+
 		final JTextField stringEditor = new JTextField();
-		final JLabel stringCheck = new JLabel();
-		final JLabel stringCounter = new JLabel();
 		stringProperty.bind(value(stringEditor));
+
+		final JLabel stringCheck = new JLabel();
 		stringProperty.listen(stringCheck::setText);
+
+		final JLabel stringCounter = new JLabel();
 		stringProperty.bind(counter()).listen(stringCounter::setText);
+
 		addGuiLineItem(stringProperty, stringEditor, stringCheck, stringCounter);
 
+		// ------------------------------------------
 		// Item selection
-		final JList<String> listSelectionEditor = new JList<>(new String[] { "A", "B", "C" });
+		// ------------------------------------------
+		final ObjectProperty<String> staticListSelection = model.getStaticListSelectionProperty();
+
+		final JList<String> staticListEditor = new JList<>(new String[] { "A", "B", "C" });
+		staticListSelection.bind(selection(staticListEditor));
+
 		final JLabel selectionCheck = new JLabel();
+		staticListSelection.listen(selectionCheck::setText);
+
 		final JLabel selectionCounter = new JLabel();
+		staticListSelection.bind(counter()).listen(selectionCounter::setText);
 
-		final ObjectProperty<String> listSelectedObjectProperty = model.getListSelectedObjectProperty();
-		listSelectedObjectProperty.bind(selection(listSelectionEditor));
-		listSelectedObjectProperty.listen(selectionCheck::setText);
-		listSelectedObjectProperty.bind(counter()).listen(selectionCounter::setText);
-
-		final JScrollPane itemEditorPane = new JScrollPane(listSelectionEditor);
+		final JScrollPane itemEditorPane = new JScrollPane(staticListEditor);
 		itemEditorPane.setPreferredSize(new Dimension(200, 100));
-		addGuiLineItem(listSelectedObjectProperty, itemEditorPane, selectionCheck, selectionCounter);
 
-		// Selection of list which content is based on "Item selection"
+		addGuiLineItem(staticListSelection, itemEditorPane, selectionCheck, selectionCounter);
 
-		final JList<String> dynamicListSelectionEditor = new JList<>();
-		final JLabel dynamicListSelectionCheck = new JLabel();
-		final JLabel dynamicListSelectionCounter = new JLabel();
-
-		listSelectedObjectProperty.bind(new DynamicListContentConverter()).bind(values(dynamicListSelectionEditor));
+		// ------------------------------------------
+		// Selection of list which content is based on "Item selection" (preserve
+		// selection)
+		// ------------------------------------------
+		final JList<String> dynamicListEditor = new JList<>();
+		staticListSelection.bind(new DynamicListContentConverter()).bind(values(dynamicListEditor));
 
 		final ObjectProperty<String> dynamicListSelectionProperty = model.getDynamicListObjectProperty();
-		dynamicListSelectionProperty.bind(selection(dynamicListSelectionEditor))
-				.addDependency(detachOnUpdateOf(listSelectedObjectProperty));
+		dynamicListSelectionProperty.bind(selection(dynamicListEditor))
+				.addDependency(detachOnUpdateOf(staticListSelection));
+
+		final JLabel dynamicListSelectionCheck = new JLabel();
 		dynamicListSelectionProperty.listen(dynamicListSelectionCheck::setText);
+
+		final JLabel dynamicListSelectionCounter = new JLabel();
 		dynamicListSelectionProperty.bind(counter()).listen(dynamicListSelectionCounter::setText);
 
-		final JScrollPane dynamicListPane = new JScrollPane(dynamicListSelectionEditor);
+		final JScrollPane dynamicListPane = new JScrollPane(dynamicListEditor);
 		dynamicListPane.setPreferredSize(new Dimension(200, 100));
 		addGuiLineItem(dynamicListSelectionProperty, dynamicListPane, dynamicListSelectionCheck,
 				dynamicListSelectionCounter);
 
+		// ------------------------------------------
 		// Table example
+		// ------------------------------------------
+		final ObjectProperty<TestObject> tableObjectProperty = model.getComplexProperty();
+
 		final TestObjectTableModel tableSelectionTableModel = new TestObjectTableModel(model.getTableModel());
 		final JTable tableSelectionEditor = new JTable(tableSelectionTableModel);
-		final JLabel tableSelectionCheck = new JLabel();
-		final JLabel tableSelectionCounter = new JLabel();
-
-		final ObjectProperty<TestObject> tableObjectProperty = model.getComplexProperty();
 		tableObjectProperty.bind(selection(tableSelectionEditor, tableSelectionTableModel));
+
+		final JLabel tableSelectionCheck = new JLabel();
 		tableObjectProperty.bind(testObjectToString()).listen(tableSelectionCheck::setText);
+
+		final JLabel tableSelectionCounter = new JLabel();
 		tableObjectProperty.bind(counter()).listen(tableSelectionCounter::setText);
 
 		final JScrollPane tableEditorPane = new JScrollPane(tableSelectionEditor);
 		tableEditorPane.setPreferredSize(new Dimension(200, 70));
 		addGuiLineItem(tableObjectProperty, tableEditorPane, tableSelectionCheck, tableSelectionCounter);
 
+		// ------------------------------------------
 		// Display of errors
+		// ------------------------------------------
 		final ErrorProperty errorProperty = model.getErrorProperty();
 		final JLabel errorLabel = new JLabel("No Error");
 		final JLabel errorCounter = new JLabel();

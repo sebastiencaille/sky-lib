@@ -1,9 +1,9 @@
 package ch.skymarshall.tcwriter.examples;
 
-import static ch.skymarshall.tcwriter.examples.api.interfaces.selectors.BuyItemSelector.fromInternet;
-import static ch.skymarshall.tcwriter.examples.api.interfaces.selectors.BuyItemSelector.inLocalShop;
-import static ch.skymarshall.tcwriter.examples.api.interfaces.selectors.HandlePackageSelector.deliveredItem;
-import static ch.skymarshall.tcwriter.examples.api.interfaces.selectors.HandlePackageSelector.fromShop;
+import static ch.skymarshall.tcwriter.examples.api.interfaces.selectors.BuyingLocationSelector.inLocalShop;
+import static ch.skymarshall.tcwriter.examples.api.interfaces.selectors.BuyingLocationSelector.onInternet;
+import static ch.skymarshall.tcwriter.examples.api.interfaces.selectors.PackageDeliverySelector.deliveredItem;
+import static ch.skymarshall.tcwriter.examples.api.interfaces.selectors.PackageDeliverySelector.fromShop;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,14 +13,14 @@ import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem;
 import ch.skymarshall.tcwriter.recording.TestActors;
 
-public class ExampleTest {
+public class SimpleTest {
 
 	private final TestItem coffeeMachine = TestItem.coffeeMachineOfBrand("OldSchool");
 	private final TestItem teaPot = TestItem.teaPot();
 	private CustomerTestRole customer;
 	private DeliveryTestRole deliveryGuy;
 
-	public ExampleTest() {
+	public SimpleTest() {
 		coffeeMachine.setISO();
 	}
 
@@ -36,7 +36,7 @@ public class ExampleTest {
 	@Test
 	public void testNormalCase() {
 
-		customer.buy(fromInternet(), coffeeMachine);
+		customer.buy(onInternet(), coffeeMachine);
 		deliveryGuy.deliverItem();
 		customer.checkPackage(deliveredItem(), coffeeMachine);
 		customer.resellOwnedItem(10);

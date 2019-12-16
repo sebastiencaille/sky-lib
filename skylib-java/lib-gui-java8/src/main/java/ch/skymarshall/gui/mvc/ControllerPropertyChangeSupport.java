@@ -173,8 +173,10 @@ public class ControllerPropertyChangeSupport {
 		/** All the properties of the MVC */
 		private final List<AbstractProperty> properties = new ArrayList<>();
 		private final List<ListenerRegistration> listeners = new ArrayList<>();
+		private final Object scope;
 
-		public ScopedRegistration() {
+		public ScopedRegistration(final Object scope) {
+			this.scope = scope;
 		}
 
 		@Override
@@ -185,6 +187,11 @@ public class ControllerPropertyChangeSupport {
 		@Override
 		public void register(final AbstractProperty abstractProperty) {
 			properties.add(abstractProperty);
+		}
+
+		@Override
+		public void detachAll() {
+			properties.forEach(AbstractProperty::detach);
 		}
 
 		/**
@@ -208,10 +215,15 @@ public class ControllerPropertyChangeSupport {
 			listeners.forEach(
 					l -> ControllerPropertyChangeSupport.this.removePropertyChangeListener(l.name, l.listener));
 		}
+
+		@Override
+		public String toString() {
+			return "Scoped controller: " + scope;
+		}
 	}
 
-	public IScopedSupport byContainer(final Object mvc) {
-		return scopedRegistrations.computeIfAbsent(mvc, g -> new ScopedRegistration());
+	public IScopedSupport scoped(final Object scope) {
+		return scopedRegistrations.computeIfAbsent(scope, ScopedRegistration::new);
 	}
 
 }

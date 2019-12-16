@@ -3,7 +3,7 @@ package ch.skymarshall.tcwriter.examples.api.interfaces.dto;
 import ch.skymarshall.tcwriter.annotations.TCApi;
 import ch.skymarshall.tcwriter.examples.ExampleService.ItemKind;
 
-@TCApi(description = "the item you need", humanReadable = "an item")
+@TCApi(description = "an item you can buy", humanReadable = "")
 public class TestItem {
 
 	public final ItemKind itemKind;

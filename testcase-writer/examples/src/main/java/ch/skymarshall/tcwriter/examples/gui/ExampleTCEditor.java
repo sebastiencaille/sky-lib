@@ -1,6 +1,10 @@
 package ch.skymarshall.tcwriter.examples.gui;
 
 import java.io.IOException;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import javax.swing.SwingUtilities;
 
@@ -21,6 +25,14 @@ public class ExampleTCEditor {
 
 		final TCWriterController controller = new TCWriterController(ExampleHelper.getConfig(),
 				ExampleHelper.getPersister(), ExampleHelper.testExecutor());
+
+		final Logger eventDebug = Logger.getLogger("MvcEventsDebug");
+		Level eventDebugLevel = Level.FINE;
+		eventDebug.setLevel(eventDebugLevel);
+		final ConsoleHandler handler = new ConsoleHandler();
+		handler.setFormatter(new SimpleFormatter());
+		handler.setLevel(eventDebugLevel);
+		eventDebug.addHandler(handler);
 
 		SwingUtilities.invokeLater(() -> {
 			controller.run();

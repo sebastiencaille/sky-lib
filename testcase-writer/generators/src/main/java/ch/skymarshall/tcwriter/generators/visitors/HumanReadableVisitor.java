@@ -83,4 +83,8 @@ public class HumanReadableVisitor {
 		return String.format(description.getStepSummary(), (list != null) ? list.toArray() : null);
 	}
 
+	public String processAllSteps() {
+		return tc.getSteps().stream().map(this::process).collect(Collectors.joining("\n"));
+	}
+
 }

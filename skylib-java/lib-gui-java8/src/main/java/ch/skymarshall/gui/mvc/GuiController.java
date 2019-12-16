@@ -37,11 +37,11 @@ public class GuiController {
 
 	public GuiController() {
 		mainSupport = new ControllerPropertyChangeSupport(this);
-		this.propertySupport = mainSupport.byContainer(this);
+		this.propertySupport = mainSupport.scoped(this);
 	}
 
 	public GuiController(final ControllerPropertyChangeSupport propertySupport) {
-		this.propertySupport = propertySupport.byContainer(this);
+		this.propertySupport = propertySupport.scoped(this);
 	}
 
 	public IScopedSupport getPropertySupport() {

@@ -35,7 +35,7 @@ public class GeneratedTest {
 		var2.setISO();
 		customer.buy(var1, var2);
 		
-		// Step 2: As delivery company, I delivers the item
+		// Step 2: As delivery company, I deliver the item
 		deliveryGuy.deliverItem();
 		
 		// Step 3: As customer, I get the delivered package and check that the packaged item is a coffee machine of brand "OldSchool" (ISO: yes)

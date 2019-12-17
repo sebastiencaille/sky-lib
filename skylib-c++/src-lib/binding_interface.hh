@@ -38,7 +38,7 @@ class error_notifier {
 	virtual ~error_notifier() = default;
 
 public:
-	virtual void set_error(source_ptr _source, const hmi_exception& _e) = 0;
+	virtual void set_error(source_ptr _source, const gui_exception& _e) = 0;
 };
 
 /**
@@ -52,21 +52,20 @@ public:
 	virtual const _Ct convert_property_value_to_component_value(
 			const _Pt _propertyValue) = 0;
 
-protected:
 	virtual ~binding_converter() = default;
 
 };
 
-class logic_error_to_string: public binding_converter<hmi_exception_ptr, string> {
+class logic_error_to_string: public binding_converter<gui_exception_ptr, string> {
 public:
-	const hmi_exception_ptr convert_component_value_to_property_value(
+	const gui_exception_ptr convert_component_value_to_property_value(
 			const string _componentValue) {
 		// nonsense
 		return NULL;
 	}
 
 	const string convert_property_value_to_component_value(
-			hmi_exception_ptr _propertyValue) {
+			gui_exception_ptr _propertyValue) {
 		return string(_propertyValue->what());
 	}
 

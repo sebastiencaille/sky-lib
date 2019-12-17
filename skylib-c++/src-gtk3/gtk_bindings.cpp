@@ -31,6 +31,7 @@ entry_binding::entry_binding(Gtk::Entry& _entry) :
 }
 
 entry_binding::~entry_binding() {
+	remove_component_value_change_listener();
 }
 
 void entry_binding::on_changed_signal() {
@@ -44,7 +45,7 @@ void entry_binding::add_component_value_change_listener(component_link<Glib::ust
 }
 
 void entry_binding::remove_component_value_change_listener() {
-	//m_entry.signal_changed().disconnect(sigc::mem_fun(*this));
+	// TODO
 }
 
 void entry_binding::set_component_value(property& _source, Glib::ustring _value) {

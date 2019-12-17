@@ -95,7 +95,7 @@ public:
 
 	void apply_action(property_group_actions _action, const property* _property);
 
-protected:
+private:
 	//Signal handlers:
 	void on_button_clicked();
 

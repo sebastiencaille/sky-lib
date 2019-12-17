@@ -100,7 +100,7 @@ private:
 		int compare(const value_type _o1, const value_type _o2) const {
 			int compare;
 			if (m_comparator == NULL && m_parentView == NULL) {
-				throw hmi_exception(
+				throw gui_exception(
 						"You must either set a comparator or override this method");
 			} else if (m_comparator != NULL) {
 				compare = m_comparator(_o1, _o2);
@@ -343,7 +343,7 @@ public:
 					m_propertyManager, NULL), m_privateListenersImpl(this) {
 		m_tunings = make_ptr(new object_tunings());
 		if (_view == NULL) {
-			throw hmi_exception("View must not be NULL");
+			throw gui_exception("View must not be NULL");
 		}
 		set_view(_view);
 	}
@@ -622,7 +622,7 @@ private:
 			stringstream ss;
 			ss << "Edition already in progress: "
 					<< m_tunings->str(m_objectEdition->m_value);
-			throw hmi_exception(ss.str());
+			throw gui_exception(ss.str());
 		}
 	}
 

@@ -30,16 +30,16 @@ namespace org_skymarshall_util_hmi {
 
 using namespace std;
 
-class input_error_property: public error_notifier, public controller_property<hmi_exception_ptr> {
+class input_error_property: public error_notifier, public controller_property<gui_exception_ptr> {
 public:
 	input_error_property(const string& _name, property_manager& _manager) :
-			controller_property<hmi_exception_ptr>(_name, _manager, NULL,
+			controller_property<gui_exception_ptr>(_name, _manager, NULL,
 					this) {
 	}
 
-	void set_error(source_ptr _source, const hmi_exception& _value) {
-		hmi_exception_ptr oldValue = get();
-		this->set(_source, new hmi_exception(_value));
+	void set_error(source_ptr _source, const gui_exception& _value) {
+		gui_exception_ptr oldValue = get();
+		this->set(_source, new gui_exception(_value));
 		if (oldValue != NULL) {
 			delete oldValue;
 		}

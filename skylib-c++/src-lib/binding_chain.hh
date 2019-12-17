@@ -20,43 +20,46 @@ namespace org_skymarshall_util_hmi {
 using namespace std;
 using namespace std::placeholders;
 
-template<class _Tt> class binding_backward {
+/**
+ * Interface to send component side type (_CsT) to the binding
+ */
+template<class _CsT> class binding_backward {
 public:
 	virtual void to_property(int index, const source_ptr component,
-			const _Tt value) = 0;
+			const _CsT value) = 0;
 	virtual ~binding_backward() = default;
 };
 
-template<class _Ft> class binding_forward {
+/**
+ * Interface to send property side type (_PsT) of the value
+ */
+template<class _PsT> class binding_forward {
 public:
-	virtual void to_component(int index, const _Ft value) = 0;
+	virtual void to_component(int index, const _PsT value) = 0;
 	virtual ~binding_forward() = default;
 };
 
-class binding_storage {
+class binding_link {
 public:
-	void* m_binding_forward;
-	void* m_binding_backward;
-	binding_storage(void* _binding_forward, void* _binding_backward) :
-			m_binding_forward(_binding_forward), m_binding_backward(
-					_binding_backward) {
-	}
-
-	~binding_storage() = default;
+	virtual ~binding_link() = default;
 };
 
 /** End of chain */
 
-/** Binding chain */
+/** Binding chain
+ *
+ * _Pt: Property type of the chain
+ *
+ */
 
 template<class _Pt> class binding_chain: public binding_chain_controller {
 
 private:
-	vector<binding_storage*> m_links;
+	vector<binding_link*> m_links;
 
-	property& m_property;
+	property &m_property;
 
-	error_notifier* m_errorNotifier;
+	error_notifier *m_errorNotifier;
 
 	property_listener_dispatcher m_valueUpdateListener;
 
@@ -79,7 +82,7 @@ private:
 	}
 
 	binding_chain_controller* add_dependency(
-			binding_chain_dependency* _dependency) {
+			binding_chain_dependency *_dependency) {
 		m_dependencies.push_back(_dependency);
 		_dependency->register_dep(this);
 		return this;
@@ -94,14 +97,15 @@ private:
 	}
 
 	/**
-	 * Link connected to a property (first of the list)
+	 * Link connected to a property (first binding of the list)
 	 */
-	class property_link: public binding_forward<_Pt>, public binding_backward<
-			_Pt> {
-		binding_chain& m_chain;
+	class property_link: public binding_link,
+			public binding_forward<_Pt>,
+			public binding_backward<_Pt> {
+		binding_chain &m_chain;
 		std::function<void(source_ptr, _Pt)> m_setter;
 	public:
-		property_link(binding_chain& _chain,
+		property_link(binding_chain &_chain,
 				std::function<void(source_ptr, _Pt)> _setter) :
 				m_chain(_chain), m_setter(_setter) {
 		}
@@ -111,7 +115,7 @@ private:
 		}
 
 		void to_component(int _index, const _Pt _value) {
-			((binding_forward<_Pt>*) m_chain.m_links[_index + 1]->m_binding_forward)->to_component(
+			(dynamic_cast<binding_forward<_Pt>*>(m_chain.m_links[_index + 1]))->to_component(
 					_index + 1, _value);
 		}
 
@@ -120,49 +124,73 @@ private:
 		}
 	};
 
-	/** Link that convert some values */
-	template<class _Ft, class _Tt> class converter_link: public binding_forward<
-			_Ft>, public binding_backward<_Tt> {
-		binding_chain& m_chain;
-		binding_converter<_Ft, _Tt>* m_converter;
+	/** Link that convert from _PsT type (property side) to _CsT type (component side) */
+	template<class _PsT, class _CsT> class converter_link: public binding_link,
+			public binding_forward<_PsT>,
+			public binding_backward<_CsT> {
+
+		binding_chain &m_chain;
+		binding_converter<_PsT, _CsT> *m_converter;
 	public:
-		converter_link(binding_chain& _chain,
-				binding_converter<_Ft, _Tt>* _converter) :
+		converter_link(binding_chain &_chain,
+				binding_converter<_PsT, _CsT> *_converter) :
 				m_chain(_chain), m_converter(_converter) {
 		}
 
-		void to_property(int _index, source_ptr _component, const _Tt _value) {
-			((binding_backward<_Ft>*) m_chain.m_links[_index - 1]->m_binding_backward)->to_property(
-					_index - 1, _component,
-					m_converter->convert_component_value_to_property_value(
-							_value));
+		void to_property(int _index, source_ptr _component, const _CsT _value) {
+			try {
+				_PsT converted_value =
+						m_converter->convert_component_value_to_property_value(
+								_value);
+				(dynamic_cast<binding_backward<_PsT>*>(m_chain.m_links[_index
+						- 1]))->to_property(_index - 1, _component,
+						converted_value);
+			} catch (gui_exception &_e) {
+				m_chain.m_errorNotifier->set_error(_component, _e);
+			}
 		}
 
-		void to_component(int _index, const _Ft _value) {
+		void to_component(int _index, const _PsT _value) {
 
-			((binding_forward<_Tt>*) m_chain.m_links[_index + 1]->m_binding_forward)->to_component(
+			(dynamic_cast<binding_forward<_CsT>*>(m_chain.m_links[_index + 1]))->to_component(
 					_index + 1,
 					m_converter->convert_property_value_to_component_value(
 							_value));
 		}
 
 		~converter_link() {
-
+			delete m_converter;
 		}
 	};
 
 	/**
-	 * Interface given to the component's link, allowing the component binding to interact with the chain
+	 * Connection with the component
 	 */
-	template<class _Ct> class component_link_impl: public component_link<_Ct> {
-		binding_chain& m_chain;
+	template<class _Ct> class chain_component_link: public binding_link,
+			public binding_forward<_Ct>,
+			public binding_backward<_Ct>,
+			public component_link<_Ct> {
 
-		component_binding<_Ct>* m_componentBinding;
+		friend class binding_chain;
+
+		binding_chain &m_chain;
+		component_binding<_Ct> *m_componentBinding;
 
 	public:
-		component_link_impl(binding_chain& _chain,
-				component_binding<_Ct>* _componentBinding) :
-				m_chain(_chain), m_componentBinding(_componentBinding) {
+
+		chain_component_link(binding_chain &_chain,
+				component_binding<_Ct> *_newBinding) :
+				m_chain(_chain), m_componentBinding(_newBinding) {
+			m_componentBinding->add_component_value_change_listener(this);
+		}
+
+		void to_component(int index, _Ct value) {
+			m_componentBinding->set_component_value(m_chain.m_property, value);
+		}
+
+		void to_property(int index, source_ptr component, const _Ct value) {
+			(dynamic_cast<binding_backward<_Ct>*>(m_chain.m_links[index - 1]))->to_property(
+					index - 1, component, value);
 		}
 
 		void set_value_from_component(source_ptr _component,
@@ -170,11 +198,10 @@ private:
 			if (!m_chain.m_transmit) {
 				return;
 			}
-			const int lastIndex = m_chain.m_links.size() - 1;
 			try {
-				((binding_backward<_Ct>*) m_chain.m_links[lastIndex]->m_binding_backward)->to_property(
-						lastIndex, _component, _componentValue);
-			} catch (const hmi_exception& _e) {
+				to_property(m_chain.m_links.size() - 1, _component,
+						_componentValue);
+			} catch (const gui_exception &_e) {
 				m_chain.m_errorNotifier->set_error(_component, _e);
 			}
 		}
@@ -188,54 +215,26 @@ private:
 			m_chain.m_property.attach();
 		}
 
-		~component_link_impl() {
+		~chain_component_link() {
 			delete m_componentBinding;
 		}
+
 	};
 
-	template<class _Ct> class chain_component_link: public binding_forward<_Ct>,
-			public binding_backward<_Ct> {
-
-		friend class binding_chain;
-
-		binding_chain& m_chain;
-		component_binding<_Ct>* m_componentBinding;
-
-	public:
-		component_link<_Ct>* const m_componentLink;
-
-		chain_component_link(binding_chain& _chain,
-				component_binding<_Ct>* _newBinding) :
-				m_chain(_chain), m_componentBinding(_newBinding), m_componentLink(
-						new component_link_impl<_Ct>(_chain, _newBinding)) {
-			m_componentBinding->add_component_value_change_listener(
-					m_componentLink);
-		}
-
-		void to_component(int index, _Ct value) {
-			m_componentBinding->set_component_value(m_chain.m_property, value);
-		}
-
-		void to_property(int index, source_ptr component, const _Ct value) {
-			((binding_backward<_Ct>*) m_chain.m_links[index - 1]->m_binding_backward)->to_property(
-					index - 1, component, value);
-		}
-	};
-
-	void propagate_property_change(source_ptr _property, const string& _name,
-			const void* _old_value, const void* _new_value) {
+	void propagate_property_change(source_ptr _property, const string &_name,
+			const void *_old_value, const void *_new_value) {
 		if (!m_transmit) {
 			return;
 		}
 		try {
-			((binding_forward<_Pt>*) m_links[0]->m_binding_forward)->to_component(
-					0, *(_Pt*) _new_value);
-		} catch (const hmi_exception& _e) {
+			(dynamic_cast<binding_forward<_Pt>*>(m_links[0]))->to_component(0,
+					*(_Pt*) _new_value);
+		} catch (const gui_exception &_e) {
 			m_errorNotifier->set_error(_property, _e);
 		}
 	}
 public:
-	binding_chain(property& _property, error_notifier* _notifier) :
+	binding_chain(property &_property, error_notifier *_notifier) :
 			m_property(_property), m_errorNotifier(_notifier), m_valueUpdateListener(
 					std::bind(&binding_chain::propagate_property_change, this,
 							_1, _2, _3, _4)) {
@@ -246,53 +245,42 @@ public:
 	end_of_chain<_Pt>* bind_property(
 			std::function<void(source_ptr, _Pt)> _setter) {
 		m_property.add_listener(&m_valueUpdateListener);
-		property_link* const link = new property_link(*this, _setter);
-		m_links.push_back(
-				new binding_storage(
-						(void*) static_cast<binding_forward<_Pt>*>(link),
-						(void*) static_cast<binding_backward<_Pt>*>(link)));
+		property_link *const link = new property_link(*this, _setter);
+		m_links.push_back(link);
 		return new end_of_chain<_Pt>(*this);
 	}
 
-	template<class _FT, class _TT> end_of_chain<_TT>* bind(
-			binding_converter<_FT, _TT>* _converter) {
-		converter_link<_FT, _TT>* const link = new converter_link<_FT, _TT>(
+	template<class _PsT, class _CsT> end_of_chain<_CsT>* bind(
+			binding_converter<_PsT, _CsT> *_converter) {
+		converter_link<_PsT, _CsT> *const link = new converter_link<_PsT, _CsT>(
 				*this, _converter);
-		m_links.push_back(
-				new binding_storage(
-						(void*) static_cast<binding_forward<_FT>*>(link),
-						(void*) static_cast<binding_backward<_TT>*>(link)));
-		return new end_of_chain<_TT>(*this);
+		m_links.push_back(link);
+		return new end_of_chain<_CsT>(*this);
 	}
 
 	template<class _Ct> binding_chain_controller* bind(
-			component_binding<_Ct>* _componentBinding) {
-		chain_component_link<_Ct>* const link = new chain_component_link<_Ct>(
+			component_binding<_Ct> *_componentBinding) {
+		chain_component_link<_Ct> *const link = new chain_component_link<_Ct>(
 				*this, _componentBinding);
-		m_links.push_back(
-				new binding_storage(
-						(void*) static_cast<binding_forward<_Ct>*>(link),
-						(void*) static_cast<binding_backward<_Ct>*>(link)));
+		m_links.push_back(link);
 		return this;
 	}
 
 	template<class _T> class end_of_chain {
 	protected:
-		binding_chain& m_bindingChain;
+		binding_chain &m_bindingChain;
 	public:
-		end_of_chain(binding_chain& _bindingChain) :
+		end_of_chain(binding_chain &_bindingChain) :
 				m_bindingChain(_bindingChain) {
 		}
 
 		template<class _NT> end_of_chain<_NT>* bind(
-				binding_converter<_T, _NT>* converter) {
-			// delete itself ?
+				binding_converter<_T, _NT> *converter) {
 			return m_bindingChain.bind<_T, _NT>(converter);
 		}
 
 		template<class _Ct> binding_chain_controller* bind(
-				component_binding<_Ct>* _componentBinding) {
-			// delete itself ?
+				component_binding<_Ct> *_componentBinding) {
 			return m_bindingChain.bind(_componentBinding);
 		}
 

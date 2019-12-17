@@ -9,3 +9,5 @@ There is a POC about business oriented test writing (to write dev friendly and h
 This POC is also used to test a MVC POC (to simplify the writing of complex GUIs) : [[MVC POC](skylib-java)]
 ![Java lib](screenshots/java_lib.png)
 
+A C++ version of the MVC POC (not up-to-date, mostly an attempt to try C++ once again) : [[MVC POC](skylib-c++)]
+

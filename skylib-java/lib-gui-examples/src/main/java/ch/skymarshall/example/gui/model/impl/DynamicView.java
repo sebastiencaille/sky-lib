@@ -26,11 +26,11 @@ public class DynamicView extends AbstractDynamicView<TestObject> implements ILis
 	}
 
 	public IComponentBinding<Boolean> enableFilter() {
-		return viewUpdate(enabled -> filter = enabled);
+		return refreshWhenUpdated(enabled -> filter = enabled);
 	}
 
 	public IComponentBinding<Boolean> reverseOrder() {
-		return viewUpdate(enabled -> sortReverseOrder = enabled);
+		return refreshWhenUpdated(enabled -> sortReverseOrder = enabled);
 	}
 
 }

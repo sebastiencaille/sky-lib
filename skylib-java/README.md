@@ -1,16 +1,16 @@
 **MVC POC**
 
 Key points
-* The Model is made of Properties (basically, a typed value and listeners)
-* The dynamic properties of all the graphical components are always driven by properties
-* The dynamic properties of the graphical components are never directly linked together 
-* Properties of the model and properties of the graphical components are bound through converters
+* The Model is made of Properties (basically, a typed value + listeners)
+* The dynamic properties of all the GUI components are always driven by the properties  
+  (The dynamic properties of the GUI are never directly linked together)
+* The properties of the model and the graphical components are bound through converters
 * The MVC model can be generated from the application model
 
 Complete example [[Screenshot](../screenshots/MVC_Full_TC.png)][[Model](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/controller/impl/ControllerExampleModel.java)] [[View](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/controller/impl/ControllerExampleView.java)] 
 
 Example
-
+(displaying a boolean property as a checkbox and as a String)
 ```java
 protected final BooleanProperty booleanProperty = ...;
 
@@ -22,19 +22,19 @@ booleanProperty.bind(booleanToString()).bind(value(stringEditor));
 ```
 Working with selections
 
-_When propertyThatDrivesTheListValues is updated_
-1. dynamicListSelectionProperty is detached from dynamicListSelectionEditor
-1. dynamicListSelectionEditor is updated
-1. dynamicListSelectionProperty is re-applied to restore the selection
-1. dynamicListSelectionProperty is re-attached
+_When staticListSelection is updated_
+1. the dynamicListSelectionProperty is detached from dynamicListEditor, thanks to detachOnUpdateOf
+1. the dynamicListEditor is updated
+1. the dynamicListSelectionProperty is re-attached
+1. the dynamicListSelectionProperty is re-applied to restore the selection
 
 ```java
-JList<String> dynamicListSelectionEditor = new JList<>();
-ObjectProperty<String> propertyThatDrivesTheListValues = ... 
-propertyThatDrivesTheListValues.bind(...some converter...).bind(values(dynamicListSelectionEditor));
+JList<String> dynamicListEditor = new JList<>();
+staticListSelection.bind(new DynamicListContentConverter()).bind(values(dynamicListEditor));
 
-ObjectProperty<String> dynamicListSelectionProperty = ...;
-dynamicListSelectionProperty.bind(selection(dynamicListSelectionEditor)).addDependency(detachOnUpdateOf(propertyThatDrivesTheListValues)); 
+final ObjectProperty<String> dynamicListSelectionProperty = model.getDynamicListObjectProperty();
+dynamicListSelectionProperty.bind(selection(dynamicListEditor)).addDependency(detachOnUpdateOf(staticListSelection));
+
 ```
 
 **List Model**
@@ -52,23 +52,26 @@ Example [[Code](lib-gui-java8/src/test/java/ch/skymarshall/gui/model/ListModelBa
 IListView<TestObject> VIEW = ListViews.sorted((o1, o2) -> o1.val - o2.val);
 ListModel<TestObject> model = new RootListModel<>(VIEW);
 ListModel<TestObject> childModel = new ChildListModel<>(model);
+
 TestObject toMove = new TestObject(4);
 model.insert(new TestObject(1));
 model.insert(new TestObject(3));
 model.insert(toMove);
 checkModel(childModel, 1, 3, 4);
+
 model.startEditingValue(toMove);
 toMove.val = 2;
 model.stopEditingValue();
 checkModel(childModel, 1, 2, 3);
 ```
-Controlling filter using the MVC concept (TableModelExampleView.java)
+It's possible to control the filter using the MVC concept  [[Code](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/model/impl/TableModelExampleView.java)]
 
 ```java
-final DynamicView view = new DynamicView();
+final DynamicView listDynamicView = new DynamicView();
 BooleanProperty reverseOrder = ...
-reverseOrder.bind(selected(... some checkbox ...));
-reverseOrder.bind(view.reverseOrder());
+model.reverseOrder.bind(selected(... some checkbox ...));
+model.reverseOrder.bind(listDynamicView.reverseOrder());
+
 ListModel<TestObject> model = new RootListModel<>(ListViews.sorted(NATURAL_ORDER));
 ListModel<TestObject> filteredModel = new ChildListModel<>(model, view);
 ```
@@ -76,7 +79,7 @@ ListModel<TestObject> filteredModel = new ChildListModel<>(model, view);
 **Table Model**
 
 Key points
-* The columns are defined by an Enum
+* The columns are defined using an Enum
 * The model is a ListModel
 * The column can have a fixed size or fill the size of the table
  
@@ -95,7 +98,7 @@ public class TestObjectTableModel extends ListModelTableModel<TestObject, Column
 		switch (column) {
 			case A_FIRST_VALUE: ...
 ```
-Tuning column size
+Tuning column size: each column is contributing to the table's column size
 
 ```java
 final ContributionTableColumnModel<StepsTableModel.Column> columnModel = new ContributionTableColumnModel<>(table);

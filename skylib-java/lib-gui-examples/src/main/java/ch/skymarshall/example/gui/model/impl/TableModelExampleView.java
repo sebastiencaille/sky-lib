@@ -82,12 +82,16 @@ public class TableModelExampleView extends JFrame {
 		// BoundComparator, too:
 		// > controller.reverseOrder.bind(booleanToOrder()).bind(view(model));
 
-		// Bind the separate filter
-		// > controller.enableFilter.bind(filter);
-
 		final JPanel optionsPanel = new JPanel(new FlowLayout());
-		addRevOrder(optionsPanel);
-		addFilter(optionsPanel);
+
+		final JCheckBox reverse = new JCheckBox("Rev. Order");
+		model.reverseOrder.bind(selected(reverse));
+		optionsPanel.add(reverse);
+
+		final JCheckBox filter = new JCheckBox("Filter");
+		model.enableFilter.bind(selected(filter));
+		optionsPanel.add(filter);
+
 		getContentPane().add(optionsPanel, BorderLayout.SOUTH);
 
 		model.setCreated();
@@ -101,15 +105,4 @@ public class TableModelExampleView extends JFrame {
 		pack();
 	}
 
-	private void addFilter(final JPanel optionsPanel) {
-		final JCheckBox filter = new JCheckBox("Filter");
-		model.enableFilter.bind(selected(filter));
-		optionsPanel.add(filter);
-	}
-
-	private void addRevOrder(final JPanel optionsPanel) {
-		final JCheckBox reverse = new JCheckBox("Rev. Order");
-		model.reverseOrder.bind(selected(reverse));
-		optionsPanel.add(reverse);
-	}
 }

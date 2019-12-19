@@ -1,5 +1,5 @@
-**Business oriented testing POC**
 
+**Business oriented testing POC**
 The key to write business oriented test cases is to have adequate test APIs.
 
 The idea is to have 
@@ -17,7 +17,7 @@ Example
 
 
 _Api_ [[Code](examples/src/main/java/ch/skymarshall/tcwriter/examples/api/interfaces)]
-
+The Actions are methods defined by the Role classes
 ```java
 @TCRole(description = "Customer")
 public class CustomerTestRole extends Assert {
@@ -33,7 +33,11 @@ public class CustomerTestRole extends Assert {
 	} 
 	...
 }
-
+```
+The Selectors and Parameters are created though factory methods, which have business-oriented namings.  
+The method parameters can be used to provide mandatory information.  
+The setters of the type returned by the factory can be used to provide optional information.
+```
 @TCApi(description = "delivery mean", humanReadable = "", isSelector = true)
 public class PackageDeliverySelector {
 
@@ -63,6 +67,7 @@ public class TestItem {
 
 _Java test case_ [[Code](examples/src/main/java/ch/skymarshall/tcwriter/examples/SimpleTest.java)]
 
+Each Actor is an instance of a specific Role
 ```java
 CustomerTestRole customer = new CustomerTestRole(testedService); // Aka A customer
 ...
@@ -70,21 +75,21 @@ customer.buy(onInternet(), coffeeMachine());
 deliveryGuy.deliverItem(); // Another actor of the system
 customer.checkPackage(deliveredItem(), coffeeMachine());
 ```
-You can actually read
+Based on the annotations attached to the Roles/Actions/Selectors/Parameters, we can actually read
 
 Actor | Action | Selector | Parameter
 ----- | ------ | --------- | ---------
-A customer     | Buy an item                              | From internet| A coffee machine 
+A customer     | Buy an item                              | On internet| A coffee machine 
 A delivery guy | Deliver an item                  | ||
 A customer     | Check that the delivered item is || A coffee machine |
 
 This way of structuring the api should be suitable for
 * writing test cases using some GUI based application. That is, the application may allow the user to select (based on the data types)
   1. The Actor ("A customer")
-  1. Based on the selected Actor's role, the Action "Buy an item"
+  1. Based on the selected Actor's Role, the Action "Buy an item"
   1. Based on the selected Action, the Selector "On internet"
   1. Based on the selected Action, the parameter "A coffee machine"
-* generating "readable" test reports
+* generating "readable" test reports (also based on the annotations attached to the Roles/Actions/Selectors/Parameters)
 
 ```
 As customer, I go on internet and buy a coffee machine of brand "OldSchool" (ISO: yes)
@@ -103,8 +108,8 @@ As customer, I keep the note "[Value of step 8: MidClass]"
 * storing the test in a "data description" format (JSON, XML, ...) [[Code](examples/src/main/resources/models)]  [[Code](examples/src/main/resources/testCase.json)]
 
 * A demonstration GUI is available here [[Code](examples/src/main/java/ch/skymarshall/tcwriter/examples/gui/ExampleTCEditor.java)]
-  * The test model is automatically built from the java classes.
-  * The testcase is recorded from the execution of [[SimpleTest](examples/src/main/java/ch/skymarshall/tcwriter/examples/SimpleTest.java)] (thanks to aspectj)
+  * The test model is automatically built by introspecting the java classes.
+  * The testcase is recorded from the execution of [[SimpleTest](examples/src/main/java/ch/skymarshall/tcwriter/examples/SimpleTest.java)] (thanks to AspectJ)
 
-
+![TC writer full](../screenshots/TC_Writer_full.png)
   

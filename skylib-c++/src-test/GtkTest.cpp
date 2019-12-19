@@ -168,6 +168,7 @@ HelloWorld::~HelloWorld() {
 	for (binding_chain_controller_iter iter = m_bindings.begin();
 			iter != m_bindings.end(); iter++) {
 		(*iter)->unbind();
+		delete *iter;
 	}
 	m_bindings.clear();
 }

@@ -36,7 +36,7 @@ public class TestCaseToJunitVisitor {
 
 		final Map<String, String> properties = new HashMap<>();
 
-		final HumanReadableVisitor testSummaryVisitor = new HumanReadableVisitor(tc);
+		final HumanReadableVisitor testSummaryVisitor = new HumanReadableVisitor(tc, false);
 
 		final JavaCodeGenerator javaContent = new JavaCodeGenerator();
 

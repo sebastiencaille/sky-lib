@@ -92,15 +92,15 @@ This way of structuring the api should be suitable for
 * generating "readable" test reports (also based on the annotations attached to the Roles/Actions/Selectors/Parameters)
 
 ```
-As customer, I go on internet and buy a coffee machine of brand "OldSchool" (ISO: yes)
-As delivery company, I deliver the item
-As customer, I get the delivered package and check that the packaged item is a coffee machine of brand "OldSchool" (ISO: yes)
-As customer, I resell the item for 10$
-As customer, I go in a local shop and buy a tea pot
-As customer, I get the package bought at the shop and check that the packaged item is a tea pot
-As customer, I resell the item for 10$
-As customer, I find another brand
-As customer, I keep the note "[Value of step 8: MidClass]"
+1. As customer, I go on internet and buy a coffee machine of brand "OldSchool" (ISO: yes)
+2. As delivery company, I deliver the item
+3. As customer, I get the delivered package and check that the packaged item is a coffee machine of brand "OldSchool" (ISO: yes)
+4. As customer, I resell the item for 10$
+5. As customer, I go in a local shop and buy a tea pot
+6. As customer, I get the package bought at the shop and check that the packaged item is a tea pot
+7. As customer, I resell the item for 10$
+8. As customer, I find another brand
+9. As customer, I keep the note "[Value of step 8: MidClass]"
 ```
 
 * generating java test cases [[Code](examples/src/test/java/ch/skymarshall/tcwriter/examples/GeneratedTest.java)]

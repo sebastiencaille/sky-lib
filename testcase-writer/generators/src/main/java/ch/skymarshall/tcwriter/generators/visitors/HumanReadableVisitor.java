@@ -16,9 +16,11 @@ import ch.skymarshall.tcwriter.test.TestObjectDescription;
 public class HumanReadableVisitor {
 
 	private final TestCase tc;
+	private final boolean withStepNumbers;
 
-	public HumanReadableVisitor(final TestCase tc) {
+	public HumanReadableVisitor(final TestCase tc, final boolean withStepNumbers) {
 		this.tc = tc;
+		this.withStepNumbers = withStepNumbers;
 	}
 
 	public String process(final TestStep step) {
@@ -26,9 +28,12 @@ public class HumanReadableVisitor {
 		if (actorSummary == null) {
 			actorSummary = summaryOf(step.getRole(), null);
 		}
-		final StringBuilder result = new StringBuilder("As ").append(actorSummary).append(", I ")
-				.append(summaryOf(step.getAction(),
-						step.getParametersValue().stream().map(this::processTestParameter).collect(toList())));
+		final StringBuilder result = new StringBuilder();
+		if (withStepNumbers) {
+			result.append(step.getOrdinal()).append(". ");
+		}
+		result.append("As ").append(actorSummary).append(", I ").append(summaryOf(step.getAction(),
+				step.getParametersValue().stream().map(this::processTestParameter).collect(toList())));
 
 		return result.toString();
 	}

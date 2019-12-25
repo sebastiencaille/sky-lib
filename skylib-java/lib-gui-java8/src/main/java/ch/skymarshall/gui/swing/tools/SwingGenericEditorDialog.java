@@ -9,8 +9,8 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import ch.skymarshall.gui.mvc.IBindingController;
-import ch.skymarshall.gui.tools.GenericEditorClassModel.PropertyEntry;
 import ch.skymarshall.gui.tools.GenericEditorAdapter;
+import ch.skymarshall.gui.tools.GenericEditorClassModel.PropertyEntry;
 import ch.skymarshall.gui.tools.IGenericEditor;
 
 public class SwingGenericEditorDialog extends JDialog implements IGenericEditor {
@@ -47,6 +47,7 @@ public class SwingGenericEditorDialog extends JDialog implements IGenericEditor 
 
 		validate();
 		pack();
+		setSize((int) (getWidth() * 1.2), (int) (getHeight() * 1.2));
 	}
 
 	private void close() {

@@ -9,7 +9,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import ch.skymarshall.gui.mvc.IBindingController;
-import ch.skymarshall.gui.tools.ClassAdapter.PropertyEntry;
+import ch.skymarshall.gui.tools.GenericEditorClassModel.PropertyEntry;
 import ch.skymarshall.gui.tools.GenericEditorAdapter;
 import ch.skymarshall.gui.tools.IGenericEditor;
 

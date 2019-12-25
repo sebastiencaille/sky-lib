@@ -38,7 +38,6 @@ public class JTextAreaBinding extends DefaultComponentBinding<String> {
 		this.readOnly = readOnly;
 	}
 
-	@SuppressWarnings("serial")
 	@Override
 	public void addComponentValueChangeListener(final IComponentLink<String> converter) {
 		if (readOnly) {
@@ -63,7 +62,7 @@ public class JTextAreaBinding extends DefaultComponentBinding<String> {
 
 	@Override
 	public String toString() {
-		return "Content of " + SwingBindings.nameOf(textArea);
+		return "Value of " + SwingBindings.nameOf(textArea);
 	}
 
 }

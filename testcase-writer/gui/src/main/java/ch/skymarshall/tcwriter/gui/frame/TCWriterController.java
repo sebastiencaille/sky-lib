@@ -14,7 +14,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
 import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.swing.tools.SwingGenericEditorDialog;
-import ch.skymarshall.gui.tools.ClassAdapter;
+import ch.skymarshall.gui.tools.GenericEditorClassModel;
 import ch.skymarshall.gui.tools.GenericEditorAdapter;
 import ch.skymarshall.tcwriter.generators.GeneratorConfig;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
@@ -76,7 +76,7 @@ public class TCWriterController {
 		final SwingGenericEditorDialog dialog = new SwingGenericEditorDialog(gui, "Configuration",
 				ModalityType.DOCUMENT_MODAL);
 		final GenericEditorAdapter<GeneratorConfig, ?> editor = new GenericEditorAdapter<>(dialog,
-				new ClassAdapter<>(GeneratorConfig.class));
+				new GenericEditorClassModel<>(GeneratorConfig.class));
 		editor.apply();
 		editor.load(config);
 		dialog.setSize(dialog.getWidth() + 400, dialog.getHeight() + 30);

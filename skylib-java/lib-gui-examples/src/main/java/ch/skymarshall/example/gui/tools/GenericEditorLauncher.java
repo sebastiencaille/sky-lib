@@ -1,4 +1,4 @@
-package ch.skymarshall.example.gui.generic;
+package ch.skymarshall.example.gui.tools;
 
 import java.awt.Component;
 import java.awt.Dialog;
@@ -6,7 +6,7 @@ import java.awt.Dialog;
 import javax.swing.SwingUtilities;
 
 import ch.skymarshall.gui.swing.tools.SwingGenericEditorDialog;
-import ch.skymarshall.gui.tools.ClassAdapter;
+import ch.skymarshall.gui.tools.GenericEditorClassModel;
 import ch.skymarshall.gui.tools.GenericEditorAdapter;
 import ch.skymarshall.util.annotations.Labeled;
 import ch.skymarshall.util.annotations.Ordered;
@@ -14,11 +14,13 @@ import ch.skymarshall.util.annotations.Ordered;
 public class GenericEditorLauncher {
 
 	public static class EditedObject {
-		String str;
+		private String str;
 
-		boolean bool;
+		private boolean bool;
 
-		@Ordered(order = 2)
+		private Integer intValue;
+
+		@Ordered(order = 3)
 		@Labeled(label = "A string value")
 		public String getStr() {
 			return str;
@@ -38,9 +40,19 @@ public class GenericEditorLauncher {
 			this.bool = bool;
 		}
 
+		@Ordered(order = 2)
+		@Labeled(label = "An Integer value")
+		public Integer getIntValue() {
+			return intValue;
+		}
+
+		public void setIntValue(final Integer intValue) {
+			this.intValue = intValue;
+		}
+
 		@Override
 		public String toString() {
-			return str + " / " + bool;
+			return str + " / " + bool + " / " + intValue;
 		}
 	}
 
@@ -49,15 +61,16 @@ public class GenericEditorLauncher {
 		final EditedObject obj = new EditedObject();
 		obj.setBool(true);
 		obj.setStr("Hello");
+		obj.setIntValue(1);
 
-		final SwingGenericEditorDialog dialog = new SwingGenericEditorDialog(null, "Test",
+		final SwingGenericEditorDialog view = new SwingGenericEditorDialog(null, "Test",
 				Dialog.ModalityType.DOCUMENT_MODAL);
-		final GenericEditorAdapter<EditedObject, Component> editor = new GenericEditorAdapter<>(dialog,
-				new ClassAdapter<>(EditedObject.class));
+		final GenericEditorAdapter<EditedObject, Component> editor = new GenericEditorAdapter<>(view,
+				new GenericEditorClassModel<>(EditedObject.class));
 		editor.apply();
 		SwingUtilities.invokeLater(() -> {
 			editor.load(obj);
-			dialog.setVisible(true);
+			view.setVisible(true);
 			System.out.println(obj);
 		});
 	}

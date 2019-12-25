@@ -74,6 +74,6 @@ public class JTextFieldBinding extends DefaultComponentBinding<String> {
 
 	@Override
 	public String toString() {
-		return "Content of " + textField;
+		return "Value of " + textField;
 	}
 }

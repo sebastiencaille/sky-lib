@@ -41,6 +41,6 @@ public class JListContentBinding<T> extends DefaultComponentBinding<List<T>> {
 
 	@Override
 	public String toString() {
-		return "Content of " + SwingBindings.nameOf(list);
+		return "Value of " + SwingBindings.nameOf(list);
 	}
 }

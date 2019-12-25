@@ -35,6 +35,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JList;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -145,6 +146,10 @@ public class SwingBindings {
 
 	public static JTextFieldBinding value(final JTextField component) {
 		return new JTextFieldBinding(component);
+	}
+
+	public static <T extends Number> JSpinnerBinding<T> value(final JSpinner component) {
+		return new JSpinnerBinding<>(component);
 	}
 
 	public static IComponentBinding<String> value(final JTextArea component, final boolean readOnly) {

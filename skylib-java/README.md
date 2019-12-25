@@ -110,4 +110,25 @@ columnModel.configureColumn(ContributionTableColumn.gapColumn(...)); // Fills th
 Arrays.stream(Column.values()).forEach(c -> stepsTable.getColumn(c).setCellEditor(new Editor()));
 ```
 
+**Generic GUI to edit Objects**
 
+The editor is made of
+* A widget specific view (a dialog, panel, ...)
+* A model 
+* An adapter that binds the widget and the adapter 
+
+[[Example](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/tools/GenericEditorLauncher.java)]
+
+```java
+		EditedObject obj = ... ;
+		final SwingGenericEditorDialog view = new SwingGenericEditorDialog(null, "Test",
+				Dialog.ModalityType.DOCUMENT_MODAL);
+		final GenericEditorAdapter<EditedObject, Component> editor = new GenericEditorAdapter<>(view,
+				new GenericEditorClassModel<>(EditedObject.class));
+					editor.apply();
+		SwingUtilities.invokeLater(() -> {
+			editor.load(obj);
+			view.setVisible(true);
+			System.out.println(obj);
+		});
+```

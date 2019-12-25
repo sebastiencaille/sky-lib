@@ -2,7 +2,7 @@ package ch.skymarshall.gui.tools;
 
 import java.util.List;
 
-import ch.skymarshall.gui.tools.ClassAdapter.PropertyEntry;
+import ch.skymarshall.gui.tools.GenericEditorClassModel.PropertyEntry;
 
 /**
  *
@@ -15,7 +15,7 @@ public class GenericEditorAdapter<T, C> {
 	private final IGenericEditor editor;
 	private final List<PropertyEntry<T>> props;
 
-	public GenericEditorAdapter(final IGenericEditor editor, final ClassAdapter<T> modelAdapter) {
+	public GenericEditorAdapter(final IGenericEditor editor, final GenericEditorClassModel<T> modelAdapter) {
 		this.editor = editor;
 		props = modelAdapter.getProperties();
 	}

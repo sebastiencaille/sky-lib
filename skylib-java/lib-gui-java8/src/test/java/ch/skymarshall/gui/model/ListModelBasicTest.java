@@ -19,10 +19,8 @@ import java.util.Arrays;
 
 import org.junit.Assert;
 import org.junit.Test;
+
 import ch.skymarshall.gui.TestObject;
-import ch.skymarshall.gui.model.ChildListModel;
-import ch.skymarshall.gui.model.ListModel;
-import ch.skymarshall.gui.model.RootListModel;
 import ch.skymarshall.gui.model.views.IListView;
 import ch.skymarshall.gui.model.views.ListViews;
 

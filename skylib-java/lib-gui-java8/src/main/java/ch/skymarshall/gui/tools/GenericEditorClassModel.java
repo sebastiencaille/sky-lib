@@ -17,7 +17,7 @@ import ch.skymarshall.util.annotations.Ordered;
 import ch.skymarshall.util.dao.metadata.AbstractAttributeMetaData;
 import ch.skymarshall.util.dao.metadata.DataObjectMetaData;
 
-public class ClassAdapter<T> {
+public class GenericEditorClassModel<T> {
 
 	public static class PropertyEntry<U> {
 		private final AbstractTypedProperty<Object> property;
@@ -87,12 +87,12 @@ public class ClassAdapter<T> {
 	private final ResourceBundle bundle;
 	private final DataObjectMetaData<T> metaData;
 
-	public ClassAdapter(final Class<T> clazz) {
+	public GenericEditorClassModel(final Class<T> clazz) {
 		this.bundle = null;
 		this.metaData = new DataObjectMetaData<>(clazz);
 	}
 
-	public ClassAdapter(final ResourceBundle bundle, final Class<T> clazz) {
+	public GenericEditorClassModel(final ResourceBundle bundle, final Class<T> clazz) {
 		this.bundle = bundle;
 		this.metaData = new DataObjectMetaData<>(clazz);
 	}
@@ -102,8 +102,8 @@ public class ClassAdapter<T> {
 		final List<PropertyEntry<T>> properties = new ArrayList<>();
 		for (final AbstractAttributeMetaData<T> attrib : metaData.getAttributes()) {
 
-			final String message = findText(attrib, Labeled::label, ClassAdapter::descriptionKey);
-			final String toolTip = findText(attrib, Labeled::tooltip, ClassAdapter::tooltipKey);
+			final String message = findText(attrib, Labeled::label, GenericEditorClassModel::descriptionKey);
+			final String toolTip = findText(attrib, Labeled::tooltip, GenericEditorClassModel::tooltipKey);
 			final ObjectProperty<Object> property = new ObjectProperty<>(attrib.getName(), propertySupport);
 			properties.add(new PropertyEntry<>(property, attrib, message, toolTip));
 		}

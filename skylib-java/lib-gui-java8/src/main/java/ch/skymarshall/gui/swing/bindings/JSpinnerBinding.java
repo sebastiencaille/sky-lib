@@ -15,32 +15,44 @@
  ******************************************************************************/
 package ch.skymarshall.gui.swing.bindings;
 
-import java.util.List;
+import javax.swing.JSpinner;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
-
+import ch.skymarshall.gui.mvc.IComponentLink;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 
-public class JComboBoxContentBinding<T> extends DefaultComponentBinding<List<T>> {
+public class JSpinnerBinding<T extends Number> extends DefaultComponentBinding<T> {
 
-	private final JComboBox<T> box;
+	private final JSpinner spinner;
 
-	public JComboBoxContentBinding(final JComboBox<T> component) {
-		this.box = component;
+	public JSpinnerBinding(final JSpinner component) {
+		this.spinner = component;
 	}
 
 	@Override
-	public void setComponentValue(final AbstractProperty source, final List<T> value) {
-		final DefaultComboBoxModel<T> newModel = new DefaultComboBoxModel<>();
-		for (final T obj : value) {
-			newModel.addElement(obj);
+	public void addComponentValueChangeListener(final IComponentLink<T> converter) {
+
+		spinner.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(final ChangeEvent e) {
+				converter.setValueFromComponent(spinner, (T) spinner.getValue());
+			}
+		});
+	}
+
+	@Override
+	public void setComponentValue(final AbstractProperty source, final T value) {
+		if (value != null) {
+			spinner.setValue(value);
+		} else {
+			spinner.setValue(0);
 		}
-		box.setModel(newModel);
 	}
 
 	@Override
 	public String toString() {
-		return "Value of " + SwingBindings.nameOf(box);
+		return "Value of " + spinner;
 	}
 }

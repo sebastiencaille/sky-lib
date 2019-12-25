@@ -10,7 +10,7 @@ Key points
 Complete example [[Screenshot](../screenshots/MVC_Full_TC.png)][[Model](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/controller/impl/ControllerExampleModel.java)] [[View](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/controller/impl/ControllerExampleView.java)] 
 
 Example
-(displaying a boolean property as a checkbox and as a String)
+(to display a boolean property as a checkbox and as a String)
 ```java
 protected final BooleanProperty booleanProperty = ...;
 
@@ -110,13 +110,14 @@ columnModel.configureColumn(ContributionTableColumn.gapColumn(...)); // Fills th
 Arrays.stream(Column.values()).forEach(c -> stepsTable.getColumn(c).setCellEditor(new Editor()));
 ```
 
-**Generic GUI to edit Objects**
+**Generic GUI to edit simple Objects**
 
 The editor is made of
 * A widget specific view (a dialog, panel, ...)
 * A model 
 * An adapter that binds the widget and the adapter 
 
+[[Screenshot](../screenshots/Generic_Editor.png)]
 [[Example](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/tools/GenericEditorLauncher.java)]
 
 ```java

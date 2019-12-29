@@ -15,7 +15,6 @@ import ch.skymarshall.gui.mvc.properties.IPersister;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.util.annotations.Labeled;
 import ch.skymarshall.util.annotations.Ordered;
-import ch.skymarshall.util.annotations.Persistency;
 import ch.skymarshall.util.dao.metadata.AbstractAttributeMetaData;
 import ch.skymarshall.util.dao.metadata.DataObjectMetaData;
 
@@ -136,9 +135,7 @@ public class GenericEditorClassModel<T> {
 			final String message = findText(attrib, Labeled::label, GenericEditorClassModel::descriptionKey);
 			final String toolTip = findText(attrib, Labeled::tooltip, GenericEditorClassModel::tooltipKey);
 			final ObjectProperty<Object> property = new ObjectProperty<>(attrib.getName(), propertySupport);
-			final Persistency persistency = attrib.getAnnotation(Persistency.class);
-			final boolean readOnly = config.readOnly || (persistency != null && persistency.readOnly())
-					|| attrib.isReadOnly();
+			final boolean readOnly = config.readOnly || attrib.isReadOnly();
 			properties.add(new PropertyEntry<>(property, attrib, readOnly, message, toolTip));
 		}
 		Collections.sort(properties, (p1, p2) -> Integer.compare(p1.index(), p2.index()));

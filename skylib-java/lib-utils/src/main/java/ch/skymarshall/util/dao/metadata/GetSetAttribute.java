@@ -20,6 +20,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
+import ch.skymarshall.util.annotations.Persistency;
+
 /**
  * This class allows accessing an attribute through its get/set methods
  *
@@ -49,7 +51,7 @@ public class GetSetAttribute<T> extends AbstractAttributeMetaData<T> {
 	@Override
 	public Object getValueOf(final T from) {
 		try {
-			return getter.invoke (from);
+			return getter.invoke(from);
 		} catch (final Exception e) {
 			throw new IllegalStateException("Unable to get object", e);
 		}
@@ -58,7 +60,7 @@ public class GetSetAttribute<T> extends AbstractAttributeMetaData<T> {
 	@Override
 	public void setValueOf(final T to, final Object value) {
 		try {
-			setter.invoke (to, value);
+			setter.invoke(to, value);
 		} catch (final Exception e) {
 			throw new IllegalStateException("Unable to set object", e);
 		}
@@ -66,7 +68,11 @@ public class GetSetAttribute<T> extends AbstractAttributeMetaData<T> {
 
 	@Override
 	public boolean isReadOnly() {
-		return setter == null;
+		if (setter == null) {
+			return true;
+		}
+		final Persistency persistency = getAnnotation(Persistency.class);
+		return persistency != null && persistency.readOnly();
 	}
 
 	@Override

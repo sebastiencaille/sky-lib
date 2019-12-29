@@ -20,6 +20,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 
+import ch.skymarshall.util.annotations.Persistency;
+
 /**
  * This class allows to access a public field attribute
  *
@@ -59,7 +61,11 @@ public class FieldAttribute<T> extends AbstractAttributeMetaData<T> {
 
 	@Override
 	public boolean isReadOnly() {
-		return Modifier.isFinal(field.getModifiers());
+		if (Modifier.isFinal(field.getModifiers())) {
+			return true;
+		}
+		final Persistency persistency = getAnnotation(Persistency.class);
+		return persistency != null && persistency.readOnly();
 	}
 
 	@Override

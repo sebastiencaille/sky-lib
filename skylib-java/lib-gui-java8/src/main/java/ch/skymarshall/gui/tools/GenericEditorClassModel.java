@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
 import ch.skymarshall.gui.mvc.IScopedSupport;
@@ -14,6 +15,7 @@ import ch.skymarshall.gui.mvc.properties.IPersister;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.util.annotations.Labeled;
 import ch.skymarshall.util.annotations.Ordered;
+import ch.skymarshall.util.annotations.Persistency;
 import ch.skymarshall.util.dao.metadata.AbstractAttributeMetaData;
 import ch.skymarshall.util.dao.metadata.DataObjectMetaData;
 
@@ -24,14 +26,15 @@ public class GenericEditorClassModel<T> {
 		private final String label;
 		private final String tooltip;
 		private final AbstractAttributeMetaData<U> metadata;
+		private final boolean readOnly;
 
 		public PropertyEntry(final AbstractTypedProperty<Object> property, final AbstractAttributeMetaData<U> metadata,
-				final String label, final String tooltip) {
-			super();
+				final boolean readOnly, final String label, final String tooltip) {
 			this.property = property;
 			this.metadata = metadata;
 			this.label = label;
 			this.tooltip = tooltip;
+			this.readOnly = readOnly;
 		}
 
 		public int index() {
@@ -74,6 +77,10 @@ public class GenericEditorClassModel<T> {
 			return metadata.getClassType();
 		}
 
+		public boolean isReadOnly() {
+			return readOnly;
+		}
+
 		public String getLabel() {
 			return label;
 		}
@@ -84,17 +91,41 @@ public class GenericEditorClassModel<T> {
 
 	}
 
-	private final ResourceBundle bundle;
-	private final DataObjectMetaData<T> metaData;
+	public static class Builder<T> {
+		private final Class<T> clazz;
+		private ResourceBundle bundle = null;
+		private boolean readOnly = false;
 
-	public GenericEditorClassModel(final Class<T> clazz) {
-		this.bundle = null;
-		this.metaData = new DataObjectMetaData<>(clazz);
+		public Builder(final Class<T> clazz) {
+			this.clazz = clazz;
+		}
+
+		public Builder<T> setBundle(final ResourceBundle bundle) {
+			this.bundle = bundle;
+			return this;
+		}
+
+		public Builder<T> setReadOnly(final boolean readOnly) {
+			this.readOnly = readOnly;
+			return this;
+		}
+
+		public GenericEditorClassModel<T> build() {
+			return new GenericEditorClassModel<>(this);
+		}
 	}
 
-	public GenericEditorClassModel(final ResourceBundle bundle, final Class<T> clazz) {
-		this.bundle = bundle;
-		this.metaData = new DataObjectMetaData<>(clazz);
+	private final DataObjectMetaData<T> metaData;
+	private final Builder<T> config;
+
+	public static <T> Builder<T> builder(final Class<T> clazz) {
+		return new Builder<>(clazz);
+	}
+
+	protected GenericEditorClassModel(final Builder<T> builder) {
+		this.config = builder;
+		this.metaData = new DataObjectMetaData<>(builder.clazz);
+
 	}
 
 	public List<PropertyEntry<T>> getProperties() {
@@ -105,7 +136,10 @@ public class GenericEditorClassModel<T> {
 			final String message = findText(attrib, Labeled::label, GenericEditorClassModel::descriptionKey);
 			final String toolTip = findText(attrib, Labeled::tooltip, GenericEditorClassModel::tooltipKey);
 			final ObjectProperty<Object> property = new ObjectProperty<>(attrib.getName(), propertySupport);
-			properties.add(new PropertyEntry<>(property, attrib, message, toolTip));
+			final Persistency persistency = attrib.getAnnotation(Persistency.class);
+			final boolean readOnly = config.readOnly || (persistency != null && persistency.readOnly())
+					|| attrib.isReadOnly();
+			properties.add(new PropertyEntry<>(property, attrib, readOnly, message, toolTip));
 		}
 		Collections.sort(properties, (p1, p2) -> Integer.compare(p1.index(), p2.index()));
 		propertySupport.attachAll();
@@ -113,14 +147,14 @@ public class GenericEditorClassModel<T> {
 	}
 
 	private String findText(final AbstractAttributeMetaData<T> attrib, final Function<Labeled, String> fromLabel,
-			final Function<String, String> nameToKey) {
+			final UnaryOperator<String> nameToKey) {
 		final Labeled label = attrib.getAnnotation(Labeled.class);
 		String value = "";
 		if (label != null) {
 			value = fromLabel.apply(label);
 		}
-		if (value.isEmpty() && bundle != null) {
-			value = bundle.getString(nameToKey.apply(attrib.getName()));
+		if (value.isEmpty() && config.bundle != null) {
+			value = config.bundle.getString(nameToKey.apply(attrib.getName()));
 		}
 		return value;
 	}

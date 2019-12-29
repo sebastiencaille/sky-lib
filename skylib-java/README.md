@@ -2,9 +2,9 @@
 
 Key points
 * The Model is made of Properties (basically, a typed value + listeners)
-* The dynamic properties of all the GUI components are always driven by the properties  
-  (The dynamic properties of the GUI are never directly linked together)
-* The properties of the model and the graphical components are bound through converters
+* The dynamic properties of all the visual components are always driven by the properties
+  (The visual components are never directly linked together)
+* The properties of the model and the visual components are bound through converters
 * The MVC model can be generated from the application model
 
 Complete example [[Screenshot](../screenshots/MVC_Full_TC.png)][[Model](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/controller/impl/ControllerExampleModel.java)] [[View](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/controller/impl/ControllerExampleView.java)] 

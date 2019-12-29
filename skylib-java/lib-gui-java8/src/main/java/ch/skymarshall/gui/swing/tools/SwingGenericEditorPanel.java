@@ -6,17 +6,18 @@ import static ch.skymarshall.gui.swing.bindings.SwingBindings.value;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.Arrays;
 
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 
 import ch.skymarshall.gui.mvc.IBindingController;
-import ch.skymarshall.gui.swing.bindings.SwingBindings;
-import ch.skymarshall.gui.tools.GenericEditorClassModel.PropertyEntry;
 import ch.skymarshall.gui.tools.GenericEditorAdapter;
+import ch.skymarshall.gui.tools.GenericEditorClassModel.PropertyEntry;
 import ch.skymarshall.gui.tools.IGenericEditor;
 
 public class SwingGenericEditorPanel extends JPanel implements IGenericEditor {
@@ -44,7 +45,7 @@ public class SwingGenericEditorPanel extends JPanel implements IGenericEditor {
 		} else if (propType == Integer.class) {
 			currentRow++;
 			addLabel(prop);
-			return prop.getProperty(Integer.class).bind(SwingBindings.value(addSpinner(prop)));
+			return prop.getProperty(Integer.class).bind(value(addSpinner(prop)));
 		} else if (propType == Long.class) {
 			currentRow++;
 			addLabel(prop);
@@ -71,19 +72,29 @@ public class SwingGenericEditorPanel extends JPanel implements IGenericEditor {
 	private JSpinner addSpinner(final PropertyEntry<?> prop) {
 		final JSpinner sp = new JSpinner();
 		sp.setToolTipText(prop.getTooltip());
+
+		JComponent displayed = sp;
+		if (prop.isReadOnly()) {
+			displayed = sp.getEditor();
+			Arrays.stream(displayed.getComponents()).filter(c -> c instanceof JTextField)
+					.forEach(c -> ((JTextField) c).setEditable(false));
+			displayed.setBorder(sp.getBorder());
+		}
+
 		final GridBagConstraints fieldConstraint = new GridBagConstraints();
 		fieldConstraint.fill = GridBagConstraints.HORIZONTAL;
 		fieldConstraint.gridx = 2;
 		fieldConstraint.weightx = 1.0;
 		fieldConstraint.gridy = currentRow;
 		fieldConstraint.insets = new Insets(5, 0, 0, 5);
-		add(sp, fieldConstraint);
+		add(displayed, fieldConstraint);
 		return sp;
 	}
 
 	private JTextField addTextField(final PropertyEntry<?> prop) {
 		final JTextField tf = new JTextField();
 		tf.setToolTipText(prop.getTooltip());
+		tf.setEditable(!prop.isReadOnly());
 		final GridBagConstraints fieldConstraint = new GridBagConstraints();
 		fieldConstraint.fill = GridBagConstraints.HORIZONTAL;
 		fieldConstraint.gridx = 2;

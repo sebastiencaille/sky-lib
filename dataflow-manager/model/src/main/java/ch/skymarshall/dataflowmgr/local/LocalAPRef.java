@@ -33,8 +33,7 @@ import ch.skymarshall.dataflowmgr.model.InputDecisionRule;
  *
  * @author scaille
  *
- * @param <I>
- *            the flow type injected into the reference (could be input flow or
+ * @param <I> the flow type injected into the reference (could be input flow or
  *            action point flow type)
  */
 public class LocalAPRef<I extends FlowData> implements ActionPointReference<I> {
@@ -72,7 +71,7 @@ public class LocalAPRef<I extends FlowData> implements ActionPointReference<I> {
 	public static <T extends FlowData> List<ActionPoint<?, ?>.ExecutionSteps> createExecution(
 			final ActionPointReference<T> nextDp, final T nextData) {
 		final Set<ActionPoint<?, ?>> actionPoints = LocalAPRef.class.cast(nextDp).getActionPoints();
-		return actionPoints.stream()
-				.map(dp -> dp.createExecution(nextData)).collect(toList());
+		return actionPoints.stream().map(dp -> (ActionPoint<?, ?>.ExecutionSteps) dp.createExecution(nextData))
+				.collect(toList());
 	}
 }

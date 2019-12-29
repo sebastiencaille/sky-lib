@@ -5,8 +5,6 @@ import ch.skymarshall.tcwriter.examples.api.interfaces.selectors.*;
 import ch.skymarshall.tcwriter.examples.api.interfaces.*;
 import ch.skymarshall.tcwriter.recording.*;
 
-import java.io.IOException;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,7 +25,7 @@ public class ${testName} {
 	}
 	
 	@Test
-	public void testCase() throws Exception {
+	public void testCase() {
 		${testContent}
 	}
 

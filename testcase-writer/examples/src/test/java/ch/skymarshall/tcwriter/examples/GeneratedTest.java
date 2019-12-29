@@ -6,8 +6,6 @@ import ch.skymarshall.tcwriter.examples.api.interfaces.selectors.*;
 import ch.skymarshall.tcwriter.examples.api.interfaces.*;
 import ch.skymarshall.tcwriter.recording.*;
 
-import java.io.IOException;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,7 +26,7 @@ public class GeneratedTest {
 	}
 	
 	@Test
-	public void testCase() throws Exception {
+	public void testCase() {
 		// Step 1: As customer, I go on internet and buy a coffee machine of brand "OldSchool" (ISO: yes)
 		ch.skymarshall.tcwriter.examples.api.interfaces.selectors.BuyingLocationSelector var1 = BuyingLocationSelector.onInternet();
 		ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem var2 = TestItem.coffeeMachineOfBrand("OldSchool");

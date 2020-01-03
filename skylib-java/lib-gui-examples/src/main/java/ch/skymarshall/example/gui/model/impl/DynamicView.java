@@ -30,7 +30,7 @@ public class DynamicView extends AbstractDynamicView<TestObject> implements ILis
 	}
 
 	public IComponentBinding<Boolean> reverseOrder() {
-		return refreshWhenUpdated(enabled -> sortReverseOrder = enabled);
+		return refreshWhenUpdated(reversed -> sortReverseOrder = reversed);
 	}
 
 }

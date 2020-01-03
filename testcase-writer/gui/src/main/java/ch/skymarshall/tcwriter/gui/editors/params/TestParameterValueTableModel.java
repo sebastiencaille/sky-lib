@@ -12,22 +12,26 @@ public class TestParameterValueTableModel
 	}
 
 	static class ParameterValue implements Comparable<ParameterValue> {
-		final String id;
+		final String name;
 		final TestParameterFactory factory;
 		final String description;
-		final boolean mandatory;
+		boolean mandatory;
 		boolean enabled;
 		String value;
+		boolean visible;
 
-		ParameterValue(final String id, final TestParameterFactory parameterFactory, final boolean enabled,
-				final String description, final String value, final boolean mandatory) {
-			this.id = id;
+		ParameterValue(final String id, final TestParameterFactory parameterFactory, final String description,
+				final String value, final boolean enabled) {
+			this.name = id;
 			this.factory = parameterFactory;
-			this.enabled = enabled || mandatory;
+			this.enabled = enabled;
 			this.description = description;
 			this.value = value;
-			this.mandatory = mandatory;
+		}
 
+		public void update(final boolean mandatory, final boolean visible) {
+			this.mandatory = mandatory;
+			this.visible = visible;
 		}
 
 		@Override
@@ -82,7 +86,6 @@ public class TestParameterValueTableModel
 		default:
 			throw new IllegalStateException("Not editable" + column);
 		}
-
 	}
 
 }

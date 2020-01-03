@@ -19,6 +19,8 @@ import java.util.Collection;
 
 import ch.skymarshall.gui.model.views.IListView;
 import ch.skymarshall.gui.mvc.IComponentBinding;
+import ch.skymarshall.gui.mvc.IComponentLink;
+import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 
 public interface ListModelBindings {
 
@@ -27,6 +29,31 @@ public interface ListModelBindings {
 	}
 
 	public static <T> IComponentBinding<Collection<T>> values(final ListModel<T> model) {
-		return IComponentBinding.<ListModel<T>, Collection<T>>wo(model, (c, p, t) -> c.setValues(t));
+		return new IComponentBinding<Collection<T>>() {
+
+			private ListModelAdapter<T> listener;
+
+			@Override
+			public void addComponentValueChangeListener(final IComponentLink<Collection<T>> link) {
+				listener = new ListModelAdapter<T>() {
+					@Override
+					public void editionStopped(final ListEvent<T> event) {
+						link.setValueFromComponent(model, model.values());
+					}
+				};
+				model.addListener(listener);
+			}
+
+			@Override
+			public void setComponentValue(final AbstractProperty source, final Collection<T> value) {
+				model.setValues(value);
+			}
+
+			@Override
+			public void removeComponentValueChangeListener() {
+				model.removeListener(listener);
+			}
+
+		};
 	}
 }

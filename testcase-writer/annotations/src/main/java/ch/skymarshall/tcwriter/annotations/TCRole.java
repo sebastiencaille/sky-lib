@@ -8,6 +8,6 @@ public @interface TCRole {
 
 	String description();
 
-	String stepSummary();
+	String humanReadable();
 
 }

@@ -9,7 +9,7 @@ import ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem;
 import ch.skymarshall.tcwriter.examples.api.interfaces.selectors.BuyingLocationSelector;
 import ch.skymarshall.tcwriter.examples.api.interfaces.selectors.PackageDeliverySelector;
 
-@TCRole(description = "A customer", stepSummary = "customer")
+@TCRole(description = "A customer", humanReadable = "customer")
 public class CustomerTestRole extends Assert {
 
 	private final ExampleService testedService;

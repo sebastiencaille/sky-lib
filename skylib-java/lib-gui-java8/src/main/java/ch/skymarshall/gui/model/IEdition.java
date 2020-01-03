@@ -1,8 +1,6 @@
 package ch.skymarshall.gui.model;
 
-import java.io.Closeable;
-
-public interface IEdition<T> extends Closeable {
+public interface IEdition<T> extends AutoCloseable {
 
 	T edited();
 

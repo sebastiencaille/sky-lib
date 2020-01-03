@@ -95,8 +95,7 @@ public class ClassToModelVisitor {
 			for (final Method valueFactoryMethod : valueFactoryMethods) {
 				// Process each method of the class
 
-				final TestParameterFactory valueFactory = new TestParameterFactory(
-						methodKey(valueFactoryMethod),
+				final TestParameterFactory valueFactory = new TestParameterFactory(methodKey(valueFactoryMethod),
 						valueFactoryMethod.getDeclaringClass().getSimpleName() + "." + valueFactoryMethod.getName(),
 						ParameterNature.TEST_API, valueFactoryMethod.getReturnType().getName());
 				processMethodAnnotation(valueFactory, valueFactoryMethod);
@@ -199,7 +198,7 @@ public class ClassToModelVisitor {
 
 	private void forEachSuper(final Class<?> tcClazz, final Set<Class<?>> processed,
 			final Consumer<Class<?>> classHandler) {
-		if (tcClazz == Object.class) {
+		if (tcClazz == null || tcClazz == Object.class) {
 			return;
 		}
 		if (!isActor(tcClazz) && !isTestApi(tcClazz)) {
@@ -214,7 +213,7 @@ public class ClassToModelVisitor {
 	}
 
 	private TestObjectDescription descriptionFrom(final TCRole tcrole) {
-		return new TestObjectDescription(tcrole.description(), tcrole.stepSummary());
+		return new TestObjectDescription(tcrole.description(), tcrole.humanReadable());
 	}
 
 	private TestObjectDescription descriptionFrom(final TCApi tcApi) {

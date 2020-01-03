@@ -29,7 +29,7 @@ public class StepEditorController extends GuiController {
 	private final IScopedSupport changeSupport;
 
 	public StepEditorController(final TCWriterController controller) {
-		changeSupport = controller.getChangeSupport();
+		changeSupport = controller.getPropertySupport();
 		this.model = new StepEditorModel(changeSupport);
 		guiModel = controller.getModel();
 	}
@@ -42,8 +42,13 @@ public class StepEditorController extends GuiController {
 		final TestModel tm = guiModel.getTestModel();
 		final ObjectProperty<TestStep> testStep = guiModel.getSelectedStep();
 
-		model.getActor()
-				.listen(actor -> model.getPossibleActions().setValue(this, sorted(actor.getRole().getActions())));
+		model.getActor().listen(actor -> {
+			if (actor != null) {
+				model.getPossibleActions().setValue(this, sorted(actor.getRole().getActions()));
+			} else {
+				model.getPossibleActions().setValue(this, Collections.emptyList());
+			}
+		});
 
 		testStep.listen(step -> {
 			if (step == null) {
@@ -54,8 +59,13 @@ public class StepEditorController extends GuiController {
 			}
 			model.getActor().setValue(this, step.getActor());
 			model.getAction().setValue(this, step.getAction());
-
-			final ActionUtils actionUtils = ModelUtils.actionUtils(tm, step.getAction());
+		});
+		model.getAction().listen(action -> {
+			final TestStep step = testStep.getValue();
+			if (step == null || action == null) {
+				return;
+			}
+			final ActionUtils actionUtils = ModelUtils.actionUtils(tm, action);
 			actionUtils.synchronizeStep(testStep.getValue());
 			if (actionUtils.hasSelector()) {
 				final TestParameterValue selectorValue = step.getParametersValue(actionUtils.selectorIndex());
@@ -120,7 +130,6 @@ public class StepEditorController extends GuiController {
 		step.setAction(model.getAction().getValue());
 		step.getParametersValue().clear();
 		final ActionUtils actionUtils = ModelUtils.actionUtils(guiModel.getTestModel(), step.getAction());
-		step.getParametersValue().clear();
 		if (actionUtils.hasSelector()) {
 			step.getParametersValue().add(model.getSelectorValue().getValue());
 		}

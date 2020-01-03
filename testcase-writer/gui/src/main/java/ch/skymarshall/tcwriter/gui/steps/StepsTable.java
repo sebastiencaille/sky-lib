@@ -41,7 +41,6 @@ public class StepsTable extends JPanel {
 	private final JTable stepsJTable;
 
 	public StepsTable(final TCWriterController controller) {
-
 		final TCWriterModel model = controller.getModel();
 
 		final ch.skymarshall.gui.model.ListModel<TestStep> steps = new RootListModel<>(
@@ -53,6 +52,9 @@ public class StepsTable extends JPanel {
 		controller.getTestRemoteControl().setStepListener(stepsTableModel::stepExecutionUpdated);
 
 		stepsJTable = new JTable(stepsTableModel) {
+			{
+				setName("StepsTable");
+			}
 
 			@Override
 			protected void paintChildren(final Graphics g) {

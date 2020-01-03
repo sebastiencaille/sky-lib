@@ -137,8 +137,8 @@ public class TestCase {
 		if (apiParameterId.isEmpty()) {
 			return TestApiParameter.NO_PARAMETER;
 		}
-		return steps.stream().flatMap(s -> s.getAction().getParameters().stream())
-				.filter(p -> p.getId().equals(apiParameterId)).findFirst()
+		return testModel.getRoles().values().stream().flatMap(s -> s.getActions().stream())
+				.flatMap(a -> a.getParameters().stream()).filter(p -> p.getId().equals(apiParameterId)).findFirst()
 				.orElseThrow(() -> new IllegalStateException("Unable to find " + apiParameterId));
 	}
 

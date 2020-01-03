@@ -34,13 +34,20 @@ public class TCWriterGui extends JFrame {
 
 	public TCWriterGui(final TCWriterController controller) {
 		this.controller = controller;
+		setName("TCWriterGui");
+	}
+
+	private JButton button(final String name, final ImageIcon icon, final String toolTip,
+			final ActionWithException<?> action) {
+		final JButton newButton = new JButton(icon);
+		newButton.setToolTipText(toolTip);
+		newButton.addActionListener(e -> withException(action));
+		newButton.setName(name);
+		return newButton;
 	}
 
 	private JButton button(final ImageIcon icon, final String toolTip, final ActionWithException<?> action) {
-		final JButton newBUtton = new JButton(icon);
-		newBUtton.setToolTipText(toolTip);
-		newBUtton.addActionListener(e -> withException(action));
-		return newBUtton;
+		return button(null, icon, toolTip, action);
 	}
 
 	public void run() {
@@ -75,7 +82,8 @@ public class TCWriterGui extends JFrame {
 
 		final JSeparator sep = new JSeparator(SwingConstants.VERTICAL);
 
-		final JButton addStepButton = button(icon("table/RowInsertAfter24"), "Add step", controller::addStep);
+		final JButton addStepButton = button("AddStep", icon("table/RowInsertAfter24"), "Add step",
+				controller::addStep);
 
 		final JButton removeStepButton = button(icon("table/RowDelete24"), "Remove step", controller::removeStep);
 

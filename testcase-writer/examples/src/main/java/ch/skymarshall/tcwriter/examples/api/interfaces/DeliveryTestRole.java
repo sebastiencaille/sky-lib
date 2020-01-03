@@ -4,7 +4,7 @@ import ch.skymarshall.tcwriter.annotations.TCApi;
 import ch.skymarshall.tcwriter.annotations.TCRole;
 import ch.skymarshall.tcwriter.examples.ExampleService;
 
-@TCRole(description = "A delivery company", stepSummary = "delivery company")
+@TCRole(description = "A delivery company", humanReadable = "delivery company")
 public class DeliveryTestRole {
 
 	private final ExampleService testedService;

@@ -1,5 +1,6 @@
 package ch.skymarshall.tcwriter.gui.editors.params;
 
+import static ch.skymarshall.gui.model.ListModelBindings.values;
 import static ch.skymarshall.gui.mvc.BindingDependencies.detachOnUpdateOf;
 import static ch.skymarshall.gui.mvc.converters.Converters.filter;
 import static ch.skymarshall.gui.mvc.converters.Converters.listConverter;
@@ -12,7 +13,12 @@ import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -22,14 +28,17 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
+import com.google.common.base.Strings;
+
+import ch.skymarshall.gui.model.ChildListModel;
 import ch.skymarshall.gui.model.ListModel;
-import ch.skymarshall.gui.model.ListModelBindings;
 import ch.skymarshall.gui.model.RootListModel;
 import ch.skymarshall.gui.model.views.ListViews;
 import ch.skymarshall.gui.mvc.converters.IConverter;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.gui.swing.bindings.ObjectTextView;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory.ParameterNature;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
@@ -94,10 +103,46 @@ public class TestParameterValueEditorPanel extends JPanel {
 		topPanel.add(useComplexType);
 		add(topPanel, BorderLayout.NORTH);
 
-		final ListModel<ParameterValue> editedParameters = new RootListModel<>(ListViews.<ParameterValue>sorted());
+		// List of mandatory / optional parameters
+		final ListModel<ParameterValue> allEditedParameters = new RootListModel<>(ListViews.<ParameterValue>sorted());
+		final ListModel<ParameterValue> visibleParameters = new ChildListModel<>(allEditedParameters,
+				ListViews.filtered(p -> p.visible));
 		final TestParameterValueTable view = new TestParameterValueTable(
-				new TestParameterValueTableModel(editedParameters));
-		editedParamValue.bind(v -> toListModel(tc.getValue(), v)).bind(ListModelBindings.values(editedParameters));
+				new TestParameterValueTableModel(visibleParameters));
+		final ObjectProperty<Map<String, TestParameterValue>> complexValues = editedParamValue.child("ComplexParams",
+				TestParameterValue::getComplexTypeValues, TestParameterValue::updateComplexTypeValues);
+		complexValues.bind(toListModel(tc.getValue(), editedParamValue)).bind(values(allEditedParameters));
+		tpModel.getTestApi().listen(api -> {
+			if (api == null) {
+				return;
+			}
+			final Set<String> missingMandatoryNames = api.getMandatoryParameters().stream().map(TestApiParameter::getName)
+					.collect(Collectors.toSet());
+			final Set<String> missingOptionalNames = api.getOptionalParameters().stream().map(TestApiParameter::getName)
+					.collect(Collectors.toSet());
+			for (final ParameterValue p : allEditedParameters) {
+				missingMandatoryNames.remove(p.name);
+				missingOptionalNames.remove(p.name);
+				allEditedParameters.editValue(p, e -> {
+					e.visible = false;
+					updateParam(e, api);
+				});
+			}
+			final List<ParameterValue> newValues = new ArrayList<>();
+			for (final String name : missingMandatoryNames) {
+				final TestParameterValue value = new TestParameterValue(name, name,
+						api.getMandatoryParameter(name).asSimpleParameter(), null);
+				editedParamValue.getValue().addComplexTypeValue(value);
+				newValues.add(asParam(tc.getObjectValue(), name, value, api));
+			}
+			for (final String name : missingOptionalNames) {
+				final TestParameterValue value = new TestParameterValue(name, name,
+						api.getOptionalParameter(name).asSimpleParameter(), null);
+				editedParamValue.getValue().addComplexTypeValue(value);
+				newValues.add(asParam(tc.getObjectValue(), name, value, api));
+			}
+			allEditedParameters.addValues(newValues);
+		});
 
 		add(new JScrollPane(view), BorderLayout.CENTER);
 
@@ -148,29 +193,53 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 	}
 
-	public static final Collection<ParameterValue> toListModel(final TestCase tc,
-			final TestParameterValue parameterValue) {
-		final List<ParameterValue> paramList = new ArrayList<>();
+	public static final IConverter<Map<String, TestParameterValue>, Collection<ParameterValue>> toListModel(
+			final TestCase tc, final ObjectProperty<TestParameterValue> propertyValue) {
 
-		for (final TestApiParameter mandatoryParameter : parameterValue.getValueFactory().getMandatoryParameters()) {
-			paramList.add(asParam(tc, mandatoryParameter, parameterValue, true));
-		}
+		return new IConverter<Map<String, TestParameterValue>, Collection<ParameterValue>>() {
 
-		for (final TestApiParameter optionalParameter : parameterValue.getValueFactory().getOptionalParameters()) {
-			paramList.add(asParam(tc, optionalParameter, parameterValue, false));
-		}
-		return paramList;
+			@Override
+			public List<ParameterValue> convertPropertyValueToComponentValue(
+					final Map<String, TestParameterValue> values) {
+				final List<ParameterValue> paramList = new ArrayList<>();
+				for (final Entry<String, TestParameterValue> value : values.entrySet()) {
+					paramList.add(
+							asParam(tc, value.getKey(), value.getValue(), propertyValue.getValue().getValueFactory()));
+				}
+				return paramList;
+			}
+
+			@Override
+			public Map<String, TestParameterValue> convertComponentValueToPropertyValue(
+					final Collection<ParameterValue> componentValue) {
+				final Map<String, TestParameterValue> result = new HashMap<>();
+				for (final ParameterValue pv : componentValue) {
+					if (!pv.enabled && !pv.mandatory) {
+						continue;
+					}
+					result.put(pv.name, new TestParameterValue(pv.name, TestParameterFactory.NO_FACTORY, pv.value));
+				}
+				return result;
+			}
+
+		};
+
 	}
 
-	private static ParameterValue asParam(final TestCase tc, final TestApiParameter complexParameter,
-			final TestParameterValue complexParameterValue, final boolean mandatory) {
-		final String complexParameterId = complexParameter.getId();
-		final TestParameterValue testParameterValue = complexParameterValue.getComplexTypeValues()
-				.get(complexParameterId);
-		return new ParameterValue(complexParameterId, complexParameter.asSimpleParameter(),
-				complexParameterValue.getComplexTypeValues().containsKey(complexParameterId),
-				tc.descriptionOf(complexParameterId).getDescription(),
-				(testParameterValue != null) ? testParameterValue.getSimpleValue() : "", mandatory);
+	private static void updateParam(final ParameterValue paramValue, final TestParameterFactory factory) {
+		final boolean mandatory = factory.hasMandatoryParameter(paramValue.name);
+		final boolean optional = factory.hasOptionalParameter(paramValue.name);
+		paramValue.update(mandatory, mandatory || optional);
+	}
+
+	private static ParameterValue asParam(final TestCase tc, final String complexParameterId,
+			final TestParameterValue complexValue, final TestParameterFactory factory) {
+		final String simpleValue = complexValue.getSimpleValue();
+		final ParameterValue paramValue = new ParameterValue(complexParameterId, complexValue.getValueFactory(),
+				tc.descriptionOf(complexParameterId).getDescription(), simpleValue,
+				!Strings.isNullOrEmpty(simpleValue));
+		updateParam(paramValue, factory);
+		return paramValue;
 	}
 
 }

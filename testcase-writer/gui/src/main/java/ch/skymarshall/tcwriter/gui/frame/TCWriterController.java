@@ -11,8 +11,7 @@ import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
-import ch.skymarshall.gui.mvc.IScopedSupport;
+import ch.skymarshall.gui.mvc.GuiController;
 import ch.skymarshall.gui.swing.tools.SwingGenericEditorDialog;
 import ch.skymarshall.gui.tools.GenericEditorAdapter;
 import ch.skymarshall.gui.tools.GenericEditorClassModel;
@@ -25,14 +24,13 @@ import ch.skymarshall.tcwriter.gui.TestRemoteControl;
 import ch.skymarshall.tcwriter.gui.frame.TCWriterModel.TestExecutionState;
 import executors.ITestExecutor;
 
-public class TCWriterController {
+public class TCWriterController extends GuiController {
 
 	private static final Logger LOGGER = Logger.getLogger(TCWriterController.class.getName());
 
 	private final TCWriterModel model;
 	private final TestRemoteControl testRemoteControl;
 	private final TCWriterGui gui;
-	private final IScopedSupport changeSupport;
 	private final ITestExecutor testExecutor;
 
 	private final IModelPersister persister;
@@ -44,8 +42,7 @@ public class TCWriterController {
 		this.config = config;
 		this.persister = persister;
 		this.testExecutor = testExecutor;
-		changeSupport = new ControllerPropertyChangeSupport(this).scoped(this);
-		model = new TCWriterModel(persister.readTestModel(), changeSupport);
+		model = new TCWriterModel(persister.readTestModel(), getPropertySupport());
 		gui = new TCWriterGui(this);
 		testRemoteControl = new TestRemoteControl(9998,
 				r -> SwingUtilities.invokeLater(() -> model.getExecutionState().setValue(this,
@@ -55,12 +52,10 @@ public class TCWriterController {
 	}
 
 	public void run() {
+		getPropertySupport().attachAll();
+		newTestCase();
 		gui.run();
-		changeSupport.attachAll();
-	}
 
-	public IScopedSupport getChangeSupport() {
-		return changeSupport;
 	}
 
 	public TCWriterModel getModel() {
@@ -69,6 +64,10 @@ public class TCWriterController {
 
 	public TestRemoteControl getTestRemoteControl() {
 		return testRemoteControl;
+	}
+
+	public TCWriterGui getGui() {
+		return gui;
 	}
 
 	public void editConfig() throws IOException {

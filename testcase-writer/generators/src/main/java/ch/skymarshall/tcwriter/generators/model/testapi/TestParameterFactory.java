@@ -59,6 +59,15 @@ public class TestParameterFactory extends NamedObject {
 		return mandatoryParameters.get(index);
 	}
 
+	public TestApiParameter getMandatoryParameter(final String name) {
+		return mandatoryParameters.stream().filter(p -> p.getName().equals(name)).findFirst()
+				.orElseThrow(() -> new IllegalStateException("Can't find mandatory parameter " + name));
+	}
+
+	public boolean hasMandatoryParameter(final String name) {
+		return mandatoryParameters.stream().filter(p -> p.getName().equals(name)).findFirst().isPresent();
+	}
+
 	public List<TestApiParameter> getMandatoryParameters() {
 		return mandatoryParameters;
 	}
@@ -66,6 +75,10 @@ public class TestParameterFactory extends NamedObject {
 	public TestApiParameter getOptionalParameter(final String name) {
 		return optionalParameters.stream().filter(p -> p.getName().equals(name)).findFirst()
 				.orElseThrow(() -> new IllegalStateException("Can't find optional parameter " + name));
+	}
+
+	public boolean hasOptionalParameter(final String name) {
+		return optionalParameters.stream().filter(p -> p.getName().equals(name)).findFirst().isPresent();
 	}
 
 	public List<TestApiParameter> getOptionalParameters() {

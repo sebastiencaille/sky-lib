@@ -21,13 +21,14 @@ public class TestParameterModel {
 			final ObjectProperty<TestParameterValue> editedParameterValue) {
 		this.editedParameterValue = editedParameterValue;
 		this.testApi = testApi;
-		final IScopedSupport propertyChangeSupport = guiController.getChangeSupport();
+		final IScopedSupport propertyChangeSupport = guiController.getPropertySupport();
 		valueNature = new ObjectProperty<>(prefix + "-nature", propertyChangeSupport);
 		simpleValue = editedParameterValue.child(prefix + "-simpleValue", TestParameterValue::getSimpleValue,
 				TestParameterValue::setSimpleValue);
 		selectedReference = new ObjectProperty<>(prefix + "-reference", propertyChangeSupport);
 
 		references = new ListProperty<>(prefix + "-references", propertyChangeSupport);
+
 	}
 
 	public ObjectProperty<TestParameterFactory.ParameterNature> getValueNature() {
@@ -53,4 +54,5 @@ public class TestParameterModel {
 	public ObjectProperty<TestParameterValue> getEditedParameterValue() {
 		return editedParameterValue;
 	}
+
 }

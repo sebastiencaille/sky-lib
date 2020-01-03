@@ -1,0 +1,15 @@
+package ${package};
+
+import ch.skymarshall.tcwriter.it.*;
+
+import org.junit.Before;
+import org.junit.Test;
+
+public class ${testName} extends AbstractGuiTest {
+	
+	@Test
+	public void testCase() {
+		${testContent}
+	}
+
+}

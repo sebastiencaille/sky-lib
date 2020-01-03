@@ -330,10 +330,21 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 		}
 	}
 
-	protected void fireEditionStopped() {
+	protected void fireInnerEditionStopped() {
 		final ListEvent<T> event = new ListEvent<>(this, objectEdition.value);
 		for (final IListModelListener<T> listener : listeners()) {
-			listener.editionStopped(event);
+			if (LocalImpl.class.isInstance(listener)) {
+				listener.editionStopped(event);
+			}
+		}
+	}
+
+	protected void fireEditionStopped(final T value) {
+		final ListEvent<T> event = new ListEvent<>(this, value);
+		for (final IListModelListener<T> listener : listeners()) {
+			if (!LocalImpl.class.isInstance(listener)) {
+				listener.editionStopped(event);
+			}
 		}
 	}
 
@@ -536,6 +547,7 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 		if (objectEdition == null) {
 			return;
 		}
+		final T value = objectEdition.value;
 		try {
 			fireEditionStopping();
 			objectEdition.updateAccepted();
@@ -570,11 +582,12 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 					fireIntervalRemoved(this, objectEdition.oldIndex, objectEdition.oldIndex);
 					fireIntervalAdded(this, newIndex, newIndex);
 				}
-				fireEditionStopped();
+				fireInnerEditionStopped();
 			}
 		} finally {
 			objectEdition = null;
 		}
+		fireEditionStopped(value);
 	}
 
 	public int getRowOf(final T value) {

@@ -1,6 +1,7 @@
 package ch.skymarshall.gui.model;
 
 import java.util.Collection;
+import java.util.function.Consumer;
 
 import ch.skymarshall.gui.model.views.IListView;
 
@@ -67,5 +68,10 @@ public class ChildListModel<T> extends ListModel<T> {
 	@Override
 	public void stopEditingValue() {
 		parent.stopEditingValue();
+	}
+
+	@Override
+	public void editValue(final T value, final Consumer<T> editor) {
+		parent.editValue(value, editor);
 	}
 }

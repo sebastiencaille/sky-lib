@@ -20,9 +20,10 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 
+import ch.skymarshall.gui.mvc.ComponentBindingAdapter;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 
-public class JListContentBinding<T> extends DefaultComponentBinding<List<T>> {
+public class JListContentBinding<T> extends ComponentBindingAdapter<List<T>> {
 
 	private final JList<T> list;
 

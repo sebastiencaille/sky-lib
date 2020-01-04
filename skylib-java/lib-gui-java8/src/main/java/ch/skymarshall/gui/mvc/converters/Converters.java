@@ -248,6 +248,15 @@ public final class Converters {
 		return booleanConverter(b -> Boolean.toString(b), Boolean::parseBoolean); // NOSONAR
 	}
 
+	/**
+	 * Write only converter
+	 * 
+	 * @param <T>       type on property side
+	 * @param <U>       type on component side
+	 * @param prop2comp the function to convert value from property side to
+	 *                  component side
+	 * @return
+	 */
 	public static <T, U> IConverter<T, U> wo(final Function<T, U> prop2comp) {
 		return converter(prop2comp, o -> {
 			throw new WriteOnlyException();

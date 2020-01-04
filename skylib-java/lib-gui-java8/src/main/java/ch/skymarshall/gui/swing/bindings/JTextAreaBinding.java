@@ -20,10 +20,11 @@ import java.awt.event.FocusEvent;
 
 import javax.swing.JTextArea;
 
+import ch.skymarshall.gui.mvc.ComponentBindingAdapter;
 import ch.skymarshall.gui.mvc.IComponentLink;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 
-public class JTextAreaBinding extends DefaultComponentBinding<String> {
+public class JTextAreaBinding extends ComponentBindingAdapter<String> {
 
 	private final JTextArea textArea;
 	private final boolean readOnly;

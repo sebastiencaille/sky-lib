@@ -102,6 +102,8 @@ public class StepsTable extends JPanel {
 
 			}
 		};
+
+		// Setup columns
 		final ContributionTableColumnModel<StepsTableModel.Column> columnModel = new ContributionTableColumnModel<>(
 				stepsJTable);
 		columnModel.install();
@@ -118,9 +120,11 @@ public class StepsTable extends JPanel {
 
 		Arrays.stream(Column.values()).forEach(c -> stepsJTable.getColumn(c).setCellRenderer(new StepsCellRenderer()));
 
+		// BreakPoints
 		stepsJTable.getColumn(Column.BREAKPOINT).setCellRenderer(new StepStatusRenderer());
 		stepsJTable.getColumn(Column.BREAKPOINT).setCellEditor(new StepStatusEditor());
 
+		// Refresh table when step is updated
 		final IBindingController selectedStepCtrl = model.getSelectedStep()
 				.bind(selection(stepsJTable, stepsTableModel));
 		model.getSelectedStep().addListener(l -> {

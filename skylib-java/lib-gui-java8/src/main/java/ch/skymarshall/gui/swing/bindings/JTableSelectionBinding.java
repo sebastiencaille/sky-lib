@@ -17,11 +17,12 @@ package ch.skymarshall.gui.swing.bindings;
 
 import javax.swing.JTable;
 
+import ch.skymarshall.gui.mvc.ComponentBindingAdapter;
 import ch.skymarshall.gui.mvc.IComponentLink;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 import ch.skymarshall.gui.swing.model.ListModelTableModel;
 
-public class JTableSelectionBinding<T> extends DefaultComponentBinding<T> {
+public class JTableSelectionBinding<T> extends ComponentBindingAdapter<T> {
 
 	private final JTable table;
 	private final ListModelTableModel<T, ?> model;

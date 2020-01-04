@@ -17,10 +17,11 @@ package ch.skymarshall.gui.swing.bindings;
 
 import javax.swing.JList;
 
+import ch.skymarshall.gui.mvc.ComponentBindingAdapter;
 import ch.skymarshall.gui.mvc.IComponentLink;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 
-public class JListSelectionBinding<T> extends DefaultComponentBinding<T> {
+public class JListSelectionBinding<T> extends ComponentBindingAdapter<T> {
 
 	private final JList<T> list;
 	private IComponentLink<T> link;

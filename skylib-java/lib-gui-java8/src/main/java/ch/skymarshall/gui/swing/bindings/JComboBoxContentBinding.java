@@ -20,9 +20,10 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 
+import ch.skymarshall.gui.mvc.ComponentBindingAdapter;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 
-public class JComboBoxContentBinding<T> extends DefaultComponentBinding<List<T>> {
+public class JComboBoxContentBinding<T> extends ComponentBindingAdapter<List<T>> {
 
 	private final JComboBox<T> box;
 

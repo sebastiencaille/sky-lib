@@ -19,6 +19,7 @@ import java.awt.Component;
 
 import javax.swing.JTabbedPane;
 
+import ch.skymarshall.gui.mvc.ComponentBindingAdapter;
 import ch.skymarshall.gui.mvc.IComponentLink;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 
@@ -30,7 +31,7 @@ import ch.skymarshall.gui.mvc.properties.AbstractProperty;
  *
  * @param <T>
  */
-public class JTabbedPaneSelectionBinding<T> extends DefaultComponentBinding<T> {
+public class JTabbedPaneSelectionBinding<T> extends ComponentBindingAdapter<T> {
 
 	private final JTabbedPane pane;
 	private final Class<T> clazz;

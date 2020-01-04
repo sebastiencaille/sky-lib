@@ -28,7 +28,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		BREAKPOINT, STEP, ACTOR, ACTION, SELECTOR, PARAM0, TO_VAR
 	}
 
-	private HumanReadableVisitor summaryVisitor;
+	private HumanReadableVisitor humanReadableVisitor;
 
 	public StepsTableModel(final ObjectProperty<TestCase> testCaseProperty, final ListModel<TestStep> steps,
 			final TestRemoteControl testControl) {
@@ -36,7 +36,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		this.testCaseProperty = testCaseProperty;
 		this.steps = steps;
 		this.testControl = testControl;
-		testCaseProperty.listen(tc -> summaryVisitor = new HumanReadableVisitor(tc, false));
+		testCaseProperty.listen(tc -> humanReadableVisitor = new HumanReadableVisitor(tc, false));
 	}
 
 	@Override
@@ -118,8 +118,8 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 	@Override
 	public Object getValueAt(final int row, final int column) {
 		final TestStep step = getObjectAtRow(row);
-		if (row % 2 == 0 && columnOf(column) != Column.BREAKPOINT && columnOf(column) != Column.STEP) {
-			return summaryVisitor.process(step);
+		if (row % 2 == 0 && columnOf(column) == StepsTableModel.Column.ACTOR) {
+			return humanReadableVisitor.process(step);
 		}
 		return getValueAtColumn(step, columnOf(column));
 	}

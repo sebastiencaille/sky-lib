@@ -23,7 +23,7 @@ import executors.JunitTestExecutor;
 public class AbstractGuiTest {
 
 	private static final File RESOURCE_FOLDER = new File("./src/main/resources");
-	protected LocalTCWriter tcWriter;
+	protected LocalTCWriterRole tcWriter;
 	private TCGuiPilot pilot;
 
 	@org.junit.Before
@@ -51,7 +51,7 @@ public class AbstractGuiTest {
 		SwingUtilities.invokeAndWait(() -> controller.run());
 		pilot = new TCGuiPilot(controller.getGui());
 
-		tcWriter = new LocalTCWriter(pilot);
+		tcWriter = new LocalTCWriterRole(pilot);
 	}
 
 	@After

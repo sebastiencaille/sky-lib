@@ -19,10 +19,11 @@ import javax.swing.JSpinner;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import ch.skymarshall.gui.mvc.ComponentBindingAdapter;
 import ch.skymarshall.gui.mvc.IComponentLink;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 
-public class JSpinnerBinding<T extends Number> extends DefaultComponentBinding<T> {
+public class JSpinnerBinding<T extends Number> extends ComponentBindingAdapter<T> {
 
 	private final JSpinner spinner;
 

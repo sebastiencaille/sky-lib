@@ -23,10 +23,11 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JTextField;
 
+import ch.skymarshall.gui.mvc.ComponentBindingAdapter;
 import ch.skymarshall.gui.mvc.IComponentLink;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 
-public class JTextFieldBinding extends DefaultComponentBinding<String> {
+public class JTextFieldBinding extends ComponentBindingAdapter<String> {
 
 	private final JTextField textField;
 	private boolean withFocusLoss = true;

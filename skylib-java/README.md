@@ -1,5 +1,7 @@
 **MVC POC**
 
+**Model Properties**
+
 Key points
 * The Model is made of Properties (basically, a typed value + listeners)
 * The dynamic properties of all the visual components are always driven by the properties
@@ -9,7 +11,7 @@ Key points
 
 Complete example [[Screenshot](../screenshots/MVC_Full_TC.png)][[Model](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/controller/impl/ControllerExampleModel.java)] [[View](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/controller/impl/ControllerExampleView.java)] 
 
-Example
+Basic Examples  
 (to display a boolean property as a checkbox and as a String)
 ```java
 protected final BooleanProperty booleanProperty = ...;
@@ -20,11 +22,15 @@ booleanProperty.bind(selected(booleanEditor));
 JTextField stringEditor = new JTextField();
 booleanProperty.bind(booleanToString()).bind(value(stringEditor));
 ```
-Working with selections
+Working with selections  
 
-_When staticListSelection is updated_
+The lists/tables/... selection is bound to a property. This property is updated when the selection has changed, and the selection is updated when the property is updated.  
+When the content of the list/table/... is updated, the selection lost.  
+The solution is to detach the selection binding before updating the component, and re-attach it after the component has changed   
+
+_When staticListSelection is updated_:
 1. the dynamicListSelectionProperty is detached from dynamicListEditor, thanks to detachOnUpdateOf
-1. the dynamicListEditor is updated
+1. the dynamicListEditor is updated and the selection is lost 
 1. the dynamicListSelectionProperty is re-attached
 1. the dynamicListSelectionProperty is re-applied to restore the selection
 
@@ -34,15 +40,14 @@ staticListSelection.bind(new DynamicListContentConverter()).bind(values(dynamicL
 
 final ObjectProperty<String> dynamicListSelectionProperty = model.getDynamicListObjectProperty();
 dynamicListSelectionProperty.bind(selection(dynamicListEditor)).addDependency(detachOnUpdateOf(staticListSelection));
-
 ```
 
 **List Model**
 
 Key points
-* The list is always sorted (for fast search)
-* The list can be filtered
-* The list can be stacked (1 parent, many children) 
+* the list is always sorted (for fast search)
+* the list can be filtered
+* the list can be stacked (1 parent, many children) 
 * startEditingValue(editedValue) must be called before editing the value (editedValue only containing the values required for sorting)
 * stopEditingValue() must be called to validate the edition and propagate the change
 
@@ -73,7 +78,7 @@ model.reverseOrder.bind(selected(... some checkbox ...));
 model.reverseOrder.bind(listDynamicView.reverseOrder());
 
 ListModel<TestObject> model = new RootListModel<>(ListViews.sorted(NATURAL_ORDER));
-ListModel<TestObject> filteredModel = new ChildListModel<>(model, view);
+ListModel<TestObject> filteredModel = new ChildListModel<>(model, listDynamicView);
 ```
 
 **Table Model**

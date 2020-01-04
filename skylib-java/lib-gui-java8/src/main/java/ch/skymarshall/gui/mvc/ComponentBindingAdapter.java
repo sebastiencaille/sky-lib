@@ -13,10 +13,8 @@
  *  IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  ******************************************************************************/
-package ch.skymarshall.gui.swing.bindings;
+package ch.skymarshall.gui.mvc;
 
-import ch.skymarshall.gui.mvc.IComponentBinding;
-import ch.skymarshall.gui.mvc.IComponentLink;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 
 /**
@@ -27,7 +25,7 @@ import ch.skymarshall.gui.mvc.properties.AbstractProperty;
  *
  * @param <T>
  */
-public abstract class DefaultComponentBinding<T> implements IComponentBinding<T> {
+public class ComponentBindingAdapter<T> implements IComponentBinding<T> {
 
 	@Override
 	public void addComponentValueChangeListener(final IComponentLink<T> converter) {

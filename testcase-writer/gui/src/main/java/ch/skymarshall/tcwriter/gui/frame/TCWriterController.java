@@ -53,9 +53,8 @@ public class TCWriterController extends GuiController {
 
 	public void run() {
 		getPropertySupport().attachAll();
-		newTestCase();
 		gui.run();
-
+		newTestCase();
 	}
 
 	public TCWriterModel getModel() {

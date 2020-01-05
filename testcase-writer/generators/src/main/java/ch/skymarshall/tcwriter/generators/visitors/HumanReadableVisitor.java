@@ -2,8 +2,13 @@ package ch.skymarshall.tcwriter.generators.visitors;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import com.google.common.annotations.VisibleForTesting;
 
 import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
@@ -42,7 +47,7 @@ public class HumanReadableVisitor {
 		switch (parameterValue.getValueFactory().getNature()) {
 		case REFERENCE:
 			final TestReference ref = (TestReference) parameterValue.getValueFactory();
-			return "[" + ref.toDescription().getStepSummary() + ": " + parameterValue.getSimpleValue() + "]";
+			return "[" + ref.toDescription().getHumanReadable() + ": " + parameterValue.getSimpleValue() + "]";
 		case SIMPLE_TYPE:
 			final String type = parameterValue.getValueFactory().getType();
 			if (Boolean.class.getName().equals(type) || Boolean.TYPE.getName().equals(type)) {
@@ -85,7 +90,25 @@ public class HumanReadableVisitor {
 		if (description == null) {
 			return null;
 		}
-		return String.format(description.getStepSummary(), (list != null) ? list.toArray() : null);
+
+		return format(description.getHumanReadable(), list);
+	}
+
+	@VisibleForTesting
+	public static String format(final String humanReadable, final List<String> list) {
+		final List<String> emptiedBlocks = new ArrayList<>();
+		final Pattern blockPattern = Pattern.compile("//.*%s.*//");
+		final Matcher blockMatcher = blockPattern.matcher(humanReadable);
+		while (blockMatcher.find()) {
+			emptiedBlocks.add(blockMatcher.group().replace("%s", ""));
+		}
+		String formatted = String.format(humanReadable, (list != null) ? list.toArray() : null);
+		// remove empty blocks
+		for (final String emptyBlock : emptiedBlocks) {
+			formatted = formatted.replaceAll(emptyBlock, "");
+		}
+		formatted = formatted.replace("//", "").replace("/\\/", "//");
+		return formatted;
 	}
 
 	public String processAllSteps() {

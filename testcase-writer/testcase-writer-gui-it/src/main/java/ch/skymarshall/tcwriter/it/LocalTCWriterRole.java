@@ -32,13 +32,16 @@ public class LocalTCWriterRole implements TestWriterRole {
 		});
 	}
 
+	/**
+	 * Checks the text has it would be displayed
+	 */
 	@Override
 	public void checkHumanReadable(final StepSelector selector, final String humanReadable) {
 		selector.select(guiPilot);
 		guiPilot.withSwing(() -> {
 			final JTable stepsTable = guiPilot.getComponent("StepsTable", JTable.class);
-			final Object value = stepsTable.getModel().getValueAt(stepsTable.getSelectedRow(),
-					StepsTableModel.Column.ACTOR.ordinal());
+			final Object value = ((StepsTableModel) stepsTable.getModel())
+					.getHumanReadable(stepsTable.getSelectedRow());
 			assertEquals(humanReadable, value.toString());
 		});
 	}

@@ -4,29 +4,29 @@ public class TestObjectDescription {
 
 	public static final TestObjectDescription NOT_SET = new TestObjectDescription("N/A", "N/A");
 	private final String description;
-	private final String stepSummary;
+	private final String humanReadable;
 
 	protected TestObjectDescription() {
 		description = null;
-		stepSummary = null;
+		humanReadable = null;
 	}
 
-	public TestObjectDescription(final String description, final String stepSummary) {
+	public TestObjectDescription(final String description, final String humanReadable) {
 		this.description = description;
-		this.stepSummary = stepSummary;
+		this.humanReadable = humanReadable;
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
-	public String getStepSummary() {
-		return stepSummary;
+	public String getHumanReadable() {
+		return humanReadable;
 	}
 
 	@Override
 	public String toString() {
-		return description + "/" + stepSummary;
+		return description + "/" + humanReadable;
 	}
 
 }

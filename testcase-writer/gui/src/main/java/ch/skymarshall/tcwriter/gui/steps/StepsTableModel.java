@@ -20,21 +20,18 @@ import ch.skymarshall.tcwriter.gui.TestRemoteControl;
 
 public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableModel.Column> {
 
-	private final ListModel<TestStep> steps;
 	private final TestRemoteControl testControl;
 	private final ObjectProperty<TestCase> testCaseProperty;
+	private HumanReadableVisitor humanReadableVisitor;
 
 	public enum Column {
 		BREAKPOINT, STEP, ACTOR, ACTION, SELECTOR, PARAM0, TO_VAR
 	}
 
-	private HumanReadableVisitor humanReadableVisitor;
-
 	public StepsTableModel(final ObjectProperty<TestCase> testCaseProperty, final ListModel<TestStep> steps,
 			final TestRemoteControl testControl) {
 		super(steps, Column.class);
 		this.testCaseProperty = testCaseProperty;
-		this.steps = steps;
 		this.testControl = testControl;
 		testCaseProperty.listen(tc -> humanReadableVisitor = new HumanReadableVisitor(tc, false));
 	}
@@ -104,9 +101,6 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 
 	@Override
 	public boolean isCellEditable(final int rowIndex, final int columnIndex) {
-		if (rowIndex % 2 == 1) {
-			return false;
-		}
 		return columnOf(columnIndex) == Column.BREAKPOINT;
 	}
 
@@ -117,16 +111,12 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 
 	@Override
 	public Object getValueAt(final int row, final int column) {
-		final TestStep step = getObjectAtRow(row);
-		if (row % 2 == 0 && columnOf(column) == StepsTableModel.Column.ACTOR) {
-			return humanReadableVisitor.process(step);
-		}
-		return getValueAtColumn(step, columnOf(column));
+		return getValueAtColumn(getObjectAtRow(row), columnOf(column));
 	}
 
 	@Override
 	public TestStep getObjectAtRow(final int row) {
-		return super.getObjectAtRow(row / 2);
+		return super.getObjectAtRow(row);
 	}
 
 	@Override
@@ -159,13 +149,15 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 	}
 
 	public void stepExecutionUpdated(final int first, final int last) {
-		final int min = (first - 1) * 2;
-		final int max = Math.max((last - 1) * 2 + 1, steps.getSize() * 2 + 1);
-		fireTableChanged(new TableModelEvent(this, min, max, Column.BREAKPOINT.ordinal()));
+		fireTableChanged(new TableModelEvent(this, first, last, Column.BREAKPOINT.ordinal()));
 	}
 
 	@Override
 	public int getRowCount() {
-		return getBaseModel().getSize() * 2;
+		return getBaseModel().getSize();
+	}
+
+	public String getHumanReadable(final int row) {
+		return humanReadableVisitor.process(testCaseProperty.getValue().getSteps().get(row));
 	}
 }

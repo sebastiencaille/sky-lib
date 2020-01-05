@@ -111,13 +111,13 @@ public class TestParameterValueEditorPanel extends JPanel {
 				new TestParameterValueTableModel(visibleParameters));
 		final ObjectProperty<Map<String, TestParameterValue>> complexValues = editedParamValue.child("ComplexParams",
 				TestParameterValue::getComplexTypeValues, TestParameterValue::updateComplexTypeValues);
-		complexValues.bind(toListModel(tc.getValue(), editedParamValue)).bind(values(allEditedParameters));
+		complexValues.bind(toListModel(tc, editedParamValue)).bind(values(allEditedParameters));
 		tpModel.getTestApi().listen(api -> {
 			if (api == null) {
 				return;
 			}
-			final Set<String> missingMandatoryNames = api.getMandatoryParameters().stream().map(TestApiParameter::getName)
-					.collect(Collectors.toSet());
+			final Set<String> missingMandatoryNames = api.getMandatoryParameters().stream()
+					.map(TestApiParameter::getName).collect(Collectors.toSet());
 			final Set<String> missingOptionalNames = api.getOptionalParameters().stream().map(TestApiParameter::getName)
 					.collect(Collectors.toSet());
 			for (final ParameterValue p : allEditedParameters) {
@@ -194,7 +194,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 	}
 
 	public static final IConverter<Map<String, TestParameterValue>, Collection<ParameterValue>> toListModel(
-			final TestCase tc, final ObjectProperty<TestParameterValue> propertyValue) {
+			final ObjectProperty<TestCase> tc, final ObjectProperty<TestParameterValue> propertyValue) {
 
 		return new IConverter<Map<String, TestParameterValue>, Collection<ParameterValue>>() {
 
@@ -203,8 +203,8 @@ public class TestParameterValueEditorPanel extends JPanel {
 					final Map<String, TestParameterValue> values) {
 				final List<ParameterValue> paramList = new ArrayList<>();
 				for (final Entry<String, TestParameterValue> value : values.entrySet()) {
-					paramList.add(
-							asParam(tc, value.getKey(), value.getValue(), propertyValue.getValue().getValueFactory()));
+					paramList.add(asParam(tc.getValue(), value.getKey(), value.getValue(),
+							propertyValue.getValue().getValueFactory()));
 				}
 				return paramList;
 			}

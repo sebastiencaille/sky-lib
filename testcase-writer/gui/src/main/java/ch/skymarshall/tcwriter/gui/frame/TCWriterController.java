@@ -90,6 +90,10 @@ public class TCWriterController extends GuiController {
 		model.getTc().setValue(this, newTestCase);
 	}
 
+	/**
+	 * If no step selected, add to last step. If step selected, add after selected
+	 * step
+	 */
 	public void addStep() {
 		final TestCase testCase = model.getTc().getValue();
 
@@ -105,6 +109,7 @@ public class TCWriterController extends GuiController {
 		testCase.getSteps().add(addAfter.getOrdinal(), newStep);
 		testCase.fixOrdinals();
 		model.getTc().forceChanged(this);
+		model.getSelectedStep().setValue(this, newStep);
 	}
 
 	public void removeStep() {

@@ -68,11 +68,10 @@ public class StepsTable extends JPanel {
 				if (toDraw == null) {
 					throw new IllegalStateException("No renderer pane");
 				}
-				for (int i = 0; i < getRowCount(); i += 2) {
+				for (int i = 0; i < getRowCount(); i++) {
 					final Rectangle toPaintHR = getCellRect(i, 2, true);
 					toPaintHR.width = getColumnModel().getTotalColumnWidth();
-					final Rectangle toPaint = getCellRect(i, 2, true);
-					toPaint.width = getColumnModel().getTotalColumnWidth();
+					toPaintHR.height = toPaintHR.height / 2;
 
 					g.setColor(getBackground());
 					g.setClip(toPaintHR.x, toPaintHR.y, toPaintHR.width - toPaintHR.x, toPaintHR.height);
@@ -86,39 +85,37 @@ public class StepsTable extends JPanel {
 						public Component getTableCellRendererComponent(final JTable table, final Object value,
 								final boolean isSelected, final boolean hasFocus, final int row, final int column) {
 							super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+							setText(stepsTableModel.getHumanReadable(row));
 							setFont(getFont().deriveFont(Font.BOLD));
 							return this;
 						}
 
 					};
 					final Component component = prepareRenderer(renderer, i, 2);
-					component.setSize(toPaint.getSize());
-					component.setPreferredSize(toPaint.getSize());
+					component.setSize(toPaintHR.getSize());
 					g.setColor(getGridColor().brighter());
 
-					toDraw.paintComponent(g, component, this, toPaint.x, toPaint.y, toPaint.width, toPaint.height,
-							true);
+					toDraw.paintComponent(g, component, this, toPaintHR.x, toPaintHR.y, toPaintHR.width,
+							toPaintHR.height, true);
 				}
 
 			}
 		};
 
+		stepsJTable.setRowHeight(stepsJTable.getRowHeight() * 2);
+
 		// Setup columns
 		final ContributionTableColumnModel<StepsTableModel.Column> columnModel = new ContributionTableColumnModel<>(
 				stepsJTable);
 		columnModel.install();
+		Arrays.stream(Column.values()).forEach(c -> stepsJTable.getColumn(c).setCellRenderer(new StepsCellRenderer()));
 		columnModel.configureColumn(
 				ContributionTableColumn.fixedColumn(Column.BREAKPOINT, 20, new DefaultTableCellRenderer()));
 		columnModel
 				.configureColumn(ContributionTableColumn.fixedColumn(Column.STEP, 20, new DefaultTableCellRenderer()));
-		columnModel.configureColumn(
-				ContributionTableColumn.fixedColumn(Column.ACTOR, 120, new DefaultTableCellRenderer()));
-		columnModel
-				.configureColumn(ContributionTableColumn.gapColumn(Column.PARAM0, 100, new DefaultTableCellRenderer()));
-		columnModel.configureColumn(
-				ContributionTableColumn.fixedColumn(Column.TO_VAR, 250, new DefaultTableCellRenderer()));
-
-		Arrays.stream(Column.values()).forEach(c -> stepsJTable.getColumn(c).setCellRenderer(new StepsCellRenderer()));
+		columnModel.configureColumn(ContributionTableColumn.fixedColumn(Column.ACTOR, 120, new StepsCellRenderer()));
+		columnModel.configureColumn(ContributionTableColumn.gapColumn(Column.PARAM0, 100, new StepsCellRenderer()));
+		columnModel.configureColumn(ContributionTableColumn.fixedColumn(Column.TO_VAR, 250, new StepsCellRenderer()));
 
 		// BreakPoints
 		stepsJTable.getColumn(Column.BREAKPOINT).setCellRenderer(new StepStatusRenderer());
@@ -144,10 +141,6 @@ public class StepsTable extends JPanel {
 			steps.setValues(tc.getSteps());
 		});
 
-	}
-
-	static boolean displayBreakPoint(final int row) {
-		return row % 2 == 0;
 	}
 
 }

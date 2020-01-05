@@ -1,5 +1,7 @@
 package ch.skymarshall.tcwriter.it;
 
+import ch.skymarshall.tcwriter.annotations.TCApi;
+
 public class StepEdition {
 
 	private String actor;
@@ -14,6 +16,7 @@ public class StepEdition {
 		return actor;
 	}
 
+	@TCApi(description = "Actor", humanReadable = "Actor")
 	public void setActor(final String actor) {
 		this.actor = actor;
 	}
@@ -22,6 +25,7 @@ public class StepEdition {
 		return action;
 	}
 
+	@TCApi(description = "Action", humanReadable = "Action")
 	public void setAction(final String action) {
 		this.action = action;
 	}
@@ -30,6 +34,7 @@ public class StepEdition {
 		return selector;
 	}
 
+	@TCApi(description = "Selector", humanReadable = "Selector")
 	public void setSelector(final String selector) {
 		this.selector = selector;
 	}
@@ -38,6 +43,7 @@ public class StepEdition {
 		return parameter;
 	}
 
+	@TCApi(description = "Parameter", humanReadable = "Parameter")
 	public void setParameter(final String parameter) {
 		this.parameter = parameter;
 	}

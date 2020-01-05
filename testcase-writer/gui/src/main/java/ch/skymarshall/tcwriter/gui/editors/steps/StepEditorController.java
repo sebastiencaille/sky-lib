@@ -13,6 +13,7 @@ import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.tcwriter.generators.model.ModelUtils;
 import ch.skymarshall.tcwriter.generators.model.ModelUtils.ActionUtils;
 import ch.skymarshall.tcwriter.generators.model.NamedObject;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
@@ -42,6 +43,7 @@ public class StepEditorController extends GuiController {
 		final TestModel tm = guiModel.getTestModel();
 		final ObjectProperty<TestStep> testStep = guiModel.getSelectedStep();
 
+		model.getPossibleActors().setValue(this, sorted(tm.getActors().values()));
 		model.getActor().listen(actor -> {
 			if (actor != null) {
 				model.getPossibleActions().setValue(this, sorted(actor.getRole().getActions()));
@@ -59,33 +61,13 @@ public class StepEditorController extends GuiController {
 			}
 			model.getActor().setValue(this, step.getActor());
 			model.getAction().setValue(this, step.getAction());
+			updateActionParameters(tm, testStep);
 		});
-		model.getAction().listen(action -> {
-			final TestStep step = testStep.getValue();
-			if (step == null || action == null) {
-				return;
-			}
-			final ActionUtils actionUtils = ModelUtils.actionUtils(tm, action);
-			actionUtils.synchronizeStep(testStep.getValue());
-			if (actionUtils.hasSelector()) {
-				final TestParameterValue selectorValue = step.getParametersValue(actionUtils.selectorIndex());
-				model.getPossibleSelectors().setValue(this, sorted(tm.getParameterFactories(actionUtils.selector())));
-				model.getSelector().setValue(this, selectorValue.getValueFactory());
-				model.getSelectorValue().setValue(this, selectorValue.derivate(selectorValue.getValueFactory()));
-			} else {
-				emptySelectors();
-			}
-			if (actionUtils.hasActionParameter(0)) {
-				final TestParameterValue param0Value = step.getParametersValue(actionUtils.parameterIndex(0));
-				model.getPossibleActionParameters().setValue(this,
-						sorted(tm.getParameterFactories(actionUtils.parameter(0))));
-				model.getActionParameter().setValue(this, param0Value.getValueFactory());
-				model.getActionParameterValue().setValue(this, param0Value.derivate(param0Value.getValueFactory()));
-			} else {
-				emptyParam0();
-			}
-		});
+		model.getAction().listen(action -> updateActionParameters(tm, testStep));
 
+		model.getSelectorValue().setValue(this, TestParameterValue.NO_VALUE);
+		model.getActionParameterValue().setValue(this, TestParameterValue.NO_VALUE);
+		// set temporary cloned object, so it's possible to edit and cancel edition
 		model.getSelector()
 				.listen(selector -> model.getSelectorValue().setValue(this,
 						model.getSelectorValue().getValue().derivate(selector)))
@@ -96,10 +78,41 @@ public class StepEditorController extends GuiController {
 						model.getActionParameterValue().getValue().derivate(param)))
 				.addDependency(detachOnUpdateOf(testStep));
 
-		model.getPossibleActors().setValue(this, sorted(tm.getActors().values()));
+	}
 
-		model.getSelectorValue().setValue(this, TestParameterValue.NO_VALUE);
-		model.getActionParameterValue().setValue(this, TestParameterValue.NO_VALUE);
+	/**
+	 * Called when changing the step (because possibly same action but step has
+	 * different action parameters) or when changing the action (because same step
+	 * but action has different parameters)
+	 *
+	 * @param tm
+	 * @param testStep
+	 */
+	private void updateActionParameters(final TestModel tm, final ObjectProperty<TestStep> testStep) {
+		final TestStep step = testStep.getValue();
+		final TestAction action = model.getAction().getValue();
+		if (step == null || action == null) {
+			return;
+		}
+		final ActionUtils actionUtils = ModelUtils.actionUtils(tm, action);
+		actionUtils.synchronizeStep(testStep.getValue());
+		if (actionUtils.hasSelector()) {
+			final TestParameterValue selectorValue = step.getParametersValue(actionUtils.selectorIndex());
+			model.getPossibleSelectors().setValue(this, sorted(tm.getParameterFactories(actionUtils.selector())));
+			model.getSelector().setValue(this, selectorValue.getValueFactory());
+			model.getSelectorValue().setValue(this, selectorValue.derivate(selectorValue.getValueFactory()));
+		} else {
+			emptySelectors();
+		}
+		if (actionUtils.hasActionParameter(0)) {
+			final TestParameterValue param0Value = step.getParametersValue(actionUtils.parameterIndex(0));
+			model.getPossibleActionParameters().setValue(this,
+					sorted(tm.getParameterFactories(actionUtils.parameter(0))));
+			model.getActionParameter().setValue(this, param0Value.getValueFactory());
+			model.getActionParameterValue().setValue(this, param0Value.derivate(param0Value.getValueFactory()));
+		} else {
+			emptyParam0();
+		}
 	}
 
 	private void emptyParam0() {

@@ -1,5 +1,8 @@
 package ch.skymarshall.tcwriter.it;
 
+import static ch.skymarshall.tcwriter.it.ParameterSelector.selector;
+import static ch.skymarshall.tcwriter.it.ParameterValue.oneValue;
+import static ch.skymarshall.tcwriter.it.StepSelector.addStep;
 import static ch.skymarshall.tcwriter.it.StepSelector.currentStep;
 import static ch.skymarshall.tcwriter.it.StepSelector.selectStep;
 
@@ -16,15 +19,28 @@ public class StepEditionTest extends AbstractGuiTest {
 		edition1.setSelector("Append a step to the test");
 		tcWriter.updateStep(selectStep(1), edition1);
 
-		tcWriter.checkHumanReadable(currentStep(), "As test writer, I add a step to the test case");
-
 		final StepEdition edition2 = new StepEdition();
 		edition2.setActor("Test writer");
 		edition2.setAction("Check the Human Readable text");
 		edition2.setSelector("Selected step");
-		tcWriter.updateStep(StepSelector.addStep(), edition2);
+		tcWriter.updateStep(addStep(), edition2);
 
+		final StepEdition edition3 = new StepEdition();
+		edition3.setActor("Test writer");
+		edition3.setAction("Select a step");
+		edition3.setSelector("Step at index");
+		tcWriter.editStep(addStep(), edition3);
+		tcWriter.updateParameter(selector(), oneValue("index:1"));
+
+		tcWriter.checkStep(selectStep(1), edition1);
+		tcWriter.checkHumanReadable(currentStep(), "As test writer, I add a step to the test case");
+
+		tcWriter.checkStep(selectStep(2), edition2);
 		tcWriter.checkHumanReadable(currentStep(), "As test writer, I check that the human readable text is \"\"");
+
+		tcWriter.checkStep(selectStep(3), edition3);
+		tcWriter.checkHumanReadable(currentStep(), "As test writer, I select the step 1");
+
 	}
 
 }

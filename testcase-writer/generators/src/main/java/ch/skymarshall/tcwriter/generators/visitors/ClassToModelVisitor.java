@@ -142,7 +142,7 @@ public class ClassToModelVisitor {
 			final TCApi apiMethodAnnotation = apiMethodParam.getAnnotation(TCApi.class);
 			final Type apiMethodParamType = apiMethodParam.getType();
 			final TestApiParameter testObjectParameter = new TestApiParameter(paramKey(apiMethod, i),
-					apiMethod.getName(), apiMethodParamType.getTypeName());
+					apiMethod.getName() + '-' + i, apiMethodParamType.getTypeName());
 			if (apiMethodAnnotation != null) {
 				model.addDescription(testObjectParameter, descriptionFrom(apiMethodAnnotation));
 			}

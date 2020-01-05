@@ -80,6 +80,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 		final JPanel topPanel = new JPanel();
 		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.PAGE_AXIS));
 
+		// Simple raw value
 		final JRadioButton useRawValue = new JRadioButton("Raw value");
 		topPanel.add(useRawValue);
 
@@ -87,6 +88,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 		tpModel.getSimpleValue().bind(value(simpleValueEditor));
 		topPanel.add(simpleValueEditor);
 
+		// Value references
 		final JRadioButton useReference = new JRadioButton("Reference: ");
 		topPanel.add(useReference);
 		final JComboBox<ObjectTextView<TestReference>> referenceEditor = new JComboBox<>();
@@ -99,52 +101,59 @@ public class TestParameterValueEditorPanel extends JPanel {
 				.addDependency(detachOnUpdateOf(tpModel.getReferences()));
 		topPanel.add(referenceEditor);
 
+		// Complex type
 		final JRadioButton useComplexType = new JRadioButton("Test Api: ");
 		topPanel.add(useComplexType);
 		add(topPanel, BorderLayout.NORTH);
 
-		// List of mandatory / optional parameters
 		final ListModel<ParameterValue> allEditedParameters = new RootListModel<>(ListViews.<ParameterValue>sorted());
 		final ListModel<ParameterValue> visibleParameters = new ChildListModel<>(allEditedParameters,
 				ListViews.filtered(p -> p.visible));
-		final TestParameterValueTable view = new TestParameterValueTable(
+		final TestParameterValueTable valueTable = new TestParameterValueTable(
 				new TestParameterValueTableModel(visibleParameters));
+		valueTable.setName(tpModel.getPrefix() + "-valueTable");
 		final ObjectProperty<Map<String, TestParameterValue>> complexValues = editedParamValue.child("ComplexParams",
 				TestParameterValue::getComplexTypeValues, TestParameterValue::updateComplexTypeValues);
 		complexValues.bind(toListModel(tc, editedParamValue)).bind(values(allEditedParameters));
+		// Update the values table when changing the api. Don't trigger when loading
+		// the step, because we may not have the right value during the loading
 		tpModel.getTestApi().listen(api -> {
 			if (api == null) {
 				return;
 			}
-			final Set<String> missingMandatoryNames = api.getMandatoryParameters().stream()
-					.map(TestApiParameter::getName).collect(Collectors.toSet());
-			final Set<String> missingOptionalNames = api.getOptionalParameters().stream().map(TestApiParameter::getName)
+			// Update existing values, track missing ones
+			final Set<String> missingMandatoryIds = api.getMandatoryParameters().stream().map(TestApiParameter::getId)
+					.collect(Collectors.toSet());
+			final Set<String> missingOptionalIds = api.getOptionalParameters().stream().map(TestApiParameter::getId)
 					.collect(Collectors.toSet());
 			for (final ParameterValue p : allEditedParameters) {
-				missingMandatoryNames.remove(p.name);
-				missingOptionalNames.remove(p.name);
+				missingMandatoryIds.remove(p.id);
+				missingOptionalIds.remove(p.id);
 				allEditedParameters.editValue(p, e -> {
 					e.visible = false;
 					updateParam(e, api);
 				});
 			}
+			// Add missing values in parameter value and in table
 			final List<ParameterValue> newValues = new ArrayList<>();
-			for (final String name : missingMandatoryNames) {
-				final TestParameterValue value = new TestParameterValue(name, name,
-						api.getMandatoryParameter(name).asSimpleParameter(), null);
+			for (final String mandatoryId : missingMandatoryIds) {
+				final TestParameterValue value = new TestParameterValue(mandatoryId,
+						tc.getValue().descriptionOf(mandatoryId).getDescription(),
+						api.getMandatoryParameter(mandatoryId).asSimpleParameter(), null);
 				editedParamValue.getValue().addComplexTypeValue(value);
-				newValues.add(asParam(tc.getObjectValue(), name, value, api));
+				newValues.add(asParam(tc.getObjectValue(), mandatoryId, value, api));
 			}
-			for (final String name : missingOptionalNames) {
-				final TestParameterValue value = new TestParameterValue(name, name,
-						api.getOptionalParameter(name).asSimpleParameter(), null);
+			for (final String optionalId : missingOptionalIds) {
+				final TestParameterValue value = new TestParameterValue(optionalId,
+						tc.getValue().descriptionOf(optionalId).getDescription(),
+						api.getOptionalParameter(optionalId).asSimpleParameter(), null);
 				editedParamValue.getValue().addComplexTypeValue(value);
-				newValues.add(asParam(tc.getObjectValue(), name, value, api));
+				newValues.add(asParam(tc.getObjectValue(), optionalId, value, api));
 			}
 			allEditedParameters.addValues(newValues);
-		});
+		}).addDependency(detachOnUpdateOf(tcWriterModel.getSelectedStep()));
 
-		add(new JScrollPane(view), BorderLayout.CENTER);
+		add(new JScrollPane(valueTable), BorderLayout.CENTER);
 
 		final ButtonGroup group = new ButtonGroup();
 		group.add(useRawValue);
@@ -154,6 +163,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 		tpModel.getValueNature().bind(group(group, ParameterNature.REFERENCE, useReference, ParameterNature.SIMPLE_TYPE,
 				useRawValue, ParameterNature.TEST_API, useComplexType));
 
+		// Update the reference when updating the parameter value
 		editedParamValue.listen(value -> {
 			tpModel.getValueNature().setValue(this, value.getValueFactory().getNature());
 			if (value.getValueFactory().getNature() == ParameterNature.REFERENCE) {
@@ -163,6 +173,9 @@ public class TestParameterValueEditorPanel extends JPanel {
 			}
 		});
 
+		// Edit the parameter value when changing the reference. Don't trigger when
+		// loading the step, because we may not have the right value during the
+		// loading
 		tpModel.getSelectedReference().listen(ref -> {
 			if (tpModel.getEditedParameterValue().getObjectValue().getValueFactory()
 					.getNature() == ParameterNature.REFERENCE) {
@@ -170,6 +183,10 @@ public class TestParameterValueEditorPanel extends JPanel {
 			}
 		}).addDependency(detachOnUpdateOf(editedParamValue));
 
+		// Edit the parameter value when changing the nature of the factory. Don't
+		// trigger when
+		// loading the step, because we may not have the right value during the
+		// loading
 		tpModel.getValueNature().listen(v -> {
 			final TestParameterValue paramValue = editedParamValue.getValue();
 
@@ -217,7 +234,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 					if (!pv.enabled && !pv.mandatory) {
 						continue;
 					}
-					result.put(pv.name, new TestParameterValue(pv.name, TestParameterFactory.NO_FACTORY, pv.value));
+					result.put(pv.id, new TestParameterValue(pv.id, TestParameterFactory.NO_FACTORY, pv.value));
 				}
 				return result;
 			}
@@ -227,8 +244,8 @@ public class TestParameterValueEditorPanel extends JPanel {
 	}
 
 	private static void updateParam(final ParameterValue paramValue, final TestParameterFactory factory) {
-		final boolean mandatory = factory.hasMandatoryParameter(paramValue.name);
-		final boolean optional = factory.hasOptionalParameter(paramValue.name);
+		final boolean mandatory = factory.hasMandatoryParameter(paramValue.id);
+		final boolean optional = factory.hasOptionalParameter(paramValue.id);
 		paramValue.update(mandatory, mandatory || optional);
 	}
 

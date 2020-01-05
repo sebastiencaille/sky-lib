@@ -15,10 +15,12 @@ public class TestParameterModel {
 	private final ListProperty<TestReference> references;
 	private final ObjectProperty<TestParameterFactory> testApi;
 	private final ObjectProperty<TestParameterValue> editedParameterValue;
+	private final String prefix;
 
 	public TestParameterModel(final String prefix, final TCWriterController guiController,
 			final ObjectProperty<TestParameterFactory> testApi,
 			final ObjectProperty<TestParameterValue> editedParameterValue) {
+		this.prefix = prefix;
 		this.editedParameterValue = editedParameterValue;
 		this.testApi = testApi;
 		final IScopedSupport propertyChangeSupport = guiController.getPropertySupport();
@@ -29,6 +31,10 @@ public class TestParameterModel {
 
 		references = new ListProperty<>(prefix + "-references", propertyChangeSupport);
 
+	}
+
+	public String getPrefix() {
+		return prefix;
 	}
 
 	public ObjectProperty<TestParameterFactory.ParameterNature> getValueNature() {

@@ -104,14 +104,14 @@ public class TestParameterValue extends IdObject {
 		return complexTypeValues;
 	}
 
-	public void updateComplexTypeValues(final Map<String, TestParameterValue> values) {
-		for (final Entry<String, TestParameterValue> param : values.entrySet()) {
+	public void updateComplexTypeValues(final Map<String, TestParameterValue> idsToValues) {
+		for (final Entry<String, TestParameterValue> param : idsToValues.entrySet()) {
 			complexTypeValues.get(param.getKey()).setSimpleValue(param.getValue().getSimpleValue());
 		}
 	}
 
 	public void addComplexTypeValue(final TestParameterValue value) {
-		complexTypeValues.put(value.getApiParameterId(), value);
+		complexTypeValues.put(value.getId(), value);
 	}
 
 	public String getSimpleValue() {

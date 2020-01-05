@@ -59,26 +59,26 @@ public class TestParameterFactory extends NamedObject {
 		return mandatoryParameters.get(index);
 	}
 
-	public TestApiParameter getMandatoryParameter(final String name) {
-		return mandatoryParameters.stream().filter(p -> p.getName().equals(name)).findFirst()
-				.orElseThrow(() -> new IllegalStateException("Can't find mandatory parameter " + name));
+	public TestApiParameter getMandatoryParameter(final String id) {
+		return mandatoryParameters.stream().filter(p -> p.getId().equals(id)).findFirst()
+				.orElseThrow(() -> new IllegalStateException("Can't find mandatory parameter " + id));
 	}
 
-	public boolean hasMandatoryParameter(final String name) {
-		return mandatoryParameters.stream().filter(p -> p.getName().equals(name)).findFirst().isPresent();
+	public boolean hasMandatoryParameter(final String id) {
+		return mandatoryParameters.stream().anyMatch(p -> p.getId().equals(id));
 	}
 
 	public List<TestApiParameter> getMandatoryParameters() {
 		return mandatoryParameters;
 	}
 
-	public TestApiParameter getOptionalParameter(final String name) {
-		return optionalParameters.stream().filter(p -> p.getName().equals(name)).findFirst()
-				.orElseThrow(() -> new IllegalStateException("Can't find optional parameter " + name));
+	public TestApiParameter getOptionalParameter(final String id) {
+		return optionalParameters.stream().filter(p -> p.getId().equals(id)).findFirst()
+				.orElseThrow(() -> new IllegalStateException("Can't find optional parameter " + id));
 	}
 
-	public boolean hasOptionalParameter(final String name) {
-		return optionalParameters.stream().filter(p -> p.getName().equals(name)).findFirst().isPresent();
+	public boolean hasOptionalParameter(final String id) {
+		return optionalParameters.stream().anyMatch(p -> p.getId().equals(id));
 	}
 
 	public List<TestApiParameter> getOptionalParameters() {

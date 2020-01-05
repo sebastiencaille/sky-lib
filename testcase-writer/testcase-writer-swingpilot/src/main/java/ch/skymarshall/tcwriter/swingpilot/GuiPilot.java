@@ -1,5 +1,8 @@
 package ch.skymarshall.tcwriter.swingpilot;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Window;
@@ -135,6 +138,21 @@ public class GuiPilot {
 		return clazz.cast(cachedComponent);
 	}
 
+	public void checkSelectedInList(final String componentName, final String value) {
+		if (value == null) {
+			return;
+		}
+		final JList<?> list = checkEditable(getComponent(componentName, JList.class));
+		assertTrue("A row must be selected", list.getSelectedIndex() >= 0);
+		assertEquals(value, list.getModel().getElementAt(list.getSelectedIndex()).toString());
+	}
+
+	/**
+	 * Select a value in a list, according to it's String representation
+	 *
+	 * @param componentName
+	 * @param value
+	 */
 	public void selectInList(final String componentName, final String value) {
 		if (value == null) {
 			return;
@@ -147,6 +165,14 @@ public class GuiPilot {
 		}
 		Assert.assertTrue("Value [" + componentName + ":" + value + "] must have been selected",
 				list.getSelectedIndex() >= 0);
+	}
+
+	public void checkTextValue(final String componentName, final String value) {
+		if (value == null) {
+			return;
+		}
+		final JTextField textField = checkEditable(getComponent(componentName, JTextField.class));
+		assertEquals(value, textField.getText());
 	}
 
 	public void setTextValue(final String componentName, final String value) {
@@ -169,7 +195,7 @@ public class GuiPilot {
 		try {
 			SwingUtilities.invokeAndWait(runnable);
 		} catch (final InvocationTargetException e) {
-			Assert.assertNull("Unexpected error while executing selection", e.getCause());
+			throw new Error(e.getCause());
 		} catch (final InterruptedException e) {
 			Assert.assertNull("Unexpected error while executing selection", e);
 		}

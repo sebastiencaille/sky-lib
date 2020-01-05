@@ -12,7 +12,7 @@ public class TestParameterValueTableModel
 	}
 
 	static class ParameterValue implements Comparable<ParameterValue> {
-		final String name;
+		final String id;
 		final TestParameterFactory factory;
 		final String description;
 		boolean mandatory;
@@ -22,7 +22,7 @@ public class TestParameterValueTableModel
 
 		ParameterValue(final String id, final TestParameterFactory parameterFactory, final String description,
 				final String value, final boolean enabled) {
-			this.name = id;
+			this.id = id;
 			this.factory = parameterFactory;
 			this.enabled = enabled;
 			this.description = description;

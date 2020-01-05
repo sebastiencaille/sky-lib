@@ -30,7 +30,7 @@ public class StepSelector {
 		return guiPilot.getComponent(TCGuiPilot.STEPS_TABLE, JTable.class);
 	}
 
-	@TCApi(description = "Step at index", humanReadable = "select the step %i")
+	@TCApi(description = "Step at index", humanReadable = "select the step %s")
 	public static StepSelector selectStep(@TCApi(description = "index", humanReadable = "at row") final int ordinal) {
 		return new StepSelector(guiPilot -> {
 			final int tableIndex = ordinal - 1;

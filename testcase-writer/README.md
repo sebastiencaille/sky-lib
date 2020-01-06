@@ -16,7 +16,7 @@ Example
 ![Test Case](../screenshots/TC_Writer.png)
 
 
-_Api_ [[Code](examples/src/main/java/ch/skymarshall/tcwriter/examples/api/interfaces)]
+_APIs_ [[Code](examples/src/main/java/ch/skymarshall/tcwriter/examples/api/interfaces)]  
 The Actions are methods defined by the Role classes
 ```java
 @TCRole(description = "Customer")
@@ -75,7 +75,7 @@ customer.buy(onInternet(), coffeeMachine());
 deliveryGuy.deliverItem(); // Another actor of the system
 customer.checkPackage(deliveredItem(), coffeeMachine());
 ```
-Based on the annotations attached to the Roles/Actions/Selectors/Parameters, we can actually read
+Based on the annotations attached to the Roles/Actions/Selectors/Parameters, we can deduce
 
 Actor | Action | Selector | Parameter
 ----- | ------ | --------- | ---------
@@ -107,13 +107,13 @@ This way of structuring the api should be suitable for
 
 * storing the test in a "data description" format (JSON, XML, ...) [[Model](examples/src/main/resources/models/test-model.json)]  [[TestCase](examples/src/main/resources/testCase/testCase.json)]
 
-* A demonstration GUI is available here [[Code](examples/src/main/java/ch/skymarshall/tcwriter/examples/gui/ExampleTCEditor.java)]
+A demonstration GUI is available here [[Code](examples/src/main/java/ch/skymarshall/tcwriter/examples/gui/ExampleTCEditor.java)]
   * The test model is automatically built by introspecting the java classes.
-  * The testcase is recorded from the execution of [[SimpleTest](examples/src/main/java/ch/skymarshall/tcwriter/examples/SimpleTest.java)] (thanks to AspectJ)
+  * The test case is recorded from the execution of [[SimpleTest](examples/src/main/java/ch/skymarshall/tcwriter/examples/SimpleTest.java)] (thanks to AspectJ)
 
 ![TC writer full](../screenshots/TC_Writer_full.png)
 
-_Testing the test case writer with business oriented tests_
-They are some test cases to test the GUI...  (work in progress)
+_Testing the test case writer with business oriented tests_  
+They are some test cases to test the GUI... (work in progress)  
 [[Test infrastructure](gui-it/src/main/java/ch/skymarshall/tcwriter/it/)] [[TestCase](gui-it/src/test/java/ch/skymarshall/tcwriter/it/)]
 

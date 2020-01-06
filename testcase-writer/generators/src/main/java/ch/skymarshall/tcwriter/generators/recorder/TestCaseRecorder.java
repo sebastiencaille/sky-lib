@@ -150,7 +150,7 @@ public class TestCaseRecorder implements ITestCaseRecorder {
 			apiArg = null;
 		}
 		testParameterValue.addComplexTypeValue(
-				createFactoryParameterValue(testParameterFactory.getOptionalParameter(callName), apiArg));
+				createFactoryParameterValue(testParameterFactory.getOptionalParameterByName(callName), apiArg));
 	}
 
 	@Override

@@ -4,14 +4,20 @@ import ch.skymarshall.gui.model.ListModel;
 import ch.skymarshall.gui.swing.model.ListModelTableModel;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
 
-public class TestParameterValueTableModel
-		extends ListModelTableModel<TestParameterValueTableModel.ParameterValue, TestParameterValueTableModel.Columns> {
+public class TestParameterValueTableModel extends
+		ListModelTableModel<TestParameterValueTableModel.ParameterValueEntry, TestParameterValueTableModel.Columns> {
 
 	public enum Columns {
 		MANDATORY, ENABLED, DESCRIPTION, VALUE
 	}
 
-	static class ParameterValue implements Comparable<ParameterValue> {
+	/**
+	 * Parameter edition
+	 *
+	 * @author scaille
+	 *
+	 */
+	static class ParameterValueEntry implements Comparable<ParameterValueEntry> {
 		final String id;
 		final TestParameterFactory factory;
 		final String description;
@@ -20,7 +26,7 @@ public class TestParameterValueTableModel
 		String value;
 		boolean visible;
 
-		ParameterValue(final String id, final TestParameterFactory parameterFactory, final String description,
+		ParameterValueEntry(final String id, final TestParameterFactory parameterFactory, final String description,
 				final String value, final boolean enabled) {
 			this.id = id;
 			this.factory = parameterFactory;
@@ -35,7 +41,7 @@ public class TestParameterValueTableModel
 		}
 
 		@Override
-		public int compareTo(final ParameterValue other) {
+		public int compareTo(final ParameterValueEntry other) {
 			if (mandatory && !other.mandatory) {
 				return -1;
 			} else if (!mandatory && other.mandatory) {
@@ -43,9 +49,14 @@ public class TestParameterValueTableModel
 			}
 			return description.compareTo(other.description);
 		}
+
+		@Override
+		public String toString() {
+			return id + ":[" + enabled + ", " + value;
+		}
 	}
 
-	public TestParameterValueTableModel(final ListModel<ParameterValue> paramList) {
+	public TestParameterValueTableModel(final ListModel<ParameterValueEntry> paramList) {
 		super(paramList, Columns.class);
 	}
 
@@ -56,7 +67,7 @@ public class TestParameterValueTableModel
 	}
 
 	@Override
-	protected Object getValueAtColumn(final ParameterValue object, final Columns column) {
+	protected Object getValueAtColumn(final ParameterValueEntry object, final Columns column) {
 		switch (column) {
 		case MANDATORY:
 			return object.mandatory;
@@ -75,7 +86,7 @@ public class TestParameterValueTableModel
 	}
 
 	@Override
-	protected void setValueAtColumn(final ParameterValue object, final Columns column, final Object value) {
+	protected void setValueAtColumn(final ParameterValueEntry object, final Columns column, final Object value) {
 		switch (column) {
 		case ENABLED:
 			object.enabled = (Boolean) value;

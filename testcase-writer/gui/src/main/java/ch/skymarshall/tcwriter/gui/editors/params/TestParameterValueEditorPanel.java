@@ -43,7 +43,7 @@ import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory.Par
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestReference;
-import ch.skymarshall.tcwriter.gui.editors.params.TestParameterValueTableModel.ParameterValue;
+import ch.skymarshall.tcwriter.gui.editors.params.TestParameterValueTableModel.ParameterValueEntry;
 import ch.skymarshall.tcwriter.gui.frame.TCWriterController;
 import ch.skymarshall.tcwriter.gui.frame.TCWriterModel;
 
@@ -106,8 +106,8 @@ public class TestParameterValueEditorPanel extends JPanel {
 		topPanel.add(useComplexType);
 		add(topPanel, BorderLayout.NORTH);
 
-		final ListModel<ParameterValue> allEditedParameters = new RootListModel<>(ListViews.<ParameterValue>sorted());
-		final ListModel<ParameterValue> visibleParameters = new ChildListModel<>(allEditedParameters,
+		final ListModel<ParameterValueEntry> allEditedParameters = new RootListModel<>(ListViews.<ParameterValueEntry>sorted());
+		final ListModel<ParameterValueEntry> visibleParameters = new ChildListModel<>(allEditedParameters,
 				ListViews.filtered(p -> p.visible));
 		final TestParameterValueTable valueTable = new TestParameterValueTable(
 				new TestParameterValueTableModel(visibleParameters));
@@ -126,7 +126,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 					.collect(Collectors.toSet());
 			final Set<String> missingOptionalIds = api.getOptionalParameters().stream().map(TestApiParameter::getId)
 					.collect(Collectors.toSet());
-			for (final ParameterValue p : allEditedParameters) {
+			for (final ParameterValueEntry p : allEditedParameters) {
 				missingMandatoryIds.remove(p.id);
 				missingOptionalIds.remove(p.id);
 				allEditedParameters.editValue(p, e -> {
@@ -135,18 +135,18 @@ public class TestParameterValueEditorPanel extends JPanel {
 				});
 			}
 			// Add missing values in parameter value and in table
-			final List<ParameterValue> newValues = new ArrayList<>();
+			final List<ParameterValueEntry> newValues = new ArrayList<>();
 			for (final String mandatoryId : missingMandatoryIds) {
 				final TestParameterValue value = new TestParameterValue(mandatoryId,
 						tc.getValue().descriptionOf(mandatoryId).getDescription(),
-						api.getMandatoryParameter(mandatoryId).asSimpleParameter(), null);
+						api.getMandatoryParameterById(mandatoryId).asSimpleParameter(), null);
 				editedParamValue.getValue().addComplexTypeValue(value);
 				newValues.add(asParam(tc.getObjectValue(), mandatoryId, value, api));
 			}
 			for (final String optionalId : missingOptionalIds) {
 				final TestParameterValue value = new TestParameterValue(optionalId,
 						tc.getValue().descriptionOf(optionalId).getDescription(),
-						api.getOptionalParameter(optionalId).asSimpleParameter(), null);
+						api.getOptionalParameterById(optionalId).asSimpleParameter(), null);
 				editedParamValue.getValue().addComplexTypeValue(value);
 				newValues.add(asParam(tc.getObjectValue(), optionalId, value, api));
 			}
@@ -210,15 +210,15 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 	}
 
-	public static final IConverter<Map<String, TestParameterValue>, Collection<ParameterValue>> toListModel(
+	public static final IConverter<Map<String, TestParameterValue>, Collection<ParameterValueEntry>> toListModel(
 			final ObjectProperty<TestCase> tc, final ObjectProperty<TestParameterValue> propertyValue) {
 
-		return new IConverter<Map<String, TestParameterValue>, Collection<ParameterValue>>() {
+		return new IConverter<Map<String, TestParameterValue>, Collection<ParameterValueEntry>>() {
 
 			@Override
-			public List<ParameterValue> convertPropertyValueToComponentValue(
+			public List<ParameterValueEntry> convertPropertyValueToComponentValue(
 					final Map<String, TestParameterValue> values) {
-				final List<ParameterValue> paramList = new ArrayList<>();
+				final List<ParameterValueEntry> paramList = new ArrayList<>();
 				for (final Entry<String, TestParameterValue> value : values.entrySet()) {
 					paramList.add(asParam(tc.getValue(), value.getKey(), value.getValue(),
 							propertyValue.getValue().getValueFactory()));
@@ -228,13 +228,13 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 			@Override
 			public Map<String, TestParameterValue> convertComponentValueToPropertyValue(
-					final Collection<ParameterValue> componentValue) {
+					final Collection<ParameterValueEntry> componentValue) {
 				final Map<String, TestParameterValue> result = new HashMap<>();
-				for (final ParameterValue pv : componentValue) {
+				for (final ParameterValueEntry pv : componentValue) {
 					if (!pv.enabled && !pv.mandatory) {
 						continue;
 					}
-					result.put(pv.id, new TestParameterValue(pv.id, TestParameterFactory.NO_FACTORY, pv.value));
+					result.put(pv.id, new TestParameterValue(pv.id, pv.factory, pv.value));
 				}
 				return result;
 			}
@@ -243,19 +243,19 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 	}
 
-	private static void updateParam(final ParameterValue paramValue, final TestParameterFactory factory) {
-		final boolean mandatory = factory.hasMandatoryParameter(paramValue.id);
-		final boolean optional = factory.hasOptionalParameter(paramValue.id);
+	private static void updateParam(final ParameterValueEntry paramValue, final TestParameterFactory complexTypeFactory) {
+		final boolean mandatory = complexTypeFactory.hasMandatoryParameter(paramValue.id);
+		final boolean optional = complexTypeFactory.hasOptionalParameter(paramValue.id);
 		paramValue.update(mandatory, mandatory || optional);
 	}
 
-	private static ParameterValue asParam(final TestCase tc, final String complexParameterId,
-			final TestParameterValue complexValue, final TestParameterFactory factory) {
+	private static ParameterValueEntry asParam(final TestCase tc, final String complexParameterId,
+			final TestParameterValue complexValue, final TestParameterFactory complexTypeFactory) {
 		final String simpleValue = complexValue.getSimpleValue();
-		final ParameterValue paramValue = new ParameterValue(complexParameterId, complexValue.getValueFactory(),
+		final ParameterValueEntry paramValue = new ParameterValueEntry(complexParameterId, complexValue.getValueFactory(),
 				tc.descriptionOf(complexParameterId).getDescription(), simpleValue,
 				!Strings.isNullOrEmpty(simpleValue));
-		updateParam(paramValue, factory);
+		updateParam(paramValue, complexTypeFactory);
 		return paramValue;
 	}
 

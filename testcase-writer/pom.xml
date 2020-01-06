@@ -19,7 +19,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.source-target.version>1.8</java.source-target.version>
 		<tcwriter.version>0.0.1-SNAPSHOT</tcwriter.version>
-		<aspectj.version>1.9.4</aspectj.version>
+		<aspectj.version>1.9.2</aspectj.version>
 	</properties>
 
 	<build>
@@ -152,7 +152,7 @@
 		<module>generators</module>
 		<module>gui</module>
 		<module>examples</module>
-		<module>testcase-writer-swingpilot</module>
-		<module>testcase-writer-gui-it</module>
+		<module>swingpilot</module>
+		<module>gui-it</module>
 	</modules>
 </project>

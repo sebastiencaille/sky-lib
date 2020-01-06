@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Objects;
 
 import ch.skymarshall.tcwriter.generators.model.ExportReference;
 import ch.skymarshall.tcwriter.generators.model.IdObject;
@@ -40,16 +41,16 @@ public class TestParameterValue extends IdObject {
 
 	public TestParameterValue(final TestApiParameter apiParameter, final TestParameterFactory valueFactory,
 			final String simpleValue) {
-		this(UUID.randomUUID().toString(), apiParameter.getId(), valueFactory, simpleValue);
+		this(apiParameter.getId(), apiParameter.getId(), valueFactory, simpleValue);
 	}
 
 	public TestParameterValue(final String apiParameterId, final TestParameterFactory valueFactory,
 			final String simpleValue) {
-		this(UUID.randomUUID().toString(), apiParameterId, valueFactory, simpleValue);
+		this(apiParameterId, apiParameterId, valueFactory, simpleValue);
 	}
 
 	public TestParameterValue(final String apiParameterId, final TestParameterFactory valueFactory) {
-		this(UUID.randomUUID().toString(), apiParameterId, valueFactory, null);
+		this(apiParameterId, apiParameterId, valueFactory, null);
 	}
 
 	/**
@@ -64,6 +65,16 @@ public class TestParameterValue extends IdObject {
 		this.apiParameterId = apiParameterId;
 		setValueFactory(valueFactory);
 		this.simpleValue = simpleValue;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (!super.equals(obj)) {
+			return false;
+		}
+		final TestParameterValue other = (TestParameterValue) obj;
+		return Objects.equal(simpleValue, other.simpleValue) && complexTypeValues.equals(other.complexTypeValues)
+				&& apiParameterId.equals(other.apiParameterId);
 	}
 
 	public String getApiParameterId() {

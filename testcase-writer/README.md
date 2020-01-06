@@ -112,4 +112,8 @@ This way of structuring the api should be suitable for
   * The testcase is recorded from the execution of [[SimpleTest](examples/src/main/java/ch/skymarshall/tcwriter/examples/SimpleTest.java)] (thanks to AspectJ)
 
 ![TC writer full](../screenshots/TC_Writer_full.png)
-  
+
+_Testing the test case writer with business oriented tests_
+They are some test cases to test the GUI...  (work in progress)
+[[Test infrastructure](gui-it/src/main/java/ch/skymarshall/tcwriter/it/)] [[TestCase](gui-it/src/test/java/ch/skymarshall/tcwriter/it/)]
+

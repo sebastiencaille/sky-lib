@@ -34,7 +34,7 @@ public class CustomerTestRole extends Assert {
 	...
 }
 ```
-The Selectors and Parameters are created though factory methods, which have business-oriented namings.  
+The Selectors and Parameters are created though factory methods, which have a business-oriented naming.  
 The method parameters can be used to provide mandatory information.  
 The setters of the type returned by the factory can be used to provide optional information.
 ```
@@ -83,7 +83,7 @@ A customer     | Buy an item                              | On internet| A coffe
 A delivery guy | Deliver an item                  | ||
 A customer     | Check that the delivered item is || A coffee machine |
 
-This way of structuring the api should be suitable for
+This formalism should be suitable for
 * writing test cases using some GUI based application. That is, the application may allow the user to select (based on the data types)
   1. The Actor ("A customer")
   1. Based on the selected Actor's Role, the Action "Buy an item"

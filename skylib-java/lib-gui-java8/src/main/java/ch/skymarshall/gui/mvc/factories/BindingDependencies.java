@@ -1,8 +1,13 @@
-package ch.skymarshall.gui.mvc;
+package ch.skymarshall.gui.mvc.factories;
 
 import ch.skymarshall.gui.model.ListEvent;
 import ch.skymarshall.gui.model.ListModel;
 import ch.skymarshall.gui.model.ListModelAdapter;
+import ch.skymarshall.gui.mvc.IBindingChainDependency;
+import ch.skymarshall.gui.mvc.IBindingController;
+import ch.skymarshall.gui.mvc.IPropertyEventListener;
+import ch.skymarshall.gui.mvc.PropertyEvent;
+import ch.skymarshall.gui.mvc.ScreenBuildingReport;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 
 public interface BindingDependencies {

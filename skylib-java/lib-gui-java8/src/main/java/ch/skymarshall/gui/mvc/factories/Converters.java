@@ -13,7 +13,7 @@
  *  IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  ******************************************************************************/
-package ch.skymarshall.gui.mvc.converters;
+package ch.skymarshall.gui.mvc.factories;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +27,10 @@ import java.util.stream.Collectors;
 
 import ch.skymarshall.gui.Utils;
 import ch.skymarshall.gui.mvc.GuiErrors.GuiError;
+import ch.skymarshall.gui.mvc.converters.ConversionException;
+import ch.skymarshall.gui.mvc.converters.GuiErrorToStringConverter;
+import ch.skymarshall.gui.mvc.converters.IConverter;
+import ch.skymarshall.gui.mvc.converters.WriteOnlyException;
 import ch.skymarshall.util.FunctionWithException;
 import ch.skymarshall.util.Lambda;
 

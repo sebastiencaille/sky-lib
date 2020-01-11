@@ -1,6 +1,6 @@
 package ch.skymarshall.tcwriter.gui.frame;
 
-import static ch.skymarshall.gui.mvc.IComponentBinding.wo;
+import static ch.skymarshall.gui.mvc.factories.ComponentBindings.wo;
 
 import java.awt.BorderLayout;
 import java.net.URL;

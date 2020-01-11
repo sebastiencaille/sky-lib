@@ -28,7 +28,7 @@ import ch.skymarshall.gui.mvc.GuiModel;
 import ch.skymarshall.gui.mvc.IComponentBinding;
 import ch.skymarshall.gui.mvc.IComponentLink;
 import ch.skymarshall.gui.mvc.converters.ConversionException;
-import ch.skymarshall.gui.mvc.converters.Converters;
+import ch.skymarshall.gui.mvc.factories.Converters;
 import ch.skymarshall.gui.mvc.persisters.FieldAccess;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 import ch.skymarshall.gui.mvc.properties.Configuration;

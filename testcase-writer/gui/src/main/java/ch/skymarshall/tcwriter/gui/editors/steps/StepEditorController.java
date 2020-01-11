@@ -1,6 +1,6 @@
 package ch.skymarshall.tcwriter.gui.editors.steps;
 
-import static ch.skymarshall.gui.mvc.BindingDependencies.detachOnUpdateOf;
+import static ch.skymarshall.gui.mvc.factories.BindingDependencies.detachOnUpdateOf;
 
 import java.util.ArrayList;
 import java.util.Collection;

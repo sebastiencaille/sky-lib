@@ -11,7 +11,7 @@ import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
 import ch.skymarshall.gui.mvc.GuiController;
 import ch.skymarshall.gui.mvc.GuiModel;
 import ch.skymarshall.gui.mvc.IBindingController;
-import ch.skymarshall.gui.mvc.converters.Converters;
+import ch.skymarshall.gui.mvc.factories.Converters;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.gui.swing.bindings.SwingBindings;
 

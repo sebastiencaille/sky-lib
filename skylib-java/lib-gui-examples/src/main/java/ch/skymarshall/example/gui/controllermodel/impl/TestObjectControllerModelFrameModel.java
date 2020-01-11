@@ -20,7 +20,7 @@ import ch.skymarshall.example.gui.TestObjectGuiModel;
 import ch.skymarshall.example.gui.controllermodel.impl.TestObjectControllerModelFrameModel.Columns;
 import ch.skymarshall.gui.model.ListModel;
 import ch.skymarshall.gui.mvc.GuiController;
-import ch.skymarshall.gui.mvc.converters.Converters;
+import ch.skymarshall.gui.mvc.factories.Converters;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 import ch.skymarshall.gui.swing.model.ObjectControllerTableModel;
 

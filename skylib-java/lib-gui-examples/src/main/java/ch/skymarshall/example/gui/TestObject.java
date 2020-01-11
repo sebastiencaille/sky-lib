@@ -16,8 +16,8 @@
 package ch.skymarshall.example.gui;
 
 import ch.skymarshall.gui.GuiObject;
-import ch.skymarshall.gui.mvc.converters.Converters;
 import ch.skymarshall.gui.mvc.converters.IConverter;
+import ch.skymarshall.gui.mvc.factories.Converters;
 
 @GuiObject
 public class TestObject {

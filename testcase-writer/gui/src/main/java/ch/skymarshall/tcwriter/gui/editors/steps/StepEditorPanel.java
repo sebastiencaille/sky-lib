@@ -1,7 +1,7 @@
 package ch.skymarshall.tcwriter.gui.editors.steps;
 
-import static ch.skymarshall.gui.mvc.BindingDependencies.detachOnUpdateOf;
-import static ch.skymarshall.gui.mvc.converters.Converters.listConverter;
+import static ch.skymarshall.gui.mvc.factories.BindingDependencies.detachOnUpdateOf;
+import static ch.skymarshall.gui.mvc.factories.Converters.listConverter;
 import static ch.skymarshall.gui.swing.bindings.SwingBindings.selection;
 import static ch.skymarshall.gui.swing.bindings.SwingBindings.values;
 
@@ -14,8 +14,8 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import ch.skymarshall.gui.mvc.converters.Converters;
 import ch.skymarshall.gui.mvc.converters.IConverter;
+import ch.skymarshall.gui.mvc.factories.Converters;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.gui.swing.bindings.ObjectTextView;
 import ch.skymarshall.gui.swing.bindings.SwingBindings;

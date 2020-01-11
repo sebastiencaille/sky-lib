@@ -1,9 +1,9 @@
 package ch.skymarshall.tcwriter.gui.editors.params;
 
 import static ch.skymarshall.gui.model.ListModelBindings.values;
-import static ch.skymarshall.gui.mvc.BindingDependencies.detachOnUpdateOf;
-import static ch.skymarshall.gui.mvc.converters.Converters.filter;
-import static ch.skymarshall.gui.mvc.converters.Converters.listConverter;
+import static ch.skymarshall.gui.mvc.factories.BindingDependencies.detachOnUpdateOf;
+import static ch.skymarshall.gui.mvc.factories.Converters.filter;
+import static ch.skymarshall.gui.mvc.factories.Converters.listConverter;
 import static ch.skymarshall.gui.swing.bindings.SwingBindings.group;
 import static ch.skymarshall.gui.swing.bindings.SwingBindings.selection;
 import static ch.skymarshall.gui.swing.bindings.SwingBindings.value;

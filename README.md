@@ -14,7 +14,7 @@ The testing POC is also used to test a MVC POC (to simplify the code of complex 
 [[Details here](skylib-java)]
 ![Java lib](screenshots/java_lib.png)
 
-I made a C++ version of the MVC POC (not up-to-date, not complete. Mostly an attempt to try C++ once again) : [[Details here](skylib-c++)]
+There is a C++ version of the MVC POC (not up-to-date, not complete. Mostly another attempt to write some code in C++...) : [[Details here](skylib-c++)]
 
 ## License
 The code is under BSD 3 License.  

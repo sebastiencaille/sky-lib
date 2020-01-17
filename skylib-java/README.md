@@ -74,8 +74,8 @@ It's possible to control the filter using the MVC concept  [[Code](lib-gui-examp
 ```java
 final DynamicView listDynamicView = new DynamicView();
 BooleanProperty reverseOrder = ...
-model.reverseOrder.bind(selected(... some checkbox ...));
-model.reverseOrder.bind(listDynamicView.reverseOrder());
+model.reverseOrder.bind(selected(... some checkbox ...)); // the model is modified by the component
+model.reverseOrder.bind(listDynamicView.reverseOrder());  // the filter is modified by the model
 
 ListModel<TestObject> model = new RootListModel<>(ListViews.sorted(NATURAL_ORDER));
 ListModel<TestObject> filteredModel = new ChildListModel<>(model, listDynamicView);

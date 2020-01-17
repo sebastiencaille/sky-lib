@@ -1,17 +1,17 @@
-**MVC POC**
+# MVC POC
 
-**Model Properties**
+# Model Properties
 
-Key points
+**Key points**
 * The Model is made of Properties (basically, a typed value + listeners)
 * The dynamic properties of all the visual components are always driven by the properties
   (The visual components are never directly linked together)
 * The properties of the model and the visual components are bound through converters
 * The MVC model can be generated from the application model
 
-Complete example [[Screenshot](../screenshots/MVC_Full_TC.png)][[Model](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/controller/impl/ControllerExampleModel.java)] [[View](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/controller/impl/ControllerExampleView.java)] 
+Complete example: [[Screenshot](../screenshots/MVC_Full_TC.png)][[Model](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/controller/impl/ControllerExampleModel.java)] [[View](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/controller/impl/ControllerExampleView.java)] 
 
-Basic Examples  
+**Basic Examples**  
 (to display a boolean property as a checkbox and as a String)
 ```java
 protected final BooleanProperty booleanProperty = ...;
@@ -42,16 +42,16 @@ final ObjectProperty<String> dynamicListSelectionProperty = model.getDynamicList
 dynamicListSelectionProperty.bind(selection(dynamicListEditor)).addDependency(detachOnUpdateOf(staticListSelection));
 ```
 
-**List Model**
+# List Model
 
-Key points
+**Key points**
 * the list is always sorted (for fast search)
 * the list can be filtered
 * the list can be stacked (1 parent, many children) 
 * startEditingValue(editedValue) must be called before editing the value (editedValue only containing the values required for sorting)
 * stopEditingValue() must be called to validate the edition and propagate the change
 
-Example [[Code](lib-gui-java8/src/test/java/ch/skymarshall/gui/model/ListModelBasicTest.java)] [[Filters Example](lib-gui-java8/src/test/java/ch/skymarshall/gui/model/FilterObjectModelTest.java)]
+Example: [[Code](lib-gui-java8/src/test/java/ch/skymarshall/gui/model/ListModelBasicTest.java)] [[Filters Example](lib-gui-java8/src/test/java/ch/skymarshall/gui/model/FilterObjectModelTest.java)]
 
 ```java
 IListView<TestObject> VIEW = ListViews.sorted((o1, o2) -> o1.val - o2.val);
@@ -81,14 +81,14 @@ ListModel<TestObject> model = new RootListModel<>(ListViews.sorted(NATURAL_ORDER
 ListModel<TestObject> filteredModel = new ChildListModel<>(model, listDynamicView);
 ```
 
-**Table Model**
+# Table Model
 
-Key points
+**Key points**
 * The columns are defined using an Enum
 * The model is a ListModel
 * The column can have a fixed size or fill the size of the table
  
-Model Example [[Model](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/TestObjectTableModel.java)] [[View](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/model/impl/TableModelExampleView.java)]
+Model Example: [[Model](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/TestObjectTableModel.java)] [[View](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/model/impl/TableModelExampleView.java)]
 
 ```java
 public class TestObjectTableModel extends ListModelTableModel<TestObject, Columns> {
@@ -103,7 +103,8 @@ public class TestObjectTableModel extends ListModelTableModel<TestObject, Column
 		switch (column) {
 			case A_FIRST_VALUE: ...
 ```
-Tuning column size: each column is contributing to the table's column size
+**Tuning the table columns**
+The width of each column is computed according to the contribution of each column (fixed or % or filling  
 
 ```java
 final ContributionTableColumnModel<StepsTableModel.Column> columnModel = new ContributionTableColumnModel<>(table);
@@ -115,7 +116,7 @@ columnModel.configureColumn(ContributionTableColumn.gapColumn(...)); // Fills th
 Arrays.stream(Column.values()).forEach(c -> stepsTable.getColumn(c).setCellEditor(new Editor()));
 ```
 
-**Generic GUI to edit simple Objects**
+# Generic GUI to edit simple Objects
 
 The editor is made of
 * A widget specific view (a dialog, panel, ...)

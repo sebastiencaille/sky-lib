@@ -1,5 +1,5 @@
 
-**Business oriented testing POC**
+## Business oriented testing POC
 The key to write business oriented test cases is to have adequate test APIs.
 
 The idea is to have 
@@ -11,12 +11,12 @@ The idea is to have
   * the action's Parameters 
 * Factories to create business oriented Selectors and Parameters
 
-Example
+*Example*
 
 ![Test Case](../screenshots/TC_Writer.png)
 
-
-_APIs_ [[Code](examples/src/main/java/ch/skymarshall/tcwriter/examples/api/interfaces)]  
+# Actions/Selectors/...
+[[Code](examples/src/main/java/ch/skymarshall/tcwriter/examples/api/interfaces)] / [[Testcase Writer Tests](gui-it/src/main/java/ch/skymarshall/tcwriter/it)]  
 The Actions are methods defined by the Role classes
 ```java
 @TCRole(description = "Customer")
@@ -34,9 +34,9 @@ public class CustomerTestRole extends Assert {
 	...
 }
 ```
-The Selectors and Parameters are created though factory methods, which have a business-oriented naming.  
+The Selectors and Parameters are created using factory methods, which have a business-oriented naming.  
 The method parameters can be used to provide mandatory information.  
-The setters of the type returned by the factory can be used to provide optional information.
+The setters of the factory's return type can be used to provide optional information.
 ```
 @TCApi(description = "delivery mean", humanReadable = "", isSelector = true)
 public class PackageDeliverySelector {
@@ -65,17 +65,20 @@ public class TestItem {
 }
 ```
 
-_Java test case_ [[Code](examples/src/main/java/ch/skymarshall/tcwriter/examples/SimpleTest.java)]
-
-Each Actor is an instance of a specific Role
+# Dev test case 
+Each Actor is an instance of a specific Role.  
+by using the defined Roles/Actions/...
+[[Code](examples/src/main/java/ch/skymarshall/tcwriter/examples/SimpleTest.java)]  
 ```java
-CustomerTestRole customer = new CustomerTestRole(testedService); // Aka A customer
+CustomerTestRole customer = new CustomerTestRole(testedService); // A customer
 ...
 customer.buy(onInternet(), coffeeMachine());
 deliveryGuy.deliverItem(); // Another actor of the system
 customer.checkPackage(deliveredItem(), coffeeMachine());
 ```
-Based on the annotations attached to the Roles/Actions/Selectors/Parameters, we can deduce
+
+# Business expert test case
+We can transform the dev's test case into a more readable form by using the annotations attached to the Roles/Actions/Selectors/Parameters   
 
 Actor | Action | Selector | Parameter
 ----- | ------ | --------- | ---------
@@ -83,12 +86,13 @@ A customer     | Buy an item                              | On internet| A coffe
 A delivery guy | Deliver an item                  | ||
 A customer     | Check that the delivered item is || A coffee machine |
 
-This formalism should be suitable for
-* writing test cases using some GUI based application. That is, the application may allow the user to select (based on the data types)
-  1. The Actor ("A customer")
-  1. Based on the selected Actor's Role, the Action "Buy an item"
-  1. Based on the selected Action, the Selector "On internet"
-  1. Based on the selected Action, the parameter "A coffee machine"
+This formalism should allow
+* writing a test cases using a GUI based application. The application may allow the user to select (based on the actions' signature)
+  1. An Actor ("A customer")
+  1. Based on the selected Actor's Role, an Action ("Buy an item")
+  1. Based on the selected Action, a Selector ("On internet")
+  1. Based on the selected Action, a parameter ("A coffee machine")
+  
 * generating "readable" test reports (also based on the annotations attached to the Roles/Actions/Selectors/Parameters)
 
 ```
@@ -107,13 +111,14 @@ This formalism should be suitable for
 
 * storing the test in a "data description" format (JSON, XML, ...) [[Model](examples/src/main/resources/models/test-model.json)]  [[TestCase](examples/src/main/resources/testCase/testCase.json)]
 
+# Demonstration GUI
 A demonstration GUI is available here [[Code](examples/src/main/java/ch/skymarshall/tcwriter/examples/gui/ExampleTCEditor.java)]
   * The test model is automatically built by introspecting the java classes.
   * The test case is recorded from the execution of [[SimpleTest](examples/src/main/java/ch/skymarshall/tcwriter/examples/SimpleTest.java)] (thanks to AspectJ)
 
 ![TC writer full](../screenshots/TC_Writer_full.png)
 
-_Testing the test case writer with business oriented tests_  
-They are some test cases to test the GUI... (work in progress)  
+*Testing the test case writer with business oriented tests*  
+It's actually possible to test the GUI using this formalism... (work in progress)  
 [[Test infrastructure](gui-it/src/main/java/ch/skymarshall/tcwriter/it/)] [[TestCase](gui-it/src/test/java/ch/skymarshall/tcwriter/it/)]
 

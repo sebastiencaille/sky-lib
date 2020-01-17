@@ -22,13 +22,13 @@ booleanProperty.bind(selected(booleanEditor));
 JTextField stringEditor = new JTextField();
 booleanProperty.bind(booleanToString()).bind(value(stringEditor));
 ```
-Working with selections  
+**Working with selections**  
 
 The lists/tables/... selection is bound to a property. This property is updated when the selection has changed, and the selection is updated when the property is updated.  
 When the content of the list/table/... is updated, the selection lost.  
 The solution is to detach the selection binding before updating the component, and re-attach it after the component has changed   
 
-_When staticListSelection is updated_:
+In the example, when staticListSelection is updated:
 1. the dynamicListSelectionProperty is detached from dynamicListEditor, thanks to detachOnUpdateOf
 1. the dynamicListEditor is updated and the selection is lost 
 1. the dynamicListSelectionProperty is re-attached
@@ -49,7 +49,7 @@ dynamicListSelectionProperty.bind(selection(dynamicListEditor)).addDependency(de
 * the list can be filtered
 * the list can be stacked (1 parent, many children) 
 * startEditingValue(editedValue) must be called before editing the value (editedValue only containing the values required for sorting)
-* stopEditingValue() must be called to validate the edition and propagate the change
+* stopEditingValue() must be called to validate the edition, move the edit value at the right place, and propagate the change
 
 Example: [[Code](lib-gui-java8/src/test/java/ch/skymarshall/gui/model/ListModelBasicTest.java)] [[Filters Example](lib-gui-java8/src/test/java/ch/skymarshall/gui/model/FilterObjectModelTest.java)]
 
@@ -103,7 +103,7 @@ public class TestObjectTableModel extends ListModelTableModel<TestObject, Column
 		switch (column) {
 			case A_FIRST_VALUE: ...
 ```
-**Tuning the table columns**
+**Tuning the table columns**  
 The width of each column is computed according to the contribution of each column (fixed or % or filling  
 
 ```java
@@ -127,15 +127,15 @@ The editor is made of
 [[Example](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/tools/GenericEditorLauncher.java)]
 
 ```java
-		EditedObject obj = ... ;
-		final SwingGenericEditorDialog view = new SwingGenericEditorDialog(null, "Test",
-				Dialog.ModalityType.DOCUMENT_MODAL);
-		final GenericEditorAdapter<EditedObject, Component> editor = new GenericEditorAdapter<>(view,
-				new GenericEditorClassModel<>(EditedObject.class));
-					editor.apply();
-		SwingUtilities.invokeLater(() -> {
-			editor.load(obj);
-			view.setVisible(true);
-			System.out.println(obj);
-		});
+EditedObject obj = ... ;
+final SwingGenericEditorDialog view = new SwingGenericEditorDialog(null, "Test",
+		Dialog.ModalityType.DOCUMENT_MODAL);
+final GenericEditorAdapter<EditedObject, Component> editor = new GenericEditorAdapter<>(view,
+		new GenericEditorClassModel<>(EditedObject.class));
+			editor.apply();
+SwingUtilities.invokeLater(() -> {
+	editor.load(obj);
+	view.setVisible(true);
+	System.out.println(obj);
+});
 ```

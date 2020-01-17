@@ -16,8 +16,23 @@ The idea is to have
 ![Test Case](../screenshots/TC_Writer.png)
 
 # Actions/Selectors/...
+
+The Actions are methods defined by the Role classes  
+The idea is to combine the Actions, Selectors and Parameters to perform many different actions.    
+Some basic actions could be "Edit", "Check" and "Delete"  
+Some selectors could be "create", "find", "current"  
+Let's consider that we have the data data1 and data2  
+By combining the actions, we can 
+edit(create(i1), data2) | Creates an item i1 and fills it using data2 |
+edit(current(), data1) | Edits the selected item (i1) and fills it using data1 |
+edit(create(i2), data2) | Creates an item i2 and fills it using data2 |
+check(find(i1), data1) | Checks that the content of i1 has data1 |
+check(find(i2), data2) | Checks that the content of i2 has data2 |
+delete(find(i1)) | Deletes i1 |
+delete(find(i2))| Deletes i2 |
+
+
 [[Code](examples/src/main/java/ch/skymarshall/tcwriter/examples/api/interfaces)] / [[Testcase Writer Tests](gui-it/src/main/java/ch/skymarshall/tcwriter/it)]  
-The Actions are methods defined by the Role classes
 ```java
 @TCRole(description = "Customer")
 public class CustomerTestRole extends Assert {
@@ -34,7 +49,7 @@ public class CustomerTestRole extends Assert {
 	...
 }
 ```
-The Selectors and Parameters are created using factory methods, which have a business-oriented naming.  
+The Selectors and Parameters are created using factory methods, which have a business-oriented naming.   
 The method parameters can be used to provide mandatory information.  
 The setters of the factory's return type can be used to provide optional information.
 ```
@@ -67,7 +82,7 @@ public class TestItem {
 
 # Dev test case 
 Each Actor is an instance of a specific Role.  
-by using the defined Roles/Actions/...
+by using the defined Roles/Actions/..., we can write test cases like
 [[Code](examples/src/main/java/ch/skymarshall/tcwriter/examples/SimpleTest.java)]  
 ```java
 CustomerTestRole customer = new CustomerTestRole(testedService); // A customer
@@ -88,10 +103,10 @@ A customer     | Check that the delivered item is || A coffee machine |
 
 This formalism should allow
 * writing a test cases using a GUI based application. The application may allow the user to select (based on the actions' signature)
-  1. An Actor ("A customer")
-  1. Based on the selected Actor's Role, an Action ("Buy an item")
-  1. Based on the selected Action, a Selector ("On internet")
-  1. Based on the selected Action, a parameter ("A coffee machine")
+1. An Actor ("A customer")
+1. Based on the selected Actor's Role, an Action ("Buy an item")
+1. Based on the selected Action, a Selector ("On internet")
+1. Based on the selected Action, a parameter ("A coffee machine")
   
 * generating "readable" test reports (also based on the annotations attached to the Roles/Actions/Selectors/Parameters)
 
@@ -118,7 +133,7 @@ A demonstration GUI is available here [[Code](examples/src/main/java/ch/skymarsh
 
 ![TC writer full](../screenshots/TC_Writer_full.png)
 
-*Testing the test case writer with business oriented tests*  
+**Testing the test case writer with business oriented tests**  
 It's actually possible to test the GUI using this formalism... (work in progress)  
 [[Test infrastructure](gui-it/src/main/java/ch/skymarshall/tcwriter/it/)] [[TestCase](gui-it/src/test/java/ch/skymarshall/tcwriter/it/)]
 

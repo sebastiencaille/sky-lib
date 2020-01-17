@@ -19,7 +19,7 @@ The idea is to have
 
 The Actions are methods defined by the Role classes  
 The idea is to combine the Actions, Selectors and Parameters to perform many different actions.    
-Some basic actions could be "Edit", "Check" and "Delete"  
+Some basic actions could be "edit", "check" and "delete"  
 Some selectors could be "create", "find", "current"  
 Let's consider that we have the data data1 and data2  
 By combining the actions, we can

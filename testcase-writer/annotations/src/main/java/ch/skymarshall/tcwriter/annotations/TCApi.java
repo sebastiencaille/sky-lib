@@ -19,9 +19,12 @@ public @interface TCApi {
 	 * Human readable text, use %s to inline parameters.<br>
 	 * It is possible to use // ... %s ... // to skip a whole block of text if a
 	 * parameter is empty.<br>
-	 * Hello// %srld// would be formatted as "Hello world" if parameter is "wo", and
-	 * "Hello" is parameter is empty<br>
+	 * Eg, applying "wo" on Hello// %srld// would produce "Hello world". Applying ""
+	 * would produce "Hello"<br>
 	 * To skip this behavior, use "/\\/" instead of "//"
+	 *
+	 * Also, using | would split a text in two. Eg, applying "Hello|world" on "%s
+	 * %s" would produce "Hello world"
 	 *
 	 * @return
 	 */

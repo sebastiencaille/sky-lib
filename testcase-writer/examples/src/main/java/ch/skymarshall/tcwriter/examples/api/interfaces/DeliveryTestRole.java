@@ -13,7 +13,7 @@ public class DeliveryTestRole {
 		this.testedService = testedService;
 	}
 
-	@TCApi(description = "Deliver item", humanReadable = "deliver the item")
+	@TCApi(description = "Deliver item", humanReadable = "I deliver the item")
 	public void deliverItem() {
 		testedService.delivered();
 	}

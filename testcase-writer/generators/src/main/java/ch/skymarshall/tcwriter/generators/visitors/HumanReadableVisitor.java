@@ -1,5 +1,6 @@
 package ch.skymarshall.tcwriter.generators.visitors;
 
+import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class HumanReadableVisitor {
 		if (withStepNumbers) {
 			result.append(step.getOrdinal()).append(". ");
 		}
-		result.append("As ").append(actorSummary).append(", I ").append(summaryOf(step.getAction(),
+		result.append("As ").append(actorSummary).append(", ").append(summaryOf(step.getAction(),
 				step.getParametersValue().stream().map(this::processTestParameter).collect(toList())));
 
 		return result.toString();
@@ -95,14 +96,21 @@ public class HumanReadableVisitor {
 	}
 
 	@VisibleForTesting
-	public static String format(final String humanReadable, final List<String> list) {
+	public static String format(final String humanReadable, final List<String> paramsTexts) {
 		final List<String> emptiedBlocks = new ArrayList<>();
+		final List<String> formatParams;
+		if (paramsTexts != null) {
+			formatParams = paramsTexts.stream().flatMap(s -> stream((' ' + s + ' ').split("\\|"))).map(String::trim)
+					.collect(toList());
+		} else {
+			formatParams = null;
+		}
 		final Pattern blockPattern = Pattern.compile("//.*%s.*//");
 		final Matcher blockMatcher = blockPattern.matcher(humanReadable);
 		while (blockMatcher.find()) {
 			emptiedBlocks.add(blockMatcher.group().replace("%s", ""));
 		}
-		String formatted = String.format(humanReadable, (list != null) ? list.toArray() : null);
+		String formatted = String.format(humanReadable, (formatParams != null) ? formatParams.toArray() : null);
 		// remove empty blocks
 		for (final String emptyBlock : emptiedBlocks) {
 			formatted = formatted.replaceAll(emptyBlock, "");

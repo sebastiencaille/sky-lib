@@ -15,12 +15,12 @@ public class ParameterSelector {
 		return tableName;
 	}
 
-	@TCApi(description = "Current selector", humanReadable = "keep the current selector")
+	@TCApi(description = "Current selector", humanReadable = "|the selector")
 	public static ParameterSelector selector() {
 		return new ParameterSelector("selector-valueTable");
 	}
 
-	@TCApi(description = "Current parameter", humanReadable = "keep the current parameter")
+	@TCApi(description = "Current parameter", humanReadable = "|the parameter")
 	public static ParameterSelector parameter() {
 		return new ParameterSelector("param0-valueTable");
 	}

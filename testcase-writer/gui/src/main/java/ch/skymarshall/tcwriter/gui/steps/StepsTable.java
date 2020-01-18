@@ -19,8 +19,8 @@ import javax.swing.table.TableCellRenderer;
 import ch.skymarshall.gui.model.RootListModel;
 import ch.skymarshall.gui.model.views.ListViews;
 import ch.skymarshall.gui.mvc.IBindingController;
-import ch.skymarshall.gui.swing.ContributionTableColumn;
-import ch.skymarshall.gui.swing.ContributionTableColumnModel;
+import ch.skymarshall.gui.swing.jtable.TableColumnWithPolicy;
+import ch.skymarshall.gui.swing.jtable.PolicyTableColumnModel;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
@@ -105,21 +105,18 @@ public class StepsTable extends JPanel {
 		stepsJTable.setRowHeight(stepsJTable.getRowHeight() * 2);
 
 		// Setup columns
-		final ContributionTableColumnModel<StepsTableModel.Column> columnModel = new ContributionTableColumnModel<>(
-				stepsJTable);
+		final PolicyTableColumnModel<StepsTableModel.Column> columnModel = new PolicyTableColumnModel<>(stepsJTable);
 		columnModel.install();
 		Arrays.stream(Column.values()).forEach(c -> stepsJTable.getColumn(c).setCellRenderer(new StepsCellRenderer()));
+		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(Column.BREAKPOINT, 20).apply(new StepStatusRenderer(),
+				new StepStatusEditor()));
+		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(Column.STEP, 20));
+		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(Column.ACTOR, 120).apply(new StepsCellRenderer()));
 		columnModel.configureColumn(
-				ContributionTableColumn.fixedColumn(Column.BREAKPOINT, 20, new DefaultTableCellRenderer()));
+				TableColumnWithPolicy.percentOfAvailableSpace(Column.SELECTOR, 50).apply(new StepsCellRenderer()));
 		columnModel
-				.configureColumn(ContributionTableColumn.fixedColumn(Column.STEP, 20, new DefaultTableCellRenderer()));
-		columnModel.configureColumn(ContributionTableColumn.fixedColumn(Column.ACTOR, 120, new StepsCellRenderer()));
-		columnModel.configureColumn(ContributionTableColumn.gapColumn(Column.PARAM0, 100, new StepsCellRenderer()));
-		columnModel.configureColumn(ContributionTableColumn.fixedColumn(Column.TO_VAR, 250, new StepsCellRenderer()));
-
-		// BreakPoints
-		stepsJTable.getColumn(Column.BREAKPOINT).setCellRenderer(new StepStatusRenderer());
-		stepsJTable.getColumn(Column.BREAKPOINT).setCellEditor(new StepStatusEditor());
+				.configureColumn(TableColumnWithPolicy.percentOfAvailableSpace(Column.PARAM0, 50).apply(new StepsCellRenderer()));
+		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(Column.TO_VAR, 250).apply(new StepsCellRenderer()));
 
 		// Refresh table when step is updated
 		final IBindingController selectedStepCtrl = model.getSelectedStep()

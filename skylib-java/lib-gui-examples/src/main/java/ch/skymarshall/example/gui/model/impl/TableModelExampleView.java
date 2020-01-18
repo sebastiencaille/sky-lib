@@ -35,8 +35,8 @@ import ch.skymarshall.gui.model.ChildListModel;
 import ch.skymarshall.gui.model.ListModel;
 import ch.skymarshall.gui.model.RootListModel;
 import ch.skymarshall.gui.model.views.ListViews;
-import ch.skymarshall.gui.swing.ContributionTableColumn;
-import ch.skymarshall.gui.swing.ContributionTableColumnModel;
+import ch.skymarshall.gui.swing.jtable.TableColumnWithPolicy;
+import ch.skymarshall.gui.swing.jtable.PolicyTableColumnModel;
 
 @SuppressWarnings("serial")
 public class TableModelExampleView extends JFrame {
@@ -67,13 +67,13 @@ public class TableModelExampleView extends JFrame {
 
 		// The first row will fills the remaining space up to 100% of the width, the
 		// second one will have a fixed width of 50px
-		final ContributionTableColumnModel<TestObjectTableModel.Columns> columnModel = new ContributionTableColumnModel<>(
-				jtable);
+		final PolicyTableColumnModel<TestObjectTableModel.Columns> columnModel = new PolicyTableColumnModel<>(jtable);
 		columnModel.install();
-		columnModel.configureColumn(ContributionTableColumn.gapColumn(TestObjectTableModel.Columns.A_FIRST_VALUE, 100,
-				new DefaultTableCellRenderer()));
-		columnModel.configureColumn(ContributionTableColumn.fixedColumn(TestObjectTableModel.Columns.A_SECOND_VALUE, 50,
-				new DefaultTableCellRenderer()));
+		columnModel.configureColumn(
+				TableColumnWithPolicy.percentOfAvailableSpace(TestObjectTableModel.Columns.A_FIRST_VALUE, 100)
+						.apply(new DefaultTableCellRenderer()));
+		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(TestObjectTableModel.Columns.A_SECOND_VALUE, 50)
+				.apply(new DefaultTableCellRenderer()));
 
 		model.objectSelection.bind(selection(jtable, tableModel)).addDependency(detachOnUpdateOf(filteredModel));
 		getContentPane().add(jtable, BorderLayout.CENTER);

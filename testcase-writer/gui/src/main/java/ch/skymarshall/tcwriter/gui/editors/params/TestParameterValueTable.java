@@ -3,11 +3,9 @@ package ch.skymarshall.tcwriter.gui.editors.params;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
 
-import ch.skymarshall.gui.swing.ContributionTableColumn;
-import ch.skymarshall.gui.swing.ContributionTableColumnModel;
-import ch.skymarshall.tcwriter.gui.editors.params.TestParameterValueTableModel.Columns;
+import ch.skymarshall.gui.swing.jtable.TableColumnWithPolicy;
+import ch.skymarshall.gui.swing.jtable.PolicyTableColumnModel;
 
 public class TestParameterValueTable extends JTable {
 
@@ -16,26 +14,17 @@ public class TestParameterValueTable extends JTable {
 	public TestParameterValueTable(final TestParameterValueTableModel testParameterValueTableModel) {
 		super(testParameterValueTableModel);
 		this.testParameterValueTableModel = testParameterValueTableModel;
-		final ContributionTableColumnModel<TestParameterValueTableModel.Columns> columnModel = new ContributionTableColumnModel<>(
+		final PolicyTableColumnModel<TestParameterValueTableModel.Columns> columnModel = new PolicyTableColumnModel<>(
 				this);
 		columnModel.install();
-		columnModel.configureColumn(ContributionTableColumn.fixedColumn(TestParameterValueTableModel.Columns.MANDATORY,
-				50, new DefaultTableCellRenderer()));
-		columnModel.configureColumn(ContributionTableColumn.fixedColumn(TestParameterValueTableModel.Columns.ENABLED,
-				50, new DefaultTableCellRenderer()));
-		columnModel.configureColumn(ContributionTableColumn
-				.fixedColumn(TestParameterValueTableModel.Columns.DESCRIPTION, 200, new DefaultTableCellRenderer()));
-		columnModel.configureColumn(ContributionTableColumn.gapColumn(TestParameterValueTableModel.Columns.VALUE, 100,
-				new DefaultTableCellRenderer()));
-	}
-
-	@Override
-	public TableCellRenderer getCellRenderer(final int row, final int column) {
-		if (column == testParameterValueTableModel.getIndexOf(Columns.MANDATORY)
-				|| column == testParameterValueTableModel.getIndexOf(Columns.ENABLED)) {
-			return getDefaultRenderer(Boolean.class);
-		}
-		return super.getCellRenderer(row, column);
+		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(TestParameterValueTableModel.Columns.MANDATORY, 50)
+				.apply(getDefaultRenderer(Boolean.class)));
+		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(TestParameterValueTableModel.Columns.ENABLED, 50)
+				.apply(getDefaultRenderer(Boolean.class)));
+		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(TestParameterValueTableModel.Columns.DESCRIPTION, 200)
+				.apply(new DefaultTableCellRenderer()));
+		columnModel
+				.configureColumn(TableColumnWithPolicy.percentOfAvailableSpace(TestParameterValueTableModel.Columns.VALUE, 100));
 	}
 
 	@Override

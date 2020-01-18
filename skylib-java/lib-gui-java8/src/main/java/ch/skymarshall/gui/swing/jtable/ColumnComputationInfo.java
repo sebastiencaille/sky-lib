@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -13,18 +13,19 @@
  *  IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  ******************************************************************************/
-package ch.skymarshall.gui.swing;
+package ch.skymarshall.gui.swing.jtable;
 
-class ColumnContribution {
-    /**
-     * Number of columns with unfixed width
-     */
-    int gapColumnCount;
-    /**
-     * Width allocated to the gap columns
-     */
-    int unallocateWidth;
+class ColumnComputationInfo {
 
-    int allocatedWidth;
-    int gapTotalFraction;
+	final int sameClassCount;
+	final int tableWidth;
+	final int unallocatedWidth;
+
+	public ColumnComputationInfo(final int sameClassCount, final int tableWidth, final int unallocatedWidth) {
+		super();
+		this.sameClassCount = sameClassCount;
+		this.tableWidth = tableWidth;
+		this.unallocatedWidth = unallocatedWidth;
+	}
+
 }

@@ -104,16 +104,19 @@ public class TestObjectTableModel extends ListModelTableModel<TestObject, Column
 			case A_FIRST_VALUE: ...
 ```
 **Tuning the table columns**  
-The width of each column is computed according to the contribution of each column (fixed or % or filling  
+The width of each column is computed according to the policy of each column (fixed or % or remaining width)  
 
 ```java
-final ContributionTableColumnModel<StepsTableModel.Column> columnModel = new ContributionTableColumnModel<>(table);
+final PolicyTableColumnModel<StepsTableModel.Column> columnModel = new PolicyTableColumnModel<>(stepsJTable);
 columnModel.install();
-columnModel.configureColumn(ContributionTableColumn.fixedColumn(Column.STEP, 20, new DefaultTableCellRenderer()));
-columnModel.configureColumn(ContributionTableColumn.fixedColumn(Column.ACTOR, 120, new DefaultTableCellRenderer()));
-columnModel.configureColumn(ContributionTableColumn.gapColumn(...)); // Fills the rest of the table 
+Arrays.stream(Column.values()).forEach(c -> stepsJTable.getColumn(c).setCellRenderer(new StepsCellRenderer()));
+columnModel.configureColumn(TableColumnPolicy.fixedWidth(Column.BREAKPOINT, 20).apply(new StepStatusRenderer(), new StepStatusEditor()));
+columnModel.configureColumn(TableColumnPolicy.fixedWidth(Column.STEP, 20));
+columnModel.configureColumn(TableColumnPolicy.fixedWidth(Column.ACTOR, 120).apply(new StepsCellRenderer()));
+columnModel.configureColumn(TableColumnPolicy.percentOfAvailableSpace(Column.SELECTOR, 50).apply(new StepsCellRenderer()));
+columnModel.configureColumn(TableColumnPolicy.percentOfAvailableSpace(Column.PARAM0, 50).apply(new StepsCellRenderer()));
+columnModel.configureColumn(TableColumnPolicy.fixedWidth(Column.TO_VAR, 250).apply(new StepsCellRenderer()));
 
-Arrays.stream(Column.values()).forEach(c -> stepsTable.getColumn(c).setCellEditor(new Editor()));
 ```
 
 # Generic GUI to edit simple Objects
@@ -139,3 +142,4 @@ SwingUtilities.invokeLater(() -> {
 	System.out.println(obj);
 });
 ```
+

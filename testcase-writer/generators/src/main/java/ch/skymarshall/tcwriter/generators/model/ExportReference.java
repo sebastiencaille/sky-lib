@@ -14,7 +14,7 @@ public class ExportReference extends IdObject {
 	}
 
 	public ExportReference(final IdObject idObject) {
-		super(idObject.getId());
+		this(idObject.getId());
 	}
 
 	public ExportReference(final String exportedId) {

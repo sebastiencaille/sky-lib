@@ -94,7 +94,7 @@ public class TestCase {
 
 	public TestReference getReference(final String reference) {
 		return dynamicReferences.values().stream().filter(ref -> ref.getName().equals(reference)).findFirst()
-				.orElseThrow(() -> new IllegalArgumentException("Unable to find reference " + reference));
+				.orElseThrow(() -> new IllegalArgumentException("Unable to find reference [" + reference + ']'));
 	}
 
 	public Collection<TestReference> getReferences(final String returnType) {

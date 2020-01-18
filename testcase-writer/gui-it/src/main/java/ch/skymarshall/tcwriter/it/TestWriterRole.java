@@ -24,4 +24,7 @@ public interface TestWriterRole {
 	@TCApi(description = "Update the step parameters", humanReadable = "I //%s, //edit %s (%s) and apply the changes")
 	void updateParameter(ParameterSelector selector, ParameterValue value);
 
+	@TCApi(description = "Action on main frame", humanReadable = "I %s")
+	void mainFrameAction(MainFrameAction action);
+
 }

@@ -5,18 +5,17 @@ import static org.junit.Assert.assertTrue;
 
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Window;
 import java.lang.reflect.InvocationTargetException;
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Optional;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.function.Predicate;
 
+import javax.swing.AbstractButton;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JTextField;
@@ -30,8 +29,6 @@ import ch.skymarshall.util.helpers.NoExceptionCloseable;
 public class GuiPilot {
 
 	private final WeakHashMap<String, JComponent> cache = new WeakHashMap<>();
-	private final Timer timer = new Timer();
-	private DialogBoxCloser dialogBoxCloser;
 	private final Container root;
 
 	public GuiPilot(final Container root) {
@@ -70,6 +67,27 @@ public class GuiPilot {
 	}
 
 	/**
+	 * Search for a component by scanning the components hierarchy, starting from
+	 * the root component
+	 *
+	 * @param <T>
+	 * @param container the scanned component
+	 * @param clazz     the class of the searched component
+	 * @return
+	 */
+	public <T extends JComponent> Optional<T> search(final Class<T> clazz) {
+		return search(new HashSet<>(), root, clazz, c -> true, s -> !s.isEmpty()).stream().findAny();
+	}
+
+	public <T extends JComponent> Optional<T> search(final Class<T> clazz, final Predicate<T> filter) {
+		return search(new HashSet<>(), root, clazz, filter, s -> !s.isEmpty()).stream().findAny();
+	}
+
+	public <T extends JComponent> Set<T> searchAll(final Class<T> clazz, final Predicate<T> filter) {
+		return search(new HashSet<>(), root, clazz, filter, s -> false);
+	}
+
+	/**
 	 * Search for a component by scanning a components hierarchy, starting from
 	 * container
 	 *
@@ -78,51 +96,24 @@ public class GuiPilot {
 	 * @param clazz     the class of the searched component
 	 * @return
 	 */
-	public <T extends JComponent> Optional<T> search(final Container container, final Class<T> clazz) {
+	public <T> Set<T> search(final Set<T> result, final Container container, final Class<T> clazz,
+			final Predicate<T> filter, final Predicate<Set<T>> searchFinished) {
 		checkSwingThread();
 		for (final Component child : container.getComponents()) {
-			if (clazz.isInstance(child)) {
-				return Optional.of(clazz.cast(child));
+			if (clazz.isInstance(child) && filter.test(clazz.cast(child))) {
+				result.add(clazz.cast(child));
+				if (searchFinished.test(result)) {
+					return result;
+				}
 			}
 			if (child instanceof Container) {
-				final Optional<T> found = search((Container) child, clazz);
-				if (found.isPresent()) {
-					return found;
+				search(result, (Container) child, clazz, filter, searchFinished);
+				if (searchFinished.test(result)) {
+					return result;
 				}
 			}
 		}
-		return Optional.empty();
-	}
-
-	private class DialogBoxCloser extends TimerTask {
-		private final List<String> errors = new ArrayList<>();
-
-		@Override
-		public void run() {
-			SwingUtilities.invokeLater(() -> {
-				for (final Window window : Window.getWindows()) {
-					if (window instanceof JDialog) {
-						final JDialog jDialog = (JDialog) window;
-						errors.add(search(window, JLabel.class)
-								.orElseThrow(() -> new IllegalStateException("JDialog: no JLabel found")).getText());
-						jDialog.setVisible(false);
-						jDialog.dispose();
-					}
-				}
-			});
-		}
-
-		public void close() {
-			this.cancel();
-			Assert.assertEquals("Unexpected dialog boxes", "", String.join(",\n", errors));
-		}
-
-	}
-
-	public NoExceptionCloseable withDialogBoxCloser() {
-		dialogBoxCloser = new DialogBoxCloser();
-		timer.schedule(dialogBoxCloser, 500, 500);
-		return () -> dialogBoxCloser.close();
+		return result;
 	}
 
 	public <T extends JComponent> T getComponent(final String name, final Class<T> clazz) {
@@ -183,7 +174,7 @@ public class GuiPilot {
 		textField.setText(value);
 	}
 
-	private <T extends Component> T checkEditable(final T component) {
+	protected <T extends Component> T checkEditable(final T component) {
 		Assert.assertTrue("Component must be enabled", component.isEnabled());
 		if (component instanceof JTextComponent) {
 			Assert.assertTrue("Component must be editable", ((JTextComponent) component).isEditable());
@@ -191,8 +182,8 @@ public class GuiPilot {
 		return component;
 	}
 
-	public void withSwing(final Runnable runnable) {
-		try {
+	public void withSwing(final Runnable runnable, final Predicate<JDialogPilot> dialogHandler) {
+		try (NoExceptionCloseable dialogCloseable = JDialogPilot.withDialog(dialogHandler)) {
 			SwingUtilities.invokeAndWait(runnable);
 		} catch (final InvocationTargetException e) {
 			throw new Error(e.getCause());
@@ -201,10 +192,38 @@ public class GuiPilot {
 		}
 	}
 
-	private void checkSwingThread() {
+	public void withSwing(final Runnable runnable) {
+		withSwing(runnable, null);
+	}
+
+	protected void checkSwingThread() {
 		if (!SwingUtilities.isEventDispatchThread()) {
 			throw new IllegalStateException("Not in Swing thread");
 		}
+	}
+
+	public String dumpHierarchy() {
+		final StringBuilder result = new StringBuilder();
+		dumpHierarchy(root, result, "  ");
+		return result.toString();
+	}
+
+	public void dumpHierarchy(final Container container, final StringBuilder result, final String indent) {
+		Arrays.stream(container.getComponents()).forEach(c -> {
+			result.append(indent).append(c.getClass()).append('[');
+			if (c instanceof JLabel) {
+				result.append((((JLabel) c).getText()));
+			} else if (c instanceof JTextComponent) {
+				result.append((((JTextComponent) c).getText()));
+			} else if (c instanceof AbstractButton) {
+				result.append((((AbstractButton) c).getText()));
+			}
+			result.append("]\n");
+			if (Container.class.isInstance(c)) {
+				dumpHierarchy((Container) c, result, indent + "  ");
+			}
+		});
+
 	}
 
 }

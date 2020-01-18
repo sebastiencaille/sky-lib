@@ -9,7 +9,6 @@ import org.junit.Assert;
 
 import ch.skymarshall.tcwriter.annotations.TCApi;
 import ch.skymarshall.tcwriter.swingpilot.GuiPilot;
-import ch.skymarshall.util.helpers.NoExceptionCloseable;
 
 @TCApi(description = "Step selector", humanReadable = "Step selector", isSelector = true)
 public class StepSelector {
@@ -21,9 +20,7 @@ public class StepSelector {
 	}
 
 	public void select(final GuiPilot guiPilot) {
-		try (final NoExceptionCloseable closeable = guiPilot.withDialogBoxCloser()) {
-			guiPilot.withSwing(() -> applier.accept(guiPilot));
-		}
+		guiPilot.withSwing(() -> applier.accept(guiPilot));
 	}
 
 	protected static JTable getStepsTable(final GuiPilot guiPilot) {

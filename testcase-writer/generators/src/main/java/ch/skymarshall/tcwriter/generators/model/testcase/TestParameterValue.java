@@ -102,9 +102,11 @@ public class TestParameterValue extends IdObject {
 
 	public void setTestParameterRef(final ExportReference ref) {
 		ref.setRestoreAction((tc, id) -> {
-			if (id.startsWith(ParameterNature.SIMPLE_TYPE.name())) {
-				setValueFactory(factory = TestParameterFactory
-						.simpleType(id.substring(ParameterNature.SIMPLE_TYPE.name().length() + 1)));
+			if (id.isEmpty()) {
+				setValueFactory(TestParameterFactory.NO_FACTORY);
+			} else if (id.startsWith(ParameterNature.SIMPLE_TYPE.name())) {
+				setValueFactory(
+						TestParameterFactory.simpleType(id.substring(ParameterNature.SIMPLE_TYPE.name().length() + 1)));
 			} else {
 				setValueFactory((TestParameterFactory) tc.getRestoreValue(id));
 			}

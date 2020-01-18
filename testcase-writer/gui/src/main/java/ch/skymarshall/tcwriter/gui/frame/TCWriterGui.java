@@ -39,11 +39,11 @@ public class TCWriterGui extends JFrame {
 
 	private JButton button(final String name, final ImageIcon icon, final String toolTip,
 			final ActionWithException<?> action) {
-		final JButton newButton = new JButton(icon);
-		newButton.setToolTipText(toolTip);
-		newButton.addActionListener(e -> withException(action));
-		newButton.setName(name);
-		return newButton;
+		final JButton createdButton = new JButton(icon);
+		createdButton.setToolTipText(toolTip);
+		createdButton.addActionListener(e -> withException(action));
+		createdButton.setName(name);
+		return createdButton;
 	}
 
 	private JButton button(final ImageIcon icon, final String toolTip, final ActionWithException<?> action) {
@@ -62,11 +62,11 @@ public class TCWriterGui extends JFrame {
 		final JButton editConfigButton = button(icon("general/Information24"), "Edit configuration",
 				controller::editConfig);
 
-		final JButton newTCButton = button(icon("general/New24"), "New test case", controller::newTestCase);
+		final JButton newTCButton = button("NewTC", icon("general/New24"), "New test case", controller::newTestCase);
 
-		final JButton loadButton = button(icon("general/Open24"), "Open test case", controller::loadTestCase);
+		final JButton loadButton = button("LoadTC", icon("general/Open24"), "Open test case", controller::loadTestCase);
 
-		final JButton saveButton = button(icon("general/Save24"), "Save test case", controller::save);
+		final JButton saveButton = button("SaveTC", icon("general/Save24"), "Save test case", controller::save);
 
 		final JButton generateButton = button(icon("general/Export24"), "Export to Java", controller::generateCode);
 

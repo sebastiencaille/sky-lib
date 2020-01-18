@@ -1,5 +1,9 @@
 package ch.skymarshall.tcwriter.it;
 
+import static ch.skymarshall.tcwriter.it.ParameterSelector.selector;
+import static ch.skymarshall.tcwriter.it.ParameterValue.oneValue;
+import static ch.skymarshall.tcwriter.it.StepSelector.addStep;
+import static ch.skymarshall.tcwriter.it.StepSelector.currentStep;
 import static org.junit.Assert.assertEquals;
 
 import javax.swing.JButton;
@@ -9,7 +13,7 @@ import org.junit.Assert;
 
 import ch.skymarshall.tcwriter.gui.steps.StepsTableModel;
 
-public class LocalTCWriterRole implements TestWriterRole {
+public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 
 	private final TCGuiPilot guiPilot;
 
@@ -93,5 +97,54 @@ public class LocalTCWriterRole implements TestWriterRole {
 			}
 		}
 		Assert.fail("No such complex type parameter: " + keyValue[0]);
+	}
+
+	private StepEdition[] basicTestContents() {
+		final StepEdition edition1 = new StepEdition();
+		edition1.setActor("Test writer");
+		edition1.setAction("Select a step");
+		edition1.setSelector("Append a step to the test");
+
+		final StepEdition edition2 = new StepEdition();
+		edition2.setActor("Test writer");
+		edition2.setAction("Check the Human Readable text");
+		edition2.setSelector("Selected step");
+
+		final StepEdition edition3 = new StepEdition();
+		edition3.setActor("Test writer");
+		edition3.setAction("Select a step");
+		edition3.setSelector("Step at index");
+		return new StepEdition[] { edition1, edition2, edition3 };
+	}
+
+	@Override
+	public void injectBasicTest() {
+
+		final StepEdition[] basicTestContents = basicTestContents();
+		updateStep(StepSelector.selectStep(1), basicTestContents[0]);
+		updateStep(addStep(), basicTestContents[1]);
+		editStep(addStep(), basicTestContents[2]);
+		updateParameter(selector(), oneValue("index:1"));
+
+	}
+
+	@Override
+	public void checkBasicTest() {
+		final StepEdition[] basicTestContents = basicTestContents();
+
+		checkStep(StepSelector.selectStep(1), basicTestContents[0]);
+		checkHumanReadable(currentStep(), "As test writer, I add a step to the test case");
+
+		checkStep(StepSelector.selectStep(2), basicTestContents[1]);
+		checkHumanReadable(currentStep(), "As test writer, I check that the human readable text is \"\"");
+
+		checkStep(StepSelector.selectStep(3), basicTestContents[2]);
+		checkHumanReadable(currentStep(), "As test writer, I select the step 1");
+
+	}
+
+	@Override
+	public void mainFrameAction(final MainFrameAction action) {
+		guiPilot.withSwing(() -> action.execute(guiPilot), action::handleJDialog);
 	}
 }

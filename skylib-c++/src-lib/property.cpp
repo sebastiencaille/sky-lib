@@ -15,7 +15,8 @@
  */
 #include "property.hh"
 
-namespace org_skymarshall_util_hmi {
+namespace ch_skymarshall {
+namespace gui {
 
 using namespace std;
 
@@ -50,6 +51,6 @@ void property::remove_listener(property_listener* _listener) {
 void property::remove_listener(property_listener_ref _listener) {
 	m_manager.remove_listener(m_name, (property_listener*)_listener);
 }
-
+}
 
 }

@@ -27,8 +27,8 @@
 #include "typed_property.hh"
 #include "binding_chain.hh"
 
-namespace org_skymarshall_util_hmi {
-
+namespace ch_skymarshall {
+namespace gui {
 
 using namespace std::placeholders;
 /**
@@ -38,27 +38,35 @@ using namespace std::placeholders;
 template<class _Pt> class controller_property: public typed_property<_Pt> {
 private:
 	_Pt m_value;
-	error_notifier* m_errorNotifier;
+	error_notifier *m_errorNotifier;
 
 public:
 
-	controller_property(const string& _name, property_manager& _manager,
-			_Pt _defaultValue, error_notifier* _errorNotifier) :
+	controller_property(const string &_name, property_manager &_manager,
+			_Pt _defaultValue, error_notifier *_errorNotifier) :
 			typed_property<_Pt>(_name, _manager, _defaultValue), m_errorNotifier(
 					_errorNotifier) {
 	}
 
-	template<class _Nt> binding_chain<_Pt>::end_of_chain<_Nt>* bind(
-			binding_converter<_Pt, _Nt>* const _converter) {
-		binding_chain<_Pt>* chain = new binding_chain<_Pt>(*this, m_errorNotifier);
-		return chain->bind_property(std::bind(&controller_property::set, this, _1, _2))->bind(_converter);
+	template<class _Cst> end_of_chain<_Pt, _Cst>* bind(
+			binding_converter<_Pt, _Cst> *const _converter) {
+		binding_chain<_Pt>* chain = new binding_chain<_Pt>(*this,
+				m_errorNotifier);
+		return chain->bind_property(std::bind(&controller_property::set, this, _1, _2))->bind(
+				_converter);
+
 	}
 
-	template<class _Ct> binding_chain_controller* bind(component_binding<_Ct>* const _componentBinding) {
-		binding_chain<_Pt>* chain = new binding_chain<_Pt>(*this, m_errorNotifier);
-		return chain->bind_property(std::bind(&controller_property::set, this, _1, _2))->bind(_componentBinding);
+	template<class _Cst> binding_chain_controller* bind(
+			component_binding<_Cst> *const _componentBinding) {
+		binding_chain<_Pt> *chain = new binding_chain<_Pt>(*this,
+				m_errorNotifier);
+		return chain->bind_property(
+				std::bind(&controller_property::set, this, _1, _2))->bind(
+				_componentBinding);
 	}
 
 };
+}
 }
 #endif /* CONTROLLERPROPERTY_HH_ */

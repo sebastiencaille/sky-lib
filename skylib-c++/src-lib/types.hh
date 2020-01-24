@@ -10,7 +10,8 @@
 
 #include <stdexcept>
 
-namespace org_skymarshall_util_hmi {
+namespace ch_skymarshall {
+namespace gui {
 
 typedef const void* source_ptr;
 
@@ -20,7 +21,7 @@ class gui_exception: public std::exception {
 private:
 	std::string const m_what;
 public:
-	gui_exception(std::string const& _message) :
+	explicit gui_exception(std::string const& _message) :
 			m_what(_message) {
 	}
 
@@ -38,5 +39,5 @@ public:
 typedef gui_exception* gui_exception_ptr;
 
 }
-
+}
 #endif

@@ -15,7 +15,8 @@
 #include "property.hh"
 #include "property_listener.hh"
 
-namespace org_skymarshall_util_hmi {
+namespace ch_skymarshall {
+namespace gui {
 
 using namespace std;
 using namespace std::placeholders;
@@ -44,9 +45,9 @@ public:
 	virtual ~binding_link() = default;
 };
 
-/** End of chain */
+template<class _Pt, class _PsT> class end_of_chain;
 
-/** Binding chain
+/** A whole binding chain, attached to the property, attaching to the component
  *
  * _Pt: Property type of the chain
  *
@@ -54,8 +55,13 @@ public:
 
 template<class _Pt> class binding_chain: public binding_chain_controller {
 
+	template<typename T, typename U>
+	friend class end_of_chain;
+
 private:
 	vector<binding_link*> m_links;
+
+	vector<binding_link*> m_endOfChains; // for memory recovery
 
 	property &m_property;
 
@@ -65,7 +71,6 @@ private:
 
 	bool m_transmit = true;
 
-	typedef list<binding_chain_dependency*>::iterator binding_chain_dependency_iter;
 	list<binding_chain_dependency*> m_dependencies;
 
 	void attach() {
@@ -89,11 +94,21 @@ private:
 	}
 
 	void unbind() {
-		for (binding_chain_dependency_iter iter = m_dependencies.begin();
-				iter != m_dependencies.end(); iter++) {
-			(*iter)->unbind();
+		for (binding_chain_dependency*& dependency: m_dependencies) {
+			dependency->unbind();
 		}
 		m_dependencies.clear();
+	}
+
+	template<class _PsT> void to_property(int _index, source_ptr _component,
+			_PsT value) {
+		dynamic_cast<binding_backward<_PsT>*>(m_links[_index])->to_property(
+				_index, _component, value);
+	}
+
+	template<class _CsT> void to_component(int _index, _CsT value) {
+		dynamic_cast<binding_forward<_CsT>*>(m_links[_index])->to_component(
+				_index, value);
 	}
 
 	/**
@@ -115,8 +130,7 @@ private:
 		}
 
 		void to_component(int _index, const _Pt _value) {
-			(dynamic_cast<binding_forward<_Pt>*>(m_chain.m_links[_index + 1]))->to_component(
-					_index + 1, _value);
+			m_chain.to_component(_index + 1, _value);
 		}
 
 		~property_link() {
@@ -142,20 +156,18 @@ private:
 				_PsT converted_value =
 						m_converter->convert_component_value_to_property_value(
 								_value);
-				(dynamic_cast<binding_backward<_PsT>*>(m_chain.m_links[_index
-						- 1]))->to_property(_index - 1, _component,
-						converted_value);
+				m_chain.to_property(_index - 1, _component, converted_value);
+
 			} catch (gui_exception &_e) {
 				m_chain.m_errorNotifier->set_error(_component, _e);
 			}
 		}
 
 		void to_component(int _index, const _PsT _value) {
-
-			(dynamic_cast<binding_forward<_CsT>*>(m_chain.m_links[_index + 1]))->to_component(
-					_index + 1,
+			_CsT converted_value =
 					m_converter->convert_property_value_to_component_value(
-							_value));
+							_value);
+			m_chain.to_component(_index + 1, converted_value);
 		}
 
 		~converter_link() {
@@ -189,8 +201,7 @@ private:
 		}
 
 		void to_property(int index, source_ptr component, const _Ct value) {
-			(dynamic_cast<binding_backward<_Ct>*>(m_chain.m_links[index - 1]))->to_property(
-					index - 1, component, value);
+			m_chain.to_property(index - 1, component, value);
 		}
 
 		void set_value_from_component(source_ptr _component,
@@ -227,35 +238,18 @@ private:
 			return;
 		}
 		try {
-			(dynamic_cast<binding_forward<_Pt>*>(m_links[0]))->to_component(0,
-					*(_Pt*) _new_value);
+			to_component(0, *(_Pt*) _new_value);
 		} catch (const gui_exception &_e) {
 			m_errorNotifier->set_error(_property, _e);
 		}
 	}
-public:
-	binding_chain(property &_property, error_notifier *_notifier) :
-			m_property(_property), m_errorNotifier(_notifier), m_valueUpdateListener(
-					std::bind(&binding_chain::propagate_property_change, this,
-							_1, _2, _3, _4)) {
-	}
 
-	template<class _T> class end_of_chain;
-
-	end_of_chain<_Pt>* bind_property(
-			std::function<void(source_ptr, _Pt)> _setter) {
-		m_property.add_listener(&m_valueUpdateListener);
-		property_link *const link = new property_link(*this, _setter);
-		m_links.push_back(link);
-		return new end_of_chain<_Pt>(*this);
-	}
-
-	template<class _PsT, class _CsT> end_of_chain<_CsT>* bind(
+	template<class _PsT, class _CsT> end_of_chain<_Pt, _CsT>* bind(
 			binding_converter<_PsT, _CsT> *_converter) {
 		converter_link<_PsT, _CsT> *const link = new converter_link<_PsT, _CsT>(
 				*this, _converter);
 		m_links.push_back(link);
-		return new end_of_chain<_CsT>(*this);
+		return new_end_of_chain<_CsT>();
 	}
 
 	template<class _Ct> binding_chain_controller* bind(
@@ -266,39 +260,69 @@ public:
 		return this;
 	}
 
-	template<class _T> class end_of_chain {
-	protected:
-		binding_chain &m_bindingChain;
-	public:
-		end_of_chain(binding_chain &_bindingChain) :
-				m_bindingChain(_bindingChain) {
-		}
+	template<class _ET> end_of_chain<_Pt, _ET>* new_end_of_chain() {
+		end_of_chain<_Pt, _ET> *eoc = new end_of_chain<_Pt, _ET>(*this);
+		m_endOfChains.push_back(eoc);
+		return eoc;
+	}
 
-		template<class _NT> end_of_chain<_NT>* bind(
-				binding_converter<_T, _NT> *converter) {
-			return m_bindingChain.bind<_T, _NT>(converter);
-		}
+public:
 
-		template<class _Ct> binding_chain_controller* bind(
-				component_binding<_Ct> *_componentBinding) {
-			return m_bindingChain.bind(_componentBinding);
-		}
+	binding_chain(property &_property, error_notifier *_notifier) :
+			m_property(_property), m_errorNotifier(_notifier), m_valueUpdateListener(
+					std::bind(&binding_chain::propagate_property_change, this,
+							_1, _2, _3, _4)) {
+	}
 
-		~end_of_chain() = default;
-
-	};
+	end_of_chain<_Pt, _Pt>* bind_property(
+			std::function<void(source_ptr, _Pt)> _setter) {
+		m_property.add_listener(&m_valueUpdateListener);
+		property_link *const link = new property_link(*this, _setter);
+		m_links.push_back(link);
+		return new_end_of_chain<_Pt>();
+	}
 
 private:
 
 	~binding_chain() {
 		m_property.remove_listener(&m_valueUpdateListener);
-		for (unsigned int i = 0; i < m_links.size(); i++) {
-			delete m_links[i];
+		for (binding_link *&link : m_links) {
+			delete link;
 		}
 		m_links.clear();
+		for (binding_link *&link : m_endOfChains) {
+			delete link;
+		}
+		m_endOfChains.clear();
 	}
 };
 
+/**
+ * End of chain, used to control the chain
+ */
+template<class _Pt, class _PsT> class end_of_chain: public binding_link {
+private:
+	binding_chain<_Pt> &m_bindingChain;
+public:
+	explicit end_of_chain(binding_chain<_Pt> &_bindingChain) :
+			m_bindingChain(_bindingChain) {
+	}
+
+	template<class _CsT> end_of_chain<_Pt, _CsT>* bind(
+			binding_converter<_PsT, _CsT> *converter) {
+		return m_bindingChain.bind(converter);
+	}
+
+	template<class _CsT> binding_chain_controller* bind(
+			component_binding<_CsT> *_componentBinding) {
+		return m_bindingChain.bind(_componentBinding);
+	}
+
+	~end_of_chain() = default;
+
+};
+
+}
 }
 
 #endif /* BINDING_CHAIN_HH_ */

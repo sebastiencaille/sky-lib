@@ -28,7 +28,8 @@
 
 #include "types.hh"
 
-namespace org_skymarshall_util_hmi {
+namespace ch_skymarshall {
+namespace gui {
 
 using namespace std;
 
@@ -65,19 +66,19 @@ private:
 	before_after_function m_func_after;
 
 public:
-	property_listener_dispatcher(fire_function _fireFunction) :
+	explicit property_listener_dispatcher(fire_function const& _fireFunction) :
 					m_func_fire(_fireFunction),
 					m_func_before(NULL),
 					m_func_after(NULL) {
 	}
 
-	property_listener_dispatcher(before_after_function _beforeFireFunction, before_after_function _afterFireFunction) :
+	property_listener_dispatcher(before_after_function const& _beforeFireFunction, before_after_function const& _afterFireFunction) :
 					m_func_fire(NULL),
 					m_func_before(_beforeFireFunction),
 					m_func_after(_afterFireFunction) {
 	}
 
-	property_listener_dispatcher(property_listener_dispatcher& _p) :
+	explicit property_listener_dispatcher(property_listener_dispatcher const& _p) :
 					m_func_fire(_p.m_func_fire),
 					m_func_before(_p.m_func_before),
 					m_func_after(_p.m_func_after) {
@@ -104,5 +105,5 @@ public:
 	~property_listener_dispatcher() = default;
 };
 }
-
+}
 #endif /* PROPERTYLISTENER_HH_ */

@@ -27,11 +27,12 @@
 #include <glibmm.h>
 #include <string>
 
-namespace org_skymarshall_util_hmi_glib {
+namespace ch_skymarshall {
+namespace gui {
+namespace glib {
 
 using namespace std;
 using namespace Glib;
-using namespace org_skymarshall_util_hmi;
 
 class string_to_ustring: public binding_converter<string, Glib::ustring> {
 
@@ -48,5 +49,7 @@ public:
 
 };
 
+}
+}
 }
 #endif /* GLIB_CONVERTER_HH_ */

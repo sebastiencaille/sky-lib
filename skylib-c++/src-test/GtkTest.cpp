@@ -31,9 +31,9 @@
 
 #include "list_model.hh"
 
-using namespace org_skymarshall_util_hmi;
-using namespace org_skymarshall_util_hmi_glib;
-using namespace org_skymarshall_util_hmi_gtk;
+using namespace ch_skymarshall::gui;
+using namespace ch_skymarshall::gui::glib;
+using namespace ch_skymarshall::gui::gtk;
 
 using namespace std;
 using namespace __gnu_cxx;
@@ -107,7 +107,6 @@ private:
 	Gtk::Label m_error;
 	Gtk::Box m_box;
 
-	typedef list<binding_chain_controller*>::iterator binding_chain_controller_iter;
 	list<binding_chain_controller*> m_bindings;
 };
 
@@ -165,10 +164,9 @@ void HelloWorld::init(controller_property<string>& _testProperty1,
 }
 
 HelloWorld::~HelloWorld() {
-	for (binding_chain_controller_iter iter = m_bindings.begin();
-			iter != m_bindings.end(); iter++) {
-		(*iter)->unbind();
-		delete *iter;
+	for (binding_chain_controller* ctrl: m_bindings) {
+		ctrl->unbind();
+		delete ctrl;
 	}
 	m_bindings.clear();
 }

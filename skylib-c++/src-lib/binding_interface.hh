@@ -29,7 +29,8 @@
 #include "types.hh"
 #include "typed_property.hh"
 
-namespace org_skymarshall_util_hmi {
+namespace ch_skymarshall {
+namespace gui {
 
 using namespace std;
 
@@ -191,5 +192,6 @@ public:
 	virtual ~action_dependency() {
 	}
 };
+}
 }
 #endif /* BINDINGINTERFACE_HH_ */

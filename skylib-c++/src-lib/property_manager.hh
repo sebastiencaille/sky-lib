@@ -30,7 +30,8 @@
 #include "property_listener.hh"
 
 
-namespace org_skymarshall_util_hmi {
+namespace ch_skymarshall {
+namespace gui {
 
 using namespace std;
 
@@ -53,10 +54,10 @@ private:
 	typedef list<property_listener*> listener_list_type;
 	typedef map<string, listener_list_type*> listener_map_type;
 	typedef map<string, listener_list_type*>::const_iterator listeners_const_iter;
-
 	listener_map_type m_propertyListeners;
 };
 
+}
 }
 
 #endif /* PropertyManager_HH_ */

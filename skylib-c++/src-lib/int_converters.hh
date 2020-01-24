@@ -34,7 +34,8 @@
 
 #include "binding_interface.hh"
 
-namespace org_skymarshall_util_hmi {
+namespace ch_skymarshall {
+namespace gui {
 
 using namespace std;
 
@@ -64,6 +65,7 @@ public:
 	}
 };
 
+}
 }
 
 #endif /* INT_CONVERTERS_HH_ */

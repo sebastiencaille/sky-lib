@@ -28,7 +28,8 @@
 #include "property_manager.hh"
 
 
-namespace org_skymarshall_util_hmi {
+namespace ch_skymarshall {
+namespace gui {
 
 /**
  * Basic property
@@ -58,5 +59,5 @@ public:
 	virtual void attach() = 0;
 };
 }
-
+}
 #endif /* PROPERTY_HH_ */

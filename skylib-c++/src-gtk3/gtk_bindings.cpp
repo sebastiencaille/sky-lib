@@ -22,9 +22,9 @@
 #include <iostream>
 #include "gtk_bindings.hh"
 
-namespace org_skymarshall_util_hmi_gtk {
-
-using namespace org_skymarshall_util_hmi;
+namespace ch_skymarshall {
+namespace gui {
+namespace gtk {
 
 entry_binding::entry_binding(Gtk::Entry& _entry) :
 				m_entry(_entry) {
@@ -79,4 +79,6 @@ source_ptr label_binding::get_component() {
 	return (source_ptr) &m_label;
 }
 
+}
+}
 }

@@ -21,7 +21,8 @@
 
 
 
-namespace org_skymarshall_util_hmi {
+namespace ch_skymarshall {
+namespace gui {
 
 using namespace std;
 
@@ -99,11 +100,8 @@ void property_manager::fire_after_property_changed(source_ptr _source, property*
 }
 
 void property_manager::dump() const {
-	for (listeners_const_iter liter = m_propertyListeners.begin(); liter != m_propertyListeners.end(); liter++) {
-
-		cout << (*liter).first << ": " << endl;
-
-		listener_list_type* plist = (*liter).second;
+	for (const std::pair<string, listener_list_type*>& mapListener: m_propertyListeners) {
+		listener_list_type* plist = mapListener.second;
 		listener_list_type::iterator listener;
 		for (listener = plist->begin(); listener != plist->end(); listener++) {
 			cout << "  " << hex << *listener << endl;
@@ -111,5 +109,5 @@ void property_manager::dump() const {
 	}
 
 }
-
+}
 }

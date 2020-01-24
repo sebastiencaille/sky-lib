@@ -113,12 +113,12 @@ public:
 	/**
 	 *
 	 */
-	typedef function<bool(const value_type)> filter;
+	typedef function<bool(value_type const&)> filter;
 
 	/**
 	 *
 	 */
-	typedef function<int(const value_type _value1, const value_type value2)> comparator;
+	typedef function<int(value_type const&, value_type const&)> comparator;
 
 	/**
 	 *
@@ -135,14 +135,17 @@ public:
 	virtual ~list_model_view() {
 	}
 
-	virtual bool accept(const value_type _object) const = 0;
-
-	virtual void attach(owner *_owner) = 0;
-
-	virtual void detach(owner *_owner) = 0;
+	virtual bool accept(value_type const &_object) const = 0;
 
 	// Compare
-	virtual int compare(const value_type _o1, const value_type _o2) const = 0;
+	virtual int compare(value_type const &_o1, value_type const &_o2) const = 0;
+
+	virtual void attach(owner *_owner) {
+	}
+
+	virtual void detach(owner *_owner) {
+	}
+
 };
 
 }

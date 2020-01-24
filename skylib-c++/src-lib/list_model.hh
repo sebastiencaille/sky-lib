@@ -51,6 +51,10 @@ using namespace std::placeholders;
  * List Model with log(n) access.
  */
 template<typename _Tp> class list_model {
+
+public:
+	typedef list_model_view<_Tp> view_type;
+
 private:
 
 	typedef _Tp value_type;
@@ -65,7 +69,6 @@ private:
 
 	typedef vector<model_listener_type*> model_listener_list_type;
 
-	typedef list_model_view<value_type> view_type;
 	typedef typename view_type::owner view_owner;
 	typedef typename view_type::filter view_filter;
 	typedef typename view_type::comparator view_comparator;
@@ -95,11 +98,11 @@ private:
 
 	public:
 
-		bool accept(const value_type _object) const {
+		bool accept(value_type const &_object) const {
 			return m_filter == NULL || m_filter(_object);
 		}
 
-		int compare(const value_type _o1, const value_type _o2) const {
+		int compare(value_type const &_o1, value_type const &_o2) const {
 			int compare;
 			if (m_comparator == NULL && m_parentView == NULL) {
 				throw gui_exception(
@@ -160,13 +163,14 @@ public:
 
 		virtual ~object_tunings() = default;
 
-		virtual string str(const value_type _value) const {
+		const virtual string str(value_type const &_value) const {
 			stringstream ss;
 			ss << hex << &_value;
 			return ss.str();
 		}
 
-		virtual bool equals(value_type _val1, value_type _val2) const {
+		const virtual bool equals(value_type const &_val1,
+				value_type const &_val2) const {
 			return _val1 == _val2;
 		}
 	};
@@ -285,18 +289,18 @@ private:
 			}
 		}
 
-		void edition_cancelled(model_listener_event & event) {
+		void edition_cancelled(model_listener_event &event) {
 			m_model->m_objectEdition = NULL;
 		}
 
-		void editions_started(model_listener_event & event) {
+		void editions_started(model_listener_event &event) {
 			m_model->start_editing_value(event.get_object());
 		}
 
-		void editions_stopping(model_listener_event & event) {
+		void editions_stopping(model_listener_event &event) {
 		}
 
-		void editions_stopped(model_listener_event & event) {
+		void editions_stopped(model_listener_event &event) {
 			m_model->stop_editing_value();
 		}
 
@@ -471,6 +475,7 @@ public:
 	void set_view(list_model_view<value_type> *_view) {
 		if (m_viewProperty.get() != NULL) {
 			m_viewProperty.get()->detach(&m_privateListenersImpl);
+			delete m_viewProperty.get();
 		}
 		if (_view != NULL) {
 			m_viewProperty.set(this, _view);
@@ -516,7 +521,7 @@ public:
 	void insert(value_list_type &_newData) {
 		check_no_edition();
 		value_list_type addedData;
-		for (value_type value: _newData) {
+		for (value_type value : _newData) {
 			if (m_viewProperty.get()->accept(value)) {
 				m_data.push_back(value);
 				addedData.push_back(value);

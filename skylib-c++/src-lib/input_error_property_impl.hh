@@ -38,9 +38,19 @@ public:
 					this) {
 	}
 
-	void set_error(source_ptr _source, const gui_exception& _value) {
+	virtual void set_error(source_ptr _source, const gui_exception& _value) {
 		gui_exception_ptr oldValue = get();
 		this->set(_source, new gui_exception(_value));
+		if (oldValue != NULL) {
+			delete oldValue;
+		}
+	}
+	virtual void clear_error(source_ptr _source) {
+		if (_source == static_cast<property*>( this)) {
+			return;
+		}
+		gui_exception_ptr oldValue = get();
+		this->set(_source, NULL);
 		if (oldValue != NULL) {
 			delete oldValue;
 		}

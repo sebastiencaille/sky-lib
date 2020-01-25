@@ -36,4 +36,12 @@ public class ErrorProperty extends ObjectProperty<GuiError> implements ErrorNoti
 	public void notifyError(final Object caller, final GuiError e) {
 		setObjectValue(caller, e);
 	}
+
+	@Override
+	public void clearError(final Object caller) {
+		if (caller == this) {
+			return;
+		}
+		setObjectValue(caller, null);
+	}
 }

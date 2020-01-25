@@ -125,10 +125,11 @@ public class BindingChain implements IBindingController {
 					try {
 						value = links.get(i).toProperty(component, value);
 					} catch (final ConversionException e) {
-						errorNotifier.notifyError(property, GuiErrors.fromException(e));
+						errorNotifier.notifyError(property, GuiErrors.fromException(component, e));
 						return;
 					}
 				}
+				errorNotifier.clearError(component);
 			}
 		}
 
@@ -236,10 +237,11 @@ public class BindingChain implements IBindingController {
 			try {
 				value = link.toComponent(value);
 			} catch (final ConversionException e) {
-				errorNotifier.notifyError(property, GuiErrors.fromException(e));
+				errorNotifier.notifyError(property, GuiErrors.fromException(getProperty(), e));
 				return;
 			}
 		}
+		errorNotifier.clearError(property);
 	}
 
 	public <T> EndOfChain<T> bindProperty(final BiConsumer<Object, T> propertySetter) {

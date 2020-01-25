@@ -38,13 +38,22 @@ import ch.skymarshall.gui.mvc.PropertyEvent.EventKind;
  */
 public abstract class AbstractProperty implements Serializable {
 
-	@FunctionalInterface
 	public interface ErrorNotifier {
 		void notifyError(Object source, GuiError error);
+
+		void clearError(Object source);
 	}
 
 	public static ErrorNotifier emptyErrorNotifier() {
-		return (s, e) -> { // nope
+		return new ErrorNotifier() {
+
+			@Override
+			public void notifyError(final Object source, final GuiError error) {
+			}
+
+			@Override
+			public void clearError(final Object source) {
+			}
 		};
 	}
 

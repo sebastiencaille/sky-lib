@@ -26,10 +26,16 @@ public class GuiErrors {
 	 *
 	 */
 	public static class GuiError {
+		private final Object source;
 		private final Object content;
 
-		public GuiError(final Object content) {
+		public GuiError(final Object source, final Object content) {
+			this.source = source;
 			this.content = content;
+		}
+
+		public Object getSource() {
+			return source;
 		}
 
 		public Object getContent() {
@@ -37,7 +43,7 @@ public class GuiErrors {
 		}
 	}
 
-	public static GuiError fromException(final Exception e) {
-		return new GuiError(e);
+	public static GuiError fromException(final Object source, final Exception e) {
+		return new GuiError(source, e);
 	}
 }

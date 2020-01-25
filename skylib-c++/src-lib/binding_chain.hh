@@ -58,7 +58,6 @@ template<class _Pt> class binding_chain: public binding_chain_controller {
 	template<typename T, typename U>
 	friend class end_of_chain;
 
-private:
 	vector<binding_link*> m_links;
 
 	vector<binding_link*> m_endOfChains; // for memory recovery
@@ -94,7 +93,7 @@ private:
 	}
 
 	void unbind() {
-		for (binding_chain_dependency*& dependency: m_dependencies) {
+		for (binding_chain_dependency *&dependency : m_dependencies) {
 			dependency->unbind();
 		}
 		m_dependencies.clear();
@@ -127,6 +126,7 @@ private:
 
 		void to_property(int _index, source_ptr _component, const _Pt _value) {
 			m_setter(_component, _value);
+			m_chain.m_errorNotifier->clear_error(_component);
 		}
 
 		void to_component(int _index, const _Pt _value) {
@@ -196,12 +196,13 @@ private:
 			m_componentBinding->add_component_value_change_listener(this);
 		}
 
-		void to_component(int index, _Ct value) {
+		void to_component(int _index, _Ct value) {
 			m_componentBinding->set_component_value(m_chain.m_property, value);
+			m_chain.m_errorNotifier->clear_error(&m_chain.get_property());
 		}
 
-		void to_property(int index, source_ptr component, const _Ct value) {
-			m_chain.to_property(index - 1, component, value);
+		void to_property(int _index, source_ptr _component, const _Ct _value) {
+			m_chain.to_property(_index - 1, _component, _value);
 		}
 
 		void set_value_from_component(source_ptr _component,

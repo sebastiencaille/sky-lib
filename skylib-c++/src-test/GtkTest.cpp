@@ -29,9 +29,12 @@
 #include "glib_converter.hh"
 #include "gtk_bindings.hh"
 
+#include <pangomm/attrlist.h>
+
 #include "list_model.hh"
 
 using namespace ch_skymarshall::gui;
+using namespace ch_skymarshall::gui::converters;
 using namespace ch_skymarshall::gui::glib;
 using namespace ch_skymarshall::gui::gtk;
 
@@ -159,6 +162,11 @@ void HelloWorld::init(controller_property<string> &_testProperty1,
 					new string_to_ustring())->bind(new label_binding(m_error)));
 	m_box.pack_start(m_error);
 
+	Pango::Attribute redText = Pango::Attribute::create_attr_foreground(0xefef, 0x2929, 0x2929);
+	Pango::AttrList atrlist;
+	atrlist.insert(redText);
+	m_error.set_attributes(atrlist);
+
 	m_label.show();
 	m_entry.show();
 	m_intEntry.show();
@@ -193,8 +201,6 @@ void HelloWorld::on_button_clicked() {
 }
 
 typedef list_model<int> int_model;
-
-
 
 int main(int argc, char *argv[]) {
 

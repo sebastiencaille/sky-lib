@@ -18,11 +18,11 @@
 		<dependency>
 			<groupId>org.skymarshall</groupId>
 			<artifactId>lib-utils</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 

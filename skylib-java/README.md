@@ -130,13 +130,16 @@ The editor is made of
 [[Example](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/tools/GenericEditorLauncher.java)]
 
 ```java
-EditedObject obj = ... ;
 final SwingGenericEditorDialog view = new SwingGenericEditorDialog(null, "Test",
 		Dialog.ModalityType.DOCUMENT_MODAL);
-final GenericEditorAdapter<EditedObject, Component> editor = new GenericEditorAdapter<>(view,
-		new GenericEditorClassModel<>(EditedObject.class));
-			editor.apply();
+final GenericEditorAdapter<EditedObject> editor = new GenericEditorAdapter<>(view,
+			GenericEditorClassModel.builder(EditedObject.class) //
+						.addAdapters(new GenericEditorValidationAdapter()) // optionally add validation
+						.build());
+
+EditedObject obj = ... ;
 SwingUtilities.invokeLater(() -> {
+	editor.apply();
 	editor.load(obj);
 	view.setVisible(true);
 	System.out.println(obj);

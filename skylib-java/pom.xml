@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -48,6 +49,11 @@
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
+				<groupId>org.skymarshall</groupId>
+				<artifactId>lib-gui-validation</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
 				<version>4.12</version>
@@ -73,5 +79,6 @@
 		<module>lib-gui-java8</module>
 		<module>lib-gui-generators</module>
 		<module>lib-gui-examples</module>
+		<module>lib-gui-validation</module>
 	</modules>
 </project>

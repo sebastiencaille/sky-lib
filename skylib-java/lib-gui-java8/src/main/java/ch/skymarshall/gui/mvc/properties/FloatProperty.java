@@ -41,7 +41,7 @@ public class FloatProperty extends AbstractTypedProperty<Float> {
 	}
 
 	@Override
-	protected EndOfChain<Float> createBindingChain() {
+	public EndOfChain<Float> createBindingChain() {
 		return new BindingChain(this, errorNotifier).<Float>bindProperty(this::setObjectValueFromComponent);
 	}
 

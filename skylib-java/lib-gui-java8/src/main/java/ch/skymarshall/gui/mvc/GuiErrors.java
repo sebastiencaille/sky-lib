@@ -28,9 +28,11 @@ public class GuiErrors {
 	public static class GuiError {
 		private final Object source;
 		private final Object content;
+		private final String message;
 
-		public GuiError(final Object source, final Object content) {
+		public GuiError(final Object source, final String message, final Object content) {
 			this.source = source;
+			this.message = message;
 			this.content = content;
 		}
 
@@ -41,9 +43,13 @@ public class GuiErrors {
 		public Object getContent() {
 			return content;
 		}
+
+		public String getMessage() {
+			return message;
+		}
 	}
 
 	public static GuiError fromException(final Object source, final Exception e) {
-		return new GuiError(source, e);
+		return new GuiError(source, e.getMessage(), e);
 	}
 }

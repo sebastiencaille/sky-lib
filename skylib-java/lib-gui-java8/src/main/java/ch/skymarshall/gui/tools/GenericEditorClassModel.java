@@ -8,8 +8,9 @@ import java.util.ResourceBundle;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
-import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
+import ch.skymarshall.gui.mvc.BindingChain.EndOfChain;
 import ch.skymarshall.gui.mvc.IScopedSupport;
+import ch.skymarshall.gui.mvc.properties.AbstractProperty.ErrorNotifier;
 import ch.skymarshall.gui.mvc.properties.AbstractTypedProperty;
 import ch.skymarshall.gui.mvc.properties.IPersister;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
@@ -22,14 +23,17 @@ public class GenericEditorClassModel<T> {
 
 	public static class PropertyEntry<U> {
 		private final AbstractTypedProperty<Object> property;
-		private final String label;
-		private final String tooltip;
+		private final EndOfChain<Object> endOfChain;
 		private final AbstractAttributeMetaData<U> metadata;
 		private final boolean readOnly;
+		private final String label;
+		private final String tooltip;
 
-		public PropertyEntry(final AbstractTypedProperty<Object> property, final AbstractAttributeMetaData<U> metadata,
-				final boolean readOnly, final String label, final String tooltip) {
+		public PropertyEntry(final AbstractTypedProperty<Object> property, final EndOfChain<Object> endOfChain,
+				final AbstractAttributeMetaData<U> metadata, final boolean readOnly, final String label,
+				final String tooltip) {
 			this.property = property;
+			this.endOfChain = endOfChain;
 			this.metadata = metadata;
 			this.label = label;
 			this.tooltip = tooltip;
@@ -44,12 +48,12 @@ public class GenericEditorClassModel<T> {
 			return Integer.MAX_VALUE / 2;
 		}
 
-		public <V> AbstractTypedProperty<V> getProperty(final Class<V> clazz) {
-			if (!clazz.equals(getPropertyType())) {
+		public <V> EndOfChain<V> getChain(final Class<V> expectedType) {
+			if (!expectedType.equals(getPropertyType())) {
 				throw new InvalidParameterException(
-						"Expected " + clazz + ", but property type is " + getPropertyType());
+						"Expected " + expectedType + ", but property type is " + getPropertyType());
 			}
-			return (AbstractTypedProperty<V>) property;
+			return ((EndOfChain<V>) endOfChain);
 		}
 
 		public void loadFromObject(final Object caller, final U obj) {
@@ -91,12 +95,13 @@ public class GenericEditorClassModel<T> {
 	}
 
 	public static class Builder<T> {
-		private final Class<T> clazz;
+		private final Class<T> editedClazz;
 		private ResourceBundle bundle = null;
 		private boolean readOnly = false;
+		private IGenericModelAdapter[] adapters = new IGenericModelAdapter[0];
 
 		public Builder(final Class<T> clazz) {
-			this.clazz = clazz;
+			this.editedClazz = clazz;
 		}
 
 		public Builder<T> setBundle(final ResourceBundle bundle) {
@@ -106,6 +111,11 @@ public class GenericEditorClassModel<T> {
 
 		public Builder<T> setReadOnly(final boolean readOnly) {
 			this.readOnly = readOnly;
+			return this;
+		}
+
+		public Builder<T> addAdapters(final IGenericModelAdapter... adapters) {
+			this.adapters = adapters;
 			return this;
 		}
 
@@ -123,23 +133,36 @@ public class GenericEditorClassModel<T> {
 
 	protected GenericEditorClassModel(final Builder<T> builder) {
 		this.config = builder;
-		this.metaData = new DataObjectMetaData<>(builder.clazz);
-
+		this.metaData = new DataObjectMetaData<>(builder.editedClazz);
 	}
 
-	public List<PropertyEntry<T>> getProperties() {
-		final IScopedSupport propertySupport = new ControllerPropertyChangeSupport(this).scoped(this);
+	/**
+	 * Creates the properties by introspecting the displayed class Class
+	 *
+	 * @param errorProperty
+	 * @param propertySupport
+	 *
+	 * @return
+	 */
+	public List<PropertyEntry<T>> createProperties(final IScopedSupport propertySupport,
+			final ErrorNotifier errorNotifier) {
+
 		final List<PropertyEntry<T>> properties = new ArrayList<>();
 		for (final AbstractAttributeMetaData<T> attrib : metaData.getAttributes()) {
 
+			final ObjectProperty<Object> property = new ObjectProperty<>(attrib.getName(), propertySupport);
+			property.setErrorNotifier(errorNotifier);
+			EndOfChain<Object> chain = property.createBindingChain();
+			for (final IGenericModelAdapter adapter : config.adapters) {
+				chain = adapter.apply(config.editedClazz, chain);
+			}
+
+			final boolean readOnly = config.readOnly || attrib.isReadOnly();
 			final String message = findText(attrib, Labeled::label, GenericEditorClassModel::descriptionKey);
 			final String toolTip = findText(attrib, Labeled::tooltip, GenericEditorClassModel::tooltipKey);
-			final ObjectProperty<Object> property = new ObjectProperty<>(attrib.getName(), propertySupport);
-			final boolean readOnly = config.readOnly || attrib.isReadOnly();
-			properties.add(new PropertyEntry<>(property, attrib, readOnly, message, toolTip));
+			properties.add(new PropertyEntry<>(property, chain, attrib, readOnly, message, toolTip));
 		}
 		Collections.sort(properties, (p1, p2) -> Integer.compare(p1.index(), p2.index()));
-		propertySupport.attachAll();
 		return properties;
 	}
 

@@ -17,7 +17,13 @@ package ch.skymarshall.gui.mvc.converters;
 
 import java.util.function.Supplier;
 
+import ch.skymarshall.gui.mvc.properties.AbstractProperty;
+
 public interface IConverter<P, C> {
+
+	default void initialize(final AbstractProperty p) {
+		// noop
+	}
 
 	C convertPropertyValueToComponentValue(final P propertyValue);
 

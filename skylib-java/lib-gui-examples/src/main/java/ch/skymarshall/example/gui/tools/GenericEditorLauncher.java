@@ -1,13 +1,15 @@
 package ch.skymarshall.example.gui.tools;
 
-import java.awt.Component;
 import java.awt.Dialog;
 
 import javax.swing.SwingUtilities;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 
 import ch.skymarshall.gui.swing.tools.SwingGenericEditorDialog;
-import ch.skymarshall.gui.tools.GenericEditorAdapter;
 import ch.skymarshall.gui.tools.GenericEditorClassModel;
+import ch.skymarshall.gui.tools.GenericEditorController;
+import ch.skymarshall.gui.validation.GenericEditorValidationAdapter;
 import ch.skymarshall.util.annotations.Labeled;
 import ch.skymarshall.util.annotations.Ordered;
 import ch.skymarshall.util.annotations.Persistency;
@@ -25,6 +27,7 @@ public class GenericEditorLauncher {
 
 		@Ordered(order = 3)
 		@Labeled(label = "A string value")
+		@NotBlank
 		public String getStr() {
 			return str;
 		}
@@ -45,6 +48,7 @@ public class GenericEditorLauncher {
 
 		@Ordered(order = 2)
 		@Labeled(label = "An Integer value")
+		@Min(value = 1)
 		public Integer getIntValue() {
 			return intValue;
 		}
@@ -78,10 +82,12 @@ public class GenericEditorLauncher {
 
 		final SwingGenericEditorDialog view = new SwingGenericEditorDialog(null, "Test",
 				Dialog.ModalityType.DOCUMENT_MODAL);
-		final GenericEditorAdapter<EditedObject, Component> editor = new GenericEditorAdapter<>(view,
-				GenericEditorClassModel.builder(EditedObject.class).build());
-		editor.apply();
+		final GenericEditorController<EditedObject> editor = new GenericEditorController<>(view,
+				GenericEditorClassModel.builder(EditedObject.class) //
+						.addAdapters(new GenericEditorValidationAdapter()) // optionally add validation
+						.build());
 		SwingUtilities.invokeLater(() -> {
+			editor.activate();
 			editor.load(obj);
 			view.setVisible(true);
 			System.out.println(obj);

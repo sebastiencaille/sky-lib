@@ -31,20 +31,6 @@ public class JavaCodeGenerator extends TextFormatter {
 		return getOutput().toString();
 	}
 
-	public static String toFirstLetterInUpperCase(final String str) {
-		if (str == null) {
-			return null;
-		}
-		return Character.toUpperCase(str.charAt(0)) + str.substring(1);
-	}
-
-	public static String toFirstLetterInLowerCase(final String str) {
-		if (str == null) {
-			return null;
-		}
-		return Character.toLowerCase(str.charAt(0)) + str.substring(1);
-	}
-
 	public static String toConstant(final String str) {
 		final StringBuilder builder = new StringBuilder(str.length());
 		int prevUpper = 0;

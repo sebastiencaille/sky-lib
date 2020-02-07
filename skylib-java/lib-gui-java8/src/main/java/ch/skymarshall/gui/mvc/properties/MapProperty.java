@@ -15,6 +15,7 @@
  ******************************************************************************/
 package ch.skymarshall.gui.mvc.properties;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import ch.skymarshall.gui.mvc.IScopedSupport;
@@ -22,7 +23,7 @@ import ch.skymarshall.gui.mvc.IScopedSupport;
 public class MapProperty<T, U> extends ObjectProperty<Map<T, U>> {
 
 	public MapProperty(final String name, final IScopedSupport propertySupport) {
-		super(name, propertySupport);
+		super(name, propertySupport, new HashMap<>());
 	}
 
 }

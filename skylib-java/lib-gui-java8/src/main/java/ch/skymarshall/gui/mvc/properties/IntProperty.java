@@ -43,7 +43,7 @@ public class IntProperty extends AbstractTypedProperty<Integer> {
 	}
 
 	@Override
-	protected EndOfChain<Integer> createBindingChain() {
+	public EndOfChain<Integer> createBindingChain() {
 		return new BindingChain(this, errorNotifier).<Integer>bindProperty(this::setObjectValueFromComponent);
 	}
 

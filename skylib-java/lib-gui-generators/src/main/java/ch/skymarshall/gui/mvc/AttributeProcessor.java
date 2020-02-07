@@ -1,8 +1,8 @@
 package ch.skymarshall.gui.mvc;
 
+import static ch.skymarshall.util.dao.metadata.MetadataHelper.toFirstLetterInLowerCase;
+import static ch.skymarshall.util.dao.metadata.MetadataHelper.toFirstLetterInUpperCase;
 import static ch.skymarshall.util.generators.JavaCodeGenerator.toConstant;
-import static ch.skymarshall.util.generators.JavaCodeGenerator.toFirstLetterInLowerCase;
-import static ch.skymarshall.util.generators.JavaCodeGenerator.toFirstLetterInUpperCase;
 
 import java.util.List;
 import java.util.Map;

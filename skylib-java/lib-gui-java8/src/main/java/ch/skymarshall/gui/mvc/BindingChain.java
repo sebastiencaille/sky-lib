@@ -125,7 +125,7 @@ public class BindingChain implements IBindingController {
 					try {
 						value = links.get(i).toProperty(component, value);
 					} catch (final ConversionException e) {
-						errorNotifier.notifyError(property, GuiErrors.fromException(component, e));
+						errorNotifier.notifyError(component, GuiErrors.fromException(component, e));
 						return;
 					}
 				}
@@ -165,6 +165,7 @@ public class BindingChain implements IBindingController {
 		 * @return
 		 */
 		public <N> EndOfChain<N> bind(final IConverter<T, N> link) {
+			link.initialize(getProperty());
 			links.add(link(value -> link.convertPropertyValueToComponentValue((T) value),
 					value -> link.convertComponentValueToPropertyValue((N) value)));
 			return new EndOfChain<>();

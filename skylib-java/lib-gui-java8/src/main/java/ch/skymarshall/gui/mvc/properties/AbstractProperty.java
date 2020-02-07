@@ -49,10 +49,12 @@ public abstract class AbstractProperty implements Serializable {
 
 			@Override
 			public void notifyError(final Object source, final GuiError error) {
+				// noop
 			}
 
 			@Override
 			public void clearError(final Object source) {
+				// noop
 			}
 		};
 	}

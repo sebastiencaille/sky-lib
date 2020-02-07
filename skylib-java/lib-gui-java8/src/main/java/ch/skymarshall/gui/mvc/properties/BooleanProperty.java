@@ -40,7 +40,7 @@ public class BooleanProperty extends AbstractTypedProperty<Boolean> {
 	}
 
 	@Override
-	protected EndOfChain<Boolean> createBindingChain() {
+	public EndOfChain<Boolean> createBindingChain() {
 		return new BindingChain(this, errorNotifier).<Boolean>bindProperty(this::setObjectValueFromComponent);
 	}
 

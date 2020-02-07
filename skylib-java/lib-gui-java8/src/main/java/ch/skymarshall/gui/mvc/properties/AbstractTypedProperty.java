@@ -115,6 +115,6 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 
 	public abstract T getObjectValue();
 
-	protected abstract EndOfChain<T> createBindingChain();
+	public abstract EndOfChain<T> createBindingChain();
 
 }

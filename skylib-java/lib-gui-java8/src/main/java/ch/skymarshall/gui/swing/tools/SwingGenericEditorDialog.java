@@ -3,14 +3,16 @@ package ch.skymarshall.gui.swing.tools;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Window;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import ch.skymarshall.gui.mvc.IBindingController;
-import ch.skymarshall.gui.tools.GenericEditorAdapter;
+import ch.skymarshall.gui.mvc.properties.ErrorSet;
 import ch.skymarshall.gui.tools.GenericEditorClassModel.PropertyEntry;
+import ch.skymarshall.gui.tools.GenericEditorController;
 import ch.skymarshall.gui.tools.IGenericEditor;
 
 public class SwingGenericEditorDialog extends JDialog implements IGenericEditor {
@@ -29,11 +31,13 @@ public class SwingGenericEditorDialog extends JDialog implements IGenericEditor 
 	}
 
 	@Override
-	public void finish(final GenericEditorAdapter<?, ?> adapter) {
+	public void build(final GenericEditorController<?> adapter, final ErrorSet errorProperty) {
+		panel.build(adapter, errorProperty);
 		add(panel, BorderLayout.CENTER);
 
 		final JPanel buttonPanel = new JPanel(new FlowLayout());
 		final JButton okButton = new JButton("OK");
+		errorProperty.getErrors().bind(Map::isEmpty).listen(okButton::setEnabled);
 		buttonPanel.add(okButton);
 		okButton.addActionListener(e -> {
 			adapter.save();

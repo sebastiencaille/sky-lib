@@ -8,7 +8,10 @@ import ch.skymarshall.gui.mvc.IComponentBinding;
 import ch.skymarshall.gui.mvc.IComponentLink;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 
-public class ComponentBindings {
+public final class ComponentBindings {
+
+	private ComponentBindings() {
+	}
 
 	@FunctionalInterface
 	public static interface ValueSetter<C, T> {

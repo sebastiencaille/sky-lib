@@ -34,7 +34,7 @@ public interface IConverter<P, C> {
 
 			@Override
 			public C convertPropertyValueToComponentValue(final Boolean propertyValue) {
-				if (propertyValue) {
+				if (propertyValue != null && propertyValue.booleanValue()) {
 					return either.get();
 				}
 				return or.get();

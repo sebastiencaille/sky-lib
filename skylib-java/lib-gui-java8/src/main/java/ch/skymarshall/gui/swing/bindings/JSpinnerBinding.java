@@ -16,8 +16,6 @@
 package ch.skymarshall.gui.swing.bindings;
 
 import javax.swing.JSpinner;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import ch.skymarshall.gui.mvc.ComponentBindingAdapter;
 import ch.skymarshall.gui.mvc.IComponentLink;
@@ -33,14 +31,7 @@ public class JSpinnerBinding<T extends Number> extends ComponentBindingAdapter<T
 
 	@Override
 	public void addComponentValueChangeListener(final IComponentLink<T> converter) {
-
-		spinner.addChangeListener(new ChangeListener() {
-
-			@Override
-			public void stateChanged(final ChangeEvent e) {
-				converter.setValueFromComponent(spinner, (T) spinner.getValue());
-			}
-		});
+		spinner.addChangeListener(e -> converter.setValueFromComponent(spinner, (T) spinner.getValue()));
 	}
 
 	@Override

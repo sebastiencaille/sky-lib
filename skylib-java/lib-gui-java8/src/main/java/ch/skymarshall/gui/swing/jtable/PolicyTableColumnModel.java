@@ -79,6 +79,8 @@ public class PolicyTableColumnModel<C extends Enum<C>> extends DefaultTableColum
 		if (width == 0) {
 			return;
 		}
+
+		// Classify columns per type
 		int unallocatedWidth = width;
 		final Map<Class<?>, List<TableColumnWithPolicy<C>>> columnPerClass = new HashMap<>();
 		final Enumeration<TableColumn> columnsEnum = getColumns();
@@ -92,6 +94,7 @@ public class PolicyTableColumnModel<C extends Enum<C>> extends DefaultTableColum
 			}
 		}
 
+		// Apply each policy per class
 		for (final Class<?> policyClass : policyExecutionOrder) {
 			final List<TableColumnWithPolicy<C>> columnsOfPolicy = columnPerClass.get(policyClass);
 			if (columnsOfPolicy == null) {
@@ -106,6 +109,8 @@ public class PolicyTableColumnModel<C extends Enum<C>> extends DefaultTableColum
 				unallocatedWidth -= computedWidth;
 			}
 		}
+
+		// Fix rounding
 		final List<TableColumnWithPolicy<C>> remainingPercentWidthCols = columnPerClass
 				.get(PercentOfAvailableSpaceColumn.class);
 		if (unallocatedWidth < 0 && !remainingPercentWidthCols.isEmpty()) {

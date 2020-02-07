@@ -8,7 +8,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
@@ -17,7 +19,6 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 
-import ch.skymarshall.gui.mvc.GuiErrors.GuiError;
 import ch.skymarshall.gui.mvc.IBindingController;
 import ch.skymarshall.gui.mvc.properties.ErrorSet;
 import ch.skymarshall.gui.tools.GenericEditorClassModel.PropertyEntry;
@@ -27,6 +28,26 @@ import ch.skymarshall.gui.tools.IGenericEditor;
 public class SwingGenericEditorPanel extends JPanel implements IGenericEditor {
 
 	private int currentRow;
+
+	private static class ErrorHandler {
+		final JComponent errorComponent;
+		final Color backup;
+
+		public ErrorHandler(final JComponent errorComponent) {
+			this.errorComponent = errorComponent;
+			this.backup = errorComponent.getForeground();
+		}
+
+		public void setError() {
+			errorComponent.setForeground(Color.RED.darker());
+		}
+
+		public void unsetError() {
+			errorComponent.setForeground(backup);
+		}
+	}
+
+	private final Map<JComponent, ErrorHandler> errorHandlers = new HashMap<>();
 
 	public SwingGenericEditorPanel() {
 		setLayout(new GridBagLayout());
@@ -45,19 +66,26 @@ public class SwingGenericEditorPanel extends JPanel implements IGenericEditor {
 			cbConstraint.anchor = GridBagConstraints.WEST;
 			cbConstraint.insets = new Insets(5, 5, 0, 5);
 			add(cb, cbConstraint);
+			errorHandlers.put(cb, new ErrorHandler(cb));
 			return prop.getChain(Boolean.class).bind(selected(cb));
 		} else if (propType == Integer.class) {
 			currentRow++;
-			addLabel(prop);
-			return prop.getChain(Integer.class).bind(value(addSpinner(prop)));
+			final JLabel label = addLabel(prop);
+			final JSpinner component = addSpinner(prop);
+			errorHandlers.put(component, new ErrorHandler(label));
+			return prop.getChain(Integer.class).bind(value(component));
 		} else if (propType == Long.class) {
 			currentRow++;
-			addLabel(prop);
-			return prop.getChain(Long.class).bind(value(addSpinner(prop)));
+			final JLabel label = addLabel(prop);
+			final JSpinner component = addSpinner(prop);
+			errorHandlers.put(component, new ErrorHandler(label));
+			return prop.getChain(Long.class).bind(value(component));
 		} else if (propType == String.class) {
 			currentRow++;
-			addLabel(prop);
-			return prop.getChain(String.class).bind(value(addTextField(prop)));
+			final JLabel label = addLabel(prop);
+			final JTextField component = addTextField(prop);
+			errorHandlers.put(component, new ErrorHandler(label));
+			return prop.getChain(String.class).bind(value(component));
 		}
 		throw new IllegalStateException("Type not handled: " + prop.getPropertyType());
 	}
@@ -126,8 +154,9 @@ public class SwingGenericEditorPanel extends JPanel implements IGenericEditor {
 		labelConstraint.weighty = 1.0;
 		final JLabel errorLabel = addLabel(labelConstraint);
 		errorLabel.setForeground(Color.RED.darker());
-		errorProperty.getErrors()
-				.bind(m -> m.values().stream().map(GuiError::getMessage).collect(Collectors.joining(", ")))
-				.listen(errorLabel::setText);
+		errorProperty.getErrors().listen(e -> {
+			errorHandlers.values().forEach(ErrorHandler::unsetError);
+			e.keySet().stream().map(errorHandlers::get).filter(Objects::nonNull).forEach(ErrorHandler::setError);
+		});
 	}
 }

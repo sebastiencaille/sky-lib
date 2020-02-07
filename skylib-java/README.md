@@ -132,7 +132,7 @@ The editor is made of
 ```java
 final SwingGenericEditorDialog view = new SwingGenericEditorDialog(null, "Test",
 		Dialog.ModalityType.DOCUMENT_MODAL);
-final GenericEditorAdapter<EditedObject> editor = new GenericEditorAdapter<>(view,
+final GenericEditorController<EditedObject> editor = new GenericEditorController<>(view,
 			GenericEditorClassModel.builder(EditedObject.class) //
 						.addAdapters(new GenericEditorValidationAdapter()) // optionally add validation
 						.build());

@@ -6,8 +6,8 @@ The idea is to have
 * Actors, each actor having a Role
 * Each Role contains Actions
 * Those Actions are made of
-  * The action itself
-  * a Selection operation (a Selector, to select the element targeted by the Action)
+  * The Action itself
+  * a Selection operation (aka Selector), used to select the element targeted by the action
   * the action's Parameters 
 * Factories to create business oriented Selectors and Parameters
 
@@ -15,7 +15,7 @@ The idea is to have
 
 ![Test Case](../screenshots/TC_Writer.png)
 
-# Actions/Selectors/...
+# Actions/Selectors/Parameters
 
 The Actions are methods defined by the Role classes  
 The idea is to combine the Actions, Selectors and Parameters to perform many different actions.    

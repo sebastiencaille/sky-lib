@@ -1,4 +1,4 @@
-package ch.skymarshall.util.annotations;
+package ch.skymarshall.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

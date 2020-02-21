@@ -15,8 +15,8 @@
  ******************************************************************************/
 package ch.skymarshall.example.gui.controller.impl;
 
+import ch.skymarshall.annotations.GuiObject;
 import ch.skymarshall.example.gui.TestObject;
-import ch.skymarshall.gui.GuiObject;
 
 @GuiObject
 public class ControllerExampleObject {

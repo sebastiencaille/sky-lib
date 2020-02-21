@@ -20,9 +20,15 @@
 	<artifactId>lib-utils</artifactId>
 
 	<dependencies>
+
+		<dependency>
+			<groupId>org.skymarshall</groupId>
+			<artifactId>lib-annotations</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

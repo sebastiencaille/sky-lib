@@ -20,7 +20,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 
-import ch.skymarshall.util.annotations.Persistency;
+import ch.skymarshall.annotations.Persistency;
 
 /**
  * This class allows to access a public field attribute

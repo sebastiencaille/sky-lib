@@ -29,7 +29,6 @@ import java.util.function.Predicate;
  */
 public class InputDecisionRule<IDT extends FlowData, ACTIDT extends FlowData> extends IDData {
 
-	@FunctionalInterface
 	public static interface CollectorFunction<IDT extends FlowData, DecisionPointDataType extends FlowData> {
 		DecisionPointDataType apply(IDT inputData, ActionPoint<DecisionPointDataType, ?> ap, Registry reg);
 	}

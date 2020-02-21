@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import ch.skymarshall.ClassFinder;
+import ch.skymarshall.annotations.GuiObject;
 import ch.skymarshall.util.generators.Template;
 
 public class GuiModelGenerator {
@@ -36,38 +37,10 @@ public class GuiModelGenerator {
 		new GuiModelGenerator().process(target);
 	}
 
-	public static Class<?> findClass(final String className) {
-		final ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		Class<?> found = null;
-
-		try {
-			found = loader.loadClass(className);
-		} catch (final ClassNotFoundException e) {
-			// ignore
-		}
-
-		if (found == null) {
-			final String[] defaultPackages = { "ch.skymarshall.gui.mvc.properties.",
-					"ch.skymarshall.gui.mvc.persisters.", "ch.skymarshall.gui." };
-			for (final String pkg : defaultPackages) {
-				try {
-					found = loader.loadClass(pkg + className);
-					break;
-				} catch (final ClassNotFoundException e) {
-					// ignore
-				}
-			}
-		}
-		if (found == null) {
-			throw new IllegalStateException("Not found: " + className);
-		}
-		return found;
-	}
-
 	private void process(final File targetSrcFolder) throws IOException, URISyntaxException {
 
-		final ClassFinder finder = new ClassFinder(Thread.currentThread().getContextClassLoader());
-		finder.addExpectedAnnotation(findClass("GuiObject"), ClassFinder.Policy.CLASS_ONLY);
+		final ClassFinder finder = ClassFinder.forThread();
+		finder.addExpectedAnnotation(GuiObject.class, ClassFinder.Policy.CLASS_ONLY);
 		finder.collect();
 		System.out.println(finder.getResult()); // NOSONAR
 
@@ -76,11 +49,9 @@ public class GuiModelGenerator {
 			final File targetFolder = new File(targetSrcFolder, pkg.replace('.', '/'));
 
 			final ModelClassProcessor processor = new ModelClassProcessor(clazz);
-			final Template result = processor.process();
-			result.add("package", pkg);
-			final File outputFile = new File(targetFolder, processor.getClassName() + ".java");
-			System.out.println("Generating " + outputFile.getAbsolutePath()); // NOSONAR
-			result.write(outputFile);
+			final Template generatedClassTemplate = processor.process();
+			generatedClassTemplate.add("package", pkg);
+			generatedClassTemplate.write(new File(targetFolder, processor.getClassName() + ".java"));
 		}
 
 	}

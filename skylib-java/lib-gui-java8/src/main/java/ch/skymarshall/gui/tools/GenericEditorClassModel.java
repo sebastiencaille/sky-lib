@@ -9,13 +9,13 @@ import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 import ch.skymarshall.gui.mvc.BindingChain.EndOfChain;
+import ch.skymarshall.annotations.Labeled;
+import ch.skymarshall.annotations.Ordered;
 import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty.ErrorNotifier;
 import ch.skymarshall.gui.mvc.properties.AbstractTypedProperty;
 import ch.skymarshall.gui.mvc.properties.IPersister;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
-import ch.skymarshall.util.annotations.Labeled;
-import ch.skymarshall.util.annotations.Ordered;
 import ch.skymarshall.util.dao.metadata.AbstractAttributeMetaData;
 import ch.skymarshall.util.dao.metadata.DataObjectMetaData;
 

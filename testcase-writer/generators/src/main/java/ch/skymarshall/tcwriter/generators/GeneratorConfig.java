@@ -1,7 +1,7 @@
 package ch.skymarshall.tcwriter.generators;
 
-import ch.skymarshall.util.annotations.Labeled;
-import ch.skymarshall.util.annotations.Ordered;
+import ch.skymarshall.annotations.Labeled;
+import ch.skymarshall.annotations.Ordered;
 
 public class GeneratorConfig {
 

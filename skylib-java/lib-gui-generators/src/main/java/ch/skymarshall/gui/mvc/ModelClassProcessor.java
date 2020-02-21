@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import ch.skymarshall.ClassFinder;
 import ch.skymarshall.gui.mvc.AttributeProcessor.AttributeProcessorDelegate;
 import ch.skymarshall.util.dao.metadata.AbstractAttributeMetaData;
 import ch.skymarshall.util.dao.metadata.UntypedDataObjectMetaData;
@@ -54,7 +55,7 @@ public class ModelClassProcessor {
 		}
 
 		public void addImport(final String className) {
-			imports.add(GuiModelGenerator.findClass(className).getName());
+			imports.add(ClassFinder.forThread().loadByName(className).getName());
 		}
 
 	}
@@ -98,7 +99,7 @@ public class ModelClassProcessor {
 
 	private final Context context;
 
-	private AttributeProcessorDelegate delegate;
+	private final AttributeProcessorDelegate delegate;
 
 	public ModelClassProcessor(final Class<?> clazz) {
 		this.modelClass = clazz;
@@ -179,7 +180,6 @@ public class ModelClassProcessor {
 				AttributeProcessor.create(context, attrib, delegate).addImports().generateInitialization() + "\n"));
 	}
 
-	@FunctionalInterface
 	protected interface AttributeApplier {
 		void apply(AbstractAttributeMetaData<?> attrib) throws IOException;
 	}

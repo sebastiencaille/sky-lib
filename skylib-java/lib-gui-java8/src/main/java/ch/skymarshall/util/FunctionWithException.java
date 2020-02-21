@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2017 Sebastien Caille.
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms are permitted
  *  provided that the above Copyrightnotice and this paragraph are
  *  duplicated in all such forms and that any documentation,
@@ -15,7 +15,6 @@
  ******************************************************************************/
 package ch.skymarshall.util;
 
-@FunctionalInterface
 public interface FunctionWithException<T, R, E extends Throwable> {
 	R apply(T value) throws E;
 }

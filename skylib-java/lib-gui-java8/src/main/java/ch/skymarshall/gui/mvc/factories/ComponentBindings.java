@@ -13,7 +13,6 @@ public final class ComponentBindings {
 	private ComponentBindings() {
 	}
 
-	@FunctionalInterface
 	public static interface ValueSetter<C, T> {
 		void setComponentValue(C component, AbstractProperty property, T value);
 	}

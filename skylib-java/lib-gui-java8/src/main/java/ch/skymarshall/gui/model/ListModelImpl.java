@@ -261,7 +261,6 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 		listeners.remove(IListModelListener.class, listener);
 	}
 
-	@SuppressWarnings("unchecked")
 	private IListModelListener<T>[] listeners() {
 		return listeners.getListeners(IListModelListener.class);
 	}

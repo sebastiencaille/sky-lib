@@ -1,4 +1,4 @@
-package ch.skymarshall.util.annotations;
+package ch.skymarshall.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,8 +7,10 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface Ordered {
+public @interface Labeled {
 
-	int order();
+	String label();
+
+	String tooltip() default "";
 
 }

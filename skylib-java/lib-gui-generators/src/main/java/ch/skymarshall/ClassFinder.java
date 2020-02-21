@@ -24,19 +24,18 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import ch.skymarshall.util.helpers.ClassLoaderHelper;
 
 /**
- * To select some classes
+ * To select some classes according to an annotation, ...
  *
  * @author scaille
  *
@@ -45,8 +44,18 @@ public class ClassFinder {
 
 	private static final Logger LOGGER = Logger.getLogger(ClassFinder.class.getName());
 
+	private static final String[] DEFAULT_PACKAGES = { "", "ch.skymarshall.gui.mvc.properties.",
+			"ch.skymarshall.gui.mvc.persisters.", "ch.skymarshall.gui." };
+
 	public enum Policy {
-		ALL_SUBCLASSES, CLASS_ONLY
+		/**
+		 * Gather all subclasses of the matching class
+		 */
+		ALL_SUBCLASSES,
+		/**
+		 * Gather the matching class only
+		 */
+		CLASS_ONLY
 	}
 
 	private static final String CLASS_EXTENSION = ".class";
@@ -57,7 +66,7 @@ public class ClassFinder {
 		JAR_EXTENSIONS.add(".sar");
 	}
 
-	private final Map<Class<?>, Policy> result = new HashMap<>();
+	private final Map<Class<?>, Policy> collectedClasses = new HashMap<>();
 
 	private final Map<Class<?>, Policy> expectedTags = new HashMap<>();
 
@@ -65,17 +74,30 @@ public class ClassFinder {
 
 	private final ClassLoader loader;
 
-	public ClassFinder(final ClassLoader loader) {
-		this.loader = loader;
-		result.put(Object.class, null);
+	public static ClassFinder forThread() {
+		return new ClassFinder(Thread.currentThread().getContextClassLoader());
 	}
 
-	public void addExpectedAnnotation(final String tagClassName, final Policy policy) throws ClassNotFoundException {
-		final Class<?> tag = Class.forName(tagClassName, true, loader);
-		if (!tag.isAnnotation()) {
-			throw new IllegalArgumentException("Class is not an annotation: " + tagClassName);
+	public ClassFinder(final ClassLoader loader) {
+		this.loader = loader;
+		collectedClasses.put(Object.class, null);
+	}
+
+	public Class<?> loadByName(final String className) {
+
+		Class<?> found = null;
+		for (final String pkg : DEFAULT_PACKAGES) {
+			try {
+				found = loader.loadClass(pkg + className);
+				break;
+			} catch (final ClassNotFoundException e) {
+				// ignore
+			}
 		}
-		expectedTags.put(tag, policy);
+		if (found == null) {
+			throw new IllegalStateException("Not found: " + className);
+		}
+		return found;
 	}
 
 	public void addExpectedAnnotation(final Class<?> tag, final Policy policy) {
@@ -90,29 +112,25 @@ public class ClassFinder {
 	}
 
 	public void collect() throws IOException, URISyntaxException {
-
 		for (final URL url : ClassLoaderHelper.appClassPath()) {
-			final File file = new File(url.toURI());
-			if (!file.exists()) {
-				continue;
-			}
-			LOGGER.log(Level.INFO, "Handling {0}", file);
-			final int lastDot = file.getName().lastIndexOf('.');
-			if (file.isDirectory()) {
-				final File folder = file.getAbsoluteFile().getCanonicalFile();
-				handleDirectory(folder, folder.toString().length());
-			} else if (lastDot > 0) {
-				final String extension = file.getName().substring(lastDot);
-				if (JAR_EXTENSIONS.contains(extension)) {
-					handleJarFile(file);
-				}
-			}
+			collect(url);
 		}
+	}
 
-		final Iterator<Entry<Class<?>, Policy>> iterator = result.entrySet().iterator();
-		while (iterator.hasNext()) {
-			if (iterator.next().getValue() == null) {
-				iterator.remove();
+	public void collect(final URL url) throws URISyntaxException, IOException {
+		final File file = new File(url.toURI());
+		if (!file.exists()) {
+			return;
+		}
+		LOGGER.log(Level.INFO, "Handling {0}", file);
+		final int lastDot = file.getName().lastIndexOf('.');
+		if (file.isDirectory()) {
+			final File folder = file.getAbsoluteFile().getCanonicalFile();
+			handleDirectory(folder, folder.toString().length());
+		} else if (lastDot > 0) {
+			final String extension = file.getName().substring(lastDot);
+			if (JAR_EXTENSIONS.contains(extension)) {
+				handleJarFile(file);
 			}
 		}
 	}
@@ -155,8 +173,8 @@ public class ClassFinder {
 	}
 
 	private Policy match(final Class<?> clazz) {
-		if (result.containsKey(clazz)) {
-			return result.get(clazz);
+		if (collectedClasses.containsKey(clazz)) {
+			return collectedClasses.get(clazz);
 		}
 		if (expectedSuperClasses.contains(clazz)) {
 			return Policy.ALL_SUBCLASSES;
@@ -171,28 +189,33 @@ public class ClassFinder {
 	}
 
 	private Policy processClass(final Class<?> clazz) {
-		Policy policy = result.get(clazz);
-		if (policy != null) {
-			return policy;
+		if (collectedClasses.containsKey(clazz)) {
+			// already processed
+			return collectedClasses.get(clazz);
 		}
-		policy = match(clazz);
-		if (policy == null && clazz.getSuperclass() != null) {
-			policy = processClass(clazz.getSuperclass());
+		Policy appliedPolicy = match(clazz);
+		if (appliedPolicy == null && clazz.getSuperclass() != null) {
+			appliedPolicy = processClass(clazz.getSuperclass());
+			if (appliedPolicy == Policy.CLASS_ONLY) {
+				// parent class policy is CLASS_ONLY, skip
+				appliedPolicy = null;
+			}
 		}
-		if (policy == null) {
+		if (appliedPolicy == null) {
 			for (final Class<?> iface : clazz.getInterfaces()) {
-				policy = processClass(iface);
-				if (policy != null) {
+				appliedPolicy = processClass(iface);
+				if (appliedPolicy != null) {
 					break;
 				}
 			}
 		}
-		result.put(clazz, policy);
-		return policy;
+		collectedClasses.put(clazz, appliedPolicy);
+		return appliedPolicy;
 	}
 
 	public Set<Class<?>> getResult() {
-		return result.keySet();
+		return collectedClasses.entrySet().stream().filter(e -> e.getValue() != null).map(Map.Entry::getKey)
+				.collect(Collectors.toSet());
 	}
 
 }

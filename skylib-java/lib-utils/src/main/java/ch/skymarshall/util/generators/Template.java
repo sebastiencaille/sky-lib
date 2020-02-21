@@ -7,6 +7,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+/**
+ * Simple template made of a content with place holders (${...}) and properties
+ * (place holder as key + value)
+ *
+ * @author scaille
+ *
+ */
 public class Template {
 
 	private final String content;
@@ -15,17 +22,17 @@ public class Template {
 	private String commandLine;
 
 	public Template(final String content) {
-		this.content = content.replaceAll("\r", "");
+		this.content = content.replace("\r", "");
 	}
 
 	public Template apply(final Map<String, String> newProperties) {
-		final Template newTemplate = create(content);
+		final Template newTemplate = instantiate(content);
 		newTemplate.setCommandLine(commandLine);
 		newTemplate.setContext(newProperties);
 		return newTemplate;
 	}
 
-	protected Template create(final String newContent) {
+	protected Template instantiate(final String newContent) {
 		return new Template(newContent);
 	}
 
@@ -80,7 +87,7 @@ public class Template {
 	}
 
 	public void write(final File file) throws IOException {
-		Logger.getLogger(Template.class.getName()).info(() -> "Write " + file);
+		Logger.getLogger(Template.class.getName()).info(() -> "Writing " + file);
 		file.getParentFile().mkdirs();
 
 		try (final FileWriter out = new FileWriter(file)) {

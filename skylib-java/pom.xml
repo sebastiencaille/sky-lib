@@ -41,6 +41,11 @@
 		<dependencies>
 			<dependency>
 				<groupId>org.skymarshall</groupId>
+				<artifactId>lib-annotations</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>org.skymarshall</groupId>
 				<artifactId>lib-utils</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
@@ -86,6 +91,7 @@
 	</properties>
 
 	<modules>
+		<module>lib-annotations</module>
 		<module>lib-utils</module>
 		<module>lib-gui-java8</module>
 		<module>lib-gui-generators</module>

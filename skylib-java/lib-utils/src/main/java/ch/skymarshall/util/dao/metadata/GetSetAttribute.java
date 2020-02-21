@@ -20,7 +20,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
-import ch.skymarshall.util.annotations.Persistency;
+import ch.skymarshall.annotations.Persistency;
 
 /**
  * This class allows accessing an attribute through its get/set methods

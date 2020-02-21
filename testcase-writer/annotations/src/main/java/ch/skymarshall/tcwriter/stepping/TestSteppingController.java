@@ -110,7 +110,6 @@ public class TestSteppingController implements ITestSteppingController {
 		}
 	}
 
-	@FunctionalInterface
 	public interface CommandHandler {
 		void execute(Command command) throws IOException;
 	}

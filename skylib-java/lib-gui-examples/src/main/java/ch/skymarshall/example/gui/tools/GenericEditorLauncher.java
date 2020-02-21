@@ -6,13 +6,13 @@ import javax.swing.SwingUtilities;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
+import ch.skymarshall.annotations.Labeled;
+import ch.skymarshall.annotations.Ordered;
+import ch.skymarshall.annotations.Persistency;
 import ch.skymarshall.gui.swing.tools.SwingGenericEditorDialog;
 import ch.skymarshall.gui.tools.GenericEditorClassModel;
 import ch.skymarshall.gui.tools.GenericEditorController;
 import ch.skymarshall.gui.validation.GenericEditorValidationAdapter;
-import ch.skymarshall.util.annotations.Labeled;
-import ch.skymarshall.util.annotations.Ordered;
-import ch.skymarshall.util.annotations.Persistency;
 
 public class GenericEditorLauncher {
 

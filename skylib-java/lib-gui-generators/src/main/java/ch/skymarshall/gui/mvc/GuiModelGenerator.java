@@ -19,9 +19,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import ch.skymarshall.ClassFinder;
 import ch.skymarshall.annotations.GuiObject;
 import ch.skymarshall.util.generators.Template;
+import ch.skymarshall.util.helpers.ClassFinder;
 
 public class GuiModelGenerator {
 
@@ -51,7 +51,7 @@ public class GuiModelGenerator {
 			final ModelClassProcessor processor = new ModelClassProcessor(clazz);
 			final Template generatedClassTemplate = processor.process();
 			generatedClassTemplate.add("package", pkg);
-			generatedClassTemplate.write(new File(targetFolder, processor.getClassName() + ".java"));
+			generatedClassTemplate.writeTo(new File(targetFolder, processor.getClassName() + ".java"));
 		}
 
 	}

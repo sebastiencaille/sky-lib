@@ -15,6 +15,7 @@ import ch.skymarshall.gui.mvc.GuiController;
 import ch.skymarshall.gui.swing.tools.SwingGenericEditorDialog;
 import ch.skymarshall.gui.tools.GenericEditorClassModel;
 import ch.skymarshall.gui.tools.GenericEditorController;
+import ch.skymarshall.tcwriter.executors.ITestExecutor;
 import ch.skymarshall.tcwriter.generators.GeneratorConfig;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.persistence.IModelPersister;
@@ -22,7 +23,6 @@ import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 import ch.skymarshall.tcwriter.gui.TestRemoteControl;
 import ch.skymarshall.tcwriter.gui.frame.TCWriterModel.TestExecutionState;
-import executors.ITestExecutor;
 
 public class TCWriterController extends GuiController {
 

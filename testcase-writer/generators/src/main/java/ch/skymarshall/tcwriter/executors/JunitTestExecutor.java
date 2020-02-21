@@ -1,4 +1,4 @@
-package executors;
+package ch.skymarshall.tcwriter.executors;
 
 import static ch.skymarshall.util.helpers.ClassLoaderHelper.cpToCommandLine;
 import static java.util.stream.Collectors.joining;

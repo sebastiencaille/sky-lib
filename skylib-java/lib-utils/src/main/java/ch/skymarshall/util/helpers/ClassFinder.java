@@ -13,7 +13,7 @@
  *  IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  ******************************************************************************/
-package ch.skymarshall;
+package ch.skymarshall.util.helpers;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,8 +31,6 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-
-import ch.skymarshall.util.helpers.ClassLoaderHelper;
 
 /**
  * To select some classes according to an annotation, ...

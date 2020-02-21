@@ -27,12 +27,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import ch.skymarshall.ClassFinder;
 import ch.skymarshall.gui.mvc.AttributeProcessor.AttributeProcessorDelegate;
 import ch.skymarshall.util.dao.metadata.AbstractAttributeMetaData;
 import ch.skymarshall.util.dao.metadata.UntypedDataObjectMetaData;
 import ch.skymarshall.util.generators.JavaCodeGenerator;
 import ch.skymarshall.util.generators.Template;
+import ch.skymarshall.util.helpers.ClassFinder;
 import ch.skymarshall.util.helpers.ClassLoaderHelper;
 
 public class ModelClassProcessor {

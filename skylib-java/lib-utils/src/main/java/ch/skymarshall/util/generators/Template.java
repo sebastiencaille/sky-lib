@@ -86,7 +86,7 @@ public class Template {
 		return indent;
 	}
 
-	public void write(final File file) throws IOException {
+	public void writeTo(final File file) throws IOException {
 		Logger.getLogger(Template.class.getName()).info(() -> "Writing " + file);
 		file.getParentFile().mkdirs();
 
@@ -112,12 +112,7 @@ public class Template {
 	 * @return
 	 */
 	public static Map<String, String> append(final Map<String, String> context, final String key, final String value) {
-		final String current = context.get(key);
-		if (current != null) {
-			context.put(key, current + value);
-		} else {
-			context.put(key, value);
-		}
+		context.put(key, context.getOrDefault(key, "") + value);
 		return context;
 	}
 }

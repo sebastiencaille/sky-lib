@@ -10,6 +10,8 @@ import javax.swing.SwingUtilities;
 
 import org.junit.After;
 
+import ch.skymarshall.tcwriter.executors.ITestExecutor;
+import ch.skymarshall.tcwriter.executors.JunitTestExecutor;
 import ch.skymarshall.tcwriter.generators.GeneratorConfig;
 import ch.skymarshall.tcwriter.generators.JavaToModel;
 import ch.skymarshall.tcwriter.generators.model.persistence.JsonModelPersister;
@@ -19,8 +21,6 @@ import ch.skymarshall.tcwriter.gui.frame.TCWriterController;
 import ch.skymarshall.tcwriter.it.api.TestSessionRole;
 import ch.skymarshall.tcwriter.it.api.TestWriterRole;
 import ch.skymarshall.util.helpers.ClassLoaderHelper;
-import executors.ITestExecutor;
-import executors.JunitTestExecutor;
 
 public class AbstractGuiTest {
 

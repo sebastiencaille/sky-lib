@@ -7,6 +7,8 @@ import java.io.IOException;
 
 import ch.skymarshall.tcwriter.examples.api.interfaces.CustomerTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestRole;
+import ch.skymarshall.tcwriter.executors.ITestExecutor;
+import ch.skymarshall.tcwriter.executors.JunitTestExecutor;
 import ch.skymarshall.tcwriter.generators.GeneratorConfig;
 import ch.skymarshall.tcwriter.generators.JavaToModel;
 import ch.skymarshall.tcwriter.generators.model.persistence.IModelPersister;
@@ -18,8 +20,6 @@ import ch.skymarshall.tcwriter.generators.recorder.TestCaseRecorder;
 import ch.skymarshall.tcwriter.generators.visitors.HumanReadableVisitor;
 import ch.skymarshall.tcwriter.recording.TestCaseRecorderAspect;
 import ch.skymarshall.util.helpers.ClassLoaderHelper;
-import executors.ITestExecutor;
-import executors.JunitTestExecutor;
 
 public class ExampleHelper {
 

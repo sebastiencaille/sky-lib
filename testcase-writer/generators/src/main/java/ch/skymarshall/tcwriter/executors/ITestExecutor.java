@@ -1,4 +1,4 @@
-package executors;
+package ch.skymarshall.tcwriter.executors;
 
 import java.io.File;
 import java.io.IOException;

@@ -70,7 +70,7 @@ public class ModuleVisitor<T> {
 
 	protected void writeFile(final String filename, final Template template) throws IOException {
 		final File moduleLocation = writer.getModuleLocation(module);
-		template.write(new File(moduleLocation, module.packageName.replaceAll(Pattern.quote("."), "/") + filename));
+		template.writeTo(new File(moduleLocation, module.packageName.replaceAll(Pattern.quote("."), "/") + filename));
 	}
 
 	public T visit(final T context) {

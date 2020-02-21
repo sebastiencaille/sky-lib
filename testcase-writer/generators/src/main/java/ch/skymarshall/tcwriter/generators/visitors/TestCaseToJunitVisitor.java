@@ -7,6 +7,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import ch.skymarshall.tcwriter.generators.model.IdObject;
@@ -24,7 +25,7 @@ public class TestCaseToJunitVisitor {
 
 	private final Template template;
 
-	private int varIndex = 0;
+	private final Map<Integer, AtomicInteger> varIndex = new HashMap<>();
 
 	private final Map<TestParameterValue, String> varNames = new IdentityHashMap<>();
 
@@ -32,7 +33,7 @@ public class TestCaseToJunitVisitor {
 		this.template = template;
 	}
 
-	public String visitTestCase(final TestCase tc) throws IOException, TestCaseException {
+	public Template visitTestCase(final TestCase tc) throws IOException, TestCaseException {
 
 		final Map<String, String> properties = new HashMap<>();
 
@@ -49,7 +50,7 @@ public class TestCaseToJunitVisitor {
 		properties.put("package", tc.getPackage());
 		properties.put("testName", tc.getName());
 		properties.put("testContent", javaContent.toString());
-		return template.apply(properties).generate();
+		return template.apply(properties);
 	}
 
 	private void visitTestStep(final JavaCodeGenerator javaContent, final TestModel model, final TestStep step)
@@ -59,7 +60,7 @@ public class TestCaseToJunitVisitor {
 		final JavaCodeGenerator stepContent = new JavaCodeGenerator();
 
 		for (final TestParameterValue stepParamValue : step.getParametersValue()) {
-			visitTestParameterValue(stepContent, model, stepParamValue);
+			visitTestParameterValue(stepContent, model, step, stepParamValue);
 		}
 
 		if (step.getReference() != null) {
@@ -68,7 +69,7 @@ public class TestCaseToJunitVisitor {
 		}
 		stepContent.append(step.getActor().getName()).append(".").append(step.getAction().getName()).append("(");
 
-		addParameterValuesToCall(stepContent, step.getParametersValue(), step.getAction().getParameters());
+		addParameterValuesToCall(stepContent, step, step.getParametersValue(), step.getAction().getParameters());
 		stepContent.append(");").newLine().newLine();
 
 		javaContent.append(comment.toString());
@@ -76,7 +77,7 @@ public class TestCaseToJunitVisitor {
 	}
 
 	private void visitTestParameterValue(final JavaCodeGenerator javaContent, final TestModel model,
-			final TestParameterValue paramValue) throws IOException, TestCaseException {
+			final TestStep step, final TestParameterValue paramValue) throws IOException, TestCaseException {
 
 		final TestParameterFactory factory = paramValue.getValueFactory();
 		if (factory.getNature().isSimpleValue()) {
@@ -85,32 +86,33 @@ public class TestCaseToJunitVisitor {
 
 		final JavaCodeGenerator parametersContent = new JavaCodeGenerator();
 
-		visitTestValueParams(parametersContent, model, paramValue.getComplexTypeValues());
+		visitTestValueParams(parametersContent, model, step, paramValue.getComplexTypeValues());
 
-		final String parameterVarName = varNameFor(paramValue);
+		final String parameterVarName = varNameFor(step, paramValue);
 		parametersContent.append(factory.getType()).append(" ").append(parameterVarName).append(" = ")
 				.append(factory.getName()).append("(");
-		addParameterValuesToCall(parametersContent, paramValue.getComplexTypeValues().values(),
+		addParameterValuesToCall(parametersContent, step, paramValue.getComplexTypeValues().values(),
 				factory.getMandatoryParameters());
 		parametersContent.append(");").newLine();
-		addOptionalParameters(parametersContent, parameterVarName, paramValue.getComplexTypeValues().values(),
+		addOptionalParameters(step, parametersContent, parameterVarName, paramValue.getComplexTypeValues().values(),
 				factory.getOptionalParameters());
 		javaContent.append(parametersContent.toString());
 	}
 
 	private void visitTestValueParams(final JavaCodeGenerator parametersContent, final TestModel model,
-			final Map<String, TestParameterValue> testObjectValues) throws IOException, TestCaseException {
+			final TestStep step, final Map<String, TestParameterValue> testObjectValues)
+			throws IOException, TestCaseException {
 		for (final TestParameterValue testObjectValue : testObjectValues.values()) {
 			// No need to define a variable
 			if (testObjectValue.getValueFactory().getNature().isSimpleValue()) {
 				// Simple value
 				continue;
 			}
-			visitTestParameterValue(parametersContent, model, testObjectValue);
+			visitTestParameterValue(parametersContent, model, step, testObjectValue);
 		}
 	}
 
-	private void addParameterValuesToCall(final JavaCodeGenerator parametersContent,
+	private void addParameterValuesToCall(final JavaCodeGenerator parametersContent, final TestStep step,
 			final Collection<TestParameterValue> parameterValues, final List<TestApiParameter> filter)
 			throws IOException, TestCaseException {
 		final Set<String> filterIds = filter.stream().map(IdObject::getId).collect(Collectors.toSet());
@@ -120,14 +122,14 @@ public class TestCaseToJunitVisitor {
 				continue;
 			}
 			parametersContent.add(sep);
-			inlineValue(parametersContent, parameterValue);
+			inlineValue(parametersContent, step, parameterValue);
 			sep = ", ";
 		}
 	}
 
-	private void addOptionalParameters(final JavaCodeGenerator parametersContent, final String parameterVarName,
-			final Collection<TestParameterValue> parameterValues, final List<TestApiParameter> filter)
-			throws IOException, TestCaseException {
+	private void addOptionalParameters(final TestStep step, final JavaCodeGenerator parametersContent,
+			final String parameterVarName, final Collection<TestParameterValue> parameterValues,
+			final List<TestApiParameter> filter) throws IOException, TestCaseException {
 		final Map<String, TestApiParameter> filteredMap = filter.stream()
 				.collect(Collectors.toMap(IdObject::getId, t -> t));
 		for (final TestParameterValue parameterValue : parameterValues) {
@@ -137,17 +139,17 @@ public class TestCaseToJunitVisitor {
 			final TestApiParameter parameterType = filteredMap.get(parameterValue.getApiParameterId());
 			parametersContent.append(parameterVarName).append(".").append(parameterType.getName()).append("(");
 			if (parameterValue.getValueFactory().hasType()) {
-				inlineValue(parametersContent, parameterValue);
+				inlineValue(parametersContent, step, parameterValue);
 			}
 			parametersContent.append(");").newLine();
 		}
 	}
 
-	private void inlineValue(final JavaCodeGenerator parametersContent, final TestParameterValue parameterValue)
-			throws IOException, TestCaseException {
+	private void inlineValue(final JavaCodeGenerator parametersContent, final TestStep step,
+			final TestParameterValue parameterValue) throws IOException, TestCaseException {
 		switch (parameterValue.getValueFactory().getNature()) {
 		case TEST_API:
-			parametersContent.append(varNameFor(parameterValue));
+			parametersContent.append(varNameFor(step, parameterValue));
 			break;
 		case SIMPLE_TYPE:
 			final String valueType = parameterValue.getValueFactory().getType();
@@ -171,8 +173,9 @@ public class TestCaseToJunitVisitor {
 		}
 	}
 
-	private String varNameFor(final TestParameterValue testValue) {
-		varIndex++;
-		return varNames.computeIfAbsent(testValue, v -> "var" + varIndex);
+	private String varNameFor(final TestStep step, final TestParameterValue testValue) {
+		final int nextIndex = varIndex.computeIfAbsent(step.getOrdinal(), (s) -> new AtomicInteger(1))
+				.getAndIncrement();
+		return varNames.computeIfAbsent(testValue, v -> "step" + step.getOrdinal() + "_var" + nextIndex);
 	}
 }

@@ -4,13 +4,13 @@ import java.io.IOException;
 
 import javax.swing.SwingUtilities;
 
+import ch.skymarshall.tcwriter.executors.ITestExecutor;
+import ch.skymarshall.tcwriter.executors.JunitTestExecutor;
 import ch.skymarshall.tcwriter.generators.GeneratorConfig;
 import ch.skymarshall.tcwriter.generators.model.persistence.IModelPersister;
 import ch.skymarshall.tcwriter.generators.model.persistence.JsonModelPersister;
 import ch.skymarshall.tcwriter.gui.frame.TCWriterController;
 import ch.skymarshall.util.helpers.ClassLoaderHelper;
-import executors.ITestExecutor;
-import executors.JunitTestExecutor;
 
 public class TCEditor {
 

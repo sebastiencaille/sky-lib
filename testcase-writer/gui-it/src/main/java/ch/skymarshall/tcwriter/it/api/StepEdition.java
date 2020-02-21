@@ -1,7 +1,13 @@
-package ch.skymarshall.tcwriter.it;
+package ch.skymarshall.tcwriter.it.api;
 
 import ch.skymarshall.tcwriter.annotations.TCApi;
 
+/**
+ * To edit a step (actor/action/selector/parameter
+ *
+ * @author scaille
+ *
+ */
 public class StepEdition {
 
 	private String actor;

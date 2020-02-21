@@ -1,12 +1,14 @@
 package ch.skymarshall.tcwriter.it;
 
-import static ch.skymarshall.tcwriter.it.ParameterSelector.selector;
-import static ch.skymarshall.tcwriter.it.ParameterValue.oneValue;
-import static ch.skymarshall.tcwriter.it.StepSelector.addStep;
-import static ch.skymarshall.tcwriter.it.StepSelector.currentStep;
-import static ch.skymarshall.tcwriter.it.StepSelector.selectStep;
+import static ch.skymarshall.tcwriter.it.api.ParameterSelector.selector;
+import static ch.skymarshall.tcwriter.it.api.ParameterValue.oneValue;
+import static ch.skymarshall.tcwriter.it.api.StepSelector.addStep;
+import static ch.skymarshall.tcwriter.it.api.StepSelector.currentStep;
+import static ch.skymarshall.tcwriter.it.api.StepSelector.selectStep;
 
 import org.junit.Test;
+
+import ch.skymarshall.tcwriter.it.api.StepEdition;
 
 public class StepEditionTest extends AbstractGuiTest {
 

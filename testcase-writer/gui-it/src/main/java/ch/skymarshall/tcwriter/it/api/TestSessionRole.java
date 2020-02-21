@@ -1,4 +1,4 @@
-package ch.skymarshall.tcwriter.it;
+package ch.skymarshall.tcwriter.it.api;
 
 import ch.skymarshall.tcwriter.annotations.TCApi;
 import ch.skymarshall.tcwriter.annotations.TCRole;

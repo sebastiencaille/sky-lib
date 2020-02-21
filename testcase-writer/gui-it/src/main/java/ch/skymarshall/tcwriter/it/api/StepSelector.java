@@ -1,4 +1,4 @@
-package ch.skymarshall.tcwriter.it;
+package ch.skymarshall.tcwriter.it.api;
 
 import java.util.function.Consumer;
 
@@ -8,6 +8,7 @@ import javax.swing.JTable;
 import org.junit.Assert;
 
 import ch.skymarshall.tcwriter.annotations.TCApi;
+import ch.skymarshall.tcwriter.it.TCGuiPilot;
 import ch.skymarshall.tcwriter.swingpilot.GuiPilot;
 
 @TCApi(description = "Step selector", humanReadable = "Step selector", isSelector = true)

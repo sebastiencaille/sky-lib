@@ -1,4 +1,4 @@
-package ch.skymarshall.tcwriter.it;
+package ch.skymarshall.tcwriter.it.api;
 
 import java.security.InvalidParameterException;
 import java.util.Optional;
@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 
 import ch.skymarshall.tcwriter.annotations.TCApi;
+import ch.skymarshall.tcwriter.it.TCGuiPilot;
 import ch.skymarshall.tcwriter.swingpilot.JDialogPilot;
 
 @TCApi(description = "Main frame actions", humanReadable = "Main frame actions")

@@ -16,6 +16,8 @@ import ch.skymarshall.tcwriter.generators.model.persistence.JsonModelPersister;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.gui.frame.TCWriterController;
+import ch.skymarshall.tcwriter.it.api.TestSessionRole;
+import ch.skymarshall.tcwriter.it.api.TestWriterRole;
 import ch.skymarshall.util.helpers.ClassLoaderHelper;
 import executors.ITestExecutor;
 import executors.JunitTestExecutor;

@@ -1,9 +1,9 @@
 package ch.skymarshall.tcwriter.it;
 
-import static ch.skymarshall.tcwriter.it.ParameterSelector.selector;
-import static ch.skymarshall.tcwriter.it.ParameterValue.oneValue;
-import static ch.skymarshall.tcwriter.it.StepSelector.addStep;
-import static ch.skymarshall.tcwriter.it.StepSelector.currentStep;
+import static ch.skymarshall.tcwriter.it.api.ParameterSelector.selector;
+import static ch.skymarshall.tcwriter.it.api.ParameterValue.oneValue;
+import static ch.skymarshall.tcwriter.it.api.StepSelector.addStep;
+import static ch.skymarshall.tcwriter.it.api.StepSelector.currentStep;
 import static org.junit.Assert.assertEquals;
 
 import javax.swing.JButton;
@@ -12,6 +12,13 @@ import javax.swing.JTable;
 import org.junit.Assert;
 
 import ch.skymarshall.tcwriter.gui.steps.StepsTableModel;
+import ch.skymarshall.tcwriter.it.api.MainFrameAction;
+import ch.skymarshall.tcwriter.it.api.ParameterSelector;
+import ch.skymarshall.tcwriter.it.api.ParameterValue;
+import ch.skymarshall.tcwriter.it.api.StepEdition;
+import ch.skymarshall.tcwriter.it.api.StepSelector;
+import ch.skymarshall.tcwriter.it.api.TestSessionRole;
+import ch.skymarshall.tcwriter.it.api.TestWriterRole;
 
 public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 

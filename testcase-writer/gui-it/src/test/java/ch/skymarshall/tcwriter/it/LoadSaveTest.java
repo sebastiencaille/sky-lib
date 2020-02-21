@@ -2,6 +2,8 @@ package ch.skymarshall.tcwriter.it;
 
 import org.junit.Test;
 
+import ch.skymarshall.tcwriter.it.api.MainFrameAction;
+
 public class LoadSaveTest extends AbstractGuiTest {
 
 	@Test

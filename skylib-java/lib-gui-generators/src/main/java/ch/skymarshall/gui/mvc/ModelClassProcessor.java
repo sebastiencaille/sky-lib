@@ -15,8 +15,8 @@
  ******************************************************************************/
 package ch.skymarshall.gui.mvc;
 
-import static java.util.stream.Collectors.toList;
 import static ch.skymarshall.util.generators.JavaCodeGenerator.toConstant;
+import static java.util.stream.Collectors.toList;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
@@ -43,6 +43,7 @@ public class ModelClassProcessor {
 	public static class Context {
 		final Map<String, String> properties = new HashMap<>();
 		final Set<String> imports = new HashSet<>();
+		final Map<String, String> generatedConstants = new HashMap<>();
 
 		public void addImport(final Class<?> class1) {
 			imports.add(class1.getName());
@@ -93,16 +94,14 @@ public class ModelClassProcessor {
 		return builder.toString();
 	}
 
-	private final Class<?> clazz;
-
-	private final Map<String, String> fieldConstants = new HashMap<>();
+	private final Class<?> modelClass;
 
 	private final Context context;
 
 	private AttributeProcessorDelegate delegate;
 
 	public ModelClassProcessor(final Class<?> clazz) {
-		this.clazz = clazz;
+		this.modelClass = clazz;
 		this.context = new Context();
 
 		if (java8) {
@@ -113,7 +112,7 @@ public class ModelClassProcessor {
 	}
 
 	public String getClassName() {
-		return clazz.getSimpleName() + "GuiModel";
+		return modelClass.getSimpleName() + "GuiModel";
 	}
 
 	protected boolean includeAttribute(final AbstractAttributeMetaData<?> attrib) {
@@ -122,10 +121,9 @@ public class ModelClassProcessor {
 
 	protected Template process() throws IOException {
 
-		final UntypedDataObjectMetaData metaData = new UntypedDataObjectMetaData(clazz, false);
+		final UntypedDataObjectMetaData metaData = new UntypedDataObjectMetaData(modelClass, false);
 
 		if (metaData.getAttributes().isEmpty()) {
-			System.err.println("No attribute found for class " + clazz);
 			return null;
 		}
 
@@ -188,8 +186,8 @@ public class ModelClassProcessor {
 
 	protected void forEachAttribute(final UntypedDataObjectMetaData metaData, final AttributeApplier attributeApplier)
 			throws IOException {
-		for (final AbstractAttributeMetaData<?> attrib : metaData.getAttributes().stream().filter(this::includeAttribute)
-				.collect(toList())) {
+		for (final AbstractAttributeMetaData<?> attrib : metaData.getAttributes().stream()
+				.filter(this::includeAttribute).collect(toList())) {
 			attributeApplier.apply(attrib);
 		}
 	}
@@ -215,7 +213,7 @@ public class ModelClassProcessor {
 		final JavaCodeGenerator gen = new JavaCodeGenerator();
 		final String constant = toConstant(attrib.getName());
 		final String fieldConstant = constant + "_FIELD";
-		fieldConstants.put(fieldConstant, attrib.getCodeName());
+		context.generatedConstants.put(fieldConstant, attrib.getCodeName());
 		gen.appendIndentedLine("private static final Field " + fieldConstant + ';');
 		gen.newLine();
 
@@ -227,8 +225,8 @@ public class ModelClassProcessor {
 		final JavaCodeGenerator gen = new JavaCodeGenerator();
 		final StringBuilder fieldsList = new StringBuilder();
 
-		for (final Map.Entry<String, String> entry : fieldConstants.entrySet()) {
-			gen.appendIndentedLine(entry.getKey() + " = " + typeToString(clazz) + ".class.getDeclaredField(\""
+		for (final Map.Entry<String, String> entry : context.generatedConstants.entrySet()) {
+			gen.appendIndentedLine(entry.getKey() + " = " + typeToString(modelClass) + ".class.getDeclaredField(\""
 					+ entry.getValue() + "\");");
 			fieldsList.append(", ");
 			fieldsList.append(entry.getKey());

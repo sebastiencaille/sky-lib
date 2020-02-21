@@ -26,8 +26,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
-import ch.skymarshall.util.generators.Template;
-
 import ch.skymarshall.dataflowmgr.generator.Utils;
 import ch.skymarshall.dataflowmgr.generator.exceptions.GeneratorException;
 import ch.skymarshall.dataflowmgr.generator.model.ActionPoint;
@@ -38,6 +36,7 @@ import ch.skymarshall.dataflowmgr.generator.model.OutFlowRule;
 import ch.skymarshall.dataflowmgr.generator.model.TemplateType;
 import ch.skymarshall.dataflowmgr.generator.writers.AbstractWriter;
 import ch.skymarshall.dataflowmgr.generator.writers.ModuleVisitor;
+import ch.skymarshall.util.generators.Template;
 
 /**
  * Generates the dto and action classes
@@ -196,11 +195,11 @@ public abstract class JavaDTOsAndActionsGenerator extends ModuleVisitor<Map<Stri
 	}
 
 	protected String variableName(final ActionPoint ap, final InFlowRule in) {
-		return Utils.firstLowerCase(ap.name + "_in_" + in.uuid).replaceAll("-", "_");
+		return Utils.firstLowerCase(ap.name + "_in_" + in.uuid).replace("-", "_");
 	}
 
 	protected String variableName(final ActionPoint ap, final OutFlowRule out) {
-		return Utils.firstLowerCase(ap.name + "_out_" + out.uuid).replaceAll("-", "_");
+		return Utils.firstLowerCase(ap.name + "_out_" + out.uuid).replace("-", "_");
 	}
 
 	protected Set<String> packages(final String... classes) {

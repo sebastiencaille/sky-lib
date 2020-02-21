@@ -17,6 +17,7 @@ import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 
 import ch.skymarshall.gui.mvc.ScreenBuildingReport;
 import ch.skymarshall.tcwriter.gui.editors.params.TestParameterModel;
@@ -55,7 +56,7 @@ public class TCWriterGui extends JFrame {
 		final ScreenBuildingReport screenBuildingReport = new ScreenBuildingReport();
 		ScreenBuildingReport.setScreenBuildingReport(screenBuildingReport);
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		this.getContentPane().setLayout(new BorderLayout());
 
@@ -133,7 +134,7 @@ public class TCWriterGui extends JFrame {
 
 		this.getContentPane().add(bottomSplit, BorderLayout.CENTER);
 
-		System.out.println(screenBuildingReport.toString());
+		LOGGER.fine(screenBuildingReport.toString());
 
 		this.validate();
 		this.pack();

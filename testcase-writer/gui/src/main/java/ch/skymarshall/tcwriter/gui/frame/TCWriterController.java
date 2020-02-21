@@ -46,9 +46,9 @@ public class TCWriterController extends GuiController {
 		gui = new TCWriterGui(this);
 		testRemoteControl = new TestRemoteControl(9998,
 				r -> SwingUtilities.invokeLater(() -> model.getExecutionState().setValue(this,
-						r ? TestExecutionState.RUNNING : TestExecutionState.STOPPED)),
+						r.booleanValue() ? TestExecutionState.RUNNING : TestExecutionState.STOPPED)),
 				p -> SwingUtilities.invokeLater(() -> model.getExecutionState().setValue(this,
-						p ? TestExecutionState.PAUSED : TestExecutionState.RUNNING)));
+						p.booleanValue() ? TestExecutionState.PAUSED : TestExecutionState.RUNNING)));
 	}
 
 	public void run() {
@@ -162,7 +162,7 @@ public class TCWriterController extends GuiController {
 
 	public void runTestCase() throws IOException, InterruptedException, TestCaseException {
 		final int rcPort = testRemoteControl.prepare();
-		LOGGER.log(Level.INFO, "Using port " + rcPort);
+		LOGGER.log(Level.INFO, "Using port {}", rcPort);
 		testExecutor.runTest(model.getTc().getValue(), rcPort);
 		testRemoteControl.start();
 	}

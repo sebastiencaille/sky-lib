@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 import ch.skymarshall.tcwriter.generators.GeneratorConfig;
@@ -59,7 +60,7 @@ public class JunitTestExecutor implements ITestExecutor {
 				"-d", targetFolder().toString(), //
 				sourceFile.toString() //
 		).redirectErrorStream(true).start();
-		new StreamHandler(testCompiler.getInputStream(), LOGGER::info).start();
+		new StreamHandler(testCompiler::getInputStream, LOGGER::info).start();
 		if (testCompiler.waitFor() != 0) {
 			throw new IllegalStateException("Compiler failed with status " + testCompiler.exitValue());
 		}
@@ -71,7 +72,7 @@ public class JunitTestExecutor implements ITestExecutor {
 		final Process runTest = new ProcessBuilder("java", "-cp", cpToCommandLine(classPath, targetURL),
 				"-Dtest.port=" + tcpPort, "-Dtc.stepping=true", "org.junit.runner.JUnitCore", className)
 						.redirectErrorStream(true).start();
-		new StreamHandler(runTest.getInputStream(), LOGGER::info).start();
+		new StreamHandler(runTest::getInputStream, LOGGER::info).start();
 	}
 
 	protected Path targetFolder() {
@@ -80,10 +81,10 @@ public class JunitTestExecutor implements ITestExecutor {
 
 	private class StreamHandler implements Runnable {
 
-		private final InputStream in;
+		private final Supplier<InputStream> in;
 		private final Consumer<String> flow;
 
-		public StreamHandler(final InputStream in, final Consumer<String> flow) {
+		public StreamHandler(final Supplier<InputStream> in, final Consumer<String> flow) {
 			this.in = in;
 			this.flow = flow;
 		}
@@ -94,10 +95,10 @@ public class JunitTestExecutor implements ITestExecutor {
 
 		@Override
 		public void run() {
-			try {
+			try (InputStream strIn = in.get()) {
 				final byte[] buffer = new byte[1024 * 1024];
 				int read;
-				while ((read = in.read(buffer, 0, buffer.length)) >= 0) {
+				while ((read = strIn.read(buffer, 0, buffer.length)) >= 0) {
 					flow.accept(new String(buffer, 0, read));
 				}
 			} catch (final IOException e) {

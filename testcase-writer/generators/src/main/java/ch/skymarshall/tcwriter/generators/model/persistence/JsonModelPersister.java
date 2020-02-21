@@ -20,6 +20,8 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
 import com.fasterxml.jackson.databind.cfg.ContextAttributes;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
@@ -35,10 +37,11 @@ public class JsonModelPersister implements IModelPersister {
 	private static ObjectMapper mapper;
 
 	static {
-		mapper = new ObjectMapper().configure(MapperFeature.AUTO_DETECT_GETTERS, false)
+		mapper = JsonMapper.builder().configure(MapperFeature.AUTO_DETECT_GETTERS, false)
 				.configure(MapperFeature.AUTO_DETECT_IS_GETTERS, false)
-				.configure(MapperFeature.AUTO_DETECT_FIELDS, true).setVisibility(PropertyAccessor.FIELD, Visibility.ANY)
-				.enableDefaultTyping(DefaultTyping.NON_FINAL, As.WRAPPER_OBJECT);
+				.configure(MapperFeature.AUTO_DETECT_FIELDS, true).visibility(PropertyAccessor.FIELD, Visibility.ANY)
+				.activateDefaultTyping(new LaissezFaireSubTypeValidator(), DefaultTyping.NON_FINAL, As.WRAPPER_OBJECT)
+				.build();
 
 		final SimpleModule testCaseWriterModule = new SimpleModule("TestCaseWriter");
 		testCaseWriterModule.addDeserializer(ExportReference.class, new JsonDeserializer<ExportReference>() {

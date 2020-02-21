@@ -20,11 +20,8 @@ import java.util.function.Predicate;
 
 import org.junit.Assert;
 import org.junit.Test;
+
 import ch.skymarshall.gui.TestObject;
-import ch.skymarshall.gui.model.ChildListModel;
-import ch.skymarshall.gui.model.IEdition;
-import ch.skymarshall.gui.model.ListModel;
-import ch.skymarshall.gui.model.RootListModel;
 import ch.skymarshall.gui.model.views.IListView;
 import ch.skymarshall.gui.model.views.ListViews;
 
@@ -70,10 +67,9 @@ public class FilterObjectModelTest extends Assert {
 		final TestObject toMove = new TestObject(3);
 		baseModel.insert(toMove);
 
-		baseModel.startEditingValue(toMove);
-		toMove.val = 2;
-		baseModel.stopEditingValue();
-
+		try (IEdition<?> edition = baseModel.startEditingValue(toMove)) {
+			toMove.val = 2;
+		}
 		// model is filtered
 		checkModel(model, 2, 4);
 

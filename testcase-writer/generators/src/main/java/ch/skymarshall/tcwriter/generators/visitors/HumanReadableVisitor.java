@@ -59,31 +59,35 @@ public class HumanReadableVisitor {
 			final List<String> mandatoryParams = parameterValue.getValueFactory().getMandatoryParameters().stream()
 					.map(p -> processTestParameter(parameterValue.getComplexTypeValues().get(p.getId())))
 					.collect(Collectors.toList());
-			final StringBuilder optionals = new StringBuilder();
-			String sep = "(";
-			boolean hasOptionals = false;
-			for (final TestApiParameter optionalParameter : parameterValue.getValueFactory().getOptionalParameters()) {
-				final TestParameterValue optionalParameterValue = parameterValue.getComplexTypeValues()
-						.get(optionalParameter.getId());
-				if (optionalParameterValue == null) {
-					continue;
-				}
-				optionals.append(sep).append(summaryOf(optionalParameter, null)).append(": ");
-				if (optionalParameter.hasType()) {
-					optionals.append(processTestParameter(optionalParameterValue));
-				} else {
-					optionals.append("yes");
-				}
-				sep = ", ";
-				hasOptionals = true;
-			}
-			optionals.append(")");
-			return summaryOf(parameterValue.getValueFactory(), mandatoryParams)
-					+ ((hasOptionals) ? " " + optionals.toString() : "");
+			return processTestParameter(parameterValue, mandatoryParams);
 		default:
 			return "";
 		}
 
+	}
+
+	private String processTestParameter(final TestParameterValue parameterValue, final List<String> mandatoryParams) {
+		final StringBuilder optionals = new StringBuilder();
+		String sep = "(";
+		boolean hasOptionals = false;
+		for (final TestApiParameter optionalParameter : parameterValue.getValueFactory().getOptionalParameters()) {
+			final TestParameterValue optionalParameterValue = parameterValue.getComplexTypeValues()
+					.get(optionalParameter.getId());
+			if (optionalParameterValue == null) {
+				continue;
+			}
+			optionals.append(sep).append(summaryOf(optionalParameter, null)).append(": ");
+			if (optionalParameter.hasType()) {
+				optionals.append(processTestParameter(optionalParameterValue));
+			} else {
+				optionals.append("yes");
+			}
+			sep = ", ";
+			hasOptionals = true;
+		}
+		optionals.append(")");
+		return summaryOf(parameterValue.getValueFactory(), mandatoryParams)
+				+ ((hasOptionals) ? " " + optionals.toString() : "");
 	}
 
 	private String summaryOf(final IdObject idObject, final List<String> list) {

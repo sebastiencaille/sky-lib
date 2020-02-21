@@ -11,7 +11,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
-import ch.skymarshall.tcwriter.gui.frame.TCWriterGui;
 import ch.skymarshall.tcwriter.stepping.StepStatus;
 import ch.skymarshall.tcwriter.stepping.TestApi;
 import ch.skymarshall.tcwriter.stepping.TestApi.StepState;
@@ -19,7 +18,7 @@ import ch.skymarshall.tcwriter.stepping.TestSteppingController.TestCaseError;
 
 public class TestRemoteControl {
 
-	private static final Logger LOGGER = Logger.getLogger(TCWriterGui.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(TestRemoteControl.class.getName());
 
 	private final int baseTcpPort;
 

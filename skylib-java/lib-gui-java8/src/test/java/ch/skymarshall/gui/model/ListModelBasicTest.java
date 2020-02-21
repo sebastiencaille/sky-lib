@@ -56,9 +56,9 @@ public class ListModelBasicTest extends Assert {
 		checkModel(model, 1, 3, 4);
 		checkModel(childModel, 1, 3, 4);
 
-		model.startEditingValue(toMove);
-		toMove.val = 2;
-		model.stopEditingValue();
+		try (IEdition<?> edition = model.startEditingValue(toMove)) {
+			toMove.val = 2;
+		}
 
 		checkModel(model, 1, 2, 3);
 		checkModel(childModel, 1, 2, 3);

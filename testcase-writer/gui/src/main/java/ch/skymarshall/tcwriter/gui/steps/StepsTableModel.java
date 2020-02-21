@@ -115,11 +115,6 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 	}
 
 	@Override
-	public TestStep getObjectAtRow(final int row) {
-		return super.getObjectAtRow(row);
-	}
-
-	@Override
 	public void setValueAt(final Object aValue, final int row, final int column) {
 		setValueAtColumn(getObjectAtRow(row), columnOf(column), aValue);
 		fireTableRowsUpdated(row - 1, row);

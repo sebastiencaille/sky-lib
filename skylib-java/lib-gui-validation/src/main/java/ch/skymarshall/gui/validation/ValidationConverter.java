@@ -18,6 +18,9 @@ public class ValidationConverter {
 	private static final ValidatorFactory factory = javax.validation.Validation.buildDefaultValidatorFactory();
 	private static final Validator validator = factory.getValidator();
 
+	private ValidationConverter() {
+	}
+
 	public static <B, T> IConverter<T, T> validator(final Class<B> beanType) {
 
 		return new IConverter<T, T>() {

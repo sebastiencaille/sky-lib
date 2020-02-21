@@ -49,7 +49,7 @@ public class AbstractGuiTest {
 		final ITestExecutor executor = new JunitTestExecutor(config, ClassLoaderHelper.appClassPath());
 
 		final TCWriterController controller = new TCWriterController(config, persister, executor);
-		SwingUtilities.invokeAndWait(() -> controller.run());
+		SwingUtilities.invokeAndWait(controller::run);
 		pilot = new TCGuiPilot(controller.getGui());
 
 		final LocalTCWriterRole localRole = new LocalTCWriterRole(pilot);

@@ -187,6 +187,7 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 			objectEdition = null;
 		}
 
+		@SuppressWarnings("resource")
 		@Override
 		public void editionStarted(final ListEvent<T> event) {
 			startEditingValue(event.getObject());

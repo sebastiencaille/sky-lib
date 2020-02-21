@@ -15,6 +15,7 @@ import ch.skymarshall.tcwriter.gui.steps.StepsTableModel;
 
 public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 
+	private static final String ACTOR_TEST_WRITER = "Test writer";
 	private final TCGuiPilot guiPilot;
 
 	public LocalTCWriterRole(final TCGuiPilot guiPilot) {
@@ -40,9 +41,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	@Override
 	public void updateStep(final StepSelector selector, final StepEdition edition) {
 		editStep(selector, edition);
-		guiPilot.withSwing(() -> {
-			applyStepEdition();
-		});
+		guiPilot.withSwing(this::applyStepEdition);
 	}
 
 	private void applyStepEdition() {
@@ -101,17 +100,17 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 
 	private StepEdition[] basicTestContents() {
 		final StepEdition edition1 = new StepEdition();
-		edition1.setActor("Test writer");
+		edition1.setActor(ACTOR_TEST_WRITER);
 		edition1.setAction("Select a step");
 		edition1.setSelector("Append a step to the test");
 
 		final StepEdition edition2 = new StepEdition();
-		edition2.setActor("Test writer");
+		edition2.setActor(ACTOR_TEST_WRITER);
 		edition2.setAction("Check the Human Readable text");
 		edition2.setSelector("Selected step");
 
 		final StepEdition edition3 = new StepEdition();
-		edition3.setActor("Test writer");
+		edition3.setActor(ACTOR_TEST_WRITER);
 		edition3.setAction("Select a step");
 		edition3.setSelector("Step at index");
 		return new StepEdition[] { edition1, edition2, edition3 };

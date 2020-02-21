@@ -66,16 +66,14 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 	public TestParameterValueEditorPanel(final TCWriterController controller, final TCWriterModel tcWriterModel,
 			final TestParameterModel tpModel) {
+
 		final ObjectProperty<TestCase> tc = controller.getModel().getTc();
 		final ObjectProperty<TestParameterValue> editedParamValue = tpModel.getEditedParameterValue();
 
+		setLayout(new BorderLayout());
+
 		tpModel.getEditedParameterValue().bind(v -> !v.equals(TestParameterValue.NO_VALUE)) //
 				.listen(this::setVisible);
-
-		tc.listen(test -> tpModel.getReferences().setValue(this, getReferences(test, editedParamValue.getValue())));
-		editedParamValue.listen(values -> tpModel.getReferences().setValue(this, getReferences(tc.getValue(), values)));
-
-		setLayout(new BorderLayout());
 
 		final JPanel topPanel = new JPanel();
 		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.PAGE_AXIS));
@@ -106,7 +104,8 @@ public class TestParameterValueEditorPanel extends JPanel {
 		topPanel.add(useComplexType);
 		add(topPanel, BorderLayout.NORTH);
 
-		final ListModel<ParameterValueEntry> allEditedParameters = new RootListModel<>(ListViews.<ParameterValueEntry>sorted());
+		final ListModel<ParameterValueEntry> allEditedParameters = new RootListModel<>(
+				ListViews.<ParameterValueEntry>sorted());
 		final ListModel<ParameterValueEntry> visibleParameters = new ChildListModel<>(allEditedParameters,
 				ListViews.filtered(p -> p.visible));
 		final TestParameterValueTable valueTable = new TestParameterValueTable(
@@ -115,43 +114,9 @@ public class TestParameterValueEditorPanel extends JPanel {
 		final ObjectProperty<Map<String, TestParameterValue>> complexValues = editedParamValue.child("ComplexParams",
 				TestParameterValue::getComplexTypeValues, TestParameterValue::updateComplexTypeValues);
 		complexValues.bind(toListModel(tc, editedParamValue)).bind(values(allEditedParameters));
-		// Update the values table when changing the api. Don't trigger when loading
-		// the step, because we may not have the right value during the loading
-		tpModel.getTestApi().listen(api -> {
-			if (api == null) {
-				return;
-			}
-			// Update existing values, track missing ones
-			final Set<String> missingMandatoryIds = api.getMandatoryParameters().stream().map(TestApiParameter::getId)
-					.collect(Collectors.toSet());
-			final Set<String> missingOptionalIds = api.getOptionalParameters().stream().map(TestApiParameter::getId)
-					.collect(Collectors.toSet());
-			for (final ParameterValueEntry p : allEditedParameters) {
-				missingMandatoryIds.remove(p.id);
-				missingOptionalIds.remove(p.id);
-				allEditedParameters.editValue(p, e -> {
-					e.visible = false;
-					updateParam(e, api);
-				});
-			}
-			// Add missing values in parameter value and in table
-			final List<ParameterValueEntry> newValues = new ArrayList<>();
-			for (final String mandatoryId : missingMandatoryIds) {
-				final TestParameterValue value = new TestParameterValue(mandatoryId,
-						tc.getValue().descriptionOf(mandatoryId).getDescription(),
-						api.getMandatoryParameterById(mandatoryId).asSimpleParameter(), null);
-				editedParamValue.getValue().addComplexTypeValue(value);
-				newValues.add(asParam(tc.getObjectValue(), mandatoryId, value, api));
-			}
-			for (final String optionalId : missingOptionalIds) {
-				final TestParameterValue value = new TestParameterValue(optionalId,
-						tc.getValue().descriptionOf(optionalId).getDescription(),
-						api.getOptionalParameterById(optionalId).asSimpleParameter(), null);
-				editedParamValue.getValue().addComplexTypeValue(value);
-				newValues.add(asParam(tc.getObjectValue(), optionalId, value, api));
-			}
-			allEditedParameters.addValues(newValues);
-		}).addDependency(detachOnUpdateOf(tcWriterModel.getSelectedStep()));
+
+		tpModel.getTestApi().listen(api -> fixParamsOfApi(tc, api, editedParamValue, allEditedParameters))
+				.addDependency(detachOnUpdateOf(tcWriterModel.getSelectedStep()));
 
 		add(new JScrollPane(valueTable), BorderLayout.CENTER);
 
@@ -163,7 +128,11 @@ public class TestParameterValueEditorPanel extends JPanel {
 		tpModel.getValueNature().bind(group(group, ParameterNature.REFERENCE, useReference, ParameterNature.SIMPLE_TYPE,
 				useRawValue, ParameterNature.TEST_API, useComplexType));
 
-		// Update the reference when updating the parameter value
+		// When TC or parameters are changing, update the list of references
+		tc.listen(test -> tpModel.getReferences().setValue(this, getReferences(test, editedParamValue.getValue())));
+		editedParamValue.listen(values -> tpModel.getReferences().setValue(this, getReferences(tc.getValue(), values)));
+
+		// when updating the parameter value, update the reference
 		editedParamValue.listen(value -> {
 			tpModel.getValueNature().setValue(this, value.getValueFactory().getNature());
 			if (value.getValueFactory().getNature() == ParameterNature.REFERENCE) {
@@ -210,6 +179,48 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 	}
 
+	/**
+	 * Update the values table when changing the api. Don't trigger when loading the
+	 * step, because we may not have the right value during the loading
+	 */
+	private void fixParamsOfApi(final ObjectProperty<TestCase> tc,
+			final TestParameterFactory api,
+			final ObjectProperty<TestParameterValue> editedParamValue, final ListModel<ParameterValueEntry> allEditedParameters) {
+		if (api == null) {
+			return;
+		}
+		// Update existing values, track missing ones
+		final Set<String> missingMandatoryIds = api.getMandatoryParameters().stream().map(TestApiParameter::getId)
+				.collect(Collectors.toSet());
+		final Set<String> missingOptionalIds = api.getOptionalParameters().stream().map(TestApiParameter::getId)
+				.collect(Collectors.toSet());
+		for (final ParameterValueEntry p : allEditedParameters) {
+			missingMandatoryIds.remove(p.id);
+			missingOptionalIds.remove(p.id);
+			allEditedParameters.editValue(p, e -> {
+				e.visible = false;
+				updateParam(e, api);
+			});
+		}
+		// Add missing values in parameter value and in table
+		final List<ParameterValueEntry> newValues = new ArrayList<>();
+		for (final String mandatoryId : missingMandatoryIds) {
+			final TestParameterValue value = new TestParameterValue(mandatoryId,
+					tc.getValue().descriptionOf(mandatoryId).getDescription(),
+					api.getMandatoryParameterById(mandatoryId).asSimpleParameter(), null);
+			editedParamValue.getValue().addComplexTypeValue(value);
+			newValues.add(asParam(tc.getObjectValue(), mandatoryId, value, api));
+		}
+		for (final String optionalId : missingOptionalIds) {
+			final TestParameterValue value = new TestParameterValue(optionalId,
+					tc.getValue().descriptionOf(optionalId).getDescription(),
+					api.getOptionalParameterById(optionalId).asSimpleParameter(), null);
+			editedParamValue.getValue().addComplexTypeValue(value);
+			newValues.add(asParam(tc.getObjectValue(), optionalId, value, api));
+		}
+		allEditedParameters.addValues(newValues);
+	}
+
 	public static final IConverter<Map<String, TestParameterValue>, Collection<ParameterValueEntry>> toListModel(
 			final ObjectProperty<TestCase> tc, final ObjectProperty<TestParameterValue> propertyValue) {
 
@@ -243,7 +254,8 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 	}
 
-	private static void updateParam(final ParameterValueEntry paramValue, final TestParameterFactory complexTypeFactory) {
+	private static void updateParam(final ParameterValueEntry paramValue,
+			final TestParameterFactory complexTypeFactory) {
 		final boolean mandatory = complexTypeFactory.hasMandatoryParameter(paramValue.id);
 		final boolean optional = complexTypeFactory.hasOptionalParameter(paramValue.id);
 		paramValue.update(mandatory, mandatory || optional);
@@ -252,8 +264,8 @@ public class TestParameterValueEditorPanel extends JPanel {
 	private static ParameterValueEntry asParam(final TestCase tc, final String complexParameterId,
 			final TestParameterValue complexValue, final TestParameterFactory complexTypeFactory) {
 		final String simpleValue = complexValue.getSimpleValue();
-		final ParameterValueEntry paramValue = new ParameterValueEntry(complexParameterId, complexValue.getValueFactory(),
-				tc.descriptionOf(complexParameterId).getDescription(), simpleValue,
+		final ParameterValueEntry paramValue = new ParameterValueEntry(complexParameterId,
+				complexValue.getValueFactory(), tc.descriptionOf(complexParameterId).getDescription(), simpleValue,
 				!Strings.isNullOrEmpty(simpleValue));
 		updateParam(paramValue, complexTypeFactory);
 		return paramValue;

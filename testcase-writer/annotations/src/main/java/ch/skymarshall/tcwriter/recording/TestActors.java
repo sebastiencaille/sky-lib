@@ -11,6 +11,9 @@ public class TestActors {
 	private static Map<Object, TestObjectDescription> descriptions = new HashMap<>();
 	private static Map<Object, String> names = new HashMap<>();
 
+	private TestActors() {
+	}
+
 	/**
 	 *
 	 * @param testActor   the actor

@@ -95,35 +95,39 @@ public class ClassToModelVisitor {
 			for (final Method valueFactoryMethod : valueFactoryMethods) {
 				// Process each method of the class
 
-				final TestParameterFactory valueFactory = new TestParameterFactory(methodKey(valueFactoryMethod),
-						valueFactoryMethod.getDeclaringClass().getSimpleName() + "." + valueFactoryMethod.getName(),
-						ParameterNature.TEST_API, valueFactoryMethod.getReturnType().getName());
-				processMethodAnnotation(valueFactory, valueFactoryMethod);
-
-				// Add mandatory parameters (parameters of the method)
-				valueFactory.getMandatoryParameters().addAll(processParameters(valueFactory, valueFactoryMethod));
-
-				// Add optional parameters: instance methods of the return type
-				final HashSet<Method> factoryApiMethods = new HashSet<>();
-				accumulateApiMethods(valueFactoryMethod.getReturnType(), factoryApiMethods);
-				factoryApiMethods.removeIf(m -> Modifier.isStatic(m.getModifiers()) || m.getParameterCount() > 1);
-				for (final Method factoryReturnTypeMethod : factoryApiMethods) {
-					String type;
-					if (factoryReturnTypeMethod.getParameterTypes().length > 0) {
-						type = factoryReturnTypeMethod.getParameterTypes()[0].getName();
-					} else {
-						type = TestApiParameter.NO_TYPE;
-					}
-					final TestApiParameter optionalParameter = new TestApiParameter(methodKey(factoryReturnTypeMethod),
-							factoryReturnTypeMethod.getName(), type);
-					processMethodAnnotation(optionalParameter, factoryReturnTypeMethod);
-					valueFactory.getOptionalParameters().add(optionalParameter);
-				}
-
-				forEachSuper(valueFactoryMethod.getReturnType(),
-						apiClazz -> model.getParameterFactories().put(apiClazz.getName(), valueFactory));
+				processValueFactory(valueFactoryMethod);
 			}
 		}
+	}
+
+	private void processValueFactory(final Method valueFactoryMethod) {
+		final TestParameterFactory valueFactory = new TestParameterFactory(methodKey(valueFactoryMethod),
+				valueFactoryMethod.getDeclaringClass().getSimpleName() + "." + valueFactoryMethod.getName(),
+				ParameterNature.TEST_API, valueFactoryMethod.getReturnType().getName());
+		processMethodAnnotation(valueFactory, valueFactoryMethod);
+
+		// Add mandatory parameters (parameters of the method)
+		valueFactory.getMandatoryParameters().addAll(processParameters(valueFactory, valueFactoryMethod));
+
+		// Add optional parameters: instance methods of the return type
+		final HashSet<Method> factoryApiMethods = new HashSet<>();
+		accumulateApiMethods(valueFactoryMethod.getReturnType(), factoryApiMethods);
+		factoryApiMethods.removeIf(m -> Modifier.isStatic(m.getModifiers()) || m.getParameterCount() > 1);
+		for (final Method factoryReturnTypeMethod : factoryApiMethods) {
+			String type;
+			if (factoryReturnTypeMethod.getParameterTypes().length > 0) {
+				type = factoryReturnTypeMethod.getParameterTypes()[0].getName();
+			} else {
+				type = TestApiParameter.NO_TYPE;
+			}
+			final TestApiParameter optionalParameter = new TestApiParameter(methodKey(factoryReturnTypeMethod),
+					factoryReturnTypeMethod.getName(), type);
+			processMethodAnnotation(optionalParameter, factoryReturnTypeMethod);
+			valueFactory.getOptionalParameters().add(optionalParameter);
+		}
+
+		forEachSuper(valueFactoryMethod.getReturnType(),
+				apiClazz -> model.getParameterFactories().put(apiClazz.getName(), valueFactory));
 	}
 
 	private void processMethodAnnotation(final IdObject idObject, final Method apiMethod) {

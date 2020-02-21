@@ -1,6 +1,10 @@
 package ch.skymarshall.util.dao.metadata;
 
 public class MetadataHelper {
+
+	private MetadataHelper() {
+	}
+
 	public static String toFirstLetterInUpperCase(final String str) {
 		if (str == null) {
 			return null;

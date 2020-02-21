@@ -145,7 +145,7 @@ public class ClassFinder {
 
 	private void handleClass(final String classFileName) {
 		final String className = classFileName.substring(0, classFileName.length() - CLASS_EXTENSION.length())
-				.replaceAll("/", ".");
+				.replace("/", ".");
 		try {
 			final Class<?> clazz = Class.forName(className, false, loader);
 			processClass(clazz);

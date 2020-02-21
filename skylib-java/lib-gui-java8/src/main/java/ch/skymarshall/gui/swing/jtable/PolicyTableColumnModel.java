@@ -44,17 +44,13 @@ import ch.skymarshall.gui.swing.model.ListModelTableModel;
  */
 public class PolicyTableColumnModel<C extends Enum<C>> extends DefaultTableColumnModel {
 
-	public final List<Class<?>> policyExecutionOrder;
+	private final List<Class<?>> policyExecutionOrder;
 
 	private final JTable table;
 
 	public PolicyTableColumnModel(final JTable table) {
 		this(table, Arrays.asList(FixedWidthColumn.class, PercentOfTableWidthColumn.class,
 				PercentOfAvailableSpaceColumn.class));
-	}
-
-	boolean isValid() {
-		return table.isValid();
 	}
 
 	protected PolicyTableColumnModel(final JTable table, final List<Class<?>> executionOrder) {
@@ -67,6 +63,10 @@ public class PolicyTableColumnModel<C extends Enum<C>> extends DefaultTableColum
 		table.setColumnModel(this);
 		table.createDefaultColumnsFromModel();
 		return this;
+	}
+
+	boolean isValid() {
+		return table.isValid();
 	}
 
 	/**
@@ -110,26 +110,34 @@ public class PolicyTableColumnModel<C extends Enum<C>> extends DefaultTableColum
 			}
 		}
 
-		// Fix rounding
+		fixWidthRounding(unallocatedWidth, columnPerClass);
+
+		table.getTableHeader().repaint();
+		table.repaint();
+	}
+
+	private void fixWidthRounding(final int unallocatedWidth,
+			final Map<Class<?>, List<TableColumnWithPolicy<C>>> columnPerClass) {
+
 		final List<TableColumnWithPolicy<C>> remainingPercentWidthCols = columnPerClass
 				.get(PercentOfAvailableSpaceColumn.class);
-		if (unallocatedWidth < 0 && !remainingPercentWidthCols.isEmpty()) {
-			final int perColumnCorrection = unallocatedWidth / remainingPercentWidthCols.size() - 1;
-			unallocatedWidth -= perColumnCorrection * remainingPercentWidthCols.size();
+		int remainingWidth = unallocatedWidth;
+
+		if (remainingWidth < 0 && !remainingPercentWidthCols.isEmpty()) {
+			final int perColumnCorrection = remainingWidth / remainingPercentWidthCols.size() - 1;
+			remainingWidth -= perColumnCorrection * remainingPercentWidthCols.size();
 			remainingPercentWidthCols.forEach(col -> col.setComputedWidth(col.getWidth() + perColumnCorrection));
 		}
-		if (unallocatedWidth > 0 && !remainingPercentWidthCols.isEmpty()) {
+
+		if (remainingWidth > 0 && !remainingPercentWidthCols.isEmpty()) {
 			final int percentSum = remainingPercentWidthCols.stream()
 					.collect(Collectors.summingInt(c -> ((PercentOfAvailableSpaceColumn<C>) c).getPercent()));
 			if (percentSum == 100) {
 				final TableColumnWithPolicy<C> lastPercentColumn = remainingPercentWidthCols
 						.get(remainingPercentWidthCols.size() - 1);
-				lastPercentColumn.setComputedWidth(lastPercentColumn.getWidth() + unallocatedWidth);
+				lastPercentColumn.setComputedWidth(lastPercentColumn.getWidth() + remainingWidth);
 			}
 		}
-
-		table.getTableHeader().repaint();
-		table.repaint();
 	}
 
 	public void configureColumn(final TableColumnWithPolicy<C> column) {

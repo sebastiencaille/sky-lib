@@ -19,8 +19,8 @@ import javax.swing.table.TableCellRenderer;
 import ch.skymarshall.gui.model.RootListModel;
 import ch.skymarshall.gui.model.views.ListViews;
 import ch.skymarshall.gui.mvc.IBindingController;
-import ch.skymarshall.gui.swing.jtable.TableColumnWithPolicy;
 import ch.skymarshall.gui.swing.jtable.PolicyTableColumnModel;
+import ch.skymarshall.gui.swing.jtable.TableColumnWithPolicy;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
@@ -52,9 +52,6 @@ public class StepsTable extends JPanel {
 		controller.getTestRemoteControl().setStepListener(stepsTableModel::stepExecutionUpdated);
 
 		stepsJTable = new JTable(stepsTableModel) {
-			{
-				setName("StepsTable");
-			}
 
 			@Override
 			protected void paintChildren(final Graphics g) {
@@ -101,22 +98,23 @@ public class StepsTable extends JPanel {
 
 			}
 		};
-
+		stepsJTable.setName("StepsTable");
 		stepsJTable.setRowHeight(stepsJTable.getRowHeight() * 2);
 
 		// Setup columns
 		final PolicyTableColumnModel<StepsTableModel.Column> columnModel = new PolicyTableColumnModel<>(stepsJTable);
 		columnModel.install();
 		Arrays.stream(Column.values()).forEach(c -> stepsJTable.getColumn(c).setCellRenderer(new StepsCellRenderer()));
-		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(Column.BREAKPOINT, 20).apply(new StepStatusRenderer(),
-				new StepStatusEditor()));
+		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(Column.BREAKPOINT, 20)
+				.apply(new StepStatusRenderer(), new StepStatusEditor()));
 		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(Column.STEP, 20));
 		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(Column.ACTOR, 120).apply(new StepsCellRenderer()));
 		columnModel.configureColumn(
 				TableColumnWithPolicy.percentOfAvailableSpace(Column.SELECTOR, 50).apply(new StepsCellRenderer()));
+		columnModel.configureColumn(
+				TableColumnWithPolicy.percentOfAvailableSpace(Column.PARAM0, 50).apply(new StepsCellRenderer()));
 		columnModel
-				.configureColumn(TableColumnWithPolicy.percentOfAvailableSpace(Column.PARAM0, 50).apply(new StepsCellRenderer()));
-		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(Column.TO_VAR, 250).apply(new StepsCellRenderer()));
+				.configureColumn(TableColumnWithPolicy.fixedWidth(Column.TO_VAR, 250).apply(new StepsCellRenderer()));
 
 		// Refresh table when step is updated
 		final IBindingController selectedStepCtrl = model.getSelectedStep()

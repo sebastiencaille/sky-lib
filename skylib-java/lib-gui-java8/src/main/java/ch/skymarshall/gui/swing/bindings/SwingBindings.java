@@ -28,6 +28,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
@@ -46,6 +47,9 @@ import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 import ch.skymarshall.gui.swing.model.ListModelTableModel;
 
 public class SwingBindings {
+
+	private SwingBindings() {
+	}
 
 	public static String nameOf(final Component component) {
 		if (component.getName() != null) {
@@ -130,13 +134,11 @@ public class SwingBindings {
 	}
 
 	public static <C extends ItemSelectable, T> ListenerRegistration<T, C, ?> itemListener(
-			final Function<ItemEvent, Boolean> activator, final Function<ItemEvent, T> valueExtractor) {
-		return new ListenerRegistration<T, C, ItemListener>((link, component) -> {
-			return event -> {
-				if (activator.apply(event)) {
-					link.setValueFromComponent(component, valueExtractor.apply(event));
-				}
-			};
+			final Predicate<ItemEvent> activator, final Function<ItemEvent, T> valueExtractor) {
+		return new ListenerRegistration<T, C, ItemListener>((link, component) -> event -> {
+			if (activator.test(event)) {
+				link.setValueFromComponent(component, valueExtractor.apply(event));
+			}
 		}, (c, l) -> c.addItemListener(l), (c, l) -> c.removeItemListener(l));
 	}
 

@@ -8,7 +8,9 @@ It eventually happens, at some point in time, that the teams involved in a softw
 
 ## What is a software
 A software is basically made of data (or a collection of...) and processing units (processors).
-> data -> processor -> data
+```
+data -> processor -> data
+```
 
 **Data** may be coming as an external input or from a processor. 
 Acquiring some the data may require send an explicit event (to trigger a remote call to a remote service or send a data request to a storage)
@@ -16,21 +18,25 @@ Data are sent as an external output (which may be a remote service, a storage de
 **Processors** are pure functions that are transforming some data to other ones.
 
 The combination of data and processors can be considered as a data processing **flow**.
->                 external input -> processor -> processor output ->
+```                 
+external input -> processor -> processor output ->
 processor input + external input -> processor -> processor output ->
 ...
 processor input + external input -> processor -> external output
+```
 
 In a traditional software, procedures and functions are taking the responsibility of loading durable data, processing all data and opportunistically triggering the subsequent processing. This approach is creating a hierarchy, which may become quite complex.
 
 In a reactive software, the loading of the durable data are still performed by the processor, and the processor is still opportunistically triggering the subsequent processing. A complexity is added because of the difficulty to transfer a growing set of data from a processing to another one
-> processor1(processorInput): myData=f_1(processorInput)
+```
+processor1(processorInput): myData=f_1(processorInput)
     return r(processor2(myData))...
 
-> processor2(processorInput): myData=f_2(processorInput)
+processor2(processorInput): myData=f_2(processorInput)
     return r(processor2_part1(myData))
     .then(d -> combine(d, r(d -> externalInput(myData, d)))
     .then(d -> processor2_part2(myData, d))...
+```
 
 ## The hierarchy issue
 It is quite common to introduce bugs because no one really remembers which feature is calling some piece of code. We must understand that in some cases there is no sane way to identify the impact of some changes.

@@ -1,4 +1,4 @@
-# POC repository
+# POCs repository
 This repository contains some POCs I wrote during the years...
 
 ## Business oriented testing

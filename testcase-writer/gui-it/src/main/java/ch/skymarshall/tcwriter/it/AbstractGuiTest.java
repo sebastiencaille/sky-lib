@@ -41,7 +41,7 @@ public class AbstractGuiTest {
 		config.setTcPath(tcPath.toString());
 		config.setDefaultGeneratedTCPath("./src/test/java");
 		config.setDictionaryPath(modelPath + "/test-model.json");
-		config.setTemplatePath(new File("./src/main/resources/templates/TC.template").toString());
+		config.setTemplatePath(new File("templates/TC.template").toString());
 		final JsonModelPersister persister = new JsonModelPersister(config);
 
 		final TestDictionary model = new JavaToDictionary(asList(TestWriterRole.class)).generateDictionary();

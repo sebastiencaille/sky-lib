@@ -51,7 +51,6 @@
 
 	<modules>
 		<module>model</module>
-		<module>engine</module>
 		<module>generator</module>
 		<module>examples</module>
 	</modules>

@@ -21,7 +21,7 @@ public interface IModelPersister {
 
 	void writeTestDictionary(TestDictionary tm) throws IOException;
 
-	void writetestDictionary(Path target, TestDictionary model) throws IOException;
+	void writeTestDictionary(Path target, TestDictionary model) throws IOException;
 
 	TestCase readTestCase(String identifier, TestDictionary testDictionary) throws IOException;
 

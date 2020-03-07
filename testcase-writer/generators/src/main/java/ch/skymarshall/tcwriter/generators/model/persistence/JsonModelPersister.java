@@ -110,11 +110,11 @@ public class JsonModelPersister implements IModelPersister {
 
 	@Override
 	public void writeTestDictionary(final TestDictionary tm) throws IOException {
-		writetestDictionary(Paths.get(config.getDictionaryPath()), tm);
+		writeTestDictionary(Paths.get(config.getDictionaryPath()), tm);
 	}
 
 	@Override
-	public void writetestDictionary(final Path target, final TestDictionary tm) throws IOException {
+	public void writeTestDictionary(final Path target, final TestDictionary tm) throws IOException {
 		writeJson(target, mapper.writerFor(TestDictionary.class).writeValueAsString(tm));
 	}
 

@@ -16,7 +16,7 @@ import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 public class IntegrationTest {
 
 	@Test
-	public void generateModelAndTC() throws IOException, TestCaseException {
+	public void generateDictionaryAndTC() throws IOException, TestCaseException {
 		final TestDictionary model = ExampleHelper.generateDictionary();
 		final TestCase testCase = ExampleHelper.recordTestCase(model);
 		ExampleHelper.saveDictionary(model);
@@ -33,7 +33,7 @@ public class IntegrationTest {
 		tmpModel.deleteOnExit();
 		final File tmpTC = File.createTempFile("tc-content", ".json");
 		tmpTC.deleteOnExit();
-		ExampleHelper.getPersister().writetestDictionary(tmpModel.toPath(), model);
+		ExampleHelper.getPersister().writeTestDictionary(tmpModel.toPath(), model);
 		ExampleHelper.saveTC(ExampleHelper.TC_NAME + "-tmp", tc);
 
 		// TODO: find a way to compare both

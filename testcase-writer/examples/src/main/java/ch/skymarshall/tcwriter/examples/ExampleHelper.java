@@ -44,7 +44,7 @@ public class ExampleHelper {
 		config.setTcPath(tcPath.toString());
 		config.setDefaultGeneratedTCPath("./src/test/java");
 		config.setDictionaryPath(modelPath + "/test-model.json");
-		config.setTemplatePath(new File("./src/main/resources/templates/TC.template").toString());
+		config.setTemplatePath(new File("templates/TC.template").toString());
 		persister = new JsonModelPersister(config);
 	}
 

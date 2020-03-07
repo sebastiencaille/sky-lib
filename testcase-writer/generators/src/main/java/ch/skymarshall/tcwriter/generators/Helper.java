@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
-import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestDictionary;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestRole;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
@@ -19,7 +19,7 @@ public class Helper {
 
 	private static final char EOL = '\n';
 
-	static String dumpModel(final TestModel model) {
+	static String dumpModel(final TestDictionary model) {
 		final StringBuilder builder = new StringBuilder();
 		builder.append(model.toString()).append(EOL);
 		for (final TestRole actor : model.getRoles().values()) {

@@ -17,41 +17,34 @@ package ch.skymarshall.gui.mvc;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 
 import ch.skymarshall.annotations.GuiObject;
-import ch.skymarshall.util.generators.Template;
 import ch.skymarshall.util.helpers.ClassFinder;
 
 public class GuiModelGenerator {
 
-	public static void main(final String[] args) throws IOException, URISyntaxException {
+	public static void main(final String[] args) throws IOException {
 		System.out.println("Running in " + new File(".").getAbsolutePath()); // NOSONAR
 		final File target;
-		if (args.length > 0) {
-			target = new File(args[0]);
+		final String sourcePackage = args[0];
+		if (args.length > 1) {
+			target = new File(args[1]);
 		} else {
 			target = new File("src-generated");
 		}
 		target.mkdirs();
-		new GuiModelGenerator().process(target);
+		new GuiModelGenerator().process(sourcePackage, target);
 	}
 
-	private void process(final File targetSrcFolder) throws IOException, URISyntaxException {
+	private void process(final String sourcePackage, final File targetSrcFolder) throws IOException {
 
-		final ClassFinder finder = ClassFinder.forThread();
+		final ClassFinder finder = ClassFinder.forApp();
 		finder.addExpectedAnnotation(GuiObject.class, ClassFinder.Policy.CLASS_ONLY);
-		finder.collect();
+		finder.collect(sourcePackage);
 		System.out.println(finder.getResult()); // NOSONAR
 
 		for (final Class<?> clazz : finder.getResult()) {
-			final String pkg = clazz.getPackage().getName();
-			final File targetFolder = new File(targetSrcFolder, pkg.replace('.', '/'));
-
-			final ModelClassProcessor processor = new ModelClassProcessor(clazz);
-			final Template generatedClassTemplate = processor.process();
-			generatedClassTemplate.add("package", pkg);
-			generatedClassTemplate.writeTo(new File(targetFolder, processor.getClassName() + ".java"));
+			new ModelClassProcessor(clazz).process().writeToFolder(targetSrcFolder);
 		}
 
 	}

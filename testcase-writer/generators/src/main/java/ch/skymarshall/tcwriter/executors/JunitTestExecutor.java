@@ -10,10 +10,10 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import ch.skymarshall.tcwriter.generators.GeneratorConfig;
 import ch.skymarshall.tcwriter.generators.TestCaseToJava;
@@ -31,9 +31,9 @@ public class JunitTestExecutor implements ITestExecutor {
 
 	private final TestCaseToJava testCaseToJava;
 
-	private final List<URL> classPath;
+	private final URL[] classPath;
 
-	public JunitTestExecutor(final GeneratorConfig config, final List<URL> classPath) throws IOException {
+	public JunitTestExecutor(final GeneratorConfig config, final URL[] classPath) throws IOException {
 		this.javaTargetPath = Files.createTempDirectory("tcwriter");
 		this.javaTargetPath.toFile().deleteOnExit();
 		this.classPath = classPath;
@@ -47,7 +47,7 @@ public class JunitTestExecutor implements ITestExecutor {
 
 	@Override
 	public void compile(final File sourceFile) throws IOException, InterruptedException {
-		final String waveClassPath = classPath.stream()
+		final String waveClassPath = Stream.of(classPath)
 				.filter(j -> j.toString().contains("testcase-writer") && j.toString().contains("annotations"))
 				.map(URL::getFile).collect(joining(":"));
 		final Process testCompiler = new ProcessBuilder("java", //

@@ -1,0 +1,15 @@
+// TBD
+digraph "SimpleFlow" {
+    "enhance2" [ label="simpleService.enhance2", shape="box"  ];
+    "enhance1" [ label="simpleService.enhance1", shape="box"  ];
+    "display" [ label="simpleService.display", shape="box"  ];
+    "entryProcessor" [ label="simpleService.init", shape="box"  ];
+    "entryProcessor" -> "enhance1" [ label="
+" ];
+    "entryProcessor" -> "enhance2" [ label="
+" ];
+    "enhance2" -> "display" [ label="
+" ];
+    "enhance1" -> "display" [ label="
+" ];
+}

@@ -2,7 +2,7 @@ package ch.skymarshall.tcwriter.gui.frame;
 
 import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestDictionary;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 
@@ -18,17 +18,17 @@ public class TCWriterModel {
 
 	private final ObjectProperty<TestExecutionState> executionState;
 
-	private final TestModel testModel;
+	private final TestDictionary testDictionary;
 
-	public TCWriterModel(final TestModel testModel, final IScopedSupport changeSupport) {
-		this.testModel = testModel;
+	public TCWriterModel(final TestDictionary testDictionary, final IScopedSupport changeSupport) {
+		this.testDictionary = testDictionary;
 		tc = new ObjectProperty<>("TestCase", changeSupport);
 		selectedStep = new ObjectProperty<>("SelectedStep", changeSupport);
 		executionState = new ObjectProperty<>("ExecutionState", changeSupport, TestExecutionState.STOPPED);
 	}
 
-	public TestModel getTestModel() {
-		return testModel;
+	public TestDictionary getTestDictionary() {
+		return testDictionary;
 	}
 
 	public ObjectProperty<TestCase> getTc() {

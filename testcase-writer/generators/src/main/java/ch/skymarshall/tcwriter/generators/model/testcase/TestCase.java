@@ -14,13 +14,13 @@ import com.google.common.collect.MultimapBuilder;
 
 import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestDictionary;
 import ch.skymarshall.tcwriter.test.TestObjectDescription;
 
 public class TestCase {
 
 	@JsonIgnore
-	private TestModel testModel;
+	private TestDictionary testDictionary;
 
 	private final List<TestStep> steps = new ArrayList<>();
 	private final String pkgAndClassName;
@@ -35,20 +35,20 @@ public class TestCase {
 
 	public TestCase() {
 		this.pkgAndClassName = null;
-		this.testModel = null;
+		this.testDictionary = null;
 	}
 
-	public TestCase(final String path, final TestModel testModel) {
+	public TestCase(final String path, final TestDictionary testDictionary) {
 		this.pkgAndClassName = path;
-		this.testModel = testModel;
+		this.testDictionary = testDictionary;
 	}
 
-	public void setModel(final TestModel testModel) {
-		this.testModel = testModel;
+	public void setDictionary(final TestDictionary testDictionary) {
+		this.testDictionary = testDictionary;
 	}
 
-	public TestModel getModel() {
-		return testModel;
+	public TestDictionary getDictionary() {
+		return testDictionary;
 	}
 
 	public void addStep(final TestStep step) {
@@ -81,7 +81,7 @@ public class TestCase {
 	}
 
 	public TestObjectDescription descriptionOf(final String id) {
-		final TestObjectDescription modelDescr = testModel.getDescriptions().get(id);
+		final TestObjectDescription modelDescr = testDictionary.getDescriptions().get(id);
 		if (modelDescr != null) {
 			return modelDescr;
 		}
@@ -111,9 +111,9 @@ public class TestCase {
 
 	public synchronized IdObject getRestoreValue(final String id) {
 		if (cachedValues == null) {
-			cachedValues = testModel.getRoles().values().stream().flatMap(r -> r.getActions().stream())
+			cachedValues = testDictionary.getRoles().values().stream().flatMap(r -> r.getActions().stream())
 					.collect(Collectors.toMap(IdObject::getId, a -> a));
-			cachedValues.putAll(testModel.getParameterFactories().values().stream()
+			cachedValues.putAll(testDictionary.getParameterFactories().values().stream()
 					.collect(Collectors.toMap(IdObject::getId, a -> a)));
 		}
 
@@ -137,7 +137,7 @@ public class TestCase {
 		if (apiParameterId.isEmpty()) {
 			return TestApiParameter.NO_PARAMETER;
 		}
-		return testModel.getRoles().values().stream().flatMap(s -> s.getActions().stream())
+		return testDictionary.getRoles().values().stream().flatMap(s -> s.getActions().stream())
 				.flatMap(a -> a.getParameters().stream()).filter(p -> p.getId().equals(apiParameterId)).findFirst()
 				.orElseThrow(() -> new IllegalStateException("Unable to find " + apiParameterId));
 	}

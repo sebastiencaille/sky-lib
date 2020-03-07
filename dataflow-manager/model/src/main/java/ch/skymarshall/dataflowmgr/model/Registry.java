@@ -26,7 +26,7 @@ public interface Registry {
 	 * @param data
 	 * @param simpleName
 	 */
-	void registerObject(IDData data, String simpleName);
+	void registerObject(IDItem data, String simpleName);
 
 	/**
 	 * Get the user readable name matching the uuid

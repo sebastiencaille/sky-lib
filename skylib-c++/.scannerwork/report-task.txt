@@ -1,0 +1,7 @@
+organization=sebastiencaille-github
+projectKey=skylib_cpp
+serverUrl=https://sonarcloud.io
+serverVersion=7.1.1.10702
+dashboardUrl=https://sonarcloud.io/dashboard/index/skylib_cpp
+ceTaskId=AWLIzQ0fX0BbYiea-y1B
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AWLIzQ0fX0BbYiea-y1B

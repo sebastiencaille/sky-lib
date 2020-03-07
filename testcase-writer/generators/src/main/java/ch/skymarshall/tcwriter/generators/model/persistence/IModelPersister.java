@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import ch.skymarshall.tcwriter.generators.GeneratorConfig;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestDictionary;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 
 /**
@@ -17,13 +17,13 @@ public interface IModelPersister {
 
 	void setConfiguration(GeneratorConfig config);
 
-	TestModel readTestModel() throws IOException;
+	TestDictionary readtestDictionary() throws IOException;
 
-	void writeTestModel(TestModel tm) throws IOException;
+	void writeTestDictionary(TestDictionary tm) throws IOException;
 
-	void writeTestModel(Path target, TestModel model) throws IOException;
+	void writetestDictionary(Path target, TestDictionary model) throws IOException;
 
-	TestCase readTestCase(String identifier, TestModel testModel) throws IOException;
+	TestCase readTestCase(String identifier, TestDictionary testDictionary) throws IOException;
 
 	void writeTestCase(String identifier, TestCase tc) throws IOException;
 

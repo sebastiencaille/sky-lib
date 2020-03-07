@@ -16,7 +16,7 @@ import ch.skymarshall.tcwriter.generators.model.persistence.JsonModelPersister;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestDictionary;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory.ParameterNature;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestRole;
@@ -32,7 +32,7 @@ public class TestCaseRecorder implements ITestCaseRecorder {
 
 	private static int actorIndex = 0;
 
-	private final TestModel testModel;
+	private final TestDictionary testDictionary;
 
 	private final List<TestStep> testSteps = new ArrayList<>();
 	private final Map<Object, TestParameterValue> testParameterValues = new HashMap<>();
@@ -43,12 +43,12 @@ public class TestCaseRecorder implements ITestCaseRecorder {
 
 	public TestCaseRecorder(final IModelPersister persister) throws IOException {
 		this.persister = persister;
-		this.testModel = persister.readTestModel();
+		this.testDictionary = persister.readtestDictionary();
 	}
 
-	public TestCaseRecorder(final IModelPersister persister, final TestModel model) {
+	public TestCaseRecorder(final IModelPersister persister, final TestDictionary model) {
 		this.persister = persister;
-		this.testModel = model;
+		this.testDictionary = model;
 	}
 
 	private static void resetActorIndex() {
@@ -76,7 +76,7 @@ public class TestCaseRecorder implements ITestCaseRecorder {
 	public TestActor recordActor(final Object actor) {
 		final Class<?> roleType = actor.getClass();
 		final TestActor testActor = new TestActor(nextActorIndex() + "_" + roleType.getSimpleName(),
-				roleType.getSimpleName(), testModel.getRole(roleType));
+				roleType.getSimpleName(), testDictionary.getRole(roleType));
 		actors.put(actor, testActor);
 		return testActor;
 	}
@@ -89,7 +89,7 @@ public class TestCaseRecorder implements ITestCaseRecorder {
 		TestActor actor = null;
 		final String actorName = TestActors.getNames().get(recordedActor);
 		if (actorName != null) {
-			actor = testModel.getActors().get(actorName);
+			actor = testDictionary.getActors().get(actorName);
 		}
 		if (actor == null) {
 			actor = actors.get(recordedActor);
@@ -125,7 +125,7 @@ public class TestCaseRecorder implements ITestCaseRecorder {
 	@Override
 	public void recordParamFactory(final Class<?> apiFactoryClass, final String apiName, final Object[] apiArgs,
 			final Object returnValue) {
-		final TestParameterFactory testParameterFactory = testModel
+		final TestParameterFactory testParameterFactory = testDictionary
 				.getTestParameterFactory(Helper.methodKey(apiFactoryClass, apiName));
 		final TestParameterValue testParameterValue = new TestParameterValue("<PlaceHolder>", testParameterFactory);
 		for (int i = 0; i < testParameterFactory.getMandatoryParameters().size(); i++) {
@@ -191,8 +191,8 @@ public class TestCaseRecorder implements ITestCaseRecorder {
 	}
 
 	public TestCase getTestCase(final String testClassName) {
-		final TestCase testCase = new TestCase(testClassName, testModel);
-		actors.forEach((a, ta) -> testModel.addActor(ta,
+		final TestCase testCase = new TestCase(testClassName, testDictionary);
+		actors.forEach((a, ta) -> testDictionary.addActor(ta,
 				TestActors.getDescriptions().getOrDefault(a, new TestObjectDescription(ta.getId(), ta.getId()))));
 		testCase.getSteps().addAll(testSteps);
 		testParameterValues.values().stream().map(TestParameterValue::getValueFactory)

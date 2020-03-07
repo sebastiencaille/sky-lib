@@ -9,7 +9,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -18,7 +17,6 @@ public class ClassLoaderHelper {
 	private static final String CP_SEPARATOR = System.getProperty("path.separator");
 
 	private ClassLoaderHelper() {
-
 	}
 
 	public static InputStream openResourceStream(final String resourceName) {
@@ -30,7 +28,7 @@ public class ClassLoaderHelper {
 		return in;
 	}
 
-	public static String readResource(final InputStream in) throws IOException {
+	public static String readUTF8Resource(final InputStream in) throws IOException {
 		final StringBuilder result = new StringBuilder();
 
 		final InputStreamReader inReader = new InputStreamReader(in, StandardCharsets.UTF_8);
@@ -44,11 +42,11 @@ public class ClassLoaderHelper {
 
 	public static String readUTF8Resource(final String resourceName) throws IOException {
 		try (final InputStream in = openResourceStream(resourceName)) {
-			return readResource(in);
+			return readUTF8Resource(in);
 		}
 	}
 
-	public static List<URL> appClassPath() {
+	public static URL[] appClassPath() {
 		final String[] cp = System.getProperty("java.class.path").split(CP_SEPARATOR);
 		return Arrays.stream(cp).map(c -> {
 			try {
@@ -57,10 +55,10 @@ public class ClassLoaderHelper {
 				throw new IllegalStateException(e);
 			}
 
-		}).collect(Collectors.toList());
+		}).collect(Collectors.toList()).toArray(new URL[0]);
 	}
 
-	public static String cpToCommandLine(final List<URL> classpath, final URL... extra) {
-		return Stream.concat(classpath.stream(), Stream.of(extra)).map(URL::getFile).collect(joining(CP_SEPARATOR));
+	public static String cpToCommandLine(final URL[] classpath, final URL... extra) {
+		return Stream.concat(Stream.of(classpath), Stream.of(extra)).map(URL::getFile).collect(joining(CP_SEPARATOR));
 	}
 }

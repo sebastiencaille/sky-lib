@@ -7,7 +7,7 @@ public class GeneratorConfig {
 
 	private String name = "default";
 
-	private String modelPath;
+	private String dictionaryPath;
 
 	private String tcPath;
 
@@ -27,12 +27,12 @@ public class GeneratorConfig {
 
 	@Ordered(order = 2)
 	@Labeled(label = "Location of the model")
-	public String getModelPath() {
-		return modelPath;
+	public String getDictionaryPath() {
+		return dictionaryPath;
 	}
 
-	public void setModelPath(final String modelPath) {
-		this.modelPath = modelPath;
+	public void setDictionaryPath(final String dictionaryPath) {
+		this.dictionaryPath = dictionaryPath;
 	}
 
 	@Ordered(order = 3)

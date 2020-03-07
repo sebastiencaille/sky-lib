@@ -11,7 +11,8 @@
 	OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. -->
 <project
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>ch.skymarshall.dataflowmgr</groupId>
@@ -25,55 +26,13 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.6.0</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>java</goal>
-						</goals>
-						<phase>generate-sources</phase>
-					</execution>
-				</executions>
-				<configuration>
-					<includeProjectDependencies>false</includeProjectDependencies>
-					<includePluginDependencies>true</includePluginDependencies>
-					<mainClass>ch.skymarshall.dataflowmgr.generator.writers.singlenode.SingleNodeWriter</mainClass>
-					<arguments>
-						<argument>-c</argument>
-						<argument>${project.basedir}/src/main/resources/data/config.json</argument>
-						<argument>-o</argument>
-						<argument>${project.basedir}/src/main/java </argument>
-						<argument>-f</argument>
-						<argument>${project.basedir}/src/main/resources/data/simple-flow.json</argument>
-					</arguments>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>ch.skymarshall.dataflowmgr</groupId>
-						<artifactId>data-flow-generator</artifactId>
-						<version>${data-flow-manager-version}</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-		</plugins>
-	</build>
-
 	<dependencies>
 
 		<dependency>
 			<groupId>ch.skymarshall.dataflowmgr</groupId>
 			<artifactId>data-flow-model</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>ch.skymarshall.dataflowmgr</groupId>
-			<artifactId>data-flow-engine</artifactId>
-		</dependency>
-		<!--  to generate png -->
+		<!-- to generate png -->
 		<dependency>
 			<groupId>ch.skymarshall.dataflowmgr</groupId>
 			<artifactId>data-flow-generator</artifactId>
@@ -81,6 +40,12 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

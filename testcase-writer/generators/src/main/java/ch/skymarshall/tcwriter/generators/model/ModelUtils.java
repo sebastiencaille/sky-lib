@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestDictionary;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
@@ -14,10 +14,10 @@ import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 public interface ModelUtils {
 
 	public static class ActionUtils {
-		private final TestModel tm;
+		private final TestDictionary tm;
 		private final TestAction testAction;
 
-		public ActionUtils(final TestModel tm, final TestAction testAction) {
+		public ActionUtils(final TestDictionary tm, final TestAction testAction) {
 			this.tm = tm;
 			this.testAction = testAction;
 		}
@@ -90,7 +90,7 @@ public interface ModelUtils {
 
 	}
 
-	public static ActionUtils actionUtils(final TestModel tm, final TestAction testAction) {
+	public static ActionUtils actionUtils(final TestDictionary tm, final TestAction testAction) {
 		return new ActionUtils(tm, testAction);
 	}
 

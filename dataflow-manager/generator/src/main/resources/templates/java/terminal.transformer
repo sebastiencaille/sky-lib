@@ -1,6 +1,0 @@
-{
-	"regexp": "(.*\\.)([^\\.]*)",
-	"variables": ["method.target", "method.name" ],
-	"output": "${method.target}${method.name}(input); \n return ch.skymarshall.dataflowmgr.model.FlowAction.NO_DATA"
-}
-

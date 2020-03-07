@@ -37,7 +37,7 @@ public class TestStep {
 	}
 
 	public void setActorRef(final ExportReference ref) {
-		ref.setRestoreAction((tc, id) -> actor = tc.getModel().getActors().get(id));
+		ref.setRestoreAction((tc, id) -> actor = tc.getDictionary().getActors().get(id));
 	}
 
 	@JsonProperty
@@ -46,7 +46,7 @@ public class TestStep {
 	}
 
 	public void setRoleRef(final ExportReference ref) {
-		ref.setRestoreAction((tc, id) -> role = tc.getModel().getRoles().get(id));
+		ref.setRestoreAction((tc, id) -> role = tc.getDictionary().getRoles().get(id));
 	}
 
 	@JsonProperty

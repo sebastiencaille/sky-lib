@@ -15,20 +15,16 @@
  ******************************************************************************/
 package ch.skymarshall.util.helpers;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -70,14 +66,14 @@ public class ClassFinder {
 
 	private final Set<Class<?>> expectedSuperClasses = new HashSet<>();
 
-	private final ClassLoader loader;
+	private final URLClassLoader loader;
 
-	public static ClassFinder forThread() {
-		return new ClassFinder(Thread.currentThread().getContextClassLoader());
+	public static ClassFinder forApp() {
+		return new ClassFinder(ClassLoaderHelper.appClassPath());
 	}
 
-	public ClassFinder(final ClassLoader loader) {
-		this.loader = loader;
+	public ClassFinder(final URL[] urls) {
+		this.loader = new URLClassLoader(urls);
 		collectedClasses.put(Object.class, null);
 	}
 
@@ -109,62 +105,41 @@ public class ClassFinder {
 		expectedSuperClasses.add(Class.forName(className, true, loader));
 	}
 
-	public void collect() throws IOException, URISyntaxException {
-		for (final URL url : ClassLoaderHelper.appClassPath()) {
-			collect(url);
+	public ClassFinder collect(final String basePackage) throws IOException {
+		final Enumeration<URL> folders = loader.getResources(basePackage.replace(".", "/"));
+		while (folders.hasMoreElements()) {
+			scanFolder(folders.nextElement(), basePackage);
 		}
+		return this;
 	}
 
-	public void collect(final URL url) throws URISyntaxException, IOException {
-		final File file = new File(url.toURI());
-		if (!file.exists()) {
+	private void scanFolder(final URL resource, final String currentPackage) throws IOException {
+		if (resource == null) {
 			return;
 		}
-		LOGGER.log(Level.INFO, "Handling {0}", file);
-		final int lastDot = file.getName().lastIndexOf('.');
-		if (file.isDirectory()) {
-			final File folder = file.getAbsoluteFile().getCanonicalFile();
-			handleDirectory(folder, folder.toString().length());
-		} else if (lastDot > 0) {
-			final String extension = file.getName().substring(lastDot);
-			if (JAR_EXTENSIONS.contains(extension)) {
-				handleJarFile(file);
+		try (InputStream in = resource.openStream()) {
+			final String content = ClassLoaderHelper.readUTF8Resource(in);
+			if (content.trim().isEmpty()) {
+				return;
 			}
-		}
-	}
-
-	private void handleJarFile(final File file) throws IOException {
-		LOGGER.log(Level.INFO, "Handling jar file {0}", file);
-		try (final JarFile jar = new JarFile(file)) {
-			final Enumeration<JarEntry> entries = jar.entries();
-			while (entries.hasMoreElements()) {
-				final JarEntry jarEntry = entries.nextElement();
-				if (jarEntry.getName().endsWith(CLASS_EXTENSION)) {
-					handleClass(jarEntry.getName());
+			final String[] folderContent = content.split("\n");
+			for (final String entry : folderContent) {
+				if (entry.endsWith(CLASS_EXTENSION)) {
+					handleClass(currentPackage + "." + entry.substring(0, entry.length() - CLASS_EXTENSION.length()));
+				} else if (!entry.contains(".")) {
+					// note: we may read files instead of folders
+					scanFolder(new URL(resource.toString() + '/' + entry), currentPackage + '.' + entry);
 				}
 			}
 		}
 	}
 
-	private void handleDirectory(final File directory, final int baseLength) throws MalformedURLException {
-		for (final File file : directory.listFiles()) {
-			if (file.isDirectory()) {
-				handleDirectory(file, baseLength);
-			} else if (file.getName().endsWith(CLASS_EXTENSION)) {
-				final String absolutePath = file.getAbsolutePath();
-				final String className = absolutePath.substring(baseLength + 1);
-				handleClass(className);
-			}
+	private void handleClass(final String className) {
+		if ("module-info".equals(className)) {
+			return;
 		}
-
-	}
-
-	private void handleClass(final String classFileName) {
-		final String className = classFileName.substring(0, classFileName.length() - CLASS_EXTENSION.length())
-				.replace("/", ".");
 		try {
-			final Class<?> clazz = Class.forName(className, false, loader);
-			processClass(clazz);
+			processClass(Class.forName(className, false, loader));
 		} catch (final Exception | NoClassDefFoundError e) { // NOSONAR
 			// ignore
 		}

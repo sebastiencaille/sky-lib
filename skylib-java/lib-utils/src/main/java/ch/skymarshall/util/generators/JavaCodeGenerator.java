@@ -26,9 +26,8 @@ public class JavaCodeGenerator extends TextFormatter {
 		super(output(new StringBuilder()));
 	}
 
-	@Override
-	public String toString() {
-		return getOutput().toString();
+	public static String classToSource(final String packageName, final String className) {
+		return packageName.replace('.', '/') + '/' + className + ".java";
 	}
 
 	public static String toConstant(final String str) {
@@ -79,4 +78,10 @@ public class JavaCodeGenerator extends TextFormatter {
 		}
 		newLine();
 	}
+
+	@Override
+	public String toString() {
+		return getOutput().toString();
+	}
+
 }

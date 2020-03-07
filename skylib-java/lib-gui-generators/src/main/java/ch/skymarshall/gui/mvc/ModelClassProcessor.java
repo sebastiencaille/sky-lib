@@ -33,7 +33,6 @@ import ch.skymarshall.util.dao.metadata.UntypedDataObjectMetaData;
 import ch.skymarshall.util.generators.JavaCodeGenerator;
 import ch.skymarshall.util.generators.Template;
 import ch.skymarshall.util.helpers.ClassFinder;
-import ch.skymarshall.util.helpers.ClassLoaderHelper;
 
 public class ModelClassProcessor {
 
@@ -55,7 +54,7 @@ public class ModelClassProcessor {
 		}
 
 		public void addImport(final String className) {
-			imports.add(ClassFinder.forThread().loadByName(className).getName());
+			imports.add(ClassFinder.forApp().loadByName(className).getName());
 		}
 
 	}
@@ -124,10 +123,6 @@ public class ModelClassProcessor {
 
 		final UntypedDataObjectMetaData metaData = new UntypedDataObjectMetaData(modelClass, false);
 
-		if (metaData.getAttributes().isEmpty()) {
-			return null;
-		}
-
 		final String strType = typeToString(metaData.getDataType());
 
 		context.properties.put("modelClass", getClassName());
@@ -142,8 +137,11 @@ public class ModelClassProcessor {
 		addAttributePersistenceMethods(metaData);
 
 		context.properties.put("imports", JavaCodeGenerator.toImports(context.imports));
-		return new Template(ClassLoaderHelper.readUTF8Resource("templates/guiModel.template"))
-				.apply(context.properties);
+
+		final String pkg = modelClass.getPackage().getName();
+		context.properties.put("package", pkg);
+		return Template.from("templates/guiModel.template").apply(context.properties,
+				JavaCodeGenerator.classToSource(pkg, getClassName()));
 	}
 
 	protected void addAttributesGetters(final UntypedDataObjectMetaData metaData) throws IOException {

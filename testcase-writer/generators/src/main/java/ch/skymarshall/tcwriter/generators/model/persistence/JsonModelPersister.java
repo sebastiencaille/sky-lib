@@ -28,7 +28,7 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 
 import ch.skymarshall.tcwriter.generators.GeneratorConfig;
 import ch.skymarshall.tcwriter.generators.model.ExportReference;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestDictionary;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 
 public class JsonModelPersister implements IModelPersister {
@@ -104,27 +104,27 @@ public class JsonModelPersister implements IModelPersister {
 	}
 
 	@Override
-	public TestModel readTestModel() throws IOException {
-		return mapper.readerFor(TestModel.class).readValue(readJson(Paths.get(config.getModelPath())));
+	public TestDictionary readtestDictionary() throws IOException {
+		return mapper.readerFor(TestDictionary.class).readValue(readJson(Paths.get(config.getDictionaryPath())));
 	}
 
 	@Override
-	public void writeTestModel(final TestModel tm) throws IOException {
-		writeTestModel(Paths.get(config.getModelPath()), tm);
+	public void writeTestDictionary(final TestDictionary tm) throws IOException {
+		writetestDictionary(Paths.get(config.getDictionaryPath()), tm);
 	}
 
 	@Override
-	public void writeTestModel(final Path target, final TestModel tm) throws IOException {
-		writeJson(target, mapper.writerFor(TestModel.class).writeValueAsString(tm));
+	public void writetestDictionary(final Path target, final TestDictionary tm) throws IOException {
+		writeJson(target, mapper.writerFor(TestDictionary.class).writeValueAsString(tm));
 	}
 
 	@Override
-	public TestCase readTestCase(final String identifier, final TestModel testModel) throws IOException {
+	public TestCase readTestCase(final String identifier, final TestDictionary testDictionary) throws IOException {
 		final ArrayList<ExportReference> references = new ArrayList<>();
 		final ContextAttributes ctxt = mapper.getDeserializationConfig().getAttributes()
 				.withPerCallAttribute(CONTEXT_ALL_REFERENCES, references);
 		final TestCase testCase = mapper.readerFor(TestCase.class).with(ctxt).readValue(readJson(tcPath(identifier)));
-		testCase.setModel(testModel);
+		testCase.setDictionary(testDictionary);
 		references.forEach(e -> e.restore(testCase));
 		return testCase;
 	}

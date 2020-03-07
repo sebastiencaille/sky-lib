@@ -43,7 +43,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		IdObject tcObject;
 		final List<TestParameterValue> parametersValue = testStep.getParametersValue();
 		final TestAction testAction = testStep.getAction();
-		final ActionUtils actionUtils = ModelUtils.actionUtils(tc.getModel(), testAction);
+		final ActionUtils actionUtils = ModelUtils.actionUtils(tc.getDictionary(), testAction);
 		switch (column) {
 		case BREAKPOINT:
 			return testControl.stepStatus(testStep.getOrdinal());

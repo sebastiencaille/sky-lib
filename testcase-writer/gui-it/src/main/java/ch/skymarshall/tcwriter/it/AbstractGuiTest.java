@@ -13,10 +13,10 @@ import org.junit.After;
 import ch.skymarshall.tcwriter.executors.ITestExecutor;
 import ch.skymarshall.tcwriter.executors.JunitTestExecutor;
 import ch.skymarshall.tcwriter.generators.GeneratorConfig;
-import ch.skymarshall.tcwriter.generators.JavaToModel;
+import ch.skymarshall.tcwriter.generators.JavaToDictionary;
 import ch.skymarshall.tcwriter.generators.model.persistence.JsonModelPersister;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestDictionary;
 import ch.skymarshall.tcwriter.gui.frame.TCWriterController;
 import ch.skymarshall.tcwriter.it.api.TestSessionRole;
 import ch.skymarshall.tcwriter.it.api.TestWriterRole;
@@ -40,13 +40,13 @@ public class AbstractGuiTest {
 
 		config.setTcPath(tcPath.toString());
 		config.setDefaultGeneratedTCPath("./src/test/java");
-		config.setModelPath(modelPath + "/test-model.json");
+		config.setDictionaryPath(modelPath + "/test-model.json");
 		config.setTemplatePath(new File("./src/main/resources/templates/TC.template").toString());
 		final JsonModelPersister persister = new JsonModelPersister(config);
 
-		final TestModel model = new JavaToModel(asList(TestWriterRole.class)).generateModel();
+		final TestDictionary model = new JavaToDictionary(asList(TestWriterRole.class)).generateDictionary();
 		model.addActor(new TestActor("TestCase writer", "tcWriter", model.getRole(TestWriterRole.class)), null);
-		persister.writeTestModel(model);
+		persister.writeTestDictionary(model);
 
 		final ITestExecutor executor = new JunitTestExecutor(config, ClassLoaderHelper.appClassPath());
 

@@ -21,7 +21,7 @@ import ch.skymarshall.gui.model.views.ListViews;
 import ch.skymarshall.gui.mvc.IBindingController;
 import ch.skymarshall.gui.swing.jtable.PolicyTableColumnModel;
 import ch.skymarshall.gui.swing.jtable.TableColumnWithPolicy;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestDictionary;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 import ch.skymarshall.tcwriter.gui.frame.TCWriterController;
@@ -33,7 +33,7 @@ public class StepsTable extends JPanel {
 	private static final TestCase NO_TC = new TestCase();
 
 	static {
-		NO_TC.setModel(new TestModel());
+		NO_TC.setDictionary(new TestDictionary());
 	}
 
 	private final StepsTableModel stepsTableModel;

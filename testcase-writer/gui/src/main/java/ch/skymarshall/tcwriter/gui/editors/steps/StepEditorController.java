@@ -14,7 +14,7 @@ import ch.skymarshall.tcwriter.generators.model.ModelUtils;
 import ch.skymarshall.tcwriter.generators.model.ModelUtils.ActionUtils;
 import ch.skymarshall.tcwriter.generators.model.NamedObject;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestDictionary;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
@@ -40,10 +40,10 @@ public class StepEditorController extends GuiController {
 	}
 
 	public void load() {
-		final TestModel tm = guiModel.getTestModel();
+		final TestDictionary td = guiModel.getTestDictionary();
 		final ObjectProperty<TestStep> testStep = guiModel.getSelectedStep();
 
-		model.getPossibleActors().setValue(this, sorted(tm.getActors().values()));
+		model.getPossibleActors().setValue(this, sorted(td.getActors().values()));
 		model.getActor().listen(actor -> {
 			if (actor != null) {
 				model.getPossibleActions().setValue(this, sorted(actor.getRole().getActions()));
@@ -61,9 +61,9 @@ public class StepEditorController extends GuiController {
 			}
 			model.getActor().setValue(this, step.getActor());
 			model.getAction().setValue(this, step.getAction());
-			updateActionParameters(tm, testStep);
+			updateActionParameters(td, testStep);
 		});
-		model.getAction().listen(action -> updateActionParameters(tm, testStep));
+		model.getAction().listen(action -> updateActionParameters(td, testStep));
 
 		model.getSelectorValue().setValue(this, TestParameterValue.NO_VALUE);
 		model.getActionParameterValue().setValue(this, TestParameterValue.NO_VALUE);
@@ -85,20 +85,20 @@ public class StepEditorController extends GuiController {
 	 * different action parameters) or when changing the action (because same step
 	 * but action has different parameters)
 	 *
-	 * @param tm
+	 * @param td
 	 * @param testStep
 	 */
-	private void updateActionParameters(final TestModel tm, final ObjectProperty<TestStep> testStep) {
+	private void updateActionParameters(final TestDictionary td, final ObjectProperty<TestStep> testStep) {
 		final TestStep step = testStep.getValue();
 		final TestAction action = model.getAction().getValue();
 		if (step == null || action == null) {
 			return;
 		}
-		final ActionUtils actionUtils = ModelUtils.actionUtils(tm, action);
+		final ActionUtils actionUtils = ModelUtils.actionUtils(td, action);
 		actionUtils.synchronizeStep(testStep.getValue());
 		if (actionUtils.hasSelector()) {
 			final TestParameterValue selectorValue = step.getParametersValue(actionUtils.selectorIndex());
-			model.getPossibleSelectors().setValue(this, sorted(tm.getParameterFactories(actionUtils.selector())));
+			model.getPossibleSelectors().setValue(this, sorted(td.getParameterFactories(actionUtils.selector())));
 			model.getSelector().setValue(this, selectorValue.getValueFactory());
 			model.getSelectorValue().setValue(this, selectorValue.derivate(selectorValue.getValueFactory()));
 		} else {
@@ -107,7 +107,7 @@ public class StepEditorController extends GuiController {
 		if (actionUtils.hasActionParameter(0)) {
 			final TestParameterValue param0Value = step.getParametersValue(actionUtils.parameterIndex(0));
 			model.getPossibleActionParameters().setValue(this,
-					sorted(tm.getParameterFactories(actionUtils.parameter(0))));
+					sorted(td.getParameterFactories(actionUtils.parameter(0))));
 			model.getActionParameter().setValue(this, param0Value.getValueFactory());
 			model.getActionParameterValue().setValue(this, param0Value.derivate(param0Value.getValueFactory()));
 		} else {
@@ -142,7 +142,7 @@ public class StepEditorController extends GuiController {
 		step.setActor(model.getActor().getValue());
 		step.setAction(model.getAction().getValue());
 		step.getParametersValue().clear();
-		final ActionUtils actionUtils = ModelUtils.actionUtils(guiModel.getTestModel(), step.getAction());
+		final ActionUtils actionUtils = ModelUtils.actionUtils(guiModel.getTestDictionary(), step.getAction());
 		if (actionUtils.hasSelector()) {
 			step.getParametersValue().add(model.getSelectorValue().getValue());
 		}

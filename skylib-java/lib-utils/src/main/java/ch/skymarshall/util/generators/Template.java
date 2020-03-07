@@ -3,9 +3,13 @@ package ch.skymarshall.util.generators;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
+
+import ch.skymarshall.util.helpers.ClassLoaderHelper;
 
 /**
  * Simple template made of a content with place holders (${...}) and properties
@@ -20,15 +24,29 @@ public class Template {
 	private final Map<String, String> properties = new HashMap<>();
 
 	private String commandLine;
+	private String preferedFile;
+
+	public static final Template from(final File file) throws IOException {
+		return new Template(new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8));
+	}
+
+	public static final Template from(final String resource) throws IOException {
+		return new Template(ClassLoaderHelper.readUTF8Resource(resource));
+	}
 
 	public Template(final String content) {
 		this.content = content.replace("\r", "");
 	}
 
-	public Template apply(final Map<String, String> newProperties) {
+	public String getPreferedFileName() {
+		return preferedFile;
+	}
+
+	public Template apply(final Map<String, String> templateProperties, final String providedPreferedFile) {
 		final Template newTemplate = instantiate(content);
+		newTemplate.preferedFile = providedPreferedFile;
 		newTemplate.setCommandLine(commandLine);
-		newTemplate.setContext(newProperties);
+		newTemplate.setContext(templateProperties);
 		return newTemplate;
 	}
 
@@ -86,13 +104,21 @@ public class Template {
 		return indent;
 	}
 
-	public void writeTo(final File file) throws IOException {
+	public File writeTo(final File file) throws IOException {
 		Logger.getLogger(Template.class.getName()).info(() -> "Writing " + file);
 		file.getParentFile().mkdirs();
 
 		try (final FileWriter out = new FileWriter(file)) {
 			out.write(generate());
 		}
+		return file;
+	}
+
+	public File writeToFolder(final File folder) throws IOException {
+		if (preferedFile == null) {
+			throw new IllegalStateException("preferedFile is not set");
+		}
+		return writeTo(new File(folder, preferedFile));
 	}
 
 	public void setContext(final Map<String, String> context) {

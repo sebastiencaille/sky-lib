@@ -10,11 +10,11 @@ import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestRole;
 import ch.skymarshall.tcwriter.executors.ITestExecutor;
 import ch.skymarshall.tcwriter.executors.JunitTestExecutor;
 import ch.skymarshall.tcwriter.generators.GeneratorConfig;
-import ch.skymarshall.tcwriter.generators.JavaToModel;
+import ch.skymarshall.tcwriter.generators.JavaToDictionary;
 import ch.skymarshall.tcwriter.generators.model.persistence.IModelPersister;
 import ch.skymarshall.tcwriter.generators.model.persistence.JsonModelPersister;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;
-import ch.skymarshall.tcwriter.generators.model.testapi.TestModel;
+import ch.skymarshall.tcwriter.generators.model.testapi.TestDictionary;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.recorder.TestCaseRecorder;
 import ch.skymarshall.tcwriter.generators.visitors.HumanReadableVisitor;
@@ -43,7 +43,7 @@ public class ExampleHelper {
 
 		config.setTcPath(tcPath.toString());
 		config.setDefaultGeneratedTCPath("./src/test/java");
-		config.setModelPath(modelPath + "/test-model.json");
+		config.setDictionaryPath(modelPath + "/test-model.json");
 		config.setTemplatePath(new File("./src/main/resources/templates/TC.template").toString());
 		persister = new JsonModelPersister(config);
 	}
@@ -52,22 +52,24 @@ public class ExampleHelper {
 		return persister;
 	}
 
-	public static TestModel generateModel() {
-		final TestModel model = new JavaToModel(asList(CustomerTestRole.class, DeliveryTestRole.class)).generateModel();
-		model.addActor(new TestActor("customer", "customer", model.getRole(CustomerTestRole.class)), null);
-		model.addActor(new TestActor("deliveryGuy", "deliveryGuy", model.getRole(DeliveryTestRole.class)), null);
-		return model;
+	public static TestDictionary generateDictionary() {
+		final TestDictionary dictionary = new JavaToDictionary(asList(CustomerTestRole.class, DeliveryTestRole.class))
+				.generateDictionary();
+		dictionary.addActor(new TestActor("customer", "customer", dictionary.getRole(CustomerTestRole.class)), null);
+		dictionary.addActor(new TestActor("deliveryGuy", "deliveryGuy", dictionary.getRole(DeliveryTestRole.class)),
+				null);
+		return dictionary;
 	}
 
-	public static void saveModel(final TestModel model) throws IOException {
-		persister.writeTestModel(model);
+	public static void saveDictionary(final TestDictionary dictionary) throws IOException {
+		persister.writeTestDictionary(dictionary);
 	}
 
 	public static void saveTC(final String name, final TestCase testCase) throws IOException {
 		persister.writeTestCase(name, testCase);
 	}
 
-	public static TestCase recordTestCase(final TestModel model) {
+	public static TestCase recordTestCase(final TestDictionary model) {
 		final TestCaseRecorder recorder = new TestCaseRecorder(persister, model);
 		TestCaseRecorderAspect.setRecorder(recorder);
 		final SimpleTest test = new SimpleTest();

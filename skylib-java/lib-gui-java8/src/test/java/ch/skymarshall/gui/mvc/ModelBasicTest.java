@@ -21,12 +21,8 @@ import static ch.skymarshall.gui.mvc.properties.Configuration.persistent;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
 import ch.skymarshall.gui.TestObject;
-import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
-import ch.skymarshall.gui.mvc.GuiController;
-import ch.skymarshall.gui.mvc.GuiModel;
-import ch.skymarshall.gui.mvc.IComponentBinding;
-import ch.skymarshall.gui.mvc.IComponentLink;
 import ch.skymarshall.gui.mvc.converters.ConversionException;
 import ch.skymarshall.gui.mvc.factories.Converters;
 import ch.skymarshall.gui.mvc.persisters.FieldAccess;

@@ -125,10 +125,10 @@
 		</dependencies>
 	</dependencyManagement>
 
-	<dependencies>
+	<dependencies>			
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>org.skymarshall</groupId>
+			<artifactId>lib-testing</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

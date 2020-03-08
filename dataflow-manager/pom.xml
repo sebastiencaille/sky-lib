@@ -22,6 +22,13 @@
 
 	<dependencyManagement>
 		<dependencies>
+
+			<dependency>
+				<groupId>org.skymarshall</groupId>
+				<artifactId>lib-utils</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+
 			<dependency>
 				<groupId>ch.skymarshall.dataflowmgr</groupId>
 				<artifactId>data-flow-model</artifactId>
@@ -30,7 +37,6 @@
 			<dependency>
 				<groupId>ch.skymarshall.dataflowmgr</groupId>
 				<artifactId>data-flow-model</artifactId>
-				<classifier>test</classifier>
 				<version>${data-flow-manager-version}</version>
 			</dependency>
 			<dependency>
@@ -43,8 +49,8 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>org.skymarshall</groupId>
+			<artifactId>lib-testing</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -35,8 +34,6 @@ import java.util.stream.Collectors;
  *
  */
 public class ClassFinder {
-
-	private static final Logger LOGGER = Logger.getLogger(ClassFinder.class.getName());
 
 	private static final String[] DEFAULT_PACKAGES = { "", "ch.skymarshall.gui.mvc.properties.",
 			"ch.skymarshall.gui.mvc.persisters.", "ch.skymarshall.gui." };

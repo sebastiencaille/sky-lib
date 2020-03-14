@@ -29,7 +29,6 @@ public class TestSteppingController implements ITestSteppingController {
 		final Integer tcpPort = Integer.getInteger("test.port");
 		if (tcpPort != null) {
 			final InetSocketAddress remoteControlAddress = new InetSocketAddress(host, tcpPort);
-			System.out.println("Connecting to " + remoteControlAddress);
 
 			remoteControlConnection = new Socket();
 			int retry = 5;

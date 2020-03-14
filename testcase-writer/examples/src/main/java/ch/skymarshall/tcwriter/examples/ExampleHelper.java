@@ -28,7 +28,7 @@ public class ExampleHelper {
 
 	public static final File RESOURCE_FOLDER = new File("./src/main/resources");
 
-	public static String TC_NAME = "testCase.json";
+	public static final String TC_NAME = "testCase.json";
 
 	private static GeneratorConfig config;
 	private static IModelPersister persister;

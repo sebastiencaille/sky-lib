@@ -1,17 +1,26 @@
 package ch.skymarshall.dataflowmgr.model;
 
-public class Binding {
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
-	private final Builder config;
+public class Binding extends WithId {
 
 	public static class Builder {
 
 		private final String fromProcessor;
 		private final String toProcessor;
+		private final Set<BindingRule> rules = new HashSet<>();
 
 		public Builder(final String fromProcessor, final String toProcessor) {
 			this.fromProcessor = fromProcessor;
 			this.toProcessor = toProcessor;
+		}
+
+		public Builder activator(final String activator) {
+			rules.add(BindingRule.activator(activator));
+			return this;
 		}
 
 		public Binding build() {
@@ -24,7 +33,10 @@ public class Binding {
 		return new Builder(entryProcessor, string);
 	}
 
+	private final Builder config;
+
 	public Binding(final Builder config) {
+		super(UUID.randomUUID());
 		this.config = config;
 	}
 
@@ -36,19 +48,12 @@ public class Binding {
 		return config.toProcessor;
 	}
 
-	@Override
-	public int hashCode() {
-		return config.fromProcessor.hashCode() + config.toProcessor.hashCode();
+	public void addExclusions(final Set<Binding> excl) {
+		config.rules.addAll(excl.stream().map(BindingRule::exclusion).collect(Collectors.toSet()));
 	}
 
-	@Override
-	public boolean equals(final Object obj) {
-		if (!(obj instanceof Binding)) {
-			return false;
-		}
-		final Binding other = (Binding) obj;
-		return other.config.fromProcessor.equals(config.fromProcessor)
-				&& other.config.toProcessor.equals(config.toProcessor);
+	public Set<BindingRule> getRules() {
+		return config.rules;
 	}
 
 }

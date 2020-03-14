@@ -63,12 +63,13 @@ public class JavaCodeGenerator extends TextFormatter {
 		return imports.toString();
 	}
 
-	public void openBlock(final String... extra) throws IOException {
+	public JavaCodeGenerator openBlock(final String... extra) throws IOException {
 		appendIndented("");
 		for (final String str : extra) {
 			append(str);
 		}
 		append(" {").newLine().indent();
+		return this;
 	}
 
 	public void closeBlock(final String... extra) throws IOException {

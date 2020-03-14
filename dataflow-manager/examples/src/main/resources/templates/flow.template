@@ -11,6 +11,7 @@ public class ${flow.name} extends AbstractFlow {
 	
 	public static void main(String[] args) {
 		new ${flow.name}().execute("Hello");
+		new ${flow.name}().execute("Hi");
 	}
 
 }

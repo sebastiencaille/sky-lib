@@ -1,8 +1,9 @@
 package ch.skymarshall.dataflowmgr.model;
 
 import java.lang.reflect.Method;
+import java.util.UUID;
 
-public class Processor {
+public class Processor extends WithId {
 
 	private final String name;
 	private final String call;
@@ -10,6 +11,7 @@ public class Processor {
 	private final String returnType;
 
 	public Processor(final String name, final String methodName, final String parameter, final String returnType) {
+		super(UUID.randomUUID());
 		this.name = name;
 		this.call = methodName;
 		this.parameter = parameter;

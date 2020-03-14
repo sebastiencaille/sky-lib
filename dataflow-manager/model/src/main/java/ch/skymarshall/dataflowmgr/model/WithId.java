@@ -17,11 +17,11 @@ package ch.skymarshall.dataflowmgr.model;
 
 import java.util.UUID;
 
-public class IDItem {
+public class WithId {
 
 	private final UUID uuid;
 
-	public IDItem(final UUID uuid) {
+	public WithId(final UUID uuid) {
 		this.uuid = uuid;
 	}
 

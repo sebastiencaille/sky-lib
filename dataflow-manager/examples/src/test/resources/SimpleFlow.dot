@@ -5,11 +5,11 @@ digraph "SimpleFlow" {
     "display" [ label="simpleService.display", shape="box"  ];
     "entryProcessor" [ label="simpleService.init", shape="box"  ];
     "entryProcessor" -> "enhance1" [ label="
+entryProcessor.equals(\"Hello\")" ];
+    "enhance1" -> "display" [ label="
 " ];
     "entryProcessor" -> "enhance2" [ label="
 " ];
     "enhance2" -> "display" [ label="
-" ];
-    "enhance1" -> "display" [ label="
 " ];
 }

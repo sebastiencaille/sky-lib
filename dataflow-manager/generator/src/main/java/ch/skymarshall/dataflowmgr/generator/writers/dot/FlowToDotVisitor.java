@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.Set;
 
 import ch.skymarshall.dataflowmgr.generator.AbstractFlowVisitor;
+import ch.skymarshall.dataflowmgr.model.BindingRule;
+import ch.skymarshall.dataflowmgr.model.BindingRule.Type;
 import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.Processor;
 import ch.skymarshall.util.generators.DotFileGenerator;
@@ -73,7 +75,8 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 	}
 
 	@Override
-	protected void process(final String processorName, final Processor processor, final String inputParameter) {
+	protected void process(final String inputParameter, final Processor processor, final String processorName,
+			final Set<BindingRule> rules) {
 		if (!graph.nodes.containsKey(processorName)) {
 			graph.nodes.put(processorName, new Node(processorName, processor.getCall(),
 					ch.skymarshall.util.generators.DotFileGenerator.Shape.BOX));
@@ -81,7 +84,8 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 		if (inputParameter.equals("input")) {
 			return;
 		}
-		graph.links.add(new Link(inputParameter, processorName, "", ""));
+		graph.links.add(new Link(inputParameter, processorName, "",
+				BindingRule.get(rules, Type.ACTIVATION).map(BindingRule::string).orElse("")));
 	}
 
 	public DotFileGenerator process() throws IOException {

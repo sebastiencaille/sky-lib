@@ -88,6 +88,11 @@ public class TextFormatter {
 		return this;
 	}
 
+	public TextFormatter appendBlank() throws IOException {
+		output.append(indentationManager.getIndentation());
+		return this;
+	}
+
 	public TextFormatter appendIndented(final String string) throws IOException {
 		output.append(indentationManager.getIndentation());
 		output.append(string);

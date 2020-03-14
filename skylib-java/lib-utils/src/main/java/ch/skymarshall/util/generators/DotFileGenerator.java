@@ -29,19 +29,23 @@ public class DotFileGenerator extends TextFormatter {
 		} else {
 			extra = "";
 		}
-		appendIndented(String.format("\"%s\" [ label=\"%s\", shape=\"%s\" %s ];", name, label,
+		appendIndented(String.format("\"%s\" [ label=\"%s\", shape=\"%s\" %s ];", escape(name), escape(label),
 				shape.name().toLowerCase(), extra)).newLine();
 		return this;
 	}
 
 	public DotFileGenerator addLink(final String from, final String to, final String label) throws IOException {
-		appendIndented(String.format("\"%s\" -> \"%s\" [ label=\"%s\" ];", from, to, label)).newLine(); // NOSONAR
+		appendIndented(String.format("\"%s\" -> \"%s\" [ label=\"%s\" ];", from, to, escape(label))).newLine(); // NOSONAR
 		return this;
 	}
 
 	public void footer() throws IOException {
 		unindent();
 		appendIndented("}");
+	}
+
+	public static String escape(final String str) {
+		return str.replace("\"", "\\\"");
 	}
 
 }

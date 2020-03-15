@@ -18,6 +18,7 @@ package ch.skymarshall.util.helpers;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.IntFunction;
+import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
@@ -63,5 +64,9 @@ public interface StreamHelper {
 
 	public static <T> void throwIfContainsNull(final Stream<T> stream) {
 		stream.filter(Objects::isNull).findAny().ifPresent(t -> new IllegalArgumentException("No null value allowed"));
+	}
+
+	public static <T> Predicate<T> notEq(final T val) {
+		return v -> !Objects.equals(v, val);
 	}
 }

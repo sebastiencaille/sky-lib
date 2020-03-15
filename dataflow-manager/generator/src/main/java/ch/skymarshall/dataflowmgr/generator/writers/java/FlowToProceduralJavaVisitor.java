@@ -60,7 +60,7 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 
 		final boolean conditionalState = isConditional(inputParameter);
 		final boolean hasOutput = !"void".equals(processor.getReturnType());
-		final Optional<BindingRule> activator = BindingRule.get(rules, BindingRule.Type.ACTIVATION);
+		final Optional<String> activator = BindingRule.getActivator(rules);
 		final Set<String> exclusions = BindingRule.getAll(rules, BindingRule.Type.EXCLUSION)
 				.map(r -> r.get(Binding.class).toProcessor()).collect(Collectors.toSet());
 
@@ -85,7 +85,7 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 				conditions.add(inputParameter + " != null");
 			}
 			if (activator.isPresent()) {
-				conditions.add('(' + activator.get().string() + ')');
+				conditions.add(activator.get() + '(' + inputParameter + ')');
 			}
 			if (!exclusions.isEmpty()) {
 				conditions.add("notExcl_" + outputParameter);

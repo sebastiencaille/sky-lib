@@ -1,13 +1,14 @@
 package ch.skymarshall.dataflowmgr.model;
 
 import static ch.skymarshall.dataflowmgr.model.BindingRule.getActivator;
+import static ch.skymarshall.util.helpers.StreamHelper.notEq;
+import static java.util.stream.Collectors.toSet;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-public class ConditionalBinding implements IFlowCheck {
+public class ConditionalBindingGroup implements IFlowCheck {
 
 	public static class Builder {
 
@@ -31,7 +32,7 @@ public class ConditionalBinding implements IFlowCheck {
 		}
 
 		public Builder add(final Binding binding) {
-			if (getActivator(binding).isPresent() && getDefaultBinding().isPresent()) {
+			if (getActivator(binding.getRules()).isPresent() && getDefaultBinding().isPresent()) {
 				throw new IllegalStateException("Duplicate default binding");
 			}
 			bindings.add(binding);
@@ -39,16 +40,16 @@ public class ConditionalBinding implements IFlowCheck {
 		}
 
 		public Optional<Binding> getDefaultBinding() {
-			return bindings.stream().filter(b -> !getActivator(b).isPresent()).findAny();
+			return bindings.stream().filter(b -> !getActivator(b.getRules()).isPresent()).findAny();
 		}
 
-		public ConditionalBinding build() {
+		public ConditionalBindingGroup build() {
 			final Optional<Binding> defaultBinding = getDefaultBinding();
 			if (defaultBinding.isPresent()) {
-				defaultBinding.get().addExclusions(
-						bindings.stream().filter(b -> !b.equals(defaultBinding.get())).collect(Collectors.toSet()));
+				defaultBinding.get().addRule(bindings.stream().filter(notEq(defaultBinding.get()))
+						.map(BindingRule::exclusion).collect(toSet()));
 			}
-			return new ConditionalBinding(this);
+			return new ConditionalBindingGroup(this);
 		}
 	}
 
@@ -58,8 +59,9 @@ public class ConditionalBinding implements IFlowCheck {
 
 	private final Builder config;
 
-	public ConditionalBinding(final Builder configuration) {
+	public ConditionalBindingGroup(final Builder configuration) {
 		this.config = configuration;
+		this.config.bindings.forEach(b -> b.addRule(BindingRule.condition(this)));
 	}
 
 	public List<Binding> getBindings() {
@@ -73,6 +75,10 @@ public class ConditionalBinding implements IFlowCheck {
 	@Override
 	public String getCheck() {
 		return config.check;
+	}
+
+	public String getName() {
+		return config.name;
 	}
 
 }

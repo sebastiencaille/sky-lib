@@ -2,9 +2,11 @@ package ch.skymarshall.dataflowmgr.examples;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.UUID;
 
 import org.junit.Test;
@@ -13,7 +15,7 @@ import ch.skymarshall.dataflowmgr.generator.JavaToDictionary;
 import ch.skymarshall.dataflowmgr.generator.writers.dot.FlowToDotVisitor;
 import ch.skymarshall.dataflowmgr.generator.writers.java.FlowToProceduralJavaVisitor;
 import ch.skymarshall.dataflowmgr.model.Binding;
-import ch.skymarshall.dataflowmgr.model.ConditionalBinding;
+import ch.skymarshall.dataflowmgr.model.ConditionalBindingGroup;
 import ch.skymarshall.dataflowmgr.model.Dictionary;
 import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.Processor;
@@ -40,9 +42,9 @@ public class SimpleTest {
 				.add(SVC_ENHANCE1, enhance1) //
 				.add(SVC_ENHANCE2, enhance2) //
 				.add(SVC_DISPLAY, display).bindings() //
-				.add(ConditionalBinding.builder("Svc1 or Svc2")//
+				.add(ConditionalBindingGroup.builder("Svc1 or Svc2")//
 						.add(Binding.builder(Flow.ENTRY_PROCESSOR, SVC_ENHANCE1)
-								.activator(Flow.ENTRY_PROCESSOR + ".equals(\"Hello\")")) //
+								.activator("simpleService.isEnhance1Enabled"))//
 						.add(Binding.builder(Flow.ENTRY_PROCESSOR, SVC_ENHANCE2))) //
 				.add(Binding.builder(SVC_ENHANCE1, SVC_DISPLAY)) //
 				.add(Binding.builder(SVC_ENHANCE2, SVC_DISPLAY)).build();
@@ -54,8 +56,14 @@ public class SimpleTest {
 			out.write(new FlowToDotVisitor(flow).process().getOutput().toString());
 		}
 
-		final int dotExit = new ProcessBuilder("dot", "-Tpng", "-osrc/test/resources/SimpleFlow.png",
-				"src/test/resources/SimpleFlow.dot").start().waitFor();
+		final Process dotExec = new ProcessBuilder("dot", "-Tpng", "-osrc/test/resources/SimpleFlow.png",
+				"src/test/resources/SimpleFlow.dot").start();
+		final BufferedReader reader = new BufferedReader(new InputStreamReader(dotExec.getErrorStream()));
+		String line;
+		while ((line = reader.readLine()) != null) {
+			System.out.println(line);
+		}
+		final int dotExit = dotExec.waitFor();
 		assertEquals(0, dotExit);
 	}
 

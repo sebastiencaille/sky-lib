@@ -9,6 +9,10 @@ public class SimpleService {
 		return input + " -> Init";
 	}
 
+	public boolean isEnhance1Enabled(final String input) {
+		return input.equals("Hello");
+	}
+
 	public String enhance1(final String input) {
 		return input + " -> enhance1";
 	}

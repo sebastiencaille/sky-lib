@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 public class BindingRule extends WithId {
 
 	public enum Type {
-		EXCLUSION, ACTIVATION
+		EXCLUSION, ACTIVATION, CONDITIONAL
 	}
 
 	private final Type ruleType;
@@ -41,12 +41,16 @@ public class BindingRule extends WithId {
 		return new BindingRule(Type.ACTIVATION, activator);
 	}
 
+	public static Optional<String> getActivator(final Set<BindingRule> rules) {
+		return BindingRule.get(rules, BindingRule.Type.ACTIVATION).map(BindingRule::string);
+	}
+
 	public static BindingRule exclusion(final Binding exclusion) {
 		return new BindingRule(Type.EXCLUSION, exclusion);
 	}
 
-	public static Optional<String> getActivator(final Binding binding) {
-		return BindingRule.get(binding.getRules(), BindingRule.Type.ACTIVATION).map(BindingRule::string);
+	public static BindingRule condition(final ConditionalBindingGroup condition) {
+		return new BindingRule(Type.CONDITIONAL, condition);
 	}
 
 	public static Optional<BindingRule> get(final Set<BindingRule> rules, final Type type) {

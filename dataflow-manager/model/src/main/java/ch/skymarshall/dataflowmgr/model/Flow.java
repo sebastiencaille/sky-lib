@@ -73,18 +73,19 @@ public class Flow extends WithId {
 			return this;
 		}
 
-		public BindingsBuilder add(final ConditionalBinding.Builder binding) {
+		public BindingsBuilder add(final ConditionalBindingGroup.Builder binding) {
 			return add(binding.build());
 		}
 
-		public BindingsBuilder add(final ConditionalBinding caseControl) {
+		public BindingsBuilder add(final ConditionalBindingGroup caseControl) {
 			caseControl.getBindings().forEach(this::add);
 			final Optional<Binding> defaultBinding = caseControl.getDefaultBinding();
 			if (defaultBinding.isPresent()) {
-				final Set<Binding> bindingDeps = dependencies.computeIfAbsent(defaultBinding.get(),
+				// make default depend on all other bindings
+				final Set<Binding> defaultBindingDeps = dependencies.computeIfAbsent(defaultBinding.get(),
 						b -> new HashSet<>());
-				bindingDeps.addAll(caseControl.getBindings());
-				bindingDeps.remove(defaultBinding.get());
+				defaultBindingDeps.addAll(caseControl.getBindings());
+				defaultBindingDeps.remove(defaultBinding.get());
 			}
 			return this;
 		}

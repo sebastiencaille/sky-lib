@@ -21,11 +21,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import ch.skymarshall.dataflowmgr.generator.AbstractFlowVisitor;
 import ch.skymarshall.dataflowmgr.model.BindingRule;
-import ch.skymarshall.dataflowmgr.model.BindingRule.Type;
+import ch.skymarshall.dataflowmgr.model.ConditionalBindingGroup;
 import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.Processor;
 import ch.skymarshall.util.generators.DotFileGenerator;
@@ -51,13 +52,17 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 		final String from;
 		final String to;
 		final String label;
-		String activator;
+		final String extra;
 
-		public Link(final String from, final String to, final String label, final String activator) {
+		public Link(final String from, final String to) {
+			this(from, to, "", "");
+		}
+
+		public Link(final String from, final String to, final String label, final String extra) {
 			this.from = from;
 			this.to = to;
 			this.label = label;
-			this.activator = activator;
+			this.extra = extra;
 		}
 
 	}
@@ -79,13 +84,31 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 			final Set<BindingRule> rules) {
 		if (!graph.nodes.containsKey(processorName)) {
 			graph.nodes.put(processorName, new Node(processorName, processor.getCall(),
-					ch.skymarshall.util.generators.DotFileGenerator.Shape.BOX));
+					ch.skymarshall.util.generators.DotFileGenerator.Shape.ELLIPSE));
 		}
-		if (inputParameter.equals("input")) {
+		if (processorName.equals(Flow.ENTRY_PROCESSOR)) {
 			return;
 		}
-		graph.links.add(new Link(inputParameter, processorName, "",
-				BindingRule.get(rules, Type.ACTIVATION).map(BindingRule::string).orElse("")));
+		final Optional<String> activator = BindingRule.getActivator(rules);
+		final Optional<String> conditionGroupName = BindingRule.get(rules, BindingRule.Type.CONDITIONAL)
+				.map(r -> r.get(ConditionalBindingGroup.class).getName());
+		String condition;
+		if (conditionGroupName.isPresent()) {
+			condition = conditionGroupName.get() + ":\n" + activator.orElse("default");
+		} else if (activator.isPresent()) {
+			condition = activator.get();
+		} else {
+			condition = null;
+		}
+		if (condition != null) {
+			final String graphCondName = processorName + "_cond";
+			graph.nodes.put(graphCondName,
+					new Node(graphCondName, condition, ch.skymarshall.util.generators.DotFileGenerator.Shape.BOX));
+			graph.links.add(new Link(inputParameter, graphCondName));
+			graph.links.add(new Link(graphCondName, processorName));
+		} else {
+			graph.links.add(new Link(inputParameter, processorName));
+		}
 	}
 
 	public DotFileGenerator process() throws IOException {
@@ -100,10 +123,10 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 				final String color = computeColor(node);
 				final String label = node.label;
 				final ch.skymarshall.util.generators.DotFileGenerator.Shape shape = node.shape;
-				generator.addNode(node.name.toString(), label, shape, color);
+				generator.addNode(node.name, label, shape, color);
 			}
 			for (final Link link : graph.links) {
-				generator.addLink(link.from.toString(), link.to.toString(), link.label + '\n' + link.activator);
+				generator.addEdge(link.from, link.to, link.label, link.extra);
 			}
 			generator.footer();
 			return generator;

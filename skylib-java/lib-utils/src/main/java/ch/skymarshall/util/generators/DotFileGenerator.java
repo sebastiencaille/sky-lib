@@ -34,8 +34,10 @@ public class DotFileGenerator extends TextFormatter {
 		return this;
 	}
 
-	public DotFileGenerator addLink(final String from, final String to, final String label) throws IOException {
-		appendIndented(String.format("\"%s\" -> \"%s\" [ label=\"%s\" ];", from, to, escape(label))).newLine(); // NOSONAR
+	public DotFileGenerator addEdge(final String from, final String to, final String label, final String extra)
+			throws IOException {
+		appendIndented(String.format("\"%s\" -> \"%s\" [ label=\"%s\" %s ];", from, to, escape(label), extra))
+				.newLine(); // NOSONAR
 		return this;
 	}
 
@@ -45,6 +47,9 @@ public class DotFileGenerator extends TextFormatter {
 	}
 
 	public static String escape(final String str) {
+		if (str == null) {
+			return "";
+		}
 		return str.replace("\"", "\\\"");
 	}
 

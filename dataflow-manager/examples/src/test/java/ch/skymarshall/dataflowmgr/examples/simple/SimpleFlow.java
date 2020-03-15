@@ -12,13 +12,8 @@ public class SimpleFlow extends AbstractFlow {
 		
 		// ---------------- enhance1 ----------------
 		String enhance1 = null;
-		if ((entryProcessor.equals("Hello")))  {
+		if (simpleService.isEnhance1Enabled(entryProcessor))  {
 		    enhance1 = simpleService.enhance1(entryProcessor);
-		}
-		
-		// ---------------- display ----------------
-		if (enhance1 != null)  {
-		    simpleService.display(enhance1);
 		}
 		
 		// ---------------- enhance2 ----------------
@@ -31,6 +26,11 @@ public class SimpleFlow extends AbstractFlow {
 		// ---------------- display ----------------
 		if (enhance2 != null)  {
 		    simpleService.display(enhance2);
+		}
+		
+		// ---------------- display ----------------
+		if (enhance1 != null)  {
+		    simpleService.display(enhance1);
 		}
 		
 		

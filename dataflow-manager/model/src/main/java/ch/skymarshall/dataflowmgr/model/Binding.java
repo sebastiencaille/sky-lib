@@ -3,7 +3,6 @@ package ch.skymarshall.dataflowmgr.model;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class Binding extends WithId {
 
@@ -48,8 +47,12 @@ public class Binding extends WithId {
 		return config.toProcessor;
 	}
 
-	public void addExclusions(final Set<Binding> excl) {
-		config.rules.addAll(excl.stream().map(BindingRule::exclusion).collect(Collectors.toSet()));
+	public void addRule(final BindingRule rule) {
+		config.rules.add(rule);
+	}
+
+	public void addRule(final Set<BindingRule> rules) {
+		config.rules.addAll(rules);
 	}
 
 	public Set<BindingRule> getRules() {

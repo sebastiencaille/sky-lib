@@ -1,14 +1,12 @@
 package ch.skymarshall.dataflowmgr.generator;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
 import ch.skymarshall.dataflowmgr.model.Binding;
-import ch.skymarshall.dataflowmgr.model.BindingRule;
 import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.Processor;
 
@@ -20,8 +18,8 @@ public abstract class AbstractFlowVisitor {
 	private final Map<Binding, Set<Binding>> currentDeps;
 	private final Set<String> conditionalState = new HashSet<>();
 
-	protected abstract void process(String inputParameter, Processor processor, String outputParameter,
-			Set<BindingRule> rules) throws IOException;
+	protected abstract void process(Binding binding, String inputParameter, Processor processor, String processorName)
+			throws IOException;
 
 	public AbstractFlowVisitor(final Flow flow) {
 		this.flow = flow;
@@ -34,7 +32,9 @@ public abstract class AbstractFlowVisitor {
 
 	protected void processFlow() throws IOException {
 
-		process("input", flow.getEntryProcessor(), Flow.ENTRY_PROCESSOR, Collections.emptySet());
+		// remove hardcoding
+		process(Binding.builder("input", Flow.ENTRY_PROCESSOR).build(), "input", flow.getEntryProcessor(),
+				Flow.ENTRY_PROCESSOR);
 
 		final Set<Binding> untriggeredBindings = new HashSet<>(flow.getBindings());
 		final Set<String> executedProcessors = new HashSet<>();
@@ -61,7 +61,7 @@ public abstract class AbstractFlowVisitor {
 				final Processor nextProcessor = flow.getProcessor(binding.toProcessor());
 
 				newlyTriggeredBindings.add(binding);
-				process(binding.fromProcessor(), nextProcessor, binding.toProcessor(), binding.getRules());
+				process(binding, binding.fromProcessor(), nextProcessor, binding.toProcessor());
 				executedProcessors.add(binding.toProcessor());
 			}
 			untriggeredBindings.removeAll(newlyTriggeredBindings);

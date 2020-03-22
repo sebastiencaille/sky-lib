@@ -25,8 +25,10 @@ import java.util.Optional;
 import java.util.Set;
 
 import ch.skymarshall.dataflowmgr.generator.AbstractFlowVisitor;
+import ch.skymarshall.dataflowmgr.model.Binding;
 import ch.skymarshall.dataflowmgr.model.BindingRule;
 import ch.skymarshall.dataflowmgr.model.ConditionalBindingGroup;
+import ch.skymarshall.dataflowmgr.model.ExternalAdapter;
 import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.Processor;
 import ch.skymarshall.util.generators.DotFileGenerator;
@@ -80,18 +82,20 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 	}
 
 	@Override
-	protected void process(final String inputParameter, final Processor processor, final String processorName,
-			final Set<BindingRule> rules) {
+	protected void process(final Binding binding, final String inputParameter, final Processor processor,
+			final String processorName) {
 		if (!graph.nodes.containsKey(processorName)) {
 			graph.nodes.put(processorName, new Node(processorName, processor.getCall(),
-					ch.skymarshall.util.generators.DotFileGenerator.Shape.ELLIPSE));
+					ch.skymarshall.util.generators.DotFileGenerator.Shape.SQUARE));
 		}
 		if (processorName.equals(Flow.ENTRY_PROCESSOR)) {
 			return;
 		}
-		final Optional<String> activator = BindingRule.getActivator(rules);
-		final Optional<String> conditionGroupName = BindingRule.get(rules, BindingRule.Type.CONDITIONAL)
+		final Optional<String> activator = BindingRule.getActivator(binding.getRules());
+		final Optional<String> conditionGroupName = BindingRule.get(binding.getRules(), BindingRule.Type.CONDITIONAL)
 				.map(r -> r.get(ConditionalBindingGroup.class).getName());
+
+		// Link condition
 		String condition;
 		if (conditionGroupName.isPresent()) {
 			condition = conditionGroupName.get() + ":\n" + activator.orElse("default");
@@ -100,15 +104,27 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 		} else {
 			condition = null;
 		}
+
+		final String linkProcessFrom;
 		if (condition != null) {
 			final String graphCondName = processorName + "_cond";
 			graph.nodes.put(graphCondName,
-					new Node(graphCondName, condition, ch.skymarshall.util.generators.DotFileGenerator.Shape.BOX));
+					new Node(graphCondName, condition, ch.skymarshall.util.generators.DotFileGenerator.Shape.DIAMOND));
 			graph.links.add(new Link(inputParameter, graphCondName));
-			graph.links.add(new Link(graphCondName, processorName));
+			linkProcessFrom = graphCondName;
 		} else {
-			graph.links.add(new Link(inputParameter, processorName));
+			linkProcessFrom = inputParameter;
 		}
+
+		for (final String adapterName : binding.getAdapters()) {
+			final ExternalAdapter adapter = flow.getAdapter(adapterName);
+			graph.nodes.put(adapterName, new Node(adapterName, adapter.getCall(),
+					ch.skymarshall.util.generators.DotFileGenerator.Shape.ELLIPSE));
+			graph.links.add(new Link(linkProcessFrom, adapterName));
+			graph.links.add(new Link(adapterName, processorName));
+		}
+
+		graph.links.add(new Link(linkProcessFrom, processorName));
 	}
 
 	public DotFileGenerator process() throws IOException {

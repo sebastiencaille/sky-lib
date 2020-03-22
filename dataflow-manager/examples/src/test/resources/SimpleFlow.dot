@@ -1,17 +1,25 @@
 // TBD
 digraph "SimpleFlow" {
-    "enhance2" [ label="simpleService.enhance2", shape="ellipse"  ];
-    "enhance1" [ label="simpleService.enhance1", shape="ellipse"  ];
-    "enhance1_cond" [ label="Svc1 or Svc2:
-simpleService.isEnhance1Enabled", shape="box"  ];
-    "display" [ label="simpleService.display", shape="ellipse"  ];
-    "entryProcessor" [ label="simpleService.init", shape="ellipse"  ];
-    "enhance2_cond" [ label="Svc1 or Svc2:
-default", shape="box"  ];
-    "entryProcessor" -> "enhance1_cond" [ label=""  ];
-    "enhance1_cond" -> "enhance1" [ label=""  ];
-    "entryProcessor" -> "enhance2_cond" [ label=""  ];
-    "enhance2_cond" -> "enhance2" [ label=""  ];
-    "enhance2" -> "display" [ label=""  ];
-    "enhance1" -> "display" [ label=""  ];
+    "noEnhance_cond" [ label="Svc1 or Svc2:
+default", shape="diamond"  ];
+    "exitProcessor" [ label="", shape="square"  ];
+    "noEnhance" [ label="simpleService.noEnhance", shape="square"  ];
+    "loadData" [ label="simpleExternalAdapter.load", shape="ellipse"  ];
+    "entryProcessor" [ label="simpleService.init", shape="square"  ];
+    "displayData" [ label="simpleExternalAdapter.display", shape="ellipse"  ];
+    "enhance" [ label="simpleService.enhance", shape="square"  ];
+    "enhance_cond" [ label="Svc1 or Svc2:
+simpleService.isEnhanceEnabled", shape="diamond"  ];
+    "entryProcessor" -> "enhance_cond" [ label=""  ];
+    "enhance_cond" -> "loadData" [ label=""  ];
+    "loadData" -> "enhance" [ label=""  ];
+    "enhance_cond" -> "enhance" [ label=""  ];
+    "enhance" -> "displayData" [ label=""  ];
+    "displayData" -> "exitProcessor" [ label=""  ];
+    "enhance" -> "exitProcessor" [ label=""  ];
+    "entryProcessor" -> "noEnhance_cond" [ label=""  ];
+    "noEnhance_cond" -> "noEnhance" [ label=""  ];
+    "noEnhance" -> "displayData" [ label=""  ];
+    "displayData" -> "exitProcessor" [ label=""  ];
+    "noEnhance" -> "exitProcessor" [ label=""  ];
 }

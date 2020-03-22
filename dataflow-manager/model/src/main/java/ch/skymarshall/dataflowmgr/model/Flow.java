@@ -15,6 +15,7 @@
  ******************************************************************************/
 package ch.skymarshall.dataflowmgr.model;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,16 +30,19 @@ import java.util.stream.Collectors;
 public class Flow extends WithId {
 
 	public static final String ENTRY_PROCESSOR = "entryProcessor";
+	public static final String EXIT_PROCESSOR = "exitProcessor";
 
 	public static class FlowBuilder {
 		final String flowName;
 		final UUID uuid;
 		final Map<String, Processor> processors = new HashMap<>();
+		final Map<String, ExternalAdapter> adapters = new HashMap<>();
 
 		public FlowBuilder(final String flowName, final UUID uuid, final Processor entryProcessor) {
 			this.flowName = flowName;
 			this.uuid = uuid;
 			processors.put(ENTRY_PROCESSOR, entryProcessor);
+			processors.put(EXIT_PROCESSOR, new Processor(EXIT_PROCESSOR, "", null, Void.TYPE.toString()));
 		}
 
 		public FlowBuilder add(final String name, final Processor processor) {
@@ -48,9 +52,20 @@ public class Flow extends WithId {
 			return this;
 		}
 
+		public FlowBuilder add(final String name, final ExternalAdapter adapter) {
+			if (adapters.put(name, adapter) != null) {
+				throw new IllegalStateException("There is already an adapter with such name: " + name);
+			}
+			return this;
+		}
+
 		public BindingsBuilder bindings() {
 			return new BindingsBuilder(this);
 		}
+	}
+
+	public static FlowBuilder builder(final String flowName, final UUID uuid, final Processor entryProcessor) {
+		return new FlowBuilder(flowName, uuid, entryProcessor);
 	}
 
 	public static class BindingsBuilder {
@@ -104,10 +119,6 @@ public class Flow extends WithId {
 		}
 	}
 
-	public static FlowBuilder builder(final String flowName, final UUID uuid, final Processor entryProcessor) {
-		return new FlowBuilder(flowName, uuid, entryProcessor);
-	}
-
 	private final BindingsBuilder config;
 
 	public Flow(final BindingsBuilder bindingsBuilder) {
@@ -124,7 +135,15 @@ public class Flow extends WithId {
 	}
 
 	public Processor getProcessor(final String name) {
-		return config.flowConfig.processors.get(name);
+		return config.flowConfig.processors.computeIfAbsent(name, n -> {
+			throw new InvalidParameterException("No such processor:" + n);
+		});
+	}
+
+	public ExternalAdapter getAdapter(final String name) {
+		return config.flowConfig.adapters.computeIfAbsent(name, n -> {
+			throw new InvalidParameterException("No such processor:" + n);
+		});
 	}
 
 	public List<Binding> getBindings() {

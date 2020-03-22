@@ -18,8 +18,14 @@ public class ConditionalBindingGroup implements IFlowCheck {
 
 		private final String name;
 
+		private boolean exclusive;
+
 		public Builder(final String name) {
 			this.name = name;
+		}
+
+		public void setExclusive(final boolean exclusive) {
+			this.exclusive = exclusive;
 		}
 
 		public Builder setCheck(final String check) {
@@ -79,6 +85,10 @@ public class ConditionalBindingGroup implements IFlowCheck {
 
 	public String getName() {
 		return config.name;
+	}
+
+	public boolean isExclusive() {
+		return config.exclusive;
 	}
 
 }

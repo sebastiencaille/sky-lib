@@ -1,6 +1,6 @@
 package ch.skymarshall.dataflowmgr.examples.simple;
 
 public class AbstractFlow {
-	protected DataStore dataStore = new DataStore();
+	protected SimpleExternalAdapter simpleExternalAdapter = new SimpleExternalAdapter();
 	protected SimpleService simpleService = new SimpleService();
 }

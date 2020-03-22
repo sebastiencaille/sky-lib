@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.stream.Stream;
 
-import ch.skymarshall.dataflowmgr.annotations.ExternalInput;
+import ch.skymarshall.dataflowmgr.annotations.ExternalAdapter;
 import ch.skymarshall.dataflowmgr.annotations.Processor;
 import ch.skymarshall.dataflowmgr.model.Dictionary;
 import ch.skymarshall.util.helpers.ClassFinder;
@@ -17,15 +17,15 @@ public class JavaToDictionary {
 	public Dictionary scan(final String apiClassPackage) throws IOException {
 		final Dictionary dictionary = new Dictionary();
 		classFinder.addExpectedAnnotation(Processor.class, Policy.CLASS_ONLY);
-		classFinder.addExpectedAnnotation(ExternalInput.class, Policy.CLASS_ONLY);
+		classFinder.addExpectedAnnotation(ExternalAdapter.class, Policy.CLASS_ONLY);
 
 		for (final Class<?> clazz : classFinder.collect(apiClassPackage).getResult()) {
 			if (clazz.isAnnotationPresent(Processor.class)) {
 				streamOf(clazz)
 						.forEach(m -> dictionary.addProcessor(ch.skymarshall.dataflowmgr.model.Processor.from(m)));
-			} else if (clazz.isAnnotationPresent(ExternalInput.class)) {
+			} else if (clazz.isAnnotationPresent(ExternalAdapter.class)) {
 				streamOf(clazz).forEach(
-						m -> dictionary.addExternalInput(ch.skymarshall.dataflowmgr.model.ExternalInput.from(m)));
+						m -> dictionary.addExternalAdapter(ch.skymarshall.dataflowmgr.model.ExternalAdapter.from(m)));
 			}
 		}
 		return dictionary;

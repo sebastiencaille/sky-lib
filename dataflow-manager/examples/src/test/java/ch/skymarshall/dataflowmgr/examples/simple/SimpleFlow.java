@@ -8,29 +8,30 @@ public class SimpleFlow extends AbstractFlow {
 
 	public void execute(java.lang.String input) {
 		// ---------------- entryProcessor ----------------
-		String entryProcessor = simpleService.init(input);
+		ch.skymarshall.dataflowmgr.examples.simple.SimpleService.MyData entryProcessor = simpleService.init(input);
 		
-		// ---------------- enhance1 ----------------
-		String enhance1 = null;
-		if (simpleService.isEnhance1Enabled(entryProcessor))  {
-		    enhance1 = simpleService.enhance1(entryProcessor);
+		// ---------------- enhance ----------------
+		ch.skymarshall.dataflowmgr.examples.simple.SimpleService.MyData enhance = null;
+		if (simpleService.isEnhanceEnabled(entryProcessor))  {
+		    String loadData = simpleExternalAdapter.load(entryProcessor);
+		    enhance = simpleService.enhance(entryProcessor, loadData);
 		}
 		
-		// ---------------- enhance2 ----------------
-		String enhance2 = null;
-		boolean notExcl_enhance2 = enhance1 == null;
-		if (notExcl_enhance2)  {
-		    enhance2 = simpleService.enhance2(entryProcessor);
+		// ---------------- exitProcessor ----------------
+		if (enhance != null)  {
+		    simpleExternalAdapter.display(enhance);
 		}
 		
-		// ---------------- display ----------------
-		if (enhance2 != null)  {
-		    simpleService.display(enhance2);
+		// ---------------- noEnhance ----------------
+		ch.skymarshall.dataflowmgr.examples.simple.SimpleService.MyData noEnhance = null;
+		boolean notExcl_noEnhance = enhance == null;
+		if (notExcl_noEnhance)  {
+		    noEnhance = simpleService.noEnhance(entryProcessor);
 		}
 		
-		// ---------------- display ----------------
-		if (enhance1 != null)  {
-		    simpleService.display(enhance1);
+		// ---------------- exitProcessor ----------------
+		if (noEnhance != null)  {
+		    simpleExternalAdapter.display(noEnhance);
 		}
 		
 		
@@ -39,6 +40,7 @@ public class SimpleFlow extends AbstractFlow {
 	public static void main(String[] args) {
 		new SimpleFlow().execute("Hello");
 		new SimpleFlow().execute("Hi");
+		new SimpleFlow().execute("Huh");
 	}
 
 }

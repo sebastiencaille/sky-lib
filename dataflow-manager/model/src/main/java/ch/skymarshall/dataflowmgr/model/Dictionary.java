@@ -3,19 +3,20 @@ package ch.skymarshall.dataflowmgr.model;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiFunction;
 
 public class Dictionary {
 
 	private final Map<String, Processor> processors = new HashMap<>();
 
-	private final Map<String, ExternalInput> externalInputs = new HashMap<>();
+	private final Map<String, ExternalAdapter> externalAdapters = new HashMap<>();
 
 	public void addProcessor(final Processor processor) {
 		processors.put(processor.getName(), processor);
 	}
 
-	public void addExternalInput(final ExternalInput externalInput) {
-		externalInputs.put(externalInput.getName(), externalInput);
+	public void addExternalAdapter(final ExternalAdapter externalInput) {
+		externalAdapters.put(externalInput.getName(), externalInput);
 	}
 
 	public Processor getProcessor(final String name) {
@@ -26,15 +27,24 @@ public class Dictionary {
 		return processor;
 	}
 
+	public ExternalAdapter getExternalAdapter(final String name) {
+		final ExternalAdapter adapter = externalAdapters.get(name);
+		if (adapter == null) {
+			throw new InvalidParameterException("name: " + name);
+		}
+		return adapter;
+	}
+
 	public void mapToService(final String from, final String to) {
-		final Map<String, Processor> origProc = new HashMap<>(processors);
-		origProc.entrySet().stream()
-				.forEach(e -> processors.put(e.getKey().replace(from, to), e.getValue().derivate(to)));
+		map(processors, from, to, Processor::derivate);
+		map(externalAdapters, from, to, ExternalAdapter::derivate);
+	}
 
-		final Map<String, ExternalInput> origExtInp = new HashMap<>(externalInputs);
-		origExtInp.entrySet().stream()
-				.forEach(e -> externalInputs.put(e.getKey().replace(from, to), e.getValue().derivate(to)));
-
+	private static <T> void map(final Map<String, T> original, final String from, final String to,
+			final BiFunction<T, String, T> derivate) {
+		final Map<String, T> copy = new HashMap<>(original);
+		copy.entrySet().stream().filter(kv -> kv.getKey().startsWith(from + "."))
+				.forEach(kv -> original.put(kv.getKey().replaceAll(from, to), derivate.apply(kv.getValue(), to)));
 	}
 
 }

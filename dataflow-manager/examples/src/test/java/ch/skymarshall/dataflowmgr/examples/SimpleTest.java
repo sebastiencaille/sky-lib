@@ -17,37 +17,46 @@ import ch.skymarshall.dataflowmgr.generator.writers.java.FlowToProceduralJavaVis
 import ch.skymarshall.dataflowmgr.model.Binding;
 import ch.skymarshall.dataflowmgr.model.ConditionalBindingGroup;
 import ch.skymarshall.dataflowmgr.model.Dictionary;
+import ch.skymarshall.dataflowmgr.model.ExternalAdapter;
 import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.Processor;
 import ch.skymarshall.util.generators.Template;
 
 public class SimpleTest {
 
-	private static final String SVC_DISPLAY = "display";
-	private static final String SVC_ENHANCE2 = "enhance2";
-	private static final String SVC_ENHANCE1 = "enhance1";
+	private static final String SVC_ENHANCE = "enhance";
+	private static final String SVC_NO_ENHANCE = "noEnhance";
+
+	private static final String ADAPTER_LOAD_DATA = "loadData";
+	private static final String ADAPTER_DISPLAY_DATA = "displayData";
 
 	@Test
 	public void testFlow() throws IOException, InterruptedException {
 
 		final Dictionary serviceDictionary = new JavaToDictionary().scan("ch.skymarshall.dataflowmgr.examples.simple");
 		serviceDictionary.mapToService("ch.skymarshall.dataflowmgr.examples.simple.SimpleService", "simpleService");
+		serviceDictionary.mapToService("ch.skymarshall.dataflowmgr.examples.simple.SimpleExternalAdapter",
+				"simpleExternalAdapter");
 
 		final Processor init = serviceDictionary.getProcessor("simpleService.init");
-		final Processor enhance1 = serviceDictionary.getProcessor("simpleService.enhance1");
-		final Processor enhance2 = serviceDictionary.getProcessor("simpleService.enhance2");
-		final Processor display = serviceDictionary.getProcessor("simpleService.display");
+		final Processor enhance = serviceDictionary.getProcessor("simpleService.enhance");
+		final Processor noEnhance = serviceDictionary.getProcessor("simpleService.noEnhance");
+
+		final ExternalAdapter loadData = serviceDictionary.getExternalAdapter("simpleExternalAdapter.load");
+		final ExternalAdapter displayData = serviceDictionary.getExternalAdapter("simpleExternalAdapter.display");
 
 		final Flow flow = Flow.builder("SimpleFlow", UUID.randomUUID(), init)//
-				.add(SVC_ENHANCE1, enhance1) //
-				.add(SVC_ENHANCE2, enhance2) //
-				.add(SVC_DISPLAY, display).bindings() //
+				.add(SVC_ENHANCE, enhance) //
+				.add(SVC_NO_ENHANCE, noEnhance) //
+				.add(ADAPTER_LOAD_DATA, loadData) //
+				.add(ADAPTER_DISPLAY_DATA, displayData) //
+				.bindings()//
 				.add(ConditionalBindingGroup.builder("Svc1 or Svc2")//
-						.add(Binding.builder(Flow.ENTRY_PROCESSOR, SVC_ENHANCE1)
-								.activator("simpleService.isEnhance1Enabled"))//
-						.add(Binding.builder(Flow.ENTRY_PROCESSOR, SVC_ENHANCE2))) //
-				.add(Binding.builder(SVC_ENHANCE1, SVC_DISPLAY)) //
-				.add(Binding.builder(SVC_ENHANCE2, SVC_DISPLAY)).build();
+						.add(Binding.entryBuilder(SVC_ENHANCE).withExternalAdapter(ADAPTER_LOAD_DATA)
+								.activator("simpleService.isEnhanceEnabled"))//
+						.add(Binding.entryBuilder(SVC_NO_ENHANCE))) //
+				.add(Binding.exitBuilder(SVC_ENHANCE).withExternalAdapter(ADAPTER_DISPLAY_DATA)) //
+				.add(Binding.exitBuilder(SVC_NO_ENHANCE).withExternalAdapter(ADAPTER_DISPLAY_DATA)).build();
 
 		new FlowToProceduralJavaVisitor(flow, "ch.skymarshall.dataflowmgr.examples.simple",
 				Template.from("templates/flow.template")).process().writeToFolder(new File("src/test/java"));

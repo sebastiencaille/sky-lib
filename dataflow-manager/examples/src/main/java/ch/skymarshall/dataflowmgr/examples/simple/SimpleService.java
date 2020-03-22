@@ -5,24 +5,35 @@ import ch.skymarshall.dataflowmgr.annotations.Processor;
 @Processor
 public class SimpleService {
 
-	public String init(final String input) {
-		return input + " -> Init";
+	public static class MyData {
+		protected final String parameter;
+		protected final String output;
+
+		public MyData(final String input) {
+			parameter = input;
+			output = input;
+		}
+
+		public MyData(final MyData orig, final String flowInfo) {
+			parameter = orig.parameter;
+			output = orig.parameter + flowInfo;
+		}
 	}
 
-	public boolean isEnhance1Enabled(final String input) {
-		return input.equals("Hello");
+	public MyData init(final String input) {
+		return new MyData(input);
 	}
 
-	public String enhance1(final String input) {
-		return input + " -> enhance1";
+	public boolean isEnhanceEnabled(final MyData input) {
+		return input.parameter.equals("Hello") || input.parameter.equals("Hi");
 	}
 
-	public String enhance2(final String input) {
-		return input + " -> enhance2";
+	public MyData enhance(final MyData input, final String externalData) {
+		return new MyData(input, " -> enhanced with " + externalData);
 	}
 
-	public void display(final String result) {
-		System.out.println(result);
+	public MyData noEnhance(final MyData input) {
+		return new MyData(input, " -> not enhanced");
 	}
 
 }

@@ -52,11 +52,9 @@ A flow is defined by
    * producing a set of data (except for the processor at the end of the chain, which is only consuming data)
 * Sub flows
 * Binding Rules (defining how to bind two processors according to the data semantic and conditions)
-* External Input Providers (to retrieve on-demand external data, eg from a database)
+* External Adapters (to retrieve/push external data, eg from a database)
 
-For the shake of simplicity, Binding rules and External Input Triggers may contain function to 
-adapt the data used to call the processor or to trigger the external input provider.
-Eg an external input provider may call the target in a paginated way.
+It should be possible to provide implicit conversions from the bindings output types to the external adapter input types.    
 
 The flow implementations would be defined in a way that allows adequate visualization and testing.
 

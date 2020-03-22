@@ -1,6 +1,8 @@
 package ch.skymarshall.dataflowmgr.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -11,6 +13,7 @@ public class Binding extends WithId {
 		private final String fromProcessor;
 		private final String toProcessor;
 		private final Set<BindingRule> rules = new HashSet<>();
+		private final List<String> adapters = new ArrayList<>();
 
 		public Builder(final String fromProcessor, final String toProcessor) {
 			this.fromProcessor = fromProcessor;
@@ -26,10 +29,23 @@ public class Binding extends WithId {
 			return new Binding(this);
 		}
 
+		public Builder withExternalAdapter(final String adapterName) {
+			adapters.add(adapterName);
+			return this;
+		}
+
 	}
 
-	public static Builder builder(final String entryProcessor, final String string) {
-		return new Builder(entryProcessor, string);
+	public static Builder builder(final String fromProcessor, final String toProcessor) {
+		return new Builder(fromProcessor, toProcessor);
+	}
+
+	public static Builder entryBuilder(final String toProcessor) {
+		return new Builder(Flow.ENTRY_PROCESSOR, toProcessor);
+	}
+
+	public static Builder exitBuilder(final String fromProcessor) {
+		return new Builder(fromProcessor, Flow.EXIT_PROCESSOR);
 	}
 
 	private final Builder config;
@@ -59,4 +75,7 @@ public class Binding extends WithId {
 		return config.rules;
 	}
 
+	public List<String> getAdapters() {
+		return config.adapters;
+	}
 }

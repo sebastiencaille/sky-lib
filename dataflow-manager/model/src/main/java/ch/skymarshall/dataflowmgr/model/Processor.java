@@ -22,4 +22,8 @@ public class Processor extends Call {
 				type(m.getReturnType()));
 	}
 
+	public String asDataPoint() {
+		return getCall().replace('.', '_');
+	}
+
 }

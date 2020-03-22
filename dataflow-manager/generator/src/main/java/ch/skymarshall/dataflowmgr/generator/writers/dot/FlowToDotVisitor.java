@@ -88,9 +88,6 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 			graph.nodes.put(processorName, new Node(processorName, processor.getCall(),
 					ch.skymarshall.util.generators.DotFileGenerator.Shape.SQUARE));
 		}
-		if (processorName.equals(Flow.ENTRY_PROCESSOR)) {
-			return;
-		}
 		final Optional<String> activator = BindingRule.getActivator(binding.getRules());
 		final Optional<String> conditionGroupName = BindingRule.get(binding.getRules(), BindingRule.Type.CONDITIONAL)
 				.map(r -> r.get(ConditionalBindingGroup.class).getName());
@@ -116,12 +113,11 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 			linkProcessFrom = inputParameter;
 		}
 
-		for (final String adapterName : binding.getAdapters()) {
-			final ExternalAdapter adapter = flow.getAdapter(adapterName);
-			graph.nodes.put(adapterName, new Node(adapterName, adapter.getCall(),
+		for (final ExternalAdapter adapter : binding.getAdapters()) {
+			graph.nodes.put(adapter.uuid().toString(), new Node(adapter.uuid().toString(), adapter.getCall(),
 					ch.skymarshall.util.generators.DotFileGenerator.Shape.ELLIPSE));
-			graph.links.add(new Link(linkProcessFrom, adapterName));
-			graph.links.add(new Link(adapterName, processorName));
+			graph.links.add(new Link(linkProcessFrom, adapter.uuid().toString()));
+			graph.links.add(new Link(adapter.uuid().toString(), processorName));
 		}
 
 		graph.links.add(new Link(linkProcessFrom, processorName));

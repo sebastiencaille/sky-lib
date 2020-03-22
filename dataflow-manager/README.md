@@ -47,14 +47,14 @@ Why ? The reason is that reverse-engineering the call hierarchy is a complex tas
 As a solution, we could consider taking an approach that is closer to the data processing flow, as previously defined, and a more data-centric conception.
 
 A flow is defined by 
-* A set of processors, which are 
+* Processors, which are 
    * taking a set of data as parameters
    * producing a set of data (except for the processor at the end of the chain, which is only consuming data)
-* Sub flows
 * Binding Rules (defining how to bind two processors according to the data semantic and conditions)
 * External Adapters (to retrieve/push external data, eg from a database)
+* Data Points
 
-It should be possible to provide implicit conversions from the bindings output types to the external adapter input types.    
+A Binding rule is taking data from a Data Point, calls the External Adapters, calls a Processor and output the data to another DataPoint.  
 
 The flow implementations would be defined in a way that allows adequate visualization and testing.
 

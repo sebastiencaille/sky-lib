@@ -6,32 +6,26 @@ import java.util.UUID;
 
 public class SimpleFlow extends AbstractFlow {
 
-	public void execute(java.lang.String input) {
-		// ---------------- entryProcessor ----------------
-		ch.skymarshall.dataflowmgr.examples.simple.SimpleService.MyData entryProcessor = simpleService.init(input);
+	public void execute(String flowInputData) {
+		// ---------------- simpleService.init -> simpleService_init ----------------
+		ch.skymarshall.dataflowmgr.examples.simple.SimpleService.MyData simpleService_init = simpleService.init(flowInputData);
 		
-		// ---------------- enhance ----------------
-		ch.skymarshall.dataflowmgr.examples.simple.SimpleService.MyData enhance = null;
-		if (simpleService.isEnhanceEnabled(entryProcessor))  {
-		    String loadData = simpleExternalAdapter.load(entryProcessor);
-		    enhance = simpleService.enhance(entryProcessor, loadData);
+		// ---------------- simpleService.enhance -> enhanced ----------------
+		ch.skymarshall.dataflowmgr.examples.simple.SimpleService.MyData enhanced = null;
+		if (simpleService.isEnhanceEnabled(simpleService_init))  {
+		    String adapter_1 = simpleExternalAdapter.load(simpleService_init);
+		    enhanced = simpleService.enhance(simpleService_init, adapter_1);
 		}
 		
-		// ---------------- exitProcessor ----------------
-		if (enhance != null)  {
-		    simpleExternalAdapter.display(enhance);
+		// ---------------- exit -> exit ----------------
+		if (enhanced != null)  {
+		    simpleExternalAdapter.display(enhanced);
 		}
 		
-		// ---------------- noEnhance ----------------
-		ch.skymarshall.dataflowmgr.examples.simple.SimpleService.MyData noEnhance = null;
-		boolean notExcl_noEnhance = enhance == null;
-		if (notExcl_noEnhance)  {
-		    noEnhance = simpleService.noEnhance(entryProcessor);
-		}
-		
-		// ---------------- exitProcessor ----------------
-		if (noEnhance != null)  {
-		    simpleExternalAdapter.display(noEnhance);
+		// ---------------- simpleService.noEnhance -> enhanced ----------------
+		boolean notExcl_enhanced = enhanced == null;
+		if (notExcl_enhanced)  {
+		    enhanced = simpleService.noEnhance(simpleService_init);
 		}
 		
 		

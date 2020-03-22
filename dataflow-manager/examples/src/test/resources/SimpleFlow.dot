@@ -1,25 +1,20 @@
 // TBD
 digraph "SimpleFlow" {
-    "noEnhance_cond" [ label="Svc1 or Svc2:
+    "enhanced" [ label="simpleService.enhance", shape="square"  ];
+    "4b490b69-688c-4405-8734-cf4e0e5e81fc" [ label="simpleExternalAdapter.display", shape="ellipse"  ];
+    "simpleService_init" [ label="simpleService.init", shape="square"  ];
+    "exit" [ label="exit", shape="square"  ];
+    "b6a5f6d0-27dd-4458-b3fe-9594dac2e26e" [ label="simpleExternalAdapter.load", shape="ellipse"  ];
+    "enhanced_cond" [ label="Svc1 or Svc2:
 default", shape="diamond"  ];
-    "exitProcessor" [ label="", shape="square"  ];
-    "noEnhance" [ label="simpleService.noEnhance", shape="square"  ];
-    "loadData" [ label="simpleExternalAdapter.load", shape="ellipse"  ];
-    "entryProcessor" [ label="simpleService.init", shape="square"  ];
-    "displayData" [ label="simpleExternalAdapter.display", shape="ellipse"  ];
-    "enhance" [ label="simpleService.enhance", shape="square"  ];
-    "enhance_cond" [ label="Svc1 or Svc2:
-simpleService.isEnhanceEnabled", shape="diamond"  ];
-    "entryProcessor" -> "enhance_cond" [ label=""  ];
-    "enhance_cond" -> "loadData" [ label=""  ];
-    "loadData" -> "enhance" [ label=""  ];
-    "enhance_cond" -> "enhance" [ label=""  ];
-    "enhance" -> "displayData" [ label=""  ];
-    "displayData" -> "exitProcessor" [ label=""  ];
-    "enhance" -> "exitProcessor" [ label=""  ];
-    "entryProcessor" -> "noEnhance_cond" [ label=""  ];
-    "noEnhance_cond" -> "noEnhance" [ label=""  ];
-    "noEnhance" -> "displayData" [ label=""  ];
-    "displayData" -> "exitProcessor" [ label=""  ];
-    "noEnhance" -> "exitProcessor" [ label=""  ];
+    "flowInputData" -> "simpleService_init" [ label=""  ];
+    "simpleService_init" -> "enhanced_cond" [ label=""  ];
+    "enhanced_cond" -> "b6a5f6d0-27dd-4458-b3fe-9594dac2e26e" [ label=""  ];
+    "b6a5f6d0-27dd-4458-b3fe-9594dac2e26e" -> "enhanced" [ label=""  ];
+    "enhanced_cond" -> "enhanced" [ label=""  ];
+    "enhanced" -> "4b490b69-688c-4405-8734-cf4e0e5e81fc" [ label=""  ];
+    "4b490b69-688c-4405-8734-cf4e0e5e81fc" -> "exit" [ label=""  ];
+    "enhanced" -> "exit" [ label=""  ];
+    "simpleService_init" -> "enhanced_cond" [ label=""  ];
+    "enhanced_cond" -> "enhanced" [ label=""  ];
 }

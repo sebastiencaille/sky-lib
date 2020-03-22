@@ -19,20 +19,16 @@ public class Dictionary {
 		externalAdapters.put(externalInput.getName(), externalInput);
 	}
 
-	public Processor getProcessor(final String name) {
-		final Processor processor = processors.get(name);
-		if (processor == null) {
-			throw new InvalidParameterException("name: " + name);
-		}
-		return processor;
+	public Processor getProcessor(final String clazz, final String name) {
+		return processors.computeIfAbsent(clazz + '.' + name, n -> {
+			throw new InvalidParameterException("No parameter found: " + n);
+		});
 	}
 
-	public ExternalAdapter getExternalAdapter(final String name) {
-		final ExternalAdapter adapter = externalAdapters.get(name);
-		if (adapter == null) {
-			throw new InvalidParameterException("name: " + name);
-		}
-		return adapter;
+	public ExternalAdapter getExternalAdapter(final String clazz, final String name) {
+		return externalAdapters.computeIfAbsent(clazz + '.' + name, n -> {
+			throw new InvalidParameterException("No adapter found: " + n);
+		});
 	}
 
 	public void mapToService(final String from, final String to) {
@@ -44,7 +40,7 @@ public class Dictionary {
 			final BiFunction<T, String, T> derivate) {
 		final Map<String, T> copy = new HashMap<>(original);
 		copy.entrySet().stream().filter(kv -> kv.getKey().startsWith(from + "."))
-				.forEach(kv -> original.put(kv.getKey().replaceAll(from, to), derivate.apply(kv.getValue(), to)));
+				.forEach(kv -> original.put(kv.getKey(), derivate.apply(kv.getValue(), to)));
 	}
 
 }

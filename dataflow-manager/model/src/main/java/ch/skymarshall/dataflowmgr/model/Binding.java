@@ -1,8 +1,10 @@
 package ch.skymarshall.dataflowmgr.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -10,13 +12,15 @@ public class Binding extends WithId {
 
 	public static class Builder {
 
-		private final String fromProcessor;
-		private final String toProcessor;
+		private final String fromDataPoint;
+		private final Processor toProcessor;
 		private final Set<BindingRule> rules = new HashSet<>();
-		private final List<String> adapters = new ArrayList<>();
+		private final List<ExternalAdapter> adapters = new ArrayList<>();
+		private final Set<Binding> parents = new HashSet<>();
+		private String toDataPoint;
 
-		public Builder(final String fromProcessor, final String toProcessor) {
-			this.fromProcessor = fromProcessor;
+		public Builder(final String fromDataPoint, final Processor toProcessor) {
+			this.fromDataPoint = fromDataPoint;
 			this.toProcessor = toProcessor;
 		}
 
@@ -25,27 +29,33 @@ public class Binding extends WithId {
 			return this;
 		}
 
-		public Binding build() {
+		public Binding build(final Map<Processor, List<Binding>> leafsByProcessor) {
 			return new Binding(this);
 		}
 
-		public Builder withExternalAdapter(final String adapterName) {
-			adapters.add(adapterName);
+		public Binding build(final Binding... someParents) {
+			this.parents.addAll(Arrays.asList(someParents));
+			return new Binding(this);
+		}
+
+		public Builder withExternalAdapter(final ExternalAdapter adapter) {
+			adapters.add(adapter);
+			return this;
+		}
+
+		public Builder as(final String dataPoint) {
+			this.toDataPoint = dataPoint;
 			return this;
 		}
 
 	}
 
-	public static Builder builder(final String fromProcessor, final String toProcessor) {
-		return new Builder(fromProcessor, toProcessor);
+	public static Builder builder(final Processor fromProcessor, final Processor toProcessor) {
+		return new Builder(fromProcessor.asDataPoint(), toProcessor);
 	}
 
-	public static Builder entryBuilder(final String toProcessor) {
-		return new Builder(Flow.ENTRY_PROCESSOR, toProcessor);
-	}
-
-	public static Builder exitBuilder(final String fromProcessor) {
-		return new Builder(fromProcessor, Flow.EXIT_PROCESSOR);
+	public static Builder builder(final String fromDataPoint, final Processor toProcessor) {
+		return new Builder(fromDataPoint, toProcessor);
 	}
 
 	private final Builder config;
@@ -55,11 +65,11 @@ public class Binding extends WithId {
 		this.config = config;
 	}
 
-	public String fromProcessor() {
-		return config.fromProcessor;
+	public String fromDataPoint() {
+		return config.fromDataPoint;
 	}
 
-	public String toProcessor() {
+	public Processor toProcessor() {
 		return config.toProcessor;
 	}
 
@@ -75,7 +85,15 @@ public class Binding extends WithId {
 		return config.rules;
 	}
 
-	public List<String> getAdapters() {
+	public List<ExternalAdapter> getAdapters() {
 		return config.adapters;
 	}
+
+	public String outputName() {
+		if (config.toDataPoint != null) {
+			return config.toDataPoint;
+		}
+		return toProcessor().asDataPoint();
+	}
+
 }

@@ -15,8 +15,8 @@
  ******************************************************************************/
 package ch.skymarshall.dataflowmgr.model;
 
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
@@ -29,70 +29,35 @@ import java.util.stream.Collectors;
 
 public class Flow extends WithId {
 
-	public static final String ENTRY_PROCESSOR = "entryProcessor";
-	public static final String EXIT_PROCESSOR = "exitProcessor";
-
 	public static class FlowBuilder {
 		final String flowName;
 		final UUID uuid;
-		final Map<String, Processor> processors = new HashMap<>();
-		final Map<String, ExternalAdapter> adapters = new HashMap<>();
-
-		public FlowBuilder(final String flowName, final UUID uuid, final Processor entryProcessor) {
-			this.flowName = flowName;
-			this.uuid = uuid;
-			processors.put(ENTRY_PROCESSOR, entryProcessor);
-			processors.put(EXIT_PROCESSOR, new Processor(EXIT_PROCESSOR, "", null, Void.TYPE.toString()));
-		}
-
-		public FlowBuilder add(final String name, final Processor processor) {
-			if (processors.put(name, processor) != null) {
-				throw new IllegalStateException("There is already a processor with such name: " + name);
-			}
-			return this;
-		}
-
-		public FlowBuilder add(final String name, final ExternalAdapter adapter) {
-			if (adapters.put(name, adapter) != null) {
-				throw new IllegalStateException("There is already an adapter with such name: " + name);
-			}
-			return this;
-		}
-
-		public BindingsBuilder bindings() {
-			return new BindingsBuilder(this);
-		}
-	}
-
-	public static FlowBuilder builder(final String flowName, final UUID uuid, final Processor entryProcessor) {
-		return new FlowBuilder(flowName, uuid, entryProcessor);
-	}
-
-	public static class BindingsBuilder {
-
 		private final List<Binding> bindings = new ArrayList<>();
 		private final IdentityHashMap<Binding, Set<Binding>> dependencies = new IdentityHashMap<>();
-		private final FlowBuilder flowConfig;
+		private final Map<Processor, List<Binding>> leafsByProcessor = new HashMap<>();
+		private final String inputType;
 
-		public BindingsBuilder(final FlowBuilder processorBuilder) {
-			this.flowConfig = processorBuilder;
+		public FlowBuilder(final String flowName, final UUID uuid, final String inputType) {
+			this.flowName = flowName;
+			this.uuid = uuid;
+			this.inputType = inputType;
 		}
 
-		public BindingsBuilder add(final Binding.Builder binding) {
-			return add(binding.build());
+		public FlowBuilder add(final Binding.Builder binding) {
+			add(binding.build(leafsByProcessor));
+			return this;
 		}
 
-		public BindingsBuilder add(final Binding binding) {
-			validate(binding);
+		public FlowBuilder add(final Binding binding) {
 			bindings.add(binding);
 			return this;
 		}
 
-		public BindingsBuilder add(final ConditionalBindingGroup.Builder binding) {
+		public FlowBuilder add(final ConditionalBindingGroup.Builder binding) {
 			return add(binding.build());
 		}
 
-		public BindingsBuilder add(final ConditionalBindingGroup caseControl) {
+		public FlowBuilder add(final ConditionalBindingGroup caseControl) {
 			caseControl.getBindings().forEach(this::add);
 			final Optional<Binding> defaultBinding = caseControl.getDefaultBinding();
 			if (defaultBinding.isPresent()) {
@@ -105,49 +70,36 @@ public class Flow extends WithId {
 			return this;
 		}
 
-		private void validate(final Binding binding) {
-			if (!flowConfig.processors.containsKey(binding.fromProcessor())) {
-				throw new IllegalStateException("No such processor: " + binding.fromProcessor());
-			}
-			if (!flowConfig.processors.containsKey(binding.toProcessor())) {
-				throw new IllegalStateException("No such processor: " + binding.toProcessor());
-			}
-		}
-
 		public Flow build() {
 			return new Flow(this);
 		}
 	}
 
-	private final BindingsBuilder config;
+	public static FlowBuilder builder(final String flowName, final UUID uuid, final String inputType) {
+		return new FlowBuilder(flowName, uuid, inputType);
+	}
 
-	public Flow(final BindingsBuilder bindingsBuilder) {
-		super(bindingsBuilder.flowConfig.uuid);
+	private final FlowBuilder config;
+
+	public static final String EXIT_PROCESSOR = "exit";
+	public static final Processor EXIT = new Processor("exit", "exit", Collections.emptyList(), Void.TYPE.getName());
+	public static final String INITIAL_DATA = "flowInputData";
+
+	public Flow(final FlowBuilder bindingsBuilder) {
+		super(bindingsBuilder.uuid);
 		this.config = bindingsBuilder;
 	}
 
 	public String getName() {
-		return config.flowConfig.flowName;
-	}
-
-	public Processor getEntryProcessor() {
-		return config.flowConfig.processors.get(ENTRY_PROCESSOR);
-	}
-
-	public Processor getProcessor(final String name) {
-		return config.flowConfig.processors.computeIfAbsent(name, n -> {
-			throw new InvalidParameterException("No such processor:" + n);
-		});
-	}
-
-	public ExternalAdapter getAdapter(final String name) {
-		return config.flowConfig.adapters.computeIfAbsent(name, n -> {
-			throw new InvalidParameterException("No such processor:" + n);
-		});
+		return config.flowName;
 	}
 
 	public List<Binding> getBindings() {
 		return config.bindings;
+	}
+
+	public String getInputType() {
+		return config.inputType;
 	}
 
 	public Map<Binding, Set<Binding>> cloneDependencies() {

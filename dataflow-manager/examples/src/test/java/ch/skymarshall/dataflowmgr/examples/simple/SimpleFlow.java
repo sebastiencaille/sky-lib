@@ -6,9 +6,9 @@ import java.util.UUID;
 
 public class SimpleFlow extends AbstractFlow {
 
-	public void execute(String flowInputData) {
+	public void execute(String inputDataPoint) {
 		// ---------------- simpleService.init -> simpleService_init ----------------
-		ch.skymarshall.dataflowmgr.examples.simple.SimpleService.MyData simpleService_init = simpleService.init(flowInputData);
+		ch.skymarshall.dataflowmgr.examples.simple.SimpleService.MyData simpleService_init = simpleService.init(inputDataPoint);
 		
 		// ---------------- simpleService.enhance -> enhanced ----------------
 		ch.skymarshall.dataflowmgr.examples.simple.SimpleService.MyData enhanced = null;

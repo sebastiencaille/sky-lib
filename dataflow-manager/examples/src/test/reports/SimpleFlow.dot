@@ -1,13 +1,25 @@
-// 
+// TBD
 digraph "SimpleFlow" {
-    "45d3a926-6e9c-48d1-95d9-6ffc071b8f3d" [ label="IntTransfer\ntrue", shape="box" , fillcolor=yellow, style=filled ];
-    "8a3152fb-4d16-4ff7-92a4-bce11cc30987" [ label="IntTransfer\ntrue", shape="box" , fillcolor=yellow, style=filled ];
-    "252663c7-305a-4867-ba24-855656d1e2f9" [ label="IntTransferIdentity", shape="ellipse" , fillcolor=yellow, style=filled ];
-    "6c072b83-e71f-4307-8a0d-86724e014bd6" [ label="DumpIntTransfer", shape="ellipse" , fillcolor=yellow, style=filled ];
-    "45d3a926-6e9c-48d1-95d9-6ffc071b8f3d" -> "252663c7-305a-4867-ba24-855656d1e2f9" [ label="IntTransfer
-true" ];
-    "252663c7-305a-4867-ba24-855656d1e2f9" -> "8a3152fb-4d16-4ff7-92a4-bce11cc30987" [ label="IntTransfer
-true" ];
-    "8a3152fb-4d16-4ff7-92a4-bce11cc30987" -> "6c072b83-e71f-4307-8a0d-86724e014bd6" [ label="IntTransfer
-true" ];
+    "7955ab96-c560-4003-9a44-5e654056d7ce_simpleService_init" [ label="simpleService.init", shape="box"  ];
+    "enhanced" [ label="", shape="point"  ];
+    "7481c631-7c62-47ba-bd37-3ab011c0db1b_simpleService_enhance" [ label="simpleService.enhance", shape="box"  ];
+    "55cc53c4-0c2c-41ce-b43b-b287e4f2eceb_exit" [ label="exit", shape="box"  ];
+    "f0777270-008d-4fc7-b7cc-e6a1f3eaeec7_simpleService_noEnhance" [ label="simpleService.noEnhance", shape="box"  ];
+    "inputDataPoint" [ label="", shape="point"  ];
+    "simpleService_init" [ label="", shape="point"  ];
+    "exit" [ label="", shape="point"  ];
+    "05175646-b745-4611-b5ab-8082e0ea9782" [ label="simpleExternalAdapter.display", shape="ellipse"  ];
+    "cond_7372e135-4f65-4033-8a0b-0deeb3ab328b" [ label="Svc1 or Svc2", shape="diamond"  ];
+    "1a17b08b-a59c-4d16-9646-53f89fa62d36" [ label="simpleExternalAdapter.load", shape="ellipse"  ];
+    "inputDataPoint" -> "7955ab96-c560-4003-9a44-5e654056d7ce_simpleService_init" [ xlabel=""  ];
+    "7955ab96-c560-4003-9a44-5e654056d7ce_simpleService_init" -> "simpleService_init" [ xlabel=""  ];
+    "simpleService_init" -> "cond_7372e135-4f65-4033-8a0b-0deeb3ab328b" [ xlabel=""  ];
+    "cond_7372e135-4f65-4033-8a0b-0deeb3ab328b" -> "1a17b08b-a59c-4d16-9646-53f89fa62d36" [ xlabel="simpleService.isEnhanceEnabled"  ];
+    "1a17b08b-a59c-4d16-9646-53f89fa62d36" -> "7481c631-7c62-47ba-bd37-3ab011c0db1b_simpleService_enhance" [ xlabel=""  ];
+    "7481c631-7c62-47ba-bd37-3ab011c0db1b_simpleService_enhance" -> "enhanced" [ xlabel=""  ];
+    "enhanced" -> "05175646-b745-4611-b5ab-8082e0ea9782" [ xlabel=""  ];
+    "05175646-b745-4611-b5ab-8082e0ea9782" -> "55cc53c4-0c2c-41ce-b43b-b287e4f2eceb_exit" [ xlabel=""  ];
+    "55cc53c4-0c2c-41ce-b43b-b287e4f2eceb_exit" -> "exit" [ xlabel=""  ];
+    "cond_7372e135-4f65-4033-8a0b-0deeb3ab328b" -> "f0777270-008d-4fc7-b7cc-e6a1f3eaeec7_simpleService_noEnhance" [ xlabel="Default"  ];
+    "f0777270-008d-4fc7-b7cc-e6a1f3eaeec7_simpleService_noEnhance" -> "enhanced" [ xlabel=""  ];
 }

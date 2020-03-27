@@ -1,20 +1,25 @@
 // TBD
 digraph "SimpleFlow" {
-    "enhanced" [ label="simpleService.enhance", shape="square"  ];
-    "4b490b69-688c-4405-8734-cf4e0e5e81fc" [ label="simpleExternalAdapter.display", shape="ellipse"  ];
-    "simpleService_init" [ label="simpleService.init", shape="square"  ];
-    "exit" [ label="exit", shape="square"  ];
-    "b6a5f6d0-27dd-4458-b3fe-9594dac2e26e" [ label="simpleExternalAdapter.load", shape="ellipse"  ];
-    "enhanced_cond" [ label="Svc1 or Svc2:
-default", shape="diamond"  ];
-    "flowInputData" -> "simpleService_init" [ label=""  ];
-    "simpleService_init" -> "enhanced_cond" [ label=""  ];
-    "enhanced_cond" -> "b6a5f6d0-27dd-4458-b3fe-9594dac2e26e" [ label=""  ];
-    "b6a5f6d0-27dd-4458-b3fe-9594dac2e26e" -> "enhanced" [ label=""  ];
-    "enhanced_cond" -> "enhanced" [ label=""  ];
-    "enhanced" -> "4b490b69-688c-4405-8734-cf4e0e5e81fc" [ label=""  ];
-    "4b490b69-688c-4405-8734-cf4e0e5e81fc" -> "exit" [ label=""  ];
-    "enhanced" -> "exit" [ label=""  ];
-    "simpleService_init" -> "enhanced_cond" [ label=""  ];
-    "enhanced_cond" -> "enhanced" [ label=""  ];
+    "enhanced" [ label="", shape="point"  ];
+    "4be0b5e2-a0e8-4975-a233-32ae4b2e67c6" [ label="simpleExternalAdapter.load", shape="ellipse"  ];
+    "inputDataPoint" [ label="", shape="point"  ];
+    "simpleService_init" [ label="", shape="point"  ];
+    "exit" [ label="", shape="point"  ];
+    "5d2e3dbc-2069-413a-82c6-943ba95b6208_simpleService_noEnhance" [ label="simpleService.noEnhance", shape="box"  ];
+    "cond_8ff14989-d9f1-42af-a0c4-9dd9479cfa44" [ label="Svc1 or Svc2", shape="diamond"  ];
+    "7b84172a-1278-4207-a84d-4c5d40ffd8fe_simpleService_enhance" [ label="simpleService.enhance", shape="box"  ];
+    "43895306-8faa-47af-9c70-a64345160daa_simpleService_init" [ label="simpleService.init", shape="box"  ];
+    "9319a697-8951-4ca7-b7c9-4c82eb095844_exit" [ label="exit", shape="box"  ];
+    "22555c9f-917d-48a5-b928-911154c75742" [ label="simpleExternalAdapter.display", shape="ellipse"  ];
+    "inputDataPoint" -> "43895306-8faa-47af-9c70-a64345160daa_simpleService_init" [ xlabel=""  ];
+    "43895306-8faa-47af-9c70-a64345160daa_simpleService_init" -> "simpleService_init" [ xlabel=""  ];
+    "simpleService_init" -> "cond_8ff14989-d9f1-42af-a0c4-9dd9479cfa44" [ xlabel=""  ];
+    "cond_8ff14989-d9f1-42af-a0c4-9dd9479cfa44" -> "4be0b5e2-a0e8-4975-a233-32ae4b2e67c6" [ xlabel="simpleService.isEnhanceEnabled"  ];
+    "4be0b5e2-a0e8-4975-a233-32ae4b2e67c6" -> "7b84172a-1278-4207-a84d-4c5d40ffd8fe_simpleService_enhance" [ xlabel=""  ];
+    "7b84172a-1278-4207-a84d-4c5d40ffd8fe_simpleService_enhance" -> "enhanced" [ xlabel=""  ];
+    "enhanced" -> "22555c9f-917d-48a5-b928-911154c75742" [ xlabel=""  ];
+    "22555c9f-917d-48a5-b928-911154c75742" -> "9319a697-8951-4ca7-b7c9-4c82eb095844_exit" [ xlabel=""  ];
+    "9319a697-8951-4ca7-b7c9-4c82eb095844_exit" -> "exit" [ xlabel=""  ];
+    "cond_8ff14989-d9f1-42af-a0c4-9dd9479cfa44" -> "5d2e3dbc-2069-413a-82c6-943ba95b6208_simpleService_noEnhance" [ xlabel="Default"  ];
+    "5d2e3dbc-2069-413a-82c6-943ba95b6208_simpleService_noEnhance" -> "enhanced" [ xlabel=""  ];
 }

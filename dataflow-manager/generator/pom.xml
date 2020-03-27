@@ -49,14 +49,12 @@
 
 		<dependency>
 			<groupId>ch.skymarshall.dataflowmgr</groupId>
-			<artifactId>data-flow-model</artifactId>
+			<artifactId>data-flow-annotations</artifactId>
 		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/net.sf.jopt-simple/jopt-simple -->
+		
 		<dependency>
-			<groupId>net.sf.jopt-simple</groupId>
-			<artifactId>jopt-simple</artifactId>
-			<version>5.0.4</version>
+			<groupId>ch.skymarshall.dataflowmgr</groupId>
+			<artifactId>data-flow-model</artifactId>
 		</dependency>
 
 	</dependencies>

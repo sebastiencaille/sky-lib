@@ -5,7 +5,7 @@ ${imports}
 
 public class ${flow.name} extends AbstractFlow {
 
-	public ${flow.output} execute(${flow.input} flowInputData) {
+	public ${flow.output} execute(${flow.input} inputDataPoint) {
 		${flow.code}
 	}
 	

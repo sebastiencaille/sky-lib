@@ -19,28 +19,42 @@ public class Dictionary {
 		externalAdapters.put(externalInput.getName(), externalInput);
 	}
 
-	public Processor getProcessor(final String clazz, final String name) {
-		return processors.computeIfAbsent(clazz + '.' + name, n -> {
-			throw new InvalidParameterException("No parameter found: " + n);
-		});
+	public static class Service {
+
+		private final Map<String, Processor> processors = new HashMap<>();
+
+		private final Map<String, ExternalAdapter> externalAdapters = new HashMap<>();
+
+		private final String serviceName;
+
+		public Service(final String serviceName) {
+			this.serviceName = serviceName;
+		}
+
+		public Processor getProcessor(final String name) {
+			return processors.computeIfAbsent(name, n -> {
+				throw new InvalidParameterException("No parameter found: " + n);
+			});
+		}
+
+		public ExternalAdapter getExternalAdapter(final String name) {
+			return externalAdapters.computeIfAbsent(name, n -> {
+				throw new InvalidParameterException("No adapter found: " + n);
+			});
+		}
+
+		private <T> void map(final Map<String, T> original, final Map<String, T> target, final String from,
+				final BiFunction<T, String, T> derivate) {
+			original.entrySet().stream().filter(kv -> kv.getKey().startsWith(from + ".")).forEach(kv -> target
+					.put(kv.getKey().substring(from.length() + 1), derivate.apply(kv.getValue(), serviceName)));
+		}
 	}
 
-	public ExternalAdapter getExternalAdapter(final String clazz, final String name) {
-		return externalAdapters.computeIfAbsent(clazz + '.' + name, n -> {
-			throw new InvalidParameterException("No adapter found: " + n);
-		});
-	}
-
-	public void mapToService(final String from, final String to) {
-		map(processors, from, to, Processor::derivate);
-		map(externalAdapters, from, to, ExternalAdapter::derivate);
-	}
-
-	private static <T> void map(final Map<String, T> original, final String from, final String to,
-			final BiFunction<T, String, T> derivate) {
-		final Map<String, T> copy = new HashMap<>(original);
-		copy.entrySet().stream().filter(kv -> kv.getKey().startsWith(from + "."))
-				.forEach(kv -> original.put(kv.getKey(), derivate.apply(kv.getValue(), to)));
+	public Service mapApiToService(final String from, final String to) {
+		final Service service = new Service(to);
+		service.map(processors, service.processors, from, Processor::derivate);
+		service.map(externalAdapters, service.externalAdapters, from, ExternalAdapter::derivate);
+		return service;
 	}
 
 }

@@ -83,7 +83,7 @@ public class Flow extends WithId {
 
 	public static final String EXIT_PROCESSOR = "exit";
 	public static final Processor EXIT = new Processor("exit", "exit", Collections.emptyList(), Void.TYPE.getName());
-	public static final String INITIAL_DATA = "flowInputData";
+	public static final String INITIAL_DATAPOINT = "inputDataPoint";
 
 	public Flow(final FlowBuilder bindingsBuilder) {
 		super(bindingsBuilder.uuid);

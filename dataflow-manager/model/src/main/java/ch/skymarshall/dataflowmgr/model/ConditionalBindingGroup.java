@@ -7,8 +7,9 @@ import static java.util.stream.Collectors.toSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
-public class ConditionalBindingGroup implements IFlowCheck {
+public class ConditionalBindingGroup extends WithId implements IFlowCheck {
 
 	public static class Builder {
 
@@ -66,6 +67,7 @@ public class ConditionalBindingGroup implements IFlowCheck {
 	private final Builder config;
 
 	public ConditionalBindingGroup(final Builder configuration) {
+		super(UUID.randomUUID());
 		this.config = configuration;
 		this.config.bindings.forEach(b -> b.addRule(BindingRule.condition(this)));
 	}

@@ -24,7 +24,6 @@ import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.Processor;
 import ch.skymarshall.util.generators.JavaCodeGenerator;
 import ch.skymarshall.util.generators.Template;
-import joptsimple.internal.Strings;
 
 public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 
@@ -62,13 +61,13 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 	}
 
 	@Override
-	protected void process(final Binding binding, final String inputParameter, final Processor processor,
-			final String dataPoint) throws IOException {
+	protected void process(final Binding binding, final String inputDataPoint, final Processor processor,
+			final String outputDataPoint) throws IOException {
 
-		generator.append("// ---------------- ").append(processor.getCall()).append(" -> ").append(dataPoint)
+		generator.append("// ---------------- ").append(processor.getCall()).append(" -> ").append(outputDataPoint)
 				.append(" ----------------").newLine();
 
-		final boolean conditionalState = isConditional(inputParameter);
+		final boolean conditionalState = isConditional(inputDataPoint);
 		final boolean hasOutput = !"void".equals(processor.getReturnType());
 		final Optional<String> activator = BindingRule.getActivator(binding.getRules());
 		final Set<String> dataPointForDefault = BindingRule.getAll(binding.getRules(), BindingRule.Type.EXCLUSION)
@@ -76,9 +75,9 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 		final boolean conditionalExec = conditionalState || activator.isPresent() || !dataPointForDefault.isEmpty();
 
 		// Output declaration
-		if (hasOutput && !definedDataPoints.contains(dataPoint)) {
-			definedDataPoints.add(dataPoint);
-			appendNewVariable(dataPoint, processor);
+		if (hasOutput && !definedDataPoints.contains(outputDataPoint)) {
+			definedDataPoints.add(outputDataPoint);
+			appendNewVariable(outputDataPoint, processor);
 			if (conditionalExec) {
 				generator.append(" = null;").newLine();
 			} else {
@@ -88,39 +87,39 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 
 		// Conditional Execution
 		if (!dataPointForDefault.isEmpty()) {
-			generator.append("boolean notExcl_").append(dataPoint).append(" = ")
+			generator.append("boolean notExcl_").append(outputDataPoint).append(" = ")
 					.append(dataPointForDefault.stream().map(x -> x + " == null").collect(Collectors.joining(" && ")))
 					.append(";").newLine();
 		}
 		if (conditionalExec) {
-			setConditional(dataPoint);
+			setConditional(outputDataPoint);
 			final List<String> conditions = new ArrayList<>();
 			if (conditionalState) {
-				conditions.add(inputParameter + " != null");
+				conditions.add(inputDataPoint + " != null");
 			}
 			if (activator.isPresent()) {
-				conditions.add(activator.get() + '(' + inputParameter + ')');
+				conditions.add(activator.get() + '(' + inputDataPoint + ')');
 			}
 			if (!dataPointForDefault.isEmpty()) {
-				conditions.add("notExcl_" + dataPoint);
+				conditions.add("notExcl_" + outputDataPoint);
 			}
-			generator.append("if (").append(Strings.join(conditions, " && ")).append(") ");
+			generator.append("if (").append(String.join(" && ", conditions)).append(") ");
 			generator.openBlock();
 		}
 
 		// Adapters
 		final List<String> parameterNames = new ArrayList<>();
-		parameterNames.add(inputParameter);
+		parameterNames.add(inputDataPoint);
 		for (final ExternalAdapter adapter : binding.getAdapters()) {
 			generator.appendIndent();
-			visit("adapter_" + uniqueIndex.getAndIncrement(), adapter, inputParameter).ifPresent(parameterNames::add);
+			visit("adapter_" + uniqueIndex.getAndIncrement(), adapter, inputDataPoint).ifPresent(parameterNames::add);
 		}
 
 		// Execution
-		if (!Flow.EXIT_PROCESSOR.equals(dataPoint)) {
+		if (!Flow.EXIT_PROCESSOR.equals(outputDataPoint)) {
 			generator.appendIndent();
 			if (hasOutput && conditionalExec) {
-				generator.append(dataPoint).append(" = ");
+				generator.append(outputDataPoint).append(" = ");
 			}
 			appendCall(processor, parameterNames);
 		}

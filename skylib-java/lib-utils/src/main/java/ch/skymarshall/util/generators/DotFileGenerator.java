@@ -7,7 +7,7 @@ import ch.skymarshall.util.text.TextFormatter;
 public class DotFileGenerator extends TextFormatter {
 
 	public enum Shape {
-		SQUARE, BOX, ELLIPSE, DIAMOND
+		SQUARE, BOX, ELLIPSE, DIAMOND, CIRCLE, POINT
 	}
 
 	public DotFileGenerator() {
@@ -37,6 +37,13 @@ public class DotFileGenerator extends TextFormatter {
 	public DotFileGenerator addEdge(final String from, final String to, final String label, final String extra)
 			throws IOException {
 		appendIndented(String.format("\"%s\" -> \"%s\" [ label=\"%s\" %s ];", from, to, escape(label), extra))
+				.newLine(); // NOSONAR
+		return this;
+	}
+
+	public DotFileGenerator addEdgeXlabel(final String from, final String to, final String label, final String extra)
+			throws IOException {
+		appendIndented(String.format("\"%s\" -> \"%s\" [ xlabel=\"%s\" %s ];", from, to, escape(label), extra))
 				.newLine(); // NOSONAR
 		return this;
 	}

@@ -18,7 +18,7 @@ public abstract class AbstractFlowVisitor {
 	private final Map<Binding, Set<Binding>> currentDeps;
 	private final Set<String> conditionalState = new HashSet<>();
 
-	protected abstract void process(Binding binding, String inputParameter, Processor processor, String processorName)
+	protected abstract void process(Binding binding, String inputDataPoint, Processor processor, String outputDataPoint)
 			throws IOException;
 
 	public AbstractFlowVisitor(final Flow flow) {
@@ -35,7 +35,7 @@ public abstract class AbstractFlowVisitor {
 		final Set<Binding> untriggeredBindings = new HashSet<>(flow.getBindings());
 		final Set<String> availableDataPoints = new HashSet<>();
 
-		availableDataPoints.add(Flow.INITIAL_DATA);
+		availableDataPoints.add(Flow.INITIAL_DATAPOINT);
 		while (!untriggeredBindings.isEmpty()) {
 			// More to process
 

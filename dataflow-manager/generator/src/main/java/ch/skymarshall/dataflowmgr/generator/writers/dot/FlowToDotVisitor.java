@@ -79,48 +79,88 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 	public FlowToDotVisitor(final Flow flow) {
 		super(flow);
 		this.graph = new Graph();
+		addDataPoint(Flow.INITIAL_DATAPOINT);
+	}
+
+	private void addDataPoint(final String name) {
+		graph.nodes.put(name, new Node(name, "", ch.skymarshall.util.generators.DotFileGenerator.Shape.POINT));
+	}
+
+	private String getConditionNodeName(final ConditionalBindingGroup group) {
+		return "cond_" + group.uuid().toString();
+	}
+
+	private String addCondition(final ConditionalBindingGroup group) {
+		final String graphCondNode = getConditionNodeName(group);
+		graph.nodes.put(graphCondNode, new Node(graphCondNode, group.getName(), DotFileGenerator.Shape.DIAMOND));
+		return graphCondNode;
+	}
+
+	private String addProcessor(final Binding binding, final Processor processor) {
+		final String nodeName = binding.uuid().toString() + "_" + processor.getCall().replace('.', '_');
+		graph.nodes.put(nodeName,
+				new Node(nodeName, processor.getCall(), ch.skymarshall.util.generators.DotFileGenerator.Shape.BOX));
+		return nodeName;
+	}
+
+	private void addLinkWithLabel(final String from, final String to, final String label) {
+		graph.links.add(new Link(from, to, label, ""));
 	}
 
 	@Override
-	protected void process(final Binding binding, final String inputParameter, final Processor processor,
-			final String processorName) {
-		if (!graph.nodes.containsKey(processorName)) {
-			graph.nodes.put(processorName, new Node(processorName, processor.getCall(),
-					ch.skymarshall.util.generators.DotFileGenerator.Shape.SQUARE));
+	protected void process(final Binding binding, final String inputDataPoint, final Processor processor,
+			final String outputDataPoint) {
+		// Create data point
+		if (!graph.nodes.containsKey(outputDataPoint)) {
+			addDataPoint(outputDataPoint);
 		}
-		final Optional<String> activator = BindingRule.getActivator(binding.getRules());
-		final Optional<String> conditionGroupName = BindingRule.get(binding.getRules(), BindingRule.Type.CONDITIONAL)
-				.map(r -> r.get(ConditionalBindingGroup.class).getName());
 
-		// Link condition
-		String condition;
-		if (conditionGroupName.isPresent()) {
-			condition = conditionGroupName.get() + ":\n" + activator.orElse("default");
-		} else if (activator.isPresent()) {
-			condition = activator.get();
+		final Optional<ConditionalBindingGroup> conditionGroupOpt = BindingRule
+				.get(binding.getRules(), BindingRule.Type.CONDITIONAL).map(r -> r.get(ConditionalBindingGroup.class));
+
+		// Add condition
+		String linkProcessFrom;
+		String activator;
+		if (conditionGroupOpt.isPresent()) {
+			final ConditionalBindingGroup conditionGroup = conditionGroupOpt.get();
+			final String conditionNodeName = getConditionNodeName(conditionGroup);
+			if (!graph.nodes.containsKey(conditionNodeName)) {
+				addCondition(conditionGroup);
+				graph.links.add(new Link(inputDataPoint, conditionNodeName, "", ""));
+			}
+			activator = BindingRule.getActivator(binding.getRules()).orElse("Default");
+			linkProcessFrom = conditionNodeName;
 		} else {
-			condition = null;
+			activator = "";
+			linkProcessFrom = inputDataPoint;
+		}
+		// Add split for multiple adapters
+		final List<ExternalAdapter> adapters = binding.getAdapters();
+		if (adapters.size() > 1) {
+			final String nodeName = "adapterPoint_" + binding.uuid().toString();
+			graph.nodes.put(nodeName,
+					new Node(nodeName, "", ch.skymarshall.util.generators.DotFileGenerator.Shape.POINT));
+			addLinkWithLabel(linkProcessFrom, nodeName, activator);
+			linkProcessFrom = nodeName;
+			activator = "";
 		}
 
-		final String linkProcessFrom;
-		if (condition != null) {
-			final String graphCondName = processorName + "_cond";
-			graph.nodes.put(graphCondName,
-					new Node(graphCondName, condition, ch.skymarshall.util.generators.DotFileGenerator.Shape.DIAMOND));
-			graph.links.add(new Link(inputParameter, graphCondName));
-			linkProcessFrom = graphCondName;
-		} else {
-			linkProcessFrom = inputParameter;
+		final String processorNode = addProcessor(binding, processor);
+		for (final ExternalAdapter adapter : adapters) {
+			addAdapter(adapter);
+			addLinkWithLabel(linkProcessFrom, adapter.uuid().toString(), activator);
+			graph.links.add(new Link(adapter.uuid().toString(), processorNode));
+			activator = "";
 		}
-
-		for (final ExternalAdapter adapter : binding.getAdapters()) {
-			graph.nodes.put(adapter.uuid().toString(), new Node(adapter.uuid().toString(), adapter.getCall(),
-					ch.skymarshall.util.generators.DotFileGenerator.Shape.ELLIPSE));
-			graph.links.add(new Link(linkProcessFrom, adapter.uuid().toString()));
-			graph.links.add(new Link(adapter.uuid().toString(), processorName));
+		if (adapters.isEmpty()) {
+			addLinkWithLabel(linkProcessFrom, processorNode, activator);
 		}
+		graph.links.add(new Link(processorNode, outputDataPoint));
+	}
 
-		graph.links.add(new Link(linkProcessFrom, processorName));
+	private void addAdapter(final ExternalAdapter adapter) {
+		graph.nodes.put(adapter.uuid().toString(), new Node(adapter.uuid().toString(), adapter.getCall(),
+				ch.skymarshall.util.generators.DotFileGenerator.Shape.ELLIPSE));
 	}
 
 	public DotFileGenerator process() throws IOException {
@@ -138,7 +178,7 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 				generator.addNode(node.name, label, shape, color);
 			}
 			for (final Link link : graph.links) {
-				generator.addEdge(link.from, link.to, link.label, link.extra);
+				generator.addEdgeXlabel(link.from, link.to, link.label, link.extra);
 			}
 			generator.footer();
 			return generator;

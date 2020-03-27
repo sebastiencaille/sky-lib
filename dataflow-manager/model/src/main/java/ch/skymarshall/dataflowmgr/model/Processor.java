@@ -1,9 +1,7 @@
 package ch.skymarshall.dataflowmgr.model;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Processor extends Call {
 
@@ -17,9 +15,7 @@ public class Processor extends Call {
 	}
 
 	public static Processor from(final Method m) {
-		return new Processor(methodFullName(m), m.getName(),
-				Arrays.stream(m.getParameterTypes()).map(Call::type).collect(Collectors.toList()),
-				type(m.getReturnType()));
+		return new Processor(methodFullName(m), m.getName(), parameters(m), type(m.getReturnType()));
 	}
 
 	public String asDataPoint() {

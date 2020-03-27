@@ -8,11 +8,11 @@ public class SimpleFlow extends AbstractFlow {
 
 	public void execute(String inputDataPoint) {
 		// ---------------- simpleService.init -> simpleService_init ----------------
-		ch.skymarshall.dataflowmgr.examples.simple.SimpleService.MyData simpleService_init = simpleService.init(inputDataPoint);
+		ch.skymarshall.dataflowmgr.examples.simple.dto.MyData simpleService_init = simpleService.init(inputDataPoint);
 		
 		// ---------------- simpleService.enhance -> enhanced ----------------
-		ch.skymarshall.dataflowmgr.examples.simple.SimpleService.MyData enhanced = null;
-		if (simpleService.isEnhanceEnabled(simpleService_init))  {
+		ch.skymarshall.dataflowmgr.examples.simple.dto.MyData enhanced = null;
+		if (simpleServiceConditions.isEnhanceEnabled(simpleService_init))  {
 		    String adapter_1 = simpleExternalAdapter.load(simpleService_init);
 		    enhanced = simpleService.enhance(simpleService_init, adapter_1);
 		}

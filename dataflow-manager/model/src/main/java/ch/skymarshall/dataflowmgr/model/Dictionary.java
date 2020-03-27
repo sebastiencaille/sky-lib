@@ -7,54 +7,39 @@ import java.util.function.BiFunction;
 
 public class Dictionary {
 
-	private final Map<String, Processor> processors = new HashMap<>();
+	public static class Calls<T extends Call> {
+		private final Map<String, T> calls = new HashMap<>();
+		private final String kind;
+		private final BiFunction<T, String, T> derivateFunc;
 
-	private final Map<String, ExternalAdapter> externalAdapters = new HashMap<>();
-
-	public void addProcessor(final Processor processor) {
-		processors.put(processor.getName(), processor);
-	}
-
-	public void addExternalAdapter(final ExternalAdapter externalInput) {
-		externalAdapters.put(externalInput.getName(), externalInput);
-	}
-
-	public static class Service {
-
-		private final Map<String, Processor> processors = new HashMap<>();
-
-		private final Map<String, ExternalAdapter> externalAdapters = new HashMap<>();
-
-		private final String serviceName;
-
-		public Service(final String serviceName) {
-			this.serviceName = serviceName;
+		public Calls(final String kind, final BiFunction<T, String, T> derivateFunc) {
+			this.kind = kind;
+			this.derivateFunc = derivateFunc;
 		}
 
-		public Processor getProcessor(final String name) {
-			return processors.computeIfAbsent(name, n -> {
-				throw new InvalidParameterException("No parameter found: " + n);
+		public void add(final T call) {
+			calls.put(call.getName(), call);
+		}
+
+		public T get(final String name) {
+			return calls.computeIfAbsent(name, n -> {
+				throw new InvalidParameterException("No " + kind + " found: " + n);
 			});
 		}
 
-		public ExternalAdapter getExternalAdapter(final String name) {
-			return externalAdapters.computeIfAbsent(name, n -> {
-				throw new InvalidParameterException("No adapter found: " + n);
-			});
+		public Calls<T> map(final String from, final String to) {
+			final Calls<T> derivates = new Calls<>(kind, derivateFunc);
+			calls.entrySet().stream().filter(kv -> kv.getKey().startsWith(from + ".")).forEach(kv -> derivates.calls
+					.put(kv.getKey().substring(from.length() + 1), derivateFunc.apply(kv.getValue(), to)));
+			return derivates;
 		}
 
-		private <T> void map(final Map<String, T> original, final Map<String, T> target, final String from,
-				final BiFunction<T, String, T> derivate) {
-			original.entrySet().stream().filter(kv -> kv.getKey().startsWith(from + ".")).forEach(kv -> target
-					.put(kv.getKey().substring(from.length() + 1), derivate.apply(kv.getValue(), serviceName)));
-		}
 	}
 
-	public Service mapApiToService(final String from, final String to) {
-		final Service service = new Service(to);
-		service.map(processors, service.processors, from, Processor::derivate);
-		service.map(externalAdapters, service.externalAdapters, from, ExternalAdapter::derivate);
-		return service;
-	}
+	public final Calls<Processor> processors = new Calls<>("processor", Processor::derivate);
+
+	public final Calls<Condition> conditions = new Calls<>("condition", Condition::derivate);
+
+	public final Calls<ExternalAdapter> externalAdapters = new Calls<>("externalAdapter", ExternalAdapter::derivate);
 
 }

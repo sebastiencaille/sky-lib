@@ -1,7 +1,7 @@
 package ch.skymarshall.dataflowmgr.examples.simple;
 
 import ch.skymarshall.dataflowmgr.annotations.ExternalAdapter;
-import ch.skymarshall.dataflowmgr.examples.simple.SimpleService.MyData;
+import ch.skymarshall.dataflowmgr.examples.simple.dto.MyData;
 
 @ExternalAdapter
 public class SimpleExternalAdapter {

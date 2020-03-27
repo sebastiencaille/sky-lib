@@ -27,6 +27,7 @@ import java.util.Set;
 import ch.skymarshall.dataflowmgr.generator.AbstractFlowVisitor;
 import ch.skymarshall.dataflowmgr.model.Binding;
 import ch.skymarshall.dataflowmgr.model.BindingRule;
+import ch.skymarshall.dataflowmgr.model.Condition;
 import ch.skymarshall.dataflowmgr.model.ConditionalBindingGroup;
 import ch.skymarshall.dataflowmgr.model.ExternalAdapter;
 import ch.skymarshall.dataflowmgr.model.Flow;
@@ -103,8 +104,9 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 		return nodeName;
 	}
 
-	private void addLinkWithLabel(final String from, final String to, final String label) {
-		graph.links.add(new Link(from, to, label, ""));
+	private void addBindingWithActivator(final String from, final String to, final String label) {
+		// labelfloat
+		graph.links.add(new Link(from, to, label.replace(".", ".\n"), "labelfloat=true"));
 	}
 
 	@Override
@@ -114,6 +116,8 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 		if (!graph.nodes.containsKey(outputDataPoint)) {
 			addDataPoint(outputDataPoint);
 		}
+
+		final String processorNode = addProcessor(binding, processor);
 
 		final Optional<ConditionalBindingGroup> conditionGroupOpt = BindingRule
 				.get(binding.getRules(), BindingRule.Type.CONDITIONAL).map(r -> r.get(ConditionalBindingGroup.class));
@@ -128,7 +132,7 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 				addCondition(conditionGroup);
 				graph.links.add(new Link(inputDataPoint, conditionNodeName, "", ""));
 			}
-			activator = BindingRule.getActivator(binding.getRules()).orElse("Default");
+			activator = BindingRule.getActivator(binding.getRules()).map(Condition::getCall).orElse("Default");
 			linkProcessFrom = conditionNodeName;
 		} else {
 			activator = "";
@@ -140,20 +144,22 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 			final String nodeName = "adapterPoint_" + binding.uuid().toString();
 			graph.nodes.put(nodeName,
 					new Node(nodeName, "", ch.skymarshall.util.generators.DotFileGenerator.Shape.POINT));
-			addLinkWithLabel(linkProcessFrom, nodeName, activator);
+			addBindingWithActivator(linkProcessFrom, nodeName, activator);
 			linkProcessFrom = nodeName;
 			activator = "";
 		}
 
-		final String processorNode = addProcessor(binding, processor);
+		// Add adapters
 		for (final ExternalAdapter adapter : adapters) {
 			addAdapter(adapter);
-			addLinkWithLabel(linkProcessFrom, adapter.uuid().toString(), activator);
+			addBindingWithActivator(linkProcessFrom, adapter.uuid().toString(), activator);
 			graph.links.add(new Link(adapter.uuid().toString(), processorNode));
 			activator = "";
 		}
+
+		// Add link to processor
 		if (adapters.isEmpty()) {
-			addLinkWithLabel(linkProcessFrom, processorNode, activator);
+			addBindingWithActivator(linkProcessFrom, processorNode, activator);
 		}
 		graph.links.add(new Link(processorNode, outputDataPoint));
 	}
@@ -170,6 +176,7 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 		try {
 			final DotFileGenerator generator = new DotFileGenerator();
 			generator.header(flow.getName(), "TBD");
+			generator.polyLines();
 
 			for (final Node node : graph.nodes.values()) {
 				final String color = computeColor(node);
@@ -178,7 +185,7 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 				generator.addNode(node.name, label, shape, color);
 			}
 			for (final Link link : graph.links) {
-				generator.addEdgeXlabel(link.from, link.to, link.label, link.extra);
+				generator.addEdge(link.from, link.to, link.label, false, link.extra);
 			}
 			generator.footer();
 			return generator;

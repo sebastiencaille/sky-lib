@@ -17,7 +17,6 @@ package ch.skymarshall.dataflowmgr.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -34,7 +33,6 @@ public class Flow extends WithId {
 		final UUID uuid;
 		private final List<Binding> bindings = new ArrayList<>();
 		private final IdentityHashMap<Binding, Set<Binding>> dependencies = new IdentityHashMap<>();
-		private final Map<Processor, List<Binding>> leafsByProcessor = new HashMap<>();
 		private final String inputType;
 
 		public FlowBuilder(final String flowName, final UUID uuid, final String inputType) {
@@ -44,7 +42,7 @@ public class Flow extends WithId {
 		}
 
 		public FlowBuilder add(final Binding.Builder binding) {
-			add(binding.build(leafsByProcessor));
+			this.add(binding.build());
 			return this;
 		}
 

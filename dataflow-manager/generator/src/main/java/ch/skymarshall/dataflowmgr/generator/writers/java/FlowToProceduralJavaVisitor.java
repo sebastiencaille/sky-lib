@@ -19,6 +19,7 @@ import ch.skymarshall.dataflowmgr.generator.AbstractFlowVisitor;
 import ch.skymarshall.dataflowmgr.model.Binding;
 import ch.skymarshall.dataflowmgr.model.BindingRule;
 import ch.skymarshall.dataflowmgr.model.Call;
+import ch.skymarshall.dataflowmgr.model.Condition;
 import ch.skymarshall.dataflowmgr.model.ExternalAdapter;
 import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.Processor;
@@ -69,10 +70,10 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 
 		final boolean conditionalState = isConditional(inputDataPoint);
 		final boolean hasOutput = !"void".equals(processor.getReturnType());
-		final Optional<String> activator = BindingRule.getActivator(binding.getRules());
-		final Set<String> dataPointForDefault = BindingRule.getAll(binding.getRules(), BindingRule.Type.EXCLUSION)
+		final Optional<String> activator = BindingRule.getActivator(binding.getRules()).map(Condition::getCall);
+		final Set<String> defaultBinding = BindingRule.getAll(binding.getRules(), BindingRule.Type.EXCLUSION)
 				.map(r -> r.get(Binding.class).outputName()).collect(toSet());
-		final boolean conditionalExec = conditionalState || activator.isPresent() || !dataPointForDefault.isEmpty();
+		final boolean conditionalExec = conditionalState || activator.isPresent() || !defaultBinding.isEmpty();
 
 		// Output declaration
 		if (hasOutput && !definedDataPoints.contains(outputDataPoint)) {
@@ -86,9 +87,9 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 		}
 
 		// Conditional Execution
-		if (!dataPointForDefault.isEmpty()) {
+		if (!defaultBinding.isEmpty()) {
 			generator.append("boolean notExcl_").append(outputDataPoint).append(" = ")
-					.append(dataPointForDefault.stream().map(x -> x + " == null").collect(Collectors.joining(" && ")))
+					.append(defaultBinding.stream().map(x -> x + " == null").collect(Collectors.joining(" && ")))
 					.append(";").newLine();
 		}
 		if (conditionalExec) {
@@ -100,7 +101,7 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 			if (activator.isPresent()) {
 				conditions.add(activator.get() + '(' + inputDataPoint + ')');
 			}
-			if (!dataPointForDefault.isEmpty()) {
+			if (!defaultBinding.isEmpty()) {
 				conditions.add("notExcl_" + outputDataPoint);
 			}
 			generator.append("if (").append(String.join(" && ", conditions)).append(") ");

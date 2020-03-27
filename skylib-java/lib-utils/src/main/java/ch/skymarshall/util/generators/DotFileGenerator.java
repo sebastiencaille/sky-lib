@@ -21,6 +21,16 @@ public class DotFileGenerator extends TextFormatter {
 		return this;
 	}
 
+	public DotFileGenerator straightLines() throws IOException {
+		appendIndentedLine("splines=line;");
+		return this;
+	}
+
+	public DotFileGenerator polyLines() throws IOException {
+		appendIndentedLine("splines=polyline;");
+		return this;
+	}
+
 	public DotFileGenerator addNode(final String name, final String label, final Shape shape, final String color)
 			throws IOException {
 		final String extra;
@@ -34,17 +44,17 @@ public class DotFileGenerator extends TextFormatter {
 		return this;
 	}
 
-	public DotFileGenerator addEdge(final String from, final String to, final String label, final String extra)
-			throws IOException {
-		appendIndented(String.format("\"%s\" -> \"%s\" [ label=\"%s\" %s ];", from, to, escape(label), extra))
-				.newLine(); // NOSONAR
-		return this;
-	}
-
-	public DotFileGenerator addEdgeXlabel(final String from, final String to, final String label, final String extra)
-			throws IOException {
-		appendIndented(String.format("\"%s\" -> \"%s\" [ xlabel=\"%s\" %s ];", from, to, escape(label), extra))
-				.newLine(); // NOSONAR
+	public DotFileGenerator addEdge(final String from, final String to, final String label, final boolean isXLabel,
+			final String extra) throws IOException {
+		String formatted;
+		if (label == null || label.isEmpty()) {
+			formatted = String.format("\"%s\" -> \"%s\" [ %s ];", from, to, extra);
+		} else if (isXLabel) {
+			formatted = String.format("\"%s\" -> \"%s\" [ xlabel=\"%s\" %s ];", from, to, escape(label), extra);
+		} else {
+			formatted = String.format("\"%s\" -> \"%s\" [ label=\"%s\" %s ];", from, to, escape(label), extra);
+		}
+		appendIndented(formatted).newLine();
 		return this;
 	}
 

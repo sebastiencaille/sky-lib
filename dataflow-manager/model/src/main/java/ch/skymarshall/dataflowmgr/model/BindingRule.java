@@ -37,12 +37,12 @@ public class BindingRule extends WithId {
 		return get(String.class);
 	}
 
-	public static BindingRule activator(final String activator) {
-		return new BindingRule(Type.ACTIVATION, activator);
+	public static BindingRule activator(final Condition condition) {
+		return new BindingRule(Type.ACTIVATION, condition);
 	}
 
-	public static Optional<String> getActivator(final Set<BindingRule> rules) {
-		return BindingRule.get(rules, BindingRule.Type.ACTIVATION).map(BindingRule::string);
+	public static Optional<Condition> getActivator(final Set<BindingRule> rules) {
+		return BindingRule.get(rules, BindingRule.Type.ACTIVATION).map(r -> r.get(Condition.class));
 	}
 
 	public static BindingRule exclusion(final Binding exclusion) {

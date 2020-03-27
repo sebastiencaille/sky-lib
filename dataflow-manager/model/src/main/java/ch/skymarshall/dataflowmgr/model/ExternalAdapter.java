@@ -1,7 +1,8 @@
 package ch.skymarshall.dataflowmgr.model;
 
+import static java.util.Collections.singletonList;
+
 import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.List;
 
 public class ExternalAdapter extends Call {
@@ -16,8 +17,8 @@ public class ExternalAdapter extends Call {
 	}
 
 	public static ExternalAdapter from(final Method m) {
-		return new ExternalAdapter(methodFullName(m), m.getName(),
-				Collections.singletonList(type(m.getParameterTypes()[0])), type(m.getReturnType()));
+		return new ExternalAdapter(methodFullName(m), m.getName(), singletonList(type(m.getParameterTypes()[0])),
+				type(m.getReturnType()));
 	}
 
 }

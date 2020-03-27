@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -24,13 +23,9 @@ public class Binding extends WithId {
 			this.toProcessor = toProcessor;
 		}
 
-		public Builder activator(final String activator) {
-			rules.add(BindingRule.activator(activator));
+		public Builder activator(final Condition isEnhance) {
+			rules.add(BindingRule.activator(isEnhance));
 			return this;
-		}
-
-		public Binding build(final Map<Processor, List<Binding>> leafsByProcessor) {
-			return new Binding(this);
 		}
 
 		public Binding build(final Binding... someParents) {

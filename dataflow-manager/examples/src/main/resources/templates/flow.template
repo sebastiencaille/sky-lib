@@ -1,6 +1,7 @@
 package ${package};
 
-import java.util.UUID;
+import org.junit.Test;
+import org.junit.Assert;
 ${imports}
 
 public class ${flow.name} extends AbstractFlow {
@@ -8,11 +9,19 @@ public class ${flow.name} extends AbstractFlow {
 	public ${flow.output} execute(${flow.input} inputDataPoint) {
 		${flow.code}
 	}
-	
-	public static void main(String[] args) {
-		new ${flow.name}().execute("Hello");
-		new ${flow.name}().execute("Hi");
-		new ${flow.name}().execute("Huh");
+
+	@Test	
+	public void testFlow() {
+		simpleExternalAdapter.reset();
+		
+	 	execute("Hello");
+		Assert.assertEquals("Hello -> enhanced with World", simpleExternalAdapter.getOutput());
+		
+		execute("Hi");
+		Assert.assertEquals("Hi -> enhanced with There", simpleExternalAdapter.getOutput());
+		
+		execute("Huh");
+		Assert.assertEquals("Huh -> not enhanced", simpleExternalAdapter.getOutput());
 	}
 
 }

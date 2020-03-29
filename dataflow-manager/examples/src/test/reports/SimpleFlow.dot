@@ -1,25 +1,30 @@
 // TBD
 digraph "SimpleFlow" {
     splines=polyline;
-    "enhanced" [ label="", shape="point"  ];
+    "condGrp_7f69a026-90ee-4857-b545-b8b9eaaffc43" [ label="Enhanced ?", shape="diamond"  ];
     "inputDataPoint" [ label="", shape="point"  ];
     "simpleService_init" [ label="", shape="point"  ];
+    "b6c323ec-43a9-4bff-9b24-38e9481f7560_simpleService_noEnhance" [ label="simpleService.noEnhance", shape="box"  ];
+    "cond_d373c61b-de81-40c7-83b3-1af36f9167b5" [ label="Default", shape="octagon"  ];
+    "a31cfec0-41e1-403e-a01d-53c98f1c49b8_simpleService_enhance" [ label="simpleService.enhance", shape="box"  ];
+    "c9139e6a-c0a7-4944-a58f-bbfcd5cd4078_exit" [ label="exit", shape="box"  ];
+    "enhanced" [ label="", shape="point"  ];
     "exit" [ label="", shape="point"  ];
-    "cond_24567b3c-5117-483f-8ea9-fb691be1cc53" [ label="Enhanced ?", shape="diamond"  ];
-    "613b7b2c-12e0-48a4-bd93-8c598f421d0f_exit" [ label="exit", shape="box"  ];
-    "8c27cce9-5d3f-4073-9305-0666fe1967f4_simpleService_noEnhance" [ label="simpleService.noEnhance", shape="box"  ];
-    "6fdc7ed4-7490-4a09-8079-b195f9a3dcf8_simpleService_init" [ label="simpleService.init", shape="box"  ];
-    "a6420748-b0b3-47c6-b141-d3a2531766d3_simpleService_enhance" [ label="simpleService.enhance", shape="box"  ];
-    "69d7b327-448e-419a-98d5-75a3447898c1" [ label="simpleExternalAdapter.enhancement", shape="ellipse"  ];
-    "08254c9a-f8c4-42f6-a631-75a5a67a0b7e" [ label="simpleExternalAdapter.display", shape="ellipse"  ];
-    "6fdc7ed4-7490-4a09-8079-b195f9a3dcf8_simpleService_init" -> "simpleService_init" [  ];
-    "simpleService_init" -> "cond_24567b3c-5117-483f-8ea9-fb691be1cc53" [  ];
-    "cond_24567b3c-5117-483f-8ea9-fb691be1cc53" -> "69d7b327-448e-419a-98d5-75a3447898c1" [ label="simpleServiceConditions.
-isEnhanceEnabled" labelfloat=true ];
-    "69d7b327-448e-419a-98d5-75a3447898c1" -> "a6420748-b0b3-47c6-b141-d3a2531766d3_simpleService_enhance" [  ];
-    "a6420748-b0b3-47c6-b141-d3a2531766d3_simpleService_enhance" -> "enhanced" [  ];
-    "cond_24567b3c-5117-483f-8ea9-fb691be1cc53" -> "8c27cce9-5d3f-4073-9305-0666fe1967f4_simpleService_noEnhance" [ label="Default" labelfloat=true ];
-    "8c27cce9-5d3f-4073-9305-0666fe1967f4_simpleService_noEnhance" -> "enhanced" [  ];
-    "08254c9a-f8c4-42f6-a631-75a5a67a0b7e" -> "613b7b2c-12e0-48a4-bd93-8c598f421d0f_exit" [  ];
-    "613b7b2c-12e0-48a4-bd93-8c598f421d0f_exit" -> "exit" [  ];
+    "cond_f421c88c-478e-4d38-8897-04ccb37111c4" [ label="simpleServiceConditions.isEnhanceEnabled", shape="octagon"  ];
+    "fefb55bd-560b-4759-b888-67970c1738ea" [ label="simpleExternalAdapter.enhancement", shape="ellipse"  ];
+    "9100900e-78e3-4208-a0ae-1c7d9ac02787" [ label="simpleExternalAdapter.display", shape="ellipse"  ];
+    "b42a99cb-b4f2-4262-a31a-8516f2161f12_simpleService_init" [ label="simpleService.init", shape="box"  ];
+    "inputDataPoint" -> "b42a99cb-b4f2-4262-a31a-8516f2161f12_simpleService_init" [  ];
+    "b42a99cb-b4f2-4262-a31a-8516f2161f12_simpleService_init" -> "simpleService_init" [  ];
+    "simpleService_init" -> "condGrp_7f69a026-90ee-4857-b545-b8b9eaaffc43" [  ];
+    "condGrp_7f69a026-90ee-4857-b545-b8b9eaaffc43" -> "cond_f421c88c-478e-4d38-8897-04ccb37111c4" [  ];
+    "cond_f421c88c-478e-4d38-8897-04ccb37111c4" -> "fefb55bd-560b-4759-b888-67970c1738ea" [  ];
+    "fefb55bd-560b-4759-b888-67970c1738ea" -> "a31cfec0-41e1-403e-a01d-53c98f1c49b8_simpleService_enhance" [  ];
+    "a31cfec0-41e1-403e-a01d-53c98f1c49b8_simpleService_enhance" -> "enhanced" [  ];
+    "condGrp_7f69a026-90ee-4857-b545-b8b9eaaffc43" -> "cond_d373c61b-de81-40c7-83b3-1af36f9167b5" [  ];
+    "cond_d373c61b-de81-40c7-83b3-1af36f9167b5" -> "b6c323ec-43a9-4bff-9b24-38e9481f7560_simpleService_noEnhance" [  ];
+    "b6c323ec-43a9-4bff-9b24-38e9481f7560_simpleService_noEnhance" -> "enhanced" [  ];
+    "enhanced" -> "9100900e-78e3-4208-a0ae-1c7d9ac02787" [  ];
+    "9100900e-78e3-4208-a0ae-1c7d9ac02787" -> "c9139e6a-c0a7-4944-a58f-bbfcd5cd4078_exit" [  ];
+    "c9139e6a-c0a7-4944-a58f-bbfcd5cd4078_exit" -> "exit" [  ];
 }

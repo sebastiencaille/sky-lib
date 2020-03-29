@@ -1,13 +1,17 @@
 package ch.skymarshall.dataflowmgr.generator;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
 
 import ch.skymarshall.dataflowmgr.model.Binding;
+import ch.skymarshall.dataflowmgr.model.Condition;
+import ch.skymarshall.dataflowmgr.model.ExternalAdapter;
 import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.Processor;
 
@@ -71,6 +75,28 @@ public abstract class AbstractFlowVisitor {
 			currentDeps.values().forEach(v -> v.removeAll(newlyTriggeredBindings));
 		}
 
+	}
+
+	/**
+	 * Lists the adapters required by the activators
+	 * 
+	 * @param activator
+	 * @param adapters
+	 * @return
+	 */
+	protected Set<ExternalAdapter> listAdaptersRequiredByActivator(final Condition activator,
+			final Collection<ExternalAdapter> adapters) {
+		final HashSet<ExternalAdapter> adaptersRequiredByActivator = new HashSet<>();
+		for (final Entry<String, String> param : activator.getParameters().entrySet()) {
+			for (final ExternalAdapter adapter : adapters) {
+				final boolean match = adapter.getName().endsWith('.' + param.getKey())
+						|| adapter.getReturnType().equals(param.getValue());
+				if (match) {
+					adaptersRequiredByActivator.add(adapter);
+				}
+			}
+		}
+		return adaptersRequiredByActivator;
 	}
 
 	protected void setConditional(final String parameter) {

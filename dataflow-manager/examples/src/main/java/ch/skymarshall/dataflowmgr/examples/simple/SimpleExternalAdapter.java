@@ -6,6 +6,12 @@ import ch.skymarshall.dataflowmgr.examples.simple.dto.MyData;
 @ExternalAdapters
 public class SimpleExternalAdapter {
 
+	private String output;
+
+	public void reset() {
+		output = null;
+	}
+
 	public String enhancement(final MyData input) {
 		switch (input.parameter) {
 		case "Hello":
@@ -19,5 +25,10 @@ public class SimpleExternalAdapter {
 
 	public void display(final MyData result) {
 		System.out.println(result.output);
+		this.output = result.output;
+	}
+
+	public String getOutput() {
+		return output;
 	}
 }

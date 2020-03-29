@@ -7,7 +7,7 @@ import ch.skymarshall.util.text.TextFormatter;
 public class DotFileGenerator extends TextFormatter {
 
 	public enum Shape {
-		SQUARE, BOX, ELLIPSE, DIAMOND, CIRCLE, POINT
+		SQUARE, BOX, ELLIPSE, DIAMOND, CIRCLE, POINT, HEXAGON, OCTAGON
 	}
 
 	public DotFileGenerator() {

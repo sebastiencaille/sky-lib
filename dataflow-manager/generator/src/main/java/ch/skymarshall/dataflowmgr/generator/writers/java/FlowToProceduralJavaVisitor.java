@@ -1,16 +1,15 @@
 package ch.skymarshall.dataflowmgr.generator.writers.java;
 
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toSet;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -23,6 +22,7 @@ import ch.skymarshall.dataflowmgr.model.Condition;
 import ch.skymarshall.dataflowmgr.model.ExternalAdapter;
 import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.Processor;
+import ch.skymarshall.dataflowmgr.model.WithId;
 import ch.skymarshall.util.generators.JavaCodeGenerator;
 import ch.skymarshall.util.generators.Template;
 
@@ -54,7 +54,7 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 		final Map<String, String> templateProperties = new HashMap<>();
 		templateProperties.put("package", packageName);
 		templateProperties.put("flow.name", flow.getName());
-		templateProperties.put("flow.input", flow.getInputType());
+		templateProperties.put("flow.input", flow.getEntryPointType());
 		templateProperties.put("flow.output", "void");
 		templateProperties.put("flow.code", generator.toString());
 		templateProperties.put("imports", imports.stream().map(i -> "import " + i + ";").collect(joining("\n")));
@@ -62,20 +62,38 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 	}
 
 	@Override
-	protected void process(final Binding binding, final String inputDataPoint, final Processor processor,
-			final String outputDataPoint) throws IOException {
+	protected void process(final Binding binding, final String inputDataPoint, final String inputDataType,
+			final Processor processor, final String outputDataPoint) throws IOException {
 
-		generator.append("// ---------------- ").append(processor.getCall()).append(" -> ").append(outputDataPoint)
-				.append(" ----------------").newLine();
+		generator.append("// ------------------------- ").append(processor.getCall()).append(" -> ")
+				.append(outputDataPoint).append(" -------------------------").newLine();
 
-		final boolean conditionalState = isConditional(inputDataPoint);
+		// Init all data
+		// ----------------
+		final boolean conditionalInputDataPoint = isConditional(inputDataPoint);
 		final boolean hasOutput = !"void".equals(processor.getReturnType());
-		final Optional<String> activator = BindingRule.getActivator(binding.getRules()).map(Condition::getCall);
-		final Set<String> defaultBinding = BindingRule.getAll(binding.getRules(), BindingRule.Type.EXCLUSION)
-				.map(r -> r.get(Binding.class).outputName()).collect(toSet());
-		final boolean conditionalExec = conditionalState || activator.isPresent() || !defaultBinding.isEmpty();
 
-		// Output declaration
+		final List<ExternalAdapter> adapters = binding.getAdapters();
+		final List<Condition> activators = BindingRule.getActivators(binding.getRules()).collect(Collectors.toList());
+
+		final Set<String> defaultBinding = BindingRule.getAll(binding.getRules(), BindingRule.Type.EXCLUSION)
+				.map(r -> r.get(Binding.class).outputName()).collect(Collectors.toSet());
+		final boolean conditionalExec = conditionalInputDataPoint || !activators.isEmpty() || !defaultBinding.isEmpty();
+
+		final List<BindingImplVariable> availableVars = new ArrayList<>();
+		availableVars.add(new BindingImplVariable(inputDataPoint, inputDataType, inputDataPoint));
+
+		final Set<ExternalAdapter> adaptersNotDeclared = new HashSet<>(adapters);
+
+		// Add activators
+		// -------------------------
+		if (!activators.isEmpty()) {
+			generator.append("boolean ").append(activatedVariable(binding)).append(" = true;").newLine();
+			visitActivators(binding, activators, availableVars, adaptersNotDeclared);
+		}
+
+		// Declare output DP
+		// -------------------------
 		if (hasOutput && !definedDataPoints.contains(outputDataPoint)) {
 			definedDataPoints.add(outputDataPoint);
 			appendNewVariable(outputDataPoint, processor);
@@ -87,6 +105,7 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 		}
 
 		// Conditional Execution
+		// -------------------------
 		if (!defaultBinding.isEmpty()) {
 			generator.append("boolean notExcl_").append(outputDataPoint).append(" = ")
 					.append(defaultBinding.stream().map(x -> x + " == null").collect(Collectors.joining(" && ")))
@@ -95,11 +114,11 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 		if (conditionalExec) {
 			setConditional(outputDataPoint);
 			final List<String> conditions = new ArrayList<>();
-			if (conditionalState) {
+			if (conditionalInputDataPoint) {
 				conditions.add(inputDataPoint + " != null");
 			}
-			if (activator.isPresent()) {
-				conditions.add(activator.get() + '(' + inputDataPoint + ')');
+			if (!activators.isEmpty()) {
+				conditions.add(activatedVariable(binding));
 			}
 			if (!defaultBinding.isEmpty()) {
 				conditions.add("notExcl_" + outputDataPoint);
@@ -108,21 +127,14 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 			generator.openBlock();
 		}
 
-		// Adapters
-		final List<String> parameterNames = new ArrayList<>();
-		parameterNames.add(inputDataPoint);
-		for (final ExternalAdapter adapter : binding.getAdapters()) {
-			generator.appendIndent();
-			visit("adapter_" + uniqueIndex.getAndIncrement(), adapter, inputDataPoint).ifPresent(parameterNames::add);
-		}
-
 		// Execution
+		visitExternalAdapters(adaptersNotDeclared, binding, availableVars);
 		if (!Flow.EXIT_PROCESSOR.equals(outputDataPoint)) {
 			generator.appendIndent();
 			if (hasOutput && conditionalExec) {
 				generator.append(outputDataPoint).append(" = ");
 			}
-			appendCall(processor, parameterNames);
+			appendCall(processor, availableVars);
 		}
 		if (conditionalExec) {
 			generator.closeBlock();
@@ -130,17 +142,98 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 		generator.newLine();
 	}
 
-	private Optional<String> visit(final String adapterName, final ExternalAdapter adapter, final String parameterName)
+	private void visitActivators(final Binding binding, final List<Condition> activators,
+			final List<BindingImplVariable> availableVars, final Set<ExternalAdapter> adaptersNotDeclared)
 			throws IOException {
-		if (adapter.hasReturnType()) {
-			appendNewVariable(adapterName, adapter);
-			generator.append(" = ");
+		for (final Condition activator : activators) {
+			generator.append("if (").append(activatedVariable(binding)).append(")");
+			generator.openBlock();
+
+			final Set<ExternalAdapter> requiredByActivator = requiredByActivator(activator, adaptersNotDeclared);
+			visitExternalAdapters(requiredByActivator, binding, availableVars);
+			adaptersNotDeclared.removeAll(requiredByActivator);
+
+			generator.appendIndented(activatedVariable(binding)).append(" &= ");
+			appendCall(activator, availableVars);
+
+			generator.closeBlock();
 		}
-		appendCall(adapter, Collections.singletonList(parameterName));
-		if (adapter.hasReturnType()) {
-			return Optional.of(adapterName);
+	}
+
+	private void visitExternalAdapters(final Set<ExternalAdapter> requiredByActivator, final Binding binding,
+			final List<BindingImplVariable> availableVars) throws IOException {
+		for (final ExternalAdapter adapter : requiredByActivator) {
+			final BindingImplVariable parameter = new BindingImplVariable(adapter, variableNameOf(binding, adapter));
+			appendNewVarAndCall(parameter.variable, adapter, availableVars);
+			availableVars.add(parameter);
 		}
-		return Optional.empty();
+	}
+
+	private static class BindingImplVariable {
+		private final String parameterName;
+		private final String parameterType;
+		private final String variable;
+
+		public BindingImplVariable(final String parameterName, final String parameterType, final String variable) {
+			super();
+			this.parameterName = parameterName;
+			this.parameterType = parameterType;
+			this.variable = variable;
+		}
+
+		public BindingImplVariable(final Call call, final String variable) {
+			super();
+			this.parameterName = call.getName().substring(0, call.getName().lastIndexOf('.') + 1);
+			this.parameterType = call.getReturnType();
+			this.variable = variable;
+		}
+
+	}
+
+	private List<String> guessParameters(final Call call, final List<BindingImplVariable> availableVars) {
+		return call.getParameters().entrySet().stream()
+				.map(kv -> guessParameter(kv.getKey(), kv.getValue(), availableVars)).collect(Collectors.toList());
+	}
+
+	private String guessParameter(final String paramName, final String paramType,
+			final List<BindingImplVariable> availableVars) {
+		List<BindingImplVariable> matches = availableVars.stream().filter(a -> a.parameterName.equals(paramName))
+				.collect(Collectors.toList());
+		if (matches.size() > 1) {
+			throw new IllegalArgumentException("Too many possible parameters found for " + paramName);
+		} else if (matches.size() == 1) {
+			return matches.get(0).variable;
+		}
+		matches = availableVars.stream().filter(a -> a.parameterType.equals(paramType)).collect(Collectors.toList());
+		if (matches.size() > 1) {
+			throw new IllegalArgumentException("Too many possible parameters found for " + paramType);
+		} else if (matches.size() == 1) {
+			return matches.get(0).variable;
+		}
+		throw new IllegalStateException("No parameter found for " + paramName + "/" + paramType);
+	}
+
+	private Set<ExternalAdapter> requiredByActivator(final Condition activator,
+			final Collection<ExternalAdapter> adapters) {
+		final HashSet<ExternalAdapter> adaptersRequiredByActivator = new HashSet<>();
+		for (final Entry<String, String> param : activator.getParameters().entrySet()) {
+			for (final ExternalAdapter adapter : adapters) {
+				final boolean match = adapter.getName().endsWith('.' + param.getKey())
+						|| adapter.getReturnType().equals(param.getValue());
+				if (match) {
+					adaptersRequiredByActivator.add(adapter);
+				}
+			}
+		}
+		return adaptersRequiredByActivator;
+	}
+
+	private String activatedVariable(final Binding binding) {
+		return "activated_" + toVariable(binding);
+	}
+
+	private String toVariable(final WithId withId) {
+		return withId.uuid().toString().replace('-', '_');
 	}
 
 	private void appendNewVariable(final String variableName, final Call call) throws IOException {
@@ -148,11 +241,27 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 		if (returnType.startsWith("java.lang")) {
 			returnType = returnType.substring("java.lang".length() + 1);
 		}
-		generator.append(returnType).append(" ").append(variableName);
+		generator.appendIndented(returnType).append(" ").append(variableName);
 	}
 
-	private void appendCall(final Call call, final List<String> parameterNames) throws IOException {
-		generator.append(call.getCall()).append("(").append(String.join(", ", parameterNames)).append(");").newLine();
+	private String variableNameOf(final Binding binding, final Call call) {
+		return call.getCall().replace('.', '_') + toVariable(binding);
+	}
+
+	private void appendCall(final Call call, final List<BindingImplVariable> availableVars) throws IOException {
+		final String parameters = String.join(", ", guessParameters(call, availableVars));
+		generator.append(call.getCall()).append("(").append(parameters).append(");").newLine();
+	}
+
+	private void appendNewVarAndCall(final String variableName, final Call call,
+			final List<BindingImplVariable> availableVars) throws IOException {
+		if (call.hasReturnType()) {
+			appendNewVariable(variableName, call);
+			generator.append(" = ");
+		} else {
+			generator.appendIndent();
+		}
+		appendCall(call, availableVars);
 	}
 
 }

@@ -1,6 +1,7 @@
 package ch.skymarshall.dataflowmgr.generator;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -18,8 +19,8 @@ public abstract class AbstractFlowVisitor {
 	private final Map<Binding, Set<Binding>> currentDeps;
 	private final Set<String> conditionalState = new HashSet<>();
 
-	protected abstract void process(Binding binding, String inputDataPoint, Processor processor, String outputDataPoint)
-			throws IOException;
+	protected abstract void process(Binding binding, String inputDataPoint, String inputDataType, Processor processor,
+			String outputDataPoint) throws IOException;
 
 	public AbstractFlowVisitor(final Flow flow) {
 		this.flow = flow;
@@ -33,9 +34,9 @@ public abstract class AbstractFlowVisitor {
 	protected void processFlow() throws IOException {
 
 		final Set<Binding> untriggeredBindings = new HashSet<>(flow.getBindings());
-		final Set<String> availableDataPoints = new HashSet<>();
+		final Map<String, String> availableDataPoints = new HashMap<>();
 
-		availableDataPoints.add(Flow.INITIAL_DATAPOINT);
+		availableDataPoints.put(Flow.ENTRY_POINT, flow.getEntryPointType());
 		while (!untriggeredBindings.isEmpty()) {
 			// More to process
 
@@ -44,28 +45,32 @@ public abstract class AbstractFlowVisitor {
 				// Next potential binding
 				final Set<Binding> bindingDeps = currentDeps.get(binding);
 				final boolean depsTriggered = bindingDeps == null || bindingDeps.isEmpty();
-				LOGGER.fine(() -> "Testing " + binding.fromDataPoint() + " -> " + binding.toProcessor() + ": deps="
-						+ depsTriggered);
-				if (!availableDataPoints.contains(binding.fromDataPoint()) || !depsTriggered) {
+				if (!availableDataPoints.containsKey(binding.fromDataPoint()) || !depsTriggered) {
 					continue;
 				}
 
 				// Process
-				final boolean conditional = isConditional(binding.fromDataPoint());
-				LOGGER.info(() -> "Handling " + binding.fromDataPoint() + " -> " + binding.toProcessor() + ": cond="
-						+ conditional + ", rules=" + binding.getRules());
-				final Processor nextProcessor = binding.toProcessor();
+				final Processor processor = binding.toProcessor();
 
 				newlyTriggeredBindings.add(binding);
-				process(binding, binding.fromDataPoint(), nextProcessor, binding.outputName());
-				availableDataPoints.add(binding.outputName());
+				process(binding, binding.fromDataPoint(), availableDataPoints.get(binding.fromDataPoint()), processor,
+						binding.outputName());
 			}
 			if (!untriggeredBindings.isEmpty() && newlyTriggeredBindings.isEmpty()) {
 				throw new IllegalStateException("Remaining bindings cannot be processed: " + untriggeredBindings);
 			}
 			untriggeredBindings.removeAll(newlyTriggeredBindings);
+			// make datapoint available only if all corresponding bindings have been
+			// executed
+			for (final Binding binding : newlyTriggeredBindings) {
+				if (untriggeredBindings.stream().noneMatch(b -> binding.outputName().equals(b.outputName()))) {
+					availableDataPoints.put(binding.outputName(), binding.toProcessor().getReturnType());
+				}
+			}
+
 			currentDeps.values().forEach(v -> v.removeAll(newlyTriggeredBindings));
 		}
+
 	}
 
 	protected void setConditional(final String parameter) {

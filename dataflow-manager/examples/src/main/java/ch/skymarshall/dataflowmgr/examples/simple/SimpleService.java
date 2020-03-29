@@ -1,16 +1,17 @@
 package ch.skymarshall.dataflowmgr.examples.simple;
 
-import ch.skymarshall.dataflowmgr.annotations.Processor;
+import ch.skymarshall.dataflowmgr.annotations.Input;
+import ch.skymarshall.dataflowmgr.annotations.Processors;
 import ch.skymarshall.dataflowmgr.examples.simple.dto.MyData;
 
-@Processor
+@Processors
 public class SimpleService {
 
 	public MyData init(final String input) {
 		return new MyData(input);
 	}
 
-	public MyData enhance(final MyData input, final String externalData) {
+	public MyData enhance(final MyData input, @Input("enhancement") final String externalData) {
 		return new MyData(input, " -> enhanced with " + externalData);
 	}
 

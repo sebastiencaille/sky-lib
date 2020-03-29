@@ -1,17 +1,17 @@
 package ch.skymarshall.dataflowmgr.examples.simple;
 
-import ch.skymarshall.dataflowmgr.annotations.ExternalAdapter;
+import ch.skymarshall.dataflowmgr.annotations.ExternalAdapters;
 import ch.skymarshall.dataflowmgr.examples.simple.dto.MyData;
 
-@ExternalAdapter
+@ExternalAdapters
 public class SimpleExternalAdapter {
 
-	public String load(final MyData input) {
+	public String enhancement(final MyData input) {
 		switch (input.parameter) {
 		case "Hello":
 			return "World";
 		case "Hi":
-			return "there";
+			return "There";
 		default:
 			throw new IllegalStateException("Unkown id: " + input);
 		}

@@ -6,26 +6,30 @@ import java.util.UUID;
 
 public class SimpleFlow extends AbstractFlow {
 
-	public void execute(String inputDataPoint) {
-		// ---------------- simpleService.init -> simpleService_init ----------------
+	public void execute(java.lang.String inputDataPoint) {
+		// ------------------------- simpleService.init -> simpleService_init -------------------------
 		ch.skymarshall.dataflowmgr.examples.simple.dto.MyData simpleService_init = simpleService.init(inputDataPoint);
 		
-		// ---------------- simpleService.enhance -> enhanced ----------------
+		// ------------------------- simpleService.enhance -> enhanced -------------------------
+		boolean activated_a6420748_b0b3_47c6_b141_d3a2531766d3 = true;
+		if (activated_a6420748_b0b3_47c6_b141_d3a2531766d3) {
+		    activated_a6420748_b0b3_47c6_b141_d3a2531766d3 &= simpleServiceConditions.isEnhanceEnabled(simpleService_init);
+		}
 		ch.skymarshall.dataflowmgr.examples.simple.dto.MyData enhanced = null;
-		if (simpleServiceConditions.isEnhanceEnabled(simpleService_init))  {
-		    String adapter_1 = simpleExternalAdapter.load(simpleService_init);
-		    enhanced = simpleService.enhance(simpleService_init, adapter_1);
+		if (activated_a6420748_b0b3_47c6_b141_d3a2531766d3)  {
+		    String simpleExternalAdapter_enhancementa6420748_b0b3_47c6_b141_d3a2531766d3 = simpleExternalAdapter.enhancement(simpleService_init);
+		    enhanced = simpleService.enhance(simpleService_init, simpleExternalAdapter_enhancementa6420748_b0b3_47c6_b141_d3a2531766d3);
 		}
 		
-		// ---------------- exit -> exit ----------------
-		if (enhanced != null)  {
-		    simpleExternalAdapter.display(enhanced);
-		}
-		
-		// ---------------- simpleService.noEnhance -> enhanced ----------------
+		// ------------------------- simpleService.noEnhance -> enhanced -------------------------
 		boolean notExcl_enhanced = enhanced == null;
 		if (notExcl_enhanced)  {
 		    enhanced = simpleService.noEnhance(simpleService_init);
+		}
+		
+		// ------------------------- exit -> exit -------------------------
+		if (enhanced != null)  {
+		    simpleExternalAdapter.display(enhanced);
 		}
 		
 		

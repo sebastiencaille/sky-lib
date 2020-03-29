@@ -16,9 +16,9 @@
 package ch.skymarshall.dataflowmgr.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,6 +27,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class Flow extends WithId {
+
+	private static final LinkedHashMap<String, String> EMPTY_PARAMETERS = new LinkedHashMap<>();
 
 	public static class FlowBuilder {
 		final String flowName;
@@ -80,8 +82,8 @@ public class Flow extends WithId {
 	private final FlowBuilder config;
 
 	public static final String EXIT_PROCESSOR = "exit";
-	public static final Processor EXIT = new Processor("exit", "exit", Collections.emptyList(), Void.TYPE.getName());
-	public static final String INITIAL_DATAPOINT = "inputDataPoint";
+	public static final Processor EXIT_POINT = new Processor("exit", "exit", EMPTY_PARAMETERS, Void.TYPE.getName());
+	public static final String ENTRY_POINT = "inputDataPoint";
 
 	public Flow(final FlowBuilder bindingsBuilder) {
 		super(bindingsBuilder.uuid);
@@ -96,7 +98,7 @@ public class Flow extends WithId {
 		return config.bindings;
 	}
 
-	public String getInputType() {
+	public String getEntryPointType() {
 		return config.inputType;
 	}
 

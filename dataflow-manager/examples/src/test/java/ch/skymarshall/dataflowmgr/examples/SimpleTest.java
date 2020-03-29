@@ -48,11 +48,11 @@ public class SimpleTest {
 
 		final Condition isEnhanceEnabled = simpleServiceConditions.get("isEnhanceEnabled");
 
-		final ExternalAdapter loadData = simpleExternalAdapter.get("load");
+		final ExternalAdapter loadData = simpleExternalAdapter.get("enhancement");
 		final ExternalAdapter displayData = simpleExternalAdapter.get("display");
 
-		final Flow flow = Flow.builder("SimpleFlow", UUID.randomUUID(), "String")//
-				.add(Binding.builder(Flow.INITIAL_DATAPOINT, init))//
+		final Flow flow = Flow.builder("SimpleFlow", UUID.randomUUID(), "java.lang.String")//
+				.add(Binding.builder(Flow.ENTRY_POINT, init))//
 				.add(ConditionalBindingGroup.builder("Enhanced ?")//
 						.add(Binding.builder(init, enhance)//
 								.withExternalAdapter(loadData)//
@@ -60,7 +60,7 @@ public class SimpleTest {
 								.as(DP_ENHANCED))//
 						.add(Binding.builder(init, noEnhance)//
 								.as(DP_ENHANCED))) //
-				.add(Binding.builder(DP_ENHANCED, Flow.EXIT)//
+				.add(Binding.builder(DP_ENHANCED, Flow.EXIT_POINT)//
 						.withExternalAdapter(displayData))//
 				.build();
 

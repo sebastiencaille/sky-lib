@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.skymarshall</groupId>
+		<groupId>ch.skymarshall</groupId>
 		<artifactId>libs</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
@@ -25,7 +25,7 @@
 		<dependencies>
 
 			<dependency>
-				<groupId>org.skymarshall</groupId>
+				<groupId>ch.skymarshall</groupId>
 				<artifactId>lib-utils</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
@@ -55,7 +55,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.skymarshall</groupId>
+			<groupId>ch.skymarshall</groupId>
 			<artifactId>lib-testing</artifactId>
 			<scope>test</scope>
 		</dependency>

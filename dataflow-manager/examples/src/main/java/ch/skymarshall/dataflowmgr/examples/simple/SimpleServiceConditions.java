@@ -1,9 +1,9 @@
 package ch.skymarshall.dataflowmgr.examples.simple;
 
-import ch.skymarshall.dataflowmgr.annotations.Condition;
+import ch.skymarshall.dataflowmgr.annotations.Conditions;
 import ch.skymarshall.dataflowmgr.examples.simple.dto.MyData;
 
-@Condition
+@Conditions
 public class SimpleServiceConditions {
 
 	public boolean isEnhanceEnabled(final MyData input) {

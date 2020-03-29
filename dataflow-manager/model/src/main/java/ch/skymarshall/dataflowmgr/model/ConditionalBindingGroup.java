@@ -1,6 +1,5 @@
 package ch.skymarshall.dataflowmgr.model;
 
-import static ch.skymarshall.dataflowmgr.model.BindingRule.getActivator;
 import static ch.skymarshall.util.helpers.StreamHelper.notEq;
 import static java.util.stream.Collectors.toSet;
 
@@ -39,7 +38,7 @@ public class ConditionalBindingGroup extends WithId implements IFlowCheck {
 		}
 
 		public Builder add(final Binding binding) {
-			if (getActivator(binding.getRules()).isPresent() && getDefaultBinding().isPresent()) {
+			if (BindingRule.getActivators(binding.getRules()).count() > 0 && getDefaultBinding().isPresent()) {
 				throw new IllegalStateException("Duplicate default binding");
 			}
 			bindings.add(binding);
@@ -47,7 +46,7 @@ public class ConditionalBindingGroup extends WithId implements IFlowCheck {
 		}
 
 		public Optional<Binding> getDefaultBinding() {
-			return bindings.stream().filter(b -> !getActivator(b.getRules()).isPresent()).findAny();
+			return bindings.stream().filter(b -> BindingRule.getActivators(b.getRules()).count() == 0).findAny();
 		}
 
 		public ConditionalBindingGroup build() {

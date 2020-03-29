@@ -13,7 +13,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.skymarshall</groupId>
+		<groupId>ch.skymarshall</groupId>
 		<artifactId>libs</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
@@ -22,12 +22,12 @@
 	<dependencies>
 
 		<dependency>
-			<groupId>org.skymarshall</groupId>
+			<groupId>ch.skymarshall</groupId>
 			<artifactId>lib-annotations</artifactId>
 		</dependency>
 		
 		<dependency>
-			<groupId>org.skymarshall</groupId>
+			<groupId>ch.skymarshall</groupId>
 			<artifactId>lib-testing</artifactId>
 			<scope>test</scope>
 		</dependency>

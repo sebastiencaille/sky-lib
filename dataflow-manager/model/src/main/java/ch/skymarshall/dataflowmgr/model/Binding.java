@@ -13,7 +13,7 @@ public class Binding extends WithId {
 
 		private final String fromDataPoint;
 		private final Processor toProcessor;
-		private final Set<BindingRule> rules = new HashSet<>();
+		private final List<BindingRule> rules = new ArrayList<>();
 		private final List<ExternalAdapter> adapters = new ArrayList<>();
 		private final Set<Binding> parents = new HashSet<>();
 		private String toDataPoint;
@@ -76,7 +76,7 @@ public class Binding extends WithId {
 		config.rules.addAll(rules);
 	}
 
-	public Set<BindingRule> getRules() {
+	public List<BindingRule> getRules() {
 		return config.rules;
 	}
 

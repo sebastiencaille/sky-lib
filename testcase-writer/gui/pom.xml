@@ -27,7 +27,7 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.skymarshall</groupId>
+			<groupId>ch.skymarshall</groupId>
 			<artifactId>lib-gui-java8</artifactId>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/net.java.linoleum/jlfgr -->

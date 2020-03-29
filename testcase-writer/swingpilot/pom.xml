@@ -16,7 +16,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.skymarshall</groupId>
+			<groupId>ch.skymarshall</groupId>
 			<artifactId>lib-utils</artifactId>
 		</dependency>
 		<dependency>

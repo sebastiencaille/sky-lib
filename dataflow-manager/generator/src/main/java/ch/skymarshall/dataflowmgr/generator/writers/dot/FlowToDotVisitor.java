@@ -17,12 +17,14 @@ package ch.skymarshall.dataflowmgr.generator.writers.dot;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import ch.skymarshall.dataflowmgr.generator.AbstractFlowVisitor;
 import ch.skymarshall.dataflowmgr.model.Binding;
@@ -80,7 +82,7 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 	public FlowToDotVisitor(final Flow flow) {
 		super(flow);
 		this.graph = new Graph();
-		addDataPoint(Flow.INITIAL_DATAPOINT);
+		addDataPoint(Flow.ENTRY_POINT);
 	}
 
 	private void addDataPoint(final String name) {
@@ -104,14 +106,16 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 		return nodeName;
 	}
 
-	private void addBindingWithActivator(final String from, final String to, final String label) {
+	private void addBindingWithActivator(final String from, final String to, final List<String> activators) {
 		// labelfloat
-		graph.links.add(new Link(from, to, label.replace(".", ".\n"), "labelfloat=true"));
+		for (final String activator : activators) {
+			graph.links.add(new Link(from, to, activator.replace(".", ".\n"), "labelfloat=true"));
+		}
 	}
 
 	@Override
-	protected void process(final Binding binding, final String inputDataPoint, final Processor processor,
-			final String outputDataPoint) {
+	protected void process(final Binding binding, final String inputDataPoint, final String inputDataType,
+			final Processor processor, final String outputDataPoint) throws IOException {
 		// Create data point
 		if (!graph.nodes.containsKey(outputDataPoint)) {
 			addDataPoint(outputDataPoint);
@@ -124,7 +128,7 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 
 		// Add condition
 		String linkProcessFrom;
-		String activator;
+		List<String> activators;
 		if (conditionGroupOpt.isPresent()) {
 			final ConditionalBindingGroup conditionGroup = conditionGroupOpt.get();
 			final String conditionNodeName = getConditionNodeName(conditionGroup);
@@ -132,10 +136,14 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 				addCondition(conditionGroup);
 				graph.links.add(new Link(inputDataPoint, conditionNodeName, "", ""));
 			}
-			activator = BindingRule.getActivator(binding.getRules()).map(Condition::getCall).orElse("Default");
+			activators = BindingRule.getActivators(binding.getRules()).map(Condition::getCall)
+					.collect(Collectors.toList());
+			if (activators.isEmpty()) {
+				activators.add("Default");
+			}
 			linkProcessFrom = conditionNodeName;
 		} else {
-			activator = "";
+			activators = Collections.emptyList();
 			linkProcessFrom = inputDataPoint;
 		}
 		// Add split for multiple adapters
@@ -144,22 +152,22 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 			final String nodeName = "adapterPoint_" + binding.uuid().toString();
 			graph.nodes.put(nodeName,
 					new Node(nodeName, "", ch.skymarshall.util.generators.DotFileGenerator.Shape.POINT));
-			addBindingWithActivator(linkProcessFrom, nodeName, activator);
+			addBindingWithActivator(linkProcessFrom, nodeName, activators);
 			linkProcessFrom = nodeName;
-			activator = "";
+			activators = Collections.emptyList();
 		}
 
 		// Add adapters
 		for (final ExternalAdapter adapter : adapters) {
 			addAdapter(adapter);
-			addBindingWithActivator(linkProcessFrom, adapter.uuid().toString(), activator);
+			addBindingWithActivator(linkProcessFrom, adapter.uuid().toString(), activators);
 			graph.links.add(new Link(adapter.uuid().toString(), processorNode));
-			activator = "";
+			activators = Collections.emptyList();
 		}
 
 		// Add link to processor
 		if (adapters.isEmpty()) {
-			addBindingWithActivator(linkProcessFrom, processorNode, activator);
+			addBindingWithActivator(linkProcessFrom, processorNode, activators);
 		}
 		graph.links.add(new Link(processorNode, outputDataPoint));
 	}

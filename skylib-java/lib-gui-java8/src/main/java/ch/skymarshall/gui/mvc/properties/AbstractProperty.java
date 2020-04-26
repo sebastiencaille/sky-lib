@@ -59,6 +59,18 @@ public abstract class AbstractProperty implements Serializable {
 		};
 	}
 
+	public enum TransmitMode {
+		NONE(false, false), BOTH(true, true), TO_COMPONENT(true, false);
+
+		public final boolean toComponent;
+		public final boolean toProperty;
+
+		private TransmitMode(final boolean toComponent, final boolean toProperty) {
+			this.toComponent = toComponent;
+			this.toProperty = toProperty;
+		}
+	}
+
 	/**
 	 * Name of the property
 	 */
@@ -79,7 +91,7 @@ public abstract class AbstractProperty implements Serializable {
 	 */
 	protected transient ErrorNotifier errorNotifier = emptyErrorNotifier();
 
-	protected boolean attached = false;
+	protected TransmitMode transmitMode = TransmitMode.NONE;
 
 	public abstract void reset(Object caller);
 
@@ -99,16 +111,20 @@ public abstract class AbstractProperty implements Serializable {
 		return name;
 	}
 
-	public void detach() {
-		attached = false;
+	public void setTransmitMode(final TransmitMode transmitMode) {
+		this.transmitMode = transmitMode;
+	}
+
+	public boolean mustSendToProperty() {
+		return transmitMode.toProperty;
+	}
+
+	public boolean mustSendToComponent() {
+		return transmitMode.toComponent;
 	}
 
 	public void attach() {
-		attached = true;
-	}
-
-	public boolean isAttached() {
-		return attached;
+		setTransmitMode(TransmitMode.BOTH);
 	}
 
 	public void setErrorNotifier(final ErrorNotifier errorNotifier) {

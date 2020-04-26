@@ -63,7 +63,7 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 	}
 
 	public void setObjectValueFromComponent(final Object caller, final T newValue) {
-		if (attached) {
+		if (mustSendToProperty()) {
 			setObjectValue(caller, newValue);
 		}
 	}
@@ -91,7 +91,7 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 	}
 
 	protected void setObjectValue(final Object caller, final T newValue) {
-		if (!attached) {
+		if (!mustSendToProperty()) {
 			replaceValue(newValue);
 			return;
 		}

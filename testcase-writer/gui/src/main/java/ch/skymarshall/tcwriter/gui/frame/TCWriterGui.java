@@ -1,6 +1,7 @@
 package ch.skymarshall.tcwriter.gui.frame;
 
 import static ch.skymarshall.gui.mvc.factories.ComponentBindings.wo;
+import static ch.skymarshall.gui.swing.SwingHelper.withException;
 
 import java.awt.BorderLayout;
 import java.net.URL;
@@ -20,6 +21,7 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
 import ch.skymarshall.gui.mvc.ScreenBuildingReport;
+import ch.skymarshall.gui.swing.SwingHelper.ActionWithException;
 import ch.skymarshall.tcwriter.gui.editors.params.TestParameterModel;
 import ch.skymarshall.tcwriter.gui.editors.params.TestParameterValueEditorPanel;
 import ch.skymarshall.tcwriter.gui.editors.steps.StepEditorController;
@@ -42,7 +44,7 @@ public class TCWriterGui extends JFrame {
 			final ActionWithException<?> action) {
 		final JButton createdButton = new JButton(icon);
 		createdButton.setToolTipText(toolTip);
-		createdButton.addActionListener(e -> withException(action));
+		createdButton.addActionListener(e -> withException(action, this::handleException));
 		createdButton.setName(name);
 		return createdButton;
 	}
@@ -151,19 +153,8 @@ public class TCWriterGui extends JFrame {
 		return new ImageIcon(resource);
 	}
 
-	public interface ActionWithException<E extends Exception> {
-
-		void execute() throws E;
-
-	}
-
-	public <E extends Exception> void withException(final ActionWithException<E> e) {
-		try {
-			e.execute();
-		} catch (final Exception ex) {
-			LOGGER.log(Level.WARNING, "Unable to start testcase", ex);
-			JOptionPane.showMessageDialog(this, "Unable to execution action: " + ex.getMessage());
-		}
-
+	public void handleException(final Exception ex) {
+		LOGGER.log(Level.WARNING, "Unable to start testcase", ex);
+		JOptionPane.showMessageDialog(this, "Unable to execution action: " + ex.getMessage());
 	}
 }

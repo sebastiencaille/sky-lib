@@ -77,6 +77,11 @@ public class TestParameterValue extends IdObject {
 				&& apiParameterId.equals(other.apiParameterId);
 	}
 
+	@Override
+	public int hashCode() {
+		return simpleValue.hashCode() + complexTypeValues.hashCode() * 13 + apiParameterId.hashCode() * 29;
+	}
+
 	public String getApiParameterId() {
 		return apiParameterId;
 	}

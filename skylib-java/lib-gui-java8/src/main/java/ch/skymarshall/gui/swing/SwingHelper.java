@@ -43,4 +43,20 @@ public interface SwingHelper {
 	public static ActionListener actionListener(final Consumer<ActionEvent> c) {
 		return c::accept;
 	}
+
+	public interface ActionWithException<E extends Exception> {
+
+		void execute() throws E;
+
+	}
+
+	public static <E extends Exception> void withException(final ActionWithException<E> e,
+			final Consumer<E> exceptionHandler) {
+		try {
+			e.execute();
+		} catch (final Exception ex) {
+			exceptionHandler.accept((E) ex);
+		}
+
+	}
 }

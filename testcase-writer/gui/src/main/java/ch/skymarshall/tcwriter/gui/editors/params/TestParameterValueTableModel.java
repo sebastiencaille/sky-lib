@@ -1,5 +1,7 @@
 package ch.skymarshall.tcwriter.gui.editors.params;
 
+import java.util.Objects;
+
 import ch.skymarshall.gui.model.ListModel;
 import ch.skymarshall.gui.swing.model.ListModelTableModel;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
@@ -48,6 +50,20 @@ public class TestParameterValueTableModel extends
 				return 1;
 			}
 			return description.compareTo(other.description);
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			if (!(obj instanceof ParameterValueEntry)) {
+				return false;
+			}
+			final ParameterValueEntry other = (ParameterValueEntry) obj;
+			return mandatory == other.mandatory && Objects.equals(description, other.description);
+		}
+
+		@Override
+		public int hashCode() {
+			return description.hashCode() + (mandatory ? 1 : 3);
 		}
 
 		@Override

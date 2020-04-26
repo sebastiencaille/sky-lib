@@ -186,8 +186,9 @@ public class GuiPilot {
 		try (NoExceptionCloseable dialogCloseable = JDialogPilot.withDialog(dialogHandler)) {
 			SwingUtilities.invokeAndWait(runnable);
 		} catch (final InvocationTargetException e) {
-			throw new Error(e.getCause());
+			throw new AssertionError(e.getCause());
 		} catch (final InterruptedException e) {
+			Thread.currentThread().interrupt();
 			Assert.assertNull("Unexpected error while executing selection", e);
 		}
 	}

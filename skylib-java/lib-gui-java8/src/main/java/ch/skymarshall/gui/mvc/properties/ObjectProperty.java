@@ -87,7 +87,7 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 	}
 
 	public void setValue(final Object caller, final T newValue) {
-		attached = true; // consider it's already attached
+		setTransmitMode(TransmitMode.BOTH); // consider it's already attached
 		setObjectValue(caller, newValue);
 	}
 
@@ -110,7 +110,7 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 
 	@Override
 	public void attach() {
-		if (attached) {
+		if (mustSendToComponent()) {
 			return;
 		}
 		super.attach();

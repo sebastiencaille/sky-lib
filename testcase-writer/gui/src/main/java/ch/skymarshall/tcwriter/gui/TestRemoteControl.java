@@ -140,6 +140,10 @@ public class TestRemoteControl {
 		api.write(TestApi.Command.RUN);
 	}
 
+	/**
+	 *
+	 * @param stepChangedListener listen to first and last changed step
+	 */
 	public void setStepListener(final BiConsumer<Integer, Integer> stepChangedListener) {
 		this.stepChangedListener = stepChangedListener;
 	}

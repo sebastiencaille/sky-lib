@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
+import ch.skymarshall.gui.mvc.properties.AbstractProperty.TransmitMode;
 
 /**
  * PropertyChangeSupport adapted to the property controllers.
@@ -191,7 +192,7 @@ public class ControllerPropertyChangeSupport {
 
 		@Override
 		public void detachAll() {
-			properties.forEach(AbstractProperty::detach);
+			properties.forEach(p -> p.setTransmitMode(TransmitMode.NONE));
 		}
 
 		/**

@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import ch.skymarshall.gui.mvc.factories.Converters;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
-import ch.skymarshall.gui.swing.bindings.SwingBindings;
+import ch.skymarshall.gui.swing.factories.SwingBindings;
 
 public class SwingBindingsTest extends Assert {
 	private class TestGuiModel extends GuiModel {

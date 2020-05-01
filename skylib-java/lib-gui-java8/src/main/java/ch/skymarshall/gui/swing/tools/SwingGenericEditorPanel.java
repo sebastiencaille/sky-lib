@@ -1,7 +1,7 @@
 package ch.skymarshall.gui.swing.tools;
 
-import static ch.skymarshall.gui.swing.bindings.SwingBindings.selected;
-import static ch.skymarshall.gui.swing.bindings.SwingBindings.value;
+import static ch.skymarshall.gui.swing.factories.SwingBindings.selected;
+import static ch.skymarshall.gui.swing.factories.SwingBindings.value;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;

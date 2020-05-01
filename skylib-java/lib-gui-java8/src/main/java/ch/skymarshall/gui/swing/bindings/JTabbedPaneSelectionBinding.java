@@ -22,6 +22,7 @@ import javax.swing.JTabbedPane;
 import ch.skymarshall.gui.mvc.ComponentBindingAdapter;
 import ch.skymarshall.gui.mvc.IComponentLink;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
+import ch.skymarshall.gui.swing.factories.SwingBindings;
 
 /**
  * Select the tab of a tabbed pane according to the property's value.

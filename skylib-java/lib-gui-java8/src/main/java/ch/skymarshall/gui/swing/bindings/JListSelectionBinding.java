@@ -20,6 +20,7 @@ import javax.swing.JList;
 import ch.skymarshall.gui.mvc.ComponentBindingAdapter;
 import ch.skymarshall.gui.mvc.IComponentLink;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
+import ch.skymarshall.gui.swing.factories.SwingBindings;
 
 public class JListSelectionBinding<T> extends ComponentBindingAdapter<T> {
 

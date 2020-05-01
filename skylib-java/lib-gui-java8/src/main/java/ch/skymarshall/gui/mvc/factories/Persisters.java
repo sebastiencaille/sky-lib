@@ -13,8 +13,11 @@
  *  IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  ******************************************************************************/
-package ch.skymarshall.gui.mvc.persisters;
+package ch.skymarshall.gui.mvc.factories;
 
+import ch.skymarshall.gui.mvc.persisters.FieldAccess;
+import ch.skymarshall.gui.mvc.persisters.GetSetAccess;
+import ch.skymarshall.gui.mvc.persisters.ObjectProviderPersister;
 import ch.skymarshall.gui.mvc.persisters.ObjectProviderPersister.IObjectProvider;
 import ch.skymarshall.gui.mvc.properties.IPersister;
 

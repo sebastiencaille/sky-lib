@@ -19,10 +19,10 @@ import static ch.skymarshall.example.gui.TestObject.testObjectToString;
 import static ch.skymarshall.gui.mvc.factories.BindingDependencies.detachOnUpdateOf;
 import static ch.skymarshall.gui.mvc.factories.Converters.guiErrorToString;
 import static ch.skymarshall.gui.mvc.factories.Converters.intToString;
-import static ch.skymarshall.gui.swing.bindings.SwingBindings.selected;
-import static ch.skymarshall.gui.swing.bindings.SwingBindings.selection;
-import static ch.skymarshall.gui.swing.bindings.SwingBindings.value;
-import static ch.skymarshall.gui.swing.bindings.SwingBindings.values;
+import static ch.skymarshall.gui.swing.factories.SwingBindings.selected;
+import static ch.skymarshall.gui.swing.factories.SwingBindings.selection;
+import static ch.skymarshall.gui.swing.factories.SwingBindings.value;
+import static ch.skymarshall.gui.swing.factories.SwingBindings.values;
 
 import java.awt.Color;
 import java.awt.Container;

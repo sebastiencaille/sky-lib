@@ -16,8 +16,8 @@
 package ch.skymarshall.example.gui.model.impl;
 
 import static ch.skymarshall.gui.mvc.factories.BindingDependencies.detachOnUpdateOf;
-import static ch.skymarshall.gui.swing.bindings.SwingBindings.selected;
-import static ch.skymarshall.gui.swing.bindings.SwingBindings.selection;
+import static ch.skymarshall.gui.swing.factories.SwingBindings.selected;
+import static ch.skymarshall.gui.swing.factories.SwingBindings.selection;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;

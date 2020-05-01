@@ -23,6 +23,7 @@ import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.LongFunction;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import ch.skymarshall.gui.Utils;
@@ -254,7 +255,7 @@ public final class Converters {
 
 	/**
 	 * Write only converter
-	 * 
+	 *
 	 * @param <T>       type on property side
 	 * @param <U>       type on component side
 	 * @param prop2comp the function to convert value from property side to
@@ -293,6 +294,28 @@ public final class Converters {
 				consumer.accept(false, componentValue);
 				return componentValue;
 			}
+		};
+	}
+
+	public static <C> IConverter<Boolean, C> either(final Supplier<C> either, final Supplier<C> or) {
+		return new IConverter<Boolean, C>() {
+
+			@Override
+			public C convertPropertyValueToComponentValue(final Boolean propertyValue) {
+				if (propertyValue != null && propertyValue.booleanValue()) {
+					return either.get();
+				}
+				return or.get();
+			}
+
+			/**
+			 * @throws ConversionException exception thrown when a conversion error occurs
+			 */
+			@Override
+			public Boolean convertComponentValueToPropertyValue(final C componentValue) throws ConversionException {
+				throw new IllegalStateException("Write only converter");
+			}
+
 		};
 	}
 

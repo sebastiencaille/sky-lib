@@ -2,12 +2,12 @@
 package ch.skymarshall.example.gui;
 
 import ch.skymarshall.gui.mvc.IScopedSupport;
+import ch.skymarshall.gui.mvc.factories.Persisters;
 import ch.skymarshall.gui.mvc.GuiModel;
 import ch.skymarshall.gui.mvc.IObjectGuiModel;
 import ch.skymarshall.gui.mvc.persisters.ObjectProviderPersister;
 import ch.skymarshall.gui.mvc.IComponentBinding;
 import ch.skymarshall.gui.mvc.GuiController;
-import ch.skymarshall.gui.mvc.persisters.Persisters;
 import ch.skymarshall.gui.mvc.properties.Properties;
 import ch.skymarshall.gui.mvc.properties.ErrorProperty;
 import ch.skymarshall.gui.mvc.IComponentLink;

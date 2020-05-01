@@ -23,6 +23,7 @@ import javax.swing.JTable;
 import ch.skymarshall.gui.mvc.ComponentBindingAdapter;
 import ch.skymarshall.gui.mvc.IComponentLink;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
+import ch.skymarshall.gui.swing.factories.SwingBindings;
 import ch.skymarshall.gui.swing.model.ListModelTableModel;
 
 /**

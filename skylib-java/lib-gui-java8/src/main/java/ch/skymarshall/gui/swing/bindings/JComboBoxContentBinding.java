@@ -22,6 +22,7 @@ import javax.swing.JComboBox;
 
 import ch.skymarshall.gui.mvc.ComponentBindingAdapter;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
+import ch.skymarshall.gui.swing.factories.SwingBindings;
 
 public class JComboBoxContentBinding<T> extends ComponentBindingAdapter<List<T>> {
 

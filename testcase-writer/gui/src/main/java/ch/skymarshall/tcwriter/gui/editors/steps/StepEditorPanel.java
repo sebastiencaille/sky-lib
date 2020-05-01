@@ -2,8 +2,8 @@ package ch.skymarshall.tcwriter.gui.editors.steps;
 
 import static ch.skymarshall.gui.mvc.factories.BindingDependencies.detachOnUpdateOf;
 import static ch.skymarshall.gui.mvc.factories.Converters.listConverter;
-import static ch.skymarshall.gui.swing.bindings.SwingBindings.selection;
-import static ch.skymarshall.gui.swing.bindings.SwingBindings.values;
+import static ch.skymarshall.gui.swing.factories.SwingBindings.selection;
+import static ch.skymarshall.gui.swing.factories.SwingBindings.values;
 
 import java.awt.BorderLayout;
 import java.util.Objects;
@@ -16,9 +16,9 @@ import javax.swing.JScrollPane;
 
 import ch.skymarshall.gui.mvc.converters.IConverter;
 import ch.skymarshall.gui.mvc.factories.Converters;
+import ch.skymarshall.gui.mvc.factories.ObjectTextView;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
-import ch.skymarshall.gui.swing.bindings.ObjectTextView;
-import ch.skymarshall.gui.swing.bindings.SwingBindings;
+import ch.skymarshall.gui.swing.factories.SwingBindings;
 import ch.skymarshall.tcwriter.generators.model.NamedObject;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;

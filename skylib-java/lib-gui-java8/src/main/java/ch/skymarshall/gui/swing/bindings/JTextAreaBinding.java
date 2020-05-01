@@ -23,6 +23,7 @@ import javax.swing.JTextArea;
 import ch.skymarshall.gui.mvc.ComponentBindingAdapter;
 import ch.skymarshall.gui.mvc.IComponentLink;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
+import ch.skymarshall.gui.swing.factories.SwingBindings;
 
 public class JTextAreaBinding extends ComponentBindingAdapter<String> {
 

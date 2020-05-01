@@ -18,8 +18,8 @@ package ch.skymarshall.gui.mvc.properties;
 import java.util.function.Consumer;
 
 import ch.skymarshall.gui.mvc.AutoCommitListener;
+import ch.skymarshall.gui.mvc.factories.Persisters;
 import ch.skymarshall.gui.mvc.persisters.FieldAccess;
-import ch.skymarshall.gui.mvc.persisters.Persisters;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty.ErrorNotifier;
 
 /**

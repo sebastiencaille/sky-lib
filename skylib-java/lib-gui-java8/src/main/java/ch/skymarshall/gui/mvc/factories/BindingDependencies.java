@@ -10,7 +10,10 @@ import ch.skymarshall.gui.mvc.PropertyEvent;
 import ch.skymarshall.gui.mvc.ScreenBuildingReport;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 
-public interface BindingDependencies {
+public final class BindingDependencies {
+
+	private BindingDependencies() {
+	}
 
 	public static class DetachOnPropertyUpdate implements IBindingChainDependency, IPropertyEventListener {
 

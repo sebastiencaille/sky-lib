@@ -1,10 +1,9 @@
-package ch.skymarshall.gui.swing.bindings;
+package ch.skymarshall.gui.mvc.factories;
 
 import java.util.Objects;
 import java.util.function.Function;
 
 import ch.skymarshall.gui.mvc.converters.IConverter;
-import ch.skymarshall.gui.mvc.factories.Converters;
 
 public abstract class ObjectTextView<T> {
 

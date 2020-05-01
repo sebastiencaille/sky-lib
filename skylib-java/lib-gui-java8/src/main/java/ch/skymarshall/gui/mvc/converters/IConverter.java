@@ -15,8 +15,6 @@
  ******************************************************************************/
 package ch.skymarshall.gui.mvc.converters;
 
-import java.util.function.Supplier;
-
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 
 public interface IConverter<P, C> {
@@ -28,27 +26,5 @@ public interface IConverter<P, C> {
 	C convertPropertyValueToComponentValue(final P propertyValue);
 
 	P convertComponentValueToPropertyValue(C componentValue) throws ConversionException;
-
-	public static <C> IConverter<Boolean, C> either(final Supplier<C> either, final Supplier<C> or) {
-		return new IConverter<Boolean, C>() {
-
-			@Override
-			public C convertPropertyValueToComponentValue(final Boolean propertyValue) {
-				if (propertyValue != null && propertyValue.booleanValue()) {
-					return either.get();
-				}
-				return or.get();
-			}
-
-			/**
-			 * @throws ConversionException exception thrown when a conversion error occurs
-			 */
-			@Override
-			public Boolean convertComponentValueToPropertyValue(final C componentValue) throws ConversionException {
-				throw new IllegalStateException("Write only converter");
-			}
-
-		};
-	}
 
 }

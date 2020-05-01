@@ -1,6 +1,6 @@
 package ch.skymarshall.tcwriter.gui.steps;
 
-import static ch.skymarshall.gui.swing.bindings.SwingBindings.selection;
+import static ch.skymarshall.gui.swing.factories.SwingBindings.selection;
 
 import java.awt.BorderLayout;
 import java.awt.Component;

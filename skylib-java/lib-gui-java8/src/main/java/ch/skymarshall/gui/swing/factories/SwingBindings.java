@@ -13,7 +13,7 @@
  *  IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  ******************************************************************************/
-package ch.skymarshall.gui.swing.bindings;
+package ch.skymarshall.gui.swing.factories;
 
 import java.awt.Component;
 import java.awt.ItemSelectable;
@@ -44,6 +44,14 @@ import javax.swing.JTextField;
 import ch.skymarshall.gui.mvc.IComponentBinding;
 import ch.skymarshall.gui.mvc.IComponentLink;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
+import ch.skymarshall.gui.swing.bindings.JComboBoxContentBinding;
+import ch.skymarshall.gui.swing.bindings.JListContentBinding;
+import ch.skymarshall.gui.swing.bindings.JListSelectionBinding;
+import ch.skymarshall.gui.swing.bindings.JSpinnerBinding;
+import ch.skymarshall.gui.swing.bindings.JTableMultiSelectionBinding;
+import ch.skymarshall.gui.swing.bindings.JTableSelectionBinding;
+import ch.skymarshall.gui.swing.bindings.JTextAreaBinding;
+import ch.skymarshall.gui.swing.bindings.JTextFieldBinding;
 import ch.skymarshall.gui.swing.model.ListModelTableModel;
 
 public class SwingBindings {

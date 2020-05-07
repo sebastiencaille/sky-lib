@@ -1,4 +1,4 @@
-package ch.skymarshall.tcwriter.swingpilot;
+package ch.skymarshall.tcwriter.pilot.swing;
 
 import java.awt.Window;
 import java.util.ArrayList;

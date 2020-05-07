@@ -1,4 +1,4 @@
-package ch.skymarshall.tcwriter.swingpilot;
+package ch.skymarshall.tcwriter.pilot.swing;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -26,7 +26,7 @@ import org.junit.Assert;
 
 import ch.skymarshall.util.helpers.NoExceptionCloseable;
 
-public class GuiPilot {
+public class GuiPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 
 	private final WeakHashMap<String, JComponent> cache = new WeakHashMap<>();
 	private final Container root;

@@ -99,6 +99,11 @@
 			</dependency>
 			<dependency>
 				<groupId>ch.skymarshall.tcwriter</groupId>
+				<artifactId>testcase-writer-pilot</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.skymarshall.tcwriter</groupId>
 				<artifactId>testcase-writer-swingpilot</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
@@ -125,7 +130,7 @@
 		</dependencies>
 	</dependencyManagement>
 
-	<dependencies>			
+	<dependencies>
 		<dependency>
 			<groupId>ch.skymarshall</groupId>
 			<artifactId>lib-testing</artifactId>
@@ -138,7 +143,9 @@
 		<module>generators</module>
 		<module>gui</module>
 		<module>examples</module>
+		<module>pilot</module>
 		<module>swingpilot</module>
 		<module>gui-it</module>
+		<module>seleniumpilot</module>
 	</modules>
 </project>

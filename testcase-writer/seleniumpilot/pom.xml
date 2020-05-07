@@ -1,0 +1,33 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>ch.skymarshall.tcwriter</groupId>
+		<artifactId>testcase-writer</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>testcase-writer-seleniumpilot</artifactId>
+
+	<dependencies>
+		<dependency>
+			<groupId>ch.skymarshall.tcwriter</groupId>
+			<artifactId>testcase-writer-pilot</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>3.141.59</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/io.undertow/undertow-core -->
+		<dependency>
+			<groupId>io.undertow</groupId>
+			<artifactId>undertow-core</artifactId>
+			<version>2.1.0.Final</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+</project>

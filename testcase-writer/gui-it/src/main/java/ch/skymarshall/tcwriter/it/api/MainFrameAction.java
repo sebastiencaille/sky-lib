@@ -8,7 +8,7 @@ import javax.swing.JTextField;
 
 import ch.skymarshall.tcwriter.annotations.TCApi;
 import ch.skymarshall.tcwriter.it.TCGuiPilot;
-import ch.skymarshall.tcwriter.swingpilot.JDialogPilot;
+import ch.skymarshall.tcwriter.pilot.swing.JDialogPilot;
 
 @TCApi(description = "Main frame actions", humanReadable = "Main frame actions")
 public class MainFrameAction {

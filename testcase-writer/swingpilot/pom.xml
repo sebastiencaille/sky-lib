@@ -20,9 +20,8 @@
 			<artifactId>lib-utils</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>compile</scope>
+			<groupId>ch.skymarshall.tcwriter</groupId>
+			<artifactId>testcase-writer-pilot</artifactId>
 		</dependency>
 	</dependencies>
 

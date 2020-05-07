@@ -1,7 +1,7 @@
 package ch.skymarshall.tcwriter.it;
 
 import ch.skymarshall.tcwriter.gui.frame.TCWriterGui;
-import ch.skymarshall.tcwriter.swingpilot.GuiPilot;
+import ch.skymarshall.tcwriter.pilot.swing.GuiPilot;
 
 public class TCGuiPilot extends GuiPilot {
 

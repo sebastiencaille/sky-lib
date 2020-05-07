@@ -9,7 +9,7 @@ import org.junit.Assert;
 
 import ch.skymarshall.tcwriter.annotations.TCApi;
 import ch.skymarshall.tcwriter.it.TCGuiPilot;
-import ch.skymarshall.tcwriter.swingpilot.GuiPilot;
+import ch.skymarshall.tcwriter.pilot.swing.GuiPilot;
 
 @TCApi(description = "Step selector", humanReadable = "Step selector", isSelector = true)
 public class StepSelector {

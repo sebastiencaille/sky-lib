@@ -1,9 +1,19 @@
 <html>
 	<head>
+		<script type="application/javascript" >
+			onClick = function() {
+				document.getElementById('Proceed').disabled=true;
+				document.getElementById('OK').disabled=true;
+				setTimeout(() => { 
+					document.getElementById('Proceed').disabled=false;
+					document.getElementById('OK').disabled=false; 
+				}, 2000)
+			}
+		</script>
 	</head>
 	<body>
 		Hello
-		<button id="Bouh" onclick="alert('Bouh')">Bouh</button>
-		<button id="OK">OK</button>
+		<button id="Proceed" onclick="onClick()">Proceed</button>
+		<button id="OK" disabled="true" onClick="alert('OK')")>OK</button>
 	</body>
 </html>

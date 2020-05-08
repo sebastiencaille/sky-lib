@@ -1,5 +1,7 @@
 package ch.skymarshall.tcwriter.pilot.selenium;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +22,8 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 
 public class ExampleTest {
+
+	/* **************************** WEB SERVER **************************** */
 
 	public static Undertow webServer = null;
 	private static FirefoxDriver driver;
@@ -66,18 +70,22 @@ public class ExampleTest {
 		webServer = null;
 	}
 
-	// Not the best example..
-	public static class AlertDelay implements ActionDelay {
+	/* **************************** TESTS **************************** */
+
+	private static final By PROCEED_LOCATION = By.id("Proceed");
+	private static final By OK_LOCATION = By.id("OK");
+
+	public static class ArbitraryDelay implements ActionDelay {
 
 		private final GuiPilot pilot;
 
-		public AlertDelay(final GuiPilot pilot) {
+		public ArbitraryDelay(final GuiPilot pilot) {
 			this.pilot = pilot;
 		}
 
 		@Override
 		public boolean waitFinished() {
-			new SeleniumAlertAction(pilot).acknowledge();
+			new SeleniumAction(pilot, PROCEED_LOCATION).waitAvailable();
 			return true;
 		}
 
@@ -88,8 +96,13 @@ public class ExampleTest {
 		final GuiPilot pilot = new GuiPilot(driver);
 
 		pilot.getDriver().get("http://localhost:8080/example1.html");
-		new SeleniumAction(pilot, By.id("Bouh")).click().followedByDelay(new AlertDelay(pilot));
-		new SeleniumAction(pilot, By.id("OK")).click();
+		//
+		new SeleniumAction(pilot, PROCEED_LOCATION).click().followedByDelay(new ArbitraryDelay(pilot));
+		new SeleniumAction(pilot, OK_LOCATION).click();
+		new SeleniumAlertAction(pilot).acknowledge();
+
+		System.out.println(pilot.getActionReport().getFormattedReport());
+		assertEquals(pilot.getActionReport().getFormattedReport(), 4, pilot.getActionReport().getReport().size());
 	}
 
 }

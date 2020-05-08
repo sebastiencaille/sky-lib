@@ -3,11 +3,11 @@ package ch.skymarshall.tcwriter.pilot.selenium;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
@@ -17,10 +17,11 @@ import ch.skymarshall.tcwriter.pilot.AbstractGuiAction;
 
 public class SeleniumAction extends AbstractGuiAction<WebElement> {
 
+	private static final Duration QUICK_TIMEOUT = Duration.ofSeconds(5);
 	private final GuiPilot pilot;
 	private final By locator;
 
-	protected static boolean isInteractive(final WebElement element) {
+	protected static boolean canInteract(final WebElement element) {
 		return element.isDisplayed() && element.isEnabled();
 	}
 
@@ -35,15 +36,43 @@ public class SeleniumAction extends AbstractGuiAction<WebElement> {
 		return pilot.getDriver().findElement(locator);
 	}
 
+	/**
+	 * Wait until the action is processed. First try with a short polling, then with
+	 * a longer one
+	 */
 	@Override
-	protected <U> Optional<U> waitActionProcessed(final Predicate<WebElement> precondition,
+	protected <U> Optional<U> waitActionSuccessLoop(final Predicate<WebElement> precondition,
 			final Function<WebElement, Optional<U>> applier, final Duration timeout) {
-		return Optional.ofNullable(new WebDriverWait(pilot.getDriver(), timeout.getSeconds()).withTimeout(timeout)
-				.pollingEvery(pollingTime(timeout))
-				.ignoreAll(Arrays.asList(NoSuchElementException.class, StaleElementReferenceException.class))
+		Duration remains = timeout;
+		if (timeout.compareTo(QUICK_TIMEOUT) > 0) {
+			final Optional<U> result = processWait(precondition, applier, QUICK_TIMEOUT); // quick polling first
+			if (result.isPresent()) {
+				return result;
+			}
+			remains = remains.minus(QUICK_TIMEOUT);
+		}
+		return processWait(precondition, applier, remains);
+	}
+
+	/**
+	 * Process a single wait
+	 *
+	 * @param <U>
+	 * @param precondition
+	 * @param applier
+	 * @param timeout
+	 * @return
+	 */
+	private <U> Optional<U> processWait(final Predicate<WebElement> precondition,
+			final Function<WebElement, Optional<U>> applier, final Duration timeout) {
+		return Optional.ofNullable(new WebDriverWait(pilot.getDriver(), timeout.getSeconds()) //
+				.withTimeout(timeout) // set timeout in ms
+				.pollingEvery(pollingTime(timeout)) //
+				.ignoreAll(Arrays.asList(NoSuchElementException.class, StaleElementReferenceException.class,
+						ElementNotInteractableException.class))
 				.until(d -> {
 					try {
-						final Optional<U> result = executeOnConditionUnsafe(precondition, applier);
+						final Optional<U> result = executeActionOnce(precondition, applier);
 						if (!result.isPresent()) {
 							return null;
 						}
@@ -55,19 +84,19 @@ public class SeleniumAction extends AbstractGuiAction<WebElement> {
 				}));
 	}
 
-	protected <U> U executeOnInteractive(final Function<WebElement, Optional<U>> applier) {
-		return executeOnCondition(SeleniumAction::isInteractive, applier, pilot.getDefaultActionTimeout());
+	protected <U> U executeInteractiveAction(final Function<WebElement, Optional<U>> applier) {
+		return waitActionSuccess(SeleniumAction::canInteract, applier, pilot.getDefaultActionTimeout());
 	}
 
-	protected boolean executeOnInteractiveConsumer(final Consumer<WebElement> consumer) {
-		return executeOnInteractive(e -> {
-			consumer.accept(e);
-			return Optional.of(Boolean.TRUE);
-		});
+	public SeleniumAction waitAvailable() {
+		addReporting(e -> "Wait on " + locator);
+		executeInteractiveAction(e -> Optional.of(Boolean.TRUE));
+		return this;
 	}
 
 	public SeleniumAction click() {
-		executeOnInteractiveConsumer(WebElement::click);
+		addReporting(e -> "Click on " + locator);
+		executeInteractiveAction(consumer(WebElement::click));
 		return this;
 	}
 

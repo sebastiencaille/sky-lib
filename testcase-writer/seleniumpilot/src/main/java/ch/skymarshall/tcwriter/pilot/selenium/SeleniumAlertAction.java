@@ -1,7 +1,5 @@
 package ch.skymarshall.tcwriter.pilot.selenium;
 
-import java.util.Optional;
-
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoAlertPresentException;
 
@@ -25,11 +23,10 @@ public class SeleniumAlertAction extends AbstractGuiAction<Alert> {
 		}
 	}
 
-	public void acknowledge() {
-		executeOnCondition(null, a -> {
-			a.accept();
-			return Optional.of(Boolean.TRUE);
-		}, pilot.getDefaultActionTimeout());
+	public SeleniumAlertAction acknowledge() {
+		addReporting(e -> "Acknowledge alert " + e.getText());
+		waitActionSuccess(null, consumer(Alert::accept), pilot.getDefaultActionTimeout());
+		return this;
 	}
 
 }

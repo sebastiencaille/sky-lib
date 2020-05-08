@@ -31,13 +31,21 @@ public abstract class AbstractGuiAction<T> {
 
 	}
 
+	protected static <T> Function<T, Optional<Boolean>> consumer(final Consumer<T> consumer) {
+		return t -> {
+			consumer.accept(t);
+			return Optional.of(Boolean.TRUE);
+		};
+	}
+
 	protected abstract T loadElement();
 
 	private final GuiPilot pilot;
+	private final List<Consumer<T>> postExecutions = new ArrayList<>();
 
 	protected LoadedElement cachedElement = null;
-	protected List<Consumer<T>> postExecutions = new ArrayList<>();
 	protected boolean fired = false;
+	private Function<T, String> reportLine = (t) -> null;
 
 	public AbstractGuiAction(final GuiPilot pilot) {
 		this.pilot = pilot;
@@ -61,11 +69,22 @@ public abstract class AbstractGuiAction<T> {
 		return Duration.ofMillis(5_000);
 	}
 
-	public void addPostExecution(final Consumer<T> postExec) {
+	/**
+	 * Adds a post-action, which is executed once action is finished
+	 *
+	 * @param postExec
+	 */
+	public AbstractGuiAction<T> addPostExecution(final Consumer<T> postExec) {
 		postExecutions.add(postExec);
 		if (fired) {
 			postExec.accept(cachedElement.element);
 		}
+		return this;
+	}
+
+	public AbstractGuiAction<T> addReporting(final Function<T, String> reportLine) {
+		this.reportLine = reportLine;
+		return this;
 	}
 
 	/**
@@ -76,12 +95,12 @@ public abstract class AbstractGuiAction<T> {
 	 * @param timeout
 	 * @return
 	 */
-	public <U> U executeOnCondition(final Predicate<T> precondition, final Function<T, Optional<U>> applier,
+	protected <U> U waitActionSuccess(final Predicate<T> precondition, final Function<T, Optional<U>> applier,
 			final Duration timeout) {
 
 		waitActionDelay();
 
-		final Optional<U> result = waitActionProcessed(precondition, applier, timeout);
+		final Optional<U> result = waitActionSuccessLoop(precondition, applier, timeout);
 		if (result.isPresent()) {
 			fired = true;
 			postExecutions.stream().forEach(p -> p.accept(cachedElement.element));
@@ -92,11 +111,21 @@ public abstract class AbstractGuiAction<T> {
 		return null;
 	}
 
-	protected <U> Optional<U> waitActionProcessed(final Predicate<T> precondition,
+	/**
+	 * Loops until the action is processed. Can be overwritten by custom code
+	 *
+	 * @param <U>          type of returned value (component, text, ...)
+	 * @param precondition a precondition
+	 * @param applier      action applied on component
+	 * @param reporting    reporting, if action is successful
+	 * @param timeout
+	 * @return an optional on a response
+	 */
+	protected <U> Optional<U> waitActionSuccessLoop(final Predicate<T> precondition,
 			final Function<T, Optional<U>> applier, final Duration timeout) {
 		final long startTime = System.currentTimeMillis();
 		while (System.currentTimeMillis() - startTime < timeout.toMillis()) {
-			final Optional<U> result = executeOnConditionUnsafe(precondition, applier);
+			final Optional<U> result = executeActionOnce(precondition, applier);
 			if (result.isPresent()) {
 				return result;
 			}
@@ -105,13 +134,13 @@ public abstract class AbstractGuiAction<T> {
 	}
 
 	/**
-	 * Try to execute on condition
+	 * Try to execute the action
 	 *
 	 * @param precondition
 	 * @param applier
 	 * @return
 	 */
-	protected <U> Optional<U> executeOnConditionUnsafe(final Predicate<T> precondition,
+	protected <U> Optional<U> executeActionOnce(final Predicate<T> precondition,
 			final Function<T, Optional<U>> applier) {
 		if (cachedElement == null) {
 			final T loadedElement = loadElement();
@@ -125,7 +154,12 @@ public abstract class AbstractGuiAction<T> {
 		if (!cachedElement.preconditionValidated && precondition != null && !precondition.test(cachedElement.element)) {
 			return Optional.empty();
 		}
-		return applier.apply(cachedElement.element);
+		final String report = reportLine.apply(cachedElement.element);
+		final Optional<U> result = applier.apply(cachedElement.element);
+		if (result.isPresent()) {
+			pilot.getActionReport().report(report);
+		}
+		return result;
 	}
 
 	/**

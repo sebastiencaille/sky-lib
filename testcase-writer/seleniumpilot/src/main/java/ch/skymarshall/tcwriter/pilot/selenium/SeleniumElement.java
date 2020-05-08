@@ -41,18 +41,19 @@ public class SeleniumElement extends AbstractGuiComponent<WebElement> {
 	 * a longer one
 	 */
 	@Override
-	protected <U> PollingResult<U> waitActionSuccessLoop(final Predicate<WebElement> precondition,
-			final Function<WebElement, PollingResult<U>> applier, final Duration timeout) {
+	protected <U> PollingResult<WebElement, U> waitActionSuccessLoop(final Predicate<WebElement> precondition,
+			final Function<WebElement, PollingResult<WebElement, U>> applier, final Duration timeout) {
 		Duration remains = timeout;
 		if (timeout.compareTo(QUICK_TIMEOUT) > 0) {
-			final PollingResult<U> result = actionPoll(precondition, applier, QUICK_TIMEOUT); // quick polling
-																								// first
+			final PollingResult<WebElement, U> result = executeOnePolling(precondition, applier, QUICK_TIMEOUT); // quick
+																													// polling
+			// first
 			if (result.success()) {
 				return result;
 			}
 			remains = remains.minus(QUICK_TIMEOUT);
 		}
-		return actionPoll(precondition, applier, remains);
+		return executeOnePolling(precondition, applier, remains);
 	}
 
 	/**
@@ -64,8 +65,8 @@ public class SeleniumElement extends AbstractGuiComponent<WebElement> {
 	 * @param timeout
 	 * @return
 	 */
-	private <U> PollingResult<U> actionPoll(final Predicate<WebElement> precondition,
-			final Function<WebElement, PollingResult<U>> applier, final Duration timeout) {
+	private <U> PollingResult<WebElement, U> executeOnePolling(final Predicate<WebElement> precondition,
+			final Function<WebElement, PollingResult<WebElement, U>> applier, final Duration timeout) {
 		try {
 			return value(new WebDriverWait(pilot.getDriver(), timeout.getSeconds()) //
 					.withTimeout(timeout) // set timeout in ms
@@ -85,13 +86,13 @@ public class SeleniumElement extends AbstractGuiComponent<WebElement> {
 		}
 	}
 
-	protected <U> U executeInteractiveAction(final Function<WebElement, PollingResult<U>> applier) {
+	protected <U> U executeInteractiveAction(final Function<WebElement, PollingResult<WebElement, U>> applier) {
 		return waitActionSuccess(SeleniumElement::canInteract, applier, pilot.getDefaultActionTimeout(), assertFail());
 	}
 
 	public SeleniumElement waitAvailable() {
 		addReporting(e -> "Wait on " + locator);
-		executeInteractiveAction(e -> value(Boolean.TRUE));
+		executeInteractiveAction(e -> isTrue());
 		return this;
 	}
 

@@ -8,7 +8,7 @@ import ch.skymarshall.tcwriter.pilot.AbstractGuiComponent;
 
 public class AbstractSwingComponent<T extends JComponent> extends AbstractGuiComponent<T> {
 
-	private final GuiPilot pilot;
+	protected final GuiPilot pilot;
 	protected final String name;
 	protected final Class<T> clazz;
 
@@ -32,14 +32,18 @@ public class AbstractSwingComponent<T extends JComponent> extends AbstractGuiCom
 		return component.isEnabled() && component.isVisible();
 	}
 
-	protected <U> U waitComponentEditSuccess(final Function<T, PollingResult<U>> applier,
-			final Function<PollingResult<U>, U> onFail) {
+	public <U> U waitComponentEditSuccess(final Function<T, PollingResult<T, U>> applier,
+			final Function<PollingResult<T, U>, U> onFail) {
 		return waitActionSuccess(this::canEdit, applier, pilot.getDefaultActionTimeout(), onFail);
 	}
 
-	protected <U> U waitComponentReadActionSuccess(final Function<T, PollingResult<U>> applier,
-			final Function<PollingResult<U>, U> onFail) {
+	public <U> U waitComponentReadActionSuccess(final Function<T, PollingResult<T, U>> applier,
+			final Function<PollingResult<T, U>, U> onFail) {
 		return waitActionSuccess(this::canEdit, applier, pilot.getDefaultActionTimeout(), onFail);
+	}
+
+	public <U> U waitComponentEditSuccess(final Function<T, PollingResult<T, U>> applier, final String reason) {
+		return waitComponentEditSuccess(applier, assertFail(reason));
 	}
 
 }

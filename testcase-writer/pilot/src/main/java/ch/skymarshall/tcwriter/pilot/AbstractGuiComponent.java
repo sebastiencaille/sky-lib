@@ -12,11 +12,11 @@ import org.junit.Assert;
 
 public abstract class AbstractGuiComponent<T> {
 
-	protected class LoadedElement {
-		public final T element;
+	protected static class LoadedElement<TT> {
+		public final TT element;
 		private boolean preconditionValidated;
 
-		public LoadedElement(final T element) {
+		public LoadedElement(final TT element) {
 			this.element = element;
 		}
 
@@ -30,24 +30,24 @@ public abstract class AbstractGuiComponent<T> {
 
 	}
 
-	protected class PollingResult<U> {
+	public static class PollingResult<TT, U> {
 		public final U value;
 		public final Throwable failureReason;
-		private LoadedElement loadedElement;
+		private LoadedElement<TT> loadedElement;
 
 		public PollingResult(final U value, final Throwable failureReason) {
 			this.value = value;
 			this.failureReason = failureReason;
 		}
 
-		public T getFoundElement() {
+		public TT getFoundElement() {
 			if (loadedElement != null) {
 				return loadedElement.element;
 			}
 			return null;
 		}
 
-		public void setLoadedElement(final AbstractGuiComponent<T>.LoadedElement loadedElement) {
+		public void setLoadedElement(final LoadedElement<TT> loadedElement) {
 			this.loadedElement = loadedElement;
 		}
 
@@ -71,22 +71,30 @@ public abstract class AbstractGuiComponent<T> {
 
 	}
 
-	protected <U> PollingResult<U> value(final U value) {
+	public static <TT, U> PollingResult<TT, U> value(final U value) {
 		return new PollingResult<>(value, null);
 	}
 
-	protected <U> PollingResult<U> failure(final String reason) {
+	public static <TT> PollingResult<TT, Boolean> isTrue() {
+		return new PollingResult<>(Boolean.TRUE, null);
+	}
+
+	public static <TT> PollingResult<TT, Boolean> isFalse() {
+		return new PollingResult<>(Boolean.FALSE, null);
+	}
+
+	public <TT, U> PollingResult<TT, U> failure(final String reason) {
 		return new PollingResult<>(null, new RuntimeException(reason));
 	}
 
-	protected <U> PollingResult<U> onException(final Throwable cause) {
+	public <TT, U> PollingResult<TT, U> onException(final Throwable cause) {
 		return new PollingResult<>(null, cause);
 	}
 
-	protected Function<T, PollingResult<Boolean>> action(final Consumer<T> consumer) {
+	protected Function<T, PollingResult<T, Boolean>> action(final Consumer<T> consumer) {
 		return t -> {
 			consumer.accept(t);
-			return value(Boolean.TRUE);
+			return isTrue();
 		};
 	}
 
@@ -95,7 +103,7 @@ public abstract class AbstractGuiComponent<T> {
 	private final GuiPilot pilot;
 	private final List<Consumer<T>> postExecutions = new ArrayList<>();
 
-	private LoadedElement cachedElement = null;
+	private LoadedElement<T> cachedElement = null;
 	protected boolean fired = false;
 	private Function<T, String> reportLine = t -> null;
 
@@ -109,7 +117,7 @@ public abstract class AbstractGuiComponent<T> {
 	 * @param actionDescr
 	 * @return
 	 */
-	protected <U> Function<PollingResult<U>, U> assertFail(final String actionDescr) {
+	public <U> Function<PollingResult<T, U>, U> assertFail(final String actionDescr) {
 		return r -> {
 			Assert.fail("Action failed [" + actionDescr + "]: " + r.failureReason);
 			return null;
@@ -122,7 +130,7 @@ public abstract class AbstractGuiComponent<T> {
 	 * @param actionDescr
 	 * @return
 	 */
-	protected <U> Function<PollingResult<U>, U> assertFail() {
+	public <U> Function<PollingResult<T, U>, U> assertFail() {
 		return r -> {
 			Assert.fail("Action failed: [" + reportLine.apply(r.getFoundElement()) + "]: " + r.failureReason);
 			return null;
@@ -184,12 +192,12 @@ public abstract class AbstractGuiComponent<T> {
 	 * @param timeout
 	 * @return
 	 */
-	protected <U> U waitActionSuccess(final Predicate<T> precondition, final Function<T, PollingResult<U>> applier,
-			final Duration timeout, final Function<PollingResult<U>, U> onFail) {
+	protected <U> U waitActionSuccess(final Predicate<T> precondition, final Function<T, PollingResult<T, U>> applier,
+			final Duration timeout, final Function<PollingResult<T, U>, U> onFail) {
 
 		waitActionDelay();
 
-		final PollingResult<U> result = waitActionSuccessLoop(precondition, applier, timeout);
+		final PollingResult<T, U> result = waitActionSuccessLoop(precondition, applier, timeout);
 		if (result.success()) {
 			fired = true;
 			postExecutions.stream().forEach(p -> p.accept(cachedElement.element));
@@ -209,10 +217,10 @@ public abstract class AbstractGuiComponent<T> {
 	 * @param timeout
 	 * @return an optional on a response
 	 */
-	protected <U> PollingResult<U> waitActionSuccessLoop(final Predicate<T> precondition,
-			final Function<T, PollingResult<U>> applier, final Duration timeout) {
+	protected <U> PollingResult<T, U> waitActionSuccessLoop(final Predicate<T> precondition,
+			final Function<T, PollingResult<T, U>> applier, final Duration timeout) {
 		final long startTime = System.currentTimeMillis();
-		PollingResult<U> lastResult = failure("No information");
+		PollingResult<T, U> lastResult = failure("No information");
 		while (System.currentTimeMillis() - startTime < timeout.toMillis()) {
 			lastResult = executePolling(precondition, applier);
 			if (lastResult.success()) {
@@ -235,12 +243,12 @@ public abstract class AbstractGuiComponent<T> {
 	 * @param applier
 	 * @return
 	 */
-	protected <U> PollingResult<U> executePolling(final Predicate<T> precondition,
-			final Function<T, PollingResult<U>> applier) {
+	protected <U> PollingResult<T, U> executePolling(final Predicate<T> precondition,
+			final Function<T, PollingResult<T, U>> applier) {
 		if (cachedElement == null) {
 			final T loadedElement = loadElement();
 			if (loadedElement != null) {
-				cachedElement = new LoadedElement(loadedElement);
+				cachedElement = new LoadedElement<>(loadedElement);
 			}
 		}
 		if (cachedElement == null) {
@@ -251,7 +259,7 @@ public abstract class AbstractGuiComponent<T> {
 		}
 
 		final String report = reportLine.apply(cachedElement.element); // element may disappear after action
-		final PollingResult<U> result = applier.apply(cachedElement.element);
+		final PollingResult<T, U> result = applier.apply(cachedElement.element);
 		if (result.success()) {
 			pilot.getActionReport().report(report);
 			reportLine = null;

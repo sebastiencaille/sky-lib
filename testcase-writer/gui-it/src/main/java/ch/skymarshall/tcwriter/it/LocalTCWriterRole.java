@@ -6,7 +6,6 @@ import static ch.skymarshall.tcwriter.it.api.StepSelector.addStep;
 import static ch.skymarshall.tcwriter.it.api.StepSelector.currentStep;
 import static org.junit.Assert.assertEquals;
 
-import javax.swing.JButton;
 import javax.swing.JTable;
 
 import org.junit.Assert;
@@ -19,7 +18,10 @@ import ch.skymarshall.tcwriter.it.api.StepEdition;
 import ch.skymarshall.tcwriter.it.api.StepSelector;
 import ch.skymarshall.tcwriter.it.api.TestSessionRole;
 import ch.skymarshall.tcwriter.it.api.TestWriterRole;
+import ch.skymarshall.tcwriter.pilot.AbstractGuiComponent;
+import ch.skymarshall.tcwriter.pilot.swing.SwingButton;
 import ch.skymarshall.tcwriter.pilot.swing.SwingJList;
+import ch.skymarshall.tcwriter.pilot.swing.SwingTable;
 
 public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 
@@ -53,7 +55,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	}
 
 	private void applyStepEdition() {
-		guiPilot.getComponent("ApplyStep", JButton.class).doClick();
+		new SwingButton(guiPilot, "ApplyStep").click();
 	}
 
 	@Override
@@ -84,15 +86,17 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	@Override
 	public void updateParameter(final ParameterSelector selector, final ParameterValue value) {
 		guiPilot.withSwing(() -> {
-			final JTable valueTable = guiPilot.getComponent(selector.getTableName(), JTable.class);
-			updateValue(valueTable, value.getKeyValue1());
-			updateValue(valueTable, value.getKeyValue2());
-			updateValue(valueTable, value.getKeyValue3());
+			new SwingTable(guiPilot, selector.getTableName()).<Boolean>waitComponentEditSuccess(t -> {
+				updateValue(t, value.getKeyValue1());
+				updateValue(t, value.getKeyValue2());
+				updateValue(t, value.getKeyValue3());
+				return AbstractGuiComponent.isTrue();
+			}, "Setting " + value);
 			applyStepEdition();
 		});
 	}
 
-	private void updateValue(final JTable valueTable, final String keyValueStr) {
+	private static void updateValue(final JTable valueTable, final String keyValueStr) {
 		if (keyValueStr == null) {
 			return;
 		}

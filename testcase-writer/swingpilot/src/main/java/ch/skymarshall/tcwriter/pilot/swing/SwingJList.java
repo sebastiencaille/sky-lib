@@ -45,7 +45,7 @@ public class SwingJList extends AbstractSwingComponent<JList> {
 			if (!value.equals(current)) {
 				return failure("Wrong element selected (" + current + ")");
 			}
-			return value(true);
+			return isTrue();
 		}, assertFail());
 	}
 }

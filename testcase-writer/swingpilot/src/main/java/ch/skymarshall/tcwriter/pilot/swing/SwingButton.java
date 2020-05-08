@@ -8,4 +8,8 @@ public class SwingButton extends AbstractSwingComponent<JButton> {
 		super(pilot, JButton.class, name);
 	}
 
+	public void click() {
+		waitComponentEditSuccess(action(JButton::doClick), assertFail());
+	}
+
 }

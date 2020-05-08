@@ -24,8 +24,9 @@ public class SeleniumAlertAction extends AbstractGuiAction<Alert> {
 	}
 
 	public SeleniumAlertAction acknowledge() {
-		addReporting(e -> "Acknowledge alert " + e.getText());
-		waitActionSuccess(null, consumer(Alert::accept), pilot.getDefaultActionTimeout());
+		addReporting(e -> "Acknowledge alert: " + e.getText());
+		waitActionSuccess(null, action(Alert::accept), pilot.getDefaultActionTimeout(),
+				assertFail("unable to acknowledge alert"));
 		return this;
 	}
 

@@ -6,7 +6,7 @@ public class GuiPilot {
 
 	private final ActionReport actionReport = new ActionReport();
 
-	private ActionDelay actionDelay;
+	private ActionDelay actionDelay = null;
 
 	private Duration defaultActionTimeout = Duration.ofSeconds(30);
 

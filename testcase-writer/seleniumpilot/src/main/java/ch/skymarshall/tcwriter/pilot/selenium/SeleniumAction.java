@@ -2,7 +2,6 @@ package ch.skymarshall.tcwriter.pilot.selenium;
 
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -10,6 +9,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -41,17 +41,18 @@ public class SeleniumAction extends AbstractGuiAction<WebElement> {
 	 * a longer one
 	 */
 	@Override
-	protected <U> Optional<U> waitActionSuccessLoop(final Predicate<WebElement> precondition,
-			final Function<WebElement, Optional<U>> applier, final Duration timeout) {
+	protected <U> PollingResult<U> waitActionSuccessLoop(final Predicate<WebElement> precondition,
+			final Function<WebElement, PollingResult<U>> applier, final Duration timeout) {
 		Duration remains = timeout;
 		if (timeout.compareTo(QUICK_TIMEOUT) > 0) {
-			final Optional<U> result = processWait(precondition, applier, QUICK_TIMEOUT); // quick polling first
-			if (result.isPresent()) {
+			final PollingResult<U> result = actionPoll(precondition, applier, QUICK_TIMEOUT); // quick polling
+																								// first
+			if (result.success()) {
 				return result;
 			}
 			remains = remains.minus(QUICK_TIMEOUT);
 		}
-		return processWait(precondition, applier, remains);
+		return actionPoll(precondition, applier, remains);
 	}
 
 	/**
@@ -63,41 +64,51 @@ public class SeleniumAction extends AbstractGuiAction<WebElement> {
 	 * @param timeout
 	 * @return
 	 */
-	private <U> Optional<U> processWait(final Predicate<WebElement> precondition,
-			final Function<WebElement, Optional<U>> applier, final Duration timeout) {
-		return Optional.ofNullable(new WebDriverWait(pilot.getDriver(), timeout.getSeconds()) //
-				.withTimeout(timeout) // set timeout in ms
-				.pollingEvery(pollingTime(timeout)) //
-				.ignoreAll(Arrays.asList(NoSuchElementException.class, StaleElementReferenceException.class,
-						ElementNotInteractableException.class))
-				.until(d -> {
-					try {
-						final Optional<U> result = executeActionOnce(precondition, applier);
-						if (!result.isPresent()) {
-							return null;
+	private <U> PollingResult<U> actionPoll(final Predicate<WebElement> precondition,
+			final Function<WebElement, PollingResult<U>> applier, final Duration timeout) {
+		try {
+			return value(new WebDriverWait(pilot.getDriver(), timeout.getSeconds()) //
+					.withTimeout(timeout) // set timeout in ms
+					.pollingEvery(pollingTime(timeout)) //
+					.ignoreAll(Arrays.asList(NoSuchElementException.class, StaleElementReferenceException.class,
+							ElementNotInteractableException.class))
+					.<U>until(d -> {
+						try {
+							return executePolling(precondition, applier).orElse(null);
+						} catch (final StaleElementReferenceException stale) {
+							invalidateCache();
+							throw stale;
 						}
-						return result.get();
-					} catch (final StaleElementReferenceException stale) {
-						invalidateCache();
-						throw stale;
-					}
-				}));
+					}));
+		} catch (final TimeoutException e) {
+			return onException(e);
+		}
 	}
 
-	protected <U> U executeInteractiveAction(final Function<WebElement, Optional<U>> applier) {
-		return waitActionSuccess(SeleniumAction::canInteract, applier, pilot.getDefaultActionTimeout());
+	protected <U> U executeInteractiveAction(final Function<WebElement, PollingResult<U>> applier) {
+		return waitActionSuccess(SeleniumAction::canInteract, applier, pilot.getDefaultActionTimeout(), assertFail());
 	}
 
 	public SeleniumAction waitAvailable() {
 		addReporting(e -> "Wait on " + locator);
-		executeInteractiveAction(e -> Optional.of(Boolean.TRUE));
+		executeInteractiveAction(e -> value(Boolean.TRUE));
 		return this;
 	}
 
 	public SeleniumAction click() {
 		addReporting(e -> "Click on " + locator);
-		executeInteractiveAction(consumer(WebElement::click));
+		executeInteractiveAction(action(WebElement::click));
 		return this;
+	}
+
+	public boolean clickIfPresent(final Duration shortTimeout) {
+		addReporting(e -> "Click on " + locator);
+		final boolean found = waitActionSuccess(SeleniumAction::canInteract, action(WebElement::click), shortTimeout,
+				r -> Boolean.FALSE);
+		if (!found) {
+			pilot.getActionReport().report("Not found: " + locator);
+		}
+		return found;
 	}
 
 }

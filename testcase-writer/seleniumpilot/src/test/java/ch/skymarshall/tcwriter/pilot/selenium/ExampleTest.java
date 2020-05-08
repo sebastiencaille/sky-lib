@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -101,8 +102,10 @@ public class ExampleTest {
 		new SeleniumAction(pilot, OK_LOCATION).click();
 		new SeleniumAlertAction(pilot).acknowledge();
 
+		new SeleniumAction(pilot, By.id("NotExisting")).clickIfPresent(Duration.ofMillis(500));
+
 		System.out.println(pilot.getActionReport().getFormattedReport());
-		assertEquals(pilot.getActionReport().getFormattedReport(), 4, pilot.getActionReport().getReport().size());
+		assertEquals(pilot.getActionReport().getFormattedReport(), 5, pilot.getActionReport().getReport().size());
 	}
 
 }

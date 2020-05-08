@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 
 import org.junit.Assert;
 
-public abstract class AbstractGuiAction<T> {
+public abstract class AbstractGuiComponent<T> {
 
 	protected class LoadedElement {
 		public final T element;
@@ -47,7 +47,7 @@ public abstract class AbstractGuiAction<T> {
 			return null;
 		}
 
-		public void setLoadedElement(final AbstractGuiAction<T>.LoadedElement loadedElement) {
+		public void setLoadedElement(final AbstractGuiComponent<T>.LoadedElement loadedElement) {
 			this.loadedElement = loadedElement;
 		}
 
@@ -95,11 +95,11 @@ public abstract class AbstractGuiAction<T> {
 	private final GuiPilot pilot;
 	private final List<Consumer<T>> postExecutions = new ArrayList<>();
 
-	protected LoadedElement cachedElement = null;
+	private LoadedElement cachedElement = null;
 	protected boolean fired = false;
 	private Function<T, String> reportLine = t -> null;
 
-	public AbstractGuiAction(final GuiPilot pilot) {
+	public AbstractGuiComponent(final GuiPilot pilot) {
 		this.pilot = pilot;
 	}
 
@@ -129,6 +129,13 @@ public abstract class AbstractGuiAction<T> {
 		};
 	}
 
+	public T getCachedElement() {
+		if (cachedElement == null) {
+			return null;
+		}
+		return cachedElement.element;
+	}
+
 	protected void invalidateCache() {
 		if (fired) {
 			throw new IllegalStateException("Action was already fired");
@@ -152,7 +159,7 @@ public abstract class AbstractGuiAction<T> {
 	 *
 	 * @param postExec
 	 */
-	public AbstractGuiAction<T> addPostExecution(final Consumer<T> postExec) {
+	public AbstractGuiComponent<T> addPostExecution(final Consumer<T> postExec) {
 		postExecutions.add(postExec);
 		if (fired) {
 			postExec.accept(cachedElement.element);
@@ -160,7 +167,7 @@ public abstract class AbstractGuiAction<T> {
 		return this;
 	}
 
-	public AbstractGuiAction<T> addReporting(final Function<T, String> reportLine) {
+	public AbstractGuiComponent<T> addReporting(final Function<T, String> reportLine) {
 		this.reportLine = reportLine;
 		return this;
 	}
@@ -259,7 +266,7 @@ public abstract class AbstractGuiAction<T> {
 	 * @param actionDelay
 	 * @return
 	 */
-	public AbstractGuiAction<T> followedByDelay(final ActionDelay actionDelay) {
+	public AbstractGuiComponent<T> followedByDelay(final ActionDelay actionDelay) {
 		pilot.setActionDelay(actionDelay);
 		return this;
 	}

@@ -86,7 +86,7 @@ public class ExampleTest {
 
 		@Override
 		public boolean waitFinished() {
-			new SeleniumAction(pilot, PROCEED_LOCATION).waitAvailable();
+			new SeleniumElement(pilot, PROCEED_LOCATION).waitAvailable();
 			return true;
 		}
 
@@ -98,11 +98,11 @@ public class ExampleTest {
 
 		pilot.getDriver().get("http://localhost:8080/example1.html");
 		//
-		new SeleniumAction(pilot, PROCEED_LOCATION).click().followedByDelay(new ArbitraryDelay(pilot));
-		new SeleniumAction(pilot, OK_LOCATION).click();
-		new SeleniumAlertAction(pilot).acknowledge();
+		new SeleniumElement(pilot, PROCEED_LOCATION).click().followedByDelay(new ArbitraryDelay(pilot));
+		new SeleniumElement(pilot, OK_LOCATION).click();
+		new SeleniumAlert(pilot).acknowledge();
 
-		new SeleniumAction(pilot, By.id("NotExisting")).clickIfPresent(Duration.ofMillis(500));
+		new SeleniumElement(pilot, By.id("NotExisting")).clickIfPresent(Duration.ofMillis(500));
 
 		System.out.println(pilot.getActionReport().getFormattedReport());
 		assertEquals(pilot.getActionReport().getFormattedReport(), 5, pilot.getActionReport().getReport().size());

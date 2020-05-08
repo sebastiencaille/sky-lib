@@ -1,8 +1,5 @@
 package ch.skymarshall.tcwriter.pilot.swing;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.awt.Component;
 import java.awt.Container;
 import java.lang.reflect.InvocationTargetException;
@@ -17,8 +14,6 @@ import java.util.function.Predicate;
 import javax.swing.AbstractButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
 
@@ -127,59 +122,6 @@ public class GuiPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 			throw new InvalidParameterException("Not found: " + name);
 		}
 		return clazz.cast(cachedComponent);
-	}
-
-	public void checkSelectedInList(final String componentName, final String value) {
-		if (value == null) {
-			return;
-		}
-		final JList<?> list = checkEditable(getComponent(componentName, JList.class));
-		assertTrue("A row must be selected", list.getSelectedIndex() >= 0);
-		assertEquals(value, list.getModel().getElementAt(list.getSelectedIndex()).toString());
-	}
-
-	/**
-	 * Select a value in a list, according to it's String representation
-	 *
-	 * @param componentName
-	 * @param value
-	 */
-	public void selectInList(final String componentName, final String value) {
-		if (value == null) {
-			return;
-		}
-		final JList<?> list = checkEditable(getComponent(componentName, JList.class));
-		for (int i = 0; i < list.getModel().getSize(); i++) {
-			if (value.equals(list.getModel().getElementAt(i).toString())) {
-				list.setSelectedIndex(i);
-			}
-		}
-		Assert.assertTrue("Value [" + componentName + ":" + value + "] must have been selected",
-				list.getSelectedIndex() >= 0);
-	}
-
-	public void checkTextValue(final String componentName, final String value) {
-		if (value == null) {
-			return;
-		}
-		final JTextField textField = checkEditable(getComponent(componentName, JTextField.class));
-		assertEquals(value, textField.getText());
-	}
-
-	public void setTextValue(final String componentName, final String value) {
-		if (value == null) {
-			return;
-		}
-		final JTextField textField = checkEditable(getComponent(componentName, JTextField.class));
-		textField.setText(value);
-	}
-
-	protected <T extends Component> T checkEditable(final T component) {
-		Assert.assertTrue("Component must be enabled", component.isEnabled());
-		if (component instanceof JTextComponent) {
-			Assert.assertTrue("Component must be editable", ((JTextComponent) component).isEditable());
-		}
-		return component;
 	}
 
 	public void withSwing(final Runnable runnable, final Predicate<JDialogPilot> dialogHandler) {

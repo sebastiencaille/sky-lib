@@ -19,6 +19,7 @@ import ch.skymarshall.tcwriter.it.api.StepEdition;
 import ch.skymarshall.tcwriter.it.api.StepSelector;
 import ch.skymarshall.tcwriter.it.api.TestSessionRole;
 import ch.skymarshall.tcwriter.it.api.TestWriterRole;
+import ch.skymarshall.tcwriter.pilot.swing.SwingJList;
 
 public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 
@@ -38,10 +39,10 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	public void editStep(final StepSelector selector, final StepEdition edition) {
 		selector.select(guiPilot);
 		guiPilot.withSwing(() -> {
-			guiPilot.selectInList("Actors", edition.getActor());
-			guiPilot.selectInList("Actions", edition.getAction());
-			guiPilot.selectInList("Selectors", edition.getSelector());
-			guiPilot.selectInList("Parameters0", edition.getParameter());
+			new SwingJList(guiPilot, "Actors").select(edition.getActor());
+			new SwingJList(guiPilot, "Actions").select(edition.getAction());
+			new SwingJList(guiPilot, "Selectors").select(edition.getSelector());
+			new SwingJList(guiPilot, "Parameters0").select(edition.getParameter());
 		});
 	}
 
@@ -59,10 +60,10 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	public void checkStep(final StepSelector selector, final StepEdition edition) {
 		selector.select(guiPilot);
 		guiPilot.withSwing(() -> {
-			guiPilot.checkSelectedInList("Actors", edition.getActor());
-			guiPilot.checkSelectedInList("Actions", edition.getAction());
-			guiPilot.checkSelectedInList("Selectors", edition.getSelector());
-			guiPilot.checkSelectedInList("Parameters0", edition.getParameter());
+			new SwingJList(guiPilot, "Actors").checkSelected(edition.getActor());
+			new SwingJList(guiPilot, "Actions").checkSelected(edition.getAction());
+			new SwingJList(guiPilot, "Selectors").checkSelected(edition.getSelector());
+			new SwingJList(guiPilot, "Parameters0").checkSelected(edition.getParameter());
 		});
 	}
 

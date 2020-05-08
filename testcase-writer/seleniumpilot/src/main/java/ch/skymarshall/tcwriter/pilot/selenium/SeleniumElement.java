@@ -13,9 +13,9 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import ch.skymarshall.tcwriter.pilot.AbstractGuiAction;
+import ch.skymarshall.tcwriter.pilot.AbstractGuiComponent;
 
-public class SeleniumAction extends AbstractGuiAction<WebElement> {
+public class SeleniumElement extends AbstractGuiComponent<WebElement> {
 
 	private static final Duration QUICK_TIMEOUT = Duration.ofSeconds(5);
 	private final GuiPilot pilot;
@@ -25,7 +25,7 @@ public class SeleniumAction extends AbstractGuiAction<WebElement> {
 		return element.isDisplayed() && element.isEnabled();
 	}
 
-	public SeleniumAction(final GuiPilot pilot, final By locator) {
+	public SeleniumElement(final GuiPilot pilot, final By locator) {
 		super(pilot);
 		this.pilot = pilot;
 		this.locator = locator;
@@ -86,16 +86,16 @@ public class SeleniumAction extends AbstractGuiAction<WebElement> {
 	}
 
 	protected <U> U executeInteractiveAction(final Function<WebElement, PollingResult<U>> applier) {
-		return waitActionSuccess(SeleniumAction::canInteract, applier, pilot.getDefaultActionTimeout(), assertFail());
+		return waitActionSuccess(SeleniumElement::canInteract, applier, pilot.getDefaultActionTimeout(), assertFail());
 	}
 
-	public SeleniumAction waitAvailable() {
+	public SeleniumElement waitAvailable() {
 		addReporting(e -> "Wait on " + locator);
 		executeInteractiveAction(e -> value(Boolean.TRUE));
 		return this;
 	}
 
-	public SeleniumAction click() {
+	public SeleniumElement click() {
 		addReporting(e -> "Click on " + locator);
 		executeInteractiveAction(action(WebElement::click));
 		return this;
@@ -103,7 +103,7 @@ public class SeleniumAction extends AbstractGuiAction<WebElement> {
 
 	public boolean clickIfPresent(final Duration shortTimeout) {
 		addReporting(e -> "Click on " + locator);
-		final boolean found = waitActionSuccess(SeleniumAction::canInteract, action(WebElement::click), shortTimeout,
+		final boolean found = waitActionSuccess(SeleniumElement::canInteract, action(WebElement::click), shortTimeout,
 				r -> Boolean.FALSE);
 		if (!found) {
 			pilot.getActionReport().report("Not found: " + locator);

@@ -4,7 +4,7 @@ import static ch.skymarshall.tcwriter.it.api.ParameterSelector.selector;
 import static ch.skymarshall.tcwriter.it.api.ParameterValue.oneValue;
 import static ch.skymarshall.tcwriter.it.api.StepSelector.addStep;
 import static ch.skymarshall.tcwriter.it.api.StepSelector.currentStep;
-import static org.junit.Assert.assertEquals;
+import static ch.skymarshall.tcwriter.pilot.Polling.assertion;
 
 import javax.swing.JTable;
 
@@ -18,9 +18,9 @@ import ch.skymarshall.tcwriter.it.api.StepEdition;
 import ch.skymarshall.tcwriter.it.api.StepSelector;
 import ch.skymarshall.tcwriter.it.api.TestSessionRole;
 import ch.skymarshall.tcwriter.it.api.TestWriterRole;
-import ch.skymarshall.tcwriter.pilot.AbstractGuiComponent;
+import ch.skymarshall.tcwriter.pilot.Polling;
 import ch.skymarshall.tcwriter.pilot.swing.SwingButton;
-import ch.skymarshall.tcwriter.pilot.swing.SwingJList;
+import ch.skymarshall.tcwriter.pilot.swing.SwingList;
 import ch.skymarshall.tcwriter.pilot.swing.SwingTable;
 
 public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
@@ -40,18 +40,16 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	@Override
 	public void editStep(final StepSelector selector, final StepEdition edition) {
 		selector.select(guiPilot);
-		guiPilot.withSwing(() -> {
-			new SwingJList(guiPilot, "Actors").select(edition.getActor());
-			new SwingJList(guiPilot, "Actions").select(edition.getAction());
-			new SwingJList(guiPilot, "Selectors").select(edition.getSelector());
-			new SwingJList(guiPilot, "Parameters0").select(edition.getParameter());
-		});
+		new SwingList(guiPilot, "Actors").select(edition.getActor());
+		new SwingList(guiPilot, "Actions").select(edition.getAction());
+		new SwingList(guiPilot, "Selectors").select(edition.getSelector());
+		new SwingList(guiPilot, "Parameters0").select(edition.getParameter());
 	}
 
 	@Override
 	public void updateStep(final StepSelector selector, final StepEdition edition) {
 		editStep(selector, edition);
-		guiPilot.withSwing(this::applyStepEdition);
+		applyStepEdition();
 	}
 
 	private void applyStepEdition() {
@@ -61,12 +59,10 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	@Override
 	public void checkStep(final StepSelector selector, final StepEdition edition) {
 		selector.select(guiPilot);
-		guiPilot.withSwing(() -> {
-			new SwingJList(guiPilot, "Actors").checkSelected(edition.getActor());
-			new SwingJList(guiPilot, "Actions").checkSelected(edition.getAction());
-			new SwingJList(guiPilot, "Selectors").checkSelected(edition.getSelector());
-			new SwingJList(guiPilot, "Parameters0").checkSelected(edition.getParameter());
-		});
+		new SwingList(guiPilot, "Actors").checkSelected(edition.getActor());
+		new SwingList(guiPilot, "Actions").checkSelected(edition.getAction());
+		new SwingList(guiPilot, "Selectors").checkSelected(edition.getSelector());
+		new SwingList(guiPilot, "Parameters0").checkSelected(edition.getParameter());
 	}
 
 	/**
@@ -75,25 +71,23 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	@Override
 	public void checkHumanReadable(final StepSelector selector, final String humanReadable) {
 		selector.select(guiPilot);
-		guiPilot.withSwing(() -> {
-			final JTable stepsTable = guiPilot.getComponent("StepsTable", JTable.class);
-			final Object value = ((StepsTableModel) stepsTable.getModel())
-					.getHumanReadable(stepsTable.getSelectedRow());
-			assertEquals(humanReadable, value.toString());
-		});
+		final SwingTable stepsTable = new SwingTable(guiPilot, "StepsTable");
+		stepsTable.withReport(c -> "Check human readable text: " + humanReadable).waitReadSuccess(assertion(t -> {
+			final Object value = ((StepsTableModel) t.getModel()).getHumanReadable(t.getSelectedRow());
+			Assert.assertEquals(humanReadable, value.toString());
+		}));
 	}
 
 	@Override
 	public void updateParameter(final ParameterSelector selector, final ParameterValue value) {
-		guiPilot.withSwing(() -> {
-			new SwingTable(guiPilot, selector.getTableName()).<Boolean>waitComponentEditSuccess(t -> {
-				updateValue(t, value.getKeyValue1());
-				updateValue(t, value.getKeyValue2());
-				updateValue(t, value.getKeyValue3());
-				return AbstractGuiComponent.isTrue();
-			}, "Setting " + value);
-			applyStepEdition();
-		});
+		new SwingTable(guiPilot, selector.getTableName()).withReport(c -> "Set parameter values:" + value)
+				.waitComponentEditSuccess(t -> {
+					updateValue(t, value.getKeyValue1());
+					updateValue(t, value.getKeyValue2());
+					updateValue(t, value.getKeyValue3());
+					return Polling.isTrue();
+				}, "Setting " + value);
+		applyStepEdition();
 	}
 
 	private static void updateValue(final JTable valueTable, final String keyValueStr) {
@@ -156,6 +150,6 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 
 	@Override
 	public void mainFrameAction(final MainFrameAction action) {
-		guiPilot.withSwing(() -> action.execute(guiPilot), action::handleJDialog);
+		guiPilot.withDialog(() -> action.execute(guiPilot), action::handleJDialog);
 	}
 }

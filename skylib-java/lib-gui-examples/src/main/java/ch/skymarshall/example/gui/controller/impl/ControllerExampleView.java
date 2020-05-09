@@ -83,8 +83,10 @@ public class ControllerExampleView extends JFrame {
 		final BooleanProperty booleanProperty = model.getBooleanPropProperty();
 
 		final JCheckBox booleanEditor = new JCheckBox();
+		booleanEditor.setName("BooleanCB");
 		booleanProperty.bind(selected(booleanEditor));
 		final JLabel label = new JLabel("Am I enabled?");
+		label.setName("BooleanCBLabel");
 		booleanProperty.listen(label::setEnabled);
 		final JLabel booleanCounter = new JLabel();
 		booleanProperty.bind(counter()).listen(booleanCounter::setText);

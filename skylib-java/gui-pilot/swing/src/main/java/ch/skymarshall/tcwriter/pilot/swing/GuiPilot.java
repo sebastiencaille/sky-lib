@@ -3,7 +3,6 @@ package ch.skymarshall.tcwriter.pilot.swing;
 import java.awt.Component;
 import java.awt.Container;
 import java.lang.reflect.InvocationTargetException;
-import java.security.InvalidParameterException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
@@ -111,7 +110,8 @@ public class GuiPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 		return result;
 	}
 
-	public <T extends JComponent> T getComponent(final String name, final Class<T> clazz) {
+	public <T extends JComponent> T getComponent(final String name, final Class<T> clazz)
+			throws NoSuchComponentException {
 		checkSwingThread();
 		JComponent cachedComponent = cache.get(name);
 		if (cachedComponent == null) {
@@ -119,9 +119,15 @@ public class GuiPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 			cachedComponent = cache.get(name);
 		}
 		if (cachedComponent == null) {
-			throw new InvalidParameterException("Not found: " + name);
+			throw new NoSuchComponentException("Not found: " + name);
 		}
 		return clazz.cast(cachedComponent);
+	}
+
+	public void withDialog(final Runnable runnable, final Predicate<JDialogPilot> dialogHandler) {
+		try (NoExceptionCloseable dialogCloseable = JDialogPilot.withDialog(dialogHandler)) {
+			runnable.run();
+		}
 	}
 
 	public void withSwing(final Runnable runnable, final Predicate<JDialogPilot> dialogHandler) {

@@ -1,6 +1,11 @@
 package ch.skymarshall.tcwriter.pilot.swing;
 
+import static ch.skymarshall.tcwriter.pilot.Polling.action;
+import static ch.skymarshall.tcwriter.pilot.Polling.assertion;
+
 import javax.swing.text.JTextComponent;
+
+import org.junit.Assert;
 
 public class SwingText extends AbstractSwingComponent<JTextComponent> {
 
@@ -23,16 +28,15 @@ public class SwingText extends AbstractSwingComponent<JTextComponent> {
 		if (value == null) {
 			return;
 		}
-		addReporting(r -> "Set text \'" + value + "\' in " + clazz.getSimpleName() + " " + name);
-		waitComponentEditSuccess(action(t -> t.setText(value)), assertFail());
+		withReport(r -> "set text \'" + value + "\'").waitEditSuccess(action(t -> t.setText(value)));
 	}
 
 	public void checkTextValue(final String value) {
 		if (value == null) {
 			return;
 		}
-		addReporting(r -> "Check text \'" + value + "\' in " + clazz.getSimpleName() + " " + name);
-		waitComponentEditSuccess(action(t -> value.equals(t.getText())), assertFail());
+		withReport(r -> "check text \'" + value + "\'")
+				.waitReadSuccess(assertion(t -> Assert.assertEquals(value, t.getText())));
 	}
 
 }

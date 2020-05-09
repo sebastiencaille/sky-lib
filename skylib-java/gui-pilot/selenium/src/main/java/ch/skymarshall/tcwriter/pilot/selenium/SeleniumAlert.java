@@ -1,11 +1,14 @@
 package ch.skymarshall.tcwriter.pilot.selenium;
 
+import static ch.skymarshall.tcwriter.pilot.Polling.action;
+
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoAlertPresentException;
 
 import ch.skymarshall.tcwriter.pilot.AbstractGuiComponent;
+import ch.skymarshall.tcwriter.pilot.Polling;
 
-public class SeleniumAlert extends AbstractGuiComponent<Alert> {
+public class SeleniumAlert extends AbstractGuiComponent<Alert, SeleniumAlert> {
 
 	private final GuiPilot pilot;
 
@@ -24,9 +27,9 @@ public class SeleniumAlert extends AbstractGuiComponent<Alert> {
 	}
 
 	public SeleniumAlert acknowledge() {
-		addReporting(e -> "Acknowledge alert: " + e.getText());
+		withReport(e -> "Acknowledged alert: " + e.getText());
 		waitActionSuccess(null, action(Alert::accept), pilot.getDefaultActionTimeout(),
-				assertFail("unable to acknowledge alert"));
+				Polling.assertFail("unable to acknowledge alert"));
 		return this;
 	}
 

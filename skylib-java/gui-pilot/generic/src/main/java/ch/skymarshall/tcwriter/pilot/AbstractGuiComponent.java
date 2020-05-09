@@ -1,16 +1,15 @@
 package ch.skymarshall.tcwriter.pilot;
 
+import static ch.skymarshall.tcwriter.pilot.Polling.failure;
+
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
-import org.junit.Assert;
-
-public abstract class AbstractGuiComponent<T> {
+public abstract class AbstractGuiComponent<T, C extends AbstractGuiComponent<T, C>> {
 
 	protected static class LoadedElement<TT> {
 		public final TT element;
@@ -30,74 +29,6 @@ public abstract class AbstractGuiComponent<T> {
 
 	}
 
-	public static class PollingResult<TT, U> {
-		public final U value;
-		public final Throwable failureReason;
-		private LoadedElement<TT> loadedElement;
-
-		public PollingResult(final U value, final Throwable failureReason) {
-			this.value = value;
-			this.failureReason = failureReason;
-		}
-
-		public TT getFoundElement() {
-			if (loadedElement != null) {
-				return loadedElement.element;
-			}
-			return null;
-		}
-
-		public void setLoadedElement(final LoadedElement<TT> loadedElement) {
-			this.loadedElement = loadedElement;
-		}
-
-		public boolean success() {
-			return failureReason == null;
-		}
-
-		public U orElse(final U orElse) {
-			if (success()) {
-				return value;
-			}
-			return orElse;
-		}
-
-		public U orElseGet(final Supplier<U> orElse) {
-			if (success()) {
-				return value;
-			}
-			return orElse.get();
-		}
-
-	}
-
-	public static <TT, U> PollingResult<TT, U> value(final U value) {
-		return new PollingResult<>(value, null);
-	}
-
-	public static <TT> PollingResult<TT, Boolean> isTrue() {
-		return new PollingResult<>(Boolean.TRUE, null);
-	}
-
-	public static <TT> PollingResult<TT, Boolean> isFalse() {
-		return new PollingResult<>(Boolean.FALSE, null);
-	}
-
-	public <TT, U> PollingResult<TT, U> failure(final String reason) {
-		return new PollingResult<>(null, new RuntimeException(reason));
-	}
-
-	public <TT, U> PollingResult<TT, U> onException(final Throwable cause) {
-		return new PollingResult<>(null, cause);
-	}
-
-	protected Function<T, PollingResult<T, Boolean>> action(final Consumer<T> consumer) {
-		return t -> {
-			consumer.accept(t);
-			return isTrue();
-		};
-	}
-
 	protected abstract T loadElement();
 
 	private final GuiPilot pilot;
@@ -109,32 +40,6 @@ public abstract class AbstractGuiComponent<T> {
 
 	public AbstractGuiComponent(final GuiPilot pilot) {
 		this.pilot = pilot;
-	}
-
-	/**
-	 * Fails using some text
-	 *
-	 * @param actionDescr
-	 * @return
-	 */
-	public <U> Function<PollingResult<T, U>, U> assertFail(final String actionDescr) {
-		return r -> {
-			Assert.fail("Action failed [" + actionDescr + "]: " + r.failureReason);
-			return null;
-		};
-	}
-
-	/**
-	 * Fails using reporting line. The line must handle null T if it was not found
-	 *
-	 * @param actionDescr
-	 * @return
-	 */
-	public <U> Function<PollingResult<T, U>, U> assertFail() {
-		return r -> {
-			Assert.fail("Action failed: [" + reportLine.apply(r.getFoundElement()) + "]: " + r.failureReason);
-			return null;
-		};
 	}
 
 	public T getCachedElement() {
@@ -167,17 +72,17 @@ public abstract class AbstractGuiComponent<T> {
 	 *
 	 * @param postExec
 	 */
-	public AbstractGuiComponent<T> addPostExecution(final Consumer<T> postExec) {
+	public C addPostExecution(final Consumer<T> postExec) {
 		postExecutions.add(postExec);
 		if (fired) {
 			postExec.accept(cachedElement.element);
 		}
-		return this;
+		return (C) this;
 	}
 
-	public AbstractGuiComponent<T> addReporting(final Function<T, String> reportLine) {
-		this.reportLine = reportLine;
-		return this;
+	public C withReport(final Function<T, String> reportLine) {
+		this.reportLine = t -> toString() + ": " + reportLine.apply(t);
+		return (C) this;
 	}
 
 	/**
@@ -192,18 +97,18 @@ public abstract class AbstractGuiComponent<T> {
 	 * @param timeout
 	 * @return
 	 */
-	protected <U> U waitActionSuccess(final Predicate<T> precondition, final Function<T, PollingResult<T, U>> applier,
-			final Duration timeout, final Function<PollingResult<T, U>, U> onFail) {
+	protected <U> U waitActionSuccess(final Predicate<T> precondition, final Function<T, Polling<T, U>> applier,
+			final Duration timeout, final Function<Polling<T, U>, U> onFail) {
 
 		waitActionDelay();
 
-		final PollingResult<T, U> result = waitActionSuccessLoop(precondition, applier, timeout);
+		final Polling<T, U> result = waitActionSuccessLoop(precondition, applier, timeout);
 		if (result.success()) {
 			fired = true;
 			postExecutions.stream().forEach(p -> p.accept(cachedElement.element));
 		}
 
-		result.setLoadedElement(cachedElement);
+		result.setInformation(pilot, toString(), cachedElement);
 		return result.orElseGet(() -> onFail.apply(result));
 	}
 
@@ -217,10 +122,10 @@ public abstract class AbstractGuiComponent<T> {
 	 * @param timeout
 	 * @return an optional on a response
 	 */
-	protected <U> PollingResult<T, U> waitActionSuccessLoop(final Predicate<T> precondition,
-			final Function<T, PollingResult<T, U>> applier, final Duration timeout) {
+	protected <U> Polling<T, U> waitActionSuccessLoop(final Predicate<T> precondition,
+			final Function<T, Polling<T, U>> applier, final Duration timeout) {
 		final long startTime = System.currentTimeMillis();
-		PollingResult<T, U> lastResult = failure("No information");
+		Polling<T, U> lastResult = failure("No information");
 		while (System.currentTimeMillis() - startTime < timeout.toMillis()) {
 			lastResult = executePolling(precondition, applier);
 			if (lastResult.success()) {
@@ -243,8 +148,8 @@ public abstract class AbstractGuiComponent<T> {
 	 * @param applier
 	 * @return
 	 */
-	protected <U> PollingResult<T, U> executePolling(final Predicate<T> precondition,
-			final Function<T, PollingResult<T, U>> applier) {
+	protected <U> Polling<T, U> executePolling(final Predicate<T> precondition,
+			final Function<T, Polling<T, U>> applier) {
 		if (cachedElement == null) {
 			final T loadedElement = loadElement();
 			if (loadedElement != null) {
@@ -259,7 +164,7 @@ public abstract class AbstractGuiComponent<T> {
 		}
 
 		final String report = reportLine.apply(cachedElement.element); // element may disappear after action
-		final PollingResult<T, U> result = applier.apply(cachedElement.element);
+		final Polling<T, U> result = applier.apply(cachedElement.element);
 		if (result.success()) {
 			pilot.getActionReport().report(report);
 			reportLine = null;
@@ -274,9 +179,9 @@ public abstract class AbstractGuiComponent<T> {
 	 * @param actionDelay
 	 * @return
 	 */
-	public AbstractGuiComponent<T> followedByDelay(final ActionDelay actionDelay) {
+	public C followedByDelay(final ActionDelay actionDelay) {
 		pilot.setActionDelay(actionDelay);
-		return this;
+		return (C) this;
 	}
 
 	/**

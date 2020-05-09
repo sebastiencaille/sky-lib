@@ -1,5 +1,11 @@
 package ch.skymarshall.tcwriter.pilot.selenium;
 
+import static ch.skymarshall.tcwriter.pilot.Polling.action;
+import static ch.skymarshall.tcwriter.pilot.Polling.isTrue;
+import static ch.skymarshall.tcwriter.pilot.Polling.onException;
+import static ch.skymarshall.tcwriter.pilot.Polling.throwError;
+import static ch.skymarshall.tcwriter.pilot.Polling.value;
+
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.function.Function;
@@ -14,8 +20,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import ch.skymarshall.tcwriter.pilot.AbstractGuiComponent;
+import ch.skymarshall.tcwriter.pilot.Polling;
 
-public class SeleniumElement extends AbstractGuiComponent<WebElement> {
+public class SeleniumElement extends AbstractGuiComponent<WebElement, SeleniumElement> {
 
 	private static final Duration QUICK_TIMEOUT = Duration.ofSeconds(5);
 	private final GuiPilot pilot;
@@ -32,6 +39,11 @@ public class SeleniumElement extends AbstractGuiComponent<WebElement> {
 	}
 
 	@Override
+	public String toString() {
+		return locator.toString();
+	}
+
+	@Override
 	protected WebElement loadElement() {
 		return pilot.getDriver().findElement(locator);
 	}
@@ -41,13 +53,12 @@ public class SeleniumElement extends AbstractGuiComponent<WebElement> {
 	 * a longer one
 	 */
 	@Override
-	protected <U> PollingResult<WebElement, U> waitActionSuccessLoop(final Predicate<WebElement> precondition,
-			final Function<WebElement, PollingResult<WebElement, U>> applier, final Duration timeout) {
+	protected <U> Polling<WebElement, U> waitActionSuccessLoop(final Predicate<WebElement> precondition,
+			final Function<WebElement, Polling<WebElement, U>> applier, final Duration timeout) {
 		Duration remains = timeout;
 		if (timeout.compareTo(QUICK_TIMEOUT) > 0) {
-			final PollingResult<WebElement, U> result = executeOnePolling(precondition, applier, QUICK_TIMEOUT); // quick
-																													// polling
-			// first
+			// first do quick polling
+			final Polling<WebElement, U> result = executeOnePolling(precondition, applier, QUICK_TIMEOUT);
 			if (result.success()) {
 				return result;
 			}
@@ -65,8 +76,8 @@ public class SeleniumElement extends AbstractGuiComponent<WebElement> {
 	 * @param timeout
 	 * @return
 	 */
-	private <U> PollingResult<WebElement, U> executeOnePolling(final Predicate<WebElement> precondition,
-			final Function<WebElement, PollingResult<WebElement, U>> applier, final Duration timeout) {
+	private <U> Polling<WebElement, U> executeOnePolling(final Predicate<WebElement> precondition,
+			final Function<WebElement, Polling<WebElement, U>> applier, final Duration timeout) {
 		try {
 			return value(new WebDriverWait(pilot.getDriver(), timeout.getSeconds()) //
 					.withTimeout(timeout) // set timeout in ms
@@ -86,30 +97,24 @@ public class SeleniumElement extends AbstractGuiComponent<WebElement> {
 		}
 	}
 
-	protected <U> U executeInteractiveAction(final Function<WebElement, PollingResult<WebElement, U>> applier) {
-		return waitActionSuccess(SeleniumElement::canInteract, applier, pilot.getDefaultActionTimeout(), assertFail());
+	protected <U> U executeInteractiveAction(final Function<WebElement, Polling<WebElement, U>> applier) {
+		return waitActionSuccess(SeleniumElement::canInteract, applier, pilot.getDefaultActionTimeout(), throwError());
 	}
 
-	public SeleniumElement waitAvailable() {
-		addReporting(e -> "Wait on " + locator);
-		executeInteractiveAction(e -> isTrue());
+	public SeleniumElement waitEnabled() {
+		withReport(e -> "wait enabled").executeInteractiveAction(e -> isTrue());
 		return this;
 	}
 
 	public SeleniumElement click() {
-		addReporting(e -> "Click on " + locator);
-		executeInteractiveAction(action(WebElement::click));
+		withReport(e -> "click").executeInteractiveAction(action(WebElement::click));
 		return this;
 	}
 
-	public boolean clickIfPresent(final Duration shortTimeout) {
-		addReporting(e -> "Click on " + locator);
-		final boolean found = waitActionSuccess(SeleniumElement::canInteract, action(WebElement::click), shortTimeout,
-				r -> Boolean.FALSE);
-		if (!found) {
-			pilot.getActionReport().report("Not found: " + locator);
-		}
-		return found;
+	public boolean clickIfEnabled(final Duration shortTimeout) {
+		return withReport(e -> "click if enabled").waitActionSuccess(SeleniumElement::canInteract,
+				action(WebElement::click), shortTimeout, Polling.report("Not found: " + locator));
+
 	}
 
 }

@@ -9,6 +9,7 @@ import javax.swing.JTextField;
 import ch.skymarshall.tcwriter.annotations.TCApi;
 import ch.skymarshall.tcwriter.it.TCGuiPilot;
 import ch.skymarshall.tcwriter.pilot.swing.JDialogPilot;
+import ch.skymarshall.tcwriter.pilot.swing.SwingButton;
 
 @TCApi(description = "Main frame actions", humanReadable = "Main frame actions")
 public class MainFrameAction {
@@ -25,7 +26,7 @@ public class MainFrameAction {
 	}
 
 	public void execute(final TCGuiPilot guiPilot) {
-		guiPilot.getComponent(guiButtonName, JButton.class).doClick();
+		new SwingButton(guiPilot, guiButtonName).click();
 	}
 
 	public boolean handleJDialog(final JDialogPilot jDialogPilot) {

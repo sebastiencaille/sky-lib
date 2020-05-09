@@ -22,7 +22,7 @@ import io.undertow.Undertow;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 
-public class ExampleTest {
+public class SeleniumExampleTest {
 
 	/* **************************** WEB SERVER **************************** */
 
@@ -32,7 +32,7 @@ public class ExampleTest {
 	@BeforeClass
 	public static void startWebServer() {
 
-		webServer = Undertow.builder().addHttpListener(8080, "localhost").setHandler(ExampleTest::handleExchange)
+		webServer = Undertow.builder().addHttpListener(8080, "localhost").setHandler(SeleniumExampleTest::handleExchange)
 				.build();
 		webServer.start();
 
@@ -86,7 +86,7 @@ public class ExampleTest {
 
 		@Override
 		public boolean waitFinished() {
-			new SeleniumElement(pilot, PROCEED_LOCATION).waitAvailable();
+			new SeleniumElement(pilot, PROCEED_LOCATION).waitEnabled();
 			return true;
 		}
 
@@ -102,7 +102,7 @@ public class ExampleTest {
 		new SeleniumElement(pilot, OK_LOCATION).click();
 		new SeleniumAlert(pilot).acknowledge();
 
-		new SeleniumElement(pilot, By.id("NotExisting")).clickIfPresent(Duration.ofMillis(500));
+		new SeleniumElement(pilot, By.id("NotExisting")).clickIfEnabled(Duration.ofMillis(500));
 
 		System.out.println(pilot.getActionReport().getFormattedReport());
 		assertEquals(pilot.getActionReport().getFormattedReport(), 5, pilot.getActionReport().getReport().size());

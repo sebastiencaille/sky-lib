@@ -1,12 +1,16 @@
 package ch.skymarshall.tcwriter.pilot.swing;
 
+import static ch.skymarshall.tcwriter.pilot.Polling.action;
+import static ch.skymarshall.tcwriter.pilot.Polling.failure;
+import static ch.skymarshall.tcwriter.pilot.Polling.isTrue;
+
 import javax.swing.JList;
 
 import org.junit.Assert;
 
-public class SwingJList extends AbstractSwingComponent<JList> {
+public class SwingList extends AbstractSwingComponent<JList> {
 
-	public SwingJList(final GuiPilot pilot, final String name) {
+	public SwingList(final GuiPilot pilot, final String name) {
 		super(pilot, JList.class, name);
 	}
 
@@ -20,14 +24,13 @@ public class SwingJList extends AbstractSwingComponent<JList> {
 		if (value == null) {
 			return;
 		}
-		addReporting(r -> "Select element " + value + " of " + clazz.getSimpleName() + " " + name);
-		waitComponentEditSuccess(action(l -> {
+		withReport(r -> "select element " + value).waitEditSuccess(action(l -> {
 			for (int i = 0; i < l.getModel().getSize(); i++) {
 				if (value.equals(l.getModel().getElementAt(i).toString())) {
 					l.setSelectedIndex(i);
 				}
 			}
-		}), assertFail());
+		}));
 		Assert.assertTrue("Value [" + name + ":" + value + "] must have been selected",
 				getCachedElement().getSelectedIndex() >= 0);
 	}
@@ -36,8 +39,7 @@ public class SwingJList extends AbstractSwingComponent<JList> {
 		if (value == null) {
 			return;
 		}
-		addReporting(r -> "Check element " + value + " is selected in " + clazz.getSimpleName() + " " + name);
-		waitComponentEditSuccess(l -> {
+		withReport(r -> "check element " + value).waitReadSuccess(l -> {
 			if (l.getSelectedIndex() < 0) {
 				return failure("No element selected");
 			}
@@ -46,6 +48,6 @@ public class SwingJList extends AbstractSwingComponent<JList> {
 				return failure("Wrong element selected (" + current + ")");
 			}
 			return isTrue();
-		}, assertFail());
+		});
 	}
 }

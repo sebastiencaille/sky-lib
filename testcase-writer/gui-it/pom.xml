@@ -15,8 +15,8 @@
 			<artifactId>testcase-writer-gui</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>ch.skymarshall.tcwriter</groupId>
-			<artifactId>testcase-writer-swingpilot</artifactId>
+			<groupId>ch.skymarshall</groupId>
+			<artifactId>gui-pilot-swing</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

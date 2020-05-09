@@ -97,17 +97,7 @@
 				<artifactId>testcase-writer-examples</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
-			<dependency>
-				<groupId>ch.skymarshall.tcwriter</groupId>
-				<artifactId>testcase-writer-pilot</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.skymarshall.tcwriter</groupId>
-				<artifactId>testcase-writer-swingpilot</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
-			</dependency>
-
+			
 			<dependency>
 				<groupId>org.aspectj</groupId>
 				<artifactId>aspectjweaver</artifactId>
@@ -143,9 +133,6 @@
 		<module>generators</module>
 		<module>gui</module>
 		<module>examples</module>
-		<module>pilot</module>
-		<module>swingpilot</module>
 		<module>gui-it</module>
-		<module>seleniumpilot</module>
 	</modules>
 </project>

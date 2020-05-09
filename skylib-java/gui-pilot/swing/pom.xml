@@ -5,14 +5,12 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>ch.skymarshall.tcwriter</groupId>
-		<artifactId>testcase-writer</artifactId>
+		<groupId>ch.skymarshall</groupId>
+		<artifactId>gui-pilot</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>testcase-writer-swingpilot</artifactId>
-
-	<name>testcase-writer-swingpilot</name>
+	<artifactId>gui-pilot-swing</artifactId>
 
 	<dependencies>
 		<dependency>
@@ -20,8 +18,8 @@
 			<artifactId>lib-utils</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>ch.skymarshall.tcwriter</groupId>
-			<artifactId>testcase-writer-pilot</artifactId>
+			<groupId>ch.skymarshall</groupId>
+			<artifactId>gui-pilot-generic</artifactId>
 		</dependency>
 	</dependencies>
 

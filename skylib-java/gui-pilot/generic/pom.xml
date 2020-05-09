@@ -3,11 +3,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>ch.skymarshall.tcwriter</groupId>
-		<artifactId>testcase-writer</artifactId>
+		<groupId>ch.skymarshall</groupId>
+		<artifactId>gui-pilot</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>testcase-writer-pilot</artifactId>
+	<artifactId>gui-pilot-generic</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

@@ -63,6 +63,21 @@
 				<artifactId>lib-gui-validation</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
+			<dependency>
+				<groupId>ch.skymarshall</groupId>
+				<artifactId>gui-pilot-generic</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.skymarshall</groupId>
+				<artifactId>gui-pilot-swing</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.skymarshall</groupId>
+				<artifactId>gui-pilot-selenium</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
 
 			<dependency>
 				<groupId>com.fasterxml.jackson</groupId>
@@ -98,7 +113,8 @@
 		<module>lib-utils</module>
 		<module>lib-gui-java8</module>
 		<module>lib-gui-generators</module>
-		<module>lib-gui-examples</module>
 		<module>lib-gui-validation</module>
+		<module>gui-pilot</module>
+		<module>lib-gui-examples</module>
 	</modules>
 </project>

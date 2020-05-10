@@ -9,6 +9,7 @@ import ch.skymarshall.example.gui.controller.impl.ControllerExampleController;
 import ch.skymarshall.example.gui.controller.impl.ControllerExampleView;
 import ch.skymarshall.tcwriter.pilot.swing.GuiPilot;
 import ch.skymarshall.tcwriter.pilot.swing.SwingLabel;
+import ch.skymarshall.tcwriter.pilot.swing.SwingText;
 import ch.skymarshall.tcwriter.pilot.swing.SwingToggleButton;
 
 public class ControllerExampleTest {
@@ -24,10 +25,16 @@ public class ControllerExampleTest {
 		});
 
 		final GuiPilot pilot = new GuiPilot(view[0]);
-		new SwingToggleButton(pilot, "BooleanCB").setSelected(true);
-		new SwingLabel(pilot, "BooleanCBLabel").waitEnabled();
-		new SwingToggleButton(pilot, "BooleanCB").setSelected(false);
-		new SwingLabel(pilot, "BooleanCBLabel").waitDisabled();
+		new SwingToggleButton(pilot, "booleanEditor").setSelected(true);
+		new SwingLabel(pilot, "booleanEditorLabel").waitEnabled();
+		new SwingToggleButton(pilot, "booleanEditor").setSelected(false);
+		new SwingLabel(pilot, "booleanEditorLabel").waitDisabled();
+
+		new SwingText(pilot, "intStringEditor").setText("123");
+		new SwingLabel(pilot, "intStringEditorLabel").checkValue("123");
+		new SwingText(pilot, "intStringEditor").setText("abc");
+		new SwingLabel(pilot, "intStringEditorLabel").checkValue("123");
+		new SwingLabel(pilot, "errorLabel").checkValue("Cannot convert to number");
 
 		System.out.println(pilot.getActionReport().getFormattedReport());
 	}

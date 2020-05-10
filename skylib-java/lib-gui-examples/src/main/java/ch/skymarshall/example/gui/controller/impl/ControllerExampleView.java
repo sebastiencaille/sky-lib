@@ -83,11 +83,13 @@ public class ControllerExampleView extends JFrame {
 		final BooleanProperty booleanProperty = model.getBooleanPropProperty();
 
 		final JCheckBox booleanEditor = new JCheckBox();
-		booleanEditor.setName("BooleanCB");
+		booleanEditor.setName("booleanEditor");
 		booleanProperty.bind(selected(booleanEditor));
+
 		final JLabel label = new JLabel("Am I enabled?");
-		label.setName("BooleanCBLabel");
+		label.setName("booleanEditorLabel");
 		booleanProperty.listen(label::setEnabled);
+
 		final JLabel booleanCounter = new JLabel();
 		booleanProperty.bind(counter()).listen(booleanCounter::setText);
 
@@ -99,9 +101,11 @@ public class ControllerExampleView extends JFrame {
 		final IntProperty intProperty = model.getIntPropProperty();
 
 		final JTextField intStringEditor = new JTextField();
+		intStringEditor.setName("intStringEditor");
 		intProperty.bind(intToString()).bind(value(intStringEditor));
 
 		final JLabel intCheck = new JLabel();
+		intCheck.setName("intStringEditorLabel");
 		intProperty.bind(intToString()).listen(intCheck::setText);
 
 		final JLabel intCounter = new JLabel();
@@ -190,6 +194,7 @@ public class ControllerExampleView extends JFrame {
 		// ------------------------------------------
 		final ErrorProperty errorProperty = model.getErrorProperty();
 		final JLabel errorLabel = new JLabel("No Error");
+		errorLabel.setName("errorLabel");
 		final JLabel errorCounter = new JLabel();
 		errorProperty.bind(guiErrorToString()).listen(errorLabel::setText);
 		errorProperty.bind(counter()).listen(errorCounter::setText);

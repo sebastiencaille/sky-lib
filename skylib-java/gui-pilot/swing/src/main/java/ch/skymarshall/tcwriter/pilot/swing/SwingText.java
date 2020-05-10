@@ -3,6 +3,9 @@ package ch.skymarshall.tcwriter.pilot.swing;
 import static ch.skymarshall.tcwriter.pilot.Polling.action;
 import static ch.skymarshall.tcwriter.pilot.Polling.assertion;
 
+import java.awt.event.KeyEvent;
+
+import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
 import org.junit.Assert;
@@ -28,7 +31,13 @@ public class SwingText extends AbstractSwingComponent<JTextComponent> {
 		if (value == null) {
 			return;
 		}
-		withReport(r -> "set text \'" + value + "\'").waitEditSuccess(action(t -> t.setText(value)));
+		withReport(r -> "set text \'" + value + "\'").waitEditSuccess(action(t -> {
+			t.setText(value);
+			if (t instanceof JTextField) {
+				t.dispatchEvent(
+						new KeyEvent(t, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, '\n'));
+			}
+		}));
 	}
 
 	public void checkTextValue(final String value) {

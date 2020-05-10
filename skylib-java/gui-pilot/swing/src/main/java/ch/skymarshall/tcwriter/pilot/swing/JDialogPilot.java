@@ -16,7 +16,7 @@ import org.junit.Assert;
 
 import ch.skymarshall.util.helpers.NoExceptionCloseable;
 
-public class JDialogPilot extends GuiPilot {
+public class JDialogPilot extends SwingGuiPilot {
 
 	private static final Timer timer = new Timer();
 

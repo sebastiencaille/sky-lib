@@ -10,7 +10,7 @@ import org.junit.Assert;
 
 public class SwingList extends AbstractSwingComponent<JList> {
 
-	public SwingList(final GuiPilot pilot, final String name) {
+	public SwingList(final SwingGuiPilot pilot, final String name) {
 		super(pilot, JList.class, name);
 	}
 

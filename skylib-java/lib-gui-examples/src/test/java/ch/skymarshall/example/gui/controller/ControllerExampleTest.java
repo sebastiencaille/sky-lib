@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import ch.skymarshall.example.gui.controller.impl.ControllerExampleController;
 import ch.skymarshall.example.gui.controller.impl.ControllerExampleView;
-import ch.skymarshall.tcwriter.pilot.swing.GuiPilot;
+import ch.skymarshall.tcwriter.pilot.swing.SwingGuiPilot;
 import ch.skymarshall.tcwriter.pilot.swing.SwingLabel;
 import ch.skymarshall.tcwriter.pilot.swing.SwingList;
 import ch.skymarshall.tcwriter.pilot.swing.SwingText;
@@ -26,7 +26,7 @@ public class ControllerExampleTest {
 			view[0].setVisible(true);
 		});
 
-		final GuiPilot pilot = new GuiPilot(view[0]);
+		final SwingGuiPilot pilot = new SwingGuiPilot(view[0]);
 		pilot.setDefaultActionTimeout(Duration.ofSeconds(1));
 		booleanEditor(pilot).setSelected(true);
 		booleanEditorCheck(pilot).waitEnabled();
@@ -52,39 +52,39 @@ public class ControllerExampleTest {
 		System.out.println(pilot.getActionReport().getFormattedReport());
 	}
 
-	private SwingLabel staticListSelectionCheck(final GuiPilot pilot) {
+	private SwingLabel staticListSelectionCheck(final SwingGuiPilot pilot) {
 		return new SwingLabel(pilot, "staticListSelectionCheck");
 	}
 
-	private SwingList staticListEditor(final GuiPilot pilot) {
+	private SwingList staticListEditor(final SwingGuiPilot pilot) {
 		return new SwingList(pilot, "staticListEditor");
 	}
 
-	private SwingLabel dynamicListSelectionCheck(final GuiPilot pilot) {
+	private SwingLabel dynamicListSelectionCheck(final SwingGuiPilot pilot) {
 		return new SwingLabel(pilot, "dynamicListSelectionCheck");
 	}
 
-	private SwingList dynamicListEditor(final GuiPilot pilot) {
+	private SwingList dynamicListEditor(final SwingGuiPilot pilot) {
 		return new SwingList(pilot, "dynamicListEditor");
 	}
 
-	private SwingLabel intCheck(final GuiPilot pilot) {
+	private SwingLabel intCheck(final SwingGuiPilot pilot) {
 		return new SwingLabel(pilot, "intCheck");
 	}
 
-	private SwingText intStringEditor(final GuiPilot pilot) {
+	private SwingText intStringEditor(final SwingGuiPilot pilot) {
 		return new SwingText(pilot, "intStringEditor");
 	}
 
-	private SwingLabel booleanEditorCheck(final GuiPilot pilot) {
+	private SwingLabel booleanEditorCheck(final SwingGuiPilot pilot) {
 		return new SwingLabel(pilot, "booleanEditorCheck");
 	}
 
-	private SwingToggleButton booleanEditor(final GuiPilot pilot) {
+	private SwingToggleButton booleanEditor(final SwingGuiPilot pilot) {
 		return new SwingToggleButton(pilot, "booleanEditor");
 	}
 
-	private SwingLabel getErrorLabel(final GuiPilot pilot) {
+	private SwingLabel getErrorLabel(final SwingGuiPilot pilot) {
 		return new SwingLabel(pilot, "errorLabel");
 	}
 

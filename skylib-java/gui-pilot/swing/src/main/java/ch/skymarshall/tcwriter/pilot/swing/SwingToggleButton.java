@@ -9,7 +9,7 @@ import org.junit.Assert;
 
 public class SwingToggleButton extends AbstractSwingComponent<JToggleButton> {
 
-	public SwingToggleButton(final GuiPilot pilot, final String name) {
+	public SwingToggleButton(final SwingGuiPilot pilot, final String name) {
 		super(pilot, JToggleButton.class, name);
 	}
 

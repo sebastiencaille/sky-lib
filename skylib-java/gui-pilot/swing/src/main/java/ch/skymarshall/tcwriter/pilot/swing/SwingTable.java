@@ -6,7 +6,7 @@ import javax.swing.JTable;
 
 public class SwingTable extends AbstractSwingComponent<JTable> {
 
-	public SwingTable(final GuiPilot pilot, final String name) {
+	public SwingTable(final SwingGuiPilot pilot, final String name) {
 		super(pilot, JTable.class, name);
 	}
 

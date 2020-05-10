@@ -18,11 +18,11 @@ import ch.skymarshall.tcwriter.pilot.Polling;
 
 public class AbstractSwingComponent<T extends JComponent> extends AbstractGuiComponent<T, AbstractSwingComponent<T>> {
 
-	protected final GuiPilot pilot;
+	protected final SwingGuiPilot pilot;
 	protected final String name;
 	protected final Class<T> clazz;
 
-	public AbstractSwingComponent(final GuiPilot pilot, final Class<T> clazz, final String name) {
+	public AbstractSwingComponent(final SwingGuiPilot pilot, final Class<T> clazz, final String name) {
 		super(pilot);
 		this.pilot = pilot;
 		this.name = name;

@@ -12,7 +12,7 @@ import org.junit.Assert;
 
 public class SwingText extends AbstractSwingComponent<JTextComponent> {
 
-	public SwingText(final GuiPilot pilot, final String name) {
+	public SwingText(final SwingGuiPilot pilot, final String name) {
 		super(pilot, JTextComponent.class, name);
 	}
 

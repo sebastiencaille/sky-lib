@@ -10,9 +10,9 @@ import ch.skymarshall.tcwriter.pilot.Polling;
 
 public class SeleniumAlert extends AbstractGuiComponent<Alert, SeleniumAlert> {
 
-	private final GuiPilot pilot;
+	private final SeleniumGuiPilot pilot;
 
-	public SeleniumAlert(final GuiPilot pilot) {
+	public SeleniumAlert(final SeleniumGuiPilot pilot) {
 		super(pilot);
 		this.pilot = pilot;
 	}

@@ -78,9 +78,9 @@ public class SeleniumExampleTest {
 
 	public static class ArbitraryDelay implements ActionDelay {
 
-		private final GuiPilot pilot;
+		private final SeleniumGuiPilot pilot;
 
-		public ArbitraryDelay(final GuiPilot pilot) {
+		public ArbitraryDelay(final SeleniumGuiPilot pilot) {
 			this.pilot = pilot;
 		}
 
@@ -94,7 +94,7 @@ public class SeleniumExampleTest {
 
 	@Test
 	public void testExample() {
-		final GuiPilot pilot = new GuiPilot(driver);
+		final SeleniumGuiPilot pilot = new SeleniumGuiPilot(driver);
 
 		pilot.getDriver().get("http://localhost:8080/example1.html");
 		//

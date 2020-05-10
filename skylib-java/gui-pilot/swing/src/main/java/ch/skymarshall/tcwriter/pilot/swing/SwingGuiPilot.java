@@ -20,12 +20,12 @@ import org.junit.Assert;
 
 import ch.skymarshall.util.helpers.NoExceptionCloseable;
 
-public class GuiPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
+public class SwingGuiPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 
 	private final WeakHashMap<String, JComponent> cache = new WeakHashMap<>();
 	private final Container root;
 
-	public GuiPilot(final Container root) {
+	public SwingGuiPilot(final Container root) {
 		this.root = root;
 	}
 

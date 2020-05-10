@@ -9,24 +9,24 @@ import org.junit.Assert;
 import ch.skymarshall.tcwriter.annotations.TCApi;
 import ch.skymarshall.tcwriter.it.TCGuiPilot;
 import ch.skymarshall.tcwriter.pilot.Polling;
-import ch.skymarshall.tcwriter.pilot.swing.GuiPilot;
+import ch.skymarshall.tcwriter.pilot.swing.SwingGuiPilot;
 import ch.skymarshall.tcwriter.pilot.swing.SwingButton;
 import ch.skymarshall.tcwriter.pilot.swing.SwingTable;
 
 @TCApi(description = "Step selector", humanReadable = "Step selector", isSelector = true)
 public class StepSelector {
 
-	private final Consumer<GuiPilot> applier;
+	private final Consumer<SwingGuiPilot> applier;
 
-	protected StepSelector(final Consumer<GuiPilot> applier) {
+	protected StepSelector(final Consumer<SwingGuiPilot> applier) {
 		this.applier = applier;
 	}
 
-	public void select(final GuiPilot guiPilot) {
+	public void select(final SwingGuiPilot guiPilot) {
 		applier.accept(guiPilot);
 	}
 
-	protected static SwingTable getStepsTable(final GuiPilot guiPilot) {
+	protected static SwingTable getStepsTable(final SwingGuiPilot guiPilot) {
 		return new SwingTable(guiPilot, TCGuiPilot.STEPS_TABLE);
 	}
 

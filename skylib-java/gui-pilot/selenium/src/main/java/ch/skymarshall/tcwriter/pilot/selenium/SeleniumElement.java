@@ -25,14 +25,14 @@ import ch.skymarshall.tcwriter.pilot.Polling;
 public class SeleniumElement extends AbstractGuiComponent<WebElement, SeleniumElement> {
 
 	private static final Duration QUICK_TIMEOUT = Duration.ofSeconds(5);
-	private final GuiPilot pilot;
+	private final SeleniumGuiPilot pilot;
 	private final By locator;
 
 	protected static boolean canInteract(final WebElement element) {
 		return element.isDisplayed() && element.isEnabled();
 	}
 
-	public SeleniumElement(final GuiPilot pilot, final By locator) {
+	public SeleniumElement(final SeleniumGuiPilot pilot, final By locator) {
 		super(pilot);
 		this.pilot = pilot;
 		this.locator = locator;

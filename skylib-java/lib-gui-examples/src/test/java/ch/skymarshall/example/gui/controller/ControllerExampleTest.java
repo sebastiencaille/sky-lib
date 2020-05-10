@@ -11,6 +11,7 @@ import ch.skymarshall.example.gui.controller.impl.ControllerExampleView;
 import ch.skymarshall.tcwriter.pilot.swing.SwingGuiPilot;
 import ch.skymarshall.tcwriter.pilot.swing.SwingLabel;
 import ch.skymarshall.tcwriter.pilot.swing.SwingList;
+import ch.skymarshall.tcwriter.pilot.swing.SwingTable;
 import ch.skymarshall.tcwriter.pilot.swing.SwingText;
 import ch.skymarshall.tcwriter.pilot.swing.SwingToggleButton;
 
@@ -49,43 +50,58 @@ public class ControllerExampleTest {
 		dynamicListEditor(pilot).checkSelected("C");
 		dynamicListSelectionCheck(pilot).checkValue("C");
 
+		tableSelectionEditor(pilot).selectRow(0);
+		tableSelectionCheck(pilot).checkValue("Hello");
+		tableSelectionEditor(pilot).selectRow(1);
+		tableSelectionCheck(pilot).checkValue("World");
+		tableSelectionEditor(pilot).editValueOnSelectedRow(0, "Bouh");
+		tableSelectionCheck(pilot).checkValue("Bouh");
+
 		System.out.println(pilot.getActionReport().getFormattedReport());
-	}
-
-	private SwingLabel staticListSelectionCheck(final SwingGuiPilot pilot) {
-		return new SwingLabel(pilot, "staticListSelectionCheck");
-	}
-
-	private SwingList staticListEditor(final SwingGuiPilot pilot) {
-		return new SwingList(pilot, "staticListEditor");
-	}
-
-	private SwingLabel dynamicListSelectionCheck(final SwingGuiPilot pilot) {
-		return new SwingLabel(pilot, "dynamicListSelectionCheck");
-	}
-
-	private SwingList dynamicListEditor(final SwingGuiPilot pilot) {
-		return new SwingList(pilot, "dynamicListEditor");
-	}
-
-	private SwingLabel intCheck(final SwingGuiPilot pilot) {
-		return new SwingLabel(pilot, "intCheck");
-	}
-
-	private SwingText intStringEditor(final SwingGuiPilot pilot) {
-		return new SwingText(pilot, "intStringEditor");
-	}
-
-	private SwingLabel booleanEditorCheck(final SwingGuiPilot pilot) {
-		return new SwingLabel(pilot, "booleanEditorCheck");
 	}
 
 	private SwingToggleButton booleanEditor(final SwingGuiPilot pilot) {
 		return new SwingToggleButton(pilot, "booleanEditor");
 	}
 
+	private SwingLabel booleanEditorCheck(final SwingGuiPilot pilot) {
+		return new SwingLabel(pilot, "booleanEditorCheck");
+	}
+
+	private SwingText intStringEditor(final SwingGuiPilot pilot) {
+		return new SwingText(pilot, "intStringEditor");
+	}
+
+	private final SwingLabel intCheck(final SwingGuiPilot pilot) {
+		return new SwingLabel(pilot, "intCheck");
+	}
+
 	private SwingLabel getErrorLabel(final SwingGuiPilot pilot) {
 		return new SwingLabel(pilot, "errorLabel");
+	}
+
+	private SwingList dynamicListEditor(final SwingGuiPilot pilot) {
+		return new SwingList(pilot, "dynamicListEditor");
+	}
+
+	private SwingLabel dynamicListSelectionCheck(final SwingGuiPilot pilot) {
+		return new SwingLabel(pilot, "dynamicListSelectionCheck");
+	}
+
+	private SwingList staticListEditor(final SwingGuiPilot pilot) {
+		return new SwingList(pilot, "staticListEditor");
+	}
+
+	private SwingLabel staticListSelectionCheck(final SwingGuiPilot pilot) {
+		return new SwingLabel(pilot, "staticListSelectionCheck");
+	}
+
+	private SwingTable tableSelectionEditor(final SwingGuiPilot pilot) {
+		return new SwingTable(pilot, "tableSelectionEditor");
+	}
+
+	private SwingLabel tableSelectionCheck(final SwingGuiPilot pilot) {
+		return new SwingLabel(pilot, "tableSelectionCheck");
 	}
 
 }

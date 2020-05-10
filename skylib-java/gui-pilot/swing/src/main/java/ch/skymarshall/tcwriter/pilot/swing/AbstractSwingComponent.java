@@ -5,6 +5,7 @@ import static ch.skymarshall.tcwriter.pilot.Polling.failure;
 import static ch.skymarshall.tcwriter.pilot.Polling.matches;
 import static ch.skymarshall.tcwriter.pilot.Polling.throwError;
 
+import java.awt.event.KeyEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.time.Duration;
 import java.util.function.Function;
@@ -105,5 +106,9 @@ public class AbstractSwingComponent<T extends JComponent> extends AbstractGuiCom
 	public void waitDisabled() {
 		withReport(c -> "check disabled");
 		waitReadSuccess(matches(c -> !c.isEnabled()));
+	}
+
+	public static void pressReturn(final JComponent t) {
+		t.dispatchEvent(new KeyEvent(t, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, '\n'));
 	}
 }

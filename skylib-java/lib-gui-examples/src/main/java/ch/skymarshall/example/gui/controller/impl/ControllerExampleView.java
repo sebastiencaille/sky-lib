@@ -181,9 +181,11 @@ public class ControllerExampleView extends JFrame {
 
 		final TestObjectTableModel tableSelectionTableModel = new TestObjectTableModel(model.getTableModel());
 		final JTable tableSelectionEditor = new JTable(tableSelectionTableModel);
+		tableSelectionEditor.setName("tableSelectionEditor");
 		tableObjectProperty.bind(selection(tableSelectionEditor, tableSelectionTableModel));
 
 		final JLabel tableSelectionCheck = new JLabel();
+		tableSelectionCheck.setName("tableSelectionCheck");
 		tableObjectProperty.bind(testObjectToString()).listen(tableSelectionCheck::setText);
 
 		final JLabel tableSelectionCounter = new JLabel();

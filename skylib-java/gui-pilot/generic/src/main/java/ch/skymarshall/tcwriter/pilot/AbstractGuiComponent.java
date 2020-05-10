@@ -109,7 +109,10 @@ public abstract class AbstractGuiComponent<T, C extends AbstractGuiComponent<T, 
 		}
 
 		result.setInformation(pilot, toString(), cachedElement);
-		return result.orElseGet(() -> onFail.apply(result));
+		final U resultWithFail = result.orElseGet(() -> onFail.apply(result));
+
+		reportLine = null;
+		return resultWithFail;
 	}
 
 	/**

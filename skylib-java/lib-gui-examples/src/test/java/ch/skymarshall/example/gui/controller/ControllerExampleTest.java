@@ -2,6 +2,7 @@ package ch.skymarshall.example.gui.controller;
 
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
+import java.time.Duration;
 
 import org.junit.Test;
 
@@ -9,6 +10,7 @@ import ch.skymarshall.example.gui.controller.impl.ControllerExampleController;
 import ch.skymarshall.example.gui.controller.impl.ControllerExampleView;
 import ch.skymarshall.tcwriter.pilot.swing.GuiPilot;
 import ch.skymarshall.tcwriter.pilot.swing.SwingLabel;
+import ch.skymarshall.tcwriter.pilot.swing.SwingList;
 import ch.skymarshall.tcwriter.pilot.swing.SwingText;
 import ch.skymarshall.tcwriter.pilot.swing.SwingToggleButton;
 
@@ -25,18 +27,65 @@ public class ControllerExampleTest {
 		});
 
 		final GuiPilot pilot = new GuiPilot(view[0]);
-		new SwingToggleButton(pilot, "booleanEditor").setSelected(true);
-		new SwingLabel(pilot, "booleanEditorLabel").waitEnabled();
-		new SwingToggleButton(pilot, "booleanEditor").setSelected(false);
-		new SwingLabel(pilot, "booleanEditorLabel").waitDisabled();
+		pilot.setDefaultActionTimeout(Duration.ofSeconds(1));
+		booleanEditor(pilot).setSelected(true);
+		booleanEditorCheck(pilot).waitEnabled();
+		booleanEditor(pilot).setSelected(false);
+		booleanEditorCheck(pilot).waitDisabled();
 
-		new SwingText(pilot, "intStringEditor").setText("123");
-		new SwingLabel(pilot, "intStringEditorLabel").checkValue("123");
-		new SwingText(pilot, "intStringEditor").setText("abc");
-		new SwingLabel(pilot, "intStringEditorLabel").checkValue("123");
-		new SwingLabel(pilot, "errorLabel").checkValue("Cannot convert to number");
+		intStringEditor(pilot).setText("123");
+		intCheck(pilot).checkValue("123");
+		intStringEditor(pilot).setText("abc");
+		intCheck(pilot).checkValue("123");
+		getErrorLabel(pilot).checkValue("Cannot convert to number");
+
+		staticListEditor(pilot).select("A");
+		staticListSelectionCheck(pilot).checkValue("A");
+		dynamicListEditor(pilot).select("C");
+		dynamicListSelectionCheck(pilot).checkValue("C");
+
+		staticListEditor(pilot).select("B");
+		staticListSelectionCheck(pilot).checkValue("B");
+		dynamicListEditor(pilot).checkSelected("C");
+		dynamicListSelectionCheck(pilot).checkValue("C");
 
 		System.out.println(pilot.getActionReport().getFormattedReport());
+	}
+
+	private SwingLabel staticListSelectionCheck(final GuiPilot pilot) {
+		return new SwingLabel(pilot, "staticListSelectionCheck");
+	}
+
+	private SwingList staticListEditor(final GuiPilot pilot) {
+		return new SwingList(pilot, "staticListEditor");
+	}
+
+	private SwingLabel dynamicListSelectionCheck(final GuiPilot pilot) {
+		return new SwingLabel(pilot, "dynamicListSelectionCheck");
+	}
+
+	private SwingList dynamicListEditor(final GuiPilot pilot) {
+		return new SwingList(pilot, "dynamicListEditor");
+	}
+
+	private SwingLabel intCheck(final GuiPilot pilot) {
+		return new SwingLabel(pilot, "intCheck");
+	}
+
+	private SwingText intStringEditor(final GuiPilot pilot) {
+		return new SwingText(pilot, "intStringEditor");
+	}
+
+	private SwingLabel booleanEditorCheck(final GuiPilot pilot) {
+		return new SwingLabel(pilot, "booleanEditorCheck");
+	}
+
+	private SwingToggleButton booleanEditor(final GuiPilot pilot) {
+		return new SwingToggleButton(pilot, "booleanEditor");
+	}
+
+	private SwingLabel getErrorLabel(final GuiPilot pilot) {
+		return new SwingLabel(pilot, "errorLabel");
 	}
 
 }

@@ -86,14 +86,14 @@ public class ControllerExampleView extends JFrame {
 		booleanEditor.setName("booleanEditor");
 		booleanProperty.bind(selected(booleanEditor));
 
-		final JLabel label = new JLabel("Am I enabled?");
-		label.setName("booleanEditorLabel");
-		booleanProperty.listen(label::setEnabled);
+		final JLabel booleanEditorCheck = new JLabel("Am I enabled?");
+		booleanEditorCheck.setName("booleanEditorCheck");
+		booleanProperty.listen(booleanEditorCheck::setEnabled);
 
 		final JLabel booleanCounter = new JLabel();
 		booleanProperty.bind(counter()).listen(booleanCounter::setText);
 
-		addGuiLineItem(booleanProperty, booleanEditor, label, booleanCounter);
+		addGuiLineItem(booleanProperty, booleanEditor, booleanEditorCheck, booleanCounter);
 
 		// ------------------------------------------
 		// Int input field
@@ -105,7 +105,7 @@ public class ControllerExampleView extends JFrame {
 		intProperty.bind(intToString()).bind(value(intStringEditor));
 
 		final JLabel intCheck = new JLabel();
-		intCheck.setName("intStringEditorLabel");
+		intCheck.setName("intCheck");
 		intProperty.bind(intToString()).listen(intCheck::setText);
 
 		final JLabel intCounter = new JLabel();
@@ -135,10 +135,12 @@ public class ControllerExampleView extends JFrame {
 		final ObjectProperty<String> staticListSelection = model.getStaticListSelectionProperty();
 
 		final JList<String> staticListEditor = new JList<>(new String[] { "A", "B", "C" });
+		staticListEditor.setName("staticListEditor");
 		staticListSelection.bind(selection(staticListEditor));
 
-		final JLabel selectionCheck = new JLabel();
-		staticListSelection.listen(selectionCheck::setText);
+		final JLabel staticListSelectionCheck = new JLabel();
+		staticListSelectionCheck.setName("staticListSelectionCheck");
+		staticListSelection.listen(staticListSelectionCheck::setText);
 
 		final JLabel selectionCounter = new JLabel();
 		staticListSelection.bind(counter()).listen(selectionCounter::setText);
@@ -146,13 +148,14 @@ public class ControllerExampleView extends JFrame {
 		final JScrollPane itemEditorPane = new JScrollPane(staticListEditor);
 		itemEditorPane.setPreferredSize(new Dimension(200, 100));
 
-		addGuiLineItem(staticListSelection, itemEditorPane, selectionCheck, selectionCounter);
+		addGuiLineItem(staticListSelection, itemEditorPane, staticListSelectionCheck, selectionCounter);
 
 		// ------------------------------------------
 		// Selection of list which content is based on "Item selection" (preserve
 		// selection)
 		// ------------------------------------------
 		final JList<String> dynamicListEditor = new JList<>();
+		dynamicListEditor.setName("dynamicListEditor");
 		staticListSelection.bind(new DynamicListContentConverter()).bind(values(dynamicListEditor));
 
 		final ObjectProperty<String> dynamicListSelectionProperty = model.getDynamicListObjectProperty();
@@ -160,6 +163,7 @@ public class ControllerExampleView extends JFrame {
 				.addDependency(detachOnUpdateOf(staticListSelection));
 
 		final JLabel dynamicListSelectionCheck = new JLabel();
+		dynamicListSelectionCheck.setName("dynamicListSelectionCheck");
 		dynamicListSelectionProperty.listen(dynamicListSelectionCheck::setText);
 
 		final JLabel dynamicListSelectionCounter = new JLabel();

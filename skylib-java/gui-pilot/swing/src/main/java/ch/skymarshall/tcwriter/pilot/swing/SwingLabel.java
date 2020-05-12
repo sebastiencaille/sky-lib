@@ -17,7 +17,7 @@ public class SwingLabel extends AbstractSwingComponent<JLabel> {
 			return;
 		}
 		withReport(r -> "check text \'" + value + "\'")
-				.waitReadSuccess(assertion(t -> Assert.assertEquals(value, t.getText())));
+				.waitStateSuccess(assertion(t -> Assert.assertEquals(value, t.getText())));
 	}
 
 }

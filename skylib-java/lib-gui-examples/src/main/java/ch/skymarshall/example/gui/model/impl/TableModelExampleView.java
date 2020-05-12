@@ -35,8 +35,8 @@ import ch.skymarshall.gui.model.ChildListModel;
 import ch.skymarshall.gui.model.ListModel;
 import ch.skymarshall.gui.model.RootListModel;
 import ch.skymarshall.gui.model.views.ListViews;
-import ch.skymarshall.gui.swing.jtable.TableColumnWithPolicy;
 import ch.skymarshall.gui.swing.jtable.PolicyTableColumnModel;
+import ch.skymarshall.gui.swing.jtable.TableColumnWithPolicy;
 
 @SuppressWarnings("serial")
 public class TableModelExampleView extends JFrame {
@@ -63,11 +63,14 @@ public class TableModelExampleView extends JFrame {
 		// > filtered(filter));
 		final TestObjectTableModel tableModel = new TestObjectTableModel(filteredModel);
 
-		final JTable jtable = new JTable(tableModel);
+		final JTable listTable = new JTable(tableModel);
+		listTable.setName("listTable");
+		listTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
 		// The first row will fills the remaining space up to 100% of the width, the
 		// second one will have a fixed width of 50px
-		final PolicyTableColumnModel<TestObjectTableModel.Columns> columnModel = new PolicyTableColumnModel<>(jtable);
+		final PolicyTableColumnModel<TestObjectTableModel.Columns> columnModel = new PolicyTableColumnModel<>(
+				listTable);
 		columnModel.install();
 		columnModel.configureColumn(
 				TableColumnWithPolicy.percentOfAvailableSpace(TestObjectTableModel.Columns.A_FIRST_VALUE, 100)
@@ -75,20 +78,22 @@ public class TableModelExampleView extends JFrame {
 		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(TestObjectTableModel.Columns.A_SECOND_VALUE, 50)
 				.apply(new DefaultTableCellRenderer()));
 
-		model.objectSelection.bind(selection(jtable, tableModel)).addDependency(detachOnUpdateOf(filteredModel));
-		getContentPane().add(jtable, BorderLayout.CENTER);
+		model.objectSelection.bind(selection(listTable, tableModel)).addDependency(detachOnUpdateOf(filteredModel));
+		getContentPane().add(listTable, BorderLayout.CENTER);
 
-		// One can also use a converter to change the model's view, or a
-		// BoundComparator, too:
+		// It's also possible to use a converter to change the model's view, or a
+		// BoundComparator:
 		// > controller.reverseOrder.bind(booleanToOrder()).bind(view(model));
 
 		final JPanel optionsPanel = new JPanel(new FlowLayout());
 
 		final JCheckBox reverse = new JCheckBox("Rev. Order");
+		reverse.setName("reverseOrder");
 		model.reverseOrder.bind(selected(reverse));
 		optionsPanel.add(reverse);
 
 		final JCheckBox filter = new JCheckBox("Filter");
+		filter.setName("enableFilter");
 		model.enableFilter.bind(selected(filter));
 		optionsPanel.add(filter);
 

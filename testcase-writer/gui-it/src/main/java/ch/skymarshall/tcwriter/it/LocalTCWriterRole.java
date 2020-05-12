@@ -72,7 +72,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	public void checkHumanReadable(final StepSelector selector, final String humanReadable) {
 		selector.select(guiPilot);
 		final SwingTable stepsTable = new SwingTable(guiPilot, "StepsTable");
-		stepsTable.withReport(c -> "Check human readable text: " + humanReadable).waitReadSuccess(assertion(t -> {
+		stepsTable.withReport(c -> "Check human readable text: " + humanReadable).waitStateSuccess(assertion(t -> {
 			final Object value = ((StepsTableModel) t.getModel()).getHumanReadable(t.getSelectedRow());
 			Assert.assertEquals(humanReadable, value.toString());
 		}));

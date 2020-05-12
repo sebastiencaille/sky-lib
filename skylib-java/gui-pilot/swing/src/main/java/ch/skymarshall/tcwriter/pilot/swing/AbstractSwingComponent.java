@@ -90,7 +90,7 @@ public class AbstractSwingComponent<T extends JComponent> extends AbstractGuiCom
 		return waitActionSuccess(this::canRead, applier, pilot.getDefaultActionTimeout(), onFail);
 	}
 
-	public <U> U waitReadSuccess(final Function<T, Polling<T, U>> applier) {
+	public <U> U waitStateSuccess(final Function<T, Polling<T, U>> applier) {
 		return waitActionSuccess(this::canRead, applier, pilot.getDefaultActionTimeout(), throwError());
 	}
 
@@ -100,12 +100,12 @@ public class AbstractSwingComponent<T extends JComponent> extends AbstractGuiCom
 
 	public void waitEnabled() {
 		withReport(c -> "check enabled");
-		waitReadSuccess(matches(JComponent::isEnabled));
+		waitStateSuccess(matches(JComponent::isEnabled));
 	}
 
 	public void waitDisabled() {
 		withReport(c -> "check disabled");
-		waitReadSuccess(matches(c -> !c.isEnabled()));
+		waitStateSuccess(matches(c -> !c.isEnabled()));
 	}
 
 	public static void pressReturn(final JComponent t) {

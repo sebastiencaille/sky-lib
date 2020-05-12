@@ -34,7 +34,7 @@ public class StepSelector {
 	public static StepSelector selectStep(@TCApi(description = "index", humanReadable = "at row") final int ordinal) {
 		return new StepSelector(guiPilot -> {
 			final int tableIndex = ordinal - 1;
-			getStepsTable(guiPilot).withReport(c -> "step " + ordinal + " exists").waitReadSuccess(
+			getStepsTable(guiPilot).withReport(c -> "step " + ordinal + " exists").waitStateSuccess(
 					assertion(t -> Assert.assertTrue("Step does not exist", tableIndex < t.getRowCount())));
 			getStepsTable(guiPilot).selectRow(tableIndex);
 		});
@@ -60,7 +60,7 @@ public class StepSelector {
 	public static StepSelector currentStep() {
 		return new StepSelector(guiPilot -> {
 			final SwingTable stepsTable = getStepsTable(guiPilot);
-			stepsTable.withReport(c -> "a step is selected").waitReadSuccess(
+			stepsTable.withReport(c -> "a step is selected").waitStateSuccess(
 					assertion(c -> Assert.assertTrue("Step must be selected", c.getSelectedRowCount() > 0)));
 		});
 	}

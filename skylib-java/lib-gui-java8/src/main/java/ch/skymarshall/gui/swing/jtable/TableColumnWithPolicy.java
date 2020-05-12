@@ -49,9 +49,6 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 
 	@Override
 	public void setWidth(final int width) {
-		if (!model.isValid()) {
-			return;
-		}
 		forcedWidth = width;
 		model.update();
 	}

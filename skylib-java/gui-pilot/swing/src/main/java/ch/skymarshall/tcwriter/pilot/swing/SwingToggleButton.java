@@ -15,7 +15,7 @@ public class SwingToggleButton extends AbstractSwingComponent<JToggleButton> {
 
 	public void waitSelected(final boolean selected) {
 		withReport(c -> "check " + (selected ? "selected" : "not selected"))
-				.waitReadSuccess(assertion(c -> Assert.assertEquals(selected, c.isSelected())));
+				.waitStateSuccess(assertion(c -> Assert.assertEquals(selected, c.isSelected())));
 	}
 
 	public void setSelected(final boolean selected) {

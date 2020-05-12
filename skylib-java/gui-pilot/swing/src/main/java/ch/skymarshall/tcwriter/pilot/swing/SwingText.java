@@ -42,7 +42,7 @@ public class SwingText extends AbstractSwingComponent<JTextComponent> {
 			return;
 		}
 		withReport(r -> "check text \'" + value + "\'")
-				.waitReadSuccess(assertion(t -> Assert.assertEquals(value, t.getText())));
+				.waitStateSuccess(assertion(t -> Assert.assertEquals(value, t.getText())));
 	}
 
 }

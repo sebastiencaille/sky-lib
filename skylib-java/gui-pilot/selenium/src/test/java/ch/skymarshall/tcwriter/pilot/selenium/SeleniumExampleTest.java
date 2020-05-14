@@ -98,7 +98,7 @@ public class SeleniumExampleTest {
 
 		pilot.getDriver().get("http://localhost:8080/example1.html");
 		//
-		new SeleniumElement(pilot, PROCEED_LOCATION).click().followedByDelay(new ArbitraryDelay(pilot));
+		new SeleniumElement(pilot, PROCEED_LOCATION).click().followedBy(new ArbitraryDelay(pilot));
 		new SeleniumElement(pilot, OK_LOCATION).click();
 		new SeleniumAlert(pilot).acknowledge();
 

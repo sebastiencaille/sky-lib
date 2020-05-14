@@ -82,8 +82,18 @@ public class TestItem {
 	...
 }
 ```
+# Test api impementation
+Test cases may target GUIs implemented using different technologies, such as Java Swing, web pages, ...
 
-# Dev test case 
+In general, the logic is still the same:
+Until the action is performed,
+1. find a GUI component
+2. apply an action (click on a button, retrieve a text, ...)
+It may be necessary to repeat both operations until the action is performed.
+
+Some actions may trigger arbitrary events that are delaying the execution of the next action. The test case knows that an action is followed by such event, so the test case must memorize this event after the action is performed. The next action may then wait until the event is finished.
+
+# Dev test cases 
 Each Actor is an instance of a specific Role.  
 by using the defined Roles/Actions/..., we can write test cases like
 [[Code](examples/src/main/java/ch/skymarshall/tcwriter/examples/SimpleTest.java)]  
@@ -95,7 +105,7 @@ deliveryGuy.deliverItem(); // Another actor of the system
 customer.checkPackage(deliveredItem(), coffeeMachine());
 ```
 
-# Business expert test case
+# Business expert test cases
 We can transform the dev's test case into a more readable form by using the annotations attached to the Roles/Actions/Selectors/Parameters   
 
 Actor | Action | Selector | Parameter

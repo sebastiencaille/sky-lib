@@ -184,7 +184,7 @@ public abstract class AbstractGuiComponent<T, C extends AbstractGuiComponent<T, 
 	 * @param actionDelay
 	 * @return
 	 */
-	public C followedByDelay(final ActionDelay actionDelay) {
+	public C followedBy(final ActionDelay actionDelay) {
 		pilot.setActionDelay(actionDelay);
 		return (C) this;
 	}

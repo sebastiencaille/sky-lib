@@ -1,6 +1,5 @@
 package ch.skymarshall.tcwriter.pilot.swing;
 
-import static ch.skymarshall.tcwriter.pilot.Polling.assertFail;
 import static ch.skymarshall.tcwriter.pilot.Polling.failure;
 import static ch.skymarshall.tcwriter.pilot.Polling.matches;
 import static ch.skymarshall.tcwriter.pilot.Polling.throwError;
@@ -8,7 +7,6 @@ import static ch.skymarshall.tcwriter.pilot.Polling.throwError;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.time.Duration;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import javax.swing.JComponent;
@@ -16,6 +14,8 @@ import javax.swing.SwingUtilities;
 
 import ch.skymarshall.tcwriter.pilot.AbstractGuiComponent;
 import ch.skymarshall.tcwriter.pilot.Polling;
+import ch.skymarshall.tcwriter.pilot.Polling.PollingFunction;
+import ch.skymarshall.tcwriter.pilot.Polling.PollingResultFunction;
 
 public class AbstractSwingComponent<T extends JComponent> extends AbstractGuiComponent<T, AbstractSwingComponent<T>> {
 
@@ -53,8 +53,8 @@ public class AbstractSwingComponent<T extends JComponent> extends AbstractGuiCom
 	}
 
 	@Override
-	protected <U> U waitActionSuccess(final Predicate<T> precondition, final Function<T, Polling<T, U>> applier,
-			final Duration timeout, final Function<Polling<T, U>, U> onFail) {
+	protected <U> U waitActionSuccess(final Predicate<T> precondition, final PollingFunction<T, U> applier,
+			final Duration timeout, final PollingResultFunction<T, U> onFail) {
 		if (SwingUtilities.isEventDispatchThread()) {
 			throw new IllegalStateException("Action must not run in Swing thread");
 		}
@@ -62,8 +62,7 @@ public class AbstractSwingComponent<T extends JComponent> extends AbstractGuiCom
 	}
 
 	@Override
-	protected <U> Polling<T, U> executePolling(final Predicate<T> precondition,
-			final Function<T, Polling<T, U>> applier) {
+	protected <U> Polling<T, U> executePolling(final Predicate<T> precondition, final PollingFunction<T, U> applier) {
 		final Object[] response = new Object[1];
 		try {
 			SwingUtilities.invokeAndWait(() -> response[0] = super.executePolling(precondition, applier));
@@ -76,36 +75,24 @@ public class AbstractSwingComponent<T extends JComponent> extends AbstractGuiCom
 		return (Polling<T, U>) response[0];
 	}
 
-	public <U> U waitComponentEditSuccess(final Function<T, Polling<T, U>> applier,
-			final Function<Polling<T, U>, U> onFail) {
-		return waitActionSuccess(this::canEdit, applier, pilot.getDefaultActionTimeout(), onFail);
-	}
-
-	public <U> U waitEditSuccess(final Function<T, Polling<T, U>> applier) {
+	public <U> U waitEditSuccess(final PollingFunction<T, U> applier) {
 		return waitActionSuccess(this::canEdit, applier, pilot.getDefaultActionTimeout(), throwError());
 	}
 
-	public <U> U waitComponentReadSuccess(final Function<T, Polling<T, U>> applier,
-			final Function<Polling<T, U>, U> onFail) {
-		return waitActionSuccess(this::canRead, applier, pilot.getDefaultActionTimeout(), onFail);
+	public <U> U waitEditSuccess(final PollingFunction<T, U> applier, final PollingResultFunction<T, U> onFail) {
+		return waitActionSuccess(this::canEdit, applier, pilot.getDefaultActionTimeout(), onFail);
 	}
 
-	public <U> U waitStateSuccess(final Function<T, Polling<T, U>> applier) {
+	public <U> U waitState(final PollingFunction<T, U> applier) {
 		return waitActionSuccess(this::canRead, applier, pilot.getDefaultActionTimeout(), throwError());
 	}
 
-	public <U> U waitComponentEditSuccess(final Function<T, Polling<T, U>> applier, final String reason) {
-		return waitComponentEditSuccess(applier, assertFail(reason));
-	}
-
 	public void waitEnabled() {
-		withReport(c -> "check enabled");
-		waitStateSuccess(matches(JComponent::isEnabled));
+		withReport(c -> "check enabled").waitState(matches(JComponent::isEnabled));
 	}
 
 	public void waitDisabled() {
-		withReport(c -> "check disabled");
-		waitStateSuccess(matches(c -> !c.isEnabled()));
+		withReport(c -> "check disabled").waitState(matches(c -> !c.isEnabled()));
 	}
 
 	public static void pressReturn(final JComponent t) {

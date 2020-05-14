@@ -39,7 +39,7 @@ public class SwingList extends AbstractSwingComponent<JList> {
 		if (value == null) {
 			return;
 		}
-		withReport(r -> "check element " + value).waitStateSuccess(l -> {
+		withReport(r -> "check element " + value).waitState(l -> {
 			if (l.getSelectedIndex() < 0) {
 				return failure("No element selected");
 			}

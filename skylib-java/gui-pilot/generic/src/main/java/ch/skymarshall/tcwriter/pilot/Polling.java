@@ -164,7 +164,7 @@ public class Polling<TT, U> {
 
 	/* *********************************************************** */
 
-	public interface PollingResultHandler<TT, U> extends Function<Polling<TT, U>, U> {
+	public interface PollingResultFunction<TT, U> extends Function<Polling<TT, U>, U> {
 		// simplify type
 	}
 
@@ -174,7 +174,7 @@ public class Polling<TT, U> {
 	 * @param actionDescr
 	 * @return
 	 */
-	public static <TT, U> PollingResultHandler<TT, U> assertFail(final String actionDescr) {
+	public static <TT, U> PollingResultFunction<TT, U> assertFail(final String actionDescr) {
 		return r -> {
 			throw new AssertionError(
 					r.componentDescription + ": action failed [" + actionDescr + "]: " + r.failureReason);
@@ -186,7 +186,7 @@ public class Polling<TT, U> {
 	 *
 	 * @return
 	 */
-	public static <TT, U> PollingResultHandler<TT, U> throwError() {
+	public static <TT, U> PollingResultFunction<TT, U> throwError() {
 		return r -> {
 			if (r.failureReason instanceof AssertionError) {
 				throw new AssertionError(r.componentDescription + ": " + r.failureReason.getMessage(),
@@ -202,7 +202,7 @@ public class Polling<TT, U> {
 	 * @param actionDescr
 	 * @return
 	 */
-	public static <TT> PollingResultHandler<TT, Boolean> report(final String report) {
+	public static <TT> PollingResultFunction<TT, Boolean> report(final String report) {
 		return r -> {
 			r.getPilot().getActionReport().report(report);
 			return Boolean.FALSE;

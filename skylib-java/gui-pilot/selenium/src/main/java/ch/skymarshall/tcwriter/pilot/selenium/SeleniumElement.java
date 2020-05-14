@@ -8,7 +8,6 @@ import static ch.skymarshall.tcwriter.pilot.Polling.value;
 
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.openqa.selenium.By;
@@ -21,6 +20,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import ch.skymarshall.tcwriter.pilot.AbstractGuiComponent;
 import ch.skymarshall.tcwriter.pilot.Polling;
+import ch.skymarshall.tcwriter.pilot.Polling.PollingFunction;
 
 public class SeleniumElement extends AbstractGuiComponent<WebElement, SeleniumElement> {
 
@@ -54,7 +54,7 @@ public class SeleniumElement extends AbstractGuiComponent<WebElement, SeleniumEl
 	 */
 	@Override
 	protected <U> Polling<WebElement, U> waitActionSuccessLoop(final Predicate<WebElement> precondition,
-			final Function<WebElement, Polling<WebElement, U>> applier, final Duration timeout) {
+			final PollingFunction<WebElement, U> applier, final Duration timeout) {
 		Duration remains = timeout;
 		if (timeout.compareTo(QUICK_TIMEOUT) > 0) {
 			// first do quick polling
@@ -77,7 +77,7 @@ public class SeleniumElement extends AbstractGuiComponent<WebElement, SeleniumEl
 	 * @return
 	 */
 	private <U> Polling<WebElement, U> executeOnePolling(final Predicate<WebElement> precondition,
-			final Function<WebElement, Polling<WebElement, U>> applier, final Duration timeout) {
+			final PollingFunction<WebElement, U> applier, final Duration timeout) {
 		try {
 			return value(new WebDriverWait(pilot.getDriver(), timeout.getSeconds()) //
 					.withTimeout(timeout) // set timeout in ms
@@ -97,7 +97,7 @@ public class SeleniumElement extends AbstractGuiComponent<WebElement, SeleniumEl
 		}
 	}
 
-	protected <U> U executeInteractiveAction(final Function<WebElement, Polling<WebElement, U>> applier) {
+	protected <U> U executeInteractiveAction(final PollingFunction<WebElement, U> applier) {
 		return waitActionSuccess(SeleniumElement::canInteract, applier, pilot.getDefaultActionTimeout(), throwError());
 	}
 

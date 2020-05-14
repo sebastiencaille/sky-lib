@@ -25,7 +25,7 @@ public class SwingTable extends AbstractSwingComponent<JTable> {
 
 	public void checkValue(final int row, final int column, final String value) {
 		withReport(c -> "check value '" + value + "' at " + row + '/' + column)
-				.waitStateSuccess(Polling.assertion(t -> Assert.assertEquals(value, t.getValueAt(row, column))));
+				.waitState(Polling.assertion(t -> Assert.assertEquals(value, t.getValueAt(row, column))));
 	}
 
 	public void editValueOnSelectedRow(final int column, final String value) {
@@ -36,7 +36,7 @@ public class SwingTable extends AbstractSwingComponent<JTable> {
 	}
 
 	public void checkValueOnSelectedRow(final int column, final String value) {
-		withReport(c -> "check value '" + value + "' of selected row, column " + column).waitStateSuccess(
+		withReport(c -> "check value '" + value + "' of selected row, column " + column).waitState(
 				Polling.assertion(t -> Assert.assertEquals(value, t.getValueAt(t.getSelectedRow(), column))));
 	}
 

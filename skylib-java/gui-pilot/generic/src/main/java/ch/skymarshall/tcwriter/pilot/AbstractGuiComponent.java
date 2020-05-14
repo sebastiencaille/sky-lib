@@ -9,6 +9,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import ch.skymarshall.tcwriter.pilot.Polling.PollingFunction;
+import ch.skymarshall.tcwriter.pilot.Polling.PollingResultFunction;
+
 public abstract class AbstractGuiComponent<T, C extends AbstractGuiComponent<T, C>> {
 
 	protected static class LoadedElement<TT> {
@@ -97,8 +100,8 @@ public abstract class AbstractGuiComponent<T, C extends AbstractGuiComponent<T, 
 	 * @param timeout
 	 * @return
 	 */
-	protected <U> U waitActionSuccess(final Predicate<T> precondition, final Function<T, Polling<T, U>> applier,
-			final Duration timeout, final Function<Polling<T, U>, U> onFail) {
+	protected <U> U waitActionSuccess(final Predicate<T> precondition, final PollingFunction<T, U> applier,
+			final Duration timeout, final PollingResultFunction<T, U> onFail) {
 
 		waitActionDelay();
 
@@ -123,10 +126,10 @@ public abstract class AbstractGuiComponent<T, C extends AbstractGuiComponent<T, 
 	 * @param applier      action applied on component
 	 * @param reporting    reporting, if action is successful
 	 * @param timeout
-	 * @return an optional on a response
+	 * @return a polling result, either successful or failure
 	 */
 	protected <U> Polling<T, U> waitActionSuccessLoop(final Predicate<T> precondition,
-			final Function<T, Polling<T, U>> applier, final Duration timeout) {
+			final PollingFunction<T, U> applier, final Duration timeout) {
 		final long startTime = System.currentTimeMillis();
 		Polling<T, U> lastResult = failure("No information");
 		while (System.currentTimeMillis() - startTime < timeout.toMillis()) {
@@ -151,8 +154,7 @@ public abstract class AbstractGuiComponent<T, C extends AbstractGuiComponent<T, 
 	 * @param applier
 	 * @return
 	 */
-	protected <U> Polling<T, U> executePolling(final Predicate<T> precondition,
-			final Function<T, Polling<T, U>> applier) {
+	protected <U> Polling<T, U> executePolling(final Predicate<T> precondition, final PollingFunction<T, U> applier) {
 		if (cachedElement == null) {
 			final T loadedElement = loadElement();
 			if (loadedElement != null) {

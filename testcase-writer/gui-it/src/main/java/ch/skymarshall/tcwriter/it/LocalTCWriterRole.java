@@ -72,7 +72,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	public void checkHumanReadable(final StepSelector selector, final String humanReadable) {
 		selector.select(guiPilot);
 		final SwingTable stepsTable = new SwingTable(guiPilot, "StepsTable");
-		stepsTable.withReport(c -> "Check human readable text: " + humanReadable).waitStateSuccess(assertion(t -> {
+		stepsTable.withReport(c -> "Check human readable text: " + humanReadable).waitState(assertion(t -> {
 			final Object value = ((StepsTableModel) t.getModel()).getHumanReadable(t.getSelectedRow());
 			Assert.assertEquals(humanReadable, value.toString());
 		}));
@@ -81,12 +81,12 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	@Override
 	public void updateParameter(final ParameterSelector selector, final ParameterValue value) {
 		new SwingTable(guiPilot, selector.getTableName()).withReport(c -> "Set parameter values:" + value)
-				.waitComponentEditSuccess(t -> {
+				.waitEditSuccess(t -> {
 					updateValue(t, value.getKeyValue1());
 					updateValue(t, value.getKeyValue2());
 					updateValue(t, value.getKeyValue3());
 					return Polling.isTrue();
-				}, "Setting " + value);
+				}, Polling.assertFail("Setting " + value));
 		applyStepEdition();
 	}
 

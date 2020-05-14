@@ -28,7 +28,7 @@ public class ModelExampleTest {
 		final SwingGuiPilot pilot = new SwingGuiPilot(view[0]);
 		pilot.setDefaultActionTimeout(Duration.ofSeconds(1));
 
-		listTable(pilot).waitStateSuccess(Polling.assertion(t -> {
+		listTable(pilot).waitState(Polling.assertion(t -> {
 			Assert.assertEquals(50, t.getColumn(TestObjectTableModel.Columns.A_SECOND_VALUE).getWidth());
 			Assert.assertEquals(t.getWidth() - 50, t.getColumn(TestObjectTableModel.Columns.A_FIRST_VALUE).getWidth());
 		}));

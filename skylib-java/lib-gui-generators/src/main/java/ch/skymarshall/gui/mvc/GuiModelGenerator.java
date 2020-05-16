@@ -19,32 +19,29 @@ import java.io.File;
 import java.io.IOException;
 
 import ch.skymarshall.annotations.GuiObject;
+import ch.skymarshall.generators.util.CodeGeneratorParams;
 import ch.skymarshall.util.helpers.ClassFinder;
 
 public class GuiModelGenerator {
 
 	public static void main(final String[] args) throws IOException {
-		System.out.println("Running in " + new File(".").getAbsolutePath()); // NOSONAR
-		final File target;
-		final String sourcePackage = args[0];
-		if (args.length > 1) {
-			target = new File(args[1]);
-		} else {
-			target = new File("src-generated");
-		}
-		target.mkdirs();
-		new GuiModelGenerator().process(sourcePackage, target);
+
+		final CodeGeneratorParams params = CodeGeneratorParams.parse(args);
+
+		new GuiModelGenerator().process(params);
 	}
 
-	private void process(final String sourcePackage, final File targetSrcFolder) throws IOException {
+	private void process(final CodeGeneratorParams params) throws IOException {
+		final File targetFolder = new File(params.getTargetFolder());
+		targetFolder.mkdirs();
 
-		final ClassFinder finder = ClassFinder.forApp();
+		final ClassFinder finder = ClassFinder.source(new File(params.getSourceFolder()));
 		finder.addExpectedAnnotation(GuiObject.class, ClassFinder.Policy.CLASS_ONLY);
-		finder.collect(sourcePackage);
+		finder.collect(params.getNamespaceFilter());
 		System.out.println(finder.getResult()); // NOSONAR
 
 		for (final Class<?> clazz : finder.getResult()) {
-			new ModelClassProcessor(clazz).process().writeToFolder(targetSrcFolder);
+			new ModelClassProcessor(clazz).process().writeToFolder(targetFolder);
 		}
 
 	}

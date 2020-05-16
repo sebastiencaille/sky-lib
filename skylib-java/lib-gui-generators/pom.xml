@@ -24,6 +24,10 @@
 			<groupId>ch.skymarshall</groupId>
 			<artifactId>lib-utils</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>ch.skymarshall</groupId>
+			<artifactId>lib-generator-utils</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>

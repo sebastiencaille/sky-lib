@@ -78,6 +78,11 @@
 				<artifactId>gui-pilot-selenium</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
+			<dependency>
+				<groupId>ch.skymarshall</groupId>
+				<artifactId>lib-generator-utils</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
 
 			<dependency>
 				<groupId>com.fasterxml.jackson</groupId>
@@ -116,5 +121,6 @@
 		<module>lib-gui-validation</module>
 		<module>gui-pilot</module>
 		<module>lib-gui-examples</module>
+		<module>lib-generator-utils</module>
 	</modules>
 </project>

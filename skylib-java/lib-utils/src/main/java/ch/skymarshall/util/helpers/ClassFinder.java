@@ -15,11 +15,14 @@
  ******************************************************************************/
 package ch.skymarshall.util.helpers;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -67,6 +70,18 @@ public class ClassFinder {
 
 	public static ClassFinder forApp() {
 		return new ClassFinder(ClassLoaderHelper.appClassPath());
+	}
+
+	public static ClassFinder source(final File... sourceFolder) {
+
+		return new ClassFinder(Arrays.stream(sourceFolder).map(f -> {
+			try {
+				return f.toURI().toURL();
+			} catch (final MalformedURLException e) {
+				throw new IllegalStateException("Unable process folder " + sourceFolder, e);
+			}
+		}).collect(Collectors.toList()).toArray(new URL[0]));
+
 	}
 
 	public ClassFinder(final URL[] urls) {

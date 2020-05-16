@@ -30,6 +30,8 @@ public interface IListModelListener<T> extends EventListener {
 
 	void mutates();
 
+	void mutated();
+
 	void valuesSet(ListEvent<T> event);
 
 	void valuesCleared(ListEvent<T> event);

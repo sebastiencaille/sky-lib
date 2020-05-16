@@ -22,6 +22,11 @@ public class ListModelAdapter<T> implements IListModelListener<T> {
 	}
 
 	@Override
+	public void mutated() {
+		// no op
+	}
+
+	@Override
 	public void valuesSet(final ListEvent<T> event) {
 		// no op
 	}

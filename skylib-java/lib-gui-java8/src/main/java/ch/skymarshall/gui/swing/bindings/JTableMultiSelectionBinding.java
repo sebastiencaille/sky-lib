@@ -69,8 +69,6 @@ public class JTableMultiSelectionBinding<T> extends ComponentBindingAdapter<List
 				componentlink.reloadComponentValue();
 			} else if (event.getType() == ListModelTableModel.TABLE_ABOUT_TO_CHANGE) {
 				modelChange = true;
-			} else if (!modelChange) {
-				updateSelection(componentlink);
 			}
 		});
 

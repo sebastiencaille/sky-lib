@@ -123,13 +123,13 @@ public class PolicyTableColumnModel<C extends Enum<C>> extends DefaultTableColum
 				.get(PercentOfAvailableSpaceColumn.class);
 		int remainingWidth = unallocatedWidth;
 
-		if (remainingWidth < 0 && !remainingPercentWidthCols.isEmpty()) {
+		if (remainingWidth < 0 && remainingPercentWidthCols != null && !remainingPercentWidthCols.isEmpty()) {
 			final int perColumnCorrection = remainingWidth / remainingPercentWidthCols.size() - 1;
 			remainingWidth -= perColumnCorrection * remainingPercentWidthCols.size();
 			remainingPercentWidthCols.forEach(col -> col.setComputedWidth(col.getWidth() + perColumnCorrection));
 		}
 
-		if (remainingWidth > 0 && !remainingPercentWidthCols.isEmpty()) {
+		if (remainingWidth > 0 && remainingPercentWidthCols != null && !remainingPercentWidthCols.isEmpty()) {
 			final int percentSum = remainingPercentWidthCols.stream()
 					.collect(Collectors.summingInt(c -> ((PercentOfAvailableSpaceColumn<C>) c).getPercent()));
 			if (percentSum == 100) {

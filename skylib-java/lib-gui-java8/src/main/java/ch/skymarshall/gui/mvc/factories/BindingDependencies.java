@@ -97,6 +97,11 @@ public final class BindingDependencies {
 		}
 
 		@Override
+		public void mutated() {
+			controller.attach();
+		}
+
+		@Override
 		public void valuesSet(final ListEvent<T> event) {
 			controller.attach();
 		}

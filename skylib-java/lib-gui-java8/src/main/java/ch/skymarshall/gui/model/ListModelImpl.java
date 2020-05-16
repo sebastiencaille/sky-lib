@@ -156,6 +156,11 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 		}
 
 		@Override
+		public void mutated() {
+			// noop
+		}
+
+		@Override
 		public void valuesSet(final ListEvent<T> event) {
 			setValues(event.getObjects());
 		}
@@ -271,6 +276,12 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 		}
 	}
 
+	private void fireMutated() {
+		for (final IListModelListener<T> listener : listeners()) {
+			listener.mutated();
+		}
+	}
+
 	protected void fireValuesSet(final List<T> set) {
 		final ListEvent<T> event = new ListEvent<>(this, set);
 		for (final IListModelListener<T> listener : listeners()) {
@@ -360,6 +371,7 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 		fireMutating();
 		rebuildModel();
 		fireViewUpdated();
+		fireMutated();
 	}
 
 	/**

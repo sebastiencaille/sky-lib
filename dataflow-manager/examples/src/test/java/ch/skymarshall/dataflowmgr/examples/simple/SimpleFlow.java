@@ -12,15 +12,15 @@ public class SimpleFlow extends AbstractFlow {
 		ch.skymarshall.dataflowmgr.examples.simple.dto.MyData simpleService_init = simpleService.init(inputDataPoint);
 		
 		// ------------------------- simpleService.enhance -> enhanced -------------------------
-		boolean activated_a31cfec0_41e1_403e_a01d_53c98f1c49b8 = true;
-		if (activated_a31cfec0_41e1_403e_a01d_53c98f1c49b8) {
-		    activated_a31cfec0_41e1_403e_a01d_53c98f1c49b8 &= simpleServiceConditions.isEnhanceEnabled(simpleService_init);
+		boolean activated_728541a9_5503_4c37_9624_7c0bc58293a8 = true;
+		if (activated_728541a9_5503_4c37_9624_7c0bc58293a8) {
+		    activated_728541a9_5503_4c37_9624_7c0bc58293a8 &= simpleServiceConditions.isEnhanceEnabled(simpleService_init);
 		}
 		ch.skymarshall.dataflowmgr.examples.simple.dto.MyData enhanced = null;
 		boolean executed_enhanced = false;
-		if (activated_a31cfec0_41e1_403e_a01d_53c98f1c49b8)  {
-		    String simpleExternalAdapter_enhancementa31cfec0_41e1_403e_a01d_53c98f1c49b8 = simpleExternalAdapter.enhancement(simpleService_init);
-		    enhanced = simpleService.enhance(simpleService_init, simpleExternalAdapter_enhancementa31cfec0_41e1_403e_a01d_53c98f1c49b8);
+		if (activated_728541a9_5503_4c37_9624_7c0bc58293a8)  {
+		    String simpleExternalAdapter_enhancement728541a9_5503_4c37_9624_7c0bc58293a8 = simpleExternalAdapter.enhancement(simpleService_init);
+		    enhanced = simpleService.enhance(simpleService_init, simpleExternalAdapter_enhancement728541a9_5503_4c37_9624_7c0bc58293a8);
 		    executed_enhanced = true;
 		}
 		

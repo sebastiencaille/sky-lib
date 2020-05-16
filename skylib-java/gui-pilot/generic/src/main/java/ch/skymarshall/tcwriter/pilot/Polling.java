@@ -8,14 +8,14 @@ import java.util.function.Supplier;
 import ch.skymarshall.tcwriter.pilot.AbstractGuiComponent.LoadedElement;
 
 public class Polling<TT, U> {
-	public final U value;
+	public final U polledValue;
 	public final Throwable failureReason;
 	private GuiPilot pilot;
 	private String componentDescription;
 	private LoadedElement<TT> loadedElement;
 
-	public Polling(final U value, final Throwable failureReason) {
-		this.value = value;
+	public Polling(final U polledValue, final Throwable failureReason) {
+		this.polledValue = polledValue;
 		this.failureReason = failureReason;
 	}
 
@@ -47,14 +47,14 @@ public class Polling<TT, U> {
 
 	public U orElse(final U orElse) {
 		if (success()) {
-			return value;
+			return polledValue;
 		}
 		return orElse;
 	}
 
 	public U orElseGet(final Supplier<U> orElse) {
 		if (success()) {
-			return value;
+			return polledValue;
 		}
 		return orElse.get();
 	}

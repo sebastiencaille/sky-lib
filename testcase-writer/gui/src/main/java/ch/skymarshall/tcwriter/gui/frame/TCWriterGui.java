@@ -135,8 +135,9 @@ public class TCWriterGui extends JFrame {
 		bottomSplit.setDividerLocation(height / 2);
 
 		this.getContentPane().add(bottomSplit, BorderLayout.CENTER);
-
-		LOGGER.fine(screenBuildingReport.toString());
+		if (LOGGER.isLoggable(Level.FINE)) {
+			LOGGER.fine(screenBuildingReport.toString());
+		}
 
 		this.validate();
 		this.pack();

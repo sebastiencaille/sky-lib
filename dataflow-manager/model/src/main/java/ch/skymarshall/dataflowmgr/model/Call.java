@@ -6,7 +6,7 @@ import java.util.UUID;
 public class Call extends WithId {
 
 	private final String name;
-	private final String call;
+	private final String implCall;
 	private final LinkedHashMap<String, String> parameters;
 	private final String returnType;
 
@@ -14,7 +14,7 @@ public class Call extends WithId {
 			final String returnType) {
 		super(UUID.randomUUID());
 		this.name = name;
-		this.call = methodName;
+		this.implCall = methodName;
 		this.parameters = parameters;
 		this.returnType = returnType;
 	}
@@ -24,7 +24,7 @@ public class Call extends WithId {
 	}
 
 	public String getCall() {
-		return call;
+		return implCall;
 	}
 
 	public String getReturnType() {

@@ -78,7 +78,7 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 	}
 
 	@Override
-	protected void process(final Binding binding, final String inputDataPoint, final String inputDataType,
+	protected void process(final BindingContext context, final String inputDataPoint, final String inputDataType,
 			final Processor processor, final String outputDataPoint) throws IOException {
 
 		generator.append("// ------------------------- ").append(processor.getCall()).append(" -> ")
@@ -88,39 +88,18 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 		// ----------------
 		final boolean conditionalInputDataPoint = isConditional(inputDataPoint);
 
-		final List<ExternalAdapter> adapters = binding.getAdapters();
-		final Set<ExternalAdapter> adaptersNotDeclared = new HashSet<>(adapters);
-
-		final List<Condition> activators = BindingRule.getActivators(binding.getRules()).collect(Collectors.toList());
-
-		final Set<String> defaultBinding = BindingRule.getAll(binding.getRules(), BindingRule.Type.EXCLUSION)
+		final Set<String> defaultBinding = BindingRule.getAll(context.binding.getRules(), BindingRule.Type.EXCLUSION)
 				.map(r -> r.get(Binding.class).outputName()).collect(Collectors.toSet());
-		final boolean conditionalExec = conditionalInputDataPoint || !activators.isEmpty() || !defaultBinding.isEmpty();
+		final boolean isConditionalExec = conditionalInputDataPoint || !context.activators.isEmpty()
+				|| !defaultBinding.isEmpty();
 
-		final List<BindingImplVariable> availableVars = new ArrayList<>();
-		availableVars.add(new BindingImplVariable(inputDataPoint, inputDataType, inputDataPoint));
+		final List<BindingImplVariable> declaredVars = new ArrayList<>();
+		declaredVars.add(new BindingImplVariable(inputDataPoint, inputDataType, inputDataPoint));
 
 		final boolean isExit = Flow.EXIT_PROCESSOR.equals(outputDataPoint);
 
-		// Add activators
-		// -------------------------
-		if (!activators.isEmpty()) {
-			generator.append("boolean ").append(activatedVariable(binding)).append(" = true;").newLine();
-			visitActivators(binding, activators, availableVars, adaptersNotDeclared);
-		}
-
-		// Declare output DP
-		// -------------------------
-		if (!isExit && !definedDataPoints.contains(outputDataPoint)) {
-			definedDataPoints.add(outputDataPoint);
-			appendNewVariable(outputDataPoint, processor);
-			if (conditionalExec) {
-				generator.append(" = null;").newLine();
-				generator.append("boolean executed_").append(outputDataPoint).append(" = false;").newLine();
-			} else {
-				generator.append(" = ");
-			}
-		}
+		visitActivators(context, declaredVars);
+		generateDataPoint(processor, outputDataPoint, isConditionalExec, isExit);
 
 		// Conditional Execution
 		// -------------------------
@@ -129,14 +108,23 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 					.append(defaultBinding.stream().map(x -> x + " == null").collect(Collectors.joining(" && ")))
 					.append(";").newLine();
 		}
+		addExecution(context, declaredVars, inputDataPoint, conditionalInputDataPoint, processor, outputDataPoint,
+				defaultBinding, isConditionalExec, isExit);
+		generator.newLine();
+	}
+
+	private void addExecution(final BindingContext context, final List<BindingImplVariable> availableVars,
+			final String inputDataPoint, final boolean conditionalInputDataPoint, final Processor processor,
+			final String outputDataPoint, final Set<String> defaultBinding, final boolean conditionalExec,
+			final boolean isExit) throws IOException {
 		if (conditionalExec) {
 			setConditional(outputDataPoint);
 			final List<String> conditions = new ArrayList<>();
 			if (conditionalInputDataPoint) {
 				conditions.add("executed_" + inputDataPoint);
 			}
-			if (!activators.isEmpty()) {
-				conditions.add(activatedVariable(binding));
+			if (!context.activators.isEmpty()) {
+				conditions.add(activatedVariableNameOf(context.binding));
 			}
 			if (!defaultBinding.isEmpty()) {
 				conditions.add("notExcl_" + outputDataPoint);
@@ -146,7 +134,7 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 		}
 
 		// Execution
-		visitExternalAdapters(adaptersNotDeclared, binding, availableVars);
+		visitExternalAdapters(context, availableVars, context.unprocessedAdapters(context.adapters));
 		if (!isExit) {
 			generator.appendIndent();
 			if (conditionalExec) {
@@ -160,32 +148,55 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 		if (conditionalExec) {
 			generator.closeBlock();
 		}
-		generator.newLine();
 	}
 
-	private void visitActivators(final Binding binding, final List<Condition> activators,
-			final List<BindingImplVariable> availableVars, final Set<ExternalAdapter> adaptersNotDeclared)
+	private void generateDataPoint(final Processor processor, final String outputDataPoint,
+			final boolean conditionalExec, final boolean isExit) throws IOException {
+		if (!isExit && !definedDataPoints.contains(outputDataPoint)) {
+			definedDataPoints.add(outputDataPoint);
+			appendNewVariable(outputDataPoint, processor);
+			if (conditionalExec) {
+				generator.append(" = null;").newLine();
+				generator.append("boolean executed_").append(outputDataPoint).append(" = false;").newLine();
+			} else {
+				generator.append(" = ");
+			}
+		}
+	}
+
+	/**
+	 * Generates the code calling a list of activators
+	 *
+	 * @param context
+	 * @param availableVars
+	 * @throws IOException
+	 */
+	private void visitActivators(final BindingContext context, final List<BindingImplVariable> availableVars)
 			throws IOException {
-		for (final Condition activator : activators) {
-			generator.append("if (").append(activatedVariable(binding)).append(")");
+		if (context.activators.isEmpty()) {
+			return;
+		}
+		generator.append("boolean ").append(activatedVariableNameOf(context.binding)).append(" = true;").newLine();
+		for (final Condition activator : context.activators) {
+			generator.append("if (").append(activatedVariableNameOf(context.binding)).append(")");
 			generator.openBlock();
 
-			final Set<ExternalAdapter> requiredByActivator = listAdaptersRequiredByActivator(activator,
-					adaptersNotDeclared);
-			visitExternalAdapters(requiredByActivator, binding, availableVars);
-			adaptersNotDeclared.removeAll(requiredByActivator);
+			final Set<ExternalAdapter> unprocessed = context.unprocessedAdapters(listAdapters(context, activator));
+			visitExternalAdapters(context, availableVars, unprocessed);
+			context.processedAdapters.addAll(unprocessed);
 
-			generator.appendIndented(activatedVariable(binding)).append(" &= ");
+			generator.appendIndented(activatedVariableNameOf(context.binding)).append(" &= ");
 			appendCall(activator, availableVars);
 
 			generator.closeBlock();
 		}
 	}
 
-	private void visitExternalAdapters(final Set<ExternalAdapter> requiredByActivator, final Binding binding,
-			final List<BindingImplVariable> availableVars) throws IOException {
-		for (final ExternalAdapter adapter : requiredByActivator) {
-			final BindingImplVariable parameter = new BindingImplVariable(adapter, variableNameOf(binding, adapter));
+	private void visitExternalAdapters(final BindingContext context, final List<BindingImplVariable> availableVars,
+			final Set<ExternalAdapter> externalAdapter) throws IOException {
+		for (final ExternalAdapter adapter : externalAdapter) {
+			final BindingImplVariable parameter = new BindingImplVariable(adapter,
+					variableNameOf(context.binding, adapter));
 			appendNewVarAndCall(parameter.variable, adapter, availableVars);
 			availableVars.add(parameter);
 		}
@@ -214,8 +225,12 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 		throw new IllegalStateException("No parameter found for " + paramName + "/" + paramType);
 	}
 
-	private String activatedVariable(final Binding binding) {
+	private String activatedVariableNameOf(final Binding binding) {
 		return "activated_" + toVariable(binding);
+	}
+
+	private String variableNameOf(final Binding binding, final Call call) {
+		return call.getCall().replace('.', '_') + toVariable(binding);
 	}
 
 	private String toVariable(final WithId withId) {
@@ -228,10 +243,6 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 			returnType = returnType.substring("java.lang".length() + 1);
 		}
 		generator.appendIndented(returnType).append(" ").append(variableName);
-	}
-
-	private String variableNameOf(final Binding binding, final Call call) {
-		return call.getCall().replace('.', '_') + toVariable(binding);
 	}
 
 	private void appendCall(final Call call, final List<BindingImplVariable> availableVars) throws IOException {

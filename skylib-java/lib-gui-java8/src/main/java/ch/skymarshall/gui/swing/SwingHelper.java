@@ -21,10 +21,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import javax.swing.ImageIcon;
 
 public interface SwingHelper {
+
+	public static ImageIcon iconFromStream(final Supplier<InputStream> inSupplier) throws IOException {
+		try (InputStream in = inSupplier.get()) {
+			return iconFromStream(in);
+		}
+	}
 
 	public static ImageIcon iconFromStream(final InputStream in) throws IOException {
 		if (in == null) {

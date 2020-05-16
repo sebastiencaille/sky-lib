@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import ch.skymarshall.dataflowmgr.generator.AbstractFlowVisitor;
 import ch.skymarshall.dataflowmgr.model.Binding;
@@ -87,22 +86,18 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 	}
 
 	@Override
-	protected void process(final Binding binding, final String inputDataPoint, final String inputDataType,
+	protected void process(final BindingContext context, final String inputDataPoint, final String inputDataType,
 			final Processor processor, final String outputDataPoint) {
 		// Create data point
 		if (!graph.nodes.containsKey(outputDataPoint)) {
 			addDataPoint(outputDataPoint);
 		}
 
-		final String processorNode = addProcessor(binding, processor);
+		final String processorNode = addProcessor(context.binding, processor);
 
 		final Optional<ConditionalBindingGroup> conditionGroupOpt = BindingRule
-				.get(binding.getRules(), BindingRule.Type.CONDITIONAL).map(r -> r.get(ConditionalBindingGroup.class));
-
-		final List<ExternalAdapter> adapters = binding.getAdapters();
-		final Set<ExternalAdapter> adaptersNotDeclared = new HashSet<>(adapters);
-
-		final List<Condition> activators = BindingRule.getActivators(binding.getRules()).collect(Collectors.toList());
+				.get(context.binding.getRules(), BindingRule.Type.CONDITIONAL)
+				.map(r -> r.get(ConditionalBindingGroup.class));
 
 		// Add condition
 		String linkFrom;
@@ -118,19 +113,18 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 			linkFrom = inputDataPoint;
 		}
 
-		if (conditionGroupOpt.isPresent() && activators.isEmpty()) {
-			activators.add(new Condition("Default", "Default", new LinkedHashMap<>()));
+		if (conditionGroupOpt.isPresent() && context.activators.isEmpty()) {
+			context.activators.add(new Condition("Default", "Default", new LinkedHashMap<>()));
 		}
-		for (final Condition activator : activators) {
+		for (final Condition activator : context.activators) {
 			final String activatorNode = addCondition(activator);
-			final Set<ExternalAdapter> adaptersOfActivator = listAdaptersRequiredByActivator(activator,
-					adaptersNotDeclared);
-			addAdapters(adaptersOfActivator, linkFrom, activatorNode);
-			adaptersNotDeclared.removeAll(adaptersOfActivator);
+			final Set<ExternalAdapter> missingAdapters = context.unprocessedAdapters(listAdapters(context, activator));
+			addAdapters(missingAdapters, linkFrom, activatorNode);
+			context.processedAdapters.addAll(missingAdapters);
 			linkFrom = activatorNode;
 		}
 
-		addAdapters(adaptersNotDeclared, linkFrom, processorNode);
+		addAdapters(context.processedAdapters, linkFrom, processorNode);
 
 		graph.links.add(new Link(processorNode, outputDataPoint));
 	}

@@ -8,7 +8,7 @@ import java.util.function.BiFunction;
 public class Dictionary {
 
 	public static class Calls<T extends Call> {
-		private final Map<String, T> calls = new HashMap<>();
+		private final Map<String, T> callsName = new HashMap<>();
 		private final String kind;
 		private final BiFunction<T, String, T> derivateFunc;
 
@@ -18,18 +18,18 @@ public class Dictionary {
 		}
 
 		public void add(final T call) {
-			calls.put(call.getName(), call);
+			callsName.put(call.getName(), call);
 		}
 
 		public T get(final String name) {
-			return calls.computeIfAbsent(name, n -> {
+			return callsName.computeIfAbsent(name, n -> {
 				throw new InvalidParameterException("No " + kind + " found: " + n);
 			});
 		}
 
 		public Calls<T> map(final String from, final String to) {
 			final Calls<T> derivates = new Calls<>(kind, derivateFunc);
-			calls.entrySet().stream().filter(kv -> kv.getKey().startsWith(from + ".")).forEach(kv -> derivates.calls
+			callsName.entrySet().stream().filter(kv -> kv.getKey().startsWith(from + ".")).forEach(kv -> derivates.callsName
 					.put(kv.getKey().substring(from.length() + 1), derivateFunc.apply(kv.getValue(), to)));
 			return derivates;
 		}

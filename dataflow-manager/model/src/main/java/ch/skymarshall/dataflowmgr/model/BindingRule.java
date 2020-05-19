@@ -1,7 +1,6 @@
 package ch.skymarshall.dataflowmgr.model;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -57,12 +56,12 @@ public class BindingRule extends WithId {
 		return new BindingRule(Type.CONDITIONAL, condition);
 	}
 
-	public static Optional<BindingRule> get(final Collection<BindingRule> rules, final Type type) {
-		return rules.stream().filter(r -> r.ruleType == type).findAny();
-	}
-
 	public static Stream<BindingRule> getAll(final Collection<BindingRule> rules, final Type type) {
 		return rules.stream().filter(r -> r.ruleType == type);
+	}
+
+	public static <T> Stream<T> getAll(final Collection<BindingRule> rules, final Type type, final Class<T> cast) {
+		return rules.stream().filter(r -> r.ruleType == type).map(r -> r.get(cast));
 	}
 
 }

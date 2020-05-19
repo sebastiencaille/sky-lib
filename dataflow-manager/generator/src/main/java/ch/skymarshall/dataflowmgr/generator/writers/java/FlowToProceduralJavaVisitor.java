@@ -31,17 +31,20 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 		private final String variable;
 
 		public BindingImplVariable(final String parameterName, final String parameterType, final String variable) {
-			super();
 			this.parameterName = parameterName;
 			this.parameterType = parameterType;
 			this.variable = variable;
 		}
 
-		public BindingImplVariable(final Call call, final String variable) {
-			super();
-			this.parameterName = call.getName().substring(0, call.getName().lastIndexOf('.') + 1);
+		public BindingImplVariable(final Call<?> call, final String variable) {
+			this.parameterName = call.getName().substring(call.getName().lastIndexOf('.') + 1);
 			this.parameterType = call.getReturnType();
 			this.variable = variable;
+		}
+
+		@Override
+		public String toString() {
+			return parameterName + ": " + parameterType;
 		}
 
 	}
@@ -56,6 +59,8 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 
 	private final Set<String> definedDataPoints = new HashSet<>();
 
+	private final List<BindingImplVariable> availableVars = new ArrayList<>();
+
 	public FlowToProceduralJavaVisitor(final Flow flow, final String packageName, final Template template) {
 		super(flow);
 		this.packageName = packageName;
@@ -64,6 +69,8 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 	}
 
 	public Template process() throws IOException {
+
+		availableVars.add(new BindingImplVariable(Flow.ENTRY_POINT, flow.getEntryPointType(), Flow.ENTRY_POINT));
 
 		super.processFlow();
 
@@ -78,89 +85,86 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 	}
 
 	@Override
-	protected void process(final BindingContext context, final String inputDataPoint, final String inputDataType,
-			final Processor processor, final String outputDataPoint) throws IOException {
+	protected void process(final BindingContext context, final Processor processor) throws IOException {
 
-		generator.append("// ------------------------- ").append(processor.getCall()).append(" -> ")
-				.append(outputDataPoint).append(" -------------------------").newLine();
+		generator.append("// ------------------------- ").append(context.inputDataPoint).append(" -> ")
+				.append(processor.getCall()).append(" -> ").append(context.outputDataPoint)
+				.append(" -------------------------").newLine();
+
+		availableVars.add(
+				new BindingImplVariable(context.outputDataPoint, processor.getReturnType(), context.outputDataPoint));
 
 		// Init all data
 		// ----------------
-		final boolean conditionalInputDataPoint = isConditional(inputDataPoint);
+		final boolean isConditionalInputDataPoint = isConditional(context.inputDataPoint);
 
-		final Set<String> defaultBinding = BindingRule.getAll(context.binding.getRules(), BindingRule.Type.EXCLUSION)
-				.map(r -> r.get(Binding.class).outputName()).collect(Collectors.toSet());
-		final boolean isConditionalExec = conditionalInputDataPoint || !context.activators.isEmpty()
-				|| !defaultBinding.isEmpty();
+		final Set<String> exclusions = BindingRule
+				.getAll(context.binding.getRules(), BindingRule.Type.EXCLUSION, Binding.class).map(Binding::toDataPoint)
+				.collect(Collectors.toSet());
+		final boolean isConditionalExec = isConditionalInputDataPoint || !context.activators.isEmpty()
+				|| !exclusions.isEmpty();
+		final boolean isExit = Flow.EXIT_PROCESSOR.equals(context.outputDataPoint);
 
-		final List<BindingImplVariable> declaredVars = new ArrayList<>();
-		declaredVars.add(new BindingImplVariable(inputDataPoint, inputDataType, inputDataPoint));
-
-		final boolean isExit = Flow.EXIT_PROCESSOR.equals(outputDataPoint);
-
-		visitActivators(context, declaredVars);
-		generateDataPoint(processor, outputDataPoint, isConditionalExec, isExit);
+		visitActivators(context);
+		if (!isExit && !definedDataPoints.contains(context.outputDataPoint)) {
+			generateDataPoint(processor, context.outputDataPoint, isConditionalExec);
+		}
 
 		// Conditional Execution
 		// -------------------------
-		if (!defaultBinding.isEmpty()) {
-			generator.append("boolean notExcl_").append(outputDataPoint).append(" = ")
-					.append(defaultBinding.stream().map(x -> x + " == null").collect(Collectors.joining(" && ")))
-					.append(";").newLine();
+		if (!exclusions.isEmpty()) {
+			generator.addVariable("boolean", executeDefaultVarNameOf(context),
+					exclusions.stream().map(x -> "!" + executedVarNameOf(x)).collect(Collectors.joining(" && ")))
+					.newLine();
 		}
-		addExecution(context, declaredVars, inputDataPoint, conditionalInputDataPoint, processor, outputDataPoint,
-				defaultBinding, isConditionalExec, isExit);
+		addExecution(context, processor, exclusions, isConditionalInputDataPoint, isConditionalExec, isExit);
 		generator.newLine();
 	}
 
-	private void addExecution(final BindingContext context, final List<BindingImplVariable> availableVars,
-			final String inputDataPoint, final boolean conditionalInputDataPoint, final Processor processor,
-			final String outputDataPoint, final Set<String> defaultBinding, final boolean conditionalExec,
-			final boolean isExit) throws IOException {
-		if (conditionalExec) {
-			setConditional(outputDataPoint);
+	private void addExecution(final BindingContext context, final Processor processor, final Set<String> exclusions,
+			final boolean conditionalInputDataPoint, final boolean isConditionalExec, final boolean isExit)
+			throws IOException {
+		if (isConditionalExec) {
+			setConditional(context.outputDataPoint);
 			final List<String> conditions = new ArrayList<>();
 			if (conditionalInputDataPoint) {
-				conditions.add("executed_" + inputDataPoint);
+				conditions.add(executedVarNameOf(context.inputDataPoint));
 			}
 			if (!context.activators.isEmpty()) {
-				conditions.add(activatedVariableNameOf(context.binding));
+				conditions.add(activatedVarNameOf(context.binding));
 			}
-			if (!defaultBinding.isEmpty()) {
-				conditions.add("notExcl_" + outputDataPoint);
+			if (!exclusions.isEmpty()) {
+				conditions.add(executeDefaultVarNameOf(context));
 			}
-			generator.append("if (").append(String.join(" && ", conditions)).append(") ");
-			generator.openBlock();
+			generator.openIf(String.join(" && ", conditions));
 		}
 
 		// Execution
-		visitExternalAdapters(context, availableVars, context.unprocessedAdapters(context.adapters));
+		visitExternalAdapters(context, context.unprocessedAdapters(context.adapters));
 		if (!isExit) {
 			generator.appendIndent();
-			if (conditionalExec) {
-				generator.append(outputDataPoint).append(" = ");
+			if (isConditionalExec) {
+				generator.append(context.outputDataPoint).append(" = ");
 			}
-			appendCall(processor, availableVars);
-			if (conditionalExec) {
-				generator.appendIndented("executed_").append(outputDataPoint).append(" = true;").newLine();
+			appendCall(context, processor);
+			if (isConditionalExec) {
+				generator.appendIndented(executedVarNameOf(context.outputDataPoint)).append(" = true").eos();
 			}
 		}
-		if (conditionalExec) {
+		if (isConditionalExec) {
 			generator.closeBlock();
 		}
 	}
 
 	private void generateDataPoint(final Processor processor, final String outputDataPoint,
-			final boolean conditionalExec, final boolean isExit) throws IOException {
-		if (!isExit && !definedDataPoints.contains(outputDataPoint)) {
-			definedDataPoints.add(outputDataPoint);
-			appendNewVariable(outputDataPoint, processor);
-			if (conditionalExec) {
-				generator.append(" = null;").newLine();
-				generator.append("boolean executed_").append(outputDataPoint).append(" = false;").newLine();
-			} else {
-				generator.append(" = ");
-			}
+			final boolean conditionalExec) throws IOException {
+		definedDataPoints.add(outputDataPoint);
+		appendNewVariable(outputDataPoint, processor);
+		if (conditionalExec) {
+			generator.append(" = null").eos();
+			generator.addVariable("boolean", executedVarNameOf(outputDataPoint), "false");
+		} else {
+			generator.append(" = ");
 		}
 	}
 
@@ -171,65 +175,73 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 	 * @param availableVars
 	 * @throws IOException
 	 */
-	private void visitActivators(final BindingContext context, final List<BindingImplVariable> availableVars)
-			throws IOException {
+	private void visitActivators(final BindingContext context) throws IOException {
 		if (context.activators.isEmpty()) {
 			return;
 		}
-		generator.append("boolean ").append(activatedVariableNameOf(context.binding)).append(" = true;").newLine();
+		generator.addVariable("boolean", activatedVarNameOf(context.binding), "true");
 		for (final Condition activator : context.activators) {
-			generator.append("if (").append(activatedVariableNameOf(context.binding)).append(")");
-			generator.openBlock();
+			generator.openIf(activatedVarNameOf(context.binding));
 
 			final Set<ExternalAdapter> unprocessed = context.unprocessedAdapters(listAdapters(context, activator));
-			visitExternalAdapters(context, availableVars, unprocessed);
+			visitExternalAdapters(context, unprocessed);
 			context.processedAdapters.addAll(unprocessed);
 
-			generator.appendIndented(activatedVariableNameOf(context.binding)).append(" &= ");
-			appendCall(activator, availableVars);
+			generator.appendIndented(activatedVarNameOf(context.binding)).append(" &= ");
+			appendCall(context, activator);
 
 			generator.closeBlock();
 		}
 	}
 
-	private void visitExternalAdapters(final BindingContext context, final List<BindingImplVariable> availableVars,
-			final Set<ExternalAdapter> externalAdapter) throws IOException {
+	private void visitExternalAdapters(final BindingContext context, final Set<ExternalAdapter> externalAdapter)
+			throws IOException {
 		for (final ExternalAdapter adapter : externalAdapter) {
-			final BindingImplVariable parameter = new BindingImplVariable(adapter,
-					variableNameOf(context.binding, adapter));
-			appendNewVarAndCall(parameter.variable, adapter, availableVars);
+			final BindingImplVariable parameter = new BindingImplVariable(adapter, varNameOf(context.binding, adapter));
+			appendNewVarAndCall(context, parameter.variable, adapter);
 			availableVars.add(parameter);
 		}
 	}
 
-	private List<String> guessParameters(final Call call, final List<BindingImplVariable> availableVars) {
-		return call.getParameters().entrySet().stream()
-				.map(kv -> guessParameter(kv.getKey(), kv.getValue(), availableVars)).collect(Collectors.toList());
+	private List<String> guessParameters(final BindingContext context, final Call<?> call) {
+		return call.getParameters().entrySet().stream().map(kv -> guessParameter(context, kv.getKey(), kv.getValue()))
+				.collect(Collectors.toList());
 	}
 
-	private String guessParameter(final String paramName, final String paramType,
-			final List<BindingImplVariable> availableVars) {
+	private String guessParameter(final BindingContext context, final String paramName, final String paramType) {
+		if (paramType.equals(context.inputDataType)) {
+			return availableVars.stream().filter(a -> a.parameterName.equals(context.inputDataPoint)).findFirst()
+					.map(v -> v.variable).get();
+		}
 		List<BindingImplVariable> matches = availableVars.stream().filter(a -> a.parameterName.equals(paramName))
 				.collect(Collectors.toList());
 		if (matches.size() > 1) {
-			throw new IllegalArgumentException("Too many possible parameters found for " + paramName);
+			throw new IllegalArgumentException("Too many possible parameters found for " + paramName + ": " + matches);
 		} else if (matches.size() == 1) {
 			return matches.get(0).variable;
 		}
 		matches = availableVars.stream().filter(a -> a.parameterType.equals(paramType)).collect(Collectors.toList());
 		if (matches.size() > 1) {
-			throw new IllegalArgumentException("Too many possible parameters found for " + paramType);
+			throw new IllegalArgumentException("Too many possible parameters found for " + paramType + ": " + matches);
 		} else if (matches.size() == 1) {
 			return matches.get(0).variable;
 		}
 		throw new IllegalStateException("No parameter found for " + paramName + "/" + paramType);
 	}
 
-	private String activatedVariableNameOf(final Binding binding) {
+	private String activatedVarNameOf(final Binding binding) {
 		return "activated_" + toVariable(binding);
 	}
 
-	private String variableNameOf(final Binding binding, final Call call) {
+	private String executedVarNameOf(final String dataPoint) {
+		return "executed_" + dataPoint;
+	}
+
+	private String executeDefaultVarNameOf(final BindingContext context) {
+		return "executeDefault_" + context.outputDataPoint;
+	}
+
+	private String varNameOf(final Binding binding, final Call<?> call) {
 		return call.getCall().replace('.', '_') + toVariable(binding);
 	}
 
@@ -237,7 +249,7 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 		return withId.uuid().toString().replace('-', '_');
 	}
 
-	private void appendNewVariable(final String variableName, final Call call) throws IOException {
+	private void appendNewVariable(final String variableName, final Call<?> call) throws IOException {
 		String returnType = call.getReturnType();
 		if (returnType.startsWith("java.lang")) {
 			returnType = returnType.substring("java.lang".length() + 1);
@@ -245,20 +257,20 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 		generator.appendIndented(returnType).append(" ").append(variableName);
 	}
 
-	private void appendCall(final Call call, final List<BindingImplVariable> availableVars) throws IOException {
-		final String parameters = String.join(", ", guessParameters(call, availableVars));
-		generator.append(call.getCall()).append("(").append(parameters).append(");").newLine();
+	private void appendCall(final BindingContext context, final Call<?> call) throws IOException {
+		final String parameters = String.join(", ", guessParameters(context, call));
+		generator.addMethodCall("this", call.getCall(), parameters).eos();
 	}
 
-	private void appendNewVarAndCall(final String variableName, final Call call,
-			final List<BindingImplVariable> availableVars) throws IOException {
+	private void appendNewVarAndCall(final BindingContext context, final String variableName, final Call<?> call)
+			throws IOException {
 		if (call.hasReturnType()) {
 			appendNewVariable(variableName, call);
 			generator.append(" = ");
 		} else {
 			generator.appendIndent();
 		}
-		appendCall(call, availableVars);
+		appendCall(context, call);
 	}
 
 }

@@ -84,11 +84,16 @@ public class Binding extends WithId {
 		return config.adapters;
 	}
 
-	public String outputName() {
+	public String toDataPoint() {
 		if (config.toDataPoint != null) {
 			return config.toDataPoint;
 		}
 		return toProcessor().asDataPoint();
+	}
+
+	@Override
+	public String toString() {
+		return config.fromDataPoint + " -> " + config.toProcessor.asDataPoint();
 	}
 
 }

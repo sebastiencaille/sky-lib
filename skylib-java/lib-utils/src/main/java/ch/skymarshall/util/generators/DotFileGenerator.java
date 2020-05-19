@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import ch.skymarshall.util.text.TextFormatter;
 
-public class DotFileGenerator extends TextFormatter {
+public class DotFileGenerator extends TextFormatter<DotFileGenerator> {
 
 	public enum Shape {
 		SQUARE, BOX, ELLIPSE, DIAMOND, CIRCLE, POINT, HEXAGON, OCTAGON
@@ -15,7 +15,7 @@ public class DotFileGenerator extends TextFormatter {
 	}
 
 	public DotFileGenerator header(final String graphName, final String comment) throws IOException {
-		appendIndented("// ").add(comment).newLine();
+		appendIndented("// ").append(comment).newLine();
 		appendIndented("digraph \"").append(graphName).append("\" {").newLine();
 		indent();
 		return this;

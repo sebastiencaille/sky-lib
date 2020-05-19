@@ -26,11 +26,18 @@ public abstract class AbstractFlowVisitor {
 		public final Set<ExternalAdapter> processedAdapters;
 		public final List<Condition> activators;
 
-		public BindingContext(final Binding binding) {
+		public final String inputDataPoint;
+		public final String inputDataType;
+		public final String outputDataPoint;
+
+		public BindingContext(final Binding binding, final String inputDataType) {
 			this.binding = binding;
 			adapters = binding.getAdapters();
 			processedAdapters = new HashSet<>();
 			activators = BindingRule.getActivators(binding.getRules()).collect(Collectors.toList());
+			inputDataPoint = binding.fromDataPoint();
+			this.inputDataType = inputDataType;
+			outputDataPoint = binding.toDataPoint();
 		}
 
 		public Set<ExternalAdapter> unprocessedAdapters(final Collection<ExternalAdapter> adapters) {
@@ -44,13 +51,15 @@ public abstract class AbstractFlowVisitor {
 	protected final Flow flow;
 	private final Map<Binding, Set<Binding>> currentDeps;
 	private final Set<String> conditionalState = new HashSet<>();
+	private final Set<Binding> untriggeredBindings;
+	private final Map<String, String> availableDataPoints = new HashMap<>();
 
-	protected abstract void process(BindingContext context, String inputDataPoint, String inputDataType,
-			Processor processor, String outputDataPoint) throws IOException;
+	protected abstract void process(BindingContext context, Processor processor) throws IOException;
 
 	public AbstractFlowVisitor(final Flow flow) {
 		this.flow = flow;
 		this.currentDeps = flow.cloneDependencies();
+		this.untriggeredBindings = new HashSet<>(flow.getBindings());
 	}
 
 	protected boolean isConditional(final String input) {
@@ -58,30 +67,23 @@ public abstract class AbstractFlowVisitor {
 	}
 
 	protected void processFlow() throws IOException {
-
-		final Set<Binding> untriggeredBindings = new HashSet<>(flow.getBindings());
-		final Map<String, String> availableDataPoints = new HashMap<>();
-
 		availableDataPoints.put(Flow.ENTRY_POINT, flow.getEntryPointType());
 		while (!untriggeredBindings.isEmpty()) {
 			// More to process
-			final Set<Binding> newlyTriggeredBindings = triggerBindings(untriggeredBindings, availableDataPoints);
+			final Set<Binding> newlyTriggeredBindings = triggerBindings();
 			untriggeredBindings.removeAll(newlyTriggeredBindings);
-			// make datapoint available only if all corresponding bindings have been
+			// make data point available only if all corresponding bindings have been
 			// executed
 			for (final Binding binding : newlyTriggeredBindings) {
-				if (untriggeredBindings.stream().noneMatch(b -> binding.outputName().equals(b.outputName()))) {
-					availableDataPoints.put(binding.outputName(), binding.toProcessor().getReturnType());
+				if (untriggeredBindings.stream().noneMatch(b -> binding.toDataPoint().equals(b.toDataPoint()))) {
+					availableDataPoints.put(binding.toDataPoint(), binding.toProcessor().getReturnType());
 				}
 			}
-
 			currentDeps.values().forEach(v -> v.removeAll(newlyTriggeredBindings));
 		}
-
 	}
 
-	private Set<Binding> triggerBindings(final Set<Binding> untriggeredBindings,
-			final Map<String, String> availableDataPoints) throws IOException {
+	private Set<Binding> triggerBindings() throws IOException {
 		final Set<Binding> newlyTriggeredBindings = new HashSet<>();
 		for (final Binding binding : untriggeredBindings) {
 			// Next potential binding
@@ -95,9 +97,9 @@ public abstract class AbstractFlowVisitor {
 			final Processor processor = binding.toProcessor();
 
 			newlyTriggeredBindings.add(binding);
-			final BindingContext context = new BindingContext(binding);
-			process(context, binding.fromDataPoint(), availableDataPoints.get(binding.fromDataPoint()), processor,
-					binding.outputName());
+			final BindingContext context = new BindingContext(binding,
+					availableDataPoints.get(binding.fromDataPoint()));
+			process(context, processor);
 		}
 		if (!untriggeredBindings.isEmpty() && newlyTriggeredBindings.isEmpty()) {
 			throw new IllegalStateException("Remaining bindings cannot be processed: " + untriggeredBindings);

@@ -64,16 +64,14 @@ public class TestCaseToJunitVisitor {
 		}
 
 		if (step.getReference() != null) {
-			stepContent.append(step.getReference().getType()).append(" ").append(step.getReference().getName())
-					.append(" = ");
+			stepContent.addVarAssign(step.getReference().getType(), step.getReference().getName());
 		}
-		stepContent.append(step.getActor().getName()).append(".").append(step.getAction().getName()).append("(");
+		stepContent.addMethodCall(step.getActor().getName(), step.getAction().getName(),
+				g -> addParameterValuesToCall(g, step, step.getParametersValue(), step.getAction().getParameters()))
+				.eos().newLine();
 
-		addParameterValuesToCall(stepContent, step, step.getParametersValue(), step.getAction().getParameters());
-		stepContent.append(");").newLine().newLine();
-
-		javaContent.append(comment.toString());
-		javaContent.append(stepContent.toString());
+		javaContent.append(comment);
+		javaContent.append(stepContent);
 	}
 
 	private void visitTestParameterValue(final JavaCodeGenerator javaContent, final TestDictionary model,
@@ -89,14 +87,13 @@ public class TestCaseToJunitVisitor {
 		visitTestValueParams(parametersContent, model, step, paramValue.getComplexTypeValues());
 
 		final String parameterVarName = varNameFor(step, paramValue);
-		parametersContent.append(factory.getType()).append(" ").append(parameterVarName).append(" = ")
-				.append(factory.getName()).append("(");
-		addParameterValuesToCall(parametersContent, step, paramValue.getComplexTypeValues().values(),
-				factory.getMandatoryParameters());
-		parametersContent.append(");").newLine();
+		parametersContent.addVarAssign(factory.getType(), parameterVarName) //
+				.addMethodCall(factory.getName(), g -> addParameterValuesToCall(g, step,
+						paramValue.getComplexTypeValues().values(), factory.getMandatoryParameters()))
+				.eos();
 		addOptionalParameters(step, parametersContent, parameterVarName, paramValue.getComplexTypeValues().values(),
 				factory.getOptionalParameters());
-		javaContent.append(parametersContent.toString());
+		javaContent.append(parametersContent);
 	}
 
 	private void visitTestValueParams(final JavaCodeGenerator parametersContent, final TestDictionary model,
@@ -121,7 +118,7 @@ public class TestCaseToJunitVisitor {
 			if (!filterIds.contains(parameterValue.getApiParameterId())) {
 				continue;
 			}
-			parametersContent.add(sep);
+			parametersContent.append(sep);
 			inlineValue(parametersContent, step, parameterValue);
 			sep = ", ";
 		}
@@ -137,11 +134,11 @@ public class TestCaseToJunitVisitor {
 				continue;
 			}
 			final TestApiParameter parameterType = filteredMap.get(parameterValue.getApiParameterId());
-			parametersContent.append(parameterVarName).append(".").append(parameterType.getName()).append("(");
-			if (parameterValue.getValueFactory().hasType()) {
-				inlineValue(parametersContent, step, parameterValue);
-			}
-			parametersContent.append(");").newLine();
+			parametersContent.addMethodCall(parameterVarName, parameterType.getName(), g -> {
+				if (parameterValue.getValueFactory().hasType()) {
+					inlineValue(g, step, parameterValue);
+				}
+			}).eos();
 		}
 	}
 

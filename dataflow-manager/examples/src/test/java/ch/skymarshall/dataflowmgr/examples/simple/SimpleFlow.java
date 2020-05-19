@@ -8,32 +8,33 @@ import org.junit.Assert;
 public class SimpleFlow extends AbstractFlow {
 
 	public void execute(java.lang.String inputDataPoint) {
-		// ------------------------- simpleService.init -> simpleService_init -------------------------
-		ch.skymarshall.dataflowmgr.examples.simple.dto.MyData simpleService_init = simpleService.init(inputDataPoint);
+		// ------------------------- inputDataPoint -> simpleService.init -> simpleService_init -------------------------
+		ch.skymarshall.dataflowmgr.examples.simple.dto.MyData simpleService_init = this.simpleService.init(inputDataPoint);
 		
-		// ------------------------- simpleService.enhance -> enhanced -------------------------
-		boolean activated_728541a9_5503_4c37_9624_7c0bc58293a8 = true;
-		if (activated_728541a9_5503_4c37_9624_7c0bc58293a8) {
-		    activated_728541a9_5503_4c37_9624_7c0bc58293a8 &= simpleServiceConditions.isEnhanceEnabled(simpleService_init);
+		// ------------------------- simpleService_init -> simpleService.enhance -> enhanced -------------------------
+		boolean activated_9872854a_fece_46e8_b8be_b700fd3fed9a = true;
+		if (activated_9872854a_fece_46e8_b8be_b700fd3fed9a) {
+		    activated_9872854a_fece_46e8_b8be_b700fd3fed9a &= this.simpleServiceConditions.isEnhanceEnabled(simpleService_init);
 		}
 		ch.skymarshall.dataflowmgr.examples.simple.dto.MyData enhanced = null;
 		boolean executed_enhanced = false;
-		if (activated_728541a9_5503_4c37_9624_7c0bc58293a8)  {
-		    String simpleExternalAdapter_enhancement728541a9_5503_4c37_9624_7c0bc58293a8 = simpleExternalAdapter.enhancement(simpleService_init);
-		    enhanced = simpleService.enhance(simpleService_init, simpleExternalAdapter_enhancement728541a9_5503_4c37_9624_7c0bc58293a8);
+		if (activated_9872854a_fece_46e8_b8be_b700fd3fed9a) {
+		    String simpleExternalAdapter_enhancement9872854a_fece_46e8_b8be_b700fd3fed9a = this.simpleExternalAdapter.enhancement(simpleService_init);
+		    enhanced = this.simpleService.enhance(simpleService_init, simpleExternalAdapter_enhancement9872854a_fece_46e8_b8be_b700fd3fed9a);
 		    executed_enhanced = true;
 		}
 		
-		// ------------------------- simpleService.noEnhance -> enhanced -------------------------
-		boolean notExcl_enhanced = enhanced == null;
-		if (notExcl_enhanced)  {
-		    enhanced = simpleService.noEnhance(simpleService_init);
+		// ------------------------- simpleService_init -> simpleService.noEnhance -> enhanced -------------------------
+		boolean executeDefault_enhanced = !executed_enhanced;
+		
+		if (executeDefault_enhanced) {
+		    enhanced = this.simpleService.noEnhance(simpleService_init);
 		    executed_enhanced = true;
 		}
 		
-		// ------------------------- exit -> exit -------------------------
-		if (executed_enhanced)  {
-		    simpleExternalAdapter.display(enhanced);
+		// ------------------------- enhanced -> exit -> exit -------------------------
+		if (executed_enhanced) {
+		    this.simpleExternalAdapter.display(enhanced);
 		}
 		
 		

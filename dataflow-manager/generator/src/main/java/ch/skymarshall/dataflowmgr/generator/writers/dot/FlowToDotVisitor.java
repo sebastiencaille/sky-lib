@@ -86,18 +86,17 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 	}
 
 	@Override
-	protected void process(final BindingContext context, final String inputDataPoint, final String inputDataType,
-			final Processor processor, final String outputDataPoint) {
+	protected void process(final BindingContext context, final Processor processor) {
 		// Create data point
-		if (!graph.nodes.containsKey(outputDataPoint)) {
-			addDataPoint(outputDataPoint);
+		if (!graph.nodes.containsKey(context.outputDataPoint)) {
+			addDataPoint(context.outputDataPoint);
 		}
 
 		final String processorNode = addProcessor(context.binding, processor);
 
 		final Optional<ConditionalBindingGroup> conditionGroupOpt = BindingRule
-				.get(context.binding.getRules(), BindingRule.Type.CONDITIONAL)
-				.map(r -> r.get(ConditionalBindingGroup.class));
+				.getAll(context.binding.getRules(), BindingRule.Type.CONDITIONAL, ConditionalBindingGroup.class)
+				.findAny();
 
 		// Add condition
 		String linkFrom;
@@ -106,11 +105,11 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 			final String conditionNodeName = getConditionGroupNodeName(conditionGroup);
 			if (!graph.nodes.containsKey(conditionNodeName)) {
 				addConditionGroup(conditionGroup);
-				graph.links.add(new Link(inputDataPoint, conditionNodeName, "", ""));
+				graph.links.add(new Link(context.inputDataPoint, conditionNodeName, "", ""));
 			}
 			linkFrom = conditionNodeName;
 		} else {
-			linkFrom = inputDataPoint;
+			linkFrom = context.inputDataPoint;
 		}
 
 		if (conditionGroupOpt.isPresent() && context.activators.isEmpty()) {
@@ -126,7 +125,7 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 
 		addAdapters(context.processedAdapters, linkFrom, processorNode);
 
-		graph.links.add(new Link(processorNode, outputDataPoint));
+		graph.links.add(new Link(processorNode, context.outputDataPoint));
 	}
 
 	private void addAdapters(final Set<ExternalAdapter> adapters, final String linkFrom, final String linkTo) {

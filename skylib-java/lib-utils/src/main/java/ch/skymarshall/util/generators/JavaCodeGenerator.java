@@ -20,7 +20,11 @@ import java.util.Set;
 
 import ch.skymarshall.util.text.TextFormatter;
 
-public class JavaCodeGenerator extends TextFormatter {
+public class JavaCodeGenerator extends TextFormatter<JavaCodeGenerator> {
+
+	public interface InlinedCode<E extends Exception> {
+		void apply(JavaCodeGenerator gen) throws IOException, E;
+	}
 
 	public JavaCodeGenerator() {
 		super(output(new StringBuilder()));
@@ -68,16 +72,51 @@ public class JavaCodeGenerator extends TextFormatter {
 		for (final String str : extra) {
 			append(str);
 		}
-		append(" {").newLine().indent();
-		return this;
+		return append(" {").newLine().indent();
 	}
 
-	public void closeBlock(final String... extra) throws IOException {
+	public JavaCodeGenerator closeBlock(final String... extra) throws IOException {
 		unindent().appendIndented("}");
 		for (final String str : extra) {
 			append(str);
 		}
-		newLine();
+		return newLine();
+	}
+
+	public JavaCodeGenerator openIf(final String condition) throws IOException {
+		return appendIndented("if (").append(condition).append(")").openBlock();
+	}
+
+	public JavaCodeGenerator addVarAssign(final String type, final String name) throws IOException {
+		return appendIndented(type).append(" ").append(name).append(" = ");
+	}
+
+	public JavaCodeGenerator addVariable(final String type, final String name, final String value) throws IOException {
+		return appendIndented(type).append(" ").append(name).append(" = ").append(value).eos();
+	}
+
+	public JavaCodeGenerator addMethodCall(final String instance, final String methodName, final String parameters)
+			throws IOException {
+		return append(instance).append(".").append(methodName).append("(").append(parameters).append(")");
+	}
+
+	public JavaCodeGenerator eos() throws IOException {
+		return append(";").newLine();
+	}
+
+	public <E extends Exception> JavaCodeGenerator addMethodCall(final String methodName,
+			final InlinedCode<E> inlinedParameters) throws IOException, E {
+		append(methodName).append("(");
+		inlinedParameters.apply(this);
+		return append(")");
+
+	}
+
+	public <E extends Exception> JavaCodeGenerator addMethodCall(final String instance, final String methodName,
+			final InlinedCode<E> inlinedParameters) throws IOException, E {
+		append(instance).append(".").append(methodName).append("(");
+		inlinedParameters.apply(this);
+		return append(")");
 	}
 
 	@Override

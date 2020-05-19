@@ -1,1 +1,0 @@
-{"ch.skymarshall.tcwriter.generators.model.testcase.TestCase":{"steps":{"java.util.ArrayList":[]},"pkgAndClassName":"ch.skymarshall.tcwriter.examples.GeneratedTest","dynamicReferences":{"com.google.common.collect.Multimaps$CustomListMultimap":{}},"dynamicDescriptions":{"java.util.HashMap":{}}}}

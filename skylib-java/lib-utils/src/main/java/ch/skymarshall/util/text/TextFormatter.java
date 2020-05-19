@@ -25,7 +25,7 @@ import java.io.OutputStream;
  * @author Sebastien Caille
  *
  */
-public class TextFormatter {
+public class TextFormatter<T extends TextFormatter<T>> {
 
 	public interface IOutput {
 		void append(String str) throws IOException;
@@ -79,52 +79,58 @@ public class TextFormatter {
 		this.indentationManager = indentationManager;
 	}
 
-	public void indent() {
+	public T indent() {
 		indentationManager.indent();
+		return (T) this;
 	}
 
-	public TextFormatter unindent() {
+	public T unindent() {
 		indentationManager.unindent();
-		return this;
+		return (T) this;
 	}
 
-	public TextFormatter appendIndent() throws IOException {
+	public T appendIndent() throws IOException {
 		output.append(indentationManager.getIndentation());
-		return this;
+		return (T) this;
 	}
 
-	public TextFormatter appendIndented(final String string) throws IOException {
+	public T appendIndented(final String string) throws IOException {
 		output.append(indentationManager.getIndentation());
 		output.append(string);
-		return this;
+		return (T) this;
 	}
 
-	public TextFormatter appendAtOverride() throws IOException {
+	public T appendAtOverride() throws IOException {
 		output.append(indentationManager.getIndentation());
 		output.append("@Override\n");
-		return this;
+		return (T) this;
 	}
 
-	public TextFormatter appendIndentedLine(final String string) throws IOException {
+	public T appendIndentedLine(final String string) throws IOException {
 		output.append(indentationManager.getIndentation());
 		output.append(string);
 		output.append('\n');
-		return this;
+		return (T) this;
 	}
 
-	public TextFormatter append(final String str) throws IOException {
+	public T append(final String str) throws IOException {
 		output.append(str);
-		return this;
+		return (T) this;
 	}
 
-	public TextFormatter add(final String string) throws IOException {
-		output.append(string);
-		return this;
+	public T append(final TextFormatter<?> text) throws IOException {
+		output.append(text.getOutput().toString());
+		return (T) this;
 	}
 
-	public TextFormatter newLine() throws IOException {
+	public T newLine() throws IOException {
 		output.append('\n');
-		return this;
+		return (T) this;
+	}
+
+	public T append(final StringBuilder builder) throws IOException {
+		output.append(builder.toString());
+		return (T) this;
 	}
 
 	public IOutput getOutput() {

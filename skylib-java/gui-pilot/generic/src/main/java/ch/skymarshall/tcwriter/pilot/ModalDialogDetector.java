@@ -63,48 +63,49 @@ public class ModalDialogDetector {
 		return new ErrorCheck(false, extraInfo, null, null);
 	}
 
-	private class ModalDialogHandler extends TimerTask {
-
-		@Override
-		public void run() {
-			if (!enabled) {
-				this.cancel();
-				return;
-			}
-
-			try {
-				running.acquire();
-				for (final ErrorCheck checked : errorChecks.get()) {
-					ErrorCheck result = checked;
-					if (!result.handled) {
-						result = error("Unhandled fallback: " + checked.extraInfo, null);
-					} else {
-						foundDialog = result;
-					}
-					if (result.error == null) {
-						return;
-					}
-					errors.add(result.error);
-					if (result.closeFunction != null) {
-						result.closeFunction.run();
-					}
+	private synchronized void handleModalDialogs() {
+		try {
+			running.acquire();
+			for (final ErrorCheck checked : errorChecks.get()) {
+				ErrorCheck result = checked;
+				if (!result.handled) {
+					result = error("Unhandled fallback: " + checked.extraInfo, null);
+				} else {
+					foundDialog = result;
 				}
-			} catch (final InterruptedException e) {
-				Thread.currentThread().interrupt();
-				// noop
-			} finally {
-				running.release();
+				if (result.error == null) {
+					return;
+				}
+				errors.add(result.error);
+				if (result.closeFunction != null) {
+					result.closeFunction.run();
+				}
 			}
+		} catch (final InterruptedException e) {
+			Thread.currentThread().interrupt();
+			// noop
+		} finally {
+			running.release();
 		}
-
 	}
 
 	public void close() {
 		Assert.assertEquals("Unexpected modal dialog", "", String.join(",\n", errors));
 	}
 
-	protected ModalDialogHandler timerTask() {
-		return new ModalDialogHandler();
+	protected TimerTask timerTask() {
+		return new TimerTask() {
+
+			@Override
+			public void run() {
+				if (!enabled) {
+					this.cancel();
+					return;
+				}
+				handleModalDialogs();
+			}
+
+		};
 	}
 
 	public void stop() {
@@ -117,17 +118,16 @@ public class ModalDialogDetector {
 		}
 	}
 
-	private NoExceptionCloseable schedule(final Timer t) {
+	private synchronized NoExceptionCloseable schedule(final Timer t) {
 		Assert.assertNull("Detector already detected a dialog", foundDialog);
-		final ModalDialogHandler handler = timerTask();
 		if (!enabled) {
 			enabled = true;
-			t.schedule(handler, 0, 500);
+			t.schedule(timerTask(), 0, 500);
 		}
 		return this::close;
 	}
 
-	public ErrorCheck getCheckResult() {
+	public synchronized ErrorCheck getCheckResult() {
 		return foundDialog;
 	}
 

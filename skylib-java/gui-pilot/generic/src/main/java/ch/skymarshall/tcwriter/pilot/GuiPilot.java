@@ -2,8 +2,6 @@ package ch.skymarshall.tcwriter.pilot;
 
 import java.time.Duration;
 
-import org.junit.Assert;
-
 import ch.skymarshall.util.helpers.NoExceptionCloseable;
 
 public class GuiPilot {
@@ -53,11 +51,16 @@ public class GuiPilot {
 	}
 
 	public void waitModalDialogHandled() {
+		waitModalDialogHandled(Polling.throwError());
+	}
+
+	public boolean waitModalDialogHandled(
+			final Polling.PollingResultFunction<ModalDialogDetector.ErrorCheck, Boolean> onFail) {
 		final long start = System.currentTimeMillis();
 		while (System.currentTimeMillis() - start < defaultActionTimeout.toMillis()) {
 			if (currentModalDialogDetector.getCheckResult() != null) {
 				stopModalDialogDetector();
-				return;
+				return true;
 			}
 			try {
 				Thread.sleep(100);
@@ -65,7 +68,7 @@ public class GuiPilot {
 				Thread.currentThread().interrupt();
 			}
 		}
-		Assert.fail("Modal dialog not detected");
+		return onFail.apply(Polling.failure("Modal dialog not detected"));
 	}
 
 	public NoExceptionCloseable withModalDialogDetection() {

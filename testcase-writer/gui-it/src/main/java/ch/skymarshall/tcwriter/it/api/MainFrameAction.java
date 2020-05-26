@@ -8,8 +8,8 @@ import javax.swing.JTextField;
 
 import ch.skymarshall.tcwriter.annotations.TCApi;
 import ch.skymarshall.tcwriter.it.TCGuiPilot;
-import ch.skymarshall.tcwriter.pilot.swing.JDialogPilot;
-import ch.skymarshall.tcwriter.pilot.swing.SwingButton;
+import ch.skymarshall.tcwriter.pilot.ModalDialogDetector;
+import ch.skymarshall.tcwriter.pilot.swing.SwingModalDialogDetector;
 
 @TCApi(description = "Main frame actions", humanReadable = "Main frame actions")
 public class MainFrameAction {
@@ -26,22 +26,28 @@ public class MainFrameAction {
 	}
 
 	public void execute(final TCGuiPilot guiPilot) {
-		new SwingButton(guiPilot, guiButtonName).click();
+		if (dialogCloserName != null) {
+			guiPilot.expectModalDialog(this::openSaveDialogBoxHandler);
+		}
+		guiPilot.button(guiButtonName).click();
+		if (dialogCloserName != null) {
+			guiPilot.waitModalDialogHandled();
+		}
 	}
 
-	public boolean handleJDialog(final JDialogPilot jDialogPilot) {
+	public ModalDialogDetector.ErrorCheck openSaveDialogBoxHandler(final SwingModalDialogDetector errorDialogPilot) {
 		if (dialogCloserName == null) {
-			return false;
+			return errorDialogPilot.fallback();
 		}
 
-		final Optional<JTextField> filenameEditor = jDialogPilot.search(JTextField.class);
+		final Optional<JTextField> filenameEditor = errorDialogPilot.search(JTextField.class);
 		if (!filenameEditor.isPresent()) {
-			return false;
+			return errorDialogPilot.fallback();
 		}
 		filenameEditor.get().setText(fileName);
-		jDialogPilot.search(JButton.class, b -> dialogCloserName.equals(b.getText()))
+		errorDialogPilot.search(JButton.class, b -> dialogCloserName.equals(b.getText()))
 				.orElseThrow(() -> new InvalidParameterException("No button " + dialogCloserName)).doClick();
-		return true;
+		return ModalDialogDetector.ignore();
 	}
 
 	@TCApi(description = "Load a test case", humanReadable = "load the test %s")

@@ -1,9 +1,7 @@
 package ch.skymarshall.tcwriter.pilot.selenium;
 
 import static ch.skymarshall.tcwriter.pilot.Polling.action;
-import static ch.skymarshall.tcwriter.pilot.Polling.isTrue;
 import static ch.skymarshall.tcwriter.pilot.Polling.onException;
-import static ch.skymarshall.tcwriter.pilot.Polling.throwError;
 import static ch.skymarshall.tcwriter.pilot.Polling.value;
 
 import java.time.Duration;
@@ -15,6 +13,7 @@ import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -22,15 +21,11 @@ import ch.skymarshall.tcwriter.pilot.AbstractGuiComponent;
 import ch.skymarshall.tcwriter.pilot.Polling;
 import ch.skymarshall.tcwriter.pilot.Polling.PollingFunction;
 
-public class SeleniumElement extends AbstractGuiComponent<WebElement, SeleniumElement> {
+public class SeleniumElement extends AbstractGuiComponent<SeleniumElement, WebElement> {
 
-	private static final Duration QUICK_TIMEOUT = Duration.ofSeconds(5);
+	private static final Duration SHORT_POLLING_TIMEOUT = Duration.ofSeconds(5);
 	private final SeleniumGuiPilot pilot;
 	private final By locator;
-
-	protected static boolean canInteract(final WebElement element) {
-		return element.isDisplayed() && element.isEnabled();
-	}
 
 	public SeleniumElement(final SeleniumGuiPilot pilot, final By locator) {
 		super(pilot);
@@ -44,8 +39,18 @@ public class SeleniumElement extends AbstractGuiComponent<WebElement, SeleniumEl
 	}
 
 	@Override
-	protected WebElement loadElement() {
+	protected WebElement loadGuiComponent() {
 		return pilot.getDriver().findElement(locator);
+	}
+
+	@Override
+	protected boolean canCheck(final WebElement element) {
+		return element.isDisplayed();
+	}
+
+	@Override
+	protected boolean canEdit(final WebElement element) {
+		return element.isDisplayed() && element.isEnabled();
 	}
 
 	/**
@@ -56,13 +61,13 @@ public class SeleniumElement extends AbstractGuiComponent<WebElement, SeleniumEl
 	protected <U> Polling<WebElement, U> waitActionSuccessLoop(final Predicate<WebElement> precondition,
 			final PollingFunction<WebElement, U> applier, final Duration timeout) {
 		Duration remains = timeout;
-		if (timeout.compareTo(QUICK_TIMEOUT) > 0) {
-			// first do quick polling
-			final Polling<WebElement, U> result = executeOnePolling(precondition, applier, QUICK_TIMEOUT);
-			if (result.success()) {
+		if (timeout.compareTo(SHORT_POLLING_TIMEOUT) > 0) {
+			// first use short polling time
+			final Polling<WebElement, U> result = executeOnePolling(precondition, applier, SHORT_POLLING_TIMEOUT);
+			if (result.isSuccess()) {
 				return result;
 			}
-			remains = remains.minus(QUICK_TIMEOUT);
+			remains = remains.minus(SHORT_POLLING_TIMEOUT);
 		}
 		return executeOnePolling(precondition, applier, remains);
 	}
@@ -83,8 +88,8 @@ public class SeleniumElement extends AbstractGuiComponent<WebElement, SeleniumEl
 					.withTimeout(timeout) // set timeout in ms
 					.pollingEvery(pollingTime(timeout)) //
 					.ignoreAll(Arrays.asList(NoSuchElementException.class, StaleElementReferenceException.class,
-							ElementNotInteractableException.class))
-					.<U>until(d -> {
+							ElementNotInteractableException.class, UnhandledAlertException.class))
+					.until(d -> {
 						try {
 							return executePolling(precondition, applier).orElse(null);
 						} catch (final StaleElementReferenceException stale) {
@@ -97,24 +102,19 @@ public class SeleniumElement extends AbstractGuiComponent<WebElement, SeleniumEl
 		}
 	}
 
-	protected <U> U executeInteractiveAction(final PollingFunction<WebElement, U> applier) {
-		return waitActionSuccess(SeleniumElement::canInteract, applier, pilot.getDefaultActionTimeout(), throwError());
-	}
-
 	public SeleniumElement waitEnabled() {
-		withReport(e -> "wait enabled").executeInteractiveAction(e -> isTrue());
+		withReport(e -> "wait enabled").waitState(Polling.satisfies(this::canEdit));
 		return this;
 	}
 
 	public SeleniumElement click() {
-		withReport(e -> "click").executeInteractiveAction(action(WebElement::click));
+		withReport(e -> "click").waitEdited(action(WebElement::click));
 		return this;
 	}
 
 	public boolean clickIfEnabled(final Duration shortTimeout) {
-		return withReport(e -> "click if enabled").waitActionSuccess(SeleniumElement::canInteract,
-				action(WebElement::click), shortTimeout, Polling.report("Not found: " + locator));
-
+		return withReport(e -> "click if enabled").waitActionSuccess(this::canEdit, action(WebElement::click),
+				shortTimeout, Polling.reportFailed("Not found: " + locator));
 	}
 
 }

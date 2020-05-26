@@ -2,13 +2,13 @@ package ch.skymarshall.tcwriter.pilot.swing;
 
 import static ch.skymarshall.tcwriter.pilot.Polling.action;
 import static ch.skymarshall.tcwriter.pilot.Polling.failure;
-import static ch.skymarshall.tcwriter.pilot.Polling.isTrue;
+import static ch.skymarshall.tcwriter.pilot.Polling.success;
 
 import javax.swing.JList;
 
 import org.junit.Assert;
 
-public class SwingList extends AbstractSwingComponent<JList> {
+public class SwingList extends AbstractSwingComponent<SwingList, JList> {
 
 	public SwingList(final SwingGuiPilot pilot, final String name) {
 		super(pilot, JList.class, name);
@@ -24,7 +24,7 @@ public class SwingList extends AbstractSwingComponent<JList> {
 		if (value == null) {
 			return;
 		}
-		withReport(r -> "select element " + value).waitEditSuccess(action(l -> {
+		withReport(r -> "select element " + value).waitEdited(action(l -> {
 			for (int i = 0; i < l.getModel().getSize(); i++) {
 				if (value.equals(l.getModel().getElementAt(i).toString())) {
 					l.setSelectedIndex(i);
@@ -47,7 +47,7 @@ public class SwingList extends AbstractSwingComponent<JList> {
 			if (!value.equals(current)) {
 				return failure("Wrong element selected (" + current + ")");
 			}
-			return isTrue();
+			return success();
 		});
 	}
 }

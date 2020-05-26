@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import javax.swing.AbstractButton;
@@ -18,6 +19,8 @@ import javax.swing.text.JTextComponent;
 
 import org.junit.Assert;
 
+import ch.skymarshall.tcwriter.pilot.ModalDialogDetector;
+import ch.skymarshall.tcwriter.pilot.ModalDialogDetector.ErrorCheck;
 import ch.skymarshall.util.helpers.NoExceptionCloseable;
 
 public class SwingGuiPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
@@ -27,6 +30,15 @@ public class SwingGuiPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 
 	public SwingGuiPilot(final Container root) {
 		this.root = root;
+	}
+
+	@Override
+	protected ModalDialogDetector createDefaultModalDialogDetector() {
+		return SwingModalDialogDetector.defaultDetector();
+	}
+
+	public void expectModalDialog(final Function<SwingModalDialogDetector, ErrorCheck> check) {
+		setCurrentModalDialogDetector(SwingModalDialogDetector.withCheck(check));
 	}
 
 	/**
@@ -124,25 +136,31 @@ public class SwingGuiPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 		return clazz.cast(cachedComponent);
 	}
 
-	public void withDialog(final Runnable runnable, final Predicate<JDialogPilot> dialogHandler) {
-		try (NoExceptionCloseable dialogCloseable = JDialogPilot.withDialog(dialogHandler)) {
-			runnable.run();
-		}
-	}
-
-	public void withSwing(final Runnable runnable, final Predicate<JDialogPilot> dialogHandler) {
-		try (NoExceptionCloseable dialogCloseable = JDialogPilot.withDialog(dialogHandler)) {
+	public void withSwing(final Runnable runnable, final ModalDialogDetector detector) {
+		try (NoExceptionCloseable dialogCloseable = ModalDialogDetector.withModalDialogDetection(detector)) {
 			SwingUtilities.invokeAndWait(runnable);
 		} catch (final InvocationTargetException e) {
 			throw new AssertionError(e.getCause());
 		} catch (final InterruptedException e) {
 			Thread.currentThread().interrupt();
-			Assert.assertNull("Unexpected error while executing selection", e);
+			Assert.fail("Test case interrupted");
 		}
 	}
 
-	public void withSwing(final Runnable runnable) {
-		withSwing(runnable, null);
+	/**
+	 * Low level calls to Swing. Prefer withSwing methods
+	 *
+	 * @param runnable
+	 */
+	public static void invokeAndWait(final Runnable runnable) {
+		try {
+			SwingUtilities.invokeAndWait(runnable);
+		} catch (final InvocationTargetException e) {
+			throw new AssertionError(e.getCause());
+		} catch (final InterruptedException e) {
+			Thread.currentThread().interrupt();
+			Assert.fail("Test case interrupted");
+		}
 	}
 
 	protected void checkSwingThread() {
@@ -173,6 +191,30 @@ public class SwingGuiPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 			}
 		});
 
+	}
+
+	public SwingButton button(final String name) {
+		return new SwingButton(this, name);
+	}
+
+	public SwingLabel label(final String name) {
+		return new SwingLabel(this, name);
+	}
+
+	public SwingList list(final String name) {
+		return new SwingList(this, name);
+	}
+
+	public SwingTable table(final String name) {
+		return new SwingTable(this, name);
+	}
+
+	public SwingText text(final String name) {
+		return new SwingText(this, name);
+	}
+
+	public SwingToggleButton toggleButton(final String name) {
+		return new SwingToggleButton(this, name);
 	}
 
 }

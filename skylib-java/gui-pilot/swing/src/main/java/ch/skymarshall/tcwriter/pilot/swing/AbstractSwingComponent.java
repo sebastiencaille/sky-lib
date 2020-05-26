@@ -1,11 +1,8 @@
 package ch.skymarshall.tcwriter.pilot.swing;
 
-import static ch.skymarshall.tcwriter.pilot.Polling.failure;
-import static ch.skymarshall.tcwriter.pilot.Polling.matches;
-import static ch.skymarshall.tcwriter.pilot.Polling.throwError;
+import static ch.skymarshall.tcwriter.pilot.Polling.satisfies;
 
 import java.awt.event.KeyEvent;
-import java.lang.reflect.InvocationTargetException;
 import java.time.Duration;
 import java.util.function.Predicate;
 
@@ -17,7 +14,8 @@ import ch.skymarshall.tcwriter.pilot.Polling;
 import ch.skymarshall.tcwriter.pilot.Polling.PollingFunction;
 import ch.skymarshall.tcwriter.pilot.Polling.PollingResultFunction;
 
-public class AbstractSwingComponent<T extends JComponent> extends AbstractGuiComponent<T, AbstractSwingComponent<T>> {
+public class AbstractSwingComponent<C extends AbstractSwingComponent<C, T>, T extends JComponent>
+		extends AbstractGuiComponent<C, T> {
 
 	protected final SwingGuiPilot pilot;
 	protected final String name;
@@ -36,7 +34,7 @@ public class AbstractSwingComponent<T extends JComponent> extends AbstractGuiCom
 	}
 
 	@Override
-	protected T loadElement() {
+	protected T loadGuiComponent() {
 		try {
 			return pilot.getComponent(name, clazz);
 		} catch (final NoSuchComponentException e) {
@@ -44,19 +42,21 @@ public class AbstractSwingComponent<T extends JComponent> extends AbstractGuiCom
 		}
 	}
 
-	protected boolean canRead(final T component) {
+	@Override
+	protected boolean canCheck(final T component) {
 		return component.isVisible();
 	}
 
+	@Override
 	protected boolean canEdit(final T component) {
-		return component.isEnabled() && component.isVisible();
+		return component.isVisible() && component.isEnabled();
 	}
 
 	@Override
 	protected <U> U waitActionSuccess(final Predicate<T> precondition, final PollingFunction<T, U> applier,
 			final Duration timeout, final PollingResultFunction<T, U> onFail) {
 		if (SwingUtilities.isEventDispatchThread()) {
-			throw new IllegalStateException("Action must not run in Swing thread");
+			throw new IllegalStateException("Action wait must not run in Swing thread");
 		}
 		return super.waitActionSuccess(precondition, applier, timeout, onFail);
 	}
@@ -64,35 +64,16 @@ public class AbstractSwingComponent<T extends JComponent> extends AbstractGuiCom
 	@Override
 	protected <U> Polling<T, U> executePolling(final Predicate<T> precondition, final PollingFunction<T, U> applier) {
 		final Object[] response = new Object[1];
-		try {
-			SwingUtilities.invokeAndWait(() -> response[0] = super.executePolling(precondition, applier));
-		} catch (final InvocationTargetException e) {
-			throw new IllegalStateException("Polling failed with unexpected exception", e);
-		} catch (final InterruptedException e) {
-			Thread.currentThread().interrupt();
-			return failure("Interrupted");
-		}
+		SwingGuiPilot.invokeAndWait(() -> response[0] = super.executePolling(precondition, applier));
 		return (Polling<T, U>) response[0];
 	}
 
-	public <U> U waitEditSuccess(final PollingFunction<T, U> applier) {
-		return waitActionSuccess(this::canEdit, applier, pilot.getDefaultActionTimeout(), throwError());
-	}
-
-	public <U> U waitEditSuccess(final PollingFunction<T, U> applier, final PollingResultFunction<T, U> onFail) {
-		return waitActionSuccess(this::canEdit, applier, pilot.getDefaultActionTimeout(), onFail);
-	}
-
-	public <U> U waitState(final PollingFunction<T, U> applier) {
-		return waitActionSuccess(this::canRead, applier, pilot.getDefaultActionTimeout(), throwError());
-	}
-
 	public void waitEnabled() {
-		withReport(c -> "check enabled").waitState(matches(JComponent::isEnabled));
+		withReport(c -> "check enabled").waitState(satisfies(JComponent::isEnabled));
 	}
 
 	public void waitDisabled() {
-		withReport(c -> "check disabled").waitState(matches(c -> !c.isEnabled()));
+		withReport(c -> "check disabled").waitState(satisfies(c -> !c.isEnabled()));
 	}
 
 	public static void pressReturn(final JComponent t) {

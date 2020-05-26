@@ -8,7 +8,7 @@ import javax.swing.text.JTextComponent;
 
 import org.junit.Assert;
 
-public class SwingText extends AbstractSwingComponent<JTextComponent> {
+public class SwingText extends AbstractSwingComponent<SwingText, JTextComponent> {
 
 	public SwingText(final SwingGuiPilot pilot, final String name) {
 		super(pilot, JTextComponent.class, name);
@@ -29,7 +29,7 @@ public class SwingText extends AbstractSwingComponent<JTextComponent> {
 		if (value == null) {
 			return;
 		}
-		withReport(r -> "set text \'" + value + "\'").waitEditSuccess(action(t -> {
+		withReport(r -> "set text \'" + value + "\'").waitEdited(action(t -> {
 			t.setText(value);
 			if (t instanceof JTextField) {
 				pressReturn(t);

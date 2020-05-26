@@ -6,7 +6,7 @@ import javax.swing.JLabel;
 
 import org.junit.Assert;
 
-public class SwingLabel extends AbstractSwingComponent<JLabel> {
+public class SwingLabel extends AbstractSwingComponent<SwingLabel, JLabel> {
 
 	public SwingLabel(final SwingGuiPilot pilot, final String name) {
 		super(pilot, JLabel.class, name);

@@ -19,8 +19,6 @@ import ch.skymarshall.tcwriter.it.api.StepSelector;
 import ch.skymarshall.tcwriter.it.api.TestSessionRole;
 import ch.skymarshall.tcwriter.it.api.TestWriterRole;
 import ch.skymarshall.tcwriter.pilot.Polling;
-import ch.skymarshall.tcwriter.pilot.swing.SwingButton;
-import ch.skymarshall.tcwriter.pilot.swing.SwingList;
 import ch.skymarshall.tcwriter.pilot.swing.SwingTable;
 
 public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
@@ -30,78 +28,6 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 
 	public LocalTCWriterRole(final TCGuiPilot guiPilot) {
 		this.guiPilot = guiPilot;
-	}
-
-	@Override
-	public void selectStep(final StepSelector selector) {
-		selector.select(guiPilot);
-	}
-
-	@Override
-	public void editStep(final StepSelector selector, final StepEdition edition) {
-		selector.select(guiPilot);
-		new SwingList(guiPilot, "Actors").select(edition.getActor());
-		new SwingList(guiPilot, "Actions").select(edition.getAction());
-		new SwingList(guiPilot, "Selectors").select(edition.getSelector());
-		new SwingList(guiPilot, "Parameters0").select(edition.getParameter());
-	}
-
-	@Override
-	public void updateStep(final StepSelector selector, final StepEdition edition) {
-		editStep(selector, edition);
-		applyStepEdition();
-	}
-
-	private void applyStepEdition() {
-		new SwingButton(guiPilot, "ApplyStep").click();
-	}
-
-	@Override
-	public void checkStep(final StepSelector selector, final StepEdition edition) {
-		selector.select(guiPilot);
-		new SwingList(guiPilot, "Actors").checkSelected(edition.getActor());
-		new SwingList(guiPilot, "Actions").checkSelected(edition.getAction());
-		new SwingList(guiPilot, "Selectors").checkSelected(edition.getSelector());
-		new SwingList(guiPilot, "Parameters0").checkSelected(edition.getParameter());
-	}
-
-	/**
-	 * Checks the text has it would be displayed
-	 */
-	@Override
-	public void checkHumanReadable(final StepSelector selector, final String humanReadable) {
-		selector.select(guiPilot);
-		final SwingTable stepsTable = new SwingTable(guiPilot, "StepsTable");
-		stepsTable.withReport(c -> "Check human readable text: " + humanReadable).waitState(assertion(t -> {
-			final Object value = ((StepsTableModel) t.getModel()).getHumanReadable(t.getSelectedRow());
-			Assert.assertEquals(humanReadable, value.toString());
-		}));
-	}
-
-	@Override
-	public void updateParameter(final ParameterSelector selector, final ParameterValue value) {
-		new SwingTable(guiPilot, selector.getTableName()).withReport(c -> "Set parameter values:" + value)
-				.waitEditSuccess(t -> {
-					updateValue(t, value.getKeyValue1());
-					updateValue(t, value.getKeyValue2());
-					updateValue(t, value.getKeyValue3());
-					return Polling.isTrue();
-				}, Polling.assertFail("Setting " + value));
-		applyStepEdition();
-	}
-
-	private static void updateValue(final JTable valueTable, final String keyValueStr) {
-		if (keyValueStr == null) {
-			return;
-		}
-		final String[] keyValue = keyValueStr.split(":");
-		for (int i = 0; i < valueTable.getRowCount(); i++) {
-			if (valueTable.getValueAt(i, 2).equals(keyValue[0])) {
-				valueTable.setValueAt(keyValue[1], i, 3);
-				return;
-			}
-		}
-		Assert.fail("No such complex type parameter: " + keyValue[0]);
 	}
 
 	private StepEdition[] basicTestContents() {
@@ -123,14 +49,69 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	}
 
 	@Override
-	public void injectBasicTest() {
+	public void selectStep(final StepSelector selector) {
+		selector.select(guiPilot);
+	}
 
+	@Override
+	public void editStep(final StepSelector selector, final StepEdition edition) {
+		selector.select(guiPilot);
+		guiPilot.list("Actors").select(edition.getActor());
+		guiPilot.list("Actions").select(edition.getAction());
+		guiPilot.list("Selectors").select(edition.getSelector());
+		guiPilot.list("Parameters0").select(edition.getParameter());
+	}
+
+	@Override
+	public void updateStep(final StepSelector selector, final StepEdition edition) {
+		editStep(selector, edition);
+		applyStepEdition();
+	}
+
+	private void applyStepEdition() {
+		guiPilot.button("ApplyStep").click();
+	}
+
+	@Override
+	public void checkStep(final StepSelector selector, final StepEdition edition) {
+		selector.select(guiPilot);
+		guiPilot.list("Actors").checkSelected(edition.getActor());
+		guiPilot.list("Actions").checkSelected(edition.getAction());
+		guiPilot.list("Selectors").checkSelected(edition.getSelector());
+		guiPilot.list("Parameters0").checkSelected(edition.getParameter());
+	}
+
+	/**
+	 * Checks the text has it would be displayed
+	 */
+	@Override
+	public void checkHumanReadable(final StepSelector selector, final String humanReadable) {
+		selector.select(guiPilot);
+		final SwingTable stepsTable = guiPilot.table("StepsTable");
+		stepsTable.withReport(c -> "Check human readable text: " + humanReadable).waitState(assertion(t -> {
+			final Object value = ((StepsTableModel) t.getModel()).getHumanReadable(t.getSelectedRow());
+			Assert.assertEquals(humanReadable, value.toString());
+		}));
+	}
+
+	@Override
+	public void updateParameter(final ParameterSelector selector, final ParameterValue value) {
+		guiPilot.table(selector.getTableName()).withReport(c -> "Set parameter values:" + value).waitEdited(t -> {
+			updateValue(t, value.getKeyValue1());
+			updateValue(t, value.getKeyValue2());
+			updateValue(t, value.getKeyValue3());
+			return Polling.success();
+		}, Polling.assertFail("Setting " + value));
+		applyStepEdition();
+	}
+
+	@Override
+	public void injectBasicTest() {
 		final StepEdition[] basicTestContents = basicTestContents();
 		updateStep(StepSelector.selectStep(1), basicTestContents[0]);
 		updateStep(addStep(), basicTestContents[1]);
 		editStep(addStep(), basicTestContents[2]);
 		updateParameter(selector(), oneValue("index:1"));
-
 	}
 
 	@Override
@@ -145,11 +126,24 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 
 		checkStep(StepSelector.selectStep(3), basicTestContents[2]);
 		checkHumanReadable(currentStep(), "As test writer, I select the step 1");
-
 	}
 
 	@Override
 	public void mainFrameAction(final MainFrameAction action) {
-		guiPilot.withDialog(() -> action.execute(guiPilot), action::handleJDialog);
+		action.execute(guiPilot);
+	}
+
+	private static void updateValue(final JTable valueTable, final String keyValueStr) {
+		if (keyValueStr == null) {
+			return;
+		}
+		final String[] keyValue = keyValueStr.split(":");
+		for (int i = 0; i < valueTable.getRowCount(); i++) {
+			if (valueTable.getValueAt(i, 2).equals(keyValue[0])) {
+				valueTable.setValueAt(keyValue[1], i, 3);
+				return;
+			}
+		}
+		Assert.fail("No such complex type parameter: " + keyValue[0]);
 	}
 }

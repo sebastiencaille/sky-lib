@@ -8,16 +8,21 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
+import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.CapabilityType;
 import org.xnio.streams.Streams;
 
 import ch.skymarshall.tcwriter.pilot.ActionDelay;
+import ch.skymarshall.tcwriter.pilot.ModalDialogDetector;
 import io.undertow.Undertow;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
@@ -32,8 +37,8 @@ public class SeleniumExampleTest {
 	@BeforeClass
 	public static void startWebServer() {
 
-		webServer = Undertow.builder().addHttpListener(8080, "localhost").setHandler(SeleniumExampleTest::handleExchange)
-				.build();
+		webServer = Undertow.builder().addHttpListener(8080, "localhost")
+				.setHandler(SeleniumExampleTest::handleWebExchange).build();
 		webServer.start();
 
 		// Start selenium
@@ -44,11 +49,12 @@ public class SeleniumExampleTest {
 
 		final FirefoxOptions firefoxOptions = new FirefoxOptions();
 		firefoxOptions.setBinary(firefoxBinary);
+		firefoxOptions.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.IGNORE);
 
 		driver = new FirefoxDriver(firefoxOptions);
 	}
 
-	public static void handleExchange(final HttpServerExchange exchange) {
+	public static void handleWebExchange(final HttpServerExchange exchange) {
 		if ("/example1.html".equals(exchange.getRequestPath())) {
 
 			exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/html");
@@ -86,25 +92,41 @@ public class SeleniumExampleTest {
 
 		@Override
 		public boolean waitFinished() {
-			new SeleniumElement(pilot, PROCEED_LOCATION).waitEnabled();
+			pilot.element(PROCEED_LOCATION).waitEnabled();
 			return true;
 		}
 
 	}
 
+	private SeleniumGuiPilot pilot;
+
+	@Before
+	public void createPilot() {
+		pilot = new SeleniumGuiPilot(driver);
+	}
+
+	@After
+	public void releasePilot() {
+		pilot.close();
+	}
+
 	@Test
 	public void testExample() {
-		final SeleniumGuiPilot pilot = new SeleniumGuiPilot(driver);
 
 		pilot.getDriver().get("http://localhost:8080/example1.html");
 		//
-		new SeleniumElement(pilot, PROCEED_LOCATION).click().followedBy(new ArbitraryDelay(pilot));
-		new SeleniumElement(pilot, OK_LOCATION).click();
-		new SeleniumAlert(pilot).acknowledge();
+		pilot.element(PROCEED_LOCATION).click().followedBy(new ArbitraryDelay(pilot));
+		pilot.expectModalDialog(s -> {
+			s.acknowledge();
+			return ModalDialogDetector.ignore();
+		});
+		pilot.element(OK_LOCATION).click();
+		pilot.waitModalDialogHandled();
 
-		new SeleniumElement(pilot, By.id("NotExisting")).clickIfEnabled(Duration.ofMillis(500));
+		pilot.element(By.id("NotExisting")).clickIfEnabled(Duration.ofMillis(500));
 
 		System.out.println(pilot.getActionReport().getFormattedReport());
+
 		assertEquals(pilot.getActionReport().getFormattedReport(), 5, pilot.getActionReport().getReport().size());
 	}
 

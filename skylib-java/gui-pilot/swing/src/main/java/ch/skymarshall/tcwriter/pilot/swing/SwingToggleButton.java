@@ -7,7 +7,7 @@ import javax.swing.JToggleButton;
 
 import org.junit.Assert;
 
-public class SwingToggleButton extends AbstractSwingComponent<JToggleButton> {
+public class SwingToggleButton extends AbstractSwingComponent<SwingToggleButton, JToggleButton> {
 
 	public SwingToggleButton(final SwingGuiPilot pilot, final String name) {
 		super(pilot, JToggleButton.class, name);
@@ -20,7 +20,7 @@ public class SwingToggleButton extends AbstractSwingComponent<JToggleButton> {
 
 	public void setSelected(final boolean selected) {
 		withReport(c -> "set " + (selected ? "selected" : "not selected"))
-				.waitEditSuccess(action(c -> c.setSelected(selected)));
+				.waitEdited(action(c -> c.setSelected(selected)));
 	}
 
 }

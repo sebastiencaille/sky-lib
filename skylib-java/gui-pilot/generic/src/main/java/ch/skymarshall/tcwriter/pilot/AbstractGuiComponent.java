@@ -1,6 +1,7 @@
 package ch.skymarshall.tcwriter.pilot;
 
 import static ch.skymarshall.tcwriter.pilot.Polling.failure;
+import static ch.skymarshall.tcwriter.pilot.Polling.throwError;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -11,8 +12,9 @@ import java.util.function.Predicate;
 
 import ch.skymarshall.tcwriter.pilot.Polling.PollingFunction;
 import ch.skymarshall.tcwriter.pilot.Polling.PollingResultFunction;
+import ch.skymarshall.util.helpers.NoExceptionCloseable;
 
-public abstract class AbstractGuiComponent<T, C extends AbstractGuiComponent<T, C>> {
+public abstract class AbstractGuiComponent<C extends AbstractGuiComponent<C, T>, T> {
 
 	protected static class LoadedElement<TT> {
 		public final TT element;
@@ -32,13 +34,38 @@ public abstract class AbstractGuiComponent<T, C extends AbstractGuiComponent<T, 
 
 	}
 
-	protected abstract T loadElement();
+	/**
+	 * Loads a component from the gui
+	 *
+	 * @return
+	 */
+	protected abstract T loadGuiComponent();
+
+	/**
+	 * Checks if a component is in a state that allows checking it's state
+	 *
+	 * @param component
+	 * @return
+	 */
+	protected abstract boolean canCheck(final T component);
+
+	/**
+	 * Checks if a component is in a state that allows edition
+	 *
+	 * @param component
+	 * @return
+	 */
+	protected abstract boolean canEdit(final T component);
 
 	private final GuiPilot pilot;
+
 	private final List<Consumer<T>> postExecutions = new ArrayList<>();
 
 	private LoadedElement<T> cachedElement = null;
+
 	protected boolean fired = false;
+
+	/** Next report line */
 	private Function<T, String> reportLine = t -> null;
 
 	public AbstractGuiComponent(final GuiPilot pilot) {
@@ -89,8 +116,8 @@ public abstract class AbstractGuiComponent<T, C extends AbstractGuiComponent<T, 
 	}
 
 	/**
-	 * Executes until condition is true. This method wais for the delayActions and
-	 * fires the post executions. Use this to method to protect execution of
+	 * Executes until condition is true. This method waits for the "action delays"
+	 * and fires the post executions. Use this to method to protect execution of
 	 * actions.
 	 *
 	 * Prefer overriding waitActionSuccessLoop
@@ -105,23 +132,25 @@ public abstract class AbstractGuiComponent<T, C extends AbstractGuiComponent<T, 
 
 		waitActionDelay();
 
-		final Polling<T, U> result = waitActionSuccessLoop(precondition, applier, timeout);
-		if (result.success()) {
-			fired = true;
-			postExecutions.stream().forEach(p -> p.accept(cachedElement.element));
+		try (NoExceptionCloseable closeable = pilot.withModalDialogDetection()) {
+			final Polling<T, U> result = waitActionSuccessLoop(precondition, applier, timeout);
+			if (result.isSuccess()) {
+				fired = true;
+				postExecutions.stream().forEach(p -> p.accept(cachedElement.element));
+			}
+
+			result.setInformation(pilot, toString(), cachedElement);
+			final U resultWithFail = result.orElseGet(() -> onFail.apply(result));
+
+			reportLine = null;
+			return resultWithFail;
 		}
-
-		result.setInformation(pilot, toString(), cachedElement);
-		final U resultWithFail = result.orElseGet(() -> onFail.apply(result));
-
-		reportLine = null;
-		return resultWithFail;
 	}
 
 	/**
 	 * Loops until the action is processed. Can be overwritten by custom code
 	 *
-	 * @param <U>          type of returned value (component, text, ...)
+	 * @param <U>          return type
 	 * @param precondition a precondition
 	 * @param applier      action applied on component
 	 * @param reporting    reporting, if action is successful
@@ -134,7 +163,7 @@ public abstract class AbstractGuiComponent<T, C extends AbstractGuiComponent<T, 
 		Polling<T, U> lastResult = failure("No information");
 		while (System.currentTimeMillis() - startTime < timeout.toMillis()) {
 			lastResult = executePolling(precondition, applier);
-			if (lastResult.success()) {
+			if (lastResult.isSuccess()) {
 				break;
 			}
 			try {
@@ -148,17 +177,19 @@ public abstract class AbstractGuiComponent<T, C extends AbstractGuiComponent<T, 
 	}
 
 	/**
-	 * Try to execute the action
+	 * Tries to execute the action
 	 *
+	 * @param <U>          return type
 	 * @param precondition
 	 * @param applier
 	 * @return
 	 */
 	protected <U> Polling<T, U> executePolling(final Predicate<T> precondition, final PollingFunction<T, U> applier) {
+
 		if (cachedElement == null) {
-			final T loadedElement = loadElement();
-			if (loadedElement != null) {
-				cachedElement = new LoadedElement<>(loadedElement);
+			final T loadedGuiComponent = loadGuiComponent();
+			if (loadedGuiComponent != null) {
+				cachedElement = new LoadedElement<>(loadedGuiComponent);
 			}
 		}
 		if (cachedElement == null) {
@@ -170,11 +201,58 @@ public abstract class AbstractGuiComponent<T, C extends AbstractGuiComponent<T, 
 
 		final String report = reportLine.apply(cachedElement.element); // element may disappear after action
 		final Polling<T, U> result = applier.apply(cachedElement.element);
-		if (result.success()) {
+		if (result.isSuccess()) {
 			pilot.getActionReport().report(report);
 			reportLine = null;
 		}
 		return result;
+	}
+
+	/**
+	 * Wait until a component is edited
+	 *
+	 * @param <U>     return type
+	 * @param edition
+	 * @param onFail
+	 * @return
+	 */
+	public <U> U waitEdited(final PollingFunction<T, U> edition, final PollingResultFunction<T, U> onFail) {
+		return waitActionSuccess(this::canEdit, edition, pilot.getDefaultActionTimeout(), onFail);
+	}
+
+	/**
+	 * Waits until a component is edited, throwing a java assertion error if edition
+	 * failed
+	 *
+	 * @param <U>     return type
+	 * @param edition
+	 * @return
+	 */
+	public <U> U waitEdited(final PollingFunction<T, U> edition) {
+		return waitEdited(edition, throwError());
+	}
+
+	/**
+	 * Waits until a component is in the expected state
+	 *
+	 * @param <U>   return type
+	 * @param check
+	 * @return
+	 */
+	public <U> U waitState(final PollingFunction<T, U> check, final PollingResultFunction<T, U> onFail) {
+		return waitActionSuccess(this::canCheck, check, pilot.getDefaultActionTimeout(), onFail);
+	}
+
+	/**
+	 * Waits until a component is in the expected state, throwing a java assertion
+	 * error if the check failed
+	 *
+	 * @param <U>   return type
+	 * @param check
+	 * @return
+	 */
+	public <U> U waitState(final PollingFunction<T, U> check) {
+		return waitState(check, throwError());
 	}
 
 	/**

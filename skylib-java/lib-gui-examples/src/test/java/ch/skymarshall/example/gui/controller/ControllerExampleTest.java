@@ -61,47 +61,47 @@ public class ControllerExampleTest {
 	}
 
 	private SwingToggleButton booleanEditor(final SwingGuiPilot pilot) {
-		return new SwingToggleButton(pilot, "booleanEditor");
+		return pilot.toggleButton("booleanEditor");
 	}
 
 	private SwingLabel booleanEditorCheck(final SwingGuiPilot pilot) {
-		return new SwingLabel(pilot, "booleanEditorCheck");
+		return pilot.label("booleanEditorCheck");
 	}
 
 	private SwingText intStringEditor(final SwingGuiPilot pilot) {
-		return new SwingText(pilot, "intStringEditor");
+		return pilot.text("intStringEditor");
 	}
 
 	private final SwingLabel intCheck(final SwingGuiPilot pilot) {
-		return new SwingLabel(pilot, "intCheck");
+		return pilot.label("intCheck");
 	}
 
 	private SwingLabel getErrorLabel(final SwingGuiPilot pilot) {
-		return new SwingLabel(pilot, "errorLabel");
+		return pilot.label("errorLabel");
 	}
 
 	private SwingList dynamicListEditor(final SwingGuiPilot pilot) {
-		return new SwingList(pilot, "dynamicListEditor");
+		return pilot.list("dynamicListEditor");
 	}
 
 	private SwingLabel dynamicListSelectionCheck(final SwingGuiPilot pilot) {
-		return new SwingLabel(pilot, "dynamicListSelectionCheck");
+		return pilot.label("dynamicListSelectionCheck");
 	}
 
 	private SwingList staticListEditor(final SwingGuiPilot pilot) {
-		return new SwingList(pilot, "staticListEditor");
+		return pilot.list("staticListEditor");
 	}
 
 	private SwingLabel staticListSelectionCheck(final SwingGuiPilot pilot) {
-		return new SwingLabel(pilot, "staticListSelectionCheck");
+		return pilot.label("staticListSelectionCheck");
 	}
 
 	private SwingTable tableSelectionEditor(final SwingGuiPilot pilot) {
-		return new SwingTable(pilot, "tableSelectionEditor");
+		return pilot.table("tableSelectionEditor");
 	}
 
 	private SwingLabel tableSelectionCheck(final SwingGuiPilot pilot) {
-		return new SwingLabel(pilot, "tableSelectionCheck");
+		return pilot.label("tableSelectionCheck");
 	}
 
 }

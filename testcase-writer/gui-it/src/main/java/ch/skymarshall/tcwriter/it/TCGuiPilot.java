@@ -14,9 +14,11 @@ public class TCGuiPilot extends SwingGuiPilot {
 		this.root = root;
 	}
 
+	@Override
 	public void close() {
 		root.setVisible(false);
 		root.dispose();
+		super.close();
 	}
 
 }

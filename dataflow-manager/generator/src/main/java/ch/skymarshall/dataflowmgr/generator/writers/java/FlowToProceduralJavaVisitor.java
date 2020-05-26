@@ -1,6 +1,7 @@
 package ch.skymarshall.dataflowmgr.generator.writers.java;
 
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toSet;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -87,8 +88,10 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 	@Override
 	protected void process(final BindingContext context, final Processor processor) throws IOException {
 
-		generator.append("// ------------------------- ").append(context.inputDataPoint).append(" -> ")
-				.append(processor.getCall()).append(" -> ").append(context.outputDataPoint)
+		generator.append("// ------------------------- ") //
+				.append(context.inputDataPoint).append(" -> ") //
+				.append(processor.getCall()).append(" -> ")//
+				.append(context.outputDataPoint) //
 				.append(" -------------------------").newLine();
 
 		availableVars.add(
@@ -100,7 +103,7 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 
 		final Set<String> exclusions = BindingRule
 				.getAll(context.binding.getRules(), BindingRule.Type.EXCLUSION, Binding.class).map(Binding::toDataPoint)
-				.collect(Collectors.toSet());
+				.collect(toSet());
 		final boolean isConditionalExec = isConditionalInputDataPoint || !context.activators.isEmpty()
 				|| !exclusions.isEmpty();
 		final boolean isExit = Flow.EXIT_PROCESSOR.equals(context.outputDataPoint);
@@ -113,8 +116,9 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 		// Conditional Execution
 		// -------------------------
 		if (!exclusions.isEmpty()) {
-			generator.addVariable("boolean", executeDefaultVarNameOf(context),
-					exclusions.stream().map(x -> "!" + executedVarNameOf(x)).collect(Collectors.joining(" && ")))
+			generator
+					.addVariable("boolean", executeDefaultVarNameOf(context),
+							exclusions.stream().map(x -> "!" + executedVarNameOf(x)).collect(joining(" && ")))
 					.newLine();
 		}
 		addExecution(context, processor, exclusions, isConditionalInputDataPoint, isConditionalExec, isExit);

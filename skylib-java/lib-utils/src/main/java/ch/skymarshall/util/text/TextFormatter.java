@@ -123,9 +123,23 @@ public class TextFormatter<T extends TextFormatter<T>> {
 		return (T) this;
 	}
 
-	public T newLine() throws IOException {
+	public T appendCamelCase(final String s) throws IOException {
+		final String[] parts = s.split("_");
+		for (final String part : parts) {
+			output.append(Character.toUpperCase(part.charAt(0)));
+			output.append(part.substring(1));
+		}
+		return (T) this;
+	}
+
+	public T eol() throws IOException {
 		output.append('\n');
 		return (T) this;
+	}
+
+	public T eoli() throws IOException {
+		output.append('\n');
+		return appendIndent();
 	}
 
 	public T append(final StringBuilder builder) throws IOException {

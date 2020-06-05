@@ -202,7 +202,7 @@ public class ModelClassProcessor {
 		final JavaCodeGenerator gen = new JavaCodeGenerator();
 		gen.appendIndentedLine(
 				"public static final String " + toConstant(attrib.getName()) + " = \"" + attrib.getName() + "\";");
-		gen.newLine();
+		gen.eol();
 
 		return gen.toString();
 	}
@@ -213,7 +213,7 @@ public class ModelClassProcessor {
 		final String fieldConstant = constant + "_FIELD";
 		context.generatedConstants.put(fieldConstant, attrib.getCodeName());
 		gen.appendIndentedLine("private static final Field " + fieldConstant + ';');
-		gen.newLine();
+		gen.eol();
 
 		return gen.toString();
 	}

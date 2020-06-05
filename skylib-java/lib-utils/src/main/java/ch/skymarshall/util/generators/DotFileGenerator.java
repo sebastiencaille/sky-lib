@@ -15,8 +15,8 @@ public class DotFileGenerator extends TextFormatter<DotFileGenerator> {
 	}
 
 	public DotFileGenerator header(final String graphName, final String comment) throws IOException {
-		appendIndented("// ").append(comment).newLine();
-		appendIndented("digraph \"").append(graphName).append("\" {").newLine();
+		appendIndented("// ").append(comment).eol();
+		appendIndented("digraph \"").append(graphName).append("\" {").eol();
 		indent();
 		return this;
 	}
@@ -40,7 +40,7 @@ public class DotFileGenerator extends TextFormatter<DotFileGenerator> {
 			extra = "";
 		}
 		appendIndented(String.format("\"%s\" [ label=\"%s\", shape=\"%s\" %s ];", escape(name), escape(label),
-				shape.name().toLowerCase(), extra)).newLine();
+				shape.name().toLowerCase(), extra)).eol();
 		return this;
 	}
 
@@ -54,7 +54,7 @@ public class DotFileGenerator extends TextFormatter<DotFileGenerator> {
 		} else {
 			formatted = String.format("\"%s\" -> \"%s\" [ label=\"%s\" %s ];", from, to, escape(label), extra);
 		}
-		appendIndented(formatted).newLine();
+		appendIndented(formatted).eol();
 		return this;
 	}
 

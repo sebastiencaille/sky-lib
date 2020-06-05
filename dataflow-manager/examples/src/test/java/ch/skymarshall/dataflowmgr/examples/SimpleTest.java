@@ -14,6 +14,7 @@ import org.junit.Test;
 import ch.skymarshall.dataflowmgr.generator.JavaToDictionary;
 import ch.skymarshall.dataflowmgr.generator.writers.dot.FlowToDotVisitor;
 import ch.skymarshall.dataflowmgr.generator.writers.java.FlowToProceduralJavaVisitor;
+import ch.skymarshall.dataflowmgr.generator.writers.java.FlowToRXJavaVisitor;
 import ch.skymarshall.dataflowmgr.model.Binding;
 import ch.skymarshall.dataflowmgr.model.Condition;
 import ch.skymarshall.dataflowmgr.model.ConditionalBindingGroup;
@@ -66,6 +67,9 @@ public class SimpleTest {
 
 		new FlowToProceduralJavaVisitor(flow, "ch.skymarshall.dataflowmgr.examples.simple",
 				Template.from("templates/flow.template")).process().writeToFolder(new File("src/test/java"));
+
+		new FlowToRXJavaVisitor(flow, "ch.skymarshall.dataflowmgr.examples.simplerx",
+				Template.from("templates/flowrx.template")).process().writeToFolder(new File("src/test/java"));
 
 		try (final FileWriter out = new FileWriter(new File("src/test/reports/SimpleFlow.dot"))) {
 			out.write(new FlowToDotVisitor(flow).process().getOutput().toString());

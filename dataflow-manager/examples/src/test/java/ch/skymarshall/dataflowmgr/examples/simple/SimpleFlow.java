@@ -12,28 +12,28 @@ public class SimpleFlow extends AbstractFlow {
 		ch.skymarshall.dataflowmgr.examples.simple.dto.MyData simpleService_init = this.simpleService.init(inputDataPoint);
 		
 		// ------------------------- simpleService_init -> simpleService.enhance -> enhanced -------------------------
-		boolean activated_9872854a_fece_46e8_b8be_b700fd3fed9a = true;
-		if (activated_9872854a_fece_46e8_b8be_b700fd3fed9a) {
-		    activated_9872854a_fece_46e8_b8be_b700fd3fed9a &= this.simpleServiceConditions.isEnhanceEnabled(simpleService_init);
+		boolean activated_83faca4f_19cc_4ea2_b81f_5e4a1fbae85f = true;
+		if (activated_83faca4f_19cc_4ea2_b81f_5e4a1fbae85f) {
+		    activated_83faca4f_19cc_4ea2_b81f_5e4a1fbae85f &= this.simpleServiceConditions.isEnhanceEnabled(simpleService_init);
 		}
 		ch.skymarshall.dataflowmgr.examples.simple.dto.MyData enhanced = null;
-		boolean executed_enhanced = false;
-		if (activated_9872854a_fece_46e8_b8be_b700fd3fed9a) {
-		    String simpleExternalAdapter_enhancement9872854a_fece_46e8_b8be_b700fd3fed9a = this.simpleExternalAdapter.enhancement(simpleService_init);
-		    enhanced = this.simpleService.enhance(simpleService_init, simpleExternalAdapter_enhancement9872854a_fece_46e8_b8be_b700fd3fed9a);
-		    executed_enhanced = true;
+		boolean enhanced_available = false;
+		if (activated_83faca4f_19cc_4ea2_b81f_5e4a1fbae85f) {
+		    String simpleExternalAdapter_enhancement83faca4f_19cc_4ea2_b81f_5e4a1fbae85f = this.simpleExternalAdapter.enhancement(simpleService_init);
+		    enhanced = this.simpleService.enhance(simpleService_init,simpleExternalAdapter_enhancement83faca4f_19cc_4ea2_b81f_5e4a1fbae85f);
+		    enhanced_available = true;
 		}
 		
 		// ------------------------- simpleService_init -> simpleService.noEnhance -> enhanced -------------------------
-		boolean executeDefault_enhanced = !executed_enhanced;
+		boolean enhanced_executeDefault = !enhanced_available;
 		
-		if (executeDefault_enhanced) {
+		if (enhanced_executeDefault) {
 		    enhanced = this.simpleService.noEnhance(simpleService_init);
-		    executed_enhanced = true;
+		    enhanced_available = true;
 		}
 		
 		// ------------------------- enhanced -> exit -> exit -------------------------
-		if (executed_enhanced) {
+		if (enhanced_available) {
 		    this.simpleExternalAdapter.display(enhanced);
 		}
 		

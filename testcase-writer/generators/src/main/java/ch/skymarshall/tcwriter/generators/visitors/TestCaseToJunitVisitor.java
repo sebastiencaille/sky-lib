@@ -43,7 +43,7 @@ public class TestCaseToJunitVisitor {
 
 		for (final TestStep step : tc.getSteps()) {
 			javaContent.append("// Step ").append(Integer.toString(step.getOrdinal())).append(": ")
-					.append(testSummaryVisitor.process(step)).newLine();
+					.append(testSummaryVisitor.process(step)).eol();
 			visitTestStep(javaContent, tc.getDictionary(), step);
 		}
 
@@ -68,7 +68,7 @@ public class TestCaseToJunitVisitor {
 		}
 		stepContent.addMethodCall(step.getActor().getName(), step.getAction().getName(),
 				g -> addParameterValuesToCall(g, step, step.getParametersValue(), step.getAction().getParameters()))
-				.eos().newLine();
+				.eos().eol();
 
 		javaContent.append(comment);
 		javaContent.append(stepContent);

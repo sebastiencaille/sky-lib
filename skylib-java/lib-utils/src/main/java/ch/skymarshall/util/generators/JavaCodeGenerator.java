@@ -16,6 +16,7 @@
 package ch.skymarshall.util.generators;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Set;
 
 import ch.skymarshall.util.text.TextFormatter;
@@ -72,7 +73,7 @@ public class JavaCodeGenerator extends TextFormatter<JavaCodeGenerator> {
 		for (final String str : extra) {
 			append(str);
 		}
-		return append(" {").newLine().indent();
+		return append(" {").indent().eol();
 	}
 
 	public JavaCodeGenerator closeBlock(final String... extra) throws IOException {
@@ -80,7 +81,7 @@ public class JavaCodeGenerator extends TextFormatter<JavaCodeGenerator> {
 		for (final String str : extra) {
 			append(str);
 		}
-		return newLine();
+		return eol();
 	}
 
 	public JavaCodeGenerator openIf(final String condition) throws IOException {
@@ -91,17 +92,22 @@ public class JavaCodeGenerator extends TextFormatter<JavaCodeGenerator> {
 		return appendIndented(type).append(" ").append(name).append(" = ");
 	}
 
+	public JavaCodeGenerator addVarDecl(final String scope, final String type, final String name) throws IOException {
+		return appendIndented(scope).append(" ").append(type).append(" ").append(name).eos();
+	}
+
 	public JavaCodeGenerator addVariable(final String type, final String name, final String value) throws IOException {
 		return appendIndented(type).append(" ").append(name).append(" = ").append(value).eos();
 	}
 
-	public JavaCodeGenerator addMethodCall(final String instance, final String methodName, final String parameters)
-			throws IOException {
-		return append(instance).append(".").append(methodName).append("(").append(parameters).append(")");
+	public JavaCodeGenerator appendMethodCall(final String instance, final String methodName,
+			final Collection<String> parameters) throws IOException {
+		return append(instance).append(".").append(methodName).append("(").append(String.join(",", parameters))
+				.append(")");
 	}
 
 	public JavaCodeGenerator eos() throws IOException {
-		return append(";").newLine();
+		return append(";").eol();
 	}
 
 	public <E extends Exception> JavaCodeGenerator addMethodCall(final String methodName,
@@ -122,6 +128,15 @@ public class JavaCodeGenerator extends TextFormatter<JavaCodeGenerator> {
 	@Override
 	public String toString() {
 		return getOutput().toString();
+	}
+
+	public JavaCodeGenerator addSetter(final String scope, final String type, final String property)
+			throws IOException {
+		appendIndented(scope).append(" void set").appendCamelCase(property).append("(").append(type).append(" ")
+				.append(property).append(")").openBlock();
+		appendIndented("this.").append(property).append(" = ").append(property).eos();
+		closeBlock();
+		return this;
 	}
 
 }

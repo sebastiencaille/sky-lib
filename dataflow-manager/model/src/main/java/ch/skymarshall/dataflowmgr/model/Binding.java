@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 public class Binding extends WithId {
 
@@ -56,7 +55,7 @@ public class Binding extends WithId {
 	private final Builder config;
 
 	public Binding(final Builder config) {
-		super(UUID.randomUUID());
+		super(WithId.id());
 		this.config = config;
 	}
 

@@ -1,0 +1,47 @@
+package ${package};
+
+import org.junit.Test;
+import org.junit.Assert;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.core.Maybe;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Stream;
+import java.util.Optional;
+${imports}
+
+public class ${flow.name} extends ch.skymarshall.dataflowmgr.examples.simple.AbstractFlow {
+
+	public class FlowExecution {
+	    private final ${flow.input} inputDataPoint;
+		
+		public FlowExecution(${flow.input} inputDataPoint) {
+			this.inputDataPoint = inputDataPoint;
+		}
+
+		${flow.executionClass}
+
+	}
+
+	${flow.factories}
+
+	public Maybe<FlowExecution> execute(${flow.input} inputDataPoint) {
+		final FlowExecution execution = new FlowExecution(inputDataPoint);
+		return Maybe.just(execution)${flow.code};
+	}
+
+	@Test	
+	public void testFlow() {
+		simpleExternalAdapter.reset();
+		
+	 	execute("Hello").blockingGet();
+		Assert.assertEquals("Hello -> enhanced with World", simpleExternalAdapter.getOutput());
+		
+		execute("Hi").blockingGet();
+		Assert.assertEquals("Hi -> enhanced with There", simpleExternalAdapter.getOutput());
+		
+		execute("Huh").blockingGet();
+		Assert.assertEquals("Huh -> not enhanced", simpleExternalAdapter.getOutput());
+	}
+
+}

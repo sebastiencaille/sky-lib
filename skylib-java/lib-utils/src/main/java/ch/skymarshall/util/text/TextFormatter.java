@@ -90,20 +90,22 @@ public class TextFormatter<T extends TextFormatter<T>> {
 	}
 
 	public T appendIndent() throws IOException {
-		output.append(indentationManager.getIndentation());
+		return append(indentationManager.getIndentation());
+	}
+
+	public T append(final String str) throws IOException {
+		output.append(str);
 		return (T) this;
 	}
 
 	public T appendIndented(final String string) throws IOException {
 		output.append(indentationManager.getIndentation());
-		output.append(string);
-		return (T) this;
+		return append(string);
 	}
 
 	public T appendAtOverride() throws IOException {
 		output.append(indentationManager.getIndentation());
-		output.append("@Override\n");
-		return (T) this;
+		return append("@Override\n");
 	}
 
 	public T appendIndentedLine(final String string) throws IOException {
@@ -113,23 +115,20 @@ public class TextFormatter<T extends TextFormatter<T>> {
 		return (T) this;
 	}
 
-	public T append(final String str) throws IOException {
-		output.append(str);
-		return (T) this;
+	public T append(final String format, final Object... parameters) throws IOException {
+		return append(String.format(format, parameters));
+	}
+
+	public T appendIndented(final String format, final Object... parameters) throws IOException {
+		return appendIndented(String.format(format, parameters));
+	}
+
+	public T appendIndentedLine(final String format, final Object... parameters) throws IOException {
+		return appendIndentedLine(String.format(format, parameters));
 	}
 
 	public T append(final TextFormatter<?> text) throws IOException {
-		output.append(text.getOutput().toString());
-		return (T) this;
-	}
-
-	public T appendCamelCase(final String s) throws IOException {
-		final String[] parts = s.split("_");
-		for (final String part : parts) {
-			output.append(Character.toUpperCase(part.charAt(0)));
-			output.append(part.substring(1));
-		}
-		return (T) this;
+		return append(text.getOutput().toString());
 	}
 
 	public T eol() throws IOException {
@@ -143,12 +142,20 @@ public class TextFormatter<T extends TextFormatter<T>> {
 	}
 
 	public T append(final StringBuilder builder) throws IOException {
-		output.append(builder.toString());
-		return (T) this;
+		return append(builder.toString());
 	}
 
 	public IOutput getOutput() {
 		return output;
 	}
 
+	public static String toCamelCase(final String s) {
+		final StringBuilder b = new StringBuilder();
+		final String[] parts = s.split("_");
+		for (final String part : parts) {
+			b.append(Character.toString(Character.toUpperCase(part.charAt(0))));
+			b.append(part.substring(1));
+		}
+		return b.toString();
+	}
 }

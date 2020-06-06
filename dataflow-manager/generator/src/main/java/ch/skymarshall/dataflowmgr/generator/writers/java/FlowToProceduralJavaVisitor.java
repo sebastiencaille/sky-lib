@@ -6,13 +6,10 @@ import static java.util.stream.Collectors.toSet;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import ch.skymarshall.dataflowmgr.generator.AbstractFlowVisitor;
 import ch.skymarshall.dataflowmgr.model.Binding;
 import ch.skymarshall.dataflowmgr.model.BindingRule;
 import ch.skymarshall.dataflowmgr.model.Call;
@@ -20,52 +17,15 @@ import ch.skymarshall.dataflowmgr.model.Condition;
 import ch.skymarshall.dataflowmgr.model.ExternalAdapter;
 import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.Processor;
-import ch.skymarshall.dataflowmgr.model.WithId;
 import ch.skymarshall.util.generators.JavaCodeGenerator;
 import ch.skymarshall.util.generators.Template;
 
-public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
-
-	private static class BindingImplVariable {
-		private final String parameterName;
-		private final String parameterType;
-		private final String variable;
-
-		public BindingImplVariable(final String parameterName, final String parameterType, final String variable) {
-			this.parameterName = parameterName;
-			this.parameterType = parameterType;
-			this.variable = variable;
-		}
-
-		public BindingImplVariable(final Call<?> call, final String variable) {
-			this.parameterName = call.getName().substring(call.getName().lastIndexOf('.') + 1);
-			this.parameterType = call.getReturnType();
-			this.variable = variable;
-		}
-
-		@Override
-		public String toString() {
-			return parameterName + ": " + parameterType;
-		}
-
-	}
-
-	private final Set<String> imports = new HashSet<>();
-
-	private final String packageName;
-
-	private final Template template;
+public class FlowToProceduralJavaVisitor extends AbstractJavaVisitor {
 
 	private final JavaCodeGenerator generator = new JavaCodeGenerator();
 
-	private final Set<String> definedDataPoints = new HashSet<>();
-
-	private final List<BindingImplVariable> availableVars = new ArrayList<>();
-
 	public FlowToProceduralJavaVisitor(final Flow flow, final String packageName, final Template template) {
-		super(flow);
-		this.packageName = packageName;
-		this.template = template;
+		super(flow, packageName, template);
 	}
 
 	public Template process() throws IOException {
@@ -87,11 +47,7 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 	@Override
 	protected void process(final BindingContext context, final Processor processor) throws IOException {
 
-		generator.append("// ------------------------- ") //
-				.append(context.inputDataPoint).append(" -> ") //
-				.append(processor.getCall()).append(" -> ")//
-				.append(context.outputDataPoint) //
-				.append(" -------------------------").eol();
+		appendInfo(generator, context.binding).eol();
 
 		availableVars.add(
 				new BindingImplVariable(context.outputDataPoint, processor.getReturnType(), context.outputDataPoint));
@@ -115,7 +71,7 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 		// Conditional Execution
 		// -------------------------
 		if (!exclusions.isEmpty()) {
-			generator.addVariable("boolean", executeDefaultVarNameOf(context),
+			generator.addLocalVariable("boolean", executeDefaultVarNameOf(context),
 					exclusions.stream().map(x -> "!" + availableVarNameOf(x)).collect(joining(" && "))).eol();
 		}
 		addExecution(context, processor, exclusions, isConditionalInputDataPoint, isConditionalExec, isExit);
@@ -163,7 +119,7 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 		appendNewVariable(outputDataPoint, processor);
 		if (conditionalExec) {
 			generator.append(" = null").eos();
-			generator.addVariable("boolean", availableVarNameOf(outputDataPoint), "false");
+			generator.addLocalVariable("boolean", availableVarNameOf(outputDataPoint), "false");
 		} else {
 			generator.append(" = ");
 		}
@@ -180,7 +136,7 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 		if (context.activators.isEmpty()) {
 			return;
 		}
-		generator.addVariable("boolean", activatedVarNameOf(context.binding), "true");
+		generator.addLocalVariable("boolean", activatedVarNameOf(context.binding), "true");
 		for (final Condition activator : context.activators) {
 			generator.openIf(activatedVarNameOf(context.binding));
 
@@ -204,32 +160,6 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 		}
 	}
 
-	private List<String> guessParameters(final BindingContext context, final Call<?> call) {
-		return call.getParameters().entrySet().stream().map(kv -> guessParameter(context, kv.getKey(), kv.getValue()))
-				.collect(Collectors.toList());
-	}
-
-	private String guessParameter(final BindingContext context, final String paramName, final String paramType) {
-		if (paramType.equals(context.inputDataType)) {
-			return availableVars.stream().filter(a -> a.parameterName.equals(context.inputDataPoint)).findFirst()
-					.map(v -> v.variable).get();
-		}
-		List<BindingImplVariable> matches = availableVars.stream().filter(a -> a.parameterName.equals(paramName))
-				.collect(Collectors.toList());
-		if (matches.size() > 1) {
-			throw new IllegalArgumentException("Too many possible parameters found for " + paramName + ": " + matches);
-		} else if (matches.size() == 1) {
-			return matches.get(0).variable;
-		}
-		matches = availableVars.stream().filter(a -> a.parameterType.equals(paramType)).collect(Collectors.toList());
-		if (matches.size() > 1) {
-			throw new IllegalArgumentException("Too many possible parameters found for " + paramType + ": " + matches);
-		} else if (matches.size() == 1) {
-			return matches.get(0).variable;
-		}
-		throw new IllegalStateException("No parameter found for " + paramName + "/" + paramType);
-	}
-
 	/** Specifies if the default binding must be executed */
 	private String executeDefaultVarNameOf(final BindingContext context) {
 		return context.outputDataPoint + "_executeDefault";
@@ -243,25 +173,6 @@ public class FlowToProceduralJavaVisitor extends AbstractFlowVisitor {
 	 */
 	private String activatedVarNameOf(final Binding binding) {
 		return "activated_" + toVariable(binding);
-	}
-
-	/**
-	 * Specifies if a binding a data point is available (executed by any possible
-	 * binding)
-	 *
-	 * @param dataPoint
-	 * @return
-	 */
-	private String availableVarNameOf(final String dataPoint) {
-		return dataPoint + "_available";
-	}
-
-	private String varNameOf(final Binding binding, final Call<?> call) {
-		return call.getCall().replace('.', '_') + toVariable(binding);
-	}
-
-	private String toVariable(final WithId withId) {
-		return withId.uuid().toString().replace('-', '_');
 	}
 
 	private void appendNewVariable(final String variableName, final Call<?> call) throws IOException {

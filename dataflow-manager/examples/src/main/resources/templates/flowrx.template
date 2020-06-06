@@ -2,17 +2,23 @@ package ${package};
 
 import org.junit.Test;
 import org.junit.Assert;
-import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import java.util.concurrent.ExecutionException;
-import java.util.stream.Stream;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.function.Function;
 ${imports}
 
 public class ${flow.name} extends ch.skymarshall.dataflowmgr.examples.simple.AbstractFlow {
 
+	public enum DataPointState {
+		NOT_TRIGGERED, TRIGGERING, TRIGGERED, SKIPPED
+	}
+
 	public class FlowExecution {
+	
 	    private final ${flow.input} inputDataPoint;
 		
 		public FlowExecution(${flow.input} inputDataPoint) {
@@ -20,27 +26,38 @@ public class ${flow.name} extends ch.skymarshall.dataflowmgr.examples.simple.Abs
 		}
 
 		${flow.executionClass}
-
 	}
 
 	${flow.factories}
 
-	public Maybe<FlowExecution> execute(${flow.input} inputDataPoint) {
+	public Maybe<FlowExecution> execute(${flow.input} inputDataPoint,	
+		final Function<Maybe<FlowExecution>, Maybe<FlowExecution>> exitModifier) {
+		
 		final FlowExecution execution = new FlowExecution(inputDataPoint);
-		return Maybe.just(execution)${flow.code};
+		${flow.code}
+		return ${flow.zip};
 	}
 
 	@Test	
-	public void testFlow() {
-		simpleExternalAdapter.reset();
+	public void testFlow() throws InterruptedException  {
+		Semaphore finished = new Semaphore(0);
 		
-	 	execute("Hello").blockingGet();
+		simpleExternalAdapter.reset();
+		FlowExecution result1 = execute("Hello", e -> e.doOnSuccess(r -> finished.release())).blockingGet();
+		Assert.assertTrue(finished.tryAcquire(500, TimeUnit.MILLISECONDS));
+		Assert.assertFalse(finished.tryAcquire(500, TimeUnit.MILLISECONDS));
 		Assert.assertEquals("Hello -> enhanced with World", simpleExternalAdapter.getOutput());
 		
-		execute("Hi").blockingGet();
+		simpleExternalAdapter.reset();
+		FlowExecution result2 = execute("Hi", e -> e.doOnSuccess(r -> finished.release())).blockingGet();
+		Assert.assertTrue(finished.tryAcquire(500, TimeUnit.MILLISECONDS));
+		Assert.assertFalse(finished.tryAcquire(500, TimeUnit.MILLISECONDS));
 		Assert.assertEquals("Hi -> enhanced with There", simpleExternalAdapter.getOutput());
 		
-		execute("Huh").blockingGet();
+		simpleExternalAdapter.reset();
+		FlowExecution result3 = execute("Huh", e -> e.doOnSuccess(r -> finished.release())).blockingGet();
+ 		Assert.assertTrue(finished.tryAcquire(500, TimeUnit.MILLISECONDS));
+		Assert.assertFalse(finished.tryAcquire(500, TimeUnit.MILLISECONDS));
 		Assert.assertEquals("Huh -> not enhanced", simpleExternalAdapter.getOutput());
 	}
 

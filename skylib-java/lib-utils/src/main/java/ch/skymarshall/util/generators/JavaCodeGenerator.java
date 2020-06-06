@@ -69,9 +69,11 @@ public class JavaCodeGenerator extends TextFormatter<JavaCodeGenerator> {
 	}
 
 	public JavaCodeGenerator openBlock(final String... extra) throws IOException {
-		appendIndented("");
-		for (final String str : extra) {
-			append(str);
+		if (extra.length > 0) {
+			appendIndent();
+			for (final String str : extra) {
+				append(str);
+			}
 		}
 		return append(" {").indent().eol();
 	}
@@ -93,17 +95,22 @@ public class JavaCodeGenerator extends TextFormatter<JavaCodeGenerator> {
 	}
 
 	public JavaCodeGenerator addVarDecl(final String scope, final String type, final String name) throws IOException {
-		return appendIndented(scope).append(" ").append(type).append(" ").append(name).eos();
+		return appendIndented(String.format("%s %s %s", scope, type, name)).eos();
 	}
 
-	public JavaCodeGenerator addVariable(final String type, final String name, final String value) throws IOException {
+	public JavaCodeGenerator addVarDecl(final String scope, final String type, final String name, final String value)
+			throws IOException {
+		return appendIndented(String.format("%s %s %s = %s", scope, type, name, value)).eos();
+	}
+
+	public JavaCodeGenerator addLocalVariable(final String type, final String name, final String value)
+			throws IOException {
 		return appendIndented(type).append(" ").append(name).append(" = ").append(value).eos();
 	}
 
 	public JavaCodeGenerator appendMethodCall(final String instance, final String methodName,
 			final Collection<String> parameters) throws IOException {
-		return append(instance).append(".").append(methodName).append("(").append(String.join(",", parameters))
-				.append(")");
+		return append("%s.%s(%s)", instance, methodName, String.join(",", parameters));
 	}
 
 	public JavaCodeGenerator eos() throws IOException {
@@ -132,9 +139,8 @@ public class JavaCodeGenerator extends TextFormatter<JavaCodeGenerator> {
 
 	public JavaCodeGenerator addSetter(final String scope, final String type, final String property)
 			throws IOException {
-		appendIndented(scope).append(" void set").appendCamelCase(property).append("(").append(type).append(" ")
-				.append(property).append(")").openBlock();
-		appendIndented("this.").append(property).append(" = ").append(property).eos();
+		appendIndented(String.format("%s void set%s(%s %s)", scope, toCamelCase(property), type, property)).openBlock();
+		appendIndented(String.format("this.%s = %s", property, property)).eos();
 		closeBlock();
 		return this;
 	}

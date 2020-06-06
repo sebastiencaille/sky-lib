@@ -11,8 +11,8 @@ public class SimpleService {
 		return new MyData(input);
 	}
 
-	public MyData enhance(final MyData input, @Input("enhancement") final String externalData) {
-		return new MyData(input, " -> enhanced with " + externalData);
+	public MyData enhance(final MyData input, @Input("enhancement") final String enhancement) {
+		return new MyData(input, " -> enhanced with " + enhancement);
 	}
 
 	public MyData noEnhance(final MyData input) {

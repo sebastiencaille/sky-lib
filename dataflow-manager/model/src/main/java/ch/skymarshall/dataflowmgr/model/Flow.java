@@ -16,6 +16,7 @@
 package ch.skymarshall.dataflowmgr.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
@@ -105,6 +106,14 @@ public class Flow extends WithId {
 	public Map<Binding, Set<Binding>> cloneDependencies() {
 		return config.dependencies.entrySet().stream()
 				.collect(Collectors.toMap(Map.Entry::getKey, kv -> new HashSet<>(kv.getValue())));
+	}
+
+	public Set<Binding> getAllDependencies(final Binding binding) {
+		final Set<Binding> deps = new HashSet<>();
+		deps.addAll(config.bindings.stream().filter(b -> b.toDataPoint().equals(binding.fromDataPoint()))
+				.collect(Collectors.toSet()));
+		deps.addAll(config.dependencies.getOrDefault(binding, Collections.emptySet()));
+		return deps;
 	}
 
 }

@@ -11,15 +11,15 @@ public class Binding extends WithId {
 	public static class Builder {
 
 		private final String fromDataPoint;
-		private final Processor toProcessor;
+		private final Processor processor;
 		private final List<BindingRule> rules = new ArrayList<>();
 		private final List<ExternalAdapter> adapters = new ArrayList<>();
 		private final Set<Binding> parents = new HashSet<>();
 		private String toDataPoint;
 
-		public Builder(final String fromDataPoint, final Processor toProcessor) {
+		public Builder(final String fromDataPoint, final Processor processor) {
 			this.fromDataPoint = fromDataPoint;
-			this.toProcessor = toProcessor;
+			this.processor = processor;
 		}
 
 		public Builder activator(final Condition isEnhance) {
@@ -63,8 +63,8 @@ public class Binding extends WithId {
 		return config.fromDataPoint;
 	}
 
-	public Processor toProcessor() {
-		return config.toProcessor;
+	public Processor getProcessor() {
+		return config.processor;
 	}
 
 	public void addRule(final BindingRule rule) {
@@ -87,12 +87,20 @@ public class Binding extends WithId {
 		if (config.toDataPoint != null) {
 			return config.toDataPoint;
 		}
-		return toProcessor().asDataPoint();
+		return getProcessor().asDataPoint();
 	}
 
 	@Override
 	public String toString() {
-		return config.fromDataPoint + " -> " + config.toProcessor.asDataPoint();
+		return fromDataPoint() + " -> " + getProcessor().getCall() + " -> " + toDataPoint();
+	}
+
+	public boolean isExit() {
+		return Flow.EXIT_PROCESSOR.equals(toDataPoint());
+	}
+
+	public boolean isEntry() {
+		return Flow.ENTRY_POINT.equals(fromDataPoint());
 	}
 
 }

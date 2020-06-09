@@ -162,13 +162,12 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 			final List<Binding> bindingDeps, final Set<Binding> exclusions, final boolean isConditionalExec)
 			throws IOException {
 
-		// Execution
 		final List<String> adapterNames = visitExternalAdapters(context, context.unprocessedAdapters(context.adapters));
 
-		flowFactories.appendIndented("// All dependencies have been either triggered or skipped").eol();
-		flowFactories.appendIndented("Maybe<FlowExecution> call = Maybe.just(execution)").indent() //
-				.eoli().append(".subscribeOn(Schedulers.computation())"); //
-		addAdapterZip(adapterNames);
+		// Call service if not excluded
+		flowFactories.appendIndented("Maybe<FlowExecution> callService = Maybe.just(execution)").indent() //
+				.eoli().append(".doOnSuccess(e -> e.setState%s(DataPointState.TRIGGERED))",
+						toCamelCase(varNameOf(context.binding)));
 		if (!exclusions.isEmpty()) {
 			flowFactories
 					.eoli().append(".mapOptional(f -> ").append(exclusions.stream()
@@ -189,19 +188,34 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 			flowFactories.eoli().append(".doOnSuccess(f -> f.set%s(", toCamelCase(context.outputDataPoint)) //
 					.appendMethodCall("this", processor.getCall(), guessParameters(context, processor)).append("))");
 		}
-		flowFactories.eoli().append(".doOnTerminate(() -> Arrays.stream(callbacks).forEach(Runnable::run))").eos()
-				.unindent();
+		flowFactories.eoli().append(".doOnTerminate(() -> Arrays.stream(callbacks).forEach(Runnable::run))")//
+				.eoli().append(".subscribeOn(Schedulers.computation())") //
+				.eos().unindent();
 
+		// Refine call
 		flowFactories.openIf("callModifier != null") //
-				.appendIndented("call = callModifier.apply(call)").eos()//
+				.appendIndented("callService = callModifier.apply(callService)").eos()//
 				.closeBlock();
+		flowFactories.appendIndented("callService.subscribeOn(Schedulers.computation())").eos();
 
-		flowFactories.appendIndented("final Maybe<FlowExecution> last = call").eos();
+		// Call adapters
+		if (!adapterNames.isEmpty()) {
+			flowFactories.eoli().append("final Maybe<FlowExecution> callServiceConst = callService").eos();
+			flowFactories
+					.appendIndented("final Maybe<FlowExecution> callAdaptersAndServiceConst = Maybe.just(execution)")
+					.indent(); //
+			addAdapterZip(adapterNames);
+			flowFactories.eoli().append(".flatMap(r -> callServiceConst)").eos().unindent();
+		} else {
+			flowFactories.appendIndented("final Maybe<FlowExecution> callAdaptersAndServiceConst = callService").eos()
+					.eol();
+		}
 
 		if (!isConditionalExec) {
+			// Subscribe because we want to Complete only after all deps are executed
 			flowFactories.appendIndented("Maybe<FlowExecution> first = Maybe.just(execution)").indent(); //
 			addBindingDepsCheck(context.binding, bindingDeps) //
-					.eoli().append(".doOnSuccess(r -> last.subscribe())").eos().unindent();
+					.eoli().append(".doOnSuccess(r -> callAdaptersAndServiceConst.subscribe())").eos().unindent();
 		}
 
 	}
@@ -227,6 +241,7 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 		}
 		final List<String> activatorNames = new ArrayList<>();
 
+		// Activators
 		for (final Condition activator : context.activators) {
 
 			final Set<ExternalAdapter> unprocessed = context.unprocessedAdapters(listAdapters(context, activator));
@@ -242,29 +257,28 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 					.indent();
 			addAdapterZip(adapterNames);
 			flowFactories.eoli() //
-					.append(".subscribeOn(Schedulers.computation())").eoli() //
-					.append(".map(f -> ").appendMethodCall("this", activator.getCall(), activatorParameters).append(")")
-					.eos().unindent().eol();
+					.append(".map(f -> ").appendMethodCall("this", activator.getCall(), activatorParameters).append(")") //
+					.eoli().append(".subscribeOn(Schedulers.computation())").eos().unindent().eol();
 		}
 
-		flowFactories.appendIndented("final Maybe<FlowExecution> doActivation = Maybe.just(true)").indent();
+		// Activation check
+		flowFactories.appendIndented("final Maybe<FlowExecution> activationCheck = Maybe.just(true)").indent();
 		for (final String activatorName : activatorNames) {
 			flowFactories.eoli().append(".zipWith(").append(activatorName)
 					.append(", (u, r) -> u.booleanValue() && r.booleanValue())");
 		}
 		flowFactories.eoli().append(".mapOptional(b -> b ? Optional.of(execution) : Optional.empty())") //
-				.eoli()
-				.append(".doOnSuccess(e ->  { execution.setState%s(DataPointState.TRIGGERED); last.subscribe(); })",
-						toCamelCase(varNameOf(context.binding)))
+				.eoli().append(".flatMap(e -> callAdaptersAndServiceConst)") //
 				.eoli()
 				.append(".doOnComplete(() -> { execution.setState%s(DataPointState.TRIGGERED); execution.setState%s(DataPointState.SKIPPED); })",
 						toCamelCase(varNameOf(context.binding)), toCamelCase(context.binding.toDataPoint())) //
 				.eoli().append(".doOnTerminate(() -> Arrays.stream(callbacks).forEach(Runnable::run))") //
 				.eos().unindent().eol();
 
+		// Call activation when all deps are ok
 		flowFactories.appendIndented("Maybe<FlowExecution> first = Maybe.just(execution)").indent();
 		addBindingDepsCheck(context.binding, bindingDeps). //
-				eoli().append(".doOnSuccess(r -> doActivation.subscribe())").eos().unindent();
+				eoli().append(".doOnSuccess(r -> activationCheck.subscribe())").eos().unindent();
 	}
 
 	private List<String> visitExternalAdapters(final BindingContext context, final Set<ExternalAdapter> externalAdapter)
@@ -282,18 +296,18 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 
 			adapterNames.add("adapter_" + toVariable(adapter));
 			flowFactories.appendIndented("final Maybe<?> adapter_%s = Maybe.just(execution)", toVariable(adapter));
-			flowFactories.indent().eoli().append(".subscribeOn(Schedulers.io())").eol(); //
+			flowFactories.indent(); //
+
 			if (adapter.hasReturnType()) {
 				flowFactories.appendIndented(".map(f -> ")
-						.appendMethodCall("this", adapter.getCall(), guessParameters(context, adapter)).append(")")
-						.eoli(); //
-				flowFactories.append(".subscribeOn(Schedulers.computation())").eoli() //
-						.append(".doOnSuccess(execution::set").append(toCamelCase(varNameOfAdapter)).append(")");
+						.appendMethodCall("this", adapter.getCall(), guessParameters(context, adapter)).append(")") //
+						.eoli().append(".doOnSuccess(execution::set").append(toCamelCase(varNameOfAdapter)).append(")");
 
 			} else {
 				flowFactories.appendIndented(".doOnSuccess(f -> ")
 						.appendMethodCall("this", adapter.getCall(), guessParameters(context, adapter)).append(")");
 			}
+			flowFactories.eoli().append(".subscribeOn(Schedulers.io())");//
 			flowFactories.eos().unindent().eol();
 		}
 		return adapterNames;

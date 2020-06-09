@@ -1,5 +1,7 @@
 package ${package};
 
+import ch.skymarshall.dataflowmgr.examples.simple.FlowReport;
+
 import org.junit.Test;
 import org.junit.Assert;
 import io.reactivex.rxjava3.core.Maybe;
@@ -38,27 +40,21 @@ public class ${flow.name} extends ch.skymarshall.dataflowmgr.examples.simple.Abs
 		return ${flow.zip};
 	}
 
-	@Test	
-	public void testFlow() throws InterruptedException  {
-		Semaphore finished = new Semaphore(0);
-		
+	private void runTest(final String in, final String out) throws InterruptedException {
+		final Semaphore finished = new Semaphore(0);
+		FlowReport.report.clear();
 		simpleExternalAdapter.reset();
-		FlowExecution result1 = execute("Hello", e -> e.doOnSuccess(r -> finished.release())).blockingGet();
+		final FlowExecution result = execute(in, e -> e.doOnSuccess(r -> finished.release())).blockingGet();
 		Assert.assertTrue(finished.tryAcquire(500, TimeUnit.MILLISECONDS));
 		Assert.assertFalse(finished.tryAcquire(500, TimeUnit.MILLISECONDS));
-		Assert.assertEquals("Hello -> enhanced with World", simpleExternalAdapter.getOutput());
-		
-		simpleExternalAdapter.reset();
-		FlowExecution result2 = execute("Hi", e -> e.doOnSuccess(r -> finished.release())).blockingGet();
-		Assert.assertTrue(finished.tryAcquire(500, TimeUnit.MILLISECONDS));
-		Assert.assertFalse(finished.tryAcquire(500, TimeUnit.MILLISECONDS));
-		Assert.assertEquals("Hi -> enhanced with There", simpleExternalAdapter.getOutput());
-		
-		simpleExternalAdapter.reset();
-		FlowExecution result3 = execute("Huh", e -> e.doOnSuccess(r -> finished.release())).blockingGet();
- 		Assert.assertTrue(finished.tryAcquire(500, TimeUnit.MILLISECONDS));
-		Assert.assertFalse(finished.tryAcquire(500, TimeUnit.MILLISECONDS));
-		Assert.assertEquals("Huh -> not enhanced", simpleExternalAdapter.getOutput());
+		Assert.assertEquals(out, simpleExternalAdapter.getOutput());
+		System.out.println(FlowReport.report);
 	}
 
+	@Test
+	public void testFlow() throws InterruptedException {
+		runTest("Hello", "Hello -> enhanced with World");
+		runTest("Hi", "Hi -> enhanced with There");
+		runTest("Huh", "Huh -> not enhanced");
+	}
 }

@@ -155,7 +155,7 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 
 	private void generateDataPoint(final BindingContext context) throws IOException {
 		definedDataPoints.add(context.outputDataPoint);
-		addDataSetter(context.binding.getProcessor().getReturnType(), context.outputDataPoint);
+		addDataSetter(context.binding.getProcessor().getReturnType(), context.outputDataPoint, true);
 	}
 
 	private void visitExecution(final BindingContext context, final Processor processor,
@@ -289,7 +289,7 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 		for (final ExternalAdapter adapter : externalAdapter) {
 			final String varNameOfAdapter = varNameOf(context.binding, adapter);
 			if (!context.binding.isExit()) {
-				addDataSetter(adapter.getReturnType(), varNameOfAdapter);
+				addDataSetter(adapter.getReturnType(), varNameOfAdapter, false);
 				final BindingImplVariable parameter = new BindingImplVariable(adapter, "f." + varNameOfAdapter);
 				availableVars.add(parameter);
 			}
@@ -313,16 +313,19 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 		return adapterNames;
 	}
 
-	private void addDataSetter(final String type, final String property) throws IOException {
-		flowClass.addVarDecl("private", "DataPointState", "state_" + property, "DataPointState.NOT_TRIGGERED");
+	private void addDataSetter(final String type, final String property, boolean withState) throws IOException {
+		if (withState) {
+			flowClass.addVarDecl("private", "DataPointState", "state_" + property, "DataPointState.NOT_TRIGGERED");
+			flowClass.addSetter("private", "DataPointState", "state_" + property);
+		}
 		flowClass.addVarDecl("private", type, property);
-		flowClass.addSetter("private", "DataPointState", "state_" + property);
-
 		flowClass.appendIndented(String.format("private void set%s(%s %s)", toCamelCase(property), type, property))
 				.openBlock() //
-				.appendIndented(String.format("this.%s = %s", property, property)).eos() //
-				.appendIndented(String.format("this.state_%s = DataPointState.TRIGGERED", property)).eos() //
-				.closeBlock().eol();
+				.appendIndented(String.format("this.%s = %s", property, property)).eos(); //
+		if (withState) {
+			flowClass.appendIndented(String.format("this.state_%s = DataPointState.TRIGGERED", property)).eos(); //
+		}
+		flowClass.closeBlock().eol();
 
 	}
 

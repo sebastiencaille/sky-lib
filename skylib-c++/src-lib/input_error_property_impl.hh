@@ -26,8 +26,7 @@
 #include <string>
 #include "controller_property.hh"
 
-namespace ch_skymarshall {
-namespace gui {
+namespace ch_skymarshall::gui {
 
 using namespace std;
 
@@ -58,5 +57,5 @@ public:
 };
 
 }
-}
+
 #endif /* ERRORPROPERTYIMPL_HH_ */

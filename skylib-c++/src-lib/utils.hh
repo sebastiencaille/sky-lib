@@ -10,8 +10,7 @@
 
 #include <vector>
 
-namespace ch_skymarshall {
-namespace util {
+namespace ch_skymarshall::util {
 
 using std::vector;
 
@@ -24,6 +23,6 @@ constexpr UnaryFunction for_each_vector(vector<Input>& vec, UnaryFunction f) {
 	return f; // implicit move since C++11
 }
 }
-}
+
 
 #endif /* UTILS_HH_ */

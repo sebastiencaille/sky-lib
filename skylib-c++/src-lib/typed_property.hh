@@ -26,8 +26,7 @@
 #include <string>
 #include "property.hh"
 
-namespace ch_skymarshall {
-namespace gui {
+namespace ch_skymarshall::gui {
 
 using namespace std;
 
@@ -89,6 +88,6 @@ public:
 
 };
 
-}}
+}
 
 #endif /* TYPEDPROPERTY_HH_ */

@@ -30,8 +30,7 @@
 #include "property_listener.hh"
 
 
-namespace ch_skymarshall {
-namespace gui {
+namespace ch_skymarshall::gui {
 
 using namespace std;
 
@@ -58,6 +57,6 @@ private:
 };
 
 }
-}
+
 
 #endif /* PropertyManager_HH_ */

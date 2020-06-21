@@ -6,6 +6,10 @@ import java.util.List;
 
 public class FlowReport {
 
+	private FlowReport() {
+
+	}
+
 	public static class ReportEntry {
 		public final String name;
 		public final String threadName;

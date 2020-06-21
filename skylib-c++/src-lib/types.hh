@@ -10,8 +10,7 @@
 
 #include <stdexcept>
 
-namespace ch_skymarshall {
-namespace gui {
+namespace ch_skymarshall::gui {
 
 typedef const void* source_ptr;
 
@@ -39,5 +38,5 @@ public:
 typedef gui_exception* gui_exception_ptr;
 
 }
-}
+
 #endif

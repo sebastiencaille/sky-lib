@@ -37,8 +37,7 @@
 #include "list_model_interfaces.hh"
 #include "utils.hh"
 
-namespace ch_skymarshall {
-namespace gui {
+namespace ch_skymarshall::gui {
 
 using namespace ch_skymarshall::util;
 using namespace std;
@@ -82,10 +81,10 @@ private:
 
 		view_filter m_filter;
 		view_comparator m_comparator;
-		view_type *m_parentView;
+		view_type *m_parentView = NULL;
 
 		view_impl(view_comparator _comparator, view_filter _filter) :
-				m_filter(_filter), m_comparator(_comparator), m_parentView(NULL) {
+				m_filter(_filter), m_comparator(_comparator) {
 		}
 
 		view_impl(view_impl &_view) :
@@ -189,21 +188,19 @@ public:
 
 		friend class list_model<value_type> ;
 
-		model_type *m_model;
+		model_type *m_model = NULL;
 		value_type m_value;
-		bool m_accepted;
-		int m_oldIndex;
-		int m_newIndex;
+		bool m_accepted = false;
+		int m_oldIndex = -1;
+		int m_newIndex = -1;
 
 	public:
 		value_edition() :
-				m_value(), m_accepted(false), m_oldIndex(-1), m_newIndex(-1) {
-			m_model = NULL;
+				m_value() {
 		}
 
 		value_edition(model_type *_model, value_type _value, int _oldIndex) :
-				m_model(_model), m_value(_value), m_oldIndex(_oldIndex), m_newIndex(
-						-1) {
+				m_model(_model), m_value(_value), m_oldIndex(_oldIndex) {
 			m_accepted = m_model->get_view()->accept(m_value);
 		}
 
@@ -237,13 +234,13 @@ private:
 	/**
 	 * Current edition
 	 */
-	value_edition *m_objectEdition;
+	value_edition *m_objectEdition = NULL;
 
 	property_manager m_propertyManager;
 
 	value_list_type m_data;
 
-	model_type *m_source;
+	model_type *m_source = NULL;
 
 	typed_property<list_model_view<value_type>*> m_viewProperty;
 
@@ -309,11 +306,11 @@ private:
 			m_model->view_updated();
 		}
 
-		void before_change(source_ptr _source, const property *_property) {
+		void before_change(source_ptr _source, property *_property) {
 			// nope
 		}
 
-		void after_change(source_ptr _source, const property *_property) {
+		void after_change(source_ptr _source, property *_property) {
 			// nope
 		}
 
@@ -340,8 +337,8 @@ private:
 public:
 
 	list_model(list_model_view<value_type> *_view) :
-			m_objectEdition(NULL), m_source(NULL), m_viewProperty("View",
-					m_propertyManager, NULL), m_privateListenersImpl(this) {
+			m_viewProperty("View", m_propertyManager, NULL), m_privateListenersImpl(
+					this) {
 		m_tunings = make_ptr(new object_tunings());
 		if (_view == NULL) {
 			throw gui_exception("View must not be NULL");
@@ -350,18 +347,16 @@ public:
 	}
 
 	list_model(model_type &_source) :
-			m_objectEdition(NULL), m_source(&_source), m_viewProperty("View",
-					m_propertyManager, NULL), m_privateListenersImpl(this) {
-		m_tunings = _source.m_tunings;
+			m_source(&_source), m_viewProperty("View", m_propertyManager, NULL), m_privateListenersImpl(
+					this), m_tunings(_source.m_tunings) {
 		attach_to_source();
 		set_view(inherited());
 		set_tunings(_source.m_tunings);
 	}
 
 	list_model(model_type &_source, list_model_view<value_type> &_view) :
-			m_objectEdition(NULL), m_source(_source), m_viewProperty("View",
-					m_propertyManager, NULL), m_privateListenersImpl(this) {
-		m_tunings = _source.m_tunings;
+			m_source(_source), m_viewProperty("View", m_propertyManager, NULL), m_privateListenersImpl(
+					this), m_tunings(_source.m_tunings) {
 		attach_to_source();
 		set_view(_view);
 	}
@@ -652,7 +647,7 @@ public:
 		}
 		m_objectEdition = NULL;
 	}
-public:
+
 	int row_of(value_type value) const {
 		const value_list_citerator &begin = m_data.begin();
 		value_list_citerator found = lower_bound(begin, m_data.end(), value,
@@ -731,5 +726,5 @@ public:
 
 };
 }
-}
+
 #endif /* DYNAMICLIST_HH_ */

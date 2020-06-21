@@ -21,8 +21,7 @@
 
 
 
-namespace ch_skymarshall {
-namespace gui {
+namespace ch_skymarshall::gui {
 
 using namespace std;
 
@@ -109,5 +108,5 @@ void property_manager::dump() const {
 	}
 
 }
-}
+
 }

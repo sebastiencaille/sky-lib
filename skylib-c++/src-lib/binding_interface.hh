@@ -29,8 +29,7 @@
 #include "types.hh"
 #include "typed_property.hh"
 
-namespace ch_skymarshall {
-namespace gui {
+namespace ch_skymarshall::gui {
 
 using namespace std;
 
@@ -167,11 +166,11 @@ private:
 			void(property_group_actions _action, const property* _property)> m_action;
 	property_listener_dispatcher* m_listener = NULL;
 
-	void action_before(const source_ptr caller, const property* _property) {
+	void action_before(const source_ptr caller, property* _property) {
 		m_action(BEFORE_FIRE, _property);
 	}
 
-	void action_after(const source_ptr caller, const property* _property) {
+	void action_after(const source_ptr caller, property* _property) {
 		m_action(AFTER_FIRE, _property);
 	}
 
@@ -199,5 +198,5 @@ public:
 	}
 };
 }
-}
+
 #endif /* BINDINGINTERFACE_HH_ */

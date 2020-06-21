@@ -15,17 +15,16 @@
  */
 #include "property.hh"
 
-namespace ch_skymarshall {
-namespace gui {
+namespace ch_skymarshall::gui {
 
 using namespace std;
 
 property::property(const string& _name, property_manager& _manager) :
-		m_attached(false), m_name(_name), m_manager(_manager) {
+		 m_name(_name), m_manager(_manager) {
 }
 
 property::property(const char* _name, property_manager& _manager) :
-		m_attached(false), m_name(string(_name)), m_manager(_manager) {
+		m_name(string(_name)), m_manager(_manager) {
 }
 
 property::~property() {
@@ -50,7 +49,6 @@ void property::remove_listener(property_listener* _listener) {
 
 void property::remove_listener(property_listener_ref _listener) {
 	m_manager.remove_listener(m_name, (property_listener*)_listener);
-}
 }
 
 }

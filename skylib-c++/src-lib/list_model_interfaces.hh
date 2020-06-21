@@ -26,8 +26,7 @@
 #include <string>
 #include <vector>
 
-namespace ch_skymarshall {
-namespace gui {
+namespace ch_skymarshall::gui {
 
 using namespace std;
 using namespace __gnu_cxx;
@@ -149,6 +148,6 @@ public:
 };
 
 }
-}
+
 
 #endif /* ORG_SKYMARSHALL_LISTVIEW_HH_ */

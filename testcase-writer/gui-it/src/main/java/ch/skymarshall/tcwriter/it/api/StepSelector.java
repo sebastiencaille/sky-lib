@@ -56,10 +56,8 @@ public class StepSelector {
 
 	@TCApi(description = "Selected step", humanReadable = "")
 	public static StepSelector currentStep() {
-		return new StepSelector(guiPilot -> {
-			getStepsTable(guiPilot).withReport(c -> "a step is selected")
-					.waitState(assertion(c -> Assert.assertTrue("Step must be selected", c.getSelectedRowCount() > 0)));
-		});
+		return new StepSelector(guiPilot -> getStepsTable(guiPilot).withReport(c -> "a step is selected")
+				.waitState(assertion(c -> Assert.assertTrue("Step must be selected", c.getSelectedRowCount() > 0))));
 	}
 
 }

@@ -28,8 +28,7 @@
 
 #include "types.hh"
 
-namespace ch_skymarshall {
-namespace gui {
+namespace ch_skymarshall::gui {
 
 using namespace std;
 
@@ -46,9 +45,9 @@ public:
 
 	virtual void fire(source_ptr _source, const string& _name, const void* _oldValue, const void* _newValue) = 0;
 
-	virtual void before_change(source_ptr _source, const property* _property) = 0;
+	virtual void before_change(source_ptr _source, property* _property) = 0;
 
-	virtual void after_change(source_ptr _source, const property* _property) = 0;
+	virtual void after_change(source_ptr _source, property* _property) = 0;
 
 };
 
@@ -59,21 +58,18 @@ class property_listener_dispatcher:
 		public property_listener {
 public:
 	typedef std::function<void (source_ptr, const string&, const void*, const void*)> fire_function;
-	typedef std::function<void (source_ptr, const property*)> before_after_function;
+	typedef std::function<void (source_ptr, property*)> before_after_function;
 private:
-	fire_function m_func_fire;
-	before_after_function m_func_before;
-	before_after_function m_func_after;
+	fire_function m_func_fire = NULL;
+	before_after_function m_func_before = NULL;
+	before_after_function m_func_after = NULL;
 
 public:
 	explicit property_listener_dispatcher(fire_function const& _fireFunction) :
-					m_func_fire(_fireFunction),
-					m_func_before(NULL),
-					m_func_after(NULL) {
+					m_func_fire(_fireFunction) {
 	}
 
 	property_listener_dispatcher(before_after_function const& _beforeFireFunction, before_after_function const& _afterFireFunction) :
-					m_func_fire(NULL),
 					m_func_before(_beforeFireFunction),
 					m_func_after(_afterFireFunction) {
 	}
@@ -90,13 +86,13 @@ public:
 		}
 	}
 
-	void before_change(source_ptr _source, const property* _property) {
+	void before_change(source_ptr _source, property* _property) {
 		if (m_func_before != NULL) {
 			m_func_before(_source, _property);
 		}
 	}
 
-	void after_change(source_ptr _source, const property* _property) {
+	void after_change(source_ptr _source, property* _property) {
 		if (m_func_after != NULL) {
 			m_func_after(_source, _property);
 		}
@@ -105,5 +101,5 @@ public:
 	~property_listener_dispatcher() = default;
 };
 }
-}
+
 #endif /* PROPERTYLISTENER_HH_ */

@@ -28,8 +28,7 @@
 #include "property_manager.hh"
 
 
-namespace ch_skymarshall {
-namespace gui {
+namespace ch_skymarshall::gui {
 
 /**
  * Basic property
@@ -37,7 +36,7 @@ namespace gui {
 class property {
 
 private:
-	bool m_attached;
+	bool m_attached = false;
 
 protected:
 	const string m_name;
@@ -59,5 +58,5 @@ public:
 	virtual void attach() = 0;
 };
 }
-}
+
 #endif /* PROPERTY_HH_ */

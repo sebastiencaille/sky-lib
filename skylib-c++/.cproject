@@ -51,6 +51,8 @@
                                     									
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src-lib}&quot;"/>
                                     									
+                                    <listOptionValue builtIn="false" value="/usr/include/pangomm-1.4"/>
+                                    									
                                     <listOptionValue builtIn="false" value="/usr/include/glibmm-2.4"/>
                                     									
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src-gtk3}&quot;"/>

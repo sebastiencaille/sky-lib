@@ -27,8 +27,7 @@
 #include "typed_property.hh"
 #include "binding_chain.hh"
 
-namespace ch_skymarshall {
-namespace gui {
+namespace ch_skymarshall::gui {
 
 using namespace std::placeholders;
 /**
@@ -68,5 +67,5 @@ public:
 
 };
 }
-}
+
 #endif /* CONTROLLERPROPERTY_HH_ */

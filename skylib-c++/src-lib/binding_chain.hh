@@ -15,8 +15,7 @@
 #include "property.hh"
 #include "property_listener.hh"
 
-namespace ch_skymarshall {
-namespace gui {
+namespace ch_skymarshall::gui {
 
 using namespace std;
 using namespace std::placeholders;
@@ -323,7 +322,6 @@ public:
 
 };
 
-}
 }
 
 #endif /* BINDING_CHAIN_HH_ */

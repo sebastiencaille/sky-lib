@@ -1,7 +1,5 @@
 package ch.skymarshall.tcwriter.pilot.swing;
 
-import static ch.skymarshall.tcwriter.pilot.Polling.action;
-
 import javax.swing.JButton;
 
 public class SwingButton extends AbstractSwingComponent<SwingButton, JButton> {
@@ -11,7 +9,7 @@ public class SwingButton extends AbstractSwingComponent<SwingButton, JButton> {
 	}
 
 	public void click() {
-		withReport(c -> "click").waitEdited(action(JButton::doClick));
+		wait(action(JButton::doClick).withReport(c -> "click"));
 	}
 
 }

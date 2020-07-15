@@ -3,219 +3,85 @@ package ch.skymarshall.tcwriter.pilot;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
-import ch.skymarshall.tcwriter.pilot.AbstractGuiComponent.LoadedElement;
+public class Polling<C, V> {
 
-public class Polling<T, V> {
-	public final V polledValue;
-	public final Throwable failureReason;
-	private GuiPilot pilot;
-	private String componentDescription;
-	private LoadedElement<T> loadedElement;
-
-	public Polling(final V polledValue, final Throwable failureReason) {
-		this.polledValue = polledValue;
-		this.failureReason = failureReason;
+	public interface PollingFunction<C, V> {
+		PollingResult<C, V> poll(C component);
 	}
 
-	public T getFoundElement() {
-		if (loadedElement != null) {
-			return loadedElement.element;
+	private final Predicate<C> precondition;
+
+	private final PollingFunction<C, V> pollingFunction;
+
+	private Function<C, String> reportLine;
+
+	private String name = null;
+
+	private ActionDelay actionDelay = null;
+
+	public Polling(final Predicate<C> precondition, final PollingFunction<C, V> pollingFunction) {
+		this.precondition = precondition;
+		this.pollingFunction = pollingFunction;
+	}
+
+	public Predicate<C> getPrecondition(final AbstractGuiComponent<?, C> guiComponent) {
+		return precondition;
+	}
+
+	public PollingFunction<C, V> getPollingFunction() {
+		return pollingFunction;
+	}
+
+	public Function<C, String> getReportLine() {
+		if (reportLine == null && name != null) {
+			return c -> c.toString() + ": " + name;
+		} else if (reportLine == null) {
+			return c -> "";
 		}
-		return null;
+		return reportLine;
 	}
 
-	public void setInformation(final GuiPilot pilot, final String componentDescription,
-			final LoadedElement<T> loadedElement) {
-		this.pilot = pilot;
-		this.componentDescription = componentDescription;
-		this.loadedElement = loadedElement;
+	public Polling<C, V> withReport(final Function<C, String> reportLine) {
+		this.reportLine = reportLine;
+		return this;
 	}
 
-	public GuiPilot getPilot() {
-		return pilot;
+	public Polling<C, V> withName(final String name) {
+		this.name = name;
+		return this;
 	}
 
-	public String getComponentDescription() {
-		return componentDescription;
+	public static <C> Polling<C, Boolean> success(final Consumer<C> action) {
+		return new Polling<>(null, c -> {
+			action.accept(c);
+			return PollingResult.success();
+		});
 	}
 
-	public boolean isSuccess() {
-		return failureReason == null;
-	}
-
-	public V orElse(final V orElse) {
-		if (isSuccess()) {
-			return polledValue;
-		}
-		return orElse;
-	}
-
-	public V orElseGet(final Supplier<V> orElse) {
-		if (isSuccess()) {
-			return polledValue;
-		}
-		return orElse.get();
-	}
-
-	/* *********************************************************** */
-
-	public interface PollingFunction<C, V> extends Function<C, Polling<C, V>> {
-		// simplify type
+	public ActionDelay getActionDelay() {
+		return actionDelay;
 	}
 
 	/**
-	 * Make polling successful after action is applied
+	 * To say that the next action will have to wait for some arbitrary delay before
+	 * execution
 	 *
-	 * @param <C>
-	 * @param consumer
+	 * @param actionDelay
 	 * @return
 	 */
-	public static <C> PollingFunction<C, Boolean> action(final Consumer<C> consumer) {
-		return t -> {
-			consumer.accept(t);
-			return success();
-		};
+	public Polling<C, V> followedBy(final ActionDelay actionDelay) {
+		this.actionDelay = actionDelay;
+		return this;
 	}
 
 	/**
-	 * Make polling successful true if condition is accepted
+	 * No precondition tested
 	 *
-	 * @param <C>
-	 * @param <V>
-	 * @param reason
-	 * @return
+	 * @return a precondition that is always true
 	 */
-	public static <C> PollingFunction<C, Boolean> satisfies(final Predicate<C> predicate) {
-		return t -> {
-			if (!predicate.test(t)) {
-				return new Polling<>(null, new RuntimeException("Condition not met"));
-			}
-			return success();
-		};
+	public static <C> Predicate<C> none() {
+		return p -> true;
 	}
-
-	/**
-	 * Make polling successful if assert is successful
-	 *
-	 * @param <C>
-	 * @param <V>
-	 * @param reason
-	 * @return
-	 */
-	public static <C> PollingFunction<C, Boolean> assertion(final Consumer<C> assertion) {
-		return t -> {
-			try {
-				assertion.accept(t);
-				return success();
-			} catch (final AssertionError e) {
-				return new Polling<>(null, e);
-			}
-		};
-	}
-
-	/* *********************************************************** */
-
-	/**
-	 * Make polling return a value
-	 *
-	 * @param <C>
-	 * @param <V>
-	 * @param value
-	 * @return
-	 */
-	public static <C, V> Polling<C, V> value(final V value) {
-		return new Polling<>(value, null);
-	}
-
-	/**
-	 * Make polling return value "true"
-	 *
-	 * @param <C>
-	 * @return
-	 */
-	public static <C> Polling<C, Boolean> success() {
-		return new Polling<>(Boolean.TRUE, null);
-	}
-
-	/**
-	 * Make polling return value "false"
-	 *
-	 * @param <C>
-	 * @return
-	 */
-	public static <C> Polling<C, Boolean> failed() {
-		return new Polling<>(Boolean.FALSE, null);
-	}
-
-	/**
-	 * Make polling return a failure
-	 *
-	 * @param <C>
-	 * @return
-	 */
-	public static <C, V> Polling<C, V> failure(final String reason) {
-		return new Polling<>(null, new RuntimeException(reason));
-	}
-
-	/**
-	 * Make polling return a failure
-	 *
-	 * @param <C>
-	 * @return
-	 */
-	public static <C, V> Polling<C, V> onException(final Throwable cause) {
-		return new Polling<>(null, cause);
-	}
-
-	/* *********************************************************** */
-
-	public interface PollingResultFunction<C, V> extends Function<Polling<C, V>, V> {
-		// simplify type
-	}
-
-	/**
-	 * Fails using some text
-	 *
-	 * @param actionDescr
-	 * @return
-	 */
-	public static <C, V> PollingResultFunction<C, V> assertFail(final String actionDescr) {
-		return r -> {
-			throw new AssertionError(
-					r.componentDescription + ": action failed [" + actionDescr + "]: " + r.failureReason);
-		};
-	}
-
-	/**
-	 * Throws an AssertionError
-	 *
-	 * @return
-	 */
-	public static <C, V> PollingResultFunction<C, V> throwError() {
-		return r -> {
-			if (r.failureReason instanceof AssertionError) {
-				throw new AssertionError(r.componentDescription + ": " + r.failureReason.getMessage(),
-						r.failureReason.getCause());
-			}
-			throw new AssertionError(r.componentDescription + ": " + r.failureReason.getMessage(), r.failureReason);
-		};
-	}
-
-	/**
-	 * Fails using existing error
-	 *
-	 * @param actionDescr
-	 * @return
-	 */
-	public static <C> PollingResultFunction<C, Boolean> reportFailed(final String report) {
-		return r -> {
-			r.getPilot().getActionReport().report(report);
-			return Boolean.FALSE;
-		};
-	}
-
-	/* *********************************************************** */
 
 }

@@ -1,7 +1,5 @@
 package ch.skymarshall.tcwriter.pilot.selenium;
 
-import static ch.skymarshall.tcwriter.pilot.Polling.action;
-
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoAlertPresentException;
 
@@ -26,13 +24,6 @@ public class SeleniumAlert extends AbstractGuiComponent<SeleniumAlert, Alert> {
 		}
 	}
 
-	public SeleniumAlert acknowledge() {
-		withReport(e -> "Acknowledged alert: " + e.getText());
-		waitActionSuccess(null, action(Alert::accept), pilot.getDefaultActionTimeout(),
-				Polling.assertFail("unable to acknowledge alert"));
-		return this;
-	}
-
 	@Override
 	protected boolean canCheck(final Alert component) {
 		return false;
@@ -41,6 +32,11 @@ public class SeleniumAlert extends AbstractGuiComponent<SeleniumAlert, Alert> {
 	@Override
 	protected boolean canEdit(final Alert component) {
 		return false;
+	}
+
+	public void doAcknowledge() {
+		wait(Polling.success(Alert::accept).withName("acknowledge alert")
+				.withReport(e -> "Acknowledged alert: " + e.getText()));
 	}
 
 }

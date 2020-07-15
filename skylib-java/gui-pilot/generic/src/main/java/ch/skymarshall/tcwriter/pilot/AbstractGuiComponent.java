@@ -1,20 +1,25 @@
 package ch.skymarshall.tcwriter.pilot;
 
-import static ch.skymarshall.tcwriter.pilot.Polling.failure;
-import static ch.skymarshall.tcwriter.pilot.Polling.throwError;
+import static ch.skymarshall.tcwriter.pilot.PollingResult.failure;
+import static ch.skymarshall.tcwriter.pilot.PollingResult.throwError;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
-import ch.skymarshall.tcwriter.pilot.Polling.PollingFunction;
-import ch.skymarshall.tcwriter.pilot.Polling.PollingResultFunction;
+import ch.skymarshall.tcwriter.pilot.PollingResult.PollingResultFunction;
 import ch.skymarshall.util.helpers.NoExceptionCloseable;
 
-public abstract class AbstractGuiComponent<C extends AbstractGuiComponent<C, T>, T> {
+/**
+ *
+ * @author scaille
+ *
+ * @param <G> This type
+ * @param <C> Component type
+ */
+public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>, C> {
 
 	protected static class LoadedElement<TT> {
 		public final TT element;
@@ -39,7 +44,7 @@ public abstract class AbstractGuiComponent<C extends AbstractGuiComponent<C, T>,
 	 *
 	 * @return
 	 */
-	protected abstract T loadGuiComponent();
+	protected abstract C loadGuiComponent();
 
 	/**
 	 * Checks if a component is in a state that allows checking it's state
@@ -47,7 +52,7 @@ public abstract class AbstractGuiComponent<C extends AbstractGuiComponent<C, T>,
 	 * @param component
 	 * @return
 	 */
-	protected abstract boolean canCheck(final T component);
+	protected abstract boolean canCheck(final C component);
 
 	/**
 	 * Checks if a component is in a state that allows edition
@@ -55,24 +60,21 @@ public abstract class AbstractGuiComponent<C extends AbstractGuiComponent<C, T>,
 	 * @param component
 	 * @return
 	 */
-	protected abstract boolean canEdit(final T component);
+	protected abstract boolean canEdit(final C component);
 
 	private final GuiPilot pilot;
 
-	private final List<Consumer<T>> postExecutions = new ArrayList<>();
+	private final List<Consumer<C>> postExecutions = new ArrayList<>();
 
-	private LoadedElement<T> cachedElement = null;
+	private LoadedElement<C> cachedElement = null;
 
 	protected boolean fired = false;
-
-	/** Next report line */
-	private Function<T, String> reportLine = t -> null;
 
 	public AbstractGuiComponent(final GuiPilot pilot) {
 		this.pilot = pilot;
 	}
 
-	public T getCachedElement() {
+	public C getCachedElement() {
 		if (cachedElement == null) {
 			return null;
 		}
@@ -102,17 +104,12 @@ public abstract class AbstractGuiComponent<C extends AbstractGuiComponent<C, T>,
 	 *
 	 * @param postExec
 	 */
-	public C addPostExecution(final Consumer<T> postExec) {
+	public G addPostExecution(final Consumer<C> postExec) {
 		postExecutions.add(postExec);
 		if (fired) {
 			postExec.accept(cachedElement.element);
 		}
-		return (C) this;
-	}
-
-	public C withReport(final Function<T, String> reportLine) {
-		this.reportLine = t -> toString() + ": " + reportLine.apply(t);
-		return (C) this;
+		return (G) this;
 	}
 
 	/**
@@ -127,22 +124,22 @@ public abstract class AbstractGuiComponent<C extends AbstractGuiComponent<C, T>,
 	 * @param timeout
 	 * @return
 	 */
-	protected <U> U waitActionSuccess(final Predicate<T> precondition, final PollingFunction<T, U> applier,
-			final Duration timeout, final PollingResultFunction<T, U> onFail) {
+	protected <U> U waitPollingSuccess(final Polling<C, U> polling, final Duration timeout,
+			final PollingResultFunction<C, U> onFail) {
 
 		waitActionDelay();
 
 		try (NoExceptionCloseable closeable = pilot.withModalDialogDetection()) {
-			final Polling<T, U> result = waitActionSuccessLoop(precondition, applier, timeout);
+			final PollingResult<C, U> result = waitPollingSuccessLoop(polling, timeout);
 			if (result.isSuccess()) {
 				fired = true;
 				postExecutions.stream().forEach(p -> p.accept(cachedElement.element));
+				pilot.setActionDelay(polling.getActionDelay());
 			}
 
 			result.setInformation(pilot, toString(), cachedElement);
 			final U resultWithFail = result.orElseGet(() -> onFail.apply(result));
 
-			reportLine = null;
 			return resultWithFail;
 		}
 	}
@@ -157,12 +154,11 @@ public abstract class AbstractGuiComponent<C extends AbstractGuiComponent<C, T>,
 	 * @param timeout
 	 * @return a polling result, either successful or failure
 	 */
-	protected <U> Polling<T, U> waitActionSuccessLoop(final Predicate<T> precondition,
-			final PollingFunction<T, U> applier, final Duration timeout) {
+	protected <U> PollingResult<C, U> waitPollingSuccessLoop(final Polling<C, U> polling, final Duration timeout) {
 		final long startTime = System.currentTimeMillis();
-		Polling<T, U> lastResult = failure("No information");
+		PollingResult<C, U> lastResult = failure("No information");
 		while (System.currentTimeMillis() - startTime < timeout.toMillis()) {
-			lastResult = executePolling(precondition, applier);
+			lastResult = executePolling(polling);
 			if (lastResult.isSuccess()) {
 				break;
 			}
@@ -184,10 +180,10 @@ public abstract class AbstractGuiComponent<C extends AbstractGuiComponent<C, T>,
 	 * @param applier
 	 * @return
 	 */
-	protected <U> Polling<T, U> executePolling(final Predicate<T> precondition, final PollingFunction<T, U> applier) {
+	protected <U> PollingResult<C, U> executePolling(final Polling<C, U> polling) {
 
 		if (cachedElement == null) {
-			final T loadedGuiComponent = loadGuiComponent();
+			final C loadedGuiComponent = loadGuiComponent();
 			if (loadedGuiComponent != null) {
 				cachedElement = new LoadedElement<>(loadedGuiComponent);
 			}
@@ -195,15 +191,16 @@ public abstract class AbstractGuiComponent<C extends AbstractGuiComponent<C, T>,
 		if (cachedElement == null) {
 			return failure("not found");
 		}
-		if (!cachedElement.preconditionValidated && precondition != null && !precondition.test(cachedElement.element)) {
+		if (!cachedElement.preconditionValidated && polling.getPrecondition(this) != null
+				&& !polling.getPrecondition(this).test(cachedElement.element)) {
 			return failure("precondition failed");
 		}
 
-		final String report = reportLine.apply(cachedElement.element); // element may disappear after action
-		final Polling<T, U> result = applier.apply(cachedElement.element);
-		if (result.isSuccess()) {
+		final String report = polling.getReportLine().apply(cachedElement.element); // element may disappear after
+																					// action
+		final PollingResult<C, U> result = polling.getPollingFunction().poll(cachedElement.element);
+		if (result.isSuccess() && !report.isEmpty()) {
 			pilot.getActionReport().report(report);
-			reportLine = null;
 		}
 		return result;
 	}
@@ -212,12 +209,12 @@ public abstract class AbstractGuiComponent<C extends AbstractGuiComponent<C, T>,
 	 * Wait until a component is edited
 	 *
 	 * @param <U>     return type
-	 * @param edition
+	 * @param polling
 	 * @param onFail
 	 * @return
 	 */
-	public <U> U waitEdited(final PollingFunction<T, U> edition, final PollingResultFunction<T, U> onFail) {
-		return waitActionSuccess(this::canEdit, edition, pilot.getDefaultActionTimeout(), onFail);
+	public <U> U wait(final Polling<C, U> polling, final PollingResultFunction<C, U> onFail) {
+		return waitPollingSuccess(polling, pilot.getDefaultActionTimeout(), onFail);
 	}
 
 	/**
@@ -225,46 +222,11 @@ public abstract class AbstractGuiComponent<C extends AbstractGuiComponent<C, T>,
 	 * failed
 	 *
 	 * @param <U>     return type
-	 * @param edition
+	 * @param polling
 	 * @return
 	 */
-	public <U> U waitEdited(final PollingFunction<T, U> edition) {
-		return waitEdited(edition, throwError());
-	}
-
-	/**
-	 * Waits until a component is in the expected state
-	 *
-	 * @param <U>   return type
-	 * @param check
-	 * @return
-	 */
-	public <U> U waitState(final PollingFunction<T, U> check, final PollingResultFunction<T, U> onFail) {
-		return waitActionSuccess(this::canCheck, check, pilot.getDefaultActionTimeout(), onFail);
-	}
-
-	/**
-	 * Waits until a component is in the expected state, throwing a java assertion
-	 * error if the check failed
-	 *
-	 * @param <U>   return type
-	 * @param check
-	 * @return
-	 */
-	public <U> U waitState(final PollingFunction<T, U> check) {
-		return waitState(check, throwError());
-	}
-
-	/**
-	 * To say that the next action will have to wait for some arbitrary delay before
-	 * execution
-	 *
-	 * @param actionDelay
-	 * @return
-	 */
-	public C followedBy(final ActionDelay actionDelay) {
-		pilot.setActionDelay(actionDelay);
-		return (C) this;
+	public <U> U wait(final Polling<C, U> polling) {
+		return wait(polling, throwError());
 	}
 
 	/**
@@ -276,6 +238,25 @@ public abstract class AbstractGuiComponent<C extends AbstractGuiComponent<C, T>,
 			pilot.setActionDelay(null);
 			actionDelay.waitFinished();
 		}
+	}
+
+	/**
+	 * @See EditionPolling.action
+	 *
+	 * @param <C>
+	 * @param action
+	 * @return
+	 */
+	public Polling<C, Boolean> action(final Consumer<C> action) {
+		return EditionPolling.action(action);
+	}
+
+	public Polling<C, Boolean> assertion(final Consumer<C> assertion) {
+		return StatePolling.assertion(assertion);
+	}
+
+	public Polling<C, Boolean> satisfies(final Predicate<C> predicate) {
+		return StatePolling.satisfies(predicate);
 	}
 
 }

@@ -1,12 +1,11 @@
 package ch.skymarshall.tcwriter.pilot.swing;
 
-import static ch.skymarshall.tcwriter.pilot.Polling.action;
-import static ch.skymarshall.tcwriter.pilot.Polling.failure;
-import static ch.skymarshall.tcwriter.pilot.Polling.success;
-
 import javax.swing.JList;
 
 import org.junit.Assert;
+
+import ch.skymarshall.tcwriter.pilot.Polling;
+import ch.skymarshall.tcwriter.pilot.PollingResult;
 
 public class SwingList extends AbstractSwingComponent<SwingList, JList> {
 
@@ -24,13 +23,13 @@ public class SwingList extends AbstractSwingComponent<SwingList, JList> {
 		if (value == null) {
 			return;
 		}
-		withReport(r -> "select element " + value).waitEdited(action(l -> {
-			for (int i = 0; i < l.getModel().getSize(); i++) {
-				if (value.equals(l.getModel().getElementAt(i).toString())) {
-					l.setSelectedIndex(i);
+		wait(action(c -> {
+			for (int i = 0; i < c.getModel().getSize(); i++) {
+				if (value.equals(c.getModel().getElementAt(i).toString())) {
+					c.setSelectedIndex(i);
 				}
 			}
-		}));
+		}).withReport(r -> "select element " + value));
 		Assert.assertTrue("Value [" + name + ":" + value + "] must have been selected",
 				getCachedElement().getSelectedIndex() >= 0);
 	}
@@ -39,15 +38,15 @@ public class SwingList extends AbstractSwingComponent<SwingList, JList> {
 		if (value == null) {
 			return;
 		}
-		withReport(r -> "check element " + value).waitState(l -> {
-			if (l.getSelectedIndex() < 0) {
-				return failure("No element selected");
+		wait(new Polling<>(this::canCheck, c -> {
+			if (c.getSelectedIndex() < 0) {
+				return PollingResult.failure("No element selected");
 			}
-			final String current = l.getModel().getElementAt(l.getSelectedIndex()).toString();
+			final String current = c.getModel().getElementAt(c.getSelectedIndex()).toString();
 			if (!value.equals(current)) {
-				return failure("Wrong element selected (" + current + ")");
+				return PollingResult.failure("Wrong element selected (" + current + ")");
 			}
-			return success();
-		});
+			return PollingResult.success();
+		}).withReport(r -> "check element " + value));
 	}
 }

@@ -4,12 +4,14 @@ import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.time.Duration;
 
+import javax.swing.JTable;
+
 import org.junit.Assert;
 import org.junit.Test;
 
 import ch.skymarshall.example.gui.TestObjectTableModel;
 import ch.skymarshall.example.gui.model.impl.TableModelExampleView;
-import ch.skymarshall.tcwriter.pilot.Polling;
+import ch.skymarshall.tcwriter.pilot.StatePolling;
 import ch.skymarshall.tcwriter.pilot.swing.SwingGuiPilot;
 import ch.skymarshall.tcwriter.pilot.swing.SwingTable;
 import ch.skymarshall.tcwriter.pilot.swing.SwingToggleButton;
@@ -28,7 +30,7 @@ public class ModelExampleTest {
 		final SwingGuiPilot pilot = new SwingGuiPilot(view[0]);
 		pilot.setDefaultActionTimeout(Duration.ofSeconds(1));
 
-		listTable(pilot).waitState(Polling.assertion(t -> {
+		listTable(pilot).wait(StatePolling.<JTable>assertion(t -> {
 			Assert.assertEquals(50, t.getColumn(TestObjectTableModel.Columns.A_SECOND_VALUE).getWidth());
 			Assert.assertEquals(t.getWidth() - 50, t.getColumn(TestObjectTableModel.Columns.A_FIRST_VALUE).getWidth());
 		}));

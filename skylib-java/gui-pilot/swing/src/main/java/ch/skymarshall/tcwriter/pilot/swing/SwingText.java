@@ -1,8 +1,5 @@
 package ch.skymarshall.tcwriter.pilot.swing;
 
-import static ch.skymarshall.tcwriter.pilot.Polling.action;
-import static ch.skymarshall.tcwriter.pilot.Polling.assertion;
-
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
@@ -29,20 +26,19 @@ public class SwingText extends AbstractSwingComponent<SwingText, JTextComponent>
 		if (value == null) {
 			return;
 		}
-		withReport(r -> "set text \'" + value + "\'").waitEdited(action(t -> {
+		wait(action(t -> {
 			t.setText(value);
 			if (t instanceof JTextField) {
-				pressReturn(t);
+				doPressReturn(t);
 			}
-		}));
+		}).withReport(r -> "set text \'" + value + "\'"));
 	}
 
 	public void checkTextValue(final String value) {
 		if (value == null) {
 			return;
 		}
-		withReport(r -> "check text \'" + value + "\'")
-				.waitState(assertion(t -> Assert.assertEquals(value, t.getText())));
+		wait(assertion(t -> Assert.assertEquals(value, t.getText())).withReport(r -> "check text \'" + value + "\'"));
 	}
 
 }

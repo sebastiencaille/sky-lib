@@ -1,7 +1,5 @@
 package ch.skymarshall.tcwriter.pilot.swing;
 
-import static ch.skymarshall.tcwriter.pilot.Polling.assertion;
-
 import javax.swing.JLabel;
 
 import org.junit.Assert;
@@ -16,8 +14,7 @@ public class SwingLabel extends AbstractSwingComponent<SwingLabel, JLabel> {
 		if (value == null) {
 			return;
 		}
-		withReport(r -> "check text \'" + value + "\'")
-				.waitState(assertion(t -> Assert.assertEquals(value, t.getText())));
+		wait(assertion(t -> Assert.assertEquals(value, t.getText())).withReport(r -> "check text \'" + value + "\'"));
 	}
 
 }

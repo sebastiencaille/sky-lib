@@ -51,11 +51,11 @@ public class GuiPilot {
 	}
 
 	public void waitModalDialogHandled() {
-		waitModalDialogHandled(Polling.throwError());
+		waitModalDialogHandled(PollingResult.throwError());
 	}
 
 	public boolean waitModalDialogHandled(
-			final Polling.PollingResultFunction<ModalDialogDetector.ErrorCheck, Boolean> onFail) {
+			final PollingResult.PollingResultFunction<ModalDialogDetector.ErrorCheck, Boolean> onFail) {
 		final long start = System.currentTimeMillis();
 		while (System.currentTimeMillis() - start < defaultActionTimeout.toMillis()) {
 			if (currentModalDialogDetector.getCheckResult() != null) {
@@ -68,7 +68,7 @@ public class GuiPilot {
 				Thread.currentThread().interrupt();
 			}
 		}
-		return onFail.apply(Polling.failure("Modal dialog not detected"));
+		return onFail.apply(PollingResult.failure("Modal dialog not detected"));
 	}
 
 	public NoExceptionCloseable withModalDialogDetection() {

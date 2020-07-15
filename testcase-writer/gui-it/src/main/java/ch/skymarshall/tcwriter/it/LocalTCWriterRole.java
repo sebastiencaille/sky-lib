@@ -4,7 +4,6 @@ import static ch.skymarshall.tcwriter.it.api.ParameterSelector.selector;
 import static ch.skymarshall.tcwriter.it.api.ParameterValue.oneValue;
 import static ch.skymarshall.tcwriter.it.api.StepSelector.addStep;
 import static ch.skymarshall.tcwriter.it.api.StepSelector.currentStep;
-import static ch.skymarshall.tcwriter.pilot.Polling.assertion;
 
 import javax.swing.JTable;
 
@@ -18,7 +17,8 @@ import ch.skymarshall.tcwriter.it.api.StepEdition;
 import ch.skymarshall.tcwriter.it.api.StepSelector;
 import ch.skymarshall.tcwriter.it.api.TestSessionRole;
 import ch.skymarshall.tcwriter.it.api.TestWriterRole;
-import ch.skymarshall.tcwriter.pilot.Polling;
+import ch.skymarshall.tcwriter.pilot.EditionPolling;
+import ch.skymarshall.tcwriter.pilot.PollingResult;
 import ch.skymarshall.tcwriter.pilot.swing.SwingTable;
 
 public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
@@ -88,20 +88,20 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	public void checkHumanReadable(final StepSelector selector, final String humanReadable) {
 		selector.select(guiPilot);
 		final SwingTable stepsTable = guiPilot.table("StepsTable");
-		stepsTable.withReport(c -> "Check human readable text: " + humanReadable).waitState(assertion(t -> {
+		stepsTable.wait(stepsTable.assertion(t -> {
 			final Object value = ((StepsTableModel) t.getModel()).getHumanReadable(t.getSelectedRow());
 			Assert.assertEquals(humanReadable, value.toString());
-		}));
+		}).withReport(c -> "Check human readable text: " + humanReadable));
 	}
 
 	@Override
 	public void updateParameter(final ParameterSelector selector, final ParameterValue value) {
-		guiPilot.table(selector.getTableName()).withReport(c -> "Set parameter values:" + value).waitEdited(t -> {
+		guiPilot.table(selector.getTableName()).wait(new EditionPolling<JTable, Boolean>(t -> {
 			updateValue(t, value.getKeyValue1());
 			updateValue(t, value.getKeyValue2());
 			updateValue(t, value.getKeyValue3());
-			return Polling.success();
-		}, Polling.assertFail("Setting " + value));
+			return PollingResult.success();
+		}).withReport(c -> "Set parameter values:" + value), PollingResult.assertFail("Setting " + value));
 		applyStepEdition();
 	}
 

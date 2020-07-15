@@ -1,12 +1,8 @@
 package ch.skymarshall.tcwriter.pilot.swing;
 
-import static ch.skymarshall.tcwriter.pilot.Polling.action;
-
 import javax.swing.JTable;
 
 import org.junit.Assert;
-
-import ch.skymarshall.tcwriter.pilot.Polling;
 
 public class SwingTable extends AbstractSwingComponent<SwingTable, JTable> {
 
@@ -15,29 +11,29 @@ public class SwingTable extends AbstractSwingComponent<SwingTable, JTable> {
 	}
 
 	public void selectRow(final int index) {
-		withReport(c -> "select row at " + index).waitEdited(action(t -> t.setRowSelectionInterval(index, index)));
+		wait(action(t -> t.setRowSelectionInterval(index, index)).withReport(c -> "select row at " + index));
 	}
 
 	public void editValue(final int row, final int column, final String value) {
-		withReport(c -> "edit value '" + value + "' at " + row + '/' + column)
-				.waitEdited(action(t -> t.setValueAt(value, row, column)));
-	}
-
-	public void checkValue(final int row, final int column, final String value) {
-		withReport(c -> "check value '" + value + "' at " + row + '/' + column)
-				.waitState(Polling.assertion(t -> Assert.assertEquals(value, t.getValueAt(row, column))));
+		wait(action(t -> t.setValueAt(value, row, column))
+				.withReport(c -> "edit value '" + value + "' at " + row + '/' + column));
 	}
 
 	public void editValueOnSelectedRow(final int column, final String value) {
-		withReport(c -> "edit value '" + value + "' of selected row, column " + column).waitEdited(action(t -> {
+		wait(action(t -> {
 			t.setValueAt(value, t.getSelectedRow(), column);
-			pressReturn(t);
-		}));
+			doPressReturn(t);
+		}).withReport(c -> "edit value '" + value + "' of selected row, column " + column));
+	}
+
+	public void checkValue(final int row, final int column, final String value) {
+		wait(assertion(t -> Assert.assertEquals(value, t.getValueAt(row, column)))
+				.withReport(c -> "check value '" + value + "' at " + row + '/' + column));
 	}
 
 	public void checkValueOnSelectedRow(final int column, final String value) {
-		withReport(c -> "check value '" + value + "' of selected row, column " + column).waitState(
-				Polling.assertion(t -> Assert.assertEquals(value, t.getValueAt(t.getSelectedRow(), column))));
+		wait(assertion(t -> Assert.assertEquals(value, t.getValueAt(t.getSelectedRow(), column)))
+				.withReport(c -> "check value '" + value + "' of selected row, column " + column));
 	}
 
 }

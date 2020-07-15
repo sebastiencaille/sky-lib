@@ -1,8 +1,5 @@
 package ch.skymarshall.tcwriter.pilot.swing;
 
-import static ch.skymarshall.tcwriter.pilot.Polling.action;
-import static ch.skymarshall.tcwriter.pilot.Polling.assertion;
-
 import javax.swing.JToggleButton;
 
 import org.junit.Assert;
@@ -14,13 +11,12 @@ public class SwingToggleButton extends AbstractSwingComponent<SwingToggleButton,
 	}
 
 	public void waitSelected(final boolean selected) {
-		withReport(c -> "check " + (selected ? "selected" : "not selected"))
-				.waitState(assertion(c -> Assert.assertEquals(selected, c.isSelected())));
+		wait(assertion(c -> Assert.assertEquals(selected, c.isSelected()))
+				.withReport(c -> "check " + (selected ? "selected" : "not selected")));
 	}
 
 	public void setSelected(final boolean selected) {
-		withReport(c -> "set " + (selected ? "selected" : "not selected"))
-				.waitEdited(action(c -> c.setSelected(selected)));
+		wait(action(c -> c.setSelected(selected)).withReport(c -> "set " + (selected ? "selected" : "not selected")));
 	}
 
 }

@@ -1,14 +1,14 @@
 package ch.skymarshall.tcwriter.pilot;
 
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import ch.skymarshall.tcwriter.pilot.AbstractGuiComponent.LoadedElement;
 
 public class PollingResult<T, V> {
+
 	public final V polledValue;
 	public final Throwable failureReason;
-	private GuiPilot pilot;
 	private String componentDescription;
 	private LoadedElement<T> loadedElement;
 
@@ -17,7 +17,7 @@ public class PollingResult<T, V> {
 		this.failureReason = failureReason;
 	}
 
-	public T getFoundElement() {
+	public T getLoadedElement() {
 		if (loadedElement != null) {
 			return loadedElement.element;
 		}
@@ -26,13 +26,8 @@ public class PollingResult<T, V> {
 
 	public void setInformation(final GuiPilot pilot, final String componentDescription,
 			final LoadedElement<T> loadedElement) {
-		this.pilot = pilot;
 		this.componentDescription = componentDescription;
 		this.loadedElement = loadedElement;
-	}
-
-	public GuiPilot getPilot() {
-		return pilot;
 	}
 
 	public String getComponentDescription() {
@@ -115,7 +110,7 @@ public class PollingResult<T, V> {
 
 	/* *********************************************************** */
 
-	public interface PollingResultFunction<C, V> extends Function<PollingResult<C, V>, V> {
+	public interface PollingResultFunction<C, V> extends BiFunction<PollingResult<C, V>, GuiPilot, V> {
 		// simplify type
 	}
 
@@ -126,7 +121,7 @@ public class PollingResult<T, V> {
 	 * @return
 	 */
 	public static <C, V> PollingResultFunction<C, V> assertFail(final String actionDescr) {
-		return r -> {
+		return (r, g) -> {
 			throw new AssertionError(
 					r.componentDescription + ": action failed [" + actionDescr + "]: " + r.failureReason);
 		};
@@ -138,7 +133,7 @@ public class PollingResult<T, V> {
 	 * @return
 	 */
 	public static <C, V> PollingResultFunction<C, V> throwError() {
-		return r -> {
+		return (r, g) -> {
 			if (r.failureReason instanceof AssertionError) {
 				throw new AssertionError(r.componentDescription + ": " + r.failureReason.getMessage(),
 						r.failureReason.getCause());
@@ -154,12 +149,10 @@ public class PollingResult<T, V> {
 	 * @return
 	 */
 	public static <C> PollingResultFunction<C, Boolean> reportFailed(final String report) {
-		return r -> {
-			r.getPilot().getActionReport().report(report);
+		return (r, g) -> {
+			g.getActionReport().report(report);
 			return Boolean.FALSE;
 		};
 	}
-
-	/* *********************************************************** */
 
 }

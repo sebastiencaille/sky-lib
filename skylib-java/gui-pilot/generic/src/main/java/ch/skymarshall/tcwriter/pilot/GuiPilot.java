@@ -68,7 +68,7 @@ public class GuiPilot {
 				Thread.currentThread().interrupt();
 			}
 		}
-		return onFail.apply(PollingResult.failure("Modal dialog not detected"));
+		return onFail.apply(PollingResult.failure("Modal dialog not detected"), this);
 	}
 
 	public NoExceptionCloseable withModalDialogDetection() {

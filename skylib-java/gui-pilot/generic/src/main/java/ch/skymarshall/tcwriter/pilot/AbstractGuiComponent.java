@@ -138,14 +138,12 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 			}
 
 			result.setInformation(pilot, toString(), cachedElement);
-			final U resultWithFail = result.orElseGet(() -> onFail.apply(result));
-
-			return resultWithFail;
+			return result.orElseGet(() -> onFail.apply(result, pilot));
 		}
 	}
 
 	/**
-	 * Loops until the action is processed. Can be overwritten by custom code
+	 * Loops until the polling is successful. Can be overwritten by custom code
 	 *
 	 * @param <U>          return type
 	 * @param precondition a precondition
@@ -173,7 +171,7 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 	}
 
 	/**
-	 * Tries to execute the action
+	 * Tries to execute the polling
 	 *
 	 * @param <U>          return type
 	 * @param precondition
@@ -206,7 +204,7 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 	}
 
 	/**
-	 * Wait until a component is edited
+	 * Waits until a component is edited
 	 *
 	 * @param <U>     return type
 	 * @param polling
@@ -230,7 +228,7 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 	}
 
 	/**
-	 * Wait on the action set by followedByDelay
+	 * Waits on the action set by followedByDelay
 	 */
 	protected void waitActionDelay() {
 		final ActionDelay actionDelay = pilot.getActionDelay();
@@ -242,19 +240,21 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 
 	/**
 	 * @See EditionPolling.action
-	 *
-	 * @param <C>
-	 * @param action
-	 * @return
 	 */
 	public Polling<C, Boolean> action(final Consumer<C> action) {
 		return EditionPolling.action(action);
 	}
 
+	/**
+	 * @See StatePolling.assertion
+	 */
 	public Polling<C, Boolean> assertion(final Consumer<C> assertion) {
 		return StatePolling.assertion(assertion);
 	}
 
+	/**
+	 * @See StatePolling.satisfies
+	 */
 	public Polling<C, Boolean> satisfies(final Predicate<C> predicate) {
 		return StatePolling.satisfies(predicate);
 	}

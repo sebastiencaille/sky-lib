@@ -72,7 +72,9 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 		setLayout(new BorderLayout());
 
-		tpModel.getEditedParameterValue().bind(v -> !v.equals(TestParameterValue.NO_VALUE)) //
+		tpModel.getEditedParameterValue().bind(
+				v -> !v.equals(TestParameterValue.NO_VALUE) && !(v.getValueFactory().getMandatoryParameters().isEmpty()
+						&& !v.getValueFactory().getOptionalParameters().isEmpty())) //
 				.listen(this::setVisible);
 
 		final JPanel topPanel = new JPanel();
@@ -183,9 +185,9 @@ public class TestParameterValueEditorPanel extends JPanel {
 	 * Update the values table when changing the api. Don't trigger when loading the
 	 * step, because we may not have the right value during the loading
 	 */
-	private void fixParamsOfApi(final ObjectProperty<TestCase> tc,
-			final TestParameterFactory api,
-			final ObjectProperty<TestParameterValue> editedParamValue, final ListModel<ParameterValueEntry> allEditedParameters) {
+	private void fixParamsOfApi(final ObjectProperty<TestCase> tc, final TestParameterFactory api,
+			final ObjectProperty<TestParameterValue> editedParamValue,
+			final ListModel<ParameterValueEntry> allEditedParameters) {
 		if (api == null) {
 			return;
 		}

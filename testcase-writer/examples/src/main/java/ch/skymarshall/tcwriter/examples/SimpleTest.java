@@ -36,7 +36,7 @@ public class SimpleTest {
 	@Test
 	public void testNormalCase() {
 
-		customer.buy(onInternet(), coffeeMachine);
+		customer.buy(onInternet("https://truc"), coffeeMachine);
 		deliveryGuy.deliverItem();
 		customer.checkPackage(deliveredItem(), coffeeMachine);
 		customer.resellOwnedItem(10);

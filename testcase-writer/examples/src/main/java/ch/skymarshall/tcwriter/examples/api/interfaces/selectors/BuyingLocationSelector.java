@@ -25,8 +25,9 @@ public class BuyingLocationSelector {
 	 *
 	 * @return
 	 */
-	@TCApi(description = "On internet", humanReadable = "on internet")
-	public static BuyingLocationSelector onInternet() {
+	@TCApi(description = "On internet", humanReadable = "on internet (%s)")
+	public static BuyingLocationSelector onInternet(
+			@TCApi(description = "url", humanReadable = "url") final String url) {
 		return new BuyingLocationSelector(ExampleService::openBrowser);
 	}
 

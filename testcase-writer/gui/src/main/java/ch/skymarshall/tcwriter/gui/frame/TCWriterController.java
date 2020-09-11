@@ -44,7 +44,7 @@ public class TCWriterController extends GuiController {
 		this.config = config;
 		this.persister = persister;
 		this.testExecutor = testExecutor;
-		model = new TCWriterModel(persister.readtestDictionary(), getPropertySupport());
+		model = new TCWriterModel(persister.readTestDictionary(), getPropertyChangeSupport());
 		gui = new TCWriterGui(this);
 		testRemoteControl = new TestRemoteControl(9998,
 				r -> SwingUtilities.invokeLater(() -> model.getExecutionState().setValue(this,
@@ -54,8 +54,9 @@ public class TCWriterController extends GuiController {
 	}
 
 	public void run() {
-		getPropertySupport().attachAll();
-		gui.run();
+		gui.build();
+		activate();
+		gui.start();
 		newTestCase();
 	}
 
@@ -143,7 +144,7 @@ public class TCWriterController extends GuiController {
 		final int dialogResult = testFileChooser.showSaveDialog(gui);
 		if (dialogResult == 0) {
 			final File testFile = testFileChooser.getSelectedFile();
-			persister.writeTestCase(testFile.toString(), model.getTc().getValue());
+			persister.writeTestCase(testFile.getName(), model.getTc().getValue());
 		}
 	}
 
@@ -153,7 +154,7 @@ public class TCWriterController extends GuiController {
 		final int dialogResult = testFileChooser.showOpenDialog(gui);
 		if (dialogResult == 0) {
 			final File testFile = testFileChooser.getSelectedFile();
-			loadTestCase(persister.readTestCase(testFile.toString(), model.getTestDictionary()));
+			loadTestCase(persister.readTestCase(testFile.getName(), model.getTestDictionary()));
 		}
 	}
 

@@ -17,7 +17,7 @@ public interface IModelPersister {
 
 	void setConfiguration(GeneratorConfig config);
 
-	TestDictionary readtestDictionary() throws IOException;
+	TestDictionary readTestDictionary() throws IOException;
 
 	void writeTestDictionary(TestDictionary tm) throws IOException;
 

@@ -104,7 +104,7 @@ public class JsonModelPersister implements IModelPersister {
 	}
 
 	@Override
-	public TestDictionary readtestDictionary() throws IOException {
+	public TestDictionary readTestDictionary() throws IOException {
 		return mapper.readerFor(TestDictionary.class).readValue(readJson(Paths.get(config.getDictionaryPath())));
 	}
 

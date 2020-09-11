@@ -48,11 +48,11 @@ public class ControllerExampleObjectGuiModel extends GuiModel implements IObject
     }
 
     public ControllerExampleObjectGuiModel(final String prefix, final GuiController controller) {
-        this(prefix, controller.getPropertySupport(), GuiModel.createErrorProperty(prefix + "-Error", controller.getPropertySupport()));
+        this(prefix, controller.getPropertyChangeSupport(), GuiModel.createErrorProperty(prefix + "-Error", controller.getPropertyChangeSupport()));
     }
 
     public ControllerExampleObjectGuiModel(final GuiController controller) {
-        this("ControllerExampleObject", controller.getPropertySupport(), GuiModel.createErrorProperty("ControllerExampleObject-Error", controller.getPropertySupport()));
+        this("ControllerExampleObject", controller.getPropertyChangeSupport(), GuiModel.createErrorProperty("ControllerExampleObject-Error", controller.getPropertyChangeSupport()));
     }
 
     public ControllerExampleObjectGuiModel(final String prefix, final IScopedSupport propertySupport) {

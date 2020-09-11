@@ -2,6 +2,7 @@ package ch.skymarshall.gui.mvc;
 
 import java.beans.PropertyChangeListener;
 
+import ch.skymarshall.gui.mvc.Veto.TransmitMode;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 
 /**
@@ -17,17 +18,21 @@ public interface IScopedSupport {
 	void addPropertyChangeListener(String name, PropertyChangeListener propertyChangeListener);
 
 	/**
-	 * Detaches all the properties of this scope.
+	 * Attaches all the properties to the bindings.
 	 *
-	 * Use this method to avoid unexpected triggering of listeners when your model
-	 * is in an inconsistent state (ie when you are loading new objects).
+	 * Should be called after all the components are bound to the properties
+	 */
+	void attachAll();
+
+	/**
+	 * Detaches all the properties of this scope.
 	 */
 	void detachAll();
-
-	void attachAll();
 
 	void disposeBindings();
 
 	ControllerPropertyChangeSupport getMain();
+
+	IPropertyEventListener detachWhenLoading();
 
 }

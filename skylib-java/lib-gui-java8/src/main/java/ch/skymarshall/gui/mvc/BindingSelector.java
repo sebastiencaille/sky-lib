@@ -53,7 +53,7 @@ public class BindingSelector<T> implements PropertyChangeListener {
 		if (oldValue != null) {
 			final List<IBindingController> oldControllers = objectControllers.get(oldValue);
 			if (oldControllers != null) {
-				oldControllers.forEach(IBindingController::detach);
+				oldControllers.forEach(c -> c.getVeto().detach());
 			}
 		}
 
@@ -61,7 +61,7 @@ public class BindingSelector<T> implements PropertyChangeListener {
 		if (newValue != null) {
 			final List<IBindingController> newController = objectControllers.get(newValue);
 			if (newController != null) {
-				newController.forEach(IBindingController::attach);
+				newController.forEach(c -> c.getVeto().attach());
 				newController.forEach(IBindingController::forceViewUpdate);
 			}
 		}

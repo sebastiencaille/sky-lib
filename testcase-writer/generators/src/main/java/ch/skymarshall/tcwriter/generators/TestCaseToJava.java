@@ -32,7 +32,7 @@ public class TestCaseToJava {
 		final String jsonTC = args[1];
 
 		persister.setConfiguration(config);
-		final TestDictionary testDictionary = persister.readtestDictionary();
+		final TestDictionary testDictionary = persister.readTestDictionary();
 		final TestCase tc = persister.readTestCase(jsonTC, testDictionary);
 
 		new TestCaseToJava(config).generateAndWrite(tc, Paths.get(config.getDefaultGeneratedTCPath()));

@@ -72,10 +72,13 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 		setLayout(new BorderLayout());
 
-		tpModel.getEditedParameterValue().bind(
-				v -> !v.equals(TestParameterValue.NO_VALUE) && !(v.getValueFactory().getMandatoryParameters().isEmpty()
-						&& !v.getValueFactory().getOptionalParameters().isEmpty())) //
+		editedParamValue.bind(v -> !v.equals(TestParameterValue.NO_VALUE)) //
 				.listen(this::setVisible);
+
+		editedParamValue
+				.bind(v -> !v.getValueFactory().getMandatoryParameters().isEmpty()
+						|| !v.getValueFactory().getOptionalParameters().isEmpty()) //
+				.listen(this::setEnabled);
 
 		final JPanel topPanel = new JPanel();
 		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.PAGE_AXIS));
@@ -117,8 +120,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 				TestParameterValue::getComplexTypeValues, TestParameterValue::updateComplexTypeValues);
 		complexValues.bind(toListModel(tc, editedParamValue)).bind(values(allEditedParameters));
 
-		tpModel.getTestApi().listen(api -> fixParamsOfApi(tc, api, editedParamValue, allEditedParameters))
-				.addDependency(detachOnUpdateOf(tcWriterModel.getSelectedStep()));
+		tpModel.getTestApi().listen(api -> fixParamsOfApi(tc, api, editedParamValue, allEditedParameters));
 
 		add(new JScrollPane(valueTable), BorderLayout.CENTER);
 
@@ -152,7 +154,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 					.getNature() == ParameterNature.REFERENCE) {
 				editedParamValue.getValue().setValueFactory(ref);
 			}
-		}).addDependency(detachOnUpdateOf(editedParamValue));
+		});
 
 		// Edit the parameter value when changing the nature of the factory. Don't
 		// trigger when
@@ -177,8 +179,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 			default:
 				break;
 			}
-		}).addDependency(detachOnUpdateOf(editedParamValue));
-
+		});
 	}
 
 	/**

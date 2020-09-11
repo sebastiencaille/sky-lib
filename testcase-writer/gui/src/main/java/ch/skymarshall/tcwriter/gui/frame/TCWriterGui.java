@@ -35,6 +35,10 @@ public class TCWriterGui extends JFrame {
 
 	private final TCWriterController controller;
 
+	private TestParameterModel selectorModel;
+
+	private TestParameterModel param0Model;
+
 	public TCWriterGui(final TCWriterController controller) {
 		this.controller = controller;
 		setName("TCWriterGui");
@@ -53,7 +57,7 @@ public class TCWriterGui extends JFrame {
 		return button(null, icon, toolTip, action);
 	}
 
-	public void run() {
+	public void build() {
 
 		final ScreenBuildingReport screenBuildingReport = new ScreenBuildingReport();
 		ScreenBuildingReport.setScreenBuildingReport(screenBuildingReport);
@@ -110,12 +114,12 @@ public class TCWriterGui extends JFrame {
 		final StepEditorPanel stepEditor = new StepEditorPanel(stepEditorController);
 		stepEditorController.load();
 
-		final TestParameterModel selectorModel = new TestParameterModel("selector", controller,
+		selectorModel = new TestParameterModel("selector", controller,
 				stepEditorModel.getSelector(), stepEditorModel.getSelectorValue());
 		final JComponent selectorEditor = new TestParameterValueEditorPanel(controller, controller.getModel(),
 				selectorModel);
 
-		final TestParameterModel param0Model = new TestParameterModel("param0", controller,
+		param0Model = new TestParameterModel("param0", controller,
 				stepEditorModel.getActionParameter(), stepEditorModel.getActionParameterValue());
 		final JComponent param0Editor = new TestParameterValueEditorPanel(controller, controller.getModel(),
 				param0Model);
@@ -138,10 +142,15 @@ public class TCWriterGui extends JFrame {
 		if (LOGGER.isLoggable(Level.FINE)) {
 			LOGGER.fine(screenBuildingReport.toString());
 		}
-
 		this.validate();
 		this.pack();
 		this.setSize(1600, height);
+	}
+	
+	public void start() {
+		selectorModel.activate();
+		param0Model.activate();
+		
 		this.setVisible(true);
 	}
 

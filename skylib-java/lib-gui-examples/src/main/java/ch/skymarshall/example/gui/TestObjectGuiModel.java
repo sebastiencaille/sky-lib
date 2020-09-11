@@ -39,11 +39,11 @@ public class TestObjectGuiModel extends GuiModel implements IObjectGuiModel<ch.s
     }
 
     public TestObjectGuiModel(final String prefix, final GuiController controller) {
-        this(prefix, controller.getPropertySupport(), GuiModel.createErrorProperty(prefix + "-Error", controller.getPropertySupport()));
+        this(prefix, controller.getPropertyChangeSupport(), GuiModel.createErrorProperty(prefix + "-Error", controller.getPropertyChangeSupport()));
     }
 
     public TestObjectGuiModel(final GuiController controller) {
-        this("TestObject", controller.getPropertySupport(), GuiModel.createErrorProperty("TestObject-Error", controller.getPropertySupport()));
+        this("TestObject", controller.getPropertyChangeSupport(), GuiModel.createErrorProperty("TestObject-Error", controller.getPropertyChangeSupport()));
     }
 
     public TestObjectGuiModel(final String prefix, final IScopedSupport propertySupport) {

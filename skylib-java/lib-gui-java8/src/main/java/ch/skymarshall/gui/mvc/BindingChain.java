@@ -23,8 +23,10 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 
+import ch.skymarshall.gui.mvc.Veto.TransmitMode;
 import ch.skymarshall.gui.mvc.converters.ConversionException;
 import ch.skymarshall.gui.mvc.converters.IConverter;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
@@ -53,10 +55,13 @@ public class BindingChain implements IBindingController {
 	}
 
 	/**
-	 *
+	 * To enable / disable the binding
+	 */
+	private IVeto veto;
+
+	/**
 	 * All the links (converters, ...)
 	 */
-
 	private final List<Link> links = new ArrayList<>();
 
 	private final AbstractProperty property;
@@ -66,8 +71,6 @@ public class BindingChain implements IBindingController {
 	private final ErrorNotifier errorNotifier;
 
 	private final List<IBindingChainDependency> dependencies = new ArrayList<>();
-
-	private int detached = 0;
 
 	public class EndOfChain<T> {
 
@@ -80,7 +83,7 @@ public class BindingChain implements IBindingController {
 				newBinding.addComponentValueChangeListener(new IComponentLink<T>() {
 					@Override
 					public void setValueFromComponent(final Object component, final T componentValue) {
-						if (detached > 0) {
+						if (veto != null && !veto.mustSendToProperty(BindingChain.this)) {
 							return;
 						}
 						Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE, () -> "Component change: "
@@ -222,11 +225,11 @@ public class BindingChain implements IBindingController {
 		this.property = prop;
 		this.errorNotifier = errorNotifier;
 		// handle property change
-		this.valueUpdateListener = this::propagateProperyChange;
+		this.valueUpdateListener = this::propagatePropertyChange;
 	}
 
-	private void propagateProperyChange(final PropertyChangeEvent evt) {
-		if (detached > 0) {
+	private void propagatePropertyChange(final PropertyChangeEvent evt) {
+		if (veto != null && !veto.mustSendToComponent(BindingChain.this)) {
 			return;
 		}
 		Object value = evt.getNewValue();
@@ -270,21 +273,9 @@ public class BindingChain implements IBindingController {
 	}
 
 	@Override
-	public boolean attach() {
-		if (detached > 0) {
-			detached--;
-		}
-		return detached == 0;
-	}
-
-	@Override
 	public void forceViewUpdate() {
+		System.out.println("forceViewUpdate " + property);
 		property.fireArtificialChange(this);
-	}
-
-	@Override
-	public void detach() {
-		detached++;
 	}
 
 	@Override
@@ -304,6 +295,23 @@ public class BindingChain implements IBindingController {
 		property.removeListener(valueUpdateListener);
 		dependencies.stream().forEach(IBindingChainDependency::unbind);
 		links.stream().forEach(Link::unbind);
+	}
+
+	@Override
+	public IVeto getVeto() {
+		if (veto == null) {
+			veto = new Veto(TransmitMode.BOTH);
+		}
+		return veto;
+	}
+
+	public void setVeto(final IVeto veto) {
+		this.veto = veto;
+	}
+
+	public IBindingController addPropertyInhibitor(Predicate<BindingChain> inhibitor) {
+		getVeto().addPropertyInhibitor(inhibitor);
+		return this;
 	}
 
 	@Override

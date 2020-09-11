@@ -37,7 +37,7 @@ public class TestObjectControllerModelFrameView extends JFrame {
 		button.addActionListener(controller.getCommitAction());
 		getContentPane().add(button, BorderLayout.SOUTH);
 
-		controller.getPropertySupport().attachAll();
+		controller.getPropertyChangeSupport().attachAll();
 
 		validate();
 		pack();

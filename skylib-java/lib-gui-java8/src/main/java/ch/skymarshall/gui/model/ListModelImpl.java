@@ -568,7 +568,7 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 				// Same assertion valid for children
 				fireEditionCancelled(objectEdition.value);
 			} else if (!objectEdition.isAccepted()) {
-				// Edited object is removed from the model, and potentially from children
+				// Edited object is removed from the model and from children
 				fireEditionCancelled(objectEdition.value);
 				fireMutating();
 				data.remove(objectEdition.oldIndex);
@@ -585,14 +585,19 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 			} else {
 				// Edited object may have moved. First remove the data, since it may
 				// be at wrong location and this may confuse computeInsertionPoint
-				data.remove(objectEdition.oldIndex);
-				final int newIndex = computeInsertionPoint(objectEdition.value);
-				data.add(newIndex, objectEdition.value);
-				if (objectEdition.oldIndex == newIndex) {
-					fireContentsChanged(this, newIndex, newIndex);
-				} else {
+				boolean afterPrevious = objectEdition.oldIndex == 0 || viewProperty.getValue()
+						.compare(data.get(objectEdition.oldIndex - 1), objectEdition.value) <= 0;
+				boolean beforeNext = objectEdition.oldIndex == data.size() - 1
+						|| viewProperty.getValue().compare(objectEdition.value, data.get(objectEdition.oldIndex + 1)) <= 0;
+				if (!afterPrevious || !beforeNext) {
+					data.remove(objectEdition.oldIndex);
+					final int newIndex = computeInsertionPoint(objectEdition.value);
+					data.add(newIndex, objectEdition.value);
 					fireIntervalRemoved(this, objectEdition.oldIndex, objectEdition.oldIndex);
 					fireIntervalAdded(this, newIndex, newIndex);
+				} else {
+					// not moved
+					fireContentsChanged(this, objectEdition.oldIndex, objectEdition.oldIndex);
 				}
 				fireInnerEditionStopped();
 			}

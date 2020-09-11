@@ -44,7 +44,7 @@ public class GuiController {
 		this.propertySupport = propertySupport.scoped(this);
 	}
 
-	public IScopedSupport getPropertySupport() {
+	public IScopedSupport getPropertyChangeSupport() {
 		return propertySupport;
 	}
 

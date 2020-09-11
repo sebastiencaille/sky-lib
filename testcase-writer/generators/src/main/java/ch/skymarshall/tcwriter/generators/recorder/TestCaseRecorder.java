@@ -43,7 +43,7 @@ public class TestCaseRecorder implements ITestCaseRecorder {
 
 	public TestCaseRecorder(final IModelPersister persister) throws IOException {
 		this.persister = persister;
-		this.testDictionary = persister.readtestDictionary();
+		this.testDictionary = persister.readTestDictionary();
 	}
 
 	public TestCaseRecorder(final IModelPersister persister, final TestDictionary model) {

@@ -40,10 +40,59 @@ public final class BindingDependencies {
 		public void propertyModified(final Object caller, final PropertyEvent event) {
 			switch (event.getKind()) {
 			case BEFORE:
-				controller.detach();
+				controller.getVeto().detach();
 				break;
 			case AFTER:
-				controller.attach();
+				controller.getVeto().attach();
+				controller.forceViewUpdate();
+				break;
+			default:
+				// ignore
+				break;
+			}
+		}
+
+		@Override
+		public String toString() {
+			return "Detaching on update of " + property.getName();
+		}
+	}
+
+	public static IBindingChainDependency detachOnLoadingOf(final AbstractProperty property) {
+		return new DetachOnLoadingOf(property);
+	}
+
+	public static class DetachOnLoadingOf implements IBindingChainDependency, IPropertyEventListener {
+
+		private final AbstractProperty property;
+		private IBindingController controller;
+
+		public DetachOnLoadingOf(final AbstractProperty property) {
+			this.property = property;
+		}
+
+		@Override
+		public void register(final IBindingController controller) {
+			this.controller = controller;
+			property.addListener(this);
+			ScreenBuildingReport.addDependency(this, controller);
+		}
+
+		@Override
+		public void unbind() {
+			property.removeListener(this);
+		}
+
+		@Override
+		public void propertyModified(final Object caller, final PropertyEvent event) {
+			switch (event.getKind()) {
+			case BEFORE:
+				if (event.getProperty().mustSendToComponent()) {
+					controller.getVeto().detach();
+				}
+				break;
+			case AFTER:
+				controller.getVeto().attach();
 				controller.forceViewUpdate();
 				break;
 			default:
@@ -93,32 +142,37 @@ public final class BindingDependencies {
 
 		@Override
 		public void mutates() {
-			controller.detach();
+			controller.getVeto().detach();
 		}
 
 		@Override
 		public void mutated() {
-			controller.attach();
+			controller.getVeto().attach();
+			controller.forceViewUpdate();
 		}
 
 		@Override
 		public void valuesSet(final ListEvent<T> event) {
-			controller.attach();
+			controller.getVeto().attach();
+			controller.forceViewUpdate();
 		}
 
 		@Override
 		public void valuesCleared(final ListEvent<T> event) {
-			controller.attach();
+			controller.getVeto().attach();
+			controller.forceViewUpdate();
 		}
 
 		@Override
 		public void valuesAdded(final ListEvent<T> event) {
-			controller.attach();
+			controller.getVeto().attach();
+			controller.forceViewUpdate();
 		}
 
 		@Override
 		public void valuesRemoved(final ListEvent<T> event) {
-			controller.attach();
+			controller.getVeto().attach();
+			controller.forceViewUpdate();
 		}
 
 		@Override

@@ -23,7 +23,7 @@ public class GuiModel {
 	protected final ErrorProperty errorProperty;
 
 	public GuiModel(final GuiController controller) {
-		this.propertySupport = controller.getPropertySupport();
+		this.propertySupport = controller.getPropertyChangeSupport();
 		this.errorProperty = createErrorProperty("InputError", propertySupport);
 	}
 
@@ -43,5 +43,9 @@ public class GuiModel {
 
 	protected static ErrorProperty createErrorProperty(final String name, final IScopedSupport support) {
 		return new ErrorProperty(name, support);
+	}
+	
+	public void activate() {
+		propertySupport.attachAll();
 	}
 }

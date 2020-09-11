@@ -15,6 +15,9 @@
  ******************************************************************************/
 package ch.skymarshall.gui.mvc;
 
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
+
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 
 /**
@@ -27,13 +30,7 @@ import ch.skymarshall.gui.mvc.properties.AbstractProperty;
  */
 public interface IBindingController {
 
-	/**
-	 *
-	 * @return true if fully attached, false if any missing attach
-	 */
-	boolean attach();
-
-	void detach();
+	IVeto getVeto();
 
 	void forceViewUpdate();
 

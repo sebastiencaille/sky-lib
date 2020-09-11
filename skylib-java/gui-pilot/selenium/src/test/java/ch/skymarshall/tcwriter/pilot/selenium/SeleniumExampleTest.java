@@ -42,7 +42,7 @@ public class SeleniumExampleTest {
 		webServer.start();
 
 		// Start selenium
-		System.setProperty("webdriver.gecko.driver", "/usr/local/bin/geckodriver");
+		System.setProperty("webdriver.gecko.driver", "/usr/bin/geckodriver");
 
 		final FirefoxBinary firefoxBinary = new FirefoxBinary();
 		firefoxBinary.addCommandLineOptions("--no-sandbox");

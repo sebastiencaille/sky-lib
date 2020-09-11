@@ -30,8 +30,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import ch.skymarshall.gui.mvc.PropertyEvent.EventKind;
+import ch.skymarshall.gui.mvc.Veto.TransmitMode;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
-import ch.skymarshall.gui.mvc.properties.AbstractProperty.TransmitMode;
 
 /**
  * PropertyChangeSupport adapted to the property controllers.
@@ -151,8 +152,8 @@ public class ControllerPropertyChangeSupport {
 
 	public void unregister(final AbstractProperty abstractProperty) {
 		final String propName = abstractProperty.getName();
-		final PropertyChangeListener[] properyListeners = support.getPropertyChangeListeners(propName);
-		Arrays.stream(properyListeners).forEach(l -> support.removePropertyChangeListener(propName, l));
+		final PropertyChangeListener[] propertyListeners = support.getPropertyChangeListeners(propName);
+		Arrays.stream(propertyListeners).forEach(l -> support.removePropertyChangeListener(propName, l));
 	}
 
 	public void unregister(final AbstractProperty... abstractProperties) {
@@ -191,17 +192,13 @@ public class ControllerPropertyChangeSupport {
 		}
 
 		@Override
-		public void detachAll() {
-			properties.forEach(p -> p.setTransmitMode(TransmitMode.NONE));
-		}
-
-		/**
-		 * Attaches all the properties to the bindings. Should be called once all the
-		 * components are bound to the properties
-		 */
-		@Override
 		public void attachAll() {
 			properties.forEach(AbstractProperty::attach);
+		}
+
+		@Override
+		public void detachAll() {
+			properties.forEach(p -> p.setTransmitMode(TransmitMode.NONE));
 		}
 
 		@Override
@@ -215,6 +212,16 @@ public class ControllerPropertyChangeSupport {
 			properties.forEach(ControllerPropertyChangeSupport.this::unregister);
 			listeners.forEach(
 					l -> ControllerPropertyChangeSupport.this.removePropertyChangeListener(l.name, l.listener));
+		}
+
+		public IPropertyEventListener detachWhenLoading() {
+			return (caller, event) -> {
+				if (event.getKind() == EventKind.BEFORE) {
+					detachAll();
+				} else if (event.getKind() == EventKind.AFTER) {
+					attachAll();
+				}
+			};
 		}
 
 		@Override

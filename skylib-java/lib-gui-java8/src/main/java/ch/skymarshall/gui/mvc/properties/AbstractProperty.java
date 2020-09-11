@@ -15,6 +15,7 @@
  ******************************************************************************/
 package ch.skymarshall.gui.mvc.properties;
 
+import java.awt.Component;
 import java.beans.PropertyChangeListener;
 import java.io.Serializable;
 import java.util.List;
@@ -28,6 +29,7 @@ import ch.skymarshall.gui.mvc.IPropertyEventListener;
 import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.PropertyEvent;
 import ch.skymarshall.gui.mvc.PropertyEvent.EventKind;
+import ch.skymarshall.gui.mvc.Veto.TransmitMode;
 
 /**
  * Provides default type-independant mechanisms of properties.
@@ -59,18 +61,6 @@ public abstract class AbstractProperty implements Serializable {
 		};
 	}
 
-	public enum TransmitMode {
-		NONE(false, false), BOTH(true, true), TO_COMPONENT(true, false);
-
-		public final boolean toComponent;
-		public final boolean toProperty;
-
-		private TransmitMode(final boolean toComponent, final boolean toProperty) {
-			this.toComponent = toComponent;
-			this.toProperty = toProperty;
-		}
-	}
-
 	/**
 	 * Name of the property
 	 */
@@ -91,7 +81,7 @@ public abstract class AbstractProperty implements Serializable {
 	 */
 	protected transient ErrorNotifier errorNotifier = emptyErrorNotifier();
 
-	protected TransmitMode transmitMode = TransmitMode.NONE;
+	protected transient TransmitMode transmitMode = TransmitMode.NONE;
 
 	public abstract void reset(Object caller);
 
@@ -109,6 +99,10 @@ public abstract class AbstractProperty implements Serializable {
 
 	public String getName() {
 		return name;
+	}
+
+	public TransmitMode getTransmitMode() {
+		return transmitMode;
 	}
 
 	public void setTransmitMode(final TransmitMode transmitMode) {

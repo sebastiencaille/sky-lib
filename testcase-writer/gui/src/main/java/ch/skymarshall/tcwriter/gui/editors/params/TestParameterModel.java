@@ -1,5 +1,6 @@
 package ch.skymarshall.tcwriter.gui.editors.params;
 
+import ch.skymarshall.gui.mvc.GuiModel;
 import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.properties.ListProperty;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
@@ -8,7 +9,7 @@ import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestReference;
 import ch.skymarshall.tcwriter.gui.frame.TCWriterController;
 
-public class TestParameterModel {
+public class TestParameterModel extends GuiModel {
 	private final ObjectProperty<TestParameterFactory.ParameterNature> valueNature;
 	private final ObjectProperty<String> simpleValue;
 	private final ObjectProperty<TestReference> selectedReference;
@@ -20,16 +21,17 @@ public class TestParameterModel {
 	public TestParameterModel(final String prefix, final TCWriterController guiController,
 			final ObjectProperty<TestParameterFactory> testApi,
 			final ObjectProperty<TestParameterValue> editedParameterValue) {
+		super(guiController.getPropertyChangeSupport().getMain().scoped(prefix + "-controller"));
 		this.prefix = prefix;
 		this.editedParameterValue = editedParameterValue;
 		this.testApi = testApi;
-		final IScopedSupport propertyChangeSupport = guiController.getPropertySupport();
-		valueNature = new ObjectProperty<>(prefix + "-nature", propertyChangeSupport);
+
+		valueNature = new ObjectProperty<>(prefix + "-nature", propertySupport); 
 		simpleValue = editedParameterValue.child(prefix + "-simpleValue", TestParameterValue::getSimpleValue,
 				TestParameterValue::setSimpleValue);
-		selectedReference = new ObjectProperty<>(prefix + "-reference", propertyChangeSupport);
+		selectedReference = new ObjectProperty<>(prefix + "-reference", propertySupport);
 
-		references = new ListProperty<>(prefix + "-references", propertyChangeSupport);
+		references = new ListProperty<>(prefix + "-references", propertySupport);
 
 	}
 

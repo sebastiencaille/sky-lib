@@ -25,9 +25,7 @@ import ch.skymarshall.util.helpers.ClassFinder;
 public class GuiModelGenerator {
 
 	public static void main(final String[] args) throws IOException {
-
 		final CodeGeneratorParams params = CodeGeneratorParams.parse(args);
-
 		new GuiModelGenerator().process(params);
 	}
 

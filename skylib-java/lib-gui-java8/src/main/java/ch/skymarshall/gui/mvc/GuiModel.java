@@ -22,19 +22,22 @@ public class GuiModel {
 	protected final IScopedSupport propertySupport;
 	protected final ErrorProperty errorProperty;
 
-	public GuiModel(final GuiController controller) {
-		this.propertySupport = controller.getPropertyChangeSupport();
-		this.errorProperty = createErrorProperty("InputError", propertySupport);
-	}
-
 	public GuiModel(final IScopedSupport propertySupport, final ErrorProperty errorProperty) {
 		this.propertySupport = propertySupport;
 		this.errorProperty = errorProperty;
 	}
 
 	public GuiModel(final IScopedSupport propertySupport) {
-		this.propertySupport = propertySupport;
-		this.errorProperty = createErrorProperty("InputError", propertySupport);
+		this(propertySupport, createErrorProperty("InputError", propertySupport));
+	}
+
+	public GuiModel(final GuiController controller) {
+		this(controller.getScopedChangeSupport());
+	}
+
+	public GuiModel(final ControllerPropertyChangeSupport propertySupport) {
+		this.propertySupport = propertySupport.scoped(this);
+		this.errorProperty = createErrorProperty("InputError", this.propertySupport);
 	}
 
 	public ErrorProperty getErrorProperty() {
@@ -44,7 +47,7 @@ public class GuiModel {
 	protected static ErrorProperty createErrorProperty(final String name, final IScopedSupport support) {
 		return new ErrorProperty(name, support);
 	}
-	
+
 	public void activate() {
 		propertySupport.attachAll();
 	}

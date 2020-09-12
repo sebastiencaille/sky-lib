@@ -257,8 +257,8 @@ public abstract class AttributeProcessor {
 			}
 
 			return "GetSetAccess.<" + attr.getDeclaringType().getName() + ","
-					+ attributeProcessor.getObjectTypeAsString() + ">access(" + "(o) -> o::"
-					+ attributeProcessor.getter() + ", (o) ->" + setter + ")";
+					+ attributeProcessor.getObjectTypeAsString() + ">access(" + "o -> o::"
+					+ attributeProcessor.getter() + ", o -> " + setter + ")";
 		}
 
 		@Override

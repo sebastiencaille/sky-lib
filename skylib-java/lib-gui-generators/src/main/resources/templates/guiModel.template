@@ -27,21 +27,20 @@ public class ${modelClass} extends GuiModel implements IObjectGuiModel<${objectC
     }
 
     public ${modelClass}(final String prefix, final GuiController controller) {
-        this(prefix, controller.getPropertySupport(), GuiModel.createErrorProperty(prefix + "-Error", controller.getPropertySupport()));
+        this(prefix, controller.getScopedChangeSupport(), GuiModel.createErrorProperty(prefix + "-${objectClassSimpleName}-Error", controller.getScopedChangeSupport()));
     }
 
     public ${modelClass}(final GuiController controller) {
-        this("${objectClassSimpleName}", controller.getPropertySupport(), GuiModel.createErrorProperty("${objectClassSimpleName}-Error", controller.getPropertySupport()));
+        this("${objectClassSimpleName}", controller.getScopedChangeSupport(), GuiModel.createErrorProperty("${objectClassSimpleName}-Error", controller.getScopedChangeSupport()));
     }
 
     public ${modelClass}(final String prefix, final IScopedSupport propertySupport) {
-        this(prefix, propertySupport, GuiModel.createErrorProperty(prefix + "-Error", propertySupport));
+        this(prefix, propertySupport, GuiModel.createErrorProperty(prefix + "-${objectClassSimpleName}-Error", propertySupport));
     }
 
     public ${modelClass}(final IScopedSupport propertySupport) {
         this("${objectClassSimpleName}", propertySupport, GuiModel.createErrorProperty("${objectClassSimpleName}-Error", propertySupport));
     }
-
 
 	${fields.getters}
 

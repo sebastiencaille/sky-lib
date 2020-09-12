@@ -15,7 +15,6 @@
  ******************************************************************************/
 package ch.skymarshall.gui.mvc.properties;
 
-import java.awt.Component;
 import java.beans.PropertyChangeListener;
 import java.io.Serializable;
 import java.util.List;

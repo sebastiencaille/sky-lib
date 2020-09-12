@@ -8,8 +8,8 @@ public class CodeGeneratorParams {
 	@Parameter(names = { "-s", "--sourceFolder" }, required = true)
 	private String sourceFolder = ".";
 
-	@Parameter(names = { "-t", "--targetFolder" }, required = true)
-	private String targetFolder = "src-generated";
+	@Parameter(names = { "-t", "--targetFolder" }, required = false)
+	private String targetFolder = null;
 
 	@Parameter(names = { "-ns", "--nameSpace" }, required = true)
 	private String namespaceFilter = null;
@@ -25,6 +25,10 @@ public class CodeGeneratorParams {
 	}
 
 	public String getTargetFolder() {
+		if (targetFolder == null) {
+			// by default, store in source folder so changes can be audited
+			return sourceFolder; 
+		}
 		return targetFolder;
 	}
 

@@ -15,9 +15,6 @@
  ******************************************************************************/
 package ch.skymarshall.gui.mvc;
 
-import java.util.function.BiPredicate;
-import java.util.function.Predicate;
-
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 
 /**

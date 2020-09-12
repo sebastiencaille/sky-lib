@@ -30,7 +30,7 @@ public class StepEditorController extends GuiController {
 	private final IScopedSupport changeSupport;
 
 	public StepEditorController(final TCWriterController controller) {
-		changeSupport = controller.getPropertyChangeSupport();
+		changeSupport = controller.getScopedChangeSupport();
 		this.model = new StepEditorModel(changeSupport);
 		guiModel = controller.getModel();
 	}

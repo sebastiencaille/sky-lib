@@ -2,12 +2,12 @@
 package ch.skymarshall.example.gui.controller.impl;
 
 import ch.skymarshall.gui.mvc.IScopedSupport;
-import ch.skymarshall.gui.mvc.factories.Persisters;
 import ch.skymarshall.gui.mvc.GuiModel;
 import ch.skymarshall.gui.mvc.IObjectGuiModel;
 import ch.skymarshall.gui.mvc.persisters.ObjectProviderPersister;
 import ch.skymarshall.gui.mvc.IComponentBinding;
 import ch.skymarshall.gui.mvc.GuiController;
+import ch.skymarshall.gui.mvc.factories.Persisters;
 import ch.skymarshall.gui.mvc.properties.Properties;
 import ch.skymarshall.gui.mvc.properties.ErrorProperty;
 import ch.skymarshall.gui.mvc.IComponentLink;
@@ -40,29 +40,28 @@ public class ControllerExampleObjectGuiModel extends GuiModel implements IObject
 
     public ControllerExampleObjectGuiModel(final String prefix, final IScopedSupport propertySupport, final ErrorProperty errorProperty) {
         super(propertySupport, errorProperty);
-		booleanPropProperty = Properties.of(new BooleanProperty(prefix + "-BooleanProp",  propertySupport)).persistent(Persisters.from(currentObjectProvider, GetSetAccess.<ch.skymarshall.example.gui.controller.impl.ControllerExampleObject,java.lang.Boolean>access((o) -> o::isBooleanProp, (o) ->o::setBooleanProp))).setErrorNotifier(errorProperty).getProperty();
-		intPropProperty = Properties.of(new IntProperty(prefix + "-IntProp",  propertySupport)).persistent(Persisters.from(currentObjectProvider, GetSetAccess.<ch.skymarshall.example.gui.controller.impl.ControllerExampleObject,java.lang.Integer>access((o) -> o::getIntProp, (o) ->o::setIntProp))).setErrorNotifier(errorProperty).getProperty();
-		stringPropProperty = Properties.of(new ObjectProperty<java.lang.String>(prefix + "-StringProp",  propertySupport)).persistent(Persisters.from(currentObjectProvider, GetSetAccess.<ch.skymarshall.example.gui.controller.impl.ControllerExampleObject,java.lang.String>access((o) -> o::getStringProp, (o) ->o::setStringProp))).setErrorNotifier(errorProperty).getProperty();
-		testObjectPropProperty = Properties.of(new ObjectProperty<ch.skymarshall.example.gui.TestObject>(prefix + "-TestObjectProp",  propertySupport)).persistent(Persisters.from(currentObjectProvider, GetSetAccess.<ch.skymarshall.example.gui.controller.impl.ControllerExampleObject,ch.skymarshall.example.gui.TestObject>access((o) -> o::getTestObjectProp, (o) ->o::setTestObjectProp))).setErrorNotifier(errorProperty).getProperty();
+		booleanPropProperty = Properties.of(new BooleanProperty(prefix + "-BooleanProp",  propertySupport)).persistent(Persisters.from(currentObjectProvider, GetSetAccess.<ch.skymarshall.example.gui.controller.impl.ControllerExampleObject,java.lang.Boolean>access(o -> o::isBooleanProp, o -> o::setBooleanProp))).setErrorNotifier(errorProperty).getProperty();
+		intPropProperty = Properties.of(new IntProperty(prefix + "-IntProp",  propertySupport)).persistent(Persisters.from(currentObjectProvider, GetSetAccess.<ch.skymarshall.example.gui.controller.impl.ControllerExampleObject,java.lang.Integer>access(o -> o::getIntProp, o -> o::setIntProp))).setErrorNotifier(errorProperty).getProperty();
+		stringPropProperty = Properties.of(new ObjectProperty<java.lang.String>(prefix + "-StringProp",  propertySupport)).persistent(Persisters.from(currentObjectProvider, GetSetAccess.<ch.skymarshall.example.gui.controller.impl.ControllerExampleObject,java.lang.String>access(o -> o::getStringProp, o -> o::setStringProp))).setErrorNotifier(errorProperty).getProperty();
+		testObjectPropProperty = Properties.of(new ObjectProperty<ch.skymarshall.example.gui.TestObject>(prefix + "-TestObjectProp",  propertySupport)).persistent(Persisters.from(currentObjectProvider, GetSetAccess.<ch.skymarshall.example.gui.controller.impl.ControllerExampleObject,ch.skymarshall.example.gui.TestObject>access(o -> o::getTestObjectProp, o -> o::setTestObjectProp))).setErrorNotifier(errorProperty).getProperty();
 		
     }
 
     public ControllerExampleObjectGuiModel(final String prefix, final GuiController controller) {
-        this(prefix, controller.getPropertyChangeSupport(), GuiModel.createErrorProperty(prefix + "-Error", controller.getPropertyChangeSupport()));
+        this(prefix, controller.getScopedChangeSupport(), GuiModel.createErrorProperty(prefix + "-ControllerExampleObject-Error", controller.getScopedChangeSupport()));
     }
 
     public ControllerExampleObjectGuiModel(final GuiController controller) {
-        this("ControllerExampleObject", controller.getPropertyChangeSupport(), GuiModel.createErrorProperty("ControllerExampleObject-Error", controller.getPropertyChangeSupport()));
+        this("ControllerExampleObject", controller.getScopedChangeSupport(), GuiModel.createErrorProperty("ControllerExampleObject-Error", controller.getScopedChangeSupport()));
     }
 
     public ControllerExampleObjectGuiModel(final String prefix, final IScopedSupport propertySupport) {
-        this(prefix, propertySupport, GuiModel.createErrorProperty(prefix + "-Error", propertySupport));
+        this(prefix, propertySupport, GuiModel.createErrorProperty(prefix + "-ControllerExampleObject-Error", propertySupport));
     }
 
     public ControllerExampleObjectGuiModel(final IScopedSupport propertySupport) {
         this("ControllerExampleObject", propertySupport, GuiModel.createErrorProperty("ControllerExampleObject-Error", propertySupport));
     }
-
 
 	public BooleanProperty getBooleanPropProperty() {
 	    return booleanPropProperty;

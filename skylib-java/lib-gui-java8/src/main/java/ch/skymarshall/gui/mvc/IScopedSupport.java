@@ -2,7 +2,6 @@ package ch.skymarshall.gui.mvc;
 
 import java.beans.PropertyChangeListener;
 
-import ch.skymarshall.gui.mvc.Veto.TransmitMode;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 
 /**

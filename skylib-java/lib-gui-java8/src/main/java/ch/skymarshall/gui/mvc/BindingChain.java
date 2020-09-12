@@ -274,7 +274,6 @@ public class BindingChain implements IBindingController {
 
 	@Override
 	public void forceViewUpdate() {
-		System.out.println("forceViewUpdate " + property);
 		property.fireArtificialChange(this);
 	}
 

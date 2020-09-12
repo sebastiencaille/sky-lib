@@ -44,7 +44,7 @@ public class TCWriterController extends GuiController {
 		this.config = config;
 		this.persister = persister;
 		this.testExecutor = testExecutor;
-		model = new TCWriterModel(persister.readTestDictionary(), getPropertyChangeSupport());
+		model = new TCWriterModel(persister.readTestDictionary(), getScopedChangeSupport());
 		gui = new TCWriterGui(this);
 		testRemoteControl = new TestRemoteControl(9998,
 				r -> SwingUtilities.invokeLater(() -> model.getExecutionState().setValue(this,

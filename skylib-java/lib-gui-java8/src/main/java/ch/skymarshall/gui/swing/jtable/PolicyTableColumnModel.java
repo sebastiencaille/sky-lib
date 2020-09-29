@@ -138,6 +138,7 @@ public class PolicyTableColumnModel<C extends Enum<C>> extends DefaultTableColum
 				lastPercentColumn.setComputedWidth(lastPercentColumn.getWidth() + remainingWidth);
 			}
 		}
+
 	}
 
 	public void configureColumn(final TableColumnWithPolicy<C> column) {
@@ -147,7 +148,7 @@ public class PolicyTableColumnModel<C extends Enum<C>> extends DefaultTableColum
 		if (tableColumns.isEmpty()) {
 			table.createDefaultColumnsFromModel();
 		}
-		final int index = JTableHelper.columnIndex(table, column.getColumn());
+		final int index = JTableHelper.modelColumnIndex(table, column.getColumn());
 		column.setModelIndex(index);
 		final TableColumn old = tableColumns.get(index);
 		tableColumns.removeElementAt(index);

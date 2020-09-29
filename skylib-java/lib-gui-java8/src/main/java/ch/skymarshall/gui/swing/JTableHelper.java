@@ -24,15 +24,11 @@ import ch.skymarshall.gui.swing.model.ListModelTableModel;
 
 public interface JTableHelper {
 
-	public static <C extends Enum<C>> TableColumn getColumn(final JTable table, final C col) {
-		return table.getColumnModel().getColumn(((ListModelTableModel<?, C>) table.getModel()).getIndexOf(col));
-	}
-
 	public static <C extends Enum<C>> C columnAt(final JTable table, final Point p, final Class<C> columnClazz) {
-		return columnClazz.getEnumConstants()[table.columnAtPoint(p)];
+		return columnClazz.getEnumConstants()[table.convertColumnIndexToModel( table.columnAtPoint(p))];
 	}
 
-	public static <C extends Enum<C>> int columnIndex(final JTable table, final C col) {
+	public static <C extends Enum<C>> int modelColumnIndex(final JTable table, final C col) {
 		return ((ListModelTableModel<?, C>) table.getModel()).getIndexOf(col);
 	}
 

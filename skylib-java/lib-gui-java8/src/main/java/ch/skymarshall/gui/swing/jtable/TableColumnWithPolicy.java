@@ -72,6 +72,11 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 		return this;
 	}
 
+	@Override
+	public String toString() {
+		return column.name() + '-' + getClass().getSimpleName();
+	}
+
 	protected static class FixedWidthColumn<C extends Enum<C>> extends TableColumnWithPolicy<C> {
 
 		private final int fixedWidth;

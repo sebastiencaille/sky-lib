@@ -37,11 +37,6 @@
 			</dependency>
 			<dependency>
 				<groupId>ch.skymarshall.dataflowmgr</groupId>
-				<artifactId>data-flow-model</artifactId>
-				<version>${data-flow-manager-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.skymarshall.dataflowmgr</groupId>
 				<artifactId>data-flow-generator</artifactId>
 				<version>${data-flow-manager-version}</version>
 			</dependency>

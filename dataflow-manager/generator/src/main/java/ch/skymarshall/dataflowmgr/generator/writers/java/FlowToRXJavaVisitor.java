@@ -4,7 +4,6 @@ import static ch.skymarshall.util.text.TextFormatter.toCamelCase;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toSet;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,11 +39,11 @@ import ch.skymarshall.util.generators.Template;
  */
 public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 
-	private final JavaCodeGenerator flowClass = new JavaCodeGenerator();
+	private final JavaCodeGenerator<RuntimeException> flowClass = JavaCodeGenerator.inMemory();
 
-	private final JavaCodeGenerator flowFactories = new JavaCodeGenerator();
+	private final JavaCodeGenerator<RuntimeException> flowFactories = JavaCodeGenerator.inMemory();
 
-	private final JavaCodeGenerator flowCode = new JavaCodeGenerator();
+	private final JavaCodeGenerator<RuntimeException> flowCode = JavaCodeGenerator.inMemory();
 
 	private final boolean debug;
 
@@ -54,7 +53,7 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 		this.debug = debug;
 	}
 
-	public Template process() throws IOException {
+	public Template process() {
 
 		availableVars.add(new BindingImplVariable(Flow.ENTRY_POINT, flow.getEntryPointType(), "f." + Flow.ENTRY_POINT));
 
@@ -98,7 +97,7 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 	}
 
 	@Override
-	protected void process(final BindingContext context, final Processor processor) throws IOException {
+	protected void process(final BindingContext context, final Processor processor) {
 
 		availableVars.add(new BindingImplVariable(context.outputDataPoint, processor.getReturnType(),
 				"f." + context.outputDataPoint));
@@ -153,14 +152,13 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 
 	}
 
-	private void generateDataPoint(final BindingContext context) throws IOException {
+	private void generateDataPoint(final BindingContext context) {
 		definedDataPoints.add(context.outputDataPoint);
 		addDataSetter(context.binding.getProcessor().getReturnType(), context.outputDataPoint, true);
 	}
 
 	private void visitExecution(final BindingContext context, final Processor processor,
-			final List<Binding> bindingDeps, final Set<Binding> exclusions, final boolean isConditionalExec)
-			throws IOException {
+			final List<Binding> bindingDeps, final Set<Binding> exclusions, final boolean isConditionalExec) {
 
 		final List<String> adapterNames = visitExternalAdapters(context, context.unprocessedAdapters(context.adapters));
 
@@ -232,10 +230,9 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 	 * Generates the code calling a list of activators
 	 *
 	 * @param context
-	 * @param availableVars
-	 * @throws IOException
+	 * @param availableVars @
 	 */
-	private void visitActivators(final BindingContext context, final List<Binding> bindingDeps) throws IOException {
+	private void visitActivators(final BindingContext context, final List<Binding> bindingDeps) {
 		if (context.activators.isEmpty()) {
 			return;
 		}
@@ -281,8 +278,8 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 				eoli().append(".doOnSuccess(r -> activationCheck.subscribe())").eos().unindent();
 	}
 
-	private List<String> visitExternalAdapters(final BindingContext context, final Set<ExternalAdapter> externalAdapter)
-			throws IOException {
+	private List<String> visitExternalAdapters(final BindingContext context,
+			final Set<ExternalAdapter> externalAdapter) {
 
 		final List<String> adapterNames = new ArrayList<>();
 
@@ -313,7 +310,7 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 		return adapterNames;
 	}
 
-	private void addDataSetter(final String type, final String property, boolean withState) throws IOException {
+	private void addDataSetter(final String type, final String property, boolean withState) {
 		if (withState) {
 			flowClass.addVarDecl("private", "DataPointState", "state_" + property, "DataPointState.NOT_TRIGGERED");
 			flowClass.addSetter("private", "DataPointState", "state_" + property);
@@ -329,8 +326,8 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 
 	}
 
-	private JavaCodeGenerator addBindingDepsCheck(final Binding binding, final List<Binding> dependencies)
-			throws IOException {
+	private JavaCodeGenerator<RuntimeException> addBindingDepsCheck(final Binding binding,
+			final List<Binding> dependencies) {
 		if (!dependencies.isEmpty()) {
 			flowFactories.eoli().append(".mapOptional(f -> (")
 					.append(dependencies.stream()
@@ -345,7 +342,7 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 		return flowFactories;
 	}
 
-	private void addAdapterZip(final List<String> adapterNames) throws IOException {
+	private void addAdapterZip(final List<String> adapterNames) {
 		if (adapterNames.isEmpty()) {
 			return;
 		}

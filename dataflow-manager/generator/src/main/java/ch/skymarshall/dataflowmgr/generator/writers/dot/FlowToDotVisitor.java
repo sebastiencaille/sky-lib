@@ -15,7 +15,6 @@
  ******************************************************************************/
 package ch.skymarshall.dataflowmgr.generator.writers.dot;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -182,30 +181,26 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 		return withId.uuid().toString();
 	}
 
-	public DotFileGenerator process() throws IOException {
+	public DotFileGenerator<RuntimeException> process() {
 
 		super.processFlow();
 
-		try {
-			final DotFileGenerator generator = new DotFileGenerator();
-			generator.header(flow.getName(), "TBD");
-			generator.polyLines();
+		final DotFileGenerator<RuntimeException> generator = DotFileGenerator.inMemory();
+		generator.header(flow.getName(), "TBD");
+		generator.polyLines();
 
-			for (final Node node : graph.nodes.values()) {
-				final String color = computeColor(node);
-				final String label = node.label;
-				final ch.skymarshall.util.generators.DotFileGenerator.Shape shape = node.shape;
-				generator.addNode(node.name, label, shape, color);
-			}
-			for (final Link link : graph.links) {
-				generator.addEdge(link.from, link.to, link.label, false, link.extra);
-			}
-			generator.footer();
-			return generator;
-
-		} catch (final IOException e) {
-			throw new IllegalStateException("Unable to generate DOT", e);
+		for (final Node node : graph.nodes.values()) {
+			final String color = computeColor(node);
+			final String label = node.label;
+			final ch.skymarshall.util.generators.DotFileGenerator.Shape shape = node.shape;
+			generator.addNode(node.name, label, shape, color);
 		}
+		for (final Link link : graph.links) {
+			generator.addEdge(link.from, link.to, link.label, false, link.extra);
+		}
+		generator.footer();
+		return generator;
+
 	}
 
 	private String computeColor(final Node node) {

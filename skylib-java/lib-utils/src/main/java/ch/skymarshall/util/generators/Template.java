@@ -78,7 +78,7 @@ public class Template {
 				throw new TemplateException("No value for property " + variable);
 			}
 			final String indent = getIndentation(nextVariablePos);
-			result.append(content.substring(currentPos, nextVariablePos)).append(value.replaceAll("\n", indent));
+			result.append(content.substring(currentPos, nextVariablePos)).append(value.replace("\n", indent));
 			nextVariablePos = nextVariablePos + variable.length() + 3;
 			currentPos = nextVariablePos;
 		}

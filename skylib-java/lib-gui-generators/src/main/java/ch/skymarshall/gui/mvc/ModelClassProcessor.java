@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import ch.skymarshall.gui.mvc.AttributeProcessor.AttributeProcessorDelegate;
 import ch.skymarshall.util.dao.metadata.AbstractAttributeMetaData;
@@ -119,7 +120,7 @@ public class ModelClassProcessor {
 		return !Modifier.isStatic(attrib.getModifier());
 	}
 
-	protected Template process() throws IOException {
+	protected Template process() {
 
 		final UntypedDataObjectMetaData metaData = new UntypedDataObjectMetaData(modelClass, false);
 
@@ -140,15 +141,19 @@ public class ModelClassProcessor {
 
 		final String pkg = modelClass.getPackage().getName();
 		context.properties.put("package", pkg);
-		return Template.from("templates/guiModel.template").apply(context.properties,
-				JavaCodeGenerator.classToSource(pkg, getClassName()));
+		try {
+			return Template.from("templates/guiModel.template").apply(context.properties,
+					JavaCodeGenerator.classToSource(pkg, getClassName()));
+		} catch (IOException e) {
+			throw new IllegalStateException("Unable to load template", e);
+		}
 	}
 
-	protected void addAttributesGetters(final UntypedDataObjectMetaData metaData) throws IOException {
+	protected void addAttributesGetters(final UntypedDataObjectMetaData metaData) {
 		forEachAttribute(metaData, attrib -> context.append("fields.getters", generateGetter(attrib)));
 	}
 
-	protected void addAttributePersistenceMethods(final UntypedDataObjectMetaData metaData) throws IOException {
+	protected void addAttributePersistenceMethods(final UntypedDataObjectMetaData metaData) {
 		forEachAttribute(metaData, attrib -> context.append("fields.load", generateLoadFrom(attrib)));
 		forEachAttribute(metaData, attrib -> context.append("fields.save", generateSaveInto(attrib)));
 	}
@@ -160,7 +165,7 @@ public class ModelClassProcessor {
 	 * @param metaData
 	 * @throws IOException
 	 */
-	protected void addAttributesDeclarations(final UntypedDataObjectMetaData metaData) throws IOException {
+	protected void addAttributesDeclarations(final UntypedDataObjectMetaData metaData) {
 
 		forEachAttribute(metaData, attrib -> context.append("fields.declareStatic", generateAccessConstants(attrib)));
 		if (!java8) {
@@ -178,15 +183,11 @@ public class ModelClassProcessor {
 				AttributeProcessor.create(context, attrib, delegate).addImports().generateInitialization() + "\n"));
 	}
 
-	protected interface AttributeApplier {
-		void apply(AbstractAttributeMetaData<?> attrib) throws IOException;
-	}
-
-	protected void forEachAttribute(final UntypedDataObjectMetaData metaData, final AttributeApplier attributeApplier)
-			throws IOException {
+	protected void forEachAttribute(final UntypedDataObjectMetaData metaData,
+			final Consumer<AbstractAttributeMetaData<?>> attributeApplier) {
 		for (final AbstractAttributeMetaData<?> attrib : metaData.getAttributes().stream()
 				.filter(this::includeAttribute).collect(toList())) {
-			attributeApplier.apply(attrib);
+			attributeApplier.accept(attrib);
 		}
 	}
 
@@ -198,8 +199,8 @@ public class ModelClassProcessor {
 		return AttributeProcessor.create(context, attrib, delegate).getPropertyName() + ".save();";
 	}
 
-	protected String generateAccessConstants(final AbstractAttributeMetaData<?> attrib) throws IOException {
-		final JavaCodeGenerator gen = new JavaCodeGenerator();
+	protected String generateAccessConstants(final AbstractAttributeMetaData<?> attrib) {
+		final JavaCodeGenerator<RuntimeException> gen = JavaCodeGenerator.inMemory();
 		gen.appendIndentedLine(
 				"public static final String " + toConstant(attrib.getName()) + " = \"" + attrib.getName() + "\";");
 		gen.eol();
@@ -207,8 +208,8 @@ public class ModelClassProcessor {
 		return gen.toString();
 	}
 
-	protected String generateFieldConstants(final AbstractAttributeMetaData<?> attrib) throws IOException {
-		final JavaCodeGenerator gen = new JavaCodeGenerator();
+	protected String generateFieldConstants(final AbstractAttributeMetaData<?> attrib) {
+		final JavaCodeGenerator<RuntimeException> gen = JavaCodeGenerator.inMemory();
 		final String constant = toConstant(attrib.getName());
 		final String fieldConstant = constant + "_FIELD";
 		context.generatedConstants.put(fieldConstant, attrib.getCodeName());
@@ -218,9 +219,9 @@ public class ModelClassProcessor {
 		return gen.toString();
 	}
 
-	protected String afterPreprocessAttribs() throws IOException {
+	protected String afterPreprocessAttribs() {
 
-		final JavaCodeGenerator gen = new JavaCodeGenerator();
+		final JavaCodeGenerator<RuntimeException> gen = JavaCodeGenerator.inMemory();
 		final StringBuilder fieldsList = new StringBuilder();
 
 		for (final Map.Entry<String, String> entry : context.generatedConstants.entrySet()) {
@@ -236,10 +237,10 @@ public class ModelClassProcessor {
 		return gen.toString();
 	}
 
-	protected String generateGetter(final AbstractAttributeMetaData<?> attrib) throws IOException {
+	protected String generateGetter(final AbstractAttributeMetaData<?> attrib) {
 		final AttributeProcessor processor = AttributeProcessor.create(context, attrib, delegate);
 
-		final JavaCodeGenerator gen = new JavaCodeGenerator();
+		final JavaCodeGenerator<RuntimeException> gen = JavaCodeGenerator.inMemory();
 		gen.openBlock(ATTRIB_PUBLIC, processor.getPropertyType(), " get", attrib.getName(), "Property()");
 		gen.appendIndentedLine("return " + processor.getPropertyName() + ";");
 		gen.closeBlock();

@@ -1,38 +1,40 @@
 package ch.skymarshall.util.generators;
 
-import java.io.IOException;
-
 import ch.skymarshall.util.text.TextFormatter;
 
-public class DotFileGenerator extends TextFormatter<DotFileGenerator> {
+public class DotFileGenerator<E extends Exception> extends TextFormatter<DotFileGenerator<E>, E> {
 
 	public enum Shape {
 		SQUARE, BOX, ELLIPSE, DIAMOND, CIRCLE, POINT, HEXAGON, OCTAGON
 	}
 
-	public DotFileGenerator() {
-		super(TextFormatter.output(new StringBuilder()));
+	public static DotFileGenerator<RuntimeException> inMemory() {
+		return new DotFileGenerator<>(output(new StringBuilder()));
 	}
 
-	public DotFileGenerator header(final String graphName, final String comment) throws IOException {
+	public DotFileGenerator(IOutput<E> output) {
+		super(output);
+	}
+
+	public DotFileGenerator<E> header(final String graphName, final String comment) throws E {
 		appendIndented("// ").append(comment).eol();
 		appendIndented("digraph \"").append(graphName).append("\" {").eol();
 		indent();
 		return this;
 	}
 
-	public DotFileGenerator straightLines() throws IOException {
+	public DotFileGenerator<E> straightLines() throws E {
 		appendIndentedLine("splines=line;");
 		return this;
 	}
 
-	public DotFileGenerator polyLines() throws IOException {
+	public DotFileGenerator<E> polyLines() throws E {
 		appendIndentedLine("splines=polyline;");
 		return this;
 	}
 
-	public DotFileGenerator addNode(final String name, final String label, final Shape shape, final String color)
-			throws IOException {
+	public DotFileGenerator<E> addNode(final String name, final String label, final Shape shape, final String color)
+			throws E {
 		final String extra;
 		if (color != null) {
 			extra = ", fillcolor=" + color + ", style=filled";
@@ -44,8 +46,8 @@ public class DotFileGenerator extends TextFormatter<DotFileGenerator> {
 		return this;
 	}
 
-	public DotFileGenerator addEdge(final String from, final String to, final String label, final boolean isXLabel,
-			final String extra) throws IOException {
+	public DotFileGenerator<E> addEdge(final String from, final String to, final String label, final boolean isXLabel,
+			final String extra) throws E {
 		String formatted;
 		if (label == null || label.isEmpty()) {
 			formatted = String.format("\"%s\" -> \"%s\" [ %s ];", from, to, extra);
@@ -58,7 +60,7 @@ public class DotFileGenerator extends TextFormatter<DotFileGenerator> {
 		return this;
 	}
 
-	public void footer() throws IOException {
+	public void footer() throws E {
 		unindent();
 		appendIndented("}");
 	}

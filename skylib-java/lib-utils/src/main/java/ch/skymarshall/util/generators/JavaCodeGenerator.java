@@ -15,20 +15,23 @@
  ******************************************************************************/
 package ch.skymarshall.util.generators;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
 
 import ch.skymarshall.util.text.TextFormatter;
 
-public class JavaCodeGenerator extends TextFormatter<JavaCodeGenerator> {
+public class JavaCodeGenerator<E extends Exception> extends TextFormatter<JavaCodeGenerator<E>, E> {
 
-	public interface InlinedCode<E extends Exception> {
-		void apply(JavaCodeGenerator gen) throws IOException, E;
+	public interface InlinedCode<E extends Exception, F extends Exception> {
+		void apply(JavaCodeGenerator<E> gen) throws F;
 	}
 
-	public JavaCodeGenerator() {
-		super(output(new StringBuilder()));
+	public static JavaCodeGenerator<RuntimeException> inMemory() {
+		return new JavaCodeGenerator<>(output(new StringBuilder()));
+	}
+
+	public JavaCodeGenerator(IOutput<E> output) {
+		super(output);
 	}
 
 	public static String classToSource(final String packageName, final String className) {
@@ -68,7 +71,7 @@ public class JavaCodeGenerator extends TextFormatter<JavaCodeGenerator> {
 		return imports.toString();
 	}
 
-	public JavaCodeGenerator openBlock(final String... extra) throws IOException {
+	public JavaCodeGenerator<E> openBlock(final String... extra) throws E {
 		if (extra.length > 0) {
 			appendIndent();
 			for (final String str : extra) {
@@ -78,7 +81,7 @@ public class JavaCodeGenerator extends TextFormatter<JavaCodeGenerator> {
 		return append(" {").indent().eol();
 	}
 
-	public JavaCodeGenerator closeBlock(final String... extra) throws IOException {
+	public JavaCodeGenerator<E> closeBlock(final String... extra) throws E {
 		unindent().appendIndented("}");
 		for (final String str : extra) {
 			append(str);
@@ -86,47 +89,45 @@ public class JavaCodeGenerator extends TextFormatter<JavaCodeGenerator> {
 		return eol();
 	}
 
-	public JavaCodeGenerator openIf(final String condition) throws IOException {
+	public JavaCodeGenerator<E> openIf(final String condition) throws E {
 		return appendIndented("if (").append(condition).append(")").openBlock();
 	}
 
-	public JavaCodeGenerator addVarAssign(final String type, final String name) throws IOException {
+	public JavaCodeGenerator<E> addVarAssign(final String type, final String name) throws E {
 		return appendIndented(type).append(" ").append(name).append(" = ");
 	}
 
-	public JavaCodeGenerator addVarDecl(final String scope, final String type, final String name) throws IOException {
+	public JavaCodeGenerator<E> addVarDecl(final String scope, final String type, final String name) throws E {
 		return appendIndented(String.format("%s %s %s", scope, type, name)).eos();
 	}
 
-	public JavaCodeGenerator addVarDecl(final String scope, final String type, final String name, final String value)
-			throws IOException {
+	public JavaCodeGenerator<E> addVarDecl(final String scope, final String type, final String name, final String value)
+			throws E {
 		return appendIndented(String.format("%s %s %s = %s", scope, type, name, value)).eos();
 	}
 
-	public JavaCodeGenerator addLocalVariable(final String type, final String name, final String value)
-			throws IOException {
+	public JavaCodeGenerator<E> addLocalVariable(final String type, final String name, final String value) throws E {
 		return appendIndented(type).append(" ").append(name).append(" = ").append(value).eos();
 	}
 
-	public JavaCodeGenerator appendMethodCall(final String instance, final String methodName,
-			final Collection<String> parameters) throws IOException {
+	public JavaCodeGenerator<E> appendMethodCall(final String instance, final String methodName,
+			final Collection<String> parameters) throws E {
 		return append("%s.%s(%s)", instance, methodName, String.join(",", parameters));
 	}
 
-	public JavaCodeGenerator eos() throws IOException {
+	public JavaCodeGenerator<E> eos() throws E {
 		return append(";").eol();
 	}
 
-	public <E extends Exception> JavaCodeGenerator addMethodCall(final String methodName,
-			final InlinedCode<E> inlinedParameters) throws IOException, E {
+	public <F extends Exception> JavaCodeGenerator<E> addMethodCall(final String methodName,
+			final InlinedCode<E, F> inlinedParameters) throws E, F {
 		append(methodName).append("(");
 		inlinedParameters.apply(this);
 		return append(")");
-
 	}
 
-	public <E extends Exception> JavaCodeGenerator addMethodCall(final String instance, final String methodName,
-			final InlinedCode<E> inlinedParameters) throws IOException, E {
+	public <F extends Exception> JavaCodeGenerator<E> addMethodCall(final String instance, final String methodName,
+			final InlinedCode<E, F> inlinedParameters) throws E, F {
 		append(instance).append(".").append(methodName).append("(");
 		inlinedParameters.apply(this);
 		return append(")");
@@ -137,8 +138,7 @@ public class JavaCodeGenerator extends TextFormatter<JavaCodeGenerator> {
 		return getOutput().toString();
 	}
 
-	public JavaCodeGenerator addSetter(final String scope, final String type, final String property)
-			throws IOException {
+	public JavaCodeGenerator<E> addSetter(final String scope, final String type, final String property) throws E {
 		appendIndented(String.format("%s void set%s(%s %s)", scope, toCamelCase(property), type, property)).openBlock();
 		appendIndented(String.format("this.%s = %s", property, property)).eos();
 		closeBlock();

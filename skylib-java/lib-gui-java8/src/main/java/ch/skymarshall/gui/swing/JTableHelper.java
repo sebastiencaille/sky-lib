@@ -18,7 +18,6 @@ package ch.skymarshall.gui.swing;
 import java.awt.Point;
 
 import javax.swing.JTable;
-import javax.swing.table.TableColumn;
 
 import ch.skymarshall.gui.swing.model.ListModelTableModel;
 

@@ -17,12 +17,11 @@ package ch.skymarshall.example.util.dao.metadata;
 
 import static ch.skymarshall.example.util.dao.metadata.ADataObject.AN_ATTRIBUTE;
 
-import java.io.IOException;
-
 import ch.skymarshall.util.dao.metadata.DataObjectManager;
 import ch.skymarshall.util.dao.metadata.DataObjectManagerFactory;
 import ch.skymarshall.util.dao.metadata.UntypedDataObjectManager;
 import ch.skymarshall.util.text.ArrowIndentationManager;
+import ch.skymarshall.util.text.SimpleTextFormatter;
 import ch.skymarshall.util.text.TextFormatter;
 
 public interface UntypedObjectAccessorExample2 {
@@ -51,35 +50,29 @@ public interface UntypedObjectAccessorExample2 {
 		return accessor.getValueOf(AN_ATTRIBUTE, String.class);
 	}
 
-	public static void main(final String[] args) throws IOException {
+	public static void main(final String[] args) {
 
-		final TextFormatter log = new TextFormatter(TextFormatter.output(System.out)); // NOSONAR
+		final SimpleTextFormatter<RuntimeException> log = new SimpleTextFormatter<>(
+				TextFormatter.safeOutput(System.out)); // NOSONAR
 		log.setIndentationManager(new ArrowIndentationManager());
 
 		log.appendIndentedLine("Content of do1");
-		log.indent();
 		final ADataObject do1 = new ADataObject();
 		do1.setAnAttribute("data1");
-
 		final DataObjectManager<ADataObject> accessor1 = DataObjectManagerFactory.createFor(ADataObject.class, do1);
-		log.appendIndentedLine(getAttributeOf(accessor1.getUntypedAccessor()));
-		log.unindent();
+		log.indented(t -> t.appendIndentedLine(getAttributeOf(accessor1.getUntypedAccessor())));
 
 		log.appendIndentedLine("Content of do2");
-		log.indent();
 		final ASecondDataObject do2 = new ASecondDataObject();
 		do2.setAnAttribute("data2");
-
 		final UntypedDataObjectManager<?> accessor2 = DataObjectManagerFactory.createFor(do2);
-		log.appendIndentedLine(getAttributeOf(accessor2));
-		log.unindent();
+		log.indented(t -> t.appendIndentedLine(getAttributeOf(accessor2)));
 
 		log.appendIndentedLine("Content of do3");
-		log.indent();
 		final AThirdDataObject do3 = new AThirdDataObject();
 		do3.setAnAttribute("data3");
 		final UntypedDataObjectManager<?> accessor3 = DataObjectManagerFactory.createFor(do3);
-		log.appendIndentedLine(getAttributeOf(accessor3));
-		log.unindent();
+		log.indented(t -> t.appendIndentedLine(getAttributeOf(accessor3)));
+
 	}
 }

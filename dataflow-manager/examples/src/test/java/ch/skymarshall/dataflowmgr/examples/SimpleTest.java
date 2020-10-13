@@ -59,7 +59,7 @@ public class SimpleTest {
 								.withExternalAdapter(loadData)//
 								.activator(isEnhanceEnabled)//
 								.as(DP_ENHANCED))//
-						.add(Binding.builder(init, noEnhance)//
+						.add(Binding.builder(init, noEnhance)// fallback
 								.as(DP_ENHANCED))) //
 				.add(Binding.builder(DP_ENHANCED, Flow.EXIT_POINT)//
 						.withExternalAdapter(displayData))//

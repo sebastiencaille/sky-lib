@@ -3,7 +3,6 @@ package ch.skymarshall.dataflowmgr.generator.writers.java;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toSet;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,13 +21,13 @@ import ch.skymarshall.util.generators.Template;
 
 public class FlowToProceduralJavaVisitor extends AbstractJavaVisitor {
 
-	private final JavaCodeGenerator generator = new JavaCodeGenerator();
+	private final JavaCodeGenerator<RuntimeException> generator = JavaCodeGenerator.inMemory();
 
 	public FlowToProceduralJavaVisitor(final Flow flow, final String packageName, final Template template) {
 		super(flow, packageName, template);
 	}
 
-	public Template process() throws IOException {
+	public Template process()  {
 
 		availableVars.add(new BindingImplVariable(Flow.ENTRY_POINT, flow.getEntryPointType(), Flow.ENTRY_POINT));
 
@@ -45,7 +44,7 @@ public class FlowToProceduralJavaVisitor extends AbstractJavaVisitor {
 	}
 
 	@Override
-	protected void process(final BindingContext context, final Processor processor) throws IOException {
+	protected void process(final BindingContext context, final Processor processor)  {
 
 		appendInfo(generator, context.binding).eol();
 
@@ -80,7 +79,7 @@ public class FlowToProceduralJavaVisitor extends AbstractJavaVisitor {
 
 	private void addExecution(final BindingContext context, final Processor processor, final Set<String> exclusions,
 			final boolean conditionalInputDataPoint, final boolean isConditionalExec, final boolean isExit)
-			throws IOException {
+			 {
 		if (isConditionalExec) {
 			setConditional(context.outputDataPoint);
 			final List<String> conditions = new ArrayList<>();
@@ -114,7 +113,7 @@ public class FlowToProceduralJavaVisitor extends AbstractJavaVisitor {
 	}
 
 	private void generateDataPoint(final Processor processor, final String outputDataPoint,
-			final boolean conditionalExec) throws IOException {
+			final boolean conditionalExec)  {
 		definedDataPoints.add(outputDataPoint);
 		appendNewVariable(outputDataPoint, processor);
 		if (conditionalExec) {
@@ -130,9 +129,9 @@ public class FlowToProceduralJavaVisitor extends AbstractJavaVisitor {
 	 *
 	 * @param context
 	 * @param availableVars
-	 * @throws IOException
+	 * @
 	 */
-	private void visitActivators(final BindingContext context) throws IOException {
+	private void visitActivators(final BindingContext context)  {
 		if (context.activators.isEmpty()) {
 			return;
 		}
@@ -152,7 +151,7 @@ public class FlowToProceduralJavaVisitor extends AbstractJavaVisitor {
 	}
 
 	private void visitExternalAdapters(final BindingContext context, final Set<ExternalAdapter> externalAdapter)
-			throws IOException {
+			 {
 		for (final ExternalAdapter adapter : externalAdapter) {
 			final BindingImplVariable parameter = new BindingImplVariable(adapter, varNameOf(context.binding, adapter));
 			appendNewVarAndCall(context, parameter.variable, adapter);
@@ -175,7 +174,7 @@ public class FlowToProceduralJavaVisitor extends AbstractJavaVisitor {
 		return "activated_" + toVariable(binding);
 	}
 
-	private void appendNewVariable(final String variableName, final Call<?> call) throws IOException {
+	private void appendNewVariable(final String variableName, final Call<?> call)  {
 		String returnType = call.getReturnType();
 		if (returnType.startsWith("java.lang")) {
 			returnType = returnType.substring("java.lang".length() + 1);
@@ -183,12 +182,12 @@ public class FlowToProceduralJavaVisitor extends AbstractJavaVisitor {
 		generator.appendIndented(returnType).append(" ").append(variableName);
 	}
 
-	private void appendCall(final BindingContext context, final Call<?> call) throws IOException {
+	private void appendCall(final BindingContext context, final Call<?> call)  {
 		generator.appendMethodCall("this", call.getCall(), guessParameters(context, call)).eos();
 	}
 
 	private void appendNewVarAndCall(final BindingContext context, final String variableName, final Call<?> call)
-			throws IOException {
+			 {
 		if (call.hasReturnType()) {
 			appendNewVariable(variableName, call);
 			generator.append(" = ");

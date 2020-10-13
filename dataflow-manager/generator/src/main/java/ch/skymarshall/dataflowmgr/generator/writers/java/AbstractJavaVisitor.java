@@ -1,6 +1,5 @@
 package ch.skymarshall.dataflowmgr.generator.writers.java;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -102,8 +101,8 @@ public abstract class AbstractJavaVisitor extends AbstractFlowVisitor {
 		return dataPoint + "_available";
 	}
 
-	protected JavaCodeGenerator appendInfo(final JavaCodeGenerator generator, final Binding binding)
-			throws IOException {
+	protected JavaCodeGenerator<RuntimeException> appendInfo(final JavaCodeGenerator<RuntimeException> generator,
+			final Binding binding) {
 		return generator.append("// ------------------------- ").append(binding.toString())
 				.append(" -------------------------");
 	}

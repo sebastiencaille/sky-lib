@@ -16,7 +16,7 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<aspectj.version>1.9.5</aspectj.version>
+		<aspectj.version>1.9.6</aspectj.version>
 	</properties>
 
 	<build>
@@ -38,6 +38,7 @@
 								<artifactId>testcase-writer-annotations</artifactId>
 							</aspectLibrary>
 						</aspectLibraries>
+						<verbose>true</verbose>
 					</configuration>
 					<executions>
 						<execution>
@@ -64,14 +65,15 @@
 						</dependency>
 					</dependencies>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<useIncrementalCompilation>false</useIncrementalCompilation>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-			</plugin>
-		</plugins>
 	</build>
 
 
@@ -97,7 +99,7 @@
 				<artifactId>testcase-writer-examples</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.aspectj</groupId>
 				<artifactId>aspectjweaver</artifactId>
@@ -114,7 +116,7 @@
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
-				<version>28.2-jre</version>
+				<version>29.0-jre</version>
 			</dependency>
 
 		</dependencies>

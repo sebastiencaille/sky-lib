@@ -20,6 +20,20 @@
 	</parent>
 	<artifactId>testcase-writer-annotations</artifactId>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>aspectj-maven-plugin</artifactId>
+				<version>1.11</version>
+				<configuration>
+					<aspectLibraries combine.self="override" />
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+
 	<dependencies>
 		<!-- recording -->
 		<dependency>
@@ -31,11 +45,12 @@
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
+
 </project>

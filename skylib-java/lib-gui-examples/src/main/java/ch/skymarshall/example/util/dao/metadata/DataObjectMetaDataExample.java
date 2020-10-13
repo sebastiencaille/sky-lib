@@ -15,11 +15,10 @@
  ******************************************************************************/
 package ch.skymarshall.example.util.dao.metadata;
 
-import java.io.IOException;
-
 import ch.skymarshall.util.dao.metadata.AbstractAttributeMetaData;
 import ch.skymarshall.util.dao.metadata.DataObjectMetaData;
 import ch.skymarshall.util.text.ArrowIndentationManager;
+import ch.skymarshall.util.text.SimpleTextFormatter;
 import ch.skymarshall.util.text.TextFormatter;
 
 /**
@@ -35,29 +34,27 @@ public class DataObjectMetaDataExample {
 	private DataObjectMetaDataExample() {
 	}
 
-	public static void main(final String[] args) throws IOException {
+	public static void main(final String[] args) {
 
-		final TextFormatter log = new TextFormatter(TextFormatter.output(System.out)); // NOSONAR
+		final SimpleTextFormatter<RuntimeException> log = new SimpleTextFormatter<>(
+				TextFormatter.safeOutput(System.out)); // NOSONAR
 		log.setIndentationManager(new ArrowIndentationManager());
 
 		final DataObjectMetaData<ADataObject> metadata = new DataObjectMetaData<>(ADataObject.class);
 		final ADataObject do1 = new ADataObject();
 
-		log.appendIndentedLine("Class " + ADataObject.class.getName() + " contains the following attributes");
-		log.indent();
+		log.appendIndentedLine("Class " + ADataObject.class.getName() + " contains the following attributes").indent();
 		for (final AbstractAttributeMetaData<ADataObject> attribute : metadata.getAttributes()) {
 			log.appendIndentedLine(attribute.toString());
 		}
 		log.unindent();
 
-		log.appendIndentedLine("Read/Write access using the DO's MetaData");
-		log.indent();
+		log.appendIndentedLine("Read/Write access using the DO's MetaData").indent();
 		metadata.getAttribute(AN_ATTRIBUTE).setValueOf(do1, "data1");
 		log.appendIndentedLine(AN_ATTRIBUTE + ":" + metadata.getAttribute(AN_ATTRIBUTE).getValueOf(do1));
 		log.unindent();
 
-		log.appendIndentedLine("One can also copy the content of the DO...");
-		log.indent();
+		log.appendIndentedLine("One can also copy the content of the DO...").indent();
 		final ADataObject do2 = new ADataObject();
 		metadata.copy(do1, do2);
 		log.appendIndentedLine(AN_ATTRIBUTE + ":" + metadata.getAttribute(AN_ATTRIBUTE).getValueOf(do2));

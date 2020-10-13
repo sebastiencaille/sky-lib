@@ -1,6 +1,5 @@
 package ch.skymarshall.dataflowmgr.generator;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -67,9 +66,9 @@ public abstract class AbstractFlowVisitor {
 	private final Map<Binding, List<Binding>> reverseDeps = new HashMap<>();
 	protected final List<BindingContext> processOrder = new ArrayList<>();
 
-	protected abstract void process(BindingContext context, Processor processor) throws IOException;
+	protected abstract void process(BindingContext context, Processor processor);
 
-	public AbstractFlowVisitor(final Flow flow) {
+	protected AbstractFlowVisitor(final Flow flow) {
 		this.flow = flow;
 		this.missingDeps = flow.cloneDependencies();
 		this.untriggeredBindings = new HashSet<>(flow.getBindings());
@@ -79,7 +78,7 @@ public abstract class AbstractFlowVisitor {
 		return conditionalState.contains(input);
 	}
 
-	protected void processFlow() throws IOException {
+	protected void processFlow() {
 		availableDataPoints.put(Flow.ENTRY_POINT, flow.getEntryPointType());
 		while (!untriggeredBindings.isEmpty()) {
 			// More to process

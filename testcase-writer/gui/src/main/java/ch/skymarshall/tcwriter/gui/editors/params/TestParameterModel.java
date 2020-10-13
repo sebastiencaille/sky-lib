@@ -1,7 +1,6 @@
 package ch.skymarshall.tcwriter.gui.editors.params;
 
 import ch.skymarshall.gui.mvc.GuiModel;
-import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.properties.ListProperty;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;

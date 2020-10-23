@@ -23,9 +23,7 @@
 #include<iostream>
 #include "glib_converter.hh"
 
-namespace ch_skymarshall {
-namespace gui {
-namespace glib {
+namespace ch_skymarshall::gui::glib {
 using namespace std;
 using namespace Glib;
 
@@ -46,7 +44,7 @@ const string string_to_ustring::convert_component_value_to_property_value(
 const Glib::ustring string_to_ustring::convert_property_value_to_component_value(
 		const string _propertyValue) {
 	return ustring(_propertyValue);
-}}}
+}
 
 }
 

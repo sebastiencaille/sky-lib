@@ -27,14 +27,12 @@
 #include <glibmm.h>
 #include <string>
 
-namespace ch_skymarshall {
-namespace gui {
-namespace glib {
+namespace ch_skymarshall::gui::glib {
 
 using namespace std;
 using namespace Glib;
 
-class string_to_ustring: public binding_converter<string, Glib::ustring> {
+class string_to_ustring: public binding_converter<string, ustring> {
 
 protected:
 
@@ -43,13 +41,11 @@ protected:
 public:
 	string_to_ustring();
 	const string convert_component_value_to_property_value(
-			const Glib::ustring _componentValue);
-	const Glib::ustring convert_property_value_to_component_value(
+			const ustring _componentValue);
+	const ustring convert_property_value_to_component_value(
 			const string _propertyValue);
 
 };
 
-}
-}
 }
 #endif /* GLIB_CONVERTER_HH_ */

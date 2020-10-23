@@ -24,6 +24,7 @@
 #include <iostream>
 
 #include "controller_property.hh"
+#include "binding_interface.hh"
 #include "input_error_property_impl.hh"
 #include "int_converters.hh"
 #include "glib_converter.hh"
@@ -55,7 +56,7 @@ private:
 		}
 
 		void propertyChanged(source_ptr _source, const string &_name,
-				const void *_oldValue, const void *_newValue) {
+				const void *_oldValue, const void *_newValue) const {
 			cout << " TestStringPropertyListener " << m_i << " - "
 					<< *(string*) _oldValue << " -> " << *(string*) _newValue
 					<< endl;
@@ -65,19 +66,19 @@ private:
 
 	class dep_test: public binding_chain_dependency {
 
-		TestStringPropertyListener m_testListener;
+		TestStringPropertyListener m_testListener = TestStringPropertyListener(1);
 		property_listener_dispatcher m_listener;
-		binding_chain_controller *m_controller;
+		binding_chain_controller *m_controller = NULL;
 
 	public:
 		dep_test() :
-				m_testListener(1), m_listener(
+				m_listener(
 						[this](source_ptr source, const string &name,
 								const void *oldValue, const void *newValue) {
 							this->m_testListener.propertyChanged(source, name,
 									oldValue, newValue);
-						}),
-				m_controller(NULL) {
+						})
+				{
 		}
 
 		void register_dep(binding_chain_controller *_controller) {
@@ -135,11 +136,8 @@ void HelloWorld::init(controller_property<string> &_testProperty1,
 					new dep_test()));
 	m_box.pack_start(m_entry);
 
-	action_dependency<HelloWorld> *dep = new action_dependency<HelloWorld>(
-			&_testProperty1,
-			[this](property_group_actions group, const property *action) {
-				this->apply_action(group, action);
-			});
+	action_dependency<HelloWorld> * dep = new action_dependency<HelloWorld>(&_testProperty1,
+			[this](property_group_actions group, const property *action) { this->apply_action(group, action); });
 
 	m_bindings.push_back(
 			_testProperty1.bind(new string_to_ustring())->bind(
@@ -204,9 +202,7 @@ typedef list_model<int> int_model;
 
 int main(int argc, char *argv[]) {
 
-	int_model int_list(int_model::sorted([](int i1, int i2) {
-		return i1 - i2;
-	}));
+	int_model int_list(int_model::sorted([](int i1, int i2) { return i1 - i2; }));
 	int_list.insert(2);
 	int_list.insert(1);
 	cout << int_list.get_element_at(0) << " " << int_list.get_element_at(1)

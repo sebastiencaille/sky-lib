@@ -56,12 +56,53 @@ public class ListModelBasicTest extends Assert {
 		checkModel(model, 1, 3, 4);
 		checkModel(childModel, 1, 3, 4);
 
-		try (IEdition<?> edition = model.startEditingValue(toMove)) {
-			toMove.val = 2;
-		}
-
+		model.editValue(toMove, t -> t.val = 2);
 		checkModel(model, 1, 2, 3);
 		checkModel(childModel, 1, 2, 3);
+
+		model.editValue(toMove, t -> t.val = 5);
+		checkModel(model, 1, 3, 5);
+		checkModel(childModel, 1, 3, 5);
+
+		model.editValue(toMove, t -> t.val = 0);
+		checkModel(model, 0, 1, 3);
+		checkModel(childModel, 0, 1, 3);
+	}
+
+	@Test
+	public void testUpdateChildOnly() {
+		final ListModel<TestObject> model = new RootListModel<>(VIEW);
+		final ListModel<TestObject> childModel = new ChildListModel<>(model,
+				ListViews.sortedFiltered((t1, t2) -> Integer.compare(t2.val, t1.val), t -> t.val % 2 == 0));
+
+		model.insert(new TestObject(1));
+		model.insert(new TestObject(4));
+		model.insert(new TestObject(7));
+
+		final TestObject toMove = new TestObject(0);
+		model.insert(toMove);
+		checkModel(model, 0, 1, 4, 7);
+		checkModel(childModel, 4, 0);
+
+		model.editValue(toMove, t -> t.val = 2);
+		checkModel(model, 1, 2, 4, 7);
+		checkModel(childModel, 4, 2);
+
+		model.editValue(toMove, t -> t.val = 5);
+		checkModel(model, 1, 4, 5, 7);
+		checkModel(childModel, 4);
+
+		model.editValue(toMove, t -> t.val = 6);
+		checkModel(model, 1, 4, 6, 7);
+		checkModel(childModel, 6, 4);
+
+		model.editValue(toMove, t -> t.val = 8);
+		checkModel(model, 1, 4, 7, 8);
+		checkModel(childModel, 8, 4);
+		
+		model.editValue(toMove, t -> t.val = 2);
+		checkModel(model, 1, 2, 4, 7);
+		checkModel(childModel, 4, 2);
 	}
 
 	@Test

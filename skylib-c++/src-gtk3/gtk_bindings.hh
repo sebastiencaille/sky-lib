@@ -27,10 +27,7 @@
 #include <glibmm.h>
 #include <gtkmm.h>
 
-namespace ch_skymarshall {
-namespace gui {
-namespace gtk {
-
+namespace ch_skymarshall::gui::gtk {
 
 class entry_binding:
 		public component_binding<Glib::ustring> {
@@ -61,8 +58,6 @@ public:
 	virtual source_ptr get_component();
 };
 
-}
-}
 }
 
 #endif /* GTKBINDINGS_H_ */

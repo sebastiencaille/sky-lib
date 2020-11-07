@@ -31,9 +31,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import ch.skymarshall.example.gui.TestObject;
 import ch.skymarshall.example.gui.TestObjectTableModel;
-import ch.skymarshall.gui.model.ChildListModel;
 import ch.skymarshall.gui.model.ListModel;
-import ch.skymarshall.gui.model.RootListModel;
 import ch.skymarshall.gui.model.views.ListViews;
 import ch.skymarshall.gui.swing.jtable.PolicyTableColumnModel;
 import ch.skymarshall.gui.swing.jtable.TableColumnWithPolicy;
@@ -53,8 +51,8 @@ public class TableModelExampleView extends JFrame {
 		model.reverseOrder.bind(listDynamicView.reverseOrder());
 		model.enableFilter.bind(listDynamicView.enableFilter());
 
-		final ListModel<TestObject> listModel = new RootListModel<>(ListViews.sorted(NATURAL_ORDER));
-		final ListModel<TestObject> filteredModel = new ChildListModel<>(listModel, listDynamicView);
+		final ListModel<TestObject> listModel = new ListModel<>(ListViews.sorted(NATURAL_ORDER));
+		final ListModel<TestObject> filteredModel = listModel.child(listDynamicView);
 
 		// We could use a separate filter:
 		// > final BoundFilter<TestObject, Boolean> filter = BoundFilter.filter((value,

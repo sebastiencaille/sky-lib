@@ -21,13 +21,12 @@ import java.awt.event.ActionListener;
 
 import ch.skymarshall.example.gui.TestObject;
 import ch.skymarshall.gui.model.ListModel;
-import ch.skymarshall.gui.model.RootListModel;
 import ch.skymarshall.gui.model.views.ListViews;
 import ch.skymarshall.gui.mvc.GuiController;
 
 public class TestObjectControllerModelController extends GuiController {
 
-	final ListModel<TestObject> model = new RootListModel<>(
+	final ListModel<TestObject> model = new ListModel<>(
 			ListViews.sorted((o1, o2) -> o1.getASecondValue() - o2.getASecondValue()));
 	private final TestObjectControllerModelFrameModel tableModel;
 

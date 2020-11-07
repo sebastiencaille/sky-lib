@@ -19,7 +19,6 @@ import java.util.Comparator;
 
 import ch.skymarshall.example.gui.TestObject;
 import ch.skymarshall.gui.model.ListModel;
-import ch.skymarshall.gui.model.RootListModel;
 import ch.skymarshall.gui.model.views.ListViews;
 import ch.skymarshall.gui.mvc.GuiController;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
@@ -41,7 +40,7 @@ public class ControllerExampleModel extends ControllerExampleObjectGuiModel {
 
 	private final ObjectProperty<TestObject> complexProperty = new ObjectProperty<>("ComplexObject", propertySupport);
 
-	final ListModel<TestObject> tableModel = new RootListModel<>(ListViews.sorted(TEST_COMPARATOR));
+	final ListModel<TestObject> tableModel = new ListModel<>(ListViews.sorted(TEST_COMPARATOR));
 
 	public ObjectProperty<String> getStaticListSelectionProperty() {
 		return staticListSelection;

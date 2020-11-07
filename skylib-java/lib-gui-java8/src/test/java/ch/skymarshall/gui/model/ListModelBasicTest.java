@@ -32,8 +32,8 @@ public class ListModelBasicTest extends Assert {
 
 	@Test
 	public void testInsert() {
-		final ListModel<TestObject> model = new RootListModel<>(VIEW);
-		final ListModel<TestObject> model2 = new ChildListModel<>(model);
+		final ListModel<TestObject> model = new ListModel<>(VIEW);
+		final ListModel<TestObject> model2 = model.child(ListViews.inherited());
 
 		model.insert(new TestObject(1));
 		model.insert(new TestObject(3));
@@ -45,8 +45,8 @@ public class ListModelBasicTest extends Assert {
 
 	@Test
 	public void testUpdate() {
-		final ListModel<TestObject> model = new RootListModel<>(VIEW);
-		final ListModel<TestObject> childModel = new ChildListModel<>(model);
+		final ListModel<TestObject> model = new ListModel<>(VIEW);
+		final ListModel<TestObject> childModel = model.child(ListViews.inherited());
 
 		model.insert(new TestObject(1));
 		model.insert(new TestObject(3));
@@ -71,9 +71,9 @@ public class ListModelBasicTest extends Assert {
 
 	@Test
 	public void testUpdateChildOnly() {
-		final ListModel<TestObject> model = new RootListModel<>(VIEW);
-		final ListModel<TestObject> childModel = new ChildListModel<>(model,
-				ListViews.sortedFiltered((t1, t2) -> Integer.compare(t2.val, t1.val), t -> t.val % 2 == 0));
+		final ListModel<TestObject> model = new ListModel<>(VIEW);
+		final ListModel<TestObject> childModel = model
+				.child(ListViews.sortedFiltered((t1, t2) -> Integer.compare(t2.val, t1.val), t -> t.val % 2 == 0));
 
 		model.insert(new TestObject(1));
 		model.insert(new TestObject(4));
@@ -99,7 +99,7 @@ public class ListModelBasicTest extends Assert {
 		model.editValue(toMove, t -> t.val = 8);
 		checkModel(model, 1, 4, 7, 8);
 		checkModel(childModel, 8, 4);
-		
+
 		model.editValue(toMove, t -> t.val = 2);
 		checkModel(model, 1, 2, 4, 7);
 		checkModel(childModel, 4, 2);
@@ -107,8 +107,8 @@ public class ListModelBasicTest extends Assert {
 
 	@Test
 	public void testDelete() {
-		final ListModel<TestObject> model = new RootListModel<>(VIEW);
-		final ListModel<TestObject> model2 = new ChildListModel<>(model);
+		final ListModel<TestObject> model = new ListModel<>(VIEW);
+		final ListModel<TestObject> model2 = model.child(ListViews.inherited());
 
 		model.insert(new TestObject(1));
 		final TestObject toAddAndRemove = new TestObject(2);
@@ -122,8 +122,8 @@ public class ListModelBasicTest extends Assert {
 
 	@Test
 	public void testChangeSorting() {
-		final ListModel<TestObject> model = new RootListModel<>(VIEW);
-		final ListModel<TestObject> model2 = new ChildListModel<>(model);
+		final ListModel<TestObject> model = new ListModel<>(VIEW);
+		final ListModel<TestObject> model2 = model.child(ListViews.inherited());
 
 		model.insert(new TestObject(1));
 		model.insert(new TestObject(2));

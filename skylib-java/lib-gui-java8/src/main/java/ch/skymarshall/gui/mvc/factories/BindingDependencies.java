@@ -119,13 +119,13 @@ public final class BindingDependencies {
 	 * @return an action
 	 */
 
-	public static class DetachOnUpdateOfListModelUpdate<T> extends ListModelAdapter<T>
+	public static class DetachOnUpdateOfListModel<T> extends ListModelAdapter<T>
 			implements IBindingChainDependency {
 
 		private final ch.skymarshall.gui.model.ListModel<T> model;
 		private IBindingController controller;
 
-		public DetachOnUpdateOfListModelUpdate(final ListModel<T> model) {
+		public DetachOnUpdateOfListModel(final ListModel<T> model) {
 			this.model = model;
 		}
 
@@ -183,6 +183,6 @@ public final class BindingDependencies {
 	}
 
 	public static <T> IBindingChainDependency detachOnUpdateOf(final ListModel<T> model) {
-		return new DetachOnUpdateOfListModelUpdate<>(model);
+		return new DetachOnUpdateOfListModel<>(model);
 	}
 }

@@ -78,8 +78,7 @@ private:
 							this->m_testListener.propertyChanged(source, name,
 									oldValue, newValue);
 						})
-				{
-		}
+				{	}
 
 		void register_dep(binding_chain_controller *_controller) {
 			m_controller = _controller;
@@ -202,7 +201,7 @@ typedef list_model<int> int_model;
 
 int main(int argc, char *argv[]) {
 
-	int_model int_list(int_model::sorted([](int i1, int i2) { return i1 - i2; }));
+	int_model int_list(int_model::sorted([](const int i1, const int i2) { return i1 - i2; }));
 	int_list.insert(2);
 	int_list.insert(1);
 	cout << int_list.get_element_at(0) << " " << int_list.get_element_at(1)

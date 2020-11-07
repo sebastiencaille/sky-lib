@@ -9,30 +9,53 @@ import javax.swing.event.ListDataListener;
 
 import ch.skymarshall.gui.model.views.IListView;
 
-public abstract class ListModel<T> implements Iterable<T>, Serializable {
+/**
+ * List Model with log(n) access.
+ * <p>
+ * List entry edition must start by calling startEditingValue(). Edition is
+ * committed using stopEditingValue.<br>
+ * Only one single edition can be made at a time, because the modification of
+ * the edited entry may break the ordering of the list, making impossible to
+ * compute the actual row of another edition with a log(n) complexity.
+ * <p>
+ * The sorting and filtering is done using an {@link IListView}. A default
+ * implementation ({@link ch.skymarshall.gui.model.views.ListView) is provided.
+ * Note that total ordering is mandatory to have a log(n) access. <p> The lists
+ * can be stacked. If no ListView is defined for a list, the IListView of the
+ * parent is used. <p>
+ *
+ * @author Sebastien Caille
+ *
+ * @param <T> the type of the list's content. T must have an implementation of
+ *            the Object.equals method. It is better if an element of the list
+ *            can be uniquely identified using Object.equals.
+ */
+public class ListModel<T> implements IListModelDelegate<T>, Iterable<T>, Serializable {
 
-	protected ListModelImpl<T> impl;
+	protected final ListModelImpl<T> impl;
+	protected final IListModelDelegate<T> delegate;
+	private String name = null;
 
-	public ListModel(final ListModelImpl<T> listModelImpl) {
-		this.impl = listModelImpl;
+	public ListModel(final IListView<T> view) {
+		this.impl = new ListModelImpl<>(view);
 		this.impl.setBase(this);
+		this.delegate = impl;
 	}
 
-	public abstract void setValues(final Collection<T> newData);
+	public ListModel(final ListModelImpl<T> listModelImpl, IListModelDelegate<T> delegate) {
+		this.impl = listModelImpl;
+		this.impl.setBase(this);
+		this.delegate = delegate;
+	}
 
-	public abstract void addValues(final Collection<T> newData);
+	public ListModel<T> withName(String name) {
+		this.name = name;
+		return this;
+	}
 
-	public abstract void clear();
-
-	public abstract int insert(final T value);
-
-	public abstract T remove(final T sample);
-
-	public abstract T remove(final int row);
-
-	public abstract T getEditedValue();
-
-	public abstract IEdition<T> startEditingValue(final T value);
+	public ChildListModel<T> child(IListView<T> view) {
+		return new ChildListModel<>(this, view);
+	}
 
 	public int getRowOf(final T value) {
 		return impl.getRowOf(value);
@@ -48,17 +71,15 @@ public abstract class ListModel<T> implements Iterable<T>, Serializable {
 
 	@Override
 	public String toString() {
+		if (name != null) {
+			return name;
+		}
 		return getClass().getSimpleName();
 	}
 
 	public Collection<T> values() {
 		return impl.values();
 	}
-
-	/**
-	 * Process the current edition and
-	 */
-	public abstract void stopEditingValue();
 
 	/**
 	 * Sets a new view on the list
@@ -99,21 +120,6 @@ public abstract class ListModel<T> implements Iterable<T>, Serializable {
 		impl.addListDataListener(listener);
 	}
 
-	public T find(final T sample) {
-		return impl.find(sample);
-	}
-
-	/**
-	 * Finds an object in the model, and starts its edition if found
-	 *
-	 * @param sample a sample of the object (must contains the values required to
-	 *               find the object)
-	 * @return an object if found, null if not
-	 */
-	public IEdition<T> findForEdition(final T sample) {
-		return impl.findForEdition(sample);
-	}
-
 	/**
 	 * Finds an object in the model, and starts its edition if found
 	 *
@@ -122,32 +128,11 @@ public abstract class ListModel<T> implements Iterable<T>, Serializable {
 	 * @return an object if found, null if not
 	 */
 	public void findAndEdit(final T sample, final Consumer<T> editor) {
-		try (IEdition<T> edition = impl.findForEdition(sample)) {
-			editor.accept(edition.edited());
+		try (IEdition<T> edition = findForEdition(sample)) {
+			if (edition != null) {
+				editor.accept(edition.edited());
+			}
 		}
-	}
-
-	/**
-	 * Finds an object in the model, or insert the sample if not found.
-	 *
-	 * @param sample a sample of the object (must contains the values required to
-	 *               find the object)
-	 * @return an object if found, the sample if not found
-	 */
-	public T findOrCreate(final T sample) {
-		return impl.findOrCreate(sample);
-	}
-
-	/**
-	 * Finds an object in the model, starting it's edition, or insert the sample if
-	 * not found.
-	 *
-	 * @param sample a sample of the object (must contains the values required to
-	 *               find the object)
-	 * @return an object if found, the sample if not found
-	 */
-	public IEdition<T> findOrCreateForEdition(final T sample) {
-		return impl.findOrCreateForEdition(sample);
 	}
 
 	/**
@@ -159,15 +144,87 @@ public abstract class ListModel<T> implements Iterable<T>, Serializable {
 	 * @return an object if found, the sample if not found
 	 */
 	public void findOrCreateAndEdit(final T sample, final Consumer<T> editor) {
-		try (IEdition<T> edition = impl.findOrCreateForEdition(sample)) {
+		try (IEdition<T> edition = findOrCreateForEdition(sample)) {
 			editor.accept(edition.edited());
 		}
 	}
 
-	public void editValue(final T value, final Consumer<T> editor) {
-		try (IEdition<T> edition = impl.startEditingValue(value)) {
-			editor.accept(edition.edited());
+	public void editValue(final T sample, final Consumer<T> editor) {
+		try (IEdition<T> edition = impl.startEditingValue(sample)) {
+			if (edition != null) {
+				editor.accept(edition.edited());
+			}
 		}
+	}
+
+	@Override
+	public void setValues(final Collection<T> newData) {
+		delegate.setValues(newData);
+	}
+
+	@Override
+	public void addValues(final Collection<T> newData) {
+		delegate.addValues(newData);
+	}
+
+	@Override
+	public void clear() {
+		delegate.clear();
+	}
+
+	@Override
+	public int insert(final T value) {
+		return delegate.insert(value);
+	}
+
+	@Override
+	public T remove(final T sample) {
+		return delegate.remove(sample);
+	}
+
+	@Override
+	public T remove(final int row) {
+		return delegate.remove(row);
+	}
+
+	@Override
+	public T getEditedValue() {
+		return delegate.getEditedValue();
+	}
+
+	@Override
+	public IEdition<T> startEditingValue(final T value) {
+		return delegate.startEditingValue(value);
+	}
+
+	@Override
+	public void stopEditingValue() {
+		delegate.stopEditingValue();
+	}
+
+	public T find(final T sample) {
+		return delegate.find(sample);
+	}
+
+	@Override
+	public IEdition<T> findForEdition(final T sample) {
+		return delegate.findForEdition(sample);
+	}
+
+	/**
+	 * Finds an object in the model, or insert the sample if not found.
+	 *
+	 * @param sample a sample of the object (must contains the values required to
+	 *               find the object)
+	 * @return an object if found, the sample if not found
+	 */
+	public T findOrCreate(final T sample) {
+		return delegate.findOrCreate(sample);
+	}
+
+	@Override
+	public IEdition<T> findOrCreateForEdition(final T sample) {
+		return delegate.findOrCreateForEdition(sample);
 	}
 
 	public void dispose() {

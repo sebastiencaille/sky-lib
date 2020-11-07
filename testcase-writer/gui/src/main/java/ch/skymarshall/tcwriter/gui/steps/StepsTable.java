@@ -16,7 +16,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
-import ch.skymarshall.gui.model.RootListModel;
+import ch.skymarshall.gui.model.ListModel;
 import ch.skymarshall.gui.model.views.ListViews;
 import ch.skymarshall.gui.mvc.IBindingController;
 import ch.skymarshall.gui.swing.jtable.PolicyTableColumnModel;
@@ -43,7 +43,7 @@ public class StepsTable extends JPanel {
 	public StepsTable(final TCWriterController controller) {
 		final TCWriterModel model = controller.getModel();
 
-		final ch.skymarshall.gui.model.ListModel<TestStep> steps = new RootListModel<>(
+		final ch.skymarshall.gui.model.ListModel<TestStep> steps = new ListModel<>(
 				ListViews.sorted((s1, s2) -> s1.getOrdinal() - s2.getOrdinal()));
 
 		setLayout(new BorderLayout());

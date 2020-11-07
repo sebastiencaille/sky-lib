@@ -30,9 +30,7 @@ import javax.swing.JTextField;
 
 import com.google.common.base.Strings;
 
-import ch.skymarshall.gui.model.ChildListModel;
 import ch.skymarshall.gui.model.ListModel;
-import ch.skymarshall.gui.model.RootListModel;
 import ch.skymarshall.gui.model.views.ListViews;
 import ch.skymarshall.gui.mvc.converters.IConverter;
 import ch.skymarshall.gui.mvc.factories.ObjectTextView;
@@ -109,10 +107,10 @@ public class TestParameterValueEditorPanel extends JPanel {
 		topPanel.add(useComplexType);
 		add(topPanel, BorderLayout.NORTH);
 
-		final ListModel<ParameterValueEntry> allEditedParameters = new RootListModel<>(
+		final ListModel<ParameterValueEntry> allEditedParameters = new ListModel<>(
 				ListViews.<ParameterValueEntry>sorted());
-		final ListModel<ParameterValueEntry> visibleParameters = new ChildListModel<>(allEditedParameters,
-				ListViews.filtered(p -> p.visible));
+		final ListModel<ParameterValueEntry> visibleParameters = allEditedParameters
+				.child(ListViews.filtered(p -> p.visible));
 		final TestParameterValueTable valueTable = new TestParameterValueTable(
 				new TestParameterValueTableModel(visibleParameters));
 		valueTable.setName(tpModel.getPrefix() + "-valueTable");

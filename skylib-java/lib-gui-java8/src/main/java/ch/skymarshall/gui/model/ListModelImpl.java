@@ -57,7 +57,8 @@ import ch.skymarshall.util.helpers.StreamHelper;
  *            the Object.equals method. It is better if an element of the list
  *            can be uniquely identified using Object.equals.
  */
-public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T>, ListModelRef<T>, Serializable {
+public class ListModelImpl<T> extends AbstractListModel<T>
+		implements IListModelDelegate<T>, Iterable<T>, ListModelRef<T>, Serializable {
 
 	private static final long serialVersionUID = 5327890361188939439L;
 
@@ -219,12 +220,6 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 			throw new IllegalArgumentException("View must not be null");
 		}
 		setView(view);
-	}
-
-	public ListModelImpl(final ListModelImpl<T> source) {
-		this.parent = source;
-		attachToParent();
-		setView(ListViews.<T>inherited());
 	}
 
 	public ListModelImpl(final ListModelImpl<T> source, final IListView<T> view) {
@@ -587,8 +582,8 @@ public class ListModelImpl<T> extends AbstractListModel<T> implements Iterable<T
 				// be at wrong location and this may confuse computeInsertionPoint
 				boolean afterPrevious = objectEdition.oldIndex == 0 || viewProperty.getValue()
 						.compare(data.get(objectEdition.oldIndex - 1), objectEdition.value) <= 0;
-				boolean beforeNext = objectEdition.oldIndex == data.size() - 1
-						|| viewProperty.getValue().compare(objectEdition.value, data.get(objectEdition.oldIndex + 1)) <= 0;
+				boolean beforeNext = objectEdition.oldIndex == data.size() - 1 || viewProperty.getValue()
+						.compare(objectEdition.value, data.get(objectEdition.oldIndex + 1)) <= 0;
 				if (!afterPrevious || !beforeNext) {
 					data.remove(objectEdition.oldIndex);
 					final int newIndex = computeInsertionPoint(objectEdition.value);

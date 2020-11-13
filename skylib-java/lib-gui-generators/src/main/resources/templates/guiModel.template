@@ -46,7 +46,12 @@ public class ${modelClass} extends GuiModel implements IObjectGuiModel<${objectC
 
     @Override
     public void load() {
-		${fields.load}
+    	try {
+    		propertySupport.transmitAllToComponentOnly();
+			${fields.load}
+		} finally {
+			propertySupport.enableAllTransmit();
+		}
     }
 
     @Override

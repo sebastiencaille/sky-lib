@@ -79,7 +79,12 @@ public class ControllerExampleObjectGuiModel extends GuiModel implements IObject
 
     @Override
     public void load() {
-		booleanPropProperty.load(this);intPropProperty.load(this);stringPropProperty.load(this);testObjectPropProperty.load(this);
+    	try {
+    		propertySupport.transmitAllToComponentOnly();
+			booleanPropProperty.load(this);intPropProperty.load(this);stringPropProperty.load(this);testObjectPropProperty.load(this);
+		} finally {
+			propertySupport.enableAllTransmit();
+		}
     }
 
     @Override

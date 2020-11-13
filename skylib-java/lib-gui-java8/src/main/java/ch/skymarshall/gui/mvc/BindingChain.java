@@ -309,7 +309,7 @@ public class BindingChain implements IBindingController {
 	}
 
 	public IBindingController addPropertyInhibitor(Predicate<BindingChain> inhibitor) {
-		getVeto().addPropertyInhibitor(inhibitor);
+		getVeto().inhibitTransmitToComponentWhen(inhibitor);
 		return this;
 	}
 

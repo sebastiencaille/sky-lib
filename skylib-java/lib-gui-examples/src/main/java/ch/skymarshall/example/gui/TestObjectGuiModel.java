@@ -64,7 +64,12 @@ public class TestObjectGuiModel extends GuiModel implements IObjectGuiModel<ch.s
 
     @Override
     public void load() {
-		aSecondValueProperty.load(this);aFirstValueProperty.load(this);
+    	try {
+    		propertySupport.transmitAllToComponentOnly();
+			aSecondValueProperty.load(this);aFirstValueProperty.load(this);
+		} finally {
+			propertySupport.enableAllTransmit();
+		}
     }
 
     @Override

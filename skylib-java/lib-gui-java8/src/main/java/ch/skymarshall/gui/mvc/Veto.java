@@ -14,7 +14,8 @@ public class Veto implements IVeto {
 
 		/**
 		 * Component are kept in sync with property updates, but component changes are
-		 * not propagated to properties§
+		 * not propagated to properties. Useful when loading new data, eg when selected
+		 * item is not available because component content is not loaded
 		 */
 		TO_COMPONENT_ONLY(true, false),
 
@@ -36,7 +37,7 @@ public class Veto implements IVeto {
 
 	private TransmitMode transmitMode;
 
-	private List<Predicate<BindingChain>> propertyChangeInhibitors = new ArrayList<>();
+	private List<Predicate<BindingChain>> transmitToComponentInhibitors = new ArrayList<>();
 
 	public Veto(TransmitMode startupTransmitMode) {
 		transmitMode = startupTransmitMode;
@@ -58,7 +59,7 @@ public class Veto implements IVeto {
 	@Override
 	public boolean mustSendToComponent(final BindingChain chain) {
 		return detached == 0 && transmitMode.toComponent && chain.getProperty().mustSendToComponent()
-				&& propertyChangeInhibitors.stream().noneMatch(t -> t.test(chain));
+				&& transmitToComponentInhibitors.stream().noneMatch(t -> t.test(chain));
 	}
 
 	@Override
@@ -67,7 +68,12 @@ public class Veto implements IVeto {
 	}
 
 	@Override
-	public void addPropertyInhibitor(Predicate<BindingChain> inhibitor) {
-		propertyChangeInhibitors.add(inhibitor);
+	public void inhibitTransmitToComponentWhen(Predicate<BindingChain> inhibitor) {
+		transmitToComponentInhibitors.add(inhibitor);
+	}
+
+	@Override
+	public boolean isTransmitMode(TransmitMode mode) {
+		return mode == transmitMode;
 	}
 }

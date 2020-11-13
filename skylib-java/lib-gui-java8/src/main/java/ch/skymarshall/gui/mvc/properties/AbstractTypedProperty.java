@@ -24,6 +24,7 @@ import ch.skymarshall.gui.mvc.IBindingController;
 import ch.skymarshall.gui.mvc.IComponentBinding;
 import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.PropertyEvent.EventKind;
+import ch.skymarshall.gui.mvc.Veto.TransmitMode;
 import ch.skymarshall.gui.mvc.converters.IConverter;
 
 /**
@@ -86,10 +87,27 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 		return createBindingChain().bind(binding);
 	}
 
+	/**
+	 * Listen when property is fully transmitting (transmitMode = BOTH)
+	 * @param binding
+	 * @return
+	 */
 	public IBindingController listen(final Consumer<T> binding) {
+		IBindingController listen = createBindingChain().listen(binding);
+		listen.getVeto().inhibitTransmitToComponentWhen(b -> b.getProperty().getTransmitMode() != TransmitMode.BOTH);
+		return listen;
+	}
+
+	/**
+	 * Listen when property is transmitting (transmitMode = BOTH|TO_COMPONENT)
+	 * @param binding
+	 * @return
+	 */
+	public IBindingController alwaysListen(final Consumer<T> binding) {
 		return createBindingChain().listen(binding);
 	}
 
+	
 	protected void setObjectValue(final Object caller, final T newValue) {
 		if (!mustSendToComponent()) {
 			replaceValue(newValue);

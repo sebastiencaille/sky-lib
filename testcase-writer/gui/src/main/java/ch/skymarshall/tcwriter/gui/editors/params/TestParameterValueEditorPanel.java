@@ -43,7 +43,6 @@ import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestReference;
 import ch.skymarshall.tcwriter.gui.editors.params.TestParameterValueTableModel.ParameterValueEntry;
 import ch.skymarshall.tcwriter.gui.frame.TCWriterController;
-import ch.skymarshall.tcwriter.gui.frame.TCWriterModel;
 
 public class TestParameterValueEditorPanel extends JPanel {
 
@@ -62,8 +61,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 		return testCase.getTestApi(testParameterValue.getApiParameterId());
 	}
 
-	public TestParameterValueEditorPanel(final TCWriterController controller, final TCWriterModel tcWriterModel,
-			final TestParameterModel tpModel) {
+	public TestParameterValueEditorPanel(final TCWriterController controller, final TestParameterModel tpModel) {
 
 		final ObjectProperty<TestCase> tc = controller.getModel().getTc();
 		final ObjectProperty<TestParameterValue> editedParamValue = tpModel.getEditedParameterValue();
@@ -144,9 +142,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 			}
 		});
 
-		// Edit the parameter value when changing the reference. Don't trigger when
-		// loading the step, because we may not have the right value during the
-		// loading
+		// Edit the parameter value when changing the reference.
 		tpModel.getSelectedReference().listen(ref -> {
 			if (tpModel.getEditedParameterValue().getObjectValue().getValueFactory()
 					.getNature() == ParameterNature.REFERENCE) {
@@ -154,10 +150,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 			}
 		});
 
-		// Edit the parameter value when changing the nature of the factory. Don't
-		// trigger when
-		// loading the step, because we may not have the right value during the
-		// loading
+		// Edit the parameter value when changing the nature of the factory.
 		tpModel.getValueNature().listen(v -> {
 			final TestParameterValue paramValue = editedParamValue.getValue();
 

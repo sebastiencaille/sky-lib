@@ -48,7 +48,13 @@ public class GuiModel {
 		return new ErrorProperty(name, support);
 	}
 
+	public IScopedSupport getPropertySupport() {
+		return propertySupport;
+	}
+	
 	public void activate() {
 		propertySupport.attachAll();
 	}
+	
+	
 }

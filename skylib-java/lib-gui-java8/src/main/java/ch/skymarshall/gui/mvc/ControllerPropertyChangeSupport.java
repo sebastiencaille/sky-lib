@@ -202,6 +202,17 @@ public class ControllerPropertyChangeSupport {
 		}
 
 		@Override
+		public void transmitAllToComponentOnly() {
+			properties.forEach(p -> p.setTransmitMode(TransmitMode.TO_COMPONENT_ONLY));
+		}
+		
+		@Override
+		public void enableAllTransmit() {
+			properties.forEach(p -> p.setTransmitMode(TransmitMode.BOTH));
+		}
+		
+		
+		@Override
 		public void addPropertyChangeListener(final String name, final PropertyChangeListener propertyChangeListener) {
 			listeners.add(new ListenerRegistration(name, propertyChangeListener));
 			support.addPropertyChangeListener(name, propertyChangeListener);
@@ -214,12 +225,12 @@ public class ControllerPropertyChangeSupport {
 					l -> ControllerPropertyChangeSupport.this.removePropertyChangeListener(l.name, l.listener));
 		}
 
-		public IPropertyEventListener detachWhenLoading() {
+		public IPropertyEventListener detachWhenPropLoading() {
 			return (caller, event) -> {
 				if (event.getKind() == EventKind.BEFORE) {
-					detachAll();
+					transmitAllToComponentOnly();
 				} else if (event.getKind() == EventKind.AFTER) {
-					attachAll();
+					enableAllTransmit();
 				}
 			};
 		}

@@ -28,10 +28,14 @@ public interface IScopedSupport {
 	 */
 	void detachAll();
 
+	void transmitAllToComponentOnly();
+
+	void enableAllTransmit();
+
 	void disposeBindings();
 
 	ControllerPropertyChangeSupport getMain();
 
-	IPropertyEventListener detachWhenLoading();
+	IPropertyEventListener detachWhenPropLoading();
 
 }

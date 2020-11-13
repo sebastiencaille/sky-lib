@@ -2,6 +2,8 @@ package ch.skymarshall.gui.mvc;
 
 import java.util.function.Predicate;
 
+import ch.skymarshall.gui.mvc.Veto.TransmitMode;
+
 public interface IVeto {
 
 	boolean mustSendToComponent(BindingChain chain);
@@ -12,6 +14,8 @@ public interface IVeto {
 
 	void detach();
 
-	void addPropertyInhibitor(Predicate<BindingChain> inhibitor);
+	void inhibitTransmitToComponentWhen(Predicate<BindingChain> inhibitor);
+
+	boolean isTransmitMode(TransmitMode both);
 
 }

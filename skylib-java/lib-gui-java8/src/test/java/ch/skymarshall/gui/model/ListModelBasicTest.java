@@ -17,10 +17,13 @@ package ch.skymarshall.gui.model;
 
 import java.util.Arrays;
 
+import javax.swing.JTable;
+
 import org.junit.Assert;
 import org.junit.Test;
 
 import ch.skymarshall.gui.TestObject;
+import ch.skymarshall.gui.TestObjectTableModel;
 import ch.skymarshall.gui.model.views.IListView;
 import ch.skymarshall.gui.model.views.ListViews;
 
@@ -43,10 +46,16 @@ public class ListModelBasicTest extends Assert {
 		checkModel(model2, 1, 2, 3, 4);
 	}
 
+	private JTable table(ListModel<TestObject> listModel) {
+		return new JTable(new TestObjectTableModel(listModel));
+	}
+	
 	@Test
 	public void testUpdate() {
+
 		final ListModel<TestObject> model = new ListModel<>(VIEW);
 		final ListModel<TestObject> childModel = model.child(ListViews.inherited());
+		JTable table = table(model);
 
 		model.insert(new TestObject(1));
 		model.insert(new TestObject(3));
@@ -55,18 +64,22 @@ public class ListModelBasicTest extends Assert {
 		model.insert(toMove);
 		checkModel(model, 1, 3, 4);
 		checkModel(childModel, 1, 3, 4);
+		checkModel(table, 1, 3, 4);
 
 		model.editValue(toMove, t -> t.val = 2);
 		checkModel(model, 1, 2, 3);
 		checkModel(childModel, 1, 2, 3);
+		checkModel(table, 1, 2, 3);
 
 		model.editValue(toMove, t -> t.val = 5);
 		checkModel(model, 1, 3, 5);
 		checkModel(childModel, 1, 3, 5);
+		checkModel(table, 1, 3, 5);
 
 		model.editValue(toMove, t -> t.val = 0);
 		checkModel(model, 0, 1, 3);
 		checkModel(childModel, 0, 1, 3);
+		checkModel(table, 0, 1, 3);
 	}
 
 	@Test
@@ -74,6 +87,7 @@ public class ListModelBasicTest extends Assert {
 		final ListModel<TestObject> model = new ListModel<>(VIEW);
 		final ListModel<TestObject> childModel = model
 				.child(ListViews.sortedFiltered((t1, t2) -> Integer.compare(t2.val, t1.val), t -> t.val % 2 == 0));
+		JTable table = table(childModel);
 
 		model.insert(new TestObject(1));
 		model.insert(new TestObject(4));
@@ -83,10 +97,12 @@ public class ListModelBasicTest extends Assert {
 		model.insert(toMove);
 		checkModel(model, 0, 1, 4, 7);
 		checkModel(childModel, 4, 0);
+		checkModel(table, 4, 0);
 
 		model.editValue(toMove, t -> t.val = 2);
 		checkModel(model, 1, 2, 4, 7);
 		checkModel(childModel, 4, 2);
+		checkModel(table, 4, 2);
 
 		model.editValue(toMove, t -> t.val = 5);
 		checkModel(model, 1, 4, 5, 7);
@@ -95,14 +111,17 @@ public class ListModelBasicTest extends Assert {
 		model.editValue(toMove, t -> t.val = 6);
 		checkModel(model, 1, 4, 6, 7);
 		checkModel(childModel, 6, 4);
+		checkModel(table, 6, 4);
 
 		model.editValue(toMove, t -> t.val = 8);
 		checkModel(model, 1, 4, 7, 8);
 		checkModel(childModel, 8, 4);
+		checkModel(table, 8, 4);
 
 		model.editValue(toMove, t -> t.val = 2);
 		checkModel(model, 1, 2, 4, 7);
 		checkModel(childModel, 4, 2);
+		checkModel(table, 4, 2);
 	}
 
 	@Test
@@ -136,9 +155,19 @@ public class ListModelBasicTest extends Assert {
 	}
 
 	private void checkModel(final ListModel<TestObject> model, final int... expected) {
+		assertEquals("size", expected.length, model.getSize());
 		final int[] current = new int[model.getSize()];
-		for (int i = 0; i < model.getSize(); i++) {
+		for (int i = 0; i < current.length; i++) {
 			current[i] = model.getValueAt(i).val;
+		}
+		assertEquals(Arrays.toString(expected), Arrays.toString(current));
+	}
+
+	private void checkModel(final JTable table, final int... expected) {
+		assertEquals("size", expected.length, table.getRowCount());
+		final int[] current = new int[table.getRowCount()];
+		for (int i = 0; i < current.length; i++) {
+			current[i] = (int) table.getValueAt(i, 0);
 		}
 		assertEquals(Arrays.toString(expected), Arrays.toString(current));
 	}

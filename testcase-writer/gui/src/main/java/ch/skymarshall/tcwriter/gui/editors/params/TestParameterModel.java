@@ -32,6 +32,7 @@ public class TestParameterModel extends GuiModel {
 
 		references = new ListProperty<>(prefix + "-references", propertySupport);
 
+		editedParameterValue.addListener( getPropertySupport().detachWhenPropLoading());
 	}
 
 	public String getPrefix() {

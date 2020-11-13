@@ -31,7 +31,7 @@ import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
 import ch.skymarshall.gui.mvc.GuiModel;
 import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.properties.ListProperty;
-import ch.skymarshall.gui.swing.model.ListModelTableModel;
+import ch.skymarshall.gui.swing.bindings.JTableMultiSelectionBinding;
 
 public class TableTest extends Assert {
 
@@ -45,27 +45,6 @@ public class TableTest extends Assert {
 		}
 	}
 
-	private enum Columns {
-		VAL;
-	}
-
-	private static class TestTableModel extends ListModelTableModel<TestObject, Columns> {
-
-		public TestTableModel(final ListModel<TestObject> model) {
-			super(model, Columns.class);
-		}
-
-		@Override
-		protected Object getValueAtColumn(final TestObject object, final Columns column) {
-			return null;
-		}
-
-		@Override
-		protected void setValueAtColumn(final TestObject object, final Columns column, final Object value) {
-			// no op
-		}
-	}
-
 	@Test
 	public void testSelectionOnInsert() throws InvocationTargetException, InterruptedException {
 
@@ -74,9 +53,9 @@ public class TableTest extends Assert {
 		support.attachAll();
 
 		final ListModel<TestObject> listModel = new ListModel<>(VIEW);
-		final TestTableModel tableModel = new TestTableModel(listModel);
-		final JTable table = new JTable();
-		model.selection.bind(new ch.skymarshall.gui.swing.bindings.JTableMultiSelectionBinding<>(table, tableModel));
+		final TestObjectTableModel tableModel = new TestObjectTableModel(listModel);
+		final JTable table = new JTable(tableModel);
+		model.selection.bind(new JTableMultiSelectionBinding<>(table, tableModel));
 
 		final TestObject object1 = new TestObject(1);
 		final TestObject object3 = new TestObject(3);

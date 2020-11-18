@@ -3,6 +3,7 @@ package ch.skymarshall.gui.model;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.function.Consumer;
 
 import javax.swing.event.ListDataListener;
@@ -77,7 +78,7 @@ public class ListModel<T> implements IListModelDelegate<T>, Iterable<T>, Seriali
 		return getClass().getSimpleName();
 	}
 
-	public Collection<T> values() {
+	public List<T> values() {
 		return impl.values();
 	}
 

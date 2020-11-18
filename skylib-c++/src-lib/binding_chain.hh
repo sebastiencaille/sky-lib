@@ -80,12 +80,12 @@ template<class _Pt> class binding_chain: public binding_chain_controller {
 		m_transmit = false;
 	}
 
-	property& get_property() {
+	property& get_property() final {
 		return m_property;
 	}
 
 	binding_chain_controller* add_dependency(
-			binding_chain_dependency *_dependency) {
+			binding_chain_dependency *_dependency) final {
 		m_dependencies.push_back(_dependency);
 		_dependency->register_dep(this);
 		return this;

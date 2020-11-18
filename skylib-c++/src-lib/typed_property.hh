@@ -36,10 +36,10 @@ using namespace std;
 template<typename _Pt> class typed_property: public property {
 
 public:
-	typedef _Pt value_type;
+	using value_type =  _Pt;
 
 private:
-	typedef const _Pt value_const_type;
+	using value_const_type = const _Pt;
 	value_type m_value;
 
 public:
@@ -54,15 +54,10 @@ public:
 			property(_name, _manager), m_value(_defaultValue) {
 	}
 
-	~typed_property() {
+	~typed_property() override = default;
 
-	}
 
-	value_type get() {
-		return m_value;
-	}
-
-	value_const_type get() const {
+	value_type get() const {
 		return m_value;
 	}
 
@@ -78,7 +73,7 @@ public:
 		m_manager.fire_after_property_changed(_source, this);
 	}
 
-	void attach() {
+	void attach() override {
 		force_changed(this);
 	}
 

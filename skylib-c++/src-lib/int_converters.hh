@@ -40,14 +40,12 @@ using namespace std;
 
 class int_to_string: public binding_converter<int, string> {
 public:
-	int_to_string() {
-	}
+	int_to_string() = default;
 
-	~int_to_string() {
-	}
+	~int_to_string() final = default;
 
 	const int convert_component_value_to_property_value(
-			const string _componentValue) {
+			const string _componentValue) final {
 		char* endPtr;
 		errno = 0;
 		long result = strtol(_componentValue.c_str(), &endPtr, 10);
@@ -57,7 +55,7 @@ public:
 		return (int) result;
 	}
 	const string convert_property_value_to_component_value(
-			const int _propertyValue) {
+			const int _propertyValue) final {
 		std::stringstream ss;
 		ss << _propertyValue;
 		return ss.str();

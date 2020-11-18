@@ -59,8 +59,7 @@ label_binding::label_binding(Gtk::Label& _label) :
 				m_label(_label) {
 }
 
-label_binding::~label_binding() {
-}
+label_binding::~label_binding() = default;
 
 void label_binding::add_component_value_change_listener(component_link<Glib::ustring>* _componentLink) {
 }

@@ -32,9 +32,7 @@ string_to_ustring::string_to_ustring() :
 
 }
 
-string_to_ustring::~string_to_ustring() {
-
-}
+string_to_ustring::~string_to_ustring() = default;
 
 const string string_to_ustring::convert_component_value_to_property_value(
 		const Glib::ustring _componentValue) {

@@ -49,7 +49,7 @@ public:
 
 	template<class _Cst> end_of_chain<_Pt, _Cst>* bind(
 			binding_converter<_Pt, _Cst> *const _converter) {
-		binding_chain<_Pt>* chain = new binding_chain<_Pt>(*this,
+		auto chain = new binding_chain<_Pt>(*this,
 				m_errorNotifier);
 		return chain->bind_property(std::bind(&controller_property::set, this, _1, _2))->bind(
 				_converter);
@@ -58,7 +58,7 @@ public:
 
 	template<class _Cst> binding_chain_controller* bind(
 			component_binding<_Cst> *const _componentBinding) {
-		binding_chain<_Pt> *chain = new binding_chain<_Pt>(*this,
+		auto chain = new binding_chain<_Pt>(*this,
 				m_errorNotifier);
 		return chain->bind_property(
 				std::bind(&controller_property::set, this, _1, _2))->bind(

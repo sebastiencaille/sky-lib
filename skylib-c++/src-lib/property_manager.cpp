@@ -25,8 +25,7 @@ namespace ch_skymarshall::gui {
 
 using namespace std;
 
-property_manager::property_manager() {
-}
+property_manager::property_manager() = default;
 
 void property_manager::add_listener(const string& _name, property_listener* _listener) {
 
@@ -64,8 +63,8 @@ void property_manager::fire_property_changed(source_ptr _source, const string& _
 	if (iter == m_propertyListeners.end()) {
 		return;
 	}
-	listener_list_type * plist = (*iter).second;
-	listener_list_type::iterator listener;
+	listener_list_type const* plist((*iter).second);
+	listener_list_type::const_iterator listener;
 	for (listener = plist->begin(); listener != plist->end(); listener++) {
 		property_listener* propertyListener = *listener;
 		propertyListener->fire(_source, _name, _oldValue, _newValue);
@@ -77,8 +76,8 @@ void property_manager::fire_before_property_changed(source_ptr _source, property
 	if (iter == m_propertyListeners.end()) {
 		return;
 	}
-	listener_list_type * plist = (*iter).second;
-	listener_list_type::iterator listener;
+	listener_list_type const* plist((*iter).second);
+	listener_list_type::const_iterator listener;
 	for (listener = plist->begin(); listener != plist->end(); listener++) {
 		property_listener* propertyListener = *listener;
 		propertyListener->before_change(_source, _property);
@@ -90,8 +89,8 @@ void property_manager::fire_after_property_changed(source_ptr _source, property*
 	if (iter == m_propertyListeners.end()) {
 		return;
 	}
-	listener_list_type * plist = (*iter).second;
-	listener_list_type::iterator listener;
+	listener_list_type const* plist((*iter).second);
+	listener_list_type::const_iterator listener;
 	for (listener = plist->begin(); listener != plist->end(); listener++) {
 		property_listener* propertyListener = *listener;
 		propertyListener->after_change(_source, _property);
@@ -100,8 +99,8 @@ void property_manager::fire_after_property_changed(source_ptr _source, property*
 
 void property_manager::dump() const {
 	for (const std::pair<string, listener_list_type*>& mapListener: m_propertyListeners) {
-		listener_list_type* plist = mapListener.second;
-		listener_list_type::iterator listener;
+		listener_list_type const* plist = mapListener.second;
+		listener_list_type::const_iterator listener;
 		for (listener = plist->begin(); listener != plist->end(); listener++) {
 			cout << "  " << hex << *listener << endl;
 		}

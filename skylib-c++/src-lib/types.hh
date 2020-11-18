@@ -12,7 +12,7 @@
 
 namespace ch_skymarshall::gui {
 
-typedef const void* source_ptr;
+using source_ptr = const void*;
 
 class property;
 
@@ -28,14 +28,14 @@ public:
 			m_what(_original.what()) {
 	}
 
-	virtual const char* what() const noexcept {
+	const char* what() const noexcept override {
 		return m_what.c_str();
 	}
 
-	~gui_exception() = default;
+	~gui_exception() override = default;
 };
 
-typedef gui_exception* gui_exception_ptr;
+using gui_exception_ptr = gui_exception*;
 
 }
 

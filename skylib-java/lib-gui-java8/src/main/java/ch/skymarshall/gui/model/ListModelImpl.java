@@ -698,7 +698,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 		return startEditingValue(found);
 	}
 
-	public Collection<T> values() {
+	public List<T> values() {
 		return new ArrayList<>(data);
 	}
 

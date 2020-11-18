@@ -39,9 +39,9 @@ template<class _Tp> class list_model;
  * Listener over list model events.
  */
 template<typename _Tp> class list_model_listener {
-	typedef _Tp value_type;
-	typedef list_model<value_type> model_type;
-	typedef vector<value_type> data_list_type;
+	using value_type = _Tp;
+	using model_type = list_model<value_type>;
+	using data_list_type = vector<value_type>;
 
 public:
 
@@ -84,8 +84,7 @@ public:
 
 	};
 
-	virtual ~list_model_listener() {
-	}
+	virtual ~list_model_listener() = default;
 
 	virtual void values_cleared(event &event) = 0;
 
@@ -106,18 +105,18 @@ public:
 template<class _Tp> class list_model_view {
 
 protected:
-	typedef _Tp value_type;
+	using value_type = _Tp;
 
 public:
 	/**
 	 *
 	 */
-	typedef function<bool(value_type const&)> filter;
+	using filter = function<bool(value_type const&)>;
 
 	/**
 	 *
 	 */
-	typedef function<int(value_type const&, value_type const&)> comparator;
+	using comparator = function<int(value_type const&, value_type const&)>;
 
 	/**
 	 *
@@ -125,14 +124,12 @@ public:
 	class owner {
 
 	public:
-		virtual ~owner() {
-		}
+		virtual ~owner() = default;
 		virtual list_model_view<value_type>* get_parent_view() = 0;
 
 	};
 
-	virtual ~list_model_view() {
-	}
+	virtual ~list_model_view() = default;
 
 	virtual bool accept(value_type const &_object) const = 0;
 

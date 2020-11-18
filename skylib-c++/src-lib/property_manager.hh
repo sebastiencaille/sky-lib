@@ -50,9 +50,9 @@ public:
 	void fire_after_property_changed(source_ptr _source, property* _property) const;
 	void dump() const;
 private:
-	typedef list<property_listener*> listener_list_type;
-	typedef map<string, listener_list_type*> listener_map_type;
-	typedef map<string, listener_list_type*>::const_iterator listeners_const_iter;
+	using listener_list_type = list<property_listener*>;
+	using listener_map_type = map<string, listener_list_type*> ;
+	using listeners_const_iter = map<string, listener_list_type*>::const_iterator;
 	listener_map_type m_propertyListeners;
 };
 

@@ -35,13 +35,12 @@ using namespace std;
 /**
  * Untyped reference to property_listener
  */
-typedef void* property_listener_ref;
+using property_listener_ref = void*;
 
 class property_listener {
 public:
 
-	virtual ~property_listener() {
-	}
+	virtual ~property_listener() = default;
 
 	virtual void fire(source_ptr _source, const string& _name, const void* _oldValue, const void* _newValue) = 0;
 
@@ -57,12 +56,12 @@ public:
 class property_listener_dispatcher:
 		public property_listener {
 public:
-	typedef std::function<void (source_ptr, const string&, const void*, const void*)> fire_function;
-	typedef std::function<void (source_ptr, property*)> before_after_function;
+	using fire_function = std::function<void (source_ptr, const string&, const void*, const void*)>;
+	using before_after_function = std::function<void (source_ptr, property*)>;
 private:
-	fire_function m_func_fire = NULL;
-	before_after_function m_func_before = NULL;
-	before_after_function m_func_after = NULL;
+	fire_function m_func_fire = nullptr;
+	before_after_function m_func_before = nullptr;
+	before_after_function m_func_after = nullptr;
 
 public:
 	explicit property_listener_dispatcher(fire_function const& _fireFunction) :
@@ -80,25 +79,25 @@ public:
 					m_func_after(_p.m_func_after) {
 	}
 
-	void fire(source_ptr _source, const string& _name, const void* _oldValue, const void* _newValue) {
+	void fire(source_ptr _source, const string& _name, const void* _oldValue, const void* _newValue) override {
 		if (m_func_fire != NULL) {
 			m_func_fire(_source, _name, _oldValue, _newValue);
 		}
 	}
 
-	void before_change(source_ptr _source, property* _property) {
+	void before_change(source_ptr _source, property* _property) override {
 		if (m_func_before != NULL) {
 			m_func_before(_source, _property);
 		}
 	}
 
-	void after_change(source_ptr _source, property* _property) {
+	void after_change(source_ptr _source, property* _property) override {
 		if (m_func_after != NULL) {
 			m_func_after(_source, _property);
 		}
 	}
 
-	~property_listener_dispatcher() = default;
+	~property_listener_dispatcher() override = default;
 };
 }
 

@@ -52,25 +52,25 @@ using namespace std::placeholders;
 template<typename _Tp> class list_model {
 
 public:
-	typedef list_model_view<_Tp> view_type;
+	using view_type = list_model_view<_Tp>;
 
 private:
 
-	typedef _Tp value_type;
-	typedef list_model<value_type> model_type;
+	using value_type = _Tp;
+	using model_type = list_model<value_type>;
 
-	typedef vector<value_type> value_list_type;
-	typedef typename value_list_type::iterator value_list_iterator;
-	typedef typename value_list_type::const_iterator value_list_citerator;
+	using value_list_type = vector<value_type>;
+	using value_list_iterator = typename value_list_type::iterator;
+	using value_list_citerator = typename value_list_type::const_iterator;
 
-	typedef list_model_listener<value_type> model_listener_type;
-	typedef typename list_model_listener<value_type>::event model_listener_event;
+	using model_listener_type = list_model_listener<value_type>;
+	using model_listener_event = typename list_model_listener<value_type>::event;
 
-	typedef vector<model_listener_type*> model_listener_list_type;
+	using model_listener_list_type = vector<model_listener_type*>;
 
-	typedef typename view_type::owner view_owner;
-	typedef typename view_type::filter view_filter;
-	typedef typename view_type::comparator view_comparator;
+	using view_owner = typename view_type::owner;
+	using view_filter = typename view_type::filter;
+	using view_comparator = typename view_type::comparator;
 
 	/*
 	 * A sorted and filtered view on the model
@@ -121,7 +121,8 @@ private:
 			m_parentView = _owner->get_parent_view();
 		}
 
-		void detach(view_owner *_owner) {
+		void detach(view_owner *_owner) final {
+			// nope;
 		}
 
 		string str() const {
@@ -157,24 +158,23 @@ public:
 	 */
 	class object_tunings {
 	public:
-		object_tunings() {
-		}
+		object_tunings() = default;
 
 		virtual ~object_tunings() = default;
 
-		const virtual string str(value_type const &_value) const {
+		virtual string str(value_type const &_value) const {
 			stringstream ss;
 			ss << hex << &_value;
 			return ss.str();
 		}
 
-		const virtual bool equals(value_type const &_val1,
+		virtual bool equals(value_type const &_val1,
 				value_type const &_val2) const {
 			return _val1 == _val2;
 		}
 	};
 
-	typedef std::tr1::shared_ptr<object_tunings> object_tuning_ptr;
+	using object_tuning_ptr = std::tr1::shared_ptr<object_tunings>;
 	static object_tuning_ptr make_ptr(object_tunings *_tuning) {
 		return object_tuning_ptr(_tuning);
 	}
@@ -184,7 +184,7 @@ public:
 	 */
 	class value_edition {
 
-		typedef _Tp value_type;
+		using value_type = _Tp;
 
 		friend class list_model<value_type> ;
 
@@ -225,7 +225,7 @@ public:
 		}
 	};
 
-	typedef vector<value_edition*> edition_list;
+	using edition_list = vector<value_edition*>;
 
 private:
 
@@ -294,7 +294,8 @@ private:
 			m_model->start_editing_value(event.get_object());
 		}
 
-		void editions_stopping(model_listener_event &event) {
+		void editions_stopping(model_listener_event &event) final {
+			// nope
 		}
 
 		void editions_stopped(model_listener_event &event) {
@@ -302,15 +303,15 @@ private:
 		}
 
 		void fire(source_ptr _source, const string &_name,
-				const void *_oldValue, const void *_newValue) {
+				const void *_oldValue, const void *_newValue) final {
 			m_model->view_updated();
 		}
 
-		void before_change(source_ptr _source, property *_property) {
+		void before_change(source_ptr _source, property *_property) final {
 			// nope
 		}
 
-		void after_change(source_ptr _source, property *_property) {
+		void after_change(source_ptr _source, property *_property) final {
 			// nope
 		}
 
@@ -361,8 +362,7 @@ public:
 		set_view(_view);
 	}
 
-	virtual ~list_model() {
-	}
+	virtual ~list_model() = default;
 
 	void set_tunings(object_tuning_ptr _tunings) {
 		m_tunings = _tunings;

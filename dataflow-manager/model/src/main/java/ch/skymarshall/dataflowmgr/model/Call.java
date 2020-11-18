@@ -12,7 +12,7 @@ public abstract class Call<T extends Call<T>> extends WithId {
 
 	public abstract T derivate(final String to);
 
-	public Call(final String name, final String methodName, final LinkedHashMap<String, String> parameters,
+	protected Call(final String name, final String methodName, final LinkedHashMap<String, String> parameters,
 			final String returnType) {
 		super(UUID.randomUUID());
 		this.name = name;

@@ -27,9 +27,7 @@ property::property(const char* _name, property_manager& _manager) :
 		m_name(string(_name)), m_manager(_manager) {
 }
 
-property::~property() {
-
-}
+property::~property() = default;
 
 void property::attach() {
 	m_attached = true;

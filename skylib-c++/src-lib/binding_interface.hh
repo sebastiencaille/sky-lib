@@ -62,13 +62,13 @@ class logic_error_to_string: public binding_converter<gui_exception_ptr, string>
 
 public:
 	const gui_exception_ptr convert_component_value_to_property_value(
-			const string _componentValue) {
+			const string _componentValue) final {
 		// nonsense
 		return NULL;
 	}
 
 	const string convert_property_value_to_component_value(
-			gui_exception_ptr _propertyValue) {
+			gui_exception_ptr _propertyValue) final {
 		if (_propertyValue == NULL) {
 			return string();
 		}
@@ -183,19 +183,18 @@ public:
 			m_targetProperty(_targetProperty), m_action(_action) {
 	}
 
-	void register_dep(binding_chain_controller* _chain) {
+	void register_dep(binding_chain_controller* _chain) final {
 		m_listener = new property_listener_dispatcher(
 				std::bind(&action_dependency::action_before, this, _1, _2),
 				std::bind(&action_dependency::action_after, this, _1, _2));
 		m_targetProperty->add_listener(m_listener);
 	}
 
-	virtual void unbind() {
+	void unbind() final {
 		m_targetProperty->remove_listener(m_listener);
 	}
 
-	virtual ~action_dependency() {
-	}
+	~action_dependency() final = default;
 };
 }
 

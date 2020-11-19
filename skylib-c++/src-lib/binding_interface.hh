@@ -25,6 +25,7 @@
 
 #include <string>
 #include <functional>
+#include <memory>
 
 #include "types.hh"
 #include "typed_property.hh"
@@ -32,15 +33,20 @@
 namespace ch_skymarshall::gui {
 
 using namespace std;
+using namespace __gnu_cxx;
 
 class error_notifier {
-	protected:
-	virtual ~error_notifier() = default;
 
 public:
-	virtual void set_error(source_ptr _source, const gui_exception& _e) = 0;
+	virtual void set_error(source_ptr _source, gui_exception_ptr _e) = 0;
+
+	void set_error(source_ptr _source, const gui_exception& _e) {
+		set_error(_source, make_shared<gui_exception>(_e));
+	}
 
 	virtual void clear_error(source_ptr _source) = 0;
+
+	virtual ~error_notifier() = default;
 };
 
 /**
@@ -75,6 +81,9 @@ public:
 		return string(_propertyValue->what());
 	}
 
+	static shared_ptr<binding_converter<gui_exception_ptr, string>> of () {
+		return make_shared<logic_error_to_string>();
+	}
 };
 
 /** Link from component binding to chain */
@@ -98,7 +107,7 @@ template<class _CT> class component_binding {
 public:
 
 	virtual void add_component_value_change_listener(
-			component_link<_CT>* _converter) = 0;
+			shared_ptr<component_link<_CT>> _converter) = 0;
 
 	virtual void remove_component_value_change_listener() = 0;
 
@@ -121,8 +130,8 @@ public:
 
 	virtual void unbind() = 0;
 
-	virtual binding_chain_controller* add_dependency(
-			binding_chain_dependency* dependency) = 0;
+	virtual shared_ptr<binding_chain_controller> add_dependency(
+			shared_ptr<binding_chain_dependency> dependency) = 0;
 
 	virtual ~binding_chain_controller() = default;
 };
@@ -131,7 +140,7 @@ using namespace std::placeholders;
 
 class binding_chain_dependency {
 public:
-	virtual void register_dep(binding_chain_controller* chain) = 0;
+	virtual void register_dep(shared_ptr<binding_chain_controller> chain) = 0;
 
 	virtual void unbind() = 0;
 
@@ -155,10 +164,13 @@ public:
 
 template<class _T> class action_dependency: public binding_chain_dependency {
 private:
+
 	property* m_targetProperty;
+
 	std::function<
 			void(property_group_actions _action, const property* _property)> m_action;
-	property_listener_dispatcher* m_listener = nullptr;
+
+	shared_ptr<property_listener_dispatcher> m_listener;
 
 	void action_before(const source_ptr caller, property* _property) {
 		m_action(BEFORE_FIRE, _property);
@@ -177,8 +189,8 @@ public:
 			m_targetProperty(_targetProperty), m_action(_action) {
 	}
 
-	void register_dep(binding_chain_controller* _chain) final {
-		m_listener = new property_listener_dispatcher(
+	void register_dep(shared_ptr<binding_chain_controller> _chain) final {
+		m_listener = std::make_shared<property_listener_dispatcher>(
 				std::bind(&action_dependency::action_before, this, _1, _2),
 				std::bind(&action_dependency::action_after, this, _1, _2));
 		m_targetProperty->add_listener(m_listener);

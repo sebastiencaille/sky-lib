@@ -66,27 +66,35 @@ private:
 
 	class dep_test: public binding_chain_dependency {
 
-		TestStringPropertyListener m_testListener = TestStringPropertyListener(1);
-		property_listener_dispatcher m_listener;
-		binding_chain_controller *m_controller = nullptr;
+		TestStringPropertyListener m_testListener = TestStringPropertyListener(
+				1);
+		shared_ptr<property_listener_dispatcher> m_listener;
+		shared_ptr<binding_chain_controller> m_controller;
 
 	public:
 		dep_test() :
 				m_listener(
-						[this](source_ptr source, const string &name,
-								const void *oldValue, const void *newValue) {
-							this->m_testListener.propertyChanged(source, name,
-									oldValue, newValue);
-						})
-				{	}
+						make_shared<property_listener_dispatcher>(
+								[this](source_ptr source, const string &name,
+										const void *oldValue,
+										const void *newValue) {
+									this->m_testListener.propertyChanged(source,
+											name, oldValue, newValue);
+								})) {
+		}
 
-		void register_dep(binding_chain_controller *_controller) final {
+		void register_dep(
+				shared_ptr<binding_chain_controller> _controller) final {
 			m_controller = _controller;
-			_controller->get_property().add_listener(&m_listener);
+			_controller->get_property().add_listener(m_listener);
 		}
 
 		void unbind() final {
-			m_controller->get_property().remove_listener(&m_listener);
+			m_controller->get_property().remove_listener(m_listener);
+		}
+
+		static shared_ptr<binding_chain_dependency> of() {
+			return make_shared<dep_test>();
 		}
 
 	};
@@ -95,7 +103,7 @@ public:
 
 	void init(controller_property<string> &_testProperty1,
 			controller_property<int> &_testProperty2,
-			input_error_property &_errorProperty);
+			shared_ptr<input_error_property> _errorProperty);
 
 	~HelloWorld() override;
 
@@ -114,7 +122,7 @@ private:
 	Gtk::Label m_error;
 	Gtk::Box m_box;
 
-	list<binding_chain_controller*> m_bindings;
+	list<shared_ptr<binding_chain_controller>> m_bindings;
 };
 
 HelloWorld::HelloWorld() :
@@ -123,43 +131,48 @@ HelloWorld::HelloWorld() :
 
 void HelloWorld::init(controller_property<string> &_testProperty1,
 		controller_property<int> &_testProperty2,
-		input_error_property &_errorProperty) {
+		shared_ptr<input_error_property> _errorProperty) {
 	// Sets the border width of the window.
 	set_border_width(10);
 
 	add(m_box);
 
 	m_bindings.push_back(
-			_testProperty1.bind(new string_to_ustring())->bind(
-					new entry_binding(m_entry))->add_dependency(
-					new dep_test()));
+			_testProperty1.bind(string_to_ustring::of())->bind(
+					entry_binding::of(m_entry))->add_dependency(
+					dep_test::of()));
 	m_box.pack_start(m_entry);
 
-	action_dependency<HelloWorld>* dep = new action_dependency<HelloWorld>(&_testProperty1,
-			[this](property_group_actions group, const property *action) { this->apply_action(group, action); });
+	shared_ptr<action_dependency<HelloWorld>> dep = make_shared<
+			action_dependency<HelloWorld>>(&_testProperty1,
+			[this](property_group_actions group, const property *action) {
+				this->apply_action(group, action);
+			});
 
 	m_bindings.push_back(
-			_testProperty1.bind(new string_to_ustring())->bind(
-					new label_binding(m_label))->add_dependency(dep));
+			_testProperty1.bind(string_to_ustring::of())->bind(
+					label_binding::of(m_label))->add_dependency(dep));
 	m_box.pack_start(m_label);
 
 	m_bindings.push_back(
-			_testProperty2.bind(new int_to_string())->bind(
-					new string_to_ustring())->bind(
-					new entry_binding(m_intEntry)));
+			_testProperty2.bind(int_to_string::of())->bind(
+					string_to_ustring::of())->bind(
+					entry_binding::of(m_intEntry)));
 	m_box.pack_start(m_intEntry);
 	m_bindings.push_back(
-			_testProperty2.bind(new int_to_string())->bind(
-					new string_to_ustring())->bind(
-					new label_binding(m_intLabel)));
+			_testProperty2.bind(int_to_string::of())->bind(
+					string_to_ustring::of())->bind(
+					label_binding::of(m_intLabel)));
 	m_box.pack_start(m_intLabel);
 
 	m_bindings.push_back(
-			_errorProperty.bind(new logic_error_to_string())->bind(
-					new string_to_ustring())->bind(new label_binding(m_error)));
+			_errorProperty->bind(logic_error_to_string::of())->bind(
+					string_to_ustring::of())->bind(
+					label_binding::of(m_error)));
 	m_box.pack_start(m_error);
 
-	Pango::Attribute redText = Pango::Attribute::create_attr_foreground(0xefef, 0x2929, 0x2929);
+	Pango::Attribute redText = Pango::Attribute::create_attr_foreground(0xefef,
+			0x2929, 0x2929);
 	Pango::AttrList atrlist;
 	atrlist.insert(redText);
 	m_error.set_attributes(atrlist);
@@ -174,9 +187,8 @@ void HelloWorld::init(controller_property<string> &_testProperty1,
 }
 
 HelloWorld::~HelloWorld() {
-	for (binding_chain_controller *ctrl : m_bindings) {
+	for (shared_ptr<binding_chain_controller> ctrl : m_bindings) {
 		ctrl->unbind();
-		delete ctrl;
 	}
 	m_bindings.clear();
 }
@@ -199,11 +211,15 @@ void HelloWorld::on_button_clicked() {
 	std::cout << "Hello World" << std::endl;
 }
 
-using int_model = list_model<int> ;
+using int_model = list_model<int>;
 
 int main(int argc, char *argv[]) {
 
-	int_model int_list(int_model::sorted([](const int i1, const int i2) { return i1 - i2; }));
+	int_model::view_ptr view(int_model::sorted([](const int i1, const int i2) {
+			return i1 - i2;
+		}));
+
+	int_model int_list(view);
 	int_list.insert(2);
 	int_list.insert(1);
 	cout << int_list.get_element_at(0) << " " << int_list.get_element_at(1)
@@ -213,13 +229,13 @@ int main(int argc, char *argv[]) {
 			"org.gtkmm.example");
 
 	property_manager manager;
-	input_error_property errorProperty(string("Errors"), manager);
+	shared_ptr<input_error_property> errorProperty(make_shared<input_error_property>(string("Errors"), manager));
 
 	controller_property<string> testProperty1(string("TestProp1"), manager,
-			string(""), &errorProperty);
+			string(""), errorProperty);
 
 	controller_property<int> testProperty2("TestProp2", manager, 0,
-			&errorProperty);
+			errorProperty);
 
 	HelloWorld helloworld;
 	helloworld.init(testProperty1, testProperty2, errorProperty);

@@ -33,26 +33,18 @@ using namespace std;
 class input_error_property: public error_notifier, public controller_property<gui_exception_ptr> {
 public:
 	input_error_property(const string& _name, property_manager& _manager) :
-			controller_property<gui_exception_ptr>(_name, _manager, nullptr,
-					this) {
+			controller_property(_name, _manager, nullptr, nullptr) {
 	}
 
-	void set_error(source_ptr _source, const gui_exception& _value) final {
-		gui_exception_ptr oldValue = get();
-		this->set(_source, new gui_exception(_value));
-		if (oldValue != nullptr) {
-			delete oldValue;
-		}
+	void set_error(source_ptr _source, gui_exception_ptr _value) final {
+		this->set(_source, _value);
 	}
+
 	void clear_error(source_ptr _source) final {
 		if (_source == static_cast<property*>( this)) {
 			return;
 		}
-		gui_exception_ptr oldValue = get();
 		this->set(_source, nullptr);
-		if (oldValue != nullptr) {
-			delete oldValue;
-		}
 	}
 };
 

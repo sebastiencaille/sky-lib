@@ -19,11 +19,11 @@ namespace ch_skymarshall::gui {
 
 using namespace std;
 
-property::property(const string& _name, property_manager& _manager) :
-		 m_name(_name), m_manager(_manager) {
+property::property(const string &_name, property_manager &_manager) :
+		m_name(_name), m_manager(_manager) {
 }
 
-property::property(const char* _name, property_manager& _manager) :
+property::property(const char *_name, property_manager &_manager) :
 		m_name(string(_name)), m_manager(_manager) {
 }
 
@@ -37,16 +37,12 @@ const string& property::name() const {
 	return m_name;
 }
 
-void property::add_listener(property_listener* _listener) {
+void property::add_listener(shared_ptr<property_listener> _listener) {
 	m_manager.add_listener(m_name, _listener);
 }
 
-void property::remove_listener(property_listener* _listener) {
+void property::remove_listener(shared_ptr<property_listener> _listener) {
 	m_manager.remove_listener(m_name, _listener);
-}
-
-void property::remove_listener(property_listener_ref _listener) {
-	m_manager.remove_listener(m_name, (property_listener*)_listener);
 }
 
 }

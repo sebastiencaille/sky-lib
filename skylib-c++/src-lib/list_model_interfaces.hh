@@ -108,6 +108,10 @@ protected:
 	using value_type = _Tp;
 
 public:
+
+	using view_ptr = shared_ptr<list_model_view<value_type>>;
+
+
 	/**
 	 *
 	 */
@@ -125,7 +129,7 @@ public:
 
 	public:
 		virtual ~owner() = default;
-		virtual list_model_view<value_type>* get_parent_view() = 0;
+		virtual view_ptr get_parent_view() = 0;
 
 	};
 

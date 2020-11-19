@@ -68,7 +68,7 @@ public:
 					m_func_fire(_fireFunction) {
 	}
 
-	property_listener_dispatcher(before_after_function const& _beforeFireFunction, before_after_function const& _afterFireFunction) :
+	explicit property_listener_dispatcher(before_after_function const& _beforeFireFunction, before_after_function const& _afterFireFunction) :
 					m_func_before(_beforeFireFunction),
 					m_func_after(_afterFireFunction) {
 	}

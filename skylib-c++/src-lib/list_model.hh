@@ -53,6 +53,7 @@ template<typename _Tp> class list_model {
 
 public:
 	using view_type = list_model_view<_Tp>;
+	using view_ptr = typename view_type::view_ptr;
 
 private:
 
@@ -72,38 +73,33 @@ private:
 	using view_filter = typename view_type::filter;
 	using view_comparator = typename view_type::comparator;
 
+
 	/*
 	 * A sorted and filtered view on the model
 	 */
-	class view_impl: public view_type {
+	class view_impl: public list_model_view<_Tp> {
 
-		friend class list_model<value_type> ;
+		friend class list_model<_Tp> ;
 
 		view_filter m_filter;
 		view_comparator m_comparator;
-		view_type *m_parentView = NULL;
+		view_ptr m_parentView;
+
+
+	public:
 
 		view_impl(view_comparator _comparator, view_filter _filter) :
 				m_filter(_filter), m_comparator(_comparator) {
 		}
-
-		view_impl(view_impl &_view) :
-				m_filter(_view.m_filter), m_comparator(_view.m_comparator), m_parentView(
-						_view.m_parentView) {
-		}
-
-	protected:
 		~view_impl() = default;
 
-	public:
-
-		bool accept(value_type const &_object) const {
+		bool accept(const value_type &_object) const final {
 			return m_filter == NULL || m_filter(_object);
 		}
 
-		int compare(value_type const &_o1, value_type const &_o2) const {
+		int compare(const value_type &_o1, const value_type &_o2) const final {
 			int compare;
-			if (m_comparator == NULL && m_parentView == NULL) {
+			if (m_comparator == nullptr && m_parentView == nullptr) {
 				throw gui_exception(
 						"You must either set a comparator or override this method");
 			} else if (m_comparator != NULL) {
@@ -111,7 +107,7 @@ private:
 			} else {
 				compare = 0;
 			}
-			if (compare == 0 && m_parentView != NULL) {
+			if (compare == 0 && m_parentView != nullptr) {
 				return m_parentView->compare(_o1, _o2);
 			}
 			return compare;
@@ -136,21 +132,21 @@ private:
 
 public:
 
-	static view_type* sorted(view_comparator comparator) {
-		return new view_impl(comparator, NULL);
+	static view_ptr sorted(view_comparator comparator) {
+		return make_shared<view_impl>(comparator, nullptr);
 	}
 
-	static view_type* sorted_filtered(view_comparator comparator,
+	static view_ptr sorted_filtered(view_comparator comparator,
 			view_filter *filter) {
-		return new view_impl(comparator, filter);
+		return make_shared<view_impl>(comparator, filter);
 	}
 
-	static view_type* filtered(view_filter filter) {
-		return new view_impl(NULL, filter);
+	static view_ptr filtered(view_filter filter) {
+		return make_shared<view_impl>(nullptr, filter);
 	}
 
-	static view_type* inherited() {
-		return new view_impl(NULL, NULL);
+	static view_ptr inherited() {
+		return make_shared<view_impl>(nullptr, nullptr);
 	}
 
 	/**
@@ -225,8 +221,6 @@ public:
 		}
 	};
 
-	using edition_list = vector<value_edition*>;
-
 private:
 
 	model_listener_list_type m_listeners;
@@ -234,15 +228,15 @@ private:
 	/**
 	 * Current edition
 	 */
-	value_edition *m_objectEdition = NULL;
+	unique_ptr<value_edition> m_objectEdition;
 
 	property_manager m_propertyManager;
 
 	value_list_type m_data;
 
-	model_type *m_source = NULL;
+	shared_ptr<model_type> m_source;
 
-	typed_property<list_model_view<value_type>*> m_viewProperty;
+	typed_property_shared_ptr<view_type> m_viewProperty;
 
 	/**
 	 * Local listeners
@@ -255,15 +249,15 @@ private:
 
 		friend class list_model;
 
-		private_listeners_impl(model_type *_model) :
+		explicit private_listeners_impl(model_type *_model) :
 				m_model(_model) {
 		}
 
-		list_model_view<value_type>* get_parent_view() {
-			if (m_model->m_source != NULL) {
+		view_ptr get_parent_view() {
+			if (m_model->m_source != nullptr) {
 				return m_model->m_source->get_view();
 			}
-			return NULL;
+			return view_ptr();
 		}
 
 		void values_cleared(model_listener_event &event) {
@@ -287,7 +281,7 @@ private:
 		}
 
 		void edition_cancelled(model_listener_event &event) {
-			m_model->m_objectEdition = NULL;
+			m_model->m_objectEdition = unique_ptr<value_edition>();
 		}
 
 		void editions_started(model_listener_event &event) {
@@ -337,9 +331,9 @@ private:
 
 public:
 
-	list_model(list_model_view<value_type> *_view) :
-			m_viewProperty("View", m_propertyManager, NULL), m_privateListenersImpl(
-					this) {
+	list_model(view_ptr _view) :
+			m_viewProperty("View", m_propertyManager, view_ptr()),
+			m_privateListenersImpl(this) {
 		m_tunings = make_ptr(new object_tunings());
 		if (_view == NULL) {
 			throw gui_exception("View must not be NULL");
@@ -347,15 +341,15 @@ public:
 		set_view(_view);
 	}
 
-	list_model(model_type &_source) :
-			m_source(&_source), m_viewProperty("View", m_propertyManager, NULL), m_privateListenersImpl(
+	list_model(shared_ptr<model_type> _source) :
+			m_source(_source), m_viewProperty("View", m_propertyManager, NULL), m_privateListenersImpl(
 					this), m_tunings(_source.m_tunings) {
 		attach_to_source();
 		set_view(inherited());
 		set_tunings(_source.m_tunings);
 	}
 
-	list_model(model_type &_source, list_model_view<value_type> &_view) :
+	list_model(shared_ptr<model_type> _source, view_ptr _view) :
 			m_source(_source), m_viewProperty("View", m_propertyManager, NULL), m_privateListenersImpl(
 					this), m_tunings(_source.m_tunings) {
 		attach_to_source();
@@ -458,7 +452,7 @@ public:
 		m_viewProperty.force_changed(this);
 	}
 
-	list_model_view<value_type>* get_view() const {
+	view_ptr get_view() const {
 		return m_viewProperty.get();
 	}
 
@@ -467,10 +461,9 @@ public:
 		fire_view_updated();
 	}
 
-	void set_view(list_model_view<value_type> *_view) {
+	void set_view(view_ptr _view) {
 		if (m_viewProperty.get() != NULL) {
 			m_viewProperty.get()->detach(&m_privateListenersImpl);
-			delete m_viewProperty.get();
 		}
 		if (_view != NULL) {
 			m_viewProperty.set(this, _view);
@@ -585,7 +578,7 @@ public:
 
 	void start_editing_value(value_type _value) {
 		const int oldIndex = row_of(_value);
-		m_objectEdition = new value_edition(this, _value, oldIndex);
+		m_objectEdition = make_unique<value_edition>(this, _value, oldIndex);
 		fire_edition_started(_value);
 	}
 

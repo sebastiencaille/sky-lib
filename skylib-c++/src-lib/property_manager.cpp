@@ -15,6 +15,7 @@
  */
 
 #include <iostream>
+#include<memory>
 
 #include "property_manager.hh"
 #include "property.hh"
@@ -27,12 +28,12 @@ using namespace std;
 
 property_manager::property_manager() = default;
 
-void property_manager::add_listener(const string& _name, property_listener* _listener) {
+void property_manager::add_listener(const string& _name, shared_ptr<property_listener> _listener) {
 
 	listeners_const_iter iter = m_propertyListeners.find(_name);
-	listener_list_type* plist;
+	shared_ptr<listener_list_type> plist;
 	if (iter == m_propertyListeners.end()) {
-		plist = new list<property_listener*>();
+		plist = make_shared<listener_list_type>();
 		m_propertyListeners[_name] = plist;
 	} else {
 		plist = (*iter).second;
@@ -40,16 +41,15 @@ void property_manager::add_listener(const string& _name, property_listener* _lis
 	plist->push_back(_listener);
 }
 
-void property_manager::remove_listener(const string& _name, property_listener* _listener) {
+void property_manager::remove_listener(const string& _name, shared_ptr<property_listener> _listener) {
 	listeners_const_iter iter = m_propertyListeners.find(_name);
 	if (iter == m_propertyListeners.end()) {
 		return;
 	}
-	listener_list_type* plist = (*iter).second;
+	shared_ptr<listener_list_type> plist = (*iter).second;
 	plist->remove(_listener);
 	if (plist->empty()) {
 		m_propertyListeners.erase(_name);
-		delete plist;
 	}
 }
 
@@ -63,11 +63,10 @@ void property_manager::fire_property_changed(source_ptr _source, const string& _
 	if (iter == m_propertyListeners.end()) {
 		return;
 	}
-	listener_list_type const* plist((*iter).second);
+	shared_ptr<listener_list_type> const plist((*iter).second);
 	listener_list_type::const_iterator listener;
 	for (listener = plist->begin(); listener != plist->end(); listener++) {
-		property_listener* propertyListener = *listener;
-		propertyListener->fire(_source, _name, _oldValue, _newValue);
+		(*listener)->fire(_source, _name, _oldValue, _newValue);
 	}
 }
 
@@ -76,11 +75,10 @@ void property_manager::fire_before_property_changed(source_ptr _source, property
 	if (iter == m_propertyListeners.end()) {
 		return;
 	}
-	listener_list_type const* plist((*iter).second);
+	shared_ptr<listener_list_type> const plist((*iter).second);
 	listener_list_type::const_iterator listener;
 	for (listener = plist->begin(); listener != plist->end(); listener++) {
-		property_listener* propertyListener = *listener;
-		propertyListener->before_change(_source, _property);
+		(*listener)->before_change(_source, _property);
 	}
 }
 
@@ -89,17 +87,16 @@ void property_manager::fire_after_property_changed(source_ptr _source, property*
 	if (iter == m_propertyListeners.end()) {
 		return;
 	}
-	listener_list_type const* plist((*iter).second);
+	shared_ptr<listener_list_type> const plist((*iter).second);
 	listener_list_type::const_iterator listener;
 	for (listener = plist->begin(); listener != plist->end(); listener++) {
-		property_listener* propertyListener = *listener;
-		propertyListener->after_change(_source, _property);
+		(*listener)->after_change(_source, _property);
 	}
 }
 
 void property_manager::dump() const {
-	for (const std::pair<string, listener_list_type*>& mapListener: m_propertyListeners) {
-		listener_list_type const* plist = mapListener.second;
+	for (const std::pair<string, shared_ptr<listener_list_type>>& mapListener: m_propertyListeners) {
+		shared_ptr<listener_list_type const> plist = mapListener.second;
 		listener_list_type::const_iterator listener;
 		for (listener = plist->begin(); listener != plist->end(); listener++) {
 			cout << "  " << hex << *listener << endl;

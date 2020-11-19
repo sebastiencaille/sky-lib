@@ -60,6 +60,10 @@ public:
 		ss << _propertyValue;
 		return ss.str();
 	}
+
+	static shared_ptr<binding_converter<int, string>> of() {
+		return make_shared<int_to_string>();
+	}
 };
 
 }

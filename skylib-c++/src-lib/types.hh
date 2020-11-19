@@ -9,6 +9,7 @@
 #define TYPES_HH_
 
 #include <stdexcept>
+#include <memory>
 
 namespace ch_skymarshall::gui {
 
@@ -35,7 +36,7 @@ public:
 	~gui_exception() override = default;
 };
 
-using gui_exception_ptr = gui_exception*;
+using gui_exception_ptr = std::shared_ptr<gui_exception const>;
 
 }
 

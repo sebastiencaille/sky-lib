@@ -33,15 +33,19 @@ class entry_binding:
 		public component_binding<Glib::ustring> {
 private:
 	Gtk::Entry& m_entry;
-	component_link<Glib::ustring>* m_componentLink = NULL;
+	shared_ptr<component_link<Glib::ustring>> m_componentLink;
 	void on_changed_signal();
 public:
 	explicit entry_binding(Gtk::Entry& entry);
 	virtual ~entry_binding();
-	virtual void add_component_value_change_listener(component_link<Glib::ustring>* _componentLink);
+	virtual void add_component_value_change_listener(shared_ptr<component_link<Glib::ustring>> _componentLink);
 	virtual void remove_component_value_change_listener();
 	virtual void set_component_value(property& _source, Glib::ustring _value);
 	virtual source_ptr get_component();
+
+	static shared_ptr<component_binding<Glib::ustring>> of(Gtk::Entry& entry) {
+		return make_shared<entry_binding>(entry);
+	}
 };
 
 class label_binding:
@@ -52,10 +56,14 @@ private:
 public:
 	explicit label_binding(Gtk::Label& entry);
 	virtual ~label_binding();
-	virtual void add_component_value_change_listener(component_link<Glib::ustring>* _componentLink);
+	virtual void add_component_value_change_listener(shared_ptr<component_link<Glib::ustring>> _componentLink);
 	virtual void remove_component_value_change_listener();
 	virtual void set_component_value(property& _source, Glib::ustring _value);
 	virtual source_ptr get_component();
+
+	static shared_ptr<component_binding<Glib::ustring>> of(Gtk::Label& entry) {
+		return make_shared<label_binding>(entry);
+	}
 };
 
 }

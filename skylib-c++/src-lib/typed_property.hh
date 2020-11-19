@@ -23,6 +23,8 @@
 #ifndef TYPEDPROPERTY_HH_
 #define TYPEDPROPERTY_HH_
 
+#include <memory>
+
 #include <string>
 #include "property.hh"
 
@@ -36,7 +38,7 @@ using namespace std;
 template<typename _Pt> class typed_property: public property {
 
 public:
-	using value_type =  _Pt;
+	using value_type = _Pt;
 
 private:
 	using value_const_type = const _Pt;
@@ -44,18 +46,17 @@ private:
 
 public:
 
-	typed_property(const string& _name, property_manager& _manager,
+	typed_property(const string &_name, property_manager &_manager,
 			value_type _defaultValue) :
 			property(_name, _manager), m_value(_defaultValue) {
 	}
 
-	typed_property(const char* _name, property_manager& _manager,
+	typed_property(const char *_name, property_manager &_manager,
 			value_type _defaultValue) :
 			property(_name, _manager), m_value(_defaultValue) {
 	}
 
 	~typed_property() override = default;
-
 
 	value_type get() const {
 		return m_value;
@@ -78,9 +79,26 @@ public:
 	}
 
 	void force_changed(source_ptr _source) {
-		m_manager.fire_property_changed(_source, m_name, NULL, (const void*) &m_value);
+		m_manager.fire_property_changed(_source, m_name, NULL,
+				(const void*) &m_value);
 	}
 
+};
+
+template<typename _Pt> class typed_property_shared_ptr: public typed_property<
+		shared_ptr<_Pt>> {
+
+public:
+
+	typed_property_shared_ptr(const string &_name, property_manager &_manager,
+			shared_ptr<_Pt> _defaultValue) :
+			typed_property<shared_ptr<_Pt>>(_name, _manager, _defaultValue) {
+	}
+
+	typed_property_shared_ptr(const char *_name, property_manager &_manager,
+			shared_ptr<_Pt> _defaultValue) :
+			typed_property<shared_ptr<_Pt>>(_name, _manager, _defaultValue) {
+	}
 };
 
 }

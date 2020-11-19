@@ -36,7 +36,7 @@ private:
 	component_link<Glib::ustring>* m_componentLink = NULL;
 	void on_changed_signal();
 public:
-	entry_binding(Gtk::Entry& entry);
+	explicit entry_binding(Gtk::Entry& entry);
 	virtual ~entry_binding();
 	virtual void add_component_value_change_listener(component_link<Glib::ustring>* _componentLink);
 	virtual void remove_component_value_change_listener();
@@ -50,7 +50,7 @@ private:
 	Gtk::Label& m_label;
 	void on_changed_signal();
 public:
-	label_binding(Gtk::Label& entry);
+	explicit label_binding(Gtk::Label& entry);
 	virtual ~label_binding();
 	virtual void add_component_value_change_listener(component_link<Glib::ustring>* _componentLink);
 	virtual void remove_component_value_change_listener();

@@ -64,12 +64,12 @@ public:
 	const gui_exception_ptr convert_component_value_to_property_value(
 			const string _componentValue) final {
 		// nonsense
-		return NULL;
+		return nullptr;
 	}
 
 	const string convert_property_value_to_component_value(
 			gui_exception_ptr _propertyValue) final {
-		if (_propertyValue == NULL) {
+		if (_propertyValue == nullptr) {
 			return string();
 		}
 		return string(_propertyValue->what());
@@ -86,8 +86,7 @@ public:
 	virtual void reload_component_value() = 0;
 	virtual void unbind() = 0;
 protected:
-	~component_link() {
-	}
+	~component_link() = default;
 
 };
 
@@ -107,8 +106,7 @@ public:
 
 	virtual source_ptr get_component() = 0;
 
-	virtual ~component_binding() {
-	}
+	virtual ~component_binding() = default;
 };
 
 class binding_chain_dependency;
@@ -126,9 +124,7 @@ public:
 	virtual binding_chain_controller* add_dependency(
 			binding_chain_dependency* dependency) = 0;
 
-	virtual ~binding_chain_controller() {
-
-	}
+	virtual ~binding_chain_controller() = default;
 };
 
 using namespace std::placeholders;
@@ -139,8 +135,7 @@ public:
 
 	virtual void unbind() = 0;
 
-	virtual ~binding_chain_dependency() {
-	}
+	virtual ~binding_chain_dependency() = default;
 };
 
 /** Actions */
@@ -151,8 +146,7 @@ enum property_group_actions {
 
 class action {
 public:
-	virtual ~action() {
-	}
+	virtual ~action() = default;
 
 	virtual void apply(property_group_actions _action,
 			const property* _property) = 0;
@@ -164,7 +158,7 @@ private:
 	property* m_targetProperty;
 	std::function<
 			void(property_group_actions _action, const property* _property)> m_action;
-	property_listener_dispatcher* m_listener = NULL;
+	property_listener_dispatcher* m_listener = nullptr;
 
 	void action_before(const source_ptr caller, property* _property) {
 		m_action(BEFORE_FIRE, _property);

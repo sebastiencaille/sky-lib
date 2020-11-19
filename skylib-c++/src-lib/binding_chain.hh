@@ -71,12 +71,12 @@ template<class _Pt> class binding_chain: public binding_chain_controller {
 
 	list<binding_chain_dependency*> m_dependencies;
 
-	void attach() {
+	void attach() final {
 		m_transmit = true;
 		m_property.attach();
 	}
 
-	void detach() {
+	void detach() final {
 		m_transmit = false;
 	}
 
@@ -91,7 +91,7 @@ template<class _Pt> class binding_chain: public binding_chain_controller {
 		return this;
 	}
 
-	void unbind() {
+	void unbind() final {
 		for (binding_chain_dependency *&dependency : m_dependencies) {
 			dependency->unbind();
 		}
@@ -132,9 +132,7 @@ template<class _Pt> class binding_chain: public binding_chain_controller {
 			m_chain.to_component(_index + 1, _value);
 		}
 
-		~property_link() {
-
-		}
+		~property_link() final = default;
 	};
 
 	/** Link that convert from _PsT type (property side) to _CsT type (component side) */
@@ -169,7 +167,7 @@ template<class _Pt> class binding_chain: public binding_chain_controller {
 			m_chain.to_component(_index + 1, converted_value);
 		}
 
-		~converter_link() {
+		~converter_link() final {
 			delete m_converter;
 		}
 	};
@@ -226,7 +224,7 @@ template<class _Pt> class binding_chain: public binding_chain_controller {
 			m_chain.m_property.attach();
 		}
 
-		~chain_component_link() {
+		~chain_component_link() final {
 			delete m_componentBinding;
 		}
 
@@ -246,7 +244,7 @@ template<class _Pt> class binding_chain: public binding_chain_controller {
 
 	template<class _PsT, class _CsT> end_of_chain<_Pt, _CsT>* bind(
 			binding_converter<_PsT, _CsT> *_converter) {
-		converter_link<_PsT, _CsT> *const link = new converter_link<_PsT, _CsT>(
+		auto const link = new converter_link<_PsT, _CsT>(
 				*this, _converter);
 		m_links.push_back(link);
 		return new_end_of_chain<_CsT>();
@@ -254,14 +252,14 @@ template<class _Pt> class binding_chain: public binding_chain_controller {
 
 	template<class _Ct> binding_chain_controller* bind(
 			component_binding<_Ct> *_componentBinding) {
-		chain_component_link<_Ct> *const link = new chain_component_link<_Ct>(
+		auto *const link = new chain_component_link<_Ct>(
 				*this, _componentBinding);
 		m_links.push_back(link);
 		return this;
 	}
 
 	template<class _ET> end_of_chain<_Pt, _ET>* new_end_of_chain() {
-		end_of_chain<_Pt, _ET> *eoc = new end_of_chain<_Pt, _ET>(*this);
+		auto * eoc = new end_of_chain<_Pt, _ET>(*this);
 		m_endOfChains.push_back(eoc);
 		return eoc;
 	}
@@ -277,14 +275,14 @@ public:
 	end_of_chain<_Pt, _Pt>* bind_property(
 			std::function<void(source_ptr, _Pt)> _setter) {
 		m_property.add_listener(&m_valueUpdateListener);
-		property_link *const link = new property_link(*this, _setter);
+		auto link = new property_link(*this, _setter);
 		m_links.push_back(link);
 		return new_end_of_chain<_Pt>();
 	}
 
 private:
 
-	~binding_chain() {
+	~binding_chain() final {
 		m_property.remove_listener(&m_valueUpdateListener);
 		for (binding_link *&link : m_links) {
 			delete link;
@@ -318,7 +316,7 @@ public:
 		return m_bindingChain.bind(_componentBinding);
 	}
 
-	~end_of_chain() = default;
+	~end_of_chain() final = default;
 
 };
 

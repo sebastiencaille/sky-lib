@@ -51,7 +51,7 @@ private:
 		int m_i;
 
 	public:
-		TestStringPropertyListener(int _i) :
+		explicit TestStringPropertyListener(int _i) :
 				m_i(_i) {
 		}
 
@@ -68,7 +68,7 @@ private:
 
 		TestStringPropertyListener m_testListener = TestStringPropertyListener(1);
 		property_listener_dispatcher m_listener;
-		binding_chain_controller *m_controller = NULL;
+		binding_chain_controller *m_controller = nullptr;
 
 	public:
 		dep_test() :
@@ -80,12 +80,12 @@ private:
 						})
 				{	}
 
-		void register_dep(binding_chain_controller *_controller) {
+		void register_dep(binding_chain_controller *_controller) final {
 			m_controller = _controller;
 			_controller->get_property().add_listener(&m_listener);
 		}
 
-		void unbind() {
+		void unbind() final {
 			m_controller->get_property().remove_listener(&m_listener);
 		}
 
@@ -97,7 +97,7 @@ public:
 			controller_property<int> &_testProperty2,
 			input_error_property &_errorProperty);
 
-	virtual ~HelloWorld();
+	~HelloWorld() override;
 
 	void apply_action(property_group_actions _action,
 			const property *_property);
@@ -135,7 +135,7 @@ void HelloWorld::init(controller_property<string> &_testProperty1,
 					new dep_test()));
 	m_box.pack_start(m_entry);
 
-	action_dependency<HelloWorld> * dep = new action_dependency<HelloWorld>(&_testProperty1,
+	action_dependency<HelloWorld>* dep = new action_dependency<HelloWorld>(&_testProperty1,
 			[this](property_group_actions group, const property *action) { this->apply_action(group, action); });
 
 	m_bindings.push_back(
@@ -190,6 +190,8 @@ void HelloWorld::apply_action(property_group_actions _action,
 	case AFTER_FIRE:
 		cout << "AFTER: " << _property->name() << endl;
 		break;
+	default:
+		break;
 	}
 }
 
@@ -197,7 +199,7 @@ void HelloWorld::on_button_clicked() {
 	std::cout << "Hello World" << std::endl;
 }
 
-typedef list_model<int> int_model;
+using int_model = list_model<int> ;
 
 int main(int argc, char *argv[]) {
 

@@ -27,10 +27,7 @@ namespace ch_skymarshall::gui::glib {
 using namespace std;
 using namespace Glib;
 
-string_to_ustring::string_to_ustring() :
-		binding_converter() {
-
-}
+string_to_ustring::string_to_ustring() = default;
 
 string_to_ustring::~string_to_ustring() = default;
 

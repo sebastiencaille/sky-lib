@@ -33,12 +33,13 @@ class entry_binding:
 		public component_binding<Glib::ustring> {
 private:
 	Gtk::Entry& m_entry;
-	shared_ptr<component_link<Glib::ustring>> m_componentLink;
+	weak_ptr<component_link<Glib::ustring>> m_componentLink;
+	sigc::connection m_connection;
 	void on_changed_signal();
 public:
 	explicit entry_binding(Gtk::Entry& entry);
 	virtual ~entry_binding();
-	virtual void add_component_value_change_listener(shared_ptr<component_link<Glib::ustring>> _componentLink);
+	virtual void add_component_value_change_listener(weak_ptr<component_link<Glib::ustring>> _componentLink) final;
 	virtual void remove_component_value_change_listener();
 	virtual void set_component_value(property& _source, Glib::ustring _value);
 	virtual source_ptr get_component();
@@ -56,7 +57,7 @@ private:
 public:
 	explicit label_binding(Gtk::Label& entry);
 	virtual ~label_binding();
-	virtual void add_component_value_change_listener(shared_ptr<component_link<Glib::ustring>> _componentLink);
+	virtual void add_component_value_change_listener(weak_ptr<component_link<Glib::ustring>> _componentLink) final;
 	virtual void remove_component_value_change_listener();
 	virtual void set_component_value(property& _source, Glib::ustring _value);
 	virtual source_ptr get_component();

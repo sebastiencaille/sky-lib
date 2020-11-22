@@ -38,11 +38,8 @@ using namespace __gnu_cxx;
 class error_notifier {
 
 public:
-	virtual void set_error(source_ptr _source, gui_exception_ptr _e) = 0;
 
-	void set_error(source_ptr _source, const gui_exception& _e) {
-		set_error(_source, make_shared<gui_exception>(_e));
-	}
+	virtual void set_error(source_ptr _source, const gui_exception& _e) = 0;
 
 	virtual void clear_error(source_ptr _source) = 0;
 
@@ -93,7 +90,6 @@ public:
 	virtual void set_value_from_component(source_ptr _component,
 			_CT _componentValue) = 0;
 	virtual void reload_component_value() = 0;
-	virtual void unbind() = 0;
 protected:
 	~component_link() = default;
 
@@ -107,7 +103,7 @@ template<class _CT> class component_binding {
 public:
 
 	virtual void add_component_value_change_listener(
-			shared_ptr<component_link<_CT>> _converter) = 0;
+			weak_ptr<component_link<_CT>> _converter) = 0;
 
 	virtual void remove_component_value_change_listener() = 0;
 
@@ -128,8 +124,6 @@ public:
 
 	virtual property& get_property() = 0;
 
-	virtual void unbind() = 0;
-
 	virtual shared_ptr<binding_chain_controller> add_dependency(
 			shared_ptr<binding_chain_dependency> dependency) = 0;
 
@@ -140,9 +134,8 @@ using namespace std::placeholders;
 
 class binding_chain_dependency {
 public:
-	virtual void register_dep(shared_ptr<binding_chain_controller> chain) = 0;
-
-	virtual void unbind() = 0;
+	/* Registers the dependency. The dependency is already stored in the binding chain */
+	virtual void register_dep(weak_ptr<binding_chain_controller> _chain, weak_ptr<binding_chain_dependency> _dependency) = 0;
 
 	virtual ~binding_chain_dependency() = default;
 };
@@ -165,12 +158,11 @@ public:
 template<class _T> class action_dependency: public binding_chain_dependency {
 private:
 
-	property* m_targetProperty;
+	weak_ptr<binding_chain_controller> m_chain;
+	weak_ptr<property_listener_dispatcher> m_listener;
 
 	std::function<
 			void(property_group_actions _action, const property* _property)> m_action;
-
-	shared_ptr<property_listener_dispatcher> m_listener;
 
 	void action_before(const source_ptr caller, property* _property) {
 		m_action(BEFORE_FIRE, _property);
@@ -182,25 +174,21 @@ private:
 
 public:
 
-	action_dependency(property* _targetProperty,
-			std::function<
+	explicit action_dependency(std::function<
 					void(property_group_actions _action,
 							const property* _property)> _action) :
-			m_targetProperty(_targetProperty), m_action(_action) {
+		m_action(_action) {
 	}
 
-	void register_dep(shared_ptr<binding_chain_controller> _chain) final {
-		m_listener = std::make_shared<property_listener_dispatcher>(
+	void register_dep(weak_ptr<binding_chain_controller> _chain, weak_ptr<binding_chain_dependency> _myself) final {
+		_chain.lock()->get_property().add_listener(property_listener_dispatcher::ofLazy(m_listener, _myself,
 				std::bind(&action_dependency::action_before, this, _1, _2),
-				std::bind(&action_dependency::action_after, this, _1, _2));
-		m_targetProperty->add_listener(m_listener);
+				std::bind(&action_dependency::action_after, this, _1, _2)));
 	}
 
-	void unbind() final {
-		m_targetProperty->remove_listener(m_listener);
+	void unbind() {
+		m_chain.lock()->get_property().remove_listener(m_listener);
 	}
-
-	~action_dependency() final = default;
 };
 }
 

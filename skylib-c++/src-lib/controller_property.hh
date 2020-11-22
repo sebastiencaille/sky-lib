@@ -62,6 +62,8 @@ public:
 				_componentBinding);
 	}
 
+	~controller_property() override = default;
+
 };
 }
 

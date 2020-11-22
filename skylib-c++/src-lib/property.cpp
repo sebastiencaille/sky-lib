@@ -14,6 +14,7 @@
  *WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  */
 #include "property.hh"
+#include "utils.hh"
 
 namespace ch_skymarshall::gui {
 
@@ -27,7 +28,10 @@ property::property(const char *_name, property_manager &_manager) :
 		m_name(string(_name)), m_manager(_manager) {
 }
 
-property::~property() = default;
+property::~property() {
+	DESTR_LOG("~property " << m_name);
+	m_manager.remove_listeners(m_name);
+}
 
 void property::attach() {
 	m_attached = true;
@@ -41,7 +45,7 @@ void property::add_listener(shared_ptr<property_listener> _listener) {
 	m_manager.add_listener(m_name, _listener);
 }
 
-void property::remove_listener(shared_ptr<property_listener> _listener) {
+void property::remove_listener(weak_ptr<property_listener> _listener) {
 	m_manager.remove_listener(m_name, _listener);
 }
 

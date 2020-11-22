@@ -12,6 +12,7 @@
 #include <functional>
 #include <memory>
 
+#include "utils.hh"
 #include "binding_interface.hh"
 #include "property.hh"
 #include "property_listener.hh"
@@ -65,13 +66,13 @@ private:
 
 	shared_ptr<error_notifier> m_errorNotifier;
 
-	shared_ptr<property_listener_dispatcher> m_valueUpdateListener;
+	weak_ptr<property_listener_dispatcher> m_valueUpdateListener;
 
 	bool m_transmit = true;
 
 	list<shared_ptr<binding_chain_dependency>> m_dependencies;
 
-	shared_ptr<binding_chain<_Pt>> m_myself;
+	weak_ptr<binding_chain_controller> m_myself;
 
 public:
 
@@ -83,10 +84,7 @@ public:
 	}
 
 	binding_chain(property &_property, shared_ptr<error_notifier> _notifier) :
-			m_property(_property), m_errorNotifier(_notifier), m_valueUpdateListener(
-					make_shared<property_listener_dispatcher>(
-							std::bind(&binding_chain::propagate_property_change,
-									this, _1, _2, _3, _4))) {
+			m_property(_property), m_errorNotifier(_notifier) {
 	}
 
 	void attach() final {
@@ -105,15 +103,8 @@ public:
 	shared_ptr<binding_chain_controller> add_dependency(
 			shared_ptr<binding_chain_dependency> _dependency) final {
 		m_dependencies.push_back(_dependency);
-		_dependency->register_dep(m_myself);
-		return m_myself;
-	}
-
-	void unbind() final {
-		for (shared_ptr<binding_chain_dependency> dependency : m_dependencies) {
-			dependency->unbind();
-		}
-		m_dependencies.clear();
+		_dependency->register_dep(m_myself, _dependency);
+		return m_myself.lock();
 	}
 
 	template<class _PsT> void to_property(int _index, source_ptr _component,
@@ -174,8 +165,7 @@ public:
 				m_chain.to_property(_index - 1, _component, converted_value);
 
 			} catch (gui_exception &_e) {
-				m_chain.m_errorNotifier->set_error(_component,
-						make_shared<gui_exception>(_e));
+				m_chain.m_errorNotifier->set_error(_component, _e);
 			}
 		}
 
@@ -190,7 +180,7 @@ public:
 	};
 
 	/**
-	 * Connection with the component
+	 * Link to connect to the component
 	 */
 	template<class _Ct> class chain_component_link: public binding_link,
 			public binding_forward<_Ct>,
@@ -217,6 +207,7 @@ public:
 				m_chain(_chain), m_componentBinding(_newBinding) {
 
 		}
+
 		void chain(shared_ptr<chain_component_link<_Ct>> &_myself) {
 			m_componentBinding->add_component_value_change_listener(_myself);
 		}
@@ -245,16 +236,14 @@ public:
 			}
 		}
 
-		void unbind() {
-			m_componentBinding->remove_component_value_change_listener();
-		}
-
 		void reload_component_value() {
 			// should trigger the listeners
 			m_chain.m_property.attach();
 		}
 
-		~chain_component_link() final = default;
+		~chain_component_link() final {
+			m_componentBinding->remove_component_value_change_listener();
+		}
 
 	};
 
@@ -278,7 +267,7 @@ public:
 		return new_end_of_chain<_CsT>();
 	}
 
-	template<class _Ct> shared_ptr<binding_chain_controller> bind(
+	template<class _Ct> weak_ptr<binding_chain_controller> bind(
 			shared_ptr<component_binding<_Ct>> _componentBinding) {
 		m_links.push_back(
 				chain_component_link<_Ct>::of(*this, _componentBinding));
@@ -289,24 +278,29 @@ public:
 		return make_shared<end_of_chain<_Pt, _ET>>(*this);
 	}
 
-public:
-
 	shared_ptr<end_of_chain<_Pt, _Pt>> bind_property(
 			std::function<void(source_ptr, _Pt)> _setter) {
-		m_property.add_listener(m_valueUpdateListener);
+		m_property.add_listener(
+				property_listener_dispatcher::ofLazy(m_valueUpdateListener,
+						m_myself,
+						std::bind(&binding_chain::propagate_property_change,
+								this, _1, _2, _3, _4)));
 		auto link = std::make_shared<property_link>(*this, _setter);
 		m_links.push_back(link);
 		return new_end_of_chain<_Pt>();
 	}
 
 	~binding_chain() final {
-		m_property.remove_listener(m_valueUpdateListener);
+		DESTR_LOG("~binding_chain");
+		if (!m_valueUpdateListener.expired()) {
+			m_property.remove_listener(m_valueUpdateListener);
+		}
 	}
 
 };
 
 /**
- * End of chain, used to control the chain
+ * End ofLazy chain, used to control the chain
  */
 template<class _Pt, class _PsT> class end_of_chain: public binding_link {
 private:
@@ -323,7 +317,7 @@ public:
 
 	template<class _CsT> shared_ptr<binding_chain_controller> bind(
 			shared_ptr<component_binding<_CsT>> _componentBinding) {
-		return m_bindingChain.bind(_componentBinding);
+		return m_bindingChain.bind(_componentBinding).lock();
 	}
 
 	~end_of_chain() final = default;

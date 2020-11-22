@@ -15,11 +15,11 @@
  */
 
 #include <iostream>
-#include<memory>
+#include <memory>
 
 #include "property_manager.hh"
 #include "property.hh"
-
+#include "utils.hh"
 
 
 namespace ch_skymarshall::gui {
@@ -28,8 +28,9 @@ using namespace std;
 
 property_manager::property_manager() = default;
 
-void property_manager::add_listener(const string& _name, shared_ptr<property_listener> _listener) {
+property_manager::~property_manager() DESTR_WITH_LOG("~property_manager")
 
+void property_manager::add_listener(const string& _name, shared_ptr<property_listener> _listener) {
 	listeners_const_iter iter = m_propertyListeners.find(_name);
 	shared_ptr<listener_list_type> plist;
 	if (iter == m_propertyListeners.end()) {
@@ -41,13 +42,13 @@ void property_manager::add_listener(const string& _name, shared_ptr<property_lis
 	plist->push_back(_listener);
 }
 
-void property_manager::remove_listener(const string& _name, shared_ptr<property_listener> _listener) {
+void property_manager::remove_listener(const string& _name, weak_ptr<property_listener> _listener) {
 	listeners_const_iter iter = m_propertyListeners.find(_name);
 	if (iter == m_propertyListeners.end()) {
 		return;
 	}
 	shared_ptr<listener_list_type> plist = (*iter).second;
-	plist->remove(_listener);
+	plist->remove(_listener.lock());
 	if (plist->empty()) {
 		m_propertyListeners.erase(_name);
 	}
@@ -55,6 +56,10 @@ void property_manager::remove_listener(const string& _name, shared_ptr<property_
 
 void property_manager::remove_listener(const string& _name, property_listener_ref _listener) {
 	remove_listener(_name, (property_listener*) _listener);
+}
+
+void property_manager::remove_listeners(const string& _name) {
+	m_propertyListeners.erase(_name);
 }
 
 void property_manager::fire_property_changed(source_ptr _source, const string& _name, const void* _oldValue,

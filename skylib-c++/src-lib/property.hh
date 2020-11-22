@@ -52,8 +52,7 @@ public:
 	const string& name() const;
 
 	void add_listener(shared_ptr<property_listener> _listener);
-	void remove_listener(shared_ptr<property_listener> _listener);
-	void remove_listener(shared_ptr<property_listener_ref> _listener);
+	void remove_listener(weak_ptr<property_listener> _listener);
 
 	virtual void attach() = 0;
 };

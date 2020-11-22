@@ -53,16 +53,16 @@ public:
 		data_list_type m_objects;
 
 	public:
-		event(const model_type *_source) :
+		explicit event(const model_type *_source) :
 				m_source(_source) {
 		}
 
-		event(const model_type *_source, value_type _object) :
+		explicit event(const model_type *_source, value_type _object) :
 				m_source(_source) {
 			m_objects.push_back(_object);
 		}
 
-		event(const model_type *_source, data_list_type &_objects) :
+		explicit event(const model_type *_source, data_list_type &_objects) :
 				m_source(_source), m_objects(_objects) {
 
 		}

@@ -36,8 +36,8 @@ public:
 			controller_property(_name, _manager, nullptr, nullptr) {
 	}
 
-	void set_error(source_ptr _source, gui_exception_ptr _value) final {
-		this->set(_source, _value);
+	void set_error(source_ptr _source, const gui_exception& _e) final {
+		this->set(_source, make_shared<gui_exception>(_e));
 	}
 
 	void clear_error(source_ptr _source) final {

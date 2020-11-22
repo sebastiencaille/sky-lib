@@ -40,10 +40,14 @@ using namespace __gnu_cxx;
 class property_manager {
 public:
 	property_manager();
+	~property_manager();
+
 	void add_listener(const string &_name,
 			shared_ptr<property_listener> _listener);
+
+	void remove_listeners(const string& _name);
 	void remove_listener(const string &_name,
-			shared_ptr<property_listener> _listener);
+			weak_ptr<property_listener> _listener);
 	void remove_listener(const string &_name, property_listener_ref _listener);
 
 	void fire_property_changed(source_ptr _source, const string &_name,

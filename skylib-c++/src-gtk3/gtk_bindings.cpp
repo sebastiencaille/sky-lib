@@ -34,16 +34,18 @@ entry_binding::~entry_binding() {
 
 void entry_binding::on_changed_signal() {
 	Glib::ustring text(m_entry.get_text());
-	m_componentLink->set_value_from_component(get_component(), text);
+	m_componentLink.lock()->set_value_from_component(get_component(), text);
 }
 
-void entry_binding::add_component_value_change_listener(shared_ptr<component_link<Glib::ustring>> _componentLink) {
-	m_componentLink = _componentLink;
-	m_entry.signal_changed().connect(sigc::mem_fun(*this, &entry_binding::on_changed_signal));
+void entry_binding::add_component_value_change_listener(weak_ptr<component_link<Glib::ustring>> _componentLink) {
+	if (!m_connection.connected()) {
+		m_componentLink = _componentLink;
+		m_connection = m_entry.signal_changed().connect(sigc::mem_fun(*this, &entry_binding::on_changed_signal));
+	}
 }
 
 void entry_binding::remove_component_value_change_listener() {
-	// TODO
+	m_connection.disconnect();
 }
 
 void entry_binding::set_component_value(property& _source, Glib::ustring _value) {
@@ -61,7 +63,7 @@ label_binding::label_binding(Gtk::Label& _label) :
 
 label_binding::~label_binding() = default;
 
-void label_binding::add_component_value_change_listener(shared_ptr<component_link<Glib::ustring>> _componentLink) {
+void label_binding::add_component_value_change_listener(weak_ptr<component_link<Glib::ustring>> _componentLink) {
 }
 
 void label_binding::remove_component_value_change_listener() {

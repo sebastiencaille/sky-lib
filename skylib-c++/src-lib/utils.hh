@@ -12,6 +12,16 @@
 
 namespace ch_skymarshall::util {
 
+#ifdef DEBUG_DESTR
+#define DESTR_LOG(p) cout << p << endl;
+#define DESTR_WITH_LOG(p) { DESTR_LOG(p); }
+#endif
+
+#ifndef DEBUG_DESTR
+#define DESTR_LOG(p) (void)0
+#define DESTR_WITH_LOG(p) = default;;
+#endif
+
 using std::vector;
 
 template<class Input, class UnaryFunction>

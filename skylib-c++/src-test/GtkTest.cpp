@@ -22,6 +22,9 @@
 #include <vector>
 #include <gtkmm.h>
 #include <iostream>
+#include <memory>
+
+//#define DEBUG_DESTR
 
 #include "controller_property.hh"
 #include "binding_interface.hh"
@@ -68,29 +71,27 @@ private:
 
 		TestStringPropertyListener m_testListener = TestStringPropertyListener(
 				1);
-		shared_ptr<property_listener_dispatcher> m_listener;
-		shared_ptr<binding_chain_controller> m_controller;
+		weak_ptr<property_listener_dispatcher> m_listener;
+		weak_ptr<binding_chain_controller> m_controller;
 
 	public:
-		dep_test() :
-				m_listener(
-						make_shared<property_listener_dispatcher>(
-								[this](source_ptr source, const string &name,
-										const void *oldValue,
-										const void *newValue) {
-									this->m_testListener.propertyChanged(source,
-											name, oldValue, newValue);
-								})) {
-		}
+		dep_test() = default;
+		~dep_test() final DESTR_WITH_LOG("~dep_test")
 
-		void register_dep(
-				shared_ptr<binding_chain_controller> _controller) final {
+		void register_dep(weak_ptr<binding_chain_controller> _controller,
+				weak_ptr<binding_chain_dependency> _myself) final {
 			m_controller = _controller;
-			_controller->get_property().add_listener(m_listener);
+			m_controller.lock()->get_property().add_listener(
+					property_listener_dispatcher::ofLazy(m_listener, _myself,
+							std::bind(
+									&TestStringPropertyListener::propertyChanged,
+									this->m_testListener, _1, _2, _3, _4)));
 		}
 
-		void unbind() final {
-			m_controller->get_property().remove_listener(m_listener);
+		void unbind() {
+			if (auto lock = m_listener.lock()) {
+				m_controller.lock()->get_property().remove_listener(m_listener);
+			}
 		}
 
 		static shared_ptr<binding_chain_dependency> of() {
@@ -101,11 +102,9 @@ private:
 public:
 	HelloWorld();
 
-	void init(controller_property<string> &_testProperty1,
-			controller_property<int> &_testProperty2,
-			shared_ptr<input_error_property> _errorProperty);
+	void init();
 
-	~HelloWorld() override;
+	~HelloWorld() final;
 
 	void apply_action(property_group_actions _action,
 			const property *_property);
@@ -122,53 +121,55 @@ private:
 	Gtk::Label m_error;
 	Gtk::Box m_box;
 
-	list<shared_ptr<binding_chain_controller>> m_bindings;
+	property_manager m_manager;
+	shared_ptr<input_error_property> m_errorProperty = make_shared<
+			input_error_property>(string("Errors"), m_manager);
+	controller_property<string> testProperty1 = controller_property<string>(
+			string("TestProp1"), m_manager, string(""), m_errorProperty);
+
+	controller_property<int> testProperty2 = controller_property<int>(
+			"TestProp2", m_manager, 0, m_errorProperty);
 };
 
 HelloWorld::HelloWorld() :
 		m_box(Gtk::ORIENTATION_VERTICAL) {
+
 }
 
-void HelloWorld::init(controller_property<string> &_testProperty1,
-		controller_property<int> &_testProperty2,
-		shared_ptr<input_error_property> _errorProperty) {
+HelloWorld::~HelloWorld()
+DESTR_WITH_LOG("~HelloWorld" << endl)
+
+void HelloWorld::init() {
+
 	// Sets the border width of the window.
 	set_border_width(10);
 
 	add(m_box);
 
-	m_bindings.push_back(
-			_testProperty1.bind(string_to_ustring::of())->bind(
-					entry_binding::of(m_entry))->add_dependency(
-					dep_test::of()));
+	testProperty1.bind(string_to_ustring::of())->bind(
+			entry_binding::of(m_entry))->add_dependency(dep_test::of());
 	m_box.pack_start(m_entry);
 
-	shared_ptr<action_dependency<HelloWorld>> dep = make_shared<
-			action_dependency<HelloWorld>>(&_testProperty1,
+	auto dep = make_shared<action_dependency<HelloWorld>>(
 			[this](property_group_actions group, const property *action) {
 				this->apply_action(group, action);
 			});
 
-	m_bindings.push_back(
-			_testProperty1.bind(string_to_ustring::of())->bind(
-					label_binding::of(m_label))->add_dependency(dep));
+	testProperty1.bind(string_to_ustring::of())->bind(
+			label_binding::of(m_label))->add_dependency(dep);
 	m_box.pack_start(m_label);
 
-	m_bindings.push_back(
-			_testProperty2.bind(int_to_string::of())->bind(
-					string_to_ustring::of())->bind(
-					entry_binding::of(m_intEntry)));
+	testProperty2.bind(int_to_string::of())->bind(string_to_ustring::of())->bind(
+			entry_binding::of(m_intEntry));
 	m_box.pack_start(m_intEntry);
-	m_bindings.push_back(
-			_testProperty2.bind(int_to_string::of())->bind(
-					string_to_ustring::of())->bind(
-					label_binding::of(m_intLabel)));
+
+	testProperty2.bind(int_to_string::of())->bind(string_to_ustring::of())->bind(
+			label_binding::of(m_intLabel));
 	m_box.pack_start(m_intLabel);
 
-	m_bindings.push_back(
-			_errorProperty->bind(logic_error_to_string::of())->bind(
-					string_to_ustring::of())->bind(
-					label_binding::of(m_error)));
+	m_errorProperty->bind(logic_error_to_string::of())->bind(
+			string_to_ustring::of())->bind(label_binding::of(m_error));
+
 	m_box.pack_start(m_error);
 
 	Pango::Attribute redText = Pango::Attribute::create_attr_foreground(0xefef,
@@ -184,13 +185,8 @@ void HelloWorld::init(controller_property<string> &_testProperty1,
 	m_error.show();
 	m_box.show();
 
-}
+	testProperty2.set(NULL, 1);
 
-HelloWorld::~HelloWorld() {
-	for (shared_ptr<binding_chain_controller> ctrl : m_bindings) {
-		ctrl->unbind();
-	}
-	m_bindings.clear();
 }
 
 void HelloWorld::apply_action(property_group_actions _action,
@@ -215,11 +211,9 @@ using int_model = list_model<int>;
 
 int main(int argc, char *argv[]) {
 
-	int_model::view_ptr view(int_model::sorted([](const int i1, const int i2) {
-			return i1 - i2;
-		}));
-
-	int_model int_list(view);
+	int_model int_list(int_model::sorted([](const int i1, const int i2) {
+		return i1 - i2;
+	}));
 	int_list.insert(2);
 	int_list.insert(1);
 	cout << int_list.get_element_at(0) << " " << int_list.get_element_at(1)
@@ -228,19 +222,9 @@ int main(int argc, char *argv[]) {
 	Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(argc, argv,
 			"org.gtkmm.example");
 
-	property_manager manager;
-	shared_ptr<input_error_property> errorProperty(make_shared<input_error_property>(string("Errors"), manager));
-
-	controller_property<string> testProperty1(string("TestProp1"), manager,
-			string(""), errorProperty);
-
-	controller_property<int> testProperty2("TestProp2", manager, 0,
-			errorProperty);
-
 	HelloWorld helloworld;
-	helloworld.init(testProperty1, testProperty2, errorProperty);
+	helloworld.init();
 
-	testProperty2.set(NULL, 1);
 	return app->run(helloworld);
 }
 

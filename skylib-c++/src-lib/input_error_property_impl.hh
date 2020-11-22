@@ -30,18 +30,19 @@ namespace ch_skymarshall::gui {
 
 using namespace std;
 
-class input_error_property: public error_notifier, public controller_property<gui_exception_ptr> {
+class input_error_property: public error_notifier, public controller_property<
+		gui_exception_ptr> {
 public:
-	input_error_property(const string& _name, property_manager& _manager) :
+	input_error_property(const string &_name, property_manager &_manager) :
 			controller_property(_name, _manager, nullptr, nullptr) {
 	}
 
-	void set_error(source_ptr _source, const gui_exception& _e) final {
+	void set_error(source_ptr _source, const gui_exception &_e) final {
 		this->set(_source, make_shared<gui_exception>(_e));
 	}
 
 	void clear_error(source_ptr _source) final {
-		if (_source == static_cast<property*>( this)) {
+		if (_source == static_cast<property*>(this)) {
 			return;
 		}
 		this->set(_source, nullptr);

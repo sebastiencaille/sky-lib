@@ -76,7 +76,8 @@ private:
 
 	public:
 		dep_test() = default;
-		~dep_test() final DESTR_WITH_LOG("~dep_test")
+		~dep_test() final
+		DESTR_WITH_LOG("~dep_test")
 
 		void register_dep(weak_ptr<binding_chain_controller> _controller,
 				weak_ptr<binding_chain_dependency> _myself) final {
@@ -122,8 +123,10 @@ private:
 	Gtk::Box m_box;
 
 	property_manager m_manager;
+
 	shared_ptr<input_error_property> m_errorProperty = make_shared<
 			input_error_property>(string("Errors"), m_manager);
+
 	controller_property<string> testProperty1 = controller_property<string>(
 			string("TestProp1"), m_manager, string(""), m_errorProperty);
 

@@ -64,7 +64,6 @@ public:
 
 		explicit event(const model_type *_source, data_list_type &_objects) :
 				m_source(_source), m_objects(_objects) {
-
 		}
 
 		const model_type* get_source() {
@@ -111,7 +110,6 @@ public:
 
 	using view_ptr = shared_ptr<list_model_view<value_type>>;
 
-
 	/**
 	 *
 	 */
@@ -149,6 +147,5 @@ public:
 };
 
 }
-
 
 #endif /* ORG_SKYMARSHALL_LISTVIEW_HH_ */

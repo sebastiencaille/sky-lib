@@ -46,7 +46,7 @@ public:
 
 	const int convert_component_value_to_property_value(
 			const string _componentValue) final {
-		char* endPtr;
+		char *endPtr;
 		errno = 0;
 		long result = strtol(_componentValue.c_str(), &endPtr, 10);
 		if (errno != 0 || *endPtr != '\0' || _componentValue.empty()) {
@@ -54,6 +54,7 @@ public:
 		}
 		return (int) result;
 	}
+
 	const string convert_property_value_to_component_value(
 			const int _propertyValue) final {
 		std::stringstream ss;

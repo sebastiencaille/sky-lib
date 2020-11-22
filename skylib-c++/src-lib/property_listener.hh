@@ -72,17 +72,13 @@ public:
 
 	static shared_ptr<property_listener_dispatcher> ofLazy(
 			weak_ptr<property_listener_dispatcher> &_lazy,
-			weak_ptr<void> const &_owner,
-			fire_function const &_fireFunction) {
-		shared_ptr<property_listener_dispatcher> listener;
-		if (auto existing = _lazy.lock()) {
-			listener = existing;
-		} else {
-			listener = make_shared<property_listener_dispatcher>(_owner,
-					_fireFunction);
-			_lazy = existing;
-		}
-		return listener;
+			weak_ptr<void> const &_owner, fire_function const &_fireFunction) {
+		return ch_skymarshall::util::withLazy<property_listener_dispatcher>(
+				_lazy, _owner,
+				[_owner, _fireFunction] {
+					return make_shared<property_listener_dispatcher>(_owner,
+							_fireFunction);
+				});
 	}
 
 	static shared_ptr<property_listener_dispatcher> ofLazy(
@@ -90,15 +86,12 @@ public:
 			weak_ptr<void> const &_owner,
 			before_after_function const &_beforeFireFunction,
 			before_after_function const &_afterFireFunction) {
-		shared_ptr<property_listener_dispatcher> listener;
-		if (auto existing = _lazy.lock()) {
-			listener = existing;
-		} else {
-			listener = make_shared<property_listener_dispatcher>(_lazy,
-					_beforeFireFunction, _afterFireFunction);
-			_lazy = existing;
-		}
-		return listener;
+		return ch_skymarshall::util::withLazy<property_listener_dispatcher>(
+				_lazy, _owner,
+				[_owner, _beforeFireFunction, _afterFireFunction] {
+					return make_shared<property_listener_dispatcher>(_owner,
+							_beforeFireFunction, _afterFireFunction);
+				});
 	}
 
 	explicit property_listener_dispatcher(weak_ptr<void> _owner,
@@ -138,7 +131,8 @@ public:
 		}
 	}
 
-	~property_listener_dispatcher() override DESTR_WITH_LOG("~property_listener_dispatcher")
+	~property_listener_dispatcher() override
+	DESTR_WITH_LOG("~property_listener_dispatcher")
 
 };
 }

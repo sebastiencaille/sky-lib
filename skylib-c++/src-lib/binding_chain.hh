@@ -196,8 +196,8 @@ public:
 
 		static shared_ptr<chain_component_link<_Ct>> of(binding_chain &_chain,
 				shared_ptr<component_binding<_Ct>> _newBinding) {
-			shared_ptr<chain_component_link<_Ct>> me = make_shared<
-					chain_component_link<_Ct>>(_chain, _newBinding);
+			auto me = make_shared<chain_component_link<_Ct>>(_chain,
+					_newBinding);
 			me->chain(me);
 			return me;
 		}
@@ -285,8 +285,7 @@ public:
 						m_myself,
 						std::bind(&binding_chain::propagate_property_change,
 								this, _1, _2, _3, _4)));
-		auto link = std::make_shared<property_link>(*this, _setter);
-		m_links.push_back(link);
+		m_links.push_back(std::make_shared<property_link>(*this, _setter));
 		return new_end_of_chain<_Pt>();
 	}
 

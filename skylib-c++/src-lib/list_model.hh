@@ -73,7 +73,6 @@ private:
 	using view_filter = typename view_type::filter;
 	using view_comparator = typename view_type::comparator;
 
-
 	/*
 	 * A sorted and filtered view on the model
 	 */
@@ -84,7 +83,6 @@ private:
 		view_filter m_filter;
 		view_comparator m_comparator;
 		view_ptr m_parentView;
-
 
 	public:
 
@@ -332,8 +330,8 @@ private:
 public:
 
 	list_model(view_ptr _view) :
-			m_viewProperty("View", m_propertyManager, view_ptr()),
-			m_privateListenersImpl(this) {
+			m_viewProperty("View", m_propertyManager, view_ptr()), m_privateListenersImpl(
+					this) {
 		m_tunings = make_ptr(new object_tunings());
 		if (_view == NULL) {
 			throw gui_exception("View must not be NULL");
@@ -535,8 +533,8 @@ protected:
 		check_no_edition();
 		const int row = row_of(_sample);
 		if (row >= 0) {
-			const value_list_iterator iter = m_data.begin() + row;
-			if (_removed != NULL) {
+			auto iter = m_data.begin() + row;
+			if (_removed != nullptr) {
 				*_removed = *iter;
 			}
 			m_data.erase(iter);
@@ -550,8 +548,7 @@ public:
 	int insert(value_type _value) {
 		check_no_edition();
 		if (m_viewProperty.get()->accept(_value)) {
-			const value_list_iterator insertPoint = compute_insertion_point(
-					_value);
+			auto insertPoint = compute_insertion_point(_value);
 			m_data.insert(insertPoint, _value);
 			fire_value_added(_value);
 			return insertPoint - m_data.begin();
@@ -617,8 +614,7 @@ public:
 			//cout << "Removing " << m_tunings->str(m_objectEdition->m_value) << endl;
 			m_data.erase(m_data.begin() + m_objectEdition->m_oldIndex);
 		}
-		const value_list_iterator insertionPoint = compute_insertion_point(
-				m_objectEdition->m_value);
+		auto insertionPoint = compute_insertion_point(m_objectEdition->m_value);
 
 		m_objectEdition->update_accepted();
 		if (!m_objectEdition->accepted() && m_objectEdition->m_oldIndex < 0) {
@@ -642,8 +638,8 @@ public:
 	}
 
 	int row_of(value_type value) const {
-		const value_list_citerator &begin = m_data.begin();
-		value_list_citerator found = lower_bound(begin, m_data.end(), value,
+		auto begin = m_data.begin();
+		auto found = lower_bound(begin, m_data.end(), value,
 				std::bind(&list_model::compare_data, this, _1, _2));
 		if (found == m_data.end()) {
 			return -1;

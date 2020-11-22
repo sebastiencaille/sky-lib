@@ -60,7 +60,6 @@ public:
 private:
 	using listener_list_type = list<shared_ptr<property_listener>>;
 	using listener_map_type = map<string, shared_ptr<listener_list_type>>;
-	using listeners_const_iter = listener_map_type::const_iterator;
 	listener_map_type m_propertyListeners;
 };
 

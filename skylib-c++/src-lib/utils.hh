@@ -25,7 +25,6 @@ namespace ch_skymarshall::util {
 
 template<class Input, class UnaryFunction>
 constexpr UnaryFunction for_each_vector(std::vector<Input> &vec, UnaryFunction f) {
-	typename std::vector<Input>::iterator iter;
 	for (Input &input : vec) {
 		f(input);
 	}

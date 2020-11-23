@@ -114,19 +114,19 @@ public:
 
 	void fire(source_ptr _source, const string &_name, const void *_oldValue,
 			const void *_newValue) override {
-		if (m_func_fire != NULL) {
+		if (m_func_fire != nullptr) {
 			m_func_fire(_source, _name, _oldValue, _newValue);
 		}
 	}
 
 	void before_change(source_ptr _source, property *_property) override {
-		if (m_func_before != NULL) {
+		if (m_func_before != nullptr) {
 			m_func_before(_source, _property);
 		}
 	}
 
 	void after_change(source_ptr _source, property *_property) override {
-		if (m_func_after != NULL) {
+		if (m_func_after != nullptr) {
 			m_func_after(_source, _property);
 		}
 	}

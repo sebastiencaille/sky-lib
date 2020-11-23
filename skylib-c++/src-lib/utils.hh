@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <memory>
+#include <functional>
 
 namespace ch_skymarshall::util {
 

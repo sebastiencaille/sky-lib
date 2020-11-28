@@ -28,28 +28,48 @@ import java.util.function.Consumer;
  */
 public interface IListModelListener<T> extends EventListener {
 
-	void mutates();
+	default void mutates() {
+		// noop
+	}
 
-	void mutated();
+	default	void mutated() { 
+		// noop 
+	}
 
-	void valuesSet(ListEvent<T> event);
+	default void valuesSet(ListEvent<T> event) {
+		// noop
+	}
 
-	void valuesCleared(ListEvent<T> event);
+	default void valuesCleared(ListEvent<T> event) {
+		// noop
+	}
 
-	void valuesAdded(ListEvent<T> event);
+	default void valuesAdded(ListEvent<T> event) {
+		// noop
+	}
 
-	void valuesRemoved(ListEvent<T> event);
+	default void valuesRemoved(ListEvent<T> event) {
+		// noop
+	}
 
-	void editionCancelled(ListEvent<T> event);
+	default void editionCancelled(ListEvent<T> event) {
+		// noop
+	}
 
-	void editionStarted(ListEvent<T> event);
+	default void editionStarted(ListEvent<T> event) {
+		// noop
+	}
 
-	void editionStopping(ListEvent<T> event);
+	default void editionStopping(ListEvent<T> event) {
+		// noop
+	}
 
-	void editionStopped(ListEvent<T> event);
+	default void editionStopped(ListEvent<T> event) {
+		// noop
+	}
 
 	static <U> IListModelListener<U> valuesSet(final Consumer<ListEvent<U>> consumer) {
-		return new ListModelAdapter<U>() {
+		return new IListModelListener<U>() {
 			@Override
 			public void valuesSet(final ListEvent<U> event) {
 				consumer.accept(event);
@@ -58,7 +78,7 @@ public interface IListModelListener<T> extends EventListener {
 	}
 
 	static <U> IListModelListener<U> valuesCleared(final Consumer<ListEvent<U>> consumer) {
-		return new ListModelAdapter<U>() {
+		return new IListModelListener<U>() {
 			@Override
 			public void valuesCleared(final ListEvent<U> event) {
 				consumer.accept(event);
@@ -67,7 +87,7 @@ public interface IListModelListener<T> extends EventListener {
 	}
 
 	static <U> IListModelListener<U> valuesAdded(final Consumer<ListEvent<U>> consumer) {
-		return new ListModelAdapter<U>() {
+		return new IListModelListener<U>() {
 			@Override
 			public void valuesAdded(final ListEvent<U> event) {
 				consumer.accept(event);
@@ -76,7 +96,7 @@ public interface IListModelListener<T> extends EventListener {
 	}
 
 	static <U> IListModelListener<U> valueRemoved(final Consumer<ListEvent<U>> consumer) {
-		return new ListModelAdapter<U>() {
+		return new IListModelListener<U>() {
 			@Override
 			public void valuesRemoved(final ListEvent<U> event) {
 				consumer.accept(event);
@@ -85,7 +105,7 @@ public interface IListModelListener<T> extends EventListener {
 	}
 
 	static <U> IListModelListener<U> editionCancelled(final Consumer<ListEvent<U>> consumer) {
-		return new ListModelAdapter<U>() {
+		return new IListModelListener<U>() {
 			@Override
 			public void editionCancelled(final ListEvent<U> event) {
 				consumer.accept(event);
@@ -94,7 +114,7 @@ public interface IListModelListener<T> extends EventListener {
 	}
 
 	static <U> IListModelListener<U> editionStarted(final Consumer<ListEvent<U>> consumer) {
-		return new ListModelAdapter<U>() {
+		return new IListModelListener<U>() {
 			@Override
 			public void editionStarted(final ListEvent<U> event) {
 				consumer.accept(event);
@@ -103,7 +123,7 @@ public interface IListModelListener<T> extends EventListener {
 	}
 
 	static <U> IListModelListener<U> editionStopping(final Consumer<ListEvent<U>> consumer) {
-		return new ListModelAdapter<U>() {
+		return new IListModelListener<U>() {
 			@Override
 			public void editionStopping(final ListEvent<U> event) {
 				consumer.accept(event);
@@ -112,7 +132,7 @@ public interface IListModelListener<T> extends EventListener {
 	}
 
 	static <U> IListModelListener<U> editionStopped(final Consumer<ListEvent<U>> consumer) {
-		return new ListModelAdapter<U>() {
+		return new IListModelListener<U>() {
 			@Override
 			public void editionStopped(final ListEvent<U> event) {
 				consumer.accept(event);

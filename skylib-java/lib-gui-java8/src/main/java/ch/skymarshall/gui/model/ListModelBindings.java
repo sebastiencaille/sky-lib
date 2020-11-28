@@ -32,11 +32,11 @@ public interface ListModelBindings {
 	public static <T> IComponentBinding<Collection<T>> values(final ListModel<T> model) {
 		return new IComponentBinding<Collection<T>>() {
 
-			private ListModelAdapter<T> listener;
+			private IListModelListener<T> listener;
 
 			@Override
 			public void addComponentValueChangeListener(final IComponentLink<Collection<T>> link) {
-				listener = new ListModelAdapter<T>() {
+				listener = new IListModelListener<T>() {
 					@Override
 					public void editionStopped(final ListEvent<T> event) {
 						link.setValueFromComponent(model, model.values());

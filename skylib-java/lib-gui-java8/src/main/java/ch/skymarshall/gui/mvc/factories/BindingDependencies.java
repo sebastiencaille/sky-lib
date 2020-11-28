@@ -1,8 +1,8 @@
 package ch.skymarshall.gui.mvc.factories;
 
+import ch.skymarshall.gui.model.IListModelListener;
 import ch.skymarshall.gui.model.ListEvent;
 import ch.skymarshall.gui.model.ListModel;
-import ch.skymarshall.gui.model.ListModelAdapter;
 import ch.skymarshall.gui.mvc.IBindingChainDependency;
 import ch.skymarshall.gui.mvc.IBindingController;
 import ch.skymarshall.gui.mvc.IPropertyEventListener;
@@ -13,53 +13,6 @@ import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 public final class BindingDependencies {
 
 	private BindingDependencies() {
-	}
-
-	public static class DetachOnPropertyUpdate implements IBindingChainDependency, IPropertyEventListener {
-
-		private final AbstractProperty property;
-		private IBindingController controller;
-
-		public DetachOnPropertyUpdate(final AbstractProperty property) {
-			this.property = property;
-		}
-
-		@Override
-		public void register(final IBindingController controller) {
-			this.controller = controller;
-			property.addListener(this);
-			ScreenBuildingReport.addDependency(this, controller);
-		}
-
-		@Override
-		public void unbind() {
-			property.removeListener(this);
-		}
-
-		@Override
-		public void propertyModified(final Object caller, final PropertyEvent event) {
-			switch (event.getKind()) {
-			case BEFORE:
-				controller.getVeto().detach();
-				break;
-			case AFTER:
-				controller.getVeto().attach();
-				controller.forceViewUpdate();
-				break;
-			default:
-				// ignore
-				break;
-			}
-		}
-
-		@Override
-		public String toString() {
-			return "Detaching on update of " + property.getName();
-		}
-	}
-
-	public static IBindingChainDependency preserveOnUpdateOf(final AbstractProperty property) {
-		return new PreserveOnUpdateOf(property);
 	}
 
 	public static class PreserveOnUpdateOf implements IBindingChainDependency, IPropertyEventListener {
@@ -103,12 +56,12 @@ public final class BindingDependencies {
 
 		@Override
 		public String toString() {
-			return "Detaching on update of " + property.getName();
+			return "Preserve on update of " + property.getName();
 		}
 	}
 
-	public static IBindingChainDependency detachOnUpdateOf(final AbstractProperty property) {
-		return new DetachOnPropertyUpdate(property);
+	public static IBindingChainDependency preserveOnUpdateOf(final AbstractProperty property) {
+		return new PreserveOnUpdateOf(property);
 	}
 
 	/**
@@ -119,8 +72,8 @@ public final class BindingDependencies {
 	 * @return an action
 	 */
 
-	public static class PreserveOnUpdateOfListModel<T> extends ListModelAdapter<T>
-			implements IBindingChainDependency {
+	public static class PreserveOnUpdateOfListModel<T> 
+			implements IBindingChainDependency, IListModelListener<T> {
 
 		private final ch.skymarshall.gui.model.ListModel<T> model;
 		private IBindingController controller;
@@ -177,7 +130,7 @@ public final class BindingDependencies {
 
 		@Override
 		public String toString() {
-			return "Detaching on update of " + model;
+			return "Preserve on update of " + model;
 		}
 
 	}

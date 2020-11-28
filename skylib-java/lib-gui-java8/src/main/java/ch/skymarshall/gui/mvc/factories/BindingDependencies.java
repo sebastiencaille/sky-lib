@@ -58,16 +58,16 @@ public final class BindingDependencies {
 		}
 	}
 
-	public static IBindingChainDependency detachOnLoadingOf(final AbstractProperty property) {
-		return new DetachOnLoadingOf(property);
+	public static IBindingChainDependency preserveOnUpdateOf(final AbstractProperty property) {
+		return new PreserveOnUpdateOf(property);
 	}
 
-	public static class DetachOnLoadingOf implements IBindingChainDependency, IPropertyEventListener {
+	public static class PreserveOnUpdateOf implements IBindingChainDependency, IPropertyEventListener {
 
 		private final AbstractProperty property;
 		private IBindingController controller;
 
-		public DetachOnLoadingOf(final AbstractProperty property) {
+		public PreserveOnUpdateOf(final AbstractProperty property) {
 			this.property = property;
 		}
 
@@ -119,13 +119,13 @@ public final class BindingDependencies {
 	 * @return an action
 	 */
 
-	public static class DetachOnUpdateOfListModel<T> extends ListModelAdapter<T>
+	public static class PreserveOnUpdateOfListModel<T> extends ListModelAdapter<T>
 			implements IBindingChainDependency {
 
 		private final ch.skymarshall.gui.model.ListModel<T> model;
 		private IBindingController controller;
 
-		public DetachOnUpdateOfListModel(final ListModel<T> model) {
+		public PreserveOnUpdateOfListModel(final ListModel<T> model) {
 			this.model = model;
 		}
 
@@ -182,7 +182,7 @@ public final class BindingDependencies {
 
 	}
 
-	public static <T> IBindingChainDependency detachOnUpdateOf(final ListModel<T> model) {
-		return new DetachOnUpdateOfListModel<>(model);
+	public static <T> IBindingChainDependency preserveOnUpdateOf(final ListModel<T> model) {
+		return new PreserveOnUpdateOfListModel<>(model);
 	}
 }

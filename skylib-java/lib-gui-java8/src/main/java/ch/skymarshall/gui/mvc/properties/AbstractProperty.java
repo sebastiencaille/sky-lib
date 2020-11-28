@@ -187,4 +187,8 @@ public abstract class AbstractProperty implements Serializable {
 		return name.hashCode();
 	}
 
+	public String getModifiedBy() {
+		return propertySupport.getMain().getModificationStack(getName());
+	}
+
 }

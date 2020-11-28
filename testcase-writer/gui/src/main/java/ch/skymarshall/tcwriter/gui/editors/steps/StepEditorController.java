@@ -1,6 +1,6 @@
 package ch.skymarshall.tcwriter.gui.editors.steps;
 
-import static ch.skymarshall.gui.mvc.factories.BindingDependencies.detachOnUpdateOf;
+import static ch.skymarshall.gui.mvc.factories.BindingDependencies.preserveOnUpdateOf;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -71,12 +71,12 @@ public class StepEditorController extends GuiController {
 		model.getSelector()
 				.listen(selector -> model.getSelectorValue().setValue(this,
 						model.getSelectorValue().getValue().derivate(selector)))
-				.addDependency(detachOnUpdateOf(testStep));
+				.addDependency(preserveOnUpdateOf(testStep));
 
 		model.getActionParameter()
 				.listen(param -> model.getActionParameterValue().setValue(this,
 						model.getActionParameterValue().getValue().derivate(param)))
-				.addDependency(detachOnUpdateOf(testStep));
+				.addDependency(preserveOnUpdateOf(testStep));
 
 	}
 

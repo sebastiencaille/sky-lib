@@ -15,7 +15,7 @@
  ******************************************************************************/
 package ch.skymarshall.example.gui.model.impl;
 
-import static ch.skymarshall.gui.mvc.factories.BindingDependencies.detachOnUpdateOf;
+import static ch.skymarshall.gui.mvc.factories.BindingDependencies.preserveOnUpdateOf;
 import static ch.skymarshall.gui.swing.factories.SwingBindings.selected;
 import static ch.skymarshall.gui.swing.factories.SwingBindings.selection;
 
@@ -76,7 +76,7 @@ public class TableModelExampleView extends JFrame {
 		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(TestObjectTableModel.Columns.A_SECOND_VALUE, 50)
 				.apply(new DefaultTableCellRenderer()));
 
-		model.objectSelection.bind(selection(listTable, tableModel)).addDependency(detachOnUpdateOf(filteredModel));
+		model.objectSelection.bind(selection(listTable, tableModel)).addDependency(preserveOnUpdateOf(filteredModel));
 		getContentPane().add(listTable, BorderLayout.CENTER);
 
 		// It's also possible to use a converter to change the model's view, or a

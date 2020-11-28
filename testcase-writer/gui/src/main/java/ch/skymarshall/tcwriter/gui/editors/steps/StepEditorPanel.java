@@ -1,6 +1,6 @@
 package ch.skymarshall.tcwriter.gui.editors.steps;
 
-import static ch.skymarshall.gui.mvc.factories.BindingDependencies.detachOnUpdateOf;
+import static ch.skymarshall.gui.mvc.factories.BindingDependencies.preserveOnUpdateOf;
 import static ch.skymarshall.gui.mvc.factories.Converters.listConverter;
 import static ch.skymarshall.gui.swing.factories.SwingBindings.selection;
 import static ch.skymarshall.gui.swing.factories.SwingBindings.values;
@@ -60,7 +60,7 @@ public class StepEditorPanel extends JPanel {
 		actorsList.setEnabled(false);
 		model.getPossibleActors().bind(listConverter(converter(td))).bind(values(actorsList));
 		model.getActor().bind(converter(td)).bind(selection(actorsList))
-				.addDependency(detachOnUpdateOf(model.getPossibleActors()));
+				.addDependency(preserveOnUpdateOf(model.getPossibleActors()));
 		selectedStep.bind(Converters.wo(Objects::nonNull)).listen(actorsList::setEnabled);
 		stepEditors.add(new JScrollPane(actorsList));
 
@@ -70,7 +70,7 @@ public class StepEditorPanel extends JPanel {
 		actorsList.setEnabled(false);
 		model.getPossibleActions().bind(listConverter(converter(td))).bind(values(actionsList));
 		model.getAction().bind(converter(td)).bind(selection(actionsList))
-				.addDependency(detachOnUpdateOf(model.getPossibleActions()));
+				.addDependency(preserveOnUpdateOf(model.getPossibleActions()));
 		selectedStep.bind(Converters.wo(Objects::nonNull)).listen(actionsList::setEnabled);
 		stepEditors.add(new JScrollPane(actionsList));
 
@@ -81,7 +81,7 @@ public class StepEditorPanel extends JPanel {
 		model.getPossibleSelectors().bind(Converters.listConverter(converter(td)))
 				.bind(SwingBindings.values(selectorList));
 		model.getSelector().bind(converter(td)).bind(selection(selectorList))
-				.addDependency(detachOnUpdateOf(model.getPossibleSelectors()));
+				.addDependency(preserveOnUpdateOf(model.getPossibleSelectors()));
 		selectedStep.bind(Converters.wo(Objects::nonNull)).listen(selectorList::setEnabled);
 		stepEditors.add(new JScrollPane(selectorList));
 
@@ -91,7 +91,7 @@ public class StepEditorPanel extends JPanel {
 		actionParameterList.setEnabled(false);
 		model.getPossibleActionParameters().bind(listConverter(converter(td))).bind(values(actionParameterList));
 		model.getActionParameter().bind(converter(td)).bind(selection(actionParameterList))
-				.addDependency(detachOnUpdateOf(model.getPossibleActionParameters()));
+				.addDependency(preserveOnUpdateOf(model.getPossibleActionParameters()));
 		selectedStep.bind(Converters.wo(Objects::nonNull)).listen(actionParameterList::setEnabled);
 		stepEditors.add(new JScrollPane(actionParameterList));
 

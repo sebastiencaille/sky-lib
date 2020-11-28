@@ -16,7 +16,7 @@
 package ch.skymarshall.example.gui.controller.impl;
 
 import static ch.skymarshall.example.gui.TestObject.testObjectToString;
-import static ch.skymarshall.gui.mvc.factories.BindingDependencies.detachOnUpdateOf;
+import static ch.skymarshall.gui.mvc.factories.BindingDependencies.preserveOnUpdateOf;
 import static ch.skymarshall.gui.mvc.factories.Converters.guiErrorToString;
 import static ch.skymarshall.gui.mvc.factories.Converters.intToString;
 import static ch.skymarshall.gui.swing.factories.SwingBindings.selected;
@@ -160,7 +160,7 @@ public class ControllerExampleView extends JFrame {
 
 		final ObjectProperty<String> dynamicListSelectionProperty = model.getDynamicListObjectProperty();
 		dynamicListSelectionProperty.bind(selection(dynamicListEditor))
-				.addDependency(detachOnUpdateOf(staticListSelection));
+				.addDependency(preserveOnUpdateOf(staticListSelection));
 
 		final JLabel dynamicListSelectionCheck = new JLabel();
 		dynamicListSelectionCheck.setName("dynamicListSelectionCheck");

@@ -29,6 +29,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import ch.skymarshall.gui.mvc.PropertyEvent.EventKind;
 import ch.skymarshall.gui.mvc.Veto.TransmitMode;
@@ -119,6 +120,14 @@ public class ControllerPropertyChangeSupport {
 			return false;
 		}
 		return info.stream().anyMatch(i -> i.caller == caller);
+	}
+	
+	public String getModificationStack(String name) {
+		final Deque<CallInfo> info = callInfo.get(name);
+		if (info == null) {
+			return "";
+		}
+		return info.stream().map(Object::toString).collect(Collectors.joining("\n"));
 	}
 
 	public void removePropertyChangeListener(final String name, final PropertyChangeListener propertyChangeListener) {
@@ -244,5 +253,7 @@ public class ControllerPropertyChangeSupport {
 	public IScopedSupport scoped(final Object scope) {
 		return scopedRegistrations.computeIfAbsent(scope, ScopedRegistration::new);
 	}
+
+
 
 }

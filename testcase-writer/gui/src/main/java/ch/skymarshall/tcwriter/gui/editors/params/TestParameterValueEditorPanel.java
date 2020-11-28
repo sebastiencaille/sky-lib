@@ -1,7 +1,7 @@
 package ch.skymarshall.tcwriter.gui.editors.params;
 
 import static ch.skymarshall.gui.model.ListModelBindings.values;
-import static ch.skymarshall.gui.mvc.factories.BindingDependencies.detachOnUpdateOf;
+import static ch.skymarshall.gui.mvc.factories.BindingDependencies.preserveOnUpdateOf;
 import static ch.skymarshall.gui.mvc.factories.Converters.filter;
 import static ch.skymarshall.gui.mvc.factories.Converters.listConverter;
 import static ch.skymarshall.gui.swing.factories.SwingBindings.group;
@@ -33,6 +33,7 @@ import com.google.common.base.Strings;
 import ch.skymarshall.gui.model.ListModel;
 import ch.skymarshall.gui.model.views.ListViews;
 import ch.skymarshall.gui.mvc.converters.IConverter;
+import ch.skymarshall.gui.mvc.factories.BindingDependencies;
 import ch.skymarshall.gui.mvc.factories.ObjectTextView;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
@@ -97,7 +98,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 				.bind(values(referenceEditor));
 		tpModel.getSelectedReference().bind(refToTextConverter())//
 				.bind(selection(referenceEditor)) //
-				.addDependency(detachOnUpdateOf(tpModel.getReferences()));
+				.addDependency(BindingDependencies.preserveOnUpdateOf(tpModel.getReferences()));
 		topPanel.add(referenceEditor);
 
 		// Complex type

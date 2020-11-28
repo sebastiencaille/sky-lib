@@ -26,6 +26,7 @@ import ch.skymarshall.gui.TestObject;
 import ch.skymarshall.gui.TestObjectTableModel;
 import ch.skymarshall.gui.model.views.IListView;
 import ch.skymarshall.gui.model.views.ListViews;
+import ch.skymarshall.gui.swing.model.ListModelTableModel;
 
 public class ListModelBasicTest extends Assert {
 
@@ -33,23 +34,56 @@ public class ListModelBasicTest extends Assert {
 
 	private static final IListView<TestObject> REVERTED_VIEW = ListViews.sorted((o1, o2) -> o2.val - o1.val);
 
+	private static class TestObjectTableListModel extends ListModelTableModel<TestObject, TestObjectTableListModel.Columns> {
+		public enum Columns {
+			VAL
+		}
+
+		int insertCount = 0;
+
+		public TestObjectTableListModel(ListModel<TestObject> model) {
+			super(model, Columns.class);
+		}
+
+		public int getInsertCount() {
+			return insertCount;
+		}
+
+		@Override
+		public void fireTableRowsInserted(int firstRow, int lastRow) {
+			insertCount++;
+			super.fireTableRowsInserted(firstRow, lastRow);
+		}
+
+		@Override
+		protected Object getValueAtColumn(TestObject object, Columns column) {
+			return object.val;
+		}
+		
+		@Override
+		protected void setValueAtColumn(TestObject object, Columns column, Object value) {
+			// nope
+		}
+		
+	}
+
 	@Test
 	public void testInsert() {
 		final ListModel<TestObject> model = new ListModel<>(VIEW);
-		final ListModel<TestObject> model2 = model.child(ListViews.inherited());
+		final ListModel<TestObject> childModel = model.child(ListViews.inherited());
 
 		model.insert(new TestObject(1));
 		model.insert(new TestObject(3));
 		model.insert(new TestObject(2));
 		model.insert(new TestObject(4));
 		checkModel(model, 1, 2, 3, 4);
-		checkModel(model2, 1, 2, 3, 4);
+		checkModel(childModel, 1, 2, 3, 4);
 	}
 
 	private JTable table(ListModel<TestObject> listModel) {
 		return new JTable(new TestObjectTableModel(listModel));
 	}
-	
+
 	@Test
 	public void testUpdate() {
 
@@ -127,7 +161,7 @@ public class ListModelBasicTest extends Assert {
 	@Test
 	public void testDelete() {
 		final ListModel<TestObject> model = new ListModel<>(VIEW);
-		final ListModel<TestObject> model2 = model.child(ListViews.inherited());
+		final ListModel<TestObject> childModel = model.child(ListViews.inherited());
 
 		model.insert(new TestObject(1));
 		final TestObject toAddAndRemove = new TestObject(2);
@@ -136,13 +170,31 @@ public class ListModelBasicTest extends Assert {
 		model.remove(toAddAndRemove);
 
 		checkModel(model, 1, 3);
-		checkModel(model2, 1, 3);
+		checkModel(childModel, 1, 3);
+	}
+
+	@Test
+	public void testSearch() {
+
+		final ListModel<TestObject> model = new ListModel<>(VIEW);
+		final ListModel<TestObject> childModel = model.child(ListViews.sortedFiltered((t1, t2) -> Integer.compare(t2.val, t1.val), t -> t.val % 2 == 0));
+
+		TestObjectTableListModel tableModel = new TestObjectTableListModel(childModel);
+		
+		model.findOrCreateAndEdit(new TestObject(1), t -> t.val = 2);
+		model.findOrCreateAndEdit(new TestObject(3), t -> t.val = 4);
+
+		checkModel(model, 2, 4);
+		checkModel(childModel, 4, 2);
+		
+		Assert.assertEquals(2,  tableModel.getInsertCount());
+
 	}
 
 	@Test
 	public void testChangeSorting() {
 		final ListModel<TestObject> model = new ListModel<>(VIEW);
-		final ListModel<TestObject> model2 = model.child(ListViews.inherited());
+		final ListModel<TestObject> childModel = model.child(ListViews.inherited());
 
 		model.insert(new TestObject(1));
 		model.insert(new TestObject(2));
@@ -151,7 +203,7 @@ public class ListModelBasicTest extends Assert {
 		model.setView(REVERTED_VIEW);
 
 		checkModel(model, 3, 2, 1);
-		checkModel(model2, 3, 2, 1);
+		checkModel(childModel, 3, 2, 1);
 	}
 
 	private void checkModel(final ListModel<TestObject> model, final int... expected) {

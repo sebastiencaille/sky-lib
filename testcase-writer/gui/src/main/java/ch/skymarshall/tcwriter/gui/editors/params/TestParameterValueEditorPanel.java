@@ -1,7 +1,6 @@
 package ch.skymarshall.tcwriter.gui.editors.params;
 
 import static ch.skymarshall.gui.model.ListModelBindings.values;
-import static ch.skymarshall.gui.mvc.factories.BindingDependencies.preserveOnUpdateOf;
 import static ch.skymarshall.gui.mvc.factories.Converters.filter;
 import static ch.skymarshall.gui.mvc.factories.Converters.listConverter;
 import static ch.skymarshall.gui.swing.factories.SwingBindings.group;

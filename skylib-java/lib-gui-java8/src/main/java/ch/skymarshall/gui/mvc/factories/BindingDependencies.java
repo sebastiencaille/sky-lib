@@ -72,8 +72,7 @@ public final class BindingDependencies {
 	 * @return an action
 	 */
 
-	public static class PreserveOnUpdateOfListModel<T> 
-			implements IBindingChainDependency, IListModelListener<T> {
+	public static class PreserveOnUpdateOfListModel<T> implements IBindingChainDependency, IListModelListener<T> {
 
 		private final ch.skymarshall.gui.model.ListModel<T> model;
 		private IBindingController controller;
@@ -100,30 +99,30 @@ public final class BindingDependencies {
 
 		@Override
 		public void mutated() {
-			controller.getVeto().attach();
-			controller.forceViewUpdate();
+			reattach();
 		}
 
 		@Override
 		public void valuesSet(final ListEvent<T> event) {
-			controller.getVeto().attach();
-			controller.forceViewUpdate();
+			reattach();
 		}
 
 		@Override
 		public void valuesCleared(final ListEvent<T> event) {
-			controller.getVeto().attach();
-			controller.forceViewUpdate();
+			reattach();
 		}
 
 		@Override
 		public void valuesAdded(final ListEvent<T> event) {
-			controller.getVeto().attach();
-			controller.forceViewUpdate();
+			reattach();
 		}
 
 		@Override
 		public void valuesRemoved(final ListEvent<T> event) {
+			reattach();
+		}
+
+		private void reattach() {
 			controller.getVeto().attach();
 			controller.forceViewUpdate();
 		}

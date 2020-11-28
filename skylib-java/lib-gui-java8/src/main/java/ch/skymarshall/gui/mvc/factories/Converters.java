@@ -200,23 +200,23 @@ public final class Converters {
 	}
 
 	public static <T> IConverter<T, T> identity() {
-		return converter(Function.identity(), Lambda.<T, ConversionException>identity());
+		return converter(Function.identity(), Lambda.identity());
 	}
 
 	public static IConverter<Integer, Integer> intIdentity() {
-		return intConverter(i -> i, Lambda.<Integer, ConversionException>identity());
+		return intConverter(i -> i, Lambda.identity());
 	}
 
 	public static IConverter<Long, Long> longIdentity() {
-		return longConverter(l -> l, Lambda.<Long, ConversionException>identity());
+		return longConverter(l -> l, Lambda.identity());
 	}
 
 	public static IConverter<Boolean, Boolean> booleanIdentity() {
-		return booleanConverter(Function.identity(), Lambda.<Boolean, ConversionException>identity());
+		return booleanConverter(Function.identity(), Lambda.identity());
 	}
 
 	public static IConverter<Float, Float> floatIdentity() {
-		return floatConverter(Function.identity(), Lambda.<Float, ConversionException>identity());
+		return floatConverter(Function.identity(), Lambda.identity());
 	}
 
 	public static <T extends Number> FunctionWithException<String, T, ConversionException> numberToString(

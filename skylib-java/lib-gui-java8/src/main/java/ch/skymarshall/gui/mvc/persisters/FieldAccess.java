@@ -27,7 +27,7 @@ import ch.skymarshall.gui.mvc.properties.IPersister;
  *
  * @param <T>
  */
-public interface FieldAccess<T> {
+public abstract class FieldAccess<T> implements IPersisterFactory<T>{
 
 	public abstract T get(Object object);
 
@@ -37,7 +37,7 @@ public interface FieldAccess<T> {
 		return new IllegalStateException("Unable to access field", e);
 	}
 
-	public default IPersister<T> asPersister(final Object object) {
+	public IPersister<T> asPersister(final Object object) {
 		return new IPersister<T>() {
 			@Override
 			public T get() {

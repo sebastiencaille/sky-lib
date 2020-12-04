@@ -39,8 +39,6 @@ public class ModelClassProcessor {
 
 	private static final String ATTRIB_PUBLIC = "public ";
 
-	private final boolean java8 = !Boolean.valueOf("preJava8");
-
 	public static class Context {
 		final Map<String, String> properties = new HashMap<>();
 		final Set<String> imports = new HashSet<>();
@@ -99,17 +97,11 @@ public class ModelClassProcessor {
 
 	private final Context context;
 
-	private final AttributeProcessorDelegate delegate;
+	private final AttributeProcessorDelegate delegate = new AttributeProcessor.GetSetAttributeDelegate();
 
 	public ModelClassProcessor(final Class<?> clazz) {
 		this.modelClass = clazz;
 		this.context = new Context();
-
-		if (java8) {
-			delegate = new AttributeProcessor.GetSetAttributeDelegate();
-		} else {
-			delegate = new AttributeProcessor.FieldAttributeDelegate();
-		}
 	}
 
 	public String getClassName() {
@@ -168,13 +160,7 @@ public class ModelClassProcessor {
 	protected void addAttributesDeclarations(final UntypedDataObjectMetaData metaData) {
 
 		forEachAttribute(metaData, attrib -> context.append("fields.declareStatic", generateAccessConstants(attrib)));
-		if (!java8) {
-			forEachAttribute(metaData,
-					attrib -> context.append("fields.declareStatic", generateFieldConstants(attrib)));
-			context.append("fields.initStatic", afterPreprocessAttribs());
-		} else {
-			context.append("fields.initStatic", "");
-		}
+		context.append("fields.initStatic", "");
 
 		forEachAttribute(metaData, attrib -> context.append("fields.declare",
 				AttributeProcessor.create(context, attrib, delegate).addImports().generateDeclaration() + "\n"));

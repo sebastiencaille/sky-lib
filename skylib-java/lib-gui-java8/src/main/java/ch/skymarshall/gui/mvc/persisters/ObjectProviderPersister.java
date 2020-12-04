@@ -45,20 +45,12 @@ public class ObjectProviderPersister<T> implements IPersister<T> {
 
 	}
 
-	private final FieldAccess<T> fieldAccess;
-	private final GetSetAccess<?, T> getSetAccess;
+	private final IPersisterFactory<T> persisterFactory;
 	private final IObjectProvider target;
 
-	public ObjectProviderPersister(final IObjectProvider target, final FieldAccess<T> fieldAccess) {
+	public ObjectProviderPersister(final IObjectProvider target, IPersisterFactory<T> persisterFactory) {
 		this.target = target;
-		this.fieldAccess = fieldAccess;
-		this.getSetAccess = null;
-	}
-
-	public ObjectProviderPersister(final IObjectProvider target, final GetSetAccess<?, T> getSetAccess) {
-		this.target = target;
-		this.fieldAccess = null;
-		this.getSetAccess = getSetAccess;
+		this.persisterFactory = persisterFactory;
 	}
 
 	@Override
@@ -76,13 +68,7 @@ public class ObjectProviderPersister<T> implements IPersister<T> {
 		if (targetObject == null) {
 			throw new IllegalStateException("No target object defined");
 		}
-		IPersister<T> persister;
-		if (getSetAccess != null) {
-			persister = getSetAccess.asPersister(targetObject);
-		} else {
-			persister = fieldAccess.asPersister(targetObject);
-		}
-		return persister;
+		return persisterFactory.asPersister(targetObject);
 	}
 
 }

@@ -15,28 +15,20 @@
  ******************************************************************************/
 package ch.skymarshall.gui.mvc.factories;
 
-import ch.skymarshall.gui.mvc.persisters.FieldAccess;
-import ch.skymarshall.gui.mvc.persisters.GetSetAccess;
+import ch.skymarshall.gui.mvc.persisters.IPersisterFactory;
 import ch.skymarshall.gui.mvc.persisters.ObjectProviderPersister;
 import ch.skymarshall.gui.mvc.persisters.ObjectProviderPersister.IObjectProvider;
 import ch.skymarshall.gui.mvc.properties.IPersister;
 
 public interface Persisters {
 
-	public static <T> IPersister<T> from(final Object object, final FieldAccess<T> fieldAccess) {
-		return fieldAccess.asPersister(object);
+	public static <T> IPersister<T> from(final Object object, final IPersisterFactory<T> persisterFactory) {
+		return persisterFactory.asPersister(object);
 	}
 
-	public static <T> IPersister<T> from(final IObjectProvider objectProvider, final FieldAccess<T> fieldAccess) {
-		return new ObjectProviderPersister<>(objectProvider, fieldAccess);
-	}
-
-	public static <T> IPersister<T> from(final Object object, final GetSetAccess<?, T> getSetAccess) {
-		return getSetAccess.asPersister(object);
-	}
-
-	public static <T> IPersister<T> from(final IObjectProvider objectProvider, final GetSetAccess<?, T> getSetAccess) {
-		return new ObjectProviderPersister<>(objectProvider, getSetAccess);
+	public static <T> IPersister<T> from(final IObjectProvider objectProvider,
+			final IPersisterFactory<T> persisterFactory) {
+		return new ObjectProviderPersister<>(objectProvider, persisterFactory);
 	}
 
 }

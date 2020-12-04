@@ -223,27 +223,6 @@ public abstract class AttributeProcessor {
 		return toConstant(attrib.getName());
 	}
 
-	public static class FieldAttributeDelegate implements AttributeProcessorDelegate {
-		@Override
-		public String getFieldCreation(final AttributeProcessor attributeProcessor) {
-			return "FieldAccess.<" + attributeProcessor.getTypeAsString() + ">create("
-					+ attributeProcessor.getConstantName() + "_FIELD)";
-		}
-
-		@Override
-		public String getPrimitiveFieldCreation(final PrimitiveProcessor attributeProcessor) {
-			return "FieldAccess." + attributeProcessor.getTypeAsString() + "Access("
-					+ attributeProcessor.getConstantName() + "_FIELD)";
-		}
-
-		@Override
-		public void addImports(final AttributeProcessor attributeProcessor) {
-			attributeProcessor.context.addImport("java.lang.reflect.AccessibleObject");
-			attributeProcessor.context.addImport("java.lang.reflect.Field");
-			attributeProcessor.context.addImport("FieldAccess");
-		}
-	}
-
 	public static class GetSetAttributeDelegate implements AttributeProcessorDelegate {
 		@Override
 		public String getFieldCreation(final AttributeProcessor attributeProcessor) {

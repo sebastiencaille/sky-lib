@@ -26,6 +26,7 @@ import ch.skymarshall.gui.TestObject;
 import ch.skymarshall.gui.mvc.converters.ConversionException;
 import ch.skymarshall.gui.mvc.factories.Converters;
 import ch.skymarshall.gui.mvc.persisters.FieldAccess;
+import ch.skymarshall.gui.mvc.persisters.MethodHandlerAccess;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 import ch.skymarshall.gui.mvc.properties.Configuration;
 import ch.skymarshall.gui.mvc.properties.IntProperty;
@@ -141,8 +142,8 @@ public class ModelBasicTest extends Assert {
 		assertEquals(456, testObject.val);
 	}
 
-	protected FieldAccess<Integer> testObjectValAccess() throws NoSuchFieldException {
-		return FieldAccess.intAccess(TestObject.class.getField("val"));
+	protected MethodHandlerAccess<Integer> testObjectValAccess() throws NoSuchFieldException {
+		return MethodHandlerAccess.objectAccess(TestObject.class.getField("val"));
 	}
 
 }

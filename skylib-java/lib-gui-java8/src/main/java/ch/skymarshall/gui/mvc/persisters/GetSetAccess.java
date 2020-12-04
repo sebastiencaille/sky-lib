@@ -15,7 +15,7 @@ import ch.skymarshall.gui.mvc.properties.IPersister;
  * @param <A>
  *            Type of the object's attribute
  */
-public class GetSetAccess<C, A> {
+public class GetSetAccess<C, A> implements IPersisterFactory<A> {
 
 	private final Function<C, Supplier<A>> getter;
 	private final Function<C, Consumer<A>> setter;
@@ -26,6 +26,7 @@ public class GetSetAccess<C, A> {
 
 	}
 
+	@Override
 	public IPersister<A> asPersister(final Object object) {
 		return new IPersister<A>() {
 			@Override

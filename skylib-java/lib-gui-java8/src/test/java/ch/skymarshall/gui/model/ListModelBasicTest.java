@@ -30,11 +30,11 @@ import ch.skymarshall.gui.swing.model.ListModelTableModel;
 
 public class ListModelBasicTest extends Assert {
 
-	private static final IListView<TestObject> VIEW = ListViews.sorted((o1, o2) -> o1.val - o2.val);
+	private static final IListView<TestObject> VIEW = ListViews.sorted((o1, o2) -> o1.getVal() - o2.getVal());
+	static final IListView<TestObject> REVERTED_VIEW = ListViews.sorted((o1, o2) -> o2.getVal() - o1.getVal());
 
-	private static final IListView<TestObject> REVERTED_VIEW = ListViews.sorted((o1, o2) -> o2.val - o1.val);
-
-	private static class TestObjectTableListModel extends ListModelTableModel<TestObject, TestObjectTableListModel.Columns> {
+	private static class TestObjectTableListModel
+			extends ListModelTableModel<TestObject, TestObjectTableListModel.Columns> {
 		public enum Columns {
 			VAL
 		}
@@ -57,14 +57,14 @@ public class ListModelBasicTest extends Assert {
 
 		@Override
 		protected Object getValueAtColumn(TestObject object, Columns column) {
-			return object.val;
+			return object.getVal();
 		}
-		
+
 		@Override
 		protected void setValueAtColumn(TestObject object, Columns column, Object value) {
 			// nope
 		}
-		
+
 	}
 
 	@Test
@@ -100,17 +100,17 @@ public class ListModelBasicTest extends Assert {
 		checkModel(childModel, 1, 3, 4);
 		checkModel(table, 1, 3, 4);
 
-		model.editValue(toMove, t -> t.val = 2);
+		model.editValue(toMove, t -> t.setVal(2));
 		checkModel(model, 1, 2, 3);
 		checkModel(childModel, 1, 2, 3);
 		checkModel(table, 1, 2, 3);
 
-		model.editValue(toMove, t -> t.val = 5);
+		model.editValue(toMove, t -> t.setVal(5));
 		checkModel(model, 1, 3, 5);
 		checkModel(childModel, 1, 3, 5);
 		checkModel(table, 1, 3, 5);
 
-		model.editValue(toMove, t -> t.val = 0);
+		model.editValue(toMove, t -> t.setVal(0));
 		checkModel(model, 0, 1, 3);
 		checkModel(childModel, 0, 1, 3);
 		checkModel(table, 0, 1, 3);
@@ -119,8 +119,8 @@ public class ListModelBasicTest extends Assert {
 	@Test
 	public void testUpdateChildOnly() {
 		final ListModel<TestObject> model = new ListModel<>(VIEW);
-		final ListModel<TestObject> childModel = model
-				.child(ListViews.sortedFiltered((t1, t2) -> Integer.compare(t2.val, t1.val), t -> t.val % 2 == 0));
+		final ListModel<TestObject> childModel = model.child(ListViews
+				.sortedFiltered((t1, t2) -> Integer.compare(t2.getVal(), t1.getVal()), t -> t.getVal() % 2 == 0));
 		JTable table = table(childModel);
 
 		model.insert(new TestObject(1));
@@ -133,26 +133,26 @@ public class ListModelBasicTest extends Assert {
 		checkModel(childModel, 4, 0);
 		checkModel(table, 4, 0);
 
-		model.editValue(toMove, t -> t.val = 2);
+		model.editValue(toMove, t -> t.setVal(2));
 		checkModel(model, 1, 2, 4, 7);
 		checkModel(childModel, 4, 2);
 		checkModel(table, 4, 2);
 
-		model.editValue(toMove, t -> t.val = 5);
+		model.editValue(toMove, t -> t.setVal(5));
 		checkModel(model, 1, 4, 5, 7);
 		checkModel(childModel, 4);
 
-		model.editValue(toMove, t -> t.val = 6);
+		model.editValue(toMove, t -> t.setVal(6));
 		checkModel(model, 1, 4, 6, 7);
 		checkModel(childModel, 6, 4);
 		checkModel(table, 6, 4);
 
-		model.editValue(toMove, t -> t.val = 8);
+		model.editValue(toMove, t -> t.setVal(8));
 		checkModel(model, 1, 4, 7, 8);
 		checkModel(childModel, 8, 4);
 		checkModel(table, 8, 4);
 
-		model.editValue(toMove, t -> t.val = 2);
+		model.editValue(toMove, t -> t.setVal(2));
 		checkModel(model, 1, 2, 4, 7);
 		checkModel(childModel, 4, 2);
 		checkModel(table, 4, 2);
@@ -177,17 +177,18 @@ public class ListModelBasicTest extends Assert {
 	public void testSearch() {
 
 		final ListModel<TestObject> model = new ListModel<>(VIEW);
-		final ListModel<TestObject> childModel = model.child(ListViews.sortedFiltered((t1, t2) -> Integer.compare(t2.val, t1.val), t -> t.val % 2 == 0));
+		final ListModel<TestObject> childModel = model.child(ListViews
+				.sortedFiltered((t1, t2) -> Integer.compare(t2.getVal(), t1.getVal()), t -> t.getVal() % 2 == 0));
 
 		TestObjectTableListModel tableModel = new TestObjectTableListModel(childModel);
-		
-		model.findOrCreateAndEdit(new TestObject(1), t -> t.val = 2);
-		model.findOrCreateAndEdit(new TestObject(3), t -> t.val = 4);
+
+		model.findOrCreateAndEdit(new TestObject(1), t -> t.setVal(2));
+		model.findOrCreateAndEdit(new TestObject(3), t -> t.setVal(4));
 
 		checkModel(model, 2, 4);
 		checkModel(childModel, 4, 2);
-		
-		Assert.assertEquals(2,  tableModel.getInsertCount());
+
+		Assert.assertEquals(2, tableModel.getInsertCount());
 
 	}
 
@@ -210,7 +211,7 @@ public class ListModelBasicTest extends Assert {
 		assertEquals("size", expected.length, model.getSize());
 		final int[] current = new int[model.getSize()];
 		for (int i = 0; i < current.length; i++) {
-			current[i] = model.getValueAt(i).val;
+			current[i] = model.getValueAt(i).getVal();
 		}
 		assertEquals(Arrays.toString(expected), Arrays.toString(current));
 	}

@@ -109,7 +109,7 @@ public class ModelBasicTest extends Assert {
 		assertEquals(456, model.integerProperty.getValue());
 
 		model.integerProperty.save();
-		assertEquals(456, testObject.val);
+		assertEquals(456, testObject.getVal());
 
 		// Test exception
 		binding.setValue("bla");
@@ -139,11 +139,11 @@ public class ModelBasicTest extends Assert {
 				Configuration::autoCommit);
 
 		model.integerProperty.setValue(this, 456);
-		assertEquals(456, testObject.val);
+		assertEquals(456, testObject.getVal());
 	}
 
 	protected MethodHandlerAccess<Integer> testObjectValAccess() throws NoSuchFieldException {
-		return MethodHandlerAccess.objectAccess(TestObject.class.getField("val"));
+		return MethodHandlerAccess.unsafeObjectAccess(TestObject.class.getDeclaredField("val"));
 	}
 
 }

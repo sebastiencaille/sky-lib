@@ -27,11 +27,11 @@ import ch.skymarshall.gui.model.views.ListViews;
 
 public class FilterObjectModelTest extends Assert {
 
-	private static final IListView<TestObject> COMPARATOR = ListViews.sorted((o1, o2) -> o1.val - o2.val);
+	private static final IListView<TestObject> COMPARATOR = ListViews.sorted((o1, o2) -> o1.getVal() - o2.getVal());
 
-	private static final Predicate<TestObject> EVEN_FILTER = value -> value.val % 2 == 0;
+	private static final Predicate<TestObject> EVEN_FILTER = value -> value.getVal() % 2 == 0;
 
-	private static final Predicate<TestObject> ODD_FILTER = value -> value.val % 2 == 1;
+	private static final Predicate<TestObject> ODD_FILTER = value -> value.getVal() % 2 == 1;
 
 	@Test
 	public void testInsert() {
@@ -66,7 +66,7 @@ public class FilterObjectModelTest extends Assert {
 
 		final TestObject toMove = new TestObject(3);
 		baseModel.insert(toMove);
-		baseModel.editValue(toMove, e -> e.val = 2);
+		baseModel.editValue(toMove, e -> e.setVal( 2));
 
 		// model is filtered
 		checkModel(model, 2, 4);
@@ -81,7 +81,7 @@ public class FilterObjectModelTest extends Assert {
 
 		baseModel.findAndEdit(new TestObject(1), e -> {
 			assertSame(baseModel.getValueAt(0), e);
-			e.val = 5;
+			e.setVal( 5);
 		});
 		checkModel(baseModel, 4, 5);
 	}
@@ -92,10 +92,10 @@ public class FilterObjectModelTest extends Assert {
 
 		baseModel.insert(new TestObject(4));
 
-		baseModel.findOrCreateAndEdit(new TestObject(1), e -> e.val = 5);
+		baseModel.findOrCreateAndEdit(new TestObject(1), e -> e.setVal( 5));
 		checkModel(baseModel, 4, 5);
 
-		baseModel.findOrCreateAndEdit(new TestObject(5), e -> e.val = 3);
+		baseModel.findOrCreateAndEdit(new TestObject(5), e -> e.setVal( 3));
 		checkModel(baseModel, 3, 4);
 	}
 
@@ -133,7 +133,7 @@ public class FilterObjectModelTest extends Assert {
 	private void checkModel(final ListModel<TestObject> model, final int... expected) {
 		final int[] current = new int[model.getSize()];
 		for (int i = 0; i < model.getSize(); i++) {
-			current[i] = model.getValueAt(i).val;
+			current[i] = model.getValueAt(i).getVal();
 		}
 		assertEquals(Arrays.toString(expected), Arrays.toString(current));
 	}

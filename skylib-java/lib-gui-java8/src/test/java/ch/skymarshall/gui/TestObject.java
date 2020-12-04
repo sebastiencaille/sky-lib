@@ -17,10 +17,18 @@ package ch.skymarshall.gui;
 
 public class TestObject {
 
-	public int val;
+	private int val;
 
 	public TestObject(final int val) {
 		super();
+		this.val = val;
+	}
+	
+	public int getVal() {
+		return val;
+	}
+	
+	public void setVal(int val) {
 		this.val = val;
 	}
 

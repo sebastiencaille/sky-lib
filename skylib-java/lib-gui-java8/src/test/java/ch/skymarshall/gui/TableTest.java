@@ -35,7 +35,7 @@ import ch.skymarshall.gui.swing.bindings.JTableMultiSelectionBinding;
 
 public class TableTest extends Assert {
 
-	private static final IListView<TestObject> VIEW = ListViews.sorted((o1, o2) -> o1.val - o2.val);
+	private static final IListView<TestObject> VIEW = ListViews.sorted((o1, o2) -> o1.getVal() - o2.getVal());
 
 	private static class Model extends GuiModel {
 		ListProperty<TestObject> selection = new ListProperty<>("Selection", propertySupport);

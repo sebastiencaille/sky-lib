@@ -17,7 +17,7 @@ public  class TestObjectTableModel extends ListModelTableModel<TestObject, Colum
 
 	@Override
 	protected Object getValueAtColumn(final TestObject object, final Columns column) {
-		return object.val;
+		return object.getVal();
 	}
 
 	@Override

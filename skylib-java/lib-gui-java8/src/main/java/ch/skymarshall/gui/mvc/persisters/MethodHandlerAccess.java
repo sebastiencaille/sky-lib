@@ -42,6 +42,11 @@ public class MethodHandlerAccess<A> implements IPersisterFactory<A> {
 		};
 	}
 
+	public static <U> MethodHandlerAccess<U> unsafeObjectAccess(final Field field) {
+		field.setAccessible(true);
+		return new MethodHandlerAccess<>(field);
+	}
+
 	public static <U> MethodHandlerAccess<U> objectAccess(final Field field) {
 		return new MethodHandlerAccess<>(field);
 	}

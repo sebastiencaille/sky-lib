@@ -1,17 +1,18 @@
 // File generated from template
 package ch.skymarshall.example.gui.controller.impl;
 
-import ch.skymarshall.gui.mvc.IScopedSupport;
-import ch.skymarshall.gui.mvc.GuiModel;
-import ch.skymarshall.gui.mvc.IObjectGuiModel;
-import ch.skymarshall.gui.mvc.persisters.ObjectProviderPersister;
-import ch.skymarshall.gui.mvc.IComponentBinding;
+import java.util.Arrays;
 import ch.skymarshall.gui.mvc.GuiController;
-import ch.skymarshall.gui.mvc.factories.Persisters;
-import ch.skymarshall.gui.mvc.properties.Properties;
-import ch.skymarshall.gui.mvc.properties.ErrorProperty;
+import ch.skymarshall.gui.mvc.GuiModel;
+import ch.skymarshall.gui.mvc.IComponentBinding;
 import ch.skymarshall.gui.mvc.IComponentLink;
+import ch.skymarshall.gui.mvc.IObjectGuiModel;
+import ch.skymarshall.gui.mvc.IScopedSupport;
+import ch.skymarshall.gui.mvc.factories.Persisters;
+import ch.skymarshall.gui.mvc.persisters.ObjectProviderPersister;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
+import ch.skymarshall.gui.mvc.properties.ErrorProperty;
+import ch.skymarshall.gui.mvc.properties.Properties;
 import ch.skymarshall.gui.mvc.persisters.GetSetAccess;
 import ch.skymarshall.gui.mvc.properties.BooleanProperty;
 import ch.skymarshall.gui.mvc.properties.IntProperty;
@@ -37,7 +38,9 @@ public class ControllerExampleObjectGuiModel extends GuiModel implements IObject
 	protected final ObjectProperty<java.lang.String> stringPropProperty;
 	protected final ObjectProperty<ch.skymarshall.example.gui.TestObject> testObjectPropProperty;
 	
-
+	
+	protected final AbstractProperty[] allProperties;
+	
     public ControllerExampleObjectGuiModel(final String prefix, final IScopedSupport propertySupport, final ErrorProperty errorProperty) {
         super(propertySupport, errorProperty);
 		booleanPropProperty = Properties.of(new BooleanProperty(prefix + "-BooleanProp",  propertySupport)).persistent(Persisters.from(currentObjectProvider, GetSetAccess.<ch.skymarshall.example.gui.controller.impl.ControllerExampleObject,java.lang.Boolean>access(o -> o::isBooleanProp, o -> o::setBooleanProp))).setErrorNotifier(errorProperty).getProperty();
@@ -45,6 +48,7 @@ public class ControllerExampleObjectGuiModel extends GuiModel implements IObject
 		stringPropProperty = Properties.of(new ObjectProperty<java.lang.String>(prefix + "-StringProp",  propertySupport)).persistent(Persisters.from(currentObjectProvider, GetSetAccess.<ch.skymarshall.example.gui.controller.impl.ControllerExampleObject,java.lang.String>access(o -> o::getStringProp, o -> o::setStringProp))).setErrorNotifier(errorProperty).getProperty();
 		testObjectPropProperty = Properties.of(new ObjectProperty<ch.skymarshall.example.gui.TestObject>(prefix + "-TestObjectProp",  propertySupport)).persistent(Persisters.from(currentObjectProvider, GetSetAccess.<ch.skymarshall.example.gui.controller.impl.ControllerExampleObject,ch.skymarshall.example.gui.TestObject>access(o -> o::getTestObjectProp, o -> o::setTestObjectProp))).setErrorNotifier(errorProperty).getProperty();
 		
+		allProperties = new AbstractProperty[]{booleanPropProperty, intPropProperty, stringPropProperty, testObjectPropProperty};
     }
 
     public ControllerExampleObjectGuiModel(final String prefix, final GuiController controller) {
@@ -81,7 +85,7 @@ public class ControllerExampleObjectGuiModel extends GuiModel implements IObject
     public void load() {
     	try {
     		propertySupport.transmitAllToComponentOnly();
-			booleanPropProperty.load(this);intPropProperty.load(this);stringPropProperty.load(this);testObjectPropProperty.load(this);
+			Arrays.stream(allProperties).forEach(p -> p.load(this));
 		} finally {
 			propertySupport.enableAllTransmit();
 		}
@@ -89,7 +93,7 @@ public class ControllerExampleObjectGuiModel extends GuiModel implements IObject
 
     @Override
     public void save() {
-		booleanPropProperty.save();intPropProperty.save();stringPropProperty.save();testObjectPropProperty.save();
+		Arrays.stream(allProperties).forEach(p -> p.save());
     }
 
     @Override
@@ -97,7 +101,7 @@ public class ControllerExampleObjectGuiModel extends GuiModel implements IObject
         currentObjectProvider.setObject(value);
     }
 
-    public IComponentBinding<ch.skymarshall.example.gui.controller.impl.ControllerExampleObject> binding() {
+    public IComponentBinding<ch.skymarshall.example.gui.controller.impl.ControllerExampleObject> loadBinding() {
         return new IComponentBinding<ch.skymarshall.example.gui.controller.impl.ControllerExampleObject>() {
         
             @Override

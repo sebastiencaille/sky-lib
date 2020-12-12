@@ -141,4 +141,22 @@ public class Template {
 		context.put(key, context.getOrDefault(key, "") + value);
 		return context;
 	}
+	
+	/**
+	 * Append value to the value of a context key, adding a comma if needed
+	 *
+	 * @param context
+	 * @param key
+	 * @param valueJavaDTOVisitor
+	 * @return
+	 */
+	public static Map<String, String> appendToList(final Map<String, String> context, final String key, final String value) {
+		String existing = context.getOrDefault(key, "");
+		if (!existing.isEmpty()) {
+			existing = existing + ", ";
+		}
+		existing += value;
+		context.put(key,  existing);
+		return context;
+	}
 }

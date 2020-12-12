@@ -15,7 +15,7 @@
  ******************************************************************************/
 package ch.skymarshall.gui.swing.bindings;
 
-import java.util.List;
+import java.util.Collection;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -24,7 +24,7 @@ import ch.skymarshall.gui.mvc.ComponentBindingAdapter;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 import ch.skymarshall.gui.swing.factories.SwingBindings;
 
-public class JComboBoxContentBinding<T> extends ComponentBindingAdapter<List<T>> {
+public class JComboBoxContentBinding<T, U extends Collection<T>> extends ComponentBindingAdapter<U> {
 
 	private final JComboBox<T> box;
 
@@ -33,7 +33,7 @@ public class JComboBoxContentBinding<T> extends ComponentBindingAdapter<List<T>>
 	}
 
 	@Override
-	public void setComponentValue(final AbstractProperty source, final List<T> value) {
+	public void setComponentValue(final AbstractProperty source, final U value) {
 		final DefaultComboBoxModel<T> newModel = new DefaultComboBoxModel<>();
 		for (final T obj : value) {
 			newModel.addElement(obj);

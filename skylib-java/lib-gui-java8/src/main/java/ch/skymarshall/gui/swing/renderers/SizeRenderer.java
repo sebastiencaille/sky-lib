@@ -16,6 +16,8 @@
 package ch.skymarshall.gui.swing.renderers;
 
 import java.awt.Component;
+import java.util.Optional;
+import java.util.function.BiConsumer;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -25,15 +27,22 @@ import ch.skymarshall.gui.Utils;
 @SuppressWarnings("serial")
 public class SizeRenderer extends DefaultTableCellRenderer {
 
+	private final BiConsumer<Integer, Component> componentTuning;
+
+	public SizeRenderer(BiConsumer<Integer, Component> componentTuning) {
+		this.componentTuning = componentTuning;
+	}
+
 	@Override
 	public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
 			final boolean hasFocus, final int row, final int column) {
-		final String sizeAsString;
-		if (value != null) {
-			sizeAsString = Utils.toSize((Number) value);
-		} else {
-			sizeAsString = "";
+		Optional<Number> size = Optional.ofNullable((Number) value);
+		Component comp = super.getTableCellRendererComponent(table, size.map(Utils::toSize).orElse(null), isSelected,
+				hasFocus, row, column);
+		if (componentTuning != null) {
+			componentTuning.accept(size.map(Number::intValue).orElse(-1), comp);
 		}
-		return super.getTableCellRendererComponent(table, sizeAsString, isSelected, hasFocus, row, column);
+		return comp;
 	}
+
 }

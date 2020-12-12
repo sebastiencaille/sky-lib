@@ -52,6 +52,11 @@ public class ModelClassProcessor {
 			Template.append(properties, key, value);
 		}
 
+		public void appendToList(final String key, final String value) {
+			Template.appendToList(properties, key, value);
+		}
+
+		
 		public void addImport(final String className) {
 			imports.add(ClassFinder.forApp().loadByName(className).getName());
 		}
@@ -146,8 +151,7 @@ public class ModelClassProcessor {
 	}
 
 	protected void addAttributePersistenceMethods(final UntypedDataObjectMetaData metaData) {
-		forEachAttribute(metaData, attrib -> context.append("fields.load", generateLoadFrom(attrib)));
-		forEachAttribute(metaData, attrib -> context.append("fields.save", generateSaveInto(attrib)));
+		forEachAttribute(metaData, attrib -> context.appendToList("properties.all", generatePropertyNameOf(attrib)));
 	}
 
 	/**
@@ -179,6 +183,10 @@ public class ModelClassProcessor {
 
 	protected String generateLoadFrom(final AbstractAttributeMetaData<?> attrib) {
 		return AttributeProcessor.create(context, attrib, delegate).getPropertyName() + ".load(this);";
+	}
+	
+	protected String generatePropertyNameOf(final AbstractAttributeMetaData<?> attrib) {
+		return AttributeProcessor.create(context, attrib, delegate).getPropertyName();
 	}
 
 	protected String generateSaveInto(final AbstractAttributeMetaData<?> attrib) {

@@ -1,16 +1,17 @@
 package ${package};
 
-import ch.skymarshall.gui.mvc.IScopedSupport;
-import ch.skymarshall.gui.mvc.GuiModel;
-import ch.skymarshall.gui.mvc.IObjectGuiModel;
-import ch.skymarshall.gui.mvc.persisters.ObjectProviderPersister;
-import ch.skymarshall.gui.mvc.IComponentBinding;
+import java.util.Arrays;
 import ch.skymarshall.gui.mvc.GuiController;
-import ch.skymarshall.gui.mvc.factories.Persisters;
-import ch.skymarshall.gui.mvc.properties.Properties;
-import ch.skymarshall.gui.mvc.properties.ErrorProperty;
+import ch.skymarshall.gui.mvc.GuiModel;
+import ch.skymarshall.gui.mvc.IComponentBinding;
 import ch.skymarshall.gui.mvc.IComponentLink;
+import ch.skymarshall.gui.mvc.IObjectGuiModel;
+import ch.skymarshall.gui.mvc.IScopedSupport;
+import ch.skymarshall.gui.mvc.factories.Persisters;
+import ch.skymarshall.gui.mvc.persisters.ObjectProviderPersister;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
+import ch.skymarshall.gui.mvc.properties.ErrorProperty;
+import ch.skymarshall.gui.mvc.properties.Properties;
 ${imports}
 
 public class ${modelClass} extends GuiModel implements IObjectGuiModel<${objectClass}> {
@@ -20,10 +21,13 @@ public class ${modelClass} extends GuiModel implements IObjectGuiModel<${objectC
 	${fields.declareStatic}
 
 	${fields.declare}
-
+	
+	protected final AbstractProperty[] allProperties;
+	
     public ${modelClass}(final String prefix, final IScopedSupport propertySupport, final ErrorProperty errorProperty) {
         super(propertySupport, errorProperty);
 		${fields.init}
+		allProperties = new AbstractProperty[]{${properties.all}};
     }
 
     public ${modelClass}(final String prefix, final GuiController controller) {
@@ -48,7 +52,7 @@ public class ${modelClass} extends GuiModel implements IObjectGuiModel<${objectC
     public void load() {
     	try {
     		propertySupport.transmitAllToComponentOnly();
-			${fields.load}
+			Arrays.stream(allProperties).forEach(p -> p.load(this));
 		} finally {
 			propertySupport.enableAllTransmit();
 		}
@@ -56,7 +60,7 @@ public class ${modelClass} extends GuiModel implements IObjectGuiModel<${objectC
 
     @Override
     public void save() {
-		${fields.save}
+		Arrays.stream(allProperties).forEach(p -> p.save());
     }
 
     @Override
@@ -64,7 +68,7 @@ public class ${modelClass} extends GuiModel implements IObjectGuiModel<${objectC
         currentObjectProvider.setObject(value);
     }
 
-    public IComponentBinding<${objectClass}> binding() {
+    public IComponentBinding<${objectClass}> loadBinding() {
         return new IComponentBinding<${objectClass}>() {
         
             @Override

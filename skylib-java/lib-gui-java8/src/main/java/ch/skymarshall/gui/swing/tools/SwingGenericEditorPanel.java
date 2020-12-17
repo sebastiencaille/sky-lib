@@ -154,7 +154,7 @@ public class SwingGenericEditorPanel extends JPanel implements IGenericEditor {
 		labelConstraint.weighty = 1.0;
 		final JLabel errorLabel = addLabel(labelConstraint);
 		errorLabel.setForeground(Color.RED.darker());
-		errorProperty.getErrors().listen(e -> {
+		errorProperty.getErrors().listenActive(e -> {
 			errorHandlers.values().forEach(ErrorHandler::unsetError);
 			e.keySet().stream().map(errorHandlers::get).filter(Objects::nonNull).forEach(ErrorHandler::setError);
 		});

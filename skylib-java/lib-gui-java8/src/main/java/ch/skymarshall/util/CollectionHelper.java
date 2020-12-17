@@ -27,4 +27,5 @@ public interface CollectionHelper {
 					+ ", which are not " + clazz);
 		}
 	}
+	
 }

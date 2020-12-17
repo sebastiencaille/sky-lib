@@ -31,7 +31,7 @@ import ch.skymarshall.gui.mvc.ControllerPropertyChangeSupport;
 import ch.skymarshall.gui.mvc.GuiModel;
 import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.properties.ListProperty;
-import ch.skymarshall.gui.swing.bindings.JTableMultiSelectionBinding;
+import ch.skymarshall.gui.swing.factories.SwingBindings;
 
 public class TableTest extends Assert {
 
@@ -55,7 +55,7 @@ public class TableTest extends Assert {
 		final ListModel<TestObject> listModel = new ListModel<>(VIEW);
 		final TestObjectTableModel tableModel = new TestObjectTableModel(listModel);
 		final JTable table = new JTable(tableModel);
-		model.selection.bind(new JTableMultiSelectionBinding<>(table, tableModel));
+		model.selection.bind(SwingBindings.multipleSelection(table, tableModel));
 
 		final TestObject object1 = new TestObject(1);
 		final TestObject object3 = new TestObject(3);

@@ -15,8 +15,8 @@
  ******************************************************************************/
 package ch.skymarshall.gui.swing.bindings;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.function.Supplier;
 
 import javax.swing.JTable;
 
@@ -34,20 +34,23 @@ import ch.skymarshall.gui.swing.model.ListModelTableModel;
  *
  * @param <T>
  */
-public class JTableMultiSelectionBinding<T> extends ComponentBindingAdapter<List<T>> {
+public class JTableMultiSelectionBinding<T, U extends Collection<T>> extends ComponentBindingAdapter<U> {
 
 	private final JTable table;
 	private final ListModelTableModel<T, ?> model;
 	private boolean modelChange = false;
+	private final Supplier<U> collectionType;
 
-	public JTableMultiSelectionBinding(final JTable component, final ListModelTableModel<T, ?> model) {
+	public JTableMultiSelectionBinding(final JTable component, final ListModelTableModel<T, ?> model, Supplier<U> collectionType) {
 		this.table = component;
 		this.model = model;
+		this.collectionType = collectionType;
 		table.setModel(model);
 	}
 
-	private void updateSelection(final IComponentLink<List<T>> componentlink) {
-		final List<T> selected = new ArrayList<>();
+	private void updateSelection(final IComponentLink<U> componentlink) {
+		U selected = collectionType.get();
+		
 		for (final int row : table.getSelectedRows()) {
 			if (row >= 0 && row < model.getRowCount()) {
 				selected.add(model.getObjectAtRow(row));
@@ -57,7 +60,7 @@ public class JTableMultiSelectionBinding<T> extends ComponentBindingAdapter<List
 	}
 
 	@Override
-	public void addComponentValueChangeListener(final IComponentLink<List<T>> componentlink) {
+	public void addComponentValueChangeListener(final IComponentLink<U> componentlink) {
 		table.getSelectionModel().addListSelectionListener(e -> {
 			if (!e.getValueIsAdjusting() && !modelChange) {
 				updateSelection(componentlink);
@@ -75,7 +78,7 @@ public class JTableMultiSelectionBinding<T> extends ComponentBindingAdapter<List
 	}
 
 	@Override
-	public void setComponentValue(final AbstractProperty source, final List<T> values) {
+	public void setComponentValue(final AbstractProperty source, final U values) {
 		if ((source == null || !source.isModifiedBy(table)) && values != null) {
 
 			table.getSelectionModel().setValueIsAdjusting(true);

@@ -21,6 +21,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
@@ -29,6 +31,7 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
@@ -178,12 +181,17 @@ public class SwingBindings {
 		return new JTableSelectionBinding<>(editor, tableModel);
 	}
 
+	public static <T, U extends Collection<T>> IComponentBinding<U> multipleSelection(final JTable editor,
+			final ListModelTableModel<T, ?> tableModel, Supplier<U> collectionSupplier) {
+		return new JTableMultiSelectionBinding<>(editor, tableModel, collectionSupplier);
+	}
+	
 	public static <T> IComponentBinding<List<T>> multipleSelection(final JTable editor,
 			final ListModelTableModel<T, ?> tableModel) {
-		return new JTableMultiSelectionBinding<>(editor, tableModel);
+		return new JTableMultiSelectionBinding<>(editor, tableModel, ArrayList::new);
 	}
 
-	public static <T> IComponentBinding<List<T>> values(final JComboBox<T> component) {
+	public static <T, U extends Collection<T>> IComponentBinding<U> values(final JComboBox<T> component) {
 		return new JComboBoxContentBinding<>(component);
 	}
 

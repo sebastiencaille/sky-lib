@@ -34,18 +34,13 @@
 			<groupId>ch.skymarshall</groupId>
 			<artifactId>lib-utils</artifactId>
 		</dependency>
+	
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>ch.skymarshall</groupId>
+			<artifactId>lib-testing</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<scope>test</scope>
-		</dependency>
-
+	
 	</dependencies>
 
 </project>

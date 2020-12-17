@@ -15,6 +15,14 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
+	<modules>
+		<module>annotations</module>
+		<module>generators</module>
+		<module>gui</module>
+		<module>examples</module>
+		<module>gui-it</module>
+	</modules>
+
 	<properties>
 		<aspectj.version>1.9.6</aspectj.version>
 	</properties>
@@ -116,11 +124,12 @@
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
-				<version>29.0-jre</version>
+				<version>30.1-jre</version>
 			</dependency>
 
 		</dependencies>
 	</dependencyManagement>
+
 
 	<dependencies>
 		<dependency>
@@ -130,11 +139,4 @@
 		</dependency>
 	</dependencies>
 
-	<modules>
-		<module>annotations</module>
-		<module>generators</module>
-		<module>gui</module>
-		<module>examples</module>
-		<module>gui-it</module>
-	</modules>
 </project>

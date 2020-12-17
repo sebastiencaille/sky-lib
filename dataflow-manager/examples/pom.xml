@@ -45,14 +45,12 @@
 		<dependency>
 			<groupId>io.reactivex.rxjava3</groupId>
 			<artifactId>rxjava</artifactId>
-			<version>3.0.7</version>
+			<version>3.0.8</version>
 		</dependency>
 
-
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
+			<groupId>ch.skymarshall</groupId>
+			<artifactId>lib-testing</artifactId>
 		</dependency>
 	</dependencies>
 </project>

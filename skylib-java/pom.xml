@@ -15,6 +15,23 @@
 		<maven>3.6</maven>
 	</prerequisites>
 
+	<modules>
+		<module>lib-testing</module>
+		<module>lib-annotations</module>
+		<module>lib-utils</module>
+		<module>lib-gui-java8</module>
+		<module>lib-gui-generators</module>
+		<module>lib-gui-validation</module>
+		<module>gui-pilot</module>
+		<module>lib-gui-examples</module>
+		<module>lib-generator-utils</module>
+	</modules>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.source-target.version>1.8</java.source-target.version>
+	</properties>
+
 	<build>
 		<pluginManagement>
 
@@ -87,40 +104,12 @@
 			<dependency>
 				<groupId>com.fasterxml.jackson</groupId>
 				<artifactId>jackson-bom</artifactId>
-				<version>2.11.3</version>
+				<version>2.12.0</version>
 				<type>pom</type>
 				<scope>import</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>4.13.1</version>
-			</dependency>
-			<dependency>
-				<groupId>org.mockito</groupId>
-				<artifactId>mockito-core</artifactId>
-				<version>3.6.0</version>
 			</dependency>
 
 		</dependencies>
 	</dependencyManagement>
 
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.source-target.version>1.8</java.source-target.version>
-	</properties>
-
-	<modules>
-		<module>lib-testing</module>
-		<module>lib-annotations</module>
-		<module>lib-utils</module>
-		<module>lib-gui-java8</module>
-		<module>lib-gui-generators</module>
-		<module>lib-gui-validation</module>
-		<module>gui-pilot</module>
-		<module>lib-gui-examples</module>
-		<module>lib-generator-utils</module>
-	</modules>
 </project>

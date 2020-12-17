@@ -17,6 +17,13 @@
 
 	<name>data-flow-manager</name>
 
+	<modules>
+		<module>model</module>
+		<module>generator</module>
+		<module>examples</module>
+		<module>data-flow-annotations</module>
+	</modules>
+
 	<properties>
 		<data-flow-manager-version>0.0.1-SNAPSHOT</data-flow-manager-version>
 	</properties>
@@ -56,10 +63,5 @@
 		</dependency>
 	</dependencies>
 
-	<modules>
-		<module>model</module>
-		<module>generator</module>
-		<module>examples</module>
-		<module>data-flow-annotations</module>
-	</modules>
+
 </project>

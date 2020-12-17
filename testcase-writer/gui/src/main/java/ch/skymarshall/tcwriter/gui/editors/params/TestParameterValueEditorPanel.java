@@ -116,7 +116,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 				TestParameterValue::getComplexTypeValues, TestParameterValue::updateComplexTypeValues);
 		complexValues.bind(toListModel(tc, editedParamValue)).bind(values(allEditedParameters));
 
-		tpModel.getTestApi().listen(api -> fixParamsOfApi(tc, api, editedParamValue, allEditedParameters));
+		tpModel.getTestApi().listenActive(api -> fixParamsOfApi(tc, api, editedParamValue, allEditedParameters));
 
 		add(new JScrollPane(valueTable), BorderLayout.CENTER);
 
@@ -129,11 +129,11 @@ public class TestParameterValueEditorPanel extends JPanel {
 				useRawValue, ParameterNature.TEST_API, useComplexType));
 
 		// When TC or parameters are changing, update the list of references
-		tc.listen(test -> tpModel.getReferences().setValue(this, getReferences(test, editedParamValue.getValue())));
-		editedParamValue.listen(values -> tpModel.getReferences().setValue(this, getReferences(tc.getValue(), values)));
+		tc.listenActive(test -> tpModel.getReferences().setValue(this, getReferences(test, editedParamValue.getValue())));
+		editedParamValue.listenActive(values -> tpModel.getReferences().setValue(this, getReferences(tc.getValue(), values)));
 
 		// when updating the parameter value, update the reference
-		editedParamValue.listen(value -> {
+		editedParamValue.listenActive(value -> {
 			tpModel.getValueNature().setValue(this, value.getValueFactory().getNature());
 			if (value.getValueFactory().getNature() == ParameterNature.REFERENCE) {
 				tpModel.getSelectedReference().setValue(this, (TestReference) value.getValueFactory());
@@ -143,7 +143,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 		});
 
 		// Edit the parameter value when changing the reference.
-		tpModel.getSelectedReference().listen(ref -> {
+		tpModel.getSelectedReference().listenActive(ref -> {
 			if (tpModel.getEditedParameterValue().getObjectValue().getValueFactory()
 					.getNature() == ParameterNature.REFERENCE) {
 				editedParamValue.getValue().setValueFactory(ref);
@@ -151,7 +151,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 		});
 
 		// Edit the parameter value when changing the nature of the factory.
-		tpModel.getValueNature().listen(v -> {
+		tpModel.getValueNature().listenActive(v -> {
 			final TestParameterValue paramValue = editedParamValue.getValue();
 
 			switch (v) {

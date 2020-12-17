@@ -44,7 +44,7 @@ public class StepEditorController extends GuiController {
 		final ObjectProperty<TestStep> testStep = guiModel.getSelectedStep();
 
 		model.getPossibleActors().setValue(this, sorted(td.getActors().values()));
-		model.getActor().listen(actor -> {
+		model.getActor().listenActive(actor -> {
 			if (actor != null) {
 				model.getPossibleActions().setValue(this, sorted(actor.getRole().getActions()));
 			} else {
@@ -52,7 +52,7 @@ public class StepEditorController extends GuiController {
 			}
 		});
 
-		testStep.listen(step -> {
+		testStep.listenActive(step -> {
 			if (step == null) {
 				emptySelectors();
 				emptyParam0();
@@ -63,18 +63,18 @@ public class StepEditorController extends GuiController {
 			model.getAction().setValue(this, step.getAction());
 			updateActionParameters(td, testStep);
 		});
-		model.getAction().listen(action -> updateActionParameters(td, testStep));
+		model.getAction().listenActive(action -> updateActionParameters(td, testStep));
 
 		model.getSelectorValue().setValue(this, TestParameterValue.NO_VALUE);
 		model.getActionParameterValue().setValue(this, TestParameterValue.NO_VALUE);
 		// set temporary cloned object, so it's possible to edit and cancel edition
 		model.getSelector()
-				.listen(selector -> model.getSelectorValue().setValue(this,
+				.listenActive(selector -> model.getSelectorValue().setValue(this,
 						model.getSelectorValue().getValue().derivate(selector)))
 				.addDependency(preserveOnUpdateOf(testStep));
 
 		model.getActionParameter()
-				.listen(param -> model.getActionParameterValue().setValue(this,
+				.listenActive(param -> model.getActionParameterValue().setValue(this,
 						model.getActionParameterValue().getValue().derivate(param)))
 				.addDependency(preserveOnUpdateOf(testStep));
 

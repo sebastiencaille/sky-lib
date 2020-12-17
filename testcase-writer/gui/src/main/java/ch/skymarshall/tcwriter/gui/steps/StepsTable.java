@@ -131,7 +131,7 @@ public class StepsTable extends JPanel {
 
 		add(new JScrollPane(stepsJTable), BorderLayout.CENTER);
 
-		model.getTc().listen(tc -> {
+		model.getTc().listenActive(tc -> {
 			steps.clear();
 			steps.setValues(tc.getSteps());
 		});

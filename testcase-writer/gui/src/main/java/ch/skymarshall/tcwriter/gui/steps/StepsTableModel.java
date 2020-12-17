@@ -33,7 +33,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		super(steps, Column.class);
 		this.testCaseProperty = testCaseProperty;
 		this.testControl = testControl;
-		testCaseProperty.listen(tc -> humanReadableVisitor = new HumanReadableVisitor(tc, false));
+		testCaseProperty.listenActive(tc -> humanReadableVisitor = new HumanReadableVisitor(tc, false));
 	}
 
 	@Override

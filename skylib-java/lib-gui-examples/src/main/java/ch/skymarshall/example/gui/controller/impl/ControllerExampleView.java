@@ -88,7 +88,7 @@ public class ControllerExampleView extends JFrame {
 
 		final JLabel booleanEditorCheck = new JLabel("Am I enabled?");
 		booleanEditorCheck.setName("booleanEditorCheck");
-		booleanProperty.listen(booleanEditorCheck::setEnabled);
+		booleanProperty.listenActive(booleanEditorCheck::setEnabled);
 
 		final JLabel booleanCounter = new JLabel();
 		booleanProperty.bind(counter()).listen(booleanCounter::setText);
@@ -122,7 +122,7 @@ public class ControllerExampleView extends JFrame {
 		stringProperty.bind(value(stringEditor));
 
 		final JLabel stringCheck = new JLabel();
-		stringProperty.listen(stringCheck::setText);
+		stringProperty.listenActive(stringCheck::setText);
 
 		final JLabel stringCounter = new JLabel();
 		stringProperty.bind(counter()).listen(stringCounter::setText);
@@ -140,7 +140,7 @@ public class ControllerExampleView extends JFrame {
 
 		final JLabel staticListSelectionCheck = new JLabel();
 		staticListSelectionCheck.setName("staticListSelectionCheck");
-		staticListSelection.listen(staticListSelectionCheck::setText);
+		staticListSelection.listenActive(staticListSelectionCheck::setText);
 
 		final JLabel selectionCounter = new JLabel();
 		staticListSelection.bind(counter()).listen(selectionCounter::setText);
@@ -164,7 +164,7 @@ public class ControllerExampleView extends JFrame {
 
 		final JLabel dynamicListSelectionCheck = new JLabel();
 		dynamicListSelectionCheck.setName("dynamicListSelectionCheck");
-		dynamicListSelectionProperty.listen(dynamicListSelectionCheck::setText);
+		dynamicListSelectionProperty.listenActive(dynamicListSelectionCheck::setText);
 
 		final JLabel dynamicListSelectionCounter = new JLabel();
 		dynamicListSelectionProperty.bind(counter()).listen(dynamicListSelectionCounter::setText);

@@ -88,26 +88,27 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 	}
 
 	/**
-	 * Listen when property is fully transmitting (transmitMode = BOTH)
+	 * Executes binding when the property is updated (transmitMode = BOTH only)
+	 * 
 	 * @param binding
 	 * @return
 	 */
-	public IBindingController listen(final Consumer<T> binding) {
+	public IBindingController listenActive(final Consumer<T> binding) {
 		IBindingController listen = createBindingChain().listen(binding);
 		listen.getVeto().inhibitTransmitToComponentWhen(b -> b.getProperty().getTransmitMode() != TransmitMode.BOTH);
 		return listen;
 	}
 
 	/**
-	 * Listen when property is transmitting (transmitMode = BOTH|TO_COMPONENT)
+	 * Executes binding when the property is updated (transmitMode = BOTH|TO_COMPONENT)
+	 * 
 	 * @param binding
 	 * @return
 	 */
-	public IBindingController alwaysListen(final Consumer<T> binding) {
+	public IBindingController listen(final Consumer<T> binding) {
 		return createBindingChain().listen(binding);
 	}
 
-	
 	protected void setObjectValue(final Object caller, final T newValue) {
 		if (!mustSendToComponent()) {
 			replaceValue(newValue);

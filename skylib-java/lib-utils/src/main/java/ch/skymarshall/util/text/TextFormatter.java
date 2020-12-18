@@ -178,6 +178,10 @@ public class TextFormatter<T extends TextFormatter<T, E>, E extends Exception> {
 		return append(builder.toString());
 	}
 
+	public String currentIndentation() {
+		return indentationManager.getIndentation();
+	}
+
 	public IOutput<E> getOutput() {
 		return output;
 	}

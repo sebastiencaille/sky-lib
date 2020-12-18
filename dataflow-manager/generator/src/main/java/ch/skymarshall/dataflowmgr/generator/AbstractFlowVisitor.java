@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import ch.skymarshall.dataflowmgr.model.Binding;
 import ch.skymarshall.dataflowmgr.model.BindingRule;
+import ch.skymarshall.dataflowmgr.model.Call;
 import ch.skymarshall.dataflowmgr.model.Condition;
 import ch.skymarshall.dataflowmgr.model.ExternalAdapter;
 import ch.skymarshall.dataflowmgr.model.Flow;
@@ -23,7 +24,7 @@ public abstract class AbstractFlowVisitor {
 	public static class BindingContext {
 
 		public final Binding binding;
-		public final List<ExternalAdapter> adapters;
+		public final List<ExternalAdapter> bindingAdapters;
 		public final Set<ExternalAdapter> processedAdapters;
 		public final List<Condition> activators;
 
@@ -34,7 +35,7 @@ public abstract class AbstractFlowVisitor {
 
 		public BindingContext(final Binding binding, final String inputDataType) {
 			this.binding = binding;
-			adapters = binding.getAdapters();
+			bindingAdapters = binding.getAdapters();
 			processedAdapters = new HashSet<>();
 			activators = BindingRule.getActivators(binding.getRules()).collect(Collectors.toList());
 			inputDataPoint = binding.fromDataPoint();
@@ -133,10 +134,10 @@ public abstract class AbstractFlowVisitor {
 	 * @param undeclaredAdapters
 	 * @return
 	 */
-	protected Set<ExternalAdapter> listAdapters(final BindingContext context, final Condition activator) {
+	protected Set<ExternalAdapter> listAdapters(final BindingContext context, final Call<?> call) {
 		final HashSet<ExternalAdapter> adaptersRequiredByActivator = new HashSet<>();
-		for (final Entry<String, String> param : activator.getParameters().entrySet()) {
-			for (final ExternalAdapter adapter : context.adapters) {
+		for (final Entry<String, String> param : call.getParameters().entrySet()) {
+			for (final ExternalAdapter adapter : context.bindingAdapters) {
 				final boolean match = adapter.getName().endsWith('.' + param.getKey())
 						|| adapter.getReturnType().equals(param.getValue());
 				if (match) {

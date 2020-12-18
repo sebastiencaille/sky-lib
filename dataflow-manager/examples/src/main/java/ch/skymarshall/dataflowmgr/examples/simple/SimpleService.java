@@ -9,18 +9,22 @@ import ch.skymarshall.dataflowmgr.examples.simple.dto.MyData;
 public class SimpleService {
 
 	public MyData init(final String input) {
+		assert input != null;
 		FlowReport.report.add(new ReportEntry("init"));
 		return new MyData(input);
 	}
 
-	public MyData enhance(final MyData input, @Input("enhancement") final String enhancement) {
-		FlowReport.report.add(new ReportEntry("enhance"));
-		return new MyData(input, " -> enhanced with " + enhancement);
+	public MyData complete(final MyData input, @Input("completion") final String completion) {
+		assert input != null;
+		assert completion != null;
+		FlowReport.report.add(new ReportEntry("complete"));
+		return new MyData(input, " -> complete with " + completion);
 	}
 
-	public MyData noEnhance(final MyData input) {
-		FlowReport.report.add(new ReportEntry("noEnhance"));
-		return new MyData(input, " -> not enhanced");
+	public MyData keepAsIs(final MyData input) {
+		assert input != null;
+		FlowReport.report.add(new ReportEntry("keepAsIs"));
+		return new MyData(input, " -> keep as is");
 	}
 
 }

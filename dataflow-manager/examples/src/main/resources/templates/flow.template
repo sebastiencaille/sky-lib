@@ -15,13 +15,12 @@ public class ${flow.name} extends AbstractFlow {
 		simpleExternalAdapter.reset();
 		
 	 	execute("Hello");
-		Assert.assertEquals("Hello -> enhanced with World", simpleExternalAdapter.getOutput());
+		Assert.assertEquals("Hello -> complete with World", simpleExternalAdapter.getOutput());
 		
 		execute("Hi");
-		Assert.assertEquals("Hi -> enhanced with There", simpleExternalAdapter.getOutput());
+		Assert.assertEquals("Hi -> complete with There", simpleExternalAdapter.getOutput());
 		
 		execute("Huh");
-		Assert.assertEquals("Huh -> not enhanced", simpleExternalAdapter.getOutput());
+		Assert.assertEquals("Huh -> keep as is", simpleExternalAdapter.getOutput());
 	}
-
 }

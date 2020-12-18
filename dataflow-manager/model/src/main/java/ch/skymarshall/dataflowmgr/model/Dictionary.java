@@ -27,6 +27,7 @@ public class Dictionary {
 			});
 		}
 
+		// Maps the service to the instance available in the target code
 		public Calls<T> map(final String from, final String to) {
 			final Calls<T> derivates = new Calls<>(kind, derivateFunc);
 			callsName.entrySet().stream().filter(kv -> kv.getKey().startsWith(from + "."))

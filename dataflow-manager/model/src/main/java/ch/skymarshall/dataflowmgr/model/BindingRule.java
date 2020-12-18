@@ -1,6 +1,7 @@
 package ch.skymarshall.dataflowmgr.model;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -45,7 +46,7 @@ public class BindingRule extends WithId {
 	}
 
 	public static Stream<Condition> getActivators(final Collection<BindingRule> rules) {
-		return getAll(rules, Type.ACTIVATION).map(BindingRule::activator);
+		return getAll(rules, Type.ACTIVATION,Condition.class);
 	}
 
 	public static BindingRule exclusion(final Binding exclusion) {
@@ -56,6 +57,10 @@ public class BindingRule extends WithId {
 		return new BindingRule(Type.CONDITIONAL, condition);
 	}
 
+	public static Optional< ConditionalBindingGroup> getCondition(final Collection<BindingRule> rules) {
+		return getAll(rules, Type.CONDITIONAL, ConditionalBindingGroup.class).findFirst();
+	}
+	
 	public static Stream<BindingRule> getAll(final Collection<BindingRule> rules, final Type type) {
 		return rules.stream().filter(r -> r.ruleType == type);
 	}

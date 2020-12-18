@@ -13,8 +13,8 @@ public class SimpleExternalAdapter {
 		output = null;
 	}
 
-	public String enhancement(final MyData input) {
-		FlowReport.report.add(new ReportEntry("enhancement"));
+	public String getCompletion(final MyData input) {
+		FlowReport.report.add(new ReportEntry("getCompletion"));
 		switch (input.parameter) {
 		case "Hello":
 			return "World";
@@ -26,6 +26,8 @@ public class SimpleExternalAdapter {
 	}
 
 	public void display(final MyData result) {
+		System.out.println("r:"+result);
+		assert result != null;
 		FlowReport.report.add(new ReportEntry("display"));
 		this.output = result.output;
 	}

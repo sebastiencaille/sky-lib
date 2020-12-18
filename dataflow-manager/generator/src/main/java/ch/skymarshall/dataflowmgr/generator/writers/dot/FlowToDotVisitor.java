@@ -44,9 +44,10 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 		final String label;
 		final DotFileGenerator.Shape shape;
 
-		public Node(final String name, final String label, final DotFileGenerator.Shape shape) {
+		public Node(final String name,  final String label, String enhancer, final DotFileGenerator.Shape shape) {
 			this.name = name;
-			this.label = label;
+			String shortLabel = label.substring(label.lastIndexOf('.') + 1);
+			this.label = (enhancer != null)?enhancer.replace("$", shortLabel): shortLabel;
 			this.shape = shape;
 		}
 
@@ -117,22 +118,24 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 		for (final Condition activator : context.activators) {
 			final String activatorNode = addCondition(activator);
 			final Set<ExternalAdapter> missingAdapters = context.unprocessedAdapters(listAdapters(context, activator));
-			addAdapters(missingAdapters, linkFrom, activatorNode);
+			addExternalAdapters(missingAdapters, linkFrom, activatorNode);
 			context.processedAdapters.addAll(missingAdapters);
 			linkFrom = activatorNode;
 		}
 
-		addAdapters(context.processedAdapters, linkFrom, processorNode);
+		Set<ExternalAdapter> missingAdapters = context.unprocessedAdapters(context.bindingAdapters);
+		addExternalAdapters(missingAdapters, linkFrom, processorNode);
 
 		graph.links.add(new Link(processorNode, context.outputDataPoint));
 	}
 
-	private void addAdapters(final Set<ExternalAdapter> adapters, final String linkFrom, final String linkTo) {
-		if (adapters.isEmpty()) {
+	private void addExternalAdapters(final Set<ExternalAdapter> externalAdapters, final String linkFrom,
+			final String linkTo) {
+		if (externalAdapters.isEmpty()) {
 			graph.links.add(new Link(linkFrom, linkTo));
 			return;
 		}
-		for (final ExternalAdapter adapter : adapters) {
+		for (final ExternalAdapter adapter : externalAdapters) {
 			final String activatorNodeName = addAdapter(adapter);
 			graph.links.add(new Link(linkFrom, activatorNodeName));
 			graph.links.add(new Link(activatorNodeName, linkTo));
@@ -140,7 +143,7 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 	}
 
 	private void addDataPoint(final String name) {
-		graph.nodes.put(name, new Node(name, "", ch.skymarshall.util.generators.DotFileGenerator.Shape.POINT));
+		graph.nodes.put(name, new Node(name, "", null, ch.skymarshall.util.generators.DotFileGenerator.Shape.POINT));
 	}
 
 	private String getConditionGroupNodeName(final ConditionalBindingGroup group) {
@@ -153,27 +156,27 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 
 	private String addConditionGroup(final ConditionalBindingGroup group) {
 		final String condGroupNode = getConditionGroupNodeName(group);
-		graph.nodes.put(condGroupNode, new Node(condGroupNode, group.getName(), DotFileGenerator.Shape.DIAMOND));
+		graph.nodes.put(condGroupNode, new Node(condGroupNode, group.getName(), "$ ?", DotFileGenerator.Shape.DIAMOND));
 		return condGroupNode;
 	}
 
 	private String addCondition(final Condition condition) {
 		final String condNode = getConditionNodeName(condition);
-		graph.nodes.put(condNode, new Node(condNode, condition.getCall(), DotFileGenerator.Shape.OCTAGON));
+		graph.nodes.put(condNode, new Node(condNode, condition.getCall(),  "$: true", DotFileGenerator.Shape.OCTAGON));
 		return condNode;
 	}
 
 	private String addAdapter(final ExternalAdapter adapter) {
 		final String nodeName = toVar(adapter);
 		graph.nodes.put(nodeName,
-				new Node(nodeName, adapter.getCall(), ch.skymarshall.util.generators.DotFileGenerator.Shape.ELLIPSE));
+				new Node(nodeName, adapter.getCall(), "External:$", ch.skymarshall.util.generators.DotFileGenerator.Shape.BOX));
 		return nodeName;
 	}
 
 	private String addProcessor(final Binding binding, final Processor processor) {
 		final String nodeName = toVar(binding) + "_" + processor.getCall().replace('.', '_');
 		graph.nodes.put(nodeName,
-				new Node(nodeName, processor.getCall(), ch.skymarshall.util.generators.DotFileGenerator.Shape.BOX));
+				new Node(nodeName, processor.getCall(), null, ch.skymarshall.util.generators.DotFileGenerator.Shape.ELLIPSE));
 		return nodeName;
 	}
 

@@ -17,25 +17,27 @@ import ch.skymarshall.util.generators.Template;
 public abstract class AbstractJavaVisitor extends AbstractFlowVisitor {
 
 	protected static class BindingImplVariable {
-		final String parameterName;
-		final String parameterType;
-		final String variable;
+		final String name;
+		final String dataType;
+		final String codeVariable;
 
-		public BindingImplVariable(final String parameterName, final String parameterType, final String variable) {
-			this.parameterName = parameterName;
-			this.parameterType = parameterType;
-			this.variable = variable;
+		public BindingImplVariable(final String name, final String dataType, final String codeVariable) {
+			if (name.startsWith("get")) {
+				this.name = Character.toLowerCase(name.charAt(3)) + name.substring(4);
+			} else {
+				this.name = name;
+			}
+			this.dataType = dataType;
+			this.codeVariable = codeVariable;
 		}
 
 		public BindingImplVariable(final Call<?> call, final String variable) {
-			this.parameterName = call.getName().substring(call.getName().lastIndexOf('.') + 1);
-			this.parameterType = call.getReturnType();
-			this.variable = variable;
+			this(call.getName().substring(call.getName().lastIndexOf('.') + 1), call.getReturnType(), variable);
 		}
 
 		@Override
 		public String toString() {
-			return parameterName + ": " + parameterType;
+			return name + ": " + dataType;
 		}
 
 	}
@@ -63,21 +65,21 @@ public abstract class AbstractJavaVisitor extends AbstractFlowVisitor {
 
 	protected String guessParameter(final BindingContext context, final String paramName, final String paramType) {
 		if (paramType.equals(context.inputDataType)) {
-			return availableVars.stream().filter(a -> a.parameterName.equals(context.inputDataPoint)).findFirst()
-					.map(v -> v.variable).get();
+			return availableVars.stream().filter(a -> a.name.equals(context.inputDataPoint)).findFirst()
+					.map(v -> v.codeVariable).get();
 		}
-		List<BindingImplVariable> matches = availableVars.stream().filter(a -> a.parameterName.equals(paramName))
+		List<BindingImplVariable> matches = availableVars.stream().filter(a -> a.name.equals(paramName))
 				.collect(Collectors.toList());
 		if (matches.size() > 1) {
 			throw new IllegalArgumentException("Too many possible parameters found for " + paramName + ": " + matches);
 		} else if (matches.size() == 1) {
-			return matches.get(0).variable;
+			return matches.get(0).codeVariable;
 		}
-		matches = availableVars.stream().filter(a -> a.parameterType.equals(paramType)).collect(Collectors.toList());
+		matches = availableVars.stream().filter(a -> a.dataType.equals(paramType)).collect(Collectors.toList());
 		if (matches.size() > 1) {
 			throw new IllegalArgumentException("Too many possible parameters found for " + paramType + ": " + matches);
 		} else if (matches.size() == 1) {
-			return matches.get(0).variable;
+			return matches.get(0).codeVariable;
 		}
 		throw new IllegalStateException("No parameter found for " + paramName + "/" + paramType);
 	}

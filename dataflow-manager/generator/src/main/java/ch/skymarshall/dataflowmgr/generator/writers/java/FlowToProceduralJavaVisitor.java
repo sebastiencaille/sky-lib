@@ -96,7 +96,7 @@ public class FlowToProceduralJavaVisitor extends AbstractJavaVisitor {
 		}
 
 		// Execution
-		visitExternalAdapters(context, context.unprocessedAdapters(context.adapters));
+		visitExternalAdapters(context, context.unprocessedAdapters(context.bindingAdapters));
 		if (!isExit) {
 			generator.appendIndent();
 			if (isConditionalExec) {
@@ -154,7 +154,7 @@ public class FlowToProceduralJavaVisitor extends AbstractJavaVisitor {
 			 {
 		for (final ExternalAdapter adapter : externalAdapter) {
 			final BindingImplVariable parameter = new BindingImplVariable(adapter, varNameOf(context.binding, adapter));
-			appendNewVarAndCall(context, parameter.variable, adapter);
+			appendNewVarAndCall(context, parameter.codeVariable, adapter);
 			availableVars.add(parameter);
 		}
 	}

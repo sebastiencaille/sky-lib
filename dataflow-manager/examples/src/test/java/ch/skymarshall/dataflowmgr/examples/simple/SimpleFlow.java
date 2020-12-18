@@ -11,30 +11,30 @@ public class SimpleFlow extends AbstractFlow {
 		// ------------------------- inputDataPoint -> simpleService.init -> simpleService_init -------------------------
 		ch.skymarshall.dataflowmgr.examples.simple.dto.MyData simpleService_init = this.simpleService.init(inputDataPoint);
 		
-		// ------------------------- simpleService_init -> simpleService.enhance -> enhanced -------------------------
-		boolean activated_a62388d9_376e_4e14_83af_8cc77899841c = true;
-		if (activated_a62388d9_376e_4e14_83af_8cc77899841c) {
-		    activated_a62388d9_376e_4e14_83af_8cc77899841c &= this.simpleServiceConditions.isEnhanceEnabled(simpleService_init);
+		// ------------------------- simpleService_init -> simpleService.complete -> complete -------------------------
+		boolean activated_c0f38ebe_4902_4054_85ff_5dd949ea2697 = true;
+		if (activated_c0f38ebe_4902_4054_85ff_5dd949ea2697) {
+		    activated_c0f38ebe_4902_4054_85ff_5dd949ea2697 &= this.simpleFlowConditions.mustComplete(simpleService_init);
 		}
-		ch.skymarshall.dataflowmgr.examples.simple.dto.MyData enhanced = null;
-		boolean enhanced_available = false;
-		if (activated_a62388d9_376e_4e14_83af_8cc77899841c) {
-		    String simpleExternalAdapter_enhancementa62388d9_376e_4e14_83af_8cc77899841c = this.simpleExternalAdapter.enhancement(simpleService_init);
-		    enhanced = this.simpleService.enhance(simpleService_init,simpleExternalAdapter_enhancementa62388d9_376e_4e14_83af_8cc77899841c);
-		    enhanced_available = true;
-		}
-		
-		// ------------------------- simpleService_init -> simpleService.noEnhance -> enhanced -------------------------
-		boolean enhanced_executeDefault = !enhanced_available;
-		
-		if (enhanced_executeDefault) {
-		    enhanced = this.simpleService.noEnhance(simpleService_init);
-		    enhanced_available = true;
+		ch.skymarshall.dataflowmgr.examples.simple.dto.MyData complete = null;
+		boolean complete_available = false;
+		if (activated_c0f38ebe_4902_4054_85ff_5dd949ea2697) {
+		    String simpleExternalAdapter_getCompletionc0f38ebe_4902_4054_85ff_5dd949ea2697 = this.simpleExternalAdapter.getCompletion(simpleService_init);
+		    complete = this.simpleService.complete(simpleService_init,simpleExternalAdapter_getCompletionc0f38ebe_4902_4054_85ff_5dd949ea2697);
+		    complete_available = true;
 		}
 		
-		// ------------------------- enhanced -> exit -> exit -------------------------
-		if (enhanced_available) {
-		    this.simpleExternalAdapter.display(enhanced);
+		// ------------------------- simpleService_init -> simpleService.keepAsIs -> complete -------------------------
+		boolean complete_executeDefault = !complete_available;
+		
+		if (complete_executeDefault) {
+		    complete = this.simpleService.keepAsIs(simpleService_init);
+		    complete_available = true;
+		}
+		
+		// ------------------------- complete -> exit -> exit -------------------------
+		if (complete_available) {
+		    this.simpleExternalAdapter.display(complete);
 		}
 		
 		
@@ -45,13 +45,12 @@ public class SimpleFlow extends AbstractFlow {
 		simpleExternalAdapter.reset();
 		
 	 	execute("Hello");
-		Assert.assertEquals("Hello -> enhanced with World", simpleExternalAdapter.getOutput());
+		Assert.assertEquals("Hello -> complete with World", simpleExternalAdapter.getOutput());
 		
 		execute("Hi");
-		Assert.assertEquals("Hi -> enhanced with There", simpleExternalAdapter.getOutput());
+		Assert.assertEquals("Hi -> complete with There", simpleExternalAdapter.getOutput());
 		
 		execute("Huh");
-		Assert.assertEquals("Huh -> not enhanced", simpleExternalAdapter.getOutput());
+		Assert.assertEquals("Huh -> keep as is", simpleExternalAdapter.getOutput());
 	}
-
 }

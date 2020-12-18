@@ -9,12 +9,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import ch.skymarshall.dataflowmgr.model.Binding;
 import ch.skymarshall.dataflowmgr.model.BindingRule;
 import ch.skymarshall.dataflowmgr.model.Condition;
+import ch.skymarshall.dataflowmgr.model.ConditionalBindingGroup;
 import ch.skymarshall.dataflowmgr.model.ExternalAdapter;
 import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.Processor;
@@ -160,7 +162,7 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 	private void visitExecution(final BindingContext context, final Processor processor,
 			final List<Binding> bindingDeps, final Set<Binding> exclusions, final boolean isConditionalExec) {
 
-		final List<String> adapterNames = visitExternalAdapters(context, context.unprocessedAdapters(context.adapters));
+		final List<String> adapterNames = visitExternalAdapters(context, context.unprocessedAdapters(context.bindingAdapters));
 
 		// Call service if not excluded
 		flowFactories.appendIndented("Maybe<FlowExecution> callService = Maybe.just(execution)").indent() //
@@ -179,10 +181,7 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 					.eoli().append(".doOnComplete(() -> System.out.println(\"%s: Call skipped\"))", context.binding); //
 		}
 
-		if (context.binding.isExit()) {
-			flowFactories.eoli().append(".doOnSuccess(f -> f.set%s(DataPointState.TRIGGERED))",
-					toCamelCase(bindingStateOf(context.binding)));
-		} else {
+		if (!context.binding.isExit()) {
 			flowFactories.eoli().append(".doOnSuccess(f -> f.set%s(", toCamelCase(context.outputDataPoint)) //
 					.appendMethodCall("this", processor.getCall(), guessParameters(context, processor)).append("))");
 		}
@@ -272,7 +271,7 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 				.eoli().append(".doOnTerminate(() -> Arrays.stream(callbacks).forEach(Runnable::run))") //
 				.eos().unindent().eol();
 
-		// Call activation when all deps are ok
+		// Call default activation when all deps are ok
 		flowFactories.appendIndented("Maybe<FlowExecution> first = Maybe.just(execution)").indent();
 		addBindingDepsCheck(context.binding, bindingDeps). //
 				eoli().append(".doOnSuccess(r -> activationCheck.subscribe())").eos().unindent();
@@ -292,7 +291,7 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 			}
 
 			adapterNames.add("adapter_" + toVariable(adapter));
-			flowFactories.appendIndented("final Maybe<?> adapter_%s = Maybe.just(execution)", toVariable(adapter));
+			flowFactories.appendIndentedLine("final Maybe<?> adapter_%s = Maybe.just(execution)", toVariable(adapter));
 			flowFactories.indent(); //
 
 			if (adapter.hasReturnType()) {
@@ -326,20 +325,39 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 
 	}
 
+	/**
+	 * Add dependencies checks. 
+	 * 
+	 * For normal state, wait until parents are fully triggered.<br>
+	 * For default dependency, wait until parents + other conditions are eith
+	 * @param binding
+	 * @param dependencies
+	 * @param isDefaultConditionCheck
+	 * @return
+	 */
 	private JavaCodeGenerator<RuntimeException> addBindingDepsCheck(final Binding binding,
 			final List<Binding> dependencies) {
 		if (!dependencies.isEmpty()) {
+			final Optional<ConditionalBindingGroup> condition = BindingRule.getCondition(binding.getRules());
 			flowFactories.eoli().append(".mapOptional(f -> (")
 					.append(dependencies.stream()
 							.map(d -> "(DataPointState.TRIGGERED == f." + dataPointStateOf(d)
-									+ " || DataPointState.SKIPPED == f." + dataPointStateOf(d) + ")")
-							.distinct().collect(Collectors.joining(" && ")))
+									+ (isExclusion(condition, d)?" || DataPointState.SKIPPED == f." + dataPointStateOf(d):"") + ")")
+							.distinct().collect(Collectors.joining("\n " + flowFactories.currentIndentation()+" && ")))
 					.append(")?Optional.of(execution):Optional.empty())");
 		}
 		flowFactories.eoli().append(".mapOptional(f -> f.canTrigger%s()?Optional.of(execution):Optional.empty())",
 				toCamelCase(varNameOf(binding)));
 
 		return flowFactories;
+	}
+	
+	private boolean isExclusion(Optional<ConditionalBindingGroup> condition, Binding dependency) {
+		if (!condition.isPresent()) {
+			return false;
+		}
+		Optional<ConditionalBindingGroup> dependencyCondition = BindingRule.getCondition(dependency.getRules());
+		return condition.get().getName().equals(dependencyCondition.map(ConditionalBindingGroup::getName).orElse("---"));
 	}
 
 	private void addAdapterZip(final List<String> adapterNames) {

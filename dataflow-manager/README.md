@@ -4,30 +4,28 @@ The current code does not match the following description.
 
 ## Abstract
 
-It eventually happens, at some point in time, that the teams involved in a software development/maintenance are losing control of the software flows. This could be caused by turnover, short deadlines, design issues, general complexity of the code, ...
+It eventually happens, at some point in time, that the teams involved in a software development/maintenance are losing control of the software flows. This could be caused by turnover, short deadlines, design issues, general complexity of the code/business, ...
 
 ## What is a software
 A software is basically made of data (or a collection of...) and processing units (processors).
 ```
-data -> processor -> data
+data -> processor -> data -> processor -> ...
 ```
 
-**Data** may be coming as an external input or from a processor. 
-Acquiring some the data may require send an explicit event (to trigger a remote call to a remote service or send a data request to a storage)
-Data are sent as an external output (which may be a remote service, a storage device, ...) 
-**Processors** are pure functions that are transforming some data to other ones.
+**Data** are coming from an external service and a processed by the processors. 
+The data may be acquired asynchronously (input data) or synchronously (call to an external service, like a database, some hardware, ...).
+The data produced by the system are sent to an external service (like a database, some hardware, ...) 
 
-The combination of data and processors can be considered as a data processing **flow**.
+**Processors** are pure functions that are transforming some data into other data.
+
+The combination of data, processors and external systems are forming a data **flow**.
 ```                 
-external input -> processor -> processor output ->
-processor input + external input -> processor -> processor output ->
-...
-processor input + external input -> processor -> external output
+input data -> processor -> data [ + external data ] -> processor -> ... -> output data
 ```
 
-In a traditional software, procedures and functions are taking the responsibility of loading durable data, processing all data and opportunistically triggering the subsequent processing. This approach is creating a hierarchy, which may become quite complex.
+In a traditional software, the procedures/methods/functions are taking the responsibility of loading durable data, processing all data and opportunistically triggering the subsequent processing. This approach is creating a hierarchy, which may become quite complex.
 
-In a reactive software, the loading of the durable data are still performed by the processor, and the processor is still opportunistically triggering the subsequent processing. A complexity is added because of the difficulty to transfer a growing set of data from a processing to another one
+In a reactive software, the loading of the durable data are still performed by the processors, and each processor is still opportunistically triggering the subsequent processing. A complexity is added because of the difficulty to transfer a growing set of data from a processing to the next one
 ```
 processor1(processorInput): myData=f_1(processorInput)
     return r(processor2(myData))...
@@ -39,25 +37,35 @@ processor2(processorInput): myData=f_2(processorInput)
 ```
 
 ## The hierarchy issue
-It is quite common to introduce bugs because no one really remembers which feature is calling some piece of code. We must understand that in some cases there is no sane way to identify the impact of some changes.
+It is quite common to introduce bugs because no one really remembers which feature is calling some piece of code.
+The consequence is, that at some point there is no sane way to identify the impact of that piece of code.
 
-Why ? The reason is that reverse-engineering the call hierarchy is a complex task, and reverse-engineering the conditions in which calls are performed are even more complex.
+The reason is that reverse-engineering the call hierarchy is a complex task, and finding the conditions in which calls are performed are even more complex.
 
 ## Solving the hierarchy issue
-As a solution, we could consider taking an approach that is closer to the data processing flow, as previously defined, and a more data-centric conception.
+A solution could be to use the data processing flow approach, as previously defined, and a more data-centric conception.
 
 A flow is defined by 
 * Processors, which are 
    * taking a set of data as parameters
-   * producing a set of data (except for the processor at the end of the chain, which is only consuming data)
-* Binding Rules (defining how to bind two processors according to the data semantic and conditions)
-* External Adapters (to retrieve/push external data, eg from a database)
-* Data Points
-
-A Binding rule is taking data from a Data Point, calls the External Adapters, calls a Processor and output the data to another DataPoint.  
+   * producing a set of data (except for the last processor of the chain, which is only consuming data)
+* External Adapters (to retrieve/push data from an external service, eg from a database)
+* Conditions, which are controlling which processor must be executed according to the current set of data
 
 The flow implementations would be defined in a way that allows adequate visualization and testing.
 
+## Example
 
+The flow must be understood this way:
+* The 'input data' are sent to the 'init' processor
+* Depending of the 'Complete' conditions
+   * if 'mustComplete', 'getCompletion' is called to retrieve data from an external system, then 'complete' processor is called
+   * otherwise, the 'keepAsIs' processor is called
+* The resulting data are then sent to the 'display' of an external system
+* The flow is terminated
 
+![Flow definition](examples/src/test/java/ch/skymarshall/dataflowmgr/examples/SimpleTest.java)
+![Procedural execution](examples/src/test/java/ch/skymarshall/dataflowmgr/examples/simple/SimpleFlow.java)
+![Reactive execution](examples/src/test/java/ch/skymarshall/dataflowmgr/examples/simplerx/SimpleFlow.java)
+![Simple flow](examples/src/test/reports/SimpleFlow.png)
 

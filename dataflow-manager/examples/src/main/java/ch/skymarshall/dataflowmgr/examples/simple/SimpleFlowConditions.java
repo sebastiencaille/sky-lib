@@ -5,10 +5,10 @@ import ch.skymarshall.dataflowmgr.examples.simple.FlowReport.ReportEntry;
 import ch.skymarshall.dataflowmgr.examples.simple.dto.MyData;
 
 @Conditions
-public class SimpleServiceConditions {
+public class SimpleFlowConditions {
 
-	public boolean isEnhanceEnabled(final MyData input) {
-		FlowReport.report.add(new ReportEntry("isEnhanceEnabled"));
+	public boolean mustComplete(final MyData input) {
+		FlowReport.report.add(new ReportEntry("mustComplete"));
 		return input.parameter.equals("Hello") || input.parameter.equals("Hi");
 	}
 

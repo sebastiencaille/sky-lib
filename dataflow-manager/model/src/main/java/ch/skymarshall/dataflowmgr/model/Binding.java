@@ -6,6 +6,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * How to bind data, processors and external adapters.
+ * 
+ * TODO: add aliases to override call parameters and call results 
+ * 
+ * @author scaille
+ *
+ */
 public class Binding extends WithId {
 
 	public static class Builder {
@@ -22,8 +30,8 @@ public class Binding extends WithId {
 			this.processor = processor;
 		}
 
-		public Builder activator(final Condition isEnhance) {
-			rules.add(BindingRule.activator(isEnhance));
+		public Builder activateIf(final Condition condition) {
+			rules.add(BindingRule.activator(condition));
 			return this;
 		}
 
@@ -32,7 +40,14 @@ public class Binding extends WithId {
 			return new Binding(this);
 		}
 
-		public Builder withExternalAdapter(final ExternalAdapter adapter) {
+		/**
+		 * Adds an access to an external adapter. The adapter will be called before the
+		 * conditions if needed.
+		 * 
+		 * @param adapter
+		 * @return
+		 */
+		public Builder withExternalData(final ExternalAdapter adapter) {
 			adapters.add(adapter);
 			return this;
 		}
@@ -48,8 +63,16 @@ public class Binding extends WithId {
 		return new Builder(fromProcessor.asDataPoint(), toProcessor);
 	}
 
+	public static Builder builder(Condition condition, final Processor fromProcessor, final Processor toProcessor) {
+		return new Builder(fromProcessor.asDataPoint(), toProcessor).activateIf(condition);
+	}
+
 	public static Builder builder(final String fromDataPoint, final Processor toProcessor) {
 		return new Builder(fromDataPoint, toProcessor);
+	}
+
+	public static Builder builder(Condition condition, final String fromDataPoint, final Processor toProcessor) {
+		return new Builder(fromDataPoint, toProcessor).activateIf(condition);
 	}
 
 	private final Builder config;

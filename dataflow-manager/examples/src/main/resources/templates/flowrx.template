@@ -45,16 +45,15 @@ public class ${flow.name} extends ch.skymarshall.dataflowmgr.examples.simple.Abs
 		FlowReport.report.clear();
 		simpleExternalAdapter.reset();
 		final FlowExecution result = execute(in, e -> e.doOnSuccess(r -> finished.release())).blockingGet();
-		Assert.assertTrue(finished.tryAcquire(500, TimeUnit.MILLISECONDS));
-		Assert.assertFalse(finished.tryAcquire(500, TimeUnit.MILLISECONDS));
+		Assert.assertTrue(finished.tryAcquire(100, TimeUnit.MILLISECONDS));
 		Assert.assertEquals(out, simpleExternalAdapter.getOutput());
 		System.out.println(FlowReport.report);
 	}
 
 	@Test
 	public void testFlow() throws InterruptedException {
-		runTest("Hello", "Hello -> enhanced with World");
-		runTest("Hi", "Hi -> enhanced with There");
-		runTest("Huh", "Huh -> not enhanced");
+		runTest("Hello", "Hello -> complete with World");
+		runTest("Hi", "Hi -> complete with There");
+		runTest("Huh", "Huh -> keep as is");
 	}
 }

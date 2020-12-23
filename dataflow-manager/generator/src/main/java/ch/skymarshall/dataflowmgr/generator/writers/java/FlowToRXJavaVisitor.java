@@ -22,6 +22,8 @@ import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.Processor;
 import ch.skymarshall.util.generators.JavaCodeGenerator;
 import ch.skymarshall.util.generators.Template;
+import ch.skymarshall.util.helpers.StreamHelper;
+import ch.skymarshall.util.helpers.WrongCountException;
 
 /**
  * Tricky points:
@@ -81,8 +83,8 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 			flowCode.append(")").eos();
 		}
 
-		final Set<String> inputBindings = flow.getBindings().stream().filter(Binding::isEntry).map(this::varNameOf)
-				.collect(Collectors.toSet());
+		final String inputBinding = flow.getBindings().stream().filter(Binding::isEntry).map(this::varNameOf)
+				.collect(StreamHelper.single()).orElseThrow(WrongCountException::new);
 
 		final Map<String, String> templateProperties = new HashMap<>();
 		templateProperties.put("package", packageName);
@@ -92,8 +94,7 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 		templateProperties.put("flow.executionClass", flowClass.toString());
 		templateProperties.put("flow.factories", flowFactories.toString());
 		templateProperties.put("flow.code", flowCode.toString());
-		templateProperties.put("flow.zip",
-				String.format("Maybe.zipArray(a -> execution, %s)", String.join(", ", inputBindings)));
+		templateProperties.put("flow.start", inputBinding);
 		templateProperties.put("imports", imports.stream().map(i -> "import " + i + ";").collect(joining("\n")));
 		return template.apply(templateProperties, JavaCodeGenerator.classToSource(packageName, flow.getName()));
 	}
@@ -162,7 +163,8 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 	private void visitExecution(final BindingContext context, final Processor processor,
 			final List<Binding> bindingDeps, final Set<Binding> exclusions, final boolean isConditionalExec) {
 
-		final List<String> adapterNames = visitExternalAdapters(context, context.unprocessedAdapters(context.bindingAdapters));
+		final List<String> adapterNames = visitExternalAdapters(context,
+				context.unprocessedAdapters(context.bindingAdapters));
 
 		// Call service if not excluded
 		flowFactories.appendIndented("Maybe<FlowExecution> callService = Maybe.just(execution)").indent() //
@@ -326,10 +328,11 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 	}
 
 	/**
-	 * Add dependencies checks. 
+	 * Add dependencies checks.
 	 * 
 	 * For normal state, wait until parents are fully triggered.<br>
 	 * For default dependency, wait until parents + other conditions are eith
+	 * 
 	 * @param binding
 	 * @param dependencies
 	 * @param isDefaultConditionCheck
@@ -340,10 +343,11 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 		if (!dependencies.isEmpty()) {
 			final Optional<ConditionalBindingGroup> condition = BindingRule.getCondition(binding.getRules());
 			flowFactories.eoli().append(".mapOptional(f -> (")
-					.append(dependencies.stream()
-							.map(d -> "(DataPointState.TRIGGERED == f." + dataPointStateOf(d)
-									+ (isExclusion(condition, d)?" || DataPointState.SKIPPED == f." + dataPointStateOf(d):"") + ")")
-							.distinct().collect(Collectors.joining("\n " + flowFactories.currentIndentation()+" && ")))
+					.append(dependencies.stream().map(d -> "(DataPointState.TRIGGERED == f." + dataPointStateOf(d)
+							+ (isExclusion(condition, d) ? " || DataPointState.SKIPPED == f." + dataPointStateOf(d)
+									: "")
+							+ ")").distinct()
+							.collect(Collectors.joining("\n " + flowFactories.currentIndentation() + " && ")))
 					.append(")?Optional.of(execution):Optional.empty())");
 		}
 		flowFactories.eoli().append(".mapOptional(f -> f.canTrigger%s()?Optional.of(execution):Optional.empty())",
@@ -351,13 +355,14 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 
 		return flowFactories;
 	}
-	
+
 	private boolean isExclusion(Optional<ConditionalBindingGroup> condition, Binding dependency) {
 		if (!condition.isPresent()) {
 			return false;
 		}
 		Optional<ConditionalBindingGroup> dependencyCondition = BindingRule.getCondition(dependency.getRules());
-		return condition.get().getName().equals(dependencyCondition.map(ConditionalBindingGroup::getName).orElse("---"));
+		return condition.get().getName()
+				.equals(dependencyCondition.map(ConditionalBindingGroup::getName).orElse("---"));
 	}
 
 	private void addAdapterZip(final List<String> adapterNames) {

@@ -70,7 +70,7 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 
 	protected boolean fired = false;
 
-	public AbstractGuiComponent(final GuiPilot pilot) {
+	protected AbstractGuiComponent(final GuiPilot pilot) {
 		this.pilot = pilot;
 	}
 
@@ -137,7 +137,7 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 				pilot.setActionDelay(polling.getActionDelay());
 			}
 
-			result.setInformation(pilot, toString(), cachedElement);
+			result.setInformation(toString(), cachedElement);
 			return result.orElseGet(() -> onFail.apply(result, pilot));
 		}
 	}

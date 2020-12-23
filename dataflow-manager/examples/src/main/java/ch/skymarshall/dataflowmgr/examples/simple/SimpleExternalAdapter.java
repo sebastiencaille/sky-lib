@@ -26,7 +26,6 @@ public class SimpleExternalAdapter {
 	}
 
 	public void display(final MyData result) {
-		System.out.println("r:"+result);
 		assert result != null;
 		FlowReport.report.add(new ReportEntry("display"));
 		this.output = result.output;

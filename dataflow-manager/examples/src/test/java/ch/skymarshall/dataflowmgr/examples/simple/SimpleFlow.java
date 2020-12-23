@@ -12,15 +12,15 @@ public class SimpleFlow extends AbstractFlow {
 		ch.skymarshall.dataflowmgr.examples.simple.dto.MyData simpleService_init = this.simpleService.init(inputDataPoint);
 		
 		// ------------------------- simpleService_init -> simpleService.complete -> complete -------------------------
-		boolean activated_c0f38ebe_4902_4054_85ff_5dd949ea2697 = true;
-		if (activated_c0f38ebe_4902_4054_85ff_5dd949ea2697) {
-		    activated_c0f38ebe_4902_4054_85ff_5dd949ea2697 &= this.simpleFlowConditions.mustComplete(simpleService_init);
+		boolean activated_complete_mustComplete = true;
+		if (activated_complete_mustComplete) {
+		    activated_complete_mustComplete &= this.simpleFlowConditions.mustComplete(simpleService_init);
 		}
 		ch.skymarshall.dataflowmgr.examples.simple.dto.MyData complete = null;
 		boolean complete_available = false;
-		if (activated_c0f38ebe_4902_4054_85ff_5dd949ea2697) {
-		    String simpleExternalAdapter_getCompletionc0f38ebe_4902_4054_85ff_5dd949ea2697 = this.simpleExternalAdapter.getCompletion(simpleService_init);
-		    complete = this.simpleService.complete(simpleService_init,simpleExternalAdapter_getCompletionc0f38ebe_4902_4054_85ff_5dd949ea2697);
+		if (activated_complete_mustComplete) {
+		    String simpleExternalAdapter_getCompletioncomplete_mustComplete = this.simpleExternalAdapter.getCompletion(simpleService_init);
+		    complete = this.simpleService.complete(simpleService_init,simpleExternalAdapter_getCompletioncomplete_mustComplete);
 		    complete_available = true;
 		}
 		

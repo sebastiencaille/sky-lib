@@ -48,7 +48,7 @@ public abstract class AbstractAttributeMetaData<T> {
 
 	public abstract int getModifier();
 
-	public AbstractAttributeMetaData(final String name, final Class<?> type) {
+	protected AbstractAttributeMetaData(final String name, final Class<?> type) {
 		super();
 		this.name = name;
 		this.type = type;

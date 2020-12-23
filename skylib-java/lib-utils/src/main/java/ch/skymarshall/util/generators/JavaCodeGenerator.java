@@ -38,6 +38,10 @@ public class JavaCodeGenerator<E extends Exception> extends TextFormatter<JavaCo
 		return packageName.replace('.', '/') + '/' + className + ".java";
 	}
 
+	public static String simpleNameOf(String c) {
+		return c.substring(c.lastIndexOf('.') + 1);
+	}
+
 	public static String toConstant(final String str) {
 		final StringBuilder builder = new StringBuilder(str.length());
 		int prevUpper = 0;

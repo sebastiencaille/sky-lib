@@ -23,27 +23,42 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import ch.skymarshall.util.helpers.StreamHelper;
+import ch.skymarshall.util.helpers.WrongCountException;
 
 public class StreamHelperTest extends Assert {
 
 	@Test
-	public void zeroOrOneTest() throws Exception {
+	public void singleTest() {
+		Arrays.asList(1).stream().collect(StreamHelper.single()).orElseThrow(WrongCountException::new);
+		try {
+			Arrays.asList().stream().collect(StreamHelper.single()).orElseThrow(WrongCountException::new);
+		} catch (final Exception e) {
+			assertEquals("Wrong count: 0", e.getMessage());
+		}
+		try {
+			Arrays.asList(1, 2).stream().collect(StreamHelper.single()).orElseThrow(WrongCountException::new);
+		} catch (final Exception e) {
+			assertEquals("Wrong count: 2", e.getMessage());
+		}
+	}
+
+	@Test
+	public void zeroOrOneTest() {
 
 		final Optional<Integer> zeroOrOne1 = Arrays.asList(1).stream().collect(StreamHelper.zeroOrOne())
-				.orElseThrow(cnt -> new Exception("Fail"));
+				.optionalOrThrow(WrongCountException::new);
 		assertTrue(zeroOrOne1.isPresent());
 		assertEquals(Integer.valueOf(1), zeroOrOne1.get());
 
 		final Optional<Integer> zeroOrOne2 = Collections.<Integer>emptyList().stream().collect(StreamHelper.zeroOrOne())
-				.orElseThrow(cnt -> new Exception("Fail"));
+				.optionalOrThrow(WrongCountException::new);
 		assertFalse(zeroOrOne2.isPresent());
 
 		try {
-			Arrays.asList(1, 2).stream().collect(StreamHelper.zeroOrOne())
-					.orElseThrow(cnt -> new Exception("Fail: " + cnt));
+			Arrays.asList(1, 2).stream().collect(StreamHelper.zeroOrOne()).orElseThrow(WrongCountException::new);
 			fail("Call should have failed");
 		} catch (final Exception e) {
-			assertEquals("Fail: 2", e.getMessage());
+			assertEquals("Wrong count: 2", e.getMessage());
 		}
 	}
 

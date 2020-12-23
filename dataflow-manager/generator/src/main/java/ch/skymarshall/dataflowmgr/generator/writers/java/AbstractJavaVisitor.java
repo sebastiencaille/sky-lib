@@ -8,7 +8,9 @@ import java.util.stream.Collectors;
 
 import ch.skymarshall.dataflowmgr.generator.AbstractFlowVisitor;
 import ch.skymarshall.dataflowmgr.model.Binding;
+import ch.skymarshall.dataflowmgr.model.BindingRule;
 import ch.skymarshall.dataflowmgr.model.Call;
+import ch.skymarshall.dataflowmgr.model.ExternalAdapter;
 import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.WithId;
 import ch.skymarshall.util.generators.JavaCodeGenerator;
@@ -86,6 +88,21 @@ public abstract class AbstractJavaVisitor extends AbstractFlowVisitor {
 
 	protected String varNameOf(final Binding binding, final Call<?> call) {
 		return call.getCall().replace('.', '_') + toVariable(binding);
+	}
+
+	
+	protected String toVariable(final ExternalAdapter adapter) {
+		return JavaCodeGenerator.simpleNameOf(adapter.getName());
+	}
+	
+	protected String toVariable(final Binding binding) {
+		String activatorsSuffix = BindingRule.getActivators(binding.getRules())
+				.map(c -> JavaCodeGenerator.simpleNameOf(c.getName())).collect(Collectors.joining("_"));
+		String bindingName = binding.toDataPoint().replace('-', '_');
+		if (!activatorsSuffix.isEmpty()) {
+			bindingName = bindingName + '_' + activatorsSuffix;
+		}
+		return bindingName;
 	}
 
 	protected String toVariable(final WithId withId) {

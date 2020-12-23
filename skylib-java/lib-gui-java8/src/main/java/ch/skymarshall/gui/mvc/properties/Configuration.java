@@ -15,7 +15,6 @@
  ******************************************************************************/
 package ch.skymarshall.gui.mvc.properties;
 
-import java.awt.geom.NoninvertibleTransformException;
 import java.util.function.Consumer;
 
 import ch.skymarshall.gui.mvc.AutoCommitListener;

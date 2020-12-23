@@ -28,13 +28,13 @@ public class SimpleFlow extends ch.skymarshall.dataflowmgr.examples.simple.Abstr
 			this.inputDataPoint = inputDataPoint;
 		}
 
-		private DataPointState state_binding_e434cfa1_2612_4a5f_9731_4060ec68eb67 = DataPointState.NOT_TRIGGERED;
-		private void setStateBindingE434cfa126124a5f97314060ec68eb67(DataPointState state_binding_e434cfa1_2612_4a5f_9731_4060ec68eb67) {
-		    this.state_binding_e434cfa1_2612_4a5f_9731_4060ec68eb67 = state_binding_e434cfa1_2612_4a5f_9731_4060ec68eb67;
+		private DataPointState state_binding_simpleService_init = DataPointState.NOT_TRIGGERED;
+		private void setStateBindingSimpleServiceInit(DataPointState state_binding_simpleService_init) {
+		    this.state_binding_simpleService_init = state_binding_simpleService_init;
 		}
-		private synchronized boolean canTriggerBindingE434cfa126124a5f97314060ec68eb67() {
-		    if (this.state_binding_e434cfa1_2612_4a5f_9731_4060ec68eb67 == DataPointState.NOT_TRIGGERED) {
-		        this.state_binding_e434cfa1_2612_4a5f_9731_4060ec68eb67 = DataPointState.TRIGGERING;
+		private synchronized boolean canTriggerBindingSimpleServiceInit() {
+		    if (this.state_binding_simpleService_init == DataPointState.NOT_TRIGGERED) {
+		        this.state_binding_simpleService_init = DataPointState.TRIGGERING;
 		        return true;
 		    }
 		    return false;
@@ -49,13 +49,13 @@ public class SimpleFlow extends ch.skymarshall.dataflowmgr.examples.simple.Abstr
 		    this.state_simpleService_init = DataPointState.TRIGGERED;
 		}
 		
-		private DataPointState state_binding_c0f38ebe_4902_4054_85ff_5dd949ea2697 = DataPointState.NOT_TRIGGERED;
-		private void setStateBindingC0f38ebe4902405485ff5dd949ea2697(DataPointState state_binding_c0f38ebe_4902_4054_85ff_5dd949ea2697) {
-		    this.state_binding_c0f38ebe_4902_4054_85ff_5dd949ea2697 = state_binding_c0f38ebe_4902_4054_85ff_5dd949ea2697;
+		private DataPointState state_binding_complete_mustComplete = DataPointState.NOT_TRIGGERED;
+		private void setStateBindingCompleteMustComplete(DataPointState state_binding_complete_mustComplete) {
+		    this.state_binding_complete_mustComplete = state_binding_complete_mustComplete;
 		}
-		private synchronized boolean canTriggerBindingC0f38ebe4902405485ff5dd949ea2697() {
-		    if (this.state_binding_c0f38ebe_4902_4054_85ff_5dd949ea2697 == DataPointState.NOT_TRIGGERED) {
-		        this.state_binding_c0f38ebe_4902_4054_85ff_5dd949ea2697 = DataPointState.TRIGGERING;
+		private synchronized boolean canTriggerBindingCompleteMustComplete() {
+		    if (this.state_binding_complete_mustComplete == DataPointState.NOT_TRIGGERED) {
+		        this.state_binding_complete_mustComplete = DataPointState.TRIGGERING;
 		        return true;
 		    }
 		    return false;
@@ -70,29 +70,29 @@ public class SimpleFlow extends ch.skymarshall.dataflowmgr.examples.simple.Abstr
 		    this.state_complete = DataPointState.TRIGGERED;
 		}
 		
-		private java.lang.String simpleExternalAdapter_getCompletionc0f38ebe_4902_4054_85ff_5dd949ea2697;
-		private void setSimpleExternalAdapterGetCompletionc0f38ebe4902405485ff5dd949ea2697(java.lang.String simpleExternalAdapter_getCompletionc0f38ebe_4902_4054_85ff_5dd949ea2697) {
-		    this.simpleExternalAdapter_getCompletionc0f38ebe_4902_4054_85ff_5dd949ea2697 = simpleExternalAdapter_getCompletionc0f38ebe_4902_4054_85ff_5dd949ea2697;
+		private java.lang.String simpleExternalAdapter_getCompletioncomplete_mustComplete;
+		private void setSimpleExternalAdapterGetCompletioncompleteMustComplete(java.lang.String simpleExternalAdapter_getCompletioncomplete_mustComplete) {
+		    this.simpleExternalAdapter_getCompletioncomplete_mustComplete = simpleExternalAdapter_getCompletioncomplete_mustComplete;
 		}
 		
-		private DataPointState state_binding_57c87497_f1ed_438a_bd60_c3f1cc15af7e = DataPointState.NOT_TRIGGERED;
-		private void setStateBinding57c87497F1ed438aBd60C3f1cc15af7e(DataPointState state_binding_57c87497_f1ed_438a_bd60_c3f1cc15af7e) {
-		    this.state_binding_57c87497_f1ed_438a_bd60_c3f1cc15af7e = state_binding_57c87497_f1ed_438a_bd60_c3f1cc15af7e;
+		private DataPointState state_binding_complete = DataPointState.NOT_TRIGGERED;
+		private void setStateBindingComplete(DataPointState state_binding_complete) {
+		    this.state_binding_complete = state_binding_complete;
 		}
-		private synchronized boolean canTriggerBinding57c87497F1ed438aBd60C3f1cc15af7e() {
-		    if (this.state_binding_57c87497_f1ed_438a_bd60_c3f1cc15af7e == DataPointState.NOT_TRIGGERED) {
-		        this.state_binding_57c87497_f1ed_438a_bd60_c3f1cc15af7e = DataPointState.TRIGGERING;
+		private synchronized boolean canTriggerBindingComplete() {
+		    if (this.state_binding_complete == DataPointState.NOT_TRIGGERED) {
+		        this.state_binding_complete = DataPointState.TRIGGERING;
 		        return true;
 		    }
 		    return false;
 		}
-		private DataPointState state_binding_33684897_c3a7_40fa_aa90_49eebe018796 = DataPointState.NOT_TRIGGERED;
-		private void setStateBinding33684897C3a740faAa9049eebe018796(DataPointState state_binding_33684897_c3a7_40fa_aa90_49eebe018796) {
-		    this.state_binding_33684897_c3a7_40fa_aa90_49eebe018796 = state_binding_33684897_c3a7_40fa_aa90_49eebe018796;
+		private DataPointState state_binding_exit = DataPointState.NOT_TRIGGERED;
+		private void setStateBindingExit(DataPointState state_binding_exit) {
+		    this.state_binding_exit = state_binding_exit;
 		}
-		private synchronized boolean canTriggerBinding33684897C3a740faAa9049eebe018796() {
-		    if (this.state_binding_33684897_c3a7_40fa_aa90_49eebe018796 == DataPointState.NOT_TRIGGERED) {
-		        this.state_binding_33684897_c3a7_40fa_aa90_49eebe018796 = DataPointState.TRIGGERING;
+		private synchronized boolean canTriggerBindingExit() {
+		    if (this.state_binding_exit == DataPointState.NOT_TRIGGERED) {
+		        this.state_binding_exit = DataPointState.TRIGGERING;
 		        return true;
 		    }
 		    return false;
@@ -101,10 +101,10 @@ public class SimpleFlow extends ch.skymarshall.dataflowmgr.examples.simple.Abstr
 	}
 
 	// ------------------------- inputDataPoint -> simpleService.init -> simpleService_init -------------------------
-	private Maybe<FlowExecution> binding_e434cfa1_2612_4a5f_9731_4060ec68eb67(FlowExecution execution, final Function<Maybe<FlowExecution>, Maybe<FlowExecution>> callModifier, Runnable... callbacks) {
+	private Maybe<FlowExecution> binding_simpleService_init(FlowExecution execution, final Function<Maybe<FlowExecution>, Maybe<FlowExecution>> callModifier, Runnable... callbacks) {
 	    Maybe<FlowExecution> callService = Maybe.just(execution)
-	        .doOnSuccess(e -> e.setStateBindingE434cfa126124a5f97314060ec68eb67(DataPointState.TRIGGERED))
-	        .doOnComplete(() -> execution.setStateBindingE434cfa126124a5f97314060ec68eb67(DataPointState.SKIPPED))
+	        .doOnSuccess(e -> e.setStateBindingSimpleServiceInit(DataPointState.TRIGGERED))
+	        .doOnComplete(() -> execution.setStateBindingSimpleServiceInit(DataPointState.SKIPPED))
 	        .doOnSuccess(f -> f.setSimpleServiceInit(this.simpleService.init(f.inputDataPoint)))
 	        .doOnTerminate(() -> Arrays.stream(callbacks).forEach(Runnable::run))
 	        .subscribeOn(Schedulers.computation());
@@ -115,22 +115,22 @@ public class SimpleFlow extends ch.skymarshall.dataflowmgr.examples.simple.Abstr
 	    final Maybe<FlowExecution> callAdaptersAndServiceConst = callService;
 	
 	    Maybe<FlowExecution> first = Maybe.just(execution)
-	        .mapOptional(f -> f.canTriggerBindingE434cfa126124a5f97314060ec68eb67()?Optional.of(execution):Optional.empty())
+	        .mapOptional(f -> f.canTriggerBindingSimpleServiceInit()?Optional.of(execution):Optional.empty())
 	        .doOnSuccess(r -> callAdaptersAndServiceConst.subscribe());
 	    return first;
 	}
 	
 	// ------------------------- simpleService_init -> simpleService.complete -> complete -------------------------
-	private Maybe<FlowExecution> binding_c0f38ebe_4902_4054_85ff_5dd949ea2697(FlowExecution execution, final Function<Maybe<FlowExecution>, Maybe<FlowExecution>> callModifier, Runnable... callbacks) {
-	    final Maybe<?> adapter_c65da0c6_ad19_46b2_a932_32801a2da459 = Maybe.just(execution)
+	private Maybe<FlowExecution> binding_complete_mustComplete(FlowExecution execution, final Function<Maybe<FlowExecution>, Maybe<FlowExecution>> callModifier, Runnable... callbacks) {
+	    final Maybe<?> adapter_getCompletion = Maybe.just(execution)
 	        .map(f -> this.simpleExternalAdapter.getCompletion(f.simpleService_init))
-	        .doOnSuccess(execution::setSimpleExternalAdapterGetCompletionc0f38ebe4902405485ff5dd949ea2697)
+	        .doOnSuccess(execution::setSimpleExternalAdapterGetCompletioncompleteMustComplete)
 	        .subscribeOn(Schedulers.io());
 	
 	    Maybe<FlowExecution> callService = Maybe.just(execution)
-	        .doOnSuccess(e -> e.setStateBindingC0f38ebe4902405485ff5dd949ea2697(DataPointState.TRIGGERED))
-	        .doOnComplete(() -> execution.setStateBindingC0f38ebe4902405485ff5dd949ea2697(DataPointState.SKIPPED))
-	        .doOnSuccess(f -> f.setComplete(this.simpleService.complete(f.simpleService_init,f.simpleExternalAdapter_getCompletionc0f38ebe_4902_4054_85ff_5dd949ea2697)))
+	        .doOnSuccess(e -> e.setStateBindingCompleteMustComplete(DataPointState.TRIGGERED))
+	        .doOnComplete(() -> execution.setStateBindingCompleteMustComplete(DataPointState.SKIPPED))
+	        .doOnSuccess(f -> f.setComplete(this.simpleService.complete(f.simpleService_init,f.simpleExternalAdapter_getCompletioncomplete_mustComplete)))
 	        .doOnTerminate(() -> Arrays.stream(callbacks).forEach(Runnable::run))
 	        .subscribeOn(Schedulers.computation());
 	    if (callModifier != null) {
@@ -140,32 +140,32 @@ public class SimpleFlow extends ch.skymarshall.dataflowmgr.examples.simple.Abstr
 	
 	    final Maybe<FlowExecution> callServiceConst = callService;
 	    final Maybe<FlowExecution> callAdaptersAndServiceConst = Maybe.just(execution)
-	        .zipWith(adapter_c65da0c6_ad19_46b2_a932_32801a2da459, (r, s) -> execution)
+	        .zipWith(adapter_getCompletion, (r, s) -> execution)
 	        .flatMap(r -> callServiceConst);
-	    final Maybe<Boolean> activator_98a02654_2639_4c0a_80e2_d2fb85f932a2 = Maybe.just(execution)
+	    final Maybe<Boolean> activator_8a73eeae_2866_453d_bc82_a48cb9ee9bf1 = Maybe.just(execution)
 	        .map(f -> this.simpleFlowConditions.mustComplete(f.simpleService_init))
 	        .subscribeOn(Schedulers.computation());
 	
 	    final Maybe<FlowExecution> activationCheck = Maybe.just(true)
-	        .zipWith(activator_98a02654_2639_4c0a_80e2_d2fb85f932a2, (u, r) -> u.booleanValue() && r.booleanValue())
+	        .zipWith(activator_8a73eeae_2866_453d_bc82_a48cb9ee9bf1, (u, r) -> u.booleanValue() && r.booleanValue())
 	        .mapOptional(b -> b ? Optional.of(execution) : Optional.empty())
 	        .flatMap(e -> callAdaptersAndServiceConst)
-	        .doOnComplete(() -> { execution.setStateBindingC0f38ebe4902405485ff5dd949ea2697(DataPointState.TRIGGERED); execution.setStateComplete(DataPointState.SKIPPED); })
+	        .doOnComplete(() -> { execution.setStateBindingCompleteMustComplete(DataPointState.TRIGGERED); execution.setStateComplete(DataPointState.SKIPPED); })
 	        .doOnTerminate(() -> Arrays.stream(callbacks).forEach(Runnable::run));
 	
 	    Maybe<FlowExecution> first = Maybe.just(execution)
 	        .mapOptional(f -> ((DataPointState.TRIGGERED == f.state_simpleService_init))?Optional.of(execution):Optional.empty())
-	        .mapOptional(f -> f.canTriggerBindingC0f38ebe4902405485ff5dd949ea2697()?Optional.of(execution):Optional.empty())
+	        .mapOptional(f -> f.canTriggerBindingCompleteMustComplete()?Optional.of(execution):Optional.empty())
 	        .doOnSuccess(r -> activationCheck.subscribe());
 	    return first;
 	}
 	
 	// ------------------------- simpleService_init -> simpleService.keepAsIs -> complete -------------------------
-	private Maybe<FlowExecution> binding_57c87497_f1ed_438a_bd60_c3f1cc15af7e(FlowExecution execution, final Function<Maybe<FlowExecution>, Maybe<FlowExecution>> callModifier, Runnable... callbacks) {
+	private Maybe<FlowExecution> binding_complete(FlowExecution execution, final Function<Maybe<FlowExecution>, Maybe<FlowExecution>> callModifier, Runnable... callbacks) {
 	    Maybe<FlowExecution> callService = Maybe.just(execution)
-	        .doOnSuccess(e -> e.setStateBinding57c87497F1ed438aBd60C3f1cc15af7e(DataPointState.TRIGGERED))
+	        .doOnSuccess(e -> e.setStateBindingComplete(DataPointState.TRIGGERED))
 	        .mapOptional(f -> DataPointState.SKIPPED == f.state_complete?Optional.of(f):Optional.empty())
-	        .doOnComplete(() -> execution.setStateBinding57c87497F1ed438aBd60C3f1cc15af7e(DataPointState.SKIPPED))
+	        .doOnComplete(() -> execution.setStateBindingComplete(DataPointState.SKIPPED))
 	        .doOnSuccess(f -> f.setComplete(this.simpleService.keepAsIs(f.simpleService_init)))
 	        .doOnTerminate(() -> Arrays.stream(callbacks).forEach(Runnable::run))
 	        .subscribeOn(Schedulers.computation());
@@ -178,20 +178,20 @@ public class SimpleFlow extends ch.skymarshall.dataflowmgr.examples.simple.Abstr
 	    Maybe<FlowExecution> first = Maybe.just(execution)
 	        .mapOptional(f -> ((DataPointState.TRIGGERED == f.state_simpleService_init)
 	          && (DataPointState.TRIGGERED == f.state_complete || DataPointState.SKIPPED == f.state_complete))?Optional.of(execution):Optional.empty())
-	        .mapOptional(f -> f.canTriggerBinding57c87497F1ed438aBd60C3f1cc15af7e()?Optional.of(execution):Optional.empty())
+	        .mapOptional(f -> f.canTriggerBindingComplete()?Optional.of(execution):Optional.empty())
 	        .doOnSuccess(r -> callAdaptersAndServiceConst.subscribe());
 	    return first;
 	}
 	
 	// ------------------------- complete -> exit -> exit -------------------------
-	private Maybe<FlowExecution> binding_33684897_c3a7_40fa_aa90_49eebe018796(FlowExecution execution, final Function<Maybe<FlowExecution>, Maybe<FlowExecution>> callModifier, Runnable... callbacks) {
-	    final Maybe<?> adapter_4008fffd_b3b6_4b47_850c_70a8d6e66ec9 = Maybe.just(execution)
+	private Maybe<FlowExecution> binding_exit(FlowExecution execution, final Function<Maybe<FlowExecution>, Maybe<FlowExecution>> callModifier, Runnable... callbacks) {
+	    final Maybe<?> adapter_display = Maybe.just(execution)
 	        .doOnSuccess(f -> this.simpleExternalAdapter.display(f.complete))
 	        .subscribeOn(Schedulers.io());
 	
 	    Maybe<FlowExecution> callService = Maybe.just(execution)
-	        .doOnSuccess(e -> e.setStateBinding33684897C3a740faAa9049eebe018796(DataPointState.TRIGGERED))
-	        .doOnComplete(() -> execution.setStateBinding33684897C3a740faAa9049eebe018796(DataPointState.SKIPPED))
+	        .doOnSuccess(e -> e.setStateBindingExit(DataPointState.TRIGGERED))
+	        .doOnComplete(() -> execution.setStateBindingExit(DataPointState.SKIPPED))
 	        .doOnTerminate(() -> Arrays.stream(callbacks).forEach(Runnable::run))
 	        .subscribeOn(Schedulers.computation());
 	    if (callModifier != null) {
@@ -201,11 +201,11 @@ public class SimpleFlow extends ch.skymarshall.dataflowmgr.examples.simple.Abstr
 	
 	    final Maybe<FlowExecution> callServiceConst = callService;
 	    final Maybe<FlowExecution> callAdaptersAndServiceConst = Maybe.just(execution)
-	        .zipWith(adapter_4008fffd_b3b6_4b47_850c_70a8d6e66ec9, (r, s) -> execution)
+	        .zipWith(adapter_display, (r, s) -> execution)
 	        .flatMap(r -> callServiceConst);
 	    Maybe<FlowExecution> first = Maybe.just(execution)
 	        .mapOptional(f -> ((DataPointState.TRIGGERED == f.state_complete))?Optional.of(execution):Optional.empty())
-	        .mapOptional(f -> f.canTriggerBinding33684897C3a740faAa9049eebe018796()?Optional.of(execution):Optional.empty())
+	        .mapOptional(f -> f.canTriggerBindingExit()?Optional.of(execution):Optional.empty())
 	        .doOnSuccess(r -> callAdaptersAndServiceConst.subscribe());
 	    return first;
 	}
@@ -217,15 +217,15 @@ public class SimpleFlow extends ch.skymarshall.dataflowmgr.examples.simple.Abstr
 		
 		final FlowExecution execution = new FlowExecution(inputDataPoint);
 		// ------------------------- complete -> exit -> exit -------------------------
-		final Maybe<FlowExecution> binding_33684897_c3a7_40fa_aa90_49eebe018796 = binding_33684897_c3a7_40fa_aa90_49eebe018796(execution, exitModifier);
+		final Maybe<FlowExecution> binding_exit = binding_exit(execution, exitModifier);
 		// ------------------------- simpleService_init -> simpleService.keepAsIs -> complete -------------------------
-		final Maybe<FlowExecution> binding_57c87497_f1ed_438a_bd60_c3f1cc15af7e = binding_57c87497_f1ed_438a_bd60_c3f1cc15af7e(execution, null, () -> binding_33684897_c3a7_40fa_aa90_49eebe018796.subscribe());
+		final Maybe<FlowExecution> binding_complete = binding_complete(execution, null, () -> binding_exit.subscribe());
 		// ------------------------- simpleService_init -> simpleService.complete -> complete -------------------------
-		final Maybe<FlowExecution> binding_c0f38ebe_4902_4054_85ff_5dd949ea2697 = binding_c0f38ebe_4902_4054_85ff_5dd949ea2697(execution, null, () -> binding_57c87497_f1ed_438a_bd60_c3f1cc15af7e.subscribe(), () -> binding_33684897_c3a7_40fa_aa90_49eebe018796.subscribe());
+		final Maybe<FlowExecution> binding_complete_mustComplete = binding_complete_mustComplete(execution, null, () -> binding_complete.subscribe(), () -> binding_exit.subscribe());
 		// ------------------------- inputDataPoint -> simpleService.init -> simpleService_init -------------------------
-		final Maybe<FlowExecution> binding_e434cfa1_2612_4a5f_9731_4060ec68eb67 = binding_e434cfa1_2612_4a5f_9731_4060ec68eb67(execution, null, () -> binding_c0f38ebe_4902_4054_85ff_5dd949ea2697.subscribe(), () -> binding_57c87497_f1ed_438a_bd60_c3f1cc15af7e.subscribe());
+		final Maybe<FlowExecution> binding_simpleService_init = binding_simpleService_init(execution, null, () -> binding_complete_mustComplete.subscribe(), () -> binding_complete.subscribe());
 		
-		return Maybe.zipArray(a -> execution, binding_e434cfa1_2612_4a5f_9731_4060ec68eb67);
+		return binding_simpleService_init;
 	}
 
 	private void runTest(final String in, final String out) throws InterruptedException {

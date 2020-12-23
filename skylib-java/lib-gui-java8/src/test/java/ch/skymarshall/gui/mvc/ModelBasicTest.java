@@ -25,7 +25,6 @@ import org.junit.Test;
 import ch.skymarshall.gui.TestObject;
 import ch.skymarshall.gui.mvc.converters.ConversionException;
 import ch.skymarshall.gui.mvc.factories.Converters;
-import ch.skymarshall.gui.mvc.persisters.FieldAccess;
 import ch.skymarshall.gui.mvc.persisters.MethodHandlerAccess;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 import ch.skymarshall.gui.mvc.properties.Configuration;

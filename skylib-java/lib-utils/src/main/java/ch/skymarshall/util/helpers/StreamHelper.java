@@ -24,12 +24,21 @@ import java.util.stream.Stream;
 
 public interface StreamHelper {
 
-	public static class ZeroOrOne<T> {
+	public static class Single<T> {
+		private boolean allowZero = false;
 		private Optional<T> value = Optional.empty();
 		private int count;
 
-		public T getValue() {
-			return value.orElse(null);
+		private Single(boolean allowZero) {
+			this.allowZero = allowZero;
+		}
+
+		public static <T> Single<T> zeroOrOne() {
+			return new Single<>(true);
+		}
+
+		public static <T> Single<T> single() {
+			return new Single<>(false);
 		}
 
 		void setValue(final T newValue) {
@@ -37,29 +46,62 @@ public interface StreamHelper {
 				return;
 			}
 			count++;
-			if (!value.isPresent()) {
-				this.value = Optional.of(newValue);
-			}
+			this.value = Optional.ofNullable(newValue);
 		}
 
-		public <E extends Exception> Optional<T> orElseThrow(final IntFunction<E> supplier) throws E {
-			if (count > 1) {
+		Single<T> combiner(Single<T> t2) {
+			return this;
+		}
+
+		private boolean wrongCount() {
+			return (count == 0 && !allowZero) || count > 1;
+		}
+
+		public T get() {
+			if (wrongCount()) {
+				throw new WrongCountException(count);
+			}
+			return value.orElse(null);
+		}
+
+		public Optional<T> optional() {
+			if (wrongCount()) {
+				throw new WrongCountException(count);
+			}
+			return value;
+		}
+
+		public <E extends Exception> T orElseThrow(final IntFunction<E> supplier) throws E {
+			if (wrongCount()) {
+				throw supplier.apply(count);
+			}
+			return value.orElse(null);
+		}
+
+		public <E extends Exception> Optional<T> optionalOrThrow(final IntFunction<E> supplier) throws E {
+			if (wrongCount()) {
 				throw supplier.apply(count);
 			}
 			return value;
 		}
-	}
+}
 
 	/**
-	 * Collector that allows to check for zero or one value available
+	 * Collector that checks for zero or one value available
 	 *
 	 * @return
 	 */
-	public static <E> Collector<E, ?, ZeroOrOne<E>> zeroOrOne() {
-		return Collector.of(ZeroOrOne::new, ZeroOrOne::setValue, (left, right) -> {
-			left.setValue(right.getValue());
-			return left;
-		});
+	public static <E> Collector<E, ?, Single<E>> zeroOrOne() {
+		return Collector.of(Single::zeroOrOne, Single::setValue, Single::combiner);
+	}
+
+	/**
+	 * Collector that checks for zero or one value available
+	 *
+	 * @return
+	 */
+	public static <E> Collector<E, ?, Single<E>> single() {
+		return Collector.of(Single::single, Single::setValue, Single::combiner);
 	}
 
 	public static <T> void throwIfContainsNull(final Stream<T> stream) {

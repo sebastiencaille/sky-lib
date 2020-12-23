@@ -37,7 +37,7 @@ public class ${flow.name} extends ch.skymarshall.dataflowmgr.examples.simple.Abs
 		
 		final FlowExecution execution = new FlowExecution(inputDataPoint);
 		${flow.code}
-		return ${flow.zip};
+		return ${flow.start};
 	}
 
 	private void runTest(final String in, final String out) throws InterruptedException {

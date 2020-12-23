@@ -4,13 +4,12 @@ import ch.skymarshall.gui.TestObjectTableModel.Columns;
 import ch.skymarshall.gui.model.ListModel;
 import ch.skymarshall.gui.swing.model.ListModelTableModel;
 
-public  class TestObjectTableModel extends ListModelTableModel<TestObject, Columns> {
+public class TestObjectTableModel extends ListModelTableModel<TestObject, Columns> {
 
 	public enum Columns {
 		VAL;
 	}
 
-	
 	public TestObjectTableModel(final ListModel<TestObject> model) {
 		super(model, Columns.class);
 	}

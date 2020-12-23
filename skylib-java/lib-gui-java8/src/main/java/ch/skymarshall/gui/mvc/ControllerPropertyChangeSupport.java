@@ -121,7 +121,7 @@ public class ControllerPropertyChangeSupport {
 		}
 		return info.stream().anyMatch(i -> i.caller == caller);
 	}
-	
+
 	public String getModificationStack(String name) {
 		final Deque<CallInfo> info = callInfo.get(name);
 		if (info == null) {
@@ -214,13 +214,12 @@ public class ControllerPropertyChangeSupport {
 		public void transmitAllToComponentOnly() {
 			properties.forEach(p -> p.setTransmitMode(TransmitMode.TO_COMPONENT_ONLY));
 		}
-		
+
 		@Override
 		public void enableAllTransmit() {
 			properties.forEach(p -> p.setTransmitMode(TransmitMode.BOTH));
 		}
-		
-		
+
 		@Override
 		public void addPropertyChangeListener(final String name, final PropertyChangeListener propertyChangeListener) {
 			listeners.add(new ListenerRegistration(name, propertyChangeListener));
@@ -253,7 +252,5 @@ public class ControllerPropertyChangeSupport {
 	public IScopedSupport scoped(final Object scope) {
 		return scopedRegistrations.computeIfAbsent(scope, ScopedRegistration::new);
 	}
-
-
 
 }

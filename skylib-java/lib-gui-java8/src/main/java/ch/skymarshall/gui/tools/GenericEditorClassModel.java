@@ -8,9 +8,9 @@ import java.util.ResourceBundle;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
-import ch.skymarshall.gui.mvc.BindingChain.EndOfChain;
 import ch.skymarshall.annotations.Labeled;
 import ch.skymarshall.annotations.Ordered;
+import ch.skymarshall.gui.mvc.BindingChain.EndOfChain;
 import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty.ErrorNotifier;
 import ch.skymarshall.gui.mvc.properties.AbstractTypedProperty;

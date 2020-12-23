@@ -34,32 +34,32 @@ import ch.skymarshall.gui.swing.model.ListModelTableModel;
  */
 public abstract class AbstractJTablePopup<T> extends AbstractPopup<T> {
 
-    private final JTable                                  table;
-    private final ListModelTableModel<T, ?>               model;
-    private final ObjectProperty<? extends Collection<T>> selections;
+	private final JTable table;
+	private final ListModelTableModel<T, ?> model;
+	private final ObjectProperty<? extends Collection<T>> selections;
 
-    public AbstractJTablePopup(final JTable table, final ListModelTableModel<T, ?> model,
-            final ObjectProperty<T> lastSelected, final ObjectProperty<? extends Collection<T>> selections) {
-        super(lastSelected);
-        this.table = table;
-        this.model = model;
-        this.selections = selections;
-    }
+	public AbstractJTablePopup(final JTable table, final ListModelTableModel<T, ?> model,
+			final ObjectProperty<T> lastSelected, final ObjectProperty<? extends Collection<T>> selections) {
+		super(lastSelected);
+		this.table = table;
+		this.model = model;
+		this.selections = selections;
+	}
 
-    @Override
-    protected T getValueForPopup(final Point p) {
-        final T objectToSelect = model.getObjectAtRow(table.rowAtPoint(p));
-        if (objectToSelect != null) {
-            boolean selected = selections != null && selections.getValue() != null
-                    && selections.getValue().contains(objectToSelect);
-            selected |= lastSelected != null && lastSelected.getValue() == objectToSelect;
+	@Override
+	protected T getValueForPopup(final Point p) {
+		final T objectToSelect = model.getObjectAtRow(table.rowAtPoint(p));
+		if (objectToSelect != null) {
+			boolean selected = selections != null && selections.getValue() != null
+					&& selections.getValue().contains(objectToSelect);
+			selected |= lastSelected != null && lastSelected.getValue() == objectToSelect;
 
-            if (!selected) {
-                final int index = model.getRowOf(objectToSelect);
-                table.getSelectionModel().setSelectionInterval(index, index);
-            }
-        }
-        return objectToSelect;
-    }
+			if (!selected) {
+				final int index = model.getRowOf(objectToSelect);
+				table.getSelectionModel().setSelectionInterval(index, index);
+			}
+		}
+		return objectToSelect;
+	}
 
 }

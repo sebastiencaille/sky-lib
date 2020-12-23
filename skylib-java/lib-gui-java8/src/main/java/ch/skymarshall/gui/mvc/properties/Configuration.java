@@ -47,7 +47,7 @@ public class Configuration {
 			final FieldAccess<T> fieldAccess) {
 		return persistent(Persisters.from(object, fieldAccess));
 	}
-	
+
 	public static <T, U extends AbstractTypedProperty<T>> Consumer<U> persistent(final Object object,
 			final MethodHandlerAccess<T> fieldAccess) {
 		return persistent(Persisters.from(object, fieldAccess));

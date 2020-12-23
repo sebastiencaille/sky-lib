@@ -24,7 +24,7 @@ import ch.skymarshall.gui.swing.model.ListModelTableModel;
 public interface JTableHelper {
 
 	public static <C extends Enum<C>> C columnAt(final JTable table, final Point p, final Class<C> columnClazz) {
-		return columnClazz.getEnumConstants()[table.convertColumnIndexToModel( table.columnAtPoint(p))];
+		return columnClazz.getEnumConstants()[table.convertColumnIndexToModel(table.columnAtPoint(p))];
 	}
 
 	public static <C extends Enum<C>> int modelColumnIndex(final JTable table, final C col) {

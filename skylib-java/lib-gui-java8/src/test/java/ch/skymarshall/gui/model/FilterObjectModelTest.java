@@ -66,7 +66,7 @@ public class FilterObjectModelTest extends Assert {
 
 		final TestObject toMove = new TestObject(3);
 		baseModel.insert(toMove);
-		baseModel.editValue(toMove, e -> e.setVal( 2));
+		baseModel.editValue(toMove, e -> e.setVal(2));
 
 		// model is filtered
 		checkModel(model, 2, 4);
@@ -81,7 +81,7 @@ public class FilterObjectModelTest extends Assert {
 
 		baseModel.findAndEdit(new TestObject(1), e -> {
 			assertSame(baseModel.getValueAt(0), e);
-			e.setVal( 5);
+			e.setVal(5);
 		});
 		checkModel(baseModel, 4, 5);
 	}
@@ -92,10 +92,10 @@ public class FilterObjectModelTest extends Assert {
 
 		baseModel.insert(new TestObject(4));
 
-		baseModel.findOrCreateAndEdit(new TestObject(1), e -> e.setVal( 5));
+		baseModel.findOrCreateAndEdit(new TestObject(1), e -> e.setVal(5));
 		checkModel(baseModel, 4, 5);
 
-		baseModel.findOrCreateAndEdit(new TestObject(5), e -> e.setVal( 3));
+		baseModel.findOrCreateAndEdit(new TestObject(5), e -> e.setVal(3));
 		checkModel(baseModel, 3, 4);
 	}
 

@@ -25,8 +25,8 @@ package ch.skymarshall.gui.model.views;
  */
 public interface IListViewOwner<T> {
 
-    IListView<T> getParentView();
+	IListView<T> getParentView();
 
-    void viewUpdated();
+	void viewUpdated();
 
 }

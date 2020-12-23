@@ -25,14 +25,14 @@ public class TestParameterModel extends GuiModel {
 		this.editedParameterValue = editedParameterValue;
 		this.testApi = testApi;
 
-		valueNature = new ObjectProperty<>(prefix + "-nature", propertySupport); 
+		valueNature = new ObjectProperty<>(prefix + "-nature", propertySupport);
 		simpleValue = editedParameterValue.child(prefix + "-simpleValue", TestParameterValue::getSimpleValue,
 				TestParameterValue::setSimpleValue);
 		selectedReference = new ObjectProperty<>(prefix + "-reference", propertySupport);
 
 		references = new ListProperty<>(prefix + "-references", propertySupport);
 
-		editedParameterValue.addListener( getPropertySupport().detachWhenPropLoading());
+		editedParameterValue.addListener(getPropertySupport().detachWhenPropLoading());
 	}
 
 	public String getPrefix() {

@@ -44,10 +44,10 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 		final String label;
 		final DotFileGenerator.Shape shape;
 
-		public Node(final String name,  final String label, String enhancer, final DotFileGenerator.Shape shape) {
+		public Node(final String name, final String label, String enhancer, final DotFileGenerator.Shape shape) {
 			this.name = name;
 			String shortLabel = label.substring(label.lastIndexOf('.') + 1);
-			this.label = (enhancer != null)?enhancer.replace("$", shortLabel): shortLabel;
+			this.label = (enhancer != null) ? enhancer.replace("$", shortLabel) : shortLabel;
 			this.shape = shape;
 		}
 
@@ -162,21 +162,21 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 
 	private String addCondition(final Condition condition) {
 		final String condNode = getConditionNodeName(condition);
-		graph.nodes.put(condNode, new Node(condNode, condition.getCall(),  "$: true", DotFileGenerator.Shape.OCTAGON));
+		graph.nodes.put(condNode, new Node(condNode, condition.getCall(), "$: true", DotFileGenerator.Shape.OCTAGON));
 		return condNode;
 	}
 
 	private String addAdapter(final ExternalAdapter adapter) {
 		final String nodeName = toVar(adapter);
-		graph.nodes.put(nodeName,
-				new Node(nodeName, adapter.getCall(), "External:$", ch.skymarshall.util.generators.DotFileGenerator.Shape.BOX));
+		graph.nodes.put(nodeName, new Node(nodeName, adapter.getCall(), "External:$",
+				ch.skymarshall.util.generators.DotFileGenerator.Shape.BOX));
 		return nodeName;
 	}
 
 	private String addProcessor(final Binding binding, final Processor processor) {
 		final String nodeName = toVar(binding) + "_" + processor.getCall().replace('.', '_');
-		graph.nodes.put(nodeName,
-				new Node(nodeName, processor.getCall(), null, ch.skymarshall.util.generators.DotFileGenerator.Shape.ELLIPSE));
+		graph.nodes.put(nodeName, new Node(nodeName, processor.getCall(), null,
+				ch.skymarshall.util.generators.DotFileGenerator.Shape.ELLIPSE));
 		return nodeName;
 	}
 

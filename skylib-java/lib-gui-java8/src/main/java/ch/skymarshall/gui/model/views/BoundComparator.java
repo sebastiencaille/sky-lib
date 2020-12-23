@@ -26,10 +26,8 @@ import ch.skymarshall.gui.mvc.properties.AbstractProperty;
  *
  * @author scaille
  *
- * @param <D>
- *            type of the compared data
- * @param <C>
- *            type of the comparator
+ * @param <D> type of the compared data
+ * @param <C> type of the comparator
  */
 public abstract class BoundComparator<D, C> extends AbstractDynamicView<D>
 		implements IComponentBinding<C>, Comparator<D> {
@@ -40,10 +38,8 @@ public abstract class BoundComparator<D, C> extends AbstractDynamicView<D>
 	protected abstract int compare(D value1, D value2, C filter);
 
 	/**
-	 * @param <D>
-	 *            Type of the sorted data
-	 * @param <C>
-	 *            Type of the comparator property
+	 * @param <D> Type of the sorted data
+	 * @param <C> Type of the comparator property
 	 */
 	@FunctionalInterface
 	public interface BoundComparatorFunc<D, C> {
@@ -51,10 +47,8 @@ public abstract class BoundComparator<D, C> extends AbstractDynamicView<D>
 	}
 
 	/**
-	 * @param <D>
-	 *            Type of the sorted data
-	 * @param <C>
-	 *            Type of the comparator property
+	 * @param <D>        Type of the sorted data
+	 * @param <C>        Type of the comparator property
 	 * @param comparator
 	 * @return
 	 */

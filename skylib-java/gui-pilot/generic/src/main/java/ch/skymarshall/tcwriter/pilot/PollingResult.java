@@ -24,8 +24,7 @@ public class PollingResult<T, V> {
 		return null;
 	}
 
-	public void setInformation(final String componentDescription,
-			final LoadedElement<T> loadedElement) {
+	public void setInformation(final String componentDescription, final LoadedElement<T> loadedElement) {
 		this.componentDescription = componentDescription;
 		this.loadedElement = loadedElement;
 	}

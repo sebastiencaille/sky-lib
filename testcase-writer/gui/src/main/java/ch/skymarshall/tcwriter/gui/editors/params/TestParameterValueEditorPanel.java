@@ -7,6 +7,7 @@ import static ch.skymarshall.gui.swing.factories.SwingBindings.group;
 import static ch.skymarshall.gui.swing.factories.SwingBindings.selection;
 import static ch.skymarshall.gui.swing.factories.SwingBindings.value;
 import static ch.skymarshall.gui.swing.factories.SwingBindings.values;
+import static java.util.stream.Collectors.toSet;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;
@@ -17,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -129,8 +129,10 @@ public class TestParameterValueEditorPanel extends JPanel {
 				useRawValue, ParameterNature.TEST_API, useComplexType));
 
 		// When TC or parameters are changing, update the list of references
-		tc.listenActive(test -> tpModel.getReferences().setValue(this, getReferences(test, editedParamValue.getValue())));
-		editedParamValue.listenActive(values -> tpModel.getReferences().setValue(this, getReferences(tc.getValue(), values)));
+		tc.listenActive(
+				test -> tpModel.getReferences().setValue(this, getReferences(test, editedParamValue.getValue())));
+		editedParamValue
+				.listenActive(values -> tpModel.getReferences().setValue(this, getReferences(tc.getValue(), values)));
 
 		// when updating the parameter value, update the reference
 		editedParamValue.listenActive(value -> {
@@ -185,9 +187,9 @@ public class TestParameterValueEditorPanel extends JPanel {
 		}
 		// Update existing values, track missing ones
 		final Set<String> missingMandatoryIds = api.getMandatoryParameters().stream().map(TestApiParameter::getId)
-				.collect(Collectors.toSet());
+				.collect(toSet());
 		final Set<String> missingOptionalIds = api.getOptionalParameters().stream().map(TestApiParameter::getId)
-				.collect(Collectors.toSet());
+				.collect(toSet());
 		for (final ParameterValueEntry p : allEditedParameters) {
 			missingMandatoryIds.remove(p.id);
 			missingOptionalIds.remove(p.id);

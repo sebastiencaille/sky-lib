@@ -100,7 +100,8 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 	}
 
 	/**
-	 * Executes binding when the property is updated (transmitMode = BOTH|TO_COMPONENT)
+	 * Executes binding when the property is updated (transmitMode =
+	 * BOTH|TO_COMPONENT)
 	 * 
 	 * @param binding
 	 * @return

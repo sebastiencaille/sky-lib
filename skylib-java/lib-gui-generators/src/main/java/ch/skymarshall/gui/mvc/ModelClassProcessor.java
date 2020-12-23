@@ -56,7 +56,6 @@ public class ModelClassProcessor {
 			Template.appendToList(properties, key, value);
 		}
 
-		
 		public void addImport(final String className) {
 			imports.add(ClassFinder.forApp().loadByName(className).getName());
 		}
@@ -184,7 +183,7 @@ public class ModelClassProcessor {
 	protected String generateLoadFrom(final AbstractAttributeMetaData<?> attrib) {
 		return AttributeProcessor.create(context, attrib, delegate).getPropertyName() + ".load(this);";
 	}
-	
+
 	protected String generatePropertyNameOf(final AbstractAttributeMetaData<?> attrib) {
 		return AttributeProcessor.create(context, attrib, delegate).getPropertyName();
 	}

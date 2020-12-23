@@ -19,8 +19,7 @@ import java.util.function.Predicate;
 
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 
-public class PropertyFilter<D, F extends Predicate<D>>
-		implements Predicate<D> {
+public class PropertyFilter<D, F extends Predicate<D>> implements Predicate<D> {
 
 	private final ObjectProperty<F> filter;
 

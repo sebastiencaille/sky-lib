@@ -1,13 +1,13 @@
 package ch.skymarshall.tcwriter.generators.visitors;
 
 import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -58,7 +58,7 @@ public class HumanReadableVisitor {
 		case TEST_API:
 			final List<String> mandatoryParams = parameterValue.getValueFactory().getMandatoryParameters().stream()
 					.map(p -> processTestParameter(parameterValue.getComplexTypeValues().get(p.getId())))
-					.collect(Collectors.toList());
+					.collect(toList());
 			return processTestParameter(parameterValue, mandatoryParams);
 		default:
 			return "";
@@ -124,7 +124,7 @@ public class HumanReadableVisitor {
 	}
 
 	public String processAllSteps() {
-		return tc.getSteps().stream().map(this::process).collect(Collectors.joining("\n"));
+		return tc.getSteps().stream().map(this::process).collect(joining("\n"));
 	}
 
 }

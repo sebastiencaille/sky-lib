@@ -27,7 +27,7 @@ import ch.skymarshall.gui.mvc.properties.IPersister;
  *
  * @param <T>
  */
-public abstract class FieldAccess<T> implements IPersisterFactory<T>{
+public abstract class FieldAccess<T> implements IPersisterFactory<T> {
 
 	public abstract T get(Object object);
 

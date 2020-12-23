@@ -1,12 +1,13 @@
 package ch.skymarshall.dataflowmgr.generator;
 
+import static java.util.stream.Collectors.toMap;
+
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.security.InvalidParameterException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import ch.skymarshall.dataflowmgr.annotations.Conditions;
@@ -82,7 +83,7 @@ public class JavaToDictionary {
 	}
 
 	public static LinkedHashMap<String, String> parameters(final Method m) {
-		return Arrays.stream(m.getParameters()).collect(Collectors.toMap(JavaToDictionary::methodParamName,
+		return Arrays.stream(m.getParameters()).collect(toMap(JavaToDictionary::methodParamName,
 				JavaToDictionary::methodParamType, (s1, s2) -> s1, LinkedHashMap::new));
 	}
 

@@ -2,6 +2,7 @@ package ch.skymarshall.dataflowmgr.generator.writers.java;
 
 import static ch.skymarshall.util.text.TextFormatter.toCamelCase;
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 import java.util.ArrayList;
@@ -11,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import ch.skymarshall.dataflowmgr.model.Binding;
 import ch.skymarshall.dataflowmgr.model.BindingRule;
@@ -77,8 +77,8 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 				flowCode.append(", null");
 			}
 			if (!deps.isEmpty()) {
-				flowCode.append(", ").append(deps.stream().map(d -> "() -> " + varNameOf(d) + ".subscribe()")
-						.collect(Collectors.joining(", ")));
+				flowCode.append(", ").append(
+						deps.stream().map(d -> "() -> " + varNameOf(d) + ".subscribe()").collect(joining(", ")));
 			}
 			flowCode.append(")").eos();
 		}
@@ -129,7 +129,7 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 				.closeBlock();
 
 		final List<Binding> dependencies = flow.getAllDependencies(context.binding).stream()
-				.sorted((b1, b2) -> b1.fromDataPoint().compareTo(b2.fromDataPoint())).collect(Collectors.toList());
+				.sorted((b1, b2) -> b1.fromDataPoint().compareTo(b2.fromDataPoint())).collect(toList());
 
 		if (!isExit && !definedDataPoints.contains(context.outputDataPoint)) {
 			generateDataPoint(context);
@@ -346,8 +346,7 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 					.append(dependencies.stream().map(d -> "(DataPointState.TRIGGERED == f." + dataPointStateOf(d)
 							+ (isExclusion(condition, d) ? " || DataPointState.SKIPPED == f." + dataPointStateOf(d)
 									: "")
-							+ ")").distinct()
-							.collect(Collectors.joining("\n " + flowFactories.currentIndentation() + " && ")))
+							+ ")").distinct().collect(joining("\n " + flowFactories.currentIndentation() + " && ")))
 					.append(")?Optional.of(execution):Optional.empty())");
 		}
 		flowFactories.eoli().append(".mapOptional(f -> f.canTrigger%s()?Optional.of(execution):Optional.empty())",

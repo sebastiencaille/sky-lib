@@ -21,8 +21,7 @@ package ch.skymarshall.gui.mvc;
  *
  * @author Sebastien Caille
  *
- * @param <T>
- *            the data type handled by the component
+ * @param <T> the data type handled by the component
  */
 public interface IComponentLink<T> {
 

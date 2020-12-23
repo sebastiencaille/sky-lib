@@ -17,34 +17,33 @@ package ch.skymarshall.gui.mvc.persisters;
 
 import ch.skymarshall.gui.mvc.properties.IPersister;
 
-public class AnyObjectPersister<T> implements
-        IPersister<T> {
+public class AnyObjectPersister<T> implements IPersister<T> {
 
-    private final FieldAccess<T> fieldAccess;
-    private Object               target;
+	private final FieldAccess<T> fieldAccess;
+	private Object target;
 
-    public AnyObjectPersister(final FieldAccess<T> fieldAccess) {
-        this.fieldAccess = fieldAccess;
-    }
+	public AnyObjectPersister(final FieldAccess<T> fieldAccess) {
+		this.fieldAccess = fieldAccess;
+	}
 
-    public void setTarget(final Object target) {
-        this.target = target;
-    }
+	public void setTarget(final Object target) {
+		this.target = target;
+	}
 
-    @Override
-    public T get() {
-        if (target == null) {
-            throw new IllegalStateException("No target object defined");
-        }
-        return fieldAccess.get(target);
-    }
+	@Override
+	public T get() {
+		if (target == null) {
+			throw new IllegalStateException("No target object defined");
+		}
+		return fieldAccess.get(target);
+	}
 
-    @Override
-    public void set(final T value) {
-        if (target == null) {
-            throw new IllegalStateException("No target object defined");
-        }
-        fieldAccess.set(target, value);
-    }
+	@Override
+	public void set(final T value) {
+		if (target == null) {
+			throw new IllegalStateException("No target object defined");
+		}
+		fieldAccess.set(target, value);
+	}
 
 }

@@ -26,35 +26,35 @@ import ch.skymarshall.gui.mvc.properties.AbstractProperty;
  */
 public class PropertyEvent {
 
-    public enum EventKind {
-        BEFORE(98), AFTER(99);
+	public enum EventKind {
+		BEFORE(98), AFTER(99);
 
-        private final int tableModelId;
+		private final int tableModelId;
 
-        private EventKind(final int tableModelId) {
-            this.tableModelId = tableModelId;
-        }
+		private EventKind(final int tableModelId) {
+			this.tableModelId = tableModelId;
+		}
 
-        public int getTableModelId() {
-            return tableModelId;
-        }
-    }
+		public int getTableModelId() {
+			return tableModelId;
+		}
+	}
 
-    private final EventKind        kind;
-    private final AbstractProperty property;
+	private final EventKind kind;
+	private final AbstractProperty property;
 
-    public PropertyEvent(final EventKind kind, final AbstractProperty property) {
-        super();
-        this.kind = kind;
-        this.property = property;
-    }
+	public PropertyEvent(final EventKind kind, final AbstractProperty property) {
+		super();
+		this.kind = kind;
+		this.property = property;
+	}
 
-    public EventKind getKind() {
-        return kind;
-    }
+	public EventKind getKind() {
+		return kind;
+	}
 
-    public AbstractProperty getProperty() {
-        return property;
-    }
+	public AbstractProperty getProperty() {
+		return property;
+	}
 
 }

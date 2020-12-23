@@ -27,7 +27,7 @@ public class CodeGeneratorParams {
 	public String getTargetFolder() {
 		if (targetFolder == null) {
 			// by default, store in source folder so changes can be audited
-			return sourceFolder; 
+			return sourceFolder;
 		}
 		return targetFolder;
 	}

@@ -27,10 +27,8 @@ import ch.skymarshall.gui.mvc.properties.AbstractProperty;
  *
  * @author scaille
  *
- * @param <D>
- *            the type of the filtered data
- * @param <F>
- *            the type of the property that filters the data
+ * @param <D> the type of the filtered data
+ * @param <F> the type of the property that filters the data
  */
 public abstract class BoundFilter<D, F> extends AbstractDynamicView<D> implements IComponentBinding<F>, Predicate<D> {
 
@@ -42,8 +40,7 @@ public abstract class BoundFilter<D, F> extends AbstractDynamicView<D> implement
 	/**
 	 * * @param <D> the type of the filtered data
 	 * 
-	 * @param <F>
-	 *            the type of the property that filters the data
+	 * @param <F>      the type of the property that filters the data
 	 * @param consumer
 	 * @return
 	 */

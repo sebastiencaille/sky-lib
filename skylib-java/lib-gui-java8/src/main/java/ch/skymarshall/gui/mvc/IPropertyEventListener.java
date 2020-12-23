@@ -24,17 +24,14 @@ import java.util.EventListener;
  * @author Sebastien Caille
  * 
  */
-public interface IPropertyEventListener extends
-        EventListener {
+public interface IPropertyEventListener extends EventListener {
 
-    /**
-     * Called before the value is set
-     * 
-     * @param caller
-     *            the caller
-     * @param property
-     *            the modified property
-     */
-    void propertyModified(Object caller, PropertyEvent event);
+	/**
+	 * Called before the value is set
+	 * 
+	 * @param caller   the caller
+	 * @param property the modified property
+	 */
+	void propertyModified(Object caller, PropertyEvent event);
 
 }

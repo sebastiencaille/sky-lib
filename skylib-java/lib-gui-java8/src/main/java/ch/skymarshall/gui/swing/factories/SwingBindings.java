@@ -185,7 +185,7 @@ public class SwingBindings {
 			final ListModelTableModel<T, ?> tableModel, Supplier<U> collectionSupplier) {
 		return new JTableMultiSelectionBinding<>(editor, tableModel, collectionSupplier);
 	}
-	
+
 	public static <T> IComponentBinding<List<T>> multipleSelection(final JTable editor,
 			final ListModelTableModel<T, ?> tableModel) {
 		return new JTableMultiSelectionBinding<>(editor, tableModel, ArrayList::new);

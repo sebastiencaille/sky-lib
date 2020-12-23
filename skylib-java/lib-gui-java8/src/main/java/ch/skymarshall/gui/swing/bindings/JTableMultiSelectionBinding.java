@@ -41,7 +41,8 @@ public class JTableMultiSelectionBinding<T, U extends Collection<T>> extends Com
 	private boolean modelChange = false;
 	private final Supplier<U> collectionType;
 
-	public JTableMultiSelectionBinding(final JTable component, final ListModelTableModel<T, ?> model, Supplier<U> collectionType) {
+	public JTableMultiSelectionBinding(final JTable component, final ListModelTableModel<T, ?> model,
+			Supplier<U> collectionType) {
 		this.table = component;
 		this.model = model;
 		this.collectionType = collectionType;
@@ -50,7 +51,7 @@ public class JTableMultiSelectionBinding<T, U extends Collection<T>> extends Com
 
 	private void updateSelection(final IComponentLink<U> componentlink) {
 		U selected = collectionType.get();
-		
+
 		for (final int row : table.getSelectedRows()) {
 			if (row >= 0 && row < model.getRowCount()) {
 				selected.add(model.getObjectAtRow(row));

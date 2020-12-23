@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * How to bind data, processors and external adapters.
  * 
- * TODO: add aliases to override call parameters and call results 
+ * TODO: add aliases to override call parameters and call results
  * 
  * @author scaille
  *

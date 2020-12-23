@@ -17,10 +17,10 @@ package ch.skymarshall.gui.mvc;
 
 public interface IObjectGuiModel<T> {
 
-    void setCurrentObject(T object);
+	void setCurrentObject(T object);
 
-    void load();
+	void load();
 
-    void save();
+	void save();
 
 }

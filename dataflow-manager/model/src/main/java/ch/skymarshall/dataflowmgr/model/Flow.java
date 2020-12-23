@@ -15,8 +15,11 @@
  ******************************************************************************/
 package ch.skymarshall.dataflowmgr.model;
 
+import static java.util.Collections.emptySet;
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
@@ -25,7 +28,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class Flow extends WithId {
 
@@ -105,14 +107,14 @@ public class Flow extends WithId {
 
 	public Map<Binding, Set<Binding>> cloneDependencies() {
 		return config.dependencies.entrySet().stream()
-				.collect(Collectors.toMap(Map.Entry::getKey, kv -> new HashSet<>(kv.getValue())));
+				.collect(toMap(Map.Entry::getKey, kv -> new HashSet<>(kv.getValue())));
 	}
 
 	public Set<Binding> getAllDependencies(final Binding binding) {
 		final Set<Binding> deps = new HashSet<>();
-		deps.addAll(config.bindings.stream().filter(b -> b.toDataPoint().equals(binding.fromDataPoint()))
-				.collect(Collectors.toSet()));
-		deps.addAll(config.dependencies.getOrDefault(binding, Collections.emptySet()));
+		deps.addAll(
+				config.bindings.stream().filter(b -> b.toDataPoint().equals(binding.fromDataPoint())).collect(toSet()));
+		deps.addAll(config.dependencies.getOrDefault(binding, emptySet()));
 		return deps;
 	}
 

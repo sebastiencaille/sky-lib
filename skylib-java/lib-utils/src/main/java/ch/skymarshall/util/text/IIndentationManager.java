@@ -24,19 +24,19 @@ package ch.skymarshall.util.text;
  */
 public interface IIndentationManager {
 
-    /**
-     * Increase the indentation level
-     */
-    void indent();
+	/**
+	 * Increase the indentation level
+	 */
+	void indent();
 
-    /**
-     * Decrease the indentation level
-     */
-    void unindent();
+	/**
+	 * Decrease the indentation level
+	 */
+	void unindent();
 
-    /**
-     * Gets the current indentation
-     */
-    String getIndentation();
+	/**
+	 * Gets the current indentation
+	 */
+	String getIndentation();
 
 }

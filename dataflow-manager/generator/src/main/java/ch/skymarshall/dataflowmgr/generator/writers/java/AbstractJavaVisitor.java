@@ -1,10 +1,12 @@
 package ch.skymarshall.dataflowmgr.generator.writers.java;
 
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import ch.skymarshall.dataflowmgr.generator.AbstractFlowVisitor;
 import ch.skymarshall.dataflowmgr.model.Binding;
@@ -62,7 +64,7 @@ public abstract class AbstractJavaVisitor extends AbstractFlowVisitor {
 
 	protected List<String> guessParameters(final BindingContext context, final Call<?> call) {
 		return call.getParameters().entrySet().stream().map(kv -> guessParameter(context, kv.getKey(), kv.getValue()))
-				.collect(Collectors.toList());
+				.collect(toList());
 	}
 
 	protected String guessParameter(final BindingContext context, final String paramName, final String paramType) {
@@ -71,13 +73,13 @@ public abstract class AbstractJavaVisitor extends AbstractFlowVisitor {
 					.map(v -> v.codeVariable).get();
 		}
 		List<BindingImplVariable> matches = availableVars.stream().filter(a -> a.name.equals(paramName))
-				.collect(Collectors.toList());
+				.collect(toList());
 		if (matches.size() > 1) {
 			throw new IllegalArgumentException("Too many possible parameters found for " + paramName + ": " + matches);
 		} else if (matches.size() == 1) {
 			return matches.get(0).codeVariable;
 		}
-		matches = availableVars.stream().filter(a -> a.dataType.equals(paramType)).collect(Collectors.toList());
+		matches = availableVars.stream().filter(a -> a.dataType.equals(paramType)).collect(toList());
 		if (matches.size() > 1) {
 			throw new IllegalArgumentException("Too many possible parameters found for " + paramType + ": " + matches);
 		} else if (matches.size() == 1) {
@@ -90,14 +92,13 @@ public abstract class AbstractJavaVisitor extends AbstractFlowVisitor {
 		return call.getCall().replace('.', '_') + toVariable(binding);
 	}
 
-	
 	protected String toVariable(final ExternalAdapter adapter) {
 		return JavaCodeGenerator.simpleNameOf(adapter.getName());
 	}
-	
+
 	protected String toVariable(final Binding binding) {
 		String activatorsSuffix = BindingRule.getActivators(binding.getRules())
-				.map(c -> JavaCodeGenerator.simpleNameOf(c.getName())).collect(Collectors.joining("_"));
+				.map(c -> JavaCodeGenerator.simpleNameOf(c.getName())).collect(joining("_"));
 		String bindingName = binding.toDataPoint().replace('-', '_');
 		if (!activatorsSuffix.isEmpty()) {
 			bindingName = bindingName + '_' + activatorsSuffix;

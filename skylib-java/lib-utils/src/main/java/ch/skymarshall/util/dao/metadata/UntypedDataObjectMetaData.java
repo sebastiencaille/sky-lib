@@ -24,15 +24,15 @@ import java.util.Set;
 public class UntypedDataObjectMetaData extends AbstractObjectMetaData<Object> {
 
 	public UntypedDataObjectMetaData(final Class<?> aclass) {
-		super (aclass);
+		super(aclass);
 	}
 
 	public UntypedDataObjectMetaData(final Class<?> aclass, final boolean accessPrivateFields) {
-		super (aclass, accessPrivateFields);
+		super(aclass, accessPrivateFields);
 	}
 
 	public UntypedDataObjectMetaData(final Class<?> dataType, final Set<String> attribNames) {
-		super (dataType, attribNames);
+		super(dataType, attribNames);
 	}
 
 	public UntypedDataObjectManager<?> createUntypedObjectAccessorFor(final Object anObject) {

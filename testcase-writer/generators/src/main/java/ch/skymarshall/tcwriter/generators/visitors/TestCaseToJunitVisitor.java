@@ -1,5 +1,8 @@
 package ch.skymarshall.tcwriter.generators.visitors;
 
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
@@ -7,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;
@@ -112,7 +114,7 @@ public class TestCaseToJunitVisitor {
 	private void addParameterValuesToCall(final JavaCodeGenerator<RuntimeException> parametersContent,
 			final TestStep step, final Collection<TestParameterValue> parameterValues,
 			final List<TestApiParameter> filter) throws TestCaseException {
-		final Set<String> filterIds = filter.stream().map(IdObject::getId).collect(Collectors.toSet());
+		final Set<String> filterIds = filter.stream().map(IdObject::getId).collect(toSet());
 		String sep = "";
 		for (final TestParameterValue parameterValue : parameterValues) {
 			if (!filterIds.contains(parameterValue.getApiParameterId())) {
@@ -127,8 +129,7 @@ public class TestCaseToJunitVisitor {
 	private void addOptionalParameters(final TestStep step, final JavaCodeGenerator<RuntimeException> parametersContent,
 			final String parameterVarName, final Collection<TestParameterValue> parameterValues,
 			final List<TestApiParameter> filter) throws TestCaseException {
-		final Map<String, TestApiParameter> filteredMap = filter.stream()
-				.collect(Collectors.toMap(IdObject::getId, t -> t));
+		final Map<String, TestApiParameter> filteredMap = filter.stream().collect(toMap(IdObject::getId, t -> t));
 		for (final TestParameterValue parameterValue : parameterValues) {
 			if (!filteredMap.containsKey(parameterValue.getApiParameterId())) {
 				continue;

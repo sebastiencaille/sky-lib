@@ -27,7 +27,7 @@ public class FlowToProceduralJavaVisitor extends AbstractJavaVisitor {
 		super(flow, packageName, template);
 	}
 
-	public Template process()  {
+	public Template process() {
 
 		availableVars.add(new BindingImplVariable(Flow.ENTRY_POINT, flow.getEntryPointType(), Flow.ENTRY_POINT));
 
@@ -44,7 +44,7 @@ public class FlowToProceduralJavaVisitor extends AbstractJavaVisitor {
 	}
 
 	@Override
-	protected void process(final BindingContext context, final Processor processor)  {
+	protected void process(final BindingContext context, final Processor processor) {
 
 		appendInfo(generator, context.binding).eol();
 
@@ -78,8 +78,7 @@ public class FlowToProceduralJavaVisitor extends AbstractJavaVisitor {
 	}
 
 	private void addExecution(final BindingContext context, final Processor processor, final Set<String> exclusions,
-			final boolean conditionalInputDataPoint, final boolean isConditionalExec, final boolean isExit)
-			 {
+			final boolean conditionalInputDataPoint, final boolean isConditionalExec, final boolean isExit) {
 		if (isConditionalExec) {
 			setConditional(context.outputDataPoint);
 			final List<String> conditions = new ArrayList<>();
@@ -113,7 +112,7 @@ public class FlowToProceduralJavaVisitor extends AbstractJavaVisitor {
 	}
 
 	private void generateDataPoint(final Processor processor, final String outputDataPoint,
-			final boolean conditionalExec)  {
+			final boolean conditionalExec) {
 		definedDataPoints.add(outputDataPoint);
 		appendNewVariable(outputDataPoint, processor);
 		if (conditionalExec) {
@@ -128,10 +127,9 @@ public class FlowToProceduralJavaVisitor extends AbstractJavaVisitor {
 	 * Generates the code calling a list of activators
 	 *
 	 * @param context
-	 * @param availableVars
-	 * @
+	 * @param availableVars @
 	 */
-	private void visitActivators(final BindingContext context)  {
+	private void visitActivators(final BindingContext context) {
 		if (context.activators.isEmpty()) {
 			return;
 		}
@@ -150,8 +148,7 @@ public class FlowToProceduralJavaVisitor extends AbstractJavaVisitor {
 		}
 	}
 
-	private void visitExternalAdapters(final BindingContext context, final Set<ExternalAdapter> externalAdapter)
-			 {
+	private void visitExternalAdapters(final BindingContext context, final Set<ExternalAdapter> externalAdapter) {
 		for (final ExternalAdapter adapter : externalAdapter) {
 			final BindingImplVariable parameter = new BindingImplVariable(adapter, varNameOf(context.binding, adapter));
 			appendNewVarAndCall(context, parameter.codeVariable, adapter);
@@ -174,7 +171,7 @@ public class FlowToProceduralJavaVisitor extends AbstractJavaVisitor {
 		return "activated_" + toVariable(binding);
 	}
 
-	private void appendNewVariable(final String variableName, final Call<?> call)  {
+	private void appendNewVariable(final String variableName, final Call<?> call) {
 		String returnType = call.getReturnType();
 		if (returnType.startsWith("java.lang")) {
 			returnType = returnType.substring("java.lang".length() + 1);
@@ -182,12 +179,11 @@ public class FlowToProceduralJavaVisitor extends AbstractJavaVisitor {
 		generator.appendIndented(returnType).append(" ").append(variableName);
 	}
 
-	private void appendCall(final BindingContext context, final Call<?> call)  {
+	private void appendCall(final BindingContext context, final Call<?> call) {
 		generator.appendMethodCall("this", call.getCall(), guessParameters(context, call)).eos();
 	}
 
-	private void appendNewVarAndCall(final BindingContext context, final String variableName, final Call<?> call)
-			 {
+	private void appendNewVarAndCall(final BindingContext context, final String variableName, final Call<?> call) {
 		if (call.hasReturnType()) {
 			appendNewVariable(variableName, call);
 			generator.append(" = ");

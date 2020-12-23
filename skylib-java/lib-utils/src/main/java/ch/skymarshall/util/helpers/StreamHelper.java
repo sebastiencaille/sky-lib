@@ -84,7 +84,7 @@ public interface StreamHelper {
 			}
 			return value;
 		}
-}
+	}
 
 	/**
 	 * Collector that checks for zero or one value available

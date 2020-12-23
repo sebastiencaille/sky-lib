@@ -1,5 +1,7 @@
 package ch.skymarshall.dataflowmgr.generator;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -9,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import ch.skymarshall.dataflowmgr.model.Binding;
 import ch.skymarshall.dataflowmgr.model.BindingRule;
@@ -37,7 +38,7 @@ public abstract class AbstractFlowVisitor {
 			this.binding = binding;
 			bindingAdapters = binding.getAdapters();
 			processedAdapters = new HashSet<>();
-			activators = BindingRule.getActivators(binding.getRules()).collect(Collectors.toList());
+			activators = BindingRule.getActivators(binding.getRules()).collect(toList());
 			inputDataPoint = binding.fromDataPoint();
 			this.inputDataType = inputDataType;
 			outputDataPoint = binding.toDataPoint();

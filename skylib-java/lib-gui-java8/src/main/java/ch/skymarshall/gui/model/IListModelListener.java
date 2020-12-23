@@ -32,8 +32,8 @@ public interface IListModelListener<T> extends EventListener {
 		// noop
 	}
 
-	default	void mutated() { 
-		// noop 
+	default void mutated() {
+		// noop
 	}
 
 	default void valuesSet(ListEvent<T> event) {

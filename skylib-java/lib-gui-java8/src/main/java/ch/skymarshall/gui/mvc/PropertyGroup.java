@@ -31,45 +31,44 @@ import ch.skymarshall.gui.mvc.properties.AbstractProperty;
  */
 public class PropertyGroup {
 
-    private final EventListenerList actions   = new EventListenerList();
+	private final EventListenerList actions = new EventListenerList();
 
-    private int                     callCount = 0;
+	private int callCount = 0;
 
-    private class Impl implements
-            IPropertyEventListener {
-        @Override
-        public void propertyModified(final Object caller, final PropertyEvent event) {
-            switch (event.getKind()) {
-            case BEFORE:
-                if (callCount > 0) {
-                    return;
-                }
-                callCount++;
-                break;
+	private class Impl implements IPropertyEventListener {
+		@Override
+		public void propertyModified(final Object caller, final PropertyEvent event) {
+			switch (event.getKind()) {
+			case BEFORE:
+				if (callCount > 0) {
+					return;
+				}
+				callCount++;
+				break;
 
-            case AFTER:
-                callCount--;
-                if (callCount != 0) {
-                    return;
-                }
-                break;
-            default:
-                break;
-            }
-            for (final IPropertyEventListener action : actions.getListeners(IPropertyEventListener.class)) {
-                action.propertyModified(caller, event);
-            }
-        }
-    }
+			case AFTER:
+				callCount--;
+				if (callCount != 0) {
+					return;
+				}
+				break;
+			default:
+				break;
+			}
+			for (final IPropertyEventListener action : actions.getListeners(IPropertyEventListener.class)) {
+				action.propertyModified(caller, event);
+			}
+		}
+	}
 
-    private final Impl impl = new Impl();
+	private final Impl impl = new Impl();
 
-    public void addProperty(final AbstractProperty prop) {
-        prop.addListener(impl);
-    }
+	public void addProperty(final AbstractProperty prop) {
+		prop.addListener(impl);
+	}
 
-    public void addListener(final IPropertyEventListener action) {
-        actions.add(IPropertyEventListener.class, action);
-    }
+	public void addListener(final IPropertyEventListener action) {
+		actions.add(IPropertyEventListener.class, action);
+	}
 
 }

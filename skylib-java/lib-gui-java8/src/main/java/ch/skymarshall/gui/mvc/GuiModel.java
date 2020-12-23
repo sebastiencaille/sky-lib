@@ -51,10 +51,9 @@ public class GuiModel {
 	public IScopedSupport getPropertySupport() {
 		return propertySupport;
 	}
-	
+
 	public void activate() {
 		propertySupport.attachAll();
 	}
-	
-	
+
 }

@@ -22,7 +22,9 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 /**
- * A percentage renderer.<p>
+ * A percentage renderer.
+ * <p>
+ * 
  * @author Sebastien Caille
  *
  */

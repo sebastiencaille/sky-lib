@@ -21,22 +21,22 @@ import ch.skymarshall.gui.mvc.PropertyGroup;
 
 public class ControllerExampleController extends GuiController {
 
-    private final ControllerExampleModel model                = new ControllerExampleModel(this);
-    private final PropertyGroup          modelPropertiesGroup = new PropertyGroup();
+	private final ControllerExampleModel model = new ControllerExampleModel(this);
+	private final PropertyGroup modelPropertiesGroup = new PropertyGroup();
 
-    public ControllerExampleController() {
-        modelPropertiesGroup.addProperty(model.getStaticListSelectionProperty());
+	public ControllerExampleController() {
+		modelPropertiesGroup.addProperty(model.getStaticListSelectionProperty());
 
-        model.getTableModel().insert(new TestObject("World", 2));
-        model.getTableModel().insert(new TestObject("Hello", 1));
-    }
+		model.getTableModel().insert(new TestObject("World", 2));
+		model.getTableModel().insert(new TestObject("Hello", 1));
+	}
 
-    public ControllerExampleModel getModel() {
-        return model;
-    }
+	public ControllerExampleModel getModel() {
+		return model;
+	}
 
-    public PropertyGroup getDynamicListUpdater() {
-        return modelPropertiesGroup;
-    }
+	public PropertyGroup getDynamicListUpdater() {
+		return modelPropertiesGroup;
+	}
 
 }

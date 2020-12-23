@@ -57,9 +57,7 @@ public class ListView<T> implements IListView<T>, Serializable {
 	public int compare(final T o1, final T o2) {
 		final int compare;
 		if (comparator == null && parentView == null) {
-			throw new IllegalStateException(
-					this
-							+ ": you must either set a comparator or override this method");
+			throw new IllegalStateException(this + ": you must either set a comparator or override this method");
 		} else if (comparator != null) {
 			compare = comparator.compare(o1, o2);
 		} else {
@@ -86,8 +84,7 @@ public class ListView<T> implements IListView<T>, Serializable {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + ":[comparator=" + comparator
-				+ ", filter=" + filter + ']';
+		return getClass().getSimpleName() + ":[comparator=" + comparator + ", filter=" + filter + ']';
 	}
 
 }

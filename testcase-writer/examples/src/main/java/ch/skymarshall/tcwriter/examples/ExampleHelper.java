@@ -30,22 +30,22 @@ public class ExampleHelper {
 
 	public static final String TC_NAME = "testCase.json";
 
-	private static GeneratorConfig config;
-	private static IModelPersister persister;
+	private static final  GeneratorConfig CONFIG;
+	
+	private static final  IModelPersister persister;
 
 	static {
-
-		config = new GeneratorConfig();
+		CONFIG = new GeneratorConfig();
 		final File tcPath = new File(RESOURCE_FOLDER, "testCase");
 		tcPath.mkdirs();
 		final File modelPath = new File(RESOURCE_FOLDER, "models");
 		modelPath.mkdirs();
 
-		config.setTcPath(tcPath.toString());
-		config.setDefaultGeneratedTCPath("./src/test/java");
-		config.setDictionaryPath(modelPath + "/test-model.json");
-		config.setTemplatePath(new File("templates/TC.template").toString());
-		persister = new JsonModelPersister(config);
+		CONFIG.setTcPath(tcPath.toString());
+		CONFIG.setDefaultGeneratedTCPath("./src/test/java");
+		CONFIG.setDictionaryPath(modelPath + "/test-model.json");
+		CONFIG.setTemplatePath(new File("templates/TC.template").toString());
+		persister = new JsonModelPersister(CONFIG);
 	}
 
 	public static IModelPersister getPersister() {
@@ -81,11 +81,11 @@ public class ExampleHelper {
 	}
 
 	public static ITestExecutor testExecutor() throws IOException {
-		return new JunitTestExecutor(config, ClassLoaderHelper.appClassPath());
+		return new JunitTestExecutor(CONFIG, ClassLoaderHelper.appClassPath());
 	}
 
 	public static GeneratorConfig getConfig() {
-		return config;
+		return CONFIG;
 	}
 
 }

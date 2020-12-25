@@ -27,9 +27,9 @@ import ch.skymarshall.gui.Utils;
 @SuppressWarnings("serial")
 public class SizeRenderer extends DefaultTableCellRenderer {
 
-	private final BiConsumer<Integer, Component> componentTuning;
+	private final BiConsumer<Long, Component> componentTuning;
 
-	public SizeRenderer(BiConsumer<Integer, Component> componentTuning) {
+	public SizeRenderer(BiConsumer<Long, Component> componentTuning) {
 		this.componentTuning = componentTuning;
 	}
 
@@ -40,7 +40,7 @@ public class SizeRenderer extends DefaultTableCellRenderer {
 		Component comp = super.getTableCellRendererComponent(table, size.map(Utils::toSize).orElse(null), isSelected,
 				hasFocus, row, column);
 		if (componentTuning != null) {
-			componentTuning.accept(size.map(Number::intValue).orElse(-1), comp);
+			componentTuning.accept(size.map(Number::longValue).orElse(-1L), comp);
 		}
 		return comp;
 	}

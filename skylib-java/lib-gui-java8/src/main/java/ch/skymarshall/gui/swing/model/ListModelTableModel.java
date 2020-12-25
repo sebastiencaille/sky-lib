@@ -49,7 +49,7 @@ public abstract class ListModelTableModel<T, C extends Enum<C>> extends Abstract
 
 	protected abstract void setValueAtColumn(T object, C column, Object value);
 
-	public ListModelTableModel(final ListModel<T> model, final Class<C> columnsEnumClass) {
+	protected ListModelTableModel(final ListModel<T> model, final Class<C> columnsEnumClass) {
 		this.model = model;
 		this.columnsEnumClass = columnsEnumClass;
 		this.columnsEnum = columnsEnumClass.getEnumConstants();

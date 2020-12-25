@@ -4,18 +4,18 @@ import static java.util.stream.Collectors.joining;
 
 import java.util.Set;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-
 import ch.skymarshall.gui.mvc.converters.ConversionException;
 import ch.skymarshall.gui.mvc.converters.IConverter;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 import ch.skymarshall.util.dao.metadata.MetadataHelper;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 
 public class ValidationConverter {
 
-	private static final ValidatorFactory factory = javax.validation.Validation.buildDefaultValidatorFactory();
+	private static final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 	private static final Validator validator = factory.getValidator();
 
 	private ValidationConverter() {

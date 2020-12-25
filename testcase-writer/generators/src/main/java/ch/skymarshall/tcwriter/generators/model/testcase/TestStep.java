@@ -101,7 +101,7 @@ public class TestStep {
 
 	public TestReference asNamedReference(final String namedReference, final String description) {
 		if (reference == null) {
-			reference = new TestReference(this, namedReference, getAction().getReturnType(), description);
+			reference = new TestReference(this, namedReference, description);
 		}
 		return reference;
 	}

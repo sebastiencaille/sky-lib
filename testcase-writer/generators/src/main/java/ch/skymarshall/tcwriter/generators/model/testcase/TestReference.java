@@ -18,8 +18,8 @@ public class TestReference extends TestParameterFactory {
 		description = null;
 	}
 
-	public TestReference(final TestStep step, final String name, final String type, final String description) {
-		super(name, name, ParameterNature.REFERENCE, type);
+	public TestReference(final TestStep step, final String name, final String description) {
+		super(name, name, ParameterNature.REFERENCE, step.getAction().getReturnType());
 		this.step = step;
 		this.description = description;
 	}

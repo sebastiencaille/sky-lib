@@ -3,8 +3,6 @@ package ch.skymarshall.example.gui.tools;
 import java.awt.Dialog;
 
 import javax.swing.SwingUtilities;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 
 import ch.skymarshall.annotations.Labeled;
 import ch.skymarshall.annotations.Ordered;
@@ -13,6 +11,8 @@ import ch.skymarshall.gui.swing.tools.SwingGenericEditorDialog;
 import ch.skymarshall.gui.tools.GenericEditorClassModel;
 import ch.skymarshall.gui.tools.GenericEditorController;
 import ch.skymarshall.gui.validation.GenericEditorValidationAdapter;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 
 public class GenericEditorLauncher {
 

@@ -21,11 +21,15 @@ public class TestParameterValue extends IdObject {
 
 	public static final TestParameterValue NO_VALUE = new TestParameterValue("", TestParameterFactory.NO_FACTORY);
 
+	private final String apiParameterId;
+
+	/**
+	 * A test api used to create selector/parameters, or a reference, or a simple value type 
+	 */
 	@JsonIgnore
 	private TestParameterFactory factory;
 
 	private final Map<String, TestParameterValue> complexTypeValues = new HashMap<>();
-	private final String apiParameterId;
 	private String simpleValue;
 
 	protected TestParameterValue() {

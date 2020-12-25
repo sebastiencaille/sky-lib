@@ -136,7 +136,7 @@ public abstract class ObjectControllerTableModel<O, M extends IObjectGuiModel<O>
 
 	protected abstract AbstractProperty getPropertyAt(M anObjectModel, C column);
 
-	public ObjectControllerTableModel(final ListModel<O> listModel, final M objectModel,
+	protected ObjectControllerTableModel(final ListModel<O> listModel, final M objectModel,
 			final Class<C> columnsEnumClass) {
 		super(listModel, columnsEnumClass);
 		this.objectModel = objectModel;

@@ -33,7 +33,7 @@ public abstract class AttributeProcessor {
 
 	}
 
-	public AttributeProcessor(final Context context, final AbstractAttributeMetaData<?> attrib,
+	protected AttributeProcessor(final Context context, final AbstractAttributeMetaData<?> attrib,
 			final AttributeProcessorDelegate delegate) {
 		this.context = context;
 		this.attrib = attrib;

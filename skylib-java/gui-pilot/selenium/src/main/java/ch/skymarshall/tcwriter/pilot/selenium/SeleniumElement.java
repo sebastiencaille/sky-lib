@@ -111,7 +111,7 @@ public class SeleniumElement extends AbstractGuiComponent<SeleniumElement, WebEl
 	}
 
 	public boolean doIfEnabled(final Polling<WebElement, Boolean> polling, final Duration shortTimeout) {
-		return waitPollingSuccess(polling, shortTimeout, PollingResult.reportFailed("Not found: " + locator));
+		return waitPollingSuccess(polling, shortTimeout, PollingResult.reportFailure("Not found: " + locator));
 	}
 
 	public void click() {

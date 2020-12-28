@@ -147,7 +147,7 @@ public class PollingResult<T, V> {
 	 * @param actionDescr
 	 * @return
 	 */
-	public static <C> PollingResultFunction<C, Boolean> reportFailed(final String report) {
+	public static <C> PollingResultFunction<C, Boolean> reportFailure(final String report) {
 		return (r, g) -> {
 			g.getActionReport().report(report);
 			return Boolean.FALSE;

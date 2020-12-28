@@ -3,6 +3,7 @@ package ch.skymarshall.tcwriter.pilot;
 import java.time.Duration;
 
 import ch.skymarshall.util.helpers.NoExceptionCloseable;
+import ch.skymarshall.util.helpers.Timeout;
 
 public class GuiPilot {
 
@@ -56,16 +57,17 @@ public class GuiPilot {
 
 	public boolean waitModalDialogHandled(
 			final PollingResult.PollingResultFunction<ModalDialogDetector.ErrorCheck, Boolean> onFail) {
-		final long start = System.currentTimeMillis();
-		while (System.currentTimeMillis() - start < defaultActionTimeout.toMillis()) {
+		final Timeout timeoutCheck = new Timeout(defaultActionTimeout);
+		while (!timeoutCheck.hasTimedOut()) {
 			if (currentModalDialogDetector.getCheckResult() != null) {
 				stopModalDialogDetector();
 				return true;
 			}
 			try {
-				Thread.sleep(100);
-			} catch (final InterruptedException e) {
+				timeoutCheck.yield();
+			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
+				return onFail.apply(PollingResult.failure("Interrupted"), this);
 			}
 		}
 		return onFail.apply(PollingResult.failure("Modal dialog not detected"), this);

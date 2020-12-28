@@ -135,5 +135,5 @@ public abstract class ListModelTableModel<T, C extends Enum<C>> extends Abstract
 	protected C columnOf(final int column) {
 		return columnsEnumClass.cast(columnsEnum[column]);
 	}
-
+	
 }

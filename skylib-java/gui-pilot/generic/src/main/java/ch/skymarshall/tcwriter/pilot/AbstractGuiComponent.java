@@ -11,6 +11,7 @@ import java.util.function.Predicate;
 
 import ch.skymarshall.tcwriter.pilot.PollingResult.PollingResultFunction;
 import ch.skymarshall.util.helpers.NoExceptionCloseable;
+import ch.skymarshall.util.helpers.Timeout;
 
 /**
  *
@@ -153,9 +154,9 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 	 * @return a polling result, either successful or failure
 	 */
 	protected <U> PollingResult<C, U> waitPollingSuccessLoop(final Polling<C, U> polling, final Duration timeout) {
-		final long startTime = System.currentTimeMillis();
+		final Timeout timeoutCheck = new Timeout(timeout);
 		PollingResult<C, U> lastResult = failure("No information");
-		while (System.currentTimeMillis() - startTime < timeout.toMillis()) {
+		while (!timeoutCheck.hasTimedOut()) {
 			lastResult = executePolling(polling);
 			if (lastResult.isSuccess()) {
 				break;

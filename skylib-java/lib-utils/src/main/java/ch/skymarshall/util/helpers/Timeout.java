@@ -15,67 +15,56 @@
  ******************************************************************************/
 package ch.skymarshall.util.helpers;
 
-import java.util.Calendar;
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class Timeout {
 
-	public static class TimeoutFactory extends Duration {
-
-		public TimeoutFactory(final int hours, final int minutes, final int seconds) {
-			super(hours, minutes, seconds);
-		}
-
-		public TimeoutFactory(final int time, final TimeUnit unit) {
-			super(time, unit);
-		}
-
-		public Timeout createTimeout() {
-			return new Timeout(addTo(Calendar.getInstance()), this);
-		}
+	public static Timeout createTimeoutFactory(final int hours, final int minutes, final int seconds) {
+		return new Timeout(Duration.ofHours(hours).plus(Duration.ofMinutes(minutes)).plus(Duration.ofSeconds(seconds)));
 	}
 
-	private final long stop;
-	private final Object info;
+	public static Timeout createTimeoutFactory(final int time, final TimeUnit unit) {
+		return new Timeout(Duration.ofMillis(unit.toMillis(time)));
+	}
 
-	public Timeout(final Calendar cal, final Object info) {
-		this.info = info;
-		stop = cal.getTimeInMillis();
+	private final long delay;
+	private final Object info;
+	private long timeoutTime = -1;
+
+	public Timeout(final Duration duration) {
+		this.info = "";
+		delay = duration.toMillis();
+	}
+
+	private long getTimeout() {
+		if (timeoutTime < 0) {
+			timeoutTime = System.currentTimeMillis() + delay;
+		}
+		return timeoutTime;
 	}
 
 	public boolean hasTimedOut() {
-		return System.currentTimeMillis() > stop;
+		return System.currentTimeMillis() > getTimeout();
 	}
 
-	public void yield() throws TimeoutException {
-		if (hasTimedOut()) {
-			throw new TimeoutException("Time out: " + info);
-		}
-		try {
-			Thread.sleep(100);
-		} catch (final InterruptedException e) { // NOSONAR
-			throw new TimeoutException("Time out (interrupted): " + info);
-		}
-	}
-
-	public TimeoutFactory createTimeoutFactory(final int hours, final int minutes, final int seconds) {
-		return new TimeoutFactory(hours, minutes, seconds);
+	public void yield() throws InterruptedException {
+		Thread.sleep(Math.min(100, remainingTime()));
 	}
 
 	public void waitOn(final Object obj) throws InterruptedException, TimeoutException {
-		final long waitTime = stop - System.currentTimeMillis();
+		final long waitTime = remainingTime();
 		if (waitTime > 0) {
 			obj.wait(waitTime); // NOSONAR
 		}
 		if (hasTimedOut()) {
 			throw new TimeoutException("Time out: " + info);
 		}
-
 	}
 
-	public long remaining() {
-		final long l = stop - System.currentTimeMillis();
+	public long remainingTime() {
+		final long l = getTimeout() - System.currentTimeMillis();
 		if (l < 1) {
 			return 1;
 		}

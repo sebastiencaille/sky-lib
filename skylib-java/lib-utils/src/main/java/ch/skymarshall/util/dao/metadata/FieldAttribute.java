@@ -32,11 +32,15 @@ import ch.skymarshall.annotations.Persistency;
 public class FieldAttribute<T> extends AbstractAttributeMetaData<T> {
 
 	private final Field field;
+	private final boolean readOnly;
 
 	public FieldAttribute(final String name, final Field field) {
 		super(name, field.getType());
 		this.field = field;
 		this.field.setAccessible(true);
+
+		final Persistency persistency = getAnnotation(Persistency.class);
+		readOnly = Modifier.isFinal(field.getModifiers()) || (persistency != null && persistency.readOnly());
 	}
 
 	@Override
@@ -51,6 +55,9 @@ public class FieldAttribute<T> extends AbstractAttributeMetaData<T> {
 
 	@Override
 	public void setValueOf(final T to, final Object value) {
+		if (isReadOnly()) {
+			throw new IllegalStateException("Attribute " + getName() + " is read-only");
+		}
 		try {
 			field.set(to, value);
 		} catch (final Exception e) {
@@ -61,11 +68,7 @@ public class FieldAttribute<T> extends AbstractAttributeMetaData<T> {
 
 	@Override
 	public boolean isReadOnly() {
-		if (Modifier.isFinal(field.getModifiers())) {
-			return true;
-		}
-		final Persistency persistency = getAnnotation(Persistency.class);
-		return persistency != null && persistency.readOnly();
+		return readOnly;
 	}
 
 	@Override
@@ -89,12 +92,12 @@ public class FieldAttribute<T> extends AbstractAttributeMetaData<T> {
 	}
 
 	@Override
-	public String toString() {
-		return "Field " + field.getName();
+	public int getModifier() {
+		return field.getModifiers();
 	}
 
 	@Override
-	public int getModifier() {
-		return field.getModifiers();
+	public String toString() {
+		return getName() + "(" + getType() + ")";
 	}
 }

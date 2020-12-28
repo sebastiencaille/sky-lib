@@ -180,12 +180,12 @@ public class AbstractObjectMetaData<D> {
 		return getDataType().getSimpleName();
 	}
 
+	public Constructor<? extends D> getConstructor() throws NoSuchMethodException {
+		return getDataType().getConstructor();
+	}
+
 	@Override
 	public String toString() {
 		return "MetaData of " + dataType.getName();
-	}
-
-	public Constructor<? extends D> getConstructor() throws NoSuchMethodException {
-		return getDataType().getConstructor();
 	}
 }

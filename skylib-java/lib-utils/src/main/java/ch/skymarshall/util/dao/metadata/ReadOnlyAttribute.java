@@ -15,6 +15,7 @@
  ******************************************************************************/
 package ch.skymarshall.util.dao.metadata;
 
+import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Method;
 
 /**
@@ -26,13 +27,8 @@ import java.lang.reflect.Method;
  */
 public class ReadOnlyAttribute<T> extends GetSetAttribute<T> {
 
-	public ReadOnlyAttribute(final String name, final Method getter) {
-		super(name, getter, null);
-	}
-
-	@Override
-	public Class<?> getDeclaringType() {
-		return getter.getDeclaringClass();
+	public ReadOnlyAttribute(final String name, final Method attributeGetterInfo, final MethodHandle getter) {
+		super(name, attributeGetterInfo, getter, null);
 	}
 
 	@Override

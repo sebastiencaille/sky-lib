@@ -13,7 +13,7 @@
  *  IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  ******************************************************************************/
-package ch.skymarshall.dataflowmgr.engine;
+package ch.skymarshall.util;
 
 import java.util.Arrays;
 import java.util.Collections;

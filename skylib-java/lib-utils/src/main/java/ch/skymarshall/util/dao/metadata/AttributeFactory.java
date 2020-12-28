@@ -16,8 +16,11 @@
 
 package ch.skymarshall.util.dao.metadata;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.logging.Logger;
 
 /**
@@ -74,24 +77,33 @@ abstract class AttributeFactory {
 		} catch (final NoSuchMethodException e) {
 			getter = currentClass.getMethod("is" + property);
 		}
+		Class<?> type = getter.getReturnType();
 
-		final Class<?> type = getter.getReturnType();
-
-		Method setter = null;
+		MethodHandle getterHandler;
 		try {
-			setter = currentClass.getMethod("set" + property, type);
-			return new GetSetAttribute<>(name, getter, setter);
+			getterHandler = MethodHandles.lookup().unreflect(getter);
+		} catch (final Exception e) { // NOSONAR
+			throw new IllegalStateException("Unable to create handler", e);
+		}
 
+		try {
+			Method setter = currentClass.getMethod("set" + property, type);
+			MethodHandle setterHandler = MethodHandles.lookup().unreflect(setter);
+			return new GetSetAttribute<>(name, getter, getterHandler, setterHandler);
 		} catch (final Exception e) { // NOSONAR
 			Logger.getAnonymousLogger().finest("No setter for " + name);
-			return new ReadOnlyAttribute<>(name, getter);
+			return new ReadOnlyAttribute<>(name, getter, getterHandler);
 		}
 	}
 
 	private static <T> FieldAttribute<T> createFieldAttribute(final Class<?> currentClass, final String property,
 			final String name) {
 		try {
-			return new FieldAttribute<>(name, findField(currentClass, property));
+			Field field = findField(currentClass, property);
+			if (Modifier.isPublic(field.getModifiers())) {
+				return new NioFieldAttribute<>(name, field);
+			}
+			return new FieldAttribute<>(name, field);
 		} catch (final NoSuchFieldException e) { // NOSONAR
 			Logger.getAnonymousLogger().finest("Cannot access field " + name);
 			return null;

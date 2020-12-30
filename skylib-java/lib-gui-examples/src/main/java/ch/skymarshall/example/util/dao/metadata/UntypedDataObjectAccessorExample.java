@@ -17,10 +17,15 @@ package ch.skymarshall.example.util.dao.metadata;
 
 import static ch.skymarshall.example.util.dao.metadata.ADataObject.AN_ATTRIBUTE;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.logging.Level;
+
 import ch.skymarshall.util.dao.metadata.DataObjectAttribute;
 import ch.skymarshall.util.dao.metadata.DataObjectManagerFactory;
 import ch.skymarshall.util.dao.metadata.DataObjectMetaData;
 import ch.skymarshall.util.dao.metadata.UntypedDataObjectManager;
+import ch.skymarshall.util.helpers.Log;
 import ch.skymarshall.util.text.ArrowIndentationManager;
 import ch.skymarshall.util.text.SimpleTextFormatter;
 import ch.skymarshall.util.text.TextFormatter;
@@ -33,35 +38,37 @@ import ch.skymarshall.util.text.TextFormatter;
  */
 public interface UntypedDataObjectAccessorExample {
 
-	public static void main(final String[] args) {
+	public static void main(final String[] args) throws IOException {
 
-		final SimpleTextFormatter<RuntimeException> log = new SimpleTextFormatter<>(
-				TextFormatter.safeOutput(System.out)); // NOSONAR
-		log.setIndentationManager(new ArrowIndentationManager());
+		try (OutputStream output = Log.streamOf(DataObjectMetaDataExample.class, Level.INFO)) {
+			final SimpleTextFormatter<RuntimeException> log = new SimpleTextFormatter<>(
+					TextFormatter.safeOutput(output)); // NOSONAR
+			log.setIndentationManager(new ArrowIndentationManager());
 
-		final ADataObject do1 = new ADataObject();
-		final DataObjectMetaData<ADataObject> metadata = new DataObjectMetaData<>(ADataObject.class);
-		log.appendIndentedLine("One can create a Data Object Accessor either from the Meta Data");
-		final UntypedDataObjectManager<?> accessor0 = metadata.createUntypedAccessorTo(do1);
-		log.indented(t -> t.appendIndentedLine(accessor0.toString()));
+			final ADataObject do1 = new ADataObject();
+			final DataObjectMetaData<ADataObject> metadata = new DataObjectMetaData<>(ADataObject.class);
+			log.appendIndentedLine("One can create a Data Object Accessor either from the Meta Data");
+			final UntypedDataObjectManager<?> accessor0 = metadata.createUntypedAccessorTo(do1);
+			log.indented(t -> t.appendIndentedLine(accessor0.toString()));
 
-		log.appendIndentedLine("Or from a factory");
-		final UntypedDataObjectManager<?> doAccessor = DataObjectManagerFactory.createFor(do1);
-		log.indented(t -> t.appendIndentedLine(doAccessor.toString()));
+			log.appendIndentedLine("Or from a factory");
+			final UntypedDataObjectManager<?> doAccessor = DataObjectManagerFactory.createFor(do1);
+			log.indented(t -> t.appendIndentedLine(doAccessor.toString()));
 
-		log.appendIndentedLine("Read/Write access using the DO's Accessor");
-		doAccessor.setValueOf(AN_ATTRIBUTE, "data1");
-		log.indented(t -> t.appendIndentedLine(AN_ATTRIBUTE + ":" + doAccessor.getValueOf(AN_ATTRIBUTE)));
+			log.appendIndentedLine("Read/Write access using the DO's Accessor");
+			doAccessor.setValueOf(AN_ATTRIBUTE, "data1");
+			log.indented(t -> t.appendIndentedLine(AN_ATTRIBUTE + ":" + doAccessor.getValueOf(AN_ATTRIBUTE)));
 
-		log.appendIndentedLine("Read/Write access using the DO's Attribute Accessor");
-		final DataObjectAttribute attribAccessor = doAccessor.getAttributeAccessor(AN_ATTRIBUTE);
-		attribAccessor.setValue("data2");
-		log.indented(t -> t.appendIndentedLine(AN_ATTRIBUTE + ":" + attribAccessor.getValue()));
+			log.appendIndentedLine("Read/Write access using the DO's Attribute Accessor");
+			final DataObjectAttribute attribAccessor = doAccessor.getAttributeAccessor(AN_ATTRIBUTE);
+			attribAccessor.setValue("data2");
+			log.indented(t -> t.appendIndentedLine(AN_ATTRIBUTE + ":" + attribAccessor.getValue()));
 
-		log.appendIndentedLine("One can also copy the content of the DO...");
-		final ADataObject do2 = new ADataObject();
-		doAccessor.copyInto(do2);
-		log.indented(
-				t -> t.appendIndentedLine(AN_ATTRIBUTE + ":" + metadata.getAttribute(AN_ATTRIBUTE).getValueOf(do2)));
+			log.appendIndentedLine("One can also copy the content of the DO...");
+			final ADataObject do2 = new ADataObject();
+			doAccessor.copyInto(do2);
+			log.indented(t -> t
+					.appendIndentedLine(AN_ATTRIBUTE + ":" + metadata.getAttribute(AN_ATTRIBUTE).getValueOf(do2)));
+		}
 	}
 }

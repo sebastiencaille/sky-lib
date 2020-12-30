@@ -17,7 +17,7 @@ import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestReference;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
-import ch.skymarshall.tcwriter.test.TestObjectDescription;
+import ch.skymarshall.tcwriter.tc.TestObjectDescription;
 
 public class HumanReadableVisitor {
 

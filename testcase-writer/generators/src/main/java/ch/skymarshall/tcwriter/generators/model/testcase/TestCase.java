@@ -15,7 +15,7 @@ import com.google.common.collect.MultimapBuilder;
 import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestDictionary;
-import ch.skymarshall.tcwriter.test.TestObjectDescription;
+import ch.skymarshall.tcwriter.tc.TestObjectDescription;
 
 public class TestCase {
 

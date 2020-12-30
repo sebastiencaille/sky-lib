@@ -25,8 +25,8 @@ import ch.skymarshall.tcwriter.generators.model.testapi.TestApiParameter;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestDictionary;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory.ParameterNature;
+import ch.skymarshall.tcwriter.tc.TestObjectDescription;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestRole;
-import ch.skymarshall.tcwriter.test.TestObjectDescription;
 
 public class ClassToDictionaryVisitor {
 

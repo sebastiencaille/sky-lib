@@ -23,7 +23,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>ch.skymarshall.tcwriter</groupId>
-			<artifactId>testcase-writer-annotations</artifactId>
+			<artifactId>testcase-writer-javatc</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>ch.skymarshall.tcwriter</groupId>

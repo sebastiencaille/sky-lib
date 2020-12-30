@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import ch.skymarshall.tcwriter.generators.model.ExportReference;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestParameterFactory;
-import ch.skymarshall.tcwriter.test.TestObjectDescription;
+import ch.skymarshall.tcwriter.tc.TestObjectDescription;
 
 public class TestReference extends TestParameterFactory {
 

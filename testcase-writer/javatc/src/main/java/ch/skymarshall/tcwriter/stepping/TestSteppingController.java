@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.concurrent.Semaphore;
 
 import ch.skymarshall.tcwriter.stepping.TestApi.Command;
+import ch.skymarshall.util.helpers.Log;
 
 public class TestSteppingController implements ITestSteppingController {
 
@@ -105,7 +106,7 @@ public class TestSteppingController implements ITestSteppingController {
 			error.printStackTrace(new PrintWriter(errorStack));
 			api.writeError(currentStep, error, errorStack);
 		} catch (final IOException e) {
-			System.out.println("Unable to send error: " + e.getMessage());
+			Log.of(this).warning("Unable to send error: " + e.getMessage());
 		}
 	}
 

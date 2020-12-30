@@ -18,11 +18,13 @@ package ch.skymarshall.example.gui.controllermodel.impl;
 import static ch.skymarshall.gui.swing.SwingHelper.actionListener;
 
 import java.awt.event.ActionListener;
+import java.util.logging.Logger;
 
 import ch.skymarshall.example.gui.TestObject;
 import ch.skymarshall.gui.model.ListModel;
 import ch.skymarshall.gui.model.views.ListViews;
 import ch.skymarshall.gui.mvc.GuiController;
+import ch.skymarshall.util.helpers.Log;
 
 public class TestObjectControllerModelController extends GuiController {
 
@@ -34,7 +36,14 @@ public class TestObjectControllerModelController extends GuiController {
 		model.insert(new TestObject("Foo", 1));
 		model.insert(new TestObject("Bar", 2));
 
-		tableModel = new TestObjectControllerModelFrameModel(this, model);
+		tableModel = new TestObjectControllerModelFrameModel(this, model) {
+			@Override
+			public void commit() {
+				super.commit();
+				Logger logger = Log.of(TestObjectControllerModelController.class);
+				model.values().stream().map(Object::toString).forEach(logger::info); 
+			}
+		};
 	}
 
 	public ListModel<TestObject> getModel() {
@@ -46,10 +55,7 @@ public class TestObjectControllerModelController extends GuiController {
 	}
 
 	public ActionListener getCommitAction() {
-		return actionListener(e -> {
-			tableModel.commit();
-			model.forEach(System.out::println); // NOSONAR
-		});
+		return actionListener(e -> tableModel.commit());
 	}
 
 }

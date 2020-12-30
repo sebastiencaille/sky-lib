@@ -21,7 +21,8 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.logging.Logger;
+
+import ch.skymarshall.util.helpers.Log;
 
 /**
  * This class creates the appropriated Class that allows accessing to an
@@ -91,7 +92,7 @@ abstract class AttributeFactory {
 			MethodHandle setterHandler = MethodHandles.lookup().unreflect(setter);
 			return new GetSetAttribute<>(name, getter, getterHandler, setterHandler);
 		} catch (final Exception e) { // NOSONAR
-			Logger.getAnonymousLogger().finest("No setter for " + name);
+			Log.of(AttributeFactory.class).finest("No setter for " + name);
 			return new ReadOnlyAttribute<>(name, getter, getterHandler);
 		}
 	}
@@ -100,12 +101,15 @@ abstract class AttributeFactory {
 			final String name) {
 		try {
 			Field field = findField(currentClass, property);
+			if (Modifier.isStatic(field.getModifiers())) {
+				return null;
+			}
 			if (Modifier.isPublic(field.getModifiers())) {
 				return new NioFieldAttribute<>(name, field);
 			}
 			return new FieldAttribute<>(name, field);
 		} catch (final NoSuchFieldException e) { // NOSONAR
-			Logger.getAnonymousLogger().finest("Cannot access field " + name);
+			Log.of(AttributeFactory.class).finest("Cannot access field " + name);
 			return null;
 		}
 	}

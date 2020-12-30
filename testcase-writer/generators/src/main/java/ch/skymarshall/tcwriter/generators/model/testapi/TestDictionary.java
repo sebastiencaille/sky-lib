@@ -13,7 +13,7 @@ import com.google.common.collect.MultimapBuilder;
 import ch.skymarshall.tcwriter.generators.Helper;
 import ch.skymarshall.tcwriter.generators.model.IdObject;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
-import ch.skymarshall.tcwriter.test.TestObjectDescription;
+import ch.skymarshall.tcwriter.tc.TestObjectDescription;
 
 public class TestDictionary implements Serializable {
 

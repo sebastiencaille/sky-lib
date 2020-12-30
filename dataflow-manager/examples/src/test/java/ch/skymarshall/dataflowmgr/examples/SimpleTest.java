@@ -24,7 +24,14 @@ import ch.skymarshall.dataflowmgr.model.ExternalAdapter;
 import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.Processor;
 import ch.skymarshall.util.generators.Template;
+import ch.skymarshall.util.helpers.Log;
 
+/**
+ * This test case generates the java and dot flows
+ * 
+ * @author scaille
+ *
+ */
 public class SimpleTest {
 
 	private static final String DP_Complete = "complete";
@@ -93,7 +100,7 @@ public class SimpleTest {
 		final BufferedReader reader = new BufferedReader(new InputStreamReader(dotExec.getErrorStream()));
 		String line;
 		while ((line = reader.readLine()) != null) {
-			System.out.println(line);
+			Log.of(this).info(line);
 		}
 		final int dotExit = dotExec.waitFor();
 		assertEquals(0, dotExit);

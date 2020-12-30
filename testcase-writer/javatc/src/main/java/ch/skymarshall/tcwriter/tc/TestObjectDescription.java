@@ -1,4 +1,4 @@
-package ch.skymarshall.tcwriter.test;
+package ch.skymarshall.tcwriter.tc;
 
 public class TestObjectDescription {
 

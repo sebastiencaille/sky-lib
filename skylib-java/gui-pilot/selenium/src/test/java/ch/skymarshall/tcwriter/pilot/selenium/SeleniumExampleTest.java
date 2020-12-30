@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.logging.Logger;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -23,6 +24,7 @@ import org.xnio.streams.Streams;
 
 import ch.skymarshall.tcwriter.pilot.ActionDelay;
 import ch.skymarshall.tcwriter.pilot.ModalDialogDetector;
+import ch.skymarshall.util.helpers.Log;
 import io.undertow.Undertow;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
@@ -125,7 +127,7 @@ public class SeleniumExampleTest {
 
 		pilot.element(By.id("NotExisting")).doIfEnabled(SeleniumElement.doClick(), Duration.ofMillis(500));
 
-		System.out.println(pilot.getActionReport().getFormattedReport());
+		Log.of(this).info(pilot.getActionReport().getFormattedReport());
 
 		assertEquals(pilot.getActionReport().getFormattedReport(), 5, pilot.getActionReport().getReport().size());
 	}

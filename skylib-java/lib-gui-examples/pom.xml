@@ -23,9 +23,6 @@
 	<artifactId>lib-gui-examples</artifactId>
 	<packaging>jar</packaging>
 
-	<name>lib-gui-examples</name>
-	<url>http://maven.apache.org</url>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>

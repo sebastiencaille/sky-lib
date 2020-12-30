@@ -15,6 +15,7 @@ import ch.skymarshall.tcwriter.pilot.StatePolling;
 import ch.skymarshall.tcwriter.pilot.swing.SwingGuiPilot;
 import ch.skymarshall.tcwriter.pilot.swing.SwingTable;
 import ch.skymarshall.tcwriter.pilot.swing.SwingToggleButton;
+import ch.skymarshall.util.helpers.Log;
 
 public class ModelExampleTest {
 
@@ -59,7 +60,7 @@ public class ModelExampleTest {
 		listTable(pilot).checkValue(2, 0, "Three");
 		listTable(pilot).checkValue(3, 0, "Four");
 
-		System.out.println(pilot.getActionReport().getFormattedReport());
+		Log.of(this).info(pilot.getActionReport().getFormattedReport());
 	}
 
 	private SwingToggleButton reverseOrder(final SwingGuiPilot pilot) {

@@ -2,6 +2,7 @@ package ${package};
 
 import ch.skymarshall.dataflowmgr.examples.simple.FlowReport;
 
+import ch.skymarshall.util.helpers.Log;
 import org.junit.Test;
 import org.junit.Assert;
 import io.reactivex.rxjava3.core.Maybe;
@@ -47,7 +48,7 @@ public class ${flow.name} extends ch.skymarshall.dataflowmgr.examples.simple.Abs
 		final FlowExecution result = execute(in, e -> e.doOnSuccess(r -> finished.release())).blockingGet();
 		Assert.assertTrue(finished.tryAcquire(100, TimeUnit.MILLISECONDS));
 		Assert.assertEquals(out, simpleExternalAdapter.getOutput());
-		System.out.println(FlowReport.report);
+		Log.of(this).info(FlowReport.report.toString());
 	}
 
 	@Test

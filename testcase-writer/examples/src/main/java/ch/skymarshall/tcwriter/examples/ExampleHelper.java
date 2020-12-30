@@ -20,27 +20,28 @@ import ch.skymarshall.tcwriter.generators.recorder.TestCaseRecorder;
 import ch.skymarshall.tcwriter.generators.visitors.HumanReadableVisitor;
 import ch.skymarshall.tcwriter.recording.TestCaseRecorderAspect;
 import ch.skymarshall.util.helpers.ClassLoaderHelper;
+import ch.skymarshall.util.helpers.Log;
 
 public class ExampleHelper {
 
 	private ExampleHelper() {
 	}
 
-	public static final File RESOURCE_FOLDER = new File("./src/main/resources");
-
-	public static final String TC_NAME = "testCase.json";
+	private static final File RESOURCE_FOLDER = new File("./src/main/resources");
 
 	private static final  GeneratorConfig CONFIG;
 	
 	private static final  IModelPersister persister;
 
+	public static final String TC_NAME = "testCase.json";
+
 	static {
-		CONFIG = new GeneratorConfig();
 		final File tcPath = new File(RESOURCE_FOLDER, "testCase");
 		tcPath.mkdirs();
 		final File modelPath = new File(RESOURCE_FOLDER, "models");
 		modelPath.mkdirs();
 
+		CONFIG = new GeneratorConfig();
 		CONFIG.setTcPath(tcPath.toString());
 		CONFIG.setDefaultGeneratedTCPath("./src/test/java");
 		CONFIG.setDictionaryPath(modelPath + "/test-model.json");
@@ -76,7 +77,7 @@ public class ExampleHelper {
 		test.initActors();
 		test.testNormalCase();
 		final TestCase testCase = recorder.getTestCase("ch.skymarshall.tcwriter.examples.GeneratedTest");
-		System.out.println(new HumanReadableVisitor(testCase, true).processAllSteps()); // NOSONAR
+		Log.of(ExampleHelper.class).info(new HumanReadableVisitor(testCase, true).processAllSteps()); 
 		return testCase;
 	}
 

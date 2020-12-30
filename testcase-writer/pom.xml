@@ -21,6 +21,7 @@
 		<module>gui</module>
 		<module>examples</module>
 		<module>gui-it</module>
+		<module>javatc</module>
 	</modules>
 
 	<properties>
@@ -92,6 +93,12 @@
 				<artifactId>testcase-writer-annotations</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
+			<dependency>
+				<groupId>ch.skymarshall.tcwriter</groupId>
+				<artifactId>testcase-writer-javatc</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+
 			<dependency>
 				<groupId>ch.skymarshall.tcwriter</groupId>
 				<artifactId>testcase-writer-generators</artifactId>

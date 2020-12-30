@@ -26,7 +26,7 @@ import ch.skymarshall.tcwriter.generators.model.testcase.TestReference;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 import ch.skymarshall.tcwriter.recording.ITestCaseRecorder;
 import ch.skymarshall.tcwriter.recording.TestActors;
-import ch.skymarshall.tcwriter.test.TestObjectDescription;
+import ch.skymarshall.tcwriter.tc.TestObjectDescription;
 
 public class TestCaseRecorder implements ITestCaseRecorder {
 

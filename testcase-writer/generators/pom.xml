@@ -21,13 +21,14 @@
 	<artifactId>testcase-writer-generators</artifactId>
 
 	<dependencies>
-		<dependency>
-			<groupId>ch.skymarshall.tcwriter</groupId>
-			<artifactId>testcase-writer-annotations</artifactId>
-		</dependency>
+		
 		<dependency>
 			<groupId>ch.skymarshall</groupId>
 			<artifactId>lib-utils</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ch.skymarshall.tcwriter</groupId>
+			<artifactId>testcase-writer-javatc</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>

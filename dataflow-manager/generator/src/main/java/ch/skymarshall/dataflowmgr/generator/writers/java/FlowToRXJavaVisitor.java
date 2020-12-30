@@ -144,9 +144,9 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 
 		if (debug) {
 			flowFactories.eoli()
-					.append("first = first.doOnSuccess(r -> System.out.println(\"%s: Deps success\"))", context.binding)
+					.append("first = first.doOnSuccess(r -> Log.of(this).info(\"%s: Deps success\"))", context.binding)
 					.indent() //
-					.eoli().append(".doOnComplete(() -> System.out.println(\"%s: Deps skipping\"))", context.binding)
+					.eoli().append(".doOnComplete(() -> Log.of(this).info(\"%s: Deps skipping\"))", context.binding)
 					.eos().unindent(); //
 		}
 
@@ -179,8 +179,8 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 		flowFactories.eoli().append(".doOnComplete(() -> execution.set")
 				.append(toCamelCase(bindingStateOf(context.binding))).append("(DataPointState.SKIPPED))");
 		if (debug) {
-			flowFactories.eoli().append(".doOnSuccess(r -> System.out.println(\"%s: Call success\"))", context.binding)
-					.eoli().append(".doOnComplete(() -> System.out.println(\"%s: Call skipped\"))", context.binding); //
+			flowFactories.eoli().append(".doOnSuccess(r -> Log.of(this).info(\"%s: Call success\"))", context.binding)
+					.eoli().append(".doOnComplete(() -> Log.of(this).info(\"%s: Call skipped\"))", context.binding); //
 		}
 
 		if (!context.binding.isExit()) {

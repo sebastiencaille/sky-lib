@@ -25,6 +25,10 @@
 			<groupId>ch.skymarshall.tcwriter</groupId>
 			<artifactId>testcase-writer-generators</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>ch.skymarshall.tcwriter</groupId>
+			<artifactId>testcase-writer-javatc</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>ch.skymarshall</groupId>

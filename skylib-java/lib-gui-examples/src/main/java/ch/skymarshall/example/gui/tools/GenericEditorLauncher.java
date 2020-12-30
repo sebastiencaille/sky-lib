@@ -11,6 +11,7 @@ import ch.skymarshall.gui.swing.tools.SwingGenericEditorDialog;
 import ch.skymarshall.gui.tools.GenericEditorClassModel;
 import ch.skymarshall.gui.tools.GenericEditorController;
 import ch.skymarshall.gui.validation.GenericEditorValidationAdapter;
+import ch.skymarshall.util.helpers.Log;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
@@ -90,7 +91,7 @@ public class GenericEditorLauncher {
 			editor.activate();
 			editor.load(obj);
 			view.setVisible(true);
-			System.out.println(obj);
+			Log.of(GenericEditorLauncher.class).info(obj.toString());
 			view.dispose();
 		});
 	}

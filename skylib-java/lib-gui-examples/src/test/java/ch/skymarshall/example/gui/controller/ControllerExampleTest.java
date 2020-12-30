@@ -14,6 +14,7 @@ import ch.skymarshall.tcwriter.pilot.swing.SwingList;
 import ch.skymarshall.tcwriter.pilot.swing.SwingTable;
 import ch.skymarshall.tcwriter.pilot.swing.SwingText;
 import ch.skymarshall.tcwriter.pilot.swing.SwingToggleButton;
+import ch.skymarshall.util.helpers.Log;
 
 public class ControllerExampleTest {
 
@@ -57,7 +58,7 @@ public class ControllerExampleTest {
 		tableSelectionEditor(pilot).editValueOnSelectedRow(0, "Bouh");
 		tableSelectionCheck(pilot).checkValue("Bouh");
 
-		System.out.println(pilot.getActionReport().getFormattedReport());
+		Log.of(this).info(pilot.getActionReport().getFormattedReport());
 	}
 
 	private SwingToggleButton booleanEditor(final SwingGuiPilot pilot) {

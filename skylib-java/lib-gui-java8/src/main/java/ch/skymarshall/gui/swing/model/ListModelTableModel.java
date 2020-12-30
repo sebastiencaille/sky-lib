@@ -21,6 +21,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.table.AbstractTableModel;
 
 import ch.skymarshall.gui.model.ListModel;
+import ch.skymarshall.util.helpers.Log;
 
 /**
  * Table model based on a {@link ListModel}, with enum based column identifiers.
@@ -65,7 +66,7 @@ public abstract class ListModelTableModel<T, C extends Enum<C>> extends Abstract
 	}
 
 	protected void warn(final String string) {
-		System.out.println("WARNING: " + string); // NOSONAR
+		Log.of(this).warning("WARNING: " + string); // NOSONAR
 	}
 
 	@Override

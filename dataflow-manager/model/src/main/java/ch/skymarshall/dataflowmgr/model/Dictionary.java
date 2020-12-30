@@ -1,5 +1,7 @@
 package ch.skymarshall.dataflowmgr.model;
 
+import static java.util.stream.Collectors.toMap;
+
 import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,9 +32,11 @@ public class Dictionary {
 		// Maps the service to the instance available in the target code
 		public Calls<T> map(final String from, final String to) {
 			final Calls<T> derivates = new Calls<>(kind, derivateFunc);
-			callsName.entrySet().stream().filter(kv -> kv.getKey().startsWith(from + "."))
-					.forEach(kv -> derivates.callsName.put(kv.getKey().substring(from.length() + 1),
-							derivateFunc.apply(kv.getValue(), to)));
+			final Map<String, T> allDerivates = callsName.entrySet().stream()
+					.filter(kv -> kv.getKey().startsWith(from + "."))
+					.collect(toMap(kv -> kv.getKey().substring(from.length() + 1),
+							kv -> derivateFunc.apply(kv.getValue(), to)));
+			derivates.callsName.putAll(allDerivates);
 			return derivates;
 		}
 

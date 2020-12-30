@@ -19,7 +19,6 @@ import java.util.function.Consumer;
 
 import ch.skymarshall.gui.mvc.AutoCommitListener;
 import ch.skymarshall.gui.mvc.factories.Persisters;
-import ch.skymarshall.gui.mvc.persisters.FieldAccess;
 import ch.skymarshall.gui.mvc.persisters.MethodHandlerAccess;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty.ErrorNotifier;
 
@@ -41,11 +40,6 @@ public class Configuration {
 
 	public static <T, U extends AbstractTypedProperty<T>> Consumer<U> persistent(final IPersister<T> persister) {
 		return property -> property.setPersister(persister);
-	}
-
-	public static <T, U extends AbstractTypedProperty<T>> Consumer<U> persistent(final Object object,
-			final FieldAccess<T> fieldAccess) {
-		return persistent(Persisters.from(object, fieldAccess));
 	}
 
 	public static <T, U extends AbstractTypedProperty<T>> Consumer<U> persistent(final Object object,

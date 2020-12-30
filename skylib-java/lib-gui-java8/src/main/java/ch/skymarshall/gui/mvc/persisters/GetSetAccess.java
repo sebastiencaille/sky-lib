@@ -21,7 +21,6 @@ public class GetSetAccess<C, A> implements IPersisterFactory<A> {
 	public GetSetAccess(final Function<C, Supplier<A>> getter, final Function<C, Consumer<A>> setter) {
 		this.getter = getter;
 		this.setter = setter;
-
 	}
 
 	@Override

@@ -29,10 +29,10 @@ public class TestCaseToJava {
 	public static void main(final String[] args) throws IOException, TestCaseException {
 		final IModelPersister persister = new JsonModelPersister();
 		final GeneratorConfig config = persister.readConfiguration(args[0]);
-		final String jsonTC = args[1];
-
 		persister.setConfiguration(config);
+		
 		final TestDictionary testDictionary = persister.readTestDictionary();
+		final String jsonTC = args[1];
 		final TestCase tc = persister.readTestCase(jsonTC, testDictionary);
 
 		new TestCaseToJava(config).generateAndWrite(tc, Paths.get(config.getDefaultGeneratedTCPath()));

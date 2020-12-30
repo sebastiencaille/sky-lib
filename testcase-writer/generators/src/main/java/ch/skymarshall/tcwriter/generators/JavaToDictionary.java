@@ -34,9 +34,7 @@ public class JavaToDictionary {
 		final String sourcePackage = args[0];
 		final TestDictionary dictionary = new JavaToDictionary(ClassFinder.forApp().collect(sourcePackage).getResult())
 				.generateDictionary();
-
 		persister.writeTestDictionary(dictionary);
-
 	}
 
 }

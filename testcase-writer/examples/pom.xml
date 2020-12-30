@@ -18,23 +18,8 @@
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
-	<artifactId>testcase-writer-examples</artifactId>
 
-	<dependencies>
-		<dependency>
-			<groupId>ch.skymarshall.tcwriter</groupId>
-			<artifactId>testcase-writer-javatc</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>ch.skymarshall.tcwriter</groupId>
-			<artifactId>testcase-writer-gui</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>compile</scope>
-		</dependency>
-	</dependencies>
+	<artifactId>testcase-writer-examples</artifactId>
 
 	<build>
 		<plugins>
@@ -44,4 +29,23 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>ch.skymarshall.tcwriter</groupId>
+			<artifactId>testcase-writer-javatc</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>ch.skymarshall.tcwriter</groupId>
+			<artifactId>testcase-writer-gui</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+
 </project>

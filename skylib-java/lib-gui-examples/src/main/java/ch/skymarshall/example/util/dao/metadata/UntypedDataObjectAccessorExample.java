@@ -42,7 +42,7 @@ public interface UntypedDataObjectAccessorExample {
 
 		try (OutputStream output = Log.streamOf(DataObjectMetaDataExample.class, Level.INFO)) {
 			final SimpleTextFormatter<RuntimeException> log = new SimpleTextFormatter<>(
-					TextFormatter.safeOutput(output)); // NOSONAR
+					TextFormatter.safeOutput(output));
 			log.setIndentationManager(new ArrowIndentationManager());
 
 			final ADataObject do1 = new ADataObject();

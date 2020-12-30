@@ -44,7 +44,7 @@
 						<aspectLibraries>
 							<aspectLibrary>
 								<groupId>ch.skymarshall.tcwriter</groupId>
-								<artifactId>testcase-writer-annotations</artifactId>
+								<artifactId>testcase-writer-javatc</artifactId>
 							</aspectLibrary>
 						</aspectLibraries>
 						<verbose>true</verbose>

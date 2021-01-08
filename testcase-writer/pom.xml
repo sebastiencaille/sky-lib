@@ -36,11 +36,11 @@
 					<artifactId>aspectj-maven-plugin</artifactId>
 					<version>1.11</version>
 					<configuration>
-						<source>${java.source-target.version}</source>
-						<target>${java.source-target.version}</target>
-						<Xlint>ignore</Xlint>
-						<complianceLevel>${java.source-target.version}</complianceLevel>
+						<source>${maven.compiler.source}</source>
+						<target>${maven.compiler.target}</target>
+						<complianceLevel>${maven.compiler.source}</complianceLevel>
 						<encoding>${project.build.sourceEncoding}</encoding>
+						<Xlint>ignore</Xlint>
 						<aspectLibraries>
 							<aspectLibrary>
 								<groupId>ch.skymarshall.tcwriter</groupId>
@@ -65,18 +65,12 @@
 							<artifactId>aspectjtools</artifactId>
 							<version>${aspectj.version}</version>
 						</dependency>
-						<dependency>
-							<groupId>com.sun</groupId>
-							<artifactId>tools</artifactId>
-							<version>${java.version}</version>
-							<scope>system</scope>
-							<systemPath>${project.basedir}/pom.xml</systemPath>
-						</dependency>
 					</dependencies>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${maven-compiler-plugin.version}</version>
 					<configuration>
 						<useIncrementalCompilation>false</useIncrementalCompilation>
 					</configuration>

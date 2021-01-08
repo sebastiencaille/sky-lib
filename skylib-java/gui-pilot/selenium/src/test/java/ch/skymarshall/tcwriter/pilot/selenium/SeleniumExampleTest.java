@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.logging.Logger;
 
 import org.junit.After;
 import org.junit.AfterClass;

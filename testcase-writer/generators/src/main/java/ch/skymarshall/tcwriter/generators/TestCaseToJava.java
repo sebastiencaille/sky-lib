@@ -19,7 +19,6 @@ public class TestCaseToJava {
 
 	public TestCaseToJava(final GeneratorConfig config) throws IOException {
 		testCaseTemplate = Template.from(config.getTemplatePath());
-
 	}
 
 	public File generateAndWrite(final TestCase tc, final Path targetPath) throws IOException, TestCaseException {

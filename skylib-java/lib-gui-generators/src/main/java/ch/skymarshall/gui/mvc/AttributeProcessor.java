@@ -208,14 +208,13 @@ public abstract class AttributeProcessor {
 
 	String generateInitializationWithType() {
 		return String.format(
-				"%s = Properties.<%s, %s>of(new %s(prefix + \"-%s\",  propertySupport)).persistent(Persisters.from(currentObjectProvider, %s)).setErrorNotifier(errorProperty).getProperty();",
-				getPropertyName(), getTypeAsString(), getPropertyType(), getPropertyType(), attrib.getName(),
-				getFieldCreation());
+				"%s = new %s(prefix + \"-%s\",  propertySupport).configureTyped(Configuration.persistent(currentObjectProvider, %s), Configuration.errorNotifier(errorProperty));",
+				getPropertyName(), getPropertyType(), attrib.getName(), getFieldCreation());
 	}
 
 	String generateInitialization() {
 		return String.format(
-				"%s = Properties.of(new %s(prefix + \"-%s\",  propertySupport)).persistent(Persisters.from(currentObjectProvider, %s)).setErrorNotifier(errorProperty).getProperty();",
+				"%s = new %s(prefix + \"-%s\",  propertySupport).configureTyped(Configuration.persistent(currentObjectProvider, %s), Configuration.errorNotifier(errorProperty));",
 				getPropertyName(), getPropertyType(), attrib.getName(), getFieldCreation());
 	}
 
@@ -230,14 +229,13 @@ public abstract class AttributeProcessor {
 
 			String setter;
 			if (!attributeProcessor.attrib.isReadOnly()) {
-				setter = "o::" + attributeProcessor.setter();
+				setter = attr.getDeclaringType().getSimpleName() + "::" + attributeProcessor.setter();
 			} else {
 				setter = "null";
 			}
 
-			return "GetSetAccess.<" + attr.getDeclaringType().getName() + ","
-					+ attributeProcessor.getObjectTypeAsString() + ">access(" + "o -> o::" + attributeProcessor.getter()
-					+ ", o -> " + setter + ")";
+			return "Persisters.getSet(" + attr.getDeclaringType().getSimpleName() + "::" + attributeProcessor.getter()
+					+ ", " + setter + ")";
 		}
 
 		@Override
@@ -246,9 +244,10 @@ public abstract class AttributeProcessor {
 		}
 
 		@Override
-		public void addImports(final AttributeProcessor attributeProcessor) {
-			attributeProcessor.context.addImport("GetSetAccess");
+		public void addImports(AttributeProcessor attributeProcessor) {
+			// noop 
 		}
+
 	}
 
 	public String getter() {

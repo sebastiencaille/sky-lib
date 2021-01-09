@@ -39,7 +39,7 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 
 	private transient IPersister<T> persister;
 
-	public AbstractTypedProperty(final String name, final IScopedSupport propertySupport) {
+	protected AbstractTypedProperty(final String name, final IScopedSupport propertySupport) {
 		super(name, propertySupport);
 	}
 
@@ -69,8 +69,7 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 		}
 	}
 
-	public AbstractTypedProperty<T> setTypedConfiguration(
-			@SuppressWarnings("unchecked") final Consumer<AbstractTypedProperty<T>>... propertyConfigurer) {
+	public AbstractTypedProperty<T> configureTyped(final Consumer<AbstractTypedProperty<T>>... propertyConfigurer) {
 		Stream.of(propertyConfigurer).forEach(prop -> prop.accept(this));
 		return this;
 	}

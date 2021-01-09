@@ -15,6 +15,8 @@
  ******************************************************************************/
 package ch.skymarshall.gui.mvc.properties;
 
+import java.util.function.Consumer;
+
 import ch.skymarshall.gui.mvc.BindingChain;
 import ch.skymarshall.gui.mvc.BindingChain.EndOfChain;
 import ch.skymarshall.gui.mvc.IScopedSupport;
@@ -44,6 +46,15 @@ public class BooleanProperty extends AbstractTypedProperty<Boolean> {
 		return new BindingChain(this, errorNotifier).<Boolean>bindProperty(this::setObjectValueFromComponent);
 	}
 
+	@SafeVarargs
+	@Override
+	public final BooleanProperty configureTyped(
+			final Consumer<AbstractTypedProperty<Boolean>>... propertyConfigurer) {
+		super.configureTyped(propertyConfigurer);
+		return this;
+	}
+
+	
 	public boolean getValue() {
 		return value;
 	}

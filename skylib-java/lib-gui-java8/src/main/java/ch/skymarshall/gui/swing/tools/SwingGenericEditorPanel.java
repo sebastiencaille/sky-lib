@@ -21,9 +21,9 @@ import javax.swing.JTextField;
 
 import ch.skymarshall.gui.mvc.IBindingController;
 import ch.skymarshall.gui.mvc.properties.ErrorSet;
-import ch.skymarshall.gui.tools.GenericEditorClassModel.PropertyEntry;
 import ch.skymarshall.gui.tools.GenericEditorController;
 import ch.skymarshall.gui.tools.IGenericEditor;
+import ch.skymarshall.gui.tools.PropertyEntry;
 
 public class SwingGenericEditorPanel extends JPanel implements IGenericEditor {
 
@@ -54,9 +54,9 @@ public class SwingGenericEditorPanel extends JPanel implements IGenericEditor {
 	}
 
 	@Override
-	public IBindingController bind(final PropertyEntry<?> prop) {
+	public IBindingController addEntry(final PropertyEntry prop) {
 
-		final Class<?> propType = prop.getPropertyType();
+		final Class<?> propType = prop.getEndOfChainType();
 		if (propType == Boolean.class) {
 			final JCheckBox cb = new JCheckBox(prop.getLabel());
 			final GridBagConstraints cbConstraint = new GridBagConstraints();
@@ -87,10 +87,10 @@ public class SwingGenericEditorPanel extends JPanel implements IGenericEditor {
 			errorHandlers.put(component, new ErrorHandler(label));
 			return prop.getChain(String.class).bind(value(component));
 		}
-		throw new IllegalStateException("Type not handled: " + prop.getPropertyType());
+		throw new IllegalStateException("Type not handled: " + prop.getEndOfChainType());
 	}
 
-	private JLabel addLabel(final PropertyEntry<?> prop) {
+	private JLabel addLabel(final PropertyEntry prop) {
 		final GridBagConstraints labelConstraint = new GridBagConstraints();
 		final JLabel label = addLabel(labelConstraint);
 		label.setText(prop.getLabel());
@@ -108,7 +108,7 @@ public class SwingGenericEditorPanel extends JPanel implements IGenericEditor {
 		return label;
 	}
 
-	private JSpinner addSpinner(final PropertyEntry<?> prop) {
+	private JSpinner addSpinner(final PropertyEntry prop) {
 		final JSpinner sp = new JSpinner();
 		sp.setToolTipText(prop.getTooltip());
 
@@ -130,7 +130,7 @@ public class SwingGenericEditorPanel extends JPanel implements IGenericEditor {
 		return sp;
 	}
 
-	private JTextField addTextField(final PropertyEntry<?> prop) {
+	private JTextField addTextField(final PropertyEntry prop) {
 		final JTextField tf = new JTextField();
 		tf.setToolTipText(prop.getTooltip());
 		tf.setEditable(!prop.isReadOnly());

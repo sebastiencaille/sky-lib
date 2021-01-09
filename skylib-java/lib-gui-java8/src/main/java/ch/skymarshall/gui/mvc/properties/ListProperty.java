@@ -16,6 +16,7 @@
 package ch.skymarshall.gui.mvc.properties;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import ch.skymarshall.gui.mvc.IScopedSupport;
 
@@ -32,4 +33,12 @@ public class ListProperty<T> extends ObjectProperty<List<T>> {
 	public ListProperty(final String name, final IScopedSupport propertySupport) {
 		super(name, propertySupport);
 	}
+
+	@SafeVarargs
+	@Override
+	public final ListProperty<T> configureTyped(final Consumer<AbstractTypedProperty<List<T>>>... propertyConfigurer) {
+		super.configureTyped(propertyConfigurer);
+		return this;
+	}
+
 }

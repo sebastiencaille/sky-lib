@@ -15,6 +15,8 @@
  ******************************************************************************/
 package ch.skymarshall.gui.mvc.properties;
 
+import java.util.function.Consumer;
+
 import ch.skymarshall.gui.mvc.BindingChain;
 import ch.skymarshall.gui.mvc.BindingChain.EndOfChain;
 import ch.skymarshall.gui.mvc.IScopedSupport;
@@ -43,6 +45,13 @@ public class FloatProperty extends AbstractTypedProperty<Float> {
 	@Override
 	public EndOfChain<Float> createBindingChain() {
 		return new BindingChain(this, errorNotifier).<Float>bindProperty(this::setObjectValueFromComponent);
+	}
+
+	@SafeVarargs
+	@Override
+	public final FloatProperty configureTyped(final Consumer<AbstractTypedProperty<Float>>... propertyConfigurer) {
+		super.configureTyped(propertyConfigurer);
+		return this;
 	}
 
 	public float getValue() {

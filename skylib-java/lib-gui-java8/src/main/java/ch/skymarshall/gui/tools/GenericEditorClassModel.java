@@ -1,6 +1,7 @@
 package ch.skymarshall.gui.tools;
 
-import java.security.InvalidParameterException;
+import static ch.skymarshall.gui.mvc.properties.Configuration.persistent;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,86 +13,34 @@ import ch.skymarshall.annotations.Labeled;
 import ch.skymarshall.annotations.Ordered;
 import ch.skymarshall.gui.mvc.BindingChain.EndOfChain;
 import ch.skymarshall.gui.mvc.IScopedSupport;
-import ch.skymarshall.gui.mvc.properties.AbstractProperty.ErrorNotifier;
+import ch.skymarshall.gui.mvc.factories.Persisters;
+import ch.skymarshall.gui.mvc.persisters.ObjectProviderPersister.IObjectProvider;
 import ch.skymarshall.gui.mvc.properties.AbstractTypedProperty;
-import ch.skymarshall.gui.mvc.properties.IPersister;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.util.dao.metadata.AbstractAttributeMetaData;
 import ch.skymarshall.util.dao.metadata.DataObjectMetaData;
 
-public class GenericEditorClassModel<T> {
+public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 
-	public static class PropertyEntry<U> {
-		private final AbstractTypedProperty<Object> property;
-		private final EndOfChain<Object> endOfChain;
+	public static class ClassPropertyEntry<U> extends PropertyEntry {
+
 		private final AbstractAttributeMetaData<U> metadata;
-		private final boolean readOnly;
-		private final String label;
-		private final String tooltip;
 
-		public PropertyEntry(final AbstractTypedProperty<Object> property, final EndOfChain<Object> endOfChain,
+		public ClassPropertyEntry(final AbstractTypedProperty<Object> property,
+				final Function<AbstractTypedProperty<?>, EndOfChain<?>> endOfChainProvider,
 				final AbstractAttributeMetaData<U> metadata, final boolean readOnly, final String label,
 				final String tooltip) {
-			this.property = property;
-			this.endOfChain = endOfChain;
+			super(property, endOfChainProvider, metadata.getClassType(), readOnly, label, tooltip);
 			this.metadata = metadata;
-			this.label = label;
-			this.tooltip = tooltip;
-			this.readOnly = readOnly;
 		}
 
-		public int index() {
+		private int index() {
 			final Ordered annotation = metadata.getAnnotation(Ordered.class);
 			if (annotation != null) {
 				return annotation.order();
 			}
 			return Integer.MAX_VALUE / 2;
 		}
-
-		public <V> EndOfChain<V> getChain(final Class<V> expectedType) {
-			if (!expectedType.equals(getPropertyType())) {
-				throw new InvalidParameterException(
-						"Expected " + expectedType + ", but property type is " + getPropertyType());
-			}
-			return ((EndOfChain<V>) endOfChain);
-		}
-
-		public void loadFromObject(final Object caller, final U obj) {
-			property.setPersister(new IPersister<Object>() {
-				@Override
-				public Object get() {
-					return metadata.getValueOf(obj);
-				}
-
-				@Override
-				public void set(final Object value) {
-					metadata.setValueOf(obj, value);
-				}
-
-			});
-			property.load(caller);
-		}
-
-		public void saveInCurrentObject() {
-			property.save();
-		}
-
-		public Class<?> getPropertyType() {
-			return metadata.getClassType();
-		}
-
-		public boolean isReadOnly() {
-			return readOnly;
-		}
-
-		public String getLabel() {
-			return label;
-		}
-
-		public String getTooltip() {
-			return tooltip;
-		}
-
 	}
 
 	public static class Builder<T> {
@@ -144,26 +93,31 @@ public class GenericEditorClassModel<T> {
 	 *
 	 * @return
 	 */
-	public List<PropertyEntry<T>> createProperties(final IScopedSupport propertySupport,
-			final ErrorNotifier errorNotifier) {
+	@Override
+	public List<ClassPropertyEntry<T>> createProperties(final IScopedSupport propertySupport,
+			IObjectProvider<T> object) {
 
-		final List<PropertyEntry<T>> properties = new ArrayList<>();
+		final List<ClassPropertyEntry<T>> properties = new ArrayList<>();
 		for (final AbstractAttributeMetaData<T> attrib : metaData.getAttributes()) {
 
 			final ObjectProperty<Object> property = new ObjectProperty<>(attrib.getName(), propertySupport);
-			property.setErrorNotifier(errorNotifier);
-			EndOfChain<Object> chain = property.createBindingChain();
-			for (final IGenericModelAdapter adapter : config.adapters) {
-				chain = adapter.apply(config.editedClazz, chain);
-			}
+			property.configureTyped(persistent(object, Persisters.attribute(attrib)));
 
 			final boolean readOnly = config.readOnly || attrib.isReadOnly();
-			final String message = findText(attrib, Labeled::label, GenericEditorClassModel::descriptionKey);
-			final String toolTip = findText(attrib, Labeled::tooltip, GenericEditorClassModel::tooltipKey);
-			properties.add(new PropertyEntry<>(property, chain, attrib, readOnly, message, toolTip));
+			final String message = findText(attrib, Labeled::label, PropertyEntry::descriptionKey);
+			final String toolTip = findText(attrib, Labeled::tooltip, PropertyEntry::tooltipKey);
+			properties.add(new ClassPropertyEntry<>(property, this::createBindingChain, attrib, readOnly, message, toolTip));
 		}
 		Collections.sort(properties, (p1, p2) -> Integer.compare(p1.index(), p2.index()));
 		return properties;
+	}
+
+	private EndOfChain<?> createBindingChain(AbstractTypedProperty<?> property) {
+		EndOfChain<?> chain = property.createBindingChain();
+		for (final IGenericModelAdapter adapter : config.adapters) {
+			chain = adapter.apply(config.editedClazz, chain);
+		}
+		return chain;
 	}
 
 	private String findText(final AbstractAttributeMetaData<T> attrib, final Function<Labeled, String> fromLabel,
@@ -177,14 +131,6 @@ public class GenericEditorClassModel<T> {
 			value = config.bundle.getString(nameToKey.apply(attrib.getName()));
 		}
 		return value;
-	}
-
-	public static String descriptionKey(final String name) {
-		return name + ".description";
-	}
-
-	public static String tooltipKey(final String name) {
-		return name + ".tooltip";
 	}
 
 }

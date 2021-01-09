@@ -17,6 +17,7 @@ package ch.skymarshall.gui.mvc.properties;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import ch.skymarshall.gui.mvc.IScopedSupport;
 
@@ -26,4 +27,10 @@ public class MapProperty<T, U> extends ObjectProperty<Map<T, U>> {
 		super(name, propertySupport, new HashMap<>());
 	}
 
+	@SafeVarargs
+	@Override
+	public final MapProperty<T, U> configureTyped(final Consumer<AbstractTypedProperty<Map<T, U>>>... propertyConfigurer) {
+		super.configureTyped(propertyConfigurer);
+		return this;
+	}
 }

@@ -15,6 +15,8 @@
  ******************************************************************************/
 package ch.skymarshall.gui.mvc.properties;
 
+import java.util.function.Consumer;
+
 import ch.skymarshall.gui.mvc.BindingChain;
 import ch.skymarshall.gui.mvc.BindingChain.EndOfChain;
 import ch.skymarshall.gui.mvc.IScopedSupport;
@@ -45,6 +47,14 @@ public class LongProperty extends AbstractTypedProperty<Long> {
 		return new BindingChain(this, errorNotifier).<Long>bindProperty(this::setObjectValueFromComponent);
 	}
 
+	@SafeVarargs
+	@Override
+	public final LongProperty configureTyped(final Consumer<AbstractTypedProperty<Long>>... propertyConfigurer) {
+		super.configureTyped(propertyConfigurer);
+		return this;
+	}
+
+	
 	public long getValue() {
 		return value;
 	}

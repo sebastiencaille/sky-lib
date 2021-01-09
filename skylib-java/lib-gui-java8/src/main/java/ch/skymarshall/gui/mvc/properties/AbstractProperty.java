@@ -90,7 +90,7 @@ public abstract class AbstractProperty implements Serializable {
 
 	public abstract void fireArtificialChange(Object caller);
 
-	public AbstractProperty(final String name, final IScopedSupport propertySupport) {
+	protected AbstractProperty(final String name, final IScopedSupport propertySupport) {
 		this.name = name;
 		this.propertySupport = propertySupport;
 		propertySupport.register(this);
@@ -162,7 +162,7 @@ public abstract class AbstractProperty implements Serializable {
 				.forEach(l -> l.propertyModified(caller, event));
 	}
 
-	public AbstractProperty setConfiguration(
+	public AbstractProperty configure(
 			@SuppressWarnings("unchecked") final Consumer<AbstractProperty>... properties) {
 		Stream.of(properties).forEach(prop -> prop.accept(this));
 		return this;

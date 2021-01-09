@@ -27,7 +27,7 @@ public class GuiErrorToStringConverter implements IConverter<GuiError, String> {
 	@Override
 	public String convertPropertyValueToComponentValue(final GuiError value) {
 		if (value == null) {
-			return "No error provided";
+			return "";
 		}
 		final Object content = value.getContent();
 		if (content instanceof Exception) {

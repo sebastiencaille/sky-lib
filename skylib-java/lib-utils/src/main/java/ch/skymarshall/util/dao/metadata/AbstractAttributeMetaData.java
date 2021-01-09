@@ -79,10 +79,21 @@ public abstract class AbstractAttributeMetaData<T> {
 		return name;
 	}
 
+	/**
+	 * Returns the attribute class, preserving the primitive type.
+	 * 
+	 * @return
+	 */
 	public Class<?> getType() {
 		return type;
 	}
 
+	/**
+	 * Returns the attribute class. Primitive type are replaced by non-primitive
+	 * types
+	 * 
+	 * @return
+	 */
 	public Class<?> getClassType() {
 		if (!type.isPrimitive()) {
 			return type;

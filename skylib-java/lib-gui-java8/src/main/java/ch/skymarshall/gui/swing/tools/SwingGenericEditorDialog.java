@@ -11,9 +11,9 @@ import javax.swing.JPanel;
 
 import ch.skymarshall.gui.mvc.IBindingController;
 import ch.skymarshall.gui.mvc.properties.ErrorSet;
-import ch.skymarshall.gui.tools.GenericEditorClassModel.PropertyEntry;
 import ch.skymarshall.gui.tools.GenericEditorController;
 import ch.skymarshall.gui.tools.IGenericEditor;
+import ch.skymarshall.gui.tools.PropertyEntry;
 
 public class SwingGenericEditorDialog extends JDialog implements IGenericEditor {
 
@@ -23,11 +23,6 @@ public class SwingGenericEditorDialog extends JDialog implements IGenericEditor 
 		super(parent, title, modality);
 		getContentPane().setLayout(new BorderLayout());
 		panel = new SwingGenericEditorPanel();
-	}
-
-	@Override
-	public IBindingController bind(final PropertyEntry<?> prop) {
-		return panel.bind(prop);
 	}
 
 	@Override
@@ -54,6 +49,13 @@ public class SwingGenericEditorDialog extends JDialog implements IGenericEditor 
 		setSize((int) (getWidth() * 1.2), (int) (getHeight() * 1.2));
 	}
 
+
+	@Override
+	public IBindingController addEntry(final PropertyEntry prop) {
+		return panel.addEntry(prop);
+	}
+
+	
 	private void close() {
 		setVisible(false);
 		dispose();

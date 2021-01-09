@@ -55,9 +55,8 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 	}
 
 	@Override
-	@SafeVarargs
-	public final ObjectProperty<T> setTypedConfiguration(final Consumer<AbstractTypedProperty<T>>... properties) {
-		super.setTypedConfiguration(properties);
+	public ObjectProperty<T> configureTyped(final Consumer<AbstractTypedProperty<T>>... properties) {
+		super.configureTyped(properties);
 		return this;
 	}
 

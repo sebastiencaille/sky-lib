@@ -16,6 +16,7 @@
 package ch.skymarshall.gui.mvc.properties;
 
 import java.util.Set;
+import java.util.function.Consumer;
 
 import ch.skymarshall.gui.mvc.IScopedSupport;
 
@@ -25,4 +26,10 @@ public class SetProperty<T> extends ObjectProperty<Set<T>> {
 		super(name, propertySupport);
 	}
 
+	@SafeVarargs
+	@Override
+	public final SetProperty<T> configureTyped(final Consumer<AbstractTypedProperty<Set<T>>>... propertyConfigurer) {
+		super.configureTyped(propertyConfigurer);
+		return this;
+	}
 }

@@ -25,7 +25,8 @@ import org.junit.Test;
 import ch.skymarshall.gui.TestObject;
 import ch.skymarshall.gui.mvc.converters.ConversionException;
 import ch.skymarshall.gui.mvc.factories.Converters;
-import ch.skymarshall.gui.mvc.persisters.MethodHandlerAccess;
+import ch.skymarshall.gui.mvc.factories.Persisters;
+import ch.skymarshall.gui.mvc.persisters.IPersisterFactory;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 import ch.skymarshall.gui.mvc.properties.Configuration;
 import ch.skymarshall.gui.mvc.properties.IntProperty;
@@ -43,9 +44,9 @@ public class ModelBasicTest extends Assert {
 			super(controller);
 			try {
 				integerProperty = new IntProperty("IntegerProperty", propertySupport)
-						.setTypedConfiguration(errorNotifier(errorProperty));
+						.configureTyped(errorNotifier(errorProperty));
 				stringProperty = new ObjectProperty<String>("StringProperty", propertySupport)
-						.setTypedConfiguration(errorNotifier(errorProperty));
+						.configureTyped(errorNotifier(errorProperty));
 			} catch (final SecurityException e) {
 				throw new IllegalStateException(e);
 			}
@@ -96,7 +97,7 @@ public class ModelBasicTest extends Assert {
 		controller.activate();
 
 		final TestObject testObject = new TestObject(321);
-		model.integerProperty.setTypedConfiguration(persistent(testObject, testObjectValAccess()));
+		model.integerProperty.configureTyped(persistent(testObject, testObjectValAccess()));
 
 		model.integerProperty.load(this);
 		assertEquals("321", binding.value);
@@ -134,15 +135,14 @@ public class ModelBasicTest extends Assert {
 	public void testAutoCommit() throws NoSuchFieldException {
 		final TestObject testObject = new TestObject(123);
 
-		model.integerProperty.setTypedConfiguration(persistent(testObject, testObjectValAccess()),
-				Configuration::autoCommit);
+		model.integerProperty.configureTyped(persistent(testObject, testObjectValAccess()), Configuration::autoCommit);
 
 		model.integerProperty.setValue(this, 456);
 		assertEquals(456, testObject.getVal());
 	}
 
-	protected MethodHandlerAccess<Integer> testObjectValAccess() throws NoSuchFieldException {
-		return MethodHandlerAccess.unsafeObjectAccess(TestObject.class.getDeclaredField("val"));
+	protected IPersisterFactory<TestObject, Integer> testObjectValAccess() throws NoSuchFieldException {
+		return Persisters.unsafeFieldAccess(TestObject.class.getDeclaredField("val"));
 	}
 
 }

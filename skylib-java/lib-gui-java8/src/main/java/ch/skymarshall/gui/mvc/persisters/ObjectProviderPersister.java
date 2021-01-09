@@ -22,49 +22,50 @@ import ch.skymarshall.gui.mvc.properties.IPersister;
  *
  * @author scaille
  *
- * @param <T>
+ * @param <T> the object type
+ * @param <A> the attribute type
  */
-public class ObjectProviderPersister<T> implements IPersister<T> {
+public class ObjectProviderPersister<T, A> implements IPersister<A> {
 
-	public interface IObjectProvider {
-		Object getObject();
+	public interface IObjectProvider<T> {
+		T getObject();
 	}
 
-	public static class CurrentObjectProvider implements IObjectProvider {
+	public static class CurrentObjectProvider<T> implements IObjectProvider<T> {
 
-		private Object object;
+		private T object;
 
 		@Override
-		public Object getObject() {
+		public T getObject() {
 			return object;
 		}
 
-		public void setObject(final Object object) {
+		public void setObject(final T object) {
 			this.object = object;
 		}
 
 	}
 
-	private final IPersisterFactory<T> persisterFactory;
-	private final IObjectProvider target;
+	private final IObjectProvider<T> target;
+	private final IPersisterFactory<T, A> persisterFactory;
 
-	public ObjectProviderPersister(final IObjectProvider target, IPersisterFactory<T> persisterFactory) {
+	public ObjectProviderPersister(final IObjectProvider<T> target, IPersisterFactory<T, A> persisterFactory) {
 		this.target = target;
 		this.persisterFactory = persisterFactory;
 	}
 
 	@Override
-	public T get() {
+	public A get() {
 		return persister().get();
 	}
 
 	@Override
-	public void set(final T value) {
+	public void set(final A value) {
 		persister().set(value);
 	}
 
-	private IPersister<T> persister() {
-		final Object targetObject = target.getObject();
+	private IPersister<A> persister() {
+		final T targetObject = target.getObject();
 		if (targetObject == null) {
 			throw new IllegalStateException("No target object defined");
 		}

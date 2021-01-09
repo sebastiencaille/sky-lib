@@ -4,6 +4,6 @@ import ch.skymarshall.gui.mvc.BindingChain.EndOfChain;
 
 public interface IGenericModelAdapter {
 
-	EndOfChain<Object> apply(Class<?> editedClass, EndOfChain<Object> chain);
+	EndOfChain<?> apply(Class<?> editedClass, EndOfChain<?> chain);
 
 }

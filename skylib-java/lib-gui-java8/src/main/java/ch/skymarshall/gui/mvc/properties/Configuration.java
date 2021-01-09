@@ -15,11 +15,14 @@
  ******************************************************************************/
 package ch.skymarshall.gui.mvc.properties;
 
+import static ch.skymarshall.gui.mvc.factories.Persisters.of;
+import static ch.skymarshall.gui.mvc.factories.Persisters.persister;
+
 import java.util.function.Consumer;
 
 import ch.skymarshall.gui.mvc.AutoCommitListener;
-import ch.skymarshall.gui.mvc.factories.Persisters;
-import ch.skymarshall.gui.mvc.persisters.MethodHandlerAccess;
+import ch.skymarshall.gui.mvc.persisters.IPersisterFactory;
+import ch.skymarshall.gui.mvc.persisters.ObjectProviderPersister.IObjectProvider;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty.ErrorNotifier;
 
 /**
@@ -38,13 +41,18 @@ public class Configuration {
 	private Configuration() {
 	}
 
-	public static <T, U extends AbstractTypedProperty<T>> Consumer<U> persistent(final IPersister<T> persister) {
+	public static <A, P extends AbstractTypedProperty<A>> Consumer<P> persistent(final IPersister<A> persister) {
 		return property -> property.setPersister(persister);
 	}
 
-	public static <T, U extends AbstractTypedProperty<T>> Consumer<U> persistent(final Object object,
-			final MethodHandlerAccess<T> fieldAccess) {
-		return persistent(Persisters.from(object, fieldAccess));
+	public static <T, A, P extends AbstractTypedProperty<A>> Consumer<P> persistent(IObjectProvider<T> object,
+			final IPersisterFactory<T, A> persisterFactory) {
+		return persistent(persister(object, persisterFactory));
+	}
+
+	public static <T, A, P extends AbstractTypedProperty<A>> Consumer<P> persistent(T object,
+			final IPersisterFactory<T, A> persisterFactory) {
+		return persistent(of(object), persisterFactory);
 	}
 
 	public static <U extends AbstractProperty> Consumer<U> errorNotifier(final ErrorNotifier notifier) {

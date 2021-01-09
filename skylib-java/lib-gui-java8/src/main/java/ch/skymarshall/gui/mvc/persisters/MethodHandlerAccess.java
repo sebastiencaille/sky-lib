@@ -6,7 +6,7 @@ import java.lang.reflect.Field;
 
 import ch.skymarshall.gui.mvc.properties.IPersister;
 
-public class MethodHandlerAccess<A> implements IPersisterFactory<A> {
+public class MethodHandlerAccess<T, A> implements IPersisterFactory<T, A> {
 
 	private final MethodHandle getter;
 	private final MethodHandle setter;
@@ -40,15 +40,6 @@ public class MethodHandlerAccess<A> implements IPersisterFactory<A> {
 				}
 			}
 		};
-	}
-
-	public static <U> MethodHandlerAccess<U> unsafeObjectAccess(final Field field) {
-		field.setAccessible(true);
-		return new MethodHandlerAccess<>(field);
-	}
-
-	public static <U> MethodHandlerAccess<U> objectAccess(final Field field) {
-		return new MethodHandlerAccess<>(field);
 	}
 
 }

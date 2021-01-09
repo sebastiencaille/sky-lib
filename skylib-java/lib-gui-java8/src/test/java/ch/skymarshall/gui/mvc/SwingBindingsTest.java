@@ -21,7 +21,7 @@ public class SwingBindingsTest extends Assert {
 			super(controller);
 			try {
 				stringProperty = new ObjectProperty<String>("StringProperty", propertySupport)
-						.setTypedConfiguration(errorNotifier(errorProperty));
+						.configureTyped(errorNotifier(errorProperty));
 			} catch (final SecurityException e) {
 				throw new IllegalStateException(e);
 			}

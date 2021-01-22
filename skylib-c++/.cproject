@@ -24,11 +24,16 @@
 								<option id="gnu.cpp.compiler.exe.debug.option.optimization.level.1892626411" name="Optimization Level" superClass="gnu.cpp.compiler.exe.debug.option.optimization.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.exe.debug.option.debugging.level.675820641" name="Debug Level" superClass="gnu.cpp.compiler.exe.debug.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.cpp.compiler.option.include.paths.196011170" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="/usr/include/pangomm-1.4"/>
-									<listOptionValue builtIn="false" value="/usr/include/sigc++-2.0"/>
-									<listOptionValue builtIn="false" value="/usr/lib/glibmm-2.4/include/"/>
-									<listOptionValue builtIn="false" value="/usr/include/glibmm-2.4"/>
-									<listOptionValue builtIn="false" value="/usr/include/gtkmm-3.0"/>
+									<listOptionValue builtIn="false" value="/usr/local/include/sigc++-3.0"/>
+									<listOptionValue builtIn="false" value="/usr/local/include/gio-unix-2.0"/>
+									<listOptionValue builtIn="false" value="/usr/local/include/pangomm-2.48"/>
+									<listOptionValue builtIn="false" value="/usr/lib/graphene-1.0/include/"/>
+									<listOptionValue builtIn="false" value="/usr/include/graphene-1.0/"/>
+									<listOptionValue builtIn="false" value="/usr/include/gtk-4.0"/>
+									<listOptionValue builtIn="false" value="/usr/local/include/glibmm-2.68"/>
+									<listOptionValue builtIn="false" value="/usr/local/include/giomm-2.68"/>
+									<listOptionValue builtIn="false" value="/usr/local/include/glib"/>
+									<listOptionValue builtIn="false" value="/usr/local/include/gtkmm-4.0"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src-lib}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src-gtk3}&quot;"/>
 								</option>
@@ -44,7 +49,7 @@
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.exe.debug.1961858356" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.exe.debug"/>
 							<tool command="g++" commandLinePattern="${COMMAND} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS} ${FLAGS} " errorParsers="org.eclipse.cdt.core.GLDErrorParser" id="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug.708064932" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug">
-								<option id="gnu.cpp.link.option.flags.1121952671" name="Linker flags" superClass="gnu.cpp.link.option.flags" useByScannerDiscovery="false" value="`pkg-config gtkmm-3.0 --libs`" valueType="string"/>
+								<option id="gnu.cpp.link.option.flags.1121952671" name="Linker flags" superClass="gnu.cpp.link.option.flags" useByScannerDiscovery="false" value="`PKG_CONFIG_PATH=/usr/local/lib/pkgconfig/ pkg-config gtkmm-4.0 --libs`" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1470683272" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -80,7 +85,7 @@
 						</tool>
 					</fileInfo>
 					<sourceEntries>
-						<entry excluding="GtkBindings.cpp|GlibConverter.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src-gtk3"/>
+						<entry excluding="GtkBindings.cpp|GlibConverter.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src-gtk4"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src-lib"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src-test"/>
 					</sourceEntries>
@@ -130,8 +135,8 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src-test/GtkTest.cpp|src-gtk3|src-hmicontroller|src-impl|src-lib" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
-						<entry excluding="GtkBindings.cpp|GlibConverter.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src-gtk3"/>
+						<entry excluding="src-gtk4|src-lib|src-test/GtkTest.cpp|src-hmicontroller|src-impl" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="GtkBindings.cpp|GlibConverter.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src-gtk4"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src-lib"/>
 					</sourceEntries>
 				</configuration>

@@ -103,16 +103,12 @@ private:
 public:
 	HelloWorld();
 
-	void init();
-
 	~HelloWorld() final;
 
 	void apply_action(property_group_actions _action,
 			const property *_property);
 
 private:
-	//Signal handlers:
-	void on_button_clicked();
 
 	//Member widgets:
 	Gtk::Entry m_entry;
@@ -135,23 +131,17 @@ private:
 };
 
 HelloWorld::HelloWorld() :
-		m_box(Gtk::ORIENTATION_VERTICAL) {
+		m_box(Gtk::Orientation::VERTICAL) {
 
-}
+	set_title("Basic application");
 
-HelloWorld::~HelloWorld()
-DESTR_WITH_LOG("~HelloWorld" << endl)
-
-void HelloWorld::init() {
-
-	// Sets the border width of the window.
-	set_border_width(10);
-
-	add(m_box);
+	set_child(m_box);
+	m_box.set_margin(10);
 
 	testProperty1.bind(string_to_ustring::of())->bind(
 			entry_binding::of(m_entry))->add_dependency(dep_test::of());
-	m_box.pack_start(m_entry);
+	m_entry.set_expand();
+	m_box.append(m_entry);
 
 	auto dep = make_shared<action_dependency<HelloWorld>>(
 			[this](property_group_actions group, const property *action) {
@@ -160,20 +150,24 @@ void HelloWorld::init() {
 
 	testProperty1.bind(string_to_ustring::of())->bind(
 			label_binding::of(m_label))->add_dependency(dep);
-	m_box.pack_start(m_label);
+	m_label.set_expand();
+	m_box.append(m_label);
 
 	testProperty2.bind(int_to_string::of())->bind(string_to_ustring::of())->bind(
 			entry_binding::of(m_intEntry));
-	m_box.pack_start(m_intEntry);
+	m_intEntry.set_expand();
+	m_box.append(m_intEntry);
 
 	testProperty2.bind(int_to_string::of())->bind(string_to_ustring::of())->bind(
 			label_binding::of(m_intLabel));
-	m_box.pack_start(m_intLabel);
+	m_intLabel.set_expand();
+	m_box.append(m_intLabel);
 
 	m_errorProperty->bind(logic_error_to_string::of())->bind(
 			string_to_ustring::of())->bind(label_binding::of(m_error));
 
-	m_box.pack_start(m_error);
+	m_error.set_expand();
+	m_box.append(m_error);
 
 	Pango::Attribute redText = Pango::Attribute::create_attr_foreground(0xefef,
 			0x2929, 0x2929);
@@ -181,16 +175,12 @@ void HelloWorld::init() {
 	atrlist.insert(redText);
 	m_error.set_attributes(atrlist);
 
-	m_label.show();
-	m_entry.show();
-	m_intEntry.show();
-	m_intLabel.show();
-	m_error.show();
-	m_box.show();
-
 	testProperty2.set(NULL, 1);
 
 }
+
+HelloWorld::~HelloWorld()
+DESTR_WITH_LOG("~HelloWorld" << endl)
 
 void HelloWorld::apply_action(property_group_actions _action,
 		const property *_property) {
@@ -206,10 +196,6 @@ void HelloWorld::apply_action(property_group_actions _action,
 	}
 }
 
-void HelloWorld::on_button_clicked() {
-	std::cout << "Hello World" << std::endl;
-}
-
 using int_model = list_model<int>;
 
 int main(int argc, char *argv[]) {
@@ -222,12 +208,7 @@ int main(int argc, char *argv[]) {
 	cout << int_list.get_element_at(0) << " " << int_list.get_element_at(1)
 			<< std::endl;
 
-	Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(argc, argv,
-			"org.gtkmm.example");
-
-	HelloWorld helloworld;
-	helloworld.init();
-
-	return app->run(helloworld);
+	auto app = Gtk::Application::create("ch.skymarshall.example");
+	return app->make_window_and_run<HelloWorld>(argc, argv);
 }
 

@@ -19,10 +19,11 @@
  *  Created on: Apr 4, 2012
  *      Author: scaille
  */
+#include "../src-gtk4/gtk_bindings.hh"
+
 #include <iostream>
 
 #include "utils.hh"
-#include "gtk_bindings.hh"
 
 namespace ch_skymarshall::gui::gtk {
 
@@ -55,7 +56,9 @@ void entry_binding::remove_component_value_change_listener() {
 
 void entry_binding::set_component_value(property &_source,
 		Glib::ustring _value) {
-	m_entry.set_text(_value);
+	if (m_entry.get_text() != _value) {
+		m_entry.set_text(_value);
+	}
 }
 
 source_ptr entry_binding::get_component() {

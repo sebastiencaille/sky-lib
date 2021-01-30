@@ -29,6 +29,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import ch.skymarshall.dataflowmgr.model.flowctrl.CaseFlowCtrl;
+
 public class Flow extends WithId {
 
 	private static final LinkedHashMap<String, String> EMPTY_PARAMETERS = new LinkedHashMap<>();
@@ -56,11 +58,11 @@ public class Flow extends WithId {
 			return this;
 		}
 
-		public FlowBuilder add(final ConditionalBindingGroup.Builder binding) {
+		public FlowBuilder add(final CaseFlowCtrl.Builder binding) {
 			return add(binding.build());
 		}
 
-		public FlowBuilder add(final ConditionalBindingGroup caseControl) {
+		public FlowBuilder add(final CaseFlowCtrl caseControl) {
 			caseControl.getBindings().forEach(this::add);
 			final Optional<Binding> defaultBinding = caseControl.getDefaultBinding();
 			if (defaultBinding.isPresent()) {

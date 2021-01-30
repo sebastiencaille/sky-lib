@@ -27,12 +27,12 @@ import java.util.Set;
 import ch.skymarshall.dataflowmgr.generator.AbstractFlowVisitor;
 import ch.skymarshall.dataflowmgr.model.Binding;
 import ch.skymarshall.dataflowmgr.model.BindingRule;
-import ch.skymarshall.dataflowmgr.model.Condition;
-import ch.skymarshall.dataflowmgr.model.ConditionalBindingGroup;
+import ch.skymarshall.dataflowmgr.model.CustomCall;
 import ch.skymarshall.dataflowmgr.model.ExternalAdapter;
 import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.Processor;
 import ch.skymarshall.dataflowmgr.model.WithId;
+import ch.skymarshall.dataflowmgr.model.flowctrl.CaseFlowCtrl;
 import ch.skymarshall.util.generators.DotFileGenerator;
 
 public class FlowToDotVisitor extends AbstractFlowVisitor {
@@ -86,22 +86,22 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 	}
 
 	@Override
-	protected void process(final BindingContext context, final Processor processor) {
+	protected void process(final BindingContext context) {
 		// Create data point
 		if (!graph.nodes.containsKey(context.outputDataPoint)) {
 			addDataPoint(context.outputDataPoint);
 		}
 
-		final String processorNode = addProcessor(context.binding, processor);
+		final String processorNode = addProcessor(context.binding, context.getProcessor());
 
-		final Optional<ConditionalBindingGroup> conditionGroupOpt = BindingRule
-				.getAll(context.binding.getRules(), BindingRule.Type.CONDITIONAL, ConditionalBindingGroup.class)
+		final Optional<CaseFlowCtrl> conditionGroupOpt = BindingRule
+				.getAll(context.binding.getRules(), BindingRule.Type.CONDITIONAL, CaseFlowCtrl.class)
 				.findAny();
 
 		// Add condition
 		String linkFrom;
 		if (conditionGroupOpt.isPresent()) {
-			final ConditionalBindingGroup conditionGroup = conditionGroupOpt.get();
+			final CaseFlowCtrl conditionGroup = conditionGroupOpt.get();
 			final String conditionNodeName = getConditionGroupNodeName(conditionGroup);
 			if (!graph.nodes.containsKey(conditionNodeName)) {
 				addConditionGroup(conditionGroup);
@@ -112,16 +112,16 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 			linkFrom = context.inputDataPoint;
 		}
 
-		if (conditionGroupOpt.isPresent() && context.activators.isEmpty()) {
-			context.activators.add(new Condition("Default", "Default", new LinkedHashMap<>()));
-		}
-		for (final Condition activator : context.activators) {
-			final String activatorNode = addCondition(activator);
-			final Set<ExternalAdapter> missingAdapters = context.unprocessedAdapters(listAdapters(context, activator));
-			addExternalAdapters(missingAdapters, linkFrom, activatorNode);
-			context.processedAdapters.addAll(missingAdapters);
-			linkFrom = activatorNode;
-		}
+//		if (conditionGroupOpt.isPresent() && context.activators.isEmpty()) {
+//			context.activators.add(new CustomCall("Default", "Default", new LinkedHashMap<>()));
+//		}
+//		for (final CustomCall activator : context.activators) {
+//			final String activatorNode = addCondition(activator);
+//			final Set<ExternalAdapter> missingAdapters = context.unprocessedAdapters(listAdapters(context, activator));
+//			addExternalAdapters(missingAdapters, linkFrom, activatorNode);
+//			context.processedAdapters.addAll(missingAdapters);
+//			linkFrom = activatorNode;
+//		}
 
 		Set<ExternalAdapter> missingAdapters = context.unprocessedAdapters(context.bindingAdapters);
 		addExternalAdapters(missingAdapters, linkFrom, processorNode);
@@ -146,21 +146,21 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 		graph.nodes.put(name, new Node(name, "", null, ch.skymarshall.util.generators.DotFileGenerator.Shape.POINT));
 	}
 
-	private String getConditionGroupNodeName(final ConditionalBindingGroup group) {
+	private String getConditionGroupNodeName(final CaseFlowCtrl group) {
 		return "condGrp_" + toVar(group);
 	}
 
-	private String getConditionNodeName(final Condition cond) {
+	private String getConditionNodeName(final CustomCall cond) {
 		return "cond_" + toVar(cond);
 	}
 
-	private String addConditionGroup(final ConditionalBindingGroup group) {
+	private String addConditionGroup(final CaseFlowCtrl group) {
 		final String condGroupNode = getConditionGroupNodeName(group);
 		graph.nodes.put(condGroupNode, new Node(condGroupNode, group.getName(), "$ ?", DotFileGenerator.Shape.DIAMOND));
 		return condGroupNode;
 	}
 
-	private String addCondition(final Condition condition) {
+	private String addCondition(final CustomCall condition) {
 		final String condNode = getConditionNodeName(condition);
 		graph.nodes.put(condNode, new Node(condNode, condition.getCall(), "$: true", DotFileGenerator.Shape.OCTAGON));
 		return condNode;

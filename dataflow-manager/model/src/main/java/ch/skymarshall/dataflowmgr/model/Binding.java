@@ -2,6 +2,7 @@ package ch.skymarshall.dataflowmgr.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,11 +31,6 @@ public class Binding extends WithId {
 			this.processor = processor;
 		}
 
-		public Builder activateIf(final Condition condition) {
-			rules.add(BindingRule.activator(condition));
-			return this;
-		}
-
 		public Binding build(final Binding... someParents) {
 			this.parents.addAll(Arrays.asList(someParents));
 			return new Binding(this);
@@ -57,22 +53,28 @@ public class Binding extends WithId {
 			return this;
 		}
 
+		public Builder addRule(BindingRule rule) {
+			this.rules.add(rule);
+			return this;
+		}
+
+		public Builder addRules(Collection<BindingRule> rules) {
+			this.rules.addAll(rules);
+			return this;
+		}
+
+		public List<BindingRule> getRules() {
+			return rules;
+		}
+
 	}
 
 	public static Builder builder(final Processor fromProcessor, final Processor toProcessor) {
 		return new Builder(fromProcessor.asDataPoint(), toProcessor);
 	}
 
-	public static Builder builder(Condition condition, final Processor fromProcessor, final Processor toProcessor) {
-		return new Builder(fromProcessor.asDataPoint(), toProcessor).activateIf(condition);
-	}
-
 	public static Builder builder(final String fromDataPoint, final Processor toProcessor) {
 		return new Builder(fromDataPoint, toProcessor);
-	}
-
-	public static Builder builder(Condition condition, final String fromDataPoint, final Processor toProcessor) {
-		return new Builder(fromDataPoint, toProcessor).activateIf(condition);
 	}
 
 	private final Builder config;
@@ -88,14 +90,6 @@ public class Binding extends WithId {
 
 	public Processor getProcessor() {
 		return config.processor;
-	}
-
-	public void addRule(final BindingRule rule) {
-		config.rules.add(rule);
-	}
-
-	public void addRule(final Set<BindingRule> rules) {
-		config.rules.addAll(rules);
 	}
 
 	public List<BindingRule> getRules() {

@@ -42,10 +42,10 @@ public class Dictionary {
 
 	}
 
-	public final Calls<Processor> processors = new Calls<>("processor", Processor::derivate);
 
-	public final Calls<Condition> conditions = new Calls<>("condition", Condition::derivate);
+	public final Calls<Processor> processors = new Calls<>("processor", Processor::derivate);
 
 	public final Calls<ExternalAdapter> externalAdapters = new Calls<>("externalAdapter", ExternalAdapter::derivate);
 
+	public final Map<Class<?>, Calls<?>> flowControl = new HashMap<>();
 }

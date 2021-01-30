@@ -11,18 +11,19 @@ import java.util.UUID;
 
 import org.junit.Test;
 
-import ch.skymarshall.dataflowmgr.generator.JavaToDictionary;
+import ch.skymarshall.dataflowmgr.annotations.Conditions;
+import ch.skymarshall.dataflowmgr.generator.java.JavaToDictionary;
+import ch.skymarshall.dataflowmgr.generator.procjavawriter.FlowToProceduralJavaVisitor;
 import ch.skymarshall.dataflowmgr.generator.writers.dot.FlowToDotVisitor;
-import ch.skymarshall.dataflowmgr.generator.writers.java.FlowToProceduralJavaVisitor;
 import ch.skymarshall.dataflowmgr.generator.writers.java.FlowToRXJavaVisitor;
 import ch.skymarshall.dataflowmgr.model.Binding;
-import ch.skymarshall.dataflowmgr.model.Condition;
-import ch.skymarshall.dataflowmgr.model.ConditionalBindingGroup;
+import ch.skymarshall.dataflowmgr.model.CustomCall;
 import ch.skymarshall.dataflowmgr.model.Dictionary;
 import ch.skymarshall.dataflowmgr.model.Dictionary.Calls;
 import ch.skymarshall.dataflowmgr.model.ExternalAdapter;
 import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.Processor;
+import ch.skymarshall.dataflowmgr.model.flowctrl.CaseFlowCtrl;
 import ch.skymarshall.util.generators.Template;
 import ch.skymarshall.util.helpers.Log;
 
@@ -49,7 +50,7 @@ public class SimpleTest {
 
 		// Services (see AbstractFlow)
 		final Calls<Processor> simpleService = dictionary.processors.map(SIMPLE_SERVICE_CLASS, "simpleService");
-		final Calls<Condition> simpleFlowConditions = dictionary.conditions.map(SIMPLE_FLOW_CONDITIONS_CLASS,
+		final Calls<CustomCall> simpleFlowConditions = (Calls<CustomCall>) dictionary.flowControl.get(Conditions.class).map(SIMPLE_FLOW_CONDITIONS_CLASS,
 				"simpleFlowConditions");
 		final Calls<ExternalAdapter> simpleExternalAdapter = dictionary.externalAdapters
 				.map(SIMPLE_EXTERNAL_ADAPTER_CLASS, "simpleExternalAdapter");
@@ -60,7 +61,7 @@ public class SimpleTest {
 		final Processor keepAsIs = simpleService.get("keepAsIs");
 
 		// Conditions
-		final Condition mustComplete = simpleFlowConditions.get("mustComplete");
+		final CustomCall mustComplete = simpleFlowConditions.get("mustComplete");
 
 		// Eternal adapters
 		final ExternalAdapter getCompletion = simpleExternalAdapter.get("getCompletion");
@@ -69,11 +70,11 @@ public class SimpleTest {
 		// Flow
 		final Flow flow = Flow.builder("SimpleFlow", UUID.randomUUID(), "java.lang.String")//
 				.add(Binding.builder(Flow.ENTRY_POINT, init)) // entry point -> init(...)
-				.add(ConditionalBindingGroup.builder("Complete") //
-						.add(Binding.builder(mustComplete, init, complete) // if mustComplete, init -> complete
+				.add(CaseFlowCtrl.builder("CompleteData") //
+						.add(mustComplete, Binding.builder( init, complete) // if mustComplete, init -> complete
 								.withExternalData(getCompletion) // using some external data
 								.as(DP_Complete)) // name the output
-						.add(Binding.builder(init, keepAsIs)// fallback, init -> keepAsIs
+						.defaultCase(Binding.builder(init, keepAsIs)// fallback, init -> keepAsIs
 								.as(DP_Complete))) // name the output
 				.add(Binding.builder(DP_Complete, Flow.EXIT_POINT) // DP_ENHANCED -> exit point
 						.withExternalData(displayData)) // sending data to the display

@@ -1,7 +1,5 @@
 package ch.skymarshall.dataflowmgr.generator;
 
-import static java.util.stream.Collectors.toList;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -13,9 +11,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import ch.skymarshall.dataflowmgr.model.Binding;
-import ch.skymarshall.dataflowmgr.model.BindingRule;
 import ch.skymarshall.dataflowmgr.model.Call;
-import ch.skymarshall.dataflowmgr.model.Condition;
 import ch.skymarshall.dataflowmgr.model.ExternalAdapter;
 import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.Processor;
@@ -27,7 +23,6 @@ public abstract class AbstractFlowVisitor {
 		public final Binding binding;
 		public final List<ExternalAdapter> bindingAdapters;
 		public final Set<ExternalAdapter> processedAdapters;
-		public final List<Condition> activators;
 
 		public final String inputDataPoint;
 		public final String inputDataType;
@@ -38,7 +33,6 @@ public abstract class AbstractFlowVisitor {
 			this.binding = binding;
 			bindingAdapters = binding.getAdapters();
 			processedAdapters = new HashSet<>();
-			activators = BindingRule.getActivators(binding.getRules()).collect(toList());
 			inputDataPoint = binding.fromDataPoint();
 			this.inputDataType = inputDataType;
 			outputDataPoint = binding.toDataPoint();
@@ -58,6 +52,14 @@ public abstract class AbstractFlowVisitor {
 			this.reverseDeps = reverseDeps;
 		}
 
+		public boolean isExit() {
+			return Flow.EXIT_PROCESSOR.equals(outputDataPoint);
+		}
+
+		public Processor getProcessor() {
+			return binding.getProcessor();
+		}
+		
 	}
 
 	protected final Flow flow;
@@ -68,7 +70,7 @@ public abstract class AbstractFlowVisitor {
 	private final Map<Binding, List<Binding>> reverseDeps = new HashMap<>();
 	protected final List<BindingContext> processOrder = new ArrayList<>();
 
-	protected abstract void process(BindingContext context, Processor processor);
+	protected abstract void process(BindingContext context);
 
 	protected AbstractFlowVisitor(final Flow flow) {
 		this.flow = flow;
@@ -76,7 +78,7 @@ public abstract class AbstractFlowVisitor {
 		this.untriggeredBindings = new HashSet<>(flow.getBindings());
 	}
 
-	protected boolean isConditional(final String input) {
+	public boolean isConditional(final String input) {
 		return conditionalState.contains(input);
 	}
 
@@ -98,7 +100,7 @@ public abstract class AbstractFlowVisitor {
 
 		for (final BindingContext c : processOrder) {
 			c.setReverseDeps(reverseDeps.getOrDefault(c.binding, Collections.emptyList()));
-			process(c, c.binding.getProcessor());
+			process(c);
 		}
 	}
 
@@ -135,7 +137,7 @@ public abstract class AbstractFlowVisitor {
 	 * @param undeclaredAdapters
 	 * @return
 	 */
-	protected Set<ExternalAdapter> listAdapters(final BindingContext context, final Call<?> call) {
+	public Set<ExternalAdapter> listAdapters(final BindingContext context, final Call<?> call) {
 		final HashSet<ExternalAdapter> adaptersRequiredByActivator = new HashSet<>();
 		for (final Entry<String, String> param : call.getParameters().entrySet()) {
 			for (final ExternalAdapter adapter : context.bindingAdapters) {
@@ -149,7 +151,7 @@ public abstract class AbstractFlowVisitor {
 		return adaptersRequiredByActivator;
 	}
 
-	protected void setConditional(final String parameter) {
+	public void setConditional(final String parameter) {
 		conditionalState.add(parameter);
 	}
 

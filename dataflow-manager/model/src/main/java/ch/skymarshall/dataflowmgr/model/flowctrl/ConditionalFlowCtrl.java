@@ -18,7 +18,7 @@ import ch.skymarshall.dataflowmgr.model.CustomCall;
 import ch.skymarshall.dataflowmgr.model.IFlowCheck;
 import ch.skymarshall.dataflowmgr.model.WithId;
 
-public class CaseFlowCtrl extends WithId implements IFlowCheck {
+public class ConditionalFlowCtrl extends WithId implements IFlowCheck {
 
 	public static class Builder {
 
@@ -60,8 +60,8 @@ public class CaseFlowCtrl extends WithId implements IFlowCheck {
 			return bindings.stream().filter(b -> getActivators(b.getRules()).count() == 0).findAny();
 		}
 
-		public CaseFlowCtrl build() {
-			return new CaseFlowCtrl(this);
+		public ConditionalFlowCtrl build() {
+			return new ConditionalFlowCtrl(this);
 		}
 	}
 
@@ -74,7 +74,7 @@ public class CaseFlowCtrl extends WithId implements IFlowCheck {
 	private final List<Binding> bindings = new ArrayList<>();
 	private final Optional<Binding> defaultBinding;
 
-	public CaseFlowCtrl(final Builder configuration) {
+	public ConditionalFlowCtrl(final Builder configuration) {
 		super(UUID.randomUUID());
 		this.config = configuration;
 
@@ -83,7 +83,7 @@ public class CaseFlowCtrl extends WithId implements IFlowCheck {
 				.map(b -> b.addRule(condition(this)).build()).collect(toList()));
 
 		this.defaultBinding = defaultBindingBuilder
-				.map(b -> b.addRule(condition(this)).addRules(bindings.stream().map(CaseFlowCtrl::exclusion).collect(toSet())).build());
+				.map(b -> b.addRule(condition(this)).addRules(bindings.stream().map(ConditionalFlowCtrl::exclusion).collect(toSet())).build());
 		this.defaultBinding.ifPresent(bindings::add);
 	}
 
@@ -128,12 +128,12 @@ public class CaseFlowCtrl extends WithId implements IFlowCheck {
 		return BindingRule.getAll(rules, BindingRule.Type.EXCLUSION, Binding.class);
 	}
 
-	public static BindingRule condition(final CaseFlowCtrl condition) {
+	public static BindingRule condition(final ConditionalFlowCtrl condition) {
 		return new BindingRule(Type.CONDITIONAL, condition);
 	}
 
-	public static Optional<CaseFlowCtrl> getCondition(final Collection<BindingRule> rules) {
-		return BindingRule.getAll(rules, Type.CONDITIONAL, CaseFlowCtrl.class).findFirst();
+	public static Optional<ConditionalFlowCtrl> getCondition(final Collection<BindingRule> rules) {
+		return BindingRule.getAll(rules, Type.CONDITIONAL, ConditionalFlowCtrl.class).findFirst();
 	}
 
 }

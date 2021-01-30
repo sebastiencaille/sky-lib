@@ -1,4 +1,4 @@
-package ch.skymarshall.dataflowmgr.generator.java;
+package ch.skymarshall.dataflowmgr.generator.dictionary.java;
 
 import static java.util.stream.Collectors.toMap;
 

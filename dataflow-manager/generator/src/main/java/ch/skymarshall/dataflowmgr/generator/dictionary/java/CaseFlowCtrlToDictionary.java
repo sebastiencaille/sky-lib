@@ -1,4 +1,4 @@
-package ch.skymarshall.dataflowmgr.generator.java;
+package ch.skymarshall.dataflowmgr.generator.dictionary.java;
 
 import java.lang.reflect.Method;
 import java.security.InvalidParameterException;

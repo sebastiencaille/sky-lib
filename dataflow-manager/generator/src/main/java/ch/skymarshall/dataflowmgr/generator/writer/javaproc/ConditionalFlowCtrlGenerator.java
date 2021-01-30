@@ -1,4 +1,4 @@
-package ch.skymarshall.dataflowmgr.generator.procjavawriter;
+package ch.skymarshall.dataflowmgr.generator.writer.javaproc;
 
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -10,22 +10,22 @@ import java.util.List;
 import java.util.Set;
 
 import ch.skymarshall.dataflowmgr.generator.AbstractFlowVisitor.BindingContext;
-import ch.skymarshall.dataflowmgr.generator.writers.java.AbstractFlowGenerator;
+import ch.skymarshall.dataflowmgr.generator.IFlowGenerator;
 import ch.skymarshall.dataflowmgr.model.Binding;
 import ch.skymarshall.dataflowmgr.model.CustomCall;
 import ch.skymarshall.dataflowmgr.model.ExternalAdapter;
-import ch.skymarshall.dataflowmgr.model.flowctrl.CaseFlowCtrl;
+import ch.skymarshall.dataflowmgr.model.flowctrl.ConditionalFlowCtrl;
 import ch.skymarshall.util.generators.JavaCodeGenerator;
 
-public class CaseFlowCtrlGenerator extends AbstractFlowGenerator {
+public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 
-	public CaseFlowCtrlGenerator(FlowToProceduralJavaVisitor visitor, JavaCodeGenerator<RuntimeException> generator) {
+	public ConditionalFlowCtrlGenerator(FlowToProceduralJavaVisitor visitor, JavaCodeGenerator<RuntimeException> generator) {
 		super(visitor, generator);
 	}
 
 	@Override
 	public boolean matches(BindingContext context) {
-		return CaseFlowCtrl.getCondition(context.binding.getRules()).isPresent();
+		return ConditionalFlowCtrl.getCondition(context.binding.getRules()).isPresent();
 	}
 
 	/** Specifies if the default binding must be executed */
@@ -44,13 +44,13 @@ public class CaseFlowCtrlGenerator extends AbstractFlowGenerator {
 	}
 
 	@Override
-	public void generate(BindingContext context, Iterator<AbstractFlowGenerator> flowGeneratorIterator) {
+	public void generate(BindingContext context, Void fgContext, Iterator<IFlowGenerator<Void>> flowGeneratorIterator) {
 		visitor.setConditional(context.outputDataPoint);
 
 		visitActivators(context);
 
-		List<CustomCall> activators = CaseFlowCtrl.getActivators(context.binding.getRules()).collect(toList());
-		Set<String> exclusions = CaseFlowCtrl.getExclusions(context.binding.getRules()).map(Binding::toDataPoint)
+		List<CustomCall> activators = ConditionalFlowCtrl.getActivators(context.binding.getRules()).collect(toList());
+		Set<String> exclusions = ConditionalFlowCtrl.getExclusions(context.binding.getRules()).map(Binding::toDataPoint)
 				.collect(toSet());
 
 		if (!exclusions.isEmpty()) {
@@ -62,7 +62,7 @@ public class CaseFlowCtrlGenerator extends AbstractFlowGenerator {
 
 		generateDataPoint(context);
 		final List<String> conditions = new ArrayList<>();
-		if (visitor.isConditional(context.inputDataPoint)) {
+		if (visitor.isConditionalData(context.inputDataPoint)) {
 			conditions.add(visitor.availableVarNameOf(context.inputDataPoint));
 		}
 		if (!activators.isEmpty()) {
@@ -72,7 +72,7 @@ public class CaseFlowCtrlGenerator extends AbstractFlowGenerator {
 			conditions.add(executeDefaultVarNameOf(context));
 		}
 		generator.openIf(String.join(" && ", conditions));
-		flowGeneratorIterator.next().generate(context, flowGeneratorIterator);
+		flowGeneratorIterator.next().generate(context, fgContext, flowGeneratorIterator);
 		generator.appendIndented(visitor.availableVarNameOf(context.outputDataPoint)).append(" = true").eos();
 		generator.closeBlock();
 
@@ -95,7 +95,7 @@ public class CaseFlowCtrlGenerator extends AbstractFlowGenerator {
 	 * @param availableVars @
 	 */
 	private void visitActivators(final BindingContext context) {
-		List<CustomCall> activators = CaseFlowCtrl.getActivators(context.binding.getRules()).collect(toList());
+		List<CustomCall> activators = ConditionalFlowCtrl.getActivators(context.binding.getRules()).collect(toList());
 		if (activators.isEmpty()) {
 			return;
 		}

@@ -70,6 +70,7 @@ public abstract class AbstractFlowVisitor {
 	private final Map<Binding, List<Binding>> reverseDeps = new HashMap<>();
 	protected final List<BindingContext> processOrder = new ArrayList<>();
 
+	
 	protected abstract void process(BindingContext context);
 
 	protected AbstractFlowVisitor(final Flow flow) {
@@ -78,7 +79,7 @@ public abstract class AbstractFlowVisitor {
 		this.untriggeredBindings = new HashSet<>(flow.getBindings());
 	}
 
-	public boolean isConditional(final String input) {
+	public boolean isConditionalData(final String input) {
 		return conditionalState.contains(input);
 	}
 
@@ -154,5 +155,6 @@ public abstract class AbstractFlowVisitor {
 	public void setConditional(final String parameter) {
 		conditionalState.add(parameter);
 	}
+	
 
 }

@@ -29,7 +29,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-import ch.skymarshall.dataflowmgr.model.flowctrl.CaseFlowCtrl;
+import ch.skymarshall.dataflowmgr.model.flowctrl.ConditionalFlowCtrl;
 
 public class Flow extends WithId {
 
@@ -58,11 +58,11 @@ public class Flow extends WithId {
 			return this;
 		}
 
-		public FlowBuilder add(final CaseFlowCtrl.Builder binding) {
+		public FlowBuilder add(final ConditionalFlowCtrl.Builder binding) {
 			return add(binding.build());
 		}
 
-		public FlowBuilder add(final CaseFlowCtrl caseControl) {
+		public FlowBuilder add(final ConditionalFlowCtrl caseControl) {
 			caseControl.getBindings().forEach(this::add);
 			final Optional<Binding> defaultBinding = caseControl.getDefaultBinding();
 			if (defaultBinding.isPresent()) {

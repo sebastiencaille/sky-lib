@@ -1,4 +1,4 @@
-package ch.skymarshall.dataflowmgr.generator.java;
+package ch.skymarshall.dataflowmgr.generator.dictionary.java;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;

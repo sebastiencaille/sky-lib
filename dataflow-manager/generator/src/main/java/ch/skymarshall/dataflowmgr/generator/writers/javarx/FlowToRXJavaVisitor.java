@@ -1,4 +1,4 @@
-package ch.skymarshall.dataflowmgr.generator.writers.java;
+package ch.skymarshall.dataflowmgr.generator.writers.javarx;
 
 import static ch.skymarshall.util.text.TextFormatter.toCamelCase;
 import static java.util.stream.Collectors.joining;
@@ -19,7 +19,7 @@ import ch.skymarshall.dataflowmgr.model.CustomCall;
 import ch.skymarshall.dataflowmgr.model.ExternalAdapter;
 import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.Processor;
-import ch.skymarshall.dataflowmgr.model.flowctrl.CaseFlowCtrl;
+import ch.skymarshall.dataflowmgr.model.flowctrl.ConditionalFlowCtrl;
 import ch.skymarshall.util.generators.JavaCodeGenerator;
 import ch.skymarshall.util.generators.Template;
 import ch.skymarshall.util.helpers.StreamHelper;
@@ -342,7 +342,7 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 	private JavaCodeGenerator<RuntimeException> addBindingDepsCheck(final Binding binding,
 			final List<Binding> dependencies) {
 		if (!dependencies.isEmpty()) {
-			final Optional<CaseFlowCtrl> condition = Optional.empty();// BindingRule.getCondition(binding.getRules());
+			final Optional<ConditionalFlowCtrl> condition = Optional.empty();// BindingRule.getCondition(binding.getRules());
 			flowFactories.eoli().append(".mapOptional(f -> (")
 					.append(dependencies.stream().map(d -> "(DataPointState.TRIGGERED == f." + dataPointStateOf(d)
 							+ (isExclusion(condition, d) ? " || DataPointState.SKIPPED == f." + dataPointStateOf(d)
@@ -356,13 +356,13 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 		return flowFactories;
 	}
 
-	private boolean isExclusion(Optional<CaseFlowCtrl> condition, Binding dependency) {
+	private boolean isExclusion(Optional<ConditionalFlowCtrl> condition, Binding dependency) {
 		if (!condition.isPresent()) {
 			return false;
 		}
-		Optional<CaseFlowCtrl> dependencyCondition = Optional.empty(); //BindingRule.getCondition(dependency.getRules());
+		Optional<ConditionalFlowCtrl> dependencyCondition = Optional.empty(); //BindingRule.getCondition(dependency.getRules());
 		return condition.get().getName()
-				.equals(dependencyCondition.map(CaseFlowCtrl::getName).orElse("---"));
+				.equals(dependencyCondition.map(ConditionalFlowCtrl::getName).orElse("---"));
 	}
 
 	private void addAdapterZip(final List<String> adapterNames) {

@@ -18,28 +18,24 @@ package ch.skymarshall.dataflowmgr.generator.writers.dot;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import ch.skymarshall.dataflowmgr.generator.AbstractFlowVisitor;
+import ch.skymarshall.dataflowmgr.generator.FlowGeneratorVisitor;
 import ch.skymarshall.dataflowmgr.model.Binding;
-import ch.skymarshall.dataflowmgr.model.BindingRule;
-import ch.skymarshall.dataflowmgr.model.CustomCall;
 import ch.skymarshall.dataflowmgr.model.ExternalAdapter;
 import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.Processor;
 import ch.skymarshall.dataflowmgr.model.WithId;
-import ch.skymarshall.dataflowmgr.model.flowctrl.CaseFlowCtrl;
 import ch.skymarshall.util.generators.DotFileGenerator;
 
 public class FlowToDotVisitor extends AbstractFlowVisitor {
 
 	private final Graph graph;
 
-	private static class Node {
+	static class Node {
 		final String name;
 		final String label;
 		final DotFileGenerator.Shape shape;
@@ -53,7 +49,7 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 
 	}
 
-	private static class Link {
+	static class Link {
 		final String from;
 		final String to;
 		final String label;
@@ -72,16 +68,20 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 
 	}
 
-	public static class Graph {
+	static class Graph {
 		final Map<String, Node> nodes = new HashMap<>();
 		final List<Link> links = new ArrayList<>();
 		final Set<String> executed = new HashSet<>();
 		final Set<String> expected = new HashSet<>();
 	}
 
+	private FlowGeneratorVisitor<String> flowGeneratorVisitor = new FlowGeneratorVisitor<>();
+
 	public FlowToDotVisitor(final Flow flow) {
 		super(flow);
 		this.graph = new Graph();
+		flowGeneratorVisitor.registerFlowGenerator(new ConditionalFlowCtrlGenerator(this, graph));
+		flowGeneratorVisitor.registerFlowGenerator(new ProcessorGenerator(this, graph));
 		addDataPoint(Flow.ENTRY_POINT);
 	}
 
@@ -92,45 +92,10 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 			addDataPoint(context.outputDataPoint);
 		}
 
-		final String processorNode = addProcessor(context.binding, context.getProcessor());
-
-		final Optional<CaseFlowCtrl> conditionGroupOpt = BindingRule
-				.getAll(context.binding.getRules(), BindingRule.Type.CONDITIONAL, CaseFlowCtrl.class)
-				.findAny();
-
-		// Add condition
-		String linkFrom;
-		if (conditionGroupOpt.isPresent()) {
-			final CaseFlowCtrl conditionGroup = conditionGroupOpt.get();
-			final String conditionNodeName = getConditionGroupNodeName(conditionGroup);
-			if (!graph.nodes.containsKey(conditionNodeName)) {
-				addConditionGroup(conditionGroup);
-				graph.links.add(new Link(context.inputDataPoint, conditionNodeName, "", ""));
-			}
-			linkFrom = conditionNodeName;
-		} else {
-			linkFrom = context.inputDataPoint;
-		}
-
-//		if (conditionGroupOpt.isPresent() && context.activators.isEmpty()) {
-//			context.activators.add(new CustomCall("Default", "Default", new LinkedHashMap<>()));
-//		}
-//		for (final CustomCall activator : context.activators) {
-//			final String activatorNode = addCondition(activator);
-//			final Set<ExternalAdapter> missingAdapters = context.unprocessedAdapters(listAdapters(context, activator));
-//			addExternalAdapters(missingAdapters, linkFrom, activatorNode);
-//			context.processedAdapters.addAll(missingAdapters);
-//			linkFrom = activatorNode;
-//		}
-
-		Set<ExternalAdapter> missingAdapters = context.unprocessedAdapters(context.bindingAdapters);
-		addExternalAdapters(missingAdapters, linkFrom, processorNode);
-
-		graph.links.add(new Link(processorNode, context.outputDataPoint));
+		flowGeneratorVisitor.generateFlow(context, context.inputDataPoint);
 	}
 
-	private void addExternalAdapters(final Set<ExternalAdapter> externalAdapters, final String linkFrom,
-			final String linkTo) {
+	void addExternalAdapters(final Set<ExternalAdapter> externalAdapters, final String linkFrom, final String linkTo) {
 		if (externalAdapters.isEmpty()) {
 			graph.links.add(new Link(linkFrom, linkTo));
 			return;
@@ -146,26 +111,6 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 		graph.nodes.put(name, new Node(name, "", null, ch.skymarshall.util.generators.DotFileGenerator.Shape.POINT));
 	}
 
-	private String getConditionGroupNodeName(final CaseFlowCtrl group) {
-		return "condGrp_" + toVar(group);
-	}
-
-	private String getConditionNodeName(final CustomCall cond) {
-		return "cond_" + toVar(cond);
-	}
-
-	private String addConditionGroup(final CaseFlowCtrl group) {
-		final String condGroupNode = getConditionGroupNodeName(group);
-		graph.nodes.put(condGroupNode, new Node(condGroupNode, group.getName(), "$ ?", DotFileGenerator.Shape.DIAMOND));
-		return condGroupNode;
-	}
-
-	private String addCondition(final CustomCall condition) {
-		final String condNode = getConditionNodeName(condition);
-		graph.nodes.put(condNode, new Node(condNode, condition.getCall(), "$: true", DotFileGenerator.Shape.OCTAGON));
-		return condNode;
-	}
-
 	private String addAdapter(final ExternalAdapter adapter) {
 		final String nodeName = toVar(adapter);
 		graph.nodes.put(nodeName, new Node(nodeName, adapter.getCall(), "External:$",
@@ -173,14 +118,14 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 		return nodeName;
 	}
 
-	private String addProcessor(final Binding binding, final Processor processor) {
+	String addProcessor(final Binding binding, final Processor processor) {
 		final String nodeName = toVar(binding) + "_" + processor.getCall().replace('.', '_');
 		graph.nodes.put(nodeName, new Node(nodeName, processor.getCall(), null,
 				ch.skymarshall.util.generators.DotFileGenerator.Shape.ELLIPSE));
 		return nodeName;
 	}
 
-	private String toVar(final WithId withId) {
+	String toVar(final WithId withId) {
 		return withId.uuid().toString();
 	}
 

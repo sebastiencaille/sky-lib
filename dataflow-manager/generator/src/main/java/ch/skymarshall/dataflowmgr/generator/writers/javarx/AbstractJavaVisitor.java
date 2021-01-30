@@ -1,13 +1,11 @@
-package ch.skymarshall.dataflowmgr.generator.writers.java;
+package ch.skymarshall.dataflowmgr.generator.writers.javarx;
 
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import ch.skymarshall.dataflowmgr.generator.AbstractFlowVisitor;
 import ch.skymarshall.dataflowmgr.model.Binding;
@@ -57,7 +55,7 @@ public abstract class AbstractJavaVisitor extends AbstractFlowVisitor {
 
 	protected final List<BindingImplVariable> availableVars = new ArrayList<>();
 
-	protected final List<AbstractFlowGenerator> flowGenerators = new ArrayList<>();
+
 	
 	protected AbstractJavaVisitor(final Flow flow, final String packageName, final Template template) {
 		super(flow);
@@ -65,19 +63,6 @@ public abstract class AbstractJavaVisitor extends AbstractFlowVisitor {
 		this.template = template;
 	}
 	
-	public void registerFlowGenerator(AbstractFlowGenerator flowCtrl) {
-		flowGenerators.add(flowCtrl);
-	}
-
-	protected void generateFlow(final BindingContext context) {
-		List<AbstractFlowGenerator> flowGenerator = getFlowGenerators(context);
-		Iterator<AbstractFlowGenerator> flowGeneratorIterator = flowGenerator.iterator();
-		flowGeneratorIterator.next().generate(context, flowGeneratorIterator);
-	}
-
-	private List<AbstractFlowGenerator> getFlowGenerators(BindingContext context) {
-		return flowGenerators.stream().filter(g -> g.matches(context)).collect(Collectors.toList());
-	}
 
 	
 	protected List<String> guessParameters(final BindingContext context, final Call<?> call) {

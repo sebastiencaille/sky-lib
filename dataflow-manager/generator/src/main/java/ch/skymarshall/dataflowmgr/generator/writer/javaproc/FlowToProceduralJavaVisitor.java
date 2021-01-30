@@ -1,4 +1,4 @@
-package ch.skymarshall.dataflowmgr.generator.procjavawriter;
+package ch.skymarshall.dataflowmgr.generator.writer.javaproc;
 
 import static java.util.stream.Collectors.joining;
 
@@ -6,7 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import ch.skymarshall.dataflowmgr.generator.writers.java.AbstractJavaVisitor;
+import ch.skymarshall.dataflowmgr.generator.FlowGeneratorVisitor;
+import ch.skymarshall.dataflowmgr.generator.writers.javarx.AbstractJavaVisitor;
 import ch.skymarshall.dataflowmgr.model.Call;
 import ch.skymarshall.dataflowmgr.model.ExternalAdapter;
 import ch.skymarshall.dataflowmgr.model.Flow;
@@ -17,10 +18,12 @@ public class FlowToProceduralJavaVisitor extends AbstractJavaVisitor {
 
 	private final JavaCodeGenerator<RuntimeException> generator = JavaCodeGenerator.inMemory();
 
+	private final FlowGeneratorVisitor<Void> flowGeneratorVisitor = new FlowGeneratorVisitor<>();
+
 	public FlowToProceduralJavaVisitor(final Flow flow, final String packageName, final Template template) {
 		super(flow, packageName, template);
-		registerFlowGenerator(new CaseFlowCtrlGenerator(this, generator));
-		registerFlowGenerator(new ProcessorCallGenerator(this, generator));
+		flowGeneratorVisitor.registerFlowGenerator(new ConditionalFlowCtrlGenerator(this, generator));
+		flowGeneratorVisitor.registerFlowGenerator(new ProcessorCallGenerator(this, generator));
 	}
 
 	public Template process() {
@@ -42,14 +45,13 @@ public class FlowToProceduralJavaVisitor extends AbstractJavaVisitor {
 	@Override
 	protected void process(final BindingContext context) {
 		appendInfo(generator, context.binding).eol();
-		
+
 		availableVars.add(new BindingImplVariable(context.outputDataPoint, context.getProcessor().getReturnType(),
 				context.outputDataPoint));
 
-		generateFlow(context);
+		flowGeneratorVisitor.generateFlow(context, null);
 		generator.eol();
 	}
-
 
 	void visitExternalAdapters(final BindingContext context, final Set<ExternalAdapter> externalAdapter) {
 		for (final ExternalAdapter adapter : externalAdapter) {

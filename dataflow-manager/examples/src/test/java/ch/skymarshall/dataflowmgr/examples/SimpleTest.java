@@ -12,10 +12,10 @@ import java.util.UUID;
 import org.junit.Test;
 
 import ch.skymarshall.dataflowmgr.annotations.Conditions;
-import ch.skymarshall.dataflowmgr.generator.java.JavaToDictionary;
-import ch.skymarshall.dataflowmgr.generator.procjavawriter.FlowToProceduralJavaVisitor;
+import ch.skymarshall.dataflowmgr.generator.dictionary.java.JavaToDictionary;
+import ch.skymarshall.dataflowmgr.generator.writer.javaproc.FlowToProceduralJavaVisitor;
 import ch.skymarshall.dataflowmgr.generator.writers.dot.FlowToDotVisitor;
-import ch.skymarshall.dataflowmgr.generator.writers.java.FlowToRXJavaVisitor;
+import ch.skymarshall.dataflowmgr.generator.writers.javarx.FlowToRXJavaVisitor;
 import ch.skymarshall.dataflowmgr.model.Binding;
 import ch.skymarshall.dataflowmgr.model.CustomCall;
 import ch.skymarshall.dataflowmgr.model.Dictionary;
@@ -23,7 +23,7 @@ import ch.skymarshall.dataflowmgr.model.Dictionary.Calls;
 import ch.skymarshall.dataflowmgr.model.ExternalAdapter;
 import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.dataflowmgr.model.Processor;
-import ch.skymarshall.dataflowmgr.model.flowctrl.CaseFlowCtrl;
+import ch.skymarshall.dataflowmgr.model.flowctrl.ConditionalFlowCtrl;
 import ch.skymarshall.util.generators.Template;
 import ch.skymarshall.util.helpers.Log;
 
@@ -70,7 +70,7 @@ public class SimpleTest {
 		// Flow
 		final Flow flow = Flow.builder("SimpleFlow", UUID.randomUUID(), "java.lang.String")//
 				.add(Binding.builder(Flow.ENTRY_POINT, init)) // entry point -> init(...)
-				.add(CaseFlowCtrl.builder("CompleteData") //
+				.add(ConditionalFlowCtrl.builder("CompleteData") //
 						.add(mustComplete, Binding.builder( init, complete) // if mustComplete, init -> complete
 								.withExternalData(getCompletion) // using some external data
 								.as(DP_Complete)) // name the output

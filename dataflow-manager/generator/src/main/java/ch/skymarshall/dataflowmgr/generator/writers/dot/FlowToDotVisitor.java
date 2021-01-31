@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import ch.skymarshall.dataflowmgr.generator.AbstractFlowVisitor;
-import ch.skymarshall.dataflowmgr.generator.FlowGeneratorVisitor;
+import ch.skymarshall.dataflowmgr.generator.writers.AbstractFlowVisitor;
+import ch.skymarshall.dataflowmgr.generator.writers.FlowGeneratorVisitor;
 import ch.skymarshall.dataflowmgr.model.Binding;
 import ch.skymarshall.dataflowmgr.model.ExternalAdapter;
 import ch.skymarshall.dataflowmgr.model.Flow;
@@ -80,8 +80,8 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 	public FlowToDotVisitor(final Flow flow) {
 		super(flow);
 		this.graph = new Graph();
-		flowGeneratorVisitor.registerFlowGenerator(new ConditionalFlowCtrlGenerator(this, graph));
-		flowGeneratorVisitor.registerFlowGenerator(new ProcessorGenerator(this, graph));
+		flowGeneratorVisitor.register(new ConditionalFlowCtrlGenerator(this, graph));
+		flowGeneratorVisitor.register(new ProcessorGenerator(this, graph));
 		addDataPoint(Flow.ENTRY_POINT);
 	}
 

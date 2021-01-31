@@ -3,13 +3,11 @@ package ch.skymarshall.dataflowmgr.generator.writers.dot;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
-import ch.skymarshall.dataflowmgr.generator.AbstractFlowVisitor.BindingContext;
-import ch.skymarshall.dataflowmgr.generator.IFlowGenerator;
+import ch.skymarshall.dataflowmgr.generator.writers.AbstractFlowVisitor.BindingContext;
 import ch.skymarshall.dataflowmgr.generator.writers.dot.FlowToDotVisitor.Graph;
 import ch.skymarshall.dataflowmgr.generator.writers.dot.FlowToDotVisitor.Link;
 import ch.skymarshall.dataflowmgr.generator.writers.dot.FlowToDotVisitor.Node;
@@ -30,15 +28,15 @@ public class ConditionalFlowCtrlGenerator extends AbstractDotFlowGenerator {
 	}
 
 	@Override
-	public void generate(BindingContext context, String linkFrom,
-			Iterator<IFlowGenerator<String>> flowGeneratorIterator) {
+	public void generate(BaseGenContext<String> genContext, BindingContext context) {
 
-		final ConditionalFlowCtrl conditionGroup = ConditionalFlowCtrl.getCondition(context.binding.getRules()).get();
+		final ConditionalFlowCtrl conditionalCtrl = ConditionalFlowCtrl.getCondition(context.binding.getRules())
+				.orElseThrow(() -> new IllegalStateException("Unable to find conditional flow"));
 
-		final String conditionNodeName = getConditionGroupNodeName(conditionGroup);
+		final String conditionNodeName = getConditionGroupNodeName(conditionalCtrl);
 		if (!graph.nodes.containsKey(conditionNodeName)) {
-			addConditionGroup(conditionGroup);
-			graph.links.add(new Link(linkFrom, conditionNodeName, "", ""));
+			addConditionGroup(conditionalCtrl);
+			graph.links.add(new Link(genContext.localContext, conditionNodeName, "", ""));
 		}
 		String nextLink = conditionNodeName;
 
@@ -55,7 +53,8 @@ public class ConditionalFlowCtrlGenerator extends AbstractDotFlowGenerator {
 			context.processedAdapters.addAll(missingAdapters);
 			nextLink = activatorNode;
 		}
-		flowGeneratorIterator.next().generate(context, nextLink, flowGeneratorIterator);
+		genContext.localContext = nextLink;
+		genContext.next(context);
 	}
 
 	private String getConditionGroupNodeName(final ConditionalFlowCtrl group) {

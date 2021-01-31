@@ -1,4 +1,4 @@
-package ch.skymarshall.dataflowmgr.generator;
+package ch.skymarshall.dataflowmgr.generator.writers;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -152,8 +152,8 @@ public abstract class AbstractFlowVisitor {
 		return adaptersRequiredByActivator;
 	}
 
-	public void setConditional(final String parameter) {
-		conditionalState.add(parameter);
+	public void setConditional(final String dataPoint) {
+		conditionalState.add(dataPoint);
 	}
 	
 

@@ -1,6 +1,6 @@
-package ch.skymarshall.dataflowmgr.generator.writer.javaproc;
+package ch.skymarshall.dataflowmgr.generator.writers.javaproc;
 
-import ch.skymarshall.dataflowmgr.generator.IFlowGenerator;
+import ch.skymarshall.dataflowmgr.generator.writers.IFlowGenerator;
 import ch.skymarshall.util.generators.JavaCodeGenerator;
 
 public abstract class AbstractFlowGenerator implements IFlowGenerator<Void> {

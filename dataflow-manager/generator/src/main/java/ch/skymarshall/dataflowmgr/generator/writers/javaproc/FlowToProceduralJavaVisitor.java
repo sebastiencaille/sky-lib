@@ -1,4 +1,4 @@
-package ch.skymarshall.dataflowmgr.generator.writer.javaproc;
+package ch.skymarshall.dataflowmgr.generator.writers.javaproc;
 
 import static java.util.stream.Collectors.joining;
 
@@ -6,15 +6,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import ch.skymarshall.dataflowmgr.generator.FlowGeneratorVisitor;
-import ch.skymarshall.dataflowmgr.generator.writers.javarx.AbstractJavaVisitor;
+import ch.skymarshall.dataflowmgr.generator.writers.AbstractJavaFlowVisitor;
+import ch.skymarshall.dataflowmgr.generator.writers.FlowGeneratorVisitor;
 import ch.skymarshall.dataflowmgr.model.Call;
 import ch.skymarshall.dataflowmgr.model.ExternalAdapter;
 import ch.skymarshall.dataflowmgr.model.Flow;
 import ch.skymarshall.util.generators.JavaCodeGenerator;
 import ch.skymarshall.util.generators.Template;
 
-public class FlowToProceduralJavaVisitor extends AbstractJavaVisitor {
+public class FlowToProceduralJavaVisitor extends AbstractJavaFlowVisitor {
 
 	private final JavaCodeGenerator<RuntimeException> generator = JavaCodeGenerator.inMemory();
 
@@ -22,8 +22,8 @@ public class FlowToProceduralJavaVisitor extends AbstractJavaVisitor {
 
 	public FlowToProceduralJavaVisitor(final Flow flow, final String packageName, final Template template) {
 		super(flow, packageName, template);
-		flowGeneratorVisitor.registerFlowGenerator(new ConditionalFlowCtrlGenerator(this, generator));
-		flowGeneratorVisitor.registerFlowGenerator(new ProcessorCallGenerator(this, generator));
+		flowGeneratorVisitor.register(new ConditionalFlowCtrlGenerator(this, generator));
+		flowGeneratorVisitor.register(new ProcessorCallGenerator(this, generator));
 	}
 
 	public Template process() {

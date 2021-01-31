@@ -13,8 +13,8 @@ import org.junit.Test;
 
 import ch.skymarshall.dataflowmgr.annotations.Conditions;
 import ch.skymarshall.dataflowmgr.generator.dictionary.java.JavaToDictionary;
-import ch.skymarshall.dataflowmgr.generator.writer.javaproc.FlowToProceduralJavaVisitor;
 import ch.skymarshall.dataflowmgr.generator.writers.dot.FlowToDotVisitor;
+import ch.skymarshall.dataflowmgr.generator.writers.javaproc.FlowToProceduralJavaVisitor;
 import ch.skymarshall.dataflowmgr.generator.writers.javarx.FlowToRXJavaVisitor;
 import ch.skymarshall.dataflowmgr.model.Binding;
 import ch.skymarshall.dataflowmgr.model.CustomCall;
@@ -86,7 +86,7 @@ public class SimpleTest {
 
 		// Generate the reactive flow
 		new FlowToRXJavaVisitor(flow, "ch.skymarshall.dataflowmgr.examples.simplerx",
-				Template.from("templates/flowrx.template"), false).process().writeToFolder(new File("src/test/java"));
+				Template.from("templates/flowrx.template"), true).process().writeToFolder(new File("src/test/java"));
 
 		// Generate the graphic
 		try (final FileWriter out = new FileWriter(new File("src/test/reports/SimpleFlow.dot"))) {

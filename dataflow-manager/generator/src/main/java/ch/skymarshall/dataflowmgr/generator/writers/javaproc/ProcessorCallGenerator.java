@@ -1,9 +1,6 @@
-package ch.skymarshall.dataflowmgr.generator.writer.javaproc;
+package ch.skymarshall.dataflowmgr.generator.writers.javaproc;
 
-import java.util.Iterator;
-
-import ch.skymarshall.dataflowmgr.generator.AbstractFlowVisitor.BindingContext;
-import ch.skymarshall.dataflowmgr.generator.IFlowGenerator;
+import ch.skymarshall.dataflowmgr.generator.writers.AbstractFlowVisitor.BindingContext;
 import ch.skymarshall.dataflowmgr.model.Processor;
 import ch.skymarshall.util.generators.JavaCodeGenerator;
 
@@ -19,7 +16,7 @@ public class ProcessorCallGenerator extends AbstractFlowGenerator {
 	}
 
 	@Override
-	public void generate(BindingContext context, Void fgContext, Iterator<IFlowGenerator<Void>> flowGeneratorIterator) {
+	public void generate(BaseGenContext<Void> genContext, BindingContext context) {
 		visitor.visitExternalAdapters(context, context.unprocessedAdapters(context.bindingAdapters));
 		if (context.isExit()) {
 			// Exit only has adapters
@@ -31,6 +28,7 @@ public class ProcessorCallGenerator extends AbstractFlowGenerator {
 			generator.appendIndented(context.outputDataPoint).append(" = ");
 		}
 		visitor.appendCall(context, context.getProcessor());
+		genContext.next(context);
 	}
 
 	private void generateDataPoint(final Processor processor, final String outputDataPoint) {

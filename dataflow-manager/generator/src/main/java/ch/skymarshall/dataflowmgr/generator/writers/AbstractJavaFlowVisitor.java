@@ -1,4 +1,4 @@
-package ch.skymarshall.dataflowmgr.generator.writers.javarx;
+package ch.skymarshall.dataflowmgr.generator.writers;
 
 import static java.util.stream.Collectors.toList;
 
@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import ch.skymarshall.dataflowmgr.generator.AbstractFlowVisitor;
 import ch.skymarshall.dataflowmgr.model.Binding;
 import ch.skymarshall.dataflowmgr.model.Call;
 import ch.skymarshall.dataflowmgr.model.ExternalAdapter;
@@ -16,7 +15,7 @@ import ch.skymarshall.dataflowmgr.model.WithId;
 import ch.skymarshall.util.generators.JavaCodeGenerator;
 import ch.skymarshall.util.generators.Template;
 
-public abstract class AbstractJavaVisitor extends AbstractFlowVisitor {
+public abstract class AbstractJavaFlowVisitor extends AbstractFlowVisitor {
 
 	protected static class BindingImplVariable {
 		final String name;
@@ -45,27 +44,22 @@ public abstract class AbstractJavaVisitor extends AbstractFlowVisitor {
 	}
 
 	protected final Set<String> imports = new HashSet<>();
-	
+
 	protected final String packageName;
 
 	protected final Template template;
-	
-	
+
 	public final Set<String> definedDataPoints = new HashSet<>();
 
 	protected final List<BindingImplVariable> availableVars = new ArrayList<>();
 
-
-	
-	protected AbstractJavaVisitor(final Flow flow, final String packageName, final Template template) {
+	protected AbstractJavaFlowVisitor(final Flow flow, final String packageName, final Template template) {
 		super(flow);
 		this.packageName = packageName;
 		this.template = template;
 	}
-	
 
-	
-	protected List<String> guessParameters(final BindingContext context, final Call<?> call) {
+	public List<String> guessParameters(final BindingContext context, final Call<?> call) {
 		return call.getParameters().entrySet().stream().map(kv -> guessParameter(context, kv.getKey(), kv.getValue()))
 				.collect(toList());
 	}
@@ -73,7 +67,8 @@ public abstract class AbstractJavaVisitor extends AbstractFlowVisitor {
 	protected String guessParameter(final BindingContext context, final String paramName, final String paramType) {
 		if (paramType.equals(context.inputDataType)) {
 			return availableVars.stream().filter(a -> a.name.equals(context.inputDataPoint)).findFirst()
-					.map(v -> v.codeVariable).get();
+					.map(v -> v.codeVariable)
+					.orElseThrow(() -> new IllegalStateException("Not found: " + context.inputDataPoint));
 		}
 		List<BindingImplVariable> matches = availableVars.stream().filter(a -> a.name.equals(paramName))
 				.collect(toList());
@@ -100,16 +95,10 @@ public abstract class AbstractJavaVisitor extends AbstractFlowVisitor {
 	}
 
 	public String toVariable(final Binding binding) {
-//		String activatorsSuffix = BindingRule.getActivators(binding.getRules())
-//				.map(c -> JavaCodeGenerator.simpleNameOf(c.getName())).collect(joining("_"));
-		String bindingName = binding.toDataPoint().replace('-', '_');
-//		if (!activatorsSuffix.isEmpty()) {
-//			bindingName = bindingName + '_' + activatorsSuffix;
-//		}
-		return bindingName;
+		return (binding.getProcessor().getCall() + '_' + binding.toDataPoint()).replace('-', '_').replace('.', '_');
 	}
 
-	protected String toVariable(final WithId withId) {
+	public String toVariable(final WithId withId) {
 		return withId.uuid().toString().replace('-', '_');
 	}
 

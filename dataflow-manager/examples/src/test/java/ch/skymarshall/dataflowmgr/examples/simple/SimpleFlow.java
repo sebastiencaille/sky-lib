@@ -12,15 +12,15 @@ public class SimpleFlow extends AbstractFlow {
 		ch.skymarshall.dataflowmgr.examples.simple.dto.MyData simpleService_init = this.simpleService.init(inputDataPoint);
 		
 		// ------------------------- simpleService_init -> simpleService.complete -> complete -------------------------
-		boolean activated_complete = true;
-		if (activated_complete) {
-		    activated_complete &= this.simpleFlowConditions.mustComplete(simpleService_init);
+		boolean activated_simpleService_complete_complete = true;
+		if (activated_simpleService_complete_complete) {
+		    activated_simpleService_complete_complete &= this.simpleFlowConditions.mustComplete(simpleService_init);
 		}
 		ch.skymarshall.dataflowmgr.examples.simple.dto.MyData complete = null;
 		boolean complete_available = false;
-		if (activated_complete) {
-		    String simpleExternalAdapter_getCompletioncomplete = this.simpleExternalAdapter.getCompletion(simpleService_init);
-		    complete = this.simpleService.complete(simpleService_init,simpleExternalAdapter_getCompletioncomplete);
+		if (activated_simpleService_complete_complete) {
+		    String simpleExternalAdapter_getCompletionsimpleService_complete_complete = this.simpleExternalAdapter.getCompletion(simpleService_init);
+		    complete = this.simpleService.complete(simpleService_init,simpleExternalAdapter_getCompletionsimpleService_complete_complete);
 		    complete_available = true;
 		}
 		

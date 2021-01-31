@@ -3,23 +3,20 @@ package ch.skymarshall.dataflowmgr.generator.writers.javarx;
 import static ch.skymarshall.util.text.TextFormatter.toCamelCase;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
+import ch.skymarshall.dataflowmgr.generator.writers.AbstractJavaFlowVisitor;
+import ch.skymarshall.dataflowmgr.generator.writers.FlowGeneratorVisitor;
+import ch.skymarshall.dataflowmgr.generator.writers.javarx.AbstractFlowGenerator.GenContext;
 import ch.skymarshall.dataflowmgr.model.Binding;
-import ch.skymarshall.dataflowmgr.model.BindingRule;
-import ch.skymarshall.dataflowmgr.model.CustomCall;
 import ch.skymarshall.dataflowmgr.model.ExternalAdapter;
 import ch.skymarshall.dataflowmgr.model.Flow;
-import ch.skymarshall.dataflowmgr.model.Processor;
-import ch.skymarshall.dataflowmgr.model.flowctrl.ConditionalFlowCtrl;
 import ch.skymarshall.util.generators.JavaCodeGenerator;
 import ch.skymarshall.util.generators.Template;
 import ch.skymarshall.util.helpers.StreamHelper;
@@ -41,7 +38,7 @@ import ch.skymarshall.util.helpers.WrongCountException;
  * @author scaille
  *
  */
-public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
+public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 
 	private final JavaCodeGenerator<RuntimeException> flowClass = JavaCodeGenerator.inMemory();
 
@@ -49,12 +46,16 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 
 	private final JavaCodeGenerator<RuntimeException> flowCode = JavaCodeGenerator.inMemory();
 
+	private final FlowGeneratorVisitor<GenContext> flowGeneratorVisitor = new FlowGeneratorVisitor<>();
+
 	private final boolean debug;
 
 	public FlowToRXJavaVisitor(final Flow flow, final String packageName, final Template template,
 			final boolean debug) {
 		super(flow, packageName, template);
 		this.debug = debug;
+		flowGeneratorVisitor.register(new ProcessorCallGenerator(this, flowFactories));
+		flowGeneratorVisitor.register(new ConditionalFlowCtrlGenerator(this, flowFactories));
 	}
 
 	public Template process() {
@@ -107,14 +108,6 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 
 		appendInfo(flowFactories, context.binding).eol();
 
-		// Init all data
-		// ----------------
-
-		final Set<Binding> exclusions = BindingRule
-				.getAll(context.binding.getRules(), BindingRule.Type.EXCLUSION, Binding.class).collect(toSet());
-		final boolean isConditionalExec = true;//!context.activators.isEmpty();
-		final boolean isExit = context.binding.isExit();
-
 		final String varNameOfBinding = varNameOf(context.binding);
 		flowClass.addVarDecl("private", "DataPointState", bindingStateOf(context.binding),
 				"DataPointState.NOT_TRIGGERED");
@@ -128,31 +121,11 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 				.appendIndented("return false").eos() //
 				.closeBlock();
 
-		final List<Binding> dependencies = flow.getAllDependencies(context.binding).stream()
-				.sorted((b1, b2) -> b1.fromDataPoint().compareTo(b2.fromDataPoint())).collect(toList());
-
-		if (!isExit && !definedDataPoints.contains(context.outputDataPoint)) {
+		if (!context.binding.isExit() && !definedDataPoints.contains(context.outputDataPoint)) {
 			generateDataPoint(context);
 		}
 
-		flowFactories.appendIndented(
-				"private Maybe<FlowExecution> %s(FlowExecution execution, final Function<Maybe<FlowExecution>, Maybe<FlowExecution>> callModifier, Runnable... callbacks)",
-				varNameOfBinding).openBlock();
-
-		visitExecution(context, context.getProcessor(), dependencies, exclusions, isConditionalExec);
-		visitActivators(context, dependencies);
-
-		if (debug) {
-			flowFactories.eoli()
-					.append("first = first.doOnSuccess(r -> Log.of(this).info(\"%s: Deps success\"))", context.binding)
-					.indent() //
-					.eoli().append(".doOnComplete(() -> Log.of(this).info(\"%s: Deps skipping\"))", context.binding)
-					.eos().unindent(); //
-		}
-
-		flowFactories.appendIndented("return first").eos();
-		flowFactories.closeBlock().eol();
-
+		visitExecution(context);
 	}
 
 	private void generateDataPoint(final BindingContext context) {
@@ -160,128 +133,29 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 		addDataSetter(context.binding.getProcessor().getReturnType(), context.outputDataPoint, true);
 	}
 
-	private void visitExecution(final BindingContext context, final Processor processor,
-			final List<Binding> bindingDeps, final Set<Binding> exclusions, final boolean isConditionalExec) {
+	private void visitExecution(final BindingContext context) {
+		final List<Binding> dependencies = flow.getAllDependencies(context.binding).stream()
+				.sorted((b1, b2) -> b1.fromDataPoint().compareTo(b2.fromDataPoint())).collect(toList());
+		GenContext genContext = new AbstractFlowGenerator.GenContext(debug, dependencies);
+		flowGeneratorVisitor.generateFlow(context, genContext);
 
-		final List<String> adapterNames = visitExternalAdapters(context,
-				context.unprocessedAdapters(context.bindingAdapters));
-
-		// Call service if not excluded
-		flowFactories.appendIndented("Maybe<FlowExecution> callService = Maybe.just(execution)").indent() //
-				.eoli().append(".doOnSuccess(e -> e.setState%s(DataPointState.TRIGGERED))",
-						toCamelCase(varNameOf(context.binding)));
-		if (!exclusions.isEmpty()) {
-			flowFactories
-					.eoli().append(".mapOptional(f -> ").append(exclusions.stream()
-							.map(x -> "DataPointState.SKIPPED == f." + dataPointStateOf(x)).collect(joining(" && ")))
-					.append("?Optional.of(f):Optional.empty())");
-		}
-		flowFactories.eoli().append(".doOnComplete(() -> execution.set")
-				.append(toCamelCase(bindingStateOf(context.binding))).append("(DataPointState.SKIPPED))");
-		if (debug) {
-			flowFactories.eoli().append(".doOnSuccess(r -> Log.of(this).info(\"%s: Call success\"))", context.binding)
-					.eoli().append(".doOnComplete(() -> Log.of(this).info(\"%s: Call skipped\"))", context.binding); //
-		}
-
-		if (!context.binding.isExit()) {
-			flowFactories.eoli().append(".doOnSuccess(f -> f.set%s(", toCamelCase(context.outputDataPoint)) //
-					.appendMethodCall("this", processor.getCall(), guessParameters(context, processor)).append("))");
-		}
-		flowFactories.eoli().append(".doOnTerminate(() -> Arrays.stream(callbacks).forEach(Runnable::run))")//
-				.eoli().append(".subscribeOn(Schedulers.computation())") //
-				.eos().unindent();
-
-		// Refine call
-		flowFactories.openIf("callModifier != null") //
-				.appendIndented("callService = callModifier.apply(callService)").eos()//
-				.closeBlock();
-		flowFactories.appendIndented("callService.subscribeOn(Schedulers.computation())").eos();
-
-		// Call adapters
-		if (!adapterNames.isEmpty()) {
-			flowFactories.eoli().append("final Maybe<FlowExecution> callServiceConst = callService").eos();
-			flowFactories
-					.appendIndented("final Maybe<FlowExecution> callAdaptersAndServiceConst = Maybe.just(execution)")
-					.indent(); //
-			addAdapterZip(adapterNames);
-			flowFactories.eoli().append(".flatMap(r -> callServiceConst)").eos().unindent();
-		} else {
-			flowFactories.appendIndented("final Maybe<FlowExecution> callAdaptersAndServiceConst = callService").eos()
-					.eol();
-		}
-
-		if (!isConditionalExec) {
-			// Subscribe because we want to Complete only after all deps are executed
-			flowFactories.appendIndented("Maybe<FlowExecution> first = Maybe.just(execution)").indent(); //
-			addBindingDepsCheck(context.binding, bindingDeps) //
-					.eoli().append(".doOnSuccess(r -> callAdaptersAndServiceConst.subscribe())").eos().unindent();
-		}
-
-	}
-
-	private String bindingStateOf(final Binding binding) {
-		return "state_" + varNameOf(binding);
-	}
-
-	private String dataPointStateOf(final Binding binding) {
-		return "state_" + binding.toDataPoint();
-	}
-
-	/**
-	 * Generates the code calling a list of activators
-	 *
-	 * @param context
-	 * @param availableVars @
-	 */
-	private void visitActivators(final BindingContext context, final List<Binding> bindingDeps) {
-		List<CustomCall> activators = new ArrayList<>();
-		if (activators.isEmpty()) {
-			return;
-		}
-		final List<String> activatorNames = new ArrayList<>();
-
-		// Activators
-		for (final CustomCall activator : activators) {
-
-			final Set<ExternalAdapter> unprocessed = context.unprocessedAdapters(listAdapters(context, activator));
-			final List<String> adapterNames = visitExternalAdapters(context, unprocessed);
-			context.processedAdapters.addAll(unprocessed);
-
-			final List<String> activatorParameters = guessParameters(context, activator);
-
-			activatorNames.add("activator_" + toVariable(activator));
-
-			flowFactories
-					.appendIndented("final Maybe<Boolean> activator_%s = Maybe.just(execution)", toVariable(activator))
-					.indent();
-			addAdapterZip(adapterNames);
-			flowFactories.eoli() //
-					.append(".map(f -> ").appendMethodCall("this", activator.getCall(), activatorParameters).append(")") //
-					.eoli().append(".subscribeOn(Schedulers.computation())").eos().unindent().eol();
-		}
-
-		// Activation check
-		flowFactories.appendIndented("final Maybe<FlowExecution> activationCheck = Maybe.just(true)").indent();
-		for (final String activatorName : activatorNames) {
-			flowFactories.eoli().append(".zipWith(").append(activatorName)
-					.append(", (u, r) -> u.booleanValue() && r.booleanValue())");
-		}
-		flowFactories.eoli().append(".mapOptional(b -> b ? Optional.of(execution) : Optional.empty())") //
-				.eoli().append(".flatMap(e -> callAdaptersAndServiceConst)") //
-				.eoli()
-				.append(".doOnComplete(() -> { execution.setState%s(DataPointState.TRIGGERED); execution.setState%s(DataPointState.SKIPPED); })",
-						toCamelCase(varNameOf(context.binding)), toCamelCase(context.binding.toDataPoint())) //
-				.eoli().append(".doOnTerminate(() -> Arrays.stream(callbacks).forEach(Runnable::run))") //
-				.eos().unindent().eol();
-
+		flowFactories.appendIndented(
+				"private Maybe<FlowExecution> %s(FlowExecution execution, final Function<Maybe<FlowExecution>, Maybe<FlowExecution>> callModifier, Runnable... callbacks)",
+				varNameOf(context.binding)).openBlock();
 		// Call default activation when all deps are ok
-		flowFactories.appendIndented("Maybe<FlowExecution> first = Maybe.just(execution)").indent();
-		addBindingDepsCheck(context.binding, bindingDeps). //
-				eoli().append(".doOnSuccess(r -> activationCheck.subscribe())").eos().unindent();
+		flowFactories.appendIndented("final Maybe<FlowExecution> topCall = %s(execution, callModifier, callbacks)", genContext.topCall).eos();
+		flowFactories.appendIndented("return Maybe.just(execution)").indent();
+		addBindingDepsCheck(context.binding, dependencies);
+		if (debug) {
+			flowFactories.eoli()
+					.append(".doOnSuccess(r -> Log.of(this).info(\"%s: Deps success\"))", context.binding)
+					.eoli().append(".doOnComplete(() -> Log.of(this).info(\"%s: Deps skipping\"))", context.binding); //
+		}
+		flowFactories.eoli().append(".doOnSuccess(r -> topCall.subscribe())").eos().unindent();
+		flowFactories.closeBlock().eol();
 	}
 
-	private List<String> visitExternalAdapters(final BindingContext context,
-			final Set<ExternalAdapter> externalAdapter) {
+	List<String> visitExternalAdapters(final BindingContext context, final Set<ExternalAdapter> externalAdapter) {
 
 		final List<String> adapterNames = new ArrayList<>();
 
@@ -312,6 +186,15 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 		return adapterNames;
 	}
 
+	void addAdapterZip(final List<String> adapterNames) {
+		if (adapterNames.isEmpty()) {
+			return;
+		}
+		for (final String adapterName : adapterNames) {
+			flowFactories.eoli().append(".zipWith(").append(adapterName).append(", (r, s) -> execution)");
+		}
+	}
+
 	private void addDataSetter(final String type, final String property, boolean withState) {
 		if (withState) {
 			flowClass.addVarDecl("private", "DataPointState", "state_" + property, "DataPointState.NOT_TRIGGERED");
@@ -339,15 +222,13 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 	 * @param isDefaultConditionCheck
 	 * @return
 	 */
-	private JavaCodeGenerator<RuntimeException> addBindingDepsCheck(final Binding binding,
-			final List<Binding> dependencies) {
+	JavaCodeGenerator<RuntimeException> addBindingDepsCheck(final Binding binding, final List<Binding> dependencies) {
 		if (!dependencies.isEmpty()) {
-			final Optional<ConditionalFlowCtrl> condition = Optional.empty();// BindingRule.getCondition(binding.getRules());
 			flowFactories.eoli().append(".mapOptional(f -> (")
-					.append(dependencies.stream().map(d -> "(DataPointState.TRIGGERED == f." + dataPointStateOf(d)
-							+ (isExclusion(condition, d) ? " || DataPointState.SKIPPED == f." + dataPointStateOf(d)
-									: "")
-							+ ")").distinct().collect(joining("\n " + flowFactories.currentIndentation() + " && ")))
+					.append(dependencies.stream()
+							.map(d -> "(DataPointState.TRIGGERED == f." + dataPointStateOf(d)
+									+ " || DataPointState.SKIPPED == f." + dataPointStateOf(d) + ")")
+							.distinct().collect(joining("\n " + flowFactories.currentIndentation() + " && ")))
 					.append(")?Optional.of(execution):Optional.empty())");
 		}
 		flowFactories.eoli().append(".mapOptional(f -> f.canTrigger%s()?Optional.of(execution):Optional.empty())",
@@ -356,25 +237,16 @@ public class FlowToRXJavaVisitor extends AbstractJavaVisitor {
 		return flowFactories;
 	}
 
-	private boolean isExclusion(Optional<ConditionalFlowCtrl> condition, Binding dependency) {
-		if (!condition.isPresent()) {
-			return false;
-		}
-		Optional<ConditionalFlowCtrl> dependencyCondition = Optional.empty(); //BindingRule.getCondition(dependency.getRules());
-		return condition.get().getName()
-				.equals(dependencyCondition.map(ConditionalFlowCtrl::getName).orElse("---"));
-	}
-
-	private void addAdapterZip(final List<String> adapterNames) {
-		if (adapterNames.isEmpty()) {
-			return;
-		}
-		for (final String adapterName : adapterNames) {
-			flowFactories.eoli().append(".zipWith(").append(adapterName).append(", (r, s) -> execution)");
-		}
-	}
-
-	private String varNameOf(final Binding binding) {
+	String varNameOf(final Binding binding) {
 		return "binding_" + toVariable(binding);
 	}
+
+	String bindingStateOf(final Binding binding) {
+		return "state_" + varNameOf(binding);
+	}
+
+	String dataPointStateOf(final Binding binding) {
+		return "state_" + binding.toDataPoint();
+	}
+
 }

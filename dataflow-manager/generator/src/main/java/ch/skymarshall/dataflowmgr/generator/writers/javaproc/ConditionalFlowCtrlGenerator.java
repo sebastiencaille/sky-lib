@@ -1,16 +1,14 @@
-package ch.skymarshall.dataflowmgr.generator.writer.javaproc;
+package ch.skymarshall.dataflowmgr.generator.writers.javaproc;
 
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import ch.skymarshall.dataflowmgr.generator.AbstractFlowVisitor.BindingContext;
-import ch.skymarshall.dataflowmgr.generator.IFlowGenerator;
+import ch.skymarshall.dataflowmgr.generator.writers.AbstractFlowVisitor.BindingContext;
 import ch.skymarshall.dataflowmgr.model.Binding;
 import ch.skymarshall.dataflowmgr.model.CustomCall;
 import ch.skymarshall.dataflowmgr.model.ExternalAdapter;
@@ -44,7 +42,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 	}
 
 	@Override
-	public void generate(BindingContext context, Void fgContext, Iterator<IFlowGenerator<Void>> flowGeneratorIterator) {
+	public void generate(BaseGenContext<Void> genContext, BindingContext context) {
 		visitor.setConditional(context.outputDataPoint);
 
 		visitActivators(context);
@@ -72,7 +70,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 			conditions.add(executeDefaultVarNameOf(context));
 		}
 		generator.openIf(String.join(" && ", conditions));
-		flowGeneratorIterator.next().generate(context, fgContext, flowGeneratorIterator);
+	genContext.next(context);
 		generator.appendIndented(visitor.availableVarNameOf(context.outputDataPoint)).append(" = true").eos();
 		generator.closeBlock();
 

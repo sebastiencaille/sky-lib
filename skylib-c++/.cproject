@@ -35,7 +35,7 @@
 									<listOptionValue builtIn="false" value="/usr/local/include/glib"/>
 									<listOptionValue builtIn="false" value="/usr/local/include/gtkmm-4.0"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src-lib}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src-gtk3}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src-gtk4}&quot;"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.other.other.1653638828" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" useByScannerDiscovery="false" value="-c -fmessage-length=0  `pkg-config gtkmm-3.0 --cflags` " valueType="string"/>
 								<option id="gnu.cpp.compiler.option.dialect.std.1589945289" name="Language standard" superClass="gnu.cpp.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.cpp.compiler.dialect.c++2a" valueType="enumerated"/>

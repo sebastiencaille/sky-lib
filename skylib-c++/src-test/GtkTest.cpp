@@ -24,18 +24,17 @@
 #include <iostream>
 #include <memory>
 
-//#define DEBUG_DESTR
+#define DEBUG_DESTR
 
 #include "controller_property.hh"
 #include "binding_interface.hh"
 #include "input_error_property_impl.hh"
 #include "int_converters.hh"
-#include "glib_converter.hh"
-#include "gtk_bindings.hh"
-
 #include <pangomm/attrlist.h>
 
 #include "list_model.hh"
+#include "glib_converter.hh"
+#include "gtk_bindings.hh"
 
 using namespace ch_skymarshall::gui;
 using namespace ch_skymarshall::gui::converters;

@@ -30,7 +30,7 @@ public abstract class AbstractPopup<T> extends MouseAdapter {
 
 	protected abstract void buildPopup(JPopupMenu popupMenu, T selected);
 
-	public AbstractPopup(final ObjectProperty<T> lastSelected) {
+	protected AbstractPopup(final ObjectProperty<T> lastSelected) {
 		this.lastSelected = lastSelected;
 	}
 

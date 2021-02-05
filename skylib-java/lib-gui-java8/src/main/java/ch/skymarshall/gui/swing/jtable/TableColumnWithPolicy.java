@@ -39,7 +39,7 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 
 	public abstract int computeWidth(ColumnComputationInfo policyInfo);
 
-	public TableColumnWithPolicy(final C column) {
+	protected TableColumnWithPolicy(final C column) {
 		this.column = column;
 	}
 

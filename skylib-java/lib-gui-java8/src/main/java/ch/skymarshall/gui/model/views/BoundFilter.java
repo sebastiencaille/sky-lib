@@ -54,7 +54,7 @@ public abstract class BoundFilter<D, F> extends AbstractDynamicView<D> implement
 		};
 	}
 
-	public BoundFilter() {
+	protected BoundFilter() {
 	}
 
 	protected F getFilterPropertyValue() {

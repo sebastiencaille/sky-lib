@@ -61,7 +61,7 @@ public abstract class BoundComparator<D, C> extends AbstractDynamicView<D>
 		};
 	}
 
-	public BoundComparator() {
+	protected BoundComparator() {
 	}
 
 	protected C getSorterPropertyValue() {

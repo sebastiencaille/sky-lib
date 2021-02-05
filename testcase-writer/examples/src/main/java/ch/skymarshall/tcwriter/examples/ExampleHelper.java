@@ -77,7 +77,7 @@ public class ExampleHelper {
 		test.initActors();
 		test.testNormalCase();
 		final TestCase testCase = recorder.getTestCase("ch.skymarshall.tcwriter.examples.GeneratedTest");
-		Log.of(ExampleHelper.class).info(new HumanReadableVisitor(testCase, true).processAllSteps()); 
+		Log.of(ExampleHelper.class).info(() -> new HumanReadableVisitor(testCase, true).processAllSteps()); 
 		return testCase;
 	}
 

@@ -9,7 +9,7 @@ public abstract class ObjectTextView<T> {
 
 	private final T object;
 
-	public ObjectTextView(final T object) {
+	protected ObjectTextView(final T object) {
 		this.object = object;
 	}
 

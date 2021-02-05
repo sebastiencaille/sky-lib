@@ -29,7 +29,7 @@ public interface Log {
 			@Override
 			public void flush() throws IOException {
 				super.flush();
-				logger.log(level, builder.toString());
+				logger.log(level, () -> builder.toString());
 				builder = new StringBuilder();
 			}
 

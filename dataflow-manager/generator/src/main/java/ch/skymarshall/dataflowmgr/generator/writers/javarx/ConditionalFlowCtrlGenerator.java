@@ -38,27 +38,27 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 				topCall).openBlock();
 
 		flowFactories.appendIndented("final Maybe<FlowExecution> topCall = %s(execution, callModifier, callbacks)",
-				genContext.localContext.topCall).eos();
-		genContext.localContext.topCall = "topCall";
+				genContext.getLocalContext().getTopCall()).eos();
+		genContext.getLocalContext().setTopCall("topCall");
 
-		visitActivators(context, genContext.localContext);
+		visitActivators(context, genContext.getLocalContext());
 
 		if (!exclusions.isEmpty()) {
 			flowFactories.eoli().append("return Maybe.just(execution).mapOptional(f -> ").append(exclusions.stream()
 					.map(x -> "DataPointState.SKIPPED == f." + visitor.dataPointStateOf(x)).collect(joining(" && ")))
 					.append("?Optional.of(f):Optional.empty())");
-			if (genContext.localContext.debug) {
+			if (genContext.getLocalContext().debug) {
 				flowFactories.append(".doOnComplete(() -> Log.of(this).info(\"%s: Call skipped\"))",
 						visitor.toVariable(context.binding));
 			}
-			flowFactories.append(".doOnSuccess(f -> %s.subscribe())", genContext.localContext.topCall).eos();
+			flowFactories.append(".doOnSuccess(f -> %s.subscribe())", genContext.getLocalContext().getTopCall()).eos();
 		} else {
-			flowFactories.appendIndented("return %s", genContext.localContext.topCall).eos();
+			flowFactories.appendIndented("return %s", genContext.getLocalContext().getTopCall()).eos();
 		}
 
 		flowFactories.closeBlock();
 
-		genContext.localContext.topCall = topCall;
+		genContext.getLocalContext().setTopCall(  topCall);
 		genContext.next(context);
 	}
 
@@ -108,7 +108,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 						toCamelCase(visitor.varNameOf(context.binding)), toCamelCase(context.binding.toDataPoint())) //
 				.eoli().append(".doOnTerminate(() -> Arrays.stream(callbacks).forEach(Runnable::run))") //
 				.eos().unindent().eol();
-		genContext.topCall = "activators";
+		genContext.setTopCall( "activators");
 	}
 
 }

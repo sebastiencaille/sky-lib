@@ -14,7 +14,7 @@ public interface IFlowGenerator<C> {
 	public static class BaseGenContext<C> {
 
 		private final Iterator<IFlowGenerator<C>> flowGeneratorIterator;
-		public C localContext;
+		private C localContext;
 		
 		public BaseGenContext(List<IFlowGenerator<C>> flowGenerators, C localContext) {
 			this.flowGeneratorIterator = flowGenerators.iterator();
@@ -26,6 +26,15 @@ public interface IFlowGenerator<C> {
 				flowGeneratorIterator.next().generate(this, context);
 			}
 		}
+		
+		public C getLocalContext() {
+			return localContext;
+		}
+		
+		public void setLocalContext(C localContext) {
+			this.localContext = localContext;
+		}
+		
 	}
 
 }

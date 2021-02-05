@@ -143,7 +143,7 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 				"private Maybe<FlowExecution> %s(FlowExecution execution, final Function<Maybe<FlowExecution>, Maybe<FlowExecution>> callModifier, Runnable... callbacks)",
 				varNameOf(context.binding)).openBlock();
 		// Call default activation when all deps are ok
-		flowFactories.appendIndented("final Maybe<FlowExecution> topCall = %s(execution, callModifier, callbacks)", genContext.topCall).eos();
+		flowFactories.appendIndented("final Maybe<FlowExecution> topCall = %s(execution, callModifier, callbacks)", genContext.getTopCall()).eos();
 		flowFactories.appendIndented("return Maybe.just(execution)").indent();
 		addBindingDepsCheck(context.binding, dependencies);
 		if (debug) {

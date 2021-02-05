@@ -36,7 +36,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractDotFlowGenerator {
 		final String conditionNodeName = getConditionGroupNodeName(conditionalCtrl);
 		if (!graph.nodes.containsKey(conditionNodeName)) {
 			addConditionGroup(conditionalCtrl);
-			graph.links.add(new Link(genContext.localContext, conditionNodeName, "", ""));
+			graph.links.add(new Link(genContext.getLocalContext(), conditionNodeName, "", ""));
 		}
 		String nextLink = conditionNodeName;
 
@@ -53,7 +53,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractDotFlowGenerator {
 			context.processedAdapters.addAll(missingAdapters);
 			nextLink = activatorNode;
 		}
-		genContext.localContext = nextLink;
+		genContext.setLocalContext(nextLink);
 		genContext.next(context);
 	}
 

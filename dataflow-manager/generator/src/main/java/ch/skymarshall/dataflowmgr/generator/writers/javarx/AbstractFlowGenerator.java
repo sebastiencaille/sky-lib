@@ -12,11 +12,18 @@ public abstract class AbstractFlowGenerator implements IFlowGenerator<AbstractFl
 
 		public final boolean debug;
 		public final List<Binding> bindingDeps;
-		public String topCall;
+		private String topCall;
 
 		public GenContext(boolean debug, List<Binding> bindingDeps) {
 			this.debug = debug;
 			this.bindingDeps = bindingDeps;
+		}
+		
+		public String getTopCall() {
+			return topCall;
+		}
+		public void setTopCall(String topCall) {
+			this.topCall = topCall;
 		}
 
 	}

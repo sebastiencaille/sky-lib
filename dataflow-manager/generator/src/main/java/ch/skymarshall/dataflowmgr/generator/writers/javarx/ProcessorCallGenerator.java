@@ -28,11 +28,11 @@ public class ProcessorCallGenerator extends AbstractFlowGenerator {
 		flowFactories.appendIndented(
 				"private Maybe<FlowExecution> %s(FlowExecution execution, final Function<Maybe<FlowExecution>, Maybe<FlowExecution>> callModifier, Runnable... callbacks)",
 				topCall).openBlock();
-		
+
 		// Call first to register adapter names
 		final List<String> adapterNames = visitor.visitExternalAdapters(context,
 				context.unprocessedAdapters(context.bindingAdapters));
-		
+
 		// Call service if not excluded
 		flowFactories.appendIndented("Maybe<FlowExecution> callService = Maybe.just(execution)").indent() //
 				.eoli().append(".doOnSuccess(e -> e.setState%s(DataPointState.TRIGGERED))",
@@ -47,7 +47,7 @@ public class ProcessorCallGenerator extends AbstractFlowGenerator {
 					.append("))");
 		}
 
-		if (genContext.localContext.debug) {
+		if (genContext.getLocalContext().debug) {
 			flowFactories.eoli().append(".doOnSuccess(r -> Log.of(this).info(\"%s: Call success\"))", context.binding)
 					.eoli().append(".doOnComplete(() -> Log.of(this).info(\"%s: Call skipped\"))", context.binding); //
 		}
@@ -75,7 +75,7 @@ public class ProcessorCallGenerator extends AbstractFlowGenerator {
 
 		flowFactories.closeBlock().eol();
 
-		genContext.localContext.topCall = topCall;
+		genContext.getLocalContext().setTopCall(topCall);
 		genContext.next(context);
 	}
 

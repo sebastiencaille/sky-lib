@@ -4,7 +4,7 @@ The current code does not match the following description.
 
 ## Abstract
 
-It eventually happens, at some point in time, that the teams involved in a software development/maintenance are losing control of the software flows. This could be caused by turnover, short deadlines, design issues, general complexity of the code/business, ...
+It eventually happens, at some point in time, that the teams involved in a software development/maintenance are losing control of the software design. The reason  could be turnover, short deadlines, design issues, general complexity of the business/code, ...
 
 ## What is a software
 A software is basically made of data (or a collection of...) and processing units (processors).
@@ -12,11 +12,11 @@ A software is basically made of data (or a collection of...) and processing unit
 data -> processor -> data -> processor -> ...
 ```
 
-**Data** are coming from an external service and a processed by the processors. 
-The data may be acquired asynchronously (input data) or synchronously (call to an external service, like a database, some hardware, ...).
-The data produced by the system are sent to an external service (like a database, some hardware, ...) 
+**Data** are coming from external systems/services and are processed by processors. 
+Data may be acquired asynchronously (input data) or synchronously (call to an external service - database, hardware, ...).
+Data produced by the system are sent to an external service (database, hardware, ...)
 
-**Processors** are pure functions that are transforming some data into other data.
+**Processors** are pure functions that derivate new data from existing data.
 
 The combination of data, processors and external systems are forming a data **flow**.
 ```                 
@@ -50,7 +50,9 @@ A flow is defined by
    * taking a set of data as parameters
    * producing a set of data (except for the last processor of the chain, which is only consuming data)
 * External Adapters (to retrieve/push data from an external service, eg from a database)
-* Conditions, which are controlling which processor must be executed according to the current set of data
+* Flow controls, like
+   * conditions, which are controlling which processor must be executed according to the current set of data
+   * data splitters, which are splitting large amounts of data into smaller chunks
 
 The flow implementations would be defined in a way that allows adequate visualization and testing.
 

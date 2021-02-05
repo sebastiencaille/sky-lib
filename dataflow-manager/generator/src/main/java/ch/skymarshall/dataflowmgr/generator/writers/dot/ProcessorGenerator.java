@@ -24,7 +24,7 @@ public class ProcessorGenerator extends AbstractDotFlowGenerator {
 		final String processorNode = visitor.addProcessor(context.binding, context.getProcessor());
 
 		Set<ExternalAdapter> missingAdapters = context.unprocessedAdapters(context.bindingAdapters);
-		visitor.addExternalAdapters(missingAdapters, genContext.localContext, processorNode);
+		visitor.addExternalAdapters(missingAdapters, genContext.getLocalContext(), processorNode);
 
 		graph.links.add(new Link(processorNode, context.outputDataPoint));
 		genContext.next(context);

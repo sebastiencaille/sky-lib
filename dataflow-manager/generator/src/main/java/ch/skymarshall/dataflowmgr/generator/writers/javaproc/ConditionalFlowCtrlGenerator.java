@@ -53,7 +53,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 
 		if (!exclusions.isEmpty()) {
 			generator
-					.addLocalVariable("boolean", executeDefaultVarNameOf(context),
+					.addLocalVariable(Boolean.TYPE.getName(), executeDefaultVarNameOf(context),
 							exclusions.stream().map(x -> "!" + visitor.availableVarNameOf(x)).collect(joining(" && ")))
 					.eol();
 		}
@@ -83,7 +83,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 		visitor.definedDataPoints.add(context.outputDataPoint);
 		visitor.appendNewVariable(context.outputDataPoint, context.getProcessor());
 		generator.append(" = null").eos();
-		generator.addLocalVariable("boolean", visitor.availableVarNameOf(context.outputDataPoint), "false");
+		generator.addLocalVariable(Boolean.TYPE.getName(), visitor.availableVarNameOf(context.outputDataPoint), "false");
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 		if (activators.isEmpty()) {
 			return;
 		}
-		generator.addLocalVariable("boolean", activatedVarNameOf(context.binding), "true");
+		generator.addLocalVariable(Boolean.TYPE.getName(), activatedVarNameOf(context.binding), "true");
 		for (final CustomCall activator : activators) {
 			generator.openIf(activatedVarNameOf(context.binding));
 

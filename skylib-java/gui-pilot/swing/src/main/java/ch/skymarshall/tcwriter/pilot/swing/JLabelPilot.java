@@ -4,9 +4,9 @@ import javax.swing.JLabel;
 
 import org.junit.Assert;
 
-public class SwingLabel extends AbstractSwingComponent<SwingLabel, JLabel> {
+public class JLabelPilot extends AbstractSwingComponent<JLabelPilot, JLabel> {
 
-	public SwingLabel(final SwingGuiPilot pilot, final String name) {
+	public JLabelPilot(final SwingPilot pilot, final String name) {
 		super(pilot, JLabel.class, name);
 	}
 

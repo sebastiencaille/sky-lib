@@ -8,7 +8,7 @@ import ch.skymarshall.dataflowmgr.examples.simple.dto.MyData;
 public class SimpleFlowConditions {
 
 	public boolean mustComplete(final MyData input) {
-		FlowReport.report.add(new ReportEntry("mustComplete"));
+		FlowReport.add("mustComplete");
 		return input.parameter.equals("Hello") || input.parameter.equals("Hi");
 	}
 

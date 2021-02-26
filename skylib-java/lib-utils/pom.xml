@@ -16,6 +16,7 @@
 		<groupId>ch.skymarshall</groupId>
 		<artifactId>libs</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>lib-utils</artifactId>
 

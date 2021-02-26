@@ -20,12 +20,12 @@ public class SeleniumGuiPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 		return driver;
 	}
 
-	public SeleniumElement element(final By locator) {
-		return new SeleniumElement(this, locator);
+	public ElementPilot element(final By locator) {
+		return new ElementPilot(this, locator);
 	}
 
-	public SeleniumAlert alert() {
-		return new SeleniumAlert(this);
+	public AlertPilot alert() {
+		return new AlertPilot(this);
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class SeleniumGuiPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 		return new ModalDialogDetector(() -> AlertDetector.listAlerts(this, null));
 	}
 
-	public void expectModalDialog(final Function<SeleniumAlert, ErrorCheck> check) {
+	public void expectModalDialog(final Function<AlertPilot, ErrorCheck> check) {
 		setCurrentModalDialogDetector(new ModalDialogDetector(() -> AlertDetector.listAlerts(this, check)));
 	}
 

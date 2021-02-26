@@ -11,20 +11,23 @@ public class FlowReport {
 	}
 
 	public static class ReportEntry {
-		public final String name;
 		public final String threadName;
+		public final String text;
 
-		public ReportEntry(final String name) {
-			this.name = name;
+		public ReportEntry(final String text) {
+			this.text = text;
 			this.threadName = Thread.currentThread().getName();
 		}
 
 		@Override
 		public String toString() {
-			return name + ":[" + threadName + "]";
+			return "[" + threadName + "]" + text;
 		}
 	}
 
 	public static final List<ReportEntry> report = Collections.synchronizedList(new ArrayList<>());
+	public static void add(String text) {
+		report.add(new ReportEntry(text));
+	}
 
 }

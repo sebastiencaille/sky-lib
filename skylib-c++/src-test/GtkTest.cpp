@@ -23,23 +23,27 @@
 #include <gtkmm.h>
 #include <iostream>
 #include <memory>
+#include <thread>
+
+#include <pangomm/attrlist.h>
 
 #define DEBUG_DESTR
 
-#include "controller_property.hh"
-#include "binding_interface.hh"
-#include "input_error_property_impl.hh"
-#include "int_converters.hh"
-#include <pangomm/attrlist.h>
+#include <controller_property.hh>
+#include <binding_interface.hh>
+#include <input_error_property_impl.hh>
+#include <int_converters.hh>
 
-#include "list_model.hh"
-#include "glib_converter.hh"
-#include "gtk_bindings.hh"
+#include <list_model.hh>
+#include <glib_converter.hh>
+#include <gtk_bindings.hh>
+#include <gtk_gui_pilot.hh>
 
 using namespace ch_skymarshall::gui;
 using namespace ch_skymarshall::gui::converters;
 using namespace ch_skymarshall::gui::glib;
-using namespace ch_skymarshall::gui::gtk;
+using namespace ch_skymarshall::gui::gtk4;
+using namespace ch_skymarshall::gui::gtk4::pilot;
 
 using namespace std;
 using namespace __gnu_cxx;
@@ -104,6 +108,8 @@ public:
 
 	~HelloWorld() final;
 
+	void testGui();
+
 	void apply_action(property_group_actions _action,
 			const property *_property);
 
@@ -127,6 +133,7 @@ private:
 
 	controller_property<int> testProperty2 = controller_property<int>(
 			"TestProp2", m_manager, 0, m_errorProperty);
+
 };
 
 HelloWorld::HelloWorld() :
@@ -140,6 +147,7 @@ HelloWorld::HelloWorld() :
 	testProperty1.bind(string_to_ustring::of())->bind(
 			entry_binding::of(m_entry))->add_dependency(dep_test::of());
 	m_entry.set_expand();
+	m_entry.set_name("Entry");
 	m_box.append(m_entry);
 
 	auto dep = make_shared<action_dependency<HelloWorld>>(
@@ -155,6 +163,7 @@ HelloWorld::HelloWorld() :
 	testProperty2.bind(int_to_string::of())->bind(string_to_ustring::of())->bind(
 			entry_binding::of(m_intEntry));
 	m_intEntry.set_expand();
+	m_intEntry.set_name("IntEntry");
 	m_box.append(m_intEntry);
 
 	testProperty2.bind(int_to_string::of())->bind(string_to_ustring::of())->bind(
@@ -175,6 +184,17 @@ HelloWorld::HelloWorld() :
 	m_error.set_attributes(atrlist);
 
 	testProperty2.set(NULL, 1);
+	thread testThread(&HelloWorld::testGui, this);
+	testThread.detach();
+}
+
+void HelloWorld::testGui() {
+	gtk_gui_pilot guiPilot(this);
+	shared_ptr<gtk_entry_pilot> entryPilot = guiPilot.entry("Entry");
+	shared_ptr<gtk_entry_pilot> intEntryPilot = guiPilot.entry("IntEntry");
+
+	entryPilot->set_text("Hello");
+	intEntryPilot->set_text("123");
 
 }
 

@@ -12,9 +12,9 @@ import org.junit.Test;
 import ch.skymarshall.example.gui.TestObjectTableModel;
 import ch.skymarshall.example.gui.model.impl.TableModelExampleView;
 import ch.skymarshall.tcwriter.pilot.StatePolling;
-import ch.skymarshall.tcwriter.pilot.swing.SwingGuiPilot;
-import ch.skymarshall.tcwriter.pilot.swing.SwingTable;
-import ch.skymarshall.tcwriter.pilot.swing.SwingToggleButton;
+import ch.skymarshall.tcwriter.pilot.swing.SwingPilot;
+import ch.skymarshall.tcwriter.pilot.swing.JTablePilot;
+import ch.skymarshall.tcwriter.pilot.swing.JToggleButtonPilot;
 import ch.skymarshall.util.helpers.Log;
 
 public class ModelExampleTest {
@@ -28,7 +28,7 @@ public class ModelExampleTest {
 			view[0].setVisible(true);
 		});
 
-		final SwingGuiPilot pilot = new SwingGuiPilot(view[0]);
+		final SwingPilot pilot = new SwingPilot(view[0]);
 		pilot.setDefaultActionTimeout(Duration.ofSeconds(1));
 
 		listTable(pilot).wait(StatePolling.<JTable>assertion(t -> {
@@ -63,16 +63,16 @@ public class ModelExampleTest {
 		Log.of(this).info(pilot.getActionReport().getFormattedReport());
 	}
 
-	private SwingToggleButton reverseOrder(final SwingGuiPilot pilot) {
-		return new SwingToggleButton(pilot, "reverseOrder");
+	private JToggleButtonPilot reverseOrder(final SwingPilot pilot) {
+		return new JToggleButtonPilot(pilot, "reverseOrder");
 	}
 
-	private SwingToggleButton enableFilter(final SwingGuiPilot pilot) {
-		return new SwingToggleButton(pilot, "enableFilter");
+	private JToggleButtonPilot enableFilter(final SwingPilot pilot) {
+		return new JToggleButtonPilot(pilot, "enableFilter");
 	}
 
-	private SwingTable listTable(final SwingGuiPilot pilot) {
-		return new SwingTable(pilot, "listTable");
+	private JTablePilot listTable(final SwingPilot pilot) {
+		return new JTablePilot(pilot, "listTable");
 	}
 
 }

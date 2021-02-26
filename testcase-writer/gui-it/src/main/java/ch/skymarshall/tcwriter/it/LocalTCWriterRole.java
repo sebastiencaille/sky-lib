@@ -19,7 +19,7 @@ import ch.skymarshall.tcwriter.it.api.TestSessionRole;
 import ch.skymarshall.tcwriter.it.api.TestWriterRole;
 import ch.skymarshall.tcwriter.pilot.EditionPolling;
 import ch.skymarshall.tcwriter.pilot.PollingResult;
-import ch.skymarshall.tcwriter.pilot.swing.SwingTable;
+import ch.skymarshall.tcwriter.pilot.swing.JTablePilot;
 
 public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 
@@ -87,7 +87,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	@Override
 	public void checkHumanReadable(final StepSelector selector, final String humanReadable) {
 		selector.select(guiPilot);
-		final SwingTable stepsTable = guiPilot.table("StepsTable");
+		final JTablePilot stepsTable = guiPilot.table("StepsTable");
 		stepsTable.wait(stepsTable.assertion(t -> {
 			final Object value = ((StepsTableModel) t.getModel()).getHumanReadable(t.getSelectedRow());
 			Assert.assertEquals(humanReadable, value.toString());

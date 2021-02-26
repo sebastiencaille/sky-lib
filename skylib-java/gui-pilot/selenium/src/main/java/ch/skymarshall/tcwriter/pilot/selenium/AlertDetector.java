@@ -25,9 +25,9 @@ public class AlertDetector {
 	}
 
 	public static List<ModalDialogDetector.ErrorCheck> listAlerts(final SeleniumGuiPilot pilot,
-			final Function<SeleniumAlert, ErrorCheck> errorChecks) {
+			final Function<AlertPilot, ErrorCheck> errorChecks) {
 
-		final SeleniumAlert seleniumAlert = new SeleniumAlert(pilot);
+		final AlertPilot seleniumAlert = new AlertPilot(pilot);
 		final Alert alert = seleniumAlert.loadGuiComponent();
 		if (alert == null) {
 			return Collections.emptyList();

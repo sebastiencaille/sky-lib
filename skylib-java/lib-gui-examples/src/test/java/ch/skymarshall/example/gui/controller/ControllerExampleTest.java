@@ -8,12 +8,12 @@ import org.junit.Test;
 
 import ch.skymarshall.example.gui.controller.impl.ControllerExampleController;
 import ch.skymarshall.example.gui.controller.impl.ControllerExampleView;
-import ch.skymarshall.tcwriter.pilot.swing.SwingGuiPilot;
-import ch.skymarshall.tcwriter.pilot.swing.SwingLabel;
-import ch.skymarshall.tcwriter.pilot.swing.SwingList;
-import ch.skymarshall.tcwriter.pilot.swing.SwingTable;
-import ch.skymarshall.tcwriter.pilot.swing.SwingText;
-import ch.skymarshall.tcwriter.pilot.swing.SwingToggleButton;
+import ch.skymarshall.tcwriter.pilot.swing.SwingPilot;
+import ch.skymarshall.tcwriter.pilot.swing.JLabelPilot;
+import ch.skymarshall.tcwriter.pilot.swing.JListPilot;
+import ch.skymarshall.tcwriter.pilot.swing.JTablePilot;
+import ch.skymarshall.tcwriter.pilot.swing.JTextFieldPilot;
+import ch.skymarshall.tcwriter.pilot.swing.JToggleButtonPilot;
 import ch.skymarshall.util.helpers.Log;
 
 public class ControllerExampleTest {
@@ -28,7 +28,7 @@ public class ControllerExampleTest {
 			view[0].setVisible(true);
 		});
 
-		final SwingGuiPilot pilot = new SwingGuiPilot(view[0]);
+		final SwingPilot pilot = new SwingPilot(view[0]);
 		pilot.setDefaultActionTimeout(Duration.ofSeconds(1));
 		booleanEditor(pilot).setSelected(true);
 		booleanEditorCheck(pilot).waitEnabled();
@@ -61,47 +61,47 @@ public class ControllerExampleTest {
 		Log.of(this).info(pilot.getActionReport().getFormattedReport());
 	}
 
-	private SwingToggleButton booleanEditor(final SwingGuiPilot pilot) {
+	private JToggleButtonPilot booleanEditor(final SwingPilot pilot) {
 		return pilot.toggleButton("booleanEditor");
 	}
 
-	private SwingLabel booleanEditorCheck(final SwingGuiPilot pilot) {
+	private JLabelPilot booleanEditorCheck(final SwingPilot pilot) {
 		return pilot.label("booleanEditorCheck");
 	}
 
-	private SwingText intStringEditor(final SwingGuiPilot pilot) {
+	private JTextFieldPilot intStringEditor(final SwingPilot pilot) {
 		return pilot.text("intStringEditor");
 	}
 
-	private final SwingLabel intCheck(final SwingGuiPilot pilot) {
+	private final JLabelPilot intCheck(final SwingPilot pilot) {
 		return pilot.label("intCheck");
 	}
 
-	private SwingLabel getErrorLabel(final SwingGuiPilot pilot) {
+	private JLabelPilot getErrorLabel(final SwingPilot pilot) {
 		return pilot.label("errorLabel");
 	}
 
-	private SwingList dynamicListEditor(final SwingGuiPilot pilot) {
+	private JListPilot dynamicListEditor(final SwingPilot pilot) {
 		return pilot.list("dynamicListEditor");
 	}
 
-	private SwingLabel dynamicListSelectionCheck(final SwingGuiPilot pilot) {
+	private JLabelPilot dynamicListSelectionCheck(final SwingPilot pilot) {
 		return pilot.label("dynamicListSelectionCheck");
 	}
 
-	private SwingList staticListEditor(final SwingGuiPilot pilot) {
+	private JListPilot staticListEditor(final SwingPilot pilot) {
 		return pilot.list("staticListEditor");
 	}
 
-	private SwingLabel staticListSelectionCheck(final SwingGuiPilot pilot) {
+	private JLabelPilot staticListSelectionCheck(final SwingPilot pilot) {
 		return pilot.label("staticListSelectionCheck");
 	}
 
-	private SwingTable tableSelectionEditor(final SwingGuiPilot pilot) {
+	private JTablePilot tableSelectionEditor(final SwingPilot pilot) {
 		return pilot.table("tableSelectionEditor");
 	}
 
-	private SwingLabel tableSelectionCheck(final SwingGuiPilot pilot) {
+	private JLabelPilot tableSelectionCheck(final SwingPilot pilot) {
 		return pilot.label("tableSelectionCheck");
 	}
 

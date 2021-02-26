@@ -6,11 +6,11 @@ import org.openqa.selenium.NoAlertPresentException;
 import ch.skymarshall.tcwriter.pilot.AbstractGuiComponent;
 import ch.skymarshall.tcwriter.pilot.Polling;
 
-public class SeleniumAlert extends AbstractGuiComponent<SeleniumAlert, Alert> {
+public class AlertPilot extends AbstractGuiComponent<AlertPilot, Alert> {
 
 	private final SeleniumGuiPilot pilot;
 
-	public SeleniumAlert(final SeleniumGuiPilot pilot) {
+	public AlertPilot(final SeleniumGuiPilot pilot) {
 		super(pilot);
 		this.pilot = pilot;
 	}

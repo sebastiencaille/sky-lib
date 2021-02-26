@@ -1,7 +1,6 @@
 package ch.skymarshall.dataflowmgr.examples.simple;
 
 import ch.skymarshall.dataflowmgr.annotations.ExternalAdapters;
-import ch.skymarshall.dataflowmgr.examples.simple.FlowReport.ReportEntry;
 import ch.skymarshall.dataflowmgr.examples.simple.dto.MyData;
 
 @ExternalAdapters
@@ -14,7 +13,7 @@ public class SimpleExternalAdapter {
 	}
 
 	public String getCompletion(final MyData input) {
-		FlowReport.report.add(new ReportEntry("getCompletion"));
+		FlowReport.add("getCompletion");
 		switch (input.parameter) {
 		case "Hello":
 			return "World";
@@ -27,7 +26,7 @@ public class SimpleExternalAdapter {
 
 	public void display(final MyData result) {
 		assert result != null;
-		FlowReport.report.add(new ReportEntry("display"));
+		FlowReport.add("display");
 		this.output = result.output;
 	}
 

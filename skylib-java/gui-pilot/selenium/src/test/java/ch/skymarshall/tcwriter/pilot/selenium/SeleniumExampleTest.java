@@ -93,7 +93,7 @@ public class SeleniumExampleTest {
 
 		@Override
 		public boolean waitFinished() {
-			pilot.element(PROCEED_LOCATION).wait(SeleniumElement.isEnabled());
+			pilot.element(PROCEED_LOCATION).wait(ElementPilot.isEnabled());
 			return true;
 		}
 
@@ -116,7 +116,7 @@ public class SeleniumExampleTest {
 
 		pilot.getDriver().get("http://localhost:8080/example1.html");
 		//
-		pilot.element(PROCEED_LOCATION).wait(SeleniumElement.doClick().followedBy(new ArbitraryDelay(pilot)));
+		pilot.element(PROCEED_LOCATION).wait(ElementPilot.doClick().followedBy(new ArbitraryDelay(pilot)));
 		pilot.expectModalDialog(s -> {
 			s.doAcknowledge();
 			return ModalDialogDetector.ignore();
@@ -124,7 +124,7 @@ public class SeleniumExampleTest {
 		pilot.element(OK_LOCATION).click();
 		pilot.waitModalDialogHandled();
 
-		pilot.element(By.id("NotExisting")).doIfEnabled(SeleniumElement.doClick(), Duration.ofMillis(500));
+		pilot.element(By.id("NotExisting")).doIfEnabled(ElementPilot.doClick(), Duration.ofMillis(500));
 
 		Log.of(this).info(pilot.getActionReport().getFormattedReport());
 

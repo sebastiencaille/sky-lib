@@ -10,23 +10,23 @@ import ch.skymarshall.tcwriter.annotations.TCApi;
 import ch.skymarshall.tcwriter.it.TCGuiPilot;
 import ch.skymarshall.tcwriter.pilot.EditionPolling;
 import ch.skymarshall.tcwriter.pilot.StatePolling;
-import ch.skymarshall.tcwriter.pilot.swing.SwingGuiPilot;
-import ch.skymarshall.tcwriter.pilot.swing.SwingTable;
+import ch.skymarshall.tcwriter.pilot.swing.SwingPilot;
+import ch.skymarshall.tcwriter.pilot.swing.JTablePilot;
 
 @TCApi(description = "Step selector", humanReadable = "Step selector", isSelector = true)
 public class StepSelector {
 
-	private final Consumer<SwingGuiPilot> applier;
+	private final Consumer<SwingPilot> applier;
 
-	protected StepSelector(final Consumer<SwingGuiPilot> applier) {
+	protected StepSelector(final Consumer<SwingPilot> applier) {
 		this.applier = applier;
 	}
 
-	public void select(final SwingGuiPilot guiPilot) {
+	public void select(final SwingPilot guiPilot) {
 		applier.accept(guiPilot);
 	}
 
-	protected static SwingTable getStepsTable(final SwingGuiPilot guiPilot) {
+	protected static JTablePilot getStepsTable(final SwingPilot guiPilot) {
 		return guiPilot.table(TCGuiPilot.STEPS_TABLE);
 	}
 

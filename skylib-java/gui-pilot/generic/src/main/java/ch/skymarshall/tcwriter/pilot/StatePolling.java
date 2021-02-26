@@ -22,7 +22,7 @@ public class StatePolling<C, V> extends Polling<C, V> {
 	}
 
 	/**
-	 * Make polling successful true if condition is accepted
+	 * Make polling successful if condition is accepted
 	 *
 	 * @param <C>
 	 * @param <V>

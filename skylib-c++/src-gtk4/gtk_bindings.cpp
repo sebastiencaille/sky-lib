@@ -19,13 +19,13 @@
  *  Created on: Apr 4, 2012
  *      Author: scaille
  */
-#include "../src-gtk4/gtk_bindings.hh"
 
 #include <iostream>
 
-#include "utils.hh"
+#include <utils.hh>
+#include "gtk_bindings.hh"
 
-namespace ch_skymarshall::gui::gtk {
+namespace ch_skymarshall::gui::gtk4 {
 
 entry_binding::entry_binding(Gtk::Entry &_entry) :
 		m_entry(_entry) {

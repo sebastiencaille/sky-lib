@@ -4,9 +4,9 @@ import javax.swing.JTable;
 
 import org.junit.Assert;
 
-public class SwingTable extends AbstractSwingComponent<SwingTable, JTable> {
+public class JTablePilot extends AbstractSwingComponent<JTablePilot, JTable> {
 
-	public SwingTable(final SwingGuiPilot pilot, final String name) {
+	public JTablePilot(final SwingPilot pilot, final String name) {
 		super(pilot, JTable.class, name);
 	}
 

@@ -12,12 +12,12 @@ import javax.swing.JLabel;
 import ch.skymarshall.tcwriter.pilot.ModalDialogDetector;
 import ch.skymarshall.tcwriter.pilot.ModalDialogDetector.ErrorCheck;
 
-public class SwingModalDialogDetector extends SwingGuiPilot {
+public class SwingModalDialogDetector extends SwingPilot {
 
 	public static List<ModalDialogDetector.ErrorCheck> listDialogs(
 			final Function<SwingModalDialogDetector, ErrorCheck> errorCheck) {
 		final List<ModalDialogDetector.ErrorCheck> result = new ArrayList<>();
-		SwingGuiPilot.invokeAndWait(() -> {
+		SwingPilot.invokeAndWait(() -> {
 			for (final Window window : Window.getWindows()) {
 				if (!window.isVisible() || !(window instanceof JDialog)) {
 					continue;
@@ -61,7 +61,7 @@ public class SwingModalDialogDetector extends SwingGuiPilot {
 	}
 
 	public void closeFunction() {
-		SwingGuiPilot.invokeAndWait(() -> {
+		SwingPilot.invokeAndWait(() -> {
 			getDialog().setVisible(false);
 			getDialog().dispose();
 		});

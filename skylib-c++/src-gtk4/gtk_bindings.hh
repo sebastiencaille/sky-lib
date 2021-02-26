@@ -23,11 +23,12 @@
 #ifndef GTKBINDINGS_H_
 #define GTKBINDINGS_H_
 
-#include <binding_interface.hh>
 #include <glibmm.h>
 #include <gtkmm.h>
 
-namespace ch_skymarshall::gui::gtk {
+#include <binding_interface.hh>
+
+namespace ch_skymarshall::gui::gtk4 {
 
 class entry_binding:
 		public component_binding<Glib::ustring> {

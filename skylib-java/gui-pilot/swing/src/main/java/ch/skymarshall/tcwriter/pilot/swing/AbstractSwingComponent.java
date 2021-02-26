@@ -15,11 +15,11 @@ import ch.skymarshall.tcwriter.pilot.StatePolling;
 public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C extends JComponent>
 		extends AbstractGuiComponent<G, C> {
 
-	protected final SwingGuiPilot pilot;
+	protected final SwingPilot pilot;
 	protected final String name;
 	protected final Class<C> clazz;
 
-	public AbstractSwingComponent(final SwingGuiPilot pilot, final Class<C> clazz, final String name) {
+	public AbstractSwingComponent(final SwingPilot pilot, final Class<C> clazz, final String name) {
 		super(pilot);
 		this.pilot = pilot;
 		this.name = name;
@@ -62,7 +62,7 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 	@Override
 	protected <U> PollingResult<C, U> executePolling(final Polling<C, U> polling) {
 		final Object[] response = new Object[1];
-		SwingGuiPilot.invokeAndWait(() -> response[0] = super.executePolling(polling));
+		SwingPilot.invokeAndWait(() -> response[0] = super.executePolling(polling));
 		return (PollingResult<C, U>) response[0];
 	}
 

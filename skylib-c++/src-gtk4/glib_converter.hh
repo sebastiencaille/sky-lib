@@ -23,9 +23,10 @@
 #ifndef GLIB_CONVERTER_HH_
 #define GLIB_CONVERTER_HH_
 
-#include "binding_interface.hh"
 #include <glibmm.h>
 #include <string>
+
+#include "binding_interface.hh"
 
 namespace ch_skymarshall::gui::glib {
 

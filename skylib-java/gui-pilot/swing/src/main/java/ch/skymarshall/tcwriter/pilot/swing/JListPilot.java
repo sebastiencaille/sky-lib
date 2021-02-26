@@ -7,9 +7,9 @@ import org.junit.Assert;
 import ch.skymarshall.tcwriter.pilot.Polling;
 import ch.skymarshall.tcwriter.pilot.PollingResult;
 
-public class SwingList extends AbstractSwingComponent<SwingList, JList> {
+public class JListPilot extends AbstractSwingComponent<JListPilot, JList> {
 
-	public SwingList(final SwingGuiPilot pilot, final String name) {
+	public JListPilot(final SwingPilot pilot, final String name) {
 		super(pilot, JList.class, name);
 	}
 

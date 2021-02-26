@@ -21,13 +21,13 @@ import ch.skymarshall.tcwriter.pilot.Polling;
 import ch.skymarshall.tcwriter.pilot.PollingResult;
 import ch.skymarshall.tcwriter.pilot.StatePolling;
 
-public class SeleniumElement extends AbstractGuiComponent<SeleniumElement, WebElement> {
+public class ElementPilot extends AbstractGuiComponent<ElementPilot, WebElement> {
 
 	private static final Duration SHORT_POLLING_TIMEOUT = Duration.ofSeconds(5);
 	private final SeleniumGuiPilot pilot;
 	private final By locator;
 
-	public SeleniumElement(final SeleniumGuiPilot pilot, final By locator) {
+	public ElementPilot(final SeleniumGuiPilot pilot, final By locator) {
 		super(pilot);
 		this.pilot = pilot;
 		this.locator = locator;

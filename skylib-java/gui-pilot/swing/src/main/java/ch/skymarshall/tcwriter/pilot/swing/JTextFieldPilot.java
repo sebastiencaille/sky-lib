@@ -5,9 +5,9 @@ import javax.swing.text.JTextComponent;
 
 import org.junit.Assert;
 
-public class SwingText extends AbstractSwingComponent<SwingText, JTextComponent> {
+public class JTextFieldPilot extends AbstractSwingComponent<JTextFieldPilot, JTextComponent> {
 
-	public SwingText(final SwingGuiPilot pilot, final String name) {
+	public JTextFieldPilot(final SwingPilot pilot, final String name) {
 		super(pilot, JTextComponent.class, name);
 	}
 

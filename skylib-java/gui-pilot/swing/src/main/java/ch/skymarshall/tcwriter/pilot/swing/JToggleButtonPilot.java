@@ -4,9 +4,9 @@ import javax.swing.JToggleButton;
 
 import org.junit.Assert;
 
-public class SwingToggleButton extends AbstractSwingComponent<SwingToggleButton, JToggleButton> {
+public class JToggleButtonPilot extends AbstractSwingComponent<JToggleButtonPilot, JToggleButton> {
 
-	public SwingToggleButton(final SwingGuiPilot pilot, final String name) {
+	public JToggleButtonPilot(final SwingPilot pilot, final String name) {
 		super(pilot, JToggleButton.class, name);
 	}
 

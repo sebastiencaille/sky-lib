@@ -23,12 +23,12 @@ import ch.skymarshall.tcwriter.pilot.ModalDialogDetector;
 import ch.skymarshall.tcwriter.pilot.ModalDialogDetector.ErrorCheck;
 import ch.skymarshall.util.helpers.NoExceptionCloseable;
 
-public class SwingGuiPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
+public class SwingPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 
 	private final WeakHashMap<String, JComponent> cache = new WeakHashMap<>();
 	private final Container root;
 
-	public SwingGuiPilot(final Container root) {
+	public SwingPilot(final Container root) {
 		this.root = root;
 	}
 
@@ -193,28 +193,28 @@ public class SwingGuiPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 
 	}
 
-	public SwingButton button(final String name) {
-		return new SwingButton(this, name);
+	public JButtonPilot button(final String name) {
+		return new JButtonPilot(this, name);
 	}
 
-	public SwingLabel label(final String name) {
-		return new SwingLabel(this, name);
+	public JLabelPilot label(final String name) {
+		return new JLabelPilot(this, name);
 	}
 
-	public SwingList list(final String name) {
-		return new SwingList(this, name);
+	public JListPilot list(final String name) {
+		return new JListPilot(this, name);
 	}
 
-	public SwingTable table(final String name) {
-		return new SwingTable(this, name);
+	public JTablePilot table(final String name) {
+		return new JTablePilot(this, name);
 	}
 
-	public SwingText text(final String name) {
-		return new SwingText(this, name);
+	public JTextFieldPilot text(final String name) {
+		return new JTextFieldPilot(this, name);
 	}
 
-	public SwingToggleButton toggleButton(final String name) {
-		return new SwingToggleButton(this, name);
+	public JToggleButtonPilot toggleButton(final String name) {
+		return new JToggleButtonPilot(this, name);
 	}
 
 }

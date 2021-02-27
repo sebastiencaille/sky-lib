@@ -10,10 +10,7 @@
 namespace ch_skymarshall::util {
 
 void run_in_gtk(std::function<void()> _lambda) {
-	Glib::signal_idle().connect([_lambda]() {
-		_lambda();
-		return false;
-	});
+	Glib::signal_idle().connect_once(_lambda);
 }
 
 }

@@ -185,7 +185,8 @@ HelloWorld::HelloWorld() :
 
 	testProperty2.set(NULL, 1);
 
-	run_in_gtk([this]() { this->testGui(); });
+	thread testGui(&HelloWorld::testGui, this);
+	testGui.detach();
 }
 
 void HelloWorld::testGui() {

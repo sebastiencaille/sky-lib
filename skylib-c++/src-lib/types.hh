@@ -19,9 +19,9 @@ class property;
 
 class gui_exception: public std::exception {
 private:
-	const std::basic_string<char> m_what;
+	const std::string m_what;
 public:
-	explicit gui_exception(std::basic_string<char> _message) :
+	explicit gui_exception(std::string const& _message) :
 			m_what(_message) {
 	}
 

@@ -12,9 +12,8 @@
 #include <memory>
 #include <functional>
 
-#include <glibmm.h>
 
-namespace ch_skymarshall::util {
+namespace ch_skymarshall::utils {
 
 #ifdef DEBUG_DESTR
 #define DESTR_LOG(p) cout << p << endl;
@@ -49,8 +48,6 @@ namespace ch_skymarshall::util {
 		return listener;
 	}
 
-
-void run_in_gtk(std::function<void()> _lambda);
 
 }
 

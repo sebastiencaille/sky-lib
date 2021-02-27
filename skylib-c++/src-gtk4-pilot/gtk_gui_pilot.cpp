@@ -5,8 +5,6 @@
  *      Author: scaille
  */
 
-#include <iostream>
-
 #include <utils.hh>
 #include "gtk_entry_pilot.hh"
 #include "gtk_gui_pilot.hh"
@@ -33,7 +31,6 @@ shared_ptr<gtk_entry_pilot> gtk_gui_pilot::entry(string _name) {
 }
 
 Gtk::Widget* gtk_gui_pilot::find(Gtk::Widget *_widget, ustring &_name) {
-	cout << hex << _widget->get_name() << endl;
 	if (_name == _widget->get_name()) {
 		return _widget;
 	}

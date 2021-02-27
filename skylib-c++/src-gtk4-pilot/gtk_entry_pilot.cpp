@@ -23,6 +23,7 @@ void gtk_entry_pilot::set_text(string text) {
 			return false;
 		}
 		m_entry->set_text(text);
+
 		return true;
 	});
 	wait(set_text, std::chrono::seconds(30), [](polling &p) {

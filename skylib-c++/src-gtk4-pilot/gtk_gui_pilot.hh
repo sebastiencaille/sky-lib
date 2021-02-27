@@ -12,6 +12,7 @@
 #include <gtkmm.h>
 
 #include <utils.hh>
+#include <types.hh>
 #include "gtk_entry_pilot.hh"
 
 namespace ch_skymarshall::gui::gtk4::pilot {
@@ -19,12 +20,10 @@ namespace ch_skymarshall::gui::gtk4::pilot {
 using namespace std;
 using Glib::ustring;
 
-class gui_pilot_exception: public std::exception {
-private:
-	const basic_string<char> m_msg;
+class gui_pilot_exception: public ch_skymarshall::gui::gui_exception {
 public:
 	gui_pilot_exception(const basic_string<char> _msg) :
-			exception(), m_msg(_msg) {
+		gui_exception(_msg) {
 	}
 
 	~gui_pilot_exception()

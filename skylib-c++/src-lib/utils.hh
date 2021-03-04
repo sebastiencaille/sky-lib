@@ -12,7 +12,8 @@
 #include <memory>
 #include <functional>
 
-namespace ch_skymarshall::util {
+
+namespace ch_skymarshall::utils {
 
 #ifdef DEBUG_DESTR
 #define DESTR_LOG(p) cout << p << endl;
@@ -24,26 +25,29 @@ namespace ch_skymarshall::util {
 #define DESTR_WITH_LOG(p) = default;;
 #endif
 
-template<class Input, class UnaryFunction>
-constexpr UnaryFunction for_each_vector(std::vector<Input> &vec, UnaryFunction f) {
-	for (Input &input : vec) {
-		f(input);
-	}
-	return f; // implicit move since C++11
-}
 
-template<typename _T> std::shared_ptr<_T> withLazy(std::weak_ptr<_T> &_lazy,
-		std::weak_ptr<void> const &_owner,
-		std::function<std::shared_ptr<_T>()> _allocator) {
-	std::shared_ptr<_T> listener;
-	if (auto existing = _lazy.lock()) {
-		listener = existing;
-	} else {
-		listener = _allocator();
-		_lazy = existing;
+	template<class Input, class UnaryFunction>
+	constexpr UnaryFunction for_each_vector(std::vector<Input> &vec,
+			UnaryFunction f) {
+		for (Input &input : vec) {
+			f(input);
+		}
+		return f; // implicit move since C++11
 	}
-	return listener;
-}
+
+	template<typename _T> std::shared_ptr<_T> withLazy(std::weak_ptr<_T> &_lazy,
+			std::weak_ptr<void> const &_owner,
+			std::function<std::shared_ptr<_T>()> _allocator) {
+		std::shared_ptr<_T> listener;
+		if (auto existing = _lazy.lock()) {
+			listener = existing;
+		} else {
+			listener = _allocator();
+			_lazy = existing;
+		}
+		return listener;
+	}
+
 
 }
 

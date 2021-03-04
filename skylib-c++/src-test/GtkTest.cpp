@@ -184,8 +184,9 @@ HelloWorld::HelloWorld() :
 	m_error.set_attributes(atrlist);
 
 	testProperty2.set(NULL, 1);
-	thread testThread(&HelloWorld::testGui, this);
-	testThread.detach();
+
+	thread testGui(&HelloWorld::testGui, this);
+	testGui.detach();
 }
 
 void HelloWorld::testGui() {

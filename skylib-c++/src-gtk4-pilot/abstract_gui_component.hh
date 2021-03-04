@@ -32,9 +32,11 @@ public:
 	}
 };
 
+
 class abstract_gui_component {
 protected:
-	void wait(polling& _polling, chrono::seconds _duration, function<void (polling&)> _onFailure);
+	virtual void wait(polling& _polling, chrono::seconds _duration, function<void (polling&)> _onFailure);
+	virtual bool executePolling(polling &_polling);
 
 public:
 	abstract_gui_component();

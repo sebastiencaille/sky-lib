@@ -19,7 +19,7 @@ class property;
 
 class gui_exception: public std::exception {
 private:
-	std::string const m_what;
+	const std::string m_what;
 public:
 	explicit gui_exception(std::string const& _message) :
 			m_what(_message) {

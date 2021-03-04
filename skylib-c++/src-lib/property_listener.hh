@@ -58,8 +58,8 @@ public:
  */
 class property_listener_dispatcher: public property_listener {
 public:
-	using fire_function = std::function<void (source_ptr, const string&, const void*, const void*)>;
-	using before_after_function = std::function<void (source_ptr, property*)>;
+	using fire_function = function<void (source_ptr, const string&, const void*, const void*)>;
+	using before_after_function = function<void (source_ptr, property*)>;
 private:
 	/** Keep reference as long as listener is valid */
 	shared_ptr<void> m_owner;
@@ -73,7 +73,7 @@ public:
 	static shared_ptr<property_listener_dispatcher> ofLazy(
 			weak_ptr<property_listener_dispatcher> &_lazy,
 			weak_ptr<void> const &_owner, fire_function const &_fireFunction) {
-		return ch_skymarshall::util::withLazy<property_listener_dispatcher>(
+		return ch_skymarshall::utils::withLazy<property_listener_dispatcher>(
 				_lazy, _owner,
 				[_owner, _fireFunction] {
 					return make_shared<property_listener_dispatcher>(_owner,
@@ -86,7 +86,7 @@ public:
 			weak_ptr<void> const &_owner,
 			before_after_function const &_beforeFireFunction,
 			before_after_function const &_afterFireFunction) {
-		return ch_skymarshall::util::withLazy<property_listener_dispatcher>(
+		return ch_skymarshall::utils::withLazy<property_listener_dispatcher>(
 				_lazy, _owner,
 				[_owner, _beforeFireFunction, _afterFireFunction] {
 					return make_shared<property_listener_dispatcher>(_owner,

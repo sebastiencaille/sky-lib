@@ -50,7 +50,7 @@ public:
 		errno = 0;
 		long result = strtol(_componentValue.c_str(), &endPtr, 10);
 		if (errno != 0 || *endPtr != '\0' || _componentValue.empty()) {
-			throw gui_exception(string("Invalid number: " + _componentValue));
+			throw gui_exception("Invalid number: " + _componentValue);
 		}
 		return (int) result;
 	}

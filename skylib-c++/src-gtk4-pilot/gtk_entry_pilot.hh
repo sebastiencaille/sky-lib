@@ -20,10 +20,10 @@ using namespace std;
 
 class gtk_entry_pilot: public abstract_gtk_component {
 private:
-	Gtk::Entry *m_entry;
+	Gtk::Entry *m_entry = NULL;
 
 public:
-	gtk_entry_pilot(Gtk::Entry *_entry);
+	gtk_entry_pilot(gtk_gui_pilot* _gui_pilot, string const& _name);
 	virtual ~gtk_entry_pilot();
 
 	void set_text(string text);

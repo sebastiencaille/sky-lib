@@ -8,21 +8,30 @@
 #ifndef ABSTRACTGTKCOMPONENT_H_
 #define ABSTRACTGTKCOMPONENT_H_
 
+#include <memory>
 #include <gtkmm.h>
 
 #include "abstract_gui_component.hh"
 
 namespace ch_skymarshall::gui::gtk4::pilot {
 
-class abstract_gtk_component: public ch_skymarshall::gui::pilot::abstract_gui_component {
+using namespace ch_skymarshall::gui::pilot;
+
+class gtk_gui_pilot;
+
+class abstract_gtk_component: public abstract_gui_component {
 
 protected:
+	gtk_gui_pilot* const m_gui_pilot;
+	string const m_name;
+
 	bool isEditable(Gtk::Widget *widget);
 
 public:
-	abstract_gtk_component();
+	abstract_gtk_component(gtk_gui_pilot* _gui_pilot, string _name);
 	virtual ~abstract_gtk_component();
 
+	bool executePolling(polling &_polling) override;
 };
 }
 

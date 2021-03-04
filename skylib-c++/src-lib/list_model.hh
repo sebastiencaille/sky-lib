@@ -39,7 +39,7 @@
 
 namespace ch_skymarshall::gui {
 
-using namespace ch_skymarshall::util;
+using namespace ch_skymarshall::utils;
 using namespace std;
 using namespace __gnu_cxx;
 using namespace std::placeholders;

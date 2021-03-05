@@ -2,7 +2,6 @@ package ch.skymarshall.dataflowmgr.examples.simple;
 
 import ch.skymarshall.dataflowmgr.annotations.Input;
 import ch.skymarshall.dataflowmgr.annotations.Processors;
-import ch.skymarshall.dataflowmgr.examples.simple.FlowReport.ReportEntry;
 import ch.skymarshall.dataflowmgr.examples.simple.dto.MyData;
 
 @Processors

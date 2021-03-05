@@ -41,7 +41,7 @@ public class TestObjectControllerModelController extends GuiController {
 			public void commit() {
 				super.commit();
 				Logger logger = Log.of(TestObjectControllerModelController.class);
-				model.values().stream().map(Object::toString).forEach(logger::info); 
+				model.values().stream().map(Object::toString).forEach(logger::info);
 			}
 		};
 	}

@@ -17,7 +17,8 @@ import ch.skymarshall.util.generators.JavaCodeGenerator;
 
 public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 
-	public ConditionalFlowCtrlGenerator(FlowToProceduralJavaVisitor visitor, JavaCodeGenerator<RuntimeException> generator) {
+	public ConditionalFlowCtrlGenerator(FlowToProceduralJavaVisitor visitor,
+			JavaCodeGenerator<RuntimeException> generator) {
 		super(visitor, generator);
 	}
 
@@ -70,7 +71,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 			conditions.add(executeDefaultVarNameOf(context));
 		}
 		generator.openIf(String.join(" && ", conditions));
-	genContext.next(context);
+		genContext.next(context);
 		generator.appendIndented(visitor.availableVarNameOf(context.outputDataPoint)).append(" = true").eos();
 		generator.closeBlock();
 
@@ -83,7 +84,8 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 		visitor.definedDataPoints.add(context.outputDataPoint);
 		visitor.appendNewVariable(context.outputDataPoint, context.getProcessor());
 		generator.append(" = null").eos();
-		generator.addLocalVariable(Boolean.TYPE.getName(), visitor.availableVarNameOf(context.outputDataPoint), "false");
+		generator.addLocalVariable(Boolean.TYPE.getName(), visitor.availableVarNameOf(context.outputDataPoint),
+				"false");
 	}
 
 	/**

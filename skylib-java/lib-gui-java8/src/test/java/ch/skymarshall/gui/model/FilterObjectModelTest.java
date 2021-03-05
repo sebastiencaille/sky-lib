@@ -15,17 +15,19 @@
  ******************************************************************************/
 package ch.skymarshall.gui.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
 import java.util.Arrays;
 import java.util.function.Predicate;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import ch.skymarshall.gui.TestObject;
 import ch.skymarshall.gui.model.views.IListView;
 import ch.skymarshall.gui.model.views.ListViews;
 
-public class FilterObjectModelTest extends Assert {
+public class FilterObjectModelTest {
 
 	private static final IListView<TestObject> COMPARATOR = ListViews.sorted((o1, o2) -> o1.getVal() - o2.getVal());
 

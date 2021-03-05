@@ -27,10 +27,9 @@ public class PropertyEntry {
 		this.readOnly = readOnly;
 	}
 
-	protected PropertyEntry(final AbstractTypedProperty<?> property,
-			Class<?> propertyType, final boolean readOnly,
+	protected PropertyEntry(final AbstractTypedProperty<?> property, Class<?> propertyType, final boolean readOnly,
 			final String label, final String tooltip) {
-		this(property,AbstractTypedProperty::createBindingChain, propertyType, readOnly, label, tooltip);
+		this(property, AbstractTypedProperty::createBindingChain, propertyType, readOnly, label, tooltip);
 	}
 
 	public AbstractTypedProperty<?> getProperty() {

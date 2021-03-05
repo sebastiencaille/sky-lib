@@ -1,10 +1,12 @@
 package ch.skymarshall.util.dao.metadata;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class MetaDataTest {
 
@@ -39,20 +41,20 @@ public class MetaDataTest {
 
 		List<String> attr = metaData.getAttributes().stream().map(Object::toString).sorted()
 				.collect(Collectors.toList());
-		Assert.assertTrue(attr.toString(), attr.contains("ValA(int)"));
-		Assert.assertTrue(attr.toString(), attr.contains("ValB(int, ReadOnly)"));
-		Assert.assertTrue(attr.toString(), attr.contains("ValC(int)"));
+		assertTrue(attr.contains("ValA(int)"), () -> attr.toString());
+		assertTrue(attr.contains("ValB(int, ReadOnly)"), () -> attr.toString());
+		assertTrue(attr.contains("ValC(int)"), () -> attr.toString());
 
 		testMetaData.getAttributeAccessor("ValA").setValue(123);
-		Assert.assertEquals(123, test.getValA());
-		Assert.assertEquals(123, testMetaData.getAttributeAccessor("ValA").getValue());
-		
-		Assert.assertEquals(456, testMetaData.getAttributeAccessor("ValB").getValue());
-		
-		Assert.assertEquals(NioFieldAttribute.class, metaData.getAttribute("ValC").getClass());
+		assertEquals(123, test.getValA());
+		assertEquals(123, testMetaData.getAttributeAccessor("ValA").getValue());
+
+		assertEquals(456, testMetaData.getAttributeAccessor("ValB").getValue());
+
+		assertEquals(NioFieldAttribute.class, metaData.getAttribute("ValC").getClass());
 		testMetaData.getAttributeAccessor("ValC").setValue(789);
-		Assert.assertEquals(789, test.valC);
-		Assert.assertEquals(789, testMetaData.getAttributeAccessor("ValC").getValue());
+		assertEquals(789, test.valC);
+		assertEquals(789, testMetaData.getAttributeAccessor("ValC").getValue());
 	}
 
 }

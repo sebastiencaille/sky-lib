@@ -17,10 +17,11 @@ package ch.skymarshall.gui.mvc;
 
 import static ch.skymarshall.gui.mvc.properties.Configuration.errorNotifier;
 import static ch.skymarshall.gui.mvc.properties.Configuration.persistent;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import ch.skymarshall.gui.TestObject;
 import ch.skymarshall.gui.mvc.converters.ConversionException;
@@ -32,7 +33,7 @@ import ch.skymarshall.gui.mvc.properties.Configuration;
 import ch.skymarshall.gui.mvc.properties.IntProperty;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 
-public class ModelBasicTest extends Assert {
+public class ModelBasicTest {
 
 	private class TestGuiModel extends GuiModel {
 
@@ -58,7 +59,7 @@ public class ModelBasicTest extends Assert {
 	private GuiController controller;
 	private TestGuiModel model;
 
-	@Before
+	@BeforeEach
 	public void init() {
 		controller = new GuiController(new ControllerPropertyChangeSupport(this, false));
 		model = new TestGuiModel(controller);
@@ -114,7 +115,8 @@ public class ModelBasicTest extends Assert {
 		// Test exception
 		binding.setValue("bla");
 		assertEquals(456, model.integerProperty.getValue());
-		assertNotNull(model.errorProperty.getValue().getContent());
+		Assertions.assertNotNull(model.errorProperty.getValue().getContent(),
+				() -> "model.errorProperty.getValue().getContent()");
 		assertEquals(ConversionException.class, model.errorProperty.getValue().getContent().getClass());
 	}
 

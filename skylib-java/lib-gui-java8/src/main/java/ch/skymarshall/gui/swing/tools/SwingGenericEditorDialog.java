@@ -49,13 +49,11 @@ public class SwingGenericEditorDialog extends JDialog implements IGenericEditor 
 		setSize((int) (getWidth() * 1.2), (int) (getHeight() * 1.2));
 	}
 
-
 	@Override
 	public IBindingController addEntry(final PropertyEntry prop) {
 		return panel.addEntry(prop);
 	}
 
-	
 	private void close() {
 		setVisible(false);
 		dispose();

@@ -121,7 +121,7 @@ public class ModelClassProcessor {
 		final UntypedDataObjectMetaData metaData = new UntypedDataObjectMetaData(modelClass, false);
 
 		final String strType = metaData.getDataType().getSimpleName();
-		//context.addImport(metaData.getDataType());
+		// context.addImport(metaData.getDataType());
 
 		context.properties.put("modelClass", getClassName());
 		context.properties.put("objectClass", strType);

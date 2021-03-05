@@ -24,7 +24,8 @@ public class TestParameterValue extends IdObject {
 	private final String apiParameterId;
 
 	/**
-	 * A test api used to create selector/parameters, or a reference, or a simple value type 
+	 * A test api used to create selector/parameters, or a reference, or a simple
+	 * value type
 	 */
 	@JsonIgnore
 	private TestParameterFactory factory;

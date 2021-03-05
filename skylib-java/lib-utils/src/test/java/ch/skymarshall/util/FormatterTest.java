@@ -1,10 +1,12 @@
 package ch.skymarshall.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.io.IOException;
 import java.util.Arrays;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import ch.skymarshall.util.text.ArrowIndentationManager;
 import ch.skymarshall.util.text.SimpleTextFormatter;
@@ -30,10 +32,10 @@ public class FormatterTest {
 
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void testExceptionManagement() throws IOException {
 		SimpleTextFormatter<IOException> tf = new SimpleTextFormatter<>(new ExceptionOutput());
-		tf.append("Hello");
+		assertThrows(IOException.class, () -> tf.append("Hello"));
 	}
 
 	@Test
@@ -44,7 +46,7 @@ public class FormatterTest {
 		tf.appendIndentedLine("Hello");
 		tf.indented(t -> t.appendIndentedLine("World"));
 		tf.appendIndentedLine("Done");
-		Assert.assertEquals(Arrays.asList("--> Hello", "    World", "--> Done"), output.getLines());
+		assertEquals(Arrays.asList("--> Hello", "    World", "--> Done"), output.getLines());
 	}
 
 }

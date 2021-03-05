@@ -15,14 +15,15 @@
  ******************************************************************************/
 package ch.skymarshall.gui;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 
 import javax.swing.JTable;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import ch.skymarshall.gui.model.ListModel;
 import ch.skymarshall.gui.model.views.IListView;
@@ -33,7 +34,7 @@ import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.properties.ListProperty;
 import ch.skymarshall.gui.swing.factories.SwingBindings;
 
-public class TableTest extends Assert {
+public class TableTest {
 
 	private static final IListView<TestObject> VIEW = ListViews.sorted((o1, o2) -> o1.getVal() - o2.getVal());
 

@@ -5,7 +5,6 @@ import ch.skymarshall.dataflowmgr.generator.writers.dot.FlowToDotVisitor.Graph;
 
 public abstract class AbstractDotFlowGenerator implements IFlowGenerator<String> {
 
-
 	protected final FlowToDotVisitor visitor;
 	protected final Graph graph;
 

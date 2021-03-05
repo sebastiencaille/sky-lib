@@ -16,7 +16,7 @@
 package ch.skymarshall.gui.mvc.properties;
 
 public interface IPersister<T> {
-	
+
 	T get();
 
 	void set(T value);

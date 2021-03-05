@@ -29,7 +29,7 @@ public class TestCaseToJava {
 		final IModelPersister persister = new JsonModelPersister();
 		final GeneratorConfig config = persister.readConfiguration(args[0]);
 		persister.setConfiguration(config);
-		
+
 		final TestDictionary testDictionary = persister.readTestDictionary();
 		final String jsonTC = args[1];
 		final TestCase tc = persister.readTestCase(jsonTC, testDictionary);

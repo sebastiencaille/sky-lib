@@ -1,8 +1,9 @@
 // File generated from template
 package ch.skymarshall.dataflowmgr.examples.simple;
 
-import org.junit.Test;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 
 
 public class SimpleFlow extends AbstractFlow {
@@ -43,12 +44,12 @@ public class SimpleFlow extends AbstractFlow {
 		simpleExternalAdapter.reset();
 		
 	 	execute("Hello");
-		Assert.assertEquals("Hello -> complete with World", simpleExternalAdapter.getOutput());
+		Assertions.assertEquals("Hello -> complete with World", simpleExternalAdapter.getOutput());
 		
 		execute("Hi");
-		Assert.assertEquals("Hi -> complete with There", simpleExternalAdapter.getOutput());
+		Assertions.assertEquals("Hi -> complete with There", simpleExternalAdapter.getOutput());
 		
 		execute("Huh");
-		Assert.assertEquals("Huh -> keep as is", simpleExternalAdapter.getOutput());
+		Assertions.assertEquals("Huh -> keep as is", simpleExternalAdapter.getOutput());
 	}
 }

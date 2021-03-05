@@ -1,7 +1,8 @@
 package ${package};
 
-import org.junit.Test;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 ${imports}
 
 public class ${flow.name} extends AbstractFlow {
@@ -15,12 +16,12 @@ public class ${flow.name} extends AbstractFlow {
 		simpleExternalAdapter.reset();
 		
 	 	execute("Hello");
-		Assert.assertEquals("Hello -> complete with World", simpleExternalAdapter.getOutput());
+		Assertions.assertEquals("Hello -> complete with World", simpleExternalAdapter.getOutput());
 		
 		execute("Hi");
-		Assert.assertEquals("Hi -> complete with There", simpleExternalAdapter.getOutput());
+		Assertions.assertEquals("Hi -> complete with There", simpleExternalAdapter.getOutput());
 		
 		execute("Huh");
-		Assert.assertEquals("Huh -> keep as is", simpleExternalAdapter.getOutput());
+		Assertions.assertEquals("Huh -> keep as is", simpleExternalAdapter.getOutput());
 	}
 }

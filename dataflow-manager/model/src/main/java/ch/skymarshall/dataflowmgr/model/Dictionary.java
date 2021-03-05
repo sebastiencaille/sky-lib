@@ -42,7 +42,6 @@ public class Dictionary {
 
 	}
 
-
 	public final Calls<Processor> processors = new Calls<>("processor", Processor::derivate);
 
 	public final Calls<ExternalAdapter> externalAdapters = new Calls<>("externalAdapter", ExternalAdapter::derivate);

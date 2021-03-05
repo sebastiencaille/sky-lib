@@ -23,7 +23,6 @@ public class ADataObject {
 
 	private String anAttribute = "data1";
 
-
 	public String getAnAttribute() {
 		return anAttribute;
 	}

@@ -82,8 +82,8 @@ public class ConditionalFlowCtrl extends WithId implements IFlowCheck {
 		bindings.addAll(config.bindings.stream().filter(notEq(defaultBindingBuilder.orElse(null)))
 				.map(b -> b.addRule(condition(this)).build()).collect(toList()));
 
-		this.defaultBinding = defaultBindingBuilder
-				.map(b -> b.addRule(condition(this)).addRules(bindings.stream().map(ConditionalFlowCtrl::exclusion).collect(toSet())).build());
+		this.defaultBinding = defaultBindingBuilder.map(b -> b.addRule(condition(this))
+				.addRules(bindings.stream().map(ConditionalFlowCtrl::exclusion).collect(toSet())).build());
 		this.defaultBinding.ifPresent(bindings::add);
 	}
 

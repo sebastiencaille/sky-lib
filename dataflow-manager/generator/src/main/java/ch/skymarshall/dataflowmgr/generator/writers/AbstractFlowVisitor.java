@@ -59,7 +59,7 @@ public abstract class AbstractFlowVisitor {
 		public Processor getProcessor() {
 			return binding.getProcessor();
 		}
-		
+
 	}
 
 	protected final Flow flow;
@@ -70,7 +70,6 @@ public abstract class AbstractFlowVisitor {
 	private final Map<Binding, List<Binding>> reverseDeps = new HashMap<>();
 	protected final List<BindingContext> processOrder = new ArrayList<>();
 
-	
 	protected abstract void process(BindingContext context);
 
 	protected AbstractFlowVisitor(final Flow flow) {
@@ -155,6 +154,5 @@ public abstract class AbstractFlowVisitor {
 	public void setConditional(final String dataPoint) {
 		conditionalState.add(dataPoint);
 	}
-	
 
 }

@@ -1,18 +1,20 @@
 package ch.skymarshall.gui.mvc;
 
 import static ch.skymarshall.gui.mvc.properties.Configuration.errorNotifier;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import javax.swing.JCheckBox;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import ch.skymarshall.gui.mvc.factories.Converters;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.gui.swing.factories.SwingBindings;
 
-public class SwingBindingsTest extends Assert {
+public class SwingBindingsTest {
 	private class TestGuiModel extends GuiModel {
 
 		private final ObjectProperty<String> stringProperty;
@@ -32,7 +34,7 @@ public class SwingBindingsTest extends Assert {
 	private GuiController controller;
 	private TestGuiModel model;
 
-	@Before
+	@BeforeEach
 	public void init() {
 		controller = new GuiController(new ControllerPropertyChangeSupport(this, false));
 		model = new TestGuiModel(controller);
@@ -48,10 +50,10 @@ public class SwingBindingsTest extends Assert {
 		model.stringProperty.attach();
 
 		assertEquals(Boolean.FALSE.toString(), model.stringProperty.getValue());
-		assertFalse(cb.isSelected());
+		assertFalse(cb.isSelected(), () -> "cb.isSelected");
 
 		model.stringProperty.setValue(this, Boolean.TRUE.toString());
-		assertTrue(cb.isSelected());
+		assertTrue(cb.isSelected(), () -> "cb.isSelected");
 
 		cb.setSelected(true);
 		assertEquals(Boolean.TRUE.toString(), model.stringProperty.getValue());
@@ -59,7 +61,7 @@ public class SwingBindingsTest extends Assert {
 		cbBinding.unbind();
 
 		model.stringProperty.setValue(this, Boolean.FALSE.toString());
-		assertTrue(cb.isSelected());
+		assertTrue(cb.isSelected(), () -> "cb.isSelected");
 
 		model.stringProperty.setValue(this, Boolean.TRUE.toString());
 		cb.setSelected(false);

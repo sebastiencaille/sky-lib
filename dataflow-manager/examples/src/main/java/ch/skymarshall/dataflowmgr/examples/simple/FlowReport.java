@@ -26,6 +26,7 @@ public class FlowReport {
 	}
 
 	public static final List<ReportEntry> report = Collections.synchronizedList(new ArrayList<>());
+
 	public static void add(String text) {
 		report.add(new ReportEntry(text));
 	}

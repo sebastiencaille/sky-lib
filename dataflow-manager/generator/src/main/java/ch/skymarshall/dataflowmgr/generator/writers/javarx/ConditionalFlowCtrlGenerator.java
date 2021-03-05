@@ -58,7 +58,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 
 		flowFactories.closeBlock();
 
-		genContext.getLocalContext().setTopCall(  topCall);
+		genContext.getLocalContext().setTopCall(topCall);
 		genContext.next(context);
 	}
 
@@ -108,7 +108,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 						toCamelCase(visitor.varNameOf(context.binding)), toCamelCase(context.binding.toDataPoint())) //
 				.eoli().append(".doOnTerminate(() -> Arrays.stream(callbacks).forEach(Runnable::run))") //
 				.eos().unindent().eol();
-		genContext.setTopCall( "activators");
+		genContext.setTopCall("activators");
 	}
 
 }

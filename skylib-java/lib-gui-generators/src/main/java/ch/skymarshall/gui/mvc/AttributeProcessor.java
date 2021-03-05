@@ -245,7 +245,7 @@ public abstract class AttributeProcessor {
 
 		@Override
 		public void addImports(AttributeProcessor attributeProcessor) {
-			// noop 
+			// noop
 		}
 
 	}

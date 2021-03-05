@@ -8,7 +8,7 @@ import ch.skymarshall.util.generators.JavaCodeGenerator;
 
 public abstract class AbstractFlowGenerator implements IFlowGenerator<AbstractFlowGenerator.GenContext> {
 
-	public static class GenContext  {
+	public static class GenContext {
 
 		public final boolean debug;
 		public final List<Binding> bindingDeps;
@@ -18,10 +18,11 @@ public abstract class AbstractFlowGenerator implements IFlowGenerator<AbstractFl
 			this.debug = debug;
 			this.bindingDeps = bindingDeps;
 		}
-		
+
 		public String getTopCall() {
 			return topCall;
 		}
+
 		public void setTopCall(String topCall) {
 			this.topCall = topCall;
 		}

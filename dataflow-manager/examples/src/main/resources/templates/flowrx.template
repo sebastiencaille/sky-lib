@@ -3,8 +3,6 @@ package ${package};
 import ch.skymarshall.dataflowmgr.examples.simple.FlowReport;
 
 import ch.skymarshall.util.helpers.Log;
-import org.junit.Test;
-import org.junit.Assert;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.util.concurrent.Semaphore;
@@ -12,6 +10,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Function;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 ${imports}
 
 public class ${flow.name} extends ch.skymarshall.dataflowmgr.examples.simple.AbstractFlow {
@@ -46,8 +47,8 @@ public class ${flow.name} extends ch.skymarshall.dataflowmgr.examples.simple.Abs
 		FlowReport.report.clear();
 		simpleExternalAdapter.reset();
 		final FlowExecution result = execute(in, e -> e.doOnSuccess(r -> finished.release())).blockingGet();
-		Assert.assertTrue(finished.tryAcquire(100, TimeUnit.MILLISECONDS));
-		Assert.assertEquals(out, simpleExternalAdapter.getOutput());
+		Assertions.assertTrue(finished.tryAcquire(100, TimeUnit.MILLISECONDS), () -> "Promise executed");
+		Assertions.assertEquals(out, simpleExternalAdapter.getOutput());
 		Log.of(this).info(FlowReport.report.toString());
 	}
 

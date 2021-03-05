@@ -1,6 +1,9 @@
 package ch.skymarshall.dataflowmgr.examples;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,8 +11,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.UUID;
-
-import org.junit.Test;
 
 import ch.skymarshall.dataflowmgr.annotations.Conditions;
 import ch.skymarshall.dataflowmgr.generator.dictionary.java.JavaToDictionary;
@@ -50,8 +51,8 @@ public class SimpleTest {
 
 		// Services (see AbstractFlow)
 		final Calls<Processor> simpleService = dictionary.processors.map(SIMPLE_SERVICE_CLASS, "simpleService");
-		final Calls<CustomCall> simpleFlowConditions = (Calls<CustomCall>) dictionary.flowControl.get(Conditions.class).map(SIMPLE_FLOW_CONDITIONS_CLASS,
-				"simpleFlowConditions");
+		final Calls<CustomCall> simpleFlowConditions = (Calls<CustomCall>) dictionary.flowControl.get(Conditions.class)
+				.map(SIMPLE_FLOW_CONDITIONS_CLASS, "simpleFlowConditions");
 		final Calls<ExternalAdapter> simpleExternalAdapter = dictionary.externalAdapters
 				.map(SIMPLE_EXTERNAL_ADAPTER_CLASS, "simpleExternalAdapter");
 
@@ -71,7 +72,7 @@ public class SimpleTest {
 		final Flow flow = Flow.builder("SimpleFlow", UUID.randomUUID(), "java.lang.String")//
 				.add(Binding.builder(Flow.ENTRY_POINT, init)) // entry point -> init(...)
 				.add(ConditionalFlowCtrl.builder("CompleteData") //
-						.add(mustComplete, Binding.builder( init, complete) // if mustComplete, init -> complete
+						.add(mustComplete, Binding.builder(init, complete) // if mustComplete, init -> complete
 								.withExternalData(getCompletion) // using some external data
 								.as(DP_Complete)) // name the output
 						.defaultCase(Binding.builder(init, keepAsIs)// fallback, init -> keepAsIs

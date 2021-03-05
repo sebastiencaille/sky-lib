@@ -8,16 +8,16 @@ import java.util.List;
 import ch.skymarshall.dataflowmgr.generator.writers.AbstractFlowVisitor.BindingContext;
 import ch.skymarshall.dataflowmgr.generator.writers.IFlowGenerator.BaseGenContext;
 
-public class FlowGeneratorVisitor<T > {
+public class FlowGeneratorVisitor<T> {
 
 	protected final List<IFlowGenerator<T>> flowGenerators = new ArrayList<>();
-	
+
 	public void register(IFlowGenerator<T> flowCtrl) {
 		flowGenerators.add(flowCtrl);
 	}
 
 	public void generateFlow(final BindingContext context, T genContext) {
-		new BaseGenContext<>(getFlowGenerators(context), genContext).next(context);	
+		new BaseGenContext<>(getFlowGenerators(context), genContext).next(context);
 	}
 
 	private List<IFlowGenerator<T>> getFlowGenerators(BindingContext context) {

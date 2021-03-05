@@ -48,13 +48,11 @@ public class BooleanProperty extends AbstractTypedProperty<Boolean> {
 
 	@SafeVarargs
 	@Override
-	public final BooleanProperty configureTyped(
-			final Consumer<AbstractTypedProperty<Boolean>>... propertyConfigurer) {
+	public final BooleanProperty configureTyped(final Consumer<AbstractTypedProperty<Boolean>>... propertyConfigurer) {
 		super.configureTyped(propertyConfigurer);
 		return this;
 	}
 
-	
 	public boolean getValue() {
 		return value;
 	}

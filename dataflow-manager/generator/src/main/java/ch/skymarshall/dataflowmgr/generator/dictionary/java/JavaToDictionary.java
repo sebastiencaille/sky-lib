@@ -21,14 +21,15 @@ public class JavaToDictionary {
 
 	public JavaToDictionary() {
 		ProcessorToDictionary processorHandler = new ProcessorToDictionary();
-		addAnnotation(Processors.class,  processorHandler::addToDictionary);
+		addAnnotation(Processors.class, processorHandler::addToDictionary);
 		ExternalAdapterToDictionary externalAdapterHandler = new ExternalAdapterToDictionary();
 		addAnnotation(ExternalAdapters.class, externalAdapterHandler::addToDictionary);
 		CaseFlowCtrlToDictionary caseCtrlToDictionary = new CaseFlowCtrlToDictionary();
 		addAnnotation(Conditions.class, caseCtrlToDictionary::addToDictionary);
 	}
 
-	public void addAnnotation(Class<? extends Annotation>  annotation, BiConsumer<Dictionary, Class<?>> annotatedClassHandler) {
+	public void addAnnotation(Class<? extends Annotation> annotation,
+			BiConsumer<Dictionary, Class<?>> annotatedClassHandler) {
 		classFinder.addExpectedAnnotation(annotation, Policy.CLASS_ONLY);
 		annotation2Handlers.put(annotation, annotatedClassHandler);
 	}

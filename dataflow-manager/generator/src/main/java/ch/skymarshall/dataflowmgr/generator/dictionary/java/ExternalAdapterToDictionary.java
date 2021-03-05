@@ -13,10 +13,9 @@ public class ExternalAdapterToDictionary extends AbstractClassToDictionary {
 			methodsOf(clazz).forEach(m -> dictionary.externalAdapters.add(adapterFrom(m)));
 		}
 	}
-	
+
 	private ExternalAdapter adapterFrom(final Method m) {
 		return new ExternalAdapter(methodFullName(m), m.getName(), parameters(m), returnType(m));
 	}
-
 
 }

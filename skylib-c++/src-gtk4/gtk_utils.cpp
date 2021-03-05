@@ -5,8 +5,6 @@
  *      Author: scaille
  */
 
-#include <glibmm.h>
-
 #include <gtk_utils.hh>
 
 namespace ch_skymarshall::gui::gtk4::utils {

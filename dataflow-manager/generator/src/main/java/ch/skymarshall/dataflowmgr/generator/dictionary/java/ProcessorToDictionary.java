@@ -8,7 +8,6 @@ import ch.skymarshall.dataflowmgr.model.Processor;
 
 public class ProcessorToDictionary extends AbstractClassToDictionary {
 
-
 	public void addToDictionary(Dictionary dictionary, Class<?> clazz) {
 		if (clazz.isAnnotationPresent(Processors.class)) {
 			methodsOf(clazz).forEach(m -> dictionary.processors.add(processorFrom(m)));

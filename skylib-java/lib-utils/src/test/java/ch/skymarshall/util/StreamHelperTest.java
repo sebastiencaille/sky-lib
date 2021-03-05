@@ -15,17 +15,21 @@
  ******************************************************************************/
 package ch.skymarshall.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import ch.skymarshall.util.helpers.StreamHelper;
 import ch.skymarshall.util.helpers.WrongCountException;
 
-public class StreamHelperTest extends Assert {
+public class StreamHelperTest {
 
 	@Test
 	public void singleTest() {
@@ -47,19 +51,16 @@ public class StreamHelperTest extends Assert {
 
 		final Optional<Integer> zeroOrOne1 = Arrays.asList(1).stream().collect(StreamHelper.zeroOrOne())
 				.optionalOrThrow(WrongCountException::new);
-		assertTrue(zeroOrOne1.isPresent());
+		assertTrue(zeroOrOne1.isPresent(), () -> "zeroOrOne1.isPresent()");
 		assertEquals(Integer.valueOf(1), zeroOrOne1.get());
 
 		final Optional<Integer> zeroOrOne2 = Collections.<Integer>emptyList().stream().collect(StreamHelper.zeroOrOne())
 				.optionalOrThrow(WrongCountException::new);
 		assertFalse(zeroOrOne2.isPresent());
 
-		try {
-			Arrays.asList(1, 2).stream().collect(StreamHelper.zeroOrOne()).orElseThrow(WrongCountException::new);
-			fail("Call should have failed");
-		} catch (final Exception e) {
-			assertEquals("Wrong count: 2", e.getMessage());
-		}
+		WrongCountException e = Assertions.assertThrows(WrongCountException.class, () -> Arrays.asList(1, 2).stream()
+				.collect(StreamHelper.zeroOrOne()).orElseThrow(WrongCountException::new));
+		assertEquals("Wrong count: 2", e.getMessage());
 	}
 
 }

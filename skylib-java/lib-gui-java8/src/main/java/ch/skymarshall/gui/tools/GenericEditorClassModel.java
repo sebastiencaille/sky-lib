@@ -106,7 +106,8 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 			final boolean readOnly = config.readOnly || attrib.isReadOnly();
 			final String message = findText(attrib, Labeled::label, PropertyEntry::descriptionKey);
 			final String toolTip = findText(attrib, Labeled::tooltip, PropertyEntry::tooltipKey);
-			properties.add(new ClassPropertyEntry<>(property, this::createBindingChain, attrib, readOnly, message, toolTip));
+			properties.add(
+					new ClassPropertyEntry<>(property, this::createBindingChain, attrib, readOnly, message, toolTip));
 		}
 		Collections.sort(properties, (p1, p2) -> Integer.compare(p1.index(), p2.index()));
 		return properties;

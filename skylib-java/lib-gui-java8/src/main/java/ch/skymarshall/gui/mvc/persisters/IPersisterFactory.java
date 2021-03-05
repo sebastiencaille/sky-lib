@@ -10,7 +10,7 @@ import ch.skymarshall.gui.mvc.properties.IPersister;
  * @param <T>
  */
 public interface IPersisterFactory<T, A> {
-	
+
 	IPersister<A> asPersister(final T object);
-	
+
 }

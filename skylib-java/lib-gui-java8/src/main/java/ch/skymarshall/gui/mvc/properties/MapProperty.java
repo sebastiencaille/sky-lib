@@ -29,7 +29,8 @@ public class MapProperty<T, U> extends ObjectProperty<Map<T, U>> {
 
 	@SafeVarargs
 	@Override
-	public final MapProperty<T, U> configureTyped(final Consumer<AbstractTypedProperty<Map<T, U>>>... propertyConfigurer) {
+	public final MapProperty<T, U> configureTyped(
+			final Consumer<AbstractTypedProperty<Map<T, U>>>... propertyConfigurer) {
 		super.configureTyped(propertyConfigurer);
 		return this;
 	}

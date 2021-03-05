@@ -10,8 +10,8 @@ import ch.skymarshall.dataflowmgr.model.Dictionary.Calls;
 
 public class CaseFlowCtrlToDictionary extends AbstractClassToDictionary {
 
-	Calls<CustomCall> calls =  new Calls<>("condition", CustomCall::derivate);
-	
+	Calls<CustomCall> calls = new Calls<>("condition", CustomCall::derivate);
+
 	public void addToDictionary(Dictionary dictionary, Class<?> clazz) {
 		if (clazz.isAnnotationPresent(Conditions.class)) {
 			methodsOf(clazz).forEach(m -> calls.add(conditionFrom(m)));

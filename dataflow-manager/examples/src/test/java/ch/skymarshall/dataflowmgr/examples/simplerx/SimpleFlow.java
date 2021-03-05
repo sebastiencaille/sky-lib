@@ -4,8 +4,6 @@ package ch.skymarshall.dataflowmgr.examples.simplerx;
 import ch.skymarshall.dataflowmgr.examples.simple.FlowReport;
 
 import ch.skymarshall.util.helpers.Log;
-import org.junit.Test;
-import org.junit.Assert;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.util.concurrent.Semaphore;
@@ -13,6 +11,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Function;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 
 
 public class SimpleFlow extends ch.skymarshall.dataflowmgr.examples.simple.AbstractFlow {
@@ -155,12 +156,12 @@ public class SimpleFlow extends ch.skymarshall.dataflowmgr.examples.simple.Abstr
 	
 	private Maybe<FlowExecution> simpleService_complete_complete_conditional(FlowExecution execution, final Function<Maybe<FlowExecution>, Maybe<FlowExecution>> callModifier, Runnable... callbacks) {
 	    final Maybe<FlowExecution> topCall = simpleService_complete_complete_svcCall(execution, callModifier, callbacks);
-	    final Maybe<Boolean> activator_0603366d_7a12_4051_9b5e_74859ab04942 = Maybe.just(execution)
+	    final Maybe<Boolean> activator_5b2fe38c_47fb_4cc7_92bf_636bfc5af729 = Maybe.just(execution)
 	        .map(f -> this.simpleFlowConditions.mustComplete(f.simpleService_init))
 	        .subscribeOn(Schedulers.computation());
 	
 	    final Maybe<FlowExecution> activators = Maybe.just(true)
-	        .zipWith(activator_0603366d_7a12_4051_9b5e_74859ab04942, (u, r) -> u.booleanValue() && r.booleanValue())
+	        .zipWith(activator_5b2fe38c_47fb_4cc7_92bf_636bfc5af729, (u, r) -> u.booleanValue() && r.booleanValue())
 	        .mapOptional(b -> b ? Optional.of(execution) : Optional.empty())
 	        .flatMap(e -> topCall)
 	        .doOnComplete(() -> { execution.setStateBindingSimpleServiceCompleteComplete(DataPointState.TRIGGERED); execution.setStateComplete(DataPointState.SKIPPED); })
@@ -268,8 +269,8 @@ public class SimpleFlow extends ch.skymarshall.dataflowmgr.examples.simple.Abstr
 		FlowReport.report.clear();
 		simpleExternalAdapter.reset();
 		final FlowExecution result = execute(in, e -> e.doOnSuccess(r -> finished.release())).blockingGet();
-		Assert.assertTrue(finished.tryAcquire(100, TimeUnit.MILLISECONDS));
-		Assert.assertEquals(out, simpleExternalAdapter.getOutput());
+		Assertions.assertTrue(finished.tryAcquire(100, TimeUnit.MILLISECONDS), () -> "Promise executed");
+		Assertions.assertEquals(out, simpleExternalAdapter.getOutput());
 		Log.of(this).info(FlowReport.report.toString());
 	}
 

@@ -9,5 +9,4 @@ public interface IGenericEditor {
 
 	void build(GenericEditorController<?> adapter, final ErrorSet errorProperty);
 
-
 }

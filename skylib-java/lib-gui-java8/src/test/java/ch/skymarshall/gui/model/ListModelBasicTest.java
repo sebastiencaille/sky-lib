@@ -15,12 +15,14 @@
  ******************************************************************************/
 package ch.skymarshall.gui.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Arrays;
 
 import javax.swing.JTable;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import ch.skymarshall.gui.TestObject;
 import ch.skymarshall.gui.TestObjectTableModel;
@@ -28,7 +30,7 @@ import ch.skymarshall.gui.model.views.IListView;
 import ch.skymarshall.gui.model.views.ListViews;
 import ch.skymarshall.gui.swing.model.ListModelTableModel;
 
-public class ListModelBasicTest extends Assert {
+public class ListModelBasicTest {
 
 	private static final IListView<TestObject> VIEW = ListViews.sorted((o1, o2) -> o1.getVal() - o2.getVal());
 	static final IListView<TestObject> REVERTED_VIEW = ListViews.sorted((o1, o2) -> o2.getVal() - o1.getVal());
@@ -188,7 +190,7 @@ public class ListModelBasicTest extends Assert {
 		checkModel(model, 2, 4);
 		checkModel(childModel, 4, 2);
 
-		Assert.assertEquals(2, tableModel.getInsertCount());
+		assertEquals(2, tableModel.getInsertCount());
 
 	}
 
@@ -208,7 +210,7 @@ public class ListModelBasicTest extends Assert {
 	}
 
 	private void checkModel(final ListModel<TestObject> model, final int... expected) {
-		assertEquals("size", expected.length, model.getSize());
+		assertEquals(expected.length, model.getSize(), () -> "size");
 		final int[] current = new int[model.getSize()];
 		for (int i = 0; i < current.length; i++) {
 			current[i] = model.getValueAt(i).getVal();
@@ -217,7 +219,7 @@ public class ListModelBasicTest extends Assert {
 	}
 
 	private void checkModel(final JTable table, final int... expected) {
-		assertEquals("size", expected.length, table.getRowCount());
+		Assertions.assertEquals(expected.length, table.getRowCount(), () -> "size");
 		final int[] current = new int[table.getRowCount()];
 		for (int i = 0; i < current.length; i++) {
 			current[i] = (int) table.getValueAt(i, 0);

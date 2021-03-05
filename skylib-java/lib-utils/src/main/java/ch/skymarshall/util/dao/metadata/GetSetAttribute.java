@@ -36,7 +36,8 @@ public class GetSetAttribute<T> extends AbstractAttributeMetaData<T> {
 	protected final MethodHandle setter;
 	protected final Method attributeGetterInfo;
 
-	public GetSetAttribute(final String name, Method attributeGetterInfo, final MethodHandle getter, final MethodHandle setter) {
+	public GetSetAttribute(final String name, Method attributeGetterInfo, final MethodHandle getter,
+			final MethodHandle setter) {
 		super(name, getter.type().returnType());
 		this.attributeGetterInfo = attributeGetterInfo;
 		this.getter = getter;
@@ -98,12 +99,10 @@ public class GetSetAttribute<T> extends AbstractAttributeMetaData<T> {
 		return getName();
 	}
 
-
 	@Override
 	public int getModifier() {
 		return attributeGetterInfo.getModifiers();
 	}
-	
 
 	@Override
 	public String toString() {

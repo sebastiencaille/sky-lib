@@ -29,9 +29,9 @@ public class ExampleHelper {
 
 	private static final File RESOURCE_FOLDER = new File("./src/main/resources");
 
-	private static final  GeneratorConfig CONFIG;
-	
-	private static final  IModelPersister persister;
+	private static final GeneratorConfig CONFIG;
+
+	private static final IModelPersister persister;
 
 	public static final String TC_NAME = "testCase.json";
 
@@ -77,7 +77,7 @@ public class ExampleHelper {
 		test.initActors();
 		test.testNormalCase();
 		final TestCase testCase = recorder.getTestCase("ch.skymarshall.tcwriter.examples.GeneratedTest");
-		Log.of(ExampleHelper.class).info(() -> new HumanReadableVisitor(testCase, true).processAllSteps()); 
+		Log.of(ExampleHelper.class).info(() -> new HumanReadableVisitor(testCase, true).processAllSteps());
 		return testCase;
 	}
 

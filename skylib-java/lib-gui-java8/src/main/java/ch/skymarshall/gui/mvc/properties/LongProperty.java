@@ -54,7 +54,6 @@ public class LongProperty extends AbstractTypedProperty<Long> {
 		return this;
 	}
 
-	
 	public long getValue() {
 		return value;
 	}

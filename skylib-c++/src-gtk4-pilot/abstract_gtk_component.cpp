@@ -5,10 +5,10 @@
  *      Author: scaille
  */
 
+#include <gtk_utils.hh>
 #include <iostream>
 
 #include "abstract_gtk_component.hh"
-#include "gtk_utils.hh"
 
 namespace ch_skymarshall::gui::gtk4::pilot {
 
@@ -28,8 +28,6 @@ bool abstract_gtk_component::isEditable(Gtk::Widget *widget) {
 }
 
 bool abstract_gtk_component::executePolling(polling &_polling) {
-	return get_run_in_gtk<bool>([&_polling, this]() {
-		return this->abstract_gui_component::executePolling(_polling);
-	});
+	return get_run_in_gtk<bool>([&_polling, this]() { return this->abstract_gui_component::executePolling(_polling); });
 }
 }

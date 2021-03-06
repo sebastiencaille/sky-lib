@@ -21,6 +21,7 @@
  */
 
 #include <iostream>
+#include <algorithm>
 
 #include <utils.hh>
 #include "gtk_bindings.hh"

@@ -23,6 +23,7 @@
 #ifndef GLIB_CONVERTER_HH_
 #define GLIB_CONVERTER_HH_
 
+#include <converters.hh>
 #include <glibmm.h>
 #include <string>
 
@@ -49,6 +50,7 @@ public:
 		return make_shared<string_to_ustring>();
 	}
 };
+
 
 }
 #endif /* GLIB_CONVERTER_HH_ */

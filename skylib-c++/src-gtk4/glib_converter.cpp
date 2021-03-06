@@ -41,6 +41,4 @@ const Glib::ustring string_to_ustring::convert_property_value_to_component_value
 		const string _propertyValue) {
 	return ustring(_propertyValue);
 }
-
 }
-

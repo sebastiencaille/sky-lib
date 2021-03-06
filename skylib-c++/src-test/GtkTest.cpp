@@ -32,7 +32,7 @@
 #include <controller_property.hh>
 #include <binding_interface.hh>
 #include <input_error_property_impl.hh>
-#include <int_converters.hh>
+#include <converters.hh>
 
 #include <list_model.hh>
 #include <glib_converter.hh>
@@ -59,8 +59,9 @@ private:
 
 		void propertyChanged(source_ptr _source, const string &_name,
 				const void *_oldValue, const void *_newValue) const {
-			cout << " TestStringPropertyListener fired: " << *(string*) _oldValue
-					<< " -> " << *(string*) _newValue << endl;
+			cout << " TestStringPropertyListener fired: "
+					<< *(string*) _oldValue << " -> " << *(string*) _newValue
+					<< endl;
 		}
 
 	};
@@ -73,16 +74,17 @@ private:
 
 	public:
 		dep_test() = default;
-		~dep_test() final DESTR_WITH_LOG("~dep_test");
+		~dep_test() DESTR_WITH_LOG("~dep_test")
+		;
 
 		void register_dep(weak_ptr<binding_chain_controller> _controller,
 				weak_ptr<binding_chain_dependency> _myself) final {
 			m_controller = _controller;
-			m_controller.lock()->get_property().add_listener(
-					property_listener_dispatcher::ofLazy(m_listener, _myself,
-							std::bind(
-									&TestStringPropertyListener::propertyChanged,
-									this->m_testListener, _1, _2, _3, _4)));
+			auto listener = property_listener_dispatcher::ofLazy(m_listener,
+					_myself,
+					sigc::mem_fun(this->m_testListener,
+							&TestStringPropertyListener::propertyChanged));
+			m_controller.lock()->get_property().add_listener(listener);
 		}
 
 		void unbind() {
@@ -159,8 +161,7 @@ GtkTest::GtkTest() :
 	m_intEntry.set_name("IntEntry");
 	m_box.append(m_intEntry);
 
-	testProperty2.bind(int_to_string::of())->bind(string_to_ustring::of())->bind(
-			label_binding::of(m_intLabel));
+	testProperty2.bind(int_to_string::of())->bind(string_to_ustring::of())->bind(label_binding::of(m_intLabel));
 	m_intLabel.set_expand();
 	m_box.append(m_intLabel);
 

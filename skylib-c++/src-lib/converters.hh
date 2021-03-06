@@ -24,13 +24,6 @@
 #define INT_CONVERTERS_HH_
 
 #include <string>
-#include <stdlib.h>
-#include <limits.h>
-#include <stdio.h>
-#include <errno.h>
-#include <string.h>
-#include <sstream>
-#include <iostream>
 
 #include "binding_interface.hh"
 
@@ -39,28 +32,17 @@ namespace ch_skymarshall::gui::converters {
 using namespace std;
 
 class int_to_string: public binding_converter<int, string> {
-public:
-	int_to_string() = default;
 
-	~int_to_string() final = default;
+public:
+	int_to_string();
+
+	~int_to_string();
 
 	const int convert_component_value_to_property_value(
-			const string _componentValue) final {
-		char *endPtr;
-		errno = 0;
-		long result = strtol(_componentValue.c_str(), &endPtr, 10);
-		if (errno != 0 || *endPtr != '\0' || _componentValue.empty()) {
-			throw gui_exception("Invalid number: " + _componentValue);
-		}
-		return (int) result;
-	}
+			const string _componentValue);
 
 	const string convert_property_value_to_component_value(
-			const int _propertyValue) final {
-		std::stringstream ss;
-		ss << _propertyValue;
-		return ss.str();
-	}
+			const int _propertyValue);
 
 	static shared_ptr<binding_converter<int, string>> of() {
 		return make_shared<int_to_string>();
@@ -70,3 +52,4 @@ public:
 }
 
 #endif /* INT_CONVERTERS_HH_ */
+

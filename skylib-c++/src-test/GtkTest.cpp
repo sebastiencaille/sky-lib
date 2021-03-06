@@ -48,39 +48,32 @@ using namespace ch_skymarshall::gui::gtk4::pilot;
 using namespace std;
 using namespace __gnu_cxx;
 
-class HelloWorld: public Gtk::Window {
+class GtkTest: public Gtk::Window {
 
 private:
 
 	class TestStringPropertyListener {
 
-		int m_i;
-
 	public:
-		explicit TestStringPropertyListener(int _i) :
-				m_i(_i) {
-		}
+		explicit TestStringPropertyListener() = default;
 
 		void propertyChanged(source_ptr _source, const string &_name,
 				const void *_oldValue, const void *_newValue) const {
-			cout << " TestStringPropertyListener " << m_i << " - "
-					<< *(string*) _oldValue << " -> " << *(string*) _newValue
-					<< endl;
+			cout << " TestStringPropertyListener fired: " << *(string*) _oldValue
+					<< " -> " << *(string*) _newValue << endl;
 		}
 
 	};
 
 	class dep_test: public binding_chain_dependency {
 
-		TestStringPropertyListener m_testListener = TestStringPropertyListener(
-				1);
+		TestStringPropertyListener m_testListener;
 		weak_ptr<property_listener_dispatcher> m_listener;
 		weak_ptr<binding_chain_controller> m_controller;
 
 	public:
 		dep_test() = default;
-		~dep_test() final
-		DESTR_WITH_LOG("~dep_test")
+		~dep_test() final DESTR_WITH_LOG("~dep_test");
 
 		void register_dep(weak_ptr<binding_chain_controller> _controller,
 				weak_ptr<binding_chain_dependency> _myself) final {
@@ -104,9 +97,9 @@ private:
 
 	};
 public:
-	HelloWorld();
+	GtkTest();
 
-	~HelloWorld() final;
+	~GtkTest() final;
 
 	void testGui();
 
@@ -126,17 +119,17 @@ private:
 	property_manager m_manager;
 
 	shared_ptr<input_error_property> m_errorProperty = make_shared<
-			input_error_property>(string("Errors"), m_manager);
+			input_error_property>("Errors", m_manager);
 
 	controller_property<string> testProperty1 = controller_property<string>(
-			string("TestProp1"), m_manager, string(""), m_errorProperty);
+			"TestProp1", m_manager, "", m_errorProperty);
 
 	controller_property<int> testProperty2 = controller_property<int>(
 			"TestProp2", m_manager, 0, m_errorProperty);
 
 };
 
-HelloWorld::HelloWorld() :
+GtkTest::GtkTest() :
 		m_box(Gtk::Orientation::VERTICAL) {
 
 	set_title("Basic application");
@@ -150,7 +143,7 @@ HelloWorld::HelloWorld() :
 	m_entry.set_name("Entry");
 	m_box.append(m_entry);
 
-	auto dep = make_shared<action_dependency<HelloWorld>>(
+	auto dep = make_shared<action_dependency<GtkTest>>(
 			[this](property_group_actions group, const property *action) {
 				this->apply_action(group, action);
 			});
@@ -185,11 +178,11 @@ HelloWorld::HelloWorld() :
 
 	testProperty2.set(NULL, 1);
 
-	thread testGui(&HelloWorld::testGui, this);
+	thread testGui(&GtkTest::testGui, this);
 	testGui.detach();
 }
 
-void HelloWorld::testGui() {
+void GtkTest::testGui() {
 	gtk_gui_pilot guiPilot(this);
 	shared_ptr<gtk_entry_pilot> entryPilot = guiPilot.entry("Entry");
 	shared_ptr<gtk_entry_pilot> intEntryPilot = guiPilot.entry("IntEntry");
@@ -199,10 +192,9 @@ void HelloWorld::testGui() {
 
 }
 
-HelloWorld::~HelloWorld()
-DESTR_WITH_LOG("~HelloWorld" << endl)
+GtkTest::~GtkTest() DESTR_WITH_LOG("~GtkTest" << endl)
 
-void HelloWorld::apply_action(property_group_actions _action,
+void GtkTest::apply_action(property_group_actions _action,
 		const property *_property) {
 	switch (_action) {
 	case BEFORE_FIRE:
@@ -229,6 +221,6 @@ int main(int argc, char *argv[]) {
 			<< std::endl;
 
 	auto app = Gtk::Application::create("ch.skymarshall.example");
-	return app->make_window_and_run<HelloWorld>(argc, argv);
+	return app->make_window_and_run < GtkTest > (argc, argv);
 }
 

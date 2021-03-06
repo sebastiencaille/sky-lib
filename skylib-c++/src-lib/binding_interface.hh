@@ -73,9 +73,9 @@ public:
 	const string convert_property_value_to_component_value(
 			gui_exception_ptr _propertyValue) final {
 		if (_propertyValue == nullptr) {
-			return string();
+			return "";
 		}
-		return string(_propertyValue->what());
+		return _propertyValue->what();
 	}
 
 	static shared_ptr<binding_converter<gui_exception_ptr, string>> of () {

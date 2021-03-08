@@ -3,7 +3,7 @@ package ch.skymarshall.tcwriter.pilot.swing;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 public class JTextFieldPilot extends AbstractSwingComponent<JTextFieldPilot, JTextComponent> {
 
@@ -38,7 +38,7 @@ public class JTextFieldPilot extends AbstractSwingComponent<JTextFieldPilot, JTe
 		if (value == null) {
 			return;
 		}
-		wait(assertion(t -> Assert.assertEquals(value, t.getText())).withReport(r -> "check text \'" + value + "\'"));
+		wait(assertion(t -> Assertions.assertEquals(value, t.getText())).withReport(r -> "check text \'" + value + "\'"));
 	}
 
 }

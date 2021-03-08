@@ -28,7 +28,7 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-		
+
 		<version.junit>4.13.2</version.junit>
 	</properties>
 
@@ -155,6 +155,12 @@
 				<version>2.12.2</version>
 				<type>pom</type>
 				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-api</artifactId>
+				<version>5.7.1</version>
 			</dependency>
 
 		</dependencies>

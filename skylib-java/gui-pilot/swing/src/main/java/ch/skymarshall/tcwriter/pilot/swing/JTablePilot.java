@@ -2,7 +2,7 @@ package ch.skymarshall.tcwriter.pilot.swing;
 
 import javax.swing.JTable;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 public class JTablePilot extends AbstractSwingComponent<JTablePilot, JTable> {
 
@@ -27,12 +27,12 @@ public class JTablePilot extends AbstractSwingComponent<JTablePilot, JTable> {
 	}
 
 	public void checkValue(final int row, final int column, final String value) {
-		wait(assertion(t -> Assert.assertEquals(value, t.getValueAt(row, column)))
+		wait(assertion(t -> Assertions.assertEquals(value, t.getValueAt(row, column)))
 				.withReport(c -> "check value '" + value + "' at " + row + '/' + column));
 	}
 
 	public void checkValueOnSelectedRow(final int column, final String value) {
-		wait(assertion(t -> Assert.assertEquals(value, t.getValueAt(t.getSelectedRow(), column)))
+		wait(assertion(t -> Assertions.assertEquals(value, t.getValueAt(t.getSelectedRow(), column)))
 				.withReport(c -> "check value '" + value + "' of selected row, column " + column));
 	}
 

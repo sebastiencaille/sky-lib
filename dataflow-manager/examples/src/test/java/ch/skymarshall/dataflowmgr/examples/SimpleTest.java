@@ -1,8 +1,5 @@
 package ch.skymarshall.dataflowmgr.examples;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.BufferedReader;
@@ -11,6 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.UUID;
+
+import org.junit.jupiter.api.Test;
 
 import ch.skymarshall.dataflowmgr.annotations.Conditions;
 import ch.skymarshall.dataflowmgr.generator.dictionary.java.JavaToDictionary;

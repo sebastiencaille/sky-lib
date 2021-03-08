@@ -7,7 +7,7 @@ import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 import java.util.function.Supplier;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 import ch.skymarshall.util.helpers.NoExceptionCloseable;
 
@@ -90,7 +90,7 @@ public class ModalDialogDetector {
 	}
 
 	public void close() {
-		Assert.assertEquals("Unexpected modal dialog", "", String.join(",\n", errors));
+		Assertions.assertEquals("", String.join(",\n", errors), () -> "Unexpected modal dialog");
 	}
 
 	protected TimerTask timerTask() {
@@ -114,12 +114,12 @@ public class ModalDialogDetector {
 			running.acquire();
 		} catch (final InterruptedException e) {
 			Thread.currentThread().interrupt();
-			Assert.fail(e.getMessage());
+			Assertions.fail(e.getMessage());
 		}
 	}
 
 	private synchronized NoExceptionCloseable schedule(final Timer t) {
-		Assert.assertNull("Detector already detected a dialog", foundDialog);
+		Assertions.assertNull(foundDialog, () -> "Detector already detected a dialog");
 		if (!enabled) {
 			enabled = true;
 			t.schedule(timerTask(), 0, 500);

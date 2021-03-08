@@ -1,7 +1,7 @@
 package ch.skymarshall.tcwriter.examples;
 
 import static ch.skymarshall.tcwriter.examples.ExampleHelper.getConfig;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.io.File;
 import java.io.IOException;

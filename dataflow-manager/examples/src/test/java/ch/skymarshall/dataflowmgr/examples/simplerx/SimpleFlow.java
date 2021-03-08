@@ -156,12 +156,12 @@ public class SimpleFlow extends ch.skymarshall.dataflowmgr.examples.simple.Abstr
 	
 	private Maybe<FlowExecution> simpleService_complete_complete_conditional(FlowExecution execution, final Function<Maybe<FlowExecution>, Maybe<FlowExecution>> callModifier, Runnable... callbacks) {
 	    final Maybe<FlowExecution> topCall = simpleService_complete_complete_svcCall(execution, callModifier, callbacks);
-	    final Maybe<Boolean> activator_5b2fe38c_47fb_4cc7_92bf_636bfc5af729 = Maybe.just(execution)
+	    final Maybe<Boolean> activator_4be7b28c_bb9a_40d7_9e25_ccb81eab55fc = Maybe.just(execution)
 	        .map(f -> this.simpleFlowConditions.mustComplete(f.simpleService_init))
 	        .subscribeOn(Schedulers.computation());
 	
 	    final Maybe<FlowExecution> activators = Maybe.just(true)
-	        .zipWith(activator_5b2fe38c_47fb_4cc7_92bf_636bfc5af729, (u, r) -> u.booleanValue() && r.booleanValue())
+	        .zipWith(activator_4be7b28c_bb9a_40d7_9e25_ccb81eab55fc, (u, r) -> u.booleanValue() && r.booleanValue())
 	        .mapOptional(b -> b ? Optional.of(execution) : Optional.empty())
 	        .flatMap(e -> topCall)
 	        .doOnComplete(() -> { execution.setStateBindingSimpleServiceCompleteComplete(DataPointState.TRIGGERED); execution.setStateComplete(DataPointState.SKIPPED); })

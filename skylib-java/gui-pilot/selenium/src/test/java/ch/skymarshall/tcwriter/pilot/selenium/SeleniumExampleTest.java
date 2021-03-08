@@ -1,6 +1,6 @@
 package ch.skymarshall.tcwriter.pilot.selenium;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -8,11 +8,11 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.firefox.FirefoxBinary;
@@ -35,7 +35,7 @@ public class SeleniumExampleTest {
 	public static Undertow webServer = null;
 	private static FirefoxDriver driver;
 
-	@BeforeClass
+	@BeforeAll
 	public static void startWebServer() {
 
 		webServer = Undertow.builder().addHttpListener(8080, "localhost")
@@ -71,7 +71,7 @@ public class SeleniumExampleTest {
 		}
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void stopWebServer() {
 		driver.quit();
 		webServer.stop();
@@ -101,12 +101,12 @@ public class SeleniumExampleTest {
 
 	private SeleniumGuiPilot pilot;
 
-	@Before
+	@BeforeEach
 	public void createPilot() {
 		pilot = new SeleniumGuiPilot(driver);
 	}
 
-	@After
+	@AfterEach
 	public void releasePilot() {
 		pilot.close();
 	}
@@ -128,7 +128,7 @@ public class SeleniumExampleTest {
 
 		Log.of(this).info(pilot.getActionReport().getFormattedReport());
 
-		assertEquals(pilot.getActionReport().getFormattedReport(), 5, pilot.getActionReport().getReport().size());
+		assertEquals(5, pilot.getActionReport().getReport().size(), () -> pilot.getActionReport().getFormattedReport());
 	}
 
 }

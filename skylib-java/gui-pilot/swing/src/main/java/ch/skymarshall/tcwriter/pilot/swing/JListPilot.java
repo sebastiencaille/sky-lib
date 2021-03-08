@@ -2,7 +2,7 @@ package ch.skymarshall.tcwriter.pilot.swing;
 
 import javax.swing.JList;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 import ch.skymarshall.tcwriter.pilot.Polling;
 import ch.skymarshall.tcwriter.pilot.PollingResult;
@@ -30,8 +30,8 @@ public class JListPilot extends AbstractSwingComponent<JListPilot, JList> {
 				}
 			}
 		}).withReport(r -> "select element " + value));
-		Assert.assertTrue("Value [" + name + ":" + value + "] must have been selected",
-				getCachedElement().getSelectedIndex() >= 0);
+		Assertions.assertTrue(getCachedElement().getSelectedIndex() >= 0,
+				() -> "Value [" + name + ":" + value + "] must have been selected");
 	}
 
 	public void checkSelected(final String value) {

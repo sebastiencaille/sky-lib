@@ -17,7 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 import ch.skymarshall.tcwriter.pilot.ModalDialogDetector;
 import ch.skymarshall.tcwriter.pilot.ModalDialogDetector.ErrorCheck;
@@ -143,7 +143,7 @@ public class SwingPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 			throw new AssertionError(e.getCause());
 		} catch (final InterruptedException e) {
 			Thread.currentThread().interrupt();
-			Assert.fail("Test case interrupted");
+			Assertions.fail("Test case interrupted");
 		}
 	}
 
@@ -159,7 +159,7 @@ public class SwingPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 			throw new AssertionError(e.getCause());
 		} catch (final InterruptedException e) {
 			Thread.currentThread().interrupt();
-			Assert.fail("Test case interrupted");
+			Assertions.fail("Test case interrupted");
 		}
 	}
 

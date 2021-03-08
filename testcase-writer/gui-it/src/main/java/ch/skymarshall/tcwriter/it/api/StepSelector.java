@@ -4,14 +4,14 @@ import java.util.function.Consumer;
 
 import javax.swing.JTable;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 import ch.skymarshall.tcwriter.annotations.TCApi;
 import ch.skymarshall.tcwriter.it.TCGuiPilot;
 import ch.skymarshall.tcwriter.pilot.EditionPolling;
 import ch.skymarshall.tcwriter.pilot.StatePolling;
-import ch.skymarshall.tcwriter.pilot.swing.SwingPilot;
 import ch.skymarshall.tcwriter.pilot.swing.JTablePilot;
+import ch.skymarshall.tcwriter.pilot.swing.SwingPilot;
 
 @TCApi(description = "Step selector", humanReadable = "Step selector", isSelector = true)
 public class StepSelector {
@@ -35,7 +35,8 @@ public class StepSelector {
 		return new StepSelector(guiPilot -> {
 			final int tableIndex = ordinal - 1;
 			getStepsTable(guiPilot).wait(StatePolling
-					.<JTable>assertion(t -> Assert.assertTrue("Step does not exist", tableIndex < t.getRowCount()))
+					.<JTable>assertion(
+							t -> Assertions.assertTrue(tableIndex < t.getRowCount(), () -> "Step does not exist"))
 					.withReport(c -> "step " + ordinal + " exists"));
 			getStepsTable(guiPilot).selectRow(tableIndex);
 		});
@@ -59,7 +60,8 @@ public class StepSelector {
 	@TCApi(description = "Selected step", humanReadable = "")
 	public static StepSelector currentStep() {
 		return new StepSelector(guiPilot -> getStepsTable(guiPilot).wait(StatePolling
-				.<JTable>assertion(c -> Assert.assertTrue("Step must be selected", c.getSelectedRowCount() > 0))
+				.<JTable>assertion(
+						c -> Assertions.assertTrue(c.getSelectedRowCount() > 0, () -> "Step must be selected"))
 				.withReport(c -> "a step is selected")));
 	}
 

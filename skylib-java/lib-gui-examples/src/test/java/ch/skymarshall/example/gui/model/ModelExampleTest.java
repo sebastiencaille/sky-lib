@@ -6,8 +6,8 @@ import java.time.Duration;
 
 import javax.swing.JTable;
 
-import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import ch.skymarshall.example.gui.TestObjectTableModel;
 import ch.skymarshall.example.gui.model.impl.TableModelExampleView;

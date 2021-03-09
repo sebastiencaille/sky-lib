@@ -4,16 +4,16 @@ import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.time.Duration;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import ch.skymarshall.example.gui.controller.impl.ControllerExampleController;
 import ch.skymarshall.example.gui.controller.impl.ControllerExampleView;
-import ch.skymarshall.tcwriter.pilot.swing.SwingPilot;
 import ch.skymarshall.tcwriter.pilot.swing.JLabelPilot;
 import ch.skymarshall.tcwriter.pilot.swing.JListPilot;
 import ch.skymarshall.tcwriter.pilot.swing.JTablePilot;
 import ch.skymarshall.tcwriter.pilot.swing.JTextFieldPilot;
 import ch.skymarshall.tcwriter.pilot.swing.JToggleButtonPilot;
+import ch.skymarshall.tcwriter.pilot.swing.SwingPilot;
 import ch.skymarshall.util.helpers.Log;
 
 public class ControllerExampleTest {

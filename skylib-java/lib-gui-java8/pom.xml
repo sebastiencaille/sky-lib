@@ -17,7 +17,7 @@
 		<groupId>ch.skymarshall</groupId>
 		<artifactId>libs</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>..</relativePath>
+
 	</parent>
 
 	<artifactId>lib-gui-java8</artifactId>
@@ -34,13 +34,13 @@
 			<groupId>ch.skymarshall</groupId>
 			<artifactId>lib-utils</artifactId>
 		</dependency>
-	
+
 		<dependency>
 			<groupId>ch.skymarshall</groupId>
 			<artifactId>lib-testing</artifactId>
 			<scope>test</scope>
 		</dependency>
-	
+
 	</dependencies>
 
 </project>

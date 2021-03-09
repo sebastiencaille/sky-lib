@@ -7,7 +7,7 @@ import static ch.skymarshall.tcwriter.it.api.StepSelector.currentStep;
 
 import javax.swing.JTable;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 import ch.skymarshall.tcwriter.gui.steps.StepsTableModel;
 import ch.skymarshall.tcwriter.it.api.MainFrameAction;
@@ -90,7 +90,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 		final JTablePilot stepsTable = guiPilot.table("StepsTable");
 		stepsTable.wait(stepsTable.assertion(t -> {
 			final Object value = ((StepsTableModel) t.getModel()).getHumanReadable(t.getSelectedRow());
-			Assert.assertEquals(humanReadable, value.toString());
+			Assertions.assertEquals(humanReadable, value.toString());
 		}).withReport(c -> "Check human readable text: " + humanReadable));
 	}
 
@@ -144,6 +144,6 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 				return;
 			}
 		}
-		Assert.fail("No such complex type parameter: " + keyValue[0]);
+		Assertions.fail("No such complex type parameter: " + keyValue[0]);
 	}
 }

@@ -16,7 +16,7 @@
 		<groupId>ch.skymarshall.tcwriter</groupId>
 		<artifactId>testcase-writer</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>..</relativePath>
+
 	</parent>
 
 	<artifactId>testcase-writer-examples</artifactId>

@@ -2,7 +2,7 @@ package ch.skymarshall.tcwriter.pilot.swing;
 
 import javax.swing.JToggleButton;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 public class JToggleButtonPilot extends AbstractSwingComponent<JToggleButtonPilot, JToggleButton> {
 
@@ -11,7 +11,7 @@ public class JToggleButtonPilot extends AbstractSwingComponent<JToggleButtonPilo
 	}
 
 	public void waitSelected(final boolean selected) {
-		wait(assertion(c -> Assert.assertEquals(selected, c.isSelected()))
+		wait(assertion(c -> Assertions.assertEquals(selected, c.isSelected()))
 				.withReport(c -> "check " + (selected ? "selected" : "not selected")));
 	}
 

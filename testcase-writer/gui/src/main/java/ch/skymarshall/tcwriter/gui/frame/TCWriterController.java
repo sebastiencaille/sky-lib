@@ -149,8 +149,8 @@ public class TCWriterController extends GuiController {
 	}
 
 	public void loadTestCase() throws IOException {
-		final JFileChooser testFileChooser = new JFileChooser();
-		testFileChooser.setFileFilter(new FileNameExtensionFilter("JSon test", "json"));
+		final JFileChooser testFileChooser = new JFileChooser(); 
+		testFileChooser.setFileFilter(new FileNameExtensionFilter("Json test", "json"));
 		final int dialogResult = testFileChooser.showOpenDialog(gui);
 		if (dialogResult == 0) {
 			final File testFile = testFileChooser.getSelectedFile();

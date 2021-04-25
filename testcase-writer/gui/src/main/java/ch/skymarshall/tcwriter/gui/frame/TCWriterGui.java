@@ -46,11 +46,11 @@ public class TCWriterGui extends JFrame {
 
 	private JButton button(final String name, final ImageIcon icon, final String toolTip,
 			final ActionWithException<?> action) {
-		final JButton createdButton = new JButton(icon);
-		createdButton.setToolTipText(toolTip);
-		createdButton.addActionListener(e -> withException(action, this::handleException));
-		createdButton.setName(name);
-		return createdButton;
+		final JButton newButton = new JButton(icon);
+		newButton.setToolTipText(toolTip);
+		newButton.addActionListener(e -> withException(action, this::handleException));
+		newButton.setName(name);
+		return newButton;
 	}
 
 	private JButton button(final ImageIcon icon, final String toolTip, final ActionWithException<?> action) {

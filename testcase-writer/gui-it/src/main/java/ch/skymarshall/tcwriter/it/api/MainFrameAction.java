@@ -1,10 +1,12 @@
 package ch.skymarshall.tcwriter.it.api;
 
 import java.security.InvalidParameterException;
+import java.util.Locale;
 import java.util.Optional;
 
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 
 import ch.skymarshall.tcwriter.annotations.TCApi;
 import ch.skymarshall.tcwriter.it.TCGuiPilot;
@@ -52,12 +54,12 @@ public class MainFrameAction {
 
 	@TCApi(description = "Load a test case", humanReadable = "load the test %s")
 	public static MainFrameAction loadTC(final String testName) {
-		return new MainFrameAction("LoadTC", testName, "Open");
+		return new MainFrameAction("LoadTC", testName, UIManager.getString("FileChooser.openButtonText", Locale.getDefault()));
 	}
 
 	@TCApi(description = "Save a test case", humanReadable = "save the test %s")
 	public static MainFrameAction saveTC(final String testName) {
-		return new MainFrameAction("SaveTC", testName, "Save");
+		return new MainFrameAction("SaveTC", testName, UIManager.getString("FileChooser.saveButtonText", Locale.getDefault()));
 	}
 
 	@TCApi(description = "Create a test case", humanReadable = "create the test %s")

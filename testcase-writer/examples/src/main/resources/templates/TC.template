@@ -5,15 +5,15 @@ import ch.skymarshall.tcwriter.examples.api.interfaces.selectors.*;
 import ch.skymarshall.tcwriter.examples.api.interfaces.*;
 import ch.skymarshall.tcwriter.recording.*;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class ${testName} {
 
 	private CustomerTestRole customer;
 	private DeliveryTestRole deliveryGuy;
 
-	@Before
+	@BeforeEach
 	public void prepareApis() {
 		final ExampleService testedService = new ExampleService();
 		customer = new CustomerTestRole(testedService);

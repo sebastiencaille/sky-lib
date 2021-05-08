@@ -6,7 +6,7 @@ import static ch.skymarshall.tcwriter.it.api.StepSelector.addStep;
 import static ch.skymarshall.tcwriter.it.api.StepSelector.currentStep;
 import static ch.skymarshall.tcwriter.it.api.StepSelector.selectStep;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import ch.skymarshall.tcwriter.it.api.StepEdition;
 

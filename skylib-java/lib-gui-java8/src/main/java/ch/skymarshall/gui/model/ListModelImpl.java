@@ -351,7 +351,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 	}
 
 	protected void fireEditionStopped(final T value) {
-		forEachChildListener(listEvent(value), IChildModelListener::editionStopped);
+		forEachListener(listEvent(value), IListModelListener::editionStopped);
 	}
 
 	public void fireViewUpdated() {

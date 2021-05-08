@@ -3,7 +3,7 @@ package ch.skymarshall.tcwriter.stepping;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import ch.skymarshall.tcwriter.annotations.TCRole;
 

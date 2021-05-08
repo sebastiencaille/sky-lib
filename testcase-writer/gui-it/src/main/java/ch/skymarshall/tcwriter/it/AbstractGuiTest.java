@@ -8,7 +8,8 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.SwingUtilities;
 
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 import ch.skymarshall.tcwriter.executors.ITestExecutor;
 import ch.skymarshall.tcwriter.executors.JunitTestExecutor;
@@ -29,7 +30,7 @@ public class AbstractGuiTest {
 	protected TestSessionRole testSession;
 	private TCGuiPilot pilot;
 
-	@org.junit.Before
+	@BeforeEach
 	public void startGui() throws IOException, InvocationTargetException, InterruptedException {
 
 		final GeneratorConfig config = new GeneratorConfig();
@@ -59,7 +60,7 @@ public class AbstractGuiTest {
 		testSession = localRole;
 	}
 
-	@After
+	@AfterEach
 	public void closeGui() {
 		pilot.close();
 	}

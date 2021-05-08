@@ -1,6 +1,6 @@
 package ch.skymarshall.tcwriter.examples.api.interfaces;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 import ch.skymarshall.tcwriter.annotations.TCApi;
 import ch.skymarshall.tcwriter.annotations.TCRole;
@@ -10,7 +10,7 @@ import ch.skymarshall.tcwriter.examples.api.interfaces.selectors.BuyingLocationS
 import ch.skymarshall.tcwriter.examples.api.interfaces.selectors.PackageDeliverySelector;
 
 @TCRole(description = "A customer", humanReadable = "customer")
-public class CustomerTestRole extends Assert {
+public class CustomerTestRole extends Assertions {
 
 	private final ExampleService testedService;
 

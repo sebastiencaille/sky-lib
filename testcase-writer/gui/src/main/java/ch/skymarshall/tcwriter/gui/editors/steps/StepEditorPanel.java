@@ -30,7 +30,7 @@ public class StepEditorPanel extends JPanel {
 
 	private final StepEditorModel model;
 
-	public static <T extends NamedObject> IConverter<T, ObjectTextView<T>> converter(final TestDictionary tm) {
+	public static <T extends NamedObject> IConverter<T, ObjectTextView<T>> objectTextConverter(final TestDictionary tm) {
 		return ObjectTextView.converter(o -> tm.descriptionOf(o).getDescription());
 	}
 
@@ -58,8 +58,8 @@ public class StepEditorPanel extends JPanel {
 		final JList<ObjectTextView<TestActor>> actorsList = new JList<>();
 		actorsList.setName("Actors");
 		actorsList.setEnabled(false);
-		model.getPossibleActors().bind(listConverter(converter(td))).bind(values(actorsList));
-		model.getActor().bind(converter(td)).bind(selection(actorsList))
+		model.getPossibleActors().bind(listConverter(objectTextConverter(td))).bind(values(actorsList));
+		model.getActor().bind(objectTextConverter(td)).bind(selection(actorsList))
 				.addDependency(preserveOnUpdateOf(model.getPossibleActors()));
 		selectedStep.bind(Converters.wo(Objects::nonNull)).listen(actorsList::setEnabled);
 		stepEditors.add(new JScrollPane(actorsList));
@@ -68,8 +68,8 @@ public class StepEditorPanel extends JPanel {
 		final JList<ObjectTextView<TestAction>> actionsList = new JList<>();
 		actionsList.setName("Actions");
 		actorsList.setEnabled(false);
-		model.getPossibleActions().bind(listConverter(converter(td))).bind(values(actionsList));
-		model.getAction().bind(converter(td)).bind(selection(actionsList))
+		model.getPossibleActions().bind(listConverter(objectTextConverter(td))).bind(values(actionsList));
+		model.getAction().bind(objectTextConverter(td)).bind(selection(actionsList))
 				.addDependency(preserveOnUpdateOf(model.getPossibleActions()));
 		selectedStep.bind(Converters.wo(Objects::nonNull)).listen(actionsList::setEnabled);
 		stepEditors.add(new JScrollPane(actionsList));
@@ -78,9 +78,9 @@ public class StepEditorPanel extends JPanel {
 		final JList<ObjectTextView<TestParameterFactory>> selectorList = new JList<>();
 		selectorList.setName("Selectors");
 		selectorList.setEnabled(false);
-		model.getPossibleSelectors().bind(Converters.listConverter(converter(td)))
+		model.getPossibleSelectors().bind(Converters.listConverter(objectTextConverter(td)))
 				.bind(SwingBindings.values(selectorList));
-		model.getSelector().bind(converter(td)).bind(selection(selectorList))
+		model.getSelector().bind(objectTextConverter(td)).bind(selection(selectorList))
 				.addDependency(preserveOnUpdateOf(model.getPossibleSelectors()));
 		selectedStep.bind(Converters.wo(Objects::nonNull)).listen(selectorList::setEnabled);
 		stepEditors.add(new JScrollPane(selectorList));
@@ -89,8 +89,8 @@ public class StepEditorPanel extends JPanel {
 		final JList<ObjectTextView<TestParameterFactory>> actionParameterList = new JList<>();
 		actionParameterList.setName("Parameters0");
 		actionParameterList.setEnabled(false);
-		model.getPossibleActionParameters().bind(listConverter(converter(td))).bind(values(actionParameterList));
-		model.getActionParameter().bind(converter(td)).bind(selection(actionParameterList))
+		model.getPossibleActionParameters().bind(listConverter(objectTextConverter(td))).bind(values(actionParameterList));
+		model.getActionParameter().bind(objectTextConverter(td)).bind(selection(actionParameterList))
 				.addDependency(preserveOnUpdateOf(model.getPossibleActionParameters()));
 		selectedStep.bind(Converters.wo(Objects::nonNull)).listen(actionParameterList::setEnabled);
 		stepEditors.add(new JScrollPane(actionParameterList));

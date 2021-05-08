@@ -5,8 +5,9 @@ import static ch.skymarshall.tcwriter.examples.api.interfaces.selectors.BuyingLo
 import static ch.skymarshall.tcwriter.examples.api.interfaces.selectors.PackageDeliverySelector.deliveredItem;
 import static ch.skymarshall.tcwriter.examples.api.interfaces.selectors.PackageDeliverySelector.fromShop;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import ch.skymarshall.tcwriter.examples.api.interfaces.CustomerTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestRole;
@@ -24,7 +25,7 @@ public class SimpleTest {
 		coffeeMachine.setISO();
 	}
 
-	@Before
+	@BeforeEach
 	public void initActors() {
 		final ExampleService testedService = new ExampleService();
 		customer = new CustomerTestRole(testedService);
@@ -49,10 +50,9 @@ public class SimpleTest {
 		customer.keepNote(newBrand);
 	}
 
-	@Test(expected = AssertionError.class)
 	public void testFailureCase() {
 		customer.buy(inLocalShop(), coffeeMachine);
 		customer.checkPackage(fromShop(), teaPot);
-		customer.resellOwnedItem(10);
+		Assertions.assertThrows(AssertionError.class, () -> customer.resellOwnedItem(10));
 	}
 }

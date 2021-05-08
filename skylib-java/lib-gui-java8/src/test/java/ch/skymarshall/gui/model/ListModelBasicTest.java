@@ -35,6 +35,34 @@ public class ListModelBasicTest {
 	private static final IListView<TestObject> VIEW = ListViews.sorted((o1, o2) -> o1.getVal() - o2.getVal());
 	static final IListView<TestObject> REVERTED_VIEW = ListViews.sorted((o1, o2) -> o2.getVal() - o1.getVal());
 
+	private final class EventsCounting implements IListModelListener<TestObject> {
+		int editionStartedEvent = 0;
+		int editionStoppingEvent = 0;
+		int editionStoppedEvent = 0;
+		int valueAddedEvent = 0;
+
+		@Override
+		public void editionStarted(ListEvent<TestObject> event) {
+			editionStartedEvent++;
+		}
+
+		@Override
+		public void editionStopping(ListEvent<TestObject> event) {
+			editionStoppingEvent++;
+		}
+
+		@Override
+		public void editionStopped(ListEvent<TestObject> event) {
+			editionStoppedEvent++;
+		}
+
+		@Override
+		public void valuesAdded(ListEvent<TestObject> event) {
+			valueAddedEvent++;
+		}
+
+	}
+
 	private static class TestObjectTableListModel
 			extends ListModelTableModel<TestObject, TestObjectTableListModel.Columns> {
 		public enum Columns {
@@ -89,7 +117,10 @@ public class ListModelBasicTest {
 	@Test
 	public void testUpdate() {
 
+		final EventsCounting eventsCounting = new EventsCounting();
+
 		final ListModel<TestObject> model = new ListModel<>(VIEW);
+		model.addListener(eventsCounting);
 		final ListModel<TestObject> childModel = model.child(ListViews.inherited());
 		JTable table = table(model);
 
@@ -116,6 +147,11 @@ public class ListModelBasicTest {
 		checkModel(model, 0, 1, 3);
 		checkModel(childModel, 0, 1, 3);
 		checkModel(table, 0, 1, 3);
+		
+		assertEquals(3, eventsCounting.valueAddedEvent);
+		assertEquals(3, eventsCounting.editionStartedEvent);
+		assertEquals(3, eventsCounting.editionStoppingEvent);
+		assertEquals(3, eventsCounting.editionStoppedEvent);
 	}
 
 	@Test

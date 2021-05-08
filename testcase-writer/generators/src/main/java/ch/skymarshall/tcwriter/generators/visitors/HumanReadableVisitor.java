@@ -6,6 +6,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,8 +39,9 @@ public class HumanReadableVisitor {
 		if (withStepNumbers) {
 			result.append(step.getOrdinal()).append(". ");
 		}
-		result.append("As ").append(actorSummary).append(", ").append(summaryOf(step.getAction(),
-				step.getParametersValue().stream().map(this::processTestParameter).collect(toList())));
+		result.append("As ").append(actorSummary).append(", ")
+				.append(summaryOf(step.getAction(), step.getParametersValue().stream().map(this::processTestParameter)
+						.filter(Objects::nonNull).collect(toList())));
 
 		return result.toString();
 	}

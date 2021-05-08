@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import ch.skymarshall.tcwriter.generators.TestCaseToJava;
 import ch.skymarshall.tcwriter.generators.model.TestCaseException;

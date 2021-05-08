@@ -20,10 +20,15 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.EventListener;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import javax.swing.AbstractListModel;
 import javax.swing.event.EventListenerList;
@@ -61,8 +66,6 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 		implements IListModelDelegate<T>, Iterable<T>, ListModelRef<T>, Serializable {
 
 	private static final long serialVersionUID = 5327890361188939439L;
-
-	private transient EventListenerList listeners = new EventListenerList();
 
 	private class Edition implements IEdition<T> {
 		final T value;
@@ -109,28 +112,16 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 	}
 
 	/**
-	 * Current edition. If edition is in progress serialization may store a list
-	 * with inconsistent order
+	 * Marker
 	 */
-	private transient Edition objectEdition = null;
-
-	private transient IScopedSupport propertyChange = new ControllerPropertyChangeSupport(this, false).scoped(this);
-
-	private final ArrayList<T> data = new ArrayList<>();
-
-	/**
-	 * The current view
-	 */
-	private final ObjectProperty<IListView<T>> viewProperty = new ObjectProperty<>("View", propertyChange);
-
-	private ListModelImpl<T> parent;
-
-	private String name = getClass().getSimpleName();
+	private interface IChildModelListener<T> extends IListModelListener<T> {
+//	just a marker
+	}
 
 	/**
 	 * Local listeners. Mostly used to handle list stacking
 	 */
-	private class LocalImpl implements IListViewOwner<T>, PropertyChangeListener, IListModelListener<T>, Serializable {
+	private class LocalImpl implements IListViewOwner<T>, PropertyChangeListener, IChildModelListener<T>, Serializable {
 
 		@Override
 		public IListView<T> getParentView() {
@@ -211,11 +202,32 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 
 	}
 
+	/**
+	 * Current edition. If edition is in progress serialization may store a list
+	 * with inconsistent order
+	 */
+	private transient Edition objectEdition = null;
+
+	private transient IScopedSupport propertyChange = new ControllerPropertyChangeSupport(this, false).scoped(this);
+
+	private final EventListenerList listeners = new EventListenerList();
+
+	private final ArrayList<T> data = new ArrayList<>();
+
+	/**
+	 * The current view
+	 */
+	private final ObjectProperty<IListView<T>> viewProperty = new ObjectProperty<>("View", propertyChange);
+
+	private final ListModelImpl<T> parent;
+
+	private String name = getClass().getSimpleName();
 	private final LocalImpl localImpl = new LocalImpl();
 
 	private ListModel<T> base;
 
 	public ListModelImpl(final IListView<T> view) {
+		this.parent = null;
 		if (view == null) {
 			throw new IllegalArgumentException("View must not be null");
 		}
@@ -255,103 +267,91 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 
 	public void addListener(final IListModelListener<T> listener) {
 		listeners.add(IListModelListener.class, listener);
+		if (IChildModelListener.class.isInstance(listener)) {
+			listeners.add(IChildModelListener.class, IChildModelListener.class.cast(listener));
+		}
 	}
 
 	public void removeListener(final IListModelListener<T> listener) {
 		listeners.remove(IListModelListener.class, listener);
+		if (listener instanceof IChildModelListener) {
+			listeners.remove(IChildModelListener.class, IChildModelListener.class.cast(listener));
+		}
 	}
 
-	private IListModelListener<T>[] listeners() {
-		return listeners.getListeners(IListModelListener.class);
+	private <U extends EventListener> Stream<U> streamOf(Class<U> clazz) {
+		return Arrays.stream(listeners.getListeners(clazz));
+	}
+
+	private void forEachListener(Consumer<IListModelListener<T>> action) {
+		streamOf(IListModelListener.class).forEach(action::accept);
+	}
+
+	private void forEachListener(ListEvent<T> event, BiConsumer<IListModelListener<T>, ListEvent<T>> action) {
+		streamOf(IListModelListener.class).forEach(l -> action.accept(l, event));
+	}
+
+	private void forEachChildListener(ListEvent<T> event, BiConsumer<IChildModelListener<T>, ListEvent<T>> action) {
+		streamOf(IChildModelListener.class).forEach(l -> action.accept(l, event));
+	}
+
+	private ListEvent<T> listEvent(T object) {
+		return new ListEvent<>(this, object);
+	}
+
+	private ListEvent<T> listEvent(List<T> objects) {
+		return new ListEvent<>(this, objects);
 	}
 
 	private void fireMutating() {
-		for (final IListModelListener<T> listener : listeners()) {
-			listener.mutates();
-		}
+		forEachListener(IListModelListener::mutates);
 	}
 
 	private void fireMutated() {
-		for (final IListModelListener<T> listener : listeners()) {
-			listener.mutated();
-		}
+		forEachListener(IListModelListener::mutated);
 	}
 
 	protected void fireValuesSet(final List<T> set) {
-		final ListEvent<T> event = new ListEvent<>(this, set);
-		for (final IListModelListener<T> listener : listeners()) {
-			listener.valuesSet(event);
-		}
+		forEachListener(listEvent(set), IListModelListener::valuesSet);
 	}
 
 	protected void fireValuesCleared(final List<T> cleared) {
-		final ListEvent<T> event = new ListEvent<>(this, cleared);
-		for (final IListModelListener<T> listener : listeners()) {
-			listener.valuesCleared(event);
-		}
+		forEachListener(listEvent(cleared), IListModelListener::valuesCleared);
 	}
 
 	protected void fireValuesAdded(final List<T> added) {
-		final ListEvent<T> event = new ListEvent<>(this, added);
-		for (final IListModelListener<T> listener : listeners()) {
-			listener.valuesAdded(event);
-		}
+		forEachListener(listEvent(added), IListModelListener::valuesAdded);
 	}
 
-	protected void fireValueAdded(final T object) {
-		final ListEvent<T> event = new ListEvent<>(this, object);
-		for (final IListModelListener<T> listener : listeners()) {
-			listener.valuesAdded(event);
-		}
+	protected void fireValueAdded(final T added) {
+		forEachListener(listEvent(added), IListModelListener::valuesAdded);
 	}
 
-	protected void fireValueRemoved(final T object) {
-		final ListEvent<T> event = new ListEvent<>(this, object);
-		for (final IListModelListener<T> listener : listeners()) {
-			listener.valuesRemoved(event);
-		}
+	protected void fireValueRemoved(final T removed) {
+		forEachListener(listEvent(removed), IListModelListener::valuesRemoved);
 	}
 
-	private void fireEditionCancelled(final T value) {
-		final ListEvent<T> event = new ListEvent<>(this, value);
-		for (final IListModelListener<T> listener : listeners()) {
-			listener.editionCancelled(event);
-		}
+	private void fireEditionCancelled(final T edition) {
+		forEachListener(listEvent(edition), IListModelListener::editionCancelled);
 	}
 
-	protected void fireEditionsStarted(final T value) {
-		final ListEvent<T> event = new ListEvent<>(this, value);
-		for (final IListModelListener<T> listener : listeners()) {
-			listener.editionStarted(event);
-		}
+	protected void fireEditionsStarted(final T edition) {
+		forEachListener(listEvent(edition), IListModelListener::editionStarted);
 	}
 
 	protected void fireEditionStopping() {
 		if (objectEdition == null) {
 			return;
 		}
-		final ListEvent<T> event = new ListEvent<>(this, objectEdition.value);
-		for (final IListModelListener<T> listener : listeners()) {
-			listener.editionStopping(event);
-		}
+		forEachListener(listEvent(objectEdition.value), IListModelListener::editionStopping);
 	}
 
 	protected void fireInnerEditionStopped() {
-		final ListEvent<T> event = new ListEvent<>(this, objectEdition.value);
-		for (final IListModelListener<T> listener : listeners()) {
-			if (LocalImpl.class.isInstance(listener)) {
-				listener.editionStopped(event);
-			}
-		}
+		forEachChildListener(listEvent(objectEdition.value), IChildModelListener::editionStopped);
 	}
 
 	protected void fireEditionStopped(final T value) {
-		final ListEvent<T> event = new ListEvent<>(this, value);
-		for (final IListModelListener<T> listener : listeners()) {
-			if (!LocalImpl.class.isInstance(listener)) {
-				listener.editionStopped(event);
-			}
-		}
+		forEachChildListener(listEvent(value), IChildModelListener::editionStopped);
 	}
 
 	public void fireViewUpdated() {
@@ -642,7 +642,6 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 
 	private void readObject(final java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
 		stream.defaultReadObject();
-		listeners = new EventListenerList();
 		propertyChange = new ControllerPropertyChangeSupport(this).scoped(this);
 	}
 

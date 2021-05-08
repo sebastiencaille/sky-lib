@@ -31,7 +31,7 @@ public class SimpleFlow extends ch.skymarshall.dataflowmgr.examples.simple.Abstr
 		}
 
 		private DataPointState state_binding_simpleService_init_simpleService_init = DataPointState.NOT_TRIGGERED;
-		private void setStateBindingSimpleServiceInitSimpleServiceInit(DataPointState state_binding_simpleService_init_simpleService_init) {
+		private synchronized void setStateBindingSimpleServiceInitSimpleServiceInit(DataPointState state_binding_simpleService_init_simpleService_init) {
 		    this.state_binding_simpleService_init_simpleService_init = state_binding_simpleService_init_simpleService_init;
 		}
 		private synchronized boolean canTriggerBindingSimpleServiceInitSimpleServiceInit() {
@@ -52,7 +52,7 @@ public class SimpleFlow extends ch.skymarshall.dataflowmgr.examples.simple.Abstr
 		}
 		
 		private DataPointState state_binding_simpleService_complete_complete = DataPointState.NOT_TRIGGERED;
-		private void setStateBindingSimpleServiceCompleteComplete(DataPointState state_binding_simpleService_complete_complete) {
+		private synchronized void setStateBindingSimpleServiceCompleteComplete(DataPointState state_binding_simpleService_complete_complete) {
 		    this.state_binding_simpleService_complete_complete = state_binding_simpleService_complete_complete;
 		}
 		private synchronized boolean canTriggerBindingSimpleServiceCompleteComplete() {
@@ -78,7 +78,7 @@ public class SimpleFlow extends ch.skymarshall.dataflowmgr.examples.simple.Abstr
 		}
 		
 		private DataPointState state_binding_simpleService_keepAsIs_complete = DataPointState.NOT_TRIGGERED;
-		private void setStateBindingSimpleServiceKeepAsIsComplete(DataPointState state_binding_simpleService_keepAsIs_complete) {
+		private synchronized void setStateBindingSimpleServiceKeepAsIsComplete(DataPointState state_binding_simpleService_keepAsIs_complete) {
 		    this.state_binding_simpleService_keepAsIs_complete = state_binding_simpleService_keepAsIs_complete;
 		}
 		private synchronized boolean canTriggerBindingSimpleServiceKeepAsIsComplete() {
@@ -89,7 +89,7 @@ public class SimpleFlow extends ch.skymarshall.dataflowmgr.examples.simple.Abstr
 		    return false;
 		}
 		private DataPointState state_binding_exit_exit = DataPointState.NOT_TRIGGERED;
-		private void setStateBindingExitExit(DataPointState state_binding_exit_exit) {
+		private synchronized void setStateBindingExitExit(DataPointState state_binding_exit_exit) {
 		    this.state_binding_exit_exit = state_binding_exit_exit;
 		}
 		private synchronized boolean canTriggerBindingExitExit() {
@@ -156,12 +156,12 @@ public class SimpleFlow extends ch.skymarshall.dataflowmgr.examples.simple.Abstr
 	
 	private Maybe<FlowExecution> simpleService_complete_complete_conditional(FlowExecution execution, final Function<Maybe<FlowExecution>, Maybe<FlowExecution>> callModifier, Runnable... callbacks) {
 	    final Maybe<FlowExecution> topCall = simpleService_complete_complete_svcCall(execution, callModifier, callbacks);
-	    final Maybe<Boolean> activator_8df6a70c_c8ba_4ef5_b5a5_c2cefcfb4d90 = Maybe.just(execution)
+	    final Maybe<Boolean> activator_dc66daa0_a94d_49d4_be55_badc718ab102 = Maybe.just(execution)
 	        .map(f -> this.simpleFlowConditions.mustComplete(f.simpleService_init))
 	        .subscribeOn(Schedulers.computation());
 	
 	    final Maybe<FlowExecution> activators = Maybe.just(true)
-	        .zipWith(activator_8df6a70c_c8ba_4ef5_b5a5_c2cefcfb4d90, (u, r) -> u.booleanValue() && r.booleanValue())
+	        .zipWith(activator_dc66daa0_a94d_49d4_be55_badc718ab102, (u, r) -> u.booleanValue() && r.booleanValue())
 	        .mapOptional(b -> b ? Optional.of(execution) : Optional.empty())
 	        .flatMap(e -> topCall)
 	        .doOnComplete(() -> { execution.setStateBindingSimpleServiceCompleteComplete(DataPointState.TRIGGERED); execution.setStateComplete(DataPointState.SKIPPED); })

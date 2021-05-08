@@ -115,8 +115,8 @@ public class SwingGenericEditorPanel extends JPanel implements IGenericEditor {
 		JComponent displayed = sp;
 		if (prop.isReadOnly()) {
 			displayed = sp.getEditor();
-			Arrays.stream(displayed.getComponents()).filter(c -> c instanceof JTextField)
-					.forEach(c -> ((JTextField) c).setEditable(false));
+			Arrays.stream(displayed.getComponents()).filter(JTextField.class::isInstance).map(JTextField.class::cast)
+					.forEach(c -> c.setEditable(false));
 			displayed.setBorder(sp.getBorder());
 		}
 

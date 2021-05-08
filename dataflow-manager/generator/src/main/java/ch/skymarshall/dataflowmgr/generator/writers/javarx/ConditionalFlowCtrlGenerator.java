@@ -44,14 +44,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 		visitActivators(context, genContext.getLocalContext());
 
 		if (!exclusions.isEmpty()) {
-			flowFactories.eoli().append("return Maybe.just(execution).mapOptional(f -> ").append(exclusions.stream()
-					.map(x -> "DataPointState.SKIPPED == f." + visitor.dataPointStateOf(x)).collect(joining(" && ")))
-					.append("?Optional.of(f):Optional.empty())");
-			if (genContext.getLocalContext().debug) {
-				flowFactories.append(".doOnComplete(() -> Log.of(this).info(\"%s: Call skipped\"))",
-						visitor.toVariable(context.binding));
-			}
-			flowFactories.append(".doOnSuccess(f -> %s.subscribe())", genContext.getLocalContext().getTopCall()).eos();
+			generateConditionalCallToService(genContext, context, exclusions);
 		} else {
 			flowFactories.appendIndented("return %s", genContext.getLocalContext().getTopCall()).eos();
 		}
@@ -86,16 +79,37 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 			final List<String> activatorParameters = visitor.guessParameters(context, activator);
 
 			activatorNames.add("activator_" + visitor.toVariable(activator));
-
-			flowFactories.appendIndented("final Maybe<Boolean> activator_%s = Maybe.just(execution)",
-					visitor.toVariable(activator)).indent();
-			visitor.addAdapterZip(adapterNames);
-			flowFactories.eoli() //
-					.append(".map(f -> ").appendMethodCall("this", activator.getCall(), activatorParameters).append(")") //
-					.eoli().append(".subscribeOn(Schedulers.computation())").eos().unindent().eol();
+			generateCallActivator(activator, adapterNames, activatorParameters);
 		}
 
 		// Activation check
+		generateCallAllActivators(context, activatorNames);
+		genContext.setTopCall("activators");
+	}
+
+	private void generateConditionalCallToService(BaseGenContext<GenContext> genContext, BindingContext context,
+			final Set<Binding> exclusions) {
+		flowFactories.eoli().append("return Maybe.just(execution).mapOptional(f -> ").append(exclusions.stream()
+				.map(x -> "DataPointState.SKIPPED == f." + visitor.dataPointStateOf(x)).collect(joining(" && ")))
+				.append("?Optional.of(f):Optional.empty())");
+		if (genContext.getLocalContext().debug) {
+			flowFactories.append(".doOnComplete(() -> Log.of(this).info(\"%s: Call skipped\"))",
+					visitor.toVariable(context.binding));
+		}
+		flowFactories.append(".doOnSuccess(f -> %s.subscribe())", genContext.getLocalContext().getTopCall()).eos();
+	}
+
+	private void generateCallActivator(final CustomCall activator, final List<String> adapterNames,
+			final List<String> activatorParameters) {
+		flowFactories.appendIndented("final Maybe<Boolean> activator_%s = Maybe.just(execution)",
+				visitor.toVariable(activator)).indent();
+		visitor.addAdapterZip(adapterNames);
+		flowFactories.eoli() //
+				.append(".map(f -> ").appendMethodCall("this", activator.getCall(), activatorParameters).append(")") //
+				.eoli().append(".subscribeOn(Schedulers.computation())").eos().unindent().eol();
+	}
+
+	private void generateCallAllActivators(final BindingContext context, final List<String> activatorNames) {
 		flowFactories.appendIndented("final Maybe<FlowExecution> activators = Maybe.just(true)").indent();
 		for (final String activatorName : activatorNames) {
 			flowFactories.eoli().append(".zipWith(").append(activatorName)
@@ -108,7 +122,5 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 						toCamelCase(visitor.varNameOf(context.binding)), toCamelCase(context.binding.toDataPoint())) //
 				.eoli().append(".doOnTerminate(() -> Arrays.stream(callbacks).forEach(Runnable::run))") //
 				.eos().unindent().eol();
-		genContext.setTopCall("activators");
 	}
-
 }

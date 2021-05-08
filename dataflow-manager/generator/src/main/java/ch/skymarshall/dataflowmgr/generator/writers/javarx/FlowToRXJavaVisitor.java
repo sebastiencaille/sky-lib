@@ -64,6 +64,25 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 
 		super.processFlow();
 
+		generateGlobalFlow();
+
+		final String inputBinding = flow.getBindings().stream().filter(Binding::isEntry).map(this::varNameOf)
+				.collect(StreamHelper.single()).orElseThrow(WrongCountException::new);
+
+		final Map<String, String> templateProperties = new HashMap<>();
+		templateProperties.put("package", packageName);
+		templateProperties.put("flow.name", flow.getName());
+		templateProperties.put("flow.input", flow.getEntryPointType());
+		templateProperties.put("flow.output", "void");
+		templateProperties.put("flow.executionClass", flowClass.toString());
+		templateProperties.put("flow.factories", flowFactories.toString());
+		templateProperties.put("flow.code", flowCode.toString());
+		templateProperties.put("flow.start", inputBinding);
+		templateProperties.put("imports", imports.stream().map(i -> "import " + i + ";").collect(joining("\n")));
+		return template.apply(templateProperties, JavaCodeGenerator.classToSource(packageName, flow.getName()));
+	}
+
+	private void generateGlobalFlow() {
 		Collections.reverse(processOrder);
 		for (final BindingContext context : processOrder) {
 			appendInfo(flowCode, context.binding).eol();
@@ -83,21 +102,6 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 			}
 			flowCode.append(")").eos();
 		}
-
-		final String inputBinding = flow.getBindings().stream().filter(Binding::isEntry).map(this::varNameOf)
-				.collect(StreamHelper.single()).orElseThrow(WrongCountException::new);
-
-		final Map<String, String> templateProperties = new HashMap<>();
-		templateProperties.put("package", packageName);
-		templateProperties.put("flow.name", flow.getName());
-		templateProperties.put("flow.input", flow.getEntryPointType());
-		templateProperties.put("flow.output", "void");
-		templateProperties.put("flow.executionClass", flowClass.toString());
-		templateProperties.put("flow.factories", flowFactories.toString());
-		templateProperties.put("flow.code", flowCode.toString());
-		templateProperties.put("flow.start", inputBinding);
-		templateProperties.put("imports", imports.stream().map(i -> "import " + i + ";").collect(joining("\n")));
-		return template.apply(templateProperties, JavaCodeGenerator.classToSource(packageName, flow.getName()));
 	}
 
 	@Override
@@ -105,32 +109,17 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 
 		availableVars.add(new BindingImplVariable(context.outputDataPoint, context.getProcessor().getReturnType(),
 				"f." + context.outputDataPoint));
-
 		appendInfo(flowFactories, context.binding).eol();
-
-		final String varNameOfBinding = varNameOf(context.binding);
-		flowClass.addVarDecl("private", "DataPointState", bindingStateOf(context.binding),
-				"DataPointState.NOT_TRIGGERED");
-		flowClass.addSetter("private", "DataPointState", bindingStateOf(context.binding));
-
-		flowClass.appendIndented("private synchronized boolean canTrigger%s()", toCamelCase(varNameOfBinding))
-				.openBlock()//
-				.openIf(String.format("this.%s == DataPointState.NOT_TRIGGERED", bindingStateOf(context.binding))) //
-				.appendIndented("this.%s = DataPointState.TRIGGERING", bindingStateOf(context.binding)).eos() //
-				.appendIndented("return true").eos().closeBlock() //
-				.appendIndented("return false").eos() //
-				.closeBlock();
-
+		generateDataState(context);
 		if (!context.binding.isExit() && !definedDataPoints.contains(context.outputDataPoint)) {
 			generateDataPoint(context);
 		}
-
 		visitExecution(context);
 	}
 
 	private void generateDataPoint(final BindingContext context) {
 		definedDataPoints.add(context.outputDataPoint);
-		addDataSetter(context.binding.getProcessor().getReturnType(), context.outputDataPoint, true);
+		generateDataSetter(context.binding.getProcessor().getReturnType(), context.outputDataPoint, true);
 	}
 
 	private void visitExecution(final BindingContext context) {
@@ -142,11 +131,13 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 		flowFactories.appendIndented(
 				"private Maybe<FlowExecution> %s(FlowExecution execution, final Function<Maybe<FlowExecution>, Maybe<FlowExecution>> callModifier, Runnable... callbacks)",
 				varNameOf(context.binding)).openBlock();
-		// Call default activation when all deps are ok
 		flowFactories.appendIndented("final Maybe<FlowExecution> topCall = %s(execution, callModifier, callbacks)",
 				genContext.getTopCall()).eos();
 		flowFactories.appendIndented("return Maybe.just(execution)").indent();
+
+		// Call default activation when all deps are ok
 		addBindingDepsCheck(context.binding, dependencies);
+		
 		if (debug) {
 			flowFactories.eoli().append(".doOnSuccess(r -> Log.of(this).info(\"%s: Deps success\"))", context.binding)
 					.eoli().append(".doOnComplete(() -> Log.of(this).info(\"%s: Deps skipping\"))", context.binding); //
@@ -162,9 +153,8 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 		for (final ExternalAdapter adapter : externalAdapter) {
 			final String varNameOfAdapter = varNameOf(context.binding, adapter);
 			if (!context.binding.isExit()) {
-				addDataSetter(adapter.getReturnType(), varNameOfAdapter, false);
-				final BindingImplVariable parameter = new BindingImplVariable(adapter, "f." + varNameOfAdapter);
-				availableVars.add(parameter);
+				generateDataSetter(adapter.getReturnType(), varNameOfAdapter, false);
+				availableVars.add(new BindingImplVariable(adapter, "f." + varNameOfAdapter));
 			}
 
 			adapterNames.add("adapter_" + toVariable(adapter));
@@ -195,7 +185,7 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 		}
 	}
 
-	private void addDataSetter(final String type, final String property, boolean withState) {
+	private void generateDataSetter(final String type, final String property, boolean withState) {
 		if (withState) {
 			flowClass.addVarDecl("private", "DataPointState", "state_" + property, "DataPointState.NOT_TRIGGERED");
 			flowClass.addSetter("private", "DataPointState", "state_" + property);
@@ -209,6 +199,21 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 		}
 		flowClass.closeBlock().eol();
 
+	}
+
+	private void generateDataState(final BindingContext context) {
+		final String varNameOfBinding = varNameOf(context.binding);
+		flowClass.addVarDecl("private", "DataPointState", bindingStateOf(context.binding),
+				"DataPointState.NOT_TRIGGERED");
+		flowClass.addSetter("private synchronized", "DataPointState", bindingStateOf(context.binding));
+
+		flowClass.appendIndented("private synchronized boolean canTrigger%s()", toCamelCase(varNameOfBinding))
+				.openBlock()//
+				.openIf(String.format("this.%s == DataPointState.NOT_TRIGGERED", bindingStateOf(context.binding))) //
+				.appendIndented("this.%s = DataPointState.TRIGGERING", bindingStateOf(context.binding)).eos() //
+				.appendIndented("return true").eos().closeBlock() //
+				.appendIndented("return false").eos() //
+				.closeBlock();
 	}
 
 	/**

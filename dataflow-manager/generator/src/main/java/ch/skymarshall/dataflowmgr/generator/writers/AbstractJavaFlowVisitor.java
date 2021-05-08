@@ -51,6 +51,7 @@ public abstract class AbstractJavaFlowVisitor extends AbstractFlowVisitor {
 
 	public final Set<String> definedDataPoints = new HashSet<>();
 
+	// All variables declared until now 
 	protected final List<BindingImplVariable> availableVars = new ArrayList<>();
 
 	protected AbstractJavaFlowVisitor(final Flow flow, final String packageName, final Template template) {

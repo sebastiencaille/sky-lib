@@ -35,9 +35,7 @@ public class JListContentBinding<T> extends ComponentBindingAdapter<List<T>> {
 	@Override
 	public void setComponentValue(final AbstractProperty source, final List<T> value) {
 		final DefaultListModel<T> newModel = new DefaultListModel<>();
-		for (final T obj : value) {
-			newModel.addElement(obj);
-		}
+		value.forEach(newModel::addElement);
 		list.setModel(newModel);
 	}
 

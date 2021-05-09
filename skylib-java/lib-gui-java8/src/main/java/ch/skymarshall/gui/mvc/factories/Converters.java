@@ -26,12 +26,12 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import ch.skymarshall.gui.Utils;
 import ch.skymarshall.gui.mvc.GuiErrors.GuiError;
 import ch.skymarshall.gui.mvc.converters.ConversionException;
 import ch.skymarshall.gui.mvc.converters.GuiErrorToStringConverter;
 import ch.skymarshall.gui.mvc.converters.IConverter;
 import ch.skymarshall.gui.mvc.converters.WriteOnlyException;
+import ch.skymarshall.util.FormatterHelper;
 import ch.skymarshall.util.FunctionWithException;
 import ch.skymarshall.util.Lambda;
 
@@ -273,7 +273,7 @@ public final class Converters {
 	}
 
 	public static <T extends Number> IConverter<T, String> numberToSize() {
-		return wo(Utils::toSize);
+		return wo(FormatterHelper::toSize);
 	}
 
 	public static <T> IConverter<T, Boolean> isNotNull() {

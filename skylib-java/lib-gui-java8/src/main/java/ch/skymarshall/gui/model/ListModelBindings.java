@@ -36,12 +36,7 @@ public interface ListModelBindings {
 
 			@Override
 			public void addComponentValueChangeListener(final IComponentLink<Collection<T>> link) {
-				listener = new IListModelListener<T>() {
-					@Override
-					public void editionStopped(final ListEvent<T> event) {
-						link.setValueFromComponent(model, model.values());
-					}
-				};
+				listener = IListModelListener.editionStopped(e -> link.setValueFromComponent(model, model.values()));
 				model.addListener(listener);
 			}
 

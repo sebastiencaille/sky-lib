@@ -35,9 +35,7 @@ public class JComboBoxContentBinding<T, U extends Collection<T>> extends Compone
 	@Override
 	public void setComponentValue(final AbstractProperty source, final U value) {
 		final DefaultComboBoxModel<T> newModel = new DefaultComboBoxModel<>();
-		for (final T obj : value) {
-			newModel.addElement(obj);
-		}
+		value.forEach(newModel::addElement);
 		box.setModel(newModel);
 	}
 

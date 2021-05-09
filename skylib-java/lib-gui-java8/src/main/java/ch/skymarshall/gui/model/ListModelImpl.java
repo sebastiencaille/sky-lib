@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.swing.AbstractListModel;
@@ -168,7 +169,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 				return;
 			}
 			if (data.size() / event.getObjects().size() < 2) {
-				event.getObjects().forEach(v -> insert(v)); // NOSONAR
+				event.getObjects().forEach(ListModelImpl.this::insert);
 			} else {
 				addValues(event.getObjects());
 			}
@@ -176,7 +177,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 
 		@Override
 		public void valuesRemoved(final ListEvent<T> event) {
-			event.getObjects().forEach(v -> remove(v));// NOSONAR
+			event.getObjects().forEach(ListModelImpl.this::remove);// NOSONAR
 		}
 
 		@Override
@@ -391,9 +392,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 		checkNoEdition();
 		final List<T> newData = new ArrayList<>();
 		if (parent != null) {
-			for (int i = 0; i < parent.getSize(); i++) {
-				newData.add(parent.getValueAt(i));
-			}
+			newData.addAll(parent.values());
 		} else {
 			newData.addAll(data);
 		}
@@ -431,19 +430,15 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 	}
 
 	protected List<T> addToModel(final Collection<T> newData) {
-		final List<T> addedData = new ArrayList<>(newData.size());
-		final int oldSize = data.size();
+				final int oldSize = data.size();
 		StreamHelper.throwIfContainsNull(newData.stream());
-		newData.stream().filter(viewProperty.getValue()::accept).forEach(value -> {
-			data.add(value);
-			addedData.add(value);
-		});
-
+		final List<T> addedData = newData.stream().filter(viewProperty.getValue()::accept).collect(Collectors.toList());
+		data.addAll(addedData);
 		Collections.sort(data, viewProperty.getValue());
+		fireContentsChanged(this, 0, oldSize - 1);
 		if (!addedData.isEmpty()) {
 			fireIntervalAdded(this, oldSize, data.size() - 1);
 		}
-		fireContentsChanged(this, 0, oldSize - 1);
 		return addedData;
 	}
 
@@ -463,7 +458,6 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 	}
 
 	private int computeInsertionPoint(final T value) {
-
 		final int row = Collections.binarySearch(data, value, viewProperty.getValue());
 		int index;
 		if (row >= 0) {
@@ -540,8 +534,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 		}
 		final StringBuilder builder = new StringBuilder();
 		for (final StackTraceElement stack : objectEdition.editionStack) {
-			builder.append(stack.toString());
-			builder.append('\n');
+			builder.append(stack.toString()).append('\n');
 		}
 		throw new IllegalStateException(
 				"Edition already in progress:" + objectEdition + ", editor stack=" + builder.toString());

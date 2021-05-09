@@ -70,22 +70,17 @@ public class SwingBindings {
 	}
 
 	/**
-	 *
-	 * @author scaille
-	 *
-	 * @param <T> incoming data type
-	 * @param <C> component type
-	 * @param <L> listener type
-	 */
+	 * Class that contains all listener lifecycle (create, add, remove)
+	 **/
 	private static class ListenerRegistration<T, C, L> {
-		private final BiFunction<IComponentLink<T>, C, L> listenerFactory;
+		private final BiFunction<IComponentLink<T>, C, L> createListener;
 		private final BiConsumer<C, L> addListener;
 		private final BiConsumer<C, L> removeListener;
 		private L listener;
 
-		public ListenerRegistration(final BiFunction<IComponentLink<T>, C, L> listenerFactory,
+		public ListenerRegistration(final BiFunction<IComponentLink<T>, C, L> createListener,
 				final BiConsumer<C, L> addListener, final BiConsumer<C, L> removeListener) {
-			this.listenerFactory = listenerFactory;
+			this.createListener = createListener;
 			this.addListener = addListener;
 			this.removeListener = removeListener;
 		}
@@ -94,7 +89,7 @@ public class SwingBindings {
 			if (listener != null) {
 				throw new IllegalStateException("Listener already added");
 			}
-			listener = listenerFactory.apply(toProperty, component);
+			listener = createListener.apply(toProperty, component);
 			addListener.accept(component, listener);
 		}
 

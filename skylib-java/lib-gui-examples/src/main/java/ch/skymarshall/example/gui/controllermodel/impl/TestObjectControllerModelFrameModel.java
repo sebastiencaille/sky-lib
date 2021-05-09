@@ -38,9 +38,9 @@ public class TestObjectControllerModelFrameModel
 
 	@Override
 	protected void bindModel(final TestObjectGuiModel testObjectModel) {
-		testObjectModel.getAFirstValueProperty().bind(this.<String>getColumnBinding(Columns.VAL1));
+		testObjectModel.getAFirstValueProperty().bind(this.<String>createColumnBinding(Columns.VAL1));
 		testObjectModel.getASecondValueProperty().bind(Converters.intToString())
-				.bind(this.<String>getColumnBinding(Columns.VAL2));
+				.bind(this.<String>createColumnBinding(Columns.VAL2));
 	}
 
 	@Override

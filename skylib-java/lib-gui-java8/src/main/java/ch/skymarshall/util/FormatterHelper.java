@@ -13,11 +13,11 @@
  *  IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  ******************************************************************************/
-package ch.skymarshall.gui;
+package ch.skymarshall.util;
 
 import java.text.DecimalFormat;
 
-public interface Utils {
+public interface FormatterHelper {
 
 	public static String toSize(final Number size) {
 		float val = size.floatValue();

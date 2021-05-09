@@ -43,12 +43,13 @@
  */
 package ch.skymarshall.gui.swing.model;
 
+import static java.util.stream.Collectors.toSet;
+
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import ch.skymarshall.gui.model.IEdition;
 import ch.skymarshall.gui.model.ListModel;
 import ch.skymarshall.gui.mvc.IComponentBinding;
 import ch.skymarshall.gui.mvc.IComponentLink;
@@ -56,7 +57,7 @@ import ch.skymarshall.gui.mvc.IObjectGuiModel;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 
 /**
- * Table model that is using an object controller per column.
+ * A table model that is using an object controller per column.
  * <p>
  *
  * @author Sebastien Caille
@@ -125,6 +126,7 @@ public abstract class ObjectControllerTableModel<O, M extends IObjectGuiModel<O>
 	}
 
 	private final TableBinding<O, ?>[] bindings;
+	
 	private final M objectModel;
 
 	/**
@@ -148,7 +150,7 @@ public abstract class ObjectControllerTableModel<O, M extends IObjectGuiModel<O>
 		}
 	}
 
-	protected <U> IComponentBinding<U> getColumnBinding(final C column) {
+	protected <U> IComponentBinding<U> createColumnBinding(final C column) {
 		final TableBinding<O, U> binding = new TableBinding<>();
 		bindings[column.ordinal()] = binding;
 		return binding;
@@ -167,21 +169,11 @@ public abstract class ObjectControllerTableModel<O, M extends IObjectGuiModel<O>
 	}
 
 	public void commit() {
-		final Set<O> changes = new HashSet<>();
-		for (final TableBinding<O, ?> binding : bindings) {
-			changes.addAll(binding.changes.keySet());
-		}
+		final Set<O> changes = Arrays.stream(bindings).flatMap(b -> b.changes.keySet().stream()).collect(toSet());
 		for (final O change : changes) {
 			objectModel.setCurrentObject(change);
-			try (IEdition<O> edition = model.startEditingValue(change)) {
-				for (final TableBinding<?, ?> binding : bindings) {
-					binding.commit(change);
-				}
-			}
+			model.editValue(change, c -> Arrays.stream(bindings).forEach(b -> b.commit(c)));
 		}
-		for (final TableBinding<?, ?> binding : bindings) {
-			binding.changes.clear();
-		}
-
+		Arrays.stream(bindings).forEach(b -> b.changes.clear());
 	}
 }

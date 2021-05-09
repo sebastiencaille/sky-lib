@@ -22,7 +22,7 @@ import java.util.function.BiConsumer;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import ch.skymarshall.gui.Utils;
+import ch.skymarshall.util.FormatterHelper;
 
 @SuppressWarnings("serial")
 public class SizeRenderer extends DefaultTableCellRenderer {
@@ -37,7 +37,7 @@ public class SizeRenderer extends DefaultTableCellRenderer {
 	public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
 			final boolean hasFocus, final int row, final int column) {
 		Optional<Number> size = Optional.ofNullable((Number) value);
-		Component comp = super.getTableCellRendererComponent(table, size.map(Utils::toSize).orElse(null), isSelected,
+		Component comp = super.getTableCellRendererComponent(table, size.map(FormatterHelper::toSize).orElse(null), isSelected,
 				hasFocus, row, column);
 		if (componentTuning != null) {
 			componentTuning.accept(size.map(Number::longValue).orElse(-1L), comp);

@@ -64,9 +64,19 @@ model.insert(new TestObject(3));
 model.insert(toMove);
 checkModel(childModel, 1, 3, 4);
 
-model.startEditingValue(toMove);
-toMove.val = 2;
-model.stopEditingValue();
+try {
+  model.startEditingValue(toMove);
+  toMove.val = 2;
+} finally {
+  model.stopEditingValue();
+}
+// or
+try (IEdition e = model.startEditingValue(toMove)) {
+    toMove.val = 2;
+}
+// or
+model.editValue(toMove, v -> v.val = 2);
+
 checkModel(childModel, 1, 2, 3);
 ```
 It's possible to control the filter using the MVC concept  [[Code](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/model/impl/TableModelExampleView.java)]

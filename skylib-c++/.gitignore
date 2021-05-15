@@ -1,3 +1,8 @@
-/Debug
 /sonar.sh
 /Release/
+*.d
+*.o
+Debug/.scannerwork/
+Debug/TestApp
+Debug/bw_output/
+

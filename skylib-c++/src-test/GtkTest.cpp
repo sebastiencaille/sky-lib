@@ -139,6 +139,7 @@ GtkTest::GtkTest() :
 	set_child(m_box);
 	m_box.set_margin(10);
 
+	// Basic text listener
 	testProperty1.bind(string_to_ustring::of())->bind(
 			entry_binding::of(m_entry))->add_dependency(dep_test::of());
 	m_entry.set_expand();
@@ -155,6 +156,7 @@ GtkTest::GtkTest() :
 	m_label.set_expand();
 	m_box.append(m_label);
 
+	// Text to input numbers
 	testProperty2.bind(int_to_string::of())->bind(string_to_ustring::of())->bind(
 			entry_binding::of(m_intEntry));
 	m_intEntry.set_expand();

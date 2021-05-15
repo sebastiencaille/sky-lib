@@ -299,7 +299,7 @@ public:
 };
 
 /**
- * End ofLazy chain, used to control the chain
+ * End of chain
  */
 template<class _Pt, class _PsT> class end_of_chain: public binding_link {
 private:

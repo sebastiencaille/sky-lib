@@ -3,7 +3,7 @@
 Concepts  [[here](../skylib-java)] 
 
 The POC is based on GTK4. The compilation requires gtkmm4.
-To compile, use make in Debug folder
+To compile, use make all in Debug folder
 
 The main file is [[GtkTest.cpp](src-test/GtkTest.cpp)]
 

@@ -31,7 +31,7 @@ testProperty1.bind(string_to_ustring::of())->bind(entry_binding::of(m_entry));
 testProperty1.bind(string_to_ustring::of())->bind(label_binding::of(m_label));
 ```
 
-**Gtk gui pilot***
+**Gtk gui pilot**
 
 It is also possible to pilot the Gtk gui the following way.
 

@@ -75,7 +75,6 @@ private:
 	public:
 		dep_test() = default;
 		~dep_test() DESTR_WITH_LOG("~dep_test")
-		;
 
 		void register_dep(weak_ptr<binding_chain_controller> _controller,
 				weak_ptr<binding_chain_dependency> _myself) final {

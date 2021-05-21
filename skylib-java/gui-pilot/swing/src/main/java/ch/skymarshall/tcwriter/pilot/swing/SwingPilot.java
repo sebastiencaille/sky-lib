@@ -186,7 +186,7 @@ public class SwingPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 				result.append((((AbstractButton) c).getText()));
 			}
 			result.append("]\n");
-			if (Container.class.isInstance(c)) {
+			if (c instanceof Container) {
 				dumpHierarchy((Container) c, result, indent + "  ");
 			}
 		});

@@ -17,10 +17,10 @@ import ch.skymarshall.tcwriter.pilot.swing.JToggleButtonPilot;
 import ch.skymarshall.tcwriter.pilot.swing.SwingPilot;
 import ch.skymarshall.util.helpers.Log;
 
-public class ModelExampleTest {
+ class ModelExampleTest {
 
 	@Test
-	public void testExample() throws InvocationTargetException, InterruptedException {
+	void testExample() throws InvocationTargetException, InterruptedException {
 
 		final TableModelExampleView[] view = new TableModelExampleView[1];
 		EventQueue.invokeAndWait(() -> {

@@ -33,7 +33,7 @@ import ch.skymarshall.gui.mvc.properties.Configuration;
 import ch.skymarshall.gui.mvc.properties.IntProperty;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 
-public class ModelBasicTest {
+class ModelBasicTest {
 
 	private class TestGuiModel extends GuiModel {
 
@@ -92,7 +92,7 @@ public class ModelBasicTest {
 	}
 
 	@Test
-	public void testChain() throws NoSuchFieldException {
+	void testChain() throws NoSuchFieldException {
 		final TestBinding binding = new TestBinding();
 		model.integerProperty.bind(Converters.intToString()).bind(binding);
 		controller.activate();
@@ -121,7 +121,7 @@ public class ModelBasicTest {
 	}
 
 	@Test
-	public void testIdentityChain() {
+	void testIdentityChain() {
 		final TestBinding binding = new TestBinding();
 		model.stringProperty.bind(binding);
 		controller.activate();
@@ -134,7 +134,7 @@ public class ModelBasicTest {
 	}
 
 	@Test
-	public void testAutoCommit() throws NoSuchFieldException {
+	void testAutoCommit() throws NoSuchFieldException {
 		final TestObject testObject = new TestObject(123);
 
 		model.integerProperty.configureTyped(persistent(testObject, testObjectValAccess()), Configuration::autoCommit);

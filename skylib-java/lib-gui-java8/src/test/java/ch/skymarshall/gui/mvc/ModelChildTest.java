@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 
-public class ModelChildTest {
+class ModelChildTest {
 
 	private static class Parent {
 
@@ -23,7 +23,7 @@ public class ModelChildTest {
 	}
 
 	@Test
-	public void testChildProperty() {
+	void testChildProperty() {
 
 		final IScopedSupport propertySupport = new ControllerPropertyChangeSupport(this, false).scoped(this);
 		final ObjectProperty<Parent> parent = new ObjectProperty<>("parent", propertySupport);

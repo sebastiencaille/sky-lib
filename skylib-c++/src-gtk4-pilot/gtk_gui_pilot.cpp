@@ -21,8 +21,7 @@ shared_ptr<gtk_entry_pilot> gtk_gui_pilot::entry(string const& _name) {
 }
 
 Gtk::Widget* gtk_gui_pilot::find_widget(string const& _name) {
-	ustring uname(_name);
-	Gtk::Widget *found = find(m_window->get_child(), uname);
+	Gtk::Widget *found = find(m_window->get_child(), _name);
 	if (found == NULL) {
 		throw gui_pilot_exception("No widget found: " + _name);
 	}

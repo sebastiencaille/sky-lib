@@ -34,7 +34,7 @@ import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.properties.ListProperty;
 import ch.skymarshall.gui.swing.factories.SwingBindings;
 
-public class TableTest {
+class TableTest {
 
 	private static final IListView<TestObject> VIEW = ListViews.sorted((o1, o2) -> o1.getVal() - o2.getVal());
 
@@ -47,7 +47,7 @@ public class TableTest {
 	}
 
 	@Test
-	public void testSelectionOnInsert() throws InvocationTargetException, InterruptedException {
+	void testSelectionOnInsert() throws InvocationTargetException, InterruptedException {
 
 		final IScopedSupport support = new ControllerPropertyChangeSupport(this).scoped(this);
 		final Model model = new Model(support);

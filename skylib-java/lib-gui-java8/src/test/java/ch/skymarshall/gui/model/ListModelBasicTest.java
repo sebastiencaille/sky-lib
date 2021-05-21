@@ -30,7 +30,7 @@ import ch.skymarshall.gui.model.views.IListView;
 import ch.skymarshall.gui.model.views.ListViews;
 import ch.skymarshall.gui.swing.model.ListModelTableModel;
 
-public class ListModelBasicTest {
+class ListModelBasicTest {
 
 	private static final IListView<TestObject> VIEW = ListViews.sorted((o1, o2) -> o1.getVal() - o2.getVal());
 	static final IListView<TestObject> REVERTED_VIEW = ListViews.sorted((o1, o2) -> o2.getVal() - o1.getVal());
@@ -98,7 +98,7 @@ public class ListModelBasicTest {
 	}
 
 	@Test
-	public void testInsert() {
+	void testInsert() {
 		final ListModel<TestObject> model = new ListModel<>(VIEW);
 		final ListModel<TestObject> childModel = model.child(ListViews.inherited());
 
@@ -115,7 +115,7 @@ public class ListModelBasicTest {
 	}
 
 	@Test
-	public void testUpdate() {
+	void testUpdate() {
 
 		final EventsCounting eventsCounting = new EventsCounting();
 
@@ -147,7 +147,7 @@ public class ListModelBasicTest {
 		checkModel(model, 0, 1, 3);
 		checkModel(childModel, 0, 1, 3);
 		checkModel(table, 0, 1, 3);
-		
+
 		assertEquals(3, eventsCounting.valueAddedEvent);
 		assertEquals(3, eventsCounting.editionStartedEvent);
 		assertEquals(3, eventsCounting.editionStoppingEvent);
@@ -155,7 +155,7 @@ public class ListModelBasicTest {
 	}
 
 	@Test
-	public void testUpdateChildOnly() {
+	void testUpdateChildOnly() {
 		final ListModel<TestObject> model = new ListModel<>(VIEW);
 		final ListModel<TestObject> childModel = model.child(ListViews
 				.sortedFiltered((t1, t2) -> Integer.compare(t2.getVal(), t1.getVal()), t -> t.getVal() % 2 == 0));
@@ -197,7 +197,7 @@ public class ListModelBasicTest {
 	}
 
 	@Test
-	public void testDelete() {
+	void testDelete() {
 		final ListModel<TestObject> model = new ListModel<>(VIEW);
 		final ListModel<TestObject> childModel = model.child(ListViews.inherited());
 
@@ -212,7 +212,7 @@ public class ListModelBasicTest {
 	}
 
 	@Test
-	public void testSearch() {
+	void testSearch() {
 
 		final ListModel<TestObject> model = new ListModel<>(VIEW);
 		final ListModel<TestObject> childModel = model.child(ListViews
@@ -231,7 +231,7 @@ public class ListModelBasicTest {
 	}
 
 	@Test
-	public void testChangeSorting() {
+	void testChangeSorting() {
 		final ListModel<TestObject> model = new ListModel<>(VIEW);
 		final ListModel<TestObject> childModel = model.child(ListViews.inherited());
 

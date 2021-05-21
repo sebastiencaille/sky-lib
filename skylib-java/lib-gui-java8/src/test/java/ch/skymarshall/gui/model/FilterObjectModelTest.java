@@ -27,7 +27,7 @@ import ch.skymarshall.gui.TestObject;
 import ch.skymarshall.gui.model.views.IListView;
 import ch.skymarshall.gui.model.views.ListViews;
 
-public class FilterObjectModelTest {
+class FilterObjectModelTest {
 
 	private static final IListView<TestObject> COMPARATOR = ListViews.sorted((o1, o2) -> o1.getVal() - o2.getVal());
 
@@ -36,7 +36,7 @@ public class FilterObjectModelTest {
 	private static final Predicate<TestObject> ODD_FILTER = value -> value.getVal() % 2 == 1;
 
 	@Test
-	public void testInsert() {
+	void testInsert() {
 		final ListModel<TestObject> baseModel = new ListModel<>(ListViews.sorted(COMPARATOR));
 		final ListModel<TestObject> model = baseModel.child(ListViews.filtered(EVEN_FILTER));
 
@@ -49,7 +49,7 @@ public class FilterObjectModelTest {
 	}
 
 	@Test
-	public void testFind() {
+	void testFind() {
 		final ListModel<TestObject> baseModel = new ListModel<>(ListViews.sorted(COMPARATOR));
 
 		baseModel.insert(new TestObject(1));
@@ -59,7 +59,7 @@ public class FilterObjectModelTest {
 	}
 
 	@Test
-	public void testUpdate() {
+	void testUpdate() {
 		final ListModel<TestObject> baseModel = new ListModel<>(ListViews.sorted(COMPARATOR));
 		final ListModel<TestObject> model = baseModel.child(ListViews.filtered(EVEN_FILTER));
 
@@ -75,7 +75,7 @@ public class FilterObjectModelTest {
 	}
 
 	@Test
-	public void testFindForEdition() {
+	void testFindForEdition() {
 		final ListModel<TestObject> baseModel = new ListModel<>(ListViews.sorted(COMPARATOR));
 
 		baseModel.insert(new TestObject(1));
@@ -89,7 +89,7 @@ public class FilterObjectModelTest {
 	}
 
 	@Test
-	public void testFindOrCreateForEdition() {
+	void testFindOrCreateForEdition() {
 		final ListModel<TestObject> baseModel = new ListModel<>(ListViews.sorted(COMPARATOR));
 
 		baseModel.insert(new TestObject(4));
@@ -102,7 +102,7 @@ public class FilterObjectModelTest {
 	}
 
 	@Test
-	public void testDelete() {
+	void testDelete() {
 		final ListModel<TestObject> baseModel = new ListModel<>(ListViews.sorted(COMPARATOR));
 		final ListModel<TestObject> model = baseModel.child(ListViews.filtered(EVEN_FILTER));
 
@@ -117,7 +117,7 @@ public class FilterObjectModelTest {
 	}
 
 	@Test
-	public void testChangeFilter() {
+	void testChangeFilter() {
 		final ListModel<TestObject> baseModel = new ListModel<>(ListViews.sorted(COMPARATOR));
 		final ListModel<TestObject> model = baseModel.child(ListViews.filtered(EVEN_FILTER));
 

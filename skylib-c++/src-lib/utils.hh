@@ -22,7 +22,7 @@ namespace ch_skymarshall::utils {
 
 #ifndef DEBUG_DESTR
 #define DESTR_LOG(p) (void)0
-#define DESTR_WITH_LOG(p) = default;;
+#define DESTR_WITH_LOG(p) = default;
 #endif
 
 

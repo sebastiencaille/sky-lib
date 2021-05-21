@@ -28,7 +28,7 @@ import io.undertow.Undertow;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 
-public class SeleniumExampleTest {
+class SeleniumExampleTest {
 
 	/* **************************** WEB SERVER **************************** */
 
@@ -112,7 +112,7 @@ public class SeleniumExampleTest {
 	}
 
 	@Test
-	public void testExample() {
+	void testExample() {
 
 		pilot.getDriver().get("http://localhost:8080/example1.html");
 		//

@@ -14,7 +14,7 @@ import ch.skymarshall.gui.mvc.factories.Converters;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.gui.swing.factories.SwingBindings;
 
-public class SwingBindingsTest {
+class SwingBindingsTest {
 	private class TestGuiModel extends GuiModel {
 
 		private final ObjectProperty<String> stringProperty;
@@ -41,7 +41,7 @@ public class SwingBindingsTest {
 	}
 
 	@Test
-	public void testItemSelectable() {
+	void testItemSelectable() {
 		final JCheckBox cb = new JCheckBox("UnitTest");
 		model.stringProperty.setValue(this, Boolean.FALSE.toString());
 		final IBindingController cbBinding = model.stringProperty

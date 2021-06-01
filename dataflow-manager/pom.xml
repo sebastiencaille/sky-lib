@@ -21,7 +21,7 @@
 		<module>model</module>
 		<module>generator</module>
 		<module>examples</module>
-		<module>data-flow-annotations</module>
+		<module>annotations</module>
 	</modules>
 
 	<properties>

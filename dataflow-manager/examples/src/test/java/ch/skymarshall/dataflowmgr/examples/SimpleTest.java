@@ -17,6 +17,7 @@ import ch.skymarshall.dataflowmgr.generator.writers.dot.FlowToDotVisitor;
 import ch.skymarshall.dataflowmgr.generator.writers.javaproc.FlowToProceduralJavaVisitor;
 import ch.skymarshall.dataflowmgr.generator.writers.javarx.FlowToRXJavaVisitor;
 import ch.skymarshall.dataflowmgr.model.Binding;
+import ch.skymarshall.dataflowmgr.model.Binding.Builder;
 import ch.skymarshall.dataflowmgr.model.CustomCall;
 import ch.skymarshall.dataflowmgr.model.Dictionary;
 import ch.skymarshall.dataflowmgr.model.Dictionary.Calls;
@@ -67,18 +68,18 @@ public class SimpleTest {
 		final ExternalAdapter getCompletion = simpleExternalAdapter.get("getCompletion");
 		final ExternalAdapter displayData = simpleExternalAdapter.get("display");
 
+		// Bindings
+		final Builder entryToInit = Binding.builder(Flow.ENTRY_POINT, init);
+		final Builder initToComplete = Binding.builder(init, complete).withExternalData(getCompletion).as(DP_Complete);
+		final Builder initToKeepAsIs = Binding.builder(init, keepAsIs).as(DP_Complete);
+		final Builder completeToExit = Binding.builder(DP_Complete, Flow.EXIT_POINT).withExternalData(displayData);
+
 		// Flow
-		final Flow flow = Flow.builder("SimpleFlow", UUID.randomUUID(), "java.lang.String")//
-				.add(Binding.builder(Flow.ENTRY_POINT, init)) // entry point -> init(...)
+		final Flow flow = Flow.builder("SimpleFlow", UUID.randomUUID(), "java.lang.String") //
+				.add(entryToInit) //
 				.add(ConditionalFlowCtrl.builder("CompleteData") //
-						.add(mustComplete, Binding.builder(init, complete) // if mustComplete, init -> complete
-								.withExternalData(getCompletion) // using some external data
-								.as(DP_Complete)) // name the output
-						.defaultCase(Binding.builder(init, keepAsIs)// fallback, init -> keepAsIs
-								.as(DP_Complete))) // name the output
-				.add(Binding.builder(DP_Complete, Flow.EXIT_POINT) // DP_ENHANCED -> exit point
-						.withExternalData(displayData)) // sending data to the display
-				.build();
+						.conditional(mustComplete, initToComplete).fallback(initToKeepAsIs)) //
+				.add(completeToExit).build();
 
 		// Generate the procedural flow
 		new FlowToProceduralJavaVisitor(flow, "ch.skymarshall.dataflowmgr.examples.simple",

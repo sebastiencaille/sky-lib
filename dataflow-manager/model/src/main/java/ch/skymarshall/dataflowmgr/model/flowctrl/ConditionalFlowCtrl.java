@@ -43,12 +43,12 @@ public class ConditionalFlowCtrl extends WithId implements IFlowCheck {
 			return this;
 		}
 
-		public Builder add(CustomCall condition, final Binding.Builder binding) {
+		public Builder conditional(CustomCall condition, final Binding.Builder binding) {
 			bindings.add(binding.addRule(activator(condition)));
 			return this;
 		}
 
-		public Builder defaultCase(final Binding.Builder binding) {
+		public Builder fallback(final Binding.Builder binding) {
 			if (getActivators(binding.getRules()).count() > 0 && getDefaultBinding().isPresent()) {
 				throw new IllegalStateException("A default binding is already present");
 			}

@@ -10,7 +10,7 @@ int_to_string::int_to_string() = default;
 
 int_to_string::~int_to_string() = default;
 
-const int int_to_string::convert_component_value_to_property_value(
+int int_to_string::convert_component_value_to_property_value(
 		const string _componentValue) {
 	char *endPtr;
 	errno = 0;
@@ -21,7 +21,7 @@ const int int_to_string::convert_component_value_to_property_value(
 	return (int) result;
 }
 
-const string int_to_string::convert_property_value_to_component_value(
+string int_to_string::convert_property_value_to_component_value(
 		const int _propertyValue) {
 	return to_string(_propertyValue);
 }

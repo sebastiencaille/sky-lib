@@ -41,9 +41,9 @@ public:
 
 	virtual ~string_to_ustring();
 
-	const string convert_component_value_to_property_value(
+	string convert_component_value_to_property_value(
 			const ustring _componentValue) ;
-	const ustring convert_property_value_to_component_value(
+	ustring convert_property_value_to_component_value(
 			const string _propertyValue) ;
 
 	static shared_ptr<binding_converter<string, ustring>> of() {

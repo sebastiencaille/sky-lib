@@ -39,7 +39,7 @@ class error_notifier {
 
 public:
 
-	virtual void set_error(source_ptr _source, const gui_exception& _e) = 0;
+	virtual void set_error(source_ptr _source, const gui_exception &_e) = 0;
 
 	virtual void clear_error(source_ptr _source) = 0;
 
@@ -52,9 +52,9 @@ public:
 
 template<class _Pt, class _Ct> class binding_converter {
 public:
-	virtual const _Pt convert_component_value_to_property_value(
+	virtual _Pt convert_component_value_to_property_value(
 			const _Ct _componentValue) = 0;
-	virtual const _Ct convert_property_value_to_component_value(
+	virtual _Ct convert_property_value_to_component_value(
 			const _Pt _propertyValue) = 0;
 
 	virtual ~binding_converter() = default;
@@ -64,13 +64,13 @@ public:
 class logic_error_to_string: public binding_converter<gui_exception_ptr, string> {
 
 public:
-	const gui_exception_ptr convert_component_value_to_property_value(
+	gui_exception_ptr convert_component_value_to_property_value(
 			const string _componentValue) final {
 		// nonsense
 		return nullptr;
 	}
 
-	const string convert_property_value_to_component_value(
+	string convert_property_value_to_component_value(
 			gui_exception_ptr _propertyValue) final {
 		if (_propertyValue == nullptr) {
 			return "";
@@ -78,7 +78,7 @@ public:
 		return _propertyValue->what();
 	}
 
-	static shared_ptr<binding_converter<gui_exception_ptr, string>> of () {
+	static shared_ptr<binding_converter<gui_exception_ptr, string>> of() {
 		return make_shared<logic_error_to_string>();
 	}
 };
@@ -107,7 +107,7 @@ public:
 
 	virtual void remove_component_value_change_listener() = 0;
 
-	virtual void set_component_value(property& _source, _CT _value) = 0;
+	virtual void set_component_value(property &_source, _CT _value) = 0;
 
 	virtual source_ptr get_component() = 0;
 
@@ -135,7 +135,8 @@ using namespace std::placeholders;
 class binding_chain_dependency {
 public:
 	/* Registers the dependency. The dependency is already stored in the binding chain */
-	virtual void register_dep(weak_ptr<binding_chain_controller> _chain, weak_ptr<binding_chain_dependency> _dependency) = 0;
+	virtual void register_dep(weak_ptr<binding_chain_controller> _chain,
+			weak_ptr<binding_chain_dependency> _dependency) = 0;
 
 	virtual ~binding_chain_dependency() = default;
 };
@@ -151,7 +152,7 @@ public:
 	virtual ~action() = default;
 
 	virtual void apply(property_group_actions _action,
-			const property* _property) = 0;
+			const property *_property) = 0;
 
 };
 
@@ -162,28 +163,33 @@ private:
 	weak_ptr<property_listener_dispatcher> m_listener;
 
 	std::function<
-			void(property_group_actions _action, const property* _property)> m_action;
+			void(property_group_actions _action, const property *_property)> m_action;
 
-	void action_before(const source_ptr caller, property* _property) {
+	void action_before(const source_ptr caller, property *_property) {
 		m_action(BEFORE_FIRE, _property);
 	}
 
-	void action_after(const source_ptr caller, property* _property) {
+	void action_after(const source_ptr caller, property *_property) {
 		m_action(AFTER_FIRE, _property);
 	}
 
 public:
 
-	explicit action_dependency(std::function<
+	explicit action_dependency(
+			std::function<
 					void(property_group_actions _action,
-							const property* _property)> _action) :
-		m_action(_action) {
+							const property *_property)> _action) :
+			m_action(_action) {
 	}
 
-	void register_dep(weak_ptr<binding_chain_controller> _chain, weak_ptr<binding_chain_dependency> _myself) final {
-		_chain.lock()->get_property().add_listener(property_listener_dispatcher::ofLazy(m_listener, _myself,
-				std::bind(&action_dependency::action_before, this, _1, _2),
-				std::bind(&action_dependency::action_after, this, _1, _2)));
+	void register_dep(weak_ptr<binding_chain_controller> _chain,
+			weak_ptr<binding_chain_dependency> _myself) final {
+		_chain.lock()->get_property().add_listener(
+				property_listener_dispatcher::ofLazy(m_listener, _myself,
+						std::bind(&action_dependency::action_before, this, _1,
+								_2),
+						std::bind(&action_dependency::action_after, this, _1,
+								_2)));
 	}
 
 	void unbind() {

@@ -38,10 +38,10 @@ public:
 
 	~int_to_string();
 
-	const int convert_component_value_to_property_value(
+	int convert_component_value_to_property_value(
 			const string _componentValue) override;
 
-	const string convert_property_value_to_component_value(
+	string convert_property_value_to_component_value(
 			const int _propertyValue) override;
 
 	static shared_ptr<binding_converter<int, string>> of() {

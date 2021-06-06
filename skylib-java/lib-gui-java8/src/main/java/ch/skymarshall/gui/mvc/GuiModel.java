@@ -15,45 +15,88 @@
  ******************************************************************************/
 package ch.skymarshall.gui.mvc;
 
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import ch.skymarshall.gui.mvc.properties.AbstractTypedProperty;
 import ch.skymarshall.gui.mvc.properties.ErrorProperty;
 
 public class GuiModel {
 
-	protected final IScopedSupport propertySupport;
-	protected final ErrorProperty errorProperty;
+	public static class ModelConfiguration {
+		protected final IScopedSupport propertySupport;
+		protected ErrorProperty errorProperty;
+		
 
-	public GuiModel(final IScopedSupport propertySupport, final ErrorProperty errorProperty) {
-		this.propertySupport = propertySupport;
-		this.errorProperty = errorProperty;
+		public ModelConfiguration(IScopedSupport propertySupport) {
+			this.propertySupport = propertySupport;
+		}
+
+		public ModelConfiguration with(ErrorProperty errorProperty) {
+			this.errorProperty = errorProperty;
+			return this;
+		}
+		
+		public ModelConfiguration ifNotSet(Supplier<ErrorProperty> errSupplier) {
+			if (this.errorProperty == null) {
+				this.errorProperty = errSupplier.get();
+			}
+			return this;
+		}
+
+		public ModelConfiguration validate() {
+			if (errorProperty == null) {
+				errorProperty = createErrorProperty("InputError", this);
+			}
+			return this;
+		}
+
+		public IScopedSupport getPropertySupport() {
+			return propertySupport;
+		}
+
+		public ErrorProperty getErrorProperty() {
+			return errorProperty;
+		}
+
 	}
 
-	public GuiModel(final IScopedSupport propertySupport) {
-		this(propertySupport, createErrorProperty("InputError", propertySupport));
+	public static ModelConfiguration with(final IScopedSupport propertySupport, final ErrorProperty errorProperty) {
+		return new ModelConfiguration(propertySupport).with(errorProperty);
 	}
 
-	public GuiModel(final GuiController controller) {
-		this(controller.getScopedChangeSupport());
+	public static ModelConfiguration with(final IScopedSupport propertySupport) {
+		return new ModelConfiguration(propertySupport);
 	}
 
-	public GuiModel(final ControllerPropertyChangeSupport propertySupport) {
-		this.propertySupport = propertySupport.scoped(this);
-		this.errorProperty = createErrorProperty("InputError", this.propertySupport);
+	public static ModelConfiguration of(final GuiController controller) {
+		return new ModelConfiguration(controller.getScopedChangeSupport());
+	}
+
+	protected final ModelConfiguration configuration;
+
+	public GuiModel(ModelConfiguration configuration) {
+		this.configuration = configuration.validate();
+	}
+
+	public ModelConfiguration getConfiguration() {
+		return configuration;
 	}
 
 	public ErrorProperty getErrorProperty() {
-		return errorProperty;
+		return configuration.errorProperty;
 	}
 
-	protected static ErrorProperty createErrorProperty(final String name, final IScopedSupport support) {
-		return new ErrorProperty(name, support);
+	protected static ErrorProperty createErrorProperty(final String name, final ModelConfiguration config) {
+		return new ErrorProperty(name, config.getPropertySupport());
 	}
 
 	public IScopedSupport getPropertySupport() {
-		return propertySupport;
+		return configuration.propertySupport;
 	}
 
 	public void activate() {
-		propertySupport.attachAll();
+		configuration.propertySupport.attachAll();
 	}
 
 }

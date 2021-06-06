@@ -1,16 +1,13 @@
 package ${package};
 
 import java.util.Arrays;
-import ch.skymarshall.gui.mvc.GuiController;
 import ch.skymarshall.gui.mvc.GuiModel;
 import ch.skymarshall.gui.mvc.IComponentBinding;
 import ch.skymarshall.gui.mvc.IComponentLink;
 import ch.skymarshall.gui.mvc.IObjectGuiModel;
-import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.factories.Persisters;
 import ch.skymarshall.gui.mvc.persisters.ObjectProviderPersister;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
-import ch.skymarshall.gui.mvc.properties.ErrorProperty;
 import ch.skymarshall.gui.mvc.properties.Configuration;
 ${imports}
 
@@ -24,26 +21,14 @@ public class ${modelClass} extends GuiModel implements IObjectGuiModel<${objectC
 	
 	protected final AbstractProperty[] allProperties;
 	
-    public ${modelClass}(final String prefix, final IScopedSupport propertySupport, final ErrorProperty errorProperty) {
-        super(propertySupport, errorProperty);
+    public ${modelClass}(final String prefix, ModelConfiguration config) {
+		super(config.ifNotSet(()->	GuiModel.createErrorProperty(prefix + "-${objectClassSimpleName}-Error", config)));
 		${fields.init}
 		allProperties = new AbstractProperty[]{${properties.all}};
     }
-
-    public ${modelClass}(final String prefix, final GuiController controller) {
-        this(prefix, controller.getScopedChangeSupport(), GuiModel.createErrorProperty(prefix + "-${objectClassSimpleName}-Error", controller.getScopedChangeSupport()));
-    }
-
-    public ${modelClass}(final GuiController controller) {
-        this("${objectClassSimpleName}", controller.getScopedChangeSupport(), GuiModel.createErrorProperty("${objectClassSimpleName}-Error", controller.getScopedChangeSupport()));
-    }
-
-    public ${modelClass}(final String prefix, final IScopedSupport propertySupport) {
-        this(prefix, propertySupport, GuiModel.createErrorProperty(prefix + "-${objectClassSimpleName}-Error", propertySupport));
-    }
-
-    public ${modelClass}(final IScopedSupport propertySupport) {
-        this("${objectClassSimpleName}", propertySupport, GuiModel.createErrorProperty("${objectClassSimpleName}-Error", propertySupport));
+    
+    public ${modelClass}(ModelConfiguration config) {
+    	this("", config);
     }
 
 	${fields.getters}
@@ -51,10 +36,10 @@ public class ${modelClass} extends GuiModel implements IObjectGuiModel<${objectC
     @Override
     public void load() {
     	try {
-    		propertySupport.transmitAllToComponentOnly();
+    		getPropertySupport().transmitAllToComponentOnly();
 			Arrays.stream(allProperties).forEach(p -> p.load(this));
 		} finally {
-			propertySupport.enableAllTransmit();
+			getPropertySupport().enableAllTransmit();
 		}
     }
 

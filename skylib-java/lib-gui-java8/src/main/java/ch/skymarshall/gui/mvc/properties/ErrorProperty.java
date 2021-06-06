@@ -16,6 +16,7 @@
 package ch.skymarshall.gui.mvc.properties;
 
 import ch.skymarshall.gui.mvc.GuiErrors.GuiError;
+import ch.skymarshall.gui.mvc.GuiModel;
 import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty.ErrorNotifier;
 
@@ -27,6 +28,10 @@ import ch.skymarshall.gui.mvc.properties.AbstractProperty.ErrorNotifier;
  *
  */
 public class ErrorProperty extends ObjectProperty<GuiError> implements ErrorNotifier {
+
+	public ErrorProperty(final String name, final GuiModel model) {
+		super(name, model, null);
+	}
 
 	public ErrorProperty(final String name, final IScopedSupport propertySupport) {
 		super(name, propertySupport, null);

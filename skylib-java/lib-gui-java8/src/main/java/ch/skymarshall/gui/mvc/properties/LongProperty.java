@@ -19,6 +19,7 @@ import java.util.function.Consumer;
 
 import ch.skymarshall.gui.mvc.BindingChain;
 import ch.skymarshall.gui.mvc.BindingChain.EndOfChain;
+import ch.skymarshall.gui.mvc.GuiModel;
 import ch.skymarshall.gui.mvc.IScopedSupport;
 
 /**
@@ -32,6 +33,15 @@ public class LongProperty extends AbstractTypedProperty<Long> {
 
 	private long value;
 	private final long defaultValue;
+
+	public LongProperty(final String name, final GuiModel model, final long defaultValue) {
+		super(name, model);
+		this.defaultValue = defaultValue;
+	}
+
+	public LongProperty(final String name, final GuiModel model) {
+		this(name, model, 0);
+	}
 
 	public LongProperty(final String name, final IScopedSupport propertySupport, final long defaultValue) {
 		super(name, propertySupport);

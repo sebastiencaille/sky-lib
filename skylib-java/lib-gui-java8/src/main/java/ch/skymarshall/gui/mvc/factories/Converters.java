@@ -32,8 +32,8 @@ import ch.skymarshall.gui.mvc.converters.GuiErrorToStringConverter;
 import ch.skymarshall.gui.mvc.converters.IConverter;
 import ch.skymarshall.gui.mvc.converters.WriteOnlyException;
 import ch.skymarshall.util.FormatterHelper;
-import ch.skymarshall.util.FunctionWithException;
-import ch.skymarshall.util.Lambda;
+import ch.skymarshall.util.helpers.Lambda;
+import ch.skymarshall.util.helpers.Lambda.FunctionWithException;
 
 public final class Converters {
 

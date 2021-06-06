@@ -1,6 +1,5 @@
 package ch.skymarshall.gui.mvc;
 
-import static ch.skymarshall.gui.mvc.properties.Configuration.errorNotifier;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -17,17 +16,11 @@ import ch.skymarshall.gui.swing.factories.SwingBindings;
 class SwingBindingsTest {
 	private class TestGuiModel extends GuiModel {
 
-		private final ObjectProperty<String> stringProperty;
+		private final ObjectProperty<String> stringProperty = new ObjectProperty<String>("StringProperty", this);
 
 		public TestGuiModel(final GuiController controller) {
-			super(controller);
-			try {
-				stringProperty = new ObjectProperty<String>("StringProperty", propertySupport)
-						.configureTyped(errorNotifier(errorProperty));
-			} catch (final SecurityException e) {
-				throw new IllegalStateException(e);
-			}
-			stringProperty.attach();
+			super(of(controller));
+			getPropertySupport().attachAll();
 		}
 	}
 
@@ -36,7 +29,7 @@ class SwingBindingsTest {
 
 	@BeforeEach
 	public void init() {
-		controller = new GuiController(new ControllerPropertyChangeSupport(this, false));
+		controller = new GuiController(new ControllerPropertyChangeSupport(this));
 		model = new TestGuiModel(controller);
 	}
 

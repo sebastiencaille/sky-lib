@@ -28,19 +28,18 @@ public class ControllerExampleModel extends ControllerExampleObjectGuiModel {
 	private static final Comparator<TestObject> TEST_COMPARATOR = (o1, o2) -> o1.getAFirstValue()
 			.compareTo(o2.getAFirstValue());
 
-	public ControllerExampleModel(final GuiController controller) {
-		super(controller);
-	}
-
-	private final ObjectProperty<String> staticListSelection = new ObjectProperty<>("StaticListSelection",
-			propertySupport);
+	private final ObjectProperty<String> staticListSelection = new ObjectProperty<>("StaticListSelection", this);
 
 	private final ObjectProperty<String> dynamicListObjectProperty = new ObjectProperty<>("DynamicListObjectProperty",
-			propertySupport);
+			this);
 
-	private final ObjectProperty<TestObject> complexProperty = new ObjectProperty<>("ComplexObject", propertySupport);
+	private final ObjectProperty<TestObject> complexProperty = new ObjectProperty<>("ComplexObject", this);
 
-	final ListModel<TestObject> tableModel = new ListModel<>(ListViews.sorted(TEST_COMPARATOR));
+	private final ListModel<TestObject> tableModel = new ListModel<>(ListViews.sorted(TEST_COMPARATOR));
+
+	public ControllerExampleModel(final GuiController controller) {
+		super(of(controller));
+	}
 
 	public ObjectProperty<String> getStaticListSelectionProperty() {
 		return staticListSelection;

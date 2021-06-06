@@ -208,13 +208,13 @@ public abstract class AttributeProcessor {
 
 	String generateInitializationWithType() {
 		return String.format(
-				"%s = new %s(prefix + \"-%s\",  propertySupport).configureTyped(Configuration.persistent(currentObjectProvider, %s), Configuration.errorNotifier(errorProperty));",
+				"%s = new %s(prefix + \"-%s\", this).configureTyped(Configuration.persistent(currentObjectProvider, %s));",
 				getPropertyName(), getPropertyType(), attrib.getName(), getFieldCreation());
 	}
 
 	String generateInitialization() {
 		return String.format(
-				"%s = new %s(prefix + \"-%s\",  propertySupport).configureTyped(Configuration.persistent(currentObjectProvider, %s), Configuration.errorNotifier(errorProperty));",
+				"%s = new %s(prefix + \"-%s\", this).configureTyped(Configuration.persistent(currentObjectProvider, %s));",
 				getPropertyName(), getPropertyType(), attrib.getName(), getFieldCreation());
 	}
 

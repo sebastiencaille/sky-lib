@@ -23,6 +23,7 @@ import java.util.function.Function;
 
 import ch.skymarshall.gui.mvc.BindingChain;
 import ch.skymarshall.gui.mvc.BindingChain.EndOfChain;
+import ch.skymarshall.gui.mvc.GuiModel;
 import ch.skymarshall.gui.mvc.IScopedSupport;
 
 /**
@@ -39,6 +40,17 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 
 	private T defaultValue;
 
+	public ObjectProperty(final String name, final GuiModel model, final T defaultValue) {
+		super(name, model);
+		this.defaultValue = defaultValue;
+		value = defaultValue;
+	}
+
+	public ObjectProperty(String name, GuiModel model) {
+		this(name, model, null);
+	}
+
+	
 	public ObjectProperty(final String name, final IScopedSupport propertySupport, final T defaultValue) {
 		super(name, propertySupport);
 		this.defaultValue = defaultValue;
@@ -48,6 +60,7 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 	public ObjectProperty(final String name, final IScopedSupport propertySupport) {
 		this(name, propertySupport, null);
 	}
+
 
 	@Override
 	public EndOfChain<T> createBindingChain() {

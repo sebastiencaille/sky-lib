@@ -1,5 +1,6 @@
 package ch.skymarshall.tcwriter.gui.editors.steps;
 
+import static ch.skymarshall.gui.mvc.GuiModel.of;
 import static ch.skymarshall.gui.mvc.factories.BindingDependencies.preserveOnUpdateOf;
 
 import java.util.ArrayList;
@@ -25,14 +26,14 @@ public class StepEditorController extends GuiController {
 
 	private final StepEditorModel model;
 
-	private final TCWriterModel guiModel;
-
 	private final IScopedSupport changeSupport;
 
+	private final TCWriterModel guiModel;
+
 	public StepEditorController(final TCWriterController controller) {
-		changeSupport = controller.getScopedChangeSupport();
-		this.model = new StepEditorModel(changeSupport);
-		guiModel = controller.getModel();
+		this.model = new StepEditorModel(of(controller));
+		this.changeSupport = controller.getScopedChangeSupport();
+		this.guiModel = controller.getModel();
 	}
 
 	public TCWriterModel getGuiModel() {

@@ -15,6 +15,7 @@
  ******************************************************************************/
 package ch.skymarshall.gui.swing;
 
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayOutputStream;
@@ -24,6 +25,9 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import javax.swing.ImageIcon;
+
+import ch.skymarshall.gui.mvc.IPropertyEventListener;
+import ch.skymarshall.gui.mvc.PropertyEvent.EventKind;
 
 public interface SwingHelper {
 
@@ -50,20 +54,12 @@ public interface SwingHelper {
 	public static ActionListener actionListener(final Consumer<ActionEvent> c) {
 		return c::accept;
 	}
-
-	public interface ActionWithException<E extends Exception> {
-
-		void execute() throws E;
-
-	}
-
-	public static <E extends Exception> void withException(final ActionWithException<E> e,
-			final Consumer<E> exceptionHandler) {
-		try {
-			e.execute();
-		} catch (final Exception ex) {
-			exceptionHandler.accept((E) ex);
-		}
-
+	
+	public static IPropertyEventListener checkSwingThread() {
+		return (c,e) -> {
+			if (e.getKind() == EventKind.BEFORE && e.getProperty().getTransmitMode().toComponent && !EventQueue.isDispatchThread()) {
+					throw new IllegalStateException("Property " + e.getProperty().getName() + " fired out of Swing thread");
+			}
+		};
 	}
 }

@@ -13,7 +13,7 @@
  *  IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  ******************************************************************************/
-package ch.skymarshall.util;
+package ch.skymarshall.util.helpers;
 
 import java.util.Collection;
 import java.util.stream.Collectors;

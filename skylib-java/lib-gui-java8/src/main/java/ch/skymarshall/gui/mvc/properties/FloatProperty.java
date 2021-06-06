@@ -19,6 +19,7 @@ import java.util.function.Consumer;
 
 import ch.skymarshall.gui.mvc.BindingChain;
 import ch.skymarshall.gui.mvc.BindingChain.EndOfChain;
+import ch.skymarshall.gui.mvc.GuiModel;
 import ch.skymarshall.gui.mvc.IScopedSupport;
 
 /**
@@ -32,6 +33,15 @@ public class FloatProperty extends AbstractTypedProperty<Float> {
 
 	private float value;
 	private final float defaultValue;
+
+	public FloatProperty(final String name, final GuiModel model, final float defaultValue) {
+		super(name, model);
+		this.defaultValue = defaultValue;
+	}
+
+	public FloatProperty(final String name, final GuiModel model) {
+		this(name, model, 0.0f);
+	}
 
 	public FloatProperty(final String name, final IScopedSupport propertySupport, final float defaultValue) {
 		super(name, propertySupport);

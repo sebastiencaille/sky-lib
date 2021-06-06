@@ -13,38 +13,5 @@
  *  IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  ******************************************************************************/
-package ch.skymarshall.util;
+package ch.skymarshall.util.helpers;
 
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-
-public class Lambda {
-
-	private Lambda() {
-
-	}
-
-	public static final FunctionWithException<?, ?, ?> FUNCTION_IDENTITY = value -> value;
-
-	public static <T, E extends Exception> FunctionWithException<T, T, E> identity() {
-		return (FunctionWithException<T, T, E>) FUNCTION_IDENTITY;
-	}
-
-	public static <T> Consumer<T> emptyConsumer() {
-		return t -> {
-			// empty
-		};
-	}
-
-	public static <T, U, V> BiFunction<T, U, V> emptyBiFunction() {
-		return (t, u) -> null;
-	}
-
-	public static <T, U> BiConsumer<T, U> emptyBiConsumer() {
-		return (t, u) -> {
-			// empty
-		};
-	}
-
-}

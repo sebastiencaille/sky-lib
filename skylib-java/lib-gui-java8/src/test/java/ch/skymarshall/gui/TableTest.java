@@ -39,10 +39,11 @@ class TableTest {
 	private static final IListView<TestObject> VIEW = ListViews.sorted((o1, o2) -> o1.getVal() - o2.getVal());
 
 	private static class Model extends GuiModel {
-		ListProperty<TestObject> selection = new ListProperty<>("Selection", propertySupport);
+		
+		private final ListProperty<TestObject> selection = new ListProperty<>("Selection", this);
 
-		public Model(final IScopedSupport support) {
-			super(support);
+		public Model(final ModelConfiguration config) {
+			super(config);
 		}
 	}
 
@@ -50,7 +51,7 @@ class TableTest {
 	void testSelectionOnInsert() throws InvocationTargetException, InterruptedException {
 
 		final IScopedSupport support = new ControllerPropertyChangeSupport(this).scoped(this);
-		final Model model = new Model(support);
+		final Model model = new Model(GuiModel.with(support));
 		support.attachAll();
 
 		final ListModel<TestObject> listModel = new ListModel<>(VIEW);

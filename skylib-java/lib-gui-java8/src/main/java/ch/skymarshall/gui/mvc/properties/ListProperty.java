@@ -18,6 +18,7 @@ package ch.skymarshall.gui.mvc.properties;
 import java.util.List;
 import java.util.function.Consumer;
 
+import ch.skymarshall.gui.mvc.GuiModel;
 import ch.skymarshall.gui.mvc.IScopedSupport;
 
 /**
@@ -30,6 +31,10 @@ import ch.skymarshall.gui.mvc.IScopedSupport;
  */
 public class ListProperty<T> extends ObjectProperty<List<T>> {
 
+	public ListProperty(final String name, final GuiModel model) {
+		super(name, model);
+	}
+	
 	public ListProperty(final String name, final IScopedSupport propertySupport) {
 		super(name, propertySupport);
 	}

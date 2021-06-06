@@ -15,7 +15,6 @@
  ******************************************************************************/
 package ch.skymarshall.gui.mvc;
 
-import static ch.skymarshall.gui.mvc.properties.Configuration.errorNotifier;
 import static ch.skymarshall.gui.mvc.properties.Configuration.persistent;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -37,22 +36,13 @@ class ModelBasicTest {
 
 	private class TestGuiModel extends GuiModel {
 
-		private final IntProperty integerProperty;
+		private final IntProperty integerProperty = new IntProperty("IntegerProperty", this);
 
-		private final ObjectProperty<String> stringProperty;
+		private final ObjectProperty<String> stringProperty = new ObjectProperty<>("StringProperty", this);
 
 		public TestGuiModel(final GuiController controller) {
-			super(controller);
-			try {
-				integerProperty = new IntProperty("IntegerProperty", propertySupport)
-						.configureTyped(errorNotifier(errorProperty));
-				stringProperty = new ObjectProperty<String>("StringProperty", propertySupport)
-						.configureTyped(errorNotifier(errorProperty));
-			} catch (final SecurityException e) {
-				throw new IllegalStateException(e);
-			}
-			integerProperty.attach();
-			stringProperty.attach();
+			super(of(controller));
+			getPropertySupport().attachAll();
 		}
 	}
 
@@ -61,7 +51,7 @@ class ModelBasicTest {
 
 	@BeforeEach
 	public void init() {
-		controller = new GuiController(new ControllerPropertyChangeSupport(this, false));
+		controller = new GuiController(new ControllerPropertyChangeSupport(this));
 		model = new TestGuiModel(controller);
 	}
 
@@ -115,9 +105,9 @@ class ModelBasicTest {
 		// Test exception
 		binding.setValue("bla");
 		assertEquals(456, model.integerProperty.getValue());
-		Assertions.assertNotNull(model.errorProperty.getValue().getContent(),
+		Assertions.assertNotNull(model.getErrorProperty().getValue().getContent(),
 				() -> "model.errorProperty.getValue().getContent()");
-		assertEquals(ConversionException.class, model.errorProperty.getValue().getContent().getClass());
+		assertEquals(ConversionException.class, model.getErrorProperty().getValue().getContent().getClass());
 	}
 
 	@Test

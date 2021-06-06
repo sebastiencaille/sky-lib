@@ -1,7 +1,6 @@
 package ch.skymarshall.tcwriter.gui.frame;
 
 import static ch.skymarshall.gui.mvc.factories.ComponentBindings.wo;
-import static ch.skymarshall.gui.swing.SwingHelper.withException;
 
 import java.awt.BorderLayout;
 import java.net.URL;
@@ -21,13 +20,14 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
 import ch.skymarshall.gui.mvc.ScreenBuildingReport;
-import ch.skymarshall.gui.swing.SwingHelper.ActionWithException;
 import ch.skymarshall.tcwriter.gui.editors.params.TestParameterModel;
 import ch.skymarshall.tcwriter.gui.editors.params.TestParameterValueEditorPanel;
 import ch.skymarshall.tcwriter.gui.editors.steps.StepEditorController;
 import ch.skymarshall.tcwriter.gui.editors.steps.StepEditorModel;
 import ch.skymarshall.tcwriter.gui.editors.steps.StepEditorPanel;
 import ch.skymarshall.tcwriter.gui.steps.StepsTable;
+import ch.skymarshall.util.helpers.Lambda;
+import ch.skymarshall.util.helpers.Lambda.RunnableWithException;
 
 public class TCWriterGui extends JFrame {
 
@@ -45,15 +45,15 @@ public class TCWriterGui extends JFrame {
 	}
 
 	private JButton button(final String name, final ImageIcon icon, final String toolTip,
-			final ActionWithException<?> action) {
+			RunnableWithException<?> action) {
 		final JButton newButton = new JButton(icon);
 		newButton.setToolTipText(toolTip);
-		newButton.addActionListener(e -> withException(action, this::handleException));
+		newButton.addActionListener(e -> Lambda.withExc(action, this::handleException));
 		newButton.setName(name);
 		return newButton;
 	}
 
-	private JButton button(final ImageIcon icon, final String toolTip, final ActionWithException<?> action) {
+	private JButton button(final ImageIcon icon, final String toolTip, final RunnableWithException<?> action) {
 		return button(null, icon, toolTip, action);
 	}
 
@@ -67,7 +67,7 @@ public class TCWriterGui extends JFrame {
 		this.getContentPane().setLayout(new BorderLayout());
 
 		final JButton editConfigButton = button(icon("general/Information24"), "Edit configuration",
-				controller::editConfig);
+			controller::editConfig);
 
 		final JButton newTCButton = button("NewTC", icon("general/New24"), "New test case", controller::newTestCase);
 

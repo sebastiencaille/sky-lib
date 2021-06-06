@@ -15,11 +15,14 @@
  ******************************************************************************/
 package ch.skymarshall.gui.mvc.properties;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 import ch.skymarshall.gui.mvc.BindingChain.EndOfChain;
+import ch.skymarshall.gui.mvc.GuiModel;
 import ch.skymarshall.gui.mvc.IBindingController;
 import ch.skymarshall.gui.mvc.IComponentBinding;
 import ch.skymarshall.gui.mvc.IScopedSupport;
@@ -37,7 +40,14 @@ import ch.skymarshall.gui.mvc.converters.IConverter;
  */
 public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 
+	private final List<IConverter<T, T>> implicitConverters = new ArrayList<>();
+
 	private transient IPersister<T> persister;
+
+	protected AbstractTypedProperty(final String name, final GuiModel model) {
+		super(name, model.getPropertySupport());
+		setErrorNotifier(model.getErrorProperty());
+	}
 
 	protected AbstractTypedProperty(final String name, final IScopedSupport propertySupport) {
 		super(name, propertySupport);
@@ -45,6 +55,10 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 
 	public void setPersister(final IPersister<T> persister) {
 		this.persister = persister;
+	}
+
+	public void addImplicitConverter(IConverter<T, T> converter) {
+		implicitConverters.add(converter);
 	}
 
 	@Override
@@ -75,15 +89,23 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 	}
 
 	public <C> EndOfChain<C> bind(final IConverter<T, C> binding) {
-		return createBindingChain().bind(binding);
+		return createBindingChainWithConv().bind(binding);
 	}
 
 	public <C> EndOfChain<C> bind(final Function<T, C> binding) {
-		return createBindingChain().bind(binding);
+		return createBindingChainWithConv().bind(binding);
 	}
 
 	public IBindingController bind(final IComponentBinding<T> binding) {
-		return createBindingChain().bind(binding);
+		return createBindingChainWithConv().bind(binding);
+	}
+
+	private EndOfChain<T> createBindingChainWithConv() {
+		EndOfChain<T> chain = createBindingChain();
+		for (IConverter<T, T> conv : implicitConverters) {
+			chain = chain.bind(conv);
+		}
+		return chain;
 	}
 
 	/**
@@ -110,12 +132,12 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 	}
 
 	protected void setObjectValue(final Object caller, final T newValue) {
-		if (!mustSendToComponent()) {
-			replaceValue(newValue);
-			return;
-		}
 		onValueSet(caller, EventKind.BEFORE);
 		try {
+			if (!mustSendToComponent()) {
+				replaceValue(newValue);
+				return;
+			}
 			final T oldValue = replaceValue(newValue);
 			if (oldValue != null || newValue != null) {
 				propertySupport.getMain().firePropertyChange(getName(), caller, oldValue, newValue);

@@ -17,7 +17,6 @@ package ch.skymarshall.gui.mvc;
 
 import static java.util.Arrays.stream;
 
-import java.awt.EventQueue;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayDeque;
@@ -74,17 +73,7 @@ public class ControllerPropertyChangeSupport {
 
 	private final Map<Object, ScopedRegistration> scopedRegistrations = new IdentityHashMap<>();
 
-	/**
-	 * If true, swing thread will be checked
-	 */
-	private final boolean checkSwingThread;
-
 	public ControllerPropertyChangeSupport(final Object bean) {
-		this(bean, true);
-	}
-
-	public ControllerPropertyChangeSupport(final Object bean, final boolean checkSwingThread) {
-		this.checkSwingThread = checkSwingThread;
 		support = new PropertyChangeSupport(bean);
 	}
 
@@ -97,11 +86,7 @@ public class ControllerPropertyChangeSupport {
 	}
 
 	private void prepareFire(final String propertyName, final Object caller, final Object newValue) {
-		if (checkSwingThread && !EventQueue.isDispatchThread()) {
-			throw new IllegalStateException("Property " + propertyName + " fired out of Swing thread");
-		}
 		final Deque<CallInfo> info = callInfo.computeIfAbsent(propertyName, k -> new ArrayDeque<>(5));
-
 		if (info.size() > 5) {
 			final StringBuilder stack = new StringBuilder();
 			info.stream().forEach(i -> stack.append(i).append(";"));

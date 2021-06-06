@@ -19,6 +19,7 @@ import java.util.function.Consumer;
 
 import ch.skymarshall.gui.mvc.BindingChain;
 import ch.skymarshall.gui.mvc.BindingChain.EndOfChain;
+import ch.skymarshall.gui.mvc.GuiModel;
 import ch.skymarshall.gui.mvc.IScopedSupport;
 
 /**
@@ -32,6 +33,15 @@ public class IntProperty extends AbstractTypedProperty<Integer> {
 
 	private int value;
 	private final int defaultValue;
+
+	public IntProperty(final String name, final GuiModel model, final int defaultValue) {
+		super(name, model);
+		this.defaultValue = defaultValue;
+	}
+
+	public IntProperty(final String name, final GuiModel model) {
+		this(name, model, 0);
+	}
 
 	public IntProperty(final String name, final IScopedSupport propertySupport, final int defaultValue) {
 		super(name, propertySupport);

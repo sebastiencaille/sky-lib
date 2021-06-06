@@ -20,18 +20,16 @@ public class TestParameterModel extends GuiModel {
 	public TestParameterModel(final String prefix, final TCWriterController guiController,
 			final ObjectProperty<TestParameterFactory> testApi,
 			final ObjectProperty<TestParameterValue> editedParameterValue) {
-		super(guiController.getScopedChangeSupport().getMain().scoped(prefix + "-controller"));
+		super(with(guiController.getScopedChangeSupport().getMain().scoped(prefix + "-controller")));
 		this.prefix = prefix;
 		this.editedParameterValue = editedParameterValue;
 		this.testApi = testApi;
 
-		valueNature = new ObjectProperty<>(prefix + "-nature", propertySupport);
+		valueNature = new ObjectProperty<>(prefix + "-nature", this);
 		simpleValue = editedParameterValue.child(prefix + "-simpleValue", TestParameterValue::getSimpleValue,
 				TestParameterValue::setSimpleValue);
-		selectedReference = new ObjectProperty<>(prefix + "-reference", propertySupport);
-
-		references = new ListProperty<>(prefix + "-references", propertySupport);
-
+		selectedReference = new ObjectProperty<>(prefix + "-reference", this);
+		references = new ListProperty<>(prefix + "-references", this);
 		editedParameterValue.addListener(getPropertySupport().detachWhenPropLoading());
 	}
 

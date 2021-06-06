@@ -209,7 +209,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 	 */
 	private transient Edition objectEdition = null;
 
-	private transient IScopedSupport propertyChange = new ControllerPropertyChangeSupport(this, false).scoped(this);
+	private transient IScopedSupport propertyChange = new ControllerPropertyChangeSupport(this).scoped(this);
 
 	private final EventListenerList listeners = new EventListenerList();
 

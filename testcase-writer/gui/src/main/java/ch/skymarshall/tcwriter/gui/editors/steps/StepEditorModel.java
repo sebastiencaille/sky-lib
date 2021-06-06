@@ -3,7 +3,6 @@ package ch.skymarshall.tcwriter.gui.editors.steps;
 import java.util.List;
 
 import ch.skymarshall.gui.mvc.GuiModel;
-import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestAction;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestActor;
@@ -12,26 +11,23 @@ import ch.skymarshall.tcwriter.generators.model.testcase.TestParameterValue;
 
 public class StepEditorModel extends GuiModel {
 
-	private final ObjectProperty<List<TestActor>> possibleActors = new ObjectProperty<>("possibleActors",
-			propertySupport);
-	private final ObjectProperty<TestActor> actor = new ObjectProperty<>("actor", propertySupport);
-	private final ObjectProperty<List<TestAction>> possibleActions = new ObjectProperty<>("possibleActions",
-			propertySupport);
-	private final ObjectProperty<TestAction> action = new ObjectProperty<>("action", propertySupport);
+	private final ObjectProperty<List<TestActor>> possibleActors = new ObjectProperty<>("possibleActors", this);
+	private final ObjectProperty<TestActor> actor = new ObjectProperty<>("actor", this);
+	private final ObjectProperty<List<TestAction>> possibleActions = new ObjectProperty<>("possibleActions", this);
+	private final ObjectProperty<TestAction> action = new ObjectProperty<>("action", this);
 	private final ObjectProperty<List<TestParameterFactory>> possibleSelectors = new ObjectProperty<>(
-			"possibleSelectors", propertySupport);
-	private final ObjectProperty<TestParameterFactory> selector = new ObjectProperty<>("selector", propertySupport);
-	private final ObjectProperty<TestParameterValue> selectorValues = new ObjectProperty<>("selectorValues",
-			propertySupport, TestParameterValue.NO_VALUE);
+			"possibleSelectors", this);
+	private final ObjectProperty<TestParameterFactory> selector = new ObjectProperty<>("selector", this);
+	private final ObjectProperty<TestParameterValue> selectorValues = new ObjectProperty<>("selectorValues", this,
+			TestParameterValue.NO_VALUE);
 	private final ObjectProperty<List<TestParameterFactory>> possibleActionParameters = new ObjectProperty<>(
-			"possibleActionParameters", propertySupport);
-	private final ObjectProperty<TestParameterFactory> actionParameter = new ObjectProperty<>("actionParameter",
-			propertySupport);
+			"possibleActionParameters", this);
+	private final ObjectProperty<TestParameterFactory> actionParameter = new ObjectProperty<>("actionParameter", this);
 	private final ObjectProperty<TestParameterValue> actionParameterValues = new ObjectProperty<>(
-			"actionParameterValues", propertySupport, TestParameterValue.NO_VALUE);
+			"actionParameterValues", this, TestParameterValue.NO_VALUE);
 
-	public StepEditorModel(final IScopedSupport support) {
-		super(support);
+	public StepEditorModel(final ModelConfiguration config) {
+		super(config);
 	}
 
 	public ObjectProperty<List<TestActor>> getPossibleActors() {

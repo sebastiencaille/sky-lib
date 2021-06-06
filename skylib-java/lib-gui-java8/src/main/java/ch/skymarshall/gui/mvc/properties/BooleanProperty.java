@@ -19,6 +19,7 @@ import java.util.function.Consumer;
 
 import ch.skymarshall.gui.mvc.BindingChain;
 import ch.skymarshall.gui.mvc.BindingChain.EndOfChain;
+import ch.skymarshall.gui.mvc.GuiModel;
 import ch.skymarshall.gui.mvc.IScopedSupport;
 
 /**
@@ -31,6 +32,15 @@ import ch.skymarshall.gui.mvc.IScopedSupport;
 public class BooleanProperty extends AbstractTypedProperty<Boolean> {
 	private boolean value;
 	private final boolean defaultValue;
+
+	public BooleanProperty(final String name, final GuiModel model, final boolean defaultValue) {
+		super(name, model);
+		this.defaultValue = defaultValue;
+	}
+
+	public BooleanProperty(final String name, final GuiModel model) {
+		this(name, model, false);
+	}
 
 	public BooleanProperty(final String name, final IScopedSupport propertySupport, final boolean defaultValue) {
 		super(name, propertySupport);

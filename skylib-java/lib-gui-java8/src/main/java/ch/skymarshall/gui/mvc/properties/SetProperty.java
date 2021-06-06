@@ -18,9 +18,14 @@ package ch.skymarshall.gui.mvc.properties;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import ch.skymarshall.gui.mvc.GuiModel;
 import ch.skymarshall.gui.mvc.IScopedSupport;
 
 public class SetProperty<T> extends ObjectProperty<Set<T>> {
+
+	public SetProperty(final String name, final GuiModel model) {
+		super(name, model);
+	}
 
 	public SetProperty(final String name, final IScopedSupport propertySupport) {
 		super(name, propertySupport);

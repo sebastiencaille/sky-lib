@@ -15,6 +15,8 @@
  ******************************************************************************/
 package ch.skymarshall.example.gui.controllermodel.impl;
 
+import static ch.skymarshall.gui.mvc.GuiModel.of;
+
 import ch.skymarshall.example.gui.TestObject;
 import ch.skymarshall.example.gui.TestObjectGuiModel;
 import ch.skymarshall.example.gui.controllermodel.impl.TestObjectControllerModelFrameModel.Columns;
@@ -33,7 +35,7 @@ public class TestObjectControllerModelFrameModel
 	}
 
 	public TestObjectControllerModelFrameModel(final GuiController controller, final ListModel<TestObject> model) {
-		super(model, new TestObjectGuiModel(controller), Columns.class);
+		super(model, new TestObjectGuiModel(of(controller)), Columns.class);
 	}
 
 	@Override

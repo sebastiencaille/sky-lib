@@ -44,7 +44,6 @@ public class PropertyEvent {
 	private final AbstractProperty property;
 
 	public PropertyEvent(final EventKind kind, final AbstractProperty property) {
-		super();
 		this.kind = kind;
 		this.property = property;
 	}

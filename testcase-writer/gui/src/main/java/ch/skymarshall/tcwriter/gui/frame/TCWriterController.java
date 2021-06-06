@@ -1,7 +1,5 @@
 package ch.skymarshall.tcwriter.gui.frame;
 
-import static ch.skymarshall.gui.swing.SwingHelper.withException;
-
 import java.awt.Dialog.ModalityType;
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +23,7 @@ import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestStep;
 import ch.skymarshall.tcwriter.gui.TestRemoteControl;
 import ch.skymarshall.tcwriter.gui.frame.TCWriterModel.TestExecutionState;
+import ch.skymarshall.util.helpers.Lambda;
 
 public class TCWriterController extends GuiController {
 
@@ -160,7 +159,7 @@ public class TCWriterController extends GuiController {
 
 	public void startTestCase() {
 		testRemoteControl.resetConnection();
-		new Thread(() -> withException(this::runTestCase, gui::handleException), "Test execution").start();
+		new Thread(() -> Lambda.withExc(this::runTestCase, gui::handleException), "Test execution").start();
 	}
 
 	public void runTestCase() throws IOException, InterruptedException, TestCaseException {

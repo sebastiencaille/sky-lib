@@ -25,6 +25,5 @@ public interface Launcher {
 	public static void main(final String[] args) {
 		final ControllerExampleController controller = new ControllerExampleController();
 		EventQueue.invokeLater(() -> new ControllerExampleView(controller).setVisible(true));
-
 	}
 }

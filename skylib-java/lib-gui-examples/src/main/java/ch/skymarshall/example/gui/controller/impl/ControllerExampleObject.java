@@ -17,6 +17,7 @@ package ch.skymarshall.example.gui.controller.impl;
 
 import ch.skymarshall.annotations.GuiObject;
 import ch.skymarshall.example.gui.TestObject;
+import jakarta.validation.constraints.NotBlank;
 
 @GuiObject
 public class ControllerExampleObject {
@@ -42,6 +43,7 @@ public class ControllerExampleObject {
 		this.intProp = intProp;
 	}
 
+	@NotBlank
 	public String getStringProp() {
 		return stringProp;
 	}

@@ -15,18 +15,23 @@
  ******************************************************************************/
 package ch.skymarshall.gui.mvc;
 
-import java.util.function.Consumer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
-import ch.skymarshall.gui.mvc.properties.AbstractTypedProperty;
+import ch.skymarshall.gui.mvc.converters.IUnaryConverter;
 import ch.skymarshall.gui.mvc.properties.ErrorProperty;
 
 public class GuiModel {
 
+	public interface ImplicitConvertProvider<T, U> {
+		IUnaryConverter<U> create(Class<T> modelClass, String attributeName, Class<U> attributeClass);
+	}
+
 	public static class ModelConfiguration {
 		protected final IScopedSupport propertySupport;
 		protected ErrorProperty errorProperty;
-		
+		protected final List<ImplicitConvertProvider<?, ?>> implicitConverters = new ArrayList<>();
 
 		public ModelConfiguration(IScopedSupport propertySupport) {
 			this.propertySupport = propertySupport;
@@ -36,12 +41,21 @@ public class GuiModel {
 			this.errorProperty = errorProperty;
 			return this;
 		}
-		
+
 		public ModelConfiguration ifNotSet(Supplier<ErrorProperty> errSupplier) {
 			if (this.errorProperty == null) {
 				this.errorProperty = errSupplier.get();
 			}
 			return this;
+		}
+
+		public ModelConfiguration with(ImplicitConvertProvider<?, ?> factory) {
+			implicitConverters.add(factory);
+			return this;
+		}
+
+		public List<ImplicitConvertProvider<?, ?>> getImplicitConverters() {
+			return implicitConverters;
 		}
 
 		public ModelConfiguration validate() {

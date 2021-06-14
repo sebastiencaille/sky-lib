@@ -16,17 +16,17 @@
 package ch.skymarshall.example.gui.controller.impl;
 
 import ch.skymarshall.example.gui.TestObject;
+import ch.skymarshall.gui.mvc.GuiModel;
 import ch.skymarshall.gui.mvc.GuiController;
 import ch.skymarshall.gui.mvc.PropertyGroup;
 
 public class ControllerExampleController extends GuiController {
 
-	private final ControllerExampleModel model = new ControllerExampleModel(this);
+	private final ControllerExampleModel model = new ControllerExampleModel(GuiModel.of(this));
 	private final PropertyGroup modelPropertiesGroup = new PropertyGroup();
 
 	public ControllerExampleController() {
 		modelPropertiesGroup.addProperty(model.getStaticListSelectionProperty());
-
 		model.getTableModel().insert(new TestObject("World", 2));
 		model.getTableModel().insert(new TestObject("Hello", 1));
 	}

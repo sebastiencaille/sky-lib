@@ -19,6 +19,12 @@ import ch.skymarshall.gui.mvc.GuiErrors.GuiError;
 
 public class GuiErrorToStringConverter implements IConverter<GuiError, String> {
 
+	private String noError;
+
+	public GuiErrorToStringConverter(String noError) {
+		this.noError = noError;
+	}
+
 	@Override
 	public GuiError convertComponentValueToPropertyValue(final String text) {
 		throw new IllegalStateException("Gui error cannot be created for: " + text);
@@ -27,7 +33,7 @@ public class GuiErrorToStringConverter implements IConverter<GuiError, String> {
 	@Override
 	public String convertPropertyValueToComponentValue(final GuiError value) {
 		if (value == null) {
-			return "";
+			return noError;
 		}
 		final Object content = value.getContent();
 		if (content instanceof Exception) {

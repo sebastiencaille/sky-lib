@@ -31,16 +31,22 @@ public class TestObjectGuiModel extends GuiModel implements IObjectGuiModel<Test
 	protected final AbstractProperty[] allProperties;
 	
     public TestObjectGuiModel(final String prefix, ModelConfiguration config) {
-		super(config.ifNotSet(()->	GuiModel.createErrorProperty(prefix + "-TestObject-Error", config)));
-		aSecondValueProperty = new IntProperty(prefix + "-ASecondValue", this).configureTyped(Configuration.persistent(currentObjectProvider, Persisters.getSet(TestObject::getASecondValue, TestObject::setASecondValue)));
-		aFirstValueProperty = new ObjectProperty<java.lang.String>(prefix + "-AFirstValue", this).configureTyped(Configuration.persistent(currentObjectProvider, Persisters.getSet(TestObject::getAFirstValue, TestObject::setAFirstValue)));
+		super(config.ifNotSet(()->	GuiModel.createErrorProperty(prefix + "TestObject-Error", config)));
+		aSecondValueProperty = new IntProperty(prefix + "ASecondValue", this).configureTyped(Configuration.persistent(currentObjectProvider, Persisters.getSet(TestObject::getASecondValue, TestObject::setASecondValue)));
+		config.getImplicitConverters().stream().sequential().map(c -> ((ImplicitConvertProvider<TestObject, java.lang.Integer>)c).create(TestObject.class, "ASecondValue", java.lang.Integer.class)).forEach(aSecondValueProperty::addImplicitConverter);
+		aFirstValueProperty = new ObjectProperty<java.lang.String>(prefix + "AFirstValue", this).configureTyped(Configuration.persistent(currentObjectProvider, Persisters.getSet(TestObject::getAFirstValue, TestObject::setAFirstValue)));
+		config.getImplicitConverters().stream().sequential().map(c -> ((ImplicitConvertProvider<TestObject, java.lang.String>)c).create(TestObject.class, "AFirstValue", java.lang.String.class)).forEach(aFirstValueProperty::addImplicitConverter);
 		
 		allProperties = new AbstractProperty[]{aSecondValueProperty, aFirstValueProperty};
     }
-    
+            
     public TestObjectGuiModel(ModelConfiguration config) {
     	this("", config);
     }
+
+	public Class<?> getContainerClass() {
+		return TestObject.class;
+	}
 
 	public IntProperty getASecondValueProperty() {
 	    return aSecondValueProperty;

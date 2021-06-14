@@ -121,7 +121,6 @@ public class ModelClassProcessor {
 		final UntypedDataObjectMetaData metaData = new UntypedDataObjectMetaData(modelClass, false);
 
 		final String strType = metaData.getDataType().getSimpleName();
-		// context.addImport(metaData.getDataType());
 
 		context.properties.put("modelClass", getClassName());
 		context.properties.put("objectClass", strType);
@@ -169,8 +168,11 @@ public class ModelClassProcessor {
 		forEachAttribute(metaData, attrib -> context.append("fields.declare",
 				AttributeProcessor.create(context, attrib, delegate).addImports().generateDeclaration() + "\n"));
 
-		forEachAttribute(metaData, attrib -> context.append("fields.init",
-				AttributeProcessor.create(context, attrib, delegate).addImports().generateInitialization() + "\n"));
+		forEachAttribute(metaData, attrib -> {
+			AttributeProcessor attribProcessor = AttributeProcessor.create(context, attrib, delegate);
+			context.append("fields.init", attribProcessor.addImports().generateInitialization() + "\n");
+			context.append("fields.init", attribProcessor.generateImplicitConverters(metaData.getDataType()) + "\n");
+		});
 	}
 
 	protected void forEachAttribute(final UntypedDataObjectMetaData metaData,
@@ -209,24 +211,6 @@ public class ModelClassProcessor {
 		context.generatedConstants.put(fieldConstant, attrib.getCodeName());
 		gen.appendIndentedLine("private static final Field " + fieldConstant + ';');
 		gen.eol();
-
-		return gen.toString();
-	}
-
-	protected String afterPreprocessAttribs() {
-
-		final JavaCodeGenerator<RuntimeException> gen = JavaCodeGenerator.inMemory();
-		final StringBuilder fieldsList = new StringBuilder();
-
-		for (final Map.Entry<String, String> entry : context.generatedConstants.entrySet()) {
-			gen.appendIndentedLine(entry.getKey() + " = " + typeToString(modelClass) + ".class.getDeclaredField(\""
-					+ entry.getValue() + "\");");
-			fieldsList.append(", ");
-			fieldsList.append(entry.getKey());
-		}
-
-		gen.appendIndentedLine("AccessibleObject.setAccessible(new AccessibleObject[]{"
-				+ fieldsList.toString().substring(2) + "}, true);");
 
 		return gen.toString();
 	}

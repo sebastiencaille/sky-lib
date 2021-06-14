@@ -19,6 +19,7 @@ import static ch.skymarshall.example.gui.TestObject.testObjectToString;
 import static ch.skymarshall.gui.mvc.factories.BindingDependencies.preserveOnUpdateOf;
 import static ch.skymarshall.gui.mvc.factories.Converters.guiErrorToString;
 import static ch.skymarshall.gui.mvc.factories.Converters.intToString;
+import static ch.skymarshall.gui.mvc.factories.Converters.toSingleLine;
 import static ch.skymarshall.gui.swing.factories.SwingBindings.selected;
 import static ch.skymarshall.gui.swing.factories.SwingBindings.selection;
 import static ch.skymarshall.gui.swing.factories.SwingBindings.value;
@@ -48,6 +49,7 @@ import javax.swing.JTextField;
 import ch.skymarshall.example.gui.TestObject;
 import ch.skymarshall.example.gui.TestObjectTableModel;
 import ch.skymarshall.gui.mvc.converters.IConverter;
+import ch.skymarshall.gui.mvc.factories.Converters;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 import ch.skymarshall.gui.mvc.properties.BooleanProperty;
 import ch.skymarshall.gui.mvc.properties.ErrorProperty;
@@ -56,8 +58,9 @@ import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 
 public class ControllerExampleView extends JFrame {
 
+	private static final String NO_ERROR = "No Error";
 	private static final long serialVersionUID = -7524991791160097387L;
-	private final Container container;
+	private final Container mainContainer;
 	private int row = 0;
 
 	public ControllerExampleView(final ControllerExampleController controller) {
@@ -68,14 +71,14 @@ public class ControllerExampleView extends JFrame {
 		getContentPane().setLayout(new GridBagLayout());
 		getContentPane().setBackground(Color.WHITE);
 
-		container = new JPanel(new GridBagLayout());
+		mainContainer = new JPanel(new GridBagLayout());
 
 		final GridBagConstraints constraints = new GridBagConstraints();
 		constraints.insets = new Insets(5, 5, 0, 5);
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.0;
-		getContentPane().add(container, constraints);
+		getContentPane().add(mainContainer, constraints);
 
 		// ------------------------------------------
 		// Checkbox input
@@ -199,10 +202,10 @@ public class ControllerExampleView extends JFrame {
 		// Display of errors
 		// ------------------------------------------
 		final ErrorProperty errorProperty = model.getErrorProperty();
-		final JLabel errorLabel = new JLabel("No Error");
+		final JLabel errorLabel = new JLabel(NO_ERROR);
 		errorLabel.setName("errorLabel");
 		final JLabel errorCounter = new JLabel();
-		errorProperty.bind(guiErrorToString()).listen(errorLabel::setText);
+		errorProperty.bind(guiErrorToString(NO_ERROR)).bind(toSingleLine()).listen(errorLabel::setText);
 		errorProperty.bind(counter()).listen(errorCounter::setText);
 		addGuiLineItem(errorProperty, errorLabel, null, errorCounter);
 
@@ -277,25 +280,25 @@ public class ControllerExampleView extends JFrame {
 		panel.add(title);
 
 		constraints.gridwidth = 5;
-		container.add(panel, constraints);
+		mainContainer.add(panel, constraints);
 		constraints.gridwidth = 1;
 
-		// Editor
+		// Widget
 		constraints.gridx = 0;
 		constraints.gridy = row++;
 		constraints.insets = new Insets(0, 5, 5, 5);
-		container.add(editor, constraints);
+		mainContainer.add(editor, constraints);
 		constraints.insets = new Insets(0, 0, 0, 0);
 
 		constraints.gridx++;
 		counterLabel.setPreferredSize(new Dimension(30, -1));
-		container.add(counterLabel, constraints);
+		mainContainer.add(counterLabel, constraints);
 
 		constraints.gridx++;
 		constraints.weightx = 0.0;
 		if (check != null) {
 			check.setPreferredSize(new Dimension(100, -1));
-			container.add(check, constraints);
+			mainContainer.add(check, constraints);
 		}
 
 		final JPanel gap = new JPanel();
@@ -306,7 +309,7 @@ public class ControllerExampleView extends JFrame {
 		constraints.gridwidth = 5;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 
-		container.add(gap, constraints);
+		mainContainer.add(gap, constraints);
 
 		constraints.gridx++;
 

@@ -196,7 +196,16 @@ public final class Converters {
 	}
 
 	public static IConverter<GuiError, String> guiErrorToString() {
-		return new GuiErrorToStringConverter();
+		return new GuiErrorToStringConverter("");
+	}
+	
+
+	public static IConverter<GuiError, String> guiErrorToString(String noError) {
+		return new GuiErrorToStringConverter(noError);
+	}
+
+	public static IConverter<String, String> toSingleLine() {
+		return converter(s -> s, s -> s != null ? s.replace('\n', ' ') : null);
 	}
 
 	public static <T> IConverter<T, T> identity() {

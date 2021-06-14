@@ -22,14 +22,18 @@ public class ${modelClass} extends GuiModel implements IObjectGuiModel<${objectC
 	protected final AbstractProperty[] allProperties;
 	
     public ${modelClass}(final String prefix, ModelConfiguration config) {
-		super(config.ifNotSet(()->	GuiModel.createErrorProperty(prefix + "-${objectClassSimpleName}-Error", config)));
+		super(config.ifNotSet(()->	GuiModel.createErrorProperty(prefix + "${objectClassSimpleName}-Error", config)));
 		${fields.init}
 		allProperties = new AbstractProperty[]{${properties.all}};
     }
-    
+            
     public ${modelClass}(ModelConfiguration config) {
     	this("", config);
     }
+
+	public Class<?> getContainerClass() {
+		return ${objectClass}.class;
+	}
 
 	${fields.getters}
 

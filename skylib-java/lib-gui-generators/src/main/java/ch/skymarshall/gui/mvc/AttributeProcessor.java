@@ -12,7 +12,8 @@ import ch.skymarshall.gui.mvc.ModelClassProcessor.Context;
 import ch.skymarshall.util.dao.metadata.AbstractAttributeMetaData;
 
 public abstract class AttributeProcessor {
-	final AbstractAttributeMetaData<?> attrib;
+
+	final AbstractAttributeMetaData<?> modelAttribute;
 	final Context context;
 	protected final AttributeProcessorDelegate delegate;
 
@@ -36,20 +37,20 @@ public abstract class AttributeProcessor {
 	protected AttributeProcessor(final Context context, final AbstractAttributeMetaData<?> attrib,
 			final AttributeProcessorDelegate delegate) {
 		this.context = context;
-		this.attrib = attrib;
+		this.modelAttribute = attrib;
 		this.delegate = delegate;
 	}
 
 	protected String getTypeAsString() {
-		return ModelClassProcessor.typeToString(attrib.getGenericType());
+		return ModelClassProcessor.typeToString(modelAttribute.getGenericType());
 	}
 
-	protected String getObjectTypeAsString() {
-		return ModelClassProcessor.typeToString(attrib.getGenericType());
+	protected String getModelTypeAsString() {
+		return ModelClassProcessor.typeToString(modelAttribute.getGenericType());
 	}
 
 	String getPropertyName() {
-		return toFirstLetterInLowerCase(attrib.getName()) + "Property";
+		return toFirstLetterInLowerCase(modelAttribute.getName()) + "Property";
 	}
 
 	protected String getFieldCreation() {
@@ -81,7 +82,7 @@ public abstract class AttributeProcessor {
 
 		@Override
 		protected String getPropertyType() {
-			return toFirstLetterInUpperCase(attrib.getType().getName() + "Property");
+			return toFirstLetterInUpperCase(modelAttribute.getType().getName() + "Property");
 		}
 
 		@Override
@@ -90,8 +91,8 @@ public abstract class AttributeProcessor {
 		}
 
 		@Override
-		protected String getObjectTypeAsString() {
-			switch (attrib.getType().getSimpleName()) {
+		protected String getModelTypeAsString() {
+			switch (modelAttribute.getType().getSimpleName()) {
 			case "short":
 				return Short.class.getName();
 			case "int":
@@ -107,16 +108,16 @@ public abstract class AttributeProcessor {
 			case "boolean":
 				return Boolean.class.getName();
 			default:
-				return "java.lang." + toFirstLetterInUpperCase(attrib.getType().getSimpleName());
+				return "java.lang." + toFirstLetterInUpperCase(modelAttribute.getType().getSimpleName());
 			}
 		}
 
 		@Override
 		public String getter() {
-			if (Boolean.class.equals(attrib.getType()) || Boolean.TYPE.equals(attrib.getType())) {
-				return "is" + attrib.getName();
+			if (Boolean.class.equals(modelAttribute.getType()) || Boolean.TYPE.equals(modelAttribute.getType())) {
+				return "is" + modelAttribute.getName();
 			}
-			return "get" + attrib.getName();
+			return "get" + modelAttribute.getName();
 		}
 
 		@Override
@@ -140,7 +141,7 @@ public abstract class AttributeProcessor {
 
 		@Override
 		protected String getPropertyType() {
-			return objectName + ModelClassProcessor.typeParametersToString(attrib.getGenericType());
+			return objectName + ModelClassProcessor.typeParametersToString(modelAttribute.getGenericType());
 		}
 
 		@Override
@@ -208,27 +209,34 @@ public abstract class AttributeProcessor {
 
 	String generateInitializationWithType() {
 		return String.format(
-				"%s = new %s(prefix + \"-%s\", this).configureTyped(Configuration.persistent(currentObjectProvider, %s));",
-				getPropertyName(), getPropertyType(), attrib.getName(), getFieldCreation());
+				"%s = new %s(prefix + \"%s\", this).configureTyped(Configuration.persistent(currentObjectProvider, %s));",
+				getPropertyName(), getPropertyType(), modelAttribute.getName(), getFieldCreation());
 	}
 
 	String generateInitialization() {
 		return String.format(
-				"%s = new %s(prefix + \"-%s\", this).configureTyped(Configuration.persistent(currentObjectProvider, %s));",
-				getPropertyName(), getPropertyType(), attrib.getName(), getFieldCreation());
+				"%s = new %s(prefix + \"%s\", this).configureTyped(Configuration.persistent(currentObjectProvider, %s));",
+				getPropertyName(), getPropertyType(), modelAttribute.getName(), getFieldCreation());
+	}
+
+	String generateImplicitConverters(Class<?> modelClass) {
+		return String.format(
+				"config.getImplicitConverters().stream().sequential().map(c -> ((ImplicitConvertProvider<%s, %s>)c).create(%s.class, \"%s\", %s.class)).forEach(%s::addImplicitConverter);",
+				modelClass.getSimpleName(), getModelTypeAsString(), modelClass.getSimpleName(),
+				modelAttribute.getName(), getModelTypeAsString(), getPropertyName());
 	}
 
 	public String getConstantName() {
-		return toConstant(attrib.getName());
+		return toConstant(modelAttribute.getName());
 	}
 
 	public static class GetSetAttributeDelegate implements AttributeProcessorDelegate {
 		@Override
 		public String getFieldCreation(final AttributeProcessor attributeProcessor) {
-			final AbstractAttributeMetaData<?> attr = attributeProcessor.attrib;
+			final AbstractAttributeMetaData<?> attr = attributeProcessor.modelAttribute;
 
 			String setter;
-			if (!attributeProcessor.attrib.isReadOnly()) {
+			if (!attributeProcessor.modelAttribute.isReadOnly()) {
 				setter = attr.getDeclaringType().getSimpleName() + "::" + attributeProcessor.setter();
 			} else {
 				setter = "null";
@@ -251,11 +259,11 @@ public abstract class AttributeProcessor {
 	}
 
 	public String getter() {
-		return "get" + attrib.getName();
+		return "get" + modelAttribute.getName();
 	}
 
 	public String setter() {
-		return "set" + attrib.getName();
+		return "set" + modelAttribute.getName();
 	}
 
 }

@@ -13,17 +13,6 @@ import ch.skymarshall.util.dao.metadata.AbstractAttributeMetaData;
 
 public abstract class AttributeProcessor {
 
-	final AbstractAttributeMetaData<?> modelAttribute;
-	final Context context;
-	protected final AttributeProcessorDelegate delegate;
-
-	protected abstract String getPropertyType();
-
-	AttributeProcessor addImports() {
-		delegate.addImports(this);
-		return this;
-	}
-
 	interface AttributeProcessorDelegate {
 
 		String getFieldCreation(AttributeProcessor attributeProcessor);
@@ -34,30 +23,7 @@ public abstract class AttributeProcessor {
 
 	}
 
-	protected AttributeProcessor(final Context context, final AbstractAttributeMetaData<?> attrib,
-			final AttributeProcessorDelegate delegate) {
-		this.context = context;
-		this.modelAttribute = attrib;
-		this.delegate = delegate;
-	}
-
-	protected String getTypeAsString() {
-		return ModelClassProcessor.typeToString(modelAttribute.getGenericType());
-	}
-
-	protected String getModelTypeAsString() {
-		return ModelClassProcessor.typeToString(modelAttribute.getGenericType());
-	}
-
-	String getPropertyName() {
-		return toFirstLetterInLowerCase(modelAttribute.getName()) + "Property";
-	}
-
-	protected String getFieldCreation() {
-		return delegate.getFieldCreation(this);
-	}
-
-	static AttributeProcessor create(final Context context, final AbstractAttributeMetaData<?> attrib,
+	public static AttributeProcessor create(final Context context, final AbstractAttributeMetaData<?> attrib,
 			final AttributeProcessorDelegate delegate) {
 		final Class<?> type = attrib.getType();
 		if (type.isPrimitive()) {
@@ -73,7 +39,7 @@ public abstract class AttributeProcessor {
 
 	}
 
-	static class PrimitiveProcessor extends AttributeProcessor {
+	public static class PrimitiveProcessor extends AttributeProcessor {
 
 		public PrimitiveProcessor(final Context context, final AbstractAttributeMetaData<?> attrib,
 				final AttributeProcessorDelegate delegate) {
@@ -88,28 +54,6 @@ public abstract class AttributeProcessor {
 		@Override
 		protected String getFieldCreation() {
 			return delegate.getPrimitiveFieldCreation(this);
-		}
-
-		@Override
-		protected String getModelTypeAsString() {
-			switch (modelAttribute.getType().getSimpleName()) {
-			case "short":
-				return Short.class.getName();
-			case "int":
-				return Integer.class.getName();
-			case "long":
-				return Long.class.getName();
-			case "float":
-				return Float.class.getName();
-			case "double":
-				return Double.class.getName();
-			case "char":
-				return Character.class.getName();
-			case "boolean":
-				return Boolean.class.getName();
-			default:
-				return "java.lang." + toFirstLetterInUpperCase(modelAttribute.getType().getSimpleName());
-			}
 		}
 
 		@Override
@@ -129,7 +73,7 @@ public abstract class AttributeProcessor {
 
 	}
 
-	static class ContainerProcessorWithType extends AttributeProcessor {
+	public static class ContainerProcessorWithType extends AttributeProcessor {
 
 		private final String objectName;
 
@@ -151,13 +95,9 @@ public abstract class AttributeProcessor {
 			return this;
 		}
 
-		@Override
-		String generateInitialization() {
-			return generateInitializationWithType();
-		}
 	}
 
-	static class SetProcessor extends ContainerProcessorWithType {
+	public static class SetProcessor extends ContainerProcessorWithType {
 
 		public SetProcessor(final Context context, final AbstractAttributeMetaData<?> attrib,
 				final AttributeProcessorDelegate delegate) {
@@ -166,7 +106,7 @@ public abstract class AttributeProcessor {
 
 	}
 
-	static class MapProcessor extends ContainerProcessorWithType {
+	public static class MapProcessor extends ContainerProcessorWithType {
 
 		public MapProcessor(final Context context, final AbstractAttributeMetaData<?> attrib,
 				final AttributeProcessorDelegate delegate) {
@@ -174,7 +114,7 @@ public abstract class AttributeProcessor {
 		}
 	}
 
-	static class ListProcessor extends ContainerProcessorWithType {
+	public static class ListProcessor extends ContainerProcessorWithType {
 
 		public ListProcessor(final Context context, final AbstractAttributeMetaData<?> attrib,
 				final AttributeProcessorDelegate delegate) {
@@ -182,7 +122,7 @@ public abstract class AttributeProcessor {
 		}
 	}
 
-	static class ObjectProcessor extends AttributeProcessor {
+	public static class ObjectProcessor extends AttributeProcessor {
 
 		public ObjectProcessor(final Context context, final AbstractAttributeMetaData<?> attrib,
 				final AttributeProcessorDelegate delegate) {
@@ -201,33 +141,6 @@ public abstract class AttributeProcessor {
 			return "ObjectProperty<" + getTypeAsString() + ">";
 		}
 
-	}
-
-	String generateDeclaration() {
-		return String.format("protected final %s %s;", getPropertyType(), getPropertyName());
-	}
-
-	String generateInitializationWithType() {
-		return String.format(
-				"%s = new %s(prefix + \"%s\", this).configureTyped(Configuration.persistent(currentObjectProvider, %s));",
-				getPropertyName(), getPropertyType(), modelAttribute.getName(), getFieldCreation());
-	}
-
-	String generateInitialization() {
-		return String.format(
-				"%s = new %s(prefix + \"%s\", this).configureTyped(Configuration.persistent(currentObjectProvider, %s));",
-				getPropertyName(), getPropertyType(), modelAttribute.getName(), getFieldCreation());
-	}
-
-	String generateImplicitConverters(Class<?> modelClass) {
-		return String.format(
-				"config.getImplicitConverters().stream().sequential().map(c -> ((ImplicitConvertProvider<%s, %s>)c).create(%s.class, \"%s\", %s.class)).forEach(%s::addImplicitConverter);",
-				modelClass.getSimpleName(), getModelTypeAsString(), modelClass.getSimpleName(),
-				modelAttribute.getName(), getModelTypeAsString(), getPropertyName());
-	}
-
-	public String getConstantName() {
-		return toConstant(modelAttribute.getName());
 	}
 
 	public static class GetSetAttributeDelegate implements AttributeProcessorDelegate {
@@ -256,6 +169,53 @@ public abstract class AttributeProcessor {
 			// noop
 		}
 
+	}
+
+	final AbstractAttributeMetaData<?> modelAttribute;
+	final Context context;
+	protected final AttributeProcessorDelegate delegate;
+
+	protected abstract String getPropertyType();
+
+	AttributeProcessor addImports() {
+		delegate.addImports(this);
+		return this;
+	}
+
+	protected AttributeProcessor(final Context context, final AbstractAttributeMetaData<?> attrib,
+			final AttributeProcessorDelegate delegate) {
+		this.context = context;
+		this.modelAttribute = attrib;
+		this.delegate = delegate;
+	}
+
+	protected String getTypeAsString() {
+		return modelAttribute.getGenericType().getTypeName();
+	}
+
+	String getPropertyFieldName() {
+		return toFirstLetterInLowerCase(modelAttribute.getName()) + "Property";
+	}
+
+	protected String getFieldCreation() {
+		return delegate.getFieldCreation(this);
+	}
+
+	String generateDeclaration() {
+		return String.format("protected final %s %s;", getPropertyType(), getPropertyFieldName());
+	}
+
+	String generateInitialization(Class<?> modelClass) {
+		return String.format(
+				"%s = new %s(prefix + \"%s\", this).configureTyped(%n"
+						+ "\tConfiguration.persistent(currentObjectProvider, %s),%n"
+						+ "\timplicitConverters(%s.class, \"%s\", %s.class));",
+				getPropertyFieldName(), getPropertyType(), modelAttribute.getName(), getFieldCreation(),
+				modelClass.getSimpleName(), modelAttribute.getName(), modelAttribute.getClassType().getCanonicalName());
+	}
+
+	public String getConstantName() {
+		return toConstant(modelAttribute.getName());
 	}
 
 	public String getter() {

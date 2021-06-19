@@ -21,7 +21,7 @@ import ch.skymarshall.example.gui.TestObject;
 import ch.skymarshall.gui.model.ListModel;
 import ch.skymarshall.gui.model.views.ListViews;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
-import ch.skymarshall.gui.validation.ValidationConverter;
+import ch.skymarshall.gui.validation.ValidationBinding;
 
 public class ControllerExampleModel extends ControllerExampleObjectGuiModel {
 
@@ -38,7 +38,7 @@ public class ControllerExampleModel extends ControllerExampleObjectGuiModel {
 	private final ListModel<TestObject> tableModel = new ListModel<>(ListViews.sorted(TEST_COMPARATOR));
 
 	public ControllerExampleModel(final ModelConfiguration config) {
-		super(config.with(ValidationConverter.validator()));
+		super(config.with(ValidationBinding.validator()));
 	}
 
 	public ObjectProperty<String> getStaticListSelectionProperty() {

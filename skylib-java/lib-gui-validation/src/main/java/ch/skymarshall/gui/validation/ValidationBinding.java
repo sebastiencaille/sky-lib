@@ -8,18 +8,19 @@ import ch.skymarshall.gui.mvc.GuiModel.ImplicitConvertProvider;
 import ch.skymarshall.gui.mvc.converters.ConversionException;
 import ch.skymarshall.gui.mvc.converters.IUnaryConverter;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
+import ch.skymarshall.gui.mvc.properties.AbstractTypedProperty;
 import ch.skymarshall.util.dao.metadata.MetadataHelper;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 
-public class ValidationConverter {
+public class ValidationBinding {
 
 	private static final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 	private static final Validator validator = factory.getValidator();
 
-	private ValidationConverter() {
+	private ValidationBinding() {
 	}
 
 	public static <B, T> IUnaryConverter<T> validator(final Class<B> beanType) {
@@ -52,24 +53,24 @@ public class ValidationConverter {
 
 	}
 
-	private static class Converter<B, T> implements IUnaryConverter<T> {
+	private static class Converter<T, U> implements IUnaryConverter<U> {
 
-		private final Class<B> beanType;
+		private final Class<T> beanType;
 		private final String attributeName;
 
-		public Converter(Class<B> modelClass, String attributeName, Class<T> attibuteClass) {
+		public Converter(AbstractTypedProperty<U> prop, Class<T> modelClass, String attributeName, Class<?> attributeClass) {
 			this.beanType = modelClass;
 			this.attributeName = MetadataHelper.toFirstLetterInLowerCase(attributeName);
 		}
 
 		@Override
-		public T convertPropertyValueToComponentValue(final T propertyValue) {
+		public U convertPropertyValueToComponentValue(final U propertyValue) {
 			return propertyValue;
 		}
 
 		@Override
-		public T convertComponentValueToPropertyValue(final T componentValue) throws ConversionException {
-			final Set<ConstraintViolation<B>> validation = validator.validateValue(beanType, attributeName,
+		public U convertComponentValueToPropertyValue(final U componentValue) throws ConversionException {
+			final Set<ConstraintViolation<T>> validation = validator.validateValue(beanType, attributeName,
 					componentValue);
 			if (!validation.isEmpty()) {
 				throw new ConversionException(
@@ -79,7 +80,7 @@ public class ValidationConverter {
 		}
 	}
 
-	public static <B, T> ImplicitConvertProvider<B, T> validator() {
+	public static ImplicitConvertProvider validator() {
 		return Converter::new;
 	}
 

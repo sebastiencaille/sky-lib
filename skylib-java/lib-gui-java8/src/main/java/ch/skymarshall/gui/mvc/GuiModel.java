@@ -17,21 +17,24 @@ package ch.skymarshall.gui.mvc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import ch.skymarshall.gui.mvc.converters.IUnaryConverter;
+import ch.skymarshall.gui.mvc.properties.AbstractTypedProperty;
 import ch.skymarshall.gui.mvc.properties.ErrorProperty;
 
 public class GuiModel {
 
-	public interface ImplicitConvertProvider<T, U> {
-		IUnaryConverter<U> create(Class<T> modelClass, String attributeName, Class<U> attributeClass);
+	public interface ImplicitConvertProvider {
+		<T, U> IUnaryConverter<U> create(AbstractTypedProperty<U> property, Class<T> modelClass, String attributeName,
+				Class<?> attributeClass);
 	}
 
 	public static class ModelConfiguration {
 		protected final IScopedSupport propertySupport;
 		protected ErrorProperty errorProperty;
-		protected final List<ImplicitConvertProvider<?, ?>> implicitConverters = new ArrayList<>();
+		protected final List<ImplicitConvertProvider> implicitConverters = new ArrayList<>();
 
 		public ModelConfiguration(IScopedSupport propertySupport) {
 			this.propertySupport = propertySupport;
@@ -49,12 +52,12 @@ public class GuiModel {
 			return this;
 		}
 
-		public ModelConfiguration with(ImplicitConvertProvider<?, ?> factory) {
+		public ModelConfiguration with(ImplicitConvertProvider factory) {
 			implicitConverters.add(factory);
 			return this;
 		}
 
-		public List<ImplicitConvertProvider<?, ?>> getImplicitConverters() {
+		public List<ImplicitConvertProvider> getImplicitConverters() {
 			return implicitConverters;
 		}
 
@@ -87,6 +90,10 @@ public class GuiModel {
 		return new ModelConfiguration(controller.getScopedChangeSupport());
 	}
 
+	public static ErrorProperty createErrorProperty(final String name, final ModelConfiguration config) {
+		return new ErrorProperty(name, config.getPropertySupport());
+	}
+
 	protected final ModelConfiguration configuration;
 
 	public GuiModel(ModelConfiguration configuration) {
@@ -101,12 +108,24 @@ public class GuiModel {
 		return configuration.errorProperty;
 	}
 
-	protected static ErrorProperty createErrorProperty(final String name, final ModelConfiguration config) {
-		return new ErrorProperty(name, config.getPropertySupport());
-	}
-
 	public IScopedSupport getPropertySupport() {
 		return configuration.propertySupport;
+	}
+
+	/**
+	 * 
+	 * @param <T>
+	 * @param <U>
+	 * @param modelClass
+	 * @param attributeName
+	 * @param attributeClass generic class to allow typed classes
+	 * @return
+	 */
+	public <T, U> Consumer<AbstractTypedProperty<U>> implicitConverters(Class<T> modelClass, String attributeName,
+			Class<?> attributeClass) {
+		return p -> configuration.getImplicitConverters().stream().sequential()
+				.map(c -> c.create(p, modelClass, attributeName, (Class<U>) attributeClass))
+				.forEach(p::addImplicitConverter);
 	}
 
 	public void activate() {

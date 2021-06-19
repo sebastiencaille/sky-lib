@@ -7,6 +7,6 @@ public class GenericEditorValidationAdapter implements IGenericModelAdapter {
 
 	@Override
 	public EndOfChain<?> apply(final Class<?> editedClazz, final EndOfChain<?> chain) {
-		return chain.bind(ch.skymarshall.gui.validation.ValidationConverter.validator(editedClazz));
+		return chain.bind(ch.skymarshall.gui.validation.ValidationBinding.validator(editedClazz));
 	}
 }

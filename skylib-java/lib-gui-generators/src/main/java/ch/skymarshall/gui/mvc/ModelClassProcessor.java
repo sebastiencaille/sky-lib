@@ -61,28 +61,9 @@ public class ModelClassProcessor {
 		}
 
 	}
+	
 
-	static String typeToString(final Type type) {
-		if (type instanceof Class) {
-			return ((Class<?>) type).getCanonicalName();
-		} else if (type instanceof ParameterizedType) {
-
-			final ParameterizedType p = (ParameterizedType) type;
-			final StringBuilder builder = new StringBuilder(typeToString(p.getRawType()));
-			char sep = '<';
-			for (final Type st : p.getActualTypeArguments()) {
-				builder.append(sep).append(typeToString(st));
-				sep = ',';
-			}
-			builder.append('>');
-			return builder.toString();
-		} else {
-			throw new IllegalArgumentException("Unhandled type " + type);
-		}
-
-	}
-
-	static String typeParametersToString(final Type type) {
+	public static String typeParametersToString(final Type type) {
 		if (!(type instanceof ParameterizedType)) {
 			throw new IllegalArgumentException("Unhandled type " + type);
 		}
@@ -90,12 +71,13 @@ public class ModelClassProcessor {
 		final StringBuilder builder = new StringBuilder();
 		char sep = '<';
 		for (final Type st : p.getActualTypeArguments()) {
-			builder.append(sep).append(typeToString(st));
+			builder.append(sep).append(st.getTypeName());
 			sep = ',';
 		}
 		builder.append('>');
 		return builder.toString();
 	}
+
 
 	private final Class<?> modelClass;
 
@@ -170,8 +152,8 @@ public class ModelClassProcessor {
 
 		forEachAttribute(metaData, attrib -> {
 			AttributeProcessor attribProcessor = AttributeProcessor.create(context, attrib, delegate);
-			context.append("fields.init", attribProcessor.addImports().generateInitialization() + "\n");
-			context.append("fields.init", attribProcessor.generateImplicitConverters(metaData.getDataType()) + "\n");
+			context.append("fields.init",
+					attribProcessor.addImports().generateInitialization(metaData.getDataType()) + "\n");
 		});
 	}
 
@@ -184,15 +166,15 @@ public class ModelClassProcessor {
 	}
 
 	protected String generateLoadFrom(final AbstractAttributeMetaData<?> attrib) {
-		return AttributeProcessor.create(context, attrib, delegate).getPropertyName() + ".load(this);";
+		return AttributeProcessor.create(context, attrib, delegate).getPropertyFieldName() + ".load(this);";
 	}
 
 	protected String generatePropertyNameOf(final AbstractAttributeMetaData<?> attrib) {
-		return AttributeProcessor.create(context, attrib, delegate).getPropertyName();
+		return AttributeProcessor.create(context, attrib, delegate).getPropertyFieldName();
 	}
 
 	protected String generateSaveInto(final AbstractAttributeMetaData<?> attrib) {
-		return AttributeProcessor.create(context, attrib, delegate).getPropertyName() + ".save();";
+		return AttributeProcessor.create(context, attrib, delegate).getPropertyFieldName() + ".save();";
 	}
 
 	protected String generateAccessConstants(final AbstractAttributeMetaData<?> attrib) {
@@ -220,7 +202,7 @@ public class ModelClassProcessor {
 
 		final JavaCodeGenerator<RuntimeException> gen = JavaCodeGenerator.inMemory();
 		gen.openBlock(ATTRIB_PUBLIC, processor.getPropertyType(), " get", attrib.getName(), "Property()");
-		gen.appendIndentedLine("return " + processor.getPropertyName() + ";");
+		gen.appendIndentedLine("return " + processor.getPropertyFieldName() + ";");
 		gen.closeBlock();
 		return gen.toString();
 	}

@@ -16,7 +16,10 @@
 package ch.skymarshall.util.dao.metadata;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
+
+import javax.lang.model.type.PrimitiveType;
 
 /**
  * This class contains the basic methods and attributes used to access DO's
@@ -98,12 +101,20 @@ public abstract class AbstractAttributeMetaData<T> {
 		if (!type.isPrimitive()) {
 			return type;
 		}
-		if (type == Boolean.TYPE) {
+		if (type == Character.TYPE) {
+			return Character.class;
+		} else if (type == Boolean.TYPE) {
 			return Boolean.class;
+		} else if (type == Short.TYPE) {
+			return Short.class;
 		} else if (type == Integer.TYPE) {
 			return Integer.class;
 		} else if (type == Long.TYPE) {
 			return Long.class;
+		} else if (type == Float.TYPE) {
+			return Float.class;
+		} else if (type == Double.TYPE) {
+			return Double.class;
 		}
 		throw new IllegalStateException("Unhandled type: " + type);
 	}

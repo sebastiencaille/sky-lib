@@ -154,9 +154,8 @@ public abstract class AttributeProcessor {
 			} else {
 				setter = "null";
 			}
-
-			return "Persisters.getSet(" + attr.getDeclaringType().getSimpleName() + "::" + attributeProcessor.getter()
-					+ ", " + setter + ")";
+			return String.format("Persisters.getSet(%s::%s, %s)", attr.getDeclaringType().getSimpleName(),
+					attributeProcessor.getter(), setter);
 		}
 
 		@Override
@@ -207,14 +206,14 @@ public abstract class AttributeProcessor {
 
 	String generateInitialization(Class<?> modelClass) {
 		return String.format(
-				"%s = new %s(prefix + \"%s\", this).configureTyped(%n"
+				"%s = new %s(prefix + %s, this).configureTyped(%n"
 						+ "\tConfiguration.persistent(currentObjectProvider, %s),%n"
-						+ "\timplicitConverters(%s.class, \"%s\", %s.class));",
-				getPropertyFieldName(), getPropertyType(), modelAttribute.getName(), getFieldCreation(),
-				modelClass.getSimpleName(), modelAttribute.getName(), modelAttribute.getClassType().getCanonicalName());
+						+ "\timplicitConverters(%s.class, %s, %s.class));",
+				getPropertyFieldName(), getPropertyType(), getAttributeNameConstant(), getFieldCreation(),
+				modelClass.getSimpleName(), getAttributeNameConstant(), modelAttribute.getClassType().getCanonicalName());
 	}
 
-	public String getConstantName() {
+	public String getAttributeNameConstant() {
 		return toConstant(modelAttribute.getName());
 	}
 

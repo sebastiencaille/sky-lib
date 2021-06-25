@@ -16,10 +16,7 @@
 package ch.skymarshall.util.dao.metadata;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Array;
 import java.lang.reflect.Type;
-
-import javax.lang.model.type.PrimitiveType;
 
 /**
  * This class contains the basic methods and attributes used to access DO's

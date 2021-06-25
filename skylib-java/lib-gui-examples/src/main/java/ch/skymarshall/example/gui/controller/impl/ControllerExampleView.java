@@ -49,7 +49,6 @@ import javax.swing.JTextField;
 import ch.skymarshall.example.gui.TestObject;
 import ch.skymarshall.example.gui.TestObjectTableModel;
 import ch.skymarshall.gui.mvc.converters.IConverter;
-import ch.skymarshall.gui.mvc.factories.Converters;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 import ch.skymarshall.gui.mvc.properties.BooleanProperty;
 import ch.skymarshall.gui.mvc.properties.ErrorProperty;

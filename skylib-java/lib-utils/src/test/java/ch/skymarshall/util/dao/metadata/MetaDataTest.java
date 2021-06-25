@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
-public class MetaDataTest {
+class MetaDataTest {
 
 	private static class ObjectTest {
 
@@ -32,7 +32,7 @@ public class MetaDataTest {
 	}
 
 	@Test
-	public void testMetaData() {
+	void testMetaData() {
 
 		ObjectTest test = new ObjectTest();
 

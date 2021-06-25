@@ -39,18 +39,18 @@ public class ControllerExampleObjectGuiModel extends GuiModel implements IObject
 	
     public ControllerExampleObjectGuiModel(final String prefix, ModelConfiguration config) {
 		super(config.ifNotSet(()->	GuiModel.createErrorProperty(prefix + "ControllerExampleObject-Error", config)));
-		booleanPropProperty = new BooleanProperty(prefix + "BooleanProp", this).configureTyped(
+		booleanPropProperty = new BooleanProperty(prefix + BOOLEAN_PROP, this).configureTyped(
 			Configuration.persistent(currentObjectProvider, Persisters.getSet(ControllerExampleObject::isBooleanProp, ControllerExampleObject::setBooleanProp)),
-			implicitConverters(ControllerExampleObject.class, "BooleanProp", java.lang.Boolean.class));
-		intPropProperty = new IntProperty(prefix + "IntProp", this).configureTyped(
+			implicitConverters(ControllerExampleObject.class, BOOLEAN_PROP, java.lang.Boolean.class));
+		intPropProperty = new IntProperty(prefix + INT_PROP, this).configureTyped(
 			Configuration.persistent(currentObjectProvider, Persisters.getSet(ControllerExampleObject::getIntProp, ControllerExampleObject::setIntProp)),
-			implicitConverters(ControllerExampleObject.class, "IntProp", java.lang.Integer.class));
-		testObjectPropProperty = new ObjectProperty<ch.skymarshall.example.gui.TestObject>(prefix + "TestObjectProp", this).configureTyped(
+			implicitConverters(ControllerExampleObject.class, INT_PROP, java.lang.Integer.class));
+		testObjectPropProperty = new ObjectProperty<ch.skymarshall.example.gui.TestObject>(prefix + TEST_OBJECT_PROP, this).configureTyped(
 			Configuration.persistent(currentObjectProvider, Persisters.getSet(ControllerExampleObject::getTestObjectProp, ControllerExampleObject::setTestObjectProp)),
-			implicitConverters(ControllerExampleObject.class, "TestObjectProp", ch.skymarshall.example.gui.TestObject.class));
-		stringPropProperty = new ObjectProperty<java.lang.String>(prefix + "StringProp", this).configureTyped(
+			implicitConverters(ControllerExampleObject.class, TEST_OBJECT_PROP, ch.skymarshall.example.gui.TestObject.class));
+		stringPropProperty = new ObjectProperty<java.lang.String>(prefix + STRING_PROP, this).configureTyped(
 			Configuration.persistent(currentObjectProvider, Persisters.getSet(ControllerExampleObject::getStringProp, ControllerExampleObject::setStringProp)),
-			implicitConverters(ControllerExampleObject.class, "StringProp", java.lang.String.class));
+			implicitConverters(ControllerExampleObject.class, STRING_PROP, java.lang.String.class));
 		
 		allProperties = new AbstractProperty[]{booleanPropProperty, intPropProperty, testObjectPropProperty, stringPropProperty};
     }

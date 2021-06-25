@@ -32,12 +32,12 @@ public class TestObjectGuiModel extends GuiModel implements IObjectGuiModel<Test
 	
     public TestObjectGuiModel(final String prefix, ModelConfiguration config) {
 		super(config.ifNotSet(()->	GuiModel.createErrorProperty(prefix + "TestObject-Error", config)));
-		aSecondValueProperty = new IntProperty(prefix + "ASecondValue", this).configureTyped(
+		aSecondValueProperty = new IntProperty(prefix + ASECOND_VALUE, this).configureTyped(
 			Configuration.persistent(currentObjectProvider, Persisters.getSet(TestObject::getASecondValue, TestObject::setASecondValue)),
-			implicitConverters(TestObject.class, "ASecondValue", java.lang.Integer.class));
-		aFirstValueProperty = new ObjectProperty<java.lang.String>(prefix + "AFirstValue", this).configureTyped(
+			implicitConverters(TestObject.class, ASECOND_VALUE, java.lang.Integer.class));
+		aFirstValueProperty = new ObjectProperty<java.lang.String>(prefix + AFIRST_VALUE, this).configureTyped(
 			Configuration.persistent(currentObjectProvider, Persisters.getSet(TestObject::getAFirstValue, TestObject::setAFirstValue)),
-			implicitConverters(TestObject.class, "AFirstValue", java.lang.String.class));
+			implicitConverters(TestObject.class, AFIRST_VALUE, java.lang.String.class));
 		
 		allProperties = new AbstractProperty[]{aSecondValueProperty, aFirstValueProperty};
     }

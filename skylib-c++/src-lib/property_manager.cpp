@@ -58,11 +58,11 @@ void property_manager::remove_listener(const string& _name, property_listener_re
 	remove_listener(_name, (property_listener*) _listener);
 }
 
-void property_manager::remove_listeners(const string& _name) {
+void property_manager::remove_listeners(string_view &_name) {
 	m_propertyListeners.erase(_name);
 }
 
-void property_manager::fire_property_changed(source_ptr _source, const string& _name, const void* _oldValue,
+void property_manager::fire_property_changed(source_ptr _source, string_view &_name, const void* _oldValue,
 		const void* _newValue) const {
 	auto iter = m_propertyListeners.find(_name);
 	if (iter == m_propertyListeners.end()) {

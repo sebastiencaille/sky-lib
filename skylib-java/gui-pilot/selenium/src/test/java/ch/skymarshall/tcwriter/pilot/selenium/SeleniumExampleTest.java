@@ -119,7 +119,7 @@ class SeleniumExampleTest {
 		pilot.element(PROCEED_LOCATION).wait(ElementPilot.doClick().followedBy(new ArbitraryDelay(pilot)));
 		pilot.expectModalDialog(s -> {
 			s.doAcknowledge();
-			return ModalDialogDetector.ignore();
+			return ModalDialogDetector.expected();
 		});
 		pilot.element(OK_LOCATION).click();
 		pilot.waitModalDialogHandled();

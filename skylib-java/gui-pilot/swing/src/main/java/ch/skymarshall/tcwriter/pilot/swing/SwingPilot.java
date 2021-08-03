@@ -20,7 +20,7 @@ import javax.swing.text.JTextComponent;
 import org.junit.jupiter.api.Assertions;
 
 import ch.skymarshall.tcwriter.pilot.ModalDialogDetector;
-import ch.skymarshall.tcwriter.pilot.ModalDialogDetector.ErrorCheck;
+import ch.skymarshall.tcwriter.pilot.ModalDialogDetector.PollingResult;
 import ch.skymarshall.util.helpers.NoExceptionCloseable;
 
 public class SwingPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
@@ -37,8 +37,8 @@ public class SwingPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 		return SwingModalDialogDetector.defaultDetector();
 	}
 
-	public void expectModalDialog(final Function<SwingModalDialogDetector, ErrorCheck> check) {
-		setCurrentModalDialogDetector(SwingModalDialogDetector.withCheck(check));
+	public void expectModalDialog(final Function<SwingModalDialogDetector, PollingResult> check) {
+		setCurrentModalDialogDetector(SwingModalDialogDetector.withHandler(check));
 	}
 
 	/**

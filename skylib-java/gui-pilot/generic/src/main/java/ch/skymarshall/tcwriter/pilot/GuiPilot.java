@@ -56,7 +56,7 @@ public class GuiPilot {
 	}
 
 	public boolean waitModalDialogHandled(
-			final PollingResult.PollingResultFunction<ModalDialogDetector.ErrorCheck, Boolean> onFail) {
+			final PollingResult.PollingResultFunction<ModalDialogDetector.PollingResult, Boolean> onFail) {
 		final Timeout timeoutCheck = new Timeout(defaultActionTimeout);
 		while (!timeoutCheck.hasTimedOut()) {
 			if (currentModalDialogDetector.getCheckResult() != null) {

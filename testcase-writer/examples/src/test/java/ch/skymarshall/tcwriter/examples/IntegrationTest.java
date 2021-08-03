@@ -14,10 +14,10 @@ import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestDictionary;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 
-public class IntegrationTest {
+class IntegrationTest {
 
 	@Test
-	public void generateDictionaryAndTC() throws IOException, TestCaseException {
+	 void generateDictionaryAndTC() throws IOException, TestCaseException {
 		final TestDictionary model = ExampleHelper.generateDictionary();
 		final TestCase testCase = ExampleHelper.recordTestCase(model);
 		assertNotEquals(0, testCase.getSteps().size());
@@ -28,7 +28,7 @@ public class IntegrationTest {
 	}
 
 	@Test
-	public void testSerializeDeserialize() throws IOException {
+	 void testSerializeDeserialize() throws IOException {
 		final TestDictionary model = ExampleHelper.generateDictionary();
 		final TestCase tc = ExampleHelper.recordTestCase(model);
 

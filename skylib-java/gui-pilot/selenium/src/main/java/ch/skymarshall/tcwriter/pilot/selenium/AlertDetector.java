@@ -7,7 +7,7 @@ import java.util.function.Function;
 import org.openqa.selenium.Alert;
 
 import ch.skymarshall.tcwriter.pilot.ModalDialogDetector;
-import ch.skymarshall.tcwriter.pilot.ModalDialogDetector.ErrorCheck;
+import ch.skymarshall.tcwriter.pilot.ModalDialogDetector.PollingResult;
 import ch.skymarshall.util.helpers.NoExceptionCloseable;
 
 public class AlertDetector {
@@ -24,15 +24,15 @@ public class AlertDetector {
 		}
 	}
 
-	public static List<ModalDialogDetector.ErrorCheck> listAlerts(final SeleniumGuiPilot pilot,
-			final Function<AlertPilot, ErrorCheck> errorChecks) {
+	public static List<ModalDialogDetector.PollingResult> listAlerts(final SeleniumGuiPilot pilot,
+			final Function<AlertPilot, PollingResult> errorChecks) {
 
 		final AlertPilot seleniumAlert = new AlertPilot(pilot);
 		final Alert alert = seleniumAlert.loadGuiComponent();
 		if (alert == null) {
 			return Collections.emptyList();
 		}
-		ErrorCheck checked = ModalDialogDetector.fallback("");
+		PollingResult checked = ModalDialogDetector.notHandled("");
 		if (errorChecks != null) {
 			checked = errorChecks.apply(seleniumAlert);
 		}

@@ -13,7 +13,7 @@ namespace ch_skymarshall::gui::gtk4::pilot {
 using namespace std;
 using namespace ch_skymarshall::gui::pilot;
 
-gtk_entry_pilot::gtk_entry_pilot(gtk_gui_pilot* _gui_pilot, string const& _name) :
+gtk_entry_pilot::gtk_entry_pilot(gtk_gui_pilot* _gui_pilot, string_view& _name) :
 		abstract_gtk_component(_gui_pilot, _name) {
 }
 

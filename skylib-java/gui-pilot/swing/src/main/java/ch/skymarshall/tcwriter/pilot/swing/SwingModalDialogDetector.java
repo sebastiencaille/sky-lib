@@ -2,6 +2,7 @@ package ch.skymarshall.tcwriter.pilot.swing;
 
 import java.awt.Window;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -10,35 +11,39 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 
 import ch.skymarshall.tcwriter.pilot.ModalDialogDetector;
-import ch.skymarshall.tcwriter.pilot.ModalDialogDetector.ErrorCheck;
+import ch.skymarshall.tcwriter.pilot.ModalDialogDetector.PollingResult;
+import ch.skymarshall.util.helpers.StreamHelper;
 
 public class SwingModalDialogDetector extends SwingPilot {
 
-	public static List<ModalDialogDetector.ErrorCheck> listDialogs(
-			final Function<SwingModalDialogDetector, ErrorCheck> errorCheck) {
-		final List<ModalDialogDetector.ErrorCheck> result = new ArrayList<>();
+	public static ModalDialogDetector withHandler(
+			final Function<SwingModalDialogDetector, PollingResult>... pollingHandlers) {
+		return new ModalDialogDetector(() -> listDialogs(pollingHandlers));
+	}
+
+	public static ModalDialogDetector defaultDetector() {
+		return new ModalDialogDetector(() -> listDialogs(SwingModalDialogDetector::defaultCheck));
+	}
+
+	/**
+	 * Lists all the windows and apply the handlers.
+	 * 
+	 * @param pollingHandler
+	 * @return
+	 */
+	public static List<ModalDialogDetector.PollingResult> listDialogs(
+			final Function<SwingModalDialogDetector, PollingResult>... pollingHandlers) {
+		final List<ModalDialogDetector.PollingResult> result = new ArrayList<>();
 		SwingPilot.invokeAndWait(() -> {
 			for (final Window window : Window.getWindows()) {
 				if (!window.isVisible() || !(window instanceof JDialog)) {
 					continue;
 				}
 				final SwingModalDialogDetector dialogPilot = new SwingModalDialogDetector((JDialog) window);
-				result.add(applyCheck(errorCheck, dialogPilot));
+				Arrays.stream(pollingHandlers).map(p -> p.apply(dialogPilot)).collect(StreamHelper.addTo(result));
 			}
 		});
 		return result;
-	}
-
-	private static ErrorCheck applyCheck(final Function<SwingModalDialogDetector, ErrorCheck> errorCheck,
-			final SwingModalDialogDetector dialogPilot) {
-		ErrorCheck checked = ModalDialogDetector.fallback("");
-		if (errorCheck != null) {
-			checked = errorCheck.apply(dialogPilot);
-		}
-		if (checked.handled) {
-			return checked;
-		}
-		return dialogPilot.defaultCheck();
 	}
 
 	private final JDialog dialog;
@@ -52,35 +57,34 @@ public class SwingModalDialogDetector extends SwingPilot {
 		return dialog;
 	}
 
-	public ErrorCheck defaultCheck() {
+	/**
+	 * Triggers an error when a dialog box is detected
+	 * 
+	 * @return
+	 */
+	public PollingResult defaultCheck() {
 		final Optional<JLabel> dialogLabel = search(JLabel.class);
 		if (!dialogLabel.isPresent()) {
-			return error("Unexpected dialog box: " + dialog.getTitle());
+			return failure(dialog.getTitle());
 		}
-		return error(dialogLabel.get().getText());
+		return failure(dialogLabel.get().getText());
 	}
 
-	public void closeFunction() {
+	public void closeDialog() {
 		SwingPilot.invokeAndWait(() -> {
 			getDialog().setVisible(false);
 			getDialog().dispose();
 		});
 	}
 
-	public ErrorCheck error(final String error) {
-		return ModalDialogDetector.error(error, this::closeFunction);
-	}
-
-	public static ModalDialogDetector withCheck(final Function<SwingModalDialogDetector, ErrorCheck> errorCheck) {
-		return new ModalDialogDetector(() -> listDialogs(errorCheck));
-	}
-
-	public static ModalDialogDetector defaultDetector() {
-		return new ModalDialogDetector(() -> listDialogs(null));
-	}
-
-	public ErrorCheck fallback() {
-		return ModalDialogDetector.fallback(getDialog().getTitle());
+	/**
+	 * Close the dialog and trigger a failure
+	 * 
+	 * @param error
+	 * @return
+	 */
+	public PollingResult failure(final String error) {
+		return ModalDialogDetector.error(error, this::closeDialog);
 	}
 
 }

@@ -15,6 +15,7 @@
  ******************************************************************************/
 package ch.skymarshall.util.helpers;
 
+import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.IntFunction;
@@ -102,6 +103,10 @@ public interface StreamHelper {
 	 */
 	public static <E> Collector<E, ?, Single<E>> single() {
 		return Collector.of(Single::single, Single::setValue, Single::combiner);
+	}
+
+	public static <E> Collector<E, ?, Collection<E>> addTo(Collection<E> target) {
+		return Collector.of(() -> target, (t, v) -> t.add(v), (t, u) -> t);
 	}
 
 	public static <T> void throwIfContainsNull(final Stream<T> stream) {

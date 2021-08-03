@@ -10,10 +10,10 @@ import org.junit.jupiter.api.Test;
 
 import ch.skymarshall.tcwriter.it.api.StepEdition;
 
-public class StepEditionTest extends AbstractGuiTest {
+class StepEditionTest extends AbstractGuiTest {
 
 	@Test
-	public void addAndEditSteps() {
+	void addAndEditSteps() {
 
 		final StepEdition edition1 = new StepEdition();
 		edition1.setActor("Test writer");

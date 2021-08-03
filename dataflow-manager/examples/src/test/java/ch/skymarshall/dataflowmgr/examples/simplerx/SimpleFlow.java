@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 
 
 
-public class SimpleFlow extends ch.skymarshall.dataflowmgr.examples.simple.AbstractFlow {
+ class SimpleFlow extends ch.skymarshall.dataflowmgr.examples.simple.AbstractFlow {
 
 	public enum DataPointState {
 		NOT_TRIGGERED, TRIGGERING, TRIGGERED, SKIPPED
@@ -275,7 +275,7 @@ public class SimpleFlow extends ch.skymarshall.dataflowmgr.examples.simple.Abstr
 	}
 
 	@Test
-	public void testFlow() throws InterruptedException {
+	 void testFlow() throws InterruptedException {
 		runTest("Hello", "Hello -> complete with World");
 		runTest("Hi", "Hi -> complete with There");
 		runTest("Huh", "Huh -> keep as is");

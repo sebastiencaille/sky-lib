@@ -6,7 +6,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 import ch.skymarshall.tcwriter.pilot.ModalDialogDetector;
-import ch.skymarshall.tcwriter.pilot.ModalDialogDetector.ErrorCheck;
+import ch.skymarshall.tcwriter.pilot.ModalDialogDetector.PollingResult;
 
 public class SeleniumGuiPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 
@@ -33,7 +33,7 @@ public class SeleniumGuiPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 		return new ModalDialogDetector(() -> AlertDetector.listAlerts(this, null));
 	}
 
-	public void expectModalDialog(final Function<AlertPilot, ErrorCheck> check) {
+	public void expectModalDialog(final Function<AlertPilot, PollingResult> check) {
 		setCurrentModalDialogDetector(new ModalDialogDetector(() -> AlertDetector.listAlerts(this, check)));
 	}
 

@@ -29,10 +29,10 @@ import org.junit.jupiter.api.Test;
 import ch.skymarshall.util.helpers.StreamHelper;
 import ch.skymarshall.util.helpers.WrongCountException;
 
-public class StreamHelperTest {
+class StreamHelperTest {
 
 	@Test
-	public void singleTest() {
+	void singleTest() {
 		Arrays.asList(1).stream().collect(StreamHelper.single()).orElseThrow(WrongCountException::new);
 		try {
 			Arrays.asList().stream().collect(StreamHelper.single()).orElseThrow(WrongCountException::new);
@@ -47,7 +47,7 @@ public class StreamHelperTest {
 	}
 
 	@Test
-	public void zeroOrOneTest() {
+	void zeroOrOneTest() {
 
 		final Optional<Integer> zeroOrOne1 = Arrays.asList(1).stream().collect(StreamHelper.zeroOrOne())
 				.optionalOrThrow(WrongCountException::new);

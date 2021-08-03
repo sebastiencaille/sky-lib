@@ -40,7 +40,7 @@ private:
 	bool m_attached = false;
 
 protected:
-	const string m_name;
+	string_view m_name;
 	property_manager &m_manager;
 
 public:

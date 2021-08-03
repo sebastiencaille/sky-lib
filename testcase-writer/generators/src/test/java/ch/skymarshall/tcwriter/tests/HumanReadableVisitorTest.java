@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test;
 
 import ch.skymarshall.tcwriter.generators.visitors.HumanReadableVisitor;
 
-public class HumanReadableVisitorTest {
+ class HumanReadableVisitorTest {
 
 	@Test
-	public void testBlockFormatting() {
+	 void testBlockFormatting() {
 
 		assertEquals("Hello world", HumanReadableVisitor.format("Hello %s", Arrays.asList("world")));
 		assertEquals("Hello world", HumanReadableVisitor.format("Hello// %srld//", Arrays.asList("wo")));
@@ -22,7 +22,7 @@ public class HumanReadableVisitorTest {
 	}
 
 	@Test
-	public void testTextSplit() {
+	 void testTextSplit() {
 		assertEquals("Hello world", HumanReadableVisitor.format("%s %s", Arrays.asList("Hello|world")));
 		assertEquals("Hello world", HumanReadableVisitor.format("Hello //x%s//%s", Arrays.asList("|world")));
 		assertEquals("Hello world", HumanReadableVisitor.format("%s //x%s//world", Arrays.asList("Hello|")));

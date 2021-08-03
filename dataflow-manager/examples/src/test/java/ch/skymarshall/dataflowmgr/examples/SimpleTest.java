@@ -34,7 +34,7 @@ import ch.skymarshall.util.helpers.Log;
  * @author scaille
  *
  */
-public class SimpleTest {
+class SimpleTest {
 
 	private static final String DP_Complete = "complete";
 
@@ -45,7 +45,7 @@ public class SimpleTest {
 	public static final String SIMPLE_EXTERNAL_ADAPTER_CLASS = SIMPLE_SERVICE_PKG + ".SimpleExternalAdapter";
 
 	@Test
-	public void testFlow() throws IOException, InterruptedException {
+	void testFlow() throws IOException, InterruptedException {
 
 		final Dictionary dictionary = new JavaToDictionary().scan("ch.skymarshall.dataflowmgr.examples.simple");
 

@@ -13,7 +13,7 @@ import ch.skymarshall.util.text.SimpleTextFormatter;
 import ch.skymarshall.util.text.StringListOutput;
 import ch.skymarshall.util.text.TextFormatter;
 
-public class FormatterTest {
+ class FormatterTest {
 
 	private static class ExceptionOutput implements TextFormatter.IOutput<IOException> {
 
@@ -33,13 +33,13 @@ public class FormatterTest {
 	}
 
 	@Test
-	public void testExceptionManagement() throws IOException {
+	 void testExceptionManagement() throws IOException {
 		SimpleTextFormatter<IOException> tf = new SimpleTextFormatter<>(new ExceptionOutput());
 		assertThrows(IOException.class, () -> tf.append("Hello"));
 	}
 
 	@Test
-	public void testIndentation() {
+	 void testIndentation() {
 		StringListOutput output = new StringListOutput();
 		SimpleTextFormatter<RuntimeException> tf = new SimpleTextFormatter<>(output);
 		tf.setIndentationManager(new ArrowIndentationManager());

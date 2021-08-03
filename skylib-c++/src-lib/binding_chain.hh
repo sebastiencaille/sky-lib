@@ -247,7 +247,7 @@ public:
 
 	};
 
-	void propagate_property_change(source_ptr _property, const string &_name,
+	void propagate_property_change(source_ptr _property, string_view &_name,
 			const void *_old_value, const void *_new_value) {
 		if (!m_transmit) {
 			return;

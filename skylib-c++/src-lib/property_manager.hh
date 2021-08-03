@@ -50,7 +50,7 @@ public:
 			weak_ptr<property_listener> _listener);
 	void remove_listener(const string &_name, property_listener_ref _listener);
 
-	void fire_property_changed(source_ptr _source, const string &_name,
+	void fire_property_changed(source_ptr _source, string_view &_name,
 			const void *_oldValue, const void *_newValue) const;
 	void fire_before_property_changed(source_ptr _source,
 			property *_property) const;
@@ -59,7 +59,7 @@ public:
 	void dump() const;
 private:
 	using listener_list_type = list<shared_ptr<property_listener>>;
-	using listener_map_type = map<string, shared_ptr<listener_list_type>>;
+	using listener_map_type = map<string_view, shared_ptr<listener_list_type>>;
 	listener_map_type m_propertyListeners;
 };
 

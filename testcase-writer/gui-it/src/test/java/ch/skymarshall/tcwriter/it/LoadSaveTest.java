@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import ch.skymarshall.tcwriter.it.api.MainFrameAction;
 
-public class LoadSaveTest extends AbstractGuiTest {
+ class LoadSaveTest extends AbstractGuiTest {
 
 	@Test
-	public void testSaveNewLoad() {
+	 void testSaveNewLoad() {
 		testSession.injectBasicTest();
 		tcWriter.mainFrameAction(MainFrameAction.saveTC("test"));
 		testSession.checkBasicTest();

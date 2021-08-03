@@ -19,17 +19,17 @@ import ch.skymarshall.util.helpers.NoExceptionCloseable;
  */
 public class ModalDialogDetector {
 
-	public static class ErrorCheck {
+	public static class PollingResult {
 		public final boolean handled;
 		private final String error;
 		private final String extraInfo;
-		private Runnable closeFunction;
+		private Runnable closeOnErrorFunction;
 
-		private ErrorCheck(final boolean handled, final String extraInfo, final String error,
-				final Runnable closeFunction) {
+		private PollingResult(final boolean handled, final String error, final Runnable closeOnErrorFunction,
+				final String extraInfo) {
 			this.handled = handled;
 			this.error = error;
-			this.closeFunction = closeFunction;
+			this.closeOnErrorFunction = closeOnErrorFunction;
 			this.extraInfo = extraInfo;
 		}
 
@@ -37,49 +37,51 @@ public class ModalDialogDetector {
 
 	private static final Timer timer = new Timer("Modal dialog detector");
 
-	private Supplier<List<ErrorCheck>> errorChecks;
+	private Supplier<List<PollingResult>> pollingHandlers;
 
 	private final List<String> errors = new ArrayList<>();
 
-	private ErrorCheck foundDialog = null;
+	private PollingResult foundHandledDialog = null;
 
 	private boolean enabled = false;
 
 	private Semaphore running = new Semaphore(1);
 
-	public ModalDialogDetector(final Supplier<List<ErrorCheck>> errorChecks) {
-		this.errorChecks = errorChecks;
+	public ModalDialogDetector(final Supplier<List<PollingResult>> pollingHandlers) {
+		this.pollingHandlers = pollingHandlers;
 	}
 
-	public static ErrorCheck ignore() {
-		return new ErrorCheck(true, null, null, null);
+	public static PollingResult expected() {
+		return new PollingResult(true, null, null, null);
 	}
 
-	public static ErrorCheck error(final String error, final Runnable closeFunction) {
-		return new ErrorCheck(true, null, error, closeFunction);
+	public static PollingResult error(final String error, final Runnable closeFunction) {
+		return new PollingResult(true, error, closeFunction, null);
 	}
 
-	public static ErrorCheck fallback(final String extraInfo) {
-		return new ErrorCheck(false, extraInfo, null, null);
+	public static PollingResult notHandled(final String extraInfo) {
+		return new PollingResult(false, null, null, extraInfo);
 	}
 
 	private synchronized void handleModalDialogs() {
 		try {
 			running.acquire();
-			for (final ErrorCheck checked : errorChecks.get()) {
-				ErrorCheck result = checked;
+			for (final PollingResult checked : pollingHandlers.get()) {
+				PollingResult result = checked;
 				if (!result.handled) {
-					result = error("Unhandled fallback: " + checked.extraInfo, null);
-				} else {
-					foundDialog = result;
+					errors.add("Unhandled dialog box: " + checked.extraInfo);
+					continue;
 				}
+				foundHandledDialog = result;
 				if (result.error == null) {
 					return;
 				}
+				// handle error
 				errors.add(result.error);
-				if (result.closeFunction != null) {
-					result.closeFunction.run();
+				if (result.closeOnErrorFunction != null) {
+					result.closeOnErrorFunction.run();
 				}
+
 			}
 		} catch (final InterruptedException e) {
 			Thread.currentThread().interrupt();
@@ -119,7 +121,7 @@ public class ModalDialogDetector {
 	}
 
 	private synchronized NoExceptionCloseable schedule(final Timer t) {
-		Assertions.assertNull(foundDialog, () -> "Detector already detected a dialog");
+		Assertions.assertNull(foundHandledDialog, () -> "Detector already detected a dialog");
 		if (!enabled) {
 			enabled = true;
 			t.schedule(timerTask(), 0, 500);
@@ -127,8 +129,8 @@ public class ModalDialogDetector {
 		return this::close;
 	}
 
-	public synchronized ErrorCheck getCheckResult() {
-		return foundDialog;
+	public synchronized PollingResult getCheckResult() {
+		return foundHandledDialog;
 	}
 
 	public static NoExceptionCloseable withModalDialogDetection(final ModalDialogDetector modalDialogDetector) {

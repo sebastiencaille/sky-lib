@@ -27,6 +27,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import ch.skymarshall.gui.mvc.GuiErrors.GuiError;
+import ch.skymarshall.gui.mvc.converters.ChainInhibitedException;
 import ch.skymarshall.gui.mvc.converters.ConversionException;
 import ch.skymarshall.gui.mvc.converters.GuiErrorToStringConverter;
 import ch.skymarshall.gui.mvc.converters.IConverter;
@@ -328,4 +329,26 @@ public final class Converters {
 		};
 	}
 
+	public static <P extends Enum<P>> IConverter<P, Boolean> matches(P enumValue) {
+		return new IConverter<P, Boolean>() {
+
+			@Override
+			public Boolean convertPropertyValueToComponentValue(final P propertyValue) {
+				return propertyValue == enumValue;
+			}
+
+			/**
+			 * @throws ConversionException exception thrown when a conversion error occurs
+			 */
+			@Override
+			public P convertComponentValueToPropertyValue(final Boolean componentValue) throws ConversionException {
+				if (componentValue == null || !componentValue.booleanValue()) {
+					throw new ChainInhibitedException("Component is false");
+				}
+				return enumValue;
+			}
+
+		};
+	}
+	
 }

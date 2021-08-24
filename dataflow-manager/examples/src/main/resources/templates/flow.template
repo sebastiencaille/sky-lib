@@ -5,14 +5,14 @@ import org.junit.jupiter.api.Test;
 
 ${imports}
 
-public class ${flow.name} extends AbstractFlow {
+class ${flow.name} extends AbstractFlow {
 
 	public void execute(${flow.input} inputDataPoint) {
 		${flow.code}
 	}
 
 	@Test	
-	public void testFlow() {
+	void testFlow() {
 		simpleExternalAdapter.reset();
 		
 	 	execute("Hello");

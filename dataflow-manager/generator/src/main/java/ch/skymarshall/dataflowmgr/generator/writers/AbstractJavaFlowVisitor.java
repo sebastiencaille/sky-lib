@@ -99,8 +99,8 @@ public abstract class AbstractJavaFlowVisitor extends AbstractFlowVisitor {
 		return (binding.getProcessor().getCall() + '_' + binding.toDataPoint()).replace('-', '_').replace('.', '_');
 	}
 
-	public String toVariable(final WithId withId) {
-		return withId.uuid().toString().replace('-', '_');
+	public String toVariable(final Call<?> call) {
+		return call.getName().replace('.', '_');
 	}
 
 	/**

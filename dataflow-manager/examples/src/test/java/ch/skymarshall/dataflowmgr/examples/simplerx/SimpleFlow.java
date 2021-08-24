@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 
 
 
- class SimpleFlow extends ch.skymarshall.dataflowmgr.examples.simple.AbstractFlow {
+class SimpleFlow extends ch.skymarshall.dataflowmgr.examples.simple.AbstractFlow {
 
 	public enum DataPointState {
 		NOT_TRIGGERED, TRIGGERING, TRIGGERED, SKIPPED
@@ -156,12 +156,12 @@ import org.junit.jupiter.api.Test;
 	
 	private Maybe<FlowExecution> simpleService_complete_complete_conditional(FlowExecution execution, final Function<Maybe<FlowExecution>, Maybe<FlowExecution>> callModifier, Runnable... callbacks) {
 	    final Maybe<FlowExecution> topCall = simpleService_complete_complete_svcCall(execution, callModifier, callbacks);
-	    final Maybe<Boolean> activator_9ddec783_0847_4e3b_afbd_3f3660cf65aa = Maybe.just(execution)
+	    final Maybe<Boolean> activator_ch_skymarshall_dataflowmgr_examples_simple_SimpleFlowConditions_mustComplete = Maybe.just(execution)
 	        .map(f -> this.simpleFlowConditions.mustComplete(f.simpleService_init))
 	        .subscribeOn(Schedulers.computation());
 	
 	    final Maybe<FlowExecution> activators = Maybe.just(true)
-	        .zipWith(activator_9ddec783_0847_4e3b_afbd_3f3660cf65aa, (u, r) -> u.booleanValue() && r.booleanValue())
+	        .zipWith(activator_ch_skymarshall_dataflowmgr_examples_simple_SimpleFlowConditions_mustComplete, (u, r) -> u.booleanValue() && r.booleanValue())
 	        .mapOptional(b -> b ? Optional.of(execution) : Optional.empty())
 	        .flatMap(e -> topCall)
 	        .doOnComplete(() -> { execution.setStateBindingSimpleServiceCompleteComplete(DataPointState.TRIGGERED); execution.setStateComplete(DataPointState.SKIPPED); })
@@ -275,7 +275,7 @@ import org.junit.jupiter.api.Test;
 	}
 
 	@Test
-	 void testFlow() throws InterruptedException {
+	void testFlow() throws InterruptedException {
 		runTest("Hello", "Hello -> complete with World");
 		runTest("Hi", "Hi -> complete with There");
 		runTest("Huh", "Huh -> keep as is");

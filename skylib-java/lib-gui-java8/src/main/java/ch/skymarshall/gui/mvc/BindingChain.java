@@ -27,6 +27,7 @@ import java.util.function.Predicate;
 import java.util.logging.Level;
 
 import ch.skymarshall.gui.mvc.Veto.TransmitMode;
+import ch.skymarshall.gui.mvc.converters.ChainInhibitedException;
 import ch.skymarshall.gui.mvc.converters.ConversionException;
 import ch.skymarshall.gui.mvc.converters.IConverter;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
@@ -127,6 +128,9 @@ public class BindingChain implements IBindingController {
 				for (int i = pos - 1; i >= 0; i--) {
 					try {
 						value = links.get(i).toProperty(component, value);
+					} catch (final ChainInhibitedException e) {
+						Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE, () -> "Component change inhibited: " + e.getMessage());
+						return;
 					} catch (final ConversionException e) {
 						errorNotifier.notifyError(component, GuiErrors.fromException(component, e));
 						return;
@@ -240,6 +244,9 @@ public class BindingChain implements IBindingController {
 		for (final Link link : links) {
 			try {
 				value = link.toComponent(value);
+			} catch (final ChainInhibitedException e) {
+				Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE, () -> "Property change inhibited: " + e.getMessage());
+				return;
 			} catch (final ConversionException e) {
 				errorNotifier.notifyError(property, GuiErrors.fromException(getProperty(), e));
 				return;

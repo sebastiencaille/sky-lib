@@ -15,6 +15,8 @@
  ******************************************************************************/
 package ch.skymarshall.gui.mvc;
 
+import ch.skymarshall.gui.mvc.properties.AbstractProperty;
+
 public class GuiErrors {
 	private GuiErrors() {
 	}
@@ -26,18 +28,18 @@ public class GuiErrors {
 	 *
 	 */
 	public static class GuiError {
-		private final Object source;
+		private final AbstractProperty property;
 		private final Object content;
 		private final String message;
 
-		public GuiError(final Object source, final String message, final Object content) {
-			this.source = source;
+		public GuiError(final AbstractProperty property, final String message, final Object content) {
+			this.property = property;
 			this.message = message;
 			this.content = content;
 		}
 
-		public Object getSource() {
-			return source;
+		public AbstractProperty getProperty() {
+			return property;
 		}
 
 		public Object getContent() {
@@ -49,7 +51,7 @@ public class GuiErrors {
 		}
 	}
 
-	public static GuiError fromException(final Object source, final Exception e) {
-		return new GuiError(source, e.getMessage(), e);
+	public static GuiError fromException(final AbstractProperty property, final Exception e) {
+		return new GuiError(property, e.getMessage(), e);
 	}
 }

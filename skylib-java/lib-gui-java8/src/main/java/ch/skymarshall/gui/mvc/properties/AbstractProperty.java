@@ -40,23 +40,25 @@ import ch.skymarshall.gui.mvc.Veto.TransmitMode;
 public abstract class AbstractProperty implements Serializable {
 
 	public interface ErrorNotifier {
-		void notifyError(Object source, GuiError error);
+		void notifyError(Object source, AbstractProperty property, GuiError error);
 
-		void clearError(Object source);
+		void clearError(Object source, AbstractProperty property);
+
 	}
 
 	public static ErrorNotifier emptyErrorNotifier() {
 		return new ErrorNotifier() {
 
 			@Override
-			public void notifyError(final Object source, final GuiError error) {
+			public void notifyError(final Object source, AbstractProperty property, final GuiError error) {
 				// noop
 			}
 
 			@Override
-			public void clearError(final Object source) {
+			public void clearError(final Object source, AbstractProperty property) {
 				// noop
 			}
+
 		};
 	}
 

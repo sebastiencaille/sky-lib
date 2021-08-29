@@ -20,6 +20,7 @@ import java.util.Comparator;
 import ch.skymarshall.example.gui.TestObject;
 import ch.skymarshall.gui.model.ListModel;
 import ch.skymarshall.gui.model.views.ListViews;
+import ch.skymarshall.gui.mvc.properties.ErrorSet;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 import ch.skymarshall.gui.validation.ValidationBinding;
 
@@ -38,7 +39,7 @@ public class ControllerExampleModel extends ControllerExampleObjectGuiModel {
 	private final ListModel<TestObject> tableModel = new ListModel<>(ListViews.sorted(TEST_COMPARATOR));
 
 	public ControllerExampleModel(final ModelConfiguration config) {
-		super(config.with(ValidationBinding.validator()));
+		super(config.with(ValidationBinding.validator()).with(new ErrorSet("Errors", config.getPropertySupport())));
 	}
 
 	public ObjectProperty<String> getStaticListSelectionProperty() {

@@ -1,5 +1,6 @@
 package ch.skymarshall.example.gui.controller;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.time.Duration;
@@ -19,7 +20,7 @@ import ch.skymarshall.util.helpers.Log;
 class ControllerExampleTest {
 
 	@Test
-	 void testExample() throws InvocationTargetException, InterruptedException {
+	void testExample() throws InvocationTargetException, InterruptedException {
 
 		final ControllerExampleController controller = new ControllerExampleController();
 		final ControllerExampleView[] view = new ControllerExampleView[1];
@@ -39,7 +40,7 @@ class ControllerExampleTest {
 		intCheck(pilot).checkValue("123");
 		intStringEditor(pilot).setText("abc");
 		intCheck(pilot).checkValue("123");
-		getErrorLabel(pilot).checkValue("Cannot convert to number");
+		intStringEditor(pilot).check("foreground color is RED", c -> c.getForeground() == Color.RED);
 
 		staticListEditor(pilot).select("A");
 		staticListSelectionCheck(pilot).checkValue("A");
@@ -75,10 +76,6 @@ class ControllerExampleTest {
 
 	private final JLabelPilot intCheck(final SwingPilot pilot) {
 		return pilot.label("intCheck");
-	}
-
-	private JLabelPilot getErrorLabel(final SwingPilot pilot) {
-		return pilot.label("errorLabel");
 	}
 
 	private JListPilot dynamicListEditor(final SwingPilot pilot) {

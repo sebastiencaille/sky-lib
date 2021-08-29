@@ -13,14 +13,14 @@ public class ErrorSet implements ErrorNotifier {
 	}
 
 	@Override
-	public void notifyError(final Object source, final GuiError error) {
-		errors.getValue().put(source, error);
+	public void notifyError(final Object source, final AbstractProperty property, final GuiError error) {
+		errors.getValue().put(property, error);
 		errors.fireArtificialChange(source);
 	}
 
 	@Override
-	public void clearError(final Object source) {
-		errors.getValue().remove(source);
+	public void clearError(final Object source, final AbstractProperty property) {
+		errors.getValue().remove(property);
 		errors.fireArtificialChange(source);
 	}
 

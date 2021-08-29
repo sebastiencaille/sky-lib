@@ -46,7 +46,7 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 
 	protected AbstractTypedProperty(final String name, final GuiModel model) {
 		super(name, model.getPropertySupport());
-		setErrorNotifier(model.getErrorProperty());
+		setErrorNotifier(model.getErrorNotifier());
 	}
 
 	protected AbstractTypedProperty(final String name, final IScopedSupport propertySupport) {

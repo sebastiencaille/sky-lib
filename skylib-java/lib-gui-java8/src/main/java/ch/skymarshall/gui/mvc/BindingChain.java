@@ -129,14 +129,15 @@ public class BindingChain implements IBindingController {
 					try {
 						value = links.get(i).toProperty(component, value);
 					} catch (final ChainInhibitedException e) {
-						Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE, () -> "Component change inhibited: " + e.getMessage());
+						Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE,
+								() -> "Component change inhibited: " + e.getMessage());
 						return;
 					} catch (final ConversionException e) {
-						errorNotifier.notifyError(component, GuiErrors.fromException(component, e));
+						errorNotifier.notifyError(component, getProperty(), GuiErrors.fromException(getProperty(), e));
 						return;
 					}
 				}
-				errorNotifier.clearError(component);
+				errorNotifier.clearError(component, getProperty());
 			}
 		}
 
@@ -248,11 +249,11 @@ public class BindingChain implements IBindingController {
 				Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE, () -> "Property change inhibited: " + e.getMessage());
 				return;
 			} catch (final ConversionException e) {
-				errorNotifier.notifyError(property, GuiErrors.fromException(getProperty(), e));
+				errorNotifier.notifyError(property, property, GuiErrors.fromException(getProperty(), e));
 				return;
 			}
 		}
-		errorNotifier.clearError(property);
+		errorNotifier.clearError(property, property);
 	}
 
 	public <T> EndOfChain<T> bindProperty(final BiConsumer<Object, T> propertySetter) {

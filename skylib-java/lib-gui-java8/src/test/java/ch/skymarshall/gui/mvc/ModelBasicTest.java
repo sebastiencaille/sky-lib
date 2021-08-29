@@ -28,7 +28,9 @@ import ch.skymarshall.gui.mvc.factories.Converters;
 import ch.skymarshall.gui.mvc.factories.Persisters;
 import ch.skymarshall.gui.mvc.persisters.IPersisterFactory;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
+import ch.skymarshall.gui.mvc.properties.AbstractProperty.ErrorNotifier;
 import ch.skymarshall.gui.mvc.properties.Configuration;
+import ch.skymarshall.gui.mvc.properties.ErrorProperty;
 import ch.skymarshall.gui.mvc.properties.IntProperty;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 
@@ -105,9 +107,11 @@ class ModelBasicTest {
 		// Test exception
 		binding.setValue("bla");
 		assertEquals(456, model.integerProperty.getValue());
-		Assertions.assertNotNull(model.getErrorProperty().getValue().getContent(),
+		ErrorProperty errorProperty = (ErrorProperty) model.getErrorNotifier();
+		Assertions.assertNotNull(
+				errorProperty.getValue().getContent(),
 				() -> "model.errorProperty.getValue().getContent()");
-		assertEquals(ConversionException.class, model.getErrorProperty().getValue().getContent().getClass());
+		assertEquals(ConversionException.class, errorProperty.getValue().getContent().getClass());
 	}
 
 	@Test

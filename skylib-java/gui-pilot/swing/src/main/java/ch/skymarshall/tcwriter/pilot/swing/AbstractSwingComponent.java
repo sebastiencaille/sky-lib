@@ -2,9 +2,13 @@ package ch.skymarshall.tcwriter.pilot.swing;
 
 import java.awt.event.KeyEvent;
 import java.time.Duration;
+import java.util.function.BooleanSupplier;
+import java.util.function.Predicate;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
+
+import org.junit.jupiter.api.Assertions;
 
 import ch.skymarshall.tcwriter.pilot.AbstractGuiComponent;
 import ch.skymarshall.tcwriter.pilot.Polling;
@@ -66,6 +70,11 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 		return (PollingResult<C, U>) response[0];
 	}
 
+	public void check(final String assertText, final Predicate<C> componentPredicate) {
+		wait(assertion(t-> Assertions.assertTrue(componentPredicate.test(t), assertText)).withReport(r -> assertText));
+	}
+
+	
 	public void waitEnabled() {
 		wait(StatePolling.<C>satisfies(JComponent::isEnabled).withReport(c -> "check enabled"));
 	}

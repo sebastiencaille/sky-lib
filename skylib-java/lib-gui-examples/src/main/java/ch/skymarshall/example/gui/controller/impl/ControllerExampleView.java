@@ -19,21 +19,19 @@ import static ch.skymarshall.example.gui.TestObject.testObjectToString;
 import static ch.skymarshall.gui.mvc.factories.BindingDependencies.preserveOnUpdateOf;
 import static ch.skymarshall.gui.mvc.factories.Converters.guiErrorToString;
 import static ch.skymarshall.gui.mvc.factories.Converters.intToString;
-import static ch.skymarshall.gui.mvc.factories.Converters.toSingleLine;
+import static ch.skymarshall.gui.mvc.factories.Converters.wo;
 import static ch.skymarshall.gui.swing.factories.SwingBindings.selected;
 import static ch.skymarshall.gui.swing.factories.SwingBindings.selection;
 import static ch.skymarshall.gui.swing.factories.SwingBindings.value;
 import static ch.skymarshall.gui.swing.factories.SwingBindings.values;
 
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Rectangle;
 
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
@@ -51,7 +49,7 @@ import ch.skymarshall.example.gui.TestObjectTableModel;
 import ch.skymarshall.gui.mvc.converters.IConverter;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 import ch.skymarshall.gui.mvc.properties.BooleanProperty;
-import ch.skymarshall.gui.mvc.properties.ErrorProperty;
+import ch.skymarshall.gui.mvc.properties.ErrorSet;
 import ch.skymarshall.gui.mvc.properties.IntProperty;
 import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 
@@ -59,12 +57,14 @@ public class ControllerExampleView extends JFrame {
 
 	private static final String NO_ERROR = "No Error";
 	private static final long serialVersionUID = -7524991791160097387L;
-	private final Container mainContainer;
+	private final JPanel mainContainer;
+	private final ErrorSet errorProperty;
 	private int row = 0;
 
 	public ControllerExampleView(final ControllerExampleController controller) {
 
 		final ControllerExampleModel model = controller.getModel();
+		errorProperty = (ErrorSet) model.getErrorNotifier();
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		getContentPane().setLayout(new GridBagLayout());
@@ -197,17 +197,6 @@ public class ControllerExampleView extends JFrame {
 		tableEditorPane.setPreferredSize(new Dimension(200, 70));
 		addGuiLineItem(tableObjectProperty, tableEditorPane, tableSelectionCheck, tableSelectionCounter);
 
-		// ------------------------------------------
-		// Display of errors
-		// ------------------------------------------
-		final ErrorProperty errorProperty = model.getErrorProperty();
-		final JLabel errorLabel = new JLabel(NO_ERROR);
-		errorLabel.setName("errorLabel");
-		final JLabel errorCounter = new JLabel();
-		errorProperty.bind(guiErrorToString(NO_ERROR)).bind(toSingleLine()).listen(errorLabel::setText);
-		errorProperty.bind(counter()).listen(errorCounter::setText);
-		addGuiLineItem(errorProperty, errorLabel, null, errorCounter);
-
 		final GridBagConstraints fillerConstraints = new GridBagConstraints();
 		fillerConstraints.gridx = 1;
 		fillerConstraints.gridy = 1;
@@ -244,7 +233,7 @@ public class ControllerExampleView extends JFrame {
 		return new CounterBinding<>();
 	}
 
-	public void addGuiLineItem(final AbstractProperty property, final JComponent editor, final JComponent check,
+	public void addGuiLineItem(final AbstractProperty property, final JComponent editor, final JComponent propertyCheck,
 			final JLabel counterLabel) {
 
 		editor.setOpaque(false);
@@ -261,8 +250,7 @@ public class ControllerExampleView extends JFrame {
 			protected void paintComponent(final java.awt.Graphics g) {
 				super.paintComponent(g);
 				g.setColor(Color.BLACK);
-				final Rectangle clipBounds = g.getClipBounds();
-				final int y = clipBounds.height / 2;
+				final int y = getHeight() / 2;
 				g.drawLine(5, y, getWidth() - 10, y);
 			}
 
@@ -282,23 +270,32 @@ public class ControllerExampleView extends JFrame {
 		mainContainer.add(panel, constraints);
 		constraints.gridwidth = 1;
 
-		// Widget
+		// Vaylue widget
 		constraints.gridx = 0;
 		constraints.gridy = row++;
 		constraints.insets = new Insets(0, 5, 5, 5);
 		mainContainer.add(editor, constraints);
 		constraints.insets = new Insets(0, 0, 0, 0);
 
+		// Change counter
 		constraints.gridx++;
 		counterLabel.setPreferredSize(new Dimension(30, -1));
 		mainContainer.add(counterLabel, constraints);
 
+		// Property check widget
 		constraints.gridx++;
 		constraints.weightx = 0.0;
-		if (check != null) {
-			check.setPreferredSize(new Dimension(100, -1));
-			mainContainer.add(check, constraints);
+		if (propertyCheck != null) {
+			propertyCheck.setPreferredSize(new Dimension(100, -1));
+			mainContainer.add(propertyCheck, constraints);
 		}
+
+		// Error handling
+		final Color defaultFG = editor.getForeground();
+		errorProperty.getErrors().bind(wo(e -> e.get(property))).bind(guiErrorToString())
+				.listen(editor::setToolTipText);
+		errorProperty.getErrors().bind(wo(e -> e.containsKey(property) ? Color.RED : defaultFG))
+				.listen(editor::setForeground);
 
 		final JPanel gap = new JPanel();
 		gap.setPreferredSize(new Dimension(1, 5));

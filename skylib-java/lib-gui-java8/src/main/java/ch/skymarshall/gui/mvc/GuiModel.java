@@ -23,6 +23,7 @@ import java.util.function.Supplier;
 import ch.skymarshall.gui.mvc.converters.IUnaryConverter;
 import ch.skymarshall.gui.mvc.properties.AbstractTypedProperty;
 import ch.skymarshall.gui.mvc.properties.ErrorProperty;
+import ch.skymarshall.gui.mvc.properties.AbstractProperty.ErrorNotifier;
 
 public class GuiModel {
 
@@ -33,21 +34,21 @@ public class GuiModel {
 
 	public static class ModelConfiguration {
 		protected final IScopedSupport propertySupport;
-		protected ErrorProperty errorProperty;
+		protected ErrorNotifier errorNotifier;
 		protected final List<ImplicitConvertProvider> implicitConverters = new ArrayList<>();
 
 		public ModelConfiguration(IScopedSupport propertySupport) {
 			this.propertySupport = propertySupport;
 		}
 
-		public ModelConfiguration with(ErrorProperty errorProperty) {
-			this.errorProperty = errorProperty;
+		public ModelConfiguration with(ErrorNotifier errorNotifier) {
+			this.errorNotifier = errorNotifier;
 			return this;
 		}
 
-		public ModelConfiguration ifNotSet(Supplier<ErrorProperty> errSupplier) {
-			if (this.errorProperty == null) {
-				this.errorProperty = errSupplier.get();
+		public ModelConfiguration ifNotSet(Supplier<ErrorNotifier> errSupplier) {
+			if (this.errorNotifier == null) {
+				this.errorNotifier = errSupplier.get();
 			}
 			return this;
 		}
@@ -62,8 +63,8 @@ public class GuiModel {
 		}
 
 		public ModelConfiguration validate() {
-			if (errorProperty == null) {
-				errorProperty = createErrorProperty("InputError", this);
+			if (errorNotifier == null) {
+				errorNotifier = createErrorProperty("InputError", this);
 			}
 			return this;
 		}
@@ -72,8 +73,8 @@ public class GuiModel {
 			return propertySupport;
 		}
 
-		public ErrorProperty getErrorProperty() {
-			return errorProperty;
+		public ErrorNotifier getErrorNotifier() {
+			return errorNotifier;
 		}
 
 	}
@@ -104,8 +105,8 @@ public class GuiModel {
 		return configuration;
 	}
 
-	public ErrorProperty getErrorProperty() {
-		return configuration.errorProperty;
+	public ErrorNotifier getErrorNotifier() {
+		return configuration.getErrorNotifier();
 	}
 
 	public IScopedSupport getPropertySupport() {

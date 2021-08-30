@@ -27,7 +27,7 @@ public class GenericEditorLauncher {
 		private int readOnly = 100;
 
 		@Ordered(order = 3)
-		@Labeled(label = "A string value")
+		@Labeled(label = "A string value (not empty)")
 		@NotBlank
 		public String getStr() {
 			return str;

@@ -21,9 +21,9 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import ch.skymarshall.gui.mvc.converters.IUnaryConverter;
-import ch.skymarshall.gui.mvc.properties.AbstractTypedProperty;
-import ch.skymarshall.gui.mvc.properties.ErrorProperty;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty.ErrorNotifier;
+import ch.skymarshall.gui.mvc.properties.AbstractTypedProperty;
+import ch.skymarshall.gui.mvc.properties.ErrorSet;
 
 public class GuiModel {
 
@@ -79,7 +79,7 @@ public class GuiModel {
 
 	}
 
-	public static ModelConfiguration with(final IScopedSupport propertySupport, final ErrorProperty errorProperty) {
+	public static ModelConfiguration with(final IScopedSupport propertySupport, final ErrorNotifier errorProperty) {
 		return new ModelConfiguration(propertySupport).with(errorProperty);
 	}
 
@@ -91,8 +91,8 @@ public class GuiModel {
 		return new ModelConfiguration(controller.getScopedChangeSupport());
 	}
 
-	public static ErrorProperty createErrorProperty(final String name, final ModelConfiguration config) {
-		return new ErrorProperty(name, config.getPropertySupport());
+	public static ErrorNotifier createErrorProperty(final String name, final ModelConfiguration config) {
+		return new ErrorSet(name, config.getPropertySupport());
 	}
 
 	protected final ModelConfiguration configuration;

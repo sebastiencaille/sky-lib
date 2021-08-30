@@ -134,7 +134,7 @@ public class BindingChain implements IBindingController {
 								() -> "Component change inhibited: " + e.getMessage());
 						return;
 					} catch (final ConversionException e) {
-						errorNotifier.notifyError(component, getProperty(), GuiErrors.fromException(getProperty(), e));
+						errorNotifier.notifyError(component, GuiErrors.fromException(getProperty(), e));
 						return;
 					}
 				}
@@ -250,7 +250,7 @@ public class BindingChain implements IBindingController {
 				Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE, () -> "Property change inhibited: " + e.getMessage());
 				return;
 			} catch (final ConversionException e) {
-				errorNotifier.notifyError(property, property, GuiErrors.fromException(getProperty(), e));
+				errorNotifier.notifyError(property, GuiErrors.fromException(getProperty(), e));
 				return;
 			}
 		}

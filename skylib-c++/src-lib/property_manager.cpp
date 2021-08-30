@@ -30,7 +30,7 @@ property_manager::property_manager() = default;
 
 property_manager::~property_manager() DESTR_WITH_LOG("~property_manager")
 
-void property_manager::add_listener(const string& _name, shared_ptr<property_listener> _listener) {
+void property_manager::add_listener(const string_view& _name, shared_ptr<property_listener> _listener) {
 	auto iter = m_propertyListeners.find(_name);
 	shared_ptr<listener_list_type> plist;
 	if (iter == m_propertyListeners.end()) {
@@ -42,7 +42,7 @@ void property_manager::add_listener(const string& _name, shared_ptr<property_lis
 	plist->push_back(_listener);
 }
 
-void property_manager::remove_listener(const string& _name, weak_ptr<property_listener> _listener) {
+void property_manager::remove_listener(const string_view& _name, weak_ptr<property_listener> _listener) {
 	auto iter = m_propertyListeners.find(_name);
 	if (iter == m_propertyListeners.end()) {
 		return;
@@ -54,15 +54,15 @@ void property_manager::remove_listener(const string& _name, weak_ptr<property_li
 	}
 }
 
-void property_manager::remove_listener(const string& _name, property_listener_ref _listener) {
+void property_manager::remove_listener(const string_view& _name, property_listener_ref _listener) {
 	remove_listener(_name, (property_listener*) _listener);
 }
 
-void property_manager::remove_listeners(string_view &_name) {
+void property_manager::remove_listeners(const string_view &_name) {
 	m_propertyListeners.erase(_name);
 }
 
-void property_manager::fire_property_changed(source_ptr _source, string_view &_name, const void* _oldValue,
+void property_manager::fire_property_changed(source_ptr _source, const string_view &_name, const void* _oldValue,
 		const void* _newValue) const {
 	auto iter = m_propertyListeners.find(_name);
 	if (iter == m_propertyListeners.end()) {

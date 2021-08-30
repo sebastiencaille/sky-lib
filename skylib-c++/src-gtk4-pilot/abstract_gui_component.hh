@@ -24,8 +24,7 @@ public:
 	polling(function<bool ()> _pollingFunction):m_pollingFunction(_pollingFunction) {
 	}
 
-	virtual ~polling() {
-	}
+	virtual ~polling() = default;
 
 	std::function<bool ()> getPollingFunction() {
 		return m_pollingFunction;

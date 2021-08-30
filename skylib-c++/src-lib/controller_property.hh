@@ -41,7 +41,7 @@ private:
 
 public:
 
-	controller_property(const string &_name, property_manager &_manager,
+	controller_property(const string_view &_name, property_manager &_manager,
 			_Pt _defaultValue, shared_ptr<error_notifier> _errorNotifier) :
 			typed_property<_Pt>(_name, _manager, _defaultValue), m_errorNotifier(
 					_errorNotifier) {

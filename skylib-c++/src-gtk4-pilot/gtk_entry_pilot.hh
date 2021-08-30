@@ -23,7 +23,7 @@ private:
 	Gtk::Entry *m_entry = NULL;
 
 public:
-	gtk_entry_pilot(gtk_gui_pilot* _gui_pilot, string const& _name);
+	gtk_entry_pilot(gtk_gui_pilot* _gui_pilot, const string & _name);
 	virtual ~gtk_entry_pilot();
 
 	void set_text(string text);

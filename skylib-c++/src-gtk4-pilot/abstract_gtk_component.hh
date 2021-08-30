@@ -28,7 +28,7 @@ protected:
 	bool isEditable(Gtk::Widget *widget);
 
 public:
-	abstract_gtk_component(gtk_gui_pilot* _gui_pilot, string _name);
+	abstract_gtk_component(gtk_gui_pilot* _gui_pilot, const string &_name);
 	virtual ~abstract_gtk_component();
 
 	bool executePolling(polling &_polling) override;

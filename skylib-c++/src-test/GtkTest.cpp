@@ -57,7 +57,7 @@ private:
 	public:
 		explicit TestStringPropertyListener() = default;
 
-		void propertyChanged(source_ptr _source, string_view &_name,
+		void propertyChanged(source_ptr _source, const string_view &_name,
 				const void *_oldValue, const void *_newValue) const {
 			cout << " TestStringPropertyListener fired: "
 					<< *(string*) _oldValue << " -> " << *(string*) _newValue

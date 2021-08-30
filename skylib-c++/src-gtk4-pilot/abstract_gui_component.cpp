@@ -10,11 +10,9 @@ namespace ch_skymarshall::gui::pilot {
 
 using namespace std;
 
-abstract_gui_component::abstract_gui_component() {
-}
+abstract_gui_component::abstract_gui_component() = default;
 
-abstract_gui_component::~abstract_gui_component() {
-}
+abstract_gui_component::~abstract_gui_component() = default;
 
 void abstract_gui_component::wait(polling &_polling, chrono::seconds _duration,
 		std::function<void(polling&)> _onFailure) {

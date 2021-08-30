@@ -2,7 +2,6 @@ package ch.skymarshall.tcwriter.pilot.swing;
 
 import java.awt.event.KeyEvent;
 import java.time.Duration;
-import java.util.function.BooleanSupplier;
 import java.util.function.Predicate;
 
 import javax.swing.JComponent;

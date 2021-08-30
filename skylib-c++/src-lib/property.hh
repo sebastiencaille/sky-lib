@@ -40,15 +40,15 @@ private:
 	bool m_attached = false;
 
 protected:
-	string_view m_name;
+	const string_view m_name;
 	property_manager &m_manager;
 
 public:
 
-	property(const string &_name, property_manager &_manager);
+	property(const string_view &_name, property_manager &_manager);
 	virtual ~property();
 
-	const string& name() const;
+	const string_view& name() const;
 
 	void add_listener(shared_ptr<property_listener> _listener);
 	void remove_listener(weak_ptr<property_listener> _listener);

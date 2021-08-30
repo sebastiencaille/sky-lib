@@ -46,7 +46,7 @@ private:
 
 public:
 
-	typed_property(const string &_name, property_manager &_manager,
+	typed_property(const string_view &_name, property_manager &_manager,
 			value_type _defaultValue) :
 			property(_name, _manager), m_value(_defaultValue) {
 	}

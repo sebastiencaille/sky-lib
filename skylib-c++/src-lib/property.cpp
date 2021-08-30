@@ -20,7 +20,7 @@ namespace ch_skymarshall::gui {
 
 using namespace std;
 
-property::property(const string &_name, property_manager &_manager) :
+property::property(const string_view &_name, property_manager &_manager) :
 		m_name(_name), m_manager(_manager) {
 }
 
@@ -33,7 +33,7 @@ void property::attach() {
 	m_attached = true;
 }
 
-const string& property::name() const {
+const string_view& property::name() const {
 	return m_name;
 }
 

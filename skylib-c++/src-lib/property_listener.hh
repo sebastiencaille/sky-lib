@@ -44,7 +44,7 @@ public:
 
 	virtual ~property_listener() = default;
 
-	virtual void fire(source_ptr _source, string_view &_name,
+	virtual void fire(source_ptr _source, const string_view &_name,
 			const void *_oldValue, const void *_newValue) = 0;
 
 	virtual void before_change(source_ptr _source, property *_property) = 0;
@@ -58,7 +58,7 @@ public:
  */
 class property_listener_dispatcher: public property_listener {
 public:
-	using fire_function = function<void (source_ptr, string_view&, const void*, const void*)>;
+	using fire_function = function<void (source_ptr, const string_view&, const void*, const void*)>;
 	using before_after_function = function<void (source_ptr, property*)>;
 private:
 	/** Keep reference as long as listener is valid */
@@ -112,7 +112,7 @@ public:
 					_p.m_func_before), m_func_after(_p.m_func_after) {
 	}
 
-	void fire(source_ptr _source, string_view &_name, const void *_oldValue,
+	void fire(source_ptr _source, const string_view &_name, const void *_oldValue,
 			const void *_newValue) override {
 		if (m_func_fire != nullptr) {
 			m_func_fire(_source, _name, _oldValue, _newValue);

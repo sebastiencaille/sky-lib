@@ -19,9 +19,9 @@ class property;
 
 class gui_exception: public std::exception {
 private:
-	const std::string m_what;
+	const std::string_view m_what;
 public:
-	explicit gui_exception(std::string const& _message) :
+	explicit gui_exception(const std::string_view &_message) :
 			m_what(_message) {
 	}
 
@@ -30,7 +30,7 @@ public:
 	}
 
 	const char* what() const noexcept override {
-		return m_what.c_str();
+		return m_what.data();
 	}
 
 	~gui_exception() override = default;

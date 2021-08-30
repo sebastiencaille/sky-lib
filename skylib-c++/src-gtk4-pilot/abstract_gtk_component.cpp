@@ -16,12 +16,11 @@ using namespace ch_skymarshall::gui::pilot;
 using namespace ch_skymarshall::gui::gtk4::utils;
 
 abstract_gtk_component::abstract_gtk_component(
-		gtk_gui_pilot* _gui_pilot, string _name) :
+		gtk_gui_pilot* _gui_pilot, const string &_name) :
 		m_gui_pilot(_gui_pilot), m_name(_name) {
 }
 
-abstract_gtk_component::~abstract_gtk_component() {
-}
+abstract_gtk_component::~abstract_gtk_component() = default;
 
 bool abstract_gtk_component::isEditable(Gtk::Widget *widget) {
 	return widget->is_visible();

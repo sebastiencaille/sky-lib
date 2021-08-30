@@ -33,7 +33,7 @@ using namespace std;
 class input_error_property: public error_notifier, public controller_property<
 		gui_exception_ptr> {
 public:
-	input_error_property(const string &_name, property_manager &_manager) :
+	input_error_property(const string_view &_name, property_manager &_manager) :
 			controller_property(_name, _manager, nullptr, nullptr) {
 	}
 

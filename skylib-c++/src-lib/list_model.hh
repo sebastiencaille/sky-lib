@@ -294,7 +294,7 @@ private:
 			m_model->stop_editing_value();
 		}
 
-		void fire(source_ptr _source, string_view &_name,
+		void fire(source_ptr _source, const string_view &_name,
 				const void *_oldValue, const void *_newValue) final {
 			m_model->view_updated();
 		}
@@ -313,7 +313,7 @@ private:
 
 	object_tuning_ptr m_tunings;
 
-	void view_updated(const void *_source, string_view &_name,
+	void view_updated(const void *_source, const string_view &_name,
 			const void *_oldValue, const void *_newValue) {
 		fire_view_updated();
 	}

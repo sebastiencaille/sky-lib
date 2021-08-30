@@ -1,12 +1,12 @@
 package ch.skymarshall.gui.mvc.properties;
 
-import ch.skymarshall.gui.mvc.GuiErrors.GuiError;
+import ch.skymarshall.gui.mvc.GuiError;
 import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty.ErrorNotifier;
 
 public class ErrorSet implements ErrorNotifier {
 
-	private final MapProperty<Object, GuiError> errors;
+	private final MapProperty<AbstractProperty, GuiError> errors;
 
 	public ErrorSet(final String name, final IScopedSupport support) {
 		errors = new MapProperty<>(name, support);
@@ -24,7 +24,7 @@ public class ErrorSet implements ErrorNotifier {
 		errors.fireArtificialChange(source);
 	}
 
-	public MapProperty<Object, GuiError> getErrors() {
+	public MapProperty<AbstractProperty, GuiError> getErrors() {
 		return errors;
 	}
 

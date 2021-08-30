@@ -15,7 +15,7 @@
  ******************************************************************************/
 package ch.skymarshall.gui.mvc.converters;
 
-import ch.skymarshall.gui.mvc.GuiErrors.GuiError;
+import ch.skymarshall.gui.mvc.GuiError;
 
 public class GuiErrorToStringConverter implements IConverter<GuiError, String> {
 

@@ -19,6 +19,7 @@ import static ch.skymarshall.example.gui.TestObject.testObjectToString;
 import static ch.skymarshall.gui.mvc.factories.BindingDependencies.preserveOnUpdateOf;
 import static ch.skymarshall.gui.mvc.factories.Converters.guiErrorToString;
 import static ch.skymarshall.gui.mvc.factories.Converters.intToString;
+import static ch.skymarshall.gui.mvc.factories.Converters.mapContains;
 import static ch.skymarshall.gui.mvc.factories.Converters.wo;
 import static ch.skymarshall.gui.swing.factories.SwingBindings.selected;
 import static ch.skymarshall.gui.swing.factories.SwingBindings.selection;
@@ -55,7 +56,6 @@ import ch.skymarshall.gui.mvc.properties.ObjectProperty;
 
 public class ControllerExampleView extends JFrame {
 
-	private static final String NO_ERROR = "No Error";
 	private static final long serialVersionUID = -7524991791160097387L;
 	private final JPanel mainContainer;
 	private final ErrorSet errorProperty;
@@ -291,10 +291,9 @@ public class ControllerExampleView extends JFrame {
 		}
 
 		// Error handling
-		final Color defaultFG = editor.getForeground();
 		errorProperty.getErrors().bind(wo(e -> e.get(property))).bind(guiErrorToString())
 				.listen(editor::setToolTipText);
-		errorProperty.getErrors().bind(wo(e -> e.containsKey(property) ? Color.RED : defaultFG))
+		errorProperty.getErrors().bind(mapContains(property, Color.RED, editor.getForeground()))
 				.listen(editor::setForeground);
 
 		final JPanel gap = new JPanel();

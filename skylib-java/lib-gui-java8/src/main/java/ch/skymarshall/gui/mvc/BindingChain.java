@@ -29,6 +29,7 @@ import java.util.logging.Level;
 import ch.skymarshall.gui.mvc.Veto.TransmitMode;
 import ch.skymarshall.gui.mvc.converters.ChainInhibitedException;
 import ch.skymarshall.gui.mvc.converters.ConversionException;
+import ch.skymarshall.gui.mvc.converters.GuiErrors;
 import ch.skymarshall.gui.mvc.converters.IConverter;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty.ErrorNotifier;

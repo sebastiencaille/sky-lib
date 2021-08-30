@@ -15,7 +15,7 @@
  ******************************************************************************/
 package ch.skymarshall.gui.mvc.properties;
 
-import ch.skymarshall.gui.mvc.GuiErrors.GuiError;
+import ch.skymarshall.gui.mvc.GuiError;
 import ch.skymarshall.gui.mvc.GuiModel;
 import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty.ErrorNotifier;

@@ -50,8 +50,8 @@ public class SwingGenericEditorDialog extends JDialog implements IGenericEditor 
 	}
 
 	@Override
-	public IBindingController addEntry(final PropertyEntry prop) {
-		return panel.addEntry(prop);
+	public IBindingController addEntry(final PropertyEntry prop, final ErrorSet errorProperty) {
+		return panel.addEntry(prop, errorProperty);
 	}
 
 	private void close() {

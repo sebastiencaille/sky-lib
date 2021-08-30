@@ -31,7 +31,7 @@ public class GenericEditorController<T> {
 	}
 
 	public void activate() {
-		props.forEach(editor::addEntry);
+		props.forEach(p -> editor.addEntry(p, errorProperty));
 		editor.build(this, errorProperty);
 		propertySupport.attachAll();
 	}

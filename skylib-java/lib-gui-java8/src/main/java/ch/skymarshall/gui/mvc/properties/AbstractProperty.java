@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 
 import javax.swing.event.EventListenerList;
 
-import ch.skymarshall.gui.mvc.GuiErrors.GuiError;
+import ch.skymarshall.gui.mvc.GuiError;
 import ch.skymarshall.gui.mvc.IPropertyEventListener;
 import ch.skymarshall.gui.mvc.IScopedSupport;
 import ch.skymarshall.gui.mvc.PropertyEvent;

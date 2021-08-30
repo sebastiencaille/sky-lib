@@ -28,7 +28,6 @@ import ch.skymarshall.gui.mvc.factories.Converters;
 import ch.skymarshall.gui.mvc.factories.Persisters;
 import ch.skymarshall.gui.mvc.persisters.IPersisterFactory;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
-import ch.skymarshall.gui.mvc.properties.AbstractProperty.ErrorNotifier;
 import ch.skymarshall.gui.mvc.properties.Configuration;
 import ch.skymarshall.gui.mvc.properties.ErrorProperty;
 import ch.skymarshall.gui.mvc.properties.IntProperty;

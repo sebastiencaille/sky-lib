@@ -13,42 +13,13 @@
  *  IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  ******************************************************************************/
-package ch.skymarshall.gui.mvc;
+package ch.skymarshall.gui.mvc.converters;
 
+import ch.skymarshall.gui.mvc.GuiError;
 import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 
 public class GuiErrors {
 	private GuiErrors() {
-	}
-
-	/**
-	 * Error container
-	 *
-	 * @author Sebastien Caille
-	 *
-	 */
-	public static class GuiError {
-		private final AbstractProperty property;
-		private final Object content;
-		private final String message;
-
-		public GuiError(final AbstractProperty property, final String message, final Object content) {
-			this.property = property;
-			this.message = message;
-			this.content = content;
-		}
-
-		public AbstractProperty getProperty() {
-			return property;
-		}
-
-		public Object getContent() {
-			return content;
-		}
-
-		public String getMessage() {
-			return message;
-		}
 	}
 
 	public static GuiError fromException(final AbstractProperty property, final Exception e) {

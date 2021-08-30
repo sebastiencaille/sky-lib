@@ -17,6 +17,7 @@ package ch.skymarshall.gui.mvc.factories;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -26,7 +27,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import ch.skymarshall.gui.mvc.GuiErrors.GuiError;
+import ch.skymarshall.gui.mvc.GuiError;
 import ch.skymarshall.gui.mvc.converters.ChainInhibitedException;
 import ch.skymarshall.gui.mvc.converters.ConversionException;
 import ch.skymarshall.gui.mvc.converters.GuiErrorToStringConverter;
@@ -199,10 +200,13 @@ public final class Converters {
 	public static IConverter<GuiError, String> guiErrorToString() {
 		return new GuiErrorToStringConverter("");
 	}
-	
 
 	public static IConverter<GuiError, String> guiErrorToString(String noError) {
 		return new GuiErrorToStringConverter(noError);
+	}
+
+	public static <K, V, U> IConverter<Map<K, V>, U> mapContains(K key, U either, U or) {
+		return wo(e -> e.containsKey(key) ? either:or);
 	}
 
 	public static IConverter<String, String> toSingleLine() {
@@ -350,5 +354,5 @@ public final class Converters {
 
 		};
 	}
-	
+
 }

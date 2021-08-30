@@ -5,7 +5,7 @@ import ch.skymarshall.gui.mvc.properties.ErrorSet;
 
 public interface IGenericEditor {
 
-	IBindingController addEntry(final PropertyEntry prop);
+	IBindingController addEntry(final PropertyEntry prop,  ErrorSet errorProperty);
 
 	void build(GenericEditorController<?> adapter, final ErrorSet errorProperty);
 

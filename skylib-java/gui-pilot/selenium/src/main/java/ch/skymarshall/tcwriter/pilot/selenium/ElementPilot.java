@@ -5,6 +5,7 @@ import static ch.skymarshall.tcwriter.pilot.PollingResult.value;
 
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.function.Consumer;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotInteractableException;
@@ -32,10 +33,25 @@ public class ElementPilot extends AbstractGuiComponent<ElementPilot, WebElement>
 		this.pilot = pilot;
 		this.locator = locator;
 	}
+	
+	public ElementPilot(final SeleniumGuiPilot pilot) {
+		super(pilot);
+		this.pilot = pilot;
+		this.locator = null;
+	}
+
+	@Override
+	protected String getDescription() {
+		String description = super.getDescription();
+		if (description == null && locator != null) {
+			return locator.toString();
+		}
+		return description;
+	}
 
 	@Override
 	public String toString() {
-		return locator.toString();
+		return getDescription();
 	}
 
 	@Override
@@ -84,8 +100,7 @@ public class ElementPilot extends AbstractGuiComponent<ElementPilot, WebElement>
 	private <U> PollingResult<WebElement, U> executeOnePolling(final Polling<WebElement, U> polling,
 			final Duration timeout) {
 		try {
-			return value(new WebDriverWait(pilot.getDriver(), timeout.getSeconds()) //
-					.withTimeout(timeout) // set timeout in ms
+			return value(new WebDriverWait(pilot.getDriver(), timeout) //
 					.pollingEvery(pollingTime(timeout)) //
 					.ignoreAll(Arrays.asList(NoSuchElementException.class, StaleElementReferenceException.class,
 							ElementNotInteractableException.class, UnhandledAlertException.class))
@@ -102,20 +117,20 @@ public class ElementPilot extends AbstractGuiComponent<ElementPilot, WebElement>
 		}
 	}
 
-	public static Polling<WebElement, Boolean> isEnabled() {
-		return StatePolling.<WebElement>satisfies(c -> true).withName("enabled");
+	public boolean wait(Consumer<WebElement> action) {
+		return wait(EditionPolling.action(action));
 	}
 
-	public static Polling<WebElement, Boolean> doClick() {
+	public static Polling<WebElement, Boolean> isEnabled() {
+		return StatePolling.<WebElement>satisfies(WebElement::isEnabled).withName("enabled");
+	}
+
+	public static Polling<WebElement, Boolean> click() {
 		return EditionPolling.action(WebElement::click).withName("click");
 	}
 
-	public boolean doIfEnabled(final Polling<WebElement, Boolean> polling, final Duration shortTimeout) {
-		return waitPollingSuccess(polling, shortTimeout, PollingResult.reportFailure("Not found: " + locator));
-	}
-
-	public void click() {
-		wait(doClick());
+	public boolean run(Consumer<WebElement> action, String name) {
+		return wait(EditionPolling.action(action).withName(name));
 	}
 
 }

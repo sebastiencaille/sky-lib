@@ -3,19 +3,24 @@
 	<head>
 		<title>Example 1</title>
 		<script type="application/javascript" >
-			onClick = function() {
+			proceed = function() {
+				console.log("Proceed");
 				document.getElementById('Proceed').disabled=true;
 				document.getElementById('OK').disabled=true;
 				setTimeout(() => { 
 					document.getElementById('Proceed').disabled=false;
 					document.getElementById('OK').disabled=false; 
 				}, 2000)
-			}
+			};
+			ok = function() {
+				console.log("Ok");
+				alert('OK');
+			};
 		</script>
 	</head>
 	<body>
 		Hello
-		<button id="Proceed" onclick="onClick()">Proceed</button>
-		<button id="OK" disabled="true" onClick="alert('OK')")>OK</button>
+		<button id="Proceed" onclick="proceed()">Proceed</button>
+		<button id="OK" disabled="true" onClick="ok()")>OK</button>
 	</body>
 </html>

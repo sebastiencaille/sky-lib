@@ -34,11 +34,11 @@ public class JTextFieldPilot extends AbstractSwingComponent<JTextFieldPilot, JTe
 		}).withReport(r -> "set text \'" + value + "\'"));
 	}
 
-	public void checkTextValue(final String value) {
-		if (value == null) {
+	public void checkTextValue(final String expected) {
+		if (expected == null) {
 			return;
 		}
-		wait(assertion(t -> Assertions.assertEquals(value, t.getText())).withReport(r -> "check text \'" + value + "\'"));
+		wait(assertEquals("check text", expected, JTextComponent::getText));
 	}
 
 }

@@ -24,7 +24,8 @@ public class Polling<C, V> {
 		this.precondition = precondition;
 		this.pollingFunction = pollingFunction;
 	}
-
+	
+	
 	public Predicate<C> getPrecondition(final AbstractGuiComponent<?, C> guiComponent) {
 		return precondition;
 	}
@@ -52,6 +53,10 @@ public class Polling<C, V> {
 		return this;
 	}
 
+	public String getName() {
+		return name;
+	}
+	
 	public static <C> Polling<C, Boolean> success(final Consumer<C> action) {
 		return new Polling<>(null, c -> {
 			action.accept(c);

@@ -1,5 +1,7 @@
 package ch.skymarshall.tcwriter.pilot.selenium;
 
+import static ch.skymarshall.tcwriter.pilot.EditionPolling.action;
+import static ch.skymarshall.tcwriter.pilot.selenium.ElementPilot.click;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.ByteArrayOutputStream;
@@ -7,14 +9,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.UnexpectedAlertBehaviour;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
@@ -80,26 +86,38 @@ class SeleniumExampleTest {
 
 	/* **************************** TESTS **************************** */
 
-	private static final By PROCEED_LOCATION = By.id("Proceed");
-	private static final By OK_LOCATION = By.id("OK");
+	public static class ProceedEnabledDelay implements ActionDelay {
 
-	public static class ArbitraryDelay implements ActionDelay {
+		private PagePilot<ExamplePage> mainPage;
 
-		private final SeleniumGuiPilot pilot;
-
-		public ArbitraryDelay(final SeleniumGuiPilot pilot) {
-			this.pilot = pilot;
+		public ProceedEnabledDelay(final PagePilot<ExamplePage> mainPage) {
+			this.mainPage = mainPage;
 		}
 
 		@Override
 		public boolean waitFinished() {
-			pilot.element(PROCEED_LOCATION).wait(ElementPilot.isEnabled());
+			mainPage.wait(p -> p.proceed, ElementPilot.isEnabled());
+			Assertions.assertTrue(mainPage.page().proceed.isEnabled(), () -> "Proceed is enabled");
 			return true;
+		}
+		
+		@Override
+		public String toString() {
+			return "Wait on Proceed enabled";
 		}
 
 	}
 
 	private SeleniumGuiPilot pilot;
+
+	@BeforeAll
+	public static void initLogger() {
+		Logger rootLogger = Logger.getLogger("ch");
+		rootLogger.setLevel(Level.ALL);
+		ConsoleHandler console = new ConsoleHandler();
+		console.setLevel(Level.ALL);
+		rootLogger.addHandler(console);
+	}
 
 	@BeforeEach
 	public void createPilot() {
@@ -108,6 +126,7 @@ class SeleniumExampleTest {
 
 	@AfterEach
 	public void releasePilot() {
+		System.out.print(pilot.getActionReport().getFormattedReport());
 		pilot.close();
 	}
 
@@ -116,19 +135,30 @@ class SeleniumExampleTest {
 
 		pilot.getDriver().get("http://localhost:8080/example1.html");
 		//
-		pilot.element(PROCEED_LOCATION).wait(ElementPilot.doClick().followedBy(new ArbitraryDelay(pilot)));
+		PagePilot<ExamplePage> mainPage = pilot.page(ExamplePage.class);
+
+		// Perform a click, and tell the next action that the next action must wait
+		// until "Proceed" is enabled
+		mainPage.wait(p -> p.proceed, click().followedBy(new ProceedEnabledDelay(mainPage)));
+
+		// Handle the modal dialog raised by the click
 		pilot.expectModalDialog(s -> {
 			s.doAcknowledge();
 			return ModalDialogDetector.expected();
 		});
-		pilot.element(OK_LOCATION).click();
+
+		// click on ok
+		// mainPage.element(p -> p.ok).wait(WebElement::click);
+		// mainPage.element(p -> p.ok).wait(click());
+		// mainPage.element(p -> p.ok).wait(action(WebElement::click));
+		mainPage.wait(p -> p.ok, WebElement::click);
 		pilot.waitModalDialogHandled();
 
-		pilot.element(By.id("NotExisting")).doIfEnabled(ElementPilot.doClick(), Duration.ofMillis(500));
+		mainPage.ifEnabled(p -> p.notExisting, action(WebElement::click), Duration.ofMillis(500));
 
 		Log.of(this).info(pilot.getActionReport().getFormattedReport());
 
-		assertEquals(5, pilot.getActionReport().getReport().size(), () -> pilot.getActionReport().getFormattedReport());
+		assertEquals(6, pilot.getActionReport().getReport().size(), () -> pilot.getActionReport().getFormattedReport());
 	}
 
 }

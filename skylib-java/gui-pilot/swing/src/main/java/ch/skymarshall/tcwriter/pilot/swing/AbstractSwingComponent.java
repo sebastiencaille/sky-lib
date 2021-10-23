@@ -2,6 +2,7 @@ package ch.skymarshall.tcwriter.pilot.swing;
 
 import java.awt.event.KeyEvent;
 import java.time.Duration;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import javax.swing.JComponent;
@@ -30,8 +31,13 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 	}
 
 	@Override
+	protected String getDescription() {
+		return toString();
+	}
+	
+	@Override
 	public String toString() {
-		return clazz.getSimpleName() + "{" + name + "}";
+		return clazz.getSimpleName() + "[" + name + "]";
 	}
 
 	@Override
@@ -69,11 +75,16 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 		return (PollingResult<C, U>) response[0];
 	}
 
-	public void check(final String assertText, final Predicate<C> componentPredicate) {
-		wait(assertion(t-> Assertions.assertTrue(componentPredicate.test(t), assertText)).withReport(r -> assertText));
+	public void check(final String message, final Predicate<C> componentPredicate) {
+		wait(assertion(t -> Assertions.assertTrue(componentPredicate.test(t), getDescription()))
+				.withReport(r -> getDescription() + ": " + message));
 	}
 
-	
+	public <T> Polling<C, Boolean> assertEquals(final String message, T expected, Function<C, T> actual) {
+		return assertion(c -> Assertions.assertEquals(expected, actual.apply(c), getDescription()))
+				.withReport(r -> getDescription() + ": " + message + ": expected '" + expected + '\'');
+	}
+
 	public void waitEnabled() {
 		wait(StatePolling.<C>satisfies(JComponent::isEnabled).withReport(c -> "check enabled"));
 	}

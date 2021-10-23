@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.logging.Logger;
 
 import ch.skymarshall.tcwriter.pilot.PollingResult.PollingResultFunction;
 import ch.skymarshall.util.helpers.NoExceptionCloseable;
@@ -21,6 +22,8 @@ import ch.skymarshall.util.helpers.Timeout;
  * @param <C> Component type
  */
 public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>, C> {
+
+	private Logger logger = Logger.getLogger(getClass().getName());
 
 	protected static class LoadedElement<TT> {
 		public final TT element;
@@ -36,6 +39,11 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 
 		public void setPreconditionValidated() {
 			this.preconditionValidated = true;
+		}
+
+		@Override
+		public String toString() {
+			return "" + element + ", precond validated=" + preconditionValidated;
 		}
 
 	}
@@ -65,6 +73,7 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 
 	private final GuiPilot pilot;
 
+
 	private final List<Consumer<C>> postExecutions = new ArrayList<>();
 
 	private LoadedElement<C> cachedElement = null;
@@ -75,6 +84,14 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 		this.pilot = pilot;
 	}
 
+	protected String getDescription() {
+		if (getCachedElement() != null) {
+			return getCachedElement().toString();
+		}
+		return null;
+	}
+
+	
 	public C getCachedElement() {
 		if (cachedElement == null) {
 			return null;
@@ -187,17 +204,24 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 				cachedElement = new LoadedElement<>(loadedGuiComponent);
 			}
 		}
+		logger.fine(() -> "Cached component: " + cachedElement);
 		if (cachedElement == null) {
+			logger.fine("Not found");
 			return failure("not found");
 		}
 		if (!cachedElement.preconditionValidated && polling.getPrecondition(this) != null
 				&& !polling.getPrecondition(this).test(cachedElement.element)) {
+			logger.fine("Precondition failed");
 			return failure("precondition failed");
 		}
 
-		final String report = polling.getReportLine().apply(cachedElement.element); // element may disappear after
-																					// action
+		final String report = polling.getReportLine().apply(cachedElement.element); // element may
+																											// disappear
+																											// after
+		// action
+		logger.fine(() -> "Polling...");
 		final PollingResult<C, U> result = polling.getPollingFunction().poll(cachedElement.element);
+		logger.fine(() -> "Polling result: " + result);
 		if (result.isSuccess() && !report.isEmpty()) {
 			pilot.getActionReport().report(report);
 		}
@@ -228,6 +252,10 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 		return wait(polling, throwError());
 	}
 
+	public boolean ifEnabled(final Polling<C, Boolean> polling, final Duration shortTimeout) {
+		return waitPollingSuccess(polling, shortTimeout, PollingResult.reportFailure(getDescription() + ": not found"));
+	}
+
 	/**
 	 * Waits on the action set by followedByDelay
 	 */
@@ -236,6 +264,7 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 		if (actionDelay != null) {
 			pilot.setActionDelay(null);
 			actionDelay.waitFinished();
+			pilot.getActionReport().report("Delayed by: " + actionDelay);
 		}
 	}
 

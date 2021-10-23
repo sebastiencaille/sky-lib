@@ -51,6 +51,11 @@ public class PollingResult<T, V> {
 		return orElse.get();
 	}
 
+	@Override
+	public String toString() {
+		return "Value: " + polledValue + ", Exception: " + failureReason;
+	}
+
 	/* *********************************************************** */
 
 	/* *********************************************************** */

@@ -37,9 +37,5 @@ public class SeleniumGuiPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 		setCurrentModalDialogDetector(new ModalDialogDetector(() -> AlertDetector.listAlerts(this, check)));
 	}
 
-	
-	public <T> PagePilot<T> page(Class<T> pageClass) {
-		return new PagePilot<>(this, pageClass);
-	}
 
 }

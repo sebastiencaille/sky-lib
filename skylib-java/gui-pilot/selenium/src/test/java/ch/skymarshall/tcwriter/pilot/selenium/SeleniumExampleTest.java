@@ -1,34 +1,27 @@
 package ch.skymarshall.tcwriter.pilot.selenium;
 
-import static ch.skymarshall.tcwriter.pilot.EditionPolling.action;
-import static ch.skymarshall.tcwriter.pilot.selenium.ElementPilot.click;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.UnexpectedAlertBehaviour;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.xnio.streams.Streams;
 
-import ch.skymarshall.tcwriter.pilot.ActionDelay;
-import ch.skymarshall.tcwriter.pilot.ModalDialogDetector;
 import ch.skymarshall.util.helpers.Log;
 import io.undertow.Undertow;
 import io.undertow.server.HttpServerExchange;
@@ -86,28 +79,6 @@ class SeleniumExampleTest {
 
 	/* **************************** TESTS **************************** */
 
-	public static class ProceedEnabledDelay implements ActionDelay {
-
-		private PagePilot<ExamplePage> mainPage;
-
-		public ProceedEnabledDelay(final PagePilot<ExamplePage> mainPage) {
-			this.mainPage = mainPage;
-		}
-
-		@Override
-		public boolean waitFinished() {
-			mainPage.wait(p -> p.proceed, ElementPilot.isEnabled());
-			Assertions.assertTrue(mainPage.page().proceed.isEnabled(), () -> "Proceed is enabled");
-			return true;
-		}
-		
-		@Override
-		public String toString() {
-			return "Wait on Proceed enabled";
-		}
-
-	}
-
 	private SeleniumGuiPilot pilot;
 
 	@BeforeAll
@@ -134,30 +105,18 @@ class SeleniumExampleTest {
 	void testExample() {
 
 		pilot.getDriver().get("http://localhost:8080/example1.html");
-		//
-		PagePilot<ExamplePage> mainPage = pilot.page(ExamplePage.class);
+		
+		ExamplePage mainPage = new ExamplePage(pilot);
 
-		// Perform a click, and tell the next action that the next action must wait
-		// until "Proceed" is enabled
-		mainPage.wait(p -> p.proceed, click().followedBy(new ProceedEnabledDelay(mainPage)));
+		mainPage.proceed();
 
-		// Handle the modal dialog raised by the click
-		pilot.expectModalDialog(s -> {
-			s.doAcknowledge();
-			return ModalDialogDetector.expected();
-		});
-
-		// click on ok
-		// mainPage.element(p -> p.ok).wait(WebElement::click);
-		// mainPage.element(p -> p.ok).wait(click());
-		// mainPage.element(p -> p.ok).wait(action(WebElement::click));
-		mainPage.wait(p -> p.ok, WebElement::click);
-		pilot.waitModalDialogHandled();
-
-		mainPage.ifEnabled(p -> p.notExisting, action(WebElement::click), Duration.ofMillis(500));
+		mainPage.expectedOkDialog();
+		mainPage.ok(mainPage);
+		mainPage.checkDialogHandled();
+		
+		mainPage.clickOnMissingButton(mainPage);
 
 		Log.of(this).info(pilot.getActionReport().getFormattedReport());
-
 		assertEquals(6, pilot.getActionReport().getReport().size(), () -> pilot.getActionReport().getFormattedReport());
 	}
 

@@ -3,6 +3,7 @@ package ch.skymarshall.tcwriter.pilot.selenium;
 import java.time.Duration;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WrapsElement;
@@ -13,24 +14,20 @@ import ch.skymarshall.tcwriter.pilot.Polling;
 
 public class PagePilot<T> {
 
-	private Class<T> pageClass;
-	private SeleniumGuiPilot pilot;
-	private T page;
+	protected final SeleniumGuiPilot pilot;
 
-	public PagePilot(SeleniumGuiPilot pilot, Class<T> pageClass) {
+	private boolean invalid = true;
+	
+	public PagePilot(SeleniumGuiPilot pilot) {
 		this.pilot = pilot;
-		this.pageClass = pageClass;
 	}
 
-	public T page() {
-		return loadPage();
-	}
-
-	public ElementPilot element(Function<T, WebElement> toElement) {
+	public ElementPilot element(Supplier<WebElement> element) {
 		return new ElementPilot(pilot) {
 			@Override
 			protected WebElement loadGuiComponent() {
-				WebElement webElement = toElement.apply(loadPage());
+				reloadPage();
+				WebElement webElement = element.get();
 				if (((WrapsElement) webElement).getWrappedElement() == null) {
 					return null;
 				}
@@ -40,43 +37,43 @@ public class PagePilot<T> {
 			@Override
 			protected void invalidateCache() {
 				super.invalidateCache();
-				page = null;
+				invalid = true;
 			}
 
 			@Override
 			protected String getDescription() {
 				String result = super.getDescription();
 				if (result == null) {
-					result =  toElement.apply(loadPage()).toString();
+					result =  element.get().toString();
 				}
 				return result;
 			}
 			
 			@Override
 			public String toString() {
-				return "Element of page " + pageClass;
+				return "Element of page " + getClass();
 			}
 		};
 	}
 
-	private T loadPage() {
-		if (page == null) {
-			page = PageFactory.initElements(pilot.getDriver(), pageClass);
+	private void reloadPage() {
+		if (invalid) {
+			 PageFactory.initElements(pilot.getDriver(), this);
+			 invalid = false;
 		}
-		return page;
 	}
 
-	public <U> U wait(Function<T, WebElement> toElement, final Polling<WebElement, U> polling) {
-		return element(toElement).wait(polling);
+	public <U> U wait(Supplier<WebElement> element, final Polling<WebElement, U> polling) {
+		return element(element).wait(polling);
 	}
 
-	public boolean wait(Function<T, WebElement> toElement, Consumer<WebElement> action) {
-		return element(toElement).wait(EditionPolling.action(action).withName("<anonymous action>"));
+	public boolean wait(Supplier<WebElement> element, Consumer<WebElement> action) {
+		return element(element).wait(EditionPolling.action(action).withName("<anonymous action>"));
 	}
 
-	public boolean ifEnabled(Function<T, WebElement> toElement, final Polling<WebElement, Boolean> polling,
+	public boolean ifEnabled(Supplier<WebElement> element, final Polling<WebElement, Boolean> polling,
 			final Duration shortTimeout) {
-		return element(toElement).ifEnabled(polling, shortTimeout);
+		return element(element).ifEnabled(polling, shortTimeout);
 	}
 
 }

@@ -14,6 +14,7 @@ import ch.skymarshall.tcwriter.generators.model.TestCaseException;
 import ch.skymarshall.tcwriter.generators.model.testapi.TestDictionary;
 import ch.skymarshall.tcwriter.generators.model.testcase.TestCase;
 
+@SuppressWarnings("java:S2699")
 class IntegrationTest {
 
 	@Test

@@ -21,6 +21,7 @@ import ch.skymarshall.tcwriter.pilot.EditionPolling;
 import ch.skymarshall.tcwriter.pilot.PollingResult;
 import ch.skymarshall.tcwriter.pilot.swing.JTablePilot;
 
+@SuppressWarnings("java:S5960")
 public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 
 	private static final String ACTOR_TEST_WRITER = "Test writer";

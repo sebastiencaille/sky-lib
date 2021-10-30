@@ -17,6 +17,7 @@ import ch.skymarshall.util.helpers.NoExceptionCloseable;
  * @author scaille
  *
  */
+@SuppressWarnings("java:S5960")
 public class ModalDialogDetector {
 
 	public static class PollingResult {

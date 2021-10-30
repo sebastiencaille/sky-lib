@@ -22,9 +22,6 @@ import ch.skymarshall.gui.mvc.properties.AbstractProperty;
 /**
  * Allows firering {@link IPropertyEventListener} when the value of a property
  * in this group is changed
- * <p>
- * TODO: optimize so the group is registered into the properties only if actions
- * count > 0
  * 
  * @author Sebastien Caille
  * 

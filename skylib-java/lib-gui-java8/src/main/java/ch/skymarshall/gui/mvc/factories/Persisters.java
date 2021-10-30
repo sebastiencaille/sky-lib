@@ -28,6 +28,7 @@ import ch.skymarshall.gui.mvc.persisters.ObjectProviderPersister.IObjectProvider
 import ch.skymarshall.gui.mvc.properties.IPersister;
 import ch.skymarshall.util.dao.metadata.AbstractAttributeMetaData;
 
+@SuppressWarnings("java:S3011")
 public interface Persisters {
 
 	public static <T, A> IPersister<A> persister(final IObjectProvider<T> objectProvider,

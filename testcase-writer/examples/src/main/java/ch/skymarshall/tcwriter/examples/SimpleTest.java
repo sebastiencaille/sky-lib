@@ -14,6 +14,7 @@ import ch.skymarshall.tcwriter.examples.api.interfaces.DeliveryTestRole;
 import ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem;
 import ch.skymarshall.tcwriter.recording.TestActors;
 
+@SuppressWarnings("java:S5960")
 public class SimpleTest {
 
 	private final TestItem coffeeMachine = TestItem.coffeeMachineOfBrand("OldSchool");
@@ -37,7 +38,7 @@ public class SimpleTest {
 	@Test
 	public void testNormalCase() {
 
-		customer.buy(onInternet("https://truc"), coffeeMachine);
+		customer.buy(onInternet("https://somewebsite"), coffeeMachine);
 		deliveryGuy.deliverItem();
 		customer.checkPackage(deliveredItem(), coffeeMachine);
 		customer.resellOwnedItem(10);

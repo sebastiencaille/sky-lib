@@ -2,8 +2,6 @@ package ch.skymarshall.tcwriter.pilot.swing;
 
 import javax.swing.JTable;
 
-import org.junit.jupiter.api.Assertions;
-
 public class JTablePilot extends AbstractSwingComponent<JTablePilot, JTable> {
 
 	public JTablePilot(final SwingPilot pilot, final String name) {

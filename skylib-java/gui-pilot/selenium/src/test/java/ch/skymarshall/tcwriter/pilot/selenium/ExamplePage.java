@@ -12,7 +12,7 @@ import org.openqa.selenium.support.FindBy;
 import ch.skymarshall.tcwriter.pilot.ActionDelay;
 import ch.skymarshall.tcwriter.pilot.ModalDialogDetector;
 
-public class ExamplePage extends PagePilot<ExamplePage> {
+public class ExamplePage extends PagePilot {
 
 	@FindBy(id = "Proceed")
 	public WebElement proceed;

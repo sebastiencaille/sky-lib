@@ -6,13 +6,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 
 import ch.skymarshall.tcwriter.pilot.ModalDialogDetector;
 import ch.skymarshall.tcwriter.pilot.ModalDialogDetector.PollingResult;
-import ch.skymarshall.util.helpers.StreamHelper;
 
 public class SwingModalDialogDetector extends SwingPilot {
 
@@ -40,7 +40,7 @@ public class SwingModalDialogDetector extends SwingPilot {
 					continue;
 				}
 				final SwingModalDialogDetector dialogPilot = new SwingModalDialogDetector((JDialog) window);
-				Arrays.stream(pollingHandlers).map(p -> p.apply(dialogPilot)).collect(StreamHelper.addTo(result));
+				result.addAll(Arrays.stream(pollingHandlers).map(p -> p.apply(dialogPilot)).collect(Collectors.toList()));
 			}
 		});
 		return result;

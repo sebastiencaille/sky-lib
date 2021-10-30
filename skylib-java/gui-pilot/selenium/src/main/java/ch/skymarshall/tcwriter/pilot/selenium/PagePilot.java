@@ -2,7 +2,6 @@ package ch.skymarshall.tcwriter.pilot.selenium;
 
 import java.time.Duration;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.openqa.selenium.WebElement;
@@ -12,7 +11,7 @@ import org.openqa.selenium.support.PageFactory;
 import ch.skymarshall.tcwriter.pilot.EditionPolling;
 import ch.skymarshall.tcwriter.pilot.Polling;
 
-public class PagePilot<T> {
+public class PagePilot {
 
 	protected final SeleniumGuiPilot pilot;
 

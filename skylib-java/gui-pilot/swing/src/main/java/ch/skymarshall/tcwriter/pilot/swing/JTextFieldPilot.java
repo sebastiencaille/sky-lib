@@ -3,8 +3,6 @@ package ch.skymarshall.tcwriter.pilot.swing;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
-import org.junit.jupiter.api.Assertions;
-
 public class JTextFieldPilot extends AbstractSwingComponent<JTextFieldPilot, JTextComponent> {
 
 	public JTextFieldPilot(final SwingPilot pilot, final String name) {

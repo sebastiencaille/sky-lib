@@ -10,6 +10,7 @@ import ch.skymarshall.tcwriter.examples.api.interfaces.selectors.BuyingLocationS
 import ch.skymarshall.tcwriter.examples.api.interfaces.selectors.PackageDeliverySelector;
 
 @TCRole(description = "A customer", humanReadable = "customer")
+@SuppressWarnings("java:S5960")
 public class CustomerTestRole extends Assertions {
 
 	private final ExampleService testedService;

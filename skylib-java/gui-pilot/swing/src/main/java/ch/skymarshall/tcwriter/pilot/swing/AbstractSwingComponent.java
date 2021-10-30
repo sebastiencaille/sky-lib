@@ -16,6 +16,7 @@ import ch.skymarshall.tcwriter.pilot.PollingResult;
 import ch.skymarshall.tcwriter.pilot.PollingResult.PollingResultFunction;
 import ch.skymarshall.tcwriter.pilot.StatePolling;
 
+@SuppressWarnings("java:S5960")
 public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C extends JComponent>
 		extends AbstractGuiComponent<G, C> {
 

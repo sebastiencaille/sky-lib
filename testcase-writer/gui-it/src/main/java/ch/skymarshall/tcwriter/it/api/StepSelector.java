@@ -14,6 +14,7 @@ import ch.skymarshall.tcwriter.pilot.swing.JTablePilot;
 import ch.skymarshall.tcwriter.pilot.swing.SwingPilot;
 
 @TCApi(description = "Step selector", humanReadable = "Step selector", isSelector = true)
+@SuppressWarnings("java:S5960")
 public class StepSelector {
 
 	private final Consumer<SwingPilot> applier;

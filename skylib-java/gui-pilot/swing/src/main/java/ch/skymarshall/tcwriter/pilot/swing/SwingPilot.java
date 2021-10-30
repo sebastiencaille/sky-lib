@@ -23,6 +23,7 @@ import ch.skymarshall.tcwriter.pilot.ModalDialogDetector;
 import ch.skymarshall.tcwriter.pilot.ModalDialogDetector.PollingResult;
 import ch.skymarshall.util.helpers.NoExceptionCloseable;
 
+@SuppressWarnings("java:S5960")
 public class SwingPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 
 	private final WeakHashMap<String, JComponent> cache = new WeakHashMap<>();

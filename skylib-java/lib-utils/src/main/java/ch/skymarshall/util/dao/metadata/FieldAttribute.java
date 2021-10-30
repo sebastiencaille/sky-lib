@@ -29,6 +29,7 @@ import ch.skymarshall.annotations.Persistency;
  *
  * @param <T>
  */
+@SuppressWarnings("java:S3011")
 public class FieldAttribute<T> extends AbstractAttributeMetaData<T> {
 
 	private final Field field;

@@ -25,7 +25,9 @@ public class SimpleExternalAdapter {
 	}
 
 	public void display(final MyData result) {
-		assert result != null;
+		if (result == null) {
+			throw new IllegalStateException("Result must not be null");
+		}
 		FlowReport.add("display");
 		this.output = result.output;
 	}

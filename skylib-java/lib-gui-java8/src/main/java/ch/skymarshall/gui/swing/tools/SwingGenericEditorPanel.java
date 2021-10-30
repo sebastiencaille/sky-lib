@@ -148,6 +148,6 @@ public class SwingGenericEditorPanel extends JPanel implements IGenericEditor {
 
 	@Override
 	public void build(final GenericEditorController<?> adapter, final ErrorSet errorProperty) {
-
+		// default
 	}
 }

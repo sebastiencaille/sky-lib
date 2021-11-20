@@ -6,11 +6,11 @@
 CPP_SRCS += \
 ../src-test/GtkTest.cpp 
 
-OBJS += \
-./src-test/GtkTest.o 
-
 CPP_DEPS += \
 ./src-test/GtkTest.d 
+
+OBJS += \
+./src-test/GtkTest.o 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -21,4 +21,11 @@ src-test/GtkTest.o: ../src-test/GtkTest.cpp src-test/subdir.mk
 	@echo 'Finished building: $<'
 	@echo ' '
 
+
+clean: clean-src-2d-test
+
+clean-src-2d-test:
+	-$(RM) ./src-test/GtkTest.d ./src-test/GtkTest.o
+
+.PHONY: clean-src-2d-test
 

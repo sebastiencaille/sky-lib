@@ -27,8 +27,8 @@ public class GeneratedTest {
 	
 	@Test
 	public void testCase() {
-		// Step 1: As customer, I go on internet (https://truc) and buy a coffee machine of brand "OldSchool" (ISO: yes)
-		ch.skymarshall.tcwriter.examples.api.interfaces.selectors.BuyingLocationSelector step1_var1 = BuyingLocationSelector.onInternet("https://truc");
+		// Step 1: As customer, I go on internet (https://somewebsite) and buy a coffee machine of brand "OldSchool" (ISO: yes)
+		ch.skymarshall.tcwriter.examples.api.interfaces.selectors.BuyingLocationSelector step1_var1 = BuyingLocationSelector.onInternet("https://somewebsite");
 		ch.skymarshall.tcwriter.examples.api.interfaces.dto.TestItem step1_var2 = TestItem.coffeeMachineOfBrand("OldSchool");
 		step1_var2.setISO();
 		customer.buy(step1_var1, step1_var2);

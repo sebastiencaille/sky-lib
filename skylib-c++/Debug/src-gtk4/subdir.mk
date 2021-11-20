@@ -8,15 +8,15 @@ CPP_SRCS += \
 ../src-gtk4/gtk_bindings.cpp \
 ../src-gtk4/gtk_utils.cpp 
 
-OBJS += \
-./src-gtk4/glib_converter.o \
-./src-gtk4/gtk_bindings.o \
-./src-gtk4/gtk_utils.o 
-
 CPP_DEPS += \
 ./src-gtk4/glib_converter.d \
 ./src-gtk4/gtk_bindings.d \
 ./src-gtk4/gtk_utils.d 
+
+OBJS += \
+./src-gtk4/glib_converter.o \
+./src-gtk4/gtk_bindings.o \
+./src-gtk4/gtk_utils.o 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -27,4 +27,11 @@ src-gtk4/%.o: ../src-gtk4/%.cpp src-gtk4/subdir.mk
 	@echo 'Finished building: $<'
 	@echo ' '
 
+
+clean: clean-src-2d-gtk4
+
+clean-src-2d-gtk4:
+	-$(RM) ./src-gtk4/glib_converter.d ./src-gtk4/glib_converter.o ./src-gtk4/gtk_bindings.d ./src-gtk4/gtk_bindings.o ./src-gtk4/gtk_utils.d ./src-gtk4/gtk_utils.o
+
+.PHONY: clean-src-2d-gtk4
 

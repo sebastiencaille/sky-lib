@@ -9,17 +9,17 @@ CPP_SRCS += \
 ../src-gtk4-pilot/gtk_entry_pilot.cpp \
 ../src-gtk4-pilot/gtk_gui_pilot.cpp 
 
-OBJS += \
-./src-gtk4-pilot/abstract_gtk_component.o \
-./src-gtk4-pilot/abstract_gui_component.o \
-./src-gtk4-pilot/gtk_entry_pilot.o \
-./src-gtk4-pilot/gtk_gui_pilot.o 
-
 CPP_DEPS += \
 ./src-gtk4-pilot/abstract_gtk_component.d \
 ./src-gtk4-pilot/abstract_gui_component.d \
 ./src-gtk4-pilot/gtk_entry_pilot.d \
 ./src-gtk4-pilot/gtk_gui_pilot.d 
+
+OBJS += \
+./src-gtk4-pilot/abstract_gtk_component.o \
+./src-gtk4-pilot/abstract_gui_component.o \
+./src-gtk4-pilot/gtk_entry_pilot.o \
+./src-gtk4-pilot/gtk_gui_pilot.o 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -30,4 +30,11 @@ src-gtk4-pilot/%.o: ../src-gtk4-pilot/%.cpp src-gtk4-pilot/subdir.mk
 	@echo 'Finished building: $<'
 	@echo ' '
 
+
+clean: clean-src-2d-gtk4-2d-pilot
+
+clean-src-2d-gtk4-2d-pilot:
+	-$(RM) ./src-gtk4-pilot/abstract_gtk_component.d ./src-gtk4-pilot/abstract_gtk_component.o ./src-gtk4-pilot/abstract_gui_component.d ./src-gtk4-pilot/abstract_gui_component.o ./src-gtk4-pilot/gtk_entry_pilot.d ./src-gtk4-pilot/gtk_entry_pilot.o ./src-gtk4-pilot/gtk_gui_pilot.d ./src-gtk4-pilot/gtk_gui_pilot.o
+
+.PHONY: clean-src-2d-gtk4-2d-pilot
 

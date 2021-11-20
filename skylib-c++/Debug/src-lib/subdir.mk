@@ -8,15 +8,15 @@ CPP_SRCS += \
 ../src-lib/property.cpp \
 ../src-lib/property_manager.cpp 
 
-OBJS += \
-./src-lib/converters.o \
-./src-lib/property.o \
-./src-lib/property_manager.o 
-
 CPP_DEPS += \
 ./src-lib/converters.d \
 ./src-lib/property.d \
 ./src-lib/property_manager.d 
+
+OBJS += \
+./src-lib/converters.o \
+./src-lib/property.o \
+./src-lib/property_manager.o 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -27,4 +27,11 @@ src-lib/%.o: ../src-lib/%.cpp src-lib/subdir.mk
 	@echo 'Finished building: $<'
 	@echo ' '
 
+
+clean: clean-src-2d-lib
+
+clean-src-2d-lib:
+	-$(RM) ./src-lib/converters.d ./src-lib/converters.o ./src-lib/property.d ./src-lib/property.o ./src-lib/property_manager.d ./src-lib/property_manager.o
+
+.PHONY: clean-src-2d-lib
 

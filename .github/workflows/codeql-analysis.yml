@@ -68,9 +68,10 @@ jobs:
       run: mvn --no-transfer-progress install
       working-directory: testcase-writer
       
-    - name: Build c++ lib
-      run: make all
-      working-directory: skylib-c++/Debug
+# gtkmm packages are missing
+#    - name: Build c++ lib
+#      run: make all
+#      working-directory: skylib-c++/Debug
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1

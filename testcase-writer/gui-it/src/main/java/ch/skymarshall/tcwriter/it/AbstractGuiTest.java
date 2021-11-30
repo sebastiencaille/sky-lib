@@ -32,7 +32,6 @@ public class AbstractGuiTest {
 
 	@BeforeEach
 	public void startGui() throws IOException, InvocationTargetException, InterruptedException {
-
 		final GeneratorConfig config = new GeneratorConfig();
 		final File tcPath = new File(RESOURCE_FOLDER, "testCase");
 		tcPath.mkdirs();

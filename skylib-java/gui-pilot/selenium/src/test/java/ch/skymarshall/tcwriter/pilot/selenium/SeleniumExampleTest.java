@@ -22,11 +22,13 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.xnio.streams.Streams;
 
+import ch.skymarshall.tcwriter.jupiter.DisableIfHeadless;
 import ch.skymarshall.util.helpers.Log;
 import io.undertow.Undertow;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 
+@DisableIfHeadless
 class SeleniumExampleTest {
 
 	/* **************************** WEB SERVER **************************** */
@@ -105,7 +107,7 @@ class SeleniumExampleTest {
 	void testExample() {
 
 		pilot.getDriver().get("http://localhost:8080/example1.html");
-		
+
 		ExamplePage mainPage = new ExamplePage(pilot);
 
 		mainPage.proceed();
@@ -113,7 +115,7 @@ class SeleniumExampleTest {
 		mainPage.expectedOkDialog();
 		mainPage.ok(mainPage);
 		mainPage.checkDialogHandled();
-		
+
 		mainPage.clickOnMissingButton(mainPage);
 
 		Log.of(this).info(pilot.getActionReport().getFormattedReport());

@@ -61,11 +61,11 @@ jobs:
     #    uses a compiled language
 
     - name: Build java lib
-      run: mvn --no-transfer-progress -P github-build install
+      run: mvn --no-transfer-progress install
       working-directory: skylib-java
     
     - name: Build testcase writer
-      run: mvn --no-transfer-progress -P github-build install
+      run: mvn --no-transfer-progress install
       working-directory: testcase-writer
       
     - name: Build c++ lib

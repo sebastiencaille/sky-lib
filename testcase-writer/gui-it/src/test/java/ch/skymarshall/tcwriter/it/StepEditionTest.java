@@ -9,7 +9,9 @@ import static ch.skymarshall.tcwriter.it.api.StepSelector.selectStep;
 import org.junit.jupiter.api.Test;
 
 import ch.skymarshall.tcwriter.it.api.StepEdition;
+import ch.skymarshall.tcwriter.jupiter.DisableIfHeadless;
 
+@DisableIfHeadless
 class StepEditionTest extends AbstractGuiTest {
 
 	@Test

@@ -3,11 +3,13 @@ package ch.skymarshall.tcwriter.it;
 import org.junit.jupiter.api.Test;
 
 import ch.skymarshall.tcwriter.it.api.MainFrameAction;
+import ch.skymarshall.tcwriter.jupiter.DisableIfHeadless;
 
- class LoadSaveTest extends AbstractGuiTest {
+@DisableIfHeadless
+class LoadSaveTest extends AbstractGuiTest {
 
 	@Test
-	 void testSaveNewLoad() {
+	void testSaveNewLoad() {
 		testSession.injectBasicTest();
 		tcWriter.mainFrameAction(MainFrameAction.saveTC("test"));
 		testSession.checkBasicTest();

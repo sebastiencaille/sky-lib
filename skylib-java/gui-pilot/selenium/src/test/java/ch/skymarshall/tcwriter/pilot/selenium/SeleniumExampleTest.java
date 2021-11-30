@@ -15,6 +15,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -22,13 +23,13 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.xnio.streams.Streams;
 
-import ch.skymarshall.tcwriter.jupiter.DisableIfHeadless;
+import ch.skymarshall.tcwriter.jupiter.DisabledIfHeadless;
 import ch.skymarshall.util.helpers.Log;
 import io.undertow.Undertow;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 
-@DisableIfHeadless
+@ExtendWith(DisabledIfHeadless.class)
 class SeleniumExampleTest {
 
 	/* **************************** WEB SERVER **************************** */

@@ -8,17 +8,18 @@ import javax.swing.JTable;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import ch.skymarshall.example.gui.TestObjectTableModel;
 import ch.skymarshall.example.gui.model.impl.TableModelExampleView;
-import ch.skymarshall.tcwriter.jupiter.DisableIfHeadless;
+import ch.skymarshall.tcwriter.jupiter.DisabledIfHeadless;
 import ch.skymarshall.tcwriter.pilot.StatePolling;
 import ch.skymarshall.tcwriter.pilot.swing.JTablePilot;
 import ch.skymarshall.tcwriter.pilot.swing.JToggleButtonPilot;
 import ch.skymarshall.tcwriter.pilot.swing.SwingPilot;
 import ch.skymarshall.util.helpers.Log;
 
-@DisableIfHeadless
+@ExtendWith(DisabledIfHeadless.class)
 class ModelExampleTest {
 
 	@Test

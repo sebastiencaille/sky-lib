@@ -1,11 +1,12 @@
 package ch.skymarshall.tcwriter.it;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import ch.skymarshall.tcwriter.it.api.MainFrameAction;
-import ch.skymarshall.tcwriter.jupiter.DisableIfHeadless;
+import ch.skymarshall.tcwriter.jupiter.DisabledIfHeadless;
 
-@DisableIfHeadless
+@ExtendWith(DisabledIfHeadless.class)
 class LoadSaveTest extends AbstractGuiTest {
 
 	@Test

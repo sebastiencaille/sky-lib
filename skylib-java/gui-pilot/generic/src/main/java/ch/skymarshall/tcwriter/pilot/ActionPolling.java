@@ -3,13 +3,13 @@ package ch.skymarshall.tcwriter.pilot;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class EditionPolling<C, V> extends Polling<C, V> {
+public class ActionPolling<C, V> extends Polling<C, V> {
 
-	public EditionPolling(final PollingFunction<C, V> pollingFunction) {
+	public ActionPolling(final PollingFunction<C, V> pollingFunction) {
 		super(null, pollingFunction);
 	}
 
-	public EditionPolling(final Predicate<C> precondition, final PollingFunction<C, V> pollingFunction) {
+	public ActionPolling(final Predicate<C> precondition, final PollingFunction<C, V> pollingFunction) {
 		super(precondition, pollingFunction);
 	}
 
@@ -26,7 +26,7 @@ public class EditionPolling<C, V> extends Polling<C, V> {
 	 * @return
 	 */
 	public static <C> Polling<C, Boolean> action(final Consumer<C> action) {
-		return new EditionPolling<>(null, c -> {
+		return new ActionPolling<>(null, c -> {
 			action.accept(c);
 			return PollingResult.success();
 		});

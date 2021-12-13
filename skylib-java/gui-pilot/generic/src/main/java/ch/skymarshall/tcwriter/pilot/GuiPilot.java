@@ -7,7 +7,7 @@ import ch.skymarshall.util.helpers.Timeout;
 
 public class GuiPilot {
 
-	private final ActionReport actionReport = new ActionReport();
+	private final PilotReport actionReport = new PilotReport();
 
 	private ActionDelay actionDelay = null;
 
@@ -15,7 +15,7 @@ public class GuiPilot {
 
 	private ModalDialogDetector currentModalDialogDetector;
 
-	public ActionReport getActionReport() {
+	public PilotReport getActionReport() {
 		return actionReport;
 	}
 
@@ -83,4 +83,5 @@ public class GuiPilot {
 	public void close() {
 		stopModalDialogDetector();
 	}
+
 }

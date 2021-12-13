@@ -30,7 +30,7 @@ public class JListPilot extends AbstractSwingComponent<JListPilot, JList> {
 					c.setSelectedIndex(i);
 				}
 			}
-		}).withReport(r -> "select element " + value));
+		}).withReportText("select element " + value));
 		Assertions.assertTrue(getCachedElement().getSelectedIndex() >= 0,
 				() -> "Value [" + name + ":" + value + "] must have been selected");
 	}
@@ -48,6 +48,6 @@ public class JListPilot extends AbstractSwingComponent<JListPilot, JList> {
 				return PollingResult.failure("Wrong element selected (" + current + ")");
 			}
 			return PollingResult.success();
-		}).withReport(r -> "check element " + value));
+		}).withReportText("check element " + value));
 	}
 }

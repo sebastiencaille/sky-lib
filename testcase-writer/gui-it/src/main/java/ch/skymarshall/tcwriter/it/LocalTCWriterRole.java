@@ -17,7 +17,7 @@ import ch.skymarshall.tcwriter.it.api.StepEdition;
 import ch.skymarshall.tcwriter.it.api.StepSelector;
 import ch.skymarshall.tcwriter.it.api.TestSessionRole;
 import ch.skymarshall.tcwriter.it.api.TestWriterRole;
-import ch.skymarshall.tcwriter.pilot.EditionPolling;
+import ch.skymarshall.tcwriter.pilot.ActionPolling;
 import ch.skymarshall.tcwriter.pilot.PollingResult;
 import ch.skymarshall.tcwriter.pilot.swing.JTablePilot;
 
@@ -92,17 +92,17 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 		stepsTable.wait(stepsTable.assertion(t -> {
 			final Object value = ((StepsTableModel) t.getModel()).getHumanReadable(t.getSelectedRow());
 			Assertions.assertEquals(humanReadable, value.toString());
-		}).withReport(c -> "Check human readable text: " + humanReadable));
+		}).withReportText("Check human readable text: " + humanReadable));
 	}
 
 	@Override
 	public void updateParameter(final ParameterSelector selector, final ParameterValue value) {
-		guiPilot.table(selector.getTableName()).wait(new EditionPolling<JTable, Boolean>(t -> {
+		guiPilot.table(selector.getTableName()).wait(new ActionPolling<JTable, Boolean>(t -> {
 			updateValue(t, value.getKeyValue1());
 			updateValue(t, value.getKeyValue2());
 			updateValue(t, value.getKeyValue3());
 			return PollingResult.success();
-		}).withReport(c -> "Set parameter values:" + value), PollingResult.assertFail("Setting " + value));
+		}).withReportText("Set parameter values:" + value), PollingResult.assertFail("Setting " + value));
 		applyStepEdition();
 	}
 

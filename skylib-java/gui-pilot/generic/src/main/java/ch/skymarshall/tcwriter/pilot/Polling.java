@@ -1,8 +1,10 @@
 package ch.skymarshall.tcwriter.pilot;
 
+import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
+
+import ch.skymarshall.tcwriter.pilot.PilotReport.ReportFunction;
 
 public class Polling<C, V> {
 
@@ -10,13 +12,14 @@ public class Polling<C, V> {
 		PollingResult<C, V> poll(C component);
 	}
 
+
 	private final Predicate<C> precondition;
 
 	private final PollingFunction<C, V> pollingFunction;
 
-	private Function<C, String> reportLine;
+	private Optional<ReportFunction<C>> reportFunction = Optional.empty();
 
-	private String name = null;
+	private String reportText = null;
 
 	private ActionDelay actionDelay = null;
 
@@ -24,8 +27,7 @@ public class Polling<C, V> {
 		this.precondition = precondition;
 		this.pollingFunction = pollingFunction;
 	}
-	
-	
+
 	public Predicate<C> getPrecondition(final AbstractGuiComponent<?, C> guiComponent) {
 		return precondition;
 	}
@@ -34,29 +36,38 @@ public class Polling<C, V> {
 		return pollingFunction;
 	}
 
-	public Function<C, String> getReportLine() {
-		if (reportLine == null && name != null) {
-			return c -> c.toString() + ": " + name;
-		} else if (reportLine == null) {
-			return c -> "";
-		}
-		return reportLine;
+	public Optional<ReportFunction<C>> getReportFunction() {
+		return reportFunction;
 	}
 
-	public Polling<C, V> withReport(final Function<C, String> reportLine) {
-		this.reportLine = reportLine;
+	/**
+	 * Sets a report generation function. Setting a function will make that the
+	 * polling is logged in the report
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public Polling<C, V> withReportFunction(ReportFunction<C> reportFunction) {
+		this.reportFunction = Optional.of(reportFunction);
 		return this;
 	}
 
-	public Polling<C, V> withName(final String name) {
-		this.name = name;
+	/**
+	 * Sets the report text. Setting a text will make that the polling is logged in
+	 * the report
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public Polling<C, V> withReportText(final String reportText) {
+		this.reportText = reportText;
 		return this;
 	}
 
-	public String getName() {
-		return name;
+	public String getReportText() {
+		return reportText;
 	}
-	
+
 	public static <C> Polling<C, Boolean> success(final Consumer<C> action) {
 		return new Polling<>(null, c -> {
 			action.accept(c);

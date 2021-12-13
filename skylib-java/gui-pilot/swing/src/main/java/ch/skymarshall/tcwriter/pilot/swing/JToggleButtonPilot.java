@@ -13,7 +13,7 @@ public class JToggleButtonPilot extends AbstractSwingComponent<JToggleButtonPilo
 	}
 
 	public void setSelected(final boolean selected) {
-		wait(action(c -> c.setSelected(selected)).withReport(c -> "set " + (selected ? "selected" : "not selected")));
+		wait(action(c -> c.setSelected(selected)).withReportText((selected ? "select" : "deselect")));
 	}
 
 }

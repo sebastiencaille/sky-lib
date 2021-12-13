@@ -10,6 +10,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
+import ch.skymarshall.tcwriter.pilot.PilotReport.ReportFunction;
 import ch.skymarshall.tcwriter.pilot.PollingResult.PollingResultFunction;
 import ch.skymarshall.util.helpers.NoExceptionCloseable;
 import ch.skymarshall.util.helpers.Timeout;
@@ -48,6 +49,17 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 
 	}
 
+	private static ReportFunction<Object> defaultReportFunction = (component, componentShortName, text) -> {
+		if (text == null) {
+			return "";
+		}
+		return componentShortName + ": " + text;
+	};
+
+	public static void setDefaultReportFunction(ReportFunction<Object> defaultReportFunction) {
+		AbstractGuiComponent.defaultReportFunction = defaultReportFunction;
+	}
+
 	/**
 	 * Loads a component from the gui
 	 *
@@ -73,7 +85,6 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 
 	private final GuiPilot pilot;
 
-
 	private final List<Consumer<C>> postExecutions = new ArrayList<>();
 
 	private LoadedElement<C> cachedElement = null;
@@ -91,7 +102,6 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 		return null;
 	}
 
-	
 	public C getCachedElement() {
 		if (cachedElement == null) {
 			return null;
@@ -215,17 +225,27 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 			return failure("precondition failed");
 		}
 
-		final String report = polling.getReportLine().apply(cachedElement.element); // element may
-																											// disappear
-																											// after
-		// action
-		logger.fine(() -> "Polling...");
+		// cachedElement.element may disappear after polling, so prepare report line
+		// here
+		final String report = polling.getReportFunction().orElse(getDefaultReportFunction()).build(getCachedElement(),
+				reportNameOf(getCachedElement()), polling.getReportText());
+
+		logger.fine(() -> "Polling " + report + "...");
 		final PollingResult<C, U> result = polling.getPollingFunction().poll(cachedElement.element);
 		logger.fine(() -> "Polling result: " + result);
 		if (result.isSuccess() && !report.isEmpty()) {
 			pilot.getActionReport().report(report);
 		}
 		return result;
+	}
+
+	protected ReportFunction<C> getDefaultReportFunction() {
+		return (component, componentShortName, text) -> defaultReportFunction.build(component, componentShortName,
+				text);
+	}
+
+	protected String reportNameOf(C c) {
+		return c.toString();
 	}
 
 	/**
@@ -264,7 +284,7 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 		if (actionDelay != null) {
 			pilot.setActionDelay(null);
 			actionDelay.waitFinished();
-			pilot.getActionReport().report("Delayed by: " + actionDelay);
+			pilot.getActionReport().report("Test delayed by: " + actionDelay);
 		}
 	}
 
@@ -272,7 +292,7 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 	 * @See EditionPolling.action
 	 */
 	public Polling<C, Boolean> action(final Consumer<C> action) {
-		return EditionPolling.action(action);
+		return ActionPolling.action(action);
 	}
 
 	/**

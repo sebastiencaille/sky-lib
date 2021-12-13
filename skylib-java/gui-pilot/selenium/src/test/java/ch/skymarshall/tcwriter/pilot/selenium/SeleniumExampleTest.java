@@ -111,16 +111,18 @@ class SeleniumExampleTest {
 
 		ExamplePage mainPage = new ExamplePage(pilot);
 
-		mainPage.proceed();
+		mainPage.testEnable();
 
-		mainPage.expectedOkDialog();
-		mainPage.ok(mainPage);
+		mainPage.expectTestAlertDialog();
+		mainPage.testAlert();
 		mainPage.checkDialogHandled();
 
-		mainPage.clickOnMissingButton(mainPage);
+		mainPage.clickOnMissingButton();
+		
+		mainPage.elementChangeTest();
 
 		Log.of(this).info(pilot.getActionReport().getFormattedReport());
-		assertEquals(6, pilot.getActionReport().getReport().size(), () -> pilot.getActionReport().getFormattedReport());
+		assertEquals(8, pilot.getActionReport().getReport().size(), () -> pilot.getActionReport().getFormattedReport());
 	}
 
 }

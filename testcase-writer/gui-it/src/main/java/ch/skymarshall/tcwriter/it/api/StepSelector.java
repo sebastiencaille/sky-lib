@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Assertions;
 
 import ch.skymarshall.tcwriter.annotations.TCApi;
 import ch.skymarshall.tcwriter.it.TCGuiPilot;
-import ch.skymarshall.tcwriter.pilot.EditionPolling;
+import ch.skymarshall.tcwriter.pilot.ActionPolling;
 import ch.skymarshall.tcwriter.pilot.StatePolling;
 import ch.skymarshall.tcwriter.pilot.swing.JTablePilot;
 import ch.skymarshall.tcwriter.pilot.swing.SwingPilot;
@@ -38,7 +38,7 @@ public class StepSelector {
 			getStepsTable(guiPilot).wait(StatePolling
 					.<JTable>assertion(
 							t -> Assertions.assertTrue(tableIndex < t.getRowCount(), () -> "Step does not exist"))
-					.withReport(c -> "step " + ordinal + " exists"));
+					.withReportText("step " + ordinal + " exists"));
 			getStepsTable(guiPilot).selectRow(tableIndex);
 		});
 
@@ -47,12 +47,12 @@ public class StepSelector {
 	@TCApi(description = "Append a step to the test", humanReadable = "add a step to the test case")
 	public static StepSelector addStep() {
 		return new StepSelector(guiPilot -> {
-			getStepsTable(guiPilot).wait(EditionPolling.<JTable>action(t -> {
+			getStepsTable(guiPilot).wait(ActionPolling.<JTable>action(t -> {
 				final int stepsCount = t.getRowCount();
 				if (stepsCount > 0) {
 					t.setRowSelectionInterval(stepsCount - 1, stepsCount - 1);
 				}
-			}).withReport(c -> "select last step"));
+			}).withReportText("select last step"));
 			guiPilot.button(TCGuiPilot.ADD_STEP).click();
 		});
 
@@ -63,7 +63,7 @@ public class StepSelector {
 		return new StepSelector(guiPilot -> getStepsTable(guiPilot).wait(StatePolling
 				.<JTable>assertion(
 						c -> Assertions.assertTrue(c.getSelectedRowCount() > 0, () -> "Step must be selected"))
-				.withReport(c -> "a step is selected")));
+				.withReportText("a step is selected")));
 	}
 
 }

@@ -17,7 +17,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import ch.skymarshall.tcwriter.pilot.AbstractGuiComponent;
-import ch.skymarshall.tcwriter.pilot.EditionPolling;
+import ch.skymarshall.tcwriter.pilot.ActionPolling;
 import ch.skymarshall.tcwriter.pilot.Polling;
 import ch.skymarshall.tcwriter.pilot.PollingResult;
 import ch.skymarshall.tcwriter.pilot.StatePolling;
@@ -54,6 +54,11 @@ public class ElementPilot extends AbstractGuiComponent<ElementPilot, WebElement>
 		return getDescription();
 	}
 
+	@Override
+	protected String reportNameOf(WebElement c) {
+		return c.toString();
+	}
+	
 	@Override
 	protected WebElement loadGuiComponent() {
 		return pilot.getDriver().findElement(locator);
@@ -107,30 +112,30 @@ public class ElementPilot extends AbstractGuiComponent<ElementPilot, WebElement>
 					.until(d -> {
 						try {
 							return executePolling(polling).orElse(null);
-						} catch (final StaleElementReferenceException stale) {
+						} catch (final StaleElementReferenceException e) {
 							invalidateCache();
-							throw stale;
+							throw e;
 						}
 					}));
 		} catch (final TimeoutException e) {
-			return onException(e);
+			return onException(e.getCause());
 		}
 	}
 
 	public boolean wait(Consumer<WebElement> action) {
-		return wait(EditionPolling.action(action));
+		return wait(ActionPolling.action(action));
 	}
 
 	public static Polling<WebElement, Boolean> isEnabled() {
-		return StatePolling.<WebElement>satisfies(WebElement::isEnabled).withName("enabled");
+		return StatePolling.<WebElement>satisfies(WebElement::isEnabled).withReportText("is enabled");
 	}
 
 	public static Polling<WebElement, Boolean> click() {
-		return EditionPolling.action(WebElement::click).withName("click");
+		return ActionPolling.action(WebElement::click).withReportText("clicked");
 	}
 
 	public boolean run(Consumer<WebElement> action, String name) {
-		return wait(EditionPolling.action(action).withName(name));
+		return wait(ActionPolling.action(action).withReportText(name));
 	}
 
 }

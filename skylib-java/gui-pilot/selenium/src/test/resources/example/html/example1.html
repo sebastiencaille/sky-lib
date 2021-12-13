@@ -3,24 +3,42 @@
 	<head>
 		<title>Example 1</title>
 		<script type="application/javascript" >
-			proceed = function() {
-				console.log("Proceed");
-				document.getElementById('Proceed').disabled=true;
-				document.getElementById('OK').disabled=true;
+			enableTest = function() {
+				console.log("EnableTest");
+				document.getElementById('EnableTest').disabled=true;
+				document.getElementById('AlertTest').disabled=true;
 				setTimeout(() => { 
-					document.getElementById('Proceed').disabled=false;
-					document.getElementById('OK').disabled=false; 
+					document.getElementById('EnableTest').disabled=false;
+					document.getElementById('AlertTest').disabled=false; 
 				}, 2000)
 			};
-			ok = function() {
-				console.log("Ok");
-				alert('OK');
+			
+			alertTest = function() {
+				console.log("AlertTest");
+				alert('Alert Test');
 			};
+			
+			elementChangeTest = function() {
+				console.log("ElementChangeTest");
+				var elementChangeHolder = document.getElementById('ElementChangeHolder');
+				setTimeout(() => {
+					console.log("ElementChangeTest change 1"); 
+					elementChangeHolder.insertAdjacentHTML('beforeend', '<div id="ElementChange"><div id="TextChange">Hello</div></div>');
+				}, 500)
+				setTimeout(() => { 
+					console.log("ElementChangeTest change 2");
+					elementChangeHolder.replaceChildren();
+					elementChangeHolder.insertAdjacentHTML('beforeend', '<div id="ElementChange"><div id="TextChange">Hello again</div></div>');
+				}, 1000)
+			};
+			
 		</script>
 	</head>
 	<body>
-		Hello
-		<button id="Proceed" onclick="proceed()">Proceed</button>
-		<button id="OK" disabled="true" onClick="ok()")>OK</button>
+		<button id="EnableTest" onclick="enableTest()">EnableTest</button>
+		<button id="AlertTest" disabled="true" onClick="alertTest()")>AlertTest</button>
+		<button id="ElementChangeTest" onclick="elementChangeTest()")>ElementChangeTest</button>
+		<div id="ElementChangeHolder">
+		</div>
 	</body>
 </html>

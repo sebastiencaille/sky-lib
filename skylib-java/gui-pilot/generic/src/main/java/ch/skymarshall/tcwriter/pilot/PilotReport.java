@@ -3,8 +3,13 @@ package ch.skymarshall.tcwriter.pilot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActionReport {
+public class PilotReport {
 
+	public interface ReportFunction<C> {
+		String build(C component, String componentDescription, String text);
+	}
+
+	
 	private final List<String> report = new ArrayList<>();
 
 	public void report(final String reportLine) {

@@ -9,7 +9,7 @@ public class JButtonPilot extends AbstractSwingComponent<JButtonPilot, JButton> 
 	}
 
 	public void click() {
-		wait(action(JButton::doClick).withReport(c -> "click"));
+		wait(action(JButton::doClick).withReportText("click"));
 	}
 
 }

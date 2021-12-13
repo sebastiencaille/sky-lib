@@ -29,7 +29,7 @@ public class JTextFieldPilot extends AbstractSwingComponent<JTextFieldPilot, JTe
 			if (t instanceof JTextField) {
 				doPressReturn(t);
 			}
-		}).withReport(r -> "set text \'" + value + "\'"));
+		}).withReportText("set text \'" + value + "\'"));
 	}
 
 	public void checkTextValue(final String expected) {

@@ -42,6 +42,11 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 	}
 
 	@Override
+	protected String reportNameOf(C c) {
+		return c.getClass().getSimpleName() + "[" + c.getName() + "]";
+	}
+	
+	@Override
 	protected C loadGuiComponent() {
 		try {
 			return pilot.getComponent(name, clazz);
@@ -78,20 +83,20 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 
 	public void check(final String message, final Predicate<C> componentPredicate) {
 		wait(assertion(t -> Assertions.assertTrue(componentPredicate.test(t), getDescription()))
-				.withReport(r -> getDescription() + ": " + message));
+				.withReportText(message));
 	}
 
 	public <T> Polling<C, Boolean> assertEquals(final String message, T expected, Function<C, T> actual) {
 		return assertion(c -> Assertions.assertEquals(expected, actual.apply(c), getDescription()))
-				.withReport(r -> getDescription() + ": " + message + ": expected '" + expected + '\'');
+				.withReportText(message + ": expected '" + expected + '\'');
 	}
 
 	public void waitEnabled() {
-		wait(StatePolling.<C>satisfies(JComponent::isEnabled).withReport(c -> "check enabled"));
+		wait(StatePolling.<C>satisfies(JComponent::isEnabled).withReportText("is enabled"));
 	}
 
 	public void waitDisabled() {
-		wait(StatePolling.<C>satisfies(c -> !c.isEnabled()).withReport(c -> "check disabled"));
+		wait(StatePolling.<C>satisfies(c -> !c.isEnabled()).withReportText("is disabled"));
 	}
 
 	public static void doPressReturn(final JComponent t) {

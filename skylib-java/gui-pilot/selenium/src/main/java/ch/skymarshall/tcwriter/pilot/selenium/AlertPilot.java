@@ -35,8 +35,7 @@ public class AlertPilot extends AbstractGuiComponent<AlertPilot, Alert> {
 	}
 
 	public void doAcknowledge() {
-		wait(Polling.success(Alert::accept).withReportText("acknowledge alert")
-				.withReportFunction((e, s, t) -> "Acknowledged alert: " + e.getText()));
+		wait(Polling.success(Alert::accept).withReportFunction((e, s, t) -> "Acknowledged alert: " + e.getText()));
 	}
 
 }

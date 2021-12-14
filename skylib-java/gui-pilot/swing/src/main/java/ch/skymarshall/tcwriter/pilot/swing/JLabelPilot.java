@@ -1,7 +1,11 @@
 package ch.skymarshall.tcwriter.pilot.swing;
 
+import static ch.skymarshall.tcwriter.pilot.Factories.checkingValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import javax.swing.JLabel;
 
+@SuppressWarnings("java:S5960")
 public class JLabelPilot extends AbstractSwingComponent<JLabelPilot, JLabel> {
 
 	public JLabelPilot(final SwingPilot pilot, final String name) {
@@ -9,7 +13,7 @@ public class JLabelPilot extends AbstractSwingComponent<JLabelPilot, JLabel> {
 	}
 
 	public void checkValue(final String expected) {
-		wait(assertEquals("check text", expected, JLabel::getText));
+		wait(assertion(pc -> assertEquals(expected, pc.component.getText(), pc.description)).withReportText(checkingValue(expected)));
 	}
 
 }

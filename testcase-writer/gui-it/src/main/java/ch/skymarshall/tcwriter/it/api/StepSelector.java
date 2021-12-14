@@ -1,69 +1,51 @@
 package ch.skymarshall.tcwriter.it.api;
 
+import static ch.skymarshall.tcwriter.pilot.Factories.checkingThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.function.Consumer;
 
-import javax.swing.JTable;
-
-import org.junit.jupiter.api.Assertions;
-
 import ch.skymarshall.tcwriter.annotations.TCApi;
-import ch.skymarshall.tcwriter.it.TCGuiPilot;
-import ch.skymarshall.tcwriter.pilot.ActionPolling;
-import ch.skymarshall.tcwriter.pilot.StatePolling;
+import ch.skymarshall.tcwriter.it.TCWriterPage;
 import ch.skymarshall.tcwriter.pilot.swing.JTablePilot;
-import ch.skymarshall.tcwriter.pilot.swing.SwingPilot;
 
 @TCApi(description = "Step selector", humanReadable = "Step selector", isSelector = true)
 @SuppressWarnings("java:S5960")
-public class StepSelector {
-
-	private final Consumer<SwingPilot> applier;
-
-	protected StepSelector(final Consumer<SwingPilot> applier) {
-		this.applier = applier;
-	}
-
-	public void select(final SwingPilot guiPilot) {
-		applier.accept(guiPilot);
-	}
-
-	protected static JTablePilot getStepsTable(final SwingPilot guiPilot) {
-		return guiPilot.table(TCGuiPilot.STEPS_TABLE);
-	}
+public interface StepSelector extends Consumer<TCWriterPage> {
 
 	@TCApi(description = "Step at index", humanReadable = "select the step %s")
 	public static StepSelector selectStep(@TCApi(description = "index", humanReadable = "at row") final int ordinal) {
-		return new StepSelector(guiPilot -> {
+		return page -> {
 			final int tableIndex = ordinal - 1;
-			getStepsTable(guiPilot).wait(StatePolling
-					.<JTable>assertion(
-							t -> Assertions.assertTrue(tableIndex < t.getRowCount(), () -> "Step does not exist"))
-					.withReportText("step " + ordinal + " exists"));
-			getStepsTable(guiPilot).selectRow(tableIndex);
-		});
+			JTablePilot stepsTable = page.stepsTable;
+			stepsTable.wait(stepsTable
+					.assertion(pc -> assertTrue(tableIndex < pc.component.getRowCount(), () -> "Step must exist"))
+					.withReportText(checkingThat("the step " + ordinal + " exists")));
+			stepsTable.selectRow(tableIndex);
+		};
 
 	}
 
 	@TCApi(description = "Append a step to the test", humanReadable = "add a step to the test case")
 	public static StepSelector addStep() {
-		return new StepSelector(guiPilot -> {
-			getStepsTable(guiPilot).wait(ActionPolling.<JTable>action(t -> {
+		return page -> {
+			JTablePilot stepsTable = page.stepsTable;
+			stepsTable.wait(stepsTable.action(t -> {
 				final int stepsCount = t.getRowCount();
 				if (stepsCount > 0) {
 					t.setRowSelectionInterval(stepsCount - 1, stepsCount - 1);
 				}
-			}).withReportText("select last step"));
-			guiPilot.button(TCGuiPilot.ADD_STEP).click();
-		});
+			}).withReportText("selecting the last step"));
+			page.addStep.click();
+		};
 
 	}
 
 	@TCApi(description = "Selected step", humanReadable = "")
 	public static StepSelector currentStep() {
-		return new StepSelector(guiPilot -> getStepsTable(guiPilot).wait(StatePolling
-				.<JTable>assertion(
-						c -> Assertions.assertTrue(c.getSelectedRowCount() > 0, () -> "Step must be selected"))
-				.withReportText("a step is selected")));
+		return page -> page.stepsTable.wait(page.stepsTable
+				.assertion(pc -> assertTrue(pc.component.getSelectedRowCount() > 0, () -> "Step must be selected"))
+				.withReportText(checkingThat("a step is selected")));
 	}
 
 }

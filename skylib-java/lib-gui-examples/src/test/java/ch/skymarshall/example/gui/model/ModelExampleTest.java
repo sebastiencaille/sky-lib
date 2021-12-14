@@ -13,9 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import ch.skymarshall.example.gui.TestObjectTableModel;
 import ch.skymarshall.example.gui.model.impl.TableModelExampleView;
 import ch.skymarshall.tcwriter.jupiter.DisabledIfHeadless;
-import ch.skymarshall.tcwriter.pilot.StatePolling;
-import ch.skymarshall.tcwriter.pilot.swing.JTablePilot;
-import ch.skymarshall.tcwriter.pilot.swing.JToggleButtonPilot;
+import ch.skymarshall.tcwriter.pilot.Factories;
 import ch.skymarshall.tcwriter.pilot.swing.SwingPilot;
 import ch.skymarshall.util.helpers.Log;
 
@@ -34,48 +32,40 @@ class ModelExampleTest {
 		final SwingPilot pilot = new SwingPilot(view[0]);
 		pilot.setDefaultActionTimeout(Duration.ofSeconds(1));
 
-		listTable(pilot).wait(StatePolling.<JTable>assertion(t -> {
-			Assertions.assertEquals(50, t.getColumn(TestObjectTableModel.Columns.A_SECOND_VALUE).getWidth());
-			Assertions.assertEquals(t.getWidth() - 50, t.getColumn(TestObjectTableModel.Columns.A_FIRST_VALUE).getWidth());
+		ModelExamplePage page = new ModelExamplePage(pilot);
+
+		page.listTable.wait(Factories.<JTable>assertion(pc -> {
+			JTable component = pc.component;
+			Assertions.assertEquals(50, component.getColumn(TestObjectTableModel.Columns.A_SECOND_VALUE).getWidth());
+			Assertions.assertEquals(component.getWidth() - 50,
+					component.getColumn(TestObjectTableModel.Columns.A_FIRST_VALUE).getWidth());
 		}));
-		listTable(pilot).checkValue(0, 0, "One");
-		listTable(pilot).checkValue(1, 0, "Two");
-		listTable(pilot).checkValue(2, 0, "Three");
-		listTable(pilot).checkValue(3, 0, "Four");
+		page.listTable.checkValue(0, 0, "One");
+		page.listTable.checkValue(1, 0, "Two");
+		page.listTable.checkValue(2, 0, "Three");
+		page.listTable.checkValue(3, 0, "Four");
 
-		reverseOrder(pilot).setSelected(true);
-		listTable(pilot).checkValue(3, 0, "One");
-		listTable(pilot).checkValue(2, 0, "Two");
-		listTable(pilot).checkValue(1, 0, "Three");
-		listTable(pilot).checkValue(0, 0, "Four");
+		page.reverseOrder.setSelected(true);
+		page.listTable.checkValue(3, 0, "One");
+		page.listTable.checkValue(2, 0, "Two");
+		page.listTable.checkValue(1, 0, "Three");
+		page.listTable.checkValue(0, 0, "Four");
 
-		enableFilter(pilot).setSelected(true);
-		listTable(pilot).checkValue(1, 0, "Two");
-		listTable(pilot).checkValue(0, 0, "Four");
+		page.enableFilter.setSelected(true);
+		page.listTable.checkValue(1, 0, "Two");
+		page.listTable.checkValue(0, 0, "Four");
 
-		reverseOrder(pilot).setSelected(false);
-		listTable(pilot).checkValue(0, 0, "Two");
-		listTable(pilot).checkValue(1, 0, "Four");
+		page.reverseOrder.setSelected(false);
+		page.listTable.checkValue(0, 0, "Two");
+		page.listTable.checkValue(1, 0, "Four");
 
-		enableFilter(pilot).setSelected(false);
-		listTable(pilot).checkValue(0, 0, "One");
-		listTable(pilot).checkValue(1, 0, "Two");
-		listTable(pilot).checkValue(2, 0, "Three");
-		listTable(pilot).checkValue(3, 0, "Four");
+		page.enableFilter.setSelected(false);
+		page.listTable.checkValue(0, 0, "One");
+		page.listTable.checkValue(1, 0, "Two");
+		page.listTable.checkValue(2, 0, "Three");
+		page.listTable.checkValue(3, 0, "Four");
 
 		Log.of(this).info(pilot.getActionReport().getFormattedReport());
-	}
-
-	private JToggleButtonPilot reverseOrder(final SwingPilot pilot) {
-		return new JToggleButtonPilot(pilot, "reverseOrder");
-	}
-
-	private JToggleButtonPilot enableFilter(final SwingPilot pilot) {
-		return new JToggleButtonPilot(pilot, "enableFilter");
-	}
-
-	private JTablePilot listTable(final SwingPilot pilot) {
-		return new JTablePilot(pilot, "listTable");
 	}
 
 }

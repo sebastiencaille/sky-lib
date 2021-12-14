@@ -52,11 +52,11 @@ public class GuiPilot {
 	}
 
 	public void waitModalDialogHandled() {
-		waitModalDialogHandled(PollingResult.throwError());
+		waitModalDialogHandled(Factories.throwError());
 	}
 
 	public boolean waitModalDialogHandled(
-			final PollingResult.PollingResultFunction<ModalDialogDetector.PollingResult, Boolean> onFail) {
+			final PollingResult.FailureHandler<ModalDialogDetector.PollingResult, Boolean> onFail) {
 		final Timeout timeoutCheck = new Timeout(defaultActionTimeout);
 		while (!timeoutCheck.hasTimedOut()) {
 			if (currentModalDialogDetector.getCheckResult() != null) {
@@ -67,10 +67,10 @@ public class GuiPilot {
 				timeoutCheck.yield();
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
-				return onFail.apply(PollingResult.failure("Interrupted"), this);
+				return onFail.apply(Factories.failure("Interrupted"), this);
 			}
 		}
-		return onFail.apply(PollingResult.failure("Modal dialog not detected"), this);
+		return onFail.apply(Factories.failure("Modal dialog not detected"), this);
 	}
 
 	public NoExceptionCloseable withModalDialogDetection() {

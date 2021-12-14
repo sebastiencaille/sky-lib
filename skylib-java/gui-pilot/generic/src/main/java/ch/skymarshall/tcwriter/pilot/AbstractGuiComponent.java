@@ -1,7 +1,6 @@
 package ch.skymarshall.tcwriter.pilot;
 
-import static ch.skymarshall.tcwriter.pilot.PollingResult.failure;
-import static ch.skymarshall.tcwriter.pilot.PollingResult.throwError;
+import static ch.skymarshall.tcwriter.pilot.Factories.failure;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -11,7 +10,8 @@ import java.util.function.Predicate;
 import java.util.logging.Logger;
 
 import ch.skymarshall.tcwriter.pilot.PilotReport.ReportFunction;
-import ch.skymarshall.tcwriter.pilot.PollingResult.PollingResultFunction;
+import ch.skymarshall.tcwriter.pilot.Polling.PollingContext;
+import ch.skymarshall.tcwriter.pilot.PollingResult.FailureHandler;
 import ch.skymarshall.util.helpers.NoExceptionCloseable;
 import ch.skymarshall.util.helpers.Timeout;
 
@@ -49,11 +49,11 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 
 	}
 
-	private static ReportFunction<Object> defaultReportFunction = (component, componentShortName, text) -> {
+	private static ReportFunction<Object> defaultReportFunction = (pc, text) -> {
 		if (text == null) {
 			return "";
 		}
-		return componentShortName + ": " + text;
+		return pc.description + ": " + text;
 	};
 
 	public static void setDefaultReportFunction(ReportFunction<Object> defaultReportFunction) {
@@ -153,7 +153,7 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 	 * @return
 	 */
 	protected <U> U waitPollingSuccess(final Polling<C, U> polling, final Duration timeout,
-			final PollingResultFunction<C, U> onFail) {
+			final FailureHandler<C, U> onFail) {
 
 		waitActionDelay();
 
@@ -192,7 +192,7 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 				Thread.sleep(pollingTime(timeout).toMillis());
 			} catch (final InterruptedException e) {
 				Thread.currentThread().interrupt();
-				return failure("Interrupted");
+				return Factories.failure("Interrupted");
 			}
 		}
 		return lastResult;
@@ -225,13 +225,15 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 			return failure("precondition failed");
 		}
 
+		PollingContext<C> pollingContext = new PollingContext<>(cachedElement.element, getDescription());
+
 		// cachedElement.element may disappear after polling, so prepare report line
 		// here
-		final String report = polling.getReportFunction().orElse(getDefaultReportFunction()).build(getCachedElement(),
-				reportNameOf(getCachedElement()), polling.getReportText());
+		final String report = polling.getReportFunction().orElse(getDefaultReportFunction()).build(pollingContext,
+				polling.getReportText());
 
 		logger.fine(() -> "Polling " + report + "...");
-		final PollingResult<C, U> result = polling.getPollingFunction().poll(cachedElement.element);
+		final PollingResult<C, U> result = polling.getPollingFunction().poll(pollingContext);
 		logger.fine(() -> "Polling result: " + result);
 		if (result.isSuccess() && !report.isEmpty()) {
 			pilot.getActionReport().report(report);
@@ -240,8 +242,7 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 	}
 
 	protected ReportFunction<C> getDefaultReportFunction() {
-		return (component, componentShortName, text) -> defaultReportFunction.build(component, componentShortName,
-				text);
+		return (pc, text) -> defaultReportFunction.build(new PollingContext<>(pc.component, pc.description), text);
 	}
 
 	protected String reportNameOf(C c) {
@@ -249,31 +250,42 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 	}
 
 	/**
-	 * Waits until a component is edited
+	 * Waits until a component is checked/edited
 	 *
-	 * @param <U>     return type
-	 * @param polling
-	 * @param onFail
-	 * @return
+	 * @param <U>     returned value type
+	 * @param polling check/edition
+	 * @param onFail  action performed on failure
+	 * @return check/edition value
 	 */
-	public <U> U wait(final Polling<C, U> polling, final PollingResultFunction<C, U> onFail) {
+	public <U> U wait(final Polling<C, U> polling, final FailureHandler<C, U> onFail) {
 		return waitPollingSuccess(polling, pilot.getDefaultActionTimeout(), onFail);
 	}
 
 	/**
-	 * Waits until a component is edited, throwing a java assertion error if edition
-	 * failed
+	 * Waits until a component is edited, throwing a java assertion error in case of
+	 * failure
 	 *
 	 * @param <U>     return type
 	 * @param polling
 	 * @return
 	 */
 	public <U> U wait(final Polling<C, U> polling) {
-		return wait(polling, throwError());
+		return wait(polling, Factories.throwError());
+	}
+
+	/**
+	 * Waits until a component is checked, throwing an assertion error if the check
+	 *
+	 * @param <U>     returned value type
+	 * @param polling check/edition
+	 * @return check/edition value
+	 */
+	public boolean wait(Predicate<C> check, String report) {
+		return wait(Factories.satisfies(check).withReportText(report));
 	}
 
 	public boolean ifEnabled(final Polling<C, Boolean> polling, final Duration shortTimeout) {
-		return waitPollingSuccess(polling, shortTimeout, PollingResult.reportFailure(getDescription() + ": not found"));
+		return waitPollingSuccess(polling, shortTimeout, Factories.reportFailure(getDescription() + ": not found"));
 	}
 
 	/**
@@ -289,24 +301,24 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 	}
 
 	/**
-	 * @See EditionPolling.action
+	 * @See Factories.action
 	 */
 	public Polling<C, Boolean> action(final Consumer<C> action) {
-		return ActionPolling.action(action);
+		return Factories.action(action);
 	}
 
 	/**
-	 * @See StatePolling.assertion
+	 * @See Factories.assertion
 	 */
-	public Polling<C, Boolean> assertion(final Consumer<C> assertion) {
-		return StatePolling.assertion(assertion);
+	public Polling<C, Boolean> assertion(final Consumer<PollingContext<C>> assertion) {
+		return Factories.assertion(assertion);
 	}
 
 	/**
-	 * @See StatePolling.satisfies
+	 * @See Factories.satisfies
 	 */
 	public Polling<C, Boolean> satisfies(final Predicate<C> predicate) {
-		return StatePolling.satisfies(predicate);
+		return Factories.satisfies(predicate);
 	}
 
 }

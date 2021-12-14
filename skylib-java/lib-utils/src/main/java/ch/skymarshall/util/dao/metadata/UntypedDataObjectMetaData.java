@@ -35,8 +35,8 @@ public class UntypedDataObjectMetaData extends AbstractObjectMetaData<Object> {
 		super(dataType, attribNames);
 	}
 
-	public UntypedDataObjectManager<?> createUntypedObjectAccessorFor(final Object anObject) {
-		return new UntypedDataObjectManager<>(this, anObject);
+	public UntypedDataObjectManager createUntypedObjectAccessorFor(final Object anObject) {
+		return new UntypedDataObjectManager(this, anObject);
 	}
 
 }

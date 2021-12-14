@@ -62,6 +62,7 @@ public class AbstractGuiTest {
 	@AfterEach
 	public void closeGui() {
 		pilot.close();
+		System.out.print(pilot.getActionReport().getFormattedReport());
 	}
 
 }

@@ -1,5 +1,7 @@
 package ch.skymarshall.tcwriter.pilot.swing;
 
+import static ch.skymarshall.tcwriter.pilot.Factories.checkingThat;
+
 import javax.swing.JToggleButton;
 
 public class JToggleButtonPilot extends AbstractSwingComponent<JToggleButtonPilot, JToggleButton> {
@@ -9,11 +11,12 @@ public class JToggleButtonPilot extends AbstractSwingComponent<JToggleButtonPilo
 	}
 
 	public void waitSelected(final boolean expected) {
-		wait(assertEquals("check " + (expected ? "selected" : "not selected"), expected, JToggleButton::isSelected));
+		wait(satisfies(c -> c.isSelected() == expected)
+				.withReportText(checkingThat("component is " + (expected ? "selected" : "not selected"))));
 	}
 
 	public void setSelected(final boolean selected) {
-		wait(action(c -> c.setSelected(selected)).withReportText((selected ? "select" : "deselect")));
+		wait(action(c -> c.setSelected(selected)).withReportText((selected ? "selecting" : "deselecting")));
 	}
 
 }

@@ -1,8 +1,5 @@
 package ch.skymarshall.tcwriter.pilot.selenium;
 
-import static ch.skymarshall.tcwriter.pilot.PollingResult.onException;
-import static ch.skymarshall.tcwriter.pilot.PollingResult.value;
-
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -17,10 +14,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import ch.skymarshall.tcwriter.pilot.AbstractGuiComponent;
-import ch.skymarshall.tcwriter.pilot.ActionPolling;
+import ch.skymarshall.tcwriter.pilot.Factories;
 import ch.skymarshall.tcwriter.pilot.Polling;
 import ch.skymarshall.tcwriter.pilot.PollingResult;
-import ch.skymarshall.tcwriter.pilot.StatePolling;
 
 public class ElementPilot extends AbstractGuiComponent<ElementPilot, WebElement> {
 
@@ -105,7 +101,7 @@ public class ElementPilot extends AbstractGuiComponent<ElementPilot, WebElement>
 	private <U> PollingResult<WebElement, U> executeOnePolling(final Polling<WebElement, U> polling,
 			final Duration timeout) {
 		try {
-			return value(new WebDriverWait(pilot.getDriver(), timeout) //
+			return Factories.value(new WebDriverWait(pilot.getDriver(), timeout) //
 					.pollingEvery(pollingTime(timeout)) //
 					.ignoreAll(Arrays.asList(NoSuchElementException.class, StaleElementReferenceException.class,
 							ElementNotInteractableException.class, UnhandledAlertException.class))
@@ -118,24 +114,24 @@ public class ElementPilot extends AbstractGuiComponent<ElementPilot, WebElement>
 						}
 					}));
 		} catch (final TimeoutException e) {
-			return onException(e.getCause());
+			return Factories.onException(e.getCause());
 		}
 	}
 
 	public boolean wait(Consumer<WebElement> action) {
-		return wait(ActionPolling.action(action));
+		return wait(Factories.action(action));
 	}
 
 	public static Polling<WebElement, Boolean> isEnabled() {
-		return StatePolling.<WebElement>satisfies(WebElement::isEnabled).withReportText("is enabled");
+		return Factories.<WebElement>satisfies(WebElement::isEnabled).withReportText("is enabled");
 	}
 
 	public static Polling<WebElement, Boolean> click() {
-		return ActionPolling.action(WebElement::click).withReportText("clicked");
+		return Factories.action(WebElement::click).withReportText("clicked");
 	}
 
 	public boolean run(Consumer<WebElement> action, String name) {
-		return wait(ActionPolling.action(action).withReportText(name));
+		return wait(Factories.action(action).withReportText(name));
 	}
 
 }

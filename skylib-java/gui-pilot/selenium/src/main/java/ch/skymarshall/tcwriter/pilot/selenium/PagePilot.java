@@ -9,10 +9,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WrapsElement;
 import org.openqa.selenium.support.PageFactory;
 
-import ch.skymarshall.tcwriter.pilot.ActionPolling;
+import ch.skymarshall.tcwriter.pilot.Factories;
 import ch.skymarshall.tcwriter.pilot.Polling;
-import ch.skymarshall.tcwriter.pilot.StatePolling;
 
+@SuppressWarnings("java:S5960")
 public class PagePilot {
 
 	protected final SeleniumGuiPilot pilot;
@@ -69,7 +69,7 @@ public class PagePilot {
 	}
 
 	public boolean wait(Supplier<WebElement> element, Consumer<WebElement> action) {
-		return element(element).wait(ActionPolling.action(action).withReportText("unnamed action"));
+		return element(element).wait(Factories.action(action).withReportText("unnamed action"));
 	}
 
 	public boolean ifEnabled(Supplier<WebElement> element, final Polling<WebElement, Boolean> polling,
@@ -78,7 +78,7 @@ public class PagePilot {
 	}
 	
 	public Polling<WebElement, Boolean> textEquals(String expected) {
-		return StatePolling.<WebElement>assertion(e -> Assertions.assertEquals(expected, e.getText()))
+		return Factories.<WebElement>assertion(pc -> Assertions.assertEquals(expected, pc.component.getText(), pc.description))
 				.withReportText("text " + expected);
 	}
 }

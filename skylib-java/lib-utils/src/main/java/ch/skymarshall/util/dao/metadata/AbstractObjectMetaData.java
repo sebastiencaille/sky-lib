@@ -81,12 +81,12 @@ public class AbstractObjectMetaData<D> {
 		return new DataObjectManager<>(this, object);
 	}
 
-	public UntypedDataObjectManager<?> createUntypedAccessorTo(final D object) {
-		return new UntypedDataObjectManager<>(this, object);
+	public UntypedDataObjectManager createUntypedAccessorTo(final D object) {
+		return new UntypedDataObjectMetaData(dataType).createUntypedObjectAccessorFor(object);
 	}
 
 	public UntypedDataObjectMetaData createUntypedMetaData() {
-		return new UntypedDataObjectMetaData(dataType, attributes.keySet());
+		return new UntypedDataObjectMetaData(dataType);
 	}
 
 	protected void introspectClass(final Class<?> clazz, final boolean accessPrivateFields) {

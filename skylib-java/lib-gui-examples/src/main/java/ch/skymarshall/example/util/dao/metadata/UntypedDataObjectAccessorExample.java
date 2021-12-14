@@ -48,11 +48,11 @@ public interface UntypedDataObjectAccessorExample {
 			final ADataObject do1 = new ADataObject();
 			final DataObjectMetaData<ADataObject> metadata = new DataObjectMetaData<>(ADataObject.class);
 			log.appendIndentedLine("One can create a Data Object Accessor either from the Meta Data");
-			final UntypedDataObjectManager<?> accessor0 = metadata.createUntypedAccessorTo(do1);
+			final UntypedDataObjectManager accessor0 = metadata.createUntypedAccessorTo(do1);
 			log.indented(t -> t.appendIndentedLine(accessor0.toString()));
 
 			log.appendIndentedLine("Or from a factory");
-			final UntypedDataObjectManager<?> doAccessor = DataObjectManagerFactory.createFor(do1);
+			final UntypedDataObjectManager doAccessor = DataObjectManagerFactory.createFor(do1);
 			log.indented(t -> t.appendIndentedLine(doAccessor.toString()));
 
 			log.appendIndentedLine("Read/Write access using the DO's Accessor");

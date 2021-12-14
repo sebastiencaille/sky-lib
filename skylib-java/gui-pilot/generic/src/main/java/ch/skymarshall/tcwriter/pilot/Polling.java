@@ -1,17 +1,25 @@
 package ch.skymarshall.tcwriter.pilot;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import ch.skymarshall.tcwriter.pilot.PilotReport.ReportFunction;
 
 public class Polling<C, V> {
 
-	public interface PollingFunction<C, V> {
-		PollingResult<C, V> poll(C component);
+	public static class PollingContext<C> {
+		public final C component;
+		public final String description;
+
+		public PollingContext(C component, String description) {
+			this.component = component;
+			this.description = description;
+		}
 	}
 
+	public interface PollingFunction<C, V> {
+		PollingResult<C, V> poll(PollingContext<C> context);
+	}
 
 	private final Predicate<C> precondition;
 
@@ -68,13 +76,6 @@ public class Polling<C, V> {
 		return reportText;
 	}
 
-	public static <C> Polling<C, Boolean> success(final Consumer<C> action) {
-		return new Polling<>(null, c -> {
-			action.accept(c);
-			return PollingResult.success();
-		});
-	}
-
 	public ActionDelay getActionDelay() {
 		return actionDelay;
 	}
@@ -89,15 +90,6 @@ public class Polling<C, V> {
 	public Polling<C, V> followedBy(final ActionDelay actionDelay) {
 		this.actionDelay = actionDelay;
 		return this;
-	}
-
-	/**
-	 * No precondition tested
-	 *
-	 * @return a precondition that is always true
-	 */
-	public static <C> Predicate<C> none() {
-		return p -> true;
 	}
 
 }

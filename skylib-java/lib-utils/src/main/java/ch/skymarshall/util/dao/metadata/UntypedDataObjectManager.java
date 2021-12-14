@@ -21,12 +21,13 @@ package ch.skymarshall.util.dao.metadata;
  *
  * @param <D>
  */
-public class UntypedDataObjectManager<D> extends DataObjectManager<D> {
+public class UntypedDataObjectManager extends DataObjectManager<Object> {
 
-	public UntypedDataObjectManager(final AbstractObjectMetaData<D> objectMetaData, final D object) {
+	public UntypedDataObjectManager(final AbstractObjectMetaData<Object> objectMetaData, final Object object) {
 		super(objectMetaData, object);
 	}
 
+	
 	@Override
 	public void copyInto(final Object object) {
 

@@ -1,28 +1,22 @@
 package ch.skymarshall.tcwriter.it.api;
 
+import java.util.function.Function;
+
 import ch.skymarshall.tcwriter.annotations.TCApi;
+import ch.skymarshall.tcwriter.it.TCWriterPage;
+import ch.skymarshall.tcwriter.pilot.swing.JTablePilot;
 
 @TCApi(description = "Action parameter selection", humanReadable = "Action parameter selection", isSelector = true)
-public class ParameterSelector {
-
-	private final String tableName;
-
-	public ParameterSelector(final String tableName) {
-		this.tableName = tableName;
-	}
-
-	public String getTableName() {
-		return tableName;
-	}
+public interface ParameterSelector extends Function<TCWriterPage, JTablePilot> {
 
 	@TCApi(description = "Current selector", humanReadable = "|the selector")
 	public static ParameterSelector selector() {
-		return new ParameterSelector("selector-valueTable");
+		return p -> p.selectorValue;
 	}
 
 	@TCApi(description = "Current parameter", humanReadable = "|the parameter")
 	public static ParameterSelector parameter() {
-		return new ParameterSelector("param0-valueTable");
+		return p -> p.parameters0Value;
 	}
 
 }

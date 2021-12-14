@@ -18,17 +18,18 @@ import ch.skymarshall.tcwriter.it.api.StepSelector;
 import ch.skymarshall.tcwriter.it.api.TestSessionRole;
 import ch.skymarshall.tcwriter.it.api.TestWriterRole;
 import ch.skymarshall.tcwriter.pilot.ActionPolling;
-import ch.skymarshall.tcwriter.pilot.PollingResult;
-import ch.skymarshall.tcwriter.pilot.swing.JTablePilot;
+import ch.skymarshall.tcwriter.pilot.Factories;
 
 @SuppressWarnings("java:S5960")
 public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 
 	private static final String ACTOR_TEST_WRITER = "Test writer";
+	private final TCWriterPage tcWriterPage;
 	private final TCGuiPilot guiPilot;
 
 	public LocalTCWriterRole(final TCGuiPilot guiPilot) {
 		this.guiPilot = guiPilot;
+		this.tcWriterPage = new TCWriterPage(guiPilot);
 	}
 
 	private StepEdition[] basicTestContents() {
@@ -51,16 +52,16 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 
 	@Override
 	public void selectStep(final StepSelector selector) {
-		selector.select(guiPilot);
+		selector.accept(tcWriterPage);
 	}
 
 	@Override
 	public void editStep(final StepSelector selector, final StepEdition edition) {
-		selector.select(guiPilot);
-		guiPilot.list("Actors").select(edition.getActor());
-		guiPilot.list("Actions").select(edition.getAction());
-		guiPilot.list("Selectors").select(edition.getSelector());
-		guiPilot.list("Parameters0").select(edition.getParameter());
+		selector.accept(tcWriterPage);
+		tcWriterPage.actors.select(edition.getActor());
+		tcWriterPage.actions.select(edition.getAction());
+		tcWriterPage.selectors.select(edition.getSelector());
+		tcWriterPage.parameters0.select(edition.getParameter());
 	}
 
 	@Override
@@ -70,16 +71,16 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	}
 
 	private void applyStepEdition() {
-		guiPilot.button("ApplyStep").click();
+		tcWriterPage.applyStep.click();
 	}
 
 	@Override
 	public void checkStep(final StepSelector selector, final StepEdition edition) {
-		selector.select(guiPilot);
-		guiPilot.list("Actors").checkSelected(edition.getActor());
-		guiPilot.list("Actions").checkSelected(edition.getAction());
-		guiPilot.list("Selectors").checkSelected(edition.getSelector());
-		guiPilot.list("Parameters0").checkSelected(edition.getParameter());
+		selector.accept(tcWriterPage);
+		tcWriterPage.actors.checkSelected(edition.getActor());
+		tcWriterPage.actions.checkSelected(edition.getAction());
+		tcWriterPage.selectors.checkSelected(edition.getSelector());
+		tcWriterPage.parameters0.checkSelected(edition.getParameter());
 	}
 
 	/**
@@ -87,22 +88,23 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	 */
 	@Override
 	public void checkHumanReadable(final StepSelector selector, final String humanReadable) {
-		selector.select(guiPilot);
-		final JTablePilot stepsTable = guiPilot.table("StepsTable");
-		stepsTable.wait(stepsTable.assertion(t -> {
-			final Object value = ((StepsTableModel) t.getModel()).getHumanReadable(t.getSelectedRow());
+		selector.accept(tcWriterPage);
+
+		tcWriterPage.stepsTable.wait(tcWriterPage.stepsTable.assertion(pc -> {
+			JTable component = pc.component;
+			final Object value = ((StepsTableModel) component.getModel()).getHumanReadable(component.getSelectedRow());
 			Assertions.assertEquals(humanReadable, value.toString());
-		}).withReportText("Check human readable text: " + humanReadable));
+		}).withReportText("checking human readable text: " + humanReadable));
 	}
 
 	@Override
 	public void updateParameter(final ParameterSelector selector, final ParameterValue value) {
-		guiPilot.table(selector.getTableName()).wait(new ActionPolling<JTable, Boolean>(t -> {
-			updateValue(t, value.getKeyValue1());
-			updateValue(t, value.getKeyValue2());
-			updateValue(t, value.getKeyValue3());
-			return PollingResult.success();
-		}).withReportText("Set parameter values:" + value), PollingResult.assertFail("Setting " + value));
+		selector.apply(tcWriterPage).wait(new ActionPolling<JTable, Boolean>(pc -> {
+			updateValue(pc.component, value.getKeyValue1());
+			updateValue(pc.component, value.getKeyValue2());
+			updateValue(pc.component, value.getKeyValue3());
+			return Factories.success();
+		}).withReportText(Factories.settingValue("parameter", value)));
 		applyStepEdition();
 	}
 

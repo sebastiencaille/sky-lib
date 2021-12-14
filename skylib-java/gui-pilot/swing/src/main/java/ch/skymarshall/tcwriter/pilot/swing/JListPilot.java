@@ -1,11 +1,14 @@
 package ch.skymarshall.tcwriter.pilot.swing;
 
+import static ch.skymarshall.tcwriter.pilot.Factories.checkingValue;
+import static ch.skymarshall.tcwriter.pilot.Factories.failure;
+import static ch.skymarshall.tcwriter.pilot.Factories.success;
+
 import javax.swing.JList;
 
 import org.junit.jupiter.api.Assertions;
 
 import ch.skymarshall.tcwriter.pilot.Polling;
-import ch.skymarshall.tcwriter.pilot.PollingResult;
 
 @SuppressWarnings("java:S5960")
 public class JListPilot extends AbstractSwingComponent<JListPilot, JList> {
@@ -30,24 +33,25 @@ public class JListPilot extends AbstractSwingComponent<JListPilot, JList> {
 					c.setSelectedIndex(i);
 				}
 			}
-		}).withReportText("select element " + value));
+		}).withReportText("selecting element " + value));
 		Assertions.assertTrue(getCachedElement().getSelectedIndex() >= 0,
-				() -> "Value [" + name + ":" + value + "] must have been selected");
+				() -> name + ": element must have been selected: " + value);
 	}
 
-	public void checkSelected(final String value) {
-		if (value == null) {
+	public void checkSelected(final String expected) {
+		if (expected == null) {
 			return;
 		}
-		wait(new Polling<>(this::canCheck, c -> {
-			if (c.getSelectedIndex() < 0) {
-				return PollingResult.failure("No element selected");
+		wait(new Polling<>(this::canCheck, pc -> {
+			JList component = pc.component;
+			if (component.getSelectedIndex() < 0) {
+				return failure("No element selected");
 			}
-			final String current = c.getModel().getElementAt(c.getSelectedIndex()).toString();
-			if (!value.equals(current)) {
-				return PollingResult.failure("Wrong element selected (" + current + ")");
+			final String current = component.getModel().getElementAt(component.getSelectedIndex()).toString();
+			if (!expected.equals(current)) {
+				return failure("Wrong element selected (" + current + ")");
 			}
-			return PollingResult.success();
-		}).withReportText("check element " + value));
+			return success();
+		}).withReportText(checkingValue(expected)));
 	}
 }

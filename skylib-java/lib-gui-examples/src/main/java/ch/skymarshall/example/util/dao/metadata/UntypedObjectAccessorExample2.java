@@ -51,7 +51,7 @@ public interface UntypedObjectAccessorExample2 {
 
 	}
 
-	public static String getAttributeOf(final UntypedDataObjectManager<?> accessor) {
+	public static String getAttributeOf(final UntypedDataObjectManager accessor) {
 		return accessor.getValueOf(AN_ATTRIBUTE, String.class);
 	}
 
@@ -62,22 +62,22 @@ public interface UntypedObjectAccessorExample2 {
 					TextFormatter.safeOutput(output));
 			log.setIndentationManager(new ArrowIndentationManager());
 
-			log.appendIndentedLine("Content of do1");
+			log.appendIndentedLine("Content of data object 1");
 			final ADataObject do1 = new ADataObject();
 			do1.setAnAttribute("data1");
 			final DataObjectManager<ADataObject> accessor1 = DataObjectManagerFactory.createFor(ADataObject.class, do1);
 			log.indented(t -> t.appendIndentedLine(getAttributeOf(accessor1.getUntypedAccessor())));
 
-			log.appendIndentedLine("Content of do2");
+			log.appendIndentedLine("Content of data object 2");
 			final ASecondDataObject do2 = new ASecondDataObject();
 			do2.setAnAttribute("data2");
-			final UntypedDataObjectManager<?> accessor2 = DataObjectManagerFactory.createFor(do2);
+			final UntypedDataObjectManager accessor2 = DataObjectManagerFactory.createFor(do2);
 			log.indented(t -> t.appendIndentedLine(getAttributeOf(accessor2)));
 
-			log.appendIndentedLine("Content of do3");
+			log.appendIndentedLine("Content of data object 3");
 			final AThirdDataObject do3 = new AThirdDataObject();
 			do3.setAnAttribute("data3");
-			final UntypedDataObjectManager<?> accessor3 = DataObjectManagerFactory.createFor(do3);
+			final UntypedDataObjectManager accessor3 = DataObjectManagerFactory.createFor(do3);
 			log.indented(t -> t.appendIndentedLine(getAttributeOf(accessor3)));
 		}
 	}

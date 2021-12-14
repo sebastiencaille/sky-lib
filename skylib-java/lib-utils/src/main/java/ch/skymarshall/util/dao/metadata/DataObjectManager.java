@@ -69,6 +69,10 @@ public class DataObjectManager<D> {
 		return new UntypedDataObjectMetaData(metaData.getDataType(), accessPrivateFields);
 	}
 
+	public UntypedDataObjectManager getUntypedAccessor() {
+		return metaData.createUntypedAccessorTo(object);
+	}
+
 	public Object getValueOf(final String name) {
 		return metaData.getAttribute(name).getValueOf(object);
 	}
@@ -90,10 +94,6 @@ public class DataObjectManager<D> {
 
 	public void copyInto(final D object) {
 		metaData.copy(object, object);
-	}
-
-	public UntypedDataObjectManager<?> getUntypedAccessor() {
-		return metaData.createUntypedAccessorTo(object);
 	}
 
 	public D createNewObject()

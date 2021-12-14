@@ -1,6 +1,6 @@
 package ch.skymarshall.tcwriter.pilot.selenium;
 
-import static ch.skymarshall.tcwriter.pilot.ActionPolling.action;
+import static ch.skymarshall.tcwriter.pilot.Factories.action;
 import static ch.skymarshall.tcwriter.pilot.selenium.ElementPilot.click;
 
 import java.time.Duration;
@@ -89,6 +89,7 @@ public class ExamplePage extends PagePilot {
 
 	public void elementChangeTest() {
 		wait(() -> this.elementChangeTest, click());
+		// Explicitly test using WebElement as source
 		wait(() -> this.elementChange.findElement(By.id("TextChange")), textEquals("Hello again"));
 	}
 

@@ -1,8 +1,13 @@
 package ch.skymarshall.tcwriter.pilot.swing;
 
+import static ch.skymarshall.tcwriter.pilot.Factories.checkingValue;
+import static ch.skymarshall.tcwriter.pilot.Factories.settingValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
+@SuppressWarnings("java:S5960")
 public class JTextFieldPilot extends AbstractSwingComponent<JTextFieldPilot, JTextComponent> {
 
 	public JTextFieldPilot(final SwingPilot pilot, final String name) {
@@ -29,14 +34,14 @@ public class JTextFieldPilot extends AbstractSwingComponent<JTextFieldPilot, JTe
 			if (t instanceof JTextField) {
 				doPressReturn(t);
 			}
-		}).withReportText("set text \'" + value + "\'"));
+		}).withReportText(settingValue(value)));
 	}
 
 	public void checkTextValue(final String expected) {
 		if (expected == null) {
 			return;
 		}
-		wait(assertEquals("check text", expected, JTextComponent::getText));
+		wait(assertion(pc -> assertEquals(expected, pc.component.getText(), pc.description)).withReportText(checkingValue(expected)));
 	}
 
 }

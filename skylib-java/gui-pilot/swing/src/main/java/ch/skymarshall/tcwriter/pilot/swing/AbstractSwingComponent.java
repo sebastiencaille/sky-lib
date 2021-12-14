@@ -2,19 +2,15 @@ package ch.skymarshall.tcwriter.pilot.swing;
 
 import java.awt.event.KeyEvent;
 import java.time.Duration;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
-import org.junit.jupiter.api.Assertions;
-
 import ch.skymarshall.tcwriter.pilot.AbstractGuiComponent;
+import ch.skymarshall.tcwriter.pilot.Factories;
 import ch.skymarshall.tcwriter.pilot.Polling;
 import ch.skymarshall.tcwriter.pilot.PollingResult;
-import ch.skymarshall.tcwriter.pilot.PollingResult.PollingResultFunction;
-import ch.skymarshall.tcwriter.pilot.StatePolling;
+import ch.skymarshall.tcwriter.pilot.PollingResult.FailureHandler;
 
 @SuppressWarnings("java:S5960")
 public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C extends JComponent>
@@ -35,7 +31,7 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 	protected String getDescription() {
 		return toString();
 	}
-	
+
 	@Override
 	public String toString() {
 		return clazz.getSimpleName() + "[" + name + "]";
@@ -45,7 +41,7 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 	protected String reportNameOf(C c) {
 		return c.getClass().getSimpleName() + "[" + c.getName() + "]";
 	}
-	
+
 	@Override
 	protected C loadGuiComponent() {
 		try {
@@ -67,7 +63,7 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 
 	@Override
 	protected <U> U waitPollingSuccess(final Polling<C, U> polling, final Duration timeout,
-			final PollingResultFunction<C, U> onFail) {
+			final FailureHandler<C, U> onFail) {
 		if (SwingUtilities.isEventDispatchThread()) {
 			throw new IllegalStateException("Action wait must not run in Swing thread");
 		}
@@ -81,22 +77,13 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 		return (PollingResult<C, U>) response[0];
 	}
 
-	public void check(final String message, final Predicate<C> componentPredicate) {
-		wait(assertion(t -> Assertions.assertTrue(componentPredicate.test(t), getDescription()))
-				.withReportText(message));
-	}
-
-	public <T> Polling<C, Boolean> assertEquals(final String message, T expected, Function<C, T> actual) {
-		return assertion(c -> Assertions.assertEquals(expected, actual.apply(c), getDescription()))
-				.withReportText(message + ": expected '" + expected + '\'');
-	}
 
 	public void waitEnabled() {
-		wait(StatePolling.<C>satisfies(JComponent::isEnabled).withReportText("is enabled"));
+		wait(Factories.<C>satisfies(JComponent::isEnabled).withReportText(Factories.checkingThat("component is enabled")));
 	}
 
 	public void waitDisabled() {
-		wait(StatePolling.<C>satisfies(c -> !c.isEnabled()).withReportText("is disabled"));
+		wait(Factories.<C>satisfies(c -> !c.isEnabled()).withReportText(Factories.checkingThat("component is disabled")));
 	}
 
 	public static void doPressReturn(final JComponent t) {

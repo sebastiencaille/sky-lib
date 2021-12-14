@@ -32,6 +32,11 @@ public abstract class AbstractAttributeMetaData<T> {
 
 	protected final Class<?> type;
 
+	/**
+	 * Gets the value of the object's attribute represented by this instance
+	 * @param from 
+	 * @return the value
+	 */
 	public abstract Object getValueOf(T from);
 
 	public abstract void setValueOf(T to, Object value);

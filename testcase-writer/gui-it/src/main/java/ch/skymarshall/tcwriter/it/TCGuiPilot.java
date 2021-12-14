@@ -5,8 +5,7 @@ import ch.skymarshall.tcwriter.pilot.swing.SwingPilot;
 
 public class TCGuiPilot extends SwingPilot {
 
-	public static final String STEPS_TABLE = "StepsTable";
-	public static final String ADD_STEP = "AddStep";
+
 	private final TCWriterGui root;
 
 	public TCGuiPilot(final TCWriterGui root) {

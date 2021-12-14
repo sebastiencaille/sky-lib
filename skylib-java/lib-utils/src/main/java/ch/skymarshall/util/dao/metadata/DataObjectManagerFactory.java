@@ -31,7 +31,7 @@ public class DataObjectManagerFactory {
 	 * Creates an Accessor that does not enforce the data types in its methods. The
 	 * meta-data are extracted from the data's class.
 	 */
-	public static <T> UntypedDataObjectManager<?> createFor(final T data) {
+	public static <T> UntypedDataObjectManager createFor(final T data) {
 		return new UntypedDataObjectMetaData(data.getClass()).createUntypedAccessorTo(data);
 	}
 

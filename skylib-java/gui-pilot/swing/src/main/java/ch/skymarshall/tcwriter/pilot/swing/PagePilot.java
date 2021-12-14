@@ -2,9 +2,7 @@ package ch.skymarshall.tcwriter.pilot.swing;
 
 import java.lang.reflect.InvocationTargetException;
 
-import ch.skymarshall.util.dao.metadata.AbstractObjectMetaData;
 import ch.skymarshall.util.dao.metadata.DataObjectManagerFactory;
-import ch.skymarshall.util.dao.metadata.UntypedDataObjectManager;
 
 /**
  * Inspired by the Selenium's Page concept

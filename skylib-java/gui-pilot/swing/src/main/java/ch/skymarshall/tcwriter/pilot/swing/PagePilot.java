@@ -14,7 +14,7 @@ public class PagePilot {
 
 	private SwingPilot pilot;
 
-	public PagePilot(SwingPilot pilot) {
+	protected PagePilot(SwingPilot pilot) {
 		this.pilot = pilot;
 	}
 

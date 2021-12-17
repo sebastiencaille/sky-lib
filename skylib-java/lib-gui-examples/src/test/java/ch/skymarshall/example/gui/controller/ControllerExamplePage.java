@@ -43,7 +43,6 @@ public class ControllerExamplePage extends PagePilot {
 
 	public ControllerExamplePage(SwingPilot pilot) {
 		super(pilot);
-		initialize();
 	}
 
 }

@@ -15,11 +15,11 @@ import ch.skymarshall.tcwriter.pilot.Polling;
 @SuppressWarnings("java:S5960")
 public class PagePilot {
 
-	protected final SeleniumGuiPilot pilot;
+	protected final SeleniumPilot pilot;
 
 	private boolean invalid = true;
 
-	public PagePilot(SeleniumGuiPilot pilot) {
+	public PagePilot(SeleniumPilot pilot) {
 		this.pilot = pilot;
 	}
 

@@ -30,7 +30,7 @@ public class ExamplePage extends PagePilot {
 	@FindBy(id = "NotExisting")
 	public WebElement notExistingElement;
 
-	public ExamplePage(SeleniumGuiPilot pilot) {
+	public ExamplePage(SeleniumPilot pilot) {
 		super(pilot);
 	}
 

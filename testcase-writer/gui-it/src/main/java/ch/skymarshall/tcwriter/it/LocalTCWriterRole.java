@@ -29,7 +29,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 
 	public LocalTCWriterRole(final TCGuiPilot guiPilot) {
 		this.guiPilot = guiPilot;
-		this.tcWriterPage = new TCWriterPage(guiPilot);
+		this.tcWriterPage = guiPilot.page(TCWriterPage::new);
 	}
 
 	private StepEdition[] basicTestContents() {

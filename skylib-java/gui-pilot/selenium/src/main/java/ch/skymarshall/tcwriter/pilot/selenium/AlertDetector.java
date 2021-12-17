@@ -16,7 +16,7 @@ public class AlertDetector {
 
 	}
 
-	public static void withAlert(final SeleniumGuiPilot pilot, final Runnable runnable) {
+	public static void withAlert(final SeleniumPilot pilot, final Runnable runnable) {
 
 		final ModalDialogDetector detector = new ModalDialogDetector(() -> AlertDetector.listAlerts(pilot, null));
 		try (NoExceptionCloseable dialogCloseable = ModalDialogDetector.withModalDialogDetection(detector)) {
@@ -24,7 +24,7 @@ public class AlertDetector {
 		}
 	}
 
-	public static List<ModalDialogDetector.PollingResult> listAlerts(final SeleniumGuiPilot pilot,
+	public static List<ModalDialogDetector.PollingResult> listAlerts(final SeleniumPilot pilot,
 			final Function<AlertPilot, PollingResult> errorChecks) {
 
 		final AlertPilot seleniumAlert = new AlertPilot(pilot);

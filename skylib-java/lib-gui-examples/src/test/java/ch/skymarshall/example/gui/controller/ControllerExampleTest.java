@@ -30,7 +30,7 @@ class ControllerExampleTest {
 		final SwingPilot pilot = new SwingPilot(view[0]);
 		pilot.setDefaultActionTimeout(Duration.ofSeconds(1));
 
-		ControllerExamplePage page = new ControllerExamplePage(pilot);
+		ControllerExamplePage page = pilot.page(ControllerExamplePage::new);
 
 		page.booleanEditor.setSelected(true);
 		page.booleanEditorCheck.waitEnabled();

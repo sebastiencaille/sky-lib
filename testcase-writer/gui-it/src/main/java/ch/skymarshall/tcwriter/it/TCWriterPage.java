@@ -38,6 +38,5 @@ public class TCWriterPage extends PagePilot {
 
 	public TCWriterPage(SwingPilot pilot) {
 		super(pilot);
-		initialize();
 	}
 }

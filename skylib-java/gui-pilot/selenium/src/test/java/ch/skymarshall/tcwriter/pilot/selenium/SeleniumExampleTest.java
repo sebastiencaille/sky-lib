@@ -82,7 +82,7 @@ class SeleniumExampleTest {
 
 	/* **************************** TESTS **************************** */
 
-	private SeleniumGuiPilot pilot;
+	private SeleniumPilot pilot;
 
 	@BeforeAll
 	public static void initLogger() {
@@ -95,7 +95,7 @@ class SeleniumExampleTest {
 
 	@BeforeEach
 	public void createPilot() {
-		pilot = new SeleniumGuiPilot(driver);
+		pilot = new SeleniumPilot(driver);
 	}
 
 	@AfterEach
@@ -109,7 +109,7 @@ class SeleniumExampleTest {
 
 		pilot.getDriver().get("http://localhost:8080/example1.html");
 
-		ExamplePage mainPage = new ExamplePage(pilot);
+		ExamplePage mainPage = pilot.page(ExamplePage::new);
 
 		mainPage.testEnable();
 
@@ -118,7 +118,7 @@ class SeleniumExampleTest {
 		mainPage.checkDialogHandled();
 
 		mainPage.clickOnMissingButton();
-		
+
 		mainPage.elementChangeTest();
 
 		Log.of(this).info(pilot.getActionReport().getFormattedReport());

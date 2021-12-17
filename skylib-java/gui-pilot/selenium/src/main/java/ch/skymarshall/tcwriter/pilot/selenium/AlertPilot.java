@@ -8,9 +8,9 @@ import ch.skymarshall.tcwriter.pilot.Factories;
 
 public class AlertPilot extends AbstractGuiComponent<AlertPilot, Alert> {
 
-	private final SeleniumGuiPilot pilot;
+	private final SeleniumPilot pilot;
 
-	public AlertPilot(final SeleniumGuiPilot pilot) {
+	public AlertPilot(final SeleniumPilot pilot) {
 		super(pilot);
 		this.pilot = pilot;
 	}

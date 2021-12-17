@@ -19,6 +19,5 @@ public class ModelExamplePage extends PagePilot {
 
 	public ModelExamplePage(SwingPilot pilot) {
 		super(pilot);
-		initialize();
 	}
 }

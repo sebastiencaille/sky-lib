@@ -193,6 +193,12 @@ public class SwingPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 		});
 
 	}
+	
+	public <C extends PagePilot> C page(Function<SwingPilot, C> pageFactory) {
+		C page = pageFactory.apply(this);
+		page.initialize();
+		return page; 
+	}
 
 	public JButtonPilot button(final String name) {
 		return new JButtonPilot(this, name);

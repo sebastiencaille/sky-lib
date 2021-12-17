@@ -8,11 +8,11 @@ import org.openqa.selenium.WebDriver;
 import ch.skymarshall.tcwriter.pilot.ModalDialogDetector;
 import ch.skymarshall.tcwriter.pilot.ModalDialogDetector.PollingResult;
 
-public class SeleniumGuiPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
+public class SeleniumPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 
 	private final WebDriver driver;
 
-	public SeleniumGuiPilot(final WebDriver driver) {
+	public SeleniumPilot(final WebDriver driver) {
 		this.driver = driver;
 	}
 
@@ -28,6 +28,10 @@ public class SeleniumGuiPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 		return new AlertPilot(this);
 	}
 
+	public <C extends PagePilot> C page(Function<SeleniumPilot, C> factory) {
+		return factory.apply(this);
+	}
+
 	@Override
 	protected ModalDialogDetector createDefaultModalDialogDetector() {
 		return new ModalDialogDetector(() -> AlertDetector.listAlerts(this, null));
@@ -36,6 +40,5 @@ public class SeleniumGuiPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 	public void expectModalDialog(final Function<AlertPilot, PollingResult> check) {
 		setCurrentModalDialogDetector(new ModalDialogDetector(() -> AlertDetector.listAlerts(this, check)));
 	}
-
 
 }

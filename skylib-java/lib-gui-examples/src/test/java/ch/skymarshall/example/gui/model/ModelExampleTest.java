@@ -32,7 +32,7 @@ class ModelExampleTest {
 		final SwingPilot pilot = new SwingPilot(view[0]);
 		pilot.setDefaultActionTimeout(Duration.ofSeconds(1));
 
-		ModelExamplePage page = new ModelExamplePage(pilot);
+		ModelExamplePage page = pilot.page(ModelExamplePage::new);
 
 		page.listTable.wait(Factories.<JTable>assertion(pc -> {
 			JTable component = pc.component;

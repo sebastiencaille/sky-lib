@@ -1,19 +1,15 @@
 package ch.skymarshall.tcwriter.pilot.selenium;
 
-import java.time.Duration;
 import java.util.function.Consumer;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 
 import ch.skymarshall.tcwriter.pilot.AbstractComponentPilot;
 import ch.skymarshall.tcwriter.pilot.Factories;
 import ch.skymarshall.tcwriter.pilot.Polling;
 import ch.skymarshall.tcwriter.pilot.PollingResult;
-import ch.skymarshall.util.helpers.Poller;
-import ch.skymarshall.util.helpers.Poller.DelayFunction;
 
 public class ElementPilot extends AbstractComponentPilot<ElementPilot, WebElement> {
 
@@ -67,18 +63,11 @@ public class ElementPilot extends AbstractComponentPilot<ElementPilot, WebElemen
 	}
 
 	@Override
-	protected Poller createPoller(Duration timeout, Duration firstDelay, DelayFunction delayFunction) {
-		return new SeleniumPoller(pilot.getDriver(), timeout, firstDelay, delayFunction);
-	}
-
-	@Override
-	protected <U, E extends Exception> PollingResult<WebElement, U> waitPollingSuccessLoop(
-			Polling<WebElement, U> polling) {
-		try {
-			return super.waitPollingSuccessLoop(polling);
-		} catch (TimeoutException e) {
-			return Factories.onException(e);
-		}
+	protected <U> PollingResult<WebElement, U> waitPollingSuccessLoop(final Polling<WebElement, U> polling) {
+		polling.initialize(this);
+		return new SeleniumPoller(pilot.getDriver(), polling.getTimeout(), polling.getFirstDelay(),
+				polling.getDelayFunction()).run(p -> executePolling(p, polling), PollingResult::isSuccess,
+						Factories::onException);
 	}
 
 	@Override

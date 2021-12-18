@@ -14,7 +14,6 @@ import ch.skymarshall.tcwriter.pilot.PilotReport.ReportFunction;
 import ch.skymarshall.tcwriter.pilot.PollingResult.FailureHandler;
 import ch.skymarshall.util.helpers.NoExceptionCloseable;
 import ch.skymarshall.util.helpers.Poller;
-import ch.skymarshall.util.helpers.Poller.DelayFunction;
 
 /**
  *
@@ -122,10 +121,6 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 		return (pc, text) -> pilot.getReportFunction().build(PollingContext.generic(pc), text);
 	}
 
-	protected Poller createPoller(Duration timeout, Duration firstDelay, DelayFunction delayFunction) {
-		return new Poller(timeout, firstDelay, delayFunction);
-	}
-
 	/**
 	 * Adds a post-action, which is executed once action is finished
 	 *
@@ -178,9 +173,10 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	 * @param timeout
 	 * @return a polling result, either successful or failure
 	 */
-	protected <U, E extends Exception> PollingResult<C, U> waitPollingSuccessLoop(final Polling<C, U> polling) throws E {
+	protected <U> PollingResult<C, U> waitPollingSuccessLoop(final Polling<C, U> polling) {
 		polling.initialize(this);
-		return polling.getContext().poller.run(() -> executePolling(polling), PollingResult::isSuccess);
+		return new Poller(polling.getTimeout(), polling.getFirstDelay(), polling.getDelayFunction())
+				.run(p -> executePolling(p, polling), PollingResult::isSuccess);
 	}
 
 	/**
@@ -191,7 +187,7 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	 * @param applier
 	 * @return
 	 */
-	protected <U> PollingResult<C, U> executePolling(final Polling<C, U> polling) {
+	protected <U> PollingResult<C, U> executePolling(Poller poller, final Polling<C, U> polling) {
 
 		final Optional<PollingResult<C, U>> failure = preparePolling(polling);
 		if (failure.isPresent()) {

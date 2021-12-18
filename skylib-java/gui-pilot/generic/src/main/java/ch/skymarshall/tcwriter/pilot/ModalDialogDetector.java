@@ -164,13 +164,13 @@ public class ModalDialogDetector {
 		return this::close;
 	}
 
-	public synchronized PollingResult getCheckResult() {
+	public synchronized PollingResult getPollingResult(Poller poller) {
 		return foundHandledDialog;
 	}
 
 	public boolean waitModalDialogHandled(final FailureHandler<ModalDialogDetector.PollingResult, Boolean> onFail) {
 		Poller poller = new Poller(timeout.get(), Duration.ofMillis(100), p -> Duration.ofMillis(100));
-		PollingResult result = poller.run(this::getCheckResult, Objects::nonNull);
+		PollingResult result = poller.run(this::getPollingResult, Objects::nonNull);
 		if (result != null) {
 			return true;
 		}

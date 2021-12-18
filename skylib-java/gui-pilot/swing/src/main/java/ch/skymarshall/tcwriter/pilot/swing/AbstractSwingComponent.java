@@ -10,8 +10,8 @@ import ch.skymarshall.tcwriter.pilot.Factories;
 import ch.skymarshall.tcwriter.pilot.Polling;
 import ch.skymarshall.tcwriter.pilot.PollingResult;
 import ch.skymarshall.tcwriter.pilot.PollingResult.FailureHandler;
+import ch.skymarshall.util.helpers.Poller;
 
-@SuppressWarnings("java:S5960")
 public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C extends JComponent>
 		extends AbstractComponentPilot<G, C> {
 
@@ -69,9 +69,9 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 	}
 
 	@Override
-	protected <U> PollingResult<C, U> executePolling(final Polling<C, U> polling) {
+	protected <U> PollingResult<C, U> executePolling(Poller poller, final Polling<C, U> polling) {
 		final Object[] response = new Object[1];
-		SwingPilot.invokeAndWait(() -> response[0] = super.executePolling(polling));
+		SwingPilot.invokeAndWait(() -> response[0] = super.executePolling(poller, polling));
 		return (PollingResult<C, U>) response[0];
 	}
 

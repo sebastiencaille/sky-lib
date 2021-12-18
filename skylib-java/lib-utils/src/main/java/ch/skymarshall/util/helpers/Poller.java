@@ -3,7 +3,6 @@ package ch.skymarshall.util.helpers;
 import java.time.Duration;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 public class Poller {
 
@@ -46,13 +45,13 @@ public class Poller {
 		}
 	}
 
-	public <T, E extends Exception> T run(Supplier<T> polling, Predicate<T> isSuccess) throws E {
+	public <T> T run(Function<Poller, T> polling, Predicate<T> isSuccess) {
 		beforeRun();
 		sleep(firstDelay);
 		T result;
 		do {
 			executionCount++;
-			result = polling.get();
+			result = polling.apply(this);
 			if (isSuccess.test(result)) {
 				return result;
 			}

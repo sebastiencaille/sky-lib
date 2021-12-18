@@ -7,6 +7,7 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import ch.skymarshall.util.helpers.Poller;
 import ch.skymarshall.util.helpers.Poller.DelayFunction;
 
 class ComponentTest {
@@ -30,9 +31,9 @@ class ComponentTest {
 		}
 
 		@Override
-		protected <U> PollingResult<Object, U> callPollingFunction(Polling<Object, U> polling) {
-			delays.add(polling.getContext().poller.timeTracker.elapsedTimeMs());
-			return super.callPollingFunction(polling);
+		protected <U> PollingResult<Object, U> executePolling(Poller poller, Polling<Object, U> polling) {
+			delays.add(poller.timeTracker.elapsedTimeMs());
+			return super.executePolling(poller, polling);
 		}
 
 		@Override

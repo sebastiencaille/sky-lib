@@ -19,7 +19,7 @@ public class Polling<C, V> {
 
 	private Overridable<AbstractComponentPilot<?, C>, Duration> timeout = new Overridable<>(
 			AbstractComponentPilot::getDefaultPollingTimeout);
-	private Overridable<AbstractComponentPilot<?, C>, Duration> initialDelay = new Overridable<>(
+	private Overridable<AbstractComponentPilot<?, C>, Duration> firstDelay = new Overridable<>(
 			AbstractComponentPilot::getDefaultPollingFirstDelay);
 	private Overridable<AbstractComponentPilot<?, C>, Poller.DelayFunction> delayFunction = new Overridable<>(
 			AbstractComponentPilot::getDefaultPollingDelayFunction);
@@ -53,8 +53,12 @@ public class Polling<C, V> {
 		return timeout.get();
 	}
 
-	public Duration getInitialDelay() {
-		return initialDelay.get();
+	public Duration getFirstDelay() {
+		return firstDelay.get();
+	}
+	
+	public Poller.DelayFunction getDelayFunction() {
+		return delayFunction.get();
 	}
 
 	public ReportFunction<C> getReportFunction() {
@@ -74,8 +78,8 @@ public class Polling<C, V> {
 		return this;
 	}
 
-	public Polling<C, V> withInitialDelay(Duration initialDelay) {
-		this.initialDelay.set(initialDelay);
+	public Polling<C, V> withFirstDelay(Duration initialDelay) {
+		this.firstDelay.set(initialDelay);
 		return this;
 	}
 
@@ -127,10 +131,10 @@ public class Polling<C, V> {
 
 	public Polling<C, V> initialize(AbstractComponentPilot<?, C> component) {
 		timeout.withSource(component).ensureLoaded();
-		initialDelay.withSource(component).ensureLoaded();
+		firstDelay.withSource(component).ensureLoaded();
 		delayFunction.withSource(component).ensureLoaded();
 		reportFunction.withSource(component).ensureLoaded();
-		context = new PollingContext<>(component.createPoller(timeout.get(), initialDelay.get(), delayFunction.get()));
+		context = new PollingContext<>();
 		return this;
 	}
 }

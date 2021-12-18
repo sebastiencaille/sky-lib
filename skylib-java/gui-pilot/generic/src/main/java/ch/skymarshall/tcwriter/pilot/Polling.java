@@ -1,21 +1,13 @@
 package ch.skymarshall.tcwriter.pilot;
 
-import java.util.Optional;
+import java.time.Duration;
 import java.util.function.Predicate;
 
 import ch.skymarshall.tcwriter.pilot.PilotReport.ReportFunction;
+import ch.skymarshall.util.helpers.Overridable;
+import ch.skymarshall.util.helpers.Poller;
 
 public class Polling<C, V> {
-
-	public static class PollingContext<C> {
-		public final C component;
-		public final String description;
-
-		public PollingContext(C component, String description) {
-			this.component = component;
-			this.description = description;
-		}
-	}
 
 	public interface PollingFunction<C, V> {
 		PollingResult<C, V> poll(PollingContext<C> context);
@@ -25,18 +17,31 @@ public class Polling<C, V> {
 
 	private final PollingFunction<C, V> pollingFunction;
 
-	private Optional<ReportFunction<C>> reportFunction = Optional.empty();
+	private Overridable<AbstractComponentPilot<?, C>, Duration> timeout = new Overridable<>(
+			AbstractComponentPilot::getDefaultPollingTimeout);
+	private Overridable<AbstractComponentPilot<?, C>, Duration> initialDelay = new Overridable<>(
+			AbstractComponentPilot::getDefaultPollingFirstDelay);
+	private Overridable<AbstractComponentPilot<?, C>, Poller.DelayFunction> delayFunction = new Overridable<>(
+			AbstractComponentPilot::getDefaultPollingDelayFunction);
+	private Overridable<AbstractComponentPilot<?, C>, ReportFunction<C>> reportFunction = new Overridable<>(
+			AbstractComponentPilot::getDefaultReportFunction);
 
 	private String reportText = null;
 
 	private ActionDelay actionDelay = null;
+
+	private PollingContext<C> context = null;
 
 	public Polling(final Predicate<C> precondition, final PollingFunction<C, V> pollingFunction) {
 		this.precondition = precondition;
 		this.pollingFunction = pollingFunction;
 	}
 
-	public Predicate<C> getPrecondition(final AbstractGuiComponent<?, C> guiComponent) {
+	public PollingContext<C> getContext() {
+		return context;
+	}
+
+	public Predicate<C> getPrecondition(final AbstractComponentPilot<?, C> guiComponent) {
 		return precondition;
 	}
 
@@ -44,8 +49,44 @@ public class Polling<C, V> {
 		return pollingFunction;
 	}
 
-	public Optional<ReportFunction<C>> getReportFunction() {
-		return reportFunction;
+	public Duration getTimeout() {
+		return timeout.get();
+	}
+
+	public Duration getInitialDelay() {
+		return initialDelay.get();
+	}
+
+	public ReportFunction<C> getReportFunction() {
+		return reportFunction.get();
+	}
+
+	public String getReportText() {
+		return reportText;
+	}
+
+	public ActionDelay getActionDelay() {
+		return actionDelay;
+	}
+
+	public Polling<C, V> withTimeout(Duration timeout) {
+		this.timeout.set(timeout);
+		return this;
+	}
+
+	public Polling<C, V> withInitialDelay(Duration initialDelay) {
+		this.initialDelay.set(initialDelay);
+		return this;
+	}
+
+	public Polling<C, V> withDelay(Duration delay) {
+		this.delayFunction.set(t -> delay);
+		return this;
+	}
+
+	public Polling<C, V> withDelayFunction(Poller.DelayFunction delay) {
+		this.delayFunction.set(delay);
+		return this;
 	}
 
 	/**
@@ -56,7 +97,7 @@ public class Polling<C, V> {
 	 * @return
 	 */
 	public Polling<C, V> withReportFunction(ReportFunction<C> reportFunction) {
-		this.reportFunction = Optional.of(reportFunction);
+		this.reportFunction.set(reportFunction);
 		return this;
 	}
 
@@ -72,14 +113,6 @@ public class Polling<C, V> {
 		return this;
 	}
 
-	public String getReportText() {
-		return reportText;
-	}
-
-	public ActionDelay getActionDelay() {
-		return actionDelay;
-	}
-
 	/**
 	 * To say that the next action will have to wait for some arbitrary delay before
 	 * execution
@@ -92,4 +125,12 @@ public class Polling<C, V> {
 		return this;
 	}
 
+	public Polling<C, V> initialize(AbstractComponentPilot<?, C> component) {
+		timeout.withSource(component).ensureLoaded();
+		initialDelay.withSource(component).ensureLoaded();
+		delayFunction.withSource(component).ensureLoaded();
+		reportFunction.withSource(component).ensureLoaded();
+		context = new PollingContext<>(component.createPoller(timeout.get(), initialDelay.get(), delayFunction.get()));
+		return this;
+	}
 }

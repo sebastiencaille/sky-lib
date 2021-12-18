@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import org.openqa.selenium.Alert;
+import org.openqa.selenium.NoSuchSessionException;
 
 import ch.skymarshall.tcwriter.pilot.ModalDialogDetector;
 import ch.skymarshall.tcwriter.pilot.ModalDialogDetector.PollingResult;
@@ -28,18 +29,23 @@ public class AlertDetector {
 			final Function<AlertPilot, PollingResult> errorChecks) {
 
 		final AlertPilot seleniumAlert = new AlertPilot(pilot);
-		final Alert alert = seleniumAlert.loadGuiComponent();
-		if (alert == null) {
+		try {
+			final Alert alert = seleniumAlert.loadGuiComponent();
+			if (alert == null) {
+				return Collections.emptyList();
+			}
+			PollingResult checked = ModalDialogDetector.notHandled("");
+			if (errorChecks != null) {
+				checked = errorChecks.apply(seleniumAlert);
+			}
+			if (!checked.handled) {
+				checked = ModalDialogDetector.error(alert.getText(), alert::accept);
+			}
+			return Collections.singletonList(checked);
+		} catch (NoSuchSessionException e) {
+			// ignore
 			return Collections.emptyList();
 		}
-		PollingResult checked = ModalDialogDetector.notHandled("");
-		if (errorChecks != null) {
-			checked = errorChecks.apply(seleniumAlert);
-		}
-		if (!checked.handled) {
-			checked = ModalDialogDetector.error(alert.getText(), alert::accept);
-		}
-		return Collections.singletonList(checked);
 	}
 
 }

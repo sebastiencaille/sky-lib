@@ -3,10 +3,10 @@ package ch.skymarshall.tcwriter.pilot.selenium;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoAlertPresentException;
 
-import ch.skymarshall.tcwriter.pilot.AbstractGuiComponent;
+import ch.skymarshall.tcwriter.pilot.AbstractComponentPilot;
 import ch.skymarshall.tcwriter.pilot.Factories;
 
-public class AlertPilot extends AbstractGuiComponent<AlertPilot, Alert> {
+public class AlertPilot extends AbstractComponentPilot<AlertPilot, Alert> {
 
 	private final SeleniumPilot pilot;
 

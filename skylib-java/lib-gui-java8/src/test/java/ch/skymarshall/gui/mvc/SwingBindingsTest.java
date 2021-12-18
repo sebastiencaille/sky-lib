@@ -16,7 +16,7 @@ import ch.skymarshall.gui.swing.factories.SwingBindings;
 class SwingBindingsTest {
 	private class TestGuiModel extends GuiModel {
 
-		private final ObjectProperty<String> stringProperty = new ObjectProperty<String>("StringProperty", this);
+		private final ObjectProperty<String> stringProperty = new ObjectProperty<>("StringProperty", this);
 
 		public TestGuiModel(final GuiController controller) {
 			super(of(controller));

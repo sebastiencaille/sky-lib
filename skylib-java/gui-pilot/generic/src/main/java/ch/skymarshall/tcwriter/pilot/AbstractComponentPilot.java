@@ -5,15 +5,16 @@ import static ch.skymarshall.tcwriter.pilot.Factories.failure;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
 import ch.skymarshall.tcwriter.pilot.PilotReport.ReportFunction;
-import ch.skymarshall.tcwriter.pilot.Polling.PollingContext;
 import ch.skymarshall.tcwriter.pilot.PollingResult.FailureHandler;
 import ch.skymarshall.util.helpers.NoExceptionCloseable;
-import ch.skymarshall.util.helpers.Timeout;
+import ch.skymarshall.util.helpers.Poller;
+import ch.skymarshall.util.helpers.Poller.DelayFunction;
 
 /**
  *
@@ -22,7 +23,7 @@ import ch.skymarshall.util.helpers.Timeout;
  * @param <G> This type
  * @param <C> Component type
  */
-public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>, C> {
+public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G, C>, C> {
 
 	private Logger logger = Logger.getLogger(getClass().getName());
 
@@ -47,17 +48,6 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 			return "" + element + ", precond validated=" + preconditionValidated;
 		}
 
-	}
-
-	private static ReportFunction<Object> defaultReportFunction = (pc, text) -> {
-		if (text == null) {
-			return "";
-		}
-		return pc.description + ": " + text;
-	};
-
-	public static void setDefaultReportFunction(ReportFunction<Object> defaultReportFunction) {
-		AbstractGuiComponent.defaultReportFunction = defaultReportFunction;
 	}
 
 	/**
@@ -91,7 +81,7 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 
 	protected boolean fired = false;
 
-	protected AbstractGuiComponent(final GuiPilot pilot) {
+	protected AbstractComponentPilot(final GuiPilot pilot) {
 		this.pilot = pilot;
 	}
 
@@ -116,15 +106,24 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 		cachedElement = null;
 	}
 
-	protected Duration pollingTime(final Duration duration) {
-		if (duration.toMillis() < 500) {
-			return Duration.ofMillis(50);
-		} else if (duration.toMillis() < 10_000) {
-			return Duration.ofMillis(250);
-		} else if (duration.toMillis() < 60_000) {
-			return Duration.ofMillis(1_000);
-		}
-		return Duration.ofMillis(5_000);
+	protected Duration getDefaultPollingTimeout() {
+		return pilot.getPollingTimeout();
+	}
+
+	protected Duration getDefaultPollingFirstDelay() {
+		return pilot.getPollingFirstDelay();
+	}
+
+	protected Poller.DelayFunction getDefaultPollingDelayFunction() {
+		return pilot.getPollingDelayFunction();
+	}
+
+	protected ReportFunction<C> getDefaultReportFunction() {
+		return (pc, text) -> pilot.getReportFunction().build(PollingContext.generic(pc), text);
+	}
+
+	protected Poller createPoller(Duration timeout, Duration firstDelay, DelayFunction delayFunction) {
+		return new Poller(timeout, firstDelay, delayFunction);
 	}
 
 	/**
@@ -152,13 +151,12 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 	 * @param timeout
 	 * @return
 	 */
-	protected <U> U waitPollingSuccess(final Polling<C, U> polling, final Duration timeout,
-			final FailureHandler<C, U> onFail) {
+	protected <U> U waitPollingSuccess(final Polling<C, U> polling, final FailureHandler<C, U> onFail) {
 
 		waitActionDelay();
 
 		try (NoExceptionCloseable closeable = pilot.withModalDialogDetection()) {
-			final PollingResult<C, U> result = waitPollingSuccessLoop(polling, timeout);
+			final PollingResult<C, U> result = waitPollingSuccessLoop(polling);
 			if (result.isSuccess()) {
 				fired = true;
 				postExecutions.stream().forEach(p -> p.accept(cachedElement.element));
@@ -180,22 +178,9 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 	 * @param timeout
 	 * @return a polling result, either successful or failure
 	 */
-	protected <U> PollingResult<C, U> waitPollingSuccessLoop(final Polling<C, U> polling, final Duration timeout) {
-		final Timeout timeoutCheck = new Timeout(timeout);
-		PollingResult<C, U> lastResult = failure("No information");
-		while (!timeoutCheck.hasTimedOut()) {
-			lastResult = executePolling(polling);
-			if (lastResult.isSuccess()) {
-				break;
-			}
-			try {
-				Thread.sleep(pollingTime(timeout).toMillis());
-			} catch (final InterruptedException e) {
-				Thread.currentThread().interrupt();
-				return Factories.failure("Interrupted");
-			}
-		}
-		return lastResult;
+	protected <U, E extends Exception> PollingResult<C, U> waitPollingSuccessLoop(final Polling<C, U> polling) throws E {
+		polling.initialize(this);
+		return polling.getContext().poller.run(() -> executePolling(polling), PollingResult::isSuccess);
 	}
 
 	/**
@@ -208,6 +193,27 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 	 */
 	protected <U> PollingResult<C, U> executePolling(final Polling<C, U> polling) {
 
+		final Optional<PollingResult<C, U>> failure = preparePolling(polling);
+		if (failure.isPresent()) {
+			return failure.get();
+		}
+
+		polling.getContext().setComponent(getCachedElement(), getDescription());
+
+		// cachedElement.element may disappear after polling, so prepare report line
+		// here
+		final String report = polling.getReportFunction().build(polling.getContext(), polling.getReportText());
+
+		logger.fine(() -> "Polling " + report + "...");
+		final PollingResult<C, U> result = callPollingFunction(polling);
+		logger.fine(() -> "Polling result: " + result);
+		if (result.isSuccess() && !report.isEmpty()) {
+			pilot.getActionReport().report(report);
+		}
+		return result;
+	}
+
+	protected <U> Optional<PollingResult<C, U>> preparePolling(final Polling<C, U> polling) {
 		if (cachedElement == null) {
 			final C loadedGuiComponent = loadGuiComponent();
 			if (loadedGuiComponent != null) {
@@ -217,32 +223,18 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 		logger.fine(() -> "Cached component: " + cachedElement);
 		if (cachedElement == null) {
 			logger.fine("Not found");
-			return failure("not found");
+			return Optional.of(failure("not found"));
 		}
 		if (!cachedElement.preconditionValidated && polling.getPrecondition(this) != null
 				&& !polling.getPrecondition(this).test(cachedElement.element)) {
 			logger.fine("Precondition failed");
-			return failure("precondition failed");
+			return Optional.of(failure("precondition failed"));
 		}
-
-		PollingContext<C> pollingContext = new PollingContext<>(cachedElement.element, getDescription());
-
-		// cachedElement.element may disappear after polling, so prepare report line
-		// here
-		final String report = polling.getReportFunction().orElse(getDefaultReportFunction()).build(pollingContext,
-				polling.getReportText());
-
-		logger.fine(() -> "Polling " + report + "...");
-		final PollingResult<C, U> result = polling.getPollingFunction().poll(pollingContext);
-		logger.fine(() -> "Polling result: " + result);
-		if (result.isSuccess() && !report.isEmpty()) {
-			pilot.getActionReport().report(report);
-		}
-		return result;
+		return Optional.empty();
 	}
 
-	protected ReportFunction<C> getDefaultReportFunction() {
-		return (pc, text) -> defaultReportFunction.build(new PollingContext<>(pc.component, pc.description), text);
+	protected <U> PollingResult<C, U> callPollingFunction(final Polling<C, U> polling) {
+		return polling.getPollingFunction().poll(polling.getContext());
 	}
 
 	protected String reportNameOf(C c) {
@@ -258,7 +250,7 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 	 * @return check/edition value
 	 */
 	public <U> U wait(final Polling<C, U> polling, final FailureHandler<C, U> onFail) {
-		return waitPollingSuccess(polling, pilot.getDefaultActionTimeout(), onFail);
+		return waitPollingSuccess(polling, onFail);
 	}
 
 	/**
@@ -284,8 +276,8 @@ public abstract class AbstractGuiComponent<G extends AbstractGuiComponent<G, C>,
 		return wait(Factories.satisfies(check).withReportText(report));
 	}
 
-	public boolean ifEnabled(final Polling<C, Boolean> polling, final Duration shortTimeout) {
-		return waitPollingSuccess(polling, shortTimeout, Factories.reportFailure(getDescription() + ": not found"));
+	public boolean ifEnabled(final Polling<C, Boolean> polling) {
+		return waitPollingSuccess(polling, Factories.reportFailure(getDescription() + ": not found"));
 	}
 
 	/**

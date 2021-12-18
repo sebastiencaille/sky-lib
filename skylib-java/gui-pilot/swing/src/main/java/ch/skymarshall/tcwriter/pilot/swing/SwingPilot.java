@@ -38,8 +38,8 @@ public class SwingPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 		return SwingModalDialogDetector.defaultDetector();
 	}
 
-	public void expectModalDialog(final Function<SwingModalDialogDetector, PollingResult> check) {
-		setCurrentModalDialogDetector(SwingModalDialogDetector.withHandler(check));
+	public ModalDialogDetector expectModalDialog(final Function<SwingModalDialogDetector, PollingResult> check) {
+		return expectModalDialog(SwingModalDialogDetector.withHandler(check));
 	}
 
 	/**

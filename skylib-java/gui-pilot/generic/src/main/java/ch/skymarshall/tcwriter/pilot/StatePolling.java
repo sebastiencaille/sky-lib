@@ -13,7 +13,7 @@ public class StatePolling<C, V> extends Polling<C, V> {
 	}
 
 	@Override
-	public Predicate<C> getPrecondition(final AbstractGuiComponent<?, C> guiComponent) {
+	public Predicate<C> getPrecondition(final AbstractComponentPilot<?, C> guiComponent) {
 		if (super.getPrecondition(guiComponent) != null) {
 			return super.getPrecondition(guiComponent);
 		}

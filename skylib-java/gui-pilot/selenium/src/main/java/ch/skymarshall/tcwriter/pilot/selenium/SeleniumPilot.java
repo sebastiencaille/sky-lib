@@ -37,8 +37,8 @@ public class SeleniumPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 		return new ModalDialogDetector(() -> AlertDetector.listAlerts(this, null));
 	}
 
-	public void expectModalDialog(final Function<AlertPilot, PollingResult> check) {
-		setCurrentModalDialogDetector(new ModalDialogDetector(() -> AlertDetector.listAlerts(this, check)));
+	public ModalDialogDetector expectModalDialog(final Function<AlertPilot, PollingResult> check) {
+		return expectModalDialog(new ModalDialogDetector(() -> AlertDetector.listAlerts(this, check)));
 	}
 
 }

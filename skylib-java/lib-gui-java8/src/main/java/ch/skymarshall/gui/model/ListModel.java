@@ -203,6 +203,7 @@ public class ListModel<T> implements IListModelDelegate<T>, Iterable<T>, Seriali
 		delegate.stopEditingValue();
 	}
 
+	@Override
 	public T find(final T sample) {
 		return delegate.find(sample);
 	}
@@ -219,6 +220,7 @@ public class ListModel<T> implements IListModelDelegate<T>, Iterable<T>, Seriali
 	 *               find the object)
 	 * @return an object if found, the sample if not found
 	 */
+	@Override
 	public T findOrCreate(final T sample) {
 		return delegate.findOrCreate(sample);
 	}

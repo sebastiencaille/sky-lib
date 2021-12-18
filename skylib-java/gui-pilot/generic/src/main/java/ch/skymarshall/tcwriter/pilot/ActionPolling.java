@@ -13,7 +13,7 @@ public class ActionPolling<C, V> extends Polling<C, V> {
 	}
 
 	@Override
-	public Predicate<C> getPrecondition(final AbstractGuiComponent<?, C> guiComponent) {
+	public Predicate<C> getPrecondition(final AbstractComponentPilot<?, C> guiComponent) {
 		return guiComponent::canEdit;
 	}
 

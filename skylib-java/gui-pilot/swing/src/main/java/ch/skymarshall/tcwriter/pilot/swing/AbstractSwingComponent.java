@@ -1,12 +1,11 @@
 package ch.skymarshall.tcwriter.pilot.swing;
 
 import java.awt.event.KeyEvent;
-import java.time.Duration;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
-import ch.skymarshall.tcwriter.pilot.AbstractGuiComponent;
+import ch.skymarshall.tcwriter.pilot.AbstractComponentPilot;
 import ch.skymarshall.tcwriter.pilot.Factories;
 import ch.skymarshall.tcwriter.pilot.Polling;
 import ch.skymarshall.tcwriter.pilot.PollingResult;
@@ -14,7 +13,7 @@ import ch.skymarshall.tcwriter.pilot.PollingResult.FailureHandler;
 
 @SuppressWarnings("java:S5960")
 public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C extends JComponent>
-		extends AbstractGuiComponent<G, C> {
+		extends AbstractComponentPilot<G, C> {
 
 	protected final SwingPilot pilot;
 	protected final String name;
@@ -62,12 +61,11 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 	}
 
 	@Override
-	protected <U> U waitPollingSuccess(final Polling<C, U> polling, final Duration timeout,
-			final FailureHandler<C, U> onFail) {
+	protected <U> U waitPollingSuccess(final Polling<C, U> polling, final FailureHandler<C, U> onFail) {
 		if (SwingUtilities.isEventDispatchThread()) {
-			throw new IllegalStateException("Action wait must not run in Swing thread");
+			throw new IllegalStateException("Polling must not run in Swing thread");
 		}
-		return super.waitPollingSuccess(polling, timeout, onFail);
+		return super.waitPollingSuccess(polling, onFail);
 	}
 
 	@Override
@@ -77,13 +75,14 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 		return (PollingResult<C, U>) response[0];
 	}
 
-
 	public void waitEnabled() {
-		wait(Factories.<C>satisfies(JComponent::isEnabled).withReportText(Factories.checkingThat("component is enabled")));
+		wait(Factories.<C>satisfies(JComponent::isEnabled)
+				.withReportText(Factories.checkingThat("component is enabled")));
 	}
 
 	public void waitDisabled() {
-		wait(Factories.<C>satisfies(c -> !c.isEnabled()).withReportText(Factories.checkingThat("component is disabled")));
+		wait(Factories.<C>satisfies(c -> !c.isEnabled())
+				.withReportText(Factories.checkingThat("component is disabled")));
 	}
 
 	public static void doPressReturn(final JComponent t) {

@@ -20,6 +20,7 @@ public class MethodHandlerAccess<T, A> implements IPersisterFactory<T, A> {
 		}
 	}
 
+	@Override
 	public IPersister<A> asPersister(final Object object) {
 		return new IPersister<A>() {
 			@Override

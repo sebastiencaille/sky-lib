@@ -28,7 +28,7 @@ class ControllerExampleTest {
 		});
 
 		final SwingPilot pilot = new SwingPilot(view[0]);
-		pilot.setDefaultActionTimeout(Duration.ofSeconds(1));
+		pilot.setDefaultPollingTimeout(Duration.ofSeconds(1));
 
 		ControllerExamplePage page = pilot.page(ControllerExamplePage::new);
 

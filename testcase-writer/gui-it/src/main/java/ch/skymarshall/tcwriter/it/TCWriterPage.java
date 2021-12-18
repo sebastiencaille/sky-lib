@@ -36,6 +36,15 @@ public class TCWriterPage extends PagePilot {
 	@ByName("ApplyStep")
 	public JButtonPilot applyStep;
 
+	@ByName("NewTC")
+	public JButtonPilot newTC;
+
+	@ByName("LoadTC")
+	public JButtonPilot loadTC;
+
+	@ByName("SaveTC")
+	public JButtonPilot saveTC;
+
 	public TCWriterPage(SwingPilot pilot) {
 		super(pilot);
 	}

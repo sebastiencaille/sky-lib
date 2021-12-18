@@ -33,7 +33,7 @@ import ch.skymarshall.util.text.TextFormatter;
 	}
 
 	@Test
-	 void testExceptionManagement() throws IOException {
+	 void testExceptionManagement() {
 		SimpleTextFormatter<IOException> tf = new SimpleTextFormatter<>(new ExceptionOutput());
 		assertThrows(IOException.class, () -> tf.append("Hello"));
 	}

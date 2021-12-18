@@ -1,7 +1,9 @@
 package ch.skymarshall.tcwriter.pilot;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
@@ -9,7 +11,10 @@ import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Assertions;
 
+import ch.skymarshall.tcwriter.pilot.PollingResult.FailureHandler;
 import ch.skymarshall.util.helpers.NoExceptionCloseable;
+import ch.skymarshall.util.helpers.Overridable;
+import ch.skymarshall.util.helpers.Poller;
 
 /**
  * Handles unexpected dialog boxes, alerts, ...
@@ -19,6 +24,32 @@ import ch.skymarshall.util.helpers.NoExceptionCloseable;
  */
 @SuppressWarnings("java:S5960")
 public class ModalDialogDetector {
+
+	public static PollingResult expected() {
+		return new PollingResult(true, null, null, null);
+	}
+
+	public static PollingResult error(final String error, final Runnable closeFunction) {
+		return new PollingResult(true, error, closeFunction, null);
+	}
+
+	public static PollingResult notHandled(final String extraInfo) {
+		return new PollingResult(false, null, null, extraInfo);
+	}
+
+	public static NoExceptionCloseable withModalDialogDetection(final ModalDialogDetector modalDialogDetector) {
+		return modalDialogDetector.schedule(timer);
+	}
+
+	public static ModalDialogDetector noDetection() {
+		return new ModalDialogDetector(null) {
+			@Override
+			protected NoExceptionCloseable schedule(Timer t) {
+				return () -> {
+					/* noop */ };
+			}
+		};
+	}
 
 	public static class PollingResult {
 		public final boolean handled;
@@ -38,7 +69,11 @@ public class ModalDialogDetector {
 
 	private static final Timer timer = new Timer("Modal dialog detector");
 
-	private Supplier<List<PollingResult>> pollingHandlers;
+	private final Supplier<List<PollingResult>> pollingHandlers;
+
+	private Overridable<GuiPilot, Duration> timeout = new Overridable<>(g -> g.getModalDialogTimeout());
+
+	private GuiPilot pilot;
 
 	private final List<String> errors = new ArrayList<>();
 
@@ -52,16 +87,15 @@ public class ModalDialogDetector {
 		this.pollingHandlers = pollingHandlers;
 	}
 
-	public static PollingResult expected() {
-		return new PollingResult(true, null, null, null);
+	public ModalDialogDetector initialize(GuiPilot pilot) {
+		timeout.withSource(pilot).ensureLoaded();
+		this.pilot = pilot;
+		return this;
 	}
 
-	public static PollingResult error(final String error, final Runnable closeFunction) {
-		return new PollingResult(true, error, closeFunction, null);
-	}
-
-	public static PollingResult notHandled(final String extraInfo) {
-		return new PollingResult(false, null, null, extraInfo);
+	public ModalDialogDetector withTimeout(Duration duration) {
+		this.timeout.set(duration);
+		return this;
 	}
 
 	private synchronized void handleModalDialogs() {
@@ -121,7 +155,7 @@ public class ModalDialogDetector {
 		}
 	}
 
-	private synchronized NoExceptionCloseable schedule(final Timer t) {
+	protected synchronized NoExceptionCloseable schedule(final Timer t) {
 		Assertions.assertNull(foundHandledDialog, () -> "Detector already detected a dialog");
 		if (!enabled) {
 			enabled = true;
@@ -134,17 +168,13 @@ public class ModalDialogDetector {
 		return foundHandledDialog;
 	}
 
-	public static NoExceptionCloseable withModalDialogDetection(final ModalDialogDetector modalDialogDetector) {
-		return modalDialogDetector.schedule(timer);
-	}
-
-	public static ModalDialogDetector noDetection() {
-		return new ModalDialogDetector(null) {
-			@SuppressWarnings("unused")
-			private void schedule() {
-				// noop
-			}
-		};
+	public boolean waitModalDialogHandled(final FailureHandler<ModalDialogDetector.PollingResult, Boolean> onFail) {
+		Poller poller = new Poller(timeout.get(), Duration.ofMillis(100), p -> Duration.ofMillis(100));
+		PollingResult result = poller.run(this::getCheckResult, Objects::nonNull);
+		if (result != null) {
+			return true;
+		}
+		return onFail.apply(Factories.failure("Modal dialog not detected"), pilot);
 	}
 
 }

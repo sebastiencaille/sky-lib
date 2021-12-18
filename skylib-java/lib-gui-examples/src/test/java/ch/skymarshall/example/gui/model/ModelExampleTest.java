@@ -30,7 +30,7 @@ class ModelExampleTest {
 		});
 
 		final SwingPilot pilot = new SwingPilot(view[0]);
-		pilot.setDefaultActionTimeout(Duration.ofSeconds(1));
+		pilot.setDefaultPollingTimeout(Duration.ofSeconds(1));
 
 		ModelExamplePage page = pilot.page(ModelExamplePage::new);
 

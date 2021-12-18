@@ -133,7 +133,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 
 	@Override
 	public void mainFrameAction(final MainFrameAction action) {
-		action.execute(guiPilot);
+		action.execute(tcWriterPage, guiPilot);
 	}
 
 	private static void updateValue(final JTable valueTable, final String keyValueStr) {

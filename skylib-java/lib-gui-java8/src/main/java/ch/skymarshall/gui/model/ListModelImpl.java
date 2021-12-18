@@ -64,7 +64,7 @@ import ch.skymarshall.util.helpers.StreamHelper;
  *            can be uniquely identified using Object.equals.
  */
 public class ListModelImpl<T> extends AbstractListModel<T>
-		implements IListModelDelegate<T>, Iterable<T>, ListModelRef<T>, Serializable {
+		implements IListModelDelegate<T>, Iterable<T>, ListModelRef<T> {
 
 	private static final long serialVersionUID = 5327890361188939439L;
 
@@ -414,6 +414,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 		return new ArrayList<>(data).iterator();
 	}
 
+	@Override
 	public void setValues(final Collection<T> newData) {
 		checkNoEdition();
 		fireMutating();
@@ -422,6 +423,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 		fireValuesSet(data);
 	}
 
+	@Override
 	public void addValues(final Collection<T> newData) {
 		checkNoEdition();
 		fireMutating();
@@ -442,6 +444,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 		return addedData;
 	}
 
+	@Override
 	public void clear() {
 		checkNoEdition();
 		fireMutating();
@@ -483,6 +486,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 		return removed;
 	}
 
+	@Override
 	public int insert(final T value) {
 		checkNoEdition();
 		if (value == null) {
@@ -499,16 +503,19 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 		return -1;
 	}
 
+	@Override
 	public T remove(final T sample) {
 		return removeFromModel(sample);
 	}
 
+	@Override
 	public T remove(final int row) {
 		final T value = getValueAt(row);
 		removeFromModel(value);
 		return value;
 	}
 
+	@Override
 	public T getEditedValue() {
 		if (objectEdition == null) {
 			return null;
@@ -516,6 +523,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 		return objectEdition.value;
 	}
 
+	@Override
 	public IEdition<T> startEditingValue(final T value) {
 		if (value == null) {
 			throw new IllegalArgumentException("value must not be null");
@@ -543,6 +551,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 	/**
 	 * Process the current edition and
 	 */
+	@Override
 	public void stopEditingValue() {
 		if (objectEdition == null) {
 			return;
@@ -638,6 +647,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 		propertyChange = new ControllerPropertyChangeSupport(this).scoped(this);
 	}
 
+	@Override
 	public T find(final T sample) {
 		final int row = getRowOf(sample);
 		if (row >= 0) {
@@ -653,6 +663,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 	 *               find the object)
 	 * @return an object if found, null if not
 	 */
+	@Override
 	public IEdition<T> findForEdition(final T sample) {
 		final T found = find(sample);
 		if (found != null) {
@@ -668,6 +679,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 	 *               find the object)
 	 * @return an object if found, the sample if not found
 	 */
+	@Override
 	public T findOrCreate(final T sample) {
 		T result = find(sample);
 		if (result == null) {
@@ -685,6 +697,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 	 *               find the object)
 	 * @return an object if found, the sample if not found
 	 */
+	@Override
 	public IEdition<T> findOrCreateForEdition(final T sample) {
 		final T found = findOrCreate(sample);
 		return startEditingValue(found);

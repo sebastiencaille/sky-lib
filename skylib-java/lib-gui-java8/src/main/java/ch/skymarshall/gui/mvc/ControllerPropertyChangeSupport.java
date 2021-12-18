@@ -218,6 +218,7 @@ public class ControllerPropertyChangeSupport {
 					l -> ControllerPropertyChangeSupport.this.removePropertyChangeListener(l.name, l.listener));
 		}
 
+		@Override
 		public IPropertyEventListener detachWhenPropLoading() {
 			return (caller, event) -> {
 				if (event.getKind() == EventKind.BEFORE) {

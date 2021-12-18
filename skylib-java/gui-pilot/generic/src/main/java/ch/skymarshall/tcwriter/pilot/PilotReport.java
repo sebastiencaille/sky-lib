@@ -3,8 +3,6 @@ package ch.skymarshall.tcwriter.pilot;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.skymarshall.tcwriter.pilot.Polling.PollingContext;
-
 public class PilotReport {
 
 	public interface ReportFunction<C> {

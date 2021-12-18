@@ -1,6 +1,5 @@
 package ch.skymarshall.tcwriter.pilot.selenium;
 
-import java.time.Duration;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -72,9 +71,8 @@ public class PagePilot {
 		return element(element).wait(Factories.action(action).withReportText("unnamed action"));
 	}
 
-	public boolean ifEnabled(Supplier<WebElement> element, final Polling<WebElement, Boolean> polling,
-			final Duration shortTimeout) {
-		return element(element).ifEnabled(polling, shortTimeout);
+	public boolean ifEnabled(Supplier<WebElement> element, final Polling<WebElement, Boolean> polling) {
+		return element(element).ifEnabled(polling);
 	}
 	
 	public Polling<WebElement, Boolean> textEquals(String expected) {

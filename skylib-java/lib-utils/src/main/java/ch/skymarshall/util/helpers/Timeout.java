@@ -29,32 +29,40 @@ public class Timeout {
 		return new Timeout(Duration.ofMillis(unit.toMillis(time)));
 	}
 
-	private final long delay;
+	private final Duration duration;
+	private long absoluteTimeout = -1;
 	private final Object info;
-	private long timeoutTime = -1;
 
 	public Timeout(final Duration duration) {
 		this.info = "";
-		delay = duration.toMillis();
+		this.duration = duration;
 	}
 
-	private long getTimeout() {
-		if (timeoutTime < 0) {
-			timeoutTime = System.currentTimeMillis() + delay;
+	public Duration getDuration() {
+		return duration;
+	}
+
+	public void start() {
+		getAbsoluteTimeout();
+	}
+
+	private long getAbsoluteTimeout() {
+		if (absoluteTimeout < 0) {
+			absoluteTimeout = System.currentTimeMillis() + duration.toMillis();
 		}
-		return timeoutTime;
+		return absoluteTimeout;
 	}
 
 	public boolean hasTimedOut() {
-		return System.currentTimeMillis() > getTimeout();
+		return System.currentTimeMillis() > getAbsoluteTimeout();
 	}
 
 	public void yield() throws InterruptedException {
-		Thread.sleep(Math.min(100, remainingTime()));
+		Thread.sleep(Math.min(100, remainingTimeMs()));
 	}
 
 	public void waitOn(final Object obj) throws InterruptedException, TimeoutException {
-		final long waitTime = remainingTime();
+		final long waitTime = remainingTimeMs();
 		if (waitTime > 0) {
 			obj.wait(waitTime); // NOSONAR
 		}
@@ -63,12 +71,23 @@ public class Timeout {
 		}
 	}
 
-	public long remainingTime() {
-		final long l = getTimeout() - System.currentTimeMillis();
+	public long elapsedTimeMs() {
+		return duration.toMillis() - remainingTimeMs();
+	}
+
+	public Duration remainingDuration() {
+		return Duration.ofMillis(remainingTimeMs());
+	}
+
+	public long remainingTimeMs() {
+		final long l = getAbsoluteTimeout() - System.currentTimeMillis();
 		if (l < 1) {
 			return 1;
 		}
 		return l;
 	}
-
+	
+	public long overTimeMs() {
+		return Math.max(0, System.currentTimeMillis() - getAbsoluteTimeout());
+	}
 }

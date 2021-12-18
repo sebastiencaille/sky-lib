@@ -2,8 +2,9 @@ package ch.skymarshall.tcwriter.pilot;
 
 import java.time.Duration;
 
+import ch.skymarshall.tcwriter.pilot.PilotReport.ReportFunction;
 import ch.skymarshall.util.helpers.NoExceptionCloseable;
-import ch.skymarshall.util.helpers.Timeout;
+import ch.skymarshall.util.helpers.Poller;
 
 public class GuiPilot {
 
@@ -11,7 +12,30 @@ public class GuiPilot {
 
 	private ActionDelay actionDelay = null;
 
-	private Duration defaultActionTimeout = Duration.ofSeconds(30);
+	private Duration modalDialogTimeout = Duration.ofSeconds(30);
+
+	private Duration pollingTimeout = Duration.ofSeconds(30);
+
+	private Duration pollingFirstDelay = Duration.ofMillis(0);
+
+	private Poller.DelayFunction pollingDelayFunction = p -> {
+		Duration effectiveTimeout = p.timeTracker.getDuration();
+		if (effectiveTimeout.toMillis() < 500) {
+			return Duration.ofMillis(50);
+		} else if (effectiveTimeout.toMillis() < 10_000) {
+			return Duration.ofMillis(250);
+		} else if (effectiveTimeout.toMillis() < 60_000) {
+			return Duration.ofMillis(1_000);
+		}
+		return Duration.ofMillis(5_000);
+	};
+
+	private ReportFunction<Object> reportFunction = (pc, text) -> {
+		if (text == null) {
+			return "";
+		}
+		return pc.description + ": " + text;
+	};
 
 	private ModalDialogDetector currentModalDialogDetector;
 
@@ -19,6 +43,11 @@ public class GuiPilot {
 		return actionReport;
 	}
 
+	/**
+	 * Sets the delay implied by the last executed action
+	 * 
+	 * @param actionDelay
+	 */
 	public void setActionDelay(final ActionDelay actionDelay) {
 		this.actionDelay = actionDelay;
 	}
@@ -27,12 +56,36 @@ public class GuiPilot {
 		return actionDelay;
 	}
 
-	public void setDefaultActionTimeout(final Duration defaultActionTimeout) {
-		this.defaultActionTimeout = defaultActionTimeout;
+	public Duration getPollingTimeout() {
+		return pollingTimeout;
 	}
 
-	public Duration getDefaultActionTimeout() {
-		return defaultActionTimeout;
+	public void setDefaultPollingTimeout(final Duration pollingTimeout) {
+		this.pollingTimeout = pollingTimeout;
+	}
+
+	public Duration getPollingFirstDelay() {
+		return pollingFirstDelay;
+	}
+
+	public void setPollingFirstDelay(Duration pollingFirstDelay) {
+		this.pollingFirstDelay = pollingFirstDelay;
+	}
+
+	public ReportFunction<Object> getReportFunction() {
+		return reportFunction;
+	}
+
+	public void setReportFunction(ReportFunction<Object> reportFunction) {
+		this.reportFunction = reportFunction;
+	}
+
+	public Poller.DelayFunction getPollingDelayFunction() {
+		return pollingDelayFunction;
+	}
+
+	public void setPollingDelayFunction(Poller.DelayFunction pollingDelayFunction) {
+		this.pollingDelayFunction = pollingDelayFunction;
 	}
 
 	protected ModalDialogDetector createDefaultModalDialogDetector() {
@@ -46,31 +99,31 @@ public class GuiPilot {
 		this.currentModalDialogDetector = currentModalDialogDetector;
 	}
 
-	private void stopModalDialogDetector() {
-		this.currentModalDialogDetector.stop();
-		this.currentModalDialogDetector = null;
-	}
-
 	public void waitModalDialogHandled() {
 		waitModalDialogHandled(Factories.throwError());
 	}
 
+	public Duration getModalDialogTimeout() {
+		return modalDialogTimeout;
+	}
+
+	public void setModalDialogTimeout(Duration modalDialogTimeout) {
+		this.modalDialogTimeout = modalDialogTimeout;
+	}
+
+	protected ModalDialogDetector expectModalDialog(ModalDialogDetector detector) {
+		stopModalDialogDetector();
+		currentModalDialogDetector = detector.initialize(this);
+		return detector;
+	}
+
 	public boolean waitModalDialogHandled(
 			final PollingResult.FailureHandler<ModalDialogDetector.PollingResult, Boolean> onFail) {
-		final Timeout timeoutCheck = new Timeout(defaultActionTimeout);
-		while (!timeoutCheck.hasTimedOut()) {
-			if (currentModalDialogDetector.getCheckResult() != null) {
-				stopModalDialogDetector();
-				return true;
-			}
-			try {
-				timeoutCheck.yield();
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-				return onFail.apply(Factories.failure("Interrupted"), this);
-			}
+		try {
+			return currentModalDialogDetector.waitModalDialogHandled(onFail);
+		} finally {
+			stopModalDialogDetector();
 		}
-		return onFail.apply(Factories.failure("Modal dialog not detected"), this);
 	}
 
 	public NoExceptionCloseable withModalDialogDetection() {
@@ -78,6 +131,13 @@ public class GuiPilot {
 			currentModalDialogDetector = createDefaultModalDialogDetector();
 		}
 		return ModalDialogDetector.withModalDialogDetection(currentModalDialogDetector);
+	}
+
+	private void stopModalDialogDetector() {
+		if (currentModalDialogDetector != null) {
+			this.currentModalDialogDetector.stop();
+		}
+		this.currentModalDialogDetector = null;
 	}
 
 	public void close() {

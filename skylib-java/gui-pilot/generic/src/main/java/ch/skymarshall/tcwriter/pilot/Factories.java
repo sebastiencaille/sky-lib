@@ -4,7 +4,6 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import ch.skymarshall.tcwriter.pilot.Polling.PollingContext;
 import ch.skymarshall.tcwriter.pilot.PollingResult.FailureHandler;
 import ch.skymarshall.util.dao.metadata.DataObjectManagerFactory;
 
@@ -110,7 +109,7 @@ public interface Factories {
 	 * @return
 	 */
 	public static <C, V> PollingResult<C, V> failure(final String reason) {
-		return new PollingResult<>(null, new RuntimeException(reason));
+		return new PollingResult<>(null, new AssertionError(reason));
 	}
 
 	/**

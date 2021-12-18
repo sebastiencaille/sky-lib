@@ -5,6 +5,7 @@ import static java.util.Arrays.asList;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.time.Duration;
 
 import javax.swing.SwingUtilities;
 
@@ -52,6 +53,7 @@ public class AbstractGuiTest {
 
 		final TCWriterController controller = new TCWriterController(config, persister, executor);
 		SwingUtilities.invokeAndWait(controller::run);
+		
 		pilot = new TCGuiPilot(controller.getGui());
 
 		final LocalTCWriterRole localRole = new LocalTCWriterRole(pilot);

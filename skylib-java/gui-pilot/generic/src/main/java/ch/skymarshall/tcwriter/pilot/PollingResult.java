@@ -3,7 +3,7 @@ package ch.skymarshall.tcwriter.pilot;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-import ch.skymarshall.tcwriter.pilot.AbstractGuiComponent.LoadedElement;
+import ch.skymarshall.tcwriter.pilot.AbstractComponentPilot.LoadedElement;
 
 public class PollingResult<T, V> {
 

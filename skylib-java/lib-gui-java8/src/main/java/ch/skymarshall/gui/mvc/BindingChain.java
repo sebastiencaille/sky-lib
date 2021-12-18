@@ -152,13 +152,13 @@ public class BindingChain implements IBindingController {
 				newBinding.accept((T) v);
 				return null;
 			}, v -> {
-				throw setOnlyException();
+				throw prop2CompOnlyException();
 			}));
 			return BindingChain.this;
 		}
 
-		private IllegalStateException setOnlyException() {
-			return new IllegalStateException("Binding can only call setters");
+		private IllegalStateException prop2CompOnlyException() {
+			return new IllegalStateException("Binding cannot read component values");
 		}
 
 		public IBindingController bind(final IComponentBinding<T> newBinding) {

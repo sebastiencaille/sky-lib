@@ -70,7 +70,7 @@ public class ExamplePage extends PagePilot {
 	}
 
 	public void clickOnMissingButton() {
-		ifEnabled(() -> this.notExistingElement, action(WebElement::click), Duration.ofMillis(500));
+		ifEnabled(() -> this.notExistingElement, action(WebElement::click).withTimeout(Duration.ofMillis(500)));
 	}
 
 	public void expectTestAlertDialog() {

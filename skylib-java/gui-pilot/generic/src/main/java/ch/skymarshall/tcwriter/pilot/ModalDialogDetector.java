@@ -44,7 +44,7 @@ public class ModalDialogDetector {
 	public static ModalDialogDetector noDetection() {
 		return new ModalDialogDetector(null) {
 			@Override
-			protected NoExceptionCloseable schedule(Timer t) {
+			protected synchronized NoExceptionCloseable schedule(Timer t) {
 				return () -> {
 					/* noop */ };
 			}
@@ -71,7 +71,7 @@ public class ModalDialogDetector {
 
 	private final Supplier<List<PollingResult>> pollingHandlers;
 
-	private Overridable<GuiPilot, Duration> timeout = new Overridable<>(g -> g.getModalDialogTimeout());
+	private Overridable<GuiPilot, Duration> timeout = new Overridable<>(GuiPilot::getModalDialogTimeout);
 
 	private GuiPilot pilot;
 

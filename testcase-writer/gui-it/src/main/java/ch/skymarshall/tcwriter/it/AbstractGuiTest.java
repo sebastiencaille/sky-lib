@@ -5,7 +5,6 @@ import static java.util.Arrays.asList;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.time.Duration;
 
 import javax.swing.SwingUtilities;
 

@@ -27,7 +27,7 @@ public class JTablePilot extends AbstractSwingComponent<JTablePilot, JTable> {
 	public void editValueOnSelectedRow(final int column, final String value) {
 		wait(action(t -> {
 			t.setValueAt(value, t.getSelectedRow(), column);
-			doPressReturn(t);
+			SwingHelper.doPressReturn(t);
 		}).withReportText(Factories.settingValue("at selected row, column " + column, value)));
 	}
 
@@ -37,8 +37,8 @@ public class JTablePilot extends AbstractSwingComponent<JTablePilot, JTable> {
 	}
 
 	public void checkValueOnSelectedRow(final int column, final String expected) {
-		wait(assertion(pc -> Assertions.assertEquals(expected, pc.component.getValueAt(pc.component.getSelectedRow(), column),
-				pc.description))
+		wait(assertion(pc -> Assertions.assertEquals(expected,
+				pc.component.getValueAt(pc.component.getSelectedRow(), column), pc.description))
 						.withReportText(checkingValue("at selected row, column " + column, expected)));
 	}
 

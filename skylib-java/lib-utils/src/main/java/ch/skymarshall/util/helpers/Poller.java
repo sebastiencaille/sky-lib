@@ -10,7 +10,7 @@ public class Poller {
 		// inherited
 	}
 
-	public final Timeout timeTracker;
+	public final TimeTracker timeTracker;
 
 	protected final Duration firstDelay;
 
@@ -21,7 +21,7 @@ public class Poller {
 	private long lastPolling;
 	
 	public Poller(Duration timeout, Duration firstDelay, DelayFunction delayFunction) {
-		this.timeTracker = new Timeout(timeout);
+		this.timeTracker = new TimeTracker(timeout);
 		this.firstDelay = firstDelay;
 		this.delayFunction = delayFunction;
 	}
@@ -84,7 +84,7 @@ public class Poller {
 		return executionCount;
 	}
 
-	public Timeout getTimeTracker() {
+	public TimeTracker getTimeTracker() {
 		return timeTracker;
 	}
 

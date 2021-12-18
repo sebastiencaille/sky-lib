@@ -58,9 +58,13 @@ class StreamHelperTest {
 				.optionalOrThrow(WrongCountException::new);
 		assertFalse(zeroOrOne2.isPresent());
 
-		WrongCountException e = Assertions.assertThrows(WrongCountException.class, () -> Arrays.asList(1, 2).stream()
-				.collect(StreamHelper.zeroOrOne()).orElseThrow(WrongCountException::new));
+		WrongCountException e = Assertions.assertThrows(WrongCountException.class, () -> testWith2Values());
 		assertEquals("Wrong count: 2", e.getMessage());
+	}
+
+	private Integer testWith2Values() {
+		return Arrays.asList(1, 2).stream()
+				.collect(StreamHelper.zeroOrOne()).orElseThrow(WrongCountException::new);
 	}
 
 }

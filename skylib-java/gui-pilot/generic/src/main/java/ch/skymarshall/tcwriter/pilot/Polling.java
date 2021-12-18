@@ -41,6 +41,7 @@ public class Polling<C, V> {
 		return context;
 	}
 
+	@SuppressWarnings("java:S1172)")
 	public Predicate<C> getPrecondition(final AbstractComponentPilot<?, C> guiComponent) {
 		return precondition;
 	}

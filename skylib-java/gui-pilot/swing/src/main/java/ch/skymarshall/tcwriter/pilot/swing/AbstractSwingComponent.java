@@ -1,7 +1,5 @@
 package ch.skymarshall.tcwriter.pilot.swing;
 
-import java.awt.event.KeyEvent;
-
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
@@ -71,7 +69,7 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 	@Override
 	protected <U> PollingResult<C, U> executePolling(Poller poller, final Polling<C, U> polling) {
 		final Object[] response = new Object[1];
-		SwingPilot.invokeAndWait(() -> response[0] = super.executePolling(poller, polling));
+		SwingHelper.invokeAndWait(() -> response[0] = super.executePolling(poller, polling));
 		return (PollingResult<C, U>) response[0];
 	}
 
@@ -85,7 +83,5 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 				.withReportText(Factories.checkingThat("component is disabled")));
 	}
 
-	public static void doPressReturn(final JComponent t) {
-		t.dispatchEvent(new KeyEvent(t, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, '\n'));
-	}
+
 }

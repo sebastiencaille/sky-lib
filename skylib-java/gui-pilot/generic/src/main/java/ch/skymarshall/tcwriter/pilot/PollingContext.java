@@ -12,6 +12,7 @@ public class PollingContext<C> {
 	public String description;
 
 	public PollingContext() {
+		// noop
 	}
 
 	public void setComponent(C component, String description) {

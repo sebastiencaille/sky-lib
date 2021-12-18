@@ -32,7 +32,7 @@ public class JTextFieldPilot extends AbstractSwingComponent<JTextFieldPilot, JTe
 		wait(action(t -> {
 			t.setText(value);
 			if (t instanceof JTextField) {
-				doPressReturn(t);
+				SwingHelper.	doPressReturn(t);
 			}
 		}).withReportText(settingValue(value)));
 	}

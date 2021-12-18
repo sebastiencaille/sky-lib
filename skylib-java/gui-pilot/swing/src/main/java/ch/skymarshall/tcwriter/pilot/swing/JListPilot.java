@@ -43,7 +43,7 @@ public class JListPilot extends AbstractSwingComponent<JListPilot, JList> {
 			return;
 		}
 		wait(new Polling<>(this::canCheck, pc -> {
-			JList component = pc.component;
+			JList<?> component = pc.component;
 			if (component.getSelectedIndex() < 0) {
 				return failure("No element selected");
 			}

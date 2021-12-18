@@ -34,7 +34,7 @@ public class SwingModalDialogDetector extends SwingPilot {
 	public static List<ModalDialogDetector.PollingResult> listDialogs(
 			final Function<SwingModalDialogDetector, PollingResult>... pollingHandlers) {
 		final List<ModalDialogDetector.PollingResult> result = new ArrayList<>();
-		SwingPilot.invokeAndWait(() -> {
+		SwingHelper.invokeAndWait(() -> {
 			for (final Window window : Window.getWindows()) {
 				if (!window.isVisible() || !(window instanceof JDialog)) {
 					continue;
@@ -71,7 +71,7 @@ public class SwingModalDialogDetector extends SwingPilot {
 	}
 
 	public void closeDialog() {
-		SwingPilot.invokeAndWait(() -> {
+		SwingHelper.invokeAndWait(() -> {
 			getDialog().setVisible(false);
 			getDialog().dispose();
 		});

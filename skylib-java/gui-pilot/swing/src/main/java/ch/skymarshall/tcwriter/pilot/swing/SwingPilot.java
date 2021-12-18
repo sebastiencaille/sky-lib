@@ -2,7 +2,6 @@ package ch.skymarshall.tcwriter.pilot.swing;
 
 import java.awt.Component;
 import java.awt.Container;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
@@ -14,14 +13,10 @@ import java.util.function.Predicate;
 import javax.swing.AbstractButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
-
-import org.junit.jupiter.api.Assertions;
 
 import ch.skymarshall.tcwriter.pilot.ModalDialogDetector;
 import ch.skymarshall.tcwriter.pilot.ModalDialogDetector.PollingResult;
-import ch.skymarshall.util.helpers.NoExceptionCloseable;
 
 @SuppressWarnings("java:S5960")
 public class SwingPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
@@ -47,7 +42,7 @@ public class SwingPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 	 * root
 	 */
 	public void scan() {
-		checkSwingThread();
+		SwingHelper.checkSwingThread();
 		cache.clear();
 		final Container container = root;
 		scan(container);
@@ -105,7 +100,7 @@ public class SwingPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 	 */
 	public <T> Set<T> search(final Set<T> result, final Container container, final Class<T> clazz,
 			final Predicate<T> filter, final Predicate<Set<T>> searchFinished) {
-		checkSwingThread();
+		SwingHelper.checkSwingThread();
 		for (final Component child : container.getComponents()) {
 			if (clazz.isInstance(child) && filter.test(clazz.cast(child))) {
 				result.add(clazz.cast(child));
@@ -125,7 +120,7 @@ public class SwingPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 
 	public <T extends JComponent> T getComponent(final String name, final Class<T> clazz)
 			throws NoSuchComponentException {
-		checkSwingThread();
+		SwingHelper.checkSwingThread();
 		JComponent cachedComponent = cache.get(name);
 		if (cachedComponent == null) {
 			scan();
@@ -135,39 +130,6 @@ public class SwingPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 			throw new NoSuchComponentException("Not found: " + name);
 		}
 		return clazz.cast(cachedComponent);
-	}
-
-	public void withSwing(final Runnable runnable, final ModalDialogDetector detector) {
-		try (NoExceptionCloseable dialogCloseable = ModalDialogDetector.withModalDialogDetection(detector)) {
-			SwingUtilities.invokeAndWait(runnable);
-		} catch (final InvocationTargetException e) {
-			throw new AssertionError(e.getCause());
-		} catch (final InterruptedException e) {
-			Thread.currentThread().interrupt();
-			Assertions.fail("Test case interrupted");
-		}
-	}
-
-	/**
-	 * Low level calls to Swing. Prefer withSwing methods
-	 *
-	 * @param runnable
-	 */
-	public static void invokeAndWait(final Runnable runnable) {
-		try {
-			SwingUtilities.invokeAndWait(runnable);
-		} catch (final InvocationTargetException e) {
-			throw new AssertionError(e.getCause());
-		} catch (final InterruptedException e) {
-			Thread.currentThread().interrupt();
-			Assertions.fail("Test case interrupted");
-		}
-	}
-
-	protected void checkSwingThread() {
-		if (!SwingUtilities.isEventDispatchThread()) {
-			throw new IllegalStateException("Not in Swing thread");
-		}
 	}
 
 	public String dumpHierarchy() {
@@ -193,11 +155,11 @@ public class SwingPilot extends ch.skymarshall.tcwriter.pilot.GuiPilot {
 		});
 
 	}
-	
+
 	public <C extends PagePilot> C page(Function<SwingPilot, C> pageFactory) {
 		C page = pageFactory.apply(this);
 		page.initialize();
-		return page; 
+		return page;
 	}
 
 	public JButtonPilot button(final String name) {

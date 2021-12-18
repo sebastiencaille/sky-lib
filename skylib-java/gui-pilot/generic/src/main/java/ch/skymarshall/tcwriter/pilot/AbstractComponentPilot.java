@@ -187,6 +187,7 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	 * @param applier
 	 * @return
 	 */
+	@SuppressWarnings("java:S1172)")
 	protected <U> PollingResult<C, U> executePolling(Poller poller, final Polling<C, U> polling) {
 
 		final Optional<PollingResult<C, U>> failure = preparePolling(polling);

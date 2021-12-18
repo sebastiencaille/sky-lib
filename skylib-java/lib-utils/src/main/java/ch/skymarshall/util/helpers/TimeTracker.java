@@ -19,21 +19,21 @@ import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class Timeout {
+public class TimeTracker {
 
-	public static Timeout createTimeoutFactory(final int hours, final int minutes, final int seconds) {
-		return new Timeout(Duration.ofHours(hours).plus(Duration.ofMinutes(minutes)).plus(Duration.ofSeconds(seconds)));
+	public static TimeTracker createTimeoutFactory(final int hours, final int minutes, final int seconds) {
+		return new TimeTracker(Duration.ofHours(hours).plus(Duration.ofMinutes(minutes)).plus(Duration.ofSeconds(seconds)));
 	}
 
-	public static Timeout createTimeoutFactory(final int time, final TimeUnit unit) {
-		return new Timeout(Duration.ofMillis(unit.toMillis(time)));
+	public static TimeTracker createTimeoutFactory(final int time, final TimeUnit unit) {
+		return new TimeTracker(Duration.ofMillis(unit.toMillis(time)));
 	}
 
 	private final Duration duration;
 	private long absoluteTimeout = -1;
 	private final Object info;
 
-	public Timeout(final Duration duration) {
+	public TimeTracker(final Duration duration) {
 		this.info = "";
 		this.duration = duration;
 	}
@@ -55,10 +55,6 @@ public class Timeout {
 
 	public boolean hasTimedOut() {
 		return System.currentTimeMillis() > getAbsoluteTimeout();
-	}
-
-	public void yield() throws InterruptedException {
-		Thread.sleep(Math.min(100, remainingTimeMs()));
 	}
 
 	public void waitOn(final Object obj) throws InterruptedException, TimeoutException {

@@ -36,7 +36,7 @@ import ch.skymarshall.gui.model.views.ListViews;
 import ch.skymarshall.gui.swing.jtable.PolicyTableColumnModel;
 import ch.skymarshall.gui.swing.jtable.TableColumnWithPolicy;
 
-@SuppressWarnings({ "serial", "java:S1186"})
+@SuppressWarnings({ "serial", "java:S1186", "java:S125"})
 public class TableModelExampleView extends JFrame {
 
 	static final Comparator<TestObject> NATURAL_ORDER = (o1, o2) -> o1.getASecondValue() - o2.getASecondValue();

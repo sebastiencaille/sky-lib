@@ -35,7 +35,7 @@ delete(find(i1))        | Deletes i1
 delete(find(i2))        | Deletes i2
 
 
-[[Code](examples/src/main/java/ch/scaille/tcwriter/examples/api/interfaces)] / [[Testcase Writer Tests](gui-it/src/main/java/ch/skymarshall/tcwriter/it)]  
+[[Code](examples/src/main/java/ch/scaille/tcwriter/examples/api/interfaces)] / [[Testcase Writer Tests](gui-it/src/main/java/ch/scaille/tcwriter/it)]  
 ```java
 @TCRole(description = "Customer")
 public class CustomerTestRole extends Assert {
@@ -148,5 +148,5 @@ A demonstration GUI is available here [[Code](examples/src/main/java/ch/scaille/
 
 **Testing the test case writer with business oriented tests**  
 It's actually possible to test the GUI using this formalism... (work in progress)  
-[[Test infrastructure](gui-it/src/main/java/ch/scaille/tcwriter/it/)] [[TestCase](gui-it/src/test/java/ch/skymarshall/tcwriter/it/)]
+[[Test infrastructure](gui-it/src/main/java/ch/scaille/tcwriter/it/)] [[TestCase](gui-it/src/test/java/ch/scaille/tcwriter/it/)]
 

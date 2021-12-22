@@ -9,7 +9,7 @@
 * The properties of the model and the visual components are bound through converters
 * The MVC model can be generated from the application model
 
-Complete example: [[Screenshot](../screenshots/MVC_Full_TC.png)][[Model](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/controller/impl/ControllerExampleModel.java)] [[View](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/controller/impl/ControllerExampleView.java)] 
+Complete example: [[Screenshot](../screenshots/MVC_Full_TC.png)][[Model](lib-gui-examples/src/main/java/ch/scaille/example/gui/controller/impl/ControllerExampleModel.java)] [[View](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/controller/impl/ControllerExampleView.java)] 
 
 **Basic Examples**  
 (to display a boolean property as a checkbox and as a String)
@@ -51,7 +51,7 @@ dynamicListSelectionProperty.bind(selection(dynamicListEditor)).addDependency(de
 * startEditingValue(editedValue) must be called before editing the value (editedValue only containing the values required for sorting)
 * stopEditingValue() must be called to validate the edition, move the edit value at the right place, and propagate the change
 
-Example: [[Code](lib-gui-java8/src/test/java/ch/skymarshall/gui/model/ListModelBasicTest.java)] [[Filters Example](lib-gui-java8/src/test/java/ch/skymarshall/gui/model/FilterObjectModelTest.java)]
+Example: [[Code](lib-gui-java8/src/test/java/ch/scaille/gui/model/ListModelBasicTest.java)] [[Filters Example](lib-gui-java8/src/test/java/ch/skymarshall/gui/model/FilterObjectModelTest.java)]
 
 ```java
 IListView<TestObject> VIEW = ListViews.sorted((o1, o2) -> o1.val - o2.val);
@@ -79,7 +79,7 @@ model.editValue(toMove, v -> v.val = 2);
 
 checkModel(childModel, 1, 2, 3);
 ```
-It's possible to control the filter using the MVC concept  [[Code](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/model/impl/TableModelExampleView.java)]
+It's possible to control the filter using the MVC concept  [[Code](lib-gui-examples/src/main/java/ch/scaille/example/gui/model/impl/TableModelExampleView.java)]
 
 ```java
 final DynamicView listDynamicView = new DynamicView();
@@ -98,7 +98,7 @@ ListModel<TestObject> filteredModel = new ChildListModel<>(model, listDynamicVie
 * The model is a ListModel
 * The column can have a fixed size or fill the size of the table
  
-Model Example: [[Model](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/TestObjectTableModel.java)] [[View](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/model/impl/TableModelExampleView.java)]
+Model Example: [[Model](lib-gui-examples/src/main/java/ch/scaille/example/gui/TestObjectTableModel.java)] [[View](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/model/impl/TableModelExampleView.java)]
 
 ```java
 public class TestObjectTableModel extends ListModelTableModel<TestObject, Columns> {
@@ -137,7 +137,7 @@ The editor is made of
 * An adapter that binds the widget and the adapter 
 
 [[Screenshot](../screenshots/Generic_Editor.png)]
-[[Example](lib-gui-examples/src/main/java/ch/skymarshall/example/gui/tools/GenericEditorLauncher.java)]
+[[Example](lib-gui-examples/src/main/java/ch/scaille/example/gui/tools/GenericEditorLauncher.java)]
 
 ```java
 final SwingGenericEditorDialog view = new SwingGenericEditorDialog(null, "Test",

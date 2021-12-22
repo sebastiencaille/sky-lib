@@ -10,10 +10,10 @@ The main file is [[GtkTest.cpp](src-test/GtkTest.cpp)]
 **Basic Examples**  
 
 ```
-using namespace ch_skymarshall::gui;
-using namespace ch_skymarshall::gui::converters;
-using namespace ch_skymarshall::gui::glib;
-using namespace ch_skymarshall::gui::gtk4;
+using namespace ch_scaille::gui;
+using namespace ch_scaille::gui::converters;
+using namespace ch_scaille::gui::glib;
+using namespace ch_scaille::gui::gtk4;
 ...
 
 // View
@@ -36,7 +36,7 @@ testProperty1.bind(string_to_ustring::of())->bind(label_binding::of(m_label));
 It is also possible to pilot the Gtk gui the following way.
 
 ```
-using namespace ch_skymarshall::gui::gtk4::pilot;
+using namespace ch_scaille::gui::gtk4::pilot;
 ...
 
 gtk_gui_pilot guiPilot(this);

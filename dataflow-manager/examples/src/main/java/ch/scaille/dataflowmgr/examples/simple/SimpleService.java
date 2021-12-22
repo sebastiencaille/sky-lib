@@ -1,0 +1,29 @@
+package ch.scaille.dataflowmgr.examples.simple;
+
+import ch.scaille.dataflowmgr.annotations.Input;
+import ch.scaille.dataflowmgr.annotations.Processors;
+import ch.scaille.dataflowmgr.examples.simple.dto.MyData;
+
+@Processors
+public class SimpleService {
+
+	public MyData init(final String input) {
+		assert input != null;
+		FlowReport.add("init");
+		return new MyData(input);
+	}
+
+	public MyData complete(final MyData input, @Input("completion") final String completion) {
+		assert input != null;
+		assert completion != null;
+		FlowReport.add("complete");
+		return new MyData(input, " -> complete with " + completion);
+	}
+
+	public MyData keepAsIs(final MyData input) {
+		assert input != null;
+		FlowReport.add("keepAsIs");
+		return new MyData(input, " -> keep as is");
+	}
+
+}

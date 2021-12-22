@@ -1,14 +1,14 @@
 package ${package};
 
 import java.util.Arrays;
-import ch.skymarshall.gui.mvc.GuiModel;
-import ch.skymarshall.gui.mvc.IComponentBinding;
-import ch.skymarshall.gui.mvc.IComponentLink;
-import ch.skymarshall.gui.mvc.IObjectGuiModel;
-import ch.skymarshall.gui.mvc.factories.Persisters;
-import ch.skymarshall.gui.mvc.persisters.ObjectProviderPersister;
-import ch.skymarshall.gui.mvc.properties.AbstractProperty;
-import ch.skymarshall.gui.mvc.properties.Configuration;
+import ch.scaille.gui.mvc.GuiModel;
+import ch.scaille.gui.mvc.IComponentBinding;
+import ch.scaille.gui.mvc.IComponentLink;
+import ch.scaille.gui.mvc.IObjectGuiModel;
+import ch.scaille.gui.mvc.factories.Persisters;
+import ch.scaille.gui.mvc.persisters.ObjectProviderPersister;
+import ch.scaille.gui.mvc.properties.AbstractProperty;
+import ch.scaille.gui.mvc.properties.Configuration;
 ${imports}
 
 public class ${modelClass} extends GuiModel implements IObjectGuiModel<${objectClass}> {

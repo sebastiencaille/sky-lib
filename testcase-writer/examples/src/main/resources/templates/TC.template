@@ -1,9 +1,9 @@
 package ${package};
 
-import ch.skymarshall.tcwriter.examples.api.interfaces.dto.*;
-import ch.skymarshall.tcwriter.examples.api.interfaces.selectors.*;
-import ch.skymarshall.tcwriter.examples.api.interfaces.*;
-import ch.skymarshall.tcwriter.recording.*;
+import ch.scaille.tcwriter.examples.api.interfaces.dto.*;
+import ch.scaille.tcwriter.examples.api.interfaces.selectors.*;
+import ch.scaille.tcwriter.examples.api.interfaces.*;
+import ch.scaille.tcwriter.recording.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,8 +20,8 @@ public class ${testName} {
 		TestActors.register(customer, "customer", null);
 		deliveryGuy = new DeliveryTestRole(testedService);
 		TestActors.register(deliveryGuy, "deliveryGuy", null);
-		ch.skymarshall.tcwriter.TestFeature.aspectjRecorder().enable();
-		ch.skymarshall.tcwriter.TestFeature.aspectjStepping(); // don't enable by default
+		ch.scaille.tcwriter.TestFeature.aspectjRecorder().enable();
+		ch.scaille.tcwriter.TestFeature.aspectjStepping(); // don't enable by default
 	}
 	
 	@Test

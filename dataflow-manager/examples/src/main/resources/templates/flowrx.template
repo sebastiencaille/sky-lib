@@ -1,8 +1,8 @@
 package ${package};
 
-import ch.skymarshall.dataflowmgr.examples.simple.FlowReport;
+import ch.scaille.dataflowmgr.examples.simple.FlowReport;
 
-import ch.skymarshall.util.helpers.Log;
+import ch.scaille.util.helpers.Log;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.util.concurrent.Semaphore;
@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 
 ${imports}
 
-class ${flow.name} extends ch.skymarshall.dataflowmgr.examples.simple.AbstractFlow {
+class ${flow.name} extends ch.scaille.dataflowmgr.examples.simple.AbstractFlow {
 
 	public enum DataPointState {
 		NOT_TRIGGERED, TRIGGERING, TRIGGERED, SKIPPED

@@ -66,8 +66,8 @@ The flow must be understood this way:
 * The resulting data are then sent to the 'display' of an external system
 * The flow is terminated
 
-![Flow definition](examples/src/test/java/ch/skymarshall/dataflowmgr/examples/SimpleTest.java)
-![Procedural execution](examples/src/test/java/ch/skymarshall/dataflowmgr/examples/simple/SimpleFlow.java)
-![Reactive execution](examples/src/test/java/ch/skymarshall/dataflowmgr/examples/simplerx/SimpleFlow.java)
+![Flow definition](examples/src/test/java/ch/scaille/dataflowmgr/examples/SimpleTest.java)
+![Procedural execution](examples/src/test/java/ch/scaille/dataflowmgr/examples/simple/SimpleFlow.java)
+![Reactive execution](examples/src/test/java/ch/scaille/dataflowmgr/examples/simplerx/SimpleFlow.java)
 ![Simple flow](examples/src/test/reports/SimpleFlow.png)
 

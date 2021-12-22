@@ -35,7 +35,7 @@ delete(find(i1))        | Deletes i1
 delete(find(i2))        | Deletes i2
 
 
-[[Code](examples/src/main/java/ch/skymarshall/tcwriter/examples/api/interfaces)] / [[Testcase Writer Tests](gui-it/src/main/java/ch/skymarshall/tcwriter/it)]  
+[[Code](examples/src/main/java/ch/scaille/tcwriter/examples/api/interfaces)] / [[Testcase Writer Tests](gui-it/src/main/java/ch/skymarshall/tcwriter/it)]  
 ```java
 @TCRole(description = "Customer")
 public class CustomerTestRole extends Assert {
@@ -96,7 +96,7 @@ Some actions may trigger arbitrary events that are delaying the execution of the
 # Dev test cases 
 Each Actor is an instance of a specific Role.  
 by using the defined Roles/Actions/..., we can write test cases like
-[[Code](examples/src/main/java/ch/skymarshall/tcwriter/examples/SimpleTest.java)]  
+[[Code](examples/src/main/java/ch/scaille/tcwriter/examples/SimpleTest.java)]  
 ```java
 CustomerTestRole customer = new CustomerTestRole(testedService); // A customer
 ...
@@ -135,18 +135,18 @@ This formalism should allow
 9. As customer, I keep the note "[Value of step 8: MidClass]"
 ```
 
-* generating java test cases [[Code](examples/src/test/java/ch/skymarshall/tcwriter/examples/GeneratedTest.java)]
+* generating java test cases [[Code](examples/src/test/java/ch/scaille/tcwriter/examples/GeneratedTest.java)]
 
 * storing the test in a "data description" format (JSON, XML, ...) [[Model](examples/src/main/resources/models/test-model.json)]  [[TestCase](examples/src/main/resources/testCase/testCase.json)]
 
 # Demonstration GUI
-A demonstration GUI is available here [[Code](examples/src/main/java/ch/skymarshall/tcwriter/examples/gui/ExampleTCEditor.java)]
+A demonstration GUI is available here [[Code](examples/src/main/java/ch/scaille/tcwriter/examples/gui/ExampleTCEditor.java)]
   * The test model is automatically built by introspecting the java classes.
-  * The test case is recorded from the execution of [[SimpleTest](examples/src/main/java/ch/skymarshall/tcwriter/examples/SimpleTest.java)] (thanks to AspectJ)
+  * The test case is recorded from the execution of [[SimpleTest](examples/src/main/java/ch/scaille/tcwriter/examples/SimpleTest.java)] (thanks to AspectJ)
 
 ![TC writer full](../screenshots/TC_Writer_full.png)
 
 **Testing the test case writer with business oriented tests**  
 It's actually possible to test the GUI using this formalism... (work in progress)  
-[[Test infrastructure](gui-it/src/main/java/ch/skymarshall/tcwriter/it/)] [[TestCase](gui-it/src/test/java/ch/skymarshall/tcwriter/it/)]
+[[Test infrastructure](gui-it/src/main/java/ch/scaille/tcwriter/it/)] [[TestCase](gui-it/src/test/java/ch/skymarshall/tcwriter/it/)]
 

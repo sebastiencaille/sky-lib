@@ -61,12 +61,12 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 		super.setWidth(width);
 	}
 
-	public TableColumnWithPolicy<C> apply(final TableCellRenderer renderer) {
+	public TableColumnWithPolicy<C> with(final TableCellRenderer renderer) {
 		setCellRenderer(renderer);
 		return this;
 	}
 
-	public TableColumnWithPolicy<C> apply(final TableCellRenderer renderer, final TableCellEditor editor) {
+	public TableColumnWithPolicy<C> with(final TableCellRenderer renderer, final TableCellEditor editor) {
 		setCellRenderer(renderer);
 		setCellEditor(editor);
 		return this;

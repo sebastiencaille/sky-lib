@@ -41,14 +41,14 @@ public class AbstractGuiTest {
 		config.setTcPath(tcPath.toString());
 		config.setDefaultGeneratedTCPath("./src/test/java");
 		config.setDictionaryPath(modelPath + "/test-model.json");
-		config.setTemplatePath(new File("templates/TC.template").toString());
+		config.setTemplatePath(new File("rsrc:templates/TC.template").toString());
 		final JsonModelPersister persister = new JsonModelPersister(config);
 
 		final TestDictionary model = new JavaToDictionary(asList(TestWriterRole.class)).generateDictionary();
 		model.addActor(new TestActor("TestCase writer", "tcWriter", model.getRole(TestWriterRole.class)), null);
 		persister.writeTestDictionary(model);
 
-		final ITestExecutor executor = new JunitTestExecutor(config, ClassLoaderHelper.appClassPath());
+		final ITestExecutor executor = new JunitTestExecutor(persister, ClassLoaderHelper.appClassPath());
 
 		final TCWriterController controller = new TCWriterController(config, persister, executor);
 		SwingUtilities.invokeAndWait(controller::run);

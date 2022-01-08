@@ -3,6 +3,7 @@ package ch.scaille.tcwriter.gui.steps;
 import static ch.scaille.gui.swing.factories.SwingBindings.selection;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -10,6 +11,8 @@ import java.awt.Rectangle;
 import java.util.Arrays;
 
 import javax.swing.CellRendererPane;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -22,6 +25,7 @@ import ch.scaille.gui.mvc.IBindingController;
 import ch.scaille.gui.swing.jtable.PolicyTableColumnModel;
 import ch.scaille.gui.swing.jtable.TableColumnWithPolicy;
 import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
+import ch.scaille.tcwriter.generators.model.testcase.StepClassifier;
 import ch.scaille.tcwriter.generators.model.testcase.TestCase;
 import ch.scaille.tcwriter.generators.model.testcase.TestStep;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
@@ -106,15 +110,39 @@ public class StepsTable extends JPanel {
 		columnModel.install();
 		Arrays.stream(Column.values()).forEach(c -> stepsJTable.getColumn(c).setCellRenderer(new StepsCellRenderer()));
 		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(Column.BREAKPOINT, 20)
-				.apply(new StepStatusRenderer(), new StepStatusEditor()));
-		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(Column.STEP, 20));
-		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(Column.ACTOR, 120).apply(new StepsCellRenderer()));
+				.with(new StepStatusRenderer(), new StepStatusEditor()));
 		columnModel.configureColumn(
-				TableColumnWithPolicy.percentOfAvailableSpace(Column.SELECTOR, 50).apply(new StepsCellRenderer()));
+				TableColumnWithPolicy.fixedWidth(Column.ORDINAL, 20).with(new DefaultTableCellRenderer() {
+					@Override
+					public Component getTableCellRendererComponent(JTable var1, Object obj, boolean var3, boolean var4,
+							int row, int col) {
+						super.getTableCellRendererComponent(var1, obj, var3, var4, row, col);
+						StepClassifier classifier = (StepClassifier) var1.getValueAt(row, Column.CLASSIFIER.ordinal());
+						switch (classifier) {
+						case PREPARATION:
+							setBackground(Color.CYAN);
+							break;
+						case ACTION:
+							setBackground(Color.GREEN);
+							break;
+						case CHECK:
+							setBackground(Color.ORANGE);
+							break;
+						default:
+						}
+						return this;
+					}
+				}));
+
+		JComboBox<StepClassifier> stepClassifierEditor = new JComboBox<>(StepClassifier.values());
+		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(Column.CLASSIFIER, 100)
+				.with(new StepsCellRenderer(), new DefaultCellEditor(stepClassifierEditor)));
+		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(Column.ACTOR, 120).with(new StepsCellRenderer()));
 		columnModel.configureColumn(
-				TableColumnWithPolicy.percentOfAvailableSpace(Column.PARAM0, 50).apply(new StepsCellRenderer()));
-		columnModel
-				.configureColumn(TableColumnWithPolicy.fixedWidth(Column.TO_VAR, 250).apply(new StepsCellRenderer()));
+				TableColumnWithPolicy.percentOfAvailableSpace(Column.SELECTOR, 50).with(new StepsCellRenderer()));
+		columnModel.configureColumn(
+				TableColumnWithPolicy.percentOfAvailableSpace(Column.PARAM0, 50).with(new StepsCellRenderer()));
+		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(Column.TO_VAR, 250).with(new StepsCellRenderer()));
 
 		// Refresh table when step is updated
 		final IBindingController selectedStepCtrl = model.getSelectedStep()

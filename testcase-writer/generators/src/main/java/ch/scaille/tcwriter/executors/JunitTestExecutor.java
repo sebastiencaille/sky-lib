@@ -15,9 +15,9 @@ import java.util.function.Supplier;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
-import ch.scaille.tcwriter.generators.GeneratorConfig;
 import ch.scaille.tcwriter.generators.TestCaseToJava;
 import ch.scaille.tcwriter.generators.model.TestCaseException;
+import ch.scaille.tcwriter.generators.model.persistence.IModelPersister;
 import ch.scaille.tcwriter.generators.model.testcase.TestCase;
 import ch.scaille.util.helpers.ClassLoaderHelper;
 
@@ -33,11 +33,11 @@ public class JunitTestExecutor implements ITestExecutor {
 
 	private final URL[] classPath;
 
-	public JunitTestExecutor(final GeneratorConfig config, final URL[] classPath) throws IOException {
+	public JunitTestExecutor(final IModelPersister persister, final URL[] classPath) throws IOException {
 		this.javaTargetPath = Files.createTempDirectory("tcwriter");
 		this.javaTargetPath.toFile().deleteOnExit();
 		this.classPath = classPath;
-		this.testCaseToJava = new TestCaseToJava(config);
+		this.testCaseToJava = new TestCaseToJava(persister);
 	}
 
 	@Override

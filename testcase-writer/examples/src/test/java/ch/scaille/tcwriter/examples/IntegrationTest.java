@@ -18,18 +18,19 @@ import ch.scaille.tcwriter.generators.model.testcase.TestCase;
 class IntegrationTest {
 
 	@Test
-	 void generateDictionaryAndTC() throws IOException, TestCaseException {
+	void generateDictionaryAndTC() throws IOException, TestCaseException {
 		final TestDictionary model = ExampleHelper.generateDictionary();
 		final TestCase testCase = ExampleHelper.recordTestCase(model);
 		assertNotEquals(0, testCase.getSteps().size());
 
 		ExampleHelper.saveDictionary(model);
 		ExampleHelper.saveTC(ExampleHelper.TC_NAME, testCase);
-		new TestCaseToJava(getConfig()).generateAndWrite(testCase, Paths.get(getConfig().getDefaultGeneratedTCPath()));
+		new TestCaseToJava(ExampleHelper.getPersister()).generateAndWrite(testCase,
+				Paths.get(getConfig().getDefaultGeneratedTCPath()));
 	}
 
 	@Test
-	 void testSerializeDeserialize() throws IOException {
+	void testSerializeDeserialize() throws IOException {
 		final TestDictionary model = ExampleHelper.generateDictionary();
 		final TestCase tc = ExampleHelper.recordTestCase(model);
 

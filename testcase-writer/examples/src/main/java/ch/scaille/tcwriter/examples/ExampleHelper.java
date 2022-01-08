@@ -45,7 +45,7 @@ public class ExampleHelper {
 		CONFIG.setTcPath(tcPath.toString());
 		CONFIG.setDefaultGeneratedTCPath("./src/test/java");
 		CONFIG.setDictionaryPath(modelPath + "/test-model.json");
-		CONFIG.setTemplatePath(new File("templates/TC.template").toString());
+		CONFIG.setTemplatePath("rsrc:templates/TC.template");
 		persister = new JsonModelPersister(CONFIG);
 	}
 
@@ -82,7 +82,7 @@ public class ExampleHelper {
 	}
 
 	public static ITestExecutor testExecutor() throws IOException {
-		return new JunitTestExecutor(CONFIG, ClassLoaderHelper.appClassPath());
+		return new JunitTestExecutor(getPersister(), ClassLoaderHelper.appClassPath());
 	}
 
 	public static GeneratorConfig getConfig() {

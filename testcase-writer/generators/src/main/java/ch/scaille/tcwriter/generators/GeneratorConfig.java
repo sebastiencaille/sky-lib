@@ -7,13 +7,13 @@ public class GeneratorConfig {
 
 	private String name = "default";
 
-	private String dictionaryPath;
+	private String dictionaryPath = "${user.home}/.tcwriter/dictionary";
 
-	private String tcPath;
+	private String tcPath = "${user.home}/.tcwriter/testcase";
 
-	private String defaultGeneratedTCPath;
+	private String templatePath = "${user.home}/.tcwriter/template";
 
-	private String templatePath;
+	private String defaultGeneratedTCPath = "${user.home}/.tcwriter/generated";
 
 	@Ordered(order = 1)
 	@Labeled(label = "Name of the configuration")

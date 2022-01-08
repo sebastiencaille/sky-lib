@@ -1,6 +1,11 @@
 package ch.scaille.tcwriter.generators.model.persistence;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -8,6 +13,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
@@ -30,13 +38,18 @@ import ch.scaille.tcwriter.generators.GeneratorConfig;
 import ch.scaille.tcwriter.generators.model.ExportReference;
 import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
 import ch.scaille.tcwriter.generators.model.testcase.TestCase;
+import ch.scaille.util.generators.Template;
+import ch.scaille.util.helpers.ClassLoaderHelper;
 
 public class JsonModelPersister implements IModelPersister {
+
+	private static final Logger LOGGER = Logger.getLogger(JsonModelPersister.class.getName());
 
 	private static final String CONTEXT_ALL_REFERENCES = "AllTestReferences";
 	private static ObjectMapper mapper;
 
 	static {
+		ClassLoaderHelper.registerResourceHandler();
 		mapper = JsonMapper.builder().configure(MapperFeature.AUTO_DETECT_GETTERS, false)
 				.configure(MapperFeature.AUTO_DETECT_IS_GETTERS, false)
 				.configure(MapperFeature.AUTO_DETECT_FIELDS, true).visibility(PropertyAccessor.FIELD, Visibility.ANY)
@@ -66,14 +79,19 @@ public class JsonModelPersister implements IModelPersister {
 
 	}
 
-	private GeneratorConfig config = new GeneratorConfig();
+	private GeneratorConfig config;
 
-	public JsonModelPersister() throws IOException {
+	public JsonModelPersister() {
 		this("defaultConfig");
 	}
 
-	public JsonModelPersister(final String configIdentifier) throws IOException {
-		this.config = readConfiguration(configIdentifier);
+	public JsonModelPersister(final String configIdentifier) {
+		try {
+			this.config = readConfiguration(configIdentifier);
+		} catch (IOException e) {
+			LOGGER.log(Level.INFO, e, () -> "Unable to read config " + configIdentifier);
+			this.config = new GeneratorConfig();
+		}
 	}
 
 	public JsonModelPersister(final GeneratorConfig config) {
@@ -85,45 +103,38 @@ public class JsonModelPersister implements IModelPersister {
 		this.config = config;
 	}
 
-	protected Path tcPath(final String identifier) {
-		return Paths.get(config.getTcPath(), identifier);
+	@Override
+	public GeneratorConfig readConfiguration(final String identifier) throws IOException {
+		return mapper.readValue(read(configPath(identifier)), GeneratorConfig.class);
 	}
 
-	private static Path configPath(final String identifier) {
-		return Paths.get(System.getProperty("user.home"), ".tcwriter", identifier);
-	}
-
-	protected static String readJson(final Path path) throws IOException {
-		return String.join(" ", Files.readAllLines(path, StandardCharsets.UTF_8));
-	}
-
-	protected static void writeJson(final Path path, final String content) throws IOException {
-		Files.createDirectories(path.getParent());
-		Files.write(path, content.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE,
-				StandardOpenOption.TRUNCATE_EXISTING);
+	@Override
+	public void writeConfiguration(final GeneratorConfig config) throws IOException {
+		writeJson(configPath(config.getName()), mapper.writeValueAsString(config));
 	}
 
 	@Override
 	public TestDictionary readTestDictionary() throws IOException {
-		return mapper.readerFor(TestDictionary.class).readValue(readJson(Paths.get(config.getDictionaryPath())));
+		return mapper.readerFor(TestDictionary.class).readValue(read(resolve(config.getDictionaryPath())));
 	}
 
 	@Override
 	public void writeTestDictionary(final TestDictionary tm) throws IOException {
-		writeTestDictionary(Paths.get(config.getDictionaryPath()), tm);
+		writeJson(resolve(config.getDictionaryPath()), mapper.writerFor(TestDictionary.class).writeValueAsString(tm));
 	}
 
 	@Override
 	public void writeTestDictionary(final Path target, final TestDictionary tm) throws IOException {
-		writeJson(target, mapper.writerFor(TestDictionary.class).writeValueAsString(tm));
+		writeJson(target.toUri().toURL(), mapper.writerFor(TestDictionary.class).writeValueAsString(tm));
 	}
 
 	@Override
 	public TestCase readTestCase(final String identifier, final TestDictionary testDictionary) throws IOException {
-		final ArrayList<ExportReference> references = new ArrayList<>();
+		final List<ExportReference> references = new ArrayList<>();
 		final ContextAttributes ctxt = mapper.getDeserializationConfig().getAttributes()
 				.withPerCallAttribute(CONTEXT_ALL_REFERENCES, references);
-		final TestCase testCase = mapper.readerFor(TestCase.class).with(ctxt).readValue(readJson(tcPath(identifier)));
+		final TestCase testCase = mapper.readerFor(TestCase.class).with(ctxt)
+				.readValue(read(resolveJson(config.getTcPath(), identifier)));
 		testCase.setDictionary(testDictionary);
 		references.forEach(e -> e.restore(testCase));
 		return testCase;
@@ -131,17 +142,50 @@ public class JsonModelPersister implements IModelPersister {
 
 	@Override
 	public void writeTestCase(final String identifier, final TestCase tc) throws IOException {
-		writeJson(tcPath(identifier), mapper.writerFor(TestCase.class).writeValueAsString(tc));
+		writeJson(resolveJson(config.getTcPath(), identifier), mapper.writerFor(TestCase.class).writeValueAsString(tc));
 	}
 
 	@Override
-	public GeneratorConfig readConfiguration(final String identifier) throws IOException {
-		return mapper.readValue(readJson(configPath(identifier)), GeneratorConfig.class);
+	public Template readTemplate() throws IOException {
+		return new Template(read(resolve(config.getTemplatePath())));
 	}
 
-	@Override
-	public void writeConfiguration(final GeneratorConfig config) throws IOException {
-		writeJson(configPath(config.getName() + ".json"), mapper.writeValueAsString(config));
+	protected URL configPath(final String identifier) throws MalformedURLException {
+		return resolveJson("${user.home}/.tcwriter", identifier);
+	}
+
+	protected void writeJson(final URL path, final String content) throws IOException {
+		if (!path.getProtocol().equals("file")) {
+			throw new IllegalStateException("Not possible to write url " + path);
+		}
+		try {
+			Path file = Paths.get(path.toURI());
+			Files.createDirectories(file.getParent());
+			Files.write(file, content.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE,
+					StandardOpenOption.TRUNCATE_EXISTING);
+		} catch (URISyntaxException e) {
+			throw new IOException("Cannot write file", e);
+		}
+	}
+
+	protected URL resolve(String path) throws MalformedURLException {
+		String saneUrl = path.replace("${user.home}", System.getProperty("user.home"));
+		try {
+			return new URL(saneUrl);
+		} catch (MalformedURLException e) {
+			return Paths.get(saneUrl).toAbsolutePath().toUri().toURL();
+		}
+	}
+
+	protected URL resolveJson(String path, String subPath) throws MalformedURLException {
+		return resolve(path + '/' + subPath + ".json");
+	}
+
+	protected String read(final URL path) throws IOException {
+		try (BufferedReader reader = new BufferedReader(
+				new InputStreamReader(path.openConnection().getInputStream()))) {
+			return reader.lines().collect(Collectors.joining("\n"));
+		}
 	}
 
 	public static Path classFile(final Path root, final String testClassName) {

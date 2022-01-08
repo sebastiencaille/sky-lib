@@ -17,8 +17,8 @@ public class TestCaseToJava {
 
 	private final Template testCaseTemplate;
 
-	public TestCaseToJava(final GeneratorConfig config) throws IOException {
-		testCaseTemplate = Template.from(config.getTemplatePath());
+	public TestCaseToJava(final IModelPersister persister) throws IOException {
+		testCaseTemplate = persister.readTemplate();
 	}
 
 	public File generateAndWrite(final TestCase tc, final Path targetPath) throws IOException, TestCaseException {
@@ -34,7 +34,7 @@ public class TestCaseToJava {
 		final String jsonTC = args[1];
 		final TestCase tc = persister.readTestCase(jsonTC, testDictionary);
 
-		new TestCaseToJava(config).generateAndWrite(tc, Paths.get(config.getDefaultGeneratedTCPath()));
+		new TestCaseToJava(persister).generateAndWrite(tc, Paths.get(config.getDefaultGeneratedTCPath()));
 	}
 
 }

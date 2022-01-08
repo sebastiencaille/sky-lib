@@ -22,6 +22,7 @@ public class TestStep {
 	private TestAction action = TestAction.NOT_SET;
 	private final List<TestParameterValue> parametersValue = new ArrayList<>();
 	private TestReference reference;
+	private StepClassifier classifier = StepClassifier.ACTION;
 
 	protected TestStep() {
 		this.ordinal = -1;
@@ -121,6 +122,14 @@ public class TestStep {
 	@Override
 	public String toString() {
 		return actor.getName() + "." + action.getName();
+	}
+
+	public StepClassifier getClassifier() {
+		return classifier;
+	}
+	
+	public void setClassifier(StepClassifier classifier) {
+		this.classifier = classifier;
 	}
 
 }

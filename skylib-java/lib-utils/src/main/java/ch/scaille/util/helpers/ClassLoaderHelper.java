@@ -12,6 +12,8 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import ch.scaille.util.helpers.protocols.rsrc.Handler;
+
 public class ClassLoaderHelper {
 
 	private static final String CP_SEPARATOR = System.getProperty("path.separator");
@@ -60,5 +62,16 @@ public class ClassLoaderHelper {
 
 	public static String cpToCommandLine(final URL[] classpath, final URL... extra) {
 		return Stream.concat(Stream.of(classpath), Stream.of(extra)).map(URL::getFile).collect(joining(CP_SEPARATOR));
+	}
+
+	public static void registerResourceHandler() {
+		String handlerPkg = "ch.scaille.util.helpers.protocols";
+		String currentProp = System.getProperty("java.protocol.handler.pkgs");
+		if (currentProp == null || !currentProp.contains(handlerPkg)) {
+			if (currentProp != null) {
+				handlerPkg = handlerPkg + '|' + currentProp;
+			}
+			System.setProperty("java.protocol.handler.pkgs", handlerPkg);
+		}
 	}
 }

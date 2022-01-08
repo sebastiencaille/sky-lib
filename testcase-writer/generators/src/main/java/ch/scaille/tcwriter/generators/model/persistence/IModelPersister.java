@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import ch.scaille.tcwriter.generators.GeneratorConfig;
 import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
 import ch.scaille.tcwriter.generators.model.testcase.TestCase;
+import ch.scaille.util.generators.Template;
 
 /**
  * Methods used to load/save the configurations, models and test cases
@@ -30,5 +31,7 @@ public interface IModelPersister {
 	GeneratorConfig readConfiguration(String identifier) throws IOException;
 
 	void writeConfiguration(GeneratorConfig config) throws IOException;
+
+	Template readTemplate() throws IOException;
 
 }

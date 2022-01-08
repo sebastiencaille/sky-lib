@@ -16,12 +16,12 @@ public class TestParameterValueTable extends JTable {
 		myColumnModel.install();
 		myColumnModel
 				.configureColumn(TableColumnWithPolicy.fixedWidth(TestParameterValueTableModel.Columns.MANDATORY, 50)
-						.apply(getDefaultRenderer(Boolean.class)));
+						.with(getDefaultRenderer(Boolean.class)));
 		myColumnModel.configureColumn(TableColumnWithPolicy.fixedWidth(TestParameterValueTableModel.Columns.ENABLED, 50)
-				.apply(getDefaultRenderer(Boolean.class)));
+				.with(getDefaultRenderer(Boolean.class)));
 		myColumnModel
 				.configureColumn(TableColumnWithPolicy.fixedWidth(TestParameterValueTableModel.Columns.DESCRIPTION, 200)
-						.apply(new DefaultTableCellRenderer()));
+						.with(new DefaultTableCellRenderer()));
 		myColumnModel.configureColumn(
 				TableColumnWithPolicy.percentOfAvailableSpace(TestParameterValueTableModel.Columns.VALUE, 100));
 	}

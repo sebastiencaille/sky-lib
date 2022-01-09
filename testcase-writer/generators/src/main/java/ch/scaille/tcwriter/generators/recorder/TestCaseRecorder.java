@@ -106,7 +106,8 @@ public class TestCaseRecorder implements ITestCaseRecorder {
 		final TestAction action = role.getActions().stream().filter(a -> matches(a, apiName, apiArgs)).findFirst()
 				.orElseThrow(() -> new IllegalStateException("No action found for " + description));
 		step.setAction(action);
-
+		step.fixClassifier();
+		
 		for (int i = 0; i < apiArgs.length; i++) {
 			final Object apiArg = apiArgs[i];
 			final TestParameterValue parameterValue = testParameterValues.get(apiArg);

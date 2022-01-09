@@ -11,8 +11,6 @@ import java.awt.Rectangle;
 import java.util.Arrays;
 
 import javax.swing.CellRendererPane;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -24,8 +22,8 @@ import ch.scaille.gui.model.views.ListViews;
 import ch.scaille.gui.mvc.IBindingController;
 import ch.scaille.gui.swing.jtable.PolicyTableColumnModel;
 import ch.scaille.gui.swing.jtable.TableColumnWithPolicy;
+import ch.scaille.tcwriter.generators.model.testapi.StepClassifier;
 import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
-import ch.scaille.tcwriter.generators.model.testcase.StepClassifier;
 import ch.scaille.tcwriter.generators.model.testcase.TestCase;
 import ch.scaille.tcwriter.generators.model.testcase.TestStep;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
@@ -117,16 +115,16 @@ public class StepsTable extends JPanel {
 					public Component getTableCellRendererComponent(JTable var1, Object obj, boolean var3, boolean var4,
 							int row, int col) {
 						super.getTableCellRendererComponent(var1, obj, var3, var4, row, col);
-						StepClassifier classifier = (StepClassifier) var1.getValueAt(row, Column.CLASSIFIER.ordinal());
+						StepClassifier classifier = steps.getElementAt(row).getClassifier();
 						switch (classifier) {
 						case PREPARATION:
 							setBackground(Color.CYAN);
 							break;
 						case ACTION:
-							setBackground(Color.GREEN);
+							setBackground(Color.ORANGE);
 							break;
 						case CHECK:
-							setBackground(Color.ORANGE);
+							setBackground(Color.GREEN);
 							break;
 						default:
 						}
@@ -134,9 +132,6 @@ public class StepsTable extends JPanel {
 					}
 				}));
 
-		JComboBox<StepClassifier> stepClassifierEditor = new JComboBox<>(StepClassifier.values());
-		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(Column.CLASSIFIER, 100)
-				.with(new StepsCellRenderer(), new DefaultCellEditor(stepClassifierEditor)));
 		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(Column.ACTOR, 120).with(new StepsCellRenderer()));
 		columnModel.configureColumn(
 				TableColumnWithPolicy.percentOfAvailableSpace(Column.SELECTOR, 50).with(new StepsCellRenderer()));

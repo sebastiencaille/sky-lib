@@ -1,5 +1,6 @@
 package ch.scaille.tcwriter.examples.api.interfaces;
 
+import ch.scaille.tcwriter.annotations.TCAction;
 import ch.scaille.tcwriter.annotations.TCApi;
 import ch.scaille.tcwriter.annotations.TCRole;
 import ch.scaille.tcwriter.examples.ExampleService;
@@ -14,6 +15,7 @@ public class DeliveryTestRole {
 	}
 
 	@TCApi(description = "Deliver item", humanReadable = "I deliver the item")
+	@TCAction
 	public void deliverItem() {
 		testedService.delivered();
 	}

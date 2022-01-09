@@ -2,7 +2,7 @@ package ch.scaille.gui.swing.tools;
 
 import static ch.scaille.gui.mvc.factories.Converters.guiErrorToString;
 import static ch.scaille.gui.mvc.factories.Converters.mapContains;
-import static ch.scaille.gui.mvc.factories.Converters.wo;
+import static ch.scaille.gui.mvc.factories.Converters.listen;
 import static ch.scaille.gui.swing.factories.SwingBindings.selected;
 import static ch.scaille.gui.swing.factories.SwingBindings.value;
 
@@ -141,7 +141,7 @@ public class SwingGenericEditorPanel extends JPanel implements IGenericEditor {
 
 		errorLabel.setForeground(Color.RED);
 		errorLabel.setFont(errorLabel.getFont().deriveFont(Font.BOLD));
-		errorProperty.getErrors().bind(wo(m -> m.get(prop.getProperty()))).bind(guiErrorToString())
+		errorProperty.getErrors().bind(listen(m -> m.get(prop.getProperty()))).bind(guiErrorToString())
 				.listen(errorLabel::setToolTipText);
 		errorProperty.getErrors().bind(mapContains(prop.getProperty(), "*", "")).listen(errorLabel::setText);
 	}

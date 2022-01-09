@@ -206,7 +206,7 @@ public final class Converters {
 	}
 
 	public static <K, V, U> IConverter<Map<K, V>, U> mapContains(K key, U either, U or) {
-		return wo(e -> e.containsKey(key) ? either:or);
+		return listen(e -> e.containsKey(key) ? either:or);
 	}
 
 	public static IConverter<String, String> toSingleLine() {
@@ -276,22 +276,22 @@ public final class Converters {
 	 *                  component side
 	 * @return
 	 */
-	public static <T, U> IConverter<T, U> wo(final Function<T, U> prop2comp) {
+	public static <T, U> IConverter<T, U> listen(final Function<T, U> prop2comp) {
 		return converter(prop2comp, o -> {
 			throw new WriteOnlyException();
 		});
 	}
 
 	public static <T> IConverter<T, String> objectToString() {
-		return wo(Object::toString);
+		return listen(Object::toString);
 	}
 
 	public static <T extends Number> IConverter<T, String> numberToSize() {
-		return wo(FormatterHelper::toSize);
+		return listen(FormatterHelper::toSize);
 	}
 
 	public static <T> IConverter<T, Boolean> isNotNull() {
-		return wo(Objects::nonNull);
+		return listen(Objects::nonNull);
 	}
 
 	public static <T> IConverter<T, T> noOp(final BiConsumer<Boolean, T> consumer) {

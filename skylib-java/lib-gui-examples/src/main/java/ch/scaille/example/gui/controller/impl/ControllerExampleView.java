@@ -20,7 +20,7 @@ import static ch.scaille.gui.mvc.factories.BindingDependencies.preserveOnUpdateO
 import static ch.scaille.gui.mvc.factories.Converters.guiErrorToString;
 import static ch.scaille.gui.mvc.factories.Converters.intToString;
 import static ch.scaille.gui.mvc.factories.Converters.mapContains;
-import static ch.scaille.gui.mvc.factories.Converters.wo;
+import static ch.scaille.gui.mvc.factories.Converters.listen;
 import static ch.scaille.gui.swing.factories.SwingBindings.selected;
 import static ch.scaille.gui.swing.factories.SwingBindings.selection;
 import static ch.scaille.gui.swing.factories.SwingBindings.value;
@@ -291,7 +291,7 @@ public class ControllerExampleView extends JFrame {
 		}
 
 		// Error handling
-		errorProperty.getErrors().bind(wo(e -> e.get(property))).bind(guiErrorToString())
+		errorProperty.getErrors().bind(listen(e -> e.get(property))).bind(guiErrorToString())
 				.listen(editor::setToolTipText);
 		errorProperty.getErrors().bind(mapContains(property, Color.RED, editor.getForeground()))
 				.listen(editor::setForeground);

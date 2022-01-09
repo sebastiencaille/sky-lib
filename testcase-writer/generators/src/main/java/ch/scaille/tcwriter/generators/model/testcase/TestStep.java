@@ -1,12 +1,14 @@
 package ch.scaille.tcwriter.generators.model.testcase;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import ch.scaille.tcwriter.generators.model.ExportReference;
+import ch.scaille.tcwriter.generators.model.testapi.StepClassifier;
 import ch.scaille.tcwriter.generators.model.testapi.TestAction;
 import ch.scaille.tcwriter.generators.model.testapi.TestActor;
 import ch.scaille.tcwriter.generators.model.testapi.TestRole;
@@ -127,9 +129,16 @@ public class TestStep {
 	public StepClassifier getClassifier() {
 		return classifier;
 	}
-	
+
 	public void setClassifier(StepClassifier classifier) {
 		this.classifier = classifier;
+	}
+
+	public void fixClassifier() {
+		if (Arrays.asList(action.getAllowedClassifiers()).contains(classifier)) {
+			return;
+		}
+		setClassifier(action.getAllowedClassifiers()[0]);
 	}
 
 }

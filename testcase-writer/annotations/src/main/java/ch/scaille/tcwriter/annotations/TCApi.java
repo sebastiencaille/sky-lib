@@ -31,5 +31,5 @@ public @interface TCApi {
 	String humanReadable();
 
 	boolean isSelector() default false;
-
+	
 }

@@ -18,10 +18,10 @@
 	<modules>
 		<module>annotations</module>
 		<module>generators</module>
-		<module>gui</module>
-		<module>examples</module>
-		<module>gui-it</module>
 		<module>javatc</module>
+		<module>gui</module>
+		<module>gui-it</module>
+		<module>examples</module>
 	</modules>
 
 	<properties>

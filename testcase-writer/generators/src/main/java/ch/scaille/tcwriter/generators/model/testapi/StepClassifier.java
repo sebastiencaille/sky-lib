@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.generators.model.testcase;
+package ch.scaille.tcwriter.generators.model.testapi;
 
 public enum StepClassifier {
 

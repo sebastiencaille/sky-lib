@@ -4,6 +4,7 @@ import java.util.List;
 
 import ch.scaille.gui.mvc.GuiModel;
 import ch.scaille.gui.mvc.properties.ObjectProperty;
+import ch.scaille.tcwriter.generators.model.testapi.StepClassifier;
 import ch.scaille.tcwriter.generators.model.testapi.TestAction;
 import ch.scaille.tcwriter.generators.model.testapi.TestActor;
 import ch.scaille.tcwriter.generators.model.testapi.TestParameterFactory;
@@ -25,6 +26,8 @@ public class StepEditorModel extends GuiModel {
 	private final ObjectProperty<TestParameterFactory> actionParameter = new ObjectProperty<>("actionParameter", this);
 	private final ObjectProperty<TestParameterValue> actionParameterValues = new ObjectProperty<>(
 			"actionParameterValues", this, TestParameterValue.NO_VALUE);
+	private final ObjectProperty<StepClassifier> stepClassifier = new ObjectProperty<>(
+			"stepClassifier", this, null);
 
 	public StepEditorModel(final ModelConfiguration config) {
 		super(config);
@@ -68,5 +71,9 @@ public class StepEditorModel extends GuiModel {
 
 	public ObjectProperty<TestParameterValue> getActionParameterValue() {
 		return actionParameterValues;
+	}
+
+	public ObjectProperty<StepClassifier> getStepClassifier() {
+		return stepClassifier;
 	}
 }

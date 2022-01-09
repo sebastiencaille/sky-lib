@@ -54,7 +54,7 @@ public final class ComponentBindings {
 	 * @param setComponentValue (source, value)
 	 * @return
 	 */
-	public static <T> IComponentBinding<T> wo(final BiConsumer<AbstractProperty, T> setComponentValue) {
+	public static <T> IComponentBinding<T> listen(final BiConsumer<AbstractProperty, T> setComponentValue) {
 		return new IComponentBinding<T>() {
 
 			@Override
@@ -85,7 +85,7 @@ public final class ComponentBindings {
 	 * @param setComponentValue (source, value)
 	 * @return
 	 */
-	public static <T> IComponentBinding<T> wo(final Consumer<T> setComponentValue) {
+	public static <T> IComponentBinding<T> listen(final Consumer<T> setComponentValue) {
 		return new IComponentBinding<T>() {
 
 			@Override
@@ -116,7 +116,7 @@ public final class ComponentBindings {
 	 * @param setComponentValue (source, value)
 	 * @return
 	 */
-	public static <C, T> IComponentBinding<T> wo(final C component, final ValueSetter<C, T> setComponentValue) {
+	public static <C, T> IComponentBinding<T> listen(final C component, final ValueSetter<C, T> setComponentValue) {
 		return new IComponentBinding<T>() {
 
 			@Override

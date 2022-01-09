@@ -1,6 +1,6 @@
 package ch.scaille.tcwriter.gui.frame;
 
-import static ch.scaille.gui.mvc.factories.ComponentBindings.wo;
+import static ch.scaille.gui.mvc.factories.ComponentBindings.listen;
 
 import java.awt.BorderLayout;
 import java.net.URL;
@@ -79,13 +79,13 @@ public class TCWriterGui extends JFrame {
 
 		final JButton runButton = button(icon("media/Play24"), "Start execution", controller::startTestCase);
 		controller.getModel().getExecutionState().bind(s -> s == TCWriterModel.TestExecutionState.STOPPED)
-				.bind(wo(runButton::setEnabled));
+				.bind(listen(runButton::setEnabled));
 
 		final JButton continueButton = button(icon("media/StepForward24"), "Continue execution",
 				controller::resumeTestCase);
 		continueButton.setEnabled(false);
 		controller.getModel().getExecutionState().bind(s -> s == TCWriterModel.TestExecutionState.PAUSED)
-				.bind(wo(continueButton::setEnabled));
+				.bind(listen(continueButton::setEnabled));
 
 		final JSeparator sep = new JSeparator(SwingConstants.VERTICAL);
 

@@ -17,16 +17,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import ch.scaille.tcwriter.annotations.TCAction;
 import ch.scaille.tcwriter.annotations.TCApi;
+import ch.scaille.tcwriter.annotations.TCCheck;
 import ch.scaille.tcwriter.annotations.TCRole;
 import ch.scaille.tcwriter.generators.model.IdObject;
+import ch.scaille.tcwriter.generators.model.testapi.StepClassifier;
 import ch.scaille.tcwriter.generators.model.testapi.TestAction;
 import ch.scaille.tcwriter.generators.model.testapi.TestApiParameter;
 import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
 import ch.scaille.tcwriter.generators.model.testapi.TestParameterFactory;
 import ch.scaille.tcwriter.generators.model.testapi.TestParameterFactory.ParameterNature;
-import ch.scaille.tcwriter.tc.TestObjectDescription;
 import ch.scaille.tcwriter.generators.model.testapi.TestRole;
+import ch.scaille.tcwriter.tc.TestObjectDescription;
 
 public class ClassToDictionaryVisitor {
 
@@ -61,14 +64,32 @@ public class ClassToDictionaryVisitor {
 				final String returnType = (actionMethod.getReturnType() != Void.class)
 						? actionMethod.getReturnType().getName()
 						: null;
+				
+				StepClassifier[] classifiers = computeClassifiers(actionMethod);
 				final TestAction testAction = new TestAction(methodKey(actionMethod), actionMethod.getName(),
-						returnType);
+						returnType, classifiers);
 				final List<TestApiParameter> roleActionParameters = processParameters(testAction, actionMethod);
 				testAction.getParameters().addAll(roleActionParameters);
 				testRole.getActions().add(testAction);
 			}
 
 		}
+	}
+
+	private StepClassifier[] computeClassifiers(final Method actionMethod) {
+		StepClassifier[] classifiers;
+		final TCAction actionAnnotation = actionMethod.getAnnotation(TCAction.class);
+		final TCCheck checkAnnotation = actionMethod.getAnnotation(TCCheck.class);
+		if (checkAnnotation != null) {
+			classifiers = new StepClassifier[] {StepClassifier.CHECK};
+		} else if (actionAnnotation != null && actionAnnotation.preparationOnly()) {
+			classifiers = new StepClassifier[] {StepClassifier.PREPARATION};
+		} else if (actionAnnotation != null) {
+			classifiers = new StepClassifier[] {StepClassifier.PREPARATION, StepClassifier.ACTION};
+		} else {
+			classifiers = StepClassifier.values();
+		}
+		return classifiers;
 	}
 
 	private void processParameterFactories() {

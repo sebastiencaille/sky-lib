@@ -42,7 +42,7 @@ public abstract class AbstractDynamicView<T> {
 	 * @return
 	 */
 	public <U> IComponentBinding<U> refreshWhenUpdated(final Consumer<U> c) {
-		return ComponentBindings.wo((s, v) -> {
+		return ComponentBindings.listen((s, v) -> {
 			c.accept(v);
 			if (viewOwner != null) {
 				viewOwner.viewUpdated();

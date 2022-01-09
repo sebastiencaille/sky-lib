@@ -12,7 +12,6 @@ import ch.scaille.tcwriter.generators.model.ModelUtils;
 import ch.scaille.tcwriter.generators.model.ModelUtils.ActionUtils;
 import ch.scaille.tcwriter.generators.model.testapi.TestAction;
 import ch.scaille.tcwriter.generators.model.testapi.TestParameterFactory;
-import ch.scaille.tcwriter.generators.model.testcase.StepClassifier;
 import ch.scaille.tcwriter.generators.model.testcase.TestCase;
 import ch.scaille.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.generators.model.testcase.TestStep;
@@ -26,7 +25,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 	private HumanReadableVisitor humanReadableVisitor;
 
 	public enum Column {
-		BREAKPOINT, ORDINAL, CLASSIFIER, ACTOR, ACTION, SELECTOR, PARAM0, TO_VAR
+		BREAKPOINT, ORDINAL, ACTOR, ACTION, SELECTOR, PARAM0, TO_VAR
 	}
 
 	public StepsTableModel(final ObjectProperty<TestCase> testCaseProperty, final ListModel<TestStep> steps,
@@ -50,8 +49,6 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 			return testControl.stepStatus(testStep.getOrdinal());
 		case ORDINAL:
 			return testStep.getOrdinal();
-		case CLASSIFIER:
-				return testStep.getClassifier();
 		case ACTOR:
 			tcObject = testStep.getActor();
 			break;
@@ -104,7 +101,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 
 	@Override
 	public boolean isCellEditable(final int rowIndex, final int columnIndex) {
-		return columnOf(columnIndex) == Column.BREAKPOINT || columnOf(columnIndex) == Column.CLASSIFIER;
+		return columnOf(columnIndex) == Column.BREAKPOINT;
 	}
 
 	@Override
@@ -138,9 +135,6 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 				testControl.removeBreakpoint(testStep);
 			}
 			return;
-		case CLASSIFIER:
-			testStep.setClassifier((StepClassifier) value);
-			break;
 		case TO_VAR:
 			tc.publishReference(testStep.getReference().rename((String) value, "TODO"));
 			return;

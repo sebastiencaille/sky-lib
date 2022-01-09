@@ -20,7 +20,7 @@ public class Veto implements IVeto {
 		TO_COMPONENT_ONLY(true, false),
 
 		/**
-		 * When attached. Properties/component are kept in sync
+		 * When attached. Properties/component are fully kept in sync
 		 */
 		BOTH(true, true);
 

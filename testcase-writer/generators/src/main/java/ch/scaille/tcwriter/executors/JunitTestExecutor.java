@@ -29,19 +29,20 @@ public class JunitTestExecutor implements ITestExecutor {
 
 	private final Path javaTargetPath;
 
-	private final TestCaseToJava testCaseToJava;
-
 	private final URL[] classPath;
 
+	private IModelPersister persister;
+
 	public JunitTestExecutor(final IModelPersister persister, final URL[] classPath) throws IOException {
+		this.persister = persister;
 		this.javaTargetPath = Files.createTempDirectory("tcwriter");
 		this.javaTargetPath.toFile().deleteOnExit();
 		this.classPath = classPath;
-		this.testCaseToJava = new TestCaseToJava(persister);
 	}
 
 	@Override
 	public File generateCode(final TestCase tc) throws IOException, TestCaseException {
+		TestCaseToJava testCaseToJava = new TestCaseToJava(persister);
 		return testCaseToJava.generateAndWrite(tc, javaTargetPath);
 	}
 

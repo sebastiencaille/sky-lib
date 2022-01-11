@@ -3,11 +3,13 @@ package ch.scaille.tcwriter.generators;
 import java.io.IOException;
 import java.util.Collection;
 
+import ch.scaille.tcwriter.annotations.TCRole;
 import ch.scaille.tcwriter.generators.model.persistence.IModelPersister;
 import ch.scaille.tcwriter.generators.model.persistence.JsonModelPersister;
 import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
 import ch.scaille.tcwriter.generators.visitors.ClassToDictionaryVisitor;
 import ch.scaille.util.helpers.ClassFinder;
+import ch.scaille.util.helpers.ClassFinder.Policy;
 
 public class JavaToDictionary {
 
@@ -32,8 +34,8 @@ public class JavaToDictionary {
 		persister.setConfiguration(persister.readConfiguration(args[0]));
 
 		final String sourcePackage = args[0];
-		final TestDictionary dictionary = new JavaToDictionary(ClassFinder.forApp().collect(sourcePackage).getResult())
-				.generateDictionary();
+		final TestDictionary dictionary = new JavaToDictionary(ClassFinder.forApp().collect(sourcePackage)
+				.withAnnotation(TCRole.class, Policy.CLASS_ONLY).getResult()).generateDictionary();
 		persister.writeTestDictionary(dictionary);
 	}
 

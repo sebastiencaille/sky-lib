@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 
 import ch.scaille.tcwriter.executors.ITestExecutor;
 import ch.scaille.tcwriter.executors.JunitTestExecutor;
-import ch.scaille.tcwriter.generators.GeneratorConfig;
+import ch.scaille.tcwriter.generators.TCConfig;
 import ch.scaille.tcwriter.generators.JavaToDictionary;
 import ch.scaille.tcwriter.generators.model.persistence.JsonModelPersister;
 import ch.scaille.tcwriter.generators.model.testapi.TestActor;
@@ -32,7 +32,7 @@ public class AbstractGuiTest {
 
 	@BeforeEach
 	public void startGui() throws IOException, InvocationTargetException, InterruptedException {
-		final GeneratorConfig config = new GeneratorConfig();
+		final TCConfig config = new TCConfig();
 		final File tcPath = new File(RESOURCE_FOLDER, "testCase");
 		tcPath.mkdirs();
 		final File modelPath = new File(RESOURCE_FOLDER, "models");

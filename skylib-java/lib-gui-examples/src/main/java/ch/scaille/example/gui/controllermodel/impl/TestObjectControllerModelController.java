@@ -15,8 +15,6 @@
  ******************************************************************************/
 package ch.scaille.example.gui.controllermodel.impl;
 
-import static ch.scaille.gui.swing.SwingHelper.actionListener;
-
 import java.awt.event.ActionListener;
 import java.util.logging.Logger;
 
@@ -55,7 +53,7 @@ public class TestObjectControllerModelController extends GuiController {
 	}
 
 	public ActionListener getCommitAction() {
-		return actionListener(e -> tableModel.commit());
+		return e -> tableModel.commit();
 	}
 
 }

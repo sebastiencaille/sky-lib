@@ -3,7 +3,7 @@ package ch.scaille.tcwriter.generators;
 import ch.scaille.annotations.Labeled;
 import ch.scaille.annotations.Ordered;
 
-public class GeneratorConfig {
+public class TCConfig {
 
 	private String name = "default";
 
@@ -14,6 +14,8 @@ public class GeneratorConfig {
 	private String templatePath = "${user.home}/.tcwriter/template";
 
 	private String defaultGeneratedTCPath = "${user.home}/.tcwriter/generated";
+
+	private String actors;
 
 	@Ordered(order = 1)
 	@Labeled(label = "Name of the configuration")
@@ -64,5 +66,16 @@ public class GeneratorConfig {
 	public void setTemplatePath(final String templatePath) {
 		this.templatePath = templatePath;
 	}
+
+	@Ordered(order = 6)
+	@Labeled(label = "Actors (comma separated list of name:simple role class name)")
+	public String getActors() {
+		return actors;
+	}
+	
+	public void setActors(String actors) {
+		this.actors = actors;
+	}
+	
 
 }

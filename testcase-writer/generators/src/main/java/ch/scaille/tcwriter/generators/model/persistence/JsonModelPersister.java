@@ -34,7 +34,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 
-import ch.scaille.tcwriter.generators.GeneratorConfig;
+import ch.scaille.tcwriter.generators.TCConfig;
 import ch.scaille.tcwriter.generators.model.ExportReference;
 import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
 import ch.scaille.tcwriter.generators.model.testcase.TestCase;
@@ -79,7 +79,7 @@ public class JsonModelPersister implements IModelPersister {
 
 	}
 
-	private GeneratorConfig config;
+	private TCConfig config;
 
 	public JsonModelPersister() {
 		this("defaultConfig");
@@ -90,26 +90,26 @@ public class JsonModelPersister implements IModelPersister {
 			this.config = readConfiguration(configIdentifier);
 		} catch (IOException e) {
 			LOGGER.log(Level.INFO, e, () -> "Unable to read config " + configIdentifier);
-			this.config = new GeneratorConfig();
+			this.config = new TCConfig();
 		}
 	}
 
-	public JsonModelPersister(final GeneratorConfig config) {
+	public JsonModelPersister(final TCConfig config) {
 		this.config = config;
 	}
 
 	@Override
-	public void setConfiguration(final GeneratorConfig config) {
+	public void setConfiguration(final TCConfig config) {
 		this.config = config;
 	}
 
 	@Override
-	public GeneratorConfig readConfiguration(final String identifier) throws IOException {
-		return mapper.readValue(read(configPath(identifier)), GeneratorConfig.class);
+	public TCConfig readConfiguration(final String identifier) throws IOException {
+		return mapper.readValue(read(configPath(identifier)), TCConfig.class);
 	}
 
 	@Override
-	public void writeConfiguration(final GeneratorConfig config) throws IOException {
+	public void writeConfiguration(final TCConfig config) throws IOException {
 		writeJson(configPath(config.getName()), mapper.writeValueAsString(config));
 	}
 

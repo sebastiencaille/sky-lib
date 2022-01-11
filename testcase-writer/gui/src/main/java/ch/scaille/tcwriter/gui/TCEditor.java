@@ -6,7 +6,7 @@ import javax.swing.SwingUtilities;
 
 import ch.scaille.tcwriter.executors.ITestExecutor;
 import ch.scaille.tcwriter.executors.JunitTestExecutor;
-import ch.scaille.tcwriter.generators.GeneratorConfig;
+import ch.scaille.tcwriter.generators.TCConfig;
 import ch.scaille.tcwriter.generators.model.persistence.IModelPersister;
 import ch.scaille.tcwriter.generators.model.persistence.JsonModelPersister;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
@@ -17,9 +17,11 @@ public class TCEditor {
 	public static void main(final String[] args) throws IOException {
 
 		final IModelPersister persister = new JsonModelPersister();
-		GeneratorConfig config = new GeneratorConfig();
+		TCConfig config;
 		if (args.length >= 1) {
 			config = persister.readConfiguration(args[0]);
+		} else {
+			config = persister.readConfiguration("default");
 		}
 		persister.setConfiguration(config);
 

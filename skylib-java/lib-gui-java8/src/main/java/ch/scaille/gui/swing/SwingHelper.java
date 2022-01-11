@@ -16,12 +16,9 @@
 package ch.scaille.gui.swing;
 
 import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import javax.swing.ImageIcon;
@@ -51,10 +48,6 @@ public interface SwingHelper {
 		return new ImageIcon(out.toByteArray());
 	}
 
-	public static ActionListener actionListener(final Consumer<ActionEvent> c) {
-		return c::accept;
-	}
-	
 	public static IPropertyEventListener checkSwingThread() {
 		return (c,e) -> {
 			if (e.getKind() == EventKind.BEFORE && e.getProperty().getTransmitMode().toComponent && !EventQueue.isDispatchThread()) {

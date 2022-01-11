@@ -17,18 +17,27 @@ package ch.scaille.util.helpers;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystemAlreadyExistsException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * To select some classes according to an annotation, ...
@@ -39,7 +48,7 @@ import java.util.stream.Collectors;
 public class ClassFinder {
 
 	private static final String[] DEFAULT_PACKAGES = { "", "ch.scaille.gui.mvc.properties.",
-			"ch.scaille.gui.mvc.persisters.", "ch.skymarshall.gui." };
+			"ch.scaille.gui.mvc.persisters.", "ch.scaille.gui." };
 
 	public enum Policy {
 		/**
@@ -54,12 +63,6 @@ public class ClassFinder {
 
 	private static final String CLASS_EXTENSION = ".class";
 
-	private static final Set<String> JAR_EXTENSIONS = new HashSet<>();
-	static {
-		JAR_EXTENSIONS.add(".jar");
-		JAR_EXTENSIONS.add(".sar");
-	}
-
 	private final Map<Class<?>, Policy> collectedClasses = new HashMap<>();
 
 	private final Map<Class<?>, Policy> expectedTags = new HashMap<>();
@@ -68,17 +71,21 @@ public class ClassFinder {
 
 	private final URLClassLoader loader;
 
+	private final Function<URL, Scanner> defaultScanner = u -> new FsScanner();
+
+	private Function<URL, Scanner> scanners = defaultScanner;
+
 	public static ClassFinder forApp() {
 		return new ClassFinder(ClassLoaderHelper.appClassPath());
 	}
 
-	public static ClassFinder source(final File... sourceFolder) {
+	public static ClassFinder source(final File... source) {
 
-		return new ClassFinder(Arrays.stream(sourceFolder).map(f -> {
+		return new ClassFinder(Arrays.stream(source).map(f -> {
 			try {
 				return f.toURI().toURL();
 			} catch (final MalformedURLException e) {
-				throw new IllegalStateException("Unable process folder " + sourceFolder, e);
+				throw new IllegalStateException("Unable process folder " + source, e);
 			}
 		}).collect(Collectors.toList()).toArray(new URL[0]));
 
@@ -86,7 +93,11 @@ public class ClassFinder {
 
 	public ClassFinder(final URL[] urls) {
 		this.loader = new URLClassLoader(urls);
-		collectedClasses.put(Object.class, null);
+		this.collectedClasses.put(Object.class, null);
+	}
+
+	public void setScanners(Function<URL, Scanner> scanner) {
+		this.scanners = scanner;
 	}
 
 	public Class<?> loadByName(final String className) {
@@ -106,44 +117,81 @@ public class ClassFinder {
 		return found;
 	}
 
-	public void addExpectedAnnotation(final Class<?> tag, final Policy policy) {
+	public ClassFinder withAnnotation(final Class<?> tag, final Policy policy) {
 		if (!tag.isAnnotation()) {
 			throw new IllegalArgumentException("Class is not an annotation: " + tag.getName());
 		}
 		expectedTags.put(tag, policy);
-	}
-
-	public void addExpectedSuperClass(final String className) throws ClassNotFoundException {
-		expectedSuperClasses.add(Class.forName(className, true, loader));
-	}
-
-	public ClassFinder collect(final String basePackage) throws IOException {
-		final Enumeration<URL> folders = loader.getResources(basePackage.replace(".", "/"));
-		while (folders.hasMoreElements()) {
-			scanFolder(folders.nextElement(), basePackage);
-		}
 		return this;
 	}
 
-	private void scanFolder(final URL resource, final String currentPackage) throws IOException {
-		if (resource == null) {
-			return;
+	public ClassFinder withSuperClass(final String className) throws ClassNotFoundException {
+		expectedSuperClasses.add(Class.forName(className, true, loader));
+		return this;
+	}
+
+	public interface Scanner {
+		void scan(final URL resource, final String aPackage) throws IOException;
+	}
+
+	private static URI root(URI uri) {
+		if (uri.getPath() != null && uri.getPath().indexOf('!') >= 0) {
+			String uriStr = uri.toString();
+			return URI.create(uriStr.substring(0, uriStr.indexOf('!')));
+		} else if (uri.getPath() != null) {
+			return uri.resolve("/");
+		} else {
+			return URI.create(uri.getScheme() + ':' + root(URI.create(uri.getSchemeSpecificPart())));
 		}
-		try (InputStream in = resource.openStream()) {
-			final String content = ClassLoaderHelper.readUTF8Resource(in);
-			if (content.trim().isEmpty()) {
+	}
+
+	private static String base(URI uri, String aPackage) {
+		if (uri.getPath() == null) {
+			return "/";
+		}
+		String uriPath = uri.getPath();
+		return uriPath.substring(0, uriPath.length() - aPackage.length());
+	}
+
+	public class FsScanner implements Scanner {
+
+		@Override
+		public void scan(URL resource, String aPackage) throws IOException {
+			if (resource == null) {
 				return;
 			}
-			final String[] folderContent = content.split("\n");
-			for (final String entry : folderContent) {
-				if (entry.endsWith(CLASS_EXTENSION)) {
-					handleClass(currentPackage + "." + entry.substring(0, entry.length() - CLASS_EXTENSION.length()));
-				} else if (!entry.contains(".")) {
-					// note: we may read files instead of folders
-					scanFolder(new URL(resource.toString() + '/' + entry), currentPackage + '.' + entry);
-				}
+			URI rootUri;
+			String scanPath;
+			try {
+				URI uri = resource.toURI();
+				rootUri = root(uri);
+				scanPath = base(uri, aPackage)  + '/' + aPackage.replace('.', '/');
+			} catch (URISyntaxException e) {
+				throw new IOException("Unable to scan files", e);
+			}
+			try (FileSystem fs = FileSystems.newFileSystem(rootUri, Collections.emptyMap())) {
+				scan(fs.getPath(scanPath ), aPackage);
+			} catch (FileSystemAlreadyExistsException e) {
+				scan(FileSystems.getFileSystem(rootUri).getPath(scanPath), aPackage);
 			}
 		}
+
+		private void scan(final Path path, String aPackage) throws IOException {
+			try (Stream<Path> walk = Files.walk(path)) {
+				walk.map(Path::toString).filter(p -> p.endsWith(CLASS_EXTENSION))
+						.forEach(p -> handleClass(p.replace(CLASS_EXTENSION, "").substring(1).replace('/', '.')));
+			}
+		}
+
+	}
+
+	public ClassFinder collect(final String basePackage) throws IOException {
+		final Enumeration<URL> packages = loader.getResources(basePackage.replace(".", "/"));
+		while (packages.hasMoreElements()) {
+			URL resource = packages.nextElement();
+			scanners.apply(resource).scan(resource, basePackage);
+		}
+		return this;
 	}
 
 	private void handleClass(final String className) {
@@ -151,7 +199,7 @@ public class ClassFinder {
 			return;
 		}
 		try {
-			processClass(Class.forName(className, false, loader));
+			processClass(Class.forName(className, false, this.loader));
 		} catch (final Exception | NoClassDefFoundError e) { // NOSONAR
 			// ignore
 		}
@@ -189,6 +237,9 @@ public class ClassFinder {
 		if (appliedPolicy == null) {
 			for (final Class<?> iface : clazz.getInterfaces()) {
 				appliedPolicy = processClass(iface);
+				if (appliedPolicy == Policy.CLASS_ONLY) {
+					appliedPolicy = null;
+				}
 				if (appliedPolicy != null) {
 					break;
 				}

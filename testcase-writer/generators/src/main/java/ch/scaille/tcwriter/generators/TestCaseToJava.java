@@ -27,7 +27,7 @@ public class TestCaseToJava {
 
 	public static void main(final String[] args) throws IOException, TestCaseException {
 		final IModelPersister persister = new JsonModelPersister();
-		final GeneratorConfig config = persister.readConfiguration(args[0]);
+		final TCConfig config = persister.readConfiguration(args[0]);
 		persister.setConfiguration(config);
 
 		final TestDictionary testDictionary = persister.readTestDictionary();

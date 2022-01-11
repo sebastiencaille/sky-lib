@@ -9,8 +9,8 @@ import ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole;
 import ch.scaille.tcwriter.examples.api.interfaces.DeliveryTestRole;
 import ch.scaille.tcwriter.executors.ITestExecutor;
 import ch.scaille.tcwriter.executors.JunitTestExecutor;
-import ch.scaille.tcwriter.generators.GeneratorConfig;
 import ch.scaille.tcwriter.generators.JavaToDictionary;
+import ch.scaille.tcwriter.generators.TCConfig;
 import ch.scaille.tcwriter.generators.model.persistence.IModelPersister;
 import ch.scaille.tcwriter.generators.model.persistence.JsonModelPersister;
 import ch.scaille.tcwriter.generators.model.testapi.TestActor;
@@ -29,7 +29,7 @@ public class ExampleHelper {
 
 	private static final File RESOURCE_FOLDER = new File("./src/main/resources");
 
-	private static final GeneratorConfig CONFIG;
+	private static final TCConfig CONFIG;
 
 	private static final IModelPersister persister;
 
@@ -41,7 +41,7 @@ public class ExampleHelper {
 		final File modelPath = new File(RESOURCE_FOLDER, "models");
 		modelPath.mkdirs();
 
-		CONFIG = new GeneratorConfig();
+		CONFIG = new TCConfig();
 		CONFIG.setTcPath(tcPath.toString());
 		CONFIG.setDefaultGeneratedTCPath("./src/test/java");
 		CONFIG.setDictionaryPath(modelPath + "/test-model.json");
@@ -85,7 +85,7 @@ public class ExampleHelper {
 		return new JunitTestExecutor(getPersister(), ClassLoaderHelper.appClassPath());
 	}
 
-	public static GeneratorConfig getConfig() {
+	public static TCConfig getConfig() {
 		return CONFIG;
 	}
 

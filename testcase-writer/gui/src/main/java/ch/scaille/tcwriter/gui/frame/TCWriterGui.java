@@ -3,6 +3,7 @@ package ch.scaille.tcwriter.gui.frame;
 import static ch.scaille.gui.mvc.factories.ComponentBindings.listen;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,7 +68,7 @@ public class TCWriterGui extends JFrame {
 		this.getContentPane().setLayout(new BorderLayout());
 
 		final JButton editConfigButton = button(icon("general/Information24"), "Edit configuration",
-			controller::editConfig);
+				controller::editConfig);
 
 		final JButton newTCButton = button("NewTC", icon("general/New24"), "New test case", controller::newTestCase);
 
@@ -75,6 +76,8 @@ public class TCWriterGui extends JFrame {
 
 		final JButton saveButton = button("SaveTC", icon("general/Save24"), "Save test case", controller::save);
 
+		final JButton importDictionaryButton = button(icon("general/Import24"), "Import dictionary", controller::importDictionary);
+		
 		final JButton generateButton = button(icon("general/Export24"), "Export to Java", controller::generateCode);
 
 		final JButton runButton = button(icon("media/Play24"), "Start execution", controller::startTestCase);
@@ -101,6 +104,7 @@ public class TCWriterGui extends JFrame {
 		buttons.add(newTCButton);
 		buttons.add(loadButton);
 		buttons.add(saveButton);
+		buttons.add(importDictionaryButton);
 		buttons.add(generateButton);
 		buttons.add(runButton);
 		buttons.add(continueButton);
@@ -161,8 +165,13 @@ public class TCWriterGui extends JFrame {
 		return new ImageIcon(resource);
 	}
 
-	public void handleException(final Exception ex) {
-		LOGGER.log(Level.WARNING, "Unable to start testcase", ex);
-		JOptionPane.showMessageDialog(this, "Unable to execution action: " + ex.getMessage());
+	protected void handleException(final Exception ex) {
+		handleException(this, ex);
 	}
+
+	public static void handleException(Component parent, final Exception ex) {
+		LOGGER.log(Level.WARNING, "Unable to execute action", ex);
+		JOptionPane.showMessageDialog(parent, "Unable to execution action: " + ex.getMessage());
+	}
+
 }

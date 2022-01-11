@@ -12,8 +12,6 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import ch.scaille.util.helpers.protocols.rsrc.Handler;
-
 public class ClassLoaderHelper {
 
 	private static final String CP_SEPARATOR = System.getProperty("path.separator");

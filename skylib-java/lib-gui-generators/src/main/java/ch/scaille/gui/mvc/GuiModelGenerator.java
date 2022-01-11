@@ -35,7 +35,7 @@ public class GuiModelGenerator {
 		targetFolder.mkdirs();
 
 		final ClassFinder finder = ClassFinder.source(new File(params.getSourceFolder()));
-		finder.addExpectedAnnotation(GuiObject.class, ClassFinder.Policy.CLASS_ONLY);
+		finder.withAnnotation(GuiObject.class, ClassFinder.Policy.CLASS_ONLY);
 		finder.collect(params.getNamespaceFilter());
 		Log.of(this).info("Processing classes:" + finder.getResult());
 

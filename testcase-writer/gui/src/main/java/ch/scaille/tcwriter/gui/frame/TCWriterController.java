@@ -2,8 +2,11 @@ package ch.scaille.tcwriter.gui.frame;
 
 import java.awt.Dialog.ModalityType;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,13 +19,18 @@ import ch.scaille.gui.swing.tools.SwingGenericEditorDialog;
 import ch.scaille.gui.tools.GenericEditorClassModel;
 import ch.scaille.gui.tools.GenericEditorController;
 import ch.scaille.tcwriter.executors.ITestExecutor;
-import ch.scaille.tcwriter.generators.GeneratorConfig;
+import ch.scaille.tcwriter.generators.TCConfig;
 import ch.scaille.tcwriter.generators.model.TestCaseException;
 import ch.scaille.tcwriter.generators.model.persistence.IModelPersister;
+import ch.scaille.tcwriter.generators.model.testapi.TestActor;
+import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
+import ch.scaille.tcwriter.generators.model.testapi.TestRole;
 import ch.scaille.tcwriter.generators.model.testcase.TestCase;
 import ch.scaille.tcwriter.generators.model.testcase.TestStep;
+import ch.scaille.tcwriter.gui.DictionaryImport;
 import ch.scaille.tcwriter.gui.TestRemoteControl;
 import ch.scaille.tcwriter.gui.frame.TCWriterModel.TestExecutionState;
+import ch.scaille.tcwriter.tc.TestObjectDescription;
 import ch.scaille.util.helpers.Lambda;
 
 public class TCWriterController extends GuiController {
@@ -36,14 +44,35 @@ public class TCWriterController extends GuiController {
 
 	private final IModelPersister persister;
 
-	private final GeneratorConfig config;
+	private final TCConfig config;
 
-	public TCWriterController(final GeneratorConfig config, final IModelPersister persister,
-			final ITestExecutor testExecutor) throws IOException {
+	public TCWriterController(final TCConfig config, final IModelPersister persister, final ITestExecutor testExecutor)
+			throws IOException {
 		this.config = config;
 		this.persister = persister;
 		this.testExecutor = testExecutor;
-		model = new TCWriterModel(persister.readTestDictionary(), getScopedChangeSupport());
+		TestDictionary dictionary;
+		do {
+			try {
+				dictionary = persister.readTestDictionary();
+			} catch (FileNotFoundException e) {
+				dictionary = null;
+				new DictionaryImport(null, persister).runImport();
+			}
+		} while (dictionary == null);
+		if (config.getActors() != null) {
+			for (String actorDef : config.getActors().split("[, ]")) {
+				String[] actorAndSimpleName = actorDef.split(":");
+				Optional<TestRole> role = dictionary.getRoles().entrySet().stream()
+						.filter(r -> r.getKey().endsWith("." + actorAndSimpleName[1])).map(Entry::getValue).findFirst();
+				if (role.isPresent()) {
+					TestActor actor = new TestActor(actorAndSimpleName[0], actorAndSimpleName[0], role.get());
+					dictionary.addActor(actor, new TestObjectDescription(actorAndSimpleName[0], actorAndSimpleName[0]));
+				}
+			}
+		}
+
+		model = new TCWriterModel(dictionary, getScopedChangeSupport());
 		gui = new TCWriterGui(this);
 		testRemoteControl = new TestRemoteControl(9998,
 				r -> SwingUtilities.invokeLater(() -> model.getExecutionState().setValue(this,
@@ -75,8 +104,8 @@ public class TCWriterController extends GuiController {
 
 		final SwingGenericEditorDialog dialog = new SwingGenericEditorDialog(gui, "Configuration",
 				ModalityType.DOCUMENT_MODAL);
-		final GenericEditorController<GeneratorConfig> editor = new GenericEditorController<>(dialog,
-				GenericEditorClassModel.builder(GeneratorConfig.class).build());
+		final GenericEditorController<TCConfig> editor = new GenericEditorController<>(dialog,
+				GenericEditorClassModel.builder(TCConfig.class).build());
 		editor.activate();
 		editor.load(config);
 		dialog.setSize(dialog.getWidth() + 400, dialog.getHeight() + 30);
@@ -148,7 +177,7 @@ public class TCWriterController extends GuiController {
 	}
 
 	public void loadTestCase() throws IOException {
-		final JFileChooser testFileChooser = new JFileChooser(); 
+		final JFileChooser testFileChooser = new JFileChooser();
 		testFileChooser.setFileFilter(new FileNameExtensionFilter("Json test", "json"));
 		final int dialogResult = testFileChooser.showOpenDialog(gui);
 		if (dialogResult == 0) {
@@ -171,6 +200,22 @@ public class TCWriterController extends GuiController {
 
 	public void generateCode() throws IOException, TestCaseException {
 		testExecutor.generateCode(model.getTc().getValue());
+	}
+
+	public void importDictionary() {
+		boolean imported = new DictionaryImport(gui, persister).runImport();
+		if (imported) {
+			restart();
+		}
+	}
+
+	public void restart() {
+		try {
+			gui.setVisible(false);
+			new TCWriterController(config, persister, testExecutor).run();
+		} catch (IOException e) {
+			TCWriterGui.handleException(null, e);
+		}
 	}
 
 	public void resumeTestCase() throws IOException {

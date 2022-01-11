@@ -30,15 +30,15 @@ public class JavaToDictionary {
 
 	public void addAnnotation(Class<? extends Annotation> annotation,
 			BiConsumer<Dictionary, Class<?>> annotatedClassHandler) {
-		classFinder.addExpectedAnnotation(annotation, Policy.CLASS_ONLY);
+		classFinder.withAnnotation(annotation, Policy.CLASS_ONLY);
 		annotation2Handlers.put(annotation, annotatedClassHandler);
 	}
 
 	public Dictionary scan(final String apiClassPackage) throws IOException {
 		final Dictionary dictionary = new Dictionary();
-		classFinder.addExpectedAnnotation(Processors.class, Policy.CLASS_ONLY);
-		classFinder.addExpectedAnnotation(ExternalAdapters.class, Policy.CLASS_ONLY);
-		classFinder.addExpectedAnnotation(Conditions.class, Policy.CLASS_ONLY);
+		classFinder.withAnnotation(Processors.class, Policy.CLASS_ONLY);
+		classFinder.withAnnotation(ExternalAdapters.class, Policy.CLASS_ONLY);
+		classFinder.withAnnotation(Conditions.class, Policy.CLASS_ONLY);
 
 		for (final Class<?> clazz : classFinder.collect(apiClassPackage).getResult()) {
 			for (Annotation annotation : clazz.getAnnotations()) {

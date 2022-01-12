@@ -8,7 +8,6 @@ import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.junit.platform.commons.logging.LoggerFactory;
 import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
@@ -17,7 +16,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import ch.scaille.util.helpers.Poller;
-import io.netty.handler.logging.LogLevel;
 
 public class SeleniumPoller extends Poller {
 

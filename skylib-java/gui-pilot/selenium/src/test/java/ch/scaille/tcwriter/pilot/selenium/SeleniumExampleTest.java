@@ -16,11 +16,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.openqa.selenium.UnexpectedAlertBehaviour;
-import org.openqa.selenium.firefox.FirefoxBinary;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.WebDriver;
 import org.xnio.streams.Streams;
 
 import ch.scaille.tcwriter.jupiter.DisabledIfHeadless;
@@ -35,7 +31,7 @@ class SeleniumExampleTest {
 	/* **************************** WEB SERVER **************************** */
 
 	public static Undertow webServer = null;
-	private static FirefoxDriver driver;
+	private static WebDriver driver;
 
 	@BeforeAll
 	public static void startWebServer() {
@@ -44,17 +40,8 @@ class SeleniumExampleTest {
 				.setHandler(SeleniumExampleTest::handleWebExchange).build();
 		webServer.start();
 
-		// Start selenium
-		System.setProperty("webdriver.gecko.driver", "/usr/bin/geckodriver");
+		driver = WebDriverFactory.firefox("/usr/bin/geckodriver").build();
 
-		final FirefoxBinary firefoxBinary = new FirefoxBinary();
-		firefoxBinary.addCommandLineOptions("--no-sandbox");
-
-		final FirefoxOptions firefoxOptions = new FirefoxOptions();
-		firefoxOptions.setBinary(firefoxBinary);
-		firefoxOptions.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.IGNORE);
-
-		driver = new FirefoxDriver(firefoxOptions);
 	}
 
 	public static void handleWebExchange(final HttpServerExchange exchange) {

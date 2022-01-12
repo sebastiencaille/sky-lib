@@ -13,7 +13,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>ch.skymarshall</groupId>
+		<groupId>ch.scaille</groupId>
 		<artifactId>libs</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
@@ -21,11 +21,11 @@
 	<artifactId>lib-gui-generator</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>ch.skymarshall</groupId>
+			<groupId>ch.scaille</groupId>
 			<artifactId>lib-utils</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>ch.skymarshall</groupId>
+			<groupId>ch.scaille</groupId>
 			<artifactId>lib-generator-utils</artifactId>
 		</dependency>
 	</dependencies>

@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>ch.skymarshall.tcwriter</groupId>
+		<groupId>ch.scaille.tcwriter</groupId>
 		<artifactId>testcase-writer</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
@@ -24,11 +24,11 @@
 	<dependencies>
 
 		<dependency>
-			<groupId>ch.skymarshall</groupId>
+			<groupId>ch.scaille</groupId>
 			<artifactId>lib-utils</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>ch.skymarshall.tcwriter</groupId>
+			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-annotations</artifactId>
 		</dependency>
 

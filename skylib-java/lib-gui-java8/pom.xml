@@ -14,7 +14,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>ch.skymarshall</groupId>
+		<groupId>ch.scaille</groupId>
 		<artifactId>libs</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 
@@ -31,12 +31,12 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>ch.skymarshall</groupId>
+			<groupId>ch.scaille</groupId>
 			<artifactId>lib-utils</artifactId>
 		</dependency>
 
 		<dependency>
-			<groupId>ch.skymarshall</groupId>
+			<groupId>ch.scaille</groupId>
 			<artifactId>lib-testing</artifactId>
 			<scope>test</scope>
 		</dependency>

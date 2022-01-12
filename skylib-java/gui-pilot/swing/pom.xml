@@ -5,7 +5,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>ch.skymarshall</groupId>
+		<groupId>ch.scaille</groupId>
 		<artifactId>gui-pilot</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
@@ -14,11 +14,11 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>ch.skymarshall</groupId>
+			<groupId>ch.scaille</groupId>
 			<artifactId>lib-utils</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>ch.skymarshall</groupId>
+			<groupId>ch.scaille</groupId>
 			<artifactId>gui-pilot-generic</artifactId>
 		</dependency>
 	</dependencies>

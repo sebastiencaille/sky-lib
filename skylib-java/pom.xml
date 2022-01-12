@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>ch.skymarshall</groupId>
+	<groupId>ch.scaille</groupId>
 	<artifactId>libs</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
@@ -100,47 +100,47 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>ch.skymarshall</groupId>
+				<groupId>ch.scaille</groupId>
 				<artifactId>lib-testing</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
-				<groupId>ch.skymarshall</groupId>
+				<groupId>ch.scaille</groupId>
 				<artifactId>lib-annotations</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
-				<groupId>ch.skymarshall</groupId>
+				<groupId>ch.scaille</groupId>
 				<artifactId>lib-utils</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
-				<groupId>ch.skymarshall</groupId>
+				<groupId>ch.scaille</groupId>
 				<artifactId>lib-gui-java8</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
-				<groupId>ch.skymarshall</groupId>
+				<groupId>ch.scaille</groupId>
 				<artifactId>lib-gui-validation</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
-				<groupId>ch.skymarshall</groupId>
+				<groupId>ch.scaille</groupId>
 				<artifactId>gui-pilot-generic</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
-				<groupId>ch.skymarshall</groupId>
+				<groupId>ch.scaille</groupId>
 				<artifactId>gui-pilot-swing</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
-				<groupId>ch.skymarshall</groupId>
+				<groupId>ch.scaille</groupId>
 				<artifactId>gui-pilot-selenium</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
-				<groupId>ch.skymarshall</groupId>
+				<groupId>ch.scaille</groupId>
 				<artifactId>lib-generator-utils</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>

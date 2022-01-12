@@ -1,7 +1,9 @@
 package ch.scaille.tcwriter.annotations;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Annotation for classes/interfaces methods that are part of the test api.
@@ -11,6 +13,7 @@ import java.lang.annotation.RetentionPolicy;
  *
  */
 @Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.TYPE, ElementType.PARAMETER})
 public @interface TCApi {
 
 	String description();

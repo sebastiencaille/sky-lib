@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -105,7 +106,8 @@ public class JsonModelPersister implements IModelPersister {
 
 	@Override
 	public TCConfig readConfiguration(final String identifier) throws IOException {
-		return mapper.readValue(read(configPath(identifier)), TCConfig.class);
+		return mapper.readerFor(TCConfig.class).without(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+				.readValue(read(configPath(identifier)));
 	}
 
 	@Override

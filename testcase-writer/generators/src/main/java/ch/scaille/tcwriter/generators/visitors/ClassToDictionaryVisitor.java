@@ -135,17 +135,22 @@ public class ClassToDictionaryVisitor {
 				continue;
 			}
 			processedParameterFactoryClasses.add(apiClass);
-
+			if (isJavaType(apiClass)) {
+				continue;
+			}
 			// Process the api class
 			final HashSet<Method> valueFactoryMethods = new HashSet<>();
 
 			final TCApi tcApi = apiClass.getAnnotation(TCApi.class);
 			if (tcApi != null && tcApi.isSelector()) {
-				dictionary.addNavigationType(apiClass);
+				dictionary.addSelectorType(apiClass);
 			}
 
 			accumulateApiMethods(apiClass, valueFactoryMethods);
 			valueFactoryMethods.removeIf(m -> !Modifier.isStatic(m.getModifiers()));
+			if (valueFactoryMethods.isEmpty()) {
+				throw new IllegalStateException("No factory found for type " + apiClass.getName());
+			}
 
 			for (final Method valueFactoryMethod : valueFactoryMethods) {
 				// Process each method of the class
@@ -168,16 +173,16 @@ public class ClassToDictionaryVisitor {
 		final HashSet<Method> factoryApiMethods = new HashSet<>();
 		accumulateApiMethods(valueFactoryMethod.getReturnType(), factoryApiMethods);
 		factoryApiMethods.removeIf(m -> Modifier.isStatic(m.getModifiers()) || m.getParameterCount() > 1);
-		for (final Method factoryReturnTypeMethod : factoryApiMethods) {
+		for (final Method factoryMethod : factoryApiMethods) {
 			String type;
-			if (factoryReturnTypeMethod.getParameterTypes().length > 0) {
-				type = factoryReturnTypeMethod.getParameterTypes()[0].getName();
+			if (factoryMethod.getParameterTypes().length > 0) {
+				type = factoryMethod.getParameterTypes()[0].getName();
 			} else {
 				type = TestApiParameter.NO_TYPE;
 			}
-			final TestApiParameter optionalParameter = new TestApiParameter(methodKey(factoryReturnTypeMethod),
-					factoryReturnTypeMethod.getName(), type);
-			processMethodAnnotation(optionalParameter, factoryReturnTypeMethod);
+			final TestApiParameter optionalParameter = new TestApiParameter(methodKey(factoryMethod),
+					factoryMethod.getName(), type);
+			processMethodAnnotation(optionalParameter, factoryMethod);
 			valueFactory.getOptionalParameters().add(optionalParameter);
 		}
 
@@ -249,9 +254,10 @@ public class ClassToDictionaryVisitor {
 	private void accumulateApiMethods(final Class<?> tcClazz, final Set<Method> methods) {
 		if (apiClassIntrospectionCache.containsKey(tcClazz)) {
 			methods.addAll(apiClassIntrospectionCache.get(tcClazz));
+			return;
 		}
 
-		forEachSuper(tcClazz, new HashSet<>(), apiClazz -> {
+		forClassAndSuper(tcClazz, new HashSet<>(), apiClazz -> {
 			for (final Method apiMethod : tcClazz.getMethods()) {
 				final TCApi annotation = apiMethod.getAnnotation(TCApi.class);
 				if (annotation != null) {
@@ -259,26 +265,26 @@ public class ClassToDictionaryVisitor {
 				}
 			}
 		});
-		apiClassIntrospectionCache.put(tcClazz, methods);
+		apiClassIntrospectionCache.put(tcClazz, new HashSet<>(methods));
 	}
 
 	private void forEachSuper(final Class<?> tcClazz, final Consumer<Class<?>> classHandler) {
-		forEachSuper(tcClazz, new HashSet<>(), classHandler);
+		forClassAndSuper(tcClazz, new HashSet<>(), classHandler);
 	}
 
-	private void forEachSuper(final Class<?> tcClazz, final Set<Class<?>> processed,
+	private void forClassAndSuper(final Class<?> tcClazz, final Set<Class<?>> processed,
 			final Consumer<Class<?>> classHandler) {
 		if (tcClazz == null || tcClazz == Object.class) {
 			return;
 		}
-		if (!isRole(tcClazz) && !isTestApi(tcClazz)) {
+		if (isJavaType(tcClazz)) {
 			return;
 		}
 		processed.add(tcClazz);
 		classHandler.accept(tcClazz);
-		forEachSuper(tcClazz.getSuperclass(), processed, classHandler);
+		forClassAndSuper(tcClazz.getSuperclass(), processed, classHandler);
 		for (final Class<?> apiClassIface : tcClazz.getInterfaces()) {
-			forEachSuper(apiClassIface, processed, classHandler);
+			forClassAndSuper(apiClassIface, processed, classHandler);
 		}
 	}
 
@@ -288,5 +294,9 @@ public class ClassToDictionaryVisitor {
 
 	private TestObjectDescription descriptionFrom(final TCApi tcApi) {
 		return new TestObjectDescription(tcApi.description(), tcApi.humanReadable());
+	}
+
+	private boolean isJavaType(Class<?> clazz) {
+		return clazz.isPrimitive() || clazz.getName().startsWith("java.");
 	}
 }

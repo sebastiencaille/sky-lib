@@ -7,6 +7,7 @@ import static ch.scaille.gui.swing.factories.SwingBindings.selection;
 import static ch.scaille.gui.swing.factories.SwingBindings.values;
 
 import java.awt.BorderLayout;
+import java.util.Arrays;
 import java.util.Objects;
 
 import javax.swing.BoxLayout;
@@ -55,19 +56,30 @@ public class StepEditorPanel extends JPanel {
 
 		JComboBox<StepClassifier> classifiers = withEnabler(selectedStep, new JComboBox<>(StepClassifier.values()));
 		classifiers.setMaximumSize(classifiers.getPreferredSize());
-		selectedStep.listen(s -> model.getStepClassifier().setValue(this, (s != null)? s.getClassifier():StepClassifier.ACTION));
+		selectedStep.listen(
+				s -> model.getStepClassifier().setValue(this, (s != null) ? s.getClassifier() : StepClassifier.ACTION));
 		model.getStepClassifier().bind(selection(classifiers)).addDependency(preserveOnUpdateOf(model.getAction()));
-		model.getStepClassifier().listen(c -> selectedStep.getValue().setClassifier(c));
+		model.getStepClassifier().listenActive(c -> {
+			if (selectedStep.getValue() != null) {
+				selectedStep.getValue().setClassifier(c);
+			}
+		});
 		model.getAction().listen(a -> {
 			if (a == null) {
 				return;
 			}
 			StepClassifier[] availableClassifiers = a.getAllowedClassifiers();
+			Arrays.sort(availableClassifiers);
 			if (availableClassifiers.length == 0) {
 				availableClassifiers = StepClassifier.values();
 			}
 			DefaultComboBoxModel<StepClassifier> classifierModel = new DefaultComboBoxModel<>(availableClassifiers);
 			classifiers.setModel(classifierModel);
+			TestStep step = selectedStep.getValue();
+			if (step.getClassifier() == null || Arrays.binarySearch(availableClassifiers, step.getClassifier()) < 0) {
+				step.setClassifier(availableClassifiers[0]);
+			}
+			model.getStepClassifier().setValue(this, step.getClassifier());
 		});
 
 		JPanel topPanel = new JPanel();

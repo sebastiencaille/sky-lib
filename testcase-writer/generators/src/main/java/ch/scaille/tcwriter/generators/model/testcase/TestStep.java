@@ -24,7 +24,7 @@ public class TestStep {
 	private TestAction action = TestAction.NOT_SET;
 	private final List<TestParameterValue> parametersValue = new ArrayList<>();
 	private TestReference reference;
-	private StepClassifier classifier = StepClassifier.ACTION;
+	private StepClassifier classifier = null;
 
 	protected TestStep() {
 		this.ordinal = -1;

@@ -71,7 +71,7 @@ public class TestDictionary implements Serializable {
 		return testObjectFactories.get(paramType.getType());
 	}
 
-	public void addNavigationType(final Class<?> type) {
+	public void addSelectorType(final Class<?> type) {
 		selectorTypes.add(type.getName());
 	}
 

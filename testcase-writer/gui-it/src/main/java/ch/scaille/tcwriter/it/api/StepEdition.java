@@ -53,5 +53,10 @@ public class StepEdition {
 	public void setParameter(final String parameter) {
 		this.parameter = parameter;
 	}
+	
+	@TCApi(description = "Step Edition", humanReadable = "Step Edition")
+	public static StepEdition edition() {
+		return new StepEdition();
+	}
 
 }

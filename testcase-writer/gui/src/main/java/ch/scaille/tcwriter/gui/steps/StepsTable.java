@@ -116,6 +116,9 @@ public class StepsTable extends JPanel {
 							int row, int col) {
 						super.getTableCellRendererComponent(var1, obj, var3, var4, row, col);
 						StepClassifier classifier = steps.getElementAt(row).getClassifier();
+						if (classifier == null) {
+							return this;
+						}
 						switch (classifier) {
 						case PREPARATION:
 							setBackground(Color.CYAN);

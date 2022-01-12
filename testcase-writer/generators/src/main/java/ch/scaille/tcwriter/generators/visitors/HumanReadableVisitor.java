@@ -6,6 +6,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.MissingFormatArgumentException;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -116,13 +117,17 @@ public class HumanReadableVisitor {
 		while (blockMatcher.find()) {
 			emptiedBlocks.add(blockMatcher.group().replace("%s", ""));
 		}
-		String formatted = String.format(humanReadable, (formatParams != null) ? formatParams.toArray() : null);
-		// remove empty blocks
-		for (final String emptyBlock : emptiedBlocks) {
-			formatted = formatted.replaceAll(emptyBlock, "");
+		try {
+			String formatted = String.format(humanReadable, (formatParams != null) ? formatParams.toArray() : null);
+			// remove empty blocks
+			for (final String emptyBlock : emptiedBlocks) {
+				formatted = formatted.replaceAll(emptyBlock, "");
+			}
+			formatted = formatted.replace("//", "").replace("/\\/", "//");
+			return formatted;
+		} catch (MissingFormatArgumentException e) {
+			return "Some parameter values are missing";
 		}
-		formatted = formatted.replace("//", "").replace("/\\/", "//");
-		return formatted;
 	}
 
 	public String processAllSteps() {

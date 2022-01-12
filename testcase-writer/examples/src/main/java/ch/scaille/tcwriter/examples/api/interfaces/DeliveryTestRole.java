@@ -7,7 +7,7 @@ import ch.scaille.tcwriter.annotations.TCRole;
 import ch.scaille.tcwriter.examples.ExampleService;
 
 @TCRole(description = "A delivery company", humanReadable = "delivery company")
-@TCActors("delivery guy|deliveryGuy|DeliveryTestRole")
+@TCActors("deliveryGuy|DeliveryTestRole|delivery guy")
 public class DeliveryTestRole {
 
 	private final ExampleService testedService;

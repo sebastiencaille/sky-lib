@@ -13,7 +13,7 @@ import ch.scaille.tcwriter.examples.api.interfaces.selectors.BuyingLocationSelec
 import ch.scaille.tcwriter.examples.api.interfaces.selectors.PackageDeliverySelector;
 
 @TCRole(description = "A customer", humanReadable = "customer")
-@TCActors("customer|customer|CustomerTestRole")
+@TCActors("customer|CustomerTestRole")
 @SuppressWarnings("java:S5960")
 public class CustomerTestRole extends Assertions {
 

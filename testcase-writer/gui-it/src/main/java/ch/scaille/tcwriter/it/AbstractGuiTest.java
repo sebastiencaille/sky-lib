@@ -11,18 +11,19 @@ import javax.swing.SwingUtilities;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
+import ch.scaille.tcwriter.annotations.TCActors;
 import ch.scaille.tcwriter.executors.ITestExecutor;
 import ch.scaille.tcwriter.executors.JunitTestExecutor;
-import ch.scaille.tcwriter.generators.TCConfig;
 import ch.scaille.tcwriter.generators.JavaToDictionary;
+import ch.scaille.tcwriter.generators.TCConfig;
 import ch.scaille.tcwriter.generators.model.persistence.JsonModelPersister;
-import ch.scaille.tcwriter.generators.model.testapi.TestActor;
 import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.tcwriter.it.api.TestSessionRole;
 import ch.scaille.tcwriter.it.api.TestWriterRole;
 import ch.scaille.util.helpers.ClassLoaderHelper;
 
+@TCActors({ "tcWriter|TestWriterRole|Test writer|test writer", "testSession|TestSessionRole|Test session|test session" })
 public class AbstractGuiTest {
 
 	private static final File RESOURCE_FOLDER = new File("./src/main/resources");
@@ -44,15 +45,15 @@ public class AbstractGuiTest {
 		config.setTemplatePath(new File("rsrc:templates/TC.template").toString());
 		final JsonModelPersister persister = new JsonModelPersister(config);
 
-		final TestDictionary model = new JavaToDictionary(asList(TestWriterRole.class)).generateDictionary();
-		model.addActor(new TestActor("TestCase writer", "tcWriter", model.getRole(TestWriterRole.class)), null);
+		final TestDictionary model = new JavaToDictionary(
+				asList(TestWriterRole.class, TestSessionRole.class, AbstractGuiTest.class)).generateDictionary();
 		persister.writeTestDictionary(model);
 
 		final ITestExecutor executor = new JunitTestExecutor(persister, ClassLoaderHelper.appClassPath());
 
 		final TCWriterController controller = new TCWriterController(config, persister, executor);
 		SwingUtilities.invokeAndWait(controller::run);
-		
+
 		pilot = new TCGuiPilot(controller.getGui());
 
 		final LocalTCWriterRole localRole = new LocalTCWriterRole(pilot);

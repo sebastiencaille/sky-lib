@@ -3,6 +3,7 @@ package ch.scaille.tcwriter.examples.api.interfaces;
 import org.junit.jupiter.api.Assertions;
 
 import ch.scaille.tcwriter.annotations.TCAction;
+import ch.scaille.tcwriter.annotations.TCActors;
 import ch.scaille.tcwriter.annotations.TCApi;
 import ch.scaille.tcwriter.annotations.TCCheck;
 import ch.scaille.tcwriter.annotations.TCRole;
@@ -12,6 +13,7 @@ import ch.scaille.tcwriter.examples.api.interfaces.selectors.BuyingLocationSelec
 import ch.scaille.tcwriter.examples.api.interfaces.selectors.PackageDeliverySelector;
 
 @TCRole(description = "A customer", humanReadable = "customer")
+@TCActors("customer|customer|CustomerTestRole")
 @SuppressWarnings("java:S5960")
 public class CustomerTestRole extends Assertions {
 

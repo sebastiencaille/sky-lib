@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 
+import ch.scaille.tcwriter.annotations.TCActors;
 import ch.scaille.tcwriter.annotations.TCRole;
 import ch.scaille.tcwriter.generators.JavaToDictionary;
 import ch.scaille.tcwriter.generators.model.persistence.IModelPersister;
@@ -77,13 +78,14 @@ public class DictionaryImport extends JDialog {
 		}
 		return imported;
 	}
-	
+
 	protected void importDictionary(File dictionaryJarFile, String sourcePackage) {
 		TestDictionary dictionary;
 		try {
-			dictionary = new JavaToDictionary(ClassFinder.source(dictionaryJarFile)
-					.withAnnotation(TCRole.class, Policy.CLASS_ONLY).collect(sourcePackage).getResult())
-							.generateDictionary();
+			dictionary = new JavaToDictionary(
+					ClassFinder.source(dictionaryJarFile).withAnnotation(TCRole.class, Policy.CLASS_ONLY)
+							.withAnnotation(TCActors.class, Policy.CLASS_ONLY).collect(sourcePackage).getResult())
+									.generateDictionary();
 			persister.writeTestDictionary(dictionary);
 		} catch (IOException e) {
 			TCWriterGui.handleException(this, e);

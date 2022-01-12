@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,15 +20,12 @@ import ch.scaille.tcwriter.executors.ITestExecutor;
 import ch.scaille.tcwriter.generators.TCConfig;
 import ch.scaille.tcwriter.generators.model.TestCaseException;
 import ch.scaille.tcwriter.generators.model.persistence.IModelPersister;
-import ch.scaille.tcwriter.generators.model.testapi.TestActor;
 import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
-import ch.scaille.tcwriter.generators.model.testapi.TestRole;
 import ch.scaille.tcwriter.generators.model.testcase.TestCase;
 import ch.scaille.tcwriter.generators.model.testcase.TestStep;
 import ch.scaille.tcwriter.gui.DictionaryImport;
 import ch.scaille.tcwriter.gui.TestRemoteControl;
 import ch.scaille.tcwriter.gui.frame.TCWriterModel.TestExecutionState;
-import ch.scaille.tcwriter.tc.TestObjectDescription;
 import ch.scaille.util.helpers.Lambda;
 
 public class TCWriterController extends GuiController {
@@ -60,17 +55,6 @@ public class TCWriterController extends GuiController {
 				new DictionaryImport(null, persister).runImport();
 			}
 		} while (dictionary == null);
-		if (config.getActors() != null) {
-			for (String actorDef : config.getActors().split("[, ]")) {
-				String[] actorAndSimpleName = actorDef.split(":");
-				Optional<TestRole> role = dictionary.getRoles().entrySet().stream()
-						.filter(r -> r.getKey().endsWith("." + actorAndSimpleName[1])).map(Entry::getValue).findFirst();
-				if (role.isPresent()) {
-					TestActor actor = new TestActor(actorAndSimpleName[0], actorAndSimpleName[0], role.get());
-					dictionary.addActor(actor, new TestObjectDescription(actorAndSimpleName[0], actorAndSimpleName[0]));
-				}
-			}
-		}
 
 		model = new TCWriterModel(dictionary, getScopedChangeSupport());
 		gui = new TCWriterGui(this);

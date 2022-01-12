@@ -13,7 +13,6 @@ import ch.scaille.tcwriter.generators.JavaToDictionary;
 import ch.scaille.tcwriter.generators.TCConfig;
 import ch.scaille.tcwriter.generators.model.persistence.IModelPersister;
 import ch.scaille.tcwriter.generators.model.persistence.JsonModelPersister;
-import ch.scaille.tcwriter.generators.model.testapi.TestActor;
 import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
 import ch.scaille.tcwriter.generators.model.testcase.TestCase;
 import ch.scaille.tcwriter.generators.recorder.TestCaseRecorder;
@@ -54,12 +53,8 @@ public class ExampleHelper {
 	}
 
 	public static TestDictionary generateDictionary() {
-		final TestDictionary dictionary = new JavaToDictionary(asList(CustomerTestRole.class, DeliveryTestRole.class))
+		return new JavaToDictionary(asList(CustomerTestRole.class, DeliveryTestRole.class))
 				.generateDictionary();
-		dictionary.addActor(new TestActor("customer", "customer", dictionary.getRole(CustomerTestRole.class)), null);
-		dictionary.addActor(new TestActor("deliveryGuy", "deliveryGuy", dictionary.getRole(DeliveryTestRole.class)),
-				null);
-		return dictionary;
 	}
 
 	public static void saveDictionary(final TestDictionary dictionary) throws IOException {

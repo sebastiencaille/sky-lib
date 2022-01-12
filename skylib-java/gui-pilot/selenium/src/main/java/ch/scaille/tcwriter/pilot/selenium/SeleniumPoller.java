@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openqa.selenium.ElementNotInteractableException;
+import org.openqa.selenium.InvalidSelectorException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.UnhandledAlertException;
@@ -23,7 +24,7 @@ public class SeleniumPoller extends Poller {
 
 	private WebDriver webDriver;
 	private TimeoutException timeoutException;
-	private Object lastResult;
+	private Object lastPollingResult;
 
 	public SeleniumPoller(WebDriver webDriver, Duration timeout, Duration firstDelay, DelayFunction delayFunction) {
 		super(timeout, firstDelay, delayFunction);
@@ -34,10 +35,11 @@ public class SeleniumPoller extends Poller {
 			Function<TimeoutException, T> timeoutHandler) {
 		timeoutException = null;
 		T result = run(polling, isSuccess);
-		if (timeoutException != null && lastResult != null) {
-			return (T) lastResult;
+		if (timeoutException != null && lastPollingResult != null) {
+			// Return the root cause of the failure, which is nicer than selenium exception
+			return (T) lastPollingResult;
 		} else if (timeoutException != null) {
-			timeoutHandler.apply(timeoutException);
+			return timeoutHandler.apply(timeoutException);
 		}
 		return result;
 	}
@@ -60,16 +62,26 @@ public class SeleniumPoller extends Poller {
 
 	private <T> T pollWithSpecificDelay(Function<Poller, T> polling, Predicate<T> isSuccess, Duration duration) {
 		return new WebDriverWait(webDriver, timeTracker.remainingDuration()) //
-				.pollingEvery(duration) //
+				.withMessage(() -> {
+					if (lastPollingResult != null) {
+						return lastPollingResult.toString();
+					}
+					return null;
+				}).pollingEvery(duration) //
 				.ignoreAll(Arrays.asList(NoSuchElementException.class, StaleElementReferenceException.class,
 						ElementNotInteractableException.class, UnhandledAlertException.class))
 				.<T>until(d -> {
-					T result = polling.apply(this);
-					lastResult = result;
-					if (!isSuccess.test(result)) {
-						return null;
+					try {
+						T result = polling.apply(this);
+
+						lastPollingResult = result;
+						if (!isSuccess.test(result)) {
+							return null;
+						}
+						return result;
+					} catch (InvalidSelectorException e) {
+						throw new IllegalStateException("Selenium misuse", e);
 					}
-					return result;
 				});
 
 	}

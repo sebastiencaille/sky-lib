@@ -1,7 +1,6 @@
 package ch.scaille.tcwriter.pilot.selenium;
 
 import java.io.File;
-import java.nio.file.FileSystem;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;

@@ -1,5 +1,7 @@
 package ch.scaille.tcwriter.pilot.selenium;
 
+import java.io.File;
+import java.nio.file.FileSystem;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,6 +17,8 @@ import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.CapabilityType;
 
 public interface WebDriverFactory<T extends WebDriverFactory<T>> {
+
+	final boolean IS_WINDOWS = System.getProperty("os.name").contains("indows");
 
 	T withBinary(String binary);
 
@@ -59,11 +63,13 @@ public interface WebDriverFactory<T extends WebDriverFactory<T>> {
 		@Override
 		public FirefoxDriverFactory withLogging(String logFolder) {
 			final String date = new SimpleDateFormat("YYYY-MM-dd").format(new Date());
-			profile.setPreference("webdriver.log.browser.file", logFolder + "/firefox-browser-" + date + ".log");
-			profile.setPreference("webdriver.log.driver.file", logFolder + "/firefox-driver-" + date + ".log");
-			profile.setPreference("webdriver.log.file", "c:\\selenium\\logs\\wd-log-" + date + ".log");
+			profile.setPreference("webdriver.log.browser.file",
+					logFolder + File.pathSeparator + "firefox-browser-" + date + ".log");
+			profile.setPreference("webdriver.log.driver.file",
+					logFolder + File.pathSeparator + "firefox-driver-" + date + ".log");
+			profile.setPreference("webdriver.log.file", logFolder + File.pathSeparator + "wd-log-" + date + ".log");
 			System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE,
-					logFolder + "/firefox-log-" + date + ".log");
+					logFolder + File.pathSeparator + "firefox-log-" + date + ".log");
 			return this;
 		}
 
@@ -113,6 +119,9 @@ public interface WebDriverFactory<T extends WebDriverFactory<T>> {
 			options.addArguments("--disable-lazy-frame-loading", "--disable-lazy-image-loading");
 			options.addArguments("--disable-backgrounding-occluded-windows");
 			options.addArguments("--disable-popup-blocking");
+			if (IS_WINDOWS) {
+				options.addArguments("--disable-gpu");
+			}
 			prefs.put("profile.default_content_settings.popups", 0);
 			prefs.put("safebrowsing.enabled", "false");
 			prefs.put("disable-popup-blocking", "true");
@@ -133,11 +142,11 @@ public interface WebDriverFactory<T extends WebDriverFactory<T>> {
 		}
 
 		@Override
-		public ChromeDriverFactory withLogging(String folder) {
+		public ChromeDriverFactory withLogging(String logFolder) {
 			final String date = new SimpleDateFormat("YYYY-MM-dd").format(new Date());
 			System.setProperty("webdriver.chrome.verboseLogging", "true");
 			System.setProperty("webdriver.chrome.logfile",
-					folder + "C:\\selenium\\logs\\chromedriver-" + date + ".log");
+					logFolder + File.pathSeparator + "chromedriver-" + date + ".log");
 			return this;
 		}
 

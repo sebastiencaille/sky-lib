@@ -18,8 +18,11 @@ public class Poller {
 
 	private int executionCount = 0;
 
+	/*
+	 * End of last polling
+	 */
 	private long lastPolling;
-	
+
 	public Poller(Duration timeout, Duration firstDelay, DelayFunction delayFunction) {
 		this.timeTracker = new TimeTracker(timeout);
 		this.firstDelay = firstDelay;
@@ -31,14 +34,16 @@ public class Poller {
 	}
 
 	public void sleep(Duration pollingDelay) {
+		long endOfPolling = lastPolling + pollingDelay.toMillis();
 		try {
-			// Correct time
-			long waitTime = pollingDelay.toMillis() - (System.currentTimeMillis() - lastPolling);
-			if (waitTime <= 10) {
-				return;
+			while (System.currentTimeMillis() < endOfPolling) {
+				// Correct time
+				long waitTime = endOfPolling - System.currentTimeMillis();
+				if (waitTime > 0) {
+					Thread.sleep(waitTime);
+				}
 			}
-			Thread.sleep(waitTime);
-			lastPolling = lastPolling + waitTime;
+			lastPolling = endOfPolling;
 		} catch (final InterruptedException e) {
 			Thread.currentThread().interrupt();
 			throw new IllegalStateException("Test interrupted");

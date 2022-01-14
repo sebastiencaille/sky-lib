@@ -57,7 +57,7 @@ class ComponentTest {
 	void testDuration() {
 		GuiPilot gp = new GuiPilot();
 		TestComponent tc = new TestComponent(gp);
-		boolean res = tc.wait(tc.satisfies(c -> false), Factories.reportFailure("failed"));
+		boolean res = tc.wait(tc.satisfies(c -> false), Factories.reportNotFound("failed"));
 		Assertions.assertFalse(res);
 		Assertions.assertEquals(6, tc.delays.size(), tc.delays.toString());
 

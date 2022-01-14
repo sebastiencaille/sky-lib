@@ -40,7 +40,11 @@ class SeleniumExampleTest {
 				.setHandler(SeleniumExampleTest::handleWebExchange).build();
 		webServer.start();
 
-		driver = WebDriverFactory.firefox("/usr/bin/geckodriver").build();
+		if (WebDriverFactory.IS_WINDOWS) {
+			driver = WebDriverFactory.firefox("C:\\selenium\\drivers\\geckodriver_win32\\geckodriver.exe").build();
+		} else {
+			driver = WebDriverFactory.firefox("/usr/bin/geckodriver").build();
+		}
 
 	}
 

@@ -274,7 +274,7 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	}
 
 	public boolean ifEnabled(final Polling<C, Boolean> polling) {
-		return waitPollingSuccess(polling, Factories.reportFailure(getDescription() + ": not found"));
+		return waitPollingSuccess(polling, Factories.reportNotFound(getDescription() + ": not found"));
 	}
 
 	/**

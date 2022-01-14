@@ -154,16 +154,49 @@ public interface Factories {
 	}
 
 	/**
-	 * Fails using existing error
+	 * Only reports error and return a null value
 	 *
 	 * @param actionDescr
 	 * @return
 	 */
-	public static <C> FailureHandler<C, Boolean> reportFailure(final String report) {
+	public static <C, V> FailureHandler<C, V> reportFailure(final String report) {
+		return (r, g) -> {
+			g.getActionReport().report(report);
+			return r.polledValue;
+		};
+	}
+
+	/**
+	 * Do nothing on error and return a null value
+	 *
+	 * @param actionDescr
+	 * @return
+	 */
+	public static <C, V> FailureHandler<C, V> ignoreFailure() {
+		return (r, g) -> r.polledValue;
+	}
+	
+	/**
+	 * Only reports error and return FALSE
+	 *
+	 * @param actionDescr
+	 * @return
+	 */
+	public static <C> FailureHandler<C, Boolean> reportNotFound(final String report) {
 		return (r, g) -> {
 			g.getActionReport().report(report);
 			return Boolean.FALSE;
 		};
+	}
+
+	/**
+	 * Do nothing on error  and return FALSE
+	 *
+	 * @param actionDescr
+	 * @return
+	 */
+	public static <C> FailureHandler<C, Boolean> ignoreNotFound() {
+		return (r, g) -> Boolean.FALSE;
 	}
 
 	/**
@@ -198,11 +231,13 @@ public interface Factories {
 	}
 
 	public static String settingValue(String location, Object value) {
-		return "setting " + location + ": [" + DataObjectManagerFactory.createFor(value).getMetaData().getAttributes().stream() //
-				.filter(a -> a.getValueOf(value) != null) //
-				.sorted((a1, a2) -> a1.getName().compareTo(a2.getName())) //
-				.map(a -> a.getName() + ": " + a.getValueOf(value)) //
-				.collect(Collectors.joining(", ")) + "]";
+		return "setting " + location + ": ["
+				+ DataObjectManagerFactory.createFor(value).getMetaData().getAttributes().stream() //
+						.filter(a -> a.getValueOf(value) != null) //
+						.sorted((a1, a2) -> a1.getName().compareTo(a2.getName())) //
+						.map(a -> a.getName() + ": " + a.getValueOf(value)) //
+						.collect(Collectors.joining(", "))
+				+ "]";
 	}
 
 }

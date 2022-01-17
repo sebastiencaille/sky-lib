@@ -135,7 +135,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>ch.scaille</groupId>
-			<artifactId>lib-testing</artifactId>
+			<artifactId>lib-testing-core</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

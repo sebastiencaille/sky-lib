@@ -3,10 +3,19 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>ch.scaille.dataflowmgr</groupId>
-		<artifactId>data-flow-manager</artifactId>
+		<groupId>ch.scaille</groupId>
+		<artifactId>lib-testing</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>data-flow-annotations</artifactId>
+
+	<artifactId>gui-pilot</artifactId>
+	<name>gui-pilot</name>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>core</module>
+		<module>swing</module>
+		<module>selenium</module>
+	</modules>
 </project>

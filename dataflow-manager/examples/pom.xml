@@ -18,6 +18,7 @@
 		<groupId>ch.scaille.dataflowmgr</groupId>
 		<artifactId>data-flow-manager</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>data-flow-examples</artifactId>
 	<name>data-flow-examples</name>
@@ -49,10 +50,5 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>ch.scaille</groupId>
-			<artifactId>lib-testing</artifactId>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 </project>

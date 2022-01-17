@@ -101,11 +101,11 @@ public class JavaCodeGenerator<E extends Exception> extends TextFormatter<JavaCo
 		return appendIndented(type).append(" ").append(name).append(" = ");
 	}
 
-	public JavaCodeGenerator<E> addVarDecl(final String modifiers, final String type, final String name) throws E {
+	public JavaCodeGenerator<E> addInstanceVarDecl(final String modifiers, final String type, final String name) throws E {
 		return appendIndented(String.format("%s %s %s", modifiers, type, name)).eos();
 	}
 
-	public JavaCodeGenerator<E> addVarDecl(final String modifiers, final String type, final String name,
+	public JavaCodeGenerator<E> addInstanceVarDecl(final String modifiers, final String type, final String name,
 			final String value) throws E {
 		return appendIndented(String.format("%s %s %s = %s", modifiers, type, name, value)).eos();
 	}

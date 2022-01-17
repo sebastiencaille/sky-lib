@@ -4,18 +4,23 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>ch.scaille</groupId>
-		<artifactId>libs</artifactId>
+		<artifactId>lib-testing</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>lib-generator-utils</artifactId>
+	<artifactId>lib-testing-core</artifactId>
 
-	<dependencies><!-- https://mvnrepository.com/artifact/com.beust/jcommander -->
+	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
 		<dependency>
-			<groupId>com.beust</groupId>
-			<artifactId>jcommander</artifactId>
-			<version>1.81</version>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>4.2.0</version>
 		</dependency>
 	</dependencies>
-
 </project>

@@ -8,6 +8,7 @@
 		<groupId>ch.scaille</groupId>
 		<artifactId>libs</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<groupId>ch.scaille.dataflowmgr</groupId>
@@ -58,7 +59,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>ch.scaille</groupId>
-			<artifactId>lib-testing</artifactId>
+			<artifactId>lib-testing-core</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

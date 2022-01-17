@@ -91,6 +91,15 @@ public class ClassFinder {
 
 	}
 
+	public static ClassFinder with(Class<?> classes) {
+		return new ClassFinder(new URL[0]).withClasses(classes);
+	}
+
+	public ClassFinder withClasses(Class<?>... classes) {
+		collectedClasses.putAll(Arrays.stream(classes).collect(Collectors.toMap(c -> c, c -> Policy.CLASS_ONLY)));
+		return this;
+	}
+
 	public ClassFinder(final URL[] urls) {
 		this.loader = new URLClassLoader(urls);
 		this.collectedClasses.put(Object.class, null);
@@ -165,12 +174,12 @@ public class ClassFinder {
 			try {
 				URI uri = resource.toURI();
 				rootUri = root(uri);
-				scanPath = base(uri, aPackage)  + '/' + aPackage.replace('.', '/');
+				scanPath = base(uri, aPackage) + '/' + aPackage.replace('.', '/');
 			} catch (URISyntaxException e) {
 				throw new IOException("Unable to scan files", e);
 			}
 			try (FileSystem fs = FileSystems.newFileSystem(rootUri, Collections.emptyMap())) {
-				scan(fs.getPath(scanPath ), aPackage);
+				scan(fs.getPath(scanPath), aPackage);
 			} catch (FileSystemAlreadyExistsException e) {
 				scan(FileSystems.getFileSystem(rootUri).getPath(scanPath), aPackage);
 			}

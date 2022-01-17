@@ -6,20 +6,15 @@
 		<groupId>ch.scaille</groupId>
 		<artifactId>libs</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
+
 	<artifactId>lib-testing</artifactId>
+	<packaging>pom</packaging>
 
-	<dependencies>
-		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<version>4.2.0</version>
-		</dependency>
-	</dependencies>
+	<modules>
+		<module>core</module>
+		<module>gui-pilot</module>
+		<module>bdd-runtime</module>
+	</modules>
 </project>

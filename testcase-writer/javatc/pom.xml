@@ -6,6 +6,7 @@
 		<groupId>ch.scaille.tcwriter</groupId>
 		<artifactId>testcase-writer</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>testcase-writer-javatc</artifactId>
 

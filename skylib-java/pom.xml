@@ -16,7 +16,6 @@
 		<module>lib-gui-java8</module>
 		<module>lib-gui-generators</module>
 		<module>lib-gui-validation</module>
-		<module>gui-pilot</module>
 		<module>lib-gui-examples</module>
 		<module>lib-generator-utils</module>
 	</modules>
@@ -101,9 +100,20 @@
 		<dependencies>
 			<dependency>
 				<groupId>ch.scaille</groupId>
-				<artifactId>lib-testing</artifactId>
+				<artifactId>lib-testing-core</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
+			<dependency>
+				<groupId>ch.scaille</groupId>
+				<artifactId>lib-testing-bdd-runtime</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille</groupId>
+				<artifactId>lib-testing-bdd-tools</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+
 			<dependency>
 				<groupId>ch.scaille</groupId>
 				<artifactId>lib-annotations</artifactId>
@@ -126,7 +136,7 @@
 			</dependency>
 			<dependency>
 				<groupId>ch.scaille</groupId>
-				<artifactId>gui-pilot-generic</artifactId>
+				<artifactId>gui-pilot-core</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>

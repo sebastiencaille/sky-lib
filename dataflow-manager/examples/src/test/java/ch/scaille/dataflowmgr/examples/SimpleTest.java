@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
@@ -83,11 +84,11 @@ class SimpleTest {
 
 		// Generate the procedural flow
 		new FlowToProceduralJavaVisitor(flow, "ch.scaille.dataflowmgr.examples.simple",
-				Template.from("templates/flow.template")).process().writeToFolder(new File("src/test/java"));
+				Template.from("templates/flow.template")).process().writeToFolder(Paths.get("src/test/java"));
 
 		// Generate the reactive flow
 		new FlowToRXJavaVisitor(flow, "ch.scaille.dataflowmgr.examples.simplerx",
-				Template.from("templates/flowrx.template"), true).process().writeToFolder(new File("src/test/java"));
+				Template.from("templates/flowrx.template"), true).process().writeToFolder(Paths.get("src/test/java"));
 
 		// Generate the graphic
 		try (final FileWriter out = new FileWriter(new File("src/test/reports/SimpleFlow.dot"))) {

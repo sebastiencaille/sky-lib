@@ -1,6 +1,5 @@
 package ch.scaille.tcwriter.generators;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -21,8 +20,8 @@ public class TestCaseToJava {
 		testCaseTemplate = persister.readTemplate();
 	}
 
-	public File generateAndWrite(final TestCase tc, final Path targetPath) throws IOException, TestCaseException {
-		return new TestCaseToJunitVisitor(testCaseTemplate).visitTestCase(tc).writeToFolder(targetPath.toFile());
+	public Path generateAndWrite(final TestCase tc, final Path targetPath) throws IOException, TestCaseException {
+		return new TestCaseToJunitVisitor(testCaseTemplate).visitTestCase(tc).writeToFolder(targetPath);
 	}
 
 	public static void main(final String[] args) throws IOException, TestCaseException {

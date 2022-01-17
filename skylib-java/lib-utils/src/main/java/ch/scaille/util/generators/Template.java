@@ -1,7 +1,6 @@
 package ch.scaille.util.generators;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -115,19 +114,6 @@ public class Template {
 	 * @param file
 	 * @return
 	 * @throws IOException
-	 * @Deprecated use Path version
-	 */
-	@Deprecated
-	public File writeTo(final File file) throws IOException {
-		return writeTo(file.toPath()).toFile();
-	}
-
-	/**
-	 * Writes the resulting content in a file
-	 * 
-	 * @param file
-	 * @return
-	 * @throws IOException
 	 */
 	public Path writeTo(final Path path) throws IOException {
 		Logger.getLogger(Template.class.getName()).info(() -> "Writing " + path);
@@ -144,11 +130,11 @@ public class Template {
 	 * @return
 	 * @throws IOException
 	 */
-	public File writeToFolder(final File folder) throws IOException {
+	public Path writeToFolder(final Path folder) throws IOException {
 		if (preferredFile == null) {
 			throw new IllegalStateException("preferredFile is not set");
 		}
-		return writeTo(new File(folder, preferredFile));
+		return writeTo(folder.resolve( preferredFile));
 	}
 
 	/**

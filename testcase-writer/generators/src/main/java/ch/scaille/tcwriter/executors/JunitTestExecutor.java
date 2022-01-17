@@ -3,7 +3,6 @@ package ch.scaille.tcwriter.executors;
 import static ch.scaille.util.helpers.ClassLoaderHelper.cpToCommandLine;
 import static java.util.stream.Collectors.joining;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -41,13 +40,13 @@ public class JunitTestExecutor implements ITestExecutor {
 	}
 
 	@Override
-	public File generateCode(final TestCase tc) throws IOException, TestCaseException {
+	public Path generateCode(final TestCase tc) throws IOException, TestCaseException {
 		TestCaseToJava testCaseToJava = new TestCaseToJava(persister);
 		return testCaseToJava.generateAndWrite(tc, javaTargetPath);
 	}
 
 	@Override
-	public void compile(final File sourceFile) throws IOException, InterruptedException {
+	public void compile(final Path sourceFile) throws IOException, InterruptedException {
 		final String waveClassPath = Stream.of(classPath)
 				.filter(j -> j.toString().contains("testcase-writer") && j.toString().contains("annotations"))
 				.map(URL::getFile).collect(joining(":"));

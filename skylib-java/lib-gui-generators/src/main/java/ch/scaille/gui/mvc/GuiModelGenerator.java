@@ -17,6 +17,9 @@ package ch.scaille.gui.mvc;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import ch.scaille.annotations.GuiObject;
 import ch.scaille.generators.util.CodeGeneratorParams;
@@ -31,8 +34,8 @@ public class GuiModelGenerator {
 	}
 
 	private void process(final CodeGeneratorParams params) throws IOException {
-		final File targetFolder = new File(params.getTargetFolder());
-		targetFolder.mkdirs();
+		final Path targetFolder = Paths.get(params.getTargetFolder());
+		Files.createDirectories(targetFolder);
 
 		final ClassFinder finder = ClassFinder.source(new File(params.getSourceFolder()));
 		finder.withAnnotation(GuiObject.class, ClassFinder.Policy.CLASS_ONLY);

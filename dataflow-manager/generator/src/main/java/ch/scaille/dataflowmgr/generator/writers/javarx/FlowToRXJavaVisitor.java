@@ -187,10 +187,10 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 
 	private void generateDataSetter(final String type, final String property, boolean withState) {
 		if (withState) {
-			flowClass.addVarDecl("private", "DataPointState", stateOf(property), "DataPointState.NOT_TRIGGERED");
+			flowClass.addInstanceVarDecl("private", "DataPointState", stateOf(property), "DataPointState.NOT_TRIGGERED");
 			flowClass.addSetter("private", "DataPointState", stateOf(property));
 		}
-		flowClass.addVarDecl("private", type, property);
+		flowClass.addInstanceVarDecl("private", type, property);
 		flowClass.appendIndented(String.format("private void set%s(%s %s)", toCamelCase(property), type, property))
 				.openBlock() //
 				.appendIndented(String.format("this.%s = %s", property, property)).eos(); //
@@ -204,7 +204,7 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 
 	private void generateDataState(final BindingContext context) {
 		final String varNameOfBinding = varNameOf(context.binding);
-		flowClass.addVarDecl("private", "DataPointState", bindingStateOf(context.binding),
+		flowClass.addInstanceVarDecl("private", "DataPointState", bindingStateOf(context.binding),
 				"DataPointState.NOT_TRIGGERED");
 		flowClass.addSetter("private synchronized", "DataPointState", bindingStateOf(context.binding));
 

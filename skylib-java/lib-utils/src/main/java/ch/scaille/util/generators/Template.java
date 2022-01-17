@@ -5,6 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,7 +28,7 @@ public class Template {
 	private final Map<String, String> properties = new HashMap<>();
 
 	private String commandLine;
-	private String preferedFile;
+	private String preferredFile;
 
 	public static final Template from(final File file) throws IOException {
 		return new Template(new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8));
@@ -41,12 +43,12 @@ public class Template {
 	}
 
 	public String getPreferedFileName() {
-		return preferedFile;
+		return preferredFile;
 	}
 
 	public Template apply(final Map<String, String> templateProperties, final String providedPreferedFile) {
 		final Template newTemplate = instantiate(content);
-		newTemplate.preferedFile = providedPreferedFile;
+		newTemplate.preferredFile = providedPreferedFile;
 		newTemplate.setCommandLine(commandLine);
 		newTemplate.setContext(templateProperties);
 		return newTemplate;
@@ -107,27 +109,63 @@ public class Template {
 		return indent;
 	}
 
+	/**
+	 * Writes the resulting content in a file
+	 * 
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 * @Deprecated use Path version
+	 */
+	@Deprecated
 	public File writeTo(final File file) throws IOException {
-		Logger.getLogger(Template.class.getName()).info(() -> "Writing " + file);
-		file.getParentFile().mkdirs();
-
-		try (final FileWriter out = new FileWriter(file)) {
-			out.write(generate());
-		}
-		return file;
+		return writeTo(file.toPath()).toFile();
 	}
 
+	/**
+	 * Writes the resulting content in a file
+	 * 
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
+	public Path writeTo(final Path path) throws IOException {
+		Logger.getLogger(Template.class.getName()).info(() -> "Writing " + path);
+		Files.createDirectories(path.getParent());
+		Files.write(path, generate().getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE,
+				StandardOpenOption.TRUNCATE_EXISTING);
+		return path;
+	}
+
+	/**
+	 * Writes the resulting content in the preferred file
+	 * 
+	 * @param folder
+	 * @return
+	 * @throws IOException
+	 */
 	public File writeToFolder(final File folder) throws IOException {
-		if (preferedFile == null) {
-			throw new IllegalStateException("preferedFile is not set");
+		if (preferredFile == null) {
+			throw new IllegalStateException("preferredFile is not set");
 		}
-		return writeTo(new File(folder, preferedFile));
+		return writeTo(new File(folder, preferredFile));
 	}
 
+	/**
+	 * Sets the current context
+	 * 
+	 * @param context
+	 */
 	public void setContext(final Map<String, String> context) {
 		properties.putAll(context);
 	}
 
+	/**
+	 * Adds a value to the current context
+	 * 
+	 * @param key
+	 * @param value
+	 */
 	public void add(final String key, final String value) {
 		properties.put(key, value);
 	}

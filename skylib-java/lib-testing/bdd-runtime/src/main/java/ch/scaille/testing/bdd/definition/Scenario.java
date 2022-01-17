@@ -1,9 +1,10 @@
 package ch.scaille.testing.bdd.definition;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+
+import ch.scaille.testing.bdd.definition.Story.Context;
 
 /**
  * 
@@ -12,45 +13,71 @@ import java.util.function.Function;
  * @param <P>  Shared type (like Swing/Selenium Pilot)
  * @param <PP> Specific type (like PagePilots)
  */
-public abstract class Scenario<P, PP> {
+public class Scenario<P, PP> {
+
+	public static class Step<PP> {
+		private final String description;
+		private final BiConsumer<PP, Context> call;
+
+		public Step(String description, BiConsumer<PP, Context> stepCall) {
+			super();
+			this.description = description;
+			this.call = stepCall;
+		}
+
+	}
 
 	private final Function<P, PP> pageSupplier;
-	private String givenDescription;
-	private String whenDescription;
-	private String thenDescription;
 
-	protected Scenario(Function<P, PP> pageSupplier, String givenDescription, String whenDescription,
-			String thenDescription) {
+	private Step<PP> givenStep;
+	private Step<PP> whenStep;
+	private Step<PP> thenStep;
+
+	protected Scenario(Function<P, PP> pageSupplier, Step<PP> givenStep, Step<PP> whenStep, Step<PP> thenStep) {
 		this.pageSupplier = pageSupplier;
-		this.givenDescription = givenDescription;
-		this.whenDescription = whenDescription;
-		this.thenDescription = thenDescription;
+		this.givenStep = givenStep;
+		this.whenStep = whenStep;
+		this.thenStep = thenStep;
 	}
 
 	public String getWhenCodeDescription() {
-		return toBddCodeDescription(whenDescription);
+		return toBddCodeDescription(whenStep.description);
 	}
 
 	public String toBddCodeDescription(String descr) {
 		return descr.replace(' ', '_').toLowerCase();
 	}
 
-	public void run(P pilot, boolean isWhen) {
+	public void run(P pilot, Context context, boolean isMainScenario) {
 		PP page = pageSupplier.apply(pilot);
-		given(page);
-		when(page);
-		if (isWhen) {
-			then(page);
+		given(page, context);
+		when(page, context);
+		if (isMainScenario) {
+			then(page, context);
 		}
 	}
 
-	public void given(PP page) {
-		// noop
+	public void given(PP page, Context context) {
+		if (givenStep != null) {
+			givenStep.call.accept(page, context);
+		}
 	}
 
-	public abstract void when(PP page);
+	public void when(PP page, Context context) {
+		whenStep.call.accept(page, context);
+	}
 
-	public abstract void then(PP page);
+	public void then(PP page, Context context) {
+		thenStep.call.accept(page, context);
+	}
+
+	public static <P, PP> Step<PP> step(String description, Consumer<PP> code) {
+		return new Step<>(description, (p, c) -> code.accept(p));
+	}
+
+	public static <P, PP> Step<PP> step(String description, BiConsumer<PP, Context> code) {
+		return new Step<>(description, code);
+	}
 
 	public static class ScenarioFactory<P, PP> {
 
@@ -60,34 +87,12 @@ public abstract class Scenario<P, PP> {
 			this.pageSupplier = pageSupplier;
 		}
 
-		public Scenario<P, PP> with(String whenDescription, Consumer<PP> when, String thenDescription,
-				Consumer<PP> then) {
-			return with(null, null, whenDescription, when, thenDescription, then);
+		public Scenario<P, PP> with(Step<PP> when, Step<PP> then) {
+			return with(null, when, then);
 		}
 
-		public Scenario<P, PP> with(String givenDescription, final Consumer<PP> given, String whenDescription,
-				Consumer<PP> when, String thenDescription, Consumer<PP> then) {
-
-			return new Scenario<P, PP>(pageSupplier, givenDescription, whenDescription, thenDescription) {
-
-				@Override
-				public void given(PP page) {
-					if (given != null) {
-						given.accept(page);
-					}
-				}
-
-				@Override
-				public void when(PP page) {
-					when.accept(page);
-				}
-
-				@Override
-				public void then(PP page) {
-					then.accept(page);
-				}
-
-			};
+		public Scenario<P, PP> with(Step<PP> given, Step<PP> when, Step<PP> then) {
+			return new Scenario<>(pageSupplier, given, when, then);
 		}
 	}
 

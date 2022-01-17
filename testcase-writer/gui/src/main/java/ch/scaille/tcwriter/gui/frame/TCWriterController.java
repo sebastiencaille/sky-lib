@@ -39,11 +39,7 @@ public class TCWriterController extends GuiController {
 
 	private final IModelPersister persister;
 
-	private final TCConfig config;
-
-	public TCWriterController(final TCConfig config, final IModelPersister persister, final ITestExecutor testExecutor)
-			throws IOException {
-		this.config = config;
+	public TCWriterController(final IModelPersister persister, final ITestExecutor testExecutor) throws IOException {
 		this.persister = persister;
 		this.testExecutor = testExecutor;
 		TestDictionary dictionary;
@@ -91,16 +87,15 @@ public class TCWriterController extends GuiController {
 		final GenericEditorController<TCConfig> editor = new GenericEditorController<>(dialog,
 				GenericEditorClassModel.builder(TCConfig.class).build());
 		editor.activate();
-		editor.load(config);
+		editor.load(persister.getConfiguration());
 		dialog.setSize(dialog.getWidth() + 400, dialog.getHeight() + 30);
 		dialog.setVisible(true);
 		dialog.dispose();
-		persister.writeConfiguration(config);
+		persister.writeConfiguration(persister.getConfiguration());
 	}
 
 	public void newTestCase() {
-		final TestCase newTestCase = new TestCase();
-		newTestCase.setDictionary(model.getTestDictionary());
+		final TestCase newTestCase = new TestCase("undefined.Undefined", model.getTestDictionary());
 		newTestCase.addStep(new TestStep(1));
 		model.getTc().setValue(this, newTestCase);
 	}
@@ -183,7 +178,7 @@ public class TCWriterController extends GuiController {
 	}
 
 	public void generateCode() throws IOException, TestCaseException {
-		testExecutor.generateCode(model.getTc().getValue());
+		testExecutor.generateCode(model.getTc().getValue(), persister.getExportedTCPath());
 	}
 
 	public void importDictionary() {
@@ -196,7 +191,7 @@ public class TCWriterController extends GuiController {
 	public void restart() {
 		try {
 			gui.setVisible(false);
-			new TCWriterController(config, persister, testExecutor).run();
+			new TCWriterController(persister, testExecutor).run();
 		} catch (IOException e) {
 			TCWriterGui.handleException(null, e);
 		}

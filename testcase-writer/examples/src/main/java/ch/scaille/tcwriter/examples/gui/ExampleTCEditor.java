@@ -23,8 +23,8 @@ public class ExampleTCEditor {
 		ExampleHelper.saveDictionary(testCase.getDictionary());
 		ExampleHelper.saveTC(ExampleHelper.TC_NAME, testCase);
 
-		final TCWriterController controller = new TCWriterController(ExampleHelper.getConfig(),
-				ExampleHelper.getPersister(), ExampleHelper.testExecutor());
+		final TCWriterController controller = new TCWriterController(ExampleHelper.getPersister(),
+				ExampleHelper.testExecutor());
 
 		final Logger eventDebug = Logger.getLogger("MvcEventsDebug");
 		final Level eventDebugLevel = Level.FINE;

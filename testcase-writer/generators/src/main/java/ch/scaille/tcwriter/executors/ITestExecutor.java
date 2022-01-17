@@ -9,15 +9,17 @@ import ch.scaille.tcwriter.generators.model.testcase.TestCase;
 public interface ITestExecutor {
 
 	Path generateCode(TestCase tc) throws IOException, TestCaseException;
+	
+	Path generateCode(TestCase tc, Path targetFolder) throws IOException, TestCaseException;
 
-	void compile(Path sourceFile) throws IOException, InterruptedException;
+	String compile(TestCase tc, Path sourceFile) throws IOException, InterruptedException;
 
 	void execute(String className, int tcpPort) throws IOException;
 
 	default void runTest(final TestCase tc, final int tcpPort)
 			throws IOException, InterruptedException, TestCaseException {
 		final Path sourceFile = generateCode(tc);
-		compile(sourceFile);
-		execute(tc.getPackageAndClassName(), tcpPort);
+		final String className = compile(tc, sourceFile);
+		execute(className, tcpPort);
 	}
 }

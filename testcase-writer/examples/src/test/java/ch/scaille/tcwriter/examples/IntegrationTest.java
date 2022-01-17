@@ -26,7 +26,7 @@ class IntegrationTest {
 		ExampleHelper.saveDictionary(model);
 		ExampleHelper.saveTC(ExampleHelper.TC_NAME, testCase);
 		new TestCaseToJava(ExampleHelper.getPersister()).generateAndWrite(testCase,
-				Paths.get(getConfig().getDefaultGeneratedTCPath()));
+				Paths.get(getConfig().getTCExportPath()));
 	}
 
 	@Test

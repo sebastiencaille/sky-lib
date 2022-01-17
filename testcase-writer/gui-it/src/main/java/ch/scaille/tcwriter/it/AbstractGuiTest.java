@@ -40,7 +40,7 @@ public class AbstractGuiTest {
 		modelPath.mkdirs();
 
 		config.setTcPath(tcPath.toString());
-		config.setDefaultGeneratedTCPath("./src/test/java");
+		config.setTCExportPath("./src/test/java");
 		config.setDictionaryPath(modelPath + "/test-model.json");
 		config.setTemplatePath(new File("rsrc:templates/TC.template").toString());
 		final JsonModelPersister persister = new JsonModelPersister(config);
@@ -51,7 +51,7 @@ public class AbstractGuiTest {
 
 		final ITestExecutor executor = new JunitTestExecutor(persister, ClassLoaderHelper.appClassPath());
 
-		final TCWriterController controller = new TCWriterController(config, persister, executor);
+		final TCWriterController controller = new TCWriterController(persister, executor);
 		SwingUtilities.invokeAndWait(controller::run);
 
 		pilot = new TCGuiPilot(controller.getGui());

@@ -24,7 +24,7 @@ public class TCEditor {
 		}
 
 		final ITestExecutor testExecutor = new JunitTestExecutor(persister, ClassLoaderHelper.appClassPath());
-		final TCWriterController tcWriterController = new TCWriterController(config, persister, testExecutor);
+		final TCWriterController tcWriterController = new TCWriterController(persister, testExecutor);
 		SwingUtilities.invokeLater(tcWriterController::run);
 	}
 

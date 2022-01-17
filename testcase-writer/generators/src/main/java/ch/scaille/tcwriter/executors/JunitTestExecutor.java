@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
@@ -24,29 +23,32 @@ public class JunitTestExecutor implements ITestExecutor {
 
 	private static final Logger LOGGER = Logger.getLogger(JunitTestExecutor.class.getName());
 
-	private static final Path tmp = Paths.get(System.getProperty("java.io.tmpdir"));
-
-	private final Path javaTargetPath;
+	private final Path tempPath;
 
 	private final URL[] classPath;
 
-	private IModelPersister persister;
+	private final IModelPersister persister;
 
 	public JunitTestExecutor(final IModelPersister persister, final URL[] classPath) throws IOException {
 		this.persister = persister;
-		this.javaTargetPath = Files.createTempDirectory("tcwriter");
-		this.javaTargetPath.toFile().deleteOnExit();
+		this.tempPath = Files.createTempDirectory("tcwriter");
+		this.tempPath.toFile().deleteOnExit();
 		this.classPath = classPath;
 	}
 
 	@Override
 	public Path generateCode(final TestCase tc) throws IOException, TestCaseException {
-		TestCaseToJava testCaseToJava = new TestCaseToJava(persister);
-		return testCaseToJava.generateAndWrite(tc, javaTargetPath);
+		return generateCode(tc, tempPath);
 	}
 
 	@Override
-	public void compile(final Path sourceFile) throws IOException, InterruptedException {
+	public Path generateCode(TestCase tc, Path targetFolder) throws IOException, TestCaseException {
+		TestCaseToJava testCaseToJava = new TestCaseToJava(persister);
+		return testCaseToJava.generateAndWrite(tc, targetFolder);
+	}
+
+	@Override
+	public String compile(TestCase tc, final Path sourceFile) throws IOException, InterruptedException {
 		final String waveClassPath = Stream.of(classPath)
 				.filter(j -> j.toString().contains("testcase-writer") && j.toString().contains("annotations"))
 				.map(URL::getFile).collect(joining(":"));
@@ -57,26 +59,24 @@ public class JunitTestExecutor implements ITestExecutor {
 				"-source", "1.8", //
 				"-target", "1.8", //
 				// "-verbose", "-showWeaveInfo", //
-				"-d", targetFolder().toString(), //
+				"-d", tempPath.toString(), //
 				sourceFile.toString() //
 		).redirectErrorStream(true).start();
 		new StreamHandler(testCompiler::getInputStream, LOGGER::info).start();
 		if (testCompiler.waitFor() != 0) {
 			throw new IllegalStateException("Compiler failed with status " + testCompiler.exitValue());
 		}
+		Files.delete(sourceFile);
+		return tc.getPackageAndClassName();
 	}
 
 	@Override
 	public void execute(final String className, final int tcpPort) throws IOException {
-		final URL targetURL = targetFolder().toUri().toURL();
+		final URL targetURL = tempPath.toUri().toURL();
 		final Process runTest = new ProcessBuilder("java", "-cp", cpToCommandLine(classPath, targetURL),
 				"-Dtest.port=" + tcpPort, "-Dtc.stepping=true", "org.junit.runner.JUnitCore", className)
 						.redirectErrorStream(true).start();
 		new StreamHandler(runTest::getInputStream, LOGGER::info).start();
-	}
-
-	protected Path targetFolder() {
-		return tmp.resolve("tc");
 	}
 
 	private class StreamHandler implements Runnable {
@@ -104,6 +104,7 @@ public class JunitTestExecutor implements ITestExecutor {
 			} catch (final IOException e) {
 				// ignore
 			}
+
 		}
 	}
 

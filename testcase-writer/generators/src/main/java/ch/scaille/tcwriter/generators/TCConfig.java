@@ -7,13 +7,13 @@ public class TCConfig {
 
 	private String name = "default";
 
-	private String dictionaryPath = "${user.home}/.tcwriter/dictionary";
+	private String dictionaryPath = "${user.home}/.tcwriter/default/dictionary";
 
-	private String tcPath = "${user.home}/.tcwriter/testcase";
+	private String tcPath = "${user.home}/.tcwriter/default/testcase";
 
-	private String templatePath = "${user.home}/.tcwriter/template";
+	private String templatePath = "${user.home}/.tcwriter/default/TC.template";
 
-	private String defaultGeneratedTCPath = "${user.home}/.tcwriter/generated";
+	private String tcExportPath = "${user.home}/.tcwriter/default/exported";
 
 	@Ordered(order = 1)
 	@Labeled(label = "Name of the configuration")
@@ -47,12 +47,12 @@ public class TCConfig {
 
 	@Ordered(order = 4)
 	@Labeled(label = "Location of the exported test cases")
-	public String getDefaultGeneratedTCPath() {
-		return defaultGeneratedTCPath;
+	public String getTCExportPath() {
+		return tcExportPath;
 	}
 
-	public void setDefaultGeneratedTCPath(final String defaultGeneratedTCPath) {
-		this.defaultGeneratedTCPath = defaultGeneratedTCPath;
+	public void setTCExportPath(final String tcExportPath) {
+		this.tcExportPath = tcExportPath;
 	}
 
 	@Ordered(order = 5)

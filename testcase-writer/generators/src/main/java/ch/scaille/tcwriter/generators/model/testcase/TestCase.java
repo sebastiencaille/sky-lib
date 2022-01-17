@@ -23,16 +23,21 @@ public class TestCase {
 	private TestDictionary testDictionary;
 
 	private final List<TestStep> steps = new ArrayList<>();
-	private final String pkgAndClassName;
 	private final Multimap<String, TestReference> dynamicReferences = MultimapBuilder.hashKeys().arrayListValues()
 			.build();
 
 	// description of test variables
 	private final Map<String, TestObjectDescription> dynamicDescriptions = new HashMap<>();
 
+	private String pkgAndClassName;
+
 	@JsonIgnore
 	private Map<String, IdObject> cachedValues = null;
 
+	/**
+	 * For json
+	 */
+	@Deprecated
 	public TestCase() {
 		this.pkgAndClassName = null;
 		this.testDictionary = null;
@@ -65,6 +70,10 @@ public class TestCase {
 
 	public String getName() {
 		return pkgAndClassName.substring(pkgAndClassName.lastIndexOf('.') + 1);
+	}
+
+	public void setPkgAndClassName(String pkgAndClassName) {
+		this.pkgAndClassName = pkgAndClassName;
 	}
 
 	public String getPackageAndClassName() {

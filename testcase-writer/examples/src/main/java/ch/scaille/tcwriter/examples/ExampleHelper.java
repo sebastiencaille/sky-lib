@@ -42,7 +42,7 @@ public class ExampleHelper {
 
 		CONFIG = new TCConfig();
 		CONFIG.setTcPath(tcPath.toString());
-		CONFIG.setDefaultGeneratedTCPath("./src/test/java");
+		CONFIG.setTCExportPath("./src/test/java");
 		CONFIG.setDictionaryPath(modelPath + "/test-model.json");
 		CONFIG.setTemplatePath("rsrc:templates/TC.template");
 		persister = new JsonModelPersister(CONFIG);

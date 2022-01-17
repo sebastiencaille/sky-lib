@@ -36,4 +36,6 @@ public interface IModelPersister {
 
 	Template readTemplate() throws IOException;
 
+	Path getExportedTCPath();
+
 }

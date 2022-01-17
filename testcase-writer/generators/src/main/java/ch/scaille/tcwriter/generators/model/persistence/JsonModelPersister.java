@@ -103,7 +103,7 @@ public class JsonModelPersister implements IModelPersister {
 	public TCConfig getConfiguration() {
 		return config;
 	}
-	
+
 	@Override
 	public void setConfiguration(final TCConfig config) {
 		this.config = config;
@@ -122,12 +122,13 @@ public class JsonModelPersister implements IModelPersister {
 
 	@Override
 	public TestDictionary readTestDictionary() throws IOException {
-		return mapper.readerFor(TestDictionary.class).readValue(read(resolve(config.getDictionaryPath())));
+		return mapper.readerFor(TestDictionary.class).readValue(read(resolveToURL(config.getDictionaryPath())));
 	}
 
 	@Override
 	public void writeTestDictionary(final TestDictionary tm) throws IOException {
-		writeJson(resolve(config.getDictionaryPath()), mapper.writerFor(TestDictionary.class).writeValueAsString(tm));
+		writeJson(resolveToURL(config.getDictionaryPath()),
+				mapper.writerFor(TestDictionary.class).writeValueAsString(tm));
 	}
 
 	@Override
@@ -141,7 +142,7 @@ public class JsonModelPersister implements IModelPersister {
 		final ContextAttributes ctxt = mapper.getDeserializationConfig().getAttributes()
 				.withPerCallAttribute(CONTEXT_ALL_REFERENCES, references);
 		final TestCase testCase = mapper.readerFor(TestCase.class).with(ctxt)
-				.readValue(read(resolveJson(config.getTcPath(), identifier)));
+				.readValue(read(resolveJsonToUrl(config.getTcPath(), identifier)));
 		testCase.setDictionary(testDictionary);
 		references.forEach(e -> e.restore(testCase));
 		return testCase;
@@ -149,16 +150,17 @@ public class JsonModelPersister implements IModelPersister {
 
 	@Override
 	public void writeTestCase(final String identifier, final TestCase tc) throws IOException {
-		writeJson(resolveJson(config.getTcPath(), identifier), mapper.writerFor(TestCase.class).writeValueAsString(tc));
+		writeJson(resolveJsonToUrl(config.getTcPath(), identifier),
+				mapper.writerFor(TestCase.class).writeValueAsString(tc));
 	}
 
 	@Override
 	public Template readTemplate() throws IOException {
-		return new Template(read(resolve(config.getTemplatePath())));
+		return new Template(read(resolveToURL(config.getTemplatePath())));
 	}
 
 	protected URL configPath(final String identifier) throws MalformedURLException {
-		return resolveJson("${user.home}/.tcwriter", identifier);
+		return resolveJsonToUrl("${user.home}/.tcwriter", identifier);
 	}
 
 	protected void writeJson(final URL path, final String content) throws IOException {
@@ -175,8 +177,8 @@ public class JsonModelPersister implements IModelPersister {
 		}
 	}
 
-	protected URL resolve(String path) throws MalformedURLException {
-		String saneUrl = path.replace("${user.home}", System.getProperty("user.home"));
+	protected URL resolveToURL(String path) throws MalformedURLException {
+		String saneUrl = resolve(path);
 		try {
 			return new URL(saneUrl);
 		} catch (MalformedURLException e) {
@@ -184,8 +186,13 @@ public class JsonModelPersister implements IModelPersister {
 		}
 	}
 
-	protected URL resolveJson(String path, String subPath) throws MalformedURLException {
-		return resolve(path + '/' + subPath + ".json");
+	private String resolve(String path) {
+		String saneUrl = path.replace("${user.home}", System.getProperty("user.home"));
+		return saneUrl;
+	}
+
+	protected URL resolveJsonToUrl(String path, String subPath) throws MalformedURLException {
+		return resolveToURL(path + '/' + subPath + ".json");
 	}
 
 	protected String read(final URL path) throws IOException {
@@ -195,13 +202,13 @@ public class JsonModelPersister implements IModelPersister {
 		}
 	}
 
+	@Override
+	public Path getExportedTCPath() {
+		return Paths.get(resolve(config.getTCExportPath()));
+	}
+
 	public static Path classFile(final Path root, final String testClassName) {
-		Path result = root;
-		for (final String path : testClassName.split("\\.")) {
-			result = result.resolve(path);
-		}
-		result.getParent().resolve(result.getFileName().toString() + ".java");
-		return result;
+		return root.resolve(testClassName.replace('.', '/') + ".java");
 	}
 
 }

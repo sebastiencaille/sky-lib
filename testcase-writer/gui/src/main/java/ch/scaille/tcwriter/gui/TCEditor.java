@@ -17,13 +17,11 @@ public class TCEditor {
 	public static void main(final String[] args) throws IOException {
 
 		final IModelPersister persister = new JsonModelPersister();
-		TCConfig config;
+		TCConfig config = persister.getConfiguration();
 		if (args.length >= 1) {
 			config = persister.readConfiguration(args[0]);
-		} else {
-			config = persister.readConfiguration("default");
+			persister.setConfiguration(config);
 		}
-		persister.setConfiguration(config);
 
 		final ITestExecutor testExecutor = new JunitTestExecutor(persister, ClassLoaderHelper.appClassPath());
 		final TCWriterController tcWriterController = new TCWriterController(config, persister, testExecutor);

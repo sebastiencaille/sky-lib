@@ -100,6 +100,11 @@ public class JsonModelPersister implements IModelPersister {
 	}
 
 	@Override
+	public TCConfig getConfiguration() {
+		return config;
+	}
+	
+	@Override
 	public void setConfiguration(final TCConfig config) {
 		this.config = config;
 	}

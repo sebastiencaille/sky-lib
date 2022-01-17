@@ -16,6 +16,8 @@ import ch.scaille.util.generators.Template;
  */
 public interface IModelPersister {
 
+	TCConfig getConfiguration();
+	
 	void setConfiguration(TCConfig config);
 
 	TestDictionary readTestDictionary() throws IOException;

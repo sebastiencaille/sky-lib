@@ -8,10 +8,10 @@ import java.net.URL;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import ch.scaille.util.ClassFinderTest.TestClassFinder.TestFsScanner;
 import ch.scaille.util.helpers.ClassFinder;
 
-class ClassFinderTest {
+
+public class ClassFinderTest {
 
 	public static class TestClassFinder extends ClassFinder {
 		protected TestClassFinder(URL[] urls) {
@@ -20,8 +20,8 @@ class ClassFinderTest {
 
 		public class TestFsScanner extends FsScanner {
 			@Override
-			protected String rootOfPackage(URI uri, String aPackage) {
-				return super.rootOfPackage(uri, aPackage);
+			protected String packageLocationOf(URI uri, String aPackage) {
+				return super.packageLocationOf(uri, aPackage);
 			}
 
 			@Override
@@ -36,27 +36,27 @@ class ClassFinderTest {
 	}
 
 	@Test
-	void testWin32Path() throws MalformedURLException, URISyntaxException {
-		TestFsScanner scanner = new TestClassFinder(new URL[0]).scanner();
+	void testWindows() throws MalformedURLException, URISyntaxException {
+		TestClassFinder.	TestFsScanner scanner = new TestClassFinder(new URL[0]).scanner();
 		URI testUri = new URL("file:/C:/toto/mypackage").toURI();
 		Assertions.assertEquals(URI.create("file:/"), scanner.rootOf(testUri));
-		Assertions.assertEquals("C:/toto", scanner.rootOfPackage(testUri, "mypackage"));
+		Assertions.assertEquals("C:/toto", scanner.packageLocationOf(testUri, "mypackage"));
 	}
 	
 	@Test
 	void testUnix() throws MalformedURLException, URISyntaxException {
-		TestFsScanner scanner = new TestClassFinder(new URL[0]).scanner();
+		TestClassFinder.	TestFsScanner scanner = new TestClassFinder(new URL[0]).scanner();
 		URI testUri = new URL("file:/toto/mypackage").toURI();
 		Assertions.assertEquals(URI.create("file:/"), scanner.rootOf(testUri));
-		Assertions.assertEquals("/toto", scanner.rootOfPackage(testUri, "mypackage"));
+		Assertions.assertEquals("/toto", scanner.packageLocationOf(testUri, "mypackage"));
 	}
 	
 	@Test
 	void testJarPath() throws MalformedURLException, URISyntaxException {
-		TestFsScanner scanner = new TestClassFinder(new URL[0]).scanner();
+		TestClassFinder.	TestFsScanner scanner = new TestClassFinder(new URL[0]).scanner();
 		URI testUri = new URL("jar:file:/toto.jar!/mypackage").toURI();
 		Assertions.assertEquals(URI.create("jar:file:/toto.jar"), scanner.rootOf(testUri));
-		Assertions.assertEquals("/", scanner.rootOfPackage(testUri, "mypackage"));
+		Assertions.assertEquals("/", scanner.packageLocationOf(testUri, "mypackage"));
 	}
 
 }

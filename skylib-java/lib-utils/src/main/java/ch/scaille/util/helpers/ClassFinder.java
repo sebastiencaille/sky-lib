@@ -50,6 +50,8 @@ public class ClassFinder {
 	private static final String[] DEFAULT_PACKAGES = { "", "ch.scaille.gui.mvc.properties.",
 			"ch.scaille.gui.mvc.persisters.", "ch.scaille.gui." };
 
+	private static final String CLASS_EXTENSION = ".class";
+
 	public enum Policy {
 		/**
 		 * Gather all subclasses of the matching class
@@ -60,8 +62,6 @@ public class ClassFinder {
 		 */
 		CLASS_ONLY
 	}
-
-	private static final String CLASS_EXTENSION = ".class";
 
 	private final Map<Class<?>, Policy> collectedClasses = new HashMap<>();
 
@@ -169,7 +169,7 @@ public class ClassFinder {
 		 * @param aPackage
 		 * @return
 		 */
-		protected String rootOfPackage(URI uri, String aPackage) {
+		protected String packageLocationOf(URI uri, String aPackage) {
 			if (uri.getPath() == null) {
 				return "/";
 			}
@@ -190,7 +190,7 @@ public class ClassFinder {
 			try {
 				URI uri = resource.toURI();
 				rootUri = rootOf(uri);
-				scanPath = rootOfPackage(uri, aPackage);
+				scanPath = packageLocationOf(uri, aPackage);
 			} catch (URISyntaxException e) {
 				throw new IOException("Unable to scan files", e);
 			}

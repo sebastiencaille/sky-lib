@@ -62,7 +62,7 @@ public class Template {
 	}
 
 	public String generate() {
-		final StringBuilder result = new StringBuilder("// File generated from template")
+		final StringBuilder result = new StringBuilder("// File generated from template ")
 				.append(new SimpleDateFormat("yyyy/MM/dd hh:mm:ss").format(new Date())).append("\n");
 		if (commandLine != null) {
 			result.append("// ").append(commandLine).append("\n");

@@ -37,9 +37,9 @@ public class GuiModelGenerator {
 		final Path targetFolder = Paths.get(params.getTargetFolder());
 		Files.createDirectories(targetFolder);
 
-		final ClassFinder finder = ClassFinder.source(new File(params.getSourceFolder()));
-		finder.withAnnotation(GuiObject.class, ClassFinder.Policy.CLASS_ONLY);
-		finder.collect(params.getNamespaceFilter());
+		Log.of(this).info("Scanning " + params.getSourceFolder());
+		final ClassFinder finder = ClassFinder.source(new File(params.getSourceFolder()))
+				.withAnnotation(GuiObject.class, ClassFinder.Policy.CLASS_ONLY).collect(params.getNamespaceFilter());
 		Log.of(this).info("Processing classes:" + finder.getResult());
 
 		for (final Class<?> clazz : finder.getResult()) {

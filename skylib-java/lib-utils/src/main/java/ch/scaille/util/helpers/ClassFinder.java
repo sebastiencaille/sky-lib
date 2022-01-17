@@ -95,14 +95,14 @@ public class ClassFinder {
 		return new ClassFinder(new URL[0]).withClasses(classes);
 	}
 
+	protected ClassFinder(final URL[] urls) {
+		this.loader = new URLClassLoader(urls);
+		this.collectedClasses.put(Object.class, null);
+	}
+
 	public ClassFinder withClasses(Class<?>... classes) {
 		collectedClasses.putAll(Arrays.stream(classes).collect(Collectors.toMap(c -> c, c -> Policy.CLASS_ONLY)));
 		return this;
-	}
-
-	public ClassFinder(final URL[] urls) {
-		this.loader = new URLClassLoader(urls);
-		this.collectedClasses.put(Object.class, null);
 	}
 
 	public void setScanners(Function<URL, Scanner> scanner) {
@@ -143,26 +143,42 @@ public class ClassFinder {
 		void scan(final URL resource, final String aPackage) throws IOException;
 	}
 
-	private static URI root(URI uri) {
-		if (uri.getPath() != null && uri.getPath().indexOf('!') >= 0) {
-			String uriStr = uri.toString();
-			return URI.create(uriStr.substring(0, uriStr.indexOf('!')));
-		} else if (uri.getPath() != null) {
-			return uri.resolve("/");
-		} else {
-			return URI.create(uri.getScheme() + ':' + root(URI.create(uri.getSchemeSpecificPart())));
-		}
-	}
-
-	private static String base(URI uri, String aPackage) {
-		if (uri.getPath() == null) {
-			return "/";
-		}
-		String uriPath = uri.getPath();
-		return uriPath.substring(0, uriPath.length() - aPackage.length());
-	}
-
 	public class FsScanner implements Scanner {
+
+		/**
+		 * FileSystems uri
+		 * 
+		 * @param uri
+		 * @return
+		 */
+		protected URI rootOf(URI uri) {
+			if (uri.getPath() != null && uri.getPath().indexOf('!') >= 0) {
+				String uriStr = uri.toString();
+				return URI.create(uriStr.substring(0, uriStr.indexOf('!')));
+			} else if (uri.getPath() != null) {
+				return uri.resolve("/");
+			} else {
+				return URI.create(uri.getScheme() + ':' + rootOf(URI.create(uri.getSchemeSpecificPart())));
+			}
+		}
+
+		/**
+		 * Where to scan
+		 * 
+		 * @param uri
+		 * @param aPackage
+		 * @return
+		 */
+		protected String rootOfPackage(URI uri, String aPackage) {
+			if (uri.getPath() == null) {
+				return "/";
+			}
+			String uriPath = uri.getPath();
+			if (uriPath.length() > 2 && uriPath.charAt(2) == ':') {
+				uriPath = uriPath.substring(1);
+			}
+			return uriPath.substring(0, uriPath.length() - aPackage.length() - 1);
+		}
 
 		@Override
 		public void scan(URL resource, String aPackage) throws IOException {
@@ -173,8 +189,8 @@ public class ClassFinder {
 			String scanPath;
 			try {
 				URI uri = resource.toURI();
-				rootUri = root(uri);
-				scanPath = base(uri, aPackage) + '/' + aPackage.replace('.', '/');
+				rootUri = rootOf(uri);
+				scanPath = rootOfPackage(uri, aPackage);
 			} catch (URISyntaxException e) {
 				throw new IOException("Unable to scan files", e);
 			}
@@ -185,10 +201,10 @@ public class ClassFinder {
 			}
 		}
 
-		private void scan(final Path path, String aPackage) throws IOException {
-			try (Stream<Path> walk = Files.walk(path)) {
-				walk.map(Path::toString).filter(p -> p.endsWith(CLASS_EXTENSION))
-						.forEach(p -> handleClass(p.replace(CLASS_EXTENSION, "").substring(1).replace('/', '.')));
+		private void scan(final Path rootOfPackage, String aPackage) throws IOException {
+			try (Stream<Path> walk = Files.walk(rootOfPackage.resolve(aPackage.replace('.', '/')))) {
+				walk.map(p -> rootOfPackage.relativize(p)).map(Path::toString).filter(p -> p.endsWith(CLASS_EXTENSION))
+						.forEach(p -> handleClass(p.replace(CLASS_EXTENSION, "").replace('/', '.').replace("\\", ".")));
 			}
 		}
 

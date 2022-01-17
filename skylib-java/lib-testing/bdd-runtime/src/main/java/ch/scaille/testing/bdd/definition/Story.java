@@ -28,6 +28,10 @@ public class Story<P> {
 		this.scenarii = scenarii;
 	}
 	
+	public Consumer<Context> getContextConfigurer() {
+		return contextConfigurer;
+	}
+	
 	public Story<P> withContext(Consumer<Context> contextConfigurer) {
 		this.contextConfigurer = contextConfigurer;
 		return this;

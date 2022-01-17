@@ -127,7 +127,7 @@ public class TextFormatter<T extends TextFormatter<T, E>, E extends Exception> {
 	}
 
 	public T append(final String str) throws E {
-		output.append(str);
+		output.append(str.replace("\n", "\n" + indentationManager.getIndentation()));
 		return (T) this;
 	}
 

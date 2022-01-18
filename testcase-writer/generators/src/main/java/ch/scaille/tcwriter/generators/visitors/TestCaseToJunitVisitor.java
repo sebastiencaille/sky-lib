@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import ch.scaille.generators.util.JavaCodeGenerator;
+import ch.scaille.generators.util.Template;
 import ch.scaille.tcwriter.generators.model.IdObject;
 import ch.scaille.tcwriter.generators.model.TestCaseException;
 import ch.scaille.tcwriter.generators.model.testapi.TestApiParameter;
@@ -19,8 +21,6 @@ import ch.scaille.tcwriter.generators.model.testapi.TestParameterFactory;
 import ch.scaille.tcwriter.generators.model.testcase.TestCase;
 import ch.scaille.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.generators.model.testcase.TestStep;
-import ch.scaille.util.generators.JavaCodeGenerator;
-import ch.scaille.util.generators.Template;
 
 public class TestCaseToJunitVisitor {
 

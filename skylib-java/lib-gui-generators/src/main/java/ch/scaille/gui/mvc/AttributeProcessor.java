@@ -1,8 +1,8 @@
 package ch.scaille.gui.mvc;
 
+import static ch.scaille.generators.util.JavaCodeGenerator.toConstant;
 import static ch.scaille.util.dao.metadata.MetadataHelper.toFirstLetterInLowerCase;
 import static ch.scaille.util.dao.metadata.MetadataHelper.toFirstLetterInUpperCase;
-import static ch.scaille.util.generators.JavaCodeGenerator.toConstant;
 
 import java.util.List;
 import java.util.Map;

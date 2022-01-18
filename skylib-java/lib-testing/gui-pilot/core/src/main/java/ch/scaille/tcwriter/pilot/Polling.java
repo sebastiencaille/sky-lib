@@ -12,7 +12,7 @@ public class Polling<C, V> {
 	public interface PollingFunction<C, V> {
 		PollingResult<C, V> poll(PollingContext<C> context);
 	}
-
+	
 	private final Predicate<C> precondition;
 
 	private final PollingFunction<C, V> pollingFunction;
@@ -32,6 +32,8 @@ public class Polling<C, V> {
 
 	private PollingContext<C> context = null;
 
+	private ActionDelay currentDelay;
+
 	public Polling(final Predicate<C> precondition, final PollingFunction<C, V> pollingFunction) {
 		this.precondition = precondition;
 		this.pollingFunction = pollingFunction;
@@ -50,14 +52,10 @@ public class Polling<C, V> {
 		return pollingFunction;
 	}
 
-	public Duration getTimeout() {
-		return timeout.get();
-	}
-
 	public Duration getFirstDelay() {
 		return firstDelay.get();
 	}
-	
+
 	public Poller.DelayFunction getDelayFunction() {
 		return delayFunction.get();
 	}
@@ -118,6 +116,18 @@ public class Polling<C, V> {
 		return this;
 	}
 
+	public void withExtraDelay(ActionDelay currentDelay) {
+		this.currentDelay = currentDelay;
+	}
+
+	public Duration getTimeout() {
+		Duration realTimeout = timeout.get();
+		if (currentDelay != null) {
+			realTimeout = currentDelay.applyOnTimeout(realTimeout);
+		}
+		return realTimeout;
+	}
+
 	/**
 	 * To say that the next action will have to wait for some arbitrary delay before
 	 * execution
@@ -138,4 +148,5 @@ public class Polling<C, V> {
 		context = new PollingContext<>();
 		return this;
 	}
+
 }

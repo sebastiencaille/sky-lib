@@ -1,18 +1,19 @@
 // File generated from template2021/12/22 04:56:01
 package ch.scaille.dataflowmgr.examples.simplerx;
 
-import ch.scaille.dataflowmgr.examples.simple.FlowReport;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import ch.scaille.dataflowmgr.examples.simple.FlowReport;
 import ch.scaille.util.helpers.Log;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.function.Function;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 
 

@@ -1,4 +1,4 @@
-package ch.scaille.util.generators;
+package ch.scaille.generators.util;
 
 import java.io.File;
 import java.io.IOException;

@@ -30,8 +30,9 @@
 	<dependencies>
 		<dependency>
 			<groupId>ch.scaille</groupId>
-			<artifactId>lib-utils</artifactId>
+			<artifactId>lib-generator-utils</artifactId>
 		</dependency>
+		
 		<!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>

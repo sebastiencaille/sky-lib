@@ -11,8 +11,8 @@ import ch.scaille.dataflowmgr.model.Binding;
 import ch.scaille.dataflowmgr.model.Call;
 import ch.scaille.dataflowmgr.model.ExternalAdapter;
 import ch.scaille.dataflowmgr.model.Flow;
-import ch.scaille.util.generators.JavaCodeGenerator;
-import ch.scaille.util.generators.Template;
+import ch.scaille.generators.util.JavaCodeGenerator;
+import ch.scaille.generators.util.Template;
 
 public abstract class AbstractJavaFlowVisitor extends AbstractFlowVisitor {
 

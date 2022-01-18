@@ -26,7 +26,7 @@ import ch.scaille.dataflowmgr.model.ExternalAdapter;
 import ch.scaille.dataflowmgr.model.Flow;
 import ch.scaille.dataflowmgr.model.Processor;
 import ch.scaille.dataflowmgr.model.flowctrl.ConditionalFlowCtrl;
-import ch.scaille.util.generators.Template;
+import ch.scaille.generators.util.Template;
 import ch.scaille.util.helpers.Log;
 
 /**

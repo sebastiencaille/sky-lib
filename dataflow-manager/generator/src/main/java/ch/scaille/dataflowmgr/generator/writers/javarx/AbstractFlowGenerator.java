@@ -4,7 +4,7 @@ import java.util.List;
 
 import ch.scaille.dataflowmgr.generator.writers.IFlowGenerator;
 import ch.scaille.dataflowmgr.model.Binding;
-import ch.scaille.util.generators.JavaCodeGenerator;
+import ch.scaille.generators.util.JavaCodeGenerator;
 
 public abstract class AbstractFlowGenerator implements IFlowGenerator<AbstractFlowGenerator.GenContext> {
 

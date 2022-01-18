@@ -15,7 +15,7 @@
  ******************************************************************************/
 package ch.scaille.gui.mvc;
 
-import static ch.scaille.util.generators.JavaCodeGenerator.toConstant;
+import static ch.scaille.generators.util.JavaCodeGenerator.toConstant;
 import static java.util.stream.Collectors.toList;
 
 import java.io.IOException;
@@ -28,11 +28,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import ch.scaille.generators.util.JavaCodeGenerator;
+import ch.scaille.generators.util.Template;
 import ch.scaille.gui.mvc.AttributeProcessor.AttributeProcessorDelegate;
 import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
 import ch.scaille.util.dao.metadata.UntypedDataObjectMetaData;
-import ch.scaille.util.generators.JavaCodeGenerator;
-import ch.scaille.util.generators.Template;
 import ch.scaille.util.helpers.ClassFinder;
 
 public class ModelClassProcessor {

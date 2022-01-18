@@ -2,7 +2,7 @@ package ch.scaille.dataflowmgr.generator.writers.javaproc;
 
 import ch.scaille.dataflowmgr.generator.writers.AbstractFlowVisitor.BindingContext;
 import ch.scaille.dataflowmgr.model.Processor;
-import ch.scaille.util.generators.JavaCodeGenerator;
+import ch.scaille.generators.util.JavaCodeGenerator;
 
 public class ProcessorCallGenerator extends AbstractFlowGenerator {
 

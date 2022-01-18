@@ -17,8 +17,8 @@ import ch.scaille.dataflowmgr.generator.writers.javarx.AbstractFlowGenerator.Gen
 import ch.scaille.dataflowmgr.model.Binding;
 import ch.scaille.dataflowmgr.model.ExternalAdapter;
 import ch.scaille.dataflowmgr.model.Flow;
-import ch.scaille.util.generators.JavaCodeGenerator;
-import ch.scaille.util.generators.Template;
+import ch.scaille.generators.util.JavaCodeGenerator;
+import ch.scaille.generators.util.Template;
 import ch.scaille.util.helpers.StreamHelper;
 import ch.scaille.util.helpers.WrongCountException;
 

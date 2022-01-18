@@ -15,16 +15,19 @@ class MetaDataTest {
 		private int valA;
 		private int valB = 456;
 		public int valC;
+		@SuppressWarnings("unused")
 		public final int valD = 123;
 
 		public int getValA() {
 			return valA;
 		}
 
+		@SuppressWarnings("unused")
 		public void setValA(int valA) {
 			this.valA = valA;
 		}
 
+		@SuppressWarnings("unused")
 		public int getValB() {
 			return valB;
 		}

@@ -35,11 +35,11 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 
+import ch.scaille.generators.util.Template;
 import ch.scaille.tcwriter.generators.TCConfig;
 import ch.scaille.tcwriter.generators.model.ExportReference;
 import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
 import ch.scaille.tcwriter.generators.model.testcase.TestCase;
-import ch.scaille.util.generators.Template;
 import ch.scaille.util.helpers.ClassLoaderHelper;
 
 public class JsonModelPersister implements IModelPersister {

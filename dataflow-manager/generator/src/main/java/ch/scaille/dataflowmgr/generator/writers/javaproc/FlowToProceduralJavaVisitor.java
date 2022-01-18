@@ -11,8 +11,8 @@ import ch.scaille.dataflowmgr.generator.writers.FlowGeneratorVisitor;
 import ch.scaille.dataflowmgr.model.Call;
 import ch.scaille.dataflowmgr.model.ExternalAdapter;
 import ch.scaille.dataflowmgr.model.Flow;
-import ch.scaille.util.generators.JavaCodeGenerator;
-import ch.scaille.util.generators.Template;
+import ch.scaille.generators.util.JavaCodeGenerator;
+import ch.scaille.generators.util.Template;
 
 public class FlowToProceduralJavaVisitor extends AbstractJavaFlowVisitor {
 

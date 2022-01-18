@@ -180,6 +180,7 @@ public class ClassFinder {
 			return uriPath.substring(0, uriPath.length() - aPackage.length() - 1);
 		}
 
+		
 		@Override
 		public void scan(URL resource, String aPackage) throws IOException {
 			if (resource == null) {

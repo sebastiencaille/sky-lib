@@ -24,7 +24,7 @@
 
 		<dependency>
 			<groupId>ch.scaille</groupId>
-			<artifactId>lib-utils</artifactId>
+			<artifactId>lib-generator-utils</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>

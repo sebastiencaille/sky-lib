@@ -1,7 +1,7 @@
 package ch.scaille.dataflowmgr.generator.writers.javaproc;
 
 import ch.scaille.dataflowmgr.generator.writers.IFlowGenerator;
-import ch.scaille.util.generators.JavaCodeGenerator;
+import ch.scaille.generators.util.JavaCodeGenerator;
 
 public abstract class AbstractFlowGenerator implements IFlowGenerator<Void> {
 

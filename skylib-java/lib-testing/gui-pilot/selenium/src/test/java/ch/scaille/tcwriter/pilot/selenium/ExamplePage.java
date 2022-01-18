@@ -34,17 +34,16 @@ public class ExamplePage extends PagePilot {
 		super(pilot);
 	}
 
-	public class EnableTestDelay implements ActionDelay {
+	public class EnableTestDelay extends ActionDelay {
 
 		public EnableTestDelay() {
 		}
-
+		
 		@Override
-		public boolean waitFinished() {
+		public void waitFinished() {
 			ExamplePage page = ExamplePage.this;
 			page.wait(() -> page.enableTest, ElementPilot.isEnabled());
 			Assertions.assertTrue(page.enableTest.isEnabled(), () -> "EnableTest is enabled");
-			return true;
 		}
 
 		@Override

@@ -13,7 +13,7 @@ import ch.scaille.dataflowmgr.model.Binding;
 import ch.scaille.dataflowmgr.model.CustomCall;
 import ch.scaille.dataflowmgr.model.ExternalAdapter;
 import ch.scaille.dataflowmgr.model.flowctrl.ConditionalFlowCtrl;
-import ch.scaille.util.generators.JavaCodeGenerator;
+import ch.scaille.generators.util.JavaCodeGenerator;
 
 public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 

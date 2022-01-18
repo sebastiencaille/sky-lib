@@ -147,9 +147,8 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	 * @return
 	 */
 	protected <U> U waitPollingSuccess(final Polling<C, U> polling, final FailureHandler<C, U> onFail) {
-
+		polling.withExtraDelay(pilot.getActionDelay());
 		waitActionDelay();
-
 		try (NoExceptionCloseable closeable = pilot.withModalDialogDetection()) {
 			final PollingResult<C, U> result = waitPollingSuccessLoop(polling);
 			if (result.isSuccess()) {

@@ -29,7 +29,7 @@ import ch.scaille.dataflowmgr.model.ExternalAdapter;
 import ch.scaille.dataflowmgr.model.Flow;
 import ch.scaille.dataflowmgr.model.Processor;
 import ch.scaille.dataflowmgr.model.WithId;
-import ch.scaille.util.generators.DotFileGenerator;
+import ch.scaille.generators.util.DotFileGenerator;
 
 public class FlowToDotVisitor extends AbstractFlowVisitor {
 
@@ -108,20 +108,18 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 	}
 
 	private void addDataPoint(final String name) {
-		graph.nodes.put(name, new Node(name, "", null, ch.scaille.util.generators.DotFileGenerator.Shape.POINT));
+		graph.nodes.put(name, new Node(name, "", null, DotFileGenerator.Shape.POINT));
 	}
 
 	private String addAdapter(final ExternalAdapter adapter) {
 		final String nodeName = toVar(adapter);
-		graph.nodes.put(nodeName, new Node(nodeName, adapter.getCall(), "External:$",
-				ch.scaille.util.generators.DotFileGenerator.Shape.BOX));
+		graph.nodes.put(nodeName, new Node(nodeName, adapter.getCall(), "External:$", DotFileGenerator.Shape.BOX));
 		return nodeName;
 	}
 
 	String addProcessor(final Binding binding, final Processor processor) {
 		final String nodeName = toVar(binding) + "_" + processor.getCall().replace('.', '_');
-		graph.nodes.put(nodeName, new Node(nodeName, processor.getCall(), null,
-				ch.scaille.util.generators.DotFileGenerator.Shape.ELLIPSE));
+		graph.nodes.put(nodeName, new Node(nodeName, processor.getCall(), null, DotFileGenerator.Shape.ELLIPSE));
 		return nodeName;
 	}
 
@@ -140,7 +138,7 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 		for (final Node node : graph.nodes.values()) {
 			final String color = computeColor(node);
 			final String label = node.label;
-			final ch.scaille.util.generators.DotFileGenerator.Shape shape = node.shape;
+			final DotFileGenerator.Shape shape = node.shape;
 			generator.addNode(node.name, label, shape, color);
 		}
 		for (final Link link : graph.links) {

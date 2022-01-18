@@ -14,7 +14,7 @@ import ch.scaille.dataflowmgr.generator.writers.dot.FlowToDotVisitor.Node;
 import ch.scaille.dataflowmgr.model.CustomCall;
 import ch.scaille.dataflowmgr.model.ExternalAdapter;
 import ch.scaille.dataflowmgr.model.flowctrl.ConditionalFlowCtrl;
-import ch.scaille.util.generators.DotFileGenerator;
+import ch.scaille.generators.util.DotFileGenerator;
 
 public class ConditionalFlowCtrlGenerator extends AbstractDotFlowGenerator {
 

@@ -2,28 +2,25 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>ch.scaille</groupId>
-		<artifactId>gui-pilot</artifactId>
+		<artifactId>lib-testing</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>gui-pilot-selenium</artifactId>
+	<artifactId>selenium-test-page</artifactId>
 
 	<dependencies>
 		<dependency>
 			<groupId>ch.scaille</groupId>
-			<artifactId>gui-pilot-core</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>ch.scaille</groupId>
-			<artifactId>selenium-test-page</artifactId>
+			<artifactId>lib-testing-core</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
 		</dependency>
-
+		<!-- http server -->
+		<dependency>
+			<groupId>io.undertow</groupId>
+			<artifactId>undertow-core</artifactId>
+		</dependency>
 	</dependencies>
-
 </project>

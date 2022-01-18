@@ -1,19 +1,18 @@
-// File generated from template2021/12/22 04:56:01
+// File generated from template 2022/01/18 06:49:12
 package ch.scaille.dataflowmgr.examples.simplerx;
 
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import ch.scaille.dataflowmgr.examples.simple.FlowReport;
+
 import ch.scaille.util.helpers.Log;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.function.Function;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 
@@ -206,7 +205,7 @@ class SimpleFlow extends ch.scaille.dataflowmgr.examples.simple.AbstractFlow {
 	    final Maybe<FlowExecution> topCall = simpleService_keepAsIs_complete_conditional(execution, callModifier, callbacks);
 	    return Maybe.just(execution)
 	        .mapOptional(f -> ((DataPointState.TRIGGERED == f.state_simpleService_init || DataPointState.SKIPPED == f.state_simpleService_init)
-	          && (DataPointState.TRIGGERED == f.state_complete || DataPointState.SKIPPED == f.state_complete))?Optional.of(execution):Optional.empty())
+	                  && (DataPointState.TRIGGERED == f.state_complete || DataPointState.SKIPPED == f.state_complete))?Optional.of(execution):Optional.empty())
 	        .mapOptional(f -> f.canTriggerBindingSimpleServiceKeepAsIsComplete()?Optional.of(execution):Optional.empty())
 	        .doOnSuccess(r -> Log.of(this).info("simpleService_init -> simpleService.keepAsIs -> complete: Deps success"))
 	        .doOnComplete(() -> Log.of(this).info("simpleService_init -> simpleService.keepAsIs -> complete: Deps skipping"))

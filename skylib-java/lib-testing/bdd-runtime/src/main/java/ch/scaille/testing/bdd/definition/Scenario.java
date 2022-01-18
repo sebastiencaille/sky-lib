@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import ch.scaille.testing.bdd.definition.Story.Context;
+import ch.scaille.testing.bdd.definition.Story.ScenarioContext;
 
 /**
  * 
@@ -16,7 +17,7 @@ import ch.scaille.testing.bdd.definition.Story.Context;
 public class Scenario<P, PP> {
 
 	public static class Step<PP> {
-		private final String description;
+		public final String description;
 		private final BiConsumer<PP, Context> call;
 
 		public Step(String description, BiConsumer<PP, Context> stepCall) {
@@ -48,26 +49,33 @@ public class Scenario<P, PP> {
 		return descr.replace(' ', '_').toLowerCase();
 	}
 
-	public void run(P pilot, Context context, boolean isMainScenario) {
+	public void run(P pilot, Context context, boolean isLastScenario) {
 		PP page = pageSupplier.apply(pilot);
 		given(page, context);
-		when(page, context);
-		if (isMainScenario) {
+		when(page, context, isLastScenario);
+		if (isLastScenario) {
 			then(page, context);
 		}
 	}
 
 	public void given(PP page, Context context) {
 		if (givenStep != null) {
+			context.getContext(ScenarioContext.class).addGiven(givenStep);
 			givenStep.call.accept(page, context);
 		}
 	}
 
-	public void when(PP page, Context context) {
+	public void when(PP page, Context context, boolean isLastScenario) {
+		if (isLastScenario) {
+			context.getContext(ScenarioContext.class).addWhen(whenStep);
+		} else {
+			context.getContext(ScenarioContext.class).addGiven(whenStep);
+		}
 		whenStep.call.accept(page, context);
 	}
 
 	public void then(PP page, Context context) {
+		context.getContext(ScenarioContext.class).addThen(thenStep);
 		thenStep.call.accept(page, context);
 	}
 

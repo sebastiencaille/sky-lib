@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
-import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -17,6 +16,7 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
+import org.openqa.selenium.remote.AbstractDriverOptions;
 import org.openqa.selenium.remote.CapabilityType;
 
 public abstract class WebDriverFactory<T extends WebDriverFactory<T>> {
@@ -37,6 +37,16 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<T>> {
 
 	public abstract WebDriver build();
 
+	protected void withDefaults(AbstractDriverOptions<?> options) {
+		options.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
+	}
+
+	protected T withUntrustedConnections(AbstractDriverOptions<?> options) {
+		options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+		options.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
+		return (T) this;
+	}
+
 	protected WebDriverFactory() {
 		logPrefs.enable(LogType.BROWSER, Level.ALL);
 	}
@@ -51,15 +61,14 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<T>> {
 		private final FirefoxProfile profile = new FirefoxProfile();
 
 		public FirefoxDriverFactory(String driverPath) {
+			withDefaults(options);
 			System.setProperty("webdriver.gecko.driver", driverPath);
-			options.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.IGNORE);
 			options.addPreference("dom.disable_beforeunload", true);
 			options.setCapability(CapabilityType.HAS_NATIVE_EVENTS, false);
 			profile.setPreference("gfx.direct2d.disabled", true);
 			profile.setPreference("layers.acceleration.disabled", true);
 			profile.setPreference("toolkit.cosmeticAnimations.enabled", false);
 			profile.setPreference("webgl.angle.try-d3d11", false); // fails on vmware
-			options.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
 		}
 
 		@Override
@@ -95,12 +104,9 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<T>> {
 
 		@Override
 		public FirefoxDriverFactory withUntrustedConnection() {
-			options.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.ACCEPT);
-			options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
-			options.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
 			profile.setAcceptUntrustedCertificates(true);
 			profile.setAssumeUntrustedCertificateIssuer(false);
-			return this;
+			return withUntrustedConnections(options);
 		}
 
 		@Override
@@ -119,6 +125,7 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<T>> {
 		private final Map<String, Object> prefs = new HashMap<>();
 
 		private ChromeDriverFactory(String driverPath) {
+			withDefaults(options);
 			System.setProperty("webdriver.chrome.driver", driverPath);
 			options.addArguments("--disable-notifications");
 			options.addArguments("--no-sandbox");
@@ -134,8 +141,6 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<T>> {
 			prefs.put("safebrowsing.enabled", "false");
 			prefs.put("disable-popup-blocking", "true");
 			options.setExperimentalOption("prefs", prefs);
-
-			options.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
 		}
 
 		@Override
@@ -170,8 +175,7 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<T>> {
 		@Override
 		public ChromeDriverFactory withUntrustedConnection() {
 			options.addArguments("--ignore-certificate-errors");
-			options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
-			return this;
+			return withUntrustedConnections(options);
 		}
 
 		@Override

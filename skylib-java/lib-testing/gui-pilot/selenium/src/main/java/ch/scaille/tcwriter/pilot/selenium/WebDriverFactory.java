@@ -5,33 +5,48 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.CapabilityType;
 
-public interface WebDriverFactory<T extends WebDriverFactory<T>> {
+public abstract class WebDriverFactory<T extends WebDriverFactory<T>> {
 
-	final boolean IS_WINDOWS = System.getProperty("os.name").contains("indows");
+	public static final boolean IS_WINDOWS = System.getProperty("os.name").contains("indows");
 
-	T withBinary(String binary);
+	protected final LoggingPreferences logPrefs = new LoggingPreferences();
 
-	T headless();
+	public abstract T withBinary(String binary);
 
-	T withUntrustedConnection();
+	public abstract T headless();
 
-	T withLogging(String folder);
+	public abstract T withUntrustedConnection();
 
-	T withSilentDownload(String folder);
+	public abstract T withDriverLogs(String folder);
 
-	WebDriver build();
+	public abstract T withSilentDownload(String folder);
 
-	public static final class FirefoxDriverFactory implements WebDriverFactory<FirefoxDriverFactory> {
+	public abstract WebDriver build();
+
+	protected WebDriverFactory() {
+		logPrefs.enable(LogType.BROWSER, Level.ALL);
+	}
+
+	static String logFile(String folder, String basename) {
+		return folder + File.separatorChar + basename + '-' + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date())
+				+ ".log";
+	}
+
+	public static final class FirefoxDriverFactory extends WebDriverFactory<FirefoxDriverFactory> {
 		private final FirefoxOptions options = new FirefoxOptions();
 		private final FirefoxProfile profile = new FirefoxProfile();
 
@@ -40,11 +55,11 @@ public interface WebDriverFactory<T extends WebDriverFactory<T>> {
 			options.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.IGNORE);
 			options.addPreference("dom.disable_beforeunload", true);
 			options.setCapability(CapabilityType.HAS_NATIVE_EVENTS, false);
-
 			profile.setPreference("gfx.direct2d.disabled", true);
 			profile.setPreference("layers.acceleration.disabled", true);
 			profile.setPreference("toolkit.cosmeticAnimations.enabled", false);
 			profile.setPreference("webgl.angle.try-d3d11", false); // fails on vmware
+			options.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
 		}
 
 		@Override
@@ -60,15 +75,9 @@ public interface WebDriverFactory<T extends WebDriverFactory<T>> {
 		}
 
 		@Override
-		public FirefoxDriverFactory withLogging(String logFolder) {
-			final String date = new SimpleDateFormat("YYYY-MM-dd").format(new Date());
-			profile.setPreference("webdriver.log.browser.file",
-					logFolder + File.pathSeparator + "firefox-browser-" + date + ".log");
-			profile.setPreference("webdriver.log.driver.file",
-					logFolder + File.pathSeparator + "firefox-driver-" + date + ".log");
-			profile.setPreference("webdriver.log.file", logFolder + File.pathSeparator + "wd-log-" + date + ".log");
-			System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE,
-					logFolder + File.pathSeparator + "firefox-log-" + date + ".log");
+		public FirefoxDriverFactory withDriverLogs(String logFolder) {
+			options.setLogLevel(FirefoxDriverLogLevel.TRACE);
+			System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, logFile(logFolder, "firefox"));
 			return this;
 		}
 
@@ -104,7 +113,7 @@ public interface WebDriverFactory<T extends WebDriverFactory<T>> {
 		return new FirefoxDriverFactory(driverPath);
 	}
 
-	public static final class ChromeDriverFactory implements WebDriverFactory<ChromeDriverFactory> {
+	public static final class ChromeDriverFactory extends WebDriverFactory<ChromeDriverFactory> {
 
 		private final ChromeOptions options = new ChromeOptions();
 		private final Map<String, Object> prefs = new HashMap<>();
@@ -125,6 +134,8 @@ public interface WebDriverFactory<T extends WebDriverFactory<T>> {
 			prefs.put("safebrowsing.enabled", "false");
 			prefs.put("disable-popup-blocking", "true");
 			options.setExperimentalOption("prefs", prefs);
+
+			options.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
 		}
 
 		@Override
@@ -141,11 +152,9 @@ public interface WebDriverFactory<T extends WebDriverFactory<T>> {
 		}
 
 		@Override
-		public ChromeDriverFactory withLogging(String logFolder) {
-			final String date = new SimpleDateFormat("YYYY-MM-dd").format(new Date());
+		public ChromeDriverFactory withDriverLogs(String logFolder) {
 			System.setProperty("webdriver.chrome.verboseLogging", "true");
-			System.setProperty("webdriver.chrome.logfile",
-					logFolder + File.pathSeparator + "chromedriver-" + date + ".log");
+			System.setProperty("webdriver.chrome.logfile", logFile(logFolder, "chromedriver"));
 			return this;
 		}
 
@@ -167,7 +176,7 @@ public interface WebDriverFactory<T extends WebDriverFactory<T>> {
 
 		@Override
 		public WebDriver build() {
-			return new ChromeDriver();
+			return new ChromeDriver(options);
 		}
 	}
 

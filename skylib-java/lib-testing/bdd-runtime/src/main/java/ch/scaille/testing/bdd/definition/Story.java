@@ -25,7 +25,7 @@ public class Story<P> {
 
 	}
 
-	public static class ScenarioContext {
+	public static class StoryContext {
 		final List<String> report = new ArrayList<>();
 
 		private void add(String verb, Step<?> step) {
@@ -75,7 +75,7 @@ public class Story<P> {
 		return scenarii;
 	}
 
-	public ScenarioContext run(P pilot) {
+	public StoryContext run(P pilot) {
 		Context context = new Context();
 		if (contextConfigurer != null) {
 			contextConfigurer.accept(context);
@@ -85,7 +85,7 @@ public class Story<P> {
 		for (Scenario<P, ?> scenario : scenarii) {
 			scenario.run(pilot, context, scenario == lastScenario);
 		}
-		return context.getContext(ScenarioContext.class);
+		return context.getContext(StoryContext.class);
 	}
 
 }

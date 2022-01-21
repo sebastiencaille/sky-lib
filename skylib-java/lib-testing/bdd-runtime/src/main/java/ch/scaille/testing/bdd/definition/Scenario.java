@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import ch.scaille.testing.bdd.definition.Story.Context;
-import ch.scaille.testing.bdd.definition.Story.ScenarioContext;
+import ch.scaille.testing.bdd.definition.Story.StoryContext;
 
 /**
  * 
@@ -60,22 +60,22 @@ public class Scenario<P, PP> {
 
 	public void given(PP page, Context context) {
 		if (givenStep != null) {
-			context.getContext(ScenarioContext.class).addGiven(givenStep);
+			context.getContext(StoryContext.class).addGiven(givenStep);
 			givenStep.call.accept(page, context);
 		}
 	}
 
 	public void when(PP page, Context context, boolean isLastScenario) {
 		if (isLastScenario) {
-			context.getContext(ScenarioContext.class).addWhen(whenStep);
+			context.getContext(StoryContext.class).addWhen(whenStep);
 		} else {
-			context.getContext(ScenarioContext.class).addGiven(whenStep);
+			context.getContext(StoryContext.class).addGiven(whenStep);
 		}
 		whenStep.call.accept(page, context);
 	}
 
 	public void then(PP page, Context context) {
-		context.getContext(ScenarioContext.class).addThen(thenStep);
+		context.getContext(StoryContext.class).addThen(thenStep);
 		thenStep.call.accept(page, context);
 	}
 

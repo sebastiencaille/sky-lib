@@ -11,7 +11,7 @@ import ch.scaille.tcwriter.pilot.selenium.AbstractTestWebAppProvider;
 import ch.scaille.tcwriter.pilot.selenium.SeleniumPilot;
 import ch.scaille.tcwriter.pilot.selenium.WebDriverFactory;
 import ch.scaille.testing.bdd.definition.Story;
-import ch.scaille.testing.bdd.definition.Story.ScenarioContext;
+import ch.scaille.testing.bdd.definition.Story.StoryContext;
 import ch.scaille.util.helpers.Log;
 
 @ExtendWith(DisabledIfHeadless.class)
@@ -43,7 +43,7 @@ class SeleniumExampleTest extends AbstractTestWebAppProvider {
 
 	@Test
 	void testExample() {
-		ScenarioContext result = new Story<>(ExamplePage.OPEN_WEBSITE, ExamplePage.TEST_ENABLE, ExamplePage.TEST_ALERT)
+		StoryContext result = new Story<>(ExamplePage.OPEN_WEBSITE, ExamplePage.TEST_ENABLE, ExamplePage.TEST_ALERT)
 				.run(pilot);
 		Log.of(this).info(pilot.getActionReport().getFormattedReport());
 		Log.of(this).info(result.toString());

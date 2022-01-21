@@ -40,7 +40,7 @@ import ch.scaille.gui.model.views.ListViews;
 import ch.scaille.gui.mvc.ControllerPropertyChangeSupport;
 import ch.scaille.gui.mvc.IScopedSupport;
 import ch.scaille.gui.mvc.properties.ObjectProperty;
-import ch.scaille.util.helpers.StreamHelper;
+import ch.scaille.util.helpers.StreamExt;
 
 /**
  * List Model with log(n) access.
@@ -433,7 +433,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 
 	protected List<T> addToModel(final Collection<T> newData) {
 				final int oldSize = data.size();
-		StreamHelper.throwIfContainsNull(newData.stream());
+		StreamExt.throwIfContainsNull(newData.stream());
 		final List<T> addedData = newData.stream().filter(viewProperty.getValue()::accept).collect(Collectors.toList());
 		data.addAll(addedData);
 		Collections.sort(data, viewProperty.getValue());

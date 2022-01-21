@@ -26,7 +26,7 @@ import ch.scaille.tcwriter.generators.model.testcase.TestStep;
 import ch.scaille.tcwriter.gui.DictionaryImport;
 import ch.scaille.tcwriter.gui.TestRemoteControl;
 import ch.scaille.tcwriter.gui.frame.TCWriterModel.TestExecutionState;
-import ch.scaille.util.helpers.Lambda;
+import ch.scaille.util.helpers.LambdaExt;
 
 public class TCWriterController extends GuiController {
 
@@ -167,7 +167,7 @@ public class TCWriterController extends GuiController {
 
 	public void startTestCase() {
 		testRemoteControl.resetConnection();
-		new Thread(() -> Lambda.withExc(this::runTestCase, gui::handleException), "Test execution").start();
+		new Thread(() -> LambdaExt.withExc(this::runTestCase, gui::handleException), "Test execution").start();
 	}
 
 	public void runTestCase() throws IOException, InterruptedException, TestCaseException {

@@ -19,7 +19,7 @@ import ch.scaille.tcwriter.generators.model.persistence.IModelPersister;
 import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
 import ch.scaille.tcwriter.gui.frame.TCWriterGui;
 import ch.scaille.util.helpers.ClassFinder;
-import ch.scaille.util.helpers.Lambda;
+import ch.scaille.util.helpers.LambdaExt;
 import ch.scaille.util.helpers.ClassFinder.Policy;
 
 public class DictionaryImport extends JDialog {
@@ -44,7 +44,7 @@ public class DictionaryImport extends JDialog {
 
 		JButton importButton = new JButton("Import");
 		add(importButton, BorderLayout.EAST);
-		importButton.addActionListener(a -> Lambda.withExc(() -> {
+		importButton.addActionListener(a -> LambdaExt.withExc(() -> {
 			importDictionary(new File(dictionaryJarFile.getText()), sourcePackage.getText());
 			imported = true;
 			setVisible(false);

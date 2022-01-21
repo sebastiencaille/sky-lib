@@ -19,7 +19,7 @@ import ch.scaille.dataflowmgr.model.ExternalAdapter;
 import ch.scaille.dataflowmgr.model.Flow;
 import ch.scaille.generators.util.JavaCodeGenerator;
 import ch.scaille.generators.util.Template;
-import ch.scaille.util.helpers.StreamHelper;
+import ch.scaille.util.helpers.StreamExt;
 import ch.scaille.util.helpers.WrongCountException;
 
 /**
@@ -67,7 +67,7 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 		generateGlobalFlow();
 
 		final String inputBinding = flow.getBindings().stream().filter(Binding::isEntry).map(this::varNameOf)
-				.collect(StreamHelper.single()).orElseThrow(WrongCountException::new);
+				.collect(StreamExt.single()).orElseThrow(WrongCountException::new);
 
 		final Map<String, String> templateProperties = new HashMap<>();
 		templateProperties.put("package", packageName);

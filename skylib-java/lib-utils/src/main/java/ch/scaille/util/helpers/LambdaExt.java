@@ -15,12 +15,16 @@
  ******************************************************************************/
 package ch.scaille.util.helpers;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class Lambda {
+public class LambdaExt {
 
 	@FunctionalInterface
 	public interface RunnableWithExceptions<E extends Exception, F extends Exception> {
@@ -42,7 +46,7 @@ public class Lambda {
 		R apply(T value) throws E;
 	}
 
-	private Lambda() {
+	private LambdaExt() {
 
 	}
 
@@ -97,4 +101,5 @@ public class Lambda {
 		}
 	}
 
+	
 }

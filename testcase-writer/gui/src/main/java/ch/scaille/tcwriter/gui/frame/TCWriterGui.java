@@ -27,8 +27,8 @@ import ch.scaille.tcwriter.gui.editors.steps.StepEditorController;
 import ch.scaille.tcwriter.gui.editors.steps.StepEditorModel;
 import ch.scaille.tcwriter.gui.editors.steps.StepEditorPanel;
 import ch.scaille.tcwriter.gui.steps.StepsTable;
-import ch.scaille.util.helpers.Lambda;
-import ch.scaille.util.helpers.Lambda.RunnableWithException;
+import ch.scaille.util.helpers.LambdaExt;
+import ch.scaille.util.helpers.LambdaExt.RunnableWithException;
 
 public class TCWriterGui extends JFrame {
 
@@ -49,7 +49,7 @@ public class TCWriterGui extends JFrame {
 			RunnableWithException<?> action) {
 		final JButton newButton = new JButton(icon);
 		newButton.setToolTipText(toolTip);
-		newButton.addActionListener(e -> Lambda.withExc(action, this::handleException));
+		newButton.addActionListener(e -> LambdaExt.withExc(action, this::handleException));
 		newButton.setName(name);
 		return newButton;
 	}

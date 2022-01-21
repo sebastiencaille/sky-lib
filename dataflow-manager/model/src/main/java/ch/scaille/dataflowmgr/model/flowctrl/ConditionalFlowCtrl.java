@@ -1,6 +1,6 @@
 package ch.scaille.dataflowmgr.model.flowctrl;
 
-import static ch.scaille.util.helpers.StreamHelper.notEq;
+import static ch.scaille.util.helpers.StreamExt.notEq;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 

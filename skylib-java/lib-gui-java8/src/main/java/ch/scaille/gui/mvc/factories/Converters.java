@@ -34,8 +34,8 @@ import ch.scaille.gui.mvc.converters.GuiErrorToStringConverter;
 import ch.scaille.gui.mvc.converters.IConverter;
 import ch.scaille.gui.mvc.converters.WriteOnlyException;
 import ch.scaille.util.FormatterHelper;
-import ch.scaille.util.helpers.Lambda;
-import ch.scaille.util.helpers.Lambda.FunctionWithException;
+import ch.scaille.util.helpers.LambdaExt;
+import ch.scaille.util.helpers.LambdaExt.FunctionWithException;
 
 public final class Converters {
 
@@ -214,23 +214,23 @@ public final class Converters {
 	}
 
 	public static <T> IConverter<T, T> identity() {
-		return converter(Function.identity(), Lambda.identity());
+		return converter(Function.identity(), LambdaExt.identity());
 	}
 
 	public static IConverter<Integer, Integer> intIdentity() {
-		return intConverter(i -> i, Lambda.identity());
+		return intConverter(i -> i, LambdaExt.identity());
 	}
 
 	public static IConverter<Long, Long> longIdentity() {
-		return longConverter(l -> l, Lambda.identity());
+		return longConverter(l -> l, LambdaExt.identity());
 	}
 
 	public static IConverter<Boolean, Boolean> booleanIdentity() {
-		return booleanConverter(Function.identity(), Lambda.identity());
+		return booleanConverter(Function.identity(), LambdaExt.identity());
 	}
 
 	public static IConverter<Float, Float> floatIdentity() {
-		return floatConverter(Function.identity(), Lambda.identity());
+		return floatConverter(Function.identity(), LambdaExt.identity());
 	}
 
 	public static <T extends Number> FunctionWithException<String, T, ConversionException> numberToString(

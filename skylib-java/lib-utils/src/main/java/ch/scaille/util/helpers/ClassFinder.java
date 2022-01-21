@@ -265,8 +265,7 @@ public class ClassFinder {
 				appliedPolicy = processClass(iface);
 				if (appliedPolicy == Policy.CLASS_ONLY) {
 					appliedPolicy = null;
-				}
-				if (appliedPolicy != null) {
+				}				if (appliedPolicy != null) {
 					break;
 				}
 			}

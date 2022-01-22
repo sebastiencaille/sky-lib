@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -83,10 +84,9 @@ public class DictionaryImport extends JDialog {
 	protected void importDictionary(File dictionaryJarFile, String sourcePackage) {
 		TestDictionary dictionary;
 		try {
-			dictionary = new JavaToDictionary(
-					ClassFinder.source(dictionaryJarFile).withAnnotation(TCRole.class, Policy.CLASS_ONLY)
-							.withAnnotation(TCActors.class, Policy.CLASS_ONLY).collect(sourcePackage).getResult())
-									.generateDictionary();
+			dictionary = new JavaToDictionary(ClassFinder.source(dictionaryJarFile)
+					.withAnnotation(TCRole.class, Policy.CLASS_ONLY).withAnnotation(TCActors.class, Policy.CLASS_ONLY)
+					.withPackages(sourcePackage).scan().collect(Collectors.toList())).generateDictionary();
 			persister.writeTestDictionary(dictionary);
 		} catch (IOException e) {
 			TCWriterGui.handleException(this, e);

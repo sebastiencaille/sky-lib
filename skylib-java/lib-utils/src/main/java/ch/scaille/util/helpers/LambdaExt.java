@@ -15,10 +15,6 @@
  ******************************************************************************/
 package ch.scaille.util.helpers;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -86,13 +82,13 @@ public class LambdaExt {
 		}
 	}
 
-	public static <T, E extends Exception> T resWithExc(final SupplierWithException<T, E> s) {
-		return resWithExc(s, e -> {
+	public static <T, E extends Exception> T funcWithExc(final SupplierWithException<T, E> s) {
+		return funcWithExc(s, e -> {
 			throw new IllegalStateException(e.getMessage(), e);
 		});
 	}
 
-	public static <T, E extends Exception> T resWithExc(final SupplierWithException<T, E> s,
+	public static <T, E extends Exception> T funcWithExc(final SupplierWithException<T, E> s,
 			final Function<E, T> exceptionHandler) {
 		try {
 			return s.execute();

@@ -16,18 +16,14 @@
 package ch.scaille.util.helpers;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Spliterators;
-import java.util.function.Function;
+import java.util.Set;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 public interface StreamExt {
 
@@ -123,52 +119,13 @@ public interface StreamExt {
 		return v -> !Objects.equals(v, val);
 	}
 
-	public class MultiCollectionIterator<R, T> implements Iterator<T> {
 
-		private final Function<R, Iterator<T>> loader;
-		private final Iterator<R> rootsListIter;
-		private Iterator<T> currentElementsIter = null;
-		private Iterator<T> nextElementsIter = Collections.emptyIterator();
-
-		public MultiCollectionIterator(final List<R> roots, Function<R, Iterator<T>> loader) {
-			this.loader = loader;
-			rootsListIter = roots.iterator();
+	public static void checkContent(final Stream<?> collection, final Class<?> clazz) {
+		Set<?> mismatches = collection.filter(c -> !clazz.isInstance(c)).map(Object::getClass)
+				.collect(Collectors.toSet());
+		if (!mismatches.isEmpty()) {
+			throw new IllegalArgumentException(
+					"Collection has an instances of " + mismatches + ", which are not " + clazz);
 		}
-
-		@Override
-		public boolean hasNext() {
-			if (currentElementsIter == null || !currentElementsIter.hasNext()) {
-				load();
-			}
-			return currentElementsIter.hasNext();
-		}
-
-		@Override
-		public T next() {
-			if (currentElementsIter == null) {
-				throw new IllegalStateException("next() was not called");
-			}
-			return currentElementsIter.next();
-		}
-
-		private void load() {
-			if (currentElementsIter == null) {
-				currentElementsIter = loader.apply(rootsListIter.next());
-			} else {
-				currentElementsIter = nextElementsIter;
-			}
-			if (rootsListIter.hasNext()) {
-				do {
-					nextElementsIter = loader.apply(rootsListIter.next());
-				} while (!nextElementsIter.hasNext() && rootsListIter.hasNext());
-			} else {
-				nextElementsIter = Collections.emptyIterator();
-			}
-		}
-	}
-
-	public static <R, T> Stream<T> multiCollection(final List<R> roots, Function<R, Iterator<T>> loader) {
-		return StreamSupport
-				.stream(Spliterators.<T>spliteratorUnknownSize(new MultiCollectionIterator<>(roots, loader), 0), false);
 	}
 }

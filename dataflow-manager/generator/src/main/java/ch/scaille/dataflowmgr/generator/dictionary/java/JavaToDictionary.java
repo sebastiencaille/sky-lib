@@ -1,6 +1,5 @@
 package ch.scaille.dataflowmgr.generator.dictionary.java;
 
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,9 +14,11 @@ import ch.scaille.util.helpers.ClassFinder.Policy;
 
 public class JavaToDictionary {
 
+	private final Map<Class<? extends Annotation>, BiConsumer<Dictionary, Class<?>>> annotation2Handlers = new HashMap<>();
+
 	private final ClassFinder classFinder = ClassFinder.forApp();
 
-	private final Map<Class<? extends Annotation>, BiConsumer<Dictionary, Class<?>>> annotation2Handlers = new HashMap<>();
+	private final Dictionary dictionary = new Dictionary();
 
 	public JavaToDictionary() {
 		ProcessorToDictionary processorHandler = new ProcessorToDictionary();
@@ -28,26 +29,23 @@ public class JavaToDictionary {
 		addAnnotation(Conditions.class, caseCtrlToDictionary::addToDictionary);
 	}
 
-	public void addAnnotation(Class<? extends Annotation> annotation,
+	public JavaToDictionary addAnnotation(Class<? extends Annotation> annotation,
 			BiConsumer<Dictionary, Class<?>> annotatedClassHandler) {
 		classFinder.withAnnotation(annotation, Policy.CLASS_ONLY);
 		annotation2Handlers.put(annotation, annotatedClassHandler);
+		return this;
 	}
 
-	public Dictionary scan(final String apiClassPackage) throws IOException {
-		final Dictionary dictionary = new Dictionary();
-		classFinder.withAnnotation(Processors.class, Policy.CLASS_ONLY);
-		classFinder.withAnnotation(ExternalAdapters.class, Policy.CLASS_ONLY);
-		classFinder.withAnnotation(Conditions.class, Policy.CLASS_ONLY);
-
-		for (final Class<?> clazz : classFinder.collect(apiClassPackage).getResult()) {
-			for (Annotation annotation : clazz.getAnnotations()) {
-				if (annotation2Handlers.containsKey(annotation.annotationType())) {
-					annotation2Handlers.get(annotation.annotationType()).accept(dictionary, clazz);
-				}
-			}
-		}
+	public Dictionary scan(final String apiClassPackage) {
+		classFinder.withPackages(apiClassPackage).scan().forEach(this::handle);
 		return dictionary;
 	}
 
+	private void handle(Class<?> clazz) {
+		for (Annotation annotation : clazz.getAnnotations()) {
+			if (annotation2Handlers.containsKey(annotation.annotationType())) {
+				annotation2Handlers.get(annotation.annotationType()).accept(dictionary, clazz);
+			}
+		}
+	}
 }

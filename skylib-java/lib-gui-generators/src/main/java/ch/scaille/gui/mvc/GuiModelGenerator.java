@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import ch.scaille.annotations.GuiObject;
 import ch.scaille.generators.util.CodeGeneratorParams;
@@ -38,11 +40,12 @@ public class GuiModelGenerator {
 		Files.createDirectories(targetFolder);
 
 		Log.of(this).info("Scanning " + params.getSourceFolder());
-		final ClassFinder finder = ClassFinder.source(new File(params.getSourceFolder()))
-				.withAnnotation(GuiObject.class, ClassFinder.Policy.CLASS_ONLY).collect(params.getNamespaceFilter());
-		Log.of(this).info("Processing classes:" + finder.getResult());
+		List<Class<?>> classes = ClassFinder.source(new File(params.getSourceFolder()))
+				.withAnnotation(GuiObject.class, ClassFinder.Policy.CLASS_ONLY)
+				.withPackages(params.getNamespaceFilter()).scan().collect(Collectors.toList());
+		Log.of(this).info(() -> "Processing classes: " + classes);
 
-		for (final Class<?> clazz : finder.getResult()) {
+		for (final Class<?> clazz : classes) {
 			new ModelClassProcessor(clazz).process().writeToFolder(targetFolder);
 		}
 

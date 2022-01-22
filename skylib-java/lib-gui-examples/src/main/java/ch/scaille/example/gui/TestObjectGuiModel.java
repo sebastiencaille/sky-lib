@@ -1,4 +1,4 @@
-// File generated from template 2022/01/17 03:39:40
+// File generated from template 2022/01/22 06:07:30
 package ch.scaille.example.gui;
 
 import java.util.Arrays;

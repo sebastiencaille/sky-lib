@@ -28,14 +28,19 @@ import java.nio.file.FileSystemAlreadyExistsException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -46,6 +51,8 @@ import java.util.stream.Stream;
  *
  */
 public class ClassFinder {
+
+	public static final Logger LOGGER = Logger.getLogger(ClassFinder.class.getName());
 
 	private static final String[] DEFAULT_PACKAGES = { "", "ch.scaille.gui.mvc.properties.",
 			"ch.scaille.gui.mvc.persisters.", "ch.scaille.gui." };
@@ -60,12 +67,16 @@ public class ClassFinder {
 		/**
 		 * Gather the matching class only
 		 */
-		CLASS_ONLY
+		CLASS_ONLY,
+		/**
+		 * Internal usage
+		 */
+		SCANNED
 	}
 
-	private final Map<Class<?>, Policy> collectedClasses = new HashMap<>();
+	private final Map<Class<?>, Policy> collectedClasses = new ConcurrentHashMap<>();
 
-	private final Map<Class<?>, Policy> expectedTags = new HashMap<>();
+	private final Map<Class<?>, Policy> expectedAnnotation = new HashMap<>();
 
 	private final Set<Class<?>> expectedSuperClasses = new HashSet<>();
 
@@ -74,6 +85,8 @@ public class ClassFinder {
 	private final Function<URL, Scanner> defaultScanner = u -> new FsScanner();
 
 	private Function<URL, Scanner> scanners = defaultScanner;
+
+	private List<String> packagesToScan = new ArrayList<>();
 
 	public static ClassFinder forApp() {
 		return new ClassFinder(ClassLoaderHelper.appClassPath());
@@ -97,7 +110,7 @@ public class ClassFinder {
 
 	protected ClassFinder(final URL[] urls) {
 		this.loader = new URLClassLoader(urls);
-		this.collectedClasses.put(Object.class, null);
+		this.collectedClasses.put(Object.class, Policy.SCANNED);
 	}
 
 	public ClassFinder withClasses(Class<?>... classes) {
@@ -105,8 +118,9 @@ public class ClassFinder {
 		return this;
 	}
 
-	public void setScanners(Function<URL, Scanner> scanner) {
+	public ClassFinder withScanners(Function<URL, Scanner> scanner) {
 		this.scanners = scanner;
+		return this;
 	}
 
 	public Class<?> loadByName(final String className) {
@@ -130,7 +144,7 @@ public class ClassFinder {
 		if (!tag.isAnnotation()) {
 			throw new IllegalArgumentException("Class is not an annotation: " + tag.getName());
 		}
-		expectedTags.put(tag, policy);
+		expectedAnnotation.put(tag, policy);
 		return this;
 	}
 
@@ -139,8 +153,13 @@ public class ClassFinder {
 		return this;
 	}
 
+	public ClassFinder withPackages(final String... packageName) {
+		packagesToScan.addAll(Arrays.asList(packageName));
+		return this;
+	}
+
 	public interface Scanner {
-		void scan(final URL resource, final String aPackage) throws IOException;
+		Stream<Class<?>> scan(final URL resource, final String aPackage) throws IOException;
 	}
 
 	public class FsScanner implements Scanner {
@@ -180,11 +199,10 @@ public class ClassFinder {
 			return uriPath.substring(0, uriPath.length() - aPackage.length() - 1);
 		}
 
-		
 		@Override
-		public void scan(URL resource, String aPackage) throws IOException {
+		public Stream<Class<?>> scan(URL resource, String aPackage) throws IOException {
 			if (resource == null) {
-				return;
+				return Collections.<Class<?>>emptyList().stream();
 			}
 			URI rootUri;
 			String scanPath;
@@ -196,42 +214,43 @@ public class ClassFinder {
 				throw new IOException("Unable to scan files", e);
 			}
 			try (FileSystem fs = FileSystems.newFileSystem(rootUri, Collections.emptyMap())) {
-				scan(fs.getPath(scanPath), aPackage);
+				return scan(fs.getPath(scanPath), aPackage);
 			} catch (FileSystemAlreadyExistsException e) {
-				scan(FileSystems.getFileSystem(rootUri).getPath(scanPath), aPackage);
+				return scan(FileSystems.getFileSystem(rootUri).getPath(scanPath), aPackage);
 			}
 		}
 
-		private void scan(final Path rootOfPackage, String aPackage) throws IOException {
+		private Stream<Class<?>> scan(final Path rootOfPackage, String aPackage) throws IOException {
 			try (Stream<Path> walk = Files.walk(rootOfPackage.resolve(aPackage.replace('.', '/')))) {
-				walk.map(p -> rootOfPackage.relativize(p)).map(Path::toString).filter(p -> p.endsWith(CLASS_EXTENSION))
-						.forEach(p -> handleClass(p.replace(CLASS_EXTENSION, "").replace('/', '.').replace("\\", ".")));
+				// We need a terminal operation before the close
+				Set<Class<?>> result = walk.map(rootOfPackage::relativize). //
+						map(Path::toString).filter(p -> p.endsWith(CLASS_EXTENSION)). //
+						map(p -> p.replace(CLASS_EXTENSION, "").replace('/', '.').replace("\\", "."))
+						.map(ClassFinder.this::handleClass).collect(Collectors.toSet());
+				return result.stream();
 			}
 		}
 
 	}
 
-	public ClassFinder collect(final String basePackage) throws IOException {
-		final Enumeration<URL> packages = loader.getResources(basePackage.replace(".", "/"));
-		while (packages.hasMoreElements()) {
-			URL resource = packages.nextElement();
-			scanners.apply(resource).scan(resource, basePackage);
-		}
-		return this;
-	}
-
-	private void handleClass(final String className) {
+	private Class<?> handleClass(final String className) {
 		if ("module-info".equals(className)) {
-			return;
+			return null;
 		}
 		try {
-			processClass(Class.forName(className, false, this.loader));
+			Class<?> candidate = Class.forName(className, false, this.loader);
+			Policy result = processClass(candidate);
+			if (result != Policy.SCANNED) {
+				return candidate;
+			}
 		} catch (final Exception | NoClassDefFoundError e) { // NOSONAR
 			// ignore
+			LOGGER.log(Level.FINE, "Unable to load class", e);
 		}
+		return null;
 	}
 
-	private Policy match(final Class<?> clazz) {
+	private Policy isExpected(final Class<?> clazz) {
 		if (collectedClasses.containsKey(clazz)) {
 			return collectedClasses.get(clazz);
 		}
@@ -239,12 +258,12 @@ public class ClassFinder {
 			return Policy.ALL_SUBCLASSES;
 		}
 		for (final Annotation annotation : clazz.getAnnotations()) {
-			final Policy policy = expectedTags.get(annotation.annotationType());
+			final Policy policy = expectedAnnotation.get(annotation.annotationType());
 			if (policy != null) {
 				return policy;
 			}
 		}
-		return null;
+		return Policy.SCANNED;
 	}
 
 	private Policy processClass(final Class<?> clazz) {
@@ -252,31 +271,42 @@ public class ClassFinder {
 			// already processed
 			return collectedClasses.get(clazz);
 		}
-		Policy appliedPolicy = match(clazz);
-		if (appliedPolicy == null && clazz.getSuperclass() != null) {
+		Policy appliedPolicy = isExpected(clazz);
+		if (appliedPolicy == Policy.SCANNED && clazz.getSuperclass() != null) {
 			appliedPolicy = processClass(clazz.getSuperclass());
 			if (appliedPolicy == Policy.CLASS_ONLY) {
 				// parent class policy is CLASS_ONLY, skip
-				appliedPolicy = null;
+				appliedPolicy = Policy.SCANNED;
 			}
 		}
-		if (appliedPolicy == null) {
+		if (appliedPolicy == Policy.SCANNED) {
 			for (final Class<?> iface : clazz.getInterfaces()) {
 				appliedPolicy = processClass(iface);
 				if (appliedPolicy == Policy.CLASS_ONLY) {
-					appliedPolicy = null;
-				}				if (appliedPolicy != null) {
+					appliedPolicy = Policy.SCANNED;
+				}
+				if (appliedPolicy != Policy.SCANNED) {
 					break;
 				}
 			}
+		}
+		if (expectedAnnotation.isEmpty() && expectedSuperClasses.isEmpty()
+				&& packagesToScan.stream().anyMatch(p -> clazz.getName().startsWith(p))) {
+			appliedPolicy = Policy.ALL_SUBCLASSES;
 		}
 		collectedClasses.put(clazz, appliedPolicy);
 		return appliedPolicy;
 	}
 
-	public Set<Class<?>> getResult() {
-		return collectedClasses.entrySet().stream().filter(e -> e.getValue() != null).map(Map.Entry::getKey)
-				.collect(Collectors.toSet());
+	private Stream<Class<?>> scan(String aPackage) throws IOException {
+		return Collections.list(loader.getResources(aPackage)).stream()
+				.flatMap(r -> LambdaExt.funcWithExc(() -> scanners.apply(r).scan(r, aPackage)));
+	}
+
+	public Stream<Class<?>> scan() {
+		return packagesToScan.stream().map(p -> p.replace(".", "/")). //
+				flatMap(r -> LambdaExt.funcWithExc(() -> scan(r))). //
+				filter(Objects::nonNull).distinct();
 	}
 
 }

@@ -53,8 +53,7 @@ public class ExampleHelper {
 	}
 
 	public static TestDictionary generateDictionary() {
-		return new JavaToDictionary(asList(CustomerTestRole.class, DeliveryTestRole.class))
-				.generateDictionary();
+		return new JavaToDictionary(CustomerTestRole.class, DeliveryTestRole.class).generate();
 	}
 
 	public static void saveDictionary(final TestDictionary dictionary) throws IOException {

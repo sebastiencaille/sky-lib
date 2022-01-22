@@ -23,7 +23,8 @@ import ch.scaille.tcwriter.it.api.TestSessionRole;
 import ch.scaille.tcwriter.it.api.TestWriterRole;
 import ch.scaille.util.helpers.ClassLoaderHelper;
 
-@TCActors({ "tcWriter|TestWriterRole|Test writer|test writer", "testSession|TestSessionRole|Test session|test session" })
+@TCActors({ "tcWriter|TestWriterRole|Test writer|test writer",
+		"testSession|TestSessionRole|Test session|test session" })
 public class AbstractGuiTest {
 
 	private static final File RESOURCE_FOLDER = new File("./src/main/resources");
@@ -45,8 +46,8 @@ public class AbstractGuiTest {
 		config.setTemplatePath(new File("rsrc:templates/TC.template").toString());
 		final JsonModelPersister persister = new JsonModelPersister(config);
 
-		final TestDictionary model = new JavaToDictionary(
-				asList(TestWriterRole.class, TestSessionRole.class, AbstractGuiTest.class)).generateDictionary();
+		final TestDictionary model = new JavaToDictionary(TestWriterRole.class, TestSessionRole.class,
+				AbstractGuiTest.class).generate();
 		persister.writeTestDictionary(model);
 
 		final ITestExecutor executor = new JunitTestExecutor(persister, ClassLoaderHelper.appClassPath());

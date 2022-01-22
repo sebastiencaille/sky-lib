@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
-import java.util.stream.Collectors;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -20,8 +19,8 @@ import ch.scaille.tcwriter.generators.model.persistence.IModelPersister;
 import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
 import ch.scaille.tcwriter.gui.frame.TCWriterGui;
 import ch.scaille.util.helpers.ClassFinder;
-import ch.scaille.util.helpers.LambdaExt;
 import ch.scaille.util.helpers.ClassFinder.Policy;
+import ch.scaille.util.helpers.LambdaExt;
 
 public class DictionaryImport extends JDialog {
 
@@ -82,11 +81,10 @@ public class DictionaryImport extends JDialog {
 	}
 
 	protected void importDictionary(File dictionaryJarFile, String sourcePackage) {
-		TestDictionary dictionary;
 		try {
-			dictionary = new JavaToDictionary(ClassFinder.source(dictionaryJarFile)
+			TestDictionary dictionary = ClassFinder.source(dictionaryJarFile)
 					.withAnnotation(TCRole.class, Policy.CLASS_ONLY).withAnnotation(TCActors.class, Policy.CLASS_ONLY)
-					.withPackages(sourcePackage).scan().collect(Collectors.toList())).generateDictionary();
+					.withPackages(sourcePackage).scan().collect(JavaToDictionary.toDictionary());
 			persister.writeTestDictionary(dictionary);
 		} catch (IOException e) {
 			TCWriterGui.handleException(this, e);

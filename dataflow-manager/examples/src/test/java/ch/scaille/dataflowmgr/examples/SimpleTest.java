@@ -27,6 +27,7 @@ import ch.scaille.dataflowmgr.model.Flow;
 import ch.scaille.dataflowmgr.model.Processor;
 import ch.scaille.dataflowmgr.model.flowctrl.ConditionalFlowCtrl;
 import ch.scaille.generators.util.Template;
+import ch.scaille.util.helpers.ClassFinder;
 import ch.scaille.util.helpers.Log;
 
 /**
@@ -48,7 +49,8 @@ class SimpleTest {
 	@Test
 	void testFlow() throws IOException, InterruptedException {
 
-		final Dictionary dictionary = new JavaToDictionary().scan("ch.scaille.dataflowmgr.examples.simple");
+		final Dictionary dictionary = JavaToDictionary.configure(ClassFinder.forApp())
+				.withPackages("ch.scaille.dataflowmgr.examples.simple").scan().collect(JavaToDictionary.toDictionary());
 
 		// Services (see AbstractFlow)
 		final Calls<Processor> simpleService = dictionary.processors.map(SIMPLE_SERVICE_CLASS, "simpleService");

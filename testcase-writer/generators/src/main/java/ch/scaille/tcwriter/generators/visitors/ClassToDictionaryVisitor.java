@@ -46,7 +46,7 @@ public class ClassToDictionaryVisitor {
 
 	private final TestDictionary dictionary;
 
-	public ClassToDictionaryVisitor(final TestDictionary dictionary) {
+	public ClassToDictionaryVisitor(final TestDictionary dictionary, Class<?> ... classes) {
 		this.dictionary = dictionary;
 	}
 

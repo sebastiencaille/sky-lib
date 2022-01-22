@@ -9,6 +9,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -44,15 +45,16 @@ public class ClassToDictionaryVisitor {
 
 	private final Map<Class<?>, Set<Method>> apiClassIntrospectionCache = new HashMap<>();
 
-	private final TestDictionary dictionary;
+	private final TestDictionary dictionary = new TestDictionary();
 
-	public ClassToDictionaryVisitor(final TestDictionary dictionary, Class<?> ... classes) {
-		this.dictionary = dictionary;
+	public ClassToDictionaryVisitor(Class<?>... classes) {
+		Arrays.stream(classes).forEach(this::addClass);
 	}
 
-	public void visit() {
+	public TestDictionary visit() {
 		processEntryPointClasses();
 		processParameterFactories();
+		return dictionary;
 	}
 
 	private void processEntryPointClasses() {

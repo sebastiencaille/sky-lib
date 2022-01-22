@@ -41,8 +41,6 @@ public class JavaToDictionary extends AbstractGenerator<Dictionary> {
 		annotation2Handlers.put(annotation, annotatedClassHandler);
 	}
 
-	private final Dictionary dictionary = new Dictionary();
-
 	public JavaToDictionary() {
 	}
 
@@ -52,15 +50,15 @@ public class JavaToDictionary extends AbstractGenerator<Dictionary> {
 
 	@Override
 	public Dictionary generate() {
-		classes.forEach(this::handle);
+		Dictionary dictionary = new Dictionary();
+		for (Class<?> clazz : classes) {
+			for (Annotation annotation : clazz.getAnnotations()) {
+				if (annotation2Handlers.containsKey(annotation.annotationType())) {
+					annotation2Handlers.get(annotation.annotationType()).accept(dictionary, clazz);
+				}
+			}
+		}
 		return dictionary;
 	}
 
-	private void handle(Class<?> clazz) {
-		for (Annotation annotation : clazz.getAnnotations()) {
-			if (annotation2Handlers.containsKey(annotation.annotationType())) {
-				annotation2Handlers.get(annotation.annotationType()).accept(dictionary, clazz);
-			}
-		}
-	}
 }

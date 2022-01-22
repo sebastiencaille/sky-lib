@@ -18,7 +18,7 @@ public class JavaToDictionary extends AbstractGenerator<TestDictionary> {
 	public static Collector<Class<?>, ?, TestDictionary> toDictionary() {
 		return toDictionary(JavaToDictionary::new);
 	}
-	
+
 	protected JavaToDictionary() {
 		super();
 	}
@@ -29,12 +29,7 @@ public class JavaToDictionary extends AbstractGenerator<TestDictionary> {
 
 	@Override
 	public TestDictionary generate() {
-
-		final TestDictionary model = new TestDictionary();
-		final ClassToDictionaryVisitor gen = new ClassToDictionaryVisitor(model);
-		tcClasses.forEach(gen::addClass);
-		gen.visit();
-		return model;
+		return new ClassToDictionaryVisitor(classes.toArray(new Class<?>[0])).visit();
 	}
 
 	public static void main(final String[] args) throws IOException {
@@ -43,7 +38,7 @@ public class JavaToDictionary extends AbstractGenerator<TestDictionary> {
 		persister.setConfiguration(persister.readConfiguration(args[0]));
 
 		final String sourcePackage = args[0];
-		final TestDictionary dictionary = ClassFinder.forApp().withPackages(sourcePackage).)
+		final TestDictionary dictionary = ClassFinder.forApp().withPackages(sourcePackage)
 				.withAnnotation(TCRole.class, Policy.CLASS_ONLY).withAnnotation(TCActors.class, Policy.CLASS_ONLY)
 				.scan().collect(JavaToDictionary.toDictionary());
 		persister.writeTestDictionary(dictionary);

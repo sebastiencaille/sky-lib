@@ -1,7 +1,5 @@
 package ch.scaille.tcwriter.examples;
 
-import static java.util.Arrays.asList;
-
 import java.io.File;
 import java.io.IOException;
 

@@ -1,12 +1,11 @@
 package ch.scaille.tcwriter.pilot.swing;
 
-import static ch.scaille.tcwriter.pilot.Factories.checkingValue;
+import static ch.scaille.tcwriter.pilot.Factories.Reporting.checkingValue;
+import static ch.scaille.tcwriter.pilot.Factories.Reporting.settingValue;
 
 import javax.swing.JTable;
 
 import org.junit.jupiter.api.Assertions;
-
-import ch.scaille.tcwriter.pilot.Factories;
 
 @SuppressWarnings("java:S5960")
 public class JTablePilot extends AbstractSwingComponent<JTablePilot, JTable> {
@@ -21,14 +20,14 @@ public class JTablePilot extends AbstractSwingComponent<JTablePilot, JTable> {
 
 	public void editValue(final int row, final int column, final String value) {
 		wait(action(t -> t.setValueAt(value, row, column))
-				.withReportText(Factories.settingValue("at row/column " + row + '/' + column, value)));
+				.withReportText(settingValue("at row/column " + row + '/' + column, value)));
 	}
 
 	public void editValueOnSelectedRow(final int column, final String value) {
 		wait(action(t -> {
 			t.setValueAt(value, t.getSelectedRow(), column);
 			SwingHelper.doPressReturn(t);
-		}).withReportText(Factories.settingValue("at selected row, column " + column, value)));
+		}).withReportText(settingValue("at selected row, column " + column, value)));
 	}
 
 	public void checkValue(final int row, final int column, final String expected) {

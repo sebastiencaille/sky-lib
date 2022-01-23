@@ -9,7 +9,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WrapsElement;
 import org.openqa.selenium.support.PageFactory;
 
-import ch.scaille.tcwriter.pilot.Factories;
+import ch.scaille.tcwriter.pilot.Factories.Pollings;
 import ch.scaille.tcwriter.pilot.Polling;
 import ch.scaille.tcwriter.pilot.PollingResult.FailureHandler;
 
@@ -83,7 +83,7 @@ public class PagePilot {
 	}
 
 	public boolean wait(Supplier<WebElement> element, Consumer<WebElement> action) {
-		return element(element).wait(Factories.action(action).withReportText("unnamed action"));
+		return element(element).wait(Pollings.action(action).withReportText("unnamed action"));
 	}
 
 	public boolean ifEnabled(Supplier<WebElement> element, final Polling<WebElement, Boolean> polling) {
@@ -91,8 +91,7 @@ public class PagePilot {
 	}
 
 	public Polling<WebElement, Boolean> textEquals(String expected) {
-		return Factories
-				.<WebElement>assertion(pc -> Assertions.assertEquals(expected, pc.component.getText(), pc.description))
+		return Pollings.<WebElement>assertion(pc -> Assertions.assertEquals(expected, pc.component.getText(), pc.description))
 				.withReportText("text " + expected);
 	}
 }

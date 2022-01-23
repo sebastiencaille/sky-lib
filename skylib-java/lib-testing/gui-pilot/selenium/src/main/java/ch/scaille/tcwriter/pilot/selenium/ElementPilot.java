@@ -7,7 +7,8 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 
 import ch.scaille.tcwriter.pilot.AbstractComponentPilot;
-import ch.scaille.tcwriter.pilot.Factories;
+import ch.scaille.tcwriter.pilot.Factories.PollingResults;
+import ch.scaille.tcwriter.pilot.Factories.Pollings;
 import ch.scaille.tcwriter.pilot.Polling;
 import ch.scaille.tcwriter.pilot.PollingResult;
 
@@ -67,7 +68,7 @@ public class ElementPilot extends AbstractComponentPilot<ElementPilot, WebElemen
 		polling.initialize(this);
 		return new SeleniumPoller(pilot.getDriver(), polling.getTimeout(), polling.getFirstDelay(),
 				polling.getDelayFunction()).run(p -> executePolling(p, polling), PollingResult::isSuccess,
-						Factories::onException);
+						PollingResults::onException);
 	}
 
 	@Override
@@ -81,19 +82,19 @@ public class ElementPilot extends AbstractComponentPilot<ElementPilot, WebElemen
 	}
 
 	public boolean wait(Consumer<WebElement> action) {
-		return wait(Factories.action(action));
+		return wait(Pollings.action(action));
 	}
 
 	public static Polling<WebElement, Boolean> isEnabled() {
-		return Factories.<WebElement>satisfies(WebElement::isEnabled).withReportText("is enabled");
+		return Pollings.<WebElement>satisfies(WebElement::isEnabled).withReportText("is enabled");
 	}
 
 	public static Polling<WebElement, Boolean> click() {
-		return Factories.action(WebElement::click).withReportText("clicked");
+		return Pollings.action(WebElement::click).withReportText("clicked");
 	}
 
 	public boolean run(Consumer<WebElement> action, String name) {
-		return wait(Factories.action(action).withReportText(name));
+		return wait(Pollings.action(action).withReportText(name));
 	}
 
 }

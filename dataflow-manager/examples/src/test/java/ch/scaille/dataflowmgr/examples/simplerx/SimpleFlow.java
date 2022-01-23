@@ -1,4 +1,4 @@
-// File generated from template 2022/01/23 12:07:44
+// File generated from template 2022/01/23 03:08:19
 package ch.scaille.dataflowmgr.examples.simplerx;
 
 import ch.scaille.dataflowmgr.examples.simple.FlowReport;

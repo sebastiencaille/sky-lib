@@ -5,6 +5,7 @@ import javax.swing.SwingUtilities;
 
 import ch.scaille.tcwriter.pilot.AbstractComponentPilot;
 import ch.scaille.tcwriter.pilot.Factories;
+import ch.scaille.tcwriter.pilot.Factories.Pollings;
 import ch.scaille.tcwriter.pilot.Polling;
 import ch.scaille.tcwriter.pilot.PollingResult;
 import ch.scaille.tcwriter.pilot.PollingResult.FailureHandler;
@@ -74,13 +75,13 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 	}
 
 	public void waitEnabled() {
-		wait(Factories.<C>satisfies(JComponent::isEnabled)
-				.withReportText(Factories.checkingThat("component is enabled")));
+		wait(Pollings.<C>satisfies(JComponent::isEnabled)
+				.withReportText(Factories.Reporting.checkingThat("component is enabled")));
 	}
 
 	public void waitDisabled() {
-		wait(Factories.<C>satisfies(c -> !c.isEnabled())
-				.withReportText(Factories.checkingThat("component is disabled")));
+		wait(Pollings.<C>satisfies(c -> !c.isEnabled())
+				.withReportText(Factories.Reporting.checkingThat("component is disabled")));
 	}
 
 

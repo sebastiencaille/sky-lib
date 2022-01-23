@@ -1,6 +1,7 @@
 package ch.scaille.testing.bdd.selenium;
 
-import static ch.scaille.tcwriter.pilot.Factories.action;
+import static ch.scaille.tcwriter.pilot.Factories.Pollings.action;
+import static ch.scaille.tcwriter.pilot.Factories.Pollings.assertion;
 import static ch.scaille.tcwriter.pilot.selenium.ElementPilot.click;
 import static ch.scaille.testing.bdd.definition.Scenario.step;
 
@@ -12,7 +13,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import ch.scaille.tcwriter.pilot.ActionDelay;
-import ch.scaille.tcwriter.pilot.Factories;
 import ch.scaille.tcwriter.pilot.ModalDialogDetector;
 import ch.scaille.tcwriter.pilot.selenium.ElementPilot;
 import ch.scaille.tcwriter.pilot.selenium.PagePilot;
@@ -87,7 +87,7 @@ public class ExamplePage extends PagePilot {
 	}
 
 	public void testEnabled() {
-		wait(() -> this.enableTest, Factories.assertion(c -> Assertions.assertTrue(c.component.isEnabled())));
+		wait(() -> this.enableTest, assertion(c -> Assertions.assertTrue(c.component.isEnabled())));
 	}
 
 	public void testAlert() {

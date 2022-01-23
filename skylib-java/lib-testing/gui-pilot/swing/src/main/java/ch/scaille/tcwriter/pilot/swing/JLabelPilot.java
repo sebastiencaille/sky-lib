@@ -1,6 +1,6 @@
 package ch.scaille.tcwriter.pilot.swing;
 
-import static ch.scaille.tcwriter.pilot.Factories.checkingValue;
+import static ch.scaille.tcwriter.pilot.Factories.Reporting.checkingValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import javax.swing.JLabel;

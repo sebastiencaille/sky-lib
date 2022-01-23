@@ -19,6 +19,8 @@ import ch.scaille.tcwriter.it.api.TestSessionRole;
 import ch.scaille.tcwriter.it.api.TestWriterRole;
 import ch.scaille.tcwriter.pilot.ActionPolling;
 import ch.scaille.tcwriter.pilot.Factories;
+import ch.scaille.tcwriter.pilot.Factories.PollingResults;
+import ch.scaille.tcwriter.pilot.Factories.Reporting;
 
 @SuppressWarnings("java:S5960")
 public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
@@ -103,8 +105,8 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 			updateValue(pc.component, value.getKeyValue1());
 			updateValue(pc.component, value.getKeyValue2());
 			updateValue(pc.component, value.getKeyValue3());
-			return Factories.success();
-		}).withReportText(Factories.settingValue("parameter", value)));
+			return PollingResults.success();
+		}).withReportText(Reporting.settingValue("parameter", value)));
 		applyStepEdition();
 	}
 

@@ -1,6 +1,5 @@
 package ch.scaille.tcwriter.pilot.selenium;
 
-import static ch.scaille.tcwriter.pilot.Factories.action;
 import static ch.scaille.tcwriter.pilot.selenium.ElementPilot.click;
 
 import java.time.Duration;
@@ -11,6 +10,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import ch.scaille.tcwriter.pilot.ActionDelay;
+import ch.scaille.tcwriter.pilot.Factories.Pollings;
 import ch.scaille.tcwriter.pilot.ModalDialogDetector;
 
 public class ExamplePage extends PagePilot {
@@ -69,7 +69,8 @@ public class ExamplePage extends PagePilot {
 	}
 
 	public void clickOnMissingButton() {
-		ifEnabled(() -> this.notExistingElement, action(WebElement::click).withTimeout(Duration.ofMillis(500)));
+		ifEnabled(() -> this.notExistingElement,
+				Pollings. action(WebElement::click).withTimeout(Duration.ofMillis(500)));
 	}
 
 	public void expectTestAlertDialog() {

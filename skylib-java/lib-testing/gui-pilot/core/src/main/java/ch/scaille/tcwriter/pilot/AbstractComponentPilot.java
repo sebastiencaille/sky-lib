@@ -1,6 +1,6 @@
 package ch.scaille.tcwriter.pilot;
 
-import static ch.scaille.tcwriter.pilot.Factories.failure;
+import static ch.scaille.tcwriter.pilot.Factories.PollingResults.failure;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -10,6 +10,8 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
+import ch.scaille.tcwriter.pilot.Factories.FailureHandlers;
+import ch.scaille.tcwriter.pilot.Factories.Pollings;
 import ch.scaille.tcwriter.pilot.PilotReport.ReportFunction;
 import ch.scaille.tcwriter.pilot.PollingResult.FailureHandler;
 import ch.scaille.util.helpers.NoExceptionCloseable;
@@ -258,7 +260,7 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	 * @return
 	 */
 	public <U> U wait(final Polling<C, U> polling) {
-		return wait(polling, Factories.throwError());
+		return wait(polling, FailureHandlers.throwError());
 	}
 
 	/**
@@ -269,11 +271,11 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	 * @return check/edition value
 	 */
 	public boolean wait(Predicate<C> check, String report) {
-		return wait(Factories.satisfies(check).withReportText(report));
+		return wait(Factories.Pollings.satisfies(check).withReportText(report));
 	}
 
 	public boolean ifEnabled(final Polling<C, Boolean> polling) {
-		return waitPollingSuccess(polling, Factories.reportNotFound(getDescription() + ": not found"));
+		return waitPollingSuccess(polling, FailureHandlers.reportNotFound(getDescription() + ": not found"));
 	}
 
 	/**
@@ -292,21 +294,21 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	 * @See Factories.action
 	 */
 	public Polling<C, Boolean> action(final Consumer<C> action) {
-		return Factories.action(action);
+		return Pollings.action(action);
 	}
 
 	/**
 	 * @See Factories.assertion
 	 */
 	public Polling<C, Boolean> assertion(final Consumer<PollingContext<C>> assertion) {
-		return Factories.assertion(assertion);
+		return Pollings.assertion(assertion);
 	}
 
 	/**
 	 * @See Factories.satisfies
 	 */
 	public Polling<C, Boolean> satisfies(final Predicate<C> predicate) {
-		return Factories.satisfies(predicate);
+		return Pollings.satisfies(predicate);
 	}
 
 }

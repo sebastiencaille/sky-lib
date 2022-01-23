@@ -4,7 +4,7 @@ import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoAlertPresentException;
 
 import ch.scaille.tcwriter.pilot.AbstractComponentPilot;
-import ch.scaille.tcwriter.pilot.Factories;
+import ch.scaille.tcwriter.pilot.Factories.Pollings;
 
 public class AlertPilot extends AbstractComponentPilot<AlertPilot, Alert> {
 
@@ -35,7 +35,7 @@ public class AlertPilot extends AbstractComponentPilot<AlertPilot, Alert> {
 	}
 
 	public void doAcknowledge() {
-		wait(Factories.success(Alert::accept).withReportFunction((cp, t) -> "Acknowledging alert: " + cp.component.getText()));
+		wait(Pollings.success(Alert::accept).withReportFunction((cp, t) -> "Acknowledging alert: " + cp.component.getText()));
 	}
 
 }

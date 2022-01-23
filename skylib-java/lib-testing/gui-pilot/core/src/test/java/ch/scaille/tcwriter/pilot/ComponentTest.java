@@ -7,6 +7,7 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import ch.scaille.tcwriter.pilot.Factories.FailureHandlers;
 import ch.scaille.util.helpers.Poller;
 import ch.scaille.util.helpers.Poller.DelayFunction;
 
@@ -57,7 +58,7 @@ class ComponentTest {
 	void testDuration() {
 		GuiPilot gp = new GuiPilot();
 		TestComponent tc = new TestComponent(gp);
-		boolean res = tc.wait(tc.satisfies(c -> false), Factories.reportNotFound("failed"));
+		boolean res = tc.wait(tc.satisfies(c -> false), FailureHandlers.reportNotFound("failed"));
 		Assertions.assertFalse(res);
 		Assertions.assertEquals(6, tc.delays.size(), tc.delays.toString());
 

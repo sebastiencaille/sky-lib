@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Assertions;
 
+import ch.scaille.tcwriter.pilot.Factories.PollingResults;
 import ch.scaille.tcwriter.pilot.PollingResult.FailureHandler;
 import ch.scaille.util.helpers.NoExceptionCloseable;
 import ch.scaille.util.helpers.Overridable;
@@ -174,7 +175,7 @@ public class ModalDialogDetector {
 		if (result != null) {
 			return true;
 		}
-		return onFail.apply(Factories.failure("Modal dialog not detected"), pilot);
+		return onFail.apply(PollingResults.failure("Modal dialog not detected"), pilot);
 	}
 
 }

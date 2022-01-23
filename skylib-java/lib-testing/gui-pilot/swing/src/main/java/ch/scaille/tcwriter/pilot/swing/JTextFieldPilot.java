@@ -1,7 +1,7 @@
 package ch.scaille.tcwriter.pilot.swing;
 
-import static ch.scaille.tcwriter.pilot.Factories.checkingValue;
-import static ch.scaille.tcwriter.pilot.Factories.settingValue;
+import static ch.scaille.tcwriter.pilot.Factories.Reporting.checkingValue;
+import static ch.scaille.tcwriter.pilot.Factories.Reporting.settingValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import javax.swing.JTextField;

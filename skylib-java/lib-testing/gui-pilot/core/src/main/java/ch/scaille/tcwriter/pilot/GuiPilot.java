@@ -2,6 +2,7 @@ package ch.scaille.tcwriter.pilot;
 
 import java.time.Duration;
 
+import ch.scaille.tcwriter.pilot.Factories.FailureHandlers;
 import ch.scaille.tcwriter.pilot.PilotReport.ReportFunction;
 import ch.scaille.util.helpers.NoExceptionCloseable;
 import ch.scaille.util.helpers.Poller;
@@ -100,7 +101,7 @@ public class GuiPilot {
 	}
 
 	public void waitModalDialogHandled() {
-		waitModalDialogHandled(Factories.throwError());
+		waitModalDialogHandled(FailureHandlers.throwError());
 	}
 
 	public Duration getModalDialogTimeout() {

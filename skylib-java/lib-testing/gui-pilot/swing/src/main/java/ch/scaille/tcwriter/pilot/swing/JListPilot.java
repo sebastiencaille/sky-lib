@@ -1,8 +1,8 @@
 package ch.scaille.tcwriter.pilot.swing;
 
-import static ch.scaille.tcwriter.pilot.Factories.checkingValue;
-import static ch.scaille.tcwriter.pilot.Factories.failure;
-import static ch.scaille.tcwriter.pilot.Factories.success;
+import static ch.scaille.tcwriter.pilot.Factories.Reporting.checkingValue;
+import static ch.scaille.tcwriter.pilot.Factories.PollingResults.failure;
+import static ch.scaille.tcwriter.pilot.Factories.PollingResults.success;
 
 import javax.swing.JList;
 

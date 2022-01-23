@@ -13,7 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import ch.scaille.example.gui.TestObjectTableModel;
 import ch.scaille.example.gui.model.impl.TableModelExampleView;
 import ch.scaille.tcwriter.jupiter.DisabledIfHeadless;
-import ch.scaille.tcwriter.pilot.Factories;
+import ch.scaille.tcwriter.pilot.Factories.Pollings;
 import ch.scaille.tcwriter.pilot.swing.SwingPilot;
 import ch.scaille.util.helpers.Log;
 
@@ -34,7 +34,7 @@ class ModelExampleTest {
 
 		ModelExamplePage page = pilot.page(ModelExamplePage::new);
 
-		page.listTable.wait(Factories.<JTable>assertion(pc -> {
+		page.listTable.wait(Pollings.assertion(pc -> {
 			JTable component = pc.component;
 			Assertions.assertEquals(50, component.getColumn(TestObjectTableModel.Columns.A_SECOND_VALUE).getWidth());
 			Assertions.assertEquals(component.getWidth() - 50,

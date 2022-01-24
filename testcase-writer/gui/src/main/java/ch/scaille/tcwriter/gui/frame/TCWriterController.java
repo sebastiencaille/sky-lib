@@ -167,7 +167,7 @@ public class TCWriterController extends GuiController {
 
 	public void startTestCase() {
 		testRemoteControl.resetConnection();
-		new Thread(() -> LambdaExt.withExc(this::runTestCase, gui::handleException), "Test execution").start();
+		new Thread(LambdaExt.withExc(this::runTestCase, gui::handleException), "Test execution").start();
 	}
 
 	public void runTestCase() throws IOException, InterruptedException, TestCaseException {

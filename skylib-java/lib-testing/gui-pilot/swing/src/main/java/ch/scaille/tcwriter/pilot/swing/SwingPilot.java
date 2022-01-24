@@ -90,7 +90,7 @@ public class SwingPilot extends ch.scaille.tcwriter.pilot.GuiPilot {
 	}
 
 	/**
-	 * Search for a component by scanning a components hierarchy, starting from
+	 * Search for a component by scanning a component hierarchy, starting from a 
 	 * container
 	 *
 	 * @param <T>
@@ -98,7 +98,7 @@ public class SwingPilot extends ch.scaille.tcwriter.pilot.GuiPilot {
 	 * @param clazz     the class of the searched component
 	 * @return
 	 */
-	public <T> Set<T> search(final Set<T> result, final Container container, final Class<T> clazz,
+	public <T extends Component> Set<T> search(final Set<T> result, final Container container, final Class<T> clazz,
 			final Predicate<T> filter, final Predicate<Set<T>> searchFinished) {
 		SwingHelper.checkSwingThread();
 		for (final Component child : container.getComponents()) {

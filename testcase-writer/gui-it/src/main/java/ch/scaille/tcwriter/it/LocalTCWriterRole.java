@@ -18,7 +18,6 @@ import ch.scaille.tcwriter.it.api.StepSelector;
 import ch.scaille.tcwriter.it.api.TestSessionRole;
 import ch.scaille.tcwriter.it.api.TestWriterRole;
 import ch.scaille.tcwriter.pilot.ActionPolling;
-import ch.scaille.tcwriter.pilot.Factories;
 import ch.scaille.tcwriter.pilot.Factories.PollingResults;
 import ch.scaille.tcwriter.pilot.Factories.Reporting;
 

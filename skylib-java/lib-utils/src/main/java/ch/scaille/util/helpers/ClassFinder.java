@@ -15,6 +15,8 @@
  ******************************************************************************/
 package ch.scaille.util.helpers;
 
+import static ch.scaille.util.helpers.LambdaExt.funcWithExc;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -300,12 +302,12 @@ public class ClassFinder {
 
 	private Stream<Class<?>> scan(String aPackage) throws IOException {
 		return Collections.list(loader.getResources(aPackage)).stream()
-				.flatMap(r -> LambdaExt.funcWithExc(() -> scanners.apply(r).scan(r, aPackage)));
+				.flatMap(funcWithExc(r -> scanners.apply(r).scan(r, aPackage)));
 	}
 
 	public Stream<Class<?>> scan() {
 		return packagesToScan.stream().map(p -> p.replace(".", "/")). //
-				flatMap(r -> LambdaExt.funcWithExc(() -> scan(r))). //
+				flatMap(funcWithExc(this::scan)). //
 				filter(Objects::nonNull).distinct();
 	}
 

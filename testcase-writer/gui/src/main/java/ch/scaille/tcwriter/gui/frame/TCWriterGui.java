@@ -21,6 +21,7 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
 import ch.scaille.gui.mvc.ScreenBuildingReport;
+import ch.scaille.gui.swing.SwingHelper;
 import ch.scaille.tcwriter.gui.editors.params.TestParameterModel;
 import ch.scaille.tcwriter.gui.editors.params.TestParameterValueEditorPanel;
 import ch.scaille.tcwriter.gui.editors.steps.StepEditorController;
@@ -49,7 +50,7 @@ public class TCWriterGui extends JFrame {
 			RunnableWithException<?> action) {
 		final JButton newButton = new JButton(icon);
 		newButton.setToolTipText(toolTip);
-		newButton.addActionListener(e -> LambdaExt.withExc(action, this::handleException));
+		newButton.addActionListener(SwingHelper.action(LambdaExt.withExc(action, this::handleException)));
 		newButton.setName(name);
 		return newButton;
 	}
@@ -76,8 +77,9 @@ public class TCWriterGui extends JFrame {
 
 		final JButton saveButton = button("SaveTC", icon("general/Save24"), "Save test case", controller::save);
 
-		final JButton importDictionaryButton = button(icon("general/Import24"), "Import dictionary", controller::importDictionary);
-		
+		final JButton importDictionaryButton = button(icon("general/Import24"), "Import dictionary",
+				controller::importDictionary);
+
 		final JButton generateButton = button(icon("general/Export24"), "Export to Java", controller::generateCode);
 
 		final JButton runButton = button(icon("media/Play24"), "Start execution", controller::startTestCase);

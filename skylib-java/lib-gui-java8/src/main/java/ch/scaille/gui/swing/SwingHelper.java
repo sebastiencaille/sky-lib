@@ -16,9 +16,12 @@
 package ch.scaille.gui.swing;
 
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import javax.swing.ImageIcon;
@@ -49,10 +52,31 @@ public interface SwingHelper {
 	}
 
 	public static IPropertyEventListener checkSwingThread() {
-		return (c,e) -> {
-			if (e.getKind() == EventKind.BEFORE && e.getProperty().getTransmitMode().toComponent && !EventQueue.isDispatchThread()) {
-					throw new IllegalStateException("Property " + e.getProperty().getName() + " fired out of Swing thread");
+		return (c, e) -> {
+			if (e.getKind() == EventKind.BEFORE && e.getProperty().getTransmitMode().toComponent
+					&& !EventQueue.isDispatchThread()) {
+				throw new IllegalStateException("Property " + e.getProperty().getName() + " fired out of Swing thread");
 			}
 		};
+	}
+
+	/**
+	 * Bridge between ActionListener and Lambda function
+	 * 
+	 * @param consumer
+	 * @return
+	 */
+	public static ActionListener action(Consumer<ActionEvent> consumer) {
+		return consumer::accept;
+	}
+
+	/**
+	 * Bridge between ActionListener and Lambda function
+	 * 
+	 * @param consumer
+	 * @return
+	 */
+	public static ActionListener action(Runnable runnable) {
+		return e -> runnable.run();
 	}
 }

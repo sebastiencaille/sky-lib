@@ -18,7 +18,7 @@ import ch.scaille.gui.swing.tools.SwingGenericEditorDialog;
 import ch.scaille.gui.tools.GenericEditorController;
 import ch.scaille.gui.tools.PropertyEntry;
 import ch.scaille.gui.tools.SimpleEditorModel;
-import ch.scaille.util.helpers.Log;
+import ch.scaille.util.helpers.Logs;
 
 public class GenericPropertiesEditorLauncher {
 
@@ -72,7 +72,7 @@ public class GenericPropertiesEditorLauncher {
 			editor.activate();
 			editor.load(obj);
 			view.setVisible(true);
-			Log.of(GenericPropertiesEditorLauncher.class).info(obj.toString());
+			Logs.of(GenericPropertiesEditorLauncher.class).info(obj.toString());
 			view.dispose();
 		});
 	}

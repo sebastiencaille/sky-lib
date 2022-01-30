@@ -73,7 +73,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 		int oldIndex;
 
 		// Debug information
-		private transient StackTraceElement[] editionStack;
+		private StackTraceElement[] editionStack;
 
 		/**
 		 * True if object is not filtered out by the filter

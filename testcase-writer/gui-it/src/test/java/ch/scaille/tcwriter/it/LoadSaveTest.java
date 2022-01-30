@@ -10,13 +10,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import ch.scaille.tcwriter.it.api.MainFrameAction;
 import ch.scaille.tcwriter.jupiter.DisabledIfHeadless;
+import ch.scaille.util.helpers.Logs;
 
 @ExtendWith(DisabledIfHeadless.class)
 class LoadSaveTest extends AbstractGuiTest {
 
 	@BeforeAll
 	public static void initLogger() {
-		Logger rootLogger = Logger.getLogger("ch");
+		Logger rootLogger = Logs.of("ch");
 		rootLogger.setLevel(Level.ALL);
 		ConsoleHandler console = new ConsoleHandler();
 		console.setLevel(Level.ALL);

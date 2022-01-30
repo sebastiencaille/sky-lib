@@ -27,10 +27,11 @@ import ch.scaille.tcwriter.gui.DictionaryImport;
 import ch.scaille.tcwriter.gui.TestRemoteControl;
 import ch.scaille.tcwriter.gui.frame.TCWriterModel.TestExecutionState;
 import ch.scaille.util.helpers.LambdaExt;
+import ch.scaille.util.helpers.Logs;
 
 public class TCWriterController extends GuiController {
 
-	private static final Logger LOGGER = Logger.getLogger(TCWriterController.class.getName());
+	private static final Logger LOGGER = Logs.of(TCWriterController.class);
 
 	private final TCWriterModel model;
 	private final TestRemoteControl testRemoteControl;

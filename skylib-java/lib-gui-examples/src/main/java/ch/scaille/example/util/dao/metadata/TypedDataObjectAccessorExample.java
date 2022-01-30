@@ -25,7 +25,7 @@ import ch.scaille.util.dao.metadata.DataObjectAttribute;
 import ch.scaille.util.dao.metadata.DataObjectManager;
 import ch.scaille.util.dao.metadata.DataObjectManagerFactory;
 import ch.scaille.util.dao.metadata.DataObjectMetaData;
-import ch.scaille.util.helpers.Log;
+import ch.scaille.util.helpers.Logs;
 import ch.scaille.util.text.ArrowIndentationManager;
 import ch.scaille.util.text.SimpleTextFormatter;
 import ch.scaille.util.text.TextFormatter;
@@ -40,7 +40,7 @@ public interface TypedDataObjectAccessorExample {
 
 	public static void main(final String[] args) throws IOException {
 
-		try (OutputStream output = Log.streamOf(DataObjectMetaDataExample.class, Level.INFO)) {
+		try (OutputStream output = Logs.streamOf(DataObjectMetaDataExample.class, Level.INFO)) {
 			final SimpleTextFormatter<RuntimeException> log = new SimpleTextFormatter<>(
 					TextFormatter.safeOutput(output));
 			log.setIndentationManager(new ArrowIndentationManager());

@@ -18,10 +18,11 @@ import ch.scaille.tcwriter.generators.model.TestCaseException;
 import ch.scaille.tcwriter.generators.model.persistence.IModelPersister;
 import ch.scaille.tcwriter.generators.model.testcase.TestCase;
 import ch.scaille.util.helpers.ClassLoaderHelper;
+import ch.scaille.util.helpers.Logs;
 
 public class JunitTestExecutor implements ITestExecutor {
 
-	private static final Logger LOGGER = Logger.getLogger(JunitTestExecutor.class.getName());
+	private static final Logger LOGGER = Logs.of(JunitTestExecutor.class);
 
 	private final Path tempPath;
 

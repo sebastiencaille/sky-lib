@@ -23,20 +23,12 @@ import ch.scaille.gui.mvc.IBindingController;
 import ch.scaille.gui.swing.jtable.PolicyTableColumnModel;
 import ch.scaille.gui.swing.jtable.TableColumnWithPolicy;
 import ch.scaille.tcwriter.generators.model.testapi.StepClassifier;
-import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
-import ch.scaille.tcwriter.generators.model.testcase.TestCase;
 import ch.scaille.tcwriter.generators.model.testcase.TestStep;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.tcwriter.gui.frame.TCWriterModel;
 import ch.scaille.tcwriter.gui.steps.StepsTableModel.Column;
 
 public class StepsTable extends JPanel {
-
-	private static final TestCase NO_TC = new TestCase();
-
-	static {
-		NO_TC.setDictionary(new TestDictionary());
-	}
 
 	private final StepsTableModel stepsTableModel;
 

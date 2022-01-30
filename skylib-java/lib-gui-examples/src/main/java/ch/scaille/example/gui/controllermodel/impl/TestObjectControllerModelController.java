@@ -22,7 +22,7 @@ import ch.scaille.example.gui.TestObject;
 import ch.scaille.gui.model.ListModel;
 import ch.scaille.gui.model.views.ListViews;
 import ch.scaille.gui.mvc.GuiController;
-import ch.scaille.util.helpers.Log;
+import ch.scaille.util.helpers.Logs;
 
 public class TestObjectControllerModelController extends GuiController {
 
@@ -38,7 +38,7 @@ public class TestObjectControllerModelController extends GuiController {
 			@Override
 			public void commit() {
 				super.commit();
-				Logger logger = Log.of(TestObjectControllerModelController.class);
+				Logger logger = Logs.of(TestObjectControllerModelController.this);
 				model.values().stream().map(Object::toString).forEach(logger::info);
 			}
 		};

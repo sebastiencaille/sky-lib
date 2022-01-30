@@ -5,18 +5,23 @@ import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public interface Log {
+public interface Logs {
 
 	public static Logger of(Class<?> clazz) {
 		return Logger.getLogger(clazz.getName());
 	}
 
+	public static Logger of(String logger) {
+		return Logger.getLogger(logger);
+	}
+
+	
 	public static Logger of(Object obj) {
 		return of(obj.getClass());
 	}
 
 	public static OutputStream streamOf(Class<?> clazz, Level level) {
-		final Logger logger = Log.of(clazz);
+		final Logger logger = Logs.of(clazz);
 		return new OutputStream() {
 
 			private StringBuilder builder = new StringBuilder();

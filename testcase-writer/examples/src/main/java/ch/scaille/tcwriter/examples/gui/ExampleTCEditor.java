@@ -8,6 +8,7 @@ import java.util.logging.SimpleFormatter;
 
 import javax.swing.SwingUtilities;
 
+import ch.scaille.gui.mvc.Logging;
 import ch.scaille.tcwriter.examples.ExampleHelper;
 import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
 import ch.scaille.tcwriter.generators.model.testcase.TestCase;
@@ -26,7 +27,7 @@ public class ExampleTCEditor {
 		final TCWriterController controller = new TCWriterController(ExampleHelper.getPersister(),
 				ExampleHelper.testExecutor());
 
-		final Logger eventDebug = Logger.getLogger("MvcEventsDebug");
+		final Logger eventDebug = Logging.MVC_EVENTS_DEBUGGER;
 		final Level eventDebugLevel = Level.FINE;
 		eventDebug.setLevel(eventDebugLevel);
 		final ConsoleHandler handler = new ConsoleHandler();

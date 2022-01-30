@@ -30,10 +30,11 @@ import ch.scaille.tcwriter.gui.editors.steps.StepEditorPanel;
 import ch.scaille.tcwriter.gui.steps.StepsTable;
 import ch.scaille.util.helpers.LambdaExt;
 import ch.scaille.util.helpers.LambdaExt.RunnableWithException;
+import ch.scaille.util.helpers.Logs;
 
 public class TCWriterGui extends JFrame {
 
-	private static final Logger LOGGER = Logger.getLogger(TCWriterGui.class.getName());
+	private static final Logger LOGGER = Logs.of(TCWriterGui.class);
 
 	private final TCWriterController controller;
 

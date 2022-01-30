@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.concurrent.Semaphore;
 
 import ch.scaille.tcwriter.stepping.TestApi.Command;
-import ch.scaille.util.helpers.Log;
+import ch.scaille.util.helpers.Logs;
 
 public class TestSteppingController implements ITestSteppingController {
 
@@ -106,7 +106,7 @@ public class TestSteppingController implements ITestSteppingController {
 			error.printStackTrace(new PrintWriter(errorStack));
 			api.writeError(currentStep, error, errorStack);
 		} catch (final IOException e) {
-			Log.of(this).warning("Unable to send error: " + e.getMessage());
+			Logs.of(this).warning("Unable to send error: " + e.getMessage());
 		}
 	}
 

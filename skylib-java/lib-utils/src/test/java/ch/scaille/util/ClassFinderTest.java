@@ -7,6 +7,8 @@ import java.net.URL;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import ch.scaille.util.helpers.ClassFinder;
 
@@ -35,28 +37,18 @@ class ClassFinderTest {
 		}
 	}
 
-	@Test
-	void testWindows() throws MalformedURLException, URISyntaxException {
+	@ParameterizedTest
+	@CsvSource({ //
+			"file:/C:/toto/mypackage,file:/,C:/toto", // windows
+			"file:/toto/mypackage,file:/,/toto", // unix 
+			"jar:file:/toto.jar!/mypackage,jar:file:/toto.jar,/" // jar
+			})
+	void testUriTransformation(String urlPackageLocation, String fsRoot, String fsPackageLocation)
+			throws MalformedURLException, URISyntaxException {
 		TestClassFinder.TestFsScanner scanner = new TestClassFinder(new URL[0]).scanner();
-		URI testUri = new URL("file:/C:/toto/mypackage").toURI();
-		Assertions.assertEquals(URI.create("file:/"), scanner.rootOf(testUri));
-		Assertions.assertEquals("C:/toto", scanner.packageLocationOf(testUri, "mypackage"));
-	}
-
-	@Test
-	void testUnix() throws MalformedURLException, URISyntaxException {
-		TestClassFinder.TestFsScanner scanner = new TestClassFinder(new URL[0]).scanner();
-		URI testUri = new URL("file:/toto/mypackage").toURI();
-		Assertions.assertEquals(URI.create("file:/"), scanner.rootOf(testUri));
-		Assertions.assertEquals("/toto", scanner.packageLocationOf(testUri, "mypackage"));
-	}
-
-	@Test
-	void testJarPath() throws MalformedURLException, URISyntaxException {
-		TestClassFinder.TestFsScanner scanner = new TestClassFinder(new URL[0]).scanner();
-		URI testUri = new URL("jar:file:/toto.jar!/mypackage").toURI();
-		Assertions.assertEquals(URI.create("jar:file:/toto.jar"), scanner.rootOf(testUri));
-		Assertions.assertEquals("/", scanner.packageLocationOf(testUri, "mypackage"));
+		URI testUri = new URL(urlPackageLocation).toURI();
+		Assertions.assertEquals(URI.create(fsRoot), scanner.rootOf(testUri));
+		Assertions.assertEquals(fsPackageLocation, scanner.packageLocationOf(testUri, "mypackage"));
 	}
 
 	@Test

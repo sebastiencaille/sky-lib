@@ -15,10 +15,11 @@ import ch.scaille.tcwriter.stepping.StepStatus;
 import ch.scaille.tcwriter.stepping.TestApi;
 import ch.scaille.tcwriter.stepping.TestApi.StepState;
 import ch.scaille.tcwriter.stepping.TestSteppingController.TestCaseError;
+import ch.scaille.util.helpers.Logs;
 
 public class TestRemoteControl {
 
-	private static final Logger LOGGER = Logger.getLogger(TestRemoteControl.class.getName());
+	private static final Logger LOGGER = Logs.of(TestRemoteControl.class);
 
 	private final int baseTcpPort;
 

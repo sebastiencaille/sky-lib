@@ -28,7 +28,7 @@ import ch.scaille.dataflowmgr.model.Processor;
 import ch.scaille.dataflowmgr.model.flowctrl.ConditionalFlowCtrl;
 import ch.scaille.generators.util.Template;
 import ch.scaille.util.helpers.ClassFinder;
-import ch.scaille.util.helpers.Log;
+import ch.scaille.util.helpers.Logs;
 
 /**
  * This test case generates the java and dot flows
@@ -105,7 +105,7 @@ class SimpleTest {
 		final BufferedReader reader = new BufferedReader(new InputStreamReader(dotExec.getErrorStream()));
 		String line;
 		while ((line = reader.readLine()) != null) {
-			Log.of(this).info(line);
+			Logs.of(this).info(line);
 		}
 		final int dotExit = dotExec.waitFor();
 		assertEquals(0, dotExit);

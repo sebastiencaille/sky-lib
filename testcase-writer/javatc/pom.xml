@@ -28,6 +28,7 @@
 			<groupId>ch.scaille</groupId>
 			<artifactId>lib-utils</artifactId>
 		</dependency>
+		
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-annotations</artifactId>

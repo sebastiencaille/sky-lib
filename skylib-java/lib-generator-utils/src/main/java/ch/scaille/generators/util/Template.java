@@ -10,9 +10,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import ch.scaille.util.helpers.ClassLoaderHelper;
+import ch.scaille.util.helpers.Logs;
 
 /**
  * Simple template made of a content with place holders (${...}) and properties
@@ -116,7 +116,7 @@ public class Template {
 	 * @throws IOException
 	 */
 	public Path writeTo(final Path path) throws IOException {
-		Logger.getLogger(Template.class.getName()).info(() -> "Writing " + path);
+		Logs.of(this).info(() -> "Writing " + path);
 		Files.createDirectories(path.getParent());
 		Files.write(path, generate().getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);

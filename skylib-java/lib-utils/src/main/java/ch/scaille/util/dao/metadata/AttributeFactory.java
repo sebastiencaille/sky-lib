@@ -22,7 +22,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import ch.scaille.util.helpers.Log;
+import ch.scaille.util.helpers.Logs;
 
 /**
  * This class creates the appropriated Class that allows accessing to an
@@ -92,7 +92,7 @@ abstract class AttributeFactory {
 			MethodHandle setterHandler = MethodHandles.lookup().unreflect(setter);
 			return new GetSetAttribute<>(name, getter, getterHandler, setterHandler);
 		} catch (final Exception e) { // NOSONAR
-			Log.of(AttributeFactory.class).finest("No setter for " + name);
+			Logs.of(AttributeFactory.class).finest("No setter for " + name);
 			return new ReadOnlyAttribute<>(name, getter, getterHandler);
 		}
 	}
@@ -109,7 +109,7 @@ abstract class AttributeFactory {
 			}
 			return new FieldAttribute<>(name, field);
 		} catch (final NoSuchFieldException e) { // NOSONAR
-			Log.of(AttributeFactory.class).finest("Cannot access field " + name);
+			Logs.of(AttributeFactory.class).finest("Cannot access field " + name);
 			return null;
 		}
 	}

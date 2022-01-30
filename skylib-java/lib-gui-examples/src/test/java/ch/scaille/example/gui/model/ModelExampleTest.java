@@ -15,7 +15,7 @@ import ch.scaille.example.gui.model.impl.TableModelExampleView;
 import ch.scaille.tcwriter.jupiter.DisabledIfHeadless;
 import ch.scaille.tcwriter.pilot.Factories.Pollings;
 import ch.scaille.tcwriter.pilot.swing.SwingPilot;
-import ch.scaille.util.helpers.Log;
+import ch.scaille.util.helpers.Logs;
 
 @ExtendWith(DisabledIfHeadless.class)
 class ModelExampleTest {
@@ -65,7 +65,7 @@ class ModelExampleTest {
 		page.listTable.checkValue(2, 0, "Three");
 		page.listTable.checkValue(3, 0, "Four");
 
-		Log.of(this).info(pilot.getActionReport().getFormattedReport());
+		Logs.of(this).info(pilot.getActionReport().getFormattedReport());
 	}
 
 }

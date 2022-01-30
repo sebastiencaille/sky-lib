@@ -16,11 +16,12 @@ import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import ch.scaille.util.helpers.Logs;
 import ch.scaille.util.helpers.Poller;
 
 public class SeleniumPoller extends Poller {
 
-	private Logger LOGGER = Logger.getLogger(SeleniumPoller.class.getName());
+	private static final Logger LOGGER = Logs.of(SeleniumPoller.class);
 
 	private WebDriver webDriver;
 	private TimeoutException timeoutException;

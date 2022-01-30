@@ -9,7 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.WebDriver;
 
 import ch.scaille.tcwriter.jupiter.DisabledIfHeadless;
-import ch.scaille.util.helpers.Log;
+import ch.scaille.util.helpers.Logs;
 
 @ExtendWith(DisabledIfHeadless.class)
 class SeleniumExampleTest extends AbstractTestWebAppProvider {
@@ -55,7 +55,7 @@ class SeleniumExampleTest extends AbstractTestWebAppProvider {
 
 		mainPage.elementChangeTest();
 
-		Log.of(this).info(pilot.getActionReport().getFormattedReport());
+		Logs.of(this).info(pilot.getActionReport().getFormattedReport());
 		assertEquals(8, pilot.getActionReport().getReport().size(), () -> pilot.getActionReport().getFormattedReport());
 	}
 

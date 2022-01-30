@@ -54,7 +54,7 @@ import java.util.stream.Stream;
  */
 public class ClassFinder {
 
-	public static final Logger LOGGER = Logger.getLogger(ClassFinder.class.getName());
+	public static final Logger LOGGER = Logs.of(ClassFinder.class);
 
 	private static final String[] DEFAULT_PACKAGES = { "", "ch.scaille.gui.mvc.properties.",
 			"ch.scaille.gui.mvc.persisters.", "ch.scaille.gui." };

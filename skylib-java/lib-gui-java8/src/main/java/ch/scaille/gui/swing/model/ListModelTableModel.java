@@ -21,7 +21,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.table.AbstractTableModel;
 
 import ch.scaille.gui.model.ListModel;
-import ch.scaille.util.helpers.Log;
+import ch.scaille.util.helpers.Logs;
 
 /**
  * Table model based on a {@link ListModel}, with enum based column identifiers.
@@ -66,7 +66,7 @@ public abstract class ListModelTableModel<T, C extends Enum<C>> extends Abstract
 	}
 
 	protected void warn(final String string) {
-		Log.of(this).warning("WARNING: " + string); // NOSONAR
+		Logs.of(this).warning("WARNING: " + string); // NOSONAR
 	}
 
 	@Override

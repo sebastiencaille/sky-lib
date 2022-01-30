@@ -12,7 +12,7 @@ import ch.scaille.example.gui.controller.impl.ControllerExampleController;
 import ch.scaille.example.gui.controller.impl.ControllerExampleView;
 import ch.scaille.tcwriter.jupiter.DisabledIfHeadless;
 import ch.scaille.tcwriter.pilot.swing.SwingPilot;
-import ch.scaille.util.helpers.Log;
+import ch.scaille.util.helpers.Logs;
 
 @ExtendWith(DisabledIfHeadless.class)
 class ControllerExampleTest {
@@ -60,7 +60,7 @@ class ControllerExampleTest {
 		page.tableSelectionEditor.editValueOnSelectedRow(0, "Bouh");
 		page.tableSelectionCheck.checkValue("Bouh");
 
-		Log.of(this).info(pilot.getActionReport().getFormattedReport());
+		Logs.of(this).info(pilot.getActionReport().getFormattedReport());
 	}
 
 }

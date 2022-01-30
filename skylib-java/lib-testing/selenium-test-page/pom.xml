@@ -12,6 +12,11 @@
 			<groupId>ch.scaille</groupId>
 			<artifactId>lib-testing-core</artifactId>
 		</dependency>
+		
+			<dependency>
+			<groupId>ch.scaille</groupId>
+			<artifactId>lib-utils</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>

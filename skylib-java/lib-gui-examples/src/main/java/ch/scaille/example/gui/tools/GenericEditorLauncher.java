@@ -11,7 +11,7 @@ import ch.scaille.gui.swing.tools.SwingGenericEditorDialog;
 import ch.scaille.gui.tools.GenericEditorClassModel;
 import ch.scaille.gui.tools.GenericEditorController;
 import ch.scaille.gui.validation.GenericEditorValidationAdapter;
-import ch.scaille.util.helpers.Log;
+import ch.scaille.util.helpers.Logs;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
@@ -91,7 +91,7 @@ public class GenericEditorLauncher {
 			editor.activate();
 			editor.load(obj);
 			view.setVisible(true);
-			Log.of(GenericEditorLauncher.class).info(obj.toString());
+			Logs.of(GenericEditorLauncher.class).info(obj.toString());
 			view.dispose();
 		});
 	}

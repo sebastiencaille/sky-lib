@@ -54,7 +54,7 @@ public abstract class AbstractGenerator<R> {
 		classes = new HashSet<>();
 	}
 
-	public AbstractGenerator(final Class<?>... tcClasses) {
+	protected AbstractGenerator(final Class<?>... tcClasses) {
 		this.classes = Arrays.asList(tcClasses);
 	}
 

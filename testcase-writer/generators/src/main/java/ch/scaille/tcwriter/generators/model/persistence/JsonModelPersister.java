@@ -41,10 +41,11 @@ import ch.scaille.tcwriter.generators.model.ExportReference;
 import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
 import ch.scaille.tcwriter.generators.model.testcase.TestCase;
 import ch.scaille.util.helpers.ClassLoaderHelper;
+import ch.scaille.util.helpers.Logs;
 
 public class JsonModelPersister implements IModelPersister {
 
-	private static final Logger LOGGER = Logger.getLogger(JsonModelPersister.class.getName());
+	private static final Logger LOGGER = Logs.of(JsonModelPersister.class);
 
 	private static final String CONTEXT_ALL_REFERENCES = "AllTestReferences";
 	private static ObjectMapper mapper;
@@ -187,8 +188,7 @@ public class JsonModelPersister implements IModelPersister {
 	}
 
 	private String resolve(String path) {
-		String saneUrl = path.replace("${user.home}", System.getProperty("user.home"));
-		return saneUrl;
+		return path.replace("${user.home}", System.getProperty("user.home"));
 	}
 
 	protected URL resolveJsonToUrl(String path, String subPath) throws MalformedURLException {

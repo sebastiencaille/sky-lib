@@ -79,13 +79,13 @@ public class Scenario<P, PP> {
 		thenStep.call.accept(page, context);
 	}
 
-	public static <P, PP> Step<PP> step(String description, Consumer<PP> code) {
+	public static <PP> Step<PP> step(String description, Consumer<PP> code) {
 		return new Step<>(description, (p, c) -> code.accept(p));
 	}
 
-	public static <P, PP> Step<PP> step(String description, BiConsumer<PP, Context> code) {
+	public static <PP> Step<PP> step(String description, BiConsumer<PP, Context> code) {
 		return new Step<>(description, code);
-	}
+	} 
 
 	public static class ScenarioFactory<P, PP> {
 

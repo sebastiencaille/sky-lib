@@ -14,6 +14,7 @@ import ch.scaille.tcwriter.pilot.Factories.FailureHandlers;
 import ch.scaille.tcwriter.pilot.Factories.Pollings;
 import ch.scaille.tcwriter.pilot.PilotReport.ReportFunction;
 import ch.scaille.tcwriter.pilot.PollingResult.FailureHandler;
+import ch.scaille.util.helpers.Logs;
 import ch.scaille.util.helpers.NoExceptionCloseable;
 import ch.scaille.util.helpers.Poller;
 
@@ -26,7 +27,7 @@ import ch.scaille.util.helpers.Poller;
  */
 public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G, C>, C> {
 
-	private Logger logger = Logger.getLogger(getClass().getName());
+	private final Logger logger = Logs.of(this);
 
 	protected static class LoadedElement<TT> {
 		public final TT element;

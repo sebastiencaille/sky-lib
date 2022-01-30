@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.WebDriver;
 import org.xnio.streams.Streams;
 
+import ch.scaille.util.helpers.Logs;
 import io.undertow.Undertow;
 import io.undertow.server.HttpServerExchange;
 
@@ -69,7 +70,7 @@ public abstract class AbstractTestWebAppProvider {
 
 	@BeforeAll
 	public static void initLogger() {
-		Logger rootLogger = Logger.getLogger("ch");
+		Logger rootLogger = Logs.of("ch");
 		rootLogger.setLevel(Level.ALL);
 		ConsoleHandler console = new ConsoleHandler();
 		console.setLevel(Level.ALL);

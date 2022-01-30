@@ -17,7 +17,7 @@ import ch.scaille.tcwriter.generators.recorder.TestCaseRecorder;
 import ch.scaille.tcwriter.generators.visitors.HumanReadableVisitor;
 import ch.scaille.tcwriter.recording.TestCaseRecorderAspect;
 import ch.scaille.util.helpers.ClassLoaderHelper;
-import ch.scaille.util.helpers.Log;
+import ch.scaille.util.helpers.Logs;
 
 public class ExampleHelper {
 
@@ -69,7 +69,7 @@ public class ExampleHelper {
 		test.initActors();
 		test.testNormalCase();
 		final TestCase testCase = recorder.getTestCase("ch.scaille.tcwriter.examples.GeneratedTest");
-		Log.of(ExampleHelper.class).info(() -> new HumanReadableVisitor(testCase, true).processAllSteps());
+		Logs.of(ExampleHelper.class).info(() -> new HumanReadableVisitor(testCase, true).processAllSteps());
 		return testCase;
 	}
 

@@ -48,8 +48,8 @@ public class ProcessorCallGenerator extends AbstractFlowGenerator {
 		}
 
 		if (genContext.getLocalContext().debug) {
-			flowFactories.eoli().append(".doOnSuccess(r -> Log.of(this).info(\"%s: Call success\"))", context.binding)
-					.eoli().append(".doOnComplete(() -> Log.of(this).info(\"%s: Call skipped\"))", context.binding); //
+			flowFactories.eoli().append(".doOnSuccess(r -> info(\"%s: Call success\"))", context.binding)
+					.eoli().append(".doOnComplete(() -> info(\"%s: Call skipped\"))", context.binding); //
 		}
 
 		flowFactories.eoli().append(".doOnTerminate(() -> Arrays.stream(callbacks).forEach(Runnable::run))")//

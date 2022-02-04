@@ -59,7 +59,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 	 * Generates the code calling a list of activators
 	 *
 	 * @param context
-	 * @param availableVars @
+	 * @param genContext
 	 */
 	private void visitActivators(final BindingContext context, GenContext genContext) {
 		List<CustomCall> activators = ConditionalFlowCtrl.getActivators(context.binding.getRules()).collect(toList());
@@ -93,7 +93,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 				.map(x -> "DataPointState.SKIPPED == f." + visitor.dataPointStateOf(x)).collect(joining(" && ")))
 				.append("?Optional.of(f):Optional.empty())");
 		if (genContext.getLocalContext().debug) {
-			flowFactories.append(".doOnComplete(() -> Log.of(this).info(\"%s: Call skipped\"))",
+			flowFactories.append(".doOnComplete(() -> info(\"%s: Call skipped\"))",
 					visitor.toVariable(context.binding));
 		}
 		flowFactories.append(".doOnSuccess(f -> %s.subscribe())", genContext.getLocalContext().getTopCall()).eos();

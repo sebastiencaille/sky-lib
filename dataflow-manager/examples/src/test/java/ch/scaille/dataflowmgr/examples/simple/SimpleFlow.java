@@ -1,4 +1,4 @@
-// File generated from template 2022/01/30 07:32:08
+// File generated from template 2022/02/04 03:40:34
 package ch.scaille.dataflowmgr.examples.simple;
 
 import org.junit.jupiter.api.Assertions;

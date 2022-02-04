@@ -139,8 +139,8 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 		addBindingDepsCheck(context.binding, dependencies);
 		
 		if (debug) {
-			flowFactories.eoli().append(".doOnSuccess(r -> Log.of(this).info(\"%s: Deps success\"))", context.binding)
-					.eoli().append(".doOnComplete(() -> Log.of(this).info(\"%s: Deps skipping\"))", context.binding); //
+			flowFactories.eoli().append(".doOnSuccess(r -> info(\"%s: Deps success\"))", context.binding)
+					.eoli().append(".doOnComplete(() -> info(\"%s: Deps skipping\"))", context.binding); //
 		}
 		flowFactories.eoli().append(".doOnSuccess(r -> topCall.subscribe())").eos().unindent();
 		flowFactories.closeBlock().eol();
@@ -225,7 +225,6 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 	 * 
 	 * @param binding
 	 * @param dependencies
-	 * @param isDefaultConditionCheck
 	 * @return
 	 */
 	JavaCodeGenerator<RuntimeException> addBindingDepsCheck(final Binding binding, final List<Binding> dependencies) {

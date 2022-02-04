@@ -1,9 +1,8 @@
-// File generated from template 2022/01/30 07:32:08
+// File generated from template 2022/02/04 03:40:34
 package ch.scaille.dataflowmgr.examples.simplerx;
 
 import ch.scaille.dataflowmgr.examples.simple.FlowReport;
 
-import ch.scaille.util.helpers.Log;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.util.concurrent.Semaphore;
@@ -108,8 +107,8 @@ class SimpleFlow extends ch.scaille.dataflowmgr.examples.simple.AbstractFlow {
 	        .doOnSuccess(e -> e.setStateBindingSimpleServiceInitSimpleServiceInit(DataPointState.TRIGGERED))
 	        .doOnComplete(() -> execution.setStateBindingSimpleServiceInitSimpleServiceInit(DataPointState.SKIPPED))
 	        .doOnSuccess(f -> f.setSimpleServiceInit(this.simpleService.init(f.inputDataPoint)))
-	        .doOnSuccess(r -> Log.of(this).info("inputDataPoint -> simpleService.init -> simpleService_init: Call success"))
-	        .doOnComplete(() -> Log.of(this).info("inputDataPoint -> simpleService.init -> simpleService_init: Call skipped"))
+	        .doOnSuccess(r -> info("inputDataPoint -> simpleService.init -> simpleService_init: Call success"))
+	        .doOnComplete(() -> info("inputDataPoint -> simpleService.init -> simpleService_init: Call skipped"))
 	        .doOnTerminate(() -> Arrays.stream(callbacks).forEach(Runnable::run))
 	        .subscribeOn(Schedulers.computation());
 	    if (callModifier != null) {
@@ -123,8 +122,8 @@ class SimpleFlow extends ch.scaille.dataflowmgr.examples.simple.AbstractFlow {
 	    final Maybe<FlowExecution> topCall = simpleService_init_simpleService_init_svcCall(execution, callModifier, callbacks);
 	    return Maybe.just(execution)
 	        .mapOptional(f -> f.canTriggerBindingSimpleServiceInitSimpleServiceInit()?Optional.of(execution):Optional.empty())
-	        .doOnSuccess(r -> Log.of(this).info("inputDataPoint -> simpleService.init -> simpleService_init: Deps success"))
-	        .doOnComplete(() -> Log.of(this).info("inputDataPoint -> simpleService.init -> simpleService_init: Deps skipping"))
+	        .doOnSuccess(r -> info("inputDataPoint -> simpleService.init -> simpleService_init: Deps success"))
+	        .doOnComplete(() -> info("inputDataPoint -> simpleService.init -> simpleService_init: Deps skipping"))
 	        .doOnSuccess(r -> topCall.subscribe());
 	}
 	
@@ -139,8 +138,8 @@ class SimpleFlow extends ch.scaille.dataflowmgr.examples.simple.AbstractFlow {
 	        .doOnSuccess(e -> e.setStateBindingSimpleServiceCompleteComplete(DataPointState.TRIGGERED))
 	        .doOnComplete(() -> execution.setStateBindingSimpleServiceCompleteComplete(DataPointState.SKIPPED))
 	        .doOnSuccess(f -> f.setComplete(this.simpleService.complete(f.simpleService_init,f.simpleExternalAdapter_getCompletionsimpleService_complete_complete)))
-	        .doOnSuccess(r -> Log.of(this).info("simpleService_init -> simpleService.complete -> complete: Call success"))
-	        .doOnComplete(() -> Log.of(this).info("simpleService_init -> simpleService.complete -> complete: Call skipped"))
+	        .doOnSuccess(r -> info("simpleService_init -> simpleService.complete -> complete: Call success"))
+	        .doOnComplete(() -> info("simpleService_init -> simpleService.complete -> complete: Call skipped"))
 	        .doOnTerminate(() -> Arrays.stream(callbacks).forEach(Runnable::run))
 	        .subscribeOn(Schedulers.computation());
 	    if (callModifier != null) {
@@ -174,8 +173,8 @@ class SimpleFlow extends ch.scaille.dataflowmgr.examples.simple.AbstractFlow {
 	    return Maybe.just(execution)
 	        .mapOptional(f -> ((DataPointState.TRIGGERED == f.state_simpleService_init || DataPointState.SKIPPED == f.state_simpleService_init))?Optional.of(execution):Optional.empty())
 	        .mapOptional(f -> f.canTriggerBindingSimpleServiceCompleteComplete()?Optional.of(execution):Optional.empty())
-	        .doOnSuccess(r -> Log.of(this).info("simpleService_init -> simpleService.complete -> complete: Deps success"))
-	        .doOnComplete(() -> Log.of(this).info("simpleService_init -> simpleService.complete -> complete: Deps skipping"))
+	        .doOnSuccess(r -> info("simpleService_init -> simpleService.complete -> complete: Deps success"))
+	        .doOnComplete(() -> info("simpleService_init -> simpleService.complete -> complete: Deps skipping"))
 	        .doOnSuccess(r -> topCall.subscribe());
 	}
 	
@@ -185,8 +184,8 @@ class SimpleFlow extends ch.scaille.dataflowmgr.examples.simple.AbstractFlow {
 	        .doOnSuccess(e -> e.setStateBindingSimpleServiceKeepAsIsComplete(DataPointState.TRIGGERED))
 	        .doOnComplete(() -> execution.setStateBindingSimpleServiceKeepAsIsComplete(DataPointState.SKIPPED))
 	        .doOnSuccess(f -> f.setComplete(this.simpleService.keepAsIs(f.simpleService_init)))
-	        .doOnSuccess(r -> Log.of(this).info("simpleService_init -> simpleService.keepAsIs -> complete: Call success"))
-	        .doOnComplete(() -> Log.of(this).info("simpleService_init -> simpleService.keepAsIs -> complete: Call skipped"))
+	        .doOnSuccess(r -> info("simpleService_init -> simpleService.keepAsIs -> complete: Call success"))
+	        .doOnComplete(() -> info("simpleService_init -> simpleService.keepAsIs -> complete: Call skipped"))
 	        .doOnTerminate(() -> Arrays.stream(callbacks).forEach(Runnable::run))
 	        .subscribeOn(Schedulers.computation());
 	    if (callModifier != null) {
@@ -199,7 +198,7 @@ class SimpleFlow extends ch.scaille.dataflowmgr.examples.simple.AbstractFlow {
 	private Maybe<FlowExecution> simpleService_keepAsIs_complete_conditional(FlowExecution execution, final Function<Maybe<FlowExecution>, Maybe<FlowExecution>> callModifier, Runnable... callbacks) {
 	    final Maybe<FlowExecution> topCall = simpleService_keepAsIs_complete_svcCall(execution, callModifier, callbacks);
 	
-	    return Maybe.just(execution).mapOptional(f -> DataPointState.SKIPPED == f.state_complete?Optional.of(f):Optional.empty()).doOnComplete(() -> Log.of(this).info("simpleService_keepAsIs_complete: Call skipped")).doOnSuccess(f -> topCall.subscribe());
+	    return Maybe.just(execution).mapOptional(f -> DataPointState.SKIPPED == f.state_complete?Optional.of(f):Optional.empty()).doOnComplete(() -> info("simpleService_keepAsIs_complete: Call skipped")).doOnSuccess(f -> topCall.subscribe());
 	}
 	private Maybe<FlowExecution> binding_simpleService_keepAsIs_complete(FlowExecution execution, final Function<Maybe<FlowExecution>, Maybe<FlowExecution>> callModifier, Runnable... callbacks) {
 	    final Maybe<FlowExecution> topCall = simpleService_keepAsIs_complete_conditional(execution, callModifier, callbacks);
@@ -207,8 +206,8 @@ class SimpleFlow extends ch.scaille.dataflowmgr.examples.simple.AbstractFlow {
 	        .mapOptional(f -> ((DataPointState.TRIGGERED == f.state_simpleService_init || DataPointState.SKIPPED == f.state_simpleService_init)
 	                  && (DataPointState.TRIGGERED == f.state_complete || DataPointState.SKIPPED == f.state_complete))?Optional.of(execution):Optional.empty())
 	        .mapOptional(f -> f.canTriggerBindingSimpleServiceKeepAsIsComplete()?Optional.of(execution):Optional.empty())
-	        .doOnSuccess(r -> Log.of(this).info("simpleService_init -> simpleService.keepAsIs -> complete: Deps success"))
-	        .doOnComplete(() -> Log.of(this).info("simpleService_init -> simpleService.keepAsIs -> complete: Deps skipping"))
+	        .doOnSuccess(r -> info("simpleService_init -> simpleService.keepAsIs -> complete: Deps success"))
+	        .doOnComplete(() -> info("simpleService_init -> simpleService.keepAsIs -> complete: Deps skipping"))
 	        .doOnSuccess(r -> topCall.subscribe());
 	}
 	
@@ -221,8 +220,8 @@ class SimpleFlow extends ch.scaille.dataflowmgr.examples.simple.AbstractFlow {
 	    Maybe<FlowExecution> callService = Maybe.just(execution)
 	        .doOnSuccess(e -> e.setStateBindingExitExit(DataPointState.TRIGGERED))
 	        .doOnComplete(() -> execution.setStateBindingExitExit(DataPointState.SKIPPED))
-	        .doOnSuccess(r -> Log.of(this).info("complete -> exit -> exit: Call success"))
-	        .doOnComplete(() -> Log.of(this).info("complete -> exit -> exit: Call skipped"))
+	        .doOnSuccess(r -> info("complete -> exit -> exit: Call success"))
+	        .doOnComplete(() -> info("complete -> exit -> exit: Call skipped"))
 	        .doOnTerminate(() -> Arrays.stream(callbacks).forEach(Runnable::run))
 	        .subscribeOn(Schedulers.computation());
 	    if (callModifier != null) {
@@ -241,8 +240,8 @@ class SimpleFlow extends ch.scaille.dataflowmgr.examples.simple.AbstractFlow {
 	    return Maybe.just(execution)
 	        .mapOptional(f -> ((DataPointState.TRIGGERED == f.state_complete || DataPointState.SKIPPED == f.state_complete))?Optional.of(execution):Optional.empty())
 	        .mapOptional(f -> f.canTriggerBindingExitExit()?Optional.of(execution):Optional.empty())
-	        .doOnSuccess(r -> Log.of(this).info("complete -> exit -> exit: Deps success"))
-	        .doOnComplete(() -> Log.of(this).info("complete -> exit -> exit: Deps skipping"))
+	        .doOnSuccess(r -> info("complete -> exit -> exit: Deps success"))
+	        .doOnComplete(() -> info("complete -> exit -> exit: Deps skipping"))
 	        .doOnSuccess(r -> topCall.subscribe());
 	}
 	
@@ -271,7 +270,7 @@ class SimpleFlow extends ch.scaille.dataflowmgr.examples.simple.AbstractFlow {
 		final FlowExecution result = execute(in, e -> e.doOnSuccess(r -> finished.release())).blockingGet();
 		Assertions.assertTrue(finished.tryAcquire(100, TimeUnit.MILLISECONDS), () -> "Promise executed");
 		Assertions.assertEquals(out, simpleExternalAdapter.getOutput());
-		Log.of(this).info(FlowReport.report.toString());
+		info(FlowReport.report.toString());
 	}
 
 	@Test

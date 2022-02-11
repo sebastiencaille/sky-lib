@@ -15,7 +15,7 @@
  ******************************************************************************/
 package ch.scaille.util.helpers;
 
-import static ch.scaille.util.helpers.LambdaExt.funcWithExc;
+import static ch.scaille.util.helpers.LambdaExt.uncheckF;
 
 import java.io.File;
 import java.io.IOException;
@@ -252,7 +252,7 @@ public class ClassFinder {
 		return null;
 	}
 
-	private Policy isExpected(final Class<?> clazz) {
+	private Policy matchesExpectations(final Class<?> clazz) {
 		if (collectedClasses.containsKey(clazz)) {
 			return collectedClasses.get(clazz);
 		}
@@ -273,20 +273,13 @@ public class ClassFinder {
 			// already processed
 			return collectedClasses.get(clazz);
 		}
-		Policy appliedPolicy = isExpected(clazz);
-		if (appliedPolicy == Policy.SCANNED && clazz.getSuperclass() != null) {
-			appliedPolicy = processClass(clazz.getSuperclass());
-			if (appliedPolicy == Policy.CLASS_ONLY) {
-				// parent class policy is CLASS_ONLY, skip
-				appliedPolicy = Policy.SCANNED;
-			}
+		Policy appliedPolicy = matchesExpectations(clazz);
+		if (appliedPolicy == Policy.SCANNED && !Object.class.equals(clazz.getSuperclass())) {
+			appliedPolicy = scanInheritedClass(clazz.getSuperclass());
 		}
 		if (appliedPolicy == Policy.SCANNED) {
 			for (final Class<?> iface : clazz.getInterfaces()) {
-				appliedPolicy = processClass(iface);
-				if (appliedPolicy == Policy.CLASS_ONLY) {
-					appliedPolicy = Policy.SCANNED;
-				}
+				appliedPolicy = scanInheritedClass(iface);
 				if (appliedPolicy != Policy.SCANNED) {
 					break;
 				}
@@ -294,20 +287,30 @@ public class ClassFinder {
 		}
 		if (expectedAnnotation.isEmpty() && expectedSuperClasses.isEmpty()
 				&& packagesToScan.stream().anyMatch(p -> clazz.getName().startsWith(p))) {
-			appliedPolicy = Policy.ALL_SUBCLASSES;
+			appliedPolicy = Policy.CLASS_ONLY;
 		}
 		collectedClasses.put(clazz, appliedPolicy);
 		return appliedPolicy;
 	}
 
+	private Policy scanInheritedClass(final Class<?> inheritedClass) {
+		Policy appliedPolicy;
+		appliedPolicy = processClass(inheritedClass);
+		if (appliedPolicy == Policy.CLASS_ONLY) {
+			// parent class policy is CLASS_ONLY, skip
+			appliedPolicy = Policy.SCANNED;
+		}
+		return appliedPolicy;
+	}
+
 	private Stream<Class<?>> scan(String aPackage) throws IOException {
 		return Collections.list(loader.getResources(aPackage)).stream()
-				.flatMap(funcWithExc(r -> scanners.apply(r).scan(r, aPackage)));
+				.flatMap(uncheckF(r -> scanners.apply(r).scan(r, aPackage)));
 	}
 
 	public Stream<Class<?>> scan() {
 		return packagesToScan.stream().map(p -> p.replace(".", "/")). //
-				flatMap(funcWithExc(this::scan)). //
+				flatMap(uncheckF(this::scan)). //
 				filter(Objects::nonNull).distinct();
 	}
 

@@ -66,11 +66,11 @@ public class LambdaExt {
 		};
 	}
 
-	public static <E extends Exception> Runnable withExc(RunnableWithException<E> call) {
-		return withExc(call, exceptionHandler);
+	public static <E extends Exception> Runnable uncheck(RunnableWithException<E> call) {
+		return uncheck(call, exceptionHandler);
 	}
 
-	public static <E extends Exception> Runnable withExc(RunnableWithException<E> call,
+	public static <E extends Exception> Runnable uncheck(RunnableWithException<E> call,
 			final Consumer<? super E> exceptionHandler) {
 		return () -> {
 			try {
@@ -81,11 +81,11 @@ public class LambdaExt {
 		};
 	}
 
-	public static <T, E extends Exception> Consumer<T> withExc(ConsumerWithException<T, E> call) {
-		return withExc(call, exceptionHandler);
+	public static <T, E extends Exception> Consumer<T> uncheck(ConsumerWithException<T, E> call) {
+		return uncheck(call, exceptionHandler);
 	}
 
-	public static <T, E extends Exception> Consumer<T> withExc(ConsumerWithException<T, E> call,
+	public static <T, E extends Exception> Consumer<T> uncheck(ConsumerWithException<T, E> call,
 			final Consumer<? super E> exceptionHandler) {
 		return c -> {
 			try {
@@ -96,11 +96,11 @@ public class LambdaExt {
 		};
 	}
 
-	public static <T, E extends Exception> T suppWithExc(final SupplierWithException<T, E> call) {
-		return suppWithExc(call, LambdaExt::defaultExceptionHandler);
+	public static <T, E extends Exception> T uncheck(final SupplierWithException<T, E> call) {
+		return uncheckSup(call, LambdaExt::defaultExceptionHandler);
 	}
 
-	public static <T, E extends Exception> T suppWithExc(final SupplierWithException<T, E> call,
+	public static <T, E extends Exception> T uncheckSup(final SupplierWithException<T, E> call,
 			final Function<? super E, T> exceptionHandler) {
 		try {
 			return call.execute();
@@ -109,11 +109,11 @@ public class LambdaExt {
 		}
 	}
 
-	public static <T, R, E extends Exception> Function<T, R> funcWithExc(final FunctionWithException<T, R, E> call) {
-		return funcWithExc(call, LambdaExt::defaultExceptionHandler);
+	public static <T, R, E extends Exception> Function<T, R> uncheckF(final FunctionWithException<T, R, E> call) {
+		return uncheckFunc(call, LambdaExt::defaultExceptionHandler);
 	}
 
-	public static <T, R, E extends Exception> Function<T, R> funcWithExc(final FunctionWithException<T, R, E> call,
+	public static <T, R, E extends Exception> Function<T, R> uncheckFunc(final FunctionWithException<T, R, E> call,
 			final Function<? super E, R> exceptionHandler) {
 		return t -> {
 			try {

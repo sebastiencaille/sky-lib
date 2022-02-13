@@ -10,9 +10,9 @@ import ch.scaille.testing.bdd.definition.Scenario.ExecutionContext;
  * 
  * @author scaille
  *
- * @param <P>  Shared type (like Swing/Selenium Pilot)
+ * @param <P> Shared type (like Swing/Selenium Pilot)
  */
-public class ScenarioFragment<PP> {
+public class Steps<PP> {
 
 	public static class Step<PP> {
 		public final String description;
@@ -26,11 +26,19 @@ public class ScenarioFragment<PP> {
 
 	}
 
+	public static <PP> Step<PP> step(String description, Consumer<PP> code) {
+		return new Step<>(description, (p, c) -> code.accept(p));
+	}
+
+	public static <PP> Step<PP> step(String description, BiConsumer<PP, Context> code) {
+		return new Step<>(description, code);
+	}
+
 	private Step<PP> givenStep;
 	private Step<PP> whenStep;
 	private Step<PP> thenStep;
 
-	protected ScenarioFragment( Step<PP> givenStep, Step<PP> whenStep, Step<PP> thenStep) {
+	protected Steps(Step<PP> givenStep, Step<PP> whenStep, Step<PP> thenStep) {
 		this.givenStep = givenStep;
 		this.whenStep = whenStep;
 		this.thenStep = thenStep;
@@ -72,15 +80,5 @@ public class ScenarioFragment<PP> {
 		context.getContext(ExecutionContext.class).addThen(thenStep);
 		thenStep.call.accept(page, context);
 	}
-	
-	public static <PP> Step<PP> step(String description, Consumer<PP> code) {
-		return new Step<>(description, (p, c) -> code.accept(p));
-	}
-
-	public static <PP> Step<PP> step(String description, BiConsumer<PP, Context> code) {
-		return new Step<>(description, code);
-	} 
-
-
 
 }

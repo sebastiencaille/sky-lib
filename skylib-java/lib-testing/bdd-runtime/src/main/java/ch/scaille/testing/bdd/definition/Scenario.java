@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import ch.scaille.testing.bdd.definition.ScenarioFragment.Step;
+import ch.scaille.testing.bdd.definition.Steps.Step;
 
 public class Scenario<PP> {
 
@@ -56,11 +56,11 @@ public class Scenario<PP> {
 
 	}
 
-	private final ScenarioFragment<PP>[] scenarii;
+	private final Steps<PP>[] steps;
 	private Consumer<Context> contextConfigurer;
 
-	public Scenario(ScenarioFragment<PP>... scenarii) {
-		this.scenarii = scenarii;
+	public Scenario(Steps<PP>... steps) {
+		this.steps = steps;
 	}
 
 	public Consumer<Context> getContextConfigurer() {
@@ -72,14 +72,14 @@ public class Scenario<PP> {
 		return this;
 	}
 
-	public ScenarioFragment<PP>[] getScenarii() {
-		return scenarii;
+	public Steps<PP>[] getScenarii() {
+		return steps;
 	}
 
-	public Scenario<PP> followedBy(ScenarioFragment<PP> next) {
-		ScenarioFragment<PP>[] newScenarii = Arrays.copyOf(getScenarii(), getScenarii().length + 1);
-		newScenarii[newScenarii.length - 1] = next;
-		return new Scenario<>(newScenarii);
+	public Scenario<PP> followedBy(Steps<PP>... nexts) {
+		Steps<PP>[] newsteps = Arrays.copyOf(steps, steps.length + nexts.length);
+		System.arraycopy(nexts, 0, newsteps, steps.length, nexts.length);
+		return new Scenario<>(newsteps);
 	}
 
 	public ExecutionContext run(PP pageProvider) {
@@ -88,12 +88,11 @@ public class Scenario<PP> {
 			contextConfigurer.accept(context);
 		}
 
-		ScenarioFragment<PP> lastScenario = scenarii[scenarii.length - 1];
-		for (ScenarioFragment<PP> scenario : scenarii) {
-			scenario.run(pageProvider, context, scenario == lastScenario);
+		Steps<PP> lastStep = steps[steps.length - 1];
+		for (Steps<PP> step : steps) {
+			step.run(pageProvider, context, step == lastStep);
 		}
 		return context.getContext(ExecutionContext.class);
 	}
-
 
 }

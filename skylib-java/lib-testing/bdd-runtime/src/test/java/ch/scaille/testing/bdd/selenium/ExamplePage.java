@@ -3,7 +3,6 @@ package ch.scaille.testing.bdd.selenium;
 import static ch.scaille.tcwriter.pilot.Factories.Pollings.action;
 import static ch.scaille.tcwriter.pilot.Factories.Pollings.assertion;
 import static ch.scaille.tcwriter.pilot.selenium.ElementPilot.click;
-import static ch.scaille.testing.bdd.definition.Scenario.step;
 
 import java.time.Duration;
 
@@ -17,8 +16,6 @@ import ch.scaille.tcwriter.pilot.ModalDialogDetector;
 import ch.scaille.tcwriter.pilot.selenium.ElementPilot;
 import ch.scaille.tcwriter.pilot.selenium.PagePilot;
 import ch.scaille.tcwriter.pilot.selenium.SeleniumPilot;
-import ch.scaille.testing.bdd.definition.Scenario;
-import ch.scaille.testing.bdd.definition.Scenario.ScenarioFactory;
 
 public class ExamplePage extends PagePilot {
 
@@ -40,24 +37,6 @@ public class ExamplePage extends PagePilot {
 	public ExamplePage(SeleniumPilot pilot) {
 		super(pilot);
 	}
-
-	/** BDD **/
-
-	private static final ScenarioFactory<SeleniumPilot, ExamplePage> BDD_FACTORY = Scenario.of(ExamplePage::new);
-
-	public static final Scenario<SeleniumPilot, ExamplePage> OPEN_WEBSITE = BDD_FACTORY.with(
-			step("I open the website", p -> p.getDriver().get("http://localhost:8080/example1.html")),
-			step("I see that the website is open", ExamplePage::testEnabled));
-
-	public static final Scenario<SeleniumPilot, ExamplePage> TEST_ENABLE = BDD_FACTORY.with(
-			step("I test the Enable function", ExamplePage::testEnable),
-			step("I see that the Enable function is back to normal after some seconds", ExamplePage::testEnabled));
-	
-	public static final Scenario<SeleniumPilot, ExamplePage> TEST_ALERT = BDD_FACTORY.with(
-			step("I expect the Alert", ExamplePage::expectTestAlertDialog),
-			step("I test the Alert function", ExamplePage::testAlert),
-			step("I see that the Alert was raised|I acknowledge the Alert", ExamplePage::checkDialogHandled));
-
 
 	public class EnableTestDelay extends ActionDelay {
 

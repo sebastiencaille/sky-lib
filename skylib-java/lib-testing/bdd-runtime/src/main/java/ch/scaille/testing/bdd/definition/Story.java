@@ -1,14 +1,16 @@
 package ch.scaille.testing.bdd.definition;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
-import ch.scaille.testing.bdd.definition.Scenario.Step;
+import ch.scaille.testing.bdd.definition.ScenarioFragment.Step;
 
-public class Story<P> {
+public class Story<P, PP> {
 
 	public static class Context {
 		private final Map<Class<?>, Object> context = new HashMap<>();
@@ -55,10 +57,10 @@ public class Story<P> {
 		
 	}
 
-	private final Scenario<P, ?>[] scenarii;
+	private final ScenarioFragment<P, PP>[] scenarii;
 	private Consumer<Context> contextConfigurer;
 
-	public Story(Scenario<P, ?>... scenarii) {
+	public Story(ScenarioFragment<P, PP>... scenarii) {
 		this.scenarii = scenarii;
 	}
 
@@ -66,13 +68,19 @@ public class Story<P> {
 		return contextConfigurer;
 	}
 
-	public Story<P> withContext(Consumer<Context> contextConfigurer) {
+	public Story<P, PP> withContext(Consumer<Context> contextConfigurer) {
 		this.contextConfigurer = contextConfigurer;
 		return this;
 	}
 
-	public Scenario<P, ?>[] getScenarii() {
+	public ScenarioFragment<P, PP>[] getScenarii() {
 		return scenarii;
+	}
+	
+	public Story<P, PP> followedBy(ScenarioFragment<P, PP> next) {
+		ScenarioFragment<P, PP>[] newScenarii = Arrays.copyOf(getScenarii(), getScenarii().length+1);
+		newScenarii[newScenarii.length-1] = next;
+		return new Story<>(newScenarii);
 	}
 
 	public StoryContext run(P pilot) {
@@ -81,11 +89,32 @@ public class Story<P> {
 			contextConfigurer.accept(context);
 		}
 
-		Scenario<P, ?> lastScenario = scenarii[scenarii.length - 1];
-		for (Scenario<P, ?> scenario : scenarii) {
+		ScenarioFragment<P, PP> lastScenario = scenarii[scenarii.length - 1];
+		for (ScenarioFragment<P, PP> scenario : scenarii) {
 			scenario.run(pilot, context, scenario == lastScenario);
 		}
 		return context.getContext(StoryContext.class);
+	}
+	
+	public static class ScenarioFactory<P, PP> {
+
+		private final Function<P, PP> pageProviderSupplier;
+
+		public ScenarioFactory(Function<P, PP> pageProviderSupplier) {
+			this.pageProviderSupplier = pageProviderSupplier;
+		}
+
+		public ScenarioFragment<P, PP> with(Step<PP> when, Step<PP> then) {
+			return with(null, when, then);
+		}
+
+		public ScenarioFragment<P, PP> with(Step<PP> given, Step<PP> when, Step<PP> then) {
+			return new ScenarioFragment<>(pageProviderSupplier, given, when, then);
+		}
+	}
+
+	public static <P, PP> ScenarioFactory<P, PP> of(Function<P, PP> pageProviderProvider) {
+		return new ScenarioFactory<>(pageProviderProvider);
 	}
 
 }

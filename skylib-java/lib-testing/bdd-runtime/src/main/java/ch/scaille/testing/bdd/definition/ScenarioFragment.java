@@ -12,9 +12,8 @@ import ch.scaille.testing.bdd.definition.Story.StoryContext;
  * @author scaille
  *
  * @param <P>  Shared type (like Swing/Selenium Pilot)
- * @param <PP> Specific type (like PagePilots)
  */
-public class Scenario<P, PP> {
+public class ScenarioFragment<P, PP> {
 
 	public static class Step<PP> {
 		public final String description;
@@ -34,7 +33,7 @@ public class Scenario<P, PP> {
 	private Step<PP> whenStep;
 	private Step<PP> thenStep;
 
-	protected Scenario(Function<P, PP> pageSupplier, Step<PP> givenStep, Step<PP> whenStep, Step<PP> thenStep) {
+	protected ScenarioFragment(Function<P, PP> pageSupplier, Step<PP> givenStep, Step<PP> whenStep, Step<PP> thenStep) {
 		this.pageSupplier = pageSupplier;
 		this.givenStep = givenStep;
 		this.whenStep = whenStep;
@@ -78,7 +77,7 @@ public class Scenario<P, PP> {
 		context.getContext(StoryContext.class).addThen(thenStep);
 		thenStep.call.accept(page, context);
 	}
-
+	
 	public static <PP> Step<PP> step(String description, Consumer<PP> code) {
 		return new Step<>(description, (p, c) -> code.accept(p));
 	}
@@ -87,25 +86,6 @@ public class Scenario<P, PP> {
 		return new Step<>(description, code);
 	} 
 
-	public static class ScenarioFactory<P, PP> {
 
-		private final Function<P, PP> pageSupplier;
-
-		public ScenarioFactory(Function<P, PP> pageSupplier) {
-			this.pageSupplier = pageSupplier;
-		}
-
-		public Scenario<P, PP> with(Step<PP> when, Step<PP> then) {
-			return with(null, when, then);
-		}
-
-		public Scenario<P, PP> with(Step<PP> given, Step<PP> when, Step<PP> then) {
-			return new Scenario<>(pageSupplier, given, when, then);
-		}
-	}
-
-	public static <P, PP> ScenarioFactory<P, PP> of(Function<P, PP> pageSupplier) {
-		return new ScenarioFactory<>(pageSupplier);
-	}
 
 }

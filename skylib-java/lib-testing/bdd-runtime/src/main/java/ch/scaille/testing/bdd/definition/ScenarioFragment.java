@@ -2,10 +2,9 @@ package ch.scaille.testing.bdd.definition;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
-import ch.scaille.testing.bdd.definition.Story.Context;
-import ch.scaille.testing.bdd.definition.Story.StoryContext;
+import ch.scaille.testing.bdd.definition.Scenario.Context;
+import ch.scaille.testing.bdd.definition.Scenario.ExecutionContext;
 
 /**
  * 
@@ -13,7 +12,7 @@ import ch.scaille.testing.bdd.definition.Story.StoryContext;
  *
  * @param <P>  Shared type (like Swing/Selenium Pilot)
  */
-public class ScenarioFragment<P, PP> {
+public class ScenarioFragment<PP> {
 
 	public static class Step<PP> {
 		public final String description;
@@ -27,14 +26,11 @@ public class ScenarioFragment<P, PP> {
 
 	}
 
-	private final Function<P, PP> pageSupplier;
-
 	private Step<PP> givenStep;
 	private Step<PP> whenStep;
 	private Step<PP> thenStep;
 
-	protected ScenarioFragment(Function<P, PP> pageSupplier, Step<PP> givenStep, Step<PP> whenStep, Step<PP> thenStep) {
-		this.pageSupplier = pageSupplier;
+	protected ScenarioFragment( Step<PP> givenStep, Step<PP> whenStep, Step<PP> thenStep) {
 		this.givenStep = givenStep;
 		this.whenStep = whenStep;
 		this.thenStep = thenStep;
@@ -48,33 +44,32 @@ public class ScenarioFragment<P, PP> {
 		return descr.replace(' ', '_').toLowerCase();
 	}
 
-	public void run(P pilot, Context context, boolean isLastScenario) {
-		PP page = pageSupplier.apply(pilot);
-		given(page, context);
-		when(page, context, isLastScenario);
+	public void run(PP pageProvider, Context context, boolean isLastScenario) {
+		given(pageProvider, context);
+		when(pageProvider, context, isLastScenario);
 		if (isLastScenario) {
-			then(page, context);
+			then(pageProvider, context);
 		}
 	}
 
-	public void given(PP page, Context context) {
+	public void given(PP pageProvider, Context context) {
 		if (givenStep != null) {
-			context.getContext(StoryContext.class).addGiven(givenStep);
-			givenStep.call.accept(page, context);
+			context.getContext(ExecutionContext.class).addGiven(givenStep);
+			givenStep.call.accept(pageProvider, context);
 		}
 	}
 
-	public void when(PP page, Context context, boolean isLastScenario) {
+	public void when(PP pageProvider, Context context, boolean isLastScenario) {
 		if (isLastScenario) {
-			context.getContext(StoryContext.class).addWhen(whenStep);
+			context.getContext(ExecutionContext.class).addWhen(whenStep);
 		} else {
-			context.getContext(StoryContext.class).addGiven(whenStep);
+			context.getContext(ExecutionContext.class).addGiven(whenStep);
 		}
-		whenStep.call.accept(page, context);
+		whenStep.call.accept(pageProvider, context);
 	}
 
 	public void then(PP page, Context context) {
-		context.getContext(StoryContext.class).addThen(thenStep);
+		context.getContext(ExecutionContext.class).addThen(thenStep);
 		thenStep.call.accept(page, context);
 	}
 	

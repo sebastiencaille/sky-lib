@@ -10,7 +10,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>ch.scaille</groupId>
-			<artifactId>lib-testing-core</artifactId>
+			<artifactId>gui-pilot-selenium</artifactId>
 		</dependency>
 		
 			<dependency>
@@ -18,10 +18,6 @@
 			<artifactId>lib-utils</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-java</artifactId>
-		</dependency>
 		<!-- http server -->
 		<dependency>
 			<groupId>io.undertow</groupId>

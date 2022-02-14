@@ -34,7 +34,7 @@ class SeleniumExampleTest extends AbstractTestWebAppProvider {
 
 	@AfterEach
 	public void releasePilot() {
-		System.out.print(pilot.getActionReport().getFormattedReport());
+		Logs.of(this).info(pilot.getActionReport().getFormattedReport());
 		pilot.close();
 	}
 
@@ -55,7 +55,6 @@ class SeleniumExampleTest extends AbstractTestWebAppProvider {
 
 		mainPage.elementChangeTest();
 
-		Logs.of(this).info(pilot.getActionReport().getFormattedReport());
 		assertEquals(8, pilot.getActionReport().getReport().size(), () -> pilot.getActionReport().getFormattedReport());
 	}
 

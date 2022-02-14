@@ -2,32 +2,25 @@ package ch.scaille.testing.bdd.definition;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 import ch.scaille.testing.bdd.definition.Steps.Step;
 
-public class Scenario<PP> {
+public class Scenario<PP extends AbstractAppTestApi<?>> {
 
-	public static class Context {
-		private final Map<Class<?>, Object> context = new HashMap<>();
+	public static class ExecutionContext<PP> {
 
-		public <T> T getContext(Class<T> clazz) {
-			return (T) context.computeIfAbsent(clazz, c -> {
-				try {
-					return c.newInstance();
-				} catch (InstantiationException | IllegalAccessException e) {
-					throw new IllegalStateException("Unable to create context class " + c.getName(), e);
-				}
-			});
+		private final List<String> report = new ArrayList<>();
+		private final PP appTestApi;
+
+		public ExecutionContext(PP appTestApi) {
+			this.appTestApi = appTestApi;
 		}
 
-	}
-
-	public static class ExecutionContext {
-		final List<String> report = new ArrayList<>();
+		public PP getAppTestApi() {
+			return appTestApi;
+		}
 
 		private void add(String verb, Step<?> step) {
 			report.add(verb + step.description.replace("|", "\n  And "));
@@ -57,18 +50,15 @@ public class Scenario<PP> {
 	}
 
 	private final Steps<PP>[] steps;
-	private Consumer<Context> contextConfigurer;
+
+	private Consumer<PP> runConfiguration;
 
 	public Scenario(Steps<PP>... steps) {
 		this.steps = steps;
 	}
 
-	public Consumer<Context> getContextConfigurer() {
-		return contextConfigurer;
-	}
-
-	public Scenario<PP> withContext(Consumer<Context> contextConfigurer) {
-		this.contextConfigurer = contextConfigurer;
+	public Scenario<PP> beforeRun(Consumer<PP> runConfiguration) {
+		this.runConfiguration = runConfiguration;
 		return this;
 	}
 
@@ -82,17 +72,18 @@ public class Scenario<PP> {
 		return new Scenario<>(newsteps);
 	}
 
-	public ExecutionContext run(PP pageProvider) {
-		Context context = new Context();
-		if (contextConfigurer != null) {
-			contextConfigurer.accept(context);
+	public ExecutionContext<PP> run(PP appTestApi) {
+		ExecutionContext<PP> executionContext = new ExecutionContext<>(appTestApi);
+		appTestApi.resetContext();
+		if (runConfiguration != null) {
+			runConfiguration.accept(appTestApi);
 		}
 
 		Steps<PP> lastStep = steps[steps.length - 1];
 		for (Steps<PP> step : steps) {
-			step.run(pageProvider, context, step == lastStep);
+			step.run(executionContext, step == lastStep);
 		}
-		return context.getContext(ExecutionContext.class);
+		return executionContext;
 	}
 
 }

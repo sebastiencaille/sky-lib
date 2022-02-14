@@ -1,4 +1,4 @@
-package ch.scaille.testing.bdd.selenium;
+package ch.scaille.tcwriter.pilot.selenium;
 
 import static ch.scaille.tcwriter.pilot.Factories.Pollings.action;
 import static ch.scaille.tcwriter.pilot.Factories.Pollings.assertion;
@@ -13,9 +13,6 @@ import org.openqa.selenium.support.FindBy;
 
 import ch.scaille.tcwriter.pilot.ActionDelay;
 import ch.scaille.tcwriter.pilot.ModalDialogDetector;
-import ch.scaille.tcwriter.pilot.selenium.ElementPilot;
-import ch.scaille.tcwriter.pilot.selenium.PagePilot;
-import ch.scaille.tcwriter.pilot.selenium.SeleniumPilot;
 
 public class ExamplePage extends PagePilot {
 
@@ -98,6 +95,10 @@ public class ExamplePage extends PagePilot {
 		wait(() -> this.elementChangeTest, click());
 		// Explicitly test using WebElement as source
 		wait(() -> this.elementChange.findElement(By.id("TextChange")), textEquals("Hello again"));
+	}
+
+	public void parameterExample(String param) {
+		// noop
 	}
 
 }

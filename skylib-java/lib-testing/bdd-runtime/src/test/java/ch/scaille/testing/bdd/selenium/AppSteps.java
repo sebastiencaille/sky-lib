@@ -22,6 +22,9 @@ public class AppSteps {
 	public static final Steps<AppPages> TEST_ALERT = BDD_FACTORY.with(
 			step("I expect the Alert", p -> p.examplePage.expectTestAlertDialog()),
 			step("I test the Alert function", p -> p.examplePage.testAlert()),
-			step("I see that the Alert was raised|I acknowledge the Alert", p -> p.examplePage.checkDialogHandled()));
+			step("I see that the Alert was raised|I acknowledge the Alert", p -> {
+				p.examplePage.checkDialogHandled();
+				System.out.println(p.getContext().example);
+			}));
 
 }

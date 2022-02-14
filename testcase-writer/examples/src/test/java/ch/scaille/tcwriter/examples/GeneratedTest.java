@@ -1,4 +1,4 @@
-// File generated from template 2022/02/13 10:15:26
+// File generated from template 2022/02/13 10:32:51
 package ch.scaille.tcwriter.examples;
 
 import ch.scaille.tcwriter.examples.api.interfaces.dto.*;

@@ -15,11 +15,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>ch.scaille</groupId>
-			<artifactId>selenium-test-page</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
 		</dependency>

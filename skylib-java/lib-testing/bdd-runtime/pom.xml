@@ -10,11 +10,6 @@
 
 	<artifactId>lib-testing-bdd-runtime</artifactId>
 	<dependencies>
-		<dependency>
-			<groupId>ch.scaille</groupId>
-			<artifactId>gui-pilot-selenium</artifactId>
-			<scope>test</scope>
-		</dependency>
 
 		<!-- http server -->
 		<dependency>

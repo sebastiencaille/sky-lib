@@ -2,7 +2,7 @@ package ch.scaille.testing.bdd.definition;
 
 import ch.scaille.testing.bdd.definition.Steps.Step;
 
-public class TestDictionary<PP> {
+public class TestDictionary<PP extends AbstractAppTestApi<?>> {
 
 	public Steps<PP> with(Step<PP> when, Step<PP> then) {
 		return with(null, when, then);

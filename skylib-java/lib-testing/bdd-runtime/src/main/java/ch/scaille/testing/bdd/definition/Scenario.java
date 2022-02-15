@@ -7,18 +7,18 @@ import java.util.function.Consumer;
 
 import ch.scaille.testing.bdd.definition.Steps.Step;
 
-public class Scenario<PP extends AbstractAppTestApi<?>> {
+public class Scenario<A extends AbstractAppTestApi<?>> {
 
-	public static class ExecutionContext<PP> {
+	public static class ExecutionContext<A> {
 
 		private final List<String> report = new ArrayList<>();
-		private final PP appTestApi;
+		private final A appTestApi;
 
-		public ExecutionContext(PP appTestApi) {
+		public ExecutionContext(A appTestApi) {
 			this.appTestApi = appTestApi;
 		}
 
-		public PP getAppTestApi() {
+		public A getAppTestApi() {
 			return appTestApi;
 		}
 
@@ -49,38 +49,34 @@ public class Scenario<PP extends AbstractAppTestApi<?>> {
 
 	}
 
-	private final Steps<PP>[] steps;
+	private final Steps<A>[] steps;
 
-	private Consumer<PP> runConfiguration;
+	private Consumer<A> executionConfigurer;
 
-	public Scenario(Steps<PP>... steps) {
+	public Scenario(Steps<A>... steps) {
 		this.steps = steps;
 	}
 
-	public Scenario<PP> beforeRun(Consumer<PP> runConfiguration) {
-		this.runConfiguration = runConfiguration;
+	public Scenario<A> withConfigurer(Consumer<A> executionConfigurer) {
+		this.executionConfigurer = executionConfigurer;
 		return this;
 	}
 
-	public Steps<PP>[] getScenarii() {
-		return steps;
+	public Scenario<A> followedBy(Steps<A>... addedSteps) {
+		Steps<A>[] newSteps = Arrays.copyOf(steps, steps.length + addedSteps.length);
+		System.arraycopy(addedSteps, 0, newSteps, steps.length, addedSteps.length);
+		return new Scenario<>(newSteps);
 	}
 
-	public Scenario<PP> followedBy(Steps<PP>... nexts) {
-		Steps<PP>[] newsteps = Arrays.copyOf(steps, steps.length + nexts.length);
-		System.arraycopy(nexts, 0, newsteps, steps.length, nexts.length);
-		return new Scenario<>(newsteps);
-	}
-
-	public ExecutionContext<PP> run(PP appTestApi) {
-		ExecutionContext<PP> executionContext = new ExecutionContext<>(appTestApi);
+	public ExecutionContext<A> run(A appTestApi) {
+		ExecutionContext<A> executionContext = new ExecutionContext<>(appTestApi);
 		appTestApi.resetContext();
-		if (runConfiguration != null) {
-			runConfiguration.accept(appTestApi);
+		if (executionConfigurer != null) {
+			executionConfigurer.accept(appTestApi);
 		}
 
-		Steps<PP> lastStep = steps[steps.length - 1];
-		for (Steps<PP> step : steps) {
+		Steps<A> lastStep = steps[steps.length - 1];
+		for (Steps<A> step : steps) {
 			step.run(executionContext, step == lastStep);
 		}
 		return executionContext;

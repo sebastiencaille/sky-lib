@@ -47,7 +47,7 @@ class SeleniumExampleTest extends AbstractTestWebAppProvider {
 		Scenario<AppPages> openPageScenario = AppSteps.BDD_FACTORY.scenario(AppSteps.OPEN_WEBSITE);
 		Scenario<AppPages> testEnableScenario = openPageScenario.followedBy(AppSteps.TEST_ENABLE);
 		Scenario<AppPages> testAlertScenario = testEnableScenario.followedBy(AppSteps.TEST_ALERT)
-				.beforeRun(p -> p.getContext().example = "Hello world");
+				.withConfigurer(p -> p.getContext().example = "Hello world");
 
 		ExecutionContext<?> testEnableScenarioRun = testEnableScenario.run(pageProvider);
 		ExecutionContext<?> testAlertScenarioRun = testAlertScenario.run(pageProvider);

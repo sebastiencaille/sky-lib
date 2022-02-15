@@ -8,15 +8,15 @@ import ch.scaille.testing.bdd.definition.Scenario.ExecutionContext;
  * 
  * @author scaille
  *
- * @param <P> Shared type (like Swing/Selenium Pilot)
+ * @param <A> Application test apis
  */
-public class Steps<PP> {
+public class Steps<A> {
 
-	public static class Step<PP> {
+	public static class Step<A> {
 		public final String description;
-		private final Consumer<PP> call;
+		private final Consumer<A> call;
 
-		public Step(String description, Consumer<PP> stepCall) {
+		public Step(String description, Consumer<A> stepCall) {
 			super();
 			this.description = description;
 			this.call = stepCall;
@@ -24,29 +24,21 @@ public class Steps<PP> {
 
 	}
 
-	public static <PP> Step<PP> step(String description, Consumer<PP> call) {
+	public static <A> Step<A> step(String description, Consumer<A> call) {
 		return new Step<>(description, call);
 	}
 
-	private final Step<PP> givenStep;
-	private final Step<PP> whenStep;
-	private final Step<PP> thenStep;
+	private final Step<A> givenStep;
+	private final Step<A> whenStep;
+	private final Step<A> thenStep;
 
-	protected Steps(Step<PP> givenStep, Step<PP> whenStep, Step<PP> thenStep) {
+	protected Steps(Step<A> givenStep, Step<A> whenStep, Step<A> thenStep) {
 		this.givenStep = givenStep;
 		this.whenStep = whenStep;
 		this.thenStep = thenStep;
 	}
 
-	public String getWhenCodeDescription() {
-		return toBddCodeDescription(whenStep.description);
-	}
-
-	public String toBddCodeDescription(String descr) {
-		return descr.replace(' ', '_').toLowerCase();
-	}
-
-	public void run(ExecutionContext<PP> context, boolean isLastScenario) {
+	public void run(ExecutionContext<A> context, boolean isLastScenario) {
 		given(context);
 		when(context, isLastScenario);
 		if (isLastScenario) {
@@ -54,14 +46,14 @@ public class Steps<PP> {
 		}
 	}
 
-	public void given(ExecutionContext<PP> context) {
+	public void given(ExecutionContext<A> context) {
 		if (givenStep != null) {
 			context.addGiven(givenStep);
 			givenStep.call.accept(context.getAppTestApi());
 		}
 	}
 
-	public void when(ExecutionContext<PP> context, boolean isLastScenario) {
+	public void when(ExecutionContext<A> context, boolean isLastScenario) {
 		if (isLastScenario) {
 			context.addWhen(whenStep);
 		} else {
@@ -70,7 +62,7 @@ public class Steps<PP> {
 		whenStep.call.accept(context.getAppTestApi());
 	}
 
-	public void then(ExecutionContext<PP> context) {
+	public void then(ExecutionContext<A> context) {
 		context.addThen(thenStep);
 		thenStep.call.accept(context.getAppTestApi());
 	}

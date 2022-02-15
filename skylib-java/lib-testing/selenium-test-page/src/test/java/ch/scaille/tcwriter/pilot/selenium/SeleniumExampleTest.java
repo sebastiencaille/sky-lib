@@ -17,7 +17,7 @@ class SeleniumExampleTest extends AbstractTestWebAppProvider {
 	@Override
 	public WebDriver createWebDriver() {
 		if (WebDriverFactory.IS_WINDOWS) {
-			return WebDriverFactory.firefox("C:\\selenium\\drivers\\geckodriver_win32\\geckodriver.exe").build();
+			return WebDriverFactory.firefox("C:\\selenium\\drivers\\geckodriver.exe").build();
 		} else {
 			return WebDriverFactory.firefox("/usr/bin/geckodriver").build();
 		}

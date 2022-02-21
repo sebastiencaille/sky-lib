@@ -15,8 +15,7 @@ import javax.swing.filechooser.FileFilter;
 import ch.scaille.tcwriter.annotations.TCActors;
 import ch.scaille.tcwriter.annotations.TCRole;
 import ch.scaille.tcwriter.generators.JavaToDictionary;
-import ch.scaille.tcwriter.generators.model.persistence.IModelPersister;
-import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
+import ch.scaille.tcwriter.generators.model.persistence.IModelDao;
 import ch.scaille.tcwriter.gui.frame.TCWriterGui;
 import ch.scaille.util.helpers.ClassFinder;
 import ch.scaille.util.helpers.ClassFinder.Policy;
@@ -24,28 +23,28 @@ import ch.scaille.util.helpers.LambdaExt;
 
 public class DictionaryImport extends JDialog {
 
-	private final IModelPersister persister;
+	private final IModelDao modelDao;
 	private final Component parentFrame;
-	private final JLabel dictionaryJarFile;
+	private final JLabel dictionaryJarFileDisplay;
 	private boolean imported = true;
 
-	public DictionaryImport(Component parentFrame, IModelPersister persister) {
+	public DictionaryImport(Component parentFrame, IModelDao modelDao) {
 		this.parentFrame = parentFrame;
-		this.persister = persister;
+		this.modelDao = modelDao;
 		setLayout(new BorderLayout());
 
-		dictionaryJarFile = new JLabel("");
-		add(dictionaryJarFile, BorderLayout.NORTH);
+		dictionaryJarFileDisplay = new JLabel("");
+		add(dictionaryJarFileDisplay, BorderLayout.NORTH);
 
 		add(new JLabel("Package"), BorderLayout.WEST);
 
-		JTextField sourcePackage = new JTextField();
-		add(sourcePackage, BorderLayout.CENTER);
+		var sourcePackageEditor = new JTextField();
+		add(sourcePackageEditor, BorderLayout.CENTER);
 
-		JButton importButton = new JButton("Import");
+		var importButton = new JButton("Import");
 		add(importButton, BorderLayout.EAST);
 		importButton.addActionListener(a -> LambdaExt.uncheck(() -> {
-			importDictionary(new File(dictionaryJarFile.getText()), sourcePackage.getText());
+			importDictionary(new File(dictionaryJarFileDisplay.getText()), sourcePackageEditor.getText());
 			imported = true;
 			setVisible(false);
 		}, e -> TCWriterGui.handleException(this, e)));
@@ -53,7 +52,7 @@ public class DictionaryImport extends JDialog {
 
 	public boolean runImport() {
 		pack();
-		JFileChooser chooser = new JFileChooser();
+		var chooser = new JFileChooser();
 		chooser.setDialogTitle("Dictionary import");
 		chooser.setFileFilter(new FileFilter() {
 
@@ -69,7 +68,7 @@ public class DictionaryImport extends JDialog {
 		});
 		int result = chooser.showOpenDialog(this);
 		if (result == JFileChooser.APPROVE_OPTION) {
-			dictionaryJarFile.setText(chooser.getSelectedFile().toString());
+			dictionaryJarFileDisplay.setText(chooser.getSelectedFile().toString());
 			setModal(true);
 			pack();
 			setLocationRelativeTo(parentFrame);
@@ -82,10 +81,10 @@ public class DictionaryImport extends JDialog {
 
 	protected void importDictionary(File dictionaryJarFile, String sourcePackage) {
 		try {
-			TestDictionary dictionary = ClassFinder.source(dictionaryJarFile)
-					.withAnnotation(TCRole.class, Policy.CLASS_ONLY).withAnnotation(TCActors.class, Policy.CLASS_ONLY)
-					.withPackages(sourcePackage).scan().collect(JavaToDictionary.toDictionary());
-			persister.writeTestDictionary(dictionary);
+			var dictionary = ClassFinder.source(dictionaryJarFile).withAnnotation(TCRole.class, Policy.CLASS_ONLY)
+					.withAnnotation(TCActors.class, Policy.CLASS_ONLY).withPackages(sourcePackage).scan()
+					.collect(JavaToDictionary.toDictionary());
+			modelDao.writeTestDictionary(dictionary);
 		} catch (IOException e) {
 			TCWriterGui.handleException(this, e);
 		}

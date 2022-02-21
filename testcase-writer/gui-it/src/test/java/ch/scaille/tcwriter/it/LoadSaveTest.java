@@ -2,7 +2,6 @@ package ch.scaille.tcwriter.it;
 
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -17,11 +16,11 @@ class LoadSaveTest extends AbstractGuiTest {
 
 	@BeforeAll
 	public static void initLogger() {
-		Logger rootLogger = Logs.of("ch");
+		var rootLogger = Logs.of("ch");
 		rootLogger.setLevel(Level.ALL);
-		ConsoleHandler console = new ConsoleHandler();
-		console.setLevel(Level.ALL);
-		rootLogger.addHandler(console);
+		var logConsole = new ConsoleHandler();
+		logConsole.setLevel(Level.ALL);
+		rootLogger.addHandler(logConsole);
 	}
 
 	

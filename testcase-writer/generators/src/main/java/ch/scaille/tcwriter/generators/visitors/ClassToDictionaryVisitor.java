@@ -6,17 +6,13 @@ import static ch.scaille.tcwriter.generators.Helper.roleKey;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Parameter;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -58,43 +54,43 @@ public class ClassToDictionaryVisitor {
 	}
 
 	private void processEntryPointClasses() {
-		for (final Class<?> roleClass : unprocessedRoles) {
-			final TCRole roleAnnotation = roleClass.getAnnotation(TCRole.class);
-			final TestRole testRole = new TestRole(roleKey(roleClass));
+		for (final var roleClass : unprocessedRoles) {
+			final var roleAnnotation = roleClass.getAnnotation(TCRole.class);
+			final var testRole = new TestRole(roleKey(roleClass));
 			dictionary.addDescription(testRole, descriptionFrom(roleAnnotation));
 			dictionary.getRoles().put(testRole.getId(), testRole);
 
-			final HashSet<Method> roleMethods = new HashSet<>();
+			final var roleMethods = new HashSet<Method>();
 			accumulateApiMethods(roleClass, roleMethods);
 
-			for (final Method actionMethod : roleMethods) {
-				final String returnType = (actionMethod.getReturnType() != Void.class)
+			for (final var actionMethod : roleMethods) {
+				final var returnType = (actionMethod.getReturnType() != Void.class)
 						? actionMethod.getReturnType().getName()
 						: null;
 
-				StepClassifier[] classifiers = computeClassifiers(actionMethod);
-				final TestAction testAction = new TestAction(methodKey(actionMethod), actionMethod.getName(),
-						returnType, classifiers);
-				final List<TestApiParameter> roleActionParameters = processParameters(testAction, actionMethod);
+				var classifiers = computeClassifiers(actionMethod);
+				final var testAction = new TestAction(methodKey(actionMethod), actionMethod.getName(), returnType,
+						classifiers);
+				final var roleActionParameters = gatherParameters(testAction, actionMethod);
 				testAction.getParameters().addAll(roleActionParameters);
 				testRole.getActions().add(testAction);
 			}
 		}
 
-		for (final Class<?> unprocessedActor : unprocessedActors) {
-			final TCActors actorsAnnotation = unprocessedActor.getAnnotation(TCActors.class);
-			for (String actorDef : actorsAnnotation.value()) {
-				String[] actorAndSimpleName = actorDef.split("\\|");
+		for (final var unprocessedActor : unprocessedActors) {
+			final var actorsAnnotation = unprocessedActor.getAnnotation(TCActors.class);
+			for (var actorDef : actorsAnnotation.value()) {
+				var actorAndSimpleName = actorDef.split("\\|");
 				if (actorAndSimpleName.length < 2) {
 					throw new IllegalStateException("At least code|role_simple_call_name must be provided");
 				}
-				String code = actorAndSimpleName[0];
-				String simpleClassName = actorAndSimpleName[1];
+				var codeVariable = actorAndSimpleName[0];
+				var simpleClassName = actorAndSimpleName[1];
 				String description;
 				if (actorAndSimpleName.length > 2) {
 					description = actorAndSimpleName[2];
 				} else {
-					description = code;
+					description = codeVariable;
 				}
 				String humanReadable;
 				if (actorAndSimpleName.length > 3) {
@@ -102,10 +98,10 @@ public class ClassToDictionaryVisitor {
 				} else {
 					humanReadable = description;
 				}
-				Optional<TestRole> role = dictionary.getRoles().entrySet().stream()
+				var role = dictionary.getRoles().entrySet().stream()
 						.filter(r -> r.getKey().endsWith("." + simpleClassName)).map(Entry::getValue).findFirst();
 				if (role.isPresent()) {
-					TestActor actor = new TestActor(code, code, role.get());
+					var actor = new TestActor(codeVariable, codeVariable, role.get());
 					dictionary.addActor(actor, new TestObjectDescription(description, humanReadable));
 				}
 			}
@@ -114,8 +110,8 @@ public class ClassToDictionaryVisitor {
 
 	private StepClassifier[] computeClassifiers(final Method actionMethod) {
 		StepClassifier[] classifiers;
-		final TCAction actionAnnotation = actionMethod.getAnnotation(TCAction.class);
-		final TCCheck checkAnnotation = actionMethod.getAnnotation(TCCheck.class);
+		final var actionAnnotation = actionMethod.getAnnotation(TCAction.class);
+		final var checkAnnotation = actionMethod.getAnnotation(TCCheck.class);
 		if (checkAnnotation != null) {
 			classifiers = new StepClassifier[] { StepClassifier.CHECK };
 		} else if (actionAnnotation != null && actionAnnotation.preparationOnly()) {
@@ -130,9 +126,9 @@ public class ClassToDictionaryVisitor {
 
 	private void processParameterFactories() {
 		while (!unprocessedParameterFactoryClasses.isEmpty()) {
-			final Iterator<Class<?>> firstElementIterator = unprocessedParameterFactoryClasses.iterator();
-			final Class<?> apiClass = firstElementIterator.next();
-			firstElementIterator.remove();
+			final var firstParameterClassIterator = unprocessedParameterFactoryClasses.iterator();
+			final var apiClass = firstParameterClassIterator.next();
+			firstParameterClassIterator.remove();
 			if (processedParameterFactoryClasses.contains(apiClass)) {
 				continue;
 			}
@@ -141,9 +137,9 @@ public class ClassToDictionaryVisitor {
 				continue;
 			}
 			// Process the api class
-			final HashSet<Method> valueFactoryMethods = new HashSet<>();
+			final var valueFactoryMethods = new HashSet<Method>();
 
-			final TCApi tcApi = apiClass.getAnnotation(TCApi.class);
+			final var tcApi = apiClass.getAnnotation(TCApi.class);
 			if (tcApi != null && tcApi.isSelector()) {
 				dictionary.addSelectorType(apiClass);
 			}
@@ -154,36 +150,34 @@ public class ClassToDictionaryVisitor {
 				throw new IllegalStateException("No factory found for type " + apiClass.getName());
 			}
 
-			for (final Method valueFactoryMethod : valueFactoryMethods) {
+			for (final var valueFactoryMethod : valueFactoryMethods) {
 				// Process each method of the class
-
 				processValueFactory(valueFactoryMethod);
 			}
 		}
 	}
 
 	private void processValueFactory(final Method valueFactoryMethod) {
-		final TestParameterFactory valueFactory = new TestParameterFactory(methodKey(valueFactoryMethod),
+		final var valueFactory = new TestParameterFactory(methodKey(valueFactoryMethod),
 				valueFactoryMethod.getDeclaringClass().getSimpleName() + "." + valueFactoryMethod.getName(),
 				ParameterNature.TEST_API, valueFactoryMethod.getReturnType().getName());
 		processMethodAnnotation(valueFactory, valueFactoryMethod);
 
 		// Add mandatory parameters (parameters of the method)
-		valueFactory.getMandatoryParameters().addAll(processParameters(valueFactory, valueFactoryMethod));
+		valueFactory.getMandatoryParameters().addAll(gatherParameters(valueFactory, valueFactoryMethod));
 
 		// Add optional parameters: instance methods of the return type
-		final HashSet<Method> factoryApiMethods = new HashSet<>();
+		final var factoryApiMethods = new HashSet<Method>();
 		accumulateApiMethods(valueFactoryMethod.getReturnType(), factoryApiMethods);
 		factoryApiMethods.removeIf(m -> Modifier.isStatic(m.getModifiers()) || m.getParameterCount() > 1);
-		for (final Method factoryMethod : factoryApiMethods) {
+		for (final var factoryMethod : factoryApiMethods) {
 			String type;
 			if (factoryMethod.getParameterTypes().length > 0) {
 				type = factoryMethod.getParameterTypes()[0].getName();
 			} else {
 				type = TestApiParameter.NO_TYPE;
 			}
-			final TestApiParameter optionalParameter = new TestApiParameter(methodKey(factoryMethod),
-					factoryMethod.getName(), type);
+			final var optionalParameter = new TestApiParameter(methodKey(factoryMethod), factoryMethod.getName(), type);
 			processMethodAnnotation(optionalParameter, factoryMethod);
 			valueFactory.getOptionalParameters().add(optionalParameter);
 		}
@@ -193,28 +187,26 @@ public class ClassToDictionaryVisitor {
 	}
 
 	private void processMethodAnnotation(final IdObject idObject, final Method apiMethod) {
-		final TCApi methodAnnotation = apiMethod.getAnnotation(TCApi.class);
+		final var methodAnnotation = apiMethod.getAnnotation(TCApi.class);
 		dictionary.addDescription(idObject, descriptionFrom(methodAnnotation));
 	}
 
-	private List<TestApiParameter> processParameters(final IdObject methodIdObject, final Method apiMethod) {
+	private List<TestApiParameter> gatherParameters(final IdObject methodIdObject, final Method apiMethod) {
 		processMethodAnnotation(methodIdObject, apiMethod);
 
-		final Parameter[] methodParameters = apiMethod.getParameters();
-		final List<TestApiParameter> processedParameters = new ArrayList<>();
+		final var methodParameters = apiMethod.getParameters();
+		final var processedParameters = new ArrayList<TestApiParameter>();
 		for (int i = 0; i < methodParameters.length; i++) {
-			final Parameter apiMethodParam = methodParameters[i];
+			final var apiMethodParam = methodParameters[i];
 
-			final TCApi apiMethodAnnotation = apiMethodParam.getAnnotation(TCApi.class);
-			final Type apiMethodParamType = apiMethodParam.getType();
-			final TestApiParameter testObjectParameter = new TestApiParameter(paramKey(apiMethod, i),
-					apiMethod.getName() + '-' + i, apiMethodParamType.getTypeName());
+			final var apiMethodAnnotation = apiMethodParam.getAnnotation(TCApi.class);
+			final var apiMethodParamType = apiMethodParam.getType();
+			final var testObjectParameter = new TestApiParameter(paramKey(apiMethod, i), apiMethod.getName() + '-' + i,
+					apiMethodParamType.getTypeName());
 			if (apiMethodAnnotation != null) {
 				dictionary.addDescription(testObjectParameter, descriptionFrom(apiMethodAnnotation));
 			}
-			if (apiMethodParamType instanceof Class) {
-				unprocessedParameterFactoryClasses.add((Class<?>) apiMethodParamType);
-			}
+			unprocessedParameterFactoryClasses.add(apiMethodParamType);
 			processedParameters.add(testObjectParameter);
 		}
 		return processedParameters;
@@ -260,8 +252,8 @@ public class ClassToDictionaryVisitor {
 		}
 
 		forClassAndSuper(tcClazz, new HashSet<>(), apiClazz -> {
-			for (final Method apiMethod : tcClazz.getMethods()) {
-				final TCApi annotation = apiMethod.getAnnotation(TCApi.class);
+			for (final var apiMethod : tcClazz.getMethods()) {
+				final var annotation = apiMethod.getAnnotation(TCApi.class);
 				if (annotation != null) {
 					methods.add(apiMethod);
 				}
@@ -285,7 +277,7 @@ public class ClassToDictionaryVisitor {
 		processed.add(tcClazz);
 		classHandler.accept(tcClazz);
 		forClassAndSuper(tcClazz.getSuperclass(), processed, classHandler);
-		for (final Class<?> apiClassIface : tcClazz.getInterfaces()) {
+		for (final var apiClassIface : tcClazz.getInterfaces()) {
 			forClassAndSuper(apiClassIface, processed, classHandler);
 		}
 	}

@@ -19,13 +19,11 @@ import javax.swing.table.TableCellRenderer;
 
 import ch.scaille.gui.model.ListModel;
 import ch.scaille.gui.model.views.ListViews;
-import ch.scaille.gui.mvc.IBindingController;
 import ch.scaille.gui.swing.jtable.PolicyTableColumnModel;
 import ch.scaille.gui.swing.jtable.TableColumnWithPolicy;
 import ch.scaille.tcwriter.generators.model.testapi.StepClassifier;
 import ch.scaille.tcwriter.generators.model.testcase.TestStep;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
-import ch.scaille.tcwriter.gui.frame.TCWriterModel;
 import ch.scaille.tcwriter.gui.steps.StepsTableModel.Column;
 
 public class StepsTable extends JPanel {
@@ -35,13 +33,13 @@ public class StepsTable extends JPanel {
 	private final JTable stepsJTable;
 
 	public StepsTable(final TCWriterController controller) {
-		final TCWriterModel model = controller.getModel();
+		final var model = controller.getModel();
 
 		final ch.scaille.gui.model.ListModel<TestStep> steps = new ListModel<>(
 				ListViews.sorted((s1, s2) -> s1.getOrdinal() - s2.getOrdinal()));
 
 		setLayout(new BorderLayout());
-		stepsTableModel = new StepsTableModel(model.getTc(), steps, controller.getTestRemoteControl());
+		stepsTableModel = new StepsTableModel(model.getTestCase(), steps, controller.getTestRemoteControl());
 
 		controller.getTestRemoteControl().setStepListener(stepsTableModel::stepExecutionUpdated);
 
@@ -96,7 +94,7 @@ public class StepsTable extends JPanel {
 		stepsJTable.setRowHeight(stepsJTable.getRowHeight() * 2);
 
 		// Setup columns
-		final PolicyTableColumnModel<StepsTableModel.Column> columnModel = new PolicyTableColumnModel<>(stepsJTable);
+		final var columnModel = new PolicyTableColumnModel<StepsTableModel.Column>(stepsJTable);
 		columnModel.install();
 		Arrays.stream(Column.values()).forEach(c -> stepsJTable.getColumn(c).setCellRenderer(new StepsCellRenderer()));
 		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(Column.BREAKPOINT, 20)
@@ -135,8 +133,7 @@ public class StepsTable extends JPanel {
 		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(Column.TO_VAR, 250).with(new StepsCellRenderer()));
 
 		// Refresh table when step is updated
-		final IBindingController selectedStepCtrl = model.getSelectedStep()
-				.bind(selection(stepsJTable, stepsTableModel));
+		final var selectedStepCtrl = model.getSelectedStep().bind(selection(stepsJTable, stepsTableModel));
 		model.getSelectedStep().addListener(l -> {
 			if (l.getOldValue() != null) {
 				return;
@@ -149,7 +146,7 @@ public class StepsTable extends JPanel {
 
 		add(new JScrollPane(stepsJTable), BorderLayout.CENTER);
 
-		model.getTc().listenActive(tc -> {
+		model.getTestCase().listenActive(tc -> {
 			steps.clear();
 			steps.setValues(tc.getSteps());
 		});

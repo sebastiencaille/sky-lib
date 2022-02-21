@@ -10,12 +10,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 import ch.scaille.tcwriter.annotations.TCActors;
-import ch.scaille.tcwriter.executors.ITestExecutor;
 import ch.scaille.tcwriter.executors.JunitTestExecutor;
 import ch.scaille.tcwriter.generators.JavaToDictionary;
 import ch.scaille.tcwriter.generators.TCConfig;
-import ch.scaille.tcwriter.generators.model.persistence.JsonModelPersister;
-import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
+import ch.scaille.tcwriter.generators.model.persistence.FsModelDao;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.tcwriter.it.api.TestSessionRole;
 import ch.scaille.tcwriter.it.api.TestWriterRole;
@@ -32,30 +30,30 @@ public class AbstractGuiTest {
 
 	@BeforeEach
 	public void startGui() throws IOException, InvocationTargetException, InterruptedException {
-		final TCConfig config = new TCConfig();
-		final File tcPath = new File(RESOURCE_FOLDER, "testCase");
+		final var config = new TCConfig();
+		final var tcPath = new File(RESOURCE_FOLDER, "testCase");
 		tcPath.mkdirs();
-		final File modelPath = new File(RESOURCE_FOLDER, "models");
+		final var modelPath = new File(RESOURCE_FOLDER, "models");
 		modelPath.mkdirs();
 
 		config.setTcPath(tcPath.toString());
 		config.setTCExportPath("./src/test/java");
 		config.setDictionaryPath(modelPath + "/test-model.json");
 		config.setTemplatePath(new File("rsrc:templates/TC.template").toString());
-		final JsonModelPersister persister = new JsonModelPersister(config);
+		final var persister = new FsModelDao(config);
 
-		final TestDictionary model = new JavaToDictionary(TestWriterRole.class, TestSessionRole.class,
-				AbstractGuiTest.class).generate();
+		final var model = new JavaToDictionary(TestWriterRole.class, TestSessionRole.class, AbstractGuiTest.class)
+				.generate();
 		persister.writeTestDictionary(model);
 
-		final ITestExecutor executor = new JunitTestExecutor(persister, ClassLoaderHelper.appClassPath());
+		final var executor = new JunitTestExecutor(persister, ClassLoaderHelper.appClassPath());
 
-		final TCWriterController controller = new TCWriterController(persister, executor);
+		final var controller = new TCWriterController(persister, executor);
 		SwingUtilities.invokeAndWait(controller::run);
 
 		pilot = new TCGuiPilot(controller.getGui());
 
-		final LocalTCWriterRole localRole = new LocalTCWriterRole(pilot);
+		final var localRole = new LocalTCWriterRole(pilot);
 		tcWriter = localRole;
 		testSession = localRole;
 	}

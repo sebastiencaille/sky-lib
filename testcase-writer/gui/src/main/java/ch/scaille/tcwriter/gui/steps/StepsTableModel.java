@@ -1,7 +1,5 @@
 package ch.scaille.tcwriter.gui.steps;
 
-import java.util.List;
-
 import javax.swing.event.TableModelEvent;
 
 import ch.scaille.gui.model.ListModel;
@@ -9,8 +7,6 @@ import ch.scaille.gui.mvc.properties.ObjectProperty;
 import ch.scaille.gui.swing.model.ListModelTableModel;
 import ch.scaille.tcwriter.generators.model.IdObject;
 import ch.scaille.tcwriter.generators.model.ModelUtils;
-import ch.scaille.tcwriter.generators.model.ModelUtils.ActionUtils;
-import ch.scaille.tcwriter.generators.model.testapi.TestAction;
 import ch.scaille.tcwriter.generators.model.testapi.TestParameterFactory;
 import ch.scaille.tcwriter.generators.model.testcase.TestCase;
 import ch.scaille.tcwriter.generators.model.testcase.TestParameterValue;
@@ -41,9 +37,9 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		final TestCase tc = testCaseProperty.getValue();
 
 		IdObject tcObject;
-		final List<TestParameterValue> parametersValue = testStep.getParametersValue();
-		final TestAction testAction = testStep.getAction();
-		final ActionUtils actionUtils = ModelUtils.actionUtils(tc.getDictionary(), testAction);
+		final var parametersValue = testStep.getParametersValue();
+		final var testAction = testStep.getAction();
+		final var actionUtils = ModelUtils.actionUtils(tc.getDictionary(), testAction);
 		switch (column) {
 		case BREAKPOINT:
 			return testControl.stepStatus(testStep.getOrdinal());
@@ -77,7 +73,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 	}
 
 	private String toString(final TestCase tc, final TestParameterValue parameterValue) {
-		final TestParameterFactory parameterDef = parameterValue.getValueFactory();
+		final var parameterDef = parameterValue.getValueFactory();
 		String display;
 		switch (parameterDef.getNature()) {
 		case REFERENCE:
@@ -125,7 +121,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		if (value == null) {
 			return;
 		}
-		final TestCase tc = testCaseProperty.getValue();
+		final var testCase = testCaseProperty.getValue();
 
 		switch (column) {
 		case BREAKPOINT:
@@ -136,7 +132,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 			}
 			return;
 		case TO_VAR:
-			tc.publishReference(testStep.getReference().rename((String) value, "TODO"));
+			testCase.publishReference(testStep.getReference().rename((String) value, "TODO"));
 			return;
 		default:
 			break;

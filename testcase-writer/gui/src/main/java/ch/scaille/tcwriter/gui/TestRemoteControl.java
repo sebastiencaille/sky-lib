@@ -14,7 +14,6 @@ import ch.scaille.tcwriter.generators.model.testcase.TestStep;
 import ch.scaille.tcwriter.stepping.StepStatus;
 import ch.scaille.tcwriter.stepping.TestApi;
 import ch.scaille.tcwriter.stepping.TestApi.StepState;
-import ch.scaille.tcwriter.stepping.TestSteppingController.TestCaseError;
 import ch.scaille.util.helpers.Logs;
 
 public class TestRemoteControl {
@@ -85,7 +84,7 @@ public class TestRemoteControl {
 			switch (command) {
 			case STEP_START:
 				final int startStepNumber = api.readStart();
-				final StepStatus startStatus = stepStatus(startStepNumber);
+				final var startStatus = stepStatus(startStepNumber);
 				startStatus.state = StepState.STARTED;
 				stepChangedListener.accept(startStepNumber, startStepNumber);
 				if (startStatus.breakPoint) {
@@ -94,7 +93,7 @@ public class TestRemoteControl {
 				break;
 			case STEP_DONE:
 				final int stopStepNumber = api.readDone();
-				final StepStatus stopStepStatus = stepStatus(stopStepNumber);
+				final var stopStepStatus = stepStatus(stopStepNumber);
 				if (stopStepStatus.state == StepState.STARTED) {
 					stopStepStatus.state = StepState.OK;
 				}
@@ -102,9 +101,9 @@ public class TestRemoteControl {
 				stepChangedListener.accept(stopStepNumber, stopStepNumber);
 				break;
 			case ERROR:
-				final TestCaseError errorMessage = api.readErrorMessage();
+				final var errorMessage = api.readErrorMessage();
 				final int errStepNumber = errorMessage.stepNumber;
-				final StepStatus errStepStatus = stepStatus(errStepNumber);
+				final var errStepStatus = stepStatus(errStepNumber);
 				errStepStatus.state = StepState.FAILED;
 				errStepStatus.message = errorMessage.message;
 				stepChangedListener.accept(errStepNumber, errStepNumber);

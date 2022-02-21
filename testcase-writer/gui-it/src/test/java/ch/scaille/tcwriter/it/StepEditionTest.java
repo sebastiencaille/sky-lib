@@ -18,19 +18,19 @@ class StepEditionTest extends AbstractGuiTest {
 	@Test
 	void addAndEditSteps() {
 
-		final StepEdition edition1 = new StepEdition();
+		final var edition1 = new StepEdition();
 		edition1.setActor("Test writer");
 		edition1.setAction("Select a step");
 		edition1.setSelector("Append a step to the test");
 		tcWriter.updateStep(selectStep(1), edition1);
 
-		final StepEdition edition2 = new StepEdition();
+		final var edition2 = new StepEdition();
 		edition2.setActor("Test writer");
 		edition2.setAction("Check the Human Readable text");
 		edition2.setSelector("Selected step");
 		tcWriter.updateStep(addStep(), edition2);
 
-		final StepEdition edition3 = new StepEdition();
+		final var edition3 = new StepEdition();
 		edition3.setActor("Test writer");
 		edition3.setAction("Select a step");
 		edition3.setSelector("Step at index");

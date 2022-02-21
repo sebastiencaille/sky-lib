@@ -1,4 +1,4 @@
-// File generated from template 2022/02/15 12:02:13
+// File generated from template 2022/02/21 08:59:13
 package ch.scaille.tcwriter.examples;
 
 import ch.scaille.tcwriter.examples.api.interfaces.dto.*;
@@ -18,9 +18,9 @@ public class GeneratedTest {
 	public void prepareApis() {
 		final ExampleService testedService = new ExampleService();
 		customer = new CustomerTestRole(testedService);
-		TestActors.register(customer, "customer", null);
+		RecorderTestActors.register(customer, "customer", null);
 		deliveryGuy = new DeliveryTestRole(testedService);
-		TestActors.register(deliveryGuy, "deliveryGuy", null);
+		RecorderTestActors.register(deliveryGuy, "deliveryGuy", null);
 		ch.scaille.tcwriter.TestFeature.aspectjRecorder().enable();
 		ch.scaille.tcwriter.TestFeature.aspectjStepping(); // don't enable by default
 	}

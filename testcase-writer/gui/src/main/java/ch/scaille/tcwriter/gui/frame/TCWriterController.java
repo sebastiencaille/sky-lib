@@ -1,7 +1,8 @@
 package ch.scaille.tcwriter.gui.frame;
 
+import static ch.scaille.util.helpers.LambdaExt.uncheck;
+
 import java.awt.Dialog.ModalityType;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
@@ -17,16 +18,14 @@ import ch.scaille.gui.swing.tools.SwingGenericEditorDialog;
 import ch.scaille.gui.tools.GenericEditorClassModel;
 import ch.scaille.gui.tools.GenericEditorController;
 import ch.scaille.tcwriter.executors.ITestExecutor;
-import ch.scaille.tcwriter.generators.TCConfig;
 import ch.scaille.tcwriter.generators.model.TestCaseException;
-import ch.scaille.tcwriter.generators.model.persistence.IModelPersister;
+import ch.scaille.tcwriter.generators.model.persistence.IModelDao;
 import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
 import ch.scaille.tcwriter.generators.model.testcase.TestCase;
 import ch.scaille.tcwriter.generators.model.testcase.TestStep;
 import ch.scaille.tcwriter.gui.DictionaryImport;
 import ch.scaille.tcwriter.gui.TestRemoteControl;
 import ch.scaille.tcwriter.gui.frame.TCWriterModel.TestExecutionState;
-import ch.scaille.util.helpers.LambdaExt;
 import ch.scaille.util.helpers.Logs;
 
 public class TCWriterController extends GuiController {
@@ -38,18 +37,18 @@ public class TCWriterController extends GuiController {
 	private final TCWriterGui gui;
 	private final ITestExecutor testExecutor;
 
-	private final IModelPersister persister;
+	private final IModelDao modelDao;
 
-	public TCWriterController(final IModelPersister persister, final ITestExecutor testExecutor) throws IOException {
-		this.persister = persister;
+	public TCWriterController(final IModelDao modelDao, final ITestExecutor testExecutor) throws IOException {
+		this.modelDao = modelDao;
 		this.testExecutor = testExecutor;
 		TestDictionary dictionary;
 		do {
 			try {
-				dictionary = persister.readTestDictionary();
+				dictionary = modelDao.readTestDictionary();
 			} catch (FileNotFoundException e) {
 				dictionary = null;
-				new DictionaryImport(null, persister).runImport();
+				new DictionaryImport(null, modelDao).runImport();
 			}
 		} while (dictionary == null);
 
@@ -83,22 +82,21 @@ public class TCWriterController extends GuiController {
 
 	public void editConfig() throws IOException {
 
-		final SwingGenericEditorDialog dialog = new SwingGenericEditorDialog(gui, "Configuration",
-				ModalityType.DOCUMENT_MODAL);
-		final GenericEditorController<TCConfig> editor = new GenericEditorController<>(dialog,
-				GenericEditorClassModel.builder(TCConfig.class).build());
+		final var dialog = new SwingGenericEditorDialog(gui, "Configuration", ModalityType.DOCUMENT_MODAL);
+		final var editor = new GenericEditorController<>(dialog,
+				GenericEditorClassModel.builder(modelDao.getConfiguration().getClass()).build());
 		editor.activate();
-		editor.load(persister.getConfiguration());
+		editor.loadUnsafe(modelDao.getConfiguration());
 		dialog.setSize(dialog.getWidth() + 400, dialog.getHeight() + 30);
 		dialog.setVisible(true);
 		dialog.dispose();
-		persister.writeConfiguration(persister.getConfiguration());
+		modelDao.saveConfiguration();
 	}
 
 	public void newTestCase() {
-		final TestCase newTestCase = new TestCase("undefined.Undefined", model.getTestDictionary());
+		final var newTestCase = new TestCase("undefined.Undefined", model.getTestDictionary());
 		newTestCase.addStep(new TestStep(1));
-		model.getTc().setValue(this, newTestCase);
+		model.getTestCase().setValue(this, newTestCase);
 	}
 
 	/**
@@ -106,7 +104,7 @@ public class TCWriterController extends GuiController {
 	 * step
 	 */
 	public void addStep() {
-		final TestCase testCase = model.getTc().getValue();
+		final var testCase = model.getTestCase().getValue();
 
 		TestStep addAfter;
 		if (model.getSelectedStep().getValue() != null) {
@@ -116,15 +114,15 @@ public class TCWriterController extends GuiController {
 			addAfter = steps.get(steps.size() - 1);
 		}
 
-		final TestStep newStep = addAfter.duplicate();
+		final var newStep = addAfter.duplicate();
 		testCase.getSteps().add(addAfter.getOrdinal(), newStep);
 		testCase.fixOrdinals();
-		model.getTc().forceChanged(this);
+		model.getTestCase().forceChanged(this);
 		model.getSelectedStep().setValue(this, newStep);
 	}
 
 	public void removeStep() {
-		final TestCase testCase = model.getTc().getValue();
+		final var testCase = model.getTestCase().getValue();
 		if (testCase.getSteps().size() == 1) {
 			return;
 		}
@@ -133,57 +131,57 @@ public class TCWriterController extends GuiController {
 		}
 		testCase.getSteps().remove(model.getSelectedStep().getValue().getOrdinal() - 1);
 		testCase.fixOrdinals();
-		model.getTc().forceChanged(this);
+		model.getTestCase().forceChanged(this);
 	}
 
 	public void loadTestCase(final TestCase testCase) {
 		for (int i = 0; i < testCase.getSteps().size(); i++) {
-			final TestStep testStep = testCase.getSteps().get(i);
+			final var testStep = testCase.getSteps().get(i);
 			if (testStep.getOrdinal() != i + 1) {
 				throw new IllegalStateException("Step " + i + ": wrong ordinal " + testStep.getOrdinal());
 			}
 		}
-		model.getTc().setValue(this, testCase);
+		model.getTestCase().setValue(this, testCase);
 	}
 
 	public void save() throws IOException {
-		final JFileChooser testFileChooser = new JFileChooser();
+		final var testFileChooser = new JFileChooser();
 		testFileChooser.setFileFilter(new FileNameExtensionFilter("JSon test", "json"));
 		final int dialogResult = testFileChooser.showSaveDialog(gui);
 		if (dialogResult == 0) {
-			final File testFile = testFileChooser.getSelectedFile();
-			persister.writeTestCase(testFile.getName(), model.getTc().getValue());
+			final var testFile = testFileChooser.getSelectedFile();
+			modelDao.writeTestCase(testFile.getName(), model.getTestCase().getValue());
 		}
 	}
 
 	public void loadTestCase() throws IOException {
-		final JFileChooser testFileChooser = new JFileChooser();
+		final var testFileChooser = new JFileChooser();
 		testFileChooser.setFileFilter(new FileNameExtensionFilter("Json test", "json"));
 		final int dialogResult = testFileChooser.showOpenDialog(gui);
 		if (dialogResult == 0) {
-			final File testFile = testFileChooser.getSelectedFile();
-			loadTestCase(persister.readTestCase(testFile.getName(), model.getTestDictionary()));
+			final var testFile = testFileChooser.getSelectedFile();
+			loadTestCase(modelDao.readTestCase(testFile.getName(), model.getTestDictionary()));
 		}
 	}
 
 	public void startTestCase() {
 		testRemoteControl.resetConnection();
-		new Thread(LambdaExt.uncheck(this::runTestCase, gui::handleException), "Test execution").start();
+		new Thread(uncheck(this::runTestCase, gui::handleException), "Test execution").start();
 	}
 
 	public void runTestCase() throws IOException, InterruptedException, TestCaseException {
 		final int rcPort = testRemoteControl.prepare();
 		LOGGER.log(Level.INFO, "Using port {}", rcPort);
-		testExecutor.runTest(model.getTc().getValue(), rcPort);
+		testExecutor.runTest(model.getTestCase().getValue(), rcPort);
 		testRemoteControl.start();
 	}
 
 	public void generateCode() throws IOException, TestCaseException {
-		testExecutor.generateCode(model.getTc().getValue(), persister.getExportedTCPath());
+		this.testExecutor.generateCode(this.model.getTestCase().getValue());
 	}
 
 	public void importDictionary() {
-		boolean imported = new DictionaryImport(gui, persister).runImport();
+		boolean imported = new DictionaryImport(gui, modelDao).runImport();
 		if (imported) {
 			restart();
 		}
@@ -192,7 +190,7 @@ public class TCWriterController extends GuiController {
 	public void restart() {
 		try {
 			gui.setVisible(false);
-			new TCWriterController(persister, testExecutor).run();
+			new TCWriterController(modelDao, testExecutor).run();
 		} catch (IOException e) {
 			TCWriterGui.handleException(null, e);
 		}

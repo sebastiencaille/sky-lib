@@ -5,7 +5,6 @@ import ch.scaille.tcwriter.pilot.swing.SwingPilot;
 
 public class TCGuiPilot extends SwingPilot {
 
-
 	private final TCWriterGui root;
 
 	public TCGuiPilot(final TCWriterGui root) {

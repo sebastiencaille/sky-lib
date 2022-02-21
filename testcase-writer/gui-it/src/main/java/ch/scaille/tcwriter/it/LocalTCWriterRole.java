@@ -34,17 +34,17 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	}
 
 	private StepEdition[] basicTestContents() {
-		final StepEdition edition1 = new StepEdition();
+		final var edition1 = new StepEdition();
 		edition1.setActor(ACTOR_TEST_WRITER);
 		edition1.setAction("Select a step");
 		edition1.setSelector("Append a step to the test");
 
-		final StepEdition edition2 = new StepEdition();
+		final var edition2 = new StepEdition();
 		edition2.setActor(ACTOR_TEST_WRITER);
 		edition2.setAction("Check the Human Readable text");
 		edition2.setSelector("Selected step");
 
-		final StepEdition edition3 = new StepEdition();
+		final var edition3 = new StepEdition();
 		edition3.setActor(ACTOR_TEST_WRITER);
 		edition3.setAction("Select a step");
 		edition3.setSelector("Step at index");
@@ -92,7 +92,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 		selector.accept(tcWriterPage);
 
 		tcWriterPage.stepsTable.wait(tcWriterPage.stepsTable.assertion(pc -> {
-			JTable component = pc.component;
+			var component = pc.component;
 			final Object value = ((StepsTableModel) component.getModel()).getHumanReadable(component.getSelectedRow());
 			Assertions.assertEquals(humanReadable, value.toString());
 		}).withReportText("checking human readable text: " + humanReadable));
@@ -111,7 +111,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 
 	@Override
 	public void injectBasicTest() {
-		final StepEdition[] basicTestContents = basicTestContents();
+		final var basicTestContents = basicTestContents();
 		updateStep(StepSelector.selectStep(1), basicTestContents[0]);
 		updateStep(addStep(), basicTestContents[1]);
 		editStep(addStep(), basicTestContents[2]);
@@ -120,7 +120,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 
 	@Override
 	public void checkBasicTest() {
-		final StepEdition[] basicTestContents = basicTestContents();
+		final var basicTestContents = basicTestContents();
 
 		checkStep(StepSelector.selectStep(1), basicTestContents[0]);
 		checkHumanReadable(currentStep(), "As test writer, I add a step to the test case");
@@ -141,7 +141,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 		if (keyValueStr == null) {
 			return;
 		}
-		final String[] keyValue = keyValueStr.split(":");
+		final var keyValue = keyValueStr.split(":");
 		for (int i = 0; i < valueTable.getRowCount(); i++) {
 			if (valueTable.getValueAt(i, 2).equals(keyValue[0])) {
 				valueTable.setValueAt(keyValue[1], i, 3);

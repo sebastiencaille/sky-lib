@@ -6,12 +6,12 @@ import java.util.Map;
 
 import ch.scaille.tcwriter.tc.TestObjectDescription;
 
-public class TestActors {
+public class RecorderTestActors {
 
 	private static Map<Object, TestObjectDescription> descriptions = new HashMap<>();
 	private static Map<Object, String> names = new HashMap<>();
 
-	private TestActors() {
+	private RecorderTestActors() {
 	}
 
 	/**

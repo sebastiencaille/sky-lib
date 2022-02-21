@@ -8,21 +8,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.MissingFormatArgumentException;
 import java.util.Objects;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.google.common.annotations.VisibleForTesting;
 
 import ch.scaille.tcwriter.generators.model.IdObject;
-import ch.scaille.tcwriter.generators.model.testapi.TestApiParameter;
 import ch.scaille.tcwriter.generators.model.testcase.TestCase;
 import ch.scaille.tcwriter.generators.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.generators.model.testcase.TestReference;
 import ch.scaille.tcwriter.generators.model.testcase.TestStep;
-import ch.scaille.tcwriter.tc.TestObjectDescription;
 
 public class HumanReadableVisitor {
 
+	private static final Pattern	BLOCK_PATTERN = Pattern.compile("//.*%s.*//");
+	
 	private final TestCase tc;
 	private final boolean withStepNumbers;
 
@@ -32,11 +31,11 @@ public class HumanReadableVisitor {
 	}
 
 	public String process(final TestStep step) {
-		String actorSummary = summaryOf(step.getActor(), null);
+		var actorSummary = summaryOf(step.getActor(), null);
 		if (actorSummary == null) {
 			actorSummary = summaryOf(step.getRole(), null);
 		}
-		final StringBuilder result = new StringBuilder();
+		final var result = new StringBuilder();
 		if (withStepNumbers) {
 			result.append(step.getOrdinal()).append(". ");
 		}
@@ -50,16 +49,16 @@ public class HumanReadableVisitor {
 	private String processTestParameter(final TestParameterValue parameterValue) {
 		switch (parameterValue.getValueFactory().getNature()) {
 		case REFERENCE:
-			final TestReference ref = (TestReference) parameterValue.getValueFactory();
-			return "[" + ref.toDescription().getHumanReadable() + ": " + parameterValue.getSimpleValue() + "]";
+			final var testRef = (TestReference) parameterValue.getValueFactory();
+			return "[" + testRef.toDescription().getHumanReadable() + ": " + parameterValue.getSimpleValue() + "]";
 		case SIMPLE_TYPE:
-			final String type = parameterValue.getValueFactory().getType();
+			final var type = parameterValue.getValueFactory().getType();
 			if (Boolean.class.getName().equals(type) || Boolean.TYPE.getName().equals(type)) {
 				return Boolean.TRUE.toString().equals(parameterValue.getSimpleValue()) ? "yes" : "no";
 			}
 			return parameterValue.getSimpleValue();
 		case TEST_API:
-			final List<String> mandatoryParams = parameterValue.getValueFactory().getMandatoryParameters().stream()
+			final var mandatoryParams = parameterValue.getValueFactory().getMandatoryParameters().stream()
 					.map(p -> processTestParameter(parameterValue.getComplexTypeValues().get(p.getId())))
 					.collect(toList());
 			return processTestParameter(parameterValue, mandatoryParams);
@@ -70,12 +69,11 @@ public class HumanReadableVisitor {
 	}
 
 	private String processTestParameter(final TestParameterValue parameterValue, final List<String> mandatoryParams) {
-		final StringBuilder optionals = new StringBuilder();
-		String sep = "(";
+		final var optionals = new StringBuilder();
+		var sep = "(";
 		boolean hasOptionals = false;
-		for (final TestApiParameter optionalParameter : parameterValue.getValueFactory().getOptionalParameters()) {
-			final TestParameterValue optionalParameterValue = parameterValue.getComplexTypeValues()
-					.get(optionalParameter.getId());
+		for (final var optionalParameter : parameterValue.getValueFactory().getOptionalParameters()) {
+			final var optionalParameterValue = parameterValue.getComplexTypeValues().get(optionalParameter.getId());
 			if (optionalParameterValue == null) {
 				continue;
 			}
@@ -94,7 +92,7 @@ public class HumanReadableVisitor {
 	}
 
 	private String summaryOf(final IdObject idObject, final List<String> list) {
-		final TestObjectDescription description = tc.descriptionOf(idObject);
+		final var description = tc.descriptionOf(idObject);
 		if (description == null) {
 			return null;
 		}
@@ -104,7 +102,7 @@ public class HumanReadableVisitor {
 
 	@VisibleForTesting
 	public static String format(final String humanReadable, final List<String> paramsTexts) {
-		final List<String> emptiedBlocks = new ArrayList<>();
+		final var emptiedBlocks = new ArrayList<String>();
 		final List<String> formatParams;
 		if (paramsTexts != null) {
 			formatParams = paramsTexts.stream().flatMap(s -> stream((' ' + s + ' ').split("\\|"))).map(String::trim)
@@ -112,15 +110,15 @@ public class HumanReadableVisitor {
 		} else {
 			formatParams = null;
 		}
-		final Pattern blockPattern = Pattern.compile("//.*%s.*//");
-		final Matcher blockMatcher = blockPattern.matcher(humanReadable);
+	
+		final var blockMatcher = BLOCK_PATTERN.matcher(humanReadable);
 		while (blockMatcher.find()) {
 			emptiedBlocks.add(blockMatcher.group().replace("%s", ""));
 		}
 		try {
-			String formatted = String.format(humanReadable, (formatParams != null) ? formatParams.toArray() : null);
+			var formatted = String.format(humanReadable, (formatParams != null) ? formatParams.toArray() : null);
 			// remove empty blocks
-			for (final String emptyBlock : emptiedBlocks) {
+			for (final var emptyBlock : emptiedBlocks) {
 				formatted = formatted.replaceAll(emptyBlock, "");
 			}
 			formatted = formatted.replace("//", "").replace("/\\/", "//");

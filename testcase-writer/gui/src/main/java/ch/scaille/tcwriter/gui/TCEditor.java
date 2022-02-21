@@ -6,9 +6,7 @@ import javax.swing.SwingUtilities;
 
 import ch.scaille.tcwriter.executors.ITestExecutor;
 import ch.scaille.tcwriter.executors.JunitTestExecutor;
-import ch.scaille.tcwriter.generators.TCConfig;
-import ch.scaille.tcwriter.generators.model.persistence.IModelPersister;
-import ch.scaille.tcwriter.generators.model.persistence.JsonModelPersister;
+import ch.scaille.tcwriter.generators.model.persistence.FsModelDao;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.util.helpers.ClassLoaderHelper;
 
@@ -16,16 +14,12 @@ public class TCEditor {
 
 	public static void main(final String[] args) throws IOException {
 
-		final IModelPersister persister = new JsonModelPersister();
+		var modelDao = FsModelDao.withDefaultConfig();
 		if (args.length >= 1) {
-			TCConfig config = persister.readConfiguration(args[0]);
-			persister.setConfiguration(config);
-		} else {
-			persister.getConfiguration();
+			modelDao.loadConfiguration(args[0]);
 		}
-
-		final ITestExecutor testExecutor = new JunitTestExecutor(persister, ClassLoaderHelper.appClassPath());
-		final TCWriterController tcWriterController = new TCWriterController(persister, testExecutor);
+		var testExecutor = new JunitTestExecutor(modelDao, ClassLoaderHelper.appClassPath());
+		var tcWriterController = new TCWriterController(modelDao, testExecutor);
 		SwingUtilities.invokeLater(tcWriterController::run);
 	}
 

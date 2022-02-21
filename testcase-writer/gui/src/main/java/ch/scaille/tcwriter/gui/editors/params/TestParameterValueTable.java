@@ -11,8 +11,7 @@ public class TestParameterValueTable extends JTable {
 
 	public TestParameterValueTable(final TestParameterValueTableModel testParameterValueTableModel) {
 		super(testParameterValueTableModel);
-		final PolicyTableColumnModel<TestParameterValueTableModel.Columns> myColumnModel = new PolicyTableColumnModel<>(
-				this);
+		final var myColumnModel = new PolicyTableColumnModel<TestParameterValueTableModel.Columns>(this);
 		myColumnModel.install();
 		myColumnModel
 				.configureColumn(TableColumnWithPolicy.fixedWidth(TestParameterValueTableModel.Columns.MANDATORY, 50)

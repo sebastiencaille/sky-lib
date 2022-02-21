@@ -4,13 +4,11 @@ import static ch.scaille.gui.mvc.factories.ComponentBindings.listen;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -25,7 +23,6 @@ import ch.scaille.gui.swing.SwingHelper;
 import ch.scaille.tcwriter.gui.editors.params.TestParameterModel;
 import ch.scaille.tcwriter.gui.editors.params.TestParameterValueEditorPanel;
 import ch.scaille.tcwriter.gui.editors.steps.StepEditorController;
-import ch.scaille.tcwriter.gui.editors.steps.StepEditorModel;
 import ch.scaille.tcwriter.gui.editors.steps.StepEditorPanel;
 import ch.scaille.tcwriter.gui.steps.StepsTable;
 import ch.scaille.util.helpers.LambdaExt;
@@ -49,7 +46,7 @@ public class TCWriterGui extends JFrame {
 
 	private JButton button(final String name, final ImageIcon icon, final String toolTip,
 			RunnableWithException<?> action) {
-		final JButton newButton = new JButton(icon);
+		final var newButton = new JButton(icon);
 		newButton.setToolTipText(toolTip);
 		newButton.addActionListener(SwingHelper.action(LambdaExt.uncheck(action, this::handleException)));
 		newButton.setName(name);
@@ -62,84 +59,81 @@ public class TCWriterGui extends JFrame {
 
 	public void build() {
 
-		final ScreenBuildingReport screenBuildingReport = new ScreenBuildingReport();
+		final var screenBuildingReport = new ScreenBuildingReport();
 		ScreenBuildingReport.setScreenBuildingReport(screenBuildingReport);
 
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		this.getContentPane().setLayout(new BorderLayout());
 
-		final JButton editConfigButton = button(icon("general/Information24"), "Edit configuration",
+		final var editConfigButton = button(icon("general/Information24"), "Edit configuration",
 				controller::editConfig);
 
-		final JButton newTCButton = button("NewTC", icon("general/New24"), "New test case", controller::newTestCase);
+		final var newTCButton = button("NewTC", icon("general/New24"), "New test case", controller::newTestCase);
+		final var loadButton = button("LoadTC", icon("general/Open24"), "Open test case", controller::loadTestCase);
+		final var saveButton = button("SaveTC", icon("general/Save24"), "Save test case", controller::save);
 
-		final JButton loadButton = button("LoadTC", icon("general/Open24"), "Open test case", controller::loadTestCase);
-
-		final JButton saveButton = button("SaveTC", icon("general/Save24"), "Save test case", controller::save);
-
-		final JButton importDictionaryButton = button(icon("general/Import24"), "Import dictionary",
+		final var importDictionaryButton = button(icon("general/Import24"), "Import dictionary",
 				controller::importDictionary);
 
-		final JButton generateButton = button(icon("general/Export24"), "Export to Java", controller::generateCode);
+		final var generateButton = button(icon("general/Export24"), "Export to Java", controller::generateCode);
 
-		final JButton runButton = button(icon("media/Play24"), "Start execution", controller::startTestCase);
+		final var runButton = button(icon("media/Play24"), "Start execution", controller::startTestCase);
 		controller.getModel().getExecutionState().bind(s -> s == TCWriterModel.TestExecutionState.STOPPED)
 				.bind(listen(runButton::setEnabled));
 
-		final JButton continueButton = button(icon("media/StepForward24"), "Continue execution",
+		final var continueButton = button(icon("media/StepForward24"), "Continue execution",
 				controller::resumeTestCase);
 		continueButton.setEnabled(false);
 		controller.getModel().getExecutionState().bind(s -> s == TCWriterModel.TestExecutionState.PAUSED)
 				.bind(listen(continueButton::setEnabled));
 
-		final JSeparator sep = new JSeparator(SwingConstants.VERTICAL);
+		final var sep = new JSeparator(SwingConstants.VERTICAL);
 
-		final JButton addStepButton = button("AddStep", icon("table/RowInsertAfter24"), "Add step",
-				controller::addStep);
+		final var addStepButton = button("AddStep", icon("table/RowInsertAfter24"), "Add step", controller::addStep);
 
-		final JButton removeStepButton = button(icon("table/RowDelete24"), "Remove step", controller::removeStep);
+		final var removeStepButton = button(icon("table/RowDelete24"), "Remove step", controller::removeStep);
 
-		final StepsTable stepsTable = new StepsTable(controller);
+		final var stepsTable = new StepsTable(controller);
 
-		final JToolBar buttons = new JToolBar();
-		buttons.add(editConfigButton);
-		buttons.add(newTCButton);
-		buttons.add(loadButton);
-		buttons.add(saveButton);
-		buttons.add(importDictionaryButton);
-		buttons.add(generateButton);
-		buttons.add(runButton);
-		buttons.add(continueButton);
-		buttons.add(sep);
-		buttons.add(addStepButton);
-		buttons.add(removeStepButton);
-		this.getContentPane().add(buttons, BorderLayout.NORTH);
+		final var buttonsBar = new JToolBar();
+		buttonsBar.add(editConfigButton);
+		buttonsBar.add(newTCButton);
+		buttonsBar.add(loadButton);
+		buttonsBar.add(saveButton);
+		buttonsBar.add(importDictionaryButton);
+		buttonsBar.add(generateButton);
+		buttonsBar.add(runButton);
+		buttonsBar.add(continueButton);
+		buttonsBar.add(sep);
+		buttonsBar.add(addStepButton);
+		buttonsBar.add(removeStepButton);
+		this.getContentPane().add(buttonsBar, BorderLayout.NORTH);
 
-		final StepEditorController stepEditorController = new StepEditorController(controller);
-		final StepEditorModel stepEditorModel = stepEditorController.getModel();
-		final StepEditorPanel stepEditor = new StepEditorPanel(stepEditorController);
+		final var stepEditorController = new StepEditorController(controller);
+		final var stepEditorModel = stepEditorController.getModel();
+		final var stepEditor = new StepEditorPanel(stepEditorController);
 		stepEditorController.load();
 
 		selectorModel = new TestParameterModel("selector", controller, stepEditorModel.getSelector(),
 				stepEditorModel.getSelectorValue());
-		final JComponent selectorEditor = new TestParameterValueEditorPanel(controller, selectorModel);
+		final var selectorEditor = new TestParameterValueEditorPanel(controller, selectorModel);
 
 		param0Model = new TestParameterModel("param0", controller, stepEditorModel.getActionParameter(),
 				stepEditorModel.getActionParameterValue());
-		final JComponent param0Editor = new TestParameterValueEditorPanel(controller, param0Model);
+		final var param0Editor = new TestParameterValueEditorPanel(controller, param0Model);
 
-		final JSplitPane paramsPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(selectorEditor),
+		final var paramsPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(selectorEditor),
 				new JScrollPane(param0Editor));
 
-		final JScrollPane stepsPane = new JScrollPane(stepsTable);
-		final JScrollPane stepPane = new JScrollPane(stepEditor);
-		final JScrollPane paramPane = new JScrollPane(paramsPane);
+		final var stepsPane = new JScrollPane(stepsTable);
+		final var stepPane = new JScrollPane(stepEditor);
+		final var paramPane = new JScrollPane(paramsPane);
 
 		final int height = 1200;
 
-		final JSplitPane topSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, stepsPane, stepPane);
-		final JSplitPane bottomSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topSplit, paramPane);
+		final var topSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, stepsPane, stepPane);
+		final var bottomSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topSplit, paramPane);
 		topSplit.setDividerLocation(height / 3);
 		bottomSplit.setDividerLocation(height / 2);
 
@@ -160,12 +154,12 @@ public class TCWriterGui extends JFrame {
 	}
 
 	private ImageIcon icon(final String name) {
-		final String resourceName = "toolbarButtonGraphics/" + name + ".gif";
-		final URL resource = Thread.currentThread().getContextClassLoader().getResource(resourceName);
-		if (resource == null) {
-			throw new IllegalStateException("Unable to find resource " + resourceName);
+		final var iconRsrcName = "toolbarButtonGraphics/" + name + ".gif";
+		final var iconRsrc = Thread.currentThread().getContextClassLoader().getResource(iconRsrcName);
+		if (iconRsrc == null) {
+			throw new IllegalStateException("Unable to find resource " + iconRsrcName);
 		}
-		return new ImageIcon(resource);
+		return new ImageIcon(iconRsrc);
 	}
 
 	protected void handleException(final Exception ex) {

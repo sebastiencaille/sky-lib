@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -63,8 +62,8 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 	public TestParameterValueEditorPanel(final TCWriterController controller, final TestParameterModel tpModel) {
 
-		final ObjectProperty<TestCase> tc = controller.getModel().getTc();
-		final ObjectProperty<TestParameterValue> editedParamValue = tpModel.getEditedParameterValue();
+		final var testCase = controller.getModel().getTestCase();
+		final var editedParamValue = tpModel.getEditedParameterValue();
 
 		setLayout(new BorderLayout());
 
@@ -76,21 +75,21 @@ public class TestParameterValueEditorPanel extends JPanel {
 						|| !v.getValueFactory().getOptionalParameters().isEmpty()) //
 				.listen(this::setEnabled);
 
-		final JPanel topPanel = new JPanel();
+		final var topPanel = new JPanel();
 		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.PAGE_AXIS));
 
 		// Simple raw value
-		final JRadioButton useRawValue = new JRadioButton("Raw value");
-		topPanel.add(useRawValue);
+		final var useRawValueEditor = new JRadioButton("Raw value");
+		topPanel.add(useRawValueEditor);
 
-		final JTextField simpleValueEditor = new JTextField();
+		final var simpleValueEditor = new JTextField();
 		tpModel.getSimpleValue().bind(value(simpleValueEditor));
 		topPanel.add(simpleValueEditor);
 
 		// Value references
-		final JRadioButton useReference = new JRadioButton("Reference: ");
-		topPanel.add(useReference);
-		final JComboBox<ObjectTextView<TestReference>> referenceEditor = new JComboBox<>();
+		final var useReferenceEditor = new JRadioButton("Reference: ");
+		topPanel.add(useReferenceEditor);
+		final var referenceEditor = new JComboBox<ObjectTextView<TestReference>>();
 		tpModel.getReferences()
 				.bind(filter(r -> r.getType().equals(editedParamValue.getValue().getValueFactory().getType()))) //
 				.bind(listConverter(refToTextConverter())) //
@@ -101,38 +100,35 @@ public class TestParameterValueEditorPanel extends JPanel {
 		topPanel.add(referenceEditor);
 
 		// Complex type
-		final JRadioButton useComplexType = new JRadioButton("Test Api: ");
-		topPanel.add(useComplexType);
+		final var useComplexTypeEditor = new JRadioButton("Test Api: ");
+		topPanel.add(useComplexTypeEditor);
 		add(topPanel, BorderLayout.NORTH);
 
-		final ListModel<ParameterValueEntry> allEditedParameters = new ListModel<>(
-				ListViews.<ParameterValueEntry>sorted());
-		final ListModel<ParameterValueEntry> visibleParameters = allEditedParameters
-				.child(ListViews.filtered(p -> p.visible));
-		final TestParameterValueTable valueTable = new TestParameterValueTable(
-				new TestParameterValueTableModel(visibleParameters));
+		final var allEditedParameters = new ListModel<>(ListViews.<ParameterValueEntry>sorted());
+		final var visibleParameters = allEditedParameters.child(ListViews.filtered(p -> p.visible));
+		final var valueTable = new TestParameterValueTable(new TestParameterValueTableModel(visibleParameters));
 		valueTable.setName(tpModel.getPrefix() + "-valueTable");
-		final ObjectProperty<Map<String, TestParameterValue>> complexValues = editedParamValue.child("ComplexParams",
-				TestParameterValue::getComplexTypeValues, TestParameterValue::updateComplexTypeValues);
-		complexValues.bind(toListModel(tc, editedParamValue)).bind(values(allEditedParameters));
+		final var complexValues = editedParamValue.child("ComplexParams", TestParameterValue::getComplexTypeValues,
+				TestParameterValue::updateComplexTypeValues);
+		complexValues.bind(toListModel(testCase, editedParamValue)).bind(values(allEditedParameters));
 
-		tpModel.getTestApi().listenActive(api -> fixParamsOfApi(tc, api, editedParamValue, allEditedParameters));
+		tpModel.getTestApi().listenActive(api -> fixParamsOfApi(testCase, api, editedParamValue, allEditedParameters));
 
 		add(new JScrollPane(valueTable), BorderLayout.CENTER);
 
-		final ButtonGroup group = new ButtonGroup();
-		group.add(useRawValue);
-		group.add(useReference);
-		group.add(useComplexType);
+		final var paramTypeEditorgroup = new ButtonGroup();
+		paramTypeEditorgroup.add(useRawValueEditor);
+		paramTypeEditorgroup.add(useReferenceEditor);
+		paramTypeEditorgroup.add(useComplexTypeEditor);
 
-		tpModel.getValueNature().bind(group(group, ParameterNature.REFERENCE, useReference, ParameterNature.SIMPLE_TYPE,
-				useRawValue, ParameterNature.TEST_API, useComplexType));
+		tpModel.getValueNature().bind(group(paramTypeEditorgroup, ParameterNature.REFERENCE, useReferenceEditor,
+				ParameterNature.SIMPLE_TYPE, useRawValueEditor, ParameterNature.TEST_API, useComplexTypeEditor));
 
 		// When TC or parameters are changing, update the list of references
-		tc.listenActive(
+		testCase.listenActive(
 				test -> tpModel.getReferences().setValue(this, getReferences(test, editedParamValue.getValue())));
-		editedParamValue
-				.listenActive(values -> tpModel.getReferences().setValue(this, getReferences(tc.getValue(), values)));
+		editedParamValue.listenActive(
+				values -> tpModel.getReferences().setValue(this, getReferences(testCase.getValue(), values)));
 
 		// when updating the parameter value, update the reference
 		editedParamValue.listenActive(value -> {
@@ -154,16 +150,16 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 		// Edit the parameter value when changing the nature of the factory.
 		tpModel.getValueNature().listenActive(v -> {
-			final TestParameterValue paramValue = editedParamValue.getValue();
+			final var paramValue = editedParamValue.getValue();
 
 			switch (v) {
 			case SIMPLE_TYPE:
-				paramValue.setValueFactory(apiOf(tc.getValue(), paramValue).asSimpleParameter());
+				paramValue.setValueFactory(apiOf(testCase.getValue(), paramValue).asSimpleParameter());
 				break;
 			case REFERENCE:
-				final TestReference ref = tpModel.getSelectedReference().getValue();
-				if (ref != null) {
-					paramValue.setValueFactory(ref);
+				final var testRef = tpModel.getSelectedReference().getValue();
+				if (testRef != null) {
+					paramValue.setValueFactory(testRef);
 				}
 				break;
 			case TEST_API:
@@ -186,33 +182,33 @@ public class TestParameterValueEditorPanel extends JPanel {
 			return;
 		}
 		// Update existing values, track missing ones
-		final Set<String> missingMandatoryIds = api.getMandatoryParameters().stream().map(TestApiParameter::getId)
+		final var missingMandatoryIds = api.getMandatoryParameters().stream().map(TestApiParameter::getId)
 				.collect(toSet());
-		final Set<String> missingOptionalIds = api.getOptionalParameters().stream().map(TestApiParameter::getId)
+		final var missingOptionalIds = api.getOptionalParameters().stream().map(TestApiParameter::getId)
 				.collect(toSet());
-		for (final ParameterValueEntry p : allEditedParameters) {
-			missingMandatoryIds.remove(p.id);
-			missingOptionalIds.remove(p.id);
-			allEditedParameters.editValue(p, e -> {
+		for (final var editorParamValue : allEditedParameters) {
+			missingMandatoryIds.remove(editorParamValue.id);
+			missingOptionalIds.remove(editorParamValue.id);
+			allEditedParameters.editValue(editorParamValue, e -> {
 				e.visible = false;
 				updateParam(e, api);
 			});
 		}
 		// Add missing values in parameter value and in table
-		final List<ParameterValueEntry> newValues = new ArrayList<>();
-		for (final String mandatoryId : missingMandatoryIds) {
-			final TestParameterValue value = new TestParameterValue(mandatoryId,
+		final var newValues = new ArrayList<ParameterValueEntry>();
+		for (final var mandatoryId : missingMandatoryIds) {
+			final var newValue = new TestParameterValue(mandatoryId,
 					tc.getValue().descriptionOf(mandatoryId).getDescription(),
 					api.getMandatoryParameterById(mandatoryId).asSimpleParameter(), null);
-			editedParamValue.getValue().addComplexTypeValue(value);
-			newValues.add(asParam(tc.getObjectValue(), mandatoryId, value, api));
+			editedParamValue.getValue().addComplexTypeValue(newValue);
+			newValues.add(asParam(tc.getObjectValue(), mandatoryId, newValue, api));
 		}
-		for (final String optionalId : missingOptionalIds) {
-			final TestParameterValue value = new TestParameterValue(optionalId,
+		for (final var optionalId : missingOptionalIds) {
+			final var newValue = new TestParameterValue(optionalId,
 					tc.getValue().descriptionOf(optionalId).getDescription(),
 					api.getOptionalParameterById(optionalId).asSimpleParameter(), null);
-			editedParamValue.getValue().addComplexTypeValue(value);
-			newValues.add(asParam(tc.getObjectValue(), optionalId, value, api));
+			editedParamValue.getValue().addComplexTypeValue(newValue);
+			newValues.add(asParam(tc.getObjectValue(), optionalId, newValue, api));
 		}
 		allEditedParameters.addValues(newValues);
 	}
@@ -220,12 +216,12 @@ public class TestParameterValueEditorPanel extends JPanel {
 	public static final IConverter<Map<String, TestParameterValue>, Collection<ParameterValueEntry>> toListModel(
 			final ObjectProperty<TestCase> tc, final ObjectProperty<TestParameterValue> propertyValue) {
 
-		return new IConverter<Map<String, TestParameterValue>, Collection<ParameterValueEntry>>() {
+		return new IConverter<>() {
 
 			@Override
 			public List<ParameterValueEntry> convertPropertyValueToComponentValue(
 					final Map<String, TestParameterValue> values) {
-				final List<ParameterValueEntry> paramList = new ArrayList<>();
+				final var paramList = new ArrayList<ParameterValueEntry>();
 				for (final Entry<String, TestParameterValue> value : values.entrySet()) {
 					paramList.add(asParam(tc.getValue(), value.getKey(), value.getValue(),
 							propertyValue.getValue().getValueFactory()));
@@ -236,12 +232,13 @@ public class TestParameterValueEditorPanel extends JPanel {
 			@Override
 			public Map<String, TestParameterValue> convertComponentValueToPropertyValue(
 					final Collection<ParameterValueEntry> componentValue) {
-				final Map<String, TestParameterValue> result = new HashMap<>();
-				for (final ParameterValueEntry pv : componentValue) {
-					if (!pv.enabled && !pv.mandatory) {
+				final var result = new HashMap<String, TestParameterValue>();
+				for (final var parameterValueEntry : componentValue) {
+					if (!parameterValueEntry.enabled && !parameterValueEntry.mandatory) {
 						continue;
 					}
-					result.put(pv.id, new TestParameterValue(pv.id, pv.factory, pv.value));
+					result.put(parameterValueEntry.id, new TestParameterValue(parameterValueEntry.id,
+							parameterValueEntry.factory, parameterValueEntry.value));
 				}
 				return result;
 			}
@@ -259,12 +256,12 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 	private static ParameterValueEntry asParam(final TestCase tc, final String complexParameterId,
 			final TestParameterValue complexValue, final TestParameterFactory complexTypeFactory) {
-		final String simpleValue = complexValue.getSimpleValue();
-		final ParameterValueEntry paramValue = new ParameterValueEntry(complexParameterId,
+		final var simpleValue = complexValue.getSimpleValue();
+		final var newParamValue = new ParameterValueEntry(complexParameterId,
 				complexValue.getValueFactory(), tc.descriptionOf(complexParameterId).getDescription(), simpleValue,
 				!Strings.isNullOrEmpty(simpleValue));
-		updateParam(paramValue, complexTypeFactory);
-		return paramValue;
+		updateParam(newParamValue, complexTypeFactory);
+		return newParamValue;
 	}
 
 }

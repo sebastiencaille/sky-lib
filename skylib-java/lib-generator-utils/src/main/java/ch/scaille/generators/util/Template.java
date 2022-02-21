@@ -10,6 +10,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import ch.scaille.util.helpers.ClassLoaderHelper;
 import ch.scaille.util.helpers.Logs;
@@ -134,7 +136,32 @@ public class Template {
 		if (preferredFile == null) {
 			throw new IllegalStateException("preferredFile is not set");
 		}
-		return writeTo(folder.resolve( preferredFile));
+		return writeTo(folder.resolve(preferredFile));
+	}
+
+	/**
+	 * Writes the resulting content in a file
+	 * 
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
+	public <U> U writeTo(final Function<String, U> writer) {
+		return writer.apply(generate());
+	}
+
+	/**
+	 * Writes the resulting content in the preferred file
+	 * 
+	 * @param folder
+	 * @return
+	 * @throws IOException
+	 */
+	public <U> U writeTo(final BiFunction<String, String, U> writer) {
+		if (preferredFile == null) {
+			throw new IllegalStateException("preferredFile is not set");
+		}
+		return writer.apply(preferredFile, generate());
 	}
 
 	/**

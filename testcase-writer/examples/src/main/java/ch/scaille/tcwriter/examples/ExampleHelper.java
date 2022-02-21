@@ -9,8 +9,8 @@ import ch.scaille.tcwriter.executors.ITestExecutor;
 import ch.scaille.tcwriter.executors.JunitTestExecutor;
 import ch.scaille.tcwriter.generators.JavaToDictionary;
 import ch.scaille.tcwriter.generators.TCConfig;
-import ch.scaille.tcwriter.generators.model.persistence.IModelPersister;
-import ch.scaille.tcwriter.generators.model.persistence.JsonModelPersister;
+import ch.scaille.tcwriter.generators.model.persistence.FsModelDao;
+import ch.scaille.tcwriter.generators.model.persistence.IModelDao;
 import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
 import ch.scaille.tcwriter.generators.model.testcase.TestCase;
 import ch.scaille.tcwriter.generators.recorder.TestCaseRecorder;
@@ -26,9 +26,7 @@ public class ExampleHelper {
 
 	private static final File RESOURCE_FOLDER = new File("./src/main/resources");
 
-	private static final TCConfig CONFIG;
-
-	private static final IModelPersister persister;
+	private static final IModelDao modelDao;
 
 	public static final String TC_NAME = "testCase.json";
 
@@ -38,16 +36,16 @@ public class ExampleHelper {
 		final File modelPath = new File(RESOURCE_FOLDER, "models");
 		modelPath.mkdirs();
 
-		CONFIG = new TCConfig();
-		CONFIG.setTcPath(tcPath.toString());
-		CONFIG.setTCExportPath("./src/test/java");
-		CONFIG.setDictionaryPath(modelPath + "/test-model.json");
-		CONFIG.setTemplatePath("rsrc:templates/TC.template");
-		persister = new JsonModelPersister(CONFIG);
+		var config = new TCConfig();
+		config.setTcPath(tcPath.toString());
+		config.setTCExportPath("./src/test/java");
+		config.setDictionaryPath(modelPath + "/test-model.json");
+		config.setTemplatePath("rsrc:templates/TC.template");
+		modelDao = new FsModelDao(config);
 	}
 
-	public static IModelPersister getPersister() {
-		return persister;
+	public static IModelDao getModelDao() {
+		return modelDao;
 	}
 
 	public static TestDictionary generateDictionary() {
@@ -55,30 +53,25 @@ public class ExampleHelper {
 	}
 
 	public static void saveDictionary(final TestDictionary dictionary) throws IOException {
-		persister.writeTestDictionary(dictionary);
+		modelDao.writeTestDictionary(dictionary);
 	}
 
 	public static void saveTC(final String name, final TestCase testCase) throws IOException {
-		persister.writeTestCase(name, testCase);
+		modelDao.writeTestCase(name, testCase);
 	}
 
 	public static TestCase recordTestCase(final TestDictionary model) {
-		final TestCaseRecorder recorder = new TestCaseRecorder(persister, model);
+		final var recorder = new TestCaseRecorder(modelDao, model);
 		TestCaseRecorderAspect.setRecorder(recorder);
-		final SimpleTest test = new SimpleTest();
+		final var test = new SimpleTest();
 		test.initActors();
 		test.testNormalCase();
-		final TestCase testCase = recorder.getTestCase("ch.scaille.tcwriter.examples.GeneratedTest");
+		final var testCase = recorder.getTestCase("ch.scaille.tcwriter.examples.GeneratedTest");
 		Logs.of(ExampleHelper.class).info(() -> new HumanReadableVisitor(testCase, true).processAllSteps());
 		return testCase;
 	}
 
 	public static ITestExecutor testExecutor() throws IOException {
-		return new JunitTestExecutor(getPersister(), ClassLoaderHelper.appClassPath());
+		return new JunitTestExecutor(getModelDao(), ClassLoaderHelper.appClassPath());
 	}
-
-	public static TCConfig getConfig() {
-		return CONFIG;
-	}
-
 }

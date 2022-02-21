@@ -3,17 +3,25 @@ package ch.scaille.tcwriter.generators;
 import java.io.IOException;
 import java.util.stream.Collector;
 
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameter;
+
 import ch.scaille.generators.util.AbstractGenerator;
 import ch.scaille.tcwriter.annotations.TCActors;
 import ch.scaille.tcwriter.annotations.TCRole;
-import ch.scaille.tcwriter.generators.model.persistence.IModelPersister;
-import ch.scaille.tcwriter.generators.model.persistence.JsonModelPersister;
+import ch.scaille.tcwriter.generators.model.persistence.FsModelDao;
 import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
 import ch.scaille.tcwriter.generators.visitors.ClassToDictionaryVisitor;
 import ch.scaille.util.helpers.ClassFinder;
-import ch.scaille.util.helpers.ClassFinder.Policy;
 
 public class JavaToDictionary extends AbstractGenerator<TestDictionary> {
+	public static class Args {
+		@Parameter(names = { "-c" }, required = false, description = "Name of configuration")
+		public String configuration;
+
+		@Parameter(names = { "-s" }, required = true, description = "Source package")
+		public String sourcePackage;
+	}
 
 	public static Collector<Class<?>, ?, TestDictionary> toDictionary() {
 		return toDictionary(JavaToDictionary::new);
@@ -33,14 +41,15 @@ public class JavaToDictionary extends AbstractGenerator<TestDictionary> {
 	}
 
 	public static void main(final String[] args) throws IOException {
-
-		final IModelPersister persister = new JsonModelPersister();
-		persister.setConfiguration(persister.readConfiguration(args[0]));
-
-		final String sourcePackage = args[0];
-		final TestDictionary dictionary = ClassFinder.forApp().withPackages(sourcePackage)
-				.withAnnotation(TCRole.class, Policy.CLASS_ONLY).withAnnotation(TCActors.class, Policy.CLASS_ONLY)
-				.scan().collect(JavaToDictionary.toDictionary());
+		Args mainArgs = new Args();
+		JCommander.newBuilder().addObject(mainArgs).build().parse(args);
+		var persister = FsModelDao.withDefaultConfig();
+		if (mainArgs.configuration != null) {
+			persister.loadConfiguration(mainArgs.configuration);
+		}
+		TestDictionary dictionary = ClassFinder.forApp().withPackages(mainArgs.sourcePackage)
+				.withAnnotation(TCRole.class, ClassFinder.Policy.CLASS_ONLY)
+				.withAnnotation(TCActors.class, ClassFinder.Policy.CLASS_ONLY).scan().collect(toDictionary());
 		persister.writeTestDictionary(dictionary);
 	}
 

@@ -31,7 +31,7 @@ public class TCWriterModel {
 		return testDictionary;
 	}
 
-	public ObjectProperty<TestCase> getTc() {
+	public ObjectProperty<TestCase> getTestCase() {
 		return tc;
 	}
 

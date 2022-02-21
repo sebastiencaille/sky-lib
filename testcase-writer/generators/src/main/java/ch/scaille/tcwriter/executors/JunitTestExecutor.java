@@ -1,10 +1,12 @@
 package ch.scaille.tcwriter.executors;
 
 import static ch.scaille.util.helpers.ClassLoaderHelper.cpToCommandLine;
+import static ch.scaille.util.helpers.LambdaExt.uncheckF;
 import static java.util.stream.Collectors.joining;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,7 +17,7 @@ import java.util.stream.Stream;
 
 import ch.scaille.tcwriter.generators.TestCaseToJava;
 import ch.scaille.tcwriter.generators.model.TestCaseException;
-import ch.scaille.tcwriter.generators.model.persistence.IModelPersister;
+import ch.scaille.tcwriter.generators.model.persistence.IModelDao;
 import ch.scaille.tcwriter.generators.model.testcase.TestCase;
 import ch.scaille.util.helpers.ClassLoaderHelper;
 import ch.scaille.util.helpers.Logs;
@@ -28,32 +30,31 @@ public class JunitTestExecutor implements ITestExecutor {
 
 	private final URL[] classPath;
 
-	private final IModelPersister persister;
+	private final IModelDao modelDao;
 
-	public JunitTestExecutor(final IModelPersister persister, final URL[] classPath) throws IOException {
-		this.persister = persister;
+	public JunitTestExecutor(final IModelDao modelDao, final URL[] classPath) throws IOException {
+		this.modelDao = modelDao;
 		this.tempPath = Files.createTempDirectory("tcwriter");
 		this.tempPath.toFile().deleteOnExit();
 		this.classPath = classPath;
 	}
 
-	@Override
-	public Path generateCode(final TestCase tc) throws IOException, TestCaseException {
-		return generateCode(tc, tempPath);
-	}
-
-	@Override
+	  @Override
+	public URI generateCode(TestCase tc) throws IOException, TestCaseException {
+	    return new TestCaseToJava(this.modelDao).generate(tc).writeTo(uncheckF(this.modelDao::exportTestCase));
+	  }
+	  
+	  @Override
 	public Path generateCode(TestCase tc, Path targetFolder) throws IOException, TestCaseException {
-		TestCaseToJava testCaseToJava = new TestCaseToJava(persister);
-		return testCaseToJava.generateAndWrite(tc, targetFolder);
-	}
+	    return new TestCaseToJava(this.modelDao).generate(tc).writeToFolder(targetFolder);
+	  }
 
 	@Override
 	public String compile(TestCase tc, final Path sourceFile) throws IOException, InterruptedException {
 		final String waveClassPath = Stream.of(classPath)
 				.filter(j -> j.toString().contains("testcase-writer") && j.toString().contains("annotations"))
 				.map(URL::getFile).collect(joining(":"));
-		final Process testCompiler = new ProcessBuilder("java", //
+		final var testCompiler = new ProcessBuilder("java", //
 				"-cp", ClassLoaderHelper.cpToCommandLine(classPath), //
 				"org.aspectj.tools.ajc.Main", //
 				"-aspectpath", waveClassPath, //
@@ -67,14 +68,13 @@ public class JunitTestExecutor implements ITestExecutor {
 		if (testCompiler.waitFor() != 0) {
 			throw new IllegalStateException("Compiler failed with status " + testCompiler.exitValue());
 		}
-		Files.delete(sourceFile);
 		return tc.getPackageAndClassName();
 	}
 
 	@Override
 	public void execute(final String className, final int tcpPort) throws IOException {
-		final URL targetURL = tempPath.toUri().toURL();
-		final Process runTest = new ProcessBuilder("java", "-cp", cpToCommandLine(classPath, targetURL),
+		final var targetURL = tempPath.toUri().toURL();
+		final var runTest = new ProcessBuilder("java", "-cp", cpToCommandLine(classPath, targetURL),
 				"-Dtest.port=" + tcpPort, "-Dtc.stepping=true", "org.junit.runner.JUnitCore", className)
 						.redirectErrorStream(true).start();
 		new StreamHandler(runTest::getInputStream, LOGGER::info).start();
@@ -96,7 +96,7 @@ public class JunitTestExecutor implements ITestExecutor {
 
 		@Override
 		public void run() {
-			try (InputStream strIn = in.get()) {
+			try (var strIn = in.get()) {
 				final byte[] buffer = new byte[1024 * 1024];
 				int read;
 				while ((read = strIn.read(buffer, 0, buffer.length)) >= 0) {

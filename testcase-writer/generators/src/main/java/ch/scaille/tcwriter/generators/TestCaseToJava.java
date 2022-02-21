@@ -1,39 +1,50 @@
 package ch.scaille.tcwriter.generators;
 
+import static ch.scaille.util.helpers.LambdaExt.uncheckF;
+
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameter;
 
 import ch.scaille.generators.util.Template;
 import ch.scaille.tcwriter.generators.model.TestCaseException;
-import ch.scaille.tcwriter.generators.model.persistence.IModelPersister;
-import ch.scaille.tcwriter.generators.model.persistence.JsonModelPersister;
-import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
+import ch.scaille.tcwriter.generators.model.persistence.FsModelDao;
+import ch.scaille.tcwriter.generators.model.persistence.IModelDao;
 import ch.scaille.tcwriter.generators.model.testcase.TestCase;
 import ch.scaille.tcwriter.generators.visitors.TestCaseToJunitVisitor;
 
 public class TestCaseToJava {
 
-	private final Template testCaseTemplate;
+	public static class Args {
+		@Parameter(names = { "-c" }, required = false, description = "Name of configuration")
+		public String configuration;
 
-	public TestCaseToJava(final IModelPersister persister) throws IOException {
-		testCaseTemplate = persister.readTemplate();
+		@Parameter(names = { "-tc" }, description = "Name of test case")
+		public String testCase;
 	}
 
-	public Path generateAndWrite(final TestCase tc, final Path targetPath) throws IOException, TestCaseException {
-		return new TestCaseToJunitVisitor(testCaseTemplate).visitTestCase(tc).writeToFolder(targetPath);
+	public TestCaseToJava(IModelDao modelDao) {
+		this.modelDao = modelDao;
 	}
 
-	public static void main(final String[] args) throws IOException, TestCaseException {
-		final IModelPersister persister = new JsonModelPersister();
-		final TCConfig config = persister.readConfiguration(args[0]);
-		persister.setConfiguration(config);
+	private final IModelDao modelDao;
 
-		final TestDictionary testDictionary = persister.readTestDictionary();
-		final String jsonTC = args[1];
-		final TestCase tc = persister.readTestCase(jsonTC, testDictionary);
+	public Template generate(TestCase tc) throws IOException, TestCaseException {
+		return new TestCaseToJunitVisitor(this.modelDao.readTemplate()).visitTestCase(tc);
+	}
 
-		new TestCaseToJava(persister).generateAndWrite(tc, Paths.get(config.getTCExportPath()));
+	public static void main(String[] args) throws IOException, TestCaseException {
+		var mainArgs = new Args();
+		JCommander.newBuilder().addObject(mainArgs).build().parse(args);
+		var modelDao = FsModelDao.withDefaultConfig();
+		if (mainArgs.configuration != null) {
+			modelDao.loadConfiguration(mainArgs.configuration);
+		}
+		var testDictionary = modelDao.readTestDictionary();
+		var jsonTC = mainArgs.testCase;
+		var testcase = modelDao.readTestCase(jsonTC, testDictionary);
+		new TestCaseToJava(modelDao).generate(testcase).writeTo(uncheckF(modelDao::exportTestCase));
 	}
 
 }

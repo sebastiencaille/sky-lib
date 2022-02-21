@@ -28,7 +28,7 @@ public class StepStatusRenderer extends DefaultTableCellRenderer {
 			jPanel.setBackground(table.getBackground());
 			return jPanel;
 		}
-		final StepStatus status = (StepStatus) value;
+		final var status = (StepStatus) value;
 		renderer.setSelected(status.breakPoint);
 
 		if (status.state == StepState.STARTED) {

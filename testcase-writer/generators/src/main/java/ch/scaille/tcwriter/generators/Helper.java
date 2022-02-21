@@ -7,8 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
-import ch.scaille.tcwriter.generators.model.testapi.TestParameterFactory;
-import ch.scaille.tcwriter.generators.model.testapi.TestRole;
 import ch.scaille.tcwriter.generators.model.testcase.TestCase;
 import ch.scaille.tcwriter.generators.model.testcase.TestStep;
 
@@ -20,27 +18,27 @@ public class Helper {
 	private static final char EOL = '\n';
 
 	static String dumpModel(final TestDictionary model) {
-		final StringBuilder builder = new StringBuilder();
+		final var builder = new StringBuilder();
 		builder.append(model.toString()).append(EOL);
-		for (final TestRole actor : model.getRoles().values()) {
+		for (final var actor : model.getRoles().values()) {
 			builder.append("  ").append(model.descriptionOf(actor)).append(": ").append(actor).append(EOL);
 			actor.getActions().forEach(api -> builder.append("    ").append(model.descriptionOf(api)).append(": ")
 					.append(api).append(EOL));
 
 		}
-		for (final TestParameterFactory testObject : model.getParameterFactories().values()) {
-			builder.append("  ").append(model.descriptionOf(testObject)).append(": ").append(testObject).append(EOL);
-			testObject.getMandatoryParameters().forEach(api -> builder.append("    mandatory: ")
+		for (final var parameterFactory : model.getParameterFactories().values()) {
+			builder.append("  ").append(model.descriptionOf(parameterFactory)).append(": ").append(parameterFactory).append(EOL);
+			parameterFactory.getMandatoryParameters().forEach(api -> builder.append("    mandatory: ")
 					.append(model.descriptionOf(api)).append(": ").append(api).append(EOL));
-			testObject.getOptionalParameters().forEach(api -> builder.append("    optional: ")
+			parameterFactory.getOptionalParameters().forEach(api -> builder.append("    optional: ")
 					.append(model.descriptionOf(api)).append(": ").append(api).append(EOL));
 		}
 		return builder.toString();
 	}
 
 	static String dumpTestCase(final TestCase testCase) {
-		final StringBuilder result = new StringBuilder();
-		for (final TestStep step : testCase.getSteps()) {
+		final var result = new StringBuilder();
+		for (final var step : testCase.getSteps()) {
 			result.append(step.getOrdinal()).append(": ").append(step.getActor().getName()).append(" ")
 					.append(step.getAction().getName()).append(EOL);
 			step.getParametersValue().forEach(v -> result.append(v).append(EOL));

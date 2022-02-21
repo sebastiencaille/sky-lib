@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole;
 import ch.scaille.tcwriter.examples.api.interfaces.DeliveryTestRole;
 import ch.scaille.tcwriter.examples.api.interfaces.dto.TestItem;
-import ch.scaille.tcwriter.recording.TestActors;
+import ch.scaille.tcwriter.recording.RecorderTestActors;
 
 @SuppressWarnings("java:S5960")
 public class SimpleTest {
@@ -30,9 +30,9 @@ public class SimpleTest {
 	public void initActors() {
 		final ExampleService testedService = new ExampleService();
 		customer = new CustomerTestRole(testedService);
-		TestActors.register(customer, "customer", null);
+		RecorderTestActors.register(customer, "customer", null);
 		deliveryGuy = new DeliveryTestRole(testedService);
-		TestActors.register(deliveryGuy, "deliveryGuy", null);
+		RecorderTestActors.register(deliveryGuy, "deliveryGuy", null);
 	}
 
 	@Test

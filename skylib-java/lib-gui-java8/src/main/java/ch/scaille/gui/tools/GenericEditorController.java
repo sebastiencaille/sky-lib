@@ -41,6 +41,10 @@ public class GenericEditorController<T> {
 		props.forEach(p -> p.loadFromCurrentObject(this));
 	}
 
+	public void loadUnsafe(final Object obj) {
+		load((T) obj);
+	}
+
 	public void save() {
 		if (!errorProperty.getErrors().getValue().isEmpty()) {
 			return;

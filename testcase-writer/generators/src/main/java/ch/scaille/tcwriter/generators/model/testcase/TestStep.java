@@ -135,7 +135,7 @@ public class TestStep {
 	}
 
 	public void fixClassifier() {
-		if (Arrays.asList(action.getAllowedClassifiers()).contains(classifier)) {
+		if (classifier != null && List.of(action.getAllowedClassifiers()).contains(classifier)) {
 			return;
 		}
 		setClassifier(action.getAllowedClassifiers()[0]);

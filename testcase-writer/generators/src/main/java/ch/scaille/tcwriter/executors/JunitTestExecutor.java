@@ -51,7 +51,7 @@ public class JunitTestExecutor implements ITestExecutor {
 
 	@Override
 	public String compile(TestCase tc, final Path sourceFile) throws IOException, InterruptedException {
-		final String waveClassPath = Stream.of(classPath)
+		final var waveClassPath = Stream.of(classPath)
 				.filter(j -> j.toString().contains("testcase-writer") && j.toString().contains("annotations"))
 				.map(URL::getFile).collect(joining(":"));
 		final var testCompiler = new ProcessBuilder("java", //

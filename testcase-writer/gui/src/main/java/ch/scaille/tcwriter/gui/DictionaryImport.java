@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 
+import ch.scaille.gui.swing.SwingHelper;
 import ch.scaille.tcwriter.annotations.TCActors;
 import ch.scaille.tcwriter.annotations.TCRole;
 import ch.scaille.tcwriter.generators.JavaToDictionary;
@@ -43,11 +44,11 @@ public class DictionaryImport extends JDialog {
 
 		var importButton = new JButton("Import");
 		add(importButton, BorderLayout.EAST);
-		importButton.addActionListener(a -> LambdaExt.uncheck(() -> {
+		importButton.addActionListener(SwingHelper.action(LambdaExt.uncheck(()-> {
 			importDictionary(new File(dictionaryJarFileDisplay.getText()), sourcePackageEditor.getText());
 			imported = true;
 			setVisible(false);
-		}, e -> TCWriterGui.handleException(this, e)));
+		}, e -> TCWriterGui.handleException(this, e))));
 	}
 
 	public boolean runImport() {

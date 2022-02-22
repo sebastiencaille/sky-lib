@@ -3,6 +3,7 @@ package ch.scaille.tcwriter.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -13,20 +14,20 @@ import ch.scaille.tcwriter.generators.visitors.HumanReadableVisitor;
 	@Test
 	 void testBlockFormatting() {
 
-		assertEquals("Hello world", HumanReadableVisitor.format("Hello %s", Arrays.asList("world")));
-		assertEquals("Hello world", HumanReadableVisitor.format("Hello// %srld//", Arrays.asList("wo")));
-		assertEquals("Hello", HumanReadableVisitor.format("Hello// %srld//", Arrays.asList("")));
-		assertEquals("Hello// rld//", HumanReadableVisitor.format("Hello/\\/ %srld/\\/", Arrays.asList("")));
-		assertEquals("Hello //world", HumanReadableVisitor.format("Hello %s", Arrays.asList("//world")));
+		assertEquals("Hello world", HumanReadableVisitor.format("Hello %s", List.of("world")));
+		assertEquals("Hello world", HumanReadableVisitor.format("Hello// %srld//", List.of("wo")));
+		assertEquals("Hello", HumanReadableVisitor.format("Hello// %srld//", List.of("")));
+		assertEquals("Hello// rld//", HumanReadableVisitor.format("Hello/\\/ %srld/\\/", List.of("")));
+		assertEquals("Hello //world", HumanReadableVisitor.format("Hello %s", List.of("//world")));
 
 	}
 
 	@Test
 	 void testTextSplit() {
-		assertEquals("Hello world", HumanReadableVisitor.format("%s %s", Arrays.asList("Hello|world")));
-		assertEquals("Hello world", HumanReadableVisitor.format("Hello //x%s//%s", Arrays.asList("|world")));
-		assertEquals("Hello world", HumanReadableVisitor.format("%s //x%s//world", Arrays.asList("Hello|")));
-		assertEquals("world", HumanReadableVisitor.format("%s//x%s//world", Arrays.asList("|")));
+		assertEquals("Hello world", HumanReadableVisitor.format("%s %s", List.of("Hello|world")));
+		assertEquals("Hello world", HumanReadableVisitor.format("Hello //x%s//%s", List.of("|world")));
+		assertEquals("Hello world", HumanReadableVisitor.format("%s //x%s//world", List.of("Hello|")));
+		assertEquals("world", HumanReadableVisitor.format("%s//x%s//world", List.of("|")));
 	}
 
 }

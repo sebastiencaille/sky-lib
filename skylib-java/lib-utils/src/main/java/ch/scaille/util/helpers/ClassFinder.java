@@ -294,8 +294,10 @@ public class ClassFinder {
 	}
 
 	private Policy scanInheritedClass(final Class<?> inheritedClass) {
-		Policy appliedPolicy;
-		appliedPolicy = processClass(inheritedClass);
+		if (inheritedClass == null) {
+			return Policy.SCANNED;
+		}
+		Policy appliedPolicy = processClass(inheritedClass);
 		if (appliedPolicy == Policy.CLASS_ONLY) {
 			// parent class policy is CLASS_ONLY, skip
 			appliedPolicy = Policy.SCANNED;

@@ -109,9 +109,9 @@ public class ClassToDictionaryVisitor {
 	}
 
 	private StepClassifier[] computeClassifiers(final Method actionMethod) {
-		StepClassifier[] classifiers;
 		final var actionAnnotation = actionMethod.getAnnotation(TCAction.class);
 		final var checkAnnotation = actionMethod.getAnnotation(TCCheck.class);
+		StepClassifier[] classifiers;
 		if (checkAnnotation != null) {
 			classifiers = new StepClassifier[] { StepClassifier.CHECK };
 		} else if (actionAnnotation != null && actionAnnotation.preparationOnly()) {

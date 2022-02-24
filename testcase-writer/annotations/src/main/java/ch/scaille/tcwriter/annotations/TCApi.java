@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  *
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.TYPE, ElementType.PARAMETER})
+@Target({ ElementType.METHOD, ElementType.TYPE, ElementType.PARAMETER })
 public @interface TCApi {
 
 	String description();
@@ -34,5 +34,5 @@ public @interface TCApi {
 	String humanReadable();
 
 	boolean isSelector() default false;
-	
+
 }

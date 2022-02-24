@@ -39,15 +39,15 @@ public class JunitTestExecutor implements ITestExecutor {
 		this.classPath = classPath;
 	}
 
-	  @Override
+	@Override
 	public URI generateCode(TestCase tc) throws IOException, TestCaseException {
-	    return new TestCaseToJava(this.modelDao).generate(tc).writeTo(uncheckF(this.modelDao::exportTestCase));
-	  }
-	  
-	  @Override
+		return new TestCaseToJava(this.modelDao).generate(tc).writeTo(uncheckF(this.modelDao::exportTestCase));
+	}
+
+	@Override
 	public Path generateCode(TestCase tc, Path targetFolder) throws IOException, TestCaseException {
-	    return new TestCaseToJava(this.modelDao).generate(tc).writeToFolder(targetFolder);
-	  }
+		return new TestCaseToJava(this.modelDao).generate(tc).writeToFolder(targetFolder);
+	}
 
 	@Override
 	public String compile(TestCase tc, final Path sourceFile) throws IOException, InterruptedException {

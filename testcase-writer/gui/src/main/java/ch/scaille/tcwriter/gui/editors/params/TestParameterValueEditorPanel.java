@@ -257,8 +257,8 @@ public class TestParameterValueEditorPanel extends JPanel {
 	private static ParameterValueEntry asParam(final TestCase tc, final String complexParameterId,
 			final TestParameterValue complexValue, final TestParameterFactory complexTypeFactory) {
 		final var simpleValue = complexValue.getSimpleValue();
-		final var newParamValue = new ParameterValueEntry(complexParameterId,
-				complexValue.getValueFactory(), tc.descriptionOf(complexParameterId).getDescription(), simpleValue,
+		final var newParamValue = new ParameterValueEntry(complexParameterId, complexValue.getValueFactory(),
+				tc.descriptionOf(complexParameterId).getDescription(), simpleValue,
 				!Strings.isNullOrEmpty(simpleValue));
 		updateParam(newParamValue, complexTypeFactory);
 		return newParamValue;

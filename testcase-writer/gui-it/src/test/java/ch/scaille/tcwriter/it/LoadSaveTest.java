@@ -23,7 +23,6 @@ class LoadSaveTest extends AbstractGuiTest {
 		rootLogger.addHandler(logConsole);
 	}
 
-	
 	@Test
 	void testSaveNewLoad() {
 		testSession.injectBasicTest();

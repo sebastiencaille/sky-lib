@@ -15,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
 
 import ch.scaille.gui.model.ListModel;
 import ch.scaille.gui.model.views.ListViews;
@@ -35,8 +34,7 @@ public class StepsTable extends JPanel {
 	public StepsTable(final TCWriterController controller) {
 		final var model = controller.getModel();
 
-		final ch.scaille.gui.model.ListModel<TestStep> steps = new ListModel<>(
-				ListViews.sorted((s1, s2) -> s1.getOrdinal() - s2.getOrdinal()));
+		final var steps = new ListModel<TestStep>(ListViews.sorted((s1, s2) -> s1.getOrdinal() - s2.getOrdinal()));
 
 		setLayout(new BorderLayout());
 		stepsTableModel = new StepsTableModel(model.getTestCase(), steps, controller.getTestRemoteControl());
@@ -69,7 +67,7 @@ public class StepsTable extends JPanel {
 					g.drawLine(toPaintHR.x, toPaintHR.y + toPaintHR.height - 1, toPaintHR.width,
 							toPaintHR.y + toPaintHR.height - 1);
 
-					final TableCellRenderer renderer = new DefaultTableCellRenderer() {
+					final var renderer = new DefaultTableCellRenderer() {
 						@Override
 						public Component getTableCellRendererComponent(final JTable table, final Object value,
 								final boolean isSelected, final boolean hasFocus, final int row, final int column) {

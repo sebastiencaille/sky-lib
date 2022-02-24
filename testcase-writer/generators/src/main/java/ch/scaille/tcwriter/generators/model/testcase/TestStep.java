@@ -1,7 +1,6 @@
 package ch.scaille.tcwriter.generators.model.testcase;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

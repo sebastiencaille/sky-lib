@@ -37,7 +37,7 @@ public class TestCase {
 	/**
 	 * For json
 	 * 
-	 * @Deprecated: for JSON
+	 * @deprecated: for JSON
 	 */
 	@Deprecated
 	public TestCase() {

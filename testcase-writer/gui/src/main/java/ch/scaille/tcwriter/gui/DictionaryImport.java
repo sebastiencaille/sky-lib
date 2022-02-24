@@ -44,7 +44,7 @@ public class DictionaryImport extends JDialog {
 
 		var importButton = new JButton("Import");
 		add(importButton, BorderLayout.EAST);
-		importButton.addActionListener(SwingHelper.action(LambdaExt.uncheck(()-> {
+		importButton.addActionListener(SwingHelper.action(LambdaExt.uncheck(() -> {
 			importDictionary(new File(dictionaryJarFileDisplay.getText()), sourcePackageEditor.getText());
 			imported = true;
 			setVisible(false);

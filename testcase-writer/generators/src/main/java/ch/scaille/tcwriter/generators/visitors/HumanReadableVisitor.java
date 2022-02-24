@@ -20,8 +20,8 @@ import ch.scaille.tcwriter.generators.model.testcase.TestStep;
 
 public class HumanReadableVisitor {
 
-	private static final Pattern	BLOCK_PATTERN = Pattern.compile("//.*%s.*//");
-	
+	private static final Pattern BLOCK_PATTERN = Pattern.compile("//.*%s.*//");
+
 	private final TestCase tc;
 	private final boolean withStepNumbers;
 
@@ -110,7 +110,7 @@ public class HumanReadableVisitor {
 		} else {
 			formatParams = null;
 		}
-	
+
 		final var blockMatcher = BLOCK_PATTERN.matcher(humanReadable);
 		while (blockMatcher.find()) {
 			emptiedBlocks.add(blockMatcher.group().replace("%s", ""));

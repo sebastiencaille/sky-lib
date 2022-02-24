@@ -9,11 +9,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.nio.file.attribute.FileAttribute;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -137,7 +135,7 @@ public class FsModelDao implements IModelDao {
 	@Override
 	public TestCase readTestCase(String identifier, TestDictionary testDictionary) throws IOException {
 		List<ExportReference> references = new ArrayList<>();
-		var ctxt = mapper.getDeserializationConfig().getAttributes().withPerCallAttribute("AllTestReferences",
+		var ctxt = mapper.getDeserializationConfig().getAttributes().withPerCallAttribute(CONTEXT_ALL_REFERENCES,
 				references);
 		var testCase = (TestCase) mapper.readerFor(TestCase.class).with(ctxt)
 				.readValue(read(resolveJsonToUrl(this.config.getTcPath(), identifier)));
@@ -159,11 +157,11 @@ public class FsModelDao implements IModelDao {
 
 	@Override
 	public URI exportTestCase(String name, String content) throws IOException {
-		var exportPath = Paths.get(resolve(this.config.getTCExportPath()), new String[0]).resolve(name);
+		var exportPath = Paths.get(resolve(this.config.getTCExportPath())).resolve(name);
 		Logs.of(this).info(() -> "Writing " + exportPath);
-		Files.createDirectories(exportPath.getParent(), (FileAttribute<?>[]) new FileAttribute[0]);
-		Files.write(exportPath, content.getBytes(StandardCharsets.UTF_8),
-				new OpenOption[] { StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING });
+		Files.createDirectories(exportPath.getParent());
+		Files.write(exportPath, content.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE,
+				StandardOpenOption.TRUNCATE_EXISTING);
 		return exportPath.toUri();
 	}
 
@@ -177,9 +175,9 @@ public class FsModelDao implements IModelDao {
 		}
 		try {
 			var file = Paths.get(path.toURI());
-			Files.createDirectories(file.getParent(), (FileAttribute<?>[]) new FileAttribute[0]);
-			Files.write(file, content.getBytes(StandardCharsets.UTF_8),
-					new OpenOption[] { StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING });
+			Files.createDirectories(file.getParent());
+			Files.write(file, content.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE,
+					StandardOpenOption.TRUNCATE_EXISTING);
 		} catch (URISyntaxException e) {
 			throw new IOException("Cannot write file", e);
 		}
@@ -190,7 +188,7 @@ public class FsModelDao implements IModelDao {
 		try {
 			return new URL(saneUrl);
 		} catch (MalformedURLException e) {
-			return Paths.get(saneUrl, new String[0]).toAbsolutePath().toUri().toURL();
+			return Paths.get(saneUrl).toAbsolutePath().toUri().toURL();
 		}
 	}
 
@@ -199,14 +197,12 @@ public class FsModelDao implements IModelDao {
 	}
 
 	protected URL resolveJsonToUrl(String path, String subPath) throws MalformedURLException {
-		return resolveToURL(path + "/" + path + ".json");
+		return resolveToURL(path + "/" + subPath + ".json");
 	}
 
 	protected String read(URL path) throws IOException {
 		try (var reader = new BufferedReader(new InputStreamReader(path.openConnection().getInputStream()))) {
-			String str = reader.lines().collect(Collectors.joining("\n"));
-			reader.close();
-			return str;
+			return reader.lines().collect(Collectors.joining("\n"));
 		}
 	}
 

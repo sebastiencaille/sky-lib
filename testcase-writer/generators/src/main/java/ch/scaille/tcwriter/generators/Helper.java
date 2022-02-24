@@ -27,7 +27,8 @@ public class Helper {
 
 		}
 		for (final var parameterFactory : model.getParameterFactories().values()) {
-			builder.append("  ").append(model.descriptionOf(parameterFactory)).append(": ").append(parameterFactory).append(EOL);
+			builder.append("  ").append(model.descriptionOf(parameterFactory)).append(": ").append(parameterFactory)
+					.append(EOL);
 			parameterFactory.getMandatoryParameters().forEach(api -> builder.append("    mandatory: ")
 					.append(model.descriptionOf(api)).append(": ").append(api).append(EOL));
 			parameterFactory.getOptionalParameters().forEach(api -> builder.append("    optional: ")

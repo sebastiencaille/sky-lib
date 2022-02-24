@@ -2,17 +2,16 @@ package ch.scaille.tcwriter.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
 import ch.scaille.tcwriter.generators.visitors.HumanReadableVisitor;
 
- class HumanReadableVisitorTest {
+class HumanReadableVisitorTest {
 
 	@Test
-	 void testBlockFormatting() {
+	void testBlockFormatting() {
 
 		assertEquals("Hello world", HumanReadableVisitor.format("Hello %s", List.of("world")));
 		assertEquals("Hello world", HumanReadableVisitor.format("Hello// %srld//", List.of("wo")));
@@ -23,7 +22,7 @@ import ch.scaille.tcwriter.generators.visitors.HumanReadableVisitor;
 	}
 
 	@Test
-	 void testTextSplit() {
+	void testTextSplit() {
 		assertEquals("Hello world", HumanReadableVisitor.format("%s %s", List.of("Hello|world")));
 		assertEquals("Hello world", HumanReadableVisitor.format("Hello //x%s//%s", List.of("|world")));
 		assertEquals("Hello world", HumanReadableVisitor.format("%s //x%s//world", List.of("Hello|")));

@@ -26,8 +26,7 @@ public class StepEditorModel extends GuiModel {
 	private final ObjectProperty<TestParameterFactory> actionParameter = new ObjectProperty<>("actionParameter", this);
 	private final ObjectProperty<TestParameterValue> actionParameterValues = new ObjectProperty<>(
 			"actionParameterValues", this, TestParameterValue.NO_VALUE);
-	private final ObjectProperty<StepClassifier> stepClassifier = new ObjectProperty<>(
-			"stepClassifier", this, null);
+	private final ObjectProperty<StepClassifier> stepClassifier = new ObjectProperty<>("stepClassifier", this, null);
 
 	public StepEditorModel(final ModelConfiguration config) {
 		super(config);

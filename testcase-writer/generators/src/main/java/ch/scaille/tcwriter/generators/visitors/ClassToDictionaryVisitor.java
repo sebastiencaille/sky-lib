@@ -54,56 +54,58 @@ public class ClassToDictionaryVisitor {
 	}
 
 	private void processEntryPointClasses() {
-		for (final var roleClass : unprocessedRoles) {
-			final var roleAnnotation = roleClass.getAnnotation(TCRole.class);
-			final var testRole = new TestRole(roleKey(roleClass));
-			dictionary.addDescription(testRole, descriptionFrom(roleAnnotation));
-			dictionary.getRoles().put(testRole.getId(), testRole);
+		unprocessedRoles.forEach(this::processRoles);
+		unprocessedActors.forEach(this::processActors);
+	}
 
-			final var roleMethods = new HashSet<Method>();
-			accumulateApiMethods(roleClass, roleMethods);
+	private void processRoles(Class<?> roleClass) {
+		final var roleAnnotation = roleClass.getAnnotation(TCRole.class);
+		final var testRole = new TestRole(roleKey(roleClass));
+		dictionary.addDescription(testRole, descriptionFrom(roleAnnotation));
+		dictionary.getRoles().put(testRole.getId(), testRole);
 
-			for (final var actionMethod : roleMethods) {
-				final var returnType = (actionMethod.getReturnType() != Void.class)
-						? actionMethod.getReturnType().getName()
-						: null;
+		final var roleMethods = new HashSet<Method>();
+		accumulateApiMethods(roleClass, roleMethods);
 
-				var classifiers = computeClassifiers(actionMethod);
-				final var testAction = new TestAction(methodKey(actionMethod), actionMethod.getName(), returnType,
-						classifiers);
-				final var roleActionParameters = gatherParameters(testAction, actionMethod);
-				testAction.getParameters().addAll(roleActionParameters);
-				testRole.getActions().add(testAction);
-			}
+		for (final var actionMethod : roleMethods) {
+			final var returnType = (actionMethod.getReturnType() != Void.class) ? actionMethod.getReturnType().getName()
+					: null;
+
+			var classifiers = computeClassifiers(actionMethod);
+			final var testAction = new TestAction(methodKey(actionMethod), actionMethod.getName(), returnType,
+					classifiers);
+			final var roleActionParameters = gatherParameters(testAction, actionMethod);
+			testAction.getParameters().addAll(roleActionParameters);
+			testRole.getActions().add(testAction);
 		}
+	}
 
-		for (final var unprocessedActor : unprocessedActors) {
-			final var actorsAnnotation = unprocessedActor.getAnnotation(TCActors.class);
-			for (var actorDef : actorsAnnotation.value()) {
-				var actorAndSimpleName = actorDef.split("\\|");
-				if (actorAndSimpleName.length < 2) {
-					throw new IllegalStateException("At least code|role_simple_call_name must be provided");
-				}
-				var codeVariable = actorAndSimpleName[0];
-				var simpleClassName = actorAndSimpleName[1];
-				String description;
-				if (actorAndSimpleName.length > 2) {
-					description = actorAndSimpleName[2];
-				} else {
-					description = codeVariable;
-				}
-				String humanReadable;
-				if (actorAndSimpleName.length > 3) {
-					humanReadable = actorAndSimpleName[3];
-				} else {
-					humanReadable = description;
-				}
-				var role = dictionary.getRoles().entrySet().stream()
-						.filter(r -> r.getKey().endsWith("." + simpleClassName)).map(Entry::getValue).findFirst();
-				if (role.isPresent()) {
-					var actor = new TestActor(codeVariable, codeVariable, role.get());
-					dictionary.addActor(actor, new TestObjectDescription(description, humanReadable));
-				}
+	private void processActors(Class<?> unprocessedActor) {
+		final var actorsAnnotation = unprocessedActor.getAnnotation(TCActors.class);
+		for (var actorDef : actorsAnnotation.value()) {
+			var actorAndSimpleName = actorDef.split("\\|");
+			if (actorAndSimpleName.length < 2) {
+				throw new IllegalStateException("At least code|role_simple_call_name must be provided");
+			}
+			var codeVariable = actorAndSimpleName[0];
+			var simpleClassName = actorAndSimpleName[1];
+			String description;
+			if (actorAndSimpleName.length > 2) {
+				description = actorAndSimpleName[2];
+			} else {
+				description = codeVariable;
+			}
+			String humanReadable;
+			if (actorAndSimpleName.length > 3) {
+				humanReadable = actorAndSimpleName[3];
+			} else {
+				humanReadable = description;
+			}
+			var role = dictionary.getRoles().entrySet().stream().filter(r -> r.getKey().endsWith("." + simpleClassName))
+					.map(Entry::getValue).findFirst();
+			if (role.isPresent()) {
+				var actor = new TestActor(codeVariable, codeVariable, role.get());
+				dictionary.addActor(actor, new TestObjectDescription(description, humanReadable));
 			}
 		}
 	}
@@ -129,32 +131,32 @@ public class ClassToDictionaryVisitor {
 			final var firstParameterClassIterator = unprocessedParameterFactoryClasses.iterator();
 			final var apiClass = firstParameterClassIterator.next();
 			firstParameterClassIterator.remove();
-			if (processedParameterFactoryClasses.contains(apiClass)) {
+			if (processedParameterFactoryClasses.contains(apiClass) || isJavaType(apiClass)) {
 				continue;
 			}
 			processedParameterFactoryClasses.add(apiClass);
-			if (isJavaType(apiClass)) {
-				continue;
-			}
-			// Process the api class
-			final var valueFactoryMethods = new HashSet<Method>();
-
-			final var tcApi = apiClass.getAnnotation(TCApi.class);
-			if (tcApi != null && tcApi.isSelector()) {
-				dictionary.addSelectorType(apiClass);
-			}
-
-			accumulateApiMethods(apiClass, valueFactoryMethods);
-			valueFactoryMethods.removeIf(m -> !Modifier.isStatic(m.getModifiers()));
-			if (valueFactoryMethods.isEmpty()) {
-				throw new IllegalStateException("No factory found for type " + apiClass.getName());
-			}
-
-			for (final var valueFactoryMethod : valueFactoryMethods) {
-				// Process each method of the class
-				processValueFactory(valueFactoryMethod);
-			}
+			processParameterFactoryClass(apiClass);
 		}
+	}
+
+	protected void processParameterFactoryClass(Class<?> apiClass) {
+		final var tcApi = apiClass.getAnnotation(TCApi.class);
+		if (tcApi != null && tcApi.isSelector()) {
+			dictionary.addSelectorType(apiClass);
+		}
+
+		final var valueFactoryMethods = new HashSet<Method>();
+		accumulateApiMethods(apiClass, valueFactoryMethods);
+		valueFactoryMethods.removeIf(m -> !Modifier.isStatic(m.getModifiers()));
+		if (valueFactoryMethods.isEmpty()) {
+			throw new IllegalStateException("No factory found for type " + apiClass.getName());
+		}
+
+		for (final var valueFactoryMethod : valueFactoryMethods) {
+			// Process each method of the class
+			processValueFactory(valueFactoryMethod);
+		}
+
 	}
 
 	private void processValueFactory(final Method valueFactoryMethod) {

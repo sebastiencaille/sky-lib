@@ -39,7 +39,7 @@ class TableTest {
 	private static final IListView<TestObject> VIEW = ListViews.sorted((o1, o2) -> o1.getVal() - o2.getVal());
 
 	private static class Model extends GuiModel {
-		
+
 		private final ListProperty<TestObject> selection = new ListProperty<>("Selection", this);
 
 		public Model(final ModelConfiguration config) {

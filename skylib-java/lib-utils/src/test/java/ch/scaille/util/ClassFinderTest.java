@@ -40,9 +40,9 @@ class ClassFinderTest {
 	@ParameterizedTest
 	@CsvSource({ //
 			"file:/C:/toto/mypackage,file:/,C:/toto", // windows
-			"file:/toto/mypackage,file:/,/toto", // unix 
+			"file:/toto/mypackage,file:/,/toto", // unix
 			"jar:file:/toto.jar!/mypackage,jar:file:/toto.jar,/" // jar
-			})
+	})
 	void testUriTransformation(String urlPackageLocation, String fsRoot, String fsPackageLocation)
 			throws MalformedURLException, URISyntaxException {
 		TestClassFinder.TestFsScanner scanner = new TestClassFinder(new URL[0]).scanner();

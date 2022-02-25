@@ -52,10 +52,10 @@ import ch.scaille.util.helpers.StreamExt;
  * compute the actual row of another edition with a log(n) complexity.
  * <p>
  * The sorting and filtering is done using an {@link IListView}. A default
- * implementation ({@link ch.scaille.gui.model.views.ListView) is provided.
- * Note that total ordering is mandatory to have a log(n) access. <p> The lists
- * can be stacked. If no ListView is defined for a list, the IListView of the
- * parent is used. <p>
+ * implementation ({@link ch.scaille.gui.model.views.ListView) is provided. Note
+ * that total ordering is mandatory to have a log(n) access. <p> The lists can
+ * be stacked. If no ListView is defined for a list, the IListView of the parent
+ * is used. <p>
  *
  * @author Sebastien Caille
  *
@@ -268,7 +268,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 
 	public void addListener(final IListModelListener<T> listener) {
 		listeners.add(IListModelListener.class, listener);
-		if (listener instanceof IChildModelListener) { 
+		if (listener instanceof IChildModelListener) {
 			listeners.add(IChildModelListener.class, IChildModelListener.class.cast(listener));
 		}
 	}
@@ -432,7 +432,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 	}
 
 	protected List<T> addToModel(final Collection<T> newData) {
-				final int oldSize = data.size();
+		final int oldSize = data.size();
 		StreamExt.throwIfContainsNull(newData.stream());
 		final List<T> addedData = newData.stream().filter(viewProperty.getValue()::accept).collect(Collectors.toList());
 		data.addAll(addedData);

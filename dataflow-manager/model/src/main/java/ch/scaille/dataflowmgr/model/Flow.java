@@ -25,7 +25,6 @@ import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -64,11 +63,10 @@ public class Flow extends WithId {
 
 		public FlowBuilder add(final ConditionalFlowCtrl caseControl) {
 			caseControl.getBindings().forEach(this::add);
-			final Optional<Binding> defaultBinding = caseControl.getDefaultBinding();
+			final var defaultBinding = caseControl.getDefaultBinding();
 			if (defaultBinding.isPresent()) {
 				// make default depend on all other bindings
-				final Set<Binding> defaultBindingDeps = dependencies.computeIfAbsent(defaultBinding.get(),
-						b -> new HashSet<>());
+				final var defaultBindingDeps = dependencies.computeIfAbsent(defaultBinding.get(), b -> new HashSet<>());
 				defaultBindingDeps.addAll(caseControl.getBindings());
 				defaultBindingDeps.remove(defaultBinding.get());
 			}
@@ -113,7 +111,7 @@ public class Flow extends WithId {
 	}
 
 	public Set<Binding> getAllDependencies(final Binding binding) {
-		final Set<Binding> deps = new HashSet<>();
+		var deps = new HashSet<Binding>();
 		deps.addAll(
 				config.bindings.stream().filter(b -> b.toDataPoint().equals(binding.fromDataPoint())).collect(toSet()));
 		deps.addAll(config.dependencies.getOrDefault(binding, emptySet()));

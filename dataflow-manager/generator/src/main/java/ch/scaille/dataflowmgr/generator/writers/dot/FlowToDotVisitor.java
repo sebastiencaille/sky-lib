@@ -91,7 +91,6 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 		if (!graph.nodes.containsKey(context.outputDataPoint)) {
 			addDataPoint(context.outputDataPoint);
 		}
-
 		flowGeneratorVisitor.generateFlow(context, context.inputDataPoint);
 	}
 
@@ -100,7 +99,7 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 			graph.links.add(new Link(linkFrom, linkTo));
 			return;
 		}
-		for (final ExternalAdapter adapter : externalAdapters) {
+		for (final var adapter : externalAdapters) {
 			final String activatorNodeName = addAdapter(adapter);
 			graph.links.add(new Link(linkFrom, activatorNodeName));
 			graph.links.add(new Link(activatorNodeName, linkTo));
@@ -112,7 +111,7 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 	}
 
 	private String addAdapter(final ExternalAdapter adapter) {
-		final String nodeName = toVar(adapter);
+		final var nodeName = toVar(adapter);
 		graph.nodes.put(nodeName, new Node(nodeName, adapter.getCall(), "External:$", DotFileGenerator.Shape.BOX));
 		return nodeName;
 	}
@@ -131,22 +130,21 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 
 		super.processFlow();
 
-		final DotFileGenerator<RuntimeException> generator = DotFileGenerator.inMemory();
-		generator.header(flow.getName(), "TBD");
-		generator.polyLines();
+		final var dotGeenerator = DotFileGenerator.inMemory();
+		dotGeenerator.header(flow.getName(), "TBD");
+		dotGeenerator.polyLines();
 
-		for (final Node node : graph.nodes.values()) {
-			final String color = computeColor(node);
-			final String label = node.label;
-			final DotFileGenerator.Shape shape = node.shape;
-			generator.addNode(node.name, label, shape, color);
+		for (final var graphNode : graph.nodes.values()) {
+			final var color = computeColor(graphNode);
+			final var label = graphNode.label;
+			final var shape = graphNode.shape;
+			dotGeenerator.addNode(graphNode.name, label, shape, color);
 		}
-		for (final Link link : graph.links) {
-			generator.addEdge(link.from, link.to, link.label, false, link.extra);
+		for (final var link : graph.links) {
+			dotGeenerator.addEdge(link.from, link.to, link.label, false, link.extra);
 		}
-		generator.footer();
-		return generator;
-
+		dotGeenerator.footer();
+		return dotGeenerator;
 	}
 
 	private String computeColor(final Node node) {

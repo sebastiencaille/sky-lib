@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import ch.scaille.dataflowmgr.model.Binding;
@@ -39,7 +38,7 @@ public abstract class AbstractFlowVisitor {
 		}
 
 		public Set<ExternalAdapter> unprocessedAdapters(final Collection<ExternalAdapter> adapters) {
-			final Set<ExternalAdapter> unprocessed = new HashSet<>(adapters);
+			final var unprocessed = new HashSet<>(adapters);
 			adapters.removeAll(processedAdapters);
 			return unprocessed;
 		}
@@ -86,11 +85,11 @@ public abstract class AbstractFlowVisitor {
 		availableDataPoints.put(Flow.ENTRY_POINT, flow.getEntryPointType());
 		while (!untriggeredBindings.isEmpty()) {
 			// More to process
-			final Set<Binding> newlyTriggeredBindings = getTriggeredBindings();
+			final var newlyTriggeredBindings = getTriggeredBindings();
 			untriggeredBindings.removeAll(newlyTriggeredBindings);
 			// make data point available only if all corresponding bindings have been
 			// executed
-			for (final Binding binding : newlyTriggeredBindings) {
+			for (final var binding : newlyTriggeredBindings) {
 				if (untriggeredBindings.stream().noneMatch(b -> binding.toDataPoint().equals(b.toDataPoint()))) {
 					availableDataPoints.put(binding.toDataPoint(), binding.getProcessor().getReturnType());
 				}
@@ -98,15 +97,15 @@ public abstract class AbstractFlowVisitor {
 			missingDeps.values().forEach(v -> v.removeAll(newlyTriggeredBindings));
 		}
 
-		for (final BindingContext c : processOrder) {
+		for (final var c : processOrder) {
 			c.setReverseDeps(reverseDeps.getOrDefault(c.binding, Collections.emptyList()));
 			process(c);
 		}
 	}
 
 	private Set<Binding> getTriggeredBindings() {
-		final Set<Binding> newlyTriggeredBindings = new HashSet<>();
-		for (final Binding binding : untriggeredBindings) {
+		final var newlyTriggeredBindings = new HashSet<Binding>();
+		for (final var binding : untriggeredBindings) {
 			// Next potential binding
 			final Set<Binding> bindingDeps = missingDeps.get(binding);
 			final boolean depsTriggered = bindingDeps == null || bindingDeps.isEmpty();
@@ -115,10 +114,9 @@ public abstract class AbstractFlowVisitor {
 			}
 
 			// Process
-			final BindingContext context = new BindingContext(binding,
-					availableDataPoints.get(binding.fromDataPoint()));
+			final var context = new BindingContext(binding, availableDataPoints.get(binding.fromDataPoint()));
 			processOrder.add(context);
-			for (final Binding dep : flow.getAllDependencies(binding)) {
+			for (final var dep : flow.getAllDependencies(binding)) {
 				reverseDeps.computeIfAbsent(dep, v -> new ArrayList<>()).add(context.binding);
 			}
 
@@ -138,9 +136,9 @@ public abstract class AbstractFlowVisitor {
 	 * @return
 	 */
 	public Set<ExternalAdapter> listAdapters(final BindingContext context, final Call<?> call) {
-		final HashSet<ExternalAdapter> adaptersRequiredByActivator = new HashSet<>();
-		for (final Entry<String, String> param : call.getParameters().entrySet()) {
-			for (final ExternalAdapter adapter : context.bindingAdapters) {
+		final var adaptersRequiredByActivator = new HashSet<ExternalAdapter>();
+		for (final var param : call.getParameters().entrySet()) {
+			for (final var adapter : context.bindingAdapters) {
 				final boolean match = adapter.getName().endsWith('.' + param.getKey())
 						|| adapter.getReturnType().equals(param.getValue());
 				if (match) {

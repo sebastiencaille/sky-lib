@@ -28,11 +28,11 @@ public class JavaToDictionary extends AbstractGenerator<Dictionary> {
 	private static final Map<Class<? extends Annotation>, BiConsumer<Dictionary, Class<?>>> annotation2Handlers = new HashMap<>();
 
 	static {
-		ProcessorToDictionary processorHandler = new ProcessorToDictionary();
+		var processorHandler = new ProcessorToDictionary();
 		addAnnotation(Processors.class, processorHandler::addToDictionary);
-		ExternalAdapterToDictionary externalAdapterHandler = new ExternalAdapterToDictionary();
+		var externalAdapterHandler = new ExternalAdapterToDictionary();
 		addAnnotation(ExternalAdapters.class, externalAdapterHandler::addToDictionary);
-		CaseFlowCtrlToDictionary caseCtrlToDictionary = new CaseFlowCtrlToDictionary();
+		var caseCtrlToDictionary = new CaseFlowCtrlToDictionary();
 		addAnnotation(Conditions.class, caseCtrlToDictionary::addToDictionary);
 	}
 
@@ -50,9 +50,9 @@ public class JavaToDictionary extends AbstractGenerator<Dictionary> {
 
 	@Override
 	public Dictionary generate() {
-		Dictionary dictionary = new Dictionary();
-		for (Class<?> clazz : classes) {
-			for (Annotation annotation : clazz.getAnnotations()) {
+		var dictionary = new Dictionary();
+		for (var clazz : classes) {
+			for (var annotation : clazz.getAnnotations()) {
 				if (annotation2Handlers.containsKey(annotation.annotationType())) {
 					annotation2Handlers.get(annotation.annotationType()).accept(dictionary, clazz);
 				}

@@ -91,7 +91,8 @@ public class PagePilot {
 	}
 
 	public Polling<WebElement, Boolean> textEquals(String expected) {
-		return Pollings.<WebElement>assertion(pc -> Assertions.assertEquals(expected, pc.component.getText(), pc.description))
+		return Pollings
+				.<WebElement>assertion(pc -> Assertions.assertEquals(expected, pc.component.getText(), pc.description))
 				.withReportText("text " + expected);
 	}
 }

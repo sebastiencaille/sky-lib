@@ -126,7 +126,7 @@ public abstract class ObjectControllerTableModel<O, M extends IObjectGuiModel<O>
 	}
 
 	private final TableBinding<O, ?>[] bindings;
-	
+
 	private final M objectModel;
 
 	/**

@@ -50,7 +50,6 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 		this(name, model, null);
 	}
 
-	
 	public ObjectProperty(final String name, final IScopedSupport propertySupport, final T defaultValue) {
 		super(name, propertySupport);
 		this.defaultValue = defaultValue;
@@ -60,7 +59,6 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 	public ObjectProperty(final String name, final IScopedSupport propertySupport) {
 		this(name, propertySupport, null);
 	}
-
 
 	@Override
 	public EndOfChain<T> createBindingChain() {

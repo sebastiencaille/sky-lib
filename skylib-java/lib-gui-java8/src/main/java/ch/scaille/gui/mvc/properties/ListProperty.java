@@ -34,7 +34,7 @@ public class ListProperty<T> extends ObjectProperty<List<T>> {
 	public ListProperty(final String name, final GuiModel model) {
 		super(name, model);
 	}
-	
+
 	public ListProperty(final String name, final IScopedSupport propertySupport) {
 		super(name, propertySupport);
 	}

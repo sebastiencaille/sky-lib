@@ -27,6 +27,5 @@ public class PilotReport {
 	public String toString() {
 		return "Report: " + report.size() + " lines";
 	}
-	
 
 }

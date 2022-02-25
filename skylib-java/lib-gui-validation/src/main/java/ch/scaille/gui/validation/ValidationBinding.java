@@ -58,7 +58,8 @@ public class ValidationBinding {
 		private final Class<T> beanType;
 		private final String attributeName;
 
-		public Converter(AbstractTypedProperty<U> prop, Class<T> modelClass, String attributeName, Class<?> attributeClass) {
+		public Converter(AbstractTypedProperty<U> prop, Class<T> modelClass, String attributeName,
+				Class<?> attributeClass) {
 			this.beanType = modelClass;
 			this.attributeName = MetadataHelper.toFirstLetterInLowerCase(attributeName);
 		}

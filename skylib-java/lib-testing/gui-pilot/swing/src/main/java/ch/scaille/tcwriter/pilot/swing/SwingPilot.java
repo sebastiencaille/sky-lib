@@ -90,7 +90,7 @@ public class SwingPilot extends ch.scaille.tcwriter.pilot.GuiPilot {
 	}
 
 	/**
-	 * Search for a component by scanning a component hierarchy, starting from a 
+	 * Search for a component by scanning a component hierarchy, starting from a
 	 * container
 	 *
 	 * @param <T>

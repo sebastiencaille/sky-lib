@@ -206,7 +206,7 @@ public final class Converters {
 	}
 
 	public static <K, V, U> IConverter<Map<K, V>, U> mapContains(K key, U either, U or) {
-		return listen(e -> e.containsKey(key) ? either:or);
+		return listen(e -> e.containsKey(key) ? either : or);
 	}
 
 	public static IConverter<String, String> toSingleLine() {

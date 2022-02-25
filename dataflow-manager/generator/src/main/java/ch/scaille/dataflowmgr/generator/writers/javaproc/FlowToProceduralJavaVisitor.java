@@ -3,7 +3,6 @@ package ch.scaille.dataflowmgr.generator.writers.javaproc;
 import static java.util.stream.Collectors.joining;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 import ch.scaille.dataflowmgr.generator.writers.AbstractJavaFlowVisitor;
@@ -32,7 +31,7 @@ public class FlowToProceduralJavaVisitor extends AbstractJavaFlowVisitor {
 
 		super.processFlow();
 
-		final Map<String, String> templateProperties = new HashMap<>();
+		final var templateProperties = new HashMap<String, String>();
 		templateProperties.put("package", packageName);
 		templateProperties.put("flow.name", flow.getName());
 		templateProperties.put("flow.input", flow.getEntryPointType());
@@ -54,15 +53,15 @@ public class FlowToProceduralJavaVisitor extends AbstractJavaFlowVisitor {
 	}
 
 	void visitExternalAdapters(final BindingContext context, final Set<ExternalAdapter> externalAdapter) {
-		for (final ExternalAdapter adapter : externalAdapter) {
-			final BindingImplVariable parameter = new BindingImplVariable(adapter, varNameOf(context.binding, adapter));
-			appendNewVarAndCall(context, parameter.codeVariable, adapter);
-			availableVars.add(parameter);
+		for (final var adapter : externalAdapter) {
+			final var adapterVariable = new BindingImplVariable(adapter, varNameOf(context.binding, adapter));
+			appendNewVarAndCall(context, adapterVariable.codeVariable, adapter);
+			availableVars.add(adapterVariable);
 		}
 	}
 
 	public void appendNewVariable(final String variableName, final Call<?> call) {
-		String returnType = call.getReturnType();
+		var returnType = call.getReturnType();
 		if (returnType.startsWith("java.lang")) {
 			returnType = returnType.substring("java.lang".length() + 1);
 		}

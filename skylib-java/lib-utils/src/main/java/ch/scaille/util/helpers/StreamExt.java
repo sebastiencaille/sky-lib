@@ -119,7 +119,6 @@ public interface StreamExt {
 		return v -> !Objects.equals(v, val);
 	}
 
-
 	public static void checkContent(final Stream<?> collection, final Class<?> clazz) {
 		Set<?> mismatches = collection.filter(c -> !clazz.isInstance(c)).map(Object::getClass)
 				.collect(Collectors.toSet());

@@ -50,7 +50,7 @@ public abstract class AbstractJavaFlowVisitor extends AbstractFlowVisitor {
 
 	public final Set<String> definedDataPoints = new HashSet<>();
 
-	// All variables declared until now 
+	// All variables declared until now
 	protected final List<BindingImplVariable> availableVars = new ArrayList<>();
 
 	protected AbstractJavaFlowVisitor(final Flow flow, final String packageName, final Template template) {
@@ -70,8 +70,7 @@ public abstract class AbstractJavaFlowVisitor extends AbstractFlowVisitor {
 					.map(v -> v.codeVariable)
 					.orElseThrow(() -> new IllegalStateException("Not found: " + context.inputDataPoint));
 		}
-		List<BindingImplVariable> matches = availableVars.stream().filter(a -> a.name.equals(paramName))
-				.collect(toList());
+		var matches = availableVars.stream().filter(a -> a.name.equals(paramName)).collect(toList());
 		if (matches.size() > 1) {
 			throw new IllegalArgumentException("Too many possible parameters found for " + paramName + ": " + matches);
 		} else if (matches.size() == 1) {

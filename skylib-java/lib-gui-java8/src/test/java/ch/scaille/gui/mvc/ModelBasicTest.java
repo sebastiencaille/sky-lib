@@ -107,8 +107,7 @@ class ModelBasicTest {
 		binding.setValue("bla");
 		assertEquals(456, model.integerProperty.getValue());
 		ErrorSet errorProperty = (ErrorSet) model.getErrorNotifier();
-		Assertions.assertNotNull(
-				errorProperty.getLastError().getValue().getContent(),
+		Assertions.assertNotNull(errorProperty.getLastError().getValue().getContent(),
 				() -> "errorProperty.getLastError().getValue().getContent()");
 		assertEquals(ConversionException.class, errorProperty.getLastError().getValue().getContent().getClass());
 	}

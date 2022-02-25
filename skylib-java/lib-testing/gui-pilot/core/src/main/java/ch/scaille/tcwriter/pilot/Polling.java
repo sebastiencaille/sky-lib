@@ -12,7 +12,7 @@ public class Polling<C, V> {
 	public interface PollingFunction<C, V> {
 		PollingResult<C, V> poll(PollingContext<C> context);
 	}
-	
+
 	private final Predicate<C> precondition;
 
 	private final PollingFunction<C, V> pollingFunction;

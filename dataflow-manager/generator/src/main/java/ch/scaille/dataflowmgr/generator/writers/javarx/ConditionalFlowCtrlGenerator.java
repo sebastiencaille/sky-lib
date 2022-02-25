@@ -12,7 +12,6 @@ import java.util.Set;
 import ch.scaille.dataflowmgr.generator.writers.AbstractFlowVisitor.BindingContext;
 import ch.scaille.dataflowmgr.model.Binding;
 import ch.scaille.dataflowmgr.model.CustomCall;
-import ch.scaille.dataflowmgr.model.ExternalAdapter;
 import ch.scaille.dataflowmgr.model.flowctrl.ConditionalFlowCtrl;
 import ch.scaille.generators.util.JavaCodeGenerator;
 
@@ -29,10 +28,10 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 
 	@Override
 	public void generate(BaseGenContext<GenContext> genContext, BindingContext context) {
-		final Set<Binding> exclusions = ConditionalFlowCtrl.getExclusions(context.binding.getRules()).collect(toSet());
+		final var exclusions = ConditionalFlowCtrl.getExclusions(context.binding.getRules()).collect(toSet());
 		visitor.setConditional(context.outputDataPoint);
 
-		String topCall = visitor.toVariable(context.binding) + "_conditional";
+		var topCall = visitor.toVariable(context.binding) + "_conditional";
 		flowFactories.appendIndented(
 				"private Maybe<FlowExecution> %s(FlowExecution execution, final Function<Maybe<FlowExecution>, Maybe<FlowExecution>> callModifier, Runnable... callbacks)",
 				topCall).openBlock();
@@ -62,21 +61,20 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 	 * @param genContext
 	 */
 	private void visitActivators(final BindingContext context, GenContext genContext) {
-		List<CustomCall> activators = ConditionalFlowCtrl.getActivators(context.binding.getRules()).collect(toList());
+		var activators = ConditionalFlowCtrl.getActivators(context.binding.getRules()).collect(toList());
 		if (activators.isEmpty()) {
 			return;
 		}
-		final List<String> activatorNames = new ArrayList<>();
+		final var activatorNames = new ArrayList<String>();
 
 		// Activators
-		for (final CustomCall activator : activators) {
+		for (final var activator : activators) {
 
-			final Set<ExternalAdapter> unprocessed = context
-					.unprocessedAdapters(visitor.listAdapters(context, activator));
-			final List<String> adapterNames = visitor.visitExternalAdapters(context, unprocessed);
-			context.processedAdapters.addAll(unprocessed);
+			final var unprocessedAdapters = context.unprocessedAdapters(visitor.listAdapters(context, activator));
+			final var adapterNames = visitor.visitExternalAdapters(context, unprocessedAdapters);
+			context.processedAdapters.addAll(unprocessedAdapters);
 
-			final List<String> activatorParameters = visitor.guessParameters(context, activator);
+			final var activatorParameters = visitor.guessParameters(context, activator);
 
 			activatorNames.add("activator_" + visitor.toVariable(activator));
 			generateCallActivator(activator, adapterNames, activatorParameters);
@@ -111,7 +109,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 
 	private void generateCallAllActivators(final BindingContext context, final List<String> activatorNames) {
 		flowFactories.appendIndented("final Maybe<FlowExecution> activators = Maybe.just(true)").indent();
-		for (final String activatorName : activatorNames) {
+		for (final var activatorName : activatorNames) {
 			flowFactories.eoli().append(".zipWith(").append(activatorName)
 					.append(", (u, r) -> u.booleanValue() && r.booleanValue())");
 		}

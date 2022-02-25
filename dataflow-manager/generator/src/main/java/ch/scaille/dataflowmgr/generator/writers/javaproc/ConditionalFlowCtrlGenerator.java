@@ -5,13 +5,9 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 import ch.scaille.dataflowmgr.generator.writers.AbstractFlowVisitor.BindingContext;
 import ch.scaille.dataflowmgr.model.Binding;
-import ch.scaille.dataflowmgr.model.CustomCall;
-import ch.scaille.dataflowmgr.model.ExternalAdapter;
 import ch.scaille.dataflowmgr.model.flowctrl.ConditionalFlowCtrl;
 import ch.scaille.generators.util.JavaCodeGenerator;
 
@@ -48,8 +44,8 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 
 		visitActivators(context);
 
-		List<CustomCall> activators = ConditionalFlowCtrl.getActivators(context.binding.getRules()).collect(toList());
-		Set<String> exclusions = ConditionalFlowCtrl.getExclusions(context.binding.getRules()).map(Binding::toDataPoint)
+		var activators = ConditionalFlowCtrl.getActivators(context.binding.getRules()).collect(toList());
+		var exclusions = ConditionalFlowCtrl.getExclusions(context.binding.getRules()).map(Binding::toDataPoint)
 				.collect(toSet());
 
 		if (!exclusions.isEmpty()) {
@@ -60,7 +56,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 		}
 
 		generateDataPoint(context);
-		final List<String> conditions = new ArrayList<>();
+		final var conditions = new ArrayList<String>();
 		if (visitor.isConditionalData(context.inputDataPoint)) {
 			conditions.add(visitor.availableVarNameOf(context.inputDataPoint));
 		}
@@ -95,16 +91,15 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 	 * @param availableVars @
 	 */
 	private void visitActivators(final BindingContext context) {
-		List<CustomCall> activators = ConditionalFlowCtrl.getActivators(context.binding.getRules()).collect(toList());
+		var activators = ConditionalFlowCtrl.getActivators(context.binding.getRules()).collect(toList());
 		if (activators.isEmpty()) {
 			return;
 		}
 		generator.addLocalVariable(Boolean.TYPE.getName(), activatedVarNameOf(context.binding), "true");
-		for (final CustomCall activator : activators) {
+		for (final var activator : activators) {
 			generator.openIf(activatedVarNameOf(context.binding));
 
-			final Set<ExternalAdapter> unprocessed = context
-					.unprocessedAdapters(visitor.listAdapters(context, activator));
+			final var unprocessed = context.unprocessedAdapters(visitor.listAdapters(context, activator));
 			visitor.visitExternalAdapters(context, unprocessed);
 			context.processedAdapters.addAll(unprocessed);
 

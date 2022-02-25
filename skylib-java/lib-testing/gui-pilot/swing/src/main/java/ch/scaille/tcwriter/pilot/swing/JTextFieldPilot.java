@@ -32,7 +32,7 @@ public class JTextFieldPilot extends AbstractSwingComponent<JTextFieldPilot, JTe
 		wait(action(t -> {
 			t.setText(value);
 			if (t instanceof JTextField) {
-				SwingHelper.	doPressReturn(t);
+				SwingHelper.doPressReturn(t);
 			}
 		}).withReportText(settingValue(value)));
 	}
@@ -41,7 +41,8 @@ public class JTextFieldPilot extends AbstractSwingComponent<JTextFieldPilot, JTe
 		if (expected == null) {
 			return;
 		}
-		wait(assertion(pc -> assertEquals(expected, pc.component.getText(), pc.description)).withReportText(checkingValue(expected)));
+		wait(assertion(pc -> assertEquals(expected, pc.component.getText(), pc.description))
+				.withReportText(checkingValue(expected)));
 	}
 
 }

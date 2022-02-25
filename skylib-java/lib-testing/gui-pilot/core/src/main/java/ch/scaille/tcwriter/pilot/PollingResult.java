@@ -10,7 +10,7 @@ public class PollingResult<T, V> {
 	public interface FailureHandler<C, V> extends BiFunction<PollingResult<C, V>, GuiPilot, V> {
 		// simplify type
 	}
-	
+
 	public final V polledValue;
 	public final Throwable failureReason;
 	private String componentDescription;
@@ -59,7 +59,5 @@ public class PollingResult<T, V> {
 	public String toString() {
 		return "Value: " + polledValue + ", Exception: " + failureReason;
 	}
-
-
 
 }

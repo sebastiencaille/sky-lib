@@ -29,7 +29,7 @@ public class LambdaExt {
 	public interface FunctionWithException<T, R, E extends Throwable> {
 		R apply(T value) throws E;
 	}
-	
+
 	@FunctionalInterface
 	public interface BiFunctionWithException<T, U, R, E extends Throwable> {
 		R apply(T value, U value2) throws E;
@@ -40,7 +40,7 @@ public class LambdaExt {
 	public static <T, E extends Exception> FunctionWithException<T, T, E> identity() {
 		return (FunctionWithException<T, T, E>) FUNCTION_IDENTITY;
 	}
-	
+
 	private static Consumer<Exception> exceptionHandler = e -> {
 		throw new IllegalStateException(e.getMessage(), e);
 	};
@@ -49,7 +49,6 @@ public class LambdaExt {
 		exceptionHandler.accept(e);
 		return null;
 	}
-
 
 	public static void setDefaultExceptionHandler(Consumer<Exception> anExceptionHandler) {
 		exceptionHandler = anExceptionHandler;
@@ -128,14 +127,15 @@ public class LambdaExt {
 			}
 		};
 	}
-	
-	public static <T,U, R, E extends Exception> BiFunction<T,U, R> uncheckF(final BiFunctionWithException<T, U, R, E> call) {
+
+	public static <T, U, R, E extends Exception> BiFunction<T, U, R> uncheckF(
+			final BiFunctionWithException<T, U, R, E> call) {
 		return uncheckF(call, LambdaExt::defaultExceptionHandler);
 	}
 
-	public static <T, U,R, E extends Exception> BiFunction<T,U, R> uncheckF(final BiFunctionWithException<T, U,R, E> call,
-			final Function<? super E, R> exceptionHandler) {
-		return (t,u) -> {
+	public static <T, U, R, E extends Exception> BiFunction<T, U, R> uncheckF(
+			final BiFunctionWithException<T, U, R, E> call, final Function<? super E, R> exceptionHandler) {
+		return (t, u) -> {
 			try {
 				return call.apply(t, u);
 			} catch (final Exception ex) {

@@ -18,13 +18,9 @@ import ch.scaille.dataflowmgr.generator.writers.dot.FlowToDotVisitor;
 import ch.scaille.dataflowmgr.generator.writers.javaproc.FlowToProceduralJavaVisitor;
 import ch.scaille.dataflowmgr.generator.writers.javarx.FlowToRXJavaVisitor;
 import ch.scaille.dataflowmgr.model.Binding;
-import ch.scaille.dataflowmgr.model.Binding.Builder;
 import ch.scaille.dataflowmgr.model.CustomCall;
-import ch.scaille.dataflowmgr.model.Dictionary;
 import ch.scaille.dataflowmgr.model.Dictionary.Calls;
-import ch.scaille.dataflowmgr.model.ExternalAdapter;
 import ch.scaille.dataflowmgr.model.Flow;
-import ch.scaille.dataflowmgr.model.Processor;
 import ch.scaille.dataflowmgr.model.flowctrl.ConditionalFlowCtrl;
 import ch.scaille.generators.util.Template;
 import ch.scaille.util.helpers.ClassFinder;
@@ -49,36 +45,36 @@ class SimpleTest {
 	@Test
 	void testFlow() throws IOException, InterruptedException {
 
-		final Dictionary dictionary = JavaToDictionary.configure(ClassFinder.forApp())
+		final var dictionary = JavaToDictionary.configure(ClassFinder.forApp())
 				.withPackages("ch.scaille.dataflowmgr.examples.simple").scan().collect(JavaToDictionary.toDictionary());
 
 		// Services (see AbstractFlow)
-		final Calls<Processor> simpleService = dictionary.processors.map(SIMPLE_SERVICE_CLASS, "simpleService");
-		final Calls<CustomCall> simpleFlowConditions = (Calls<CustomCall>) dictionary.flowControl.get(Conditions.class)
+		final var simpleService = dictionary.processors.map(SIMPLE_SERVICE_CLASS, "simpleService");
+		final var simpleFlowConditions = (Calls<CustomCall>) dictionary.flowControl.get(Conditions.class)
 				.map(SIMPLE_FLOW_CONDITIONS_CLASS, "simpleFlowConditions");
-		final Calls<ExternalAdapter> simpleExternalAdapter = dictionary.externalAdapters
-				.map(SIMPLE_EXTERNAL_ADAPTER_CLASS, "simpleExternalAdapter");
+		final var simpleExternalAdapter = dictionary.externalAdapters.map(SIMPLE_EXTERNAL_ADAPTER_CLASS,
+				"simpleExternalAdapter");
 
 		// Processors
-		final Processor init = simpleService.get("init");
-		final Processor complete = simpleService.get("complete");
-		final Processor keepAsIs = simpleService.get("keepAsIs");
+		final var init = simpleService.get("init");
+		final var complete = simpleService.get("complete");
+		final var keepAsIs = simpleService.get("keepAsIs");
 
 		// Conditions
 		final CustomCall mustComplete = simpleFlowConditions.get("mustComplete");
 
 		// Eternal adapters
-		final ExternalAdapter getCompletion = simpleExternalAdapter.get("getCompletion");
-		final ExternalAdapter displayData = simpleExternalAdapter.get("display");
+		final var getCompletion = simpleExternalAdapter.get("getCompletion");
+		final var displayData = simpleExternalAdapter.get("display");
 
 		// Bindings
-		final Builder entryToInit = Binding.builder(Flow.ENTRY_POINT, init);
-		final Builder initToComplete = Binding.builder(init, complete).withExternalData(getCompletion).as(DP_Complete);
-		final Builder initToKeepAsIs = Binding.builder(init, keepAsIs).as(DP_Complete);
-		final Builder completeToExit = Binding.builder(DP_Complete, Flow.EXIT_POINT).withExternalData(displayData);
+		final var entryToInit = Binding.builder(Flow.ENTRY_POINT, init);
+		final var initToComplete = Binding.builder(init, complete).withExternalData(getCompletion).as(DP_Complete);
+		final var initToKeepAsIs = Binding.builder(init, keepAsIs).as(DP_Complete);
+		final var completeToExit = Binding.builder(DP_Complete, Flow.EXIT_POINT).withExternalData(displayData);
 
 		// Flow
-		final Flow flow = Flow.builder("SimpleFlow", UUID.randomUUID(), "java.lang.String") //
+		final var flow = Flow.builder("SimpleFlow", UUID.randomUUID(), "java.lang.String") //
 				.add(entryToInit) //
 				.add(ConditionalFlowCtrl.builder("CompleteData") //
 						.conditional(mustComplete, initToComplete).fallback(initToKeepAsIs)) //
@@ -93,7 +89,7 @@ class SimpleTest {
 				Template.from("templates/flowrx.template"), true).process().writeToFolder(Paths.get("src/test/java"));
 
 		// Generate the graphic
-		try (final FileWriter out = new FileWriter(new File("src/test/reports/SimpleFlow.dot"))) {
+		try (final var out = new FileWriter(new File("src/test/reports/SimpleFlow.dot"))) {
 			out.write(new FlowToDotVisitor(flow).process().getOutput().toString());
 		}
 		runDot();
@@ -102,7 +98,7 @@ class SimpleTest {
 	private void runDot() throws IOException, InterruptedException {
 		final Process dotExec = new ProcessBuilder("dot", "-Tpng", "-osrc/test/reports/SimpleFlow.png",
 				"src/test/reports/SimpleFlow.dot").start();
-		final BufferedReader reader = new BufferedReader(new InputStreamReader(dotExec.getErrorStream()));
+		final var reader = new BufferedReader(new InputStreamReader(dotExec.getErrorStream()));
 		String line;
 		while ((line = reader.readLine()) != null) {
 			Logs.of(this).info(line);

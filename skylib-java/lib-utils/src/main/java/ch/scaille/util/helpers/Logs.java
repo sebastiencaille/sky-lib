@@ -15,7 +15,6 @@ public interface Logs {
 		return Logger.getLogger(logger);
 	}
 
-	
 	public static Logger of(Object obj) {
 		return of(obj.getClass());
 	}

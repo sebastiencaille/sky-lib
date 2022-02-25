@@ -11,16 +11,15 @@ import ch.scaille.util.helpers.LambdaExt;
 
 class LambdaExtTest {
 
-	private static final String STR = "https://www.google.com"; 
-	
+	private static final String STR = "https://www.google.com";
+
 	private URL url() throws MalformedURLException {
 		return new URL(STR);
 	}
-	
+
 	private URL str2url(String url) throws MalformedURLException {
 		return new URL(url);
 	}
-	
 
 	private void consumeUrl(String u) {
 		// noop

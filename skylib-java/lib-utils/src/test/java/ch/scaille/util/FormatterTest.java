@@ -13,7 +13,7 @@ import ch.scaille.util.text.SimpleTextFormatter;
 import ch.scaille.util.text.StringListOutput;
 import ch.scaille.util.text.TextFormatter;
 
- class FormatterTest {
+class FormatterTest {
 
 	private static class ExceptionOutput implements TextFormatter.IOutput<IOException> {
 
@@ -33,13 +33,13 @@ import ch.scaille.util.text.TextFormatter;
 	}
 
 	@Test
-	 void testExceptionManagement() {
+	void testExceptionManagement() {
 		SimpleTextFormatter<IOException> tf = new SimpleTextFormatter<>(new ExceptionOutput());
 		assertThrows(IOException.class, () -> tf.append("Hello"));
 	}
 
 	@Test
-	 void testIndentation() {
+	void testIndentation() {
 		StringListOutput output = new StringListOutput();
 		SimpleTextFormatter<RuntimeException> tf = new SimpleTextFormatter<>(output);
 		tf.setIndentationManager(new ArrowIndentationManager());

@@ -10,10 +10,10 @@ public class ModelExamplePage extends PagePilot {
 
 	@ByName("reverseOrder")
 	public JToggleButtonPilot reverseOrder = null;
-	
+
 	@ByName("enableFilter")
 	public JToggleButtonPilot enableFilter = null;
-	
+
 	@ByName("listTable")
 	public JTablePilot listTable = null;
 

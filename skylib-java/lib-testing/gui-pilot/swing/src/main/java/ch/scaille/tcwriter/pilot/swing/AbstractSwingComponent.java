@@ -84,5 +84,4 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 				.withReportText(Factories.Reporting.checkingThat("component is disabled")));
 	}
 
-
 }

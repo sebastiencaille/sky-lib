@@ -34,7 +34,8 @@ public abstract class AbstractAttributeMetaData<T> {
 
 	/**
 	 * Gets the value of the object's attribute represented by this instance
-	 * @param from 
+	 * 
+	 * @param from
 	 * @return the value
 	 */
 	public abstract Object getValueOf(T from);

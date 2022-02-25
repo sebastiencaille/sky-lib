@@ -210,7 +210,8 @@ public abstract class AttributeProcessor {
 						+ "\tConfiguration.persistent(currentObjectProvider, %s),%n"
 						+ "\timplicitConverters(%s.class, %s, %s.class));",
 				getPropertyFieldName(), getPropertyType(), getAttributeNameConstant(), getFieldCreation(),
-				modelClass.getSimpleName(), getAttributeNameConstant(), modelAttribute.getClassType().getCanonicalName());
+				modelClass.getSimpleName(), getAttributeNameConstant(),
+				modelAttribute.getClassType().getCanonicalName());
 	}
 
 	public String getAttributeNameConstant() {

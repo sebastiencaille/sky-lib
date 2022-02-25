@@ -40,7 +40,8 @@ public class SwingModalDialogDetector extends SwingPilot {
 					continue;
 				}
 				final SwingModalDialogDetector dialogPilot = new SwingModalDialogDetector((JDialog) window);
-				result.addAll(Arrays.stream(pollingHandlers).map(p -> p.apply(dialogPilot)).collect(Collectors.toList()));
+				result.addAll(
+						Arrays.stream(pollingHandlers).map(p -> p.apply(dialogPilot)).collect(Collectors.toList()));
 			}
 		});
 		return result;

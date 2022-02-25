@@ -22,7 +22,8 @@ import java.util.concurrent.TimeoutException;
 public class TimeTracker {
 
 	public static TimeTracker createTimeoutFactory(final int hours, final int minutes, final int seconds) {
-		return new TimeTracker(Duration.ofHours(hours).plus(Duration.ofMinutes(minutes)).plus(Duration.ofSeconds(seconds)));
+		return new TimeTracker(
+				Duration.ofHours(hours).plus(Duration.ofMinutes(minutes)).plus(Duration.ofSeconds(seconds)));
 	}
 
 	public static TimeTracker createTimeoutFactory(final int time, final TimeUnit unit) {
@@ -82,7 +83,7 @@ public class TimeTracker {
 		}
 		return l;
 	}
-	
+
 	public long overTimeMs() {
 		return Math.max(0, System.currentTimeMillis() - getAbsoluteTimeout());
 	}

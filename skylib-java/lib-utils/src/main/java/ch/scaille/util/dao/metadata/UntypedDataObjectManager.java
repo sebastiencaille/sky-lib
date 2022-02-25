@@ -27,7 +27,6 @@ public class UntypedDataObjectManager extends DataObjectManager<Object> {
 		super(objectMetaData, object);
 	}
 
-	
 	@Override
 	public void copyInto(final Object object) {
 

@@ -17,7 +17,7 @@ public abstract class AbstractClassToDictionary {
 	}
 
 	protected String methodParamName(final Parameter p) {
-		final Input inputAnnotation = p.getDeclaredAnnotation(Input.class);
+		final var inputAnnotation = p.getDeclaredAnnotation(Input.class);
 		if (inputAnnotation == null) {
 			return p.getName();
 		}

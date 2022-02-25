@@ -61,7 +61,6 @@ public class ModelClassProcessor {
 		}
 
 	}
-	
 
 	public static String typeParametersToString(final Type type) {
 		if (!(type instanceof ParameterizedType)) {
@@ -77,7 +76,6 @@ public class ModelClassProcessor {
 		builder.append('>');
 		return builder.toString();
 	}
-
 
 	private final Class<?> modelClass;
 

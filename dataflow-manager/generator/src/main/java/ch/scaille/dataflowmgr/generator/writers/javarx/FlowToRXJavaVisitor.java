@@ -66,7 +66,7 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 
 		generateGlobalFlow();
 
-		final String inputBinding = flow.getBindings().stream().filter(Binding::isEntry).map(this::varNameOf)
+		final var inputBinding = flow.getBindings().stream().filter(Binding::isEntry).map(this::varNameOf)
 				.collect(StreamExt.single()).orElseThrow(WrongCountException::new);
 
 		final Map<String, String> templateProperties = new HashMap<>();
@@ -84,12 +84,12 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 
 	private void generateGlobalFlow() {
 		Collections.reverse(processOrder);
-		for (final BindingContext context : processOrder) {
+		for (final var context : processOrder) {
 			appendInfo(flowCode, context.binding).eol();
 
-			final String varNameOfBinding = varNameOf(context.binding);
+			final var varNameOfBinding = varNameOf(context.binding);
 
-			final List<Binding> deps = context.getReverseDeps();
+			final var deps = context.getReverseDeps();
 			flowCode.appendIndented("final Maybe<FlowExecution> %s = %s(execution", varNameOfBinding, varNameOfBinding);
 			if (context.binding.isExit()) {
 				flowCode.append(", exitModifier");
@@ -123,9 +123,9 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 	}
 
 	private void visitExecution(final BindingContext context) {
-		final List<Binding> dependencies = flow.getAllDependencies(context.binding).stream()
+		final var dependencies = flow.getAllDependencies(context.binding).stream()
 				.sorted((b1, b2) -> b1.fromDataPoint().compareTo(b2.fromDataPoint())).collect(toList());
-		GenContext genContext = new AbstractFlowGenerator.GenContext(debug, dependencies);
+		var genContext = new AbstractFlowGenerator.GenContext(debug, dependencies);
 		flowGeneratorVisitor.generateFlow(context, genContext);
 
 		flowFactories.appendIndented(
@@ -137,10 +137,10 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 
 		// Call default activation when all deps are ok
 		addBindingDepsCheck(context.binding, dependencies);
-		
+
 		if (debug) {
-			flowFactories.eoli().append(".doOnSuccess(r -> info(\"%s: Deps success\"))", context.binding)
-					.eoli().append(".doOnComplete(() -> info(\"%s: Deps skipping\"))", context.binding); //
+			flowFactories.eoli().append(".doOnSuccess(r -> info(\"%s: Deps success\"))", context.binding).eoli()
+					.append(".doOnComplete(() -> info(\"%s: Deps skipping\"))", context.binding); //
 		}
 		flowFactories.eoli().append(".doOnSuccess(r -> topCall.subscribe())").eos().unindent();
 		flowFactories.closeBlock().eol();
@@ -148,10 +148,10 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 
 	List<String> visitExternalAdapters(final BindingContext context, final Set<ExternalAdapter> externalAdapter) {
 
-		final List<String> adapterNames = new ArrayList<>();
+		final var adapterNames = new ArrayList<String>();
 
-		for (final ExternalAdapter adapter : externalAdapter) {
-			final String varNameOfAdapter = varNameOf(context.binding, adapter);
+		for (final var adapter : externalAdapter) {
+			final var varNameOfAdapter = varNameOf(context.binding, adapter);
 			if (!context.binding.isExit()) {
 				generateDataSetter(adapter.getReturnType(), varNameOfAdapter, false);
 				availableVars.add(new BindingImplVariable(adapter, "f." + varNameOfAdapter));
@@ -180,14 +180,15 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 		if (adapterNames.isEmpty()) {
 			return;
 		}
-		for (final String adapterName : adapterNames) {
+		for (final var adapterName : adapterNames) {
 			flowFactories.eoli().append(".zipWith(").append(adapterName).append(", (r, s) -> execution)");
 		}
 	}
 
 	private void generateDataSetter(final String type, final String property, boolean withState) {
 		if (withState) {
-			flowClass.addInstanceVarDecl("private", "DataPointState", stateOf(property), "DataPointState.NOT_TRIGGERED");
+			flowClass.addInstanceVarDecl("private", "DataPointState", stateOf(property),
+					"DataPointState.NOT_TRIGGERED");
 			flowClass.addSetter("private", "DataPointState", stateOf(property));
 		}
 		flowClass.addInstanceVarDecl("private", type, property);
@@ -201,9 +202,8 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 
 	}
 
-
 	private void generateDataState(final BindingContext context) {
-		final String varNameOfBinding = varNameOf(context.binding);
+		final var varNameOfBinding = varNameOf(context.binding);
 		flowClass.addInstanceVarDecl("private", "DataPointState", bindingStateOf(context.binding),
 				"DataPointState.NOT_TRIGGERED");
 		flowClass.addSetter("private synchronized", "DataPointState", bindingStateOf(context.binding));
@@ -253,7 +253,6 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 	String dataPointStateOf(final Binding binding) {
 		return "state_" + binding.toDataPoint();
 	}
-
 
 	private String stateOf(final String property) {
 		return "state_" + property;

@@ -78,7 +78,7 @@ public class ConditionalFlowCtrl extends WithId implements IFlowCheck {
 		super(UUID.randomUUID());
 		this.config = configuration;
 
-		final Optional<Binding.Builder> defaultBindingBuilder = config.getDefaultBinding();
+		final var defaultBindingBuilder = config.getDefaultBinding();
 		bindings.addAll(config.bindings.stream().filter(notEq(defaultBindingBuilder.orElse(null)))
 				.map(b -> b.addRule(condition(this)).build()).collect(toList()));
 

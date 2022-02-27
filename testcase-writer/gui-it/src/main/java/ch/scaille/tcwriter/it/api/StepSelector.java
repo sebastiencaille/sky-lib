@@ -7,7 +7,6 @@ import java.util.function.Consumer;
 
 import ch.scaille.tcwriter.annotations.TCApi;
 import ch.scaille.tcwriter.it.TCWriterPage;
-import ch.scaille.tcwriter.pilot.swing.JTablePilot;
 
 @TCApi(description = "Step selector", humanReadable = "Step selector", isSelector = true)
 @SuppressWarnings("java:S5960")
@@ -17,7 +16,7 @@ public interface StepSelector extends Consumer<TCWriterPage> {
 	public static StepSelector selectStep(@TCApi(description = "index", humanReadable = "at row") final int ordinal) {
 		return page -> {
 			final int tableIndex = ordinal - 1;
-			JTablePilot stepsTable = page.stepsTable;
+			var stepsTable = page.stepsTable;
 			stepsTable.wait(stepsTable
 					.assertion(pc -> assertTrue(tableIndex < pc.component.getRowCount(), () -> "Step must exist"))
 					.withReportText(checkingThat("the step " + ordinal + " exists")));
@@ -29,7 +28,7 @@ public interface StepSelector extends Consumer<TCWriterPage> {
 	@TCApi(description = "Append a step to the test", humanReadable = "add a step to the test case")
 	public static StepSelector addStep() {
 		return page -> {
-			JTablePilot stepsTable = page.stepsTable;
+			var stepsTable = page.stepsTable;
 			stepsTable.wait(stepsTable.action(t -> {
 				final int stepsCount = t.getRowCount();
 				if (stepsCount > 0) {

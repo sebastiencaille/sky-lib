@@ -5,6 +5,7 @@ import static ch.scaille.util.helpers.LambdaExt.uncheck;
 import java.awt.Dialog.ModalityType;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +19,7 @@ import ch.scaille.gui.swing.tools.SwingGenericEditorDialog;
 import ch.scaille.gui.tools.GenericEditorClassModel;
 import ch.scaille.gui.tools.GenericEditorController;
 import ch.scaille.tcwriter.executors.ITestExecutor;
+import ch.scaille.tcwriter.executors.ITestExecutor.ExecConfig;
 import ch.scaille.tcwriter.generators.model.TestCaseException;
 import ch.scaille.tcwriter.generators.model.persistence.IModelDao;
 import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
@@ -172,8 +174,10 @@ public class TCWriterController extends GuiController {
 	public void runTestCase() throws IOException, InterruptedException, TestCaseException {
 		final int rcPort = testRemoteControl.prepare();
 		LOGGER.log(Level.INFO, "Using port {}", rcPort);
-		testExecutor.runTest(model.getTestCase().getValue(), rcPort);
-		testRemoteControl.start();
+		final ExecConfig config = new ExecConfig(model.getTestCase().getValue(), Files.createTempDirectory("tc"),
+				rcPort);
+		testExecutor.startTest(config);
+		testRemoteControl.start(config::clean);
 	}
 
 	public void generateCode() throws IOException, TestCaseException {

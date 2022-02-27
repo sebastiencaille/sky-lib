@@ -27,7 +27,7 @@ public class TestApi {
 		}
 
 		public static Command from(final int cmd) {
-			for (final Command command : Command.values()) {
+			for (final var command : Command.values()) {
 				if (command.cmd == (char) (cmd & 0xFF)) {
 					return command;
 				}

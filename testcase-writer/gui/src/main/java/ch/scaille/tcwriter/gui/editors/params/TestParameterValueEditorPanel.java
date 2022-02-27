@@ -16,7 +16,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -222,8 +221,8 @@ public class TestParameterValueEditorPanel extends JPanel {
 			public List<ParameterValueEntry> convertPropertyValueToComponentValue(
 					final Map<String, TestParameterValue> values) {
 				final var paramList = new ArrayList<ParameterValueEntry>();
-				for (final Entry<String, TestParameterValue> value : values.entrySet()) {
-					paramList.add(asParam(tc.getValue(), value.getKey(), value.getValue(),
+				for (final var paramValue : values.entrySet()) {
+					paramList.add(asParam(tc.getValue(), paramValue.getKey(), paramValue.getValue(),
 							propertyValue.getValue().getValueFactory()));
 				}
 				return paramList;

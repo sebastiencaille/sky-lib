@@ -17,7 +17,7 @@ public class ParameterValue {
 	@TCApi(description = "One key:value", humanReadable = "Key:Value")
 	public static ParameterValue oneValue(
 			@TCApi(description = "Key:Value 1", humanReadable = "Key:Value 1") final String keyValue) {
-		final ParameterValue value = new ParameterValue();
+		final var value = new ParameterValue();
 		value.keyValue1 = keyValue;
 		return value;
 	}

@@ -92,8 +92,8 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 		selector.accept(tcWriterPage);
 
 		tcWriterPage.stepsTable.wait(tcWriterPage.stepsTable.assertion(pc -> {
-			var component = pc.component;
-			final Object value = ((StepsTableModel) component.getModel()).getHumanReadable(component.getSelectedRow());
+			final var component = pc.component;
+			final var value = ((StepsTableModel) component.getModel()).getHumanReadable(component.getSelectedRow());
 			Assertions.assertEquals(humanReadable, value.toString());
 		}).withReportText("checking human readable text: " + humanReadable));
 	}

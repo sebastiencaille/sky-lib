@@ -36,8 +36,7 @@ public class TestRemoteControl {
 
 	private TestApi api;
 
-	public TestRemoteControl(final int baseTcpPort, final Consumer<Boolean> testRunning,
-			final Consumer<Boolean> testPaused) {
+	public TestRemoteControl(int baseTcpPort, final Consumer<Boolean> testRunning, final Consumer<Boolean> testPaused) {
 		this.baseTcpPort = baseTcpPort;
 		this.testRunning = testRunning;
 		this.testPaused = testPaused;
@@ -72,49 +71,57 @@ public class TestRemoteControl {
 		return controlPort;
 	}
 
-	public void start() throws IOException {
+	public void start(Runnable testFinished) throws IOException {
 		testRunning.accept(true);
 		cleanSteps();
 		controlServer.setSoTimeout(20_000);
-		controlConnection = controlServer.accept();
-		LOGGER.log(Level.INFO, "Connected");
-		api = new TestApi(controlConnection);
-		TestApi.handleCommands(api, command -> {
+		try {
+			controlConnection = controlServer.accept();
+			LOGGER.log(Level.INFO, "Connected");
+			api = new TestApi(controlConnection);
+			TestApi.handleCommands(api, command -> {
 
-			switch (command) {
-			case STEP_START:
-				final int startStepNumber = api.readStart();
-				final var startStatus = stepStatus(startStepNumber);
-				startStatus.state = StepState.STARTED;
-				stepChangedListener.accept(startStepNumber, startStepNumber);
-				if (startStatus.breakPoint) {
-					testPaused.accept(true);
+				switch (command) {
+				case STEP_START:
+					final int startStepNumber = api.readStart();
+					final var startStatus = stepStatus(startStepNumber);
+					startStatus.state = StepState.STARTED;
+					stepChangedListener.accept(startStepNumber, startStepNumber);
+					if (startStatus.breakPoint) {
+						testPaused.accept(true);
+					}
+					break;
+				case STEP_DONE:
+					final int stopStepNumber = api.readDone();
+					final var stopStepStatus = stepStatus(stopStepNumber);
+					if (stopStepStatus.state == StepState.STARTED) {
+						stopStepStatus.state = StepState.OK;
+					}
+					testPaused.accept(false);
+					stepChangedListener.accept(stopStepNumber, stopStepNumber);
+					break;
+				case ERROR:
+					final var errorMessage = api.readErrorMessage();
+					final int errStepNumber = errorMessage.stepNumber;
+					final var errStepStatus = stepStatus(errStepNumber);
+					errStepStatus.state = StepState.FAILED;
+					errStepStatus.message = errorMessage.message;
+					stepChangedListener.accept(errStepNumber, errStepNumber);
+					break;
+				default:
+					break;
 				}
-				break;
-			case STEP_DONE:
-				final int stopStepNumber = api.readDone();
-				final var stopStepStatus = stepStatus(stopStepNumber);
-				if (stopStepStatus.state == StepState.STARTED) {
-					stopStepStatus.state = StepState.OK;
-				}
-				testPaused.accept(false);
-				stepChangedListener.accept(stopStepNumber, stopStepNumber);
-				break;
-			case ERROR:
-				final var errorMessage = api.readErrorMessage();
-				final int errStepNumber = errorMessage.stepNumber;
-				final var errStepStatus = stepStatus(errStepNumber);
-				errStepStatus.state = StepState.FAILED;
-				errStepStatus.message = errorMessage.message;
-				stepChangedListener.accept(errStepNumber, errStepNumber);
-				break;
-			default:
-				break;
-			}
-		}, this::resetConnection, () -> testRunning.accept(false));
+			}, this::resetConnection, () -> {
+				testRunning.accept(false);
+				testFinished.run();
+			});
 
-		stepStates.values().stream().filter(s -> s.breakPoint).forEach(api::setBreakPoint);
-		api.write(TestApi.Command.RUN);
+			stepStates.values().stream().filter(s -> s.breakPoint).forEach(api::setBreakPoint);
+			api.write(TestApi.Command.RUN);
+		} catch (IOException e) {
+			testRunning.accept(false);
+			throw e;
+		}
 	}
 
 	public void cleanSteps() {

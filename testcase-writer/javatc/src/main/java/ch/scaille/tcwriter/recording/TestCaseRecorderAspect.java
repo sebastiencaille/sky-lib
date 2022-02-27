@@ -27,7 +27,7 @@ public class TestCaseRecorderAspect {
 				recorder.recordParamFactoryCall(jp.getTarget(), jp.getSignature().getName(), jp.getArgs());
 			}
 		}
-		final Object returnValue = jp.proceed();
+		final var returnValue = jp.proceed();
 		if (jp.getTarget() == null) {
 			recorder.recordParamFactory(jp.getSignature().getDeclaringType(), jp.getSignature().getName(), jp.getArgs(),
 					returnValue);

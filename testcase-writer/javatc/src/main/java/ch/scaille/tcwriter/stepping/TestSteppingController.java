@@ -29,7 +29,7 @@ public class TestSteppingController implements ITestSteppingController {
 		final String host = System.getProperty("test.host", "127.0.0.1");
 		final Integer tcpPort = Integer.getInteger("test.port");
 		if (tcpPort != null) {
-			final InetSocketAddress remoteControlAddress = new InetSocketAddress(host, tcpPort);
+			final var remoteControlAddress = new InetSocketAddress(host, tcpPort);
 
 			remoteControlConnection = new Socket();
 			int retry = 5;

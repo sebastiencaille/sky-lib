@@ -3,7 +3,7 @@ package ch.scaille.util.helpers;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class Overridable<S, T> {
+public class OverridableParameter<S, T> {
 
 	private Function<S, T> defaultProvider;
 
@@ -11,11 +11,11 @@ public class Overridable<S, T> {
 
 	private Optional<T> value = Optional.empty();
 
-	public Overridable(Function<S, T> defaultProvider) {
+	public OverridableParameter(Function<S, T> defaultProvider) {
 		this.defaultProvider = defaultProvider;
 	}
 
-	public Overridable<S, T> withSource(S source) {
+	public OverridableParameter<S, T> withSource(S source) {
 		this.source = source;
 		return this;
 	}

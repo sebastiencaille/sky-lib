@@ -27,7 +27,7 @@ public abstract class TestFeature {
 	}
 
 	public static TestFeature aspectjRecorder() {
-		final String jsonModelPath = System.getProperty("tc.jsonModelFile");
+		final var jsonModelPath = System.getProperty("tc.jsonModelFile");
 		if (jsonModelPath == null) {
 			return unavailable();
 		}
@@ -39,7 +39,7 @@ public abstract class TestFeature {
 			return unavailable();
 		}
 		try {
-			final ITestCaseRecorder recorder = (ITestCaseRecorder) recorderClass.getConstructor(Path.class)
+			final var recorder = (ITestCaseRecorder) recorderClass.getConstructor(Path.class)
 					.newInstance(Paths.get(jsonModelPath));
 			return new TestFeature() {
 				@Override
@@ -55,7 +55,7 @@ public abstract class TestFeature {
 
 	public static TestFeature aspectjStepping() {
 
-		final TestFeature feature = new TestFeature() {
+		final var feature = new TestFeature() {
 			@Override
 			public void enable() {
 				try {

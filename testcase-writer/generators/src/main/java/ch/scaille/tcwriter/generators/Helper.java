@@ -9,6 +9,7 @@ import java.util.List;
 import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
 import ch.scaille.tcwriter.generators.model.testcase.TestCase;
 import ch.scaille.tcwriter.generators.model.testcase.TestStep;
+import ch.scaille.util.helpers.LambdaExt;
 
 public class Helper {
 
@@ -48,13 +49,7 @@ public class Helper {
 	}
 
 	static List<Class<?>> toClasses(final String[] args) {
-		return Arrays.stream(args).map(t -> {
-			try {
-				return Class.forName(t);
-			} catch (final ClassNotFoundException e) {
-				throw new IllegalStateException(e);
-			}
-		}).collect(toList());
+		return Arrays.stream(args).map(LambdaExt.uncheckF(s -> Class.forName(s))).collect(toList());
 	}
 
 	public static String paramKey(final Method apiMethod, final int i) {

@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Assertions;
 import ch.scaille.tcwriter.pilot.Factories.PollingResults;
 import ch.scaille.tcwriter.pilot.PollingResult.FailureHandler;
 import ch.scaille.util.helpers.NoExceptionCloseable;
-import ch.scaille.util.helpers.Overridable;
+import ch.scaille.util.helpers.OverridableParameter;
 import ch.scaille.util.helpers.Poller;
 
 /**
@@ -72,7 +72,7 @@ public class ModalDialogDetector {
 
 	private final Supplier<List<PollingResult>> pollingHandlers;
 
-	private Overridable<GuiPilot, Duration> timeout = new Overridable<>(GuiPilot::getModalDialogTimeout);
+	private OverridableParameter<GuiPilot, Duration> timeout = new OverridableParameter<>(GuiPilot::getModalDialogTimeout);
 
 	private GuiPilot pilot;
 

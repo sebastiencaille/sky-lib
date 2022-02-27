@@ -71,7 +71,7 @@ public class ExampleHelper {
 		return testCase;
 	}
 
-	public static ITestExecutor testExecutor() throws IOException {
+	public static ITestExecutor testExecutor() {
 		return new JunitTestExecutor(getModelDao(), ClassLoaderHelper.appClassPath());
 	}
 }

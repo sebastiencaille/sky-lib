@@ -174,8 +174,7 @@ public class TCWriterController extends GuiController {
 	public void runTestCase() throws IOException, InterruptedException, TestCaseException {
 		final int rcPort = testRemoteControl.prepare();
 		LOGGER.log(Level.INFO, "Using port {}", rcPort);
-		final ExecConfig config = new ExecConfig(model.getTestCase().getValue(), Files.createTempDirectory("tc"),
-				rcPort);
+		final var config = new ExecConfig(model.getTestCase().getValue(), Files.createTempDirectory("tc"), rcPort);
 		testExecutor.startTest(config);
 		testRemoteControl.start(config::clean);
 	}

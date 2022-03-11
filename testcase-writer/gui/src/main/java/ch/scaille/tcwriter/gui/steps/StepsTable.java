@@ -7,7 +7,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.util.Arrays;
 
 import javax.swing.CellRendererPane;
@@ -56,7 +55,7 @@ public class StepsTable extends JPanel {
 					throw new IllegalStateException("No renderer pane");
 				}
 				for (int i = 0; i < getRowCount(); i++) {
-					final Rectangle toPaintHR = getCellRect(i, 2, true);
+					final var toPaintHR = getCellRect(i, 2, true);
 					toPaintHR.width = getColumnModel().getTotalColumnWidth();
 					toPaintHR.height = toPaintHR.height / 2;
 

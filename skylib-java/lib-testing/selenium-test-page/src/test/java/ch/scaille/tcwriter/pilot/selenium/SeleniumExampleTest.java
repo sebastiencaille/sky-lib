@@ -53,7 +53,7 @@ class SeleniumExampleTest extends AbstractTestWebAppProvider {
 
 		mainPage.clickOnMissingButton();
 
-		mainPage.elementChangeTest();
+		mainPage.testElementChange();
 
 		assertEquals(8, pilot.getActionReport().getReport().size(), () -> pilot.getActionReport().getFormattedReport());
 	}

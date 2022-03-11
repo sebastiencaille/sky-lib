@@ -77,7 +77,7 @@ public class TestParameterValue extends IdObject {
 		if (!super.equals(obj)) {
 			return false;
 		}
-		final TestParameterValue other = (TestParameterValue) obj;
+		final var other = (TestParameterValue) obj;
 		return Objects.equal(simpleValue, other.simpleValue) && complexTypeValues.equals(other.complexTypeValues)
 				&& apiParameterId.equals(other.apiParameterId);
 	}
@@ -128,8 +128,8 @@ public class TestParameterValue extends IdObject {
 	}
 
 	public void updateComplexTypeValues(final Map<String, TestParameterValue> idsToValues) {
-		for (final Entry<String, TestParameterValue> param : idsToValues.entrySet()) {
-			complexTypeValues.get(param.getKey()).setSimpleValue(param.getValue().getSimpleValue());
+		for (final var testParam : idsToValues.entrySet()) {
+			complexTypeValues.get(testParam.getKey()).setSimpleValue(testParam.getValue().getSimpleValue());
 		}
 	}
 
@@ -146,26 +146,26 @@ public class TestParameterValue extends IdObject {
 	}
 
 	public TestParameterValue duplicate() {
-		final TestParameterValue newValue = new TestParameterValue(getId(), getApiParameterId(), factory, simpleValue);
+		final var newParamValue = new TestParameterValue(getId(), getApiParameterId(), factory, simpleValue);
 		for (final Entry<String, TestParameterValue> complexValue : complexTypeValues.entrySet()) {
-			newValue.complexTypeValues.put(complexValue.getKey(), complexValue.getValue().duplicate());
+			newParamValue.complexTypeValues.put(complexValue.getKey(), complexValue.getValue().duplicate());
 		}
-		return newValue;
+		return newParamValue;
 	}
 
 	public TestParameterValue derivate(final TestParameterFactory newFactory) {
-		TestParameterFactory newSafeFactory = newFactory;
-		if (newSafeFactory == null) {
-			newSafeFactory = TestParameterFactory.NO_FACTORY;
+		var newFactorySafe = newFactory;
+		if (newFactorySafe == null) {
+			newFactorySafe = TestParameterFactory.NO_FACTORY;
 		}
-		final TestParameterValue newValue = new TestParameterValue(UUID.randomUUID().toString(), getApiParameterId(),
-				newSafeFactory, getSimpleValue());
+		final var newValue = new TestParameterValue(UUID.randomUUID().toString(), getApiParameterId(), newFactorySafe,
+				getSimpleValue());
 		newValue.getComplexTypeValues().putAll(getComplexTypeValues());
 		return newValue;
 	}
 
 	public TestParameterValue derivate(final TestApiParameter parameter) {
-		final TestParameterValue newValue = new TestParameterValue(parameter, factory, simpleValue);
+		final var newValue = new TestParameterValue(parameter, factory, simpleValue);
 		newValue.getComplexTypeValues().putAll(getComplexTypeValues());
 		return newValue;
 	}

@@ -57,7 +57,7 @@ public class TestParameterValueTableModel extends
 			if (!(obj instanceof ParameterValueEntry)) {
 				return false;
 			}
-			final ParameterValueEntry other = (ParameterValueEntry) obj;
+			final var other = (ParameterValueEntry) obj;
 			return mandatory == other.mandatory && Objects.equals(description, other.description);
 		}
 

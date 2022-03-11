@@ -38,6 +38,7 @@ public class ExamplePage extends PagePilot {
 	public class EnableTestDelay extends ActionDelay {
 
 		public EnableTestDelay() {
+			//noop
 		}
 
 		@Override
@@ -91,7 +92,7 @@ public class ExamplePage extends PagePilot {
 		pilot.waitModalDialogHandled();
 	}
 
-	public void elementChangeTest() {
+	public void testElementChange() {
 		wait(() -> this.elementChangeTest, click());
 		// Explicitly test using WebElement as source
 		wait(() -> this.elementChange.findElement(By.id("TextChange")), textEquals("Hello again"));

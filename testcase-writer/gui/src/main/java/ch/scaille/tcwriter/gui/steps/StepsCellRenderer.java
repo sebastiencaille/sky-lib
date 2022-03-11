@@ -1,7 +1,6 @@
 package ch.scaille.tcwriter.gui.steps;
 
 import java.awt.Graphics;
-import java.awt.Rectangle;
 
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -13,7 +12,7 @@ public class StepsCellRenderer extends DefaultTableCellRenderer {
 
 	@Override
 	protected void paintComponent(final Graphics g) {
-		final Rectangle clip = g.getClip().getBounds();
+		final var clip = g.getClip().getBounds();
 		setSize((int) clip.getWidth(), (int) (clip.getHeight() / 2));
 		super.paintComponent(g.create(0, 0 + clip.height / 2 + 1, clip.width, clip.height / 2));
 	}

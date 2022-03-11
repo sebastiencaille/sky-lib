@@ -100,7 +100,7 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 			return;
 		}
 		for (final var adapter : externalAdapters) {
-			final String activatorNodeName = addAdapter(adapter);
+			final var activatorNodeName = addAdapter(adapter);
 			graph.links.add(new Link(linkFrom, activatorNodeName));
 			graph.links.add(new Link(activatorNodeName, linkTo));
 		}
@@ -117,7 +117,7 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 	}
 
 	String addProcessor(final Binding binding, final Processor processor) {
-		final String nodeName = toVar(binding) + "_" + processor.getCall().replace('.', '_');
+		final var nodeName = toVar(binding) + "_" + processor.getCall().replace('.', '_');
 		graph.nodes.put(nodeName, new Node(nodeName, processor.getCall(), null, DotFileGenerator.Shape.ELLIPSE));
 		return nodeName;
 	}

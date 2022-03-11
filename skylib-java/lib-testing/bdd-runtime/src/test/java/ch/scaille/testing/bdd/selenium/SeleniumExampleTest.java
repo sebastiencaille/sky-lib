@@ -15,6 +15,7 @@ import ch.scaille.testing.bdd.definition.Scenario.ExecutionContext;
 import ch.scaille.util.helpers.Logs;
 
 @ExtendWith(DisabledIfHeadless.class)
+@SuppressWarnings("java:S2699")
 class SeleniumExampleTest extends AbstractTestWebAppProvider {
 
 	@Override

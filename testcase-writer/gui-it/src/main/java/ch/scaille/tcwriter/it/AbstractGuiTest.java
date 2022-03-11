@@ -40,6 +40,7 @@ public class AbstractGuiTest {
 		config.setTCExportPath("./src/test/java");
 		config.setDictionaryPath(modelPath + "/test-model.json");
 		config.setTemplatePath(new File("rsrc:templates/TC.template").toString());
+
 		final var persister = new FsModelDao(config);
 
 		final var model = new JavaToDictionary(TestWriterRole.class, TestSessionRole.class, AbstractGuiTest.class)

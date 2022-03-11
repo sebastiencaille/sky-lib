@@ -18,8 +18,9 @@ public class StepStatusEditor extends DefaultCellEditor {
 	public Component getTableCellEditorComponent(final JTable table, final Object value, final boolean hasFocus,
 			final int row, final int column) {
 		final var status = (StepStatus) value;
-		((JCheckBox) getComponent()).setSelected(status.breakPoint);
-		return getComponent();
+		var component = (JCheckBox) getComponent();
+		component.setSelected(status.breakPoint);
+		return component;
 	}
 
 }

@@ -56,29 +56,29 @@ class SimpleTest {
 				"simpleExternalAdapter");
 
 		// Processors
-		final var init = simpleService.get("init");
-		final var complete = simpleService.get("complete");
-		final var keepAsIs = simpleService.get("keepAsIs");
+		final var initCall = simpleService.get("init");
+		final var completeCall = simpleService.get("complete");
+		final var keepAsIsCall = simpleService.get("keepAsIs");
 
 		// Conditions
-		final CustomCall mustComplete = simpleFlowConditions.get("mustComplete");
+		final var mustCompleteCond = simpleFlowConditions.get("mustComplete");
 
 		// Eternal adapters
-		final var getCompletion = simpleExternalAdapter.get("getCompletion");
-		final var displayData = simpleExternalAdapter.get("display");
+		final var getCompletionCall = simpleExternalAdapter.get("getCompletion");
+		final var displayDataCall = simpleExternalAdapter.get("display");
 
 		// Bindings
-		final var entryToInit = Binding.builder(Flow.ENTRY_POINT, init);
-		final var initToComplete = Binding.builder(init, complete).withExternalData(getCompletion).as(DP_Complete);
-		final var initToKeepAsIs = Binding.builder(init, keepAsIs).as(DP_Complete);
-		final var completeToExit = Binding.builder(DP_Complete, Flow.EXIT_POINT).withExternalData(displayData);
+		final var entryToInitCall = Binding.builder(Flow.ENTRY_POINT, initCall);
+		final var initToCompleteCall = Binding.builder(initCall, completeCall).withExternalData(getCompletionCall).as(DP_Complete);
+		final var initToKeepAsIsCall = Binding.builder(initCall, keepAsIsCall).as(DP_Complete);
+		final var completeToExitCall = Binding.builder(DP_Complete, Flow.EXIT_POINT).withExternalData(displayDataCall);
 
 		// Flow
 		final var flow = Flow.builder("SimpleFlow", UUID.randomUUID(), "java.lang.String") //
-				.add(entryToInit) //
+				.add(entryToInitCall) //
 				.add(ConditionalFlowCtrl.builder("CompleteData") //
-						.conditional(mustComplete, initToComplete).fallback(initToKeepAsIs)) //
-				.add(completeToExit).build();
+						.conditional(mustCompleteCond, initToCompleteCall).fallback(initToKeepAsIsCall)) //
+				.add(completeToExitCall).build();
 
 		// Generate the procedural flow
 		new FlowToProceduralJavaVisitor(flow, "ch.scaille.dataflowmgr.examples.simple",

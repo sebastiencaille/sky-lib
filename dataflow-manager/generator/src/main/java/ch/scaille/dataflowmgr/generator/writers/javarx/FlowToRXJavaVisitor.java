@@ -247,11 +247,11 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 	}
 
 	String bindingStateOf(final Binding binding) {
-		return "state_" + varNameOf(binding);
+		return stateOf(varNameOf(binding));
 	}
 
 	String dataPointStateOf(final Binding binding) {
-		return "state_" + binding.toDataPoint();
+		return stateOf(binding.toDataPoint());
 	}
 
 	private String stateOf(final String property) {

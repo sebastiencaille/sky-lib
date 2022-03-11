@@ -137,7 +137,7 @@ public class TestCaseRecorder implements ITestCaseRecorder {
 
 	@Override
 	public void recordParamFactoryCall(final Object factory, final String callName, final Object[] args) {
-		final TestParameterValue testParameterValue = testParameterValues.get(factory);
+		final var testParameterValue = testParameterValues.get(factory);
 		if (testParameterValue == null) {
 			// we are being called during the factory's call
 			return;

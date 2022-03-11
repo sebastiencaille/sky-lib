@@ -4,14 +4,12 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.Set;
 
 import ch.scaille.dataflowmgr.generator.writers.AbstractFlowVisitor.BindingContext;
 import ch.scaille.dataflowmgr.generator.writers.dot.FlowToDotVisitor.Graph;
 import ch.scaille.dataflowmgr.generator.writers.dot.FlowToDotVisitor.Link;
 import ch.scaille.dataflowmgr.generator.writers.dot.FlowToDotVisitor.Node;
 import ch.scaille.dataflowmgr.model.CustomCall;
-import ch.scaille.dataflowmgr.model.ExternalAdapter;
 import ch.scaille.dataflowmgr.model.flowctrl.ConditionalFlowCtrl;
 import ch.scaille.generators.util.DotFileGenerator;
 
@@ -45,9 +43,8 @@ public class ConditionalFlowCtrlGenerator extends AbstractDotFlowGenerator {
 			activators.add(new CustomCall("Default", "Default", new LinkedHashMap<>(), Boolean.TYPE.toString()));
 		}
 		for (final var activator : activators) {
-			final String activatorNode = addCondition(activator);
-			final Set<ExternalAdapter> missingAdapters = context
-					.unprocessedAdapters(visitor.listAdapters(context, activator));
+			final var activatorNode = addCondition(activator);
+			final var missingAdapters = context.unprocessedAdapters(visitor.listAdapters(context, activator));
 			visitor.addExternalAdapters(missingAdapters, nextLink, activatorNode);
 			context.processedAdapters.addAll(missingAdapters);
 			nextLink = activatorNode;

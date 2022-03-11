@@ -41,7 +41,7 @@ public class JavaToDictionary extends AbstractGenerator<TestDictionary> {
 	}
 
 	public static void main(final String[] args) throws IOException {
-		Args mainArgs = new Args();
+		var mainArgs = new Args();
 		JCommander.newBuilder().addObject(mainArgs).build().parse(args);
 		var persister = FsModelDao.withDefaultConfig();
 		if (mainArgs.configuration != null) {

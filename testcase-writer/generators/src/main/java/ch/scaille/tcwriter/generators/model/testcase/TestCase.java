@@ -92,11 +92,11 @@ public class TestCase {
 	}
 
 	public TestObjectDescription descriptionOf(final String id) {
-		final TestObjectDescription modelDescr = testDictionary.getDescriptions().get(id);
+		final var modelDescr = testDictionary.getDescriptions().get(id);
 		if (modelDescr != null) {
 			return modelDescr;
 		}
-		final TestObjectDescription dynamicDescr = dynamicDescriptions.get(id);
+		final var dynamicDescr = dynamicDescriptions.get(id);
 		if (dynamicDescr != null) {
 			return dynamicDescr;
 		}
@@ -109,7 +109,7 @@ public class TestCase {
 	}
 
 	public Collection<TestReference> getReferences(final String returnType) {
-		final Collection<TestReference> result = dynamicReferences.get(returnType);
+		final var result = dynamicReferences.get(returnType);
 		if (result == null) {
 			return Collections.emptyList();
 		}
@@ -128,7 +128,7 @@ public class TestCase {
 					.collect(Collectors.toMap(IdObject::getId, a -> a)));
 		}
 
-		IdObject restoredObject = cachedValues.get(id);
+		var restoredObject = cachedValues.get(id);
 		if (restoredObject == null) {
 			restoredObject = getReference(id);
 		}

@@ -20,14 +20,14 @@ import ch.scaille.gui.tools.GenericEditorClassModel;
 import ch.scaille.gui.tools.GenericEditorController;
 import ch.scaille.tcwriter.executors.ITestExecutor;
 import ch.scaille.tcwriter.executors.ITestExecutor.ExecConfig;
-import ch.scaille.tcwriter.generators.model.TestCaseException;
-import ch.scaille.tcwriter.generators.model.persistence.IModelDao;
-import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
-import ch.scaille.tcwriter.generators.model.testcase.TestCase;
-import ch.scaille.tcwriter.generators.model.testcase.TestStep;
 import ch.scaille.tcwriter.gui.DictionaryImport;
 import ch.scaille.tcwriter.gui.TestRemoteControl;
 import ch.scaille.tcwriter.gui.frame.TCWriterModel.TestExecutionState;
+import ch.scaille.tcwriter.model.TestCaseException;
+import ch.scaille.tcwriter.model.persistence.IModelDao;
+import ch.scaille.tcwriter.model.testapi.TestDictionary;
+import ch.scaille.tcwriter.model.testcase.TestCase;
+import ch.scaille.tcwriter.model.testcase.TestStep;
 import ch.scaille.util.helpers.Logs;
 
 public class TCWriterController extends GuiController {

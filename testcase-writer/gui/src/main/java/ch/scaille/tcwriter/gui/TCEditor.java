@@ -5,8 +5,8 @@ import java.io.IOException;
 import javax.swing.SwingUtilities;
 
 import ch.scaille.tcwriter.executors.JunitTestExecutor;
-import ch.scaille.tcwriter.generators.model.persistence.FsModelDao;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
+import ch.scaille.tcwriter.model.persistence.FsModelDao;
 import ch.scaille.util.helpers.ClassLoaderHelper;
 
 public class TCEditor {

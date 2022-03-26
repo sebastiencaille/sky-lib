@@ -11,14 +11,14 @@ import java.util.List;
 import ch.scaille.gui.mvc.GuiController;
 import ch.scaille.gui.mvc.IScopedSupport;
 import ch.scaille.gui.mvc.properties.ObjectProperty;
-import ch.scaille.tcwriter.generators.model.ModelUtils;
-import ch.scaille.tcwriter.generators.model.NamedObject;
-import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
-import ch.scaille.tcwriter.generators.model.testapi.TestParameterFactory;
-import ch.scaille.tcwriter.generators.model.testcase.TestParameterValue;
-import ch.scaille.tcwriter.generators.model.testcase.TestStep;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.tcwriter.gui.frame.TCWriterModel;
+import ch.scaille.tcwriter.model.ModelUtils;
+import ch.scaille.tcwriter.model.NamedObject;
+import ch.scaille.tcwriter.model.testapi.TestDictionary;
+import ch.scaille.tcwriter.model.testapi.TestParameterFactory;
+import ch.scaille.tcwriter.model.testcase.TestParameterValue;
+import ch.scaille.tcwriter.model.testcase.TestStep;
 
 public class StepEditorController extends GuiController {
 

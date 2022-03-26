@@ -3,10 +3,10 @@ package ch.scaille.tcwriter.gui.editors.params;
 import ch.scaille.gui.mvc.GuiModel;
 import ch.scaille.gui.mvc.properties.ListProperty;
 import ch.scaille.gui.mvc.properties.ObjectProperty;
-import ch.scaille.tcwriter.generators.model.testapi.TestParameterFactory;
-import ch.scaille.tcwriter.generators.model.testcase.TestParameterValue;
-import ch.scaille.tcwriter.generators.model.testcase.TestReference;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
+import ch.scaille.tcwriter.model.testapi.TestParameterFactory;
+import ch.scaille.tcwriter.model.testcase.TestParameterValue;
+import ch.scaille.tcwriter.model.testcase.TestReference;
 
 public class TestParameterModel extends GuiModel {
 	private final ObjectProperty<TestParameterFactory.ParameterNature> valueNature;

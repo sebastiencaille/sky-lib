@@ -31,7 +31,12 @@
 		
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
-			<artifactId>testcase-writer-annotations</artifactId>
+			<artifactId>testcase-writer-core</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>ch.scaille.tcwriter</groupId>
+			<artifactId>testcase-writer-api</artifactId>
 		</dependency>
 
 		<!-- recording -->

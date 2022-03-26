@@ -4,7 +4,7 @@ import java.util.Objects;
 
 import ch.scaille.gui.model.ListModel;
 import ch.scaille.gui.swing.model.ListModelTableModel;
-import ch.scaille.tcwriter.generators.model.testapi.TestParameterFactory;
+import ch.scaille.tcwriter.model.testapi.TestParameterFactory;
 
 public class TestParameterValueTableModel extends
 		ListModelTableModel<TestParameterValueTableModel.ParameterValueEntry, TestParameterValueTableModel.Columns> {

@@ -33,14 +33,14 @@ import ch.scaille.gui.mvc.converters.IConverter;
 import ch.scaille.gui.mvc.factories.BindingDependencies;
 import ch.scaille.gui.mvc.factories.ObjectTextView;
 import ch.scaille.gui.mvc.properties.ObjectProperty;
-import ch.scaille.tcwriter.generators.model.testapi.TestApiParameter;
-import ch.scaille.tcwriter.generators.model.testapi.TestParameterFactory;
-import ch.scaille.tcwriter.generators.model.testapi.TestParameterFactory.ParameterNature;
-import ch.scaille.tcwriter.generators.model.testcase.TestCase;
-import ch.scaille.tcwriter.generators.model.testcase.TestParameterValue;
-import ch.scaille.tcwriter.generators.model.testcase.TestReference;
 import ch.scaille.tcwriter.gui.editors.params.TestParameterValueTableModel.ParameterValueEntry;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
+import ch.scaille.tcwriter.model.testapi.TestApiParameter;
+import ch.scaille.tcwriter.model.testapi.TestParameterFactory;
+import ch.scaille.tcwriter.model.testapi.TestParameterFactory.ParameterNature;
+import ch.scaille.tcwriter.model.testcase.TestCase;
+import ch.scaille.tcwriter.model.testcase.TestParameterValue;
+import ch.scaille.tcwriter.model.testcase.TestReference;
 
 public class TestParameterValueEditorPanel extends JPanel {
 

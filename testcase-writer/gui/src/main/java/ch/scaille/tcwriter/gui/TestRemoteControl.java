@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import ch.scaille.tcwriter.generators.model.testcase.TestStep;
+import ch.scaille.tcwriter.model.testcase.TestStep;
 import ch.scaille.tcwriter.stepping.StepStatus;
 import ch.scaille.tcwriter.stepping.TestApi;
 import ch.scaille.tcwriter.stepping.TestApi.StepState;

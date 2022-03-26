@@ -9,7 +9,7 @@ import java.io.IOException;
 import org.junit.jupiter.api.Test;
 
 import ch.scaille.tcwriter.generators.TestCaseToJava;
-import ch.scaille.tcwriter.generators.model.TestCaseException;
+import ch.scaille.tcwriter.model.TestCaseException;
 
 @SuppressWarnings("java:S2699")
 class IntegrationTest {

@@ -2,9 +2,9 @@ package ch.scaille.tcwriter.gui.frame;
 
 import ch.scaille.gui.mvc.IScopedSupport;
 import ch.scaille.gui.mvc.properties.ObjectProperty;
-import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
-import ch.scaille.tcwriter.generators.model.testcase.TestCase;
-import ch.scaille.tcwriter.generators.model.testcase.TestStep;
+import ch.scaille.tcwriter.model.testapi.TestDictionary;
+import ch.scaille.tcwriter.model.testcase.TestCase;
+import ch.scaille.tcwriter.model.testcase.TestStep;
 
 public class TCWriterModel {
 

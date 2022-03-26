@@ -24,13 +24,13 @@ import ch.scaille.gui.mvc.factories.Converters;
 import ch.scaille.gui.mvc.factories.ObjectTextView;
 import ch.scaille.gui.mvc.properties.AbstractTypedProperty;
 import ch.scaille.gui.swing.factories.SwingBindings;
-import ch.scaille.tcwriter.generators.model.NamedObject;
-import ch.scaille.tcwriter.generators.model.testapi.StepClassifier;
-import ch.scaille.tcwriter.generators.model.testapi.TestAction;
-import ch.scaille.tcwriter.generators.model.testapi.TestActor;
-import ch.scaille.tcwriter.generators.model.testapi.TestDictionary;
-import ch.scaille.tcwriter.generators.model.testapi.TestParameterFactory;
-import ch.scaille.tcwriter.generators.model.testcase.TestStep;
+import ch.scaille.tcwriter.model.NamedObject;
+import ch.scaille.tcwriter.model.testapi.StepClassifier;
+import ch.scaille.tcwriter.model.testapi.TestAction;
+import ch.scaille.tcwriter.model.testapi.TestActor;
+import ch.scaille.tcwriter.model.testapi.TestDictionary;
+import ch.scaille.tcwriter.model.testapi.TestParameterFactory;
+import ch.scaille.tcwriter.model.testcase.TestStep;
 
 public class StepEditorPanel extends JPanel {
 

@@ -23,10 +23,6 @@
 	<dependencies>
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
-			<artifactId>testcase-writer-generators</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-javatc</artifactId>
 		</dependency>
 

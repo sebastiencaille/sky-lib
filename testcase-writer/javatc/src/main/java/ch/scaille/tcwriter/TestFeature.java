@@ -5,8 +5,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import ch.scaille.tcwriter.recording.ITestCaseRecorder;
-import ch.scaille.tcwriter.recording.TestCaseRecorderAspect;
+import ch.scaille.tcwriter.recorder.ITestCaseRecorder;
+import ch.scaille.tcwriter.recorder.TestCaseRecorderAspect;
 import ch.scaille.tcwriter.stepping.TestSteppingAspect;
 import ch.scaille.tcwriter.stepping.TestSteppingController;
 

@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole;
 import ch.scaille.tcwriter.examples.api.interfaces.DeliveryTestRole;
 import ch.scaille.tcwriter.examples.api.interfaces.dto.TestItem;
-import ch.scaille.tcwriter.recording.RecorderTestActors;
+import ch.scaille.tcwriter.recorder.RecorderTestActors;
 
 @SuppressWarnings("java:S5960")
 public class SimpleTest {

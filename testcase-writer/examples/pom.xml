@@ -31,11 +31,6 @@
 	<dependencies>
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
-			<artifactId>testcase-writer-javatc</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-gui</artifactId>
 		</dependency>
 

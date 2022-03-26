@@ -31,13 +31,11 @@
 
 	<dependencyManagement>
 		<dependencies>
-
 			<dependency>
 				<groupId>ch.scaille</groupId>
 				<artifactId>lib-utils</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
-
 			<dependency>
 				<groupId>ch.scaille.dataflowmgr</groupId>
 				<artifactId>data-flow-model</artifactId>
@@ -63,6 +61,5 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
 
 </project>

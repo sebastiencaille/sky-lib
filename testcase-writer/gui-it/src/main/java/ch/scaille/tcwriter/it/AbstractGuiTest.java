@@ -13,10 +13,10 @@ import ch.scaille.tcwriter.annotations.TCActors;
 import ch.scaille.tcwriter.executors.JunitTestExecutor;
 import ch.scaille.tcwriter.generators.JavaToDictionary;
 import ch.scaille.tcwriter.generators.TCConfig;
-import ch.scaille.tcwriter.generators.model.persistence.FsModelDao;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.tcwriter.it.api.TestSessionRole;
 import ch.scaille.tcwriter.it.api.TestWriterRole;
+import ch.scaille.tcwriter.model.persistence.FsModelDao;
 import ch.scaille.util.helpers.ClassLoaderHelper;
 
 @TCActors({ "tcWriter|TestWriterRole|Test writer|test writer",

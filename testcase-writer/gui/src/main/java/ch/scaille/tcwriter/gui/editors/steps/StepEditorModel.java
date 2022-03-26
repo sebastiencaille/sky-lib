@@ -4,11 +4,11 @@ import java.util.List;
 
 import ch.scaille.gui.mvc.GuiModel;
 import ch.scaille.gui.mvc.properties.ObjectProperty;
-import ch.scaille.tcwriter.generators.model.testapi.StepClassifier;
-import ch.scaille.tcwriter.generators.model.testapi.TestAction;
-import ch.scaille.tcwriter.generators.model.testapi.TestActor;
-import ch.scaille.tcwriter.generators.model.testapi.TestParameterFactory;
-import ch.scaille.tcwriter.generators.model.testcase.TestParameterValue;
+import ch.scaille.tcwriter.model.testapi.StepClassifier;
+import ch.scaille.tcwriter.model.testapi.TestAction;
+import ch.scaille.tcwriter.model.testapi.TestActor;
+import ch.scaille.tcwriter.model.testapi.TestParameterFactory;
+import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 
 public class StepEditorModel extends GuiModel {
 

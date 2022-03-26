@@ -29,10 +29,8 @@ public class SimpleTest {
 	@BeforeEach
 	public void initActors() {
 		final ExampleService testedService = new ExampleService();
-		customer = new CustomerTestRole(testedService);
-		RecorderTestActors.register(customer, "customer", null);
-		deliveryGuy = new DeliveryTestRole(testedService);
-		RecorderTestActors.register(deliveryGuy, "deliveryGuy", null);
+		customer = RecorderTestActors.register(new CustomerTestRole(testedService), "customer", null);
+		deliveryGuy = RecorderTestActors.register(new DeliveryTestRole(testedService), "deliveryGuy", null);
 	}
 
 	@Test

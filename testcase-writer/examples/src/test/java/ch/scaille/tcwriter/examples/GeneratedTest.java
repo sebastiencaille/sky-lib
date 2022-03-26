@@ -1,4 +1,4 @@
-// File generated from template 2022/03/26 01:45:04
+// File generated from template 2022/03/26 03:01:32
 package ch.scaille.tcwriter.examples;
 
 import ch.scaille.tcwriter.examples.api.interfaces.dto.*;
@@ -9,7 +9,7 @@ import ch.scaille.tcwriter.recorder.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class GeneratedTest {
+class GeneratedTest {
 
 	private CustomerTestRole customer;
 	private DeliveryTestRole deliveryGuy;
@@ -17,16 +17,14 @@ public class GeneratedTest {
 	@BeforeEach
 	public void prepareApis() {
 		final ExampleService testedService = new ExampleService();
-		customer = new CustomerTestRole(testedService);
-		RecorderTestActors.register(customer, "customer", null);
-		deliveryGuy = new DeliveryTestRole(testedService);
-		RecorderTestActors.register(deliveryGuy, "deliveryGuy", null);
+		customer = RecorderTestActors.register(new CustomerTestRole(testedService), "customer", null);
+		deliveryGuy = RecorderTestActors.register(new DeliveryTestRole(testedService), "deliveryGuy", null);
 		ch.scaille.tcwriter.TestFeature.aspectjRecorder().enable();
 		ch.scaille.tcwriter.TestFeature.aspectjStepping(); // don't enable by default
 	}
 	
 	@Test
-	public void testCase() {
+	void testCase() {
 		// Step 1: As customer, I go on internet (https://somewebsite) and buy a coffee machine of brand "OldSchool" (ISO: yes)
 		ch.scaille.tcwriter.examples.api.interfaces.selectors.BuyingLocationSelector step1_var1 = BuyingLocationSelector.onInternet("https://somewebsite");
 		ch.scaille.tcwriter.examples.api.interfaces.dto.TestItem step1_var2 = TestItem.coffeeMachineOfBrand("OldSchool");

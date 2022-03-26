@@ -20,7 +20,7 @@ public class RecorderTestActors {
 	 * @param modelName   the name of the actor in the model (optional)
 	 * @param description a description
 	 */
-	public static void register(final Object testActor, final String modelName,
+	public static <T> T register(final T testActor, final String modelName,
 			final TestObjectDescription description) {
 		if (modelName == null && description == null) {
 			throw new InvalidParameterException("Either modelName or description must be provided");
@@ -31,6 +31,7 @@ public class RecorderTestActors {
 		if (description == null) {
 			descriptions.put(testActor, description);
 		}
+		return testActor;
 	}
 
 	public static Map<Object, String> getNames() {

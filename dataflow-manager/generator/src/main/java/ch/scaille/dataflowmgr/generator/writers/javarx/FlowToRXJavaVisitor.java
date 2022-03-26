@@ -69,7 +69,7 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 		final var inputBinding = flow.getBindings().stream().filter(Binding::isEntry).map(this::varNameOf)
 				.collect(StreamExt.single()).orElseThrow(WrongCountException::new);
 
-		final Map<String, String> templateProperties = new HashMap<>();
+		final var templateProperties = new HashMap<String, String>();
 		templateProperties.put("package", packageName);
 		templateProperties.put("flow.name", flow.getName());
 		templateProperties.put("flow.input", flow.getEntryPointType());
@@ -199,7 +199,6 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 			flowClass.appendIndented(String.format("this.state_%s = DataPointState.TRIGGERED", property)).eos(); //
 		}
 		flowClass.closeBlock().eol();
-
 	}
 
 	private void generateDataState(final BindingContext context) {

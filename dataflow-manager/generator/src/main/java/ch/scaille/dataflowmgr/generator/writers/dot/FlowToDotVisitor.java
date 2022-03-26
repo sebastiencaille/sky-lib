@@ -130,21 +130,21 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 
 		super.processFlow();
 
-		final var dotGeenerator = DotFileGenerator.inMemory();
-		dotGeenerator.header(flow.getName(), "TBD");
-		dotGeenerator.polyLines();
+		final var dotGenerator = DotFileGenerator.inMemory();
+		dotGenerator.header(flow.getName(), "TBD");
+		dotGenerator.polyLines();
 
 		for (final var graphNode : graph.nodes.values()) {
 			final var color = computeColor(graphNode);
 			final var label = graphNode.label;
 			final var shape = graphNode.shape;
-			dotGeenerator.addNode(graphNode.name, label, shape, color);
+			dotGenerator.addNode(graphNode.name, label, shape, color);
 		}
 		for (final var link : graph.links) {
-			dotGeenerator.addEdge(link.from, link.to, link.label, false, link.extra);
+			dotGenerator.addEdge(link.from, link.to, link.label, false, link.extra);
 		}
-		dotGeenerator.footer();
-		return dotGeenerator;
+		dotGenerator.footer();
+		return dotGenerator;
 	}
 
 	private String computeColor(final Node node) {

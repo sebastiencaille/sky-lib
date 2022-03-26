@@ -1,10 +1,10 @@
-// File generated from template 2022/03/26 01:41:48
+// File generated from template 2022/03/26 01:45:04
 package ch.scaille.tcwriter.examples;
 
 import ch.scaille.tcwriter.examples.api.interfaces.dto.*;
 import ch.scaille.tcwriter.examples.api.interfaces.selectors.*;
 import ch.scaille.tcwriter.examples.api.interfaces.*;
-import ch.scaille.tcwriter.recording.*;
+import ch.scaille.tcwriter.recorder.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -3,7 +3,7 @@ package ${package};
 import ch.scaille.tcwriter.examples.api.interfaces.dto.*;
 import ch.scaille.tcwriter.examples.api.interfaces.selectors.*;
 import ch.scaille.tcwriter.examples.api.interfaces.*;
-import ch.scaille.tcwriter.recording.*;
+import ch.scaille.tcwriter.recorder.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

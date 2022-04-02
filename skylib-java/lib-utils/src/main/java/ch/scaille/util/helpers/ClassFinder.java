@@ -20,7 +20,6 @@ import static ch.scaille.util.helpers.LambdaExt.uncheckF;
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -76,13 +75,26 @@ public class ClassFinder {
 		SCANNED
 	}
 
+	public static class URLClassFinder extends ClassFinder implements AutoCloseable {
+
+		protected URLClassFinder(URL[] urls) {
+			super(new URLClassLoader(urls));
+		}
+
+		@Override
+		public void close() throws IOException {
+			((URLClassLoader) loader).close();
+		}
+
+	}
+
 	private final Map<Class<?>, Policy> collectedClasses = new ConcurrentHashMap<>();
 
 	private final Map<Class<?>, Policy> expectedAnnotation = new HashMap<>();
 
 	private final Set<Class<?>> expectedSuperClasses = new HashSet<>();
 
-	private final URLClassLoader loader;
+	protected final ClassLoader loader;
 
 	private final Function<URL, Scanner> defaultScanner = u -> new FsScanner();
 
@@ -90,28 +102,26 @@ public class ClassFinder {
 
 	private List<String> packagesToScan = new ArrayList<>();
 
-	public static ClassFinder forApp() {
-		return new ClassFinder(ClassLoaderHelper.appClassPath());
+	public static URLClassFinder of(URL[] cp) {
+		return new URLClassFinder(cp);
 	}
 
-	public static ClassFinder source(final File... source) {
-
-		return new ClassFinder(Arrays.stream(source).map(f -> {
-			try {
-				return f.toURI().toURL();
-			} catch (final MalformedURLException e) {
-				throw new IllegalStateException("Unable process folder " + source, e);
-			}
-		}).collect(Collectors.toList()).toArray(new URL[0]));
+	public static URLClassFinder source(final File... source) {
+		return new URLClassFinder(Arrays.stream(source).map(LambdaExt.uncheckF(f -> f.toURI().toURL()))
+				.collect(Collectors.toList()).toArray(new URL[0]));
 
 	}
 
 	public static ClassFinder with(Class<?> classes) {
-		return new ClassFinder(new URL[0]).withClasses(classes);
+		return new ClassFinder(Thread.currentThread().getContextClassLoader()).withClasses(classes);
 	}
 
-	protected ClassFinder(final URL[] urls) {
-		this.loader = new URLClassLoader(urls);
+	public static ClassFinder ofCurrentThread() {
+		return new ClassFinder(Thread.currentThread().getContextClassLoader());
+	}
+
+	protected ClassFinder(ClassLoader loader) {
+		this.loader = loader;
 		this.collectedClasses.put(Object.class, Policy.SCANNED);
 	}
 
@@ -261,6 +271,7 @@ public class ClassFinder {
 		}
 		for (final Annotation annotation : clazz.getAnnotations()) {
 			final Policy policy = expectedAnnotation.get(annotation.annotationType());
+			System.out.println(annotation.annotationType() + "->" + policy + " in " + expectedAnnotation);
 			if (policy != null) {
 				return policy;
 			}

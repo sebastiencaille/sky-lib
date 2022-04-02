@@ -47,7 +47,7 @@ public class JavaToDictionary extends AbstractGenerator<TestDictionary> {
 		if (mainArgs.configuration != null) {
 			persister.loadConfiguration(mainArgs.configuration);
 		}
-		var dictionary = ClassFinder.forApp().withPackages(mainArgs.sourcePackage)
+		var dictionary = ClassFinder.ofCurrentThread().withPackages(mainArgs.sourcePackage)
 				.withAnnotation(TCRole.class, ClassFinder.Policy.CLASS_ONLY)
 				.withAnnotation(TCActors.class, ClassFinder.Policy.CLASS_ONLY).scan().collect(toDictionary());
 		persister.writeTestDictionary(dictionary);

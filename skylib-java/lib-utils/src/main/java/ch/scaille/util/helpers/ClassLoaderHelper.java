@@ -5,8 +5,8 @@ import static java.util.stream.Collectors.joining;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -48,16 +48,21 @@ public class ClassLoaderHelper {
 
 	public static URL[] appClassPath() {
 		final String[] cp = System.getProperty("java.class.path").split(CP_SEPARATOR);
-		return Arrays.stream(cp).map(c -> {
-			try {
-				return new URL("file://" + c);
-			} catch (final MalformedURLException e) {
-				throw new IllegalStateException(e);
-			}
-
-		}).collect(Collectors.toList()).toArray(new URL[0]);
+		return Arrays.stream(cp).map(LambdaExt.uncheckF(c -> 
+				new URL("file://" + c))).collect(Collectors.toList()).toArray(new URL[0]);
+	}
+	
+	public static URL[] threadClassPath() {
+		return ((URLClassLoader)Thread.currentThread().getContextClassLoader()).getURLs();
 	}
 
+	public static URL[] guessClassPath() {
+		if (Thread.currentThread().getContextClassLoader() instanceof URLClassLoader) {
+			return threadClassPath();
+		}
+		return appClassPath();
+	}
+	
 	public static String cpToCommandLine(final URL[] classpath, final URL... extra) {
 		return Stream.concat(Stream.of(classpath), Stream.of(extra)).map(URL::getFile).collect(joining(CP_SEPARATOR));
 	}

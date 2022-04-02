@@ -1,6 +1,6 @@
 package ch.scaille.util;
 
-import java.net.MalformedURLException;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -11,10 +11,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import ch.scaille.util.helpers.ClassFinder;
+import ch.scaille.util.helpers.ClassFinder.URLClassFinder;
+import ch.scaille.util.helpers.ClassLoaderHelper;
 
 class ClassFinderTest {
 
-	public static class TestClassFinder extends ClassFinder {
+	public static class TestClassFinder extends URLClassFinder {
 		protected TestClassFinder(URL[] urls) {
 			super(urls);
 		}
@@ -44,16 +46,20 @@ class ClassFinderTest {
 			"jar:file:/toto.jar!/mypackage,jar:file:/toto.jar,/" // jar
 	})
 	void testUriTransformation(String urlPackageLocation, String fsRoot, String fsPackageLocation)
-			throws MalformedURLException, URISyntaxException {
-		TestClassFinder.TestFsScanner scanner = new TestClassFinder(new URL[0]).scanner();
-		URI testUri = new URL(urlPackageLocation).toURI();
-		Assertions.assertEquals(URI.create(fsRoot), scanner.rootOf(testUri));
-		Assertions.assertEquals(fsPackageLocation, scanner.packageLocationOf(testUri, "mypackage"));
+			throws URISyntaxException, IOException {
+		try (TestClassFinder finder = new TestClassFinder(new URL[0])) {
+			TestClassFinder.TestFsScanner scanner = finder.scanner();
+			URI testUri = new URL(urlPackageLocation).toURI();
+			Assertions.assertEquals(URI.create(fsRoot), scanner.rootOf(testUri));
+			Assertions.assertEquals(fsPackageLocation, scanner.packageLocationOf(testUri, "mypackage"));
+		}
 	}
 
 	@Test
-	void testScan() {
-		Assertions.assertEquals(1, ClassFinder.forApp().withPackages("ch.scaille.util").scan()
-				.filter(c -> c.equals(ClassFinder.class)).count());
+	void testScan() throws IOException {
+		try (URLClassFinder finder = ClassFinder.of(ClassLoaderHelper.appClassPath())) {
+			Assertions.assertEquals(1,
+					finder.withPackages("ch.scaille.util").scan().filter(c -> c.equals(ClassFinder.class)).count());
+		}
 	}
 }

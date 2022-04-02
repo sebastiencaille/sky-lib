@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import ch.scaille.annotations.GuiObject;
 import ch.scaille.generators.util.CodeGeneratorParams;
 import ch.scaille.util.helpers.ClassFinder;
+import ch.scaille.util.helpers.ClassFinder.URLClassFinder;
 import ch.scaille.util.helpers.Logs;
 
 public class GuiModelGenerator {
@@ -40,13 +41,14 @@ public class GuiModelGenerator {
 		Files.createDirectories(targetFolder);
 
 		Logs.of(this).info("Scanning " + params.getSourceFolder());
-		List<Class<?>> classes = ClassFinder.source(new File(params.getSourceFolder()))
-				.withAnnotation(GuiObject.class, ClassFinder.Policy.CLASS_ONLY)
-				.withPackages(params.getNamespaceFilter()).scan().collect(Collectors.toList());
-		Logs.of(this).info(() -> "Processing classes: " + classes);
+		try (URLClassFinder classFinder = ClassFinder.source(new File(params.getSourceFolder()))) {
+			List<Class<?>> classes = classFinder.withAnnotation(GuiObject.class, ClassFinder.Policy.CLASS_ONLY)
+					.withPackages(params.getNamespaceFilter()).scan().collect(Collectors.toList());
+			Logs.of(this).info(() -> "Processing classes: " + classes);
 
-		for (final Class<?> clazz : classes) {
-			new ModelClassProcessor(clazz).process().writeToFolder(targetFolder);
+			for (final Class<?> clazz : classes) {
+				new ModelClassProcessor(clazz, classFinder).process().writeToFolder(targetFolder);
+			}
 		}
 
 	}

@@ -33,7 +33,7 @@ import ch.scaille.generators.util.Template;
 import ch.scaille.gui.mvc.AttributeProcessor.AttributeProcessorDelegate;
 import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
 import ch.scaille.util.dao.metadata.UntypedDataObjectMetaData;
-import ch.scaille.util.helpers.ClassFinder;
+import ch.scaille.util.helpers.ClassFinder.URLClassFinder;
 
 public class ModelClassProcessor {
 
@@ -43,6 +43,11 @@ public class ModelClassProcessor {
 		final Map<String, String> properties = new HashMap<>();
 		final Set<String> imports = new HashSet<>();
 		final Map<String, String> generatedConstants = new HashMap<>();
+		private final URLClassFinder classFinder;
+
+		public Context(URLClassFinder classFinder) {
+			this.classFinder = classFinder;
+		}
 
 		public void addImport(final Class<?> class1) {
 			imports.add(class1.getName());
@@ -57,7 +62,7 @@ public class ModelClassProcessor {
 		}
 
 		public void addImport(final String className) {
-			imports.add(ClassFinder.forApp().loadByName(className).getName());
+			imports.add(classFinder.loadByName(className).getName());
 		}
 
 	}
@@ -83,9 +88,9 @@ public class ModelClassProcessor {
 
 	private final AttributeProcessorDelegate delegate = new AttributeProcessor.GetSetAttributeDelegate();
 
-	public ModelClassProcessor(final Class<?> clazz) {
+	public ModelClassProcessor(final Class<?> clazz, URLClassFinder classFinder) {
 		this.modelClass = clazz;
-		this.context = new Context();
+		this.context = new Context(classFinder);
 	}
 
 	public String getClassName() {

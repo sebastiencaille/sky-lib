@@ -17,6 +17,7 @@ package ch.scaille.util.text;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 
 /**
@@ -35,6 +36,10 @@ public class TextFormatter<T extends TextFormatter<T, E>, E extends Exception> {
 		void append(String str) throws E;
 
 		void append(char c) throws E;
+		
+		default byte[] getUTF8() {
+			return toString().getBytes(StandardCharsets.UTF_8);
+		}
 	}
 
 	public static IOutput<RuntimeException> output(final StringBuilder builder) {
@@ -54,6 +59,7 @@ public class TextFormatter<T extends TextFormatter<T, E>, E extends Exception> {
 			public String toString() {
 				return builder.toString();
 			}
+			
 		};
 	}
 

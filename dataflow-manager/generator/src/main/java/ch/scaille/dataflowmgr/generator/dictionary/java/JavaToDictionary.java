@@ -54,9 +54,9 @@ public class JavaToDictionary extends AbstractGenerator<Dictionary> {
         var dictionary = new Dictionary();
         for (var clazz : classes) {
             Arrays.stream(clazz.getAnnotations())
-                    .map(a -> a.annotationType())
-                    .filter(a -> annotation2Handlers.containsKey(a))
-                    .map(a -> annotation2Handlers.get(a))
+                    .map(Annotation::annotationType)
+                    .filter(annotation2Handlers::containsKey)
+                    .map(annotation2Handlers::get)
                     .forEach(a -> a.accept(dictionary, clazz));
         }
         return dictionary;

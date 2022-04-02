@@ -1,16 +1,13 @@
-package ch.scaille.dataflowmgr.examples;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+package ch.scaille.dataflowmgr.examples.simple;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.UUID;
-
-import org.junit.jupiter.api.Test;
 
 import ch.scaille.dataflowmgr.annotations.Conditions;
 import ch.scaille.dataflowmgr.generator.dictionary.java.JavaToDictionary;
@@ -24,6 +21,7 @@ import ch.scaille.dataflowmgr.model.Flow;
 import ch.scaille.dataflowmgr.model.flowctrl.ConditionalFlowCtrl;
 import ch.scaille.generators.util.Template;
 import ch.scaille.util.helpers.ClassFinder;
+import ch.scaille.util.helpers.ClassLoaderHelper;
 import ch.scaille.util.helpers.Logs;
 
 /**
@@ -32,7 +30,7 @@ import ch.scaille.util.helpers.Logs;
  * @author scaille
  *
  */
-class SimpleTest {
+public class SimpleTestGenerator {
 
 	private static final String DP_Complete = "complete";
 
@@ -42,10 +40,11 @@ class SimpleTest {
 	public static final String SIMPLE_FLOW_CONDITIONS_CLASS = SIMPLE_SERVICE_PKG + ".SimpleFlowConditions";
 	public static final String SIMPLE_EXTERNAL_ADAPTER_CLASS = SIMPLE_SERVICE_PKG + ".SimpleExternalAdapter";
 
-	@Test
-	void testFlow() throws IOException, InterruptedException {
+	private static final Path TARGET_PATH_SRC = Paths.get("target/generated-tests");
+	private static final Path TARGET_PATH_DOT = Paths.get("target/reports");
 
-		final var dictionary = JavaToDictionary.configure(ClassFinder.forApp())
+	public static void main(String[] args) throws IOException, InterruptedException {
+		final var dictionary = JavaToDictionary.configure(ClassFinder.ofCurrentThread())
 				.withPackages("ch.scaille.dataflowmgr.examples.simple").scan().collect(JavaToDictionary.toDictionary());
 
 		// Services (see AbstractFlow)
@@ -69,42 +68,49 @@ class SimpleTest {
 
 		// Bindings
 		final var entryToInitCall = Binding.builder(Flow.ENTRY_POINT, initCall);
-		final var initToCompleteCall = Binding.builder(initCall, completeCall).withExternalData(getCompletionCall).as(DP_Complete);
+		final var initToCompleteCall = Binding.builder(initCall, completeCall).withExternalData(getCompletionCall)
+				.as(DP_Complete);
 		final var initToKeepAsIsCall = Binding.builder(initCall, keepAsIsCall).as(DP_Complete);
 		final var completeToExitCall = Binding.builder(DP_Complete, Flow.EXIT_POINT).withExternalData(displayDataCall);
 
 		// Flow
-		final var flow = Flow.builder("SimpleFlow", UUID.randomUUID(), "java.lang.String") //
+		final var flow = Flow.builder("SimpleFlowTest", UUID.randomUUID(), "java.lang.String") //
 				.add(entryToInitCall) //
 				.add(ConditionalFlowCtrl.builder("CompleteData") //
 						.conditional(mustCompleteCond, initToCompleteCall).fallback(initToKeepAsIsCall)) //
 				.add(completeToExitCall).build();
 
+		Files.createDirectories(TARGET_PATH_SRC);
+
 		// Generate the procedural flow
 		new FlowToProceduralJavaVisitor(flow, "ch.scaille.dataflowmgr.examples.simple",
-				Template.from("templates/flow.template")).process().writeToFolder(Paths.get("src/test/java"));
+				Template.from("templates/flow.template")).process().writeToFolder(TARGET_PATH_SRC);
 
 		// Generate the reactive flow
 		new FlowToRXJavaVisitor(flow, "ch.scaille.dataflowmgr.examples.simplerx",
-				Template.from("templates/flowrx.template"), true).process().writeToFolder(Paths.get("src/test/java"));
+				Template.from("templates/flowrx.template"), true).process().writeToFolder(TARGET_PATH_SRC);
 
 		// Generate the graphic
-		try (final var out = new FileWriter(new File("src/test/reports/SimpleFlow.dot"))) {
-			out.write(new FlowToDotVisitor(flow).process().getOutput().toString());
-		}
+
+		Files.createDirectories(TARGET_PATH_DOT);
+		Files.write(TARGET_PATH_DOT.resolve("SimpleFlow.dot"),
+				new FlowToDotVisitor(flow).process().getOutput().getUTF8());
 		runDot();
 	}
 
-	private void runDot() throws IOException, InterruptedException {
-		final Process dotExec = new ProcessBuilder("dot", "-Tpng", "-osrc/test/reports/SimpleFlow.png",
-				"src/test/reports/SimpleFlow.dot").start();
+	private static void runDot() throws IOException, InterruptedException {
+		final Process dotExec = new ProcessBuilder("dot", "-Tpng",
+				"-o" + TARGET_PATH_DOT.resolve("SimpleFlow.png").toString(),
+				TARGET_PATH_DOT.resolve("SimpleFlow.dot").toString()).start();
 		final var reader = new BufferedReader(new InputStreamReader(dotExec.getErrorStream()));
 		String line;
 		while ((line = reader.readLine()) != null) {
-			Logs.of(this).info(line);
+			Logs.of(SimpleTestGenerator.class).info(line);
 		}
 		final int dotExit = dotExec.waitFor();
-		assertEquals(0, dotExit);
+		if (dotExit != 0) {
+			throw new IllegalStateException("Png generation failed");
+		}
 	}
 
 }

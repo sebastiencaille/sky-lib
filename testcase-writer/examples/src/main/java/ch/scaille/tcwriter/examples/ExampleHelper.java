@@ -38,7 +38,7 @@ public class ExampleHelper {
 
 		var config = new TCConfig();
 		config.setTcPath(tcPath.toString());
-		config.setTCExportPath("./src/test/java");
+		config.setTCExportPath("target/generated-tests");
 		config.setDictionaryPath(modelPath + "/test-model.json");
 		config.setTemplatePath("rsrc:templates/TC.template");
 		modelDao = new FsModelDao(config);

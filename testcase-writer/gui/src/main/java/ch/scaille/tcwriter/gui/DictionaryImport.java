@@ -20,6 +20,7 @@ import ch.scaille.tcwriter.gui.frame.TCWriterGui;
 import ch.scaille.tcwriter.model.persistence.IModelDao;
 import ch.scaille.util.helpers.ClassFinder;
 import ch.scaille.util.helpers.ClassFinder.Policy;
+import ch.scaille.util.helpers.ClassFinder.URLClassFinder;
 import ch.scaille.util.helpers.LambdaExt;
 
 public class DictionaryImport extends JDialog {
@@ -81,8 +82,8 @@ public class DictionaryImport extends JDialog {
 	}
 
 	protected void importDictionary(File dictionaryJarFile, String sourcePackage) {
-		try {
-			var dictionary = ClassFinder.source(dictionaryJarFile).withAnnotation(TCRole.class, Policy.CLASS_ONLY)
+		try (URLClassFinder finder = ClassFinder.source(dictionaryJarFile)) {
+			var dictionary = finder.withAnnotation(TCRole.class, Policy.CLASS_ONLY)
 					.withAnnotation(TCActors.class, Policy.CLASS_ONLY).withPackages(sourcePackage).scan()
 					.collect(JavaToDictionary.toDictionary());
 			modelDao.writeTestDictionary(dictionary);

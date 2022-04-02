@@ -30,11 +30,11 @@ public abstract class AbstractFlowVisitor {
 
 		public BindingContext(final Binding binding, final String inputDataType) {
 			this.binding = binding;
-			bindingAdapters = binding.getAdapters();
-			processedAdapters = new HashSet<>();
-			inputDataPoint = binding.fromDataPoint();
+			this.bindingAdapters = binding.getAdapters();
+			this.processedAdapters = new HashSet<>();
+			this.inputDataPoint = binding.fromDataPoint();
 			this.inputDataType = inputDataType;
-			outputDataPoint = binding.toDataPoint();
+			this.outputDataPoint = binding.toDataPoint();
 		}
 
 		public Set<ExternalAdapter> unprocessedAdapters(final Collection<ExternalAdapter> adapters) {
@@ -107,7 +107,7 @@ public abstract class AbstractFlowVisitor {
 		final var newlyTriggeredBindings = new HashSet<Binding>();
 		for (final var binding : untriggeredBindings) {
 			// Next potential binding
-			final Set<Binding> bindingDeps = missingDeps.get(binding);
+			final var bindingDeps = missingDeps.get(binding);
 			final boolean depsTriggered = bindingDeps == null || bindingDeps.isEmpty();
 			if (!availableDataPoints.containsKey(binding.fromDataPoint()) || !depsTriggered) {
 				continue;
@@ -131,8 +131,6 @@ public abstract class AbstractFlowVisitor {
 	/**
 	 * Lists the adapters required by the activators
 	 *
-	 * @param activator
-	 * @param undeclaredAdapters
 	 * @return
 	 */
 	public Set<ExternalAdapter> listAdapters(final BindingContext context, final Call<?> call) {

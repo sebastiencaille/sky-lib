@@ -88,7 +88,6 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 	 * Generates the code calling a list of activators
 	 *
 	 * @param context
-	 * @param availableVars @
 	 */
 	private void visitActivators(final BindingContext context) {
 		var activators = ConditionalFlowCtrl.getActivators(context.binding.getRules()).collect(toList());

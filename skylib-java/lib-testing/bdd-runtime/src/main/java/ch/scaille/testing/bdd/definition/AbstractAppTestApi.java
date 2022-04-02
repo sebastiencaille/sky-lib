@@ -8,7 +8,7 @@ public abstract class AbstractAppTestApi<C> {
 
 	private C context;
 
-	public AbstractAppTestApi(Supplier<C> contextFactory) {
+	protected AbstractAppTestApi(Supplier<C> contextFactory) {
 		this.contextFactory = contextFactory;
 	}
 

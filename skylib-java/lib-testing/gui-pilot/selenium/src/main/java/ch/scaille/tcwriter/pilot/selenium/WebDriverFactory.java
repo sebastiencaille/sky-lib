@@ -1,6 +1,8 @@
 package ch.scaille.tcwriter.pilot.selenium;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,13 +21,13 @@ import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.AbstractDriverOptions;
 import org.openqa.selenium.remote.CapabilityType;
 
-public abstract class WebDriverFactory<T extends WebDriverFactory<T>> {
+public abstract class WebDriverFactory<T extends WebDriverFactory<T, O>, O extends AbstractDriverOptions<?>> {
 
 	public static final boolean IS_WINDOWS = System.getProperty("os.name").contains("indows");
 
 	protected final LoggingPreferences logPrefs = new LoggingPreferences();
 
-	public abstract T withBinary(String binary);
+	protected final O options;
 
 	public abstract T headless();
 
@@ -35,20 +37,33 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<T>> {
 
 	public abstract T withSilentDownload(String folder);
 
+	public abstract T withWebDriverPath(Path path);
+
+	public abstract T withBinary(String binary);
+
 	public abstract WebDriver build();
 
-	protected void withDefaults(AbstractDriverOptions<?> options) {
+	protected WebDriverFactory(O options) {
+		this.options = options;
+		logPrefs.enable(LogType.BROWSER, Level.ALL);
 		options.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
 	}
 
-	protected T withUntrustedConnections(AbstractDriverOptions<?> options) {
+	protected Path webDriverPath() {
+		return Paths.get(System.getProperty("user.home")).resolve("selenium/webdrivers");
+	}
+
+	public T withUntrustedConnections() {
 		options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
 		options.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
 		return (T) this;
 	}
-
-	protected WebDriverFactory() {
-		logPrefs.enable(LogType.BROWSER, Level.ALL);
+	
+	public static String withPlatformName(Path driver) {
+		if (IS_WINDOWS) {
+			return driver + "-windows-64bit.exe";
+		}
+		return driver + "-linux-64bit";
 	}
 
 	static String logFile(String folder, String basename) {
@@ -56,19 +71,24 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<T>> {
 				+ ".log";
 	}
 
-	public static final class FirefoxDriverFactory extends WebDriverFactory<FirefoxDriverFactory> {
-		private final FirefoxOptions options = new FirefoxOptions();
+	public static final class FirefoxDriverFactory extends WebDriverFactory<FirefoxDriverFactory, FirefoxOptions> {
 		private final FirefoxProfile profile = new FirefoxProfile();
 
-		public FirefoxDriverFactory(String driverPath) {
-			withDefaults(options);
-			System.setProperty("webdriver.gecko.driver", driverPath);
+		public FirefoxDriverFactory() {
+			super(new FirefoxOptions());
+			withWebDriverPath(webDriverPath());
 			options.addPreference("dom.disable_beforeunload", true);
 			options.setCapability(CapabilityType.HAS_NATIVE_EVENTS, false);
 			profile.setPreference("gfx.direct2d.disabled", true);
 			profile.setPreference("layers.acceleration.disabled", true);
 			profile.setPreference("toolkit.cosmeticAnimations.enabled", false);
 			profile.setPreference("webgl.angle.try-d3d11", false); // fails on vmware
+		}
+
+		@Override
+		public FirefoxDriverFactory withWebDriverPath(Path path) {
+			System.setProperty("webdriver.gecko.driver", withPlatformName(path.resolve("geckodriver")));
+			return this;
 		}
 
 		@Override
@@ -106,7 +126,7 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<T>> {
 		public FirefoxDriverFactory withUntrustedConnection() {
 			profile.setAcceptUntrustedCertificates(true);
 			profile.setAssumeUntrustedCertificateIssuer(false);
-			return withUntrustedConnections(options);
+			return withUntrustedConnections();
 		}
 
 		@Override
@@ -115,18 +135,17 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<T>> {
 		}
 	}
 
-	public static FirefoxDriverFactory firefox(String driverPath) {
-		return new FirefoxDriverFactory(driverPath);
+	public static FirefoxDriverFactory firefox() {
+		return new FirefoxDriverFactory();
 	}
 
-	public static final class ChromeDriverFactory extends WebDriverFactory<ChromeDriverFactory> {
+	public static final class ChromeDriverFactory extends WebDriverFactory<ChromeDriverFactory, ChromeOptions> {
 
-		private final ChromeOptions options = new ChromeOptions();
 		private final Map<String, Object> prefs = new HashMap<>();
 
-		private ChromeDriverFactory(String driverPath) {
-			withDefaults(options);
-			System.setProperty("webdriver.chrome.driver", driverPath);
+		private ChromeDriverFactory() {
+			super(new ChromeOptions());
+			withWebDriverPath(webDriverPath());
 			options.addArguments("--disable-notifications");
 			options.addArguments("--no-sandbox");
 			options.addArguments("--disable-dev-shm-usage");
@@ -141,6 +160,12 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<T>> {
 			prefs.put("safebrowsing.enabled", "false");
 			prefs.put("disable-popup-blocking", "true");
 			options.setExperimentalOption("prefs", prefs);
+		}
+
+		@Override
+		public ChromeDriverFactory withWebDriverPath(Path path) {
+			System.setProperty("webdriver.chrome.driver", withPlatformName(path.resolve("geckodriver")));
+			return this;
 		}
 
 		@Override
@@ -175,7 +200,7 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<T>> {
 		@Override
 		public ChromeDriverFactory withUntrustedConnection() {
 			options.addArguments("--ignore-certificate-errors");
-			return withUntrustedConnections(options);
+			return withUntrustedConnections();
 		}
 
 		@Override
@@ -184,8 +209,8 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<T>> {
 		}
 	}
 
-	public static ChromeDriverFactory chrome(String driverPath) {
-		return new ChromeDriverFactory(driverPath);
+	public static ChromeDriverFactory chrome() {
+		return new ChromeDriverFactory();
 	}
 
 }

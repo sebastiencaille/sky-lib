@@ -36,11 +36,9 @@ public abstract class AbstractTestWebAppProvider {
 
 	@BeforeAll
 	public static void startWebServer() {
-
 		webServer = Undertow.builder().addHttpListener(8080, "localhost")
 				.setHandler(AbstractTestWebAppProvider::handleWebExchange).build();
 		webServer.start();
-
 	}
 
 	public static void handleWebExchange(final HttpServerExchange exchange) {
@@ -61,9 +59,13 @@ public abstract class AbstractTestWebAppProvider {
 
 	@AfterAll
 	public static void stopWebServer() {
-		driver.quit();
-		webServer.stop();
-		webServer = null;
+		if (driver != null) {
+			driver.quit();
+		}
+		if (webServer != null) {
+			webServer.stop();
+			webServer = null;
+		}
 	}
 
 	/* **************************** TESTS **************************** */

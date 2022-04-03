@@ -3,6 +3,9 @@ package ch.scaille.generators.util;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class CodeGeneratorParams {
 
 	@Parameter(names = { "-s", "--sourceFolder" }, required = true)
@@ -35,4 +38,9 @@ public class CodeGeneratorParams {
 	public String getNamespaceFilter() {
 		return namespaceFilter;
 	}
+
+    public static Path mavenTarget(Class<?> clazz) {
+         return Paths.get(clazz.getProtectionDomain().getCodeSource().getLocation().getPath()).resolve("..");
+    }
+
 }

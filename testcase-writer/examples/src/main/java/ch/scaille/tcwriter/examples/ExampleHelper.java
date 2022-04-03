@@ -3,6 +3,7 @@ package ch.scaille.tcwriter.examples;
 import java.io.File;
 import java.io.IOException;
 
+import ch.scaille.generators.util.CodeGeneratorParams;
 import ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole;
 import ch.scaille.tcwriter.examples.api.interfaces.DeliveryTestRole;
 import ch.scaille.tcwriter.executors.ITestExecutor;
@@ -38,7 +39,7 @@ public class ExampleHelper {
 
 		var config = new TCConfig();
 		config.setTcPath(tcPath.toString());
-		config.setTCExportPath("target/generated-tests");
+		config.setTCExportPath(CodeGeneratorParams.mavenTarget(ExampleHelper.class).resolve("generated-tests").toString());
 		config.setDictionaryPath(modelPath + "/test-model.json");
 		config.setTemplatePath("rsrc:templates/TC.template");
 		modelDao = new FsModelDao(config);
@@ -73,5 +74,8 @@ public class ExampleHelper {
 
 	public static ITestExecutor testExecutor() {
 		return new JunitTestExecutor(getModelDao(), ClassLoaderHelper.appClassPath());
+	}
+
+	public static void setup(CodeGeneratorParams parse) {
 	}
 }

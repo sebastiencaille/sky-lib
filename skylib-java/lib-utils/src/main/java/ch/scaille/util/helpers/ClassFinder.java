@@ -271,7 +271,6 @@ public class ClassFinder {
 		}
 		for (final Annotation annotation : clazz.getAnnotations()) {
 			final Policy policy = expectedAnnotation.get(annotation.annotationType());
-			System.out.println(annotation.annotationType() + "->" + policy + " in " + expectedAnnotation);
 			if (policy != null) {
 				return policy;
 			}

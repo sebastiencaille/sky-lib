@@ -18,6 +18,7 @@ import ch.scaille.tcwriter.it.api.TestSessionRole;
 import ch.scaille.tcwriter.it.api.TestWriterRole;
 import ch.scaille.tcwriter.model.persistence.FsModelDao;
 import ch.scaille.util.helpers.ClassLoaderHelper;
+import ch.scaille.util.helpers.Logs;
 
 @TCActors({ "tcWriter|TestWriterRole|Test writer|test writer",
 		"testSession|TestSessionRole|Test session|test session" })
@@ -62,7 +63,7 @@ public class AbstractGuiTest {
 	@AfterEach
 	public void closeGui() {
 		pilot.close();
-		System.out.print(pilot.getActionReport().getFormattedReport());
+		Logs.of(getClass()).info(pilot.getActionReport().getFormattedReport());
 	}
 
 }

@@ -4,7 +4,6 @@ import static ch.scaille.util.helpers.LambdaExt.uncheckF;
 
 import java.io.IOException;
 
-import ch.scaille.generators.util.CodeGeneratorParams;
 import ch.scaille.tcwriter.generators.TestCaseToJava;
 import ch.scaille.tcwriter.model.TestCaseException;
 

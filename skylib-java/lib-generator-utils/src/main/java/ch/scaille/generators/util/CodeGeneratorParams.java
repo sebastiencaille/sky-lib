@@ -3,6 +3,8 @@ package ch.scaille.generators.util;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 
+import ch.scaille.util.helpers.JavaExt;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -40,7 +42,7 @@ public class CodeGeneratorParams {
 	}
 
     public static Path mavenTarget(Class<?> clazz) {
-         return Paths.get(clazz.getProtectionDomain().getCodeSource().getLocation().getPath()).resolve("..");
+         return Paths.get(JavaExt.pathOf(clazz.getProtectionDomain().getCodeSource().getLocation())).resolve("..");
     }
 
 }

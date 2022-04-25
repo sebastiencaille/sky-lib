@@ -1,3 +1,6 @@
 target/
 .settings/
 *.iml
+.classpath
+.project
+*.bak

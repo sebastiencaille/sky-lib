@@ -204,10 +204,7 @@ public class ClassFinder {
 			if (uri.getPath() == null) {
 				return "/";
 			}
-			String uriPath = uri.getPath();
-			if (uriPath.length() > 2 && uriPath.charAt(2) == ':') {
-				uriPath = uriPath.substring(1);
-			}
+			String uriPath = JavaExt.pathOf(uri);
 			return uriPath.substring(0, uriPath.length() - aPackage.length() - 1);
 		}
 

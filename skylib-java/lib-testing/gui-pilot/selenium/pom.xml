@@ -19,7 +19,6 @@
 			<artifactId>selenium-java</artifactId>
 		</dependency>
 
-
 	</dependencies>
 
 	<build>

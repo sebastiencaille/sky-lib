@@ -15,17 +15,29 @@ public class Steps<A> {
 	public static class Step<A> {
 		public final String description;
 		private final Consumer<A> call;
+		/**
+		 * Indicates that the step is purely useful for automation
+		 */
+		private final boolean automationStep;
 
-		public Step(String description, Consumer<A> stepCall) {
+		public Step(String description, Consumer<A> stepCall, boolean automationStep) {
 			super();
 			this.description = description;
 			this.call = stepCall;
+			this.automationStep = automationStep;
 		}
 
+		public boolean isAutomationStep() {
+			return automationStep;
+		}
 	}
 
 	public static <A> Step<A> step(String description, Consumer<A> call) {
-		return new Step<>(description, call);
+		return new Step<>(description, call, false);
+	}
+
+	public static <A> Step<A> automationStep(String description, Consumer<A> call) {
+		return new Step<>(description, call, true);
 	}
 
 	private final Step<A> givenStep;

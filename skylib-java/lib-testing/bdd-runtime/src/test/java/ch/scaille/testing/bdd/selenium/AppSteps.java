@@ -1,6 +1,7 @@
 package ch.scaille.testing.bdd.selenium;
 
 import static ch.scaille.testing.bdd.definition.Steps.step;
+import static ch.scaille.testing.bdd.definition.Steps.automationStep;
 
 import ch.scaille.testing.bdd.definition.Steps;
 import ch.scaille.testing.bdd.definition.TestDictionary;
@@ -20,7 +21,7 @@ public class AppSteps {
 					p -> p.examplePage.testEnabled()));
 
 	public static final Steps<AppPages> TEST_ALERT = BDD_FACTORY.with(
-			step("I expect the Alert", p -> p.examplePage.expectTestAlertDialog()),
+			automationStep("I expect the Alert", p -> p.examplePage.expectTestAlertDialog()),
 			step("I test the Alert function", p -> p.examplePage.testAlert()),
 			step("I see that the Alert was raised|I acknowledge the Alert", p -> {
 				p.examplePage.checkDialogHandled();

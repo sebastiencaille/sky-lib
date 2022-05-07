@@ -29,7 +29,7 @@ public class ExampleHelper {
 
 	private static final IModelDao modelDao;
 
-	public static final String TC_NAME = "testCase.json";
+	public static final String TC_NAME = "testCase";
 
 	static {
 		final File tcPath = new File(RESOURCE_FOLDER, "testCase");
@@ -53,14 +53,6 @@ public class ExampleHelper {
 		return new JavaToDictionary(CustomerTestRole.class, DeliveryTestRole.class).generate();
 	}
 
-	public static void saveDictionary(final TestDictionary dictionary) throws IOException {
-		modelDao.writeTestDictionary(dictionary);
-	}
-
-	public static void saveTC(final String name, final TestCase testCase) throws IOException {
-		modelDao.writeTestCase(name, testCase);
-	}
-
 	public static TestCase recordTestCase(final TestDictionary model) {
 		final var recorder = new TestCaseRecorder(modelDao, model);
 		TestCaseRecorderAspect.setRecorder(recorder);
@@ -74,8 +66,5 @@ public class ExampleHelper {
 
 	public static ITestExecutor testExecutor() {
 		return new JunitTestExecutor(getModelDao(), ClassLoaderHelper.appClassPath());
-	}
-
-	public static void setup(CodeGeneratorParams parse) {
 	}
 }

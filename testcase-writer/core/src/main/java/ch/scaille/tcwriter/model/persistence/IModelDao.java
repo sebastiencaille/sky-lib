@@ -13,19 +13,19 @@ public interface IModelDao {
 
 	TestDictionary readTestDictionary() throws IOException;
 
-	void writeTestDictionary(TestDictionary paramTestDictionary) throws IOException;
+	void writeTestDictionary(TestDictionary testDictionary) throws IOException;
 
-	void writeTestDictionary(Path paramPath, TestDictionary paramTestDictionary) throws IOException;
+	void writeTestDictionary(Path path, TestDictionary testDictionary) throws IOException;
 
-	TestCase readTestCase(String paramString, TestDictionary paramTestDictionary) throws IOException;
+	TestCase readTestCase(String filename, TestDictionary testDictionary) throws IOException;
 
-	void writeTestCase(String paramString, TestCase paramTestCase) throws IOException;
+	void writeTestCase(String identifier, TestCase testCase) throws IOException;
 
-	IModelDao loadConfiguration(String paramString) throws IOException;
+	IModelDao loadConfiguration(String identifier) throws IOException;
 
 	void saveConfiguration() throws IOException;
 
 	Template readTemplate() throws IOException;
 
-	URI exportTestCase(String paramString1, String paramString2) throws IOException;
+	URI exportTestCase(String name, String content) throws IOException;
 }

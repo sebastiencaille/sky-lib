@@ -14,8 +14,8 @@ public class TestGenerator {
 		final var model = ExampleHelper.generateDictionary();
 		final var testCase = ExampleHelper.recordTestCase(model);
 
-		ExampleHelper.saveDictionary(model);
-		ExampleHelper.saveTC(ExampleHelper.TC_NAME, testCase);
+		ExampleHelper.getModelDao().writeTestDictionary(model);
+		ExampleHelper.getModelDao().writeTestCase(ExampleHelper.TC_NAME, testCase);
 		new TestCaseToJava(ExampleHelper.getModelDao()).generate(testCase)
 				.writeTo(uncheckF(ExampleHelper.getModelDao()::exportTestCase));
 	}

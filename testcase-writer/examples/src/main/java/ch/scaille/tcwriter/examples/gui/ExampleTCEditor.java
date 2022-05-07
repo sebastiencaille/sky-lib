@@ -18,8 +18,8 @@ public class ExampleTCEditor {
 		final var model = ExampleHelper.generateDictionary();
 		final var testCase = ExampleHelper.recordTestCase(model);
 
-		ExampleHelper.saveDictionary(testCase.getDictionary());
-		ExampleHelper.saveTC(ExampleHelper.TC_NAME, testCase);
+		ExampleHelper.getModelDao().writeTestDictionary(testCase.getDictionary());
+		ExampleHelper.getModelDao().writeTestCase(ExampleHelper.TC_NAME, testCase);
 
 		final var controller = new TCWriterController(ExampleHelper.getModelDao(), ExampleHelper.testExecutor());
 

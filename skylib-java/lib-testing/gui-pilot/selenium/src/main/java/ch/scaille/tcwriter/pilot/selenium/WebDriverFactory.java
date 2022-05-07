@@ -21,7 +21,7 @@ import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.AbstractDriverOptions;
 import org.openqa.selenium.remote.CapabilityType;
 
-public abstract class WebDriverFactory<T extends WebDriverFactory<T, O>, O extends AbstractDriverOptions<?>> {
+public abstract class WebDriverFactory<T extends WebDriverFactory<?, O>, O extends AbstractDriverOptions<?>> {
 
 	public static final boolean IS_WINDOWS = System.getProperty("os.name").contains("indows");
 

@@ -35,6 +35,16 @@
 						</goals>
 						<configuration>
 							<installationDirectory>${user.home}/selenium/webdrivers</installationDirectory>
+							<drivers>
+								<driver>
+									<name>geckodriver</name>
+									<platform>linux</platform>
+									<bit>64</bit>
+									<version>0.31.0</version>
+									<url>https://github.com/mozilla/geckodriver/releases/download/v0.31.0/geckodriver-v0.31.0-linux64.tar.gz</url>
+
+								</driver>
+							</drivers>
 						</configuration>
 					</execution>
 				</executions>

@@ -46,7 +46,6 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<?, O>, O exten
 	protected WebDriverFactory(O options) {
 		this.options = options;
 		logPrefs.enable(LogType.BROWSER, Level.ALL);
-		options.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
 	}
 
 	protected Path webDriverPath() {
@@ -54,7 +53,6 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<?, O>, O exten
 	}
 
 	public T withUntrustedConnections() {
-		options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
 		options.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
 		return (T) this;
 	}
@@ -78,7 +76,7 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<?, O>, O exten
 			super(new FirefoxOptions());
 			withWebDriverPath(webDriverPath());
 			options.addPreference("dom.disable_beforeunload", true);
-			options.setCapability(CapabilityType.HAS_NATIVE_EVENTS, false);
+			options.setCapability(CapabilityType.UNHANDLED_PROMPT_BEHAVIOUR, "ignore");
 			profile.setPreference("gfx.direct2d.disabled", true);
 			profile.setPreference("layers.acceleration.disabled", true);
 			profile.setPreference("toolkit.cosmeticAnimations.enabled", false);
@@ -146,6 +144,7 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<?, O>, O exten
 		private ChromeDriverFactory() {
 			super(new ChromeOptions());
 			withWebDriverPath(webDriverPath());
+			options.setCapability(CapabilityType.UNHANDLED_PROMPT_BEHAVIOUR, "ignore");
 			options.addArguments("--disable-notifications");
 			options.addArguments("--no-sandbox");
 			options.addArguments("--disable-dev-shm-usage");

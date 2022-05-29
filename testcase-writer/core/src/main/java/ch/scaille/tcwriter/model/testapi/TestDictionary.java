@@ -19,6 +19,8 @@ public class TestDictionary implements Serializable {
 
 	private static final TestObjectDescription NO_ID_DESCRIPTION = new TestObjectDescription("", "");
 
+	private Metadata metadata = new Metadata();
+	
 	private final Map<String, TestObjectDescription> descriptions = new HashMap<>();
 
 	private final Map<String, TestRole> roles = new HashMap<>();
@@ -34,6 +36,14 @@ public class TestDictionary implements Serializable {
 		descriptions.put(IdObject.ID_NOT_SET, TestObjectDescription.NOT_SET);
 	}
 
+	public Metadata getMetadata() {
+		return metadata;
+	}
+	
+	public void setMetadata(Metadata metadata) {
+		this.metadata = metadata;
+	}
+	
 	public Map<String, TestObjectDescription> getDescriptions() {
 		return descriptions;
 	}

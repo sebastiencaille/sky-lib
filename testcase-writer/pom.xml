@@ -22,6 +22,7 @@
 		<module>gui</module>
 		<module>gui-it</module>
 		<module>examples</module>
+		<module>server</module>
 	</modules>
 
 	<properties>

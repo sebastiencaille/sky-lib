@@ -3,6 +3,7 @@ package ch.scaille.tcwriter.examples;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
 
@@ -22,6 +23,7 @@ class IntegrationTest {
 		final var tc = ExampleHelper.recordTestCase(model);
 
 		ExampleHelper.getModelDao().writeTestDictionary(model);
+		ExampleHelper.getModelDao().writeTestDictionary(Paths.get(System.getProperty("java.io.tmpdir")).resolve("dictionary.json"), model);
 		ExampleHelper.getModelDao().writeTestCase(ExampleHelper.TC_NAME, tc);
 
 		// TODO: find a way to compare both

@@ -1,5 +1,7 @@
 package ch.scaille.tcwriter.model.persistence;
 
+import static ch.scaille.util.helpers.LambdaExt.uncheckF;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,6 +19,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
@@ -37,8 +40,10 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import ch.scaille.generators.util.Template;
 import ch.scaille.tcwriter.generators.TCConfig;
 import ch.scaille.tcwriter.model.ExportReference;
+import ch.scaille.tcwriter.model.testapi.Metadata;
 import ch.scaille.tcwriter.model.testapi.TestDictionary;
 import ch.scaille.tcwriter.model.testcase.TestCase;
+import ch.scaille.util.exceptions.StorageRTException;
 import ch.scaille.util.helpers.ClassLoaderHelper;
 import ch.scaille.util.helpers.Logs;
 
@@ -62,12 +67,12 @@ public class FsModelDao implements IModelDao {
 			public ExportReference deserialize(final JsonParser p, final DeserializationContext ctxt)
 					throws IOException {
 				if (!ExportReference.class.getName().equals(p.getCurrentName())) {
-					throw new IllegalStateException("Unexpected type in ExportReference: " + p.getCurrentName());
+					throw new StorageRTException("Unexpected type in ExportReference: " + p.getCurrentName());
 				}
 				final var content = p.readValueAsTree();
 				final var id = content.get("id");
 				if (id == null) {
-					throw new IllegalStateException("Unexpected attribute in ExportReference: " + p.getCurrentName());
+					throw new StorageRTException("Unexpected attribute in ExportReference: " + p.getCurrentName());
 				}
 				final var exportReference = new ExportReference(((TextNode) id).asText());
 				((List<ExportReference>) ctxt.getAttribute(CONTEXT_ALL_REFERENCES)).add(exportReference);
@@ -116,6 +121,19 @@ public class FsModelDao implements IModelDao {
 	}
 
 	@Override
+	public List<Metadata> listDictionaries() throws IOException {
+		try (Stream<Path> list = Files.list(Paths.get(resolveToURL(this.config.getDictionaryPath()).toURI()))) {
+			return list.map(f -> f.getFileName().toString())
+					.map(uncheckF(f -> readTestDictionary(f).getMetadata(), (f, e) -> {
+						Logs.of(getClass()).log(Level.INFO, "Unable to read meta data", e);
+						return new Metadata(f, "Unreadable: " + e.getClass());
+					})).collect(Collectors.toList());
+		} catch (IOException | URISyntaxException e) {
+			throw new IOException("Unable to read dictionaries", e);
+		}
+	}
+
+	@Override
 	public TestDictionary readTestDictionary() throws IOException {
 		return (TestDictionary) mapper.readerFor(TestDictionary.class)
 				.readValue(read(resolveToURL(this.config.getDictionaryPath())));
@@ -125,6 +143,14 @@ public class FsModelDao implements IModelDao {
 	public void writeTestDictionary(TestDictionary tm) throws IOException {
 		writeJson(resolveToURL(this.config.getDictionaryPath()),
 				mapper.writerFor(TestDictionary.class).writeValueAsString(tm));
+	}
+
+	@Override
+	public TestDictionary readTestDictionary(String dictionaryId) throws IOException {
+		TestDictionary dictionary = (TestDictionary) mapper.readerFor(TestDictionary.class)
+				.readValue(read(resolveToURL(this.config.getDictionaryPath() + '/' + dictionaryId)));
+		dictionary.getMetadata().setTransientId(dictionaryId);
+		return dictionary;
 	}
 
 	@Override

@@ -50,7 +50,9 @@ public class ExampleHelper {
 	}
 
 	public static TestDictionary generateDictionary() {
-		return new JavaToDictionary(CustomerTestRole.class, DeliveryTestRole.class).generate();
+		TestDictionary dictionary = new JavaToDictionary(CustomerTestRole.class, DeliveryTestRole.class).generate();
+		dictionary.getMetadata().setDescription("Test dictionary");
+		return dictionary;
 	}
 
 	public static TestCase recordTestCase(final TestDictionary model) {

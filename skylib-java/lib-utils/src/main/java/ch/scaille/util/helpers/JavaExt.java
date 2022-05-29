@@ -35,4 +35,8 @@ public class JavaExt {
 		return uriPath;
 	}
 
+	public interface AutoCloseableNoException extends AutoCloseable{
+		@Override
+		void close();
+	}
 }

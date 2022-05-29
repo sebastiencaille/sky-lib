@@ -7,13 +7,24 @@ public class TCConfig {
 
 	private String name = "default";
 
-	private String dictionaryPath = "${user.home}/.tcwriter/default/dictionary";
+	private String dictionaryPath;
 
-	private String tcPath = "${user.home}/.tcwriter/default/testcase";
+	private String tcPath;
 
-	private String templatePath = "${user.home}/.tcwriter/default/TC.template";
+	private String templatePath;
 
-	private String tcExportPath = "${user.home}/.tcwriter/default/exported";
+	private String tcExportPath;
+
+	public void setBase(String base) {
+		dictionaryPath = base + "/dictionary";
+		tcPath = base + "/testcase";
+		templatePath = base + "/TC.template";
+		tcExportPath = base + "/exported";
+	}
+
+	public TCConfig() {
+		setBase("${user.home}/.tcwriter/" + name);
+	}
 
 	@Ordered(order = 1)
 	@Labeled(label = "Name of the configuration")

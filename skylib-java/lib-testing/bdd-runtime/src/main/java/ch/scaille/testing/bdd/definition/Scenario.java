@@ -13,7 +13,7 @@ public class Scenario<A extends AbstractAppTestApi<?>> {
     public static class ExecutionContext<A> {
 
         private final List<String> report = new ArrayList<>();
-        private final A appTestApi;
+		private final A appTestApi;
 
         public ExecutionContext(A appTestApi) {
             this.appTestApi = appTestApi;

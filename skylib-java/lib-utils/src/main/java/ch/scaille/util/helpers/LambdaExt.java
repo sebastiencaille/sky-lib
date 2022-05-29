@@ -41,9 +41,14 @@ public class LambdaExt {
 		return (FunctionWithException<T, T, E>) FUNCTION_IDENTITY;
 	}
 
-	private static Consumer<Exception> exceptionHandler = e -> {
-		throw new IllegalStateException(e.getMessage(), e);
-	};
+	public static <T, E extends Exception, R> BiFunction<T, E, R> raise(
+			BiFunction<T, E, RuntimeException> transformer) {
+		return (t, e) -> {
+			throw transformer.apply(t, e);
+		};
+	}
+
+	private static Consumer<Exception> exceptionHandler = e -> new IllegalStateException(e.getMessage(), e);
 
 	public static <R> R defaultExceptionHandler(Exception e) {
 		exceptionHandler.accept(e);
@@ -114,16 +119,16 @@ public class LambdaExt {
 	}
 
 	public static <T, R, E extends Exception> Function<T, R> uncheckF(final FunctionWithException<T, R, E> call) {
-		return uncheckF(call, LambdaExt::defaultExceptionHandler);
+		return uncheckF(call, (m, e) -> defaultExceptionHandler(e));
 	}
 
 	public static <T, R, E extends Exception> Function<T, R> uncheckF(final FunctionWithException<T, R, E> call,
-			final Function<? super E, R> exceptionHandler) {
+			final BiFunction<T, ? super E, R> exceptionHandler) {
 		return t -> {
 			try {
 				return call.apply(t);
 			} catch (final Exception ex) {
-				return exceptionHandler.apply((E) ex);
+				return exceptionHandler.apply(t, (E) ex);
 			}
 		};
 	}

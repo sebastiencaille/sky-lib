@@ -24,7 +24,7 @@ import ch.scaille.util.helpers.Logs;
 		"testSession|TestSessionRole|Test session|test session" })
 public class AbstractGuiTest {
 
-	private static final File RESOURCE_FOLDER = new File("./src/main/resources");
+	private static final File RESOURCE_FOLDER = new File(System.getProperty("java.io.tmpdir"));
 	protected TestWriterRole tcWriter;
 	protected TestSessionRole testSession;
 	private TCGuiPilot pilot;

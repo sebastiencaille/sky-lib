@@ -11,14 +11,16 @@
     "web-vitals": "^2.1.4"
   },
   "dependencies": {
+    "build": "^0.1.4",
     "jquery": "^3.6.0",
     "react": "^18.1.0",
-    "react-dom": "^18.1.0"
+    "react-dom": "^18.1.0",
+    "run": "^1.4.0"
   },
   "scripts": {
-    "start": "HTTPS=true react-app-rewired start",
-    "build": "HTTPS=true react-app-rewired build",
-    "test": "HTTPS=true react-app-rewired test",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

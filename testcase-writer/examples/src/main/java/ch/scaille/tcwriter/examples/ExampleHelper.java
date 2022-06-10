@@ -25,7 +25,7 @@ public class ExampleHelper {
 	private ExampleHelper() {
 	}
 
-	private static final File RESOURCE_FOLDER = new File("./src/main/resources");
+	private static final File RESOURCE_FOLDER = new File(System.getProperty("java.io.tmpdir"));
 
 	private static final IModelDao modelDao;
 

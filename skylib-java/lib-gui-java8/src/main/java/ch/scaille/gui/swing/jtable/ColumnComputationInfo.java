@@ -15,17 +15,34 @@
  ******************************************************************************/
 package ch.scaille.gui.swing.jtable;
 
+import java.awt.FontMetrics;
+import java.awt.Toolkit;
+
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
+
 class ColumnComputationInfo {
 
 	final int sameClassCount;
 	final int tableWidth;
 	final int unallocatedWidth;
+	final JTable table;
 
-	public ColumnComputationInfo(final int sameClassCount, final int tableWidth, final int unallocatedWidth) {
+	public ColumnComputationInfo(final JTable table, final int sameClassCount, final int unallocatedWidth) {
 		super();
+		this.table = table;
 		this.sameClassCount = sameClassCount;
-		this.tableWidth = tableWidth;
+		this.tableWidth = table.getWidth();
 		this.unallocatedWidth = unallocatedWidth;
+	}
+	
+	public String getFontDesciption() {
+		return table.getFont().toString();
+	}
+	
+	public int computeWidth(String text) {
+		FontMetrics metrics = Toolkit.getDefaultToolkit().getFontMetrics(table.getFont());
+		return SwingUtilities.computeStringWidth(metrics, text);
 	}
 
 }

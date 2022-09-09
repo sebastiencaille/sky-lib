@@ -73,7 +73,7 @@ public class TableModelExampleView extends JFrame {
 		columnModel.configureColumn(
 				TableColumnWithPolicy.percentOfAvailableSpace(TestObjectTableModel.Columns.A_FIRST_VALUE, 100)
 						.with(new DefaultTableCellRenderer()));
-		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(TestObjectTableModel.Columns.A_SECOND_VALUE, 50)
+		columnModel.configureColumn(TableColumnWithPolicy.fixedTextWidth(TestObjectTableModel.Columns.A_SECOND_VALUE, 1, TableColumnWithPolicy.SAMPLE_NUMBERS, 5)
 				.with(new DefaultTableCellRenderer()));
 
 		model.objectSelection.bind(selection(listTable, tableModel)).addDependency(preserveOnUpdateOf(filteredModel));

@@ -28,6 +28,7 @@ import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 
 import ch.scaille.gui.swing.JTableHelper;
+import ch.scaille.gui.swing.jtable.TableColumnWithPolicy.FixedTextWidthColumn;
 import ch.scaille.gui.swing.jtable.TableColumnWithPolicy.FixedWidthColumn;
 import ch.scaille.gui.swing.jtable.TableColumnWithPolicy.PercentOfAvailableSpaceColumn;
 import ch.scaille.gui.swing.jtable.TableColumnWithPolicy.PercentOfTableWidthColumn;
@@ -48,9 +49,11 @@ public class PolicyTableColumnModel<C extends Enum<C>> extends DefaultTableColum
 
 	private final JTable table;
 
+	public static final List<Class<?>> DEFAULT_POLICIES = Arrays.asList(FixedWidthColumn.class, FixedTextWidthColumn.class, PercentOfTableWidthColumn.class,
+			PercentOfAvailableSpaceColumn.class);
+	
 	public PolicyTableColumnModel(final JTable table) {
-		this(table, Arrays.asList(FixedWidthColumn.class, PercentOfTableWidthColumn.class,
-				PercentOfAvailableSpaceColumn.class));
+		this(table, DEFAULT_POLICIES);
 	}
 
 	protected PolicyTableColumnModel(final JTable table, final List<Class<?>> executionOrder) {
@@ -101,7 +104,7 @@ public class PolicyTableColumnModel<C extends Enum<C>> extends DefaultTableColum
 				// no policy
 				continue;
 			}
-			final ColumnComputationInfo info = new ColumnComputationInfo(columnsOfPolicy.size(), width,
+			final ColumnComputationInfo info = new ColumnComputationInfo(table, columnsOfPolicy.size(), 
 					unallocatedWidth);
 			for (final TableColumnWithPolicy<C> column : columnsOfPolicy) {
 				final int computedWidth = column.computeWidth(info);

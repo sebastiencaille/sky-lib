@@ -97,7 +97,7 @@ public class StepsTable extends JPanel {
 		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(Column.BREAKPOINT, 20)
 				.with(new StepStatusRenderer(), new StepStatusEditor()));
 		columnModel.configureColumn(
-				TableColumnWithPolicy.fixedWidth(Column.ORDINAL, 20).with(new DefaultTableCellRenderer() {
+				TableColumnWithPolicy.fixedTextWidth(Column.ORDINAL, 2, TableColumnWithPolicy.SAMPLE_NUMBERS, 2).with(new DefaultTableCellRenderer() {
 					@Override
 					public Component getTableCellRendererComponent(JTable var1, Object obj, boolean var3, boolean var4,
 							int row, int col) {
@@ -122,12 +122,12 @@ public class StepsTable extends JPanel {
 					}
 				}));
 
-		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(Column.ACTOR, 120).with(new StepsCellRenderer()));
+		columnModel.configureColumn(TableColumnWithPolicy.fixedTextWidth(Column.ACTOR, 15).with(new StepsCellRenderer()));
 		columnModel.configureColumn(
 				TableColumnWithPolicy.percentOfAvailableSpace(Column.SELECTOR, 50).with(new StepsCellRenderer()));
 		columnModel.configureColumn(
 				TableColumnWithPolicy.percentOfAvailableSpace(Column.PARAM0, 50).with(new StepsCellRenderer()));
-		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(Column.TO_VAR, 250).with(new StepsCellRenderer()));
+		columnModel.configureColumn(TableColumnWithPolicy.fixedTextWidth(Column.TO_VAR, 30).with(new StepsCellRenderer()));
 
 		// Refresh table when step is updated
 		final var selectedStepCtrl = model.getSelectedStep().bind(selection(stepsJTable, stepsTableModel));

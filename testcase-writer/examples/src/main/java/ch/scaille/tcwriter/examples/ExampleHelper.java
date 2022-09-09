@@ -56,11 +56,16 @@ public class ExampleHelper {
 	}
 
 	public static TestCase recordTestCase(final TestDictionary model) {
+		// Setup the recorder
 		final var recorder = new TestCaseRecorder(modelDao, model);
 		TestCaseRecorderAspect.setRecorder(recorder);
+		
+		// create and run a test
 		final var test = new SimpleTest();
 		test.initActors();
 		test.testNormalCase();
+		
+		// retrieve the test
 		final var testCase = recorder.getTestCase("ch.scaille.tcwriter.examples.GeneratedTest");
 		Logs.of(ExampleHelper.class).info(() -> new HumanReadableVisitor(testCase, true).processAllSteps());
 		return testCase;

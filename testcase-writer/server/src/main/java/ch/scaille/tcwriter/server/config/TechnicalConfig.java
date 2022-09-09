@@ -12,7 +12,7 @@ public class TechnicalConfig {
 
 	@Bean
 	public ContextService contextService(ContextDao contextDao) {
-		return new  ContextServiceImpl(contextDao);
+		return new ContextServiceImpl(contextDao);
 	}
-	
+
 }

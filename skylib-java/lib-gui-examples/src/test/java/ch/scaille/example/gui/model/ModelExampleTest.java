@@ -36,9 +36,8 @@ class ModelExampleTest {
 
 		page.listTable.wait(Pollings.assertion(pc -> {
 			JTable component = pc.component;
-			Assertions.assertEquals(50, component.getColumn(TestObjectTableModel.Columns.A_SECOND_VALUE).getWidth());
-			Assertions.assertEquals(component.getWidth() - 50,
-					component.getColumn(TestObjectTableModel.Columns.A_FIRST_VALUE).getWidth());
+			Assertions.assertEquals(15, component.getColumn(TestObjectTableModel.Columns.A_SECOND_VALUE).getWidth());
+			Assertions.assertEquals(148, component.getColumn(TestObjectTableModel.Columns.A_FIRST_VALUE).getWidth());
 		}));
 		page.listTable.checkValue(0, 0, "One");
 		page.listTable.checkValue(1, 0, "Two");

@@ -15,7 +15,10 @@
  ******************************************************************************/
 package ch.scaille.gui.swing;
 
+import java.awt.Component;
 import java.awt.EventQueue;
+import java.awt.FontMetrics;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayOutputStream;
@@ -25,6 +28,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import javax.swing.ImageIcon;
+import javax.swing.SwingUtilities;
 
 import ch.scaille.gui.mvc.IPropertyEventListener;
 import ch.scaille.gui.mvc.PropertyEvent.EventKind;
@@ -78,5 +82,13 @@ public interface SwingHelper {
 	 */
 	public static ActionListener action(Runnable runnable) {
 		return e -> runnable.run();
+	}
+
+	/*
+	 * Computes the length of a text
+	 */
+	public static int computeTextWidth(Component component, String text) {
+		FontMetrics metrics = component.getFontMetrics(component.getFont());
+		return SwingUtilities.computeStringWidth(metrics, text);
 	}
 }

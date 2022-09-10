@@ -22,6 +22,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import ch.scaille.gui.swing.SwingHelper;
 import ch.scaille.gui.swing.model.ListModelTableModel;
 
 /**
@@ -37,7 +38,7 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 
 	public static final String SAMPLE_LOREM_IPSUM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vehicula lorem ut neque condimentum, non hendrerit nisl molestie. Morbi non vehicula erat. Phasellus nec diam quis ipsum lacinia congue id in nisi. Aenean dolor lectus, ornare ut faucibus nec, sagittis in mauris. Nulla ac bibendum sapien, quis porta nunc. Morbi sit amet metus massa. Vestibulum feugiat pretium enim, at maximus mi convallis eget. Duis maximus in nunc quis ornare. Duis dui risus, mattis in leo a, semper rutrum ante. Aliquam rutrum laoreet feugiat. Quisque rhoncus felis vitae metus volutpat finibus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed sed viverra ipsum. In hac habitasse platea dictumst. Pellentesque a purus diam. Nullam facilisis metus ut nulla dapibus finibus.";
 	public static final String SAMPLE_NUMBERS = "0";
-	
+
 	private PolicyTableColumnModel<C> model;
 
 	private final C column;
@@ -101,6 +102,7 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 
 	/**
 	 * Creates a column with a pixel based width
+	 * 
 	 * @param <C>
 	 * @param column
 	 * @param fixedWidth
@@ -109,13 +111,13 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 	public static <C extends Enum<C>> TableColumnWithPolicy<C> fixedWidth(final C column, final int fixedWidth) {
 		return new FixedWidthColumn<>(column, fixedWidth);
 	}
-	
+
 	protected static class FixedTextWidthColumn<C extends Enum<C>> extends TableColumnWithPolicy<C> {
 
 		private static Map<String, Float> WIDTH_CACHE = new HashMap<>();
-		
+
 		private final int fixedTextWidth;
-		
+
 		private final String sample;
 
 		private final int margins;
@@ -129,34 +131,40 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 
 		@Override
 		public int computeWidth(final ColumnComputationInfo policyInfo) {
-			float charRatio = WIDTH_CACHE.computeIfAbsent(sample + policyInfo.getFontDesciption(), d -> ((float)policyInfo.computeWidth(sample))/sample.length());
-			return (int)(charRatio * fixedTextWidth) + margins;
+			float charRatio = WIDTH_CACHE.computeIfAbsent(sample + policyInfo.getFont().toString(),
+					d -> ((float) SwingHelper.computeTextWidth(policyInfo.table, sample)) / sample.length());
+			return (int) (charRatio * fixedTextWidth) + margins;
 		}
 	}
 
 	/**
-	 * Creates a column with a text based width, the width of a char being based on the lorem ipsum and the table's font 
+	 * Creates a column with a text based width, the width of a char being based on
+	 * the lorem ipsum and the table's font
+	 * 
 	 * @param <C>
 	 * @param column
 	 * @param fixedTextWidth
 	 * @return
 	 */
-	public static <C extends Enum<C>> TableColumnWithPolicy<C> fixedTextWidth(final C column, final int fixedTextWidth) {
+	public static <C extends Enum<C>> TableColumnWithPolicy<C> fixedTextWidth(final C column,
+			final int fixedTextWidth) {
 		return fixedTextWidth(column, fixedTextWidth, SAMPLE_LOREM_IPSUM, 2);
 	}
 
 	/**
-	 * Creates a column with a text based width, the width of a char being based on referenceText and the table's font 
+	 * Creates a column with a text based width, the width of a char being based on
+	 * referenceText and the table's font
+	 * 
 	 * @param <C>
 	 * @param column
 	 * @param fixedTextWidth
 	 * @param referenceText
 	 * @return
 	 */
-	public static <C extends Enum<C>> TableColumnWithPolicy<C> fixedTextWidth(final C column, final int fixedTextWidth, String sample, int margins) {
+	public static <C extends Enum<C>> TableColumnWithPolicy<C> fixedTextWidth(final C column, final int fixedTextWidth,
+			String sample, int margins) {
 		return new FixedTextWidthColumn<>(column, fixedTextWidth, sample, margins);
 	}
-
 
 	protected static class PercentOfTableWidthColumn<C extends Enum<C>> extends TableColumnWithPolicy<C> {
 		private final int percent;
@@ -178,6 +186,7 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 
 	/**
 	 * Creates a column based on a fraction of the table's width
+	 * 
 	 * @param <C>
 	 * @param column
 	 * @param percent
@@ -209,7 +218,9 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 	}
 
 	/**
-	 * Creates a column based on a fraction of the unused space (that is, not allocated by another policy) 
+	 * Creates a column based on a fraction of the unused space (that is, not
+	 * allocated by another policy)
+	 * 
 	 * @param <C>
 	 * @param column
 	 * @param percent

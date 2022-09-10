@@ -35,14 +35,9 @@ class ColumnComputationInfo {
 		this.tableWidth = table.getWidth();
 		this.unallocatedWidth = unallocatedWidth;
 	}
-	
-	public String getFontDesciption() {
-		return table.getFont().toString();
-	}
-	
-	public int computeWidth(String text) {
-		FontMetrics metrics = Toolkit.getDefaultToolkit().getFontMetrics(table.getFont());
-		return SwingUtilities.computeStringWidth(metrics, text);
-	}
 
+	public Object getFont() {
+		return table.getFont();
+	}
+	
 }

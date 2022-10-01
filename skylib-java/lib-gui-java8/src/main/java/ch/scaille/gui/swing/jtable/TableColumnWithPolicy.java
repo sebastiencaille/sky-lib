@@ -36,6 +36,7 @@ import ch.scaille.gui.swing.model.ListModelTableModel;
  */
 public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColumn {
 
+	public static final Margin DEFAULT_MARGIN = Margin.px(5);
 	public static final String SAMPLE_LOREM_IPSUM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vehicula lorem ut neque condimentum, non hendrerit nisl molestie. Morbi non vehicula erat. Phasellus nec diam quis ipsum lacinia congue id in nisi. Aenean dolor lectus, ornare ut faucibus nec, sagittis in mauris. Nulla ac bibendum sapien, quis porta nunc. Morbi sit amet metus massa. Vestibulum feugiat pretium enim, at maximus mi convallis eget. Duis maximus in nunc quis ornare. Duis dui risus, mattis in leo a, semper rutrum ante. Aliquam rutrum laoreet feugiat. Quisque rhoncus felis vitae metus volutpat finibus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed sed viverra ipsum. In hac habitasse platea dictumst. Pellentesque a purus diam. Nullam facilisis metus ut nulla dapibus finibus.";
 	public static final String SAMPLE_NUMBERS = "0";
 
@@ -47,6 +48,7 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 
 	public abstract int computeWidth(ColumnComputationInfo policyInfo);
 
+		
 	protected TableColumnWithPolicy(final C column) {
 		this.column = column;
 	}
@@ -114,26 +116,27 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 
 	protected static class FixedTextWidthColumn<C extends Enum<C>> extends TableColumnWithPolicy<C> {
 
-		private static Map<String, Float> WIDTH_CACHE = new HashMap<>();
+		private static final Map<String, Float> WIDTH_CACHE = new HashMap<>();
 
 		private final int fixedTextWidth;
 
 		private final String sample;
 
-		private final int margins;
+		private final Margin margin;
 
-		public FixedTextWidthColumn(final C column, final int fixedTextWidth, String sample, int margins) {
+		public FixedTextWidthColumn(final C column, final int fixedTextWidth, String sample, Margin margin) {
 			super(column);
 			this.fixedTextWidth = fixedTextWidth;
 			this.sample = sample;
-			this.margins = margins;
+			this.margin = margin;
 		}
 
 		@Override
 		public int computeWidth(final ColumnComputationInfo policyInfo) {
-			float charRatio = WIDTH_CACHE.computeIfAbsent(sample + policyInfo.getFont().toString(),
+			final float charRatio = WIDTH_CACHE.computeIfAbsent(sample + policyInfo.getFont().toString(),
 					d -> ((float) SwingHelper.computeTextWidth(policyInfo.table, sample)) / sample.length());
-			return (int) (charRatio * fixedTextWidth) + margins;
+			final int columnWidth = (int) (charRatio * fixedTextWidth);
+			return columnWidth + margin.compute(columnWidth);
 		}
 	}
 
@@ -148,7 +151,7 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 	 */
 	public static <C extends Enum<C>> TableColumnWithPolicy<C> fixedTextWidth(final C column,
 			final int fixedTextWidth) {
-		return fixedTextWidth(column, fixedTextWidth, SAMPLE_LOREM_IPSUM, 2);
+		return fixedTextWidth(column, fixedTextWidth, SAMPLE_LOREM_IPSUM, DEFAULT_MARGIN);
 	}
 
 	/**
@@ -162,7 +165,7 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 	 * @return
 	 */
 	public static <C extends Enum<C>> TableColumnWithPolicy<C> fixedTextWidth(final C column, final int fixedTextWidth,
-			String sample, int margins) {
+			String sample, Margin margins) {
 		return new FixedTextWidthColumn<>(column, fixedTextWidth, sample, margins);
 	}
 

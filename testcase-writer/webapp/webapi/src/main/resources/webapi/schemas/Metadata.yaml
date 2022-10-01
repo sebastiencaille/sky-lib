@@ -1,0 +1,14 @@
+IdObject:
+  type: object
+  discriminator:
+    propertyName: tcDataType
+  properties:
+    id:
+      type: string
+Metadata:
+  type: object
+  properties:
+    transientId:
+      type: string
+    description:
+      type: string

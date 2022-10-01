@@ -4,13 +4,11 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 
 import ch.scaille.generators.util.Template;
 import ch.scaille.tcwriter.model.testapi.Metadata;
 import ch.scaille.tcwriter.model.testapi.TestDictionary;
 import ch.scaille.tcwriter.model.testcase.TestCase;
-import ch.scaille.util.exceptions.StorageException;
 
 public interface IModelDao {
 	

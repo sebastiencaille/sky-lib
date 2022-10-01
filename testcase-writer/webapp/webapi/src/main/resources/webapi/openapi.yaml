@@ -1,0 +1,19 @@
+openapi: 3.0.1
+info:
+  title: Test Case Server
+  version: 0.0.1
+servers: 
+  - http://localhost:8080
+paths:
+  /dictionary:
+    $ref: paths/allDictionaries.yaml
+  /dictionary/current:
+    $ref: paths/currentDictionary.yaml
+components:
+  schemas:
+    Metadata:
+      $ref: schemas/Metadata.yaml#/Metadata
+    TestDictionary:
+      $ref: schemas/TestDictionary.yaml#/TestDictionary
+
+

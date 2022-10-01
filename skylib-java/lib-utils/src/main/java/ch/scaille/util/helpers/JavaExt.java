@@ -1,5 +1,9 @@
 package ch.scaille.util.helpers;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
 import java.util.TimerTask;
@@ -24,7 +28,7 @@ public class JavaExt {
 		return pathOf(uri.getPath());
 	}
 
-	public static String pathOf(URL url)  {
+	public static String pathOf(URL url) {
 		return pathOf(url.getPath());
 	}
 
@@ -35,8 +39,21 @@ public class JavaExt {
 		return uriPath;
 	}
 
-	public interface AutoCloseableNoException extends AutoCloseable{
+	public interface AutoCloseableNoException extends AutoCloseable {
 		@Override
 		void close();
+	}
+
+	public static <T extends OutputStream> T transferTo(InputStream in, T out) throws IOException {
+		final byte[] buffer = new byte[1024];
+		int read;
+		while ((read = in.read(buffer)) > 0) {
+			out.write(buffer, 0, read);
+		}
+		return out;
+	}
+	
+	public static byte[] read(InputStream in) throws IOException {
+		return transferTo(in, new ByteArrayOutputStream()).toByteArray();
 	}
 }

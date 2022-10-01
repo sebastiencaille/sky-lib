@@ -1,0 +1,23 @@
+DicoIdObject:
+  # Hacked in pom.xml to map to Metadata
+  $ref: Metadata.yaml#/IdObject
+DicoMetadata:
+  # Hacked in pom.xml to map to Metadata
+  $ref: Metadata.yaml#/Metadata
+TestRole:
+  description: A role
+  allOf:
+  - $ref: '#/DicoIdObject'
+  - type: object
+    properties:
+TestRoles:
+  type: object
+  additionalProperties:
+    $ref: '#/TestRole'
+TestDictionary:
+  properties:
+    metadata:
+      $ref: '#/DicoMetadata'
+    roles:
+      $ref: '#/TestRoles'
+        

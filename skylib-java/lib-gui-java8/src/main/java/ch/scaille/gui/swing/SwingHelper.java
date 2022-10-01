@@ -18,10 +18,8 @@ package ch.scaille.gui.swing;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.FontMetrics;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.function.Consumer;
@@ -32,6 +30,7 @@ import javax.swing.SwingUtilities;
 
 import ch.scaille.gui.mvc.IPropertyEventListener;
 import ch.scaille.gui.mvc.PropertyEvent.EventKind;
+import ch.scaille.util.helpers.JavaExt;
 
 public interface SwingHelper {
 
@@ -44,15 +43,8 @@ public interface SwingHelper {
 	public static ImageIcon iconFromStream(final InputStream in) throws IOException {
 		if (in == null) {
 			throw new IllegalArgumentException("Stream must not be null");
-		}
-		final ByteArrayOutputStream out = new ByteArrayOutputStream();
-		final byte[] buffer = new byte[1024];
-		int read;
-		while ((read = in.read(buffer)) > 0) {
-			out.write(buffer, 0, read);
-		}
-		in.close();
-		return new ImageIcon(out.toByteArray());
+		}		
+		return new ImageIcon(JavaExt.read(in));
 	}
 
 	public static IPropertyEventListener checkSwingThread() {

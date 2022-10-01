@@ -97,37 +97,40 @@ public class StepsTable extends JPanel {
 		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(Column.BREAKPOINT, 20)
 				.with(new StepStatusRenderer(), new StepStatusEditor()));
 		columnModel.configureColumn(
-				TableColumnWithPolicy.fixedTextWidth(Column.ORDINAL, 2, TableColumnWithPolicy.SAMPLE_NUMBERS, 2).with(new DefaultTableCellRenderer() {
-					@Override
-					public Component getTableCellRendererComponent(JTable var1, Object obj, boolean var3, boolean var4,
-							int row, int col) {
-						super.getTableCellRendererComponent(var1, obj, var3, var4, row, col);
-						StepClassifier classifier = steps.getElementAt(row).getClassifier();
-						if (classifier == null) {
-							return this;
-						}
-						switch (classifier) {
-						case PREPARATION:
-							setBackground(Color.CYAN);
-							break;
-						case ACTION:
-							setBackground(Color.ORANGE);
-							break;
-						case CHECK:
-							setBackground(Color.GREEN);
-							break;
-						default:
-						}
-						return this;
-					}
-				}));
+				TableColumnWithPolicy.fixedTextWidth(Column.ORDINAL, 2, TableColumnWithPolicy.SAMPLE_NUMBERS,
+						TableColumnWithPolicy.DEFAULT_MARGIN).with(new DefaultTableCellRenderer() {
+							@Override
+							public Component getTableCellRendererComponent(JTable var1, Object obj, boolean var3,
+									boolean var4, int row, int col) {
+								super.getTableCellRendererComponent(var1, obj, var3, var4, row, col);
+								StepClassifier classifier = steps.getElementAt(row).getClassifier();
+								if (classifier == null) {
+									return this;
+								}
+								switch (classifier) {
+								case PREPARATION:
+									setBackground(Color.CYAN);
+									break;
+								case ACTION:
+									setBackground(Color.ORANGE);
+									break;
+								case CHECK:
+									setBackground(Color.GREEN);
+									break;
+								default:
+								}
+								return this;
+							}
+						}));
 
-		columnModel.configureColumn(TableColumnWithPolicy.fixedTextWidth(Column.ACTOR, 15).with(new StepsCellRenderer()));
+		columnModel
+				.configureColumn(TableColumnWithPolicy.fixedTextWidth(Column.ACTOR, 15).with(new StepsCellRenderer()));
 		columnModel.configureColumn(
 				TableColumnWithPolicy.percentOfAvailableSpace(Column.SELECTOR, 50).with(new StepsCellRenderer()));
 		columnModel.configureColumn(
 				TableColumnWithPolicy.percentOfAvailableSpace(Column.PARAM0, 50).with(new StepsCellRenderer()));
-		columnModel.configureColumn(TableColumnWithPolicy.fixedTextWidth(Column.TO_VAR, 30).with(new StepsCellRenderer()));
+		columnModel
+				.configureColumn(TableColumnWithPolicy.fixedTextWidth(Column.TO_VAR, 30).with(new StepsCellRenderer()));
 
 		// Refresh table when step is updated
 		final var selectedStepCtrl = model.getSelectedStep().bind(selection(stepsJTable, stepsTableModel));

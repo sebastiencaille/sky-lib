@@ -29,11 +29,11 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 
 	private final Logger logger = Logs.of(this);
 
-	protected static class LoadedElement<TT> {
-		public final TT element;
+	protected static class LoadedElement<T> {
+		public final T element;
 		private boolean preconditionValidated;
 
-		public LoadedElement(final TT element) {
+		public LoadedElement(final T element) {
 			this.element = element;
 		}
 

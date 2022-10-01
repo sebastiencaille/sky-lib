@@ -22,7 +22,7 @@
 		<module>gui</module>
 		<module>gui-it</module>
 		<module>examples</module>
-		<module>server</module>
+		<module>webapp</module>
 	</modules>
 
 	<properties>
@@ -111,7 +111,6 @@
 				<artifactId>testcase-writer-examples</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
-
 			<dependency>
 				<groupId>org.aspectj</groupId>
 				<artifactId>aspectjweaver</artifactId>

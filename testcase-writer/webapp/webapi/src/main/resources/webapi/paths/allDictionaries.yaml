@@ -1,0 +1,16 @@
+components:
+  schemas:
+    Metadata:
+      $ref: ../openapi.yaml#/components/schemas/Metadata
+get:
+  summary: List all dictionaries
+  operationId: listAll
+  responses:
+    '200':
+      description: all dictionaries
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: Metadata

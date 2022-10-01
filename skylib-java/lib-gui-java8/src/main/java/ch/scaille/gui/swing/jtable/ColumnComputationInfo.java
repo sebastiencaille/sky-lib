@@ -15,11 +15,7 @@
  ******************************************************************************/
 package ch.scaille.gui.swing.jtable;
 
-import java.awt.FontMetrics;
-import java.awt.Toolkit;
-
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
 
 class ColumnComputationInfo {
 

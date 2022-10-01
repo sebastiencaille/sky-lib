@@ -25,7 +25,6 @@
 			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-javatc</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>ch.scaille</groupId>
 			<artifactId>lib-gui-java8</artifactId>

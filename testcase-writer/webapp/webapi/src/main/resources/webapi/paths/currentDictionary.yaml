@@ -1,9 +1,5 @@
-components:
-  schemas:
-    TestDictionary:
-      $ref: ../openapi.yaml#/components/schemas/TestDictionary
 get:
-  summary: Get current dictionary
+  summary: Gets the currently selected dictionary
   operationId: current
   responses:
     '200':
@@ -11,4 +7,4 @@ get:
       content:
         application/json:
           schema:
-            $ref: TestDictionary
+            $ref: ../openapi.yaml#/components/schemas/TestDictionary

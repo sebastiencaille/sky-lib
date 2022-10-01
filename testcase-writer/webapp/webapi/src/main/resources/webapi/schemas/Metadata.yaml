@@ -2,11 +2,16 @@ IdObject:
   type: object
   discriminator:
     propertyName: tcDataType
+  required:
+    - id    
   properties:
     id:
       type: string
 Metadata:
   type: object
+  required:
+    - transientId
+      description
   properties:
     transientId:
       type: string

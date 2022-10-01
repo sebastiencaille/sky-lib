@@ -1,0 +1,27 @@
+get:
+  summary: Gets current content
+  operationId: getCurrent
+  responses:
+    '200':
+      description: current context
+      content:
+        application/json:
+          schema:
+            $ref: ../openapi.yaml#/components/schemas/Context
+put:
+  summary: Sets the current content
+  operationId: setCurrent
+  requestBody: 
+    description: context to set
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../openapi.yaml#/components/schemas/ContextUpdate
+  responses:
+    '200':
+      description: The new context, after it was set
+      content:
+        application/json:
+          schema:
+            $ref: ../openapi.yaml#/components/schemas/Context

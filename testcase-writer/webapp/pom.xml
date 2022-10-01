@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -21,6 +19,7 @@
 
 	<properties>
 		<version.springboot>2.7.4</version.springboot>
+		<version.swagger>2.1.1</version.swagger>
 	</properties>
 
 
@@ -41,4 +40,36 @@
 		</dependencies>
 	</dependencyManagement>
 
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.openapitools</groupId>
+					<artifactId>openapi-generator-maven-plugin</artifactId>
+					<version>6.2.0</version>
+					<configuration>
+						<inputSpec>${project.basedir}/../webapi/src/main/resources/webapi/openapi.yaml</inputSpec>
+						<configOptions>
+							<sourceFolder>src/gen/java/main</sourceFolder>
+						</configOptions>
+						<apiPackage>ch.scaille.tcwriter.generated.api.contollers</apiPackage>
+						<modelPackage>ch.scaille.tcwriter.generated.api.model</modelPackage>
+						<generatorName>spring</generatorName>
+						<library>spring-boot</library>
+						<schemaMappings>
+							<schemaMapping>DicoMetadata=Metadata</schemaMapping>
+							<schemaMapping>DicoIdObject=IdObject</schemaMapping>
+						</schemaMappings>
+					</configuration>
+					<dependencies>
+						<dependency>
+							<groupId>io.swagger.parser.v3</groupId>
+							<artifactId>swagger-parser</artifactId>
+							<version>${version.swagger}</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>

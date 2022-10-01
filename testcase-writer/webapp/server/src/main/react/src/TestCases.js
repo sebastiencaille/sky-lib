@@ -9,7 +9,7 @@ class TestCaseList extends React.Component {
 	};
 
 	componentDidMount() {
-		WebApis.loadAllDictionaries(dicts => this.setState({ allDictionaries: dicts }));
+		WebApis.loadTestCases(dicts => this.setState({ allDictionaries: dicts }));
 	}
 
 	componentDidUpdate(oldProps, oldState) {

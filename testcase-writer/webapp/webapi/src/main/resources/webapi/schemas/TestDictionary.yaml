@@ -10,6 +10,8 @@ TestRole:
   - $ref: '#/DicoIdObject'
   - type: object
     properties:
+      dummy:
+        type: string
 TestRoles:
   type: object
   additionalProperties:

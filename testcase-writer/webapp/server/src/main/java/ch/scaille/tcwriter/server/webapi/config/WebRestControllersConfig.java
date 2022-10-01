@@ -14,7 +14,7 @@ import ch.scaille.tcwriter.server.dao.ContextDao;
 import ch.scaille.tcwriter.server.dao.DictionaryDao;
 import ch.scaille.tcwriter.server.services.ContextService;
 import ch.scaille.tcwriter.server.webapi.controllers.ContextController;
-import ch.scaille.tcwriter.server.webapi.controllers.DictionariesController;
+import ch.scaille.tcwriter.server.webapi.controllers.DictionaryController;
 
 @Configuration
 public class WebRestControllersConfig {
@@ -34,13 +34,13 @@ public class WebRestControllersConfig {
 	}
 
 	@Bean
-	public ContextController contextController(ContextService contextService, ContextDao contextDao) {
-		return new ContextController(contextService, contextDao);
+	public ContextController contextController(ContextService contextService, ContextDao contextDao, NativeWebRequest nativeWebRequest) {
+		return new ContextController(contextService, contextDao, nativeWebRequest);
 	}
 
 	@Bean
-	public DictionariesController dictionariesController(ContextService contextService, DictionaryDao dictionaryDao, NativeWebRequest nativeWebRequest) {
-		return new DictionariesController(contextService, dictionaryDao, nativeWebRequest);
+	public DictionaryController dictionariesController(ContextService contextService, DictionaryDao dictionaryDao, NativeWebRequest nativeWebRequest) {
+		return new DictionaryController(contextService, dictionaryDao, nativeWebRequest);
 	}
 
 

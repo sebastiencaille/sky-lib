@@ -49,6 +49,12 @@
 			<artifactId>mapstruct</artifactId>
 			<version>${version.mapstruct}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.openapitools</groupId>
+			<artifactId>jackson-databind-nullable</artifactId>
+			<version>0.2.3</version>
+		</dependency>
 	</dependencies>
 
 	<profiles>

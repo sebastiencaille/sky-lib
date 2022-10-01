@@ -1,12 +1,12 @@
 Identity:
   type: object
-  required:
-    - id
+  required: [ id ]
   parameters:
     id:
       type: string
 Context:
   type: object
+  required: [ identity ]
   properties:
     identity:
       $ref: '#/Identity'

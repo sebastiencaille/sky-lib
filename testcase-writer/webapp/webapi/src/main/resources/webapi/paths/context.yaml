@@ -1,3 +1,7 @@
+Context:
+   $ref: ../openapi.yaml#/components/schemas/Context
+ContextUpdate:
+   $ref: ../openapi.yaml#/components/schemas/ContextUpdate
 get:
   summary: Gets current content
   operationId: getCurrent
@@ -7,7 +11,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: ../openapi.yaml#/components/schemas/Context
+            $ref: '#/Context'
 put:
   summary: Sets the current content
   operationId: setCurrent
@@ -17,11 +21,11 @@ put:
     content:
       application/json:
         schema:
-          $ref: ../openapi.yaml#/components/schemas/ContextUpdate
+          $ref: '#/ContextUpdate'
   responses:
     '200':
       description: The new context, after it was set
       content:
         application/json:
           schema:
-            $ref: ../openapi.yaml#/components/schemas/Context
+            $ref: '#/Context'

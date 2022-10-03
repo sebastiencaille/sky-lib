@@ -13,12 +13,12 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 
 import ch.scaille.tcwriter.generators.TCConfig;
+import ch.scaille.tcwriter.model.Metadata;
+import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.persistence.FsModelDao;
-import ch.scaille.tcwriter.model.testapi.Metadata;
-import ch.scaille.tcwriter.model.testapi.TestDictionary;
 import ch.scaille.util.exceptions.StorageRTException;
 
-public class FsDictionaryDao implements DictionaryDao {
+public class DictionaryFsDao implements DictionaryDao {
 
 	private final Map<String, TestDictionary> cache = new HashMap<>();
 
@@ -29,14 +29,14 @@ public class FsDictionaryDao implements DictionaryDao {
 
 	@PostConstruct
 	private void created() {
-		final TCConfig config = new TCConfig();
+		final var config = new TCConfig();
 		config.setName("server");
 		config.setBase(dataFolder);
 		modelDao = new FsModelDao(config);
 	}
 
 	@Override
-	public List<Metadata> listDictionaries() {
+	public List<Metadata> listAll() {
 		try {
 			return modelDao.listDictionaries();
 		} catch (IOException e) {

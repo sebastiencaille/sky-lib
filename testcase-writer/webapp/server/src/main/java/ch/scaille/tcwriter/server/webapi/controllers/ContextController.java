@@ -9,7 +9,6 @@ import org.springframework.web.context.request.NativeWebRequest;
 
 import ch.scaille.tcwriter.generated.api.contollers.ContextApiController;
 import ch.scaille.tcwriter.server.dao.ContextDao;
-import ch.scaille.tcwriter.server.dto.Context;
 import ch.scaille.tcwriter.server.dto.Identity;
 import ch.scaille.tcwriter.server.services.ContextService;
 import ch.scaille.tcwriter.server.webapi.mappers.ContextMapper;
@@ -31,10 +30,12 @@ public class ContextController extends ContextApiController {
 	public ResponseEntity<ch.scaille.tcwriter.generated.api.model.Context> getCurrent() {
 		return new ResponseEntity<>(ContextMapper.MAPPER.convert(contextService.get()), HttpStatus.OK);
 	}
-	
+
 	@Override
-	public ResponseEntity<ch.scaille.tcwriter.generated.api.model.Context> setCurrent(ch.scaille.tcwriter.generated.api.model.@Valid ContextUpdate contextUpdate) {
-		Context modelContext = contextDao.save(Identity.of(getRequest().get().getNativeRequest(HttpServletRequest.class)),
+	public ResponseEntity<ch.scaille.tcwriter.generated.api.model.Context> setCurrent(
+			ch.scaille.tcwriter.generated.api.model.@Valid ContextUpdate contextUpdate) {
+		final var modelContext = contextDao.save(
+				Identity.of(getRequest().get().getNativeRequest(HttpServletRequest.class)),
 				contextService.merge(ContextMapper.MAPPER.convert(contextUpdate)));
 		Logs.of(getClass()).info(() -> "Setting new context: " + modelContext);
 		return new ResponseEntity<>(ContextMapper.MAPPER.convert(modelContext), HttpStatus.OK);

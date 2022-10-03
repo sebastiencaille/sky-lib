@@ -11,6 +11,6 @@ public interface MetadataMapper {
 
 	MetadataMapper MAPPER = Mappers.getMapper(MetadataMapper.class);
 	
-	Metadata convert(ch.scaille.tcwriter.model.testapi.Metadata model);
+	Metadata convert(ch.scaille.tcwriter.model.Metadata model);
 	
 }

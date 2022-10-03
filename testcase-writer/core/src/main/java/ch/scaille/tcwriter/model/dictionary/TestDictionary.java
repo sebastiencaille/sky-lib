@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.model.testapi;
+package ch.scaille.tcwriter.model.dictionary;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -12,6 +12,7 @@ import com.google.common.collect.MultimapBuilder;
 
 import ch.scaille.tcwriter.generators.Helper;
 import ch.scaille.tcwriter.model.IdObject;
+import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.model.TestObjectDescription;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 
@@ -73,14 +74,18 @@ public class TestDictionary implements Serializable {
 		}
 	}
 
-	public Multimap<String, TestParameterFactory> getParameterFactories() {
+	public Multimap<String, TestParameterFactory> getTestObjectFactories() {
 		return testObjectFactories;
 	}
 
 	public Collection<TestParameterFactory> getParameterFactories(final TestApiParameter paramType) {
-		return testObjectFactories.get(paramType.getType());
+		return testObjectFactories.get(paramType.getParameterType());
 	}
 
+	public Set<String> getSelectorTypes() {
+		return selectorTypes;
+	}
+	
 	public void addSelectorType(final Class<?> type) {
 		selectorTypes.add(type.getName());
 	}
@@ -93,6 +98,7 @@ public class TestDictionary implements Serializable {
 		return description;
 	}
 
+	
 	public TestParameterFactory getTestParameterFactory(final String factoryId) {
 		return testObjectFactories.values().stream().filter(tObj -> tObj.getId().equals(factoryId)).findFirst()
 				.orElseThrow(
@@ -106,11 +112,11 @@ public class TestDictionary implements Serializable {
 	}
 
 	public boolean isSelector(final TestApiParameter testParameterType) {
-		return selectorTypes.contains(testParameterType.getType());
+		return selectorTypes.contains(testParameterType.getParameterType());
 	}
 
 	public boolean isSelector(final TestParameterValue value) {
-		return selectorTypes.contains(value.getValueFactory().getType());
+		return selectorTypes.contains(value.getValueFactory().getParameterType());
 	}
 
 }

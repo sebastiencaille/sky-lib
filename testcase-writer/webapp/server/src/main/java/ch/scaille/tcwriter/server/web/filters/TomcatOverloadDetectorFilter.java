@@ -8,7 +8,6 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,7 +28,7 @@ public class TomcatOverloadDetectorFilter extends OncePerRequestFilter {
 	@Override
 	public void afterPropertiesSet() throws ServletException {
 		super.afterPropertiesSet();
-		Optional<FilterConfig> config = Optional.ofNullable(getFilterConfig());
+		var config = Optional.ofNullable(getFilterConfig());
 		this.dumpIfMoreThan = config.map(c -> c.getInitParameter("dumpIfMoreThan")).map(Integer::parseInt).orElse(50);
 		int periodInSeconds = config.map(c -> c.getInitParameter("taskPeriodInSeconds")).map(Integer::parseInt)
 				.orElse(60);
@@ -54,7 +53,7 @@ public class TomcatOverloadDetectorFilter extends OncePerRequestFilter {
 		if (!thread.getName().contains("-exec-")) {
 			return;
 		}
-		StringBuilder log = new StringBuilder("\n[overload] ").append(thread.getName());
+		var log = new StringBuilder("\n[overload] ").append(thread.getName());
 		int initialLength = log.length();
 		Arrays.stream(stack).filter(this::keepElement)
 				.forEach(e -> log.append("\n[overload] at ").append(e.getClassName()).append('.')

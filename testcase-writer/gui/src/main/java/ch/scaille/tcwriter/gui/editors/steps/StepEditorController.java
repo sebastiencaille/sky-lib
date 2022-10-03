@@ -15,9 +15,9 @@ import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.tcwriter.gui.frame.TCWriterModel;
 import ch.scaille.tcwriter.model.ModelUtils;
 import ch.scaille.tcwriter.model.NamedObject;
-import ch.scaille.tcwriter.model.testapi.TestDictionary;
-import ch.scaille.tcwriter.model.testapi.TestParameterFactory;
-import ch.scaille.tcwriter.model.testcase.TestParameterValue;
+import ch.scaille.tcwriter.model.dictionary.TestDictionary;
+import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
+import ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestStep;
 
 public class StepEditorController extends GuiController {
@@ -64,8 +64,8 @@ public class StepEditorController extends GuiController {
 		});
 		model.getAction().listenActive(action -> updateActionParameters(dictionary, testStep));
 
-		model.getSelectorValue().setValue(this, TestParameterValue.NO_VALUE);
-		model.getActionParameterValue().setValue(this, TestParameterValue.NO_VALUE);
+		model.getSelectorValue().setValue(this, ExportableTestParameterValue.NO_VALUE);
+		model.getActionParameterValue().setValue(this, ExportableTestParameterValue.NO_VALUE);
 		// set temporary cloned object, so it's possible to edit and cancel edition
 		model.getSelector()
 				.listenActive(selector -> model.getSelectorValue().setValue(this,
@@ -115,13 +115,13 @@ public class StepEditorController extends GuiController {
 	}
 
 	private void emptyParam0() {
-		model.getActionParameterValue().setValue(this, TestParameterValue.NO_VALUE);
+		model.getActionParameterValue().setValue(this, ExportableTestParameterValue.NO_VALUE);
 		model.getActionParameter().setValue(this, TestParameterFactory.NO_FACTORY);
 		model.getPossibleActionParameters().setValue(this, Collections.emptyList());
 	}
 
 	private void emptySelectors() {
-		model.getSelectorValue().setValue(this, TestParameterValue.NO_VALUE);
+		model.getSelectorValue().setValue(this, ExportableTestParameterValue.NO_VALUE);
 		model.getSelector().setValue(this, TestParameterFactory.NO_FACTORY);
 		model.getPossibleSelectors().setValue(this, Collections.emptyList());
 	}

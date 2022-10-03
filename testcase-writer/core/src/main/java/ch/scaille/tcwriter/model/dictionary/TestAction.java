@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.model.testapi;
+package ch.scaille.tcwriter.model.dictionary;
 
 import static java.util.stream.Collectors.joining;
 
@@ -12,7 +12,7 @@ public class TestAction extends NamedObject {
 
 	public static final TestAction NOT_SET = new TestAction(IdObject.ID_NOT_SET, "", "", new StepClassifier[0]);
 
-	private final List<TestApiParameter> parameterTypes = new ArrayList<>();
+	private final List<TestApiParameter> parameters = new ArrayList<>();
 
 	private final StepClassifier[] allowedClassifiers;
 
@@ -36,11 +36,11 @@ public class TestAction extends NamedObject {
 	}
 
 	public List<TestApiParameter> getParameters() {
-		return parameterTypes;
+		return parameters;
 	}
 
 	public TestApiParameter getParameter(final int index) {
-		return parameterTypes.get(index);
+		return parameters.get(index);
 	}
 
 	public String getReturnType() {
@@ -49,7 +49,7 @@ public class TestAction extends NamedObject {
 
 	@Override
 	public String toString() {
-		return getName() + ": " + parameterTypes.stream().map(TestApiParameter::getType).collect(joining(","));
+		return getName() + ": " + parameters.stream().map(TestApiParameter::getParameterType).collect(joining(","));
 	}
 
 }

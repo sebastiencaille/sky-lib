@@ -1,16 +1,16 @@
 components:
   schemas:
-    AllDictMetadata:
+    AllTCMetadata:
       $ref: ../openapi.yaml#/components/schemas/Metadata
 get:
-  summary: List all dictionaries
+  summary: List all test cases
   operationId: listAll
   responses:
     '200':
-      description: all dictionaries
+      description: all  test cases
       content:
         application/json:
           schema:
             type: array
             items:
-              $ref: AllDictMetadata
+              $ref: AllTCMetadata

@@ -57,8 +57,13 @@
 						<generatorName>spring</generatorName>
 						<library>spring-boot</library>
 						<schemaMappings>
+						    <schemaMapping>AllDictMetadata=Metadata</schemaMapping>
+						    <schemaMapping>AllTCMetadata=Metadata</schemaMapping>
 							<schemaMapping>DicoMetadata=Metadata</schemaMapping>
 							<schemaMapping>DicoIdObject=IdObject</schemaMapping>
+							<schemaMapping>TCIdObject=IdObject</schemaMapping>
+							<schemaMapping>DicoNamedObject=NamedObject</schemaMapping>$
+							<schemaMapping>TCTestParameterFactory=TestParameterFactory</schemaMapping>
 						</schemaMappings>
 					</configuration>
 					<dependencies>

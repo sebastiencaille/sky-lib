@@ -4,21 +4,20 @@ import WebApis from './WebApis.js';
 class TestCaseList extends React.Component {
 
 	state = {
-		allTests: [],
+		allTestCases: [],
 		currentSelection: '',
 	};
 
-	componentDidMount() {
-		WebApis.loadTestCases(dicts => this.setState({ allDictionaries: dicts }));
-	}
-
 	componentDidUpdate(oldProps, oldState) {
-		let current;
-		if (this.props.currentDictionary) {
-			current = this.props.currentDictionary.metadata.transientId;
+		if (this.props.currentDictionary && oldProps.currentDictionary != this.props.currentDictionary) {
+			WebApis.listAllTestCases(tcs => this.setState({ allTestCases: tcs }));
 		}
-		if (!current && this.state.allDictionaries[0]) {
-			current = this.state.allDictionaries[0].transientId;
+		let current;
+		if (this.props.currentTestCase) {
+			current = this.props.currentTestCase.metadata.transientId;
+		}
+		if (!current && this.state.allTestCases[0]) {
+			current = this.state.allTestCases[0].transientId;
 		}
 		if (current && current !== this.state.currentSelection) {
 			this.setState({ currentSelection: current })
@@ -27,12 +26,12 @@ class TestCaseList extends React.Component {
 
 	changeSelection = (e) => this.setState({ currentSelection: e.target.value });
 
-	select = (e) => WebApis.selectCurrentDictionary(this.state.currentSelection, context => this.props.dictionaryChanged(context));
+	select = (e) => WebApis.selectCurrentTestCase(this.state.currentSelection, context => this.props.testCaseChanged(context));
 
-	createDictionaryItems = () => {
+	createTestCaseItems = () => {
 		let options = [];
-		for (let dict of this.state.allDictionaries) {
-			options.push(<option key={dict.transientId} value={dict.transientId}>{dict.description}</option>);
+		for (let tc of this.state.allTestCases) {
+			options.push(<option key={tc.transientId} value={tc.transientId}>{tc.description}</option>);
 		}
 		return options;
 	}
@@ -40,7 +39,7 @@ class TestCaseList extends React.Component {
 	render() {
 		return (<div>
 			<select value={this.state.currentSelection} onChange={this.changeSelection}>
-				{this.createDictionaryItems()}
+				{this.createTestCaseItems()}
 			</select>
 			<button onClick={this.select}>Select</button>
 		</div>
@@ -48,4 +47,4 @@ class TestCaseList extends React.Component {
 	}
 }
 
-export default DictionaryList;
+export default TestCaseList;

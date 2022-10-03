@@ -22,7 +22,7 @@ public class ContextServiceImpl implements ContextService {
 
 	@Override
 	public AutoCloseableNoException load(Identity identity) {
-		return set(contextDao.loadContext(identity));
+		return set(contextDao.loadContext(identity).derive());
 	}
 
 	@Override
@@ -32,8 +32,13 @@ public class ContextServiceImpl implements ContextService {
 
 	@Override
 	public Context merge(Context newContext) {
-		Context current = contexts.get();
-		current.setDictionary(newContext.getDictionary());
+		var current = contexts.get();
+		if (newContext.getDictionary() != null) {
+			current.setDictionary(newContext.getDictionary());
+		}
+		if (newContext.getTestCase() != null) {
+			current.setTestCase(newContext.getTestCase());
+		}
 		return current;
 	}
 

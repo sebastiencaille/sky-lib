@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.model.testapi;
+package ch.scaille.tcwriter.model.dictionary;
 
 import ch.scaille.tcwriter.model.IdObject;
 import ch.scaille.tcwriter.model.NamedObject;

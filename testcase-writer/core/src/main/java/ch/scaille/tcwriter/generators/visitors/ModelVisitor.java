@@ -1,6 +1,6 @@
 package ch.scaille.tcwriter.generators.visitors;
 
-import ch.scaille.tcwriter.model.testapi.TestDictionary;
+import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 
 public class ModelVisitor {
 

@@ -9,6 +9,10 @@ paths:
     $ref: paths/allDictionaries.yaml
   /dictionary/current:
     $ref: paths/currentDictionary.yaml
+  /testcase:
+    $ref: paths/allTestCases.yaml
+  /testcase/current:
+    $ref: paths/currentTestCase.yaml
   /context:
     $ref: paths/context.yaml
 components:
@@ -21,5 +25,7 @@ components:
       $ref: schemas/Metadata.yaml#/Metadata
     TestDictionary:
       $ref: schemas/TestDictionary.yaml#/TestDictionary
+    TestCase:
+      $ref: schemas/TestCase.yaml#/TestCase
 
 

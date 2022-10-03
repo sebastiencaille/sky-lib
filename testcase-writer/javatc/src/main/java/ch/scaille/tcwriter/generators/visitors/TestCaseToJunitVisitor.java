@@ -14,8 +14,8 @@ import ch.scaille.generators.util.JavaCodeGenerator;
 import ch.scaille.generators.util.Template;
 import ch.scaille.tcwriter.model.IdObject;
 import ch.scaille.tcwriter.model.TestCaseException;
-import ch.scaille.tcwriter.model.testapi.TestApiParameter;
-import ch.scaille.tcwriter.model.testapi.TestDictionary;
+import ch.scaille.tcwriter.model.dictionary.TestApiParameter;
+import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestStep;
@@ -62,7 +62,7 @@ public class TestCaseToJunitVisitor {
 		}
 
 		if (step.getReference() != null) {
-			stepContentCode.addVarAssign(step.getReference().getType(), step.getReference().getName());
+			stepContentCode.addVarAssign(step.getReference().getParameterType(), step.getReference().getName());
 		}
 		stepContentCode.addMethodCall(step.getActor().getName(), step.getAction().getName(),
 				g -> addParameterValuesToCall(g, step, step.getParametersValue(), step.getAction().getParameters()))
@@ -86,7 +86,7 @@ public class TestCaseToJunitVisitor {
 		visitTestValueParams(parametersContentCode, model, step, paramValue.getComplexTypeValues());
 
 		final var parameterVarName = varNameFor(step, paramValue);
-		parametersContentCode.addVarAssign(valuefactory.getType(), parameterVarName) //
+		parametersContentCode.addVarAssign(valuefactory.getParameterType(), parameterVarName) //
 				.addMethodCall(valuefactory.getName(), g -> addParameterValuesToCall(g, step,
 						paramValue.getComplexTypeValues().values(), valuefactory.getMandatoryParameters()))
 				.eos();
@@ -147,7 +147,7 @@ public class TestCaseToJunitVisitor {
 			parametersContent.append(varNameFor(step, parameterValue));
 			break;
 		case SIMPLE_TYPE:
-			final var valueType = parameterValue.getValueFactory().getType();
+			final var valueType = parameterValue.getValueFactory().getParameterType();
 			final boolean isString = String.class.getName().equals(valueType);
 			final boolean isLong = Long.class.getName().equals(valueType) || Long.TYPE.getName().equals(valueType);
 			if (isString) {

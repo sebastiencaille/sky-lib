@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
-import ch.scaille.tcwriter.model.testapi.TestDictionary;
+import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestStep;
 import ch.scaille.util.helpers.LambdaExt;
@@ -27,7 +27,7 @@ public class Helper {
 					.append(api).append(EOL));
 
 		}
-		for (final var parameterFactory : model.getParameterFactories().values()) {
+		for (final var parameterFactory : model.getTestObjectFactories().values()) {
 			builder.append("  ").append(model.descriptionOf(parameterFactory)).append(": ").append(parameterFactory)
 					.append(EOL);
 			parameterFactory.getMandatoryParameters().forEach(api -> builder.append("    mandatory: ")

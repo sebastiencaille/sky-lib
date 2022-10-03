@@ -1,7 +1,6 @@
 package ch.scaille.tcwriter.examples;
 
 import java.io.File;
-import java.io.IOException;
 
 import ch.scaille.generators.util.CodeGeneratorParams;
 import ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole;
@@ -11,9 +10,9 @@ import ch.scaille.tcwriter.executors.JunitTestExecutor;
 import ch.scaille.tcwriter.generators.JavaToDictionary;
 import ch.scaille.tcwriter.generators.TCConfig;
 import ch.scaille.tcwriter.generators.visitors.HumanReadableVisitor;
+import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.persistence.FsModelDao;
 import ch.scaille.tcwriter.model.persistence.IModelDao;
-import ch.scaille.tcwriter.model.testapi.TestDictionary;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.recorder.TestCaseRecorder;
 import ch.scaille.tcwriter.recorder.TestCaseRecorderAspect;

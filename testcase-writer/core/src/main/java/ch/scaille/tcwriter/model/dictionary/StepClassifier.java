@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.model.testapi;
+package ch.scaille.tcwriter.model.dictionary;
 
 public enum StepClassifier {
 

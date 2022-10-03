@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.model.testapi;
+package ch.scaille.tcwriter.model.dictionary;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +47,7 @@ public class TestParameterFactory extends NamedObject {
 		this.nature = nature;
 	}
 
-	public String getType() {
+	public String getParameterType() {
 		return parameterType;
 	}
 
@@ -95,7 +95,7 @@ public class TestParameterFactory extends NamedObject {
 	}
 
 	public boolean matches(final TestApiParameter param) {
-		return getType().equals(param.getType());
+		return getParameterType().equals(param.getParameterType());
 	}
 
 	@Override
@@ -109,7 +109,7 @@ public class TestParameterFactory extends NamedObject {
 	}
 
 	public static TestParameterFactory unSet(final TestApiParameter param) {
-		return new TestParameterFactory("", "", ParameterNature.NOT_SET, param.getType());
+		return new TestParameterFactory("", "", ParameterNature.NOT_SET, param.getParameterType());
 	}
 
 }

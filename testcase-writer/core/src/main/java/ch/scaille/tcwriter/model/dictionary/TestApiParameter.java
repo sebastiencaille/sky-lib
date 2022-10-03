@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.model.testapi;
+package ch.scaille.tcwriter.model.dictionary;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -30,7 +30,7 @@ public class TestApiParameter extends NamedObject {
 		this.parameterType = type;
 	}
 
-	public String getType() {
+	public String getParameterType() {
 		return parameterType;
 	}
 
@@ -45,7 +45,7 @@ public class TestApiParameter extends NamedObject {
 
 	@JsonIgnore
 	public TestParameterFactory asSimpleParameter() {
-		return TestParameterFactory.simpleType(getType());
+		return TestParameterFactory.simpleType(getParameterType());
 	}
 
 }

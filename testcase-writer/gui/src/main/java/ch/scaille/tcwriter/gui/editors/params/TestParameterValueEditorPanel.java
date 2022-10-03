@@ -35,9 +35,10 @@ import ch.scaille.gui.mvc.factories.ObjectTextView;
 import ch.scaille.gui.mvc.properties.ObjectProperty;
 import ch.scaille.tcwriter.gui.editors.params.TestParameterValueTableModel.ParameterValueEntry;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
-import ch.scaille.tcwriter.model.testapi.TestApiParameter;
-import ch.scaille.tcwriter.model.testapi.TestParameterFactory;
-import ch.scaille.tcwriter.model.testapi.TestParameterFactory.ParameterNature;
+import ch.scaille.tcwriter.model.dictionary.TestApiParameter;
+import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
+import ch.scaille.tcwriter.model.dictionary.TestParameterFactory.ParameterNature;
+import ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestReference;
@@ -56,7 +57,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 	}
 
 	private TestApiParameter apiOf(final TestCase testCase, final TestParameterValue testParameterValue) {
-		return testCase.getTestApi(testParameterValue.getApiParameterId());
+		return testCase.getTestParameter(testParameterValue.getApiParameterId());
 	}
 
 	public TestParameterValueEditorPanel(final TCWriterController controller, final TestParameterModel tpModel) {
@@ -66,7 +67,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 		setLayout(new BorderLayout());
 
-		editedParamValue.bind(v -> !v.equals(TestParameterValue.NO_VALUE)) //
+		editedParamValue.bind(v -> !v.equals(ExportableTestParameterValue.NO_VALUE)) //
 				.listen(this::setVisible);
 
 		editedParamValue
@@ -90,7 +91,8 @@ public class TestParameterValueEditorPanel extends JPanel {
 		topPanel.add(useReferenceEditor);
 		final var referenceEditor = new JComboBox<ObjectTextView<TestReference>>();
 		tpModel.getReferences()
-				.bind(filter(r -> r.getType().equals(editedParamValue.getValue().getValueFactory().getType()))) //
+				.bind(filter(r -> r.getParameterType()
+						.equals(editedParamValue.getValue().getValueFactory().getParameterType()))) //
 				.bind(listConverter(refToTextConverter())) //
 				.bind(values(referenceEditor));
 		tpModel.getSelectedReference().bind(refToTextConverter())//
@@ -143,7 +145,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 		tpModel.getSelectedReference().listenActive(ref -> {
 			if (tpModel.getEditedParameterValue().getObjectValue().getValueFactory()
 					.getNature() == ParameterNature.REFERENCE) {
-				editedParamValue.getValue().setValueFactory(ref);
+				editedParamValue.getValue().setParameterFactory(ref);
 			}
 		});
 
@@ -153,16 +155,16 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 			switch (v) {
 			case SIMPLE_TYPE:
-				paramValue.setValueFactory(apiOf(testCase.getValue(), paramValue).asSimpleParameter());
+				paramValue.setParameterFactory(apiOf(testCase.getValue(), paramValue).asSimpleParameter());
 				break;
 			case REFERENCE:
 				final var testRef = tpModel.getSelectedReference().getValue();
 				if (testRef != null) {
-					paramValue.setValueFactory(testRef);
+					paramValue.setParameterFactory(testRef);
 				}
 				break;
 			case TEST_API:
-				paramValue.setValueFactory(tpModel.getTestApi().getValue());
+				paramValue.setParameterFactory(tpModel.getTestApi().getValue());
 				break;
 			default:
 				break;
@@ -196,14 +198,14 @@ public class TestParameterValueEditorPanel extends JPanel {
 		// Add missing values in parameter value and in table
 		final var newValues = new ArrayList<ParameterValueEntry>();
 		for (final var mandatoryId : missingMandatoryIds) {
-			final var newValue = new TestParameterValue(mandatoryId,
+			final var newValue = new ExportableTestParameterValue(mandatoryId,
 					tc.getValue().descriptionOf(mandatoryId).getDescription(),
 					api.getMandatoryParameterById(mandatoryId).asSimpleParameter(), null);
 			editedParamValue.getValue().addComplexTypeValue(newValue);
 			newValues.add(asParam(tc.getObjectValue(), mandatoryId, newValue, api));
 		}
 		for (final var optionalId : missingOptionalIds) {
-			final var newValue = new TestParameterValue(optionalId,
+			final var newValue = new ExportableTestParameterValue(optionalId,
 					tc.getValue().descriptionOf(optionalId).getDescription(),
 					api.getOptionalParameterById(optionalId).asSimpleParameter(), null);
 			editedParamValue.getValue().addComplexTypeValue(newValue);
@@ -236,7 +238,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 					if (!parameterValueEntry.enabled && !parameterValueEntry.mandatory) {
 						continue;
 					}
-					result.put(parameterValueEntry.id, new TestParameterValue(parameterValueEntry.id,
+					result.put(parameterValueEntry.id, new ExportableTestParameterValue(parameterValueEntry.id,
 							parameterValueEntry.factory, parameterValueEntry.value));
 				}
 				return result;

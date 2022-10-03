@@ -24,9 +24,11 @@ import ch.scaille.tcwriter.gui.DictionaryImport;
 import ch.scaille.tcwriter.gui.TestRemoteControl;
 import ch.scaille.tcwriter.gui.frame.TCWriterModel.TestExecutionState;
 import ch.scaille.tcwriter.model.TestCaseException;
+import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.persistence.IModelDao;
-import ch.scaille.tcwriter.model.testapi.TestDictionary;
 import ch.scaille.tcwriter.model.testcase.TestCase;
+import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
+import ch.scaille.tcwriter.model.testcase.ExportableTestStep;
 import ch.scaille.tcwriter.model.testcase.TestStep;
 import ch.scaille.util.helpers.Logs;
 
@@ -96,8 +98,8 @@ public class TCWriterController extends GuiController {
 	}
 
 	public void newTestCase() {
-		final var newTestCase = new TestCase("undefined.Undefined", model.getTestDictionary());
-		newTestCase.addStep(new TestStep(1));
+		final var newTestCase = new ExportableTestCase("undefined.Undefined", model.getTestDictionary());
+		newTestCase.addStep(new ExportableTestStep(1));
 		model.getTestCase().setValue(this, newTestCase);
 	}
 

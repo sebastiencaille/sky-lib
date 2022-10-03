@@ -6,6 +6,16 @@ IdObject:
   properties:
     id:
       type: string
+NamedObject:
+  type: object
+  discriminator:
+    propertyName: tcDataType
+  required: [ id, name ]
+  properties:
+    id:
+      type: string
+    name:
+      type: string
 Metadata:
   type: object
   required: [transientId, description]

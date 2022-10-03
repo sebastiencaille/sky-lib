@@ -23,14 +23,14 @@ import ch.scaille.tcwriter.annotations.TCCheck;
 import ch.scaille.tcwriter.annotations.TCRole;
 import ch.scaille.tcwriter.model.IdObject;
 import ch.scaille.tcwriter.model.TestObjectDescription;
-import ch.scaille.tcwriter.model.testapi.StepClassifier;
-import ch.scaille.tcwriter.model.testapi.TestAction;
-import ch.scaille.tcwriter.model.testapi.TestActor;
-import ch.scaille.tcwriter.model.testapi.TestApiParameter;
-import ch.scaille.tcwriter.model.testapi.TestDictionary;
-import ch.scaille.tcwriter.model.testapi.TestParameterFactory;
-import ch.scaille.tcwriter.model.testapi.TestRole;
-import ch.scaille.tcwriter.model.testapi.TestParameterFactory.ParameterNature;
+import ch.scaille.tcwriter.model.dictionary.StepClassifier;
+import ch.scaille.tcwriter.model.dictionary.TestAction;
+import ch.scaille.tcwriter.model.dictionary.TestActor;
+import ch.scaille.tcwriter.model.dictionary.TestApiParameter;
+import ch.scaille.tcwriter.model.dictionary.TestDictionary;
+import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
+import ch.scaille.tcwriter.model.dictionary.TestParameterFactory.ParameterNature;
+import ch.scaille.tcwriter.model.dictionary.TestRole;
 
 public class ClassToDictionaryVisitor {
 
@@ -60,7 +60,7 @@ public class ClassToDictionaryVisitor {
 
 	private void processRoles(Class<?> roleClass) {
 		final var roleAnnotation = roleClass.getAnnotation(TCRole.class);
-		final var testRole = new TestRole(roleKey(roleClass));
+		final var testRole = new TestRole(roleKey(roleClass), roleClass.getSimpleName());
 		dictionary.addDescription(testRole, descriptionFrom(roleAnnotation));
 		dictionary.getRoles().put(testRole.getId(), testRole);
 
@@ -185,7 +185,7 @@ public class ClassToDictionaryVisitor {
 		}
 
 		forEachSuper(valueFactoryMethod.getReturnType(),
-				apiClazz -> dictionary.getParameterFactories().put(apiClazz.getName(), valueFactory));
+				apiClazz -> dictionary.getTestObjectFactories().put(apiClazz.getName(), valueFactory));
 	}
 
 	private void processMethodAnnotation(final IdObject idObject, final Method apiMethod) {

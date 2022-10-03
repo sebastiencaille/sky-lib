@@ -65,7 +65,7 @@ public class JunitTestExecutor implements ITestExecutor {
 		if (testCompiler.waitFor() != 0) {
 			throw new IllegalStateException("Compiler failed with status " + testCompiler.exitValue());
 		}
-		return config.testCase.getPackageAndClassName();
+		return config.testCase.getPkgAndClassName();
 	}
 
 	@Override

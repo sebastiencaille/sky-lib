@@ -1,25 +1,106 @@
 DicoIdObject:
   # Hacked in pom.xml to map to Metadata
   $ref: Metadata.yaml#/IdObject
+DicoNamedObject:
+  # Hacked in pom.xml to map to Metadata
+  $ref: Metadata.yaml#/NamedObject
 DicoMetadata:
   # Hacked in pom.xml to map to Metadata
   $ref: Metadata.yaml#/Metadata
-TestRole:
-  description: A role
-  allOf:
-  - $ref: '#/DicoIdObject'
-  - type: object
-    properties:
-      dummy:
-        type: string
-TestRoles:
-  type: object
-  additionalProperties:
-    $ref: '#/TestRole'
+StepClassifier:
+  property:
+    name: string
+    enum: [ ACTION, PREPARATION, CHECK ]
 TestDictionary:
   properties:
     metadata:
       $ref: '#/DicoMetadata'
     roles:
-      $ref: '#/TestRoles'
-        
+      type: array
+      items:
+        $ref: '#/TestRole'
+    descriptions:
+      type: array
+      items:
+       $ref: '#/TestObjectDescription'
+    actors:
+      type: array
+      items:
+        $ref: '#/TestActor'
+    testObjectFactories:
+      type: array
+      items:
+        $ref: '#/TestParameterFactory'
+    selectorTypes:
+      type: array
+      items:
+        type: string
+TestObjectDescription:
+    description: description of a test object
+    type: object
+    properties:
+      description:
+        type: string
+      humanReadable:
+        type: string
+TestActor:
+  description: A test actor
+  allOf:
+  - $ref: '#/DicoNamedObject'
+  - type: object
+    properties:
+      role:
+        description: role of the actor
+        type: string
+TestParameterFactory:
+  description: A test parameter factory (selectors factory, parameters factory)
+  allOf:
+  - $ref: '#/DicoNamedObject'
+  - type: object
+    properties:
+      mandatoryParameters:
+        type: array
+        items:
+          type: '#/TestApiParameter'
+      optionalParameters:
+        type: array
+        items:
+          type: '#/TestApiParameter'
+      nature:
+        type: string
+      parameterType:
+        type: string      
+TestApiParameter:
+  description: A test parameter factory (selectors factory, parameters factory)
+  allOf:
+  - $ref: '#/DicoNamedObject'
+  - type: object
+    properties:
+      parameterType:
+        type: string
+TestRole:
+  description: A test role
+  allOf:
+  - $ref: '#/DicoNamedObject'
+  - type: object
+    properties:
+      actions:
+        type: array
+        items:
+          $ref: '#/TestAction'
+TestAction:
+  description: A test action
+  allOf:
+  - $ref: '#/DicoNamedObject'
+  - type: object
+    properties:
+      parameters:
+        type: array
+        items:
+          $ref: '#/TestApiParameter'
+      allowedClassifiers:
+        type: array
+        items:
+          $ref: '#/StepClassifier'
+      returnType:
+        type: string

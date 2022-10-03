@@ -4,6 +4,7 @@ public class Context {
 
 	private final Identity identity;
 	private String dictionaryName;
+	private String testCase;
 
 	public Context() {
 		identity = null;
@@ -24,16 +25,25 @@ public class Context {
 	public void setDictionary(String dictionaryName) {
 		this.dictionaryName = dictionaryName;
 	}
+	
+	public String getTestCase() {
+		return testCase;
+	}
+	
+	public void setTestCase(String testCase) {
+		this.testCase = testCase;
+	}
 
 	public Context derive() {
-		Context copy = new Context(this.identity);
+		var copy = new Context(this.identity);
 		copy.setDictionary(dictionaryName);
+		copy.setTestCase(testCase);
 		return copy;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("[id: %s, dictionaryName: %s ]", identity, dictionaryName);
+		return String.format("[id: %s, dictionary: %s, testCase: %s ]", identity, dictionaryName, testCase);
 	}
 
 }

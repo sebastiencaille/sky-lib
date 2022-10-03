@@ -1,0 +1,67 @@
+TCIdObject:
+  # Hacked in pom.xml to map to Metadata
+  $ref: Metadata.yaml#/IdObject
+StepClassifier:
+  $ref: TestDictionary.yaml#/StepClassifier
+TCTestParameterFactory:
+  $ref: TestDictionary.yaml#/TestParameterFactory
+TestCase:
+  type: object
+  required: [ steps, pkgAndClassName ]
+  properties:
+    steps:
+      type: array
+      items:
+        $ref: '#/TestStep'
+    pkgAndClassName:
+      type: string
+TestStep:
+  type: object
+  required: [ ordinal, classifier ]
+  properties:
+    ordinal:
+      type: integer
+    actorRef:
+      type: string
+    roleRef:
+      type: string
+    actionRef:
+      type: string
+    parametersValue:
+      type: array
+      items:
+        $ref: '#/TestParameterValue'
+    reference:
+      $ref: '#/TestReference'
+    classifier:
+      $ref: '#/StepClassifier'
+ComplexTypeContent:
+  type: object
+  additionalProperties:
+    $ref: '#/TestParameterValue'
+TestParameterValue:
+  description: A parameter of the test step action
+  allOf:
+    - $ref: '#/TCIdObject'
+    - type: object
+      required: [ apiParameterId, type, complexTypeValues ] 
+      properties:
+        apiParameterId:
+          type: string
+        testParameterFactoryRef:
+          type: string
+        complexTypeValues:
+          $ref: '#/ComplexTypeContent'
+        simpleValue:
+          type: string
+TestReference: 
+  description: a named reference to a test step
+  allOf:
+    - $ref: '#/TCTestParameterFactory'
+    - type: object
+      properties:
+        description:
+          type: string
+        testStepRef:
+          type: string
+      

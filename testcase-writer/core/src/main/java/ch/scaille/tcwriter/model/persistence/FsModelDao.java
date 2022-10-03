@@ -40,8 +40,9 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import ch.scaille.generators.util.Template;
 import ch.scaille.tcwriter.generators.TCConfig;
 import ch.scaille.tcwriter.model.ExportReference;
-import ch.scaille.tcwriter.model.testapi.Metadata;
-import ch.scaille.tcwriter.model.testapi.TestDictionary;
+import ch.scaille.tcwriter.model.Metadata;
+import ch.scaille.tcwriter.model.dictionary.TestDictionary;
+import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.util.exceptions.StorageRTException;
 import ch.scaille.util.helpers.ClassLoaderHelper;
@@ -79,9 +80,7 @@ public class FsModelDao implements IModelDao {
 				return exportReference;
 			}
 		});
-
 		mapper.registerModules(new GuavaModule(), testCaseWriterModule);
-
 	}
 
 	public static IModelDao withDefaultConfig() {
@@ -122,9 +121,9 @@ public class FsModelDao implements IModelDao {
 
 	@Override
 	public List<Metadata> listDictionaries() throws IOException {
-		try (Stream<Path> list = Files.list(Paths.get(resolveToURL(this.config.getDictionaryPath()).toURI()))) {
-			return list.map(f -> f.getFileName().toString())
-					.map(uncheckF(f -> readTestDictionary(f).getMetadata(), (f, e) -> {
+		try (var list = Files.list(Paths.get(resolveToURL(this.config.getDictionaryPath()).toURI()))) {
+			return list.map(FsModelDao::toIdentifier).map(uncheckF(f -> readTestDictionary(f).getMetadata(), //
+					(f, e) -> {
 						Logs.of(getClass()).log(Level.INFO, "Unable to read meta data", e);
 						return new Metadata(f, "Unreadable: " + e.getClass());
 					})).collect(Collectors.toList());
@@ -147,8 +146,8 @@ public class FsModelDao implements IModelDao {
 
 	@Override
 	public TestDictionary readTestDictionary(String dictionaryId) throws IOException {
-		TestDictionary dictionary = (TestDictionary) mapper.readerFor(TestDictionary.class)
-				.readValue(read(resolveToURL(this.config.getDictionaryPath() + '/' + dictionaryId)));
+		final var dictionary = (TestDictionary) mapper.readerFor(TestDictionary.class)
+				.readValue(read(resolveJsonToUrl(this.config.getDictionaryPath(), dictionaryId)));
 		dictionary.getMetadata().setTransientId(dictionaryId);
 		return dictionary;
 	}
@@ -159,13 +158,27 @@ public class FsModelDao implements IModelDao {
 	}
 
 	@Override
-	public TestCase readTestCase(String identifier, TestDictionary testDictionary) throws IOException {
-		List<ExportReference> references = new ArrayList<>();
+	public List<Metadata> listTestCases(final TestDictionary dictionary) throws IOException {
+		try (var list = Files.list(Paths.get(resolveToURL(this.config.getTcPath()).toURI()))) {
+			return list.map(FsModelDao::toIdentifier).map(uncheckF(f -> readTestCase(f, dictionary).getMetadata(), //
+					(f, e) -> {
+						Logs.of(getClass()).log(Level.INFO, "Unable to read meta data", e);
+						return new Metadata(f, "Unreadable: " + e.getClass());
+					})).collect(Collectors.toList());
+		} catch (IOException | URISyntaxException e) {
+			throw new IOException("Unable to read dictionaries", e);
+		}
+	}
+
+	@Override
+	public ExportableTestCase readTestCase(String identifier, TestDictionary testDictionary) throws IOException {
+		var references = new ArrayList<ExportReference>();
 		var ctxt = mapper.getDeserializationConfig().getAttributes().withPerCallAttribute(CONTEXT_ALL_REFERENCES,
 				references);
-		var testCase = (TestCase) mapper.readerFor(TestCase.class).with(ctxt)
+		var testCase = (ExportableTestCase) mapper.readerFor(ExportableTestCase.class).with(ctxt)
 				.readValue(read(resolveJsonToUrl(this.config.getTcPath(), identifier)));
 		testCase.setDictionary(testDictionary);
+		testCase.getMetadata().setTransientId(identifier);
 		references.forEach(e -> e.restore(testCase));
 		return testCase;
 	}
@@ -234,5 +247,9 @@ public class FsModelDao implements IModelDao {
 
 	public static Path classFile(Path root, String testClassName) {
 		return root.resolve(testClassName.replace('.', '/') + ".java");
+	}
+
+	public static String toIdentifier(Path path) {
+		return path.getFileName().toString().replace(".json", "");
 	}
 }

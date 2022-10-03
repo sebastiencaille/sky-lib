@@ -3,61 +3,23 @@ package ch.scaille.tcwriter.model.testcase;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import ch.scaille.tcwriter.model.ExportReference;
-import ch.scaille.tcwriter.model.testapi.StepClassifier;
-import ch.scaille.tcwriter.model.testapi.TestAction;
-import ch.scaille.tcwriter.model.testapi.TestActor;
-import ch.scaille.tcwriter.model.testapi.TestRole;
+import ch.scaille.tcwriter.model.dictionary.StepClassifier;
+import ch.scaille.tcwriter.model.dictionary.TestAction;
+import ch.scaille.tcwriter.model.dictionary.TestActor;
+import ch.scaille.tcwriter.model.dictionary.TestRole;
 
 public class TestStep {
 
 	private int ordinal;
-	@JsonIgnore
-	private TestActor actor = TestActor.NOT_SET;
-	@JsonIgnore
-	private TestRole role = TestRole.NOT_SET;
-	@JsonIgnore
-	private TestAction action = TestAction.NOT_SET;
+	protected TestActor actor = TestActor.NOT_SET;
+	protected TestRole role = TestRole.NOT_SET;
+	protected TestAction action = TestAction.NOT_SET;
 	private final List<TestParameterValue> parametersValue = new ArrayList<>();
 	private TestReference reference;
 	private StepClassifier classifier = null;
 
-	protected TestStep() {
-		this.ordinal = -1;
-	}
-
 	public TestStep(final int ordinal) {
 		this.ordinal = ordinal;
-	}
-
-	@JsonProperty
-	public ExportReference getActorRef() {
-		return new ExportReference(actor);
-	}
-
-	public void setActorRef(final ExportReference ref) {
-		ref.setRestoreAction((tc, id) -> actor = tc.getDictionary().getActors().get(id));
-	}
-
-	@JsonProperty
-	public ExportReference getRoleRef() {
-		return new ExportReference(role);
-	}
-
-	public void setRoleRef(final ExportReference ref) {
-		ref.setRestoreAction((tc, id) -> role = tc.getDictionary().getRoles().get(id));
-	}
-
-	@JsonProperty
-	public ExportReference getActionRef() {
-		return new ExportReference(action);
-	}
-
-	public void setActionRef(final ExportReference ref) {
-		ref.setRestoreAction((tc, id) -> action = (TestAction) tc.getRestoreValue(id));
 	}
 
 	public int getOrdinal() {
@@ -103,7 +65,7 @@ public class TestStep {
 
 	public TestReference asNamedReference(final String namedReference, final String description) {
 		if (reference == null) {
-			reference = new TestReference(this, namedReference, description);
+			reference = createTestReference(this, namedReference, description);
 		}
 		return reference;
 	}
@@ -113,13 +75,22 @@ public class TestStep {
 	}
 
 	public TestStep duplicate() {
-		final var newTestStep = new TestStep();
+		final var newTestStep = createTestStep();
 		newTestStep.setActor(actor);
 		newTestStep.setAction(action);
 		parametersValue.stream().forEach(p -> newTestStep.addParameter(p.duplicate()));
 		return newTestStep;
 	}
 
+	protected TestStep createTestStep() {
+		return new TestStep(-1);
+	}
+	
+	protected TestReference createTestReference(TestStep testStep, String namedReference, String description) {
+		return new TestReference(testStep, namedReference, description);
+	}
+	
+	
 	@Override
 	public String toString() {
 		return actor.getName() + "." + action.getName();

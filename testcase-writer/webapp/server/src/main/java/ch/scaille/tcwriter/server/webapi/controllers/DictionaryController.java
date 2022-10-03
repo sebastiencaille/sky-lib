@@ -21,8 +21,7 @@ public class DictionaryController extends DictionaryApiController {
 
 	private final ContextService contextService;
 
-	public DictionaryController(ContextService contextService, DictionaryDao dictionaryDao,
-			NativeWebRequest request) {
+	public DictionaryController(ContextService contextService, DictionaryDao dictionaryDao, NativeWebRequest request) {
 		super(request);
 		this.contextService = contextService;
 		this.dictionaryDao = dictionaryDao;
@@ -30,8 +29,9 @@ public class DictionaryController extends DictionaryApiController {
 
 	@Override
 	public ResponseEntity<List<Metadata>> listAll() {
-		return new ResponseEntity<>(dictionaryDao.listDictionaries().stream().map(MetadataMapper.MAPPER::convert)
-				.collect(Collectors.toList()), HttpStatus.OK);
+		return new ResponseEntity<>(
+				dictionaryDao.listAll().stream().map(MetadataMapper.MAPPER::convert).collect(Collectors.toList()),
+				HttpStatus.OK);
 	}
 
 	@Override

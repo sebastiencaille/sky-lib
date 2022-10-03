@@ -52,7 +52,7 @@ public class HumanReadableVisitor {
 			final var testRef = (TestReference) parameterValue.getValueFactory();
 			return "[" + testRef.toDescription().getHumanReadable() + ": " + parameterValue.getSimpleValue() + "]";
 		case SIMPLE_TYPE:
-			final var type = parameterValue.getValueFactory().getType();
+			final var type = parameterValue.getValueFactory().getParameterType();
 			if (Boolean.class.getName().equals(type) || Boolean.TYPE.getName().equals(type)) {
 				return Boolean.TRUE.toString().equals(parameterValue.getSimpleValue()) ? "yes" : "no";
 			}

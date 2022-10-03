@@ -1,0 +1,15 @@
+components:
+  schemas:
+    TestCase:
+      $ref: ../openapi.yaml#/components/schemas/TestCase
+
+get:
+  summary: Gets the currently selected test case
+  operationId: current
+  responses:
+    '200':
+      description: current test case
+      content:
+        application/json:
+          schema:
+            $ref: TestCase

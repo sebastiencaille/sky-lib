@@ -10,7 +10,7 @@ class DictionaryList extends React.Component {
 	};
 
 	componentDidMount() {
-		WebApis.loadAllDictionaries(dicts => this.setState({ allDictionaries: dicts }));
+		WebApis.listAllDictionaries(dicts => this.setState({ allDictionaries: dicts }));
 	}
 
 	componentDidUpdate(oldProps, oldState) {

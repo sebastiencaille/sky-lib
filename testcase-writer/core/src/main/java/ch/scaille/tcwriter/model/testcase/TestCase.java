@@ -6,50 +6,44 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 
 import ch.scaille.tcwriter.model.IdObject;
+import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.model.TestObjectDescription;
-import ch.scaille.tcwriter.model.testapi.TestApiParameter;
-import ch.scaille.tcwriter.model.testapi.TestDictionary;
+import ch.scaille.tcwriter.model.dictionary.TestApiParameter;
+import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 
 public class TestCase {
 
-	@JsonIgnore
-	private TestDictionary testDictionary;
+	protected Metadata metadata = new Metadata();
+	
+	protected TestDictionary testDictionary;
 
-	private final List<TestStep> steps = new ArrayList<>();
-	private final Multimap<String, TestReference> dynamicReferences = MultimapBuilder.hashKeys().arrayListValues()
+	protected final List<TestStep> steps = new ArrayList<>();
+
+	protected String pkgAndClassName;
+
+	protected final Multimap<String, TestReference> dynamicReferences = MultimapBuilder.hashKeys().arrayListValues()
 			.build();
 
-	// description of test variables
-	private final Map<String, TestObjectDescription> dynamicDescriptions = new HashMap<>();
+	protected final Map<String, TestObjectDescription> dynamicDescriptions = new HashMap<>();
 
-	private String pkgAndClassName;
-
-	@JsonIgnore
-	private Map<String, IdObject> cachedValues = null;
-
-	/**
-	 * For json
-	 * 
-	 * @deprecated: for JSON
-	 */
-	@Deprecated
-	public TestCase() {
-		this.pkgAndClassName = null;
-		this.testDictionary = null;
-	}
-
-	public TestCase(final String path, final TestDictionary testDictionary) {
-		this.pkgAndClassName = path;
+	protected TestCase(final String pkgAndClassName, final TestDictionary testDictionary) {
+		this.pkgAndClassName = pkgAndClassName;
 		this.testDictionary = testDictionary;
 	}
 
+	public Metadata getMetadata() {
+		return metadata;
+	}
+	
+	public void setMetadata(Metadata metadata) {
+		this.metadata = metadata;
+	}
+	
 	public void setDictionary(final TestDictionary testDictionary) {
 		this.testDictionary = testDictionary;
 	}
@@ -78,12 +72,12 @@ public class TestCase {
 		this.pkgAndClassName = pkgAndClassName;
 	}
 
-	public String getPackageAndClassName() {
+	public String getPkgAndClassName() {
 		return pkgAndClassName;
 	}
 
 	public void publishReference(final TestReference reference) {
-		dynamicReferences.put(reference.getType(), reference);
+		dynamicReferences.put(reference.getParameterType(), reference);
 		dynamicDescriptions.put(reference.getId(), reference.toDescription());
 	}
 
@@ -117,25 +111,7 @@ public class TestCase {
 	}
 
 	public Collection<TestReference> getSuitableReferences(final TestApiParameter param) {
-		return getReferences(param.getType());
-	}
-
-	public synchronized IdObject getRestoreValue(final String id) {
-		if (cachedValues == null) {
-			cachedValues = testDictionary.getRoles().values().stream().flatMap(r -> r.getActions().stream())
-					.collect(Collectors.toMap(IdObject::getId, a -> a));
-			cachedValues.putAll(testDictionary.getParameterFactories().values().stream()
-					.collect(Collectors.toMap(IdObject::getId, a -> a)));
-		}
-
-		var restoredObject = cachedValues.get(id);
-		if (restoredObject == null) {
-			restoredObject = getReference(id);
-		}
-		if (restoredObject == null) {
-			throw new IllegalArgumentException("No cached value for " + id);
-		}
-		return restoredObject;
+		return getReferences(param.getParameterType());
 	}
 
 	public void fixOrdinals() {
@@ -144,7 +120,7 @@ public class TestCase {
 		}
 	}
 
-	public TestApiParameter getTestApi(final String apiParameterId) {
+	public TestApiParameter getTestParameter(final String apiParameterId) {
 		if (apiParameterId.isEmpty()) {
 			return TestApiParameter.NO_PARAMETER;
 		}

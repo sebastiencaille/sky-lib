@@ -9,7 +9,7 @@ import ch.scaille.tcwriter.generators.visitors.HumanReadableVisitor;
 import ch.scaille.tcwriter.gui.TestRemoteControl;
 import ch.scaille.tcwriter.model.IdObject;
 import ch.scaille.tcwriter.model.ModelUtils;
-import ch.scaille.tcwriter.model.testapi.TestParameterFactory;
+import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestStep;

@@ -1,22 +1,12 @@
 package ch.scaille.tcwriter.model.testcase;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import ch.scaille.tcwriter.model.ExportReference;
 import ch.scaille.tcwriter.model.TestObjectDescription;
-import ch.scaille.tcwriter.model.testapi.TestParameterFactory;
+import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 
 public class TestReference extends TestParameterFactory {
 
-	@JsonIgnore
-	private TestStep step;
-	private String description;
-
-	protected TestReference() {
-		step = null;
-		description = null;
-	}
+	protected TestStep step;
+	protected String description;
 
 	public TestReference(final TestStep step, final String name, final String description) {
 		super(name, name, ParameterNature.REFERENCE, step.getAction().getReturnType());
@@ -28,15 +18,6 @@ public class TestReference extends TestParameterFactory {
 		super.setName(newName);
 		this.description = description;
 		return this;
-	}
-
-	@JsonProperty
-	public ExportReference getTestStepRef() {
-		return new ExportReference(Integer.toString(step.getOrdinal()));
-	}
-
-	public void setTestStepRef(final ExportReference ref) {
-		ref.setRestoreAction((testCase, id) -> step = testCase.getSteps().get(Integer.parseInt(id) - 1));
 	}
 
 	public TestStep getStep() {

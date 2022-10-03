@@ -15,15 +15,15 @@ public class WebConfig {
 
 	@Bean
 	public ServletRegistrationBean<?> webApiServlet() {
-		AnnotationConfigServletWebApplicationContext ctx = new AnnotationConfigServletWebApplicationContext();
-		ctx.register(WebRestControllersConfig.class);
-		ctx.setDisplayName("Web Api");
-		DispatcherServlet ds = new DispatcherServlet(ctx);
+		var annotationContext = new AnnotationConfigServletWebApplicationContext();
+		annotationContext.register(WebRestControllersConfig.class);
+		annotationContext.setDisplayName("Web Api");
+		var dispatcher = new DispatcherServlet(annotationContext);
 
-		ServletRegistrationBean<?> registration = new ServletRegistrationBean<>(ds, "/api/*");
-		registration.setLoadOnStartup(1);
-		registration.setName("Web Rest api");
-		return registration;
+		var servletRegistration = new ServletRegistrationBean<>(dispatcher, "/api/*");
+		servletRegistration.setLoadOnStartup(1);
+		servletRegistration.setName("Web Rest api");
+		return servletRegistration;
 	}
 
 	@Bean

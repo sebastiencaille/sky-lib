@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import ch.scaille.tcwriter.model.testapi.TestAction;
-import ch.scaille.tcwriter.model.testapi.TestApiParameter;
-import ch.scaille.tcwriter.model.testapi.TestDictionary;
-import ch.scaille.tcwriter.model.testapi.TestParameterFactory;
+import ch.scaille.tcwriter.model.dictionary.TestAction;
+import ch.scaille.tcwriter.model.dictionary.TestApiParameter;
+import ch.scaille.tcwriter.model.dictionary.TestDictionary;
+import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
+import ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestStep;
 
@@ -69,7 +70,7 @@ public interface ModelUtils {
 				if (selectorMatch.isPresent()) {
 					newParametersValues.add(selectorMatch.get());
 				} else {
-					newParametersValues.add(new TestParameterValue(selector, TestParameterFactory.unSet(selector)));
+					newParametersValues.add(new ExportableTestParameterValue(selector, TestParameterFactory.unSet(selector)));
 				}
 
 			}
@@ -81,7 +82,7 @@ public interface ModelUtils {
 				if (valueMatch.isPresent()) {
 					newParametersValues.add(valueMatch.get());
 				} else {
-					newParametersValues.add(new TestParameterValue(parameter, TestParameterFactory.unSet(parameter)));
+					newParametersValues.add(new ExportableTestParameterValue(parameter, TestParameterFactory.unSet(parameter)));
 				}
 			}
 			step.getParametersValue().clear();

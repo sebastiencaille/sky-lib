@@ -101,7 +101,6 @@ public class TestSteppingController implements ITestSteppingController {
 
 	@Override
 	public void notifyError(final Throwable error) {
-
 		try (StringWriter errorStack = new StringWriter()) {
 			error.printStackTrace(new PrintWriter(errorStack));
 			api.writeError(currentStep, error, errorStack);

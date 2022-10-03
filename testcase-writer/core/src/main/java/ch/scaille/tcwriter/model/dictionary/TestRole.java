@@ -1,21 +1,21 @@
-package ch.scaille.tcwriter.model.testapi;
+package ch.scaille.tcwriter.model.dictionary;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.scaille.tcwriter.model.IdObject;
+import ch.scaille.tcwriter.model.NamedObject;
 
-public class TestRole extends IdObject {
+public class TestRole extends NamedObject {
 
-	public static final TestRole NOT_SET = new TestRole(ID_NOT_SET);
+	public static final TestRole NOT_SET = new TestRole(ID_NOT_SET, "");
 	private final List<TestAction> actions = new ArrayList<>();
 
 	protected TestRole() {
-		super(null);
+		super(null, null);
 	}
 
-	public TestRole(final String id) {
-		super(id);
+	public TestRole(final String id, String name) {
+		super(id, name);
 	}
 
 	public List<TestAction> getActions() {

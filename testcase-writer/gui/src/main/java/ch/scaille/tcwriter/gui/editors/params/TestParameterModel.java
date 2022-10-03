@@ -4,7 +4,7 @@ import ch.scaille.gui.mvc.GuiModel;
 import ch.scaille.gui.mvc.properties.ListProperty;
 import ch.scaille.gui.mvc.properties.ObjectProperty;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
-import ch.scaille.tcwriter.model.testapi.TestParameterFactory;
+import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestReference;
 

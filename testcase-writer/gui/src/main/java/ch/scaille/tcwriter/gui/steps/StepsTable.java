@@ -21,7 +21,7 @@ import ch.scaille.gui.swing.jtable.PolicyTableColumnModel;
 import ch.scaille.gui.swing.jtable.TableColumnWithPolicy;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.tcwriter.gui.steps.StepsTableModel.Column;
-import ch.scaille.tcwriter.model.testapi.StepClassifier;
+import ch.scaille.tcwriter.model.dictionary.StepClassifier;
 import ch.scaille.tcwriter.model.testcase.TestStep;
 
 public class StepsTable extends JPanel {

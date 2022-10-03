@@ -9,7 +9,7 @@ class TestCaseList extends React.Component {
 	};
 
 	componentDidUpdate(oldProps, oldState) {
-		if (this.props.currentDictionary && oldProps.currentDictionary != this.props.currentDictionary) {
+		if (this.props.currentDictionary && oldProps.currentDictionary !== this.props.currentDictionary) {
 			WebApis.listAllTestCases(tcs => this.setState({ allTestCases: tcs }));
 		}
 		let current;

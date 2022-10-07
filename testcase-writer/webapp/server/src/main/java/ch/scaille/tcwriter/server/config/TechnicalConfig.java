@@ -15,4 +15,5 @@ public class TechnicalConfig {
 		return new ContextServiceImpl(contextDao);
 	}
 
+
 }

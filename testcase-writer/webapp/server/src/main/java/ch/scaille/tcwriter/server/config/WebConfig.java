@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import ch.scaille.tcwriter.server.webapi.config.WebRestControllersConfig;
+import ch.scaille.tcwriter.server.webapi.config.WebRestOpenApiDocConfig;
 
 @Configuration
 public class WebConfig {
@@ -17,6 +18,7 @@ public class WebConfig {
 	public ServletRegistrationBean<?> webApiServlet() {
 		var annotationContext = new AnnotationConfigServletWebApplicationContext();
 		annotationContext.register(WebRestControllersConfig.class);
+		annotationContext.register(WebRestOpenApiDocConfig.class);
 		annotationContext.setDisplayName("Web Api");
 		var dispatcher = new DispatcherServlet(annotationContext);
 

@@ -9,15 +9,11 @@
 	<artifactId>testcase-writer-webapp-webapi</artifactId>
 	<packaging>jar</packaging>
 
-	<properties>
-		<jackson-databind-nullable-version>0.2.1</jackson-databind-nullable-version>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.openapitools</groupId>
 			<artifactId>jackson-databind-nullable</artifactId>
-			<version>${jackson-databind-nullable-version}</version>
+			<version>${version.jackson-databind-nullable}</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/jakarta.annotation/jakarta.annotation-api -->

@@ -17,8 +17,7 @@ public class WebConfig {
 	@Bean
 	public ServletRegistrationBean<?> webApiServlet() {
 		var annotationContext = new AnnotationConfigServletWebApplicationContext();
-		annotationContext.register(WebRestControllersConfig.class);
-		annotationContext.register(WebRestOpenApiDocConfig.class);
+		annotationContext.register(WebRestControllersConfig.class, WebRestOpenApiDocConfig.class);
 		annotationContext.setDisplayName("Web Api");
 		var dispatcher = new DispatcherServlet(annotationContext);
 

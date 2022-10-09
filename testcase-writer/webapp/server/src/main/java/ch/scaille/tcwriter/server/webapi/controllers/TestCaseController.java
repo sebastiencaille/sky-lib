@@ -19,7 +19,7 @@ import ch.scaille.tcwriter.server.webapi.mappers.TestCaseMapper;
 
 public class TestCaseController extends TestcaseApiController {
 
-	DictionaryDao dictionaryDao;
+	private final DictionaryDao dictionaryDao;
 
 	private final TestCaseDao testCaseDao;
 

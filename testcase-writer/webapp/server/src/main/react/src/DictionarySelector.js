@@ -1,8 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import WebApis from './WebApis.js';
 
 
-class DictionaryList extends React.Component {
+class DictionarySelector extends React.Component {
 
 	state = {
 		allDictionaries: [],
@@ -49,4 +50,9 @@ class DictionaryList extends React.Component {
 	}
 }
 
-export default DictionaryList;
+DictionarySelector.propTypes = {
+	currentDictionary: PropTypes.object,
+	dictionaryChanged: PropTypes.func
+};
+
+export default DictionarySelector;

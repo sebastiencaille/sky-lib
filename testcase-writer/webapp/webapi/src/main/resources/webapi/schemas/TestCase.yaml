@@ -1,3 +1,6 @@
+TCMetadata:
+  # Hacked in pom.xml to map to Metadata
+  $ref: Metadata.yaml#/Metadata
 TCIdObject:
   # Hacked in pom.xml to map to Metadata
   $ref: Metadata.yaml#/IdObject
@@ -9,6 +12,8 @@ TestCase:
   type: object
   required: [ steps, pkgAndClassName ]
   properties:
+    metadata: 
+      $ref: '#/TCMetadata'
     steps:
       type: array
       items:

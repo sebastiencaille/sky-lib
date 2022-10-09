@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import WebApis from './WebApis.js';
 
-class TestCaseList extends React.Component {
+class TestCaseSelector extends React.Component {
 
 	state = {
 		allTestCases: [],
@@ -9,7 +10,7 @@ class TestCaseList extends React.Component {
 	};
 
 	componentDidUpdate(oldProps, oldState) {
-		if (this.props.currentDictionary && oldProps.currentDictionary !== this.props.currentDictionary) {
+		if (this.props.dictionary && oldProps.dictionary !== this.props.dictionary) {
 			WebApis.listAllTestCases(tcs => this.setState({ allTestCases: tcs }));
 		}
 		let current;
@@ -47,4 +48,10 @@ class TestCaseList extends React.Component {
 	}
 }
 
-export default TestCaseList;
+TestCaseSelector.propTypes = {
+	dictionary: PropTypes.object,
+	currentTestCase: PropTypes.object,
+	testCaseChanged: PropTypes.func
+};
+
+export default TestCaseSelector;

@@ -55,11 +55,6 @@ public interface TestDictionaryMapper {
 	
 	TestParameterFactory convert(ch.scaille.tcwriter.model.dictionary.TestParameterFactory model);
 
-	default List<TestObjectDescription> convertTestObjectDescriptionList(
-			Map<String, ch.scaille.tcwriter.model.TestObjectDescription> model) {
-		return model.values().stream().map(this::convert).collect(Collectors.toList());
-	}
-
 	TestObjectDescription convert(ch.scaille.tcwriter.model.TestObjectDescription model);
 
 }

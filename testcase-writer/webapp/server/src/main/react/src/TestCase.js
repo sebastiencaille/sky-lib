@@ -1,38 +1,43 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import DictionaryHelper from './helpers/DictionaryHelper.js';
+import TestCaseHelper from './helpers/TestCaseHelper.js';
 
 class TestCase extends React.Component {
 
-	state = {
-		currentTestCase: null,
-	};
-
 	createTestCaseSteps = () => {
-		let rows = [];
+		const rows = [];
 		rows.push(
-			<thead>
+			<thead key="tcHead">
 				<tr>
-					<th>Ordinal</th>
-					<th>Actor</th>
-					<th>Action</th>
-					<th>Selector</th>
-					<th>Parameter</th>
+					<th>Ordinal</th><th>Actor</th><th>Action</th><th>Selector</th><th>Parameter</th>
 				</tr>
 			</thead>);
-		if (!this.props.currentTestCase) {
+
+		const dict = this.props.dictionary;
+		const tc = this.props.testCase;
+		if (!tc) {
 			return rows;
 		}
-		for (let step of this.props.currentTestCase.steps) {
-			let selector = step.parametersValue[0]?.id || 'none';
-			let parameter = step.parametersValue[1]?.id || 'none';
+		for (const step of tc.steps) {
+			let selector;
+			let parameter;
+			if (DictionaryHelper.hasSelector(dict, step.action)) {
+				selector = step.parametersValue[0];
+				parameter = step.parametersValue[1];
+			} else {
+				selector = null;
+				parameter = step.parametersValue[0];
+			}
+
 			rows.push(
-				<tbody>
+				<tbody class="steps" key={"tcStep" + step.ordinal}>
 					<tr>
 						<td>{step.ordinal}</td>
-						<td>{step.actorRef}</td>
-						<td>{step.actionRef}</td>
-						<td>{selector}</td>
-						<td>{parameter}</td>
+						<td>{dict.descriptions[step.actorRef].description}</td>
+						<td>{dict.descriptions[step.actionRef].description}</td>
+						<td>{TestCaseHelper.descriptionOfParameter(dict, selector)}</td>
+						<td>{TestCaseHelper.descriptionOfParameter(dict, parameter)}</td>
 					</tr>
 				</tbody>);
 		}
@@ -41,7 +46,7 @@ class TestCase extends React.Component {
 
 	render() {
 		return (
-			<table>
+			<table class="steps">
 				{this.createTestCaseSteps()}
 			</table>
 		);

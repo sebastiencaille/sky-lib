@@ -1,4 +1,6 @@
 import React from 'react';
+import DictionaryHelper from './helpers/DictionaryHelper.js';
+import TestCaseHelper from './helpers/TestCaseHelper.js';
 import DictionarySelector from './DictionarySelector.js';
 import TestCaseSelector from './TestCaseSelector.js';
 import TestCase from './TestCase.js';
@@ -13,16 +15,17 @@ class App extends React.Component {
 	};
 
 	dictionaryChanged = () => {
-		WebApis.loadCurrentDictionary(dict => this.setState({ currentDictionary: dict }));
+		WebApis.loadCurrentDictionary(dict => this.setState({ currentDictionary: DictionaryHelper.enhanceDictionary(dict) }));
 	}
+
 
 	testCaseChanged = () => {
 		if (this.state.currentDictionary) {
-			WebApis.loadCurrentTestCase(tc => 
-				this.setState({ currentTestCase: tc }))
+			WebApis.loadCurrentTestCase(tc =>
+				this.setState({ currentTestCase: TestCaseHelper.enhanceTestCase(this.state.currentDictionary, tc) }))
 		}
 	}
-	
+
 	render() {
 		return (
 			<div className="App">

@@ -20,9 +20,7 @@ TestDictionary:
       items:
         $ref: '#/TestRole'
     descriptions:
-      type: array
-      items:
-       $ref: '#/TestObjectDescription'
+      $ref: '#/TestObjectDescriptions'
     actors:
       type: array
       items:
@@ -35,6 +33,10 @@ TestDictionary:
       type: array
       items:
         type: string
+TestObjectDescriptions:
+  type: object
+  additionalProperties:
+    $ref: '#/TestObjectDescription'
 TestObjectDescription:
     description: description of a test object
     type: object

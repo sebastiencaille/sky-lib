@@ -36,3 +36,10 @@
     transform: rotate(360deg);
   }
 }
+
+table, th, td, tbody .steps {
+	border: 1px solid;
+    border-collapse: collapse;
+	text-align: left;
+}
+

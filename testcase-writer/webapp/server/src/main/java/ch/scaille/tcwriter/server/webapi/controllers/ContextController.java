@@ -35,7 +35,8 @@ public class ContextController extends ContextApiController {
 	public ResponseEntity<ch.scaille.tcwriter.generated.api.model.Context> setCurrent(
 			ch.scaille.tcwriter.generated.api.model.@Valid ContextUpdate contextUpdate) {
 		final var modelContext = contextDao.save(
-				Identity.of(getRequest().get().getNativeRequest(HttpServletRequest.class)),
+				Identity.of(getRequest().orElseThrow(() -> new IllegalStateException("No request available"))
+						.getNativeRequest(HttpServletRequest.class)),
 				contextService.merge(ContextMapper.MAPPER.convert(contextUpdate)));
 		Logs.of(getClass()).info(() -> "Setting new context: " + modelContext);
 		return new ResponseEntity<>(ContextMapper.MAPPER.convert(modelContext), HttpStatus.OK);

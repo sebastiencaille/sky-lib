@@ -13,9 +13,18 @@ const hasSelector = (dict, action) => {
 	return action.parameters[0] && dict.selectors[action.parameters[0].parameterType];
 }
 
+const descriptionOf = (dict, testObjects, fallback) => {
+	const descr = testObjects.filter(o => o).map(o => dict.descriptions[o.id]?.description).find(descr => descr);
+	if (descr) {
+		return descr;
+	}
+	return fallback;
+}
+
 const DictionaryHelper = {
 	enhanceDictionary: enhanceDictionary,
-	hasSelector: hasSelector
+	hasSelector: hasSelector,
+	descriptionOf: descriptionOf
 }
 
 export default DictionaryHelper;

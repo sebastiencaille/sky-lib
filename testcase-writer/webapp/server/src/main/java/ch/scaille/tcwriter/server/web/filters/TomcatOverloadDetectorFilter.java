@@ -54,14 +54,11 @@ public class TomcatOverloadDetectorFilter extends OncePerRequestFilter {
 			return;
 		}
 		var log = new StringBuilder("\n[overload] ").append(thread.getName());
-		int initialLength = log.length();
 		Arrays.stream(stack).filter(this::keepElement)
 				.forEach(e -> log.append("\n[overload] at ").append(e.getClassName()).append('.')
 						.append(e.getMethodName()).append("(").append(e.getFileName()).append(':')
 						.append(e.getLineNumber()).append(')'));
-		if (log.length() != initialLength) {
-			LOGGER.warn(log.toString());
-		}
+		LOGGER.warn(log.toString());
 	}
 
 	private boolean keepElement(StackTraceElement element) {
@@ -75,7 +72,7 @@ public class TomcatOverloadDetectorFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		activeThreadsCount.incrementAndGet();
-		//to test: dumpThreads();
+		// to test: dumpThreads();
 		try {
 			super.doFilter(request, response, filterChain);
 		} finally {

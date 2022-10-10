@@ -48,7 +48,7 @@ public class TestCaseController extends TestcaseApiController {
 		var currentDictionary = contextService.get().getDictionary();
 		var currentTC = contextService.get().getTestCase();
 		if (currentDictionary == null || currentTC == null) {
-			return new ResponseEntity<>(null, HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		return new ResponseEntity<>(TestCaseMapper.MAPPER.convert(testCaseDao.load(contextService.get().getTestCase(),
 				dictionaryDao.load(contextService.get().getDictionary()))), HttpStatus.OK);

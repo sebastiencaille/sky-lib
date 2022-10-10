@@ -31,7 +31,7 @@ class TestCase extends React.Component {
 			}
 
 			rows.push(
-				<tbody class="steps" key={"tcStep" + step.ordinal}>
+				<tbody className='steps' key={"tcStep" + step.ordinal}>
 					<tr>
 						<td>{step.ordinal}</td>
 						<td>{dict.descriptions[step.actorRef].description}</td>
@@ -46,7 +46,7 @@ class TestCase extends React.Component {
 
 	render() {
 		return (
-			<table class="steps">
+			<table className='steps'>
 				{this.createTestCaseSteps()}
 			</table>
 		);

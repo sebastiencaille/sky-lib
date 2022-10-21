@@ -18,7 +18,7 @@
 	</modules>
 
 	<properties>
-		<version.springboot>2.7.4</version.springboot>
+		<version.springboot>2.7.5</version.springboot>
 		<version.swagger>2.2.2</version.swagger>
 		<version.jackson-databind-nullable>0.2.1</version.jackson-databind-nullable>
 		

@@ -12,6 +12,7 @@ StepClassifier:
     name: string
     enum: [ ACTION, PREPARATION, CHECK ]
 TestDictionary:
+  required: [ metadata, roles, descriptions, actors, testObjectFactories, selectorTypes ]
   properties:
     metadata:
       $ref: '#/DicoMetadata'
@@ -50,6 +51,7 @@ TestActor:
   allOf:
   - $ref: '#/DicoNamedObject'
   - type: object
+    required: [ role ]
     properties:
       role:
         description: role of the actor
@@ -77,6 +79,7 @@ TestApiParameter:
   allOf:
   - $ref: '#/DicoNamedObject'
   - type: object
+    required: [ parameterType ]
     properties:
       parameterType:
         type: string
@@ -85,6 +88,7 @@ TestRole:
   allOf:
   - $ref: '#/DicoNamedObject'
   - type: object
+    required: [ actions ]
     properties:
       actions:
         type: array
@@ -95,6 +99,7 @@ TestAction:
   allOf:
   - $ref: '#/DicoNamedObject'
   - type: object
+    required: [ parameters, allowedClassifiers, returnType ] 
     properties:
       parameters:
         type: array

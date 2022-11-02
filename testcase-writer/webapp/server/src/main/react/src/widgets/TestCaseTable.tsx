@@ -1,11 +1,19 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import DictionaryHelper from './helpers/DictionaryHelper.js';
-import TestCaseHelper from './helpers/TestCaseHelper.js';
+import DictionaryHelper from '../helpers/DictionaryHelper';
+import TestCaseHelper from '../helpers/TestCaseHelper';
+import { TestDictionary, TestCase } from '../webapis/Types';
 
-class TestCase extends React.Component {
+interface ITestCaseProps {
+	dictionary?: TestDictionary;
+	testCase?: TestCase;
+}
+
+class TestCaseTable extends React.Component<ITestCaseProps> {
 
 	createTestCaseSteps = () => {
+		if (!this.props.dictionary || !this.props.testCase) {
+			return;
+		}
 		const rows = [];
 		rows.push(
 			<thead key="tcHead">
@@ -26,7 +34,7 @@ class TestCase extends React.Component {
 				selector = step.parametersValue[0];
 				parameter = step.parametersValue[1];
 			} else {
-				selector = null;
+				selector = undefined;
 				parameter = step.parametersValue[0];
 			}
 
@@ -53,11 +61,4 @@ class TestCase extends React.Component {
 	}
 }
 
-
-TestCase.propTypes = {
-	dictionary: PropTypes.object,
-	testCase: PropTypes.object
-};
-
-
-export default TestCase;
+export default TestCaseTable;

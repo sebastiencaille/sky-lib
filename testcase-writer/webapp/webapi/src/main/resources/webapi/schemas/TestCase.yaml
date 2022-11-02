@@ -22,7 +22,7 @@ TestCase:
       type: string
 TestStep:
   type: object
-  required: [ ordinal, classifier ]
+  required: [ ordinal, classifier, actorRef, roleRef, actionRef, parametersValue, reference, classifier ]
   properties:
     ordinal:
       type: integer

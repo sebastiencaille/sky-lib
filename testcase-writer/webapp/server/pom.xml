@@ -65,30 +65,6 @@
 		</dependency>
 	</dependencies>
 
-	<profiles>
-		<profile>
-			<id>linux</id>
-			<activation>
-				<os>
-					<family>unix</family>
-				</os>
-			</activation>
-			<properties>
-				<npm.cmd>npm</npm.cmd>
-			</properties>
-		</profile>
-		<profile>
-			<id>windows</id>
-			<activation>
-				<os>
-					<family>windows</family>
-				</os>
-			</activation>
-			<properties>
-				<npm.cmd>npm.cmd</npm.cmd>
-			</properties>
-		</profile>
-	</profiles>
 
 	<build>
 		<pluginManagement>
@@ -125,7 +101,24 @@
 				<artifactId>exec-maven-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>npm install</id>
+						<id>npm_openapi</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>${npx.cmd}</executable>
+							<!-- optional -->
+							<arguments>
+								<argument>openapi-typescript</argument>
+								<argument>${project.build.directory}/generated-sources/openapi/src/main/resources/openapi.yaml</argument>
+								<argument>--output</argument>
+								<argument>src/main/react/src/webapis/WebApis-generated-types.ts</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>npm_install</id>
 						<phase>generate-resources</phase>
 						<goals>
 							<goal>exec</goal>
@@ -139,7 +132,7 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>npm build</id>
+						<id>npm_build</id>
 						<phase>generate-resources</phase>
 						<goals>
 							<goal>exec</goal>

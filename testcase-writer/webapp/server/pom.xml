@@ -10,8 +10,6 @@
 	<packaging>war</packaging>
 
 	<properties>
-		<version.mapstruct>1.5.2.Final</version.mapstruct>
-
 		<!-- automatically run annotation processors within the incremental compilation -->
 		<m2e.apt.activation>jdt_apt</m2e.apt.activation>
 	</properties>

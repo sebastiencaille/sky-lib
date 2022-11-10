@@ -20,10 +20,7 @@ const enhanceTestCase = (dict: TestDictionary, tc: TestCase): TestCase => {
 
 
 const descriptionOfParameter = (dict: TestDictionary, value?: TestParameterValue): string => {
-	if (!value) {
-		return '---';
-	}
-	return DictionaryHelper.descriptionOf(dict, [value.testParameterFactory], value.simpleValue) || '---';
+	return DictionaryHelper.descriptionOf(dict, [value?.testParameterFactory], value?.simpleValue);
 }
 
 const TestCaseHelper = {

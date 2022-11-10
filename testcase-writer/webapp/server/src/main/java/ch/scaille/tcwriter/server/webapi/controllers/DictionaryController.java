@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import ch.scaille.tcwriter.generated.api.contollers.DictionaryApiController;
+import ch.scaille.tcwriter.generated.api.controllers.DictionaryApiController;
 import ch.scaille.tcwriter.generated.api.model.Metadata;
 import ch.scaille.tcwriter.generated.api.model.TestDictionary;
 import ch.scaille.tcwriter.server.dao.DictionaryDao;

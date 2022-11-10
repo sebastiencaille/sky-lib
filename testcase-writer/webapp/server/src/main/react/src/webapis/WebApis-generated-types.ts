@@ -3,21 +3,33 @@
  * Do not make direct changes to the file.
  */
 
+
+/** Type helpers */
+type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
+type XOR<T, U> = (T | U) extends object ? (Without<T, U> & U) | (Without<U, T> & T) : T | U;
+type OneOf<T extends any[]> = T extends [infer Only] ? Only : T extends [infer A, infer B, ...infer Rest] ? OneOf<[XOR<A, B>, ...Rest]> : never;
+
 export interface paths {
   "/dictionary": {
+    /** List all dictionaries */
     get: operations["listAll"];
   };
   "/dictionary/current": {
+    /** Gets the currently selected dictionary */
     get: operations["current"];
   };
   "/testcase": {
+    /** List all test cases */
     get: operations["listAll"];
   };
   "/testcase/current": {
+    /** Gets the currently selected test case */
     get: operations["current"];
   };
   "/context": {
+    /** Gets current content */
     get: operations["getCurrent"];
+    /** Sets the current content */
     put: operations["setCurrent"];
   };
 }
@@ -32,9 +44,7 @@ export interface components {
      * }
      */
     Context: {
-      identity: { [key: string]: unknown } & {
-        id: unknown;
-      };
+      identity: Record<string, never>;
       dictionary?: string;
       testCase?: string;
     };
@@ -87,13 +97,13 @@ export interface components {
      */
     TestDictionary: {
       metadata: components["schemas"]["DicoMetadata"];
-      roles: components["schemas"]["TestRole"][];
+      roles: (components["schemas"]["TestRole"])[];
       descriptions: {
-        [key: string]: components["schemas"]["TestObjectDescription"];
+        [key: string]: components["schemas"]["TestObjectDescription"] | undefined;
       };
-      actors: components["schemas"]["TestActor"][];
-      testObjectFactories: components["schemas"]["TestParameterFactory"][];
-      selectorTypes: string[];
+      actors: (components["schemas"]["TestActor"])[];
+      testObjectFactories: (components["schemas"]["TestParameterFactory"])[];
+      selectorTypes: (string)[];
     };
     /**
      * @example {
@@ -132,31 +142,28 @@ export interface components {
      */
     TestCase: {
       metadata?: components["schemas"]["Metadata"];
-      steps: components["schemas"]["TestStep"][];
+      steps: (components["schemas"]["TestStep"])[];
       pkgAndClassName: string;
     };
     AllDictMetadata: components["schemas"]["Metadata"];
     DicoMetadata: components["schemas"]["Metadata"];
     /** @description A test role */
-    TestRole: components["schemas"]["DicoNamedObject"] &
-      components["schemas"]["TestRole_allOf"];
+    TestRole: components["schemas"]["DicoNamedObject"] & components["schemas"]["TestRole_allOf"];
     DicoNamedObject: components["schemas"]["NamedObject"];
     NamedObject: {
       id: string;
       name: string;
     };
     /** @description A test action */
-    TestAction: components["schemas"]["DicoNamedObject"] &
-      components["schemas"]["TestAction_allOf"];
+    TestAction: components["schemas"]["DicoNamedObject"] & components["schemas"]["TestAction_allOf"];
     /** @description A test parameter factory (selectors factory, parameters factory) */
-    TestApiParameter: components["schemas"]["DicoNamedObject"] &
-      components["schemas"]["TestApiParameter_allOf"];
-    StepClassifier: unknown;
+    TestApiParameter: components["schemas"]["DicoNamedObject"] & components["schemas"]["TestApiParameter_allOf"];
+    StepClassifier: Record<string, never>;
     TestObjectDescriptions: {
-      [key: string]: components["schemas"]["TestObjectDescription"];
+      [key: string]: components["schemas"]["TestObjectDescription"] | undefined;
     };
     /**
-     * @description description of a test object
+     * @description description of a test object 
      * @example {
      *   "description": "description",
      *   "humanReadable": "humanReadable"
@@ -167,11 +174,9 @@ export interface components {
       humanReadable?: string;
     };
     /** @description A test actor */
-    TestActor: components["schemas"]["DicoNamedObject"] &
-      components["schemas"]["TestActor_allOf"];
+    TestActor: components["schemas"]["DicoNamedObject"] & components["schemas"]["TestActor_allOf"];
     /** @description A test parameter factory (selectors factory, parameters factory) */
-    TestParameterFactory: components["schemas"]["DicoNamedObject"] &
-      components["schemas"]["TestParameterFactory_allOf"];
+    TestParameterFactory: components["schemas"]["DicoNamedObject"] & components["schemas"]["TestParameterFactory_allOf"];
     AllTCMetadata: components["schemas"]["Metadata"];
     TCMetadata: components["schemas"]["Metadata"];
     /**
@@ -193,39 +198,34 @@ export interface components {
       actorRef: string;
       roleRef: string;
       actionRef: string;
-      parametersValue: components["schemas"]["TestParameterValue"][];
+      parametersValue: (components["schemas"]["TestParameterValue"])[];
       reference: components["schemas"]["TestReference"];
-      classifier: unknown;
+      classifier: Record<string, never>;
     };
     /** @description A parameter of the test step action */
-    TestParameterValue: components["schemas"]["TCIdObject"] &
-      components["schemas"]["TestParameterValue_allOf"];
+    TestParameterValue: components["schemas"]["TCIdObject"] & components["schemas"]["TestParameterValue_allOf"];
     TCIdObject: components["schemas"]["IdObject"];
     IdObject: {
       id: string;
     };
     ComplexTypeContent: {
-      [key: string]: components["schemas"]["TestParameterValue"];
+      [key: string]: components["schemas"]["TestParameterValue"] | undefined;
     };
     /** @description a named reference to a test step */
-    TestReference: components["schemas"]["TCTestParameterFactory"] &
-      components["schemas"]["TestReference_allOf"];
+    TestReference: components["schemas"]["TCTestParameterFactory"] & components["schemas"]["TestReference_allOf"];
     TCTestParameterFactory: components["schemas"]["TestParameterFactory_1"];
     /** @description A test parameter factory (selectors factory, parameters factory) */
-    TestParameterFactory_1: components["schemas"]["DicoNamedObject"] &
-      components["schemas"]["TestParameterFactory_allOf"];
+    TestParameterFactory_1: components["schemas"]["DicoNamedObject"] & components["schemas"]["TestParameterFactory_allOf"];
     StepClassifier_1: components["schemas"]["StepClassifier"];
-    Identity: { [key: string]: unknown } & {
-      id: unknown;
-    };
+    Identity: Record<string, never>;
     /** @example null */
     TestRole_allOf: {
-      actions: components["schemas"]["TestAction"][];
+      actions: (components["schemas"]["TestAction"])[];
     };
     /** @example null */
     TestAction_allOf: {
-      parameters: components["schemas"]["TestApiParameter"][];
-      allowedClassifiers: components["schemas"]["StepClassifier"][];
+      parameters: (components["schemas"]["TestApiParameter"])[];
+      allowedClassifiers: (components["schemas"]["StepClassifier"])[];
       returnType: string;
     };
     /** @example null */
@@ -239,8 +239,8 @@ export interface components {
     };
     /** @example null */
     TestParameterFactory_allOf: {
-      mandatoryParameters?: unknown[];
-      optionalParameters?: unknown[];
+      mandatoryParameters?: (Record<string, never>)[];
+      optionalParameters?: (Record<string, never>)[];
       nature?: string;
       parameterType?: string;
     };
@@ -249,11 +249,9 @@ export interface components {
       apiParameterId: string;
       testParameterFactoryRef?: string;
       complexTypeValues: {
-        [key: string]: components["schemas"]["TestParameterValue"];
+        [key: string]: components["schemas"]["TestParameterValue"] | undefined;
       };
       simpleValue?: string;
-    } & {
-      type: unknown;
     };
     /** @example null */
     TestReference_allOf: {
@@ -261,22 +259,32 @@ export interface components {
       testStepRef?: string;
     };
   };
+  responses: never;
+  parameters: never;
+  requestBodies: never;
+  headers: never;
+  pathItems: never;
 }
 
+export type external = Record<string, never>;
+
 export interface operations {
+
   listAll: {
+    /** List all test cases */
     responses: {
-      /** all  test cases */
+      /** @description all  test cases */
       200: {
         content: {
-          "application/json": components["schemas"]["AllTCMetadata"][];
+          "application/json": (components["schemas"]["AllTCMetadata"])[];
         };
       };
     };
   };
   current: {
+    /** Gets the currently selected test case */
     responses: {
-      /** current test case */
+      /** @description current test case */
       200: {
         content: {
           "application/json": components["schemas"]["TestCase"];
@@ -285,8 +293,9 @@ export interface operations {
     };
   };
   getCurrent: {
+    /** Gets current content */
     responses: {
-      /** current context */
+      /** @description current context */
       200: {
         content: {
           "application/json": components["schemas"]["Context"];
@@ -295,21 +304,20 @@ export interface operations {
     };
   };
   setCurrent: {
+    /** Sets the current content */
+    /** @description context to set */
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ContextUpdate"];
+      };
+    };
     responses: {
-      /** The new context, after it was set */
+      /** @description The new context, after it was set */
       200: {
         content: {
           "application/json": components["schemas"]["Context"];
         };
       };
     };
-    /** context to set */
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["ContextUpdate"];
-      };
-    };
   };
 }
-
-export interface external {}

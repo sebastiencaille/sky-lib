@@ -15,9 +15,9 @@ const hasSelector = (dict: TestDictionary, action: TestAction): boolean => {
 	return action.parameters[0] && dict.selectors.has(action.parameters[0].parameterType);
 }
 
-const descriptionOf = (dict: TestDictionary, testObjects: IdObject[], fallback ?: string) : string|undefined => {
-	const descr = testObjects.filter(o => o).map(o => dict.descriptions[o.id]?.description).find(descr => descr);
-	return descr || fallback;
+const descriptionOf = (dict: TestDictionary, testObjects: (IdObject|undefined)[], fallback ?: string) : string => {
+	const descr = testObjects.map(o => o && dict.descriptions[o.id]?.description).find(descr => descr);
+	return descr || fallback || '---';
 }
 
 const DictionaryHelper = {

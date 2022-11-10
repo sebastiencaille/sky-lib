@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import ch.scaille.tcwriter.generated.api.contollers.ContextApiController;
+import ch.scaille.tcwriter.generated.api.controllers.ContextApiController;
 import ch.scaille.tcwriter.server.dao.ContextDao;
 import ch.scaille.tcwriter.server.dto.Identity;
 import ch.scaille.tcwriter.server.services.ContextService;

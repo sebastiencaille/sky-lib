@@ -77,13 +77,13 @@
 				<plugin>
 					<groupId>org.openapitools</groupId>
 					<artifactId>openapi-generator-maven-plugin</artifactId>
-					<version>6.2.0</version>
+					<version>6.2.1</version>
 					<configuration>
 						<inputSpec>${project.basedir}/../webapi/src/main/resources/webapi/openapi.yaml</inputSpec>
 						<configOptions>
 							<sourceFolder>src/gen/java/main</sourceFolder>
 						</configOptions>
-						<apiPackage>ch.scaille.tcwriter.generated.api.contollers</apiPackage>
+						<apiPackage>ch.scaille.tcwriter.generated.api.controllers</apiPackage>
 						<modelPackage>ch.scaille.tcwriter.generated.api.model</modelPackage>
 						<generatorName>spring</generatorName>
 						<library>spring-boot</library>

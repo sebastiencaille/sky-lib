@@ -4,9 +4,9 @@ import static ch.scaille.util.helpers.LambdaExt.raise;
 import static ch.scaille.util.helpers.LambdaExt.uncheckF;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
 
@@ -20,7 +20,7 @@ import ch.scaille.util.exceptions.StorageRTException;
 
 public class DictionaryFsDao implements DictionaryDao {
 
-	private final Map<String, TestDictionary> cache = new HashMap<>();
+	private final Map<String, TestDictionary> cache = new ConcurrentHashMap<>();
 
 	@Value("${app.dataFolder:/var/lib/tcwriter/data}")
 	private String dataFolder;

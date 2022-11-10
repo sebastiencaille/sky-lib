@@ -42,8 +42,8 @@ class TestCaseTable extends React.Component<ITestCaseProps> {
 				<tbody className='steps' key={"tcStep" + step.ordinal}>
 					<tr>
 						<td>{step.ordinal}</td>
-						<td>{dict.descriptions[step.actorRef].description}</td>
-						<td>{dict.descriptions[step.actionRef].description}</td>
+						<td>{dict.descriptions[step.actor.id].description}</td>
+						<td>{dict.descriptions[step.action.id].description}</td>
 						<td>{TestCaseHelper.descriptionOfParameter(dict, selector)}</td>
 						<td>{TestCaseHelper.descriptionOfParameter(dict, parameter)}</td>
 					</tr>

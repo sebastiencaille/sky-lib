@@ -42,16 +42,17 @@ class App extends React.Component<IAppProps, IAppState> {
 
 	componentDidUpdate(prevProps: Readonly<IAppProps>, prevState: Readonly<IAppState>): void {
 		const contextDicoChanged = prevState.currentContext?.dictionary !== this.state.currentContext?.dictionary;
-		const dicoChanged = prevState.currentDictionary !== this.state.currentDictionary;
 		const contextTcChanged = prevState.currentContext?.testCase !== this.state.currentContext?.testCase;
-		if (contextDicoChanged) {
+		const dicoChanged = prevState.currentDictionary !== this.state.currentDictionary;
+		
+		if (contextDicoChanged && this.state.currentContext?.dictionary) {
 			WebApis.loadCurrentDictionary(dict => this.setState({ currentDictionary: DictionaryHelper.enhanceDictionary(dict) }));
 		}
-		if (!prevState.currentContext?.dictionary && this.state.currentContext?.dictionary) {
+		if (dicoChanged) {
 			WebApis.listAllTestCases((allMetaData) => this.setState({ allTestCases: allMetaData }));
 		}
 		if (dicoChanged || contextTcChanged) {
-			if (this.state.currentDictionary) {
+			if (this.state.currentDictionary && this.state.currentContext?.testCase) {
 				WebApis.loadCurrentTestCase(tc =>
 					this.setState({ currentTestCase: TestCaseHelper.enhanceTestCase(this.state.currentDictionary!, tc) }));
 			}

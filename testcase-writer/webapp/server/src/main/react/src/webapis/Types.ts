@@ -30,6 +30,7 @@ interface TestCase extends ApiTestCase {
 
 interface TestStep extends ApiTestStep  {
 	action: TestAction;
+	actor: TestActor;
 	parametersValue: TestParameterValue[];
 }
 

@@ -99,24 +99,7 @@
 				<artifactId>exec-maven-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>npm_openapi</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<executable>${npx.cmd}</executable>
-							<!-- optional -->
-							<arguments>
-								<argument>openapi-typescript</argument>
-								<argument>${project.build.directory}/generated-sources/openapi/src/main/resources/openapi.yaml</argument>
-								<argument>--output</argument>
-								<argument>src/main/react/src/webapis/WebApis-generated-types.ts</argument>
-							</arguments>
-						</configuration>
-					</execution>
-					<execution>
-						<id>npm_install</id>
+						<id>npm-install</id>
 						<phase>generate-resources</phase>
 						<goals>
 							<goal>exec</goal>
@@ -125,12 +108,13 @@
 							<executable>${npm.cmd}</executable>
 							<!-- optional -->
 							<arguments>
-								<argument>install</argument>
+								<argument>run</argument>
+								<argument>setup</argument>
 							</arguments>
 						</configuration>
 					</execution>
 					<execution>
-						<id>npm_build</id>
+						<id>npm-build</id>
 						<phase>generate-resources</phase>
 						<goals>
 							<goal>exec</goal>

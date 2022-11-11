@@ -40,6 +40,8 @@ TestStep:
       $ref: '#/TestReference'
     classifier:
       $ref: '#/StepClassifier'
+    humanReadable:
+      type: string
 ComplexTypeContent:
   type: object
   additionalProperties:

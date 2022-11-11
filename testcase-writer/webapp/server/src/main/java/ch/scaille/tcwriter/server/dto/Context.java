@@ -1,5 +1,7 @@
 package ch.scaille.tcwriter.server.dto;
 
+import ch.scaille.tcwriter.generators.visitors.HumanReadableVisitor;
+
 public class Context {
 
 	private final Identity identity;
@@ -25,15 +27,15 @@ public class Context {
 	public void setDictionary(String dictionaryName) {
 		this.dictionaryName = dictionaryName;
 	}
-	
+
 	public String getTestCase() {
 		return testCase;
 	}
-	
+
 	public void setTestCase(String testCase) {
 		this.testCase = testCase;
 	}
-
+	
 	public Context derive() {
 		var copy = new Context(this.identity);
 		copy.setDictionary(dictionaryName);

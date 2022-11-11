@@ -1,4 +1,4 @@
-import { components } from './WebApis-generated-types'
+import { components } from 'testcase-writer-webapi'
 
 type Metadata = components["schemas"]["Metadata"];
 type IdObject = components["schemas"]["IdObject"];

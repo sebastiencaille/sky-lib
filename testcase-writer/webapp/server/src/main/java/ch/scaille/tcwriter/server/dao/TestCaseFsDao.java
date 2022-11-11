@@ -47,8 +47,9 @@ public class TestCaseFsDao implements TestCaseDao {
 
 	@Override
 	public ExportableTestCase load(String testCaseName, TestDictionary dictionary) {
-		return cache.computeIfAbsent(testCaseName, uncheckF(n -> modelDao.readTestCase(n, dictionary),
-				raise((t, e) -> new StorageRTException("bad.testcase.folder", e))));
+		return cache.computeIfAbsent(testCaseName + dictionary.getMetadata().getTransientId(),
+				uncheckF(n -> modelDao.readTestCase(testCaseName, dictionary),
+						raise((t, e) -> new StorageRTException("bad.testcase.folder", e))));
 	}
 
 }

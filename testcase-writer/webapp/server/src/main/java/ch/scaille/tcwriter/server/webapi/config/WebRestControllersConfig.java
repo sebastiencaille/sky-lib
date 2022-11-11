@@ -10,6 +10,7 @@ import ch.scaille.tcwriter.server.dao.ContextDao;
 import ch.scaille.tcwriter.server.dao.DictionaryDao;
 import ch.scaille.tcwriter.server.dao.TestCaseDao;
 import ch.scaille.tcwriter.server.services.ContextService;
+import ch.scaille.tcwriter.server.services.TestCaseService;
 import ch.scaille.tcwriter.server.webapi.controllers.ContextController;
 import ch.scaille.tcwriter.server.webapi.controllers.DictionaryController;
 import ch.scaille.tcwriter.server.webapi.controllers.TestCaseController;
@@ -39,8 +40,8 @@ public class WebRestControllersConfig {
 
 	@Bean
 	TestCaseController testCaseController(ContextService contextService, DictionaryDao dictionaryDao,
-			NativeWebRequest nativeWebRequest, TestCaseDao testCaseDao) {
-		return new TestCaseController(contextService, dictionaryDao, testCaseDao, nativeWebRequest);
+			NativeWebRequest nativeWebRequest, TestCaseDao testCaseDao, TestCaseService testCaseService) {
+		return new TestCaseController(contextService, dictionaryDao, testCaseDao, nativeWebRequest, testCaseService);
 	}
 
 }

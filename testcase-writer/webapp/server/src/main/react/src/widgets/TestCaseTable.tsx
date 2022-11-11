@@ -41,7 +41,11 @@ class TestCaseTable extends React.Component<ITestCaseProps> {
 			rows.push(
 				<tbody className='steps' key={"tcStep" + step.ordinal}>
 					<tr>
-						<td>{step.ordinal}</td>
+					<td rowSpan={2}>{step.ordinal}</td>
+					<td colSpan={4}>{step.humanReadable || '---'}</td>
+					</tr>
+					<tr>
+						<td></td>
 						<td>{DictionaryHelper.descriptionOf(dict, [step.actor])}</td>
 						<td>{DictionaryHelper.descriptionOf(dict, [step.action])}</td>
 						<td>{TestCaseHelper.descriptionOfParameter(dict, selector)}</td>

@@ -55,4 +55,5 @@ public class ExportableTestStep extends TestStep {
 	public void setActionRef(final ExportReference ref) {
 		ref.setRestoreAction((tc, id) -> action = (TestAction) ((ExportableTestCase)tc).getRestoreValue(id));
 	}
+	
 }

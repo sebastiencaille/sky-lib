@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -36,6 +37,7 @@ public interface TestCaseMapper {
 		return model.stream().map(ExportableTestStep.class::cast).map(MAPPER::convert).collect(Collectors.toList());
 	}
 
+	@Mapping(target = "humanReadable", ignore = true)
 	TestStep convert(ch.scaille.tcwriter.model.testcase.ExportableTestStep model);
 
 	default List<TestParameterValue> convertExportableTestParameterValue(

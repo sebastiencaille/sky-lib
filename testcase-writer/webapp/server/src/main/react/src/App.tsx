@@ -43,7 +43,7 @@ class App extends React.Component<IAppProps, IAppState> {
 	componentDidUpdate(prevProps: Readonly<IAppProps>, prevState: Readonly<IAppState>): void {
 		const contextDicoChanged = prevState.currentContext?.dictionary !== this.state.currentContext?.dictionary;
 		const contextTcChanged = prevState.currentContext?.testCase !== this.state.currentContext?.testCase;
-		const dicoChanged = prevState.currentDictionary !== this.state.currentDictionary;
+		const dicoChanged = prevState.currentDictionary !== this.state.currentDictionary && this.state.currentDictionary;
 		
 		if (contextDicoChanged && this.state.currentContext?.dictionary) {
 			WebApis.loadCurrentDictionary(dict => this.setState({ currentDictionary: DictionaryHelper.enhanceDictionary(dict) }));

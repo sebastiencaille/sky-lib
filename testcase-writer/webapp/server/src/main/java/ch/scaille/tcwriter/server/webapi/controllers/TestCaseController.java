@@ -11,9 +11,11 @@ import org.springframework.web.context.request.NativeWebRequest;
 import ch.scaille.tcwriter.generated.api.controllers.TestcaseApiController;
 import ch.scaille.tcwriter.generated.api.model.Metadata;
 import ch.scaille.tcwriter.generated.api.model.TestCase;
+import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
 import ch.scaille.tcwriter.server.dao.DictionaryDao;
 import ch.scaille.tcwriter.server.dao.TestCaseDao;
 import ch.scaille.tcwriter.server.services.ContextService;
+import ch.scaille.tcwriter.server.services.TestCaseService;
 import ch.scaille.tcwriter.server.webapi.mappers.MetadataMapper;
 import ch.scaille.tcwriter.server.webapi.mappers.TestCaseMapper;
 
@@ -25,12 +27,15 @@ public class TestCaseController extends TestcaseApiController {
 
 	private final ContextService contextService;
 
+	private final TestCaseService tcService;
+
 	public TestCaseController(ContextService contextService, DictionaryDao dictionaryDao, TestCaseDao testcaseDao,
-			NativeWebRequest request) {
+			NativeWebRequest request, TestCaseService tcService) {
 		super(request);
 		this.contextService = contextService;
 		this.dictionaryDao = dictionaryDao;
 		this.testCaseDao = testcaseDao;
+		this.tcService = tcService;
 	}
 
 	@Override
@@ -45,12 +50,18 @@ public class TestCaseController extends TestcaseApiController {
 
 	@Override
 	public ResponseEntity<TestCase> current() {
-		var currentDictionary = contextService.get().getDictionary();
-		var currentTC = contextService.get().getTestCase();
-		if (currentDictionary == null || currentTC == null) {
+		var currentDictionaryId = contextService.get().getDictionary();
+		var currentTCId = contextService.get().getTestCase();
+		if (currentDictionaryId == null || currentTCId == null) {
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
-		return new ResponseEntity<>(TestCaseMapper.MAPPER.convert(testCaseDao.load(contextService.get().getTestCase(),
-				dictionaryDao.load(contextService.get().getDictionary()))), HttpStatus.OK);
+		var loadedTC = testCaseDao.load(contextService.get().getTestCase(),
+				dictionaryDao.load(contextService.get().getDictionary()));
+		var dto = TestCaseMapper.MAPPER.convert(loadedTC);
+		var humanReadables = tcService.computeHumanReadableTexts(loadedTC, loadedTC.getSteps());
+		for (int i = 0; i < dto.getSteps().size(); i++) {
+			dto.getSteps().get(i).setHumanReadable(humanReadables.get(i));
+		}
+		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
 }

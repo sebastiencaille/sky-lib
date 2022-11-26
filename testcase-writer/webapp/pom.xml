@@ -18,7 +18,7 @@
 	</modules>
 
 	<properties>
-		<version.springboot>2.7.5</version.springboot>
+		<version.springboot>3.0.0</version.springboot>
 		<version.swagger>2.2.6</version.swagger>
 		<version.jackson-databind-nullable>0.2.4</version.jackson-databind-nullable>
 		<version.mapstruct>1.5.3.Final</version.mapstruct>
@@ -87,6 +87,7 @@
 						<modelPackage>ch.scaille.tcwriter.generated.api.model</modelPackage>
 						<generatorName>spring</generatorName>
 						<library>spring-boot</library>
+						<templateDirectory>${project.basedir}/../openapi-templates/JavaSpring</templateDirectory>
 						<schemaMappings>
 						    <schemaMapping>AllDictMetadata=Metadata</schemaMapping>
 						    <schemaMapping>AllTCMetadata=Metadata</schemaMapping>

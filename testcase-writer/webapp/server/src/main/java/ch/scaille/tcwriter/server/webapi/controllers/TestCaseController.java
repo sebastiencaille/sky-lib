@@ -11,7 +11,6 @@ import org.springframework.web.context.request.NativeWebRequest;
 import ch.scaille.tcwriter.generated.api.controllers.TestcaseApiController;
 import ch.scaille.tcwriter.generated.api.model.Metadata;
 import ch.scaille.tcwriter.generated.api.model.TestCase;
-import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
 import ch.scaille.tcwriter.server.dao.DictionaryDao;
 import ch.scaille.tcwriter.server.dao.TestCaseDao;
 import ch.scaille.tcwriter.server.services.ContextService;

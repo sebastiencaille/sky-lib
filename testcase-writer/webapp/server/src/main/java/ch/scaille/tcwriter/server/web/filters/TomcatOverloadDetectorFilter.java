@@ -7,10 +7,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -58,7 +58,9 @@ public class TomcatOverloadDetectorFilter extends OncePerRequestFilter {
 				.forEach(e -> log.append("\n[overload] at ").append(e.getClassName()).append('.')
 						.append(e.getMethodName()).append("(").append(e.getFileName()).append(':')
 						.append(e.getLineNumber()).append(')'));
-		LOGGER.warn(log.toString());
+		if (LOGGER.isWarnEnabled()) {
+			LOGGER.warn(log.toString());
+		}
 	}
 
 	private boolean keepElement(StackTraceElement element) {

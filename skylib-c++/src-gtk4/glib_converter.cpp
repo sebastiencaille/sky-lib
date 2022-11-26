@@ -39,6 +39,6 @@ string string_to_ustring::convert_component_value_to_property_value(
 
 Glib::ustring string_to_ustring::convert_property_value_to_component_value(
 		const string _propertyValue) {
-	return ustring(_propertyValue);
+	return Glib::ustring(_propertyValue);
 }
 }

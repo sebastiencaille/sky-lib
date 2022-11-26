@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Value;
 
 import ch.scaille.tcwriter.generators.TCConfig;
@@ -18,6 +16,7 @@ import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.persistence.FsModelDao;
 import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
 import ch.scaille.util.exceptions.StorageRTException;
+import jakarta.annotation.PostConstruct;
 
 public class TestCaseFsDao implements TestCaseDao {
 

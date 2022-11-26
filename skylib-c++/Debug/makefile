@@ -12,8 +12,6 @@ RM := rm -rf
 -include src-lib/subdir.mk
 -include src-gtk4-pilot/subdir.mk
 -include src-gtk4/subdir.mk
--include objects.mk
-
 ifneq ($(MAKECMDGOALS),clean)
 ifneq ($(strip $(C++_DEPS)),)
 -include $(C++_DEPS)
@@ -57,7 +55,7 @@ all: main-build
 main-build: TestApp
 
 # Tool invocations
-TestApp: $(OBJS) $(USER_OBJS) makefile objects.mk $(OPTIONAL_TOOL_DEPS)
+TestApp: $(OBJS) $(USER_OBJS) makefile $(OPTIONAL_TOOL_DEPS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
 	g++ -o "TestApp" $(OBJS) $(USER_OBJS) $(LIBS) `pkg-config gtkmm-4.0 --libs` -pthread

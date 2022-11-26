@@ -1,8 +1,5 @@
 package ch.scaille.tcwriter.server.webapi.controllers;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -13,6 +10,8 @@ import ch.scaille.tcwriter.server.dto.Identity;
 import ch.scaille.tcwriter.server.services.ContextService;
 import ch.scaille.tcwriter.server.webapi.mappers.ContextMapper;
 import ch.scaille.util.helpers.Logs;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 public class ContextController extends ContextApiController {
 

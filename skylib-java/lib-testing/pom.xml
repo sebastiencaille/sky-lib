@@ -13,7 +13,7 @@
 	<properties>
 		<version.undertow>2.3.0.Final</version.undertow>
 		<version.selenium>4.6.0</version.selenium>
-		<version.mockito>4.8.1</version.mockito>
+		<version.mockito>4.9.0</version.mockito>
 	</properties>
 
 	<modules>

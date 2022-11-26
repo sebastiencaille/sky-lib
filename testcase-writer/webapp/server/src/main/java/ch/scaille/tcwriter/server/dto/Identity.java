@@ -1,6 +1,6 @@
 package ch.scaille.tcwriter.server.dto;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class Identity {
 

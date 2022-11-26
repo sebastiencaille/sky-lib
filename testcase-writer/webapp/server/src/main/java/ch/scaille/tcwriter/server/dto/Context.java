@@ -1,7 +1,5 @@
 package ch.scaille.tcwriter.server.dto;
 
-import ch.scaille.tcwriter.generators.visitors.HumanReadableVisitor;
-
 public class Context {
 
 	private final Identity identity;

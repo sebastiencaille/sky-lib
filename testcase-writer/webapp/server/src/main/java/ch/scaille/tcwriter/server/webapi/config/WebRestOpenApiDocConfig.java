@@ -10,6 +10,7 @@ import org.springdoc.core.OperationService;
 import org.springdoc.core.PropertyResolverUtils;
 import org.springdoc.core.SecurityService;
 import org.springdoc.core.SpringDocConfigProperties;
+import org.springdoc.core.SpringDocConfiguration;
 import org.springdoc.core.SpringDocProviders;
 import org.springdoc.core.customizers.OpenApiBuilderCustomizer;
 import org.springdoc.core.customizers.OpenApiCustomiser;
@@ -32,10 +33,12 @@ import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 import io.swagger.v3.oas.models.OpenAPI;
 
 @Configuration
+@Import({ SpringDocConfiguration.class, SpringDocConfigProperties.class })
 public class WebRestOpenApiDocConfig {
 
 	@Bean
@@ -53,7 +56,7 @@ public class WebRestOpenApiDocConfig {
 	}
 
 	@Bean
-	public OpenApiWebMvcResource webApiOpenApiResource(
+	OpenApiWebMvcResource webApiOpenApiResource(
 			@Qualifier("webApiOpenAPIBuilder") ObjectFactory<OpenAPIService> openAPIBuilderObjectFactory,
 			AbstractRequestService requestBuilder, GenericResponseService responseBuilder,
 			OperationService operationParser, SpringDocConfigProperties springDocConfigProperties,

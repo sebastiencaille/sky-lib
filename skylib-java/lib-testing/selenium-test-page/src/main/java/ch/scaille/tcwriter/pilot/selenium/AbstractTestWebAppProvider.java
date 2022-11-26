@@ -27,10 +27,14 @@ public abstract class AbstractTestWebAppProvider {
 
 	public abstract WebDriver createWebDriver();
 
+	public static void setDriver(WebDriver driver) {
+		AbstractTestWebAppProvider.driver = driver;
+	}
+	
 	@BeforeEach
 	public void ensureWebDriverStarted() {
 		if (driver == null) {
-			driver = createWebDriver();
+			setDriver(createWebDriver());
 		}
 	}
 

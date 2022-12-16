@@ -11,9 +11,9 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<version.undertow>2.3.1.Final</version.undertow>
-		<version.selenium>4.7.1</version.selenium>
-		<version.mockito>4.9.0</version.mockito>
+		<version.undertow>2.3.2.Final</version.undertow>
+		<version.selenium>4.7.2</version.selenium>
+		<version.mockito>4.10.0</version.mockito>
 	</properties>
 
 	<modules>

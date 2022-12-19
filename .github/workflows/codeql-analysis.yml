@@ -57,12 +57,13 @@ jobs:
         # Prefix the list here with "+" to use these queries and those in the config file.
         # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
-
     - name: 'java lib: build'
       run: mvn --no-transfer-progress  -Pcoverage install
       working-directory: skylib-java
 
     - name: 'java lib: sonar'
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: mvn --no-transfer-progress  -Pcoverage,sonar jacoco:report@report-for-sonar sonar:sonar 
       working-directory: skylib-java
     
@@ -71,6 +72,8 @@ jobs:
       working-directory: testcase-writer
 
     - name: 'testcase writer: build'
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: mvn --no-transfer-progress  -Pcoverage,sonar jacoco:report@report-for-sonar sonar:sonar 
       working-directory: testcase-writer
       

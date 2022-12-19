@@ -36,6 +36,8 @@ jobs:
         
     - name: Checkout repository
       uses: actions/checkout@v3
+      with:
+      	fetch-depth: 0
     
     # 'hope that it won't accumulate SNAPSHOT jars
     - name: Setup java and maven caching
@@ -57,19 +59,19 @@ jobs:
 
 
     - name: 'java lib: build'
-      run: mvn -Pcoverage --no-transfer-progress install
+      run: mvn --no-transfer-progress  -Pcoverage install
       working-directory: skylib-java
 
     - name: 'java lib: sonar'
-      run: mvn -Pcoverage,sonar jacoco:report@report-for-sonar sonar:sonar 
+      run: mvn --no-transfer-progress  -Pcoverage,sonar jacoco:report@report-for-sonar sonar:sonar 
       working-directory: skylib-java
     
     - name: 'testcase writer: build'
-      run: mvn -Pcoverage --no-transfer-progress install
+      run: mvn --no-transfer-progress  -Pcoverage install
       working-directory: testcase-writer
 
     - name: 'testcase writer: build'
-      run: mvn -Pcoverage,sonar jacoco:report@report-for-sonar sonar:sonar 
+      run: mvn --no-transfer-progress  -Pcoverage,sonar jacoco:report@report-for-sonar sonar:sonar 
       working-directory: testcase-writer
       
 # gtkmm packages are missing

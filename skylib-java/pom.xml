@@ -230,7 +230,7 @@
 											</includes>
 										</fileSet>
 									</fileSets>
-									<destFile>${coverage.temp}/sonar-coverage/all.exec</destFile>
+									<destFile>${coverage.temp}/all.exec</destFile>
 								</configuration>
 							</execution>
 							<execution>
@@ -240,7 +240,7 @@
 									<goal>report</goal>
 								</goals>
 								<configuration>
-									<dataFile>${coverage.temp}/sonar-coverage-all.exec</dataFile>
+									<dataFile>${coverage.temp}/all.exec</dataFile>
 									<formats>XML</formats>
 								</configuration>
 							</execution>

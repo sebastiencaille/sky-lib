@@ -3,18 +3,15 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<parent>
 		<groupId>ch.scaille</groupId>
 		<artifactId>libs</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-
 	<groupId>ch.scaille.tcwriter</groupId>
 	<artifactId>testcase-writer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-
 	<modules>
 		<module>api</module>
 		<module>core</module>
@@ -24,13 +21,11 @@
 		<module>examples</module>
 		<module>webapp</module>
 	</modules>
-
 	<properties>
 		<aspectj.version>1.9.9.1</aspectj.version>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
 	</properties>
-
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -81,8 +76,6 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-
-
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -95,7 +88,6 @@
 				<artifactId>testcase-writer-javatc</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
-
 			<dependency>
 				<groupId>ch.scaille.tcwriter</groupId>
 				<artifactId>testcase-writer-core</artifactId>
@@ -116,24 +108,19 @@
 				<artifactId>aspectjweaver</artifactId>
 				<version>${aspectj.version}</version>
 			</dependency>
-
 			<dependency>
 				<groupId>org.aspectj</groupId>
 				<artifactId>aspectjrt</artifactId>
 				<version>${aspectj.version}</version>
 			</dependency>
-
 			<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
 				<version>31.1-jre</version>
 			</dependency>
-
 		</dependencies>
 	</dependencyManagement>
-
-
 	<dependencies>
 		<dependency>
 			<groupId>ch.scaille</groupId>
@@ -141,5 +128,12 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
+	<profiles>
+		<profile>
+			<id>sonar</id>
+			<properties>
+				<sonar.projectName>testcase-writer</sonar.projectName>
+			</properties>
+		</profile>
+	</profiles>
 </project>

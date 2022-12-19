@@ -56,12 +56,20 @@ jobs:
         # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
 
-    - name: Build java lib
-      run: mvn --no-transfer-progress install
+    - name: 'java lib: build'
+      run: mvn -Pcoverage --no-transfer-progress install
+      working-directory: skylib-java
+
+    - name: 'java lib: sonar'
+      run: mvn -Pcoverage,sonar jacoco:report@report-for-sonar sonar:sonar 
       working-directory: skylib-java
     
-    - name: Build testcase writer
-      run: mvn --no-transfer-progress install
+    - name: 'testcase writer: build'
+      run: mvn -Pcoverage --no-transfer-progress install
+      working-directory: testcase-writer
+
+    - name: 'testcase writer: build'
+      run: mvn -Pcoverage,sonar jacoco:report@report-for-sonar sonar:sonar 
       working-directory: testcase-writer
       
 # gtkmm packages are missing

@@ -22,7 +22,7 @@
 		<module>webapp</module>
 	</modules>
 	<properties>
-		<aspectj.version>1.9.9.1</aspectj.version>
+		<aspectj.version>1.9.19</aspectj.version>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
 	</properties>

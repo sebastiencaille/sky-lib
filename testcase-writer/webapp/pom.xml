@@ -18,7 +18,7 @@
 	</modules>
 
 	<properties>
-		<version.springboot>3.0.0</version.springboot>
+		<version.springboot>3.0.1</version.springboot>
 		<version.jackson-databind-nullable>0.2.4</version.jackson-databind-nullable>
 		<version.mapstruct>1.5.3.Final</version.mapstruct>
 		<version.swagger-parser>2.1.9</version.swagger-parser>

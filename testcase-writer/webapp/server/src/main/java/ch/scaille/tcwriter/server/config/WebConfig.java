@@ -1,6 +1,5 @@
 package ch.scaille.tcwriter.server.config;
 
-import org.springdoc.webmvc.core.SpringDocWebMvcConfiguration;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +17,7 @@ public class WebConfig {
 	@Bean
 	public ServletRegistrationBean<?> webApiServlet() {
 		var annotationContext = new AnnotationConfigServletWebApplicationContext();
-		annotationContext.register(WebRestControllersConfig.class, WebRestOpenApiDocConfig.class, SpringDocWebMvcConfiguration.class);
+		annotationContext.register(WebRestControllersConfig.class, WebRestOpenApiDocConfig.class);
 		annotationContext.setDisplayName("Web Api");
 		var dispatcher = new DispatcherServlet(annotationContext);
 

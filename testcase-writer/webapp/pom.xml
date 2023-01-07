@@ -21,8 +21,8 @@
 		<version.springboot>3.0.1</version.springboot>
 		<version.jackson-databind-nullable>0.2.4</version.jackson-databind-nullable>
 		<version.mapstruct>1.5.3.Final</version.mapstruct>
-		<version.swagger-parser>2.1.9</version.swagger-parser>
-		<version.swagger>2.2.7</version.swagger>
+		<version.swagger-parser>2.1.10</version.swagger-parser>
+		<version.swagger>2.2.8</version.swagger>
 
 		<sonar.exclusions>**/generated-sources/**</sonar.exclusions>
 	</properties>

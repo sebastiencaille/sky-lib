@@ -22,6 +22,7 @@
   },
   "scripts": {
     "setup": "npm ci && npm link testcase-writer-webapi@0.0.1",
+    "setup-dev": "npm install && npm link testcase-writer-webapi@0.0.1",
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",

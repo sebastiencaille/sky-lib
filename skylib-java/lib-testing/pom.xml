@@ -12,8 +12,8 @@
 
 	<properties>
 		<version.undertow>2.3.3.Final</version.undertow>
-		<version.selenium>4.7.2</version.selenium>
-		<version.mockito>5.0.0</version.mockito>
+		<version.selenium>4.8.0</version.selenium>
+		<version.mockito>5.1.1</version.mockito>
 	</properties>
 
 	<modules>

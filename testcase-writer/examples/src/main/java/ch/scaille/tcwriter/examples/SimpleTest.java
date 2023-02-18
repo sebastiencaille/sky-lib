@@ -49,6 +49,7 @@ public class SimpleTest {
 		customer.keepNote(newBrand);
 	}
 
+	@Test
 	public void testFailureCase() {
 		customer.buy(inLocalShop(), coffeeMachine);
 		customer.checkPackage(fromShop(), teaPot);

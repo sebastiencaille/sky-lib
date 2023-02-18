@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ import ch.scaille.gui.model.views.ListViews;
 
 class FilterObjectModelTest {
 
-	private static final IListView<TestObject> COMPARATOR = ListViews.sorted((o1, o2) -> o1.getVal() - o2.getVal());
+	private static final IListView<TestObject> COMPARATOR = ListViews.sorted(Comparator.comparingInt(TestObject::getVal));
 
 	private static final Predicate<TestObject> EVEN_FILTER = value -> value.getVal() % 2 == 0;
 

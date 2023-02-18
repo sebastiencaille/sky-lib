@@ -3,7 +3,6 @@ package ch.scaille.tcwriter.examples;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
 

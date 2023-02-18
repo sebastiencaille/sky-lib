@@ -26,8 +26,7 @@ import ch.scaille.gui.validation.ValidationBinding;
 
 public class ControllerExampleModel extends ControllerExampleObjectGuiModel {
 
-	private static final Comparator<TestObject> TEST_COMPARATOR = (o1, o2) -> o1.getAFirstValue()
-			.compareTo(o2.getAFirstValue());
+	private static final Comparator<TestObject> TEST_COMPARATOR = Comparator.comparing(TestObject::getAFirstValue);
 
 	private final ObjectProperty<String> staticListSelection = new ObjectProperty<>("StaticListSelection", this);
 

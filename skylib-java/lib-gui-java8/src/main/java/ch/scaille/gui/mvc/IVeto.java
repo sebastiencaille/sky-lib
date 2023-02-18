@@ -10,7 +10,7 @@ public interface IVeto {
 
 	boolean mustSendToProperty(BindingChain chain);
 
-	boolean attach();
+	void attach();
 
 	void detach();
 

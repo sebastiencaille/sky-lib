@@ -19,7 +19,7 @@ public class TestParameterFactory extends NamedObject {
 
 		private final boolean requiresSimpleValue;
 
-		private ParameterNature(final boolean requiresSimpleValue) {
+		ParameterNature(final boolean requiresSimpleValue) {
 			this.requiresSimpleValue = requiresSimpleValue;
 		}
 

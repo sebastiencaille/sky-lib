@@ -31,11 +31,11 @@ public class Template {
 	private String commandLine;
 	private String preferredFile;
 
-	public static final Template from(final File file) throws IOException {
+	public static Template from(final File file) throws IOException {
 		return new Template(new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8));
 	}
 
-	public static final Template from(final String resource) throws IOException {
+	public static Template from(final String resource) throws IOException {
 		return new Template(ClassLoaderHelper.readUTF8Resource(resource));
 	}
 
@@ -72,7 +72,7 @@ public class Template {
 		int nextVariablePos = 0;
 		int currentPos = 0;
 		while ((nextVariablePos = content.indexOf("${", nextVariablePos)) > 0) {
-			if (nextVariablePos > 0 && content.charAt(nextVariablePos - 1) == '$') {
+			if (content.charAt(nextVariablePos - 1) == '$') {
 				// it's a $$, skip
 				nextVariablePos++;
 				continue;

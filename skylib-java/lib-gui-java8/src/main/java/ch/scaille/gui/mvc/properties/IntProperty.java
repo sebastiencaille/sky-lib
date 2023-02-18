@@ -90,7 +90,7 @@ public class IntProperty extends AbstractTypedProperty<Integer> {
 	@Override
 	public void attach() {
 		super.attach();
-		propertySupport.getMain().firePropertyChange(getName(), this, null, Integer.valueOf(value));
+		propertySupport.getMain().firePropertyChange(getName(), this, null, value);
 	}
 
 	@Override

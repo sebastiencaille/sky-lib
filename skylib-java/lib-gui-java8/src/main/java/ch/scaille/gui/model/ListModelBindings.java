@@ -25,11 +25,11 @@ import ch.scaille.gui.mvc.properties.AbstractProperty;
 
 public interface ListModelBindings {
 
-	public static <T> IComponentBinding<IListView<T>> view(final ListModel<T> model) {
+	static <T> IComponentBinding<IListView<T>> view(final ListModel<T> model) {
 		return ComponentBindings.<ListModel<T>, IListView<T>>listen(model, (c, p, t) -> c.setView(t));
 	}
 
-	public static <T> IComponentBinding<Collection<T>> values(final ListModel<T> model) {
+	static <T> IComponentBinding<Collection<T>> values(final ListModel<T> model) {
 		return new IComponentBinding<Collection<T>>() {
 
 			private IListModelListener<T> listener;

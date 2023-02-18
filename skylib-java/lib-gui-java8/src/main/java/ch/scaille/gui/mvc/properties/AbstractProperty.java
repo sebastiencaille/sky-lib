@@ -75,7 +75,7 @@ public abstract class AbstractProperty implements Serializable {
 	/**
 	 * Property related events (before firing, after firing, ...)
 	 */
-	protected transient EventListenerList eventListeners = new EventListenerList();
+	protected final transient EventListenerList eventListeners = new EventListenerList();
 
 	/**
 	 * Error property
@@ -164,7 +164,8 @@ public abstract class AbstractProperty implements Serializable {
 				.forEach(l -> l.propertyModified(caller, event));
 	}
 
-	public AbstractProperty configure(@SuppressWarnings("unchecked") final Consumer<AbstractProperty>... properties) {
+	@SafeVarargs
+	public final AbstractProperty configure(@SuppressWarnings("unchecked") final Consumer<AbstractProperty>... properties) {
 		Stream.of(properties).forEach(prop -> prop.accept(this));
 		return this;
 	}
@@ -180,7 +181,7 @@ public abstract class AbstractProperty implements Serializable {
 
 	@Override
 	public final boolean equals(final Object obj) {
-		return obj != null && this.getClass().isInstance(obj) && name.equals(((AbstractProperty) obj).name);
+		return this.getClass().isInstance(obj) && name.equals(((AbstractProperty) obj).name);
 	}
 
 	@Override

@@ -39,7 +39,7 @@ import ch.scaille.gui.swing.jtable.TableColumnWithPolicy;
 @SuppressWarnings({ "serial", "java:S1186", "java:S125" })
 public class TableModelExampleView extends JFrame {
 
-	static final Comparator<TestObject> NATURAL_ORDER = (o1, o2) -> o1.getASecondValue() - o2.getASecondValue();
+	static final Comparator<TestObject> NATURAL_ORDER = Comparator.comparingInt(TestObject::getASecondValue);
 	static final Comparator<TestObject> REVERSE_ORDER = (o1, o2) -> o2.getASecondValue() - o1.getASecondValue();
 
 	private final transient TableModelExampleModel model = new TableModelExampleModel();

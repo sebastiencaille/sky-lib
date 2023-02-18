@@ -26,7 +26,7 @@ class FormatterTest {
 		}
 
 		@Override
-		public void append(char c) throws IOException {
+		public void append(char c) {
 			buffer.append(c);
 		}
 

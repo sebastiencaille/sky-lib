@@ -11,7 +11,7 @@ import ch.scaille.util.helpers.FilesExt;
 
 public interface ITestExecutor {
 
-	public static class ExecConfig {
+	 class ExecConfig {
 
 		public final TestCase testCase;
 

@@ -8,6 +8,7 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.util.Arrays;
+import java.util.Comparator;
 
 import javax.swing.CellRendererPane;
 import javax.swing.JPanel;
@@ -33,7 +34,7 @@ public class StepsTable extends JPanel {
 	public StepsTable(final TCWriterController controller) {
 		final var model = controller.getModel();
 
-		final var steps = new ListModel<TestStep>(ListViews.sorted((s1, s2) -> s1.getOrdinal() - s2.getOrdinal()));
+		final var steps = new ListModel<TestStep>(ListViews.sorted(Comparator.comparingInt(TestStep::getOrdinal)));
 
 		setLayout(new BorderLayout());
 		stepsTableModel = new StepsTableModel(model.getTestCase(), steps, controller.getTestRemoteControl());

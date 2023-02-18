@@ -19,7 +19,7 @@ import ch.scaille.gui.mvc.GuiError;
 
 public class GuiErrorToStringConverter implements IConverter<GuiError, String> {
 
-	private String noError;
+	private final String noError;
 
 	public GuiErrorToStringConverter(String noError) {
 		this.noError = noError;

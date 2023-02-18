@@ -14,7 +14,7 @@ import ch.scaille.tcwriter.model.testcase.TestStep;
 
 public interface ModelUtils {
 
-	public static class ActionUtils {
+	class ActionUtils {
 		private final TestDictionary tm;
 		private final TestAction testAction;
 
@@ -91,7 +91,7 @@ public interface ModelUtils {
 
 	}
 
-	public static ActionUtils actionUtils(final TestDictionary tm, final TestAction testAction) {
+	static ActionUtils actionUtils(final TestDictionary tm, final TestAction testAction) {
 		return new ActionUtils(tm, testAction);
 	}
 

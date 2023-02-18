@@ -12,7 +12,7 @@ import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
  */
 public class AttributeMetaDataAccess<T, A> implements IPersisterFactory<T, A> {
 
-	private AbstractAttributeMetaData<T> metadata;
+	private final AbstractAttributeMetaData<T> metadata;
 
 	public AttributeMetaDataAccess(AbstractAttributeMetaData<T> metadata) {
 		this.metadata = metadata;

@@ -19,7 +19,7 @@ import java.text.DecimalFormat;
 
 public interface FormatterHelper {
 
-	public static String toSize(final Number size) {
+	static String toSize(final Number size) {
 		float val = size.floatValue();
 
 		String unit = "";

@@ -31,13 +31,13 @@ import ch.scaille.util.text.TextFormatter;
 
 public interface UntypedObjectAccessorExample2 {
 
-	public static class ASecondDataObject extends ADataObject {
+	class ASecondDataObject extends ADataObject {
 
 		// Maybe more...
 
 	}
 
-	public static class AThirdDataObject {
+	class AThirdDataObject {
 
 		private String anAttribute = "data1";
 
@@ -51,11 +51,11 @@ public interface UntypedObjectAccessorExample2 {
 
 	}
 
-	public static String getAttributeOf(final UntypedDataObjectManager accessor) {
+	static String getAttributeOf(final UntypedDataObjectManager accessor) {
 		return accessor.getValueOf(AN_ATTRIBUTE, String.class);
 	}
 
-	public static void main(final String[] args) throws IOException {
+	static void main(final String[] args) throws IOException {
 
 		try (OutputStream output = Logs.streamOf(DataObjectMetaDataExample.class, Level.INFO)) {
 			final SimpleTextFormatter<RuntimeException> log = new SimpleTextFormatter<>(

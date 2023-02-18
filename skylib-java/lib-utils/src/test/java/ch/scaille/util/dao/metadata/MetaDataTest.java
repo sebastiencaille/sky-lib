@@ -13,7 +13,7 @@ class MetaDataTest {
 	private static class ObjectTest {
 
 		private int valA;
-		private int valB = 456;
+		private final int valB = 456;
 		public int valC;
 		@SuppressWarnings("unused")
 		public final int valD = 123;
@@ -44,9 +44,9 @@ class MetaDataTest {
 
 		List<String> attr = metaData.getAttributes().stream().map(Object::toString).sorted()
 				.collect(Collectors.toList());
-		assertTrue(attr.contains("ValA(int)"), () -> attr.toString());
-		assertTrue(attr.contains("ValB(int, ReadOnly)"), () -> attr.toString());
-		assertTrue(attr.contains("ValC(int)"), () -> attr.toString());
+		assertTrue(attr.contains("ValA(int)"), attr::toString);
+		assertTrue(attr.contains("ValB(int, ReadOnly)"), attr::toString);
+		assertTrue(attr.contains("ValC(int)"), attr::toString);
 
 		testMetaData.getAttributeAccessor("ValA").setValue(123);
 		assertEquals(123, test.getValA());

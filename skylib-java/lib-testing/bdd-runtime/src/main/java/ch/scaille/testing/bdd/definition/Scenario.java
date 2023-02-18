@@ -58,6 +58,7 @@ public class Scenario<A extends AbstractAppTestApi<?>> {
 
     private Consumer<A> executionConfigurer;
 
+    @SafeVarargs
     public Scenario(Steps<A>... steps) {
         this.steps = steps;
     }
@@ -67,7 +68,8 @@ public class Scenario<A extends AbstractAppTestApi<?>> {
         return this;
     }
 
-    public Scenario<A> followedBy(Steps<A>... addedSteps) {
+    @SafeVarargs
+    public final Scenario<A> followedBy(Steps<A>... addedSteps) {
         Steps<A>[] newSteps = Arrays.copyOf(steps, steps.length + addedSteps.length);
         System.arraycopy(addedSteps, 0, newSteps, steps.length, addedSteps.length);
         return new Scenario<>(newSteps);

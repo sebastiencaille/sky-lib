@@ -98,7 +98,7 @@ public class SimpleTestGenerator {
 
     private static void runDot(Path targetPathDot) throws IOException, InterruptedException {
         final Process dotExec = new ProcessBuilder("dot", "-Tpng",
-                "-o" + targetPathDot.resolve("SimpleFlow.png").toString(),
+                "-o" + targetPathDot.resolve("SimpleFlow.png"),
                 targetPathDot.resolve("SimpleFlow.dot").toString()).start();
         final var reader = new BufferedReader(new InputStreamReader(dotExec.getErrorStream()));
         String line;

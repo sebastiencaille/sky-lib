@@ -7,26 +7,26 @@ import java.util.logging.Logger;
 
 public interface Logs {
 
-	public static Logger of(Class<?> clazz) {
+	static Logger of(Class<?> clazz) {
 		return Logger.getLogger(clazz.getName());
 	}
 
-	public static Logger of(String logger) {
+	static Logger of(String logger) {
 		return Logger.getLogger(logger);
 	}
 
-	public static Logger of(Object obj) {
+	static Logger of(Object obj) {
 		return of(obj.getClass());
 	}
 
-	public static OutputStream streamOf(Class<?> clazz, Level level) {
+	static OutputStream streamOf(Class<?> clazz, Level level) {
 		final Logger logger = Logs.of(clazz);
 		return new OutputStream() {
 
 			private StringBuilder builder = new StringBuilder();
 
 			@Override
-			public void write(int b) throws IOException {
+			public void write(int b) {
 				builder.append((char) b);
 			}
 

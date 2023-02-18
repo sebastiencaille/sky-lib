@@ -2,10 +2,7 @@ package ch.scaille.gui.tools;
 
 import static ch.scaille.gui.mvc.properties.Configuration.persistent;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
@@ -109,7 +106,7 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 			properties.add(
 					new ClassPropertyEntry<>(property, this::createBindingChain, attrib, readOnly, message, toolTip));
 		}
-		Collections.sort(properties, (p1, p2) -> Integer.compare(p1.index(), p2.index()));
+		properties.sort(Comparator.comparing(ClassPropertyEntry::index));
 		return properties;
 	}
 

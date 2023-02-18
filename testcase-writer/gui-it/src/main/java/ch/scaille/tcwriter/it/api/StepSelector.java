@@ -13,7 +13,7 @@ import ch.scaille.tcwriter.it.TCWriterPage;
 public interface StepSelector extends Consumer<TCWriterPage> {
 
 	@TCApi(description = "Step at index", humanReadable = "select the step %s")
-	public static StepSelector selectStep(@TCApi(description = "index", humanReadable = "at row") final int ordinal) {
+    static StepSelector selectStep(@TCApi(description = "index", humanReadable = "at row") final int ordinal) {
 		return page -> {
 			final int tableIndex = ordinal - 1;
 			var stepsTable = page.stepsTable;
@@ -26,7 +26,7 @@ public interface StepSelector extends Consumer<TCWriterPage> {
 	}
 
 	@TCApi(description = "Append a step to the test", humanReadable = "add a step to the test case")
-	public static StepSelector addStep() {
+    static StepSelector addStep() {
 		return page -> {
 			var stepsTable = page.stepsTable;
 			stepsTable.wait(stepsTable.action(t -> {
@@ -41,7 +41,7 @@ public interface StepSelector extends Consumer<TCWriterPage> {
 	}
 
 	@TCApi(description = "Selected step", humanReadable = "")
-	public static StepSelector currentStep() {
+    static StepSelector currentStep() {
 		return page -> page.stepsTable.wait(page.stepsTable
 				.assertion(pc -> assertTrue(pc.component.getSelectedRowCount() > 0, () -> "Step must be selected"))
 				.withReportText(checkingThat("a step is selected")));

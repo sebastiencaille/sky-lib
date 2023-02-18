@@ -31,14 +31,14 @@ public interface IComponentBinding<T> {
 	 * Called when bound to a link, so the component binding can hook to the
 	 * component and forward it's content to the property
 	 */
-	public void addComponentValueChangeListener(final IComponentLink<T> link);
+	void addComponentValueChangeListener(final IComponentLink<T> link);
 
 	/**
 	 *
 	 * @param source
 	 * @param value
 	 */
-	public void setComponentValue(final AbstractProperty source, final T value);
+	void setComponentValue(final AbstractProperty source, final T value);
 
-	public void removeComponentValueChangeListener();
+	void removeComponentValueChangeListener();
 }

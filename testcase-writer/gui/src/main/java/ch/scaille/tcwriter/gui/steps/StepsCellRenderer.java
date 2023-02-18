@@ -14,7 +14,7 @@ public class StepsCellRenderer extends DefaultTableCellRenderer {
 	protected void paintComponent(final Graphics g) {
 		final var clip = g.getClip().getBounds();
 		setSize((int) clip.getWidth(), (int) (clip.getHeight() / 2));
-		super.paintComponent(g.create(0, 0 + clip.height / 2 + 1, clip.width, clip.height / 2));
+		super.paintComponent(g.create(0, clip.height / 2 + 1, clip.width, clip.height / 2));
 	}
 
 }

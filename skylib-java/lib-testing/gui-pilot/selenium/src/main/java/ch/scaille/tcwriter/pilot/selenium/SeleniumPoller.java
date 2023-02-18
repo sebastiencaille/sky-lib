@@ -23,7 +23,7 @@ public class SeleniumPoller extends Poller {
 
 	private static final Logger LOGGER = Logs.of(SeleniumPoller.class);
 
-	private WebDriver webDriver;
+	private final WebDriver webDriver;
 	private TimeoutException timeoutException;
 	private Object lastPollingResult;
 

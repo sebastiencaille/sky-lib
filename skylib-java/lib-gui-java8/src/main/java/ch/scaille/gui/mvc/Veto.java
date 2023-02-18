@@ -27,7 +27,7 @@ public class Veto implements IVeto {
 		public final boolean toComponent;
 		public final boolean toProperty;
 
-		private TransmitMode(final boolean toComponent, final boolean toProperty) {
+		TransmitMode(final boolean toComponent, final boolean toProperty) {
 			this.toComponent = toComponent;
 			this.toProperty = toProperty;
 		}
@@ -35,20 +35,19 @@ public class Veto implements IVeto {
 
 	private int detached = 0;
 
-	private TransmitMode transmitMode;
+	private final TransmitMode transmitMode;
 
-	private List<Predicate<BindingChain>> transmitToComponentInhibitors = new ArrayList<>();
+	private final List<Predicate<BindingChain>> transmitToComponentInhibitors = new ArrayList<>();
 
 	public Veto(TransmitMode startupTransmitMode) {
 		transmitMode = startupTransmitMode;
 	}
 
 	@Override
-	public boolean attach() {
+	public void attach() {
 		if (detached > 0) {
 			detached--;
 		}
-		return detached == 0;
 	}
 
 	@Override

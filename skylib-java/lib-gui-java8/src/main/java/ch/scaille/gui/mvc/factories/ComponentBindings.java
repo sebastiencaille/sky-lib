@@ -13,7 +13,7 @@ public final class ComponentBindings {
 	private ComponentBindings() {
 	}
 
-	public static interface ValueSetter<C, T> {
+	public interface ValueSetter<C, T> {
 		void setComponentValue(C component, AbstractProperty property, T value);
 	}
 

@@ -84,13 +84,13 @@ public class LongProperty extends AbstractTypedProperty<Long> {
 
 	@Override
 	public Long getObjectValue() {
-		return Long.valueOf(getValue());
+		return getValue();
 	}
 
 	@Override
 	public void attach() {
 		super.attach();
-		propertySupport.getMain().firePropertyChange(getName(), this, null, Long.valueOf(value));
+		propertySupport.getMain().firePropertyChange(getName(), this, null, value);
 	}
 
 	@Override

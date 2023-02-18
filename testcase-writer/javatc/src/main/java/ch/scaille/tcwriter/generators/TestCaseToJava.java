@@ -17,7 +17,7 @@ import ch.scaille.tcwriter.model.testcase.TestCase;
 public class TestCaseToJava {
 
 	public static class Args {
-		@Parameter(names = { "-c" }, required = false, description = "Name of configuration")
+		@Parameter(names = { "-c" }, description = "Name of configuration")
 		public String configuration;
 
 		@Parameter(names = { "-tc" }, description = "Name of test case")

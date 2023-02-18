@@ -36,9 +36,10 @@ import ch.scaille.gui.mvc.IScopedSupport;
  */
 public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 
+	private final T defaultValue;
+
 	private T value;
 
-	private T defaultValue;
 
 	public ObjectProperty(final String name, final GuiModel model, final T defaultValue) {
 		super(name, model);

@@ -38,7 +38,7 @@ import ch.scaille.util.text.TextFormatter;
  */
 public interface TypedDataObjectAccessorExample {
 
-	public static void main(final String[] args) throws IOException {
+	static void main(final String[] args) throws IOException {
 
 		try (OutputStream output = Logs.streamOf(DataObjectMetaDataExample.class, Level.INFO)) {
 			final SimpleTextFormatter<RuntimeException> log = new SimpleTextFormatter<>(

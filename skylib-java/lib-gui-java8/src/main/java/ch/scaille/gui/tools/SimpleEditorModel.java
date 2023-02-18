@@ -32,16 +32,15 @@ public class SimpleEditorModel<T> implements IGenericEditorModel<T> {
 				textProvider.apply(PropertyEntry.tooltipKey(property.getName())));
 	}
 
-	private BiFunction<IScopedSupport, IObjectProvider<T>, List<PropertyEntry>> builder;
+	private final BiFunction<IScopedSupport, IObjectProvider<T>, List<PropertyEntry>> builder;
 
 	public SimpleEditorModel(final BiFunction<IScopedSupport, IObjectProvider<T>, List<PropertyEntry>> builder) {
 		this.builder = builder;
 	}
 
 	/**
-	 * Creates the properties by introspecting the displayed class Class
+	 * Creates the properties by introspecting the displayed object
 	 *
-	 * @param errorProperty
 	 * @param propertySupport
 	 *
 	 * @return

@@ -70,10 +70,10 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 
 	private class Edition implements IEdition<T> {
 		final T value;
-		int oldIndex;
+		final int oldIndex;
 
 		// Debug information
-		private StackTraceElement[] editionStack;
+		private final StackTraceElement[] editionStack;
 
 		/**
 		 * True if object is not filtered out by the filter
@@ -436,7 +436,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 		StreamExt.throwIfContainsNull(newData.stream());
 		final List<T> addedData = newData.stream().filter(viewProperty.getValue()::accept).collect(Collectors.toList());
 		data.addAll(addedData);
-		Collections.sort(data, viewProperty.getValue());
+		data.sort(viewProperty.getValue());
 		fireContentsChanged(this, 0, oldSize - 1);
 		if (!addedData.isEmpty()) {
 			fireIntervalAdded(this, oldSize, data.size() - 1);
@@ -545,7 +545,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 			builder.append(stack.toString()).append('\n');
 		}
 		throw new IllegalStateException(
-				"Edition already in progress:" + objectEdition + ", editor stack=" + builder.toString());
+				"Edition already in progress:" + objectEdition + ", editor stack=" + builder);
 	}
 
 	/**
@@ -639,7 +639,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + ":[" + name + ", " + viewProperty.toString() + ']';
+		return getClass().getSimpleName() + ":[" + name + ", " + viewProperty + ']';
 	}
 
 	private void readObject(final java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {

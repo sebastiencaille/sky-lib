@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
+import java.util.Comparator;
 
 import javax.swing.JTable;
 
@@ -36,7 +37,7 @@ import ch.scaille.gui.swing.factories.SwingBindings;
 
 class TableTest {
 
-	private static final IListView<TestObject> VIEW = ListViews.sorted((o1, o2) -> o1.getVal() - o2.getVal());
+	private static final IListView<TestObject> VIEW = ListViews.sorted(Comparator.comparingInt(TestObject::getVal));
 
 	private static class Model extends GuiModel {
 

@@ -49,7 +49,7 @@ public class ConditionalFlowCtrl extends WithId implements IFlowCheck {
 		}
 
 		public Builder fallback(final Binding.Builder binding) {
-			if (getActivators(binding.getRules()).count() > 0 && getDefaultBinding().isPresent()) {
+			if (getActivators(binding.getRules()).findAny().isPresent() && getDefaultBinding().isPresent()) {
 				throw new IllegalStateException("A default binding is already present");
 			}
 			bindings.add(binding);
@@ -57,7 +57,7 @@ public class ConditionalFlowCtrl extends WithId implements IFlowCheck {
 		}
 
 		public Optional<Binding.Builder> getDefaultBinding() {
-			return bindings.stream().filter(b -> getActivators(b.getRules()).count() == 0).findAny();
+			return bindings.stream().filter(b -> getActivators(b.getRules()).findAny().isEmpty()).findAny();
 		}
 
 		public ConditionalFlowCtrl build() {

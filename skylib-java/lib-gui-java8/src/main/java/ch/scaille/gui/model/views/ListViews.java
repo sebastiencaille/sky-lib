@@ -23,23 +23,23 @@ import ch.scaille.gui.mvc.properties.ObjectProperty;
 
 public interface ListViews {
 
-	public static <U> IListView<U> sorted(final Comparator<U> comparator) {
+	static <U> IListView<U> sorted(final Comparator<U> comparator) {
 		return new ListView<>(comparator, null);
 	}
 
-	public static <U, V extends Comparable<V>> IListView<U> sorted(final Function<U, V> comparator) {
-		return new ListView<>((o1, o2) -> comparator.apply(o1).compareTo(comparator.apply(o2)), null);
+	static <U, V extends Comparable<V>> IListView<U> sorted(final Function<U, V> comparator) {
+		return new ListView<>(Comparator.comparing(comparator::apply), null);
 	}
 
-	public static <U extends Comparable<U>> IListView<U> sorted() {
-		return new ListView<>((u1, u2) -> u1.compareTo(u2), null);
+	static <U extends Comparable<U>> IListView<U> sorted() {
+		return new ListView<>(Comparator.naturalOrder(), (Predicate<U>) null);
 	}
 
-	public static <U> IListView<U> sortedFiltered(final Comparator<U> comparator, final Predicate<U> filter) {
+	static <U> IListView<U> sortedFiltered(final Comparator<U> comparator, final Predicate<U> filter) {
 		return new ListView<>(comparator, filter);
 	}
 
-	public static <U> IListView<U> filtered(final Predicate<U> filter) {
+	static <U> IListView<U> filtered(final Predicate<U> filter) {
 		return new ListView<>(null, filter);
 	}
 
@@ -49,11 +49,11 @@ public interface ListViews {
 	 * @param filter
 	 * @return
 	 */
-	public static <D, F extends Predicate<D>> Predicate<D> filter(final ObjectProperty<F> filter) {
+	static <D, F extends Predicate<D>> Predicate<D> filter(final ObjectProperty<F> filter) {
 		return new PropertyFilter<>(filter);
 	}
 
-	public static <U> IListView<U> inherited() {
+	static <U> IListView<U> inherited() {
 		return new ListView<>(null, null);
 	}
 

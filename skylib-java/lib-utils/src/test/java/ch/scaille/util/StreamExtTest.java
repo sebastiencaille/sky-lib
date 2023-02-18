@@ -58,7 +58,7 @@ class StreamExtTest {
 				.optionalOrThrow(WrongCountException::new);
 		assertFalse(zeroOrOne2.isPresent());
 
-		WrongCountException e = Assertions.assertThrows(WrongCountException.class, () -> testWith2Values());
+		WrongCountException e = Assertions.assertThrows(WrongCountException.class, this::testWith2Values);
 		assertEquals("Wrong count: 2", e.getMessage());
 	}
 

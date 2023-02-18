@@ -22,7 +22,7 @@ public class TestApi {
 
 		public final char cmd;
 
-		private Command(final char cmd) {
+		Command(final char cmd) {
 			this.cmd = cmd;
 		}
 

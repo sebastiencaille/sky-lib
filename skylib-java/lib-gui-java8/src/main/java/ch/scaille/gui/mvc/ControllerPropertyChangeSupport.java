@@ -90,7 +90,7 @@ public class ControllerPropertyChangeSupport {
 		if (info.size() > 5) {
 			final StringBuilder stack = new StringBuilder();
 			info.stream().forEach(i -> stack.append(i).append(";"));
-			throw new IllegalStateException(propertyName + " is already fired:" + stack.toString());
+			throw new IllegalStateException(propertyName + " is already fired:" + stack);
 		}
 		info.push(new CallInfo(caller, newValue));
 	}

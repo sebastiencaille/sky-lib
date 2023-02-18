@@ -90,7 +90,7 @@ public class FloatProperty extends AbstractTypedProperty<Float> {
 	@Override
 	public void attach() {
 		super.attach();
-		propertySupport.getMain().firePropertyChange(getName(), this, null, Float.valueOf(value));
+		propertySupport.getMain().firePropertyChange(getName(), this, null, value);
 	}
 
 	@Override

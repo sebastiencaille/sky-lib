@@ -53,7 +53,7 @@ public class ExampleHelper {
     }
 
     public TestDictionary generateDictionary() {
-        TestDictionary dictionary = new JavaToDictionary(CustomerTestRole.class, DeliveryTestRole.class).generate();
+        final var dictionary = new JavaToDictionary(CustomerTestRole.class, DeliveryTestRole.class).generate();
         dictionary.getMetadata().setDescription("Test dictionary");
         return dictionary;
     }

@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 
 public interface StreamExt {
 
-	public static class Single<T> {
+	class Single<T> {
 		private boolean allowZero = false;
 		private Optional<T> value = Optional.empty();
 		private int count;
@@ -94,7 +94,7 @@ public interface StreamExt {
 	 *
 	 * @return
 	 */
-	public static <E> Collector<E, ?, Single<E>> zeroOrOne() {
+	static <E> Collector<E, ?, Single<E>> zeroOrOne() {
 		return Collector.of(Single::zeroOrOne, Single::setValue, Single::combiner);
 	}
 
@@ -103,23 +103,23 @@ public interface StreamExt {
 	 *
 	 * @return
 	 */
-	public static <E> Collector<E, ?, Single<E>> single() {
+	static <E> Collector<E, ?, Single<E>> single() {
 		return Collector.of(Single::single, Single::setValue, Single::combiner);
 	}
 
-	public static <E> Collector<E, ?, Collection<E>> addTo(Collection<E> target) {
-		return Collector.of(() -> target, (t, v) -> t.add(v), (t, u) -> t);
+	static <E> Collector<E, ?, Collection<E>> addTo(Collection<E> target) {
+		return Collector.of(() -> target, Collection::add, (t, u) -> t);
 	}
 
-	public static <T> void throwIfContainsNull(final Stream<T> stream) {
+	static <T> void throwIfContainsNull(final Stream<T> stream) {
 		stream.filter(Objects::isNull).findAny().ifPresent(t -> new IllegalArgumentException("No null value allowed"));
 	}
 
-	public static <T> Predicate<T> notEq(final T val) {
+	static <T> Predicate<T> notEq(final T val) {
 		return v -> !Objects.equals(v, val);
 	}
 
-	public static void checkContent(final Stream<?> collection, final Class<?> clazz) {
+	static void checkContent(final Stream<?> collection, final Class<?> clazz) {
 		Set<?> mismatches = collection.filter(c -> !clazz.isInstance(c)).map(Object::getClass)
 				.collect(Collectors.toSet());
 		if (!mismatches.isEmpty()) {

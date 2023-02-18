@@ -196,7 +196,7 @@ public class TextFormatter<T extends TextFormatter<T, E>, E extends Exception> {
 		final StringBuilder b = new StringBuilder();
 		final String[] parts = s.split("_");
 		for (final String part : parts) {
-			b.append(Character.toString(Character.toUpperCase(part.charAt(0))));
+			b.append(Character.toUpperCase(part.charAt(0)));
 			b.append(part.substring(1));
 		}
 		return b.toString();

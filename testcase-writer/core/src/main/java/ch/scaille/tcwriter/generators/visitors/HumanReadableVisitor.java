@@ -88,7 +88,7 @@ public class HumanReadableVisitor {
 		}
 		optionals.append(")");
 		return summaryOf(parameterValue.getValueFactory(), mandatoryParams)
-				+ ((hasOptionals) ? " " + optionals.toString() : "");
+				+ ((hasOptionals) ? " " + optionals : "");
 	}
 
 	private String summaryOf(final IdObject idObject, final List<String> list) {

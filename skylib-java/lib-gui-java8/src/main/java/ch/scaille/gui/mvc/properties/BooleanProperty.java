@@ -83,7 +83,7 @@ public class BooleanProperty extends AbstractTypedProperty<Boolean> {
 
 	@Override
 	public Boolean getObjectValue() {
-		return Boolean.valueOf(getValue());
+		return getValue();
 	}
 
 	@Override
@@ -94,7 +94,7 @@ public class BooleanProperty extends AbstractTypedProperty<Boolean> {
 	@Override
 	public void attach() {
 		super.attach();
-		propertySupport.getMain().firePropertyChange(getName(), this, null, Boolean.valueOf(value));
+		propertySupport.getMain().firePropertyChange(getName(), this, null, value);
 	}
 
 }

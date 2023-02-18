@@ -16,6 +16,7 @@
 package ch.scaille.example.gui.controllermodel.impl;
 
 import java.awt.event.ActionListener;
+import java.util.Comparator;
 import java.util.logging.Logger;
 
 import ch.scaille.example.gui.TestObject;
@@ -27,7 +28,7 @@ import ch.scaille.util.helpers.Logs;
 public class TestObjectControllerModelController extends GuiController {
 
 	final ListModel<TestObject> model = new ListModel<>(
-			ListViews.sorted((o1, o2) -> o1.getASecondValue() - o2.getASecondValue()));
+			ListViews.sorted(Comparator.comparingInt(TestObject::getASecondValue)));
 	private final TestObjectControllerModelFrameModel tableModel;
 
 	public TestObjectControllerModelController() {

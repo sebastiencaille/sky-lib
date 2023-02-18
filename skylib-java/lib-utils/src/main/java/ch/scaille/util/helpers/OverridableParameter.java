@@ -5,7 +5,7 @@ import java.util.function.Function;
 
 public class OverridableParameter<S, T> {
 
-	private Function<S, T> defaultProvider;
+	private final Function<S, T> defaultProvider;
 
 	private S source;
 

@@ -34,20 +34,20 @@ import ch.scaille.util.helpers.JavaExt;
 
 public interface SwingHelper {
 
-	public static ImageIcon iconFromStream(final Supplier<InputStream> inSupplier) throws IOException {
+	static ImageIcon iconFromStream(final Supplier<InputStream> inSupplier) throws IOException {
 		try (InputStream in = inSupplier.get()) {
 			return iconFromStream(in);
 		}
 	}
 
-	public static ImageIcon iconFromStream(final InputStream in) throws IOException {
+	static ImageIcon iconFromStream(final InputStream in) throws IOException {
 		if (in == null) {
 			throw new IllegalArgumentException("Stream must not be null");
 		}		
 		return new ImageIcon(JavaExt.read(in));
 	}
 
-	public static IPropertyEventListener checkSwingThread() {
+	static IPropertyEventListener checkSwingThread() {
 		return (c, e) -> {
 			if (e.getKind() == EventKind.BEFORE && e.getProperty().getTransmitMode().toComponent
 					&& !EventQueue.isDispatchThread()) {
@@ -62,7 +62,7 @@ public interface SwingHelper {
 	 * @param consumer
 	 * @return
 	 */
-	public static ActionListener action(Consumer<ActionEvent> consumer) {
+	static ActionListener action(Consumer<ActionEvent> consumer) {
 		return consumer::accept;
 	}
 
@@ -72,14 +72,14 @@ public interface SwingHelper {
 	 * @param consumer
 	 * @return
 	 */
-	public static ActionListener action(Runnable runnable) {
+	static ActionListener action(Runnable runnable) {
 		return e -> runnable.run();
 	}
 
 	/*
 	 * Computes the length of a text
 	 */
-	public static int computeTextWidth(Component component, String text) {
+	static int computeTextWidth(Component component, String text) {
 		FontMetrics metrics = component.getFontMetrics(component.getFont());
 		return SwingUtilities.computeStringWidth(metrics, text);
 	}

@@ -10,7 +10,7 @@ import ch.scaille.dataflowmgr.model.Dictionary.Calls;
 
 public class CaseFlowCtrlToDictionary extends AbstractClassToDictionary {
 
-	Calls<CustomCall> calls = new Calls<>("condition", CustomCall::derivate);
+	final Calls<CustomCall> calls = new Calls<>("condition", CustomCall::derivate);
 
 	public void addToDictionary(Dictionary dictionary, Class<?> clazz) {
 		if (clazz.isAnnotationPresent(Conditions.class)) {

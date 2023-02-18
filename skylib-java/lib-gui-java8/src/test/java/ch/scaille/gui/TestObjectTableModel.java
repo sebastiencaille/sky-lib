@@ -7,7 +7,7 @@ import ch.scaille.gui.swing.model.ListModelTableModel;
 public class TestObjectTableModel extends ListModelTableModel<TestObject, Columns> {
 
 	public enum Columns {
-		VAL;
+		VAL
 	}
 
 	public TestObjectTableModel(final ListModel<TestObject> model) {

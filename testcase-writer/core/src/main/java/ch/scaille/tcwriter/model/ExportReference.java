@@ -25,10 +25,9 @@ public class ExportReference extends IdObject {
 		this.restoreAction = testCase -> restoreAction.accept(testCase, getId());
 	}
 
-	public boolean restore(final TestCase testCase) {
+	public void restore(final TestCase testCase) {
 		if (restoreAction != null) {
 			restoreAction.accept(testCase);
 		}
-		return restoreAction != null;
 	}
 }

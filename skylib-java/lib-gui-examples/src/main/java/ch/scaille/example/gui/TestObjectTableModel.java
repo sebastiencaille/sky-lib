@@ -42,7 +42,7 @@ public class TestObjectTableModel extends ListModelTableModel<TestObject, Column
 		case A_FIRST_VALUE:
 			return object.getAFirstValue();
 		case A_SECOND_VALUE:
-			return Integer.valueOf(object.getASecondValue());
+			return object.getASecondValue();
 		default:
 			throw new IllegalArgumentException("Unknown column " + column);
 		}

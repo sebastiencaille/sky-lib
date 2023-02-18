@@ -54,10 +54,9 @@ public class TestParameterValueTableModel extends
 
 		@Override
 		public boolean equals(final Object obj) {
-			if (!(obj instanceof ParameterValueEntry)) {
+			if (!(obj instanceof final ParameterValueEntry other)) {
 				return false;
 			}
-			final var other = (ParameterValueEntry) obj;
 			return mandatory == other.mandatory && Objects.equals(description, other.description);
 		}
 

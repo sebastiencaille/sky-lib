@@ -214,7 +214,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 		allEditedParameters.addValues(newValues);
 	}
 
-	public static final IConverter<Map<String, TestParameterValue>, Collection<ParameterValueEntry>> toListModel(
+	public static IConverter<Map<String, TestParameterValue>, Collection<ParameterValueEntry>> toListModel(
 			final ObjectProperty<TestCase> tc, final ObjectProperty<TestParameterValue> propertyValue) {
 
 		return new IConverter<>() {

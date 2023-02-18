@@ -31,29 +31,29 @@ import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
 @SuppressWarnings("java:S3011")
 public interface Persisters {
 
-	public static <T, A> IPersister<A> persister(final IObjectProvider<T> objectProvider,
+	static <T, A> IPersister<A> persister(final IObjectProvider<T> objectProvider,
 			final IPersisterFactory<T, A> persisterFactory) {
 		return new ObjectProviderPersister<>(objectProvider, persisterFactory);
 	}
 
-	public static <T> IObjectProvider<T> of(T object) {
+	static <T> IObjectProvider<T> of(T object) {
 		return () -> object;
 	}
 
-	public static <T, A> IPersisterFactory<T, A> getSet(final Function<T, A> getter, final BiConsumer<T, A> setter) {
+	static <T, A> IPersisterFactory<T, A> getSet(final Function<T, A> getter, final BiConsumer<T, A> setter) {
 		return new GetSetAccess<>(getter, setter);
 	}
 
-	public static <T, A> IPersisterFactory<T, A> attribute(AbstractAttributeMetaData<T> attribute) {
+	static <T, A> IPersisterFactory<T, A> attribute(AbstractAttributeMetaData<T> attribute) {
 		return new AttributeMetaDataAccess<>(attribute);
 	}
 
-	public static <T, A> IPersisterFactory<T, A> unsafeFieldAccess(final Field field) {
+	static <T, A> IPersisterFactory<T, A> unsafeFieldAccess(final Field field) {
 		field.setAccessible(true);
 		return new MethodHandlerAccess<>(field);
 	}
 
-	public static <T, A> IPersisterFactory<T, A> fieldAccess(final Field field) {
+	static <T, A> IPersisterFactory<T, A> fieldAccess(final Field field) {
 		return new MethodHandlerAccess<>(field);
 	}
 

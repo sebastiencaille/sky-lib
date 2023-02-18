@@ -8,8 +8,8 @@ import ch.scaille.tcwriter.model.TestObjectDescription;
 
 public class RecorderTestActors {
 
-	private static Map<Object, TestObjectDescription> descriptions = new HashMap<>();
-	private static Map<Object, String> names = new HashMap<>();
+	private static final Map<Object, TestObjectDescription> descriptions = new HashMap<>();
+	private static final Map<Object, String> names = new HashMap<>();
 
 	private RecorderTestActors() {
 	}
@@ -28,7 +28,7 @@ public class RecorderTestActors {
 		if (modelName != null) {
 			names.put(testActor, modelName);
 		}
-		if (description == null) {
+		if (description != null) {
 			descriptions.put(testActor, description);
 		}
 		return testActor;

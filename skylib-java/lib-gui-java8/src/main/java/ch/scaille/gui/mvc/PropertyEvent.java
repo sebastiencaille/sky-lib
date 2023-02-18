@@ -31,7 +31,7 @@ public class PropertyEvent {
 
 		private final int tableModelId;
 
-		private EventKind(final int tableModelId) {
+		EventKind(final int tableModelId) {
 			this.tableModelId = tableModelId;
 		}
 

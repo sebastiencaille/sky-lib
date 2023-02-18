@@ -3,10 +3,7 @@ package ch.scaille.tcwriter.gui.editors.steps;
 import static ch.scaille.gui.mvc.GuiModel.of;
 import static ch.scaille.gui.mvc.factories.BindingDependencies.preserveOnUpdateOf;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import ch.scaille.gui.mvc.GuiController;
 import ch.scaille.gui.mvc.IScopedSupport;
@@ -132,7 +129,7 @@ public class StepEditorController extends GuiController {
 
 	public static <T extends NamedObject> List<T> sorted(final Collection<T> original) {
 		final var sorted = new ArrayList<>(original);
-		sorted.sort((n1, n2) -> n1.getName().compareTo(n2.getName()));
+		sorted.sort(Comparator.comparing(NamedObject::getName));
 		return sorted;
 	}
 

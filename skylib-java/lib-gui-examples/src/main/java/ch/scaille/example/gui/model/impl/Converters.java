@@ -23,7 +23,7 @@ import ch.scaille.gui.mvc.converters.IConverter;
 
 public interface Converters {
 
-	public static IConverter<Boolean, IListView<TestObject>> booleanToOrder() {
+	static IConverter<Boolean, IListView<TestObject>> booleanToOrder() {
 		return ch.scaille.gui.mvc.factories.Converters.<IListView<TestObject>>either(
 				() -> sorted(TableModelExampleView.NATURAL_ORDER), () -> sorted(TableModelExampleView.REVERSE_ORDER));
 	}

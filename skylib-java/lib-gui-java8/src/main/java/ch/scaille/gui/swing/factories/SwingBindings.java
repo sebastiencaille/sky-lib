@@ -145,7 +145,7 @@ public class SwingBindings {
 			if (activator.test(event)) {
 				link.setValueFromComponent(component, valueExtractor.apply(event));
 			}
-		}, (c, l) -> c.addItemListener(l), (c, l) -> c.removeItemListener(l));
+		}, ItemSelectable::addItemListener, ItemSelectable::removeItemListener);
 	}
 
 	public static IComponentBinding<Boolean> selected(final JCheckBox cb) {

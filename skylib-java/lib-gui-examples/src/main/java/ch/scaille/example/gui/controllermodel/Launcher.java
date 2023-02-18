@@ -22,7 +22,7 @@ import ch.scaille.example.gui.controllermodel.impl.TestObjectControllerModelFram
 
 public interface Launcher {
 
-	public static void main(final String[] args) {
+	static void main(final String[] args) {
 		EventQueue.invokeLater(() -> new TestObjectControllerModelFrameView(new TestObjectControllerModelController())
 				.setVisible(true));
 	}

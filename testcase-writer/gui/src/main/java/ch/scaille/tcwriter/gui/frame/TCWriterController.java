@@ -60,9 +60,9 @@ public class TCWriterController extends GuiController {
 		gui = new TCWriterGui(this);
 		testRemoteControl = new TestRemoteControl(9998,
 				r -> SwingUtilities.invokeLater(() -> model.getExecutionState().setValue(this,
-						r.booleanValue() ? TestExecutionState.RUNNING : TestExecutionState.STOPPED)),
+                        r ? TestExecutionState.RUNNING : TestExecutionState.STOPPED)),
 				p -> SwingUtilities.invokeLater(() -> model.getExecutionState().setValue(this,
-						p.booleanValue() ? TestExecutionState.PAUSED : TestExecutionState.RUNNING)));
+                        p ? TestExecutionState.PAUSED : TestExecutionState.RUNNING)));
 	}
 
 	public void run() {

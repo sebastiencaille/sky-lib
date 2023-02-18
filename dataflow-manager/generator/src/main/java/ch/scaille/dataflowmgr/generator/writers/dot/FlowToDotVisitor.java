@@ -75,7 +75,7 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 		final Set<String> expected = new HashSet<>();
 	}
 
-	private FlowGeneratorVisitor<String> flowGeneratorVisitor = new FlowGeneratorVisitor<>();
+	private final FlowGeneratorVisitor<String> flowGeneratorVisitor = new FlowGeneratorVisitor<>();
 
 	public FlowToDotVisitor(final Flow flow) {
 		super(flow);

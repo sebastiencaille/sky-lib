@@ -18,6 +18,7 @@ package ch.scaille.gui.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 import javax.swing.JTable;
 
@@ -32,10 +33,10 @@ import ch.scaille.gui.swing.model.ListModelTableModel;
 
 class ListModelBasicTest {
 
-	private static final IListView<TestObject> VIEW = ListViews.sorted((o1, o2) -> o1.getVal() - o2.getVal());
+	private static final IListView<TestObject> VIEW = ListViews.sorted(Comparator.comparingInt(TestObject::getVal));
 	static final IListView<TestObject> REVERTED_VIEW = ListViews.sorted((o1, o2) -> o2.getVal() - o1.getVal());
 
-	private final class EventsCounting implements IListModelListener<TestObject> {
+	private static final class EventsCounting implements IListModelListener<TestObject> {
 		int editionStartedEvent = 0;
 		int editionStoppingEvent = 0;
 		int editionStoppedEvent = 0;

@@ -8,9 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ch.scaille.tcwriter.model.persistence.FsTCConfig;
 import org.springframework.beans.factory.annotation.Value;
 
-import ch.scaille.tcwriter.generators.TCConfig;
 import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.persistence.FsModelDao;
@@ -29,7 +29,7 @@ public class TestCaseFsDao implements TestCaseDao {
 
 	@PostConstruct
 	private void created() {
-		final var config = new TCConfig();
+		final var config = new FsTCConfig();
 		config.setName("server");
 		config.setBase(dataFolder);
 		modelDao = new FsModelDao(config);

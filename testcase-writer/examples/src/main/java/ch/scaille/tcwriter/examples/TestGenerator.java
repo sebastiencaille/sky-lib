@@ -9,14 +9,14 @@ import ch.scaille.tcwriter.model.TestCaseException;
 
 public class TestGenerator {
 
-	public static void main(String[] args) throws IOException, TestCaseException {
+    public static void main(String[] args) throws IOException, TestCaseException {
+        final var exampleHelper = new ExampleHelper();
+        final var model = exampleHelper.generateDictionary();
+        final var testCase = exampleHelper.recordTestCase(model);
 
-		final var model = ExampleHelper.generateDictionary();
-		final var testCase = ExampleHelper.recordTestCase(model);
-
-		ExampleHelper.getModelDao().writeTestDictionary(model);
-		ExampleHelper.getModelDao().writeTestCase(ExampleHelper.TC_NAME, testCase);
-		new TestCaseToJava(ExampleHelper.getModelDao()).generate(testCase)
-				.writeTo(uncheckF(ExampleHelper.getModelDao()::exportTestCase));
-	}
+        final var modelDao = exampleHelper.getModelDao();
+        modelDao.writeTestDictionary(model);
+        modelDao.writeTestCase(ExampleHelper.TC_NAME, testCase);
+        new TestCaseToJava(modelDao).generate(testCase).writeTo(uncheckF(modelDao::exportTestCase));
+    }
 }

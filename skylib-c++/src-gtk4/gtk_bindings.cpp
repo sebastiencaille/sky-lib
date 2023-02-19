@@ -75,9 +75,11 @@ DESTR_WITH_LOG("~label_binding")
 
 void label_binding::add_component_value_change_listener(
 		weak_ptr<component_link<Glib::ustring>> _componentLink) {
+    // label is read-only
 }
 
 void label_binding::remove_component_value_change_listener() {
+	// label is read-only
 }
 
 void label_binding::set_component_value(property &_source,

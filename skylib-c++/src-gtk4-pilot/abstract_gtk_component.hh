@@ -29,7 +29,7 @@ protected:
 
 public:
 	abstract_gtk_component(gtk_gui_pilot* _gui_pilot, const string &_name);
-	virtual ~abstract_gtk_component();
+	~abstract_gtk_component() override;
 
 	bool executePolling(polling &_polling) override;
 };

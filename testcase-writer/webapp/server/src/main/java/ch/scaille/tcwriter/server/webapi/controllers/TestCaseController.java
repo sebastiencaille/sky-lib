@@ -2,7 +2,6 @@ package ch.scaille.tcwriter.server.webapi.controllers;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +43,7 @@ public class TestCaseController extends TestcaseApiController {
 			return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK);
 		}
 		return new ResponseEntity<>(testCaseDao.listAll(dictionaryDao.load(currentDictionary)).stream()
-				.map(MetadataMapper.MAPPER::convert).collect(Collectors.toList()), HttpStatus.OK);
+				.map(MetadataMapper.MAPPER::convert).toList(), HttpStatus.OK);
 	}
 
 	@Override

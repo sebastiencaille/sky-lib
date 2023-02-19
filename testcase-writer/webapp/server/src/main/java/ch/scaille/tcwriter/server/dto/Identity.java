@@ -21,7 +21,7 @@ public class Identity {
 
 	@Override
 	public boolean equals(Object obj) {
-		return (obj instanceof Identity && id.equals(((Identity) obj).id));
+		return obj instanceof Identity identity && id.equals(identity.id);
 	}
 
 	public static Identity of(HttpServletRequest request) {

@@ -34,7 +34,7 @@ public class StepsTable extends JPanel {
 	public StepsTable(final TCWriterController controller) {
 		final var model = controller.getModel();
 
-		final var steps = new ListModel<TestStep>(ListViews.sorted(Comparator.comparingInt(TestStep::getOrdinal)));
+		final var steps = new ListModel<>(ListViews.sorted(Comparator.comparingInt(TestStep::getOrdinal)));
 
 		setLayout(new BorderLayout());
 		stepsTableModel = new StepsTableModel(model.getTestCase(), steps, controller.getTestRemoteControl());

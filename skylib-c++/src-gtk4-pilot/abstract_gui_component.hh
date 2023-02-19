@@ -21,7 +21,7 @@ private:
 	function<bool ()> m_pollingFunction;
 
 public:
-	polling(function<bool ()> _pollingFunction):m_pollingFunction(_pollingFunction) {
+	explicit polling(function<bool ()> _pollingFunction):m_pollingFunction(_pollingFunction) {
 	}
 
 	virtual ~polling() = default;

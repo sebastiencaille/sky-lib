@@ -253,7 +253,7 @@ public:
 			return;
 		}
 		try {
-			to_component(0, *(_Pt*) _new_value);
+			to_component(0, *(const _Pt*) _new_value);
 		} catch (const gui_exception &_e) {
 			m_errorNotifier->set_error(_property, _e);
 		}

@@ -25,9 +25,6 @@ class DictionarySelector extends React.Component<IMetadataChooserProps, IMetadat
 		this.select = this.select.bind(this);
 	}
 
-	componentDidMount() {
-	}
-
 	componentDidUpdate(prevProps: Readonly<IMetadataChooserProps>, prevState: Readonly<IMetadataChooserState>, snapshot?: any): void {
 		let current: Metadata | undefined = undefined;
 		if (this.props.currentChoice) {

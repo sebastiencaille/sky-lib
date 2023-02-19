@@ -36,7 +36,7 @@ class int_to_string: public binding_converter<int, string> {
 public:
 	int_to_string();
 
-	~int_to_string();
+	~int_to_string() override;
 
 	int convert_component_value_to_property_value(
 			const string _componentValue) override;

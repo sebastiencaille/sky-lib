@@ -329,7 +329,7 @@ private:
 
 public:
 
-	list_model(view_ptr _view) :
+	explicit list_model(view_ptr _view) :
 			m_viewProperty("View", m_propertyManager, view_ptr()), m_privateListenersImpl(
 					this) {
 		m_tunings = make_ptr(new object_tunings());
@@ -339,7 +339,7 @@ public:
 		set_view(_view);
 	}
 
-	list_model(shared_ptr<model_type> _source) :
+	explicit list_model(shared_ptr<model_type> _source) :
 			m_source(_source), m_viewProperty("View", m_propertyManager, NULL), m_privateListenersImpl(
 					this), m_tunings(_source.m_tunings) {
 		attach_to_source();
@@ -691,8 +691,8 @@ public:
 
 	int find_or_create(value_type _sample) {
 		value_type *found;
-		int row = find(_sample, found);
-		if (row < 0) {
+
+		if (find(_sample, found) < 0) {
 			insert(_sample);
 			*found = _sample;
 		}

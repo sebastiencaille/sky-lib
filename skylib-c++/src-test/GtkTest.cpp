@@ -60,7 +60,7 @@ private:
 		void propertyChanged(source_ptr _source, const string_view &_name,
 				const void *_oldValue, const void *_newValue) const {
 			cout << " TestStringPropertyListener fired: "
-					<< *(string*) _oldValue << " -> " << *(string*) _newValue
+					<< *(const string*) _oldValue << " -> " << *(const string*) _newValue
 					<< endl;
 		}
 
@@ -74,7 +74,7 @@ private:
 
 	public:
 		dep_test() = default;
-		~dep_test() DESTR_WITH_LOG("~dep_test")
+		~dep_test() override DESTR_WITH_LOG("~dep_test")
 
 		void register_dep(weak_ptr<binding_chain_controller> _controller,
 				weak_ptr<binding_chain_dependency> _myself) final {
@@ -86,7 +86,7 @@ private:
 			m_controller.lock()->get_property().add_listener(listener);
 		}
 
-		void unbind() {
+		void unbind() const {
 			if (auto lock = m_listener.lock()) {
 				m_controller.lock()->get_property().remove_listener(m_listener);
 			}
@@ -100,12 +100,12 @@ private:
 public:
 	GtkTest();
 
-	~GtkTest() final;
+	~GtkTest() override;
 
 	void testGui();
 
 	void apply_action(property_group_actions _action,
-			const property *_property);
+			const property *_property) const;
 
 private:
 
@@ -197,12 +197,12 @@ void GtkTest::testGui() {
 GtkTest::~GtkTest() DESTR_WITH_LOG("~GtkTest" << endl)
 
 void GtkTest::apply_action(property_group_actions _action,
-		const property *_property) {
+		const property *_property) const {
 	switch (_action) {
-	case BEFORE_FIRE:
+	case property_group_actions::BEFORE_FIRE:
 		cout << "BEFORE: " << _property->name() << endl;
 		break;
-	case AFTER_FIRE:
+	case property_group_actions::AFTER_FIRE:
 		cout << "AFTER: " << _property->name() << endl;
 		break;
 	default:

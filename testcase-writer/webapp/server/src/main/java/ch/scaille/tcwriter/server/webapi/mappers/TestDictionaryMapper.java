@@ -2,7 +2,6 @@ package ch.scaille.tcwriter.server.webapi.mappers;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -29,7 +28,7 @@ public interface TestDictionaryMapper {
 	TestDictionary convert(ch.scaille.tcwriter.model.dictionary.TestDictionary model);
 
 	default List<TestRole> convertRoleList(Map<String, ch.scaille.tcwriter.model.dictionary.TestRole> model) {
-		return model.values().stream().map(this::convert).collect(Collectors.toList());
+		return model.values().stream().map(this::convert).toList();
 	}
 
 	TestRole convert(ch.scaille.tcwriter.model.dictionary.TestRole model);
@@ -43,14 +42,14 @@ public interface TestDictionaryMapper {
 	}
 	
 	default List<TestActor> convertActorsList(Map<String, ch.scaille.tcwriter.model.dictionary.TestActor> model) {
-		return model.values().stream().map(this::convert).collect(Collectors.toList());
+		return model.values().stream().map(this::convert).toList();
 	}
 
 	TestActor convert(ch.scaille.tcwriter.model.dictionary.TestActor model);
 
 	default List<TestParameterFactory> convertTestParameterFactoryList(
 			Multimap<String, ch.scaille.tcwriter.model.dictionary.TestParameterFactory> model) {
-		return model.values().stream().map(this::convert).collect(Collectors.toList());
+		return model.values().stream().map(this::convert).toList();
 	}
 	
 	TestParameterFactory convert(ch.scaille.tcwriter.model.dictionary.TestParameterFactory model);

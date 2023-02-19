@@ -143,7 +143,7 @@ public:
 
 /** Actions */
 
-enum property_group_actions {
+enum class property_group_actions {
 	BEFORE_FIRE, AFTER_FIRE
 };
 
@@ -166,11 +166,11 @@ private:
 			void(property_group_actions _action, const property *_property)> m_action;
 
 	void action_before(const source_ptr caller, property *_property) {
-		m_action(BEFORE_FIRE, _property);
+		m_action(property_group_actions::BEFORE_FIRE, _property);
 	}
 
 	void action_after(const source_ptr caller, property *_property) {
-		m_action(AFTER_FIRE, _property);
+		m_action(property_group_actions::AFTER_FIRE, _property);
 	}
 
 public:

@@ -1,7 +1,6 @@
 package ch.scaille.tcwriter.server.webapi.mappers;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -34,7 +33,7 @@ public interface TestCaseMapper {
 	TestCase convert(ch.scaille.tcwriter.model.testcase.ExportableTestCase model);
 
 	default List<TestStep> convertExportableSteps(List<ch.scaille.tcwriter.model.testcase.TestStep> model) {
-		return model.stream().map(ExportableTestStep.class::cast).map(MAPPER::convert).collect(Collectors.toList());
+		return model.stream().map(ExportableTestStep.class::cast).map(MAPPER::convert).toList();
 	}
 
 	@Mapping(target = "humanReadable", ignore = true)
@@ -43,7 +42,7 @@ public interface TestCaseMapper {
 	default List<TestParameterValue> convertExportableTestParameterValue(
 			List<ch.scaille.tcwriter.model.testcase.TestParameterValue> model) {
 		return model.stream().map(ExportableTestParameterValue.class::cast).map(MAPPER::convert)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	default TestParameterValue convert(ch.scaille.tcwriter.model.testcase.TestParameterValue model) {

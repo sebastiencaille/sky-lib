@@ -1,7 +1,6 @@
 package ch.scaille.tcwriter.server.webapi.controllers;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +29,7 @@ public class DictionaryController extends DictionaryApiController {
 	@Override
 	public ResponseEntity<List<Metadata>> listAll() {
 		return new ResponseEntity<>(
-				dictionaryDao.listAll().stream().map(MetadataMapper.MAPPER::convert).collect(Collectors.toList()),
+				dictionaryDao.listAll().stream().map(MetadataMapper.MAPPER::convert).toList(),
 				HttpStatus.OK);
 	}
 

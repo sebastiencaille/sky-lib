@@ -19,11 +19,11 @@ gtk_entry_pilot::gtk_entry_pilot(gtk_gui_pilot* _gui_pilot, const string& _name)
 
 void gtk_entry_pilot::set_text(string text) {
 	polling set_text([&text, this]() {
-		if (m_entry == NULL) {
+		if (m_entry == nullptr) {
 			Gtk::Widget* found = m_gui_pilot->find_widget(m_name);
 			m_entry = dynamic_cast<Gtk::Entry*>(found);
 		}
-		if (m_entry == NULL) {
+		if (m_entry == nullptr) {
 			return false;
 		}
 		if (!isEditable(m_entry)) {
@@ -33,13 +33,11 @@ void gtk_entry_pilot::set_text(string text) {
 
 		return true;
 	});
-	wait(set_text, std::chrono::seconds(30), [](polling &p) {
+	wait(set_text, std::chrono::seconds(30), [](const polling &p) {
 		throw string("setText failed");
 	});
 }
 
-gtk_entry_pilot::~gtk_entry_pilot() {
-	// TODO Auto-generated destructor stub
-}
+gtk_entry_pilot::~gtk_entry_pilot() = default;
 
 }

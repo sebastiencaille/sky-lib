@@ -15,8 +15,6 @@ public interface IModelDao {
 	
 	Object getConfiguration();
 	
-	IModelDao loadConfiguration(String identifier) throws IOException;
-
 	void saveConfiguration() throws IOException;
 
 	Template readTemplate() throws IOException;
@@ -26,11 +24,9 @@ public interface IModelDao {
 	
 	List<Metadata> listDictionaries() throws IOException;
 	
-	TestDictionary readTestDictionary() throws IOException;
+	TestDictionary readTestDictionary(String dictionaryName) throws IOException;
 
 	void writeTestDictionary(TestDictionary testDictionary) throws IOException;
-
-	TestDictionary readTestDictionary(String dictionaryName) throws IOException;
 
 	void writeTestDictionary(Path path, TestDictionary testDictionary) throws IOException;
 

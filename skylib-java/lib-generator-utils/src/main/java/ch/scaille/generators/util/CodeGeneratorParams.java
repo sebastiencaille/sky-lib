@@ -41,6 +41,11 @@ public class CodeGeneratorParams {
 		return namespaceFilter;
 	}
 
+	/**
+	 * Gets the folder of a class
+	 * @param clazz
+	 * @return
+	 */
     public static Path mavenTarget(Class<?> clazz) {
          return Paths.get(JavaExt.pathOf(clazz.getProtectionDomain().getCodeSource().getLocation())).resolve("..");
     }

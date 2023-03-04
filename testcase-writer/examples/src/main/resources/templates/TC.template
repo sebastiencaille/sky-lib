@@ -18,8 +18,6 @@ class ${testName} {
 		final ExampleService testedService = new ExampleService();
 		customer = RecorderTestActors.register(new CustomerTestRole(testedService), "customer", null);
 		deliveryGuy = RecorderTestActors.register(new DeliveryTestRole(testedService), "deliveryGuy", null);
-		ch.scaille.tcwriter.TestFeature.aspectjRecorder().enable();
-		ch.scaille.tcwriter.TestFeature.aspectjStepping(); // don't enable by default
 	}
 	
 	@Test

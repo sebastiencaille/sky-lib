@@ -8,11 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ch.scaille.tcwriter.model.persistence.FsTCConfig;
 import org.springframework.beans.factory.annotation.Value;
 
 import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
+import ch.scaille.tcwriter.model.persistence.FsModelConfig;
 import ch.scaille.tcwriter.model.persistence.FsModelDao;
 import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
 import ch.scaille.util.exceptions.StorageRTException;
@@ -29,7 +29,7 @@ public class TestCaseFsDao implements TestCaseDao {
 
 	@PostConstruct
 	private void created() {
-		final var config = new FsTCConfig();
+		final var config = new FsModelConfig();
 		config.setName("server");
 		config.setBase(dataFolder);
 		modelDao = new FsModelDao(config);

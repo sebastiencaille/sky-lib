@@ -42,7 +42,7 @@
 					<arguments>
 						<argument>-classpath</argument>
 						<classpath />
-						<argument>ch.scaille.tcwriter.examples.TestGenerator</argument>
+						<argument>ch.scaille.tcwriter.examples.JavaTestGenerator</argument>
 					</arguments>
 				</configuration>
 			</plugin>

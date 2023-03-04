@@ -4,11 +4,9 @@ import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.scaille.tcwriter.model.TestObjectDescription;
-
 public class RecorderTestActors {
 
-	private static final Map<Object, TestObjectDescription> descriptions = new HashMap<>();
+	private static final Map<Object, String> descriptions = new HashMap<>();
 	private static final Map<Object, String> names = new HashMap<>();
 
 	private RecorderTestActors() {
@@ -16,12 +14,11 @@ public class RecorderTestActors {
 
 	/**
 	 *
-	 * @param testActor   the actor
-	 * @param modelName   the name of the actor in the model (optional)
+	 * @param testActor   the actor, which must be the instance used during the test
+	 * @param modelName   the name of the actor
 	 * @param description a description
 	 */
-	public static <T> T register(final T testActor, final String modelName,
-			final TestObjectDescription description) {
+	public static <T> T register(final T testActor, final String modelName, final String description) {
 		if (modelName == null && description == null) {
 			throw new InvalidParameterException("Either modelName or description must be provided");
 		}
@@ -38,7 +35,7 @@ public class RecorderTestActors {
 		return names;
 	}
 
-	public static Map<Object, TestObjectDescription> getDescriptions() {
+	public static Map<Object, String> getDescriptions() {
 		return descriptions;
 	}
 

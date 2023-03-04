@@ -3,9 +3,16 @@ package ch.scaille.tcwriter.model.persistence;
 import ch.scaille.annotations.Labeled;
 import ch.scaille.annotations.Ordered;
 
-public class FsTCConfig {
+/**
+ * File based configuration
+ * @author scaille
+ *
+ */
+public class FsModelConfig {
 
-    private String name = "default";
+	public static final String DEFAULT = "default";
+	
+    private String name = DEFAULT;
 
     private String dictionaryPath;
 
@@ -22,7 +29,7 @@ public class FsTCConfig {
         tcExportPath = base + "/exported";
     }
 
-    public FsTCConfig() {
+    public FsModelConfig() {
         setBase("${user.home}/.tcwriter/" + name);
     }
 
@@ -37,7 +44,7 @@ public class FsTCConfig {
     }
 
     @Ordered(order = 2)
-    @Labeled(label = "Location of the model")
+    @Labeled(label = "Location of the models")
     public String getDictionaryPath() {
         return dictionaryPath;
     }

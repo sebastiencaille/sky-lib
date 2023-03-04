@@ -7,7 +7,7 @@ import java.io.IOException;
 import ch.scaille.tcwriter.generators.TestCaseToJava;
 import ch.scaille.tcwriter.model.TestCaseException;
 
-public class TestGenerator {
+public class JavaTestGenerator {
 
     public static void main(String[] args) throws IOException, TestCaseException {
         final var exampleHelper = new ExampleHelper();

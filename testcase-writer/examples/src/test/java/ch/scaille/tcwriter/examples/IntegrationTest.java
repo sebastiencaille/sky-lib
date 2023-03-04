@@ -10,11 +10,17 @@ import org.junit.jupiter.api.Test;
 class IntegrationTest {
 
     @Test
-    void recordTest() throws IOException {
+    void recordAndGenerateTest() throws IOException {
         final var exampleHelper = new ExampleHelper();
         final var model = exampleHelper.generateDictionary();
+        
+        // Record test
         final var testCase = exampleHelper.recordTestCase(model);
         assertNotEquals(0, testCase.getSteps().size());
+        
+        final var modelDao = exampleHelper.getModelDao();
+        modelDao.writeTestDictionary(model);
+        modelDao.writeTestCase(ExampleHelper.TC_NAME, testCase);
     }
 
     @Test

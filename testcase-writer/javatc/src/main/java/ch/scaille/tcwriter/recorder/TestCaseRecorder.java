@@ -3,7 +3,6 @@ package ch.scaille.tcwriter.recorder;
 import static ch.scaille.tcwriter.model.dictionary.TestParameterFactory.simpleType;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -19,7 +18,6 @@ import ch.scaille.tcwriter.model.dictionary.TestActor;
 import ch.scaille.tcwriter.model.dictionary.TestApiParameter;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory.ParameterNature;
-import ch.scaille.tcwriter.model.persistence.FsModelDao;
 import ch.scaille.tcwriter.model.persistence.IModelDao;
 import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
 import ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue;
@@ -33,7 +31,7 @@ public class TestCaseRecorder implements ITestCaseRecorder {
 
 	private static int actorIndex = 0;
 
-	private final TestDictionary testDictionary;
+	private final TestDictionary tcDictionary;
 
 	private final List<TestStep> testSteps = new ArrayList<>();
 	private final Map<Object, TestParameterValue> testParameterValues = new HashMap<>();
@@ -42,14 +40,19 @@ public class TestCaseRecorder implements ITestCaseRecorder {
 
 	private final IModelDao modelDao;
 
-	public TestCaseRecorder(final IModelDao modelDao) throws IOException {
+	/**
+	 * Creates a recorder
+	 * @param modelDao
+	 * @throws IOException
+	 */
+	public TestCaseRecorder(final IModelDao modelDao, String tcDictionary) throws IOException {
 		this.modelDao = modelDao;
-		this.testDictionary = modelDao.readTestDictionary();
+		this.tcDictionary = modelDao.readTestDictionary(tcDictionary);
 	}
 
-	public TestCaseRecorder(final IModelDao modelDao, final TestDictionary model) {
+	public TestCaseRecorder(final IModelDao modelDao, final TestDictionary tcDictionary) {
 		this.modelDao = modelDao;
-		this.testDictionary = model;
+		this.tcDictionary = tcDictionary;
 	}
 
 	private static void resetActorIndex() {
@@ -77,7 +80,7 @@ public class TestCaseRecorder implements ITestCaseRecorder {
 	public TestActor recordActor(final Object actor) {
 		final var roleType = actor.getClass();
 		final var testActor = new TestActor(nextActorIndex() + "_" + roleType.getSimpleName(), roleType.getSimpleName(),
-				testDictionary.getRole(roleType));
+				tcDictionary.getRole(roleType));
 		actors.put(actor, testActor);
 		return testActor;
 	}
@@ -90,7 +93,7 @@ public class TestCaseRecorder implements ITestCaseRecorder {
 		TestActor actor = null;
 		final var actorName = RecorderTestActors.getNames().get(recordedActor);
 		if (actorName != null) {
-			actor = testDictionary.getActors().get(actorName);
+			actor = tcDictionary.getActors().get(actorName);
 		}
 		if (actor == null) {
 			actor = actors.get(recordedActor);
@@ -128,7 +131,7 @@ public class TestCaseRecorder implements ITestCaseRecorder {
 	@Override
 	public void recordParamFactory(final Class<?> apiFactoryClass, final String apiName, final Object[] apiArgs,
 			final Object returnValue) {
-		final var testParameterFactory = testDictionary
+		final var testParameterFactory = tcDictionary
 				.getTestParameterFactory(Helper.methodKey(apiFactoryClass, apiName));
 		final var testParameterValue = new ExportableTestParameterValue("<PlaceHolder>", testParameterFactory);
 		for (int i = 0; i < testParameterFactory.getMandatoryParameters().size(); i++) {
@@ -193,12 +196,16 @@ public class TestCaseRecorder implements ITestCaseRecorder {
 		return Object.class;
 	}
 
+	@Override
 	public TestCase getTestCase(final String testClassName) {
-		final var testCase = new ExportableTestCase(testClassName, testDictionary);
-		testCase.getMetadata().setDescription(testClassName + ": execution of "
-				+ DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss").format(LocalDateTime.now()));
-		actors.forEach((a, ta) -> testDictionary.addActor(ta, RecorderTestActors.getDescriptions().getOrDefault(a,
-				new TestObjectDescription(ta.getId(), ta.getId()))));
+		final var testCase = new ExportableTestCase(testClassName, tcDictionary);
+		testCase.getMetadata().setDescription(String.format("%s: execution at %s", testClassName,
+				DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss").format(LocalDateTime.now())));
+
+		actors.forEach((a, ta) -> {
+			var description = RecorderTestActors.getDescriptions().getOrDefault(ta.getId(), ta.getId());
+			tcDictionary.addActor(ta, new TestObjectDescription(description, description));
+		});
 		testCase.getSteps().addAll(testSteps);
 		testParameterValues.values().stream().map(TestParameterValue::getValueFactory)
 				.filter(t -> t.getNature() == ParameterNature.REFERENCE)
@@ -208,7 +215,7 @@ public class TestCaseRecorder implements ITestCaseRecorder {
 	}
 
 	@Override
-	public void save(final Path testRoot, final String testClassName) throws IOException {
-		modelDao.writeTestCase(FsModelDao.classFile(testRoot, testClassName).toString(), getTestCase(testClassName));
+	public void save(final String testClassName) throws IOException {
+		modelDao.writeTestCase(testClassName, getTestCase(testClassName));
 	}
 }

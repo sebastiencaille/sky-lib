@@ -20,7 +20,10 @@ public class TestCaseToJava {
 		@Parameter(names = { "-c" }, description = "Name of configuration")
 		public String configuration;
 
-		@Parameter(names = { "-tc" }, description = "Name of test case")
+		@Parameter(names = { "-td" }, description = "Name of test case dictionary")
+		public String tcDictionary = "default";
+		
+		@Parameter(names = { "-tc" }, required = true, description = "Name of test case")
 		public String testCase;
 	}
 
@@ -37,11 +40,8 @@ public class TestCaseToJava {
 	public static void main(String[] args) throws IOException, TestCaseException {
 		var mainArgs = new Args();
 		JCommander.newBuilder().addObject(mainArgs).build().parse(args);
-		var modelDao = FsModelDao.withDefaultConfig();
-		if (mainArgs.configuration != null) {
-			modelDao.loadConfiguration(mainArgs.configuration);
-		}
-		var testDictionary = modelDao.readTestDictionary();
+		var modelDao = new FsModelDao(FsModelDao.loadConfiguration(mainArgs.configuration));
+		var testDictionary = modelDao.readTestDictionary(mainArgs.tcDictionary);
 		var jsonTC = mainArgs.testCase;
 		var testcase = modelDao.readTestCase(jsonTC, testDictionary);
 		new TestCaseToJava(modelDao).generate(testcase).writeTo(uncheckF(modelDao::exportTestCase));

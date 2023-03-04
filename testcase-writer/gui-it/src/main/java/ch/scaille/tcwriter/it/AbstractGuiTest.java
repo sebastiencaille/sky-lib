@@ -6,7 +6,6 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.SwingUtilities;
 
-import ch.scaille.tcwriter.model.persistence.FsTCConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -16,6 +15,7 @@ import ch.scaille.tcwriter.generators.JavaToDictionary;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.tcwriter.it.api.TestSessionRole;
 import ch.scaille.tcwriter.it.api.TestWriterRole;
+import ch.scaille.tcwriter.model.persistence.FsModelConfig;
 import ch.scaille.tcwriter.model.persistence.FsModelDao;
 import ch.scaille.util.helpers.ClassLoaderHelper;
 import ch.scaille.util.helpers.Logs;
@@ -31,7 +31,7 @@ public class AbstractGuiTest {
 
 	@BeforeEach
 	public void startGui() throws IOException, InvocationTargetException, InterruptedException {
-		final var config = new FsTCConfig();
+		final var config = new FsModelConfig();
 		final var tcPath = new File(RESOURCE_FOLDER, "testCase");
 		tcPath.mkdirs();
 		final var modelPath = new File(RESOURCE_FOLDER, "models");
@@ -44,13 +44,13 @@ public class AbstractGuiTest {
 
 		final var persister = new FsModelDao(config);
 
-		final var model = new JavaToDictionary(TestWriterRole.class, TestSessionRole.class, AbstractGuiTest.class)
+		final var dictionary = new JavaToDictionary(TestWriterRole.class, TestSessionRole.class, AbstractGuiTest.class)
 				.generate();
-		persister.writeTestDictionary(model);
+		persister.writeTestDictionary(dictionary);
 
 		final var executor = new JunitTestExecutor(persister, ClassLoaderHelper.appClassPath());
 
-		final var controller = new TCWriterController(persister, executor);
+		final var controller = new TCWriterController(persister, dictionary, executor);
 		SwingUtilities.invokeAndWait(controller::run);
 
 		pilot = new TCGuiPilot(controller.getGui());

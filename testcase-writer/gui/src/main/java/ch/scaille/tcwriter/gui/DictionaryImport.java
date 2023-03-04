@@ -76,7 +76,7 @@ public class DictionaryImport extends JDialog {
 			setLocationRelativeTo(parentFrame);
 			setVisible(true);
 		} else {
-			setVisible(false);
+			System.exit(1);
 		}
 		return imported;
 	}

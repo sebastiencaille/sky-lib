@@ -15,9 +15,10 @@ import ch.scaille.tcwriter.model.persistence.FsModelDao;
 import ch.scaille.util.helpers.ClassFinder;
 
 public class JavaToDictionary extends AbstractGenerator<TestDictionary> {
+	
 	public static class Args {
 		@Parameter(names = { "-c" }, description = "Name of configuration")
-		public String configuration;
+		public String configuration = "default";
 
 		@Parameter(names = { "-s" }, required = true, description = "Source package")
 		public String sourcePackage;
@@ -43,10 +44,7 @@ public class JavaToDictionary extends AbstractGenerator<TestDictionary> {
 	public static void main(final String[] args) throws IOException {
 		var mainArgs = new Args();
 		JCommander.newBuilder().addObject(mainArgs).build().parse(args);
-		var persister = FsModelDao.withDefaultConfig();
-		if (mainArgs.configuration != null) {
-			persister.loadConfiguration(mainArgs.configuration);
-		}
+		var persister = new FsModelDao(FsModelDao.loadConfiguration(mainArgs.configuration));
 		var dictionary = ClassFinder.ofCurrentThread().withPackages(mainArgs.sourcePackage)
 				.withAnnotation(TCRole.class, ClassFinder.Policy.CLASS_ONLY)
 				.withAnnotation(TCActors.class, ClassFinder.Policy.CLASS_ONLY).scan().collect(toDictionary());

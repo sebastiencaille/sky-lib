@@ -43,18 +43,17 @@ public class TCWriterController extends GuiController {
 
 	private final IModelDao modelDao;
 
-	public TCWriterController(final IModelDao modelDao, final ITestExecutor testExecutor) throws IOException {
+	public TCWriterController(final IModelDao modelDao, TestDictionary tcDictionary, final ITestExecutor testExecutor) throws IOException {
 		this.modelDao = modelDao;
 		this.testExecutor = testExecutor;
-		TestDictionary dictionary;
-		do {
+		TestDictionary dictionary = tcDictionary;
+		while (dictionary == null) {
 			try {
-				dictionary = modelDao.readTestDictionary();
+				dictionary = modelDao.readTestDictionary("default");
 			} catch (FileNotFoundException e) {
-				dictionary = null;
 				new DictionaryImport(null, modelDao).runImport();
 			}
-		} while (dictionary == null);
+		} 
 
 		model = new TCWriterModel(dictionary, getScopedChangeSupport());
 		gui = new TCWriterGui(this);
@@ -195,7 +194,7 @@ public class TCWriterController extends GuiController {
 	public void restart() {
 		try {
 			gui.setVisible(false);
-			new TCWriterController(modelDao, testExecutor).run();
+			new TCWriterController(modelDao, null, testExecutor).run();
 		} catch (IOException e) {
 			TCWriterGui.handleException(null, e);
 		}

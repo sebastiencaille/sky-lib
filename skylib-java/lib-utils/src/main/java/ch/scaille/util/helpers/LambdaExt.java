@@ -133,12 +133,12 @@ public class LambdaExt {
 		};
 	}
 
-	public static <T, U, R, E extends Exception> BiFunction<T, U, R> uncheckF(
+	public static <T, U, R, E extends Exception> BiFunction<T, U, R> uncheckF2(
 			final BiFunctionWithException<T, U, R, E> call) {
-		return uncheckF(call, LambdaExt::defaultExceptionHandler);
+		return uncheckF2(call, LambdaExt::defaultExceptionHandler);
 	}
 
-	public static <T, U, R, E extends Exception> BiFunction<T, U, R> uncheckF(
+	public static <T, U, R, E extends Exception> BiFunction<T, U, R> uncheckF2(
 			final BiFunctionWithException<T, U, R, E> call, final Function<? super E, R> exceptionHandler) {
 		return (t, u) -> {
 			try {

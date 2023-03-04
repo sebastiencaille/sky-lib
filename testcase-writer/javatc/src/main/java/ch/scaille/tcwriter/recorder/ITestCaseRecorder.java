@@ -1,7 +1,6 @@
 package ch.scaille.tcwriter.recorder;
 
 import java.io.IOException;
-import java.nio.file.Path;
 
 import ch.scaille.tcwriter.model.testcase.TestCase;
 

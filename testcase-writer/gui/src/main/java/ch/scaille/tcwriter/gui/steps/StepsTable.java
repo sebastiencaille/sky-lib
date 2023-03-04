@@ -48,8 +48,8 @@ public class StepsTable extends JPanel {
 				super.paintChildren(g);
 				CellRendererPane toDraw = null;
 				for (final Component component : getComponents()) {
-					if (component instanceof CellRendererPane) {
-						toDraw = (CellRendererPane) component;
+					if (component instanceof CellRendererPane pane) {
+						toDraw = pane;
 					}
 				}
 				if (toDraw == null) {

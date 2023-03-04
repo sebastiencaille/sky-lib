@@ -2,7 +2,6 @@ package ch.scaille.tcwriter.generators.visitors;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,9 +38,8 @@ public class HumanReadableVisitor {
 		if (withStepNumbers) {
 			result.append(step.getOrdinal()).append(". ");
 		}
-		result.append("As ").append(actorSummary).append(", ")
-				.append(summaryOf(step.getAction(), step.getParametersValue().stream().map(this::processTestParameter)
-						.filter(Objects::nonNull).collect(toList())));
+		result.append("As ").append(actorSummary).append(", ").append(summaryOf(step.getAction(),
+				step.getParametersValue().stream().map(this::processTestParameter).filter(Objects::nonNull).toList()));
 
 		return result.toString();
 	}
@@ -59,8 +57,7 @@ public class HumanReadableVisitor {
 			return parameterValue.getSimpleValue();
 		case TEST_API:
 			final var mandatoryParams = parameterValue.getValueFactory().getMandatoryParameters().stream()
-					.map(p -> processTestParameter(parameterValue.getComplexTypeValues().get(p.getId())))
-					.collect(toList());
+					.map(p -> processTestParameter(parameterValue.getComplexTypeValues().get(p.getId()))).toList();
 			return processTestParameter(parameterValue, mandatoryParams);
 		default:
 			return "";
@@ -87,8 +84,7 @@ public class HumanReadableVisitor {
 			hasOptionals = true;
 		}
 		optionals.append(")");
-		return summaryOf(parameterValue.getValueFactory(), mandatoryParams)
-				+ ((hasOptionals) ? " " + optionals : "");
+		return summaryOf(parameterValue.getValueFactory(), mandatoryParams) + ((hasOptionals) ? " " + optionals : "");
 	}
 
 	private String summaryOf(final IdObject idObject, final List<String> list) {
@@ -106,7 +102,7 @@ public class HumanReadableVisitor {
 		final List<String> formatParams;
 		if (paramsTexts != null) {
 			formatParams = paramsTexts.stream().flatMap(s -> stream((' ' + s + ' ').split("\\|"))).map(String::trim)
-					.map(s -> s.replace("//", "/\\/")).collect(toList());
+					.map(s -> s.replace("//", "/\\/")).toList();
 		} else {
 			formatParams = null;
 		}

@@ -3,9 +3,6 @@ package ch.scaille.tcwriter;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import ch.scaille.tcwriter.model.persistence.FsModelDao;
-import ch.scaille.tcwriter.recorder.TestCaseRecorder;
-import ch.scaille.tcwriter.recorder.TestCaseRecorderAspect;
 import ch.scaille.tcwriter.stepping.TestSteppingAspect;
 import ch.scaille.tcwriter.stepping.TestSteppingController;
 

@@ -1,15 +1,10 @@
 package ch.scaille.tcwriter.generators;
 
-import static java.util.stream.Collectors.toList;
-
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
 
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestStep;
-import ch.scaille.util.helpers.LambdaExt;
 
 public class Helper {
 
@@ -46,10 +41,6 @@ public class Helper {
 			step.getParametersValue().forEach(v -> result.append(v).append(EOL));
 		}
 		return result.toString();
-	}
-
-	static List<Class<?>> toClasses(final String[] args) {
-		return Arrays.stream(args).map(LambdaExt.uncheckF(s -> Class.forName(s))).collect(toList());
 	}
 
 	public static String paramKey(final Method apiMethod, final int i) {

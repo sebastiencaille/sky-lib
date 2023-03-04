@@ -116,7 +116,7 @@ public class FsModelDao implements IModelDao {
 					(f, e) -> {
 						Logs.of(getClass()).log(Level.INFO, "Unable to read meta data", e);
 						return new Metadata(f, "Unreadable: " + e.getClass());
-					})).collect(Collectors.toList());
+					})).toList();
 		} catch (IOException | URISyntaxException e) {
 			throw new IOException("Unable to read dictionaries", e);
 		}
@@ -148,7 +148,7 @@ public class FsModelDao implements IModelDao {
 					(f, e) -> {
 						Logs.of(getClass()).log(Level.INFO, "Unable to read meta data", e);
 						return new Metadata(f, "Unreadable: " + e.getClass());
-					})).collect(Collectors.toList());
+					})).toList();
 		} catch (IOException | URISyntaxException e) {
 			throw new IOException("Unable to read dictionaries", e);
 		}

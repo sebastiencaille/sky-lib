@@ -21,7 +21,7 @@ public class IdObject {
 
 	@Override
 	public boolean equals(final Object obj) {
-		return obj instanceof IdObject && id.equals(((IdObject) obj).id);
+		return obj instanceof IdObject idObj && id.equals(idObj.id);
 	}
 
 	@Override

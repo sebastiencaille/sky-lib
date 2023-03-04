@@ -10,7 +10,7 @@
     </parent>
     <artifactId>gui-pilot-selenium</artifactId>
     <properties>
-        <version.geckodriver>0.31.0</version.geckodriver>
+        <version.geckodriver>0.32.0</version.geckodriver>
     </properties>
 
     <dependencies>
@@ -30,7 +30,7 @@
             <plugin>
                 <groupId>com.github.webdriverextensions</groupId>
                 <artifactId>webdriverextensions-maven-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.4.0</version>
                 <executions>
                     <execution>
                         <phase>generate-test-resources</phase>

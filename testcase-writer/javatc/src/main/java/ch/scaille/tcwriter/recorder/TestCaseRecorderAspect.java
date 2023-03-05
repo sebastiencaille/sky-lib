@@ -29,6 +29,7 @@ public class TestCaseRecorderAspect {
 
 	/**
 	 * Configures the recording and saves the test
+	 * 
 	 * @param jp
 	 * @param test
 	 * @return
@@ -51,8 +52,8 @@ public class TestCaseRecorderAspect {
 			tcDictionaryName = recorded.dictionary();
 		}
 		if (recorder == null && (recorderEnabled || (recorded != null && recorded.enabled()))) {
-			recorder = new TestCaseRecorder(new FsModelDao(FsModelDao.loadConfiguration(fsModelConfig)),
-					tcDictionaryName);
+			setRecorder(new TestCaseRecorder(new FsModelDao(FsModelDao.loadConfiguration(fsModelConfig)),
+					tcDictionaryName));
 		}
 		var result = jp.proceed();
 		if (recorder != null) {

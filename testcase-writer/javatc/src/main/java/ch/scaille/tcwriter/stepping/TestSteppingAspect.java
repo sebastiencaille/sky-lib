@@ -1,14 +1,10 @@
 package ch.scaille.tcwriter.stepping;
 
-import java.io.IOException;
-import java.util.logging.Logger;
-
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.junit.jupiter.api.Test;
 
-import ch.scaille.tcwriter.TestFeature;
 import ch.scaille.tcwriter.annotations.TCRole;
 
 @Aspect

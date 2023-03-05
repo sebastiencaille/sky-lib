@@ -81,21 +81,13 @@ public class TestParameterValueTableModel extends
 
 	@Override
 	protected Object getValueAtColumn(final ParameterValueEntry object, final Columns column) {
-		switch (column) {
-		case MANDATORY:
-			return object.mandatory;
-		case ENABLED:
-			return object.enabled || object.mandatory;
-		case DESCRIPTION:
-			return object.description;
-		case VALUE:
-			if (!object.factory.hasType()) {
-				return "<no value>";
-			}
-			return object.value;
-		default:
-			throw new IllegalStateException("Unknown column " + column);
-		}
+		return switch (column) {
+			case MANDATORY -> object.mandatory;
+			case ENABLED -> object.enabled || object.mandatory;
+			case DESCRIPTION -> object.description;
+			case VALUE -> object.factory.hasType() ? object.value : "<no value>";
+			default -> throw new IllegalStateException("Unknown column " + column);
+		};
 	}
 
 	@Override

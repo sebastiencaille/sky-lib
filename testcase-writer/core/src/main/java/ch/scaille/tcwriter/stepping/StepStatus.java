@@ -5,7 +5,7 @@ import ch.scaille.tcwriter.stepping.TestApi.StepState;
 public class StepStatus {
 	public final int ordinal;
 	public boolean breakPoint = false;
-	public StepState state = null;
+	public StepState state = StepState.NOT_RUN;
 	public String message;
 
 	public StepStatus(final int ordinal) {

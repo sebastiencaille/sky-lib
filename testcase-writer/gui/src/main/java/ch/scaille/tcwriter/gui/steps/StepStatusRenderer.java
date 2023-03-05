@@ -9,7 +9,6 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import ch.scaille.tcwriter.stepping.StepStatus;
-import ch.scaille.tcwriter.stepping.TestApi.StepState;
 
 public class StepStatusRenderer extends DefaultTableCellRenderer {
 
@@ -30,16 +29,12 @@ public class StepStatusRenderer extends DefaultTableCellRenderer {
 		}
 		final var status = (StepStatus) value;
 		renderer.setSelected(status.breakPoint);
-
-		if (status.state == StepState.STARTED) {
-			renderer.setBackground(Color.CYAN);
-		} else if (status.state == StepState.OK) {
-			renderer.setBackground(Color.GREEN.darker());
-		} else if (status.state == StepState.FAILED) {
-			renderer.setBackground(Color.RED.darker());
-		} else {
-			renderer.setBackground(table.getBackground());
-		}
+		renderer.setBackground(switch (status.state) {
+			case STARTED -> Color.CYAN;
+			case OK -> Color.GREEN.darker();
+			case FAILED -> Color.RED.darker();
+			default -> table.getBackground();
+		});
 		if (status.message != null) {
 			renderer.setToolTipText(status.message);
 		}

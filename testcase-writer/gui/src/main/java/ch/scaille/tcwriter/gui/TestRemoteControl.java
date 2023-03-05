@@ -83,7 +83,7 @@ public class TestRemoteControl {
 
 				switch (command) {
 				case STEP_START:
-					final int startStepNumber = api.readStart();
+					final int startStepNumber = api.readStartBody();
 					final var startStatus = stepStatus(startStepNumber);
 					startStatus.state = StepState.STARTED;
 					stepChangedListener.accept(startStepNumber, startStepNumber);
@@ -92,7 +92,7 @@ public class TestRemoteControl {
 					}
 					break;
 				case STEP_DONE:
-					final int stopStepNumber = api.readDone();
+					final int stopStepNumber = api.readDoneBody();
 					final var stopStepStatus = stepStatus(stopStepNumber);
 					if (stopStepStatus.state == StepState.STARTED) {
 						stopStepStatus.state = StepState.OK;
@@ -101,7 +101,7 @@ public class TestRemoteControl {
 					stepChangedListener.accept(stopStepNumber, stopStepNumber);
 					break;
 				case ERROR:
-					final var errorMessage = api.readErrorMessage();
+					final var errorMessage = api.readErrorBody();
 					final int errStepNumber = errorMessage.stepNumber;
 					final var errStepStatus = stepStatus(errStepNumber);
 					errStepStatus.state = StepState.FAILED;
@@ -125,7 +125,7 @@ public class TestRemoteControl {
 	}
 
 	public void cleanSteps() {
-		stepStates.values().forEach(s -> s.state = null);
+		stepStates.values().forEach(s -> s.state = StepState.NOT_RUN);
 		stepChangedListener.accept(1, Integer.MAX_VALUE);
 	}
 

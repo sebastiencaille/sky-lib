@@ -40,55 +40,46 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		final var parametersValue = testStep.getParametersValue();
 		final var testAction = testStep.getAction();
 		final var actionUtils = ModelUtils.actionUtils(tc.getDictionary(), testAction);
-		switch (column) {
+		return switch (column) {
 		case BREAKPOINT:
-			return testControl.stepStatus(testStep.getOrdinal());
+			yield testControl.stepStatus(testStep.getOrdinal());
 		case ORDINAL:
-			return testStep.getOrdinal();
+			yield testStep.getOrdinal();
 		case ACTOR:
 			tcObject = testStep.getActor();
-			break;
+			yield tc.descriptionOf(tcObject).getDescription();
 		case ACTION:
 			tcObject = testAction;
-			break;
+			yield tc.descriptionOf(tcObject).getDescription();
 		case SELECTOR:
 			if (!actionUtils.hasSelector()) {
-				return "";
+				yield "";
 			}
-			return toString(tc, parametersValue.get(actionUtils.selectorIndex()));
+			yield toString(tc, parametersValue.get(actionUtils.selectorIndex()));
 		case PARAM0:
 			if (actionUtils.hasActionParameter(0)) {
-				return toString(tc, parametersValue.get(actionUtils.parameterIndex(0)));
+				yield toString(tc, parametersValue.get(actionUtils.parameterIndex(0)));
 			}
-			return "";
+			yield "";
 		case TO_VAR:
 			if (testStep.getReference() != null) {
-				return toString(tc, testStep.getReference());
+				yield toString(tc, testStep.getReference());
 			}
-			return "";
+			yield "";
 		default:
-			return "";
-		}
-		return tc.descriptionOf(tcObject).getDescription();
+			yield "";
+		};
 	}
 
 	private String toString(final TestCase tc, final TestParameterValue parameterValue) {
 		final var parameterDef = parameterValue.getValueFactory();
-		String display;
-		switch (parameterDef.getNature()) {
-		case REFERENCE:
-			display = toString(tc, parameterDef);
-			break;
-		case SIMPLE_TYPE:
-			display = parameterValue.getSimpleValue();
-			break;
-		case TEST_API:
-			display = toString(tc, parameterDef);
-			break;
-		default:
-			display = "N/A";
-		}
-		return display;
+
+		return switch (parameterDef.getNature()) {
+		case REFERENCE -> toString(tc, parameterDef);
+		case SIMPLE_TYPE -> parameterValue.getSimpleValue();
+		case TEST_API -> toString(tc, parameterDef);
+		default -> "N/A";
+		};
 	}
 
 	private String toString(final TestCase tc, final TestParameterFactory parameterDef) {
@@ -130,10 +121,10 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 			} else {
 				testControl.removeBreakpoint(testStep);
 			}
-			return;
+			break;
 		case TO_VAR:
 			testCase.publishReference(testStep.getReference().rename((String) value, "TODO"));
-			return;
+			break;
 		default:
 			break;
 		}

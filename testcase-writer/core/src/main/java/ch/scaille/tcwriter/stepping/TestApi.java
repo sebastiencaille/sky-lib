@@ -13,7 +13,7 @@ import ch.scaille.tcwriter.stepping.TestSteppingController.TestCaseError;
 
 public class TestApi {
 	public enum StepState {
-		STARTED, OK, FAILED
+		NOT_RUN, STARTED, OK, FAILED
 	}
 
 	public enum Command {
@@ -48,15 +48,15 @@ public class TestApi {
 		return Command.from(inputStream.read());
 	}
 
-	public int readStart() throws IOException {
+	public int readStartBody() throws IOException {
 		return readStepNumber();
 	}
 
-	public int readDone() throws IOException {
+	public int readDoneBody() throws IOException {
 		return readStepNumber();
 	}
 
-	public TestCaseError readErrorMessage() throws IOException {
+	public TestCaseError readErrorBody() throws IOException {
 		return new TestCaseError(readInt(), readString(), readString());
 	}
 

@@ -14,6 +14,7 @@ import javax.swing.CellRendererPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import ch.scaille.gui.model.ListModel;
@@ -39,7 +40,8 @@ public class StepsTable extends JPanel {
 		setLayout(new BorderLayout());
 		stepsTableModel = new StepsTableModel(model.getTestCase(), steps, controller.getTestRemoteControl());
 
-		controller.getTestRemoteControl().setStepListener(stepsTableModel::stepExecutionUpdated);
+		controller.getTestRemoteControl().setStepListener(
+				(f, t) -> SwingUtilities.invokeLater(() -> stepsTableModel.stepExecutionUpdated(f - 1, t - 1)));
 
 		stepsJTable = new JTable(stepsTableModel) {
 
@@ -101,25 +103,19 @@ public class StepsTable extends JPanel {
 				TableColumnWithPolicy.fixedTextWidth(Column.ORDINAL, 2, TableColumnWithPolicy.SAMPLE_NUMBERS,
 						TableColumnWithPolicy.DEFAULT_MARGIN).with(new DefaultTableCellRenderer() {
 							@Override
-							public Component getTableCellRendererComponent(JTable var1, Object obj, boolean var3,
+							public Component getTableCellRendererComponent(JTable table, Object obj, boolean var3,
 									boolean var4, int row, int col) {
-								super.getTableCellRendererComponent(var1, obj, var3, var4, row, col);
+								super.getTableCellRendererComponent(table, obj, var3, var4, row, col);
 								StepClassifier classifier = steps.getElementAt(row).getClassifier();
 								if (classifier == null) {
 									return this;
 								}
-								switch (classifier) {
-								case PREPARATION:
-									setBackground(Color.CYAN);
-									break;
-								case ACTION:
-									setBackground(Color.ORANGE);
-									break;
-								case CHECK:
-									setBackground(Color.GREEN);
-									break;
-								default:
-								}
+								setBackground(switch (classifier) {
+									case PREPARATION -> Color.CYAN;
+									case ACTION -> Color.ORANGE;
+									case CHECK -> Color.GREEN;
+									default -> table.getBackground();
+								});
 								return this;
 							}
 						}));

@@ -1,10 +1,14 @@
 package ch.scaille.tcwriter.stepping;
 
+import java.io.IOException;
+import java.util.logging.Logger;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.junit.jupiter.api.Test;
 
+import ch.scaille.tcwriter.TestFeature;
 import ch.scaille.tcwriter.annotations.TCRole;
 
 @Aspect
@@ -35,9 +39,10 @@ public class TestSteppingAspect {
 
 	@Around("execution(* *.*(..)) && @annotation(test)")
 	public Object testControl(final ProceedingJoinPoint jp, final Test test) throws Throwable {
-		if (controller == null) {
+		if (!Boolean.getBoolean("tc.stepping")) {
 			return jp.proceed();
 		}
+		TestSteppingAspect.setController(new TestSteppingController());
 		controller.beforeTestExecution();
 		try {
 			return jp.proceed();

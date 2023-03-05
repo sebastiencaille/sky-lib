@@ -48,20 +48,19 @@ public class JUnitTestExecutor implements ITestExecutor {
 
 	@Override
 	public String compile(ExecConfig config, String sourceRef) throws IOException, InterruptedException {
-		final var waveClassPath = Stream.of(classPath)
-				.filter(j -> j.toString().contains("testcase-writer") && j.toString().contains("annotations"))
+		final var aspectsClassPath = Stream.of(classPath)
+				.filter(j -> j.toString().contains("testcase-writer") &&
+						(j.toString().contains("api") || j.toString().contains("javatc")))
 				.map(URL::getFile).collect(joining(":"));
-		final var testCompiler = new ProcessBuilder(java, //
+		final var testCompiler = exec("Compile", new String[] { java, //
 				"-cp", ClassLoaderHelper.cpToCommandLine(classPath), //
 				"org.aspectj.tools.ajc.Main", //
-				"-aspectpath", waveClassPath, //
+				"-aspectpath", aspectsClassPath, //
 				"-source", "11", //
 				"-target", "11", //
 				// "-verbose", "-showWeaveInfo", //
 				"-d", config.binaryFolder.toString(), //
-				"-sourceroots", config.sourceFolder.toString() //
-		).redirectErrorStream(true).start();
-		FilesExt.streamHandler(testCompiler::getInputStream, LOGGER::info).start();
+				"-sourceroots", config.sourceFolder.toString() });//
 		if (testCompiler.waitFor() != 0) {
 			throw new IllegalStateException("Compiler failed with status " + testCompiler.exitValue());
 		}
@@ -74,12 +73,20 @@ public class JUnitTestExecutor implements ITestExecutor {
 		final var junit = Arrays.asList(classPath).stream()
 				.filter(s -> s.toString().contains("junit-platform-console-standalone")).findAny()
 				.orElseThrow(() -> new IllegalStateException("junit-platform-console-standalone was not found"))
-				.getFile(); 
+				.getFile();
 
-		final var runTest = new ProcessBuilder(java, "-cp", cpToCommandLine(classPath), "-Dtest.port=" + config.tcpPort,
-				"-Dtc.stepping=true", "-jar", junit, "--select-class=" + binaryRef, "-cp=" + cpToCommandLine(classPath, binaryURL.toUri().toURL()))
-						.redirectErrorStream(true).start();
-		FilesExt.streamHandler(runTest::getInputStream, LOGGER::info).start();
+		exec("Execution", new String[]{java, // 
+				"-cp", cpToCommandLine(classPath), //
+				"-Dtest.port=" + config.tcpPort, "-Dtc.stepping=true", // 
+				"-jar", junit, "--select-class=" + binaryRef,
+				"-cp=" + cpToCommandLine(classPath, binaryURL.toUri().toURL())});
+	
 	}
 
+	private Process exec(String stage, String[] command) throws IOException {
+		LOGGER.info(() -> stage + ' ' + String.join("\n", command));
+		final var process = new ProcessBuilder(command).redirectErrorStream(true).start();
+		FilesExt.streamHandler(process::getInputStream, LOGGER::info).start();
+		return process;
+	}
 }

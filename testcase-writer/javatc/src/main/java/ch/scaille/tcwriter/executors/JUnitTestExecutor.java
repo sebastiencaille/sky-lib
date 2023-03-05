@@ -1,7 +1,7 @@
 package ch.scaille.tcwriter.executors;
 
 import static ch.scaille.util.helpers.ClassLoaderHelper.cpToCommandLine;
-import static ch.scaille.util.helpers.LambdaExt.uncheckF;
+import static ch.scaille.util.helpers.LambdaExt.uncheckF2;
 import static java.util.stream.Collectors.joining;
 
 import java.io.IOException;
@@ -19,9 +19,9 @@ import ch.scaille.util.helpers.ClassLoaderHelper;
 import ch.scaille.util.helpers.FilesExt;
 import ch.scaille.util.helpers.Logs;
 
-public class JunitTestExecutor implements ITestExecutor {
+public class JUnitTestExecutor implements ITestExecutor {
 
-	private static final Logger LOGGER = Logs.of(JunitTestExecutor.class);
+	private static final Logger LOGGER = Logs.of(JUnitTestExecutor.class);
 
 	private final URL[] classPath;
 
@@ -29,7 +29,7 @@ public class JunitTestExecutor implements ITestExecutor {
 
 	private final String java;
 
-	public JunitTestExecutor(final IModelDao modelDao, final URL[] classPath) {
+	public JUnitTestExecutor(final IModelDao modelDao, final URL[] classPath) {
 		this.modelDao = modelDao;
 		this.classPath = classPath;
 		java = System.getProperty("java.home") + "/bin/java";
@@ -37,7 +37,7 @@ public class JunitTestExecutor implements ITestExecutor {
 
 	@Override
 	public URI generateCode(TestCase tc) throws IOException, TestCaseException {
-		return new TestCaseToJava(this.modelDao).generate(tc).writeTo(uncheckF(this.modelDao::exportTestCase));
+		return new TestCaseToJava(this.modelDao).generate(tc).writeTo(uncheckF2(this.modelDao::exportTestCase));
 	}
 
 	@Override

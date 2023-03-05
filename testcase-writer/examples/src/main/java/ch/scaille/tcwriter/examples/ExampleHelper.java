@@ -9,7 +9,7 @@ import ch.scaille.generators.util.CodeGeneratorParams;
 import ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole;
 import ch.scaille.tcwriter.examples.api.interfaces.DeliveryTestRole;
 import ch.scaille.tcwriter.executors.ITestExecutor;
-import ch.scaille.tcwriter.executors.JunitTestExecutor;
+import ch.scaille.tcwriter.executors.JUnitTestExecutor;
 import ch.scaille.tcwriter.generators.JavaToDictionary;
 import ch.scaille.tcwriter.generators.visitors.HumanReadableVisitor;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
@@ -82,6 +82,6 @@ public class ExampleHelper {
 	}
 
 	public ITestExecutor testExecutor() {
-		return new JunitTestExecutor(getModelDao(), ClassLoaderHelper.appClassPath());
+		return new JUnitTestExecutor(getModelDao(), ClassLoaderHelper.appClassPath());
 	}
 }

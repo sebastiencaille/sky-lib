@@ -1,6 +1,6 @@
 package ch.scaille.tcwriter.generators;
 
-import static ch.scaille.util.helpers.LambdaExt.uncheckF;
+import static ch.scaille.util.helpers.LambdaExt.uncheckF2;
 
 import java.io.IOException;
 
@@ -44,7 +44,7 @@ public class TestCaseToJava {
 		var testDictionary = modelDao.readTestDictionary(mainArgs.tcDictionary);
 		var jsonTC = mainArgs.testCase;
 		var testcase = modelDao.readTestCase(jsonTC, testDictionary);
-		new TestCaseToJava(modelDao).generate(testcase).writeTo(uncheckF(modelDao::exportTestCase));
+		new TestCaseToJava(modelDao).generate(testcase).writeTo(uncheckF2(modelDao::exportTestCase));
 	}
 
 }

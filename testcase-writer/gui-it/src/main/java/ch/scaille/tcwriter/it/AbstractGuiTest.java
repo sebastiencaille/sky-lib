@@ -10,7 +10,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 import ch.scaille.tcwriter.annotations.TCActors;
-import ch.scaille.tcwriter.executors.JunitTestExecutor;
+import ch.scaille.tcwriter.executors.JUnitTestExecutor;
 import ch.scaille.tcwriter.generators.JavaToDictionary;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.tcwriter.it.api.TestSessionRole;
@@ -48,7 +48,7 @@ public class AbstractGuiTest {
 				.generate();
 		persister.writeTestDictionary(dictionary);
 
-		final var executor = new JunitTestExecutor(persister, ClassLoaderHelper.appClassPath());
+		final var executor = new JUnitTestExecutor(persister, ClassLoaderHelper.appClassPath());
 
 		final var controller = new TCWriterController(persister, dictionary, executor);
 		SwingUtilities.invokeAndWait(controller::run);

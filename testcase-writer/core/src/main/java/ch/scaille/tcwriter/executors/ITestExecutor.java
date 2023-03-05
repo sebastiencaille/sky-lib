@@ -11,7 +11,7 @@ import ch.scaille.util.helpers.FilesExt;
 
 public interface ITestExecutor {
 
-	 class ExecConfig {
+	  class TestConfig implements AutoCloseable {
 
 		public final TestCase testCase;
 
@@ -21,7 +21,7 @@ public interface ITestExecutor {
 		public final Path sourceFolder;
 		public final Path binaryFolder;
 
-		public ExecConfig(TestCase testCase, Path tmpFolder, int tcpPort) {
+		public TestConfig(TestCase testCase, Path tmpFolder, int tcpPort) {
 			this.tmpFolder = tmpFolder;
 			this.testCase = testCase;
 			this.tcpPort = tcpPort;
@@ -29,25 +29,25 @@ public interface ITestExecutor {
 			binaryFolder = tmpFolder.resolve("bin");
 		}
 
-		public void clean() {
+		@Override
+		public void close() {
 			FilesExt.removeFolderUnsafe(tmpFolder);
 		}
 	}
 
 	URI generateCode(TestCase paramTestCase) throws IOException, TestCaseException;
 
-	String generateCodeLocal(ExecConfig config) throws IOException, TestCaseException;
+	String generateCodeLocal(TestConfig config) throws IOException, TestCaseException;
 
-	String compile(ExecConfig config, String sourceRef) throws IOException, InterruptedException;
+	String compile(TestConfig config) throws IOException, InterruptedException;
 
-	void start(ExecConfig config, String binaryRef) throws IOException;
+	void execute(TestConfig config, String binaryRef) throws IOException;
 
-	default ExecConfig startTest(ExecConfig config) throws IOException, InterruptedException, TestCaseException {
+	default void startTest(TestConfig config) throws IOException, InterruptedException, TestCaseException {
 		Files.createDirectories(config.sourceFolder);
 		Files.createDirectories(config.binaryFolder);
-		var sourceRef = generateCodeLocal(config);
-		var binaryRef = compile(config, sourceRef);
-		start(config, binaryRef);
-		return config;
+		generateCodeLocal(config);
+		var binaryRef = compile(config);
+		execute(config, binaryRef);
 	}
 }

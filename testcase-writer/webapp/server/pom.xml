@@ -37,7 +37,7 @@
 		</dependency>
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
-			<artifactId>testcase-writer-core</artifactId>
+			<artifactId>testcase-writer-javatc</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.mapstruct</groupId>
@@ -65,7 +65,7 @@
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-examples</artifactId>
-			<scope>test</scope>
+			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
 	<build>

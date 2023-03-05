@@ -1,6 +1,6 @@
-package ch.scaille.tcwriter.stepping;
+package ch.scaille.tcwriter.testexec;
 
-import ch.scaille.tcwriter.stepping.TestApi.StepState;
+import ch.scaille.tcwriter.testexec.TestApi.StepState;
 
 public class StepStatus {
 	public final int ordinal;

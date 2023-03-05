@@ -83,16 +83,16 @@ public class FsModelDao implements IModelDao {
 	public static FsModelConfig loadConfiguration(String identifier) throws IOException {
 		var toLoad = identifier;
 		if (toLoad == null) {
-			toLoad = "default"; 
+			toLoad = "default";
 		}
 		return mapper.readerFor(FsModelConfig.class).without(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
 				.readValue(read(configPath(toLoad)));
 	}
-	
+
 	public static FsModelConfig loadConfiguration() throws IOException {
 		return loadConfiguration(null);
 	}
-	
+
 	private FsModelConfig config;
 
 	public FsModelDao(FsModelConfig config) {
@@ -219,11 +219,12 @@ public class FsModelDao implements IModelDao {
 	}
 
 	private static String resolve(String path) {
-		return path.replace("${user.home}", System.getProperty("user.home")).replace("~", System.getProperty("user.home"));
+		return path.replace("${user.home}", System.getProperty("user.home")).replace("~",
+				System.getProperty("user.home"));
 	}
 
 	protected static String read(URL path) throws IOException {
-		LOGGER.info(() -> "Reading " + path); 
+		LOGGER.info(() -> "Reading " + path);
 		try (var reader = new BufferedReader(new InputStreamReader(path.openConnection().getInputStream()))) {
 			return reader.lines().collect(Collectors.joining("\n"));
 		}

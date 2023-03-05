@@ -74,6 +74,15 @@ class App extends React.Component<IAppProps, IAppState> {
 		WebApis.selectCurrentTestCase(metadata.transientId, (context) => this.setState({ currentContext: context }));
 	}
 
+	private execute = () => {
+		const url = "wss://" + window.location.host + "/ws";
+		const ws = new WebSocket(url);
+        ws.onmessage = function (event) {
+            const json = JSON.parse(event.data);
+        	console.log(json)
+        };
+		WebApis.executeCurrentTestCase();
+	}
 
 	render() {
 		return (
@@ -86,6 +95,7 @@ class App extends React.Component<IAppProps, IAppState> {
 					allChoices={this.state.allTestCases}
 					currentChoice={this.state.currentTestCase?.metadata}
 					onSelection={this.testCaseChanged} />
+				<button onClick={this.execute}>Execute</button>
 				<TestCaseTable
 					dictionary={this.state.currentDictionary}
 					testCase={this.state.currentTestCase} />

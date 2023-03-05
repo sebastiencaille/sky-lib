@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.stepping;
+package ch.scaille.tcwriter.testexec;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -10,25 +10,25 @@ import ch.scaille.tcwriter.annotations.TCRole;
 @Aspect
 public class TestSteppingAspect {
 
-	private static ITestSteppingController controller;
+	private static ITestExecutionFeedbackClient feedbackClient;
 
-	public static void setController(final ITestSteppingController controller) {
-		TestSteppingAspect.controller = controller;
+	public static void setFeedbackClient(final ITestExecutionFeedbackClient feedbackClient) {
+		TestSteppingAspect.feedbackClient = feedbackClient;
 	}
 
 	@Around("execution(@ch.scaille.tcwriter.annotations.TCApi * *.*(..))")
 	public Object apiCallControl(final ProceedingJoinPoint jp) throws Throwable {
-		if (controller == null) {
+		if (feedbackClient == null) {
 			return jp.proceed();
 		}
 		final boolean roleCall = jp.getTarget() != null
 				&& jp.getSignature().getDeclaringType().isAnnotationPresent(TCRole.class);
 		if (roleCall) {
-			controller.beforeStepExecution();
+			feedbackClient.beforeStepExecution();
 		}
 		final Object returnValue = jp.proceed();
 		if (roleCall) {
-			controller.afterStepExecution();
+			feedbackClient.afterStepExecution();
 		}
 		return returnValue;
 	}
@@ -38,12 +38,12 @@ public class TestSteppingAspect {
 		if (!Boolean.getBoolean("tc.stepping")) {
 			return jp.proceed();
 		}
-		TestSteppingAspect.setController(new TestSteppingController());
-		controller.beforeTestExecution();
+		setFeedbackClient(new TestExecutionFeedbackClient());
+		feedbackClient.beforeTestExecution();
 		try {
 			return jp.proceed();
 		} catch (final Throwable t) {
-			controller.notifyError(t);
+			feedbackClient.notifyError(t);
 			throw t;
 		}
 	}

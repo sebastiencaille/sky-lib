@@ -1,0 +1,14 @@
+
+post:
+  summary: eExecute a test case
+  operationId: executeTestcase
+  parameters:
+    - in: path
+      name: tc
+      schema:
+        type: string
+      required: true
+      description: id of the test case
+  responses:
+    '200':
+      description: test case executed

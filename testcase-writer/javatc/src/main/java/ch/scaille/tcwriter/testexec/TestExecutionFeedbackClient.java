@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.stepping;
+package ch.scaille.tcwriter.testexec;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -10,10 +10,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Semaphore;
 
-import ch.scaille.tcwriter.stepping.TestApi.Command;
+import ch.scaille.tcwriter.testexec.TestApi;
+import ch.scaille.tcwriter.testexec.TestApi.Command;
 import ch.scaille.util.helpers.Logs;
 
-public class TestSteppingController implements ITestSteppingController {
+public class TestExecutionFeedbackClient implements ITestExecutionFeedbackClient {
 
 	private final Semaphore pauseSemaphore = new Semaphore(0);
 
@@ -25,10 +26,10 @@ public class TestSteppingController implements ITestSteppingController {
 
 	private int currentStep = 0;
 
-	public TestSteppingController() throws IOException {
+	public TestExecutionFeedbackClient() throws IOException {
 		final String host = System.getProperty("test.host", "127.0.0.1");
 		final Integer tcpPort = Integer.getInteger("test.port");
-		if (tcpPort != null) {
+		if (tcpPort != null && tcpPort > 0) {
 			final var remoteControlAddress = new InetSocketAddress(host, tcpPort);
 
 			remoteControlConnection = new Socket();
@@ -107,23 +108,6 @@ public class TestSteppingController implements ITestSteppingController {
 		} catch (final IOException e) {
 			Logs.of(this).warning("Unable to send error: " + e.getMessage());
 		}
-	}
-
-	public interface CommandHandler {
-		void execute(Command command) throws IOException;
-	}
-
-	public static class TestCaseError {
-		public final int stepNumber;
-		public final String message;
-		public final String stack;
-
-		public TestCaseError(final int step, final String message, final String stack) {
-			this.stepNumber = step;
-			this.message = message;
-			this.stack = stack;
-		}
-
 	}
 
 }

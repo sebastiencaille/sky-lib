@@ -3,4 +3,5 @@ target/
 *.iml
 .classpath
 .project
+.factorypath
 *.bak

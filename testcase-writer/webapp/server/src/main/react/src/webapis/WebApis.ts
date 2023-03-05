@@ -37,6 +37,13 @@ const selectCurrentTestCase = (transientId: string, callback: (context: Context)
 			body: JSON.stringify({ testCase: transientId })
 		})
 		.then(r => r.json()).then(r => callback(r as Context));
+		
+const executeCurrentTestCase = () => {
+		fetch(API_URL + '/testcase/current/execute',
+		{
+			method: 'POST',
+		})
+} 
 
 const WebApis = {
 	listAllDictionaries: listAllDictionaries,
@@ -45,6 +52,7 @@ const WebApis = {
 	loadCurrentTestCase: loadCurrentTestCase,
 	selectCurrentDictionary: selectCurrentDictionary,
 	selectCurrentTestCase: selectCurrentTestCase,
+	executeCurrentTestCase: executeCurrentTestCase
 };
 
 export default WebApis;

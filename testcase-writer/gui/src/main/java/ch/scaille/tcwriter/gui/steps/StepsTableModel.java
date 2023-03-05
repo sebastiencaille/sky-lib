@@ -6,13 +6,13 @@ import ch.scaille.gui.model.ListModel;
 import ch.scaille.gui.mvc.properties.ObjectProperty;
 import ch.scaille.gui.swing.model.ListModelTableModel;
 import ch.scaille.tcwriter.generators.visitors.HumanReadableVisitor;
-import ch.scaille.tcwriter.gui.TestRemoteControl;
 import ch.scaille.tcwriter.model.IdObject;
 import ch.scaille.tcwriter.model.ModelUtils;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestStep;
+import ch.scaille.tcwriter.testexec.TestRemoteControl;
 
 public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableModel.Column> {
 

@@ -25,7 +25,7 @@ public class FsModelConfig {
     public void setBase(String base) {
         dictionaryPath = base + "/dictionary";
         tcPath = base + "/testcase";
-        templatePath = base + "/TC.template";
+        templatePath = base + "/templates/TC.template";
         tcExportPath = base + "/exported";
     }
 

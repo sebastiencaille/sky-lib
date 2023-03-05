@@ -41,13 +41,13 @@ public class JUnitTestExecutor implements ITestExecutor {
 	}
 
 	@Override
-	public String generateCodeLocal(ExecConfig config) throws IOException, TestCaseException {
+	public String generateCodeLocal(TestConfig config) throws IOException, TestCaseException {
 		return new TestCaseToJava(this.modelDao).generate(config.testCase).writeToFolder(config.sourceFolder)
 				.toString();
 	}
 
 	@Override
-	public String compile(ExecConfig config, String sourceRef) throws IOException, InterruptedException {
+	public String compile(TestConfig config) throws IOException, InterruptedException {
 		final var aspectsClassPath = Stream.of(classPath)
 				.filter(j -> j.toString().contains("testcase-writer") &&
 						(j.toString().contains("api") || j.toString().contains("javatc")))
@@ -68,7 +68,7 @@ public class JUnitTestExecutor implements ITestExecutor {
 	}
 
 	@Override
-	public void start(ExecConfig config, String binaryRef) throws IOException {
+	public void execute(TestConfig config, String binaryRef) throws IOException {
 		final var binaryURL = config.binaryFolder;
 		final var junit = Arrays.asList(classPath).stream()
 				.filter(s -> s.toString().contains("junit-platform-console-standalone")).findAny()

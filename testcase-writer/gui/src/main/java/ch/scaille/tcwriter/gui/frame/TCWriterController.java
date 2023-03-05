@@ -19,9 +19,8 @@ import ch.scaille.gui.swing.tools.SwingGenericEditorDialog;
 import ch.scaille.gui.tools.GenericEditorClassModel;
 import ch.scaille.gui.tools.GenericEditorController;
 import ch.scaille.tcwriter.executors.ITestExecutor;
-import ch.scaille.tcwriter.executors.ITestExecutor.ExecConfig;
+import ch.scaille.tcwriter.executors.ITestExecutor.TestConfig;
 import ch.scaille.tcwriter.gui.DictionaryImport;
-import ch.scaille.tcwriter.gui.TestRemoteControl;
 import ch.scaille.tcwriter.gui.frame.TCWriterModel.TestExecutionState;
 import ch.scaille.tcwriter.model.TestCaseException;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
@@ -30,6 +29,8 @@ import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
 import ch.scaille.tcwriter.model.testcase.ExportableTestStep;
 import ch.scaille.tcwriter.model.testcase.TestStep;
+import ch.scaille.tcwriter.testexec.TestExecutionListener;
+import ch.scaille.tcwriter.testexec.TestRemoteControl;
 import ch.scaille.util.helpers.Logs;
 
 public class TCWriterController extends GuiController {
@@ -43,7 +44,8 @@ public class TCWriterController extends GuiController {
 
 	private final IModelDao modelDao;
 
-	public TCWriterController(final IModelDao modelDao, TestDictionary tcDictionary, final ITestExecutor testExecutor) throws IOException {
+	public TCWriterController(final IModelDao modelDao, TestDictionary tcDictionary, final ITestExecutor testExecutor)
+			throws IOException {
 		this.modelDao = modelDao;
 		this.testExecutor = testExecutor;
 		TestDictionary dictionary = tcDictionary;
@@ -53,15 +55,25 @@ public class TCWriterController extends GuiController {
 			} catch (FileNotFoundException e) {
 				new DictionaryImport(null, modelDao).runImport();
 			}
-		} 
+		}
 
 		model = new TCWriterModel(dictionary, getScopedChangeSupport());
 		gui = new TCWriterGui(this);
-		testRemoteControl = new TestRemoteControl(9998,
-				r -> SwingUtilities.invokeLater(() -> model.getExecutionState().setValue(this,
-                        r ? TestExecutionState.RUNNING : TestExecutionState.STOPPED)),
-				p -> SwingUtilities.invokeLater(() -> model.getExecutionState().setValue(this,
-                        p ? TestExecutionState.PAUSED : TestExecutionState.RUNNING)));
+		testRemoteControl = new TestRemoteControl(9998, new TestExecutionListener() {
+
+			@Override
+			public void testRunning(boolean running) {
+				SwingUtilities.invokeLater(() -> model.getExecutionState().setValue(this,
+						running ? TestExecutionState.RUNNING : TestExecutionState.STOPPED));
+			}
+
+			@Override
+			public void testPaused(boolean paused) {
+				SwingUtilities.invokeLater(() -> model.getExecutionState().setValue(this,
+						paused ? TestExecutionState.PAUSED : TestExecutionState.RUNNING));
+			}
+
+		});
 	}
 
 	public void run() {
@@ -175,9 +187,10 @@ public class TCWriterController extends GuiController {
 	public void runTestCase() throws IOException, InterruptedException, TestCaseException {
 		final int rcPort = testRemoteControl.prepare();
 		LOGGER.log(Level.INFO, "Using port {}", rcPort);
-		final var config = new ExecConfig(model.getTestCase().getValue(), Files.createTempDirectory("tc"), rcPort);
-		testExecutor.startTest(config);
-		testRemoteControl.start(config::clean);
+		try (var config = new TestConfig(model.getTestCase().getValue(), Files.createTempDirectory("tc"), rcPort)) {
+			testExecutor.startTest(config);
+			testRemoteControl.controlTest();
+		} 
 	}
 
 	public void generateCode() throws IOException, TestCaseException {

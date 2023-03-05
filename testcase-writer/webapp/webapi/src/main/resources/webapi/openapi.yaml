@@ -11,8 +11,10 @@ paths:
     $ref: paths/currentDictionary.yaml
   /testcase:
     $ref: paths/allTestCases.yaml
-  /testcase/current:
-    $ref: paths/currentTestCase.yaml
+  /testcase/{tc}:
+    $ref: paths/testCase.yaml
+  /testcase/{tc}/execute:
+    $ref: paths/executeTestCase.yaml
   /context:
     $ref: paths/context.yaml
 components:

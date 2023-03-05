@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.gui;
+package ch.scaille.tcwriter.testexec;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -6,14 +6,11 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ch.scaille.tcwriter.model.testcase.TestStep;
-import ch.scaille.tcwriter.stepping.StepStatus;
-import ch.scaille.tcwriter.stepping.TestApi;
-import ch.scaille.tcwriter.stepping.TestApi.StepState;
+import ch.scaille.tcwriter.testexec.TestApi.StepState;
 import ch.scaille.util.helpers.Logs;
 
 public class TestRemoteControl {
@@ -22,9 +19,7 @@ public class TestRemoteControl {
 
 	private final int baseTcpPort;
 
-	private final Consumer<Boolean> testRunning;
-
-	private final Consumer<Boolean> testPaused;
+	private final TestExecutionListener testExecutionListener;
 
 	private final Map<Integer, StepStatus> stepStates = new HashMap<>();
 
@@ -36,10 +31,9 @@ public class TestRemoteControl {
 
 	private TestApi api;
 
-	public TestRemoteControl(int baseTcpPort, final Consumer<Boolean> testRunning, final Consumer<Boolean> testPaused) {
+	public TestRemoteControl(int baseTcpPort, TestExecutionListener testExecutionListener) {
 		this.baseTcpPort = baseTcpPort;
-		this.testRunning = testRunning;
-		this.testPaused = testPaused;
+		this.testExecutionListener = testExecutionListener;
 	}
 
 	public StepStatus stepStatus(final int ordinal) {
@@ -71,8 +65,8 @@ public class TestRemoteControl {
 		return controlPort;
 	}
 
-	public void start(Runnable testFinished) throws IOException {
-		testRunning.accept(true);
+	public void controlTest() throws IOException {
+		testExecutionListener.testRunning(true);
 		cleanSteps();
 		controlServer.setSoTimeout(20_000);
 		try {
@@ -88,7 +82,7 @@ public class TestRemoteControl {
 					startStatus.state = StepState.STARTED;
 					stepChangedListener.accept(startStepNumber, startStepNumber);
 					if (startStatus.breakPoint) {
-						testPaused.accept(true);
+						testExecutionListener.testPaused(true);
 					}
 					break;
 				case STEP_DONE:
@@ -97,7 +91,7 @@ public class TestRemoteControl {
 					if (stopStepStatus.state == StepState.STARTED) {
 						stopStepStatus.state = StepState.OK;
 					}
-					testPaused.accept(false);
+					testExecutionListener.testPaused(false);
 					stepChangedListener.accept(stopStepNumber, stopStepNumber);
 					break;
 				case ERROR:
@@ -112,21 +106,23 @@ public class TestRemoteControl {
 					break;
 				}
 			}, this::resetConnection, () -> {
-				testRunning.accept(false);
-				testFinished.run();
+				testExecutionListener.testRunning(false);
+				testExecutionListener.testFinished();
 			});
 
 			stepStates.values().stream().filter(s -> s.breakPoint).forEach(api::setBreakPoint);
 			api.write(TestApi.Command.RUN);
 		} catch (IOException e) {
-			testRunning.accept(false);
+			testExecutionListener.testRunning(false);
 			throw e;
 		}
 	}
 
 	public void cleanSteps() {
 		stepStates.values().forEach(s -> s.state = StepState.NOT_RUN);
-		stepChangedListener.accept(1, Integer.MAX_VALUE);
+		if (stepChangedListener != null) {
+			stepChangedListener.accept(1, Integer.MAX_VALUE);
+		}
 	}
 
 	public void resetConnection() {

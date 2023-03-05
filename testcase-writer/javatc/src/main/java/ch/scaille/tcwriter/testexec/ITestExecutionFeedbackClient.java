@@ -1,6 +1,6 @@
-package ch.scaille.tcwriter.stepping;
+package ch.scaille.tcwriter.testexec;
 
-public interface ITestSteppingController {
+public interface ITestExecutionFeedbackClient {
 
 	void beforeTestExecution() throws InterruptedException;
 

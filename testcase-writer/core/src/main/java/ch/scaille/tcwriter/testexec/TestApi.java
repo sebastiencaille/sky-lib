@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.stepping;
+package ch.scaille.tcwriter.testexec;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -7,9 +7,6 @@ import java.io.OutputStream;
 import java.io.StringWriter;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-
-import ch.scaille.tcwriter.stepping.TestSteppingController.CommandHandler;
-import ch.scaille.tcwriter.stepping.TestSteppingController.TestCaseError;
 
 public class TestApi {
 	public enum StepState {
@@ -141,6 +138,23 @@ public class TestApi {
 				testFinished.run();
 			}
 		}).start();
+	}
+	
+	public interface CommandHandler {
+		void execute(Command command) throws IOException;
+	}
+
+	public static class TestCaseError {
+		public final int stepNumber;
+		public final String message;
+		public final String stack;
+
+		public TestCaseError(final int step, final String message, final String stack) {
+			this.stepNumber = step;
+			this.message = message;
+			this.stack = stack;
+		}
+
 	}
 
 }

@@ -52,16 +52,24 @@ public class ClassLoaderHelper {
     }
 
     public static URL[] threadClassPath() {
-        return ((URLClassLoader) Thread.currentThread().getContextClassLoader()).getURLs();
+        return urlClassPath((URLClassLoader) Thread.currentThread().getContextClassLoader());
     }
-
-    public static URL[] guessClassPath() {
-        if (Thread.currentThread().getContextClassLoader() instanceof URLClassLoader) {
-            return threadClassPath();
+    
+	public static URL[] guessClassPath() {
+		if (Thread.currentThread().getContextClassLoader() instanceof URLClassLoader) {
+            return urlClassPath((URLClassLoader) Thread.currentThread().getContextClassLoader());
         }
         return appClassPath();
-    }
-
+	}
+	
+	private static URL[] urlClassPath(URLClassLoader cl) {
+		final URL[] urls = cl.getURLs();
+		if (urls.length == 0) {
+			return appClassPath();
+		}
+		return urls;
+	}
+	
     public static String cpToCommandLine(final URL[] classpath, final URL... extra) {
         return Stream.concat(Stream.of(classpath), Stream.of(extra)).map(URL::getFile).collect(joining(CP_SEPARATOR));
     }

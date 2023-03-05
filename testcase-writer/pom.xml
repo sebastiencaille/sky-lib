@@ -113,6 +113,11 @@
 				<artifactId>aspectjrt</artifactId>
 				<version>${aspectj.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.aspectj</groupId>
+				<artifactId>aspectjtools</artifactId>
+				<version>${aspectj.version}</version>
+			</dependency>
 			<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
 			<dependency>
 				<groupId>com.google.guava</groupId>

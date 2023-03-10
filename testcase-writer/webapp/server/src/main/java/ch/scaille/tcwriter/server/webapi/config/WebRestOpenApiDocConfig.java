@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.openapitools.configuration.SpringDocConfiguration;
 import org.springdoc.core.customizers.*;
-import org.springdoc.core.filters.OpenApiMethodFilter;
 import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springdoc.core.providers.*;
 import org.springdoc.core.service.*;
@@ -21,51 +20,50 @@ import org.springframework.context.annotation.Import;
 import io.swagger.v3.oas.models.OpenAPI;
 
 @Configuration
-@Import({ SpringDocConfiguration.class, SpringDocConfigProperties.class })
+@Import({SpringDocConfiguration.class, SpringDocConfigProperties.class})
 public class WebRestOpenApiDocConfig {
 
-	@Bean
-	SpringDocProviders webApiSpringDocProviders(Optional<ActuatorProvider> actuatorProvider,
-												Optional<CloudFunctionProvider> springCloudFunctionProvider,
-												Optional<SecurityOAuth2Provider> springSecurityOAuth2Provider,
-												Optional<RepositoryRestResourceProvider> repositoryRestResourceProvider,
-												Optional<RouterFunctionProvider> routerFunctionProvider,
-												@Qualifier("webApiSpringWebProvider") Optional<SpringWebProvider> springWebProvider,
-												Optional<WebConversionServiceProvider> webConversionServiceProvider,
-												ObjectMapperProvider objectMapperProvider) {
-		return new SpringDocProviders(actuatorProvider, springCloudFunctionProvider, springSecurityOAuth2Provider,
-				repositoryRestResourceProvider, routerFunctionProvider, springWebProvider, webConversionServiceProvider,
-				objectMapperProvider);
-	}
+    @Bean
+    SpringDocProviders webApiSpringDocProviders(Optional<ActuatorProvider> actuatorProvider,
+                                                Optional<CloudFunctionProvider> springCloudFunctionProvider,
+                                                Optional<SecurityOAuth2Provider> springSecurityOAuth2Provider,
+                                                Optional<RepositoryRestResourceProvider> repositoryRestResourceProvider,
+                                                Optional<RouterFunctionProvider> routerFunctionProvider,
+                                                @Qualifier("webApiSpringWebProvider") Optional<SpringWebProvider> springWebProvider,
+                                                Optional<WebConversionServiceProvider> webConversionServiceProvider,
+                                                ObjectMapperProvider objectMapperProvider) {
+        return new SpringDocProviders(actuatorProvider, springCloudFunctionProvider, springSecurityOAuth2Provider,
+                repositoryRestResourceProvider, routerFunctionProvider, springWebProvider, webConversionServiceProvider,
+                objectMapperProvider);
+    }
 
-	@Bean
-	OpenApiWebMvcResource webApiOpenApiResource(
-			@Qualifier("webApiOpenAPIBuilder") ObjectFactory<OpenAPIService> openAPIBuilderObjectFactory,
-			AbstractRequestService requestBuilder, GenericResponseService responseBuilder,
-			OperationService operationParser, SpringDocConfigProperties springDocConfigProperties,
-			Optional<List<OperationCustomizer>> operationCustomizers,
-			Optional<List<OpenApiCustomizer>> openApiCustomisers,
-			Optional<List<RouterOperationCustomizer>> routerOperationCustomizers,
-			Optional<List<OpenApiMethodFilter>> methodFilters,
-			@Qualifier("webApiSpringDocProviders") SpringDocProviders springDocProviders) {
-		return new OpenApiWebMvcResource(openAPIBuilderObjectFactory, requestBuilder, responseBuilder, operationParser,
-				operationCustomizers, openApiCustomisers, routerOperationCustomizers, methodFilters,
-				springDocConfigProperties, springDocProviders);
-	}
+    @Bean
+    OpenApiWebMvcResource webApiOpenApiResource(
+            @Qualifier("webApiOpenAPIBuilder") ObjectFactory<OpenAPIService> openAPIBuilderObjectFactory,
+            AbstractRequestService requestBuilder, GenericResponseService responseBuilder,
+            OperationService operationParser,
+            SpringDocConfigProperties springDocConfigProperties,
+            @Qualifier("webApiSpringDocProviders") SpringDocProviders springDocProviders,
+            SpringDocCustomizers springDocCustomizers) {
+        return new OpenApiWebMvcResource(openAPIBuilderObjectFactory, requestBuilder, responseBuilder, operationParser,
+                springDocConfigProperties,
+                springDocProviders, springDocCustomizers);
+    }
 
-	@Bean
-	OpenAPIService webApiOpenAPIBuilder(Optional<OpenAPI> openAPI, SecurityService securityParser,
-										SpringDocConfigProperties springDocConfigProperties, PropertyResolverUtils propertyResolverUtils,
-										Optional<List<OpenApiBuilderCustomizer>> openApiBuilderCustomisers,
-										Optional<List<ServerBaseUrlCustomizer>> serverBaseUrlCustomisers,
-										Optional<JavadocProvider> javadocProvider) {
-		return new OpenAPIService(openAPI, securityParser, springDocConfigProperties, propertyResolverUtils,
-				openApiBuilderCustomisers, serverBaseUrlCustomisers, javadocProvider);
-	}
 
-	@Bean
-	SpringWebProvider webApiSpringWebProvider() {
-		return new SpringWebMvcProvider();
-	}
+    @Bean
+    OpenAPIService webApiOpenAPIBuilder(Optional<OpenAPI> openAPI, SecurityService securityParser,
+                                        SpringDocConfigProperties springDocConfigProperties, PropertyResolverUtils propertyResolverUtils,
+                                        Optional<List<OpenApiBuilderCustomizer>> openApiBuilderCustomisers,
+                                        Optional<List<ServerBaseUrlCustomizer>> serverBaseUrlCustomisers,
+                                        Optional<JavadocProvider> javadocProvider) {
+        return new OpenAPIService(openAPI, securityParser, springDocConfigProperties, propertyResolverUtils,
+                openApiBuilderCustomisers, serverBaseUrlCustomisers, javadocProvider);
+    }
+
+    @Bean
+    SpringWebProvider webApiSpringWebProvider() {
+        return new SpringWebMvcProvider();
+    }
 
 }

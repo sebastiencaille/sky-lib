@@ -54,7 +54,7 @@ public class IntProperty extends AbstractTypedProperty<Integer> {
 
 	@Override
 	public EndOfChain<Integer> createBindingChain() {
-		return new BindingChain(this, errorNotifier).<Integer>bindProperty(this::setObjectValueFromComponent);
+		return new BindingChain(this, errorNotifier).bindProperty(this::setObjectValueFromComponent);
 	}
 
 	@SafeVarargs

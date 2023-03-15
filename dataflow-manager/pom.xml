@@ -6,6 +6,7 @@
 		<groupId>ch.scaille</groupId>
 		<artifactId>libs</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../skylib-java/pom.xml</relativePath>
 	</parent>
 
 	<groupId>ch.scaille.dataflowmgr</groupId>

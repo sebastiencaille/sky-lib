@@ -17,13 +17,13 @@ public class Polling<C, V> {
 
 	private final PollingFunction<C, V> pollingFunction;
 
-	private OverridableParameter<AbstractComponentPilot<?, C>, Duration> timeout = new OverridableParameter<>(
+	private final OverridableParameter<AbstractComponentPilot<?, C>, Duration> timeout = new OverridableParameter<>(
 			AbstractComponentPilot::getDefaultPollingTimeout);
-	private OverridableParameter<AbstractComponentPilot<?, C>, Duration> firstDelay = new OverridableParameter<>(
+	private final OverridableParameter<AbstractComponentPilot<?, C>, Duration> firstDelay = new OverridableParameter<>(
 			AbstractComponentPilot::getDefaultPollingFirstDelay);
-	private OverridableParameter<AbstractComponentPilot<?, C>, Poller.DelayFunction> delayFunction = new OverridableParameter<>(
+	private final OverridableParameter<AbstractComponentPilot<?, C>, Poller.DelayFunction> delayFunction = new OverridableParameter<>(
 			AbstractComponentPilot::getDefaultPollingDelayFunction);
-	private OverridableParameter<AbstractComponentPilot<?, C>, ReportFunction<C>> reportFunction = new OverridableParameter<>(
+	private final OverridableParameter<AbstractComponentPilot<?, C>, ReportFunction<C>> reportFunction = new OverridableParameter<>(
 			AbstractComponentPilot::getDefaultReportFunction);
 
 	private String reportText = null;

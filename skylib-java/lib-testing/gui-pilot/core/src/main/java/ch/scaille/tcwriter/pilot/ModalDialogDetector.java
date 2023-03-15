@@ -56,7 +56,7 @@ public class ModalDialogDetector {
 		public final boolean handled;
 		private final String error;
 		private final String extraInfo;
-		private Runnable closeOnErrorFunction;
+		private final Runnable closeOnErrorFunction;
 
 		private PollingResult(final boolean handled, final String error, final Runnable closeOnErrorFunction,
 				final String extraInfo) {
@@ -72,7 +72,7 @@ public class ModalDialogDetector {
 
 	private final Supplier<List<PollingResult>> pollingHandlers;
 
-	private OverridableParameter<GuiPilot, Duration> timeout = new OverridableParameter<>(GuiPilot::getModalDialogTimeout);
+	private final OverridableParameter<GuiPilot, Duration> timeout = new OverridableParameter<>(GuiPilot::getModalDialogTimeout);
 
 	private GuiPilot pilot;
 
@@ -82,7 +82,7 @@ public class ModalDialogDetector {
 
 	private boolean enabled = false;
 
-	private Semaphore running = new Semaphore(1);
+	private final Semaphore running = new Semaphore(1);
 
 	public ModalDialogDetector(final Supplier<List<PollingResult>> pollingHandlers) {
 		this.pollingHandlers = pollingHandlers;

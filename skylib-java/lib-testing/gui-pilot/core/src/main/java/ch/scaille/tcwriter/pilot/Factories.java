@@ -10,7 +10,7 @@ import ch.scaille.util.dao.metadata.DataObjectManagerFactory;
 @SuppressWarnings("java:S5960")
 public interface Factories {
 
-	public interface Pollings {
+	interface Pollings {
 
 		/*************************** Pollings ***************************/
 
@@ -22,7 +22,7 @@ public interface Factories {
 		 * @param reason
 		 * @return
 		 */
-		public static <C> Polling<C, Boolean> satisfies(final Predicate<C> predicate) {
+		static <C> Polling<C, Boolean> satisfies(final Predicate<C> predicate) {
 			return new Polling<>(null, c -> {
 				if (!predicate.test(c.component)) {
 					return PollingResults.failure("Condition not met");
@@ -39,7 +39,7 @@ public interface Factories {
 		 * @param reason
 		 * @return
 		 */
-		public static <C> Polling<C, Boolean> assertion(final Consumer<PollingContext<C>> assertion) {
+		static <C> Polling<C, Boolean> assertion(final Consumer<PollingContext<C>> assertion) {
 			return new Polling<>(null, c -> {
 				try {
 					assertion.accept(c);
@@ -57,14 +57,14 @@ public interface Factories {
 		 * @param action
 		 * @return
 		 */
-		public static <C> Polling<C, Boolean> action(final Consumer<C> action) {
+		static <C> Polling<C, Boolean> action(final Consumer<C> action) {
 			return new ActionPolling<>(null, c -> {
 				action.accept(c.component);
 				return PollingResults.success();
 			});
 		}
 
-		public static <C> Polling<C, Boolean> success(final Consumer<C> action) {
+		static <C> Polling<C, Boolean> success(final Consumer<C> action) {
 			return new Polling<>(null, c -> {
 				action.accept(c.component);
 				return PollingResults.success();
@@ -73,7 +73,7 @@ public interface Factories {
 	}
 
 	/*************************** Polling Results ***************************/
-	public interface PollingResults {
+    interface PollingResults {
 		/**
 		 * Make polling return a value
 		 *
@@ -82,7 +82,7 @@ public interface Factories {
 		 * @param value
 		 * @return
 		 */
-		public static <C, V> PollingResult<C, V> value(final V value) {
+		static <C, V> PollingResult<C, V> value(final V value) {
 			return new PollingResult<>(value, null);
 		}
 
@@ -92,7 +92,7 @@ public interface Factories {
 		 * @param <C>
 		 * @return
 		 */
-		public static <C> PollingResult<C, Boolean> success() {
+		static <C> PollingResult<C, Boolean> success() {
 			return new PollingResult<>(Boolean.TRUE, null);
 		}
 
@@ -102,7 +102,7 @@ public interface Factories {
 		 * @param <C>
 		 * @return
 		 */
-		public static <C> PollingResult<C, Boolean> failed() {
+		static <C> PollingResult<C, Boolean> failed() {
 			return new PollingResult<>(Boolean.FALSE, null);
 		}
 
@@ -112,7 +112,7 @@ public interface Factories {
 		 * @param <C>
 		 * @return
 		 */
-		public static <C, V> PollingResult<C, V> failure(final String reason) {
+		static <C, V> PollingResult<C, V> failure(final String reason) {
 			return new PollingResult<>(null, new AssertionError(reason));
 		}
 
@@ -122,13 +122,13 @@ public interface Factories {
 		 * @param <C>
 		 * @return
 		 */
-		public static <C, V> PollingResult<C, V> onException(final Throwable cause) {
+		static <C, V> PollingResult<C, V> onException(final Throwable cause) {
 			return new PollingResult<>(null, cause);
 		}
 
 	}
 
-	public interface FailureHandlers {
+	interface FailureHandlers {
 		/*************************** Failure handlers ***************************/
 
 		/**
@@ -137,7 +137,7 @@ public interface Factories {
 		 * @param actionDescr
 		 * @return
 		 */
-		public static <C, V> FailureHandler<C, V> throwError(final String actionDescr) {
+		static <C, V> FailureHandler<C, V> throwError(final String actionDescr) {
 			return (r, g) -> {
 				throw new AssertionError(
 						r.getComponentDescription() + ": action failed [" + actionDescr + "]: " + r.failureReason);
@@ -149,7 +149,7 @@ public interface Factories {
 		 *
 		 * @return
 		 */
-		public static <C, V> FailureHandler<C, V> throwError() {
+		static <C, V> FailureHandler<C, V> throwError() {
 			return (r, g) -> {
 				if (r.failureReason instanceof AssertionError) {
 					throw new AssertionError(r.getComponentDescription() + ": " + r.failureReason.getMessage(),
@@ -166,7 +166,7 @@ public interface Factories {
 		 * @param actionDescr
 		 * @return
 		 */
-		public static <C, V> FailureHandler<C, V> reportFailure(final String report) {
+		static <C, V> FailureHandler<C, V> reportFailure(final String report) {
 			return (r, g) -> {
 				g.getActionReport().report(report);
 				return r.polledValue;
@@ -179,7 +179,7 @@ public interface Factories {
 		 * @param actionDescr
 		 * @return
 		 */
-		public static <C, V> FailureHandler<C, V> ignoreFailure() {
+		static <C, V> FailureHandler<C, V> ignoreFailure() {
 			return (r, g) -> r.polledValue;
 		}
 
@@ -189,7 +189,7 @@ public interface Factories {
 		 * @param actionDescr
 		 * @return
 		 */
-		public static <C> FailureHandler<C, Boolean> reportNotFound(final String report) {
+		static <C> FailureHandler<C, Boolean> reportNotFound(final String report) {
 			return (r, g) -> {
 				g.getActionReport().report(report);
 				return Boolean.FALSE;
@@ -202,7 +202,7 @@ public interface Factories {
 		 * @param actionDescr
 		 * @return
 		 */
-		public static <C> FailureHandler<C, Boolean> ignoreNotFound() {
+		static <C> FailureHandler<C, Boolean> ignoreNotFound() {
 			return (r, g) -> Boolean.FALSE;
 		}
 	}
@@ -212,34 +212,34 @@ public interface Factories {
 	 *
 	 * @return a precondition that is always true
 	 */
-	public static <C> Predicate<C> none() {
+	static <C> Predicate<C> none() {
 		return p -> true;
 	}
 
 	// Report factories
-	public interface Reporting {
+    interface Reporting {
 
-		public static String settingValue(String value) {
+		static String settingValue(String value) {
 			return "setting: " + value;
 		}
 
-		public static String settingValue(String location, String value) {
+		static String settingValue(String location, String value) {
 			return "setting " + location + ": " + value;
 		}
 
-		public static String checkingThat(String message) {
+		static String checkingThat(String message) {
 			return "checking that " + message;
 		}
 
-		public static String checkingValue(String value) {
+		static String checkingValue(String value) {
 			return "checking value: " + value;
 		}
 
-		public static String checkingValue(String location, String value) {
+		static String checkingValue(String location, String value) {
 			return "checking value " + location + ": " + value;
 		}
 
-		public static String settingValue(String location, Object value) {
+		static String settingValue(String location, Object value) {
 			return "setting " + location + ": ["
 					+ DataObjectManagerFactory.createFor(value).getMetaData().getAttributes().stream() //
 							.filter(a -> a.getValueOf(value) != null) //

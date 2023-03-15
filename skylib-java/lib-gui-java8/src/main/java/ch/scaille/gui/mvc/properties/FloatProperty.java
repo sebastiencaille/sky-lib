@@ -54,7 +54,7 @@ public class FloatProperty extends AbstractTypedProperty<Float> {
 
 	@Override
 	public EndOfChain<Float> createBindingChain() {
-		return new BindingChain(this, errorNotifier).<Float>bindProperty(this::setObjectValueFromComponent);
+		return new BindingChain(this, errorNotifier).bindProperty(this::setObjectValueFromComponent);
 	}
 
 	@SafeVarargs

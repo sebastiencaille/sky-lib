@@ -26,7 +26,7 @@ import ch.scaille.gui.mvc.properties.AbstractProperty;
 public interface ListModelBindings {
 
 	static <T> IComponentBinding<IListView<T>> view(final ListModel<T> model) {
-		return ComponentBindings.<ListModel<T>, IListView<T>>listen(model, (c, p, t) -> c.setView(t));
+		return ComponentBindings.listen(model, (c, p, t) -> c.setView(t));
 	}
 
 	static <T> IComponentBinding<Collection<T>> values(final ListModel<T> model) {

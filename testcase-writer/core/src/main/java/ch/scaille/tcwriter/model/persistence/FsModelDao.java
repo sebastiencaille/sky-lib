@@ -93,7 +93,7 @@ public class FsModelDao implements IModelDao {
 		return loadConfiguration(null);
 	}
 
-	private FsModelConfig config;
+	private final FsModelConfig config;
 
 	public FsModelDao(FsModelConfig config) {
 		this.config = config;

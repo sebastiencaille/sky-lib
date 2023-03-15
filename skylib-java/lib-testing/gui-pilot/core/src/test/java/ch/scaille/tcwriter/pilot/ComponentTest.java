@@ -15,7 +15,7 @@ class ComponentTest {
 
 	public static class TestComponent extends AbstractComponentPilot<TestComponent, Object> {
 
-		private List<Long> delays = new ArrayList<>();
+		private final List<Long> delays = new ArrayList<>();
 
 		protected TestComponent(GuiPilot pilot) {
 			super(pilot);

@@ -3,6 +3,8 @@ package ch.scaille.tcwriter.pilot.selenium;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
@@ -25,6 +27,16 @@ public abstract class AbstractTestWebAppProvider {
 	protected static Undertow webServer = null;
 	protected static WebDriver driver = null;
 
+	public static URL localUrl;
+
+	static {
+		try {
+			localUrl = new URL("http://localhost:9999");
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	public abstract WebDriver createWebDriver();
 
 	public static void setDriver(WebDriver driver) {
@@ -40,7 +52,7 @@ public abstract class AbstractTestWebAppProvider {
 
 	@BeforeAll
 	public static void startWebServer() {
-		webServer = Undertow.builder().addHttpListener(8080, "localhost")
+		webServer = Undertow.builder().addHttpListener(9999, "localhost")
 				.setHandler(AbstractTestWebAppProvider::handleWebExchange).build();
 		webServer.start();
 	}

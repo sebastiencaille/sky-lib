@@ -86,7 +86,7 @@ public class ElementPilot extends AbstractComponentPilot<ElementPilot, WebElemen
 	}
 
 	public static Polling<WebElement, Boolean> isEnabled() {
-		return Pollings.<WebElement>satisfies(WebElement::isEnabled).withReportText("is enabled");
+		return Pollings.satisfies(WebElement::isEnabled).withReportText("is enabled");
 	}
 
 	public static Polling<WebElement, Boolean> click() {

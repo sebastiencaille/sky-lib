@@ -11,7 +11,7 @@ public interface IFlowGenerator<C> {
 
 	void generate(BaseGenContext<C> genContext, BindingContext context);
 
-	public static class BaseGenContext<C> {
+	class BaseGenContext<C> {
 
 		private final Iterator<IFlowGenerator<C>> flowGeneratorIterator;
 		private C localContext;

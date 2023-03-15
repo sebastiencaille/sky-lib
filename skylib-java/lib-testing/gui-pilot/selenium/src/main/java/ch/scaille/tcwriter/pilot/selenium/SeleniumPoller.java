@@ -71,7 +71,7 @@ public class SeleniumPoller extends Poller {
 				}).pollingEvery(duration) //
 				.ignoreAll(Arrays.asList(NoSuchElementException.class, StaleElementReferenceException.class,
 						ElementNotInteractableException.class, UnhandledAlertException.class))
-				.<T>until(d -> {
+				.until(d -> {
 					try {
 						T result = polling.apply(this);
 

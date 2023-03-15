@@ -269,14 +269,14 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 	public void addListener(final IListModelListener<T> listener) {
 		listeners.add(IListModelListener.class, listener);
 		if (listener instanceof IChildModelListener) {
-			listeners.add(IChildModelListener.class, IChildModelListener.class.cast(listener));
+			listeners.add(IChildModelListener.class, (IChildModelListener) listener);
 		}
 	}
 
 	public void removeListener(final IListModelListener<T> listener) {
 		listeners.remove(IListModelListener.class, listener);
 		if (listener instanceof IChildModelListener) {
-			listeners.remove(IChildModelListener.class, IChildModelListener.class.cast(listener));
+			listeners.remove(IChildModelListener.class, (IChildModelListener) listener);
 		}
 	}
 
@@ -382,7 +382,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 		if (newView != null) {
 			viewProperty.setValue(this, newView);
 		} else {
-			viewProperty.setValue(this, ListViews.<T>inherited());
+			viewProperty.setValue(this, ListViews.inherited());
 		}
 		viewProperty.getValue().attach(localImpl);
 		viewUpdated();

@@ -101,17 +101,19 @@ ListModel<TestObject> filteredModel = new ChildListModel<>(model, listDynamicVie
 Model Example: [[Model](lib-gui-examples/src/main/java/ch/scaille/example/gui/TestObjectTableModel.java)] [[View](lib-gui-examples/src/main/java/ch/scaille/example/gui/model/impl/TableModelExampleView.java)]
 
 ```java
+import java.util.Objects;
+
 public class TestObjectTableModel extends ListModelTableModel<TestObject, Columns> {
 
-	public enum Columns { A_FIRST_VALUE, A_SECOND_VALUE	}
-	
-	public boolean isCellEditable(final int rowIndex, final int columnIndex) {
-		return Columns.A_FIRST_VALUE.ordinal() == columnIndex;
-	}
+    public enum Columns {A_FIRST_VALUE, A_SECOND_VALUE}
 
-   	protected Object getValueAtColumn(final TestObject object, final Columns column) {
-		switch (column) {
-			case A_FIRST_VALUE: ...
+    public boolean isCellEditable(final int rowIndex, final int columnIndex) {
+        return Columns.A_FIRST_VALUE.ordinal() == columnIndex;
+    }
+
+    protected Object getValueAtColumn(final TestObject object, final Columns column) {
+        if (Objects.requireNonNull(column) == Columns.A_FIRST_VALUE) {...
+        }
 ```
 **Tuning the table columns**  
 The width of each column is computed according to the policy of each column (fixed or % or remaining width)  

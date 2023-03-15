@@ -125,7 +125,7 @@ public class GuiModel {
 	public <T, U> Consumer<AbstractTypedProperty<U>> implicitConverters(Class<T> modelClass, String attributeName,
 			Class<?> attributeClass) {
 		return p -> configuration.getImplicitConverters().stream().sequential()
-				.map(c -> c.create(p, modelClass, attributeName, (Class<U>) attributeClass))
+				.map(c -> c.create(p, modelClass, attributeName, attributeClass))
 				.forEach(p::addImplicitConverter);
 	}
 

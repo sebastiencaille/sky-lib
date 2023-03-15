@@ -38,7 +38,7 @@ class SwingBindingsTest {
 		final JCheckBox cb = new JCheckBox("UnitTest");
 		model.stringProperty.setValue(this, Boolean.FALSE.toString());
 		final IBindingController cbBinding = model.stringProperty
-				.bind(Converters.<String, Boolean>converter(Boolean::valueOf, Object::toString))
+				.bind(Converters.converter(Boolean::valueOf, Object::toString))
 				.bind(SwingBindings.selected(cb));
 		model.stringProperty.attach();
 

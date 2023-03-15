@@ -133,7 +133,7 @@ public class AbstractObjectMetaData<D> {
 	protected void createAttributesMetaData(final Class<?> clazz, final Set<String> attribNames) {
 		for (final String name : attribNames) {
 			final String attribName = Character.toUpperCase(name.charAt(0)) + name.substring(1);
-			final AbstractAttributeMetaData<D> access = AttributeFactory.<D>create(clazz, name, attribName,
+			final AbstractAttributeMetaData<D> access = AttributeFactory.create(clazz, name, attribName,
 					attributeMode);
 			if (access != null) {
 				attributes.put(attribName, access);

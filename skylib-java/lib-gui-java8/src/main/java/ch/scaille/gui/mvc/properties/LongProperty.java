@@ -54,7 +54,7 @@ public class LongProperty extends AbstractTypedProperty<Long> {
 
 	@Override
 	public EndOfChain<Long> createBindingChain() {
-		return new BindingChain(this, errorNotifier).<Long>bindProperty(this::setObjectValueFromComponent);
+		return new BindingChain(this, errorNotifier).bindProperty(this::setObjectValueFromComponent);
 	}
 
 	@SafeVarargs

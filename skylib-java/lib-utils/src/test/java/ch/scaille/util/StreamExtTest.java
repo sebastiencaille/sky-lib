@@ -33,9 +33,9 @@ class StreamExtTest {
 
 	@Test
 	void singleTest() {
-		Arrays.asList(1).stream().collect(StreamExt.single()).orElseThrow(WrongCountException::new);
+        Collections.singletonList(1).stream().collect(StreamExt.single()).orElseThrow(WrongCountException::new);
 		try {
-			Arrays.asList().stream().collect(StreamExt.single()).orElseThrow(WrongCountException::new);
+            Collections.emptyList().stream().collect(StreamExt.single()).orElseThrow(WrongCountException::new);
 		} catch (final Exception e) {
 			assertEquals("Wrong count: 0", e.getMessage());
 		}
@@ -49,7 +49,7 @@ class StreamExtTest {
 	@Test
 	void zeroOrOneTest() {
 
-		final Optional<Integer> zeroOrOne1 = Arrays.asList(1).stream().collect(StreamExt.zeroOrOne())
+		final Optional<Integer> zeroOrOne1 = Collections.singletonList(1).stream().collect(StreamExt.zeroOrOne())
 				.optionalOrThrow(WrongCountException::new);
 		assertTrue(zeroOrOne1.isPresent(), () -> "zeroOrOne1.isPresent()");
 		assertEquals(Integer.valueOf(1), zeroOrOne1.get());

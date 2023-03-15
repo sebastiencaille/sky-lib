@@ -12,7 +12,7 @@ import ch.scaille.util.dao.metadata.DataObjectManagerFactory;
  */
 public class PagePilot {
 
-	private SwingPilot pilot;
+	private final SwingPilot pilot;
 
 	protected PagePilot(SwingPilot pilot) {
 		this.pilot = pilot;

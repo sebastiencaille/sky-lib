@@ -63,7 +63,7 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 
 	@Override
 	public EndOfChain<T> createBindingChain() {
-		return new BindingChain(this, errorNotifier).<T>bindProperty(this::setObjectValueFromComponent);
+		return new BindingChain(this, errorNotifier).bindProperty(this::setObjectValueFromComponent);
 	}
 
 	@Override

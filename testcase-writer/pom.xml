@@ -7,6 +7,7 @@
 		<groupId>ch.scaille</groupId>
 		<artifactId>libs</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../skylib-java/pom.xml</relativePath>
 	</parent>
 	<groupId>ch.scaille.tcwriter</groupId>
 	<artifactId>testcase-writer</artifactId>
@@ -25,6 +26,7 @@
 		<aspectj.version>1.9.19</aspectj.version>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
+		<sonar.exclusions>**/node_modules/**/*</sonar.exclusions>
 	</properties>
 	<build>
 		<pluginManagement>

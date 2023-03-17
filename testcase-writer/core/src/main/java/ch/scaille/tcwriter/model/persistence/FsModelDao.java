@@ -87,10 +87,6 @@ public class FsModelDao implements IModelDao {
                 .readValue(read(configPath(toLoad)));
     }
 
-    public static FsModelConfig loadConfiguration() throws IOException {
-        return loadConfiguration(null);
-    }
-
     private final FsModelConfig config;
 
     public FsModelDao(FsModelConfig config) {
@@ -226,10 +222,6 @@ public class FsModelDao implements IModelDao {
         try (var reader = new BufferedReader(new InputStreamReader(path.openConnection().getInputStream()))) {
             return reader.lines().collect(Collectors.joining("\n"));
         }
-    }
-
-    public static Path classFile(Path root, String testClassName) {
-        return root.resolve(testClassName.replace('.', '/') + ".java");
     }
 
     public static String toIdentifier(Path path) {

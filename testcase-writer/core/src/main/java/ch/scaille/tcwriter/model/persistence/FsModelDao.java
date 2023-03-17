@@ -1,7 +1,5 @@
 package ch.scaille.tcwriter.model.persistence;
 
-import static ch.scaille.util.helpers.LambdaExt.uncheckF;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,7 +14,6 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -113,11 +110,7 @@ public class FsModelDao implements IModelDao {
     @Override
     public List<Metadata> listDictionaries() throws IOException {
         try (var list = Files.list(Paths.get(resolveToURL(this.config.getDictionaryPath()).toURI()))) {
-            return list.map(FsModelDao::toIdentifier).map(uncheckF(f -> readTestDictionary(f).get().getMetadata(), //
-                    (f, e) -> {
-                        Logs.of(getClass()).log(Level.INFO, "Unable to read meta data", e);
-                        return new Metadata(f, "Unreadable: " + e.getClass());
-                    })).toList();
+            return list.map(FsModelDao::toIdentifier).map(f -> readTestDictionary(f).get().getMetadata()).toList();
         } catch (IOException | URISyntaxException e) {
             throw new IOException("Unable to read dictionaries", e);
         }
@@ -149,11 +142,7 @@ public class FsModelDao implements IModelDao {
     @Override
     public List<Metadata> listTestCases(final TestDictionary dictionary) throws IOException {
         try (var list = Files.list(Paths.get(resolveToURL(this.config.getTcPath()).toURI()))) {
-            return list.map(FsModelDao::toIdentifier).map(uncheckF(f -> readTestCase(f, dictionary).get().getMetadata(), //
-                    (f, e) -> {
-                        Logs.of(getClass()).log(Level.INFO, "Unable to read meta data", e);
-                        return new Metadata(f, "Unreadable: " + e.getClass());
-                    })).toList();
+            return list.map(FsModelDao::toIdentifier).map(f -> readTestCase(f, dictionary).get().getMetadata()).toList();
         } catch (IOException | URISyntaxException e) {
             throw new IOException("Unable to read dictionaries", e);
         }

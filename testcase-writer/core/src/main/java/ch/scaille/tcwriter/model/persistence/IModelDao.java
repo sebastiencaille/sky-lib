@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
 import ch.scaille.generators.util.Template;
 import ch.scaille.tcwriter.model.Metadata;
@@ -23,8 +24,8 @@ public interface IModelDao {
 	// ----------------------- Dictionary -----------------------
 	
 	List<Metadata> listDictionaries() throws IOException;
-	
-	TestDictionary readTestDictionary(String dictionaryName) throws IOException;
+
+	Optional<TestDictionary> readTestDictionary(String dictionaryName);
 
 	void writeTestDictionary(TestDictionary testDictionary) throws IOException;
 
@@ -34,7 +35,7 @@ public interface IModelDao {
 
 	List<Metadata> listTestCases(TestDictionary dictionary) throws IOException;
 	
-	ExportableTestCase readTestCase(String filename, TestDictionary testDictionary) throws IOException;
+	Optional<ExportableTestCase> readTestCase(String filename, TestDictionary testDictionary);
 
 	void writeTestCase(String identifier, TestCase testCase) throws IOException;
 

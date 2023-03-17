@@ -3,7 +3,7 @@
 	<head>
 		<title>Example 1</title>
 		<script type="application/javascript" >
-			enableTest = function() {
+			const enableTest = function() {
 				console.log("EnableTest");
 				document.getElementById('EnableTest').disabled=true;
 				document.getElementById('AlertTest').disabled=true;
@@ -13,12 +13,12 @@
 				}, 2000)
 			};
 			
-			alertTest = function() {
+			const alertTest = function() {
 				console.log("AlertTest");
 				alert('Alert Test');
 			};
 			
-			elementChangeTest = function() {
+			const elementChangeTest = function() {
 				console.log("ElementChangeTest");
 				var elementChangeHolder = document.getElementById('ElementChangeHolder');
 				setTimeout(() => {

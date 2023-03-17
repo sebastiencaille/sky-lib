@@ -1,6 +1,5 @@
 package ch.scaille.tcwriter.server.webapi.controllers;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.NativeWebRequest;
 
@@ -15,30 +14,30 @@ import jakarta.validation.Valid;
 
 public class ContextController extends ContextApiController {
 
-	private final ContextService contextService;
+    private final ContextService contextService;
 
-	private final ContextDao contextDao;
+    private final ContextDao contextDao;
 
-	public ContextController(ContextService contextService, ContextDao contextDao, NativeWebRequest webNativeRequest) {
-		super(webNativeRequest);
-		this.contextService = contextService;
-		this.contextDao = contextDao;
-	}
+    public ContextController(ContextService contextService, ContextDao contextDao, NativeWebRequest webNativeRequest) {
+        super(webNativeRequest);
+        this.contextService = contextService;
+        this.contextDao = contextDao;
+    }
 
-	@Override
-	public ResponseEntity<ch.scaille.tcwriter.generated.api.model.Context> getCurrent() {
-		return new ResponseEntity<>(ContextMapper.MAPPER.convert(contextService.get()), HttpStatus.OK);
-	}
+    @Override
+    public ResponseEntity<ch.scaille.tcwriter.generated.api.model.Context> getCurrent() {
+        return ResponseEntity.ok(ContextMapper.MAPPER.convert(contextService.get()));
+    }
 
-	@Override
-	public ResponseEntity<ch.scaille.tcwriter.generated.api.model.Context> setCurrent(
-			ch.scaille.tcwriter.generated.api.model.@Valid ContextUpdate contextUpdate) {
-		final var modelContext = contextDao.save(
-				Identity.of(getRequest().orElseThrow(() -> new IllegalStateException("No request available"))
-						.getNativeRequest(HttpServletRequest.class)),
-				contextService.merge(ContextMapper.MAPPER.convert(contextUpdate)));
-		Logs.of(getClass()).info(() -> "Setting new context: " + modelContext);
-		return new ResponseEntity<>(ContextMapper.MAPPER.convert(modelContext), HttpStatus.OK);
-	}
+    @Override
+    public ResponseEntity<ch.scaille.tcwriter.generated.api.model.Context> setCurrent(
+            ch.scaille.tcwriter.generated.api.model.@Valid ContextUpdate contextUpdate) {
+        final var modelContext = contextDao.save(
+                Identity.of(getRequest().orElseThrow(() -> new IllegalStateException("No request available"))
+                        .getNativeRequest(HttpServletRequest.class)),
+                contextService.merge(ContextMapper.MAPPER.convert(contextUpdate)));
+        Logs.of(getClass()).info(() -> "Setting new context: " + modelContext);
+        return ResponseEntity.ok(ContextMapper.MAPPER.convert(modelContext));
+    }
 
 }

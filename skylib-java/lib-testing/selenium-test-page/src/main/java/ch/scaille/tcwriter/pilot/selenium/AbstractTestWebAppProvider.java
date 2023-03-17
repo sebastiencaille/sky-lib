@@ -27,7 +27,7 @@ public abstract class AbstractTestWebAppProvider {
 	protected static Undertow webServer = null;
 	protected static WebDriver driver = null;
 
-	public static URL localUrl;
+	public static final URL localUrl;
 
 	static {
 		try {

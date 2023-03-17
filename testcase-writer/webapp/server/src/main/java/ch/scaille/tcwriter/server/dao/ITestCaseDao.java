@@ -1,6 +1,7 @@
 package ch.scaille.tcwriter.server.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
@@ -10,6 +11,6 @@ public interface ITestCaseDao {
 
 	List<Metadata> listAll(TestDictionary dictionary);
 
-	ExportableTestCase load(String dictionaryName, TestDictionary dictionary);
+	Optional<ExportableTestCase> load(String dictionaryName, TestDictionary dictionary);
 
 }

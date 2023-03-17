@@ -2,7 +2,6 @@ package ch.scaille.tcwriter.server.webapi.controllers;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.NativeWebRequest;
 
@@ -16,27 +15,32 @@ import ch.scaille.tcwriter.server.webapi.mappers.TestDictionaryMapper;
 
 public class DictionaryController extends DictionaryApiController {
 
-	private final IDictionaryDao dictionaryDao;
+    private final IDictionaryDao dictionaryDao;
 
-	private final ContextService contextService;
+    private final ContextService contextService;
 
-	public DictionaryController(ContextService contextService, IDictionaryDao dictionaryDao, NativeWebRequest request) {
-		super(request);
-		this.contextService = contextService;
-		this.dictionaryDao = dictionaryDao;
-	}
+    public DictionaryController(ContextService contextService, IDictionaryDao dictionaryDao, NativeWebRequest request) {
+        super(request);
+        this.contextService = contextService;
+        this.dictionaryDao = dictionaryDao;
+    }
 
-	@Override
-	public ResponseEntity<List<Metadata>> listAll() {
-		return new ResponseEntity<>(
-				dictionaryDao.listAll().stream().map(MetadataMapper.MAPPER::convert).toList(),
-				HttpStatus.OK);
-	}
+    @Override
+    public ResponseEntity<List<Metadata>> listAll() {
+        return ResponseEntity.ok(
+                dictionaryDao.listAll().stream().map(MetadataMapper.MAPPER::convert).toList());
+    }
 
-	@Override
-	public ResponseEntity<TestDictionary> current() {
-		return new ResponseEntity<>(
-				TestDictionaryMapper.MAPPER.convert(dictionaryDao.load(contextService.get().getDictionary())),
-				HttpStatus.OK);
-	}
+    @Override
+    public ResponseEntity<TestDictionary> current() {
+        var dictionaryName = contextService.get().getDictionary();
+        if (dictionaryName == null) {
+            return ResponseEntity.notFound().build();
+        }
+        var dictionary = dictionaryDao.load(dictionaryName);
+        if (dictionary.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(TestDictionaryMapper.MAPPER.convert(dictionary.get()));
+    }
 }

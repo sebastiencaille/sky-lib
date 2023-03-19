@@ -65,8 +65,8 @@ public class TestCaseController extends TestcaseApiController {
 	@Override
 	public ResponseEntity<TestCase> testcase(@Valid String tc) {
 		final var loadedTC = loadValidTestCase(tc);
-		var dto = TestCaseMapper.MAPPER.convert(loadedTC);
-		var humanReadables = tcService.computeHumanReadableTexts(loadedTC, loadedTC.getSteps());
+		final var dto = TestCaseMapper.MAPPER.convert(loadedTC);
+		final var humanReadables = tcService.computeHumanReadableTexts(loadedTC, loadedTC.getSteps());
 		for (int i = 0; i < dto.getSteps().size(); i++) {
 			dto.getSteps().get(i).setHumanReadable(humanReadables.get(i));
 		}
@@ -75,8 +75,8 @@ public class TestCaseController extends TestcaseApiController {
 
 	@Override
 	public ResponseEntity<Void> executeTestcase(@Valid String tc) {
-		var loadedTC = loadValidTestCase(tc);
-		var testRemoteControl = new TestRemoteControl(10_000, new TestExecutionListener() {
+		final var loadedTC = loadValidTestCase(tc);
+		final var testRemoteControl = new TestRemoteControl(10_000, new TestExecutionListener() {
 			@Override
 			public void testRunning(boolean running) {
 				LOGGER.info(() -> "Running: " + running);
@@ -87,8 +87,8 @@ public class TestCaseController extends TestcaseApiController {
 				LOGGER.info(() -> "Paused: " + paused);
 			}
 		});
-		var tcpPort = testRemoteControl.prepare();
-		var executor = new JUnitTestExecutor(modelDao, ClassLoaderHelper.guessClassPath());
+		final var tcpPort = testRemoteControl.prepare();
+		final var executor = new JUnitTestExecutor(modelDao, ClassLoaderHelper.guessClassPath());
 		try (var config = new ITestExecutor.TestConfig(loadedTC, Paths.get(System.getProperty("java.io.tmpdir")),
 				tcpPort)) {
 			executor.startTest(config);
@@ -100,10 +100,10 @@ public class TestCaseController extends TestcaseApiController {
 	}
 
 	private ExportableTestCase loadValidTestCase(String tc) {
-		var dictionary = loadValidDictionary();
+		final var dictionary = loadValidDictionary();
 		final ExportableTestCase loadedTC;
 		if ("current".equals(tc)) {
-			var currentTCId = validateTestCaseSet(contextService.get().getTestCase());
+			final  var currentTCId = validateTestCaseSet(contextService.get().getTestCase());
 			loadedTC = validateTestCaseSet(testCaseDao.load(currentTCId, dictionary));
 		} else {
 			loadedTC = testCaseDao.load(tc, dictionary).orElseThrow(() -> new TestCaseNotFoundException(tc));
@@ -112,7 +112,7 @@ public class TestCaseController extends TestcaseApiController {
 	}
 
 	private ch.scaille.tcwriter.model.dictionary.TestDictionary loadValidDictionary() {
-		var currentDictionaryId = validateDictionarySet(contextService.get().getDictionary());
+		final var currentDictionaryId = validateDictionarySet(contextService.get().getDictionary());
 		return validateDictionarySet(dictionaryDao.load(currentDictionaryId));
 	}
 

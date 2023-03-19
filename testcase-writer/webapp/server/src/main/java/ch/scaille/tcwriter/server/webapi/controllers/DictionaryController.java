@@ -34,8 +34,8 @@ public class DictionaryController extends DictionaryApiController {
 
 	@Override
 	public ResponseEntity<TestDictionary> current() {
-		var dictionaryName = validateDictionarySet(contextService.get().getDictionary());
-		var dictionary = validateDictionarySet(dictionaryDao.load(dictionaryName));
+		final var dictionaryName = validateDictionarySet(contextService.get().getDictionary());
+		final var dictionary = validateDictionarySet(dictionaryDao.load(dictionaryName));
 		return ResponseEntity.ok(TestDictionaryMapper.MAPPER.convert(dictionary));
 	}
 }

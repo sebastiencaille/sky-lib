@@ -1,7 +1,14 @@
-<html>
-<body><h1>Error</h1>
-Error: <i>{text}</i><br>
-Error code: {code}<br>
-Error arguments: {arguments}<br>
-{trace}
-</body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Error</title>
+</head>
+<body>
+	<h1>Error {httpStatusCode} ({httpStatusValue})</h1>
+	<h3>{message}</h3>
+	<b>Error code:</b> {code}
+	<br>
+	<b>Error arguments:</b> {arguments}
+	<p>{trace}
+</body>
+</html>

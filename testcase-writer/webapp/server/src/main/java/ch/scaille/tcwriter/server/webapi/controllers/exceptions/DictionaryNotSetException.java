@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 
 import ch.scaille.tcwriter.server.web.controller.exceptions.WebRTException;
 
-//@ResponseStatus
 public class DictionaryNotSetException extends WebRTException {
 	
 	public DictionaryNotSetException() {

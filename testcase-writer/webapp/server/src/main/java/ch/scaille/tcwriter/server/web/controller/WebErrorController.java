@@ -78,8 +78,10 @@ public class WebErrorController extends AbstractErrorController {
 					responseBody
 							.write(line.replace("{code}", dto.getCode())
 									.replace("{arguments}", Arrays.toString(dto.getArguments()))
-									.replace("{text}", dto.getText())
-									.replace("{trace}", dto.getTrace()));
+									.replace("{message}", dto.getMessage())
+									.replace("{trace}", dto.getTrace())
+									.replace("{httpStatusValue}", Integer.toString(dto.getStatus().value()))
+									.replace("{httpStatusCode}", dto.getStatus().name()));
 					}
 				}
 			}
@@ -99,13 +101,15 @@ public class WebErrorController extends AbstractErrorController {
 	public class ExceptionDto {
 		private final String code;
 		private final Object[] arguments;
-		private String text = null;
+		private final HttpStatus status;
+		private String message = null;
 		private String trace;
 
-		public ExceptionDto(String code, Object[] arguments) {
+		public ExceptionDto(String code, Object[] arguments, HttpStatus status) {
 			super();
 			this.code = code;
 			this.arguments = arguments;
+			this.status = status;
 		}
 
 		public String getCode() {
@@ -116,12 +120,12 @@ public class WebErrorController extends AbstractErrorController {
 			return arguments;
 		}
 
-		public void setText(String text) {
-			this.text = text;
+		public void setMessage(String text) {
+			this.message = text;
 		}
 
-		public String getText() {
-			return text;
+		public String getMessage() {
+			return message;
 		}
 
 		public String getTrace() {
@@ -132,25 +136,29 @@ public class WebErrorController extends AbstractErrorController {
 			this.trace = trace;
 		}
 
+		public HttpStatus getStatus() {
+			return status;
+		}
+
 	}
 
 	private ExceptionDto toDto(HttpServletRequest request) {
-		var exc = (Exception) request.getAttribute(DispatcherServlet.EXCEPTION_ATTRIBUTE);
+		final var exc = (Exception) request.getAttribute(DispatcherServlet.EXCEPTION_ATTRIBUTE);
+		final var status = getStatus(request);
 		ExceptionDto dto;
 		String defaultText;
 		if (exc instanceof WebRTException webRTexc) {
-			dto = new ExceptionDto(webRTexc.getDetailMessageCode(), webRTexc.getDetailMessageArguments());
+			dto = new ExceptionDto(webRTexc.getDetailMessageCode(), webRTexc.getDetailMessageArguments(), status);
 			defaultText = webRTexc.getDetailMessageCode();
 		} else if (exc != null) {
-			dto = new ExceptionDto("exception." + exc.getClass().getName(), new Object[] { exc.getMessage() });
+			dto = new ExceptionDto("exception." + exc.getClass().getName(), new Object[] { exc.getMessage() }, status);
 			defaultText = messageSource.getMessage("error.exception",
 					new Object[] { exc.getClass().getName(), exc.getMessage() }, "error.exception", LOCALE);
 		} else {
-			var status = getStatus(request);
-			dto = new ExceptionDto("exception." + status.name(), new Object[] { status.getReasonPhrase() });
+			dto = new ExceptionDto("exception." + status.name(), new Object[] { status.getReasonPhrase() }, status);
 			defaultText = messageSource.getMessage("error.status", new Object[] { status }, "error.status", LOCALE);
 		}
-		dto.setText(messageSource.getMessage(dto.getCode(), dto.getArguments(), defaultText, LOCALE));
+		dto.setMessage(messageSource.getMessage(dto.getCode(), dto.getArguments(), defaultText, LOCALE));
 		dto.setTrace((String) getErrorAttributes(request,
 				ErrorAttributeOptions.of(ErrorAttributeOptions.Include.STACK_TRACE)).get("trace"));
 

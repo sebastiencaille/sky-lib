@@ -1,7 +1,5 @@
 package ch.scaille.tcwriter.server.services;
 
-import java.util.Optional;
-
 import ch.scaille.tcwriter.server.dao.ContextDao;
 import ch.scaille.tcwriter.server.dto.Context;
 import ch.scaille.tcwriter.server.dto.Identity;

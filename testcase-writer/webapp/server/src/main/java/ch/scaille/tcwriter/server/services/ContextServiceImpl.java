@@ -1,5 +1,7 @@
 package ch.scaille.tcwriter.server.services;
 
+import java.util.Optional;
+
 import ch.scaille.tcwriter.server.dao.ContextDao;
 import ch.scaille.tcwriter.server.dto.Context;
 import ch.scaille.tcwriter.server.dto.Identity;
@@ -32,12 +34,15 @@ public class ContextServiceImpl implements ContextService {
 
 	@Override
 	public Context merge(Context newContext) {
+		var dictionary = newContext.getDictionary();
+		var testCase = newContext.getTestCase();
+
 		var current = contexts.get();
-		if (newContext.getDictionary() != null) {
-			current.setDictionary(newContext.getDictionary());
+		if (dictionary.isPresent()) {
+			current.setDictionary(dictionary.get());
 		}
-		if (newContext.getTestCase() != null) {
-			current.setTestCase(newContext.getTestCase());
+		if (testCase.isPresent()) {
+			current.setTestCase(testCase.get());
 		}
 		return current;
 	}

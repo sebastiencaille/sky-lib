@@ -2,6 +2,11 @@ import { Metadata, TestDictionary, TestCase, Context } from './Types'
 
 const API_URL = process.env.REACT_APP_API_URL;
 
+
+const loadCurrentContext = (callback: (context: Context) => void) =>
+	fetch(API_URL + '/context')
+		.then(r => r.json()).then(r => callback(r as Context));
+
 const listAllDictionaries = (callback: (metadata: Metadata[]) => void) =>
 	fetch(API_URL + '/dictionary')
 		.then(r => r.json()).then(r => callback(r as Metadata[]));
@@ -17,6 +22,7 @@ const listAllTestCases = (callback: (metadata: Metadata[]) => void) =>
 const loadCurrentTestCase = (callback: (dict: TestCase) => void) =>
 	fetch(API_URL + '/testcase/current')
 		.then(r => r.json()).then(r => callback(r as TestCase));
+
 
 const selectCurrentDictionary = (transientId: string, callback: (context: Context) => void) =>
 	fetch(API_URL + '/context',
@@ -46,6 +52,7 @@ const executeCurrentTestCase = () => {
 } 
 
 const WebApis = {
+	loadCurrentContext: loadCurrentContext,
 	listAllDictionaries: listAllDictionaries,
 	loadCurrentDictionary: loadCurrentDictionary,
 	listAllTestCases: listAllTestCases,

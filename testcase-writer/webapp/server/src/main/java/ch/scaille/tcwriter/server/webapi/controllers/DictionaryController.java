@@ -1,5 +1,7 @@
 package ch.scaille.tcwriter.server.webapi.controllers;
 
+import static ch.scaille.tcwriter.server.webapi.controllers.ControllerHelper.validateDictionarySet;
+
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -15,32 +17,25 @@ import ch.scaille.tcwriter.server.webapi.mappers.TestDictionaryMapper;
 
 public class DictionaryController extends DictionaryApiController {
 
-    private final IDictionaryDao dictionaryDao;
+	private final IDictionaryDao dictionaryDao;
 
-    private final ContextService contextService;
+	private final ContextService contextService;
 
-    public DictionaryController(ContextService contextService, IDictionaryDao dictionaryDao, NativeWebRequest request) {
-        super(request);
-        this.contextService = contextService;
-        this.dictionaryDao = dictionaryDao;
-    }
+	public DictionaryController(ContextService contextService, IDictionaryDao dictionaryDao, NativeWebRequest request) {
+		super(request);
+		this.contextService = contextService;
+		this.dictionaryDao = dictionaryDao;
+	}
 
-    @Override
-    public ResponseEntity<List<Metadata>> listAll() {
-        return ResponseEntity.ok(
-                dictionaryDao.listAll().stream().map(MetadataMapper.MAPPER::convert).toList());
-    }
+	@Override
+	public ResponseEntity<List<Metadata>> listAll() {
+		return ResponseEntity.ok(dictionaryDao.listAll().stream().map(MetadataMapper.MAPPER::convert).toList());
+	}
 
-    @Override
-    public ResponseEntity<TestDictionary> current() {
-        var dictionaryName = contextService.get().getDictionary();
-        if (dictionaryName == null) {
-            return ResponseEntity.notFound().build();
-        }
-        var dictionary = dictionaryDao.load(dictionaryName);
-        if (dictionary.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(TestDictionaryMapper.MAPPER.convert(dictionary.get()));
-    }
+	@Override
+	public ResponseEntity<TestDictionary> current() {
+		var dictionaryName = validateDictionarySet(contextService.get().getDictionary());
+		var dictionary = validateDictionarySet(dictionaryDao.load(dictionaryName));
+		return ResponseEntity.ok(TestDictionaryMapper.MAPPER.convert(dictionary));
+	}
 }

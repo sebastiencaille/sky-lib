@@ -44,8 +44,7 @@ public class TCWriterController extends GuiController {
 
     private final IModelDao modelDao;
 
-    public TCWriterController(final IModelDao modelDao, TestDictionary tcDictionary, final ITestExecutor testExecutor)
-            throws IOException {
+    public TCWriterController(final IModelDao modelDao, TestDictionary tcDictionary, final ITestExecutor testExecutor) {
         this.modelDao = modelDao;
         this.testExecutor = testExecutor;
         TestDictionary dictionary = tcDictionary;
@@ -205,12 +204,8 @@ public class TCWriterController extends GuiController {
     }
 
     public void restart() {
-        try {
-            gui.setVisible(false);
-            new TCWriterController(modelDao, null, testExecutor).run();
-        } catch (IOException e) {
-            TCWriterGui.handleException(null, e);
-        }
+    	gui.setVisible(false);
+        new TCWriterController(modelDao, null, testExecutor).run();
     }
 
     public void resumeTestCase() throws IOException {

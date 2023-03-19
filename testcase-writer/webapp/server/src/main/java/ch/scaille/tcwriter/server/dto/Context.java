@@ -1,5 +1,7 @@
 package ch.scaille.tcwriter.server.dto;
 
+import java.util.Optional;
+
 public class Context {
 
 	private final Identity identity;
@@ -18,16 +20,16 @@ public class Context {
 		return identity;
 	}
 
-	public String getDictionary() {
-		return dictionaryName;
+	public Optional<String> getDictionary() {
+		return Optional.ofNullable(dictionaryName);
 	}
 
 	public void setDictionary(String dictionaryName) {
 		this.dictionaryName = dictionaryName;
 	}
 
-	public String getTestCase() {
-		return testCase;
+	public Optional<String> getTestCase() {
+		return Optional.ofNullable(testCase);
 	}
 
 	public void setTestCase(String testCase) {

@@ -38,6 +38,7 @@ class App extends React.Component<IAppProps, IAppState> {
 
 	componentDidMount(): void {
 		WebApis.listAllDictionaries((allMetaData) => this.setState({ allDictionaries: allMetaData }));
+		WebApis.loadCurrentContext((c) => this.setState({ currentContext: c}))
 	}
 
 	componentDidUpdate(prevProps: Readonly<IAppProps>, prevState: Readonly<IAppState>): void {

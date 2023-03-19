@@ -71,10 +71,10 @@ public class WebErrorController extends AbstractErrorController {
 				response.setContentType(getContentType());
 				var responseBody = response.getWriter();
 				var dto = (ExceptionDto)model.get("dto");
-				try (BufferedReader in = new BufferedReader(
+				try (var rsrcStream = new BufferedReader(
 						new InputStreamReader(this.resource.getInputStream(), StandardCharsets.UTF_8))) {
 					String line;
-					while ((line = in.readLine()) != null) {
+					while ((line = rsrcStream.readLine()) != null) {
 					responseBody
 							.write(line.replace("{code}", dto.getCode())
 									.replace("{arguments}", Arrays.toString(dto.getArguments()))

@@ -22,7 +22,7 @@
 		<version.jackson-databind-nullable>0.2.6</version.jackson-databind-nullable>
 		<version.mapstruct>1.5.3.Final</version.mapstruct>
 		<version.swagger-parser>2.1.12</version.swagger-parser>
-		<version.swagger>2.2.8</version.swagger>
+		<version.swagger>2.2.9</version.swagger>
 
 		<sonar.exclusions>**/generated-sources/**</sonar.exclusions>
 	</properties>

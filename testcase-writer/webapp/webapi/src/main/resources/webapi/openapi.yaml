@@ -29,5 +29,7 @@ components:
       $ref: schemas/TestDictionary.yaml#/TestDictionary
     TestCase:
       $ref: schemas/TestCase.yaml#/TestCase
+    TestStatus:
+      $ref: schemas/StepStatus.yaml#/StepStatus
 
 

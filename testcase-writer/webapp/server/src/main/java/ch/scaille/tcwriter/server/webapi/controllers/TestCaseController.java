@@ -4,11 +4,14 @@ import static ch.scaille.tcwriter.server.webapi.controllers.ControllerHelper.val
 import static ch.scaille.tcwriter.server.webapi.controllers.ControllerHelper.validateTestCaseSet;
 
 import java.io.IOException;
-import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.core.MessageSendingOperations;
+import org.springframework.messaging.support.GenericMessage;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import ch.scaille.tcwriter.executors.ITestExecutor;
@@ -23,6 +26,7 @@ import ch.scaille.tcwriter.server.dao.IDictionaryDao;
 import ch.scaille.tcwriter.server.dao.ITestCaseDao;
 import ch.scaille.tcwriter.server.services.ContextService;
 import ch.scaille.tcwriter.server.services.TestCaseService;
+import ch.scaille.tcwriter.server.webapi.config.WebsocketConfig;
 import ch.scaille.tcwriter.server.webapi.controllers.exceptions.TestCaseNotFoundException;
 import ch.scaille.tcwriter.server.webapi.mappers.MetadataMapper;
 import ch.scaille.tcwriter.server.webapi.mappers.TestCaseMapper;
@@ -45,21 +49,24 @@ public class TestCaseController extends TestcaseApiController {
 
 	private final IModelDao modelDao;
 
+	private final MessageSendingOperations<String> feedbackSendingTemplate;
+
 	public TestCaseController(ContextService contextService, IDictionaryDao dictionaryDao, ITestCaseDao testcaseDao,
-			IModelDao modelDao, TestCaseService tcService, NativeWebRequest request) {
+			IModelDao modelDao, TestCaseService tcService, MessageSendingOperations<String> feedbackSendingTemplate,
+			NativeWebRequest request) {
 		super(request);
 		this.contextService = contextService;
 		this.dictionaryDao = dictionaryDao;
 		this.testCaseDao = testcaseDao;
 		this.modelDao = modelDao;
 		this.tcService = tcService;
+		this.feedbackSendingTemplate = feedbackSendingTemplate;
 	}
 
 	@Override
 	public ResponseEntity<List<Metadata>> listAll() {
 		var dictionary = loadValidDictionary();
-		return ResponseEntity
-				.ok(testCaseDao.listAll(dictionary).stream().map(MetadataMapper.MAPPER::convert).toList());
+		return ResponseEntity.ok(testCaseDao.listAll(dictionary).stream().map(MetadataMapper.MAPPER::convert).toList());
 	}
 
 	@Override
@@ -87,10 +94,25 @@ public class TestCaseController extends TestcaseApiController {
 				LOGGER.info(() -> "Paused: " + paused);
 			}
 		});
+
+		testRemoteControl.setStepListener((f, t) -> {
+			for (int i = f; i <= t;i++) {
+				var status = testRemoteControl.stepStatus(i);
+				LOGGER.info(status.toString());
+				var msg = new GenericMessage<>(TestCaseMapper.MAPPER.convert(status));
+				feedbackSendingTemplate.convertAndSend(WebsocketConfig.TEST_FEEDBACK_DESTINATION, msg);
+			}
+		});
+		
 		final var tcpPort = testRemoteControl.prepare();
 		final var executor = new JUnitTestExecutor(modelDao, ClassLoaderHelper.guessClassPath());
-		try (var config = new ITestExecutor.TestConfig(loadedTC, Paths.get(System.getProperty("java.io.tmpdir")),
-				tcpPort)) {
+		Path tempDir;
+		try {
+			tempDir = Files.createTempDirectory("tc-writer");
+		} catch (IOException e) {
+			throw new RuntimeException("Web call execution failed", e);
+		}
+		try (var config = new ITestExecutor.TestConfig(loadedTC, tempDir, tcpPort)) {
 			executor.startTest(config);
 			testRemoteControl.controlTest();
 		} catch (IOException | InterruptedException | TestCaseException e) {
@@ -103,7 +125,7 @@ public class TestCaseController extends TestcaseApiController {
 		final var dictionary = loadValidDictionary();
 		final ExportableTestCase loadedTC;
 		if ("current".equals(tc)) {
-			final  var currentTCId = validateTestCaseSet(contextService.get().getTestCase());
+			final var currentTCId = validateTestCaseSet(contextService.get().getTestCase());
 			loadedTC = validateTestCaseSet(testCaseDao.load(currentTCId, dictionary));
 		} else {
 			loadedTC = testCaseDao.load(tc, dictionary).orElseThrow(() -> new TestCaseNotFoundException(tc));

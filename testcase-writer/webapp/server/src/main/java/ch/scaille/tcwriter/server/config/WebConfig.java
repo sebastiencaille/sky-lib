@@ -2,6 +2,7 @@ package ch.scaille.tcwriter.server.config;
 
 import java.nio.charset.StandardCharsets;
 
+import ch.scaille.tcwriter.server.webapi.config.WebsocketConfig;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
@@ -30,7 +31,7 @@ public class WebConfig implements WebMvcConfigurer{
 	@Bean
 	ServletRegistrationBean<?> webApiServlet() {
 		var annotationContext = new AnnotationConfigServletWebApplicationContext();
-		annotationContext.register(WebApiControllersConfig.class, WebRestOpenApiDocConfig.class);
+		annotationContext.register(WebApiControllersConfig.class, WebRestOpenApiDocConfig.class, WebsocketConfig.class);
 		annotationContext.setDisplayName("Web Api");
 		var dispatcher = new DispatcherServlet(annotationContext);
 
@@ -42,7 +43,7 @@ public class WebConfig implements WebMvcConfigurer{
 
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("/*").allowedMethods("*").allowedOrigins("http://localhost:3000");
+		registry.addMapping("/*").allowedMethods("*").allowedOrigins("https://localhost:3000");
 	}
 	
 	@Bean

@@ -54,10 +54,6 @@ void property_manager::remove_listener(const string_view& _name, weak_ptr<proper
 	}
 }
 
-void property_manager::remove_listener(const string_view& _name, property_listener_ref _listener) {
-	remove_listener(_name, (property_listener*) _listener);
-}
-
 void property_manager::remove_listeners(const string_view &_name) {
 	m_propertyListeners.erase(_name);
 }

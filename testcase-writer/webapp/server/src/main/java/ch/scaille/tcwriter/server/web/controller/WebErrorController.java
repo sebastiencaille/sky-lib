@@ -18,9 +18,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
@@ -173,13 +171,13 @@ public class WebErrorController extends AbstractErrorController {
 		return super.resolveErrorView(request, response, getStatus(request), model);
 	}
 
-	@GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, produces = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
 	public ExceptionDto handleErrorJson(HttpServletRequest request) {
 		return toDto(request);
 	}
 
-	@GetMapping()
+	@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST})
 	@ResponseBody
 	public Object handleError(HttpServletRequest request) {
 		return null;

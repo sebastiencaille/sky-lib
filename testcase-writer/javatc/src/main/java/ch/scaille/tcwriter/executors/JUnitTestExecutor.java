@@ -1,15 +1,18 @@
 package ch.scaille.tcwriter.executors;
 
-import static ch.scaille.util.helpers.ClassLoaderHelper.cpToCommandLine;
 import static ch.scaille.util.helpers.LambdaExt.uncheckF2;
 import static java.util.stream.Collectors.joining;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
+
+import com.google.common.collect.Lists;
 
 import ch.scaille.tcwriter.generators.TestCaseToJava;
 import ch.scaille.tcwriter.model.TestCaseException;
@@ -49,8 +52,8 @@ public class JUnitTestExecutor implements ITestExecutor {
 	@Override
 	public String compile(TestConfig config) throws IOException, InterruptedException {
 		final var aspectsClassPath = Stream.of(classPath)
-				.filter(j -> j.toString().contains("testcase-writer") &&
-						(j.toString().contains("api") || j.toString().contains("javatc")))
+				.filter(j -> j.toString().contains("testcase-writer")
+						&& (j.toString().contains("api") || j.toString().contains("javatc")))
 				.map(URL::getFile).collect(joining(":"));
 		final var testCompiler = exec("Compile", new String[] { java, //
 				"-cp", ClassLoaderHelper.cpToCommandLine(classPath), //
@@ -58,6 +61,7 @@ public class JUnitTestExecutor implements ITestExecutor {
 				"-aspectpath", aspectsClassPath, //
 				"-source", "11", //
 				"-target", "11", //
+				"-verbose", //
 				// "-verbose", "-showWeaveInfo", //
 				"-d", config.binaryFolder.toString(), //
 				"-sourceroots", config.sourceFolder.toString() });//
@@ -75,12 +79,20 @@ public class JUnitTestExecutor implements ITestExecutor {
 				.orElseThrow(() -> new IllegalStateException("junit-platform-console-standalone was not found"))
 				.getFile();
 
-		exec("Execution", new String[]{java, // 
-				"-cp", cpToCommandLine(classPath), //
-				"-Dtest.port=" + config.tcpPort, "-Dtc.stepping=true", // 
+		var parameters = new ArrayList<String>();
+		parameters.addAll(Arrays.asList(java, //
+				"-Dtest.port=" + config.tcpPort, "-Dtc.stepping=true", //
 				"-jar", junit, "--select-class=" + binaryRef,
-				"-cp=" + cpToCommandLine(classPath, binaryURL.toUri().toURL())});
-	
+				"--details", "verbose"));
+		parameters.addAll(toMultipleCommandLine(classPath));
+		parameters.add("-cp=" + binaryURL);
+		exec("Execution", parameters.toArray(new String[parameters.size()]));
+
+	}
+
+	private List<String> toMultipleCommandLine(URL[] classPath) {
+		return Lists.partition(Arrays.asList(classPath), 50).stream()
+				.map(c -> "-cp=" + ClassLoaderHelper.cpToCommandLine(c.toArray(new URL[c.size()]))).toList();
 	}
 
 	private Process exec(String stage, String[] command) throws IOException {

@@ -43,3 +43,21 @@ table, th, td, tbody .steps {
 	text-align: left;
 }
 
+.NOT_RUN {
+	background-color: default;
+}
+
+.OK {
+	background-color: #78bc0f;
+}
+
+.STARTED {
+	background-color: #6ba5ff;
+}
+
+.FAILED {
+	background-color: #1a0000;
+}
+
+
+

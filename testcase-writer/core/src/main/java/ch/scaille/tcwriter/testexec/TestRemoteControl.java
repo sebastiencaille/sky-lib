@@ -3,6 +3,7 @@ package ch.scaille.tcwriter.testexec;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -121,7 +122,7 @@ public class TestRemoteControl {
 	public void cleanSteps() {
 		stepStates.values().forEach(s -> s.state = StepState.NOT_RUN);
 		if (stepChangedListener != null) {
-			stepChangedListener.accept(1, Integer.MAX_VALUE);
+			stepChangedListener.accept(1, stepStates.keySet().stream().max(Comparator.naturalOrder()).orElse(1));
 		}
 	}
 

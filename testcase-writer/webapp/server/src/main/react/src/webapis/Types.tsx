@@ -13,6 +13,7 @@ type ApiTestParameterValue = components["schemas"]["TestParameterValue"];
 type TestReference = components["schemas"]["TestReference"];
 type Context = components["schemas"]["Context"];
 type TestObjectDescription = components["schemas"]["TestObjectDescription"];
+type StepStatus = components["schemas"]["StepStatus"];
 
 interface TestDictionary extends ApiTestDictionary {
 
@@ -42,5 +43,6 @@ export type {
 	Metadata, IdObject,
 	TestDictionary, TestAction, TestActor, TestRole, TestParameterFactory, TestObjectDescription,
 	TestCase, TestStep, TestReference, TestParameterValue,
+	StepStatus,
 	Context
 }

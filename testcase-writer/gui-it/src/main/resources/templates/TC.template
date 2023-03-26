@@ -1,6 +1,6 @@
 package ${package};
 
-import ch.skymarshall.tcwriter.it.*;
+import ch.scaille.tcwriter.it.*;
 
 import org.junit.Before;
 import org.junit.Test;

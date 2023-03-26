@@ -4,7 +4,8 @@ import TestCaseHelper from './helpers/TestCaseHelper';
 import MetadataChooser from './widgets/MetadataChooser';
 import TestCaseTable from './widgets/TestCaseTable';
 import WebApis from './webapis/WebApis';
-import { Metadata, TestDictionary, TestCase, Context } from './webapis/Types'
+import WebApiFeedback from './webapis/WebApiFeedback'
+import { Metadata, TestDictionary, TestCase, Context, StepStatus } from './webapis/Types'
 import './App.css';
 
 interface IAppProps {
@@ -16,6 +17,8 @@ interface IAppState {
 	allTestCases: Metadata[];
 	currentDictionary?: TestDictionary;
 	currentTestCase?: TestCase;
+	executionState: string[];
+	stepStatuses: Map<number, StepStatus>;
 }
 
 const initialState: IAppState = {
@@ -23,9 +26,10 @@ const initialState: IAppState = {
 	allDictionaries: [],
 	allTestCases: [],
 	currentDictionary: undefined,
-	currentTestCase: undefined
+	currentTestCase: undefined,
+	executionState: [],
+	stepStatuses: new Map<number, StepStatus>(),
 };
-
 
 class App extends React.Component<IAppProps, IAppState> {
 
@@ -34,12 +38,13 @@ class App extends React.Component<IAppProps, IAppState> {
 		this.state = initialState;
 		this.dictionaryChanged = this.dictionaryChanged.bind(this);
 		this.testCaseChanged = this.testCaseChanged.bind(this);
+		this.stepStatusChanged = this.stepStatusChanged.bind(this);
 	}
 
 	componentDidMount(): void {
 		WebApis.listAllDictionaries((allMetaData) => this.setState({ allDictionaries: allMetaData }));
 		WebApis.loadCurrentContext((c) => this.setState({ currentContext: c}))
-	}
+  	}
 
 	componentDidUpdate(prevProps: Readonly<IAppProps>, prevState: Readonly<IAppState>): void {
 		const contextDicoChanged = prevState.currentContext?.dictionary !== this.state.currentContext?.dictionary;
@@ -76,13 +81,15 @@ class App extends React.Component<IAppProps, IAppState> {
 	}
 
 	private execute = () => {
-		const url = "wss://" + window.location.host + "/ws";
-		const ws = new WebSocket(url);
-        ws.onmessage = function (event) {
-            const json = JSON.parse(event.data);
-        	console.log(json)
-        };
-		WebApis.executeCurrentTestCase();
+  		WebApis.executeCurrentTestCase();
+	}
+
+	private stepStatusChanged = (stepStatus: StepStatus) =>  {
+		console.log(stepStatus.ordinal);
+		if (stepStatus) {
+			this.state.stepStatuses.set(stepStatus?.ordinal, stepStatus);
+			this.setState({ stepStatuses: new Map(this.state.stepStatuses)});
+		}
 	}
 
 	render() {
@@ -99,8 +106,14 @@ class App extends React.Component<IAppProps, IAppState> {
 				<button onClick={this.execute}>Execute</button>
 				<TestCaseTable
 					dictionary={this.state.currentDictionary}
-					testCase={this.state.currentTestCase} />
-			</div>);
+					testCase={this.state.currentTestCase} 
+					stepStatuses={this.state.stepStatuses}
+					/>
+        		<WebApiFeedback 
+        			stepStatusChanged={ this.stepStatusChanged }         		
+        		/>
+    		</div>
+        )
 	}
 }
 

@@ -1,11 +1,12 @@
 import React from 'react';
 import DictionaryHelper from '../helpers/DictionaryHelper';
 import TestCaseHelper from '../helpers/TestCaseHelper';
-import { TestDictionary, TestCase } from '../webapis/Types';
+import { TestDictionary, TestCase, StepStatus } from '../webapis/Types';
 
 interface ITestCaseProps {
 	dictionary?: TestDictionary;
 	testCase?: TestCase;
+	stepStatuses: Map<number, StepStatus>;
 }
 
 class TestCaseTable extends React.Component<ITestCaseProps> {
@@ -38,10 +39,13 @@ class TestCaseTable extends React.Component<ITestCaseProps> {
 				parameter = step.parametersValue[0];
 			}
 
+			var status = this.props.stepStatuses.get(step.ordinal);
+			console.log("> " + step.ordinal + " " + typeof status?.state);
+			var stepClass = (status?.state as string) || "";
 			rows.push(
 				<tbody className='steps' key={"tcStep" + step.ordinal}>
 					<tr>
-					<td rowSpan={2}>{step.ordinal}</td>
+					<td rowSpan={2} className={stepClass}>{step.ordinal}</td>
 					<td colSpan={4}>{step.humanReadable || '---'}</td>
 					</tr>
 					<tr>

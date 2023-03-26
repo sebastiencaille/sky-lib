@@ -40,7 +40,6 @@ class TestCaseTable extends React.Component<ITestCaseProps> {
 			}
 
 			var status = this.props.stepStatuses.get(step.ordinal);
-			console.log("> " + step.ordinal + " " + typeof status?.state);
 			var stepClass = (status?.state as string) || "";
 			rows.push(
 				<tbody className='steps' key={"tcStep" + step.ordinal}>

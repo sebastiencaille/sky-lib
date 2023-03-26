@@ -14,7 +14,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebsocketConfig implements WebSocketMessageBrokerConfigurer {
 
-	private static final String FEEDBACK_QUEUE = "/feedback";
+	private static final String FEEDBACK_QUEUE = "/secured/user/feedback";
 
     public static final String TEST_FEEDBACK_DESTINATION = FEEDBACK_QUEUE + "/testexec";
 
@@ -22,12 +22,12 @@ public class WebsocketConfig implements WebSocketMessageBrokerConfigurer {
     public void configureMessageBroker(MessageBrokerRegistry config) {
         config.enableSimpleBroker(FEEDBACK_QUEUE);
         config.setApplicationDestinationPrefixes("/ws");
-        config.setUserDestinationPrefix("/user");
+        config.setUserDestinationPrefix("/secured/user");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/websocket")
+        registry.addEndpoint("/secured/websocket")
                 .setAllowedOrigins("https://localhost:3000")
                 .withSockJS();
     }

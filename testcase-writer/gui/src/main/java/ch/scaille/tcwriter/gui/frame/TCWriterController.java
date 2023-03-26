@@ -188,7 +188,7 @@ public class TCWriterController extends GuiController {
         LOGGER.log(Level.INFO, "Using port {}", rcPort);
         try (var config = new TestConfig(model.getTestCase().getValue(), Files.createTempDirectory("tc"), rcPort)) {
             testExecutor.startTest(config);
-            testRemoteControl.controlTest();
+            testRemoteControl.controlTest(model.getTestCase().getValue().getSteps().size());
         }
     }
 

@@ -114,7 +114,7 @@ public class TestCaseController extends TestcaseApiController {
 		}
 		try (var config = new ITestExecutor.TestConfig(loadedTC, tempDir, tcpPort)) {
 			executor.startTest(config);
-			testRemoteControl.controlTest();
+			testRemoteControl.controlTest(loadedTC.getSteps().size());
 		} catch (IOException | InterruptedException | TestCaseException e) {
 			throw new RuntimeException("Web call execution failed", e);
 		}

@@ -32,6 +32,7 @@ public class TestRemoteControl {
 
 	private TestApi api;
 
+
 	public TestRemoteControl(int baseTcpPort, TestExecutionListener testExecutionListener) {
 		this.baseTcpPort = baseTcpPort;
 		this.testExecutionListener = testExecutionListener;
@@ -66,9 +67,9 @@ public class TestRemoteControl {
 		return controlPort;
 	}
 
-	public void controlTest() throws IOException {
+	public void controlTest(int stepsCount) throws IOException {
 		testExecutionListener.testRunning(true);
-		cleanSteps();
+		cleanSteps(stepsCount);
 		controlServer.setSoTimeout(20_000);
 		try {
 			controlConnection = controlServer.accept();
@@ -119,10 +120,10 @@ public class TestRemoteControl {
 		}
 	}
 
-	public void cleanSteps() {
-		stepStates.values().forEach(s -> s.state = StepState.NOT_RUN);
+	public void cleanSteps(int stepsCount) {
+		stepStates.clear();
 		if (stepChangedListener != null) {
-			stepChangedListener.accept(1, stepStates.keySet().stream().max(Comparator.naturalOrder()).orElse(1));
+			stepChangedListener.accept(1, stepsCount);
 		}
 	}
 

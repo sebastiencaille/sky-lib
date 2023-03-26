@@ -63,7 +63,6 @@ class App extends React.Component<IAppProps, IAppState> {
 					this.setState({ currentTestCase: TestCaseHelper.enhanceTestCase(this.state.currentDictionary!, tc) }));
 			}
 		}
-
 	}
 
 	private dictionaryChanged = (metadata?: Metadata) => {
@@ -85,7 +84,6 @@ class App extends React.Component<IAppProps, IAppState> {
 	}
 
 	private stepStatusChanged = (stepStatus: StepStatus) =>  {
-		console.log(stepStatus.ordinal);
 		if (stepStatus) {
 			this.state.stepStatuses.set(stepStatus?.ordinal, stepStatus);
 			this.setState({ stepStatuses: new Map(this.state.stepStatuses)});

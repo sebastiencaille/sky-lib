@@ -18,9 +18,6 @@ function SubscribeTcFeedback(props: StepStatusChanged) {
 }
 
 class WebApiFeedback extends React.PureComponent<IWebApiFeedbackProps> {
-	constructor(props: IWebApiFeedbackProps) {
-		super(props)
-	}
 
 	render() {
 		return (

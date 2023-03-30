@@ -13,8 +13,8 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<version.undertow>2.3.4.Final</version.undertow>
-		<version.selenium>4.8.2</version.selenium>
+		<version.undertow>2.3.5.Final</version.undertow>
+		<version.selenium>4.8.3</version.selenium>
 		<version.mockito>5.2.0</version.mockito>
 	</properties>
 

@@ -65,11 +65,11 @@ public class FsModelConfig {
 
     @Ordered(order = 4)
     @Labeled(label = "Location of the exported test cases")
-    public String getTCExportPath() {
+    public String getTcExportPath() {
         return tcExportPath;
     }
 
-    public void setTCExportPath(final String tcExportPath) {
+    public void setTcExportPath(final String tcExportPath) {
         this.tcExportPath = tcExportPath;
     }
 
@@ -82,6 +82,5 @@ public class FsModelConfig {
     public void setTemplatePath(final String templatePath) {
         this.templatePath = templatePath;
     }
-
 
 }

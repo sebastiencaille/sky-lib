@@ -4,7 +4,6 @@ import static ch.scaille.util.helpers.LambdaExt.uncheckF2;
 import static java.util.stream.Collectors.joining;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +17,7 @@ import ch.scaille.tcwriter.generators.TestCaseToJava;
 import ch.scaille.tcwriter.model.TestCaseException;
 import ch.scaille.tcwriter.model.persistence.IModelDao;
 import ch.scaille.tcwriter.model.testcase.TestCase;
+import ch.scaille.tcwriter.testexec.ITestExecutor;
 import ch.scaille.util.helpers.ClassLoaderHelper;
 import ch.scaille.util.helpers.FilesExt;
 import ch.scaille.util.helpers.Logs;
@@ -39,8 +39,8 @@ public class JUnitTestExecutor implements ITestExecutor {
 	}
 
 	@Override
-	public URI generateCode(TestCase tc) throws IOException, TestCaseException {
-		return new TestCaseToJava(this.modelDao).generate(tc).writeTo(uncheckF2(this.modelDao::exportTestCase));
+	public String generateCode(TestCase tc) throws IOException, TestCaseException {
+		return new TestCaseToJava(this.modelDao).generate(tc).writeTo(uncheckF2(this.modelDao::writeTestCaseCode));
 	}
 
 	@Override
@@ -82,8 +82,7 @@ public class JUnitTestExecutor implements ITestExecutor {
 		var parameters = new ArrayList<String>();
 		parameters.addAll(Arrays.asList(java, //
 				"-Dtest.port=" + config.tcpPort, "-Dtc.stepping=true", //
-				"-jar", junit, "--select-class=" + binaryRef,
-				"--details", "verbose"));
+				"-jar", junit, "--select-class=" + binaryRef, "--details", "verbose"));
 		parameters.addAll(toMultipleCommandLine(classPath));
 		parameters.add("-cp=" + binaryURL);
 		exec("Execution", parameters.toArray(new String[parameters.size()]));

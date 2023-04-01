@@ -18,17 +18,19 @@ import ch.scaille.gui.mvc.GuiController;
 import ch.scaille.gui.swing.tools.SwingGenericEditorDialog;
 import ch.scaille.gui.tools.GenericEditorClassModel;
 import ch.scaille.gui.tools.GenericEditorController;
-import ch.scaille.tcwriter.executors.ITestExecutor;
-import ch.scaille.tcwriter.executors.ITestExecutor.TestConfig;
+import ch.scaille.tcwriter.config.FsConfigManager;
 import ch.scaille.tcwriter.gui.DictionaryImport;
 import ch.scaille.tcwriter.gui.frame.TCWriterModel.TestExecutionState;
 import ch.scaille.tcwriter.model.TestCaseException;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
-import ch.scaille.tcwriter.model.persistence.IModelDao;
-import ch.scaille.tcwriter.model.testcase.TestCase;
+import ch.scaille.tcwriter.model.persistence.FsModelConfig;
+import ch.scaille.tcwriter.model.persistence.FsModelDao;
 import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
 import ch.scaille.tcwriter.model.testcase.ExportableTestStep;
+import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestStep;
+import ch.scaille.tcwriter.testexec.ITestExecutor;
+import ch.scaille.tcwriter.testexec.ITestExecutor.TestConfig;
 import ch.scaille.tcwriter.testexec.TestExecutionListener;
 import ch.scaille.tcwriter.testexec.TestRemoteControl;
 import ch.scaille.util.helpers.Logs;
@@ -42,12 +44,15 @@ public class TCWriterController extends GuiController {
     private final TCWriterGui gui;
     private final ITestExecutor testExecutor;
 
-    private final IModelDao modelDao;
+	private final FsConfigManager configManager;
+    private final FsModelDao modelDao;
 
-    public TCWriterController(final IModelDao modelDao, TestDictionary tcDictionary, final ITestExecutor testExecutor) {
-        this.modelDao = modelDao;
+    public TCWriterController(final FsConfigManager configLoader, final FsModelDao modelDao, TestDictionary tcDictionary, final ITestExecutor testExecutor) {
+        this.configManager = configLoader;
+		this.modelDao = modelDao;
         this.testExecutor = testExecutor;
-        TestDictionary dictionary = tcDictionary;
+        
+        var dictionary = tcDictionary;
         while (dictionary == null) {
             try {
                 dictionary = modelDao.readTestDictionary("default").orElseThrow(() -> new FileNotFoundException("default"));
@@ -96,15 +101,17 @@ public class TCWriterController extends GuiController {
 
     public void editConfig() throws IOException {
 
+    	var configToEdit =  configManager.getCurrentConfig().getSubconfig(FsModelConfig.class);
+    	
         final var dialog = new SwingGenericEditorDialog(gui, "Configuration", ModalityType.DOCUMENT_MODAL);
         final var editor = new GenericEditorController<>(dialog,
-                GenericEditorClassModel.builder(modelDao.getConfiguration().getClass()).build());
+                GenericEditorClassModel.builder(configToEdit.getClass()).build());
         editor.activate();
-        editor.loadUnsafe(modelDao.getConfiguration());
+        editor.loadUnsafe(configToEdit);
         dialog.setSize(dialog.getWidth() + 400, dialog.getHeight() + 30);
         dialog.setVisible(true);
         dialog.dispose();
-        modelDao.saveConfiguration();
+        configManager.saveConfiguration();
     }
 
     public void newTestCase() {
@@ -158,23 +165,25 @@ public class TCWriterController extends GuiController {
         model.getTestCase().setValue(this, testCase);
     }
 
-    public void save() throws IOException {
+    public void save() {
         final var testFileChooser = new JFileChooser();
         testFileChooser.setFileFilter(new FileNameExtensionFilter("JSon test", "json"));
+        testFileChooser.setCurrentDirectory(modelDao.getTCFolder().toFile());
         final int dialogResult = testFileChooser.showSaveDialog(gui);
         if (dialogResult == 0) {
             final var testFile = testFileChooser.getSelectedFile();
-            modelDao.writeTestCase(testFile.getName(), model.getTestCase().getValue());
+            modelDao.writeTestCase(testFile.toString(), model.getTestCase().getValue());
         }
     }
 
     public void loadTestCase() throws IOException {
         final var testFileChooser = new JFileChooser();
         testFileChooser.setFileFilter(new FileNameExtensionFilter("Json test", "json"));
+        testFileChooser.setCurrentDirectory(modelDao.getTCFolder().toFile());
         final int dialogResult = testFileChooser.showOpenDialog(gui);
         if (dialogResult == 0) {
             final var testFile = testFileChooser.getSelectedFile();
-            loadTestCase(modelDao.readTestCase(testFile.getName(), model.getTestDictionary()).orElseThrow(() -> new FileNotFoundException(testFile.getName())));
+            loadTestCase(modelDao.readTestCase(testFile.toString(), model.getTestDictionary()).orElseThrow(() -> new FileNotFoundException(testFile.getName())));
         }
     }
 
@@ -205,7 +214,7 @@ public class TCWriterController extends GuiController {
 
     public void restart() {
     	gui.setVisible(false);
-        new TCWriterController(modelDao, null, testExecutor).run();
+        new TCWriterController(configManager, modelDao, null, testExecutor).run();
     }
 
     public void resumeTestCase() throws IOException {

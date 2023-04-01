@@ -18,11 +18,14 @@ public class SwingModalDialogDetector extends SwingPilot {
 
 	public static ModalDialogDetector withHandler(
 			final Function<SwingModalDialogDetector, PollingResult>... pollingHandlers) {
-		return new ModalDialogDetector(() -> listDialogs(pollingHandlers));
+		final Thread testThread = Thread.currentThread();
+		return new ModalDialogDetector(() -> listDialogs(pollingHandlers), e -> testThread.interrupt());
 	}
 
 	public static ModalDialogDetector defaultDetector() {
-		return new ModalDialogDetector(() -> listDialogs(SwingModalDialogDetector::defaultCheck));
+		final Thread testThread = Thread.currentThread();
+		return new ModalDialogDetector(() -> listDialogs(SwingModalDialogDetector::defaultCheck),
+				e -> testThread.interrupt());
 	}
 
 	/**

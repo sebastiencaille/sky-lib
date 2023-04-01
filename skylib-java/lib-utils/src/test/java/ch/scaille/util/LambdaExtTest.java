@@ -1,5 +1,6 @@
 package ch.scaille.util;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Optional;
@@ -38,4 +39,10 @@ class LambdaExtTest {
 		Assertions.assertEquals(Optional.of(url()), Optional.of(STR).map(LambdaExt.uncheckF(this::str2url)));
 	}
 
+	@Test()
+	void testExceptionRaised() {
+		Assertions.assertThrows(IllegalStateException.class, () -> LambdaExt.uncheck(() -> {
+			throw new IOException("Huh");
+		}));
+	}
 }

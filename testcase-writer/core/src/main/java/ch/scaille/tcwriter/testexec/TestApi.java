@@ -8,6 +8,8 @@ import java.io.StringWriter;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
+import ch.scaille.tcwriter.testexec.model.StepStatus;
+
 public class TestApi {
 	public enum StepState {
 		NOT_RUN, STARTED, OK, FAILED

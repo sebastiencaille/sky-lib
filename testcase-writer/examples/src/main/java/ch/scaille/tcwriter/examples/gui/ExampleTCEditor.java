@@ -21,7 +21,7 @@ public class ExampleTCEditor {
 		exampleHelper.getModelDao().writeTestDictionary(testCase.getDictionary());
 		exampleHelper.getModelDao().writeTestCase(ExampleHelper.TC_NAME, testCase);
 
-		final var controller = new TCWriterController(exampleHelper.getModelDao(), tcDictionary, exampleHelper.testExecutor());
+		final var controller = new TCWriterController(exampleHelper.getConfigManager(), exampleHelper.getModelDao(), tcDictionary, exampleHelper.testExecutor());
 
 		final var eventDebug = Logging.MVC_EVENTS_DEBUGGER;
 		final var eventDebugLevel = Level.FINE;

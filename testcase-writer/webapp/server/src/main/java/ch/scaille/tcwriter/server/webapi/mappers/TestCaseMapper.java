@@ -16,7 +16,7 @@ import ch.scaille.tcwriter.model.dictionary.StepClassifier;
 import ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue;
 import ch.scaille.tcwriter.model.testcase.ExportableTestReference;
 import ch.scaille.tcwriter.model.testcase.ExportableTestStep;
-import ch.scaille.tcwriter.testexec.StepStatus;
+import ch.scaille.tcwriter.testexec.model.StepStatus;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.ERROR)
 public interface TestCaseMapper {
@@ -58,5 +58,5 @@ public interface TestCaseMapper {
 
 	TestReference convertExportable(ch.scaille.tcwriter.model.testcase.ExportableTestReference model);
 	
-	StepStatus convert(ch.scaille.tcwriter.testexec.StepStatus model); 
+	StepStatus convert(ch.scaille.tcwriter.testexec.model.StepStatus model); 
 }

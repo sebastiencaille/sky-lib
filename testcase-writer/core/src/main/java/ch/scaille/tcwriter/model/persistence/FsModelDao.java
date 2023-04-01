@@ -1,28 +1,17 @@
 package ch.scaille.tcwriter.model.persistence;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,6 +23,8 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 
 import ch.scaille.generators.util.Template;
+import ch.scaille.tcwriter.config.FsConfigManager;
+import ch.scaille.tcwriter.config.IResourceLoader;
 import ch.scaille.tcwriter.model.ExportReference;
 import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
@@ -41,190 +32,156 @@ import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.util.exceptions.StorageRTException;
 import ch.scaille.util.helpers.ClassLoaderHelper;
-import ch.scaille.util.helpers.Logs;
+import ch.scaille.util.helpers.ExcExt;
+import ch.scaille.util.helpers.LambdaExt;
 
 public class FsModelDao implements IModelDao {
-    private static final Logger LOGGER = Logs.of(FsModelDao.class);
 
-    private static final String CONTEXT_ALL_REFERENCES = "AllTestReferences";
-    private static final ObjectMapper mapper;
+	private static final String CONTEXT_ALL_REFERENCES = "AllTestReferences";
+	private static final ObjectMapper mapper;
 
-    static {
-        ClassLoaderHelper.registerResourceHandler();
-        mapper = JsonMapper.builder().configure(MapperFeature.AUTO_DETECT_GETTERS, false)
-                .configure(MapperFeature.AUTO_DETECT_IS_GETTERS, false)
-                .configure(MapperFeature.AUTO_DETECT_FIELDS, true).visibility(PropertyAccessor.FIELD, Visibility.ANY)
-                .activateDefaultTyping(new LaissezFaireSubTypeValidator(), DefaultTyping.NON_FINAL, As.WRAPPER_OBJECT)
-                .build();
+	static {
+		ClassLoaderHelper.registerResourceHandler();
+		mapper = JsonMapper.builder().configure(MapperFeature.AUTO_DETECT_GETTERS, false)
+				.configure(MapperFeature.AUTO_DETECT_IS_GETTERS, false)
+				.configure(MapperFeature.AUTO_DETECT_FIELDS, true).visibility(PropertyAccessor.FIELD, Visibility.ANY)
+				.activateDefaultTyping(new LaissezFaireSubTypeValidator(), DefaultTyping.NON_FINAL, As.WRAPPER_OBJECT)
+				.build();
 
-        final var testCaseWriterModule = new SimpleModule("TestCaseWriter");
-        testCaseWriterModule.addDeserializer(ExportReference.class, new JsonDeserializer<>() {
-            @Override
-            public ExportReference deserialize(final JsonParser p, final DeserializationContext ctxt)
-                    throws IOException {
-                if (!ExportReference.class.getName().equals(p.getCurrentName())) {
-                    throw new StorageRTException("Unexpected type in ExportReference: " + p.getCurrentName());
-                }
-                final var content = p.readValueAsTree();
-                final var id = content.get("id");
-                if (id == null) {
-                    throw new StorageRTException("Unexpected attribute in ExportReference: " + p.getCurrentName());
-                }
-                final var exportReference = new ExportReference(((TextNode) id).asText());
-                ((List<ExportReference>) ctxt.getAttribute(CONTEXT_ALL_REFERENCES)).add(exportReference);
-                return exportReference;
-            }
-        });
-        mapper.registerModules(new GuavaModule(), testCaseWriterModule);
-    }
+		final var testCaseWriterModule = new SimpleModule("TestCaseWriter");
+		testCaseWriterModule.addDeserializer(ExportReference.class, new JsonDeserializer<>() {
+			@Override
+			public ExportReference deserialize(final JsonParser p, final DeserializationContext ctxt)
+					throws IOException {
+				if (!ExportReference.class.getName().equals(p.getCurrentName())) {
+					throw new StorageRTException("Unexpected type in ExportReference: " + p.getCurrentName());
+				}
+				final var content = p.readValueAsTree();
+				final var id = content.get("id");
+				if (id == null) {
+					throw new StorageRTException("Unexpected attribute in ExportReference: " + p.getCurrentName());
+				}
+				final var exportReference = new ExportReference(((TextNode) id).asText());
+				((List<ExportReference>) ctxt.getAttribute(CONTEXT_ALL_REFERENCES)).add(exportReference);
+				return exportReference;
+			}
+		});
+		mapper.registerModules(new GuavaModule(), testCaseWriterModule);
+	}
 
-    public static FsModelConfig loadConfiguration(String identifier) throws IOException {
-        var toLoad = identifier;
-        if (toLoad == null) {
-            toLoad = "default";
-        }
-        return mapper.readerFor(FsModelConfig.class).without(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-                .readValue(read(configPath(toLoad)));
-    }
+	private final FsConfigManager configLoader;
 
-    private final FsModelConfig config;
+	private IResourceLoader dictionaryResource;
 
-    public FsModelDao(FsModelConfig config) {
-        this.config = config;
-    }
+	private IResourceLoader testCaseResource;
 
-    @Override
-    public Object getConfiguration() {
-        return this.config;
-    }
+	private IResourceLoader templateResource;
 
-    @Override
-    public void saveConfiguration() throws IOException {
-        writeJson(configPath(this.config.getName()), mapper.writeValueAsString(this.config));
-    }
+	private IResourceLoader testCaseCodeResource;
 
-    @Override
-    public List<Metadata> listDictionaries() throws IOException {
-        try (var list = Files.list(Paths.get(resolveToURL(this.config.getDictionaryPath()).toURI()))) {
-            return list.map(FsModelDao::toIdentifier).map(f -> readTestDictionary(f).get().getMetadata()).toList();
-        } catch (IOException | URISyntaxException e) {
-            throw new IOException("Unable to read dictionaries", e);
-        }
-    }
+	public FsModelDao(FsConfigManager configLoader) {
+		this.configLoader = configLoader;
+		this.configLoader.onReload(c -> reload(c.getSubconfig(FsModelConfig.class)));
+	}
 
-    @Override
-    public void writeTestDictionary(TestDictionary tm) throws IOException {
-        writeJson(resolveToURL(this.config.getDictionaryPath()),
-                mapper.writerFor(TestDictionary.class).writeValueAsString(tm));
-    }
+	private void reload(Optional<FsModelConfig> config) {
+		var cfg = config.orElseThrow(() -> new IllegalStateException("Cannot find dao config"));
+		this.dictionaryResource = configLoader.configure(cfg.getDictionaryPath(), "json");
+		this.testCaseResource = configLoader.configure(cfg.getTcPath(), "json");
+		this.templateResource = configLoader.configure(cfg.getTemplatePath(), null);
+		this.testCaseCodeResource = configLoader.configure(cfg.getTcExportPath(), null);
+	}
 
-    @Override
-    public Optional<TestDictionary> readTestDictionary(String dictionaryId) {
-        try {
-            final var dictionary = (TestDictionary) mapper.readerFor(TestDictionary.class)
-                    .readValue(read(resolveJsonToUrl(this.config.getDictionaryPath(), dictionaryId)));
-            dictionary.getMetadata().setTransientId(dictionaryId);
-            return Optional.of(dictionary);
-        } catch (IOException e) {
-            return Optional.empty();
-        }
-    }
+	@Override
+	public List<Metadata> listDictionaries() throws IOException {
+		return dictionaryResource.list().map(f -> readTestDictionary(f).get().getMetadata()).toList();
+	}
 
-    @Override
-    public void writeTestDictionary(Path target, TestDictionary tm) throws IOException {
-        writeJson(target.toUri().toURL(), mapper.writerFor(TestDictionary.class).writeValueAsString(tm));
-    }
+	@Override
+	public void writeTestDictionary(TestDictionary tm) {
+		var id = tm.getMetadata().getTransientId();
+		if (id.isEmpty()) {
+			id = "default";
+		}
+		final var idSafe = id;
+		ExcExt.uncheck(
+				() -> dictionaryResource.write(idSafe, mapper.writerFor(TestDictionary.class).writeValueAsString(tm)));
+	}
 
-    @Override
-    public List<Metadata> listTestCases(final TestDictionary dictionary) throws IOException {
-        try (var list = Files.list(Paths.get(resolveToURL(this.config.getTcPath()).toURI()))) {
-            return list.map(FsModelDao::toIdentifier).map(f -> readTestCase(f, dictionary).get().getMetadata()).toList();
-        } catch (IOException | URISyntaxException e) {
-            throw new IOException("Unable to read dictionaries", e);
-        }
-    }
+	@Override
+	public Optional<TestDictionary> readTestDictionary(String dictionaryId) {
+		try {
+			final var dictionary = (TestDictionary) mapper.readerFor(TestDictionary.class)
+					.readValue(dictionaryResource.read(dictionaryId));
+			dictionary.getMetadata().setTransientId(dictionaryId);
+			return Optional.of(dictionary);
+		} catch (IOException e) {
+			return Optional.empty();
+		}
+	}
 
-    @Override
-    public Optional<ExportableTestCase> readTestCase(String identifier, TestDictionary testDictionary) {
-        try {
-            var references = new ArrayList<ExportReference>();
-            var ctxt = mapper.getDeserializationConfig().getAttributes().withPerCallAttribute(CONTEXT_ALL_REFERENCES,
-                    references);
-            var testCase = (ExportableTestCase) mapper.readerFor(ExportableTestCase.class).with(ctxt)
-                    .readValue(read(resolveJsonToUrl(this.config.getTcPath(), identifier)));
-            testCase.setDictionary(testDictionary);
-            testCase.getMetadata().setTransientId(identifier);
-            references.forEach(e -> e.restore(testCase));
-            return Optional.of(testCase);
-        } catch (IOException e) {
-            return Optional.empty();
-        }
-    }
+	@Override
+	public void writeTestDictionary(Path target, TestDictionary tm) {
+		ExcExt.uncheck(
+				() -> dictionaryResource.write(target, mapper.writerFor(TestDictionary.class).writeValueAsString(tm)));
+	}
 
-    @Override
-    public void writeTestCase(String identifier, TestCase tc) throws IOException {
-        writeJson(resolveJsonToUrl(this.config.getTcPath(), identifier),
-                mapper.writerFor(TestCase.class).writeValueAsString(tc));
-    }
+	@Override
+	public List<Metadata> listTestCases(final TestDictionary dictionary) throws IOException {
+		return testCaseResource.list().map(f -> readTestCase(f, dictionary).get().getMetadata()).toList();
+	}
 
-    @Override
-    public Template readTemplate() throws IOException {
-        return new Template(read(resolveToURL(this.config.getTemplatePath())));
-    }
+	@Override
+	public Optional<ExportableTestCase> readTestCase(String locator, TestDictionary testDictionary) {
+		try {
+			String tcJson;
+			var tcpath = Paths.get(locator);
+			if (tcpath.getNameCount() == 1) {
+				tcJson = testCaseResource.read(tcpath.getFileName().toString());
+			} else {
+				tcJson = testCaseResource.read(tcpath);
+			}
 
-    @Override
-    public URI exportTestCase(String name, String content) throws IOException {
-        var exportPath = Paths.get(resolve(this.config.getTCExportPath())).resolve(name);
-        Logs.of(this).info(() -> "Writing " + exportPath);
-        Files.createDirectories(exportPath.getParent());
-        Files.writeString(exportPath, content, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-        return exportPath.toUri();
-    }
+			var references = new ArrayList<ExportReference>();
+			var ctxt = mapper.getDeserializationConfig().getAttributes().withPerCallAttribute(CONTEXT_ALL_REFERENCES,
+					references);
+			var testCase = (ExportableTestCase) mapper.readerFor(ExportableTestCase.class).with(ctxt).readValue(tcJson);
+			testCase.setDictionary(testDictionary);
+			testCase.getMetadata().setTransientId(locator);
+			references.forEach(e -> e.restore(testCase));
+			return Optional.of(testCase);
+		} catch (IOException e) {
+			return Optional.empty();
+		}
+	}
 
-    protected void writeJson(URL path, String content) throws IOException {
-        LOGGER.info(() -> "Writing " + path);
-        if (!path.getProtocol().equals("file")) {
-            throw new IllegalStateException("Not possible to write url " + path);
-        }
-        try {
-            var file = Paths.get(path.toURI());
-            Files.createDirectories(file.getParent());
-            Files.writeString(file, content, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-        } catch (URISyntaxException e) {
-            throw new IOException("Cannot write file", e);
-        }
-    }
+	@Override
+	public void writeTestCase(String locator, TestCase tc) {
+		String tcJson = ExcExt.uncheck(() -> mapper.writerFor(TestCase.class).writeValueAsString(tc));
+		var tcpath = Paths.get(locator);
+		if (tcpath.getNameCount() == 1) {
+			ExcExt.uncheck(() -> testCaseResource.write(tcpath.getFileName().toString(), tcJson));
+		} else {
+			ExcExt.uncheck(() -> testCaseResource.write(tcpath, tcJson));
+		}
+	}
 
-    protected static URL configPath(String identifier) throws MalformedURLException {
-        return resolveJsonToUrl("${user.home}/.tcwriter", identifier);
-    }
+	@Override
+	public Template readTemplate() {
+		return LambdaExt.uncheck(() -> new Template(templateResource.read("")));
+	}
 
-    protected static URL resolveJsonToUrl(String path, String subPath) throws MalformedURLException {
-        return resolveToURL(path + "/" + subPath + ".json");
-    }
+	@Override
+	public String writeTestCaseCode(String locator, String code) {
+		return ExcExt.uncheck(() -> testCaseCodeResource.write(locator, code));
+	}
 
-    protected static URL resolveToURL(String path) throws MalformedURLException {
-        var saneUrl = resolve(path);
-        try {
-            return new URL(saneUrl);
-        } catch (MalformedURLException e) {
-            return Paths.get(saneUrl).toAbsolutePath().toUri().toURL();
-        }
-    }
+	public static String toIdentifier(Path path) {
+		return path.getFileName().toString().replace(".json", "");
+	}
 
-    private static String resolve(String path) {
-        return path.replace("${user.home}", System.getProperty("user.home")).replace("~",
-                System.getProperty("user.home"));
-    }
+	public Path getTCFolder() {
+		return testCaseResource.getBaseFolder();
+	}
 
-    protected static String read(URL path) throws IOException {
-        LOGGER.info(() -> "Reading " + path);
-        try (var reader = new BufferedReader(new InputStreamReader(path.openConnection().getInputStream()))) {
-            return reader.lines().collect(Collectors.joining("\n"));
-        }
-    }
-
-    public static String toIdentifier(Path path) {
-        return path.getFileName().toString().replace(".json", "");
-    }
 }

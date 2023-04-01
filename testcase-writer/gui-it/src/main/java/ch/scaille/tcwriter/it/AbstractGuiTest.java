@@ -1,7 +1,6 @@
 package ch.scaille.tcwriter.it;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.SwingUtilities;
@@ -10,6 +9,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 import ch.scaille.tcwriter.annotations.TCActors;
+import ch.scaille.tcwriter.config.FsConfigManager;
+import ch.scaille.tcwriter.config.TCConfig;
 import ch.scaille.tcwriter.executors.JUnitTestExecutor;
 import ch.scaille.tcwriter.generators.JavaToDictionary;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
@@ -30,27 +31,33 @@ public class AbstractGuiTest {
 	private TCGuiPilot pilot;
 
 	@BeforeEach
-	public void startGui() throws IOException, InvocationTargetException, InterruptedException {
-		final var config = new FsModelConfig();
+	public void startGui() throws  InvocationTargetException, InterruptedException {
 		final var tcPath = new File(RESOURCE_FOLDER, "testCase");
 		tcPath.mkdirs();
-		final var modelPath = new File(RESOURCE_FOLDER, "models");
-		modelPath.mkdirs();
+		final var dictionaries = new File(RESOURCE_FOLDER, "dictionaries");
+		dictionaries.mkdirs();
+		
+		// Setup config
+		
+		final var modelConfig = new FsModelConfig();
+		modelConfig.setTcPath(tcPath.toString());
+		modelConfig.setTcExportPath("./src/test/java");
+		modelConfig.setDictionaryPath(dictionaries.toString());
+		modelConfig.setTemplatePath(new File("rsrc:templates/TC.template").toString());
 
-		config.setTcPath(tcPath.toString());
-		config.setTCExportPath("./src/test/java");
-		config.setDictionaryPath(modelPath + "/test-model.json");
-		config.setTemplatePath(new File("rsrc:templates/TC.template").toString());
+		var configLoader = new FsConfigManager().setConfiguration(TCConfig.of("default", modelConfig));
+		
+		// Setup services 
+		final var persister = new FsModelDao(configLoader);
+		final var executor = new JUnitTestExecutor(persister, ClassLoaderHelper.appClassPath());
 
-		final var persister = new FsModelDao(config);
-
+		// Setup data
 		final var dictionary = new JavaToDictionary(TestWriterRole.class, TestSessionRole.class, AbstractGuiTest.class)
 				.generate();
 		persister.writeTestDictionary(dictionary);
 
-		final var executor = new JUnitTestExecutor(persister, ClassLoaderHelper.appClassPath());
 
-		final var controller = new TCWriterController(persister, dictionary, executor);
+		final var controller = new TCWriterController(configLoader, persister, dictionary, executor);
 		SwingUtilities.invokeAndWait(controller::run);
 
 		pilot = new TCGuiPilot(controller.getGui());

@@ -1,6 +1,5 @@
 package ch.scaille.tcwriter.generators;
 
-import java.io.IOException;
 import java.util.stream.Collector;
 
 import com.beust.jcommander.JCommander;
@@ -9,6 +8,7 @@ import com.beust.jcommander.Parameter;
 import ch.scaille.generators.util.AbstractGenerator;
 import ch.scaille.tcwriter.annotations.TCActors;
 import ch.scaille.tcwriter.annotations.TCRole;
+import ch.scaille.tcwriter.config.FsConfigManager;
 import ch.scaille.tcwriter.generators.visitors.ClassToDictionaryVisitor;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.persistence.FsModelDao;
@@ -41,10 +41,11 @@ public class JavaToDictionary extends AbstractGenerator<TestDictionary> {
 		return new ClassToDictionaryVisitor(classes.toArray(new Class<?>[0])).visit();
 	}
 
-	public static void main(final String[] args) throws IOException {
+	public static void main(final String[] args) {
 		var mainArgs = new Args();
 		JCommander.newBuilder().addObject(mainArgs).build().parse(args);
-		var persister = new FsModelDao(FsModelDao.loadConfiguration(mainArgs.configuration));
+		var configManager = new FsConfigManager().setConfiguration("default");
+		var persister = new FsModelDao(configManager);
 		var dictionary = ClassFinder.ofCurrentThread().withPackages(mainArgs.sourcePackage)
 				.withAnnotation(TCRole.class, ClassFinder.Policy.CLASS_ONLY)
 				.withAnnotation(TCActors.class, ClassFinder.Policy.CLASS_ONLY).scan().collect(toDictionary());

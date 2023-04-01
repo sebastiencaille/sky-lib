@@ -1,5 +1,6 @@
-package ch.scaille.tcwriter.testexec;
+package ch.scaille.tcwriter.testexec.model;
 
+import ch.scaille.tcwriter.testexec.TestApi;
 import ch.scaille.tcwriter.testexec.TestApi.StepState;
 
 public class StepStatus {

@@ -18,8 +18,8 @@ public class AlertDetector {
 	}
 
 	public static void withAlert(final SeleniumPilot pilot, final Runnable runnable) {
-
-		final ModalDialogDetector detector = new ModalDialogDetector(() -> AlertDetector.listAlerts(pilot, null));
+		final Thread testThread = Thread.currentThread();
+		final ModalDialogDetector detector = new ModalDialogDetector(() -> AlertDetector.listAlerts(pilot, null), e -> testThread.interrupt());
 		try (NoExceptionCloseable dialogCloseable = ModalDialogDetector.withModalDialogDetection(detector)) {
 			runnable.run();
 		}

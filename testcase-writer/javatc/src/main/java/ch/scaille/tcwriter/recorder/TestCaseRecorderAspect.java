@@ -1,7 +1,5 @@
 package ch.scaille.tcwriter.recorder;
 
-import java.io.IOException;
-
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -10,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import ch.scaille.tcwriter.annotations.Recorded;
 import ch.scaille.tcwriter.annotations.TCRole;
+import ch.scaille.tcwriter.config.FsConfigManager;
 import ch.scaille.tcwriter.model.persistence.FsModelDao;
 
 @Aspect
@@ -21,12 +20,6 @@ public class TestCaseRecorderAspect {
 		TestCaseRecorderAspect.recorder = recorder;
 	}
 
-	public static void configure(String fsModelConfig, String tcDictionary) throws IOException {
-		final var dao = new FsModelDao(FsModelDao.loadConfiguration(fsModelConfig));
-		final var recorder = new TestCaseRecorder(dao, tcDictionary);
-		TestCaseRecorderAspect.setRecorder(recorder);
-	}
-
 	/**
 	 * Configures the recording and saves the test
 	 * 
@@ -36,7 +29,7 @@ public class TestCaseRecorderAspect {
 	 * @throws Throwable
 	 */
 	@Around("execution(* *.*(..)) && @annotation(test)")
-	public Object saveRecording(final ProceedingJoinPoint jp, Test test) throws Throwable {
+	public Object runAroundTest(final ProceedingJoinPoint jp, Test test) throws Throwable {
 		var signature = (MethodSignature) jp.getSignature();
 		var method = signature.getMethod();
 
@@ -52,7 +45,7 @@ public class TestCaseRecorderAspect {
 			tcDictionaryName = recorded.dictionary();
 		}
 		if (recorder == null && (recorderEnabled || (recorded != null && recorded.enabled()))) {
-			setRecorder(new TestCaseRecorder(new FsModelDao(FsModelDao.loadConfiguration(fsModelConfig)),
+			setRecorder(new TestCaseRecorder(new FsModelDao(new FsConfigManager().setConfiguration(fsModelConfig)),
 					tcDictionaryName));
 		}
 		var result = jp.proceed();

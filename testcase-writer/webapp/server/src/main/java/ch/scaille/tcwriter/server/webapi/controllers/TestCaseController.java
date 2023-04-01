@@ -14,7 +14,6 @@ import org.springframework.messaging.core.MessageSendingOperations;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import ch.scaille.tcwriter.executors.ITestExecutor;
 import ch.scaille.tcwriter.executors.JUnitTestExecutor;
 import ch.scaille.tcwriter.generated.api.controllers.TestcaseApiController;
 import ch.scaille.tcwriter.generated.api.model.Metadata;
@@ -30,6 +29,7 @@ import ch.scaille.tcwriter.server.webapi.config.WebsocketConfig;
 import ch.scaille.tcwriter.server.webapi.controllers.exceptions.TestCaseNotFoundException;
 import ch.scaille.tcwriter.server.webapi.mappers.MetadataMapper;
 import ch.scaille.tcwriter.server.webapi.mappers.TestCaseMapper;
+import ch.scaille.tcwriter.testexec.ITestExecutor;
 import ch.scaille.tcwriter.testexec.TestExecutionListener;
 import ch.scaille.tcwriter.testexec.TestRemoteControl;
 import ch.scaille.util.helpers.ClassLoaderHelper;

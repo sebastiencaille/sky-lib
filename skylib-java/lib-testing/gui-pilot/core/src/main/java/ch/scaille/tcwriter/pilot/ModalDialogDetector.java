@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Assertions;
@@ -43,7 +44,8 @@ public class ModalDialogDetector {
 	}
 
 	public static ModalDialogDetector noDetection() {
-		return new ModalDialogDetector(null) {
+		final Thread testThread = Thread.currentThread();
+		return new ModalDialogDetector(null, e -> testThread.interrupt()) {
 			@Override
 			protected synchronized NoExceptionCloseable schedule(Timer t) {
 				return () -> {
@@ -74,6 +76,8 @@ public class ModalDialogDetector {
 
 	private final OverridableParameter<GuiPilot, Duration> timeout = new OverridableParameter<>(GuiPilot::getModalDialogTimeout);
 
+	private final Consumer<List<String>> dialogBoxNotHandled;
+
 	private GuiPilot pilot;
 
 	private final List<String> errors = new ArrayList<>();
@@ -84,8 +88,10 @@ public class ModalDialogDetector {
 
 	private final Semaphore running = new Semaphore(1);
 
-	public ModalDialogDetector(final Supplier<List<PollingResult>> pollingHandlers) {
+
+	public ModalDialogDetector(final Supplier<List<PollingResult>> pollingHandlers, final Consumer<List<String>> errorsHandler) {
 		this.pollingHandlers = pollingHandlers;
+		this.dialogBoxNotHandled = errorsHandler;
 	}
 
 	public ModalDialogDetector initialize(GuiPilot pilot) {
@@ -101,6 +107,7 @@ public class ModalDialogDetector {
 
 	private synchronized void handleModalDialogs() {
 		try {
+			errors.clear();
 			running.acquire();
 			for (final PollingResult checked : pollingHandlers.get()) {
 				PollingResult result = checked;
@@ -118,6 +125,9 @@ public class ModalDialogDetector {
 					result.closeOnErrorFunction.run();
 				}
 
+			}
+			if (!errors.isEmpty()) {			
+				dialogBoxNotHandled.accept(errors);
 			}
 		} catch (final InterruptedException e) {
 			Thread.currentThread().interrupt();

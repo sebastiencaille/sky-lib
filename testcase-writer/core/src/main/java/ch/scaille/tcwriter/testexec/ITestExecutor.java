@@ -1,7 +1,6 @@
-package ch.scaille.tcwriter.executors;
+package ch.scaille.tcwriter.testexec;
 
 import java.io.IOException;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -35,7 +34,7 @@ public interface ITestExecutor {
 		}
 	}
 
-	URI generateCode(TestCase paramTestCase) throws IOException, TestCaseException;
+	String generateCode(TestCase paramTestCase) throws IOException, TestCaseException;
 
 	String generateCodeLocal(TestConfig config) throws IOException, TestCaseException;
 

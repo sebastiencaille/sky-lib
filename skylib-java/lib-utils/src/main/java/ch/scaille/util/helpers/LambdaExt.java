@@ -48,7 +48,7 @@ public class LambdaExt {
 		};
 	}
 
-	private static Consumer<Exception> exceptionHandler = e -> new IllegalStateException(e.getMessage(), e);
+	private static Consumer<Exception> exceptionHandler = e -> { throw new IllegalStateException(e.getMessage(), e); };
 
 	public static <R> R defaultExceptionHandler(Exception e) {
 		exceptionHandler.accept(e);

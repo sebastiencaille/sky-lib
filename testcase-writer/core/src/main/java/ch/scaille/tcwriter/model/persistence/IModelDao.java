@@ -1,7 +1,6 @@
 package ch.scaille.tcwriter.model.persistence;
 
 import java.io.IOException;
-import java.net.URI;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
@@ -14,11 +13,7 @@ import ch.scaille.tcwriter.model.testcase.TestCase;
 
 public interface IModelDao {
 	
-	Object getConfiguration();
-	
-	void saveConfiguration() throws IOException;
-
-	Template readTemplate() throws IOException;
+	Template readTemplate();
 
 
 	// ----------------------- Dictionary -----------------------
@@ -27,9 +22,9 @@ public interface IModelDao {
 
 	Optional<TestDictionary> readTestDictionary(String dictionaryName);
 
-	void writeTestDictionary(TestDictionary testDictionary) throws IOException;
+	void writeTestDictionary(TestDictionary testDictionary);
 
-	void writeTestDictionary(Path path, TestDictionary testDictionary) throws IOException;
+	void writeTestDictionary(Path path, TestDictionary testDictionary);
 
 	// ----------------------- Test case -----------------------
 
@@ -37,9 +32,9 @@ public interface IModelDao {
 	
 	Optional<ExportableTestCase> readTestCase(String filename, TestDictionary testDictionary);
 
-	void writeTestCase(String identifier, TestCase testCase) throws IOException;
+	void writeTestCase(String identifier, TestCase testCase);
 
-	URI exportTestCase(String name, String content) throws IOException;
+	String writeTestCaseCode(String identifier, String content);
 
 
 }

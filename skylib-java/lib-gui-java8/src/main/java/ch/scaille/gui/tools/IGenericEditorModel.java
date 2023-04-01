@@ -4,9 +4,13 @@ import java.util.List;
 
 import ch.scaille.gui.mvc.IScopedSupport;
 import ch.scaille.gui.mvc.persisters.ObjectProviderPersister.IObjectProvider;
+import ch.scaille.gui.mvc.properties.ErrorSet;
 
 public interface IGenericEditorModel<T> {
 
-	List<? extends PropertyEntry> createProperties(IScopedSupport propertySupport, IObjectProvider<T> object);
+	List<? extends PropertyEntry> createProperties(IObjectProvider<T> object);
 
+	ErrorSet getErrorProperty();
+
+	IScopedSupport getPropertySupport();
 }

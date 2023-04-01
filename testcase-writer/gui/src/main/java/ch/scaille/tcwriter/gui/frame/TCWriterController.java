@@ -10,20 +10,21 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.JFileChooser;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import ch.scaille.gui.mvc.ControllerPropertyChangeSupport;
 import ch.scaille.gui.mvc.GuiController;
+import ch.scaille.gui.mvc.properties.ErrorSet;
 import ch.scaille.gui.swing.tools.SwingGenericEditorDialog;
 import ch.scaille.gui.tools.GenericEditorClassModel;
 import ch.scaille.gui.tools.GenericEditorController;
+import ch.scaille.gui.tools.IGenericEditor;
 import ch.scaille.tcwriter.config.FsConfigManager;
 import ch.scaille.tcwriter.gui.DictionaryImport;
 import ch.scaille.tcwriter.gui.frame.TCWriterModel.TestExecutionState;
 import ch.scaille.tcwriter.model.TestCaseException;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
-import ch.scaille.tcwriter.model.persistence.FsModelConfig;
 import ch.scaille.tcwriter.model.persistence.FsModelDao;
 import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
 import ch.scaille.tcwriter.model.testcase.ExportableTestStep;
@@ -44,14 +45,14 @@ public class TCWriterController extends GuiController {
     private final TCWriterGui gui;
     private final ITestExecutor testExecutor;
 
-	private final FsConfigManager configManager;
+    private final FsConfigManager configManager;
     private final FsModelDao modelDao;
 
     public TCWriterController(final FsConfigManager configLoader, final FsModelDao modelDao, TestDictionary tcDictionary, final ITestExecutor testExecutor) {
         this.configManager = configLoader;
-		this.modelDao = modelDao;
+        this.modelDao = modelDao;
         this.testExecutor = testExecutor;
-        
+
         var dictionary = tcDictionary;
         while (dictionary == null) {
             try {
@@ -100,18 +101,25 @@ public class TCWriterController extends GuiController {
     }
 
     public void editConfig() throws IOException {
-
-    	var configToEdit =  configManager.getCurrentConfig().getSubconfig(FsModelConfig.class);
-    	
-        final var dialog = new SwingGenericEditorDialog(gui, "Configuration", ModalityType.DOCUMENT_MODAL);
-        final var editor = new GenericEditorController<>(dialog,
-                GenericEditorClassModel.builder(configToEdit.getClass()).build());
-        editor.activate();
-        editor.loadUnsafe(configToEdit);
-        dialog.setSize(dialog.getWidth() + 400, dialog.getHeight() + 30);
-        dialog.setVisible(true);
-        dialog.dispose();
+        final var configEditorDialog = new SwingGenericEditorDialog(gui, "Configuration", ModalityType.DOCUMENT_MODAL);
+        final var editorPropertySupport = new ControllerPropertyChangeSupport(configEditorDialog).scoped(configEditorDialog);
+        final var errorSet = new ErrorSet("Error", editorPropertySupport);
+        for (final var configToEdit : configManager.getCurrentConfig().getSubconfigs()) {
+            var builder = GenericEditorClassModel.builder(configToEdit.getClass()).with(propertySupport).with(errorSet);
+            configEditorDialog.add(createEditor(configToEdit, configEditorDialog.tab(configToEdit.getClass().getSimpleName()), builder));
+        }
+        configEditorDialog.build(errorSet);
+        configEditorDialog.setSize(configEditorDialog.getWidth() + 400, configEditorDialog.getHeight() + 30);
+        configEditorDialog.setVisible(true);
+        configEditorDialog.dispose();
         configManager.saveConfiguration();
+    }
+
+    private static GenericEditorController<?> createEditor(Object configToEdit, IGenericEditor tab, GenericEditorClassModel.Builder<?> builder) {
+        final var configEditor = new GenericEditorController<>(tab, builder.build());
+        configEditor.activate();
+        configEditor.loadUnsafe(configToEdit);
+        return configEditor;
     }
 
     public void newTestCase() {
@@ -213,7 +221,7 @@ public class TCWriterController extends GuiController {
     }
 
     public void restart() {
-    	gui.setVisible(false);
+        gui.setVisible(false);
         new TCWriterController(configManager, modelDao, null, testExecutor).run();
     }
 

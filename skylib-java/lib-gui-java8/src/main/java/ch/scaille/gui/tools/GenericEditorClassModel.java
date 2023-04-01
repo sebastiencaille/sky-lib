@@ -9,10 +9,12 @@ import java.util.function.UnaryOperator;
 import ch.scaille.annotations.Labeled;
 import ch.scaille.annotations.Ordered;
 import ch.scaille.gui.mvc.BindingChain.EndOfChain;
+import ch.scaille.gui.mvc.ControllerPropertyChangeSupport;
 import ch.scaille.gui.mvc.IScopedSupport;
 import ch.scaille.gui.mvc.factories.Persisters;
 import ch.scaille.gui.mvc.persisters.ObjectProviderPersister.IObjectProvider;
 import ch.scaille.gui.mvc.properties.AbstractTypedProperty;
+import ch.scaille.gui.mvc.properties.ErrorSet;
 import ch.scaille.gui.mvc.properties.ObjectProperty;
 import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
 import ch.scaille.util.dao.metadata.DataObjectMetaData;
@@ -24,9 +26,9 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 		private final AbstractAttributeMetaData<U> metadata;
 
 		public ClassPropertyEntry(final AbstractTypedProperty<Object> property,
-				final Function<AbstractTypedProperty<?>, EndOfChain<?>> endOfChainProvider,
-				final AbstractAttributeMetaData<U> metadata, final boolean readOnly, final String label,
-				final String tooltip) {
+								  final Function<AbstractTypedProperty<?>, EndOfChain<?>> endOfChainProvider,
+								  final AbstractAttributeMetaData<U> metadata, final boolean readOnly, final String label,
+								  final String tooltip) {
 			super(property, endOfChainProvider, metadata.getClassType(), readOnly, label, tooltip);
 			this.metadata = metadata;
 		}
@@ -45,6 +47,8 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 		private ResourceBundle bundle = null;
 		private boolean readOnly = false;
 		private IGenericModelAdapter[] adapters = new IGenericModelAdapter[0];
+		private IScopedSupport propertySupport;
+		private ErrorSet errorSet;
 
 		public Builder(final Class<T> clazz) {
 			this.editedClazz = clazz;
@@ -65,9 +69,26 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 			return this;
 		}
 
+		public Builder<T> with(IScopedSupport propertySupport) {
+			this.propertySupport = propertySupport;
+			return this;
+		}
+
+		public Builder<T> with(ErrorSet errorSet) {
+			this.errorSet = errorSet;
+			return this;
+		}
+
 		public GenericEditorClassModel<T> build() {
+			if (propertySupport == null) {
+				propertySupport = new ControllerPropertyChangeSupport(this).scoped(this);
+			}
+			if (errorSet == null) {
+				errorSet = new ErrorSet("Error", propertySupport);
+			}
 			return new GenericEditorClassModel<>(this);
 		}
+
 	}
 
 	private final DataObjectMetaData<T> metaData;
@@ -82,22 +103,31 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 		this.metaData = new DataObjectMetaData<>(builder.editedClazz);
 	}
 
+	@Override
+	public IScopedSupport getPropertySupport() {
+		return config.propertySupport;
+	}
+
+	@Override
+	public ErrorSet getErrorProperty() {
+		return config.errorSet;
+	}
+
 	/**
 	 * Creates the properties by introspecting the displayed class Class
 	 *
-	 * @param errorProperty
 	 * @param propertySupport
+	 * @param object
 	 *
 	 * @return
 	 */
 	@Override
-	public List<ClassPropertyEntry<T>> createProperties(final IScopedSupport propertySupport,
-			IObjectProvider<T> object) {
+	public List<ClassPropertyEntry<T>> createProperties(IObjectProvider<T> object) {
 
 		final List<ClassPropertyEntry<T>> properties = new ArrayList<>();
 		for (final AbstractAttributeMetaData<T> attrib : metaData.getAttributes()) {
 
-			final ObjectProperty<Object> property = new ObjectProperty<>(attrib.getName(), propertySupport);
+			final ObjectProperty<Object> property = new ObjectProperty<>(attrib.getName(), config.propertySupport);
 			property.configureTyped(persistent(object, Persisters.attribute(attrib)));
 
 			final boolean readOnly = config.readOnly || attrib.isReadOnly();
@@ -119,7 +149,7 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 	}
 
 	private String findText(final AbstractAttributeMetaData<T> attrib, final Function<Labeled, String> fromLabel,
-			final UnaryOperator<String> nameToKey) {
+							final UnaryOperator<String> nameToKey) {
 		final Labeled label = attrib.getAnnotation(Labeled.class);
 		String value = "";
 		if (label != null) {

@@ -1,6 +1,7 @@
 package ch.scaille.gui.tools;
 
 import ch.scaille.gui.mvc.IBindingController;
+import ch.scaille.gui.mvc.IScopedSupport;
 import ch.scaille.gui.mvc.properties.ErrorSet;
 
 public interface IGenericEditor {

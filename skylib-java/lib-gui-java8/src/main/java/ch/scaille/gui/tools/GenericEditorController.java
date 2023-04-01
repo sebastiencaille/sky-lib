@@ -19,14 +19,16 @@ import ch.scaille.gui.mvc.properties.ErrorSet;
 public class GenericEditorController<T> {
 
 	private final IGenericEditor editor;
-	private final IScopedSupport propertySupport = new ControllerPropertyChangeSupport(this).scoped(this);
-	private final ErrorSet errorProperty = new ErrorSet("Error", propertySupport);
+	private final IScopedSupport propertySupport;
+	private final ErrorSet errorProperty;
 	private final List<? extends PropertyEntry> props;
 	private final CurrentObjectProvider<T> currentObject = new CurrentObjectProvider<>();
 
 	public GenericEditorController(final IGenericEditor view, final IGenericEditorModel<T> modelAdapter) {
 		this.editor = view;
-		props = modelAdapter.createProperties(propertySupport, currentObject);
+		this.propertySupport = modelAdapter.getPropertySupport();
+		this.errorProperty = modelAdapter.getErrorProperty();
+		props = modelAdapter.createProperties(currentObject);
 		props.forEach(p -> p.getProperty().configureTyped(errorNotifier(errorProperty)));
 	}
 

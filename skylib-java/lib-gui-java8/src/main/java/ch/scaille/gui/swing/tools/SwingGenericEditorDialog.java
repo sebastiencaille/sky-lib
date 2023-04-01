@@ -55,8 +55,7 @@ public class SwingGenericEditorDialog extends JDialog {
 
 		final JButton cancelButton = new JButton("Cancel");
 		buttonPanel.add(cancelButton);
-		getContentPane().list();
-		add(buttonPanel, BorderLayout.SOUTH);
+		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 		cancelButton.addActionListener(e -> this.close());
 
 		validate();

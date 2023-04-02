@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 public class TCConfig {
 	
-	private String name;
+	public static final String DEFAULT = "default";
+	
+	private String name = DEFAULT;
 
 	private List<Object> subconfigs = new ArrayList<>();
 
@@ -18,6 +22,7 @@ public class TCConfig {
 		this.name = name;
 	}
 	
+	@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "type")
 	public List<Object> getSubconfigs() {
 		return subconfigs;
 	}

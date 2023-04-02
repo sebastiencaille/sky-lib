@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
@@ -34,6 +35,7 @@ import ch.scaille.util.exceptions.StorageRTException;
 import ch.scaille.util.helpers.ClassLoaderHelper;
 import ch.scaille.util.helpers.ExcExt;
 import ch.scaille.util.helpers.LambdaExt;
+import ch.scaille.util.helpers.Logs;
 
 public class FsModelDao implements IModelDao {
 
@@ -116,6 +118,7 @@ public class FsModelDao implements IModelDao {
 			dictionary.getMetadata().setTransientId(dictionaryId);
 			return Optional.of(dictionary);
 		} catch (IOException e) {
+			Logs.of(FsModelDao.class).log(Level.INFO, () -> "Unable to load dictionary " + e.getMessage());
 			return Optional.empty();
 		}
 	}

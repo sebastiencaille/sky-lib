@@ -2,15 +2,20 @@ package ch.scaille.tcwriter.config;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.yaml.snakeyaml.Yaml;
+import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 
 import ch.scaille.util.helpers.LambdaExt;
 
 public class FsConfigManager {
+
+	private static final YAMLMapper configReader = new YAMLMapper().configure(Feature.USE_NATIVE_TYPE_ID, true)
+			.configure(Feature.USE_NATIVE_OBJECT_ID, true);
 
 	private final FsResourceLoader loader;
 
@@ -18,14 +23,19 @@ public class FsConfigManager {
 
 	private TCConfig currentConfig = null;
 
-	public FsConfigManager() {
-		loader = new FsResourceLoader(".", "yaml");
+	public static String resolvePlaceHolders(String path) {
+		return path.replace("${user.home}", System.getProperty("user.home")).replace("~",
+				System.getProperty("user.home"));
+	}
+
+	public static FsConfigManager local() {
+		return new FsConfigManager(Paths.get(resolvePlaceHolders("${user.home}/.tcwriter")));
 	}
 
 	public FsConfigManager(Path baseFolder) {
 		loader = new FsResourceLoader(baseFolder, "yaml");
 	}
-	
+
 	public IResourceLoader configure(String locator, String extension) {
 		if (locator.startsWith(CPResourceLoader.PREFIX)) {
 			return new CPResourceLoader(locator, extension);
@@ -34,7 +44,7 @@ public class FsConfigManager {
 	}
 
 	public FsConfigManager setConfiguration(String locator) {
-		apply(LambdaExt.uncheck(() -> new Yaml().load(loader.read(locator))));
+		apply(LambdaExt.uncheck(() -> configReader.readValue(loader.read(locator), TCConfig.class)));
 		return this;
 	}
 
@@ -44,7 +54,7 @@ public class FsConfigManager {
 	}
 
 	public void saveConfiguration() throws IOException {
-		loader.write(currentConfig.getName(), new Yaml().dump(currentConfig));
+		loader.write(currentConfig.getName(), configReader.writeValueAsString(currentConfig));
 	}
 
 	public TCConfig getCurrentConfig() {

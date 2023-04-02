@@ -56,7 +56,7 @@ public class ExampleHelper {
 		modelConfig.setDictionaryPath(dictionaryPath.toString());
 		modelConfig.setTemplatePath("rsrc:templates/TC.template");
 		
-		configManager = new FsConfigManager().setConfiguration(TCConfig.of("default", modelConfig));
+		configManager = new FsConfigManager(RESOURCE_FOLDER).setConfiguration(TCConfig.of("default", modelConfig));
 		modelDao = new FsModelDao(configManager);
 	}
 

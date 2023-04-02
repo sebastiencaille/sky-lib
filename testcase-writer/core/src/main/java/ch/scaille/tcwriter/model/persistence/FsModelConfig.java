@@ -10,9 +10,6 @@ import ch.scaille.annotations.Ordered;
  */
 public class FsModelConfig {
 
-	public static final String DEFAULT = "default";
-	
-    private String name = DEFAULT;
 
     private String dictionaryPath;
 
@@ -21,27 +18,6 @@ public class FsModelConfig {
     private String templatePath;
 
     private String tcExportPath;
-
-    public void setBase(String base) {
-        dictionaryPath = base + "/dictionary";
-        tcPath = base + "/testcase";
-        templatePath = base + "/templates/TC.template";
-        tcExportPath = base + "/exported";
-    }
-
-    public FsModelConfig() {
-        setBase("${user.home}/.tcwriter/" + name);
-    }
-
-    @Ordered(order = 1)
-    @Labeled(label = "Name of the configuration")
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
 
     @Ordered(order = 2)
     @Labeled(label = "Location of the models")

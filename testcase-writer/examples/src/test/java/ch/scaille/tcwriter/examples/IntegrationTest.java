@@ -12,6 +12,8 @@ class IntegrationTest {
     @Test
     void recordAndGenerateTest() throws IOException {
         final var exampleHelper = new ExampleHelper();
+        exampleHelper.getConfigManager().saveConfiguration();
+
         final var model = exampleHelper.generateDictionary();
         
         // Record test
@@ -21,6 +23,7 @@ class IntegrationTest {
         final var modelDao = exampleHelper.getModelDao();
         modelDao.writeTestDictionary(model);
         modelDao.writeTestCase(ExampleHelper.TC_NAME, testCase);
+        
     }
 
     @Test

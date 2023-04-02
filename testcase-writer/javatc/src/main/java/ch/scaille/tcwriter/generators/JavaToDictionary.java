@@ -44,7 +44,7 @@ public class JavaToDictionary extends AbstractGenerator<TestDictionary> {
 	public static void main(final String[] args) {
 		var mainArgs = new Args();
 		JCommander.newBuilder().addObject(mainArgs).build().parse(args);
-		var configManager = new FsConfigManager().setConfiguration("default");
+		var configManager = FsConfigManager.local().setConfiguration("default");
 		var persister = new FsModelDao(configManager);
 		var dictionary = ClassFinder.ofCurrentThread().withPackages(mainArgs.sourcePackage)
 				.withAnnotation(TCRole.class, ClassFinder.Policy.CLASS_ONLY)

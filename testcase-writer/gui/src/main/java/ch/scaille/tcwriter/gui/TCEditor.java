@@ -1,16 +1,14 @@
 package ch.scaille.tcwriter.gui;
 
-import java.io.IOException;
-
 import javax.swing.SwingUtilities;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 
 import ch.scaille.tcwriter.config.FsConfigManager;
+import ch.scaille.tcwriter.config.TCConfig;
 import ch.scaille.tcwriter.executors.JUnitTestExecutor;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
-import ch.scaille.tcwriter.model.persistence.FsModelConfig;
 import ch.scaille.tcwriter.model.persistence.FsModelDao;
 import ch.scaille.util.helpers.ClassLoaderHelper;
 
@@ -18,7 +16,7 @@ public class TCEditor {
 
 	public static class Args {
 		@Parameter(names = { "-c" }, description = "Name of configuration")
-		public String configuration = FsModelConfig.DEFAULT;
+		public String configuration = TCConfig.DEFAULT;
 
 	}
 	
@@ -26,7 +24,7 @@ public class TCEditor {
 		var mainArgs = new Args();
 		JCommander.newBuilder().addObject(mainArgs).build().parse(args);
 		
-		var configLoader = new FsConfigManager().setConfiguration(mainArgs.configuration);
+		var configLoader = FsConfigManager.local().setConfiguration(mainArgs.configuration);
 		var modelDao = new FsModelDao(configLoader);
 		var testExecutor = new JUnitTestExecutor(modelDao, ClassLoaderHelper.appClassPath());
 		var tcWriterController = new TCWriterController(configLoader, modelDao, null, testExecutor);

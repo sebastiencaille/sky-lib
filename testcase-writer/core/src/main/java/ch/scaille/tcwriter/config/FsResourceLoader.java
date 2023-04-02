@@ -19,9 +19,13 @@ public class FsResourceLoader implements IResourceLoader {
 
 	private final String extension;
 
-	public FsResourceLoader(String subPath, String extension) {
+	public FsResourceLoader(String basePath, String subPath, String extension) {
 		this.extension = extension;
-		this.basePath = Paths.get(resolvePlaceHolders("${user.home}/.tcwriter/")).resolve(subPath);
+		var path = FsConfigManager.resolvePlaceHolders(subPath);
+		if (!path.startsWith("/")) {
+			path = basePath + '/' + path;
+		}
+		this.basePath = Paths.get(path);
 	}
 
 	public FsResourceLoader(Path baseFolder, String extension) {
@@ -72,11 +76,6 @@ public class FsResourceLoader implements IResourceLoader {
 		Files.write(resource, value.getBytes(StandardCharsets.UTF_8), StandardOpenOption.TRUNCATE_EXISTING,
 				StandardOpenOption.CREATE);
 		return resource.toString();
-	}
-
-	public static String resolvePlaceHolders(String path) {
-		return path.replace("${user.home}", System.getProperty("user.home")).replace("~",
-				System.getProperty("user.home"));
 	}
 
 	@Override

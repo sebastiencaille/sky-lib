@@ -45,7 +45,7 @@ public class AbstractGuiTest {
 		modelConfig.setDictionaryPath(dictionaries.toString());
 		modelConfig.setTemplatePath(new File("rsrc:templates/TC.template").toString());
 
-		var configLoader = new FsConfigManager().setConfiguration(TCConfig.of("default", modelConfig));
+		var configLoader = new FsConfigManager(RESOURCE_FOLDER.toPath()).setConfiguration(TCConfig.of("default", modelConfig));
 		
 		// Setup services 
 		final var persister = new FsModelDao(configLoader);

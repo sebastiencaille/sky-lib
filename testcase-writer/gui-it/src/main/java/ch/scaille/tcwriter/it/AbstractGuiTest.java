@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import ch.scaille.tcwriter.annotations.TCActors;
 import ch.scaille.tcwriter.config.FsConfigManager;
 import ch.scaille.tcwriter.config.TCConfig;
-import ch.scaille.tcwriter.executors.JUnitTestExecutor;
+import ch.scaille.tcwriter.testexec.JUnitTestExecutor;
 import ch.scaille.tcwriter.generators.JavaToDictionary;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.tcwriter.it.api.TestSessionRole;
@@ -49,7 +49,7 @@ public class AbstractGuiTest {
 		
 		// Setup services 
 		final var persister = new FsModelDao(configLoader);
-		final var executor = new JUnitTestExecutor(persister, ClassLoaderHelper.appClassPath());
+		final var executor = new JUnitTestExecutor(configLoader, persister, ClassLoaderHelper.appClassPath());
 
 		// Setup data
 		final var dictionary = new JavaToDictionary(TestWriterRole.class, TestSessionRole.class, AbstractGuiTest.class)

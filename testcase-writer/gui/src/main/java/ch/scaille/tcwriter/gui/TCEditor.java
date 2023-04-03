@@ -7,7 +7,7 @@ import com.beust.jcommander.Parameter;
 
 import ch.scaille.tcwriter.config.FsConfigManager;
 import ch.scaille.tcwriter.config.TCConfig;
-import ch.scaille.tcwriter.executors.JUnitTestExecutor;
+import ch.scaille.tcwriter.testexec.JUnitTestExecutor;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.tcwriter.model.persistence.FsModelDao;
 import ch.scaille.util.helpers.ClassLoaderHelper;
@@ -26,7 +26,7 @@ public class TCEditor {
 		
 		var configLoader = FsConfigManager.local().setConfiguration(mainArgs.configuration);
 		var modelDao = new FsModelDao(configLoader);
-		var testExecutor = new JUnitTestExecutor(modelDao, ClassLoaderHelper.appClassPath());
+		var testExecutor = new JUnitTestExecutor(configLoader, modelDao, ClassLoaderHelper.appClassPath());
 		var tcWriterController = new TCWriterController(configLoader, modelDao, null, testExecutor);
 		SwingUtilities.invokeLater(tcWriterController::run);
 	}

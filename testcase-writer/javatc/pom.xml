@@ -21,6 +21,7 @@
 		</plugins>
 	</build>
 	<dependencies>
+
 		<dependency>
 			<groupId>ch.scaille</groupId>
 			<artifactId>lib-utils</artifactId>
@@ -46,5 +47,11 @@
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjtools</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-console-standalone</artifactId>
+			<version>1.9.2</version>
+		</dependency>
+
 	</dependencies>
 </project>

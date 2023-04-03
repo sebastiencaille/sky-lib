@@ -3,7 +3,7 @@ package ch.scaille.tcwriter.testexec;
 import ch.scaille.annotations.Labeled;
 import ch.scaille.annotations.Ordered;
 
-public class JavaTestExecConfig {
+public class JunitTestExecConfig {
 	private String java;
 	private String classpath;
 

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 
+import ch.scaille.tcwriter.config.IConfigManager;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
@@ -71,7 +72,7 @@ public class FsModelDao implements IModelDao {
 		mapper.registerModules(new GuavaModule(), testCaseWriterModule);
 	}
 
-	private final FsConfigManager configLoader;
+	private final IConfigManager configLoader;
 
 	private IResourceLoader dictionaryResource;
 
@@ -81,7 +82,7 @@ public class FsModelDao implements IModelDao {
 
 	private IResourceLoader testCaseCodeResource;
 
-	public FsModelDao(FsConfigManager configLoader) {
+	public FsModelDao(IConfigManager configLoader) {
 		this.configLoader = configLoader;
 		this.configLoader.onReload(c -> reload(c.getSubconfig(FsModelConfig.class)));
 	}

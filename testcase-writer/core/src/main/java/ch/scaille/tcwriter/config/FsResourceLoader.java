@@ -73,7 +73,7 @@ public class FsResourceLoader implements IResourceLoader {
 	public String write(Path resource, String value) throws IOException {
 		LOGGER.info(() -> "Writing " + resource);
 		Files.createDirectories(resource.getParent());
-		Files.write(resource, value.getBytes(StandardCharsets.UTF_8), StandardOpenOption.TRUNCATE_EXISTING,
+		Files.writeString(resource, value, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING,
 				StandardOpenOption.CREATE);
 		return resource.toString();
 	}

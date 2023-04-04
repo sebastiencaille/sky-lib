@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Semaphore;
 
-import ch.scaille.tcwriter.testexec.TestApi;
 import ch.scaille.tcwriter.testexec.TestApi.Command;
 import ch.scaille.util.helpers.Logs;
 
@@ -27,8 +26,8 @@ public class TestExecutionFeedbackClient implements ITestExecutionFeedbackClient
 	private int currentStep = 0;
 
 	public TestExecutionFeedbackClient() throws IOException {
-		final String host = System.getProperty("test.host", "127.0.0.1");
-		final Integer tcpPort = Integer.getInteger("test.port");
+		final var host = System.getProperty("test.host", "127.0.0.1");
+		final var tcpPort = Integer.getInteger("test.port");
 		if (tcpPort != null && tcpPort > 0) {
 			final var remoteControlAddress = new InetSocketAddress(host, tcpPort);
 

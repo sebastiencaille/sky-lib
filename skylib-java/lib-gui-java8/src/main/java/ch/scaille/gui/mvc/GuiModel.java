@@ -33,11 +33,11 @@ public class GuiModel {
 	}
 
 	public static class ModelConfiguration {
-		protected final IScopedSupport propertySupport;
+		protected final IPropertiesGroup propertySupport;
 		protected ErrorNotifier errorNotifier;
 		protected final List<ImplicitConvertProvider> implicitConverters = new ArrayList<>();
 
-		public ModelConfiguration(IScopedSupport propertySupport) {
+		public ModelConfiguration(IPropertiesGroup propertySupport) {
 			this.propertySupport = propertySupport;
 		}
 
@@ -69,7 +69,7 @@ public class GuiModel {
 			return this;
 		}
 
-		public IScopedSupport getPropertySupport() {
+		public IPropertiesGroup getPropertySupport() {
 			return propertySupport;
 		}
 
@@ -79,11 +79,11 @@ public class GuiModel {
 
 	}
 
-	public static ModelConfiguration with(final IScopedSupport propertySupport, final ErrorNotifier errorProperty) {
+	public static ModelConfiguration with(final IPropertiesGroup propertySupport, final ErrorNotifier errorProperty) {
 		return new ModelConfiguration(propertySupport).with(errorProperty);
 	}
 
-	public static ModelConfiguration with(final IScopedSupport propertySupport) {
+	public static ModelConfiguration with(final IPropertiesGroup propertySupport) {
 		return new ModelConfiguration(propertySupport);
 	}
 
@@ -109,7 +109,7 @@ public class GuiModel {
 		return configuration.getErrorNotifier();
 	}
 
-	public IScopedSupport getPropertySupport() {
+	public IPropertiesGroup getPropertySupport() {
 		return configuration.propertySupport;
 	}
 

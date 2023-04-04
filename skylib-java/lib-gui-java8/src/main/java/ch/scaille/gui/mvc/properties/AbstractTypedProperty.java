@@ -25,7 +25,7 @@ import ch.scaille.gui.mvc.BindingChain.EndOfChain;
 import ch.scaille.gui.mvc.GuiModel;
 import ch.scaille.gui.mvc.IBindingController;
 import ch.scaille.gui.mvc.IComponentBinding;
-import ch.scaille.gui.mvc.IScopedSupport;
+import ch.scaille.gui.mvc.IPropertiesGroup;
 import ch.scaille.gui.mvc.PropertyEvent.EventKind;
 import ch.scaille.gui.mvc.Veto.TransmitMode;
 import ch.scaille.gui.mvc.converters.IConverter;
@@ -49,7 +49,7 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 		setErrorNotifier(model.getErrorNotifier());
 	}
 
-	protected AbstractTypedProperty(final String name, final IScopedSupport propertySupport) {
+	protected AbstractTypedProperty(final String name, final IPropertiesGroup propertySupport) {
 		super(name, propertySupport);
 	}
 
@@ -140,7 +140,7 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 			}
 			final T oldValue = replaceValue(newValue);
 			if (oldValue != null || newValue != null) {
-				propertySupport.getMain().firePropertyChange(getName(), caller, oldValue, newValue);
+				propertySupport.getChangeSupport().firePropertyChange(getName(), caller, oldValue, newValue);
 			}
 		} finally {
 			onValueSet(caller, EventKind.AFTER);
@@ -149,7 +149,7 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 
 	@Override
 	public void fireArtificialChange(final Object caller) {
-		propertySupport.getMain().firePropertyChange(getName(), caller, null, getObjectValue());
+		propertySupport.getChangeSupport().firePropertyChange(getName(), caller, null, getObjectValue());
 	}
 
 	protected abstract T replaceValue(T newValue);

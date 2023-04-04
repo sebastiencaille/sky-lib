@@ -4,8 +4,7 @@ import static ch.scaille.gui.mvc.properties.Configuration.errorNotifier;
 
 import java.util.List;
 
-import ch.scaille.gui.mvc.ControllerPropertyChangeSupport;
-import ch.scaille.gui.mvc.IScopedSupport;
+import ch.scaille.gui.mvc.IPropertiesGroup;
 import ch.scaille.gui.mvc.persisters.ObjectProviderPersister.CurrentObjectProvider;
 import ch.scaille.gui.mvc.properties.ErrorSet;
 
@@ -19,7 +18,7 @@ import ch.scaille.gui.mvc.properties.ErrorSet;
 public class GenericEditorController<T> {
 
 	private final IGenericEditor editor;
-	private final IScopedSupport propertySupport;
+	private final IPropertiesGroup propertySupport;
 	private final ErrorSet errorProperty;
 	private final List<? extends PropertyEntry> props;
 	private final CurrentObjectProvider<T> currentObject = new CurrentObjectProvider<>();

@@ -12,7 +12,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 
 import ch.scaille.util.helpers.LambdaExt;
 
-public class FsConfigManager {
+public class FsConfigManager implements IConfigManager {
 
 	private static final YAMLMapper configReader = new YAMLMapper().configure(Feature.USE_NATIVE_TYPE_ID, true)
 			.configure(Feature.USE_NATIVE_OBJECT_ID, true);
@@ -36,6 +36,7 @@ public class FsConfigManager {
 		loader = new FsResourceLoader(baseFolder, "yaml");
 	}
 
+	@Override
 	public IResourceLoader configure(String locator, String extension) {
 		if (locator.startsWith(CPResourceLoader.PREFIX)) {
 			return new CPResourceLoader(locator, extension);
@@ -57,6 +58,7 @@ public class FsConfigManager {
 		loader.write(currentConfig.getName(), configReader.writeValueAsString(currentConfig));
 	}
 
+	@Override
 	public TCConfig getCurrentConfig() {
 		return currentConfig;
 	}
@@ -66,6 +68,7 @@ public class FsConfigManager {
 		onReloads.forEach(h -> h.accept(config));
 	}
 
+	@Override
 	public void onReload(Consumer<TCConfig> hook) {
 		onReloads.add(hook);
 		if (currentConfig != null) {

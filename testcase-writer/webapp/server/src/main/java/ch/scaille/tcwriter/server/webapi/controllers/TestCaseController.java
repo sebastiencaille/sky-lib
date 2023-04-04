@@ -14,7 +14,6 @@ import org.springframework.messaging.core.MessageSendingOperations;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import ch.scaille.tcwriter.executors.JUnitTestExecutor;
 import ch.scaille.tcwriter.generated.api.controllers.TestcaseApiController;
 import ch.scaille.tcwriter.generated.api.model.Metadata;
 import ch.scaille.tcwriter.generated.api.model.TestCase;
@@ -30,9 +29,9 @@ import ch.scaille.tcwriter.server.webapi.controllers.exceptions.TestCaseNotFound
 import ch.scaille.tcwriter.server.webapi.mappers.MetadataMapper;
 import ch.scaille.tcwriter.server.webapi.mappers.TestCaseMapper;
 import ch.scaille.tcwriter.testexec.ITestExecutor;
+import ch.scaille.tcwriter.testexec.JUnitTestExecutor;
 import ch.scaille.tcwriter.testexec.TestExecutionListener;
 import ch.scaille.tcwriter.testexec.TestRemoteControl;
-import ch.scaille.util.helpers.ClassLoaderHelper;
 import jakarta.validation.Valid;
 
 public class TestCaseController extends TestcaseApiController {
@@ -50,11 +49,13 @@ public class TestCaseController extends TestcaseApiController {
 	private final IModelDao modelDao;
 
 	private final MessageSendingOperations<String> feedbackSendingTemplate;
+	private final JUnitTestExecutor testExecutor;
 
-	public TestCaseController(ContextService contextService, IDictionaryDao dictionaryDao, ITestCaseDao testcaseDao,
+	public TestCaseController(JUnitTestExecutor testExecutor, ContextService contextService, IDictionaryDao dictionaryDao, ITestCaseDao testcaseDao,
 			IModelDao modelDao, TestCaseService tcService, MessageSendingOperations<String> feedbackSendingTemplate,
 			NativeWebRequest request) {
 		super(request);
+		this.testExecutor = testExecutor;
 		this.contextService = contextService;
 		this.dictionaryDao = dictionaryDao;
 		this.testCaseDao = testcaseDao;
@@ -105,7 +106,6 @@ public class TestCaseController extends TestcaseApiController {
 		});
 		
 		final var tcpPort = testRemoteControl.prepare();
-		final var executor = new JUnitTestExecutor(modelDao, ClassLoaderHelper.guessClassPath());
 		Path tempDir;
 		try {
 			tempDir = Files.createTempDirectory("tc-writer");
@@ -113,7 +113,7 @@ public class TestCaseController extends TestcaseApiController {
 			throw new RuntimeException("Web call execution failed", e);
 		}
 		try (var config = new ITestExecutor.TestConfig(loadedTC, tempDir, tcpPort)) {
-			executor.startTest(config);
+			testExecutor.startTest(config);
 			testRemoteControl.controlTest(loadedTC.getSteps().size());
 		} catch (IOException | InterruptedException | TestCaseException e) {
 			throw new RuntimeException("Web call execution failed", e);

@@ -17,20 +17,20 @@ package ch.scaille.example.gui.model.impl;
 
 import ch.scaille.example.gui.TestObject;
 import ch.scaille.gui.mvc.ControllerPropertyChangeSupport;
-import ch.scaille.gui.mvc.IScopedSupport;
+import ch.scaille.gui.mvc.IPropertiesGroup;
 import ch.scaille.gui.mvc.PropertyGroup;
 import ch.scaille.gui.mvc.properties.BooleanProperty;
 import ch.scaille.gui.mvc.properties.ObjectProperty;
 
 public class TableModelExampleModel {
 
-	private final IScopedSupport propertySupport = new ControllerPropertyChangeSupport(this).scoped(this);
+	private final IPropertiesGroup changeSupport = ControllerPropertyChangeSupport.mainGroup(this);
 
-	public final BooleanProperty reverseOrder = new BooleanProperty("Order", propertySupport);
+	public final BooleanProperty reverseOrder = new BooleanProperty("Order", changeSupport);
 
-	public final BooleanProperty enableFilter = new BooleanProperty("Filter", propertySupport);
+	public final BooleanProperty enableFilter = new BooleanProperty("Filter", changeSupport);
 
-	public final ObjectProperty<TestObject> objectSelection = new ObjectProperty<>("Selection", propertySupport);
+	public final ObjectProperty<TestObject> objectSelection = new ObjectProperty<>("Selection", changeSupport);
 
 	public final PropertyGroup listChangers = new PropertyGroup();
 
@@ -40,7 +40,7 @@ public class TableModelExampleModel {
 	}
 
 	public void setCreated() {
-		propertySupport.attachAll();
+		changeSupport.attachAll();
 	}
 
 }

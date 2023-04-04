@@ -1,5 +1,7 @@
 package ch.scaille.tcwriter.server.webapi.config;
 
+import ch.scaille.tcwriter.config.IConfigManager;
+import ch.scaille.tcwriter.testexec.JUnitTestExecutor;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -23,33 +25,32 @@ import ch.scaille.tcwriter.server.webapi.controllers.TestCaseController;
 @AutoConfigureBefore(ErrorMvcAutoConfiguration.class)
 public class WebApiControllersConfig {
 
-	@Bean
-	RequestMappingHandlerMapping requestMappingHandlerMapping(CorsConfigurationSource corsSource) {
-		var requestMappingHandlerMapping = new RequestMappingHandlerMapping();
-		requestMappingHandlerMapping.setOrder(0);
-		requestMappingHandlerMapping.setCorsConfigurationSource(corsSource);
-		return requestMappingHandlerMapping;
-	}
-	
-	@Bean
-	ContextController contextController(ContextService contextService, ContextDao contextDao,
-			NativeWebRequest nativeWebRequest) {
-		return new ContextController(contextService, contextDao, nativeWebRequest);
-	}
+    @Bean
+    RequestMappingHandlerMapping requestMappingHandlerMapping(CorsConfigurationSource corsSource) {
+        var requestMappingHandlerMapping = new RequestMappingHandlerMapping();
+        requestMappingHandlerMapping.setOrder(0);
+        requestMappingHandlerMapping.setCorsConfigurationSource(corsSource);
+        return requestMappingHandlerMapping;
+    }
 
-	@Bean
-	DictionaryController dictionariesController(ContextService contextService, IDictionaryDao dictionaryDao,
-			NativeWebRequest nativeWebRequest) {
-		return new DictionaryController(contextService, dictionaryDao, nativeWebRequest);
-	}
+    @Bean
+    ContextController contextController(ContextService contextService, ContextDao contextDao,
+                                        NativeWebRequest nativeWebRequest) {
+        return new ContextController(contextService, contextDao, nativeWebRequest);
+    }
 
-	@Bean
-	TestCaseController testCaseController(ContextService contextService, IDictionaryDao dictionaryDao,
-			ITestCaseDao testCaseDao, IModelDao modelDao, TestCaseService testCaseService,
-			NativeWebRequest nativeWebRequest, MessageSendingOperations<String> feedbackSendingTemplate) {
-		return new TestCaseController(contextService, dictionaryDao, testCaseDao, modelDao, testCaseService,
-				feedbackSendingTemplate,
-				nativeWebRequest);
-	}
+    @Bean
+    DictionaryController dictionariesController(ContextService contextService, IDictionaryDao dictionaryDao,
+                                                NativeWebRequest nativeWebRequest) {
+        return new DictionaryController(contextService, dictionaryDao, nativeWebRequest);
+    }
+
+    @Bean
+    TestCaseController testCaseController(JUnitTestExecutor jUnitTestExecutor, ContextService contextService, IDictionaryDao dictionaryDao,
+                                          ITestCaseDao testCaseDao, IModelDao modelDao, TestCaseService testCaseService,
+                                          NativeWebRequest nativeWebRequest, MessageSendingOperations<String> feedbackSendingTemplate, IConfigManager configManager) {
+        return new TestCaseController(jUnitTestExecutor, contextService, dictionaryDao, testCaseDao, modelDao, testCaseService,
+                feedbackSendingTemplate, nativeWebRequest);
+    }
 
 }

@@ -10,7 +10,7 @@ import ch.scaille.annotations.Labeled;
 import ch.scaille.annotations.Ordered;
 import ch.scaille.gui.mvc.BindingChain.EndOfChain;
 import ch.scaille.gui.mvc.ControllerPropertyChangeSupport;
-import ch.scaille.gui.mvc.IScopedSupport;
+import ch.scaille.gui.mvc.IPropertiesGroup;
 import ch.scaille.gui.mvc.factories.Persisters;
 import ch.scaille.gui.mvc.persisters.ObjectProviderPersister.IObjectProvider;
 import ch.scaille.gui.mvc.properties.AbstractTypedProperty;
@@ -47,7 +47,7 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 		private ResourceBundle bundle = null;
 		private boolean readOnly = false;
 		private IGenericModelAdapter[] adapters = new IGenericModelAdapter[0];
-		private IScopedSupport propertySupport;
+		private IPropertiesGroup propertySupport;
 		private ErrorSet errorSet;
 
 		public Builder(final Class<T> clazz) {
@@ -69,7 +69,7 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 			return this;
 		}
 
-		public Builder<T> with(IScopedSupport propertySupport) {
+		public Builder<T> with(IPropertiesGroup propertySupport) {
 			this.propertySupport = propertySupport;
 			return this;
 		}
@@ -81,7 +81,7 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 
 		public GenericEditorClassModel<T> build() {
 			if (propertySupport == null) {
-				propertySupport = new ControllerPropertyChangeSupport(this).scoped(this);
+				propertySupport = ControllerPropertyChangeSupport.mainGroup(this);
 			}
 			if (errorSet == null) {
 				errorSet = new ErrorSet("Error", propertySupport);
@@ -104,7 +104,7 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 	}
 
 	@Override
-	public IScopedSupport getPropertySupport() {
+	public IPropertiesGroup getPropertySupport() {
 		return config.propertySupport;
 	}
 

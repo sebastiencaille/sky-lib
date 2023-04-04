@@ -26,29 +26,23 @@ package ch.scaille.gui.mvc;
 public class GuiController {
 
 	/**
-	 * The full support
+	 * The main properties group
 	 */
-	private ControllerPropertyChangeSupport mainSupport;
-
-	/**
-	 * The scoped support
-	 */
-	protected final IScopedSupport propertySupport;
+	protected final IPropertiesGroup propertySupport;
 
 	public GuiController() {
-		mainSupport = new ControllerPropertyChangeSupport(this);
-		this.propertySupport = mainSupport.scoped(this);
+		this.propertySupport = ControllerPropertyChangeSupport.mainGroup(this);
 	}
 
 	public GuiController(final ControllerPropertyChangeSupport propertySupport) {
 		this.propertySupport = propertySupport.scoped(this);
 	}
 
-	public GuiController(final IScopedSupport propertySupport) {
+	public GuiController(final IPropertiesGroup propertySupport) {
 		this.propertySupport = propertySupport;
 	}
 
-	public IScopedSupport getScopedChangeSupport() {
+	public IPropertiesGroup getScopedChangeSupport() {
 		return propertySupport;
 	}
 

@@ -1,6 +1,6 @@
 package ch.scaille.tcwriter.gui.frame;
 
-import ch.scaille.gui.mvc.IScopedSupport;
+import ch.scaille.gui.mvc.IPropertiesGroup;
 import ch.scaille.gui.mvc.properties.ObjectProperty;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.testcase.TestCase;
@@ -20,7 +20,7 @@ public class TCWriterModel {
 
 	private final TestDictionary testDictionary;
 
-	public TCWriterModel(final TestDictionary testDictionary, final IScopedSupport changeSupport) {
+	public TCWriterModel(final TestDictionary testDictionary, final IPropertiesGroup changeSupport) {
 		this.testDictionary = testDictionary;
 		tc = new ObjectProperty<>("TestCase", changeSupport);
 		selectedStep = new ObjectProperty<>("SelectedStep", changeSupport);

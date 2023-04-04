@@ -1,15 +1,16 @@
 package ch.scaille.tcwriter.config;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 public class TCConfig {
-	
+
 	public static final String DEFAULT = "default";
-	
+
 	private String name = DEFAULT;
 
 	private List<Object> subconfigs = new ArrayList<>();
@@ -21,7 +22,7 @@ public class TCConfig {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "type")
 	public List<Object> getSubconfigs() {
 		return subconfigs;
@@ -35,10 +36,10 @@ public class TCConfig {
 		return subconfigs.stream().filter(clazz::isInstance).findFirst().map(clazz::cast);
 	}
 
-	public static TCConfig of(String name, Object subConfig) {
+	public static TCConfig of(String name, Object... subConfig) {
 		TCConfig config = new TCConfig();
 		config.name = name;
-		config.subconfigs.add(subConfig);
+		config.subconfigs.addAll(Arrays.asList(subConfig));
 		return config;
 	}
 }

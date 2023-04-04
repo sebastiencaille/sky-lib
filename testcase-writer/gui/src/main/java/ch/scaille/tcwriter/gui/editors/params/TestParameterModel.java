@@ -20,7 +20,7 @@ public class TestParameterModel extends GuiModel {
 	public TestParameterModel(final String prefix, final TCWriterController guiController,
 			final ObjectProperty<TestParameterFactory> testApi,
 			final ObjectProperty<TestParameterValue> editedParameterValue) {
-		super(with(guiController.getScopedChangeSupport().getMain().scoped(prefix + "-controller")));
+		super(with(guiController.getScopedChangeSupport().getChangeSupport().scoped(prefix + "-controller")));
 		this.prefix = prefix;
 		this.editedParameterValue = editedParameterValue;
 		this.testApi = testApi;

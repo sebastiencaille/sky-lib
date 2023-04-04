@@ -2,7 +2,7 @@ package ch.scaille.gui.tools;
 
 import java.util.List;
 
-import ch.scaille.gui.mvc.IScopedSupport;
+import ch.scaille.gui.mvc.IPropertiesGroup;
 import ch.scaille.gui.mvc.persisters.ObjectProviderPersister.IObjectProvider;
 import ch.scaille.gui.mvc.properties.ErrorSet;
 
@@ -12,5 +12,5 @@ public interface IGenericEditorModel<T> {
 
 	ErrorSet getErrorProperty();
 
-	IScopedSupport getPropertySupport();
+	IPropertiesGroup getPropertySupport();
 }

@@ -84,4 +84,11 @@ public class ClassLoaderHelper {
             System.setProperty("java.protocol.handler.pkgs", handlerPkg);
         }
     }
+
+	public static URL[] cpToURLs(String classpath) {
+		if (classpath == null) {
+			return new URL[0];
+		}
+		return Arrays.stream(classpath.split(CP_SEPARATOR)).map(LambdaExt.uncheckF(c -> new URL("file:" + c))).toArray(URL[]::new);
+	}
 }

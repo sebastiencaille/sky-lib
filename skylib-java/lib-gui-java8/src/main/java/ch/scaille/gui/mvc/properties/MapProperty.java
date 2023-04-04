@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import ch.scaille.gui.mvc.GuiModel;
-import ch.scaille.gui.mvc.IScopedSupport;
+import ch.scaille.gui.mvc.IPropertiesGroup;
 
 public class MapProperty<T, U> extends ObjectProperty<Map<T, U>> {
 
@@ -28,7 +28,7 @@ public class MapProperty<T, U> extends ObjectProperty<Map<T, U>> {
 		super(name, model, new HashMap<>());
 	}
 
-	public MapProperty(final String name, final IScopedSupport propertySupport) {
+	public MapProperty(final String name, final IPropertiesGroup propertySupport) {
 		super(name, propertySupport, new HashMap<>());
 	}
 

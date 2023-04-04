@@ -42,14 +42,14 @@ import ch.scaille.gui.mvc.properties.AbstractProperty;
  * fired.
  * <p>
  * By default, all the properties are detached from the controller. They can be
- * attached by calling the method startController
+ * attached using the method startController
  *
  * @author Sebastien Caille
  *
  */
 public class ControllerPropertyChangeSupport {
 
-	private final PropertyChangeSupport support;
+
 
 	private static class CallInfo {
 
@@ -68,11 +68,17 @@ public class ControllerPropertyChangeSupport {
 
 	}
 
+	private final PropertyChangeSupport support;
+	
 	/** Information about properties currently called */
 	private final Map<String, Deque<CallInfo>> callInfo = new HashMap<>();
 
-	private final Map<Object, ScopedRegistration> scopedRegistrations = new IdentityHashMap<>();
+	private final Map<Object, PropertiesGroup> scopedRegistrations = new IdentityHashMap<>();
 
+	public static IPropertiesGroup mainGroup(Object bean) {
+		return new ControllerPropertyChangeSupport(bean).scoped(bean);
+	}
+	
 	public ControllerPropertyChangeSupport(final Object bean) {
 		support = new PropertyChangeSupport(bean);
 	}
@@ -165,18 +171,18 @@ public class ControllerPropertyChangeSupport {
 		}
 	}
 
-	public class ScopedRegistration implements IScopedSupport {
+	public class PropertiesGroup implements IPropertiesGroup {
 		/** All the properties of the MVC */
 		private final List<AbstractProperty> properties = new ArrayList<>();
 		private final List<ListenerRegistration> listeners = new ArrayList<>();
 		private final Object scope;
 
-		public ScopedRegistration(final Object scope) {
+		public PropertiesGroup(final Object scope) {
 			this.scope = scope;
 		}
 
 		@Override
-		public ControllerPropertyChangeSupport getMain() {
+		public ControllerPropertyChangeSupport getChangeSupport() {
 			return ControllerPropertyChangeSupport.this;
 		}
 
@@ -235,8 +241,8 @@ public class ControllerPropertyChangeSupport {
 		}
 	}
 
-	public IScopedSupport scoped(final Object scope) {
-		return scopedRegistrations.computeIfAbsent(scope, ScopedRegistration::new);
+	public IPropertiesGroup scoped(final Object scope) {
+		return scopedRegistrations.computeIfAbsent(scope, PropertiesGroup::new);
 	}
 
 }

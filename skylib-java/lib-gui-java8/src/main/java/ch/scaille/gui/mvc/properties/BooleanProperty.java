@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 import ch.scaille.gui.mvc.BindingChain;
 import ch.scaille.gui.mvc.BindingChain.EndOfChain;
 import ch.scaille.gui.mvc.GuiModel;
-import ch.scaille.gui.mvc.IScopedSupport;
+import ch.scaille.gui.mvc.IPropertiesGroup;
 
 /**
  * Property containing a boolean value.
@@ -42,12 +42,12 @@ public class BooleanProperty extends AbstractTypedProperty<Boolean> {
 		this(name, model, false);
 	}
 
-	public BooleanProperty(final String name, final IScopedSupport propertySupport, final boolean defaultValue) {
+	public BooleanProperty(final String name, final IPropertiesGroup propertySupport, final boolean defaultValue) {
 		super(name, propertySupport);
 		this.defaultValue = defaultValue;
 	}
 
-	public BooleanProperty(final String name, final IScopedSupport propertySupport) {
+	public BooleanProperty(final String name, final IPropertiesGroup propertySupport) {
 		this(name, propertySupport, false);
 	}
 
@@ -94,7 +94,7 @@ public class BooleanProperty extends AbstractTypedProperty<Boolean> {
 	@Override
 	public void attach() {
 		super.attach();
-		propertySupport.getMain().firePropertyChange(getName(), this, null, value);
+		propertySupport.getChangeSupport().firePropertyChange(getName(), this, null, value);
 	}
 
 }

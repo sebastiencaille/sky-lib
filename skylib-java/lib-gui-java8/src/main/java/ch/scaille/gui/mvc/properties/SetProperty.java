@@ -19,7 +19,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import ch.scaille.gui.mvc.GuiModel;
-import ch.scaille.gui.mvc.IScopedSupport;
+import ch.scaille.gui.mvc.IPropertiesGroup;
 
 public class SetProperty<T> extends ObjectProperty<Set<T>> {
 
@@ -27,7 +27,7 @@ public class SetProperty<T> extends ObjectProperty<Set<T>> {
 		super(name, model);
 	}
 
-	public SetProperty(final String name, final IScopedSupport propertySupport) {
+	public SetProperty(final String name, final IPropertiesGroup propertySupport) {
 		super(name, propertySupport);
 	}
 

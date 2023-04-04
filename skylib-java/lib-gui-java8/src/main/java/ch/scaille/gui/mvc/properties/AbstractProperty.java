@@ -25,7 +25,7 @@ import javax.swing.event.EventListenerList;
 
 import ch.scaille.gui.mvc.GuiError;
 import ch.scaille.gui.mvc.IPropertyEventListener;
-import ch.scaille.gui.mvc.IScopedSupport;
+import ch.scaille.gui.mvc.IPropertiesGroup;
 import ch.scaille.gui.mvc.PropertyEvent;
 import ch.scaille.gui.mvc.PropertyEvent.EventKind;
 import ch.scaille.gui.mvc.Veto.TransmitMode;
@@ -70,7 +70,7 @@ public abstract class AbstractProperty implements Serializable {
 	/**
 	 * Support to trigger property change
 	 */
-	protected final transient IScopedSupport propertySupport;
+	protected final transient IPropertiesGroup propertySupport;
 
 	/**
 	 * Property related events (before firing, after firing, ...)
@@ -92,7 +92,7 @@ public abstract class AbstractProperty implements Serializable {
 
 	public abstract void fireArtificialChange(Object caller);
 
-	protected AbstractProperty(final String name, final IScopedSupport propertySupport) {
+	protected AbstractProperty(final String name, final IPropertiesGroup propertySupport) {
 		this.name = name;
 		this.propertySupport = propertySupport;
 		propertySupport.register(this);
@@ -135,7 +135,7 @@ public abstract class AbstractProperty implements Serializable {
 	}
 
 	public void removeListener(final PropertyChangeListener propertyChangeListener) {
-		propertySupport.getMain().removePropertyChangeListener(name, propertyChangeListener);
+		propertySupport.getChangeSupport().removePropertyChangeListener(name, propertyChangeListener);
 	}
 
 	public void removeListeners(final List<IPropertyEventListener> toRemove) {
@@ -143,11 +143,11 @@ public abstract class AbstractProperty implements Serializable {
 	}
 
 	public void removeAllListeners() {
-		propertySupport.getMain().removeAllPropertyChangeListener(name);
+		propertySupport.getChangeSupport().removeAllPropertyChangeListener(name);
 	}
 
 	public boolean isModifiedBy(final Object caller) {
-		return propertySupport.getMain().isModifiedBy(name, caller);
+		return propertySupport.getChangeSupport().isModifiedBy(name, caller);
 	}
 
 	public void addListener(final IPropertyEventListener listener) {
@@ -190,7 +190,7 @@ public abstract class AbstractProperty implements Serializable {
 	}
 
 	public String getModifiedBy() {
-		return propertySupport.getMain().getModificationStack(getName());
+		return propertySupport.getChangeSupport().getModificationStack(getName());
 	}
 
 }

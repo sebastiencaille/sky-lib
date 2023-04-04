@@ -5,12 +5,12 @@ import java.beans.PropertyChangeListener;
 import ch.scaille.gui.mvc.properties.AbstractProperty;
 
 /**
- * Scopped support allows acting on a subset of the initial change support
+ * A group of properties allows controlling a group of properties
  *
  * @author scaille
  *
  */
-public interface IScopedSupport {
+public interface IPropertiesGroup {
 
 	void register(AbstractProperty abstractProperty);
 
@@ -34,7 +34,7 @@ public interface IScopedSupport {
 
 	void disposeBindings();
 
-	ControllerPropertyChangeSupport getMain();
+	ControllerPropertyChangeSupport getChangeSupport();
 
 	IPropertyEventListener detachWhenPropLoading();
 

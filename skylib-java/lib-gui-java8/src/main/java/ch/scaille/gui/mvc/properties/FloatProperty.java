@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 import ch.scaille.gui.mvc.BindingChain;
 import ch.scaille.gui.mvc.BindingChain.EndOfChain;
 import ch.scaille.gui.mvc.GuiModel;
-import ch.scaille.gui.mvc.IScopedSupport;
+import ch.scaille.gui.mvc.IPropertiesGroup;
 
 /**
  * Property containing a float value.
@@ -43,12 +43,12 @@ public class FloatProperty extends AbstractTypedProperty<Float> {
 		this(name, model, 0.0f);
 	}
 
-	public FloatProperty(final String name, final IScopedSupport propertySupport, final float defaultValue) {
+	public FloatProperty(final String name, final IPropertiesGroup propertySupport, final float defaultValue) {
 		super(name, propertySupport);
 		this.defaultValue = defaultValue;
 	}
 
-	public FloatProperty(final String name, final IScopedSupport propertySupport) {
+	public FloatProperty(final String name, final IPropertiesGroup propertySupport) {
 		this(name, propertySupport, 0.0f);
 	}
 
@@ -90,7 +90,7 @@ public class FloatProperty extends AbstractTypedProperty<Float> {
 	@Override
 	public void attach() {
 		super.attach();
-		propertySupport.getMain().firePropertyChange(getName(), this, null, value);
+		propertySupport.getChangeSupport().firePropertyChange(getName(), this, null, value);
 	}
 
 	@Override

@@ -9,7 +9,7 @@ import java.util.List;
 
 import javax.swing.SwingUtilities;
 
-import ch.scaille.gui.mvc.IScopedSupport;
+import ch.scaille.gui.mvc.IPropertiesGroup;
 import ch.scaille.gui.mvc.persisters.ObjectProviderPersister.IObjectProvider;
 import ch.scaille.gui.mvc.properties.AbstractTypedProperty;
 import ch.scaille.gui.mvc.properties.BooleanProperty;
@@ -45,7 +45,7 @@ public class GenericPropertiesEditorLauncher {
 
     }
 
-    private static List<PropertyEntry> builder(IScopedSupport support, IObjectProvider<EditedObject> obj) {
+    private static List<PropertyEntry> builder(IPropertiesGroup support, IObjectProvider<EditedObject> obj) {
 
         final ObjectProperty<String> strProp = new ObjectProperty<String>("str", support)
                 .configureTyped(persistent(obj, getSet(EditedObject::getStr, EditedObject::setStr)));

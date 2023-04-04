@@ -104,15 +104,14 @@ public class TCWriterController extends GuiController {
 
 	public void editConfig() throws IOException {
 		final var configEditorDialog = new SwingGenericEditorDialog(gui, "Configuration", ModalityType.DOCUMENT_MODAL);
-		final var editorPropertySupport = new ControllerPropertyChangeSupport(configEditorDialog)
-				.scoped(configEditorDialog);
-		final var errorSet = new ErrorSet("Error", editorPropertySupport);
+		final var editorPropertySupport = ControllerPropertyChangeSupport.mainGroup(configEditorDialog);
+		final var errorProp = new ErrorSet("Error", editorPropertySupport);
 		for (final var configToEdit : configManager.getCurrentConfig().getSubconfigs()) {
-			var builder = GenericEditorClassModel.builder(configToEdit.getClass()).with(propertySupport).with(errorSet);
+			var builder = GenericEditorClassModel.builder(configToEdit.getClass()).with(propertySupport).with(errorProp);
 			configEditorDialog.add(createEditor(configToEdit,
 					configEditorDialog.tab(configToEdit.getClass().getSimpleName()), builder));
 		}
-		configEditorDialog.build(errorSet);
+		configEditorDialog.build(errorProp);
 		configEditorDialog.setSize(configEditorDialog.getWidth() + 400, configEditorDialog.getHeight() + 30);
 		configEditorDialog.setVisible(true);
 		configEditorDialog.dispose();

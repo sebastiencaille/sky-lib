@@ -9,13 +9,11 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.Logger;
 
-import ch.scaille.tcwriter.config.IConfigManager;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.core.MessageSendingOperations;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import ch.scaille.tcwriter.testexec.JUnitTestExecutor;
 import ch.scaille.tcwriter.generated.api.controllers.TestcaseApiController;
 import ch.scaille.tcwriter.generated.api.model.Metadata;
 import ch.scaille.tcwriter.generated.api.model.TestCase;
@@ -31,9 +29,9 @@ import ch.scaille.tcwriter.server.webapi.controllers.exceptions.TestCaseNotFound
 import ch.scaille.tcwriter.server.webapi.mappers.MetadataMapper;
 import ch.scaille.tcwriter.server.webapi.mappers.TestCaseMapper;
 import ch.scaille.tcwriter.testexec.ITestExecutor;
+import ch.scaille.tcwriter.testexec.JUnitTestExecutor;
 import ch.scaille.tcwriter.testexec.TestExecutionListener;
 import ch.scaille.tcwriter.testexec.TestRemoteControl;
-import ch.scaille.util.helpers.ClassLoaderHelper;
 import jakarta.validation.Valid;
 
 public class TestCaseController extends TestcaseApiController {

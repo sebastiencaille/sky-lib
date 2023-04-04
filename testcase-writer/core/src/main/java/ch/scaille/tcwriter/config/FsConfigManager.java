@@ -36,6 +36,7 @@ public class FsConfigManager implements IConfigManager {
 		loader = new FsResourceLoader(baseFolder, "yaml");
 	}
 
+	@Override
 	public IResourceLoader configure(String locator, String extension) {
 		if (locator.startsWith(CPResourceLoader.PREFIX)) {
 			return new CPResourceLoader(locator, extension);
@@ -57,6 +58,7 @@ public class FsConfigManager implements IConfigManager {
 		loader.write(currentConfig.getName(), configReader.writeValueAsString(currentConfig));
 	}
 
+	@Override
 	public TCConfig getCurrentConfig() {
 		return currentConfig;
 	}

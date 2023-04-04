@@ -12,6 +12,7 @@ import ch.scaille.tcwriter.annotations.TCActors;
 import ch.scaille.tcwriter.config.FsConfigManager;
 import ch.scaille.tcwriter.config.TCConfig;
 import ch.scaille.tcwriter.testexec.JUnitTestExecutor;
+import ch.scaille.tcwriter.testexec.JunitTestExecConfig;
 import ch.scaille.tcwriter.generators.JavaToDictionary;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.tcwriter.it.api.TestSessionRole;
@@ -45,7 +46,11 @@ public class AbstractGuiTest {
 		modelConfig.setDictionaryPath(dictionaries.toString());
 		modelConfig.setTemplatePath(new File("rsrc:templates/TC.template").toString());
 
-		var configLoader = new FsConfigManager(RESOURCE_FOLDER.toPath()).setConfiguration(TCConfig.of("default", modelConfig));
+		var junitTestConfig = new JunitTestExecConfig();
+		junitTestConfig.setJava("");
+		junitTestConfig.setClasspath("");
+		
+		var configLoader = new FsConfigManager(RESOURCE_FOLDER.toPath()).setConfiguration(TCConfig.of("default", modelConfig, junitTestConfig));
 		
 		// Setup services 
 		final var persister = new FsModelDao(configLoader);

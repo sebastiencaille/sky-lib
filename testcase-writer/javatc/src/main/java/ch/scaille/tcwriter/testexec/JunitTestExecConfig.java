@@ -4,8 +4,8 @@ import ch.scaille.annotations.Labeled;
 import ch.scaille.annotations.Ordered;
 
 public class JunitTestExecConfig {
-	private String java;
-	private String classpath;
+	private String java = System.getProperty("java.home") + "/bin/java";
+	private String classpath = null;
 
 	@Ordered(order = 1)
 	@Labeled(label = "Path to java (empty for default)")

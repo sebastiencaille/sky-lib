@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Semaphore;
 
-import ch.scaille.tcwriter.testexec.TestApi;
 import ch.scaille.tcwriter.testexec.TestApi.Command;
 import ch.scaille.util.helpers.Logs;
 

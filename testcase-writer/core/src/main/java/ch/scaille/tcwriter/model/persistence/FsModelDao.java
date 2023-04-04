@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 
-import ch.scaille.tcwriter.config.IConfigManager;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
@@ -25,7 +24,7 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 
 import ch.scaille.generators.util.Template;
-import ch.scaille.tcwriter.config.FsConfigManager;
+import ch.scaille.tcwriter.config.IConfigManager;
 import ch.scaille.tcwriter.config.IResourceLoader;
 import ch.scaille.tcwriter.model.ExportReference;
 import ch.scaille.tcwriter.model.Metadata;
@@ -72,7 +71,7 @@ public class FsModelDao implements IModelDao {
 		mapper.registerModules(new GuavaModule(), testCaseWriterModule);
 	}
 
-	private final IConfigManager configLoader;
+	private final IConfigManager configManager;
 
 	private IResourceLoader dictionaryResource;
 
@@ -83,16 +82,16 @@ public class FsModelDao implements IModelDao {
 	private IResourceLoader testCaseCodeResource;
 
 	public FsModelDao(IConfigManager configLoader) {
-		this.configLoader = configLoader;
-		this.configLoader.onReload(c -> reload(c.getSubconfig(FsModelConfig.class)));
+		this.configManager = configLoader;
+		this.configManager.onReload(c -> reload(c.getSubconfig(FsModelConfig.class)
+				.orElseThrow(() -> new IllegalStateException("Cannot find dao config"))));
 	}
 
-	private void reload(Optional<FsModelConfig> config) {
-		var cfg = config.orElseThrow(() -> new IllegalStateException("Cannot find dao config"));
-		this.dictionaryResource = configLoader.configure(cfg.getDictionaryPath(), "json");
-		this.testCaseResource = configLoader.configure(cfg.getTcPath(), "json");
-		this.templateResource = configLoader.configure(cfg.getTemplatePath(), null);
-		this.testCaseCodeResource = configLoader.configure(cfg.getTcExportPath(), null);
+	private void reload(FsModelConfig config) {
+		this.dictionaryResource = configManager.configure(config.getDictionaryPath(), "json");
+		this.testCaseResource = configManager.configure(config.getTcPath(), "json");
+		this.templateResource = configManager.configure(config.getTemplatePath(), null);
+		this.testCaseCodeResource = configManager.configure(config.getTcExportPath(), null);
 	}
 
 	@Override

@@ -7,7 +7,7 @@ import java.util.function.UnaryOperator;
 
 import ch.scaille.gui.mvc.BindingChain.EndOfChain;
 import ch.scaille.gui.mvc.ControllerPropertyChangeSupport;
-import ch.scaille.gui.mvc.IScopedSupport;
+import ch.scaille.gui.mvc.IPropertiesGroup;
 import ch.scaille.gui.mvc.persisters.ObjectProviderPersister.IObjectProvider;
 import ch.scaille.gui.mvc.properties.AbstractTypedProperty;
 import ch.scaille.gui.mvc.properties.ErrorSet;
@@ -32,12 +32,12 @@ public class SimpleEditorModel<T> implements IGenericEditorModel<T> {
                 textProvider.apply(PropertyEntry.tooltipKey(property.getName())));
     }
 
-    private final IScopedSupport support;
+    private final IPropertiesGroup support;
     private final ErrorSet errorSet;
-    private final BiFunction<IScopedSupport, IObjectProvider<T>, List<PropertyEntry>> builder;
+    private final BiFunction<IPropertiesGroup, IObjectProvider<T>, List<PropertyEntry>> builder;
 
-    public SimpleEditorModel(final BiFunction<IScopedSupport, IObjectProvider<T>, List<PropertyEntry>> builder) {
-        this.support = new ControllerPropertyChangeSupport(this).scoped(this);
+    public SimpleEditorModel(final BiFunction<IPropertiesGroup, IObjectProvider<T>, List<PropertyEntry>> builder) {
+        this.support = ControllerPropertyChangeSupport.mainGroup(this);
         this.errorSet = new ErrorSet("Error", support);
         this.builder = builder;
     }
@@ -54,7 +54,7 @@ public class SimpleEditorModel<T> implements IGenericEditorModel<T> {
     }
 
     @Override
-    public IScopedSupport getPropertySupport() {
+    public IPropertiesGroup getPropertySupport() {
         return support;
     }
 

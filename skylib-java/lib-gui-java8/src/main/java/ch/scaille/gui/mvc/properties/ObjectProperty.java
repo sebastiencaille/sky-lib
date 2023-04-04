@@ -24,7 +24,7 @@ import java.util.function.Function;
 import ch.scaille.gui.mvc.BindingChain;
 import ch.scaille.gui.mvc.BindingChain.EndOfChain;
 import ch.scaille.gui.mvc.GuiModel;
-import ch.scaille.gui.mvc.IScopedSupport;
+import ch.scaille.gui.mvc.IPropertiesGroup;
 
 /**
  * A property that contains an object.
@@ -51,13 +51,13 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 		this(name, model, null);
 	}
 
-	public ObjectProperty(final String name, final IScopedSupport propertySupport, final T defaultValue) {
+	public ObjectProperty(final String name, final IPropertiesGroup propertySupport, final T defaultValue) {
 		super(name, propertySupport);
 		this.defaultValue = defaultValue;
 		value = defaultValue;
 	}
 
-	public ObjectProperty(final String name, final IScopedSupport propertySupport) {
+	public ObjectProperty(final String name, final IPropertiesGroup propertySupport) {
 		this(name, propertySupport, null);
 	}
 
@@ -107,7 +107,7 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 	}
 
 	public void forceChanged(final Object caller) {
-		propertySupport.getMain().firePropertyChange(getName(), caller, null, getValue());
+		propertySupport.getChangeSupport().firePropertyChange(getName(), caller, null, getValue());
 	}
 
 	public T getValue() {
@@ -123,7 +123,7 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 		boolean mustUpdate = !mustSendToComponent();
 		super.attach();
 		if (mustUpdate) {
-			propertySupport.getMain().firePropertyChange(getName(), this, null, getValue());
+			propertySupport.getChangeSupport().firePropertyChange(getName(), this, null, getValue());
 		}
 	}
 

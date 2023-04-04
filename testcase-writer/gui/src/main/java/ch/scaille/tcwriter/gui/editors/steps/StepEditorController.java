@@ -6,7 +6,7 @@ import static ch.scaille.gui.mvc.factories.BindingDependencies.preserveOnUpdateO
 import java.util.*;
 
 import ch.scaille.gui.mvc.GuiController;
-import ch.scaille.gui.mvc.IScopedSupport;
+import ch.scaille.gui.mvc.IPropertiesGroup;
 import ch.scaille.gui.mvc.properties.ObjectProperty;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.tcwriter.gui.frame.TCWriterModel;
@@ -21,7 +21,7 @@ public class StepEditorController extends GuiController {
 
 	private final StepEditorModel model;
 
-	private final IScopedSupport changeSupport;
+	private final IPropertiesGroup changeSupport;
 
 	private final TCWriterModel guiModel;
 

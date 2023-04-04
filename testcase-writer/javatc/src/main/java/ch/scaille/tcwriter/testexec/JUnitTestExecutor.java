@@ -1,7 +1,6 @@
 package ch.scaille.tcwriter.testexec;
 
 import static ch.scaille.util.helpers.LambdaExt.uncheckF2;
-import static java.util.stream.Collectors.joining;
 
 import java.io.IOException;
 import java.net.URL;
@@ -11,17 +10,16 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
-import ch.scaille.tcwriter.config.FsConfigManager;
-import ch.scaille.tcwriter.config.IConfigManager;
-import ch.scaille.util.helpers.LambdaExt;
 import com.google.common.collect.Lists;
 
+import ch.scaille.tcwriter.config.IConfigManager;
 import ch.scaille.tcwriter.generators.TestCaseToJava;
 import ch.scaille.tcwriter.model.TestCaseException;
 import ch.scaille.tcwriter.model.persistence.IModelDao;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.util.helpers.ClassLoaderHelper;
 import ch.scaille.util.helpers.FilesExt;
+import ch.scaille.util.helpers.LambdaExt;
 import ch.scaille.util.helpers.Logs;
 
 public class JUnitTestExecutor implements ITestExecutor {
@@ -56,7 +54,7 @@ public class JUnitTestExecutor implements ITestExecutor {
         final var aspectsClassPath = ClassLoaderHelper.cpToCommandLine(Stream.of(classPath)
                 .filter(j -> j.toString().contains("testcase-writer")
                         && (j.toString().contains("api") || j.toString().contains("javatc")))
-                .toArray(URL[]::new), new URL(config.getClasspath()));
+                .toArray(URL[]::new),  ClassLoaderHelper.cpToURLs(config.getClasspath()));
         final var testCompiler = exec("Compile", new String[]{config.getJava(), //
                 "-cp", ClassLoaderHelper.cpToCommandLine(classPath), //
                 "org.aspectj.tools.ajc.Main", //
@@ -65,7 +63,7 @@ public class JUnitTestExecutor implements ITestExecutor {
                 "-target", "11", //
                 "-verbose", //
                 // "-verbose", "-showWeaveInfo", //
-                "-d", testConfig.binaryFolder.toString(), //
+                "-d", testConfig.binaryFolder.toString(), // 
                 "-sourceroots", testConfig.sourceFolder.toString()});//
         if (testCompiler.waitFor() != 0) {
             throw new IllegalStateException("Compiler failed with status " + testCompiler.exitValue());
@@ -87,12 +85,13 @@ public class JUnitTestExecutor implements ITestExecutor {
                 "-jar", junit, "--select-class=" + binaryRef, "--details", "verbose"));
         parameters.addAll(toMultipleCommandLine(classPath));
         parameters.add("-cp=" + binaryURL);
+        parameters.add("-cp=" + ClassLoaderHelper.cpToCommandLine(ClassLoaderHelper.cpToURLs(config.getClasspath())));
         exec("Execution", parameters.toArray(new String[0]));
     }
 
     private List<String> toMultipleCommandLine(URL[] classPath) {
         return Lists.partition(Arrays.asList(classPath), 50).stream()
-                .map(c -> LambdaExt.uncheck(() -> "-cp=" + ClassLoaderHelper.cpToCommandLine(c.toArray(new URL[0]), new URL(config.getClasspath()))))
+                .map(c -> LambdaExt.uncheck(() -> "-cp=" + ClassLoaderHelper.cpToCommandLine(c.toArray(new URL[0]))))
                 .toList();
     }
 

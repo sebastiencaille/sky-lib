@@ -1,7 +1,7 @@
 package ch.scaille.gui.mvc.properties;
 
 import ch.scaille.gui.mvc.GuiError;
-import ch.scaille.gui.mvc.IScopedSupport;
+import ch.scaille.gui.mvc.IPropertiesGroup;
 import ch.scaille.gui.mvc.properties.AbstractProperty.ErrorNotifier;
 
 public class ErrorSet implements ErrorNotifier {
@@ -10,7 +10,7 @@ public class ErrorSet implements ErrorNotifier {
 
 	private final ObjectProperty<GuiError> lastError;
 
-	public ErrorSet(final String name, final IScopedSupport support) {
+	public ErrorSet(final String name, final IPropertiesGroup support) {
 		errors = new MapProperty<>(name, support);
 		lastError = new ObjectProperty<>(name + "-last", support);
 	}

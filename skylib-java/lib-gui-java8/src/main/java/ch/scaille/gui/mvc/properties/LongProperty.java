@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 import ch.scaille.gui.mvc.BindingChain;
 import ch.scaille.gui.mvc.BindingChain.EndOfChain;
 import ch.scaille.gui.mvc.GuiModel;
-import ch.scaille.gui.mvc.IScopedSupport;
+import ch.scaille.gui.mvc.IPropertiesGroup;
 
 /**
  * Property containing a long value.
@@ -43,12 +43,12 @@ public class LongProperty extends AbstractTypedProperty<Long> {
 		this(name, model, 0);
 	}
 
-	public LongProperty(final String name, final IScopedSupport propertySupport, final long defaultValue) {
+	public LongProperty(final String name, final IPropertiesGroup propertySupport, final long defaultValue) {
 		super(name, propertySupport);
 		this.defaultValue = defaultValue;
 	}
 
-	public LongProperty(final String name, final IScopedSupport propertySupport) {
+	public LongProperty(final String name, final IPropertiesGroup propertySupport) {
 		this(name, propertySupport, 0);
 	}
 
@@ -90,7 +90,7 @@ public class LongProperty extends AbstractTypedProperty<Long> {
 	@Override
 	public void attach() {
 		super.attach();
-		propertySupport.getMain().firePropertyChange(getName(), this, null, value);
+		propertySupport.getChangeSupport().firePropertyChange(getName(), this, null, value);
 	}
 
 	@Override

@@ -31,7 +31,7 @@ import ch.scaille.gui.model.views.IListView;
 import ch.scaille.gui.model.views.ListViews;
 import ch.scaille.gui.mvc.ControllerPropertyChangeSupport;
 import ch.scaille.gui.mvc.GuiModel;
-import ch.scaille.gui.mvc.IScopedSupport;
+import ch.scaille.gui.mvc.IPropertiesGroup;
 import ch.scaille.gui.mvc.properties.ListProperty;
 import ch.scaille.gui.swing.factories.SwingBindings;
 
@@ -51,7 +51,7 @@ class TableTest {
 	@Test
 	void testSelectionOnInsert() throws InvocationTargetException, InterruptedException {
 
-		final IScopedSupport support = new ControllerPropertyChangeSupport(this).scoped(this);
+		final IPropertiesGroup support = ControllerPropertyChangeSupport.mainGroup(this);
 		final Model model = new Model(GuiModel.with(support));
 		support.attachAll();
 
@@ -76,7 +76,6 @@ class TableTest {
 				assertEquals(1, model.selection.getValue().size()); // NOSONAR
 				listModel.insert(new TestObject(4));
 				assertEquals(1, model.selection.getValue().size()); // NOSONAR
-
 			}
 		});
 

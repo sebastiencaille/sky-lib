@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import ch.scaille.gui.mvc.GuiModel;
-import ch.scaille.gui.mvc.IScopedSupport;
+import ch.scaille.gui.mvc.IPropertiesGroup;
 
 /**
  * Property containing a list of Objects.
@@ -35,7 +35,7 @@ public class ListProperty<T> extends ObjectProperty<List<T>> {
 		super(name, model);
 	}
 
-	public ListProperty(final String name, final IScopedSupport propertySupport) {
+	public ListProperty(final String name, final IPropertiesGroup propertySupport) {
 		super(name, propertySupport);
 	}
 

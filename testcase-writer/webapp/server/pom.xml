@@ -66,6 +66,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>ch.scaille.tcwriter</groupId>
+			<artifactId>testcase-writer-examples</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
 	</dependencies>
 	<build>
 		<pluginManagement>

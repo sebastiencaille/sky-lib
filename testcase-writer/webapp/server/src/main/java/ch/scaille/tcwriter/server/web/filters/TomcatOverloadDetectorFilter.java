@@ -30,7 +30,7 @@ public class TomcatOverloadDetectorFilter extends OncePerRequestFilter {
 		super.afterPropertiesSet();
 		var config = Optional.ofNullable(getFilterConfig());
 		this.dumpIfMoreThan = config.map(c -> c.getInitParameter("dumpIfMoreThan")).map(Integer::parseInt).orElse(50);
-		int periodInSeconds = config.map(c -> c.getInitParameter("taskPeriodInSeconds")).map(Integer::parseInt)
+		var periodInSeconds = config.map(c -> c.getInitParameter("taskPeriodInSeconds")).map(Integer::parseInt)
 				.orElse(60);
 		TIMER.schedule(new TimerTask() {
 

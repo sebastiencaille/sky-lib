@@ -20,7 +20,6 @@ import ch.scaille.tcwriter.gui.frame.TCWriterGui;
 import ch.scaille.tcwriter.model.persistence.IModelDao;
 import ch.scaille.util.helpers.ClassFinder;
 import ch.scaille.util.helpers.ClassFinder.Policy;
-import ch.scaille.util.helpers.ClassFinder.URLClassFinder;
 import ch.scaille.util.helpers.LambdaExt;
 
 public class DictionaryImport extends JDialog {
@@ -40,10 +39,10 @@ public class DictionaryImport extends JDialog {
 
 		add(new JLabel("Package"), BorderLayout.WEST);
 
-		var sourcePackageEditor = new JTextField();
+		final var sourcePackageEditor = new JTextField();
 		add(sourcePackageEditor, BorderLayout.CENTER);
 
-		var importButton = new JButton("Import");
+		final var importButton = new JButton("Import");
 		add(importButton, BorderLayout.EAST);
 		importButton.addActionListener(SwingHelper.action(LambdaExt.uncheck(() -> {
 			importDictionary(new File(dictionaryJarFileDisplay.getText()), sourcePackageEditor.getText());
@@ -54,7 +53,7 @@ public class DictionaryImport extends JDialog {
 
 	public boolean runImport() {
 		pack();
-		var chooser = new JFileChooser();
+		final var chooser = new JFileChooser();
 		chooser.setDialogTitle("Dictionary import");
 		chooser.setFileFilter(new FileFilter() {
 
@@ -68,7 +67,7 @@ public class DictionaryImport extends JDialog {
 				return f.isDirectory() || f.getName().endsWith(".jar");
 			}
 		});
-		int result = chooser.showOpenDialog(this);
+		final int result = chooser.showOpenDialog(this);
 		if (result == JFileChooser.APPROVE_OPTION) {
 			dictionaryJarFileDisplay.setText(chooser.getSelectedFile().toString());
 			setModal(true);
@@ -82,8 +81,8 @@ public class DictionaryImport extends JDialog {
 	}
 
 	protected void importDictionary(File dictionaryJarFile, String sourcePackage) {
-		try (URLClassFinder finder = ClassFinder.source(dictionaryJarFile)) {
-			var dictionary = finder.withAnnotation(TCRole.class, Policy.CLASS_ONLY)
+		try (var finder = ClassFinder.source(dictionaryJarFile)) {
+			final var dictionary = finder.withAnnotation(TCRole.class, Policy.CLASS_ONLY)
 					.withAnnotation(TCActors.class, Policy.CLASS_ONLY).withPackages(sourcePackage).scan()
 					.collect(JavaToDictionary.toDictionary());
 			modelDao.writeTestDictionary(dictionary);

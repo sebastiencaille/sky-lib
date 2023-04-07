@@ -65,7 +65,7 @@ public class FsResourceLoader implements IResourceLoader {
 
 	@Override
 	public String write(String resource, String value) throws IOException {
-		var resolved = resolve(resource);
+		final var resolved = resolve(resource);
 		return write(resolved, value);
 	}
 

@@ -77,8 +77,8 @@ public class TestApi {
 	}
 
 	private int readInt() throws IOException {
-		final int high = inputStream.read();
-		final int low = inputStream.read();
+		final var high = inputStream.read();
+		final var low = inputStream.read();
 		return ((high & 0xFF) << 8) | (low & 0xFF);
 	}
 
@@ -92,8 +92,8 @@ public class TestApi {
 	}
 
 	private String readString() throws IOException {
-		final int length = readInt();
-		final byte[] bytes = new byte[length];
+		final var length = readInt();
+		final var bytes = new byte[length];
 		int total = 0;
 		while (total != length) {
 			final int read = inputStream.read(bytes, total, length - total);

@@ -90,7 +90,7 @@ public class TestDictionary {
 	}
 
 	public TestObjectDescription descriptionOf(final IdObject idObject) {
-		final TestObjectDescription description = descriptions.get(idObject.getId());
+		final var description = descriptions.get(idObject.getId());
 		if (description == null) {
 			return NO_ID_DESCRIPTION;
 		}

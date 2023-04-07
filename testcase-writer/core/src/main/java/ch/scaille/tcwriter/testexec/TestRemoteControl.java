@@ -3,7 +3,6 @@ package ch.scaille.tcwriter.testexec;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -53,7 +52,7 @@ public class TestRemoteControl {
 
 	public int prepare() {
 		controlServer = null;
-		int controlPort = baseTcpPort;
+		var controlPort = baseTcpPort;
 		while (controlServer == null && controlPort < baseTcpPort + 10) {
 			try {
 				controlServer = new ServerSocket(controlPort);
@@ -80,7 +79,7 @@ public class TestRemoteControl {
 
 				switch (command) {
 				case STEP_START:
-					final int startStepNumber = api.readStartBody();
+					final var startStepNumber = api.readStartBody();
 					final var startStatus = stepStatus(startStepNumber);
 					startStatus.state = StepState.STARTED;
 					stepChangedListener.accept(startStepNumber, startStepNumber);
@@ -89,7 +88,7 @@ public class TestRemoteControl {
 					}
 					break;
 				case STEP_DONE:
-					final int stopStepNumber = api.readDoneBody();
+					final var stopStepNumber = api.readDoneBody();
 					final var stopStepStatus = stepStatus(stopStepNumber);
 					if (stopStepStatus.state == StepState.STARTED) {
 						stopStepStatus.state = StepState.OK;
@@ -99,7 +98,7 @@ public class TestRemoteControl {
 					break;
 				case ERROR:
 					final var errorMessage = api.readErrorBody();
-					final int errStepNumber = errorMessage.stepNumber;
+					final var errStepNumber = errorMessage.stepNumber;
 					final var errStepStatus = stepStatus(errStepNumber);
 					errStepStatus.state = StepState.FAILED;
 					errStepStatus.message = errorMessage.message;

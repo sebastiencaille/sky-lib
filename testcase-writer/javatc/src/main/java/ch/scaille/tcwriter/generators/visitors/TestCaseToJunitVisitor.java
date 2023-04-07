@@ -85,7 +85,7 @@ public class TestCaseToJunitVisitor {
 
 		visitTestValueParams(parametersContentCode, model, step, paramValue.getComplexTypeValues());
 
-		final var parameterVarName = varNameFor(step, paramValue);
+		final var parameterVarName = varNameOf(step, paramValue);
 		parametersContentCode.addVarAssign(valuefactory.getParameterType(), parameterVarName) //
 				.addMethodCall(valuefactory.getName(), g -> addParameterValuesToCall(g, step,
 						paramValue.getComplexTypeValues().values(), valuefactory.getMandatoryParameters()))
@@ -144,12 +144,12 @@ public class TestCaseToJunitVisitor {
 			final TestParameterValue parameterValue) throws TestCaseException {
 		switch (parameterValue.getValueFactory().getNature()) {
 		case TEST_API:
-			parametersContent.append(varNameFor(step, parameterValue));
+			parametersContent.append(varNameOf(step, parameterValue));
 			break;
 		case SIMPLE_TYPE:
 			final var valueType = parameterValue.getValueFactory().getParameterType();
-			final boolean isString = String.class.getName().equals(valueType);
-			final boolean isLong = Long.class.getName().equals(valueType) || Long.TYPE.getName().equals(valueType);
+			final var isString = String.class.getName().equals(valueType);
+			final var isLong = Long.class.getName().equals(valueType) || Long.TYPE.getName().equals(valueType);
 			if (isString) {
 				parametersContent.append("\"");
 			}
@@ -168,8 +168,8 @@ public class TestCaseToJunitVisitor {
 		}
 	}
 
-	private String varNameFor(final TestStep step, final TestParameterValue testValue) {
-		final int nextIndex = varIndex.computeIfAbsent(step.getOrdinal(), s -> new AtomicInteger(1)).getAndIncrement();
+	private String varNameOf(final TestStep step, final TestParameterValue testValue) {
+		final var nextIndex = varIndex.computeIfAbsent(step.getOrdinal(), s -> new AtomicInteger(1)).getAndIncrement();
 		return varNames.computeIfAbsent(testValue, v -> "step" + step.getOrdinal() + "_var" + nextIndex);
 	}
 }

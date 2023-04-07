@@ -207,7 +207,7 @@ public class TCWriterController extends GuiController {
 
 	public void runTestCase() throws IOException, InterruptedException, TestCaseException {
 		final int rcPort = testRemoteControl.prepare();
-		LOGGER.log(Level.INFO, "Using port {}", rcPort);
+		LOGGER.info(() -> "Using port " + rcPort);
 		try (var config = new TestConfig(model.getTestCase().getValue(), Files.createTempDirectory("tc"), rcPort)) {
 			testExecutor.startTest(config);
 			testRemoteControl.controlTest(model.getTestCase().getValue().getSteps().size());
@@ -219,7 +219,7 @@ public class TCWriterController extends GuiController {
 	}
 
 	public void importDictionary() {
-		boolean imported = new DictionaryImport(gui, modelDao).runImport();
+		final var imported = new DictionaryImport(gui, modelDao).runImport();
 		if (imported) {
 			restart();
 		}

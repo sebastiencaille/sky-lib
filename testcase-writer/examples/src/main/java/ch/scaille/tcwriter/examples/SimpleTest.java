@@ -28,7 +28,7 @@ public class SimpleTest {
 
 	@BeforeEach
 	public void initActors() {
-		final ExampleService testedService = new ExampleService();
+		final var testedService = new ExampleService();
 		customer = RecorderTestActors.register(new CustomerTestRole(testedService), "customer", null);
 		deliveryGuy = RecorderTestActors.register(new DeliveryTestRole(testedService), "deliveryGuy", null);
 	}
@@ -45,7 +45,7 @@ public class SimpleTest {
 		customer.checkPackage(fromShop(), teaPot);
 		customer.resellOwnedItem(10);
 
-		final String newBrand = customer.findAnotherBrand();
+		final var newBrand = customer.findAnotherBrand();
 		customer.keepNote(newBrand);
 	}
 

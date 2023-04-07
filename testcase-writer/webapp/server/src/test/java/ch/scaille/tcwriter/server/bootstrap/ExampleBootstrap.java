@@ -5,7 +5,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import ch.scaille.generators.util.CodeGeneratorParams;
-import ch.scaille.tcwriter.config.TCConfig;
 import ch.scaille.tcwriter.examples.ExampleHelper;
 import ch.scaille.tcwriter.model.persistence.FsModelConfig;
 import ch.scaille.tcwriter.testexec.JunitTestExecConfig;
@@ -19,7 +18,7 @@ public class ExampleBootstrap {
 		final var model = exampleHelper.generateDictionary();
 		final var tc = exampleHelper.recordTestCase(model);
 
-		TCConfig currentConfig = exampleHelper.getConfigManager().getCurrentConfig();
+		final var currentConfig = exampleHelper.getConfigManager().getCurrentConfig();
 		currentConfig.getSubconfig(FsModelConfig.class).get().setTemplatePath("templates/TC.template");
 		currentConfig.getSubconfig(JunitTestExecConfig.class).get()
 				.setClasspath(CodeGeneratorParams.mavenTarget(ExampleHelper.class).resolve("classes").toString());

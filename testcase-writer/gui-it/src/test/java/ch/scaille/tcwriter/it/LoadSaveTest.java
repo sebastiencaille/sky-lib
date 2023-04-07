@@ -15,7 +15,7 @@ import ch.scaille.util.helpers.Logs;
 class LoadSaveTest extends AbstractGuiTest {
 
 	@BeforeAll
-	public static void initLogger() {
+	static void initLogger() {
 		var rootLogger = Logs.of("ch");
 		rootLogger.setLevel(Level.ALL);
 		var logConsole = new ConsoleHandler();

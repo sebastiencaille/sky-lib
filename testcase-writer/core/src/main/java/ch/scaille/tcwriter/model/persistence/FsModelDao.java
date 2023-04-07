@@ -88,10 +88,10 @@ public class FsModelDao implements IModelDao {
 	}
 
 	private void reload(FsModelConfig config) {
-		this.dictionaryResource = configManager.configure(config.getDictionaryPath(), "json");
-		this.testCaseResource = configManager.configure(config.getTcPath(), "json");
-		this.templateResource = configManager.configure(config.getTemplatePath(), null);
-		this.testCaseCodeResource = configManager.configure(config.getTcExportPath(), null);
+		this.dictionaryResource = configManager.loaderOf(config.getDictionaryPath(), "json");
+		this.testCaseResource = configManager.loaderOf(config.getTcPath(), "json");
+		this.templateResource = configManager.loaderOf(config.getTemplatePath(), null);
+		this.testCaseCodeResource = configManager.loaderOf(config.getTcExportPath(), null);
 	}
 
 	@Override
@@ -160,7 +160,7 @@ public class FsModelDao implements IModelDao {
 
 	@Override
 	public void writeTestCase(String locator, TestCase tc) {
-		String tcJson = ExcExt.uncheck(() -> mapper.writerFor(TestCase.class).writeValueAsString(tc));
+		var tcJson = ExcExt.uncheck(() -> mapper.writerFor(TestCase.class).writeValueAsString(tc));
 		var tcpath = Paths.get(locator);
 		if (tcpath.getNameCount() == 1) {
 			ExcExt.uncheck(() -> testCaseResource.write(tcpath.getFileName().toString(), tcJson));

@@ -101,7 +101,7 @@ public class TestExecutionFeedbackClient implements ITestExecutionFeedbackClient
 
 	@Override
 	public void notifyError(final Throwable error) {
-		try (StringWriter errorStack = new StringWriter()) {
+		try (var errorStack = new StringWriter()) {
 			error.printStackTrace(new PrintWriter(errorStack));
 			api.writeError(currentStep, error, errorStack);
 		} catch (final IOException e) {

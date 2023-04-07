@@ -21,13 +21,13 @@ public class TCEditor {
 	}
 	
 	public static void main(final String[] args) {
-		var mainArgs = new Args();
+		final var mainArgs = new Args();
 		JCommander.newBuilder().addObject(mainArgs).build().parse(args);
 		
-		var configLoader = FsConfigManager.local().setConfiguration(mainArgs.configuration);
-		var modelDao = new FsModelDao(configLoader);
-		var testExecutor = new JUnitTestExecutor(configLoader, modelDao, ClassLoaderHelper.appClassPath());
-		var tcWriterController = new TCWriterController(configLoader, modelDao, null, testExecutor);
+		final var configLoader = FsConfigManager.local().setConfiguration(mainArgs.configuration);
+		final var modelDao = new FsModelDao(configLoader);
+		final var testExecutor = new JUnitTestExecutor(configLoader, modelDao, ClassLoaderHelper.appClassPath());
+		final var tcWriterController = new TCWriterController(configLoader, modelDao, null, testExecutor);
 		SwingUtilities.invokeLater(tcWriterController::run);
 	}
 

@@ -90,6 +90,7 @@ public class StepEditorController extends GuiController {
 		if (step == null || action == null) {
 			return;
 		}
+		
 		final var actionUtils = ModelUtils.actionUtils(td, action);
 		actionUtils.synchronizeStep(testStep.getValue());
 		if (actionUtils.hasSelector()) {
@@ -100,6 +101,7 @@ public class StepEditorController extends GuiController {
 		} else {
 			emptySelectors();
 		}
+		
 		if (actionUtils.hasActionParameter(0)) {
 			final var param0Value = step.getParametersValue(actionUtils.parameterIndex(0));
 			model.getPossibleActionParameters().setValue(this,
@@ -138,6 +140,7 @@ public class StepEditorController extends GuiController {
 		step.setActor(model.getActor().getValue());
 		step.setAction(model.getAction().getValue());
 		step.getParametersValue().clear();
+		
 		final var actionUtils = ModelUtils.actionUtils(guiModel.getTestDictionary(), step.getAction());
 		if (actionUtils.hasSelector()) {
 			step.getParametersValue().add(model.getSelectorValue().getValue());

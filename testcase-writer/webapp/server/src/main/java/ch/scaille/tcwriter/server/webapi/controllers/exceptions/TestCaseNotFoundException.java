@@ -10,5 +10,4 @@ public class TestCaseNotFoundException extends WebRTException {
 		super(HttpStatus.NOT_FOUND, "testcase.not.found", resourceName);
 	}
 
-
 }

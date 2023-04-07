@@ -89,6 +89,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 		// Value references
 		final var useReferenceEditor = new JRadioButton("Reference: ");
 		topPanel.add(useReferenceEditor);
+		
 		final var referenceEditor = new JComboBox<ObjectTextView<TestReference>>();
 		tpModel.getReferences()
 				.bind(filter(r -> r.getParameterType()
@@ -100,7 +101,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 				.addDependency(BindingDependencies.preserveOnUpdateOf(tpModel.getReferences()));
 		topPanel.add(referenceEditor);
 
-		// Complex type
+		// Complex type editor
 		final var useComplexTypeEditor = new JRadioButton("Test Api: ");
 		topPanel.add(useComplexTypeEditor);
 		add(topPanel, BorderLayout.NORTH);
@@ -250,8 +251,8 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 	private static void updateParam(final ParameterValueEntry paramValue,
 			final TestParameterFactory complexTypeFactory) {
-		final boolean mandatory = complexTypeFactory.hasMandatoryParameter(paramValue.id);
-		final boolean optional = complexTypeFactory.hasOptionalParameter(paramValue.id);
+		final var mandatory = complexTypeFactory.hasMandatoryParameter(paramValue.id);
+		final var optional = complexTypeFactory.hasOptionalParameter(paramValue.id);
 		paramValue.update(mandatory, mandatory || optional);
 	}
 

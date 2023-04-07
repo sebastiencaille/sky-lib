@@ -50,7 +50,7 @@ public class TestItem {
 	@TCApi(description = "A coffee machine of a specific brand", humanReadable = "a coffee machine of brand \"%s\"")
 	public static TestItem coffeeMachineOfBrand(
 			@TCApi(description = "Name of brand", humanReadable = "") final String brandName) {
-		final TestItem testItem = new TestItem(ItemKind.COFFE_MACHINE);
+		final var testItem = new TestItem(ItemKind.COFFE_MACHINE);
 		testItem.setBrandName(brandName);
 		return testItem;
 	}

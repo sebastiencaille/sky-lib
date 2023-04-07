@@ -27,9 +27,11 @@ import ch.scaille.util.helpers.Logs;
 public class AbstractGuiTest {
 
 	private static final File RESOURCE_FOLDER = new File(System.getProperty("java.io.tmpdir"));
+
+	private TCGuiPilot pilot;
+	
 	protected TestWriterRole tcWriter;
 	protected TestSessionRole testSession;
-	private TCGuiPilot pilot;
 
 	@BeforeEach
 	public void startGui() throws  InvocationTargetException, InterruptedException {
@@ -46,11 +48,11 @@ public class AbstractGuiTest {
 		modelConfig.setDictionaryPath(dictionaries.toString());
 		modelConfig.setTemplatePath(new File("rsrc:templates/TC.template").toString());
 
-		var junitTestConfig = new JunitTestExecConfig();
+		final var junitTestConfig = new JunitTestExecConfig();
 		junitTestConfig.setJava("");
 		junitTestConfig.setClasspath("");
 		
-		var configLoader = new FsConfigManager(RESOURCE_FOLDER.toPath()).setConfiguration(TCConfig.of("default", modelConfig, junitTestConfig));
+		final var configLoader = new FsConfigManager(RESOURCE_FOLDER.toPath()).setConfiguration(TCConfig.of("default", modelConfig, junitTestConfig));
 		
 		// Setup services 
 		final var persister = new FsModelDao(configLoader);

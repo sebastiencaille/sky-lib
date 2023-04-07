@@ -18,7 +18,6 @@ import ch.scaille.tcwriter.generated.api.controllers.TestcaseApiController;
 import ch.scaille.tcwriter.generated.api.model.Metadata;
 import ch.scaille.tcwriter.generated.api.model.TestCase;
 import ch.scaille.tcwriter.model.TestCaseException;
-import ch.scaille.tcwriter.model.persistence.IModelDao;
 import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
 import ch.scaille.tcwriter.server.dao.IDictionaryDao;
 import ch.scaille.tcwriter.server.dao.ITestCaseDao;
@@ -46,20 +45,17 @@ public class TestCaseController extends TestcaseApiController {
 
 	private final TestCaseService tcService;
 
-	private final IModelDao modelDao;
-
 	private final MessageSendingOperations<String> feedbackSendingTemplate;
 	private final JUnitTestExecutor testExecutor;
 
 	public TestCaseController(JUnitTestExecutor testExecutor, ContextService contextService, IDictionaryDao dictionaryDao, ITestCaseDao testcaseDao,
-			IModelDao modelDao, TestCaseService tcService, MessageSendingOperations<String> feedbackSendingTemplate,
+			TestCaseService tcService, MessageSendingOperations<String> feedbackSendingTemplate,
 			NativeWebRequest request) {
 		super(request);
 		this.testExecutor = testExecutor;
 		this.contextService = contextService;
 		this.dictionaryDao = dictionaryDao;
 		this.testCaseDao = testcaseDao;
-		this.modelDao = modelDao;
 		this.tcService = tcService;
 		this.feedbackSendingTemplate = feedbackSendingTemplate;
 	}

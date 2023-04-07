@@ -1,8 +1,6 @@
 package ch.scaille.tcwriter.model;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 import ch.scaille.tcwriter.model.dictionary.TestAction;
 import ch.scaille.tcwriter.model.dictionary.TestApiParameter;
@@ -60,12 +58,12 @@ public interface ModelUtils {
 		 * In case of mismatch, when a new action is selected
 		 */
 		public void synchronizeStep(final TestStep step) {
-			final List<TestParameterValue> parametersValue = step.getParametersValue();
-			final List<TestParameterValue> newParametersValues = new ArrayList<>();
+			final var parametersValue = step.getParametersValue();
+			final var newParametersValues = new ArrayList<TestParameterValue>();
 
 			if (hasSelector()) {
-				final TestApiParameter selector = selector();
-				final Optional<TestParameterValue> selectorMatch = parametersValue.stream()
+				final var selector = selector();
+				final var selectorMatch = parametersValue.stream()
 						.filter(p -> p.matches(selector)).findFirst();
 				if (selectorMatch.isPresent()) {
 					newParametersValues.add(selectorMatch.get());
@@ -76,8 +74,8 @@ public interface ModelUtils {
 			}
 
 			if (hasActionParameter(0)) {
-				final TestApiParameter parameter = parameter(0);
-				final Optional<TestParameterValue> valueMatch = parametersValue.stream()
+				final var parameter = parameter(0);
+				final var valueMatch = parametersValue.stream()
 						.filter(p -> p.matches(parameter)).findFirst();
 				if (valueMatch.isPresent()) {
 					newParametersValues.add(valueMatch.get());

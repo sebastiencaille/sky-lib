@@ -53,7 +53,7 @@ public class StepEditorPanel extends JPanel {
 		final var cancelButton = withEnabler(selectedStep, new JButton("Cancel"));
 		cancelButton.addActionListener(l -> controller.cancelChanges());
 
-		var classifiersEditor = withEnabler(selectedStep, new JComboBox<>(StepClassifier.values()));
+		final var classifiersEditor = withEnabler(selectedStep, new JComboBox<>(StepClassifier.values()));
 		classifiersEditor.setMaximumSize(classifiersEditor.getPreferredSize());
 		selectedStep.listen(
 				s -> model.getStepClassifier().setValue(this, (s != null) ? s.getClassifier() : StepClassifier.ACTION));
@@ -68,14 +68,15 @@ public class StepEditorPanel extends JPanel {
 			if (a == null) {
 				return;
 			}
-			StepClassifier[] availableClassifiers = a.getAllowedClassifiers();
+			var availableClassifiers = a.getAllowedClassifiers();
 			Arrays.sort(availableClassifiers);
 			if (availableClassifiers.length == 0) {
 				availableClassifiers = StepClassifier.values();
 			}
-			var classifierEditorModel = new DefaultComboBoxModel<>(availableClassifiers);
+			final var classifierEditorModel = new DefaultComboBoxModel<>(availableClassifiers);
 			classifiersEditor.setModel(classifierEditorModel);
-			var step = selectedStep.getValue();
+			
+			final var step = selectedStep.getValue();
 			if (step.getClassifier() == null || Arrays.binarySearch(availableClassifiers, step.getClassifier()) < 0) {
 				step.setClassifier(availableClassifiers[0]);
 			}

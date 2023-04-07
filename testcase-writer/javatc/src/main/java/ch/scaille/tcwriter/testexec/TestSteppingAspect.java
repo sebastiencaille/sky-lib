@@ -21,12 +21,12 @@ public class TestSteppingAspect {
 		if (feedbackClient == null) {
 			return jp.proceed();
 		}
-		final boolean roleCall = jp.getTarget() != null
+		final var roleCall = jp.getTarget() != null
 				&& jp.getSignature().getDeclaringType().isAnnotationPresent(TCRole.class);
 		if (roleCall) {
 			feedbackClient.beforeStepExecution();
 		}
-		final Object returnValue = jp.proceed();
+		final var returnValue = jp.proceed();
 		if (roleCall) {
 			feedbackClient.afterStepExecution();
 		}

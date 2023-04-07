@@ -37,7 +37,7 @@ public class TCConfig {
 	}
 
 	public static TCConfig of(String name, Object... subConfig) {
-		TCConfig config = new TCConfig();
+		final var config = new TCConfig();
 		config.name = name;
 		config.subconfigs.addAll(Arrays.asList(subConfig));
 		return config;

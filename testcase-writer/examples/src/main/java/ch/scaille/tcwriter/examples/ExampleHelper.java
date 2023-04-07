@@ -45,9 +45,9 @@ public class ExampleHelper {
 	 * @throws IOException
 	 */
 	public ExampleHelper(Path dataPath, String configName) throws IOException {
-		final Path tcPath = dataPath.resolve("testcase");
+		final var tcPath = dataPath.resolve("testcase");
 		Files.createDirectories(tcPath);
-		final Path dictionaryPath = dataPath.resolve("dictionary");
+		final var dictionaryPath = dataPath.resolve("dictionary");
 		Files.createDirectories(dictionaryPath);
 
 		final var modelConfig = new FsModelConfig();
@@ -76,7 +76,7 @@ public class ExampleHelper {
 
 	public TestCase recordTestCase(final TestDictionary dictionary) {
 
-		var recorder = new TestCaseRecorder(modelDao, dictionary);
+		final var recorder = new TestCaseRecorder(modelDao, dictionary);
 		TestCaseRecorderAspect.setRecorder(recorder);
 
 		// create and run a test

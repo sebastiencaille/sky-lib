@@ -71,7 +71,7 @@ public class ClassToDictionaryVisitor {
 			final var returnType = (actionMethod.getReturnType() != Void.class) ? actionMethod.getReturnType().getName()
 					: null;
 
-			var classifiers = computeClassifiers(actionMethod);
+			final var classifiers = computeClassifiers(actionMethod);
 			final var testAction = new TestAction(methodKey(actionMethod), actionMethod.getName(), returnType,
 					classifiers);
 			final var roleActionParameters = gatherParameters(testAction, actionMethod);
@@ -89,18 +89,21 @@ public class ClassToDictionaryVisitor {
 			}
 			var codeVariable = actorAndSimpleName[0];
 			var simpleClassName = actorAndSimpleName[1];
+			
 			String description;
 			if (actorAndSimpleName.length > 2) {
 				description = actorAndSimpleName[2];
 			} else {
 				description = codeVariable;
 			}
+			
 			String humanReadable;
 			if (actorAndSimpleName.length > 3) {
 				humanReadable = actorAndSimpleName[3];
 			} else {
 				humanReadable = description;
 			}
+			
 			var role = dictionary.getRoles().entrySet().stream().filter(r -> r.getKey().endsWith("." + simpleClassName))
 					.map(Entry::getValue).findFirst();
 			if (role.isPresent()) {

@@ -37,7 +37,7 @@ public class FsConfigManager implements IConfigManager {
 	}
 
 	@Override
-	public IResourceLoader configure(String locator, String extension) {
+	public IResourceLoader loaderOf(String locator, String extension) {
 		if (locator.startsWith(CPResourceLoader.PREFIX)) {
 			return new CPResourceLoader(locator, extension);
 		}

@@ -8,5 +8,5 @@ public interface IConfigManager {
 
     TCConfig getCurrentConfig();
 
-    IResourceLoader configure(String subPath, String extensions);
+    IResourceLoader loaderOf(String subPath, String extensions);
 }

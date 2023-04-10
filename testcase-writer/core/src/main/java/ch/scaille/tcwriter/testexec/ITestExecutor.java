@@ -46,7 +46,7 @@ public interface ITestExecutor {
 		Files.createDirectories(config.sourceFolder);
 		Files.createDirectories(config.binaryFolder);
 		generateCodeLocal(config);
-		var binaryRef = compile(config);
+		final var binaryRef = compile(config);
 		execute(config, binaryRef);
 	}
 }

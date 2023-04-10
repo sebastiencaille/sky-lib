@@ -120,7 +120,7 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 	private void visitExecution(final BindingContext context) {
 		final var dependencies = flow.getAllDependencies(context.binding).stream()
 				.sorted(Comparator.comparing(Binding::fromDataPoint)).collect(toList());
-		var genContext = new AbstractFlowGenerator.GenContext(debug, dependencies);
+		final var genContext = new AbstractFlowGenerator.GenContext(debug, dependencies);
 		flowGeneratorVisitor.generateFlow(context, genContext);
 
 		flowFactories.appendIndented(

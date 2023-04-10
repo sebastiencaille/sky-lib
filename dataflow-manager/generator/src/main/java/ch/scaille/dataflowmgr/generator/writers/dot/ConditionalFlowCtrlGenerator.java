@@ -37,7 +37,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractDotFlowGenerator {
 		}
 		var nextLink = conditionNodeName;
 
-		var activators = new ArrayList<>(
+		final var activators = new ArrayList<>(
 				ConditionalFlowCtrl.getActivators(context.binding.getRules()).collect(toList()));
 		if (activators.isEmpty()) {
 			activators.add(new CustomCall("Default", "Default", new LinkedHashMap<>(), Boolean.TYPE.toString()));

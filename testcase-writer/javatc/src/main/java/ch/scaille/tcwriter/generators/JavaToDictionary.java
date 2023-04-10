@@ -42,11 +42,11 @@ public class JavaToDictionary extends AbstractGenerator<TestDictionary> {
 	}
 
 	public static void main(final String[] args) {
-		var mainArgs = new Args();
+		final var mainArgs = new Args();
 		JCommander.newBuilder().addObject(mainArgs).build().parse(args);
-		var configManager = FsConfigManager.local().setConfiguration("default");
-		var persister = new FsModelDao(configManager);
-		var dictionary = ClassFinder.ofCurrentThread().withPackages(mainArgs.sourcePackage)
+		final var configManager = FsConfigManager.local().setConfiguration("default");
+		final var persister = new FsModelDao(configManager);
+		final var dictionary = ClassFinder.ofCurrentThread().withPackages(mainArgs.sourcePackage)
 				.withAnnotation(TCRole.class, ClassFinder.Policy.CLASS_ONLY)
 				.withAnnotation(TCActors.class, ClassFinder.Policy.CLASS_ONLY).scan().collect(toDictionary());
 		persister.writeTestDictionary(dictionary);

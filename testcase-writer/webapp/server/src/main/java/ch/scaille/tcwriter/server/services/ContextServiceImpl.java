@@ -32,10 +32,10 @@ public class ContextServiceImpl implements ContextService {
 
 	@Override
 	public Context merge(Context newContext) {
-		var dictionary = newContext.getDictionary();
-		var testCase = newContext.getTestCase();
+		final var dictionary = newContext.getDictionary();
+		final var testCase = newContext.getTestCase();
 
-		var current = contexts.get();
+		final var current = contexts.get();
 		if (dictionary.isPresent()) {
 			current.setDictionary(dictionary.get());
 		}

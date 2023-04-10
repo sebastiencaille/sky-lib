@@ -19,8 +19,8 @@ public class ProcessorCallGenerator extends AbstractFlowGenerator {
 	@Override
 	public void generate(BaseGenContext<GenContext> genContext, BindingContext context) {
 
-		var processor = context.getProcessor();
-		var topCall = visitor.toVariable(context.binding) + "_svcCall";
+		final var processor = context.getProcessor();
+		final var topCall = visitor.toVariable(context.binding) + "_svcCall";
 		flowFactories.appendIndented(
 				"private Maybe<FlowExecution> %s(FlowExecution execution, final Function<Maybe<FlowExecution>, Maybe<FlowExecution>> callModifier, Runnable... callbacks)",
 				topCall).openBlock();

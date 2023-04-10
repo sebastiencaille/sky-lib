@@ -28,9 +28,9 @@ public class TomcatOverloadDetectorFilter extends OncePerRequestFilter {
 	@Override
 	public void afterPropertiesSet() throws ServletException {
 		super.afterPropertiesSet();
-		var config = Optional.ofNullable(getFilterConfig());
+		final var config = Optional.ofNullable(getFilterConfig());
 		this.dumpIfMoreThan = config.map(c -> c.getInitParameter("dumpIfMoreThan")).map(Integer::parseInt).orElse(50);
-		var periodInSeconds = config.map(c -> c.getInitParameter("taskPeriodInSeconds")).map(Integer::parseInt)
+		final var periodInSeconds = config.map(c -> c.getInitParameter("taskPeriodInSeconds")).map(Integer::parseInt)
 				.orElse(60);
 		TIMER.schedule(new TimerTask() {
 
@@ -53,7 +53,7 @@ public class TomcatOverloadDetectorFilter extends OncePerRequestFilter {
 		if (!thread.getName().contains("-exec-")) {
 			return;
 		}
-		var log = new StringBuilder("\n[overload] ").append(thread.getName());
+		final var log = new StringBuilder("\n[overload] ").append(thread.getName());
 		Arrays.stream(stack).filter(this::keepElement)
 				.forEach(e -> log.append("\n[overload] at ").append(e.getClassName()).append('.')
 						.append(e.getMethodName()).append("(").append(e.getFileName()).append(':')

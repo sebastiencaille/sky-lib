@@ -31,7 +31,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 		final var exclusions = ConditionalFlowCtrl.getExclusions(context.binding.getRules()).collect(toSet());
 		visitor.setConditional(context.outputDataPoint);
 
-		var topCall = visitor.toVariable(context.binding) + "_conditional";
+		final var topCall = visitor.toVariable(context.binding) + "_conditional";
 		flowFactories.appendIndented(
 				"private Maybe<FlowExecution> %s(FlowExecution execution, final Function<Maybe<FlowExecution>, Maybe<FlowExecution>> callModifier, Runnable... callbacks)",
 				topCall).openBlock();
@@ -61,7 +61,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 	 * @param genContext
 	 */
 	private void visitActivators(final BindingContext context, GenContext genContext) {
-		var activators = ConditionalFlowCtrl.getActivators(context.binding.getRules()).collect(toList());
+		final var activators = ConditionalFlowCtrl.getActivators(context.binding.getRules()).collect(toList());
 		if (activators.isEmpty()) {
 			return;
 		}

@@ -43,7 +43,7 @@ public class WebErrorController extends AbstractErrorController {
 
 		@Override
 		public ModelAndView resolveErrorView(HttpServletRequest request, HttpStatus status, Map<String, Object> model) {
-			var resource = this.context.getResource("/WEB-INF/errorPage.html");
+			final var resource = this.context.getResource("/WEB-INF/errorPage.html");
 			return new ModelAndView(new HtmlResourceView(resource), model);
 		}
 
@@ -67,8 +67,8 @@ public class WebErrorController extends AbstractErrorController {
 			public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response)
 					throws Exception {
 				response.setContentType(getContentType());
-				var responseBody = response.getWriter();
-				var dto = (ExceptionDto)model.get("dto");
+				final var responseBody = response.getWriter();
+				final var dto = (ExceptionDto)model.get("dto");
 				try (var rsrcStream = new BufferedReader(
 						new InputStreamReader(this.resource.getInputStream(), StandardCharsets.UTF_8))) {
 					String line;
@@ -166,7 +166,7 @@ public class WebErrorController extends AbstractErrorController {
 	@GetMapping(produces = MediaType.TEXT_HTML_VALUE)
 	public ModelAndView handleErrorHtml(HttpServletRequest request, HttpServletResponse response,
 			Map<String, Object> model) {
-		var dto = toDto(request);
+		final var dto = toDto(request);
 		model.put("dto", dto);
 		return super.resolveErrorView(request, response, getStatus(request), model);
 	}

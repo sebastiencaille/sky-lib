@@ -7,10 +7,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.*;
+import javax.swing.JFileChooser;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import ch.scaille.gui.mvc.ControllerPropertyChangeSupport;
@@ -107,7 +107,7 @@ public class TCWriterController extends GuiController {
 		final var editorPropertySupport = ControllerPropertyChangeSupport.mainGroup(configEditorDialog);
 		final var errorProp = new ErrorSet("Error", editorPropertySupport);
 		for (final var configToEdit : configManager.getCurrentConfig().getSubconfigs()) {
-			var builder = GenericEditorClassModel.builder(configToEdit.getClass()).with(propertySupport).with(errorProp);
+			final var builder = GenericEditorClassModel.builder(configToEdit.getClass()).with(propertySupport).with(errorProp);
 			configEditorDialog.add(createEditor(configToEdit,
 					configEditorDialog.tab(configToEdit.getClass().getSimpleName()), builder));
 		}

@@ -44,8 +44,8 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 
 		visitActivators(context);
 
-		var activators = ConditionalFlowCtrl.getActivators(context.binding.getRules()).collect(toList());
-		var exclusions = ConditionalFlowCtrl.getExclusions(context.binding.getRules()).map(Binding::toDataPoint)
+		final var activators = ConditionalFlowCtrl.getActivators(context.binding.getRules()).collect(toList());
+		final var exclusions = ConditionalFlowCtrl.getExclusions(context.binding.getRules()).map(Binding::toDataPoint)
 				.collect(toSet());
 
 		if (!exclusions.isEmpty()) {
@@ -90,7 +90,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 	 * @param context
 	 */
 	private void visitActivators(final BindingContext context) {
-		var activators = ConditionalFlowCtrl.getActivators(context.binding.getRules()).collect(toList());
+		final var activators = ConditionalFlowCtrl.getActivators(context.binding.getRules()).collect(toList());
 		if (activators.isEmpty()) {
 			return;
 		}

@@ -39,12 +39,12 @@ public class TestCaseToJava {
 	}
 
 	public static void main(String[] args) throws IOException, TestCaseException {
-		var mainArgs = new Args();
+		final var mainArgs = new Args();
 		JCommander.newBuilder().addObject(mainArgs).build().parse(args);
-		var modelDao = new FsModelDao(FsConfigManager.local().setConfiguration(mainArgs.configuration));
-		var testDictionary = modelDao.readTestDictionary(mainArgs.tcDictionary).orElseThrow(FileNotFoundException::new);
-		var jsonTC = mainArgs.testCase;
-		var testcase = modelDao.readTestCase(jsonTC, testDictionary).orElseThrow(FileNotFoundException::new);
+		final var modelDao = new FsModelDao(FsConfigManager.local().setConfiguration(mainArgs.configuration));
+		final var testDictionary = modelDao.readTestDictionary(mainArgs.tcDictionary).orElseThrow(FileNotFoundException::new);
+		final var jsonTC = mainArgs.testCase;
+		final var testcase = modelDao.readTestCase(jsonTC, testDictionary).orElseThrow(FileNotFoundException::new);
 		new TestCaseToJava(modelDao).generate(testcase).writeTo(LambdaExt.uncheckF2(modelDao::writeTestCaseCode));
 	}
 

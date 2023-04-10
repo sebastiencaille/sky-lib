@@ -16,7 +16,7 @@ public interface StepSelector extends Consumer<TCWriterPage> {
     static StepSelector selectStep(@TCApi(description = "index", humanReadable = "at row") final int ordinal) {
 		return page -> {
 			final int tableIndex = ordinal - 1;
-			var stepsTable = page.stepsTable;
+			final var stepsTable = page.stepsTable;
 			stepsTable.wait(stepsTable
 					.assertion(pc -> assertTrue(tableIndex < pc.component.getRowCount(), () -> "Step must exist"))
 					.withReportText(checkingThat("the step " + ordinal + " exists")));
@@ -28,7 +28,7 @@ public interface StepSelector extends Consumer<TCWriterPage> {
 	@TCApi(description = "Append a step to the test", humanReadable = "add a step to the test case")
     static StepSelector addStep() {
 		return page -> {
-			var stepsTable = page.stepsTable;
+			final var stepsTable = page.stepsTable;
 			stepsTable.wait(stepsTable.action(t -> {
 				final int stepsCount = t.getRowCount();
 				if (stepsCount > 0) {

@@ -106,7 +106,7 @@ public class StepsTable extends JPanel {
 							public Component getTableCellRendererComponent(JTable table, Object obj, boolean var3,
 									boolean var4, int row, int col) {
 								super.getTableCellRendererComponent(table, obj, var3, var4, row, col);
-								StepClassifier classifier = steps.getElementAt(row).getClassifier();
+								final var classifier = steps.getElementAt(row).getClassifier();
 								if (classifier == null) {
 									return this;
 								}

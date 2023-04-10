@@ -62,7 +62,7 @@ public class TestCaseController extends TestcaseApiController {
 
 	@Override
 	public ResponseEntity<List<Metadata>> listAll() {
-		var dictionary = loadValidDictionary();
+		final var dictionary = loadValidDictionary();
 		return ResponseEntity.ok(testCaseDao.listAll(dictionary).stream().map(MetadataMapper.MAPPER::convert).toList());
 	}
 
@@ -94,9 +94,9 @@ public class TestCaseController extends TestcaseApiController {
 
 		testRemoteControl.setStepListener((f, t) -> {
 			for (int i = f; i <= t;i++) {
-				var status = testRemoteControl.stepStatus(i);
+				final var status = testRemoteControl.stepStatus(i);
 				LOGGER.info(status.toString());
-				var msg = new GenericMessage<>(TestCaseMapper.MAPPER.convert(status));
+				final var msg = new GenericMessage<>(TestCaseMapper.MAPPER.convert(status));
 				feedbackSendingTemplate.convertAndSend(WebsocketConfig.TEST_FEEDBACK_DESTINATION, msg);
 			}
 		});

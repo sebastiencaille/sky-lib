@@ -30,12 +30,12 @@ public class WebConfig implements WebMvcConfigurer{
 
 	@Bean
 	ServletRegistrationBean<?> webApiServlet() {
-		var annotationContext = new AnnotationConfigServletWebApplicationContext();
+		final var annotationContext = new AnnotationConfigServletWebApplicationContext();
 		annotationContext.register(WebApiControllersConfig.class, WebRestOpenApiDocConfig.class, WebsocketConfig.class);
 		annotationContext.setDisplayName("Web Api");
-		var dispatcher = new DispatcherServlet(annotationContext);
+		final var dispatcher = new DispatcherServlet(annotationContext);
 
-		var servletRegistration = new ServletRegistrationBean<>(dispatcher, "/api/*");
+		final var servletRegistration = new ServletRegistrationBean<>(dispatcher, "/api/*");
 		servletRegistration.setLoadOnStartup(1);
 		servletRegistration.setName("Web Rest api");
 		return servletRegistration;
@@ -48,7 +48,7 @@ public class WebConfig implements WebMvcConfigurer{
 	
 	@Bean
 	MessageSource webMessages() {
-		var messageSource = new ResourceBundleMessageSource();
+		final var messageSource = new ResourceBundleMessageSource();
 		messageSource.setDefaultEncoding(StandardCharsets.UTF_8.name());
 		messageSource.setBundleClassLoader(Thread.currentThread().getContextClassLoader());
 		messageSource.addBasenames("web/messages");

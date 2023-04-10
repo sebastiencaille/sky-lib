@@ -83,12 +83,12 @@ public class ClassToDictionaryVisitor {
 	private void processActors(Class<?> unprocessedActor) {
 		final var actorsAnnotation = unprocessedActor.getAnnotation(TCActors.class);
 		for (var actorDef : actorsAnnotation.value()) {
-			var actorAndSimpleName = actorDef.split("\\|");
+			final var actorAndSimpleName = actorDef.split("\\|");
 			if (actorAndSimpleName.length < 2) {
 				throw new IllegalStateException("At least code|role_simple_call_name must be provided");
 			}
-			var codeVariable = actorAndSimpleName[0];
-			var simpleClassName = actorAndSimpleName[1];
+			final var codeVariable = actorAndSimpleName[0];
+			final var simpleClassName = actorAndSimpleName[1];
 			
 			String description;
 			if (actorAndSimpleName.length > 2) {
@@ -104,10 +104,10 @@ public class ClassToDictionaryVisitor {
 				humanReadable = description;
 			}
 			
-			var role = dictionary.getRoles().entrySet().stream().filter(r -> r.getKey().endsWith("." + simpleClassName))
+			final var role = dictionary.getRoles().entrySet().stream().filter(r -> r.getKey().endsWith("." + simpleClassName))
 					.map(Entry::getValue).findFirst();
 			if (role.isPresent()) {
-				var actor = new TestActor(codeVariable, codeVariable, role.get());
+				final var actor = new TestActor(codeVariable, codeVariable, role.get());
 				dictionary.addActor(actor, new TestObjectDescription(description, humanReadable));
 			}
 		}

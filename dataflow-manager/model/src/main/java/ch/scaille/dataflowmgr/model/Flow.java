@@ -111,7 +111,7 @@ public class Flow extends WithId {
 	}
 
 	public Set<Binding> getAllDependencies(final Binding binding) {
-		var deps = new HashSet<Binding>();
+		final var deps = new HashSet<Binding>();
 		deps.addAll(
 				config.bindings.stream().filter(b -> b.toDataPoint().equals(binding.fromDataPoint())).collect(toSet()));
 		deps.addAll(config.dependencies.getOrDefault(binding, emptySet()));

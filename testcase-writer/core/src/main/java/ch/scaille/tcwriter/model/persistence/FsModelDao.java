@@ -138,17 +138,17 @@ public class FsModelDao implements IModelDao {
 	public Optional<ExportableTestCase> readTestCase(String locator, TestDictionary testDictionary) {
 		try {
 			String tcJson;
-			var tcpath = Paths.get(locator);
+			final var tcpath = Paths.get(locator);
 			if (tcpath.getNameCount() == 1) {
 				tcJson = testCaseResource.read(tcpath.getFileName().toString());
 			} else {
 				tcJson = testCaseResource.read(tcpath);
 			}
 
-			var references = new ArrayList<ExportReference>();
-			var ctxt = mapper.getDeserializationConfig().getAttributes().withPerCallAttribute(CONTEXT_ALL_REFERENCES,
+			final var references = new ArrayList<ExportReference>();
+			final var ctxt = mapper.getDeserializationConfig().getAttributes().withPerCallAttribute(CONTEXT_ALL_REFERENCES,
 					references);
-			var testCase = (ExportableTestCase) mapper.readerFor(ExportableTestCase.class).with(ctxt).readValue(tcJson);
+			final var testCase = (ExportableTestCase) mapper.readerFor(ExportableTestCase.class).with(ctxt).readValue(tcJson);
 			testCase.setDictionary(testDictionary);
 			testCase.getMetadata().setTransientId(locator);
 			references.forEach(e -> e.restore(testCase));
@@ -160,8 +160,8 @@ public class FsModelDao implements IModelDao {
 
 	@Override
 	public void writeTestCase(String locator, TestCase tc) {
-		var tcJson = ExcExt.uncheck(() -> mapper.writerFor(TestCase.class).writeValueAsString(tc));
-		var tcpath = Paths.get(locator);
+		final var tcJson = ExcExt.uncheck(() -> mapper.writerFor(TestCase.class).writeValueAsString(tc));
+		final var tcpath = Paths.get(locator);
 		if (tcpath.getNameCount() == 1) {
 			ExcExt.uncheck(() -> testCaseResource.write(tcpath.getFileName().toString(), tcJson));
 		} else {

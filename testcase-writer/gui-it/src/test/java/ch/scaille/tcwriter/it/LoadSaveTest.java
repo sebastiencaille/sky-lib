@@ -16,9 +16,9 @@ class LoadSaveTest extends AbstractGuiTest {
 
 	@BeforeAll
 	static void initLogger() {
-		var rootLogger = Logs.of("ch");
+		final var rootLogger = Logs.of("ch");
 		rootLogger.setLevel(Level.ALL);
-		var logConsole = new ConsoleHandler();
+		final var logConsole = new ConsoleHandler();
 		logConsole.setLevel(Level.ALL);
 		rootLogger.addHandler(logConsole);
 	}

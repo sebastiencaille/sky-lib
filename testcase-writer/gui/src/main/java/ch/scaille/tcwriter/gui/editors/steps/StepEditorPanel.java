@@ -69,10 +69,10 @@ public class StepEditorPanel extends JPanel {
 				return;
 			}
 			var availableClassifiers = a.getAllowedClassifiers();
-			Arrays.sort(availableClassifiers);
 			if (availableClassifiers.length == 0) {
 				availableClassifiers = StepClassifier.values();
 			}
+			Arrays.sort(availableClassifiers);
 			final var classifierEditorModel = new DefaultComboBoxModel<>(availableClassifiers);
 			classifiersEditor.setModel(classifierEditorModel);
 			
@@ -83,7 +83,7 @@ public class StepEditorPanel extends JPanel {
 			model.getStepClassifier().setValue(this, step.getClassifier());
 		});
 
-		var topPanel = new JPanel();
+		final var topPanel = new JPanel();
 		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
 		topPanel.add(applyButton);
 		topPanel.add(cancelButton);

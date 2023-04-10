@@ -37,7 +37,7 @@ public class Context {
 	}
 	
 	public Context derive() {
-		var copy = new Context(this.identity);
+		final var copy = new Context(this.identity);
 		copy.setDictionary(dictionaryName);
 		copy.setTestCase(testCase);
 		return copy;

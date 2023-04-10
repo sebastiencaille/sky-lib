@@ -26,7 +26,7 @@ public class WebApiControllersConfig {
 
 	@Bean
 	RequestMappingHandlerMapping requestMappingHandlerMapping(CorsConfigurationSource corsSource) {
-		var requestMappingHandlerMapping = new RequestMappingHandlerMapping();
+		final var requestMappingHandlerMapping = new RequestMappingHandlerMapping();
 		requestMappingHandlerMapping.setOrder(0);
 		requestMappingHandlerMapping.setCorsConfigurationSource(corsSource);
 		return requestMappingHandlerMapping;

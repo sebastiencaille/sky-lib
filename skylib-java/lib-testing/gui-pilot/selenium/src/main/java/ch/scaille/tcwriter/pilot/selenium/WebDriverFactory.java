@@ -12,10 +12,7 @@ import java.util.logging.Level;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.firefox.*;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.AbstractDriverOptions;
@@ -104,7 +101,7 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<?, O>, O exten
 		@Override
 		public FirefoxDriverFactory withDriverLogs(String logFolder) {
 			options.setLogLevel(FirefoxDriverLogLevel.TRACE);
-			System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, logFile(logFolder, "firefox"));
+			System.setProperty(GeckoDriverService.GECKO_DRIVER_LOG_PROPERTY, logFile(logFolder, "firefox"));
 			return this;
 		}
 

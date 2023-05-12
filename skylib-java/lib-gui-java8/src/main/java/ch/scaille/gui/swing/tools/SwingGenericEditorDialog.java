@@ -31,7 +31,7 @@ public class SwingGenericEditorDialog extends JDialog {
 
 	public IGenericEditor tab(String name) {
 		if (tabbedPane == null) {
-			tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+			tabbedPane = new JTabbedPane(SwingConstants.TOP);
 			getContentPane().add(tabbedPane, BorderLayout.CENTER);
 		}
 		final SwingGenericEditorPanel panel = new SwingGenericEditorPanel();

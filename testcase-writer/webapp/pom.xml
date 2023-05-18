@@ -5,8 +5,7 @@
 	<parent>
 		<groupId>ch.scaille.tcwriter</groupId>
 		<artifactId>testcase-writer</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
+		<version>${revision}</version>
 	</parent>
 
 	<artifactId>testcase-writer-webapp</artifactId>
@@ -22,7 +21,7 @@
 		<version.jackson-databind-nullable>0.2.6</version.jackson-databind-nullable>
 		<version.mapstruct>1.5.5.Final</version.mapstruct>
 		<version.swagger-parser>2.1.13</version.swagger-parser>
-		<version.swagger>2.2.9</version.swagger>
+		<version.swagger>2.2.10</version.swagger>
 
 		<sonar.exclusions>**/generated-sources/**</sonar.exclusions>
 	</properties>
@@ -67,7 +66,7 @@
 			<dependency>
 				<groupId>ch.scaille.tcwriter</groupId>
 				<artifactId>testcase-writer-webapp-webapi</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
+				<version>${revision}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

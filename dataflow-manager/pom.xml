@@ -6,12 +6,12 @@
 		<groupId>ch.scaille</groupId>
 		<artifactId>libs</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../skylib-java/pom.xml</relativePath>
+		<relativePath/>
 	</parent>
 
 	<groupId>ch.scaille.dataflowmgr</groupId>
 	<artifactId>data-flow-manager</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>${revision}</version>
 	<packaging>pom</packaging>
 
 	<name>data-flow-manager</name>
@@ -24,7 +24,8 @@
 	</modules>
 
 	<properties>
-		<data-flow-manager-version>0.0.1-SNAPSHOT</data-flow-manager-version>
+		<revision>0.0.1-SNAPSHOT</revision>
+		<data-flow-manager-version>${revision}</data-flow-manager-version>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 	</properties>
@@ -34,7 +35,7 @@
 			<dependency>
 				<groupId>ch.scaille</groupId>
 				<artifactId>lib-utils</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
+				<version>${revision}</version>
 			</dependency>
 			<dependency>
 				<groupId>ch.scaille.dataflowmgr</groupId>

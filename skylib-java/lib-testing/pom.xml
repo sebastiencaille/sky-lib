@@ -5,15 +5,14 @@
 	<parent>
 		<groupId>ch.scaille</groupId>
 		<artifactId>libs</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
+		<version>${revision}</version>
 	</parent>
 
 	<artifactId>lib-testing</artifactId>
 	<packaging>pom</packaging>
 
 	<properties>
-		<version.undertow>2.3.5.Final</version.undertow>
+		<version.undertow>2.3.6.Final</version.undertow>
 		<version.selenium>4.9.1</version.selenium>
 		<version.mockito>5.3.1</version.mockito>
 	</properties>
@@ -30,7 +29,7 @@
 			<dependency>
 				<groupId>ch.scaille</groupId>
 				<artifactId>selenium-test-page</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
+				<version>${revision}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.seleniumhq.selenium</groupId>

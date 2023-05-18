@@ -5,8 +5,7 @@
     <parent>
         <groupId>ch.scaille</groupId>
         <artifactId>gui-pilot</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <version>${revision}</version>
     </parent>
     <artifactId>gui-pilot-selenium</artifactId>
     <properties>

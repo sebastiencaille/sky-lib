@@ -5,8 +5,7 @@
 	<parent>
 		<groupId>ch.scaille</groupId>
 		<artifactId>lib-testing</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
+		<version>${revision}</version>
 	</parent>
 	<artifactId>lib-testing-core</artifactId>
 

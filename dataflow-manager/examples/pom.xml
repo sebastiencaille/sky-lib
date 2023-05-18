@@ -15,8 +15,7 @@
     <parent>
         <groupId>ch.scaille.dataflowmgr</groupId>
         <artifactId>data-flow-manager</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <version>${revision}</version>
     </parent>
     <artifactId>data-flow-examples</artifactId>
     <name>data-flow-examples</name>

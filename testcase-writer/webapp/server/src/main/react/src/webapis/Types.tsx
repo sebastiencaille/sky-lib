@@ -1,4 +1,4 @@
-import { components } from 'testcase-writer-webapi'
+import { components } from '@scaille/testcase-writer-webapi'
 
 type Metadata = components["schemas"]["Metadata"];
 type IdObject = components["schemas"]["IdObject"];

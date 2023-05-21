@@ -7,7 +7,7 @@
 		<groupId>ch.scaille</groupId>
 		<artifactId>skylib-bom</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath/>
+		<relativePath>../bom/pom.xml</relativePath>
 	</parent>
 	<artifactId>libs</artifactId>
 	<version>${revision}</version>

@@ -1,5 +1,5 @@
 {
-  "name": "testcase-writer-webapi",
+  "name": "@scaille/testcase-writer-webapi",
   "version": "0.0.1",
   "description": "Typescript web api of testcase writer",
   "main": "./WebApis-generated-types.ts",

@@ -1,19 +1,9 @@
-TCMetadata:
-  # Hacked in pom.xml to map to Metadata
-  $ref: Metadata.yaml#/Metadata
-TCIdObject:
-  # Hacked in pom.xml to map to Metadata
-  $ref: Metadata.yaml#/IdObject
-StepClassifier:
-  $ref: TestDictionary.yaml#/StepClassifier
-TCTestParameterFactory:
-  $ref: TestDictionary.yaml#/TestParameterFactory
 TestCase:
   type: object
   required: [ steps, pkgAndClassName ]
   properties:
     metadata: 
-      $ref: '#/TCMetadata'
+      $ref: ../openapi.yaml#/components/schemas/Metadata
     steps:
       type: array
       items:
@@ -39,7 +29,7 @@ TestStep:
     reference:
       $ref: '#/TestReference'
     classifier:
-      $ref: '#/StepClassifier'
+      $ref: ../openapi.yaml#/components/schemas/StepClassifier
     humanReadable:
       type: string
 ComplexTypeContent:
@@ -49,7 +39,7 @@ ComplexTypeContent:
 TestParameterValue:
   description: A parameter of the test step action
   allOf:
-    - $ref: '#/TCIdObject'
+    - $ref: ../openapi.yaml#/components/schemas/IdObject
     - type: object
       required: [ apiParameterId, type, complexTypeValues ] 
       properties:
@@ -64,7 +54,7 @@ TestParameterValue:
 TestReference: 
   description: a named reference to a test step
   allOf:
-    - $ref: '#/TCTestParameterFactory'
+    - $ref: ../openapi.yaml#/components/schemas/TestParameterFactory
     - type: object
       properties:
         description:

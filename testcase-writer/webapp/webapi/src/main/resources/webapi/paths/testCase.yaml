@@ -1,7 +1,3 @@
-components:
-  schemas:
-    TestCase:
-      $ref: ../openapi.yaml#/components/schemas/TestCase
 get:
   summary: Gets a test case
   operationId: testcase
@@ -18,4 +14,4 @@ get:
       content:
         application/json:
           schema:
-            $ref: TestCase
+            $ref: ../openapi.yaml#/components/schemas/TestCase

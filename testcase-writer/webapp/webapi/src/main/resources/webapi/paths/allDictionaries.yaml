@@ -1,7 +1,3 @@
-components:
-  schemas:
-    AllDictMetadata:
-      $ref: ../openapi.yaml#/components/schemas/Metadata
 get:
   summary: List all dictionaries
   operationId: listAll
@@ -13,4 +9,4 @@ get:
           schema:
             type: array
             items:
-              $ref: AllDictMetadata
+              $ref: ../openapi.yaml#/components/schemas/Metadata

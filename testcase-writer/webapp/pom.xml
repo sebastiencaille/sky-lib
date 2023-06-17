@@ -20,8 +20,8 @@
 		<version.springboot>3.1.0</version.springboot>
 		<version.jackson-databind-nullable>0.2.6</version.jackson-databind-nullable>
 		<version.mapstruct>1.5.5.Final</version.mapstruct>
-		<version.swagger-parser>2.1.14</version.swagger-parser>
-		<version.swagger>2.2.10</version.swagger>
+		<version.swagger-parser>2.1.15</version.swagger-parser>
+		<version.swagger>2.2.12</version.swagger>
 
 		<sonar.exclusions>**/generated-sources/**</sonar.exclusions>
 	</properties>
@@ -77,26 +77,18 @@
 				<plugin>
 					<groupId>org.openapitools</groupId>
 					<artifactId>openapi-generator-maven-plugin</artifactId>
-					<version>6.2.1</version>
+					<version>6.6.0</version>
 					<configuration>
 						<inputSpec>${project.basedir}/../webapi/src/main/resources/webapi/openapi.yaml</inputSpec>
 						<configOptions>
 							<sourceFolder>src/gen/java/main</sourceFolder>
+		                    <useJakartaEe>true</useJakartaEe>
 						</configOptions>
 						<apiPackage>ch.scaille.tcwriter.generated.api.controllers</apiPackage>
 						<modelPackage>ch.scaille.tcwriter.generated.api.model</modelPackage>
 						<generatorName>spring</generatorName>
 						<library>spring-boot</library>
-						<templateDirectory>${project.basedir}/../openapi-templates/JavaSpring</templateDirectory>
-						<schemaMappings>
-						    <schemaMapping>AllDictMetadata=Metadata</schemaMapping>
-						    <schemaMapping>AllTCMetadata=Metadata</schemaMapping>
-							<schemaMapping>DicoMetadata=Metadata</schemaMapping>
-							<schemaMapping>DicoIdObject=IdObject</schemaMapping>
-							<schemaMapping>TCIdObject=IdObject</schemaMapping>
-							<schemaMapping>DicoNamedObject=NamedObject</schemaMapping>$
-							<schemaMapping>TCTestParameterFactory=TestParameterFactory</schemaMapping>
-						</schemaMappings>
+						<generateAliasModel>true</generateAliasModel>
 					</configuration>
 					<dependencies>
 						<dependency>

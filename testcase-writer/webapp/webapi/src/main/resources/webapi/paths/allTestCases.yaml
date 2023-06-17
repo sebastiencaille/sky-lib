@@ -1,7 +1,3 @@
-components:
-  schemas:
-    AllTCMetadata:
-      $ref: ../openapi.yaml#/components/schemas/Metadata
 get:
   summary: List all test cases
   operationId: listAll
@@ -13,4 +9,4 @@ get:
           schema:
             type: array
             items:
-              $ref: AllTCMetadata
+              $ref: ../openapi.yaml#/components/schemas/Metadata

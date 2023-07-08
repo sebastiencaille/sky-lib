@@ -101,7 +101,6 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<?, O>, O exten
 		@Override
 		public FirefoxDriverFactory withDriverLogs(String logFolder) {
 			options.setLogLevel(FirefoxDriverLogLevel.TRACE);
-			System.setProperty(GeckoDriverService.GECKO_DRIVER_LOG_PROPERTY, logFile(logFolder, "firefox"));
 			return this;
 		}
 

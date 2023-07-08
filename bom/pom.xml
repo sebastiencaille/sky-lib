@@ -8,12 +8,74 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>skylib-bom</name>
 	<packaging>pom</packaging>
+
+	<properties>
+		<version.springboot>3.1.1</version.springboot>
+		<version.jackson>2.15.2</version.jackson>
+		<version.mockito>5.4.0</version.mockito>
+		<version.junit-jupiter>5.9.3</version.junit-jupiter>
+		<version.junit>4.13.2</version.junit>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-parent</artifactId>
+				<version>${version.springboot}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille.tcwriter</groupId>
+				<artifactId>testcase-writer-webapp-webapi</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>32.1.1-jre</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.fasterxml.jackson</groupId>
+				<artifactId>jackson-bom</artifactId>
+				<version>${version.jackson}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<!-- override jackson bom import -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${version.junit}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-api</artifactId>
+				<version>${version.junit-jupiter}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-engine</artifactId>
+				<version>${version.junit-jupiter}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-core</artifactId>
+				<version>${version.mockito}</version>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
+
 	<build>
 		<pluginManagement>
 			<plugins>
 				<plugin>
 					<artifactId>maven-clean-plugin</artifactId>
-					<version>3.2.0</version>
+					<version>3.3.1</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-deploy-plugin</artifactId>

@@ -14,7 +14,6 @@
 	<properties>
 		<version.undertow>2.3.7.Final</version.undertow>
 		<version.selenium>4.10.0</version.selenium>
-		<version.mockito>5.3.1</version.mockito>
 	</properties>
 
 	<modules>
@@ -27,19 +26,9 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>selenium-test-page</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
 				<groupId>org.seleniumhq.selenium</groupId>
 				<artifactId>selenium-java</artifactId>
 				<version>${version.selenium}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.mockito</groupId>
-				<artifactId>mockito-core</artifactId>
-				<version>${version.mockito}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

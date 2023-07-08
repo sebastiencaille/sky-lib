@@ -9,7 +9,7 @@
          <relativePath>./bom/pom.xml</relativePath>
     </parent>
     <artifactId>skylib</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${revision}</version>
     <name>skylib</name>
     <packaging>pom</packaging>
     <modules>

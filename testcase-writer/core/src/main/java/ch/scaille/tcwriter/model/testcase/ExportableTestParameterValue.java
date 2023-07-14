@@ -59,6 +59,10 @@ public class ExportableTestParameterValue extends TestParameterValue {
 		return new ExportReference(factory.getId());
 	}
 
+	/**
+	 * Allow the reference to be restored later
+	 * @param ref
+	 */
 	public void setTestParameterFactoryRef(final ExportReference ref) {
 		ref.setRestoreAction((tc, id) -> {
 			if (id.isEmpty()) {

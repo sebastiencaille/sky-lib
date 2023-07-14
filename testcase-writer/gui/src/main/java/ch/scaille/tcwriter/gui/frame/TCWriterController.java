@@ -20,12 +20,12 @@ import ch.scaille.gui.swing.tools.SwingGenericEditorDialog;
 import ch.scaille.gui.tools.GenericEditorClassModel;
 import ch.scaille.gui.tools.GenericEditorController;
 import ch.scaille.gui.tools.IGenericEditor;
-import ch.scaille.tcwriter.config.FsConfigManager;
 import ch.scaille.tcwriter.gui.DictionaryImport;
 import ch.scaille.tcwriter.gui.frame.TCWriterModel.TestExecutionState;
 import ch.scaille.tcwriter.model.TestCaseException;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
-import ch.scaille.tcwriter.model.persistence.FsModelDao;
+import ch.scaille.tcwriter.model.persistence.IConfigDao;
+import ch.scaille.tcwriter.model.persistence.fsmodel.FsModelDao;
 import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
 import ch.scaille.tcwriter.model.testcase.ExportableTestStep;
 import ch.scaille.tcwriter.model.testcase.TestCase;
@@ -45,12 +45,12 @@ public class TCWriterController extends GuiController {
 	private final TCWriterGui gui;
 	private final ITestExecutor testExecutor;
 
-	private final FsConfigManager configManager;
+	private final IConfigDao configDao;
 	private final FsModelDao modelDao;
 
-	public TCWriterController(final FsConfigManager configLoader, final FsModelDao modelDao,
+	public TCWriterController(final IConfigDao configLoader, final FsModelDao modelDao,
 			TestDictionary tcDictionary, final ITestExecutor testExecutor) {
-		this.configManager = configLoader;
+		this.configDao = configLoader;
 		this.modelDao = modelDao;
 		this.testExecutor = testExecutor;
 
@@ -106,7 +106,7 @@ public class TCWriterController extends GuiController {
 		final var configEditorDialog = new SwingGenericEditorDialog(gui, "Configuration", ModalityType.DOCUMENT_MODAL);
 		final var editorPropertySupport = ControllerPropertyChangeSupport.mainGroup(configEditorDialog);
 		final var errorProp = new ErrorSet("Error", editorPropertySupport);
-		for (final var configToEdit : configManager.getCurrentConfig().getSubconfigs()) {
+		for (final var configToEdit : configDao.getCurrentConfig().getSubconfigs()) {
 			final var builder = GenericEditorClassModel.builder(configToEdit.getClass()).with(propertySupport).with(errorProp);
 			configEditorDialog.add(createEditor(configToEdit,
 					configEditorDialog.tab(configToEdit.getClass().getSimpleName()), builder));
@@ -115,7 +115,7 @@ public class TCWriterController extends GuiController {
 		configEditorDialog.setSize(configEditorDialog.getWidth() + 400, configEditorDialog.getHeight() + 30);
 		configEditorDialog.setVisible(true);
 		configEditorDialog.dispose();
-		configManager.saveConfiguration();
+		configDao.saveConfiguration();
 	}
 
 	private static GenericEditorController<?> createEditor(Object configToEdit, IGenericEditor tab,
@@ -178,20 +178,23 @@ public class TCWriterController extends GuiController {
 	}
 
 	public void save() {
-		final var testFileChooser = new JFileChooser();
-		testFileChooser.setFileFilter(new FileNameExtensionFilter("JSon test", "json"));
-		testFileChooser.setCurrentDirectory(modelDao.getTCFolder().toFile());
-		final int dialogResult = testFileChooser.showSaveDialog(gui);
+		final var testFileChooser = fileChooser();
+		final var dialogResult = testFileChooser.showSaveDialog(gui);
 		if (dialogResult == 0) {
 			final var testFile = testFileChooser.getSelectedFile();
 			modelDao.writeTestCase(testFile.toString(), model.getTestCase().getValue());
 		}
 	}
 
-	public void loadTestCase() throws IOException {
+	private JFileChooser fileChooser() {
 		final var testFileChooser = new JFileChooser();
-		testFileChooser.setFileFilter(new FileNameExtensionFilter("Json test", "json"));
+		testFileChooser.setFileFilter(new FileNameExtensionFilter("Test case", "yaml"));
 		testFileChooser.setCurrentDirectory(modelDao.getTCFolder().toFile());
+		return testFileChooser;
+	}
+
+	public void loadTestCase() throws IOException {
+		final var testFileChooser = fileChooser();
 		final int dialogResult = testFileChooser.showOpenDialog(gui);
 		if (dialogResult == 0) {
 			final var testFile = testFileChooser.getSelectedFile();
@@ -227,7 +230,7 @@ public class TCWriterController extends GuiController {
 
 	public void restart() {
 		gui.setVisible(false);
-		new TCWriterController(configManager, modelDao, null, testExecutor).run();
+		new TCWriterController(configDao, modelDao, null, testExecutor).run();
 	}
 
 	public void resumeTestCase() throws IOException {

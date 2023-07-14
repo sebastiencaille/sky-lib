@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.config;
+package ch.scaille.tcwriter.model.persistence;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,8 +8,14 @@ import java.nio.file.Path;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class CPResourceLoader implements IResourceLoader {
+import ch.scaille.util.helpers.ClassLoaderHelper;
 
+public class CPResourceLoader implements IResourceRepository {
+
+	static {
+		ClassLoaderHelper.registerResourceHandler();
+	}
+	
 	public static final String PREFIX = "rsrc:";
 
 	private final String resourceName;
@@ -27,19 +33,18 @@ public class CPResourceLoader implements IResourceLoader {
 	}
 
 	@Override
-	public String read(String locator) throws IOException {
+	public Resource read(String locator) throws IOException {
 		var resName = resourceName + locator;
 		if (extension != null) {
 			resName += locator;
 		}
 		try (var resStream = new BufferedReader(new InputStreamReader(
 				Thread.currentThread().getContextClassLoader().getResourceAsStream(resName), StandardCharsets.UTF_8))) {
-			return resStream.lines().collect(Collectors.joining("\n"));
+			return Resource.of(locator, resStream.lines().collect(Collectors.joining("\n")));
 		}
 	}
 
-	@Override
-	public String read(Path path) throws IOException {
+	public String read(Path path) {
 		throw new IllegalStateException("Not implemented");
 	}
 
@@ -48,12 +53,6 @@ public class CPResourceLoader implements IResourceLoader {
 		throw new IllegalStateException("Not implemented");
 	}
 
-	@Override
-	public String write(Path target, String value) throws IOException {
-		throw new IllegalStateException("Not implemented");
-	}
-
-	@Override
 	public Path getBaseFolder() {
 		throw new IllegalStateException("Not implemented");
 	}

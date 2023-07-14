@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.config;
+package ch.scaille.tcwriter.model.persistence.fsconfig;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -7,15 +7,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature;
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
-
+import ch.scaille.tcwriter.config.TCConfig;
+import ch.scaille.tcwriter.model.persistence.CPResourceLoader;
+import ch.scaille.tcwriter.model.persistence.IConfigDao;
+import ch.scaille.tcwriter.model.persistence.IResourceRepository;
+import ch.scaille.tcwriter.model.persistence.JacksonFactory;
 import ch.scaille.util.helpers.LambdaExt;
 
-public class FsConfigManager implements IConfigManager {
+public class FsConfigDao implements IConfigDao {
 
-	private static final YAMLMapper configReader = new YAMLMapper().configure(Feature.USE_NATIVE_TYPE_ID, true)
-			.configure(Feature.USE_NATIVE_OBJECT_ID, true);
+	private static final JacksonFactory jacksonFactory = new JacksonFactory();
 
 	private final FsResourceLoader loader;
 
@@ -28,34 +29,35 @@ public class FsConfigManager implements IConfigManager {
 				System.getProperty("user.home"));
 	}
 
-	public static FsConfigManager local() {
-		return new FsConfigManager(Paths.get(resolvePlaceHolders("${user.home}/.tcwriter")));
+	public static FsConfigDao local() {
+		return new FsConfigDao(Paths.get(resolvePlaceHolders("${user.home}/.tcwriter")));
 	}
 
-	public FsConfigManager(Path baseFolder) {
+	public FsConfigDao(Path baseFolder) {
 		loader = new FsResourceLoader(baseFolder, "yaml");
 	}
 
 	@Override
-	public IResourceLoader loaderOf(String locator, String extension) {
+	public IResourceRepository loaderOf(String locator, String extension) {
 		if (locator.startsWith(CPResourceLoader.PREFIX)) {
 			return new CPResourceLoader(locator, extension);
 		}
 		return loader.inSubFolder(locator, extension);
 	}
 
-	public FsConfigManager setConfiguration(String locator) {
-		apply(LambdaExt.uncheck(() -> configReader.readValue(loader.read(locator), TCConfig.class)));
+	public FsConfigDao setConfiguration(String locator) {
+		apply(LambdaExt.uncheck(() -> loader.read(locator).decode(jacksonFactory.of(TCConfig.class))));
 		return this;
 	}
 
-	public FsConfigManager setConfiguration(TCConfig config) {
+	public FsConfigDao setConfiguration(TCConfig config) {
 		apply(config);
 		return this;
 	}
 
+	@Override
 	public void saveConfiguration() throws IOException {
-		loader.write(currentConfig.getName(), configReader.writeValueAsString(currentConfig));
+		loader.write(currentConfig.getName(), jacksonFactory.yaml().writeValueAsString(currentConfig));
 	}
 
 	@Override

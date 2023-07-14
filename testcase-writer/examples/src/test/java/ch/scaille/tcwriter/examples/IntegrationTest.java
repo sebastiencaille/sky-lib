@@ -12,7 +12,7 @@ class IntegrationTest {
     @Test
     void recordAndGenerateTest() throws IOException {
         final var exampleHelper = new ExampleHelper();
-        exampleHelper.getConfigManager().saveConfiguration();
+        exampleHelper.getConfigDao().saveConfiguration();
 
         final var model = exampleHelper.generateDictionary();
         

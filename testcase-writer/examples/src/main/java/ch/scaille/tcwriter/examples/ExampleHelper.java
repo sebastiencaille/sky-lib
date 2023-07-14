@@ -6,15 +6,16 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import ch.scaille.generators.util.CodeGeneratorParams;
-import ch.scaille.tcwriter.config.FsConfigManager;
 import ch.scaille.tcwriter.config.TCConfig;
 import ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole;
 import ch.scaille.tcwriter.examples.api.interfaces.DeliveryTestRole;
 import ch.scaille.tcwriter.generators.JavaToDictionary;
 import ch.scaille.tcwriter.generators.visitors.HumanReadableVisitor;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
-import ch.scaille.tcwriter.model.persistence.FsModelConfig;
-import ch.scaille.tcwriter.model.persistence.FsModelDao;
+import ch.scaille.tcwriter.model.persistence.IConfigDao;
+import ch.scaille.tcwriter.model.persistence.fsconfig.FsConfigDao;
+import ch.scaille.tcwriter.model.persistence.fsmodel.FsModelConfig;
+import ch.scaille.tcwriter.model.persistence.fsmodel.FsModelDao;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.recorder.TestCaseRecorder;
 import ch.scaille.tcwriter.recorder.TestCaseRecorderAspect;
@@ -30,7 +31,7 @@ public class ExampleHelper {
 
 	public static final String TC_NAME = "testCase";
 
-	private final FsConfigManager configManager;
+	private final IConfigDao configDao;
 	
 	private final FsModelDao modelDao;
 
@@ -60,8 +61,8 @@ public class ExampleHelper {
 		final var junitTestConfig = new JunitTestExecConfig();
 		junitTestConfig.setClasspath("");
 		
-		configManager = new FsConfigManager(dataPath).setConfiguration(TCConfig.of(configName, modelConfig, junitTestConfig));
-		modelDao = new FsModelDao(configManager);
+		configDao = new FsConfigDao(dataPath).setConfiguration(TCConfig.of(configName, modelConfig, junitTestConfig));
+		modelDao = new FsModelDao(configDao);
 	}
 
 	public FsModelDao getModelDao() {
@@ -91,10 +92,10 @@ public class ExampleHelper {
 	}
 
 	public ITestExecutor testExecutor() {
-		return new JUnitTestExecutor(configManager, getModelDao(), ClassLoaderHelper.appClassPath());
+		return new JUnitTestExecutor(configDao, getModelDao(), ClassLoaderHelper.appClassPath());
 	}
 
-	public FsConfigManager getConfigManager() {
-		return configManager;
+	public IConfigDao getConfigDao() {
+		return configDao;
 	}
 }

@@ -12,9 +12,9 @@ import java.util.stream.Stream;
 
 import com.google.common.collect.Lists;
 
-import ch.scaille.tcwriter.config.IConfigManager;
 import ch.scaille.tcwriter.generators.TestCaseToJava;
 import ch.scaille.tcwriter.model.TestCaseException;
+import ch.scaille.tcwriter.model.persistence.IConfigDao;
 import ch.scaille.tcwriter.model.persistence.IModelDao;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.util.helpers.ClassLoaderHelper;
@@ -32,10 +32,10 @@ public class JUnitTestExecutor implements ITestExecutor {
 
     private final JunitTestExecConfig config;
 
-    public JUnitTestExecutor(final IConfigManager configManager, final IModelDao modelDao, final URL[] classPath) {
+    public JUnitTestExecutor(final IConfigDao configDao, final IModelDao modelDao, final URL[] classPath) {
         this.modelDao = modelDao;
         this.classPath = classPath;
-        this.config = configManager.getCurrentConfig().getSubconfig(JunitTestExecConfig.class).get();
+        this.config = configDao.getCurrentConfig().getSubconfig(JunitTestExecConfig.class).get();
     }
 
     @Override

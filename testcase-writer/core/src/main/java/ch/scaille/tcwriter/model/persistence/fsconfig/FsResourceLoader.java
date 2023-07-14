@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.config;
+package ch.scaille.tcwriter.model.persistence.fsconfig;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -9,9 +9,11 @@ import java.nio.file.StandardOpenOption;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
+import ch.scaille.tcwriter.model.persistence.IResourceRepository;
+import ch.scaille.tcwriter.model.persistence.Resource;
 import ch.scaille.util.helpers.Logs;
 
-public class FsResourceLoader implements IResourceLoader {
+public class FsResourceLoader implements IResourceRepository {
 
 	private static final Logger LOGGER = Logs.of(FsResourceLoader.class);
 
@@ -21,7 +23,7 @@ public class FsResourceLoader implements IResourceLoader {
 
 	public FsResourceLoader(String basePath, String subPath, String extension) {
 		this.extension = extension;
-		var path = FsConfigManager.resolvePlaceHolders(subPath);
+		var path = FsConfigDao.resolvePlaceHolders(subPath);
 		if (!path.startsWith("/")) {
 			path = basePath + '/' + path;
 		}
@@ -33,14 +35,18 @@ public class FsResourceLoader implements IResourceLoader {
 		this.basePath = baseFolder;
 	}
 
-	public Path resolve(String resource) {
-		var fullName = resource;
-		if (extension != null) {
+	private Path resolve(String locator) {
+		var fullName = locator;
+		if (extension != null && !Resource.hasExtension(locator)) {
 			fullName += '.' + extension;
 		}
-		return basePath.resolve(fullName);
+		var file = basePath.resolve(fullName);
+		if (!Files.exists(file)) {
+			file = basePath.resolve(locator + ".json");
+		}
+		return file;
 	}
-
+		
 	@Override
 	public Stream<String> list() throws IOException {
 		return Files.list(basePath).map(p -> {
@@ -53,14 +59,13 @@ public class FsResourceLoader implements IResourceLoader {
 	}
 
 	@Override
-	public String read(String resource) throws IOException {
+	public Resource read(String resource) throws IOException {
 		return this.read(resolve(resource));
 	}
 
-	@Override
-	public String read(Path resource) throws IOException {
+	public Resource read(Path resource) throws IOException {
 		LOGGER.info(() -> "Reading " + resource);
-		return Files.readString(resource, StandardCharsets.UTF_8);
+		return Resource.of(resource.toString(), Files.readString(resource, StandardCharsets.UTF_8));
 	}
 
 	@Override
@@ -69,7 +74,6 @@ public class FsResourceLoader implements IResourceLoader {
 		return write(resolved, value);
 	}
 
-	@Override
 	public String write(Path resource, String value) throws IOException {
 		LOGGER.info(() -> "Writing " + resource);
 		Files.createDirectories(resource.getParent());
@@ -78,7 +82,6 @@ public class FsResourceLoader implements IResourceLoader {
 		return resource.toString();
 	}
 
-	@Override
 	public Path getBaseFolder() {
 		return basePath;
 	}

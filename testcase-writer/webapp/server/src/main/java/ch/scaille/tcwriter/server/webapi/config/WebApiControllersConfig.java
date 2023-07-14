@@ -9,7 +9,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import ch.scaille.tcwriter.config.IConfigManager;
+import ch.scaille.tcwriter.model.persistence.IConfigDao;
 import ch.scaille.tcwriter.server.dao.ContextDao;
 import ch.scaille.tcwriter.server.dao.IDictionaryDao;
 import ch.scaille.tcwriter.server.dao.ITestCaseDao;
@@ -48,7 +48,7 @@ public class WebApiControllersConfig {
 	TestCaseController testCaseController(JUnitTestExecutor jUnitTestExecutor, ContextService contextService,
 			IDictionaryDao dictionaryDao, ITestCaseDao testCaseDao, TestCaseService testCaseService,
 			NativeWebRequest nativeWebRequest, MessageSendingOperations<String> feedbackSendingTemplate,
-			IConfigManager configManager) {
+			IConfigDao configDao) {
 		return new TestCaseController(jUnitTestExecutor, contextService, dictionaryDao, testCaseDao, testCaseService,
 				feedbackSendingTemplate, nativeWebRequest);
 	}

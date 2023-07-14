@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 
 import ch.scaille.tcwriter.annotations.Recorded;
 import ch.scaille.tcwriter.annotations.TCRole;
-import ch.scaille.tcwriter.config.FsConfigManager;
-import ch.scaille.tcwriter.model.persistence.FsModelDao;
+import ch.scaille.tcwriter.model.persistence.fsconfig.FsConfigDao;
+import ch.scaille.tcwriter.model.persistence.fsmodel.FsModelDao;
 
 @Aspect
 public class TestCaseRecorderAspect {
@@ -45,7 +45,7 @@ public class TestCaseRecorderAspect {
 			tcDictionaryName = recorded.dictionary();
 		}
 		if (recorder == null && (recorderEnabled || (recorded != null && recorded.enabled()))) {
-			setRecorder(new TestCaseRecorder(new FsModelDao(FsConfigManager.local().setConfiguration(fsModelConfig)),
+			setRecorder(new TestCaseRecorder(new FsModelDao(FsConfigDao.local().setConfiguration(fsModelConfig)),
 					tcDictionaryName));
 		}
 		final var result = jp.proceed();

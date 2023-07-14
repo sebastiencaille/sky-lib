@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.model.persistence;
+package ch.scaille.tcwriter.model.persistence.fsmodel;
 
 import ch.scaille.annotations.Labeled;
 import ch.scaille.annotations.Ordered;

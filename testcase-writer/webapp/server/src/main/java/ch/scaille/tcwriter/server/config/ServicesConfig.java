@@ -1,6 +1,6 @@
 package ch.scaille.tcwriter.server.config;
 
-import ch.scaille.tcwriter.config.IConfigManager;
+import ch.scaille.tcwriter.model.persistence.IConfigDao;
 import ch.scaille.tcwriter.model.persistence.IModelDao;
 import ch.scaille.tcwriter.testexec.JUnitTestExecutor;
 import ch.scaille.util.helpers.ClassLoaderHelper;
@@ -18,8 +18,8 @@ public class ServicesConfig {
 	}
 
 	@Bean
-	JUnitTestExecutor jUnitTestExecutor(IConfigManager configManager, IModelDao modelDao) {
-		return new JUnitTestExecutor(configManager, modelDao, ClassLoaderHelper.guessClassPath());
+	JUnitTestExecutor jUnitTestExecutor(IConfigDao configDao, IModelDao modelDao) {
+		return new JUnitTestExecutor(configDao, modelDao, ClassLoaderHelper.guessClassPath());
 	}
 
 }

@@ -15,6 +15,7 @@ import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.model.TestObjectDescription;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 
+
 public class TestDictionary {
 
 	private static final TestObjectDescription NO_ID_DESCRIPTION = new TestObjectDescription("", "");

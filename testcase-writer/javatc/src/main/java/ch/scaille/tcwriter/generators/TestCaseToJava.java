@@ -7,11 +7,11 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 
 import ch.scaille.generators.util.Template;
-import ch.scaille.tcwriter.config.FsConfigManager;
 import ch.scaille.tcwriter.generators.visitors.TestCaseToJunitVisitor;
 import ch.scaille.tcwriter.model.TestCaseException;
-import ch.scaille.tcwriter.model.persistence.FsModelDao;
 import ch.scaille.tcwriter.model.persistence.IModelDao;
+import ch.scaille.tcwriter.model.persistence.fsconfig.FsConfigDao;
+import ch.scaille.tcwriter.model.persistence.fsmodel.FsModelDao;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.util.helpers.LambdaExt;
 
@@ -41,7 +41,7 @@ public class TestCaseToJava {
 	public static void main(String[] args) throws IOException, TestCaseException {
 		final var mainArgs = new Args();
 		JCommander.newBuilder().addObject(mainArgs).build().parse(args);
-		final var modelDao = new FsModelDao(FsConfigManager.local().setConfiguration(mainArgs.configuration));
+		final var modelDao = new FsModelDao(FsConfigDao.local().setConfiguration(mainArgs.configuration));
 		final var testDictionary = modelDao.readTestDictionary(mainArgs.tcDictionary).orElseThrow(FileNotFoundException::new);
 		final var jsonTC = mainArgs.testCase;
 		final var testcase = modelDao.readTestCase(jsonTC, testDictionary).orElseThrow(FileNotFoundException::new);

@@ -8,10 +8,10 @@ import com.beust.jcommander.Parameter;
 import ch.scaille.generators.util.AbstractGenerator;
 import ch.scaille.tcwriter.annotations.TCActors;
 import ch.scaille.tcwriter.annotations.TCRole;
-import ch.scaille.tcwriter.config.FsConfigManager;
 import ch.scaille.tcwriter.generators.visitors.ClassToDictionaryVisitor;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
-import ch.scaille.tcwriter.model.persistence.FsModelDao;
+import ch.scaille.tcwriter.model.persistence.fsconfig.FsConfigDao;
+import ch.scaille.tcwriter.model.persistence.fsmodel.FsModelDao;
 import ch.scaille.util.helpers.ClassFinder;
 
 public class JavaToDictionary extends AbstractGenerator<TestDictionary> {
@@ -44,8 +44,8 @@ public class JavaToDictionary extends AbstractGenerator<TestDictionary> {
 	public static void main(final String[] args) {
 		final var mainArgs = new Args();
 		JCommander.newBuilder().addObject(mainArgs).build().parse(args);
-		final var configManager = FsConfigManager.local().setConfiguration("default");
-		final var persister = new FsModelDao(configManager);
+		final var configDao = FsConfigDao.local().setConfiguration("default");
+		final var persister = new FsModelDao(configDao);
 		final var dictionary = ClassFinder.ofCurrentThread().withPackages(mainArgs.sourcePackage)
 				.withAnnotation(TCRole.class, ClassFinder.Policy.CLASS_ONLY)
 				.withAnnotation(TCActors.class, ClassFinder.Policy.CLASS_ONLY).scan().collect(toDictionary());

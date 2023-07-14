@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import ch.scaille.tcwriter.config.FsConfigManager;
-import ch.scaille.tcwriter.model.persistence.FsModelDao;
 import ch.scaille.tcwriter.model.persistence.IModelDao;
+import ch.scaille.tcwriter.model.persistence.fsconfig.FsConfigDao;
+import ch.scaille.tcwriter.model.persistence.fsmodel.FsModelDao;
 import ch.scaille.tcwriter.server.dao.ContextDao;
 import ch.scaille.tcwriter.server.dao.DictionaryDao;
 import ch.scaille.tcwriter.server.dao.IDictionaryDao;
@@ -23,13 +23,13 @@ public class StorageConfig {
 	private Path dataFolder;
 
 	@Bean
-	public FsConfigManager fsConfigManager() {
-		return new FsConfigManager(dataFolder).setConfiguration("server");
+	public FsConfigDao fsconfigDao() {
+		return new FsConfigDao(dataFolder).setConfiguration("server");
 	}
 
 	@Bean
-	public IModelDao modelDao(FsConfigManager configManager) {
-		return new FsModelDao(configManager);
+	public IModelDao modelDao(FsConfigDao configDao) {
+		return new FsModelDao(configDao);
 	}
 
 	@Bean

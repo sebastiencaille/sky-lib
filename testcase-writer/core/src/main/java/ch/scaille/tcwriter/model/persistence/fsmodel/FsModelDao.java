@@ -101,7 +101,7 @@ public class FsModelDao implements IModelDao {
 		}
 		final var idSafe = id;
 		ExcExt.uncheck(() -> dictionaryRepo.write(idSafe,
-				jacksonFactory.yaml().writerFor(TestDictionary.class).writeValueAsString(tm)));
+				jacksonFactory.yamlModel().writerFor(TestDictionary.class).writeValueAsString(tm)));
 	}
 
 	@Override
@@ -119,7 +119,7 @@ public class FsModelDao implements IModelDao {
 	@Override
 	public void writeTestDictionary(Path target, TestDictionary tm) {
 		ExcExt.uncheck(() -> dictionaryRepo.write(target.toString(),
-				jacksonFactory.yaml().writerFor(TestDictionary.class).writeValueAsString(tm)));
+				jacksonFactory.yamlModel().writerFor(TestDictionary.class).writeValueAsString(tm)));
 	}
 
 	@Override
@@ -154,7 +154,7 @@ public class FsModelDao implements IModelDao {
 
 	@Override
 	public void writeTestCase(String locator, TestCase tc) {
-		final var tcJson = ExcExt.uncheck(() -> jacksonFactory.yaml().writerFor(TestCase.class).writeValueAsString(tc));
+		final var tcJson = ExcExt.uncheck(() -> jacksonFactory.yamlModel().writerFor(TestCase.class).writeValueAsString(tc));
 		final var tcpath = Paths.get(locator);
 		if (tcpath.getNameCount() == 1) {
 			ExcExt.uncheck(() -> testCaseRepo.write(tcpath.getFileName().toString(), tcJson));

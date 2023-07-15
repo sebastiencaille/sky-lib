@@ -40,11 +40,7 @@ public class FsResourceLoader implements IResourceRepository {
 		if (extension != null && !Resource.hasExtension(locator)) {
 			fullName += '.' + extension;
 		}
-		var file = basePath.resolve(fullName);
-		if (!Files.exists(file)) {
-			file = basePath.resolve(locator + ".json");
-		}
-		return file;
+		return basePath.resolve(fullName);
 	}
 		
 	@Override
@@ -60,7 +56,17 @@ public class FsResourceLoader implements IResourceRepository {
 
 	@Override
 	public Resource read(String resource) throws IOException {
-		return this.read(resolve(resource));
+		try {
+			return this.read(resolve(resource));	
+		} catch (IOException e) {
+			// failed, try json file
+			try {
+				return this.read(resolve(resource+".json"));	
+			} catch (IOException e2) {
+				// throw original exception
+				throw e;
+			}
+		}
 	}
 
 	public Resource read(Path resource) throws IOException {

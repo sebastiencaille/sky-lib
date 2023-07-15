@@ -1,7 +1,7 @@
 package ch.scaille.util.helpers;
 
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.Writer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,29 +19,30 @@ public interface Logs {
 		return of(obj.getClass());
 	}
 
-	static OutputStream streamOf(Class<?> clazz, Level level) {
+	static Writer streamOf(Class<?> clazz, Level level) {
 		final Logger logger = Logs.of(clazz);
-		return new OutputStream() {
+		return new Writer() {
 
 			private StringBuilder builder = new StringBuilder();
 
 			@Override
-			public void write(int b) {
-				builder.append((char) b);
+			public void write(char[] cbuf, int off, int len) throws IOException {
+				builder.append(cbuf, off, len);
 			}
 
 			@Override
 			public void flush() throws IOException {
-				super.flush();
-				logger.log(level, () -> builder.toString());
+				if (logger.isLoggable(level)) {
+					logger.log(level, builder.toString());
+				}
 				builder = new StringBuilder();
 			}
 
 			@Override
 			public void close() throws IOException {
 				flush();
-				super.close();
 			}
+			
 		};
 	}
 

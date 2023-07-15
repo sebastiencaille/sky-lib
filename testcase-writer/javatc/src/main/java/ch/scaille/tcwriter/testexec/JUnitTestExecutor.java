@@ -18,7 +18,7 @@ import ch.scaille.tcwriter.model.persistence.IConfigDao;
 import ch.scaille.tcwriter.model.persistence.IModelDao;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.util.helpers.ClassLoaderHelper;
-import ch.scaille.util.helpers.FilesExt;
+import ch.scaille.util.helpers.JavaExt;
 import ch.scaille.util.helpers.LambdaExt;
 import ch.scaille.util.helpers.Logs;
 
@@ -35,7 +35,7 @@ public class JUnitTestExecutor implements ITestExecutor {
     public JUnitTestExecutor(final IConfigDao configDao, final IModelDao modelDao, final URL[] classPath) {
         this.modelDao = modelDao;
         this.classPath = classPath;
-        this.config = configDao.getCurrentConfig().getSubconfig(JunitTestExecConfig.class).get();
+        this.config = configDao.getCurrentConfig().getSubconfig(JunitTestExecConfig.class).orElseThrow();
     }
 
     @Override
@@ -98,7 +98,7 @@ public class JUnitTestExecutor implements ITestExecutor {
     private Process exec(String stage, String[] command) throws IOException {
         LOGGER.info(() -> stage + ' ' + String.join("\n", command));
         final var process = new ProcessBuilder(command).redirectErrorStream(true).start();
-        FilesExt.streamHandler(process::getInputStream, LOGGER::info).start();
+        JavaExt.inputStreamHandler(process::getInputStream, LOGGER::info).start();
         return process;
     }
 }

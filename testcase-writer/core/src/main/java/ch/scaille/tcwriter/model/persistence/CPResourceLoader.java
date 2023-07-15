@@ -1,14 +1,11 @@
 package ch.scaille.tcwriter.model.persistence;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import ch.scaille.util.helpers.ClassLoaderHelper;
+import ch.scaille.util.helpers.JavaExt;
 
 public class CPResourceLoader implements IResourceRepository {
 
@@ -29,7 +26,7 @@ public class CPResourceLoader implements IResourceRepository {
 
 	@Override
 	public Stream<String> list() throws IOException {
-		throw new IllegalStateException("Not implemented");
+		throw JavaExt.notImplemented();
 	}
 
 	@Override
@@ -38,23 +35,22 @@ public class CPResourceLoader implements IResourceRepository {
 		if (extension != null) {
 			resName += locator;
 		}
-		try (var resStream = new BufferedReader(new InputStreamReader(
-				Thread.currentThread().getContextClassLoader().getResourceAsStream(resName), StandardCharsets.UTF_8))) {
-			return Resource.of(locator, resStream.lines().collect(Collectors.joining("\n")));
+		try (var resStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resName)) {
+			return Resource.of(locator, JavaExt.readUTF8Stream(resStream));
 		}
 	}
 
 	public String read(Path path) {
-		throw new IllegalStateException("Not implemented");
+		throw JavaExt.notImplemented();
 	}
 
 	@Override
 	public String write(String locator, String value) throws IOException {
-		throw new IllegalStateException("Not implemented");
+		throw JavaExt.notImplemented();
 	}
 
 	public Path getBaseFolder() {
-		throw new IllegalStateException("Not implemented");
+		throw JavaExt.notImplemented();
 	}
 
 }

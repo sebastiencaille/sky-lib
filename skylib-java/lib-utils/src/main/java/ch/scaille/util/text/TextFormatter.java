@@ -17,6 +17,7 @@ package ch.scaille.util.text;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 
@@ -78,13 +79,13 @@ public class TextFormatter<T extends TextFormatter<T, E>, E extends Exception> {
 		};
 	}
 
-	public static IOutput<RuntimeException> safeOutput(final OutputStream stream) {
+	public static IOutput<RuntimeException> safeOutput(final Writer writer) {
 		return new IOutput<RuntimeException>() {
 
 			@Override
 			public void append(final char c) {
 				try {
-					stream.write((byte) c);
+					writer.write(c);
 				} catch (IOException e) {
 					throw new IllegalStateException("Unable to write into stream", e);
 				}
@@ -93,7 +94,7 @@ public class TextFormatter<T extends TextFormatter<T, E>, E extends Exception> {
 			@Override
 			public void append(final String str) {
 				try {
-					stream.write(str.getBytes());
+					writer.write(str);
 				} catch (IOException e) {
 					throw new IllegalStateException("Unable to write into stream", e);
 				}

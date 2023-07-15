@@ -24,6 +24,6 @@ public record TCConfig(String name, List<Object> subconfigs) {
 	}
 
 	public static TCConfig of(String name, Object... subConfig) {
-		return new TCConfig("default", Arrays.asList(subConfig));
+		return new TCConfig(name, Arrays.asList(subConfig));
 	}
 }

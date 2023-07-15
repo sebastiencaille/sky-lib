@@ -46,7 +46,7 @@ public class FsConfigDao implements IConfigDao {
 	}
 
 	public FsConfigDao setConfiguration(String locator) {
-		apply(LambdaExt.uncheck(() -> loader.read(locator).decode(jacksonFactory.of(TCConfig.class))));
+		apply(LambdaExt.uncheck(() -> loader.read(locator).decode(jacksonFactory.yaml(TCConfig.class))));
 		return this;
 	}
 

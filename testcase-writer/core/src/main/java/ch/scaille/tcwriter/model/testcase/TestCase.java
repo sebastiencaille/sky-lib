@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 
@@ -20,6 +21,7 @@ public class TestCase {
 
 	protected Metadata metadata = new Metadata();
 	
+	@JsonIgnore
 	protected TestDictionary testDictionary;
 
 	protected final List<TestStep> steps = new ArrayList<>();

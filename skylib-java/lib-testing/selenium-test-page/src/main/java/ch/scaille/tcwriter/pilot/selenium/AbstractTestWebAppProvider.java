@@ -1,6 +1,5 @@
 package ch.scaille.tcwriter.pilot.selenium;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -14,8 +13,8 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.WebDriver;
-import org.xnio.streams.Streams;
 
+import ch.scaille.util.helpers.JavaExt;
 import ch.scaille.util.helpers.Logs;
 import io.undertow.Undertow;
 import io.undertow.server.HttpServerExchange;
@@ -42,7 +41,7 @@ public abstract class AbstractTestWebAppProvider {
 	public static void setDriver(WebDriver driver) {
 		AbstractTestWebAppProvider.driver = driver;
 	}
-	
+
 	@BeforeEach
 	public void ensureWebDriverStarted() {
 		if (driver == null) {
@@ -61,12 +60,9 @@ public abstract class AbstractTestWebAppProvider {
 		if ("/example1.html".equals(exchange.getRequestPath())) {
 
 			exchange.getResponseHeaders().put(io.undertow.util.Headers.CONTENT_TYPE, "text/html");
-			try (InputStream res = Thread.currentThread().getContextClassLoader()
+			try (InputStream in = Thread.currentThread().getContextClassLoader()
 					.getResourceAsStream("example/html/example1.html")) {
-				final ByteArrayOutputStream bout = new ByteArrayOutputStream();
-				Streams.copyStream(res, bout);
-				exchange.getResponseSender().send(new String(bout.toByteArray(), StandardCharsets.UTF_8),
-						StandardCharsets.UTF_8);
+				exchange.getResponseSender().send(JavaExt.readUTF8Stream(in), StandardCharsets.UTF_8);
 			} catch (final IOException e) {
 				throw new IllegalStateException("Cannot serve file", e);
 			}

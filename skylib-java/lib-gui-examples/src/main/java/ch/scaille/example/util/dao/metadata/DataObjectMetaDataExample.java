@@ -16,7 +16,7 @@
 package ch.scaille.example.util.dao.metadata;
 
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.Writer;
 import java.util.logging.Level;
 
 import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
@@ -41,7 +41,7 @@ public class DataObjectMetaDataExample {
 
 	public static void main(final String[] args) throws IOException {
 
-		try (OutputStream output = Logs.streamOf(DataObjectMetaDataExample.class, Level.INFO)) {
+		try (Writer output = Logs.streamOf(DataObjectMetaDataExample.class, Level.INFO)) {
 			final SimpleTextFormatter<RuntimeException> log = new SimpleTextFormatter<>(
 					TextFormatter.safeOutput(output));
 			log.setIndentationManager(new ArrowIndentationManager());

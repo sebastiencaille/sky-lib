@@ -6,7 +6,7 @@ import java.nio.file.Path;
 
 import ch.scaille.tcwriter.model.TestCaseException;
 import ch.scaille.tcwriter.model.testcase.TestCase;
-import ch.scaille.util.helpers.FilesExt;
+import ch.scaille.util.helpers.JavaExt;
 
 public interface ITestExecutor {
 
@@ -30,7 +30,7 @@ public interface ITestExecutor {
 
 		@Override
 		public void close() {
-			FilesExt.removeFolderUnsafe(tmpFolder);
+			JavaExt.removeFolderUnsafe(tmpFolder);
 		}
 	}
 

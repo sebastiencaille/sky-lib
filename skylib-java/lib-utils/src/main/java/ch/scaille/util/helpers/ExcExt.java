@@ -5,6 +5,9 @@ import java.util.function.Consumer;
 import ch.scaille.util.helpers.LambdaExt.RunnableWithException;
 import ch.scaille.util.helpers.LambdaExt.SupplierWithException;
 
+/**
+ * Exception extension
+ */
 public class ExcExt {
 
 	private ExcExt() {

@@ -5,7 +5,6 @@ import java.util.function.BiFunction;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
@@ -19,7 +18,9 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 
 public class JacksonFactory {
 
-	private final ObjectMapper jsonMapper;
+	private final ObjectMapper jsonModelMapper;
+
+	private final YAMLMapper yamlModelMapper;
 
 	private final YAMLMapper yamlMapper;
 
@@ -39,28 +40,40 @@ public class JacksonFactory {
 	}
 
 	private JacksonFactory(com.fasterxml.jackson.databind.Module... modules) {
-		jsonMapper = configure(JsonMapper.builder().activateDefaultTyping(new LaissezFaireSubTypeValidator(),
+		jsonModelMapper = configure(JsonMapper.builder().activateDefaultTyping(new LaissezFaireSubTypeValidator(),
 				DefaultTyping.NON_FINAL, As.WRAPPER_OBJECT)).build();
-		jsonMapper.registerModules(modules);
+		jsonModelMapper.registerModules(modules);
+
+		yamlModelMapper = configure(YAMLMapper.builder().activateDefaultTyping(new LaissezFaireSubTypeValidator(),
+				DefaultTyping.NON_FINAL, As.PROPERTY)).build();
+		yamlModelMapper.registerModules(modules);
 
 		yamlMapper = configure(YAMLMapper.builder().configure(Feature.USE_NATIVE_TYPE_ID, true)
 				.configure(Feature.USE_NATIVE_OBJECT_ID, true)).build();
 		yamlMapper.registerModules(modules);
 	}
 
-	public ObjectMapper json() {
-		return jsonMapper;
+	public ObjectMapper jsonModel() {
+		return jsonModelMapper;
+	}
+
+	public ObjectMapper yamlModel() {
+		return yamlModelMapper;
 	}
 
 	public ObjectMapper yaml() {
 		return yamlMapper;
 	}
 
+	public <T> Resource.Decoder<T> yaml(Class<T> clazz) {
+		return r -> yamlMapper.readerFor(clazz).readValue(r.data());
+	}
+
 	public ObjectMapper of(String mimeType) {
 		if (Resource.MIMETYPE_JSON.equalsIgnoreCase(mimeType)) {
-			return jsonMapper;
+			return jsonModelMapper;
 		}
-		return yamlMapper;
+		return yamlModelMapper;
 	}
 
 	public <T> Resource.Decoder<T> of(Class<T> clazz) {

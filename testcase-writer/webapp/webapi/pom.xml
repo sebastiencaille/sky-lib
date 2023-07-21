@@ -11,7 +11,7 @@
 		<dependency>
 			<groupId>org.openapitools</groupId>
 			<artifactId>jackson-databind-nullable</artifactId>
-			<version>${version.jackson-databind-nullable}</version>
+			<version>${jackson-databind-nullable.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>jakarta.validation</groupId>
@@ -25,7 +25,7 @@
 		<dependency>
 			<groupId>io.swagger.core.v3</groupId>
 			<artifactId>swagger-annotations</artifactId>
-			<version>${version.swagger}</version>
+			<version>${swagger.version}</version>
 		</dependency>
 	</dependencies>
 	<build>

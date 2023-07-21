@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>ch.scaille.tcwriter</groupId>
@@ -8,7 +10,8 @@
 	<artifactId>testcase-writer-webapp-server</artifactId>
 	<packaging>war</packaging>
 	<properties>
-		<!-- automatically run annotation processors within the incremental compilation -->
+		<!-- automatically run annotation processors within the incremental
+		compilation -->
 		<m2e.apt.activation>jdt_apt</m2e.apt.activation>
 	</properties>
 	<dependencies>
@@ -38,20 +41,20 @@
 			<artifactId>testcase-writer-javatc</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.mapstruct</groupId>
-			<artifactId>mapstruct</artifactId>
-			<version>${version.mapstruct}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.openapitools</groupId>
 			<artifactId>jackson-databind-nullable</artifactId>
-			<version>${version.jackson-databind-nullable}</version>
+			<version>${jackson-databind-nullable.version}</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations -->
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+		</dependency>
+		<!--
+		https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations -->
 		<dependency>
 			<groupId>io.swagger.core.v3</groupId>
 			<artifactId>swagger-annotations</artifactId>
-			<version>${version.swagger}</version>
+			<version>${swagger.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
 		<dependency>
@@ -70,22 +73,21 @@
 			<artifactId>testcase-writer-examples</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
+
 	</dependencies>
 	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<artifactId>maven-war-plugin</artifactId>
-					<version>3.4.0</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${version.springboot}</version>
+				<executions>
+					<execution>
+						<id>repackage</id>
+						<configuration>
+							<mainClass>ch.scaille.tcwriter.server.Server</mainClass>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.openapitools</groupId>
@@ -97,7 +99,8 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<ignoreFileOverride>${project.basedir}/.openapi-generator-ignore</ignoreFileOverride>
+							<ignoreFileOverride>
+								${project.basedir}/.openapi-generator-ignore</ignoreFileOverride>
 						</configuration>
 					</execution>
 				</executions>
@@ -110,7 +113,7 @@
 						<path>
 							<groupId>org.mapstruct</groupId>
 							<artifactId>mapstruct-processor</artifactId>
-							<version>${version.mapstruct}</version>
+							<version>${mapstruct.version}</version>
 						</path>
 						<!-- other annotation processors -->
 					</annotationProcessorPaths>

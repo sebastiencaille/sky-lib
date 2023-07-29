@@ -18,7 +18,7 @@
 
 	<properties>
 		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
-		<swagger-parser.version>2.1.15</swagger-parser.version>
+		<swagger-parser.version>2.1.16</swagger-parser.version>
 		<swagger.version>2.2.15</swagger.version>
 		<sonar.exclusions>**/generated-sources/**</sonar.exclusions>
 	</properties>

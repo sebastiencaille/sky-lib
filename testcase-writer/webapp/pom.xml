@@ -14,7 +14,9 @@
 
 	<modules>
 		<module>webapi</module>
-		<module>server</module>
+		<module>backend</module>
+		<module>frontend</module>
+		<module>war</module>
 	</modules>
 
 	<properties>
@@ -23,6 +25,26 @@
 		<swagger.version>2.2.15</swagger.version>
 		<sonar.exclusions>**/generated-sources/**</sonar.exclusions>
 	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>ch.scaille.tcwriter</groupId>
+				<artifactId>testcase-writer-webapp-webapi</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille.tcwriter</groupId>
+				<artifactId>testcase-writer-webapp-backend</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille.tcwriter</groupId>
+				<artifactId>testcase-writer-webapp-frontend</artifactId>
+				<version>${revision}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 
 	<profiles>

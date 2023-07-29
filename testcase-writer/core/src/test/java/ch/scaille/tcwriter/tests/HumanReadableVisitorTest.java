@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import ch.scaille.tcwriter.generators.visitors.HumanReadableVisitor;
+import ch.scaille.tcwriter.services.generators.visitors.HumanReadableVisitor;
 
 class HumanReadableVisitorTest {
 

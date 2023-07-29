@@ -4,8 +4,8 @@ import static ch.scaille.util.helpers.LambdaExt.uncheckF2;
 
 import java.io.IOException;
 
-import ch.scaille.tcwriter.generators.TestCaseToJava;
 import ch.scaille.tcwriter.model.TestCaseException;
+import ch.scaille.tcwriter.services.generators.TestCaseToJava;
 
 public class JavaTestGenerator {
 

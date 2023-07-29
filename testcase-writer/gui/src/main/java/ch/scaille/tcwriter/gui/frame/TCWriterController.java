@@ -24,16 +24,16 @@ import ch.scaille.tcwriter.gui.DictionaryImport;
 import ch.scaille.tcwriter.gui.frame.TCWriterModel.TestExecutionState;
 import ch.scaille.tcwriter.model.TestCaseException;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
-import ch.scaille.tcwriter.model.persistence.IConfigDao;
-import ch.scaille.tcwriter.model.persistence.fsmodel.FsModelDao;
 import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
 import ch.scaille.tcwriter.model.testcase.ExportableTestStep;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestStep;
-import ch.scaille.tcwriter.testexec.ITestExecutor;
-import ch.scaille.tcwriter.testexec.ITestExecutor.TestConfig;
-import ch.scaille.tcwriter.testexec.TestExecutionListener;
-import ch.scaille.tcwriter.testexec.TestRemoteControl;
+import ch.scaille.tcwriter.persistence.IConfigDao;
+import ch.scaille.tcwriter.persistence.fsmodel.FsModelDao;
+import ch.scaille.tcwriter.services.testexec.ITestExecutor;
+import ch.scaille.tcwriter.services.testexec.TestExecutionListener;
+import ch.scaille.tcwriter.services.testexec.TestRemoteControl;
+import ch.scaille.tcwriter.services.testexec.ITestExecutor.TestConfig;
 import ch.scaille.util.helpers.Logs;
 
 public class TCWriterController extends GuiController {

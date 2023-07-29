@@ -10,16 +10,16 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 import ch.scaille.tcwriter.annotations.TCActors;
-import ch.scaille.tcwriter.config.TCConfig;
-import ch.scaille.tcwriter.testexec.JUnitTestExecutor;
-import ch.scaille.tcwriter.testexec.JunitTestExecConfig;
-import ch.scaille.tcwriter.generators.JavaToDictionary;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.tcwriter.it.api.TestSessionRole;
 import ch.scaille.tcwriter.it.api.TestWriterRole;
-import ch.scaille.tcwriter.model.persistence.fsconfig.FsConfigDao;
-import ch.scaille.tcwriter.model.persistence.fsmodel.FsModelConfig;
-import ch.scaille.tcwriter.model.persistence.fsmodel.FsModelDao;
+import ch.scaille.tcwriter.model.config.TCConfig;
+import ch.scaille.tcwriter.persistence.fsconfig.FsConfigDao;
+import ch.scaille.tcwriter.persistence.fsmodel.FsModelConfig;
+import ch.scaille.tcwriter.persistence.fsmodel.FsModelDao;
+import ch.scaille.tcwriter.persistence.testexec.JunitTestExecConfig;
+import ch.scaille.tcwriter.services.generators.JavaToDictionary;
+import ch.scaille.tcwriter.services.testexec.JUnitTestExecutor;
 import ch.scaille.util.helpers.ClassLoaderHelper;
 import ch.scaille.util.helpers.Logs;
 

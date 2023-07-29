@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import ch.scaille.tcwriter.testexec.model.StepStatus;
+import ch.scaille.tcwriter.model.testexec.StepStatus;
 
 public class StepStatusRenderer extends DefaultTableCellRenderer {
 

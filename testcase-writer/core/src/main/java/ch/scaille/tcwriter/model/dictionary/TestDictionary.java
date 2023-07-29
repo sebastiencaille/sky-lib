@@ -9,11 +9,11 @@ import java.util.Set;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 
-import ch.scaille.tcwriter.generators.Helper;
 import ch.scaille.tcwriter.model.IdObject;
 import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.model.TestObjectDescription;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
+import ch.scaille.tcwriter.services.generators.Helper;
 
 
 public class TestDictionary {

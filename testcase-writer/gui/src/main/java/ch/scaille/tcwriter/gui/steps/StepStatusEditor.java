@@ -6,7 +6,7 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
 import javax.swing.JTable;
 
-import ch.scaille.tcwriter.testexec.model.StepStatus;
+import ch.scaille.tcwriter.model.testexec.StepStatus;
 
 public class StepStatusEditor extends DefaultCellEditor {
 

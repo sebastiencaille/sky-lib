@@ -75,11 +75,11 @@ public class LambdaExt {
 		};
 	}
 
-	public static <E extends Exception> Runnable uncheck(RunnableWithException<E> call) {
-		return uncheck(call, exceptionHandler);
+	public static <E extends Exception> Runnable uncheckR(RunnableWithException<E> call) {
+		return uncheckR(call, exceptionHandler);
 	}
 
-	public static <E extends Exception> Runnable uncheck(RunnableWithException<E> call,
+	public static <E extends Exception> Runnable uncheckR(RunnableWithException<E> call,
 			final Consumer<? super E> exceptionHandler) {
 		return () -> {
 			try {
@@ -90,11 +90,11 @@ public class LambdaExt {
 		};
 	}
 
-	public static <T, E extends Exception> Consumer<T> uncheck(ConsumerWithException<T, E> call) {
-		return uncheck(call, exceptionHandler);
+	public static <T, E extends Exception> Consumer<T> uncheckC(ConsumerWithException<T, E> call) {
+		return uncheckC(call, exceptionHandler);
 	}
 
-	public static <T, E extends Exception> Consumer<T> uncheck(ConsumerWithException<T, E> call,
+	public static <T, E extends Exception> Consumer<T> uncheckC(ConsumerWithException<T, E> call,
 			final Consumer<? super E> exceptionHandler) {
 		return c -> {
 			try {
@@ -103,19 +103,6 @@ public class LambdaExt {
 				exceptionHandler.accept((E) ex);
 			}
 		};
-	}
-
-	public static <T, E extends Exception> T uncheck(final SupplierWithException<T, E> call) {
-		return uncheckSup(call, LambdaExt::defaultExceptionHandler);
-	}
-
-	public static <T, E extends Exception> T uncheckSup(final SupplierWithException<T, E> call,
-			final Function<? super E, T> exceptionHandler) {
-		try {
-			return call.execute();
-		} catch (final Exception ex) {
-			return exceptionHandler.apply((E) ex);
-		}
 	}
 
 	public static <T, R, E extends Exception> Function<T, R> uncheckF(final FunctionWithException<T, R, E> call) {
@@ -147,5 +134,36 @@ public class LambdaExt {
 				return exceptionHandler.apply((E) ex);
 			}
 		};
+	}
+	
+	public static <T, E extends Exception> T uncheckM(final SupplierWithException<T, E> call) {
+		return uncheckM(call, LambdaExt::defaultExceptionHandler);
+	}
+
+	public static <T, E extends Exception> T uncheckM(final SupplierWithException<T, E> call,
+			final Function<? super E, T> exceptionHandler) {
+		try {
+			return call.execute();
+		} catch (final Exception ex) {
+			try {
+				return exceptionHandler.apply((E) ex);
+			} catch (ClassCastException c) {
+				// not compatible
+				if (ex instanceof RuntimeException) {
+					throw (RuntimeException)ex;
+				} else {
+					throw new RuntimeException(ex);
+				}
+			}
+		}
+	}
+
+	public static <E extends Exception> void uncheckM(RunnableWithException<E> call) {
+		uncheckR(call).run();
+	}
+	
+	public static <E extends Exception> void uncheckM(RunnableWithException<E> call,
+			final Consumer<? super E> exceptionHandle) {
+		uncheckR(call, exceptionHandler).run();
 	}
 }

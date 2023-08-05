@@ -41,7 +41,7 @@ public class JUnitTestExecutor implements ITestExecutor {
 
     @Override
     public String generateCode(TestCase tc) throws TestCaseException {
-        return new TestCaseToJava(this.modelDao).generate(tc).writeTo(uncheckF2(this.modelDao::writeTestCaseCode));
+        return new TestCaseToJava(this.modelDao).generate(tc).writeTo(uncheckF2(this.modelDao::writeTestCaseCode)).getStorage();
     }
 
     @Override
@@ -92,7 +92,7 @@ public class JUnitTestExecutor implements ITestExecutor {
 
     private List<String> toMultipleCommandLine(URL[] classPath) {
         return Lists.partition(Arrays.asList(classPath), 50).stream()
-                .map(c -> LambdaExt.uncheck(() -> "-cp=" + ClassLoaderHelper.cpToCommandLine(c.toArray(new URL[0]))))
+                .map(c -> LambdaExt.uncheckM(() -> "-cp=" + ClassLoaderHelper.cpToCommandLine(c.toArray(new URL[0]))))
                 .toList();
     }
 

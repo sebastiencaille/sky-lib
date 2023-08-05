@@ -17,6 +17,7 @@
 		<module>lib-testing</module>
 		<module>lib-annotations</module>
 		<module>lib-utils</module>
+		<module>lib-persistence</module>
 		<module>lib-gui-java8</module>
 		<module>lib-gui-generators</module>
 		<module>lib-gui-validation</module>
@@ -135,6 +136,11 @@
 			<dependency>
 				<groupId>ch.scaille</groupId>
 				<artifactId>lib-generator-utils</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille</groupId>
+				<artifactId>lib-persistence</artifactId>
 				<version>${revision}</version>
 			</dependency>
 			<dependency>

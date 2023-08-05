@@ -2,6 +2,7 @@ package ch.scaille.util.helpers;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,6 +45,15 @@ public interface Logs {
 			}
 			
 		};
+	}
+	
+	static void info(Logger logger, Supplier<String> message, Exception e) {
+		if (logger.isLoggable(Level.INFO)) {
+			logger.info(message.get());
+		}
+		if (logger.isLoggable(Level.FINE)) {
+			logger.log(Level.FINE, message.get(), e);	
+		}
 	}
 
 }

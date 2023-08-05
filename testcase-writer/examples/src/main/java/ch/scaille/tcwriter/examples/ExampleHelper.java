@@ -61,7 +61,7 @@ public class ExampleHelper {
 		final var junitTestConfig = new JunitTestExecConfig();
 		junitTestConfig.setClasspath("");
 		
-		configDao = new FsConfigDao(dataPath).setConfiguration(TCConfig.of(configName, modelConfig, junitTestConfig));
+		configDao = FsConfigDao.withBaseFolder(dataPath).setConfiguration(TCConfig.of(configName, modelConfig, junitTestConfig));
 		modelDao = new FsModelDao(configDao);
 	}
 

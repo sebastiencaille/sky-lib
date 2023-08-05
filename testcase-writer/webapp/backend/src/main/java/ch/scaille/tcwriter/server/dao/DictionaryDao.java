@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.persistence.IModelDao;
-import ch.scaille.util.exceptions.StorageRTException;
+import ch.scaille.util.persistence.StorageRTException;
 
 public class DictionaryDao extends AbstractDao implements IDictionaryDao {
 

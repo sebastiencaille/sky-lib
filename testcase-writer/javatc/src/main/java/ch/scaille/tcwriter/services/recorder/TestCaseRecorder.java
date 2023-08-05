@@ -219,6 +219,6 @@ public class TestCaseRecorder implements ITestCaseRecorder {
 
     @Override
     public void save(final String testClassName) throws IOException {
-        modelDao.writeTestCase(testClassName, getTestCase(testClassName));
+        modelDao.writeTestCase(testClassName.replace(".", "_"), getTestCase(testClassName));
     }
 }

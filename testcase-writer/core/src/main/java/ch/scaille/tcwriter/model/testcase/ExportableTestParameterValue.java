@@ -51,6 +51,10 @@ public class ExportableTestParameterValue extends TestParameterValue {
 		return new ExportableTestParameterValue(id, apiParameterId, valueFactory, simpleValue);
 	}
 	
+	/**
+	 * When the object is serialized, save the id of the test parameter factory.
+	 * @return
+	 */
 	@JsonProperty
 	public ExportReference getTestParameterFactoryRef() {
 		if (factory.getNature() == ParameterNature.SIMPLE_TYPE) {
@@ -60,7 +64,7 @@ public class ExportableTestParameterValue extends TestParameterValue {
 	}
 
 	/**
-	 * Allow the reference to be restored later
+	 * When the object is deserialized, provide how to restore the state of the test parameter factory, according to the saved id
 	 * @param ref
 	 */
 	public void setTestParameterFactoryRef(final ExportReference ref) {

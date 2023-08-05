@@ -1,11 +1,13 @@
 package ch.scaille.tcwriter.model.testcase;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import ch.scaille.tcwriter.model.ExportReference;
 import ch.scaille.tcwriter.model.IdObject;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 
@@ -14,6 +16,8 @@ public class ExportableTestCase extends TestCase {
 
 	@JsonIgnore
 	private Map<String, IdObject> cachedValues = null;
+	@JsonIgnore
+	private List<ExportReference> references;
 
 	protected ExportableTestCase() {
 		super(null, null);
@@ -26,8 +30,14 @@ public class ExportableTestCase extends TestCase {
 	public void restoreReferences() {
 		dynamicDescriptions.putAll(dynamicReferences.values().stream()
 				.collect(Collectors.toMap(TestReference::getId, TestReference::toDescription)));
+		references.forEach(e -> e.restore(this));
 	}
 
+	/**
+	 * During restore of value, get the dictionary object matching the id 
+	 * @param id
+	 * @return a TC object (action, ...)
+	 */
 	public synchronized IdObject getRestoreValue(final String id) {
 		if (cachedValues == null) {
 			cachedValues = testDictionary.getRoles().values().stream().flatMap(r -> r.getActions().stream())
@@ -44,6 +54,10 @@ public class ExportableTestCase extends TestCase {
 			throw new IllegalArgumentException("No cached value for " + id);
 		}
 		return restoredObject;
+	}
+
+	public void setExportedReferences(List<ExportReference> references) {
+		this.references = references;
 	}
 
 }

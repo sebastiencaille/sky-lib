@@ -41,11 +41,11 @@ public class TestCaseToJava {
 	public static void main(String[] args) throws IOException, TestCaseException {
 		final var mainArgs = new Args();
 		JCommander.newBuilder().addObject(mainArgs).build().parse(args);
-		final var modelDao = new FsModelDao(FsConfigDao.local().setConfiguration(mainArgs.configuration));
+		final var modelDao = new FsModelDao(FsConfigDao.localUser().setConfiguration(mainArgs.configuration));
 		final var testDictionary = modelDao.readTestDictionary(mainArgs.tcDictionary).orElseThrow(FileNotFoundException::new);
 		final var jsonTC = mainArgs.testCase;
 		final var testcase = modelDao.readTestCase(jsonTC, testDictionary).orElseThrow(FileNotFoundException::new);
-		new TestCaseToJava(modelDao).generate(testcase).writeTo(LambdaExt.uncheckF2(modelDao::writeTestCaseCode));
+		new TestCaseToJava(modelDao).generate(testcase).writeTo(LambdaExt.uncheckC(tc-> modelDao.writeTestCaseCode(jsonTC, tc)));
 	}
 
 }

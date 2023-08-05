@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import ch.scaille.util.helpers.ClassLoaderHelper;
@@ -139,6 +140,18 @@ public class Template {
 		return writeTo(folder.resolve(preferredFile));
 	}
 
+	/**
+	 * Writes the resulting content in a file
+	 * 
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
+	public void writeTo(final Consumer<String> writer) {
+		writer.accept(generate());
+	}
+
+	
 	/**
 	 * Writes the resulting content in a file
 	 * 

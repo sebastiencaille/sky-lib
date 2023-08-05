@@ -1,6 +1,5 @@
 package ch.scaille.tcwriter.persistence.fsconfig;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -8,45 +7,49 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import ch.scaille.tcwriter.model.config.TCConfig;
-import ch.scaille.tcwriter.persistence.CPResourceLoader;
 import ch.scaille.tcwriter.persistence.IConfigDao;
-import ch.scaille.tcwriter.persistence.IResourceRepository;
-import ch.scaille.tcwriter.persistence.JacksonFactory;
-import ch.scaille.util.helpers.LambdaExt;
+import ch.scaille.tcwriter.persistence.handlers.YamlConfigDataHandler;
+import ch.scaille.util.persistence.CPResourceRepository;
+import ch.scaille.util.persistence.FsResourceRepository;
+import ch.scaille.util.persistence.IResourceRepository;
+import ch.scaille.util.persistence.StorageRTException;
+import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
 
 public class FsConfigDao implements IConfigDao {
 
-	private static final JacksonFactory jacksonFactory = new JacksonFactory();
-
-	private final FsResourceLoader loader;
+	private final FsResourceRepository<TCConfig> loader;
 
 	private final List<Consumer<TCConfig>> onReloads = new ArrayList<>();
 
 	private TCConfig currentConfig = null;
 
-	public static String resolvePlaceHolders(String path) {
-		return path.replace("${user.home}", System.getProperty("user.home")).replace("~",
-				System.getProperty("user.home"));
+	public static StorageDataHandlerRegistry defaultStorageDataHandler() {
+		return new StorageDataHandlerRegistry(new YamlConfigDataHandler());
 	}
 
-	public static FsConfigDao local() {
-		return new FsConfigDao(Paths.get(resolvePlaceHolders("${user.home}/.tcwriter")));
+	public static FsConfigDao localUser() {
+		return withBaseFolder(Paths.get(FsResourceRepository.resolvePlaceHolders("${user.home}/.tcwriter")));
 	}
 
-	public FsConfigDao(Path baseFolder) {
-		loader = new FsResourceLoader(baseFolder, "yaml");
+	public static FsConfigDao withBaseFolder(Path baseFolder) {
+		return new FsConfigDao(baseFolder, defaultStorageDataHandler());
+	}
+
+	public FsConfigDao(Path baseFolder, StorageDataHandlerRegistry configSerDeserializerRegistry) {
+		this.loader = new FsResourceRepository<>(TCConfig.class, baseFolder, configSerDeserializerRegistry);
 	}
 
 	@Override
-	public IResourceRepository loaderOf(String locator, String extension) {
-		if (locator.startsWith(CPResourceLoader.PREFIX)) {
-			return new CPResourceLoader(locator, extension);
+	public <T> IResourceRepository<T> loaderOf(Class<T> daoType, String locator,
+			StorageDataHandlerRegistry DataHandlersRegistry) {
+		if (locator.startsWith(CPResourceRepository.PREFIX)) {
+			return new CPResourceRepository<>(daoType, locator, DataHandlersRegistry);
 		}
-		return loader.inSubFolder(locator, extension);
+		return new FsResourceRepository<>(daoType, loader.getBaseFolder().resolve(locator), DataHandlersRegistry);
 	}
 
 	public FsConfigDao setConfiguration(String locator) {
-		apply(LambdaExt.uncheck(() -> loader.read(locator).decode(jacksonFactory.yaml(TCConfig.class))));
+		apply(StorageRTException.uncheck("Reading of configuration", () -> loader.read(locator)));
 		return this;
 	}
 
@@ -56,8 +59,9 @@ public class FsConfigDao implements IConfigDao {
 	}
 
 	@Override
-	public void saveConfiguration() throws IOException {
-		loader.write(currentConfig.getName(), jacksonFactory.yaml().writeValueAsString(currentConfig));
+	public void saveConfiguration() {
+		StorageRTException.uncheck("Writing of configuration",
+				() -> loader.write(currentConfig.getName(), currentConfig));
 	}
 
 	@Override

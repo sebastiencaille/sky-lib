@@ -2,20 +2,11 @@ package ch.scaille.tcwriter.persistence.fsmodel;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.node.TextNode;
-
 import ch.scaille.generators.util.Template;
-import ch.scaille.tcwriter.model.ExportReference;
 import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.model.config.TCConfig;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
@@ -23,53 +14,34 @@ import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.persistence.IConfigDao;
 import ch.scaille.tcwriter.persistence.IModelDao;
-import ch.scaille.tcwriter.persistence.IResourceRepository;
-import ch.scaille.tcwriter.persistence.JacksonFactory;
-import ch.scaille.tcwriter.persistence.Resource;
-import ch.scaille.util.exceptions.StorageRTException;
-import ch.scaille.util.helpers.ExcExt;
-import ch.scaille.util.helpers.LambdaExt;
+import ch.scaille.tcwriter.persistence.handlers.JsonModelDataHandler;
+import ch.scaille.tcwriter.persistence.handlers.YamlModelDataHandler;
 import ch.scaille.util.helpers.Logs;
+import ch.scaille.util.persistence.IResourceRepository;
+import ch.scaille.util.persistence.Resource;
+import ch.scaille.util.persistence.StorageException;
+import ch.scaille.util.persistence.StorageRTException;
+import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
 
 public class FsModelDao implements IModelDao {
 
-	private static final JacksonFactory jacksonFactory;
-
-	private static final String CONTEXT_ALL_REFERENCES = "AllTestReferences";
-
-	static {
-		final var testCaseWriterModule = new SimpleModule("TCWriterModel");
-		testCaseWriterModule.addDeserializer(ExportReference.class, new JsonDeserializer<>() {
-			@Override
-			public ExportReference deserialize(final JsonParser p, final DeserializationContext ctxt)
-					throws IOException {
-				// yaml and json have different behavior
-				if (!ExportReference.class.getName().equals(p.getTypeId())
-						&& !ExportReference.class.getName().equals(p.getCurrentName())) {
-					throw new StorageRTException("Unexpected type in ExportReference: " + p.getTypeId());
-				}
-				final var content = p.readValueAsTree();
-				final var id = content.get("id");
-				if (id == null) {
-					throw new StorageRTException("Unexpected attribute in ExportReference: " + p.getCurrentName());
-				}
-				final var exportReference = new ExportReference(((TextNode) id).asText());
-				((List<ExportReference>) ctxt.getAttribute(CONTEXT_ALL_REFERENCES)).add(exportReference);
-				return exportReference;
-			}
-		});
-		jacksonFactory = new JacksonFactory(testCaseWriterModule);
-	}
-
 	private final IConfigDao configDao;
 
-	private IResourceRepository dictionaryRepo;
+	private IResourceRepository<TestDictionary> dictionaryRepo;
 
-	private IResourceRepository testCaseRepo;
+	private IResourceRepository<ExportableTestCase> testCaseRepo;
 
-	private IResourceRepository templateRepo;
+	private IResourceRepository<String> templateRepo;
 
-	private IResourceRepository testCaseCodeRepo;
+	private IResourceRepository<String> testCaseCodeRepo;
+
+	private StorageDataHandlerRegistry serDeserializerRegistry;
+
+	public static StorageDataHandlerRegistry defaultDataHandlers() {
+		var modelSerDeserializerRegistry = new StorageDataHandlerRegistry(new YamlModelDataHandler());
+		modelSerDeserializerRegistry.register(new JsonModelDataHandler());
+		return modelSerDeserializerRegistry;
+	}
 
 	private static FsModelConfig configOf(TCConfig config) {
 		return config.getSubconfig(FsModelConfig.class)
@@ -77,20 +49,27 @@ public class FsModelDao implements IModelDao {
 	}
 
 	public FsModelDao(IConfigDao configLoader) {
+		this(configLoader, defaultDataHandlers());
+	}
+
+	public FsModelDao(IConfigDao configLoader, StorageDataHandlerRegistry serDeserializerRegistry) {
 		this.configDao = configLoader;
+		this.serDeserializerRegistry = serDeserializerRegistry;
 		this.configDao.onReload(c -> reload(configOf(c)));
 	}
 
 	private void reload(FsModelConfig config) {
-		this.dictionaryRepo = configDao.loaderOf(config.getDictionaryPath(), "yaml");
-		this.testCaseRepo = configDao.loaderOf(config.getTcPath(), "yaml");
-		this.templateRepo = configDao.loaderOf(config.getTemplatePath(), null);
-		this.testCaseCodeRepo = configDao.loaderOf(config.getTcExportPath(), null);
+		this.dictionaryRepo = configDao.loaderOf(TestDictionary.class, config.getDictionaryPath(),
+				serDeserializerRegistry);
+		this.testCaseRepo = configDao.loaderOf(ExportableTestCase.class, config.getTcPath(), serDeserializerRegistry);
+		this.templateRepo = configDao.loaderOf(String.class, config.getTemplatePath(), null);
+		this.testCaseCodeRepo = configDao.loaderOf(String.class, config.getTcExportPath(), null);
 	}
 
 	@Override
 	public List<Metadata> listDictionaries() throws IOException {
-		return dictionaryRepo.list().map(f -> readTestDictionary(f).get().getMetadata()).toList();
+		return StorageRTException.uncheck("Listing of dictionaries",
+				() -> dictionaryRepo.list().map(f -> readTestDictionary(f).get().getMetadata()).toList());
 	}
 
 	@Override
@@ -100,17 +79,16 @@ public class FsModelDao implements IModelDao {
 			id = "default";
 		}
 		final var idSafe = id;
-		ExcExt.uncheck(() -> dictionaryRepo.write(idSafe,
-				jacksonFactory.yamlModel().writerFor(TestDictionary.class).writeValueAsString(tm)));
+		StorageRTException.uncheck("Writing of test dictionary", () -> dictionaryRepo.write(idSafe, tm));
 	}
 
 	@Override
 	public Optional<TestDictionary> readTestDictionary(String dictionaryId) {
 		try {
-			final var dictionary = dictionaryRepo.read(dictionaryId).decode(jacksonFactory.of(TestDictionary.class));
+			final var dictionary = dictionaryRepo.read(dictionaryId);
 			dictionary.getMetadata().setTransientId(dictionaryId);
 			return Optional.of(dictionary);
-		} catch (IOException e) {
+		} catch (StorageException e) {
 			Logs.of(FsModelDao.class).log(Level.WARNING, e, () -> "Unable to load dictionary");
 			return Optional.empty();
 		}
@@ -118,35 +96,24 @@ public class FsModelDao implements IModelDao {
 
 	@Override
 	public void writeTestDictionary(Path target, TestDictionary tm) {
-		ExcExt.uncheck(() -> dictionaryRepo.write(target.toString(),
-				jacksonFactory.yamlModel().writerFor(TestDictionary.class).writeValueAsString(tm)));
+		StorageRTException.uncheck("Writing of test dictionary", () -> dictionaryRepo.write(target.toString(), tm));
 	}
 
 	@Override
-	public List<Metadata> listTestCases(final TestDictionary dictionary) throws IOException {
-		return testCaseRepo.list().map(f -> readTestCase(f, dictionary).get().getMetadata()).toList();
+	public List<Metadata> listTestCases(final TestDictionary dictionary) {
+		return StorageRTException.uncheck("Listing of test cases",
+				() -> testCaseRepo.list().map(f -> readTestCase(f, dictionary).get().getMetadata()).toList());
 	}
 
 	@Override
 	public Optional<ExportableTestCase> readTestCase(String locator, TestDictionary testDictionary) {
 		try {
-			final Resource tcRawData;
-			final var tcpath = Paths.get(locator);
-			if (tcpath.getNameCount() == 1) {
-				tcRawData = testCaseRepo.read(tcpath.getFileName().toString());
-			} else {
-				tcRawData = testCaseRepo.read(tcpath.toString());
-			}
-
-			final var references = new ArrayList<ExportReference>();
-			final var testCase = tcRawData
-					.decode(jacksonFactory.of(ExportableTestCase.class, (m, r) -> r.with(m.getDeserializationConfig()
-							.getAttributes().withPerCallAttribute(CONTEXT_ALL_REFERENCES, references))));
+			final var testCase = testCaseRepo.read(locator);
 			testCase.setDictionary(testDictionary);
 			testCase.getMetadata().setTransientId(locator);
-			references.forEach(e -> e.restore(testCase));
+			testCase.restoreReferences();
 			return Optional.of(testCase);
-		} catch (IOException e) {
+		} catch (StorageException e) {
 			Logs.of(FsModelDao.class).log(Level.WARNING, e, () -> "Unable to load test case " + locator);
 			return Optional.empty();
 		}
@@ -154,23 +121,17 @@ public class FsModelDao implements IModelDao {
 
 	@Override
 	public void writeTestCase(String locator, TestCase tc) {
-		final var tcJson = ExcExt.uncheck(() -> jacksonFactory.yamlModel().writerFor(TestCase.class).writeValueAsString(tc));
-		final var tcpath = Paths.get(locator);
-		if (tcpath.getNameCount() == 1) {
-			ExcExt.uncheck(() -> testCaseRepo.write(tcpath.getFileName().toString(), tcJson));
-		} else {
-			ExcExt.uncheck(() -> testCaseRepo.write(tcpath.toString(), tcJson));
-		}
+		StorageRTException.uncheck("Writing of test case", () -> testCaseRepo.write(locator, (ExportableTestCase) tc));
 	}
 
 	@Override
 	public Template readTemplate() {
-		return LambdaExt.uncheck(() -> new Template(templateRepo.read("").data()));
+		return StorageRTException.uncheck("Reading of template", () -> new Template(templateRepo.readRaw("")));
 	}
 
 	@Override
-	public String writeTestCaseCode(String locator, String code) {
-		return ExcExt.uncheck(() -> testCaseCodeRepo.write(locator, code));
+	public Resource writeTestCaseCode(String locator, String code) {
+		return StorageRTException.uncheck("Writing of test case code", () -> testCaseCodeRepo.writeRaw(locator, code));
 	}
 
 	public static String toIdentifier(Path path) {

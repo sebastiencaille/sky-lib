@@ -10,6 +10,7 @@ import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
 import ch.scaille.tcwriter.model.testcase.TestCase;
+import ch.scaille.util.persistence.Resource;
 
 public interface IModelDao {
 	
@@ -34,7 +35,7 @@ public interface IModelDao {
 
 	void writeTestCase(String identifier, TestCase testCase);
 
-	String writeTestCaseCode(String identifier, String content);
+	Resource writeTestCaseCode(String identifier, String content);
 
 
 }

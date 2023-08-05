@@ -1,6 +1,9 @@
 package ch.scaille.tcwriter.server.bootstrap;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -11,6 +14,7 @@ import ch.scaille.tcwriter.persistence.testexec.JunitTestExecConfig;
 
 public class ExampleBootstrap {
 
+	private static final String TC_TEMPLATE = "templates/TC.template";
 	private static final Path SRV_DATA = Paths.get("/var/lib/tcwriter/data");
 
 	public static void main(String[] args) throws IOException {
@@ -19,12 +23,21 @@ public class ExampleBootstrap {
 		final var tc = exampleHelper.recordTestCase(model);
 
 		final var currentConfig = exampleHelper.getConfigDao().getCurrentConfig();
-		currentConfig.getSubconfig(FsModelConfig.class).get().setTemplatePath("templates/TC.template");
-		currentConfig.getSubconfig(JunitTestExecConfig.class).get()
+		currentConfig.getSubconfig(FsModelConfig.class).get().setTemplatePath(TC_TEMPLATE);
+		currentConfig.getSubconfig(JunitTestExecConfig.class)
+				.get()
 				.setClasspath(CodeGeneratorParams.mavenTarget(ExampleHelper.class).resolve("classes").toString());
 
 		exampleHelper.getModelDao().writeTestDictionary(model);
 		exampleHelper.getModelDao().writeTestCase(ExampleHelper.TC_NAME, tc);
 		exampleHelper.getConfigDao().saveConfiguration();
+
+		var templatePath = SRV_DATA.resolve(TC_TEMPLATE);
+		Files.createDirectories(templatePath.getParent());
+		try (var in = Thread.currentThread().getContextClassLoader().getResourceAsStream(TC_TEMPLATE);
+				var out = new FileOutputStream(templatePath.toFile())) {
+			in.transferTo(out);
+		}
+
 	}
 }

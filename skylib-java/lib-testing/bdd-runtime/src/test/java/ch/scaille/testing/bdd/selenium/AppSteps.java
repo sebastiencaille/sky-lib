@@ -19,7 +19,7 @@ public class AppSteps {
     public static final TestDictionary<AppPages> BDD_FACTORY = new TestDictionary<>();
 
     public static final Steps<AppPages> OPEN_WEBSITE = BDD_FACTORY.with(
-            step("I open the website", LambdaExt.uncheck(p -> p.driver.get(new URL(AbstractTestWebAppProvider.localUrl, "/example1.html").toString()))),
+            step("I open the website", LambdaExt.uncheckC(p -> p.driver.get(new URL(AbstractTestWebAppProvider.localUrl, "/example1.html").toString()))),
             step("I see that the website is open", p -> p.examplePage.testEnabled()));
 
     public static final Steps<AppPages> TEST_ENABLE = BDD_FACTORY.with(

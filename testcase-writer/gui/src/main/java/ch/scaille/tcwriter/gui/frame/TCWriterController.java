@@ -1,6 +1,6 @@
 package ch.scaille.tcwriter.gui.frame;
 
-import static ch.scaille.util.helpers.LambdaExt.uncheck;
+import static ch.scaille.util.helpers.LambdaExt.uncheckR;
 
 import java.awt.Dialog.ModalityType;
 import java.io.FileNotFoundException;
@@ -205,7 +205,7 @@ public class TCWriterController extends GuiController {
 
 	public void startTestCase() {
 		testRemoteControl.resetConnection();
-		new Thread(uncheck(this::runTestCase, gui::handleException), "Test execution").start();
+		new Thread(uncheckR(this::runTestCase, gui::handleException), "Test execution").start();
 	}
 
 	public void runTestCase() throws IOException, InterruptedException, TestCaseException {

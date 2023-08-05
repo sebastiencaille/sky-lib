@@ -54,7 +54,7 @@ public class AbstractGuiTest {
 		junitTestConfig.setJava("");
 		junitTestConfig.setClasspath("");
 		
-		final var configLoader = new FsConfigDao(RESOURCE_FOLDER.toPath()).setConfiguration(TCConfig.of("default", modelConfig, junitTestConfig));
+		final var configLoader = FsConfigDao.withBaseFolder(RESOURCE_FOLDER.toPath()).setConfiguration(TCConfig.of("default", modelConfig, junitTestConfig));
 		
 		// Setup services 
 		final var persister = new FsModelDao(configLoader);

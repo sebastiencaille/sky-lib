@@ -32,6 +32,12 @@ MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. -->
 			<groupId>ch.scaille</groupId>
 			<artifactId>lib-generator-utils</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>ch.scaille</groupId>
+			<artifactId>lib-persistence</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>

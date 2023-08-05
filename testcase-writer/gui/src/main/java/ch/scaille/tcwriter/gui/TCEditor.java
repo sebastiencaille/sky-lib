@@ -24,7 +24,7 @@ public class TCEditor {
 		final var mainArgs = new Args();
 		JCommander.newBuilder().addObject(mainArgs).build().parse(args);
 		
-		final var configLoader = FsConfigDao.local().setConfiguration(mainArgs.configuration);
+		final var configLoader = FsConfigDao.localUser().setConfiguration(mainArgs.configuration);
 		final var modelDao = new FsModelDao(configLoader);
 		final var testExecutor = new JUnitTestExecutor(configLoader, modelDao, ClassLoaderHelper.appClassPath());
 		final var tcWriterController = new TCWriterController(configLoader, modelDao, null, testExecutor);

@@ -24,7 +24,7 @@ public class StorageConfig {
 
 	@Bean
 	public FsConfigDao fsconfigDao() {
-		return new FsConfigDao(dataFolder).setConfiguration("server");
+		return FsConfigDao.withBaseFolder(dataFolder).setConfiguration("server");
 	}
 
 	@Bean

@@ -101,7 +101,7 @@ public class WebErrorController extends AbstractErrorController {
 		private final Object[] arguments;
 		private final HttpStatus status;
 		private String message = null;
-		private String trace;
+		private String trace = "";
 
 		public ExceptionDto(String code, Object[] arguments, HttpStatus status) {
 			super();
@@ -157,8 +157,11 @@ public class WebErrorController extends AbstractErrorController {
 			defaultText = messageSource.getMessage("error.status", new Object[] { status }, "error.status", LOCALE);
 		}
 		dto.setMessage(messageSource.getMessage(dto.getCode(), dto.getArguments(), defaultText, LOCALE));
-		dto.setTrace((String) getErrorAttributes(request,
-				ErrorAttributeOptions.of(ErrorAttributeOptions.Include.STACK_TRACE)).get("trace"));
+		var trace = (String) getErrorAttributes(request,
+				ErrorAttributeOptions.of(ErrorAttributeOptions.Include.STACK_TRACE)).get("trace");
+		if (trace != null) {
+			dto.setTrace(trace);
+		}
 
 		return dto;
 	}

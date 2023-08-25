@@ -42,8 +42,6 @@
     <module>lib-gui-examples</module>
     		
     <module>lib-generator-utils</module>
-    	  
-    <module>lib-persistance</module>
       
   </modules>
   	

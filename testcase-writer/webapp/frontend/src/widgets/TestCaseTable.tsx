@@ -45,7 +45,7 @@ class TestCaseTable extends React.Component<ITestCaseProps> {
 				<tbody className='steps' key={"tcStep" + step.ordinal}>
 					<tr>
 					<td rowSpan={2} className={stepClass}>{step.ordinal}</td>
-					<td colSpan={4}>{step.humanReadable || '---'}</td>
+					<td colSpan={4}>{step.humanReadable ?? '---'}</td>
 					</tr>
 					<tr>
 						<td></td>

@@ -183,6 +183,18 @@
 						</dependency>
 					</dependencies>
 				</plugin>
+				<plugin>
+					<groupId>org.openapitools</groupId>
+					<artifactId>openapi-generator-maven-plugin</artifactId>
+					<version>7.0.0</version>
+					<dependencies>
+						<dependency>
+							<groupId>io.swagger.parser.v3</groupId>
+							<artifactId>swagger-parser</artifactId>
+							<version>${swagger-parser.version}</version>
+						</dependency>
+					</dependencies>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>

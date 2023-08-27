@@ -77,7 +77,6 @@
 				<plugin>
 					<groupId>org.openapitools</groupId>
 					<artifactId>openapi-generator-maven-plugin</artifactId>
-					<version>6.6.0</version>
 					<configuration>
 						<inputSpec>
 							${project.basedir}/../webapi/src/main/resources/webapi/openapi.yaml</inputSpec>
@@ -90,15 +89,7 @@
 						<modelPackage>ch.scaille.tcwriter.generated.api.model</modelPackage>
 						<generatorName>spring</generatorName>
 						<library>spring-boot</library>
-						<generateAliasModel>true</generateAliasModel>
 					</configuration>
-					<dependencies>
-						<dependency>
-							<groupId>io.swagger.parser.v3</groupId>
-							<artifactId>swagger-parser</artifactId>
-							<version>${swagger-parser.version}</version>
-						</dependency>
-					</dependencies>
 				</plugin>
 			</plugins>
 		</pluginManagement>

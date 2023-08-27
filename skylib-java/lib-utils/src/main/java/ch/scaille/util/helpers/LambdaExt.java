@@ -163,7 +163,7 @@ public class LambdaExt {
 	}
 	
 	public static <E extends Exception> void uncheckM(RunnableWithException<E> call,
-			final Consumer<? super E> exceptionHandle) {
+			final Consumer<? super E> exceptionHandler) {
 		uncheckR(call, exceptionHandler).run();
 	}
 }

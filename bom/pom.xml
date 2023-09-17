@@ -19,7 +19,7 @@
 
 	<properties>
 
-		<aspectj.version>1.9.20</aspectj.version>
+		<aspectj.version>1.9.20.1</aspectj.version>
 		<jackson.version>2.15.2</jackson.version>
 
 		<undertow.version>2.3.8.Final</undertow.version>
@@ -27,7 +27,7 @@
 		<junit-jupiter.version>5.10.0</junit-jupiter.version>
 		<junit.version>4.13.2</junit.version>
 		<junit-platform-console-standalone.version>1.10.0</junit-platform-console-standalone.version>
-		<selenium.version>4.11.0</selenium.version>
+		<selenium.version>4.12.1</selenium.version>
 
 		<mapstruct.version>1.5.5.Final</mapstruct.version>
 
@@ -148,7 +148,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-enforcer-plugin</artifactId>
-					<version>3.4.0</version>
+					<version>3.4.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
@@ -161,7 +161,7 @@
 				<plugin>
 					<groupId>org.sonarsource.scanner.maven</groupId>
 					<artifactId>sonar-maven-plugin</artifactId>
-					<version>3.9.1.2184</version>
+					<version>3.10.0.2594</version>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>

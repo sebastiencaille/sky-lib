@@ -31,7 +31,7 @@ import ch.scaille.util.helpers.Logs;
  * @author Sebastien Caille
  *
  */
-abstract class AttributeFactory {
+interface AttributeFactory {
 
 	public enum Mode {
 		AUTOMATIC, GET_SET, FIELD

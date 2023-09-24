@@ -75,7 +75,7 @@ public class GetSetAttribute<T> extends AbstractAttributeMetaData<T> {
 		if (setter == null) {
 			return true;
 		}
-		final Persistency persistency = getAnnotation(Persistency.class);
+		final var persistency = getAnnotation(Persistency.class);
 		return persistency != null && persistency.readOnly();
 	}
 

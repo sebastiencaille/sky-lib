@@ -44,7 +44,7 @@ public class TextFormatter<T extends TextFormatter<T, E>, E extends Exception> {
 	}
 
 	public static IOutput<RuntimeException> output(final StringBuilder builder) {
-		return new IOutput<RuntimeException>() {
+		return new IOutput<>() {
 
 			@Override
 			public void append(final char c) {
@@ -65,7 +65,7 @@ public class TextFormatter<T extends TextFormatter<T, E>, E extends Exception> {
 	}
 
 	public static IOutput<IOException> output(final OutputStream stream) {
-		return new IOutput<IOException>() {
+		return new IOutput<>() {
 
 			@Override
 			public void append(final char c) throws IOException {
@@ -80,7 +80,7 @@ public class TextFormatter<T extends TextFormatter<T, E>, E extends Exception> {
 	}
 
 	public static IOutput<RuntimeException> safeOutput(final Writer writer) {
-		return new IOutput<RuntimeException>() {
+		return new IOutput<>() {
 
 			@Override
 			public void append(final char c) {
@@ -124,7 +124,7 @@ public class TextFormatter<T extends TextFormatter<T, E>, E extends Exception> {
 	}
 
 	public T indented(Consumer<T> indentedExecution) {
-		T manager = indent();
+		final var manager = indent();
 		indentedExecution.accept(manager);
 		return unindent();
 	}
@@ -194,9 +194,9 @@ public class TextFormatter<T extends TextFormatter<T, E>, E extends Exception> {
 	}
 
 	public static String toCamelCase(final String s) {
-		final StringBuilder b = new StringBuilder();
-		final String[] parts = s.split("_");
-		for (final String part : parts) {
+		final var b = new StringBuilder();
+		final var parts = s.split("_");
+		for (final var part : parts) {
 			b.append(Character.toUpperCase(part.charAt(0)));
 			b.append(part.substring(1));
 		}

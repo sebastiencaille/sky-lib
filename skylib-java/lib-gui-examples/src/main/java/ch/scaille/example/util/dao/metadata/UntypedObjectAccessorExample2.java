@@ -18,10 +18,8 @@ package ch.scaille.example.util.dao.metadata;
 import static ch.scaille.example.util.dao.metadata.ADataObject.AN_ATTRIBUTE;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.util.logging.Level;
 
-import ch.scaille.util.dao.metadata.DataObjectManager;
 import ch.scaille.util.dao.metadata.DataObjectManagerFactory;
 import ch.scaille.util.dao.metadata.UntypedDataObjectManager;
 import ch.scaille.util.helpers.Logs;
@@ -57,27 +55,26 @@ public interface UntypedObjectAccessorExample2 {
 
 	static void main(final String[] args) throws IOException {
 
-		try (Writer output = Logs.streamOf(DataObjectMetaDataExample.class, Level.INFO)) {
-			final SimpleTextFormatter<RuntimeException> log = new SimpleTextFormatter<>(
-					TextFormatter.safeOutput(output));
+		try (var output = Logs.streamOf(DataObjectMetaDataExample.class, Level.INFO)) {
+			final var log = new SimpleTextFormatter<>(TextFormatter.safeOutput(output));
 			log.setIndentationManager(new ArrowIndentationManager());
 
 			log.appendIndentedLine("Content of data object 1");
-			final ADataObject do1 = new ADataObject();
+			final var do1 = new ADataObject();
 			do1.setAnAttribute("data1");
-			final DataObjectManager<ADataObject> accessor1 = DataObjectManagerFactory.createFor(ADataObject.class, do1);
+			final var accessor1 = DataObjectManagerFactory.createFor(ADataObject.class, do1);
 			log.indented(t -> t.appendIndentedLine(getAttributeOf(accessor1.getUntypedAccessor())));
 
 			log.appendIndentedLine("Content of data object 2");
-			final ASecondDataObject do2 = new ASecondDataObject();
+			final var do2 = new ASecondDataObject();
 			do2.setAnAttribute("data2");
-			final UntypedDataObjectManager accessor2 = DataObjectManagerFactory.createFor(do2);
+			final var accessor2 = DataObjectManagerFactory.createFor(do2);
 			log.indented(t -> t.appendIndentedLine(getAttributeOf(accessor2)));
 
 			log.appendIndentedLine("Content of data object 3");
-			final AThirdDataObject do3 = new AThirdDataObject();
+			final var do3 = new AThirdDataObject();
 			do3.setAnAttribute("data3");
-			final UntypedDataObjectManager accessor3 = DataObjectManagerFactory.createFor(do3);
+			final var accessor3 = DataObjectManagerFactory.createFor(do3);
 			log.indented(t -> t.appendIndentedLine(getAttributeOf(accessor3)));
 		}
 	}

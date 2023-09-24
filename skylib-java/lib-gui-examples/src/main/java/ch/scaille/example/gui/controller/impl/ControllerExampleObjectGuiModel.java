@@ -108,7 +108,7 @@ public class ControllerExampleObjectGuiModel extends GuiModel implements IObject
 	}
 
 	public IComponentBinding<ControllerExampleObject> loadBinding() {
-		return new IComponentBinding<ControllerExampleObject>() {
+		return new IComponentBinding<>() {
 
 			@Override
 			public void addComponentValueChangeListener(final IComponentLink<ControllerExampleObject> link) {

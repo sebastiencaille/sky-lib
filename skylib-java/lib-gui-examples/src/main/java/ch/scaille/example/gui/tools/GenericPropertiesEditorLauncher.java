@@ -22,61 +22,60 @@ import ch.scaille.util.helpers.Logs;
 
 public class GenericPropertiesEditorLauncher {
 
-    public static class EditedObject {
-        private String str;
+	public static class EditedObject {
+		private String str;
 
-        private boolean bool;
+		private boolean bool;
 
-        public String getStr() {
-            return str;
-        }
+		public String getStr() {
+			return str;
+		}
 
-        public void setStr(String str) {
-            this.str = str;
-        }
+		public void setStr(String str) {
+			this.str = str;
+		}
 
-        public boolean isBool() {
-            return bool;
-        }
+		public boolean isBool() {
+			return bool;
+		}
 
-        public void setBool(boolean bool) {
-            this.bool = bool;
-        }
+		public void setBool(boolean bool) {
+			this.bool = bool;
+		}
 
-    }
+	}
 
-    private static List<PropertyEntry> builder(IPropertiesGroup support, IObjectProvider<EditedObject> obj) {
+	private static List<PropertyEntry> builder(IPropertiesGroup support, IObjectProvider<EditedObject> obj) {
 
-        final ObjectProperty<String> strProp = new ObjectProperty<String>("str", support)
-                .configureTyped(persistent(obj, getSet(EditedObject::getStr, EditedObject::setStr)));
-        final BooleanProperty boolProp = new BooleanProperty("bool", support)
-                .configureTyped(persistent(obj, getSet(EditedObject::isBool, EditedObject::setBool)));
+		final var strProp = new ObjectProperty<String>("str", support)
+				.configureTyped(persistent(obj, getSet(EditedObject::getStr, EditedObject::setStr)));
+		final var boolProp = new BooleanProperty("bool", support)
+				.configureTyped(persistent(obj, getSet(EditedObject::isBool, EditedObject::setBool)));
 
-        return Arrays.asList(//
-                SimpleEditorModel.entry(strProp, AbstractTypedProperty::createBindingChain, String.class, false,
-                        "A string property", null),
-                SimpleEditorModel.entry(boolProp, AbstractTypedProperty::createBindingChain, Boolean.class, false,
-                        "A boolean property", null) //
-        );
-    }
+		return Arrays.asList(//
+				SimpleEditorModel.entry(strProp, AbstractTypedProperty::createBindingChain, String.class, false,
+						"A string property", null),
+				SimpleEditorModel.entry(boolProp, AbstractTypedProperty::createBindingChain, Boolean.class, false,
+						"A boolean property", null) //
+		);
+	}
 
-    public static void main(final String[] args) {
+	public static void main(final String[] args) {
 
-        final EditedObject obj = new EditedObject();
-        final SimpleEditorModel<EditedObject> model = new SimpleEditorModel<>(GenericPropertiesEditorLauncher::builder);
-        final SwingGenericEditorDialog view = new SwingGenericEditorDialog(null, "Test",
-                Dialog.ModalityType.DOCUMENT_MODAL);
-        final GenericEditorController<EditedObject> editor = new GenericEditorController<>(view.mainPanel(), model);
-        SwingUtilities.invokeLater(() -> {
-            editor.activate();
-            editor.load(obj);
-            view.build(model.getErrorProperty());
-            view.validate();
-            view.pack();
-            view.setVisible(true);
-            Logs.of(GenericPropertiesEditorLauncher.class).info(obj.toString());
-            view.dispose();
-        });
-    }
+		final var obj = new EditedObject();
+		final var model = new SimpleEditorModel<>(GenericPropertiesEditorLauncher::builder);
+		final var view = new SwingGenericEditorDialog(null, "Test", Dialog.ModalityType.DOCUMENT_MODAL);
+		final var editor = new GenericEditorController<>(view.mainPanel(), model);
+		SwingUtilities.invokeLater(() -> {
+			editor.activate();
+			editor.load(obj);
+			view.build(model.getErrorProperty());
+			view.validate();
+			view.pack();
+			view.setVisible(true);
+			Logs.of(GenericPropertiesEditorLauncher.class).info(obj.toString());
+			view.dispose();
+		});
+	}
 
 }

@@ -15,7 +15,7 @@ public abstract class AbstractGenerator<R> {
 
 	protected static <A extends AbstractGenerator<R>, R> Collector<Class<?>, A, R> toDictionary(
 			Supplier<A> generatorSupplier) {
-		return new Collector<Class<?>, A, R>() {
+		return new Collector<>() {
 
 			@Override
 			public BiConsumer<A, Class<?>> accumulator() {

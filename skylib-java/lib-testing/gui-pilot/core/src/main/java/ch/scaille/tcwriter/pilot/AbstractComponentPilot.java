@@ -152,8 +152,8 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	protected <U> U waitPollingSuccess(final Polling<C, U> polling, final FailureHandler<C, U> onFail) {
 		polling.withExtraDelay(pilot.getActionDelay());
 		waitActionDelay();
-		try (NoExceptionCloseable closeable = pilot.withModalDialogDetection()) {
-			final PollingResult<C, U> result = waitPollingSuccessLoop(polling);
+		try (var closeable = pilot.withModalDialogDetection()) {
+			final var result = waitPollingSuccessLoop(polling);
 			if (result.isSuccess()) {
 				fired = true;
 				postExecutions.stream().forEach(p -> p.accept(cachedElement.element));
@@ -192,29 +192,29 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	@SuppressWarnings("java:S1172)")
 	protected <U> PollingResult<C, U> executePolling(Poller poller, final Polling<C, U> polling) {
 
-		final Optional<PollingResult<C, U>> failure = preparePolling(polling);
-		if (failure.isPresent()) {
-			return failure.get();
+		final var pollingFailure = preparePolling(polling);
+		if (pollingFailure.isPresent()) {
+			return pollingFailure.get();
 		}
 
 		polling.getContext().setComponent(getCachedElement(), getDescription());
 
 		// cachedElement.element may disappear after polling, so prepare report line
 		// here
-		final String report = polling.getReportFunction().build(polling.getContext(), polling.getReportText());
+		final var logReport = polling.getReportFunction().build(polling.getContext(), polling.getReportText());
 
-		logger.fine(() -> "Polling " + report + "...");
-		final PollingResult<C, U> result = callPollingFunction(polling);
-		logger.fine(() -> "Polling result: " + result);
-		if (result.isSuccess() && !report.isEmpty()) {
-			pilot.getActionReport().report(report);
+		logger.fine(() -> "Polling " + logReport + "...");
+		final var pollingResult = callPollingFunction(polling);
+		logger.fine(() -> "Polling result: " + pollingResult);
+		if (pollingResult.isSuccess() && !logReport.isEmpty()) {
+			pilot.getActionReport().report(logReport);
 		}
-		return result;
+		return pollingResult;
 	}
 
 	protected <U> Optional<PollingResult<C, U>> preparePolling(final Polling<C, U> polling) {
 		if (cachedElement == null) {
-			final C loadedGuiComponent = loadGuiComponent();
+			final var loadedGuiComponent = loadGuiComponent();
 			if (loadedGuiComponent != null) {
 				cachedElement = new LoadedElement<>(loadedGuiComponent);
 			}
@@ -283,7 +283,7 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	 * Waits on the action set by followedByDelay
 	 */
 	protected void waitActionDelay() {
-		final ActionDelay actionDelay = pilot.getActionDelay();
+		final var actionDelay = pilot.getActionDelay();
 		if (actionDelay != null) {
 			pilot.setActionDelay(null);
 			actionDelay.waitFinished();

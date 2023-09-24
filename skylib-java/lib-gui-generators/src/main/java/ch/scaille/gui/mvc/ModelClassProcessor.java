@@ -16,7 +16,6 @@
 package ch.scaille.gui.mvc;
 
 import static ch.scaille.generators.util.JavaCodeGenerator.toConstant;
-import static java.util.stream.Collectors.toList;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
@@ -71,15 +70,15 @@ public class ModelClassProcessor {
 		if (!(type instanceof ParameterizedType)) {
 			throw new IllegalArgumentException("Unhandled type " + type);
 		}
-		final ParameterizedType p = (ParameterizedType) type;
-		final StringBuilder builder = new StringBuilder();
-		char sep = '<';
-		for (final Type st : p.getActualTypeArguments()) {
-			builder.append(sep).append(st.getTypeName());
+		final var parameterizedType = (ParameterizedType) type;
+		final var textOutput = new StringBuilder();
+		var sep = '<';
+		for (final var argType : parameterizedType.getActualTypeArguments()) {
+			textOutput.append(sep).append(argType.getTypeName());
 			sep = ',';
 		}
-		builder.append('>');
-		return builder.toString();
+		textOutput.append('>');
+		return textOutput.toString();
 	}
 
 	private final Class<?> modelClass;
@@ -103,9 +102,8 @@ public class ModelClassProcessor {
 
 	protected Template process() {
 
-		final UntypedDataObjectMetaData metaData = new UntypedDataObjectMetaData(modelClass, false);
-
-		final String strType = metaData.getDataType().getSimpleName();
+		final var metaData = new UntypedDataObjectMetaData(modelClass, false);
+		final var strType = metaData.getDataType().getSimpleName();
 
 		context.properties.put("modelClass", getClassName());
 		context.properties.put("objectClass", strType);
@@ -120,11 +118,11 @@ public class ModelClassProcessor {
 
 		context.properties.put("imports", JavaCodeGenerator.toImports(context.imports));
 
-		final String pkg = modelClass.getPackage().getName();
+		final var pkg = modelClass.getPackage().getName();
 		context.properties.put("package", pkg);
 		try {
-			return Template.from("templates/guiModel.template").apply(context.properties,
-					JavaCodeGenerator.classToSource(pkg, getClassName()));
+			return Template.from("templates/guiModel.template")
+					.apply(context.properties, JavaCodeGenerator.classToSource(pkg, getClassName()));
 		} catch (IOException e) {
 			throw new IllegalStateException("Unable to load template", e);
 		}
@@ -162,10 +160,7 @@ public class ModelClassProcessor {
 
 	protected void forEachAttribute(final UntypedDataObjectMetaData metaData,
 			final Consumer<AbstractAttributeMetaData<?>> attributeApplier) {
-		for (final AbstractAttributeMetaData<?> attrib : metaData.getAttributes().stream()
-				.filter(this::includeAttribute).collect(toList())) {
-			attributeApplier.accept(attrib);
-		}
+		metaData.getAttributes().stream().filter(this::includeAttribute).forEach(a -> attributeApplier.accept(a));
 	}
 
 	protected String generateLoadFrom(final AbstractAttributeMetaData<?> attrib) {
@@ -181,18 +176,17 @@ public class ModelClassProcessor {
 	}
 
 	protected String generateAccessConstants(final AbstractAttributeMetaData<?> attrib) {
-		final JavaCodeGenerator<RuntimeException> gen = JavaCodeGenerator.inMemory();
+		final var gen = JavaCodeGenerator.inMemory();
 		gen.appendIndentedLine(
 				"public static final String " + toConstant(attrib.getName()) + " = \"" + attrib.getName() + "\";");
 		gen.eol();
-
 		return gen.toString();
 	}
 
 	protected String generateFieldConstants(final AbstractAttributeMetaData<?> attrib) {
-		final JavaCodeGenerator<RuntimeException> gen = JavaCodeGenerator.inMemory();
-		final String constant = toConstant(attrib.getName());
-		final String fieldConstant = constant + "_FIELD";
+		final var gen = JavaCodeGenerator.inMemory();
+		final var constant = toConstant(attrib.getName());
+		final var fieldConstant = constant + "_FIELD";
 		context.generatedConstants.put(fieldConstant, attrib.getCodeName());
 		gen.appendIndentedLine("private static final Field " + fieldConstant + ';');
 		gen.eol();
@@ -201,9 +195,8 @@ public class ModelClassProcessor {
 	}
 
 	protected String generateGetter(final AbstractAttributeMetaData<?> attrib) {
-		final AttributeProcessor processor = AttributeProcessor.create(context, attrib, delegate);
-
-		final JavaCodeGenerator<RuntimeException> gen = JavaCodeGenerator.inMemory();
+		final var processor = AttributeProcessor.create(context, attrib, delegate);
+		final var gen = JavaCodeGenerator.inMemory();
 		gen.openBlock(ATTRIB_PUBLIC, processor.getPropertyType(), " get", attrib.getName(), "Property()");
 		gen.appendIndentedLine("return " + processor.getPropertyFieldName() + ";");
 		gen.closeBlock();

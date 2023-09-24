@@ -5,10 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.Reader;
 import java.io.StringWriter;
-import java.io.Writer;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -125,8 +122,8 @@ public class JavaExt {
 		@Override
 		public void run() {
 			// Use a reader to handle multi-byte chars
-			try (Reader reader = new InputStreamReader(in.get(), StandardCharsets.UTF_8)) {
-				final char[] buffer = new char[1024 * 1024];
+			try (var reader = new InputStreamReader(in.get(), StandardCharsets.UTF_8)) {
+				final var buffer = new char[1024 * 1024];
 				int read;
 				while ((read = reader.read(buffer, 0, buffer.length)) >= 0) {
 					flow.accept(new String(buffer, 0, read));
@@ -153,38 +150,14 @@ public class JavaExt {
 		void close();
 	}
 
-	/**
-	 * @deprecated use java 9 transferTo
-	 */
-	@Deprecated
-	public static <T extends OutputStream> T transferTo(InputStream in, T out) throws IOException {
-		final byte[] buffer = new byte[1024];
-		int read;
-		while ((read = in.read(buffer)) > 0) {
-			out.write(buffer, 0, read);
-		}
-		return out;
-	}
-
 	public static byte[] read(InputStream in) throws IOException {
-		return transferTo(in, new ByteArrayOutputStream()).toByteArray();
+		final var out = new ByteArrayOutputStream();
+		in.transferTo(out);
+		return out.toByteArray();
 	}
 
-	/**
-	 * @deprecated use java 9 transferTo
-	 */
-	@Deprecated
-	public static <T extends Writer> T transferTo(Reader in, T out) throws IOException {
-		final char[] buffer = new char[1024];
-		int read;
-		while ((read = in.read(buffer)) > 0) {
-			out.write(buffer, 0, read);
-		}
-		return out;
-	}
-	
 	public static void transferUTF8LineTo(InputStream in, Consumer<String> out) throws IOException {
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
+		try (var reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
 			String str;
 			while ((str = reader.readLine()) != null) {
 				out.accept(str);
@@ -193,9 +166,10 @@ public class JavaExt {
 	}
 
 	public static String readUTF8Stream(final InputStream in) throws IOException {
-		InputStreamReader inReader = new InputStreamReader(in, StandardCharsets.UTF_8);
-		try (final StringWriter stringWriter = new StringWriter()) {
-			return JavaExt.transferTo(inReader, stringWriter).toString();
+		final var inReader = new InputStreamReader(in, StandardCharsets.UTF_8);
+		try (final var stringWriter = new StringWriter()) {
+			inReader.transferTo(stringWriter);
+			return stringWriter.toString();
 		}
 	}
 

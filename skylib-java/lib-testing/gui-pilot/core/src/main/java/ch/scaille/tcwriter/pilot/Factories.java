@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import ch.scaille.tcwriter.pilot.PollingResult.FailureHandler;
 import ch.scaille.util.dao.metadata.DataObjectManagerFactory;
 
-@SuppressWarnings("java:S5960")
 public interface Factories {
 
 	interface Pollings {

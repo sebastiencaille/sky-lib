@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -33,9 +32,9 @@ class StreamExtTest {
 
 	@Test
 	void singleTest() {
-        Collections.singletonList(1).stream().collect(StreamExt.single()).orElseThrow(WrongCountException::new);
+		Collections.singletonList(1).stream().collect(StreamExt.single()).orElseThrow(WrongCountException::new);
 		try {
-            Collections.emptyList().stream().collect(StreamExt.single()).orElseThrow(WrongCountException::new);
+			Collections.emptyList().stream().collect(StreamExt.single()).orElseThrow(WrongCountException::new);
 		} catch (final Exception e) {
 			assertEquals("Wrong count: 0", e.getMessage());
 		}
@@ -49,17 +48,21 @@ class StreamExtTest {
 	@Test
 	void zeroOrOneTest() {
 
-		final Optional<Integer> zeroOrOne1 = Collections.singletonList(1).stream().collect(StreamExt.zeroOrOne())
+		final var zeroOrOne1 = Collections.singletonList(1)
+				.stream()
+				.collect(StreamExt.zeroOrOne())
 				.optionalOrThrow(WrongCountException::new);
 		assertTrue(zeroOrOne1.isPresent(), () -> "zeroOrOne1.isPresent()");
 		assertEquals(Integer.valueOf(1), zeroOrOne1.get());
 
-		final Optional<Integer> zeroOrOne2 = Collections.<Integer>emptyList().stream().collect(StreamExt.zeroOrOne())
+		final var zeroOrOne2 = Collections.<Integer>emptyList()
+				.stream()
+				.collect(StreamExt.zeroOrOne())
 				.optionalOrThrow(WrongCountException::new);
 		assertFalse(zeroOrOne2.isPresent());
 
-		WrongCountException e = Assertions.assertThrows(WrongCountException.class, this::testWith2Values);
-		assertEquals("Wrong count: 2", e.getMessage());
+		final var exception = Assertions.assertThrows(WrongCountException.class, this::testWith2Values);
+		assertEquals("Wrong count: 2", exception.getMessage());
 	}
 
 	private Integer testWith2Values() {

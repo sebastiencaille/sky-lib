@@ -43,7 +43,6 @@ public class Polling<C, V> {
 		return context;
 	}
 
-	@SuppressWarnings("java:S1172)")
 	public Predicate<C> getPrecondition(final AbstractComponentPilot<?, C> guiComponent) {
 		return precondition;
 	}
@@ -121,11 +120,11 @@ public class Polling<C, V> {
 	}
 
 	public Duration getTimeout() {
-		Duration realTimeout = timeout.get();
+		var effectiveTimeout = timeout.get();
 		if (currentDelay != null) {
-			realTimeout = currentDelay.applyOnTimeout(realTimeout);
+			effectiveTimeout = currentDelay.applyOnTimeout(effectiveTimeout);
 		}
-		return realTimeout;
+		return effectiveTimeout;
 	}
 
 	/**

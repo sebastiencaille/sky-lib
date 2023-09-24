@@ -59,7 +59,7 @@ public class TimeTracker {
 	}
 
 	public void waitOn(final Object obj) throws InterruptedException, TimeoutException {
-		final long waitTime = remainingTimeMs();
+		final var waitTime = remainingTimeMs();
 		if (waitTime > 0) {
 			obj.wait(waitTime); // NOSONAR
 		}
@@ -77,7 +77,7 @@ public class TimeTracker {
 	}
 
 	public long remainingTimeMs() {
-		final long l = getAbsoluteTimeout() - System.currentTimeMillis();
+		final var l = getAbsoluteTimeout() - System.currentTimeMillis();
 		if (l < 1) {
 			return 1;
 		}

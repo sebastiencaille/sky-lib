@@ -24,7 +24,7 @@ public class Scenario<A extends AbstractAppTestApi<?>> {
         }
 
         private void add(String verb, Step<?> step) {
-            String reportLine = verb + step.description.replace("|", "\n  And ");
+        	var reportLine = verb + step.description.replace("|", "\n  And ");
             if (step.isAutomationStep()) {
                 reportLine = Arrays.stream(reportLine.split("\n")).map(s -> "[Automation: " + s + "]").collect(Collectors.joining("\n"));
             }
@@ -70,20 +70,20 @@ public class Scenario<A extends AbstractAppTestApi<?>> {
 
     @SafeVarargs
     public final Scenario<A> followedBy(Steps<A>... addedSteps) {
-        Steps<A>[] newSteps = Arrays.copyOf(steps, steps.length + addedSteps.length);
+    	var newSteps = Arrays.copyOf(steps, steps.length + addedSteps.length);
         System.arraycopy(addedSteps, 0, newSteps, steps.length, addedSteps.length);
         return new Scenario<>(newSteps);
     }
 
     public ExecutionContext<A> run(A appTestApi) {
-        ExecutionContext<A> executionContext = new ExecutionContext<>(appTestApi);
+    	var executionContext = new ExecutionContext<>(appTestApi);
         appTestApi.resetContext();
         if (executionConfigurer != null) {
             executionConfigurer.accept(appTestApi);
         }
 
-        Steps<A> lastStep = steps[steps.length - 1];
-        for (Steps<A> step : steps) {
+        final var lastStep = steps[steps.length - 1];
+        for (var step : steps) {
             step.run(executionContext, step == lastStep);
         }
         return executionContext;

@@ -2,7 +2,6 @@ package ch.scaille.util;
 
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -14,9 +13,9 @@ class PollerTest {
 	@Test
 	void testDuration() {
 
-		List<Long> delays = new ArrayList<>();
+		final var delays = new ArrayList<Long>();
 
-		Poller poller = new Poller(Duration.ofMillis(500), Duration.ofMillis(100), p -> Duration.ofMillis(100));
+		final var poller = new Poller(Duration.ofMillis(500), Duration.ofMillis(100), p -> Duration.ofMillis(100));
 		poller.run(p -> {
 			delays.add(p.timeTracker.elapsedTimeMs());
 			return null;

@@ -23,16 +23,16 @@ class ModelExampleTest {
 	@Test
 	void testExample() throws InvocationTargetException, InterruptedException {
 
-		final TableModelExampleView[] view = new TableModelExampleView[1];
+		final var view = new TableModelExampleView[1];
 		EventQueue.invokeAndWait(() -> {
 			view[0] = new TableModelExampleView();
 			view[0].setVisible(true);
 		});
 
-		final SwingPilot pilot = new SwingPilot(view[0]);
+		final var pilot = new SwingPilot(view[0]);
 		pilot.setDefaultPollingTimeout(Duration.ofSeconds(1));
 
-		ModelExamplePage page = pilot.page(ModelExamplePage::new);
+		var page = pilot.page(ModelExamplePage::new);
 
 		page.listTable.wait(Pollings.assertion(pc -> {
 			JTable component = pc.component;

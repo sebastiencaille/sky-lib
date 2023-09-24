@@ -30,10 +30,10 @@ public class TestObjectControllerModelFrameView extends JFrame {
 
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-		final JTable table = new JTable(controller.getTableModel());
+		final var table = new JTable(controller.getTableModel());
 		getContentPane().add(new JScrollPane(table), BorderLayout.CENTER);
 
-		final JButton button = new JButton("Commit");
+		final var button = new JButton("Commit");
 		button.addActionListener(controller.getCommitAction());
 		getContentPane().add(button, BorderLayout.SOUTH);
 

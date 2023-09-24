@@ -24,7 +24,6 @@ import ch.scaille.util.helpers.Poller;
  * @author scaille
  *
  */
-@SuppressWarnings("java:S5960")
 public class ModalDialogDetector {
 
 	public static PollingResult expected() {
@@ -44,7 +43,7 @@ public class ModalDialogDetector {
 	}
 
 	public static ModalDialogDetector noDetection() {
-		final Thread testThread = Thread.currentThread();
+		final var testThread = Thread.currentThread();
 		return new ModalDialogDetector(null, e -> testThread.interrupt()) {
 			@Override
 			protected synchronized NoExceptionCloseable schedule(Timer t) {
@@ -72,17 +71,17 @@ public class ModalDialogDetector {
 
 	private static final Timer timer = new Timer("Modal dialog detector");
 
-	private final Supplier<List<PollingResult>> pollingHandlers;
+	private final Supplier<List<PollingResult>> pollingResults;
 
 	private final OverridableParameter<GuiPilot, Duration> timeout = new OverridableParameter<>(GuiPilot::getModalDialogTimeout);
 
-	private final Consumer<List<String>> dialogBoxNotHandled;
+	private final Consumer<List<String>> dialogNotHandled;
 
 	private GuiPilot pilot;
 
 	private final List<String> errors = new ArrayList<>();
 
-	private PollingResult foundHandledDialog = null;
+	private PollingResult handledDialog = null;
 
 	private boolean enabled = false;
 
@@ -90,8 +89,8 @@ public class ModalDialogDetector {
 
 
 	public ModalDialogDetector(final Supplier<List<PollingResult>> pollingHandlers, final Consumer<List<String>> errorsHandler) {
-		this.pollingHandlers = pollingHandlers;
-		this.dialogBoxNotHandled = errorsHandler;
+		this.pollingResults = pollingHandlers;
+		this.dialogNotHandled = errorsHandler;
 	}
 
 	public ModalDialogDetector initialize(GuiPilot pilot) {
@@ -109,25 +108,24 @@ public class ModalDialogDetector {
 		try {
 			errors.clear();
 			running.acquire();
-			for (final PollingResult checked : pollingHandlers.get()) {
-				PollingResult result = checked;
-				if (!result.handled) {
-					errors.add("Unhandled dialog box: " + checked.extraInfo);
+			for (final var pollingResult : pollingResults.get()) {
+				if (!pollingResult.handled) {
+					errors.add("Unhandled dialog box: " + pollingResult.extraInfo);
 					continue;
 				}
-				foundHandledDialog = result;
-				if (result.error == null) {
+				this.handledDialog = pollingResult;
+				if (pollingResult.error == null) {
 					return;
 				}
 				// handle error
-				errors.add(result.error);
-				if (result.closeOnErrorFunction != null) {
-					result.closeOnErrorFunction.run();
+				errors.add(pollingResult.error);
+				if (pollingResult.closeOnErrorFunction != null) {
+					pollingResult.closeOnErrorFunction.run();
 				}
 
 			}
 			if (!errors.isEmpty()) {			
-				dialogBoxNotHandled.accept(errors);
+				dialogNotHandled.accept(errors);
 			}
 		} catch (final InterruptedException e) {
 			Thread.currentThread().interrupt();
@@ -167,7 +165,7 @@ public class ModalDialogDetector {
 	}
 
 	protected synchronized NoExceptionCloseable schedule(final Timer t) {
-		Assertions.assertNull(foundHandledDialog, () -> "Detector already detected a dialog");
+		Assertions.assertNull(handledDialog, () -> "Detector already detected a dialog");
 		if (!enabled) {
 			enabled = true;
 			t.schedule(timerTask(), 0, 500);
@@ -176,13 +174,13 @@ public class ModalDialogDetector {
 	}
 
 	public synchronized PollingResult getPollingResult(Poller poller) {
-		return foundHandledDialog;
+		return handledDialog;
 	}
 
 	public boolean waitModalDialogHandled(final FailureHandler<ModalDialogDetector.PollingResult, Boolean> onFail) {
-		Poller poller = new Poller(timeout.get(), Duration.ofMillis(100), p -> Duration.ofMillis(100));
-		PollingResult result = poller.run(this::getPollingResult, Objects::nonNull);
-		if (result != null) {
+		final var poller = new Poller(timeout.get(), Duration.ofMillis(100), p -> Duration.ofMillis(100));
+		final var pollingtResult = poller.run(this::getPollingResult, Objects::nonNull);
+		if (pollingtResult != null) {
 			return true;
 		}
 		return onFail.apply(PollingResults.failure("Modal dialog not detected"), pilot);

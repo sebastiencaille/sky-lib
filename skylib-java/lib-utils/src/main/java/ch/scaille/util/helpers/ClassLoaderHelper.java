@@ -17,22 +17,22 @@ public class ClassLoaderHelper {
     }
 
     public static String readUTF8Resource(final String resourceName) throws IOException {
-        try (final InputStream in = openResourceStream(resourceName)) {
-            return JavaExt.readUTF8Stream(in);
+        try (final var inStream = openResourceStream(resourceName)) {
+            return JavaExt.readUTF8Stream(inStream);
         }
     }
     
     public static InputStream openResourceStream(final String resourceName) {
-        final ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        final InputStream in = cl.getResourceAsStream(resourceName);
-        if (in == null) {
+        final var cl = Thread.currentThread().getContextClassLoader();
+        final var inStream = cl.getResourceAsStream(resourceName);
+        if (inStream == null) {
             throw new IllegalArgumentException("No such file in classpath: " + resourceName);
         }
-        return in;
+        return inStream;
     }
 
     public static URL[] appClassPath() {
-        final String[] cp = System.getProperty("java.class.path").split(CP_SEPARATOR);
+        final var cp = System.getProperty("java.class.path").split(CP_SEPARATOR);
         return Arrays.stream(cp).map(LambdaExt.uncheckF(c ->
                 new URL("file://" + c))).toArray(c -> new URL[c]);
     }
@@ -49,7 +49,7 @@ public class ClassLoaderHelper {
 	}
 	
 	private static URL[] urlClassPath(URLClassLoader cl) {
-		final URL[] urls = cl.getURLs();
+		final var urls = cl.getURLs();
 		if (urls.length == 0) {
 			return appClassPath();
 		}
@@ -61,8 +61,8 @@ public class ClassLoaderHelper {
     }
 
     public static void registerResourceHandler() {
-        String handlerPkg = "ch.scaille.util.helpers.protocols";
-        String currentProp = System.getProperty("java.protocol.handler.pkgs");
+    	var handlerPkg = "ch.scaille.util.helpers.protocols";
+    	final var currentProp = System.getProperty("java.protocol.handler.pkgs");
         if (currentProp == null || !currentProp.contains(handlerPkg)) {
             if (currentProp != null) {
                 handlerPkg = handlerPkg + '|' + currentProp;

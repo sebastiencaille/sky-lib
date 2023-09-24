@@ -35,7 +35,7 @@ public class SeleniumPoller extends Poller {
 	public <T> T run(Function<Poller, T> polling, Predicate<T> isSuccess,
 			Function<TimeoutException, T> timeoutHandler) {
 		timeoutException = null;
-		T result = run(polling, isSuccess);
+		final var result = run(polling, isSuccess);
 		if (timeoutException != null && lastPollingResult != null) {
 			// Return the root cause of the failure, which is nicer than selenium exception
 			return (T) lastPollingResult;
@@ -49,7 +49,7 @@ public class SeleniumPoller extends Poller {
 	public <T> T run(Function<Poller, T> polling, Predicate<T> isSuccess) {
 		try {
 			beforeRun();
-			T result = pollWithSpecificDelay(polling, isSuccess, firstDelay);
+			final var result = pollWithSpecificDelay(polling, isSuccess, firstDelay);
 			if (isSuccess.test(result)) {
 				return result;
 			}
@@ -73,8 +73,7 @@ public class SeleniumPoller extends Poller {
 						ElementNotInteractableException.class, UnhandledAlertException.class))
 				.until(d -> {
 					try {
-						T result = polling.apply(this);
-
+						final var result = polling.apply(this);
 						lastPollingResult = result;
 						if (!isSuccess.test(result)) {
 							return null;

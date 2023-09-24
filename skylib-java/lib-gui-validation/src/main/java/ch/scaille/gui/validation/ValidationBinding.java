@@ -2,8 +2,6 @@ package ch.scaille.gui.validation;
 
 import static java.util.stream.Collectors.joining;
 
-import java.util.Set;
-
 import ch.scaille.gui.mvc.GuiModel.ImplicitConvertProvider;
 import ch.scaille.gui.mvc.converters.ConversionException;
 import ch.scaille.gui.mvc.converters.IUnaryConverter;
@@ -25,7 +23,7 @@ public class ValidationBinding {
 
 	public static <B, T> IUnaryConverter<T> validator(final Class<B> beanType) {
 
-		return new IUnaryConverter<T>() {
+		return new IUnaryConverter<>() {
 
 			private String propertyName;
 
@@ -41,8 +39,7 @@ public class ValidationBinding {
 
 			@Override
 			public T convertComponentValueToPropertyValue(final T componentValue) throws ConversionException {
-				final Set<ConstraintViolation<B>> validation = validator.validateValue(beanType, propertyName,
-						componentValue);
+				final var validation = validator.validateValue(beanType, propertyName, componentValue);
 				if (!validation.isEmpty()) {
 					throw new ConversionException(
 							validation.stream().map(ConstraintViolation::getMessage).collect(joining(", ")));
@@ -71,8 +68,7 @@ public class ValidationBinding {
 
 		@Override
 		public U convertComponentValueToPropertyValue(final U componentValue) throws ConversionException {
-			final Set<ConstraintViolation<T>> validation = validator.validateValue(beanType, attributeName,
-					componentValue);
+			final var validation = validator.validateValue(beanType, attributeName, componentValue);
 			if (!validation.isEmpty()) {
 				throw new ConversionException(
 						validation.stream().map(ConstraintViolation::getMessage).collect(joining(", ")));

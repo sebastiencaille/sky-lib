@@ -43,7 +43,7 @@ public class ExamplePage extends PagePilot {
 
 		@Override
 		public void waitFinished() {
-			ExamplePage page = ExamplePage.this;
+			final var page = ExamplePage.this;
 			page.wait(() -> page.enableTest, ElementPilot.isEnabled());
 			Assertions.assertTrue(page.enableTest.isEnabled(), () -> "EnableTest is enabled");
 		}

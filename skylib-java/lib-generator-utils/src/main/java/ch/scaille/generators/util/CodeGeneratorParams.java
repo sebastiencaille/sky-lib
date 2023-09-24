@@ -11,16 +11,16 @@ import java.nio.file.Paths;
 public class CodeGeneratorParams {
 
 	@Parameter(names = { "-s", "--sourceFolder" }, required = true)
-	private final String sourceFolder = ".";
+	private String sourceFolder = ".";
 
 	@Parameter(names = { "-t", "--targetFolder" })
-	private final String targetFolder = null;
+	private String targetFolder = null;
 
 	@Parameter(names = { "-ns", "--nameSpace" }, required = true)
-	private final String namespaceFilter = null;
+	private String namespaceFilter = null;
 
 	public static CodeGeneratorParams parse(final String[] args) {
-		final CodeGeneratorParams params = new CodeGeneratorParams();
+		final var params = new CodeGeneratorParams();
 		JCommander.newBuilder().addObject(params).build().parse(args);
 		return params;
 	}

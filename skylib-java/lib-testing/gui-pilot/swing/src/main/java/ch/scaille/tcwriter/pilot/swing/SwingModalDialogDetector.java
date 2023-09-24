@@ -4,7 +4,6 @@ import java.awt.Window;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -18,12 +17,12 @@ public class SwingModalDialogDetector extends SwingPilot {
 
 	public static ModalDialogDetector withHandler(
 			final Function<SwingModalDialogDetector, PollingResult>... pollingHandlers) {
-		final Thread testThread = Thread.currentThread();
+		final var testThread = Thread.currentThread();
 		return new ModalDialogDetector(() -> listDialogs(pollingHandlers), e -> testThread.interrupt());
 	}
 
 	public static ModalDialogDetector defaultDetector() {
-		final Thread testThread = Thread.currentThread();
+		final var testThread = Thread.currentThread();
 		return new ModalDialogDetector(() -> listDialogs(SwingModalDialogDetector::defaultCheck),
 				e -> testThread.interrupt());
 	}
@@ -36,13 +35,13 @@ public class SwingModalDialogDetector extends SwingPilot {
 	 */
 	public static List<ModalDialogDetector.PollingResult> listDialogs(
 			final Function<SwingModalDialogDetector, PollingResult>... pollingHandlers) {
-		final List<ModalDialogDetector.PollingResult> result = new ArrayList<>();
+		final var result = new ArrayList<ModalDialogDetector.PollingResult>();
 		SwingHelper.invokeAndWait(() -> {
-			for (final Window window : Window.getWindows()) {
+			for (final var window : Window.getWindows()) {
 				if (!window.isVisible() || !(window instanceof JDialog)) {
 					continue;
 				}
-				final SwingModalDialogDetector dialogPilot = new SwingModalDialogDetector((JDialog) window);
+				final var dialogPilot = new SwingModalDialogDetector((JDialog) window);
 				result.addAll(
 						Arrays.stream(pollingHandlers).map(p -> p.apply(dialogPilot)).collect(Collectors.toList()));
 			}
@@ -67,7 +66,7 @@ public class SwingModalDialogDetector extends SwingPilot {
 	 * @return
 	 */
 	public PollingResult defaultCheck() {
-		final Optional<JLabel> dialogLabel = search(JLabel.class);
+		final var dialogLabel = search(JLabel.class);
 		if (!dialogLabel.isPresent()) {
 			return failure(dialog.getTitle());
 		}

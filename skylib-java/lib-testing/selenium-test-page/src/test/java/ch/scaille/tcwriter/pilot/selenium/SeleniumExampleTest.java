@@ -42,7 +42,7 @@ class SeleniumExampleTest extends AbstractTestWebAppProvider {
 
 		pilot.getDriver().get(new URL(localUrl, "example1.html").toString());
 
-		ExamplePage mainPage = pilot.page(ExamplePage::new);
+		final var mainPage = pilot.page(ExamplePage::new);
 
 		mainPage.testEnable();
 

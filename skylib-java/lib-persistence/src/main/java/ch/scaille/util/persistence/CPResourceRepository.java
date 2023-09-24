@@ -1,7 +1,6 @@
 package ch.scaille.util.persistence;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.stream.Stream;
 
 import ch.scaille.util.helpers.ClassLoaderHelper;
@@ -30,9 +29,9 @@ public class CPResourceRepository<T> extends AbstractResourceRepository<T> {
 
 	@Override
 	protected Resource resolveAndRead(String locator) throws IOException {
-		final String resPath = resourceName + locator;
-		final Resource resource = resourceOrDefaultOf(locator, resPath);
-		try (InputStream resStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resPath)) {
+		final var resPath = resourceName + locator;
+		final var resource = resourceOrDefaultOf(locator, resPath);
+		try (var resStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resPath)) {
 			return new Resource(resource, JavaExt.readUTF8Stream(resStream));
 		}
 	}

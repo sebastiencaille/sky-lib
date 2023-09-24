@@ -1,13 +1,11 @@
 package ch.scaille.tcwriter.pilot.selenium;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -60,7 +58,7 @@ public abstract class AbstractTestWebAppProvider {
 		if ("/example1.html".equals(exchange.getRequestPath())) {
 
 			exchange.getResponseHeaders().put(io.undertow.util.Headers.CONTENT_TYPE, "text/html");
-			try (InputStream in = Thread.currentThread().getContextClassLoader()
+			try (var in = Thread.currentThread().getContextClassLoader()
 					.getResourceAsStream("example/html/example1.html")) {
 				exchange.getResponseSender().send(JavaExt.readUTF8Stream(in), StandardCharsets.UTF_8);
 			} catch (final IOException e) {
@@ -84,9 +82,9 @@ public abstract class AbstractTestWebAppProvider {
 
 	@BeforeAll
 	public static void initLogger() {
-		Logger rootLogger = Logs.of("ch");
+		final var rootLogger = Logs.of("ch");
 		rootLogger.setLevel(Level.ALL);
-		ConsoleHandler console = new ConsoleHandler();
+		final var console = new ConsoleHandler();
 		console.setLevel(Level.ALL);
 		rootLogger.addHandler(console);
 	}

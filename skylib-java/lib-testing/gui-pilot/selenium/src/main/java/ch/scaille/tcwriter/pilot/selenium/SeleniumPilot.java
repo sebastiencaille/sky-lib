@@ -34,12 +34,12 @@ public class SeleniumPilot extends ch.scaille.tcwriter.pilot.GuiPilot {
 
 	@Override
 	protected ModalDialogDetector createDefaultModalDialogDetector() {
-		final Thread testThread = Thread.currentThread();
+		final var testThread = Thread.currentThread();
 		return new ModalDialogDetector(() -> AlertDetector.listAlerts(this, null), e -> testThread.interrupt());
 	}
 
 	public ModalDialogDetector expectModalDialog(final Function<AlertPilot, PollingResult> check) {
-		final Thread testThread = Thread.currentThread();
+		final var testThread = Thread.currentThread();
 		return expectModalDialog(new ModalDialogDetector(() -> AlertDetector.listAlerts(this, check),
 				e -> testThread.interrupt()));
 	}

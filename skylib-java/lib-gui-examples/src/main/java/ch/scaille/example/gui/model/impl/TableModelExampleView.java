@@ -47,27 +47,27 @@ public class TableModelExampleView extends JFrame {
 	public TableModelExampleView() {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-		final DynamicView listDynamicView = new DynamicView();
+		final var listDynamicView = new DynamicView();
 		model.reverseOrder.bind(listDynamicView.reverseOrder());
 		model.enableFilter.bind(listDynamicView.enableFilter());
 
-		final ListModel<TestObject> listModel = new ListModel<>(ListViews.sorted(NATURAL_ORDER));
-		final ListModel<TestObject> filteredModel = listModel.child(listDynamicView);
+		final var listModel = new ListModel<>(ListViews.sorted(NATURAL_ORDER));
+		final var filteredModel = listModel.child(listDynamicView);
 
 		// We could use a separate filter:
 		// > final BoundFilter<TestObject, Boolean> filter = BoundFilter.filter((value,
 		// > filtered) -> !filtered || value.aSecondValue % 2 == 0);
 		// > final ListModel<TestObject> filteredModel = new ChildListModel<>(model,
 		// > filtered(filter));
-		final TestObjectTableModel tableModel = new TestObjectTableModel(filteredModel);
+		final var tableModel = new TestObjectTableModel(filteredModel);
 
-		final JTable listTable = new JTable(tableModel);
+		final var listTable = new JTable(tableModel);
 		listTable.setName("listTable");
 		listTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
 		// The first row will fills the remaining space up to 100% of the width, the
 		// second one will have a fixed width of 50px
-		final PolicyTableColumnModel<TestObjectTableModel.Columns> columnModel = new PolicyTableColumnModel<>(
+		final var columnModel = new PolicyTableColumnModel<TestObjectTableModel.Columns>(
 				listTable);
 		columnModel.install();
 		columnModel.configureColumn(
@@ -86,17 +86,17 @@ public class TableModelExampleView extends JFrame {
 		// BoundComparator:
 		// > controller.reverseOrder.bind(booleanToOrder()).bind(view(model));
 
-		final JPanel optionsPanel = new JPanel(new FlowLayout());
+		final var optionsPanel = new JPanel(new FlowLayout());
 
-		final JCheckBox reverse = new JCheckBox("Rev. Order");
-		reverse.setName("reverseOrder");
-		model.reverseOrder.bind(selected(reverse));
-		optionsPanel.add(reverse);
+		final var reverseBtn = new JCheckBox("Rev. Order");
+		reverseBtn.setName("reverseOrder");
+		model.reverseOrder.bind(selected(reverseBtn));
+		optionsPanel.add(reverseBtn);
 
-		final JCheckBox filter = new JCheckBox("Filter");
-		filter.setName("enableFilter");
-		model.enableFilter.bind(selected(filter));
-		optionsPanel.add(filter);
+		final var filterBtn = new JCheckBox("Filter");
+		filterBtn.setName("enableFilter");
+		model.enableFilter.bind(selected(filterBtn));
+		optionsPanel.add(filterBtn);
 
 		getContentPane().add(optionsPanel, BorderLayout.SOUTH);
 

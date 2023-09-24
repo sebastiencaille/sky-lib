@@ -77,7 +77,7 @@ public class TestObjectGuiModel extends GuiModel implements IObjectGuiModel<Test
 	}
 
 	public IComponentBinding<TestObject> loadBinding() {
-		return new IComponentBinding<TestObject>() {
+		return new IComponentBinding<>() {
 
 			@Override
 			public void addComponentValueChangeListener(final IComponentLink<TestObject> link) {

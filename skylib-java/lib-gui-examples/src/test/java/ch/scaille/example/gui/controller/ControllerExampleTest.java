@@ -20,17 +20,17 @@ class ControllerExampleTest {
 	@Test
 	void testExample() throws InvocationTargetException, InterruptedException {
 
-		final ControllerExampleController controller = new ControllerExampleController();
-		final ControllerExampleView[] view = new ControllerExampleView[1];
+		final var controller = new ControllerExampleController();
+		final var view = new ControllerExampleView[1];
 		EventQueue.invokeAndWait(() -> {
 			view[0] = new ControllerExampleView(controller);
 			view[0].setVisible(true);
 		});
 
-		final SwingPilot pilot = new SwingPilot(view[0]);
+		final var pilot = new SwingPilot(view[0]);
 		pilot.setDefaultPollingTimeout(Duration.ofSeconds(1));
 
-		ControllerExamplePage page = pilot.page(ControllerExamplePage::new);
+		final var page = pilot.page(ControllerExamplePage::new);
 
 		page.booleanEditor.setSelected(true);
 		page.booleanEditorCheck.waitEnabled();

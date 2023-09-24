@@ -44,7 +44,7 @@ public class SwingPilot extends ch.scaille.tcwriter.pilot.GuiPilot {
 	public void scan() {
 		SwingHelper.checkSwingThread();
 		cache.clear();
-		final Container container = root;
+		final var container = root;
 		scan(container);
 	}
 
@@ -55,9 +55,9 @@ public class SwingPilot extends ch.scaille.tcwriter.pilot.GuiPilot {
 	 * @param container the scanned component
 	 */
 	public void scan(final Container container) {
-		for (final Component child : container.getComponents()) {
+		for (final var child : container.getComponents()) {
 			if (child instanceof JComponent) {
-				final JComponent jChild = (JComponent) child;
+				final var jChild = (JComponent) child;
 				if (child.getName() != null) {
 					cache.put(child.getName(), jChild);
 				}
@@ -101,7 +101,7 @@ public class SwingPilot extends ch.scaille.tcwriter.pilot.GuiPilot {
 	public <T extends Component> Set<T> search(final Set<T> result, final Container container, final Class<T> clazz,
 			final Predicate<T> filter, final Predicate<Set<T>> searchFinished) {
 		SwingHelper.checkSwingThread();
-		for (final Component child : container.getComponents()) {
+		for (final var child : container.getComponents()) {
 			if (clazz.isInstance(child) && filter.test(clazz.cast(child))) {
 				result.add(clazz.cast(child));
 				if (searchFinished.test(result)) {
@@ -121,7 +121,7 @@ public class SwingPilot extends ch.scaille.tcwriter.pilot.GuiPilot {
 	public <T extends JComponent> T getComponent(final String name, final Class<T> clazz)
 			throws NoSuchComponentException {
 		SwingHelper.checkSwingThread();
-		JComponent cachedComponent = cache.get(name);
+		var cachedComponent = cache.get(name);
 		if (cachedComponent == null) {
 			scan();
 			cachedComponent = cache.get(name);
@@ -133,7 +133,7 @@ public class SwingPilot extends ch.scaille.tcwriter.pilot.GuiPilot {
 	}
 
 	public String dumpHierarchy() {
-		final StringBuilder result = new StringBuilder();
+		final var result = new StringBuilder();
 		dumpHierarchy(root, result, "  ");
 		return result.toString();
 	}
@@ -157,7 +157,7 @@ public class SwingPilot extends ch.scaille.tcwriter.pilot.GuiPilot {
 	}
 
 	public <C extends PagePilot> C page(Function<SwingPilot, C> pageFactory) {
-		C page = pageFactory.apply(this);
+		final var page = pageFactory.apply(this);
 		page.initialize();
 		return page;
 	}

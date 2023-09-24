@@ -56,11 +56,11 @@ class ComponentTest {
 
 	@Test
 	void testDuration() {
-		GuiPilot gp = new GuiPilot();
-		TestComponent tc = new TestComponent(gp);
-		boolean res = tc.wait(tc.satisfies(c -> false), FailureHandlers.reportNotFound("failed"));
-		Assertions.assertFalse(res);
-		Assertions.assertEquals(6, tc.delays.size(), tc.delays.toString());
+		final var pilot = new GuiPilot();
+		final var testComponent = new TestComponent(pilot);
+		final var waitResult = testComponent.wait(testComponent.satisfies(c -> false), FailureHandlers.reportNotFound("failed"));
+		Assertions.assertFalse(waitResult);
+		Assertions.assertEquals(6, testComponent.delays.size(), testComponent.delays.toString());
 
 	}
 

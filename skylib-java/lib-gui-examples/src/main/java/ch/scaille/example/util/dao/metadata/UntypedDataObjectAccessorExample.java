@@ -18,13 +18,10 @@ package ch.scaille.example.util.dao.metadata;
 import static ch.scaille.example.util.dao.metadata.ADataObject.AN_ATTRIBUTE;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.util.logging.Level;
 
-import ch.scaille.util.dao.metadata.DataObjectAttribute;
 import ch.scaille.util.dao.metadata.DataObjectManagerFactory;
 import ch.scaille.util.dao.metadata.DataObjectMetaData;
-import ch.scaille.util.dao.metadata.UntypedDataObjectManager;
 import ch.scaille.util.helpers.Logs;
 import ch.scaille.util.text.ArrowIndentationManager;
 import ch.scaille.util.text.SimpleTextFormatter;
@@ -40,19 +37,18 @@ public interface UntypedDataObjectAccessorExample {
 
 	static void main(final String[] args) throws IOException {
 
-		try (Writer output = Logs.streamOf(DataObjectMetaDataExample.class, Level.INFO)) {
-			final SimpleTextFormatter<RuntimeException> log = new SimpleTextFormatter<>(
-					TextFormatter.safeOutput(output));
+		try (var output = Logs.streamOf(DataObjectMetaDataExample.class, Level.INFO)) {
+			final var log = new SimpleTextFormatter<>(TextFormatter.safeOutput(output));
 			log.setIndentationManager(new ArrowIndentationManager());
 
-			final ADataObject do1 = new ADataObject();
-			final DataObjectMetaData<ADataObject> metadata = new DataObjectMetaData<>(ADataObject.class);
+			final var do1 = new ADataObject();
+			final var metadata = new DataObjectMetaData<>(ADataObject.class);
 			log.appendIndentedLine("One can create a Data Object Accessor either from the Meta Data");
-			final UntypedDataObjectManager accessor0 = metadata.createUntypedAccessorTo(do1);
+			final var accessor0 = metadata.createUntypedAccessorTo(do1);
 			log.indented(t -> t.appendIndentedLine(accessor0.toString()));
 
 			log.appendIndentedLine("Or from a factory");
-			final UntypedDataObjectManager doAccessor = DataObjectManagerFactory.createFor(do1);
+			final var doAccessor = DataObjectManagerFactory.createFor(do1);
 			log.indented(t -> t.appendIndentedLine(doAccessor.toString()));
 
 			log.appendIndentedLine("Read/Write access using the DO's Accessor");
@@ -60,12 +56,12 @@ public interface UntypedDataObjectAccessorExample {
 			log.indented(t -> t.appendIndentedLine(AN_ATTRIBUTE + ":" + doAccessor.getValueOf(AN_ATTRIBUTE)));
 
 			log.appendIndentedLine("Read/Write access using the DO's Attribute Accessor");
-			final DataObjectAttribute attribAccessor = doAccessor.getAttributeAccessor(AN_ATTRIBUTE);
+			final var attribAccessor = doAccessor.getAttributeAccessor(AN_ATTRIBUTE);
 			attribAccessor.setValue("data2");
 			log.indented(t -> t.appendIndentedLine(AN_ATTRIBUTE + ":" + attribAccessor.getValue()));
 
 			log.appendIndentedLine("One can also copy the content of the DO...");
-			final ADataObject do2 = new ADataObject();
+			final var do2 = new ADataObject();
 			doAccessor.copyInto(do2);
 			log.indented(t -> t
 					.appendIndentedLine(AN_ATTRIBUTE + ":" + metadata.getAttribute(AN_ATTRIBUTE).getValueOf(do2)));

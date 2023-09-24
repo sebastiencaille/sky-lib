@@ -31,7 +31,7 @@ public class ElementPilot extends AbstractComponentPilot<ElementPilot, WebElemen
 
 	@Override
 	protected String getDescription() {
-		String description = super.getDescription();
+		final var description = super.getDescription();
 		if (description == null && locator != null) {
 			return locator.toString();
 		}

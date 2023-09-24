@@ -21,7 +21,7 @@ public interface Logs {
 	}
 
 	static Writer streamOf(Class<?> clazz, Level level) {
-		final Logger logger = Logs.of(clazz);
+		final var logger = Logs.of(clazz);
 		return new Writer() {
 
 			private StringBuilder builder = new StringBuilder();

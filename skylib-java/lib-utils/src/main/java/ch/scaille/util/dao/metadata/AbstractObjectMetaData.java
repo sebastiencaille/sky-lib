@@ -17,8 +17,6 @@
 package ch.scaille.util.dao.metadata;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.HashMap;
@@ -91,10 +89,9 @@ public class AbstractObjectMetaData<D> {
 
 	protected void introspectClass(final Class<?> clazz, final boolean accessPrivateFields) {
 
-		final Set<String> attribNames = new HashSet<>();
+		final var attribNames = new HashSet<String>();
 
 		scanMethods(clazz, attribNames);
-
 		scanFields(clazz, accessPrivateFields, attribNames);
 
 		createAttributesMetaData(clazz, attribNames);
@@ -105,8 +102,8 @@ public class AbstractObjectMetaData<D> {
 	}
 
 	private void scanFields(final Class<?> clazz, final boolean accessPrivateFields, final Set<String> attribNames) {
-		for (final Field field : clazz.getDeclaredFields()) {
-			final boolean canAccess = Modifier.isPublic(field.getModifiers()) || accessPrivateFields;
+		for (final var field : clazz.getDeclaredFields()) {
+			final var canAccess = Modifier.isPublic(field.getModifiers()) || accessPrivateFields;
 			if (canAccess && !field.getDeclaringClass().equals(Object.class)) {
 				attribNames.add(field.getName());
 			}
@@ -114,8 +111,8 @@ public class AbstractObjectMetaData<D> {
 	}
 
 	private void scanMethods(final Class<?> clazz, final Set<String> attribNames) {
-		for (final Method method : clazz.getMethods()) {
-			final String name = method.getName();
+		for (final var method : clazz.getMethods()) {
+			final var name = method.getName();
 			if (method.getDeclaringClass().equals(Object.class)) {
 				continue;
 			}
@@ -131,10 +128,9 @@ public class AbstractObjectMetaData<D> {
 	}
 
 	protected void createAttributesMetaData(final Class<?> clazz, final Set<String> attribNames) {
-		for (final String name : attribNames) {
-			final String attribName = Character.toUpperCase(name.charAt(0)) + name.substring(1);
-			final AbstractAttributeMetaData<D> access = AttributeFactory.create(clazz, name, attribName,
-					attributeMode);
+		for (final var name : attribNames) {
+			final var attribName = Character.toUpperCase(name.charAt(0)) + name.substring(1);
+			final var access = AttributeFactory.<D>create(clazz, name, attribName, attributeMode);
 			if (access != null) {
 				attributes.put(attribName, access);
 			}
@@ -153,7 +149,7 @@ public class AbstractObjectMetaData<D> {
 
 	public AbstractAttributeMetaData<D> getAttribute(final String name) {
 
-		final AbstractAttributeMetaData<D> attrib = attributes.get(name);
+		final var attrib = attributes.get(name);
 		if (attrib == null) {
 			throw new IllegalArgumentException("No such attribute:" + name);
 		}
@@ -161,7 +157,7 @@ public class AbstractObjectMetaData<D> {
 	}
 
 	public void copy(final D from, final D to) {
-		for (final AbstractAttributeMetaData<D> attrib : attributes.values()) {
+		for (final var attrib : attributes.values()) {
 			if (!attrib.isReadOnly()) {
 				attrib.copy(from, to);
 			}

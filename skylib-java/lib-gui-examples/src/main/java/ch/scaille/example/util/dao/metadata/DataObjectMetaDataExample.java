@@ -16,10 +16,8 @@
 package ch.scaille.example.util.dao.metadata;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.util.logging.Level;
 
-import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
 import ch.scaille.util.dao.metadata.DataObjectMetaData;
 import ch.scaille.util.helpers.Logs;
 import ch.scaille.util.text.ArrowIndentationManager;
@@ -41,17 +39,16 @@ public class DataObjectMetaDataExample {
 
 	public static void main(final String[] args) throws IOException {
 
-		try (Writer output = Logs.streamOf(DataObjectMetaDataExample.class, Level.INFO)) {
-			final SimpleTextFormatter<RuntimeException> log = new SimpleTextFormatter<>(
-					TextFormatter.safeOutput(output));
+		try (var output = Logs.streamOf(DataObjectMetaDataExample.class, Level.INFO)) {
+			final var log = new SimpleTextFormatter<>(TextFormatter.safeOutput(output));
 			log.setIndentationManager(new ArrowIndentationManager());
 
-			final DataObjectMetaData<ADataObject> metadata = new DataObjectMetaData<>(ADataObject.class);
-			final ADataObject do1 = new ADataObject();
+			final var metadata = new DataObjectMetaData<>(ADataObject.class);
+			final var do1 = new ADataObject();
 
 			log.appendIndentedLine("Class " + ADataObject.class.getName() + " contains the following attributes")
 					.indent();
-			for (final AbstractAttributeMetaData<ADataObject> attribute : metadata.getAttributes()) {
+			for (final var attribute : metadata.getAttributes()) {
 				log.appendIndentedLine(attribute.toString());
 			}
 			log.unindent();
@@ -62,7 +59,7 @@ public class DataObjectMetaDataExample {
 			log.unindent();
 
 			log.appendIndentedLine("One can also copy the content of the DO...").indent();
-			final ADataObject do2 = new ADataObject();
+			final var do2 = new ADataObject();
 			metadata.copy(do1, do2);
 			log.appendIndentedLine(AN_ATTRIBUTE + ":" + metadata.getAttribute(AN_ATTRIBUTE).getValueOf(do2));
 			log.unindent();

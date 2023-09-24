@@ -4,12 +4,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoSuchSessionException;
 
 import ch.scaille.tcwriter.pilot.ModalDialogDetector;
 import ch.scaille.tcwriter.pilot.ModalDialogDetector.PollingResult;
-import ch.scaille.util.helpers.NoExceptionCloseable;
 
 public class AlertDetector {
 
@@ -18,9 +16,9 @@ public class AlertDetector {
 	}
 
 	public static void withAlert(final SeleniumPilot pilot, final Runnable runnable) {
-		final Thread testThread = Thread.currentThread();
-		final ModalDialogDetector detector = new ModalDialogDetector(() -> AlertDetector.listAlerts(pilot, null), e -> testThread.interrupt());
-		try (NoExceptionCloseable dialogCloseable = ModalDialogDetector.withModalDialogDetection(detector)) {
+		final var testThread = Thread.currentThread();
+		final var dialogDetector = new ModalDialogDetector(() -> AlertDetector.listAlerts(pilot, null), e -> testThread.interrupt());
+		try (var dialogEnabler = ModalDialogDetector.withModalDialogDetection(dialogDetector)) {
 			runnable.run();
 		}
 	}
@@ -28,20 +26,20 @@ public class AlertDetector {
 	public static List<ModalDialogDetector.PollingResult> listAlerts(final SeleniumPilot pilot,
 			final Function<AlertPilot, PollingResult> errorChecks) {
 
-		final AlertPilot seleniumAlert = new AlertPilot(pilot);
+		final var alertPilot = new AlertPilot(pilot);
 		try {
-			final Alert alert = seleniumAlert.loadGuiComponent();
+			final var alert = alertPilot.loadGuiComponent();
 			if (alert == null) {
 				return Collections.emptyList();
 			}
-			PollingResult checked = ModalDialogDetector.notHandled("");
+			var pollingResult = ModalDialogDetector.notHandled("");
 			if (errorChecks != null) {
-				checked = errorChecks.apply(seleniumAlert);
+				pollingResult = errorChecks.apply(alertPilot);
 			}
-			if (!checked.handled) {
-				checked = ModalDialogDetector.error(alert.getText(), alert::accept);
+			if (!pollingResult.handled) {
+				pollingResult = ModalDialogDetector.error(alert.getText(), alert::accept);
 			}
-			return Collections.singletonList(checked);
+			return Collections.singletonList(pollingResult);
 		} catch (NoSuchSessionException e) {
 			// ignore
 			return Collections.emptyList();

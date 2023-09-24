@@ -40,7 +40,7 @@ public class JFileDialogPilot {
 
 	public ModalDialogDetector.PollingResult fileDialogBoxHandler(final SwingModalDialogDetector dialogBox,
 			String fileName) {
-		final Optional<JTextField> filenameEditor = dialogBox.search(JTextField.class);
+		final var filenameEditor = dialogBox.search(JTextField.class);
 		if (!filenameEditor.isPresent()) {
 			return ModalDialogDetector.notHandled("not found");
 		}

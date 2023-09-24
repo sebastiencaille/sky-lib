@@ -17,6 +17,7 @@ package ch.scaille.generators.util;
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import ch.scaille.util.text.TextFormatter;
 
@@ -43,13 +44,13 @@ public class JavaCodeGenerator<E extends Exception> extends TextFormatter<JavaCo
 	}
 
 	public static String toConstant(final String str) {
-		final StringBuilder builder = new StringBuilder(str.length());
-		int prevUpper = 0;
-		boolean prevIsNumeric = true;
-		boolean isFirst = true;
-		for (final char c : str.toCharArray()) {
-			final boolean isUpper = Character.isUpperCase(c);
-			final boolean isNumeric = Character.isDigit(c);
+		final var builder = new StringBuilder(str.length());
+		var prevUpper = 0;
+		var prevIsNumeric = true;
+		var isFirst = true;
+		for (final var c : str.toCharArray()) {
+			final var isUpper = Character.isUpperCase(c);
+			final var isNumeric = Character.isDigit(c);
 			if (isFirst) {
 				isFirst = false;
 			} else if (isNumeric ^ prevIsNumeric || (isUpper && prevUpper == 0)) {
@@ -68,28 +69,20 @@ public class JavaCodeGenerator<E extends Exception> extends TextFormatter<JavaCo
 	}
 
 	public static String toImports(final Set<String> toImport) {
-		final StringBuilder imports = new StringBuilder();
-		for (final String imp : toImport) {
-			imports.append("import ").append(imp).append(";\n");
-		}
-		return imports.toString();
+		return toImport.stream().map(p -> "import " + p + ';').collect(Collectors.joining("\n"));
 	}
 
 	public JavaCodeGenerator<E> openBlock(final String... extra) throws E {
 		if (extra.length > 0) {
 			appendIndent();
-			for (final String str : extra) {
-				append(str);
-			}
+			append(String.join("", extra));
 		}
 		return append(" {").indent().eol();
 	}
 
 	public JavaCodeGenerator<E> closeBlock(final String... extra) throws E {
 		unindent().appendIndented("}");
-		for (final String str : extra) {
-			append(str);
-		}
+		append(String.join("", extra));
 		return eol();
 	}
 

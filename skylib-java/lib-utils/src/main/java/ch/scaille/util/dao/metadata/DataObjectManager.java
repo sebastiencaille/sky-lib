@@ -103,8 +103,8 @@ public class DataObjectManager<D> {
 
 	public D cloneObject() {
 		try {
-			final D newObject = createNewObject();
-			for (final AbstractAttributeMetaData<D> attribute : metaData.attributes.values()) {
+			final var newObject = createNewObject();
+			for (final var attribute : metaData.attributes.values()) {
 				attribute.copy(object, newObject);
 			}
 			return newObject;

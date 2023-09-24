@@ -20,7 +20,7 @@ public class GuiPilot {
 	private Duration pollingFirstDelay = Duration.ofMillis(0);
 
 	private Poller.DelayFunction pollingDelayFunction = p -> {
-		Duration effectiveTimeout = p.timeTracker.getDuration();
+		final var effectiveTimeout = p.timeTracker.getDuration();
 		if (effectiveTimeout.toMillis() < 500) {
 			return Duration.ofMillis(50);
 		} else if (effectiveTimeout.toMillis() < 10_000) {

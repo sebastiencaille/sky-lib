@@ -10,8 +10,6 @@ import ch.scaille.tcwriter.jupiter.DisabledIfHeadless;
 import ch.scaille.tcwriter.pilot.selenium.AbstractTestWebAppProvider;
 import ch.scaille.tcwriter.pilot.selenium.SeleniumPilot;
 import ch.scaille.tcwriter.pilot.selenium.WebDriverFactory;
-import ch.scaille.testing.bdd.definition.Scenario;
-import ch.scaille.testing.bdd.definition.Scenario.ExecutionContext;
 import ch.scaille.util.helpers.Logs;
 
 @ExtendWith(DisabledIfHeadless.class)
@@ -40,18 +38,17 @@ class SeleniumExampleTest extends AbstractTestWebAppProvider {
 
 	@Test
 	void testExample() {
-		AppPages pageProvider = new AppPages(pilot);
-		Scenario<AppPages> openPageScenario = AppSteps.BDD_FACTORY.scenario(AppSteps.OPEN_WEBSITE);
-		Scenario<AppPages> testEnableScenario = openPageScenario.followedBy(AppSteps.TEST_ENABLE);
-		Scenario<AppPages> testAlertScenario = testEnableScenario.followedBy(AppSteps.TEST_ALERT)
+		final var pageProvider = new AppPages(pilot);
+		final var openPageScenario = AppSteps.BDD_FACTORY.scenario(AppSteps.OPEN_WEBSITE);
+		final var testEnableScenario = openPageScenario.followedBy(AppSteps.TEST_ENABLE);
+		final var testAlertScenario = testEnableScenario.followedBy(AppSteps.TEST_ALERT)
 				.withConfigurer(p -> p.getContext().example = "Hello world");
 
-		ExecutionContext<?> testEnableScenarioRun = testEnableScenario.run(pageProvider);
-		ExecutionContext<?> testAlertScenarioRun = testAlertScenario.run(pageProvider);
+		final var testEnableScenarioRun = testEnableScenario.run(pageProvider);
+		final var testAlertScenarioRun = testAlertScenario.run(pageProvider);
 
 		Logs.of(this).info(testEnableScenarioRun.toString());
 		Logs.of(this).info(testAlertScenarioRun.toString());
-
 	}
 
 }

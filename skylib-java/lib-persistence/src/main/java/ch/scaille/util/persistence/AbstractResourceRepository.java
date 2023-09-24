@@ -31,7 +31,7 @@ public abstract class AbstractResourceRepository<T> implements IResourceReposito
 	}
 
 	protected String[] nameAndExtension(String locator) {
-		final int lastDot = locator.lastIndexOf('.');
+		final var lastDot = locator.lastIndexOf('.');
 		final String[] nameAndExt;
 		if (lastDot >= 0) {
 			nameAndExt = new String[] { locator.substring(0, lastDot), locator.substring(lastDot + 1) };
@@ -49,7 +49,7 @@ public abstract class AbstractResourceRepository<T> implements IResourceReposito
 	}
 
 	public Optional<Resource> resourceOf(String locator, String storage) {
-		final String[] nameAndExt = nameAndExtension(locator);
+		final var nameAndExt = nameAndExtension(locator);
 		return completeResource(locator, storage, nameAndExt);
 	}
 
@@ -59,7 +59,7 @@ public abstract class AbstractResourceRepository<T> implements IResourceReposito
 	}
 
 	public Resource resourceOrDefaultOf(String locator, String storage) {
-		final String[] nameAndExt = nameAndExtension(locator);
+		final var nameAndExt = nameAndExtension(locator);
 		return completeResource(locator, storage, nameAndExt)
 				.orElseGet(() -> new Resource(nameAndExt[0], storage, dataHandlerRegistry.getDefaultMimeType(), null));
 	}
@@ -78,7 +78,7 @@ public abstract class AbstractResourceRepository<T> implements IResourceReposito
 	@Override
 	public Resource write(String locator, T value) throws StorageException {
 		return StorageException.wrap("write", () -> {
-			final Resource resource = resolveOrCreate(locator);
+			final var resource = resolveOrCreate(locator);
 			return writeContent(resource, dataHandlerRegistry.encode(resource, resourceType, value));
 		});
 	}

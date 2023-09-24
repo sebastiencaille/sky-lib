@@ -57,8 +57,8 @@ public class TransientLog {
 
 	@Override
 	public synchronized String toString() {
-		final StringBuilder builder = new StringBuilder();
-		for (int i = logs.size() - 1; i >= 0; i--) {
+		final var builder = new StringBuilder();
+		for (var i = logs.size() - 1; i >= 0; i--) {
 			builder.append(logs.get(i));
 		}
 		builder.append(currentBucket.toString());

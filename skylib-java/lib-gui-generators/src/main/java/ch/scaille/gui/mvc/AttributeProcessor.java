@@ -25,7 +25,7 @@ public abstract class AttributeProcessor {
 
 	public static AttributeProcessor create(final Context context, final AbstractAttributeMetaData<?> attrib,
 			final AttributeProcessorDelegate delegate) {
-		final Class<?> type = attrib.getType();
+		final var type = attrib.getType();
 		if (type.isPrimitive()) {
 			return new PrimitiveProcessor(context, attrib, delegate);
 		} else if (Set.class.isAssignableFrom(type)) {
@@ -146,7 +146,7 @@ public abstract class AttributeProcessor {
 	public static class GetSetAttributeDelegate implements AttributeProcessorDelegate {
 		@Override
 		public String getFieldCreation(final AttributeProcessor attributeProcessor) {
-			final AbstractAttributeMetaData<?> attr = attributeProcessor.modelAttribute;
+			final var attr = attributeProcessor.modelAttribute;
 
 			String setter;
 			if (!attributeProcessor.modelAttribute.isReadOnly()) {

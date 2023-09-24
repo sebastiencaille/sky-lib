@@ -13,7 +13,6 @@ import ch.scaille.tcwriter.pilot.Factories.Pollings;
 import ch.scaille.tcwriter.pilot.Polling;
 import ch.scaille.tcwriter.pilot.PollingResult.FailureHandler;
 
-@SuppressWarnings("java:S5960")
 public class PagePilot {
 
 	protected final SeleniumPilot pilot;
@@ -37,7 +36,7 @@ public class PagePilot {
 			@Override
 			protected WebElement loadGuiComponent() {
 				reloadPage();
-				WebElement webElement = element.get();
+				final var webElement = element.get();
 				if (webElement instanceof WrapsElement && ((WrapsElement) webElement).getWrappedElement() == null) {
 					return null;
 				}
@@ -52,11 +51,11 @@ public class PagePilot {
 
 			@Override
 			protected String getDescription() {
-				String result = super.getDescription();
-				if (result == null) {
-					result = element.get().toString();
+				var description = super.getDescription();
+				if (description == null) {
+					description = element.get().toString();
 				}
-				return result;
+				return description;
 			}
 
 			@Override

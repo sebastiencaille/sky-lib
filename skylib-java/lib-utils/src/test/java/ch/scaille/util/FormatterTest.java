@@ -34,14 +34,14 @@ class FormatterTest {
 
 	@Test
 	void testExceptionManagement() {
-		SimpleTextFormatter<IOException> tf = new SimpleTextFormatter<>(new ExceptionOutput());
+		final var tf = new SimpleTextFormatter<>(new ExceptionOutput());
 		assertThrows(IOException.class, () -> tf.append("Hello"));
 	}
 
 	@Test
 	void testIndentation() {
-		StringListOutput output = new StringListOutput();
-		SimpleTextFormatter<RuntimeException> tf = new SimpleTextFormatter<>(output);
+		final var  output = new StringListOutput();
+		final var tf = new SimpleTextFormatter<>(output);
 		tf.setIndentationManager(new ArrowIndentationManager());
 		tf.appendIndentedLine("Hello");
 		tf.indented(t -> t.appendIndentedLine("World"));

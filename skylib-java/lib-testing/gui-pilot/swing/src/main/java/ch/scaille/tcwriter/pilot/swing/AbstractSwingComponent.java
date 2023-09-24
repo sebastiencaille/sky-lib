@@ -69,7 +69,7 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 
 	@Override
 	protected <U> PollingResult<C, U> executePolling(Poller poller, final Polling<C, U> polling) {
-		final Object[] response = new Object[1];
+		final var response = new Object[1];
 		SwingHelper.invokeAndWait(() -> response[0] = super.executePolling(poller, polling));
 		return (PollingResult<C, U>) response[0];
 	}

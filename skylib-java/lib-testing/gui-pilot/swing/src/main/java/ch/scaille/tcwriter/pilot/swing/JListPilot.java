@@ -1,8 +1,8 @@
 package ch.scaille.tcwriter.pilot.swing;
 
-import static ch.scaille.tcwriter.pilot.Factories.Reporting.checkingValue;
 import static ch.scaille.tcwriter.pilot.Factories.PollingResults.failure;
 import static ch.scaille.tcwriter.pilot.Factories.PollingResults.success;
+import static ch.scaille.tcwriter.pilot.Factories.Reporting.checkingValue;
 
 import javax.swing.JList;
 
@@ -42,12 +42,12 @@ public class JListPilot extends AbstractSwingComponent<JListPilot, JList> {
 		if (expected == null) {
 			return;
 		}
-		wait(new Polling<>(this::canCheck, pc -> {
-			JList<?> component = pc.component;
+		wait(new Polling<JList, Boolean>(this::canCheck, pc -> {
+			final var component = pc.component;
 			if (component.getSelectedIndex() < 0) {
 				return failure("No element selected");
 			}
-			final String current = component.getModel().getElementAt(component.getSelectedIndex()).toString();
+			final var current = component.getModel().getElementAt(component.getSelectedIndex()).toString();
 			if (!expected.equals(current)) {
 				return failure("Wrong element selected (" + current + ")");
 			}

@@ -26,7 +26,7 @@
 		</dependency>
 		<dependency>
 			<groupId>ch.scaille</groupId>
-			<artifactId>lib-gui-java8</artifactId>
+			<artifactId>lib-gui</artifactId>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/net.java.linoleum/jlfgr -->
 		<dependency>

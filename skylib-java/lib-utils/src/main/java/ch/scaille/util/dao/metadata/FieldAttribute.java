@@ -40,7 +40,7 @@ public class FieldAttribute<T> extends AbstractAttributeMetaData<T> {
 		this.field = field;
 		this.field.setAccessible(true);
 
-		final Persistency persistency = getAnnotation(Persistency.class);
+		final var persistency = getAnnotation(Persistency.class);
 		readOnly = Modifier.isFinal(field.getModifiers()) || (persistency != null && persistency.readOnly());
 	}
 

@@ -19,8 +19,8 @@ import static ch.scaille.example.gui.TestObject.testObjectToString;
 import static ch.scaille.gui.mvc.factories.BindingDependencies.preserveOnUpdateOf;
 import static ch.scaille.gui.mvc.factories.Converters.guiErrorToString;
 import static ch.scaille.gui.mvc.factories.Converters.intToString;
-import static ch.scaille.gui.mvc.factories.Converters.mapContains;
 import static ch.scaille.gui.mvc.factories.Converters.listen;
+import static ch.scaille.gui.mvc.factories.Converters.mapContains;
 import static ch.scaille.gui.swing.factories.SwingBindings.selected;
 import static ch.scaille.gui.swing.factories.SwingBindings.selection;
 import static ch.scaille.gui.swing.factories.SwingBindings.value;
@@ -45,14 +45,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
-import ch.scaille.example.gui.TestObject;
 import ch.scaille.example.gui.TestObjectTableModel;
 import ch.scaille.gui.mvc.converters.IConverter;
 import ch.scaille.gui.mvc.properties.AbstractProperty;
-import ch.scaille.gui.mvc.properties.BooleanProperty;
 import ch.scaille.gui.mvc.properties.ErrorSet;
-import ch.scaille.gui.mvc.properties.IntProperty;
-import ch.scaille.gui.mvc.properties.ObjectProperty;
 
 public class ControllerExampleView extends JFrame {
 
@@ -63,7 +59,7 @@ public class ControllerExampleView extends JFrame {
 
 	public ControllerExampleView(final ControllerExampleController controller) {
 
-		final ControllerExampleModel model = controller.getModel();
+		final var model = controller.getModel();
 		errorProperty = (ErrorSet) model.getErrorNotifier();
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -72,7 +68,7 @@ public class ControllerExampleView extends JFrame {
 
 		mainContainer = new JPanel(new GridBagLayout());
 
-		final GridBagConstraints constraints = new GridBagConstraints();
+		final var constraints = new GridBagConstraints();
 		constraints.insets = new Insets(5, 5, 0, 5);
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.weightx = 0.0;
@@ -82,17 +78,17 @@ public class ControllerExampleView extends JFrame {
 		// ------------------------------------------
 		// Checkbox input
 		// ------------------------------------------
-		final BooleanProperty booleanProperty = model.getBooleanPropProperty();
+		final var booleanProperty = model.getBooleanPropProperty();
 
-		final JCheckBox booleanEditor = new JCheckBox();
+		final var booleanEditor = new JCheckBox();
 		booleanEditor.setName("booleanEditor");
 		booleanProperty.bind(selected(booleanEditor));
 
-		final JLabel booleanEditorCheck = new JLabel("Am I enabled?");
+		final var booleanEditorCheck = new JLabel("Am I enabled?");
 		booleanEditorCheck.setName("booleanEditorCheck");
 		booleanProperty.listenActive(booleanEditorCheck::setEnabled);
 
-		final JLabel booleanCounter = new JLabel();
+		final var booleanCounter = new JLabel();
 		booleanProperty.bind(counter()).listen(booleanCounter::setText);
 
 		addGuiLineItem(booleanProperty, booleanEditor, booleanEditorCheck, booleanCounter);
@@ -100,13 +96,13 @@ public class ControllerExampleView extends JFrame {
 		// ------------------------------------------
 		// Int input field
 		// ------------------------------------------
-		final IntProperty intProperty = model.getIntPropProperty();
+		final var intProperty = model.getIntPropProperty();
 
-		final JTextField intStringEditor = new JTextField();
+		final var intStringEditor = new JTextField();
 		intStringEditor.setName("intStringEditor");
 		intProperty.bind(intToString()).bind(value(intStringEditor));
 
-		final JLabel intCheck = new JLabel();
+		final var intCheck = new JLabel();
 		intCheck.setName("intCheck");
 		intProperty.bind(intToString()).listen(intCheck::setText);
 
@@ -118,15 +114,15 @@ public class ControllerExampleView extends JFrame {
 		// ------------------------------------------
 		// String input field
 		// ------------------------------------------
-		final ObjectProperty<String> stringProperty = model.getStringPropProperty();
+		final var stringProperty = model.getStringPropProperty();
 
-		final JTextField stringEditor = new JTextField();
+		final var stringEditor = new JTextField();
 		stringProperty.bind(value(stringEditor));
 
-		final JLabel stringCheck = new JLabel();
+		final var stringCheck = new JLabel();
 		stringProperty.listenActive(stringCheck::setText);
 
-		final JLabel stringCounter = new JLabel();
+		final var stringCounter = new JLabel();
 		stringProperty.bind(counter()).listen(stringCounter::setText);
 
 		addGuiLineItem(stringProperty, stringEditor, stringCheck, stringCounter);
@@ -134,20 +130,20 @@ public class ControllerExampleView extends JFrame {
 		// ------------------------------------------
 		// Item selection
 		// ------------------------------------------
-		final ObjectProperty<String> staticListSelection = model.getStaticListSelectionProperty();
+		final var staticListSelection = model.getStaticListSelectionProperty();
 
-		final JList<String> staticListEditor = new JList<>(new String[] { "A", "B", "C" });
+		final var staticListEditor = new JList<>(new String[] { "A", "B", "C" });
 		staticListEditor.setName("staticListEditor");
 		staticListSelection.bind(selection(staticListEditor));
 
-		final JLabel staticListSelectionCheck = new JLabel();
+		final var staticListSelectionCheck = new JLabel();
 		staticListSelectionCheck.setName("staticListSelectionCheck");
 		staticListSelection.listenActive(staticListSelectionCheck::setText);
 
-		final JLabel selectionCounter = new JLabel();
+		final var selectionCounter = new JLabel();
 		staticListSelection.bind(counter()).listen(selectionCounter::setText);
 
-		final JScrollPane itemEditorPane = new JScrollPane(staticListEditor);
+		final var itemEditorPane = new JScrollPane(staticListEditor);
 		itemEditorPane.setPreferredSize(new Dimension(200, 100));
 
 		addGuiLineItem(staticListSelection, itemEditorPane, staticListSelectionCheck, selectionCounter);
@@ -156,22 +152,22 @@ public class ControllerExampleView extends JFrame {
 		// Selection of list which content is based on "Item selection" (preserve
 		// selection)
 		// ------------------------------------------
-		final JList<String> dynamicListEditor = new JList<>();
+		final var dynamicListEditor = new JList<String>();
 		dynamicListEditor.setName("dynamicListEditor");
 		staticListSelection.bind(new DynamicListContentConverter()).bind(values(dynamicListEditor));
 
-		final ObjectProperty<String> dynamicListSelectionProperty = model.getDynamicListObjectProperty();
+		final var dynamicListSelectionProperty = model.getDynamicListObjectProperty();
 		dynamicListSelectionProperty.bind(selection(dynamicListEditor))
 				.addDependency(preserveOnUpdateOf(staticListSelection));
 
-		final JLabel dynamicListSelectionCheck = new JLabel();
+		final var dynamicListSelectionCheck = new JLabel();
 		dynamicListSelectionCheck.setName("dynamicListSelectionCheck");
 		dynamicListSelectionProperty.listenActive(dynamicListSelectionCheck::setText);
 
-		final JLabel dynamicListSelectionCounter = new JLabel();
+		final var dynamicListSelectionCounter = new JLabel();
 		dynamicListSelectionProperty.bind(counter()).listen(dynamicListSelectionCounter::setText);
 
-		final JScrollPane dynamicListPane = new JScrollPane(dynamicListEditor);
+		final var dynamicListPane = new JScrollPane(dynamicListEditor);
 		dynamicListPane.setPreferredSize(new Dimension(200, 100));
 		addGuiLineItem(dynamicListSelectionProperty, dynamicListPane, dynamicListSelectionCheck,
 				dynamicListSelectionCounter);
@@ -179,31 +175,31 @@ public class ControllerExampleView extends JFrame {
 		// ------------------------------------------
 		// Table example
 		// ------------------------------------------
-		final ObjectProperty<TestObject> tableObjectProperty = model.getComplexProperty();
+		final var tableObjectProperty = model.getComplexProperty();
 
-		final TestObjectTableModel tableSelectionTableModel = new TestObjectTableModel(model.getTableModel());
-		final JTable tableSelectionEditor = new JTable(tableSelectionTableModel);
+		final var tableSelectionTableModel = new TestObjectTableModel(model.getTableModel());
+		final var tableSelectionEditor = new JTable(tableSelectionTableModel);
 		tableSelectionEditor.setName("tableSelectionEditor");
 		tableObjectProperty.bind(selection(tableSelectionEditor, tableSelectionTableModel));
 
-		final JLabel tableSelectionCheck = new JLabel();
+		final var tableSelectionCheck = new JLabel();
 		tableSelectionCheck.setName("tableSelectionCheck");
 		tableObjectProperty.bind(testObjectToString()).listen(tableSelectionCheck::setText);
 
-		final JLabel tableSelectionCounter = new JLabel();
+		final var tableSelectionCounter = new JLabel();
 		tableObjectProperty.bind(counter()).listen(tableSelectionCounter::setText);
 
-		final JScrollPane tableEditorPane = new JScrollPane(tableSelectionEditor);
+		final var tableEditorPane = new JScrollPane(tableSelectionEditor);
 		tableEditorPane.setPreferredSize(new Dimension(200, 70));
 		addGuiLineItem(tableObjectProperty, tableEditorPane, tableSelectionCheck, tableSelectionCounter);
 
-		final GridBagConstraints fillerConstraints = new GridBagConstraints();
+		final var fillerConstraints = new GridBagConstraints();
 		fillerConstraints.gridx = 1;
 		fillerConstraints.gridy = 1;
 		fillerConstraints.fill = GridBagConstraints.BOTH;
 		fillerConstraints.weightx = 1.0;
 		fillerConstraints.weighty = 1.0;
-		final JPanel filler = new JPanel();
+		final var filler = new JPanel();
 		filler.setPreferredSize(new Dimension(0, 0));
 		filler.setOpaque(false);
 		getContentPane().add(filler, fillerConstraints);
@@ -238,19 +234,19 @@ public class ControllerExampleView extends JFrame {
 
 		editor.setOpaque(false);
 
-		final GridBagConstraints constraints = new GridBagConstraints();
+		final var constraints = new GridBagConstraints();
 		constraints.gridx = 0;
 		constraints.gridy = row++;
 		constraints.fill = GridBagConstraints.BOTH;
 		constraints.weightx = 0.0;
 
 		// Title
-		final JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEADING)) {
+		final var panel = new JPanel(new FlowLayout(FlowLayout.LEADING)) {
 			@Override
 			protected void paintComponent(final java.awt.Graphics g) {
 				super.paintComponent(g);
 				g.setColor(Color.BLACK);
-				final int y = getHeight() / 2;
+				final var y = getHeight() / 2;
 				g.drawLine(5, y, getWidth() - 10, y);
 			}
 
@@ -261,7 +257,7 @@ public class ControllerExampleView extends JFrame {
 				g.translate(-5, 0);
 			}
 		};
-		final JLabel title = new JLabel(property.getName());
+		final var title = new JLabel(property.getName());
 		title.setOpaque(true);
 		title.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
 		panel.add(title);
@@ -270,7 +266,7 @@ public class ControllerExampleView extends JFrame {
 		mainContainer.add(panel, constraints);
 		constraints.gridwidth = 1;
 
-		// Vaylue widget
+		// Value widget
 		constraints.gridx = 0;
 		constraints.gridy = row++;
 		constraints.insets = new Insets(0, 5, 5, 5);
@@ -296,7 +292,7 @@ public class ControllerExampleView extends JFrame {
 		errorProperty.getErrors().bind(mapContains(property, Color.RED, editor.getForeground()))
 				.listen(editor::setForeground);
 
-		final JPanel gap = new JPanel();
+		final var gap = new JPanel();
 		gap.setPreferredSize(new Dimension(1, 5));
 		gap.setBackground(Color.WHITE);
 		constraints.gridx = 0;

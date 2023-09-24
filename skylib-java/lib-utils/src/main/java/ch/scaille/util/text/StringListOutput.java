@@ -18,9 +18,9 @@ public class StringListOutput implements TextFormatter.IOutput<RuntimeException>
 		if (str.startsWith("\n")) {
 			push();
 		}
-		String[] split = str.split("\n");
-		boolean first = true;
-		for (String line : split) {
+		final var split = str.split("\n");
+		var first = true;
+		for (final var line : split) {
 			currentLine.append(line);
 			if (!first) {
 				push();
@@ -45,7 +45,7 @@ public class StringListOutput implements TextFormatter.IOutput<RuntimeException>
 		if (currentLine.length() == 0) {
 			return buffer;
 		}
-		final ArrayList<String> fixed = new ArrayList<>(buffer);
+		final var fixed = new ArrayList<>(buffer);
 		fixed.ensureCapacity(buffer.size() + 1);
 		fixed.add(currentLine.toString());
 		return fixed;

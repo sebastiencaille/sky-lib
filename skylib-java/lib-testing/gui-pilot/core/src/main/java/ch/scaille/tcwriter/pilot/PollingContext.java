@@ -3,7 +3,7 @@ package ch.scaille.tcwriter.pilot;
 public class PollingContext<C> {
 
 	public static PollingContext<Object> generic(PollingContext<?> orig) {
-		PollingContext<Object> newContext = new PollingContext<>();
+		final var newContext = new PollingContext<>();
 		newContext.setComponent(orig.component, orig.description);
 		return newContext;
 	}

@@ -45,14 +45,14 @@ interface AttributeFactory {
 			try {
 				return createGetSetAttribute(currentClass, property, name);
 			} catch (final Exception exc) { // NOSONAR
-				final FieldAttribute<T> attribute = createFieldAttribute(currentClass, property, name);
+				final var attribute = AttributeFactory.<T>createFieldAttribute(currentClass, property, name);
 				if (attribute != null) {
 					return attribute;
 				}
 			}
 			break;
 		case FIELD:
-			final FieldAttribute<T> attribute = createFieldAttribute(currentClass, property, name);
+			final var attribute = AttributeFactory.<T>createFieldAttribute(currentClass, property, name);
 			if (attribute != null) {
 				return attribute;
 			}
@@ -78,7 +78,7 @@ interface AttributeFactory {
 		} catch (final NoSuchMethodException e) {
 			getter = currentClass.getMethod("is" + property);
 		}
-		Class<?> type = getter.getReturnType();
+		final var type = getter.getReturnType();
 
 		MethodHandle getterHandler;
 		try {
@@ -88,8 +88,8 @@ interface AttributeFactory {
 		}
 
 		try {
-			Method setter = currentClass.getMethod("set" + property, type);
-			MethodHandle setterHandler = MethodHandles.lookup().unreflect(setter);
+			final var setter = currentClass.getMethod("set" + property, type);
+			final var setterHandler = MethodHandles.lookup().unreflect(setter);
 			return new GetSetAttribute<>(name, getter, getterHandler, setterHandler);
 		} catch (final Exception e) { // NOSONAR
 			Logs.of(AttributeFactory.class).finest("No setter for " + name);
@@ -100,7 +100,7 @@ interface AttributeFactory {
 	private static <T> FieldAttribute<T> createFieldAttribute(final Class<?> currentClass, final String property,
 			final String name) {
 		try {
-			Field field = findField(currentClass, property);
+			var field = findField(currentClass, property);
 			if (Modifier.isStatic(field.getModifiers())) {
 				return null;
 			}

@@ -47,9 +47,9 @@ class ClassFinderTest {
 	})
 	void testUriTransformation(String urlPackageLocation, String fsRoot, String fsPackageLocation)
 			throws URISyntaxException, IOException {
-		try (TestClassFinder finder = new TestClassFinder(new URL[0])) {
-			TestClassFinder.TestFsScanner scanner = finder.scanner();
-			URI testUri = new URL(urlPackageLocation).toURI();
+		try (var finder = new TestClassFinder(new URL[0])) {
+			final var scanner = finder.scanner();
+			final var testUri = new URL(urlPackageLocation).toURI();
 			Assertions.assertEquals(URI.create(fsRoot), scanner.rootOf(testUri));
 			Assertions.assertEquals(fsPackageLocation, scanner.packageLocationOf(testUri, "mypackage"));
 		}
@@ -57,7 +57,7 @@ class ClassFinderTest {
 
 	@Test
 	void testScan() throws IOException {
-		try (URLClassFinder finder = ClassFinder.of(ClassLoaderHelper.appClassPath())) {
+		try (var finder = ClassFinder.of(ClassLoaderHelper.appClassPath())) {
 			Assertions.assertEquals(1,
 					finder.withPackages("ch.scaille.util").scan().filter(c -> c.equals(ClassFinder.class)).count());
 		}

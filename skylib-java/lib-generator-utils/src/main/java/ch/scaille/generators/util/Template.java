@@ -49,7 +49,7 @@ public class Template {
 	}
 
 	public Template apply(final Map<String, String> templateProperties, final String providedPreferedFile) {
-		final Template newTemplate = instantiate(content);
+		final var newTemplate = instantiate(content);
 		newTemplate.preferredFile = providedPreferedFile;
 		newTemplate.setCommandLine(commandLine);
 		newTemplate.setContext(templateProperties);
@@ -65,7 +65,7 @@ public class Template {
 	}
 
 	public String generate() {
-		final StringBuilder result = new StringBuilder("// File generated from template ")
+		final var result = new StringBuilder("// File generated from template ")
 				.append(new SimpleDateFormat("yyyy/MM/dd hh:mm:ss").format(new Date())).append("\n");
 		if (commandLine != null) {
 			result.append("// ").append(commandLine).append("\n");
@@ -79,12 +79,12 @@ public class Template {
 				continue;
 			}
 
-			final String variable = content.substring(nextVariablePos + 2, content.indexOf('}', nextVariablePos));
-			final String value = properties.get(variable);
+			final var variable = content.substring(nextVariablePos + 2, content.indexOf('}', nextVariablePos));
+			final var value = properties.get(variable);
 			if (value == null) {
 				throw new TemplateException("No value for property " + variable);
 			}
-			final String indent = getIndentation(nextVariablePos);
+			final var indent = getIndentation(nextVariablePos);
 			result.append(content, currentPos, nextVariablePos).append(value.replace("\n", indent));
 			nextVariablePos = nextVariablePos + variable.length() + 3;
 			currentPos = nextVariablePos;
@@ -94,8 +94,8 @@ public class Template {
 	}
 
 	private String getIndentation(final int nextVariablePos) {
-		int prevEol = nextVariablePos;
-		int startOfText = nextVariablePos;
+		var prevEol = nextVariablePos;
+		var startOfText = nextVariablePos;
 		while (prevEol >= 0 && content.charAt(prevEol) != '\n') {
 			if (content.charAt(prevEol) != ' ' && content.charAt(prevEol) != '\t') {
 				startOfText = prevEol;
@@ -219,7 +219,7 @@ public class Template {
 	 */
 	public static Map<String, String> appendToList(final Map<String, String> context, final String key,
 			final String value) {
-		String existing = context.getOrDefault(key, "");
+		var existing = context.getOrDefault(key, "");
 		if (!existing.isEmpty()) {
 			existing = existing + ", ";
 		}

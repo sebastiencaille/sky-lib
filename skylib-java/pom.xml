@@ -18,7 +18,7 @@
 		<module>lib-annotations</module>
 		<module>lib-utils</module>
 		<module>lib-persistence</module>
-		<module>lib-gui-java8</module>
+		<module>lib-gui</module>
 		<module>lib-gui-generators</module>
 		<module>lib-gui-validation</module>
 		<module>lib-gui-examples</module>
@@ -27,8 +27,9 @@
 	<properties>
 		<revision>0.0.1-SNAPSHOT</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<java.version>11</java.version>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 		<coverage.temp>${java.io.tmpdir}/coverage/${basedir}</coverage.temp>
 	</properties>
 	<build>
@@ -46,7 +47,7 @@
 								<requireMavenVersion>
 									<version>3.7</version>
 								</requireMavenVersion>
-								<requireJavaVersion>									<!-- mostly for aspectj -->
+								<requireJavaVersion>
 									<version>11</version>
 								</requireJavaVersion>
 							</rules>
@@ -109,7 +110,7 @@
 			</dependency>
 			<dependency>
 				<groupId>ch.scaille</groupId>
-				<artifactId>lib-gui-java8</artifactId>
+				<artifactId>lib-gui</artifactId>
 				<version>${revision}</version>
 			</dependency>
 			<dependency>

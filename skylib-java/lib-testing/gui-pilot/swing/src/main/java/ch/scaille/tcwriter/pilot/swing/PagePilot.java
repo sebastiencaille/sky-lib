@@ -22,13 +22,15 @@ public class PagePilot {
 	 * This must be called from the page's constructor
 	 */
 	protected void initialize() {
-		DataObjectManagerFactory.createFor(this).getMetaData().getAttributes().stream() //
+		DataObjectManagerFactory.createFor(this)
+				.getMetaData()
+				.getAttributes()
+				.stream() //
 				.filter(a -> AbstractSwingComponent.class.isAssignableFrom(a.getType())) //
 				.filter(a -> a.getAnnotation(ByName.class) != null)//
 				.forEach(a -> {
-					String name = a.getAnnotation(ByName.class).value();
-					Class<AbstractSwingComponent<?, ?>> pilotClass = ((Class<AbstractSwingComponent<?, ?>>) a
-							.getType());
+					final var name = a.getAnnotation(ByName.class).value();
+					final var pilotClass = ((Class<AbstractSwingComponent<?, ?>>) a.getType());
 					try {
 						a.setValueOf(this,
 								pilotClass.getConstructor(SwingPilot.class, String.class).newInstance(pilot, name));
@@ -36,7 +38,6 @@ public class PagePilot {
 							| InvocationTargetException | NoSuchMethodException | SecurityException e) {
 						throw new IllegalStateException("Cannot inject Swing component pilot", e);
 					}
-
 				});
 	}
 

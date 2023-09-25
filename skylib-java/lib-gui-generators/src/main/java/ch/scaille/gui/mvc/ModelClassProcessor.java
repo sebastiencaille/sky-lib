@@ -160,7 +160,7 @@ public class ModelClassProcessor {
 
 	protected void forEachAttribute(final UntypedDataObjectMetaData metaData,
 			final Consumer<AbstractAttributeMetaData<?>> attributeApplier) {
-		metaData.getAttributes().stream().filter(this::includeAttribute).forEach(a -> attributeApplier.accept(a));
+		metaData.getAttributes().stream().filter(this::includeAttribute).forEach(attributeApplier::accept);
 	}
 
 	protected String generateLoadFrom(final AbstractAttributeMetaData<?> attrib) {

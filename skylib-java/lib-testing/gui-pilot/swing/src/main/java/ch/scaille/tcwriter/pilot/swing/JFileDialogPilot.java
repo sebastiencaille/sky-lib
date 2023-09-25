@@ -2,7 +2,6 @@ package ch.scaille.tcwriter.pilot.swing;
 
 import java.security.InvalidParameterException;
 import java.util.Locale;
-import java.util.Optional;
 
 import javax.swing.JButton;
 import javax.swing.JTextField;

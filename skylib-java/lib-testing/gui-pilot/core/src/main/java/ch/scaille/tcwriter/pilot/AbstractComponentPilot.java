@@ -15,7 +15,6 @@ import ch.scaille.tcwriter.pilot.Factories.Pollings;
 import ch.scaille.tcwriter.pilot.PilotReport.ReportFunction;
 import ch.scaille.tcwriter.pilot.PollingResult.FailureHandler;
 import ch.scaille.util.helpers.Logs;
-import ch.scaille.util.helpers.NoExceptionCloseable;
 import ch.scaille.util.helpers.Poller;
 
 /**

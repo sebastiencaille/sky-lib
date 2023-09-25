@@ -30,9 +30,9 @@ import ch.scaille.util.helpers.Logs;
  */
 public class SimpleTestGenerator {
 
-	private static final String DP_Complete = "complete";
+	private static final String SIMPLE_SERVICE_PKG = "ch.scaille.dataflowmgr.examples.simple";
 
-	public static final String SIMPLE_SERVICE_PKG = "ch.scaille.dataflowmgr.examples.simple";
+	private static final String DP_COMPLETE = "complete";
 
 	public static final String SIMPLE_SERVICE_CLASS = SIMPLE_SERVICE_PKG + ".SimpleService";
 	public static final String SIMPLE_FLOW_CONDITIONS_CLASS = SIMPLE_SERVICE_PKG + ".SimpleFlowConditions";
@@ -44,7 +44,7 @@ public class SimpleTestGenerator {
 		var targetPathDot = targetFolder.resolve("reports");
 
 		final var dictionary = JavaToDictionary.configure(ClassFinder.ofCurrentThread())
-				.withPackages("ch.scaille.dataflowmgr.examples.simple").scan().collect(JavaToDictionary.toDictionary());
+				.withPackages(SIMPLE_SERVICE_PKG).scan().collect(JavaToDictionary.toDictionary());
 
 		// Services (see AbstractFlow)
 		final var simpleService = dictionary.processors.map(SIMPLE_SERVICE_CLASS, "simpleService");
@@ -55,7 +55,7 @@ public class SimpleTestGenerator {
 
 		// Processors
 		final var initCall = simpleService.get("init");
-		final var completeCall = simpleService.get("complete");
+		final var completeCall = simpleService.get(DP_COMPLETE);
 		final var keepAsIsCall = simpleService.get("keepAsIs");
 
 		// Conditions
@@ -68,9 +68,9 @@ public class SimpleTestGenerator {
 		// Bindings
 		final var entryToInitCall = Binding.builder(Flow.ENTRY_POINT, initCall);
 		final var initToCompleteCall = Binding.builder(initCall, completeCall).withExternalData(getCompletionCall)
-				.as(DP_Complete);
-		final var initToKeepAsIsCall = Binding.builder(initCall, keepAsIsCall).as(DP_Complete);
-		final var completeToExitCall = Binding.builder(DP_Complete, Flow.EXIT_POINT).withExternalData(displayDataCall);
+				.as(DP_COMPLETE);
+		final var initToKeepAsIsCall = Binding.builder(initCall, keepAsIsCall).as(DP_COMPLETE);
+		final var completeToExitCall = Binding.builder(DP_COMPLETE, Flow.EXIT_POINT).withExternalData(displayDataCall);
 
 		// Flow
 		final var flow = Flow.builder("SimpleFlowTest", UUID.randomUUID(), "java.lang.String") //
@@ -82,7 +82,7 @@ public class SimpleTestGenerator {
 		Files.createDirectories(targetPathSrc);
 
 		// Generate the procedural flow
-		new FlowToProceduralJavaVisitor(flow, "ch.scaille.dataflowmgr.examples.simple",
+		new FlowToProceduralJavaVisitor(flow, SIMPLE_SERVICE_PKG,
 				Template.from("templates/flow.template")).process().writeToFolder(targetPathSrc);
 
 		// Generate the reactive flow

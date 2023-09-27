@@ -85,66 +85,6 @@
 		<dependencies>
 			<dependency>
 				<groupId>ch.scaille</groupId>
-				<artifactId>lib-testing-core</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>lib-testing-bdd-runtime</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>lib-testing-bdd-tools</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>lib-annotations</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>lib-utils</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>lib-gui</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>lib-gui-validation</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>gui-pilot-core</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>gui-pilot-swing</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>gui-pilot-selenium</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>lib-generator-utils</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>lib-persistence</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille</groupId>
 				<artifactId>selenium-test-page</artifactId>
 				<version>${revision}</version>
 			</dependency>
@@ -165,7 +105,7 @@
 					<plugin>
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
-						<version>0.8.8</version>
+						<version>0.8.10</version>
 						<executions>
 							<execution>
 								<id>prepare</id>

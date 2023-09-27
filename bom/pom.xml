@@ -13,12 +13,12 @@
 
 	<groupId>ch.scaille</groupId>
 	<artifactId>skylib-bom</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>${revision}</version>
 	<name>skylib-bom</name>
 	<packaging>pom</packaging>
 
 	<properties>
-
+		<revision>0.0.1-SNAPSHOT</revision>
 		<aspectj.version>1.9.20.1</aspectj.version>
 		<jackson.version>2.15.2</jackson.version>
 
@@ -74,7 +74,66 @@
 				<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 				<version>${springdoc-openapi.version}</version>
 			</dependency>
-
+			<dependency>
+				<groupId>ch.scaille</groupId>
+				<artifactId>lib-testing-core</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille</groupId>
+				<artifactId>lib-testing-bdd-runtime</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille</groupId>
+				<artifactId>lib-testing-bdd-tools</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille</groupId>
+				<artifactId>lib-annotations</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille</groupId>
+				<artifactId>lib-utils</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille</groupId>
+				<artifactId>lib-gui</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille</groupId>
+				<artifactId>lib-gui-validation</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille</groupId>
+				<artifactId>gui-pilot-core</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille</groupId>
+				<artifactId>gui-pilot-swing</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille</groupId>
+				<artifactId>gui-pilot-selenium</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille</groupId>
+				<artifactId>lib-generator-utils</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille</groupId>
+				<artifactId>lib-persistence</artifactId>
+				<version>${revision}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

@@ -74,7 +74,7 @@ jobs:
       run: mvn --no-transfer-progress  -Pcoverage install
       working-directory: testcase-writer
 
-    - name: 'testcase writer: build'
+    - name: 'testcase writer: sonar'
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: mvn --no-transfer-progress  -Pcoverage,sonar jacoco:report@report-for-sonar sonar:sonar 

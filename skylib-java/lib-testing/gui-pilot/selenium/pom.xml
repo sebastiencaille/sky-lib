@@ -9,7 +9,7 @@
     </parent>
     <artifactId>gui-pilot-selenium</artifactId>
     <properties>
-        <geckodriver.version>0.32.0</geckodriver.version>
+        <geckodriver.version>0.33.0</geckodriver.version>
     </properties>
 
     <dependencies>

@@ -58,7 +58,7 @@ jobs:
         # queries: ./path/to/local/query, your-org/your-repo/queries@main
     - name: 'bom: build'
       run: mvn --no-transfer-progress  -Pcoverage install
-      working-directory: bom
+      working-directory: skylib-starter-parent
 
     - name: 'java lib: build'
       run: mvn --no-transfer-progress  -Pcoverage install

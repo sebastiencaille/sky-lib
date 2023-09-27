@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
+<project
+	xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
@@ -12,13 +13,12 @@
 	</parent>
 
 	<groupId>ch.scaille</groupId>
-	<artifactId>skylib-bom</artifactId>
-	<version>${revision}</version>
-	<name>skylib-bom</name>
+	<artifactId>skylib-starter-parent</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>skylib-starter-parent</name>
 	<packaging>pom</packaging>
 
 	<properties>
-		<revision>0.0.1-SNAPSHOT</revision>
 		<aspectj.version>1.9.20.1</aspectj.version>
 		<jackson.version>2.15.2</jackson.version>
 
@@ -40,6 +40,7 @@
 
 		<springdoc-openapi.version>2.2.0</springdoc-openapi.version>
 
+		<coverage.temp>${java.io.tmpdir}/coverage/${basedir}</coverage.temp>
 	</properties>
 
 	<dependencyManagement>
@@ -256,5 +257,92 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>flatten-maven-plugin</artifactId>
+				<configuration>
+					<updatePomFile>true</updatePomFile>
+					<flattenMode>resolveCiFriendliesOnly</flattenMode>
+				</configuration>
+				<executions>
+					<execution>
+						<id>flatten</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>flatten</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>flatten.clean</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>coverage</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<version>0.8.10</version>
+						<executions>
+							<execution>
+								<id>prepare</id>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+								<phase>initialize</phase>
+								<configuration>
+									<destFile>
+										${coverage.temp}/sonar-coverage/module-${project.name}.exec</destFile>
+								</configuration>
+							</execution>
+							<execution>								<!-- a bit overkill. ideally should be
+								executed								once -->
+								<id>merge-for-sonar</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>merge</goal>
+								</goals>
+								<configuration>
+									<fileSets>
+										<fileSet>
+											<directory>
+												${coverage.temp}/sonar-coverage/</directory>
+											<includes>
+												<include>module-*.exec</include>
+											</includes>
+										</fileSet>
+									</fileSets>
+									<destFile>${coverage.temp}/all.exec</destFile>
+								</configuration>
+							</execution>
+							<execution>
+								<id>report-for-sonar</id>
+								<phase>none</phase>								<!-- manually run for all
+								modules after all .exec are merged -->
+								<goals>
+									<goal>report</goal>
+								</goals>
+								<configuration>
+									<dataFile>${coverage.temp}/all.exec</dataFile>
+									<formats>XML</formats>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
 </project>

@@ -7,16 +7,16 @@
 		<!-- including the parent makes that the version plugin does not show
 		unused dependencies -->
 		<groupId>ch.scaille</groupId>
-		<artifactId>skylib-bom</artifactId>
+		<artifactId>skylib-starter-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>./bom/pom.xml</relativePath>
+		<relativePath>./skylib-starter-parent/pom.xml</relativePath>
 	</parent>
+
 	<artifactId>skylib</artifactId>
-	<version>${revision}</version>
 	<name>skylib</name>
 	<packaging>pom</packaging>
 	<modules>
-		<module>bom</module>
+		<module>skylib-starter-parent</module>
 		<module>skylib-java</module>
 		<module>testcase-writer</module>
 		<module>dataflow-manager</module>

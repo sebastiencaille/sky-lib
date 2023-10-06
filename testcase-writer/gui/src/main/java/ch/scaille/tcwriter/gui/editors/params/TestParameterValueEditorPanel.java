@@ -105,8 +105,8 @@ public class TestParameterValueEditorPanel extends JPanel {
 		final var useComplexTypeEditor = new JRadioButton("Test Api: ");
 		topPanel.add(useComplexTypeEditor);
 		add(topPanel, BorderLayout.NORTH);
-
-		final var allEditedParameters = new ListModel<>(ListViews.<ParameterValueEntry>sorted());
+ 
+		final var allEditedParameters = new ListModel<ParameterValueEntry>(ListViews.sorted());
 		final var visibleParameters = allEditedParameters.child(ListViews.filtered(p -> p.visible));
 		final var valueTable = new TestParameterValueTable(new TestParameterValueTableModel(visibleParameters));
 		valueTable.setName(tpModel.getPrefix() + "-valueTable");

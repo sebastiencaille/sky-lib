@@ -27,11 +27,11 @@ public interface ListViews {
 		return new ListView<>(comparator, null);
 	}
 
-	static <U, V extends Comparable<V>> IListView<U> sorted(final Function<U, V> comparator) {
+	static <U extends V, V extends Comparable<V>> IListView<U> sorted(final Function<U, V> comparator) {
 		return new ListView<>(Comparator.comparing(comparator::apply), null);
 	}
 
-	static <U extends Comparable<U>> IListView<U> sorted() {
+	static <U extends V, V extends Comparable<V>> IListView<U> sorted() {
 		return new ListView<>(Comparator.naturalOrder(), (Predicate<U>) null);
 	}
 

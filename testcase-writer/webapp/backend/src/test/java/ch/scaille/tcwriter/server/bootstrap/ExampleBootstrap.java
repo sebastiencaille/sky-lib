@@ -2,7 +2,6 @@ package ch.scaille.tcwriter.server.bootstrap;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -32,7 +31,7 @@ public class ExampleBootstrap {
 		exampleHelper.getModelDao().writeTestCase(ExampleHelper.TC_NAME, tc);
 		exampleHelper.getConfigDao().saveConfiguration();
 
-		var templatePath = SRV_DATA.resolve(TC_TEMPLATE);
+		final var templatePath = SRV_DATA.resolve(TC_TEMPLATE);
 		Files.createDirectories(templatePath.getParent());
 		try (var in = Thread.currentThread().getContextClassLoader().getResourceAsStream(TC_TEMPLATE);
 				var out = new FileOutputStream(templatePath.toFile())) {

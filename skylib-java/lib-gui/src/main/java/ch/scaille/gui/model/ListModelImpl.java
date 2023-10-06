@@ -269,14 +269,14 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 	public void addListener(final IListModelListener<T> listener) {
 		listeners.add(IListModelListener.class, listener);
 		if (listener instanceof IChildModelListener) {
-			listeners.add(IChildModelListener.class, (IChildModelListener) listener);
+			listeners.add(IChildModelListener.class, (IChildModelListener<T>) listener);
 		}
 	}
 
 	public void removeListener(final IListModelListener<T> listener) {
 		listeners.remove(IListModelListener.class, listener);
 		if (listener instanceof IChildModelListener) {
-			listeners.remove(IChildModelListener.class, (IChildModelListener) listener);
+			listeners.remove(IChildModelListener.class, (IChildModelListener<T>) listener);
 		}
 	}
 

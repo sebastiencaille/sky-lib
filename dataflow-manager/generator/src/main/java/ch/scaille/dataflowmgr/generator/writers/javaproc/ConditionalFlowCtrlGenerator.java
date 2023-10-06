@@ -1,7 +1,6 @@
 package ch.scaille.dataflowmgr.generator.writers.javaproc;
 
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 import java.util.ArrayList;
@@ -44,7 +43,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 
 		visitActivators(context);
 
-		final var activators = ConditionalFlowCtrl.getActivators(context.binding.getRules()).collect(toList());
+		final var activators = ConditionalFlowCtrl.getActivators(context.binding.getRules()).toList();
 		final var exclusions = ConditionalFlowCtrl.getExclusions(context.binding.getRules()).map(Binding::toDataPoint)
 				.collect(toSet());
 
@@ -90,7 +89,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 	 * @param context
 	 */
 	private void visitActivators(final BindingContext context) {
-		final var activators = ConditionalFlowCtrl.getActivators(context.binding.getRules()).collect(toList());
+		final var activators = ConditionalFlowCtrl.getActivators(context.binding.getRules()).toList();
 		if (activators.isEmpty()) {
 			return;
 		}

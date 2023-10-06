@@ -1,7 +1,5 @@
 package ch.scaille.dataflowmgr.generator.writers;
 
-import static java.util.stream.Collectors.toList;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +19,7 @@ public class FlowGeneratorVisitor<T> {
 	}
 
 	private List<IFlowGenerator<T>> getFlowGenerators(BindingContext context) {
-		return flowGenerators.stream().filter(g -> g.matches(context)).collect(toList());
+		return flowGenerators.stream().filter(g -> g.matches(context)).toList();
 	}
 
 }

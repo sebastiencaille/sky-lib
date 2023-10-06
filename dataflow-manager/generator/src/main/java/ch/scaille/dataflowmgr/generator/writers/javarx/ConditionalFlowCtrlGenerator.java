@@ -2,7 +2,6 @@ package ch.scaille.dataflowmgr.generator.writers.javarx;
 
 import static ch.scaille.util.text.TextFormatter.toCamelCase;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 import java.util.ArrayList;
@@ -61,7 +60,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 	 * @param genContext
 	 */
 	private void visitActivators(final BindingContext context, GenContext genContext) {
-		final var activators = ConditionalFlowCtrl.getActivators(context.binding.getRules()).collect(toList());
+		final var activators = ConditionalFlowCtrl.getActivators(context.binding.getRules()).toList();
 		if (activators.isEmpty()) {
 			return;
 		}

@@ -1,7 +1,6 @@
 package ch.scaille.dataflowmgr.model.flowctrl;
 
 import static ch.scaille.util.helpers.StreamExt.notEq;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 import java.util.ArrayList;
@@ -80,7 +79,7 @@ public class ConditionalFlowCtrl extends WithId implements IFlowCheck {
 
 		final var defaultBindingBuilder = config.getDefaultBinding();
 		bindings.addAll(config.bindings.stream().filter(notEq(defaultBindingBuilder.orElse(null)))
-				.map(b -> b.addRule(condition(this)).build()).collect(toList()));
+				.map(b -> b.addRule(condition(this)).build()).toList());
 
 		this.defaultBinding = defaultBindingBuilder.map(b -> b.addRule(condition(this))
 				.addRules(bindings.stream().map(ConditionalFlowCtrl::exclusion).collect(toSet())).build());

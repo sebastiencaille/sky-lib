@@ -2,9 +2,13 @@ package ch.scaille.dataflowmgr.generator.writers.javarx;
 
 import static ch.scaille.util.text.TextFormatter.toCamelCase;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 import ch.scaille.dataflowmgr.generator.writers.AbstractJavaFlowVisitor;
 import ch.scaille.dataflowmgr.generator.writers.FlowGeneratorVisitor;
@@ -119,7 +123,7 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 
 	private void visitExecution(final BindingContext context) {
 		final var dependencies = flow.getAllDependencies(context.binding).stream()
-				.sorted(Comparator.comparing(Binding::fromDataPoint)).collect(toList());
+				.sorted(Comparator.comparing(Binding::fromDataPoint)).toList();
 		final var genContext = new AbstractFlowGenerator.GenContext(debug, dependencies);
 		flowGeneratorVisitor.generateFlow(context, genContext);
 

@@ -1,7 +1,5 @@
 package ch.scaille.dataflowmgr.generator.writers;
 
-import static java.util.stream.Collectors.toList;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -61,7 +59,7 @@ public abstract class AbstractJavaFlowVisitor extends AbstractFlowVisitor {
 
 	public List<String> guessParameters(final BindingContext context, final Call<?> call) {
 		return call.getParameters().entrySet().stream().map(kv -> guessParameter(context, kv.getKey(), kv.getValue()))
-				.collect(toList());
+				.toList();
 	}
 
 	protected String guessParameter(final BindingContext context, final String paramName, final String paramType) {
@@ -70,13 +68,13 @@ public abstract class AbstractJavaFlowVisitor extends AbstractFlowVisitor {
 					.map(v -> v.codeVariable)
 					.orElseThrow(() -> new IllegalStateException("Not found: " + context.inputDataPoint));
 		}
-		var matches = availableVars.stream().filter(a -> a.name.equals(paramName)).collect(toList());
+		var matches = availableVars.stream().filter(a -> a.name.equals(paramName)).toList();
 		if (matches.size() > 1) {
 			throw new IllegalArgumentException("Too many possible parameters found for " + paramName + ": " + matches);
 		} else if (matches.size() == 1) {
 			return matches.get(0).codeVariable;
 		}
-		matches = availableVars.stream().filter(a -> a.dataType.equals(paramType)).collect(toList());
+		matches = availableVars.stream().filter(a -> a.dataType.equals(paramType)).toList();
 		if (matches.size() > 1) {
 			throw new IllegalArgumentException("Too many possible parameters found for " + paramType + ": " + matches);
 		} else if (matches.size() == 1) {

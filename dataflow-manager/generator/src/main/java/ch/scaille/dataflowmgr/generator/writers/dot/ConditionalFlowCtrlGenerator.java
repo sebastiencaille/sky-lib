@@ -1,7 +1,5 @@
 package ch.scaille.dataflowmgr.generator.writers.dot;
 
-import static java.util.stream.Collectors.toList;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
@@ -38,7 +36,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractDotFlowGenerator {
 		var nextLink = conditionNodeName;
 
 		final var activators = new ArrayList<>(
-				ConditionalFlowCtrl.getActivators(context.binding.getRules()).collect(toList()));
+				ConditionalFlowCtrl.getActivators(context.binding.getRules()).toList());
 		if (activators.isEmpty()) {
 			activators.add(new CustomCall("Default", "Default", new LinkedHashMap<>(), Boolean.TYPE.toString()));
 		}

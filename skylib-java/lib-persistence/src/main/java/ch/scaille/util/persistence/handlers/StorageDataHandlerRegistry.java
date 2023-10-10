@@ -39,16 +39,16 @@ public class StorageDataHandlerRegistry {
 		return find(mimeType).orElseThrow(() -> new IllegalStateException("Not handled: " + mimeType));
 	}
 
-	private IStorageDataHandler find(Resource resource) {
+	private <T> IStorageDataHandler findHandler(Resource<T> resource) {
 		return find(resource.getMimeType()).orElseThrow(() -> new IllegalStateException("Not handled: " + resource));
 	}
 
-	public <T> String encode(Resource resource, Class<T> targetType, T value) throws IOException {
-		return find(resource).encode(targetType, value);
+	public <T> Resource<String> encode(Resource<T> resource, Class<T> targetType) throws IOException {
+		return resource.withValue(findHandler(resource).encode(targetType, resource.getValue()));
 	}
 
-	public <T> T decode(Resource resource, Class<T> targetType) throws IOException {
-		return find(resource).decode(resource.getData(), targetType);
+	public <T> Resource<T> decode(Resource<String> resource, Class<T> targetType) throws IOException {
+		return resource.withValue(findHandler(resource).decode(resource.getValue(), targetType));
 	}
 
 	public IStorageDataHandler getDefaultHandler() {

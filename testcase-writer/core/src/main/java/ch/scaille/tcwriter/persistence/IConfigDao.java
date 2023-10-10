@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.function.Consumer;
 
 import ch.scaille.tcwriter.model.config.TCConfig;
-import ch.scaille.util.persistence.IResourceRepository;
+import ch.scaille.util.persistence.IDao;
 import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
 
 public interface IConfigDao {
@@ -13,7 +13,7 @@ public interface IConfigDao {
 
     TCConfig getCurrentConfig();
 
-    <T> IResourceRepository<T> loaderOf(Class<T> daoType, String subPath, StorageDataHandlerRegistry DataHandlerRegistry);
+    <T> IDao<T> loaderOf(Class<T> daoType, String subPath, StorageDataHandlerRegistry dataHandlerRegistry);
 
 	void saveConfiguration() throws IOException;
 	

@@ -10,7 +10,7 @@ public interface IStorageDataHandler {
 
 	String getDefaultExtension();
 
-	<T> String encode(Class<T> targetClass, T value) throws IOException;
+	<T> String encode(Class<T> targetType, T value) throws IOException;
 
 	<T> T decode(String value, Class<T> targetType) throws IOException;
 

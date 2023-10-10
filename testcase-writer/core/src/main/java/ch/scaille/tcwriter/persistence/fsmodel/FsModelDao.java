@@ -17,29 +17,31 @@ import ch.scaille.tcwriter.persistence.IModelDao;
 import ch.scaille.tcwriter.persistence.handlers.JsonModelDataHandler;
 import ch.scaille.tcwriter.persistence.handlers.YamlModelDataHandler;
 import ch.scaille.util.helpers.Logs;
-import ch.scaille.util.persistence.IResourceRepository;
+import ch.scaille.util.persistence.IDao;
 import ch.scaille.util.persistence.Resource;
 import ch.scaille.util.persistence.StorageException;
 import ch.scaille.util.persistence.StorageRTException;
 import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
+import ch.scaille.util.persistence.handlers.TextStorageHandler;
 
 public class FsModelDao implements IModelDao {
 
 	private final IConfigDao configDao;
 
-	private IResourceRepository<TestDictionary> dictionaryRepo;
+	private IDao<TestDictionary> dictionaryRepo;
 
-	private IResourceRepository<ExportableTestCase> testCaseRepo;
+	private IDao<ExportableTestCase> testCaseRepo;
 
-	private IResourceRepository<String> templateRepo;
+	private IDao<String> templateRepo;
 
-	private IResourceRepository<String> testCaseCodeRepo;
+	private IDao<String> testCaseCodeRepo;
 
 	private StorageDataHandlerRegistry serDeserializerRegistry;
 
 	public static StorageDataHandlerRegistry defaultDataHandlers() {
 		var modelSerDeserializerRegistry = new StorageDataHandlerRegistry(new YamlModelDataHandler());
 		modelSerDeserializerRegistry.register(new JsonModelDataHandler());
+		modelSerDeserializerRegistry.register(new TextStorageHandler());
 		return modelSerDeserializerRegistry;
 	}
 
@@ -62,8 +64,8 @@ public class FsModelDao implements IModelDao {
 		this.dictionaryRepo = configDao.loaderOf(TestDictionary.class, config.getDictionaryPath(),
 				serDeserializerRegistry);
 		this.testCaseRepo = configDao.loaderOf(ExportableTestCase.class, config.getTcPath(), serDeserializerRegistry);
-		this.templateRepo = configDao.loaderOf(String.class, config.getTemplatePath(), null);
-		this.testCaseCodeRepo = configDao.loaderOf(String.class, config.getTcExportPath(), null);
+		this.templateRepo = configDao.loaderOf(String.class, config.getTemplatePath(), serDeserializerRegistry);
+		this.testCaseCodeRepo = configDao.loaderOf(String.class, config.getTcExportPath(), serDeserializerRegistry);
 	}
 
 	@Override
@@ -79,13 +81,13 @@ public class FsModelDao implements IModelDao {
 			id = "default";
 		}
 		final var idSafe = id;
-		StorageRTException.uncheck("Writing of test dictionary", () -> dictionaryRepo.write(idSafe, tm));
+		StorageRTException.uncheck("Writing of test dictionary", () -> dictionaryRepo.saveOrUpdate(idSafe, tm));
 	}
 
 	@Override
 	public Optional<TestDictionary> readTestDictionary(String dictionaryId) {
 		try {
-			final var dictionary = dictionaryRepo.read(dictionaryId);
+			final var dictionary = dictionaryRepo.load(dictionaryId);
 			dictionary.getMetadata().setTransientId(dictionaryId);
 			return Optional.of(dictionary);
 		} catch (StorageException e) {
@@ -96,7 +98,7 @@ public class FsModelDao implements IModelDao {
 
 	@Override
 	public void writeTestDictionary(Path target, TestDictionary tm) {
-		StorageRTException.uncheck("Writing of test dictionary", () -> dictionaryRepo.write(target.toString(), tm));
+		StorageRTException.uncheck("Writing of test dictionary", () -> dictionaryRepo.saveOrUpdate(target.toString(), tm));
 	}
 
 	@Override
@@ -108,7 +110,7 @@ public class FsModelDao implements IModelDao {
 	@Override
 	public Optional<ExportableTestCase> readTestCase(String locator, TestDictionary testDictionary) {
 		try {
-			final var testCase = testCaseRepo.read(locator);
+			final var testCase = testCaseRepo.load(locator);
 			testCase.setDictionary(testDictionary);
 			testCase.getMetadata().setTransientId(locator);
 			testCase.restoreReferences();
@@ -121,17 +123,17 @@ public class FsModelDao implements IModelDao {
 
 	@Override
 	public void writeTestCase(String locator, TestCase tc) {
-		StorageRTException.uncheck("Writing of test case", () -> testCaseRepo.write(locator, (ExportableTestCase) tc));
+		StorageRTException.uncheck("Writing of test case", () -> testCaseRepo.saveOrUpdate(locator, (ExportableTestCase) tc));
 	}
 
 	@Override
 	public Template readTemplate() {
-		return StorageRTException.uncheck("Reading of template", () -> new Template(templateRepo.readRaw("")));
+		return StorageRTException.uncheck("Reading of template", () -> new Template(templateRepo.load("")));
 	}
 
 	@Override
-	public Resource writeTestCaseCode(String locator, String code) {
-		return StorageRTException.uncheck("Writing of test case code", () -> testCaseCodeRepo.writeRaw(locator, code));
+	public Resource<String> writeTestCaseCode(String locator, String code) {
+		return StorageRTException.uncheck("Writing of test case code", () -> testCaseCodeRepo.saveOrUpdate(locator, code));
 	}
 
 	public static String toIdentifier(Path path) {

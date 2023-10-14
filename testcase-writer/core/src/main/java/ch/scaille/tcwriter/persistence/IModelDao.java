@@ -35,7 +35,7 @@ public interface IModelDao {
 
 	void writeTestCase(String identifier, TestCase testCase);
 
-	Resource writeTestCaseCode(String identifier, String content);
+	Resource<String> writeTestCaseCode(String identifier, String content);
 
 
 }

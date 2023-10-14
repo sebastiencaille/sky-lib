@@ -40,6 +40,10 @@ public interface Persisters {
 		return () -> object;
 	}
 
+	/**
+	 * @param <T> the type of the persisted bean
+	 * @param <A> the type of the persisted attribute
+	 */
 	static <T, A> IPersisterFactory<T, A> getSet(final Function<T, A> getter, final BiConsumer<T, A> setter) {
 		return new GetSetAccess<>(getter, setter);
 	}

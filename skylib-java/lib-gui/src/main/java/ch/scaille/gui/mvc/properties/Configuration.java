@@ -32,9 +32,6 @@ import ch.scaille.gui.mvc.properties.AbstractProperty.ErrorNotifier;
  * Properties.of(property).persistent(...)...
  *
  * @author Sebastien Caille
- *
- * @param <T>
- * @param <U>
  */
 public class Configuration {
 
@@ -45,6 +42,12 @@ public class Configuration {
 		return property -> property.setPersister(persister);
 	}
 
+	/**
+	 * 
+	 * @param <T> the type of the persisted bean
+	 * @param <A> the type of the persisted attribute
+	 * @param <P> the type of the attribute Property
+	 */
 	public static <T, A, P extends AbstractTypedProperty<A>> Consumer<P> persistent(IObjectProvider<T> object,
 			final IPersisterFactory<T, A> persisterFactory) {
 		return persistent(persister(object, persisterFactory));

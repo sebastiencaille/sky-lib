@@ -12,7 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 
-import ch.scaille.gui.swing.SwingHelper;
+import ch.scaille.gui.swing.SwingExt;
 import ch.scaille.tcwriter.annotations.TCActors;
 import ch.scaille.tcwriter.annotations.TCRole;
 import ch.scaille.tcwriter.gui.frame.TCWriterGui;
@@ -44,7 +44,7 @@ public class DictionaryImport extends JDialog {
 
 		final var importButton = new JButton("Import");
 		add(importButton, BorderLayout.EAST);
-		importButton.addActionListener(SwingHelper.action(LambdaExt.uncheckR(() -> {
+		importButton.addActionListener(SwingExt.action(LambdaExt.uncheckR(() -> {
 			importDictionary(new File(dictionaryJarFileDisplay.getText()), sourcePackageEditor.getText());
 			imported = true;
 			setVisible(false);

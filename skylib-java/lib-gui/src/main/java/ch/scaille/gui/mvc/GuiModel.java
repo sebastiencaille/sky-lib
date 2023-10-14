@@ -28,13 +28,29 @@ import ch.scaille.gui.mvc.properties.ErrorSet;
 public class GuiModel {
 
 	public interface ImplicitConvertProvider {
-		<T, U> IUnaryConverter<U> create(AbstractTypedProperty<U> property, Class<T> modelClass, String attributeName,
+		/**
+		 * Creates an implicit converter 
+		 * @param <T>
+		 * @param <U>
+		 * @param property
+		 * @param modelClass
+		 * @param attributeName
+		 * @param attributeClass
+		 * @return
+		 */
+		<T, U> IUnaryConverter<U> create(Class<T> modelClass, AbstractTypedProperty<U> property, String attributeName,
 				Class<?> attributeClass);
 	}
 
 	public static class ModelConfiguration {
+		
 		protected final IPropertiesGroup propertySupport;
+		
 		protected ErrorNotifier errorNotifier;
+		
+		/**
+		 * Allows converting a persisted value to a Property value
+		 */
 		protected final List<ImplicitConvertProvider> implicitConverters = new ArrayList<>();
 
 		public ModelConfiguration(IPropertiesGroup propertySupport) {
@@ -125,7 +141,7 @@ public class GuiModel {
 	public <T, U> Consumer<AbstractTypedProperty<U>> implicitConverters(Class<T> modelClass, String attributeName,
 			Class<?> attributeClass) {
 		return p -> configuration.getImplicitConverters().stream().sequential()
-				.map(c -> c.create(p, modelClass, attributeName, attributeClass))
+				.map(c -> c.create(modelClass, p, attributeName, attributeClass))
 				.forEach(p::addImplicitConverter);
 	}
 

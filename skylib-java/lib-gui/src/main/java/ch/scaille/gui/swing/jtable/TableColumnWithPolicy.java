@@ -22,7 +22,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import ch.scaille.gui.swing.SwingHelper;
+import ch.scaille.gui.swing.SwingExt;
 import ch.scaille.gui.swing.model.ListModelTableModel;
 
 /**
@@ -134,7 +134,7 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 		@Override
 		public int computeWidth(final ColumnComputationInfo policyInfo) {
 			final var charRatio = WIDTH_CACHE.computeIfAbsent(sample + policyInfo.getFont().toString(),
-					d -> ((float) SwingHelper.computeTextWidth(policyInfo.table, sample)) / sample.length());
+					d -> ((float) SwingExt.computeTextWidth(policyInfo.table, sample)) / sample.length());
 			final var columnWidth = (int) (charRatio * fixedTextWidth);
 			return columnWidth + margin.compute(columnWidth);
 		}

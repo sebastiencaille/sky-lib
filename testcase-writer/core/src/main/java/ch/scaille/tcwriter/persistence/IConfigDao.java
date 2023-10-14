@@ -13,6 +13,14 @@ public interface IConfigDao {
 
     TCConfig getCurrentConfig();
 
+    /**
+     * Gets the dao according to the data type
+     * @param <T>
+     * @param daoType
+     * @param subPath
+     * @param dataHandlerRegistry
+     * @return
+     */
     <T> IDao<T> loaderOf(Class<T> daoType, String subPath, StorageDataHandlerRegistry dataHandlerRegistry);
 
 	void saveConfiguration() throws IOException;

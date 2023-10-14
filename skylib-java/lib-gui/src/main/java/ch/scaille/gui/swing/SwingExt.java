@@ -31,7 +31,7 @@ import ch.scaille.gui.mvc.IPropertyEventListener;
 import ch.scaille.gui.mvc.PropertyEvent.EventKind;
 import ch.scaille.util.helpers.JavaExt;
 
-public interface SwingHelper {
+public interface SwingExt {
 
 	static ImageIcon iconFromStream(final Supplier<InputStream> inSupplier) throws IOException {
 		try (var inStream = inSupplier.get()) {
@@ -42,7 +42,7 @@ public interface SwingHelper {
 	static ImageIcon iconFromStream(final InputStream in) throws IOException {
 		if (in == null) {
 			throw new IllegalArgumentException("Stream must not be null");
-		}		
+		}
 		return new ImageIcon(JavaExt.read(in));
 	}
 
@@ -82,4 +82,5 @@ public interface SwingHelper {
 		final var metrics = component.getFontMetrics(component.getFont());
 		return SwingUtilities.computeStringWidth(metrics, text);
 	}
+
 }

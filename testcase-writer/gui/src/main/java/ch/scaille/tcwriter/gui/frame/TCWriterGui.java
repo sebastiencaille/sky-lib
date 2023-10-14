@@ -19,7 +19,7 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
 import ch.scaille.gui.mvc.ScreenBuildingReport;
-import ch.scaille.gui.swing.SwingHelper;
+import ch.scaille.gui.swing.SwingExt;
 import ch.scaille.tcwriter.gui.editors.params.TestParameterModel;
 import ch.scaille.tcwriter.gui.editors.params.TestParameterValueEditorPanel;
 import ch.scaille.tcwriter.gui.editors.steps.StepEditorController;
@@ -48,7 +48,7 @@ public class TCWriterGui extends JFrame {
 			RunnableWithException<?> action) {
 		final var newButton = new JButton(icon);
 		newButton.setToolTipText(toolTip);
-		newButton.addActionListener(SwingHelper.action(LambdaExt.uncheckR(action, this::handleException)));
+		newButton.addActionListener(SwingExt.action(LambdaExt.uncheckR(action, this::handleException)));
 		newButton.setName(name);
 		return newButton;
 	}

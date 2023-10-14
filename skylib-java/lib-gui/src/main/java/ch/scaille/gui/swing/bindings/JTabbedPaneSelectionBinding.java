@@ -82,8 +82,8 @@ public class JTabbedPaneSelectionBinding<T> extends ComponentBindingAdapter<T> {
 		pane.putClientProperty(tabPanel, tabClientProperty);
 	}
 
-	public static Object getValueForTab(final JTabbedPane pane, final Component tabPanel) {
-		return pane.getClientProperty(tabPanel);
+	public static <T> T getValueForTab(final JTabbedPane pane, final Component tabPanel, Class<T> type) {
+		return type.cast(pane.getClientProperty(tabPanel));
 	}
 
 }

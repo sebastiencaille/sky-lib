@@ -9,7 +9,7 @@
 		<groupId>ch.scaille</groupId>
 		<artifactId>skylib-starter-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>./skylib-starter-parent/pom.xml</relativePath>
+		<relativePath/>
 	</parent>
 
 	<artifactId>skylib</artifactId>

@@ -2,7 +2,6 @@ package ch.scaille.util.helpers;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.nio.BufferUnderflowException;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;

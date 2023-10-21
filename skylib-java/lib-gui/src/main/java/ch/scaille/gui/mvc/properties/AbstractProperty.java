@@ -24,8 +24,8 @@ import java.util.stream.Stream;
 import javax.swing.event.EventListenerList;
 
 import ch.scaille.gui.mvc.GuiError;
-import ch.scaille.gui.mvc.IPropertyEventListener;
 import ch.scaille.gui.mvc.IPropertiesGroup;
+import ch.scaille.gui.mvc.IPropertyEventListener;
 import ch.scaille.gui.mvc.PropertyEvent;
 import ch.scaille.gui.mvc.PropertyEvent.EventKind;
 import ch.scaille.gui.mvc.Veto.TransmitMode;

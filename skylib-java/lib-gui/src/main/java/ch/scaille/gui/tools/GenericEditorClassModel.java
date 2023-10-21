@@ -2,7 +2,10 @@ package ch.scaille.gui.tools;
 
 import static ch.scaille.gui.mvc.properties.Configuration.persistent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.ResourceBundle;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 

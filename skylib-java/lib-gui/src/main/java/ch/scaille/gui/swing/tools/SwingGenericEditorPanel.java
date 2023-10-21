@@ -1,8 +1,8 @@
 package ch.scaille.gui.swing.tools;
 
 import static ch.scaille.gui.mvc.factories.Converters.guiErrorToString;
-import static ch.scaille.gui.mvc.factories.Converters.mapContains;
 import static ch.scaille.gui.mvc.factories.Converters.listen;
+import static ch.scaille.gui.mvc.factories.Converters.mapContains;
 import static ch.scaille.gui.swing.factories.SwingBindings.selected;
 import static ch.scaille.gui.swing.factories.SwingBindings.value;
 

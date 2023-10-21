@@ -34,8 +34,8 @@ public class ListView<T> implements IListView<T>, Serializable {
 	private static final long serialVersionUID = -4696996416566266010L;
 
 	private IListView<T> parentView;
-	protected final Predicate<T> filter;
-	protected final Comparator<T> comparator;
+	protected final Predicate<? super T> filter;
+	protected final Comparator<? super T> comparator;
 
 	/**
 	 * Creates a list view using a comparator and a filter
@@ -43,7 +43,7 @@ public class ListView<T> implements IListView<T>, Serializable {
 	 * @param comparator
 	 * @param filter
 	 */
-	public ListView(final Comparator<T> comparator, final Predicate<T> filter) {
+	public ListView(final Comparator<? super T> comparator, final Predicate<? super T> filter) {
 		this.filter = filter;
 		this.comparator = comparator;
 	}

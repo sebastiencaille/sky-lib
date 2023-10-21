@@ -1,7 +1,5 @@
 package ch.scaille.tcwriter.services.testexec;
 
-import static ch.scaille.util.helpers.LambdaExt.uncheckF2;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -12,12 +10,13 @@ import java.util.stream.Stream;
 
 import com.google.common.collect.Lists;
 
+import ch.scaille.generators.util.Template;
+import ch.scaille.tcwriter.generators.services.visitors.TestCaseToJunitVisitor;
 import ch.scaille.tcwriter.model.TestCaseException;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.persistence.IConfigDao;
 import ch.scaille.tcwriter.persistence.IModelDao;
 import ch.scaille.tcwriter.persistence.testexec.JunitTestExecConfig;
-import ch.scaille.tcwriter.services.generators.TestCaseToJava;
 import ch.scaille.util.helpers.ClassLoaderHelper;
 import ch.scaille.util.helpers.JavaExt;
 import ch.scaille.util.helpers.LambdaExt;
@@ -25,81 +24,83 @@ import ch.scaille.util.helpers.Logs;
 
 public class JUnitTestExecutor implements ITestExecutor {
 
-    private static final Logger LOGGER = Logs.of(JUnitTestExecutor.class);
+	private static final Logger LOGGER = Logs.of(JUnitTestExecutor.class);
 
-    private final URL[] classPath;
+	private final URL[] classPath;
 
-    private final IModelDao modelDao;
+	private final IModelDao modelDao;
 
-    private final JunitTestExecConfig config;
+	private final JunitTestExecConfig config;
 
-    public JUnitTestExecutor(final IConfigDao configDao, final IModelDao modelDao, final URL[] classPath) {
-        this.modelDao = modelDao;
-        this.classPath = classPath;
-        this.config = configDao.getCurrentConfig().getSubconfig(JunitTestExecConfig.class).orElseThrow();
-    }
+	public JUnitTestExecutor(final IConfigDao configDao, final IModelDao modelDao, final URL[] classPath) {
+		this.modelDao = modelDao;
+		this.classPath = classPath;
+		this.config = configDao.getCurrentConfig().getSubconfig(JunitTestExecConfig.class).orElseThrow();
+	}
 
-    @Override
-    public String generateCode(TestCase tc) throws TestCaseException {
-        return new TestCaseToJava(this.modelDao).generate(tc).writeTo(uncheckF2(this.modelDao::writeTestCaseCode)).getStorage();
-    }
+	@Override
+	public Template createTemplate(TestCase tc) throws TestCaseException {
+		return new TestCaseToJunitVisitor(this.modelDao.readTemplate()).visitTestCase(tc);
+	}
 
-    @Override
-    public String generateCodeLocal(TestConfig testConfig) throws IOException, TestCaseException {
-        return new TestCaseToJava(this.modelDao).generate(testConfig.testCase).writeToFolder(testConfig.sourceFolder)
-                .toString();
-    }
 
-    @Override
-    public String compile(TestConfig testConfig) throws IOException, InterruptedException {
-        final var aspectsClassPath = ClassLoaderHelper.cpToCommandLine(Stream.of(classPath)
-                .filter(j -> j.toString().contains("testcase-writer")
-                        && (j.toString().contains("api") || j.toString().contains("javatc")))
-                .toArray(URL[]::new),  ClassLoaderHelper.cpToURLs(config.getClasspath()));
-        final var testCompiler = exec("Compile", new String[]{config.getJava(), //
-                "-cp", ClassLoaderHelper.cpToCommandLine(classPath), //
-                "org.aspectj.tools.ajc.Main", //
-                "-aspectpath", aspectsClassPath, //
-                "-source", "11", //
-                "-target", "11", //
-                "-verbose", //
-                // "-verbose", "-showWeaveInfo", //
-                "-d", testConfig.binaryFolder.toString(), // 
-                "-sourceroots", testConfig.sourceFolder.toString()});//
-        if (testCompiler.waitFor() != 0) {
-            throw new IllegalStateException("Compiler failed with status " + testCompiler.exitValue());
-        }
-        return testConfig.testCase.getPkgAndClassName();
-    }
+	@Override
+	public String write(TestConfig testConfig) throws IOException, TestCaseException {
+		return createTemplate(testConfig.testCase).writeToFolder(testConfig.sourceFolder).toString();
+	}
 
-    @Override
-    public void execute(TestConfig testConfig, String binaryRef) throws IOException {
-        final var binaryURL = testConfig.binaryFolder;
-        final var junit = Arrays.stream(classPath)
-                .filter(s -> s.toString().contains("junit-platform-console-standalone")).findAny()
-                .orElseThrow(() -> new IllegalStateException("junit-platform-console-standalone was not found"))
-                .getFile();
+	@Override
+	public String compile(TestConfig testConfig) throws IOException, InterruptedException {
+		final var aspectsClassPath = ClassLoaderHelper.cpToCommandLine(Stream.of(classPath)
+				.filter(j -> j.toString().contains("testcase-writer")
+						&& (j.toString().contains("api") || j.toString().contains("javatc")))
+				.toArray(URL[]::new), ClassLoaderHelper.cpToURLs(config.getClasspath()));
+		final var testCompiler = exec("Compile", new String[] { config.getJava(), //
+				"-cp", ClassLoaderHelper.cpToCommandLine(classPath), //
+				"org.aspectj.tools.ajc.Main", //
+				"-aspectpath", aspectsClassPath, //
+				"-source", "11", //
+				"-target", "11", //
+				"-verbose", //
+				// "-verbose", "-showWeaveInfo", //
+				"-d", testConfig.binaryFolder.toString(), //
+				"-sourceroots", testConfig.sourceFolder.toString() });//
+		if (testCompiler.waitFor() != 0) {
+			throw new IllegalStateException("Compiler failed with status " + testCompiler.exitValue());
+		}
+		return testConfig.testCase.getPkgAndClassName();
+	}
 
-        var parameters = new ArrayList<String>();
-        parameters.addAll(Arrays.asList(config.getJava(), //
-                "-Dtest.port=" + testConfig.tcpPort, "-Dtc.stepping=true", //
-                "-jar", junit, "--select-class=" + binaryRef, "--details", "verbose"));
-        parameters.addAll(toMultipleCommandLine(classPath));
-        parameters.add("-cp=" + binaryURL);
-        parameters.add("-cp=" + ClassLoaderHelper.cpToCommandLine(ClassLoaderHelper.cpToURLs(config.getClasspath())));
-        exec("Execution", parameters.toArray(new String[0]));
-    }
+	@Override
+	public void execute(TestConfig testConfig, String binaryRef) throws IOException {
+		final var binaryURL = testConfig.binaryFolder;
+		final var junit = Arrays.stream(classPath)
+				.filter(s -> s.toString().contains("junit-platform-console-standalone"))
+				.findAny()
+				.orElseThrow(() -> new IllegalStateException("junit-platform-console-standalone was not found"))
+				.getFile();
 
-    private List<String> toMultipleCommandLine(URL[] classPath) {
-        return Lists.partition(Arrays.asList(classPath), 50).stream()
-                .map(c -> LambdaExt.uncheckM(() -> "-cp=" + ClassLoaderHelper.cpToCommandLine(c.toArray(new URL[0]))))
-                .toList();
-    }
+		var parameters = new ArrayList<String>();
+		parameters.addAll(Arrays.asList(config.getJava(), //
+				"-Dtest.port=" + testConfig.tcpPort, "-Dtc.stepping=true", //
+				"-jar", junit, "--select-class=" + binaryRef, "--details", "verbose"));
+		parameters.addAll(toMultipleCommandLine(classPath));
+		parameters.add("-cp=" + binaryURL);
+		parameters.add("-cp=" + ClassLoaderHelper.cpToCommandLine(ClassLoaderHelper.cpToURLs(config.getClasspath())));
+		exec("Execution", parameters.toArray(new String[0]));
+	}
 
-    private Process exec(String stage, String[] command) throws IOException {
-        LOGGER.info(() -> stage + ' ' + String.join("\n", command));
-        final var process = new ProcessBuilder(command).redirectErrorStream(true).start();
-        JavaExt.inputStreamHandler(process::getInputStream, LOGGER::info).start();
-        return process;
-    }
+	private List<String> toMultipleCommandLine(URL[] classPath) {
+		return Lists.partition(Arrays.asList(classPath), 50)
+				.stream()
+				.map(c -> LambdaExt.uncheckM(() -> "-cp=" + ClassLoaderHelper.cpToCommandLine(c.toArray(new URL[0]))))
+				.toList();
+	}
+
+	private Process exec(String stage, String[] command) throws IOException {
+		LOGGER.info(() -> stage + ' ' + String.join("\n", command));
+		final var process = new ProcessBuilder(command).redirectErrorStream(true).start();
+		JavaExt.inputStreamHandler(process::getInputStream, LOGGER::info).start();
+		return process;
+	}
 }

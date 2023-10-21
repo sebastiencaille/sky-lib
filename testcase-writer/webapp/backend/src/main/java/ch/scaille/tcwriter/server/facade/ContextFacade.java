@@ -1,10 +1,10 @@
-package ch.scaille.tcwriter.server.services;
+package ch.scaille.tcwriter.server.facade;
 
 import ch.scaille.tcwriter.server.dto.Context;
 import ch.scaille.tcwriter.server.dto.Identity;
 import ch.scaille.util.helpers.JavaExt.AutoCloseableNoException;
 
-public interface ContextService {
+public interface ContextFacade {
 	
 	AutoCloseableNoException set(Context context);
 	

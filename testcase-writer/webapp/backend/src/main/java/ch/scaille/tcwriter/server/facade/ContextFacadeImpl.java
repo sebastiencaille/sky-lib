@@ -1,16 +1,16 @@
-package ch.scaille.tcwriter.server.services;
+package ch.scaille.tcwriter.server.facade;
 
 import ch.scaille.tcwriter.server.dao.ContextDao;
 import ch.scaille.tcwriter.server.dto.Context;
 import ch.scaille.tcwriter.server.dto.Identity;
 import ch.scaille.util.helpers.JavaExt.AutoCloseableNoException;
 
-public class ContextServiceImpl implements ContextService {
+public class ContextFacadeImpl implements ContextFacade {
 
 	private final ThreadLocal<Context> contexts = new InheritableThreadLocal<>();
 	private final ContextDao contextDao;
 
-	public ContextServiceImpl(ContextDao contextDao) {
+	public ContextFacadeImpl(ContextDao contextDao) {
 		this.contextDao = contextDao;
 	}
 

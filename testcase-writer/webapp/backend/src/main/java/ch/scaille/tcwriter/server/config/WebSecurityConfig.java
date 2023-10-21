@@ -7,7 +7,7 @@ import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 
-import ch.scaille.tcwriter.server.services.ContextService;
+import ch.scaille.tcwriter.server.facade.ContextFacade;
 import ch.scaille.tcwriter.server.web.filters.ContextFilter;
 import ch.scaille.tcwriter.server.web.filters.TomcatOverloadDetectorFilter;
 
@@ -27,7 +27,7 @@ public class WebSecurityConfig {
 	}
 
 	@Bean
-	public ContextFilter contextFilter(ContextService contextService) {
+	public ContextFilter contextFilter(ContextFacade contextService) {
 		return new ContextFilter(contextService);
 	}
 

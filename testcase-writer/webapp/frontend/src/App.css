@@ -59,5 +59,8 @@ table, th, td, tbody .steps {
 	background-color: #1a0000;
 }
 
-
+.export-popup-content {
+	width: 80%; 
+	overflow: scroll;
+}
 

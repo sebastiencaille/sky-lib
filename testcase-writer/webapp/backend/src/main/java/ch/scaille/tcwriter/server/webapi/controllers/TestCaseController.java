@@ -1,76 +1,60 @@
 package ch.scaille.tcwriter.server.webapi.controllers;
 
-import static ch.scaille.tcwriter.server.webapi.controllers.ControllerHelper.validateDictionarySet;
-import static ch.scaille.tcwriter.server.webapi.controllers.ControllerHelper.validateTestCaseSet;
+import static ch.scaille.tcwriter.server.webapi.controllers.exceptions.ValidationHelper.validateDictionarySet;
+import static ch.scaille.tcwriter.server.webapi.controllers.exceptions.ValidationHelper.validateTestCaseSet;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
-import java.util.logging.Logger;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.core.MessageSendingOperations;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.web.context.request.NativeWebRequest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import ch.scaille.tcwriter.generated.api.controllers.TestcaseApiController;
+import ch.scaille.tcwriter.generated.api.model.ExportType;
 import ch.scaille.tcwriter.generated.api.model.Metadata;
 import ch.scaille.tcwriter.generated.api.model.TestCase;
-import ch.scaille.tcwriter.model.TestCaseException;
 import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
-import ch.scaille.tcwriter.server.dao.IDictionaryDao;
-import ch.scaille.tcwriter.server.dao.ITestCaseDao;
-import ch.scaille.tcwriter.server.services.ContextService;
-import ch.scaille.tcwriter.server.services.TestCaseService;
+import ch.scaille.tcwriter.server.facade.ContextFacade;
+import ch.scaille.tcwriter.server.facade.TestCaseFacade;
+import ch.scaille.tcwriter.server.web.controller.exceptions.WebRTException;
 import ch.scaille.tcwriter.server.webapi.config.WebsocketConfig;
-import ch.scaille.tcwriter.server.webapi.controllers.exceptions.TestCaseNotFoundException;
 import ch.scaille.tcwriter.server.webapi.mappers.MetadataMapper;
 import ch.scaille.tcwriter.server.webapi.mappers.TestCaseMapper;
-import ch.scaille.tcwriter.services.testexec.ITestExecutor;
-import ch.scaille.tcwriter.services.testexec.JUnitTestExecutor;
-import ch.scaille.tcwriter.services.testexec.TestExecutionListener;
-import ch.scaille.tcwriter.services.testexec.TestRemoteControl;
+import io.swagger.v3.core.util.Json;
 import jakarta.validation.Valid;
 
 public class TestCaseController extends TestcaseApiController {
 
-	private static final Logger LOGGER = Logger.getLogger(TestCaseController.class.getName());
+	private final ContextFacade contextFacade;
 
-	private final IDictionaryDao dictionaryDao;
-
-	private final ITestCaseDao testCaseDao;
-
-	private final ContextService contextService;
-
-	private final TestCaseService tcService;
+	private final TestCaseFacade testCaseFacade;
 
 	private final MessageSendingOperations<String> feedbackSendingTemplate;
-	private final JUnitTestExecutor testExecutor;
 
-	public TestCaseController(JUnitTestExecutor testExecutor, ContextService contextService, IDictionaryDao dictionaryDao, ITestCaseDao testcaseDao,
-			TestCaseService tcService, MessageSendingOperations<String> feedbackSendingTemplate,
-			NativeWebRequest request) {
+	public TestCaseController(ContextFacade contextFacade, TestCaseFacade testCaseFacade,
+			MessageSendingOperations<String> feedbackSendingTemplate, NativeWebRequest request) {
 		super(request);
-		this.testExecutor = testExecutor;
-		this.contextService = contextService;
-		this.dictionaryDao = dictionaryDao;
-		this.testCaseDao = testcaseDao;
-		this.tcService = tcService;
+		this.contextFacade = contextFacade;
+		this.testCaseFacade = testCaseFacade;
 		this.feedbackSendingTemplate = feedbackSendingTemplate;
 	}
 
 	@Override
 	public ResponseEntity<List<Metadata>> listAll() {
-		final var dictionary = loadValidDictionary();
-		return ResponseEntity.ok(testCaseDao.listAll(dictionary).stream().map(MetadataMapper.MAPPER::convert).toList());
+		return ResponseEntity.ok(
+				testCaseFacade.listAll(getCurrentDictionaryId()).stream().map(MetadataMapper.MAPPER::convert).toList());
 	}
 
 	@Override
 	public ResponseEntity<TestCase> testcase(@Valid String tc) {
 		final var loadedTC = loadValidTestCase(tc);
 		final var dto = TestCaseMapper.MAPPER.convert(loadedTC);
-		final var humanReadables = tcService.computeHumanReadableTexts(loadedTC, loadedTC.getSteps());
+		final var humanReadables = testCaseFacade.computeHumanReadableTexts(loadedTC, loadedTC.getSteps());
 		for (int i = 0; i < dto.getSteps().size(); i++) {
 			dto.getSteps().get(i).setHumanReadable(humanReadables.get(i));
 		}
@@ -78,60 +62,54 @@ public class TestCaseController extends TestcaseApiController {
 	}
 
 	@Override
-	public ResponseEntity<Void> executeTestcase(@Valid String tc) {
+	public ResponseEntity<Void> executeTestCase(@Valid String tc) {
 		final var loadedTC = loadValidTestCase(tc);
-		final var testRemoteControl = new TestRemoteControl(10_000, new TestExecutionListener() {
-			@Override
-			public void testRunning(boolean running) {
-				LOGGER.info(() -> "Running: " + running);
-			}
-
-			@Override
-			public void testPaused(boolean paused) {
-				LOGGER.info(() -> "Paused: " + paused);
-			}
-		});
-
-		testRemoteControl.setStepListener((f, t) -> {
-			for (int i = f; i <= t;i++) {
-				final var status = testRemoteControl.stepStatus(i);
-				LOGGER.info(status.toString());
-				final var msg = new GenericMessage<>(TestCaseMapper.MAPPER.convert(status));
-				feedbackSendingTemplate.convertAndSend(WebsocketConfig.TEST_FEEDBACK_DESTINATION, msg);
-			}
-		});
-		
-		final var tcpPort = testRemoteControl.prepare();
-		Path tempDir;
-		try {
-			tempDir = Files.createTempDirectory("tc-writer");
-		} catch (IOException e) {
-			throw new RuntimeException("Web call execution failed", e);
-		}
-		try (var config = new ITestExecutor.TestConfig(loadedTC, tempDir, tcpPort)) {
-			testExecutor.startTest(config);
-			testRemoteControl.controlTest(loadedTC.getSteps().size());
-		} catch (IOException | InterruptedException | TestCaseException e) {
-			throw new RuntimeException("Web call execution failed", e);
-		}
+		testCaseFacade.executeTest(loadedTC,
+				s -> feedbackSendingTemplate.convertAndSend(WebsocketConfig.TEST_FEEDBACK_DESTINATION,
+						new GenericMessage<>(TestCaseMapper.MAPPER.convert(s))));
 		return ResponseEntity.ok(null);
 	}
 
-	private ExportableTestCase loadValidTestCase(String tc) {
-		final var dictionary = loadValidDictionary();
-		final ExportableTestCase loadedTC;
-		if ("current".equals(tc)) {
-			final var currentTCId = validateTestCaseSet(contextService.get().getTestCase());
-			loadedTC = validateTestCaseSet(testCaseDao.load(currentTCId, dictionary));
-		} else {
-			loadedTC = testCaseDao.load(tc, dictionary).orElseThrow(() -> new TestCaseNotFoundException(tc));
+	@Override
+	public ResponseEntity<String> exportTestCase(@Valid String tc, @Valid ExportType format) {
+		final var loadedTC = loadValidTestCase(tc);
+		if (format == ExportType.JAVA) {
+			return  exportJava(loadedTC);
 		}
-		return loadedTC;
+		return exportHumanReadable(loadedTC);
 	}
 
-	private ch.scaille.tcwriter.model.dictionary.TestDictionary loadValidDictionary() {
-		final var currentDictionaryId = validateDictionarySet(contextService.get().getDictionary());
-		return validateDictionarySet(dictionaryDao.load(currentDictionaryId));
+	private ResponseEntity<String> exportHumanReadable(ExportableTestCase tc) {
+		try {
+			var headers = new org.springframework.http.HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			return new ResponseEntity<>(
+					Json.mapper().writeValueAsString(testCaseFacade.computeHumanReadableTexts(tc, tc.getSteps())),
+					headers, HttpStatus.OK);
+		} catch (JsonProcessingException e) {
+			throw new WebRTException(e);
+		}
+
+	}
+	
+	private ResponseEntity<String> exportJava(ExportableTestCase tc) {
+		var headers = new org.springframework.http.HttpHeaders();
+		headers.setContentType(new MediaType("text", "java"));
+		return new ResponseEntity<>(testCaseFacade.generateCode(tc), headers, HttpStatus.OK);
 	}
 
+	private ExportableTestCase loadValidTestCase(String tc) {
+		final var dictionaryId = getCurrentDictionaryId();
+		final String tcId;
+		if ("current".equals(tc)) {
+			tcId = validateTestCaseSet(contextFacade.get().getTestCase());
+		} else {
+			tcId = tc;
+		}
+		return testCaseFacade.load(tcId, dictionaryId);
+	}
+
+	private String getCurrentDictionaryId() {
+		return validateDictionarySet(contextFacade.get().getDictionary());
+	}
 }

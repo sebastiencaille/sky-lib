@@ -1,0 +1,31 @@
+get:
+  summary: Exports a test case
+  operationId: exportTestCase
+  parameters:
+    - in: path
+      name: tc
+      schema:
+        type: string
+      required: true
+      description: id of the test case
+    - in: query
+      name: format
+      schema:
+        $ref: ../openapi.yaml#/components/schemas/ExportType
+      # Default to human readable
+      required: false
+      description: Export format 
+  responses:
+    '200':
+      description: export
+      content:
+        # java code
+        text/java:
+          schema:
+            type: string
+        # human readable
+        application/json:
+          schema: 
+            type: array
+            items: 
+              type: string

@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import ch.scaille.tcwriter.server.dto.Identity;
-import ch.scaille.tcwriter.server.services.ContextService;
+import ch.scaille.tcwriter.server.facade.ContextFacade;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,9 +13,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class ContextFilter extends OncePerRequestFilter {
 
-	private final ContextService contextService;
+	private final ContextFacade contextService;
 
-	public ContextFilter(ContextService contextService) {
+	public ContextFilter(ContextFacade contextService) {
 		super();
 		this.contextService = contextService;
 	}

@@ -6,7 +6,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import ch.scaille.tcwriter.generated.api.controllers.ContextApiController;
 import ch.scaille.tcwriter.server.dao.ContextDao;
 import ch.scaille.tcwriter.server.dto.Identity;
-import ch.scaille.tcwriter.server.services.ContextService;
+import ch.scaille.tcwriter.server.facade.ContextFacade;
 import ch.scaille.tcwriter.server.webapi.mappers.ContextMapper;
 import ch.scaille.util.helpers.Logs;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,11 +14,11 @@ import jakarta.validation.Valid;
 
 public class ContextController extends ContextApiController {
 
-    private final ContextService contextService;
+    private final ContextFacade contextService;
 
     private final ContextDao contextDao;
 
-    public ContextController(ContextService contextService, ContextDao contextDao, NativeWebRequest webNativeRequest) {
+    public ContextController(ContextFacade contextService, ContextDao contextDao, NativeWebRequest webNativeRequest) {
         super(webNativeRequest);
         this.contextService = contextService;
         this.contextDao = contextDao;

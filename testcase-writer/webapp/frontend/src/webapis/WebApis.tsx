@@ -23,7 +23,6 @@ const loadCurrentTestCase = (callback: (dict: TestCase) => void) =>
 	fetch(API_URL + '/testcase/current')
 		.then(r => r.json()).then(r => callback(r as TestCase));
 
-
 const selectCurrentDictionary = (transientId: string, callback: (context: Context) => void) =>
 	fetch(API_URL + '/context',
 		{
@@ -32,8 +31,6 @@ const selectCurrentDictionary = (transientId: string, callback: (context: Contex
 			body: JSON.stringify({ dictionary: transientId })
 		})
 		.then(r => r.json()).then(r => callback(r as Context));
-
-
 
 const selectCurrentTestCase = (transientId: string, callback: (context: Context) => void) =>
 	fetch(API_URL + '/context',
@@ -49,9 +46,29 @@ const executeCurrentTestCase = () => {
 		{
 			method: 'POST',
 		})
-} 
+}
+
+enum ExportType {
+	JAVA = "JAVA",
+	HUMAN_READABLE = "HUMAN_READABLE"
+}
+
+const exportCurrentTestCase = (format: ExportType, callback: (content: string) => void) => {
+		fetch(API_URL + '/testcase/current/export?format=' + format,
+		{
+			method: 'GET',
+		})
+		.then(r => {
+			if (r.headers.get("Content-Type")?.startsWith("application/json")) {
+				return r.json().then(r => (r as Array<string>).join('\n'));
+			} else { 
+				return r.text(); 
+			}
+		}).then(r => callback(r));
+}
 
 const WebApis = {
+	ExportType: ExportType,
 	loadCurrentContext: loadCurrentContext,
 	listAllDictionaries: listAllDictionaries,
 	loadCurrentDictionary: loadCurrentDictionary,
@@ -59,7 +76,8 @@ const WebApis = {
 	loadCurrentTestCase: loadCurrentTestCase,
 	selectCurrentDictionary: selectCurrentDictionary,
 	selectCurrentTestCase: selectCurrentTestCase,
-	executeCurrentTestCase: executeCurrentTestCase
+	executeCurrentTestCase: executeCurrentTestCase,
+	exportCurrentTestCase: exportCurrentTestCase
 };
 
 export default WebApis;

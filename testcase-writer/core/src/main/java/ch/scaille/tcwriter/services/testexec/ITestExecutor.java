@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import ch.scaille.generators.util.Template;
 import ch.scaille.tcwriter.model.TestCaseException;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.util.helpers.JavaExt;
@@ -34,9 +35,9 @@ public interface ITestExecutor {
 		}
 	}
 
-	String generateCode(TestCase paramTestCase) throws IOException, TestCaseException;
-
-	String generateCodeLocal(TestConfig config) throws IOException, TestCaseException;
+	Template createTemplate(TestCase tc) throws TestCaseException;
+	
+	String write(TestConfig config) throws IOException, TestCaseException;
 
 	String compile(TestConfig config) throws IOException, InterruptedException;
 
@@ -45,8 +46,9 @@ public interface ITestExecutor {
 	default void startTest(TestConfig config) throws IOException, InterruptedException, TestCaseException {
 		Files.createDirectories(config.sourceFolder);
 		Files.createDirectories(config.binaryFolder);
-		generateCodeLocal(config);
+		write(config);
 		final var binaryRef = compile(config);
 		execute(config, binaryRef);
 	}
+
 }

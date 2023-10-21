@@ -1,6 +1,6 @@
 post:
-  summary: eExecute a test case
-  operationId: executeTestcase
+  summary: Executes a test case
+  operationId: executeTestCase
   parameters:
     - in: path
       name: tc

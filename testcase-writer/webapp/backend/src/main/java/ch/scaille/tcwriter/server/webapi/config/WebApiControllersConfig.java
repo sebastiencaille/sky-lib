@@ -9,16 +9,13 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import ch.scaille.tcwriter.persistence.IConfigDao;
 import ch.scaille.tcwriter.server.dao.ContextDao;
-import ch.scaille.tcwriter.server.dao.IDictionaryDao;
-import ch.scaille.tcwriter.server.dao.ITestCaseDao;
-import ch.scaille.tcwriter.server.services.ContextService;
-import ch.scaille.tcwriter.server.services.TestCaseService;
+import ch.scaille.tcwriter.server.facade.ContextFacade;
+import ch.scaille.tcwriter.server.facade.DictionaryFacade;
+import ch.scaille.tcwriter.server.facade.TestCaseFacade;
 import ch.scaille.tcwriter.server.webapi.controllers.ContextController;
 import ch.scaille.tcwriter.server.webapi.controllers.DictionaryController;
 import ch.scaille.tcwriter.server.webapi.controllers.TestCaseController;
-import ch.scaille.tcwriter.services.testexec.JUnitTestExecutor;
 
 @Configuration
 @AutoConfigureBefore(ErrorMvcAutoConfiguration.class)
@@ -33,24 +30,21 @@ public class WebApiControllersConfig {
 	}
 
 	@Bean
-	ContextController contextController(ContextService contextService, ContextDao contextDao,
+	ContextController contextController(ContextFacade contextFacade, ContextDao contextDao,
 			NativeWebRequest nativeWebRequest) {
-		return new ContextController(contextService, contextDao, nativeWebRequest);
+		return new ContextController(contextFacade, contextDao, nativeWebRequest);
 	}
 
 	@Bean
-	DictionaryController dictionariesController(ContextService contextService, IDictionaryDao dictionaryDao,
+	DictionaryController dictionariesController(ContextFacade contextFacade, DictionaryFacade dictionaryFacade,
 			NativeWebRequest nativeWebRequest) {
-		return new DictionaryController(contextService, dictionaryDao, nativeWebRequest);
+		return new DictionaryController(contextFacade, dictionaryFacade, nativeWebRequest);
 	}
 
 	@Bean
-	TestCaseController testCaseController(JUnitTestExecutor jUnitTestExecutor, ContextService contextService,
-			IDictionaryDao dictionaryDao, ITestCaseDao testCaseDao, TestCaseService testCaseService,
-			NativeWebRequest nativeWebRequest, MessageSendingOperations<String> feedbackSendingTemplate,
-			IConfigDao configDao) {
-		return new TestCaseController(jUnitTestExecutor, contextService, dictionaryDao, testCaseDao, testCaseService,
-				feedbackSendingTemplate, nativeWebRequest);
+	TestCaseController testCaseController(ContextFacade contextFacade, TestCaseFacade testCaseFacade,
+			NativeWebRequest nativeWebRequest, MessageSendingOperations<String> feedbackSendingTemplate) {
+		return new TestCaseController(contextFacade, testCaseFacade, feedbackSendingTemplate, nativeWebRequest);
 	}
 
 }

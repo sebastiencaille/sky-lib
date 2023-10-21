@@ -1,6 +1,6 @@
 package ch.scaille.tcwriter.server.webapi.controllers;
 
-import static ch.scaille.tcwriter.server.webapi.controllers.ControllerHelper.validateDictionarySet;
+import static ch.scaille.tcwriter.server.webapi.controllers.exceptions.ValidationHelper.validateDictionarySet;
 
 import java.util.List;
 
@@ -10,32 +10,32 @@ import org.springframework.web.context.request.NativeWebRequest;
 import ch.scaille.tcwriter.generated.api.controllers.DictionaryApiController;
 import ch.scaille.tcwriter.generated.api.model.Metadata;
 import ch.scaille.tcwriter.generated.api.model.TestDictionary;
-import ch.scaille.tcwriter.server.dao.IDictionaryDao;
-import ch.scaille.tcwriter.server.services.ContextService;
+import ch.scaille.tcwriter.server.facade.ContextFacade;
+import ch.scaille.tcwriter.server.facade.DictionaryFacade;
 import ch.scaille.tcwriter.server.webapi.mappers.MetadataMapper;
 import ch.scaille.tcwriter.server.webapi.mappers.TestDictionaryMapper;
 
 public class DictionaryController extends DictionaryApiController {
 
-	private final IDictionaryDao dictionaryDao;
+	private final ContextFacade contextService;
 
-	private final ContextService contextService;
+	private final DictionaryFacade dictionaryFacade;
 
-	public DictionaryController(ContextService contextService, IDictionaryDao dictionaryDao, NativeWebRequest request) {
+	public DictionaryController(ContextFacade contextService, DictionaryFacade dictionaryFacade,
+			NativeWebRequest request) {
 		super(request);
 		this.contextService = contextService;
-		this.dictionaryDao = dictionaryDao;
+		this.dictionaryFacade = dictionaryFacade;
 	}
 
 	@Override
 	public ResponseEntity<List<Metadata>> listAll() {
-		return ResponseEntity.ok(dictionaryDao.listAll().stream().map(MetadataMapper.MAPPER::convert).toList());
+		return ResponseEntity.ok(dictionaryFacade.listAll().stream().map(MetadataMapper.MAPPER::convert).toList());
 	}
 
 	@Override
 	public ResponseEntity<TestDictionary> current() {
-		final var dictionaryName = validateDictionarySet(contextService.get().getDictionary());
-		final var dictionary = validateDictionarySet(dictionaryDao.load(dictionaryName));
-		return ResponseEntity.ok(TestDictionaryMapper.MAPPER.convert(dictionary));
+		return ResponseEntity.ok(TestDictionaryMapper.MAPPER
+				.convert(dictionaryFacade.load(validateDictionarySet(contextService.get().getDictionary()))));
 	}
 }

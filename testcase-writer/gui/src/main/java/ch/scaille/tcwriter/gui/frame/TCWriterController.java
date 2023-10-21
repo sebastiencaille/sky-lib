@@ -1,5 +1,6 @@
 package ch.scaille.tcwriter.gui.frame;
 
+import static ch.scaille.util.helpers.LambdaExt.uncheckF2;
 import static ch.scaille.util.helpers.LambdaExt.uncheckR;
 
 import java.awt.Dialog.ModalityType;
@@ -48,8 +49,8 @@ public class TCWriterController extends GuiController {
 	private final IConfigDao configDao;
 	private final FsModelDao modelDao;
 
-	public TCWriterController(final IConfigDao configLoader, final FsModelDao modelDao,
-			TestDictionary tcDictionary, final ITestExecutor testExecutor) {
+	public TCWriterController(final IConfigDao configLoader, final FsModelDao modelDao, TestDictionary tcDictionary,
+			final ITestExecutor testExecutor) {
 		this.configDao = configLoader;
 		this.modelDao = modelDao;
 		this.testExecutor = testExecutor;
@@ -70,14 +71,14 @@ public class TCWriterController extends GuiController {
 
 			@Override
 			public void testRunning(boolean running) {
-				SwingUtilities.invokeLater(() -> model.getExecutionState().setValue(this,
-						running ? TestExecutionState.RUNNING : TestExecutionState.STOPPED));
+				SwingUtilities.invokeLater(() -> model.getExecutionState()
+						.setValue(this, running ? TestExecutionState.RUNNING : TestExecutionState.STOPPED));
 			}
 
 			@Override
 			public void testPaused(boolean paused) {
-				SwingUtilities.invokeLater(() -> model.getExecutionState().setValue(this,
-						paused ? TestExecutionState.PAUSED : TestExecutionState.RUNNING));
+				SwingUtilities.invokeLater(() -> model.getExecutionState()
+						.setValue(this, paused ? TestExecutionState.PAUSED : TestExecutionState.RUNNING));
 			}
 
 		});
@@ -107,7 +108,9 @@ public class TCWriterController extends GuiController {
 		final var editorPropertySupport = ControllerPropertyChangeSupport.mainGroup(configEditorDialog);
 		final var errorProp = new ErrorSet("Error", editorPropertySupport);
 		for (final var configToEdit : configDao.getCurrentConfig().getSubconfigs()) {
-			final var builder = GenericEditorClassModel.builder(configToEdit.getClass()).with(propertySupport).with(errorProp);
+			final var builder = GenericEditorClassModel.builder(configToEdit.getClass())
+					.with(propertySupport)
+					.with(errorProp);
 			configEditorDialog.add(createEditor(configToEdit,
 					configEditorDialog.tab(configToEdit.getClass().getSimpleName()), builder));
 		}
@@ -217,8 +220,10 @@ public class TCWriterController extends GuiController {
 		}
 	}
 
-	public void generateCode() throws IOException, TestCaseException {
-		this.testExecutor.generateCode(this.model.getTestCase().getValue());
+	public void generateCode() throws TestCaseException {
+		this.testExecutor.createTemplate(this.model.getTestCase().getValue())
+				.writeTo(uncheckF2(this.modelDao::writeTestCaseCode))
+				.getStorage();
 	}
 
 	public void importDictionary() {

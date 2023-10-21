@@ -8,5 +8,9 @@ public class WebRTException extends ResponseStatusException {
 	public WebRTException(HttpStatus status, String code, String... parameters) {
 		super(status, code, null, code, parameters);
 	}
+	
+	public WebRTException(Exception e) {
+		super(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+	}
 
 }

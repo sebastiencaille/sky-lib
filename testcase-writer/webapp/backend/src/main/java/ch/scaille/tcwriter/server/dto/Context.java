@@ -2,23 +2,11 @@ package ch.scaille.tcwriter.server.dto;
 
 import java.util.Optional;
 
+
 public class Context {
 
-	private final Identity identity;
 	private String dictionaryName;
 	private String testCase;
-
-	public Context() {
-		identity = null;
-	}
-
-	public Context(Identity identity) {
-		this.identity = identity;
-	}
-
-	public Identity getIdentity() {
-		return identity;
-	}
 
 	public Optional<String> getDictionary() {
 		return Optional.ofNullable(dictionaryName);
@@ -37,7 +25,7 @@ public class Context {
 	}
 	
 	public Context derive() {
-		final var copy = new Context(this.identity);
+		final var copy = new Context();
 		copy.setDictionary(dictionaryName);
 		copy.setTestCase(testCase);
 		return copy;
@@ -45,7 +33,7 @@ public class Context {
 
 	@Override
 	public String toString() {
-		return String.format("[id: %s, dictionary: %s, testCase: %s ]", identity, dictionaryName, testCase);
+		return String.format("[dictionary: %s, testCase: %s ]", dictionaryName, testCase);
 	}
 
 }

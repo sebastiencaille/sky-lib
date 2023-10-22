@@ -9,11 +9,9 @@ import org.springframework.context.annotation.Configuration;
 import ch.scaille.tcwriter.persistence.IModelDao;
 import ch.scaille.tcwriter.persistence.fsconfig.FsConfigDao;
 import ch.scaille.tcwriter.persistence.fsmodel.FsModelDao;
-import ch.scaille.tcwriter.server.dao.ContextDao;
 import ch.scaille.tcwriter.server.dao.DictionaryDao;
 import ch.scaille.tcwriter.server.dao.IDictionaryDao;
 import ch.scaille.tcwriter.server.dao.ITestCaseDao;
-import ch.scaille.tcwriter.server.dao.InMemoryContextDao;
 import ch.scaille.tcwriter.server.dao.TestCaseDao;
 
 @Configuration
@@ -40,11 +38,6 @@ public class StorageConfig {
 	@Bean
 	public ITestCaseDao testCaseDao(IModelDao modelDao) {
 		return new TestCaseDao(modelDao);
-	}
-
-	@Bean
-	public ContextDao inMemoryContextDao() {
-		return new InMemoryContextDao();
 	}
 
 }

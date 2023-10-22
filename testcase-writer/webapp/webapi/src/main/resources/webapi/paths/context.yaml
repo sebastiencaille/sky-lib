@@ -18,7 +18,7 @@ put:
     content:
       application/json:
         schema:
-          $ref: ../openapi.yaml#/components/schemas/ContextUpdate
+          $ref: ../openapi.yaml#/components/schemas/Context
   responses:
     '200':
       description: The new context, after it was set

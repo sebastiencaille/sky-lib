@@ -9,7 +9,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import ch.scaille.tcwriter.server.dao.ContextDao;
+import ch.scaille.tcwriter.server.dto.Context;
 import ch.scaille.tcwriter.server.facade.ContextFacade;
 import ch.scaille.tcwriter.server.facade.DictionaryFacade;
 import ch.scaille.tcwriter.server.facade.TestCaseFacade;
@@ -30,21 +30,21 @@ public class WebApiControllersConfig {
 	}
 
 	@Bean
-	ContextController contextController(ContextFacade contextFacade, ContextDao contextDao,
+	ContextController contextController(Context context, ContextFacade contextFacade,
 			NativeWebRequest nativeWebRequest) {
-		return new ContextController(contextFacade, contextDao, nativeWebRequest);
+		return new ContextController(context, contextFacade, nativeWebRequest);
 	}
 
 	@Bean
-	DictionaryController dictionariesController(ContextFacade contextFacade, DictionaryFacade dictionaryFacade,
+	DictionaryController dictionariesController(Context context, DictionaryFacade dictionaryFacade,
 			NativeWebRequest nativeWebRequest) {
-		return new DictionaryController(contextFacade, dictionaryFacade, nativeWebRequest);
+		return new DictionaryController(context, dictionaryFacade, nativeWebRequest);
 	}
 
 	@Bean
-	TestCaseController testCaseController(ContextFacade contextFacade, TestCaseFacade testCaseFacade,
+	TestCaseController testCaseController(Context context, TestCaseFacade testCaseFacade,
 			NativeWebRequest nativeWebRequest, MessageSendingOperations<String> feedbackSendingTemplate) {
-		return new TestCaseController(contextFacade, testCaseFacade, feedbackSendingTemplate, nativeWebRequest);
+		return new TestCaseController(context, testCaseFacade, feedbackSendingTemplate, nativeWebRequest);
 	}
 
 }

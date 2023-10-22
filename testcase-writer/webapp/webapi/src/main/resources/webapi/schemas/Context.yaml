@@ -1,28 +1,9 @@
-Identity:
-  type: object
-  required: [ id ]
-  parameters:
-    id:
-      type: string
 Context:
   type: object
-  required: [ identity ]
   properties:
-    identity:
-      $ref: '#/Identity'
     dictionary:
       describe: reference to the dictionary 
       type: string
     testCase:
       describe: reference to the test case 
       type: string
-ContextUpdate:
-  type: object
-  properties:
-    dictionary:
-      describe: reference to the dictionary 
-      type: string
-    testCase:
-      describe: reference to the test case  
-      type: string
-

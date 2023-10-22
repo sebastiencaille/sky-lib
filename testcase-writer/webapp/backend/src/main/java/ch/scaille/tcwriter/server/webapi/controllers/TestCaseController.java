@@ -19,7 +19,7 @@ import ch.scaille.tcwriter.generated.api.model.ExportType;
 import ch.scaille.tcwriter.generated.api.model.Metadata;
 import ch.scaille.tcwriter.generated.api.model.TestCase;
 import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
-import ch.scaille.tcwriter.server.facade.ContextFacade;
+import ch.scaille.tcwriter.server.dto.Context;
 import ch.scaille.tcwriter.server.facade.TestCaseFacade;
 import ch.scaille.tcwriter.server.web.controller.exceptions.WebRTException;
 import ch.scaille.tcwriter.server.webapi.config.WebsocketConfig;
@@ -30,16 +30,16 @@ import jakarta.validation.Valid;
 
 public class TestCaseController extends TestcaseApiController {
 
-	private final ContextFacade contextFacade;
-
 	private final TestCaseFacade testCaseFacade;
 
 	private final MessageSendingOperations<String> feedbackSendingTemplate;
 
-	public TestCaseController(ContextFacade contextFacade, TestCaseFacade testCaseFacade,
+	private Context context;
+	
+	public TestCaseController(Context context, TestCaseFacade testCaseFacade,
 			MessageSendingOperations<String> feedbackSendingTemplate, NativeWebRequest request) {
 		super(request);
-		this.contextFacade = contextFacade;
+		this.context = context;
 		this.testCaseFacade = testCaseFacade;
 		this.feedbackSendingTemplate = feedbackSendingTemplate;
 	}
@@ -102,7 +102,7 @@ public class TestCaseController extends TestcaseApiController {
 		final var dictionaryId = getCurrentDictionaryId();
 		final String tcId;
 		if ("current".equals(tc)) {
-			tcId = validateTestCaseSet(contextFacade.get().getTestCase());
+			tcId = validateTestCaseSet(context.getTestCase());
 		} else {
 			tcId = tc;
 		}
@@ -110,6 +110,6 @@ public class TestCaseController extends TestcaseApiController {
 	}
 
 	private String getCurrentDictionaryId() {
-		return validateDictionarySet(contextFacade.get().getDictionary());
+		return validateDictionarySet(context.getDictionary());
 	}
 }

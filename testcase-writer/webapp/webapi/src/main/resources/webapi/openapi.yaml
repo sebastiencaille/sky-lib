@@ -23,8 +23,6 @@ components:
   schemas:
     Context:
       $ref: schemas/Context.yaml#/Context
-    ContextUpdate:
-      $ref: schemas/Context.yaml#/ContextUpdate
     Metadata:
       $ref: schemas/Metadata.yaml#/Metadata
     IdObject:

@@ -20,16 +20,19 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import ch.scaille.gui.mvc.converters.IUnaryConverter;
-import ch.scaille.gui.mvc.properties.AbstractProperty.ErrorNotifier;
-import ch.scaille.gui.mvc.properties.AbstractTypedProperty;
-import ch.scaille.gui.mvc.properties.ErrorSet;
+import ch.scaille.javabeans.IPropertiesGroup;
+import ch.scaille.javabeans.IPropertiesOwner;
+import ch.scaille.javabeans.converters.IUnaryConverter;
+import ch.scaille.javabeans.properties.AbstractTypedProperty;
+import ch.scaille.javabeans.properties.ErrorSet;
+import ch.scaille.javabeans.properties.AbstractProperty.ErrorNotifier;
 
-public class GuiModel {
+public class GuiModel implements IPropertiesOwner {
 
 	public interface ImplicitConvertProvider {
 		/**
-		 * Creates an implicit converter 
+		 * Creates an implicit converter
+		 * 
 		 * @param <T>
 		 * @param <U>
 		 * @param property
@@ -43,11 +46,11 @@ public class GuiModel {
 	}
 
 	public static class ModelConfiguration {
-		
+
 		protected final IPropertiesGroup propertySupport;
-		
+
 		protected ErrorNotifier errorNotifier;
-		
+
 		/**
 		 * Allows converting a persisted value to a Property value
 		 */
@@ -140,7 +143,9 @@ public class GuiModel {
 	 */
 	public <T, U> Consumer<AbstractTypedProperty<U>> implicitConverters(Class<T> modelClass, String attributeName,
 			Class<?> attributeClass) {
-		return p -> configuration.getImplicitConverters().stream().sequential()
+		return p -> configuration.getImplicitConverters()
+				.stream()
+				.sequential()
 				.map(c -> c.create(modelClass, p, attributeName, attributeClass))
 				.forEach(p::addImplicitConverter);
 	}

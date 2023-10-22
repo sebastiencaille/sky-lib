@@ -21,7 +21,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JPopupMenu;
 
-import ch.scaille.gui.mvc.properties.ObjectProperty;
+import ch.scaille.javabeans.properties.ObjectProperty;
 
 public abstract class AbstractPopup<T> extends MouseAdapter {
 

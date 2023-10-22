@@ -4,7 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import ch.scaille.gui.mvc.properties.ObjectProperty;
+import ch.scaille.javabeans.PropertyChangeSupportController;
+import ch.scaille.javabeans.properties.ObjectProperty;
 
 class ModelChildTest {
 
@@ -25,7 +26,7 @@ class ModelChildTest {
 	@Test
 	void testChildProperty() {
 
-		final var propertySupport = ControllerPropertyChangeSupport.mainGroup(this);
+		final var propertySupport = PropertyChangeSupportController.mainGroup(this);
 		final var parentProperty = new ObjectProperty<Parent>("parent", propertySupport);
 		final var childProperty = parentProperty.child("child", Parent::getChild, Parent::setChild);
 		propertySupport.attachAll();

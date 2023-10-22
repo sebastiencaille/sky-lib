@@ -3,7 +3,7 @@ package ch.scaille.example.gui.model.impl;
 import ch.scaille.example.gui.TestObject;
 import ch.scaille.gui.model.views.AbstractDynamicView;
 import ch.scaille.gui.model.views.IListView;
-import ch.scaille.gui.mvc.IComponentBinding;
+import ch.scaille.javabeans.IComponentBinding;
 
 public class DynamicView extends AbstractDynamicView<TestObject> implements IListView<TestObject> {
 

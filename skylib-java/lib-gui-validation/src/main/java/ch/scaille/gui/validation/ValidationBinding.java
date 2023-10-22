@@ -3,10 +3,10 @@ package ch.scaille.gui.validation;
 import static java.util.stream.Collectors.joining;
 
 import ch.scaille.gui.mvc.GuiModel.ImplicitConvertProvider;
-import ch.scaille.gui.mvc.converters.ConversionException;
-import ch.scaille.gui.mvc.converters.IUnaryConverter;
-import ch.scaille.gui.mvc.properties.AbstractProperty;
-import ch.scaille.gui.mvc.properties.AbstractTypedProperty;
+import ch.scaille.javabeans.converters.ConversionException;
+import ch.scaille.javabeans.converters.IUnaryConverter;
+import ch.scaille.javabeans.properties.AbstractProperty;
+import ch.scaille.javabeans.properties.AbstractTypedProperty;
 import ch.scaille.util.dao.metadata.MetadataHelper;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;

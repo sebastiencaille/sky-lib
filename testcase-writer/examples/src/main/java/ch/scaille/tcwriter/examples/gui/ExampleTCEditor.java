@@ -7,7 +7,7 @@ import java.util.logging.SimpleFormatter;
 
 import javax.swing.SwingUtilities;
 
-import ch.scaille.gui.mvc.Logging;
+import ch.scaille.javabeans.Logging;
 import ch.scaille.tcwriter.examples.ExampleHelper;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
 

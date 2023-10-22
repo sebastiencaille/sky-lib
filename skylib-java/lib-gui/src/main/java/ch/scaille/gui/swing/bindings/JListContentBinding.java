@@ -21,8 +21,8 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 
 import ch.scaille.gui.mvc.ComponentBindingAdapter;
-import ch.scaille.gui.mvc.properties.AbstractProperty;
 import ch.scaille.gui.swing.factories.SwingBindings;
+import ch.scaille.javabeans.properties.AbstractProperty;
 
 public class JListContentBinding<T> extends ComponentBindingAdapter<List<T>> {
 

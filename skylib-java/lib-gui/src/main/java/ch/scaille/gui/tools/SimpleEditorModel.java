@@ -5,12 +5,12 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
-import ch.scaille.gui.mvc.BindingChain.EndOfChain;
-import ch.scaille.gui.mvc.ControllerPropertyChangeSupport;
-import ch.scaille.gui.mvc.IPropertiesGroup;
-import ch.scaille.gui.mvc.persisters.ObjectProviderPersister.IObjectProvider;
-import ch.scaille.gui.mvc.properties.AbstractTypedProperty;
-import ch.scaille.gui.mvc.properties.ErrorSet;
+import ch.scaille.javabeans.PropertyChangeSupportController;
+import ch.scaille.javabeans.IPropertiesGroup;
+import ch.scaille.javabeans.BindingChain.EndOfChain;
+import ch.scaille.javabeans.persisters.ObjectProviderPersister.IObjectProvider;
+import ch.scaille.javabeans.properties.AbstractTypedProperty;
+import ch.scaille.javabeans.properties.ErrorSet;
 
 /**
  * @param <T> type of the persisted object
@@ -37,7 +37,7 @@ public class SimpleEditorModel<T> implements IGenericEditorModel<T> {
     private final BiFunction<IPropertiesGroup, IObjectProvider<T>, List<PropertyEntry>> builder;
 
     public SimpleEditorModel(final BiFunction<IPropertiesGroup, IObjectProvider<T>, List<PropertyEntry>> builder) {
-        this.support = ControllerPropertyChangeSupport.mainGroup(this);
+        this.support = PropertyChangeSupportController.mainGroup(this);
         this.errorSet = new ErrorSet("Error", support);
         this.builder = builder;
     }

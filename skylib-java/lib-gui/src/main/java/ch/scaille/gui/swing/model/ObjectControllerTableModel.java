@@ -50,10 +50,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.scaille.gui.model.ListModel;
-import ch.scaille.gui.mvc.IComponentBinding;
-import ch.scaille.gui.mvc.IComponentLink;
 import ch.scaille.gui.mvc.IObjectGuiModel;
-import ch.scaille.gui.mvc.properties.AbstractProperty;
+import ch.scaille.javabeans.IComponentBinding;
+import ch.scaille.javabeans.IComponentLink;
+import ch.scaille.javabeans.properties.AbstractProperty;
 
 /**
  * A table model that is using an object controller per column.

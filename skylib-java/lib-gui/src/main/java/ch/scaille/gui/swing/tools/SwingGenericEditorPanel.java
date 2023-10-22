@@ -1,10 +1,10 @@
 package ch.scaille.gui.swing.tools;
 
-import static ch.scaille.gui.mvc.factories.Converters.guiErrorToString;
-import static ch.scaille.gui.mvc.factories.Converters.listen;
-import static ch.scaille.gui.mvc.factories.Converters.mapContains;
 import static ch.scaille.gui.swing.factories.SwingBindings.selected;
 import static ch.scaille.gui.swing.factories.SwingBindings.value;
+import static ch.scaille.javabeans.Converters.guiErrorToString;
+import static ch.scaille.javabeans.Converters.listen;
+import static ch.scaille.javabeans.Converters.mapContains;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -21,11 +21,11 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 
-import ch.scaille.gui.mvc.IBindingController;
-import ch.scaille.gui.mvc.properties.ErrorSet;
 import ch.scaille.gui.tools.GenericEditorController;
 import ch.scaille.gui.tools.IGenericEditor;
 import ch.scaille.gui.tools.PropertyEntry;
+import ch.scaille.javabeans.IBindingController;
+import ch.scaille.javabeans.properties.ErrorSet;
 
 public class SwingGenericEditorPanel extends JPanel implements IGenericEditor {
 

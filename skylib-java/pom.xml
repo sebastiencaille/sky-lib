@@ -17,6 +17,7 @@
 		<module>lib-testing</module>
 		<module>lib-annotations</module>
 		<module>lib-utils</module>
+		<module>lib-javabeans</module>
 		<module>lib-persistence</module>
 		<module>lib-gui</module>
 		<module>lib-gui-generators</module>

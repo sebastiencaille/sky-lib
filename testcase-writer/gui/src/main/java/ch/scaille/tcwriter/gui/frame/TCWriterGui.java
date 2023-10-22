@@ -18,8 +18,8 @@ import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
-import ch.scaille.gui.mvc.ScreenBuildingReport;
 import ch.scaille.gui.swing.SwingExt;
+import ch.scaille.javabeans.DependenciesBuildingReport;
 import ch.scaille.tcwriter.gui.editors.params.TestParameterModel;
 import ch.scaille.tcwriter.gui.editors.params.TestParameterValueEditorPanel;
 import ch.scaille.tcwriter.gui.editors.steps.StepEditorController;
@@ -59,8 +59,8 @@ public class TCWriterGui extends JFrame {
 
 	public void build() {
 
-		final var screenBuildingReport = new ScreenBuildingReport();
-		ScreenBuildingReport.setScreenBuildingReport(screenBuildingReport);
+		final var screenBuildingReport = new DependenciesBuildingReport();
+		DependenciesBuildingReport.setScreenBuildingReport(screenBuildingReport);
 
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 

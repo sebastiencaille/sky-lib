@@ -17,8 +17,8 @@ package ch.scaille.gui.model.views;
 
 import java.util.function.Consumer;
 
-import ch.scaille.gui.mvc.IComponentBinding;
 import ch.scaille.gui.mvc.factories.ComponentBindings;
+import ch.scaille.javabeans.IComponentBinding;
 
 public abstract class AbstractDynamicView<T> {
 

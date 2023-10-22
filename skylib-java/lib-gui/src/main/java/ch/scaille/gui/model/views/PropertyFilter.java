@@ -17,7 +17,7 @@ package ch.scaille.gui.model.views;
 
 import java.util.function.Predicate;
 
-import ch.scaille.gui.mvc.properties.ObjectProperty;
+import ch.scaille.javabeans.properties.ObjectProperty;
 
 public class PropertyFilter<D, F extends Predicate<D>> implements Predicate<D> {
 

@@ -1,10 +1,10 @@
 package ch.scaille.tcwriter.gui.editors.steps;
 
-import static ch.scaille.gui.mvc.factories.BindingDependencies.preserveOnUpdateOf;
-import static ch.scaille.gui.mvc.factories.Converters.listConverter;
-import static ch.scaille.gui.mvc.factories.Converters.listen;
 import static ch.scaille.gui.swing.factories.SwingBindings.selection;
 import static ch.scaille.gui.swing.factories.SwingBindings.values;
+import static ch.scaille.javabeans.BindingDependencies.preserveOnUpdateOf;
+import static ch.scaille.javabeans.Converters.listConverter;
+import static ch.scaille.javabeans.Converters.listen;
 
 import java.awt.BorderLayout;
 import java.util.Arrays;
@@ -19,11 +19,11 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import ch.scaille.gui.mvc.converters.IConverter;
-import ch.scaille.gui.mvc.factories.Converters;
 import ch.scaille.gui.mvc.factories.ObjectTextView;
-import ch.scaille.gui.mvc.properties.AbstractTypedProperty;
 import ch.scaille.gui.swing.factories.SwingBindings;
+import ch.scaille.javabeans.Converters;
+import ch.scaille.javabeans.converters.IConverter;
+import ch.scaille.javabeans.properties.AbstractTypedProperty;
 import ch.scaille.tcwriter.model.NamedObject;
 import ch.scaille.tcwriter.model.dictionary.StepClassifier;
 import ch.scaille.tcwriter.model.dictionary.TestAction;

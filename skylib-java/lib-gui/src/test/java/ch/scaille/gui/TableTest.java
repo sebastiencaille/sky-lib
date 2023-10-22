@@ -29,10 +29,10 @@ import org.junit.jupiter.api.Test;
 import ch.scaille.gui.model.ListModel;
 import ch.scaille.gui.model.views.IListView;
 import ch.scaille.gui.model.views.ListViews;
-import ch.scaille.gui.mvc.ControllerPropertyChangeSupport;
 import ch.scaille.gui.mvc.GuiModel;
-import ch.scaille.gui.mvc.properties.ListProperty;
 import ch.scaille.gui.swing.factories.SwingBindings;
+import ch.scaille.javabeans.PropertyChangeSupportController;
+import ch.scaille.javabeans.properties.ListProperty;
 
 class TableTest {
 
@@ -50,7 +50,7 @@ class TableTest {
 	@Test
 	void testSelectionOnInsert() throws InvocationTargetException, InterruptedException {
 
-		final var support = ControllerPropertyChangeSupport.mainGroup(this);
+		final var support = PropertyChangeSupportController.mainGroup(this);
 		final var model = new Model(GuiModel.with(support));
 		support.attachAll();
 

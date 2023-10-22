@@ -22,9 +22,9 @@ import ch.scaille.example.gui.TestObjectGuiModel;
 import ch.scaille.example.gui.controllermodel.impl.TestObjectControllerModelFrameModel.Columns;
 import ch.scaille.gui.model.ListModel;
 import ch.scaille.gui.mvc.GuiController;
-import ch.scaille.gui.mvc.factories.Converters;
-import ch.scaille.gui.mvc.properties.AbstractProperty;
 import ch.scaille.gui.swing.model.ObjectControllerTableModel;
+import ch.scaille.javabeans.Converters;
+import ch.scaille.javabeans.properties.AbstractProperty;
 
 @SuppressWarnings("serial")
 public class TestObjectControllerModelFrameModel

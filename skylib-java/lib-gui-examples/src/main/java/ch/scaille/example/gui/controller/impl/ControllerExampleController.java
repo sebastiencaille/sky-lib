@@ -16,9 +16,9 @@
 package ch.scaille.example.gui.controller.impl;
 
 import ch.scaille.example.gui.TestObject;
-import ch.scaille.gui.mvc.GuiModel;
 import ch.scaille.gui.mvc.GuiController;
-import ch.scaille.gui.mvc.PropertyGroup;
+import ch.scaille.gui.mvc.GuiModel;
+import ch.scaille.javabeans.PropertyGroup;
 
 public class ControllerExampleController extends GuiController {
 

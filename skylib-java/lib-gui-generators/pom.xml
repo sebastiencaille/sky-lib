@@ -26,6 +26,10 @@
 		</dependency>
 		<dependency>
 			<groupId>ch.scaille</groupId>
+			<artifactId>lib-javabeans</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ch.scaille</groupId>
 			<artifactId>lib-generator-utils</artifactId>
 		</dependency>
 	</dependencies>

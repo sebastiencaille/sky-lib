@@ -37,9 +37,9 @@ import javax.swing.event.EventListenerList;
 import ch.scaille.gui.model.views.IListView;
 import ch.scaille.gui.model.views.IListViewOwner;
 import ch.scaille.gui.model.views.ListViews;
-import ch.scaille.gui.mvc.ControllerPropertyChangeSupport;
-import ch.scaille.gui.mvc.IPropertiesGroup;
-import ch.scaille.gui.mvc.properties.ObjectProperty;
+import ch.scaille.javabeans.PropertyChangeSupportController;
+import ch.scaille.javabeans.IPropertiesGroup;
+import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.util.helpers.StreamExt;
 
 /**
@@ -209,7 +209,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 	 */
 	private transient Edition objectEdition = null;
 
-	private transient IPropertiesGroup changeSupport = ControllerPropertyChangeSupport.mainGroup(this);
+	private transient IPropertiesGroup changeSupport = PropertyChangeSupportController.mainGroup(this);
 
 	private final EventListenerList listeners = new EventListenerList();
 
@@ -644,7 +644,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 
 	private void readObject(final java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
 		stream.defaultReadObject();
-		changeSupport = ControllerPropertyChangeSupport.mainGroup(this);
+		changeSupport = PropertyChangeSupportController.mainGroup(this);
 	}
 
 	@Override

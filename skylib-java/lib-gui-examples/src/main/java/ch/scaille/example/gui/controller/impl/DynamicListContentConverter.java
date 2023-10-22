@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import ch.scaille.gui.mvc.converters.IConverter;
+import ch.scaille.javabeans.converters.IConverter;
 
 public class DynamicListContentConverter implements IConverter<String, List<String>> {
 

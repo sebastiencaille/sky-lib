@@ -57,15 +57,17 @@ public class FsModelDao implements IModelDao {
 	public FsModelDao(IConfigDao configLoader, StorageDataHandlerRegistry serDeserializerRegistry) {
 		this.configDao = configLoader;
 		this.serDeserializerRegistry = serDeserializerRegistry;
-		this.configDao.onReload(c -> reload(configOf(c)));
+		this.configDao.getCurrentConfigProperty().listen(this::reload);
+		reload(this.configDao.getCurrentConfig());
 	}
 
-	private void reload(FsModelConfig config) {
-		this.dictionaryRepo = configDao.loaderOf(TestDictionary.class, config.getDictionaryPath(),
+	private void reload(TCConfig config) {
+		final var fsConfig = configOf(config);
+		this.dictionaryRepo = configDao.loaderOf(TestDictionary.class, fsConfig.getDictionaryPath(),
 				serDeserializerRegistry);
-		this.testCaseRepo = configDao.loaderOf(ExportableTestCase.class, config.getTcPath(), serDeserializerRegistry);
-		this.templateRepo = configDao.loaderOf(String.class, config.getTemplatePath(), serDeserializerRegistry);
-		this.testCaseCodeRepo = configDao.loaderOf(String.class, config.getTcExportPath(), serDeserializerRegistry);
+		this.testCaseRepo = configDao.loaderOf(ExportableTestCase.class, fsConfig.getTcPath(), serDeserializerRegistry);
+		this.templateRepo = configDao.loaderOf(String.class, fsConfig.getTemplatePath(), serDeserializerRegistry);
+		this.testCaseCodeRepo = configDao.loaderOf(String.class, fsConfig.getTcExportPath(), serDeserializerRegistry);
 	}
 
 	@Override

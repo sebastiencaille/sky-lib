@@ -27,8 +27,8 @@ import java.util.function.Supplier;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 
-import ch.scaille.gui.mvc.IPropertyEventListener;
-import ch.scaille.gui.mvc.PropertyEvent.EventKind;
+import ch.scaille.javabeans.PropertyEvent.EventKind;
+import ch.scaille.javabeans.properties.IPropertyEventListener;
 import ch.scaille.util.helpers.JavaExt;
 
 public interface SwingExt {

@@ -9,9 +9,11 @@ import javax.swing.JCheckBox;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import ch.scaille.gui.mvc.factories.Converters;
-import ch.scaille.gui.mvc.properties.ObjectProperty;
 import ch.scaille.gui.swing.factories.SwingBindings;
+import ch.scaille.javabeans.PropertyChangeSupportController;
+import ch.scaille.javabeans.Converters;
+import ch.scaille.javabeans.IBindingController;
+import ch.scaille.javabeans.properties.ObjectProperty;
 
 class SwingBindingsTest {
 	private class TestGuiModel extends GuiModel {
@@ -29,7 +31,7 @@ class SwingBindingsTest {
 
 	@BeforeEach
 	public void init() {
-		controller = new GuiController(new ControllerPropertyChangeSupport(this));
+		controller = new GuiController(new PropertyChangeSupportController(this));
 		model = new TestGuiModel(controller);
 	}
 

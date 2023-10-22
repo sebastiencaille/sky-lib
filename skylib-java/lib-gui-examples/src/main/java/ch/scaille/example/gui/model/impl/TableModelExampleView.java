@@ -15,9 +15,9 @@
  ******************************************************************************/
 package ch.scaille.example.gui.model.impl;
 
-import static ch.scaille.gui.mvc.factories.BindingDependencies.preserveOnUpdateOf;
 import static ch.scaille.gui.swing.factories.SwingBindings.selected;
 import static ch.scaille.gui.swing.factories.SwingBindings.selection;
+import static ch.scaille.gui.swing.factories.BindingDependencies.preserveOnUpdateOf;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;

@@ -20,9 +20,9 @@ import java.util.Comparator;
 import ch.scaille.example.gui.TestObject;
 import ch.scaille.gui.model.ListModel;
 import ch.scaille.gui.model.views.ListViews;
-import ch.scaille.gui.mvc.properties.ErrorSet;
-import ch.scaille.gui.mvc.properties.ObjectProperty;
 import ch.scaille.gui.validation.ValidationBinding;
+import ch.scaille.javabeans.properties.ErrorSet;
+import ch.scaille.javabeans.properties.ObjectProperty;
 
 public class ControllerExampleModel extends ControllerExampleObjectGuiModel {
 

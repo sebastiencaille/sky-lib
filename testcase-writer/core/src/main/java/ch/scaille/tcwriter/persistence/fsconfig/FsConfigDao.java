@@ -1,11 +1,15 @@
 package ch.scaille.tcwriter.persistence.fsconfig;
 
+import java.beans.PropertyChangeSupport;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import ch.scaille.javabeans.IPropertiesGroup;
+import ch.scaille.javabeans.PropertyChangeSupportController;
+import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.tcwriter.model.config.TCConfig;
 import ch.scaille.tcwriter.persistence.IConfigDao;
 import ch.scaille.tcwriter.persistence.handlers.YamlConfigDataHandler;
@@ -19,9 +23,9 @@ public class FsConfigDao implements IConfigDao {
 
 	private final FileSystemDao<TCConfig> loader;
 
-	private final List<Consumer<TCConfig>> onReloads = new ArrayList<>();
+	private final IPropertiesGroup propertiesGroup = PropertyChangeSupportController.mainGroup(this);
 
-	private TCConfig currentConfig = null;
+	private final ObjectProperty<TCConfig> currentConfig = new ObjectProperty<>("config", propertiesGroup);
 
 	public static StorageDataHandlerRegistry defaultStorageDataHandler() {
 		return new StorageDataHandlerRegistry(new YamlConfigDataHandler());
@@ -40,8 +44,7 @@ public class FsConfigDao implements IConfigDao {
 	}
 
 	@Override
-	public <T> IDao<T> loaderOf(Class<T> daoType, String locator,
-			StorageDataHandlerRegistry dataHandlersRegistry) {
+	public <T> IDao<T> loaderOf(Class<T> daoType, String locator, StorageDataHandlerRegistry dataHandlersRegistry) {
 		if (locator.startsWith(ClassPathDao.PREFIX)) {
 			return new ClassPathDao<>(daoType, locator, dataHandlersRegistry);
 		}
@@ -61,25 +64,21 @@ public class FsConfigDao implements IConfigDao {
 	@Override
 	public void saveConfiguration() {
 		StorageRTException.uncheck("Writing of configuration",
-				() -> loader.saveOrUpdate(currentConfig.getName(), currentConfig));
+				() -> loader.saveOrUpdate(currentConfig.getValue().getName(), currentConfig.getValue()));
+	}
+
+	@Override
+	public ObjectProperty<TCConfig> getCurrentConfigProperty() {
+		return currentConfig;
 	}
 
 	@Override
 	public TCConfig getCurrentConfig() {
-		return currentConfig;
+		return currentConfig.getValue();
 	}
 
 	private void apply(TCConfig config) {
-		this.currentConfig = config;
-		onReloads.forEach(h -> h.accept(config));
-	}
-
-	@Override
-	public void onReload(Consumer<TCConfig> hook) {
-		onReloads.add(hook);
-		if (currentConfig != null) {
-			hook.accept(currentConfig);
-		}
+		this.currentConfig.setValue(this, config);
 	}
 
 }

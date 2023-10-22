@@ -18,8 +18,8 @@ package ch.scaille.gui.swing.bindings;
 import javax.swing.JSpinner;
 
 import ch.scaille.gui.mvc.ComponentBindingAdapter;
-import ch.scaille.gui.mvc.IComponentLink;
-import ch.scaille.gui.mvc.properties.AbstractProperty;
+import ch.scaille.javabeans.IComponentLink;
+import ch.scaille.javabeans.properties.AbstractProperty;
 
 public class JSpinnerBinding<T extends Number> extends ComponentBindingAdapter<T> {
 

@@ -20,9 +20,9 @@ import java.awt.Component;
 import javax.swing.JTabbedPane;
 
 import ch.scaille.gui.mvc.ComponentBindingAdapter;
-import ch.scaille.gui.mvc.IComponentLink;
-import ch.scaille.gui.mvc.properties.AbstractProperty;
 import ch.scaille.gui.swing.factories.SwingBindings;
+import ch.scaille.javabeans.IComponentLink;
+import ch.scaille.javabeans.properties.AbstractProperty;
 
 /**
  * Select the tab of a tabbed pane according to the property's value.

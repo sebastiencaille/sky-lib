@@ -18,10 +18,10 @@ package ch.scaille.gui.model;
 import java.util.Collection;
 
 import ch.scaille.gui.model.views.IListView;
-import ch.scaille.gui.mvc.IComponentBinding;
-import ch.scaille.gui.mvc.IComponentLink;
 import ch.scaille.gui.mvc.factories.ComponentBindings;
-import ch.scaille.gui.mvc.properties.AbstractProperty;
+import ch.scaille.javabeans.IComponentBinding;
+import ch.scaille.javabeans.IComponentLink;
+import ch.scaille.javabeans.properties.AbstractProperty;
 
 public interface ListModelBindings {
 

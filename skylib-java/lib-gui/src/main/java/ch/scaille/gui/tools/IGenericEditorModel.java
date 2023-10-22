@@ -2,9 +2,9 @@ package ch.scaille.gui.tools;
 
 import java.util.List;
 
-import ch.scaille.gui.mvc.IPropertiesGroup;
-import ch.scaille.gui.mvc.persisters.ObjectProviderPersister.IObjectProvider;
-import ch.scaille.gui.mvc.properties.ErrorSet;
+import ch.scaille.javabeans.IPropertiesGroup;
+import ch.scaille.javabeans.persisters.ObjectProviderPersister.IObjectProvider;
+import ch.scaille.javabeans.properties.ErrorSet;
 
 public interface IGenericEditorModel<T> {
 

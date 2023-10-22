@@ -18,9 +18,9 @@ package ch.scaille.gui.swing.bindings;
 import javax.swing.JTable;
 
 import ch.scaille.gui.mvc.ComponentBindingAdapter;
-import ch.scaille.gui.mvc.IComponentLink;
-import ch.scaille.gui.mvc.properties.AbstractProperty;
 import ch.scaille.gui.swing.model.ListModelTableModel;
+import ch.scaille.javabeans.IComponentLink;
+import ch.scaille.javabeans.properties.AbstractProperty;
 
 public class JTableSelectionBinding<T> extends ComponentBindingAdapter<T> {
 

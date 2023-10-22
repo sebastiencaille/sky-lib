@@ -1,7 +1,7 @@
 package ch.scaille.tcwriter.gui.frame;
 
-import ch.scaille.gui.mvc.IPropertiesGroup;
-import ch.scaille.gui.mvc.properties.ObjectProperty;
+import ch.scaille.javabeans.IPropertiesGroup;
+import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestStep;

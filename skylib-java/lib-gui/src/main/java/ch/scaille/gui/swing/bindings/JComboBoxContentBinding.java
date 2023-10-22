@@ -21,8 +21,8 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 
 import ch.scaille.gui.mvc.ComponentBindingAdapter;
-import ch.scaille.gui.mvc.properties.AbstractProperty;
 import ch.scaille.gui.swing.factories.SwingBindings;
+import ch.scaille.javabeans.properties.AbstractProperty;
 
 public class JComboBoxContentBinding<T, U extends Collection<T>> extends ComponentBindingAdapter<U> {
 

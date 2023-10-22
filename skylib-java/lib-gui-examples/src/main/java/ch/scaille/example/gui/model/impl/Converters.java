@@ -19,12 +19,12 @@ import static ch.scaille.gui.model.views.ListViews.sorted;
 
 import ch.scaille.example.gui.TestObject;
 import ch.scaille.gui.model.views.IListView;
-import ch.scaille.gui.mvc.converters.IConverter;
+import ch.scaille.javabeans.converters.IConverter;
 
 public interface Converters {
 
 	static IConverter<Boolean, IListView<TestObject>> booleanToOrder() {
-		return ch.scaille.gui.mvc.factories.Converters.either(
+		return ch.scaille.javabeans.Converters.either(
 				() -> sorted(TableModelExampleView.NATURAL_ORDER), () -> sorted(TableModelExampleView.REVERSE_ORDER));
 	}
 

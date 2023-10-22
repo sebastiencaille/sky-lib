@@ -1,6 +1,6 @@
 package ch.scaille.gui.tools;
 
-import static ch.scaille.gui.mvc.properties.Configuration.persistent;
+import static ch.scaille.javabeans.properties.Configuration.persistent;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -11,14 +11,14 @@ import java.util.function.UnaryOperator;
 
 import ch.scaille.annotations.Labeled;
 import ch.scaille.annotations.Ordered;
-import ch.scaille.gui.mvc.BindingChain.EndOfChain;
-import ch.scaille.gui.mvc.ControllerPropertyChangeSupport;
-import ch.scaille.gui.mvc.IPropertiesGroup;
-import ch.scaille.gui.mvc.factories.Persisters;
-import ch.scaille.gui.mvc.persisters.ObjectProviderPersister.IObjectProvider;
-import ch.scaille.gui.mvc.properties.AbstractTypedProperty;
-import ch.scaille.gui.mvc.properties.ErrorSet;
-import ch.scaille.gui.mvc.properties.ObjectProperty;
+import ch.scaille.javabeans.BindingChain.EndOfChain;
+import ch.scaille.javabeans.PropertyChangeSupportController;
+import ch.scaille.javabeans.IPropertiesGroup;
+import ch.scaille.javabeans.persisters.Persisters;
+import ch.scaille.javabeans.persisters.ObjectProviderPersister.IObjectProvider;
+import ch.scaille.javabeans.properties.AbstractTypedProperty;
+import ch.scaille.javabeans.properties.ErrorSet;
+import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
 import ch.scaille.util.dao.metadata.DataObjectMetaData;
 
@@ -84,7 +84,7 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 
 		public GenericEditorClassModel<T> build() {
 			if (propertySupport == null) {
-				propertySupport = ControllerPropertyChangeSupport.mainGroup(this);
+				propertySupport = PropertyChangeSupportController.mainGroup(this);
 			}
 			if (errorSet == null) {
 				errorSet = new ErrorSet("Error", propertySupport);

@@ -14,13 +14,13 @@ import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import ch.scaille.gui.mvc.ControllerPropertyChangeSupport;
 import ch.scaille.gui.mvc.GuiController;
-import ch.scaille.gui.mvc.properties.ErrorSet;
 import ch.scaille.gui.swing.tools.SwingGenericEditorDialog;
 import ch.scaille.gui.tools.GenericEditorClassModel;
 import ch.scaille.gui.tools.GenericEditorController;
 import ch.scaille.gui.tools.IGenericEditor;
+import ch.scaille.javabeans.PropertyChangeSupportController;
+import ch.scaille.javabeans.properties.ErrorSet;
 import ch.scaille.tcwriter.gui.DictionaryImport;
 import ch.scaille.tcwriter.gui.frame.TCWriterModel.TestExecutionState;
 import ch.scaille.tcwriter.model.TestCaseException;
@@ -105,7 +105,7 @@ public class TCWriterController extends GuiController {
 
 	public void editConfig() throws IOException {
 		final var configEditorDialog = new SwingGenericEditorDialog(gui, "Configuration", ModalityType.DOCUMENT_MODAL);
-		final var editorPropertySupport = ControllerPropertyChangeSupport.mainGroup(configEditorDialog);
+		final var editorPropertySupport = PropertyChangeSupportController.mainGroup(configEditorDialog);
 		final var errorProp = new ErrorSet("Error", editorPropertySupport);
 		for (final var configToEdit : configDao.getCurrentConfig().getSubconfigs()) {
 			final var builder = GenericEditorClassModel.builder(configToEdit.getClass())

@@ -1,6 +1,6 @@
 package ch.scaille.gui.tools;
 
-import ch.scaille.gui.mvc.BindingChain.EndOfChain;
+import ch.scaille.javabeans.BindingChain.EndOfChain;
 
 public interface IGenericModelAdapter {
 

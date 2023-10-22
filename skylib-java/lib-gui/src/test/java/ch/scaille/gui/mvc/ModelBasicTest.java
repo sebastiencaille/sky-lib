@@ -15,7 +15,7 @@
  ******************************************************************************/
 package ch.scaille.gui.mvc;
 
-import static ch.scaille.gui.mvc.properties.Configuration.persistent;
+import static ch.scaille.javabeans.properties.Configuration.persistent;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Assertions;
@@ -23,15 +23,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import ch.scaille.gui.TestObject;
-import ch.scaille.gui.mvc.converters.ConversionException;
-import ch.scaille.gui.mvc.factories.Converters;
-import ch.scaille.gui.mvc.factories.Persisters;
-import ch.scaille.gui.mvc.persisters.IPersisterFactory;
-import ch.scaille.gui.mvc.properties.AbstractProperty;
-import ch.scaille.gui.mvc.properties.Configuration;
-import ch.scaille.gui.mvc.properties.ErrorSet;
-import ch.scaille.gui.mvc.properties.IntProperty;
-import ch.scaille.gui.mvc.properties.ObjectProperty;
+import ch.scaille.javabeans.PropertyChangeSupportController;
+import ch.scaille.javabeans.Converters;
+import ch.scaille.javabeans.IComponentBinding;
+import ch.scaille.javabeans.IComponentLink;
+import ch.scaille.javabeans.converters.ConversionException;
+import ch.scaille.javabeans.persisters.IPersisterFactory;
+import ch.scaille.javabeans.persisters.Persisters;
+import ch.scaille.javabeans.properties.AbstractProperty;
+import ch.scaille.javabeans.properties.Configuration;
+import ch.scaille.javabeans.properties.ErrorSet;
+import ch.scaille.javabeans.properties.IntProperty;
+import ch.scaille.javabeans.properties.ObjectProperty;
 
 class ModelBasicTest {
 
@@ -52,7 +55,7 @@ class ModelBasicTest {
 
 	@BeforeEach
 	public void init() {
-		controller = new GuiController(new ControllerPropertyChangeSupport(this));
+		controller = new GuiController(new PropertyChangeSupportController(this));
 		model = new TestGuiModel(controller);
 	}
 

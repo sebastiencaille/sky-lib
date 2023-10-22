@@ -3,7 +3,7 @@ package ch.scaille.tcwriter.gui.editors.steps;
 import java.util.List;
 
 import ch.scaille.gui.mvc.GuiModel;
-import ch.scaille.gui.mvc.properties.ObjectProperty;
+import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.tcwriter.model.dictionary.StepClassifier;
 import ch.scaille.tcwriter.model.dictionary.TestAction;
 import ch.scaille.tcwriter.model.dictionary.TestActor;

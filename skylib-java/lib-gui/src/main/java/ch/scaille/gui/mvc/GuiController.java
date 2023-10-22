@@ -15,6 +15,9 @@
  ******************************************************************************/
 package ch.scaille.gui.mvc;
 
+import ch.scaille.javabeans.PropertyChangeSupportController;
+import ch.scaille.javabeans.IPropertiesGroup;
+
 /**
  * Base of MVC controller.
  * <p>
@@ -31,10 +34,10 @@ public class GuiController {
 	protected final IPropertiesGroup propertySupport;
 
 	public GuiController() {
-		this.propertySupport = ControllerPropertyChangeSupport.mainGroup(this);
+		this.propertySupport = PropertyChangeSupportController.mainGroup(this);
 	}
 
-	public GuiController(final ControllerPropertyChangeSupport propertySupport) {
+	public GuiController(final PropertyChangeSupportController propertySupport) {
 		this.propertySupport = propertySupport.scoped(this);
 	}
 

@@ -29,9 +29,10 @@
 	</properties>
 
 	<dependencies>
+
 		<dependency>
 			<groupId>ch.scaille</groupId>
-			<artifactId>lib-utils</artifactId>
+			<artifactId>lib-javabeans</artifactId>
 		</dependency>
 
 		<dependency>
@@ -40,16 +41,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-engine</artifactId>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 
 </project>

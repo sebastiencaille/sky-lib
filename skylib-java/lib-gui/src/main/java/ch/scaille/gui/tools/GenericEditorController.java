@@ -1,12 +1,12 @@
 package ch.scaille.gui.tools;
 
-import static ch.scaille.gui.mvc.properties.Configuration.errorNotifier;
+import static ch.scaille.javabeans.properties.Configuration.errorNotifier;
 
 import java.util.List;
 
-import ch.scaille.gui.mvc.IPropertiesGroup;
-import ch.scaille.gui.mvc.persisters.ObjectProviderPersister.CurrentObjectProvider;
-import ch.scaille.gui.mvc.properties.ErrorSet;
+import ch.scaille.javabeans.IPropertiesGroup;
+import ch.scaille.javabeans.persisters.ObjectProviderPersister.CurrentObjectProvider;
+import ch.scaille.javabeans.properties.ErrorSet;
 
 /**
  * This controller is the root of the generic editor. It helps binding the view

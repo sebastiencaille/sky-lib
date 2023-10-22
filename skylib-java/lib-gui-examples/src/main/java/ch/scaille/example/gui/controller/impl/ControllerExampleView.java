@@ -16,15 +16,15 @@
 package ch.scaille.example.gui.controller.impl;
 
 import static ch.scaille.example.gui.TestObject.testObjectToString;
-import static ch.scaille.gui.mvc.factories.BindingDependencies.preserveOnUpdateOf;
-import static ch.scaille.gui.mvc.factories.Converters.guiErrorToString;
-import static ch.scaille.gui.mvc.factories.Converters.intToString;
-import static ch.scaille.gui.mvc.factories.Converters.listen;
-import static ch.scaille.gui.mvc.factories.Converters.mapContains;
 import static ch.scaille.gui.swing.factories.SwingBindings.selected;
 import static ch.scaille.gui.swing.factories.SwingBindings.selection;
 import static ch.scaille.gui.swing.factories.SwingBindings.value;
 import static ch.scaille.gui.swing.factories.SwingBindings.values;
+import static ch.scaille.javabeans.BindingDependencies.preserveOnUpdateOf;
+import static ch.scaille.javabeans.Converters.guiErrorToString;
+import static ch.scaille.javabeans.Converters.intToString;
+import static ch.scaille.javabeans.Converters.listen;
+import static ch.scaille.javabeans.Converters.mapContains;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -46,9 +46,9 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import ch.scaille.example.gui.TestObjectTableModel;
-import ch.scaille.gui.mvc.converters.IConverter;
-import ch.scaille.gui.mvc.properties.AbstractProperty;
-import ch.scaille.gui.mvc.properties.ErrorSet;
+import ch.scaille.javabeans.converters.IConverter;
+import ch.scaille.javabeans.properties.AbstractProperty;
+import ch.scaille.javabeans.properties.ErrorSet;
 
 public class ControllerExampleView extends JFrame {
 

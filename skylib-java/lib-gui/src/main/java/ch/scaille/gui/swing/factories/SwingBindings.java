@@ -42,9 +42,6 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import ch.scaille.gui.mvc.IComponentBinding;
-import ch.scaille.gui.mvc.IComponentLink;
-import ch.scaille.gui.mvc.properties.AbstractProperty;
 import ch.scaille.gui.swing.bindings.JComboBoxContentBinding;
 import ch.scaille.gui.swing.bindings.JListContentBinding;
 import ch.scaille.gui.swing.bindings.JListSelectionBinding;
@@ -54,6 +51,9 @@ import ch.scaille.gui.swing.bindings.JTableSelectionBinding;
 import ch.scaille.gui.swing.bindings.JTextAreaBinding;
 import ch.scaille.gui.swing.bindings.JTextFieldBinding;
 import ch.scaille.gui.swing.model.ListModelTableModel;
+import ch.scaille.javabeans.IComponentBinding;
+import ch.scaille.javabeans.IComponentLink;
+import ch.scaille.javabeans.properties.AbstractProperty;
 
 public class SwingBindings {
 

@@ -3,7 +3,8 @@ package ch.scaille.gui.mvc.factories;
 import java.util.Objects;
 import java.util.function.Function;
 
-import ch.scaille.gui.mvc.converters.IConverter;
+import ch.scaille.javabeans.Converters;
+import ch.scaille.javabeans.converters.IConverter;
 
 public abstract class ObjectTextView<T> {
 

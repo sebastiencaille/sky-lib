@@ -22,7 +22,7 @@ import java.util.function.BiConsumer;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import ch.scaille.util.FormatterHelper;
+import ch.scaille.util.text.FormatterHelper;
 
 @SuppressWarnings("serial")
 public class SizeRenderer extends DefaultTableCellRenderer {

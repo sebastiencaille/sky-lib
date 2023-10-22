@@ -4,9 +4,9 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-import ch.scaille.gui.mvc.IComponentBinding;
-import ch.scaille.gui.mvc.IComponentLink;
-import ch.scaille.gui.mvc.properties.AbstractProperty;
+import ch.scaille.javabeans.IComponentBinding;
+import ch.scaille.javabeans.IComponentLink;
+import ch.scaille.javabeans.properties.AbstractProperty;
 
 public final class ComponentBindings {
 

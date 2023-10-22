@@ -1,12 +1,12 @@
 package ch.scaille.tcwriter.gui.editors.params;
 
 import static ch.scaille.gui.model.ListModelBindings.values;
-import static ch.scaille.gui.mvc.factories.Converters.filter;
-import static ch.scaille.gui.mvc.factories.Converters.listConverter;
 import static ch.scaille.gui.swing.factories.SwingBindings.group;
 import static ch.scaille.gui.swing.factories.SwingBindings.selection;
 import static ch.scaille.gui.swing.factories.SwingBindings.value;
 import static ch.scaille.gui.swing.factories.SwingBindings.values;
+import static ch.scaille.javabeans.Converters.filter;
+import static ch.scaille.javabeans.Converters.listConverter;
 import static java.util.stream.Collectors.toSet;
 
 import java.awt.BorderLayout;
@@ -29,10 +29,10 @@ import com.google.common.base.Strings;
 
 import ch.scaille.gui.model.ListModel;
 import ch.scaille.gui.model.views.ListViews;
-import ch.scaille.gui.mvc.converters.IConverter;
-import ch.scaille.gui.mvc.factories.BindingDependencies;
 import ch.scaille.gui.mvc.factories.ObjectTextView;
-import ch.scaille.gui.mvc.properties.ObjectProperty;
+import ch.scaille.javabeans.BindingDependencies;
+import ch.scaille.javabeans.converters.IConverter;
+import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.tcwriter.gui.editors.params.TestParameterValueTableModel.ParameterValueEntry;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.tcwriter.model.dictionary.TestApiParameter;

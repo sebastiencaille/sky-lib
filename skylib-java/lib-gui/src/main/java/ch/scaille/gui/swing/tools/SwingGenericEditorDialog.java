@@ -13,9 +13,9 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 
-import ch.scaille.gui.mvc.properties.ErrorSet;
 import ch.scaille.gui.tools.GenericEditorController;
 import ch.scaille.gui.tools.IGenericEditor;
+import ch.scaille.javabeans.properties.ErrorSet;
 
 public class SwingGenericEditorDialog extends JDialog {
 

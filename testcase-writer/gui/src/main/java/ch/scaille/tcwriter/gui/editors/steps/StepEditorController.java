@@ -1,13 +1,13 @@
 package ch.scaille.tcwriter.gui.editors.steps;
 
 import static ch.scaille.gui.mvc.GuiModel.of;
-import static ch.scaille.gui.mvc.factories.BindingDependencies.preserveOnUpdateOf;
+import static ch.scaille.javabeans.BindingDependencies.preserveOnUpdateOf;
 
 import java.util.*;
 
 import ch.scaille.gui.mvc.GuiController;
-import ch.scaille.gui.mvc.IPropertiesGroup;
-import ch.scaille.gui.mvc.properties.ObjectProperty;
+import ch.scaille.javabeans.IPropertiesGroup;
+import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.tcwriter.gui.frame.TCWriterModel;
 import ch.scaille.tcwriter.model.ModelUtils;

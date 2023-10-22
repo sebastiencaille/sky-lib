@@ -20,8 +20,8 @@ import java.util.Collection;
 
 import javax.swing.JTable;
 
-import ch.scaille.gui.mvc.properties.ObjectProperty;
 import ch.scaille.gui.swing.model.ListModelTableModel;
+import ch.scaille.javabeans.properties.ObjectProperty;
 
 /**
  * Popup on JTable with a ListModelTableModel

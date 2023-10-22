@@ -1,7 +1,7 @@
 package ch.scaille.example.gui.tools;
 
-import static ch.scaille.gui.mvc.factories.Persisters.getSet;
-import static ch.scaille.gui.mvc.properties.Configuration.persistent;
+import static ch.scaille.javabeans.persisters.Persisters.getSet;
+import static ch.scaille.javabeans.properties.Configuration.persistent;
 
 import java.awt.Dialog;
 import java.util.Arrays;
@@ -9,15 +9,15 @@ import java.util.List;
 
 import javax.swing.SwingUtilities;
 
-import ch.scaille.gui.mvc.IPropertiesGroup;
-import ch.scaille.gui.mvc.persisters.ObjectProviderPersister.IObjectProvider;
-import ch.scaille.gui.mvc.properties.AbstractTypedProperty;
-import ch.scaille.gui.mvc.properties.BooleanProperty;
-import ch.scaille.gui.mvc.properties.ObjectProperty;
 import ch.scaille.gui.swing.tools.SwingGenericEditorDialog;
 import ch.scaille.gui.tools.GenericEditorController;
 import ch.scaille.gui.tools.PropertyEntry;
 import ch.scaille.gui.tools.SimpleEditorModel;
+import ch.scaille.javabeans.IPropertiesGroup;
+import ch.scaille.javabeans.persisters.ObjectProviderPersister.IObjectProvider;
+import ch.scaille.javabeans.properties.AbstractTypedProperty;
+import ch.scaille.javabeans.properties.BooleanProperty;
+import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.util.helpers.Logs;
 
 public class GenericPropertiesEditorLauncher {

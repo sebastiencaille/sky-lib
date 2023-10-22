@@ -18,9 +18,9 @@ package ch.scaille.gui.model.views;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
-import ch.scaille.gui.mvc.IComponentBinding;
-import ch.scaille.gui.mvc.IComponentLink;
-import ch.scaille.gui.mvc.properties.AbstractProperty;
+import ch.scaille.javabeans.IComponentBinding;
+import ch.scaille.javabeans.IComponentLink;
+import ch.scaille.javabeans.properties.AbstractProperty;
 
 /**
  * Filter that can be used as a component Binding

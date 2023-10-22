@@ -2,8 +2,8 @@ package ch.scaille.gui.tools;
 
 import java.util.function.Function;
 
-import ch.scaille.gui.mvc.BindingChain.EndOfChain;
-import ch.scaille.gui.mvc.properties.AbstractTypedProperty;
+import ch.scaille.javabeans.BindingChain.EndOfChain;
+import ch.scaille.javabeans.properties.AbstractTypedProperty;
 
 /*
  */

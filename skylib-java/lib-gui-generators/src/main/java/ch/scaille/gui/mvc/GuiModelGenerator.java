@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import ch.scaille.annotations.GuiObject;
@@ -40,7 +41,11 @@ public class GuiModelGenerator {
 		Logs.of(this).info("Scanning " + params.getSourceFolder());
 		try (var classFinder = ClassFinder.source(new File(params.getSourceFolder()))) {
 			final var classes = classFinder.withAnnotation(GuiObject.class, ClassFinder.Policy.CLASS_ONLY)
-					.withPackages(params.getNamespaceFilter()).scan().collect(Collectors.toList());
+					.withLibPackages(List.of("ch.scaille.javabeans.properties.", "ch.scaille.javabeans.persisters.",
+							"ch.scaille.javabeans."))
+					.withPackages(params.getNamespaceFilter())
+					.scan()
+					.collect(Collectors.toList());
 			Logs.of(this).info(() -> "Processing classes: " + classes);
 
 			for (final var clazz : classes) {

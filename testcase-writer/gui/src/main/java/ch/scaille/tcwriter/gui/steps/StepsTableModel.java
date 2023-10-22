@@ -3,8 +3,8 @@ package ch.scaille.tcwriter.gui.steps;
 import javax.swing.event.TableModelEvent;
 
 import ch.scaille.gui.model.ListModel;
-import ch.scaille.gui.mvc.properties.ObjectProperty;
 import ch.scaille.gui.swing.model.ListModelTableModel;
+import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.tcwriter.model.IdObject;
 import ch.scaille.tcwriter.model.ModelUtils;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;

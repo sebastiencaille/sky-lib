@@ -1,7 +1,7 @@
 package ch.scaille.gui.tools;
 
-import ch.scaille.gui.mvc.IBindingController;
-import ch.scaille.gui.mvc.properties.ErrorSet;
+import ch.scaille.javabeans.IBindingController;
+import ch.scaille.javabeans.properties.ErrorSet;
 
 public interface IGenericEditor {
 

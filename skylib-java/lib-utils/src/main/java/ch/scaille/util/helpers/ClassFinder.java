@@ -29,6 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -51,9 +52,6 @@ import java.util.stream.Stream;
 public class ClassFinder {
 
 	public static final Logger LOGGER = Logs.of(ClassFinder.class);
-
-	private static final String[] DEFAULT_PACKAGES = { "", "ch.scaille.gui.mvc.properties.",
-			"ch.scaille.gui.mvc.persisters.", "ch.scaille.gui." };
 
 	private static final String CLASS_EXTENSION = ".class";
 
@@ -99,6 +97,8 @@ public class ClassFinder {
 
 	private Function<URL, Scanner> scanners = defaultScanner;
 
+	private List<String> libPackages = new ArrayList<>();
+
 	public static URLClassFinder of(URL[] cp) {
 		return new URLClassFinder(cp);
 	}
@@ -122,6 +122,11 @@ public class ClassFinder {
 		this.collectedClasses.put(Object.class, Policy.SCANNED);
 	}
 
+	public ClassFinder withLibPackages(Collection<String> packages) {
+		libPackages.addAll(packages);
+		return this;
+	}
+	
 	public ClassFinder withClasses(Class<?>... classes) {
 		collectedClasses.putAll(Arrays.stream(classes).collect(Collectors.toMap(c -> c, c -> Policy.CLASS_ONLY)));
 		return this;
@@ -135,7 +140,7 @@ public class ClassFinder {
 	public Class<?> loadByName(final String className) {
 
 		Class<?> found = null;
-		for (final var pkg : DEFAULT_PACKAGES) {
+		for (final var pkg : libPackages) {
 			try {
 				found = loader.loadClass(pkg + className);
 				break;

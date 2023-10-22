@@ -16,8 +16,8 @@
 package ch.scaille.example.gui;
 
 import ch.scaille.annotations.GuiObject;
-import ch.scaille.gui.mvc.converters.IConverter;
-import ch.scaille.gui.mvc.factories.Converters;
+import ch.scaille.javabeans.Converters;
+import ch.scaille.javabeans.converters.IConverter;
 
 @GuiObject
 public class TestObject {

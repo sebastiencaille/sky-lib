@@ -21,9 +21,9 @@ import java.awt.event.FocusEvent;
 import javax.swing.JTextArea;
 
 import ch.scaille.gui.mvc.ComponentBindingAdapter;
-import ch.scaille.gui.mvc.IComponentLink;
-import ch.scaille.gui.mvc.properties.AbstractProperty;
 import ch.scaille.gui.swing.factories.SwingBindings;
+import ch.scaille.javabeans.IComponentLink;
+import ch.scaille.javabeans.properties.AbstractProperty;
 
 public class JTextAreaBinding extends ComponentBindingAdapter<String> {
 

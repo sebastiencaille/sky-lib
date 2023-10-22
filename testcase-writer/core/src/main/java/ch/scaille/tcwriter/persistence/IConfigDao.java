@@ -1,17 +1,17 @@
 package ch.scaille.tcwriter.persistence;
 
 import java.io.IOException;
-import java.util.function.Consumer;
 
+import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.tcwriter.model.config.TCConfig;
 import ch.scaille.util.persistence.IDao;
 import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
 
 public interface IConfigDao {
 
-    void onReload(Consumer<TCConfig> hook);
-
     TCConfig getCurrentConfig();
+
+	ObjectProperty<TCConfig> getCurrentConfigProperty();
 
     /**
      * Gets the dao according to the data type
@@ -24,5 +24,6 @@ public interface IConfigDao {
     <T> IDao<T> loaderOf(Class<T> daoType, String subPath, StorageDataHandlerRegistry dataHandlerRegistry);
 
 	void saveConfiguration() throws IOException;
+
 	
 }

@@ -15,7 +15,9 @@
  ******************************************************************************/
 package ch.scaille.gui.mvc;
 
-import ch.scaille.gui.mvc.properties.AbstractProperty;
+import ch.scaille.javabeans.IComponentBinding;
+import ch.scaille.javabeans.IComponentLink;
+import ch.scaille.javabeans.properties.AbstractProperty;
 
 /**
  * Parent class of all component bindings.

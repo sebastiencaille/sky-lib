@@ -16,10 +16,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -29,7 +31,9 @@ import com.google.common.base.Strings;
 
 import ch.scaille.gui.model.ListModel;
 import ch.scaille.gui.model.views.ListViews;
+import ch.scaille.gui.mvc.factories.ComponentBindings;
 import ch.scaille.gui.mvc.factories.ObjectTextView;
+import ch.scaille.gui.swing.factories.SwingBindings;
 import ch.scaille.javabeans.BindingDependencies;
 import ch.scaille.javabeans.converters.IConverter;
 import ch.scaille.javabeans.properties.ObjectProperty;
@@ -78,17 +82,35 @@ public class TestParameterValueEditorPanel extends JPanel {
 		final var topPanel = new JPanel();
 		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.PAGE_AXIS));
 
-		// Simple raw value
-		final var useRawValueEditor = new JRadioButton("Raw value");
-		topPanel.add(useRawValueEditor);
+		final var valueTypePanel = new JPanel();
+		
+		// To select the kind of value 
 
+		final var useRawValueEditor = new JRadioButton("Raw value");
+		tpModel.getTestApi().bind(o -> o != null && o.getNature() != ParameterNature.TEST_API).listen(useRawValueEditor::setEnabled);
+		valueTypePanel.add(useRawValueEditor);
+
+		final var useReferenceEditor = new JRadioButton("Reference: ");
+		valueTypePanel.add(useReferenceEditor);
+		
+		final var useComplexTypeEditor = new JRadioButton("Test Api: ");
+		tpModel.getTestApi().bind(o -> o != null && o.getNature() == ParameterNature.TEST_API).listen(useComplexTypeEditor::setEnabled);
+		valueTypePanel.add(useComplexTypeEditor);
+		
+		topPanel.add(valueTypePanel);
+		
+		final var paramTypeEditorGroup = new ButtonGroup();
+		paramTypeEditorGroup.add(useRawValueEditor);
+		paramTypeEditorGroup.add(useReferenceEditor);
+		paramTypeEditorGroup.add(useComplexTypeEditor);
+		
+		// editors 
+		
 		final var simpleValueEditor = new JTextField();
 		tpModel.getSimpleValue().bind(value(simpleValueEditor));
+		tpModel.getValueNature().bind(v -> v == ParameterNature.SIMPLE_TYPE).listen(enableAndVisible(simpleValueEditor));
 		topPanel.add(simpleValueEditor);
-
-		// Value references
-		final var useReferenceEditor = new JRadioButton("Reference: ");
-		topPanel.add(useReferenceEditor);
+		
 		
 		final var referenceEditor = new JComboBox<ObjectTextView<TestReference>>();
 		tpModel.getReferences()
@@ -99,11 +121,10 @@ public class TestParameterValueEditorPanel extends JPanel {
 		tpModel.getSelectedReference().bind(refToTextConverter())//
 				.bind(selection(referenceEditor)) //
 				.addDependency(BindingDependencies.preserveOnUpdateOf(tpModel.getReferences()));
+		tpModel.getValueNature().bind(v -> v == ParameterNature.REFERENCE).listen(enableAndVisible(referenceEditor));
 		topPanel.add(referenceEditor);
 
 		// Complex type editor
-		final var useComplexTypeEditor = new JRadioButton("Test Api: ");
-		topPanel.add(useComplexTypeEditor);
 		add(topPanel, BorderLayout.NORTH);
  
 		final var allEditedParameters = new ListModel<ParameterValueEntry>(ListViews.sorted());
@@ -113,17 +134,13 @@ public class TestParameterValueEditorPanel extends JPanel {
 		final var complexValues = editedParamValue.child("ComplexParams", TestParameterValue::getComplexTypeValues,
 				TestParameterValue::updateComplexTypeValues);
 		complexValues.bind(toListModel(testCase, editedParamValue)).bind(values(allEditedParameters));
-
+		var  valueTablePane = new JScrollPane(valueTable);
+		tpModel.getValueNature().bind(v -> v == ParameterNature.TEST_API).listen(enableAndVisible(valueTablePane));
 		tpModel.getTestApi().listenActive(api -> fixParamsOfApi(testCase, api, editedParamValue, allEditedParameters));
 
-		add(new JScrollPane(valueTable), BorderLayout.CENTER);
+		add(valueTablePane, BorderLayout.CENTER);
 
-		final var paramTypeEditorgroup = new ButtonGroup();
-		paramTypeEditorgroup.add(useRawValueEditor);
-		paramTypeEditorgroup.add(useReferenceEditor);
-		paramTypeEditorgroup.add(useComplexTypeEditor);
-
-		tpModel.getValueNature().bind(group(paramTypeEditorgroup, ParameterNature.REFERENCE, useReferenceEditor,
+		tpModel.getValueNature().bind(group(paramTypeEditorGroup, ParameterNature.REFERENCE, useReferenceEditor,
 				ParameterNature.SIMPLE_TYPE, useRawValueEditor, ParameterNature.TEST_API, useComplexTypeEditor));
 
 		// When TC or parameters are changing, update the list of references
@@ -171,6 +188,14 @@ public class TestParameterValueEditorPanel extends JPanel {
 				break;
 			}
 		});
+	}
+
+	private Consumer<Boolean> enableAndVisible(JComponent component) {
+		return e -> {
+			component.setEnabled(e);
+			component.setVisible(e);
+			component.revalidate();
+		};
 	}
 
 	/**

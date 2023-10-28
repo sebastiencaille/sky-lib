@@ -1,5 +1,6 @@
 package ch.scaille.tcwriter.server.dto;
 
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -24,13 +25,17 @@ public class Context {
 		this.testCase = testCase;
 	}
 	
-	public Context derive() {
+	public Context copy() {
 		final var copy = new Context();
 		copy.setDictionary(dictionaryName);
 		copy.setTestCase(testCase);
 		return copy;
 	}
 
+	public boolean differs(Context other) {
+		return Objects.equals(dictionaryName, other.dictionaryName) && Objects.equals(testCase, other.testCase);
+	}
+	
 	@Override
 	public String toString() {
 		return String.format("[dictionary: %s, testCase: %s ]", dictionaryName, testCase);

@@ -4,12 +4,8 @@ import ch.scaille.tcwriter.server.dto.Context;
 
 public class ContextFacadeImpl implements ContextFacade {
 
-
-	public ContextFacadeImpl() {
-	}
-
 	@Override
-	public Context merge(Context current, Context newContext) {
+	public void merge(Context current, Context newContext) {
 		final var dictionary = newContext.getDictionary();
 		final var testCase = newContext.getTestCase();
 
@@ -19,7 +15,6 @@ public class ContextFacadeImpl implements ContextFacade {
 		if (testCase.isPresent()) {
 			current.setTestCase(testCase.get());
 		}
-		return current;
 	}
 
 }

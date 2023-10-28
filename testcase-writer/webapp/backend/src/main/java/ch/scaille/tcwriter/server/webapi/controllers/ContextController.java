@@ -15,7 +15,7 @@ public class ContextController extends ContextApiController {
 
     private final ContextFacade contextService;
 
-    private Context context;
+    private final Context context;
     
     public ContextController(Context context, ContextFacade contextService, NativeWebRequest webNativeRequest) {
         super(webNativeRequest);
@@ -31,7 +31,7 @@ public class ContextController extends ContextApiController {
     @Override
     public ResponseEntity<ch.scaille.tcwriter.generated.api.model.Context> setCurrent(
             ch.scaille.tcwriter.generated.api.model.@Valid Context contextUpdate) {
-    	context = contextService.merge(context, ContextMapper.MAPPER.convert(contextUpdate));
+    	contextService.merge(context, ContextMapper.MAPPER.convert(contextUpdate));
         Logs.of(getClass()).info(() -> "Setting new context: " + context);
         return ResponseEntity.ok(ContextMapper.MAPPER.convert(context));
     }

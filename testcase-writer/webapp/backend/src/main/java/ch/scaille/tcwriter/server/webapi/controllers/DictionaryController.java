@@ -11,7 +11,6 @@ import ch.scaille.tcwriter.generated.api.controllers.DictionaryApiController;
 import ch.scaille.tcwriter.generated.api.model.Metadata;
 import ch.scaille.tcwriter.generated.api.model.TestDictionary;
 import ch.scaille.tcwriter.server.dto.Context;
-import ch.scaille.tcwriter.server.facade.ContextFacade;
 import ch.scaille.tcwriter.server.facade.DictionaryFacade;
 import ch.scaille.tcwriter.server.webapi.mappers.MetadataMapper;
 import ch.scaille.tcwriter.server.webapi.mappers.TestDictionaryMapper;
@@ -20,7 +19,7 @@ public class DictionaryController extends DictionaryApiController {
 
 	private final DictionaryFacade dictionaryFacade;
 
-	private Context context;
+	private final Context context;
 
 	public DictionaryController(Context context, DictionaryFacade dictionaryFacade, NativeWebRequest request) {
 		super(request);

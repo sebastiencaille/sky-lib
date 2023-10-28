@@ -4,6 +4,6 @@ import ch.scaille.tcwriter.server.dto.Context;
 
 public interface ContextFacade {
 	
-	Context merge(Context current, Context newContext);
+	void merge(Context current, Context newContext);
 
 }

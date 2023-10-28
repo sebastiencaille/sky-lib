@@ -11,12 +11,16 @@ import ch.scaille.tcwriter.persistence.IModelDao;
 import ch.scaille.tcwriter.server.dao.IDictionaryDao;
 import ch.scaille.tcwriter.server.dao.ITestCaseDao;
 import ch.scaille.tcwriter.server.dto.Context;
+import ch.scaille.tcwriter.server.facade.ClusteredSessionFacade;
+import ch.scaille.tcwriter.server.facade.ClusteredSessionFacadeImpl;
 import ch.scaille.tcwriter.server.facade.ContextFacade;
 import ch.scaille.tcwriter.server.facade.ContextFacadeImpl;
 import ch.scaille.tcwriter.server.facade.DictionaryFacade;
 import ch.scaille.tcwriter.server.facade.TestCaseFacade;
+import ch.scaille.tcwriter.server.repository.ClusteredContextRepository;
 import ch.scaille.tcwriter.services.testexec.JUnitTestExecutor;
 import ch.scaille.util.helpers.ClassLoaderHelper;
+import jakarta.persistence.EntityManagerFactory;
 
 @Configuration
 public class ServiceConfig {
@@ -37,6 +41,11 @@ public class ServiceConfig {
 		return new ContextFacadeImpl();
 	}
 
+	@Bean
+	ClusteredSessionFacade clusteredSessionFacade(EntityManagerFactory emf, ClusteredContextRepository repository) {
+		return new ClusteredSessionFacadeImpl(repository);
+	}
+	
 	@Bean
 	JUnitTestExecutor jUnitTestExecutor(IConfigDao configDao, IModelDao modelDao) {
 		return new JUnitTestExecutor(configDao, modelDao, ClassLoaderHelper.guessClassPath());

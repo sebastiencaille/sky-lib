@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan("ch.scaille.tcwriter.server.config")
+@ComponentScan({"ch.scaille.tcwriter.server.config"})
 public class Server  {
 
 	public static void main(String[] args) {

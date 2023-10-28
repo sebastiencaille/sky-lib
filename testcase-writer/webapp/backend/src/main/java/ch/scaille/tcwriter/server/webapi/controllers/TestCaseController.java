@@ -34,7 +34,7 @@ public class TestCaseController extends TestcaseApiController {
 
 	private final MessageSendingOperations<String> feedbackSendingTemplate;
 
-	private Context context;
+	private final Context context;
 	
 	public TestCaseController(Context context, TestCaseFacade testCaseFacade,
 			MessageSendingOperations<String> feedbackSendingTemplate, NativeWebRequest request) {

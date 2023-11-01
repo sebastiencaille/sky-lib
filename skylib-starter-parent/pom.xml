@@ -29,7 +29,8 @@
 		<junit-jupiter.version>5.10.0</junit-jupiter.version>
 		<junit.version>4.13.2</junit.version>
 		<junit-platform-console-standalone.version>1.10.0</junit-platform-console-standalone.version>
-		<selenium.version>4.14.1</selenium.version>
+		<selenium.version>4.15.0</selenium.version>
+		<h2.version>2.2.224</h2.version>
 
 		<mapstruct.version>1.5.5.Final</mapstruct.version>
 

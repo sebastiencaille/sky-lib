@@ -1,6 +1,7 @@
 package ch.scaille.tcwriter.pilot;
 
 import java.time.Duration;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import ch.scaille.tcwriter.pilot.PilotReport.ReportFunction;
@@ -43,8 +44,8 @@ public class Polling<C, V> {
 		return context;
 	}
 
-	public Predicate<C> getPrecondition(final AbstractComponentPilot<?, C> guiComponent) {
-		return precondition;
+	public Optional<Predicate<C>> getPrecondition(final AbstractComponentPilot<?, C> guiComponent) {
+		return Optional.ofNullable(precondition);
 	}
 
 	public PollingFunction<C, V> getPollingFunction() {

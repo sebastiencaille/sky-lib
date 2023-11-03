@@ -39,10 +39,13 @@ public class SeleniumPoller extends Poller {
 		final var result = run(polling, isSuccess);
 		if (timeoutException != null && lastPollingResult != null) {
 			// Return the root cause of the failure, which is nicer than selenium exception
-			return Optional.ofNullable((T)lastPollingResult);
+			LOGGER.fine("Timeout with polling result");
+			return Optional.of((T) lastPollingResult);
 		} else if (timeoutException != null) {
-			return Optional.ofNullable(timeoutHandler.apply(timeoutException));
+			LOGGER.fine("Timeout");
+			return Optional.of(timeoutHandler.apply(timeoutException));
 		}
+		LOGGER.fine(() -> "Returning " + result);
 		return result;
 	}
 
@@ -61,7 +64,7 @@ public class SeleniumPoller extends Poller {
 
 	private <T> Optional<T> pollWithSpecificDelay(Function<Poller, Optional<T>> polling, Predicate<T> isSuccess,
 			Duration duration) {
-		return new WebDriverWait(webDriver, timeTracker.remainingDuration()) //
+		return Optional.ofNullable(new WebDriverWait(webDriver, timeTracker.remainingDuration()) //
 				.withMessage(() -> {
 					if (lastPollingResult != null) {
 						return lastPollingResult.toString();
@@ -75,11 +78,11 @@ public class SeleniumPoller extends Poller {
 					try {
 						final var result = polling.apply(this);
 						lastPollingResult = result.orElse(null);
-						return result.filter(isSuccess);
+						return result.filter(isSuccess).orElse(null);
 					} catch (InvalidSelectorException e) {
 						throw new IllegalStateException("Selenium misuse", e);
 					}
-				});
+				}));
 
 	}
 }

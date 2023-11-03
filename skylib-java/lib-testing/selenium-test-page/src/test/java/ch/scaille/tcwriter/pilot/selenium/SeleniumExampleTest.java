@@ -11,7 +11,7 @@ import org.openqa.selenium.WebDriver;
 import ch.scaille.tcwriter.jupiter.DisabledIfHeadless;
 import ch.scaille.util.helpers.Logs;
 
-import java.net.MalformedURLException;
+import java.io.IOException;
 import java.net.URL;
 
 @ExtendWith(DisabledIfHeadless.class)
@@ -38,8 +38,8 @@ class SeleniumExampleTest extends AbstractTestWebAppProvider {
 	}
 
 	@Test
-	void testExample() throws MalformedURLException {
-
+	void testExample() throws SecurityException, IOException {
+		Logs.configureFromClassPath();
 		pilot.getDriver().get(new URL(localUrl, "example1.html").toString());
 
 		final var mainPage = pilot.page(ExamplePage::new);

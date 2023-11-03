@@ -4,7 +4,7 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-import ch.scaille.tcwriter.pilot.AbstractComponentPilot.LoadedElement;
+import ch.scaille.tcwriter.pilot.AbstractComponentPilot.LoadedComponent;
 
 public class PollingResult<T, V> {
 
@@ -15,7 +15,7 @@ public class PollingResult<T, V> {
 	public final V polledValue;
 	public final Throwable failureReason;
 	private String componentDescription;
-	private LoadedElement<T> loadedElement;
+	private LoadedComponent<T> loadedElement;
 
 	public PollingResult(final V polledValue, final Throwable failureReason) {
 		this.polledValue = polledValue;
@@ -29,7 +29,7 @@ public class PollingResult<T, V> {
 		return Optional.of(loadedElement.element);
 	}
 
-	public void setInformation(final String componentDescription, final LoadedElement<T> loadedElement) {
+	public void setInformation(final String componentDescription, final LoadedComponent<T> loadedElement) {
 		this.componentDescription = componentDescription;
 		this.loadedElement = loadedElement;
 	}

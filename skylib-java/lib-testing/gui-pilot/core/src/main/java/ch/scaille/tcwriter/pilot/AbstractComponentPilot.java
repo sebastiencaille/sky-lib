@@ -28,11 +28,11 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 
 	private final Logger logger = Logs.of(this);
 
-	protected static class LoadedElement<T> {
+	protected static class LoadedComponent<T> {
 		public final T element;
 		private boolean preconditionValidated;
 
-		public LoadedElement(final T element) {
+		public LoadedComponent(final T element) {
 			this.element = element;
 		}
 
@@ -78,7 +78,7 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 
 	private final List<Consumer<C>> postExecutions = new ArrayList<>();
 
-	private LoadedElement<C> cachedElement = null;
+	private LoadedComponent<C> cachedComponent = null;
 
 	protected boolean fired = false;
 
@@ -91,17 +91,17 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	}
 
 	public Optional<C> getCachedElement() {
-		if (cachedElement == null) {
+		if (cachedComponent == null) {
 			return Optional.empty();
 		}
-		return Optional.of(cachedElement.element);
+		return Optional.of(cachedComponent.element);
 	}
 
 	protected void invalidateCache() {
 		if (fired) {
 			throw new IllegalStateException("Action was already fired");
 		}
-		cachedElement = null;
+		cachedComponent = null;
 	}
 
 	protected Duration getDefaultPollingTimeout() {
@@ -128,7 +128,7 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	public G addPostExecution(final Consumer<C> postExec) {
 		postExecutions.add(postExec);
 		if (fired) {
-			postExec.accept(cachedElement.element);
+			postExec.accept(cachedComponent.element);
 		}
 		return (G) this;
 	}
@@ -152,11 +152,11 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 			final var result = waitPollingSuccessLoop(polling);
 			if (result.isSuccess()) {
 				fired = true;
-				postExecutions.stream().forEach(p -> p.accept(cachedElement.element));
+				postExecutions.stream().forEach(p -> p.accept(cachedComponent.element));
 				pilot.setActionDelay(polling.getActionDelay());
 			}
 
-			result.setInformation(toString(), cachedElement);
+			result.setInformation(toString(), cachedComponent);
 			return result.orElseGet(() -> onFail.apply(result, pilot));
 		}
 	}
@@ -189,7 +189,7 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	@SuppressWarnings("java:S1172)")
 	protected <U> Optional<PollingResult<C, U>> executePolling(Poller poller, final Polling<C, U> polling) {
 
-		final var pollingFailure = preparePolling(polling);
+		final var pollingFailure = loadComponent(polling);
 		if (pollingFailure.isPresent()) {
 			return pollingFailure;
 		}
@@ -209,18 +209,25 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 		return Optional.of(pollingResult);
 	}
 
-	protected <U> Optional<PollingResult<C, U>> preparePolling(final Polling<C, U> polling) {
-		if (cachedElement == null) {
-			final var loadedGuiComponent = loadGuiComponent();
-			cachedElement = loadedGuiComponent.map(LoadedElement::new).orElse(null);
+	/**
+	 * Loads and check that the element is valid
+	 * 
+	 * @param <U>
+	 * @param polling
+	 * @return
+	 */
+	protected <U> Optional<PollingResult<C, U>> loadComponent(final Polling<C, U> polling) {
+		if (cachedComponent == null) {
+			cachedComponent = loadGuiComponent().map(LoadedComponent::new).orElse(null);
 		}
-		logger.fine(() -> "Cached component: " + cachedElement);
-		if (cachedElement == null) {
+		logger.fine(() -> "Cached component: " + cachedComponent);
+		if (cachedComponent == null) {
 			logger.fine("Not found");
 			return Optional.of(failure("not found"));
 		}
-		if (!cachedElement.preconditionValidated && polling.getPrecondition(this) != null
-				&& !polling.getPrecondition(this).test(cachedElement.element)) {
+		final var preCondition = polling.getPrecondition(this);
+		if (!cachedComponent.preconditionValidated && preCondition.isPresent()
+				&& !preCondition.get().test(cachedComponent.element)) {
 			logger.fine("Precondition failed");
 			return Optional.of(failure("precondition failed"));
 		}

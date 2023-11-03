@@ -57,7 +57,10 @@ public class Poller {
 		Optional<T> result;
 		do {
 			executionCount++;
-			result = polling.apply(this).filter(isSuccess);
+			result = polling.apply(this);
+			if (result.filter(isSuccess).isPresent()) {
+				return result;
+			}
 			sleep(delayFunction.apply(this));
 		} while (!hasTimedOut());
 		return result;

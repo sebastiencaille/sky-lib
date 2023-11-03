@@ -1,5 +1,6 @@
 package ch.scaille.tcwriter.pilot;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 
 public class StatePolling<C, V> extends Polling<C, V> {
@@ -13,11 +14,8 @@ public class StatePolling<C, V> extends Polling<C, V> {
 	}
 
 	@Override
-	public Predicate<C> getPrecondition(final AbstractComponentPilot<?, C> guiComponent) {
-		if (super.getPrecondition(guiComponent) != null) {
-			return super.getPrecondition(guiComponent);
-		}
-		return guiComponent::canCheck;
+	public Optional<Predicate<C>> getPrecondition(final AbstractComponentPilot<?, C> guiComponent) {
+		return super.getPrecondition(guiComponent).or(() -> Optional.of(guiComponent::canCheck));
 	}
 
 }

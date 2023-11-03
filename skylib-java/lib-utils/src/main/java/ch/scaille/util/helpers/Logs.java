@@ -1,9 +1,11 @@
 package ch.scaille.util.helpers;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Writer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 public interface Logs {
@@ -43,16 +45,22 @@ public interface Logs {
 			public void close() throws IOException {
 				flush();
 			}
-			
+
 		};
 	}
-	
+
 	static void info(Logger logger, Supplier<String> message, Exception e) {
 		if (logger.isLoggable(Level.INFO)) {
 			logger.info(message.get());
 		}
 		if (logger.isLoggable(Level.FINE)) {
-			logger.log(Level.FINE, message.get(), e);	
+			logger.log(Level.FINE, message.get(), e);
+		}
+	}
+
+	static void configureFromClassPath() throws SecurityException, IOException {
+		try (InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("logging.properties")) {
+			LogManager.getLogManager().readConfiguration(in);
 		}
 	}
 

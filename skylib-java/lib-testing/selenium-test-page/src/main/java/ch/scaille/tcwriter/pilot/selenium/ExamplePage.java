@@ -35,9 +35,9 @@ public class ExamplePage extends PagePilot {
 		super(pilot);
 	}
 
-	public class EnableTestDelay extends ActionDelay {
+	public class WaitEnableTestEnabledDelay extends ActionDelay {
 
-		public EnableTestDelay() {
+		public WaitEnableTestEnabledDelay() {
 			//noop
 		}
 
@@ -60,7 +60,7 @@ public class ExamplePage extends PagePilot {
 	 * until "Proceed" is enabled
 	 */
 	public void testEnable() {
-		wait(() -> this.enableTest, click().followedBy(new EnableTestDelay()));
+		wait(() -> this.enableTest, click().followedBy(new WaitEnableTestEnabledDelay()));
 	}
 
 	public void testEnabled() {

@@ -2,6 +2,7 @@ package ch.scaille.tcwriter.server.facade;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.Optional;
 import java.util.function.LongPredicate;
 import java.util.logging.Level;
 
@@ -13,8 +14,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Objects;
 
 import ch.scaille.tcwriter.server.dto.Context;
-import ch.scaille.tcwriter.server.model.ClusteredContext;
-import ch.scaille.tcwriter.server.repository.ClusteredContextRepository;
+import ch.scaille.tcwriter.server.model.ClusteredSession;
+import ch.scaille.tcwriter.server.repository.ClusteredSessionRepository;
 import ch.scaille.util.helpers.Logs;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -27,31 +28,31 @@ public class ClusteredSessionFacadeImpl implements ClusteredSessionFacade {
 	@Autowired
 	private ObjectMapper mapper;
 
-	private final ClusteredContextRepository repository;
+	private final ClusteredSessionRepository repository;
 
-	public ClusteredSessionFacadeImpl(ClusteredContextRepository repository) {
+	public ClusteredSessionFacadeImpl(ClusteredSessionRepository repository) {
 		this.repository = repository;
 	}
 
 	@Transactional(value = TxType.REQUIRES_NEW)
 	@Override
-	public Context loadAndValidate(String sessionId, LongPredicate isExpired) {
+	public Optional<Context> loadAndValidate(String sessionId, LongPredicate isExpired) {
 		LOGGER.info(() -> "load " + sessionId);
 		final var context = repository.getBySessionId(sessionId);
 		if (context == null) {
-			return null;
+			return Optional.empty();
 		}
 		final var owner = getOwner();
 		if (!Objects.equal(owner, context.getOwner())) {
 			// Security
 			LOGGER.warning(() -> "Not restoring context because of owner mismatch: " + sessionId + ", expected " + owner
 					+ " found " + context.getOwner());
-			return null;
+			return Optional.empty();
 		}
 		if (isExpired.test(context.getLastAccess())) {
 			// Security
 			LOGGER.info(() -> "Not restoring context because context is outdated");
-			return null;
+			return Optional.empty();
 		} else {
 			return deserialize(context);
 		}
@@ -63,7 +64,7 @@ public class ClusteredSessionFacadeImpl implements ClusteredSessionFacade {
 		LOGGER.info(() -> "save " + sessionId);
 		final var owner = getOwner();
 		try {
-			final var newContext = new ClusteredContext();
+			final var newContext = new ClusteredSession();
 			newContext.setSessionId(sessionId);
 			newContext.setOwner(owner);
 			newContext.setContext(serialize(appContext));
@@ -107,12 +108,12 @@ public class ClusteredSessionFacadeImpl implements ClusteredSessionFacade {
 		return mapper.writeValueAsString(appContext.copy());
 	}
 
-	private Context deserialize(final ClusteredContext context) {
+	private Optional<Context> deserialize(final ClusteredSession context) {
 		try {
-			return mapper.readValue(context.getContext(), Context.class);
+			return Optional.of(mapper.readValue(context.getContext(), Context.class));
 		} catch (JsonProcessingException e) {
 			LOGGER.log(Level.WARNING, "Unable to restore context", e);
-			return null;
+			return Optional.empty();
 		}
 	}
 

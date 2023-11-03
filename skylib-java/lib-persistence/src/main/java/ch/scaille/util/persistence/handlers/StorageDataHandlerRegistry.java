@@ -28,13 +28,6 @@ public class StorageDataHandlerRegistry {
 		return handlers.stream().filter(t -> t.supports(extensionOrMimeType)).findFirst();
 	}
 
-	public String getDefaultExtension() {
-		if (defaultDataHandler == null) {
-			return null;
-		}
-		return defaultDataHandler.getDefaultExtension();
-	}
-
 	public IStorageDataHandler getHandlerOf(String mimeType) {
 		return find(mimeType).orElseThrow(() -> new IllegalStateException("Not handled: " + mimeType));
 	}

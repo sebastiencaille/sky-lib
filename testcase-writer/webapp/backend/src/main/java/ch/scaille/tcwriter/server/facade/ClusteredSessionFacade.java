@@ -1,12 +1,13 @@
 package ch.scaille.tcwriter.server.facade;
 
+import java.util.Optional;
 import java.util.function.LongPredicate;
 
 import ch.scaille.tcwriter.server.dto.Context;
 
 public interface ClusteredSessionFacade {
 
-	Context loadAndValidate(String sessionId, LongPredicate isExpired);
+	Optional<Context> loadAndValidate(String sessionId, LongPredicate isExpired);
 
 	void save(String sessionId, Context appContext);
 

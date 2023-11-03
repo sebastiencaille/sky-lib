@@ -1,5 +1,6 @@
 package ch.scaille.tcwriter.pilot.selenium;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -34,13 +35,13 @@ public class PagePilot {
 	public ElementPilot element(Supplier<WebElement> element) {
 		return new ElementPilot(pilot) {
 			@Override
-			protected WebElement loadGuiComponent() {
+			protected Optional<WebElement> loadGuiComponent() {
 				reloadPage();
 				final var webElement = element.get();
 				if (webElement instanceof WrapsElement && ((WrapsElement) webElement).getWrappedElement() == null) {
-					return null;
+					return Optional.empty();
 				}
-				return webElement;
+				return Optional.ofNullable(webElement);
 			}
 
 			@Override

@@ -168,7 +168,7 @@ public class ClassFinder {
 	}
 
 	public ClassFinder withPackages(final String... packageName) {
-		packagesToScan.addAll(Arrays.asList(packageName));
+		packagesToScan.addAll(List.of(packageName));
 		return this;
 	}
 

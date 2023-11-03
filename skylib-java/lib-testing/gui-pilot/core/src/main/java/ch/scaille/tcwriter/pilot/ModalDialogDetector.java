@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
@@ -73,7 +74,8 @@ public class ModalDialogDetector {
 
 	private final Supplier<List<PollingResult>> pollingResults;
 
-	private final OverridableParameter<GuiPilot, Duration> timeout = new OverridableParameter<>(GuiPilot::getModalDialogTimeout);
+	private final OverridableParameter<GuiPilot, Duration> timeout = new OverridableParameter<>(
+			GuiPilot::getModalDialogTimeout);
 
 	private final Consumer<List<String>> dialogNotHandled;
 
@@ -87,8 +89,8 @@ public class ModalDialogDetector {
 
 	private final Semaphore running = new Semaphore(1);
 
-
-	public ModalDialogDetector(final Supplier<List<PollingResult>> pollingHandlers, final Consumer<List<String>> errorsHandler) {
+	public ModalDialogDetector(final Supplier<List<PollingResult>> pollingHandlers,
+			final Consumer<List<String>> errorsHandler) {
 		this.pollingResults = pollingHandlers;
 		this.dialogNotHandled = errorsHandler;
 	}
@@ -124,7 +126,7 @@ public class ModalDialogDetector {
 				}
 
 			}
-			if (!errors.isEmpty()) {			
+			if (!errors.isEmpty()) {
 				dialogNotHandled.accept(errors);
 			}
 		} catch (final InterruptedException e) {
@@ -173,17 +175,15 @@ public class ModalDialogDetector {
 		return this::close;
 	}
 
-	public synchronized PollingResult getPollingResult(Poller poller) {
-		return handledDialog;
+	public synchronized Optional<PollingResult> getPollingResult(Poller poller) {
+		return Optional.ofNullable(handledDialog);
 	}
 
 	public boolean waitModalDialogHandled(final FailureHandler<ModalDialogDetector.PollingResult, Boolean> onFail) {
-		final var poller = new Poller(timeout.get(), Duration.ofMillis(100), p -> Duration.ofMillis(100));
-		final var pollingtResult = poller.run(this::getPollingResult, Objects::nonNull);
-		if (pollingtResult != null) {
-			return true;
-		}
-		return onFail.apply(PollingResults.failure("Modal dialog not detected"), pilot);
+		return new Poller(timeout.get(), Duration.ofMillis(100), p -> Duration.ofMillis(100))
+				.run(this::getPollingResult, Objects::nonNull)
+				.map(p -> true)
+				.orElseGet(() -> onFail.apply(PollingResults.failure("Modal dialog not detected"), pilot));
 	}
 
 }

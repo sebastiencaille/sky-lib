@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
@@ -56,7 +57,7 @@ public abstract class AbstractGenerator<R> {
 	}
 
 	protected AbstractGenerator(final Class<?>... tcClasses) {
-		this.classes = Arrays.asList(tcClasses);
+		this.classes = List.of(tcClasses);
 	}
 
 	protected void addClass(Class<?> clazz) {

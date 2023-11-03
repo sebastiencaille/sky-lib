@@ -17,7 +17,7 @@ import ch.scaille.tcwriter.server.facade.ContextFacade;
 import ch.scaille.tcwriter.server.facade.ContextFacadeImpl;
 import ch.scaille.tcwriter.server.facade.DictionaryFacade;
 import ch.scaille.tcwriter.server.facade.TestCaseFacade;
-import ch.scaille.tcwriter.server.repository.ClusteredContextRepository;
+import ch.scaille.tcwriter.server.repository.ClusteredSessionRepository;
 import ch.scaille.tcwriter.services.testexec.JUnitTestExecutor;
 import ch.scaille.util.helpers.ClassLoaderHelper;
 import jakarta.persistence.EntityManagerFactory;
@@ -42,7 +42,7 @@ public class ServiceConfig {
 	}
 
 	@Bean
-	ClusteredSessionFacade clusteredSessionFacade(EntityManagerFactory emf, ClusteredContextRepository repository) {
+	ClusteredSessionFacade clusteredSessionFacade(EntityManagerFactory emf, ClusteredSessionRepository repository) {
 		return new ClusteredSessionFacadeImpl(repository);
 	}
 	

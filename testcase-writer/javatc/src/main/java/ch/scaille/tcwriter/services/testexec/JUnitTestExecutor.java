@@ -81,7 +81,7 @@ public class JUnitTestExecutor implements ITestExecutor {
 				.getFile();
 
 		var parameters = new ArrayList<String>();
-		parameters.addAll(Arrays.asList(config.getJava(), //
+		parameters.addAll(List.of(config.getJava(), //
 				"-Dtest.port=" + testConfig.tcpPort, "-Dtc.stepping=true", //
 				"-jar", junit, "--select-class=" + binaryRef, "--details", "verbose"));
 		parameters.addAll(toMultipleCommandLine(classPath));
@@ -91,7 +91,7 @@ public class JUnitTestExecutor implements ITestExecutor {
 	}
 
 	private List<String> toMultipleCommandLine(URL[] classPath) {
-		return Lists.partition(Arrays.asList(classPath), 50)
+		return Lists.partition(List.of(classPath), 50)
 				.stream()
 				.map(c -> LambdaExt.uncheckM(() -> "-cp=" + ClassLoaderHelper.cpToCommandLine(c.toArray(new URL[0]))))
 				.toList();

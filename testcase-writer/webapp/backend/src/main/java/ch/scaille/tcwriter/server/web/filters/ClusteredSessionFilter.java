@@ -77,36 +77,48 @@ public class ClusteredSessionFilter extends OncePerRequestFilter {
 				.map(Cookie::getValue)
 				.findFirst()
 				.orElseGet(() -> {
-					var sessionId = UUID.randomUUID().toString();
-					var cookie = ResponseCookie.from(APP_SESSION_COOKIE, sessionId).httpOnly(true).path("/");
+					final var sessionId = UUID.randomUUID().toString();
+					final var cookie = ResponseCookie.from(APP_SESSION_COOKIE, sessionId)
+							.httpOnly(true)
+							.secure(request.isSecure())
+							.path(request.getServletPath());
 					response.addHeader(HttpHeaders.SET_COOKIE, cookie.build().toString());
 					return sessionId;
 				});
 
 		// Recover previous session
-		var lastSave = (Long) request.getSession().getAttribute(LAST_SESSION_SAVE_MS);
-		if (lastSave == null) {
-			final var toRestore = clusteredSessionService.loadAndValidate(backendSessionId, l -> isExpired(request, l));
-			if (toRestore != null) {
-				Logs.of(ClusteredSessionFilter.class).info(() -> "Restoring context of session " + backendSessionId);
-				contextFacade.merge(context, toRestore);
-				lastSave = sessionUpdated(request);
-			}
-		}
+		recover(request, backendSessionId);
 		try {
 			filterChain.doFilter(request, response);
 		} finally {
-			final var contextAfterCall = context;
-			if (lastSave == null) {
-				clusteredSessionService.save(backendSessionId, contextAfterCall);
+			save(request, contextBeforeCall, backendSessionId);
+		}
+	}
+
+	private void save(HttpServletRequest request, final Context contextBeforeCall, final String backendSessionId) {
+		final var contextAfterCall = context;
+		var lastSave = (Long) request.getSession().getAttribute(LAST_SESSION_SAVE_MS);
+		if (lastSave == null) {
+			clusteredSessionService.save(backendSessionId, contextAfterCall);
+			sessionUpdated(request);
+		} else if (!contextAfterCall.differs(contextBeforeCall)) {
+			clusteredSessionService.update(backendSessionId, contextAfterCall);
+			sessionUpdated(request);
+		} else if (System.currentTimeMillis() > ofMillis(lastSave).plus(ofMinutes(1)).toMillis()) {
+			clusteredSessionService.touch(backendSessionId);
+			sessionUpdated(request);
+		}
+	}
+
+	private void recover(HttpServletRequest request, final String backendSessionId) {
+		var lastSave = (Long) request.getSession().getAttribute(LAST_SESSION_SAVE_MS);
+		if (lastSave == null) {
+			final var toRestore = clusteredSessionService.loadAndValidate(backendSessionId, l -> isExpired(request, l));
+			toRestore.ifPresent(r -> {
+				Logs.of(ClusteredSessionFilter.class).info(() -> "Restoring context of session " + backendSessionId);
+				contextFacade.merge(context, r);
 				sessionUpdated(request);
-			} else if (!contextAfterCall.differs(contextBeforeCall)) {
-				clusteredSessionService.update(backendSessionId, contextAfterCall);
-				sessionUpdated(request);
-			} else if (System.currentTimeMillis() > ofMillis(lastSave).plus(ofMinutes(1)).toMillis()) {
-				clusteredSessionService.touch(backendSessionId);
-				sessionUpdated(request);
-			}
+			});
 		}
 	}
 

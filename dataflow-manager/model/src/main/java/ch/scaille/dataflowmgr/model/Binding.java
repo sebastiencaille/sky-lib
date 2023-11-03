@@ -1,7 +1,6 @@
 package ch.scaille.dataflowmgr.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -30,7 +29,7 @@ public class Binding extends WithId {
 		}
 
 		public Binding build(final Binding... someParents) {
-			this.parents.addAll(Arrays.asList(someParents));
+			this.parents.addAll(List.of(someParents));
 			return new Binding(this);
 		}
 

@@ -1,5 +1,6 @@
 package ch.scaille.tcwriter.pilot;
 
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
@@ -21,11 +22,11 @@ public class PollingResult<T, V> {
 		this.failureReason = failureReason;
 	}
 
-	public T getLoadedElement() {
-		if (loadedElement != null) {
-			return loadedElement.element;
+	public Optional<T> getLoadedElement() {
+		if (loadedElement == null) {
+			return  Optional.empty();
 		}
-		return null;
+		return Optional.of(loadedElement.element);
 	}
 
 	public void setInformation(final String componentDescription, final LoadedElement<T> loadedElement) {

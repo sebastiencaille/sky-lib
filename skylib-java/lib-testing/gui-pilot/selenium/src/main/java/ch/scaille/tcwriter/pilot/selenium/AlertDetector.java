@@ -29,7 +29,7 @@ public class AlertDetector {
 		final var alertPilot = new AlertPilot(pilot);
 		try {
 			final var alert = alertPilot.loadGuiComponent();
-			if (alert == null) {
+			if (alert.isEmpty()) {
 				return Collections.emptyList();
 			}
 			var pollingResult = ModalDialogDetector.notHandled("");
@@ -37,7 +37,8 @@ public class AlertDetector {
 				pollingResult = errorChecks.apply(alertPilot);
 			}
 			if (!pollingResult.handled) {
-				pollingResult = ModalDialogDetector.error(alert.getText(), alert::accept);
+				final var existingAlert = alert.get();
+				pollingResult = ModalDialogDetector.error(existingAlert.getText(), existingAlert::accept);
 			}
 			return Collections.singletonList(pollingResult);
 		} catch (NoSuchSessionException e) {

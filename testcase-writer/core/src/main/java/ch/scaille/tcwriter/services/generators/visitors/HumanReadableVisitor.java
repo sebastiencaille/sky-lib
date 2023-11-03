@@ -38,8 +38,15 @@ public class HumanReadableVisitor {
 		if (withStepNumbers) {
 			result.append(step.getOrdinal()).append(". ");
 		}
-		result.append("As ").append(actorSummary).append(", ").append(summaryOf(step.getAction(),
-				step.getParametersValue().stream().map(this::processTestParameter).filter(Objects::nonNull).toList()));
+		result.append("As ")
+				.append(actorSummary)
+				.append(", ")
+				.append(summaryOf(step.getAction(),
+						step.getParametersValue()
+								.stream()
+								.map(this::processTestParameter)
+								.filter(Objects::nonNull)
+								.toList()));
 
 		return result.toString();
 	}
@@ -56,8 +63,11 @@ public class HumanReadableVisitor {
 			}
 			return parameterValue.getSimpleValue();
 		case TEST_API:
-			final var mandatoryParams = parameterValue.getValueFactory().getMandatoryParameters().stream()
-					.map(p -> processTestParameter(parameterValue.getComplexTypeValues().get(p.getId()))).toList();
+			final var mandatoryParams = parameterValue.getValueFactory()
+					.getMandatoryParameters()
+					.stream()
+					.map(p -> processTestParameter(parameterValue.getComplexTypeValues().get(p.getId())))
+					.toList();
 			return processTestParameter(parameterValue, mandatoryParams);
 		default:
 			return "";
@@ -88,12 +98,7 @@ public class HumanReadableVisitor {
 	}
 
 	private String summaryOf(final IdObject idObject, final List<String> list) {
-		final var description = tc.descriptionOf(idObject);
-		if (description == null) {
-			return null;
-		}
-
-		return format(description.getHumanReadable(), list);
+		return format(tc.descriptionOf(idObject).getHumanReadable(), list);
 	}
 
 	@VisibleForTesting
@@ -101,8 +106,11 @@ public class HumanReadableVisitor {
 		final var emptiedBlocks = new ArrayList<String>();
 		final List<String> formatParams;
 		if (paramsTexts != null) {
-			formatParams = paramsTexts.stream().flatMap(s -> stream((' ' + s + ' ').split("\\|"))).map(String::trim)
-					.map(s -> s.replace("//", "/\\/")).toList();
+			formatParams = paramsTexts.stream()
+					.flatMap(s -> stream((' ' + s + ' ').split("\\|")))
+					.map(String::trim)
+					.map(s -> s.replace("//", "/\\/"))
+					.toList();
 		} else {
 			formatParams = null;
 		}

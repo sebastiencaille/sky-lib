@@ -4,7 +4,6 @@ import static ch.scaille.javabeans.persisters.Persisters.getSet;
 import static ch.scaille.javabeans.properties.Configuration.persistent;
 
 import java.awt.Dialog;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
@@ -52,7 +51,7 @@ public class GenericPropertiesEditorLauncher {
 		final var boolProp = new BooleanProperty("bool", support)
 				.configureTyped(persistent(obj, getSet(EditedObject::isBool, EditedObject::setBool)));
 
-		return Arrays.asList(//
+		return List.of(//
 				SimpleEditorModel.entry(strProp, AbstractTypedProperty::createBindingChain, String.class, false,
 						"A string property", null),
 				SimpleEditorModel.entry(boolProp, AbstractTypedProperty::createBindingChain, Boolean.class, false,

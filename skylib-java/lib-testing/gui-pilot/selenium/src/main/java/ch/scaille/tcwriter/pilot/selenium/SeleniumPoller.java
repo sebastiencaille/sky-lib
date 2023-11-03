@@ -1,8 +1,9 @@
 package ch.scaille.tcwriter.pilot.selenium;
 
 import java.time.Duration;
-import java.util.Arrays;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Level;
@@ -32,53 +33,49 @@ public class SeleniumPoller extends Poller {
 		this.webDriver = webDriver;
 	}
 
-	public <T> T run(Function<Poller, T> polling, Predicate<T> isSuccess,
+	public <T> Optional<T> run(Function<Poller, Optional<T>> polling, Predicate<T> isSuccess,
 			Function<TimeoutException, T> timeoutHandler) {
 		timeoutException = null;
 		final var result = run(polling, isSuccess);
 		if (timeoutException != null && lastPollingResult != null) {
 			// Return the root cause of the failure, which is nicer than selenium exception
-			return (T) lastPollingResult;
+			return Optional.ofNullable((T)lastPollingResult);
 		} else if (timeoutException != null) {
-			return timeoutHandler.apply(timeoutException);
+			return Optional.ofNullable(timeoutHandler.apply(timeoutException));
 		}
 		return result;
 	}
 
 	@Override
-	public <T> T run(Function<Poller, T> polling, Predicate<T> isSuccess) {
+	public <T> Optional<T> run(Function<Poller, Optional<T>> polling, Predicate<T> isSuccess) {
 		try {
 			beforeRun();
-			final var result = pollWithSpecificDelay(polling, isSuccess, firstDelay);
-			if (isSuccess.test(result)) {
-				return result;
-			}
-			return pollWithSpecificDelay(polling, isSuccess, delayFunction.apply(this));
+			return pollWithSpecificDelay(polling, isSuccess, firstDelay).filter(isSuccess)
+					.or(() -> pollWithSpecificDelay(polling, isSuccess, delayFunction.apply(this)));
 		} catch (TimeoutException e) {
 			LOGGER.log(Level.INFO, "Polling timeout", e);
 			timeoutException = e;
-			return null;
+			return Optional.empty();
 		}
 	}
 
-	private <T> T pollWithSpecificDelay(Function<Poller, T> polling, Predicate<T> isSuccess, Duration duration) {
+	private <T> Optional<T> pollWithSpecificDelay(Function<Poller, Optional<T>> polling, Predicate<T> isSuccess,
+			Duration duration) {
 		return new WebDriverWait(webDriver, timeTracker.remainingDuration()) //
 				.withMessage(() -> {
 					if (lastPollingResult != null) {
 						return lastPollingResult.toString();
 					}
 					return null;
-				}).pollingEvery(duration) //
-				.ignoreAll(Arrays.asList(NoSuchElementException.class, StaleElementReferenceException.class,
+				})
+				.pollingEvery(duration) //
+				.ignoreAll(List.of(NoSuchElementException.class, StaleElementReferenceException.class,
 						ElementNotInteractableException.class, UnhandledAlertException.class))
 				.until(d -> {
 					try {
 						final var result = polling.apply(this);
-						lastPollingResult = result;
-						if (!isSuccess.test(result)) {
-							return null;
-						}
-						return result;
+						lastPollingResult = result.orElse(null);
+						return result.filter(isSuccess);
 					} catch (InvalidSelectorException e) {
 						throw new IllegalStateException("Selenium misuse", e);
 					}

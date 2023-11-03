@@ -15,11 +15,11 @@
  ******************************************************************************/
 package ch.scaille.example.gui.controller.impl;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import ch.scaille.javabeans.converters.IConverter;
+import ch.scaille.util.helpers.JavaExt;
 
 public class DynamicListContentConverter implements IConverter<String, List<String>> {
 
@@ -32,11 +32,11 @@ public class DynamicListContentConverter implements IConverter<String, List<Stri
 
 		switch (propertyValue) {
 		case "A":
-			return Arrays.asList("A", "B", "C");
+			return List.of("A", "B", "C");
 		case "B":
-			return Arrays.asList("B", "C", "D");
+			return List.of("B", "C", "D");
 		case "C":
-			return Arrays.asList("C", "D", "E");
+			return List.of("C", "D", "E");
 		default:
 			return Collections.emptyList();
 		}
@@ -44,7 +44,7 @@ public class DynamicListContentConverter implements IConverter<String, List<Stri
 
 	@Override
 	public String convertComponentValueToPropertyValue(final List<String> componentValue) {
-		return null;
+		throw JavaExt.notImplemented();
 	}
 
 }

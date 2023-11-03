@@ -34,7 +34,7 @@ public class JListPilot extends AbstractSwingComponent<JListPilot, JList> {
 				}
 			}
 		}).withReportText("selecting element " + value));
-		Assertions.assertTrue(getCachedElement().getSelectedIndex() >= 0,
+		Assertions.assertTrue(getCachedElement().isPresent() && getCachedElement().get().getSelectedIndex() >= 0,
 				() -> name + ": element must have been selected: " + value);
 	}
 

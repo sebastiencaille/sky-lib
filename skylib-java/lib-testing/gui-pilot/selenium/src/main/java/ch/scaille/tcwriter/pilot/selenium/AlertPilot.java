@@ -1,5 +1,7 @@
 package ch.scaille.tcwriter.pilot.selenium;
 
+import java.util.Optional;
+
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoAlertPresentException;
 
@@ -16,11 +18,11 @@ public class AlertPilot extends AbstractComponentPilot<AlertPilot, Alert> {
 	}
 
 	@Override
-	protected Alert loadGuiComponent() {
+	protected Optional<Alert> loadGuiComponent() {
 		try {
-			return pilot.getDriver().switchTo().alert();
+			return Optional.of(pilot.getDriver().switchTo().alert());
 		} catch (final NoAlertPresentException e) {
-			return null;
+			return Optional.empty();
 		}
 	}
 

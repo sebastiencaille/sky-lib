@@ -18,7 +18,7 @@ public class TextStorageHandler implements IStorageDataHandler {
 
 	@Override
 	public String getDefaultExtension() {
-		return null;
+		return "";
 	}
 
 	@Override

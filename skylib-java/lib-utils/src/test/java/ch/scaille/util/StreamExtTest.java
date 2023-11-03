@@ -19,8 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,7 @@ class StreamExtTest {
 			assertEquals("Wrong count: 0", e.getMessage());
 		}
 		try {
-			Arrays.asList(1, 2).stream().collect(StreamExt.single()).orElseThrow(WrongCountException::new);
+			List.of(1, 2).stream().collect(StreamExt.single()).orElseThrow(WrongCountException::new);
 		} catch (final Exception e) {
 			assertEquals("Wrong count: 2", e.getMessage());
 		}
@@ -66,7 +66,7 @@ class StreamExtTest {
 	}
 
 	private Integer testWith2Values() {
-		return Arrays.asList(1, 2).stream().collect(StreamExt.zeroOrOne()).orElseThrow(WrongCountException::new);
+		return List.of(1, 2).stream().collect(StreamExt.zeroOrOne()).orElseThrow(WrongCountException::new);
 	}
 
 }

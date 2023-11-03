@@ -3,6 +3,7 @@ package ch.scaille.tcwriter.pilot;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -32,14 +33,14 @@ class ComponentTest {
 		}
 
 		@Override
-		protected <U> PollingResult<Object, U> executePolling(Poller poller, Polling<Object, U> polling) {
+		protected <U> Optional<PollingResult<Object, U>> executePolling(Poller poller, Polling<Object, U> polling) {
 			delays.add(poller.timeTracker.elapsedTimeMs());
 			return super.executePolling(poller, polling);
 		}
 
 		@Override
-		protected Object loadGuiComponent() {
-			return "Hello";
+		protected Optional<Object> loadGuiComponent() {
+			return Optional.of("Hello");
 		}
 
 		@Override

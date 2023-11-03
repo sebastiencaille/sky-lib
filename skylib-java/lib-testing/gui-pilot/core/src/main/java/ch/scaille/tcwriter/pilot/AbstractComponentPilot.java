@@ -56,7 +56,7 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	 *
 	 * @return
 	 */
-	protected abstract C loadGuiComponent();
+	protected abstract Optional<C> loadGuiComponent();
 
 	/**
 	 * Checks if a component is in a state that allows checking it's state
@@ -87,17 +87,14 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	}
 
 	protected String getDescription() {
-		if (getCachedElement() != null) {
-			return getCachedElement().toString();
-		}
-		return null;
+		return getCachedElement().map(Object::toString).orElse(null);
 	}
 
-	public C getCachedElement() {
+	public Optional<C> getCachedElement() {
 		if (cachedElement == null) {
-			return null;
+			return Optional.empty();
 		}
-		return cachedElement.element;
+		return Optional.of(cachedElement.element);
 	}
 
 	protected void invalidateCache() {
@@ -177,7 +174,8 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	protected <U> PollingResult<C, U> waitPollingSuccessLoop(final Polling<C, U> polling) {
 		polling.initialize(this);
 		return new Poller(polling.getTimeout(), polling.getFirstDelay(), polling.getDelayFunction())
-				.run(p -> executePolling(p, polling), PollingResult::isSuccess);
+				.run(p -> executePolling(p, polling), PollingResult::isSuccess)
+				.orElseThrow();
 	}
 
 	/**
@@ -189,14 +187,14 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	 * @return
 	 */
 	@SuppressWarnings("java:S1172)")
-	protected <U> PollingResult<C, U> executePolling(Poller poller, final Polling<C, U> polling) {
+	protected <U> Optional<PollingResult<C, U>> executePolling(Poller poller, final Polling<C, U> polling) {
 
 		final var pollingFailure = preparePolling(polling);
 		if (pollingFailure.isPresent()) {
-			return pollingFailure.get();
+			return pollingFailure;
 		}
 
-		polling.getContext().setComponent(getCachedElement(), getDescription());
+		polling.getContext().setComponent(getCachedElement().orElse(null), getDescription());
 
 		// cachedElement.element may disappear after polling, so prepare report line
 		// here
@@ -208,15 +206,13 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 		if (pollingResult.isSuccess() && !logReport.isEmpty()) {
 			pilot.getActionReport().report(logReport);
 		}
-		return pollingResult;
+		return Optional.of(pollingResult);
 	}
 
 	protected <U> Optional<PollingResult<C, U>> preparePolling(final Polling<C, U> polling) {
 		if (cachedElement == null) {
 			final var loadedGuiComponent = loadGuiComponent();
-			if (loadedGuiComponent != null) {
-				cachedElement = new LoadedElement<>(loadedGuiComponent);
-			}
+			cachedElement = loadedGuiComponent.map(LoadedElement::new).orElse(null);
 		}
 		logger.fine(() -> "Cached component: " + cachedElement);
 		if (cachedElement == null) {

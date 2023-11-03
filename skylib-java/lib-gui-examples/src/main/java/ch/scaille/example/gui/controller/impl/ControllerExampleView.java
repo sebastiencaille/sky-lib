@@ -49,6 +49,7 @@ import ch.scaille.example.gui.TestObjectTableModel;
 import ch.scaille.javabeans.converters.IConverter;
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.ErrorSet;
+import ch.scaille.util.helpers.JavaExt;
 
 public class ControllerExampleView extends JFrame {
 
@@ -216,7 +217,7 @@ public class ControllerExampleView extends JFrame {
 
 		@Override
 		public T convertComponentValueToPropertyValue(final String componentValue) {
-			return null;
+			throw JavaExt.notImplemented();
 		}
 
 		@Override

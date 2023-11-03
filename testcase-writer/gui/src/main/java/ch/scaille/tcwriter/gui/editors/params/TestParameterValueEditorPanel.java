@@ -31,9 +31,7 @@ import com.google.common.base.Strings;
 
 import ch.scaille.gui.model.ListModel;
 import ch.scaille.gui.model.views.ListViews;
-import ch.scaille.gui.mvc.factories.ComponentBindings;
 import ch.scaille.gui.mvc.factories.ObjectTextView;
-import ch.scaille.gui.swing.factories.SwingBindings;
 import ch.scaille.javabeans.BindingDependencies;
 import ch.scaille.javabeans.converters.IConverter;
 import ch.scaille.javabeans.properties.ObjectProperty;

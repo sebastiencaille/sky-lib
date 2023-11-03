@@ -47,7 +47,7 @@ public class PolicyTableColumnModel<C extends Enum<C>> extends DefaultTableColum
 
 	private final JTable table;
 
-	public static final List<Class<?>> DEFAULT_POLICIES = Arrays.asList(FixedWidthColumn.class,
+	public static final List<Class<?>> DEFAULT_POLICIES = List.of(FixedWidthColumn.class,
 			FixedTextWidthColumn.class, PercentOfTableWidthColumn.class, PercentOfAvailableSpaceColumn.class);
 
 	public PolicyTableColumnModel(final JTable table) {

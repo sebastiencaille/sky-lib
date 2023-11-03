@@ -72,7 +72,7 @@ public interface Factories {
 	}
 
 	/*************************** Polling Results ***************************/
-    interface PollingResults {
+	interface PollingResults {
 		/**
 		 * Make polling return a value
 		 *
@@ -216,7 +216,7 @@ public interface Factories {
 	}
 
 	// Report factories
-    interface Reporting {
+	interface Reporting {
 
 		static String settingValue(String value) {
 			return "setting: " + value;
@@ -240,7 +240,10 @@ public interface Factories {
 
 		static String settingValue(String location, Object value) {
 			return "setting " + location + ": ["
-					+ DataObjectManagerFactory.createFor(value).getMetaData().getAttributes().stream() //
+					+ DataObjectManagerFactory.createFor(value)
+							.getMetaData()
+							.getAttributes()
+							.stream() //
 							.filter(a -> a.getValueOf(value) != null) //
 							.sorted((a1, a2) -> a1.getName().compareTo(a2.getName())) //
 							.map(a -> a.getName() + ": " + a.getValueOf(value)) //

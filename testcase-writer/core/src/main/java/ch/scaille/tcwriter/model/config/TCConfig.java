@@ -1,6 +1,5 @@
 package ch.scaille.tcwriter.model.config;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +23,6 @@ public record TCConfig(String name, List<Object> subconfigs) {
 	}
 
 	public static TCConfig of(String name, Object... subConfig) {
-		return new TCConfig(name, Arrays.asList(subConfig));
+		return new TCConfig(name, List.of(subConfig));
 	}
 }

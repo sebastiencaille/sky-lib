@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -46,7 +46,7 @@ class FormatterTest {
 		tf.appendIndentedLine("Hello");
 		tf.indented(t -> t.appendIndentedLine("World"));
 		tf.appendIndentedLine("Done");
-		assertEquals(Arrays.asList("--> Hello", "    World", "--> Done"), output.getLines());
+		assertEquals(List.of("--> Hello", "    World", "--> Done"), output.getLines());
 	}
 
 }

@@ -3,9 +3,10 @@ package ch.scaille.tcwriter.server.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 
 @Entity
-public class ClusteredContext {
+public class ClusteredSession {
 
 	@Id
 	@GeneratedValue
@@ -15,6 +16,7 @@ public class ClusteredContext {
 
 	private String owner;
 
+	@Lob
 	private String context;
 
 	private long lastAccess;

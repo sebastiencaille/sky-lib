@@ -1,5 +1,7 @@
 package ch.scaille.tcwriter.pilot.swing;
 
+import java.util.Optional;
+
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
@@ -41,11 +43,11 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 	}
 
 	@Override
-	protected C loadGuiComponent() {
+	protected Optional<C> loadGuiComponent() {
 		try {
-			return pilot.getComponent(name, clazz);
+			return Optional.of(pilot.getComponent(name, clazz));
 		} catch (final NoSuchComponentException e) {
-			return null;
+			return Optional.empty();
 		}
 	}
 
@@ -68,10 +70,10 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 	}
 
 	@Override
-	protected <U> PollingResult<C, U> executePolling(Poller poller, final Polling<C, U> polling) {
-		final var response = new Object[1];
+	protected <U> Optional<PollingResult<C, U>> executePolling(Poller poller, final Polling<C, U> polling) {
+		final var response = new Optional[1];
 		SwingHelper.invokeAndWait(() -> response[0] = super.executePolling(poller, polling));
-		return (PollingResult<C, U>) response[0];
+		return response[0];
 	}
 
 	public void waitEnabled() {

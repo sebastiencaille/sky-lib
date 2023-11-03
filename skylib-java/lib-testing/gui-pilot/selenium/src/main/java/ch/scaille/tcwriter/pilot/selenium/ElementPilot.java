@@ -1,5 +1,6 @@
 package ch.scaille.tcwriter.pilot.selenium;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import org.openqa.selenium.By;
@@ -49,8 +50,8 @@ public class ElementPilot extends AbstractComponentPilot<ElementPilot, WebElemen
 	}
 
 	@Override
-	protected WebElement loadGuiComponent() {
-		return pilot.getDriver().findElement(locator);
+	protected Optional<WebElement> loadGuiComponent() {
+		return Optional.ofNullable(pilot.getDriver().findElement(locator));
 	}
 
 	@Override
@@ -67,8 +68,9 @@ public class ElementPilot extends AbstractComponentPilot<ElementPilot, WebElemen
 	protected <U> PollingResult<WebElement, U> waitPollingSuccessLoop(final Polling<WebElement, U> polling) {
 		polling.initialize(this);
 		return new SeleniumPoller(pilot.getDriver(), polling.getTimeout(), polling.getFirstDelay(),
-				polling.getDelayFunction()).run(p -> executePolling(p, polling), PollingResult::isSuccess,
-						PollingResults::onException);
+				polling.getDelayFunction())
+				.run(p -> executePolling(p, polling), PollingResult::isSuccess, PollingResults::onException)
+				.orElseThrow();
 	}
 
 	@Override

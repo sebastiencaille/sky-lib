@@ -25,6 +25,7 @@ import ch.scaille.gui.mvc.GuiController;
 import ch.scaille.gui.swing.model.ObjectControllerTableModel;
 import ch.scaille.javabeans.Converters;
 import ch.scaille.javabeans.properties.AbstractProperty;
+import ch.scaille.util.helpers.JavaExt;
 
 @SuppressWarnings("serial")
 public class TestObjectControllerModelFrameModel
@@ -53,7 +54,7 @@ public class TestObjectControllerModelFrameModel
 		case VAL2:
 			return "Value2";
 		default:
-			return null;
+			throw JavaExt.notImplemented();
 		}
 	}
 
@@ -66,7 +67,7 @@ public class TestObjectControllerModelFrameModel
 		case VAL2:
 			return controller.getASecondValueProperty();
 		default:
-			return null;
+			throw JavaExt.notImplemented();
 		}
 	}
 

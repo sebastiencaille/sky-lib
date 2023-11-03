@@ -1,6 +1,7 @@
 package ch.scaille.util.helpers;
 
 import java.time.Duration;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -50,16 +51,13 @@ public class Poller {
 		}
 	}
 
-	public <T> T run(Function<Poller, T> polling, Predicate<T> isSuccess) {
+	public <T> Optional<T> run(Function<Poller, Optional<T>> polling, Predicate<T> isSuccess) {
 		beforeRun();
 		sleep(firstDelay);
-		T result;
+		Optional<T> result;
 		do {
 			executionCount++;
-			result = polling.apply(this);
-			if (isSuccess.test(result)) {
-				return result;
-			}
+			result = polling.apply(this).filter(isSuccess);
 			sleep(delayFunction.apply(this));
 		} while (!hasTimedOut());
 		return result;

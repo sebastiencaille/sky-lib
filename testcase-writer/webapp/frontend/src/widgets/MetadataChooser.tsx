@@ -2,6 +2,7 @@ import React from "react";
 import { Metadata } from '../webapis/Types'
 
 interface IMetadataChooserProps {
+	prefix: string;
 	allChoices: Metadata[];
 	currentChoice ?: Metadata;
 	onSelection: (metatadata?: Metadata) => void;
@@ -56,10 +57,10 @@ class DictionarySelector extends React.Component<IMetadataChooserProps, IMetadat
 
 	render() {
 		return (<div>
-			<select value={this.state.selectionedChoice?.transientId} onChange={this.changeSelection}>
+			<select id={this.props.prefix + 'Selector'} value={this.state.selectionedChoice?.transientId} onChange={this.changeSelection}>
 				{this.createItems()}
 			</select>
-			<button onClick={this.select}>Select</button>
+			<button id={this.props.prefix + 'Select'} onClick={this.select}>Select</button>
 		</div>
 		);
 	}

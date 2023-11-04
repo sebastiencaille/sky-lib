@@ -18,10 +18,16 @@
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-webapp-backend</artifactId>
+			<type>war</type>
 		</dependency>
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-webapp-frontend</artifactId>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 	</dependencies>
 	<build>

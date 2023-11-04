@@ -8,7 +8,7 @@
 		<version>${revision}</version>
 	</parent>
 	<artifactId>testcase-writer-webapp-frontend</artifactId>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 	<build>
 		<plugins>
 			<plugin>
@@ -43,22 +43,19 @@
 							</arguments>
 						</configuration>
 					</execution>
-					<!--execution>
-						<id>npm-deploy-front</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<executable>${npm.cmd}</executable>
-							<arguments>
-								<argument>run</argument>
-								<argument>publish-local</argument>
-								<argument>${project.build.directory}/node-module</argument>
-							</arguments>
-						</configuration>
-					</execution-->
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<webResources>
+						<resource>
+							<targetPath>/static</targetPath>
+							<directory>${project.build.directory}/frontend-dist</directory>
+						</resource>
+					</webResources>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

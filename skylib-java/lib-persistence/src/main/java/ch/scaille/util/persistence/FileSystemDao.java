@@ -82,7 +82,7 @@ public class FileSystemDao<T> extends AbstractSerializationDao<T> {
 		// Correct the extension if not consistent
 		final var nameAndExt = nameAndExtension(resourceMeta.getStorage());
 		final var handler = dataHandlerRegistry.find(resourceMeta.getMimeType());
-		if (handler.isPresent() && !handler.get().supports(nameAndExt[1]) && handler.get().getDefaultExtension() != null) {
+		if (handler.isPresent() && !handler.get().supports(nameAndExt[1]) && !handler.get().getDefaultExtension().isEmpty()) {
 			return resourceMeta.withStorage(resourceMeta.getStorage() + '.' + handler.get().getDefaultExtension());
 		}
 		return resourceMeta;

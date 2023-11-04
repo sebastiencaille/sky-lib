@@ -8,7 +8,7 @@
 		<version>${revision}</version>
 	</parent>
 	<artifactId>testcase-writer-webapp-backend</artifactId>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 	<properties>
 		<!-- automatically run annotation processors within the incremental
 		compilation -->

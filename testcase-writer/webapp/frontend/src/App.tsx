@@ -102,16 +102,18 @@ class App extends React.Component<IAppProps, IAppState> {
 		return (
 			<div className="App">
 				<MetadataChooser
+					prefix='dictionary'
 					allChoices={this.state.allDictionaries}
 					currentChoice={this.state.currentDictionary?.metadata}
 					onSelection={this.dictionaryChanged} />
 				<MetadataChooser
+					prefix='testcase'
 					allChoices={this.state.allTestCases}
 					currentChoice={this.state.currentTestCase?.metadata}
 					onSelection={this.testCaseChanged} />
-				<button onClick={() => this.export(WebApis.ExportType.JAVA)}>Java Code</button>
-				<button onClick={() => this.export(WebApis.ExportType.HUMAN_READABLE)}>Human Readable</button>
-				<button onClick={this.execute}>Execute</button>
+				<button id='exportJava' onClick={() => this.export(WebApis.ExportType.JAVA)}>Java Code</button>
+				<button id='exportText' onClick={() => this.export(WebApis.ExportType.HUMAN_READABLE)}>Human Readable</button>
+				<button id='execute' onClick={this.execute}>Execute</button>
 				<Popup open={this.state.displayedExport !== undefined} onClose={() => this.setState({ displayedExport: undefined })}
 					className="export-popup">
 					<pre>

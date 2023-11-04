@@ -39,7 +39,6 @@ class SeleniumExampleTest extends AbstractTestWebAppProvider {
 
 	@Test
 	void testExample() throws SecurityException, IOException {
-		Logs.configureFromClassPath();
 		pilot.getDriver().get(new URL(localUrl, "example1.html").toString());
 
 		final var mainPage = pilot.page(ExamplePage::new);

@@ -28,6 +28,12 @@ public class SeleniumPilot extends ch.scaille.tcwriter.pilot.GuiPilot {
 		return new AlertPilot(this);
 	}
 
+	/**
+	 * Creates a page (method/constructor that takes a SeleniumPilot as parameter) 
+	 * @param <C>
+	 * @param factory
+	 * @return
+	 */
 	public <C extends PagePilot> C page(Function<SeleniumPilot, C> factory) {
 		return factory.apply(this);
 	}

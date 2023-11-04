@@ -17,6 +17,7 @@
 		<module>backend</module>
 		<module>frontend</module>
 		<module>war</module>
+		<module>tests</module>
 	</modules>
 
 	<properties>
@@ -33,11 +34,19 @@
 			<dependency>
 				<groupId>ch.scaille.tcwriter</groupId>
 				<artifactId>testcase-writer-webapp-backend</artifactId>
+				<type>war</type>
 				<version>${revision}</version>
 			</dependency>
 			<dependency>
 				<groupId>ch.scaille.tcwriter</groupId>
 				<artifactId>testcase-writer-webapp-frontend</artifactId>
+				<type>war</type>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille.tcwriter</groupId>
+				<artifactId>testcase-writer-webapp-war</artifactId>
+				<type>war</type>
 				<version>${revision}</version>
 			</dependency>
 		</dependencies>

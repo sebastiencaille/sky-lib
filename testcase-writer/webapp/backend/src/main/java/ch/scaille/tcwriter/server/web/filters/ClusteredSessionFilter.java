@@ -72,7 +72,8 @@ public class ClusteredSessionFilter extends OncePerRequestFilter {
 		startCleanup(request.getSession().getMaxInactiveInterval());
 
 		final var contextBeforeCall = context.copy();
-		final var backendSessionId = Arrays.stream(request.getCookies())
+		final var cookies = request.getCookies() != null ? request.getCookies() : new Cookie[0];
+		final var backendSessionId = Arrays.stream(cookies)
 				.filter(c -> APP_SESSION_COOKIE.equals(c.getName()))
 				.map(Cookie::getValue)
 				.findFirst()

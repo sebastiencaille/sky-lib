@@ -8,7 +8,7 @@ module.exports = (env) => {
 	return {
 		entry: './src/index.tsx',
 		output: {
-			path: path.join(__dirname, '/bundle'),
+			path: path.join(__dirname, '/target/frontend-dist'),
 			filename: 'index_bundle.js'
 		},
 		devServer: {

@@ -3,6 +3,7 @@ package ch.scaille.tcwriter.it;
 import static ch.scaille.tcwriter.pilot.selenium.ElementPilot.click;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -15,23 +16,37 @@ public class MainPage extends PagePilot {
 
 	@FindBy(id = "dictionarySelector")
 	public WebElement dictionarySelector;
-	
+
 	@FindBy(id = "dictionarySelect")
 	public WebElement dictionarySelect;
-	
+
+	@FindBy(id = "testcaseSelector")
+	public WebElement testCaseSelector;
+
+	@FindBy(id = "testcaseSelect")
+	public WebElement testCaseSelect;
+
 	public MainPage(SeleniumPilot pilot) {
 		super(pilot);
 	}
 
-	public static Consumer<MainPage> dictionary(String name) {
-		return mp -> {
-			mp.wait(() -> mp.dictionarySelector, e -> new Select(e).selectByVisibleText(name));
-			mp.wait(() -> mp.dictionarySelect, click());
-		};
+	public record ContextSelector(WebElement selector, Consumer<WebElement> selectorApplier, WebElement applier) {
 	}
 
-	public void select(Consumer<MainPage> selector) {
-		selector.accept(this);
+	public static Function<MainPage, ContextSelector> dictionary(String name) {
+		return mp -> new ContextSelector(mp.dictionarySelector, e -> new Select(e).selectByVisibleText(name),
+				mp.dictionarySelect);
+	}
+
+	public static Function<MainPage, ContextSelector> currentTestCase() {
+		return mp -> new ContextSelector(mp.testCaseSelector, e -> {
+			// noop
+		}, mp.testCaseSelect);
+	}
+
+	public void select(Function<MainPage, ContextSelector> selector) {
+		wait(() -> selector.apply(this).selector, selector.apply(this).selectorApplier);
+		wait(() -> selector.apply(this).applier, click());
 	}
 
 }

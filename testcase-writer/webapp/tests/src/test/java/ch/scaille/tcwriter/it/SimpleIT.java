@@ -41,6 +41,7 @@ class SimpleIT {
 
 		final var mainPage = pilot.page(MainPage::new);
 		mainPage.select(MainPage.dictionary("Test dictionary"));
+		mainPage.select(MainPage.currentTestCase());
 	}
 
 }

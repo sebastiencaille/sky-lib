@@ -7,7 +7,7 @@ import MetadataChooser from './widgets/MetadataChooser';
 import TestCaseTable from './widgets/TestCaseTable';
 import WebApis from './webapis/WebApis';
 import WebApiFeedback from './webapis/WebApiFeedback'
-import { Metadata, TestDictionary, TestCase, Context, StepStatus } from './webapis/Types'
+import { Metadata, TestDictionary, TestCase, Context, StepStatus, ExportType } from './webapis/Types'
 import './App.css'
 
 interface IAppProps {
@@ -37,7 +37,7 @@ const initialState: IAppState = {
 
 class App extends React.Component<IAppProps, IAppState> {
 
-	constructor(props: any) {
+	constructor(props: IAppProps) {
 		super(props);
 		this.state = initialState;
 		this.dictionaryChanged = this.dictionaryChanged.bind(this);
@@ -87,7 +87,7 @@ class App extends React.Component<IAppProps, IAppState> {
 		WebApis.executeCurrentTestCase();
 	}
 
-	private export = (format: WebApis.ExportType) => {
+	private export = (format: ExportType) => {
 		WebApis.exportCurrentTestCase(format, (text) => this.setState({ displayedExport: text }));
 	}
 
@@ -111,8 +111,8 @@ class App extends React.Component<IAppProps, IAppState> {
 					allChoices={this.state.allTestCases}
 					currentChoice={this.state.currentTestCase?.metadata}
 					onSelection={this.testCaseChanged} />
-				<button id='exportJava' onClick={() => this.export(WebApis.ExportType.JAVA)}>Java Code</button>
-				<button id='exportText' onClick={() => this.export(WebApis.ExportType.HUMAN_READABLE)}>Human Readable</button>
+				<button id='exportJava' onClick={() => this.export(ExportType.JAVA)}>Java Code</button>
+				<button id='exportText' onClick={() => this.export(ExportType.HUMAN_READABLE)}>Human Readable</button>
 				<button id='execute' onClick={this.execute}>Execute</button>
 				<Popup open={this.state.displayedExport !== undefined} onClose={() => this.setState({ displayedExport: undefined })}
 					className="export-popup">

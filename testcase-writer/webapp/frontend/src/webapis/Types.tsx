@@ -39,6 +39,11 @@ interface TestParameterValue extends ApiTestParameterValue  {
 	testParameterFactory: TestParameterFactory;
 }
 
+export enum ExportType {
+	JAVA = "JAVA",
+	HUMAN_READABLE = "HUMAN_READABLE"
+}
+
 export type {
 	Metadata, IdObject,
 	TestDictionary, TestAction, TestActor, TestRole, TestParameterFactory, TestObjectDescription,
@@ -46,3 +51,5 @@ export type {
 	StepStatus,
 	Context
 }
+
+

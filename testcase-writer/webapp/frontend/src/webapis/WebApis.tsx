@@ -1,4 +1,4 @@
-import { Metadata, TestDictionary, TestCase, Context } from './Types'
+import { Metadata, TestDictionary, TestCase, Context, ExportType } from './Types'
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -48,11 +48,6 @@ const executeCurrentTestCase = () => {
 		})
 }
 
-enum ExportType {
-	JAVA = "JAVA",
-	HUMAN_READABLE = "HUMAN_READABLE"
-}
-
 const exportCurrentTestCase = (format: ExportType, callback: (content: string) => void) => {
 		fetch(API_URL + '/testcase/current/export?format=' + format,
 		{
@@ -68,7 +63,6 @@ const exportCurrentTestCase = (format: ExportType, callback: (content: string) =
 }
 
 const WebApis = {
-	ExportType: ExportType,
 	loadCurrentContext: loadCurrentContext,
 	listAllDictionaries: listAllDictionaries,
 	loadCurrentDictionary: loadCurrentDictionary,

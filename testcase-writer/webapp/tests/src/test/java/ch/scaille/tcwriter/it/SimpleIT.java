@@ -7,12 +7,15 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.WebDriver;
 
+import ch.scaille.tcwriter.jupiter.DisabledIfHeadless;
 import ch.scaille.tcwriter.pilot.selenium.SeleniumPilot;
 import ch.scaille.tcwriter.pilot.selenium.WebDriverFactory;
 import ch.scaille.util.helpers.Logs;
 
+@ExtendWith(DisabledIfHeadless.class)
 class SimpleIT {
 
 	public static WebDriver driver = WebDriverFactory.firefox().build();

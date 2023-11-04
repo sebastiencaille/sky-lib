@@ -71,7 +71,7 @@ jobs:
       working-directory: skylib-java
     
     - name: 'testcase writer: build'
-      run: mvn --no-transfer-progress  -Pcoverage install
+      run: mvn --no-transfer-progress  -Pcoverage -Dit=false install
       working-directory: testcase-writer
 
     - name: 'testcase writer: sonar'

@@ -25,10 +25,10 @@
 		<jackson-bom.version>2.15.3</jackson-bom.version>
 
 		<undertow.version>2.3.10.Final</undertow.version>
-		<mockito.version>5.6.0</mockito.version>
-		<junit-jupiter.version>5.10.0</junit-jupiter.version>
+		<mockito.version>5.7.0</mockito.version>
+		<junit-jupiter.version>5.10.1</junit-jupiter.version>
 		<junit.version>4.13.2</junit.version>
-		<junit-platform-console-standalone.version>1.10.0</junit-platform-console-standalone.version>
+		<junit-platform-console-standalone.version>1.10.1</junit-platform-console-standalone.version>
 		<selenium.version>4.15.0</selenium.version>
 		<h2.version>2.2.224</h2.version>
 
@@ -175,11 +175,11 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>3.2.1</version>
+					<version>3.2.2</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-failsafe-plugin</artifactId>
-					<version>3.2.1</version>
+					<version>3.2.2</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>

@@ -1,5 +1,4 @@
-// File generated from template 2023/10/22 02:14:00
-package ch.scaille.example.gui;
+// File generated from template 2023/10/22 02:14:00package ch.scaille.example.gui;
 
 import java.util.Arrays;
 import ch.scaille.gui.mvc.GuiModel;

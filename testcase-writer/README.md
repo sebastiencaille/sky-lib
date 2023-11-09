@@ -6,7 +6,7 @@ The idea is to have
 * Actors, each actor having a Role
 * Each Role contains Actions
 * Those Actions are made of
-  * The Action itself
+  * the Action itself
   * a Selection operation (aka Selector), used to select the element targeted by the action
   * the action's Parameters 
 * Factories to create business oriented Selectors and Parameters
@@ -55,7 +55,7 @@ public class CustomerTestRole extends Assert {
 The Selectors and Parameters are created using factory methods, which have a business-oriented naming.   
 The method parameters can be used to provide mandatory information.  
 The setters of the factory's return type can be used to provide optional information.
-```
+```java
 @TCApi(description = "delivery mean", humanReadable = "", isSelector = true)
 public class PackageDeliverySelector {
 
@@ -143,6 +143,7 @@ This formalism should allow
 A demonstration GUI is available here [[Code](examples/src/main/java/ch/scaille/tcwriter/examples/gui/ExampleTCEditor.java)]
   * The test model is automatically built by introspecting the java classes.
   * The test case is recorded from the execution of [[SimpleTest](examples/src/main/java/ch/scaille/tcwriter/examples/SimpleTest.java)] (thanks to AspectJ)
+Web application version here: [[Code](webapp)]
 
 ![TC writer full](../screenshots/TC_Writer_full.png)
 

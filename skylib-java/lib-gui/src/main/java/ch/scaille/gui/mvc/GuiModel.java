@@ -8,9 +8,9 @@ import java.util.function.Supplier;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.IPropertiesOwner;
 import ch.scaille.javabeans.converters.IUnaryConverter;
+import ch.scaille.javabeans.properties.AbstractProperty.ErrorNotifier;
 import ch.scaille.javabeans.properties.AbstractTypedProperty;
 import ch.scaille.javabeans.properties.ErrorSet;
-import ch.scaille.javabeans.properties.AbstractProperty.ErrorNotifier;
 
 public class GuiModel implements IPropertiesOwner {
 
@@ -109,10 +109,12 @@ public class GuiModel implements IPropertiesOwner {
 		return configuration;
 	}
 
+	@Override
 	public ErrorNotifier getErrorNotifier() {
 		return configuration.getErrorNotifier();
 	}
 
+	@Override
 	public IPropertiesGroup getPropertySupport() {
 		return configuration.propertySupport;
 	}

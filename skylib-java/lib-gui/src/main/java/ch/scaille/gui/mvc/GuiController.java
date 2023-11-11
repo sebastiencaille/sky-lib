@@ -1,7 +1,7 @@
 package ch.scaille.gui.mvc;
 
-import ch.scaille.javabeans.PropertyChangeSupportController;
 import ch.scaille.javabeans.IPropertiesGroup;
+import ch.scaille.javabeans.PropertyChangeSupportController;
 
 /**
  * Base of MVC controller.

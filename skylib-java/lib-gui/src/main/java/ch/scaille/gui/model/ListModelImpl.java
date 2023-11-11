@@ -22,8 +22,8 @@ import javax.swing.event.EventListenerList;
 import ch.scaille.gui.model.views.IListView;
 import ch.scaille.gui.model.views.IListViewOwner;
 import ch.scaille.gui.model.views.ListViews;
-import ch.scaille.javabeans.PropertyChangeSupportController;
 import ch.scaille.javabeans.IPropertiesGroup;
+import ch.scaille.javabeans.PropertyChangeSupportController;
 import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.util.helpers.StreamExt;
 

@@ -8,10 +8,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import ch.scaille.gui.TestObject;
-import ch.scaille.javabeans.PropertyChangeSupportController;
 import ch.scaille.javabeans.Converters;
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentLink;
+import ch.scaille.javabeans.PropertyChangeSupportController;
 import ch.scaille.javabeans.converters.ConversionException;
 import ch.scaille.javabeans.persisters.IPersisterFactory;
 import ch.scaille.javabeans.persisters.Persisters;

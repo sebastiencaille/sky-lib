@@ -1,8 +1,8 @@
 package ch.scaille.gui.swing.factories;
 
-import ch.scaille.gui.model.ListModel;
 import ch.scaille.gui.model.IListModelListener;
 import ch.scaille.gui.model.ListEvent;
+import ch.scaille.gui.model.ListModel;
 import ch.scaille.javabeans.IBindingChainDependency;
 import ch.scaille.javabeans.IBindingController;
 

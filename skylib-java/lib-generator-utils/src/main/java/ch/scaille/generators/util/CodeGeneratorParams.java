@@ -1,12 +1,12 @@
 package ch.scaille.generators.util;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 
 import ch.scaille.util.helpers.JavaExt;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class CodeGeneratorParams {
 

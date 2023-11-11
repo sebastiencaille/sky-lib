@@ -19,7 +19,6 @@ import ch.scaille.tcwriter.server.dto.Context;
 import ch.scaille.tcwriter.server.facade.ClusteredSessionFacade;
 import ch.scaille.tcwriter.server.facade.ContextFacade;
 import ch.scaille.util.helpers.Logs;
-import jakarta.annotation.PreDestroy;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;

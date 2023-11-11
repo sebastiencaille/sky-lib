@@ -1,7 +1,8 @@
 package ch.scaille.tcwriter.it;
 
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -39,8 +40,8 @@ class SimpleIT {
 	}
 
 	@Test
-	void simpleTest() throws MalformedURLException {
-		pilot.getDriver().get(new URL("http://localhost:9000/index.html").toString());
+	void simpleTest() throws URISyntaxException, MalformedURLException {
+		pilot.getDriver().get(new URI("http://localhost:9000/index.html").toURL().toString());
 
 		final var mainPage = pilot.page(MainPage::new);
 		mainPage.select(MainPage.dictionary("Test dictionary"));

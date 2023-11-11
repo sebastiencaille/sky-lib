@@ -14,11 +14,6 @@
 	<dependencies>
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
-			<artifactId>testcase-writer-webapp-backend</artifactId>
-			<type>war</type>
-		</dependency>
-		<dependency>
-			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-webapp-war</artifactId>
 			<type>war</type>
 		</dependency>

@@ -25,6 +25,9 @@ import ch.scaille.tcwriter.services.testexec.JUnitTestExecutor;
 import ch.scaille.util.helpers.ClassLoaderHelper;
 import ch.scaille.util.helpers.Logs;
 
+/**
+ * To setup basic dictionary / test / configuration
+ */
 public class ExampleHelper {
 
 	private static final Path RESOURCE_FOLDER = Paths.get(System.getProperty("java.io.tmpdir"));

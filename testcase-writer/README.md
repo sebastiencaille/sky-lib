@@ -143,11 +143,11 @@ This formalism should allow
 A demonstration GUI is available here [[Code](examples/src/main/java/ch/scaille/tcwriter/examples/gui/ExampleTCEditor.java)]
   * The test model is automatically built by introspecting the java classes.
   * The test case is recorded from the execution of [[SimpleTest](examples/src/main/java/ch/scaille/tcwriter/examples/SimpleTest.java)] (thanks to AspectJ)
-Web application version here: [[Code](webapp)]
+There is a basic web application version here: [[Code](webapp)]
 
 ![TC writer full](../screenshots/TC_Writer_full.png)
 
 **Testing the test case writer with business oriented tests**  
-It's actually possible to test the GUI using this formalism... (work in progress)  
+It's actually possible to test the GUI using this formalism.
 [[Test infrastructure](gui-it/src/main/java/ch/scaille/tcwriter/it/)] [[TestCase](gui-it/src/test/java/ch/scaille/tcwriter/it/)]
 

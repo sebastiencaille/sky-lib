@@ -22,9 +22,9 @@ public class ExampleBootstrap {
 		final var tc = exampleHelper.recordTestCase(model);
 
 		final var currentConfig = exampleHelper.getConfigDao().getCurrentConfig();
-		currentConfig.getSubconfig(FsModelConfig.class).get().setTemplatePath(TC_TEMPLATE);
+		currentConfig.getSubconfig(FsModelConfig.class).orElseThrow().setTemplatePath(TC_TEMPLATE);
 		currentConfig.getSubconfig(JunitTestExecConfig.class)
-				.get()
+				.orElseThrow()
 				.setClasspath(CodeGeneratorParams.mavenTarget(ExampleHelper.class).resolve("classes").toString());
 
 		exampleHelper.getModelDao().writeTestDictionary(model);

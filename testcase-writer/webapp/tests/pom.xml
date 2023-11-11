@@ -7,10 +7,16 @@
 		<artifactId>testcase-writer-webapp</artifactId>
 		<version>${revision}</version>
 	</parent>
-	<artifactId>testcase-writer-webapp-tests</artifactId>
+	<!-- allows to start the war as a local application -->
 	<packaging>war</packaging>
+	<artifactId>testcase-writer-webapp-tests</artifactId>
 
 	<dependencies>
+		<dependency>
+			<groupId>ch.scaille.tcwriter</groupId>
+			<artifactId>testcase-writer-webapp-backend</artifactId>
+			<type>war</type>
+		</dependency>
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-webapp-war</artifactId>
@@ -19,6 +25,16 @@
 		<dependency>
 			<groupId>ch.scaille</groupId>
 			<artifactId>gui-pilot-selenium</artifactId>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ch.scaille.tcwriter</groupId>
+			<artifactId>testcase-writer-examples</artifactId>
 		</dependency>
 	</dependencies>
 
@@ -34,6 +50,23 @@
 			</activation>
 			<build>
 				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<goals>
+									<goal>java</goal>
+								</goals>
+								<phase>pre-integration-test</phase>
+								<configuration>
+									<mainClass>
+										ch.scaille.tcwriter.server.bootstrap.ExampleBootstrap
+									</mainClass>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
 					<plugin>
 						<groupId>org.springframework.boot</groupId>
 						<artifactId>spring-boot-maven-plugin</artifactId>
@@ -73,8 +106,6 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-failsafe-plugin</artifactId>
-						<configuration>
-						</configuration>
 					</plugin>
 				</plugins>
 			</build>

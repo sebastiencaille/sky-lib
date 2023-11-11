@@ -18,7 +18,7 @@ import ch.scaille.tcwriter.model.testcase.ExportableTestReference;
 import ch.scaille.tcwriter.model.testcase.ExportableTestStep;
 import ch.scaille.tcwriter.model.testexec.StepStatus;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.ERROR)
+@Mapper(unmappedTargetPolicy = ReportingPolicy.ERROR, implementationPackage = "<PACKAGE_NAME>.generated")
 public interface TestCaseMapper {
 
 	TestCaseMapper MAPPER = Mappers.getMapper(TestCaseMapper.class);
@@ -42,12 +42,11 @@ public interface TestCaseMapper {
 
 	default List<TestParameterValue> convertExportableTestParameterValue(
 			List<ch.scaille.tcwriter.model.testcase.TestParameterValue> model) {
-		return model.stream().map(ExportableTestParameterValue.class::cast).map(MAPPER::convert)
-				.toList();
+		return model.stream().map(ExportableTestParameterValue.class::cast).map(MAPPER::convert).toList();
 	}
 
 	default TestParameterValue convert(ch.scaille.tcwriter.model.testcase.TestParameterValue model) {
-		return MAPPER.convertExportable((ExportableTestParameterValue)model);
+		return MAPPER.convertExportable((ExportableTestParameterValue) model);
 	}
 
 	TestParameterValue convertExportable(ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue model);
@@ -57,6 +56,6 @@ public interface TestCaseMapper {
 	}
 
 	TestReference convertExportable(ch.scaille.tcwriter.model.testcase.ExportableTestReference model);
-	
-	StepStatus convert(ch.scaille.tcwriter.model.testexec.StepStatus model); 
+
+	StepStatus convert(ch.scaille.tcwriter.model.testexec.StepStatus model);
 }

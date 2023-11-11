@@ -11,7 +11,6 @@
 		<dependency>
 			<groupId>org.openapitools</groupId>
 			<artifactId>jackson-databind-nullable</artifactId>
-			<version>${jackson-databind-nullable.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>jakarta.validation</groupId>
@@ -58,7 +57,6 @@
 						</goals>
 						<configuration>
 							<executable>${npx.cmd}</executable>
-							<!-- optional -->
 							<arguments>
 								<argument>openapi-typescript</argument>
 								<argument>${project.build.directory}/generated-sources/openapi/src/main/resources/openapi.yaml</argument>

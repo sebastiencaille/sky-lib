@@ -39,7 +39,7 @@
 
 		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
 		<swagger-parser.version>2.1.18</swagger-parser.version>
-		<swagger.version>2.2.18</swagger.version>
+		<swagger.version>2.2.19</swagger.version>
 
 		<springdoc-openapi.version>2.2.0</springdoc-openapi.version>
 
@@ -48,7 +48,11 @@
 
 	<dependencyManagement>
 		<dependencies>
-
+			<dependency>
+				<groupId>org.openapitools</groupId>
+				<artifactId>jackson-databind-nullable</artifactId>
+				<version>${jackson-databind-nullable.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
@@ -310,10 +314,10 @@
 										${coverage.temp}/sonar-coverage/module-${project.name}.exec</destFile>
 								</configuration>
 							</execution>
-							<execution>								<!-- a bit overkill. ideally should be
-								executed								once -->
+							<execution>
+								<!-- must be executed for all modules after all
+								.exec are merged -->
 								<id>merge-for-sonar</id>
-								<phase>verify</phase>
 								<goals>
 									<goal>merge</goal>
 								</goals>
@@ -331,9 +335,10 @@
 								</configuration>
 							</execution>
 							<execution>
+								<!-- must be executed for all modules after all
+								.exec are merged -->
 								<id>report-for-sonar</id>
-								<phase>none</phase>								<!-- manually run for all
-								modules after all .exec are merged -->
+								<phase>none</phase>
 								<goals>
 									<goal>report</goal>
 								</goals>

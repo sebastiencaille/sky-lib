@@ -18,7 +18,7 @@ import ch.scaille.tcwriter.generated.api.model.TestObjectDescription;
 import ch.scaille.tcwriter.generated.api.model.TestParameterFactory;
 import ch.scaille.tcwriter.generated.api.model.TestRole;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.ERROR)
+@Mapper(unmappedTargetPolicy = ReportingPolicy.ERROR, implementationPackage = "<PACKAGE_NAME>.generated")
 public interface TestDictionaryMapper {
 
 	TestDictionaryMapper MAPPER = Mappers.getMapper(TestDictionaryMapper.class);
@@ -32,15 +32,15 @@ public interface TestDictionaryMapper {
 	}
 
 	TestRole convert(ch.scaille.tcwriter.model.dictionary.TestRole model);
-	
+
 	TestAction convert(ch.scaille.tcwriter.model.dictionary.TestAction model);
-	
+
 	TestApiParameter convert(ch.scaille.tcwriter.model.dictionary.TestApiParameter model);
 
 	default String convertToId(ch.scaille.tcwriter.model.dictionary.TestRole model) {
-		return model.getId(); 
+		return model.getId();
 	}
-	
+
 	default List<TestActor> convertActorsList(Map<String, ch.scaille.tcwriter.model.dictionary.TestActor> model) {
 		return model.values().stream().map(this::convert).toList();
 	}
@@ -51,7 +51,7 @@ public interface TestDictionaryMapper {
 			Multimap<String, ch.scaille.tcwriter.model.dictionary.TestParameterFactory> model) {
 		return model.values().stream().map(this::convert).toList();
 	}
-	
+
 	TestParameterFactory convert(ch.scaille.tcwriter.model.dictionary.TestParameterFactory model);
 
 	TestObjectDescription convert(ch.scaille.tcwriter.model.TestObjectDescription model);

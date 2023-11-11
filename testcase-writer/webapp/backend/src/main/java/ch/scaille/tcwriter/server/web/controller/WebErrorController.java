@@ -43,7 +43,7 @@ public class WebErrorController extends AbstractErrorController {
 
 		@Override
 		public ModelAndView resolveErrorView(HttpServletRequest request, HttpStatus status, Map<String, Object> model) {
-			final var resource = this.context.getResource("/WEB-INF/errorPage.html");
+			final var resource = this.context.getResource("classpath:templates/errorPage.html");
 			return new ModelAndView(new HtmlResourceView(resource), model);
 		}
 

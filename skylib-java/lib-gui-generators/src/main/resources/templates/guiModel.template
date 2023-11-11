@@ -58,7 +58,7 @@ public class ${modelClass} extends GuiModel implements IObjectGuiModel<${objectC
     }
 
     public IComponentBinding<${objectClass}> loadBinding() {
-        return new IComponentBinding<${objectClass}>() {
+        return new IComponentBinding<>() {
         
             @Override
             public void addComponentValueChangeListener(final IComponentLink<${objectClass}> link) {

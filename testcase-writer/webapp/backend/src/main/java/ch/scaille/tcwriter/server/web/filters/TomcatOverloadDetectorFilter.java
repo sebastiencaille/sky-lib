@@ -19,7 +19,7 @@ public class TomcatOverloadDetectorFilter extends OncePerRequestFilter {
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(TomcatOverloadDetectorFilter.class);
 
-	private static final Timer TIMER = new Timer();
+	private static final Timer TIMER = new Timer(TomcatOverloadDetectorFilter.class.getName());
 
 	private final AtomicInteger activeThreadsCount = new AtomicInteger(0);
 
@@ -41,6 +41,13 @@ public class TomcatOverloadDetectorFilter extends OncePerRequestFilter {
 		}, periodInSeconds * 1000L, periodInSeconds * 1000L);
 	}
 
+	@Override
+	public void destroy() {
+		TIMER.cancel();
+		TIMER.purge();
+		super.destroy();
+	}
+	
 	private void dumpThreads() {
 		LOGGER.debug("Active threads: {}", activeThreadsCount.get());
 		if (activeThreadsCount.get() <= dumpIfMoreThan) {

@@ -19,6 +19,7 @@ import ch.scaille.tcwriter.server.dto.Context;
 import ch.scaille.tcwriter.server.facade.ClusteredSessionFacade;
 import ch.scaille.tcwriter.server.facade.ContextFacade;
 import ch.scaille.util.helpers.Logs;
+import jakarta.annotation.PreDestroy;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -47,9 +48,9 @@ public class ClusteredSessionFilter extends OncePerRequestFilter {
 	}
 
 	private void startCleanup(int expirationInSeconds) {
-		if (this.cleaner == null) {
-			synchronized (this) {
-				this.cleaner = new Timer();
+		synchronized (this) {
+			if (this.cleaner == null) {
+				this.cleaner = new Timer(getClass().getName());
 				this.cleaner.schedule(new TimerTask() {
 
 					@Override
@@ -62,6 +63,13 @@ public class ClusteredSessionFilter extends OncePerRequestFilter {
 				}, ofMinutes(5).toMillis(), ofMinutes(30).toMillis());
 			}
 		}
+	}
+	
+	@Override
+	public void destroy() {
+		this.cleaner.cancel();
+		this.cleaner.purge();
+		super.destroy();
 	}
 
 	@Override

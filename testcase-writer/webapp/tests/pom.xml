@@ -55,6 +55,7 @@
 						<artifactId>exec-maven-plugin</artifactId>
 						<executions>
 							<execution>
+								<id>setup-test-env</id>
 								<goals>
 									<goal>java</goal>
 								</goals>
@@ -65,6 +66,20 @@
 									</mainClass>
 								</configuration>
 							</execution>
+							<execution>
+								<id>shutdown-server</id>
+								<goals><goal>exec</goal></goals>
+								<phase>post-integration-test</phase>
+								<configuration>
+									<executable>curl</executable>
+									<arguments>
+										<argument>-X</argument>
+										<argument>POST</argument>
+										<argument>http://localhost:9000/actuator/shutdown</argument>
+									</arguments>
+								</configuration>
+							</execution>
+							
 						</executions>
 					</plugin>
 					<plugin>
@@ -76,10 +91,10 @@
 								<phase>none</phase>
 							</execution>
 							<execution>
+								<id>pre-integration-test</id>
 								<goals>
 									<goal>start</goal>
 								</goals>
-								<id>pre-integration-test</id>
 							</execution>
 							<execution>
 								<id>post-integration-test</id>

@@ -1,12 +1,13 @@
-// File generated from template 2023/10/22 02:14:00package ch.scaille.example.gui;
+// File generated from template 2023/11/11 05:07:53
+package ch.scaille.example.gui;
 
 import java.util.Arrays;
 import ch.scaille.gui.mvc.GuiModel;
 import ch.scaille.gui.mvc.IObjectGuiModel;
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentLink;
-import ch.scaille.javabeans.persisters.ObjectProviderPersister;
 import ch.scaille.javabeans.persisters.Persisters;
+import ch.scaille.javabeans.persisters.ObjectProviderPersister;
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.Configuration;
 import ch.scaille.javabeans.properties.ObjectProperty;
@@ -77,7 +78,7 @@ public class TestObjectGuiModel extends GuiModel implements IObjectGuiModel<Test
     }
 
     public IComponentBinding<TestObject> loadBinding() {
-        return new IComponentBinding<TestObject>() {
+        return new IComponentBinding<>() {
         
             @Override
             public void addComponentValueChangeListener(final IComponentLink<TestObject> link) {

@@ -35,7 +35,7 @@ class SimpleIT {
 
 	@AfterAll
 	static void closeDriver() {
-		driver.close();
+		driver.quit();
 	}
 
 	@Test

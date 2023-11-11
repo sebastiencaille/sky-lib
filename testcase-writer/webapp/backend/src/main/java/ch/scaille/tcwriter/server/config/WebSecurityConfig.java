@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 import org.springframework.web.filter.RequestContextFilter;
 
@@ -36,18 +37,19 @@ public class WebSecurityConfig {
 	}
 
 	@Bean
-	SecurityFilterChain api(HttpSecurity http) throws Exception {
+	SecurityFilterChain api(HttpSecurity http, RequestContextFilter requestContextFilter,
+			ClusteredSessionFilter clusteredSessionFilter) throws Exception {
 		return http.securityMatcher("/api/*")
 				.authorizeHttpRequests(
 						a -> a.dispatcherTypeMatchers(HttpMethod.PUT).anonymous().anyRequest().anonymous())
+				.addFilterAfter(requestContextFilter, BasicAuthenticationFilter.class)
+				.addFilterAfter(clusteredSessionFilter, RequestContextFilter.class)
 				.build();
 	}
 
 	@Bean
-	SecurityFilterChain securityFilterChain(TomcatOverloadDetectorFilter tomcatOverloadDetectorFilter,
-			ClusteredSessionFilter clusteredSessionFilter, RequestContextFilter requestContextFilter) {
-		return new DefaultSecurityFilterChain(AnyRequestMatcher.INSTANCE, requestContextFilter,
-				tomcatOverloadDetectorFilter, clusteredSessionFilter);
+	SecurityFilterChain securityFilterChain(TomcatOverloadDetectorFilter tomcatOverloadDetectorFilter) {
+		return new DefaultSecurityFilterChain(AnyRequestMatcher.INSTANCE, tomcatOverloadDetectorFilter);
 	}
 
 	@Bean

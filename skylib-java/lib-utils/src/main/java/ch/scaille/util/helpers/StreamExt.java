@@ -3,7 +3,6 @@ package ch.scaille.util.helpers;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
@@ -105,7 +104,8 @@ public interface StreamExt {
 	}
 
 	static void checkContent(final Stream<?> collection, final Class<?> clazz) {
-		Set<?> mismatches = collection.filter(c -> !clazz.isInstance(c)).map(Object::getClass)
+		final var mismatches = collection.filter(c -> !clazz.isInstance(c))
+				.map(Object::getClass)
 				.collect(Collectors.toSet());
 		if (!mismatches.isEmpty()) {
 			throw new IllegalArgumentException(

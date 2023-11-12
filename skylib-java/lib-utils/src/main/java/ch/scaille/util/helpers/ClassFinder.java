@@ -1,6 +1,6 @@
 package ch.scaille.util.helpers;
 
-import static ch.scaille.util.helpers.LambdaExt.uncheckF;
+import static ch.scaille.util.helpers.LambdaExt.uncheckedF;
 
 import java.io.File;
 import java.io.IOException;
@@ -90,7 +90,7 @@ public class ClassFinder {
 
 	public static URLClassFinder source(final File... source) {
 		return new URLClassFinder(
-				Arrays.stream(source).map(LambdaExt.uncheckF(f -> f.toURI().toURL())).toArray(c -> new URL[c]));
+				Arrays.stream(source).map(LambdaExt.uncheckedF(f -> f.toURI().toURL())).toArray(c -> new URL[c]));
 
 	}
 
@@ -236,7 +236,7 @@ public class ClassFinder {
 		}
 		try {
 			final var candidate = Class.forName(className, false, this.loader);
-			var result = processClass(candidate);
+			final var result = processClass(candidate);
 			if (result != Policy.SCANNED) {
 				return candidate;
 			}
@@ -303,12 +303,12 @@ public class ClassFinder {
 	private Stream<Class<?>> scan(String aPackage) throws IOException {
 		return Collections.list(loader.getResources(aPackage))
 				.stream()
-				.flatMap(uncheckF(r -> scanners.apply(r).scan(r, aPackage)));
+				.flatMap(uncheckedF(r -> scanners.apply(r).scan(r, aPackage)));
 	}
 
 	public Stream<Class<?>> scan() {
 		return packagesToScan.stream().map(p -> p.replace(".", "/")). //
-				flatMap(uncheckF(this::scan)). //
+				flatMap(uncheckedF(this::scan)). //
 				filter(Objects::nonNull).distinct();
 	}
 

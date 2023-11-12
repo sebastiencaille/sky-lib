@@ -37,11 +37,7 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 		}
 
 		private int index() {
-			final var annotation = metadata.getAnnotation(Ordered.class);
-			if (annotation != null) {
-				return annotation.order();
-			}
-			return Integer.MAX_VALUE / 2;
+			return metadata.getAnnotation(Ordered.class).map(Ordered::order).orElse(Integer.MAX_VALUE / 2);
 		}
 	}
 
@@ -153,11 +149,7 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 
 	private String findText(final AbstractAttributeMetaData<T> attrib, final Function<Labeled, String> fromLabel,
 			final UnaryOperator<String> nameToKey) {
-		final var label = attrib.getAnnotation(Labeled.class);
-		var value = "";
-		if (label != null) {
-			value = fromLabel.apply(label);
-		}
+		var value = attrib.getAnnotation(Labeled.class).map(fromLabel::apply).orElse("");
 		if (value.isEmpty() && config.bundle != null) {
 			value = config.bundle.getString(nameToKey.apply(attrib.getName()));
 		}

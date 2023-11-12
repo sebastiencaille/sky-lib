@@ -2,6 +2,7 @@ package ch.scaille.util.dao.metadata;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.util.Optional;
 
 /**
  * This class contains the basic methods and attributes used to access DO's
@@ -31,7 +32,7 @@ public abstract class AbstractAttributeMetaData<T> {
 
 	public abstract Class<?> getDeclaringType();
 
-	public abstract <A extends Annotation> A getAnnotation(Class<A> annotation);
+	public abstract <A extends Annotation> Optional<A> getAnnotation(Class<A> annotation);
 
 	public abstract Type getGenericType();
 

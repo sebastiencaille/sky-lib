@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
+import java.util.Optional;
 
 import ch.scaille.annotations.Persistency;
 
@@ -25,8 +26,8 @@ public class FieldAttribute<T> extends AbstractAttributeMetaData<T> {
 		this.field = field;
 		this.field.setAccessible(true);
 
-		final var persistency = getAnnotation(Persistency.class);
-		readOnly = Modifier.isFinal(field.getModifiers()) || (persistency != null && persistency.readOnly());
+		readOnly = Modifier.isFinal(field.getModifiers())
+				|| getAnnotation(Persistency.class).map(Persistency::readOnly).orElse(false);
 	}
 
 	@Override
@@ -58,8 +59,8 @@ public class FieldAttribute<T> extends AbstractAttributeMetaData<T> {
 	}
 
 	@Override
-	public <A extends Annotation> A getAnnotation(final Class<A> annotation) {
-		return field.getAnnotation(annotation);
+	public <A extends Annotation> Optional<A> getAnnotation(final Class<A> annotation) {
+		return Optional.ofNullable(field.getAnnotation(annotation));
 	}
 
 	@Override

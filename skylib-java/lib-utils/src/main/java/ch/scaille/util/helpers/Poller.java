@@ -35,11 +35,11 @@ public class Poller {
 	}
 
 	public void sleep(Duration pollingDelay) {
-		var endOfPolling = lastPolling + pollingDelay.toMillis();
+		final var endOfPolling = lastPolling + pollingDelay.toMillis();
 		try {
 			while (System.currentTimeMillis() < endOfPolling) {
 				// Correct time
-				var waitTime = endOfPolling - System.currentTimeMillis();
+				final var waitTime = endOfPolling - System.currentTimeMillis();
 				if (waitTime > 0) {
 					Thread.sleep(waitTime);
 				}

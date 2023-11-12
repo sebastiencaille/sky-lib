@@ -1,5 +1,7 @@
 package ch.scaille.tcwriter.services.generators;
 
+import static ch.scaille.util.helpers.LambdaExt.uncheckedC;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -11,9 +13,8 @@ import ch.scaille.tcwriter.generators.services.visitors.TestCaseToJunitVisitor;
 import ch.scaille.tcwriter.model.TestCaseException;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.persistence.IModelDao;
-import ch.scaille.tcwriter.persistence.fsconfig.FsConfigDao;
-import ch.scaille.tcwriter.persistence.fsmodel.FsModelDao;
-import ch.scaille.util.helpers.LambdaExt;
+import ch.scaille.tcwriter.persistence.fs.FsConfigDao;
+import ch.scaille.tcwriter.persistence.fs.FsModelDao;
 
 public class TestCaseToJava {
 
@@ -42,10 +43,12 @@ public class TestCaseToJava {
 		final var mainArgs = new Args();
 		JCommander.newBuilder().addObject(mainArgs).build().parse(args);
 		final var modelDao = new FsModelDao(FsConfigDao.localUser().setConfiguration(mainArgs.configuration));
-		final var testDictionary = modelDao.readTestDictionary(mainArgs.tcDictionary).orElseThrow(FileNotFoundException::new);
+		final var testDictionary = modelDao.readTestDictionary(mainArgs.tcDictionary)
+				.orElseThrow(FileNotFoundException::new);
 		final var jsonTC = mainArgs.testCase;
 		final var testcase = modelDao.readTestCase(jsonTC, testDictionary).orElseThrow(FileNotFoundException::new);
-		new TestCaseToJava(modelDao).generate(testcase).writeTo(LambdaExt.uncheckC(tc-> modelDao.writeTestCaseCode(jsonTC, tc)));
+		new TestCaseToJava(modelDao).generate(testcase)
+				.writeTo(uncheckedC(tc -> modelDao.writeTestCaseCode(jsonTC, tc)));
 	}
 
 }

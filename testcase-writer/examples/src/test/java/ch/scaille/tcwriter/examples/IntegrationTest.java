@@ -6,7 +6,6 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings("java:S2699")
 class IntegrationTest {
 
     @Test

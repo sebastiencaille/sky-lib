@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 
 import ch.scaille.generators.util.CodeGeneratorParams;
 import ch.scaille.tcwriter.examples.ExampleHelper;
-import ch.scaille.tcwriter.persistence.fsmodel.FsModelConfig;
+import ch.scaille.tcwriter.persistence.fs.FsModelConfig;
 import ch.scaille.tcwriter.persistence.testexec.JunitTestExecConfig;
 
 public class ExampleBootstrap {

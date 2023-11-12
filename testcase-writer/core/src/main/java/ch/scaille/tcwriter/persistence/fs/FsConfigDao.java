@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.persistence.fsconfig;
+package ch.scaille.tcwriter.persistence.fs;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -66,11 +66,6 @@ public class FsConfigDao implements IConfigDao {
 	@Override
 	public ObjectProperty<TCConfig> getCurrentConfigProperty() {
 		return currentConfig;
-	}
-
-	@Override
-	public TCConfig getCurrentConfig() {
-		return currentConfig.getValue();
 	}
 
 	private void apply(TCConfig config) {

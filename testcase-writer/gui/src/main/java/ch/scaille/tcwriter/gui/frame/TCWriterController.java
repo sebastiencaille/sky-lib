@@ -1,7 +1,7 @@
 package ch.scaille.tcwriter.gui.frame;
 
-import static ch.scaille.util.helpers.LambdaExt.uncheckF2;
-import static ch.scaille.util.helpers.LambdaExt.uncheckR;
+import static ch.scaille.util.helpers.LambdaExt.uncheckedF2;
+import static ch.scaille.util.helpers.LambdaExt.uncheckedR;
 
 import java.awt.Dialog.ModalityType;
 import java.io.FileNotFoundException;
@@ -30,7 +30,7 @@ import ch.scaille.tcwriter.model.testcase.ExportableTestStep;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestStep;
 import ch.scaille.tcwriter.persistence.IConfigDao;
-import ch.scaille.tcwriter.persistence.fsmodel.FsModelDao;
+import ch.scaille.tcwriter.persistence.fs.FsModelDao;
 import ch.scaille.tcwriter.services.testexec.ITestExecutor;
 import ch.scaille.tcwriter.services.testexec.TestExecutionListener;
 import ch.scaille.tcwriter.services.testexec.TestRemoteControl;
@@ -208,7 +208,7 @@ public class TCWriterController extends GuiController {
 
 	public void startTestCase() {
 		testRemoteControl.resetConnection();
-		new Thread(uncheckR(this::runTestCase, gui::handleException), "Test execution").start();
+		new Thread(uncheckedR(this::runTestCase, gui::handleException), "Test execution").start();
 	}
 
 	public void runTestCase() throws IOException, InterruptedException, TestCaseException {
@@ -222,7 +222,7 @@ public class TCWriterController extends GuiController {
 
 	public void generateCode() throws TestCaseException {
 		this.testExecutor.createTemplate(this.model.getTestCase().getValue())
-				.writeTo(uncheckF2(this.modelDao::writeTestCaseCode))
+				.writeTo(uncheckedF2(this.modelDao::writeTestCaseCode))
 				.getStorage();
 	}
 

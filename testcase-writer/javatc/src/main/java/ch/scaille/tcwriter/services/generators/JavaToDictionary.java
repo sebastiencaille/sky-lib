@@ -10,8 +10,8 @@ import ch.scaille.tcwriter.annotations.TCActors;
 import ch.scaille.tcwriter.annotations.TCRole;
 import ch.scaille.tcwriter.generators.services.visitors.ClassToDictionaryVisitor;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
-import ch.scaille.tcwriter.persistence.fsconfig.FsConfigDao;
-import ch.scaille.tcwriter.persistence.fsmodel.FsModelDao;
+import ch.scaille.tcwriter.persistence.fs.FsConfigDao;
+import ch.scaille.tcwriter.persistence.fs.FsModelDao;
 import ch.scaille.util.helpers.ClassFinder;
 
 public class JavaToDictionary extends AbstractGenerator<TestDictionary> {

@@ -1,6 +1,6 @@
 package ch.scaille.tcwriter.examples;
 
-import static ch.scaille.util.helpers.LambdaExt.uncheckC;
+import static ch.scaille.util.helpers.LambdaExt.uncheckedC;
 
 import java.io.IOException;
 
@@ -17,6 +17,6 @@ public class JavaTestGenerator {
         final var modelDao = exampleHelper.getModelDao();
         modelDao.writeTestDictionary(model);
         modelDao.writeTestCase(ExampleHelper.TC_NAME, testCase);
-        new TestCaseToJava(modelDao).generate(testCase).writeTo(uncheckC(tc -> modelDao.writeTestCaseCode(ExampleHelper.TC_NAME, tc)));
+        new TestCaseToJava(modelDao).generate(testCase).writeTo(uncheckedC(tc -> modelDao.writeTestCaseCode(ExampleHelper.TC_NAME, tc)));
     }
 }

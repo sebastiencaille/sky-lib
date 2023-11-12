@@ -14,7 +14,6 @@ import ch.scaille.tcwriter.examples.api.interfaces.selectors.PackageDeliverySele
 
 @TCRole(description = "A customer", humanReadable = "customer")
 @TCActors("customer|CustomerTestRole")
-@SuppressWarnings("java:S5960")
 public class CustomerTestRole extends Assertions {
 
 	private final ExampleService testedService;

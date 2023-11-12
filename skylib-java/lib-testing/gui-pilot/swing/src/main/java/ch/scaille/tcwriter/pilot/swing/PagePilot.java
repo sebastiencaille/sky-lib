@@ -27,9 +27,9 @@ public class PagePilot {
 				.getAttributes()
 				.stream() //
 				.filter(a -> AbstractSwingComponent.class.isAssignableFrom(a.getType())) //
-				.filter(a -> a.getAnnotation(ByName.class) != null)//
+				.filter(a -> a.getAnnotation(ByName.class).isPresent())//
 				.forEach(a -> {
-					final var name = a.getAnnotation(ByName.class).value();
+					final var name = a.getAnnotation(ByName.class).get().value();
 					final var pilotClass = ((Class<AbstractSwingComponent<?, ?>>) a.getType());
 					try {
 						a.setValueOf(this,

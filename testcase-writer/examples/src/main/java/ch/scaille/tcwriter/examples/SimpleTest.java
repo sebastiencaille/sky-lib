@@ -14,7 +14,6 @@ import ch.scaille.tcwriter.examples.api.interfaces.DeliveryTestRole;
 import ch.scaille.tcwriter.examples.api.interfaces.dto.TestItem;
 import ch.scaille.tcwriter.recorder.RecorderTestActors;
 
-@SuppressWarnings("java:S5960")
 public class SimpleTest {
 
 	private final TestItem coffeeMachine = TestItem.coffeeMachineOfBrand("OldSchool");

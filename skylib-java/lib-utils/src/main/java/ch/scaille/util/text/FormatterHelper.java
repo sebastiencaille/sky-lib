@@ -21,7 +21,6 @@ public interface FormatterHelper {
 			val = val / 1024;
 		}
 		return new DecimalFormat("##0.0").format(val) + unit;
-
 	}
 
 }

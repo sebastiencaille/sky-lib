@@ -2,9 +2,16 @@ package ch.scaille.gui.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.Executor;
 import java.util.concurrent.FutureTask;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public abstract class ThreadedActionListener implements ActionListener {
+
+	private static final ThreadPoolExecutor executor = new ThreadPoolExecutor(1, 4, 30L, TimeUnit.SECONDS,
+			new ArrayBlockingQueue<>(10), new ThreadPoolExecutor.CallerRunsPolicy());
 
 	private FutureTask<Void> futureTask;
 
@@ -26,7 +33,7 @@ public abstract class ThreadedActionListener implements ActionListener {
 	}
 
 	protected void run() {
-		new Thread(futureTask).start();
+		executor.execute(futureTask);
 	}
 
 	public FutureTask<Void> getFutureTask() {

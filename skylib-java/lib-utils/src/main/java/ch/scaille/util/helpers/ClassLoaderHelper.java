@@ -33,7 +33,7 @@ public class ClassLoaderHelper {
 
     public static URL[] appClassPath() {
         final var cp = System.getProperty("java.class.path").split(CP_SEPARATOR);
-        return Arrays.stream(cp).map(LambdaExt.uncheckF(c ->
+        return Arrays.stream(cp).map(LambdaExt.uncheckedF(c ->
                 new URL("file://" + c))).toArray(c -> new URL[c]);
     }
 
@@ -75,6 +75,6 @@ public class ClassLoaderHelper {
 		if (classpath == null) {
 			return new URL[0];
 		}
-		return Arrays.stream(classpath.split(CP_SEPARATOR)).map(LambdaExt.uncheckF(c -> new URL("file:" + c))).toArray(URL[]::new);
+		return Arrays.stream(classpath.split(CP_SEPARATOR)).map(LambdaExt.uncheckedF(c -> new URL("file:" + c))).toArray(URL[]::new);
 	}
 }

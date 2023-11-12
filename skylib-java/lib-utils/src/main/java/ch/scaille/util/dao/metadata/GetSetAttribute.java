@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.Optional;
 
 import ch.scaille.annotations.Persistency;
 
@@ -59,13 +60,12 @@ public class GetSetAttribute<T> extends AbstractAttributeMetaData<T> {
 		if (setter == null) {
 			return true;
 		}
-		final var persistency = getAnnotation(Persistency.class);
-		return persistency != null && persistency.readOnly();
+		return getAnnotation(Persistency.class).map(Persistency::readOnly).orElse(false);
 	}
 
 	@Override
-	public <A extends Annotation> A getAnnotation(final Class<A> annotation) {
-		return attributeGetterInfo.getAnnotation(annotation);
+	public <A extends Annotation> Optional<A> getAnnotation(final Class<A> annotation) {
+		return Optional.ofNullable(attributeGetterInfo.getAnnotation(annotation));
 	}
 
 	@Override

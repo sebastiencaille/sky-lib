@@ -9,21 +9,17 @@ import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
 
 public interface IConfigDao {
 
-    TCConfig getCurrentConfig();
+	default TCConfig getCurrentConfig() {
+		return getCurrentConfigProperty().getValue();
+	}
 
 	ObjectProperty<TCConfig> getCurrentConfigProperty();
 
-    /**
-     * Gets the dao according to the data type
-     * @param <T>
-     * @param daoType
-     * @param subPath
-     * @param dataHandlerRegistry
-     * @return
-     */
-    <T> IDao<T> loaderOf(Class<T> daoType, String subPath, StorageDataHandlerRegistry dataHandlerRegistry);
+	/**
+	 * Gets the dao according to the data type and configuration
+	 */
+	<T> IDao<T> loaderOf(Class<T> daoType, String path, StorageDataHandlerRegistry dataHandlerRegistry);
 
 	void saveConfiguration() throws IOException;
 
-	
 }

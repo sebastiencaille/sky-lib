@@ -93,7 +93,7 @@ public class JUnitTestExecutor implements ITestExecutor {
 	private List<String> toMultipleCommandLine(URL[] classPath) {
 		return Lists.partition(List.of(classPath), 50)
 				.stream()
-				.map(c -> LambdaExt.uncheckM(() -> "-cp=" + ClassLoaderHelper.cpToCommandLine(c.toArray(new URL[0]))))
+				.map(c -> LambdaExt.uncheck(() -> "-cp=" + ClassLoaderHelper.cpToCommandLine(c.toArray(new URL[0]))))
 				.toList();
 	}
 

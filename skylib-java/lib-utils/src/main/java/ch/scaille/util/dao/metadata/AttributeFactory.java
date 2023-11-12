@@ -5,6 +5,7 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.logging.Logger;
 
 import ch.scaille.util.helpers.Logs;
 
@@ -15,8 +16,14 @@ import ch.scaille.util.helpers.Logs;
  * @author Sebastien Caille
  *
  */
-interface AttributeFactory {
+class AttributeFactory {
 
+	private static final Logger LOGGER = Logs.of(AttributeFactory.class);
+
+	private AttributeFactory() {
+		// noop
+	}
+	
 	public enum Mode {
 		AUTOMATIC, GET_SET, FIELD
 	}
@@ -76,7 +83,7 @@ interface AttributeFactory {
 			final var setterHandler = MethodHandles.lookup().unreflect(setter);
 			return new GetSetAttribute<>(name, getter, getterHandler, setterHandler);
 		} catch (final Exception e) { // NOSONAR
-			Logs.of(AttributeFactory.class).finest("No setter for " + name);
+			LOGGER.finest("No setter for " + name);
 			return new ReadOnlyAttribute<>(name, getter, getterHandler);
 		}
 	}
@@ -93,7 +100,7 @@ interface AttributeFactory {
 			}
 			return new FieldAttribute<>(name, field);
 		} catch (final NoSuchFieldException e) { // NOSONAR
-			Logs.of(AttributeFactory.class).finest("Cannot access field " + name);
+			LOGGER.finest("Cannot access field " + name);
 			return null;
 		}
 	}

@@ -7,8 +7,8 @@ import com.beust.jcommander.Parameter;
 
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.tcwriter.model.config.TCConfig;
-import ch.scaille.tcwriter.persistence.fsconfig.FsConfigDao;
-import ch.scaille.tcwriter.persistence.fsmodel.FsModelDao;
+import ch.scaille.tcwriter.persistence.fs.FsConfigDao;
+import ch.scaille.tcwriter.persistence.fs.FsModelDao;
 import ch.scaille.tcwriter.services.testexec.JUnitTestExecutor;
 import ch.scaille.util.helpers.ClassLoaderHelper;
 

@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 
 import ch.scaille.tcwriter.annotations.Recorded;
 import ch.scaille.tcwriter.annotations.TCRole;
-import ch.scaille.tcwriter.persistence.fsconfig.FsConfigDao;
-import ch.scaille.tcwriter.persistence.fsmodel.FsModelDao;
+import ch.scaille.tcwriter.persistence.fs.FsConfigDao;
+import ch.scaille.tcwriter.persistence.fs.FsModelDao;
 
 @Aspect
 public class TestCaseRecorderAspect {

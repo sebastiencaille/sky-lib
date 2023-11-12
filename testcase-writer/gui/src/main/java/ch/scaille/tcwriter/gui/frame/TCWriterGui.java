@@ -48,7 +48,7 @@ public class TCWriterGui extends JFrame {
 			RunnableWithException<?> action) {
 		final var newButton = new JButton(icon);
 		newButton.setToolTipText(toolTip);
-		newButton.addActionListener(SwingExt.action(LambdaExt.uncheckR(action, this::handleException)));
+		newButton.addActionListener(SwingExt.action(LambdaExt.uncheckedR(action, this::handleException)));
 		newButton.setName(name);
 		return newButton;
 	}

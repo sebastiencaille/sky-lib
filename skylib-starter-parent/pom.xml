@@ -22,7 +22,7 @@
 		<revision>0.0.1-SNAPSHOT</revision>
 
 		<aspectj.version>1.9.20.1</aspectj.version>
-		<jackson-bom.version>2.15.3</jackson-bom.version>
+		<jackson-bom.version>2.16.0</jackson-bom.version>
 
 		<undertow.version>2.3.10.Final</undertow.version>
 		<mockito.version>5.7.0</mockito.version>
@@ -201,7 +201,7 @@
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>exec-maven-plugin</artifactId>
-					<version>3.1.0</version>
+					<version>3.1.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -234,7 +234,7 @@
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>versions-maven-plugin</artifactId>
-					<version>2.16.1</version>
+					<version>2.16.2</version>
 					<configuration>
 						<processDependencyManagementTransitive>false</processDependencyManagementTransitive>
 					</configuration>
@@ -254,7 +254,7 @@
 				<plugin>
 					<groupId>org.openapitools</groupId>
 					<artifactId>openapi-generator-maven-plugin</artifactId>
-					<version>7.0.1</version>
+					<version>7.1.0</version>
 					<dependencies>
 						<dependency>
 							<groupId>io.swagger.parser.v3</groupId>

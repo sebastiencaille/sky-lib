@@ -1,7 +1,9 @@
-// File generated from template 2023/11/11 05:07:53
 package ch.scaille.example.gui.controller.impl;
 
+import javax.annotation.processing.Generated;
+
 import java.util.Arrays;
+
 import ch.scaille.gui.mvc.GuiModel;
 import ch.scaille.gui.mvc.IObjectGuiModel;
 import ch.scaille.javabeans.IComponentBinding;
@@ -14,6 +16,7 @@ import ch.scaille.javabeans.properties.BooleanProperty;
 import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.javabeans.properties.IntProperty;
 
+@Generated(value = "ch.scaille.gui.mvc.GuiModelGenerator", date = "2023/12/02 12:06", comments = "-sp ch.scaille.example.gui -s /home/scaille/src/github/sky-lib/skylib-java/lib-gui-examples/target/classes -t /home/scaille/src/github/sky-lib/skylib-java/lib-gui-examples/src/main/java")
 public class ControllerExampleObjectGuiModel extends GuiModel implements IObjectGuiModel<ControllerExampleObject> {
    
     private final ObjectProviderPersister.CurrentObjectProvider<ControllerExampleObject> currentObjectProvider = new ObjectProviderPersister.CurrentObjectProvider<>();
@@ -22,16 +25,16 @@ public class ControllerExampleObjectGuiModel extends GuiModel implements IObject
 	
 	public static final String INT_PROP = "IntProp";
 	
-	public static final String TEST_OBJECT_PROP = "TestObjectProp";
-	
 	public static final String STRING_PROP = "StringProp";
+	
+	public static final String TEST_OBJECT_PROP = "TestObjectProp";
 	
 	
 
 	protected final BooleanProperty booleanPropProperty;
 	protected final IntProperty intPropProperty;
-	protected final ObjectProperty<ch.scaille.example.gui.TestObject> testObjectPropProperty;
 	protected final ObjectProperty<java.lang.String> stringPropProperty;
+	protected final ObjectProperty<ch.scaille.example.gui.TestObject> testObjectPropProperty;
 	
 	
 	protected final AbstractProperty[] allProperties;
@@ -44,14 +47,14 @@ public class ControllerExampleObjectGuiModel extends GuiModel implements IObject
 		intPropProperty = new IntProperty(prefix + INT_PROP, this).configureTyped(
 			Configuration.persistent(currentObjectProvider, Persisters.getSet(ControllerExampleObject::getIntProp, ControllerExampleObject::setIntProp)),
 			implicitConverters(ControllerExampleObject.class, INT_PROP, java.lang.Integer.class));
-		testObjectPropProperty = new ObjectProperty<ch.scaille.example.gui.TestObject>(prefix + TEST_OBJECT_PROP, this).configureTyped(
-			Configuration.persistent(currentObjectProvider, Persisters.getSet(ControllerExampleObject::getTestObjectProp, ControllerExampleObject::setTestObjectProp)),
-			implicitConverters(ControllerExampleObject.class, TEST_OBJECT_PROP, ch.scaille.example.gui.TestObject.class));
 		stringPropProperty = new ObjectProperty<java.lang.String>(prefix + STRING_PROP, this).configureTyped(
 			Configuration.persistent(currentObjectProvider, Persisters.getSet(ControllerExampleObject::getStringProp, ControllerExampleObject::setStringProp)),
 			implicitConverters(ControllerExampleObject.class, STRING_PROP, java.lang.String.class));
+		testObjectPropProperty = new ObjectProperty<ch.scaille.example.gui.TestObject>(prefix + TEST_OBJECT_PROP, this).configureTyped(
+			Configuration.persistent(currentObjectProvider, Persisters.getSet(ControllerExampleObject::getTestObjectProp, ControllerExampleObject::setTestObjectProp)),
+			implicitConverters(ControllerExampleObject.class, TEST_OBJECT_PROP, ch.scaille.example.gui.TestObject.class));
 		
-		allProperties = new AbstractProperty[]{booleanPropProperty, intPropProperty, testObjectPropProperty, stringPropProperty};
+		allProperties = new AbstractProperty[]{booleanPropProperty, intPropProperty, stringPropProperty, testObjectPropProperty};
     }
             
     public ControllerExampleObjectGuiModel(ModelConfiguration config) {
@@ -68,11 +71,11 @@ public class ControllerExampleObjectGuiModel extends GuiModel implements IObject
 	public IntProperty getIntPropProperty() {
 	    return intPropProperty;
 	}
-	public ObjectProperty<ch.scaille.example.gui.TestObject> getTestObjectPropProperty() {
-	    return testObjectPropProperty;
-	}
 	public ObjectProperty<java.lang.String> getStringPropProperty() {
 	    return stringPropProperty;
+	}
+	public ObjectProperty<ch.scaille.example.gui.TestObject> getTestObjectPropProperty() {
+	    return testObjectPropProperty;
 	}
 	
 

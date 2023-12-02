@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import ch.scaille.generators.util.GenerationMetadata;
 import ch.scaille.generators.util.JavaCodeGenerator;
 import ch.scaille.generators.util.Template;
 import ch.scaille.tcwriter.model.IdObject;
@@ -21,6 +22,9 @@ import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestStep;
 import ch.scaille.tcwriter.services.generators.visitors.HumanReadableVisitor;
 
+/**
+ * To generate a JUnit test from a Test Case
+ */
 public class TestCaseToJunitVisitor {
 
 	private final Template template;
@@ -33,13 +37,11 @@ public class TestCaseToJunitVisitor {
 		this.template = template;
 	}
 
-	public Template visitTestCase(final TestCase tc) throws TestCaseException {
+	public Template visitTestCase(final TestCase tc, GenerationMetadata generationMetadata) throws TestCaseException {
 
-		final var properties = new HashMap<String, String>();
-
-		final var testSummaryVisitor = new HumanReadableVisitor(tc, false);
-
+		final var metadata = new HashMap<String, String>();
 		final var javaContent = JavaCodeGenerator.inMemory();
+		final var testSummaryVisitor = new HumanReadableVisitor(tc, false);
 
 		for (final var step : tc.getSteps()) {
 			javaContent.append("// Step ").append(Integer.toString(step.getOrdinal())).append(": ")
@@ -47,10 +49,10 @@ public class TestCaseToJunitVisitor {
 			visitTestStep(javaContent, tc.getDictionary(), step);
 		}
 
-		properties.put("package", tc.getPackage());
-		properties.put("testName", tc.getName());
-		properties.put("testContent", javaContent.toString());
-		return template.apply(properties, JavaCodeGenerator.classToSource(tc.getPackage(), tc.getName()));
+		metadata.put("package", tc.getPackage());
+		metadata.put("testName", tc.getName());
+		metadata.put("testContent", javaContent.toString());
+		return template.apply(metadata, JavaCodeGenerator.toSourceFilename(tc.getPackage(), tc.getName()), generationMetadata);
 	}
 
 	private void visitTestStep(final JavaCodeGenerator<RuntimeException> javaContent, final TestDictionary model,

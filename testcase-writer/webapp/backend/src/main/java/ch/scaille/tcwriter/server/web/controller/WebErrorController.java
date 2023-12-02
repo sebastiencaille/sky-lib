@@ -70,19 +70,18 @@ public class WebErrorController extends AbstractErrorController {
 			public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response)
 					throws Exception {
 				response.setContentType(getContentType());
-				final var responseBody = response.getWriter();
-				final var dto = (ExceptionDto)model.get("dto");
+				final var dto = (ExceptionDto) model.get("dto");
 				try (var rsrcStream = new BufferedReader(
 						new InputStreamReader(this.resource.getInputStream(), StandardCharsets.UTF_8))) {
 					String line;
 					while ((line = rsrcStream.readLine()) != null) {
-					responseBody
-							.write(line.replace("{code}", dto.getCode())
-									.replace("{arguments}", Arrays.toString(dto.getArguments()))
-									.replace("{message}", dto.getMessage())
-									.replace("{trace}", dto.getTrace())
-									.replace("{httpStatusValue}", Integer.toString(dto.getStatus().value()))
-									.replace("{httpStatusCode}", dto.getStatus().name()));
+						response.getWriter()
+								.write(line.replace("{code}", dto.getCode())
+										.replace("{arguments}", Arrays.toString(dto.getArguments()))
+										.replace("{message}", dto.getMessage())
+										.replace("{trace}", dto.getTrace())
+										.replace("{httpStatusValue}", Integer.toString(dto.getStatus().value()))
+										.replace("{httpStatusCode}", dto.getStatus().name()));
 					}
 				}
 			}
@@ -177,13 +176,13 @@ public class WebErrorController extends AbstractErrorController {
 		return super.resolveErrorView(request, response, getStatus(request), model);
 	}
 
-	@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
 	public ExceptionDto handleErrorJson(HttpServletRequest request) {
 		return toDto(request);
 	}
 
-	@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public Object handleError(HttpServletRequest request) {
 		return null;

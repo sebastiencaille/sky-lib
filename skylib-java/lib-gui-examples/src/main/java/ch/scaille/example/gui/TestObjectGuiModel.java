@@ -1,7 +1,9 @@
-// File generated from template 2023/11/11 05:07:53
 package ch.scaille.example.gui;
 
+import javax.annotation.processing.Generated;
+
 import java.util.Arrays;
+
 import ch.scaille.gui.mvc.GuiModel;
 import ch.scaille.gui.mvc.IObjectGuiModel;
 import ch.scaille.javabeans.IComponentBinding;
@@ -13,6 +15,7 @@ import ch.scaille.javabeans.properties.Configuration;
 import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.javabeans.properties.IntProperty;
 
+@Generated(value = "ch.scaille.gui.mvc.GuiModelGenerator", date = "2023/12/02 12:06", comments = "-sp ch.scaille.example.gui -s /home/scaille/src/github/sky-lib/skylib-java/lib-gui-examples/target/classes -t /home/scaille/src/github/sky-lib/skylib-java/lib-gui-examples/src/main/java")
 public class TestObjectGuiModel extends GuiModel implements IObjectGuiModel<TestObject> {
    
     private final ObjectProviderPersister.CurrentObjectProvider<TestObject> currentObjectProvider = new ObjectProviderPersister.CurrentObjectProvider<>();

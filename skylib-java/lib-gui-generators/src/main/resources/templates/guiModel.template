@@ -1,6 +1,9 @@
 package ${package};
 
+import javax.annotation.processing.Generated;
+
 import java.util.Arrays;
+
 import ch.scaille.gui.mvc.GuiModel;
 import ch.scaille.gui.mvc.IObjectGuiModel;
 import ch.scaille.javabeans.IComponentBinding;
@@ -11,6 +14,7 @@ import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.Configuration;
 ${imports}
 
+@Generated(value = "${generator}", date = "${generationDate}", comments = "${commandLine}")
 public class ${modelClass} extends GuiModel implements IObjectGuiModel<${objectClass}> {
    
     private final ObjectProviderPersister.CurrentObjectProvider<${objectClass}> currentObjectProvider = new ObjectProviderPersister.CurrentObjectProvider<>();

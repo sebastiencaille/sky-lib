@@ -16,8 +16,11 @@ public class CodeGeneratorParams {
 	@Parameter(names = { "-t", "--targetFolder" })
 	private String targetFolder = null;
 
-	@Parameter(names = { "-ns", "--nameSpace" }, required = true)
-	private String namespaceFilter = null;
+	@Parameter(names = { "-sp", "--scanPackage" }, required = true)
+	private String scanPackage = null;
+
+	@Parameter(names = { "-tp", "--targetPackage" })
+	private String targetPackage = null;
 
 	public static CodeGeneratorParams parse(final String[] args) {
 		final var params = new CodeGeneratorParams();
@@ -37,17 +40,22 @@ public class CodeGeneratorParams {
 		return targetFolder;
 	}
 
-	public String getNamespaceFilter() {
-		return namespaceFilter;
+	public String getScanPackage() {
+		return scanPackage;
+	}
+
+	public String getTargetPackage() {
+		return targetPackage;
 	}
 
 	/**
 	 * Gets the folder of a class
+	 * 
 	 * @param clazz
 	 * @return
 	 */
-    public static Path mavenTarget(Class<?> clazz) {
-         return Paths.get(JavaExt.pathOf(clazz.getProtectionDomain().getCodeSource().getLocation())).resolve("..");
-    }
+	public static Path mavenTarget(Class<?> clazz) {
+		return Paths.get(JavaExt.pathOf(clazz.getProtectionDomain().getCodeSource().getLocation())).resolve("..");
+	}
 
 }

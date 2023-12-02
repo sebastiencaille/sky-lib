@@ -32,6 +32,9 @@ import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory.ParameterNature;
 import ch.scaille.tcwriter.model.dictionary.TestRole;
 
+/**
+ * To generate a Dictionary from a Java class
+ */
 public class ClassToDictionaryVisitor {
 
 	private final Set<Class<?>> unprocessedActors = new HashSet<>();
@@ -90,14 +93,14 @@ public class ClassToDictionaryVisitor {
 			final var codeVariable = actorAndSimpleName[0];
 			final var simpleClassName = actorAndSimpleName[1];
 			
-			String description;
+			final String description;
 			if (actorAndSimpleName.length > 2) {
 				description = actorAndSimpleName[2];
 			} else {
 				description = codeVariable;
 			}
 			
-			String humanReadable;
+			final String humanReadable;
 			if (actorAndSimpleName.length > 3) {
 				humanReadable = actorAndSimpleName[3];
 			} else {
@@ -176,7 +179,7 @@ public class ClassToDictionaryVisitor {
 		accumulateApiMethods(valueFactoryMethod.getReturnType(), factoryApiMethods);
 		factoryApiMethods.removeIf(m -> Modifier.isStatic(m.getModifiers()) || m.getParameterCount() > 1);
 		for (final var factoryMethod : factoryApiMethods) {
-			String type;
+			final String type;
 			if (factoryMethod.getParameterTypes().length > 0) {
 				type = factoryMethod.getParameterTypes()[0].getName();
 			} else {
@@ -218,24 +221,16 @@ public class ClassToDictionaryVisitor {
 	}
 
 	public void addClass(final Class<?> tcApiClazz) {
-		boolean dispatched = false;
 		if (isRole(tcApiClazz)) {
 			unprocessedRoles.add(tcApiClazz);
-			dispatched = true;
-		}
-		if (isActor(tcApiClazz)) {
+		} else if (isActor(tcApiClazz)) {
 			unprocessedActors.add(tcApiClazz);
-			dispatched = true;
-		}
-		if (isTestApi(tcApiClazz)) {
+		} else if (isTestApi(tcApiClazz)) {
 			unprocessedParameterFactoryClasses.add(tcApiClazz);
-			dispatched = true;
-		}
-		if (!dispatched) {
+		} else { 
 			throw new IllegalStateException(
 					"Class " + tcApiClazz.getName() + " must be annotated with @TCRole or @TCApi or @TCActors");
 		}
-
 	}
 
 	private boolean isTestApi(final Class<?> tcApiClazz) {
@@ -273,10 +268,8 @@ public class ClassToDictionaryVisitor {
 
 	private void forClassAndSuper(final Class<?> tcClazz, final Set<Class<?>> processed,
 			final Consumer<Class<?>> classHandler) {
-		if (tcClazz == null || tcClazz == Object.class) {
-			return;
-		}
-		if (isJavaType(tcClazz)) {
+		if (tcClazz == null || isJavaType(tcClazz)) {
+			// Only process application classes
 			return;
 		}
 		processed.add(tcClazz);

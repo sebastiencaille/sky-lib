@@ -78,7 +78,7 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 		templateProperties.put("flow.code", flowCode.toString());
 		templateProperties.put("flow.start", inputBinding);
 		templateProperties.put("imports", imports.stream().map(i -> "import " + i + ";").collect(joining("\n")));
-		return template.apply(templateProperties, JavaCodeGenerator.classToSource(packageName, flow.getName()));
+		return template.apply(templateProperties, JavaCodeGenerator.toSourceFilename(packageName, flow.getName()), null);
 	}
 
 	private void generateGlobalFlow() {

@@ -38,7 +38,7 @@ public class FlowToProceduralJavaVisitor extends AbstractJavaFlowVisitor {
 		templateProperties.put("flow.output", "void");
 		templateProperties.put("flow.code", generator.toString());
 		templateProperties.put("imports", imports.stream().map(i -> "import " + i + ";").collect(joining("\n")));
-		return template.apply(templateProperties, JavaCodeGenerator.classToSource(packageName, flow.getName()));
+		return template.apply(templateProperties, JavaCodeGenerator.toSourceFilename(packageName, flow.getName()), null);
 	}
 
 	@Override

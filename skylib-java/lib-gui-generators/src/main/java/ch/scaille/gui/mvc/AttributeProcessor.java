@@ -8,9 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import ch.scaille.gui.mvc.ModelClassProcessor.Context;
+import ch.scaille.gui.mvc.ModelClassProcessor.GeneratorContext;
 import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
 
+/**
+ * To generate the code of the MVC model for a given model class attribute 
+ */
 public abstract class AttributeProcessor {
 
 	interface AttributeProcessorDelegate {
@@ -23,7 +26,7 @@ public abstract class AttributeProcessor {
 
 	}
 
-	public static AttributeProcessor create(final Context context, final AbstractAttributeMetaData<?> attrib,
+	public static AttributeProcessor create(final GeneratorContext context, final AbstractAttributeMetaData<?> attrib,
 			final AttributeProcessorDelegate delegate) {
 		final var type = attrib.getType();
 		if (type.isPrimitive()) {
@@ -41,7 +44,7 @@ public abstract class AttributeProcessor {
 
 	public static class PrimitiveProcessor extends AttributeProcessor {
 
-		public PrimitiveProcessor(final Context context, final AbstractAttributeMetaData<?> attrib,
+		public PrimitiveProcessor(final GeneratorContext context, final AbstractAttributeMetaData<?> attrib,
 				final AttributeProcessorDelegate delegate) {
 			super(context, attrib, delegate);
 		}
@@ -77,7 +80,7 @@ public abstract class AttributeProcessor {
 
 		private final String objectName;
 
-		public ContainerProcessorWithType(final Context context, final AbstractAttributeMetaData<?> attrib,
+		public ContainerProcessorWithType(final GeneratorContext context, final AbstractAttributeMetaData<?> attrib,
 				final String objectName, final AttributeProcessorDelegate delegate) {
 			super(context, attrib, delegate);
 			this.objectName = objectName;
@@ -99,7 +102,7 @@ public abstract class AttributeProcessor {
 
 	public static class SetProcessor extends ContainerProcessorWithType {
 
-		public SetProcessor(final Context context, final AbstractAttributeMetaData<?> attrib,
+		public SetProcessor(final GeneratorContext context, final AbstractAttributeMetaData<?> attrib,
 				final AttributeProcessorDelegate delegate) {
 			super(context, attrib, "SetProperty", delegate);
 		}
@@ -108,7 +111,7 @@ public abstract class AttributeProcessor {
 
 	public static class MapProcessor extends ContainerProcessorWithType {
 
-		public MapProcessor(final Context context, final AbstractAttributeMetaData<?> attrib,
+		public MapProcessor(final GeneratorContext context, final AbstractAttributeMetaData<?> attrib,
 				final AttributeProcessorDelegate delegate) {
 			super(context, attrib, "MapProperty", delegate);
 		}
@@ -116,7 +119,7 @@ public abstract class AttributeProcessor {
 
 	public static class ListProcessor extends ContainerProcessorWithType {
 
-		public ListProcessor(final Context context, final AbstractAttributeMetaData<?> attrib,
+		public ListProcessor(final GeneratorContext context, final AbstractAttributeMetaData<?> attrib,
 				final AttributeProcessorDelegate delegate) {
 			super(context, attrib, "ListProperty", delegate);
 		}
@@ -124,7 +127,7 @@ public abstract class AttributeProcessor {
 
 	public static class ObjectProcessor extends AttributeProcessor {
 
-		public ObjectProcessor(final Context context, final AbstractAttributeMetaData<?> attrib,
+		public ObjectProcessor(final GeneratorContext context, final AbstractAttributeMetaData<?> attrib,
 				final AttributeProcessorDelegate delegate) {
 			super(context, attrib, delegate);
 		}
@@ -171,7 +174,7 @@ public abstract class AttributeProcessor {
 	}
 
 	final AbstractAttributeMetaData<?> modelAttribute;
-	final Context context;
+	final GeneratorContext context;
 	protected final AttributeProcessorDelegate delegate;
 
 	protected abstract String getPropertyType();
@@ -181,7 +184,7 @@ public abstract class AttributeProcessor {
 		return this;
 	}
 
-	protected AttributeProcessor(final Context context, final AbstractAttributeMetaData<?> attrib,
+	protected AttributeProcessor(final GeneratorContext context, final AbstractAttributeMetaData<?> attrib,
 			final AttributeProcessorDelegate delegate) {
 		this.context = context;
 		this.modelAttribute = attrib;

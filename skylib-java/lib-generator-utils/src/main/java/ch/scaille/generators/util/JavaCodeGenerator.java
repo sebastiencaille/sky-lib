@@ -13,14 +13,14 @@ public class JavaCodeGenerator<E extends Exception> extends TextFormatter<JavaCo
 	}
 
 	public static JavaCodeGenerator<RuntimeException> inMemory() {
-		return new JavaCodeGenerator<>(output(new StringBuilder()));
+		return new JavaCodeGenerator<>(output(new StringBuilder(1000)));
 	}
 
 	public JavaCodeGenerator(IOutput<E> output) {
 		super(output);
 	}
 
-	public static String classToSource(final String packageName, final String className) {
+	public static String toSourceFilename(final String packageName, final String className) {
 		return packageName.replace('.', '/') + '/' + className + ".java";
 	}
 
@@ -28,12 +28,17 @@ public class JavaCodeGenerator<E extends Exception> extends TextFormatter<JavaCo
 		return c.substring(c.lastIndexOf('.') + 1);
 	}
 
-	public static String toConstant(final String str) {
-		final var builder = new StringBuilder(str.length());
+	/**
+	 * Generate the name of a constant
+	 * @param originalName
+	 * @return a name compatible with a constant
+	 */
+	public static String toConstant(final String originalName) {
+		final var builder = new StringBuilder(originalName.length());
 		var prevUpper = 0;
 		var prevIsNumeric = true;
 		var isFirst = true;
-		for (final var c : str.toCharArray()) {
+		for (final var c : originalName.toCharArray()) {
 			final var isUpper = Character.isUpperCase(c);
 			final var isNumeric = Character.isDigit(c);
 			if (isFirst) {

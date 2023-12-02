@@ -19,6 +19,7 @@ import ch.scaille.dataflowmgr.model.Dictionary.Calls;
 import ch.scaille.dataflowmgr.model.Flow;
 import ch.scaille.dataflowmgr.model.flowctrl.ConditionalFlowCtrl;
 import ch.scaille.generators.util.CodeGeneratorParams;
+import ch.scaille.generators.util.GenerationMetadata;
 import ch.scaille.generators.util.Template;
 import ch.scaille.util.helpers.ClassFinder;
 import ch.scaille.util.helpers.Logs;
@@ -39,12 +40,15 @@ public class SimpleTestGenerator {
 	public static final String SIMPLE_EXTERNAL_ADAPTER_CLASS = SIMPLE_SERVICE_PKG + ".SimpleExternalAdapter";
 
 	public static void main(String[] args) throws IOException, InterruptedException {
-		var targetFolder = CodeGeneratorParams.mavenTarget(SimpleTestGenerator.class);
-		var targetPathSrc = targetFolder.resolve("generated-tests").toAbsolutePath();
-		var targetPathDot = targetFolder.resolve("reports");
+		final var targetFolder = CodeGeneratorParams.mavenTarget(SimpleTestGenerator.class);
+		final var targetPathSrc = targetFolder.resolve("generated-tests").toAbsolutePath();
+		final var targetPathDot = targetFolder.resolve("reports");
+		final var generationMetadata = GenerationMetadata.fromCommandLine(SimpleTestGenerator.class, args);
 
 		final var dictionary = JavaToDictionary.configure(ClassFinder.ofCurrentThread())
-				.withPackages(SIMPLE_SERVICE_PKG).scan().collect(JavaToDictionary.toDictionary());
+				.withPackages(SIMPLE_SERVICE_PKG)
+				.scan()
+				.collect(JavaToDictionary.toDictionary());
 
 		// Services (see AbstractFlow)
 		final var simpleService = dictionary.processors.map(SIMPLE_SERVICE_CLASS, "simpleService");
@@ -67,7 +71,8 @@ public class SimpleTestGenerator {
 
 		// Bindings
 		final var entryToInitCall = Binding.builder(Flow.ENTRY_POINT, initCall);
-		final var initToCompleteCall = Binding.builder(initCall, completeCall).withExternalData(getCompletionCall)
+		final var initToCompleteCall = Binding.builder(initCall, completeCall)
+				.withExternalData(getCompletionCall)
 				.as(DP_COMPLETE);
 		final var initToKeepAsIsCall = Binding.builder(initCall, keepAsIsCall).as(DP_COMPLETE);
 		final var completeToExitCall = Binding.builder(DP_COMPLETE, Flow.EXIT_POINT).withExternalData(displayDataCall);
@@ -76,18 +81,22 @@ public class SimpleTestGenerator {
 		final var flow = Flow.builder("SimpleFlowTest", UUID.randomUUID(), "java.lang.String") //
 				.add(entryToInitCall) //
 				.add(ConditionalFlowCtrl.builder("CompleteData") //
-						.conditional(mustCompleteCond, initToCompleteCall).fallback(initToKeepAsIsCall)) //
-				.add(completeToExitCall).build();
+						.conditional(mustCompleteCond, initToCompleteCall)
+						.fallback(initToKeepAsIsCall)) //
+				.add(completeToExitCall)
+				.build();
 
 		Files.createDirectories(targetPathSrc);
 
 		// Generate the procedural flow
 		new FlowToProceduralJavaVisitor(flow, SIMPLE_SERVICE_PKG,
-				Template.from("templates/flow.template")).process().writeToFolder(targetPathSrc);
+				Template.from("templates/flow.template").withGenerationMetadata(generationMetadata)).process()
+				.writeToFolder(targetPathSrc);
 
 		// Generate the reactive flow
 		new FlowToRXJavaVisitor(flow, "ch.scaille.dataflowmgr.examples.simplerx",
-				Template.from("templates/flowrx.template"), true).process().writeToFolder(targetPathSrc);
+				Template.from("templates/flowrx.template").withGenerationMetadata(generationMetadata), true).process()
+				.writeToFolder(targetPathSrc);
 
 		// Generate the graphic
 

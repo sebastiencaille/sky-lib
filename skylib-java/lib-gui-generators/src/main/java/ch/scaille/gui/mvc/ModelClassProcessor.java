@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import ch.scaille.generators.util.GenerationMetadata;
 import ch.scaille.generators.util.JavaCodeGenerator;
 import ch.scaille.generators.util.Template;
 import ch.scaille.gui.mvc.AttributeProcessor.AttributeProcessorDelegate;
@@ -19,17 +20,20 @@ import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
 import ch.scaille.util.dao.metadata.UntypedDataObjectMetaData;
 import ch.scaille.util.helpers.ClassFinder.URLClassFinder;
 
+/**
+ * To generate the code of the MVC model for a given model class
+ */
 public class ModelClassProcessor {
 
 	private static final String ATTRIB_PUBLIC = "public ";
 
-	public static class Context {
-		final Map<String, String> properties = new HashMap<>();
-		final Set<String> imports = new HashSet<>();
-		final Map<String, String> generatedConstants = new HashMap<>();
+	public static class GeneratorContext {
 		private final URLClassFinder classFinder;
+		private final Map<String, String> properties = new HashMap<>();
+		private final Set<String> imports = new HashSet<>();
+		private final Map<String, String> generatedConstants = new HashMap<>();
 
-		public Context(URLClassFinder classFinder) {
+		public GeneratorContext(URLClassFinder classFinder) {
 			this.classFinder = classFinder;
 		}
 
@@ -57,10 +61,10 @@ public class ModelClassProcessor {
 		}
 		final var parameterizedType = (ParameterizedType) type;
 		final var textOutput = new StringBuilder();
-		var sep = '<';
+		var sep = "<";
 		for (final var argType : parameterizedType.getActualTypeArguments()) {
 			textOutput.append(sep).append(argType.getTypeName());
-			sep = ',';
+			sep = ", ";
 		}
 		textOutput.append('>');
 		return textOutput.toString();
@@ -68,13 +72,23 @@ public class ModelClassProcessor {
 
 	private final Class<?> modelClass;
 
-	private final Context context;
+
+
+	private final GenerationMetadata generationMetadata;
+	
+	private final GeneratorContext context;
 
 	private final AttributeProcessorDelegate delegate = new AttributeProcessor.GetSetAttributeDelegate();
 
-	public ModelClassProcessor(final Class<?> clazz, URLClassFinder classFinder) {
+	private final String targetPackage;
+
+	public ModelClassProcessor(
+			final Class<?> clazz, URLClassFinder classFinder,
+			String targetPackage, GenerationMetadata generationMetadata) {
 		this.modelClass = clazz;
-		this.context = new Context(classFinder);
+		this.targetPackage = targetPackage != null ? targetPackage: modelClass.getPackage().getName();
+		this.generationMetadata = generationMetadata;
+		this.context = new GeneratorContext(classFinder);
 	}
 
 	public String getClassName() {
@@ -96,18 +110,18 @@ public class ModelClassProcessor {
 
 		// attributes
 		addAttributesDeclarations(metaData);
-
 		addAttributesGetters(metaData);
-
 		addAttributePersistenceMethods(metaData);
+		if (!modelClass.getPackage().toString().equals(targetPackage)) {
+			context.addImport(modelClass);
+		}
 
 		context.properties.put("imports", JavaCodeGenerator.toImports(context.imports));
-
-		final var pkg = modelClass.getPackage().getName();
-		context.properties.put("package", pkg);
+		context.properties.put("package", targetPackage);
 		try {
 			return Template.from("templates/guiModel.template")
-					.apply(context.properties, JavaCodeGenerator.classToSource(pkg, getClassName()));
+					.apply(context.properties, JavaCodeGenerator.toSourceFilename(targetPackage, getClassName()),
+							generationMetadata);
 		} catch (IOException e) {
 			throw new IllegalStateException("Unable to load template", e);
 		}

@@ -64,7 +64,7 @@ class App extends React.Component<IAppProps, IAppState> {
 		if (dicoChanged || contextTcChanged) {
 			if (this.state.currentDictionary && this.state.currentContext?.testCase) {
 				WebApis.loadCurrentTestCase(tc =>
-					this.setState({ currentTestCase: TestCaseHelper.enhanceTestCase(this.state.currentDictionary!, tc) }));
+					this.setState(prevState => {{ currentTestCase: TestCaseHelper.enhanceTestCase(prevState.currentDictionary!, tc) }}));
 			}
 		}
 	}
@@ -94,7 +94,7 @@ class App extends React.Component<IAppProps, IAppState> {
 	private stepStatusChanged = (stepStatus: StepStatus) => {
 		if (stepStatus) {
 			this.state.stepStatuses.set(stepStatus?.ordinal, stepStatus);
-			this.setState({ stepStatuses: new Map(this.state.stepStatuses) });
+			this.setState(prevState => {{ stepStatuses: new Map(prevState.stepStatuses) }} );
 		}
 	}
 

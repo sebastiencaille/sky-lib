@@ -6,8 +6,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -20,7 +18,10 @@ import ch.scaille.util.helpers.Logs;
 /**
  * Simple template made of a content with place holders (${...}) and properties
  * (place holder as key + value)
- *
+ * <p>
+ * 	 The {@link GenerationMetadata} allow to pass information about the generation, and can be used the following way:<br>
+ *   java: @Generated(value = "${generator}", date = "${generationDate}", comments="${commandLine}")
+ * </p>
  * @author scaille
  *
  */
@@ -29,7 +30,6 @@ public class Template {
 	private final String content;
 	private final Map<String, String> properties = new HashMap<>();
 
-	private String commandLine;
 	private String preferredFile;
 
 	public static Template from(final File file) throws IOException {
@@ -48,11 +48,14 @@ public class Template {
 		return preferredFile;
 	}
 
-	public Template apply(final Map<String, String> templateProperties, final String providedPreferedFile) {
+	public Template apply(final Map<String, String> templateProperties, final String providedPreferredFile,
+			GenerationMetadata generationMetadata) {
 		final var newTemplate = instantiate(content);
-		newTemplate.preferredFile = providedPreferedFile;
-		newTemplate.setCommandLine(commandLine);
+		newTemplate.preferredFile = providedPreferredFile;
 		newTemplate.setContext(templateProperties);
+		if (generationMetadata != null) {
+			newTemplate.withGenerationMetadata(generationMetadata);
+		}
 		return newTemplate;
 	}
 
@@ -60,16 +63,15 @@ public class Template {
 		return new Template(newContent);
 	}
 
-	public void setCommandLine(final String commandLine) {
-		this.commandLine = commandLine;
+	public Template withGenerationMetadata(GenerationMetadata generationMetadata) {
+		this.properties.put("generator", generationMetadata.getGenerator());
+		this.properties.put("commandLine", generationMetadata.getComments());
+		this.properties.put("generationDate", generationMetadata.getGenerationDate());
+		return this;
 	}
 
 	public String generate() {
-		final var result = new StringBuilder("// File generated from template ")
-				.append(new SimpleDateFormat("yyyy/MM/dd hh:mm:ss").format(new Date())).append("\n");
-		if (commandLine != null) {
-			result.append("// ").append(commandLine).append("\n");
-		}
+		final var result = new StringBuilder(1000);
 		int nextVariablePos = 0;
 		int currentPos = 0;
 		while ((nextVariablePos = content.indexOf("${", nextVariablePos)) > 0) {
@@ -130,7 +132,7 @@ public class Template {
 	 * Writes the resulting content in the preferred file
 	 * 
 	 * @param folder
-	 * @return
+	 * @return the path of the written file
 	 * @throws IOException
 	 */
 	public Path writeToFolder(final Path folder) throws IOException {
@@ -144,14 +146,12 @@ public class Template {
 	 * Writes the resulting content in a file
 	 * 
 	 * @param file
-	 * @return
 	 * @throws IOException
 	 */
 	public void writeTo(final Consumer<String> writer) {
 		writer.accept(generate());
 	}
 
-	
 	/**
 	 * Writes the resulting content in a file
 	 * 

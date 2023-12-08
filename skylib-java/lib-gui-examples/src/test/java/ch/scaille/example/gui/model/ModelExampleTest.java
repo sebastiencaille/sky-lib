@@ -4,8 +4,6 @@ import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.time.Duration;
 
-import javax.swing.JTable;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +18,9 @@ import ch.scaille.util.helpers.Logs;
 @ExtendWith(DisabledIfHeadless.class)
 class ModelExampleTest {
 
-	@Test
+	private static final int FIXED_COLUMN_WIDTH = 15;
+
+@Test
 	void testExample() throws InvocationTargetException, InterruptedException {
 
 		final var view = new TableModelExampleView[1];
@@ -35,9 +35,9 @@ class ModelExampleTest {
 		var page = pilot.page(ModelExamplePage::new);
 
 		page.listTable.wait(Pollings.assertion(pc -> {
-			JTable component = pc.component;
-			Assertions.assertEquals(15, component.getColumn(TestObjectTableModel.Columns.A_SECOND_VALUE).getWidth());
-			Assertions.assertEquals(148, component.getColumn(TestObjectTableModel.Columns.A_FIRST_VALUE).getWidth());
+			final var component = pc.component;
+			Assertions.assertEquals(FIXED_COLUMN_WIDTH, component.getColumn(TestObjectTableModel.Columns.A_SECOND_VALUE).getWidth());
+			Assertions.assertEquals(component.getWidth() - FIXED_COLUMN_WIDTH, component.getColumn(TestObjectTableModel.Columns.A_FIRST_VALUE).getWidth());
 		}));
 		page.listTable.checkValue(0, 0, "One");
 		page.listTable.checkValue(1, 0, "Two");

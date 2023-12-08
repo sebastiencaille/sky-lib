@@ -90,7 +90,7 @@ public class PolicyTableColumnModel<C extends Enum<C>> extends DefaultTableColum
 			for (final var column : columnsOfPolicy) {
 				final var computedWidth = column.computeWidth(info);
 				column.setComputedWidth(computedWidth);
-				unallocatedWidth -= computedWidth;
+				unallocatedWidth -= column.getWidth();
 			}
 		}
 

@@ -13,17 +13,25 @@ import ch.scaille.javabeans.properties.AbstractTypedProperty;
 import ch.scaille.javabeans.properties.ErrorSet;
 
 /**
+ * A simple editor, with an arbitrary content
+ * 
  * @param <T> type of the persisted object
  * @author scaille
  */
 public class SimpleEditorModel<T> implements IGenericEditorModel<T> {
 
+	/**
+	 * Creates an entry of the model
+	 */
     public static <E> PropertyEntry entry(final AbstractTypedProperty<?> property,
                                           final Function<AbstractTypedProperty<?>, EndOfChain<?>> endOfChainProvider, Class<E> endOfChainType,
                                           final boolean readOnly, final String label, final String tooltip) {
         return new PropertyEntry(property, endOfChainProvider, endOfChainType, readOnly, label, tooltip);
     }
 
+	/**
+	 * Creates an entry of the model
+	 */
     public static <E> PropertyEntry entry(final AbstractTypedProperty<?> property,
                                           final Function<AbstractTypedProperty<?>, EndOfChain<?>> endOfChainProvider, Class<E> endOfChainType,
                                           final boolean readOnly, final UnaryOperator<String> textProvider) {

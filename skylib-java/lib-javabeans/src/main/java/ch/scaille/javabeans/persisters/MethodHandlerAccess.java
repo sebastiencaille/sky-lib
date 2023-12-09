@@ -6,6 +6,9 @@ import java.lang.reflect.Field;
 
 import ch.scaille.javabeans.properties.IPersister;
 
+/**
+ * To access a property using a getter and a setter
+ */
 public class MethodHandlerAccess<T, A> implements IPersisterFactory<T, A> {
 
 	private final MethodHandle getter;
@@ -21,7 +24,7 @@ public class MethodHandlerAccess<T, A> implements IPersisterFactory<T, A> {
 	}
 
 	@Override
-	public IPersister<A> asPersister(final Object object) {
+	public IPersister<A> asPersister(final T object) {
 		return new IPersister<>() {
 			@Override
 			public A get() {

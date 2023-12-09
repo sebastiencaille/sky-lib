@@ -3,6 +3,9 @@ package ch.scaille.javabeans.properties;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.properties.AbstractProperty.ErrorNotifier;
 
+/**
+ * To track the current errors (validation, exceptions, ...) 
+ */
 public class ErrorSet implements ErrorNotifier {
 
 	private final MapProperty<AbstractProperty, ConversionError> errors;

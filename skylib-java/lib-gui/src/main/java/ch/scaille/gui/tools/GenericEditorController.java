@@ -9,7 +9,7 @@ import ch.scaille.javabeans.persisters.ObjectProviderPersister.CurrentObjectProv
 import ch.scaille.javabeans.properties.ErrorSet;
 
 /**
- * This controller is the root of the generic editor. It helps binding the view
+ * This controller is the root of the generic editor. It binds the view
  * and the model.
  *
  * @author scaille

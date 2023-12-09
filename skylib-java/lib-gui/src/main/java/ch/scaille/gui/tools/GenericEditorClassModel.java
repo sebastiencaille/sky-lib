@@ -22,6 +22,10 @@ import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
 import ch.scaille.util.dao.metadata.DataObjectMetaData;
 
+/**
+ * Generic editor based on Class introspection
+ * @param <T>
+ */
 public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 
 	public static class ClassPropertyEntry<U> extends PropertyEntry {
@@ -53,6 +57,9 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 			this.editedClazz = clazz;
 		}
 
+		/**
+		 * Sets the messsage / tooltips bundle
+		 */
 		public Builder<T> setBundle(final ResourceBundle bundle) {
 			this.bundle = bundle;
 			return this;
@@ -63,6 +70,9 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 			return this;
 		}
 
+		/**
+		 * Adds the adapters, to tune the property bindings 
+		 */
 		public Builder<T> addAdapters(final IGenericModelAdapter... adapters) {
 			this.adapters = adapters;
 			return this;

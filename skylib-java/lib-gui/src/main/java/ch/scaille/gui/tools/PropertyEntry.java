@@ -6,6 +6,7 @@ import ch.scaille.javabeans.BindingChain.EndOfChain;
 import ch.scaille.javabeans.properties.AbstractTypedProperty;
 
 /*
+ * A property based entry of the editor 
  */
 public class PropertyEntry {
 

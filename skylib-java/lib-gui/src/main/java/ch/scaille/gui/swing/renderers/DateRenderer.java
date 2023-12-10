@@ -17,7 +17,7 @@ public class DateRenderer extends DefaultTableCellRenderer {
 	public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
 			final boolean hasFocus, final int row, final int column) {
 		super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-		TemporalAccessor accessor;
+		final TemporalAccessor accessor;
 		if (value instanceof TemporalAccessor) {
 			accessor = (TemporalAccessor) value;
 		} else if (value instanceof Date) {

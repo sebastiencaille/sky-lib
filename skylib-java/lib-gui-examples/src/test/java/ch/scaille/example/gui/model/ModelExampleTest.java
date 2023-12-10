@@ -20,7 +20,7 @@ class ModelExampleTest {
 
 	private static final int FIXED_COLUMN_WIDTH = 15;
 
-@Test
+	@Test
 	void testExample() throws InvocationTargetException, InterruptedException {
 
 		final var view = new TableModelExampleView[1];

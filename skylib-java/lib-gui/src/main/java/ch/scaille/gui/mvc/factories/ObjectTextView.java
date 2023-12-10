@@ -6,6 +6,9 @@ import java.util.function.Function;
 import ch.scaille.javabeans.Converters;
 import ch.scaille.javabeans.converters.IConverter;
 
+/**
+ *  To display some text based on the content of an object
+ */
 public abstract class ObjectTextView<T> {
 
 	private final T object;

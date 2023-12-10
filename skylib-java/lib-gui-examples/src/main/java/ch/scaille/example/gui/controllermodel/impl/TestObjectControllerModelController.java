@@ -12,7 +12,9 @@ import ch.scaille.util.helpers.Logs;
 
 public class TestObjectControllerModelController extends GuiController {
 
-	final ListModel<TestObject> model = new ListModel<>(
+	private static final Logger LOGGER = Logs.of(TestObjectControllerModelController.class);
+	
+	private final ListModel<TestObject> model = new ListModel<>(
 			ListViews.sorted(Comparator.comparingInt(TestObject::getASecondValue)));
 	private final TestObjectControllerModelFrameModel tableModel;
 
@@ -24,8 +26,7 @@ public class TestObjectControllerModelController extends GuiController {
 			@Override
 			public void commit() {
 				super.commit();
-				Logger logger = Logs.of(TestObjectControllerModelController.this);
-				model.values().stream().map(Object::toString).forEach(logger::info);
+				model.values().stream().map(Object::toString).forEach(LOGGER::info);
 			}
 		};
 	}

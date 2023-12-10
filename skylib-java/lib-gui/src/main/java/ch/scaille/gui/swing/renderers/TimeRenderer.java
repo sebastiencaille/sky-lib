@@ -13,19 +13,24 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 public class TimeRenderer extends DefaultTableCellRenderer {
 
+	private static final DateTimeFormatter SHORT_FORMATTER = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
+	private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+	
 	private final LocalDateTime aDay = LocalDate.now().atStartOfDay();
 
 	@Override
 	public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
 			final boolean hasFocus, final int row, final int column) {
 		super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+		String text;
 		if (value instanceof TemporalAccessor) {
-			setText(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format((TemporalAccessor) value));
+			text = SHORT_FORMATTER.format((TemporalAccessor) value);
 		} else if (value instanceof Duration) {
-			setText(DateTimeFormatter.ofPattern("HH:mm").format(((Duration) value).addTo(aDay)));
+			text = TIME_FORMATTER.format(((Duration) value).addTo(aDay));
 		} else {
-			setText("");
+			text = "";
 		}
+		setText(text);
 		return this;
 	}
 

@@ -42,7 +42,7 @@ public class SwingGenericEditorPanel extends JPanel implements IGenericEditor {
 	@Override
 	public IBindingController addEntry(final PropertyEntry prop, ErrorSet errors) {
 
-		IBindingController result = null;
+		IBindingController result;
 
 		final var propType = prop.getEndOfChainType();
 		currentRow++;
@@ -61,6 +61,8 @@ public class SwingGenericEditorPanel extends JPanel implements IGenericEditor {
 			addLabel(prop);
 			final var component = addStringComponent(prop);
 			result = prop.getChain(String.class).bind(value(component));
+		} else {
+			result = null;
 		}
 		addErrorDisplay(errors, prop);
 		if (result == null) {

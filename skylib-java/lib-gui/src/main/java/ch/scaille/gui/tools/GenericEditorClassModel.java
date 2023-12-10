@@ -134,7 +134,7 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 	public List<ClassPropertyEntry<T>> createProperties(IObjectProvider<T> object) {
 
 		final var properties = new ArrayList<ClassPropertyEntry<T>>();
-		for (final var attrib : metaData.getAttributes()) {
+		for (var attrib : metaData.getAttributes()) {
 
 			final var property = new ObjectProperty<>(attrib.getName(), config.propertySupport);
 			property.configureTyped(persistent(object, Persisters.persister(attrib)));

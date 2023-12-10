@@ -11,6 +11,24 @@ import ch.scaille.javabeans.properties.IPersister;
  */
 public interface IPersisterFactory<T, A> {
 
-	IPersister<A> asPersister(final T object);
+	IPersister<A> asPersister(final IObjectProvider<T> object);
+	
+	public interface IObjectProvider<T> {
+		T getObject();
+	}
+
+	public static class ObjectHolder<T> implements IObjectProvider<T> {
+		private T object;
+
+		@Override
+		public T getObject() {
+			return object;
+		}
+
+		public void setObject(T object) {
+			this.object = object;
+		}
+	}
+
 
 }

@@ -19,16 +19,16 @@ public class AttributeMetaDataAccess<T, A> implements IPersisterFactory<T, A> {
 	}
 
 	@Override
-	public IPersister<A> asPersister(final T object) {
+	public IPersister<A> asPersister(final IObjectProvider<T> objectProvider) {
 		return new IPersister<>() {
 			@Override
 			public A get() {
-				return (A) metadata.getValueOf(object);
+				return (A) metadata.getValueOf(objectProvider.getObject());
 			}
 
 			@Override
 			public void set(final A value) {
-				metadata.setValueOf(object, value);
+				metadata.setValueOf(objectProvider.getObject(), value);
 			}
 		};
 	}

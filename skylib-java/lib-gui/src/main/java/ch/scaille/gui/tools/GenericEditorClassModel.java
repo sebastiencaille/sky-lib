@@ -14,7 +14,7 @@ import ch.scaille.annotations.Ordered;
 import ch.scaille.javabeans.BindingChain.EndOfChain;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.PropertyChangeSupportController;
-import ch.scaille.javabeans.persisters.ObjectProviderPersister.IObjectProvider;
+import ch.scaille.javabeans.persisters.IPersisterFactory.IObjectProvider;
 import ch.scaille.javabeans.persisters.Persisters;
 import ch.scaille.javabeans.properties.AbstractTypedProperty;
 import ch.scaille.javabeans.properties.ErrorSet;
@@ -137,7 +137,7 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 		for (final var attrib : metaData.getAttributes()) {
 
 			final var property = new ObjectProperty<>(attrib.getName(), config.propertySupport);
-			property.configureTyped(persistent(object, Persisters.attribute(attrib)));
+			property.configureTyped(persistent(object, Persisters.persister(attrib)));
 
 			final var readOnly = config.readOnly || attrib.isReadOnly();
 			final var message = findText(attrib, Labeled::label, PropertyEntry::descriptionKey);

@@ -157,7 +157,7 @@ public abstract class AttributeProcessor {
 			} else {
 				setter = "null";
 			}
-			return String.format("Persisters.getSet(%s::%s, %s)", attr.getDeclaringType().getSimpleName(),
+			return String.format("Persisters.persister(%s::%s, %s)", attr.getDeclaringType().getSimpleName(),
 					attributeProcessor.getter(), setter);
 		}
 

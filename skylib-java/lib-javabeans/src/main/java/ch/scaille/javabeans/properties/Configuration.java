@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 
 import ch.scaille.javabeans.AutoCommitListener;
 import ch.scaille.javabeans.persisters.IPersisterFactory;
-import ch.scaille.javabeans.persisters.ObjectProviderPersister.IObjectProvider;
+import ch.scaille.javabeans.persisters.IPersisterFactory.IObjectProvider;
 import ch.scaille.javabeans.properties.AbstractProperty.ErrorNotifier;
 
 /**

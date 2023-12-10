@@ -8,18 +8,19 @@ import ch.scaille.gui.mvc.GuiModel;
 import ch.scaille.gui.mvc.IObjectGuiModel;
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentLink;
-import ch.scaille.javabeans.persisters.Persisters;
-import ch.scaille.javabeans.persisters.ObjectProviderPersister;
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.Configuration;
+import ch.scaille.javabeans.persisters.IPersisterFactory.ObjectHolder;
+import ch.scaille.javabeans.persisters.Persisters;
 import ch.scaille.javabeans.properties.BooleanProperty;
 import ch.scaille.javabeans.properties.ObjectProperty;
+import ch.scaille.example.gui.controller.impl.ControllerExampleObject;
 import ch.scaille.javabeans.properties.IntProperty;
 
-@Generated(value = "ch.scaille.gui.mvc.GuiModelGenerator", date = "2023/12/02 12:06", comments = "-sp ch.scaille.example.gui -s /home/scaille/src/github/sky-lib/skylib-java/lib-gui-examples/target/classes -t /home/scaille/src/github/sky-lib/skylib-java/lib-gui-examples/src/main/java")
+@Generated(value = "ch.scaille.gui.mvc.GuiModelGenerator", date = "2023/12/10 12:04", comments = "-sp ch.scaille.example.gui -s /home/scaille/src/github/sky-lib/skylib-java/lib-gui-examples/target/classes -t /home/scaille/src/github/sky-lib/skylib-java/lib-gui-examples/src/main/java")
 public class ControllerExampleObjectGuiModel extends GuiModel implements IObjectGuiModel<ControllerExampleObject> {
    
-    private final ObjectProviderPersister.CurrentObjectProvider<ControllerExampleObject> currentObjectProvider = new ObjectProviderPersister.CurrentObjectProvider<>();
+    private final ObjectHolder<ControllerExampleObject> currentObjectProvider = new ObjectHolder<>();
 
 	public static final String BOOLEAN_PROP = "BooleanProp";
 	
@@ -42,16 +43,16 @@ public class ControllerExampleObjectGuiModel extends GuiModel implements IObject
     public ControllerExampleObjectGuiModel(final String prefix, ModelConfiguration config) {
 		super(config.ifNotSet(()->	GuiModel.createErrorProperty(prefix + "ControllerExampleObject-Error", config)));
 		booleanPropProperty = new BooleanProperty(prefix + BOOLEAN_PROP, this).configureTyped(
-			Configuration.persistent(currentObjectProvider, Persisters.getSet(ControllerExampleObject::isBooleanProp, ControllerExampleObject::setBooleanProp)),
+			Configuration.persistent(currentObjectProvider, Persisters.persister(ControllerExampleObject::isBooleanProp, ControllerExampleObject::setBooleanProp)),
 			implicitConverters(ControllerExampleObject.class, BOOLEAN_PROP, java.lang.Boolean.class));
 		intPropProperty = new IntProperty(prefix + INT_PROP, this).configureTyped(
-			Configuration.persistent(currentObjectProvider, Persisters.getSet(ControllerExampleObject::getIntProp, ControllerExampleObject::setIntProp)),
+			Configuration.persistent(currentObjectProvider, Persisters.persister(ControllerExampleObject::getIntProp, ControllerExampleObject::setIntProp)),
 			implicitConverters(ControllerExampleObject.class, INT_PROP, java.lang.Integer.class));
 		stringPropProperty = new ObjectProperty<java.lang.String>(prefix + STRING_PROP, this).configureTyped(
-			Configuration.persistent(currentObjectProvider, Persisters.getSet(ControllerExampleObject::getStringProp, ControllerExampleObject::setStringProp)),
+			Configuration.persistent(currentObjectProvider, Persisters.persister(ControllerExampleObject::getStringProp, ControllerExampleObject::setStringProp)),
 			implicitConverters(ControllerExampleObject.class, STRING_PROP, java.lang.String.class));
 		testObjectPropProperty = new ObjectProperty<ch.scaille.example.gui.TestObject>(prefix + TEST_OBJECT_PROP, this).configureTyped(
-			Configuration.persistent(currentObjectProvider, Persisters.getSet(ControllerExampleObject::getTestObjectProp, ControllerExampleObject::setTestObjectProp)),
+			Configuration.persistent(currentObjectProvider, Persisters.persister(ControllerExampleObject::getTestObjectProp, ControllerExampleObject::setTestObjectProp)),
 			implicitConverters(ControllerExampleObject.class, TEST_OBJECT_PROP, ch.scaille.example.gui.TestObject.class));
 		
 		allProperties = new AbstractProperty[]{booleanPropProperty, intPropProperty, stringPropProperty, testObjectPropProperty};

@@ -23,16 +23,16 @@ public class GetSetAccess<T, A> implements IPersisterFactory<T, A> {
 	}
 
 	@Override
-	public IPersister<A> asPersister(final Object object) {
+	public IPersister<A> asPersister(final IObjectProvider<T> objectProvider) {
 		return new IPersister<>() {
 			@Override
 			public A get() {
-				return getter.apply((T) object);
+				return getter.apply(objectProvider.getObject());
 			}
 
 			@Override
 			public void set(final A value) {
-				setter.accept((T) object, value);
+				setter.accept(objectProvider.getObject(), value);
 			}
 		};
 	}

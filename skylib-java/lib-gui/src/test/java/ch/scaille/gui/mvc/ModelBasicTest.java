@@ -71,7 +71,7 @@ class ModelBasicTest {
 	}
 
 	@Test
-	void testChain() throws NoSuchFieldException {
+	void testChain() {
 		final var testBinding = new TestBinding();
 		model.integerProperty.bind(Converters.intToString()).bind(testBinding);
 		controller.activate();
@@ -114,7 +114,7 @@ class ModelBasicTest {
 	}
 
 	@Test
-	void testAutoCommit() throws NoSuchFieldException {
+	void testAutoCommit() {
 		final var testObject = new TestObject(123);
 
 		model.integerProperty.configureTyped(persistent(testObject, testObjectValAccess()), Configuration::autoCommit);
@@ -123,8 +123,8 @@ class ModelBasicTest {
 		assertEquals(456, testObject.getVal());
 	}
 
-	protected IPersisterFactory<TestObject, Integer> testObjectValAccess() throws NoSuchFieldException {
-		return Persisters.unsafeFieldAccess(TestObject.class.getDeclaredField("val"));
+	protected IPersisterFactory<TestObject, Integer> testObjectValAccess() {
+		return Persisters.persister(TestObject::getVal, TestObject::setVal);
 	}
 
 }

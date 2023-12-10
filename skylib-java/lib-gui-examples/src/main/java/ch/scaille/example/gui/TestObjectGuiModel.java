@@ -8,17 +8,18 @@ import ch.scaille.gui.mvc.GuiModel;
 import ch.scaille.gui.mvc.IObjectGuiModel;
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentLink;
-import ch.scaille.javabeans.persisters.Persisters;
-import ch.scaille.javabeans.persisters.ObjectProviderPersister;
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.Configuration;
+import ch.scaille.javabeans.persisters.IPersisterFactory.ObjectHolder;
+import ch.scaille.javabeans.persisters.Persisters;
+import ch.scaille.example.gui.TestObject;
 import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.javabeans.properties.IntProperty;
 
-@Generated(value = "ch.scaille.gui.mvc.GuiModelGenerator", date = "2023/12/02 12:06", comments = "-sp ch.scaille.example.gui -s /home/scaille/src/github/sky-lib/skylib-java/lib-gui-examples/target/classes -t /home/scaille/src/github/sky-lib/skylib-java/lib-gui-examples/src/main/java")
+@Generated(value = "ch.scaille.gui.mvc.GuiModelGenerator", date = "2023/12/10 12:04", comments = "-sp ch.scaille.example.gui -s /home/scaille/src/github/sky-lib/skylib-java/lib-gui-examples/target/classes -t /home/scaille/src/github/sky-lib/skylib-java/lib-gui-examples/src/main/java")
 public class TestObjectGuiModel extends GuiModel implements IObjectGuiModel<TestObject> {
    
-    private final ObjectProviderPersister.CurrentObjectProvider<TestObject> currentObjectProvider = new ObjectProviderPersister.CurrentObjectProvider<>();
+    private final ObjectHolder<TestObject> currentObjectProvider = new ObjectHolder<>();
 
 	public static final String ASECOND_VALUE = "ASecondValue";
 	
@@ -35,10 +36,10 @@ public class TestObjectGuiModel extends GuiModel implements IObjectGuiModel<Test
     public TestObjectGuiModel(final String prefix, ModelConfiguration config) {
 		super(config.ifNotSet(()->	GuiModel.createErrorProperty(prefix + "TestObject-Error", config)));
 		aSecondValueProperty = new IntProperty(prefix + ASECOND_VALUE, this).configureTyped(
-			Configuration.persistent(currentObjectProvider, Persisters.getSet(TestObject::getASecondValue, TestObject::setASecondValue)),
+			Configuration.persistent(currentObjectProvider, Persisters.persister(TestObject::getASecondValue, TestObject::setASecondValue)),
 			implicitConverters(TestObject.class, ASECOND_VALUE, java.lang.Integer.class));
 		aFirstValueProperty = new ObjectProperty<java.lang.String>(prefix + AFIRST_VALUE, this).configureTyped(
-			Configuration.persistent(currentObjectProvider, Persisters.getSet(TestObject::getAFirstValue, TestObject::setAFirstValue)),
+			Configuration.persistent(currentObjectProvider, Persisters.persister(TestObject::getAFirstValue, TestObject::setAFirstValue)),
 			implicitConverters(TestObject.class, AFIRST_VALUE, java.lang.String.class));
 		
 		allProperties = new AbstractProperty[]{aSecondValueProperty, aFirstValueProperty};

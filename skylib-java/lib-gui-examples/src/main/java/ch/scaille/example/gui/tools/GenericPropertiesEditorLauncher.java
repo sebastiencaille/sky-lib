@@ -1,6 +1,6 @@
 package ch.scaille.example.gui.tools;
 
-import static ch.scaille.javabeans.persisters.Persisters.getSet;
+import static ch.scaille.javabeans.persisters.Persisters.persister;
 import static ch.scaille.javabeans.properties.Configuration.persistent;
 
 import java.awt.Dialog;
@@ -13,7 +13,7 @@ import ch.scaille.gui.tools.GenericEditorController;
 import ch.scaille.gui.tools.PropertyEntry;
 import ch.scaille.gui.tools.SimpleEditorModel;
 import ch.scaille.javabeans.IPropertiesGroup;
-import ch.scaille.javabeans.persisters.ObjectProviderPersister.IObjectProvider;
+import ch.scaille.javabeans.persisters.IPersisterFactory.IObjectProvider;
 import ch.scaille.javabeans.properties.AbstractTypedProperty;
 import ch.scaille.javabeans.properties.BooleanProperty;
 import ch.scaille.javabeans.properties.ObjectProperty;
@@ -47,9 +47,9 @@ public class GenericPropertiesEditorLauncher {
 	private static List<PropertyEntry> builder(IPropertiesGroup support, IObjectProvider<EditedObject> obj) {
 
 		final var strProp = new ObjectProperty<String>("str", support)
-				.configureTyped(persistent(obj, getSet(EditedObject::getStr, EditedObject::setStr)));
+				.configureTyped(persistent(obj, persister(EditedObject::getStr, EditedObject::setStr)));
 		final var boolProp = new BooleanProperty("bool", support)
-				.configureTyped(persistent(obj, getSet(EditedObject::isBool, EditedObject::setBool)));
+				.configureTyped(persistent(obj, persister(EditedObject::isBool, EditedObject::setBool)));
 
 		return List.of(//
 				SimpleEditorModel.entry(strProp, AbstractTypedProperty::createBindingChain, String.class, false,

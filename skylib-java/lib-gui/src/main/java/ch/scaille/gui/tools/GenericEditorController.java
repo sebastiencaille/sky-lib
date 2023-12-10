@@ -5,7 +5,7 @@ import static ch.scaille.javabeans.properties.Configuration.errorNotifier;
 import java.util.List;
 
 import ch.scaille.javabeans.IPropertiesGroup;
-import ch.scaille.javabeans.persisters.ObjectProviderPersister.CurrentObjectProvider;
+import ch.scaille.javabeans.persisters.IPersisterFactory.ObjectHolder;
 import ch.scaille.javabeans.properties.ErrorSet;
 
 /**
@@ -21,7 +21,7 @@ public class GenericEditorController<T> {
 	private final IPropertiesGroup propertySupport;
 	private final ErrorSet errorProperty;
 	private final List<? extends PropertyEntry> props;
-	private final CurrentObjectProvider<T> currentObject = new CurrentObjectProvider<>();
+	private final ObjectHolder<T> currentObject = new ObjectHolder<>();
 
 	public GenericEditorController(final IGenericEditor view, final IGenericEditorModel<T> modelAdapter) {
 		this.editor = view;

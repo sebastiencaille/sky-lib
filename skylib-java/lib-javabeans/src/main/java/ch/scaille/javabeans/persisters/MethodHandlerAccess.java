@@ -24,12 +24,12 @@ public class MethodHandlerAccess<T, A> implements IPersisterFactory<T, A> {
 	}
 
 	@Override
-	public IPersister<A> asPersister(final T object) {
+	public IPersister<A> asPersister(final IObjectProvider<T> objectProvider) {
 		return new IPersister<>() {
 			@Override
 			public A get() {
 				try {
-					return (A) getter.bindTo(object).invoke();
+					return (A) getter.bindTo(objectProvider.getObject()).invoke();
 				} catch (Throwable e) {
 					throw new IllegalStateException("Cannot invoke getter", e);
 				}
@@ -38,7 +38,7 @@ public class MethodHandlerAccess<T, A> implements IPersisterFactory<T, A> {
 			@Override
 			public void set(final A value) {
 				try {
-					setter.bindTo(object).invoke(value);
+					setter.bindTo(objectProvider.getObject()).invoke(value);
 				} catch (Throwable e) {
 					throw new IllegalStateException("Cannot invoke getter", e);
 				}

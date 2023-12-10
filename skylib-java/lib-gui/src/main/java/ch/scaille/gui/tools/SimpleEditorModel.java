@@ -8,7 +8,7 @@ import java.util.function.UnaryOperator;
 import ch.scaille.javabeans.BindingChain.EndOfChain;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.PropertyChangeSupportController;
-import ch.scaille.javabeans.persisters.ObjectProviderPersister.IObjectProvider;
+import ch.scaille.javabeans.persisters.IPersisterFactory.IObjectProvider;
 import ch.scaille.javabeans.properties.AbstractTypedProperty;
 import ch.scaille.javabeans.properties.ErrorSet;
 

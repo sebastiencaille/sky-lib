@@ -17,6 +17,8 @@ import ch.scaille.tcwriter.model.IdObject;
 import ch.scaille.tcwriter.model.TestCaseException;
 import ch.scaille.tcwriter.model.dictionary.TestApiParameter;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
+import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
+import ch.scaille.tcwriter.model.dictionary.TestParameterFactory.ParameterNature;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestStep;
@@ -44,15 +46,19 @@ public class TestCaseToJunitVisitor {
 		final var testSummaryVisitor = new HumanReadableVisitor(tc, false);
 
 		for (final var step : tc.getSteps()) {
-			javaContent.append("// Step ").append(Integer.toString(step.getOrdinal())).append(": ")
-					.append(testSummaryVisitor.process(step)).eol();
+			javaContent.append("// Step ")
+					.append(Integer.toString(step.getOrdinal()))
+					.append(": ")
+					.append(testSummaryVisitor.process(step))
+					.eol();
 			visitTestStep(javaContent, tc.getDictionary(), step);
 		}
 
 		metadata.put("package", tc.getPackage());
 		metadata.put("testName", tc.getName());
 		metadata.put("testContent", javaContent.toString());
-		return template.apply(metadata, JavaCodeGenerator.toSourceFilename(tc.getPackage(), tc.getName()), generationMetadata);
+		return template.apply(metadata, JavaCodeGenerator.toSourceFilename(tc.getPackage(), tc.getName()),
+				generationMetadata);
 	}
 
 	private void visitTestStep(final JavaCodeGenerator<RuntimeException> javaContent, final TestDictionary model,
@@ -67,9 +73,12 @@ public class TestCaseToJunitVisitor {
 		if (step.getReference() != null) {
 			stepContentCode.addVarAssign(step.getReference().getParameterType(), step.getReference().getName());
 		}
-		stepContentCode.addMethodCall(step.getActor().getName(), step.getAction().getName(),
-				g -> addParameterValuesToCall(g, step, step.getParametersValue(), step.getAction().getParameters()))
-				.eos().eol();
+		stepContentCode
+				.addMethodCall(step.getActor().getName(), step.getAction().getName(),
+						g -> addParameterValuesToCall(g, step, step.getParametersValue(),
+								step.getAction().getParameters()))
+				.eos()
+				.eol();
 
 		javaContent.append(comment);
 		javaContent.append(stepContentCode);
@@ -90,8 +99,9 @@ public class TestCaseToJunitVisitor {
 
 		final var parameterVarName = varNameOf(step, paramValue);
 		parametersContentCode.addVarAssign(valuefactory.getParameterType(), parameterVarName) //
-				.addMethodCall(valuefactory.getName(), g -> addParameterValuesToCall(g, step,
-						paramValue.getComplexTypeValues().values(), valuefactory.getMandatoryParameters()))
+				.addMethodCall(valuefactory.getName(),
+						g -> addParameterValuesToCall(g, step, paramValue.getComplexTypeValues().values(),
+								valuefactory.getMandatoryParameters()))
 				.eos();
 		addOptionalParameters(step, parametersContentCode, parameterVarName, paramValue.getComplexTypeValues().values(),
 				valuefactory.getOptionalParameters());
@@ -145,29 +155,25 @@ public class TestCaseToJunitVisitor {
 
 	private void inlineValue(final JavaCodeGenerator<RuntimeException> parametersContent, final TestStep step,
 			final TestParameterValue parameterValue) throws TestCaseException {
-		switch (parameterValue.getValueFactory().getNature()) {
-		case TEST_API:
+		switch (parameterValue.getValueFactory()) {
+		case TestParameterFactory f when f.getNature() == ParameterNature.TEST_API ->
 			parametersContent.append(varNameOf(step, parameterValue));
-			break;
-		case SIMPLE_TYPE:
-			final var valueType = parameterValue.getValueFactory().getParameterType();
-			final var isString = String.class.getName().equals(valueType);
-			final var isLong = Long.class.getName().equals(valueType) || Long.TYPE.getName().equals(valueType);
-			if (isString) {
-				parametersContent.append("\"");
-			}
-			parametersContent.append(parameterValue.getSimpleValue());
-			if (isString) {
-				parametersContent.append("\"");
-			} else if (isLong) {
-				parametersContent.append("L");
-			}
-			break;
-		case REFERENCE:
+
+		case TestParameterFactory f when f.getNature() == ParameterNature.SIMPLE_TYPE
+				&& String.class.getName().equals(f.getParameterType()) ->
+			parametersContent.append("\"").append(parameterValue.getSimpleValue()).append("\"");
+
+		case TestParameterFactory f when f.getNature() == ParameterNature.SIMPLE_TYPE ->
+			parametersContent.append(parameterValue.getSimpleValue()).append("L");
+
+		case TestParameterFactory f when f.getNature() == ParameterNature.SIMPLE_TYPE
+				&& Long.class.getName().equals(f.getParameterType())
+				|| Long.TYPE.getName().equals(f.getParameterType()) ->
+			parametersContent.append(parameterValue.getSimpleValue()).append("L");
+
+		case TestParameterFactory f when f.getNature() == ParameterNature.REFERENCE ->
 			parametersContent.append(parameterValue.getValueFactory().getName());
-			break;
-		default:
-			throw new TestCaseException("Parameter value is not set");
+		default -> throw new TestCaseException("Parameter value is not set: " + parameterValue.getValueFactory());
 		}
 	}
 

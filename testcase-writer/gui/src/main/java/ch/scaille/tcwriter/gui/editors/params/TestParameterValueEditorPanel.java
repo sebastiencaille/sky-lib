@@ -81,42 +81,48 @@ public class TestParameterValueEditorPanel extends JPanel {
 		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.PAGE_AXIS));
 
 		final var valueTypePanel = new JPanel();
-		
-		// To select the kind of value 
+
+		// To select the kind of value
 
 		final var useRawValueEditor = new JRadioButton("Raw value");
-		tpModel.getTestApi().bind(o -> o != null && o.getNature() != ParameterNature.TEST_API).listen(useRawValueEditor::setEnabled);
+		tpModel.getTestApi()
+				.bind(o -> o != null && o.getNature() != ParameterNature.TEST_API)
+				.listen(useRawValueEditor::setEnabled);
 		valueTypePanel.add(useRawValueEditor);
 
 		final var useReferenceEditor = new JRadioButton("Reference: ");
 		valueTypePanel.add(useReferenceEditor);
-		
+
 		final var useComplexTypeEditor = new JRadioButton("Test Api: ");
-		tpModel.getTestApi().bind(o -> o != null && o.getNature() == ParameterNature.TEST_API).listen(useComplexTypeEditor::setEnabled);
+		tpModel.getTestApi()
+				.bind(o -> o != null && o.getNature() == ParameterNature.TEST_API)
+				.listen(useComplexTypeEditor::setEnabled);
 		valueTypePanel.add(useComplexTypeEditor);
-		
+
 		topPanel.add(valueTypePanel);
-		
+
 		final var paramTypeEditorGroup = new ButtonGroup();
 		paramTypeEditorGroup.add(useRawValueEditor);
 		paramTypeEditorGroup.add(useReferenceEditor);
 		paramTypeEditorGroup.add(useComplexTypeEditor);
-		
-		// editors 
-		
+
+		// editors
+
 		final var simpleValueEditor = new JTextField();
 		tpModel.getSimpleValue().bind(value(simpleValueEditor));
-		tpModel.getValueNature().bind(v -> v == ParameterNature.SIMPLE_TYPE).listen(enableAndVisible(simpleValueEditor));
+		tpModel.getValueNature()
+				.bind(v -> v == ParameterNature.SIMPLE_TYPE)
+				.listen(enableAndVisible(simpleValueEditor));
 		topPanel.add(simpleValueEditor);
-		
-		
+
 		final var referenceEditor = new JComboBox<ObjectTextView<TestReference>>();
 		tpModel.getReferences()
 				.bind(filter(r -> r.getParameterType()
 						.equals(editedParamValue.getValue().getValueFactory().getParameterType()))) //
 				.bind(listConverter(refToTextConverter())) //
 				.bind(values(referenceEditor));
-		tpModel.getSelectedReference().bind(refToTextConverter())//
+		tpModel.getSelectedReference()
+				.bind(refToTextConverter())//
 				.bind(selection(referenceEditor)) //
 				.addDependency(BindingDependencies.preserveOnUpdateOf(tpModel.getReferences()));
 		tpModel.getValueNature().bind(v -> v == ParameterNature.REFERENCE).listen(enableAndVisible(referenceEditor));
@@ -124,7 +130,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 		// Complex type editor
 		add(topPanel, BorderLayout.NORTH);
- 
+
 		final var allEditedParameters = new ListModel<ParameterValueEntry>(ListViews.sorted());
 		final var visibleParameters = allEditedParameters.child(ListViews.filtered(p -> p.visible));
 		final var valueTable = new TestParameterValueTable(new TestParameterValueTableModel(visibleParameters));
@@ -132,14 +138,16 @@ public class TestParameterValueEditorPanel extends JPanel {
 		final var complexValues = editedParamValue.child("ComplexParams", TestParameterValue::getComplexTypeValues,
 				TestParameterValue::updateComplexTypeValues);
 		complexValues.bind(toListModel(testCase, editedParamValue)).bind(values(allEditedParameters));
-		var  valueTablePane = new JScrollPane(valueTable);
+		final var valueTablePane = new JScrollPane(valueTable);
 		tpModel.getValueNature().bind(v -> v == ParameterNature.TEST_API).listen(enableAndVisible(valueTablePane));
 		tpModel.getTestApi().listenActive(api -> fixParamsOfApi(testCase, api, editedParamValue, allEditedParameters));
 
 		add(valueTablePane, BorderLayout.CENTER);
 
-		tpModel.getValueNature().bind(group(paramTypeEditorGroup, ParameterNature.REFERENCE, useReferenceEditor,
-				ParameterNature.SIMPLE_TYPE, useRawValueEditor, ParameterNature.TEST_API, useComplexTypeEditor));
+		tpModel.getValueNature()
+				.bind(group(paramTypeEditorGroup, ParameterNature.REFERENCE, useReferenceEditor,
+						ParameterNature.SIMPLE_TYPE, useRawValueEditor, ParameterNature.TEST_API,
+						useComplexTypeEditor));
 
 		// When TC or parameters are changing, update the list of references
 		testCase.listenActive(
@@ -159,7 +167,9 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 		// Edit the parameter value when changing the reference.
 		tpModel.getSelectedReference().listenActive(ref -> {
-			if (tpModel.getEditedParameterValue().getObjectValue().getValueFactory()
+			if (tpModel.getEditedParameterValue()
+					.getObjectValue()
+					.getValueFactory()
 					.getNature() == ParameterNature.REFERENCE) {
 				editedParamValue.getValue().setParameterFactory(ref);
 			}
@@ -170,20 +180,19 @@ public class TestParameterValueEditorPanel extends JPanel {
 			final var paramValue = editedParamValue.getValue();
 
 			switch (v) {
-			case SIMPLE_TYPE:
+			case SIMPLE_TYPE ->
 				paramValue.setParameterFactory(apiOf(testCase.getValue(), paramValue).asSimpleParameter());
-				break;
-			case REFERENCE:
+			case REFERENCE -> {
 				final var testRef = tpModel.getSelectedReference().getValue();
 				if (testRef != null) {
 					paramValue.setParameterFactory(testRef);
 				}
-				break;
-			case TEST_API:
-				paramValue.setParameterFactory(tpModel.getTestApi().getValue());
-				break;
-			default:
-				break;
+			}
+			case TEST_API -> paramValue.setParameterFactory(tpModel.getTestApi().getValue());
+			case NOT_SET -> { // noop
+			}
+			default -> throw new IllegalStateException("Not handled: " + v);
+
 			}
 		});
 	}
@@ -207,9 +216,13 @@ public class TestParameterValueEditorPanel extends JPanel {
 			return;
 		}
 		// Update existing values, track missing ones
-		final var missingMandatoryIds = api.getMandatoryParameters().stream().map(TestApiParameter::getId)
+		final var missingMandatoryIds = api.getMandatoryParameters()
+				.stream()
+				.map(TestApiParameter::getId)
 				.collect(toSet());
-		final var missingOptionalIds = api.getOptionalParameters().stream().map(TestApiParameter::getId)
+		final var missingOptionalIds = api.getOptionalParameters()
+				.stream()
+				.map(TestApiParameter::getId)
 				.collect(toSet());
 		for (final var editorParamValue : allEditedParameters) {
 			missingMandatoryIds.remove(editorParamValue.id);

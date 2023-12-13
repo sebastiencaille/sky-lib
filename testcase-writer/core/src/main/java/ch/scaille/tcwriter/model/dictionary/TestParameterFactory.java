@@ -60,7 +60,9 @@ public class TestParameterFactory extends NamedObject {
 	}
 
 	public TestApiParameter getMandatoryParameterById(final String id) {
-		return mandatoryParameters.stream().filter(p -> p.getId().equals(id)).findFirst()
+		return mandatoryParameters.stream()
+				.filter(p -> p.getId().equals(id))
+				.findFirst()
 				.orElseThrow(() -> new IllegalStateException("Can't find mandatory parameter " + id));
 	}
 
@@ -73,12 +75,16 @@ public class TestParameterFactory extends NamedObject {
 	}
 
 	public TestApiParameter getOptionalParameterById(final String id) {
-		return optionalParameters.stream().filter(p -> p.getId().equals(id)).findFirst()
+		return optionalParameters.stream()
+				.filter(p -> p.getId().equals(id))
+				.findFirst()
 				.orElseThrow(() -> new IllegalStateException("Can't find optional parameter " + id));
 	}
 
 	public TestApiParameter getOptionalParameterByName(final String name) {
-		return optionalParameters.stream().filter(p -> p.getName().equals(name)).findFirst()
+		return optionalParameters.stream()
+				.filter(p -> p.getName().equals(name))
+				.findFirst()
 				.orElseThrow(() -> new IllegalStateException("Can't find optional parameter " + name));
 	}
 
@@ -100,8 +106,8 @@ public class TestParameterFactory extends NamedObject {
 
 	@Override
 	public String toString() {
-		return super.toString() + ", " + mandatoryParameters.size() + " mandatory, " + optionalParameters.size()
-				+ " optional";
+		return String.format("%s, %s, %s mandatory, %s optional ", super.toString(), getParameterType(),
+				mandatoryParameters.size(), optionalParameters.size());
 	}
 
 	public static TestParameterFactory simpleType(final String type) {

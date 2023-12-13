@@ -21,7 +21,7 @@
 	<properties>
 		<revision>0.0.1-SNAPSHOT</revision>
 
-		<aspectj.version>1.9.20.1</aspectj.version>
+		<aspectj.version>1.9.21</aspectj.version>
 		<jackson-bom.version>2.16.0</jackson-bom.version>
 
 		<undertow.version>2.3.10.Final</undertow.version>
@@ -179,11 +179,11 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>3.2.2</version>
+					<version>3.2.3</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-failsafe-plugin</artifactId>
-					<version>3.2.2</version>
+					<version>3.2.3</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
@@ -248,7 +248,7 @@
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>aspectj-maven-plugin</artifactId>
-					<version>1.14.0</version>
+					<version>1.15.0</version>
 					<dependencies>
 						<dependency>
 							<groupId>org.aspectj</groupId>

@@ -36,6 +36,7 @@ public class TestCaseRecorder implements ITestCaseRecorder {
     private final TestDictionary tcDictionary;
 
     private final List<TestStep> testSteps = new ArrayList<>();
+    
     private final Map<Object, TestParameterValue> testParameterValues = new HashMap<>();
 
     private final Map<Object, TestActor> actors = new HashMap<>();
@@ -165,7 +166,6 @@ public class TestCaseRecorder implements ITestCaseRecorder {
     @Override
     public void recordReturnValue(final Object reference) {
         final var currentStep = testSteps.get(testSteps.size() - 1);
-
         final var paramFactory = currentStep.asNamedReference("ref" + currentStep.getOrdinal(),
                 "Value of step " + currentStep.getOrdinal());
         final var paramValue = new ExportableTestParameterValue("<placeHolder>", paramFactory,

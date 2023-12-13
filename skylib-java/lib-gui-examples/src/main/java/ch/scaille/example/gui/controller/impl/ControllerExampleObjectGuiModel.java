@@ -14,13 +14,12 @@ import ch.scaille.javabeans.persisters.IPersisterFactory.ObjectHolder;
 import ch.scaille.javabeans.persisters.Persisters;
 import ch.scaille.javabeans.properties.BooleanProperty;
 import ch.scaille.javabeans.properties.ObjectProperty;
-import ch.scaille.example.gui.controller.impl.ControllerExampleObject;
 import ch.scaille.javabeans.properties.IntProperty;
 
-@Generated(value = "ch.scaille.gui.mvc.GuiModelGenerator", date = "2023/12/10 12:04", comments = "-sp ch.scaille.example.gui -s /home/scaille/src/github/sky-lib/skylib-java/lib-gui-examples/target/classes -t /home/scaille/src/github/sky-lib/skylib-java/lib-gui-examples/src/main/java")
-public class ControllerExampleObjectGuiModel extends GuiModel implements IObjectGuiModel<ControllerExampleObject> {
+@Generated(value = "ch.scaille.gui.mvc.GuiModelGenerator", date = "2023/12/10 21:22", comments = "-sp ch.scaille.example.gui -s /home/scaille/src/github/sky-lib/skylib-java/lib-gui-examples/target/classes -t /home/scaille/src/github/sky-lib/skylib-java/lib-gui-examples/src/main/java")
+public class ControllerExampleObjectGuiModel extends GuiModel implements IObjectGuiModel<ch.scaille.example.gui.controller.impl.ControllerExampleObject> {
    
-    private final ObjectHolder<ControllerExampleObject> currentObjectProvider = new ObjectHolder<>();
+    private final ObjectHolder<ch.scaille.example.gui.controller.impl.ControllerExampleObject> currentObjectProvider = new ObjectHolder<>();
 
 	public static final String BOOLEAN_PROP = "BooleanProp";
 	
@@ -63,7 +62,7 @@ public class ControllerExampleObjectGuiModel extends GuiModel implements IObject
     }
 
 	public Class<?> getContainerClass() {
-		return ControllerExampleObject.class;
+		return ch.scaille.example.gui.controller.impl.ControllerExampleObject.class;
 	}
 
 	public BooleanProperty getBooleanPropProperty() {
@@ -96,15 +95,15 @@ public class ControllerExampleObjectGuiModel extends GuiModel implements IObject
     }
 
     @Override
-    public void setCurrentObject(final ControllerExampleObject value) {
+    public void setCurrentObject(final ch.scaille.example.gui.controller.impl.ControllerExampleObject value) {
         currentObjectProvider.setObject(value);
     }
 
-    public IComponentBinding<ControllerExampleObject> loadBinding() {
+    public IComponentBinding<ch.scaille.example.gui.controller.impl.ControllerExampleObject> loadBinding() {
         return new IComponentBinding<>() {
         
             @Override
-            public void addComponentValueChangeListener(final IComponentLink<ControllerExampleObject> link) {
+            public void addComponentValueChangeListener(final IComponentLink<ch.scaille.example.gui.controller.impl.ControllerExampleObject> link) {
                 // nope
             }
             
@@ -114,7 +113,7 @@ public class ControllerExampleObjectGuiModel extends GuiModel implements IObject
 			}
             
             @Override
-            public void setComponentValue(final AbstractProperty source, final ControllerExampleObject value) {
+            public void setComponentValue(final AbstractProperty source, final ch.scaille.example.gui.controller.impl.ControllerExampleObject value) {
                 if (value != null) {
                     setCurrentObject(value);
                     load();

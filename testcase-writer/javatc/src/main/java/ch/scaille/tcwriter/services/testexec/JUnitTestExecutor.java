@@ -82,7 +82,7 @@ public class JUnitTestExecutor implements ITestExecutor {
 				.orElseThrow(() -> new IllegalStateException("junit-platform-console-standalone was not found"))
 				.getFile();
 
-		var parameters = new ArrayList<String>();
+		final var parameters = new ArrayList<String>();
 		parameters.addAll(List.of(config.getJava(), //
 				"-Dtest.port=" + testConfig.tcpPort, "-Dtc.stepping=true", //
 				"-jar", junit, "--select-class=" + binaryRef, "--details", "verbose"));

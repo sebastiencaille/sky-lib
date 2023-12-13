@@ -52,7 +52,13 @@ public class ModelClassProcessor {
 		public void addImport(final String className) {
 			imports.add(classFinder.loadByName(className).getName());
 		}
-
+		
+		public void reset() {
+			imports.clear();
+			properties.clear();
+			generatedConstants.clear();
+		}
+		
 	}
 
 	public static String typeParametersToString(final Type type) {
@@ -70,28 +76,22 @@ public class ModelClassProcessor {
 		return textOutput.toString();
 	}
 
-	private final Class<?> modelClass;
-
-
-
 	private final GenerationMetadata generationMetadata;
-	
+
 	private final GeneratorContext context;
 
 	private final AttributeProcessorDelegate delegate = new AttributeProcessor.GetSetAttributeDelegate();
 
-	private final String targetPackage;
+	private final String defaultTargetPackage;
 
-	public ModelClassProcessor(
-			final Class<?> clazz, URLClassFinder classFinder,
-			String targetPackage, GenerationMetadata generationMetadata) {
-		this.modelClass = clazz;
-		this.targetPackage = targetPackage != null ? targetPackage: modelClass.getPackage().getName();
+	public ModelClassProcessor(URLClassFinder classFinder, String targetPackage,
+			GenerationMetadata generationMetadata) {
+		this.defaultTargetPackage = targetPackage;
 		this.generationMetadata = generationMetadata;
 		this.context = new GeneratorContext(classFinder);
 	}
 
-	public String getClassName() {
+	protected String getClassName(Class<?> modelClass) {
 		return modelClass.getSimpleName() + "GuiModel";
 	}
 
@@ -99,28 +99,35 @@ public class ModelClassProcessor {
 		return !Modifier.isStatic(attrib.getModifier());
 	}
 
-	protected Template process() {
+	protected Template process(Class<?> modelClass) {
+
+		context.reset();
+		
+		final var generatedModelClassName = getClassName(modelClass);
+		final var targetPackage = defaultTargetPackage != null ? defaultTargetPackage
+				: modelClass.getPackage().getName();
 
 		final var metaData = new UntypedDataObjectMetaData(modelClass, false);
-		final var strType = metaData.getDataType().getSimpleName();
 
-		context.properties.put("modelClass", getClassName());
-		context.properties.put("objectClass", strType);
-		context.properties.put("objectClassSimpleName", metaData.getDataType().getSimpleName());
+		context.properties.put("modelClass", generatedModelClassName);
+		context.properties.put("objectClass", modelClass.getName());
+		context.properties.put("objectClassSimpleName", modelClass.getSimpleName());
 
 		// attributes
 		addAttributesDeclarations(metaData);
 		addAttributesGetters(metaData);
 		addAttributePersistenceMethods(metaData);
-		if (!modelClass.getPackage().toString().equals(targetPackage)) {
+		
+		// imports
+		if (defaultTargetPackage != null) {
 			context.addImport(modelClass);
 		}
-
 		context.properties.put("imports", JavaCodeGenerator.toImports(context.imports));
 		context.properties.put("package", targetPackage);
 		try {
 			return Template.from("templates/guiModel.template")
-					.apply(context.properties, JavaCodeGenerator.toSourceFilename(targetPackage, getClassName()),
+					.apply(context.properties,
+							JavaCodeGenerator.toSourceFilename(targetPackage, generatedModelClassName),
 							generationMetadata);
 		} catch (IOException e) {
 			throw new IllegalStateException("Unable to load template", e);

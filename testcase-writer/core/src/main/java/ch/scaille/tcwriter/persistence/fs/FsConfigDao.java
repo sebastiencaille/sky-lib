@@ -47,6 +47,10 @@ public class FsConfigDao implements IConfigDao {
 		return new FileSystemDao<>(daoType, loader.getBaseFolder().resolve(locator), dataHandlersRegistry);
 	}
 
+	/**
+	 * Applies the configuration file 
+	 * @param locator the name of the configuration
+	 */
 	public FsConfigDao setConfiguration(String locator) {
 		apply(StorageRTException.uncheck("Reading of configuration", () -> loader.load(locator)));
 		return this;

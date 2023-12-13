@@ -39,8 +39,9 @@ public class GuiModelGenerator {
 					.collect(Collectors.toList());
 			Logs.of(this).info(() -> "Processing classes: " + classes);
 
+			final var modelClassProcessor = new ModelClassProcessor(classFinder, params.getTargetPackage(), generationMetadata);
 			for (final var clazz : classes) {
-				new ModelClassProcessor(clazz, classFinder, params.getTargetPackage(), generationMetadata).process().writeToFolder(targetFolder);
+				modelClassProcessor.process(clazz).writeToFolder(targetFolder);
 			}
 		}
 

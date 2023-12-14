@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
 import com.google.common.annotations.VisibleForTesting;
 
 import ch.scaille.tcwriter.model.IdObject;
+import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
+import ch.scaille.tcwriter.model.dictionary.TestParameterFactory.ParameterNature;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestReference;
@@ -52,26 +54,26 @@ public class HumanReadableVisitor {
 	}
 
 	private String processTestParameter(final TestParameterValue parameterValue) {
-		switch (parameterValue.getValueFactory().getNature()) {
-		case REFERENCE:
-			final var testRef = (TestReference) parameterValue.getValueFactory();
-			return "[" + testRef.toDescription().getHumanReadable() + ": " + parameterValue.getSimpleValue() + "]";
-		case SIMPLE_TYPE:
-			final var type = parameterValue.getValueFactory().getParameterType();
-			if (Boolean.class.getName().equals(type) || Boolean.TYPE.getName().equals(type)) {
-				return Boolean.TRUE.toString().equals(parameterValue.getSimpleValue()) ? "yes" : "no";
-			}
-			return parameterValue.getSimpleValue();
-		case TEST_API:
-			final var mandatoryParams = parameterValue.getValueFactory()
+		return switch (parameterValue.getValueFactory()) {
+		case TestReference testRef ->
+			"[" + testRef.toDescription().getHumanReadable() + ": " + parameterValue.getSimpleValue() + "]";
+			
+		case TestParameterFactory f when f.getNature() == ParameterNature.SIMPLE_TYPE && 
+				(Boolean.class.getName().equals(f.getParameterType()) || Boolean.TYPE.getName().equals(f.getParameterType())) ->
+			Boolean.TRUE.toString().equals(parameterValue.getSimpleValue()) ? "yes" : "no";
+			
+		case TestParameterFactory f when f.getNature() == ParameterNature.SIMPLE_TYPE ->
+			parameterValue.getSimpleValue();
+			
+		case TestParameterFactory f when f.getNature() == ParameterNature.TEST_API ->
+			processTestParameter(parameterValue, parameterValue.getValueFactory()
 					.getMandatoryParameters()
 					.stream()
 					.map(p -> processTestParameter(parameterValue.getComplexTypeValues().get(p.getId())))
-					.toList();
-			return processTestParameter(parameterValue, mandatoryParams);
-		default:
-			return "";
-		}
+					.toList());
+		default ->
+			"";
+		};
 
 	}
 

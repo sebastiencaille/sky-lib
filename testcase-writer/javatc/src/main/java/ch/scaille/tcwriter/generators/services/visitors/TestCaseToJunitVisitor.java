@@ -21,6 +21,7 @@ import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory.ParameterNature;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
+import ch.scaille.tcwriter.model.testcase.TestReference;
 import ch.scaille.tcwriter.model.testcase.TestStep;
 import ch.scaille.tcwriter.services.generators.visitors.HumanReadableVisitor;
 
@@ -163,16 +164,15 @@ public class TestCaseToJunitVisitor {
 				&& String.class.getName().equals(f.getParameterType()) ->
 			parametersContent.append("\"").append(parameterValue.getSimpleValue()).append("\"");
 
-		case TestParameterFactory f when f.getNature() == ParameterNature.SIMPLE_TYPE ->
-			parametersContent.append(parameterValue.getSimpleValue()).append("L");
-
 		case TestParameterFactory f when f.getNature() == ParameterNature.SIMPLE_TYPE
-				&& Long.class.getName().equals(f.getParameterType())
-				|| Long.TYPE.getName().equals(f.getParameterType()) ->
+				&& (Long.class.getName().equals(f.getParameterType())
+						|| Long.TYPE.getName().equals(f.getParameterType())) ->
 			parametersContent.append(parameterValue.getSimpleValue()).append("L");
 
-		case TestParameterFactory f when f.getNature() == ParameterNature.REFERENCE ->
-			parametersContent.append(parameterValue.getValueFactory().getName());
+		case TestParameterFactory f when f.getNature() == ParameterNature.SIMPLE_TYPE ->
+			parametersContent.append(parameterValue.getSimpleValue());
+
+		case TestReference f when f.getNature() == ParameterNature.REFERENCE -> parametersContent.append(f.getName());
 		default -> throw new TestCaseException("Parameter value is not set: " + parameterValue.getValueFactory());
 		}
 	}

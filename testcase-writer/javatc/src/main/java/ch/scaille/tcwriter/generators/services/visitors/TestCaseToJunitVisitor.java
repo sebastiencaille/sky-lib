@@ -157,6 +157,7 @@ public class TestCaseToJunitVisitor {
 	private void inlineValue(final JavaCodeGenerator<RuntimeException> parametersContent, final TestStep step,
 			final TestParameterValue parameterValue) throws TestCaseException {
 		switch (parameterValue.getValueFactory()) {
+		
 		case TestParameterFactory f when f.getNature() == ParameterNature.TEST_API ->
 			parametersContent.append(varNameOf(step, parameterValue));
 
@@ -173,6 +174,7 @@ public class TestCaseToJunitVisitor {
 			parametersContent.append(parameterValue.getSimpleValue());
 
 		case TestReference f when f.getNature() == ParameterNature.REFERENCE -> parametersContent.append(f.getName());
+		
 		default -> throw new TestCaseException("Parameter value is not set: " + parameterValue.getValueFactory());
 		}
 	}

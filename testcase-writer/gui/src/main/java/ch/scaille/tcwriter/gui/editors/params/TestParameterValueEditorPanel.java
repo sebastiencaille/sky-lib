@@ -192,7 +192,6 @@ public class TestParameterValueEditorPanel extends JPanel {
 			case NOT_SET -> { // noop
 			}
 			default -> throw new IllegalStateException("Not handled: " + v);
-
 			}
 		});
 	}

@@ -53,17 +53,10 @@ public class TestExecutionFeedbackClient implements ITestExecutionFeedbackClient
 
 	private void commandHandler(final Command command) throws IOException {
 		switch (command) {
-		case RUN:
-			pauseSemaphore.release();
-			break;
-		case SET_BREAKPOINT:
-			breakpoints.add(api.readBreakpoint());
-			break;
-		case REMOVE_BREAKPOINT:
-			breakpoints.remove(api.readBreakpoint());
-			break;
-		default:
-			break;
+		case RUN ->pauseSemaphore.release();
+		case SET_BREAKPOINT -> breakpoints.add(api.readBreakpoint());
+		case REMOVE_BREAKPOINT -> breakpoints.remove(api.readBreakpoint());
+		default -> { /* noop */ }
 		}
 	}
 

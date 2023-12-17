@@ -64,6 +64,8 @@ public class ClusteredSessionFacadeImpl implements ClusteredSessionFacade {
 		LOGGER.info(() -> "save " + sessionId);
 		final var owner = getOwner();
 		try {
+			repository.delete(sessionId);
+			
 			final var newContext = new ClusteredSession();
 			newContext.setSessionId(sessionId);
 			newContext.setOwner(owner);

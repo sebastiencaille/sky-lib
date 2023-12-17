@@ -13,7 +13,7 @@ interface StepStatusChanged {
 }
 
 function SubscribeTcFeedback(props: StepStatusChanged) {
-	useSubscription("/secured/user/feedback/testexec", (message) => props.callback(JSON.parse(message.body).payload as StepStatus));
+	useSubscription("/feedback/testexec", (message) => props.callback(JSON.parse(message.body).payload as StepStatus));
 	return (<div></div>)
 }
 
@@ -21,7 +21,7 @@ class WebApiFeedback extends React.PureComponent<IWebApiFeedbackProps> {
 
 	render() {
 		return (
-			<StompSessionProvider url= { "/api/secured/websocket"} >
+			<StompSessionProvider url= { "http://localhost:8080/api/websocket"} >
 				<SubscribeTcFeedback callback={ this.props.stepStatusChanged } />
 			</StompSessionProvider>
     	);

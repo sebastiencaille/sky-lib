@@ -9,6 +9,7 @@ import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
 
 /**
  * Handles resources located in the classpath
+ * 
  * @param <T>
  */
 public class ClassPathDao<T> extends AbstractSerializationDao<T> {
@@ -32,20 +33,15 @@ public class ClassPathDao<T> extends AbstractSerializationDao<T> {
 	}
 
 	@Override
-	protected ResourceMetaData resolve(ResourceMetaData resourceMetaData) throws IOException {
-		final ResourceMetaData metaWithStorage;
-		if (resourceMetaData.getStorageLocator() != null) {
-			metaWithStorage = resourceMetaData;
-		} else {
-			final var resPath = resourceName + resourceMetaData.getLocator();
-			metaWithStorage = metadataOf(resourceMetaData.getLocator(), resPath);
-		}
-		return metaWithStorage;
+	protected ResourceMetaData resolve(String locator) throws IOException {
+		return buildAndValidateMetadata(locator, resourceName + locator);
 	}
-	
+
 	@Override
 	protected Resource<String> readRaw(ResourceMetaData resourceMetaData) throws IOException {
-		try (var resStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceMetaData.getStorageLocator())) {
+		try (var resStream = Thread.currentThread()
+				.getContextClassLoader()
+				.getResourceAsStream(resourceMetaData.getStorageLocator())) {
 			if (resStream == null) {
 				throw new IOException("Resource not found: " + resourceMetaData);
 			}
@@ -54,7 +50,7 @@ public class ClassPathDao<T> extends AbstractSerializationDao<T> {
 	}
 
 	@Override
-	protected Resource<T> resolveOrCreate(ResourceMetaData locator) throws IOException {
+	protected Resource<T> resolveOrCreate(String locator) throws IOException {
 		throw JavaExt.notImplemented();
 	}
 

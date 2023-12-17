@@ -33,6 +33,7 @@ public class TestCaseRecorderAspect {
 		final var signature = (MethodSignature) jp.getSignature();
 		final var method = signature.getMethod();
 
+		// execution configuration
 		final var recorderEnabled = Boolean.getBoolean("tc.recorderEnabled");
 		var fsModelConfig = System.getProperty("tc.fsModelConfig");
 		var tcDictionaryName = System.getProperty("tc.dictionaryName", "default");
@@ -48,11 +49,7 @@ public class TestCaseRecorderAspect {
 			setRecorder(new TestCaseRecorder(new FsModelDao(FsConfigDao.localUser().setConfiguration(fsModelConfig)),
 					tcDictionaryName));
 		}
-		final var result = jp.proceed();
-		if (recorder != null) {
-			recorder.save(jp.getSignature().getDeclaringTypeName() + '-' + jp.getSignature().getName());
-		}
-		return result;
+		return jp.proceed();
 	}
 
 	/**

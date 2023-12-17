@@ -2,7 +2,7 @@ package ch.scaille.tcwriter.server.webapi.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.core.MessageSendingOperations;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import ch.scaille.tcwriter.server.dto.Context;
@@ -30,7 +30,7 @@ public class WebApiControllersConfig {
 
 	@Bean
 	TestCaseController testCaseController(Context context, TestCaseFacade testCaseFacade,
-			NativeWebRequest nativeWebRequest, MessageSendingOperations<String> feedbackSendingTemplate) {
+			NativeWebRequest nativeWebRequest, SimpMessageSendingOperations feedbackSendingTemplate) {
 		return new TestCaseController(context, testCaseFacade, feedbackSendingTemplate, nativeWebRequest);
 	}
 

@@ -8,8 +8,9 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.core.MessageSendingOperations;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.support.GenericMessage;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -32,12 +33,12 @@ public class TestCaseController extends TestcaseApiController {
 
 	private final TestCaseFacade testCaseFacade;
 
-	private final MessageSendingOperations<String> feedbackSendingTemplate;
+	private final SimpMessageSendingOperations feedbackSendingTemplate;
 
 	private final Context context;
 	
 	public TestCaseController(Context context, TestCaseFacade testCaseFacade,
-			MessageSendingOperations<String> feedbackSendingTemplate, NativeWebRequest request) {
+			SimpMessageSendingOperations feedbackSendingTemplate, NativeWebRequest request) {
 		super(request);
 		this.context = context;
 		this.testCaseFacade = testCaseFacade;

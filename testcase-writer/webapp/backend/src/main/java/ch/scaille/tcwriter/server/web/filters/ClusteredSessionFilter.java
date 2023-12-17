@@ -118,7 +118,7 @@ public class ClusteredSessionFilter extends OncePerRequestFilter {
 	}
 
 	private void recover(HttpServletRequest request, final String backendSessionId) {
-		var lastSave = (Long) request.getSession().getAttribute(LAST_SESSION_SAVE_MS);
+		final var lastSave = (Long) request.getSession().getAttribute(LAST_SESSION_SAVE_MS);
 		if (lastSave == null) {
 			final var toRestore = clusteredSessionService.loadAndValidate(backendSessionId, l -> isExpired(request, l));
 			toRestore.ifPresent(r -> {

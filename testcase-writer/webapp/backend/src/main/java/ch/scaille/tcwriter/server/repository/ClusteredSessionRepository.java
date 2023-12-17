@@ -18,6 +18,10 @@ public interface ClusteredSessionRepository extends JpaRepository<ClusteredSessi
 	@Modifying
 	@Query("UPDATE ClusteredSession c SET c.lastAccess = :lastAccess  WHERE c.sessionId = :sessionId")
 	void touch(@Param("sessionId") String sessionId, @Param("lastAccess") long lastAccess);
+
+	@Modifying
+	@Query("DELETE FROM ClusteredSession c WHERE c.sessionId = :sessionId")
+	void delete(@Param("sessionId")String sessionId);
 	
 	@Modifying
 	@Query("DELETE ClusteredSession c WHERE c.lastAccess < :deleteBefore")

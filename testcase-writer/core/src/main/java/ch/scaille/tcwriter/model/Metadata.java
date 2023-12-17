@@ -30,4 +30,9 @@ public class Metadata {
 		this.description = description;
 	}
 
+	@Override
+	public String toString() {
+		return transientId;
+	}
+	
 }

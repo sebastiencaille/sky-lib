@@ -1,6 +1,7 @@
 package ch.scaille.tcwriter.server.config;
 
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.openapitools.configuration.SpringDocConfiguration;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -10,6 +11,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.session.MapSessionRepository;
+import org.springframework.session.config.annotation.web.http.EnableSpringHttpSession;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -22,7 +25,10 @@ import ch.scaille.tcwriter.server.webapi.config.WebsocketConfig;
 @Configuration
 @Import(SpringDocConfiguration.class)
 @EnableWebMvc
+@EnableSpringHttpSession
 public class WebConfig implements WebMvcConfigurer {
+
+	private static final String ALLOWED_ORIGIN = "http://localhost:9000";
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -31,7 +37,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("/*").allowedMethods("*").allowedOrigins("https://localhost:3000");
+		registry.addMapping("/*").allowedMethods("*").allowedOrigins(ALLOWED_ORIGIN);
 	}
 
 	@Bean
@@ -56,4 +62,8 @@ public class WebConfig implements WebMvcConfigurer {
 		return servletRegistration;
 	}
 
+	@Bean
+	public MapSessionRepository sessionRepository() {
+		return new MapSessionRepository(new ConcurrentHashMap<>());
+	}
 }

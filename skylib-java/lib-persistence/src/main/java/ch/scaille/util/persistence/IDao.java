@@ -24,9 +24,8 @@ public interface IDao<T> {
 	/**
 	 * Loads a resource from a locator
 	 */
-	default Resource<T> loadResource(String locator) throws StorageException {
-		return loadResource(new ResourceMetaData(locator, null, null));
-	}
+	Resource<T> loadResource(String locator) throws StorageException;
+
 	
 	/**
 	 * Loads data from a locator

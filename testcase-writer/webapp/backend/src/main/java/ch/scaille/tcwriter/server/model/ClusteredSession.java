@@ -1,5 +1,6 @@
 package ch.scaille.tcwriter.server.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -12,6 +13,7 @@ public class ClusteredSession {
 	@GeneratedValue
 	private long id;
 
+	@Column(unique = true)
 	private String sessionId;
 
 	private String owner;
@@ -28,6 +30,7 @@ public class ClusteredSession {
 	public void setId(long id) {
 		this.id = id;
 	}
+
 
 	public String getSessionId() {
 		return sessionId;

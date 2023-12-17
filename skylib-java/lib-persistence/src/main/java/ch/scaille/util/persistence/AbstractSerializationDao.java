@@ -25,9 +25,9 @@ public abstract class AbstractSerializationDao<T> implements IDao<T> {
 	 */
 	protected final StorageDataHandlerRegistry dataHandlerRegistry;
 
-	protected abstract ResourceMetaData resolve(ResourceMetaData resourceMetaData) throws IOException;
+	protected abstract ResourceMetaData resolve(String locator) throws IOException;
 
-	protected abstract ResourceMetaData resolveOrCreate(ResourceMetaData resourceMetaData) throws IOException;
+	protected abstract ResourceMetaData resolveOrCreate(String locator) throws IOException;
 
 	protected abstract Resource<String> readRaw(ResourceMetaData resourceMetaData) throws IOException;
 
@@ -57,17 +57,8 @@ public abstract class AbstractSerializationDao<T> implements IDao<T> {
 		return nameAndExt;
 	}
 
-	/**
-	 * Creates a meta data according to the locator and storage locator
-	 * 
-	 * @return the meta data
-	 */
-	protected Optional<ResourceMetaData> optionalMetadataOf(String locator, String storageLocator) {
-		return buildMetadata(locator, storageLocator, nameAndExtensionOf(storageLocator));
-	}
-
-	protected ResourceMetaData metadataOf(String locator, String storageLocator) {
-		return buildMetadata(locator, storageLocator, nameAndExtensionOf(storageLocator)).orElseThrow(
+	protected ResourceMetaData buildAndValidateMetadata(String locator, String storageLocator) {
+		return buildMetadata(locator, storageLocator).orElseThrow(
 				() -> new IllegalStateException("Unable to identify meta-data of " + locator + " / " + storageLocator));
 	}
 
@@ -76,12 +67,25 @@ public abstract class AbstractSerializationDao<T> implements IDao<T> {
 	 * 
 	 * @return the meta data
 	 */
-	private Optional<ResourceMetaData> buildMetadata(String locator, String storage, final String[] nameAndExt) {
+	protected Optional<ResourceMetaData> buildMetadata(String locator, String storageLocator) {
+		final var nameAndExt = nameAndExtensionOf(storageLocator);
 		return dataHandlerRegistry.find(nameAndExt[1])
 				.map(h -> h.getDefaultMimeType())
 				.or(this::getPredefinedResourceMimeType)
 				.or(dataHandlerRegistry::getDefaultMimeType)
-				.map(m -> new ResourceMetaData(locator, storage, m));
+				.map(m -> fixExtension(new ResourceMetaData(locator, storageLocator, m)));
+	}
+
+	protected ResourceMetaData fixExtension(ResourceMetaData resourceMeta) {
+		// Correct the extension if not consistent
+		final var nameAndExt = nameAndExtensionOf(resourceMeta.getStorageLocator());
+		final var handler = dataHandlerRegistry.find(resourceMeta.getMimeType());
+		if (handler.isPresent() && !handler.get().supports(nameAndExt[1])
+				&& !handler.get().getDefaultExtension().isEmpty()) {
+			return resourceMeta
+					.withStorageLocator(resourceMeta.getStorageLocator() + '.' + handler.get().getDefaultExtension());
+		}
+		return resourceMeta;
 	}
 
 	/**
@@ -96,21 +100,25 @@ public abstract class AbstractSerializationDao<T> implements IDao<T> {
 
 	@Override
 	public Resource<T> loadResource(ResourceMetaData resourceMetaData) throws StorageException {
-		return StorageException.wrap("read",
-				() -> dataHandlerRegistry.decode(readRaw(resolve(resourceMetaData)), resourceType));
+		return StorageException.wrap("loadResource", () -> dataHandlerRegistry.decode(readRaw(resourceMetaData), resourceType));
 	}
 
 	@Override
+	public Resource<T> loadResource(String locator) throws StorageException {
+		return StorageException.wrap("loadResource", () -> loadResource(resolve(locator)));
+	}
+	
+	@Override
 	public Resource<T> saveOrUpdate(String locator, T value) throws StorageException {
-		return StorageException.wrap("write", () -> {
-			final var resource = resolveOrCreate(new ResourceMetaData(locator, null, null)).withValue(value);
+		return StorageException.wrap("saveOrUpdate", () -> {
+			final var resource = resolveOrCreate(locator).withValue(value);
 			return writeRaw(dataHandlerRegistry.encode(resource, resourceType));
 		}).withValue(value);
 	}
 
 	@Override
 	public Resource<T> saveOrUpdate(Resource<T> resource) throws StorageException {
-		return StorageException.wrap("write", () -> writeRaw(dataHandlerRegistry.encode(resource, resourceType)))
+		return StorageException.wrap("saveOrUpdate", () -> writeRaw(dataHandlerRegistry.encode(resource, resourceType)))
 				.withValue(resource.getValue());
 	}
 

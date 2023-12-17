@@ -1,7 +1,5 @@
 package ch.scaille.tcwriter.services.recorder;
 
-import java.io.IOException;
-
 import ch.scaille.tcwriter.model.testcase.TestCase;
 
 public interface ITestCaseRecorder {
@@ -13,8 +11,6 @@ public interface ITestCaseRecorder {
 	void recordParamFactoryCall(Object factory, String callName, Object[] args);
 
 	void recordReturnValue(Object reference);
-	
-	void save(String testName) throws IOException;
 
 	TestCase getTestCase(String testName);
 }

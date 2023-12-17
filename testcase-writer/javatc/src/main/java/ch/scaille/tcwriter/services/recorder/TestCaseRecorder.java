@@ -41,8 +41,6 @@ public class TestCaseRecorder implements ITestCaseRecorder {
 
     private final Map<Object, TestActor> actors = new HashMap<>();
 
-    private final IModelDao modelDao;
-
     /**
      * Creates a recorder
      *
@@ -50,12 +48,10 @@ public class TestCaseRecorder implements ITestCaseRecorder {
      * @throws IOException
      */
     public TestCaseRecorder(final IModelDao modelDao, String tcDictionary) throws IOException {
-        this.modelDao = modelDao;
         this.tcDictionary = modelDao.readTestDictionary(tcDictionary).orElseThrow(() -> new FileNotFoundException(tcDictionary));
     }
 
-    public TestCaseRecorder(final IModelDao modelDao, final TestDictionary tcDictionary) {
-        this.modelDao = modelDao;
+    public TestCaseRecorder(final TestDictionary tcDictionary) {
         this.tcDictionary = tcDictionary;
     }
 
@@ -217,8 +213,4 @@ public class TestCaseRecorder implements ITestCaseRecorder {
         return testCase;
     }
 
-    @Override
-    public void save(final String testClassName) throws IOException {
-        modelDao.writeTestCase(testClassName.replace(".", "_"), getTestCase(testClassName));
-    }
 }

@@ -117,6 +117,8 @@ public class TestRemoteControl {
 		} catch (IOException e) {
 			testExecutionListener.testRunning(false);
 			throw e;
+		} finally {
+			controlServer.close();
 		}
 	}
 

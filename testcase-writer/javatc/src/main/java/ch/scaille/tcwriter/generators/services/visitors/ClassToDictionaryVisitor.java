@@ -223,13 +223,12 @@ public class ClassToDictionaryVisitor {
 	public void addClass(final Class<?> tcApiClazz) {
 		if (isRole(tcApiClazz)) {
 			unprocessedRoles.add(tcApiClazz);
-		} else if (isActor(tcApiClazz)) {
+		}
+		if (isActor(tcApiClazz)) {
 			unprocessedActors.add(tcApiClazz);
-		} else if (isTestApi(tcApiClazz)) {
+		} 
+		if (isTestApi(tcApiClazz)) {
 			unprocessedParameterFactoryClasses.add(tcApiClazz);
-		} else { 
-			throw new IllegalStateException(
-					"Class " + tcApiClazz.getName() + " must be annotated with @TCRole or @TCApi or @TCActors");
 		}
 	}
 

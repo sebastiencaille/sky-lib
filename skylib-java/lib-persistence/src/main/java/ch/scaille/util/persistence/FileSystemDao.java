@@ -48,14 +48,14 @@ public class FileSystemDao<T> extends AbstractSerializationDao<T> {
 	 * @return a stream of metadata
 	 * @throws IOException
 	 */
-	private Stream<ResourceMetaData> inFolder(ResourceMetaData metadata) throws IOException {
-		final var locator = metadata.getLocator();
-		if (locator != null && locator.isEmpty()) {
+	private Stream<ResourceMetaData> inFolder(String locator) throws IOException {
+		if (!Files.isDirectory(basePath)) {
 			// basePath points to a file
-			return Collections.singleton(metadataOf(basePath.getFileName().toString(), basePath.toString())).stream();
+			return Collections.singleton(buildAndValidateMetadata(basePath.getFileName().toString(), basePath.toString())).stream();
 		}
 		var folder = basePath;
 		var file = locator;
+		// TODO: security
 		if (locator != null && new File(locator).isAbsolute()) {
 			var path = Path.of(locator);
 			folder = path.getParent();
@@ -66,47 +66,39 @@ public class FileSystemDao<T> extends AbstractSerializationDao<T> {
 			return Collections.<ResourceMetaData>emptyList().stream();
 		}
 		return Files.list(folder)
+				// basic filter
 				.filter(f -> filter == null || f.getFileName().toString().startsWith(filter))
-				.map(p -> optionalMetadataOf(p.getFileName().toString(), p.toString()))
-				.filter(m -> m.isPresent() && (filter == null || m.get().getLocator().equals(filter)))
+				.map(p -> buildMetadata(nameAndExtensionOf(p.getFileName().toString())[0], p.toString()))
+				// filter on the metadata
+				.filter(m -> filterMetaData(filter, m))
 				.map(Optional::get);
 	}
 
-	@Override
-	public ResourceMetaData resolve(ResourceMetaData metadata) throws IOException {
-		return inFolder(fixExtension(metadata)).findFirst()
-				.orElseThrow(() -> new StorageException("Resource not found: " + metadata));
+	private boolean filterMetaData(final String filter, Optional<ResourceMetaData> m) {
+		return m.isPresent() && (filter == null || m.get().getLocator().equals(filter));
 	}
 
 	@Override
-	protected ResourceMetaData resolveOrCreate(ResourceMetaData metadata) throws IOException {
-		final var fixedMetadata = fixExtension(metadata);
-		return inFolder(fixedMetadata).findFirst()
-				.orElse(metadataOf(fixedMetadata.getLocator(), basePath.resolve(fixedMetadata.getLocator()).toString()));
+	public ResourceMetaData resolve(String locator) throws IOException {
+		return inFolder(locator).findFirst()
+				.orElseThrow(() -> new StorageException("Resource not found: " + locator));
 	}
 
-	private ResourceMetaData fixExtension(ResourceMetaData resourceMeta) {
-		// Correct the extension if not consistent
-		final var nameAndExt = nameAndExtensionOf(resourceMeta.getStorageLocator());
-		final var handler = dataHandlerRegistry.find(resourceMeta.getMimeType());
-		if (handler.isPresent() && !handler.get().supports(nameAndExt[1])
-				&& !handler.get().getDefaultExtension().isEmpty()) {
-			return resourceMeta
-					.withStorageLocator(resourceMeta.getStorageLocator() + '.' + handler.get().getDefaultExtension());
-		}
-		return resourceMeta;
+	@Override
+	protected ResourceMetaData resolveOrCreate(String locator) throws IOException {
+		return inFolder(locator).findFirst().orElse(buildAndValidateMetadata(locator, basePath.resolve(locator).toString()));
 	}
 
+	
 	@Override
 	public Stream<ResourceMetaData> list() throws StorageException {
 		return StorageException.wrap("list", () -> inFolder(null));
 	}
 
 	@Override
-	protected Resource<String> readRaw(ResourceMetaData resourceMeta) throws IOException {
-		final var resource = resolve(resourceMeta);
-		LOGGER.info(() -> "Reading " + resource);
-		return resource.withValue(Files.readString(Paths.get(resource.getStorageLocator()), StandardCharsets.UTF_8));
+	protected Resource<String> readRaw(ResourceMetaData metadata) throws IOException {
+		LOGGER.info(() -> "Reading " + metadata);
+		return metadata.withValue(Files.readString(Paths.get(metadata.getStorageLocator()), StandardCharsets.UTF_8));
 	}
 
 	@Override

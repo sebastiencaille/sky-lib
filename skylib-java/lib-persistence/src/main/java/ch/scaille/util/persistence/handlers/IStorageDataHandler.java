@@ -2,13 +2,16 @@ package ch.scaille.util.persistence.handlers;
 
 import java.io.IOException;
 
+/**
+ * Handles the encoding/decoding of data, per MimeType or extension 
+ */
 public interface IStorageDataHandler {
 
 	String getDefaultMimeType();
 
-	boolean supports(String extensionOrType);
-
 	String getDefaultExtension();
+
+	boolean supports(String extensionOrType);
 
 	<T> String encode(Class<T> targetType, T value) throws IOException;
 

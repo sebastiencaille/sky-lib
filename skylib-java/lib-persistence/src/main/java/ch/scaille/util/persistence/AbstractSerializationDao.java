@@ -6,17 +6,32 @@ import java.util.Optional;
 import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
 import ch.scaille.util.persistence.handlers.TextStorageHandler;
 
+/**
+ * Abstraction of dao with serialization (json, yaml, ...)
+ * 
+ * @param <T>
+ */
 public abstract class AbstractSerializationDao<T> implements IDao<T> {
 
+	private static final String[] EMPTY_NAME_EXT = new String[] { "", "" };
+
+	/**
+	 * Type of persisted resource
+	 */
 	protected final Class<T> resourceType;
 
+	/**
+	 * Registry that provides serialization/de-serialization
+	 */
 	protected final StorageDataHandlerRegistry dataHandlerRegistry;
 
-	protected abstract ResourceMeta resolveOrCreate(ResourceMeta resourceMeta) throws IOException;
+	protected abstract ResourceMetaData resolve(ResourceMetaData resourceMetaData) throws IOException;
 
-	protected abstract Resource<String> resolveAndReadRaw(ResourceMeta resourceMeta) throws IOException;
+	protected abstract ResourceMetaData resolveOrCreate(ResourceMetaData resourceMetaData) throws IOException;
 
-	protected abstract Resource<String> writeContent(Resource<String> resource) throws StorageException;
+	protected abstract Resource<String> readRaw(ResourceMetaData resourceMetaData) throws IOException;
+
+	protected abstract Resource<String> writeRaw(Resource<String> resource) throws StorageException;
 
 	protected AbstractSerializationDao(Class<T> daoType, StorageDataHandlerRegistry serDeserializerRegistry) {
 		this.resourceType = daoType;
@@ -28,7 +43,10 @@ public abstract class AbstractSerializationDao<T> implements IDao<T> {
 
 	}
 
-	protected String[] nameAndExtension(String locator) {
+	protected String[] nameAndExtensionOf(String locator) {
+		if (locator == null) {
+			return EMPTY_NAME_EXT;
+		}
 		final var lastDot = locator.lastIndexOf('.');
 		final String[] nameAndExt;
 		if (lastDot >= 0) {
@@ -40,55 +58,60 @@ public abstract class AbstractSerializationDao<T> implements IDao<T> {
 	}
 
 	/**
-	 * Get hard pre-defined resources
-	 * @param locator
-	 * @param storage
-	 * @return
+	 * Creates a meta data according to the locator and storage locator
+	 * 
+	 * @return the meta data
 	 */
-	private Optional<ResourceMeta> preDefinedResourceOf(String locator, String storage) {
+	protected Optional<ResourceMetaData> optionalMetadataOf(String locator, String storageLocator) {
+		return buildMetadata(locator, storageLocator, nameAndExtensionOf(storageLocator));
+	}
+
+	protected ResourceMetaData metadataOf(String locator, String storageLocator) {
+		return buildMetadata(locator, storageLocator, nameAndExtensionOf(storageLocator)).orElseThrow(
+				() -> new IllegalStateException("Unable to identify meta-data of " + locator + " / " + storageLocator));
+	}
+
+	/**
+	 * Creates the metadata, searching the mime-type if needed
+	 * 
+	 * @return the meta data
+	 */
+	private Optional<ResourceMetaData> buildMetadata(String locator, String storage, final String[] nameAndExt) {
+		return dataHandlerRegistry.find(nameAndExt[1])
+				.map(h -> h.getDefaultMimeType())
+				.or(this::getPredefinedResourceMimeType)
+				.or(dataHandlerRegistry::getDefaultMimeType)
+				.map(m -> new ResourceMetaData(locator, storage, m));
+	}
+
+	/**
+	 * Creates a metadata using pre-defined mime-types
+	 */
+	private Optional<String> getPredefinedResourceMimeType() {
 		if (String.class.equals(resourceType)) {
-			return Optional.of(new ResourceMeta(locator, storage, TextStorageHandler.TEXT_MIMETYPE));
+			return Optional.of(TextStorageHandler.TEXT_MIMETYPE);
 		}
 		return Optional.empty();
 	}
 
-	public Optional<ResourceMeta> resourceOf(String locator, String storage) {
-		final var nameAndExt = nameAndExtension(locator);
-		return completeResource(locator, storage, nameAndExt);
-	}
-
-	private Optional<ResourceMeta> completeResource(String locator, String storage, final String[] nameAndExt) {
-		return preDefinedResourceOf(locator, storage).or(() -> dataHandlerRegistry.find(nameAndExt[1])
-				.map(h -> new Resource<>(nameAndExt[0], storage, h.getDefaultMimeType(), null)));
-	}
-
-	public ResourceMeta resourceOrDefaultOf(String locator, String storage) {
-		final var nameAndExt = nameAndExtension(locator);
-		return completeResource(locator, storage, nameAndExt)
-				.orElseGet(() -> new Resource<>(nameAndExt[0], storage, dataHandlerRegistry.getDefaultMimeType(), null));
-	}
-
 	@Override
-	public Resource<T> loadResource(ResourceMeta resource) throws StorageException {
-		return StorageException.wrap("read", () -> dataHandlerRegistry.decode(resolveAndReadRaw(resource), resourceType));
+	public Resource<T> loadResource(ResourceMetaData resourceMetaData) throws StorageException {
+		return StorageException.wrap("read",
+				() -> dataHandlerRegistry.decode(readRaw(resolve(resourceMetaData)), resourceType));
 	}
 
 	@Override
 	public Resource<T> saveOrUpdate(String locator, T value) throws StorageException {
 		return StorageException.wrap("write", () -> {
-			final var resource = resolveOrCreate(new ResourceMeta(locator, null, null)).withValue(value);
-			return saveOrUpdateRaw(dataHandlerRegistry.encode(resource, resourceType));
+			final var resource = resolveOrCreate(new ResourceMetaData(locator, null, null)).withValue(value);
+			return writeRaw(dataHandlerRegistry.encode(resource, resourceType));
 		}).withValue(value);
 	}
 
 	@Override
 	public Resource<T> saveOrUpdate(Resource<T> resource) throws StorageException {
-		return StorageException.wrap("write", () -> {
-			return saveOrUpdateRaw(dataHandlerRegistry.encode(resource, resourceType));
-		}).withValue(resource.getValue());
+		return StorageException.wrap("write", () -> writeRaw(dataHandlerRegistry.encode(resource, resourceType)))
+				.withValue(resource.getValue());
 	}
 
-	public Resource<String> saveOrUpdateRaw(Resource<String> resource) throws StorageException {
-		return StorageException.wrap("writeRaw", () -> writeContent(resource));
-	}
 }

@@ -46,7 +46,7 @@ public abstract class AbstractModelDao implements IModelDao {
 	@Override
 	public List<Metadata> listDictionaries() throws IOException {
 		return uncheck("Listing of dictionaries",
-				() -> dictionaryRepo.list().map(f -> readTestDictionary(f).get().getMetadata()).toList());
+				() -> dictionaryRepo.list().map(f -> readTestDictionary(f.getLocator()).get().getMetadata()).toList());
 	}
 
 	@Override
@@ -79,7 +79,7 @@ public abstract class AbstractModelDao implements IModelDao {
 	@Override
 	public List<Metadata> listTestCases(final TestDictionary dictionary) {
 		return uncheck("Listing of test cases",
-				() -> testCaseRepo.list().map(f -> readTestCase(f, dictionary).get().getMetadata()).toList());
+				() -> testCaseRepo.list().map(f -> readTestCase(f.getLocator(), dictionary).get().getMetadata()).toList());
 	}
 
 	@Override

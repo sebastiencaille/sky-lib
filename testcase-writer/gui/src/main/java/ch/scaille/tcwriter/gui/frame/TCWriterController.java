@@ -223,7 +223,7 @@ public class TCWriterController extends GuiController {
 	public void generateCode() throws TestCaseException {
 		this.testExecutor.createTemplate(this.model.getTestCase().getValue())
 				.writeTo(uncheckedF2(this.modelDao::writeTestCaseCode))
-				.getStorage();
+				.getStorageLocator();
 	}
 
 	public void importDictionary() {

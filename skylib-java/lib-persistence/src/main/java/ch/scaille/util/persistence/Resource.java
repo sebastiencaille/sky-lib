@@ -1,6 +1,11 @@
 package ch.scaille.util.persistence;
 
-public class Resource<T> extends ResourceMeta {
+/**
+ * A resource (meta data + data)
+ * 
+ * @param <T>
+ */
+public class Resource<T> extends ResourceMetaData {
 
 	private final T value;
 
@@ -15,7 +20,7 @@ public class Resource<T> extends ResourceMeta {
 	}
 
 	public Resource(Resource<?> resource, T value) {
-		super(resource.getLocator(), resource.getStorage(), resource.getMimeType());
+		super(resource.getLocator(), resource.getStorageLocator(), resource.getMimeType());
 		this.value = value;
 	}
 

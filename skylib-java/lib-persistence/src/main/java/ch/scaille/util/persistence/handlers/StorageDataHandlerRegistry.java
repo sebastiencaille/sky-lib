@@ -11,10 +11,10 @@ public class StorageDataHandlerRegistry {
 
 	private final List<IStorageDataHandler> handlers = new ArrayList<>();
 
-	private final IStorageDataHandler defaultDataHandler;
+	private final Optional<IStorageDataHandler> defaultDataHandler;
 
 	public StorageDataHandlerRegistry(IStorageDataHandler defaultDataHandler) {
-		this.defaultDataHandler = defaultDataHandler;
+		this.defaultDataHandler = Optional.ofNullable(defaultDataHandler);
 		if (defaultDataHandler != null) {
 			handlers.add(defaultDataHandler);
 		}
@@ -44,11 +44,11 @@ public class StorageDataHandlerRegistry {
 		return resource.withValue(findHandler(resource).decode(resource.getValue(), targetType));
 	}
 
-	public IStorageDataHandler getDefaultHandler() {
+	public Optional<IStorageDataHandler> getDefaultHandler() {
 		return defaultDataHandler;
 	}
 
-	public String getDefaultMimeType() {
-		return defaultDataHandler.getDefaultMimeType();
+	public Optional<String> getDefaultMimeType() {
+		return defaultDataHandler.map(IStorageDataHandler::getDefaultMimeType);
 	}
 }

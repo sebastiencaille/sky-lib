@@ -15,6 +15,11 @@ import java.util.stream.Stream;
 import ch.scaille.util.helpers.Logs;
 import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
 
+/**
+ * Handles resources located on a file system
+ * 
+ * @param <T>
+ */
 public class FileSystemDao<T> extends AbstractSerializationDao<T> {
 
 	private static final Logger LOGGER = Logs.of(FileSystemDao.class);
@@ -37,16 +42,17 @@ public class FileSystemDao<T> extends AbstractSerializationDao<T> {
 	}
 
 	/**
+	 * Finds the locator in basePath
 	 * 
 	 * @param locator empty to use basePath, null to list
-	 * @return
+	 * @return a stream of metadata
 	 * @throws IOException
 	 */
-	private Stream<ResourceMeta> inFolder(String locator) throws IOException {
+	private Stream<ResourceMetaData> inFolder(ResourceMetaData metadata) throws IOException {
+		final var locator = metadata.getLocator();
 		if (locator != null && locator.isEmpty()) {
-			// config targets one file
-			return Collections.singleton(resourceOrDefaultOf(basePath.getFileName().toString(), basePath.toString()))
-					.stream();
+			// basePath points to a file
+			return Collections.singleton(metadataOf(basePath.getFileName().toString(), basePath.toString())).stream();
 		}
 		var folder = basePath;
 		var file = locator;
@@ -57,54 +63,57 @@ public class FileSystemDao<T> extends AbstractSerializationDao<T> {
 		}
 		final var filter = file;
 		if (!Files.exists(folder)) {
-			return Collections.<ResourceMeta>emptyList().stream();
+			return Collections.<ResourceMetaData>emptyList().stream();
 		}
 		return Files.list(folder)
 				.filter(f -> filter == null || f.getFileName().toString().startsWith(filter))
-				.map(p -> resourceOf(p.getFileName().toString(), p.toString()))
-				.filter(r -> r.isPresent() && (filter == null || r.get().getLocator().equals(filter)))
+				.map(p -> optionalMetadataOf(p.getFileName().toString(), p.toString()))
+				.filter(m -> m.isPresent() && (filter == null || m.get().getLocator().equals(filter)))
 				.map(Optional::get);
 	}
 
-	private ResourceMeta resolve(ResourceMeta resourceMeta) throws IOException {
-		return fixExtension(inFolder(resourceMeta.getLocator()).findFirst()
-				.orElseThrow(() -> new StorageException("Resource not found: " + resourceMeta)));
+	@Override
+	public ResourceMetaData resolve(ResourceMetaData metadata) throws IOException {
+		return inFolder(fixExtension(metadata)).findFirst()
+				.orElseThrow(() -> new StorageException("Resource not found: " + metadata));
 	}
 
 	@Override
-	protected ResourceMeta resolveOrCreate(ResourceMeta resourceMeta) throws IOException {
-		final var locator = resourceMeta.getLocator();
-		return fixExtension(inFolder(locator).findFirst()
-				.orElse(resourceOrDefaultOf(locator, basePath.resolve(locator).toString())));
+	protected ResourceMetaData resolveOrCreate(ResourceMetaData metadata) throws IOException {
+		final var fixedMetadata = fixExtension(metadata);
+		return inFolder(fixedMetadata).findFirst()
+				.orElse(metadataOf(fixedMetadata.getLocator(), basePath.resolve(fixedMetadata.getLocator()).toString()));
 	}
 
-	private ResourceMeta fixExtension(ResourceMeta resourceMeta) {
+	private ResourceMetaData fixExtension(ResourceMetaData resourceMeta) {
 		// Correct the extension if not consistent
-		final var nameAndExt = nameAndExtension(resourceMeta.getStorage());
+		final var nameAndExt = nameAndExtensionOf(resourceMeta.getStorageLocator());
 		final var handler = dataHandlerRegistry.find(resourceMeta.getMimeType());
-		if (handler.isPresent() && !handler.get().supports(nameAndExt[1]) && !handler.get().getDefaultExtension().isEmpty()) {
-			return resourceMeta.withStorage(resourceMeta.getStorage() + '.' + handler.get().getDefaultExtension());
+		if (handler.isPresent() && !handler.get().supports(nameAndExt[1])
+				&& !handler.get().getDefaultExtension().isEmpty()) {
+			return resourceMeta
+					.withStorageLocator(resourceMeta.getStorageLocator() + '.' + handler.get().getDefaultExtension());
 		}
 		return resourceMeta;
 	}
 
 	@Override
-	public Stream<String> list() throws StorageException {
-		return StorageException.wrap("list", () -> inFolder(null).map(r -> r.getLocator()));
+	public Stream<ResourceMetaData> list() throws StorageException {
+		return StorageException.wrap("list", () -> inFolder(null));
 	}
 
 	@Override
-	protected Resource<String> resolveAndReadRaw(ResourceMeta resourceMeta) throws IOException {
+	protected Resource<String> readRaw(ResourceMetaData resourceMeta) throws IOException {
 		final var resource = resolve(resourceMeta);
 		LOGGER.info(() -> "Reading " + resource);
-		return resource.withValue(Files.readString(Paths.get(resource.getStorage()), StandardCharsets.UTF_8));
+		return resource.withValue(Files.readString(Paths.get(resource.getStorageLocator()), StandardCharsets.UTF_8));
 	}
 
 	@Override
-	protected Resource<String> writeContent(Resource<String> resource) throws StorageException {
+	protected Resource<String> writeRaw(Resource<String> resource) throws StorageException {
 		LOGGER.info(() -> "Writing " + resource);
 		try {
-			final var path = basePath.resolve(resource.getStorage());
+			final var path = basePath.resolve(resource.getStorageLocator());
 			Files.createDirectories(path.getParent());
 			Files.writeString(path, resource.getValue(), StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING,
 					StandardOpenOption.CREATE);

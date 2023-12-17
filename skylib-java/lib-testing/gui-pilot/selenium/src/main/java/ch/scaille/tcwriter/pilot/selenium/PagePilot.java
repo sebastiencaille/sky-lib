@@ -73,17 +73,17 @@ public class PagePilot {
 		}
 	}
 
-	public <U> U wait(Supplier<WebElement> element, final Polling<WebElement, U> polling) {
-		return element(element).wait(polling);
+	public <U> U waitOn(Supplier<WebElement> element, final Polling<WebElement, U> polling) {
+		return element(element).waitOn(polling);
 	}
 
-	public <U> U wait(Supplier<WebElement> element, final Polling<WebElement, U> polling,
+	public <U> U waitOn(Supplier<WebElement> element, final Polling<WebElement, U> polling,
 			FailureHandler<WebElement, U> failureHandler) {
-		return element(element).wait(polling, failureHandler);
+		return element(element).waitOn(polling, failureHandler);
 	}
 
-	public boolean wait(Supplier<WebElement> element, Consumer<WebElement> action) {
-		return element(element).wait(Pollings.action(action).withReportText("unnamed action"));
+	public boolean waitOn(Supplier<WebElement> element, Consumer<WebElement> action) {
+		return element(element).waitOn(Pollings.action(action).withReportText("unnamed action"));
 	}
 
 	public boolean ifEnabled(Supplier<WebElement> element, final Polling<WebElement, Boolean> polling) {

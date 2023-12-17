@@ -41,7 +41,7 @@ class ControllerExampleTest {
 		page.intCheck.checkValue("123");
 		page.intStringEditor.setText("abc");
 		page.intCheck.checkValue("123");
-		page.intStringEditor.wait(c -> c.getForeground() == Color.RED, "foreground color is RED");
+		page.intStringEditor.waitOn(c -> c.getForeground() == Color.RED, "foreground color is RED");
 
 		page.staticListEditor.select("A");
 		page.staticListSelectionCheck.checkValue("A");

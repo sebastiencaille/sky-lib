@@ -17,7 +17,7 @@ public interface StepSelector extends Consumer<TCWriterPage> {
 		return page -> {
 			final int tableIndex = ordinal - 1;
 			final var stepsTable = page.stepsTable;
-			stepsTable.wait(stepsTable
+			stepsTable.waitOn(stepsTable
 					.assertion(pc -> assertTrue(tableIndex < pc.component.getRowCount(), () -> "Step must exist"))
 					.withReportText(checkingThat("the step " + ordinal + " exists")));
 			stepsTable.selectRow(tableIndex);
@@ -29,7 +29,7 @@ public interface StepSelector extends Consumer<TCWriterPage> {
     static StepSelector addStep() {
 		return page -> {
 			final var stepsTable = page.stepsTable;
-			stepsTable.wait(stepsTable.action(t -> {
+			stepsTable.waitOn(stepsTable.action(t -> {
 				final int stepsCount = t.getRowCount();
 				if (stepsCount > 0) {
 					t.setRowSelectionInterval(stepsCount - 1, stepsCount - 1);
@@ -42,7 +42,7 @@ public interface StepSelector extends Consumer<TCWriterPage> {
 
 	@TCApi(description = "Selected step", humanReadable = "")
     static StepSelector currentStep() {
-		return page -> page.stepsTable.wait(page.stepsTable
+		return page -> page.stepsTable.waitOn(page.stepsTable
 				.assertion(pc -> assertTrue(pc.component.getSelectedRowCount() > 0, () -> "Step must be selected"))
 				.withReportText(checkingThat("a step is selected")));
 	}

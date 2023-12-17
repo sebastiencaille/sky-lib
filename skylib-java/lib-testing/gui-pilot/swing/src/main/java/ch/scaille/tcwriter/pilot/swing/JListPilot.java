@@ -27,7 +27,7 @@ public class JListPilot extends AbstractSwingComponent<JListPilot, JList> {
 		if (value == null) {
 			return;
 		}
-		wait(action(c -> {
+		waitOn(action(c -> {
 			for (int i = 0; i < c.getModel().getSize(); i++) {
 				if (value.equals(c.getModel().getElementAt(i).toString())) {
 					c.setSelectedIndex(i);
@@ -42,7 +42,7 @@ public class JListPilot extends AbstractSwingComponent<JListPilot, JList> {
 		if (expected == null) {
 			return;
 		}
-		wait(new Polling<JList, Boolean>(this::canCheck, pc -> {
+		waitOn(new Polling<JList, Boolean>(this::canCheck, pc -> {
 			final var component = pc.component;
 			if (component.getSelectedIndex() < 0) {
 				return failure("No element selected");

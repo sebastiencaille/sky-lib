@@ -44,7 +44,7 @@ public class ExamplePage extends PagePilot {
 		@Override
 		public void waitFinished() {
 			final var page = ExamplePage.this;
-			page.wait(() -> page.enableTest, ElementPilot.isEnabled());
+			page.waitOn(() -> page.enableTest, ElementPilot.isEnabled());
 			Assertions.assertTrue(page.enableTest.isEnabled(), () -> "EnableTest is enabled");
 		}
 
@@ -60,18 +60,18 @@ public class ExamplePage extends PagePilot {
 	 * until "Proceed" is enabled
 	 */
 	public void testEnable() {
-		wait(() -> this.enableTest, click().followedBy(new WaitEnableTestEnabledDelay()));
+		waitOn(() -> this.enableTest, click().followedBy(new WaitEnableTestEnabledDelay()));
 	}
 
 	public void testEnabled() {
-		wait(() -> this.enableTest, assertion(c -> Assertions.assertTrue(c.component.isEnabled())));
+		waitOn(() -> this.enableTest, assertion(c -> Assertions.assertTrue(c.component.isEnabled())));
 	}
 
 	public void testAlert() {
 		// wait(() -> this.alertTest, WebElement::click);
 		// wait(() -> this.alertTest, action(WebElement::click));
 		// this one has nice reporting
-		wait(() -> this.alertTest, click());
+		waitOn(() -> this.alertTest, click());
 	}
 
 	public void clickOnMissingButton() {
@@ -93,9 +93,9 @@ public class ExamplePage extends PagePilot {
 	}
 
 	public void testElementChange() {
-		wait(() -> this.elementChangeTest, click());
+		waitOn(() -> this.elementChangeTest, click());
 		// Explicitly test using WebElement as source
-		wait(() -> this.elementChange.findElement(By.id("TextChange")), textEquals("Hello again"));
+		waitOn(() -> this.elementChange.findElement(By.id("TextChange")), textEquals("Hello again"));
 	}
 
 	public void parameterExample(String param) {

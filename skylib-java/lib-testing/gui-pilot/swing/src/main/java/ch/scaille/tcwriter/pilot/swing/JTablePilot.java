@@ -15,28 +15,28 @@ public class JTablePilot extends AbstractSwingComponent<JTablePilot, JTable> {
 	}
 
 	public void selectRow(final int index) {
-		wait(action(t -> t.setRowSelectionInterval(index, index)).withReportText("select row " + index));
+		waitOn(action(t -> t.setRowSelectionInterval(index, index)).withReportText("select row " + index));
 	}
 
 	public void editValue(final int row, final int column, final String value) {
-		wait(action(t -> t.setValueAt(value, row, column))
+		waitOn(action(t -> t.setValueAt(value, row, column))
 				.withReportText(settingValue("at row/column " + row + '/' + column, value)));
 	}
 
 	public void editValueOnSelectedRow(final int column, final String value) {
-		wait(action(t -> {
+		waitOn(action(t -> {
 			t.setValueAt(value, t.getSelectedRow(), column);
 			SwingHelper.doPressReturn(t);
 		}).withReportText(settingValue("at selected row, column " + column, value)));
 	}
 
 	public void checkValue(final int row, final int column, final String expected) {
-		wait(assertion(pc -> Assertions.assertEquals(expected, pc.component.getValueAt(row, column), pc.description))
+		waitOn(assertion(pc -> Assertions.assertEquals(expected, pc.component.getValueAt(row, column), pc.description))
 				.withReportText(checkingValue("at row/column " + row + '/' + column, expected)));
 	}
 
 	public void checkValueOnSelectedRow(final int column, final String expected) {
-		wait(assertion(pc -> Assertions.assertEquals(expected,
+		waitOn(assertion(pc -> Assertions.assertEquals(expected,
 				pc.component.getValueAt(pc.component.getSelectedRow(), column), pc.description))
 						.withReportText(checkingValue("at selected row, column " + column, expected)));
 	}

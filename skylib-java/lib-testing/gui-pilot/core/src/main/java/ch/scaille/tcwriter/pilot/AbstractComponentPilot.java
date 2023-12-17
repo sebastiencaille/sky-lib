@@ -18,8 +18,7 @@ import ch.scaille.util.helpers.Logs;
 import ch.scaille.util.helpers.Poller;
 
 /**
- *
- * @author scaille
+ * Class that allows to poll graphical components
  *
  * @param <G> This type
  * @param <C> Component type
@@ -250,7 +249,7 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	 * @param onFail  action performed on failure
 	 * @return check/edition value
 	 */
-	public <U> U wait(final Polling<C, U> polling, final FailureHandler<C, U> onFail) {
+	public <U> U waitOn(final Polling<C, U> polling, final FailureHandler<C, U> onFail) {
 		return waitPollingSuccess(polling, onFail);
 	}
 
@@ -262,8 +261,8 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	 * @param polling
 	 * @return
 	 */
-	public <U> U wait(final Polling<C, U> polling) {
-		return wait(polling, FailureHandlers.throwError());
+	public <U> U waitOn(final Polling<C, U> polling) {
+		return waitOn(polling, FailureHandlers.throwError());
 	}
 
 	/**
@@ -273,8 +272,8 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	 * @param polling check/edition
 	 * @return check/edition value
 	 */
-	public boolean wait(Predicate<C> check, String report) {
-		return wait(Factories.Pollings.satisfies(check).withReportText(report));
+	public boolean waitOn(Predicate<C> check, String report) {
+		return waitOn(Factories.Pollings.satisfies(check).withReportText(report));
 	}
 
 	public boolean ifEnabled(final Polling<C, Boolean> polling) {

@@ -84,6 +84,7 @@ public class TestCaseFacade extends AbstractFacade {
 			testExecutor.startTest(config);
 			testRemoteControl.controlTest(loadedTC.getSteps().size());
 		} catch (IOException | InterruptedException | TestCaseException e) {
+			Thread.interrupted();
 			throw new WebRTException(e);
 		}
 	}

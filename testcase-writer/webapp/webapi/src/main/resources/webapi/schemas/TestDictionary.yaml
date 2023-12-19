@@ -6,7 +6,7 @@ TestDictionary:
   required: [ metadata, roles, descriptions, actors, testObjectFactories, selectorTypes ]
   properties:
     metadata:
-      $ref: ../openapi.yaml#/components/schemas/Metadata
+      $ref: '../openapi.yaml#/components/schemas/Metadata'
     roles:
       type: array
       items:
@@ -20,7 +20,7 @@ TestDictionary:
     testObjectFactories:
       type: array
       items:
-        $ref: '../openapi.yaml#/components/schemas/TestParameterFactory'
+        $ref: '#/TestParameterFactory'
     selectorTypes:
       type: array
       items:
@@ -40,7 +40,7 @@ TestObjectDescription:
 TestActor:
   description: A test actor
   allOf:
-  - $ref: ../openapi.yaml#/components/schemas/NamedObject
+  - $ref: '../openapi.yaml#/components/schemas/NamedObject'
   - type: object
     required: [ role ]
     properties:
@@ -50,7 +50,7 @@ TestActor:
 TestParameterFactory:
   description: A test parameter factory (selectors factory, parameters factory)
   allOf:
-  - $ref: ../openapi.yaml#/components/schemas/NamedObject
+  - $ref: '../openapi.yaml#/components/schemas/NamedObject'
   - type: object
     properties:
       mandatoryParameters:
@@ -68,7 +68,7 @@ TestParameterFactory:
 TestApiParameter:
   description: A test parameter factory (selectors factory, parameters factory)
   allOf:
-  - $ref: ../openapi.yaml#/components/schemas/NamedObject
+  - $ref: '../openapi.yaml#/components/schemas/NamedObject'
   - type: object
     required: [ parameterType ]
     properties:
@@ -77,7 +77,7 @@ TestApiParameter:
 TestRole:
   description: A test role
   allOf:
-  - $ref: ../openapi.yaml#/components/schemas/NamedObject
+  - $ref: '../openapi.yaml#/components/schemas/NamedObject'
   - type: object
     required: [ actions ]
     properties:
@@ -88,7 +88,7 @@ TestRole:
 TestAction:
   description: A test action
   allOf:
-  - $ref: ../openapi.yaml#/components/schemas/NamedObject
+  - $ref: '../openapi.yaml#/components/schemas/NamedObject'
   - type: object
     required: [ parameters, allowedClassifiers, returnType ] 
     properties:

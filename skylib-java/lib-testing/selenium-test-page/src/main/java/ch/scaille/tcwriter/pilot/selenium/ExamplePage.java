@@ -45,7 +45,7 @@ public class ExamplePage extends PagePilot {
 		public void waitFinished() {
 			final var page = ExamplePage.this;
 			page.waitOn(() -> page.enableTest, ElementPilot.isEnabled());
-			Assertions.assertTrue(page.enableTest.isEnabled(), () -> "EnableTest is enabled");
+			Assertions.assertTrue(page.enableTest.isEnabled(), "EnableTest is enabled");
 		}
 
 		@Override
@@ -75,7 +75,7 @@ public class ExamplePage extends PagePilot {
 	}
 
 	public void clickOnMissingButton() {
-		ifEnabled(() -> this.notExistingElement, action(WebElement::click).withTimeout(Duration.ofMillis(500)));
+		Assertions.assertFalse(ifEnabled(() -> this.notExistingElement, action(WebElement::click).withTimeout(Duration.ofMillis(500))), "Result must be false");
 	}
 
 	public void expectTestAlertDialog() {
@@ -96,10 +96,6 @@ public class ExamplePage extends PagePilot {
 		waitOn(() -> this.elementChangeTest, click());
 		// Explicitly test using WebElement as source
 		waitOn(() -> this.elementChange.findElement(By.id("TextChange")), textEquals("Hello again"));
-	}
-
-	public void parameterExample(String param) {
-		// noop
 	}
 
 }

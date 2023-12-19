@@ -1,3 +1,4 @@
+var Os = require('os')
 const fs = require('fs');
 const { execFile } = require("child_process");
 
@@ -8,7 +9,8 @@ const copyPackage = (dir, cb) =>
   });
 
 const deploy = (dir, cb) => {
-	const npmPack = execFile('npm', ['link'], { cwd: dir }, (error, stdout, stderr) => {
+	const npm = (Os.platform() === 'win32')?'npm.cmd':'npm';
+	const npmPack = execFile(npm, ['link'], { cwd: dir }, (error, stdout, stderr) => {
     	if (error) {
 	        console.log(`error: ${error.message}`);
         	return;

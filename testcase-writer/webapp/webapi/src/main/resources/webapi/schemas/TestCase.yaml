@@ -3,7 +3,7 @@ TestCase:
   required: [ steps, pkgAndClassName ]
   properties:
     metadata: 
-      $ref: ../openapi.yaml#/components/schemas/Metadata
+      $ref: '../openapi.yaml#/components/schemas/Metadata'
     steps:
       type: array
       items:
@@ -29,7 +29,7 @@ TestStep:
     reference:
       $ref: '#/TestReference'
     classifier:
-      $ref: ../openapi.yaml#/components/schemas/StepClassifier
+      $ref: '../openapi.yaml#/components/schemas/StepClassifier'
     humanReadable:
       type: string
 ComplexTypeContent:
@@ -39,7 +39,7 @@ ComplexTypeContent:
 TestParameterValue:
   description: A parameter of the test step action
   allOf:
-    - $ref: ../openapi.yaml#/components/schemas/IdObject
+    - $ref: '../openapi.yaml#/components/schemas/IdObject'
     - type: object
       required: [ apiParameterId, type, complexTypeValues ] 
       properties:
@@ -54,7 +54,7 @@ TestParameterValue:
 TestReference: 
   description: a named reference to a test step
   allOf:
-    - $ref: ../openapi.yaml#/components/schemas/TestParameterFactory
+    - $ref: '../openapi.yaml#/components/schemas/TestParameterFactory'
     - type: object
       properties:
         description:

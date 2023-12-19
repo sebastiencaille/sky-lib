@@ -2,8 +2,12 @@ package ch.scaille.tcwriter.server.webapi.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.core.Ordered;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.session.SessionRepository;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import ch.scaille.tcwriter.server.dto.Context;
 import ch.scaille.tcwriter.server.facade.ContextFacade;
@@ -15,6 +19,7 @@ import ch.scaille.tcwriter.server.webapi.controllers.TestCaseController;
 
 @Configuration
 public class WebApiControllersConfig {
+
 
 	@Bean
 	ContextController contextController(Context context, ContextFacade contextFacade,
@@ -29,9 +34,19 @@ public class WebApiControllersConfig {
 	}
 
 	@Bean
-	TestCaseController testCaseController(Context context, TestCaseFacade testCaseFacade,
-			NativeWebRequest nativeWebRequest, SimpMessageSendingOperations feedbackSendingTemplate) {
-		return new TestCaseController(context, testCaseFacade, feedbackSendingTemplate, nativeWebRequest);
+	TestCaseController testCaseController(Context context, SessionRepository<?> sessionRepository,
+			TestCaseFacade testCaseFacade, NativeWebRequest nativeWebRequest,
+			SimpMessageSendingOperations feedbackSendingTemplate) {
+		return new TestCaseController(context, sessionRepository, testCaseFacade, feedbackSendingTemplate,
+				nativeWebRequest);
 	}
 
+
+	@Bean
+	@DependsOn("webApiServlet")
+	RequestMappingHandlerMapping webApiRequestMappingHandlerMapping() {
+		var requestMappingHandlerMapping = new RequestMappingHandlerMapping();
+		requestMappingHandlerMapping.setOrder(Ordered.HIGHEST_PRECEDENCE);
+		return requestMappingHandlerMapping;
+	}
 }

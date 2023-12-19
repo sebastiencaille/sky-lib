@@ -2,6 +2,7 @@ package ch.scaille.tcwriter.server.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.web.context.WebApplicationContext;
@@ -20,7 +21,6 @@ import ch.scaille.tcwriter.server.facade.TestCaseFacade;
 import ch.scaille.tcwriter.server.repository.ClusteredSessionRepository;
 import ch.scaille.tcwriter.services.testexec.JUnitTestExecutor;
 import ch.scaille.util.helpers.ClassLoaderHelper;
-import jakarta.persistence.EntityManagerFactory;
 
 @Configuration
 public class ServiceConfig {
@@ -42,7 +42,8 @@ public class ServiceConfig {
 	}
 
 	@Bean
-	ClusteredSessionFacade clusteredSessionFacade(EntityManagerFactory emf, ClusteredSessionRepository repository) {
+	@DependsOn("entityManagerFactory")
+	ClusteredSessionFacade clusteredSessionFacade(ClusteredSessionRepository repository) {
 		return new ClusteredSessionFacadeImpl(repository);
 	}
 	

@@ -13,7 +13,7 @@ interface StepStatusChanged {
 }
 
 function SubscribeTcFeedback(props: StepStatusChanged) {
-	useSubscription("/feedback/testexec", (message) => props.callback(JSON.parse(message.body).payload as StepStatus));
+	useSubscription("/user/queue/testexec", (message) => props.callback(JSON.parse(message.body).payload as StepStatus));
 	return (<div></div>)
 }
 

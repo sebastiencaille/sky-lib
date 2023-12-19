@@ -1,15 +1,15 @@
 package ch.scaille.tcwriter.server;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
 
-@SpringBootApplication
-@ComponentScan({ "ch.scaille.tcwriter.server.config" })
+import ch.scaille.tcwriter.server.config.Application;
+
 public class Server {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Server.class, args);
+		// This adds the package of Application.class in Spring. Using Server may cause
+		// spring to scan the entire application
+		SpringApplication.run(Application.class, args);
 	}
 
 }

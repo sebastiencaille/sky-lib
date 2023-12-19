@@ -44,7 +44,7 @@ table, th, td, tbody .steps {
 }
 
 .NOT_RUN {
-	background-color: default;
+	background-color: #6ba5ff;
 }
 
 .OK {
@@ -52,7 +52,7 @@ table, th, td, tbody .steps {
 }
 
 .STARTED {
-	background-color: #6ba5ff;
+	background-color: rgb(26, 95, 180);
 }
 
 .FAILED {

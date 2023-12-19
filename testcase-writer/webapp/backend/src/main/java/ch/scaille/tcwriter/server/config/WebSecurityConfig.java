@@ -2,7 +2,6 @@ package ch.scaille.tcwriter.server.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -40,8 +39,7 @@ public class WebSecurityConfig {
 	SecurityFilterChain api(HttpSecurity http, RequestContextFilter requestContextFilter,
 			ClusteredSessionFilter clusteredSessionFilter) throws Exception {
 		return http.securityMatcher("/api/*")
-				.authorizeHttpRequests(
-						a -> a.dispatcherTypeMatchers(HttpMethod.PUT).anonymous().anyRequest().anonymous())
+				.authorizeHttpRequests(a -> a.anyRequest().anonymous())
 				.addFilterAfter(requestContextFilter, BasicAuthenticationFilter.class)
 				.addFilterAfter(clusteredSessionFilter, RequestContextFilter.class)
 				.build();

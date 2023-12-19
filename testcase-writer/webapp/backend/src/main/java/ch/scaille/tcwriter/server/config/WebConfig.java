@@ -19,11 +19,12 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import ch.scaille.tcwriter.server.webapi.config.JacksonConfig;
 import ch.scaille.tcwriter.server.webapi.config.WebApiControllersConfig;
 import ch.scaille.tcwriter.server.webapi.config.WebsocketConfig;
 
 @Configuration
-@Import(SpringDocConfiguration.class)
+@Import({SpringDocConfiguration.class})
 @EnableWebMvc
 @EnableSpringHttpSession
 public class WebConfig implements WebMvcConfigurer {
@@ -50,9 +51,14 @@ public class WebConfig implements WebMvcConfigurer {
 	}
 
 	@Bean
+	public MapSessionRepository sessionRepository() {
+		return new MapSessionRepository(new ConcurrentHashMap<>());
+	}
+	
+	@Bean
 	ServletRegistrationBean<?> webApiServlet() {
 		final var annotationContext = new AnnotationConfigServletWebApplicationContext();
-		annotationContext.register(WebApiControllersConfig.class, WebsocketConfig.class);
+		annotationContext.register(JacksonConfig.class, WebsocketConfig.class, WebApiControllersConfig.class);
 		annotationContext.setDisplayName("Web Api");
 		final var dispatcher = new DispatcherServlet(annotationContext);
 
@@ -62,8 +68,4 @@ public class WebConfig implements WebMvcConfigurer {
 		return servletRegistration;
 	}
 
-	@Bean
-	public MapSessionRepository sessionRepository() {
-		return new MapSessionRepository(new ConcurrentHashMap<>());
-	}
 }

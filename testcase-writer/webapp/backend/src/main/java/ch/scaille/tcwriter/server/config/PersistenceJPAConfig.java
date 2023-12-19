@@ -8,6 +8,7 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -18,13 +19,14 @@ import jakarta.persistence.EntityManagerFactory;
 
 @Configuration
 @EnableTransactionManagement
+@EnableJpaRepositories(basePackages = "ch.scaille.tcwriter.server.repository")
 public class PersistenceJPAConfig {
 
 	@Bean
 	FactoryBean<EntityManagerFactory> entityManagerFactory(DataSource dataSource) {
 		final var em = new LocalContainerEntityManagerFactoryBean();
 		em.setDataSource(dataSource);
-		em.setPackagesToScan("ch.scaille.tcwriter.server.model", "ch.scaille.tcwriter.server.repository");
+		em.setPackagesToScan("ch.scaille.tcwriter.server.model");
 		em.setPersistenceUnitName("TCWriter");
 
 		final var vendorAdapter = new HibernateJpaVendorAdapter();

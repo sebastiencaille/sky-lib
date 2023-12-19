@@ -8,9 +8,10 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.support.GenericMessage;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.session.SessionRepository;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,6 +21,7 @@ import ch.scaille.tcwriter.generated.api.model.ExportType;
 import ch.scaille.tcwriter.generated.api.model.Metadata;
 import ch.scaille.tcwriter.generated.api.model.TestCase;
 import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
+import ch.scaille.tcwriter.model.testexec.StepStatus;
 import ch.scaille.tcwriter.server.dto.Context;
 import ch.scaille.tcwriter.server.facade.TestCaseFacade;
 import ch.scaille.tcwriter.server.web.controller.exceptions.WebRTException;
@@ -37,10 +39,13 @@ public class TestCaseController extends TestcaseApiController {
 
 	private final Context context;
 	
-	public TestCaseController(Context context, TestCaseFacade testCaseFacade,
+	private final SessionRepository<?> sessionRepository;
+
+	public TestCaseController(Context context, SessionRepository<?> sessionRepository, TestCaseFacade testCaseFacade,
 			SimpMessageSendingOperations feedbackSendingTemplate, NativeWebRequest request) {
 		super(request);
 		this.context = context;
+		this.sessionRepository = sessionRepository;
 		this.testCaseFacade = testCaseFacade;
 		this.feedbackSendingTemplate = feedbackSendingTemplate;
 	}
@@ -65,9 +70,15 @@ public class TestCaseController extends TestcaseApiController {
 	@Override
 	public ResponseEntity<Void> executeTestCase(@Valid String tc) {
 		final var loadedTC = loadValidTestCase(tc);
-		testCaseFacade.executeTest(loadedTC,
-				s -> feedbackSendingTemplate.convertAndSend(WebsocketConfig.TEST_FEEDBACK_DESTINATION,
-						new GenericMessage<>(TestCaseMapper.MAPPER.convert(s))));
+		final var wsSessionId = (String)sessionRepository.findById(getRequest().get().getSessionId()).getAttribute(WebsocketConfig.WEBSOCKET_USER);
+		SimpMessageHeaderAccessor simpMessageHeaderAccessor = SimpMessageHeaderAccessor.create();
+		simpMessageHeaderAccessor.setSessionId(wsSessionId);
+		testCaseFacade.executeTest(loadedTC, s -> {
+			GenericMessage<StepStatus> payload = new GenericMessage<>(TestCaseMapper.MAPPER.convert(s));
+			feedbackSendingTemplate.convertAndSend(
+					WebsocketConfig.TEST_FEEDBACK_DESTINATION + "-user" + wsSessionId, payload, 
+					simpMessageHeaderAccessor.toMap());
+		});
 		return ResponseEntity.ok(null);
 	}
 
@@ -75,7 +86,7 @@ public class TestCaseController extends TestcaseApiController {
 	public ResponseEntity<String> exportTestCase(@Valid String tc, @Valid ExportType format) {
 		final var loadedTC = loadValidTestCase(tc);
 		if (format == ExportType.JAVA) {
-			return  exportJava(loadedTC);
+			return exportJava(loadedTC);
 		}
 		return exportHumanReadable(loadedTC);
 	}
@@ -92,7 +103,7 @@ public class TestCaseController extends TestcaseApiController {
 		}
 
 	}
-	
+
 	private ResponseEntity<String> exportJava(ExportableTestCase tc) {
 		var headers = new org.springframework.http.HttpHeaders();
 		headers.setContentType(new MediaType("text", "java"));

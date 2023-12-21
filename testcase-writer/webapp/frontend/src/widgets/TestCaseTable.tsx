@@ -1,5 +1,4 @@
 import React from 'react';
-import DictionaryHelper from '../helpers/DictionaryHelper';
 import TestCaseHelper from '../helpers/TestCaseHelper';
 import { TestDictionary, TestCase, StepStatus } from '../webapis/Types';
 
@@ -31,7 +30,7 @@ class TestCaseTable extends React.Component<ITestCaseProps> {
 		for (const step of tc.steps) {
 			let selector;
 			let parameter;
-			if (DictionaryHelper.hasSelector(dict, step.action)) {
+			if (TestCaseHelper.hasSelector(dict, step.action)) {
 				selector = step.parametersValue[0];
 				parameter = step.parametersValue[1];
 			} else {
@@ -49,8 +48,8 @@ class TestCaseTable extends React.Component<ITestCaseProps> {
 					</tr>
 					<tr>
 						<td></td>
-						<td>{DictionaryHelper.descriptionOf(dict, [step.actor])}</td>
-						<td>{DictionaryHelper.descriptionOf(dict, [step.action])}</td>
+						<td>{TestCaseHelper.descriptionOf(dict, [step.actor])}</td>
+						<td>{TestCaseHelper.descriptionOf(dict, [step.action])}</td>
 						<td>{TestCaseHelper.descriptionOfParameter(dict, selector)}</td>
 						<td>{TestCaseHelper.descriptionOfParameter(dict, parameter)}</td>
 					</tr>

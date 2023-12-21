@@ -25,7 +25,7 @@ public class ExampleBootstrap {
 		currentConfig.getSubconfig(FsModelConfig.class).orElseThrow().setTemplatePath(TC_TEMPLATE);
 		currentConfig.getSubconfig(JunitTestExecConfig.class)
 				.orElseThrow()
-				.setClasspath(CodeGeneratorParams.mavenTarget(ExampleHelper.class).resolve("classes").toString());
+				.setClasspath(CodeGeneratorParams.locationOf(ExampleHelper.class).toString());
 
 		exampleHelper.getModelDao().writeTestDictionary(model);
 		exampleHelper.getModelDao().writeTestCase(ExampleHelper.TC_NAME, tc);

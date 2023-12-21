@@ -40,7 +40,7 @@ public class SimpleTestGenerator {
 	public static final String SIMPLE_EXTERNAL_ADAPTER_CLASS = SIMPLE_SERVICE_PKG + ".SimpleExternalAdapter";
 
 	public static void main(String[] args) throws IOException, InterruptedException {
-		final var targetFolder = CodeGeneratorParams.mavenTarget(SimpleTestGenerator.class);
+		final var targetFolder = CodeGeneratorParams.mavenTargetFolderOf(SimpleTestGenerator.class);
 		final var targetPathSrc = targetFolder.resolve("generated-tests").toAbsolutePath();
 		final var targetPathDot = targetFolder.resolve("reports");
 		final var generationMetadata = GenerationMetadata.fromCommandLine(SimpleTestGenerator.class, args);

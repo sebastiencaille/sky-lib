@@ -78,7 +78,7 @@ public class TestCaseFacade extends AbstractFacade {
 		try {
 			tempDir = Files.createTempDirectory("tc-writer");
 		} catch (IOException e) {
-			throw new RuntimeException("Web call execution failed", e);
+			throw new IllegalStateException("Web call execution failed", e);
 		}
 		try (var config = new ITestExecutor.TestConfig(loadedTC, tempDir, tcpPort)) {
 			testExecutor.startTest(config);

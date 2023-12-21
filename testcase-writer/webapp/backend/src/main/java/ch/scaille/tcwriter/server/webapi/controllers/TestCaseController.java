@@ -8,7 +8,6 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.session.SessionRepository;
@@ -21,7 +20,6 @@ import ch.scaille.tcwriter.generated.api.model.ExportType;
 import ch.scaille.tcwriter.generated.api.model.Metadata;
 import ch.scaille.tcwriter.generated.api.model.TestCase;
 import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
-import ch.scaille.tcwriter.model.testexec.StepStatus;
 import ch.scaille.tcwriter.server.dto.Context;
 import ch.scaille.tcwriter.server.facade.TestCaseFacade;
 import ch.scaille.tcwriter.server.web.controller.exceptions.WebRTException;
@@ -38,7 +36,7 @@ public class TestCaseController extends TestcaseApiController {
 	private final SimpMessageSendingOperations feedbackSendingTemplate;
 
 	private final Context context;
-	
+
 	private final SessionRepository<?> sessionRepository;
 
 	public TestCaseController(Context context, SessionRepository<?> sessionRepository, TestCaseFacade testCaseFacade,
@@ -70,14 +68,12 @@ public class TestCaseController extends TestcaseApiController {
 	@Override
 	public ResponseEntity<Void> executeTestCase(@Valid String tc) {
 		final var loadedTC = loadValidTestCase(tc);
-		final var wsSessionId = (String)sessionRepository.findById(getRequest().get().getSessionId()).getAttribute(WebsocketConfig.WEBSOCKET_USER);
-		SimpMessageHeaderAccessor simpMessageHeaderAccessor = SimpMessageHeaderAccessor.create();
-		simpMessageHeaderAccessor.setSessionId(wsSessionId);
+		final var wsSessionId = getRequest()
+				.map(r -> sessionRepository.findById(r.getSessionId()).getAttribute(WebsocketConfig.WEBSOCKET_USER));
 		testCaseFacade.executeTest(loadedTC, s -> {
-			GenericMessage<StepStatus> payload = new GenericMessage<>(TestCaseMapper.MAPPER.convert(s));
-			feedbackSendingTemplate.convertAndSend(
-					WebsocketConfig.TEST_FEEDBACK_DESTINATION + "-user" + wsSessionId, payload, 
-					simpMessageHeaderAccessor.toMap());
+			wsSessionId.ifPresent(ws -> feedbackSendingTemplate.convertAndSend(
+					WebsocketConfig.TEST_FEEDBACK_DESTINATION + "-user" + ws,
+					new GenericMessage<>(TestCaseMapper.MAPPER.convert(s))));
 		});
 		return ResponseEntity.ok(null);
 	}

@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import ch.scaille.tcwriter.persistence.IConfigDao;
 import ch.scaille.tcwriter.persistence.IModelDao;
 import ch.scaille.tcwriter.server.dao.IDictionaryDao;
@@ -43,8 +45,8 @@ public class ServiceConfig {
 
 	@Bean
 	@DependsOn("entityManagerFactory")
-	ClusteredSessionFacade clusteredSessionFacade(ClusteredSessionRepository repository) {
-		return new ClusteredSessionFacadeImpl(repository);
+	ClusteredSessionFacade clusteredSessionFacade(ClusteredSessionRepository repository, ObjectMapper mapper) {
+		return new ClusteredSessionFacadeImpl(repository, mapper);
 	}
 	
 	@Bean

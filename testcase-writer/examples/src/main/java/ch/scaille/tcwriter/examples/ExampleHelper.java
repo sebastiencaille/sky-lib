@@ -35,7 +35,7 @@ public class ExampleHelper {
 	public static final String TC_NAME = "testCase";
 
 	private final IConfigDao configDao;
-	
+
 	private final FsModelDao modelDao;
 
 	public ExampleHelper() throws IOException {
@@ -51,21 +51,22 @@ public class ExampleHelper {
 	public ExampleHelper(Path dataPath, String configName) throws IOException {
 		final var tcPath = dataPath.resolve("testcase");
 		Files.createDirectories(tcPath);
-		
+
 		final var dictionaryPath = dataPath.resolve("dictionary");
 		Files.createDirectories(dictionaryPath);
 
 		final var modelConfig = new FsModelConfig();
 		modelConfig.setTcPath(tcPath.toString());
 		modelConfig.setTcExportPath(
-				CodeGeneratorParams.mavenTarget(ExampleHelper.class).resolve("generated-tests").toString());
+				CodeGeneratorParams.mavenTargetFolderOf(ExampleHelper.class).resolve("generated-tests").toString());
 		modelConfig.setDictionaryPath(dictionaryPath.toString());
 		modelConfig.setTemplatePath("rsrc:templates/TC.template");
 
 		final var junitTestConfig = new JunitTestExecConfig();
 		junitTestConfig.setClasspath("");
-		
-		configDao = FsConfigDao.withBaseFolder(dataPath).setConfiguration(TCConfig.of(configName, modelConfig, junitTestConfig));
+
+		configDao = FsConfigDao.withBaseFolder(dataPath)
+				.setConfiguration(TCConfig.of(configName, modelConfig, junitTestConfig));
 		modelDao = new FsModelDao(configDao);
 	}
 

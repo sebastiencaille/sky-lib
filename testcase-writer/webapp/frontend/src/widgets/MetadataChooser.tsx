@@ -26,7 +26,7 @@ class DictionarySelector extends React.Component<IMetadataChooserProps, IMetadat
 		this.select = this.select.bind(this);
 	}
 
-	componentDidUpdate(prevProps: Readonly<IMetadataChooserProps>, prevState: Readonly<IMetadataChooserState>, snapshot?: any): void {
+	componentDidUpdate(): void {
 		let current: Metadata | undefined = undefined;
 		if (this.props.currentChoice) {
 			current = this.props.currentChoice;
@@ -48,8 +48,8 @@ class DictionarySelector extends React.Component<IMetadataChooserProps, IMetadat
 	}
 
 	createItems = () => {
-		let options = [];
-		for (let dict of this.props.allChoices) {
+		const options = [];
+		for (const dict of this.props.allChoices) {
 			options.push(<option key={dict.transientId} value={dict.transientId}>{dict.description}</option>);
 		}
 		return options;

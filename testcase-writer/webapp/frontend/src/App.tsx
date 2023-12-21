@@ -1,16 +1,21 @@
 import React from 'react';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
-import DictionaryHelper from './helpers/DictionaryHelper';
-import TestCaseHelper from './helpers/TestCaseHelper';
-import MetadataChooser from './widgets/MetadataChooser';
-import TestCaseTable from './widgets/TestCaseTable';
+
 import WebApis from './webapis/WebApis';
 import WebApiFeedback from './webapis/WebApiFeedback'
 import { Metadata, TestDictionary, TestCase, Context, StepStatus, ExportType } from './webapis/Types'
+import Mappers from './mappers/Mappers';
+
+import { ErrorState, defaultErrorHandler } from './service/Errors';
 import './App.css'
 
+import MetadataChooser from './widgets/MetadataChooser';
+import TestCaseTable from './widgets/TestCaseTable';
+import ErrorDisplay from './widgets/ErrorDisplay';
+
 interface IAppProps {
+
 }
 
 interface IAppState {
@@ -22,9 +27,12 @@ interface IAppState {
 	executionState: string[];
 	stepStatuses: Map<number, StepStatus>;
 	displayedExport?: string;
+
+	errors: ErrorState;
 }
 
 const initialState: IAppState = {
+
 	currentContext: undefined,
 	allDictionaries: [],
 	allTestCases: [],
@@ -32,7 +40,9 @@ const initialState: IAppState = {
 	currentTestCase: undefined,
 	executionState: [],
 	stepStatuses: new Map<number, StepStatus>(),
-	displayedExport: undefined
+	displayedExport: undefined,
+
+	errors: ErrorState.empty()
 };
 
 class App extends React.Component<IAppProps, IAppState> {
@@ -43,6 +53,7 @@ class App extends React.Component<IAppProps, IAppState> {
 		this.dictionaryChanged = this.dictionaryChanged.bind(this);
 		this.testCaseChanged = this.testCaseChanged.bind(this);
 		this.stepStatusChanged = this.stepStatusChanged.bind(this);
+		defaultErrorHandler.errorHandler = ( (error: string) => this.setState(prevState => ({ errors: prevState.errors.add(error) })));
 	}
 
 	componentDidMount(): void {
@@ -50,54 +61,59 @@ class App extends React.Component<IAppProps, IAppState> {
 		WebApis.loadCurrentContext((c) => this.setState({ currentContext: c }))
 	}
 
-	componentDidUpdate(prevProps: Readonly<IAppProps>, prevState: Readonly<IAppState>): void {
+	componentDidUpdate(_prevProp: Readonly<IAppProps>, prevState: Readonly<IAppState>): void {
 		const contextDicoChanged = prevState.currentContext?.dictionary !== this.state.currentContext?.dictionary;
 		const contextTcChanged = prevState.currentContext?.testCase !== this.state.currentContext?.testCase;
 		const dicoChanged = prevState.currentDictionary !== this.state.currentDictionary && this.state.currentDictionary;
 
 		if (contextDicoChanged && this.state.currentContext?.dictionary) {
-			WebApis.loadCurrentDictionary(dict => this.setState({ currentDictionary: DictionaryHelper.enhanceDictionary(dict) }));
+			this.process(() => WebApis.loadCurrentDictionary(dict => this.setState({ currentDictionary: Mappers.enhanceDictionary(dict) })));
 		}
 		if (dicoChanged) {
-			WebApis.listAllTestCases((allMetaData) => this.setState({ allTestCases: allMetaData }));
+			this.process(() => WebApis.listAllTestCases((allMetaData) => this.setState({ allTestCases: allMetaData })));
 		}
 		if (dicoChanged || contextTcChanged) {
 			if (this.state.currentDictionary && this.state.currentContext?.testCase) {
-				WebApis.loadCurrentTestCase(tc =>
-					this.setState((ps) => ({ currentTestCase: TestCaseHelper.enhanceTestCase(ps.currentDictionary!, tc) })));
+				this.process(() => WebApis.loadCurrentTestCase(tc =>
+					this.setState((ps) => ({ currentTestCase: Mappers.enhanceTestCase(ps.currentDictionary!, tc) }))));
 			}
 		}
+	}
+
+	private process(call: () => void) {
+		this.setState({ errors: ErrorState.empty() });
+		call.apply(this);
 	}
 
 	private dictionaryChanged = (metadata?: Metadata) => {
 		if (!metadata) {
 			return;
 		}
-		WebApis.selectCurrentDictionary(metadata.transientId, (context) => this.setState({ currentContext: context }));
+		this.process(() => WebApis.selectCurrentDictionary(metadata.transientId, (context) => this.setState({ currentContext: context })));
 	}
 
 	private testCaseChanged = (metadata?: Metadata) => {
 		if (!metadata) {
 			return;
 		}
-		WebApis.selectCurrentTestCase(metadata.transientId, (context) => this.setState({ currentContext: context }));
+		this.process(() => WebApis.selectCurrentTestCase(metadata.transientId, (context) => this.setState({ currentContext: context })));
 	}
 
 	private execute = () => {
-		WebApis.executeCurrentTestCase();
+		this.process(() => WebApis.executeCurrentTestCase());
 	}
 
 	private export = (format: ExportType) => {
-		WebApis.exportCurrentTestCase(format, (text) => this.setState({ displayedExport: text }));
+		this.process(() => WebApis.exportCurrentTestCase(format, (text) => this.setState({ displayedExport: text })));
 	}
 
 	private stepStatusChanged = (stepStatus: StepStatus) => {
 		if (stepStatus) {
 			this.setState(prevState => {
-				const newStatuses = new Map(prevState.stepStatuses) 
+				const newStatuses = new Map(prevState.stepStatuses)
 				newStatuses.set(stepStatus?.ordinal, stepStatus);
 				return { stepStatuses: newStatuses }
-				});
+			});
 		}
 	}
 
@@ -117,6 +133,7 @@ class App extends React.Component<IAppProps, IAppState> {
 				<button id='exportJava' onClick={() => this.export(ExportType.JAVA)}>Java Code</button>
 				<button id='exportText' onClick={() => this.export(ExportType.HUMAN_READABLE)}>Human Readable</button>
 				<button id='execute' onClick={this.execute}>Execute</button>
+				<ErrorDisplay errors={this.state.errors} />
 				<Popup open={this.state.displayedExport !== undefined} onClose={() => this.setState({ displayedExport: undefined })}
 					className="export-popup">
 					<pre>

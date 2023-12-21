@@ -17,6 +17,9 @@ type StepStatus = components["schemas"]["StepStatus"];
 
 interface TestDictionary extends ApiTestDictionary {
 
+	metadata: Metadata;
+	descriptions: TestObjectDescription[];
+
 	actionsMap: Map<string, TestAction>;
 	rolesMap: Map<string, TestRole>;
 	actorsMap: Map<string, TestActor>;
@@ -25,17 +28,23 @@ interface TestDictionary extends ApiTestDictionary {
 
 }
 interface TestCase extends ApiTestCase {
-	references: Map<string, TestReference>;
+	metadata: Metadata;
 	steps: TestStep[];
+	
+	references: Map<string, TestReference>;
 }
 
 interface TestStep extends ApiTestStep  {
+	ordinal: number;
+	humanReadable: string;
+	
 	action: TestAction;
 	actor: TestActor;
 	parametersValue: TestParameterValue[];
 }
 
 interface TestParameterValue extends ApiTestParameterValue  {
+	simpleValue?: string;
 	testParameterFactory: TestParameterFactory;
 }
 

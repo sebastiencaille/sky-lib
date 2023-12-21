@@ -30,11 +30,14 @@ public class WebSocketConnectHandler<S> implements ApplicationListener<SessionCo
 	static <S extends Session> void handleSession(Message<?> message, SessionRepository<S> sessionRepository,
 			BiConsumer<Session, String> sessionAction) {
 		final var messageHeaders = message.getHeaders();
-		final var springSessionId = (String) SimpMessageHeaderAccessor.getSessionAttributes(messageHeaders)
-				.get(SPRING_SESSION_ID_ATTR_NAME);
+		final var sessionAttributes = SimpMessageHeaderAccessor.getSessionAttributes(messageHeaders);
+		if (sessionAttributes == null) {
+			return;
+		}
+		final var springSessionId = (String) sessionAttributes.get(SPRING_SESSION_ID_ATTR_NAME);
 		final var session = sessionRepository.findById(springSessionId);
 		final var wsSessionId = SimpMessageHeaderAccessor.getSessionId(messageHeaders);
 		sessionAction.accept(session, wsSessionId);
-		sessionRepository.save(session); 
+		sessionRepository.save(session);
 	}
 }

@@ -54,8 +54,11 @@ public class CodeGeneratorParams {
 	 * @param clazz
 	 * @return
 	 */
-	public static Path mavenTarget(Class<?> clazz) {
-		return Paths.get(JavaExt.pathOf(clazz.getProtectionDomain().getCodeSource().getLocation())).resolve("..");
+	public static Path locationOf(Class<?> clazz) {
+		return Paths.get(JavaExt.pathOf(clazz.getProtectionDomain().getCodeSource().getLocation()));
 	}
 
+	public static Path mavenTargetFolderOf(Class<?> clazz) {
+		return locationOf(clazz).resolve("..");
+	}
 }

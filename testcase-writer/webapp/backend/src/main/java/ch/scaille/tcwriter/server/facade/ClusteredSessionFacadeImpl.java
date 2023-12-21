@@ -6,7 +6,6 @@ import java.util.Optional;
 import java.util.function.LongPredicate;
 import java.util.logging.Level;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -25,13 +24,13 @@ public class ClusteredSessionFacadeImpl implements ClusteredSessionFacade {
 
 	private static final java.util.logging.Logger LOGGER = Logs.of(ClusteredSessionFacadeImpl.class);
 
-	@Autowired
-	private ObjectMapper mapper;
-
 	private final ClusteredSessionRepository repository;
 
-	public ClusteredSessionFacadeImpl(ClusteredSessionRepository repository) {
+	private final ObjectMapper mapper;
+
+	public ClusteredSessionFacadeImpl(ClusteredSessionRepository repository, ObjectMapper mapper) {
 		this.repository = repository;
+		this.mapper = mapper;
 	}
 
 	@Transactional(value = TxType.REQUIRES_NEW)

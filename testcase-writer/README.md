@@ -82,7 +82,7 @@ public class TestItem {
 	...
 }
 ```
-# Test api impementation
+# Test api implementation
 Test cases may target GUIs implemented using different technologies, such as Java Swing, web pages, ...
 
 In general, the logic is still the same:

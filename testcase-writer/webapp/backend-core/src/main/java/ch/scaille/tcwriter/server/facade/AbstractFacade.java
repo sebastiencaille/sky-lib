@@ -1,7 +1,5 @@
 package ch.scaille.tcwriter.server.facade;
 
-import static ch.scaille.tcwriter.server.webapi.controllers.exceptions.ValidationHelper.dictionaryFound;
-
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.server.dao.IDictionaryDao;
 
@@ -14,6 +12,6 @@ public class AbstractFacade {
 	}
 
 	protected TestDictionary loadDictionary(String dictionaryId) {
-		return dictionaryFound(dictionaryId, dictionaryDao.load(dictionaryId));
+		return ValidationHelper.dictionaryFound(dictionaryId, dictionaryDao.load(dictionaryId));
 	}
 }

@@ -1,7 +1,5 @@
 package ch.scaille.tcwriter.server.facade;
 
-import static ch.scaille.tcwriter.server.webapi.controllers.exceptions.ValidationHelper.testCaseFound;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,7 +16,7 @@ import ch.scaille.tcwriter.model.testcase.TestStep;
 import ch.scaille.tcwriter.model.testexec.StepStatus;
 import ch.scaille.tcwriter.server.dao.IDictionaryDao;
 import ch.scaille.tcwriter.server.dao.ITestCaseDao;
-import ch.scaille.tcwriter.server.web.controller.exceptions.WebRTException;
+import ch.scaille.tcwriter.server.exceptions.WebRTException;
 import ch.scaille.tcwriter.services.generators.visitors.HumanReadableVisitor;
 import ch.scaille.tcwriter.services.testexec.ITestExecutor;
 import ch.scaille.tcwriter.services.testexec.JUnitTestExecutor;
@@ -44,7 +42,7 @@ public class TestCaseFacade extends AbstractFacade {
 	}
 
 	public ExportableTestCase load(String tcId, String dictionaryId) {
-		return testCaseFound(tcId, testCaseDao.load(tcId, loadDictionary(dictionaryId)));
+		return ValidationHelper.testCaseFound(tcId, testCaseDao.load(tcId, loadDictionary(dictionaryId)));
 	}
 
 	public List<String> computeHumanReadableTexts(TestCase tc, List<TestStep> steps) {

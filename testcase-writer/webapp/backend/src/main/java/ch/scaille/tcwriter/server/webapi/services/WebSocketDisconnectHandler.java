@@ -5,7 +5,7 @@ import org.springframework.session.Session;
 import org.springframework.session.SessionRepository;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
-import ch.scaille.tcwriter.server.webapi.config.WebsocketConfig;
+import ch.scaille.tcwriter.server.WebConstants;
 
 public class WebSocketDisconnectHandler<S> implements ApplicationListener<SessionDisconnectEvent> {
 
@@ -18,8 +18,8 @@ public class WebSocketDisconnectHandler<S> implements ApplicationListener<Sessio
 	@Override
 	public void onApplicationEvent(SessionDisconnectEvent event) {
 		WebSocketConnectHandler.handleSession(event.getMessage(), sessionRepository, (session, wsSessionId) -> {
-			if (wsSessionId.equals(session.getAttribute(WebsocketConfig.WEBSOCKET_USER))) {
-				session.removeAttribute(WebsocketConfig.WEBSOCKET_USER);
+			if (wsSessionId.equals(session.getAttribute(WebConstants.WEBSOCKET_USER))) {
+				session.removeAttribute(WebConstants.WEBSOCKET_USER);
 			}
 		});
 	}

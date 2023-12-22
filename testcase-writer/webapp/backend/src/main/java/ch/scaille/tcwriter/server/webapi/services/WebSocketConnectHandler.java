@@ -9,7 +9,7 @@ import org.springframework.session.Session;
 import org.springframework.session.SessionRepository;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 
-import ch.scaille.tcwriter.server.webapi.config.WebsocketConfig;
+import ch.scaille.tcwriter.server.WebConstants;
 
 public class WebSocketConnectHandler<S> implements ApplicationListener<SessionConnectEvent> {
 
@@ -24,7 +24,7 @@ public class WebSocketConnectHandler<S> implements ApplicationListener<SessionCo
 	@Override
 	public void onApplicationEvent(SessionConnectEvent event) {
 		handleSession(event.getMessage(), sessionRepository,
-				(session, wsSessionId) -> session.setAttribute(WebsocketConfig.WEBSOCKET_USER, wsSessionId));
+				(session, wsSessionId) -> session.setAttribute(WebConstants.WEBSOCKET_USER, wsSessionId));
 	}
 
 	static <S extends Session> void handleSession(Message<?> message, SessionRepository<S> sessionRepository,

@@ -13,23 +13,17 @@ import org.springframework.session.web.socket.config.annotation.AbstractSessionW
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
+import ch.scaille.tcwriter.server.WebConstants;
 import ch.scaille.tcwriter.server.webapi.services.WebSocketConnectHandler;
 import ch.scaille.tcwriter.server.webapi.services.WebSocketDisconnectHandler;
 
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebsocketConfig<S extends Session>  extends AbstractSessionWebSocketMessageBrokerConfigurer<S> {
-
-
-	private static final String QUEUE = "/queue";
-
-	public static final String TEST_FEEDBACK_DESTINATION = QUEUE + "/testexec";
-
-	public static final String WEBSOCKET_USER = "WebSocketUser";
     
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
-		config.enableSimpleBroker(TEST_FEEDBACK_DESTINATION);
+		config.enableSimpleBroker(WebConstants.WEBSOCKET_TEST_FEEDBACK_DESTINATION);
 		config.setApplicationDestinationPrefixes("/ws");
 		//config.setUserDestinationPrefix("/user");
 	}

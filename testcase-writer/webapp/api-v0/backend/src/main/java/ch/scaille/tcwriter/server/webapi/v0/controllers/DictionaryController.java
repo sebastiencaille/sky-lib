@@ -1,6 +1,6 @@
 package ch.scaille.tcwriter.server.webapi.v0.controllers;
 
-import static ch.scaille.tcwriter.server.webapi.controllers.exceptions.ValidationHelper.validateDictionarySet;
+import static ch.scaille.tcwriter.server.facade.ValidationHelper.validateDictionarySet;
 
 import java.util.List;
 

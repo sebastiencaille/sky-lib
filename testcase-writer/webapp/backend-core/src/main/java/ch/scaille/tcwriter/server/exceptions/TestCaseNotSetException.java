@@ -1,8 +1,6 @@
-package ch.scaille.tcwriter.server.webapi.controllers.exceptions;
+package ch.scaille.tcwriter.server.exceptions;
 
 import org.springframework.http.HttpStatus;
-
-import ch.scaille.tcwriter.server.web.controller.exceptions.WebRTException;
 
 public class TestCaseNotSetException extends WebRTException {
 	

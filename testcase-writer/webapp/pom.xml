@@ -13,6 +13,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>backend-core</module>
 		<module>api-v0</module>
 		<module>backend</module>
 		<module>frontend</module>
@@ -29,6 +30,11 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>ch.scaille.tcwriter</groupId>
+				<artifactId>testcase-writer-webapp-backend-core</artifactId>
+				<version>${revision}</version>
+			</dependency>
 			<dependency>
 				<groupId>ch.scaille.tcwriter</groupId>
 				<artifactId>testcase-writer-webapp-backend</artifactId>

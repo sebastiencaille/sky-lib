@@ -1,7 +1,7 @@
 package ch.scaille.tcwriter.server.webapi.v0.controllers;
 
-import static ch.scaille.tcwriter.server.webapi.controllers.exceptions.ValidationHelper.validateDictionarySet;
-import static ch.scaille.tcwriter.server.webapi.controllers.exceptions.ValidationHelper.validateTestCaseSet;
+import static ch.scaille.tcwriter.server.facade.ValidationHelper.validateDictionarySet;
+import static ch.scaille.tcwriter.server.facade.ValidationHelper.validateTestCaseSet;
 
 import java.util.List;
 
@@ -14,19 +14,19 @@ import org.springframework.session.SessionRepository;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.scaille.tcwriter.generated.api.controllers.v0.TestcaseApiController;
 import ch.scaille.tcwriter.generated.api.model.v0.ExportType;
 import ch.scaille.tcwriter.generated.api.model.v0.Metadata;
 import ch.scaille.tcwriter.generated.api.model.v0.TestCase;
 import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
+import ch.scaille.tcwriter.server.WebConstants;
 import ch.scaille.tcwriter.server.dto.Context;
+import ch.scaille.tcwriter.server.exceptions.WebRTException;
 import ch.scaille.tcwriter.server.facade.TestCaseFacade;
-import ch.scaille.tcwriter.server.web.controller.exceptions.WebRTException;
-import ch.scaille.tcwriter.server.webapi.config.WebsocketConfig;
 import ch.scaille.tcwriter.server.webapi.v0.mappers.MetadataMapper;
 import ch.scaille.tcwriter.server.webapi.v0.mappers.TestCaseMapper;
-import io.swagger.v3.core.util.Json;
 import jakarta.validation.Valid;
 
 public class TestCaseController extends TestcaseApiController {
@@ -69,10 +69,10 @@ public class TestCaseController extends TestcaseApiController {
 	public ResponseEntity<Void> executeTestCase(@Valid String tc) {
 		final var loadedTC = loadValidTestCase(tc);
 		final var wsSessionId = getRequest()
-				.map(r -> sessionRepository.findById(r.getSessionId()).getAttribute(WebsocketConfig.WEBSOCKET_USER));
+				.map(r -> sessionRepository.findById(r.getSessionId()).getAttribute(WebConstants.WEBSOCKET_USER));
 		testCaseFacade.executeTest(loadedTC, s -> {
 			wsSessionId.ifPresent(ws -> feedbackSendingTemplate.convertAndSend(
-					WebsocketConfig.TEST_FEEDBACK_DESTINATION + "-user" + ws,
+					WebConstants.WEBSOCKET_TEST_FEEDBACK_DESTINATION + "-user" + ws,
 					new GenericMessage<>(TestCaseMapper.MAPPER.convert(s))));
 		});
 		return ResponseEntity.ok(null);
@@ -92,7 +92,7 @@ public class TestCaseController extends TestcaseApiController {
 			var headers = new org.springframework.http.HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			return new ResponseEntity<>(
-					Json.mapper().writeValueAsString(testCaseFacade.computeHumanReadableTexts(tc, tc.getSteps())),
+					new ObjectMapper().writeValueAsString(testCaseFacade.computeHumanReadableTexts(tc, tc.getSteps())),
 					headers, HttpStatus.OK);
 		} catch (JsonProcessingException e) {
 			throw new WebRTException(e);

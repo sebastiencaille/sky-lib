@@ -26,7 +26,7 @@ import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 
-import ch.scaille.tcwriter.server.web.controller.exceptions.WebRTException;
+import ch.scaille.tcwriter.server.exceptions.WebRTException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 

@@ -1,6 +1,11 @@
-package ch.scaille.tcwriter.server.webapi.controllers.exceptions;
+package ch.scaille.tcwriter.server.facade;
 
 import java.util.Optional;
+
+import ch.scaille.tcwriter.server.exceptions.DictionaryNotFoundException;
+import ch.scaille.tcwriter.server.exceptions.DictionaryNotSetException;
+import ch.scaille.tcwriter.server.exceptions.TestCaseNotFoundException;
+import ch.scaille.tcwriter.server.exceptions.TestCaseNotSetException;
 
 public class ValidationHelper {
 

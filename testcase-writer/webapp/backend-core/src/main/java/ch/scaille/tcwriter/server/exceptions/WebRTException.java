@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.server.web.controller.exceptions;
+package ch.scaille.tcwriter.server.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;

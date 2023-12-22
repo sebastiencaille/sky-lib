@@ -1,9 +1,9 @@
 openapi: 3.0.3
 info:
   title: Test Case Server
-  version: 0.0.1
+  version: 0.0.0
 servers: 
-  - url: http://localhost:8080/api
+  - url: /v0
 paths:
   /dictionary:
     $ref: 'paths/allDictionaries.yaml'

@@ -1,11 +1,11 @@
 {
   "name": "react",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "setup": "npm ci && npm link @scaille/testcase-writer-webapi@0.0.1",
-    "setup-dev": "npm install && npm link @scaille/testcase-writer-webapi@0.0.1",
+    "setup": "npm ci && npm link @scaille/testcase-writer-webapi@0.0.0",
+    "setup-dev": "npm install && npm link @scaille/testcase-writer-webapi@0.0.0",
     "test": "jest",
     "start": "webpack-dev-server --mode development --open",
     "build": "webpack --mode production",

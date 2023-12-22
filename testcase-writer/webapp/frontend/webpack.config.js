@@ -58,7 +58,7 @@ module.exports = (env) => {
 				template: './public/index.html'
 			}),
 			new webpack.DefinePlugin({
-				'process.env.REACT_APP_API_URL': '\'api\''
+				'process.env.REACT_APP_API_URL': '\'api/v0\''
 			}),
 			new InterpolateHtmlPlugin(HtmlWebpackPlugin, {
 				PUBLIC_URL: 'public'

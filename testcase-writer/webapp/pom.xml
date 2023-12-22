@@ -13,7 +13,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>webapi</module>
+		<module>api-v0</module>
 		<module>backend</module>
 		<module>frontend</module>
 		<module>war</module>
@@ -21,16 +21,14 @@
 	</modules>
 
 	<properties>
+		<apiPackageBase>
+			ch.scaille.tcwriter.generated.api.controllers</apiPackageBase>
+		<modelPackageBase>ch.scaille.tcwriter.generated.api.model</modelPackageBase>
 		<sonar.exclusions>**/generated-sources/**</sonar.exclusions>
 	</properties>
 
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>ch.scaille.tcwriter</groupId>
-				<artifactId>testcase-writer-webapp-webapi</artifactId>
-				<version>${revision}</version>
-			</dependency>
 			<dependency>
 				<groupId>ch.scaille.tcwriter</groupId>
 				<artifactId>testcase-writer-webapp-backend</artifactId>
@@ -87,15 +85,11 @@
 					<groupId>org.openapitools</groupId>
 					<artifactId>openapi-generator-maven-plugin</artifactId>
 					<configuration>
-						<inputSpec>
-							${project.basedir}/../webapi/src/main/resources/webapi/openapi.yaml</inputSpec>
+						<ignoreFileOverride>
+							${project.basedir}/.openapi-generator-ignore</ignoreFileOverride>
 						<configOptions>
-							<sourceFolder>src/gen/java/main</sourceFolder>
 							<useJakartaEe>true</useJakartaEe>
 						</configOptions>
-						<apiPackage>
-							ch.scaille.tcwriter.generated.api.controllers</apiPackage>
-						<modelPackage>ch.scaille.tcwriter.generated.api.model</modelPackage>
 						<generatorName>spring</generatorName>
 						<library>spring-boot</library>
 					</configuration>

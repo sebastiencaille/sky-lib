@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.server.webapi.mappers;
+package ch.scaille.tcwriter.server.webapi.v0.mappers;
 
 import java.util.Optional;
 
@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
-import ch.scaille.tcwriter.generated.api.model.Context;
+import ch.scaille.tcwriter.generated.api.model.v0.Context;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.ERROR, implementationPackage = "<PACKAGE_NAME>.generated")
 public interface ContextMapper {

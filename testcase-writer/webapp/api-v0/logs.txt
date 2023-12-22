@@ -1,0 +1,250 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------< ch.scaille.tcwriter:testcase-writer-webapp-webapi-v0 >--------
+[INFO] Building testcase-writer-webapp-webapi-v0 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ testcase-writer-webapp-webapi-v0 ---
+[INFO] Deleting /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target
+[INFO] 
+[INFO] --- flatten:1.5.0:clean (flatten.clean) @ testcase-writer-webapp-webapi-v0 ---
+[INFO] Deleting /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/.flattened-pom.xml
+[INFO] 
+[INFO] --- build-helper:3.5.0:add-source (add-api) @ testcase-writer-webapp-webapi-v0 ---
+[INFO] Source directory: /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/javaApi added.
+[INFO] 
+[INFO] --- build-helper:3.5.0:add-source (add-backend) @ testcase-writer-webapp-webapi-v0 ---
+[INFO] Source directory: /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/javaBackend added.
+[INFO] 
+[INFO] --- openapi-generator:7.1.0:generate (gen-openapi-stubs) @ testcase-writer-webapp-webapi-v0 ---
+[INFO] Generating with dryRun=false
+[INFO] OpenAPI Generator: spring (server)
+[INFO] Generator 'spring' is considered stable.
+[INFO] ----------------------------------
+[INFO] Environment variable JAVA_POST_PROCESS_FILE not defined so the Java code may not be properly formatted. To define it, try 'export JAVA_POST_PROCESS_FILE="/usr/local/bin/clang-format -i"' (Linux/Mac)
+[INFO] NOTE: To enable file post-processing, 'enablePostProcessFile' must be set to `true` (--enable-post-process-file for CLI).
+[INFO] Invoker Package Name, originally not set, is now derived from api package name: ch.scaille.tcwriter.generated.api.controllers
+[INFO] Processing operation listAll
+[INFO] Processing operation current
+[INFO] Processing operation listAll
+[INFO] Processing operation testcase
+[INFO] Processing operation executeTestCase
+[INFO] Processing operation exportTestCase
+[INFO] Processing operation getCurrent
+[INFO] Processing operation setCurrent
+[WARNING] Unknown type found in the schema: #/TestApiParameter. To map it, please use the schema mapping option (e.g. --schema-mappings in CLI)
+[WARNING] Unknown type found in the schema: #/TestApiParameter. To map it, please use the schema mapping option (e.g. --schema-mappings in CLI)
+[WARNING] Unknown type found in the schema: #/TestApiParameter. To map it, please use the schema mapping option (e.g. --schema-mappings in CLI)
+[WARNING] Unknown type found in the schema: #/TestApiParameter. To map it, please use the schema mapping option (e.g. --schema-mappings in CLI)
+[WARNING] Unknown type found in the schema: #/TestApiParameter. To map it, please use the schema mapping option (e.g. --schema-mappings in CLI)
+[WARNING] Unknown type found in the schema: #/TestApiParameter. To map it, please use the schema mapping option (e.g. --schema-mappings in CLI)
+[WARNING] Unknown type found in the schema: #/TestApiParameter. To map it, please use the schema mapping option (e.g. --schema-mappings in CLI)
+[WARNING] Unknown type found in the schema: #/TestApiParameter. To map it, please use the schema mapping option (e.g. --schema-mappings in CLI)
+[INFO] Model TestObjectDescriptions not generated since it's an alias to map (without property) and `generateAliasAsModel` is set to false (default)
+[INFO] Model ComplexTypeContent not generated since it's an alias to map (without property) and `generateAliasAsModel` is set to false (default)
+[INFO] adding parent variable id
+[INFO] adding parent variable name
+[INFO] adding parent variable id
+[INFO] adding parent variable name
+[INFO] adding parent variable id
+[INFO] adding parent variable name
+[INFO] adding parent variable id
+[INFO] adding parent variable name
+[INFO] adding parent variable id
+[INFO] adding parent variable name
+[INFO] adding parent variable id
+[INFO] adding parent variable mandatoryParameters
+[INFO] adding parent variable optionalParameters
+[INFO] adding parent variable nature
+[INFO] adding parent variable parameterType
+[INFO] adding parent variable id
+[INFO] adding parent variable name
+[INFO] adding parent variable id
+[INFO] adding parent variable name
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controller/v0/Context.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controller/v0/ExportType.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controller/v0/IdObject.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controller/v0/Metadata.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controller/v0/NamedObject.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controller/v0/StepState.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controller/v0/StepStatus.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controller/v0/TestAction.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controller/v0/TestActor.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controller/v0/TestApiParameter.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controller/v0/TestCase.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controller/v0/TestDictionary.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controller/v0/TestObjectDescription.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controller/v0/TestParameterFactory.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controller/v0/TestParameterFactory1.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controller/v0/TestParameterValue.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controller/v0/TestReference.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controller/v0/TestRole.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controller/v0/TestStatus.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controller/v0/TestStep.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controllers/v0/ContextApiController.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controllers/v0/ContextApi.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controllers/v0/DictionaryApiController.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controllers/v0/DictionaryApi.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controllers/v0/TestcaseApiController.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controllers/v0/TestcaseApi.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/pom.xml
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/README.md
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/org/openapitools/OpenApiGeneratorApplication.java
+[INFO] Ignored /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/test/java/org/openapitools/OpenApiGeneratorApplicationTests.java (Ignored by rule in ignore file.)
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/org/openapitools/RFC3339DateFormat.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/org/openapitools/configuration/EnumConverterConfiguration.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/resources/application.properties
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/org/openapitools/configuration/HomeController.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/resources/openapi.yaml
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/org/openapitools/configuration/SpringDocConfiguration.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaBackend/ch/scaille/tcwriter/generated/api/controllers/v0/ApiUtil.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/.openapi-generator-ignore
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/.openapi-generator/VERSION
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/.openapi-generator/FILES
+################################################################################
+# Thanks for using OpenAPI Generator.                                          #
+# Please consider donation to help us maintain this project 🙏                 #
+# https://opencollective.com/openapi_generator/donate                          #
+################################################################################
+[INFO] 
+[INFO] --- openapi-generator:7.1.0:generate (gen-openapi-model) @ testcase-writer-webapp-webapi-v0 ---
+[INFO] Generating with dryRun=false
+[INFO] OpenAPI Generator: spring (server)
+[INFO] Generator 'spring' is considered stable.
+[INFO] ----------------------------------
+[INFO] Environment variable JAVA_POST_PROCESS_FILE not defined so the Java code may not be properly formatted. To define it, try 'export JAVA_POST_PROCESS_FILE="/usr/local/bin/clang-format -i"' (Linux/Mac)
+[INFO] NOTE: To enable file post-processing, 'enablePostProcessFile' must be set to `true` (--enable-post-process-file for CLI).
+[INFO] Invoker Package Name, originally not set, is now derived from api package name: ch.scaille.tcwriter.generated.api.controllers
+[INFO] Processing operation listAll
+[INFO] Processing operation current
+[INFO] Processing operation listAll
+[INFO] Processing operation testcase
+[INFO] Processing operation executeTestCase
+[INFO] Processing operation exportTestCase
+[INFO] Processing operation getCurrent
+[INFO] Processing operation setCurrent
+[WARNING] Unknown type found in the schema: #/TestApiParameter. To map it, please use the schema mapping option (e.g. --schema-mappings in CLI)
+[WARNING] Unknown type found in the schema: #/TestApiParameter. To map it, please use the schema mapping option (e.g. --schema-mappings in CLI)
+[WARNING] Unknown type found in the schema: #/TestApiParameter. To map it, please use the schema mapping option (e.g. --schema-mappings in CLI)
+[WARNING] Unknown type found in the schema: #/TestApiParameter. To map it, please use the schema mapping option (e.g. --schema-mappings in CLI)
+[WARNING] Unknown type found in the schema: #/TestApiParameter. To map it, please use the schema mapping option (e.g. --schema-mappings in CLI)
+[WARNING] Unknown type found in the schema: #/TestApiParameter. To map it, please use the schema mapping option (e.g. --schema-mappings in CLI)
+[WARNING] Unknown type found in the schema: #/TestApiParameter. To map it, please use the schema mapping option (e.g. --schema-mappings in CLI)
+[WARNING] Unknown type found in the schema: #/TestApiParameter. To map it, please use the schema mapping option (e.g. --schema-mappings in CLI)
+[INFO] Model TestObjectDescriptions not generated since it's an alias to map (without property) and `generateAliasAsModel` is set to false (default)
+[INFO] Model ComplexTypeContent not generated since it's an alias to map (without property) and `generateAliasAsModel` is set to false (default)
+[INFO] adding parent variable id
+[INFO] adding parent variable name
+[INFO] adding parent variable id
+[INFO] adding parent variable name
+[INFO] adding parent variable id
+[INFO] adding parent variable name
+[INFO] adding parent variable id
+[INFO] adding parent variable name
+[INFO] adding parent variable id
+[INFO] adding parent variable name
+[INFO] adding parent variable id
+[INFO] adding parent variable mandatoryParameters
+[INFO] adding parent variable optionalParameters
+[INFO] adding parent variable nature
+[INFO] adding parent variable parameterType
+[INFO] adding parent variable id
+[INFO] adding parent variable name
+[INFO] adding parent variable id
+[INFO] adding parent variable name
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controller/v0/Context.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controller/v0/ExportType.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controller/v0/IdObject.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controller/v0/Metadata.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controller/v0/NamedObject.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controller/v0/StepState.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controller/v0/StepStatus.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controller/v0/TestAction.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controller/v0/TestActor.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controller/v0/TestApiParameter.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controller/v0/TestCase.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controller/v0/TestDictionary.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controller/v0/TestObjectDescription.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controller/v0/TestParameterFactory.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controller/v0/TestParameterFactory1.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controller/v0/TestParameterValue.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controller/v0/TestReference.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controller/v0/TestRole.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controller/v0/TestStatus.java
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controller/v0/TestStep.java
+[INFO] Ignored /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controllers/v0/ContextApiController.java (Ignored by rule in ignore file.)
+[INFO] Ignored /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controllers/v0/ContextApi.java (Ignored by rule in ignore file.)
+[INFO] Ignored /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controllers/v0/DictionaryApiController.java (Ignored by rule in ignore file.)
+[INFO] Ignored /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controllers/v0/DictionaryApi.java (Ignored by rule in ignore file.)
+[INFO] Ignored /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controllers/v0/TestcaseApiController.java (Ignored by rule in ignore file.)
+[INFO] Ignored /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controllers/v0/TestcaseApi.java (Ignored by rule in ignore file.)
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/pom.xml
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/README.md
+[INFO] Ignored /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/org/openapitools/OpenApiGeneratorApplication.java (Ignored by rule in ignore file.)
+[INFO] Ignored /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/test/java/org/openapitools/OpenApiGeneratorApplicationTests.java (Ignored by rule in ignore file.)
+[INFO] Ignored /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/org/openapitools/RFC3339DateFormat.java (Ignored by rule in ignore file.)
+[INFO] Ignored /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/org/openapitools/configuration/EnumConverterConfiguration.java (Ignored by rule in ignore file.)
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/resources/application.properties
+[INFO] Ignored /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/org/openapitools/configuration/HomeController.java (Ignored by rule in ignore file.)
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/resources/openapi.yaml
+[INFO] Ignored /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/org/openapitools/configuration/SpringDocConfiguration.java (Ignored by rule in ignore file.)
+[INFO] Ignored /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/javaApi/ch/scaille/tcwriter/generated/api/controllers/v0/ApiUtil.java (Ignored by rule in ignore file.)
+[INFO] Skipped /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/.openapi-generator-ignore (Skipped by supportingFiles options supplied by user.)
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/.openapi-generator/VERSION
+[INFO] writing file /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/.openapi-generator/FILES
+################################################################################
+# Thanks for using OpenAPI Generator.                                          #
+# Please consider donation to help us maintain this project 🙏                 #
+# https://opencollective.com/openapi_generator/donate                          #
+################################################################################
+[INFO] 
+[INFO] --- exec:3.1.1:exec (npm-openapi) @ testcase-writer-webapp-webapi-v0 ---
+✨ openapi-typescript 6.7.3
+🚀 /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/generated-sources/openapi/src/main/resources/openapi.yaml → file:///home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/node-module/WebApis-generated-types.ts [48ms]
+[INFO] 
+[INFO] --- exec:3.1.1:exec (npm-deploy-api) @ testcase-writer-webapp-webapi-v0 ---
+
+> @scaille/testcase-writer-webapi@$version$ publish-local
+> node publish-local.js /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/node-module 0.0.0
+
+stdout: 
+up to date, audited 3 packages in 618ms
+
+found 0 vulnerabilities
+
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ testcase-writer-webapp-webapi-v0 ---
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] Copying 14 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- flatten:1.5.0:flatten (flatten) @ testcase-writer-webapp-webapi-v0 ---
+[INFO] Generating flattened POM of project ch.scaille.tcwriter:testcase-writer-webapp-webapi-v0:jar:0.0.1-SNAPSHOT...
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ testcase-writer-webapp-webapi-v0 ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (webapi) @ testcase-writer-webapp-webapi-v0 ---
+[WARNING]  Parameter 'outputDirectory' is read-only, must not be used in configuration
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ testcase-writer-webapp-webapi-v0 ---
+[INFO] Copying 0 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ testcase-writer-webapp-webapi-v0 ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- surefire:3.2.3:test (default-test) @ testcase-writer-webapp-webapi-v0 ---
+[INFO] 
+[INFO] --- jar:3.3.0:jar (default-jar) @ testcase-writer-webapp-webapi-v0 ---
+[INFO] Building jar: /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/testcase-writer-webapp-webapi-v0-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- install:3.1.1:install (default-install) @ testcase-writer-webapp-webapi-v0 ---
+[INFO] Installing /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/.flattened-pom.xml to /home/scaille/.m2/repository/ch/scaille/tcwriter/testcase-writer-webapp-webapi-v0/0.0.1-SNAPSHOT/testcase-writer-webapp-webapi-v0-0.0.1-SNAPSHOT.pom
+[INFO] Installing /home/scaille/src/github/sky-lib/testcase-writer/webapp/api-v0/target/testcase-writer-webapp-webapi-v0-0.0.1-SNAPSHOT.jar to /home/scaille/.m2/repository/ch/scaille/tcwriter/testcase-writer-webapp-webapi-v0/0.0.1-SNAPSHOT/testcase-writer-webapp-webapi-v0-0.0.1-SNAPSHOT.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  6.925 s
+[INFO] Finished at: 2023-12-22T10:21:25+01:00
+[INFO] ------------------------------------------------------------------------

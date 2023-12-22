@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.server.webapi.controllers;
+package ch.scaille.tcwriter.server.webapi.v0.controllers;
 
 import static ch.scaille.tcwriter.server.webapi.controllers.exceptions.ValidationHelper.validateDictionarySet;
 import static ch.scaille.tcwriter.server.webapi.controllers.exceptions.ValidationHelper.validateTestCaseSet;
@@ -15,17 +15,17 @@ import org.springframework.web.context.request.NativeWebRequest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import ch.scaille.tcwriter.generated.api.controllers.TestcaseApiController;
-import ch.scaille.tcwriter.generated.api.model.ExportType;
-import ch.scaille.tcwriter.generated.api.model.Metadata;
-import ch.scaille.tcwriter.generated.api.model.TestCase;
+import ch.scaille.tcwriter.generated.api.controllers.v0.TestcaseApiController;
+import ch.scaille.tcwriter.generated.api.model.v0.ExportType;
+import ch.scaille.tcwriter.generated.api.model.v0.Metadata;
+import ch.scaille.tcwriter.generated.api.model.v0.TestCase;
 import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
 import ch.scaille.tcwriter.server.dto.Context;
 import ch.scaille.tcwriter.server.facade.TestCaseFacade;
 import ch.scaille.tcwriter.server.web.controller.exceptions.WebRTException;
 import ch.scaille.tcwriter.server.webapi.config.WebsocketConfig;
-import ch.scaille.tcwriter.server.webapi.mappers.MetadataMapper;
-import ch.scaille.tcwriter.server.webapi.mappers.TestCaseMapper;
+import ch.scaille.tcwriter.server.webapi.v0.mappers.MetadataMapper;
+import ch.scaille.tcwriter.server.webapi.v0.mappers.TestCaseMapper;
 import io.swagger.v3.core.util.Json;
 import jakarta.validation.Valid;
 

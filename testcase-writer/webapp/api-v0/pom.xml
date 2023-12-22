@@ -1,12 +1,26 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>ch.scaille.tcwriter</groupId>
 		<artifactId>testcase-writer-webapp</artifactId>
 		<version>${revision}</version>
 	</parent>
-	<artifactId>testcase-writer-webapp-webapi</artifactId>
+	<artifactId>testcase-writer-webapp-webapi-v0</artifactId>
 	<packaging>jar</packaging>
+
+	<properties>
+		<apiVersion>0</apiVersion>
+		<javaApiVersion>v${apiVersion}</javaApiVersion>
+		<nodeApiVersion>${apiVersion}.0.0</nodeApiVersion>
+		<inputSpecFolder>
+			${project.basedir}/../webapi/src/main/resources/webapi</inputSpecFolder>
+		<apiPackage>
+			ch.scaille.tcwriter.generated.api.controllers</apiPackage>
+		<modelPackage>ch.scaille.tcwriter.generated.api.model</modelPackage>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.openapitools</groupId>
@@ -20,7 +34,8 @@
 			<groupId>jakarta.annotation</groupId>
 			<artifactId>jakarta.annotation-api</artifactId>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations -->
+		<!--
+		https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations -->
 		<dependency>
 			<groupId>io.swagger.core.v3</groupId>
 			<artifactId>swagger-annotations</artifactId>
@@ -33,17 +48,24 @@
 				<artifactId>openapi-generator-maven-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>gen-openapi-model</id>
+						<id>gen-openapi-api</id>
 						<phase>generate-resources</phase>
 						<goals>
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<ignoreFileOverride>${project.basedir}/.openapi-generator-ignore</ignoreFileOverride>
-							<generateSupportingFiles>true</generateSupportingFiles>
+							<generateApis>false</generateApis>
+					<inputSpec>
+						${project.basedir}/src/main/resources/webapi/openapi.yaml</inputSpec>
+					<apiPackage>
+						${apiPackageBase}.${javaApiVersion}</apiPackage>
+					<modelPackage>
+						${modelPackageBase}.${javaApiVersion}</modelPackage>
 						</configuration>
 					</execution>
 				</executions>
+				<configuration>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -59,9 +81,11 @@
 							<executable>${npx.cmd}</executable>
 							<arguments>
 								<argument>openapi-typescript</argument>
-								<argument>${project.build.directory}/generated-sources/openapi/src/main/resources/openapi.yaml</argument>
+								<argument>
+									${project.build.directory}/generated-sources/openapi/src/main/resources/openapi.yaml</argument>
 								<argument>--output</argument>
-								<argument>${project.build.directory}/node-module/WebApis-generated-types.ts</argument>
+								<argument>
+									${project.build.directory}/node-module/WebApis-generated-types.ts</argument>
 							</arguments>
 						</configuration>
 					</execution>
@@ -78,6 +102,7 @@
 								<argument>run</argument>
 								<argument>publish-local</argument>
 								<argument>${project.build.directory}/node-module</argument>
+								<argument>${nodeApiVersion}</argument>
 							</arguments>
 						</configuration>
 					</execution>

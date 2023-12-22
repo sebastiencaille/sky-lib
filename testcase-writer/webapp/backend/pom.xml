@@ -50,7 +50,8 @@
 		</dependency>
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
-			<artifactId>testcase-writer-webapp-webapi</artifactId>
+			<artifactId>testcase-writer-webapp-webapi-v0</artifactId>
+			<version>${revision}</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
@@ -95,13 +96,17 @@
 				<artifactId>openapi-generator-maven-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>gen-openapi-stubs</id>
+						<id>gen-openapi-stubs-v0</id>
 						<goals>
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<ignoreFileOverride>
-								${project.basedir}/.openapi-generator-ignore</ignoreFileOverride>
+							<inputSpec>
+								${project.basedir}/../api-v0/src/main/resources/webapi/openapi.yaml</inputSpec>
+							<apiPackage>
+								${apiPackageBase}.v0</apiPackage>
+							<modelPackage>
+								${modelPackageBase}.v0</modelPackage>
 						</configuration>
 					</execution>
 				</executions>

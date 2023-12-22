@@ -13,28 +13,28 @@ import ch.scaille.tcwriter.server.dto.Context;
 import ch.scaille.tcwriter.server.facade.ContextFacade;
 import ch.scaille.tcwriter.server.facade.DictionaryFacade;
 import ch.scaille.tcwriter.server.facade.TestCaseFacade;
-import ch.scaille.tcwriter.server.webapi.controllers.ContextController;
-import ch.scaille.tcwriter.server.webapi.controllers.DictionaryController;
-import ch.scaille.tcwriter.server.webapi.controllers.TestCaseController;
+import ch.scaille.tcwriter.server.webapi.v0.controllers.ContextController;
+import ch.scaille.tcwriter.server.webapi.v0.controllers.DictionaryController;
+import ch.scaille.tcwriter.server.webapi.v0.controllers.TestCaseController;
 
 @Configuration
 public class WebApiControllersConfig {
 
 
 	@Bean
-	ContextController contextController(Context context, ContextFacade contextFacade,
+	ContextController contextControllerV0(Context context, ContextFacade contextFacade,
 			NativeWebRequest nativeWebRequest) {
 		return new ContextController(context, contextFacade, nativeWebRequest);
 	}
 
 	@Bean
-	DictionaryController dictionariesController(Context context, DictionaryFacade dictionaryFacade,
+	DictionaryController dictionariesControllerV0(Context context, DictionaryFacade dictionaryFacade,
 			NativeWebRequest nativeWebRequest) {
 		return new DictionaryController(context, dictionaryFacade, nativeWebRequest);
 	}
 
 	@Bean
-	TestCaseController testCaseController(Context context, SessionRepository<?> sessionRepository,
+	TestCaseController testCaseControllerV0(Context context, SessionRepository<?> sessionRepository,
 			TestCaseFacade testCaseFacade, NativeWebRequest nativeWebRequest,
 			SimpMessageSendingOperations feedbackSendingTemplate) {
 		return new TestCaseController(context, sessionRepository, testCaseFacade, feedbackSendingTemplate,

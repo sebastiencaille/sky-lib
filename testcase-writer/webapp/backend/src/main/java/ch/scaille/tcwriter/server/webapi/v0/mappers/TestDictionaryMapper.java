@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.server.webapi.mappers;
+package ch.scaille.tcwriter.server.webapi.v0.mappers;
 
 import java.util.List;
 import java.util.Map;
@@ -9,14 +9,14 @@ import org.mapstruct.factory.Mappers;
 
 import com.google.common.collect.Multimap;
 
-import ch.scaille.tcwriter.generated.api.model.Metadata;
-import ch.scaille.tcwriter.generated.api.model.TestAction;
-import ch.scaille.tcwriter.generated.api.model.TestActor;
-import ch.scaille.tcwriter.generated.api.model.TestApiParameter;
-import ch.scaille.tcwriter.generated.api.model.TestDictionary;
-import ch.scaille.tcwriter.generated.api.model.TestObjectDescription;
-import ch.scaille.tcwriter.generated.api.model.TestParameterFactory;
-import ch.scaille.tcwriter.generated.api.model.TestRole;
+import ch.scaille.tcwriter.generated.api.model.v0.Metadata;
+import ch.scaille.tcwriter.generated.api.model.v0.TestAction;
+import ch.scaille.tcwriter.generated.api.model.v0.TestActor;
+import ch.scaille.tcwriter.generated.api.model.v0.TestApiParameter;
+import ch.scaille.tcwriter.generated.api.model.v0.TestDictionary;
+import ch.scaille.tcwriter.generated.api.model.v0.TestObjectDescription;
+import ch.scaille.tcwriter.generated.api.model.v0.TestParameterFactory;
+import ch.scaille.tcwriter.generated.api.model.v0.TestRole;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.ERROR, implementationPackage = "<PACKAGE_NAME>.generated")
 public interface TestDictionaryMapper {

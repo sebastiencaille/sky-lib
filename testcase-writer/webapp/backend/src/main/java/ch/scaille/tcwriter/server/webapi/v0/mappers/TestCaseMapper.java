@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.server.webapi.mappers;
+package ch.scaille.tcwriter.server.webapi.v0.mappers;
 
 import java.util.List;
 
@@ -8,10 +8,10 @@ import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 import org.openapitools.jackson.nullable.JsonNullable;
 
-import ch.scaille.tcwriter.generated.api.model.TestCase;
-import ch.scaille.tcwriter.generated.api.model.TestParameterValue;
-import ch.scaille.tcwriter.generated.api.model.TestReference;
-import ch.scaille.tcwriter.generated.api.model.TestStep;
+import ch.scaille.tcwriter.generated.api.model.v0.TestCase;
+import ch.scaille.tcwriter.generated.api.model.v0.TestParameterValue;
+import ch.scaille.tcwriter.generated.api.model.v0.TestReference;
+import ch.scaille.tcwriter.generated.api.model.v0.TestStep;
 import ch.scaille.tcwriter.model.dictionary.StepClassifier;
 import ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue;
 import ch.scaille.tcwriter.model.testcase.ExportableTestReference;

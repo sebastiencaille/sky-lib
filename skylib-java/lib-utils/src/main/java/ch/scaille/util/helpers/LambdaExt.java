@@ -184,7 +184,7 @@ public class LambdaExt {
 				if (ex instanceof RuntimeException) {
 					throw (RuntimeException) ex;
 				} else {
-					throw new RuntimeException(ex);
+					throw new IllegalStateException(ex);
 				}
 			}
 		}

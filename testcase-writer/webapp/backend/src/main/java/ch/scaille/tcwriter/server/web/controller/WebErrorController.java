@@ -17,11 +17,10 @@ import org.springframework.context.MessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
@@ -30,7 +29,7 @@ import ch.scaille.tcwriter.server.exceptions.WebRTException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@Controller
+@RestController
 @RequestMapping("/error")
 public class WebErrorController extends AbstractErrorController {
 
@@ -177,13 +176,11 @@ public class WebErrorController extends AbstractErrorController {
 	}
 
 	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, produces = { MediaType.APPLICATION_JSON_VALUE })
-	@ResponseBody
 	public ExceptionDto handleErrorJson(HttpServletRequest request) {
 		return toDto(request);
 	}
 
 	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST })
-	@ResponseBody
 	public Object handleError(HttpServletRequest request) {
 		return null;
 	}

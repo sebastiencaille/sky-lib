@@ -1,8 +1,10 @@
 package ch.scaille.tcwriter.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Metadata {
 
-	private transient String transientId = "";
+	private String transientId = "";
 
 	private String description = "";
 
@@ -14,6 +16,7 @@ public class Metadata {
 		this.description = description;
 	}
 
+	@JsonIgnore
 	public String getTransientId() {
 		return transientId;
 	}

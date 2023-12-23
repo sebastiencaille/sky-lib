@@ -7,7 +7,7 @@ import ch.scaille.tcwriter.model.testcase.TestCase;
 
 public class ExportReference extends IdObject {
 
-	private transient Consumer<TestCase> restoreAction;
+	private Consumer<TestCase> restoreAction;
 
 	protected ExportReference() {
 		super(null);
@@ -30,4 +30,15 @@ public class ExportReference extends IdObject {
 			restoreAction.accept(testCase);
 		}
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return super.equals(obj);
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
 }

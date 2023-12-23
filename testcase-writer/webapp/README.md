@@ -17,7 +17,7 @@ The class ch.scaille.tcwriter.server.bootstrap.ExampleBootstrap (in webabpptests
 # Versioned apis
 To create a new version of the apis:
  * copy the folder api-v0, i.e. into api-v1
- * in the api-v1 folder, use "sed -i 's/v0/v1/' `find . -type f`"
+ * in the api-v1 folder, use "sed -i 's/v0/v1/' \`find . -type f\`"
  * edit the pom.xml to change the property apiVersion to 1
  * include the artifact testcase-writer-webapp-api-v0-backend in the backend module
  * edit the package.json to use the new api version

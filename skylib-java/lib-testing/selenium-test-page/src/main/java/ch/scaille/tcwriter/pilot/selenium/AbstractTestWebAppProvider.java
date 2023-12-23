@@ -30,7 +30,7 @@ public abstract class AbstractTestWebAppProvider {
 		try {
 			localUrl = new URL("http://localhost:9999");
 		} catch (MalformedURLException e) {
-			throw new RuntimeException(e);
+			throw new IllegalStateException(e);
 		}
 	}
 

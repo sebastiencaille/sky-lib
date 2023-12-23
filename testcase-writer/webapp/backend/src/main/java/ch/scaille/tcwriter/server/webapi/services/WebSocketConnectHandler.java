@@ -11,7 +11,7 @@ import org.springframework.web.socket.messaging.SessionConnectEvent;
 
 import ch.scaille.tcwriter.server.WebConstants;
 
-public class WebSocketConnectHandler<S> implements ApplicationListener<SessionConnectEvent> {
+public class WebSocketConnectHandler implements ApplicationListener<SessionConnectEvent> {
 
 	private static final String SPRING_SESSION_ID_ATTR_NAME = "SPRING.SESSION.ID";
 

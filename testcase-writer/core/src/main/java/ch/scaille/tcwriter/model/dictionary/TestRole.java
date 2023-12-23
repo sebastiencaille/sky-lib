@@ -22,13 +22,25 @@ public class TestRole extends NamedObject {
 		return actions;
 	}
 
+	public TestAction getAction(final String newId) {
+		return actions.stream()
+				.filter(api -> api.getId().equals(newId))
+				.findFirst()
+				.orElseThrow(() -> new IllegalArgumentException("No api with id " + newId));
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return super.equals(obj);
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
 	@Override
 	public String toString() {
 		return getId() + ": " + actions.size() + " apis";
-	}
-
-	public TestAction getAction(final String newId) {
-		return actions.stream().filter(api -> api.getId().equals(newId)).findFirst()
-				.orElseThrow(() -> new IllegalArgumentException("No api with id " + newId));
 	}
 }

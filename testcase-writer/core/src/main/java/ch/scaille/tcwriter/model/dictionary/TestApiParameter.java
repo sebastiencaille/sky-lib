@@ -38,14 +38,26 @@ public class TestApiParameter extends NamedObject {
 		return !TestApiParameter.NO_TYPE.equals(parameterType);
 	}
 
+	@JsonIgnore
+	public TestParameterFactory asSimpleParameter() {
+		return TestParameterFactory.simpleType(getParameterType());
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return super.equals(obj);
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+	
 	@Override
 	public String toString() {
 		return getName() + ": " + parameterType;
 	}
 
-	@JsonIgnore
-	public TestParameterFactory asSimpleParameter() {
-		return TestParameterFactory.simpleType(getParameterType());
-	}
+	
 
 }

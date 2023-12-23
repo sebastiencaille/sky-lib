@@ -28,15 +28,15 @@ public class StepStatusRenderer extends DefaultTableCellRenderer {
 			return jPanel;
 		}
 		final var status = (StepStatus) value;
-		renderer.setSelected(status.breakPoint);
-		renderer.setBackground(switch (status.state) {
+		renderer.setSelected(status.isBreakPoint());
+		renderer.setBackground(switch (status.getState()) {
 			case STARTED -> Color.CYAN;
 			case OK -> Color.GREEN.darker();
 			case FAILED -> Color.RED.darker();
 			default -> table.getBackground();
 		});
-		if (status.message != null) {
-			renderer.setToolTipText(status.message);
+		if (status.getMessage() != null) {
+			renderer.setToolTipText(status.getMessage());
 		}
 		return renderer;
 	}

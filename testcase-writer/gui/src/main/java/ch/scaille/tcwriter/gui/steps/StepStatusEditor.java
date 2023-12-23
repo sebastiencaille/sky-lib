@@ -19,7 +19,7 @@ public class StepStatusEditor extends DefaultCellEditor {
 			final int row, final int column) {
 		final var status = (StepStatus) value;
 		final var component = (JCheckBox) getComponent();
-		component.setSelected(status.breakPoint);
+		component.setSelected(status.isBreakPoint());
 		return component;
 	}
 

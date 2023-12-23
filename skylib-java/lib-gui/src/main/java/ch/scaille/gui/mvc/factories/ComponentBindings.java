@@ -10,6 +10,8 @@ import ch.scaille.javabeans.properties.AbstractProperty;
 
 public final class ComponentBindings {
 
+	private static final String BINDING_TO_WRITE_ONLY_COMPONENT = "Binding to write only component";
+
 	private ComponentBindings() {
 	}
 
@@ -74,7 +76,7 @@ public final class ComponentBindings {
 
 			@Override
 			public String toString() {
-				return "Binding to write only component";
+				return BINDING_TO_WRITE_ONLY_COMPONENT;
 			}
 
 		};
@@ -105,7 +107,7 @@ public final class ComponentBindings {
 
 			@Override
 			public String toString() {
-				return "Binding to write only component";
+				return BINDING_TO_WRITE_ONLY_COMPONENT;
 			}
 
 		};
@@ -136,7 +138,7 @@ public final class ComponentBindings {
 
 			@Override
 			public String toString() {
-				return "Binding to write only component";
+				return BINDING_TO_WRITE_ONLY_COMPONENT;
 			}
 		};
 	}

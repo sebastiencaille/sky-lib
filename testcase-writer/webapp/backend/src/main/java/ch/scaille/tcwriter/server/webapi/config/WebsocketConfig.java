@@ -19,7 +19,7 @@ import ch.scaille.tcwriter.server.webapi.services.WebSocketDisconnectHandler;
 
 @Configuration
 @EnableWebSocketMessageBroker
-public class WebsocketConfig<S extends Session>  extends AbstractSessionWebSocketMessageBrokerConfigurer<S> {
+public class WebsocketConfig  extends AbstractSessionWebSocketMessageBrokerConfigurer<Session> {
     
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -40,13 +40,13 @@ public class WebsocketConfig<S extends Session>  extends AbstractSessionWebSocke
 	}
 	
 	@Bean
-	public WebSocketConnectHandler<S> webSocketConnectHandler(SessionRepository<? extends Session> sessionRepository) {
-		return new WebSocketConnectHandler<>(sessionRepository);
+	public WebSocketConnectHandler webSocketConnectHandler(SessionRepository<? extends Session> sessionRepository) {
+		return new WebSocketConnectHandler(sessionRepository);
 	}
 
 	@Bean
-	public WebSocketDisconnectHandler<S> webSocketDisconnectHandler(SessionRepository<? extends Session> sessionRepository) {
-		return new WebSocketDisconnectHandler<>(sessionRepository);
+	public WebSocketDisconnectHandler webSocketDisconnectHandler(SessionRepository<? extends Session> sessionRepository) {
+		return new WebSocketDisconnectHandler(sessionRepository);
 	}
 
 }

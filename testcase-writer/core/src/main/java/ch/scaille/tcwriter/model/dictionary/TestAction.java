@@ -48,6 +48,16 @@ public class TestAction extends NamedObject {
 	}
 
 	@Override
+	public boolean equals(Object obj) {
+		return super.equals(obj);
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
 	public String toString() {
 		return getName() + ": " + parameters.stream().map(TestApiParameter::getParameterType).collect(joining(","));
 	}

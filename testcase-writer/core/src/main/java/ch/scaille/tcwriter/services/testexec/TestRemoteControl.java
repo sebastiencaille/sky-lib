@@ -32,7 +32,6 @@ public class TestRemoteControl {
 
 	private TestApi api;
 
-
 	public TestRemoteControl(int baseTcpPort, TestExecutionListener testExecutionListener) {
 		this.baseTcpPort = baseTcpPort;
 		this.testExecutionListener = testExecutionListener;
@@ -43,11 +42,11 @@ public class TestRemoteControl {
 	}
 
 	public void addBreakpoint(final TestStep testStep) {
-		stepStatus(testStep.getOrdinal()).breakPoint = true;
+		stepStatus(testStep.getOrdinal()).setBreakPoint(true);
 	}
 
 	public void removeBreakpoint(final TestStep testStep) {
-		stepStatus(testStep.getOrdinal()).breakPoint = false;
+		stepStatus(testStep.getOrdinal()).setBreakPoint(false);
 	}
 
 	public int prepare() {
@@ -81,17 +80,17 @@ public class TestRemoteControl {
 				case STEP_START:
 					final var startStepNumber = api.readStartBody();
 					final var startStatus = stepStatus(startStepNumber);
-					startStatus.state = StepState.STARTED;
+					startStatus.setState(StepState.STARTED);
 					stepChangedListener.accept(startStepNumber, startStepNumber);
-					if (startStatus.breakPoint) {
+					if (startStatus.isBreakPoint()) {
 						testExecutionListener.testPaused(true);
 					}
 					break;
 				case STEP_DONE:
 					final var stopStepNumber = api.readDoneBody();
 					final var stopStepStatus = stepStatus(stopStepNumber);
-					if (stopStepStatus.state == StepState.STARTED) {
-						stopStepStatus.state = StepState.OK;
+					if (stopStepStatus.getState() == StepState.STARTED) {
+						stopStepStatus.setState(StepState.OK);
 					}
 					testExecutionListener.testPaused(false);
 					stepChangedListener.accept(stopStepNumber, stopStepNumber);
@@ -100,8 +99,8 @@ public class TestRemoteControl {
 					final var errorMessage = api.readErrorBody();
 					final var errStepNumber = errorMessage.stepNumber;
 					final var errStepStatus = stepStatus(errStepNumber);
-					errStepStatus.state = StepState.FAILED;
-					errStepStatus.message = errorMessage.message;
+					errStepStatus.setState(StepState.FAILED);
+					errStepStatus.setMessage(errorMessage.message);
 					stepChangedListener.accept(errStepNumber, errStepNumber);
 					break;
 				default:
@@ -112,7 +111,7 @@ public class TestRemoteControl {
 				testExecutionListener.testFinished();
 			});
 
-			stepStates.values().stream().filter(s -> s.breakPoint).forEach(api::setBreakPoint);
+			stepStates.values().stream().filter(s -> s.isBreakPoint()).forEach(api::setBreakPoint);
 			api.write(TestApi.Command.RUN);
 		} catch (IOException e) {
 			testExecutionListener.testRunning(false);

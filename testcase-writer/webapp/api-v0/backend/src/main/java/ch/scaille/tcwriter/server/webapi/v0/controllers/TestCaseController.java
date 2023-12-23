@@ -70,11 +70,10 @@ public class TestCaseController extends TestcaseApiController {
 		final var loadedTC = loadValidTestCase(tc);
 		final var wsSessionId = getRequest()
 				.map(r -> sessionRepository.findById(r.getSessionId()).getAttribute(WebConstants.WEBSOCKET_USER));
-		testCaseFacade.executeTest(loadedTC, s -> {
-			wsSessionId.ifPresent(ws -> feedbackSendingTemplate.convertAndSend(
-					WebConstants.WEBSOCKET_TEST_FEEDBACK_DESTINATION + "-user" + ws,
-					new GenericMessage<>(TestCaseMapper.MAPPER.convert(s))));
-		});
+		testCaseFacade.executeTest(loadedTC,
+				s -> wsSessionId.ifPresent(ws -> feedbackSendingTemplate.convertAndSend(
+						WebConstants.WEBSOCKET_TEST_FEEDBACK_DESTINATION + "-user" + ws,
+						new GenericMessage<>(TestCaseMapper.MAPPER.convert(s)))));
 		return ResponseEntity.ok(null);
 	}
 

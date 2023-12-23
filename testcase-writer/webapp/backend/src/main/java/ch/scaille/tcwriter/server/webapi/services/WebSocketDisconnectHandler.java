@@ -7,7 +7,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import ch.scaille.tcwriter.server.WebConstants;
 
-public class WebSocketDisconnectHandler<S> implements ApplicationListener<SessionDisconnectEvent> {
+public class WebSocketDisconnectHandler implements ApplicationListener<SessionDisconnectEvent> {
 
 	private final SessionRepository<? extends Session> sessionRepository;
 

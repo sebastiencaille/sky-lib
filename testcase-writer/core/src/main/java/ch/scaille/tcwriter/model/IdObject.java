@@ -21,7 +21,7 @@ public class IdObject {
 
 	@Override
 	public boolean equals(final Object obj) {
-		return obj instanceof IdObject otherId && id.equals(otherId.id);
+		return obj != null && obj.getClass().equals(this.getClass()) && id.equals(((IdObject) obj).id);
 	}
 
 	@Override

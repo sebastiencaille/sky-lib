@@ -28,4 +28,14 @@ public class TestReference extends TestParameterFactory {
 		return new TestObjectDescription("[" + getName() + " from step " + getStep().getOrdinal() + "] " + description,
 				description);
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return super.equals(obj);
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
 }

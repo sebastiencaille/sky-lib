@@ -102,8 +102,19 @@ public class TestParameterFactory extends NamedObject {
 
 	public boolean matches(final TestApiParameter param) {
 		return getParameterType().equals(param.getParameterType());
+
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		return super.equals(obj);
+	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+	
 	@Override
 	public String toString() {
 		return String.format("%s, %s, %s mandatory, %s optional ", super.toString(), getParameterType(),

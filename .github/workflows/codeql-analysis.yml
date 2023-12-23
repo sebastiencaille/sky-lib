@@ -1,14 +1,3 @@
-# For most projects, this workflow file will not need changing; you simply need
-# to commit it to your repository.
-#
-# You may wish to alter this file to override the set of languages analyzed,
-# or to provide custom queries or build logic.
-#
-# ******** NOTE ********
-# We have attempted to detect the languages in your repository. Please check
-# the `language` matrix defined below to confirm you have the correct set of
-# supported CodeQL languages.
-#
 name: "CodeQL"
 
 on:
@@ -24,6 +13,7 @@ jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
+
     permissions:
       actions: read
       contents: read
@@ -33,13 +23,12 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: 16
-        
+                
     - name: Checkout repository
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
-    
-    # 'hope that it won't accumulate SNAPSHOT jars
+
     - name: Setup java and maven caching
       uses: actions/setup-java@v3
       with:
@@ -52,10 +41,14 @@ jobs:
       uses: github/codeql-action/init@v2
       with:
         languages: 'java'
-        # If you wish to specify custom queries, you can do so here or in a config file.
-        # By default, queries listed here will override any specified in a config file.
-        # Prefix the list here with "+" to use these queries and those in the config file.
-        # queries: ./path/to/local/query, your-org/your-repo/queries@main
+        
+    - name: Cache SonarCloud packages
+      uses: actions/cache@v3
+      with:
+         path: ~/.sonar/cache
+         key: ${{ runner.os }}-sonar
+         restore-keys: ${{ runner.os }}-sonar
+
     - name: 'bom: build'
       run: mvn --no-transfer-progress  -Pcoverage install
       working-directory: skylib-starter-parent
@@ -66,8 +59,10 @@ jobs:
 
     - name: 'java lib: sonar'
       env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: mvn --no-transfer-progress  -Pcoverage,sonar jacoco:report@report-for-sonar sonar:sonar 
+      run: mvn --no-transfer-progress  -Pcoverage,sonar jacoco:report@report-for-sonar sonar:sonar -Dsonar.projectKey=sebastiencaille_sky-lib ${{ vars.SONAR_CONFIG }}
+
       working-directory: skylib-java
     
     - name: 'testcase writer: build'
@@ -76,8 +71,9 @@ jobs:
 
     - name: 'testcase writer: sonar'
       env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: mvn --no-transfer-progress  -Pcoverage,sonar jacoco:report@report-for-sonar sonar:sonar 
+      run: mvn --no-transfer-progress  -Pcoverage,sonar jacoco:report@report-for-sonar sonar:sonar -Dsonar.projectKey=sebastiencaille_testcase-writer ${{ vars.SONAR_CONFIG }}
       working-directory: testcase-writer
       
 # gtkmm packages are missing

@@ -28,9 +28,6 @@
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 
-		<sonar.projectName>testcase-writer</sonar.projectName>
-		<sonar.organization>sebastiencaille-github</sonar.organization>
-		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 		<sonar.exclusions>**/node_modules/**,**/generated/**</sonar.exclusions>
 	</properties>
 	<build>

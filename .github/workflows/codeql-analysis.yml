@@ -8,7 +8,11 @@ on:
     branches: [ master ]
   schedule:
     - cron: '31 22 * * 6'
-
+    
+env:
+  MVN_INSTALL: mvn --no-transfer-progress  -Pcoverage install
+  MVN_SONAR: mvn --no-transfer-progress  -Pcoverage,sonar jacoco:report@report-for-sonar sonar:sonar ${{ vars.SONAR_CONFIG }}
+  
 jobs:
   analyze:
     name: Analyze
@@ -50,30 +54,29 @@ jobs:
          restore-keys: ${{ runner.os }}-sonar
 
     - name: 'bom: build'
-      run: mvn --no-transfer-progress  -Pcoverage install
+      run: $MVN_INSTALL
       working-directory: skylib-starter-parent
 
     - name: 'java lib: build'
-      run: mvn --no-transfer-progress  -Pcoverage install
+      run: $MVN_INSTALL
       working-directory: skylib-java
 
     - name: 'java lib: sonar'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: mvn --no-transfer-progress  -Pcoverage,sonar jacoco:report@report-for-sonar sonar:sonar -Dsonar.projectKey=sebastiencaille-github_libs ${{ vars.SONAR_CONFIG }}
-
+      run: $MVN_SONAR -Dsonar.projectKey=sebastiencaille-github_libs 
       working-directory: skylib-java
     
     - name: 'testcase writer: build'
-      run: mvn --no-transfer-progress  -Pcoverage -Dit=false install
+      run: $MVN_INSTALL -Pcoverage -Dit=false
       working-directory: testcase-writer
 
     - name: 'testcase writer: sonar'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: mvn --no-transfer-progress  -Pcoverage,sonar jacoco:report@report-for-sonar sonar:sonar -Dsonar.projectKey=sebastiencaille-github_testcase-writer ${{ vars.SONAR_CONFIG }}
+      run: $MVN_SONAR -Dsonar.projectKey=sebastiencaille-github_testcase-writer
       working-directory: testcase-writer
       
 # gtkmm packages are missing

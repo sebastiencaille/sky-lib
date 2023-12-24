@@ -22,7 +22,7 @@
 		<revision>0.0.1-SNAPSHOT</revision>
 
 		<aspectj.version>1.9.21</aspectj.version>
-		<jackson-bom.version>2.16.0</jackson-bom.version>
+		<jackson-bom.version>2.16.1</jackson-bom.version>
 
 		<undertow.version>2.3.10.Final</undertow.version>
 		<mockito.version>5.8.0</mockito.version>
@@ -194,7 +194,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.11.0</version>
+					<version>3.12.1</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-war-plugin</artifactId>

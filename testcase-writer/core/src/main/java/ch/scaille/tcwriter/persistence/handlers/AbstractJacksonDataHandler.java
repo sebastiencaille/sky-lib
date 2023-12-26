@@ -11,10 +11,11 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
 import com.fasterxml.jackson.databind.cfg.MapperBuilder;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.TextNode;
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 
 import ch.scaille.tcwriter.model.ExportReference;
@@ -58,7 +59,7 @@ public abstract class AbstractJacksonDataHandler implements IStorageDataHandler 
 
 	protected final ObjectMapper mapper;
 
-	protected AbstractJacksonDataHandler(YAMLMapper mapper) {
+	protected AbstractJacksonDataHandler(ObjectMapper mapper) {
 		this.mapper = mapper;
 	}
 
@@ -67,6 +68,12 @@ public abstract class AbstractJacksonDataHandler implements IStorageDataHandler 
 		return builder.configure(MapperFeature.AUTO_DETECT_GETTERS, false)
 				.configure(MapperFeature.AUTO_DETECT_IS_GETTERS, false)
 				.configure(MapperFeature.AUTO_DETECT_FIELDS, true).visibility(PropertyAccessor.FIELD, Visibility.ANY)
+				.activateDefaultTyping(BasicPolymorphicTypeValidator.builder()
+						.allowIfBaseType("ch.scaille.tcwriter.")
+						.allowIfBaseType("java.util.")
+						.allowIfBaseType("com.google.common.collect.")
+						.allowIfSubType("ch.scaille.tcwriter.")
+						.build(), DefaultTyping.NON_FINAL)
 				.addModule(new GuavaModule());
 	}
 

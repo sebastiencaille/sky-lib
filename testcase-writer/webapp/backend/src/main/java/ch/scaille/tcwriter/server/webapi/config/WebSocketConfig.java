@@ -14,18 +14,19 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
 import ch.scaille.tcwriter.server.WebConstants;
-import ch.scaille.tcwriter.server.webapi.services.WebSocketConnectHandler;
-import ch.scaille.tcwriter.server.webapi.services.WebSocketDisconnectHandler;
+import ch.scaille.tcwriter.server.webapi.service.WebSocketConnectHandler;
+import ch.scaille.tcwriter.server.webapi.service.WebSocketDisconnectHandler;
 
 @Configuration
 @EnableWebSocketMessageBroker
-public class WebsocketConfig  extends AbstractSessionWebSocketMessageBrokerConfigurer<Session> {
+public class WebSocketConfig  extends AbstractSessionWebSocketMessageBrokerConfigurer<Session> {
     
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
 		config.enableSimpleBroker(WebConstants.WEBSOCKET_TEST_FEEDBACK_DESTINATION);
 		config.setApplicationDestinationPrefixes("/ws");
-		//config.setUserDestinationPrefix("/user");
+		config.setUserDestinationPrefix("/user");
+		config.setPreservePublishOrder(true);
 	}
 
 	@Override

@@ -8,9 +8,6 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.messaging.support.GenericMessage;
-import org.springframework.session.SessionRepository;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -25,6 +22,7 @@ import ch.scaille.tcwriter.server.WebConstants;
 import ch.scaille.tcwriter.server.dto.Context;
 import ch.scaille.tcwriter.server.exceptions.WebRTException;
 import ch.scaille.tcwriter.server.facade.TestCaseFacade;
+import ch.scaille.tcwriter.server.facade.WebFeedbackFacade;
 import ch.scaille.tcwriter.server.webapi.v0.mappers.MetadataMapper;
 import ch.scaille.tcwriter.server.webapi.v0.mappers.TestCaseMapper;
 import jakarta.validation.Valid;
@@ -33,19 +31,16 @@ public class TestCaseController extends TestcaseApiController {
 
 	private final TestCaseFacade testCaseFacade;
 
-	private final SimpMessageSendingOperations feedbackSendingTemplate;
-
 	private final Context context;
 
-	private final SessionRepository<?> sessionRepository;
+	private final WebFeedbackFacade webFeedbackFacade;
 
-	public TestCaseController(Context context, SessionRepository<?> sessionRepository, TestCaseFacade testCaseFacade,
-			SimpMessageSendingOperations feedbackSendingTemplate, NativeWebRequest request) {
+	public TestCaseController(Context context, TestCaseFacade testCaseFacade, WebFeedbackFacade webFeedbackFacade,
+			NativeWebRequest request) {
 		super(request);
 		this.context = context;
-		this.sessionRepository = sessionRepository;
 		this.testCaseFacade = testCaseFacade;
-		this.feedbackSendingTemplate = feedbackSendingTemplate;
+		this.webFeedbackFacade = webFeedbackFacade;
 	}
 
 	@Override
@@ -68,12 +63,9 @@ public class TestCaseController extends TestcaseApiController {
 	@Override
 	public ResponseEntity<Void> executeTestCase(@Valid String tc) {
 		final var loadedTC = loadValidTestCase(tc);
-		final var wsSessionId = getRequest()
-				.map(r -> sessionRepository.findById(r.getSessionId()).getAttribute(WebConstants.WEBSOCKET_USER));
-		testCaseFacade.executeTest(loadedTC,
-				s -> wsSessionId.ifPresent(ws -> feedbackSendingTemplate.convertAndSend(
-						WebConstants.WEBSOCKET_TEST_FEEDBACK_DESTINATION + "-user" + ws,
-						new GenericMessage<>(TestCaseMapper.MAPPER.convert(s)))));
+		final var sessionId = getRequest().map(NativeWebRequest::getSessionId);
+		testCaseFacade.executeTest(loadedTC, s -> webFeedbackFacade.send(sessionId,
+				WebConstants.WEBSOCKET_TEST_FEEDBACK_DESTINATION, TestCaseMapper.MAPPER.convert(s)));
 		return ResponseEntity.ok(null);
 	}
 

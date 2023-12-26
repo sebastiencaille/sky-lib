@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.server.webapi.services;
+package ch.scaille.tcwriter.server.webapi.service;
 
 import java.util.function.BiConsumer;
 
@@ -10,6 +10,7 @@ import org.springframework.session.SessionRepository;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 
 import ch.scaille.tcwriter.server.WebConstants;
+import ch.scaille.util.helpers.Logs;
 
 public class WebSocketConnectHandler implements ApplicationListener<SessionConnectEvent> {
 
@@ -23,8 +24,10 @@ public class WebSocketConnectHandler implements ApplicationListener<SessionConne
 
 	@Override
 	public void onApplicationEvent(SessionConnectEvent event) {
-		handleSession(event.getMessage(), sessionRepository,
-				(session, wsSessionId) -> session.setAttribute(WebConstants.WEBSOCKET_USER, wsSessionId));
+		handleSession(event.getMessage(), sessionRepository, (session, wsSessionId) -> {
+			Logs.of(WebSocketConnectHandler.class).info("Connected: " + wsSessionId);
+			session.setAttribute(WebConstants.SPRING_SESSION_WEBSOCKET_SESSION, wsSessionId);
+		});
 	}
 
 	static <S extends Session> void handleSession(Message<?> message, SessionRepository<S> sessionRepository,

@@ -32,6 +32,20 @@
 	color: darkred
 }
 
+#application_status {
+	width: fit-content;
+}
+
+.connected_true {
+	background-color: #78bc0f;
+	width: calc(100% + 10px);
+}
+
+.connected_false {
+	background-color: darkred;
+}
+
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

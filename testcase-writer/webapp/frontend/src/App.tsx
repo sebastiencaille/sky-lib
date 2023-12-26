@@ -12,7 +12,7 @@ import './App.css'
 
 import MetadataChooser from './widgets/MetadataChooser';
 import TestCaseTable from './widgets/TestCaseTable';
-import ErrorDisplay from './widgets/ErrorDisplay';
+import ApplicationStatusDisplay from './widgets/ApplicationStatusDisplay';
 
 interface IAppProps {
 
@@ -28,7 +28,9 @@ interface IAppState {
 	stepStatuses: Map<number, StepStatus>;
 	displayedExport?: string;
 
+	webSocketConnected: boolean;
 	errors: ErrorState;
+
 }
 
 const initialState: IAppState = {
@@ -42,6 +44,7 @@ const initialState: IAppState = {
 	stepStatuses: new Map<number, StepStatus>(),
 	displayedExport: undefined,
 
+	webSocketConnected: false,
 	errors: ErrorState.empty()
 };
 
@@ -52,8 +55,9 @@ class App extends React.Component<IAppProps, IAppState> {
 		this.state = initialState;
 		this.dictionaryChanged = this.dictionaryChanged.bind(this);
 		this.testCaseChanged = this.testCaseChanged.bind(this);
+		this.webSocketConnected = this.webSocketConnected.bind(this);
 		this.stepStatusChanged = this.stepStatusChanged.bind(this);
-		defaultErrorHandler.errorHandler = ( (error: string) => this.setState(prevState => ({ errors: prevState.errors.add(error) })));
+		defaultErrorHandler.errorHandler = ((error: string) => this.setState(prevState => ({ errors: prevState.errors.add(error) })));
 	}
 
 	componentDidMount(): void {
@@ -107,6 +111,10 @@ class App extends React.Component<IAppProps, IAppState> {
 		this.process(() => WebApis.exportCurrentTestCase(format, (text) => this.setState({ displayedExport: text })));
 	}
 
+	private webSocketConnected = (connected: boolean) => {
+		this.setState({ webSocketConnected: connected });
+	}
+
 	private stepStatusChanged = (stepStatus: StepStatus) => {
 		if (stepStatus) {
 			this.setState(prevState => {
@@ -133,7 +141,7 @@ class App extends React.Component<IAppProps, IAppState> {
 				<button id='exportJava' onClick={() => this.export(ExportType.JAVA)}>Java Code</button>
 				<button id='exportText' onClick={() => this.export(ExportType.HUMAN_READABLE)}>Human Readable</button>
 				<button id='execute' onClick={this.execute}>Execute</button>
-				<ErrorDisplay errors={this.state.errors} />
+				<ApplicationStatusDisplay webSocketConnected={this.state.webSocketConnected} errors={this.state.errors} />
 				<Popup open={this.state.displayedExport !== undefined} onClose={() => this.setState({ displayedExport: undefined })}
 					className="export-popup">
 					<pre>
@@ -147,6 +155,7 @@ class App extends React.Component<IAppProps, IAppState> {
 				/>
 				<WebApiFeedback
 					stepStatusChanged={this.stepStatusChanged}
+					connected={this.webSocketConnected}
 				/>
 			</div>
 		)

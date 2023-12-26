@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.server.web.filters;
+package ch.scaille.tcwriter.server.web.filter;
 
 import static java.time.Duration.ofMillis;
 import static java.time.Duration.ofMinutes;

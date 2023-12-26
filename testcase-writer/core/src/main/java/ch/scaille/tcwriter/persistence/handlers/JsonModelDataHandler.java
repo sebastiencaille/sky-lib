@@ -2,13 +2,13 @@ package ch.scaille.tcwriter.persistence.handlers;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 
 public class JsonModelDataHandler extends AbstractJacksonDataHandler {
 
 	public JsonModelDataHandler() {
-		super(configure(YAMLMapper.builder().activateDefaultTyping(new LaissezFaireSubTypeValidator(),
+		super(configure(JsonMapper.builder().activateDefaultTyping(new LaissezFaireSubTypeValidator(),
 				DefaultTyping.NON_FINAL, As.PROPERTY)).addModule(testCaseWriterModule).build());
 	}
 	

@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.server.web.filters;
+package ch.scaille.tcwriter.server.web.filter;
 
 import java.io.IOException;
 import java.util.Arrays;

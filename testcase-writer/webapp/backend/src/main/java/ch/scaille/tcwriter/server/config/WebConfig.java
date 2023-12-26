@@ -21,7 +21,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import ch.scaille.tcwriter.server.webapi.config.JacksonConfig;
 import ch.scaille.tcwriter.server.webapi.config.WebApiControllersConfig;
-import ch.scaille.tcwriter.server.webapi.config.WebsocketConfig;
+import ch.scaille.tcwriter.server.webapi.config.WebSocketConfig;
 
 @Configuration
 @Import({SpringDocConfiguration.class})
@@ -58,7 +58,7 @@ public class WebConfig implements WebMvcConfigurer {
 	@Bean
 	ServletRegistrationBean<?> webApiServlet() {
 		final var annotationContext = new AnnotationConfigServletWebApplicationContext();
-		annotationContext.register(JacksonConfig.class, WebsocketConfig.class, WebApiControllersConfig.class);
+		annotationContext.register(JacksonConfig.class, WebSocketConfig.class, WebApiControllersConfig.class);
 		annotationContext.setDisplayName("Web Api");
 		final var dispatcher = new DispatcherServlet(annotationContext);
 

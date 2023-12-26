@@ -17,8 +17,8 @@ import org.springframework.web.filter.RequestContextFilter;
 import ch.scaille.tcwriter.server.dto.Context;
 import ch.scaille.tcwriter.server.facade.ClusteredSessionFacade;
 import ch.scaille.tcwriter.server.facade.ContextFacade;
-import ch.scaille.tcwriter.server.web.filters.ClusteredSessionFilter;
-import ch.scaille.tcwriter.server.web.filters.TomcatOverloadDetectorFilter;
+import ch.scaille.tcwriter.server.web.filter.ClusteredSessionFilter;
+import ch.scaille.tcwriter.server.web.filter.TomcatOverloadDetectorFilter;
 
 @Configuration
 @EnableWebSecurity

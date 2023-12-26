@@ -74,7 +74,7 @@ const selectCurrentTestCase = (transientId: string, callback: (context: Context)
 		.then(r => callback(r as Context)));
 
 const executeCurrentTestCase = () => {
-	wrap(call(API_URL + '/testcase/current/execute',
+	wrap(callResult(API_URL + '/testcase/current/execute',
 		{
 			method: 'POST',
 		}));

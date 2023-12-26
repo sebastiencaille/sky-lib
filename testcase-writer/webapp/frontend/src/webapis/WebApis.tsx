@@ -1,5 +1,6 @@
+import { useContext } from 'react';
 import { Metadata, TestDictionary, TestCase, Context, ExportType } from './Types'
-import { defaultErrorHandler } from '../service/Errors';
+import { ApplicationStatusContextUpdater, addError } from '../contexts/ApplicationStatusContext';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -32,7 +33,7 @@ const wrap = (promise: Promise<void | object>): void => {
 		} else {
 			msg = reason.toString();
 		}
-		defaultErrorHandler.errorHandler?.apply(undefined, [msg]);
+		useContext(ApplicationStatusContextUpdater)(addError(msg))
 	});
 };
 

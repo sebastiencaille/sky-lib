@@ -1,17 +1,11 @@
-import React from 'react';
-import { ErrorState } from '../service/Errors';
+import React, { useContext } from 'react';
+import { ApplicationStatusContext } from '../contexts/ApplicationStatusContext';
 
-interface IApplicationStatus {
-	webSocketConnected: boolean;
-	errors: ErrorState;
+export function ApplicationStatusDisplay() {
+	const applicationStatus = useContext(ApplicationStatusContext);
+	return (<div id="application_status">
+		<p className={"connected_" + applicationStatus.webSocketConnected}>WebSocket</p>
+		<p className="error">{applicationStatus.lastError}</p>
+	</div>);
 }
 
-class ApplicationStatusDisplay extends React.Component<IApplicationStatus, object> {
-
-	render() {
-		return (<div id="application_status"><p className={"connected_" + this.props.webSocketConnected}>WebSocket</p>
-			<p className="error">{this.props.errors.lastError}</p></div>);
-	}
-}
-
-export default ApplicationStatusDisplay;

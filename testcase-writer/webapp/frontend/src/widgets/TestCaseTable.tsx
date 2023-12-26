@@ -5,13 +5,15 @@ import { TestDictionary, TestCase, StepStatus } from '../webapis/Types';
 interface ITestCaseProps {
 	dictionary?: TestDictionary;
 	testCase?: TestCase;
+
 	stepStatuses: Map<number, StepStatus>;
 }
 
-class TestCaseTable extends React.Component<ITestCaseProps> {
 
-	createTestCaseSteps = () => {
-		if (!this.props.dictionary || !this.props.testCase) {
+function TestCaseTable(props: Readonly<ITestCaseProps>) {
+
+	const createTestCaseSteps = () => {
+		if (!props.dictionary || !props.testCase) {
 			return;
 		}
 		const rows = [];
@@ -22,8 +24,8 @@ class TestCaseTable extends React.Component<ITestCaseProps> {
 				</tr>
 			</thead>);
 
-		const dict = this.props.dictionary;
-		const tc = this.props.testCase;
+		const dict = props.dictionary;
+		const tc = props.testCase;
 		if (!tc) {
 			return rows;
 		}
@@ -38,13 +40,13 @@ class TestCaseTable extends React.Component<ITestCaseProps> {
 				parameter = step.parametersValue[0];
 			}
 
-			const status = this.props.stepStatuses.get(step.ordinal);
+			const status = props.stepStatuses.get(step.ordinal);
 			const stepClass = (status?.state as string) || "";
 			rows.push(
 				<tbody className='steps' key={"tcStep" + step.ordinal}>
 					<tr>
-					<td rowSpan={2} className={stepClass}>{step.ordinal}</td>
-					<td colSpan={4}>{step.humanReadable ?? '---'}</td>
+						<td rowSpan={2} className={stepClass}>{step.ordinal}</td>
+						<td colSpan={4}>{step.humanReadable ?? '---'}</td>
 					</tr>
 					<tr>
 						<td></td>
@@ -58,13 +60,11 @@ class TestCaseTable extends React.Component<ITestCaseProps> {
 		return rows;
 	}
 
-	render() {
-		return (
-			<table className='steps'>
-				{this.createTestCaseSteps()}
-			</table>
-		);
-	}
+	return (
+		<table className='steps'>
+			{createTestCaseSteps()}
+		</table>
+	);
 }
 
 export default TestCaseTable;

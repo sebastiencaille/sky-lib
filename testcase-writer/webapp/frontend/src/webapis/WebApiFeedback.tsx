@@ -1,48 +1,55 @@
 import React from 'react';
 import { StompSessionProvider, useSubscription } from "react-stomp-hooks";
 import { StepStatus } from '../webapis/Types'
+import { ApplicationStatusAction, ApplicationStatusContextUpdater, updateWebConnection } from '../contexts/ApplicationStatusContext';
 
-interface IWebApiFeedbackProps {
-	connected: (connected: boolean) => void;
-	stepStatusChanged: (status: StepStatus) => void;
-};
-
-interface StepStatusChanged {
-	callback: (status: StepStatus) => void
+interface StepStatusUpdater {
+	stepStatusUpdate: (status: StepStatus) => void
 }
 
-function SubscribeTcFeedback(props: Readonly<StepStatusChanged>) {
-	useSubscription("/user/queue/testexec", (message) => props.callback(JSON.parse(message.body).payload as StepStatus));
+function SubscribingComponent(props: Readonly<StepStatusUpdater>) {
+	useSubscription("/user/queue/testexec", (message) => props.stepStatusUpdate((JSON.parse(message.body).payload) as StepStatus));
 	return (<div></div>)
 }
 
-class WebApiFeedback extends React.Component<IWebApiFeedbackProps> {
 
-	constructor(props: IWebApiFeedbackProps) {
+class WebApiFeedback extends React.Component<Readonly<StepStatusUpdater>> {
+
+	updater: React.Dispatch<ApplicationStatusAction> | undefined = undefined;
+
+	constructor(props: StepStatusUpdater) {
 		super(props);
-		this.connected = this.connected.bind(this);
-		this.disconnected = this.disconnected.bind(this);
+		this.connect = this.connect.bind(this);
+		this.disconnect = this.disconnect.bind(this);
 	}
 
-	private connected(receipt: object) {
-		console.log(receipt);
-		this.props.connected(true);
+	private connect = () => {
+		if (this.updater) {
+			this.updater(updateWebConnection(true));
+		}
 	}
-
-	private disconnected(receipt: object) {
-		console.log(receipt);
-		this.props.connected(false);
+	private disconnect = () => {
+		if (this.updater) {
+			this.updater(updateWebConnection(false));
+		}
 	}
 
 	render() {
 		return (
-			<StompSessionProvider url={"http://localhost:8080/api/websocket"}
-				onConnect={this.connected}
-				onDisconnect={this.disconnected} >
-				<SubscribeTcFeedback callback={this.props.stepStatusChanged} />
-			</StompSessionProvider >
+			<ApplicationStatusContextUpdater.Consumer>
+				{(updateApplicationStatus) => {
+					this.updater = updateApplicationStatus;
+					return (
+						<StompSessionProvider url={"/api/websocket"}
+							onConnect={this.connect}
+							onDisconnect={this.disconnect} >
+							<SubscribingComponent stepStatusUpdate={this.props.stepStatusUpdate} />
+						</StompSessionProvider >
+					)
+				}
+				}
+			</ApplicationStatusContextUpdater.Consumer>
 		);
 	}
 }
-
 export default WebApiFeedback;

@@ -4,15 +4,16 @@ import 'reactjs-popup/dist/index.css';
 
 import WebApis from './webapis/WebApis';
 import WebApiFeedback from './webapis/WebApiFeedback'
-import { Metadata, TestDictionary, TestCase, Context, StepStatus, ExportType } from './webapis/Types'
+import { Metadata, TestDictionary, TestCase, Context, ExportType, StepStatus } from './webapis/Types'
 import Mappers from './mappers/Mappers';
 
-import { ErrorState, defaultErrorHandler } from './service/Errors';
 import './App.css'
 
 import MetadataChooser from './widgets/MetadataChooser';
 import TestCaseTable from './widgets/TestCaseTable';
-import ApplicationStatusDisplay from './widgets/ApplicationStatusDisplay';
+import { ApplicationStatusDisplay } from './widgets/ApplicationStatusDisplay';
+import { ApplicationStatusProvider } from './contexts/ApplicationStatusContext';
+import { StepStatusAction, clearStepStatuses, handleStepStatusAction, stepStatusUpdate } from './service/StepStatusService';
 
 interface IAppProps {
 
@@ -24,13 +25,9 @@ interface IAppState {
 	allTestCases: Metadata[];
 	currentDictionary?: TestDictionary;
 	currentTestCase?: TestCase;
-	executionState: string[];
+	exportedTestCase?: string;
+
 	stepStatuses: Map<number, StepStatus>;
-	displayedExport?: string;
-
-	webSocketConnected: boolean;
-	errors: ErrorState;
-
 }
 
 const initialState: IAppState = {
@@ -40,12 +37,8 @@ const initialState: IAppState = {
 	allTestCases: [],
 	currentDictionary: undefined,
 	currentTestCase: undefined,
-	executionState: [],
-	stepStatuses: new Map<number, StepStatus>(),
-	displayedExport: undefined,
-
-	webSocketConnected: false,
-	errors: ErrorState.empty()
+	exportedTestCase: undefined,
+	stepStatuses: new Map()
 };
 
 class App extends React.Component<IAppProps, IAppState> {
@@ -55,9 +48,7 @@ class App extends React.Component<IAppProps, IAppState> {
 		this.state = initialState;
 		this.dictionaryChanged = this.dictionaryChanged.bind(this);
 		this.testCaseChanged = this.testCaseChanged.bind(this);
-		this.webSocketConnected = this.webSocketConnected.bind(this);
-		this.stepStatusChanged = this.stepStatusChanged.bind(this);
-		defaultErrorHandler.errorHandler = ((error: string) => this.setState(prevState => ({ errors: prevState.errors.add(error) })));
+		this.stepUpdated = this.stepUpdated.bind(this);
 	}
 
 	componentDidMount(): void {
@@ -85,8 +76,8 @@ class App extends React.Component<IAppProps, IAppState> {
 	}
 
 	private process(call: () => void) {
-		this.setState({ errors: ErrorState.empty() });
 		call.apply(this);
+
 	}
 
 	private dictionaryChanged = (metadata?: Metadata) => {
@@ -104,59 +95,67 @@ class App extends React.Component<IAppProps, IAppState> {
 	}
 
 	private execute = () => {
+		this.updateSteps(clearStepStatuses());
 		this.process(() => WebApis.executeCurrentTestCase());
 	}
 
 	private export = (format: ExportType) => {
-		this.process(() => WebApis.exportCurrentTestCase(format, (text) => this.setState({ displayedExport: text })));
+		this.process(() => WebApis.exportCurrentTestCase(format, (text) => this.setState({ exportedTestCase: text })));
 	}
 
-	private webSocketConnected = (connected: boolean) => {
-		this.setState({ webSocketConnected: connected });
+	private exportJava = () => {
+		this.export(ExportType.JAVA);
 	}
 
-	private stepStatusChanged = (stepStatus: StepStatus) => {
-		if (stepStatus) {
-			this.setState(prevState => {
-				const newStatuses = new Map(prevState.stepStatuses)
-				newStatuses.set(stepStatus?.ordinal, stepStatus);
-				return { stepStatuses: newStatuses }
-			});
-		}
+
+	private exportHumanReadable = () => {
+		this.export(ExportType.HUMAN_READABLE)
+	}
+
+
+	private stepUpdated = (step: StepStatus) => {
+		this.updateSteps(stepStatusUpdate(step))
+	}
+
+	private updateSteps = (action: StepStatusAction) => {
+		this.setState((ps) => ({ stepStatuses: handleStepStatusAction(ps.stepStatuses, action) }));
+	}
+
+	private closePopUp = () => {
+		this.setState({ exportedTestCase: undefined });
 	}
 
 	render() {
 		return (
 			<div className="App">
-				<MetadataChooser
-					prefix='dictionary'
-					allChoices={this.state.allDictionaries}
-					currentChoice={this.state.currentDictionary?.metadata}
-					onSelection={this.dictionaryChanged} />
-				<MetadataChooser
-					prefix='testcase'
-					allChoices={this.state.allTestCases}
-					currentChoice={this.state.currentTestCase?.metadata}
-					onSelection={this.testCaseChanged} />
-				<button id='exportJava' onClick={() => this.export(ExportType.JAVA)}>Java Code</button>
-				<button id='exportText' onClick={() => this.export(ExportType.HUMAN_READABLE)}>Human Readable</button>
-				<button id='execute' onClick={this.execute}>Execute</button>
-				<ApplicationStatusDisplay webSocketConnected={this.state.webSocketConnected} errors={this.state.errors} />
-				<Popup open={this.state.displayedExport !== undefined} onClose={() => this.setState({ displayedExport: undefined })}
-					className="export-popup">
-					<pre>
-						<div>{this.state.displayedExport}</div>
-					</pre>
-				</Popup>
-				<TestCaseTable
-					dictionary={this.state.currentDictionary}
-					testCase={this.state.currentTestCase}
-					stepStatuses={this.state.stepStatuses}
-				/>
-				<WebApiFeedback
-					stepStatusChanged={this.stepStatusChanged}
-					connected={this.webSocketConnected}
-				/>
+				<ApplicationStatusProvider>
+					<MetadataChooser
+						prefix='dictionary'
+						allChoices={this.state.allDictionaries}
+						currentChoice={this.state.currentDictionary?.metadata}
+						onSelection={this.dictionaryChanged} />
+					<MetadataChooser
+						prefix='testcase'
+						allChoices={this.state.allTestCases}
+						currentChoice={this.state.currentTestCase?.metadata}
+						onSelection={this.testCaseChanged} />
+					<button id='exportJava' onClick={this.exportJava}>Java Code</button>
+					<button id='exportText' onClick={this.exportHumanReadable}>Human Readable</button>
+					<button id='execute' onClick={this.execute}>Execute</button>
+					<ApplicationStatusDisplay />
+					<Popup open={this.state.exportedTestCase !== undefined} onClose={this.closePopUp}
+						className="export-popup">
+						<pre>
+							<div>{this.state.exportedTestCase}</div>
+						</pre>
+					</Popup>
+					<TestCaseTable
+						dictionary={this.state.currentDictionary}
+						testCase={this.state.currentTestCase}
+						stepStatuses={this.state.stepStatuses}
+					/>
+					<WebApiFeedback stepStatusUpdate={this.stepUpdated} />
+				</ApplicationStatusProvider>
 			</div>
 		)
 	}

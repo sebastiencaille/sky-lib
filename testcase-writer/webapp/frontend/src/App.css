@@ -78,7 +78,8 @@ table, th, td, tbody .steps {
 }
 
 .export-popup-content {
-	width: 80%; 
+	width: 80%;
+	height: 95%;
 	overflow: scroll;
 }
 

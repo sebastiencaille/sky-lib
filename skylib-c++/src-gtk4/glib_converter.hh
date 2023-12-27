@@ -28,9 +28,9 @@ public:
 	~string_to_ustring() override;
 
 	string convert_component_value_to_property_value(
-			const ustring _componentValue) override;
+			const ustring& _componentValue) override;
 	ustring convert_property_value_to_component_value(
-			const string _propertyValue) override;
+			const string& _propertyValue) override;
 
 	static shared_ptr<binding_converter<string, ustring>> of() {
 		return make_shared<string_to_ustring>();

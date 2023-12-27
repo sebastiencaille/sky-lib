@@ -1,4 +1,3 @@
-
 /*
  * GtkTest.cpp
  *
@@ -46,8 +45,8 @@ private:
 		void propertyChanged(source_ptr _source, const string_view &_name,
 				const void *_oldValue, const void *_newValue) const {
 			cout << " TestStringPropertyListener fired: "
-					<< *(const string*) _oldValue << " -> " << *(const string*) _newValue
-					<< endl;
+					<< *(const string*) _oldValue << " -> "
+					<< *(const string*) _newValue << endl;
 		}
 
 	};
@@ -60,7 +59,8 @@ private:
 
 	public:
 		dep_test() = default;
-		~dep_test() override DESTR_WITH_LOG("~dep_test")
+		~dep_test() override
+		DESTR_WITH_LOG("~dep_test")
 
 		void register_dep(weak_ptr<binding_chain_controller> _controller,
 				weak_ptr<binding_chain_dependency> _myself) final {
@@ -105,8 +105,8 @@ private:
 
 	property_manager m_manager;
 
-	shared_ptr<input_error_property> m_errorProperty = make_shared<
-			input_error_property>("Errors", m_manager);
+	shared_ptr<input_error_property> m_errorProperty =
+			make_shared<input_error_property>("Errors", m_manager);
 
 	controller_property<string> testProperty1 = controller_property<string>(
 			"TestProp1", m_manager, "", m_errorProperty);
@@ -119,12 +119,13 @@ private:
 GtkTest::GtkTest() :
 		m_box(Gtk::Orientation::VERTICAL) {
 
+	// *********** Panel ***********
 	set_title("Basic application");
-
 	set_child(m_box);
 	m_box.set_margin(10);
 
-	// Basic text listener
+	// *********** Basic text -> label ***********
+
 	testProperty1.bind(string_to_ustring::of())->bind(
 			entry_binding::of(m_entry))->add_dependency(dep_test::of());
 	m_entry.set_expand();
@@ -141,34 +142,45 @@ GtkTest::GtkTest() :
 	m_label.set_expand();
 	m_box.append(m_label);
 
-	// Text to input numbers
+	// *********** int text -> label ***********
+
 	testProperty2.bind(int_to_string::of())->bind(string_to_ustring::of())->bind(
 			entry_binding::of(m_intEntry));
 	m_intEntry.set_expand();
 	m_intEntry.set_name("IntEntry");
 	m_box.append(m_intEntry);
 
-	testProperty2.bind(int_to_string::of())->bind(string_to_ustring::of())->bind(label_binding::of(m_intLabel));
+	testProperty2.bind(int_to_string::of())->bind(string_to_ustring::of())->bind(
+			label_binding::of(m_intLabel));
 	m_intLabel.set_expand();
 	m_box.append(m_intLabel);
 
-	m_errorProperty->bind(logic_error_to_string::of())->bind(
+	// *********** error ***********
+
+	m_errorProperty->bind(gui_error_to_string::of())->bind(
 			string_to_ustring::of())->bind(label_binding::of(m_error));
 
 	m_error.set_expand();
 	m_box.append(m_error);
 
-	Pango::Attribute redText = Pango::Attribute::create_attr_foreground(0xefef,
+	Pango::Attribute redTextFormatting = Pango::Attribute::create_attr_foreground(0xefef,
 			0x2929, 0x2929);
 	Pango::AttrList atrlist;
-	atrlist.insert(redText);
+	atrlist.insert(redTextFormatting);
 	m_error.set_attributes(atrlist);
+
+	// Run
 
 	testProperty2.set(NULL, 1);
 
+	// Run the test
 	thread testGui(&GtkTest::testGui, this);
 	testGui.detach();
 }
+
+/**
+ * Test gui by changing some values
+ */
 
 void GtkTest::testGui() {
 	gtk_gui_pilot guiPilot(this);
@@ -180,7 +192,10 @@ void GtkTest::testGui() {
 
 }
 
-GtkTest::~GtkTest() DESTR_WITH_LOG("~GtkTest" << endl)
+
+
+GtkTest::~GtkTest()
+DESTR_WITH_LOG("~GtkTest" << endl)
 
 void GtkTest::apply_action(property_group_actions _action,
 		const property *_property) const {
@@ -198,8 +213,7 @@ void GtkTest::apply_action(property_group_actions _action,
 
 using int_model = list_model<int>;
 
-int main(int argc, char *argv[]) {
-
+void testList() {
 	int_model int_list(int_model::sorted([](const int i1, const int i2) {
 		return i1 - i2;
 	}));
@@ -207,6 +221,11 @@ int main(int argc, char *argv[]) {
 	int_list.insert(1);
 	cout << int_list.get_element_at(0) << " " << int_list.get_element_at(1)
 			<< std::endl;
+}
+
+int main(int argc, char *argv[]) {
+
+	testList();
 
 	auto app = Gtk::Application::create("ch.skymarshall.example");
 	return app->make_window_and_run < GtkTest > (argc, argv);

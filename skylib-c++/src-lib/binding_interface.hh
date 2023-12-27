@@ -39,25 +39,25 @@ public:
 template<class _Pt, class _Ct> class binding_converter {
 public:
 	virtual _Pt convert_component_value_to_property_value(
-			const _Ct _componentValue) = 0;
+			const _Ct& _componentValue) = 0;
 	virtual _Ct convert_property_value_to_component_value(
-			const _Pt _propertyValue) = 0;
+			const _Pt& _propertyValue) = 0;
 
 	virtual ~binding_converter() = default;
 
 };
 
-class logic_error_to_string: public binding_converter<gui_exception_ptr, string> {
+class gui_error_to_string: public binding_converter<gui_exception_ptr, string> {
 
 public:
 	gui_exception_ptr convert_component_value_to_property_value(
-			const string _componentValue) final {
+			const string& _componentValue) final {
 		// nonsense
 		return nullptr;
 	}
 
 	string convert_property_value_to_component_value(
-			gui_exception_ptr _propertyValue) final {
+			const gui_exception_ptr& _propertyValue) final {
 		if (_propertyValue == nullptr) {
 			return "";
 		}
@@ -65,7 +65,7 @@ public:
 	}
 
 	static shared_ptr<binding_converter<gui_exception_ptr, string>> of() {
-		return make_shared<logic_error_to_string>();
+		return make_shared<gui_error_to_string>();
 	}
 };
 

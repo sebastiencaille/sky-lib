@@ -17,6 +17,7 @@
 			<artifactId>testcase-writer-webapp-war</artifactId>
 			<type>war</type>
 		</dependency>
+		
 		<dependency>
 			<groupId>ch.scaille</groupId>
 			<artifactId>gui-pilot-selenium</artifactId>

@@ -13,7 +13,7 @@ function SubscribingComponent(props: Readonly<StepStatusUpdater>) {
 }
 
 
-class WebApiFeedback extends React.Component<Readonly<StepStatusUpdater>> {
+class WebApiFeedback extends React.PureComponent<Readonly<StepStatusUpdater>> {
 
 	updater: React.Dispatch<ApplicationStatusAction> | undefined = undefined;
 

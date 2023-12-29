@@ -1,69 +1,53 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Metadata } from '../webapis/Types'
 
 interface IMetadataChooserProps {
 	prefix: string;
-	allChoices: Metadata[];
-	currentChoice ?: Metadata;
+	allMetadata: Metadata[];
+	initialySelectedMetadata?: Metadata;
 	onSelection: (metatadata?: Metadata) => void;
 };
 
-interface IMetadataChooserState {
-	selectionedChoice?: Metadata
-};
+export default function MetadataChooser(props: Readonly<IMetadataChooserProps>) {
 
-const initialState: IMetadataChooserState = {
-	selectionedChoice: undefined
-};
+	const [selectedMetadata, setSelectedMetadata] = useState<Metadata>(undefined);
 
+	useEffect(() => {
 
-class DictionarySelector extends React.Component<IMetadataChooserProps, IMetadataChooserState> {
-
-	constructor(props: IMetadataChooserProps) {
-		super(props);
-		this.state = initialState;
-		this.changeSelection = this.changeSelection.bind(this);
-		this.select = this.select.bind(this);
-	}
-
-	componentDidUpdate(): void {
 		let current: Metadata | undefined = undefined;
-		if (this.props.currentChoice) {
-			current = this.props.currentChoice;
+		if (props.initialySelectedMetadata) {
+			current = props.initialySelectedMetadata;
 		}
-		if (!current && this.props.allChoices[0]) {
-			current = this.props.allChoices[0];
+		if (!current && props.allMetadata[0]) {
+			current = props.allMetadata[0];
 		}
-		if (current && current !== this.state.selectionedChoice) {
-			this.setState({ selectionedChoice: current })
+		if (current && current !== selectedMetadata) {
+			setSelectedMetadata(current);
 		}
+	}, [props.allMetadata, props.initialySelectedMetadata, selectedMetadata]);
+
+	const changeSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		setSelectedMetadata(props.allMetadata.find((m) => (m.transientId === e.target.value)));
 	}
 
-	private changeSelection(e: React.ChangeEvent<HTMLSelectElement>): void {
-		this.setState({ selectionedChoice: this.props.allChoices.find(m => m.transientId === e.target.value) });
+	const select = () => {
+		props.onSelection(selectedMetadata);
 	}
 
-	private select(): void {
-		this.props.onSelection(this.state.selectionedChoice);
-	}
-
-	createItems = () => {
+	const createItems = () => {
 		const options = [];
-		for (const dict of this.props.allChoices) {
-			options.push(<option key={dict.transientId} value={dict.transientId}>{dict.description}</option>);
+		for (const metadata of props.allMetadata) {
+			options.push(<option key={metadata.transientId} value={metadata.transientId}>{metadata.description}</option>);
 		}
 		return options;
 	}
 
-	render() {
-		return (<div>
-			<select id={this.props.prefix + 'Selector'} value={this.state.selectionedChoice?.transientId} onChange={this.changeSelection}>
-				{this.createItems()}
-			</select>
-			<button id={this.props.prefix + 'Select'} onClick={this.select}>Select</button>
-		</div>
-		);
-	}
+	return (<div>
+		<select id={props.prefix + 'Selector'} value={selectedMetadata?.transientId} onChange={changeSelection}>
+			{createItems()}
+		</select>
+		<button id={props.prefix + 'Select'} onClick={select}>Select</button>
+	</div>
+	);
 }
 
-export default DictionarySelector;

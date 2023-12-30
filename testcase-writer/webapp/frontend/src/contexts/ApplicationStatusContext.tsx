@@ -1,4 +1,4 @@
-import React, { ReactNode, createContext, useReducer, Dispatch, useMemo } from 'react';
+import React, { ReactNode, createContext, useReducer, Dispatch, useMemo, useCallback, useContext } from 'react';
 
 export interface ApplicationStatus {
 	webSocketConnected: boolean;
@@ -18,11 +18,19 @@ const initialApplicationStatus: ApplicationStatus = {
 	lastError: undefined
 }
 
-export const ApplicationStatusContext = createContext<ApplicationStatus>(initialApplicationStatus);
+const ApplicationStatusContext = createContext<ApplicationStatus>(initialApplicationStatus);
 
-export const ApplicationStatusContextUpdater = createContext<Dispatch<ApplicationStatusAction>>(() => { });
+const ApplicationStatusContextUpdater = createContext<Dispatch<ApplicationStatusAction>>(() => { });
 
-const applicationStatusReducer = (applicationStatus: ApplicationStatus, action: ApplicationStatusAction): ApplicationStatus => {
+export function useApplicationStatusContext(): ApplicationStatus {
+	return useContext(ApplicationStatusContext);
+}
+
+export function useApplicationStatusContextUpdater(): Dispatch<ApplicationStatusAction> {
+	return useContext(ApplicationStatusContextUpdater);
+}
+
+function applicationStatusReducer(applicationStatus: ApplicationStatus, action: ApplicationStatusAction): ApplicationStatus {
 	const newStatus = { ...applicationStatus };
 	switch (action.type) {
 		case 'webSocketConnected': {
@@ -45,7 +53,7 @@ const applicationStatusReducer = (applicationStatus: ApplicationStatus, action: 
 	}
 }
 
-export const ApplicationStatusProvider = ({ children }: { children: ReactNode[] | ReactNode }): ReactNode => {
+export function ApplicationStatusProvider({ children }: Readonly<{ children: ReactNode[] | ReactNode }>): ReactNode {
 
 	const [applicationStatus, applicationStatusDispatch] = useReducer(
 		applicationStatusReducer,
@@ -53,7 +61,7 @@ export const ApplicationStatusProvider = ({ children }: { children: ReactNode[] 
 	);
 
 	const safeApplicationStatus = useMemo(() => (applicationStatus), [applicationStatus]);
-	const safeApplicationStatusDispatch = useMemo(() => (applicationStatusDispatch), [applicationStatusDispatch]);
+	const safeApplicationStatusDispatch = useCallback(applicationStatusDispatch, [applicationStatusDispatch]);
 
 	return (
 		<ApplicationStatusContext.Provider value={safeApplicationStatus}>

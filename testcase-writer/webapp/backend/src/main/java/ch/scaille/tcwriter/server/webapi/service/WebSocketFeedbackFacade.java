@@ -25,12 +25,12 @@ public class WebSocketFeedbackFacade implements WebFeedbackFacade {
 	}
 
 	@Override
-	public void send(Optional<String> sessionId, String destination, Object dto) {
-		if (sessionId.isEmpty()) {
+	public void send(Optional<String> sessionId, String tabId, String destination, Object dto) {
+		if (sessionId.isEmpty() || tabId == null) {
 			return;
 		}
 		final var wsSessionId = sessionRepository.findById(sessionId.get())
-				.getAttribute(WebConstants.SPRING_SESSION_WEBSOCKET_SESSION);
+				.getAttribute(WebConstants.SPRING_SESSION_WEBSOCKET_SESSION + tabId);
 		if (wsSessionId == null) {
 			return;
 		}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import { Metadata } from '../webapis/Types'
 
 interface IMetadataChooserProps {
@@ -26,21 +26,24 @@ export default function MetadataChooser(props: Readonly<IMetadataChooserProps>) 
 		}
 	}, [props.allMetadata, props.initialySelectedMetadata, selectedMetadata]);
 
-	const changeSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
+	const changeSelection = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
 		setSelectedMetadata(props.allMetadata.find((m) => (m.transientId === e.target.value)));
-	}
+	}, [props.allMetadata]);
 
-	const select = () => {
+	const select = useCallback(() => {
 		props.onSelection(selectedMetadata);
-	}
+	}, [props, selectedMetadata]);
 
-	const createItems = () => {
-		const options = [];
+	const createItems = useCallback(() => {
+		const options: ReactNode[] = [];
+		if (!props.allMetadata) {
+			return options;
+		}
 		for (const metadata of props.allMetadata) {
 			options.push(<option key={metadata.transientId} value={metadata.transientId}>{metadata.description}</option>);
 		}
 		return options;
-	}
+	}, [props.allMetadata]);
 
 	return (<div>
 		<select id={props.prefix + 'Selector'} value={selectedMetadata?.transientId} onChange={changeSelection}>

@@ -14,8 +14,8 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
 import ch.scaille.tcwriter.server.WebConstants;
-import ch.scaille.tcwriter.server.webapi.service.WebSocketConnectHandler;
-import ch.scaille.tcwriter.server.webapi.service.WebSocketDisconnectHandler;
+import ch.scaille.tcwriter.server.webapi.service.WebSocketConnectionHandler.WebSocketConnectedHandler;
+import ch.scaille.tcwriter.server.webapi.service.WebSocketConnectionHandler.WebSocketDisconnectedHandler;
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -23,7 +23,7 @@ public class WebSocketConfig  extends AbstractSessionWebSocketMessageBrokerConfi
     
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
-		config.enableSimpleBroker(WebConstants.WEBSOCKET_TEST_FEEDBACK_DESTINATION);
+		config.enableSimpleBroker(WebConstants.TEST_EXECUTION_FEEDBACK);
 		config.setApplicationDestinationPrefixes("/ws");
 		config.setUserDestinationPrefix("/user");
 		config.setPreservePublishOrder(true);
@@ -41,13 +41,13 @@ public class WebSocketConfig  extends AbstractSessionWebSocketMessageBrokerConfi
 	}
 	
 	@Bean
-	public WebSocketConnectHandler webSocketConnectHandler(SessionRepository<? extends Session> sessionRepository) {
-		return new WebSocketConnectHandler(sessionRepository);
+	WebSocketConnectedHandler<?> webSocketConnectHandler(SessionRepository<? extends Session> sessionRepository) {
+		return new WebSocketConnectedHandler<>(sessionRepository);
 	}
 
 	@Bean
-	public WebSocketDisconnectHandler webSocketDisconnectHandler(SessionRepository<? extends Session> sessionRepository) {
-		return new WebSocketDisconnectHandler(sessionRepository);
+	WebSocketDisconnectedHandler<?> webSocketDisconnectHandler(SessionRepository<? extends Session> sessionRepository) {
+		return new WebSocketDisconnectedHandler<>(sessionRepository);
 	}
 
 }

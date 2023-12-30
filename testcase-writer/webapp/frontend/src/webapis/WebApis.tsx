@@ -1,11 +1,26 @@
-import { useContext } from 'react';
+import React, { useCallback } from 'react';
 import { Metadata, TestDictionary, TestCase, Context, ExportType } from './Types'
-import { ApplicationStatusContextUpdater, addError } from '../contexts/ApplicationStatusContext';
+import { addError, useApplicationStatusContextUpdater } from '../contexts/ApplicationStatusContext';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
+interface WebApiErrorHandler {
+	handle: (msg: string) => void;
+}
 
-const callResult = async (url: string, init?: RequestInit): Promise<Response> => {
+const webApiErrorHandler: WebApiErrorHandler = {
+	handle: (msg: string) => { console.log(msg); }
+};
+
+export function ErrorHandler() {
+
+	const applicationStatusUpdater = useApplicationStatusContextUpdater();
+	webApiErrorHandler.handle = useCallback((msg) => applicationStatusUpdater(addError(msg)), [applicationStatusUpdater]);
+
+	return (<div />);
+}
+
+async function callResult(url: string, init?: RequestInit): Promise<Response> {
 	const r = await fetch(url, init);
 	if (!r.ok) {
 		throw new Error('Unexpected error ' + r.status + ': ' + r.statusText);
@@ -17,15 +32,14 @@ const callResult = async (url: string, init?: RequestInit): Promise<Response> =>
 /**
  * Performs the call, handle the errors and unwrap the received object
  */
-const call = async (url: string, init?: RequestInit): Promise<object> => {
-	const r = await callResult(url, init);
-	return await r.json();
+async function call(url: string, init?: RequestInit): Promise<object> {
+	return await callResult(url, init).then(r => r.json());
 };
 
 /**
  * Performs the call and handle the errors
  */
-const wrap = (promise: Promise<void | object>): void => {
+function wrap(promise: Promise<void | object>): void {
 	promise.catch(reason => {
 		let msg;
 		if (reason instanceof Error) {
@@ -33,30 +47,34 @@ const wrap = (promise: Promise<void | object>): void => {
 		} else {
 			msg = reason.toString();
 		}
-		useContext(ApplicationStatusContextUpdater)(addError(msg))
+		webApiErrorHandler.handle(msg)
 	});
 };
 
-const loadCurrentContext = (callback: (context: Context) => void) =>
+function loadCurrentContext(callback: (context: Context) => void) {
 	wrap(call(API_URL + '/context').then(r => callback(r as Context)));
-
-const listAllDictionaries = (callback: (metadata: Metadata[]) => void) =>
+}
+function listAllDictionaries(callback: (metadata: Metadata[]) => void) {
 	wrap(call(API_URL + '/dictionary')
 		.then(r => callback(r as Metadata[])));
+}
 
-const loadCurrentDictionary = (callback: (dict: TestDictionary) => void) =>
+function loadCurrentDictionary(callback: (dict: TestDictionary) => void) {
 	wrap(call(API_URL + '/dictionary/current')
 		.then(r => callback(r as TestDictionary)));
+}
 
-const listAllTestCases = (callback: (metadata: Metadata[]) => void) =>
+function listAllTestCases(callback: (metadata: Metadata[]) => void) {
 	wrap(call(API_URL + '/testcase')
 		.then(r => callback(r as Metadata[])));
+}
 
-const loadCurrentTestCase = (callback: (dict: TestCase) => void) =>
+function loadCurrentTestCase(callback: (dict: TestCase) => void) {
 	wrap(call(API_URL + '/testcase/current')
 		.then(r => callback(r as TestCase)));
+}
 
-const selectCurrentDictionary = (transientId: string, callback: (context: Context) => void) =>
+function selectCurrentDictionary(transientId: string, callback: (context: Context) => void) {
 	wrap(call(API_URL + '/context',
 		{
 			method: 'PUT',
@@ -64,8 +82,9 @@ const selectCurrentDictionary = (transientId: string, callback: (context: Contex
 			body: JSON.stringify({ dictionary: transientId })
 		})
 		.then(r => callback(r as Context)));
+}
 
-const selectCurrentTestCase = (transientId: string, callback: (context: Context) => void) =>
+function selectCurrentTestCase(transientId: string, callback: (context: Context) => void) {
 	wrap(call(API_URL + '/context',
 		{
 			method: 'PUT',
@@ -73,15 +92,16 @@ const selectCurrentTestCase = (transientId: string, callback: (context: Context)
 			body: JSON.stringify({ testCase: transientId })
 		})
 		.then(r => callback(r as Context)));
+}
 
-const executeCurrentTestCase = () => {
-	wrap(callResult(API_URL + '/testcase/current/execute',
+function executeCurrentTestCase(tabId: string) {
+	wrap(callResult(API_URL + '/testcase/current/execute?tabId=' + tabId,
 		{
 			method: 'POST',
 		}));
 }
 
-const exportCurrentTestCase = (format: ExportType, callback: (content: string) => void) => {
+function exportCurrentTestCase(format: ExportType, callback: (content: string) => void) {
 	wrap(callResult(API_URL + '/testcase/current/export?format=' + format)
 		.then(async r => {
 			if (r.headers.get("Content-Type")?.startsWith("application/json")) {
@@ -94,6 +114,7 @@ const exportCurrentTestCase = (format: ExportType, callback: (content: string) =
 }
 
 const WebApis = {
+	ErrorHandler: ErrorHandler,
 	loadCurrentContext: loadCurrentContext,
 	listAllDictionaries: listAllDictionaries,
 	loadCurrentDictionary: loadCurrentDictionary,

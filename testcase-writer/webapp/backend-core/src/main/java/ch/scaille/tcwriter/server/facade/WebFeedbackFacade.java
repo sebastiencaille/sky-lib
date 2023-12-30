@@ -4,6 +4,6 @@ import java.util.Optional;
 
 public interface WebFeedbackFacade {
 
-	void send(Optional<String> sessionId, String destination, Object dto);
+	void send(Optional<String> sessionId, String tabId, String destination, Object dto);
 
 }

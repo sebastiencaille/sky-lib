@@ -8,6 +8,12 @@ post:
         type: string
       required: true
       description: id of the test case
+    - in: query
+      name: tabId
+      schema:
+        type: string
+      required: false
+      description: tab id of the caller
   responses:
     '200':
       description: test case executed

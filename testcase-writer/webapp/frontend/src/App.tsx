@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 
-import WebApis from './webapis/WebApis';
+import WebApis, { } from './webapis/WebApis';
 import WebApiFeedback from './webapis/WebApiFeedback'
 import { Metadata, TestDictionary, TestCase, ExportType, StepStatus } from './webapis/Types'
 import Mappers from './mappers/Mappers';
@@ -15,10 +15,6 @@ import { ApplicationStatusDisplay } from './widgets/ApplicationStatusDisplay';
 import { ApplicationStatusProvider } from './contexts/ApplicationStatusContext';
 import { StepStatusAction, clearStepStatuses, handleStepStatusAction, stepStatusUpdate } from './service/StepStatusService';
 
-function process(call: () => void) {
-	call();
-}
-
 export default function App() {
 	const [currentContextDictionary, setCurrentContextDictionary] = useState<Metadata>(undefined);
 	const [currentContextTestCase, setCurrentContextTestCase] = useState<Metadata>(undefined);
@@ -30,8 +26,10 @@ export default function App() {
 	const [currentTestCase, setCurrentTestCase] = useState<TestCase | undefined>(undefined);
 
 	const [exportedTestCase, setExportedTestCase] = useState<string | undefined>(undefined);
-	
+
 	const [stepStatuses, setStepStatuses] = useState<Map<number, StepStatus>>(new Map());
+
+	const tabId = useMemo(() => (Date.now().toString()), []);
 
 	// On mount
 	useEffect(() => {
@@ -45,67 +43,66 @@ export default function App() {
 
 	useEffect(() => {
 		if (currentContextDictionary) {
-			process(() => WebApis.loadCurrentDictionary(dict => setCurrentDictionary(Mappers.enhanceDictionary(dict))));
+			WebApis.loadCurrentDictionary(dict => setCurrentDictionary(Mappers.enhanceDictionary(dict)));
 		}
 	}, [currentContextDictionary]);
 
 	useEffect(() => {
 		if (currentDictionary) {
-			process(() => WebApis.listAllTestCases((allMetaData) => setAllTestCases(allMetaData)));
+			WebApis.listAllTestCases((allMetaData) => setAllTestCases(allMetaData));
 		}
 	}, [currentDictionary]);
 
 
 	useEffect(() => {
 		if (currentDictionary && currentContextTestCase) {
-			process(() => WebApis.loadCurrentTestCase(tc => setCurrentTestCase(Mappers.enhanceTestCase(currentDictionary, tc))));
+			WebApis.loadCurrentTestCase(tc => setCurrentTestCase(Mappers.enhanceTestCase(currentDictionary, tc)));
 		}
 	}, [currentDictionary, currentContextTestCase]);
 
-	const dictionaryChanged = (metadata?: Metadata) => {
+	const dictionaryChanged = useCallback((metadata?: Metadata) => {
 		if (!metadata) {
 			return;
 		}
-		process(() => WebApis.selectCurrentDictionary(metadata.transientId, (context) => setCurrentContextDictionary(context.dictionary)));
-	}
+		WebApis.selectCurrentDictionary(metadata.transientId, (context) => setCurrentContextDictionary(context.dictionary));
+	}, []);
 
-	const testCaseChanged = (metadata?: Metadata) => {
+	const testCaseChanged = useCallback((metadata?: Metadata) => {
 		if (!metadata) {
 			return;
 		}
-		process(() => WebApis.selectCurrentTestCase(metadata.transientId, (context) => setCurrentContextTestCase(context.testCase)));
-	}
+		WebApis.selectCurrentTestCase(metadata.transientId, (context) => setCurrentContextTestCase(context.testCase));
+	}, []);
 
-	const executeTC = () => {
-		updateSteps(clearStepStatuses());
-		process(() => WebApis.executeCurrentTestCase());
-	}
-
-	const exportTC = (format: ExportType) => {
-		process(() => WebApis.exportCurrentTestCase(format, (text) => setExportedTestCase(text)));
-	}
-
-	const exportJava = () => {
-		exportTC(ExportType.JAVA);
-	}
-
-
-	const exportHumanReadable = () => {
-		exportTC(ExportType.HUMAN_READABLE);
-	}
-
-
-	const stepUpdated = (step: StepStatus) => {
-		updateSteps(stepStatusUpdate(step))
-	}
-
-	const updateSteps = (action: StepStatusAction) => {
+	const updateSteps = useCallback((action: StepStatusAction) => {
 		setStepStatuses((currentStatuses) => handleStepStatusAction(currentStatuses, action));
-	}
+	}, []);
 
-	const closePopUp = () => {
+	const executeTC = useCallback(() => {
+		updateSteps(clearStepStatuses());
+		WebApis.executeCurrentTestCase(tabId);
+	}, [tabId, updateSteps]);
+
+	const exportTC = useCallback((format: ExportType) => {
+		WebApis.exportCurrentTestCase(format, (text) => setExportedTestCase(text));
+	}, []);
+
+	const exportJava = useCallback(() => {
+		exportTC(ExportType.JAVA);
+	}, [exportTC]);
+
+	const exportHumanReadable = useCallback(() => {
+		exportTC(ExportType.HUMAN_READABLE);
+	}, [exportTC]);
+
+	const stepUpdated = useCallback((step: StepStatus) => {
+		updateSteps(stepStatusUpdate(step))
+	}, [updateSteps]);
+
+
+	const closePopUp = useCallback(() => {
 		setExportedTestCase(undefined);
-	}
+	}, []);
 
 	return (
 		<div className="App">
@@ -124,6 +121,7 @@ export default function App() {
 				<button id='exportText' onClick={exportHumanReadable}>Human Readable</button>
 				<button id='execute' onClick={executeTC}>Execute</button>
 				<ApplicationStatusDisplay />
+				<WebApis.ErrorHandler />
 				<Popup open={exportedTestCase !== undefined} onClose={closePopUp}
 					className="export-popup">
 					<pre>
@@ -135,7 +133,7 @@ export default function App() {
 					testCase={currentTestCase}
 					stepStatuses={stepStatuses}
 				/>
-				<WebApiFeedback stepStatusUpdate={stepUpdated} />
+				<WebApiFeedback tabId={tabId} updateStepStatus={stepUpdated} />
 			</ApplicationStatusProvider>
 		</div>
 	)

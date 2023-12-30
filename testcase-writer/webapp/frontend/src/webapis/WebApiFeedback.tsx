@@ -1,55 +1,40 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { StompSessionProvider, useSubscription } from "react-stomp-hooks";
 import { StepStatus } from '../webapis/Types'
-import { ApplicationStatusAction, ApplicationStatusContextUpdater, updateWebConnection } from '../contexts/ApplicationStatusContext';
+import { updateWebConnection, useApplicationStatusContextUpdater } from '../contexts/ApplicationStatusContext';
 
-interface StepStatusUpdater {
-	stepStatusUpdate: (status: StepStatus) => void
+interface StepStatusUpdaterType {
+	updateStepStatus: (status: StepStatus) => void;
 }
 
-function SubscribingComponent(props: Readonly<StepStatusUpdater>) {
-	useSubscription("/user/queue/testexec", (message) => props.stepStatusUpdate((JSON.parse(message.body).payload) as StepStatus));
+
+interface WebApiFeedbackProps extends StepStatusUpdaterType {
+	tabId: string
+}
+
+function SubscribingComponent(stepStatusUpdater: Readonly<StepStatusUpdaterType>) {
+	useSubscription("/user/queue/testexec", (message) => stepStatusUpdater.updateStepStatus((JSON.parse(message.body).payload) as StepStatus));
 	return (<div></div>)
 }
 
 
-class WebApiFeedback extends React.PureComponent<Readonly<StepStatusUpdater>> {
+function WebApiFeedback(props: Readonly<WebApiFeedbackProps>) {
 
-	updater: React.Dispatch<ApplicationStatusAction> | undefined = undefined;
+	const appStatusUpdate = useApplicationStatusContextUpdater();
 
-	constructor(props: StepStatusUpdater) {
-		super(props);
-		this.connect = this.connect.bind(this);
-		this.disconnect = this.disconnect.bind(this);
-	}
+	const headers = useMemo(() => ({ 'tabId': props.tabId }), [props.tabId]);
 
-	private connect = () => {
-		if (this.updater) {
-			this.updater(updateWebConnection(true));
-		}
-	}
-	private disconnect = () => {
-		if (this.updater) {
-			this.updater(updateWebConnection(false));
-		}
-	}
+	const connect = useCallback(() => appStatusUpdate(updateWebConnection(true)), [appStatusUpdate]);
 
-	render() {
-		return (
-			<ApplicationStatusContextUpdater.Consumer>
-				{(updateApplicationStatus) => {
-					this.updater = updateApplicationStatus;
-					return (
-						<StompSessionProvider url={"/api/websocket"}
-							onConnect={this.connect}
-							onDisconnect={this.disconnect} >
-							<SubscribingComponent stepStatusUpdate={this.props.stepStatusUpdate} />
-						</StompSessionProvider >
-					)
-				}
-				}
-			</ApplicationStatusContextUpdater.Consumer>
-		);
-	}
+	const disconnect = useCallback(() => appStatusUpdate(updateWebConnection(false)), [appStatusUpdate]);
+
+	return (
+		<StompSessionProvider url={"/api/websocket"}
+			connectHeaders={headers}
+			onConnect={connect}
+			onDisconnect={disconnect}>
+			<SubscribingComponent updateStepStatus={props.updateStepStatus} />
+		</StompSessionProvider >
+	);
 }
 export default WebApiFeedback;

@@ -6,7 +6,7 @@ public class WebConstants {
 	
 	private static final String USER_QUEUE = "/queue";
 
-	public static final String WEBSOCKET_TEST_FEEDBACK_DESTINATION = USER_QUEUE + "/testexec";
+	public static final String TEST_EXECUTION_FEEDBACK = USER_QUEUE + "/testexec";
 
 	private WebConstants() {
 		// noop

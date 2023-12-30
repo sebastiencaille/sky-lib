@@ -61,11 +61,11 @@ public class TestCaseController extends TestcaseApiController {
 	}
 
 	@Override
-	public ResponseEntity<Void> executeTestCase(@Valid String tc) {
+	public ResponseEntity<Void> executeTestCase(@Valid String tc, @Valid String tabId) {
 		final var loadedTC = loadValidTestCase(tc);
 		final var sessionId = getRequest().map(NativeWebRequest::getSessionId);
-		testCaseFacade.executeTest(loadedTC, s -> webFeedbackFacade.send(sessionId,
-				WebConstants.WEBSOCKET_TEST_FEEDBACK_DESTINATION, TestCaseMapper.MAPPER.convert(s)));
+		testCaseFacade.executeTest(loadedTC, s -> webFeedbackFacade.send(sessionId, tabId,
+				WebConstants.TEST_EXECUTION_FEEDBACK, TestCaseMapper.MAPPER.convert(s)));
 		return ResponseEntity.ok(null);
 	}
 
@@ -80,7 +80,7 @@ public class TestCaseController extends TestcaseApiController {
 
 	private ResponseEntity<String> exportHumanReadable(ExportableTestCase tc) {
 		try {
-			var headers = new org.springframework.http.HttpHeaders();
+			final var headers = new org.springframework.http.HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			return new ResponseEntity<>(
 					new ObjectMapper().writeValueAsString(testCaseFacade.computeHumanReadableTexts(tc, tc.getSteps())),

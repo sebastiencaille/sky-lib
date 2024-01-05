@@ -276,10 +276,6 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 		return waitOn(Factories.Pollings.satisfies(check).withReportText(report));
 	}
 
-	public boolean ifEnabled(final Polling<C, Boolean> polling) {
-		return waitPollingSuccess(polling, FailureHandlers.reportNotFound(getDescription() + ": not found"));
-	}
-
 	/**
 	 * Waits on the action set by followedByDelay
 	 */
@@ -296,7 +292,7 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	 * @See Factories.action
 	 */
 	public Polling<C, Boolean> action(final Consumer<C> action) {
-		return Pollings.action(action);
+		return Pollings.apply(action);
 	}
 
 	/**

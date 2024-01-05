@@ -1,6 +1,6 @@
 package ch.scaille.tcwriter.pilot.selenium;
 
-import static ch.scaille.tcwriter.pilot.Factories.Pollings.action;
+import static ch.scaille.tcwriter.pilot.Factories.Pollings.apply;
 import static ch.scaille.tcwriter.pilot.Factories.Pollings.assertion;
 import static ch.scaille.tcwriter.pilot.selenium.ElementPilot.click;
 
@@ -12,6 +12,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import ch.scaille.tcwriter.pilot.ActionDelay;
+import ch.scaille.tcwriter.pilot.Factories.Pollings;
 import ch.scaille.tcwriter.pilot.ModalDialogDetector;
 
 public class ExamplePage extends PagePilot {
@@ -38,7 +39,7 @@ public class ExamplePage extends PagePilot {
 	public class WaitEnableTestEnabledDelay extends ActionDelay {
 
 		public WaitEnableTestEnabledDelay() {
-			//noop
+			// noop
 		}
 
 		@Override
@@ -75,7 +76,10 @@ public class ExamplePage extends PagePilot {
 	}
 
 	public void clickOnMissingButton() {
-		Assertions.assertFalse(ifEnabled(() -> this.notExistingElement, action(WebElement::click).withTimeout(Duration.ofMillis(500))), "Result must be false");
+		Assertions.assertFalse(
+				ifSatisfied(() -> this.notExistingElement,
+						Pollings.<WebElement>found().withTimeout(Duration.ofMillis(500))),
+				"Action on button should not be applied");
 	}
 
 	public void expectTestAlertDialog() {

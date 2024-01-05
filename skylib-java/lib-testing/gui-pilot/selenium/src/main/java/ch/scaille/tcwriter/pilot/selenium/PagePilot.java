@@ -10,6 +10,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WrapsElement;
 import org.openqa.selenium.support.PageFactory;
 
+import ch.scaille.tcwriter.pilot.Factories.FailureHandlers;
 import ch.scaille.tcwriter.pilot.Factories.Pollings;
 import ch.scaille.tcwriter.pilot.Polling;
 import ch.scaille.tcwriter.pilot.PollingResult.FailureHandler;
@@ -83,11 +84,11 @@ public class PagePilot {
 	}
 
 	public boolean waitOn(Supplier<WebElement> element, Consumer<WebElement> action) {
-		return element(element).waitOn(Pollings.action(action).withReportText("unnamed action"));
+		return element(element).waitOn(Pollings.apply(action).withReportText("unnamed action"));
 	}
 
-	public boolean ifEnabled(Supplier<WebElement> element, final Polling<WebElement, Boolean> polling) {
-		return element(element).ifEnabled(polling);
+	public boolean ifSatisfied(Supplier<WebElement> element, Polling<WebElement, Boolean> pollingTuning) {
+		return element(element).waitOn(pollingTuning, FailureHandlers.reportNotSatisfied("not satisfied"));
 	}
 
 	public Polling<WebElement, Boolean> textEquals(String expected) {

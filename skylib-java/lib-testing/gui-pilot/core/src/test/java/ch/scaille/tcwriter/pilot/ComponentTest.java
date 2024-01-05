@@ -59,7 +59,7 @@ class ComponentTest {
 	void testDuration() {
 		final var pilot = new GuiPilot();
 		final var testComponent = new TestComponent(pilot);
-		final var waitResult = testComponent.waitOn(testComponent.satisfies(c -> false), FailureHandlers.reportNotFound("failed"));
+		final var waitResult = testComponent.waitOn(testComponent.satisfies(c -> false), FailureHandlers.ignoreNotSatisfied());
 		Assertions.assertFalse(waitResult);
 		Assertions.assertEquals(6, testComponent.delays.size(), testComponent.delays.toString());
 

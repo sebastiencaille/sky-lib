@@ -10,6 +10,7 @@ import org.openqa.selenium.WebElement;
 import ch.scaille.tcwriter.pilot.AbstractComponentPilot;
 import ch.scaille.tcwriter.pilot.Factories.PollingResults;
 import ch.scaille.tcwriter.pilot.Factories.Pollings;
+import ch.scaille.tcwriter.pilot.PilotReport.ReportFunction;
 import ch.scaille.tcwriter.pilot.Polling;
 import ch.scaille.tcwriter.pilot.PollingResult;
 
@@ -84,19 +85,21 @@ public class ElementPilot extends AbstractComponentPilot<ElementPilot, WebElemen
 	}
 
 	public boolean waitOn(Consumer<WebElement> action) {
-		return waitOn(Pollings.action(action));
+		return waitOn(Pollings.apply(action));
 	}
 
+	public boolean waitOn(Consumer<WebElement> action, ReportFunction<WebElement> report) {
+		return waitOn(Pollings.apply(action).withReportFunction(report));
+	}
+	
 	public static Polling<WebElement, Boolean> isEnabled() {
 		return Pollings.satisfies(WebElement::isEnabled).withReportText("is enabled");
 	}
 
 	public static Polling<WebElement, Boolean> click() {
-		return Pollings.action(WebElement::click).withReportText("clicked");
+		return Pollings.apply(WebElement::click).withReportText("clicked");
 	}
 
-	public boolean run(Consumer<WebElement> action, String name) {
-		return waitOn(Pollings.action(action).withReportText(name));
-	}
+
 
 }

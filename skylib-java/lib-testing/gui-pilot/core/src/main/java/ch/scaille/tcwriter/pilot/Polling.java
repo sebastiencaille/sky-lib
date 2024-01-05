@@ -8,6 +8,11 @@ import ch.scaille.tcwriter.pilot.PilotReport.ReportFunction;
 import ch.scaille.util.helpers.OverridableParameter;
 import ch.scaille.util.helpers.Poller;
 
+/**
+ * A polling of a component
+ * @param <C> type of component
+ * @param <V> type of returned value
+ */
 public class Polling<C, V> {
 
 	public interface PollingFunction<C, V> {

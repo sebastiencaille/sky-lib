@@ -11,15 +11,16 @@ public interface Factories {
 
 	interface Pollings {
 
-		/*************************** Pollings ***************************/
-
 		/**
-		 * Make polling successful if condition is accepted
-		 *
-		 * @param <C>
-		 * @param <V>
-		 * @param reason
-		 * @return
+		 * Succeed if the component was found
+		 */
+		static <C> Polling<C, Boolean> found() {
+			return new Polling<>(null, c -> PollingResults.success());
+		}
+
+		
+		/**
+		 * Succeed if the Predicate is accepted
 		 */
 		static <C> Polling<C, Boolean> satisfies(final Predicate<C> predicate) {
 			return new Polling<>(null, c -> {
@@ -31,12 +32,7 @@ public interface Factories {
 		}
 
 		/**
-		 * Make polling successful if assert is successful
-		 *
-		 * @param <C>
-		 * @param <V>
-		 * @param reason
-		 * @return
+		 * Succeed if the assertion has not failed (no AssertionError raised)
 		 */
 		static <C> Polling<C, Boolean> assertion(final Consumer<PollingContext<C>> assertion) {
 			return new Polling<>(null, c -> {
@@ -50,25 +46,25 @@ public interface Factories {
 		}
 
 		/**
-		 * Make polling successful after action is applied
-		 *
-		 * @param <C>
-		 * @param action
-		 * @return
+		 * Succeed if action was applied (no exception raised)
 		 */
-		static <C> Polling<C, Boolean> action(final Consumer<C> action) {
-			return new ActionPolling<>(null, c -> {
+		static <C> Polling<C, Boolean> apply(final Consumer<C> action) {
+			return new EditableComponentPolling<>(null, c -> {
 				action.accept(c.component);
 				return PollingResults.success();
 			});
 		}
-
-		static <C> Polling<C, Boolean> success(final Consumer<C> action) {
+		
+		/**
+		 * Succeed if action was applied, even if the component is not editable (no exception raised)
+		 */
+		static <C> Polling<C, Boolean> applyBlindly(final Consumer<C> action) {
 			return new Polling<>(null, c -> {
 				action.accept(c.component);
 				return PollingResults.success();
 			});
 		}
+
 	}
 
 	/*************************** Polling Results ***************************/
@@ -167,11 +163,24 @@ public interface Factories {
 		 */
 		static <C, V> FailureHandler<C, V> reportFailure(final String report) {
 			return (r, g) -> {
-				g.getActionReport().report(report);
+				g.getActionReport().report(r.getComponentDescription() + ": " + report);
 				return r.polledValue;
 			};
 		}
 
+		/**
+		 * Only reports error and return FALSE
+		 *
+		 * @param actionDescr
+		 * @return
+		 */
+		static <C> FailureHandler<C, Boolean> reportNotSatisfied(final String report) {
+			return (r, g) -> {
+				g.getActionReport().report(r.getComponentDescription() + ": " + report);
+				return Boolean.FALSE;
+			};
+		}
+		
 		/**
 		 * Do nothing on error and return a null value
 		 *
@@ -182,18 +191,6 @@ public interface Factories {
 			return (r, g) -> r.polledValue;
 		}
 
-		/**
-		 * Only reports error and return FALSE
-		 *
-		 * @param actionDescr
-		 * @return
-		 */
-		static <C> FailureHandler<C, Boolean> reportNotFound(final String report) {
-			return (r, g) -> {
-				g.getActionReport().report(report);
-				return Boolean.FALSE;
-			};
-		}
 
 		/**
 		 * Do nothing on error and return FALSE
@@ -201,7 +198,7 @@ public interface Factories {
 		 * @param actionDescr
 		 * @return
 		 */
-		static <C> FailureHandler<C, Boolean> ignoreNotFound() {
+		static <C> FailureHandler<C, Boolean> ignoreNotSatisfied() {
 			return (r, g) -> Boolean.FALSE;
 		}
 	}

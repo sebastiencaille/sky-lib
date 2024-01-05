@@ -17,7 +17,7 @@ import ch.scaille.tcwriter.it.api.StepEdition;
 import ch.scaille.tcwriter.it.api.StepSelector;
 import ch.scaille.tcwriter.it.api.TestSessionRole;
 import ch.scaille.tcwriter.it.api.TestWriterRole;
-import ch.scaille.tcwriter.pilot.ActionPolling;
+import ch.scaille.tcwriter.pilot.EditableComponentPolling;
 import ch.scaille.tcwriter.pilot.Factories.PollingResults;
 import ch.scaille.tcwriter.pilot.Factories.Reporting;
 
@@ -100,7 +100,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 
 	@Override
 	public void updateParameter(final ParameterSelector selector, final ParameterValue value) {
-		selector.apply(tcWriterPage).waitOn(new ActionPolling<JTable, Boolean>(pc -> {
+		selector.apply(tcWriterPage).waitOn(new EditableComponentPolling<JTable, Boolean>(pc -> {
 			updateValue(pc.component, value.getKeyValue1());
 			updateValue(pc.component, value.getKeyValue2());
 			updateValue(pc.component, value.getKeyValue3());

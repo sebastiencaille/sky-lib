@@ -84,7 +84,7 @@ public class PagePilot {
 	}
 
 	public boolean waitOn(Supplier<WebElement> element, Consumer<WebElement> action) {
-		return element(element).waitOn(Pollings.apply(action).withReportText("unnamed action"));
+		return element(element).waitOn(Pollings.applyOnEditable(action).withReportText("unnamed action"));
 	}
 
 	public boolean ifSatisfied(Supplier<WebElement> element, Polling<WebElement, Boolean> pollingTuning) {
@@ -93,7 +93,7 @@ public class PagePilot {
 
 	public Polling<WebElement, Boolean> textEquals(String expected) {
 		return Pollings
-				.<WebElement>assertion(pc -> Assertions.assertEquals(expected, pc.component.getText(), pc.description))
+				.<WebElement>asserts(pc -> Assertions.assertEquals(expected, pc.component.getText(), pc.description))
 				.withReportText("text " + expected);
 	}
 }

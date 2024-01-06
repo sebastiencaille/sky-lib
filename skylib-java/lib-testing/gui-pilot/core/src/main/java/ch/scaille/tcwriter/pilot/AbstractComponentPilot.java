@@ -292,14 +292,14 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	 * @See Factories.action
 	 */
 	public Polling<C, Boolean> action(final Consumer<C> action) {
-		return Pollings.apply(action);
+		return Pollings.applyOnEditable(action);
 	}
 
 	/**
 	 * @See Factories.assertion
 	 */
 	public Polling<C, Boolean> assertion(final Consumer<PollingContext<C>> assertion) {
-		return Pollings.assertion(assertion);
+		return Pollings.asserts(assertion);
 	}
 
 	/**

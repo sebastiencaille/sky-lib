@@ -14,7 +14,7 @@ public interface Factories {
 		/**
 		 * Succeed if the component was found
 		 */
-		static <C> Polling<C, Boolean> found() {
+		static <C> Polling<C, Boolean> exists() {
 			return new Polling<>(null, c -> PollingResults.success());
 		}
 
@@ -34,7 +34,7 @@ public interface Factories {
 		/**
 		 * Succeed if the assertion has not failed (no AssertionError raised)
 		 */
-		static <C> Polling<C, Boolean> assertion(final Consumer<PollingContext<C>> assertion) {
+		static <C> Polling<C, Boolean> asserts(final Consumer<PollingContext<C>> assertion) {
 			return new Polling<>(null, c -> {
 				try {
 					assertion.accept(c);
@@ -48,7 +48,7 @@ public interface Factories {
 		/**
 		 * Succeed if action was applied (no exception raised)
 		 */
-		static <C> Polling<C, Boolean> apply(final Consumer<C> action) {
+		static <C> Polling<C, Boolean> applyOnEditable(final Consumer<C> action) {
 			return new EditableComponentPolling<>(null, c -> {
 				action.accept(c.component);
 				return PollingResults.success();
@@ -58,7 +58,7 @@ public interface Factories {
 		/**
 		 * Succeed if action was applied, even if the component is not editable (no exception raised)
 		 */
-		static <C> Polling<C, Boolean> applyBlindly(final Consumer<C> action) {
+		static <C> Polling<C, Boolean> applyOnExisting(final Consumer<C> action) {
 			return new Polling<>(null, c -> {
 				action.accept(c.component);
 				return PollingResults.success();

@@ -85,11 +85,11 @@ public class ElementPilot extends AbstractComponentPilot<ElementPilot, WebElemen
 	}
 
 	public boolean waitOn(Consumer<WebElement> action) {
-		return waitOn(Pollings.apply(action));
+		return waitOn(Pollings.applyOnEditable(action));
 	}
 
 	public boolean waitOn(Consumer<WebElement> action, ReportFunction<WebElement> report) {
-		return waitOn(Pollings.apply(action).withReportFunction(report));
+		return waitOn(Pollings.applyOnEditable(action).withReportFunction(report));
 	}
 	
 	public static Polling<WebElement, Boolean> isEnabled() {
@@ -97,7 +97,7 @@ public class ElementPilot extends AbstractComponentPilot<ElementPilot, WebElemen
 	}
 
 	public static Polling<WebElement, Boolean> click() {
-		return Pollings.apply(WebElement::click).withReportText("clicked");
+		return Pollings.applyOnEditable(WebElement::click).withReportText("clicked");
 	}
 
 

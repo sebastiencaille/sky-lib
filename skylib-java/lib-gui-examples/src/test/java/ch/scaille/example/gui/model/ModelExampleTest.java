@@ -34,7 +34,7 @@ class ModelExampleTest {
 
 		var page = pilot.page(ModelExamplePage::new);
 
-		page.listTable.waitOn(Pollings.assertion(pc -> {
+		page.listTable.waitOn(Pollings.asserts(pc -> {
 			final var component = pc.component;
 			Assertions.assertEquals(FIXED_COLUMN_WIDTH, component.getColumn(TestObjectTableModel.Columns.A_SECOND_VALUE).getWidth());
 			Assertions.assertEquals(component.getWidth() - FIXED_COLUMN_WIDTH, component.getColumn(TestObjectTableModel.Columns.A_FIRST_VALUE).getWidth());

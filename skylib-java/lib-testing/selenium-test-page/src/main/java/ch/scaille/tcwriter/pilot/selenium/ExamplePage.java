@@ -1,7 +1,7 @@
 package ch.scaille.tcwriter.pilot.selenium;
 
-import static ch.scaille.tcwriter.pilot.Factories.Pollings.apply;
-import static ch.scaille.tcwriter.pilot.Factories.Pollings.assertion;
+import static ch.scaille.tcwriter.pilot.Factories.Pollings.applyOnEditable;
+import static ch.scaille.tcwriter.pilot.Factories.Pollings.asserts;
 import static ch.scaille.tcwriter.pilot.selenium.ElementPilot.click;
 
 import java.time.Duration;
@@ -65,7 +65,7 @@ public class ExamplePage extends PagePilot {
 	}
 
 	public void testEnabled() {
-		waitOn(() -> this.enableTest, assertion(c -> Assertions.assertTrue(c.component.isEnabled())));
+		waitOn(() -> this.enableTest, asserts(c -> Assertions.assertTrue(c.component.isEnabled())));
 	}
 
 	public void testAlert() {
@@ -78,7 +78,7 @@ public class ExamplePage extends PagePilot {
 	public void clickOnMissingButton() {
 		Assertions.assertFalse(
 				ifSatisfied(() -> this.notExistingElement,
-						Pollings.<WebElement>found().withTimeout(Duration.ofMillis(500))),
+						Pollings.<WebElement>exists().withTimeout(Duration.ofMillis(500))),
 				"Action on button should not be applied");
 	}
 

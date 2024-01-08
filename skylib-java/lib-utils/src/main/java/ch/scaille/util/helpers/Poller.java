@@ -11,7 +11,7 @@ public class Poller {
 		// inherited
 	}
 
-	public final TimeTracker timeTracker;
+	protected final TimeTracker timeTracker;
 
 	protected final Duration firstDelay;
 
@@ -24,27 +24,30 @@ public class Poller {
 	 */
 	private long lastPolling;
 
+	/**
+	 * Creates a poller
+	 * 
+	 * @param timeout       the poller timeout
+	 * @param firstDelay    the delay before the first polling
+	 * @param delayFunction the delay between two polls
+	 */
 	public Poller(Duration timeout, Duration firstDelay, DelayFunction delayFunction) {
 		this.timeTracker = new TimeTracker(timeout);
 		this.firstDelay = firstDelay;
 		this.delayFunction = delayFunction;
 	}
 
-	public void sleep() {
-		sleep(delayFunction.apply(this));
-	}
-
 	public void sleep(Duration pollingDelay) {
-		final var endOfPolling = lastPolling + pollingDelay.toMillis();
+		final var endOfSleep = lastPolling + pollingDelay.toMillis();
 		try {
-			while (System.currentTimeMillis() < endOfPolling) {
-				// Correct time
-				final var waitTime = endOfPolling - System.currentTimeMillis();
+			while (System.currentTimeMillis() < endOfSleep) {
+				// Correct time to take the polling's execution 
+				final var waitTime = endOfSleep - System.currentTimeMillis();
 				if (waitTime > 0) {
 					Thread.sleep(waitTime);
 				}
 			}
-			lastPolling = endOfPolling;
+			lastPolling = endOfSleep;
 		} catch (final InterruptedException e) {
 			Thread.currentThread().interrupt();
 			throw new IllegalStateException("Test interrupted");
@@ -54,16 +57,18 @@ public class Poller {
 	public <T> Optional<T> run(Function<Poller, Optional<T>> polling, Predicate<T> isSuccess) {
 		beforeRun();
 		sleep(firstDelay);
-		Optional<T> result;
+		Optional<T> lastResult;
 		do {
 			executionCount++;
-			result = polling.apply(this);
-			if (result.filter(isSuccess).isPresent()) {
-				return result;
+			lastResult = polling.apply(this);
+			if (lastResult.filter(isSuccess).isPresent()) {
+				return lastResult;
 			}
-			sleep(delayFunction.apply(this));
+			if (!hasTimedOut()) {
+				sleep(delayFunction.apply(this));
+			}
 		} while (!hasTimedOut());
-		return result;
+		return lastResult;
 	}
 
 	protected void beforeRun() {

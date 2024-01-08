@@ -1,6 +1,5 @@
 package ch.scaille.tcwriter.pilot.selenium;
 
-import static ch.scaille.tcwriter.pilot.Factories.Pollings.applyOnEditable;
 import static ch.scaille.tcwriter.pilot.Factories.Pollings.asserts;
 import static ch.scaille.tcwriter.pilot.selenium.ElementPilot.click;
 
@@ -77,9 +76,9 @@ public class ExamplePage extends PagePilot {
 
 	public void clickOnMissingButton() {
 		Assertions.assertFalse(
-				ifSatisfied(() -> this.notExistingElement,
+				isSatisfied(() -> this.notExistingElement,
 						Pollings.<WebElement>exists().withTimeout(Duration.ofMillis(500))),
-				"Action on button should not be applied");
+				"isSatisfied should have returned false");
 	}
 
 	public void expectTestAlertDialog() {

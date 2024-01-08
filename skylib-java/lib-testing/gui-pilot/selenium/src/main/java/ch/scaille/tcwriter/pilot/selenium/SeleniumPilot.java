@@ -7,6 +7,7 @@ import org.openqa.selenium.WebDriver;
 
 import ch.scaille.tcwriter.pilot.ModalDialogDetector;
 import ch.scaille.tcwriter.pilot.ModalDialogDetector.PollingResult;
+import ch.scaille.util.helpers.NoExceptionCloseable;
 
 public class SeleniumPilot extends ch.scaille.tcwriter.pilot.GuiPilot {
 
@@ -29,7 +30,8 @@ public class SeleniumPilot extends ch.scaille.tcwriter.pilot.GuiPilot {
 	}
 
 	/**
-	 * Creates a page (method/constructor that takes a SeleniumPilot as parameter) 
+	 * Creates a page (method/constructor that takes a SeleniumPilot as parameter)
+	 * 
 	 * @param <C>
 	 * @param factory
 	 * @return
@@ -39,15 +41,21 @@ public class SeleniumPilot extends ch.scaille.tcwriter.pilot.GuiPilot {
 	}
 
 	@Override
-	protected ModalDialogDetector createDefaultModalDialogDetector() {
+	protected ModalDialogDetector.Builder createDefaultModalDialogDetector() {
 		final var testThread = Thread.currentThread();
-		return new ModalDialogDetector(() -> AlertDetector.listAlerts(this, null), e -> testThread.interrupt());
+		return new ModalDialogDetector.Builder(() -> AlertDetector.listAlerts(this, null), e -> testThread.interrupt());
 	}
 
-	public ModalDialogDetector expectModalDialog(final Function<AlertPilot, PollingResult> check) {
+	/**
+	 * This api can be used using try.. finally
+	 * @param check
+	 * @return
+	 */
+	public NoExceptionCloseable expectModalDialog(final Function<AlertPilot, PollingResult> check) {
 		final var testThread = Thread.currentThread();
-		return expectModalDialog(new ModalDialogDetector(() -> AlertDetector.listAlerts(this, check),
+		return expectModalDialog(new ModalDialogDetector.Builder(() -> AlertDetector.listAlerts(this, check),
 				e -> testThread.interrupt()));
 	}
+
 
 }

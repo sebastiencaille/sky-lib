@@ -15,15 +15,15 @@ import ch.scaille.tcwriter.pilot.ModalDialogDetector.PollingResult;
 
 public class SwingModalDialogDetector extends SwingPilot {
 
-	public static ModalDialogDetector withHandler(
+	public static ModalDialogDetector.Builder withHandler(
 			final Function<SwingModalDialogDetector, PollingResult>... pollingHandlers) {
 		final var testThread = Thread.currentThread();
-		return new ModalDialogDetector(() -> listDialogs(pollingHandlers), e -> testThread.interrupt());
+		return new ModalDialogDetector.Builder(() -> listDialogs(pollingHandlers), e -> testThread.interrupt());
 	}
 
-	public static ModalDialogDetector defaultDetector() {
+	public static ModalDialogDetector.Builder defaultDetector() {
 		final var testThread = Thread.currentThread();
-		return new ModalDialogDetector(() -> listDialogs(SwingModalDialogDetector::defaultCheck),
+		return new ModalDialogDetector.Builder(() -> listDialogs(SwingModalDialogDetector::defaultCheck),
 				e -> testThread.interrupt());
 	}
 
@@ -87,7 +87,7 @@ public class SwingModalDialogDetector extends SwingPilot {
 	 * @return
 	 */
 	public PollingResult failure(final String error) {
-		return ModalDialogDetector.error(error, this::closeDialog);
+		return ModalDialogDetector.unhandled(error, this::closeDialog);
 	}
 
 }

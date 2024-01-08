@@ -96,13 +96,14 @@ public class Polling<C, V> {
 		this.delayFunction.set(delay);
 		return this;
 	}
+	
+	public void withExtraDelay(ActionDelay currentDelay) {
+		this.currentDelay = currentDelay;
+	}
 
 	/**
 	 * Sets a report generation function. Setting a function will make that the
 	 * polling is logged in the report
-	 * 
-	 * @param name
-	 * @return
 	 */
 	public Polling<C, V> withReportFunction(ReportFunction<C> reportFunction) {
 		this.reportFunction.set(reportFunction);
@@ -110,19 +111,12 @@ public class Polling<C, V> {
 	}
 
 	/**
-	 * Sets the report text. Setting a text will make that the polling is logged in
+	 * Sets the text reported in the logger. Setting a text will make that the polling is logged in
 	 * the report
-	 * 
-	 * @param name
-	 * @return
 	 */
 	public Polling<C, V> withReportText(final String reportText) {
 		this.reportText = reportText;
 		return this;
-	}
-
-	public void withExtraDelay(ActionDelay currentDelay) {
-		this.currentDelay = currentDelay;
 	}
 
 	public Duration getTimeout() {

@@ -29,12 +29,12 @@ public class SwingPilot extends ch.scaille.tcwriter.pilot.GuiPilot {
 	}
 
 	@Override
-	protected ModalDialogDetector createDefaultModalDialogDetector() {
+	protected ModalDialogDetector.Builder createDefaultModalDialogDetector() {
 		return SwingModalDialogDetector.defaultDetector();
 	}
 
-	public ModalDialogDetector expectModalDialog(final Function<SwingModalDialogDetector, PollingResult> check) {
-		return expectModalDialog(SwingModalDialogDetector.withHandler(check));
+	public void expectModalDialog(final Function<SwingModalDialogDetector, PollingResult> check) {
+		expectModalDialog(SwingModalDialogDetector.withHandler(check));
 	}
 
 	/**

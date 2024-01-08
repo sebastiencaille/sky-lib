@@ -34,7 +34,7 @@ class ComponentTest {
 
 		@Override
 		protected <U> Optional<PollingResult<Object, U>> executePolling(Poller poller, Polling<Object, U> polling) {
-			delays.add(poller.timeTracker.elapsedTimeMs());
+			delays.add(poller.getTimeTracker().elapsedTimeMs());
 			return super.executePolling(poller, polling);
 		}
 

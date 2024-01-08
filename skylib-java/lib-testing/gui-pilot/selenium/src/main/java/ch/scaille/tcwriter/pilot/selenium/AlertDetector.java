@@ -15,10 +15,15 @@ public class AlertDetector {
 
 	}
 
+	/**
+	 * Allows to run an action within a context that acknowledges the alerts and 
+	 * @param pilot
+	 * @param runnable
+	 */
 	public static void withAlert(final SeleniumPilot pilot, final Runnable runnable) {
 		final var testThread = Thread.currentThread();
-		final var dialogDetector = new ModalDialogDetector(() -> AlertDetector.listAlerts(pilot, null), e -> testThread.interrupt());
-		try (var dialogEnabler = ModalDialogDetector.withModalDialogDetection(dialogDetector)) {
+		final var dialogDetector = new ModalDialogDetector.Builder(() -> AlertDetector.listAlerts(pilot, null), e -> testThread.interrupt());
+		try (var dialogEnabler = ModalDialogDetector.withModalDialogDetection(dialogDetector.build(pilot))) {
 			runnable.run();
 		}
 	}
@@ -38,7 +43,7 @@ public class AlertDetector {
 			}
 			if (!pollingResult.handled) {
 				final var existingAlert = alert.get();
-				pollingResult = ModalDialogDetector.error(existingAlert.getText(), existingAlert::accept);
+				pollingResult = ModalDialogDetector.unhandled(existingAlert.getText(), existingAlert::accept);
 			}
 			return Collections.singletonList(pollingResult);
 		} catch (NoSuchSessionException e) {

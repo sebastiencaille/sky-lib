@@ -18,7 +18,7 @@ class PollerTest {
 
 		final var poller = new Poller(Duration.ofMillis(500), Duration.ofMillis(100), p -> Duration.ofMillis(100));
 		poller.run(p -> {
-			delays.add(p.timeTracker.elapsedTimeMs());
+			delays.add(p.getTimeTracker().elapsedTimeMs());
 			return Optional.empty();
 		}, p -> false);
 		System.out.println(delays);

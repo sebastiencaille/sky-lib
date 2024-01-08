@@ -15,6 +15,9 @@ import ch.scaille.tcwriter.pilot.Factories.Pollings;
 import ch.scaille.tcwriter.pilot.Polling;
 import ch.scaille.tcwriter.pilot.PollingResult.FailureHandler;
 
+/**
+ * Allows to pilot application using selenium's page concept
+ */
 public class PagePilot {
 
 	protected final SeleniumPilot pilot;
@@ -33,6 +36,9 @@ public class PagePilot {
 		return pilot;
 	}
 
+	/**
+	 * Creates a pilot to interact with a WebElement
+	 */
 	public ElementPilot element(Supplier<WebElement> element) {
 		return new ElementPilot(pilot) {
 			@Override
@@ -86,12 +92,12 @@ public class PagePilot {
 	public boolean waitOn(Supplier<WebElement> element, Consumer<WebElement> action) {
 		return element(element).waitOn(Pollings.applyOnEditable(action).withReportText("unnamed action"));
 	}
-
-	public boolean ifSatisfied(Supplier<WebElement> element, Polling<WebElement, Boolean> pollingTuning) {
+	
+	public boolean isSatisfied(Supplier<WebElement> element, Polling<WebElement, Boolean> pollingTuning) {
 		return element(element).waitOn(pollingTuning, FailureHandlers.reportNotSatisfied("not satisfied"));
 	}
 
-	public Polling<WebElement, Boolean> textEquals(String expected) {
+	public static Polling<WebElement, Boolean> textEquals(String expected) {
 		return Pollings
 				.<WebElement>asserts(pc -> Assertions.assertEquals(expected, pc.component.getText(), pc.description))
 				.withReportText("text " + expected);

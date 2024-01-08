@@ -3,6 +3,7 @@ package ch.scaille.tcwriter.pilot;
 import java.time.Duration;
 
 import ch.scaille.tcwriter.pilot.Factories.FailureHandlers;
+import ch.scaille.tcwriter.pilot.ModalDialogDetector.Builder;
 import ch.scaille.tcwriter.pilot.PilotReport.ReportFunction;
 import ch.scaille.util.helpers.NoExceptionCloseable;
 import ch.scaille.util.helpers.Poller;
@@ -13,19 +14,19 @@ public class GuiPilot {
 
 	private ActionDelay actionDelay = null;
 
-	private Duration modalDialogTimeout = Duration.ofSeconds(30);
+	private Duration defaultModalDialogTimeout = Duration.ofSeconds(30);
 
 	private Duration pollingTimeout = Duration.ofSeconds(30);
 
 	private Duration pollingFirstDelay = Duration.ofMillis(0);
 
 	private Poller.DelayFunction pollingDelayFunction = p -> {
-		final var effectiveTimeout = p.timeTracker.getDuration();
-		if (effectiveTimeout.toMillis() < 500) {
+		final var elapsedTime = p.getTimeTracker().elapsedTimeMs();
+		if (elapsedTime < 500) {
 			return Duration.ofMillis(50);
-		} else if (effectiveTimeout.toMillis() < 10_000) {
+		} else if (elapsedTime < 10_000) {
 			return Duration.ofMillis(250);
-		} else if (effectiveTimeout.toMillis() < 60_000) {
+		} else if (elapsedTime < 60_000) {
 			return Duration.ofMillis(1_000);
 		}
 		return Duration.ofMillis(5_000);
@@ -89,60 +90,64 @@ public class GuiPilot {
 		this.pollingDelayFunction = pollingDelayFunction;
 	}
 
-	protected ModalDialogDetector createDefaultModalDialogDetector() {
-		return ModalDialogDetector.noDetection();
-	}
-
-	public void setCurrentModalDialogDetector(final ModalDialogDetector currentModalDialogDetector) {
-		if (currentModalDialogDetector != null) {
-			stopModalDialogDetector();
-		}
-		this.currentModalDialogDetector = currentModalDialogDetector;
+	protected Builder createDefaultModalDialogDetector() {
+		return ModalDialogDetector.threadInterruptor();
 	}
 
 	public void waitModalDialogHandled() {
 		waitModalDialogHandled(FailureHandlers.throwError());
 	}
 
-	public Duration getModalDialogTimeout() {
-		return modalDialogTimeout;
+	public Duration getDefaultModalDialogTimeout() {
+		return defaultModalDialogTimeout;
 	}
 
-	public void setModalDialogTimeout(Duration modalDialogTimeout) {
-		this.modalDialogTimeout = modalDialogTimeout;
+	public void setDefaultModalDialogTimeout(Duration modalDialogTimeout) {
+		this.defaultModalDialogTimeout = modalDialogTimeout;
 	}
 
-	protected ModalDialogDetector expectModalDialog(ModalDialogDetector detector) {
-		stopModalDialogDetector();
-		currentModalDialogDetector = detector.initialize(this);
-		return detector;
-	}
-
-	public boolean waitModalDialogHandled(
-			final PollingResult.FailureHandler<ModalDialogDetector.PollingResult, Boolean> onFail) {
-		try {
-			return currentModalDialogDetector.waitModalDialogHandled(onFail);
-		} finally {
-			stopModalDialogDetector();
-		}
-	}
-
+	/**
+	 * Enables the existing dialog detector (or a default one) until the finally is executed
+	 */
 	public NoExceptionCloseable withModalDialogDetection() {
 		if (currentModalDialogDetector == null) {
-			currentModalDialogDetector = createDefaultModalDialogDetector();
+			currentModalDialogDetector = createDefaultModalDialogDetector().build(this);
 		}
 		return ModalDialogDetector.withModalDialogDetection(currentModalDialogDetector);
 	}
 
-	private void stopModalDialogDetector() {
-		if (currentModalDialogDetector != null) {
-			this.currentModalDialogDetector.stop();
+	/**
+	 * Expects a modal dialog. Use try-finally or waitModalDialogHandled if a check is required 
+	 */
+	protected NoExceptionCloseable expectModalDialog(ModalDialogDetector.Builder detector) {
+		if (currentModalDialogDetector != null && currentModalDialogDetector.isRunning()) {
+			throw new IllegalStateException("The previous detector is still running.");
 		}
-		this.currentModalDialogDetector = null;
+		currentModalDialogDetector = detector.build(this);
+		return ModalDialogDetector.withModalDialogDetection(currentModalDialogDetector);
+	}
+
+	/**
+	 * Wait the model dialog expected by expectModalDialog
+	 */
+	public boolean waitModalDialogHandled(
+			final PollingResult.FailureHandler<ModalDialogDetector.PollingResult, Boolean> onFail) {
+		if (currentModalDialogDetector == null) {
+			throw new IllegalStateException("expectModalDialog was never called");
+		}
+		try {
+			return currentModalDialogDetector.waitModalDialogHandled(onFail);
+		} finally {
+			currentModalDialogDetector.close();
+			currentModalDialogDetector = null;
+		}
 	}
 
 	public void close() {
-		stopModalDialogDetector();
+		if (currentModalDialogDetector != null) {
+			currentModalDialogDetector.close();
+		}
+		currentModalDialogDetector = null;
 	}
 
 }

@@ -61,7 +61,9 @@ const createTestCaseSteps = (stepStatuses: Map<number, StepStatus>, dictionary?:
 }
 
 function TestCaseTable(props: Readonly<ITestCaseProps>) {
-
+	if (!props.testCase) {
+		return null;
+	}
 
 	return (
 		<table className='steps'>

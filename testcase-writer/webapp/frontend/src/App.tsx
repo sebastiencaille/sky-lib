@@ -131,8 +131,8 @@ export default function App() {
 					testCase={currentTestCase}
 					stepStatuses={stepStatuses}
 				/>
-				<div className="status_bar">
-					<ApplicationStatusDisplay />
+				<div>
+				<ApplicationStatusDisplay />
 				</div>
 				<WebApiFeedback tabId={tabId} updateStepStatus={stepUpdated} />
 				<WebApis.ErrorHandler />

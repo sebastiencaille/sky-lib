@@ -28,27 +28,6 @@
   color: #61dafb;
 }
 
-.error {
-	color: darkred;
-	width: fit-content;
-}
-
-#application_status td {
-	padding-left: 5px;	
-	padding-right: 5px;
-}
-
-.status_available_true {
-	background-color: #78bc0f;
-}
-
-.status_available_false {
-	color: lightgray;
-	background-color: darkred;
-	width: calc(100% + 10px);
-}
-
-
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

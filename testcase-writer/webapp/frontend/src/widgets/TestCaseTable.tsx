@@ -1,6 +1,7 @@
 import React from 'react';
 import TestCaseHelper from '../helpers/TestCaseHelper';
 import { TestDictionary, TestCase, StepStatus, TestStep } from '../webapis/Types';
+import './TestCaseTable.css';
 
 interface ITestCaseProps {
 	dictionary?: TestDictionary;
@@ -22,10 +23,10 @@ const createTestCaseStep = (dictionary: TestDictionary, step: TestStep, stepStat
 
 	const stepClass = (stepStatus?.state as string) || "";
 	return (
-		<tbody className='steps' key={"tcStep" + step.ordinal}>
+		<tbody key={"tcStep" + step.ordinal}>
 			<tr>
 				<td rowSpan={2} className={stepClass}>{step.ordinal}</td>
-				<td colSpan={4}>{step.humanReadable ?? '---'}</td>
+				<td className="human-readable" colSpan={5}>{step.humanReadable ?? '---'}</td>
 			</tr>
 			<tr>
 				<td></td>
@@ -66,7 +67,7 @@ function TestCaseTable(props: Readonly<ITestCaseProps>) {
 	}
 
 	return (
-		<table className='steps'>
+		<table id='steps'>
 			{createTestCaseSteps(props.stepStatuses, props.dictionary, props.testCase)}
 		</table>
 	);

@@ -1,31 +1,30 @@
-
 #status_bar {
 	width: 100%;
 	position: absolute;
-    bottom: 0;
+	bottom: 0;
 }
 
-#status_bar p,table {
+#status_bar :is(p, table)   {
 	display: inline-block;
 	vertical-align: middle;
 }
 
 #application_status td {
-	padding-left: 5px;	
+	padding-left: 5px;
 	padding-right: 5px;
 	border: 0px;
 }
 
 .status_available_true {
-	background-color: #78bc0f;
+	background-color: var(--ok-color);
 }
 
 .status_available_false {
-	color: lightgray;
-	background-color: darkred;
+	color: var(--ko-color-reverse);
+	background-color: var(--ko-color);
 }
 
 #application_error {
-	color: darkred;
+	color: var(--ko-color);
 	padding-left: 10px;
 }

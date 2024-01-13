@@ -1,0 +1,31 @@
+#steps {
+	border: 1px solid;
+	border-collapse: collapse;
+	width: 80%;
+	margin: 0 auto;
+}
+
+#steps :is(th, td, tbody) {
+	border: 1px solid;
+	text-align: left;
+}
+
+.human-readable {
+	background-color: lightgray;
+}
+
+.NOT_RUN {
+	background-color: #6ba5ff;
+}
+
+.STARTED {
+	background-color: rgb(26, 95, 180);
+}
+
+.OK {
+	background-color: var(--ok-color);
+}
+
+.FAILED {
+	background-color: var(--ko-color);
+}

@@ -126,13 +126,15 @@ export default function App() {
 						<div>{exportedTestCase}</div>
 					</pre>
 				</Popup>
-				<TestCaseTable
-					dictionary={currentDictionary}
-					testCase={currentTestCase}
-					stepStatuses={stepStatuses}
-				/>
+				<p>
+					<TestCaseTable
+						dictionary={currentDictionary}
+						testCase={currentTestCase}
+						stepStatuses={stepStatuses}
+					/>
+				</p>
 				<div>
-				<ApplicationStatusDisplay />
+					<ApplicationStatusDisplay />
 				</div>
 				<WebApiFeedback tabId={tabId} updateStepStatus={stepUpdated} />
 				<WebApis.ErrorHandler />

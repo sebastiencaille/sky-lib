@@ -1,0 +1,31 @@
+
+#status_bar {
+	width: 100%;
+	position: absolute;
+    bottom: 0;
+}
+
+#status_bar p,table {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+#application_status td {
+	padding-left: 5px;	
+	padding-right: 5px;
+	border: 0px;
+}
+
+.status_available_true {
+	background-color: #78bc0f;
+}
+
+.status_available_false {
+	color: lightgray;
+	background-color: darkred;
+}
+
+#application_error {
+	color: darkred;
+	padding-left: 10px;
+}

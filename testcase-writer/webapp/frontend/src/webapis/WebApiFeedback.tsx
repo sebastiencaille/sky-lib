@@ -32,7 +32,9 @@ function WebApiFeedback(props: Readonly<WebApiFeedbackProps>) {
 		<StompSessionProvider url={"/api/websocket"}
 			connectHeaders={headers}
 			onConnect={connect}
-			onDisconnect={disconnect}>
+			onDisconnect={disconnect}
+			onWebSocketClose={disconnect}
+			>
 			<SubscribingComponent updateStepStatus={props.updateStepStatus} />
 		</StompSessionProvider >
 	);

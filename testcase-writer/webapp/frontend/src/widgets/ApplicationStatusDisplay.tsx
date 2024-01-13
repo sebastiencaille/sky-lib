@@ -3,9 +3,9 @@ import { useApplicationStatusContext } from '../contexts/ApplicationStatusContex
 
 export function ApplicationStatusDisplay() {
 	const applicationStatus = useApplicationStatusContext();
-	return (<div id="application_status">
-		<p className={"connected_" + applicationStatus.webSocketConnected}>WebSocket</p>
-		<p className="error">{applicationStatus.lastError}</p>
+	return (<div>
+		<div className="error">{applicationStatus.lastError}</div>
+		<table id="application_status"><tr><td className={"status_available_" + applicationStatus.webSocketConnected}>WebSocket</td></tr></table>
 	</div>);
 }
 

@@ -120,8 +120,6 @@ export default function App() {
 				<button id='exportJava' onClick={exportJava}>Java Code</button>
 				<button id='exportText' onClick={exportHumanReadable}>Human Readable</button>
 				<button id='execute' onClick={executeTC}>Execute</button>
-				<ApplicationStatusDisplay />
-				<WebApis.ErrorHandler />
 				<Popup open={exportedTestCase !== undefined} onClose={closePopUp}
 					className="export-popup">
 					<pre>
@@ -133,7 +131,11 @@ export default function App() {
 					testCase={currentTestCase}
 					stepStatuses={stepStatuses}
 				/>
+				<div className="status_bar">
+					<ApplicationStatusDisplay />
+				</div>
 				<WebApiFeedback tabId={tabId} updateStepStatus={stepUpdated} />
+				<WebApis.ErrorHandler />
 			</ApplicationStatusProvider>
 		</div>
 	)

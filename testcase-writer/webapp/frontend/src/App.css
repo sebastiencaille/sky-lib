@@ -29,20 +29,23 @@
 }
 
 .error {
-	color: darkred
-}
-
-#application_status {
+	color: darkred;
 	width: fit-content;
 }
 
-.connected_true {
-	background-color: #78bc0f;
-	width: calc(100% + 10px);
+#application_status td {
+	padding-left: 5px;	
+	padding-right: 5px;
 }
 
-.connected_false {
+.status_available_true {
+	background-color: #78bc0f;
+}
+
+.status_available_false {
+	color: lightgray;
 	background-color: darkred;
+	width: calc(100% + 10px);
 }
 
 

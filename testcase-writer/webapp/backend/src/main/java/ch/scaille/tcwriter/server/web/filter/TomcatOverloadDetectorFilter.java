@@ -1,5 +1,7 @@
 package ch.scaille.tcwriter.server.web.filter;
 
+import static java.time.Duration.ofSeconds;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
@@ -30,15 +32,15 @@ public class TomcatOverloadDetectorFilter extends OncePerRequestFilter {
 		super.afterPropertiesSet();
 		final var config = Optional.ofNullable(getFilterConfig());
 		this.dumpIfMoreThan = config.map(c -> c.getInitParameter("dumpIfMoreThan")).map(Integer::parseInt).orElse(50);
-		final var periodInSeconds = config.map(c -> c.getInitParameter("taskPeriodInSeconds")).map(Integer::parseInt)
-				.orElse(60);
+		final var periodInMs = ofSeconds(config.map(c -> c.getInitParameter("taskPeriodInSeconds")).map(Integer::parseInt)
+				.orElse(60)).toMillis();
 		TIMER.schedule(new TimerTask() {
 
 			@Override
 			public void run() {
 				TomcatOverloadDetectorFilter.this.dumpThreads();
 			}
-		}, periodInSeconds * 1000L, periodInSeconds * 1000L);
+		}, periodInMs, periodInMs);
 	}
 
 	@Override

@@ -36,12 +36,13 @@ public class WebSecurityConfig {
 	}
 
 	@Bean
-	SecurityFilterChain api(HttpSecurity http, RequestContextFilter requestContextFilter,
+	SecurityFilterChain api(HttpSecurity http,TomcatOverloadDetectorFilter tomcatOverloadDetectorFilter, RequestContextFilter requestContextFilter,
 			ClusteredSessionFilter clusteredSessionFilter) throws Exception {
 		return http.securityMatcher("/api/*")
 				.authorizeHttpRequests(a -> a.anyRequest().anonymous())
-				.addFilterAfter(requestContextFilter, BasicAuthenticationFilter.class)
-				.addFilterAfter(clusteredSessionFilter, RequestContextFilter.class)
+				.addFilterAfter(tomcatOverloadDetectorFilter, BasicAuthenticationFilter.class)
+				.addFilterAfter(requestContextFilter, tomcatOverloadDetectorFilter.getClass())
+				.addFilterAfter(clusteredSessionFilter, requestContextFilter.getClass())
 				.build();
 	}
 

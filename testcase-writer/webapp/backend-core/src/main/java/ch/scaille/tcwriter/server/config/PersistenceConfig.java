@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -20,7 +21,8 @@ import jakarta.persistence.EntityManagerFactory;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "ch.scaille.tcwriter.server.repository")
-public class PersistenceJPAConfig {
+@EnableJdbcHttpSession
+public class PersistenceConfig {
 
 	@Bean
 	FactoryBean<EntityManagerFactory> entityManagerFactory(DataSource dataSource) {
@@ -32,13 +34,14 @@ public class PersistenceJPAConfig {
 		final var vendorAdapter = new HibernateJpaVendorAdapter();
 		em.setJpaVendorAdapter(vendorAdapter);
 		em.setJpaProperties(additionalProperties());
-
+		
 		return em;
 	}
 
 	@Bean
-	PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+	PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory, DataSource dataSource) {
 		final var transactionManager = new JpaTransactionManager();
+		transactionManager.setDataSource(dataSource);
 		transactionManager.setEntityManagerFactory(entityManagerFactory);
 		return transactionManager;
 	}

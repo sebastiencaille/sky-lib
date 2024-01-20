@@ -9,7 +9,7 @@ import org.springframework.web.socket.messaging.AbstractSubProtocolEvent;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
-import ch.scaille.tcwriter.server.WebConstants;
+import ch.scaille.tcwriter.server.services.SessionAccessor;
 
 public class WebSocketConnectionHandler<S extends Session> {
 
@@ -21,10 +21,13 @@ public class WebSocketConnectionHandler<S extends Session> {
 
 	}
 
-	protected SessionRepository<S> sessionRepository;
+	protected final SessionRepository<S> sessionRepository;
 
-	public WebSocketConnectionHandler(SessionRepository<S> sessionRepository) {
+	protected final SessionAccessor sessionAccessor;
+
+	public WebSocketConnectionHandler(SessionRepository<S> sessionRepository, SessionAccessor sessionAccessor) {
 		this.sessionRepository = sessionRepository;
+		this.sessionAccessor = sessionAccessor;
 	}
 
 	protected void handleSession(AbstractSubProtocolEvent event, ConnectHandler handler) {
@@ -35,6 +38,10 @@ public class WebSocketConnectionHandler<S extends Session> {
 		}
 		final var springSessionId = (String) sessionAttributes.get(SPRING_SESSION_ID_ATTR_NAME);
 		final var session = sessionRepository.findById(springSessionId);
+		if (session == null) {
+			// session timed out
+			return;
+		}
 		final var wsSessionId = SimpMessageHeaderAccessor.getSessionId(messageHeaders);
 		final var tabId = NativeMessageHeaderAccessor.getFirstNativeHeader("tabId", messageHeaders);
 		handler.handle(session, tabId, wsSessionId);
@@ -44,15 +51,14 @@ public class WebSocketConnectionHandler<S extends Session> {
 	public static class WebSocketConnectedHandler<S extends Session> extends WebSocketConnectionHandler<S>
 			implements ApplicationListener<SessionConnectEvent> {
 
-		public WebSocketConnectedHandler(SessionRepository<S> sessionRepository) {
-			super(sessionRepository);
+		public WebSocketConnectedHandler(SessionRepository<S> sessionRepository, SessionAccessor sessionAccessor) {
+			super(sessionRepository, sessionAccessor);
 		}
 
 		@Override
 		public void onApplicationEvent(SessionConnectEvent event) {
-			handleSession(event, (session, tabId, wsSessionId) -> {
-				session.setAttribute(WebConstants.SPRING_SESSION_WEBSOCKET_SESSION + tabId, wsSessionId);
-			});
+			handleSession(event, (session, tabId, wsSessionId) -> sessionAccessor.webSocketSessionIdOf(session, tabId)
+					.set(wsSessionId));
 		}
 
 	}
@@ -60,15 +66,17 @@ public class WebSocketConnectionHandler<S extends Session> {
 	public static class WebSocketDisconnectedHandler<S extends Session> extends WebSocketConnectionHandler<S>
 			implements ApplicationListener<SessionDisconnectEvent> {
 
-		public WebSocketDisconnectedHandler(SessionRepository<S> sessionRepository) {
-			super(sessionRepository);
+		public WebSocketDisconnectedHandler(SessionRepository<S> sessionRepository, SessionAccessor sessionAccessor) {
+			super(sessionRepository, sessionAccessor);
 		}
 
 		@Override
 		public void onApplicationEvent(SessionDisconnectEvent event) {
 			handleSession(event, (session, tabId, wsSessionId) -> {
-				if (wsSessionId.equals(session.getAttribute(WebConstants.SPRING_SESSION_WEBSOCKET_SESSION + tabId))) {
-					session.removeAttribute(WebConstants.SPRING_SESSION_WEBSOCKET_SESSION + tabId);
+				final var accessor = sessionAccessor.webSocketSessionIdOf(session, tabId);
+				final var sessionWsSessionId = accessor.get();
+				if (sessionWsSessionId.isPresent() && wsSessionId.equals(sessionWsSessionId.get())) {
+					accessor.remove();
 				}
 			});
 		}

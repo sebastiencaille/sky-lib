@@ -126,13 +126,12 @@ export default function App() {
 						<div>{exportedTestCase}</div>
 					</pre>
 				</Popup>
-				<p>
-					<TestCaseTable
-						dictionary={currentDictionary}
-						testCase={currentTestCase}
-						stepStatuses={stepStatuses}
-					/>
-				</p>
+				<p/>
+				<TestCaseTable
+					dictionary={currentDictionary}
+					testCase={currentTestCase}
+					stepStatuses={stepStatuses}
+				/>
 				<div>
 					<ApplicationStatusDisplay />
 				</div>

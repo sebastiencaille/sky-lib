@@ -19,10 +19,10 @@ import ch.scaille.tcwriter.generated.api.model.v0.Metadata;
 import ch.scaille.tcwriter.generated.api.model.v0.TestCase;
 import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
 import ch.scaille.tcwriter.server.WebConstants;
-import ch.scaille.tcwriter.server.dto.Context;
 import ch.scaille.tcwriter.server.exceptions.WebRTException;
 import ch.scaille.tcwriter.server.facade.TestCaseFacade;
 import ch.scaille.tcwriter.server.facade.WebFeedbackFacade;
+import ch.scaille.tcwriter.server.services.SessionAccessor;
 import ch.scaille.tcwriter.server.webapi.v0.mappers.MetadataMapper;
 import ch.scaille.tcwriter.server.webapi.v0.mappers.TestCaseMapper;
 import jakarta.validation.Valid;
@@ -31,14 +31,14 @@ public class TestCaseController extends TestcaseApiController {
 
 	private final TestCaseFacade testCaseFacade;
 
-	private final Context context;
-
+	private final SessionAccessor sessionAccessor;
+	
 	private final WebFeedbackFacade webFeedbackFacade;
 
-	public TestCaseController(Context context, TestCaseFacade testCaseFacade, WebFeedbackFacade webFeedbackFacade,
+	public TestCaseController(SessionAccessor sessionAccessor, TestCaseFacade testCaseFacade, WebFeedbackFacade webFeedbackFacade,
 			NativeWebRequest request) {
 		super(request);
-		this.context = context;
+		this.sessionAccessor = sessionAccessor;
 		this.testCaseFacade = testCaseFacade;
 		this.webFeedbackFacade = webFeedbackFacade;
 	}
@@ -63,8 +63,8 @@ public class TestCaseController extends TestcaseApiController {
 	@Override
 	public ResponseEntity<Void> executeTestCase(@Valid String tc, @Valid String tabId) {
 		final var loadedTC = loadValidTestCase(tc);
-		final var sessionId = getRequest().map(NativeWebRequest::getSessionId);
-		testCaseFacade.executeTest(loadedTC, s -> webFeedbackFacade.send(sessionId, tabId,
+		final var wsSessionId = sessionAccessor.webSocketSessionIdOf(getRequest(), tabId).get();
+		testCaseFacade.executeTest(loadedTC, s -> webFeedbackFacade.send(wsSessionId, tabId,
 				WebConstants.TEST_EXECUTION_FEEDBACK, TestCaseMapper.MAPPER.convert(s)));
 		return ResponseEntity.ok(null);
 	}
@@ -101,7 +101,7 @@ public class TestCaseController extends TestcaseApiController {
 		final var dictionaryId = getCurrentDictionaryId();
 		final String tcId;
 		if ("current".equals(tc)) {
-			tcId = validateTestCaseSet(context.getTestCase());
+			tcId = validateTestCaseSet(sessionAccessor.getContext(getRequest()).mandatory().getTestCase());
 		} else {
 			tcId = tc;
 		}
@@ -109,6 +109,6 @@ public class TestCaseController extends TestcaseApiController {
 	}
 
 	private String getCurrentDictionaryId() {
-		return validateDictionarySet(context.getDictionary());
+		return validateDictionarySet(sessionAccessor.getContext(getRequest()).mandatory().getDictionary());
 	}
 }

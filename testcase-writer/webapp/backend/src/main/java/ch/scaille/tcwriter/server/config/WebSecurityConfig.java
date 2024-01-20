@@ -12,18 +12,15 @@ import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
+import org.springframework.session.Session;
 import org.springframework.web.filter.RequestContextFilter;
 
-import ch.scaille.tcwriter.server.dto.Context;
-import ch.scaille.tcwriter.server.facade.ClusteredSessionFacade;
-import ch.scaille.tcwriter.server.facade.ContextFacade;
-import ch.scaille.tcwriter.server.web.filter.ClusteredSessionFilter;
 import ch.scaille.tcwriter.server.web.filter.TomcatOverloadDetectorFilter;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig {
-
+public class WebSecurityConfig<S extends Session> {
+	
 	@Bean
 	InMemoryUserDetailsManager userDetailsService(PasswordEncoder passwordEncoder) {
 		final var user = User.withUsername("anon").password(passwordEncoder.encode("")).roles("anon").build();
@@ -36,19 +33,18 @@ public class WebSecurityConfig {
 	}
 
 	@Bean
-	SecurityFilterChain api(HttpSecurity http,TomcatOverloadDetectorFilter tomcatOverloadDetectorFilter, RequestContextFilter requestContextFilter,
-			ClusteredSessionFilter clusteredSessionFilter) throws Exception {
+	SecurityFilterChain api(HttpSecurity http) throws Exception {
 		return http.securityMatcher("/api/*")
+				.sessionManagement(c -> c.maximumSessions(2))
 				.authorizeHttpRequests(a -> a.anyRequest().anonymous())
-				.addFilterAfter(tomcatOverloadDetectorFilter, BasicAuthenticationFilter.class)
-				.addFilterAfter(requestContextFilter, tomcatOverloadDetectorFilter.getClass())
-				.addFilterAfter(clusteredSessionFilter, requestContextFilter.getClass())
+				.addFilterAfter(tomcatOverloadDetectorFilter(), BasicAuthenticationFilter.class)
+				.addFilterAfter(requestContextFilter(), tomcatOverloadDetectorFilter().getClass())
 				.build();
 	}
 
 	@Bean
-	SecurityFilterChain securityFilterChain(TomcatOverloadDetectorFilter tomcatOverloadDetectorFilter) {
-		return new DefaultSecurityFilterChain(AnyRequestMatcher.INSTANCE, tomcatOverloadDetectorFilter);
+	SecurityFilterChain securityFilterChain() {
+		return new DefaultSecurityFilterChain(AnyRequestMatcher.INSTANCE, tomcatOverloadDetectorFilter());
 	}
 
 	@Bean
@@ -59,12 +55,6 @@ public class WebSecurityConfig {
 	@Bean
 	TomcatOverloadDetectorFilter tomcatOverloadDetectorFilter() {
 		return new TomcatOverloadDetectorFilter();
-	}
-
-	@Bean
-	ClusteredSessionFilter clusteredSessionFilter(Context context, ClusteredSessionFacade clusteredSessionFacade,
-			ContextFacade contextFacade) {
-		return new ClusteredSessionFilter(context, clusteredSessionFacade, contextFacade);
 	}
 
 }

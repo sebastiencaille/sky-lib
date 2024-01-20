@@ -1,7 +1,6 @@
 package ch.scaille.tcwriter.server.config;
 
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.openapitools.configuration.SpringDocConfiguration;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -11,8 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.session.MapSessionRepository;
-import org.springframework.session.config.annotation.web.http.EnableSpringHttpSession;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -26,11 +23,10 @@ import ch.scaille.tcwriter.server.webapi.config.WebSocketConfig;
 @Configuration
 @Import({SpringDocConfiguration.class})
 @EnableWebMvc
-@EnableSpringHttpSession
 public class WebConfig implements WebMvcConfigurer {
 
 	private static final String ALLOWED_ORIGIN = "http://localhost:9000";
-
+	
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/**").addResourceLocations("/static/");
@@ -50,11 +46,6 @@ public class WebConfig implements WebMvcConfigurer {
 		return messageSource;
 	}
 
-	@Bean
-	public MapSessionRepository sessionRepository() {
-		return new MapSessionRepository(new ConcurrentHashMap<>());
-	}
-	
 	@Bean
 	ServletRegistrationBean<?> webApiServlet() {
 		final var annotationContext = new AnnotationConfigServletWebApplicationContext();

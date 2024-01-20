@@ -6,4 +6,4 @@ target/
 .factorypath
 *.bak
 .flattened-pom.xml
-
+logs/

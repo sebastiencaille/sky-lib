@@ -1,10 +1,11 @@
 package ch.scaille.tcwriter.server.dto;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
 
 
-public class Context {
+public class Context implements Serializable {
 
 	private String dictionaryName;
 	private String testCase;

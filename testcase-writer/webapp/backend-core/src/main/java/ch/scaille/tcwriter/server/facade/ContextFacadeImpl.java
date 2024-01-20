@@ -15,6 +15,7 @@ public class ContextFacadeImpl implements ContextFacade {
 		if (testCase.isPresent()) {
 			current.setTestCase(testCase.get());
 		}
+
 	}
 
 }

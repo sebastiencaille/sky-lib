@@ -6,7 +6,6 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.Ordered;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.session.SessionRepository;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import ch.scaille.tcwriter.server.facade.WebFeedbackFacade;
@@ -17,9 +16,8 @@ import ch.scaille.tcwriter.server.webapi.service.WebSocketFeedbackFacade;
 public class WebApiControllersConfig {
 
 	@Bean
-	WebFeedbackFacade webFeedbackFacade(SessionRepository<?> sessionRepository,
-			SimpMessageSendingOperations feedbackSendingTemplate) {
-		return new WebSocketFeedbackFacade(sessionRepository, feedbackSendingTemplate);
+	WebFeedbackFacade webFeedbackFacade(SimpMessageSendingOperations feedbackSendingTemplate) {
+		return new WebSocketFeedbackFacade(feedbackSendingTemplate);
 	}
 
 	@Bean

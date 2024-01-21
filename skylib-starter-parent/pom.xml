@@ -23,8 +23,19 @@
 
 		<aspectj.version>1.9.21</aspectj.version>
 		<jackson-bom.version>2.16.1</jackson-bom.version>
+		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
+
+		<guava.version>33.0.0-jre</guava.version>
+		<logback.version>1.4.14</logback.version>
+		<mapstruct.version>1.5.5.Final</mapstruct.version>
+
+		<swagger-parser.version>2.1.20</swagger-parser.version>
+		<swagger.version>2.2.20</swagger.version>
+		<springdoc-openapi.version>2.3.0</springdoc-openapi.version>
 
 		<undertow.version>2.3.10.Final</undertow.version>
+		<liquibase.version>4.25.1</liquibase.version>
+
 		<mockito.version>5.9.0</mockito.version>
 		<junit-jupiter.version>5.10.1</junit-jupiter.version>
 		<junit.version>4.13.2</junit.version>
@@ -32,18 +43,8 @@
 		<selenium.version>4.16.1</selenium.version>
 		<h2.version>2.2.224</h2.version>
 
-		<mapstruct.version>1.5.5.Final</mapstruct.version>
-
-		<guava.version>33.0.0-jre</guava.version>
-		<logback.version>1.4.14</logback.version>
-
-		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
-		<swagger-parser.version>2.1.20</swagger-parser.version>
-		<swagger.version>2.2.20</swagger.version>
-
-		<springdoc-openapi.version>2.3.0</springdoc-openapi.version>
-
 		<coverage.temp>${java.io.tmpdir}/coverage/${basedir}</coverage.temp>
+
 	</properties>
 
 	<dependencyManagement>

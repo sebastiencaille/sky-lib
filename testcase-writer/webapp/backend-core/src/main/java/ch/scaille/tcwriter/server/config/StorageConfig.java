@@ -23,7 +23,7 @@ public class StorageConfig {
 
 	@Bean
 	public DaoFactory daoFactory(@Value("${app.dataFolder:/var/lib/tcwriter/data}") Path dataFolder) {
-		return DaoFactory.defaultsWith(new DaoFactory.FsDsFactory(dataFolder));
+		return DaoFactory.defaultsPlus(new DaoFactory.FsDsFactory(dataFolder));
 	}
 
 	@Bean

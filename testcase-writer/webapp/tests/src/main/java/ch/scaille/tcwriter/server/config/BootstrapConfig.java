@@ -1,24 +1,32 @@
-package ch.scaille.tcwriter.server.bootstrap;
+package ch.scaille.tcwriter.server.config;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 
 import ch.scaille.generators.util.CodeGeneratorParams;
 import ch.scaille.tcwriter.examples.ExampleHelper;
 import ch.scaille.tcwriter.persistence.ModelConfig;
 import ch.scaille.tcwriter.persistence.factory.DaoConfigs;
 import ch.scaille.tcwriter.persistence.testexec.JunitTestExecConfig;
+import jakarta.annotation.PostConstruct;
 
-public class ExampleBootstrap {
+@Configuration
+public class BootstrapConfig {
 
 	private static final String TC_TEMPLATE = "templates/TC.template";
-	private static final Path SRV_DATA = Paths.get("/var/lib/tcwriter/data");
 
-	public static void main(String[] args) throws IOException {
-		final var exampleHelper = new ExampleHelper(SRV_DATA, "server");
+	@Value("${app.dataFolder:/var/lib/tcwriter/data}") 
+	private Path dataFolder;
+	
+	@PostConstruct
+	public void bootStrapDemo() throws IOException {
+
+		final var exampleHelper = new ExampleHelper(dataFolder, "server");
 		final var dictionary = exampleHelper.generateDictionary();
 		final var tc = exampleHelper.recordTestCase(dictionary);
 
@@ -34,7 +42,7 @@ public class ExampleBootstrap {
 		exampleHelper.getModelDao().writeTestCase(ExampleHelper.TC_NAME, tc);
 
 		// Copy the default template
-		final var templatePath = SRV_DATA.resolve(TC_TEMPLATE);
+		final var templatePath = dataFolder.resolve(TC_TEMPLATE);
 		Files.createDirectories(templatePath.getParent());
 		try (var in = Thread.currentThread()
 				.getContextClassLoader()
@@ -44,4 +52,5 @@ public class ExampleBootstrap {
 		}
 
 	}
+
 }

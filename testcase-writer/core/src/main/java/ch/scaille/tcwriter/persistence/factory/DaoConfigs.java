@@ -36,7 +36,7 @@ public interface DaoConfigs {
 	ModelDao modelDao();
 
 	public static DaoConfigs withFolder(Path path) {
-		final var daoFactory = DaoFactory.defaultsWith(new FsDsFactory(path));
+		final var daoFactory = DaoFactory.defaultsPlus(new FsDsFactory(path));
 		final var configDao = new ConfigDao(daoFactory, ".", ConfigDao.defaultDataHandlers());
 		final var modelDao = new ModelDao(daoFactory, configDao.getCurrentConfigProperty(),
 				ModelDao.defaultDataHandlers());

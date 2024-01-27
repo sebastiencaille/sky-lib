@@ -79,7 +79,7 @@ public class DaoFactory {
 				.create(daoType, locator, dataHandlerRegistry);
 	}
 
-	public static DaoFactory defaultsWith(IDataSourceFactory extraFactory) {
+	public static DaoFactory defaultsPlus(IDataSourceFactory extraFactory) {
 		final var factories = new ArrayList<IDataSourceFactory>();
 		factories.add(new ClassPathDsFactory());
 		return new DaoFactory(factories, extraFactory);

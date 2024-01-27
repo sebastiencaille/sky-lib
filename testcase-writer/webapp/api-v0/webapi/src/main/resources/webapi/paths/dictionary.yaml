@@ -1,0 +1,17 @@
+get:
+  summary: Gets a dictionary
+  operationId: getDictionary
+  parameters:
+    - in: path
+      name: dictionary    
+      schema:
+        type: string 
+      required: true
+      description: id of the dictionary
+  responses:
+    '200':
+      description: a dictionary
+      content:
+        application/json:
+          schema:
+            $ref: ../openapi.yaml#/components/schemas/TestDictionary

@@ -1,6 +1,13 @@
 get:
   summary: List all test cases
   operationId: listAll
+  parameters:
+    - in: header
+      name: X-UserContext
+      schema:
+        type: string
+      required: true
+      description: id of the dictionary
   responses:
     '200':
       description: all  test cases

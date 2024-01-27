@@ -1,8 +1,5 @@
 package ch.scaille.tcwriter.server.webapi.v0.controllers;
 
-import static ch.scaille.tcwriter.server.facade.ValidationHelper.validateDictionarySet;
-import static ch.scaille.tcwriter.server.facade.ValidationHelper.validateTestCaseSet;
-
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -26,17 +23,18 @@ import ch.scaille.tcwriter.server.services.SessionAccessor;
 import ch.scaille.tcwriter.server.webapi.v0.mappers.MetadataMapper;
 import ch.scaille.tcwriter.server.webapi.v0.mappers.TestCaseMapper;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 public class TestCaseController extends TestcaseApiController {
 
 	private final TestCaseFacade testCaseFacade;
 
 	private final SessionAccessor sessionAccessor;
-	
+
 	private final WebFeedbackFacade webFeedbackFacade;
 
-	public TestCaseController(SessionAccessor sessionAccessor, TestCaseFacade testCaseFacade, WebFeedbackFacade webFeedbackFacade,
-			NativeWebRequest request) {
+	public TestCaseController(SessionAccessor sessionAccessor, TestCaseFacade testCaseFacade,
+			WebFeedbackFacade webFeedbackFacade, NativeWebRequest request) {
 		super(request);
 		this.sessionAccessor = sessionAccessor;
 		this.testCaseFacade = testCaseFacade;
@@ -44,14 +42,15 @@ public class TestCaseController extends TestcaseApiController {
 	}
 
 	@Override
-	public ResponseEntity<List<Metadata>> listAll() {
-		return ResponseEntity.ok(
-				testCaseFacade.listAll(getCurrentDictionaryId()).stream().map(MetadataMapper.MAPPER::convert).toList());
+	public ResponseEntity<List<Metadata>> listAll(@NotNull String dictionary) {
+		return ResponseEntity
+				.ok(testCaseFacade.listAll(dictionary).stream().map(MetadataMapper.MAPPER::convert).toList());
 	}
 
+	
 	@Override
-	public ResponseEntity<TestCase> testcase(@Valid String tc) {
-		final var loadedTC = loadValidTestCase(tc);
+	public ResponseEntity<TestCase> testcase(String tc, @NotNull String dictionary) {
+		final var loadedTC = loadValidTestCase(tc, dictionary);
 		final var dto = TestCaseMapper.MAPPER.convert(loadedTC);
 		final var humanReadables = testCaseFacade.computeHumanReadableTexts(loadedTC, loadedTC.getSteps());
 		for (int i = 0; i < dto.getSteps().size(); i++) {
@@ -61,8 +60,8 @@ public class TestCaseController extends TestcaseApiController {
 	}
 
 	@Override
-	public ResponseEntity<Void> executeTestCase(@Valid String tc, @Valid String tabId) {
-		final var loadedTC = loadValidTestCase(tc);
+	public ResponseEntity<Void> executeTestCase(String tc, @NotNull String dictionary, @Valid String tabId) {
+		final var loadedTC = loadValidTestCase(tc, dictionary);
 		final var wsSessionId = sessionAccessor.webSocketSessionIdOf(getRequest(), tabId).get();
 		testCaseFacade.executeTest(loadedTC, s -> webFeedbackFacade.send(wsSessionId, tabId,
 				WebConstants.TEST_EXECUTION_FEEDBACK, TestCaseMapper.MAPPER.convert(s)));
@@ -70,8 +69,8 @@ public class TestCaseController extends TestcaseApiController {
 	}
 
 	@Override
-	public ResponseEntity<String> exportTestCase(@Valid String tc, @Valid ExportType format) {
-		final var loadedTC = loadValidTestCase(tc);
+	public ResponseEntity<String> exportTestCase(String tc, @NotNull String dictionary, @Valid ExportType format) {
+			final var loadedTC = loadValidTestCase(tc, dictionary);
 		if (format == ExportType.JAVA) {
 			return exportJava(loadedTC);
 		}
@@ -97,18 +96,8 @@ public class TestCaseController extends TestcaseApiController {
 		return new ResponseEntity<>(testCaseFacade.generateCode(tc), headers, HttpStatus.OK);
 	}
 
-	private ExportableTestCase loadValidTestCase(String tc) {
-		final var dictionaryId = getCurrentDictionaryId();
-		final String tcId;
-		if ("current".equals(tc)) {
-			tcId = validateTestCaseSet(sessionAccessor.getContext(getRequest()).mandatory().getTestCase());
-		} else {
-			tcId = tc;
-		}
-		return testCaseFacade.load(tcId, dictionaryId);
+	private ExportableTestCase loadValidTestCase(String tc, String dictionary) {
+		return testCaseFacade.load(tc, dictionary);
 	}
 
-	private String getCurrentDictionaryId() {
-		return validateDictionarySet(sessionAccessor.getContext(getRequest()).mandatory().getDictionary());
-	}
 }

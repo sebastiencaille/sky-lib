@@ -35,27 +35,6 @@
 		</dependency>
 	</dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<configuration>
-					<overlays>
-						<overlay>
-							<groupId>ch.scaille.tcwriter</groupId>
-							<artifactId>testcase-writer-webapp-war</artifactId>
-						</overlay>
-						<overlay>
-							<!-- empty groupId/artifactId represents the current
-							build -->
-						</overlay>
-					</overlays>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-
 	<profiles>
 
 		<profile>

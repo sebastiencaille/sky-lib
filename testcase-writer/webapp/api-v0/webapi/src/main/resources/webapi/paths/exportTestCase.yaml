@@ -15,6 +15,12 @@ get:
       # Default to human readable
       required: false
       description: Export format 
+    - in: header
+      name: X-UserContext
+      schema:
+        type: string
+      required: true
+      description: id of the dictionary
   responses:
     '200':
       description: export

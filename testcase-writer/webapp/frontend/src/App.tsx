@@ -12,12 +12,10 @@ import './App.css'
 import MetadataChooser from './widgets/MetadataChooser';
 import TestCaseTable from './widgets/TestCaseTable';
 import { ApplicationStatusDisplay } from './widgets/ApplicationStatusDisplay';
-import { ApplicationStatusProvider } from './contexts/ApplicationStatusContext';
 import { StepStatusAction, clearStepStatuses, handleStepStatusAction, stepStatusUpdate } from './service/StepStatusService';
+import {  contextUpdate, useUserContext, useUserContextUpdater } from './contexts/UserContext';
 
 export default function App() {
-	const [currentContextDictionary, setCurrentContextDictionary] = useState<Metadata>(undefined);
-	const [currentContextTestCase, setCurrentContextTestCase] = useState<Metadata>(undefined);
 
 	const [allDictionaries, setAllDictionaries] = useState<Metadata[]>([]);
 	const [allTestCases, setAllTestCases] = useState<Metadata[]>([]);
@@ -31,48 +29,54 @@ export default function App() {
 
 	const tabId = useMemo(() => (Date.now().toString()), []);
 
+	const userContext = useUserContext();
+	const contextUpdater = useUserContextUpdater();
+
 	// On mount
 	useEffect(() => {
 		WebApis.listAllDictionaries((allMetaData) => setAllDictionaries(allMetaData));
 		WebApis.loadCurrentContext((ctxt) => {
-			setCurrentContextDictionary(ctxt.dictionary);
-			setCurrentContextTestCase(ctxt.testCase);
+			contextUpdater(contextUpdate(ctxt));
 		});
-	}, [])
+	}, [contextUpdater])
 
 
 	useEffect(() => {
-		if (currentContextDictionary) {
-			WebApis.loadCurrentDictionary(dict => setCurrentDictionary(Mappers.enhanceDictionary(dict)));
+		if (userContext.dictionary) {
+			WebApis.loadDictionary(userContext.dictionary, dict => setCurrentDictionary(Mappers.enhanceDictionary(dict)));
 		}
-	}, [currentContextDictionary]);
+	}, [userContext.dictionary]);
 
 	useEffect(() => {
-		if (currentDictionary) {
+		if (userContext.dictionary) {
 			WebApis.listAllTestCases((allMetaData) => setAllTestCases(allMetaData));
 		}
-	}, [currentDictionary]);
+	}, [userContext]);
 
 
 	useEffect(() => {
-		if (currentDictionary && currentContextTestCase) {
-			WebApis.loadCurrentTestCase(tc => setCurrentTestCase(Mappers.enhanceTestCase(currentDictionary, tc)));
+		if (currentDictionary && userContext.testCase) {
+			WebApis.loadTestCase(userContext.testCase, tc => setCurrentTestCase(Mappers.enhanceTestCase(currentDictionary, tc)));
 		}
-	}, [currentDictionary, currentContextTestCase]);
+	}, [currentDictionary, userContext.testCase]);
 
 	const dictionaryChanged = useCallback((metadata?: Metadata) => {
 		if (!metadata) {
 			return;
 		}
-		WebApis.selectCurrentDictionary(metadata.transientId, (context) => setCurrentContextDictionary(context.dictionary));
-	}, []);
+		const newContext = { ...userContext };
+		newContext.dictionary = metadata.transientId;
+		WebApis.validateContext(newContext, (context) => contextUpdater(contextUpdate(context)));
+	}, [contextUpdater, userContext]);
 
 	const testCaseChanged = useCallback((metadata?: Metadata) => {
 		if (!metadata) {
 			return;
 		}
-		WebApis.selectCurrentTestCase(metadata.transientId, (context) => setCurrentContextTestCase(context.testCase));
-	}, []);
+		const newContext = { ...userContext };
+		newContext.testCase = metadata.transientId;
+		WebApis.validateContext(newContext, (context) => contextUpdater(contextUpdate(context)));
+	}, [contextUpdater, userContext]);
 
 	const updateSteps = useCallback((action: StepStatusAction) => {
 		setStepStatuses((currentStatuses) => handleStepStatusAction(currentStatuses, action));
@@ -106,38 +110,37 @@ export default function App() {
 
 	return (
 		<div className="App">
-			<ApplicationStatusProvider>
-				<MetadataChooser
-					prefix='dictionary'
-					allMetadata={allDictionaries}
-					initialySelectedMetadata={currentDictionary?.metadata}
-					onSelection={dictionaryChanged} />
-				<MetadataChooser
-					prefix='testcase'
-					allMetadata={allTestCases}
-					initialySelectedMetadata={currentTestCase?.metadata}
-					onSelection={testCaseChanged} />
-				<button id='exportJava' onClick={exportJava}>Java Code</button>
-				<button id='exportText' onClick={exportHumanReadable}>Human Readable</button>
-				<button id='execute' onClick={executeTC}>Execute</button>
-				<Popup open={exportedTestCase !== undefined} onClose={closePopUp}
-					className="export-popup">
-					<pre>
-						<div>{exportedTestCase}</div>
-					</pre>
-				</Popup>
-				<p/>
-				<TestCaseTable
-					dictionary={currentDictionary}
-					testCase={currentTestCase}
-					stepStatuses={stepStatuses}
-				/>
-				<div>
-					<ApplicationStatusDisplay />
-				</div>
-				<WebApiFeedback tabId={tabId} updateStepStatus={stepUpdated} />
-				<WebApis.ErrorHandler />
-			</ApplicationStatusProvider>
+					<MetadataChooser
+						prefix='dictionary'
+						allMetadata={allDictionaries}
+						initialySelectedMetadata={currentDictionary?.metadata}
+						onSelection={dictionaryChanged} />
+					<MetadataChooser
+						prefix='testcase'
+						allMetadata={allTestCases}
+						initialySelectedMetadata={currentTestCase?.metadata}
+						onSelection={testCaseChanged} />
+					<button id='exportJava' onClick={exportJava}>Java Code</button>
+					<button id='exportText' onClick={exportHumanReadable}>Human Readable</button>
+					<button id='execute' onClick={executeTC}>Execute</button>
+					<Popup open={exportedTestCase !== undefined} onClose={closePopUp}
+						className="export-popup">
+						<pre>
+							<div>{exportedTestCase}</div>
+						</pre>
+					</Popup>
+					<p />
+					<TestCaseTable
+						dictionary={currentDictionary}
+						testCase={currentTestCase}
+						stepStatuses={stepStatuses}
+					/>
+					<div>
+						<ApplicationStatusDisplay />
+					</div>
+					<WebApiFeedback tabId={tabId} updateStepStatus={stepUpdated} />
+					<WebApis.Component />
+
 		</div>
 	)
 }

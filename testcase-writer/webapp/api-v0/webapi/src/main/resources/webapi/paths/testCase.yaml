@@ -8,6 +8,12 @@ get:
         type: string
       required: true
       description: id of the test case
+    - in: header
+      name: X-UserContext
+      schema:
+        type: string
+      required: true
+      description: id of the dictionary
   responses:
     '200':
       description: test case

@@ -7,8 +7,8 @@ servers:
 paths:
   /dictionary:
     $ref: 'paths/allDictionaries.yaml'
-  /dictionary/current:
-    $ref: paths/currentDictionary.yaml
+  /dictionary/{dictionary}:
+    $ref: paths/dictionary.yaml
   /testcase:
     $ref: paths/allTestCases.yaml
   /testcase/{tc}:

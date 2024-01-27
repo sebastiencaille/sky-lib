@@ -1,5 +1,5 @@
 get:
-  summary: Gets current content
+  summary: Gets the context
   operationId: getCurrent
   responses:
     '200':
@@ -10,8 +10,8 @@ get:
             $ref: ../openapi.yaml#/components/schemas/Context
             
 put:
-  summary: Sets the current content
-  operationId: setCurrent
+  summary: Validates and remembers a context
+  operationId: validateAndRememberCurrent
   requestBody: 
     description: context to set
     required: true

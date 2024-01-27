@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { Metadata, TestDictionary, TestCase, Context, ExportType } from './Types'
 import { addError, useApplicationStatusContextUpdater } from '../contexts/ApplicationStatusContext';
+import { UserContext, useUserContext } from '../contexts/UserContext';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -12,13 +13,25 @@ const webApiErrorHandler: WebApiErrorHandler = {
 	handle: (msg: string) => { console.log(msg); }
 };
 
-export function ErrorHandler() {
+interface ContextProvider {
+	currentContext: UserContext;
+}
+
+const contextProvider: ContextProvider = {
+	currentContext: {
+		dictionary: null,
+		testCase: null
+	}
+}
+
+function Component() {
 
 	const applicationStatusUpdater = useApplicationStatusContextUpdater();
 	webApiErrorHandler.handle = useCallback((msg) => applicationStatusUpdater(addError(msg)), [applicationStatusUpdater]);
-
-	return (<div />);
+	contextProvider.currentContext = useUserContext();
+	return (<div></div>);
 }
+
 
 async function callResult(url: string, init?: RequestInit): Promise<Response> {
 	const r = await fetch(url, init);
@@ -36,6 +49,11 @@ async function call(url: string, init?: RequestInit): Promise<object> {
 	return await callResult(url, init).then(r => r.json());
 };
 
+function headers(): HeadersInit {
+	const context = contextProvider.currentContext;
+	return { 'X-UserContext': context.dictionary ?? '' };
+}
+
 /**
  * Performs the call and handle the errors
  */
@@ -51,58 +69,68 @@ function wrap(promise: Promise<void | object>): void {
 	});
 };
 
-function loadCurrentContext(callback: (context: Context) => void) {
-	wrap(call(API_URL + '/context').then(r => callback(r as Context)));
+function mapUserContextFromBackend(context: Context) {
+	return {
+		dictionary: context.dictionary,
+		testCase: context.testCase
+	};
 }
+
+function loadCurrentContext(callback: (context: UserContext) => void) {
+	wrap(call(API_URL + '/context').then(r => callback(mapUserContextFromBackend(r as Context))));
+}
+
+function validateContext(userContext: UserContext, callback: (context: UserContext) => void) {
+	wrap(call(API_URL + '/context',
+		{
+			method: 'PUT',
+			headers: { 'Content-Type': "application/json" },
+			body: JSON.stringify({ dictionary: userContext.dictionary, testCase: userContext.testCase })
+		})
+		.then(r => callback(mapUserContextFromBackend(r as Context))));
+}
+
 function listAllDictionaries(callback: (metadata: Metadata[]) => void) {
 	wrap(call(API_URL + '/dictionary')
 		.then(r => callback(r as Metadata[])));
 }
 
-function loadCurrentDictionary(callback: (dict: TestDictionary) => void) {
-	wrap(call(API_URL + '/dictionary/current')
+function loadDictionary(dictionary: string, callback: (dict: TestDictionary) => void) {
+	wrap(call(API_URL + `/dictionary/${dictionary}`)
 		.then(r => callback(r as TestDictionary)));
 }
 
 function listAllTestCases(callback: (metadata: Metadata[]) => void) {
-	wrap(call(API_URL + '/testcase')
+	wrap(call(API_URL + '/testcase',
+		{
+			headers: headers()
+		})
 		.then(r => callback(r as Metadata[])));
 }
 
-function loadCurrentTestCase(callback: (dict: TestCase) => void) {
-	wrap(call(API_URL + '/testcase/current')
+function loadTestCase(tc: string, callback: (tc: TestCase) => void) {
+	wrap(call(API_URL + '/testcase/' + tc,
+		{
+			headers: headers()
+		})
 		.then(r => callback(r as TestCase)));
 }
 
-function selectCurrentDictionary(transientId: string, callback: (context: Context) => void) {
-	wrap(call(API_URL + '/context',
-		{
-			method: 'PUT',
-			headers: { 'Content-Type': "application/json" },
-			body: JSON.stringify({ dictionary: transientId })
-		})
-		.then(r => callback(r as Context)));
-}
-
-function selectCurrentTestCase(transientId: string, callback: (context: Context) => void) {
-	wrap(call(API_URL + '/context',
-		{
-			method: 'PUT',
-			headers: { 'Content-Type': "application/json" },
-			body: JSON.stringify({ testCase: transientId })
-		})
-		.then(r => callback(r as Context)));
-}
-
 function executeCurrentTestCase(tabId: string) {
-	wrap(callResult(API_URL + '/testcase/current/execute?tabId=' + tabId,
+	const tc = contextProvider.currentContext.testCase;
+	wrap(callResult(API_URL + `/testcase/${tc}/execute?tabId=${tabId}`,
 		{
 			method: 'POST',
+			headers: headers()
 		}));
 }
 
 function exportCurrentTestCase(format: ExportType, callback: (content: string) => void) {
-	wrap(callResult(API_URL + '/testcase/current/export?format=' + format)
+	const tc = contextProvider.currentContext.testCase;
+	wrap(callResult(API_URL + `/testcase/${tc}/export?format=${format}`,
+		{
+			headers: headers()
+		})
 		.then(async r => {
 			if (r.headers.get("Content-Type")?.startsWith("application/json")) {
 				const r_1 = await r.json();
@@ -114,16 +142,15 @@ function exportCurrentTestCase(format: ExportType, callback: (content: string) =
 }
 
 const WebApis = {
-	ErrorHandler: ErrorHandler,
+	Component: Component,
 	loadCurrentContext: loadCurrentContext,
+	validateContext: validateContext,
 	listAllDictionaries: listAllDictionaries,
-	loadCurrentDictionary: loadCurrentDictionary,
+	loadDictionary: loadDictionary,
 	listAllTestCases: listAllTestCases,
-	loadCurrentTestCase: loadCurrentTestCase,
-	selectCurrentDictionary: selectCurrentDictionary,
-	selectCurrentTestCase: selectCurrentTestCase,
+	loadTestCase: loadTestCase,
 	executeCurrentTestCase: executeCurrentTestCase,
-	exportCurrentTestCase: exportCurrentTestCase
+	exportCurrentTestCase: exportCurrentTestCase,
 };
 
 export default WebApis;

@@ -8,7 +8,8 @@ import java.nio.file.Paths;
 
 import ch.scaille.generators.util.CodeGeneratorParams;
 import ch.scaille.tcwriter.examples.ExampleHelper;
-import ch.scaille.tcwriter.persistence.fs.FsModelConfig;
+import ch.scaille.tcwriter.persistence.ModelConfig;
+import ch.scaille.tcwriter.persistence.factory.DaoConfigs;
 import ch.scaille.tcwriter.persistence.testexec.JunitTestExecConfig;
 
 public class ExampleBootstrap {
@@ -18,22 +19,26 @@ public class ExampleBootstrap {
 
 	public static void main(String[] args) throws IOException {
 		final var exampleHelper = new ExampleHelper(SRV_DATA, "server");
-		final var model = exampleHelper.generateDictionary();
-		final var tc = exampleHelper.recordTestCase(model);
+		final var dictionary = exampleHelper.generateDictionary();
+		final var tc = exampleHelper.recordTestCase(dictionary);
 
+		// Setup the test execution
 		final var currentConfig = exampleHelper.getConfigDao().getCurrentConfig();
-		currentConfig.getSubconfig(FsModelConfig.class).orElseThrow().setTemplatePath(TC_TEMPLATE);
+		currentConfig.getSubconfig(ModelConfig.class).orElseThrow().setTemplatePath(TC_TEMPLATE);
 		currentConfig.getSubconfig(JunitTestExecConfig.class)
 				.orElseThrow()
 				.setClasspath(CodeGeneratorParams.locationOf(ExampleHelper.class).toString());
 
-		exampleHelper.getModelDao().writeTestDictionary(model);
-		exampleHelper.getModelDao().writeTestCase(ExampleHelper.TC_NAME, tc);
 		exampleHelper.getConfigDao().saveConfiguration();
+		exampleHelper.getModelDao().writeTestDictionary(dictionary);
+		exampleHelper.getModelDao().writeTestCase(ExampleHelper.TC_NAME, tc);
 
+		// Copy the default template
 		final var templatePath = SRV_DATA.resolve(TC_TEMPLATE);
 		Files.createDirectories(templatePath.getParent());
-		try (var in = Thread.currentThread().getContextClassLoader().getResourceAsStream(TC_TEMPLATE);
+		try (var in = Thread.currentThread()
+				.getContextClassLoader()
+				.getResourceAsStream(DaoConfigs.USER_RESOURCES + TC_TEMPLATE);
 				var out = new FileOutputStream(templatePath.toFile())) {
 			in.transferTo(out);
 		}

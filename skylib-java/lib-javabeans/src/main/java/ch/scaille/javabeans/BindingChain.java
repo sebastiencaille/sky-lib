@@ -242,6 +242,12 @@ public class BindingChain implements IBindingController {
 		errorNotifier.clearError(property, property);
 	}
 
+	/**
+	 * Binds to the property
+	 * @param <T> the type of the property
+	 * @param propertySetter the property setter that must be called then setting the value coming from the components
+	 * @return a end of chain, to dynamically control the chain
+	 */
 	public <T> EndOfChain<T> bindProperty(final BiConsumer<Object, T> propertySetter) {
 		property.addListener(valueUpdateListener);
 		links.add(new Link() {

@@ -1,6 +1,7 @@
 package ch.scaille.util.persistence;
 
 import java.io.IOException;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import ch.scaille.util.helpers.ClassLoaderHelper;
@@ -18,13 +19,17 @@ public class ClassPathDao<T> extends AbstractSerializationDao<T> {
 		ClassLoaderHelper.registerResourceHandler();
 	}
 
-	public static final String PREFIX = "rsrc:";
+	private final String resourcePath;
 
-	private final String resourceName;
+	private final Set<String> whiteList;
 
-	public ClassPathDao(Class<T> daoType, String locator, StorageDataHandlerRegistry serDeserializerRegistry) {
+	private final boolean resourcePathWhiteListed;
+
+	public ClassPathDao(Class<T> daoType, String resourcePath, StorageDataHandlerRegistry serDeserializerRegistry, Set<String> whiteList) {
 		super(daoType, serDeserializerRegistry);
-		this.resourceName = locator.substring(PREFIX.length());
+		this.whiteList = whiteList;
+		this.resourcePath = resourcePath;
+		this.resourcePathWhiteListed = whiteList.stream().anyMatch(resourcePath::startsWith);
 	}
 
 	@Override
@@ -34,7 +39,10 @@ public class ClassPathDao<T> extends AbstractSerializationDao<T> {
 
 	@Override
 	protected ResourceMetaData resolve(String locator) throws IOException {
-		return buildAndValidateMetadata(locator, resourceName + locator);
+		if (!resourcePathWhiteListed && whiteList.stream().noneMatch(locator::startsWith)) {
+			throw unableToIdentifyException(locator, resourcePath + locator, "not in white-list");
+		}
+		return buildAndValidateMetadata(locator, resourcePath + locator);
 	}
 
 	@Override

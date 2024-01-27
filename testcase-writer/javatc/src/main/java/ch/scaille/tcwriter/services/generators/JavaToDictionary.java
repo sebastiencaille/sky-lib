@@ -1,5 +1,7 @@
 package ch.scaille.tcwriter.services.generators;
 
+import static ch.scaille.tcwriter.persistence.factory.DaoConfigs.homeFolder;
+
 import java.util.stream.Collector;
 
 import com.beust.jcommander.JCommander;
@@ -10,12 +12,11 @@ import ch.scaille.tcwriter.annotations.TCActors;
 import ch.scaille.tcwriter.annotations.TCRole;
 import ch.scaille.tcwriter.generators.services.visitors.ClassToDictionaryVisitor;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
-import ch.scaille.tcwriter.persistence.fs.FsConfigDao;
-import ch.scaille.tcwriter.persistence.fs.FsModelDao;
+import ch.scaille.tcwriter.persistence.factory.DaoConfigs;
 import ch.scaille.util.helpers.ClassFinder;
 
 public class JavaToDictionary extends AbstractGenerator<TestDictionary> {
-	
+
 	public static class Args {
 		@Parameter(names = { "-c" }, description = "Name of configuration")
 		public String configuration = "default";
@@ -44,11 +45,17 @@ public class JavaToDictionary extends AbstractGenerator<TestDictionary> {
 	public static void main(final String[] args) {
 		final var mainArgs = new Args();
 		JCommander.newBuilder().addObject(mainArgs).build().parse(args);
-		final var configDao = FsConfigDao.localUser().setConfiguration(mainArgs.configuration);
-		final var persister = new FsModelDao(configDao);
-		final var dictionary = ClassFinder.ofCurrentThread().withPackages(mainArgs.sourcePackage)
+		
+		final var daoConfig = DaoConfigs.withFolder(homeFolder());
+		daoConfig.configDao().setConfiguration(mainArgs.configuration);
+		
+		final var persister = daoConfig.modelDao();
+		final var dictionary = ClassFinder.ofCurrentThread()
+				.withPackages(mainArgs.sourcePackage)
 				.withAnnotation(TCRole.class, ClassFinder.Policy.CLASS_ONLY)
-				.withAnnotation(TCActors.class, ClassFinder.Policy.CLASS_ONLY).scan().collect(toDictionary());
+				.withAnnotation(TCActors.class, ClassFinder.Policy.CLASS_ONLY)
+				.scan()
+				.collect(toDictionary());
 		persister.writeTestDictionary(dictionary);
 	}
 

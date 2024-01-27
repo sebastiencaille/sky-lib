@@ -8,8 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import ch.scaille.tcwriter.annotations.Recorded;
 import ch.scaille.tcwriter.annotations.TCRole;
-import ch.scaille.tcwriter.persistence.fs.FsConfigDao;
-import ch.scaille.tcwriter.persistence.fs.FsModelDao;
+import ch.scaille.tcwriter.persistence.factory.DaoConfigs;
 
 @Aspect
 public class TestCaseRecorderAspect {
@@ -35,19 +34,16 @@ public class TestCaseRecorderAspect {
 
 		// execution configuration
 		final var recorderEnabled = Boolean.getBoolean("tc.recorderEnabled");
-		var fsModelConfig = System.getProperty("tc.fsModelConfig");
 		var tcDictionaryName = System.getProperty("tc.dictionaryName", "default");
 
 		final var recorded = method.getAnnotation(Recorded.class);
-		if (recorded != null && recorded.fsModelConfig() != null) {
-			fsModelConfig = recorded.fsModelConfig();
-		}
 		if (recorded != null && recorded.dictionary() != null) {
 			tcDictionaryName = recorded.dictionary();
 		}
 		if (recorder == null && (recorderEnabled || (recorded != null && recorded.enabled()))) {
-			setRecorder(new TestCaseRecorder(new FsModelDao(FsConfigDao.localUser().setConfiguration(fsModelConfig)),
-					tcDictionaryName));
+			// When running in separate process, dynamically create a recorder 
+			final var daoConfig = DaoConfigs.withFolder(DaoConfigs.tempFolder());
+			setRecorder(new TestCaseRecorder(daoConfig.modelDao(), tcDictionaryName));
 		}
 		return jp.proceed();
 	}

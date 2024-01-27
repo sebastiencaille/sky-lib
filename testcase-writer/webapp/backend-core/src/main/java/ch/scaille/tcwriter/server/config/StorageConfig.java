@@ -9,9 +9,10 @@ import org.springframework.context.annotation.Configuration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 
+import ch.scaille.tcwriter.persistence.ConfigDao;
 import ch.scaille.tcwriter.persistence.IModelDao;
-import ch.scaille.tcwriter.persistence.fs.FsConfigDao;
-import ch.scaille.tcwriter.persistence.fs.FsModelDao;
+import ch.scaille.tcwriter.persistence.ModelDao;
+import ch.scaille.tcwriter.persistence.factory.DaoFactory;
 import ch.scaille.tcwriter.server.dao.DictionaryDao;
 import ch.scaille.tcwriter.server.dao.IDictionaryDao;
 import ch.scaille.tcwriter.server.dao.ITestCaseDao;
@@ -20,17 +21,20 @@ import ch.scaille.tcwriter.server.dao.TestCaseDao;
 @Configuration
 public class StorageConfig {
 
-	@Value("${app.dataFolder:/var/lib/tcwriter/data}")
-	private Path dataFolder;
-
 	@Bean
-	public FsConfigDao fsconfigDao() {
-		return FsConfigDao.withBaseFolder(dataFolder).setConfiguration("server");
+	public DaoFactory daoFactory(@Value("${app.dataFolder:/var/lib/tcwriter/data}") Path dataFolder) {
+		return DaoFactory.defaultsWith(new DaoFactory.FsDsFactory(dataFolder));
 	}
 
 	@Bean
-	public IModelDao modelDao(FsConfigDao configDao) {
-		return new FsModelDao(configDao);
+	public ConfigDao configDao(DaoFactory daoFactory) {
+		return new ConfigDao(daoFactory, ".", ConfigDao.defaultDataHandlers())
+				.setConfiguration("server");
+	}
+
+	@Bean
+	public IModelDao modelDao(DaoFactory daoFactory, ConfigDao configDao) {
+		return new ModelDao(daoFactory, configDao.getCurrentConfigProperty(), ModelDao.defaultDataHandlers());
 	}
 
 	@Bean

@@ -1,5 +1,7 @@
 package ch.scaille.tcwriter.examples;
 
+import static ch.scaille.tcwriter.persistence.factory.DaoConfigs.cp;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,9 +14,9 @@ import ch.scaille.tcwriter.model.config.TCConfig;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.persistence.IConfigDao;
-import ch.scaille.tcwriter.persistence.fs.FsConfigDao;
-import ch.scaille.tcwriter.persistence.fs.FsModelConfig;
-import ch.scaille.tcwriter.persistence.fs.FsModelDao;
+import ch.scaille.tcwriter.persistence.ModelConfig;
+import ch.scaille.tcwriter.persistence.ModelDao;
+import ch.scaille.tcwriter.persistence.factory.DaoConfigs;
 import ch.scaille.tcwriter.persistence.testexec.JunitTestExecConfig;
 import ch.scaille.tcwriter.services.generators.JavaToDictionary;
 import ch.scaille.tcwriter.services.generators.visitors.HumanReadableVisitor;
@@ -36,7 +38,7 @@ public class ExampleHelper {
 
 	private final IConfigDao configDao;
 
-	private final FsModelDao modelDao;
+	private final ModelDao modelDao;
 
 	public ExampleHelper() throws IOException {
 		this(RESOURCE_FOLDER, "default");
@@ -55,22 +57,22 @@ public class ExampleHelper {
 		final var dictionaryPath = dataPath.resolve("dictionary");
 		Files.createDirectories(dictionaryPath);
 
-		final var modelConfig = new FsModelConfig();
+		final var modelConfig = new ModelConfig();
 		modelConfig.setTcPath(tcPath.toString());
 		modelConfig.setTcExportPath(
 				CodeGeneratorParams.mavenTargetFolderOf(ExampleHelper.class).resolve("generated-tests").toString());
 		modelConfig.setDictionaryPath(dictionaryPath.toString());
-		modelConfig.setTemplatePath("rsrc:templates/TC.template");
+		modelConfig.setTemplatePath(cp("templates/TC.template"));
 
 		final var junitTestConfig = new JunitTestExecConfig();
 		junitTestConfig.setClasspath("");
 
-		configDao = FsConfigDao.withBaseFolder(dataPath)
-				.setConfiguration(TCConfig.of(configName, modelConfig, junitTestConfig));
-		modelDao = new FsModelDao(configDao);
+		final var daoConfig = DaoConfigs.withFolder(dataPath);
+		configDao = daoConfig.configDao().setConfiguration(TCConfig.of(configName, modelConfig, junitTestConfig));
+		modelDao = daoConfig.modelDao();
 	}
 
-	public FsModelDao getModelDao() {
+	public ModelDao getModelDao() {
 		return modelDao;
 	}
 
@@ -90,7 +92,7 @@ public class ExampleHelper {
 		test.initActors();
 		test.testNormalCase();
 
-		final var testCase = recorder.getTestCase("ch.scaille.tcwriter.examples.GeneratedTest");
+		final var testCase = recorder.buildTestCase("ch.scaille.tcwriter.examples.GeneratedTest");
 		Logs.of(ExampleHelper.class).info(() -> new HumanReadableVisitor(testCase, true).processAllSteps());
 
 		return testCase;

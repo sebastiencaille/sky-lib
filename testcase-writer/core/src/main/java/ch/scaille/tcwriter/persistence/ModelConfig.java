@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.persistence.fs;
+package ch.scaille.tcwriter.persistence;
 
 import ch.scaille.annotations.Labeled;
 import ch.scaille.annotations.Ordered;
@@ -8,7 +8,7 @@ import ch.scaille.annotations.Ordered;
  * @author scaille
  *
  */
-public class FsModelConfig {
+public class ModelConfig {
 
 
     private String dictionaryPath;

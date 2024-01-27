@@ -3,9 +3,9 @@ package ch.scaille.util.persistence;
 import java.util.stream.Stream;
 
 /**
- * To manipulate persisted data
- * 
- * The locator allow to find the persisted data.
+ * To access Resources
+ * <p>
+ * The locator allow to find the persisted resource.
  * 
  * @param <T>
  */

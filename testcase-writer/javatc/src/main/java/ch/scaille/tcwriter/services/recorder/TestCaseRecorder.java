@@ -196,7 +196,7 @@ public class TestCaseRecorder implements ITestCaseRecorder {
     }
 
     @Override
-    public TestCase getTestCase(final String testClassName) {
+    public TestCase buildTestCase(final String testClassName) {
         final var testCase = new ExportableTestCase(testClassName, tcDictionary);
         testCase.getMetadata().setDescription(String.format("%s: execution at %s", testClassName,
                 DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss").format(LocalDateTime.now())));

@@ -31,7 +31,7 @@ public interface IModelDao {
 
 	List<Metadata> listTestCases(TestDictionary dictionary) throws IOException;
 	
-	Optional<ExportableTestCase> readTestCase(String filename, TestDictionary testDictionary);
+	Optional<ExportableTestCase> readTestCase(String identifier, TestDictionary testDictionary);
 
 	void writeTestCase(String identifier, TestCase testCase);
 

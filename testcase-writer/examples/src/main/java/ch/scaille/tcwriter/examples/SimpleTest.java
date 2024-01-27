@@ -51,7 +51,6 @@ public class SimpleTest {
 	@Test
 	public void testFailureCase() {
 		customer.buy(inLocalShop(), coffeeMachine);
-		customer.checkPackage(fromShop(), teaPot);
-		Assertions.assertThrows(AssertionError.class, () -> customer.resellOwnedItem(10));
+		Assertions.assertThrows(AssertionError.class, () -> 	customer.checkPackage(fromShop(), teaPot));
 	}
 }

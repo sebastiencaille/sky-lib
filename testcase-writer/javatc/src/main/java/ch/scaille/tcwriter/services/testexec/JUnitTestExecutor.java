@@ -45,7 +45,6 @@ public class JUnitTestExecutor implements ITestExecutor {
 		return new TestCaseToJunitVisitor(this.modelDao.readTemplate()).visitTestCase(tc, generationMetadata);
 	}
 
-
 	@Override
 	public String write(TestConfig testConfig) throws IOException, TestCaseException {
 		return createTemplate(testConfig.testCase).writeToFolder(testConfig.sourceFolder).toString();
@@ -75,6 +74,7 @@ public class JUnitTestExecutor implements ITestExecutor {
 
 	@Override
 	public void execute(TestConfig testConfig, String binaryRef) throws IOException {
+
 		final var binaryURL = testConfig.binaryFolder;
 		final var junit = Arrays.stream(classPath)
 				.filter(s -> s.toString().contains("junit-platform-console-standalone"))

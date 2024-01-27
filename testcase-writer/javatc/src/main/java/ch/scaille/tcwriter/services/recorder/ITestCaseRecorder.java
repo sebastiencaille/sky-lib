@@ -12,5 +12,5 @@ public interface ITestCaseRecorder {
 
 	void recordReturnValue(Object reference);
 
-	TestCase getTestCase(String testName);
+	TestCase buildTestCase(String testName);
 }

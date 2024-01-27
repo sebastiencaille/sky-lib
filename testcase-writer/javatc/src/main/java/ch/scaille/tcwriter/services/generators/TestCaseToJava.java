@@ -1,5 +1,6 @@
 package ch.scaille.tcwriter.services.generators;
 
+import static ch.scaille.tcwriter.persistence.factory.DaoConfigs.homeFolder;
 import static ch.scaille.util.helpers.LambdaExt.uncheckedC;
 
 import java.io.FileNotFoundException;
@@ -14,8 +15,7 @@ import ch.scaille.tcwriter.generators.services.visitors.TestCaseToJunitVisitor;
 import ch.scaille.tcwriter.model.TestCaseException;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.persistence.IModelDao;
-import ch.scaille.tcwriter.persistence.fs.FsConfigDao;
-import ch.scaille.tcwriter.persistence.fs.FsModelDao;
+import ch.scaille.tcwriter.persistence.factory.DaoConfigs;
 
 public class TestCaseToJava {
 
@@ -47,7 +47,8 @@ public class TestCaseToJava {
 		
 		final var tcFile = mainArgs.testCase;
 
-		final var modelDao = new FsModelDao(FsConfigDao.localUser().setConfiguration(mainArgs.configuration));
+		final var daoConfig = DaoConfigs.withFolder(homeFolder());
+		final var modelDao = daoConfig.modelDao();
 		final var testDictionary = modelDao.readTestDictionary(mainArgs.tcDictionary)
 				.orElseThrow(FileNotFoundException::new);
 		final var testCase = modelDao.readTestCase(tcFile, testDictionary).orElseThrow(FileNotFoundException::new);

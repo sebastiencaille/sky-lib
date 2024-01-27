@@ -4,6 +4,7 @@ import static ch.scaille.util.helpers.LambdaExt.uncheckedF2;
 import static ch.scaille.util.helpers.LambdaExt.uncheckedR;
 
 import java.awt.Dialog.ModalityType;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -30,11 +31,11 @@ import ch.scaille.tcwriter.model.testcase.ExportableTestStep;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestStep;
 import ch.scaille.tcwriter.persistence.IConfigDao;
-import ch.scaille.tcwriter.persistence.fs.FsModelDao;
+import ch.scaille.tcwriter.persistence.ModelDao;
 import ch.scaille.tcwriter.services.testexec.ITestExecutor;
+import ch.scaille.tcwriter.services.testexec.ITestExecutor.TestConfig;
 import ch.scaille.tcwriter.services.testexec.TestExecutionListener;
 import ch.scaille.tcwriter.services.testexec.TestRemoteControl;
-import ch.scaille.tcwriter.services.testexec.ITestExecutor.TestConfig;
 import ch.scaille.util.helpers.Logs;
 
 public class TCWriterController extends GuiController {
@@ -47,9 +48,9 @@ public class TCWriterController extends GuiController {
 	private final ITestExecutor testExecutor;
 
 	private final IConfigDao configDao;
-	private final FsModelDao modelDao;
+	private final ModelDao modelDao;
 
-	public TCWriterController(final IConfigDao configLoader, final FsModelDao modelDao, TestDictionary tcDictionary,
+	public TCWriterController(final IConfigDao configLoader, final ModelDao modelDao, TestDictionary tcDictionary,
 			final ITestExecutor testExecutor) {
 		this.configDao = configLoader;
 		this.modelDao = modelDao;
@@ -192,7 +193,7 @@ public class TCWriterController extends GuiController {
 	private JFileChooser fileChooser() {
 		final var testFileChooser = new JFileChooser();
 		testFileChooser.setFileFilter(new FileNameExtensionFilter("Test case", "yaml"));
-		testFileChooser.setCurrentDirectory(modelDao.getTCFolder().toFile());
+		testFileChooser.setCurrentDirectory(new File(modelDao.getCurrentConfig().getTcPath()));
 		return testFileChooser;
 	}
 

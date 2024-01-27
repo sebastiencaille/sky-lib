@@ -58,8 +58,12 @@ public abstract class AbstractSerializationDao<T> implements IDao<T> {
 	}
 
 	protected ResourceMetaData buildAndValidateMetadata(String locator, String storageLocator) {
-		return buildMetadata(locator, storageLocator).orElseThrow(
-				() -> new IllegalStateException("Unable to identify meta-data of " + locator + " / " + storageLocator));
+		return buildMetadata(locator, storageLocator)
+				.orElseThrow(() -> unableToIdentifyException(locator, storageLocator, "not found"));
+	}
+
+	protected IllegalStateException unableToIdentifyException(String locator, String storageLocator, String extra) {
+		return new IllegalStateException(String.format( "Unable to identify meta-data of %s / %s (%s)" ,locator , storageLocator , extra));
 	}
 
 	/**
@@ -100,14 +104,15 @@ public abstract class AbstractSerializationDao<T> implements IDao<T> {
 
 	@Override
 	public Resource<T> loadResource(ResourceMetaData resourceMetaData) throws StorageException {
-		return StorageException.wrap("loadResource", () -> dataHandlerRegistry.decode(readRaw(resourceMetaData), resourceType));
+		return StorageException.wrap("loadResource",
+				() -> dataHandlerRegistry.decode(readRaw(resourceMetaData), resourceType));
 	}
 
 	@Override
 	public Resource<T> loadResource(String locator) throws StorageException {
 		return StorageException.wrap("loadResource", () -> loadResource(resolve(locator)));
 	}
-	
+
 	@Override
 	public Resource<T> saveOrUpdate(String locator, T value) throws StorageException {
 		return StorageException.wrap("saveOrUpdate", () -> {

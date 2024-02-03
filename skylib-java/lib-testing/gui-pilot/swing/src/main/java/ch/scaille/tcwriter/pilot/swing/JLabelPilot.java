@@ -13,8 +13,8 @@ public class JLabelPilot extends AbstractSwingComponent<JLabelPilot, JLabel> {
 	}
 
 	public void checkValue(final String expected) {
-		waitOn(assertion(pc -> assertEquals(expected, pc.component.getText(), pc.description))
-				.withReportText(checkingValue(expected)));
+		polling(asserts(pc -> assertEquals(expected, pc.component.getText(), pc.description)))
+				.orFail(checkingValue(expected));
 	}
 
 }

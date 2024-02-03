@@ -40,7 +40,7 @@ public interface Factories {
 					assertion.accept(c);
 					return PollingResults.success();
 				} catch (final AssertionError e) {
-					return PollingResults.onException(e);
+					return PollingResults.failWithException(e);
 				}
 			});
 		}
@@ -48,7 +48,7 @@ public interface Factories {
 		/**
 		 * Succeed if action was applied (no exception raised)
 		 */
-		static <C> Polling<C, Boolean> applyOnEditable(final Consumer<C> action) {
+		static <C> Polling<C, Boolean> applies(final Consumer<C> action) {
 			return new EditableComponentPolling<>(null, c -> {
 				action.accept(c.component);
 				return PollingResults.success();
@@ -117,7 +117,7 @@ public interface Factories {
 		 * @param <C>
 		 * @return
 		 */
-		static <C, V> PollingResult<C, V> onException(final Throwable cause) {
+		static <C, V> PollingResult<C, V> failWithException(final Throwable cause) {
 			return new PollingResult<>(null, cause);
 		}
 
@@ -132,7 +132,7 @@ public interface Factories {
 		 * @param actionDescr
 		 * @return
 		 */
-		static <C, V> FailureHandler<C, V> throwError(final String actionDescr) {
+		static <C, V> FailureHandler<C, V, V> throwError(final String actionDescr) {
 			return (r, g) -> {
 				throw new AssertionError(
 						r.getComponentDescription() + ": action failed [" + actionDescr + "]: " + r.failureReason);
@@ -144,7 +144,7 @@ public interface Factories {
 		 *
 		 * @return
 		 */
-		static <C, V> FailureHandler<C, V> throwError() {
+		static <C, V> FailureHandler<C, V, V> throwError() {
 			return (r, g) -> {
 				if (r.failureReason instanceof AssertionError) {
 					throw new AssertionError(r.getComponentDescription() + ": " + r.failureReason.getMessage(),
@@ -161,7 +161,7 @@ public interface Factories {
 		 * @param actionDescr
 		 * @return
 		 */
-		static <C, V> FailureHandler<C, V> reportFailure(final String report) {
+		static <C, V> FailureHandler<C, V, V> reportFailure(final String report) {
 			return (r, g) -> {
 				g.getActionReport().report(r.getComponentDescription() + ": " + report);
 				return r.polledValue;
@@ -174,7 +174,7 @@ public interface Factories {
 		 * @param actionDescr
 		 * @return
 		 */
-		static <C> FailureHandler<C, Boolean> reportNotSatisfied(final String report) {
+		static <C, V> FailureHandler<C, V, Boolean> reportNotSatisfied(final String report) {
 			return (r, g) -> {
 				g.getActionReport().report(r.getComponentDescription() + ": " + report);
 				return Boolean.FALSE;
@@ -187,7 +187,7 @@ public interface Factories {
 		 * @param actionDescr
 		 * @return
 		 */
-		static <C, V> FailureHandler<C, V> ignoreFailure() {
+		static <C, V> FailureHandler<C, V, V> returnNull() {
 			return (r, g) -> r.polledValue;
 		}
 
@@ -198,7 +198,7 @@ public interface Factories {
 		 * @param actionDescr
 		 * @return
 		 */
-		static <C> FailureHandler<C, Boolean> ignoreNotSatisfied() {
+		static <C, P> FailureHandler<C, P, Boolean> ignoreFailure() {
 			return (r, g) -> Boolean.FALSE;
 		}
 	}

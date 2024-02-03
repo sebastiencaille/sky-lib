@@ -1,5 +1,7 @@
 package ch.scaille.example.gui.model;
 
+import static ch.scaille.tcwriter.pilot.Factories.Pollings.asserts;
+
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.time.Duration;
@@ -11,7 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import ch.scaille.example.gui.TestObjectTableModel;
 import ch.scaille.example.gui.model.impl.TableModelExampleView;
 import ch.scaille.tcwriter.jupiter.DisabledIfHeadless;
-import ch.scaille.tcwriter.pilot.Factories.Pollings;
 import ch.scaille.tcwriter.pilot.swing.SwingPilot;
 import ch.scaille.util.helpers.Logs;
 
@@ -34,11 +35,11 @@ class ModelExampleTest {
 
 		var page = pilot.page(ModelExamplePage::new);
 
-		page.listTable.waitOn(Pollings.asserts(pc -> {
+		page.listTable.polling(asserts(pc -> {
 			final var component = pc.component;
 			Assertions.assertEquals(FIXED_COLUMN_WIDTH, component.getColumn(TestObjectTableModel.Columns.A_SECOND_VALUE).getWidth());
 			Assertions.assertEquals(component.getWidth() - FIXED_COLUMN_WIDTH, component.getColumn(TestObjectTableModel.Columns.A_FIRST_VALUE).getWidth());
-		}));
+		})).orFail();
 		page.listTable.checkValue(0, 0, "One");
 		page.listTable.checkValue(1, 0, "Two");
 		page.listTable.checkValue(2, 0, "Three");

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -41,15 +42,16 @@ public class TestCaseController extends TestcaseApiController {
 		this.webFeedbackFacade = webFeedbackFacade;
 	}
 
+	@Transactional(readOnly = true)
 	@Override
-	public ResponseEntity<List<Metadata>> listAll(@NotNull String dictionary) {
+	public ResponseEntity<List<Metadata>> listAll(@Valid @NotNull String dictionary) {
 		return ResponseEntity
 				.ok(testCaseFacade.listAll(dictionary).stream().map(MetadataMapper.MAPPER::convert).toList());
 	}
 
-	
+	@Transactional(readOnly = true)
 	@Override
-	public ResponseEntity<TestCase> testcase(String tc, @NotNull String dictionary) {
+	public ResponseEntity<TestCase> testcase(@Valid @NotNull String tc, @Valid @NotNull String dictionary) {
 		final var loadedTC = loadValidTestCase(tc, dictionary);
 		final var dto = TestCaseMapper.MAPPER.convert(loadedTC);
 		final var humanReadables = testCaseFacade.computeHumanReadableTexts(loadedTC, loadedTC.getSteps());
@@ -59,8 +61,10 @@ public class TestCaseController extends TestcaseApiController {
 		return ResponseEntity.ok(dto);
 	}
 
+	@Transactional()
 	@Override
-	public ResponseEntity<Void> executeTestCase(String tc, @NotNull String dictionary, @Valid String tabId) {
+	public ResponseEntity<Void> executeTestCase(@Valid @NotNull String tc, @Valid @NotNull String dictionary,
+			@Valid @NotNull String tabId) {
 		final var loadedTC = loadValidTestCase(tc, dictionary);
 		final var wsSessionId = sessionAccessor.webSocketSessionIdOf(getRequest(), tabId).get();
 		testCaseFacade.executeTest(loadedTC, s -> webFeedbackFacade.send(wsSessionId, tabId,
@@ -70,7 +74,7 @@ public class TestCaseController extends TestcaseApiController {
 
 	@Override
 	public ResponseEntity<String> exportTestCase(String tc, @NotNull String dictionary, @Valid ExportType format) {
-			final var loadedTC = loadValidTestCase(tc, dictionary);
+		final var loadedTC = loadValidTestCase(tc, dictionary);
 		if (format == ExportType.JAVA) {
 			return exportJava(loadedTC);
 		}

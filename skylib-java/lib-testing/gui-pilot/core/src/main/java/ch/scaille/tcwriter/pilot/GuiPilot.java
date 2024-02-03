@@ -131,7 +131,7 @@ public class GuiPilot {
 	 * Wait the model dialog expected by expectModalDialog
 	 */
 	public boolean waitModalDialogHandled(
-			final PollingResult.FailureHandler<ModalDialogDetector.PollingResult, Boolean> onFail) {
+			final PollingResult.FailureHandler<ModalDialogDetector.PollingResult, ?, Boolean> onFail) {
 		if (currentModalDialogDetector == null) {
 			throw new IllegalStateException("expectModalDialog was never called");
 		}

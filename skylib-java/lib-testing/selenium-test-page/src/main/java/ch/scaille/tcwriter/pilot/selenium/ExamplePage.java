@@ -44,7 +44,7 @@ public class ExamplePage extends PagePilot {
 		@Override
 		public void waitFinished() {
 			final var page = ExamplePage.this;
-			page.waitOn(() -> page.enableTest, ElementPilot.isEnabled());
+			page.polling(() -> page.enableTest, ElementPilot.isEnabled()).orFail();
 			Assertions.assertTrue(page.enableTest.isEnabled(), "EnableTest is enabled");
 		}
 
@@ -60,24 +60,24 @@ public class ExamplePage extends PagePilot {
 	 * until "Proceed" is enabled
 	 */
 	public void testEnable() {
-		waitOn(() -> this.enableTest, click().followedBy(new WaitEnableTestEnabledDelay()));
+		polling(() -> this.enableTest, click().followedBy(new WaitEnableTestEnabledDelay())).orFail();
 	}
 
 	public void testEnabled() {
-		waitOn(() -> this.enableTest, asserts(c -> Assertions.assertTrue(c.component.isEnabled())));
+		polling(() -> this.enableTest, asserts(c -> Assertions.assertTrue(c.component.isEnabled()))).orFail();
 	}
 
 	public void testAlert() {
 		// wait(() -> this.alertTest, WebElement::click);
 		// wait(() -> this.alertTest, action(WebElement::click));
 		// this one has nice reporting
-		waitOn(() -> this.alertTest, click());
+		polling(() -> this.alertTest, click()).orFail();
 	}
 
 	public void clickOnMissingButton() {
 		Assertions.assertFalse(
-				isSatisfied(() -> this.notExistingElement,
-						Pollings.<WebElement>exists().withTimeout(Duration.ofMillis(500))),
+				polling(() -> this.notExistingElement,
+						Pollings.<WebElement>exists().withTimeout(Duration.ofMillis(500))).isSatisfiedOr("not satisfied"),
 				"isSatisfied should have returned false");
 	}
 
@@ -96,9 +96,9 @@ public class ExamplePage extends PagePilot {
 	}
 
 	public void testElementChange() {
-		waitOn(() -> this.elementChangeTest, click());
+		polling(() -> this.elementChangeTest, click()).orFail();
 		// Explicitly test using WebElement as source
-		waitOn(() -> this.elementChange.findElement(By.id("TextChange")), textEquals("Hello again"));
+		polling(() -> this.elementChange.findElement(By.id("TextChange")), textEquals("Hello again")).orFail();
 	}
 
 }

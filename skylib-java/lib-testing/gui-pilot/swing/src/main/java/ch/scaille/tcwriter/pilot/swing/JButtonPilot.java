@@ -9,7 +9,7 @@ public class JButtonPilot extends AbstractSwingComponent<JButtonPilot, JButton> 
 	}
 
 	public void click() {
-		waitOn(action(JButton::doClick).withReportText("click"));
+		polling(applies(JButton::doClick)).orFail("click");
 	}
 
 }

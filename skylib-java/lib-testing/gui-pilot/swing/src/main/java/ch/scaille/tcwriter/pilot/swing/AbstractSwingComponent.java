@@ -1,6 +1,7 @@
 package ch.scaille.tcwriter.pilot.swing;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
@@ -38,11 +39,6 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 	}
 
 	@Override
-	protected String reportNameOf(C c) {
-		return c.getClass().getSimpleName() + "[" + c.getName() + "]";
-	}
-
-	@Override
 	protected Optional<C> loadGuiComponent() {
 		try {
 			return Optional.of(pilot.getComponent(name, clazz));
@@ -62,11 +58,12 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 	}
 
 	@Override
-	protected <U> U waitPollingSuccess(final Polling<C, U> polling, final FailureHandler<C, U> onFail) {
+	protected <P, U> U waitPollingSuccess(Polling<C, P> polling, Function<P, U> successTransformer,
+			FailureHandler<C, P, U> onFail) {
 		if (SwingUtilities.isEventDispatchThread()) {
 			throw new IllegalStateException("Polling must not run in Swing thread");
 		}
-		return super.waitPollingSuccess(polling, onFail);
+		return super.waitPollingSuccess(polling, successTransformer, onFail);
 	}
 
 	@Override
@@ -77,13 +74,13 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 	}
 
 	public void waitEnabled() {
-		waitOn(Pollings.<C>satisfies(JComponent::isEnabled)
-				.withReportText(Factories.Reporting.checkingThat("component is enabled")));
+		polling(Pollings.<C>satisfies(JComponent::isEnabled)
+				.withReportText(Factories.Reporting.checkingThat("component is enabled"))).orFail();
 	}
 
 	public void waitDisabled() {
-		waitOn(Pollings.<C>satisfies(c -> !c.isEnabled())
-				.withReportText(Factories.Reporting.checkingThat("component is disabled")));
+		polling(Pollings.<C>satisfies(c -> !c.isEnabled())
+				.withReportText(Factories.Reporting.checkingThat("component is disabled"))).orFail();
 	}
 
 }

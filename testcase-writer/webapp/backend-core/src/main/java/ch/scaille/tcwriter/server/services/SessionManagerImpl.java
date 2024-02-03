@@ -7,6 +7,7 @@ import org.springframework.session.Session;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import ch.scaille.tcwriter.server.dto.Context;
+import jakarta.transaction.Transactional;
 
 public class SessionManagerImpl implements SessionAccessor {
 
@@ -124,6 +125,7 @@ public class SessionManagerImpl implements SessionAccessor {
 	}
 
 	@Override
+	@Transactional
 	public GetSet<Context> getContext(Optional<NativeWebRequest> request) {
 		return new GetSet<>(new NativeWebRequestAccessor(request), "UserContext",
 				ch.scaille.tcwriter.server.dto.Context::new);

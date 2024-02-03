@@ -10,7 +10,6 @@ import org.openqa.selenium.WebElement;
 import ch.scaille.tcwriter.pilot.AbstractComponentPilot;
 import ch.scaille.tcwriter.pilot.Factories.PollingResults;
 import ch.scaille.tcwriter.pilot.Factories.Pollings;
-import ch.scaille.tcwriter.pilot.PilotReport.ReportFunction;
 import ch.scaille.tcwriter.pilot.Polling;
 import ch.scaille.tcwriter.pilot.PollingResult;
 
@@ -46,11 +45,6 @@ public class ElementPilot extends AbstractComponentPilot<ElementPilot, WebElemen
 	}
 
 	@Override
-	protected String reportNameOf(WebElement c) {
-		return c.toString();
-	}
-
-	@Override
 	protected Optional<WebElement> loadGuiComponent() {
 		return Optional.ofNullable(pilot.getDriver().findElement(locator));
 	}
@@ -70,7 +64,7 @@ public class ElementPilot extends AbstractComponentPilot<ElementPilot, WebElemen
 		polling.initialize(this);
 		return new SeleniumPoller(pilot.getDriver(), polling.getTimeout(), polling.getFirstDelay(),
 				polling.getDelayFunction())
-				.run(p -> executePolling(p, polling), PollingResult::isSuccess, PollingResults::onException)
+				.run(p -> executePolling(p, polling), PollingResult::isSuccess, PollingResults::failWithException)
 				.orElseThrow();
 	}
 
@@ -84,12 +78,8 @@ public class ElementPilot extends AbstractComponentPilot<ElementPilot, WebElemen
 		}
 	}
 
-	public boolean waitOn(Consumer<WebElement> action) {
-		return waitOn(Pollings.applyOnEditable(action));
-	}
-
-	public boolean waitOn(Consumer<WebElement> action, ReportFunction<WebElement> report) {
-		return waitOn(Pollings.applyOnEditable(action).withReportFunction(report));
+	public Wait<Boolean> polling(Consumer<WebElement> action) {
+		return polling(Pollings.applies(action));
 	}
 	
 	public static Polling<WebElement, Boolean> isEnabled() {
@@ -97,7 +87,7 @@ public class ElementPilot extends AbstractComponentPilot<ElementPilot, WebElemen
 	}
 
 	public static Polling<WebElement, Boolean> click() {
-		return Pollings.applyOnEditable(WebElement::click).withReportText("clicked");
+		return Pollings.applies(WebElement::click).withReportText("clicked");
 	}
 
 

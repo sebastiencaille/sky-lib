@@ -1,15 +1,15 @@
 package ch.scaille.tcwriter.pilot;
 
 import java.util.Optional;
-import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import ch.scaille.tcwriter.pilot.AbstractComponentPilot.LoadedComponent;
 
 public class PollingResult<T, V> {
 
-	public interface FailureHandler<C, V> extends BiFunction<PollingResult<C, V>, GuiPilot, V> {
-		// simplify type
+	public interface FailureHandler<C, V, R> {
+		R apply(PollingResult<C, V> result, GuiPilot guiPilot);
 	}
 
 	public final V polledValue;
@@ -24,7 +24,7 @@ public class PollingResult<T, V> {
 
 	public Optional<T> getLoadedElement() {
 		if (loadedElement == null) {
-			return  Optional.empty();
+			return Optional.empty();
 		}
 		return Optional.of(loadedElement.element);
 	}
@@ -42,16 +42,9 @@ public class PollingResult<T, V> {
 		return failureReason == null;
 	}
 
-	public V orElse(final V orElse) {
+	public <U> U mapOrGet(Function<V, U> mapper, final Supplier<U> orElse) {
 		if (isSuccess()) {
-			return polledValue;
-		}
-		return orElse;
-	}
-
-	public V orElseGet(final Supplier<V> orElse) {
-		if (isSuccess()) {
-			return polledValue;
+			return mapper.apply(polledValue);
 		}
 		return orElse.get();
 	}

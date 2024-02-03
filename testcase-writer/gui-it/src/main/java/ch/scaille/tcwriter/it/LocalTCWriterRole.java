@@ -91,21 +91,21 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	public void checkHumanReadable(final StepSelector selector, final String humanReadable) {
 		selector.accept(tcWriterPage);
 
-		tcWriterPage.stepsTable.waitOn(tcWriterPage.stepsTable.assertion(pc -> {
+		tcWriterPage.stepsTable.polling(tcWriterPage.stepsTable.asserts(pc -> {
 			final var component = pc.component;
 			final var value = ((StepsTableModel) component.getModel()).getHumanReadable(component.getSelectedRow());
 			Assertions.assertEquals(humanReadable, value);
-		}).withReportText("checking human readable text: " + humanReadable));
+		})).orFail("checking human readable text: " + humanReadable);
 	}
 
 	@Override
 	public void updateParameter(final ParameterSelector selector, final ParameterValue value) {
-		selector.apply(tcWriterPage).waitOn(new EditableComponentPolling<JTable, Boolean>(pc -> {
+		selector.apply(tcWriterPage).polling(new EditableComponentPolling<JTable, Boolean>(pc -> {
 			updateValue(pc.component, value.getKeyValue1());
 			updateValue(pc.component, value.getKeyValue2());
 			updateValue(pc.component, value.getKeyValue3());
 			return PollingResults.success();
-		}).withReportText(Reporting.settingValue("parameter", value)));
+		})).orFail(Reporting.settingValue("parameter", value));
 		applyStepEdition();
 	}
 

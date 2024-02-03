@@ -45,8 +45,8 @@ public class MainPage extends PagePilot {
 	}
 
 	public void select(Function<MainPage, ContextSelector> selector) {
-		waitOn(() -> selector.apply(this).selector, selector.apply(this).selectorApplier);
-		waitOn(() -> selector.apply(this).applier, click());
+		polling(() -> selector.apply(this).selector, selector.apply(this).selectorApplier).orFail();
+		polling(() -> selector.apply(this).applier, click()).orFail();
 	}
 
 }

@@ -10,10 +10,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WrapsElement;
 import org.openqa.selenium.support.PageFactory;
 
-import ch.scaille.tcwriter.pilot.Factories.FailureHandlers;
+import ch.scaille.tcwriter.pilot.AbstractComponentPilot;
 import ch.scaille.tcwriter.pilot.Factories.Pollings;
 import ch.scaille.tcwriter.pilot.Polling;
-import ch.scaille.tcwriter.pilot.PollingResult.FailureHandler;
 
 /**
  * Allows to pilot application using selenium's page concept
@@ -80,21 +79,13 @@ public class PagePilot {
 		}
 	}
 
-	public <U> U waitOn(Supplier<WebElement> element, final Polling<WebElement, U> polling) {
-		return element(element).waitOn(polling);
+	public <U> AbstractComponentPilot<ElementPilot, WebElement>.Wait<U> polling(Supplier<WebElement> element,
+			final Polling<WebElement, U> polling) {
+		return element(element).polling(polling);
 	}
 
-	public <U> U waitOn(Supplier<WebElement> element, final Polling<WebElement, U> polling,
-			FailureHandler<WebElement, U> failureHandler) {
-		return element(element).waitOn(polling, failureHandler);
-	}
-
-	public boolean waitOn(Supplier<WebElement> element, Consumer<WebElement> action) {
-		return element(element).waitOn(Pollings.applyOnEditable(action).withReportText("unnamed action"));
-	}
-	
-	public boolean isSatisfied(Supplier<WebElement> element, Polling<WebElement, Boolean> pollingTuning) {
-		return element(element).waitOn(pollingTuning, FailureHandlers.reportNotSatisfied("not satisfied"));
+	public AbstractComponentPilot<ElementPilot, WebElement>.Wait<Boolean> polling(Supplier<WebElement> element, Consumer<WebElement> action) {
+		return element(element).polling(Pollings.applies(action));
 	}
 
 	public static Polling<WebElement, Boolean> textEquals(String expected) {

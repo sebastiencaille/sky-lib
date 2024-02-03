@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
@@ -144,7 +145,8 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	 * @param timeout
 	 * @return
 	 */
-	protected <U> U waitPollingSuccess(final Polling<C, U> polling, final FailureHandler<C, U> onFail) {
+	protected <P, R> R waitPollingSuccess(final Polling<C, P> polling, final Function<P, R> successTransformer,
+			final FailureHandler<C, P, R> onFail) {
 		polling.withExtraDelay(pilot.getActionDelay());
 		waitActionDelay();
 		try (var closeable = pilot.withModalDialogDetection()) {
@@ -156,21 +158,21 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 			}
 
 			result.setInformation(toString(), cachedComponent);
-			return result.orElseGet(() -> onFail.apply(result, pilot));
+			return result.mapOrGet(successTransformer, () -> onFail.apply(result, pilot));
 		}
 	}
 
 	/**
 	 * Loops until the polling is successful. Can be overwritten by custom code
 	 *
-	 * @param <U>          return type
+	 * @param <R>          return type
 	 * @param precondition a precondition
 	 * @param applier      action applied on component
 	 * @param reporting    reporting, if action is successful
 	 * @param timeout
 	 * @return a polling result, either successful or failure
 	 */
-	protected <U> PollingResult<C, U> waitPollingSuccessLoop(final Polling<C, U> polling) {
+	protected <R> PollingResult<C, R> waitPollingSuccessLoop(final Polling<C, R> polling) {
 		polling.initialize(this);
 		return new Poller(polling.getTimeout(), polling.getFirstDelay(), polling.getDelayFunction())
 				.run(p -> executePolling(p, polling), PollingResult::isSuccess)
@@ -180,13 +182,13 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	/**
 	 * Tries to execute the polling
 	 *
-	 * @param <U>          return type
+	 * @param <R>          return type
 	 * @param precondition
 	 * @param applier
 	 * @return
 	 */
 	@SuppressWarnings("java:S1172)")
-	protected <U> Optional<PollingResult<C, U>> executePolling(Poller poller, final Polling<C, U> polling) {
+	protected <R> Optional<PollingResult<C, R>> executePolling(Poller poller, final Polling<C, R> polling) {
 
 		final var pollingFailure = loadComponent(polling);
 		if (pollingFailure.isPresent()) {
@@ -211,11 +213,11 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	/**
 	 * Loads and check that the element is valid
 	 * 
-	 * @param <U>
+	 * @param <R>
 	 * @param polling
 	 * @return
 	 */
-	protected <U> Optional<PollingResult<C, U>> loadComponent(final Polling<C, U> polling) {
+	protected <R> Optional<PollingResult<C, R>> loadComponent(final Polling<C, R> polling) {
 		if (cachedComponent == null) {
 			cachedComponent = loadGuiComponent().map(LoadedComponent::new).orElse(null);
 		}
@@ -233,36 +235,56 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 		return Optional.empty();
 	}
 
-	protected <U> PollingResult<C, U> callPollingFunction(final Polling<C, U> polling) {
+	protected <R> PollingResult<C, R> callPollingFunction(final Polling<C, R> polling) {
 		return polling.getPollingFunction().poll(polling.getContext());
 	}
 
-	protected String reportNameOf(C c) {
-		return c.toString();
+	public class Wait<R> {
+
+		protected final Polling<C, R> polling;
+
+		public Wait(Polling<C, R> polling) {
+			this.polling = polling;
+		}
+
+		/**
+		 * Waits until a component is checked/edited
+		 * 
+		 * @param onFail failure behavior
+		 */
+		public R or(final FailureHandler<C, R, R> onFail) {
+			return waitPollingSuccess(polling, r -> r, onFail);
+		}
+
+		/**
+		 * Waits until a component is edited, throwing a java assertion error in case of
+		 * failure
+		 */
+		public R orFail() {
+			return or(FailureHandlers.throwError());
+		}
+
+		public R orFail(String report) {
+			return waitPollingSuccess(polling.withReportText(report), r -> r, FailureHandlers.throwError());
+		}
+
+		public boolean isSatisfied() {
+			return AbstractComponentPilot.this
+					.waitPollingSuccess(polling, r -> Boolean.TRUE, FailureHandlers.ignoreFailure())
+					.booleanValue();
+		}
+
+		public boolean isSatisfiedOr(String report) {
+			return AbstractComponentPilot.this
+					.waitPollingSuccess(polling.withReportText(report), r -> Boolean.TRUE,
+							FailureHandlers.reportNotSatisfied(report))
+					.booleanValue();
+		}
 	}
 
-	/**
-	 * Waits until a component is checked/edited
-	 *
-	 * @param <U>     returned value type
-	 * @param polling check/edition
-	 * @param onFail  action performed on failure
-	 * @return check/edition value
-	 */
-	public <U> U waitOn(final Polling<C, U> polling, final FailureHandler<C, U> onFail) {
-		return waitPollingSuccess(polling, onFail);
-	}
 
-	/**
-	 * Waits until a component is edited, throwing a java assertion error in case of
-	 * failure
-	 *
-	 * @param <U>     return type
-	 * @param polling
-	 * @return
-	 */
-	public <U> U waitOn(final Polling<C, U> polling) {
-		return waitOn(polling, FailureHandlers.throwError());
+	public <U> Wait<U> polling(final Polling<C, U> polling) {
+		return new Wait<>(polling);
 	}
 
 	/**
@@ -272,8 +294,8 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	 * @param polling check/edition
 	 * @return check/edition value
 	 */
-	public boolean waitOn(Predicate<C> check, String report) {
-		return waitOn(Factories.Pollings.satisfies(check).withReportText(report));
+	public Wait<Boolean> polling(Predicate<C> check) {
+		return new Wait<>(Factories.Pollings.satisfies(check));
 	}
 
 	/**
@@ -289,16 +311,17 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	}
 
 	/**
+	 * Useful to avoid Generic issues
 	 * @See Factories.action
 	 */
-	public Polling<C, Boolean> action(final Consumer<C> action) {
-		return Pollings.applyOnEditable(action);
+	public Polling<C, Boolean> applies(final Consumer<C> action) {
+		return Pollings.applies(action);
 	}
 
 	/**
 	 * @See Factories.assertion
 	 */
-	public Polling<C, Boolean> assertion(final Consumer<PollingContext<C>> assertion) {
+	public Polling<C, Boolean> asserts(final Consumer<PollingContext<C>> assertion) {
 		return Pollings.asserts(assertion);
 	}
 

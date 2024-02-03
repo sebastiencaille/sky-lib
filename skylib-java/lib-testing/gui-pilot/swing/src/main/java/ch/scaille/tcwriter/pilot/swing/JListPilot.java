@@ -8,7 +8,9 @@ import javax.swing.JList;
 
 import org.junit.jupiter.api.Assertions;
 
+import ch.scaille.tcwriter.pilot.Factories;
 import ch.scaille.tcwriter.pilot.Polling;
+import ch.scaille.tcwriter.pilot.Polling.PollingFunction;
 
 @SuppressWarnings("java:S5960")
 public class JListPilot extends AbstractSwingComponent<JListPilot, JList> {
@@ -27,13 +29,13 @@ public class JListPilot extends AbstractSwingComponent<JListPilot, JList> {
 		if (value == null) {
 			return;
 		}
-		waitOn(action(c -> {
+		polling(applies(c -> {
 			for (int i = 0; i < c.getModel().getSize(); i++) {
 				if (value.equals(c.getModel().getElementAt(i).toString())) {
 					c.setSelectedIndex(i);
 				}
 			}
-		}).withReportText("selecting element " + value));
+		})).orFail("selecting element " + value);
 		Assertions.assertTrue(getCachedElement().map(JList::getSelectedIndex).orElse(-1) >= 0,
 				() -> name + ": element must have been selected: " + value);
 	}
@@ -42,7 +44,7 @@ public class JListPilot extends AbstractSwingComponent<JListPilot, JList> {
 		if (expected == null) {
 			return;
 		}
-		waitOn(new Polling<JList, Boolean>(this::canCheck, pc -> {
+		polling(new Polling<JList, Boolean>(this::canCheck, pc -> {
 			final var component = pc.component;
 			if (component.getSelectedIndex() < 0) {
 				return failure("No element selected");
@@ -52,6 +54,6 @@ public class JListPilot extends AbstractSwingComponent<JListPilot, JList> {
 				return failure("Wrong element selected (" + current + ")");
 			}
 			return success();
-		}).withReportText(checkingValue(expected)));
+		})).orFail(checkingValue(expected));
 	}
 }

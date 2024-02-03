@@ -29,20 +29,20 @@ public class JTextFieldPilot extends AbstractSwingComponent<JTextFieldPilot, JTe
 		if (value == null) {
 			return;
 		}
-		waitOn(action(t -> {
+		polling(applies(t -> {
 			t.setText(value);
 			if (t instanceof JTextField) {
 				SwingHelper.doPressReturn(t);
 			}
-		}).withReportText(settingValue(value)));
+		})).orFail(settingValue(value));
 	}
 
 	public void checkTextValue(final String expected) {
 		if (expected == null) {
 			return;
 		}
-		waitOn(assertion(pc -> assertEquals(expected, pc.component.getText(), pc.description))
-				.withReportText(checkingValue(expected)));
+		polling(asserts(pc -> assertEquals(expected, pc.component.getText(), pc.description)))
+				.orFail(checkingValue(expected));
 	}
 
 }

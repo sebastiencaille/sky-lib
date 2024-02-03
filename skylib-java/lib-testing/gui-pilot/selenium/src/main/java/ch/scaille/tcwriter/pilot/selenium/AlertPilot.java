@@ -37,8 +37,8 @@ public class AlertPilot extends AbstractComponentPilot<AlertPilot, Alert> {
 	}
 
 	public void doAcknowledge() {
-		waitOn(Pollings.applyOnExisting(Alert::accept)
-				.withReportFunction((cp, t) -> "Acknowledging alert: " + cp.component.getText()));
+		polling(Pollings.applyOnExisting(Alert::accept)
+				.withReportFunction((cp, t) -> "Acknowledging alert: " + cp.component.getText())).orFail();
 	}
 
 }

@@ -15,7 +15,7 @@ import ch.scaille.tcwriter.server.webapi.v0.controllers.TestCaseController;
 
 @Configuration
 public class WebApiControllersConfig {
-
+	
 	@Bean
 	ContextController contextControllerV0(SessionAccessor sessionAccessor, NativeWebRequest nativeWebRequest) {
 		return new ContextController(sessionAccessor, nativeWebRequest);

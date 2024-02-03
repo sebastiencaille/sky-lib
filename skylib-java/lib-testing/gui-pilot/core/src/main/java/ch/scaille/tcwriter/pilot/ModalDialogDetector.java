@@ -8,7 +8,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -193,7 +192,7 @@ public class ModalDialogDetector {
 		}
 	}
 
-	public boolean waitModalDialogHandled(final FailureHandler<ModalDialogDetector.PollingResult, Boolean> onFail) {
+	public boolean waitModalDialogHandled(final FailureHandler<ModalDialogDetector.PollingResult, ?, Boolean> onFail) {
 		return new Poller(builder.timeout.get(), Duration.ofMillis(100), p -> Duration.ofMillis(100))
 				.run(this::getPollingResult, Objects::nonNull)
 				.map(p -> true)

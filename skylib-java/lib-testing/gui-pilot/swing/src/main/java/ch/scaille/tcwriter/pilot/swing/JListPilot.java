@@ -8,9 +8,7 @@ import javax.swing.JList;
 
 import org.junit.jupiter.api.Assertions;
 
-import ch.scaille.tcwriter.pilot.Factories;
 import ch.scaille.tcwriter.pilot.Polling;
-import ch.scaille.tcwriter.pilot.Polling.PollingFunction;
 
 @SuppressWarnings("java:S5960")
 public class JListPilot extends AbstractSwingComponent<JListPilot, JList> {

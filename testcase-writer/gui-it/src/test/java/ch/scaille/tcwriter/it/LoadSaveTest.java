@@ -27,10 +27,10 @@ class LoadSaveTest extends AbstractGuiTest {
 	void testSaveNewLoad() {
 		testSession.injectBasicTest();
 		tcWriter.mainFrameAction(MainFrameAction.saveTC("test"));
-		testSession.checkBasicTest();
+		testSession.assertBasicTest();
 		tcWriter.mainFrameAction(MainFrameAction.newTC());
 		tcWriter.mainFrameAction(MainFrameAction.loadTC("test"));
-		testSession.checkBasicTest();
+		testSession.assertBasicTest();
 	}
 
 }

@@ -43,15 +43,15 @@ class SeleniumExampleTest extends AbstractTestWebAppProvider {
 
 		final var mainPage = pilot.page(ExamplePage::new);
 
-		mainPage.testEnable();
+		mainPage.executeEnable();
 
 		mainPage.expectTestAlertDialog();
 		mainPage.testAlert();
-		mainPage.checkDialogHandled();
+		mainPage.assertDialogHandled();
 
 		mainPage.clickOnMissingButton();
 
-		mainPage.testElementChange();
+		mainPage.assertElementChange();
 
 		assertEquals(8, pilot.getActionReport().getReport().size(), () -> pilot.getActionReport().getFormattedReport());
 	}

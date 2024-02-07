@@ -20,18 +20,18 @@ public class AppSteps {
 
     public static final Steps<AppPages> OPEN_WEBSITE = BDD_FACTORY.with(
             step("I open the website", LambdaExt.uncheckedC(p -> p.driver.get(new URL(AbstractTestWebAppProvider.localUrl, "/example1.html").toString()))),
-            step("I see that the website is open", p -> p.examplePage.testEnabled()));
+            step("I see that the website is open", p -> p.examplePage.assertedEnabledTested()));
 
     public static final Steps<AppPages> TEST_ENABLE = BDD_FACTORY.with(
-            step("I execute the Enable function", p -> p.examplePage.testEnable()),
+            step("I execute the Enable function", p -> p.examplePage.executeEnable()),
             step("I see that the Enable function is disabled|And back to normal after some seconds",
-                    p -> p.examplePage.testEnabled()));
+                    p -> p.examplePage.assertedEnabledTested()));
 
     public static final Steps<AppPages> TEST_ALERT = BDD_FACTORY.with(
             automationStep("I expect the Alert", p -> p.examplePage.expectTestAlertDialog()),
             step("I test the Alert function", p -> p.examplePage.testAlert()),
             step("I see that the Alert was raised|I acknowledge the Alert", p -> {
-                p.examplePage.checkDialogHandled();
+                p.examplePage.assertDialogHandled();
                 System.out.println(p.getContext().example);
             }));
 

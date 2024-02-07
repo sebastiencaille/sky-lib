@@ -34,12 +34,12 @@
 		<springdoc-openapi.version>2.3.0</springdoc-openapi.version>
 
 		<undertow.version>2.3.10.Final</undertow.version>
-		<liquibase.version>4.25.1</liquibase.version>
+		<liquibase.version>4.26.0</liquibase.version>
 
 		<mockito.version>5.10.0</mockito.version>
-		<junit-jupiter.version>5.10.1</junit-jupiter.version>
+		<junit-jupiter.version>5.10.2</junit-jupiter.version>
 		<junit.version>4.13.2</junit.version>
-		<junit-platform-console-standalone.version>1.10.1</junit-platform-console-standalone.version>
+		<junit-platform-console-standalone.version>1.10.2</junit-platform-console-standalone.version>
 		<selenium.version>4.17.0</selenium.version>
 		<h2.version>2.2.224</h2.version>
 

@@ -12,7 +12,7 @@ public interface TestSessionRole {
 	@TCAction(preparationOnly = true)
 	void injectBasicTest();
 
-	@TCApi(description = "Check basic test", humanReadable = "I check the basic test")
+	@TCApi(description = "Verify basic test", humanReadable = "I verify the basic test")
 	@TCCheck
-	void checkBasicTest();
+	void assertBasicTest();
 }

@@ -12,7 +12,7 @@ public class JLabelPilot extends AbstractSwingComponent<JLabelPilot, JLabel> {
 		super(pilot, JLabel.class, name);
 	}
 
-	public void checkValue(final String expected) {
+	public void assertTextEquals(final String expected) {
 		polling(asserts(pc -> assertEquals(expected, pc.component.getText(), pc.description)))
 				.orFail(checkingValue(expected));
 	}

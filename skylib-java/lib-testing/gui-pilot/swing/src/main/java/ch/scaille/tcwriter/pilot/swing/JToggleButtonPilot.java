@@ -10,7 +10,7 @@ public class JToggleButtonPilot extends AbstractSwingComponent<JToggleButtonPilo
 		super(pilot, JToggleButton.class, name);
 	}
 
-	public void waitSelected(final boolean expected) {
+	public void assertSelected(final boolean expected) {
 		polling(satisfies(c -> c.isSelected() == expected))
 				.orFail(checkingThat("component is " + (expected ? "selected" : "not selected")));
 	}

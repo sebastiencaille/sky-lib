@@ -30,12 +30,12 @@ public class JTablePilot extends AbstractSwingComponent<JTablePilot, JTable> {
 		})).orFail((settingValue("at selected row, column " + column, value)));
 	}
 
-	public void checkValue(final int row, final int column, final String expected) {
+	public void assertValue(final int row, final int column, final String expected) {
 		polling(asserts(pc -> Assertions.assertEquals(expected, pc.component.getValueAt(row, column), pc.description)))
 				.orFail((checkingValue("at row/column " + row + '/' + column, expected)));
 	}
 
-	public void checkValueOnSelectedRow(final int column, final String expected) {
+	public void assertValueOnSelectedRow(final int column, final String expected) {
 		polling(asserts(pc -> Assertions.assertEquals(expected,
 				pc.component.getValueAt(pc.component.getSelectedRow(), column), pc.description)))
 				.orFail((checkingValue("at selected row, column " + column, expected)));

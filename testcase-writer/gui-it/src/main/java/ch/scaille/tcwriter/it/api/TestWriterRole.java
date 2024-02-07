@@ -20,13 +20,13 @@ public interface TestWriterRole {
 	@TCAction
 	void updateStep(StepSelector selector, StepEdition edition);
 
-	@TCApi(description = "Check the content of the step", humanReadable = "I //%s and //check that the step contains \"%s\"")
+	@TCApi(description = "Verify the content of the step", humanReadable = "I //%s and //verify that the step contains \"%s\"")
 	@TCCheck
-	void checkStep(StepSelector selector, StepEdition edition);
+	void assertStepContent(StepSelector selector, StepEdition edition);
 
-	@TCApi(description = "Check the Human Readable text", humanReadable = "I //%s and //check that the human readable text is \"%s\"")
+	@TCApi(description = "Verify the Human Readable text", humanReadable = "I //%s and //verify that the human readable text is \"%s\"")
 	@TCCheck
-	void checkHumanReadable(StepSelector selector, String humanReadable);
+	void assertHumanReadable(StepSelector selector, String humanReadable);
 
 	@TCApi(description = "Update the step parameters", humanReadable = "I //%s, //edit %s (%s) and apply the changes")
 	@TCAction

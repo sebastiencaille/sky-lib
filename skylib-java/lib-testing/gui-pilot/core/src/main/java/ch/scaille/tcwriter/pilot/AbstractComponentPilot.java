@@ -305,7 +305,7 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 		final var actionDelay = pilot.getActionDelay();
 		if (actionDelay != null) {
 			pilot.setActionDelay(null);
-			actionDelay.waitFinished();
+			actionDelay.assertFinished();
 			pilot.getActionReport().report("Test delayed by: " + actionDelay);
 		}
 	}

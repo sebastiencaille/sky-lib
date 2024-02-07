@@ -37,7 +37,7 @@ public class JTextFieldPilot extends AbstractSwingComponent<JTextFieldPilot, JTe
 		})).orFail(settingValue(value));
 	}
 
-	public void checkTextValue(final String expected) {
+	public void assertTextValue(final String expected) {
 		if (expected == null) {
 			return;
 		}

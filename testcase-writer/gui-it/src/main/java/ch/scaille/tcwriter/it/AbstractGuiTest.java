@@ -4,6 +4,7 @@ import static ch.scaille.tcwriter.persistence.factory.DaoConfigs.cp;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.time.Duration;
 import java.util.Arrays;
 
 import javax.swing.SwingUtilities;
@@ -73,6 +74,7 @@ public class AbstractGuiTest {
 		SwingUtilities.invokeAndWait(controller::run);
 
 		pilot = new TCGuiPilot(controller.getGui());
+		pilot.setDefaultPollingTimeout(Duration.ofSeconds(5));
 
 		final var localRole = new LocalTCWriterRole(pilot);
 		tcWriter = localRole;

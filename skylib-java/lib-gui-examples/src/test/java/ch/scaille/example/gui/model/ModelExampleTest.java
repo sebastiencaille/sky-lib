@@ -40,30 +40,30 @@ class ModelExampleTest {
 			Assertions.assertEquals(FIXED_COLUMN_WIDTH, component.getColumn(TestObjectTableModel.Columns.A_SECOND_VALUE).getWidth());
 			Assertions.assertEquals(component.getWidth() - FIXED_COLUMN_WIDTH, component.getColumn(TestObjectTableModel.Columns.A_FIRST_VALUE).getWidth());
 		})).orFail();
-		page.listTable.checkValue(0, 0, "One");
-		page.listTable.checkValue(1, 0, "Two");
-		page.listTable.checkValue(2, 0, "Three");
-		page.listTable.checkValue(3, 0, "Four");
+		page.listTable.assertValue(0, 0, "One");
+		page.listTable.assertValue(1, 0, "Two");
+		page.listTable.assertValue(2, 0, "Three");
+		page.listTable.assertValue(3, 0, "Four");
 
 		page.reverseOrder.setSelected(true);
-		page.listTable.checkValue(3, 0, "One");
-		page.listTable.checkValue(2, 0, "Two");
-		page.listTable.checkValue(1, 0, "Three");
-		page.listTable.checkValue(0, 0, "Four");
+		page.listTable.assertValue(3, 0, "One");
+		page.listTable.assertValue(2, 0, "Two");
+		page.listTable.assertValue(1, 0, "Three");
+		page.listTable.assertValue(0, 0, "Four");
 
 		page.enableFilter.setSelected(true);
-		page.listTable.checkValue(1, 0, "Two");
-		page.listTable.checkValue(0, 0, "Four");
+		page.listTable.assertValue(1, 0, "Two");
+		page.listTable.assertValue(0, 0, "Four");
 
 		page.reverseOrder.setSelected(false);
-		page.listTable.checkValue(0, 0, "Two");
-		page.listTable.checkValue(1, 0, "Four");
+		page.listTable.assertValue(0, 0, "Two");
+		page.listTable.assertValue(1, 0, "Four");
 
 		page.enableFilter.setSelected(false);
-		page.listTable.checkValue(0, 0, "One");
-		page.listTable.checkValue(1, 0, "Two");
-		page.listTable.checkValue(2, 0, "Three");
-		page.listTable.checkValue(3, 0, "Four");
+		page.listTable.assertValue(0, 0, "One");
+		page.listTable.assertValue(1, 0, "Two");
+		page.listTable.assertValue(2, 0, "Three");
+		page.listTable.assertValue(3, 0, "Four");
 
 		Logs.of(this).info(pilot.getActionReport().getFormattedReport());
 	}

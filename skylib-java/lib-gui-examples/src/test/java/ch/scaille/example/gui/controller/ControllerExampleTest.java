@@ -33,32 +33,32 @@ class ControllerExampleTest {
 		final var page = pilot.page(ControllerExamplePage::new);
 
 		page.booleanEditor.setSelected(true);
-		page.booleanEditorCheck.waitEnabled();
+		page.booleanEditorCheck.assertEnabled();
 		page.booleanEditor.setSelected(false);
-		page.booleanEditorCheck.waitDisabled();
+		page.booleanEditorCheck.assertDisabled();
 
 		page.intStringEditor.setText("123");
-		page.intCheck.checkValue("123");
+		page.intCheck.assertTextEquals("123");
 		page.intStringEditor.setText("abc");
-		page.intCheck.checkValue("123");
+		page.intCheck.assertTextEquals("123");
 		page.intStringEditor.polling(c -> c.getForeground() == Color.RED).orFail("foreground color should be RED");
 
 		page.staticListEditor.select("A");
-		page.staticListSelectionCheck.checkValue("A");
+		page.staticListSelectionCheck.assertTextEquals("A");
 		page.dynamicListEditor.select("C");
-		page.dynamicListSelectionCheck.checkValue("C");
+		page.dynamicListSelectionCheck.assertTextEquals("C");
 
 		page.staticListEditor.select("B");
-		page.staticListSelectionCheck.checkValue("B");
-		page.dynamicListEditor.checkSelected("C");
-		page.dynamicListSelectionCheck.checkValue("C");
+		page.staticListSelectionCheck.assertTextEquals("B");
+		page.dynamicListEditor.assertSelected("C");
+		page.dynamicListSelectionCheck.assertTextEquals("C");
 
 		page.tableSelectionEditor.selectRow(0);
-		page.tableSelectionCheck.checkValue("Hello");
+		page.tableSelectionCheck.assertTextEquals("Hello");
 		page.tableSelectionEditor.selectRow(1);
-		page.tableSelectionCheck.checkValue("World");
+		page.tableSelectionCheck.assertTextEquals("World");
 		page.tableSelectionEditor.editValueOnSelectedRow(0, "Bouh");
-		page.tableSelectionCheck.checkValue("Bouh");
+		page.tableSelectionCheck.assertTextEquals("Bouh");
 
 		Logs.of(this).info(pilot.getActionReport().getFormattedReport());
 	}

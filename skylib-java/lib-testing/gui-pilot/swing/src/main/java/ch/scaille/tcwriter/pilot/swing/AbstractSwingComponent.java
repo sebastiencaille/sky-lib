@@ -73,12 +73,12 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 		return response[0];
 	}
 
-	public void waitEnabled() {
+	public void assertEnabled() {
 		polling(Pollings.<C>satisfies(JComponent::isEnabled)
 				.withReportText(Factories.Reporting.checkingThat("component is enabled"))).orFail();
 	}
 
-	public void waitDisabled() {
+	public void assertDisabled() {
 		polling(Pollings.<C>satisfies(c -> !c.isEnabled())
 				.withReportText(Factories.Reporting.checkingThat("component is disabled"))).orFail();
 	}

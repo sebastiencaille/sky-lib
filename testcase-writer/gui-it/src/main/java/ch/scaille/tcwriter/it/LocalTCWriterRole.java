@@ -33,7 +33,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 		this.tcWriterPage = guiPilot.page(TCWriterPage::new);
 	}
 
-	private StepEdition[] basicTestContents() {
+	private StepEdition[] basicTestContent() {
 		final var edition1 = new StepEdition();
 		edition1.setActor(ACTOR_TEST_WRITER);
 		edition1.setAction("Select a step");
@@ -41,7 +41,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 
 		final var edition2 = new StepEdition();
 		edition2.setActor(ACTOR_TEST_WRITER);
-		edition2.setAction("Check the Human Readable text");
+		edition2.setAction("Verify the Human Readable text");
 		edition2.setSelector("Selected step");
 
 		final var edition3 = new StepEdition();
@@ -76,19 +76,19 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	}
 
 	@Override
-	public void checkStep(final StepSelector selector, final StepEdition edition) {
+	public void assertStepContent(final StepSelector selector, final StepEdition edition) {
 		selector.accept(tcWriterPage);
-		tcWriterPage.actors.checkSelected(edition.getActor());
-		tcWriterPage.actions.checkSelected(edition.getAction());
-		tcWriterPage.selectors.checkSelected(edition.getSelector());
-		tcWriterPage.parameters0.checkSelected(edition.getParameter());
+		tcWriterPage.actors.assertSelected(edition.getActor());
+		tcWriterPage.actions.assertSelected(edition.getAction());
+		tcWriterPage.selectors.assertSelected(edition.getSelector());
+		tcWriterPage.parameters0.assertSelected(edition.getParameter());
 	}
 
 	/**
 	 * Checks the text has it would be displayed
 	 */
 	@Override
-	public void checkHumanReadable(final StepSelector selector, final String humanReadable) {
+	public void assertHumanReadable(final StepSelector selector, final String humanReadable) {
 		selector.accept(tcWriterPage);
 
 		tcWriterPage.stepsTable.polling(tcWriterPage.stepsTable.asserts(pc -> {
@@ -111,7 +111,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 
 	@Override
 	public void injectBasicTest() {
-		final var basicTestContents = basicTestContents();
+		final var basicTestContents = basicTestContent();
 		updateStep(StepSelector.selectStep(1), basicTestContents[0]);
 		updateStep(addStep(), basicTestContents[1]);
 		editStep(addStep(), basicTestContents[2]);
@@ -119,17 +119,17 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	}
 
 	@Override
-	public void checkBasicTest() {
-		final var basicTestContents = basicTestContents();
+	public void assertBasicTest() {
+		final var basicTestContents = basicTestContent();
 
-		checkStep(StepSelector.selectStep(1), basicTestContents[0]);
-		checkHumanReadable(currentStep(), "As test writer, I add a step to the test case");
+		assertStepContent(StepSelector.selectStep(1), basicTestContents[0]);
+		assertHumanReadable(currentStep(), "As test writer, I add a step to the test case");
 
-		checkStep(StepSelector.selectStep(2), basicTestContents[1]);
-		checkHumanReadable(currentStep(), "As test writer, I check that the human readable text is \"\"");
+		assertStepContent(StepSelector.selectStep(2), basicTestContents[1]);
+		assertHumanReadable(currentStep(), "As test writer, I verify that the human readable text is \"\"");
 
-		checkStep(StepSelector.selectStep(3), basicTestContents[2]);
-		checkHumanReadable(currentStep(), "As test writer, I select the step 1");
+		assertStepContent(StepSelector.selectStep(3), basicTestContents[2]);
+		assertHumanReadable(currentStep(), "As test writer, I select the step 1");
 	}
 
 	@Override

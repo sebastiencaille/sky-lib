@@ -26,7 +26,7 @@ class StepEditionTest extends AbstractGuiTest {
 
 		final var edition2 = new StepEdition();
 		edition2.setActor("Test writer");
-		edition2.setAction("Check the Human Readable text");
+		edition2.setAction("Verify the Human Readable text");
 		edition2.setSelector("Selected step");
 		tcWriter.updateStep(addStep(), edition2);
 
@@ -37,14 +37,14 @@ class StepEditionTest extends AbstractGuiTest {
 		tcWriter.editStep(addStep(), edition3);
 		tcWriter.updateParameter(selector(), oneValue("index:1"));
 
-		tcWriter.checkStep(selectStep(1), edition1);
-		tcWriter.checkHumanReadable(currentStep(), "As test writer, I add a step to the test case");
+		tcWriter.assertStepContent(selectStep(1), edition1);
+		tcWriter.assertHumanReadable(currentStep(), "As test writer, I add a step to the test case");
 
-		tcWriter.checkStep(selectStep(2), edition2);
-		tcWriter.checkHumanReadable(currentStep(), "As test writer, I check that the human readable text is \"\"");
+		tcWriter.assertStepContent(selectStep(2), edition2);
+		tcWriter.assertHumanReadable(currentStep(), "As test writer, I verify that the human readable text is \"\"");
 
-		tcWriter.checkStep(selectStep(3), edition3);
-		tcWriter.checkHumanReadable(currentStep(), "As test writer, I select the step 1");
+		tcWriter.assertStepContent(selectStep(3), edition3);
+		tcWriter.assertHumanReadable(currentStep(), "As test writer, I select the step 1");
 
 	}
 

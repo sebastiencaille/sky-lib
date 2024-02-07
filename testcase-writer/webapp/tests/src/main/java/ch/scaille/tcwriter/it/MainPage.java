@@ -44,7 +44,7 @@ public class MainPage extends PagePilot {
 		}, mp.testCaseSelect);
 	}
 
-	public void select(Function<MainPage, ContextSelector> selector) {
+	public void assertSelected(Function<MainPage, ContextSelector> selector) {
 		polling(() -> selector.apply(this).selector, selector.apply(this).selectorApplier).orFail();
 		polling(() -> selector.apply(this).applier, click()).orFail();
 	}

@@ -44,8 +44,8 @@ class SimpleIT {
 		pilot.getDriver().get(new URI("http://localhost:9000/index.html").toURL().toString());
 
 		final var mainPage = pilot.page(MainPage::new);
-		mainPage.select(MainPage.dictionary("Test dictionary"));
-		mainPage.select(MainPage.currentTestCase());
+		mainPage.assertSelected(MainPage.dictionary("Test dictionary"));
+		mainPage.assertSelected(MainPage.currentTestCase());
 	}
 
 }

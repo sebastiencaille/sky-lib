@@ -42,7 +42,7 @@ public class ExamplePage extends PagePilot {
 		}
 
 		@Override
-		public void waitFinished() {
+		public void assertFinished() {
 			final var page = ExamplePage.this;
 			page.polling(() -> page.enableTest, ElementPilot.isEnabled()).orFail();
 			Assertions.assertTrue(page.enableTest.isEnabled(), "EnableTest is enabled");
@@ -59,11 +59,11 @@ public class ExamplePage extends PagePilot {
 	 * Perform a click, and tell the next action that the next action must wait
 	 * until "Proceed" is enabled
 	 */
-	public void testEnable() {
+	public void executeEnable() {
 		polling(() -> this.enableTest, click().followedBy(new WaitEnableTestEnabledDelay())).orFail();
 	}
 
-	public void testEnabled() {
+	public void assertedEnabledTested() {
 		polling(() -> this.enableTest, asserts(c -> Assertions.assertTrue(c.component.isEnabled()))).orFail();
 	}
 
@@ -91,11 +91,11 @@ public class ExamplePage extends PagePilot {
 	/**
 	 * Handle the modal dialog raised by the click on OK
 	 */
-	public void checkDialogHandled() {
+	public void assertDialogHandled() {
 		pilot.waitModalDialogHandled();
 	}
 
-	public void testElementChange() {
+	public void assertElementChange() {
 		polling(() -> this.elementChangeTest, click()).orFail();
 		// Explicitly test using WebElement as source
 		polling(() -> this.elementChange.findElement(By.id("TextChange")), textEquals("Hello again")).orFail();

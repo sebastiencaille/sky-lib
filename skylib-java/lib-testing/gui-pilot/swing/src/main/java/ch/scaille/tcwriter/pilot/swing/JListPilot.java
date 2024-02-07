@@ -38,7 +38,7 @@ public class JListPilot extends AbstractSwingComponent<JListPilot, JList> {
 				() -> name + ": element must have been selected: " + value);
 	}
 
-	public void checkSelected(final String expected) {
+	public void assertSelected(final String expected) {
 		if (expected == null) {
 			return;
 		}

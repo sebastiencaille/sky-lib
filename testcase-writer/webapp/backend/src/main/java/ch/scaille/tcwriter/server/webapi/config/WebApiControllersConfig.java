@@ -12,6 +12,9 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import ch.scaille.tcwriter.server.facade.WebFeedbackFacade;
 import ch.scaille.tcwriter.server.webapi.service.WebSocketFeedbackFacade;
 
+/**
+ * Re-enable transactions because we are in another context, and use proxyTargetClass to allow Controllers detection
+ */
 @Configuration
 @Import(ch.scaille.tcwriter.server.webapi.v0.WebApiControllersConfig.class)
 @EnableTransactionManagement(proxyTargetClass = true)

@@ -9,7 +9,7 @@ import java.time.Duration;
  *
  */
 public class ActionDelay {
-	public void waitFinished() {
+	public void assertFinished() {
 		// noop
 	}
 

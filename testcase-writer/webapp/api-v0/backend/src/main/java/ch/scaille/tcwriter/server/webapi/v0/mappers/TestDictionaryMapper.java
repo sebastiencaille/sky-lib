@@ -9,7 +9,6 @@ import org.mapstruct.factory.Mappers;
 
 import com.google.common.collect.Multimap;
 
-import ch.scaille.tcwriter.generated.api.model.v0.Metadata;
 import ch.scaille.tcwriter.generated.api.model.v0.TestAction;
 import ch.scaille.tcwriter.generated.api.model.v0.TestActor;
 import ch.scaille.tcwriter.generated.api.model.v0.TestApiParameter;
@@ -19,11 +18,9 @@ import ch.scaille.tcwriter.generated.api.model.v0.TestParameterFactory;
 import ch.scaille.tcwriter.generated.api.model.v0.TestRole;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.ERROR, implementationPackage = "<PACKAGE_NAME>.generated")
-public interface TestDictionaryMapper {
+public interface TestDictionaryMapper extends MetadataMapper {
 
 	TestDictionaryMapper MAPPER = Mappers.getMapper(TestDictionaryMapper.class);
-
-	Metadata convert(ch.scaille.tcwriter.model.Metadata model);
 
 	TestDictionary convert(ch.scaille.tcwriter.model.dictionary.TestDictionary model);
 

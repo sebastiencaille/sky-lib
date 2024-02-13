@@ -17,17 +17,18 @@ module.exports = (env) => {
 			},
 			compress: true,
 			port: 9000,
-			proxy: {
-				'/api/websocket': {
+			proxy: [ 
+				{
+					context: '/api/websocket',
 					target: 'ws://localhost:8080',
 					ws: true
 				},
-				'/api': {
-					//target is where your proxy server is hosted
+				{
+					context: '/api', 
 					target: 'http://localhost:8080',
 					secure: 'false'
 				}
-			}
+			]
 		},
 		module: {
 			rules: [

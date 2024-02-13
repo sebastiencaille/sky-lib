@@ -101,7 +101,9 @@
 						<ignoreFileOverride>
 							${project.basedir}/.openapi-generator-ignore</ignoreFileOverride>
 						<configOptions>
-							<useJakartaEe>true</useJakartaEe>
+							<useSpringBoot3>true</useSpringBoot3>
+							<throwsException>true</throwsException>
+							<useBeanValidation>true</useBeanValidation>
 						</configOptions>
 						<generatorName>spring</generatorName>
 						<library>spring-boot</library>

@@ -24,3 +24,6 @@ Metadata:
       type: string
     description:
       type: string
+    creationDate:
+      type: string
+      format: date-time

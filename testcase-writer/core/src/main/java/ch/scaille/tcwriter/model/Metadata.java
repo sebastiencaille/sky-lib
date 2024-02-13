@@ -1,5 +1,7 @@
 package ch.scaille.tcwriter.model;
 
+import java.time.LocalDateTime;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Metadata {
@@ -7,6 +9,8 @@ public class Metadata {
 	private String transientId = "";
 
 	private String description = "";
+	
+	private LocalDateTime creationDate; 
 
 	public Metadata() {
 	}
@@ -33,6 +37,14 @@ public class Metadata {
 		this.description = description;
 	}
 
+	public LocalDateTime getCreationDate() {
+		return creationDate;
+	}
+	
+	public void setCreationDate(LocalDateTime creationDate) {
+		this.creationDate = creationDate;
+	}
+	
 	@Override
 	public String toString() {
 		return transientId;

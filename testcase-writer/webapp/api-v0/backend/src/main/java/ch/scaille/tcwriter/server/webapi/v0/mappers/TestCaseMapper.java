@@ -19,7 +19,7 @@ import ch.scaille.tcwriter.model.testcase.ExportableTestStep;
 import ch.scaille.tcwriter.model.testexec.StepStatus;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.ERROR, implementationPackage = "<PACKAGE_NAME>.generated")
-public interface TestCaseMapper {
+public interface TestCaseMapper extends MetadataMapper {
 
 	TestCaseMapper MAPPER = Mappers.getMapper(TestCaseMapper.class);
 

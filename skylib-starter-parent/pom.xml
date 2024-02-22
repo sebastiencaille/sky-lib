@@ -21,26 +21,26 @@
 	<properties>
 		<revision>0.0.1-SNAPSHOT</revision>
 
-		<aspectj.version>1.9.21</aspectj.version>
+		<aspectj.version>1.9.21.1</aspectj.version>
 		<jackson-bom.version>2.16.1</jackson-bom.version>
 		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
 
 		<guava.version>33.0.0-jre</guava.version>
-		<logback.version>1.4.14</logback.version>
+		<logback.version>1.5.0</logback.version>
 		<mapstruct.version>1.5.5.Final</mapstruct.version>
 
 		<swagger-parser.version>2.1.20</swagger-parser.version>
 		<swagger.version>2.2.20</swagger.version>
 		<springdoc-openapi.version>2.3.0</springdoc-openapi.version>
 
-		<undertow.version>2.3.10.Final</undertow.version>
+		<undertow.version>2.3.12.Final</undertow.version>
 		<liquibase.version>4.26.0</liquibase.version>
 
 		<mockito.version>5.10.0</mockito.version>
 		<junit-jupiter.version>5.10.2</junit-jupiter.version>
 		<junit.version>4.13.2</junit.version>
 		<junit-platform-console-standalone.version>1.10.2</junit-platform-console-standalone.version>
-		<selenium.version>4.17.0</selenium.version>
+		<selenium.version>4.18.1</selenium.version>
 		<h2.version>2.2.224</h2.version>
 
 		<coverage.temp>${java.io.tmpdir}/coverage/${basedir}</coverage.temp>
@@ -209,7 +209,7 @@
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>exec-maven-plugin</artifactId>
-					<version>3.1.1</version>
+					<version>3.2.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>

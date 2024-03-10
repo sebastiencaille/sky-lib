@@ -47,24 +47,6 @@ TestActor:
       role:
         description: role of the actor
         type: string
-TestParameterFactory:
-  description: A test parameter factory (selectors factory, parameters factory)
-  allOf:
-  - $ref: '../openapi.yaml#/components/schemas/NamedObject'
-  - type: object
-    properties:
-      mandatoryParameters:
-        type: array
-        items:
-          type: '#/TestApiParameter'
-      optionalParameters:
-        type: array
-        items:
-          type: '#/TestApiParameter'
-      nature:
-        type: string
-      parameterType:
-        type: string      
 TestApiParameter:
   description: A test parameter factory (selectors factory, parameters factory)
   allOf:
@@ -74,6 +56,24 @@ TestApiParameter:
     properties:
       parameterType:
         type: string
+TestParameterFactory:
+  description: A test parameter factory (selectors factory, parameters factory)
+  allOf:
+  - $ref: '../openapi.yaml#/components/schemas/NamedObject'
+  - type: object
+    properties:
+      mandatoryParameters:
+        type: array
+        items:
+          $ref: '#/TestApiParameter'
+      optionalParameters:
+        type: array
+        items:
+          $ref: '#/TestApiParameter'
+      nature:
+        type: string
+      parameterType:
+        type: string      
 TestRole:
   description: A test role
   allOf:

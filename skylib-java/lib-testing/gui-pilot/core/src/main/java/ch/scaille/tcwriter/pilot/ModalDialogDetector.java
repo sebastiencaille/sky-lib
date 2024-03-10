@@ -29,7 +29,7 @@ import ch.scaille.util.helpers.Poller;
  */
 public class ModalDialogDetector {
 
-	private java.util.logging.Logger LOGGER = Logs.of(ModalDialogDetector.class);
+	private static final java.util.logging.Logger LOGGER = Logs.of(ModalDialogDetector.class);
 
 	public static PollingResult expected() {
 		return new PollingResult(true, null, null, null);

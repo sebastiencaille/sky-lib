@@ -7,7 +7,7 @@ import ch.scaille.javabeans.Converters;
 import ch.scaille.javabeans.converters.IConverter;
 
 /**
- *  To display some text based on the content of an object
+ * To display some text based on the content of an object
  */
 public abstract class ObjectTextView<T> {
 
@@ -37,6 +37,16 @@ public abstract class ObjectTextView<T> {
 		public FunctionObjectTextView(final T object, final Function<T, String> objToText) {
 			super(object);
 			this.objToText = objToText;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			return super.equals(obj);
+		}
+
+		@Override
+		public int hashCode() {
+			return super.hashCode();
 		}
 
 		@Override

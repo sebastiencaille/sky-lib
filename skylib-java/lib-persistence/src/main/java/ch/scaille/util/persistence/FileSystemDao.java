@@ -1,6 +1,5 @@
 package ch.scaille.util.persistence;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -53,15 +52,12 @@ public class FileSystemDao<T> extends AbstractSerializationDao<T> {
 			// basePath points to a file
 			return Collections.singleton(buildAndValidateMetadata(basePath.getFileName().toString(), basePath.toString())).stream();
 		}
-		var folder = basePath;
-		var file = locator;
-		// TODO: security
-		if (locator != null && new File(locator).isAbsolute()) {
-			var path = Path.of(locator);
-			folder = path.getParent();
-			file = path.getFileName().toString();
+		var target = basePath.resolve(locator);
+		if (!target.startsWith(basePath)) {
+			throw new IllegalStateException("Locator must be within base path");
 		}
-		final var filter = file;
+		final var folder = target.getParent();
+		final var filter = target.getFileName().toString();
 		if (!Files.exists(folder)) {
 			return Collections.<ResourceMetaData>emptyList().stream();
 		}

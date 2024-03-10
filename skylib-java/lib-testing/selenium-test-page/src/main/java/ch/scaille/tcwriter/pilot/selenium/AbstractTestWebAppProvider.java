@@ -2,6 +2,8 @@ package ch.scaille.tcwriter.pilot.selenium;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.ConsoleHandler;
@@ -28,8 +30,8 @@ public abstract class AbstractTestWebAppProvider {
 
 	static {
 		try {
-			localUrl = new URL("http://localhost:9999");
-		} catch (MalformedURLException e) {
+			localUrl = new URI(System.getProperty("url", "http://localhost:9999")).toURL();
+		} catch (MalformedURLException | URISyntaxException e) {
 			throw new IllegalStateException(e);
 		}
 	}
@@ -49,8 +51,10 @@ public abstract class AbstractTestWebAppProvider {
 
 	@BeforeAll
 	public static void startWebServer() {
-		webServer = Undertow.builder().addHttpListener(9999, "localhost")
-				.setHandler(AbstractTestWebAppProvider::handleWebExchange).build();
+		webServer = Undertow.builder()
+				.addHttpListener(localUrl.getPort(), localUrl.getHost())
+				.setHandler(AbstractTestWebAppProvider::handleWebExchange)
+				.build();
 		webServer.start();
 	}
 
@@ -58,7 +62,8 @@ public abstract class AbstractTestWebAppProvider {
 		if ("/example1.html".equals(exchange.getRequestPath())) {
 
 			exchange.getResponseHeaders().put(io.undertow.util.Headers.CONTENT_TYPE, "text/html");
-			try (var in = Thread.currentThread().getContextClassLoader()
+			try (var in = Thread.currentThread()
+					.getContextClassLoader()
 					.getResourceAsStream("example/html/example1.html")) {
 				exchange.getResponseSender().send(JavaExt.readUTF8Stream(in), StandardCharsets.UTF_8);
 			} catch (final IOException e) {

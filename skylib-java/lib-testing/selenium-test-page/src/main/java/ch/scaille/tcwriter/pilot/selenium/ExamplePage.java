@@ -81,6 +81,9 @@ public class ExamplePage extends PagePilot {
 				"isSatisfied should have returned false");
 	}
 
+	/**
+	 * use with assertDialogHandled();
+	 */
 	public void expectTestAlertDialog() {
 		pilot.expectModalDialog(s -> {
 			s.doAcknowledge();

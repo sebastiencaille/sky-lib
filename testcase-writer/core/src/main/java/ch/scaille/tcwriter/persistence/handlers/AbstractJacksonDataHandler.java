@@ -42,13 +42,13 @@ public abstract class AbstractJacksonDataHandler implements IStorageDataHandler 
 					throws IOException {
 				// yaml and json have different behavior
 				if (!ExportReference.class.getName().equals(p.getTypeId())
-						&& !ExportReference.class.getName().equals(p.getCurrentName())) {
+						&& !ExportReference.class.getName().equals(p.currentName())) {
 					throw new StorageRTException("Unexpected type in ExportReference: " + p.getTypeId());
 				}
 				final var content = p.readValueAsTree();
 				final var id = content.get("id");
 				if (id == null) {
-					throw new StorageRTException("Unexpected attribute in ExportReference: " + p.getCurrentName());
+					throw new StorageRTException("Unexpected attribute in ExportReference: " + p.currentName());
 				}
 				final var exportReference = new ExportReference(((TextNode) id).asText());
 				((List<ExportReference>) ctxt.getAttribute(CONTEXT_ALL_REFERENCES)).add(exportReference);

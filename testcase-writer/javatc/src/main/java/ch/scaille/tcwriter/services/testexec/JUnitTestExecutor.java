@@ -26,7 +26,7 @@ import ch.scaille.util.helpers.Logs;
 public class JUnitTestExecutor implements ITestExecutor {
 
 	private static final Logger LOGGER = Logs.of(JUnitTestExecutor.class);
-
+ 
 	private final URL[] classPath;
 
 	private final IModelDao modelDao;

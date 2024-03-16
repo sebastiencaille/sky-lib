@@ -50,14 +50,23 @@ public class FileSystemDao<T> extends AbstractSerializationDao<T> {
 	private Stream<ResourceMetaData> inFolder(String locator) throws IOException {
 		if (!Files.isDirectory(basePath)) {
 			// basePath points to a file
-			return Collections.singleton(buildAndValidateMetadata(basePath.getFileName().toString(), basePath.toString())).stream();
+			return Collections
+					.singleton(buildAndValidateMetadata(basePath.getFileName().toString(), basePath.toString()))
+					.stream();
 		}
-		var target = basePath.resolve(locator);
-		if (!target.startsWith(basePath)) {
-			throw new IllegalStateException("Locator must be within base path");
+		final Path folder;
+		final String filter;
+		if (locator != null) {
+			var target = basePath.resolve(locator);
+			if (!target.startsWith(basePath)) {
+				throw new IllegalStateException("Locator must be within base path");
+			}
+			folder = target.getParent();
+			filter = target.getFileName().toString();
+		} else {
+			folder = basePath;
+			filter = null;
 		}
-		final var folder = target.getParent();
-		final var filter = target.getFileName().toString();
 		if (!Files.exists(folder)) {
 			return Collections.<ResourceMetaData>emptyList().stream();
 		}
@@ -76,16 +85,15 @@ public class FileSystemDao<T> extends AbstractSerializationDao<T> {
 
 	@Override
 	public ResourceMetaData resolve(String locator) throws IOException {
-		return inFolder(locator).findFirst()
-				.orElseThrow(() -> new StorageException("Resource not found: " + locator));
+		return inFolder(locator).findFirst().orElseThrow(() -> new StorageException("Resource not found: " + locator));
 	}
 
 	@Override
 	protected ResourceMetaData resolveOrCreate(String locator) throws IOException {
-		return inFolder(locator).findFirst().orElse(buildAndValidateMetadata(locator, basePath.resolve(locator).toString()));
+		return inFolder(locator).findFirst()
+				.orElse(buildAndValidateMetadata(locator, basePath.resolve(locator).toString()));
 	}
 
-	
 	@Override
 	public Stream<ResourceMetaData> list() throws StorageException {
 		return StorageException.wrap("list", () -> inFolder(null));

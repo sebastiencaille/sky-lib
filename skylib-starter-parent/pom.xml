@@ -21,7 +21,7 @@
 	<properties>
 		<revision>0.0.1-SNAPSHOT</revision>
 
-		<aspectj.version>1.9.21.2</aspectj.version>
+		<aspectj.version>1.9.22</aspectj.version>
 		<jackson-bom.version>2.17.0</jackson-bom.version>
 		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
 
@@ -30,7 +30,7 @@
 		<mapstruct.version>1.5.5.Final</mapstruct.version>
 
 		<swagger-parser.version>2.1.21</swagger-parser.version>
-		<swagger.version>2.2.20</swagger.version>
+		<swagger.version>2.2.21</swagger.version>
 		<springdoc-openapi.version>2.4.0</springdoc-openapi.version>
 
 		<undertow.version>2.3.12.Final</undertow.version>
@@ -52,7 +52,7 @@
 			<dependency>
 				<groupId>org.springframework.session</groupId>
 				<artifactId>spring-session-bom</artifactId>
-				<version>3.2.1</version>
+				<version>3.2.2</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -195,7 +195,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.12.1</version>
+					<version>3.13.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-war-plugin</artifactId>
@@ -219,7 +219,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-assembly-plugin</artifactId>
-					<version>3.7.0</version>
+					<version>3.7.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>

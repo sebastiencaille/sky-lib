@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 
 import org.springframework.session.Session;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.context.request.RequestAttributes;
 
 import ch.scaille.tcwriter.server.dto.Context;
 import jakarta.transaction.Transactional;
@@ -31,17 +32,17 @@ public class SessionManagerImpl implements SessionAccessor {
 		public <T> Optional<T> get(String attribName) {
 			// Creates the session if needed
 			request.ifPresent(r -> r.getSessionId());
-			return request.map(r -> (T)r.getAttribute(attribName, NativeWebRequest.SCOPE_SESSION));
+			return request.map(r -> (T)r.getAttribute(attribName, RequestAttributes.SCOPE_SESSION));
 		}
 
 		@Override
 		public void set(String attribName, Object value) {
-			request.ifPresent(s -> s.setAttribute(attribName, value, NativeWebRequest.SCOPE_SESSION));
+			request.ifPresent(s -> s.setAttribute(attribName, value, RequestAttributes.SCOPE_SESSION));
 		}
 		
 		@Override
 		public void remove(String attribName) {
-			request.ifPresent(s -> s.removeAttribute(attribName, NativeWebRequest.SCOPE_SESSION));
+			request.ifPresent(s -> s.removeAttribute(attribName, RequestAttributes.SCOPE_SESSION));
 			
 		}
 	}

@@ -57,6 +57,23 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<groupId>ch.scaille.tcwriter</groupId>
+				<artifactId>testcase-writer-maven-plugin</artifactId>
+				<version>${revision}</version>
+				<executions>
+					<execution>
+						<id>test-generation</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generateTestCases</goal>
+						</goals>
+						<configuration>
+							<template>file:src/main/resources/userResources/templates/TC.template</template>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
 				<executions>

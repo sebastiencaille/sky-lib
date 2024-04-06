@@ -87,7 +87,7 @@ public abstract class AbstractSerializationDao<T> implements IDao<T> {
 		if (handler.isPresent() && !handler.get().supports(nameAndExt[1])
 				&& !handler.get().getDefaultExtension().isEmpty()) {
 			return resourceMeta
-					.withStorageLocator(resourceMeta.getStorageLocator() + '.' + handler.get().getDefaultExtension());
+					.withStorageLocator(nameAndExt[0] + '.' + handler.get().getDefaultExtension());
 		}
 		return resourceMeta;
 	}

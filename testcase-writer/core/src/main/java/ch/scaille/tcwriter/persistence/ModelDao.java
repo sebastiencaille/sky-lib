@@ -15,10 +15,10 @@ import ch.scaille.tcwriter.model.config.TCConfig;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
 import ch.scaille.tcwriter.model.testcase.TestCase;
-import ch.scaille.tcwriter.persistence.factory.DaoFactory;
 import ch.scaille.tcwriter.persistence.handlers.JsonModelDataHandler;
 import ch.scaille.tcwriter.persistence.handlers.YamlModelDataHandler;
 import ch.scaille.util.helpers.Logs;
+import ch.scaille.util.persistence.DaoFactory;
 import ch.scaille.util.persistence.IDao;
 import ch.scaille.util.persistence.Resource;
 import ch.scaille.util.persistence.StorageException;
@@ -99,7 +99,7 @@ public class ModelDao implements IModelDao {
 			dictionary.getMetadata().setTransientId(dictionaryId);
 			return Optional.of(dictionary);
 		} catch (StorageException e) {
-			Logs.of(ModelDao.class).log(Level.WARNING, e, () -> "Unable to load dictionary");
+			Logs.of(ModelDao.class).log(Level.WARNING, e, () -> "Unable to load dictionary " + dictionaryId);
 			return Optional.empty();
 		}
 	}

@@ -1,0 +1,284 @@
+--- !<ch.scaille.tcwriter.model.testcase.ExportableTestCase>
+metadata: !<ch.scaille.tcwriter.model.Metadata>
+  description: "ch.scaille.tcwriter.examples.GeneratedTest: execution at 24-03-2024\
+    \ 14:01:00"
+  creationDate: null
+steps: !<java.util.ArrayList>
+- !<ch.scaille.tcwriter.model.testcase.ExportableTestStep>
+  ordinal: 1
+  parametersValue: !<java.util.ArrayList>
+  - !<ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue>
+    id: "d78998ba-6e51-479c-a687-00191cfb0c3b"
+    apiParameterId: "param-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole.buy-0"
+    complexTypeValues: !<java.util.HashMap>
+      param-ch.scaille.tcwriter.examples.api.interfaces.selectors.BuyingLocationSelector.onInternet-0: !<ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue>
+        id: "param-ch.scaille.tcwriter.examples.api.interfaces.selectors.BuyingLocationSelector.onInternet-0"
+        apiParameterId: "param-ch.scaille.tcwriter.examples.api.interfaces.selectors.BuyingLocationSelector.onInternet-0"
+        complexTypeValues: !<java.util.HashMap> {}
+        simpleValue: "https://somewebsite"
+        testParameterFactoryRef: !<ch.scaille.tcwriter.model.ExportReference>
+          id: "SIMPLE_TYPE:java.lang.String"
+          restoreAction: null
+    simpleValue: null
+    testParameterFactoryRef: !<ch.scaille.tcwriter.model.ExportReference>
+      id: "method-ch.scaille.tcwriter.examples.api.interfaces.selectors.BuyingLocationSelector.onInternet"
+      restoreAction: null
+  - !<ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue>
+    id: "f01f9242-8d15-4ff5-b315-6a39e473f22b"
+    apiParameterId: "param-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole.buy-1"
+    complexTypeValues: !<java.util.HashMap>
+      method-ch.scaille.tcwriter.examples.api.interfaces.dto.TestItem.setISO: !<ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue>
+        id: "method-ch.scaille.tcwriter.examples.api.interfaces.dto.TestItem.setISO"
+        apiParameterId: "method-ch.scaille.tcwriter.examples.api.interfaces.dto.TestItem.setISO"
+        complexTypeValues: !<java.util.HashMap> {}
+        simpleValue: "null"
+        testParameterFactoryRef: !<ch.scaille.tcwriter.model.ExportReference>
+          id: "SIMPLE_TYPE:void"
+          restoreAction: null
+      param-ch.scaille.tcwriter.examples.api.interfaces.dto.TestItem.coffeeMachineOfBrand-0: !<ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue>
+        id: "param-ch.scaille.tcwriter.examples.api.interfaces.dto.TestItem.coffeeMachineOfBrand-0"
+        apiParameterId: "param-ch.scaille.tcwriter.examples.api.interfaces.dto.TestItem.coffeeMachineOfBrand-0"
+        complexTypeValues: !<java.util.HashMap> {}
+        simpleValue: "OldSchool"
+        testParameterFactoryRef: !<ch.scaille.tcwriter.model.ExportReference>
+          id: "SIMPLE_TYPE:java.lang.String"
+          restoreAction: null
+    simpleValue: null
+    testParameterFactoryRef: !<ch.scaille.tcwriter.model.ExportReference>
+      id: "method-ch.scaille.tcwriter.examples.api.interfaces.dto.TestItem.coffeeMachineOfBrand"
+      restoreAction: null
+  reference: null
+  classifier: "PREPARATION"
+  actorRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "customer"
+    restoreAction: null
+  roleRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "role-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole"
+    restoreAction: null
+  actionRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "method-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole.buy"
+    restoreAction: null
+- !<ch.scaille.tcwriter.model.testcase.ExportableTestStep>
+  ordinal: 2
+  parametersValue: !<java.util.ArrayList> []
+  reference: null
+  classifier: "PREPARATION"
+  actorRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "deliveryGuy"
+    restoreAction: null
+  roleRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "role-ch.scaille.tcwriter.examples.api.interfaces.DeliveryTestRole"
+    restoreAction: null
+  actionRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "method-ch.scaille.tcwriter.examples.api.interfaces.DeliveryTestRole.deliverItem"
+    restoreAction: null
+- !<ch.scaille.tcwriter.model.testcase.ExportableTestStep>
+  ordinal: 3
+  parametersValue: !<java.util.ArrayList>
+  - !<ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue>
+    id: "7cf1ce9a-15cc-4e85-b317-bb3967bb5b5f"
+    apiParameterId: "param-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole.checkPackage-0"
+    complexTypeValues: !<java.util.HashMap> {}
+    simpleValue: null
+    testParameterFactoryRef: !<ch.scaille.tcwriter.model.ExportReference>
+      id: "method-ch.scaille.tcwriter.examples.api.interfaces.selectors.PackageDeliverySelector.deliveredItem"
+      restoreAction: null
+  - !<ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue>
+    id: "f76c1fe3-fe84-42f5-b74f-a5264c565e72"
+    apiParameterId: "param-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole.checkPackage-1"
+    complexTypeValues: !<java.util.HashMap>
+      method-ch.scaille.tcwriter.examples.api.interfaces.dto.TestItem.setISO: !<ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue>
+        id: "method-ch.scaille.tcwriter.examples.api.interfaces.dto.TestItem.setISO"
+        apiParameterId: "method-ch.scaille.tcwriter.examples.api.interfaces.dto.TestItem.setISO"
+        complexTypeValues: !<java.util.HashMap> {}
+        simpleValue: "null"
+        testParameterFactoryRef: !<ch.scaille.tcwriter.model.ExportReference>
+          id: "SIMPLE_TYPE:void"
+          restoreAction: null
+      param-ch.scaille.tcwriter.examples.api.interfaces.dto.TestItem.coffeeMachineOfBrand-0: !<ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue>
+        id: "param-ch.scaille.tcwriter.examples.api.interfaces.dto.TestItem.coffeeMachineOfBrand-0"
+        apiParameterId: "param-ch.scaille.tcwriter.examples.api.interfaces.dto.TestItem.coffeeMachineOfBrand-0"
+        complexTypeValues: !<java.util.HashMap> {}
+        simpleValue: "OldSchool"
+        testParameterFactoryRef: !<ch.scaille.tcwriter.model.ExportReference>
+          id: "SIMPLE_TYPE:java.lang.String"
+          restoreAction: null
+    simpleValue: null
+    testParameterFactoryRef: !<ch.scaille.tcwriter.model.ExportReference>
+      id: "method-ch.scaille.tcwriter.examples.api.interfaces.dto.TestItem.coffeeMachineOfBrand"
+      restoreAction: null
+  reference: null
+  classifier: "CHECK"
+  actorRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "customer"
+    restoreAction: null
+  roleRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "role-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole"
+    restoreAction: null
+  actionRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "method-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole.checkPackage"
+    restoreAction: null
+- !<ch.scaille.tcwriter.model.testcase.ExportableTestStep>
+  ordinal: 4
+  parametersValue: !<java.util.ArrayList>
+  - !<ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue>
+    id: "param-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole.resellOwnedItem-0"
+    apiParameterId: "param-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole.resellOwnedItem-0"
+    complexTypeValues: !<java.util.HashMap> {}
+    simpleValue: "10"
+    testParameterFactoryRef: !<ch.scaille.tcwriter.model.ExportReference>
+      id: "SIMPLE_TYPE:int"
+      restoreAction: null
+  reference: null
+  classifier: "PREPARATION"
+  actorRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "customer"
+    restoreAction: null
+  roleRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "role-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole"
+    restoreAction: null
+  actionRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "method-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole.resellOwnedItem"
+    restoreAction: null
+- !<ch.scaille.tcwriter.model.testcase.ExportableTestStep>
+  ordinal: 5
+  parametersValue: !<java.util.ArrayList>
+  - !<ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue>
+    id: "1d26fff3-56bb-4bdc-b6f3-f7eb12d49b59"
+    apiParameterId: "param-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole.buy-0"
+    complexTypeValues: !<java.util.HashMap> {}
+    simpleValue: null
+    testParameterFactoryRef: !<ch.scaille.tcwriter.model.ExportReference>
+      id: "method-ch.scaille.tcwriter.examples.api.interfaces.selectors.BuyingLocationSelector.inLocalShop"
+      restoreAction: null
+  - !<ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue>
+    id: "269c624b-6657-4ea0-9c45-806f0bb2bfe5"
+    apiParameterId: "param-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole.buy-1"
+    complexTypeValues: !<java.util.HashMap> {}
+    simpleValue: null
+    testParameterFactoryRef: !<ch.scaille.tcwriter.model.ExportReference>
+      id: "method-ch.scaille.tcwriter.examples.api.interfaces.dto.TestItem.teaPot"
+      restoreAction: null
+  reference: null
+  classifier: "PREPARATION"
+  actorRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "customer"
+    restoreAction: null
+  roleRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "role-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole"
+    restoreAction: null
+  actionRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "method-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole.buy"
+    restoreAction: null
+- !<ch.scaille.tcwriter.model.testcase.ExportableTestStep>
+  ordinal: 6
+  parametersValue: !<java.util.ArrayList>
+  - !<ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue>
+    id: "54f7c08c-2a1c-4f2a-957e-ccaf075d6c48"
+    apiParameterId: "param-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole.checkPackage-0"
+    complexTypeValues: !<java.util.HashMap> {}
+    simpleValue: null
+    testParameterFactoryRef: !<ch.scaille.tcwriter.model.ExportReference>
+      id: "method-ch.scaille.tcwriter.examples.api.interfaces.selectors.PackageDeliverySelector.fromShop"
+      restoreAction: null
+  - !<ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue>
+    id: "412ce566-d0e2-40d8-b127-df15e128763d"
+    apiParameterId: "param-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole.checkPackage-1"
+    complexTypeValues: !<java.util.HashMap> {}
+    simpleValue: null
+    testParameterFactoryRef: !<ch.scaille.tcwriter.model.ExportReference>
+      id: "method-ch.scaille.tcwriter.examples.api.interfaces.dto.TestItem.teaPot"
+      restoreAction: null
+  reference: null
+  classifier: "CHECK"
+  actorRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "customer"
+    restoreAction: null
+  roleRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "role-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole"
+    restoreAction: null
+  actionRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "method-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole.checkPackage"
+    restoreAction: null
+- !<ch.scaille.tcwriter.model.testcase.ExportableTestStep>
+  ordinal: 7
+  parametersValue: !<java.util.ArrayList>
+  - !<ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue>
+    id: "param-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole.resellOwnedItem-0"
+    apiParameterId: "param-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole.resellOwnedItem-0"
+    complexTypeValues: !<java.util.HashMap> {}
+    simpleValue: "10"
+    testParameterFactoryRef: !<ch.scaille.tcwriter.model.ExportReference>
+      id: "SIMPLE_TYPE:int"
+      restoreAction: null
+  reference: null
+  classifier: "PREPARATION"
+  actorRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "customer"
+    restoreAction: null
+  roleRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "role-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole"
+    restoreAction: null
+  actionRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "method-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole.resellOwnedItem"
+    restoreAction: null
+- !<ch.scaille.tcwriter.model.testcase.ExportableTestStep>
+  ordinal: 8
+  parametersValue: !<java.util.ArrayList> []
+  reference: !<ch.scaille.tcwriter.model.testcase.ExportableTestReference>
+    id: "ref8"
+    name: "ref8"
+    mandatoryParameters: !<java.util.ArrayList> []
+    optionalParameters: !<java.util.ArrayList> []
+    nature: "REFERENCE"
+    parameterType: "java.lang.String"
+    description: "Value of step 8"
+    testStepRef: !<ch.scaille.tcwriter.model.ExportReference>
+      id: "8"
+      restoreAction: null
+  classifier: "PREPARATION"
+  actorRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "customer"
+    restoreAction: null
+  roleRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "role-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole"
+    restoreAction: null
+  actionRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "method-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole.findAnotherBrand"
+    restoreAction: null
+- !<ch.scaille.tcwriter.model.testcase.ExportableTestStep>
+  ordinal: 9
+  parametersValue: !<java.util.ArrayList>
+  - !<ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue>
+    id: "eab40b99-973b-4bd9-9929-09634c2b40a3"
+    apiParameterId: "param-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole.keepNote-0"
+    complexTypeValues: !<java.util.HashMap> {}
+    simpleValue: "MidClass"
+    testParameterFactoryRef: !<ch.scaille.tcwriter.model.ExportReference>
+      id: "ref8"
+      restoreAction: null
+  reference: null
+  classifier: "PREPARATION"
+  actorRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "customer"
+    restoreAction: null
+  roleRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "role-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole"
+    restoreAction: null
+  actionRef: !<ch.scaille.tcwriter.model.ExportReference>
+    id: "method-ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole.keepNote"
+    restoreAction: null
+pkgAndClassName: "ch.scaille.tcwriter.examples.GeneratedTest"
+dynamicReferences: !<com.google.common.collect.Multimaps$CustomListMultimap>
+  java.lang.String:
+  - !<ch.scaille.tcwriter.model.testcase.ExportableTestReference>
+    id: "ref8"
+    name: "ref8"
+    mandatoryParameters: !<java.util.ArrayList> []
+    optionalParameters: !<java.util.ArrayList> []
+    nature: "REFERENCE"
+    parameterType: "java.lang.String"
+    description: "Value of step 8"
+    testStepRef: !<ch.scaille.tcwriter.model.ExportReference>
+      id: "8"
+      restoreAction: null

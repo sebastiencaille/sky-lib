@@ -148,7 +148,8 @@ public abstract class AbstractProperty implements Serializable {
 	}
 
 	@SafeVarargs
-	public final AbstractProperty configure(@SuppressWarnings("unchecked") final Consumer<AbstractProperty>... properties) {
+	public final AbstractProperty configure(
+			@SuppressWarnings("unchecked") final Consumer<AbstractProperty>... properties) {
 		Stream.of(properties).forEach(prop -> prop.accept(this));
 		return this;
 	}

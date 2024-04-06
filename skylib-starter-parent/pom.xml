@@ -14,13 +14,11 @@
 
 	<groupId>ch.scaille</groupId>
 	<artifactId>skylib-starter-parent</artifactId>
-	<version>${revision}</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<name>skylib-starter-parent</name>
 	<packaging>pom</packaging>
 
 	<properties>
-		<revision>0.0.1-SNAPSHOT</revision>
-
 		<aspectj.version>1.9.22</aspectj.version>
 		<jackson-bom.version>2.17.0</jackson-bom.version>
 		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>

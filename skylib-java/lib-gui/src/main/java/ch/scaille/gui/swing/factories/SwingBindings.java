@@ -53,7 +53,7 @@ public class SwingBindings {
 	}
 
 	/**
-	 * Class that contains all listener lifecycle (create, add, remove)
+	 * Class that contains all listener life cycle (create, add, remove)
 	 **/
 	private static class ListenerRegistration<T, C, L> {
 		private final BiFunction<IComponentLink<T>, C, L> createListener;
@@ -122,11 +122,19 @@ public class SwingBindings {
 		return val != null ? val : "<null>";
 	}
 
+	/**
+	 * Conditionally listen to an item and converts its value
+	 * @param <C> the ItemSelectable type
+	 * @param <T> the converted type
+	 * @param activator the condition that allows the value propagation 
+	 * @param converter the converter from the item value to the listener value
+	 * @return a listener registration
+	 */
 	public static <C extends ItemSelectable, T> ListenerRegistration<T, C, ?> itemListener(
-			final Predicate<ItemEvent> activator, final Function<ItemEvent, T> valueExtractor) {
+			final Predicate<ItemEvent> activator, final Function<ItemEvent, T> converter) {
 		return new ListenerRegistration<>((link, component) -> event -> {
 			if (activator.test(event)) {
-				link.setValueFromComponent(component, valueExtractor.apply(event));
+				link.setValueFromComponent(component, converter.apply(event));
 			}
 		}, ItemSelectable::addItemListener, ItemSelectable::removeItemListener);
 	}

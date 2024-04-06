@@ -57,6 +57,7 @@ public class FileSystemDao<T> extends AbstractSerializationDao<T> {
 		final Path folder;
 		final String filter;
 		if (locator != null) {
+			// The locator may contain a folder
 			var target = basePath.resolve(locator);
 			if (!target.startsWith(basePath)) {
 				throw new IllegalStateException("Locator must be within base path");
@@ -73,7 +74,7 @@ public class FileSystemDao<T> extends AbstractSerializationDao<T> {
 		return Files.list(folder)
 				// basic filter
 				.filter(f -> filter == null || f.getFileName().toString().startsWith(filter))
-				.map(p -> buildMetadata(nameAndExtensionOf(p.getFileName().toString())[0], p.toString()))
+				.map(p -> buildMetadata(nameAndExtensionOf(folder.relativize(p).toString())[0], p.toString()))
 				// filter on the metadata
 				.filter(m -> filterMetaData(filter, m))
 				.map(Optional::get);

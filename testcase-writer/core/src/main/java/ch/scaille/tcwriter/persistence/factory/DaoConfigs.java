@@ -3,24 +3,23 @@ package ch.scaille.tcwriter.persistence.factory;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Set;
 
 import ch.scaille.tcwriter.model.config.TCConfig;
 import ch.scaille.tcwriter.persistence.ConfigDao;
 import ch.scaille.tcwriter.persistence.ModelConfig;
 import ch.scaille.tcwriter.persistence.ModelDao;
-import ch.scaille.tcwriter.persistence.factory.DaoFactory.FsDsFactory;
+import ch.scaille.util.persistence.DaoFactory;
 import ch.scaille.util.persistence.FileSystemDao;
+import ch.scaille.util.persistence.DaoFactory.FsDsFactory;
 
 public interface DaoConfigs {
 
-	public static final String CP_DATASOURCE = "rsrc:";
 
 	public static final String USER_RESOURCES = "userResources/";
 
-	public static final String FS_DATASOURCE = "file:";
-
 	public static String cp(String path) {
-		return CP_DATASOURCE + USER_RESOURCES + path;
+		return DaoFactory.CP_DATASOURCE + USER_RESOURCES + path;
 	}
 
 	public static Path homeFolder() {
@@ -36,7 +35,7 @@ public interface DaoConfigs {
 	ModelDao modelDao();
 
 	public static DaoConfigs withFolder(Path path) {
-		final var daoFactory = DaoFactory.defaultsPlus(new FsDsFactory(path));
+		final var daoFactory = DaoFactory.cpPlus(Set.of(USER_RESOURCES), new FsDsFactory(path));
 		final var configDao = new ConfigDao(daoFactory, ".", ConfigDao.defaultDataHandlers());
 		final var modelDao = new ModelDao(daoFactory, configDao.getCurrentConfigProperty(),
 				ModelDao.defaultDataHandlers());

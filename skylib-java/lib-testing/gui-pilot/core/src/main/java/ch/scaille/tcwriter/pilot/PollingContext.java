@@ -1,5 +1,11 @@
 package ch.scaille.tcwriter.pilot;
 
+/**
+ * Context of the polling, giving access to meta-information of the polling
+ * (like, the component, some descriptions, ...)
+ * 
+ * @param <C>
+ */
 public class PollingContext<C> {
 
 	public static PollingContext<Object> generic(PollingContext<?> orig) {
@@ -8,8 +14,8 @@ public class PollingContext<C> {
 		return newContext;
 	}
 
-	public C component;
-	public String description;
+	private C component;
+	private String description;
 
 	public PollingContext() {
 		// noop
@@ -19,5 +25,13 @@ public class PollingContext<C> {
 		this.component = component;
 		this.description = description;
 	}
-
+	
+	public C getComponent() {
+		return component;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+	
 }

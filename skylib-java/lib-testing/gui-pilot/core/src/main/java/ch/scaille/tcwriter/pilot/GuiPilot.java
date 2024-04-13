@@ -2,9 +2,10 @@ package ch.scaille.tcwriter.pilot;
 
 import java.time.Duration;
 
-import ch.scaille.tcwriter.pilot.Factories.FailureHandlers;
 import ch.scaille.tcwriter.pilot.ModalDialogDetector.Builder;
 import ch.scaille.tcwriter.pilot.PilotReport.ReportFunction;
+import ch.scaille.tcwriter.pilot.PollingResult.FailureHandler;
+import ch.scaille.tcwriter.pilot.factories.FailureHandlers;
 import ch.scaille.util.helpers.NoExceptionCloseable;
 import ch.scaille.util.helpers.Poller;
 
@@ -23,9 +24,9 @@ public class GuiPilot {
 	private Poller.DelayFunction pollingDelayFunction = p -> {
 		final var elapsedTime = p.getTimeTracker().elapsedTimeMs();
 		if (elapsedTime < 500) {
-			return Duration.ofMillis(50);
+			return Duration.ofMillis(100);
 		} else if (elapsedTime < 10_000) {
-			return Duration.ofMillis(250);
+			return Duration.ofMillis(500);
 		} else if (elapsedTime < 60_000) {
 			return Duration.ofMillis(1_000);
 		}
@@ -36,7 +37,7 @@ public class GuiPilot {
 		if (text == null) {
 			return "";
 		}
-		return pc.description + ": " + text;
+		return pc.getDescription() + ": " + text;
 	};
 
 	private ModalDialogDetector currentModalDialogDetector;
@@ -107,7 +108,8 @@ public class GuiPilot {
 	}
 
 	/**
-	 * Enables the existing dialog detector (or a default one) until the finally is executed
+	 * Enables the existing dialog detector (or a default one) until the finally is
+	 * executed
 	 */
 	public NoExceptionCloseable withModalDialogDetection() {
 		if (currentModalDialogDetector == null) {
@@ -117,7 +119,8 @@ public class GuiPilot {
 	}
 
 	/**
-	 * Expects a modal dialog. Use try-finally or waitModalDialogHandled if a check is required 
+	 * Expects a modal dialog. Use try-finally or waitModalDialogHandled if a check
+	 * is required
 	 */
 	protected NoExceptionCloseable expectModalDialog(ModalDialogDetector.Builder detector) {
 		if (currentModalDialogDetector != null && currentModalDialogDetector.isRunning()) {
@@ -130,8 +133,7 @@ public class GuiPilot {
 	/**
 	 * Wait the model dialog expected by expectModalDialog
 	 */
-	public boolean waitModalDialogHandled(
-			final PollingResult.FailureHandler<ModalDialogDetector.PollingResult, ?, Boolean> onFail) {
+	public boolean waitModalDialogHandled(final FailureHandler<ModalDialogDetector.PollingResult, ?, Boolean> onFail) {
 		if (currentModalDialogDetector == null) {
 			throw new IllegalStateException("expectModalDialog was never called");
 		}

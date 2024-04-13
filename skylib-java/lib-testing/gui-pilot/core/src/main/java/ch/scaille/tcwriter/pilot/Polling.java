@@ -40,6 +40,10 @@ public class Polling<C, V> {
 
 	private ActionDelay currentDelay;
 
+	public Polling(PollingFunction<C, V> pollingFunction) {
+		this(null, pollingFunction);
+	}
+	
 	public Polling(final Predicate<C> precondition, final PollingFunction<C, V> pollingFunction) {
 		this.precondition = precondition;
 		this.pollingFunction = pollingFunction;
@@ -97,8 +101,9 @@ public class Polling<C, V> {
 		return this;
 	}
 	
-	public void withExtraDelay(ActionDelay currentDelay) {
+	public Polling<C, V> withExtraDelay(ActionDelay currentDelay) {
 		this.currentDelay = currentDelay;
+		return this;
 	}
 
 	/**
@@ -134,7 +139,7 @@ public class Polling<C, V> {
 	 * @param actionDelay
 	 * @return
 	 */
-	public Polling<C, V> followedBy(final ActionDelay actionDelay) {
+	public Polling<C, V> andThen(final ActionDelay actionDelay) {
 		this.actionDelay = actionDelay;
 		return this;
 	}

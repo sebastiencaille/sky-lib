@@ -1,18 +1,13 @@
 package ch.scaille.tcwriter.pilot.selenium;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WrapsElement;
 import org.openqa.selenium.support.PageFactory;
-
-import ch.scaille.tcwriter.pilot.AbstractComponentPilot;
-import ch.scaille.tcwriter.pilot.Factories.Pollings;
-import ch.scaille.tcwriter.pilot.Polling;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 
 /**
  * Allows to pilot application using selenium's page concept
@@ -35,10 +30,14 @@ public class PagePilot {
 		return pilot;
 	}
 
+	public SeleniumPollingBuilder on(Supplier<WebElement> element) {
+		return new SeleniumPollingBuilder(pilotOf(element));
+	}
+	
 	/**
 	 * Creates a pilot to interact with a WebElement
 	 */
-	public ElementPilot element(Supplier<WebElement> element) {
+	protected ElementPilot pilotOf(Supplier<WebElement> element) {
 		return new ElementPilot(pilot) {
 			@Override
 			protected Optional<WebElement> loadGuiComponent() {
@@ -51,18 +50,46 @@ public class PagePilot {
 			}
 
 			@Override
+			protected Optional<String> getDescription() {
+				return super.getDescription().or(() -> Optional.of(element.get().toString()));
+			}
+			
+			@Override
 			protected void invalidateCache() {
 				super.invalidateCache();
 				invalid = true;
 			}
 
 			@Override
-			protected String getDescription() {
-				var description = super.getDescription();
-				if (description == null) {
-					description = element.get().toString();
-				}
-				return description;
+			public String toString() {
+				return "Element of page " + getClass();
+			}
+		};
+	}
+	
+	public SeleniumPollingBuilder on(ExpectedCondition<WebElement> conditions) {
+		return new SeleniumPollingBuilder(pilotOf(conditions));
+	}
+	
+	/**
+	 * Creates a pilot to interact with a WebElement
+	 */
+	protected ElementPilot pilotOf(ExpectedCondition<WebElement> conditions) {
+		return new ElementPilot(pilot) {
+			@Override
+			protected Optional<WebElement> loadGuiComponent() {
+				return Optional.ofNullable(conditions.apply(pilot.getDriver()));
+			}
+
+			@Override
+			protected Optional<String> getDescription() {
+				return super.getDescription().or(() -> Optional.of(conditions.toString()));
+			}
+			
+			@Override
+			protected void invalidateCache() {
+				super.invalidateCache();
+				invalid = true;
 			}
 
 			@Override
@@ -79,18 +106,4 @@ public class PagePilot {
 		}
 	}
 
-	public <U> AbstractComponentPilot<ElementPilot, WebElement>.Wait<U> polling(Supplier<WebElement> element,
-			final Polling<WebElement, U> polling) {
-		return element(element).polling(polling);
-	}
-
-	public AbstractComponentPilot<ElementPilot, WebElement>.Wait<Boolean> polling(Supplier<WebElement> element, Consumer<WebElement> action) {
-		return element(element).polling(Pollings.applies(action));
-	}
-
-	public static Polling<WebElement, Boolean> textEquals(String expected) {
-		return Pollings
-				.<WebElement>asserts(pc -> Assertions.assertEquals(expected, pc.component.getText(), pc.description))
-				.withReportText("text " + expected);
-	}
 }

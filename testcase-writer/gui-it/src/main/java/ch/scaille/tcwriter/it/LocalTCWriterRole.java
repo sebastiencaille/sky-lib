@@ -17,9 +17,11 @@ import ch.scaille.tcwriter.it.api.StepEdition;
 import ch.scaille.tcwriter.it.api.StepSelector;
 import ch.scaille.tcwriter.it.api.TestSessionRole;
 import ch.scaille.tcwriter.it.api.TestWriterRole;
-import ch.scaille.tcwriter.pilot.EditableComponentPolling;
-import ch.scaille.tcwriter.pilot.Factories.PollingResults;
-import ch.scaille.tcwriter.pilot.Factories.Reporting;
+import ch.scaille.tcwriter.pilot.Polling;
+import ch.scaille.tcwriter.pilot.PollingContext;
+import ch.scaille.tcwriter.pilot.PollingResult;
+import ch.scaille.tcwriter.pilot.factories.PollingResults;
+import ch.scaille.tcwriter.pilot.factories.Reporting;
 
 @SuppressWarnings("java:S5960")
 public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
@@ -91,22 +93,30 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	public void assertHumanReadable(final StepSelector selector, final String humanReadable) {
 		selector.accept(tcWriterPage);
 
-		tcWriterPage.stepsTable.polling(tcWriterPage.stepsTable.asserts(pc -> {
-			final var component = pc.component;
+		tcWriterPage.stepsTable.polling().asserts(pc -> {
+			final var component = pc.getComponent();
 			final var value = ((StepsTableModel) component.getModel()).getHumanReadable(component.getSelectedRow());
 			Assertions.assertEquals(humanReadable, value);
-		})).orFail("checking human readable text: " + humanReadable);
+		}).orFail("checking human readable text: " + humanReadable);
 	}
 
 	@Override
 	public void updateParameter(final ParameterSelector selector, final ParameterValue value) {
-		selector.apply(tcWriterPage).polling(new EditableComponentPolling<JTable, Boolean>(pc -> {
-			updateValue(pc.component, value.getKeyValue1());
-			updateValue(pc.component, value.getKeyValue2());
-			updateValue(pc.component, value.getKeyValue3());
-			return PollingResults.success();
-		})).orFail(Reporting.settingValue("parameter", value));
+		selector.apply(tcWriterPage)
+				.polling()
+				.poll(new Polling<>(context -> updateParameterValues(context, value)))
+				.orFail(Reporting.settingValue("parameter", value));
+
 		applyStepEdition();
+
+	}
+
+	private PollingResult<JTable, Boolean> updateParameterValues(PollingContext<JTable> context,
+			final ParameterValue value) {
+		updateValue(context.getComponent(), value.getKeyValue1());
+		updateValue(context.getComponent(), value.getKeyValue2());
+		updateValue(context.getComponent(), value.getKeyValue3());
+		return PollingResults.success();
 	}
 
 	@Override

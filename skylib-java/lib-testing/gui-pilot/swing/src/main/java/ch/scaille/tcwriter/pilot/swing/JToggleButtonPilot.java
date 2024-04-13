@@ -1,6 +1,6 @@
 package ch.scaille.tcwriter.pilot.swing;
 
-import static ch.scaille.tcwriter.pilot.Factories.Reporting.checkingThat;
+import static ch.scaille.tcwriter.pilot.factories.Reporting.checkingThat;
 
 import javax.swing.JToggleButton;
 
@@ -11,12 +11,12 @@ public class JToggleButtonPilot extends AbstractSwingComponent<JToggleButtonPilo
 	}
 
 	public void assertSelected(final boolean expected) {
-		polling(satisfies(c -> c.isSelected() == expected))
+		polling().satisfy(c -> c.isSelected() == expected)
 				.orFail(checkingThat("component is " + (expected ? "selected" : "not selected")));
 	}
 
 	public void setSelected(final boolean selected) {
-		polling(applies(c -> c.setSelected(selected))).orFail((selected ? "selecting" : "deselecting"));
+		polling().apply(c -> c.setSelected(selected)).orFail((selected ? "selecting" : "deselecting"));
 	}
 
 }

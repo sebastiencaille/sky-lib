@@ -14,8 +14,8 @@ import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Assertions;
 
-import ch.scaille.tcwriter.pilot.Factories.PollingResults;
 import ch.scaille.tcwriter.pilot.PollingResult.FailureHandler;
+import ch.scaille.tcwriter.pilot.factories.PollingResults;
 import ch.scaille.util.helpers.Logs;
 import ch.scaille.util.helpers.NoExceptionCloseable;
 import ch.scaille.util.helpers.OverridableParameter;

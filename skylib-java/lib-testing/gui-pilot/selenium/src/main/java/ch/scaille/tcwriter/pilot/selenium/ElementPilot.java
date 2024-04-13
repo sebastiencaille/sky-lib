@@ -1,17 +1,15 @@
 package ch.scaille.tcwriter.pilot.selenium;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 
 import ch.scaille.tcwriter.pilot.AbstractComponentPilot;
-import ch.scaille.tcwriter.pilot.Factories.PollingResults;
-import ch.scaille.tcwriter.pilot.Factories.Pollings;
 import ch.scaille.tcwriter.pilot.Polling;
 import ch.scaille.tcwriter.pilot.PollingResult;
+import ch.scaille.tcwriter.pilot.factories.PollingResults;
 
 public class ElementPilot extends AbstractComponentPilot<ElementPilot, WebElement> {
 
@@ -29,19 +27,19 @@ public class ElementPilot extends AbstractComponentPilot<ElementPilot, WebElemen
 		this.pilot = pilot;
 		this.locator = null;
 	}
-
+	
 	@Override
-	protected String getDescription() {
-		final var description = super.getDescription();
-		if (description == null && locator != null) {
-			return locator.toString();
+	protected Optional<String> getDescription() {
+		final var description = getCachedElement().map(Object::toString);
+		if (locator != null) {
+			return description.or(() -> Optional.of(locator.toString()));
 		}
 		return description;
 	}
 
 	@Override
 	public String toString() {
-		return getDescription();
+		return getDescription().orElse("<unidentified>");
 	}
 
 	@Override
@@ -52,11 +50,6 @@ public class ElementPilot extends AbstractComponentPilot<ElementPilot, WebElemen
 	@Override
 	protected boolean canCheck(final WebElement element) {
 		return element.isDisplayed();
-	}
-
-	@Override
-	protected boolean canEdit(final WebElement element) {
-		return element.isDisplayed() && element.isEnabled();
 	}
 
 	@Override
@@ -77,19 +70,5 @@ public class ElementPilot extends AbstractComponentPilot<ElementPilot, WebElemen
 			throw e;
 		}
 	}
-
-	public Wait<Boolean> polling(Consumer<WebElement> action) {
-		return polling(Pollings.applies(action));
-	}
-	
-	public static Polling<WebElement, Boolean> isEnabled() {
-		return Pollings.satisfies(WebElement::isEnabled).withReportText("is enabled");
-	}
-
-	public static Polling<WebElement, Boolean> click() {
-		return Pollings.applies(WebElement::click).withReportText("clicked");
-	}
-
-
 
 }

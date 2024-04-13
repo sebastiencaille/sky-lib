@@ -14,7 +14,7 @@
 
 	<groupId>ch.scaille</groupId>
 	<artifactId>skylib-starter-parent</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>${revision}</version>
 	<name>skylib-starter-parent</name>
 	<packaging>pom</packaging>
 
@@ -29,16 +29,16 @@
 
 		<swagger-parser.version>2.1.21</swagger-parser.version>
 		<swagger.version>2.2.21</swagger.version>
-		<springdoc-openapi.version>2.4.0</springdoc-openapi.version>
+		<springdoc-openapi.version>2.5.0</springdoc-openapi.version>
 
 		<undertow.version>2.3.12.Final</undertow.version>
-		<liquibase.version>4.26.0</liquibase.version>
+		<liquibase.version>4.27.0</liquibase.version>
 
 		<mockito.version>5.11.0</mockito.version>
 		<junit-jupiter.version>5.10.2</junit-jupiter.version>
 		<junit.version>4.13.2</junit.version>
 		<junit-platform-console-standalone.version>1.10.2</junit-platform-console-standalone.version>
-		<selenium.version>4.18.1</selenium.version>
+		<selenium.version>4.19.1</selenium.version>
 		<h2.version>2.2.224</h2.version>
 
 		<coverage.temp>${java.io.tmpdir}/coverage/${basedir}</coverage.temp>
@@ -168,12 +168,12 @@
 					<version>3.1.1</version>
 				</plugin>
 				<plugin>
-					<artifactId>maven-site-plugin</artifactId>
-					<version>3.12.1</version>
-				</plugin>
-				<plugin>
 					<artifactId>maven-jar-plugin</artifactId>
 					<version>3.3.0</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>3.3.1</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-resources-plugin</artifactId>
@@ -233,7 +233,7 @@
 				<plugin>
 					<groupId>com.github.webdriverextensions</groupId>
 					<artifactId>webdriverextensions-maven-plugin</artifactId>
-					<version>3.4.0</version>
+					<version>4.0.0</version>
 				</plugin>
 
 				<!--

@@ -1,7 +1,5 @@
 package ch.scaille.tcwriter.it;
 
-import static ch.scaille.tcwriter.pilot.selenium.ElementPilot.click;
-
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -30,7 +28,13 @@ public class MainPage extends PagePilot {
 		super(pilot);
 	}
 
-	public record ContextSelector(WebElement selector, Consumer<WebElement> selectorApplier, WebElement applier) {
+	/**
+	 * To select the application context
+	 * @param selector the context selector (drop down)
+	 * @param selectorSelection the selection on the selector
+	 * @param applier the button that applies the selection
+	 */
+	public record ContextSelector(WebElement selector, Consumer<WebElement> selectorSelection, WebElement applier) {
 	}
 
 	public static Function<MainPage, ContextSelector> dictionary(String name) {
@@ -45,8 +49,8 @@ public class MainPage extends PagePilot {
 	}
 
 	public void assertSelected(Function<MainPage, ContextSelector> selector) {
-		polling(() -> selector.apply(this).selector, selector.apply(this).selectorApplier).orFail();
-		polling(() -> selector.apply(this).applier, click()).orFail();
+		on(() -> selector.apply(this).selector).apply(selector.apply(this).selectorSelection).orFail();
+		on(() -> selector.apply(this).applier).click().orFail();
 	}
 
 }

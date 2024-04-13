@@ -1,20 +1,16 @@
 package ch.scaille.tcwriter.pilot;
 
-import static ch.scaille.tcwriter.pilot.Factories.PollingResults.failure;
-
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.logging.Logger;
 
-import ch.scaille.tcwriter.pilot.Factories.FailureHandlers;
-import ch.scaille.tcwriter.pilot.Factories.Pollings;
 import ch.scaille.tcwriter.pilot.PilotReport.ReportFunction;
 import ch.scaille.tcwriter.pilot.PollingResult.FailureHandler;
+import ch.scaille.tcwriter.pilot.factories.PollingResults;
 import ch.scaille.util.helpers.Logs;
 import ch.scaille.util.helpers.Poller;
 
@@ -66,14 +62,6 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	 */
 	protected abstract boolean canCheck(final C component);
 
-	/**
-	 * Checks if a component is in a state that allows edition
-	 *
-	 * @param component
-	 * @return
-	 */
-	protected abstract boolean canEdit(final C component);
-
 	private final GuiPilot pilot;
 
 	private final List<Consumer<C>> postExecutions = new ArrayList<>();
@@ -86,8 +74,8 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 		this.pilot = pilot;
 	}
 
-	protected String getDescription() {
-		return getCachedElement().map(Object::toString).orElse(null);
+	protected Optional<String> getDescription() {
+		return getCachedElement().map(Object::toString);
 	}
 
 	public Optional<C> getCachedElement() {
@@ -145,21 +133,26 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	 * @param timeout
 	 * @return
 	 */
-	protected <P, R> R waitPollingSuccess(final Polling<C, P> polling, final Function<P, R> successTransformer,
-			final FailureHandler<C, P, R> onFail) {
+	public <P> PollingResult<C, P> waitPollingSuccess(final Polling<C, P> polling) {
 		polling.withExtraDelay(pilot.getActionDelay());
 		waitActionDelay();
 		try (var closeable = pilot.withModalDialogDetection()) {
 			final var result = waitPollingSuccessLoop(polling);
+			result.setPolling(polling);
 			if (result.isSuccess()) {
 				fired = true;
 				postExecutions.stream().forEach(p -> p.accept(cachedComponent.element));
-				pilot.setActionDelay(polling.getActionDelay());
 			}
-
-			result.setInformation(toString(), cachedComponent);
-			return result.mapOrGet(successTransformer, () -> onFail.apply(result, pilot));
+			return result;
 		}
+	}
+
+	public <P, U> U processResult(final PollingResult<C, P> result, Function<P, U> successTransformer,
+			FailureHandler<C, P, U> onFail) {
+		if (result.isSuccess()) {
+			pilot.setActionDelay(result.getPolling().getActionDelay());
+		}
+		return result.mapOrGet(successTransformer, () -> onFail.apply(result, pilot));
 	}
 
 	/**
@@ -192,10 +185,13 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 
 		final var pollingFailure = loadComponent(polling);
 		if (pollingFailure.isPresent()) {
+			polling.getContext().setComponent(null, getDescription().orElse("<unknown>"));
 			return pollingFailure;
 		}
 
-		polling.getContext().setComponent(getCachedElement().orElse(null), getDescription());
+		polling.getContext()
+				.setComponent(getCachedElement().orElse(null),
+						getDescription().or(() -> getCachedElement().map(Object::toString)).orElse("<unknown>"));
 
 		// cachedElement.element may disappear after polling, so prepare report line
 		// here
@@ -224,13 +220,13 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 		logger.fine(() -> "Cached component: " + cachedComponent);
 		if (cachedComponent == null) {
 			logger.fine("Not found");
-			return Optional.of(failure("not found"));
+			return Optional.of(PollingResults.failure("not found"));
 		}
 		final var preCondition = polling.getPrecondition(this);
 		if (!cachedComponent.preconditionValidated && preCondition.isPresent()
 				&& !preCondition.get().test(cachedComponent.element)) {
 			logger.fine("Precondition failed");
-			return Optional.of(failure("precondition failed"));
+			return Optional.of(PollingResults.failure("precondition failed"));
 		}
 		return Optional.empty();
 	}
@@ -239,66 +235,7 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 		return polling.getPollingFunction().poll(polling.getContext());
 	}
 
-	public class Wait<R> {
-
-		protected final Polling<C, R> polling;
-
-		public Wait(Polling<C, R> polling) {
-			this.polling = polling;
-		}
-
-		/**
-		 * Waits until a component is checked/edited
-		 * 
-		 * @param onFail failure behavior
-		 */
-		public R or(final FailureHandler<C, R, R> onFail) {
-			return waitPollingSuccess(polling, r -> r, onFail);
-		}
-
-		/**
-		 * Waits until a component is edited, throwing a java assertion error in case of
-		 * failure
-		 */
-		public R orFail() {
-			return or(FailureHandlers.throwError());
-		}
-
-		public R orFail(String report) {
-			return waitPollingSuccess(polling.withReportText(report), r -> r, FailureHandlers.throwError());
-		}
-
-		public boolean isSatisfied() {
-			return AbstractComponentPilot.this
-					.waitPollingSuccess(polling, r -> Boolean.TRUE, FailureHandlers.ignoreFailure())
-					.booleanValue();
-		}
-
-		public boolean isSatisfiedOr(String report) {
-			return AbstractComponentPilot.this
-					.waitPollingSuccess(polling.withReportText(report), r -> Boolean.TRUE,
-							FailureHandlers.reportNotSatisfied(report))
-					.booleanValue();
-		}
-	}
-
-
-	public <U> Wait<U> polling(final Polling<C, U> polling) {
-		return new Wait<>(polling);
-	}
-
-	/**
-	 * Waits until a component is checked, throwing an assertion error if the check
-	 *
-	 * @param <U>     returned value type
-	 * @param polling check/edition
-	 * @return check/edition value
-	 */
-	public Wait<Boolean> polling(Predicate<C> check) {
-		return new Wait<>(Factories.Pollings.satisfies(check));
-	}
-
-	/**
+	/*
 	 * Waits on the action set by followedByDelay
 	 */
 	protected void waitActionDelay() {
@@ -310,26 +247,7 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 		}
 	}
 
-	/**
-	 * Useful to avoid Generic issues
-	 * @See Factories.action
-	 */
-	public Polling<C, Boolean> applies(final Consumer<C> action) {
-		return Pollings.applies(action);
+	public PollingBuilder<G, C> polling() {
+		return new PollingBuilder<>(this);
 	}
-
-	/**
-	 * @See Factories.assertion
-	 */
-	public Polling<C, Boolean> asserts(final Consumer<PollingContext<C>> assertion) {
-		return Pollings.asserts(assertion);
-	}
-
-	/**
-	 * @See Factories.satisfies
-	 */
-	public Polling<C, Boolean> satisfies(final Predicate<C> predicate) {
-		return Pollings.satisfies(predicate);
-	}
-
 }

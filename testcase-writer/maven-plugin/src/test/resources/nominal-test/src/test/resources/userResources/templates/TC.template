@@ -1,0 +1,28 @@
+package ${package};
+
+import ch.scaille.tcwriter.examples.api.interfaces.dto.*;
+import ch.scaille.tcwriter.examples.api.interfaces.selectors.*;
+import ch.scaille.tcwriter.examples.api.interfaces.*;
+import ch.scaille.tcwriter.recorder.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class ${testName} {
+
+	private CustomerTestRole customer;
+	private DeliveryTestRole deliveryGuy;
+
+	@BeforeEach
+	public void prepareApis() {
+		final ExampleService testedService = new ExampleService();
+		customer = RecorderTestActors.register(new CustomerTestRole(testedService), "customer", null);
+		deliveryGuy = RecorderTestActors.register(new DeliveryTestRole(testedService), "deliveryGuy", null);
+	}
+	
+	@Test
+	void testCase() {
+		${testContent}
+	}
+
+}

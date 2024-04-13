@@ -1,7 +1,5 @@
 package ch.scaille.example.gui.model;
 
-import static ch.scaille.tcwriter.pilot.Factories.Pollings.asserts;
-
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.time.Duration;
@@ -35,11 +33,11 @@ class ModelExampleTest {
 
 		var page = pilot.page(ModelExamplePage::new);
 
-		page.listTable.polling(asserts(pc -> {
-			final var component = pc.component;
+		page.listTable.polling().asserts(context -> {
+			final var component = context.getComponent();
 			Assertions.assertEquals(FIXED_COLUMN_WIDTH, component.getColumn(TestObjectTableModel.Columns.A_SECOND_VALUE).getWidth());
 			Assertions.assertEquals(component.getWidth() - FIXED_COLUMN_WIDTH, component.getColumn(TestObjectTableModel.Columns.A_FIRST_VALUE).getWidth());
-		})).orFail();
+		}).orFail();
 		page.listTable.assertValue(0, 0, "One");
 		page.listTable.assertValue(1, 0, "Two");
 		page.listTable.assertValue(2, 0, "Three");

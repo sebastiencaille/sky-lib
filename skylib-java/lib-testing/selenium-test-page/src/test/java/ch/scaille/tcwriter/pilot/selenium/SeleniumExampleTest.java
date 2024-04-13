@@ -53,7 +53,7 @@ class SeleniumExampleTest extends AbstractTestWebAppProvider {
 
 		mainPage.assertElementChange();
 
-		assertEquals(8, pilot.getActionReport().getReport().size(), () -> pilot.getActionReport().getFormattedReport());
+		assertEquals(6, pilot.getActionReport().getReport().size(), () -> pilot.getActionReport().getFormattedReport());
 	}
 
 }

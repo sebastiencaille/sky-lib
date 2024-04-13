@@ -56,7 +56,7 @@
 					</arguments>
 				</configuration>
 			</plugin>
-			<plugin>
+			<!--plugin>
 				<groupId>ch.scaille.tcwriter</groupId>
 				<artifactId>testcase-writer-maven-plugin</artifactId>
 				<version>${revision}</version>
@@ -72,7 +72,7 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin-->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>

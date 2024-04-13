@@ -1,7 +1,5 @@
 package ch.scaille.tcwriter.pilot;
 
-import static ch.scaille.tcwriter.pilot.Factories.Pollings.satisfies;
-
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +8,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import ch.scaille.tcwriter.pilot.factories.Pollings;
 import ch.scaille.util.helpers.Poller;
 import ch.scaille.util.helpers.Poller.DelayFunction;
 
@@ -49,18 +48,13 @@ class ComponentTest {
 			return true;
 		}
 
-		@Override
-		protected boolean canEdit(Object component) {
-			return true;
-		}
-
 	}
 
 	@Test
 	void testDuration() {
 		final var pilot = new GuiPilot();
 		final var testComponent = new TestComponent(pilot);
-		final var waitResult = testComponent.polling(satisfies(c -> false)).isSatisfied();
+		final var waitResult = testComponent.polling().poll(Pollings.satisfies(c -> false)).isSatisfied();
 		Assertions.assertFalse(waitResult);
 		Assertions.assertEquals(6, testComponent.delays.size(), testComponent.delays.toString());
 

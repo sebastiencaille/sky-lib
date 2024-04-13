@@ -1,7 +1,7 @@
 package ch.scaille.tcwriter.pilot.swing;
 
-import static ch.scaille.tcwriter.pilot.Factories.Reporting.checkingValue;
-import static ch.scaille.tcwriter.pilot.Factories.Reporting.settingValue;
+import static ch.scaille.tcwriter.pilot.factories.Reporting.checkingValue;
+import static ch.scaille.tcwriter.pilot.factories.Reporting.settingValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import javax.swing.JTextField;
@@ -29,19 +29,19 @@ public class JTextFieldPilot extends AbstractSwingComponent<JTextFieldPilot, JTe
 		if (value == null) {
 			return;
 		}
-		polling(applies(t -> {
+		polling().apply(t -> {
 			t.setText(value);
 			if (t instanceof JTextField) {
 				SwingHelper.doPressReturn(t);
 			}
-		})).orFail(settingValue(value));
+		}).orFail(settingValue(value));
 	}
 
 	public void assertTextValue(final String expected) {
 		if (expected == null) {
 			return;
 		}
-		polling(asserts(pc -> assertEquals(expected, pc.component.getText(), pc.description)))
+		polling().asserts(pc -> assertEquals(expected, pc.getComponent().getText(), pc.getDescription()))
 				.orFail(checkingValue(expected));
 	}
 

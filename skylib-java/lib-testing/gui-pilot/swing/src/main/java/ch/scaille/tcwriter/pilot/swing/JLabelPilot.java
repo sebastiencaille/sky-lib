@@ -1,9 +1,10 @@
 package ch.scaille.tcwriter.pilot.swing;
 
-import static ch.scaille.tcwriter.pilot.Factories.Reporting.checkingValue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import javax.swing.JLabel;
+
+import org.junit.jupiter.api.Assertions;
+
+import ch.scaille.tcwriter.pilot.factories.Reporting;
 
 @SuppressWarnings("java:S5960")
 public class JLabelPilot extends AbstractSwingComponent<JLabelPilot, JLabel> {
@@ -13,8 +14,8 @@ public class JLabelPilot extends AbstractSwingComponent<JLabelPilot, JLabel> {
 	}
 
 	public void assertTextEquals(final String expected) {
-		polling(asserts(pc -> assertEquals(expected, pc.component.getText(), pc.description)))
-				.orFail(checkingValue(expected));
+		polling().asserts(pc -> Assertions.assertEquals(expected, pc.getComponent().getText(), pc.getDescription()))
+				.orFail(Reporting.checkingValue(expected));
 	}
 
 }

@@ -14,6 +14,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
@@ -32,13 +33,13 @@ import ch.scaille.util.helpers.LambdaExt;
 import ch.scaille.util.persistence.DaoFactory;
 import ch.scaille.util.persistence.DaoFactory.FsDsFactory;
 
-@Mojo(name = "generateTestCases")
+@Mojo(name = "generateTestCases", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES )
 public class JavaTestCaseGeneratorMojo extends AbstractMojo {
 
-	@Component
+	@Parameter( defaultValue = "${project}", readonly = true )
 	private MavenProject project;
 
-	@Parameter(property = "template", required = false, defaultValue = "file:src/test/resources/templates/TC.template")
+	@Parameter(property = "template", required = false, defaultValue = "file:src/test/resources/userResources/templates/TC.template")
 	private String template;
 
 	@Parameter(property = "dictionaryFolder", required = false, defaultValue = "file:src/test/resources/dictionaries")

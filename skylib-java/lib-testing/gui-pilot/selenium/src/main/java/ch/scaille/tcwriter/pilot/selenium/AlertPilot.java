@@ -1,12 +1,14 @@
 package ch.scaille.tcwriter.pilot.selenium;
 
+import static ch.scaille.tcwriter.pilot.factories.Pollings.applies;
+
 import java.util.Optional;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoAlertPresentException;
 
 import ch.scaille.tcwriter.pilot.AbstractComponentPilot;
-import ch.scaille.tcwriter.pilot.Factories.Pollings;
+import ch.scaille.tcwriter.pilot.PollingBuilder;
 
 public class AlertPilot extends AbstractComponentPilot<AlertPilot, Alert> {
 
@@ -25,20 +27,21 @@ public class AlertPilot extends AbstractComponentPilot<AlertPilot, Alert> {
 			return Optional.empty();
 		}
 	}
+	
+	@Override
+	protected Optional<String> getDescription() {
+		return getCachedElement().map(Alert::getText);
+	}
+
 
 	@Override
 	protected boolean canCheck(final Alert component) {
 		return false;
 	}
 
-	@Override
-	protected boolean canEdit(final Alert component) {
-		return false;
-	}
-
 	public void doAcknowledge() {
-		polling(Pollings.applyOnExisting(Alert::accept)
-				.withReportFunction((cp, t) -> "Acknowledging alert: " + cp.component.getText())).orFail();
+		new PollingBuilder<>(this).poll(applies(Alert::accept)
+				.withReportFunction((cp, t) -> "Acknowledging alert: " + cp.getComponent().getText())).orFail();
 	}
 
 }

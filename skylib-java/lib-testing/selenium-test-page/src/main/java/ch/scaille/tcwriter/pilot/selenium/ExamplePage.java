@@ -1,35 +1,30 @@
 package ch.scaille.tcwriter.pilot.selenium;
 
-import static ch.scaille.tcwriter.pilot.Factories.Pollings.asserts;
-import static ch.scaille.tcwriter.pilot.selenium.ElementPilot.click;
+import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 import java.time.Duration;
 
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import ch.scaille.tcwriter.pilot.ActionDelay;
-import ch.scaille.tcwriter.pilot.Factories.Pollings;
 import ch.scaille.tcwriter.pilot.ModalDialogDetector;
+import ch.scaille.tcwriter.pilot.factories.Pollings;
 
 public class ExamplePage extends PagePilot {
 
-	@FindBy(id = "EnableTest")
-	public WebElement enableTest;
+	private static final By ENABLE_TEST = By.id("EnableTest");
 
-	@FindBy(id = "AlertTest")
-	public WebElement alertTest;
+	private static final By ALERT_TEST = By.id("AlertTest");
 
-	@FindBy(id = "ElementChangeTest")
-	public WebElement elementChangeTest;
+	private static final By ELEMENT_CHANGE_TEST = By.id("ElementChangeTest");
 
-	@FindBy(id = "ElementChange")
-	public WebElement elementChange;
+	private static final By ELEMENT_CHANGE = By.id("ElementChange");
 
-	@FindBy(id = "NotExisting")
-	public WebElement notExistingElement;
+	private static final By NOT_EXISTING = By.id("NotExisting");
 
 	public ExamplePage(SeleniumPilot pilot) {
 		super(pilot);
@@ -44,8 +39,8 @@ public class ExamplePage extends PagePilot {
 		@Override
 		public void assertFinished() {
 			final var page = ExamplePage.this;
-			page.polling(() -> page.enableTest, ElementPilot.isEnabled()).orFail();
-			Assertions.assertTrue(page.enableTest.isEnabled(), "EnableTest is enabled");
+			page.on(visibilityOfElementLocated(ENABLE_TEST)).isEnabled().orFail();
+			Assertions.assertTrue(visibilityOfElementLocated(ENABLE_TEST).apply(getDriver()).isEnabled(), "EnableTest is enabled");
 		}
 
 		@Override
@@ -60,25 +55,21 @@ public class ExamplePage extends PagePilot {
 	 * until "Proceed" is enabled
 	 */
 	public void executeEnable() {
-		polling(() -> this.enableTest, click().followedBy(new WaitEnableTestEnabledDelay())).orFail();
+		on(elementToBeClickable(ENABLE_TEST)).click().andThen(new WaitEnableTestEnabledDelay()).orFail();
 	}
 
 	public void assertedEnabledTested() {
-		polling(() -> this.enableTest, asserts(c -> Assertions.assertTrue(c.component.isEnabled()))).orFail();
+		on(visibilityOfElementLocated(ENABLE_TEST)).asserts(ctxt -> Assertions.assertTrue(ctxt.getComponent().isEnabled())).orFail();
 	}
 
 	public void testAlert() {
-		// wait(() -> this.alertTest, WebElement::click);
-		// wait(() -> this.alertTest, action(WebElement::click));
-		// this one has nice reporting
-		polling(() -> this.alertTest, click()).orFail();
+		on(elementToBeClickable(ALERT_TEST)).click().orFail();
 	}
 
 	public void clickOnMissingButton() {
-		Assertions.assertFalse(
-				polling(() -> this.notExistingElement,
-						Pollings.<WebElement>exists().withTimeout(Duration.ofMillis(500))).isSatisfiedOr("not satisfied"),
-				"isSatisfied should have returned false");
+		Assertions.assertFalse(on(visibilityOfElementLocated(NOT_EXISTING))
+				.poll(Pollings.<WebElement>exists().withTimeout(Duration.ofMillis(500)))
+				.isSatisfiedOr("not satisfied"), "isSatisfied should have returned false");
 	}
 
 	/**
@@ -99,9 +90,9 @@ public class ExamplePage extends PagePilot {
 	}
 
 	public void assertElementChange() {
-		polling(() -> this.elementChangeTest, click()).orFail();
+		on(elementToBeClickable(ELEMENT_CHANGE_TEST)).click().orFail();
 		// Explicitly test using WebElement as source
-		polling(() -> this.elementChange.findElement(By.id("TextChange")), textEquals("Hello again")).orFail();
+		on(visibilityOfElementLocated(ELEMENT_CHANGE)).textEquals("Hello again").orFail();
 	}
 
 }

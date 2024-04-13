@@ -1,17 +1,13 @@
 package ch.scaille.tcwriter.pilot.swing;
 
 import java.util.Optional;
-import java.util.function.Function;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 import ch.scaille.tcwriter.pilot.AbstractComponentPilot;
-import ch.scaille.tcwriter.pilot.Factories;
-import ch.scaille.tcwriter.pilot.Factories.Pollings;
 import ch.scaille.tcwriter.pilot.Polling;
 import ch.scaille.tcwriter.pilot.PollingResult;
-import ch.scaille.tcwriter.pilot.PollingResult.FailureHandler;
 import ch.scaille.util.helpers.Poller;
 
 public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C extends JComponent>
@@ -29,8 +25,8 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 	}
 
 	@Override
-	protected String getDescription() {
-		return toString();
+	protected Optional<String> getDescription() {
+		return Optional.of(toString());
 	}
 
 	@Override
@@ -52,18 +48,16 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 		return component.isVisible();
 	}
 
-	@Override
 	protected boolean canEdit(final C component) {
 		return component.isVisible() && component.isEnabled();
 	}
 
 	@Override
-	protected <P, U> U waitPollingSuccess(Polling<C, P> polling, Function<P, U> successTransformer,
-			FailureHandler<C, P, U> onFail) {
+	public <P> PollingResult<C, P> waitPollingSuccess(final Polling<C, P> polling) {
 		if (SwingUtilities.isEventDispatchThread()) {
 			throw new IllegalStateException("Polling must not run in Swing thread");
 		}
-		return super.waitPollingSuccess(polling, successTransformer, onFail);
+		return super.waitPollingSuccess(polling);
 	}
 
 	@Override
@@ -73,14 +67,17 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 		return response[0];
 	}
 
-	public void assertEnabled() {
-		polling(Pollings.<C>satisfies(JComponent::isEnabled)
-				.withReportText(Factories.Reporting.checkingThat("component is enabled"))).orFail();
+	@Override
+	public SwingPollingBuilder<G, C> polling() {
+		return new SwingPollingBuilder<>(this);
 	}
+
+	public void assertEnabled() {
+		polling().apply(JComponent::isEnabled).orFail("Component is not enabled");
+	}
+	
 
 	public void assertDisabled() {
-		polling(Pollings.<C>satisfies(c -> !c.isEnabled())
-				.withReportText(Factories.Reporting.checkingThat("component is disabled"))).orFail();
+		polling().satisfy(comp -> !comp.isEnabled()).orFail("Component is not enabled");
 	}
-
 }

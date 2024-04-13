@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 
 import ch.scaille.tcwriter.pilot.AbstractComponentPilot.LoadedComponent;
 
-public class PollingResult<T, V> {
+public class PollingResult<C, V> {
 
 	public interface FailureHandler<C, V, R> {
 		R apply(PollingResult<C, V> result, GuiPilot guiPilot);
@@ -14,28 +14,31 @@ public class PollingResult<T, V> {
 
 	public final V polledValue;
 	public final Throwable failureReason;
-	private String componentDescription;
-	private LoadedComponent<T> loadedElement;
+	private Polling<C, V> polling;
+	private LoadedComponent<C> loadedElement;
 
 	public PollingResult(final V polledValue, final Throwable failureReason) {
 		this.polledValue = polledValue;
 		this.failureReason = failureReason;
 	}
 
-	public Optional<T> getLoadedElement() {
+	public void setPolling(Polling<C, V> polling) {
+		this.polling = polling;
+	}
+	
+	public Polling<C, V> getPolling() {
+		return polling;
+	}
+	
+	public Optional<C> getLoadedElement() {
 		if (loadedElement == null) {
 			return Optional.empty();
 		}
 		return Optional.of(loadedElement.element);
 	}
 
-	public void setInformation(final String componentDescription, final LoadedComponent<T> loadedElement) {
-		this.componentDescription = componentDescription;
-		this.loadedElement = loadedElement;
-	}
-
 	public String getComponentDescription() {
-		return componentDescription;
+		return getPolling().getContext().getDescription();
 	}
 
 	public boolean isSuccess() {

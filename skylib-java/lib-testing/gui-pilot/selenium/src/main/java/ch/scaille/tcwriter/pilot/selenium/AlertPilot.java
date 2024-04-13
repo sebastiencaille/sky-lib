@@ -9,6 +9,7 @@ import org.openqa.selenium.NoAlertPresentException;
 
 import ch.scaille.tcwriter.pilot.AbstractComponentPilot;
 import ch.scaille.tcwriter.pilot.PollingBuilder;
+import ch.scaille.tcwriter.pilot.PollingContext;
 
 public class AlertPilot extends AbstractComponentPilot<AlertPilot, Alert> {
 
@@ -35,7 +36,7 @@ public class AlertPilot extends AbstractComponentPilot<AlertPilot, Alert> {
 
 
 	@Override
-	protected boolean canCheck(final Alert component) {
+	protected boolean canCheck(final PollingContext<Alert> ctxt) {
 		return false;
 	}
 

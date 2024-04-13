@@ -44,7 +44,7 @@ class ComponentTest {
 		}
 
 		@Override
-		protected boolean canCheck(Object component) {
+		protected boolean canCheck(PollingContext<Object> ctxt) {
 			return true;
 		}
 

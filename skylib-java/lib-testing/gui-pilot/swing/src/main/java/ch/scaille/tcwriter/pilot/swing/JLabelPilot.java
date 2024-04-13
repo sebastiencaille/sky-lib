@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import ch.scaille.tcwriter.pilot.factories.Reporting;
 
 @SuppressWarnings("java:S5960")
-public class JLabelPilot extends AbstractSwingComponent<JLabelPilot, JLabel> {
+public class JLabelPilot extends AbstractSwingComponentPilot<JLabelPilot, JLabel> {
 
 	public JLabelPilot(final SwingPilot pilot, final String name) {
 		super(pilot, JLabel.class, name);

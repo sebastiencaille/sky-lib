@@ -7,17 +7,22 @@ import javax.swing.SwingUtilities;
 
 import ch.scaille.tcwriter.pilot.AbstractComponentPilot;
 import ch.scaille.tcwriter.pilot.Polling;
+import ch.scaille.tcwriter.pilot.PollingContext;
 import ch.scaille.tcwriter.pilot.PollingResult;
 import ch.scaille.util.helpers.Poller;
-
-public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C extends JComponent>
+/**
+ * An abstract class for Swing component pilots
+ * @param <G> the type of the Swing Component Pilot
+ * @param <C> the type of the Swing Component
+ */
+public class AbstractSwingComponentPilot<G extends AbstractSwingComponentPilot<G, C>, C extends JComponent>
 		extends AbstractComponentPilot<G, C> {
 
 	protected final SwingPilot pilot;
 	protected final String name;
 	protected final Class<C> clazz;
 
-	public AbstractSwingComponent(final SwingPilot pilot, final Class<C> clazz, final String name) {
+	public AbstractSwingComponentPilot(final SwingPilot pilot, final Class<C> clazz, final String name) {
 		super(pilot);
 		this.pilot = pilot;
 		this.name = name;
@@ -44,12 +49,12 @@ public class AbstractSwingComponent<G extends AbstractSwingComponent<G, C>, C ex
 	}
 
 	@Override
-	protected boolean canCheck(final C component) {
-		return component.isVisible();
+	protected boolean canCheck(final PollingContext<C> ctxt) {
+		return ctxt.getComponent().isVisible();
 	}
 
-	protected boolean canEdit(final C component) {
-		return component.isVisible() && component.isEnabled();
+	protected boolean canEdit(final PollingContext<C> ctxt) {
+		return ctxt.getComponent().isVisible() && ctxt.getComponent().isEnabled();
 	}
 
 	@Override

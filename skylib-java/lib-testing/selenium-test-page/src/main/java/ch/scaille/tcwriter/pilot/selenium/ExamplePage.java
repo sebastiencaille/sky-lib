@@ -8,7 +8,6 @@ import java.time.Duration;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import ch.scaille.tcwriter.pilot.ActionDelay;
 import ch.scaille.tcwriter.pilot.ModalDialogDetector;

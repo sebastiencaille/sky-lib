@@ -7,16 +7,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
+import ch.scaille.tcwriter.pilot.PollingContext;
+
 @SuppressWarnings("java:S5960")
-public class JTextFieldPilot extends AbstractSwingComponent<JTextFieldPilot, JTextComponent> {
+public class JTextFieldPilot extends AbstractSwingComponentPilot<JTextFieldPilot, JTextComponent> {
 
 	public JTextFieldPilot(final SwingPilot pilot, final String name) {
 		super(pilot, JTextComponent.class, name);
 	}
 
 	@Override
-	protected boolean canEdit(final JTextComponent component) {
-		return super.canEdit(component) && component.isEditable();
+	protected boolean canEdit(final PollingContext<JTextComponent> ctxt) {
+		return super.canEdit(ctxt) && ctxt.getComponent().isEditable();
 	}
 
 	/**

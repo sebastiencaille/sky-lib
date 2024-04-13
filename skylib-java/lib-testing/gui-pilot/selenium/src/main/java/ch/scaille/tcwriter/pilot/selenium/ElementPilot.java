@@ -8,6 +8,7 @@ import org.openqa.selenium.WebElement;
 
 import ch.scaille.tcwriter.pilot.AbstractComponentPilot;
 import ch.scaille.tcwriter.pilot.Polling;
+import ch.scaille.tcwriter.pilot.PollingContext;
 import ch.scaille.tcwriter.pilot.PollingResult;
 import ch.scaille.tcwriter.pilot.factories.PollingResults;
 
@@ -48,8 +49,8 @@ public class ElementPilot extends AbstractComponentPilot<ElementPilot, WebElemen
 	}
 
 	@Override
-	protected boolean canCheck(final WebElement element) {
-		return element.isDisplayed();
+	protected boolean canCheck(final PollingContext<WebElement> ctxt) {
+		return ctxt.getComponent().isDisplayed();
 	}
 
 	@Override

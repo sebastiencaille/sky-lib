@@ -5,8 +5,8 @@ import java.util.function.Predicate;
 
 import javax.swing.JComponent;
 
-import ch.scaille.tcwriter.pilot.AbstractComponentPilot;
 import ch.scaille.tcwriter.pilot.Polling;
+import ch.scaille.tcwriter.pilot.PollingContext;
 
 public class EditableComponentPolling<V> extends Polling<JComponent, V> {
 
@@ -14,14 +14,15 @@ public class EditableComponentPolling<V> extends Polling<JComponent, V> {
 		super(null, pollingFunction);
 	}
 
-	public EditableComponentPolling(final Predicate<JComponent> precondition, final PollingFunction<JComponent, V> pollingFunction) {
+	public EditableComponentPolling(final Predicate<PollingContext<JComponent>> precondition,
+			final PollingFunction<JComponent, V> pollingFunction) {
 		super(precondition, pollingFunction);
 	}
 
 	@Override
-	public Optional<Predicate<JComponent>> getPrecondition(final AbstractComponentPilot<?, JComponent> guiComponentPilot) {
-		return Optional.of(c -> super.getPrecondition(guiComponentPilot).map(p -> p.test(c)).orElse(true)
-				&& ((AbstractSwingComponent<?, JComponent>)guiComponentPilot).canEdit(c));
+	public Optional<Predicate<PollingContext<JComponent>>> getPrecondition() {
+		return Optional.of(c -> super.getPrecondition().map(p -> p.test(c)).orElse(true)
+				&& ((AbstractSwingComponentPilot<?, JComponent>) c.getPilot()).canEdit(c));
 	}
 
 }

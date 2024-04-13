@@ -9,29 +9,37 @@ package ch.scaille.tcwriter.pilot;
 public class PollingContext<C> {
 
 	public static PollingContext<Object> generic(PollingContext<?> orig) {
-		final var newContext = new PollingContext<>();
+		final var newContext = new PollingContext<>((AbstractComponentPilot<?, Object>) orig.pilot);
 		newContext.setComponent(orig.component, orig.description);
 		return newContext;
 	}
 
+	private final AbstractComponentPilot<?, C> pilot;
 	private C component;
 	private String description;
 
-	public PollingContext() {
-		// noop
+	public PollingContext(AbstractComponentPilot<?, C> pilot) {
+		this.pilot = pilot;
+	}
+
+	public AbstractComponentPilot<?, C> getPilot() {
+		return pilot;
+	}
+	
+	public GuiPilot getGuiPilot() {
+		return pilot.getPilot();
+	}
+
+	public C getComponent() {
+		return component;
+	}
+
+	public String getDescription() {
+		return description;
 	}
 
 	public void setComponent(C component, String description) {
 		this.component = component;
 		this.description = description;
 	}
-	
-	public C getComponent() {
-		return component;
-	}
-	
-	public String getDescription() {
-		return description;
-	}
-	
 }

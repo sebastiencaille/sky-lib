@@ -10,6 +10,7 @@ import ch.scaille.util.helpers.Poller;
 
 /**
  * A polling of a component
+ * 
  * @param <C> type of component
  * @param <V> type of returned value
  */
@@ -19,10 +20,6 @@ public class Polling<C, V> {
 		PollingResult<C, V> poll(PollingContext<C> context);
 	}
 
-	private final Predicate<C> precondition;
-
-	private final PollingFunction<C, V> pollingFunction;
-
 	private final OverridableParameter<AbstractComponentPilot<?, C>, Duration> timeout = new OverridableParameter<>(
 			AbstractComponentPilot::getDefaultPollingTimeout);
 	private final OverridableParameter<AbstractComponentPilot<?, C>, Duration> firstDelay = new OverridableParameter<>(
@@ -31,6 +28,10 @@ public class Polling<C, V> {
 			AbstractComponentPilot::getDefaultPollingDelayFunction);
 	private final OverridableParameter<AbstractComponentPilot<?, C>, ReportFunction<C>> reportFunction = new OverridableParameter<>(
 			AbstractComponentPilot::getDefaultReportFunction);
+
+	private final Predicate<PollingContext<C>> precondition;
+
+	private final PollingFunction<C, V> pollingFunction;
 
 	private String reportText = null;
 
@@ -43,8 +44,8 @@ public class Polling<C, V> {
 	public Polling(PollingFunction<C, V> pollingFunction) {
 		this(null, pollingFunction);
 	}
-	
-	public Polling(final Predicate<C> precondition, final PollingFunction<C, V> pollingFunction) {
+
+	public Polling(final Predicate<PollingContext<C>> precondition, final PollingFunction<C, V> pollingFunction) {
 		this.precondition = precondition;
 		this.pollingFunction = pollingFunction;
 	}
@@ -53,7 +54,7 @@ public class Polling<C, V> {
 		return context;
 	}
 
-	public Optional<Predicate<C>> getPrecondition(final AbstractComponentPilot<?, C> guiComponent) {
+	public Optional<Predicate<PollingContext<C>>> getPrecondition() {
 		return Optional.ofNullable(precondition);
 	}
 
@@ -100,7 +101,7 @@ public class Polling<C, V> {
 		this.delayFunction.set(delay);
 		return this;
 	}
-	
+
 	public Polling<C, V> withExtraDelay(ActionDelay currentDelay) {
 		this.currentDelay = currentDelay;
 		return this;
@@ -116,8 +117,8 @@ public class Polling<C, V> {
 	}
 
 	/**
-	 * Sets the text reported in the logger. Setting a text will make that the polling is logged in
-	 * the report
+	 * Sets the text reported in the logger. Setting a text will make that the
+	 * polling is logged in the report
 	 */
 	public Polling<C, V> withReportText(final String reportText) {
 		this.reportText = reportText;
@@ -144,12 +145,12 @@ public class Polling<C, V> {
 		return this;
 	}
 
-	public Polling<C, V> initialize(AbstractComponentPilot<?, C> component) {
-		timeout.withSource(component).ensureLoaded();
-		firstDelay.withSource(component).ensureLoaded();
-		delayFunction.withSource(component).ensureLoaded();
-		reportFunction.withSource(component).ensureLoaded();
-		context = new PollingContext<>();
+	public Polling<C, V> initialize(AbstractComponentPilot<?, C> pilot) {
+		timeout.withSource(pilot).ensureLoaded();
+		firstDelay.withSource(pilot).ensureLoaded();
+		delayFunction.withSource(pilot).ensureLoaded();
+		reportFunction.withSource(pilot).ensureLoaded();
+		context = new PollingContext<>(pilot);
 		return this;
 	}
 

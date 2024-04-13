@@ -42,6 +42,11 @@ public class GuiPilot {
 
 	private ModalDialogDetector currentModalDialogDetector;
 
+	public <T extends GuiPilot> T unwrap(Class<T> target) {
+		return target.cast(this);
+	}
+
+	
 	public PilotReport getActionReport() {
 		return actionReport;
 	}
@@ -151,5 +156,6 @@ public class GuiPilot {
 		}
 		currentModalDialogDetector = null;
 	}
+
 
 }

@@ -6,10 +6,10 @@ import ch.scaille.tcwriter.pilot.PollingBuilder;
 import ch.scaille.tcwriter.pilot.factories.Pollings;
 import ch.scaille.tcwriter.pilot.factories.Reporting;
 
-public class SwingPollingBuilder<G extends AbstractSwingComponent<G, C>, C extends JComponent>
+public class SwingPollingBuilder<G extends AbstractSwingComponentPilot<G, C>, C extends JComponent>
 		extends PollingBuilder<G, C> {
 
-	public SwingPollingBuilder(AbstractSwingComponent<G, C> elementPilot) {
+	public SwingPollingBuilder(AbstractSwingComponentPilot<G, C> elementPilot) {
 		super(elementPilot);
 	}
 

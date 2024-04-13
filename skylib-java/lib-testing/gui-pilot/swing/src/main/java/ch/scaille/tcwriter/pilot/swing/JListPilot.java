@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import ch.scaille.tcwriter.pilot.Polling;
 
 @SuppressWarnings("java:S5960")
-public class JListPilot extends AbstractSwingComponent<JListPilot, JList> {
+public class JListPilot extends AbstractSwingComponentPilot<JListPilot, JList> {
 
 	public JListPilot(final SwingPilot pilot, final String name) {
 		super(pilot, JList.class, name);
@@ -42,8 +42,8 @@ public class JListPilot extends AbstractSwingComponent<JListPilot, JList> {
 		if (expected == null) {
 			return;
 		}
-		polling().poll(new Polling<JList, Boolean>(this::canCheck, pc -> {
-			final var component = pc.getComponent();
+		polling().poll(new Polling<JList, Boolean>(this::canCheck, ctxt -> {
+			final var component = ctxt.getComponent();
 			if (component.getSelectedIndex() < 0) {
 				return failure("No element selected");
 			}

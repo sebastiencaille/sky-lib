@@ -8,7 +8,7 @@ import javax.swing.JTable;
 import org.junit.jupiter.api.Assertions;
 
 @SuppressWarnings("java:S5960")
-public class JTablePilot extends AbstractSwingComponent<JTablePilot, JTable> {
+public class JTablePilot extends AbstractSwingComponentPilot<JTablePilot, JTable> {
 
 	public JTablePilot(final SwingPilot pilot, final String name) {
 		super(pilot, JTable.class, name);

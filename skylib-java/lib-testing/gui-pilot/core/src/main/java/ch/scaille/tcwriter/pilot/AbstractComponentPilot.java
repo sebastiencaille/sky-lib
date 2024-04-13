@@ -60,7 +60,7 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	 * @param component
 	 * @return
 	 */
-	protected abstract boolean canCheck(final C component);
+	protected abstract boolean canCheck(final PollingContext<C> ctxt);
 
 	private final GuiPilot pilot;
 
@@ -72,6 +72,10 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 
 	protected AbstractComponentPilot(final GuiPilot pilot) {
 		this.pilot = pilot;
+	}
+
+	public GuiPilot getPilot() {
+		return pilot;
 	}
 
 	protected Optional<String> getDescription() {
@@ -185,13 +189,8 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 
 		final var pollingFailure = loadComponent(polling);
 		if (pollingFailure.isPresent()) {
-			polling.getContext().setComponent(null, getDescription().orElse("<unknown>"));
 			return pollingFailure;
 		}
-
-		polling.getContext()
-				.setComponent(getCachedElement().orElse(null),
-						getDescription().or(() -> getCachedElement().map(Object::toString)).orElse("<unknown>"));
 
 		// cachedElement.element may disappear after polling, so prepare report line
 		// here
@@ -220,11 +219,15 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 		logger.fine(() -> "Cached component: " + cachedComponent);
 		if (cachedComponent == null) {
 			logger.fine("Not found");
+			polling.getContext().setComponent(null, getDescription().orElse("<unknown>"));
 			return Optional.of(PollingResults.failure("not found"));
 		}
-		final var preCondition = polling.getPrecondition(this);
+		polling.getContext()
+				.setComponent(getCachedElement().orElse(null),
+						getDescription().or(() -> getCachedElement().map(Object::toString)).orElse("<unknown>"));
+		final var preCondition = polling.getPrecondition();
 		if (!cachedComponent.preconditionValidated && preCondition.isPresent()
-				&& !preCondition.get().test(cachedComponent.element)) {
+				&& !preCondition.get().test(polling.getContext())) {
 			logger.fine("Precondition failed");
 			return Optional.of(PollingResults.failure("precondition failed"));
 		}

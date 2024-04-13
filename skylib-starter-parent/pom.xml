@@ -19,12 +19,13 @@
 	<packaging>pom</packaging>
 
 	<properties>
+		<revision>0.0.1-SNAPSHOT</revision>
 		<aspectj.version>1.9.22</aspectj.version>
 		<jackson-bom.version>2.17.0</jackson-bom.version>
 		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
 
 		<guava.version>33.1.0-jre</guava.version>
-		<logback.version>1.5.3</logback.version>
+		<logback.version>1.5.5</logback.version>
 		<mapstruct.version>1.5.5.Final</mapstruct.version>
 
 		<swagger-parser.version>2.1.21</swagger-parser.version>
@@ -169,7 +170,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.3.0</version>
+					<version>3.4.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-source-plugin</artifactId>

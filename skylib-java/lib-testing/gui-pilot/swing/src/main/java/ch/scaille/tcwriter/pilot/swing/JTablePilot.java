@@ -15,28 +15,28 @@ public class JTablePilot extends AbstractSwingComponentPilot<JTablePilot, JTable
 	}
 
 	public void selectRow(final int index) {
-		polling().apply(t -> t.setRowSelectionInterval(index, index)).orFail(("select row " + index));
+		polling().tryApply(t -> t.setRowSelectionInterval(index, index)).orFail(("select row " + index));
 	}
 
 	public void editValue(final int row, final int column, final String value) {
-		polling().apply(t -> t.setValueAt(value, row, column))
+		polling().tryApply(t -> t.setValueAt(value, row, column))
 				.orFail((settingValue("at row/column " + row + '/' + column, value)));
 	}
 
 	public void editValueOnSelectedRow(final int column, final String value) {
-		polling().apply(t -> {
+		polling().tryApply(t -> {
 			t.setValueAt(value, t.getSelectedRow(), column);
 			SwingHelper.doPressReturn(t);
 		}).orFail((settingValue("at selected row, column " + column, value)));
 	}
 
 	public void assertValue(final int row, final int column, final String expected) {
-		polling().asserts(pc -> Assertions.assertEquals(expected, pc.getComponent().getValueAt(row, column), pc.getDescription()))
+		polling().tryAssert(pc -> Assertions.assertEquals(expected, pc.getComponent().getValueAt(row, column), pc.getDescription()))
 				.orFail((checkingValue("at row/column " + row + '/' + column, expected)));
 	}
 
 	public void assertValueOnSelectedRow(final int column, final String expected) {
-		polling().asserts(pc -> Assertions.assertEquals(expected,
+		polling().tryAssert(pc -> Assertions.assertEquals(expected,
 				pc.getComponent().getValueAt(pc.getComponent().getSelectedRow(), column), pc.getDescription()))
 				.orFail((checkingValue("at selected row, column " + column, expected)));
 	}

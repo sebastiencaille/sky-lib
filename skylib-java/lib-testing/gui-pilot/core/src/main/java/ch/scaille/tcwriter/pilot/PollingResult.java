@@ -6,6 +6,11 @@ import java.util.function.Supplier;
 
 import ch.scaille.tcwriter.pilot.AbstractComponentPilot.LoadedComponent;
 
+/**
+ * 
+ * @param <C> The type of Component
+ * @param <V> The type of returned Value
+ */
 public class PollingResult<C, V> {
 
 	public interface FailureHandler<C, V, R> {

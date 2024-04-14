@@ -28,12 +28,11 @@ public class AlertPilot extends AbstractComponentPilot<AlertPilot, Alert> {
 			return Optional.empty();
 		}
 	}
-	
+
 	@Override
 	protected Optional<String> getDescription() {
 		return getCachedElement().map(Alert::getText);
 	}
-
 
 	@Override
 	protected boolean canCheck(final PollingContext<Alert> ctxt) {
@@ -41,8 +40,8 @@ public class AlertPilot extends AbstractComponentPilot<AlertPilot, Alert> {
 	}
 
 	public void doAcknowledge() {
-		new PollingBuilder<>(this).poll(applies(Alert::accept)
-				.withReportFunction((cp, t) -> "Acknowledging alert: " + cp.getComponent().getText())).orFail();
+		polling().pollOrFail(applies(Alert::accept)
+				.withReportFunction((cp, t) -> "Acknowledging alert: " + cp.getComponent().getText()));
 	}
 
 }

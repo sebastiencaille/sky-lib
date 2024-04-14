@@ -14,13 +14,13 @@ public class SwingPollingBuilder<G extends AbstractSwingComponentPilot<G, C>, C 
 	}
 
 	public void assertEnabled() {
-		poll(Pollings.<C>satisfies(JComponent::isEnabled)
-				.withReportText(Reporting.checkingThat("component is enabled"))).orFail();
+		pollOrFail(Pollings.<C>satisfies(JComponent::isEnabled)
+				.withReportText(Reporting.checkingThat("component is enabled")));
 	}
 
 	public void assertDisabled() {
-		poll(Pollings.<C>satisfies(c -> !c.isEnabled()).withReportText(Reporting.checkingThat("component is disabled")))
-				.orFail();
+		pollOrFail(Pollings.<C>satisfies(c -> !c.isEnabled())
+				.withReportText(Reporting.checkingThat("component is disabled")));
 	}
 
 }

@@ -17,10 +17,10 @@ import ch.scaille.util.helpers.Poller;
 /**
  * Class that allows to poll graphical components
  *
- * @param <G> This type
+ * @param <P> Type of this Pilot
  * @param <C> Component type
  */
-public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G, C>, C> {
+public abstract class AbstractComponentPilot<P extends AbstractComponentPilot<P, C>, C> {
 
 	private final Logger logger = Logs.of(this);
 
@@ -117,12 +117,12 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	 *
 	 * @param postExec
 	 */
-	public G addPostExecution(final Consumer<C> postExec) {
+	public P addPostExecution(final Consumer<C> postExec) {
 		postExecutions.add(postExec);
 		if (fired) {
 			postExec.accept(cachedComponent.element);
 		}
-		return (G) this;
+		return (P) this;
 	}
 
 	/**
@@ -184,7 +184,6 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 	 * @param applier
 	 * @return
 	 */
-	@SuppressWarnings("java:S1172)")
 	protected <R> Optional<PollingResult<C, R>> executePolling(Poller poller, final Polling<C, R> polling) {
 
 		final var pollingFailure = loadComponent(polling);
@@ -250,7 +249,7 @@ public abstract class AbstractComponentPilot<G extends AbstractComponentPilot<G,
 		}
 	}
 
-	public PollingBuilder<G, C> polling() {
+	public PollingBuilder<P, C> polling() {
 		return new PollingBuilder<>(this);
 	}
 }

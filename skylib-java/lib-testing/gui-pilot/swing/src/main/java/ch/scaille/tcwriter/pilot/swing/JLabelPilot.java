@@ -14,7 +14,7 @@ public class JLabelPilot extends AbstractSwingComponentPilot<JLabelPilot, JLabel
 	}
 
 	public void assertTextEquals(final String expected) {
-		polling().asserts(pc -> Assertions.assertEquals(expected, pc.getComponent().getText(), pc.getDescription()))
+		polling().tryAssert(pc -> Assertions.assertEquals(expected, pc.getComponent().getText(), pc.getDescription()))
 				.orFail(Reporting.checkingValue(expected));
 	}
 

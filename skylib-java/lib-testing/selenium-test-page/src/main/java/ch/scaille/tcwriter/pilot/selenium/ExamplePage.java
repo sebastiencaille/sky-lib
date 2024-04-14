@@ -38,7 +38,7 @@ public class ExamplePage extends PagePilot {
 		@Override
 		public void assertFinished() {
 			final var page = ExamplePage.this;
-			page.on(visibilityOfElementLocated(ENABLE_TEST)).isEnabled().orFail();
+			page.on(visibilityOfElementLocated(ENABLE_TEST)).isEnabled();
 			Assertions.assertTrue(visibilityOfElementLocated(ENABLE_TEST).apply(getDriver()).isEnabled(), "EnableTest is enabled");
 		}
 
@@ -54,20 +54,20 @@ public class ExamplePage extends PagePilot {
 	 * until "Proceed" is enabled
 	 */
 	public void executeEnable() {
-		on(elementToBeClickable(ENABLE_TEST)).click().andThen(new WaitEnableTestEnabledDelay()).orFail();
+		on(elementToBeClickable(ENABLE_TEST)).clickOr().andThen(new WaitEnableTestEnabledDelay()).orFail();
 	}
 
 	public void assertedEnabledTested() {
-		on(visibilityOfElementLocated(ENABLE_TEST)).asserts(ctxt -> Assertions.assertTrue(ctxt.getComponent().isEnabled())).orFail();
+		on(visibilityOfElementLocated(ENABLE_TEST)).assertOrFail(ctxt -> Assertions.assertTrue(ctxt.getComponent().isEnabled()));
 	}
 
 	public void testAlert() {
-		on(elementToBeClickable(ALERT_TEST)).click().orFail();
+		on(elementToBeClickable(ALERT_TEST)).click();
 	}
 
 	public void clickOnMissingButton() {
 		Assertions.assertFalse(on(visibilityOfElementLocated(NOT_EXISTING))
-				.poll(Pollings.<WebElement>exists().withTimeout(Duration.ofMillis(500)))
+				.tryPoll(Pollings.<WebElement>exists().withTimeout(Duration.ofMillis(500)))
 				.isSatisfiedOr("not satisfied"), "isSatisfied should have returned false");
 	}
 
@@ -89,7 +89,7 @@ public class ExamplePage extends PagePilot {
 	}
 
 	public void assertElementChange() {
-		on(elementToBeClickable(ELEMENT_CHANGE_TEST)).click().orFail();
+		on(elementToBeClickable(ELEMENT_CHANGE_TEST)).click();
 		// Explicitly test using WebElement as source
 		on(visibilityOfElementLocated(ELEMENT_CHANGE)).textEquals("Hello again").orFail();
 	}

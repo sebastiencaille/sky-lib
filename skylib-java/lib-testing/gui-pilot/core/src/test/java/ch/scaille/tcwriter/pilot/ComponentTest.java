@@ -54,7 +54,7 @@ class ComponentTest {
 	void testDuration() {
 		final var pilot = new GuiPilot();
 		final var testComponent = new TestComponent(pilot);
-		final var waitResult = testComponent.polling().poll(Pollings.satisfies(c -> false)).isSatisfied();
+		final var waitResult = testComponent.polling().tryPoll(Pollings.satisfies(c -> false)).isSatisfied();
 		Assertions.assertFalse(waitResult);
 		Assertions.assertEquals(6, testComponent.delays.size(), testComponent.delays.toString());
 

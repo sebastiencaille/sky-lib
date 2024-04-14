@@ -93,7 +93,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	public void assertHumanReadable(final StepSelector selector, final String humanReadable) {
 		selector.accept(tcWriterPage);
 
-		tcWriterPage.stepsTable.polling().asserts(pc -> {
+		tcWriterPage.stepsTable.polling().tryAssert(pc -> {
 			final var component = pc.getComponent();
 			final var value = ((StepsTableModel) component.getModel()).getHumanReadable(component.getSelectedRow());
 			Assertions.assertEquals(humanReadable, value);
@@ -104,7 +104,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	public void updateParameter(final ParameterSelector selector, final ParameterValue value) {
 		selector.apply(tcWriterPage)
 				.polling()
-				.poll(new Polling<>(context -> updateParameterValues(context, value)))
+				.tryPoll(new Polling<>(context -> updateParameterValues(context, value)))
 				.orFail(Reporting.settingValue("parameter", value));
 
 		applyStepEdition();
@@ -158,6 +158,6 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 				return;
 			}
 		}
-		Assertions.fail("No such complex type parameter: " + keyValue[0]);
+		Assertions.orFail("No such complex type parameter: " + keyValue[0]);
 	}
 }

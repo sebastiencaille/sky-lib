@@ -11,7 +11,7 @@ import ch.scaille.util.helpers.Poller;
 /**
  * A polling of a component
  * 
- * @param <C> type of component
+ * @param <C> type of Component
  * @param <V> type of returned value
  */
 public class Polling<C, V> {

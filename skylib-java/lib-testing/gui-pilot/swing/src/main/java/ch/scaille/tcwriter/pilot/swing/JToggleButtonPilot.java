@@ -11,12 +11,12 @@ public class JToggleButtonPilot extends AbstractSwingComponentPilot<JToggleButto
 	}
 
 	public void assertSelected(final boolean expected) {
-		polling().satisfy(c -> c.isSelected() == expected)
+		polling().trySatisfy(c -> c.isSelected() == expected)
 				.orFail(checkingThat("component is " + (expected ? "selected" : "not selected")));
 	}
 
 	public void setSelected(final boolean selected) {
-		polling().apply(c -> c.setSelected(selected)).orFail((selected ? "selecting" : "deselecting"));
+		polling().tryApply(c -> c.setSelected(selected)).orFail((selected ? "selecting" : "deselecting"));
 	}
 
 }

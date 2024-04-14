@@ -28,27 +28,35 @@ public class SeleniumPollingBuilder extends PollingBuilder<ElementPilot, WebElem
 
 	public ResultHandler<Boolean> satisfies(Function<WebElement, ExpectedCondition<WebElement>> expectedCondition) {
 		return withConfiguration(polling -> polling.withReportText(expectedCondition.toString()))
-				.poll(new Polling<>(ctxt -> PollingResults
+				.tryPoll(new Polling<>(ctxt -> PollingResults
 						.value(expectedCondition.apply(ctxt.getComponent()).apply(driverFrom(ctxt)) != null)));
 	}
 
-	public ResultHandler<Boolean> isEnabled() {
+	public ResultHandler<Boolean> isEnabledOr() {
 		return wrap(withConfiguration(polling -> polling.withReportText("is enabled")))
 				.satisfies(ExpectedConditions::elementToBeClickable);
 	}
+	
+	public void isEnabled() {
+		isEnabledOr().orFail();
+	}
 
-	public ResultHandler<Boolean> click() {
-		return withConfiguration(polling -> polling.withReportText("clicked")).poll(new Polling<>(
+	public ResultHandler<Boolean> clickOr() {
+		return withConfiguration(polling -> polling.withReportText("clicked")).tryPoll(new Polling<>(
 				ctxt -> ExpectedConditions.elementToBeClickable(ctxt.getComponent()).apply(driverFrom(ctxt)) != null,
 				ctxt -> {
 					ctxt.getComponent().click();
 					return PollingResults.success();
 				}));
 	}
+	
+	public void click() {
+		clickOr().orFail();
+	}
 
 	public ResultHandler<Boolean> textEquals(String text) {
 		return withConfiguration(polling -> polling.withReportText("text equals '" + text + "'"))
-				.satisfy(element -> element.getText().equals(text));
+				.trySatisfy(element -> element.getText().equals(text));
 	}
 
 }

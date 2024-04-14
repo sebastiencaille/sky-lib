@@ -31,7 +31,7 @@ public class JTextFieldPilot extends AbstractSwingComponentPilot<JTextFieldPilot
 		if (value == null) {
 			return;
 		}
-		polling().apply(t -> {
+		polling().tryApply(t -> {
 			t.setText(value);
 			if (t instanceof JTextField) {
 				SwingHelper.doPressReturn(t);
@@ -43,7 +43,7 @@ public class JTextFieldPilot extends AbstractSwingComponentPilot<JTextFieldPilot
 		if (expected == null) {
 			return;
 		}
-		polling().asserts(pc -> assertEquals(expected, pc.getComponent().getText(), pc.getDescription()))
+		polling().tryAssert(pc -> assertEquals(expected, pc.getComponent().getText(), pc.getDescription()))
 				.orFail(checkingValue(expected));
 	}
 

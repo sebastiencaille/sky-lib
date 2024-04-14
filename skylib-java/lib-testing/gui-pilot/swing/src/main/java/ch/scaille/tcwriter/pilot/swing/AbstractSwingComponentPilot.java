@@ -78,11 +78,11 @@ public class AbstractSwingComponentPilot<G extends AbstractSwingComponentPilot<G
 	}
 
 	public void assertEnabled() {
-		polling().apply(JComponent::isEnabled).orFail("Component is not enabled");
+		polling().tryApply(JComponent::isEnabled).orFail("Component is not enabled");
 	}
 	
 
 	public void assertDisabled() {
-		polling().satisfy(comp -> !comp.isEnabled()).orFail("Component is not enabled");
+		polling().trySatisfy(comp -> !comp.isEnabled()).orFail("Component is not enabled");
 	}
 }

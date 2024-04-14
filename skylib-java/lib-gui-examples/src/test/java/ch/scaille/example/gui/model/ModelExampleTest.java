@@ -33,11 +33,11 @@ class ModelExampleTest {
 
 		var page = pilot.page(ModelExamplePage::new);
 
-		page.listTable.polling().asserts(context -> {
+		page.listTable.polling().assertOrFail(context -> {
 			final var component = context.getComponent();
 			Assertions.assertEquals(FIXED_COLUMN_WIDTH, component.getColumn(TestObjectTableModel.Columns.A_SECOND_VALUE).getWidth());
 			Assertions.assertEquals(component.getWidth() - FIXED_COLUMN_WIDTH, component.getColumn(TestObjectTableModel.Columns.A_FIRST_VALUE).getWidth());
-		}).orFail();
+		});
 		page.listTable.assertValue(0, 0, "One");
 		page.listTable.assertValue(1, 0, "Two");
 		page.listTable.assertValue(2, 0, "Three");

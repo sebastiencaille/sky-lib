@@ -137,7 +137,7 @@ public abstract class AbstractComponentPilot<P extends AbstractComponentPilot<P,
 	 * @param timeout
 	 * @return
 	 */
-	public <P> PollingResult<C, P> waitPollingSuccess(final Polling<C, P> polling) {
+	public <V> PollingResult<C, V> waitPollingSuccess(final Polling<C, V> polling) {
 		polling.withExtraDelay(pilot.getActionDelay());
 		waitActionDelay();
 		try (var closeable = pilot.withModalDialogDetection()) {
@@ -151,8 +151,8 @@ public abstract class AbstractComponentPilot<P extends AbstractComponentPilot<P,
 		}
 	}
 
-	public <P, U> U processResult(final PollingResult<C, P> result, Function<P, U> successTransformer,
-			FailureHandler<C, P, U> onFail) {
+	public <V, U> U processResult(final PollingResult<C, V> result, Function<V, U> successTransformer,
+			FailureHandler<C, V, U> onFail) {
 		if (result.isSuccess()) {
 			pilot.setActionDelay(result.getPolling().getActionDelay());
 		}

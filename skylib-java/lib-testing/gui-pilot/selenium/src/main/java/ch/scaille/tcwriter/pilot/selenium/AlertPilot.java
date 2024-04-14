@@ -8,7 +8,6 @@ import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoAlertPresentException;
 
 import ch.scaille.tcwriter.pilot.AbstractComponentPilot;
-import ch.scaille.tcwriter.pilot.PollingBuilder;
 import ch.scaille.tcwriter.pilot.PollingContext;
 
 public class AlertPilot extends AbstractComponentPilot<AlertPilot, Alert> {

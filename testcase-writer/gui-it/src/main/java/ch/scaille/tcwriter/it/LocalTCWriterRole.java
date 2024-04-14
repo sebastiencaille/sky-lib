@@ -23,7 +23,6 @@ import ch.scaille.tcwriter.pilot.PollingResult;
 import ch.scaille.tcwriter.pilot.factories.PollingResults;
 import ch.scaille.tcwriter.pilot.factories.Reporting;
 
-@SuppressWarnings("java:S5960")
 public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 
 	private static final String ACTOR_TEST_WRITER = "Test writer";
@@ -158,6 +157,6 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 				return;
 			}
 		}
-		Assertions.orFail("No such complex type parameter: " + keyValue[0]);
+		Assertions.fail("No such complex type parameter: " + keyValue[0]);
 	}
 }

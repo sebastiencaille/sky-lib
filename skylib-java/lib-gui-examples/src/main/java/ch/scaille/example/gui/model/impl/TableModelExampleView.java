@@ -21,7 +21,6 @@ import ch.scaille.gui.model.views.ListViews;
 import ch.scaille.gui.swing.jtable.PolicyTableColumnModel;
 import ch.scaille.gui.swing.jtable.TableColumnWithPolicy;
 
-@SuppressWarnings({ "serial", "java:S1186", "java:S125" })
 public class TableModelExampleView extends JFrame {
 
 	static final Comparator<TestObject> NATURAL_ORDER = Comparator.comparingInt(TestObject::getASecondValue);

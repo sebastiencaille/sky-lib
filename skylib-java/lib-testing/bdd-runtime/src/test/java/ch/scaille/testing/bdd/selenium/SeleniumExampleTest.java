@@ -13,7 +13,6 @@ import ch.scaille.tcwriter.pilot.selenium.WebDriverFactory;
 import ch.scaille.util.helpers.Logs;
 
 @ExtendWith(DisabledIfHeadless.class)
-@SuppressWarnings("java:S2699")
 class SeleniumExampleTest extends AbstractTestWebAppProvider {
 
 	@Override

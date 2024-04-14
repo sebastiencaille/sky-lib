@@ -9,7 +9,6 @@ import ch.scaille.tcwriter.annotations.TCApi;
 import ch.scaille.tcwriter.it.TCWriterPage;
 
 @TCApi(description = "Step selector", humanReadable = "Step selector", isSelector = true)
-@SuppressWarnings("java:S5960")
 public interface StepSelector extends Consumer<TCWriterPage> {
 
 	@TCApi(description = "Step at index", humanReadable = "select the step %s")

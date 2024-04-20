@@ -1,9 +1,14 @@
 package ch.scaille.tcwriter.pilot.factories;
 
-import ch.scaille.tcwriter.pilot.PollingResult.FailureHandler;
+import ch.scaille.tcwriter.pilot.PollingResult;
+import ch.scaille.util.helpers.LambdaExt;
 
 public interface FailureHandlers {
 	/*************************** Failure handlers ***************************/
+
+	public interface FailureHandler<C, V> {
+		void apply(PollingResult<C, V> result);
+	}
 
 	/**
 	 * Fails using some text
@@ -11,8 +16,8 @@ public interface FailureHandlers {
 	 * @param actionDescr
 	 * @return
 	 */
-	static <C, V> FailureHandler<C, V, V> throwError(final String actionDescr) {
-		return (r, g) -> {
+	static <C, V> FailureHandler<C, V> throwError(final String actionDescr) {
+		return r -> {
 			throw new AssertionError(
 					r.getComponentDescription() + ": action failed [" + actionDescr + "]: " + r.failureReason);
 		};
@@ -23,8 +28,8 @@ public interface FailureHandlers {
 	 *
 	 * @return
 	 */
-	static <C, V> FailureHandler<C, V, V> throwError() {
-		return (r, g) -> {
+	static <C, V> FailureHandler<C, V> throwError() {
+		return r -> {
 			if (r.failureReason instanceof AssertionError) {
 				throw new AssertionError(r.getComponentDescription() + ": " + r.failureReason.getMessage(),
 						r.failureReason.getCause());
@@ -40,11 +45,10 @@ public interface FailureHandlers {
 	 * @param actionDescr
 	 * @return
 	 */
-	static <C, V> FailureHandler<C, V, V> reportFailure(final String report) {
-		return (r, g) -> {
-			g.getActionReport().report(r.getComponentDescription() + ": " + report);
-			return r.polledValue;
-		};
+	static <C, V> FailureHandler<C, V> reportFailure(final String report) {
+		return result -> result.getGuiPilot()
+				.getActionReport()
+				.report(result.getComponentDescription() + ": " + report);
 	}
 
 	/**
@@ -53,31 +57,19 @@ public interface FailureHandlers {
 	 * @param actionDescr
 	 * @return
 	 */
-	static <C, V> FailureHandler<C, V, Boolean> reportNotSatisfied(final String report) {
-		return (result, pilot) -> {
-			pilot.getActionReport().report(result.getComponentDescription() + ": " + report);
-			return Boolean.FALSE;
-		};
+	static <C, V> FailureHandler<C, V> reportNotSatisfied(final String report) {
+		return result -> result.getGuiPilot()
+				.getActionReport()
+				.report(result.getComponentDescription() + ": " + report);
 	}
-	
+
 	/**
-	 * Do nothing on error and return a null value
+	 * Do nothing on error
 	 *
 	 * @param actionDescr
 	 * @return
 	 */
-	static <C, V> FailureHandler<C, V, V> returnNull() {
-		return (r, g) -> r.polledValue;
-	}
-
-
-	/**
-	 * Do nothing on error and return FALSE
-	 *
-	 * @param actionDescr
-	 * @return
-	 */
-	static <C, P> FailureHandler<C, P, Boolean> ignoreFailure() {
-		return (r, g) -> Boolean.FALSE;
+	static <C, V> FailureHandler<C, V> ignoreFailure() {
+		return result -> LambdaExt.doNothing();
 	}
 }

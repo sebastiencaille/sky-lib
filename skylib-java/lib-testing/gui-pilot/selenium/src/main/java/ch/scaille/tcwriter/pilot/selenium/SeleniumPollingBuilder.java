@@ -1,62 +1,67 @@
 package ch.scaille.tcwriter.pilot.selenium;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 
-import org.openqa.selenium.WebDriver;
+import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-import ch.scaille.tcwriter.pilot.Polling;
 import ch.scaille.tcwriter.pilot.PollingBuilder;
 import ch.scaille.tcwriter.pilot.PollingContext;
-import ch.scaille.tcwriter.pilot.factories.PollingResults;
+import ch.scaille.tcwriter.pilot.factories.Pollings;
 
-public class SeleniumPollingBuilder extends PollingBuilder<ElementPilot, WebElement> {
+public class SeleniumPollingBuilder extends
+		PollingBuilder<ElementPilot, WebElement, SeleniumPollingBuilder,SeleniumPollingBuilder.WebElementPoller> {
+
+	public static Predicate<PollingContext<WebElement>> satisfies(
+			Function<WebElement, ExpectedCondition<WebElement>> expectedCondition) {
+		return context -> expectedCondition.apply(context.getComponent())
+				.apply(context.getGuiPilot(SeleniumPilot.class).getDriver()) != null;
+	}
+
+	public static class WebElementPoller extends PollingBuilder.Poller<WebElement> {
+
+		protected WebElementPoller(PollingBuilder<?, WebElement, ?, ?> builder) {
+			super(builder);
+		}
+
+		public boolean present() {
+			return satisfied(Pollings.exists());
+		}
+
+		public boolean isEnabled() {
+			return configure(polling -> polling.withReportText("is enabled"))
+					.satisfiedCtxt(satisfies(ExpectedConditions::elementToBeClickable));
+		}
+
+		public boolean clicked() {
+			return configure(polling -> polling.withReportText("clicked")).applied(WebElement::click);
+		}
+
+		public boolean textEquals(String text) {
+			return asserted(context -> Assertions.assertEquals(text, context.getComponent().getText(),
+					"text equals '" + text + "'"));
+		}
+
+	}
 
 	public SeleniumPollingBuilder(ElementPilot elementPilot) {
 		super(elementPilot);
 	}
 
-	public SeleniumPollingBuilder wrap(PollingBuilder<ElementPilot, WebElement> builder) {
-		return (SeleniumPollingBuilder) builder;
+	@Override
+	public WebElementPoller ifNot() {
+		return new WebElementPoller(this);
 	}
 
-	private WebDriver driverFrom(PollingContext<WebElement> ctxt) {
-		return ctxt.getGuiPilot().unwrap(SeleniumPilot.class).getDriver();
-	}
-
-	public ResultHandler<Boolean> satisfies(Function<WebElement, ExpectedCondition<WebElement>> expectedCondition) {
-		return withConfiguration(polling -> polling.withReportText(expectedCondition.toString()))
-				.tryPoll(new Polling<>(ctxt -> PollingResults
-						.value(expectedCondition.apply(ctxt.getComponent()).apply(driverFrom(ctxt)) != null)));
-	}
-
-	public ResultHandler<Boolean> isEnabledOr() {
-		return wrap(withConfiguration(polling -> polling.withReportText("is enabled")))
-				.satisfies(ExpectedConditions::elementToBeClickable);
-	}
-	
-	public void isEnabled() {
-		isEnabledOr().orFail();
-	}
-
-	public ResultHandler<Boolean> clickOr() {
-		return withConfiguration(polling -> polling.withReportText("clicked")).tryPoll(new Polling<>(
-				ctxt -> ExpectedConditions.elementToBeClickable(ctxt.getComponent()).apply(driverFrom(ctxt)) != null,
-				ctxt -> {
-					ctxt.getComponent().click();
-					return PollingResults.success();
-				}));
-	}
-	
 	public void click() {
-		clickOr().orFail();
+		fail().ifNot().clicked();
 	}
 
-	public ResultHandler<Boolean> textEquals(String text) {
-		return withConfiguration(polling -> polling.withReportText("text equals '" + text + "'"))
-				.trySatisfy(element -> element.getText().equals(text));
+	public void assertPresent() {
+		fail().ifNot().present();
 	}
 
 }

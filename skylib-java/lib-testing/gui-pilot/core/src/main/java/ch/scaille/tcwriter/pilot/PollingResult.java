@@ -4,8 +4,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import ch.scaille.tcwriter.pilot.AbstractComponentPilot.LoadedComponent;
-
 /**
  * 
  * @param <C> The type of Component
@@ -13,41 +11,29 @@ import ch.scaille.tcwriter.pilot.AbstractComponentPilot.LoadedComponent;
  */
 public class PollingResult<C, V> {
 
-	public interface FailureHandler<C, V, R> {
-		R apply(PollingResult<C, V> result, GuiPilot guiPilot);
-	}
-
 	public final V polledValue;
 	public final Throwable failureReason;
-	private Polling<C, V> polling;
-	private LoadedComponent<C> loadedElement;
+	private Polling<C, ?> polling;
 
 	public PollingResult(final V polledValue, final Throwable failureReason) {
 		this.polledValue = polledValue;
 		this.failureReason = failureReason;
 	}
 
-	public void setPolling(Polling<C, V> polling) {
+	public void setPolling(Polling<C, ?> polling) {
 		this.polling = polling;
 	}
 	
-	public Polling<C, V> getPolling() {
-		return polling;
-	}
-	
 	public Optional<C> getLoadedElement() {
-		if (loadedElement == null) {
-			return Optional.empty();
-		}
-		return Optional.of(loadedElement.element);
+		return Optional.of(polling.getContext().getComponent());
 	}
 
 	public String getComponentDescription() {
-		return getPolling().getContext().getDescription();
+		return polling.getContext().getDescription();
 	}
 
 	public boolean isSuccess() {
-		return failureReason == null;
+		return failureReason == null && polledValue != null;
 	}
 
 	public <U> U mapOrGet(Function<V, U> mapper, final Supplier<U> orElse) {
@@ -57,9 +43,31 @@ public class PollingResult<C, V> {
 		return orElse.get();
 	}
 
+	public GuiPilot getGuiPilot() {
+		return polling.getContext().getGuiPilot();
+	}
+
+	public PollingContext<C> getContext() {
+		return polling.getContext();
+	}
+	
+	public Polling<C, ?> getPolling() {
+		return polling;
+	}
+	
 	@Override
 	public String toString() {
 		return "Value: " + polledValue + ", Exception: " + failureReason;
+	}
+
+	public <R> PollingResult<C, R> derivate(R newValue) {
+		final var newResult = new PollingResult<C, R>(newValue, failureReason);
+		newResult.setPolling(polling);
+		return newResult;
+	}
+
+	public ActionDelay getActionDelay() {
+		return polling.getActionDelay();
 	}
 
 }

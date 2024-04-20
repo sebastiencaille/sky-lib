@@ -4,6 +4,8 @@ import java.util.function.Function;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import ch.scaille.tcwriter.pilot.ModalDialogDetector;
 import ch.scaille.tcwriter.pilot.ModalDialogDetector.PollingResult;
@@ -22,7 +24,11 @@ public class SeleniumPilot extends ch.scaille.tcwriter.pilot.GuiPilot {
 	}
 
 	public ElementPilot element(final By locator) {
-		return new ElementPilot(this, locator);
+		return new ElementPilot(this, webDriver -> webDriver.findElement(locator));
+	}
+	
+	public ElementPilot element(final ExpectedCondition<WebElement> expectedCondition) {
+		return new ElementPilot(this, expectedCondition::apply);
 	}
 
 	public AlertPilot alert() {

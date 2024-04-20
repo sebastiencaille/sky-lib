@@ -49,8 +49,8 @@ public class MainPage extends PagePilot {
 	}
 
 	public void assertSelected(Function<MainPage, ContextSelector> selector) {
-		on(() -> selector.apply(this).selector).applyOrFail(selector.apply(this).selectorSelection);
-		on(() -> selector.apply(this).applier).click();
+		on(() -> selector.apply(this).selector).fail().ifNot().applied(selector.apply(this).selectorSelection);
+		on(() -> selector.apply(this).applier).fail().ifNot().clicked();
 	}
 
 }

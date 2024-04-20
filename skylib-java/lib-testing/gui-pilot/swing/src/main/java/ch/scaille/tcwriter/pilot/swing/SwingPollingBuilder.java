@@ -1,26 +1,38 @@
 package ch.scaille.tcwriter.pilot.swing;
 
+import static ch.scaille.tcwriter.pilot.factories.Reporting.checkingThat;
+
 import javax.swing.JComponent;
 
 import ch.scaille.tcwriter.pilot.PollingBuilder;
-import ch.scaille.tcwriter.pilot.factories.Pollings;
-import ch.scaille.tcwriter.pilot.factories.Reporting;
 
-public class SwingPollingBuilder<G extends AbstractSwingComponentPilot<G, C>, C extends JComponent>
-		extends PollingBuilder<G, C> {
+public class SwingPollingBuilder<P extends AbstractSwingComponentPilot<P, C>, C extends JComponent>
+		extends PollingBuilder<P, C, SwingPollingBuilder<P, C>, SwingPollingBuilder.SwingPoller<C>> {
 
-	public SwingPollingBuilder(AbstractSwingComponentPilot<G, C> elementPilot) {
+	public static class SwingPoller<C extends JComponent> extends PollingBuilder.Poller<C> {
+
+		protected SwingPoller(PollingBuilder<?, C, ?, ?> builder) {
+			super(builder);
+		}
+
+		public boolean enabled() {
+			return configure(polling -> polling.withReportText(checkingThat("component is enabled")))
+					.satisfied(JComponent::isEnabled);
+		}
+
+		public boolean disabled() {
+			return configure(polling -> polling.withReportText(checkingThat("component is disabled")))
+					.satisfied(c -> !c.isEnabled());
+		}
+	}
+
+	public SwingPollingBuilder(AbstractSwingComponentPilot<P, C> elementPilot) {
 		super(elementPilot);
 	}
 
-	public void assertEnabled() {
-		pollOrFail(Pollings.<C>satisfies(JComponent::isEnabled)
-				.withReportText(Reporting.checkingThat("component is enabled")));
-	}
-
-	public void assertDisabled() {
-		pollOrFail(Pollings.<C>satisfies(c -> !c.isEnabled())
-				.withReportText(Reporting.checkingThat("component is disabled")));
+	@Override
+	public SwingPoller<C> ifNot() {
+		return new SwingPoller<>(this);
 	}
 
 }

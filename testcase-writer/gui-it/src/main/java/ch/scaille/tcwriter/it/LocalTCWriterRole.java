@@ -17,7 +17,6 @@ import ch.scaille.tcwriter.it.api.StepEdition;
 import ch.scaille.tcwriter.it.api.StepSelector;
 import ch.scaille.tcwriter.it.api.TestSessionRole;
 import ch.scaille.tcwriter.it.api.TestWriterRole;
-import ch.scaille.tcwriter.pilot.Polling;
 import ch.scaille.tcwriter.pilot.PollingContext;
 import ch.scaille.tcwriter.pilot.PollingResult;
 import ch.scaille.tcwriter.pilot.factories.PollingResults;
@@ -92,19 +91,24 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	public void assertHumanReadable(final StepSelector selector, final String humanReadable) {
 		selector.accept(tcWriterPage);
 
-		tcWriterPage.stepsTable.polling().tryAssert(pc -> {
-			final var component = pc.getComponent();
-			final var value = ((StepsTableModel) component.getModel()).getHumanReadable(component.getSelectedRow());
-			Assertions.assertEquals(humanReadable, value);
-		}).orFail("checking human readable text: " + humanReadable);
+		tcWriterPage.stepsTable.polling()
+				.fail("checking human readable text: " + humanReadable)
+				.ifNot()
+				.asserted(pc -> {
+					final var component = pc.getComponent();
+					final var value = ((StepsTableModel) component.getModel())
+							.getHumanReadable(component.getSelectedRow());
+					Assertions.assertEquals(humanReadable, value);
+				});
 	}
 
 	@Override
 	public void updateParameter(final ParameterSelector selector, final ParameterValue value) {
 		selector.apply(tcWriterPage)
 				.polling()
-				.tryPoll(new Polling<>(context -> updateParameterValues(context, value)))
-				.orFail(Reporting.settingValue("parameter", value));
+				.fail(Reporting.settingValue("parameter", value))
+				.ifNot()
+				.appliedCtxt(context -> updateParameterValues(context, value));
 
 		applyStepEdition();
 

@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.2.4</version>
+		<version>3.2.5</version>
 		<relativePath />
 	</parent>
 
@@ -25,14 +25,14 @@
 		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
 
 		<guava.version>33.1.0-jre</guava.version>
-		<logback.version>1.5.5</logback.version>
+		<logback.version>1.5.6</logback.version>
 		<mapstruct.version>1.5.5.Final</mapstruct.version>
 
-		<swagger-parser.version>2.1.21</swagger-parser.version>
+		<swagger-parser.version>2.1.22</swagger-parser.version>
 		<swagger.version>2.2.21</swagger.version>
 		<springdoc-openapi.version>2.5.0</springdoc-openapi.version>
 
-		<undertow.version>2.3.12.Final</undertow.version>
+		<undertow.version>2.3.13.Final</undertow.version>
 		<liquibase.version>4.27.0</liquibase.version>
 
 		<mockito.version>5.11.0</mockito.version>
@@ -267,7 +267,7 @@
 				<plugin>
 					<groupId>org.openapitools</groupId>
 					<artifactId>openapi-generator-maven-plugin</artifactId>
-					<version>7.4.0</version>
+					<version>7.5.0</version>
 					<dependencies>
 						<dependency>
 							<groupId>io.swagger.parser.v3</groupId>

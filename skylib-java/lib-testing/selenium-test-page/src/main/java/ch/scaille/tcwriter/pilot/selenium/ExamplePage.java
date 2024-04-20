@@ -1,5 +1,6 @@
 package ch.scaille.tcwriter.pilot.selenium;
 
+import static ch.scaille.tcwriter.pilot.factories.Pollings.andThen;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
@@ -38,8 +39,9 @@ public class ExamplePage extends PagePilot {
 		@Override
 		public void assertFinished() {
 			final var page = ExamplePage.this;
-			page.on(visibilityOfElementLocated(ENABLE_TEST)).isEnabled();
-			Assertions.assertTrue(visibilityOfElementLocated(ENABLE_TEST).apply(getDriver()).isEnabled(), "EnableTest is enabled");
+			page.on(elementToBeClickable(ENABLE_TEST)).assertPresent();
+			Assertions.assertTrue(visibilityOfElementLocated(ENABLE_TEST).apply(getDriver()).isEnabled(),
+					"EnableTest is enabled");
 		}
 
 		@Override
@@ -54,11 +56,11 @@ public class ExamplePage extends PagePilot {
 	 * until "Proceed" is enabled
 	 */
 	public void executeEnable() {
-		on(elementToBeClickable(ENABLE_TEST)).clickOr().andThen(new WaitEnableTestEnabledDelay()).orFail();
+		on(elementToBeClickable(ENABLE_TEST)).configure(andThen(new WaitEnableTestEnabledDelay())).click();
 	}
 
 	public void assertedEnabledTested() {
-		on(visibilityOfElementLocated(ENABLE_TEST)).assertOrFail(ctxt -> Assertions.assertTrue(ctxt.getComponent().isEnabled()));
+		on(visibilityOfElementLocated(ENABLE_TEST)).assertPresent();
 	}
 
 	public void testAlert() {
@@ -66,9 +68,10 @@ public class ExamplePage extends PagePilot {
 	}
 
 	public void clickOnMissingButton() {
-		Assertions.assertFalse(on(visibilityOfElementLocated(NOT_EXISTING))
-				.tryPoll(Pollings.<WebElement>exists().withTimeout(Duration.ofMillis(500)))
-				.isSatisfiedOr("not satisfied"), "isSatisfied should have returned false");
+		Assertions.assertFalse(
+				on(visibilityOfElementLocated(NOT_EXISTING)).report("isSatisfied should have returned false")
+						.ifNot()
+						.satisfied(Pollings.<WebElement>exists().withTimeout(Duration.ofMillis(500))));
 	}
 
 	/**
@@ -89,9 +92,9 @@ public class ExamplePage extends PagePilot {
 	}
 
 	public void assertElementChange() {
-		on(elementToBeClickable(ELEMENT_CHANGE_TEST)).click();
+		on(elementToBeClickable(ELEMENT_CHANGE_TEST)).fail().ifNot().clicked();
 		// Explicitly test using WebElement as source
-		on(visibilityOfElementLocated(ELEMENT_CHANGE)).textEquals("Hello again").orFail();
+		on(visibilityOfElementLocated(ELEMENT_CHANGE)).fail().ifNot().textEquals("Hello again");
 	}
 
 }

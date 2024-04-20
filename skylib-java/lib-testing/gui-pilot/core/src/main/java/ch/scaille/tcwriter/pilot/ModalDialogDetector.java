@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Assertions;
 
-import ch.scaille.tcwriter.pilot.PollingResult.FailureHandler;
+import ch.scaille.tcwriter.pilot.factories.FailureHandlers.FailureHandler;
 import ch.scaille.tcwriter.pilot.factories.PollingResults;
 import ch.scaille.util.helpers.Logs;
 import ch.scaille.util.helpers.NoExceptionCloseable;
@@ -95,8 +95,6 @@ public class ModalDialogDetector {
 
 	private static final Timer timer = new Timer("Modal dialog detector");
 
-	private final GuiPilot pilot;
-
 	private final List<String> errors = new ArrayList<>();
 
 	private PollingResult handledDialog = null;
@@ -111,7 +109,6 @@ public class ModalDialogDetector {
 
 	public ModalDialogDetector(Builder builder, GuiPilot pilot) {
 		this.builder = builder;
-		this.pilot = pilot;
 		builder.timeout.withSource(pilot).ensureLoaded();
 	}
 
@@ -192,15 +189,18 @@ public class ModalDialogDetector {
 		}
 	}
 
-	public boolean waitModalDialogHandled(final FailureHandler<ModalDialogDetector.PollingResult, ?, Boolean> onFail) {
+	public boolean waitModalDialogHandled(final FailureHandler<ModalDialogDetector.PollingResult, Boolean> onFail) {
 		return new Poller(builder.timeout.get(), Duration.ofMillis(100), p -> Duration.ofMillis(100))
 				.run(this::getPollingResult, Objects::nonNull)
 				.map(p -> true)
-				.orElseGet(() -> onFail.apply(PollingResults.failure("Modal dialog not detected"), pilot));
+				.orElseGet(() -> {
+					onFail.apply(PollingResults.failure("Modal dialog not detected"));
+					return false;
+				});
 	}
 
 	public boolean isRunning() {
-		return timerTask != null;		
+		return timerTask != null;
 	}
 
 }

@@ -12,11 +12,11 @@ import ch.scaille.tcwriter.pilot.PollingResult;
 import ch.scaille.util.helpers.Poller;
 /**
  * An abstract class for Swing component pilots
- * @param <G> the type of the Swing Component Pilot
+ * @param <P> the type of the Swing Component Pilot
  * @param <C> the type of the Swing Component
  */
-public class AbstractSwingComponentPilot<G extends AbstractSwingComponentPilot<G, C>, C extends JComponent>
-		extends AbstractComponentPilot<G, C> {
+public class AbstractSwingComponentPilot<P extends AbstractSwingComponentPilot<P, C>, C extends JComponent>
+		extends AbstractComponentPilot<P, C> {
 
 	protected final SwingPilot pilot;
 	protected final String name;
@@ -58,7 +58,7 @@ public class AbstractSwingComponentPilot<G extends AbstractSwingComponentPilot<G
 	}
 
 	@Override
-	public <P> PollingResult<C, P> waitPollingSuccess(final Polling<C, P> polling) {
+	public <V> PollingResult<C, V> waitPollingSuccess(final Polling<C, V> polling) {
 		if (SwingUtilities.isEventDispatchThread()) {
 			throw new IllegalStateException("Polling must not run in Swing thread");
 		}
@@ -71,18 +71,18 @@ public class AbstractSwingComponentPilot<G extends AbstractSwingComponentPilot<G
 		SwingHelper.invokeAndWait(() -> response[0] = super.executePolling(poller, polling));
 		return response[0];
 	}
-
+	
 	@Override
-	public SwingPollingBuilder<G, C> polling() {
+	public SwingPollingBuilder<P, C> polling() {
 		return new SwingPollingBuilder<>(this);
 	}
-
+	
 	public void assertEnabled() {
-		polling().tryApply(JComponent::isEnabled).orFail("Component is not enabled");
+		polling().fail("Component is not enabled").ifNot().enabled();
 	}
 	
 
 	public void assertDisabled() {
-		polling().trySatisfy(comp -> !comp.isEnabled()).orFail("Component is not enabled");
+		polling().fail("Component is not enabled").ifNot().disabled();
 	}
 }

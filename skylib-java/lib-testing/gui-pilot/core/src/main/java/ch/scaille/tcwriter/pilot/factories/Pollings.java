@@ -4,15 +4,20 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import ch.scaille.tcwriter.pilot.ActionDelay;
 import ch.scaille.tcwriter.pilot.Polling;
 import ch.scaille.tcwriter.pilot.PollingContext;
 
-public interface Pollings {
+public abstract class Pollings {
 
+	protected Pollings() {
+		// noop
+	}
+	
 	/**
 	 * Succeed if the component was found
 	 */
-	static <C> Polling<C, Boolean> exists() {
+	public static <C> Polling<C, Boolean> exists() {
 		return new Polling<>(ctxt -> PollingResults.success());
 	}
 
@@ -20,7 +25,7 @@ public interface Pollings {
 	/**
 	 * Succeed if the Predicate is accepted
 	 */
-	static <C> Polling<C, Boolean> satisfies(final Predicate<C> predicate) {
+	public static <C> Polling<C, Boolean> satisfies(final Predicate<C> predicate) {
 		return new Polling<>(ctxt -> {
 			if (!predicate.test(ctxt.getComponent())) {
 				return PollingResults.failure("Condition not met");
@@ -32,7 +37,7 @@ public interface Pollings {
 	/**
 	 * Succeed if the assertion has not failed (no AssertionError raised)
 	 */
-	static <C> Polling<C, Boolean> asserts(final Consumer<PollingContext<C>> assertion) {
+	public static <C> Polling<C, Boolean> appliesCtxt(final Consumer<PollingContext<C>> assertion) {
 		return new Polling<>(ctxt -> {
 			try {
 				assertion.accept(ctxt);
@@ -46,7 +51,7 @@ public interface Pollings {
 	/**
 	 * Succeed if action was applied (no exception raised)
 	 */
-	static <C> Polling<C, Boolean> applies(final Consumer<C> action) {
+	public static <C> Polling<C, Boolean> applies(final Consumer<C> action) {
 		return new Polling<>(ctxt -> {
 			action.accept(ctxt.getComponent());
 			return PollingResults.success();
@@ -54,8 +59,12 @@ public interface Pollings {
 	}
 
 
-	static <C, V> Polling<C, V> get(Function<C, V> getter) {
+	public static <C, V> Polling<C, V> get(Function<C, V> getter) {
 		return new Polling<>(ctxt -> PollingResults.value(getter.apply(ctxt.getComponent())));
+	}
+	
+	public static <C> Consumer<Polling<C, ?>> andThen(ActionDelay actionDelay) {
+		return polling -> polling.andThen(actionDelay);
 	}
 
 }

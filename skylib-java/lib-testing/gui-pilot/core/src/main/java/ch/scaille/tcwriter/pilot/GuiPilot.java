@@ -4,8 +4,8 @@ import java.time.Duration;
 
 import ch.scaille.tcwriter.pilot.ModalDialogDetector.Builder;
 import ch.scaille.tcwriter.pilot.PilotReport.ReportFunction;
-import ch.scaille.tcwriter.pilot.PollingResult.FailureHandler;
 import ch.scaille.tcwriter.pilot.factories.FailureHandlers;
+import ch.scaille.tcwriter.pilot.factories.FailureHandlers.FailureHandler;
 import ch.scaille.util.helpers.NoExceptionCloseable;
 import ch.scaille.util.helpers.Poller;
 
@@ -138,7 +138,7 @@ public class GuiPilot {
 	/**
 	 * Wait the model dialog expected by expectModalDialog
 	 */
-	public boolean waitModalDialogHandled(final FailureHandler<ModalDialogDetector.PollingResult, ?, Boolean> onFail) {
+	public boolean waitModalDialogHandled(final FailureHandler<ModalDialogDetector.PollingResult, Boolean> onFail) {
 		if (currentModalDialogDetector == null) {
 			throw new IllegalStateException("expectModalDialog was never called");
 		}

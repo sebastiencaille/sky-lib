@@ -30,6 +30,10 @@ public class PollingContext<C> {
 		return pilot.getPilot();
 	}
 
+	public <T extends GuiPilot> T getGuiPilot(Class<T> clazz) {
+		return clazz.cast(pilot.getPilot());
+	}
+	
 	public C getComponent() {
 		return component;
 	}
@@ -42,4 +46,6 @@ public class PollingContext<C> {
 		this.component = component;
 		this.description = description;
 	}
+
+
 }

@@ -3,6 +3,11 @@ package ch.scaille.util.helpers;
 import java.util.Optional;
 import java.util.function.Function;
 
+/**
+ * Allows to override a configurable default value
+ * @param <S>
+ * @param <T>
+ */
 public class OverridableParameter<S, T> {
 
 	private final Function<S, T> defaultProvider;

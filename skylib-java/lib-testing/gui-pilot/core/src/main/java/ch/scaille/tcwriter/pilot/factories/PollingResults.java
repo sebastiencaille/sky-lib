@@ -1,14 +1,21 @@
 package ch.scaille.tcwriter.pilot.factories;
 
+import java.util.function.Function;
+
 import ch.scaille.tcwriter.pilot.PollingResult;
 
 public interface PollingResults {
+	
+	public interface Transformer<C, V, R> extends Function<PollingResult<C, V>, PollingResult<C, R>> {
+		// noop
+	}
+	
 	/**
-	 * Make polling return a value
+	 * Creates a successful polling with a value
 	 *
 	 * @param <C>
 	 * @param <V>
-	 * @param value
+	 * @param value the value
 	 * @return
 	 */
 	static <C, V> PollingResult<C, V> value(final V value) {
@@ -16,7 +23,7 @@ public interface PollingResults {
 	}
 
 	/**
-	 * Make polling return value "true"
+	 * Creates a successful polling without value
 	 *
 	 * @param <C>
 	 * @return
@@ -26,13 +33,13 @@ public interface PollingResults {
 	}
 
 	/**
-	 * Make polling return value "false"
+	 * Creates a failed polling without value
 	 *
 	 * @param <C>
 	 * @return
 	 */
-	static <C> PollingResult<C, Boolean> failed() {
-		return new PollingResult<>(Boolean.FALSE, null);
+	static <C, V> PollingResult<C, V> failed() {
+		return failure("Failed");
 	}
 
 	/**
@@ -55,4 +62,11 @@ public interface PollingResults {
 		return new PollingResult<>(null, cause);
 	}
 
+	static <C> Transformer<C, ?, Boolean> returnSuccess() {
+		return r -> r.derivate(r.isSuccess());
+	}
+	
+	static <C, R> Transformer<C, R, R> identity() {
+		return r -> r;
+	}
 }

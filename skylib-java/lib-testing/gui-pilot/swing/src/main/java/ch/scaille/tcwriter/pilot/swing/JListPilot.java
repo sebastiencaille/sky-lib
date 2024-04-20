@@ -1,8 +1,8 @@
 package ch.scaille.tcwriter.pilot.swing;
 
-import static ch.scaille.tcwriter.pilot.factories.Reporting.checkingValue;
 import static ch.scaille.tcwriter.pilot.factories.PollingResults.failure;
 import static ch.scaille.tcwriter.pilot.factories.PollingResults.success;
+import static ch.scaille.tcwriter.pilot.factories.Reporting.checkingValue;
 
 import javax.swing.JList;
 
@@ -27,13 +27,13 @@ public class JListPilot extends AbstractSwingComponentPilot<JListPilot, JList> {
 		if (value == null) {
 			return;
 		}
-		polling().tryApply(c -> {
+		polling().fail("selecting element " + value).ifNot().applied(c -> {
 			for (int i = 0; i < c.getModel().getSize(); i++) {
 				if (value.equals(c.getModel().getElementAt(i).toString())) {
 					c.setSelectedIndex(i);
 				}
 			}
-		}).orFail("selecting element " + value);
+		});
 		Assertions.assertTrue(getCachedElement().map(JList::getSelectedIndex).orElse(-1) >= 0,
 				() -> name + ": element must have been selected: " + value);
 	}
@@ -42,7 +42,7 @@ public class JListPilot extends AbstractSwingComponentPilot<JListPilot, JList> {
 		if (expected == null) {
 			return;
 		}
-		polling().tryPoll(new Polling<JList, Boolean>(this::canCheck, ctxt -> {
+		polling().fail(checkingValue(expected)).ifNot().satisfied(new Polling<>(this::canCheck, ctxt -> {
 			final var component = ctxt.getComponent();
 			if (component.getSelectedIndex() < 0) {
 				return failure("No element selected");
@@ -52,6 +52,6 @@ public class JListPilot extends AbstractSwingComponentPilot<JListPilot, JList> {
 				return failure("Wrong element selected (" + current + ")");
 			}
 			return success();
-		})).orFail(checkingValue(expected));
+		}));
 	}
 }

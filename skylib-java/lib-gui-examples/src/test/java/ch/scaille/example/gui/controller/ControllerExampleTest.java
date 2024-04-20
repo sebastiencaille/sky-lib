@@ -41,7 +41,10 @@ class ControllerExampleTest {
 		page.intCheck.assertTextEquals("123");
 		page.intStringEditor.setText("abc");
 		page.intCheck.assertTextEquals("123");
-		page.intStringEditor.polling().trySatisfy(c -> c.getForeground() == Color.RED).orFail("foreground color should be RED");
+		page.intStringEditor.polling()
+				.fail("foreground color should be RED")
+				.ifNot()
+				.satisfied(c -> c.getForeground() == Color.RED);
 
 		page.staticListEditor.select("A");
 		page.staticListSelectionCheck.assertTextEquals("A");

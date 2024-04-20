@@ -9,7 +9,7 @@ import java.util.function.Function;
 import java.util.logging.Logger;
 
 import ch.scaille.tcwriter.pilot.PilotReport.ReportFunction;
-import ch.scaille.tcwriter.pilot.PollingResult.FailureHandler;
+import ch.scaille.tcwriter.pilot.factories.FailureHandlers.FailureHandler;
 import ch.scaille.tcwriter.pilot.factories.PollingResults;
 import ch.scaille.util.helpers.Logs;
 import ch.scaille.util.helpers.Poller;
@@ -151,12 +151,14 @@ public abstract class AbstractComponentPilot<P extends AbstractComponentPilot<P,
 		}
 	}
 
-	public <V, U> U processResult(final PollingResult<C, V> result, Function<V, U> successTransformer,
-			FailureHandler<C, V, U> onFail) {
+	public <V, U> PollingResult<C, U> processResult(final PollingResult<C, V> result, Function<PollingResult<C, V>, PollingResult<C, U>> resultTransformer,
+			FailureHandler<C, V> onFail) {
 		if (result.isSuccess()) {
-			pilot.setActionDelay(result.getPolling().getActionDelay());
+			pilot.setActionDelay(result.getActionDelay());
+		} else {
+			onFail.apply(result);
 		}
-		return result.mapOrGet(successTransformer, () -> onFail.apply(result, pilot));
+		return resultTransformer.apply(result);
 	}
 
 	/**
@@ -249,7 +251,7 @@ public abstract class AbstractComponentPilot<P extends AbstractComponentPilot<P,
 		}
 	}
 
-	public PollingBuilder<P, C> polling() {
+	public <T extends PollingBuilder<P, C, T, U>, U extends PollingBuilder.Poller<C>> PollingBuilder<P, C, T, U> polling() {
 		return new PollingBuilder<>(this);
 	}
 }

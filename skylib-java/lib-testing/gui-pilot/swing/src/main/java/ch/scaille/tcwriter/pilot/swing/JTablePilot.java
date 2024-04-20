@@ -15,30 +15,35 @@ public class JTablePilot extends AbstractSwingComponentPilot<JTablePilot, JTable
 	}
 
 	public void selectRow(final int index) {
-		polling().tryApply(t -> t.setRowSelectionInterval(index, index)).orFail(("select row " + index));
+		polling().fail("select row " + index).ifNot().applied(t -> t.setRowSelectionInterval(index, index));
 	}
 
 	public void editValue(final int row, final int column, final String value) {
-		polling().tryApply(t -> t.setValueAt(value, row, column))
-				.orFail((settingValue("at row/column " + row + '/' + column, value)));
+		polling().fail(settingValue("at row/column " + row + '/' + column, value))
+				.ifNot()
+				.applied(t -> t.setValueAt(value, row, column));
 	}
 
 	public void editValueOnSelectedRow(final int column, final String value) {
-		polling().tryApply(t -> {
+		polling().fail(settingValue("at selected row, column " + column, value)).ifNot().applied(t -> {
 			t.setValueAt(value, t.getSelectedRow(), column);
 			SwingHelper.doPressReturn(t);
-		}).orFail((settingValue("at selected row, column " + column, value)));
+		});
 	}
 
 	public void assertValue(final int row, final int column, final String expected) {
-		polling().tryAssert(pc -> Assertions.assertEquals(expected, pc.getComponent().getValueAt(row, column), pc.getDescription()))
-				.orFail((checkingValue("at row/column " + row + '/' + column, expected)));
+		polling().fail(checkingValue("at row/column " + row + '/' + column, expected))
+				.ifNot()
+				.asserted(pc -> Assertions.assertEquals(expected, pc.getComponent().getValueAt(row, column),
+						pc.getDescription()));
 	}
 
 	public void assertValueOnSelectedRow(final int column, final String expected) {
-		polling().tryAssert(pc -> Assertions.assertEquals(expected,
-				pc.getComponent().getValueAt(pc.getComponent().getSelectedRow(), column), pc.getDescription()))
-				.orFail((checkingValue("at selected row, column " + column, expected)));
+		polling().fail(checkingValue("at selected row, column " + column, expected))
+				.ifNot()
+				.asserted(pc -> Assertions.assertEquals(expected,
+						pc.getComponent().getValueAt(pc.getComponent().getSelectedRow(), column), pc.getDescription()));
+
 	}
 
 }

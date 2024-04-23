@@ -34,10 +34,6 @@ import ch.scaille.tcwriter.pilot.factories.Pollings;
  */
 public class PollingBuilder<P extends AbstractComponentPilot<P, C>, C, T extends PollingBuilder<P, C, T, U>, U extends PollingBuilder.Poller<C>> {
 
-	protected interface PollingExecutionProvider<C> {
-		<R> FailureHandler<C, R> getPollingExecution();
-	}
-
 	public static class Poller<C> {
 
 		protected final PollingBuilder<?, C, ?, ?> builder;
@@ -89,7 +85,7 @@ public class PollingBuilder<P extends AbstractComponentPilot<P, C>, C, T extends
 
 	protected final List<Consumer<Polling<C, ?>>> configurers = new ArrayList<>(2);
 
-	protected PollingExecutionProvider<C> pollingExecutionProvider;
+	private FailureHandler<C, ?> failureHandler;
 
 	public PollingBuilder(AbstractComponentPilot<P, C> pilot) {
 		this.pilot = pilot;
@@ -103,7 +99,7 @@ public class PollingBuilder<P extends AbstractComponentPilot<P, C>, C, T extends
 	protected <R> PollingResult<C, R> poll(final Polling<C, R> polling) {
 		configurers.forEach(conf -> conf.accept(polling));
 		return pilot.processResult(pilot.waitPollingSuccess(polling), PollingResults.identity(),
-				pollingExecutionProvider.getPollingExecution());
+				((FailureHandler<C, R>) failureHandler));
 	}
 
 	public U ifNot() {
@@ -115,58 +111,33 @@ public class PollingBuilder<P extends AbstractComponentPilot<P, C>, C, T extends
 	 * failure
 	 */
 	public T fail() {
-		this.pollingExecutionProvider = new PollingExecutionProvider<>() {
-			@Override
-			public <R> FailureHandler<C, R> getPollingExecution() {
-				return FailureHandlers.throwError();
-			}
-		};
+		this.failureHandler = FailureHandlers.throwError();
 		return (T) this;
 	}
 
 	public T fail(String report) {
-		this.pollingExecutionProvider = new PollingExecutionProvider<>() {
-			@Override
-			public <R> FailureHandler<C, R> getPollingExecution() {
-				return FailureHandlers.throwError(report);
-			}
-		};
+		this.failureHandler = FailureHandlers.throwError(report);
 		return (T) this;
 	}
 
 	public T ignore() {
-		this.pollingExecutionProvider = new PollingExecutionProvider<>() {
-			@Override
-			public <R> FailureHandler<C, R> getPollingExecution() {
-				return FailureHandlers.ignoreFailure();
-			}
-		};
+		this.failureHandler = FailureHandlers.ignoreFailure();
 		return (T) this;
 	}
-	
+
 	public T ignore(Duration timeout) {
 		configure(polling -> polling.withTimeout(timeout));
-		this.pollingExecutionProvider = new PollingExecutionProvider<>() {
-			@Override
-			public <R> FailureHandler<C, R> getPollingExecution() {
-				return FailureHandlers.ignoreFailure();
-			}
-		};
+		this.failureHandler = FailureHandlers.ignoreFailure();
 		return (T) this;
 	}
 
 	public T report(String report) {
-		this.pollingExecutionProvider = new PollingExecutionProvider<>() {
-			@Override
-			public <R> FailureHandler<C, R> getPollingExecution() {
-				return FailureHandlers.reportFailure(report);
-			}
-		};
+		this.failureHandler = FailureHandlers.reportFailure(report);
 		return (T) this;
 	}
 
 	public T fail(ReportFunction<C> reportFunction) {
-		configurers.add(polling -> polling.withReportFunction(reportFunction));
+		configure(polling -> polling.withReportFunction(reportFunction));
 		return fail();
 	}
 

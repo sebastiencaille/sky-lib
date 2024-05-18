@@ -8,6 +8,7 @@ get:
         type: string 
       required: true
       description: id of the dictionary
+      x-constraints: "Id" 
   responses:
     '200':
       description: a dictionary
@@ -15,3 +16,4 @@ get:
         application/json:
           schema:
             $ref: ../openapi.yaml#/components/schemas/TestDictionary
+ 

@@ -8,6 +8,7 @@ get:
         type: string
       required: true
       description: id of the test case
+      x-constraints: "Id" 
     - in: query
       name: format
       schema:
@@ -21,6 +22,7 @@ get:
         type: string
       required: true
       description: id of the dictionary
+      x-constraints: "Id" 
   responses:
     '200':
       description: export

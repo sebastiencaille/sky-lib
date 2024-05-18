@@ -20,12 +20,14 @@ public class BootstrapConfig {
 
 	private static final String TC_TEMPLATE = "templates/TC.template";
 
-	@Value("${app.dataFolder:/var/lib/tcwriter/data}") 
-	private Path dataFolder;
+	private final Path dataFolder;
 	
+	public BootstrapConfig(@Value("${app.dataFolder:/var/lib/tcwriter/data}") Path dataFolder) {
+		this.dataFolder = dataFolder;
+	}
+
 	@PostConstruct
 	public void bootStrapDemo() throws IOException {
-
 		final var exampleHelper = new ExampleHelper(dataFolder, "server");
 		final var dictionary = exampleHelper.generateDictionary();
 		final var tc = exampleHelper.recordTestCase(dictionary);

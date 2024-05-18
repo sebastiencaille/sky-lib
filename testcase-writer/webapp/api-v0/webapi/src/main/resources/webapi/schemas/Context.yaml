@@ -4,6 +4,8 @@ Context:
     dictionary:
       describe: reference to the dictionary 
       type: string
+      x-constraints: "Id" 
     testCase:
       describe: reference to the test case 
       type: string
+      x-constraints: "Id" 

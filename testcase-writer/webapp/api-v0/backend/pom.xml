@@ -34,6 +34,9 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
+							<templateDirectory>
+								${project.basedir}/../openapi/templates
+							</templateDirectory>
 							<inputSpec>
 								${inputSpec}</inputSpec>
 							<apiPackage>

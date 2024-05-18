@@ -1,3 +1,4 @@
+
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
@@ -42,23 +43,23 @@ export default function App() {
 
 
 	useEffect(() => {
-		if (userContext.dictionary) {
+		if (userContext.dictionary && userContext.dictionary !== currentDictionary?.metadata.id) {
 			WebApis.loadDictionary(userContext.dictionary, dict => setCurrentDictionary(Mappers.enhanceDictionary(dict)));
 		}
-	}, [userContext.dictionary]);
+	}, [currentDictionary?.metadata.id, userContext.dictionary]);
 
 	useEffect(() => {
 		if (userContext.dictionary) {
 			WebApis.listAllTestCases((allMetaData) => setAllTestCases(allMetaData));
 		}
-	}, [userContext]);
+	}, [userContext.dictionary]);
 
 
 	useEffect(() => {
-		if (currentDictionary && userContext.testCase) {
+		if (currentDictionary && userContext.testCase && userContext.testCase !== currentTestCase?.metadata.id) {
 			WebApis.loadTestCase(userContext.testCase, tc => setCurrentTestCase(Mappers.enhanceTestCase(currentDictionary, tc)));
 		}
-	}, [currentDictionary, userContext.testCase]);
+	}, [currentDictionary, currentTestCase?.metadata.id, userContext]);
 
 	const dictionaryChanged = useCallback((metadata?: Metadata) => {
 		if (!metadata) {

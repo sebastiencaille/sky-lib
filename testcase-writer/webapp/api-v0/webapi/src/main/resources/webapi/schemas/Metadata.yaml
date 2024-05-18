@@ -6,6 +6,7 @@ IdObject:
   properties:
     id:
       type: string
+      x-constraints: "Id" 
 NamedObject:
   type: object
   discriminator:

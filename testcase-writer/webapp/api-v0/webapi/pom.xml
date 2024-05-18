@@ -12,6 +12,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>ch.scaille.tcwriter</groupId>
+			<artifactId>testcase-writer-webapp-api-validators</artifactId>
+			<version>${revision}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.openapitools</groupId>
 			<artifactId>jackson-databind-nullable</artifactId>
 		</dependency>
@@ -48,6 +53,9 @@
 						</goals>
 						<configuration>
 							<generateApis>false</generateApis>
+							<templateDirectory>
+								${project.basedir}/../openapi/templates
+							</templateDirectory>
 							<inputSpec>
 								${inputSpec}</inputSpec>
 							<apiPackage>

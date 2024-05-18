@@ -1,9 +1,7 @@
 package ch.scaille.tcwriter.server.dao;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import ch.scaille.tcwriter.model.Metadata;
@@ -13,8 +11,6 @@ import ch.scaille.tcwriter.persistence.IModelDao;
 import ch.scaille.util.persistence.StorageRTException;
 
 public class TestCaseDao extends AbstractDao implements ITestCaseDao {
-
-    private final Map<String, ExportableTestCase> cache = new HashMap<>();
 
     private final IModelDao modelDao;
 
@@ -33,8 +29,7 @@ public class TestCaseDao extends AbstractDao implements ITestCaseDao {
 
     @Override
     public Optional<ExportableTestCase> load(String testCaseName, TestDictionary dictionary) {
-        return cacheIfPresent(cache, testCaseName + dictionary.getMetadata().getTransientId(),
-                () -> modelDao.readTestCase(testCaseName, dictionary));
+        return modelDao.readTestCase(testCaseName, dictionary);
     }
 
 }

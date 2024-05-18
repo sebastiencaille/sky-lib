@@ -8,18 +8,21 @@ post:
         type: string
       required: true
       description: id of the test case
+      x-constraints: "Id" 
     - in: query
       name: tabId
       schema:
         type: string
       required: false
       description: tab id of the caller
+      x-constraints: "Id" 
     - in: header
       name: X-UserContext
       schema:
         type: string
       required: true
       description: id of the dictionary
+      x-constraints: "Id" 
   responses:
     '200':
       description: test case executed

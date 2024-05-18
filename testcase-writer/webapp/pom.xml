@@ -13,6 +13,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>api-validators</module>
 		<module>backend-core</module>
 		<module>api-v0</module>
 		<module>backend</module>
@@ -30,6 +31,11 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>ch.scaille.tcwriter</groupId>
+				<artifactId>testcase-writer-webapp-api-validators</artifactId>
+				<version>${revision}</version>
+			</dependency>
 			<dependency>
 				<groupId>ch.scaille.tcwriter</groupId>
 				<artifactId>testcase-writer-webapp-backend-core</artifactId>

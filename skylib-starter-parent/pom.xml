@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.2.5</version>
+		<version>3.3.0</version>
 		<relativePath />
 	</parent>
 
@@ -29,11 +29,11 @@
 		<mapstruct.version>1.5.5.Final</mapstruct.version>
 
 		<swagger-parser.version>2.1.22</swagger-parser.version>
-		<swagger.version>2.2.21</swagger.version>
+		<swagger.version>2.2.22</swagger.version>
 		<springdoc-openapi.version>2.5.0</springdoc-openapi.version>
 
 		<undertow.version>2.3.13.Final</undertow.version>
-		<liquibase.version>4.27.0</liquibase.version>
+		<liquibase.version>4.28.0</liquibase.version>
 
 		<mockito.version>5.12.0</mockito.version>
 		<junit-jupiter.version>5.10.2</junit-jupiter.version>
@@ -51,7 +51,7 @@
 			<dependency>
 				<groupId>org.springframework.session</groupId>
 				<artifactId>spring-session-bom</artifactId>
-				<version>3.2.2</version>
+				<version>3.3.0</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -203,12 +203,12 @@
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>build-helper-maven-plugin</artifactId>
-					<version>3.5.0</version>
+					<version>3.6.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>exec-maven-plugin</artifactId>
-					<version>3.2.0</version>
+					<version>3.3.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>

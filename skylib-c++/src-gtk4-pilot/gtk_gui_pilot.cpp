@@ -43,8 +43,5 @@ Gtk::Widget* gtk_gui_pilot::find(Gtk::Widget *_widget, const ustring &_name) {
 	return found;
 }
 
-gtk_gui_pilot::~gtk_gui_pilot() {
-	// TODO Auto-generated destructor stub
-}
-
+gtk_gui_pilot::~gtk_gui_pilot() = default;
 }

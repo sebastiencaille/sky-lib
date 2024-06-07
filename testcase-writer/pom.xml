@@ -30,6 +30,7 @@
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 
 		<sonar.exclusions>**/node_modules/**,**/generated/**</sonar.exclusions>
+		<flatten>true</flatten>
 	</properties>
 	<build>
 		<plugins>
@@ -38,6 +39,10 @@
 				<version>2.10</version>
 				<configuration>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>flatten-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 		<pluginManagement>

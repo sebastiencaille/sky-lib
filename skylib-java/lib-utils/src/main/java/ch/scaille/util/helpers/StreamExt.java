@@ -33,7 +33,7 @@ public interface StreamExt {
 				return;
 			}
 			count++;
-			this.value = Optional.ofNullable(newValue);
+			this.value = Optional.of(newValue);
 		}
 
 		Single<T> combiner(Single<T> t2) {
@@ -75,8 +75,6 @@ public interface StreamExt {
 
 	/**
 	 * Collector that checks for zero or one value available
-	 *
-	 * @return
 	 */
 	static <E> Collector<E, ?, Single<E>> zeroOrOne() {
 		return Collector.of(Single::zeroOrOne, Single::setValue, Single::combiner);
@@ -84,8 +82,6 @@ public interface StreamExt {
 
 	/**
 	 * Collector that checks for zero or one value available
-	 *
-	 * @return
 	 */
 	static <E> Collector<E, ?, Single<E>> single() {
 		return Collector.of(Single::single, Single::setValue, Single::combiner);
@@ -96,7 +92,9 @@ public interface StreamExt {
 	}
 
 	static <T> void throwIfContainsNull(final Stream<T> stream) {
-		stream.filter(Objects::isNull).findAny().ifPresent(t -> new IllegalArgumentException("No null value allowed"));
+		stream.filter(Objects::isNull).findAny().ifPresent(t -> { 
+			throw new IllegalArgumentException("No null value allowed"); 
+		});
 	}
 
 	static <T> Predicate<T> notEq(final T val) {

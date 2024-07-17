@@ -28,7 +28,7 @@ import ch.scaille.util.helpers.ClassLoaderHelper;
 import ch.scaille.util.helpers.Logs;
 
 /**
- * To setup basic dictionary / test / configuration
+ * To set basic dictionary / test / configuration up
  */
 public class ExampleHelper {
 
@@ -46,9 +46,6 @@ public class ExampleHelper {
 
 	/**
 	 * Configure the example environment
-	 * 
-	 * @param dataPath
-	 * @throws IOException
 	 */
 	public ExampleHelper(Path dataPath, String configName) throws IOException {
 		final var tcPath = dataPath.resolve("testcase");

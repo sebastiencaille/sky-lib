@@ -16,17 +16,17 @@ import ch.scaille.util.persistence.DaoFactory.FsDsFactory;
 public interface DaoConfigs {
 
 
-	public static final String USER_RESOURCES = "userResources/";
+	String USER_RESOURCES = "userResources/";
 
-	public static String cp(String path) {
+	static String cp(String path) {
 		return DaoFactory.CP_DATASOURCE + USER_RESOURCES + path;
 	}
 
-	public static Path homeFolder() {
+	static Path homeFolder() {
 		return Paths.get(FileSystemDao.resolvePlaceHolders("${user.home}/.tcwriter"));
 	}
 
-	public static Path tempFolder() {
+	static Path tempFolder() {
 		return Paths.get(System.getProperty("java.io.tmpdir"));
 	}
 
@@ -34,7 +34,7 @@ public interface DaoConfigs {
 
 	ModelDao modelDao();
 
-	public static DaoConfigs withFolder(Path path) {
+	static DaoConfigs withFolder(Path path) {
 		final var daoFactory = DaoFactory.cpPlus(Set.of(USER_RESOURCES), new FsDsFactory(path));
 		final var configDao = new ConfigDao(daoFactory, ".", ConfigDao.defaultDataHandlers());
 		final var modelDao = new ModelDao(daoFactory, configDao.getCurrentConfigProperty(),

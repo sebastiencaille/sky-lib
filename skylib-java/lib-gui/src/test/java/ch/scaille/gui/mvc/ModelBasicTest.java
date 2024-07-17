@@ -23,7 +23,7 @@ import ch.scaille.javabeans.properties.ObjectProperty;
 
 class ModelBasicTest {
 
-	private class TestGuiModel extends GuiModel {
+	private static class TestGuiModel extends GuiModel {
 
 		private final IntProperty integerProperty = new IntProperty("IntegerProperty", this);
 
@@ -96,7 +96,7 @@ class ModelBasicTest {
 		assertEquals(456, model.integerProperty.getValue());
 		final var errorProperty = (ErrorSet) model.getErrorNotifier();
 		Assertions.assertNotNull(errorProperty.getLastError().getValue().getContent(),
-				() -> "errorProperty.getLastError().getValue().getContent()");
+                "errorProperty.getLastError().getValue().getContent()");
 		assertEquals(ConversionException.class, errorProperty.getLastError().getValue().getContent().getClass());
 	}
 

@@ -28,7 +28,7 @@ public class SeleniumPilot extends ch.scaille.tcwriter.pilot.GuiPilot {
 	}
 	
 	public ElementPilot element(final ExpectedCondition<WebElement> expectedCondition) {
-		return new ElementPilot(this, expectedCondition::apply);
+		return new ElementPilot(this, expectedCondition);
 	}
 
 	public AlertPilot alert() {
@@ -37,10 +37,6 @@ public class SeleniumPilot extends ch.scaille.tcwriter.pilot.GuiPilot {
 
 	/**
 	 * Creates a page (method/constructor that takes a SeleniumPilot as parameter)
-	 * 
-	 * @param <C>
-	 * @param factory
-	 * @return
 	 */
 	public <C extends PagePilot> C page(Function<SeleniumPilot, C> factory) {
 		return factory.apply(this);
@@ -53,9 +49,7 @@ public class SeleniumPilot extends ch.scaille.tcwriter.pilot.GuiPilot {
 	}
 
 	/**
-	 * This api can be used using try.. finally
-	 * @param check
-	 * @return
+	 * This api can be used with try/finally
 	 */
 	public NoExceptionCloseable expectModalDialog(final Function<AlertPilot, PollingResult> check) {
 		final var testThread = Thread.currentThread();

@@ -39,7 +39,7 @@ async function callResult(url: string, init?: RequestInit): Promise<Response> {
 		throw new Error('Unexpected error ' + r.status + ': ' + r.statusText);
 	}
 	return r;
-};
+}
 
 
 /**
@@ -47,7 +47,7 @@ async function callResult(url: string, init?: RequestInit): Promise<Response> {
  */
 async function call(url: string, init?: RequestInit): Promise<object> {
 	return await callResult(url, init).then(r => r.json());
-};
+}
 
 function headers(): HeadersInit {
 	const context = contextProvider.currentContext;
@@ -67,7 +67,7 @@ function wrap(promise: Promise<void | object>): void {
 		}
 		webApiErrorHandler.handle(msg)
 	});
-};
+}
 
 function mapUserContextFromBackend(context: Context) {
 	return {
@@ -142,7 +142,6 @@ function exportCurrentTestCase(format: ExportType, callback: (content: string) =
 }
 
 const WebApis = {
-	Component: Component,
 	loadCurrentContext: loadCurrentContext,
 	validateContext: validateContext,
 	listAllDictionaries: listAllDictionaries,

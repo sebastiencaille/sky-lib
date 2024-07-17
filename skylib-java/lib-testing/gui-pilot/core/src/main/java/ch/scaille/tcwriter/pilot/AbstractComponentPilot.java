@@ -49,16 +49,11 @@ public abstract class AbstractComponentPilot<P extends AbstractComponentPilot<P,
 
 	/**
 	 * Loads a component from the gui
-	 *
-	 * @return
 	 */
 	protected abstract Optional<C> loadGuiComponent();
 
 	/**
-	 * Checks if a component is in a state that allows checking it's state
-	 *
-	 * @param component
-	 * @return
+	 * Checks if a component is in a state that allows checking its state
 	 */
 	protected abstract boolean canCheck(final PollingContext<C> ctxt);
 
@@ -114,8 +109,6 @@ public abstract class AbstractComponentPilot<P extends AbstractComponentPilot<P,
 
 	/**
 	 * Adds a post-action, which is executed once action is finished
-	 *
-	 * @param postExec
 	 */
 	public P addPostExecution(final Consumer<C> postExec) {
 		postExecutions.add(postExec);
@@ -129,13 +122,9 @@ public abstract class AbstractComponentPilot<P extends AbstractComponentPilot<P,
 	 * Executes until condition is true. This method waits for the "action delays"
 	 * and fires the post executions. Use this to method to protect execution of
 	 * actions.
-	 *
-	 * Prefer overriding waitActionSuccessLoop
-	 *
-	 * @param condition
-	 * @param applier
-	 * @param timeout
-	 * @return
+	 * <p>
+	 * Try to override waitActionSuccessLoop instead.
+	 * </p>
 	 */
 	public <V> PollingResult<C, V> waitPollingSuccess(final Polling<C, V> polling) {
 		polling.withExtraDelay(pilot.getActionDelay());
@@ -145,7 +134,7 @@ public abstract class AbstractComponentPilot<P extends AbstractComponentPilot<P,
 			result.setPolling(polling);
 			if (result.isSuccess()) {
 				fired = true;
-				postExecutions.stream().forEach(p -> p.accept(cachedComponent.element));
+				postExecutions.forEach(p -> p.accept(cachedComponent.element));
 			}
 			return result;
 		}
@@ -164,11 +153,6 @@ public abstract class AbstractComponentPilot<P extends AbstractComponentPilot<P,
 	/**
 	 * Loops until the polling is successful. Can be overwritten by custom code
 	 *
-	 * @param <R>          return type
-	 * @param precondition a precondition
-	 * @param applier      action applied on component
-	 * @param reporting    reporting, if action is successful
-	 * @param timeout
 	 * @return a polling result, either successful or failure
 	 */
 	protected <R> PollingResult<C, R> waitPollingSuccessLoop(final Polling<C, R> polling) {
@@ -182,9 +166,6 @@ public abstract class AbstractComponentPilot<P extends AbstractComponentPilot<P,
 	 * Tries to execute the polling
 	 *
 	 * @param <R>          return type
-	 * @param precondition
-	 * @param applier
-	 * @return
 	 */
 	protected <R> Optional<PollingResult<C, R>> executePolling(Poller poller, final Polling<C, R> polling) {
 
@@ -208,10 +189,6 @@ public abstract class AbstractComponentPilot<P extends AbstractComponentPilot<P,
 
 	/**
 	 * Loads and check that the element is valid
-	 * 
-	 * @param <R>
-	 * @param polling
-	 * @return
 	 */
 	protected <R> Optional<PollingResult<C, R>> loadComponent(final Polling<C, R> polling) {
 		if (cachedComponent == null) {

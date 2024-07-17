@@ -16,8 +16,8 @@ import ch.scaille.util.helpers.ClassLoaderHelper;
 import ch.scaille.util.helpers.Logs;
 
 /**
- * Simple template made of a content with place holders (${...}) and properties
- * (place holder as key + value)
+ * Simple template made of a content with placeholders (${...}) and properties
+ * (placeholder as key + value)
  * <p>
  * 	 The {@link GenerationMetadata} allow to pass information about the generation, and can be used the following way:<br>
  *   java: @Generated(value = "${generator}", date = "${generationDate}", comments="${commandLine}")
@@ -33,7 +33,7 @@ public class Template {
 	private String preferredFile;
 
 	public static Template from(final File file) throws IOException {
-		return new Template(new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8));
+		return new Template(Files.readString(file.toPath()));
 	}
 
 	public static Template from(final String resource) throws IOException {
@@ -115,10 +115,6 @@ public class Template {
 
 	/**
 	 * Writes the resulting content in a file
-	 * 
-	 * @param file
-	 * @return
-	 * @throws IOException
 	 */
 	public Path writeTo(final Path path) throws IOException {
 		Logs.of(this).info(() -> "Writing " + path);
@@ -131,9 +127,7 @@ public class Template {
 	/**
 	 * Writes the resulting content in the preferred file
 	 * 
-	 * @param folder
 	 * @return the path of the written file
-	 * @throws IOException
 	 */
 	public Path writeToFolder(final Path folder) throws IOException {
 		if (preferredFile == null) {
@@ -144,9 +138,6 @@ public class Template {
 
 	/**
 	 * Writes the resulting content in a file
-	 * 
-	 * @param file
-	 * @throws IOException
 	 */
 	public void writeTo(final Consumer<String> writer) {
 		writer.accept(generate());
@@ -154,10 +145,6 @@ public class Template {
 
 	/**
 	 * Writes the resulting content in a file
-	 * 
-	 * @param file
-	 * @return
-	 * @throws IOException
 	 */
 	public <U> U writeTo(final Function<String, U> writer) {
 		return writer.apply(generate());
@@ -165,10 +152,6 @@ public class Template {
 
 	/**
 	 * Writes the resulting content in the preferred file
-	 * 
-	 * @param folder
-	 * @return
-	 * @throws IOException
 	 */
 	public <U> U writeTo(final BiFunction<String, String, U> writer) {
 		if (preferredFile == null) {
@@ -188,21 +171,13 @@ public class Template {
 
 	/**
 	 * Adds a value to the current context
-	 * 
-	 * @param key
-	 * @param value
 	 */
 	public void add(final String key, final String value) {
 		properties.put(key, value);
 	}
 
 	/**
-	 * Append value to the value of a context key
-	 *
-	 * @param context
-	 * @param key
-	 * @param valueJavaDTOVisitor
-	 * @return
+	 * Appends a value to the value of a context key
 	 */
 	public static Map<String, String> append(final Map<String, String> context, final String key, final String value) {
 		context.put(key, context.getOrDefault(key, "") + value);
@@ -210,12 +185,7 @@ public class Template {
 	}
 
 	/**
-	 * Append value to the value of a context key, adding a comma if needed
-	 *
-	 * @param context
-	 * @param key
-	 * @param valueJavaDTOVisitor
-	 * @return
+	 * Appends a value to the value of a context key, adding a comma if needed
 	 */
 	public static Map<String, String> appendToList(final Map<String, String> context, final String key,
 			final String value) {

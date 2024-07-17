@@ -20,13 +20,13 @@
 			"activator": "true",
 			"action-function": "input",
 			"output": "IntTransfer",
-			"broadcast-groups": "<list of broadcast groups, optional, comma separated>"
+			"broadcast-groups": "<list of broadcast groups, optional, comma separated>",
 			"input-rules" : [
 				{
 					"uuid": "45d3a926-6e9c-48d1-95d9-6ffc071b8f3d",
 					"input": "IntTransfer",
 					"activator": "true",
-					"transform-function": "flowIn",
+					"transform-function": "flowIn"
 				}
 			],
 			"output-rules" : [

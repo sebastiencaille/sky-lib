@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.EventListener;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -43,7 +44,7 @@ import ch.scaille.util.helpers.StreamExt;
  * is used. <p>
  *
  * @author Sebastien Caille
- *
+ * <p>
  * @param <T> the type of the list's content. T must have an implementation of
  *            the Object.equals method. It is better if an element of the list
  *            can be uniquely identified using Object.equals.
@@ -126,16 +127,6 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 		@Override
 		public void viewUpdated() {
 			ListModelImpl.this.viewUpdated();
-		}
-
-		@Override
-		public void mutates() {
-			// noop
-		}
-
-		@Override
-		public void mutated() {
-			// noop
 		}
 
 		@Override
@@ -357,18 +348,12 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 
 	/**
 	 * Sets a new view on the list
-	 *
-	 * @param newView
 	 */
 	public void setView(final IListView<T> newView) {
 		if (viewProperty.getValue() != null) {
 			viewProperty.getValue().detach(localImpl);
 		}
-		if (newView != null) {
-			viewProperty.setValue(this, newView);
-		} else {
-			viewProperty.setValue(this, ListViews.inherited());
-		}
+        viewProperty.setValue(this, Objects.requireNonNullElseGet(newView, ListViews::inherited));
 		viewProperty.getValue().attach(localImpl);
 		viewUpdated();
 	}
@@ -644,7 +629,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 	/**
 	 * Finds an object in the model, and starts its edition if found
 	 *
-	 * @param sample a sample of the object (must contains the values required to
+	 * @param sample a sample of the object (must contain the values required to
 	 *               find the object)
 	 * @return an object if found, null if not
 	 */
@@ -660,7 +645,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 	/**
 	 * Finds an object in the model, or insert the sample if not found.
 	 *
-	 * @param sample a sample of the object (must contains the values required to
+	 * @param sample a sample of the object (must contain the values required to
 	 *               find the object)
 	 * @return an object if found, the sample if not found
 	 */
@@ -675,10 +660,10 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 	}
 
 	/**
-	 * Finds an object in the model, starting it's edition, or insert the sample if
+	 * Finds an object in the model, starting its edition, or insert the sample if
 	 * not found.
 	 *
-	 * @param sample a sample of the object (must contains the values required to
+	 * @param sample a sample of the object (must contain the values required to
 	 *               find the object)
 	 * @return an object if found, the sample if not found
 	 */

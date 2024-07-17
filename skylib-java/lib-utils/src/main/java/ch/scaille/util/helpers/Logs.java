@@ -29,12 +29,12 @@ public interface Logs {
 			private StringBuilder builder = new StringBuilder();
 
 			@Override
-			public void write(char[] cbuf, int off, int len) throws IOException {
+			public void write(char[] cbuf, int off, int len) {
 				builder.append(cbuf, off, len);
 			}
 
 			@Override
-			public void flush() throws IOException {
+			public void flush() {
 				if (logger.isLoggable(level)) {
 					logger.log(level, builder.toString());
 				}
@@ -42,7 +42,7 @@ public interface Logs {
 			}
 
 			@Override
-			public void close() throws IOException {
+			public void close() {
 				flush();
 			}
 

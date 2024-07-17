@@ -10,7 +10,7 @@ This POC is about business oriented test writing (how to write test cases that a
 ![TC Writer](screenshots/TC_Writer.png)
 
 ## GUI library
-The testing POC is also used to test a MVC POC (to simplify the code of complex GUIs).   
+The testing POC is also used to test an MVC POC (to simplify the code of complex GUIs).   
 [[Details here](skylib-java)]
 ![Java lib](screenshots/java_lib.png)
 

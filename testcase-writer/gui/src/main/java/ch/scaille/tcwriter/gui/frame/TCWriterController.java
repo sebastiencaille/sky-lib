@@ -104,7 +104,7 @@ public class TCWriterController extends GuiController {
 		return gui;
 	}
 
-	public void editConfig() throws IOException {
+	public void editConfig() {
 		final var configEditorDialog = new SwingGenericEditorDialog(gui, "Configuration", ModalityType.DOCUMENT_MODAL);
 		final var editorPropertySupport = PropertyChangeSupportController.mainGroup(configEditorDialog);
 		final var errorProp = new ErrorSet("Error", editorPropertySupport);
@@ -148,7 +148,7 @@ public class TCWriterController extends GuiController {
 			addAfter = model.getSelectedStep().getValue();
 		} else {
 			final List<TestStep> steps = testCase.getSteps();
-			addAfter = steps.get(steps.size() - 1);
+			addAfter = steps.getLast();
 		}
 
 		final var newStep = addAfter.duplicate();

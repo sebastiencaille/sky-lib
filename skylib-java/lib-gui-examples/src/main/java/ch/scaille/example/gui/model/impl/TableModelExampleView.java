@@ -49,7 +49,7 @@ public class TableModelExampleView extends JFrame {
 		listTable.setName("listTable");
 		listTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
-		// The first row will fills the remaining space up to 100% of the width, the
+		// The first row will fill the remaining space up to 100% of the width, the
 		// second one will have a fixed width of 50px
 		final var columnModel = new PolicyTableColumnModel<TestObjectTableModel.Columns>(
 				listTable);
@@ -59,7 +59,7 @@ public class TableModelExampleView extends JFrame {
 						.with(new DefaultTableCellRenderer()));
 		columnModel
 				.configureColumn(TableColumnWithPolicy
-						.fixedTextWidth(TestObjectTableModel.Columns.A_SECOND_VALUE, 1,
+						.fixedTextLength(TestObjectTableModel.Columns.A_SECOND_VALUE, 1,
 								TableColumnWithPolicy.SAMPLE_NUMBERS, TableColumnWithPolicy.DEFAULT_MARGIN)
 						.with(new DefaultTableCellRenderer()));
 

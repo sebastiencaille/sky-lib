@@ -38,7 +38,7 @@ public class ClassPathDao<T> extends AbstractSerializationDao<T> {
 	}
 
 	@Override
-	protected ResourceMetaData resolve(String locator) throws IOException {
+	protected ResourceMetaData resolve(String locator) {
 		if (!resourcePathWhiteListed && whiteList.stream().noneMatch(locator::startsWith)) {
 			throw unableToIdentifyException(locator, resourcePath + locator, "not in white-list");
 		}
@@ -58,22 +58,22 @@ public class ClassPathDao<T> extends AbstractSerializationDao<T> {
 	}
 
 	@Override
-	protected Resource<T> resolveOrCreate(String locator) throws IOException {
+	protected Resource<T> resolveOrCreate(String locator) {
 		throw JavaExt.notImplemented();
 	}
 
 	@Override
-	public Resource<T> saveOrUpdate(String locator, T value) throws StorageException {
+	public Resource<T> saveOrUpdate(String locator, T value) {
 		throw JavaExt.notImplemented();
 	}
 
 	@Override
-	public Resource<T> saveOrUpdate(Resource<T> value) throws StorageException {
+	public Resource<T> saveOrUpdate(Resource<T> value) {
 		throw JavaExt.notImplemented();
 	}
 
 	@Override
-	protected Resource<String> writeRaw(Resource<String> resource) throws StorageException {
+	protected Resource<String> writeRaw(Resource<String> resource) {
 		throw JavaExt.notImplemented();
 	}
 

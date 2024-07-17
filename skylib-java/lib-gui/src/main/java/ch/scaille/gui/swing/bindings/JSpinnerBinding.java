@@ -1,5 +1,7 @@
 package ch.scaille.gui.swing.bindings;
 
+import java.util.Objects;
+
 import javax.swing.JSpinner;
 
 import ch.scaille.gui.mvc.ComponentBindingAdapter;
@@ -21,11 +23,7 @@ public class JSpinnerBinding<T extends Number> extends ComponentBindingAdapter<T
 
 	@Override
 	public void setComponentValue(final AbstractProperty source, final T value) {
-		if (value != null) {
-			spinner.setValue(value);
-		} else {
-			spinner.setValue(0);
-		}
+        spinner.setValue(Objects.requireNonNullElse(value, 0));
 	}
 
 	@Override

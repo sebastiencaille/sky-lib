@@ -9,7 +9,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import ch.scaille.util.text.FormatterHelper;
 
-@SuppressWarnings("serial")
 public class SizeRenderer extends DefaultTableCellRenderer {
 
 	private final BiConsumer<Long, Component> componentTuning;

@@ -34,11 +34,8 @@ public class Binding extends WithId {
 		}
 
 		/**
-		 * Adds an access to an external adapter. The adapter will be called before the
+		 * Allows accessing an external adapter. The adapter will be called before the
 		 * conditions if needed.
-		 * 
-		 * @param adapter
-		 * @return
 		 */
 		public Builder withExternalData(final ExternalAdapter adapter) {
 			adapters.add(adapter);

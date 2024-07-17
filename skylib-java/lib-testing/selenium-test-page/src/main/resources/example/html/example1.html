@@ -20,7 +20,7 @@
 			
 			const elementChangeTest = function() {
 				console.log("ElementChangeTest");
-				var elementChangeHolder = document.getElementById('ElementChangeHolder');
+				const elementChangeHolder = document.getElementById('ElementChangeHolder');
 				setTimeout(() => {
 					console.log("ElementChangeTest change 1"); 
 					elementChangeHolder.insertAdjacentHTML('beforeend', '<div id="ElementChange"><div id="TextChange">Hello</div></div>');
@@ -36,8 +36,8 @@
 	</head>
 	<body>
 		<button id="EnableTest" onclick="enableTest()">EnableTest</button>
-		<button id="AlertTest" disabled="true" onClick="alertTest()")>AlertTest</button>
-		<button id="ElementChangeTest" onclick="elementChangeTest()")>ElementChangeTest</button>
+		<button id="AlertTest" disabled="" onClick="alertTest()">AlertTest</button>
+		<button id="ElementChangeTest" onclick="elementChangeTest()">ElementChangeTest</button>
 		<div id="ElementChangeHolder">
 		</div>
 	</body>

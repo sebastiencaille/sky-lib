@@ -1,6 +1,5 @@
 package ch.scaille.tcwriter.server.dao;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -9,7 +8,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.persistence.IModelDao;
-import ch.scaille.util.persistence.StorageRTException;
 
 public class DictionaryDao extends AbstractDao implements IDictionaryDao {
 
@@ -23,11 +21,7 @@ public class DictionaryDao extends AbstractDao implements IDictionaryDao {
 
     @Override
     public List<Metadata> listAll() {
-        try {
-            return modelDao.listDictionaries();
-        } catch (IOException e) {
-            throw new StorageRTException("Unable to list dictionaries", e);
-        }
+        return modelDao.listDictionaries();
     }
 
     @Override

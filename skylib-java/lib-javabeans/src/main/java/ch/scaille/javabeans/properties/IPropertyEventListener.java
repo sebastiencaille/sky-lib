@@ -17,7 +17,7 @@ public interface IPropertyEventListener extends EventListener {
 	 * Called before the value is set
 	 * 
 	 * @param caller   the caller
-	 * @param property the modified property
+	 * @param event the modified property
 	 */
 	void propertyModified(Object caller, PropertyEvent event);
 

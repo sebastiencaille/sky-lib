@@ -35,17 +35,17 @@ public interface IListModelDelegate<T> {
 	/**
 	 * Finds an object in the model, and starts its edition if found
 	 *
-	 * @param sample a sample of the object (must contains the values required to
+	 * @param sample a sample of the object (must contain the values required to
 	 *               find the object)
 	 * @return an object if found, null if not
 	 */
 	IEdition<T> findForEdition(T sample);
 
 	/**
-	 * Finds an object in the model, starting it's edition, or insert the sample if
+	 * Finds an object in the model, starting its edition, or insert the sample if
 	 * not found.
 	 *
-	 * @param sample a sample of the object (must contains the values required to
+	 * @param sample a sample of the object (must contain the values required to
 	 *               find the object)
 	 * @return an object if found, the sample if not found
 	 */

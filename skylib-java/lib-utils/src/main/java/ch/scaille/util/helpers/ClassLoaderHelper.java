@@ -2,6 +2,7 @@ package ch.scaille.util.helpers;
 
 import static java.util.stream.Collectors.joining;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -12,7 +13,7 @@ import java.util.stream.Stream;
 
 public class ClassLoaderHelper {
 
-	private static final String CP_SEPARATOR = System.getProperty("path.separator");
+	private static final String CP_SEPARATOR = File.pathSeparator;
 
 	private ClassLoaderHelper() {
 	}
@@ -36,7 +37,7 @@ public class ClassLoaderHelper {
 		final var cp = System.getProperty("java.class.path").split(CP_SEPARATOR);
 		return Arrays.stream(cp)
 				.map(LambdaExt.uncheckedF(jar -> Paths.get(jar).toUri().toURL()))
-				.toArray(c -> new URL[c]);
+				.toArray(URL[]::new);
 	}
 
 	public static URL[] threadClassPath() {

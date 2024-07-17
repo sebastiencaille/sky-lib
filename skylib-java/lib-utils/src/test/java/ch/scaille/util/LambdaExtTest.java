@@ -29,8 +29,8 @@ class LambdaExtTest {
 	@Test
 	void testCompile() throws MalformedURLException {
 		LambdaExt.uncheckedR(this::url);
-		Optional.of(STR).ifPresent(LambdaExt.uncheckedC(u -> consumeUrl(u)));
-		Assertions.assertEquals(url(), LambdaExt.uncheck(() -> url()));
+		Optional.of(STR).ifPresent(LambdaExt.uncheckedC(this::consumeUrl));
+		Assertions.assertEquals(url(), LambdaExt.uncheck(this::url));
 		Assertions.assertEquals(Optional.of(url()), Optional.of(STR).map(LambdaExt.uncheckedF(u -> url())));
 
 		LambdaExt.uncheckedR(this::url);

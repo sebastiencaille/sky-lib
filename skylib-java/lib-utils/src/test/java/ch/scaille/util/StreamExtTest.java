@@ -4,8 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,14 +16,14 @@ class StreamExtTest {
 
 	@Test
 	void singleTest() {
-		Collections.singletonList(1).stream().collect(StreamExt.single()).orElseThrow(WrongCountException::new);
+		Stream.of(1).collect(StreamExt.single()).orElseThrow(WrongCountException::new);
 		try {
-			Collections.emptyList().stream().collect(StreamExt.single()).orElseThrow(WrongCountException::new);
+			Stream.empty().collect(StreamExt.single()).orElseThrow(WrongCountException::new);
 		} catch (final Exception e) {
 			assertEquals("Wrong count: 0", e.getMessage());
 		}
 		try {
-			List.of(1, 2).stream().collect(StreamExt.single()).orElseThrow(WrongCountException::new);
+			Stream.of(1, 2).collect(StreamExt.single()).orElseThrow(WrongCountException::new);
 		} catch (final Exception e) {
 			assertEquals("Wrong count: 2", e.getMessage());
 		}
@@ -33,15 +32,13 @@ class StreamExtTest {
 	@Test
 	void zeroOrOneTest() {
 
-		final var zeroOrOne1 = Collections.singletonList(1)
-				.stream()
+		final var zeroOrOne1 = Stream.of(1)
 				.collect(StreamExt.zeroOrOne())
 				.optionalOrThrow(WrongCountException::new);
-		assertTrue(zeroOrOne1.isPresent(), () -> "zeroOrOne1.isPresent()");
+		assertTrue(zeroOrOne1.isPresent(), "zeroOrOne1.isPresent()");
 		assertEquals(Integer.valueOf(1), zeroOrOne1.get());
 
-		final var zeroOrOne2 = Collections.<Integer>emptyList()
-				.stream()
+		final var zeroOrOne2 = Stream.empty()
 				.collect(StreamExt.zeroOrOne())
 				.optionalOrThrow(WrongCountException::new);
 		assertFalse(zeroOrOne2.isPresent());
@@ -51,7 +48,7 @@ class StreamExtTest {
 	}
 
 	private Integer testWith2Values() {
-		return List.of(1, 2).stream().collect(StreamExt.zeroOrOne()).orElseThrow(WrongCountException::new);
+		return Stream.of(1, 2).collect(StreamExt.zeroOrOne()).orElseThrow(WrongCountException::new);
 	}
 
 }

@@ -1,7 +1,10 @@
 package ch.scaille.tcwriter.pilot.factories;
 
+import static java.util.Comparator.comparing;
+
 import java.util.stream.Collectors;
 
+import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
 import ch.scaille.util.dao.metadata.DataObjectManagerFactory;
 
 public interface Reporting {
@@ -33,7 +36,7 @@ public interface Reporting {
 						.getAttributes()
 						.stream() //
 						.filter(a -> a.getValueOf(value) != null) //
-						.sorted((a1, a2) -> a1.getName().compareTo(a2.getName())) //
+						.sorted(comparing(AbstractAttributeMetaData::getName)) //
 						.map(a -> a.getName() + ": " + a.getValueOf(value)) //
 						.collect(Collectors.joining(", "))
 				+ "]";

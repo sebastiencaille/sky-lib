@@ -42,9 +42,6 @@ public interface SwingExt {
 
 	/**
 	 * Bridge between ActionListener and Lambda function
-	 * 
-	 * @param consumer
-	 * @return
 	 */
 	static ActionListener action(Consumer<ActionEvent> consumer) {
 		return consumer::accept;
@@ -52,9 +49,6 @@ public interface SwingExt {
 
 	/**
 	 * Bridge between ActionListener and Lambda function
-	 * 
-	 * @param consumer
-	 * @return
 	 */
 	static ActionListener action(Runnable runnable) {
 		return e -> runnable.run();

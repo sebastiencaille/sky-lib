@@ -31,7 +31,6 @@ public class ModelClassProcessor {
 		private final URLClassFinder classFinder;
 		private final Map<String, String> properties = new HashMap<>();
 		private final Set<String> imports = new HashSet<>();
-		private final Map<String, String> generatedConstants = new HashMap<>();
 
 		public GeneratorContext(URLClassFinder classFinder) {
 			this.classFinder = classFinder;
@@ -56,7 +55,6 @@ public class ModelClassProcessor {
 		public void reset() {
 			imports.clear();
 			properties.clear();
-			generatedConstants.clear();
 		}
 		
 	}
@@ -144,10 +142,6 @@ public class ModelClassProcessor {
 
 	/**
 	 * Creates attributes related constants and declarations
-	 *
-	 * @param gen
-	 * @param metaData
-	 * @throws IOException
 	 */
 	protected void addAttributesDeclarations(final UntypedDataObjectMetaData metaData) {
 
@@ -166,7 +160,7 @@ public class ModelClassProcessor {
 
 	protected void forEachAttribute(final UntypedDataObjectMetaData metaData,
 			final Consumer<AbstractAttributeMetaData<?>> attributeApplier) {
-		metaData.getAttributes().stream().filter(this::includeAttribute).forEach(attributeApplier::accept);
+		metaData.getAttributes().stream().filter(this::includeAttribute).forEach(attributeApplier);
 	}
 
 	protected String generateLoadFrom(final AbstractAttributeMetaData<?> attrib) {
@@ -193,7 +187,6 @@ public class ModelClassProcessor {
 		final var gen = JavaCodeGenerator.inMemory();
 		final var constant = toConstant(attrib.getName());
 		final var fieldConstant = constant + "_FIELD";
-		context.generatedConstants.put(fieldConstant, attrib.getCodeName());
 		gen.appendIndentedLine("private static final Field " + fieldConstant + ';');
 		gen.eol();
 

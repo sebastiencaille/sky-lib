@@ -47,7 +47,7 @@ public class ElementPilot extends AbstractComponentPilot<ElementPilot, WebElemen
 
 	@Override
 	protected Optional<WebElement> loadGuiComponent() {
-		return Optional.ofNullable(locator.apply(pilot.getDriver()));
+        return Optional.ofNullable(locator).map(l -> l.apply(pilot.getDriver()));
 	}
 
 	@Override

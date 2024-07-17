@@ -43,9 +43,6 @@ public class TestCaseRecorder implements ITestCaseRecorder {
 
     /**
      * Creates a recorder
-     *
-     * @param modelDao
-     * @throws IOException
      */
     public TestCaseRecorder(final IModelDao modelDao, String tcDictionary) throws IOException {
         this.tcDictionary = modelDao.readTestDictionary(tcDictionary).orElseThrow(() -> new FileNotFoundException(tcDictionary));
@@ -161,7 +158,7 @@ public class TestCaseRecorder implements ITestCaseRecorder {
 
     @Override
     public void recordReturnValue(final Object reference) {
-        final var currentStep = testSteps.get(testSteps.size() - 1);
+        final var currentStep = testSteps.getLast();
         final var paramFactory = currentStep.asNamedReference("ref" + currentStep.getOrdinal(),
                 "Value of step " + currentStep.getOrdinal());
         final var paramValue = new ExportableTestParameterValue("<placeHolder>", paramFactory,

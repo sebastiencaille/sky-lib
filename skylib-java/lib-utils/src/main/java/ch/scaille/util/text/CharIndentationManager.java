@@ -11,11 +11,7 @@ public class CharIndentationManager implements IIndentationManager {
 	}
 
 	public CharIndentationManager(final char c, final int length) {
-		final var builder = new StringBuilder();
-		for (int i = 0; i < length; i++) {
-			builder.append(c);
-		}
-		indentationLevel = builder.toString();
+		indentationLevel = String.valueOf(c).repeat(Math.max(0, length));
 	}
 
 	@Override

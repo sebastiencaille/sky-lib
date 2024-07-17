@@ -6,15 +6,12 @@ import ch.scaille.util.helpers.LambdaExt;
 public interface FailureHandlers {
 	/*************************** Failure handlers ***************************/
 
-	public interface FailureHandler<C, V> {
+    interface FailureHandler<C, V> {
 		void apply(PollingResult<C, V> result);
 	}
 
 	/**
 	 * Fails using some text
-	 *
-	 * @param actionDescr
-	 * @return
 	 */
 	static <C, V> FailureHandler<C, V> throwError(final String actionDescr) {
 		return r -> {
@@ -25,8 +22,6 @@ public interface FailureHandlers {
 
 	/**
 	 * Throws an AssertionError
-	 *
-	 * @return
 	 */
 	static <C, V> FailureHandler<C, V> throwError() {
 		return r -> {
@@ -41,33 +36,24 @@ public interface FailureHandlers {
 
 	/**
 	 * Only reports error and return a null value
-	 *
-	 * @param actionDescr
-	 * @return
 	 */
-	static <C, V> FailureHandler<C, V> reportFailure(final String report) {
+	static <C, V> FailureHandler<C, V> reportFailure(final String reportLine) {
 		return result -> result.getGuiPilot()
 				.getActionReport()
-				.report(result.getComponentDescription() + ": " + report);
+				.report(result.getComponentDescription() + ": " + reportLine);
 	}
 
 	/**
 	 * Only reports error and return FALSE
-	 *
-	 * @param actionDescr
-	 * @return
 	 */
-	static <C, V> FailureHandler<C, V> reportNotSatisfied(final String report) {
+	static <C, V> FailureHandler<C, V> reportNotSatisfied(final String reportLine) {
 		return result -> result.getGuiPilot()
 				.getActionReport()
-				.report(result.getComponentDescription() + ": " + report);
+				.report(result.getComponentDescription() + ": " + reportLine);
 	}
 
 	/**
 	 * Do nothing on error
-	 *
-	 * @param actionDescr
-	 * @return
 	 */
 	static <C, V> FailureHandler<C, V> ignoreFailure() {
 		return result -> LambdaExt.doNothing();

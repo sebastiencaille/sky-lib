@@ -21,6 +21,6 @@ public class JavaTestGenerator {
         final var modelDao = exampleHelper.getModelDao();
         modelDao.writeTestDictionary(model);
         modelDao.writeTestCase(ExampleHelper.TC_NAME, testCase);
-        new TestCaseToJava(modelDao).generate(testCase, generationMetadata).writeTo(uncheckedC(tc -> modelDao.writeTestCaseCode(ExampleHelper.TC_NAME, tc)));
+        new TestCaseToJava(modelDao).generate(testCase, generationMetadata).writeTo(uncheckedC(tc -> modelDao.writeTestCaseCode(ExampleHelper.TC_NAME + ".java", tc)));
     }
 }

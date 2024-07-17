@@ -6,7 +6,6 @@ import java.text.NumberFormat;
 
 import javax.swing.JTable;
 
-@SuppressWarnings("serial")
 public class RatioRenderer extends PercentRenderer {
 
 	@Override

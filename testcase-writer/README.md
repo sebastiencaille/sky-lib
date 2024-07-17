@@ -24,16 +24,15 @@ Some selectors could be "create", "find", "current"
 Let's consider that we have the data data1 and data2  
 By combining the actions, we can
 
-Code | Meaning
----- | ------- 
-edit(create(i1), data2) | Creates an item i1 and fills it using data2 
-edit(current(), data1)  | Edits the selected item (i1) and fills it using data1 
-edit(create(i2), data2) | Creates an item i2 and fills it using data2 
-check(find(i1), data1)  | Checks that the content of i1 has data1 
-check(find(i2), data2)  | Checks that the content of i2 has data2 
-delete(find(i1))        | Deletes i1 
-delete(find(i2))        | Deletes i2
-
+| Code                    | Meaning                                               |
+|-------------------------|-------------------------------------------------------|
+| edit(create(i1), data2) | Creates an item i1 and fills it using data2           |
+| edit(current(), data1)  | Edits the selected item (i1) and fills it using data1 |
+| edit(create(i2), data2) | Creates an item i2 and fills it using data2           |
+| check(find(i1), data1)  | Checks that the content of i1 has data1               |
+| check(find(i2), data2)  | Checks that the content of i2 has data2               |
+| delete(find(i1))        | Deletes i1                                            |
+| delete(find(i2))        | Deletes i2                                            |
 
 [[Code](examples/src/main/java/ch/scaille/tcwriter/examples/api/interfaces)] / [[Testcase Writer Tests](gui-it/src/main/java/ch/scaille/tcwriter/it)]  
 ```java
@@ -108,18 +107,18 @@ customer.checkPackage(deliveredItem(), coffeeMachine());
 # Business expert test cases
 We can transform the dev's test case into a more readable form by using the annotations attached to the Roles/Actions/Selectors/Parameters   
 
-Actor | Action | Selector | Parameter
------ | ------ | -------- | ---------
-A customer     | Buy an item                      | On internet| A coffee machine 
-A delivery guy | Deliver an item                  |            |
-A customer     | Check that the delivered item is |            | A coffee machine 
+| Actor          | Action                           | Selector    | Parameter        |
+|----------------|----------------------------------|-------------|------------------|
+| A customer     | Buy an item                      | On internet | A coffee machine |
+| A delivery guy | Deliver an item                  |             |                  |
+| A customer     | Check that the delivered item is |             | A coffee machine |
 
 This formalism should allow
 * writing a test cases using a GUI based application. The application may allow the user to select (based on the actions' signature)
 1. An Actor ("A customer")
-1. Based on the selected Actor's Role, an Action ("Buy an item")
-1. Based on the selected Action, a Selector ("On internet")
-1. Based on the selected Action, a parameter ("A coffee machine")
+2. Based on the selected Actor's Role, an Action ("Buy an item")
+3. Based on the selected Action, a Selector ("On internet")
+4. Based on the selected Action, a parameter ("A coffee machine")
   
 * generating "readable" test reports (also based on the annotations attached to the Roles/Actions/Selectors/Parameters)
 

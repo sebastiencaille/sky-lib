@@ -6,7 +6,7 @@ import ch.scaille.javabeans.properties.AbstractProperty.ErrorNotifier;
 /**
  * To tune the properties.
  * <p>
- * Can be used through static calls, or through instance (such as
+ * Can be used through static calls, or through instance, such as
  * Properties.of(property).persistent(...)...
  *
  * @author Sebastien Caille

@@ -1,7 +1,5 @@
 package ch.scaille.util.persistence.handlers;
 
-import java.io.IOException;
-
 public class TextStorageHandler implements IStorageDataHandler {
 
 	public static final String TEXT_MIMETYPE = "application/text";
@@ -22,7 +20,7 @@ public class TextStorageHandler implements IStorageDataHandler {
 	}
 
 	@Override
-	public <T> String encode(Class<T> targetType, T value) throws IOException {
+	public <T> String encode(Class<T> targetType, T value) {
 		if (!String.class.equals(targetType)) {
 			throw new IllegalStateException("Expected String target, got " + targetType);
 		}
@@ -30,7 +28,7 @@ public class TextStorageHandler implements IStorageDataHandler {
 	}
 
 	@Override
-	public <T> T decode(String value, Class<T> targetType) throws IOException {
+	public <T> T decode(String value, Class<T> targetType) {
 		if (!String.class.equals(targetType)) {
 			throw new IllegalStateException("Expected String target, got " + targetType);
 		}

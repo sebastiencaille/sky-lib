@@ -232,7 +232,7 @@ class ListModelBasicTest {
 	}
 
 	private void checkModel(final ListModel<TestObject> model, final int... expected) {
-		assertEquals(expected.length, model.getSize(), () -> "size");
+		assertEquals(expected.length, model.getSize(), "size");
 		final var current = new int[model.getSize()];
 		for (int i = 0; i < current.length; i++) {
 			current[i] = model.getValueAt(i).getVal();
@@ -241,7 +241,7 @@ class ListModelBasicTest {
 	}
 
 	private void checkModel(final JTable table, final int... expected) {
-		Assertions.assertEquals(expected.length, table.getRowCount(), () -> "size");
+		Assertions.assertEquals(expected.length, table.getRowCount(), "size");
 		final var current = new int[table.getRowCount()];
 		for (int i = 0; i < current.length; i++) {
 			current[i] = (int) table.getValueAt(i, 0);

@@ -89,11 +89,6 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 
 	/**
 	 * Creates a column with a pixel based width
-	 * 
-	 * @param <C>
-	 * @param column
-	 * @param fixedWidth
-	 * @return
 	 */
 	public static <C extends Enum<C>> TableColumnWithPolicy<C> fixedWidth(final C column, final int fixedWidth) {
 		return new FixedWidthColumn<>(column, fixedWidth);
@@ -128,30 +123,25 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 	/**
 	 * Creates a column with a text based width, the width of a char being based on
 	 * the lorem ipsum and the table's font
-	 * 
-	 * @param <C>
-	 * @param column
-	 * @param fixedTextWidth
-	 * @return
 	 */
-	public static <C extends Enum<C>> TableColumnWithPolicy<C> fixedTextWidth(final C column,
-			final int fixedTextWidth) {
-		return fixedTextWidth(column, fixedTextWidth, SAMPLE_LOREM_IPSUM, DEFAULT_MARGIN);
+	public static <C extends Enum<C>> TableColumnWithPolicy<C> fixedTextLength(final C column,
+																			   final int fixedTextWidth) {
+		return fixedTextLength(column, fixedTextWidth, SAMPLE_LOREM_IPSUM, DEFAULT_MARGIN);
 	}
 
 	/**
 	 * Creates a column with a text based width, the width of a char being based on
-	 * referenceText and the table's font
+	 * sample and the table's font
 	 * 
-	 * @param <C>
-	 * @param column
-	 * @param fixedTextWidth
-	 * @param referenceText
-	 * @return
+	 * @param <C> the column's enum
+	 * @param column the column
+	 * @param fixedTextLength the length of the text
+	 * @param sample a sample used to compute the mean char width
+	 * @return the column policy
 	 */
-	public static <C extends Enum<C>> TableColumnWithPolicy<C> fixedTextWidth(final C column, final int fixedTextWidth,
-			String sample, Margin margins) {
-		return new FixedTextWidthColumn<>(column, fixedTextWidth, sample, margins);
+	public static <C extends Enum<C>> TableColumnWithPolicy<C> fixedTextLength(final C column, final int fixedTextLength,
+																			   String sample, Margin margins) {
+		return new FixedTextWidthColumn<>(column, fixedTextLength, sample, margins);
 	}
 
 	protected static class PercentOfTableWidthColumn<C extends Enum<C>> extends TableColumnWithPolicy<C> {
@@ -174,11 +164,6 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 
 	/**
 	 * Creates a column based on a fraction of the table's width
-	 * 
-	 * @param <C>
-	 * @param column
-	 * @param percent
-	 * @return
 	 */
 	public static <C extends Enum<C>> TableColumnWithPolicy<C> percentOfTableWidth(final C column, final int percent) {
 		return new PercentOfTableWidthColumn<>(column, percent);
@@ -208,11 +193,6 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 	/**
 	 * Creates a column based on a fraction of the unused space (that is, not
 	 * allocated by another policy)
-	 * 
-	 * @param <C>
-	 * @param column
-	 * @param percent
-	 * @return
 	 */
 	public static <C extends Enum<C>> TableColumnWithPolicy<C> percentOfAvailableSpace(final C column,
 			final int percent) {

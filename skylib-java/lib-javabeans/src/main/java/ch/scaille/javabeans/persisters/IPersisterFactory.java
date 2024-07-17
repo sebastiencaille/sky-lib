@@ -13,11 +13,11 @@ public interface IPersisterFactory<T, A> {
 
 	IPersister<A> asPersister(final IObjectProvider<T> object);
 	
-	public interface IObjectProvider<T> {
+	interface IObjectProvider<T> {
 		T getObject();
 	}
 
-	public static class ObjectHolder<T> implements IObjectProvider<T> {
+	class ObjectHolder<T> implements IObjectProvider<T> {
 		private T object;
 
 		@Override

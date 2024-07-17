@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -45,14 +44,11 @@ public class FileSystemDao<T> extends AbstractSerializationDao<T> {
 	 * 
 	 * @param locator empty to use basePath, null to list
 	 * @return a stream of metadata
-	 * @throws IOException
 	 */
 	private Stream<ResourceMetaData> inFolder(String locator) throws IOException {
-		if (!Files.isDirectory(basePath)) {
+		if (locator != null && locator.isEmpty() && !Files.isDirectory(basePath)) {
 			// basePath points to a file
-			return Collections
-					.singleton(buildAndValidateMetadata(basePath.getFileName().toString(), basePath.toString()))
-					.stream();
+			return Stream.of(buildAndValidateMetadata(basePath.getFileName().toString(), basePath.toString()));
 		}
 		final Path folder;
 		final String filter;
@@ -69,8 +65,9 @@ public class FileSystemDao<T> extends AbstractSerializationDao<T> {
 			filter = null;
 		}
 		if (!Files.exists(folder)) {
-			return Collections.<ResourceMetaData>emptyList().stream();
+			return Stream.empty();
 		}
+		// Closed by caller
 		return Files.list(folder)
 				// basic filter
 				.filter(f -> filter == null || f.getFileName().toString().startsWith(filter))

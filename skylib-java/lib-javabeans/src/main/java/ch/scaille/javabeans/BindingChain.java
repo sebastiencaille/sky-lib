@@ -67,7 +67,7 @@ public class BindingChain implements IBindingController {
 			private LinkToComponent(final IComponentBinding<T> newBinding) {
 				this.newBinding = newBinding;
 
-				newBinding.addComponentValueChangeListener(new IComponentLink<T>() {
+				newBinding.addComponentValueChangeListener(new IComponentLink<>() {
 					@Override
 					public void setValueFromComponent(final Object component, final T componentValue) {
 						if (veto != null && !veto.mustSendToProperty(BindingChain.this)) {
@@ -153,10 +153,7 @@ public class BindingChain implements IBindingController {
 		}
 
 		/**
-		 * @param<N> type of the next converter
-		 *
-		 * @param link
-		 * @return
+		 * @param <N> type of the next converter
 		 */
 		public <N> EndOfChain<N> bind(final IConverter<T, N> link) {
 			link.initialize(getProperty());
@@ -166,10 +163,7 @@ public class BindingChain implements IBindingController {
 		}
 
 		/**
-		 * @param N         next type
-		 * @param prop2Comp
-		 * @param comp2Prop
-		 * @return
+		 * @param <N> type of the next converter
 		 */
 		public <N> EndOfChain<N> bind(final Function<T, N> prop2Comp, final Function<N, T> comp2Prop) {
 			links.add(link(value -> prop2Comp.apply((T) value), value -> comp2Prop.apply((N) value)));
@@ -177,10 +171,7 @@ public class BindingChain implements IBindingController {
 		}
 
 		/**
-		 * @param N         next type
-		 * @param prop2Comp
-		 * @param comp2Prop
-		 * @return
+		 * @param <N> type of the next converter
 		 */
 		public <N> EndOfChain<N> bind(final Function<T, N> prop2Comp) {
 			links.add(link(value -> prop2Comp.apply((T) value), value -> {
@@ -246,7 +237,7 @@ public class BindingChain implements IBindingController {
 	 * Binds to the property
 	 * @param <T> the type of the property
 	 * @param propertySetter the property setter that must be called then setting the value coming from the components
-	 * @return a end of chain, to dynamically control the chain
+	 * @return an end of chain, to dynamically control the chain
 	 */
 	public <T> EndOfChain<T> bindProperty(final BiConsumer<Object, T> propertySetter) {
 		property.addListener(valueUpdateListener);
@@ -292,8 +283,8 @@ public class BindingChain implements IBindingController {
 	@Override
 	public void unbind() {
 		property.removeListener(valueUpdateListener);
-		dependencies.stream().forEach(IBindingChainDependency::unbind);
-		links.stream().forEach(Link::unbind);
+		dependencies.forEach(IBindingChainDependency::unbind);
+		links.forEach(Link::unbind);
 	}
 
 	@Override

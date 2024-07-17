@@ -10,15 +10,7 @@ public final class BindingDependencies {
 
 	private BindingDependencies() {
 	}
-
-	/**
-	 * Restores the selection once some properties are fired.
-	 * <p>
-	 *
-	 * @param property the property that contains the selection to restore
-	 * @return an action
-	 */
-
+	
 	public static class PreserveOnUpdateOfListModel<T> implements IBindingChainDependency, IListModelListener<T> {
 
 		private final ch.scaille.gui.model.ListModel<T> model;
@@ -81,6 +73,9 @@ public final class BindingDependencies {
 
 	}
 
+	/**
+	 * Restores the selection once some properties are fired.
+	 */
 	public static <T> IBindingChainDependency preserveOnUpdateOf(final ListModel<T> model) {
 		return new PreserveOnUpdateOfListModel<>(model);
 	}

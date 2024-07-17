@@ -51,6 +51,25 @@ public class TestCaseFacade extends AbstractFacade {
 	}
 
 	public void executeTest(final ExportableTestCase loadedTC, Consumer<StepStatus> feedback) {
+		final var testRemoteControl = getTestRemoteControl(feedback);
+
+		final var tcpPort = testRemoteControl.prepare();
+		Path tempDir;
+		try {
+			tempDir = Files.createTempDirectory("tc-writer");
+		} catch (IOException e) {
+			throw new IllegalStateException("Web call execution failed", e);
+		}
+		try (var config = new ITestExecutor.TestConfig(loadedTC, tempDir, tcpPort)) {
+			testExecutor.startTest(config);
+			testRemoteControl.controlTest(loadedTC.getSteps().size());
+		} catch (IOException | InterruptedException | TestCaseException e) {
+			Thread.interrupted();
+			throw new WebRTException(e);
+		}
+	}
+
+	private static TestRemoteControl getTestRemoteControl(Consumer<StepStatus> feedback) {
 		final var testRemoteControl = new TestRemoteControl(10_000, new TestExecutionListener() {
 			@Override
 			public void testRunning(boolean running) {
@@ -70,21 +89,7 @@ public class TestCaseFacade extends AbstractFacade {
 				feedback.accept(status);
 			}
 		});
-
-		final var tcpPort = testRemoteControl.prepare();
-		Path tempDir;
-		try {
-			tempDir = Files.createTempDirectory("tc-writer");
-		} catch (IOException e) {
-			throw new IllegalStateException("Web call execution failed", e);
-		}
-		try (var config = new ITestExecutor.TestConfig(loadedTC, tempDir, tcpPort)) {
-			testExecutor.startTest(config);
-			testRemoteControl.controlTest(loadedTC.getSteps().size());
-		} catch (IOException | InterruptedException | TestCaseException e) {
-			Thread.interrupted();
-			throw new WebRTException(e);
-		}
+		return testRemoteControl;
 	}
 
 	public String generateCode(ExportableTestCase tc) {

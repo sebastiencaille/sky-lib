@@ -11,15 +11,15 @@ import org.junit.Test;
 
 public class JavaTestCaseGeneratorMojoTest {
 	@Rule
-	public MojoRule rule = new MojoRule() {
+	public final MojoRule rule = new MojoRule() {
 		@Override
-		protected void before() throws Throwable {
+		protected void before() {
 			// noop
 		}
 
 		@Override
 		protected void after() {
-			// noop }
+			// noop
 		}
 	};
 

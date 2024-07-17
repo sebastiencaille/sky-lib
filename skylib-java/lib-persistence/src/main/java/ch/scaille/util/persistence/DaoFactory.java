@@ -9,7 +9,7 @@ import java.util.Set;
 import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
 
 /**
- * Factory responsible of creating the DAO, which is turning Resources loaded by
+ * Factory responsible for creating the DAO, which is turning Resources loaded by
  * DataSource into Data
  */
 public class DaoFactory {
@@ -86,10 +86,8 @@ public class DaoFactory {
 	}
 
 	/**
-	 * Creates a dao factory that includes resources on classpath and more
+	 * Creates a dao factory that includes resources on classpath, and more
 	 * @param cpWhiteList the classpath whitelist (packages)
-	 * @param extraFactory
-	 * @return
 	 */
 	public static DaoFactory cpPlus(Set<String> cpWhiteList, IDataSourceFactory extraFactory) {
 		final var factories = new ArrayList<IDataSourceFactory>();

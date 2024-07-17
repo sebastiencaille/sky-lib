@@ -71,7 +71,7 @@ public final class Converters {
         return new IConverter<>() {
             @Override
             public List<V> convertPropertyValueToComponentValue(final List<V> propertyValue) {
-                return propertyValue.stream().filter(filter::test).collect(Collectors.toList());
+                return propertyValue.stream().filter(filter).collect(Collectors.toList());
             }
 
             @Override

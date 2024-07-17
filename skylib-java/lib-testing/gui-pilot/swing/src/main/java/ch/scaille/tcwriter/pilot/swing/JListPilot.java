@@ -18,10 +18,7 @@ public class JListPilot extends AbstractSwingComponentPilot<JListPilot, JList> {
 	}
 
 	/**
-	 * Select a value in a list, according to it's String representation
-	 *
-	 * @param componentName
-	 * @param value
+	 * Select a value in a list, according to its String representation
 	 */
 	public void select(final String value) {
 		if (value == null) {

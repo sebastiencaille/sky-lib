@@ -7,3 +7,4 @@ target/
 *.bak
 .flattened-pom.xml
 logs/
+.idea

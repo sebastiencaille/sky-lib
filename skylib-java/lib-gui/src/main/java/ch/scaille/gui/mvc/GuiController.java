@@ -35,7 +35,7 @@ public class GuiController {
 	}
 
 	/**
-	 * Starts the controller, to be called once once all the GUIs component are
+	 * Starts the controller, to be called once all the GUIs component are
 	 * bound to the controller. It actually attaches all the properties, causing the
 	 * values to be sent to the components
 	 */

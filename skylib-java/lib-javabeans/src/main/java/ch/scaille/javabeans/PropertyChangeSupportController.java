@@ -81,7 +81,7 @@ public class PropertyChangeSupportController {
 		final var info = callInfo.computeIfAbsent(propertyName, k -> new ArrayDeque<>(5));
 		if (info.size() > 5) {
 			final var stack = new StringBuilder();
-			info.stream().forEach(i -> stack.append(i).append(";"));
+			info.forEach(i -> stack.append(i).append(";"));
 			throw new IllegalStateException(propertyName + " is already fired:" + stack);
 		}
 		info.push(new CallInfo(caller, newValue));

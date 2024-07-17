@@ -19,7 +19,7 @@ public interface StepSelector extends Consumer<TCWriterPage> {
 			stepsTable.polling()
 					.fail(checkingThat("the step " + ordinal + " exists"))
 					.ifNot()
-					.asserted(pc -> assertTrue(tableIndex < pc.getComponent().getRowCount(), () -> "Step must exist"));
+					.asserted(pc -> assertTrue(tableIndex < pc.getComponent().getRowCount(), "Step must exist"));
 			stepsTable.selectRow(tableIndex);
 		};
 

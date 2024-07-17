@@ -6,7 +6,7 @@ interface IMetadataChooserProps {
 	allMetadata: Metadata[];
 	initialySelectedMetadata?: Metadata;
 	onSelection: (metatadata?: Metadata) => void;
-};
+}
 
 export default function MetadataChooser(props: Readonly<IMetadataChooserProps>) {
 

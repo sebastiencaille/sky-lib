@@ -2,7 +2,6 @@ package ch.scaille.tcwriter.maven;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -12,7 +11,6 @@ import java.util.Set;
 import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -38,19 +36,19 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
 	@Parameter( defaultValue = "${project}", readonly = true )
 	private MavenProject project;
 
-	@Parameter(property = "template", required = false, defaultValue = "file:src/test/resources/userResources/templates/TC.template")
+	@Parameter(property = "template", defaultValue = "file:src/test/resources/userResources/templates/TC.template")
 	private String template;
 
-	@Parameter(property = "dictionaryFolder", required = false, defaultValue = "file:src/test/resources/dictionaries")
+	@Parameter(property = "dictionaryFolder", defaultValue = "file:src/test/resources/dictionaries")
 	private String dictionaryFolder;
 
-	@Parameter(property = "dictionary", required = false, defaultValue = "default")
+	@Parameter(property = "dictionary", defaultValue = "default")
 	private String dictionaryLocator;
 
-	@Parameter(property = "testCases", required = false)
+	@Parameter(property = "testCases")
 	private Resource testCases;
 
-	@Parameter(property = "outputFolder", required = false, defaultValue = "${project.build.directory}/generated-test-sources/tcwriter")
+	@Parameter(property = "outputFolder", defaultValue = "${project.build.directory}/generated-test-sources/tcwriter")
 	private String outputFolder;
 
 	private String resolve(String path) {
@@ -69,7 +67,7 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
 	}
 
 	@Override
-	public void execute() throws MojoExecutionException, MojoFailureException {
+	public void execute() throws MojoExecutionException {
 
 		// Defaults
 		if (testCases == null || testCases.getDirectory() == null) {
@@ -127,7 +125,7 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
 			final var outputFile = Paths.get(resolve(outputFolder)).resolve(file);
 			getLog().info("Writing " + outputFile);
 			Files.createDirectories(outputFile.getParent());
-			Files.write(outputFile, src.getBytes(StandardCharsets.UTF_8));
+			Files.writeString(outputFile, src);
 			return outputFile;
 		}));
 	}

@@ -30,9 +30,9 @@ The solution is to detach the selection binding before updating the component, a
 
 In the example, when staticListSelection is updated:
 1. the dynamicListSelectionProperty is detached from dynamicListEditor, thanks to detachOnUpdateOf
-1. the dynamicListEditor is updated and the selection is lost 
-1. the dynamicListSelectionProperty is re-attached
-1. the dynamicListSelectionProperty is re-applied to restore the selection
+2. the dynamicListEditor is updated and the selection is lost 
+3. the dynamicListSelectionProperty is re-attached
+4. the dynamicListSelectionProperty is re-applied to restore the selection
 
 ```java
 JList<String> dynamicListEditor = new JList<>();
@@ -51,7 +51,7 @@ dynamicListSelectionProperty.bind(selection(dynamicListEditor)).addDependency(de
 * startEditingValue(editedValue) must be called before editing the value (editedValue only containing the values required for sorting)
 * stopEditingValue() must be called to validate the edition, move the edit value at the right place, and propagate the change
 
-Example: [[Code](lib-gui-java8/src/test/java/ch/scaille/gui/model/ListModelBasicTest.java)] [[Filters Example](lib-gui-java8/src/test/java/ch/scaille/gui/model/FilterObjectModelTest.java)]
+Example: [[Code](lib-gui/src/test/java/ch/scaille/gui/model/ListModelBasicTest.java)] [[Filters Example](lib-gui/src/test/java/ch/scaille/gui/model/FilterObjectModelTest.java)]
 
 ```java
 IListView<TestObject> VIEW = ListViews.sorted((o1, o2) -> o1.val - o2.val);
@@ -96,7 +96,7 @@ ListModel<TestObject> filteredModel = new ChildListModel<>(model, listDynamicVie
 **Key points**
 * The columns are defined using an Enum
 * The model is a ListModel
-* The column can have a fixed size or fill the size of the table
+* The column can have a fixed size, or adapt it's size according to the table's size
  
 Model Example: [[Model](lib-gui-examples/src/main/java/ch/scaille/example/gui/TestObjectTableModel.java)] [[View](lib-gui-examples/src/main/java/ch/scaille/example/gui/model/impl/TableModelExampleView.java)]
 

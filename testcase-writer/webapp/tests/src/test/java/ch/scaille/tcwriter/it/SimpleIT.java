@@ -19,7 +19,7 @@ import ch.scaille.util.helpers.Logs;
 @ExtendWith(DisabledIfHeadless.class)
 class SimpleIT {
 
-	public static WebDriver driver = WebDriverFactory.firefox().build();
+	public static final WebDriver driver = WebDriverFactory.firefox().build();
 
 	private SeleniumPilot pilot;
 

@@ -78,7 +78,7 @@ public class TestStep {
 		final var newTestStep = createTestStep();
 		newTestStep.setActor(actor);
 		newTestStep.setAction(action);
-		parametersValue.stream().forEach(p -> newTestStep.addParameter(p.duplicate()));
+		parametersValue.forEach(p -> newTestStep.addParameter(p.duplicate()));
 		return newTestStep;
 	}
 

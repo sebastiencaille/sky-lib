@@ -16,7 +16,7 @@ import ch.scaille.javabeans.PropertyChangeSupportController;
 import ch.scaille.javabeans.properties.ObjectProperty;
 
 class SwingBindingsTest {
-	private class TestGuiModel extends GuiModel {
+	private static class TestGuiModel extends GuiModel {
 
 		private final ObjectProperty<String> stringProperty = new ObjectProperty<>("StringProperty", this);
 
@@ -45,10 +45,10 @@ class SwingBindingsTest {
 		model.stringProperty.attach();
 
 		assertEquals(Boolean.FALSE.toString(), model.stringProperty.getValue());
-		assertFalse(cb.isSelected(), () -> "cb.isSelected");
+		assertFalse(cb.isSelected(), "cb.isSelected");
 
 		model.stringProperty.setValue(this, Boolean.TRUE.toString());
-		assertTrue(cb.isSelected(), () -> "cb.isSelected");
+		assertTrue(cb.isSelected(), "cb.isSelected");
 
 		cb.setSelected(true);
 		assertEquals(Boolean.TRUE.toString(), model.stringProperty.getValue());
@@ -56,7 +56,7 @@ class SwingBindingsTest {
 		cbBinding.unbind();
 
 		model.stringProperty.setValue(this, Boolean.FALSE.toString());
-		assertTrue(cb.isSelected(), () -> "cb.isSelected");
+		assertTrue(cb.isSelected(), "cb.isSelected");
 
 		model.stringProperty.setValue(this, Boolean.TRUE.toString());
 		cb.setSelected(false);

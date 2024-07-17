@@ -66,8 +66,6 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 				yield toString(tc, testStep.getReference());
 			}
 			yield "";
-		default:
-			yield "";
 		};
 	}
 
@@ -75,10 +73,9 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		final var parameterDef = parameterValue.getValueFactory();
 
 		return switch (parameterDef.getNature()) {
-		case REFERENCE -> toString(tc, parameterDef);
+		case REFERENCE, TEST_API -> toString(tc, parameterDef);
 		case SIMPLE_TYPE -> parameterValue.getSimpleValue();
-		case TEST_API -> toString(tc, parameterDef);
-		default -> "N/A";
+            default -> "N/A";
 		};
 	}
 

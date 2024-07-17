@@ -49,7 +49,7 @@ A flow is defined by
 * Processors, which are 
    * taking a set of data as parameters
    * producing a set of data (except for the last processor of the chain, which is only consuming data)
-* External Adapters (to retrieve/push data from an external service, eg from a database)
+* External Adapters (to retrieve/push data from an external service, i.e. from a database)
 * Flow controls, like
    * conditions, which are controlling which processor must be executed according to the current set of data
    * data splitters, which are splitting large amounts of data into smaller chunks
@@ -60,7 +60,7 @@ The flow implementations would be defined in a way that allows adequate visualiz
 
 The flow must be understood this way:
 * The 'input data' are sent to the 'init' processor
-* Depending of the 'Complete' conditions
+* Depending on the 'Complete' conditions
    * if 'mustComplete', 'getCompletion' is called to retrieve data from an external system, then 'complete' processor is called
    * otherwise, the 'keepAsIs' processor is called
 * The resulting data are then sent to the 'display' of an external system

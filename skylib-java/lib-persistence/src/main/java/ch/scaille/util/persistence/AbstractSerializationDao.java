@@ -1,8 +1,10 @@
 package ch.scaille.util.persistence;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 
+import ch.scaille.util.persistence.handlers.IStorageDataHandler;
 import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
 import ch.scaille.util.persistence.handlers.TextStorageHandler;
 
@@ -35,11 +37,7 @@ public abstract class AbstractSerializationDao<T> implements IDao<T> {
 
 	protected AbstractSerializationDao(Class<T> daoType, StorageDataHandlerRegistry serDeserializerRegistry) {
 		this.resourceType = daoType;
-		if (serDeserializerRegistry != null) {
-			this.dataHandlerRegistry = serDeserializerRegistry;
-		} else {
-			this.dataHandlerRegistry = new StorageDataHandlerRegistry(null);
-		}
+        this.dataHandlerRegistry = Objects.requireNonNullElseGet(serDeserializerRegistry, () -> new StorageDataHandlerRegistry(null));
 
 	}
 
@@ -74,7 +72,7 @@ public abstract class AbstractSerializationDao<T> implements IDao<T> {
 	protected Optional<ResourceMetaData> buildMetadata(String locator, String storageLocator) {
 		final var nameAndExt = nameAndExtensionOf(storageLocator);
 		return dataHandlerRegistry.find(nameAndExt[1])
-				.map(h -> h.getDefaultMimeType())
+				.map(IStorageDataHandler::getDefaultMimeType)
 				.or(this::getPredefinedResourceMimeType)
 				.or(dataHandlerRegistry::getDefaultMimeType)
 				.map(m -> fixExtension(new ResourceMetaData(locator, storageLocator, m)));

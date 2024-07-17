@@ -7,8 +7,6 @@ import ch.scaille.javabeans.properties.AbstractProperty;
  * <p>
  *
  * @author Sebastien Caille
- *
- * @param <ComponentType>
  */
 public interface IBindingController {
 

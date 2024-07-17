@@ -2,7 +2,6 @@ package ch.scaille.tcwriter.model.testcase;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,11 +104,7 @@ public class TestCase {
 	}
 
 	public Collection<TestReference> getReferences(final String returnType) {
-		final var result = dynamicReferences.get(returnType);
-		if (result == null) {
-			return Collections.emptyList();
-		}
-		return result;
+		return dynamicReferences.get(returnType);
 	}
 
 	public Collection<TestReference> getSuitableReferences(final TestApiParameter param) {

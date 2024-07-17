@@ -100,7 +100,7 @@ public class TupleStream<X, Y> {
 	private static class CollectorFunction<X, R>
 			implements Collector<X, List<X>, R>, BiConsumer<List<X>, X>, BinaryOperator<List<X>> {
 
-		private Function<List<X>, R> finisher;
+		private final Function<List<X>, R> finisher;
 
 		public CollectorFunction(Function<List<X>, R> finisher) {
 			this.finisher = finisher;

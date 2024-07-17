@@ -124,11 +124,6 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 
 	/**
 	 * Creates the properties by introspecting the displayed class Class
-	 *
-	 * @param propertySupport
-	 * @param object
-	 *
-	 * @return
 	 */
 	@Override
 	public List<ClassPropertyEntry<T>> createProperties(IObjectProvider<T> object) {
@@ -159,7 +154,7 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 
 	private String findText(final AbstractAttributeMetaData<T> attrib, final Function<Labeled, String> fromLabel,
 			final UnaryOperator<String> nameToKey) {
-		var value = attrib.getAnnotation(Labeled.class).map(fromLabel::apply).orElse("");
+		var value = attrib.getAnnotation(Labeled.class).map(fromLabel).orElse("");
 		if (value.isEmpty() && config.bundle != null) {
 			value = config.bundle.getString(nameToKey.apply(attrib.getName()));
 		}

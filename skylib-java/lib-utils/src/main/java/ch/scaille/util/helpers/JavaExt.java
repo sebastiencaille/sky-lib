@@ -39,20 +39,14 @@ public class JavaExt {
 	}
 
 	/**
-	 * Get the path of an URI
-	 * 
-	 * @param uri
-	 * @return
+	 * Get the path of a URI
 	 */
 	public static String pathOf(URI uri) {
 		return pathOf(uri.getPath());
 	}
 
 	/**
-	 * Get the path from an URL
-	 * 
-	 * @param uri
-	 * @return
+	 * Get the path from a URL
 	 */
 	public static String pathOf(URL url) {
 		return pathOf(url.getPath());
@@ -67,7 +61,7 @@ public class JavaExt {
 
 	public static void removeFolderUnsafe(Path path) {
 		try {
-			Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+			Files.walkFileTree(path, new SimpleFileVisitor<>() {
 				@Override
 				public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
 					Files.delete(path);
@@ -121,7 +115,7 @@ public class JavaExt {
 
 		@Override
 		public void run() {
-			// Use a reader to handle multi-byte chars
+			// Use a reader to handle multibyte chars
 			try (var reader = new InputStreamReader(in.get(), StandardCharsets.UTF_8)) {
 				final var buffer = new char[1024 * 1024];
 				int read;
@@ -136,10 +130,6 @@ public class JavaExt {
 
 	/**
 	 * To consume an input stream
-	 * 
-	 * @param in
-	 * @param flow
-	 * @return
 	 */
 	public static StreamHandler inputStreamHandler(Supplier<InputStream> in, final Consumer<String> flow) {
 		return new StreamHandler(in, flow);
@@ -154,15 +144,6 @@ public class JavaExt {
 		final var out = new ByteArrayOutputStream();
 		in.transferTo(out);
 		return out.toByteArray();
-	}
-
-	public static void transferUTF8LineTo(InputStream in, Consumer<String> out) throws IOException {
-		try (var reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
-			String str;
-			while ((str = reader.readLine()) != null) {
-				out.accept(str);
-			}
-		}
 	}
 
 	public static String readUTF8Stream(final InputStream in) throws IOException {

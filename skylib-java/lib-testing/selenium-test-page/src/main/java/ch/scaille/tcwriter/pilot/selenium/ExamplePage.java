@@ -78,6 +78,7 @@ public class ExamplePage extends PagePilot {
 	 * use with assertDialogHandled();
 	 */
 	public void expectTestAlertDialog() {
+		// closed by expectTestAlertDialog
 		pilot.expectModalDialog(s -> {
 			s.doAcknowledge();
 			return ModalDialogDetector.expected();

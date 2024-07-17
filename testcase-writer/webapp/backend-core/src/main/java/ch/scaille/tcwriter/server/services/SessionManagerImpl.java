@@ -31,7 +31,7 @@ public class SessionManagerImpl implements SessionAccessor {
 		@Override
 		public <T> Optional<T> get(String attribName) {
 			// Creates the session if needed
-			request.ifPresent(r -> r.getSessionId());
+			request.ifPresent(RequestAttributes::getSessionId);
 			return request.map(r -> (T)r.getAttribute(attribName, RequestAttributes.SCOPE_SESSION));
 		}
 
@@ -79,15 +79,14 @@ public class SessionManagerImpl implements SessionAccessor {
 	 */
 	public static class GetSet<T> {
 
-		private SessionAccessor accessor;
-		private String attribName;
-		private Supplier<T> defaultValue;
+		private final SessionAccessor accessor;
+		private final String attribName;
+		private final Supplier<T> defaultValue;
 
 		private GetSet(SessionAccessor accessor, String attribName, Supplier<T> defaultValue) {
 			this.accessor = accessor;
 			this.attribName = attribName;
 			this.defaultValue = defaultValue;
-
 		}
 
 		/**
@@ -119,10 +118,6 @@ public class SessionManagerImpl implements SessionAccessor {
 			accessor.remove(attribName);
 		}
 
-	}
-
-	public Optional<String> sessionIdOf(Optional<NativeWebRequest> request) {
-		return request.map(NativeWebRequest::getSessionId);
 	}
 
 	@Override

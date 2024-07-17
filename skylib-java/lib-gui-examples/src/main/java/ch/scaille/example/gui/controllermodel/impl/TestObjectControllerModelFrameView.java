@@ -8,7 +8,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.WindowConstants;
 
-@SuppressWarnings("serial")
 public class TestObjectControllerModelFrameView extends JFrame {
 
 	public TestObjectControllerModelFrameView(final TestObjectControllerModelController controller) {

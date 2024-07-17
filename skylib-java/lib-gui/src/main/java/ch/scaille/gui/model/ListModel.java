@@ -26,7 +26,7 @@ import ch.scaille.gui.model.views.IListView;
  * is used. <p>
  *
  * @author Sebastien Caille
- *
+ * <p>
  * @param <T> the type of the list's content. T must have an implementation of
  *            the Object.equals method. It is better if an element of the list
  *            can be uniquely identified using Object.equals.
@@ -84,8 +84,6 @@ public class ListModel<T> implements IListModelDelegate<T>, Iterable<T>, Seriali
 
 	/**
 	 * Sets a new view on the list
-	 *
-	 * @param newView
 	 */
 	public void setView(final IListView<T> newView) {
 		impl.setView(newView);
@@ -124,9 +122,8 @@ public class ListModel<T> implements IListModelDelegate<T>, Iterable<T>, Seriali
 	/**
 	 * Finds an object in the model, and starts its edition if found
 	 *
-	 * @param sample a sample of the object (must contains the values required to
+	 * @param sample a sample of the object (must contain the values required to
 	 *               find the object)
-	 * @return an object if found, null if not
 	 */
 	public void findAndEdit(final T sample, final Consumer<T> editor) {
 		try (var edition = findForEdition(sample)) {
@@ -137,12 +134,11 @@ public class ListModel<T> implements IListModelDelegate<T>, Iterable<T>, Seriali
 	}
 
 	/**
-	 * Finds an object in the model, starting it's edition, or insert the sample if
+	 * Finds an object in the model, starting its edition, or insert the sample if
 	 * not found.
 	 *
-	 * @param sample a sample of the object (must contains the values required to
+	 * @param sample a sample of the object (must contain the values required to
 	 *               find the object)
-	 * @return an object if found, the sample if not found
 	 */
 	public void findOrCreateAndEdit(final T sample, final Consumer<T> editor) {
 		try (var edition = findOrCreateForEdition(sample)) {
@@ -216,7 +212,7 @@ public class ListModel<T> implements IListModelDelegate<T>, Iterable<T>, Seriali
 	/**
 	 * Finds an object in the model, or insert the sample if not found.
 	 *
-	 * @param sample a sample of the object (must contains the values required to
+	 * @param sample a sample of the object (must contain the values required to
 	 *               find the object)
 	 * @return an object if found, the sample if not found
 	 */

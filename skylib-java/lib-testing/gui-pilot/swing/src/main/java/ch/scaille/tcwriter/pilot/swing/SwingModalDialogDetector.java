@@ -29,9 +29,6 @@ public class SwingModalDialogDetector extends SwingPilot {
 
 	/**
 	 * Lists all the windows and apply the handlers.
-	 * 
-	 * @param pollingHandler
-	 * @return
 	 */
 	public static List<ModalDialogDetector.PollingResult> listDialogs(
 			final Function<SwingModalDialogDetector, PollingResult>... pollingHandlers) {
@@ -62,12 +59,10 @@ public class SwingModalDialogDetector extends SwingPilot {
 
 	/**
 	 * Triggers an error when a dialog box is detected
-	 * 
-	 * @return
 	 */
 	public PollingResult defaultCheck() {
 		final var dialogLabel = search(JLabel.class);
-		if (!dialogLabel.isPresent()) {
+		if (dialogLabel.isEmpty()) {
 			return failure(dialog.getTitle());
 		}
 		return failure(dialogLabel.get().getText());
@@ -81,10 +76,7 @@ public class SwingModalDialogDetector extends SwingPilot {
 	}
 
 	/**
-	 * Close the dialog and trigger a failure
-	 * 
-	 * @param error
-	 * @return
+	 * Closes the dialog and trigger a failure
 	 */
 	public PollingResult failure(final String error) {
 		return ModalDialogDetector.unhandled(error, this::closeDialog);

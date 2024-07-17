@@ -20,7 +20,7 @@ import ch.scaille.javabeans.properties.ErrorSet;
 public class SwingGenericEditorDialog extends JDialog {
 
 	private JTabbedPane tabbedPane = null;
-	private List<GenericEditorController<?>> controllers = new ArrayList<>();
+	private final List<GenericEditorController<?>> controllers = new ArrayList<>();
 
 	public SwingGenericEditorDialog(final Window parent, final String title, final ModalityType modality) {
 		super(parent, title, modality);

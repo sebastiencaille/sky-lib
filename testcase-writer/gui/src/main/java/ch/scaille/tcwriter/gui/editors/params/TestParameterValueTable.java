@@ -14,12 +14,12 @@ public class TestParameterValueTable extends JTable {
 		final var myColumnModel = new PolicyTableColumnModel<TestParameterValueTableModel.Columns>(this);
 		myColumnModel.install();
 		myColumnModel
-				.configureColumn(TableColumnWithPolicy.fixedTextWidth(TestParameterValueTableModel.Columns.MANDATORY, 5)
+				.configureColumn(TableColumnWithPolicy.fixedTextLength(TestParameterValueTableModel.Columns.MANDATORY, 5)
 						.with(getDefaultRenderer(Boolean.class)));
-		myColumnModel.configureColumn(TableColumnWithPolicy.fixedTextWidth(TestParameterValueTableModel.Columns.ENABLED, 5)
+		myColumnModel.configureColumn(TableColumnWithPolicy.fixedTextLength(TestParameterValueTableModel.Columns.ENABLED, 5)
 				.with(getDefaultRenderer(Boolean.class)));
 		myColumnModel
-				.configureColumn(TableColumnWithPolicy.fixedTextWidth(TestParameterValueTableModel.Columns.DESCRIPTION, 25)
+				.configureColumn(TableColumnWithPolicy.fixedTextLength(TestParameterValueTableModel.Columns.DESCRIPTION, 25)
 						.with(new DefaultTableCellRenderer()));
 		myColumnModel.configureColumn(
 				TableColumnWithPolicy.percentOfAvailableSpace(TestParameterValueTableModel.Columns.VALUE, 100));

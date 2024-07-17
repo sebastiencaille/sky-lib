@@ -3,6 +3,7 @@ package ch.scaille.javabeans.properties;
 import java.beans.PropertyChangeListener;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -106,11 +107,7 @@ public abstract class AbstractProperty implements Serializable {
 	}
 
 	public void setErrorNotifier(final ErrorNotifier errorNotifier) {
-		if (errorNotifier != null) {
-			this.errorNotifier = errorNotifier;
-		} else {
-			this.errorNotifier = emptyErrorNotifier();
-		}
+        this.errorNotifier = Objects.requireNonNullElseGet(errorNotifier, AbstractProperty::emptyErrorNotifier);
 	}
 
 	public void addListener(final PropertyChangeListener propertyChangeListener) {
@@ -148,8 +145,7 @@ public abstract class AbstractProperty implements Serializable {
 	}
 
 	@SafeVarargs
-	public final AbstractProperty configure(
-			@SuppressWarnings("unchecked") final Consumer<AbstractProperty>... properties) {
+	public final AbstractProperty configure(final Consumer<AbstractProperty>... properties) {
 		Stream.of(properties).forEach(prop -> prop.accept(this));
 		return this;
 	}

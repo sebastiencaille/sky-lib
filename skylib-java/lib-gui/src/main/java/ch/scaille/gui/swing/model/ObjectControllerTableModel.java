@@ -22,7 +22,6 @@ import ch.scaille.javabeans.properties.AbstractProperty;
  * @param <M> type of the object's gui model
  * @param <C> type that enums the columns
  */
-@SuppressWarnings("serial")
 public abstract class ObjectControllerTableModel<O, M extends IObjectGuiModel<O>, C extends Enum<C>>
 		extends ListModelTableModel<O, C> {
 
@@ -87,8 +86,6 @@ public abstract class ObjectControllerTableModel<O, M extends IObjectGuiModel<O>
 
 	/**
 	 * Binds all model properties with this model's bindings
-	 *
-	 * @param aModel
 	 */
 	protected abstract void bindModel(M anObjectModel);
 

@@ -32,7 +32,7 @@ public class BootstrapConfig {
 		final var dictionary = exampleHelper.generateDictionary();
 		final var tc = exampleHelper.recordTestCase(dictionary);
 
-		// Setup the test execution
+		// Sets up the test execution
 		final var currentConfig = exampleHelper.getConfigDao().getCurrentConfig();
 		currentConfig.getSubconfig(ModelConfig.class).orElseThrow().setTemplatePath(TC_TEMPLATE);
 		currentConfig.getSubconfig(JunitTestExecConfig.class)
@@ -50,6 +50,9 @@ public class BootstrapConfig {
 				.getContextClassLoader()
 				.getResourceAsStream(DaoConfigs.USER_RESOURCES + TC_TEMPLATE);
 				var out = new FileOutputStream(templatePath.toFile())) {
+			if (in == null) {
+				throw new IllegalStateException("Template file not found");	
+			}
 			in.transferTo(out);
 		}
 

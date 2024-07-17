@@ -23,10 +23,7 @@ public class JTextFieldPilot extends AbstractSwingComponentPilot<JTextFieldPilot
 	}
 
 	/**
-	 * Select a value in a list, according to it's String representation
-	 *
-	 * @param componentName
-	 * @param value
+	 * Select a value in a list, according to its String representation
 	 */
 	public void setText(final String value) {
 		if (value == null) {

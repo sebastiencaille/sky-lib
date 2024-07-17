@@ -82,7 +82,7 @@ public class ClassFinder {
 
 	private Function<URL, Scanner> scanners = defaultScanner;
 
-	private List<String> libPackages = new ArrayList<>();
+	private final List<String> libPackages = new ArrayList<>();
 
 	public static URLClassFinder of(URL[] cp) {
 		return new URLClassFinder(cp);
@@ -90,7 +90,7 @@ public class ClassFinder {
 
 	public static URLClassFinder source(final File... source) {
 		return new URLClassFinder(
-				Arrays.stream(source).map(LambdaExt.uncheckedF(f -> f.toURI().toURL())).toArray(c -> new URL[c]));
+				Arrays.stream(source).map(LambdaExt.uncheckedF(f -> f.toURI().toURL())).toArray(URL[]::new));
 
 	}
 
@@ -164,10 +164,7 @@ public class ClassFinder {
 	public class FsScanner implements Scanner {
 
 		/**
-		 * FileSystems uri
-		 *
-		 * @param uri
-		 * @return
+		 * Gets the FileSystems of the uri
 		 */
 		protected URI rootOf(URI uri) {
 			if (uri.getPath() != null && uri.getPath().indexOf('!') >= 0) {
@@ -181,11 +178,7 @@ public class ClassFinder {
 		}
 
 		/**
-		 * Where to scan
-		 *
-		 * @param uri
-		 * @param aPackage
-		 * @return
+		 * Gets the location of a package 
 		 */
 		protected String packageLocationOf(URI uri, String aPackage) {
 			if (uri.getPath() == null) {
@@ -198,7 +191,7 @@ public class ClassFinder {
 		@Override
 		public Stream<Class<?>> scan(URL resource, String aPackage) throws IOException {
 			if (resource == null) {
-				return Collections.<Class<?>>emptyList().stream();
+				return Stream.empty();
 			}
 			final URI rootUri;
 			final String scanPath;

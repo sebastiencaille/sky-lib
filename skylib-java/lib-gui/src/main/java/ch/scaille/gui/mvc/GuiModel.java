@@ -17,14 +17,6 @@ public class GuiModel implements IPropertiesOwner {
 	public interface ImplicitConvertProvider {
 		/**
 		 * Creates an implicit converter
-		 * 
-		 * @param <T>
-		 * @param <U>
-		 * @param property
-		 * @param modelClass
-		 * @param attributeName
-		 * @param attributeClass
-		 * @return
 		 */
 		<T, U> IUnaryConverter<U> create(Class<T> modelClass, AbstractTypedProperty<U> property, String attributeName,
 				Class<?> attributeClass);
@@ -120,19 +112,12 @@ public class GuiModel implements IPropertiesOwner {
 	}
 
 	/**
-	 * 
-	 * @param <T>
-	 * @param <U>
-	 * @param modelClass
-	 * @param attributeName
-	 * @param attributeClass generic class to allow typed classes
-	 * @return
+	 * Creates a property that uses implicit converters. 
 	 */
 	public <T, U> Consumer<AbstractTypedProperty<U>> implicitConverters(Class<T> modelClass, String attributeName,
 			Class<?> attributeClass) {
 		return p -> configuration.getImplicitConverters()
 				.stream()
-				.sequential()
 				.map(c -> c.create(modelClass, p, attributeName, attributeClass))
 				.forEach(p::addImplicitConverter);
 	}

@@ -1,6 +1,5 @@
 package ch.scaille.tcwriter.persistence;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +18,7 @@ public interface IModelDao {
 
 	// ----------------------- Dictionary -----------------------
 	
-	List<Metadata> listDictionaries() throws IOException;
+	List<Metadata> listDictionaries();
 
 	Optional<TestDictionary> readTestDictionary(String dictionaryName);
 
@@ -29,7 +28,7 @@ public interface IModelDao {
 
 	// ----------------------- Test case -----------------------
 
-	List<Metadata> listTestCases(TestDictionary dictionary) throws IOException;
+	List<Metadata> listTestCases(TestDictionary dictionary);
 	
 	Optional<ExportableTestCase> readTestCase(String identifier, TestDictionary testDictionary);
 

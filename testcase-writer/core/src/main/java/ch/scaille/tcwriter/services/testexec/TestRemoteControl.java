@@ -111,7 +111,7 @@ public class TestRemoteControl {
 				testExecutionListener.testFinished();
 			});
 
-			stepStates.values().stream().filter(s -> s.isBreakPoint()).forEach(api::setBreakPoint);
+			stepStates.values().stream().filter(StepStatus::isBreakPoint).forEach(api::setBreakPoint);
 			api.write(TestApi.Command.RUN);
 		} catch (IOException e) {
 			testExecutionListener.testRunning(false);

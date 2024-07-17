@@ -2,7 +2,6 @@ package ch.scaille.tcwriter.persistence;
 
 import static ch.scaille.util.persistence.StorageRTException.uncheck;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
@@ -77,7 +76,7 @@ public class ModelDao implements IModelDao {
 	}
 
 	@Override
-	public List<Metadata> listDictionaries() throws IOException {
+	public List<Metadata> listDictionaries() {
 		return uncheck("Listing of dictionaries",
 				() -> dictionaryRepo.list().map(f -> readTestDictionary(f.getLocator()).get().getMetadata()).toList());
 	}

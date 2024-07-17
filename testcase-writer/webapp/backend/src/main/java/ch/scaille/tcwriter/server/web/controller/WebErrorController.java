@@ -37,7 +37,7 @@ public class WebErrorController extends AbstractErrorController {
 
 	private static class WebErrorViewResolver implements ErrorViewResolver {
 
-		private ApplicationContext context;
+		private final ApplicationContext context;
 
 		public WebErrorViewResolver(ApplicationContext context) {
 			this.context = context;
@@ -97,7 +97,7 @@ public class WebErrorController extends AbstractErrorController {
 		this.messageSource = messageSource;
 	}
 
-	public class ExceptionDto {
+	public static class ExceptionDto {
 		private final String code;
 		private final Object[] arguments;
 		private final HttpStatus status;
@@ -150,11 +150,11 @@ public class WebErrorController extends AbstractErrorController {
 			dto = new ExceptionDto(webRTexc.getDetailMessageCode(), webRTexc.getDetailMessageArguments(), status);
 			defaultText = webRTexc.getDetailMessageCode();
 		} else if (exc != null) {
-			dto = new ExceptionDto("exception." + exc.getClass().getName(), new Object[] { exc.getMessage() }, status);
+			dto = new ExceptionDto("exception." + exc.getClass().getName(), new Object[]{exc.getMessage()}, status);
 			defaultText = messageSource.getMessage("error.exception",
 					new Object[] { exc.getClass().getName(), exc.getMessage() }, "error.exception", LOCALE);
 		} else {
-			dto = new ExceptionDto("exception." + status.name(), new Object[] { status.getReasonPhrase() }, status);
+			dto = new ExceptionDto("exception." + status.name(), new Object[]{status.getReasonPhrase()}, status);
 			defaultText = messageSource.getMessage("error.status", new Object[] { status }, "error.status", LOCALE);
 		}
 		dto.setMessage(messageSource.getMessage(dto.getCode(), dto.getArguments(), defaultText, LOCALE));

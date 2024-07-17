@@ -3,6 +3,7 @@ package ch.scaille.gui.swing.bindings;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.util.Objects;
 
 import javax.swing.AbstractAction;
 import javax.swing.JTextField;
@@ -49,11 +50,7 @@ public class JTextFieldBinding extends ComponentBindingAdapter<String> {
 
 	@Override
 	public void setComponentValue(final AbstractProperty source, final String value) {
-		if (value != null) {
-			textField.setText(value);
-		} else {
-			textField.setText("");
-		}
+        textField.setText(Objects.requireNonNullElse(value, ""));
 	}
 
 	@Override

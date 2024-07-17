@@ -33,7 +33,7 @@ public class HumanReadableVisitor {
 
 	public String process(final TestStep step) {
 		var actorSummary = summaryOf(step.getActor(), null);
-		if (actorSummary == null) {
+		if (actorSummary.isEmpty()) {
 			actorSummary = summaryOf(step.getRole(), null);
 		}
 		final var result = new StringBuilder();

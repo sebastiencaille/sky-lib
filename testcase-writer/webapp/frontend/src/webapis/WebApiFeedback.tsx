@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { StompSessionProvider, useSubscription } from "react-stomp-hooks";
-import { StepStatus } from '../webapis/Types'
+import { StepStatus } from './Types'
 import { updateWebConnection, useApplicationStatusContextUpdater } from '../contexts/ApplicationStatusContext';
 
 interface StepStatusUpdaterType {

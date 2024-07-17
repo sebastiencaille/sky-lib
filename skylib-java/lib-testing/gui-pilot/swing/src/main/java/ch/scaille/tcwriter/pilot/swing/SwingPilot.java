@@ -44,8 +44,7 @@ public class SwingPilot extends ch.scaille.tcwriter.pilot.GuiPilot {
 	public void scan() {
 		SwingHelper.checkSwingThread();
 		cache.clear();
-		final var container = root;
-		scan(container);
+		scan(root);
 	}
 
 	/**
@@ -72,10 +71,7 @@ public class SwingPilot extends ch.scaille.tcwriter.pilot.GuiPilot {
 	 * Search for a component by scanning the components hierarchy, starting from
 	 * the root component
 	 *
-	 * @param <T>
-	 * @param container the scanned component
 	 * @param clazz     the class of the searched component
-	 * @return
 	 */
 	public <T extends JComponent> Optional<T> search(final Class<T> clazz) {
 		return search(new HashSet<>(), root, clazz, c -> true, s -> !s.isEmpty()).stream().findAny();
@@ -93,10 +89,8 @@ public class SwingPilot extends ch.scaille.tcwriter.pilot.GuiPilot {
 	 * Search for a component by scanning a component hierarchy, starting from a
 	 * container
 	 *
-	 * @param <T>
 	 * @param container the scanned component
 	 * @param clazz     the class of the searched component
-	 * @return
 	 */
 	public <T extends Component> Set<T> search(final Set<T> result, final Container container, final Class<T> clazz,
 			final Predicate<T> filter, final Predicate<Set<T>> searchFinished) {

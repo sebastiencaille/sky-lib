@@ -142,6 +142,7 @@ function exportCurrentTestCase(format: ExportType, callback: (content: string) =
 }
 
 const WebApis = {
+	Component: Component,
 	loadCurrentContext: loadCurrentContext,
 	validateContext: validateContext,
 	listAllDictionaries: listAllDictionaries,

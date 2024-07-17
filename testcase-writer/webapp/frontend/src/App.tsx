@@ -14,7 +14,7 @@ import MetadataChooser from './widgets/MetadataChooser';
 import TestCaseTable from './widgets/TestCaseTable';
 import { ApplicationStatusDisplay } from './widgets/ApplicationStatusDisplay';
 import { StepStatusAction, clearStepStatuses, handleStepStatusAction, stepStatusUpdate } from './service/StepStatusService';
-import {  contextUpdate, useUserContext, useUserContextUpdater } from './contexts/UserContext';
+import { contextUpdate, useUserContext, useUserContextUpdater } from './contexts/UserContext';
 
 export default function App() {
 

@@ -30,7 +30,6 @@ public class JavaExt {
 
 	public static TimerTask timerTask(Runnable runnable) {
 		return new TimerTask() {
-
 			@Override
 			public void run() {
 				runnable.run();
@@ -39,14 +38,14 @@ public class JavaExt {
 	}
 
 	/**
-	 * Get the path of a URI
+	 * Gets the path of a URI
 	 */
 	public static String pathOf(URI uri) {
 		return pathOf(uri.getPath());
 	}
 
 	/**
-	 * Get the path from a URL
+	 * Gets the path of a URL
 	 */
 	public static String pathOf(URL url) {
 		return pathOf(url.getPath());
@@ -115,7 +114,7 @@ public class JavaExt {
 
 		@Override
 		public void run() {
-			// Use a reader to handle multibyte chars
+			// Use a reader to handle multi-byte chars
 			try (var reader = new InputStreamReader(in.get(), StandardCharsets.UTF_8)) {
 				final var buffer = new char[1024 * 1024];
 				int read;

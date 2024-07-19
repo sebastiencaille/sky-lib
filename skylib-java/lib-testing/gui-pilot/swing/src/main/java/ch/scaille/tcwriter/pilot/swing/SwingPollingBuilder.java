@@ -6,12 +6,12 @@ import javax.swing.JComponent;
 
 import ch.scaille.tcwriter.pilot.PollingBuilder;
 
-public class SwingPollingBuilder<P extends AbstractSwingComponentPilot<P, C>, C extends JComponent>
-		extends PollingBuilder<P, C, SwingPollingBuilder<P, C>, SwingPollingBuilder.SwingPoller<C>> {
+public class SwingPollingBuilder<C extends JComponent>
+		extends PollingBuilder<C, SwingPollingBuilder<C>, SwingPollingBuilder.SwingPoller<C>> {
 
 	public static class SwingPoller<C extends JComponent> extends PollingBuilder.Poller<C> {
 
-		protected SwingPoller(PollingBuilder<?, C, ?, ?> builder) {
+		protected SwingPoller(PollingBuilder<C, ?, ?> builder) {
 			super(builder);
 		}
 
@@ -26,7 +26,7 @@ public class SwingPollingBuilder<P extends AbstractSwingComponentPilot<P, C>, C 
 		}
 	}
 
-	public SwingPollingBuilder(AbstractSwingComponentPilot<P, C> elementPilot) {
+	public SwingPollingBuilder(AbstractSwingComponentPilot<C> elementPilot) {
 		super(elementPilot);
 	}
 

@@ -17,10 +17,9 @@ import ch.scaille.util.helpers.Poller;
 /**
  * Class that allows to poll graphical components
  *
- * @param <P> Type of this Pilot
  * @param <C> Component type
  */
-public abstract class AbstractComponentPilot<P extends AbstractComponentPilot<P, C>, C> {
+public abstract class AbstractComponentPilot<C> {
 
 	private final Logger logger = Logs.of(this);
 
@@ -110,12 +109,12 @@ public abstract class AbstractComponentPilot<P extends AbstractComponentPilot<P,
 	/**
 	 * Adds a post-action, which is executed once action is finished
 	 */
-	public P addPostExecution(final Consumer<C> postExec) {
+	public AbstractComponentPilot<C> addPostExecution(final Consumer<C> postExec) {
 		postExecutions.add(postExec);
 		if (fired) {
 			postExec.accept(cachedComponent.element);
 		}
-		return (P) this;
+		return this;
 	}
 
 	/**
@@ -156,7 +155,7 @@ public abstract class AbstractComponentPilot<P extends AbstractComponentPilot<P,
 	 * @return a polling result, either successful or failure
 	 */
 	protected <R> PollingResult<C, R> waitPollingSuccessLoop(final Polling<C, R> polling) {
-		polling.initialize(this);
+		polling.initializeFrom(this);
 		return new Poller(polling.getTimeout(), polling.getFirstDelay(), polling.getDelayFunction())
 				.run(p -> executePolling(p, polling), PollingResult::isSuccess)
 				.orElseThrow();
@@ -228,7 +227,7 @@ public abstract class AbstractComponentPilot<P extends AbstractComponentPilot<P,
 		}
 	}
 
-	public <T extends PollingBuilder<P, C, T, U>, U extends PollingBuilder.Poller<C>> PollingBuilder<P, C, T, U> polling() {
+	public <T extends PollingBuilder<C, T, U>, U extends PollingBuilder.Poller<C>> PollingBuilder<C, T, U> polling() {
 		return new PollingBuilder<>(this);
 	}
 }

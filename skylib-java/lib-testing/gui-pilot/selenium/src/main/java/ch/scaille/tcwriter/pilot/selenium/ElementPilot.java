@@ -14,7 +14,7 @@ import ch.scaille.tcwriter.pilot.PollingContext;
 import ch.scaille.tcwriter.pilot.PollingResult;
 import ch.scaille.tcwriter.pilot.factories.PollingResults;
 
-public class ElementPilot extends AbstractComponentPilot<ElementPilot, WebElement> {
+public class ElementPilot extends AbstractComponentPilot<WebElement> {
 
 	private final SeleniumPilot pilot;
 	private final Function<WebDriver, WebElement> locator;
@@ -56,13 +56,13 @@ public class ElementPilot extends AbstractComponentPilot<ElementPilot, WebElemen
 	}
 
 	@Override
-	public PollingBuilder<ElementPilot, WebElement, SeleniumPollingBuilder, SeleniumPollingBuilder.WebElementPoller> polling() {
+	public PollingBuilder<WebElement, SeleniumPollingBuilder, SeleniumPollingBuilder.WebElementPoller> polling() {
 		return new SeleniumPollingBuilder(this);
 	}
 	
 	@Override
 	protected <U> PollingResult<WebElement, U> waitPollingSuccessLoop(final Polling<WebElement, U> polling) {
-		polling.initialize(this);
+		polling.initializeFrom(this);
 		return new SeleniumPoller(pilot.getDriver(), polling.getTimeout(), polling.getFirstDelay(),
 				polling.getDelayFunction())
 				.run(p -> executePolling(p, polling), PollingResult::isSuccess, PollingResults::failWithException)

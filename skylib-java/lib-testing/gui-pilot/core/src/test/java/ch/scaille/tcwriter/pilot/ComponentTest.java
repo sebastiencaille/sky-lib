@@ -16,7 +16,7 @@ class ComponentTest {
 	private static final String TEST_TEXT = "Hello";
 
 
-	public static class TestComponent extends AbstractComponentPilot<TestComponent, Object> {
+	public static class TestComponent extends AbstractComponentPilot<Object> {
 
 		private final List<Long> delays = new ArrayList<>();
 

@@ -49,7 +49,7 @@ class ClassFinderTest {
 			throws URISyntaxException, IOException {
 		try (var finder = new TestClassFinder(new URL[0])) {
 			final var scanner = finder.scanner();
-			final var testUri = new URL(urlPackageLocation).toURI();
+			final var testUri = new URI(urlPackageLocation);
 			Assertions.assertEquals(URI.create(fsRoot), scanner.rootOf(testUri));
 			Assertions.assertEquals(fsPackageLocation, scanner.packageLocationOf(testUri, "mypackage"));
 		}

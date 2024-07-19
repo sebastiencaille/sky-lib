@@ -20,13 +20,13 @@ public class Polling<C, V> {
 		PollingResult<C, V> poll(PollingContext<C> context);
 	}
 
-	private final OverridableParameter<AbstractComponentPilot<?, C>, Duration> timeout = new OverridableParameter<>(
+	private final OverridableParameter<AbstractComponentPilot<C>, Duration> timeout = new OverridableParameter<>(
 			AbstractComponentPilot::getDefaultPollingTimeout);
-	private final OverridableParameter<AbstractComponentPilot<?, C>, Duration> firstDelay = new OverridableParameter<>(
+	private final OverridableParameter<AbstractComponentPilot<C>, Duration> firstDelay = new OverridableParameter<>(
 			AbstractComponentPilot::getDefaultPollingFirstDelay);
-	private final OverridableParameter<AbstractComponentPilot<?, C>, Poller.DelayFunction> delayFunction = new OverridableParameter<>(
+	private final OverridableParameter<AbstractComponentPilot<C>, Poller.DelayFunction> delayFunction = new OverridableParameter<>(
 			AbstractComponentPilot::getDefaultPollingDelayFunction);
-	private final OverridableParameter<AbstractComponentPilot<?, C>, ReportFunction<C>> reportFunction = new OverridableParameter<>(
+	private final OverridableParameter<AbstractComponentPilot<C>, ReportFunction<C>> reportFunction = new OverridableParameter<>(
 			AbstractComponentPilot::getDefaultReportFunction);
 
 	private final Predicate<PollingContext<C>> precondition;
@@ -145,7 +145,7 @@ public class Polling<C, V> {
 		return this;
 	}
 
-	public Polling<C, V> initialize(AbstractComponentPilot<?, C> pilot) {
+	public Polling<C, V> initializeFrom(AbstractComponentPilot<C> pilot) {
 		timeout.withSource(pilot).ensureLoaded();
 		firstDelay.withSource(pilot).ensureLoaded();
 		delayFunction.withSource(pilot).ensureLoaded();

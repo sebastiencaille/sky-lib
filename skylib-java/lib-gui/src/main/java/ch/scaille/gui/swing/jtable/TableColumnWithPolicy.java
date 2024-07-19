@@ -94,19 +94,19 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 		return new FixedWidthColumn<>(column, fixedWidth);
 	}
 
-	protected static class FixedTextWidthColumn<C extends Enum<C>> extends TableColumnWithPolicy<C> {
+	protected static class fixedTextLengthColumn<C extends Enum<C>> extends TableColumnWithPolicy<C> {
 
 		private static final Map<String, Float> WIDTH_CACHE = new HashMap<>();
 
-		private final int fixedTextWidth;
+		private final int fixedTextLength;
 
 		private final String sample;
 
 		private final Margin margin;
 
-		public FixedTextWidthColumn(final C column, final int fixedTextWidth, String sample, Margin margin) {
+		public fixedTextLengthColumn(final C column, final int fixedTextLength, String sample, Margin margin) {
 			super(column);
-			this.fixedTextWidth = fixedTextWidth;
+			this.fixedTextLength = fixedTextLength;
 			this.sample = sample;
 			this.margin = margin;
 		}
@@ -115,7 +115,7 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 		public int computeWidth(final ColumnComputationInfo policyInfo) {
 			final var charRatio = WIDTH_CACHE.computeIfAbsent(sample + policyInfo.getFont().toString(),
 					d -> ((float) SwingExt.computeTextWidth(policyInfo.table, sample)) / sample.length());
-			final var columnWidth = (int) (charRatio * fixedTextWidth);
+			final var columnWidth = (int) (charRatio * fixedTextLength);
 			return columnWidth + margin.compute(columnWidth);
 		}
 	}
@@ -125,8 +125,8 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 	 * the lorem ipsum and the table's font
 	 */
 	public static <C extends Enum<C>> TableColumnWithPolicy<C> fixedTextLength(final C column,
-																			   final int fixedTextWidth) {
-		return fixedTextLength(column, fixedTextWidth, SAMPLE_LOREM_IPSUM, DEFAULT_MARGIN);
+																			   final int fixedTextLength) {
+		return fixedTextLength(column, fixedTextLength, SAMPLE_LOREM_IPSUM, DEFAULT_MARGIN);
 	}
 
 	/**
@@ -141,7 +141,7 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 	 */
 	public static <C extends Enum<C>> TableColumnWithPolicy<C> fixedTextLength(final C column, final int fixedTextLength,
 																			   String sample, Margin margins) {
-		return new FixedTextWidthColumn<>(column, fixedTextLength, sample, margins);
+		return new fixedTextLengthColumn<>(column, fixedTextLength, sample, margins);
 	}
 
 	protected static class PercentOfTableWidthColumn<C extends Enum<C>> extends TableColumnWithPolicy<C> {

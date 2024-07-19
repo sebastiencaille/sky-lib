@@ -4,7 +4,7 @@ import static ch.scaille.tcwriter.pilot.factories.Reporting.checkingThat;
 
 import javax.swing.JToggleButton;
 
-public class JToggleButtonPilot extends AbstractSwingComponentPilot<JToggleButtonPilot, JToggleButton> {
+public class JToggleButtonPilot extends AbstractSwingComponentPilot<JToggleButton> {
 
 	public JToggleButtonPilot(final SwingPilot pilot, final String name) {
 		super(pilot, JToggleButton.class, name);

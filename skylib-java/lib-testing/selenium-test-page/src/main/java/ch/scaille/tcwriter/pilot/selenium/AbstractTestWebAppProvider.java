@@ -1,10 +1,8 @@
 package ch.scaille.tcwriter.pilot.selenium;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
@@ -26,12 +24,12 @@ public abstract class AbstractTestWebAppProvider {
 	protected static Undertow webServer = null;
 	protected static WebDriver driver = null;
 
-	public static final URL localUrl;
+	public static final URI localUrl;
 
 	static {
 		try {
-			localUrl = new URI(System.getProperty("url", "http://localhost:9999")).toURL();
-		} catch (MalformedURLException | URISyntaxException e) {
+			localUrl = new URI(System.getProperty("url", "http://localhost:9999"));
+		} catch (URISyntaxException e) {
 			throw new IllegalStateException(e);
 		}
 	}

@@ -9,20 +9,20 @@ package ch.scaille.tcwriter.pilot;
 public class PollingContext<C> {
 
 	public static PollingContext<Object> generic(PollingContext<?> orig) {
-		final var newContext = new PollingContext<>((AbstractComponentPilot<?, Object>) orig.pilot);
+		final var newContext = new PollingContext<>((AbstractComponentPilot<Object>) orig.pilot);
 		newContext.setComponent(orig.component, orig.description);
 		return newContext;
 	}
 
-	private final AbstractComponentPilot<?, C> pilot;
+	private final AbstractComponentPilot<C> pilot;
 	private C component;
 	private String description;
 
-	public PollingContext(AbstractComponentPilot<?, C> pilot) {
+	public PollingContext(AbstractComponentPilot<C> pilot) {
 		this.pilot = pilot;
 	}
 
-	public AbstractComponentPilot<?, C> getPilot() {
+	public AbstractComponentPilot<C> getPilot() {
 		return pilot;
 	}
 	

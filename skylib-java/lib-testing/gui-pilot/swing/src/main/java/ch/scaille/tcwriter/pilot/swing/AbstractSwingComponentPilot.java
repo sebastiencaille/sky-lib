@@ -15,8 +15,8 @@ import ch.scaille.util.helpers.Poller;
  * @param <P> the type of the Swing Component Pilot
  * @param <C> the type of the Swing Component
  */
-public class AbstractSwingComponentPilot<P extends AbstractSwingComponentPilot<P, C>, C extends JComponent>
-		extends AbstractComponentPilot<P, C> {
+public class AbstractSwingComponentPilot<C extends JComponent>
+		extends AbstractComponentPilot<C> {
 
 	protected final SwingPilot pilot;
 	protected final String name;
@@ -73,7 +73,7 @@ public class AbstractSwingComponentPilot<P extends AbstractSwingComponentPilot<P
 	}
 	
 	@Override
-	public SwingPollingBuilder<P, C> polling() {
+	public SwingPollingBuilder<C> polling() {
 		return new SwingPollingBuilder<>(this);
 	}
 	

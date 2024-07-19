@@ -30,7 +30,7 @@ public class PagePilot {
 				.filter(a -> a.getAnnotation(ByName.class).isPresent())//
 				.forEach(a -> {
 					final var name = a.getAnnotation(ByName.class).get().value();
-					final var pilotClass = ((Class<AbstractSwingComponentPilot<?, ?>>) a.getType());
+					final var pilotClass = ((Class<AbstractSwingComponentPilot<?>>) a.getType());
 					try {
 						a.setValueOf(this,
 								pilotClass.getConstructor(SwingPilot.class, String.class).newInstance(pilot, name));

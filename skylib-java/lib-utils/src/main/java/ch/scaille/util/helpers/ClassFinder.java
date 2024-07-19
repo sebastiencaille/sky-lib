@@ -57,8 +57,8 @@ public class ClassFinder {
 
 	public static class URLClassFinder extends ClassFinder implements AutoCloseable {
 
-		protected URLClassFinder(URL[] urls) {
-			super(new URLClassLoader(urls));
+		protected URLClassFinder(URL[] uris) {
+			super(new URLClassLoader(uris));
 		}
 
 		@Override

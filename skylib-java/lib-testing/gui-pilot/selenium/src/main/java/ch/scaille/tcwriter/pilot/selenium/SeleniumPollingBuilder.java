@@ -13,7 +13,7 @@ import ch.scaille.tcwriter.pilot.PollingContext;
 import ch.scaille.tcwriter.pilot.factories.Pollings;
 
 public class SeleniumPollingBuilder extends
-		PollingBuilder<ElementPilot, WebElement, SeleniumPollingBuilder,SeleniumPollingBuilder.WebElementPoller> {
+		PollingBuilder<WebElement, SeleniumPollingBuilder,SeleniumPollingBuilder.WebElementPoller> {
 
 	public static Predicate<PollingContext<WebElement>> satisfies(
 			Function<WebElement, ExpectedCondition<WebElement>> expectedCondition) {
@@ -23,7 +23,7 @@ public class SeleniumPollingBuilder extends
 
 	public static class WebElementPoller extends PollingBuilder.Poller<WebElement> {
 
-		protected WebElementPoller(PollingBuilder<?, WebElement, ?, ?> builder) {
+		protected WebElementPoller(PollingBuilder<WebElement, ?, ?> builder) {
 			super(builder);
 		}
 

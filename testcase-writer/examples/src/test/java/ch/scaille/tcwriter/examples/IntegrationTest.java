@@ -32,7 +32,7 @@ class IntegrationTest {
         final var tc = exampleHelper.recordTestCase(model);
 
         exampleHelper.getModelDao().writeTestDictionary(model);
-        exampleHelper.getModelDao().writeTestCase(ExampleHelper.TC_NAME, tc);
+        exampleHelper.getModelDao().writeTestCase("ch/scaille/tcwriter/examples" + ExampleHelper.TC_NAME, tc);
 
         // TODO: find a way to compare both
     }

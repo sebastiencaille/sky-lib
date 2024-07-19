@@ -32,13 +32,13 @@ import ch.scaille.tcwriter.pilot.factories.Pollings;
  * @param <P> the Pilot type
  * @param <C> the Component type
  */
-public class PollingBuilder<P extends AbstractComponentPilot<P, C>, C, T extends PollingBuilder<P, C, T, U>, U extends PollingBuilder.Poller<C>> {
+public class PollingBuilder<C, T extends PollingBuilder<C, T, U>, U extends PollingBuilder.Poller<C>> {
 
 	public static class Poller<C> {
 
-		protected final PollingBuilder<?, C, ?, ?> builder;
+		protected final PollingBuilder<C, ?, ?> builder;
 
-		protected Poller(PollingBuilder<?, C, ?, ?> builder) {
+		protected Poller(PollingBuilder<C, ?, ?> builder) {
 			this.builder = builder;
 		}
 
@@ -81,13 +81,13 @@ public class PollingBuilder<P extends AbstractComponentPilot<P, C>, C, T extends
 
 	}
 
-	protected final AbstractComponentPilot<P, C> pilot;
+	protected final AbstractComponentPilot<C> pilot;
 
 	protected final List<Consumer<Polling<C, ?>>> configurers = new ArrayList<>(2);
 
 	private FailureHandler<C, ?> failureHandler;
 
-	public PollingBuilder(AbstractComponentPilot<P, C> pilot) {
+	public PollingBuilder(AbstractComponentPilot<C> pilot) {
 		this.pilot = pilot;
 	}
 

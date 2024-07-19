@@ -1,8 +1,8 @@
 package ch.scaille.util;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
@@ -14,12 +14,12 @@ class LambdaExtTest {
 
 	private static final String STR = "https://www.google.com";
 
-	private URL url() throws MalformedURLException {
-		return new URL(STR);
+	private URI url() throws URISyntaxException {
+		return new URI(STR);
 	}
 
-	private URL str2url(String url) throws MalformedURLException {
-		return new URL(url);
+	private URI str2url(String url) throws URISyntaxException {
+		return new URI(url);
 	}
 
 	private void consumeUrl(String u) {
@@ -27,7 +27,7 @@ class LambdaExtTest {
 	}
 
 	@Test
-	void testCompile() throws MalformedURLException {
+	void testCompile() throws URISyntaxException {
 		LambdaExt.uncheckedR(this::url);
 		Optional.of(STR).ifPresent(LambdaExt.uncheckedC(this::consumeUrl));
 		Assertions.assertEquals(url(), LambdaExt.uncheck(this::url));

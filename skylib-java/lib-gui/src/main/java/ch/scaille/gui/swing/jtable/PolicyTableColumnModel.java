@@ -9,7 +9,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableColumnModel;
 
 import ch.scaille.gui.swing.JTableHelper;
-import ch.scaille.gui.swing.jtable.TableColumnWithPolicy.FixedTextWidthColumn;
+import ch.scaille.gui.swing.jtable.TableColumnWithPolicy.fixedTextLengthColumn;
 import ch.scaille.gui.swing.jtable.TableColumnWithPolicy.FixedWidthColumn;
 import ch.scaille.gui.swing.jtable.TableColumnWithPolicy.PercentOfAvailableSpaceColumn;
 import ch.scaille.gui.swing.jtable.TableColumnWithPolicy.PercentOfTableWidthColumn;
@@ -31,7 +31,7 @@ public class PolicyTableColumnModel<C extends Enum<C>> extends DefaultTableColum
 	private final JTable table;
 
 	public static final List<Class<?>> DEFAULT_POLICIES = List.of(FixedWidthColumn.class,
-			FixedTextWidthColumn.class, PercentOfTableWidthColumn.class, PercentOfAvailableSpaceColumn.class);
+			fixedTextLengthColumn.class, PercentOfTableWidthColumn.class, PercentOfAvailableSpaceColumn.class);
 
 	public PolicyTableColumnModel(final JTable table) {
 		this(table, DEFAULT_POLICIES);

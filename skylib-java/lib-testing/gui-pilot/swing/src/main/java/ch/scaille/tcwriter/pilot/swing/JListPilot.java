@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import ch.scaille.tcwriter.pilot.Polling;
 
 @SuppressWarnings("java:S5960")
-public class JListPilot extends AbstractSwingComponentPilot<JListPilot, JList> {
+public class JListPilot extends AbstractSwingComponentPilot<JList> {
 
 	public JListPilot(final SwingPilot pilot, final String name) {
 		super(pilot, JList.class, name);

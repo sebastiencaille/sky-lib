@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import ch.scaille.tcwriter.pilot.PollingContext;
 
 @SuppressWarnings("java:S5960")
-public class JTextFieldPilot extends AbstractSwingComponentPilot<JTextFieldPilot, JTextComponent> {
+public class JTextFieldPilot extends AbstractSwingComponentPilot<JTextComponent> {
 
 	public JTextFieldPilot(final SwingPilot pilot, final String name) {
 		super(pilot, JTextComponent.class, name);

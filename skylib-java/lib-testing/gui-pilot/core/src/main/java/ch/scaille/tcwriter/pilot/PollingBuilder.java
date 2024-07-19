@@ -91,7 +91,7 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, U>, U extends Poll
 		this.pilot = pilot;
 	}
 
-	public <R> T configure(Consumer<Polling<C, ?>> configurer) {
+	public T configure(Consumer<Polling<C, ?>> configurer) {
 		configurers.add(configurer);
 		return (T) this;
 	}

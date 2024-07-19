@@ -94,7 +94,7 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 		return new FixedWidthColumn<>(column, fixedWidth);
 	}
 
-	protected static class fixedTextLengthColumn<C extends Enum<C>> extends TableColumnWithPolicy<C> {
+	protected static class FixedTextLengthColumn<C extends Enum<C>> extends TableColumnWithPolicy<C> {
 
 		private static final Map<String, Float> WIDTH_CACHE = new HashMap<>();
 
@@ -104,7 +104,7 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 
 		private final Margin margin;
 
-		public fixedTextLengthColumn(final C column, final int fixedTextLength, String sample, Margin margin) {
+		public FixedTextLengthColumn(final C column, final int fixedTextLength, String sample, Margin margin) {
 			super(column);
 			this.fixedTextLength = fixedTextLength;
 			this.sample = sample;
@@ -141,7 +141,7 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 	 */
 	public static <C extends Enum<C>> TableColumnWithPolicy<C> fixedTextLength(final C column, final int fixedTextLength,
 																			   String sample, Margin margins) {
-		return new fixedTextLengthColumn<>(column, fixedTextLength, sample, margins);
+		return new FixedTextLengthColumn<>(column, fixedTextLength, sample, margins);
 	}
 
 	protected static class PercentOfTableWidthColumn<C extends Enum<C>> extends TableColumnWithPolicy<C> {

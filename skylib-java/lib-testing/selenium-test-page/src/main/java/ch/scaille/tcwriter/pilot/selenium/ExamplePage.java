@@ -1,6 +1,5 @@
 package ch.scaille.tcwriter.pilot.selenium;
 
-import static ch.scaille.tcwriter.pilot.factories.Pollings.andThen;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
@@ -56,7 +55,7 @@ public class ExamplePage extends PagePilot {
 	 * until "Proceed" is enabled
 	 */
 	public void executeEnable() {
-		on(elementToBeClickable(ENABLE_TEST)).configure(andThen(new WaitEnableTestEnabledDelay())).click();
+		on(elementToBeClickable(ENABLE_TEST)).configure(p -> p.andThen(new WaitEnableTestEnabledDelay())).click();
 	}
 
 	public void assertedEnabledTested() {

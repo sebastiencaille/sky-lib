@@ -35,6 +35,8 @@ public class ExampleHelper {
 	private static final Path RESOURCE_FOLDER = Paths.get(System.getProperty("java.io.tmpdir"));
 
 	public static final String TC_NAME = "testCase";
+	
+	public static final String TC_FILE = "ch/scaille/tcwriter/examples/GeneratedTest.java";
 
 	private final IConfigDao configDao;
 

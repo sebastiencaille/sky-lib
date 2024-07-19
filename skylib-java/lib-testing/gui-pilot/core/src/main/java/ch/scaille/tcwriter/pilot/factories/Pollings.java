@@ -4,7 +4,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import ch.scaille.tcwriter.pilot.ActionDelay;
 import ch.scaille.tcwriter.pilot.Polling;
 import ch.scaille.tcwriter.pilot.PollingContext;
 
@@ -59,12 +58,8 @@ public abstract class Pollings {
 	}
 
 
-	public static <C, V> Polling<C, V> get(Function<C, V> getter) {
+	public static <C, V extends Object> Polling<C, V> get(Function<C, V> getter) {
 		return new Polling<>(ctxt -> PollingResults.value(getter.apply(ctxt.getComponent())));
-	}
-	
-	public static <C> Consumer<Polling<C, ?>> andThen(ActionDelay actionDelay) {
-		return polling -> polling.andThen(actionDelay);
 	}
 
 }

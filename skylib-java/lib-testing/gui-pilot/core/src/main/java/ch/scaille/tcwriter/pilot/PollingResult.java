@@ -13,14 +13,14 @@ public class PollingResult<C, V> {
 
 	public final V polledValue;
 	public final Throwable failureReason;
-	private Polling<C, ?> polling;
+	private PollingConfiguration<C> polling;
 
 	public PollingResult(final V polledValue, final Throwable failureReason) {
 		this.polledValue = polledValue;
 		this.failureReason = failureReason;
 	}
 
-	public void setPolling(Polling<C, ?> polling) {
+	public void setPolling(PollingConfiguration<C> polling) {
 		this.polling = polling;
 	}
 	
@@ -51,7 +51,7 @@ public class PollingResult<C, V> {
 		return polling.getContext();
 	}
 	
-	public Polling<C, ?> getPolling() {
+	public PollingConfiguration<C> getPolling() {
 		return polling;
 	}
 	

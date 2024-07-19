@@ -6,6 +6,11 @@ import ch.scaille.tcwriter.pilot.PollingResult;
 
 public interface PollingResults {
 	
+	/**
+	 * @param <C> Component type
+	 * @param <V> Value type
+	 * @param <R> Result type
+	 */
 	interface Transformer<C, V, R> extends Function<PollingResult<C, V>, PollingResult<C, R>> {
 		// noop
 	}
@@ -45,7 +50,7 @@ public interface PollingResults {
 		return new PollingResult<>(null, cause);
 	}
 
-	static <C> Transformer<C, ?, Boolean> returnSuccess() {
+	static <C, V> Transformer<C, V, Boolean> returnSuccess() {
 		return r -> r.derivate(r.isSuccess());
 	}
 	

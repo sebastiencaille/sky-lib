@@ -21,26 +21,25 @@
 	<properties>
 		<revision>0.0.1-SNAPSHOT</revision>
 		<aspectj.version>1.9.22.1</aspectj.version>
-		<jackson-bom.version>2.17.1</jackson-bom.version>
 		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
 
-		<guava.version>33.2.0-jre</guava.version>
+		<guava.version>33.2.1-jre</guava.version>
 		<logback.version>1.5.6</logback.version>
 		<mapstruct.version>1.5.5.Final</mapstruct.version>
 
 		<swagger-parser.version>2.1.22</swagger-parser.version>
 		<swagger.version>2.2.22</swagger.version>
-		<springdoc-openapi.version>2.5.0</springdoc-openapi.version>
+		<springdoc-openapi.version>2.6.0</springdoc-openapi.version>
 
-		<undertow.version>2.3.13.Final</undertow.version>
+		<undertow.version>2.3.15.Final</undertow.version>
 		<liquibase.version>4.28.0</liquibase.version>
 
 		<mockito.version>5.12.0</mockito.version>
-		<junit-jupiter.version>5.10.2</junit-jupiter.version>
+		<junit-jupiter.version>5.10.3</junit-jupiter.version>
 		<junit.version>4.13.2</junit.version>
-		<junit-platform-console-standalone.version>1.10.2</junit-platform-console-standalone.version>
-		<selenium.version>4.21.0</selenium.version>
-		<h2.version>2.2.224</h2.version>
+		<junit-platform-console-standalone.version>1.10.3</junit-platform-console-standalone.version>
+		<selenium.version>4.23.0</selenium.version>
+		<h2.version>2.3.230</h2.version>
 
 		<coverage.temp>${java.io.tmpdir}/coverage/${basedir}</coverage.temp>
 
@@ -51,14 +50,15 @@
 		<maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
 		<maven-source-plugin.version>3.3.1</maven-source-plugin.version>
 		<maven-deploy-plugin.version>3.1.2</maven-deploy-plugin.version>
-		<maven-jar-plugin.version>3.4.1</maven-jar-plugin.version>
+		<maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
 		<maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
 		<maven-war-plugin.version>3.4.0</maven-war-plugin.version>
-		<maven-dependency-plugin.version>3.6.1</maven-dependency-plugin.version>
-		<maven-enforcer-plugin.version>3.4.1</maven-enforcer-plugin.version>
-		<maven-clean-plugin.version>3.3.2</maven-clean-plugin.version>
+		<maven-dependency-plugin.version>3.7.1</maven-dependency-plugin.version>
+		<maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
+		<maven-clean-plugin.version>3.4.0</maven-clean-plugin.version>
 
-		<maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+		<maven-surefire-plugin.version>3.3.1</maven-surefire-plugin.version>
+		<maven-failsafe-plugin.version>3.3.1</maven-failsafe-plugin.version>
 	</properties>
 
 	<dependencyManagement>
@@ -66,7 +66,7 @@
 			<dependency>
 				<groupId>org.springframework.session</groupId>
 				<artifactId>spring-session-bom</artifactId>
-				<version>3.3.0</version>
+				<version>3.3.1</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -187,12 +187,12 @@
 				<plugin>
 					<groupId>org.sonarsource.scanner.maven</groupId>
 					<artifactId>sonar-maven-plugin</artifactId>
-					<version>3.11.0.3922</version>
+					<version>4.0.0.4121</version>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>versions-maven-plugin</artifactId>
-					<version>2.16.2</version>
+					<version>2.17.1</version>
 					<configuration>
 						<processDependencyManagementTransitive>false</processDependencyManagementTransitive>
 					</configuration>
@@ -212,7 +212,7 @@
 				<plugin>
 					<groupId>org.openapitools</groupId>
 					<artifactId>openapi-generator-maven-plugin</artifactId>
-					<version>7.6.0</version>
+					<version>7.7.0</version>
 					<dependencies>
 						<dependency>
 							<groupId>io.swagger.parser.v3</groupId>

@@ -18,19 +18,21 @@ import ch.scaille.tcwriter.pilot.factories.PollingResults;
 import ch.scaille.tcwriter.pilot.factories.Pollings;
 
 /**
- * Rules:
- * <ul>
- * <li>try... methods require using orFail(...) or satisfied(...)</li>
- * <li>...Poll methods take a Polling as parameter</li>
- * <li>...Apply methods take a Component Consumer as parameter</li>
- * <li>...Satisfy methods take a Predicate as parameter</li>
- * <li>...Assert methods take a Context Consumer as parameter (mostly to access
- * the descriptions)</li>
- * <li>Otherwise, the method should call orFail(...)</li>
- * </ul>
+ * To build a polling
+ * <p>
+ * The idea is to
+ * <ol> 
+ * <li>create a PollingBuilder on a component.</li>
+ * <li>define the error handling.</li>
+ * <li>configure the poller.</li>
+ * <li>apply a polling.</li>
+ * </ol>
+ * Example: on(myComponent).fail().ifNot().clicked();
+ * </p>
  * 
- * @param <P> the Pilot type
  * @param <C> the Component type
+ * @param <T> the Builder (sub)type
+ * @param <U> the Poller (sub)type
  */
 public class PollingBuilder<C, T extends PollingBuilder<C, T, U>, U extends PollingBuilder.Poller<C>> {
 

@@ -227,6 +227,9 @@ public abstract class AbstractComponentPilot<C> {
 		}
 	}
 
+	/**
+	 * Creates a polling builder for this component
+	 */
 	public <T extends PollingBuilder<C, T, U>, U extends PollingBuilder.Poller<C>> PollingBuilder<C, T, U> polling() {
 		return new PollingBuilder<>(this);
 	}

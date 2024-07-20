@@ -15,7 +15,7 @@ public class WebSocketConnectionHandler<S extends Session> {
 
 	private static final String SPRING_SESSION_ID_ATTR_NAME = "SPRING.SESSION.ID";
 
-	private interface ConnectHandler {
+	public interface ConnectHandler {
 
 		void handle(Session session, String tabId, String wsSessionId);
 

@@ -22,27 +22,30 @@ public class SessionManagerImpl implements SessionAccessor {
 
 	private static class NativeWebRequestAccessor implements SessionAccessor {
 
-		private final Optional<NativeWebRequest> request;
+		private final NativeWebRequest request;
 
-		public NativeWebRequestAccessor(Optional<NativeWebRequest> request) {
+		public NativeWebRequestAccessor(NativeWebRequest request) {
 			this.request = request;
+		}
+
+		private Optional<NativeWebRequest> request() {
+			return Optional.of(request);
 		}
 
 		@Override
 		public <T> Optional<T> get(String attribName) {
 			// Creates the session if needed
-			request.ifPresent(RequestAttributes::getSessionId);
-			return request.map(r -> (T)r.getAttribute(attribName, RequestAttributes.SCOPE_SESSION));
+			return request().map(r -> (T)r.getAttribute(attribName, RequestAttributes.SCOPE_SESSION));
 		}
 
 		@Override
 		public void set(String attribName, Object value) {
-			request.ifPresent(s -> s.setAttribute(attribName, value, RequestAttributes.SCOPE_SESSION));
+			request().ifPresent(s -> s.setAttribute(attribName, value, RequestAttributes.SCOPE_SESSION));
 		}
 		
 		@Override
 		public void remove(String attribName) {
-			request.ifPresent(s -> s.removeAttribute(attribName, RequestAttributes.SCOPE_SESSION));
+			request().ifPresent(s -> s.removeAttribute(attribName, RequestAttributes.SCOPE_SESSION));
 			
 		}
 	}
@@ -122,7 +125,7 @@ public class SessionManagerImpl implements SessionAccessor {
 
 	@Override
 	@Transactional
-	public GetSet<Context> getContext(Optional<NativeWebRequest> request) {
+	public GetSet<Context> getContext(NativeWebRequest request) {
 		return new GetSet<>(new NativeWebRequestAccessor(request), "UserContext",
 				ch.scaille.tcwriter.server.dto.Context::new);
 	}
@@ -132,7 +135,7 @@ public class SessionManagerImpl implements SessionAccessor {
 	}
 
 	@Override
-	public GetSet<String> webSocketSessionIdOf(Optional<NativeWebRequest> request, String tabId) {
+	public GetSet<String> webSocketSessionIdOf(NativeWebRequest request, String tabId) {
 		return webSocketSessionIdOf(new NativeWebRequestAccessor(request), tabId);
 	}
 

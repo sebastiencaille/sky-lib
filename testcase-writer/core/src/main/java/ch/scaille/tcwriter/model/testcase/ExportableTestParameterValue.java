@@ -53,8 +53,7 @@ public class ExportableTestParameterValue extends TestParameterValue {
 	
 	/**
 	 * When the object is serialized, save the id of the test parameter factory.
-	 * @return
-	 */
+     */
 	@JsonProperty
 	public ExportReference getTestParameterFactoryRef() {
 		if (factory.getNature() == ParameterNature.SIMPLE_TYPE) {
@@ -65,8 +64,7 @@ public class ExportableTestParameterValue extends TestParameterValue {
 
 	/**
 	 * When the object is deserialized, provide how to restore the state of the test parameter factory, according to the saved id
-	 * @param ref
-	 */
+     */
 	public void setTestParameterFactoryRef(final ExportReference ref) {
 		ref.setRestoreAction((tc, id) -> {
 			if (id.isEmpty()) {

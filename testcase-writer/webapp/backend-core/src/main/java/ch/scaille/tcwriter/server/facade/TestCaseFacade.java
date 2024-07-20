@@ -42,7 +42,7 @@ public class TestCaseFacade extends AbstractFacade {
 	}
 
 	public ExportableTestCase load(String tcId, String dictionaryId) {
-		return ValidationHelper.testCaseFound(tcId, testCaseDao.load(tcId, loadDictionary(dictionaryId)));
+		return ValidationHelper.testCaseFound(tcId, testCaseDao.load(tcId, loadDictionary(dictionaryId)).orElse(null));
 	}
 
 	public List<String> computeHumanReadableTexts(TestCase tc, List<TestStep> steps) {

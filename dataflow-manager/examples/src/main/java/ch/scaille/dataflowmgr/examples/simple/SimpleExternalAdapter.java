@@ -14,14 +14,11 @@ public class SimpleExternalAdapter {
 
 	public String getCompletion(final MyData input) {
 		FlowReport.add("getCompletion");
-		switch (input.parameter) {
-		case "Hello":
-			return "World";
-		case "Hi":
-			return "There";
-		default:
-			throw new IllegalStateException("Unkown id: " + input);
-		}
+        return switch (input.parameter) {
+            case "Hello" -> "World";
+            case "Hi" -> "There";
+            default -> throw new IllegalStateException("Unknown id: " + input);
+        };
 	}
 
 	public void display(final MyData result) {

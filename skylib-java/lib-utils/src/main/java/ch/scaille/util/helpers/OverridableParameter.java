@@ -1,6 +1,5 @@
 package ch.scaille.util.helpers;
 
-import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -14,7 +13,7 @@ public class OverridableParameter<S, T> {
 
 	private S source;
 
-	private Optional<T> value = Optional.empty();
+	private T value = null;
 
 	public OverridableParameter(Function<S, T> defaultProvider) {
 		this.defaultProvider = defaultProvider;
@@ -26,22 +25,22 @@ public class OverridableParameter<S, T> {
 	}
 
 	public void set(T value) {
-		this.value = Optional.of(value);
+		this.value = value;
 	}
 
 	public T get() {
 		ensureLoaded();
-		return this.value.get();
+		return this.value;
 	}
 
 	public void ensureLoaded() {
-		if (this.value.isPresent()) {
+		if (this.value != null) {
 			return;
 		}
 		if (source == null) {
 			throw new IllegalStateException("Source not available");
 		}
-		this.value = Optional.of(defaultProvider.apply(source));
+		this.value = defaultProvider.apply(source);
 	}
 
 }

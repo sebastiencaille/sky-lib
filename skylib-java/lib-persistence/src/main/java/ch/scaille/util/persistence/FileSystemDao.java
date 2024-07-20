@@ -73,12 +73,12 @@ public class FileSystemDao<T> extends AbstractSerializationDao<T> {
 				.filter(f -> filter == null || f.getFileName().toString().startsWith(filter))
 				.map(p -> buildMetadata(nameAndExtensionOf(folder.relativize(p).toString())[0], p.toString()))
 				// filter on the metadata
-				.filter(m -> filterMetaData(filter, m))
+				.filter(m -> filterMetaData(filter, m.orElse(null)))
 				.map(Optional::get);
 	}
 
-	private boolean filterMetaData(final String filter, Optional<ResourceMetaData> m) {
-		return m.isPresent() && (filter == null || m.get().getLocator().equals(filter));
+	private boolean filterMetaData(final String filter, ResourceMetaData m) {
+		return m != null && (filter == null || m.getLocator().equals(filter));
 	}
 
 	@Override

@@ -81,9 +81,7 @@ public class StepEditorController extends GuiController {
 	 * different action parameters) or when changing the action (because same step
 	 * but action has different parameters)
 	 *
-	 * @param td
-	 * @param testStep
-	 */
+     */
 	private void updateActionParameters(final TestDictionary td, final ObjectProperty<TestStep> testStep) {
 		final var step = testStep.getValue();
 		final var action = model.getAction().getValue();

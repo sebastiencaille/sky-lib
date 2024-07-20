@@ -8,7 +8,7 @@
 		<version>${revision}</version>
 	</parent>
 
-	<artifactId>lib-gui-generator</artifactId>
+	<artifactId>lib-gui-generators</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>ch.scaille</groupId>

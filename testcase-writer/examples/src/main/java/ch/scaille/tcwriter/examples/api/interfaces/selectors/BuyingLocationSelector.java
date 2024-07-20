@@ -23,8 +23,7 @@ public class BuyingLocationSelector {
 	/**
 	 * Buy from internet
 	 *
-	 * @return
-	 */
+     */
 	@TCApi(description = "On internet", humanReadable = "on internet (%s)")
 	public static BuyingLocationSelector onInternet(
 			@TCApi(description = "url", humanReadable = "url") final String url) {

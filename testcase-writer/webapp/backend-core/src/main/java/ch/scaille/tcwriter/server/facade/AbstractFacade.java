@@ -12,6 +12,6 @@ public class AbstractFacade {
 	}
 
 	protected TestDictionary loadDictionary(String dictionaryId) {
-		return ValidationHelper.dictionaryFound(dictionaryId, dictionaryDao.load(dictionaryId));
+		return ValidationHelper.dictionaryFound(dictionaryId, dictionaryDao.load(dictionaryId).orElse(null));
 	}
 }

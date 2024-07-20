@@ -13,7 +13,7 @@ public interface StreamExt {
 
 	class Single<T> {
 		private boolean allowZero = false;
-		private Optional<T> value = Optional.empty();
+		private T value = null;
 		private int count;
 
 		private Single(boolean allowZero) {
@@ -33,7 +33,7 @@ public interface StreamExt {
 				return;
 			}
 			count++;
-			this.value = Optional.of(newValue);
+			this.value = newValue;
 		}
 
 		Single<T> combiner(Single<T> t2) {
@@ -48,28 +48,28 @@ public interface StreamExt {
 			if (wrongCount()) {
 				throw new WrongCountException(count);
 			}
-			return value.orElse(null);
+			return value;
 		}
 
 		public Optional<T> optional() {
 			if (wrongCount()) {
 				throw new WrongCountException(count);
 			}
-			return value;
+			return Optional.of(value);
 		}
 
 		public <E extends Exception> T orElseThrow(final IntFunction<E> supplier) throws E {
 			if (wrongCount()) {
 				throw supplier.apply(count);
 			}
-			return value.orElse(null);
+			return value;
 		}
 
 		public <E extends Exception> Optional<T> optionalOrThrow(final IntFunction<E> supplier) throws E {
 			if (wrongCount()) {
 				throw supplier.apply(count);
 			}
-			return value;
+			return Optional.ofNullable(value);
 		}
 	}
 

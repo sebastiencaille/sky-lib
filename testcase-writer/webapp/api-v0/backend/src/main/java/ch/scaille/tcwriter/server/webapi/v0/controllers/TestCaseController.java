@@ -66,8 +66,8 @@ public class TestCaseController extends TestcaseApiController {
 	public ResponseEntity<Void> executeTestCase(@Valid @NotNull String tc, @Valid @NotNull String dictionary,
 			@Valid @NotNull String tabId) {
 		final var loadedTC = loadValidTestCase(tc, dictionary);
-		final var wsSessionId = sessionAccessor.webSocketSessionIdOf(getRequest(), tabId).get();
-		testCaseFacade.executeTest(loadedTC, s -> webFeedbackFacade.send(wsSessionId, tabId,
+		final var wsSessionId = sessionAccessor.webSocketSessionIdOf(getRequest().orElse(null), tabId).get();
+		testCaseFacade.executeTest(loadedTC, s -> webFeedbackFacade.send(wsSessionId.orElse(null), tabId,
 				WebConstants.TEST_EXECUTION_FEEDBACK, TestCaseMapper.MAPPER.convert(s)));
 		return ResponseEntity.ok(null);
 	}

@@ -11,10 +11,10 @@ public class StorageDataHandlerRegistry {
 
 	private final List<IStorageDataHandler> handlers = new ArrayList<>();
 
-	private final Optional<IStorageDataHandler> defaultDataHandler;
+	private final IStorageDataHandler defaultDataHandler;
 
 	public StorageDataHandlerRegistry(IStorageDataHandler defaultDataHandler) {
-		this.defaultDataHandler = Optional.ofNullable(defaultDataHandler);
+		this.defaultDataHandler = defaultDataHandler;
 		if (defaultDataHandler != null) {
 			handlers.add(defaultDataHandler);
 		}
@@ -45,10 +45,10 @@ public class StorageDataHandlerRegistry {
 	}
 
 	public Optional<IStorageDataHandler> getDefaultHandler() {
-		return defaultDataHandler;
+		return Optional.ofNullable(defaultDataHandler);
 	}
 
 	public Optional<String> getDefaultMimeType() {
-		return defaultDataHandler.map(IStorageDataHandler::getDefaultMimeType);
+		return getDefaultHandler().map(IStorageDataHandler::getDefaultMimeType);
 	}
 }

@@ -54,8 +54,7 @@ public class ExportableTestStep extends TestStep {
 
 	/**
 	 * When the object is deserialized, provide how to restore the state of the action, according to the saved id
-	 * @param ref
-	 */
+     */
 	public void setActionRef(final ExportReference ref) {
 		ref.setRestoreAction((tc, id) -> action = (TestAction) ((ExportableTestCase)tc).getRestoreValue(id));
 	}

@@ -71,7 +71,7 @@ public class ConditionalFlowCtrl extends WithId implements IFlowCheck {
 	private final Builder config;
 
 	private final List<Binding> bindings = new ArrayList<>();
-	private final Optional<Binding> defaultBinding;
+	private final Binding defaultBinding;
 
 	public ConditionalFlowCtrl(final Builder configuration) {
 		super(UUID.randomUUID());
@@ -82,8 +82,12 @@ public class ConditionalFlowCtrl extends WithId implements IFlowCheck {
 				.map(b -> b.addRule(condition(this)).build()).toList());
 
 		this.defaultBinding = defaultBindingBuilder.map(b -> b.addRule(condition(this))
-				.addRules(bindings.stream().map(ConditionalFlowCtrl::exclusion).collect(toSet())).build());
-		this.defaultBinding.ifPresent(bindings::add);
+				.addRules(bindings.stream().map(ConditionalFlowCtrl::exclusion).collect(toSet())).build())
+				.orElse(null);
+		if (this.defaultBinding != null) {
+			bindings.add(this.defaultBinding);
+		}
+
 	}
 
 	public List<Binding> getBindings() {
@@ -91,7 +95,7 @@ public class ConditionalFlowCtrl extends WithId implements IFlowCheck {
 	}
 
 	public Optional<Binding> getDefaultBinding() {
-		return defaultBinding;
+		return Optional.ofNullable(defaultBinding);
 	}
 
 	@Override

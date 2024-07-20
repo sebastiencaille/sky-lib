@@ -25,14 +25,14 @@ public class ContextController extends ContextApiController {
 	@Transactional(readOnly = true)
 	@Override
 	public ResponseEntity<Context> getCurrent() {
-		final var context = sessionAccessor.getContext(getRequest()).mandatory();
+		final var context = sessionAccessor.getContext(getRequest().orElse(null)).mandatory();
 		return ResponseEntity.ok(ContextMapper.MAPPER.convert(context));
 	}
 
 	@Override
 	@Transactional
 	public ResponseEntity<Context> validateAndRememberCurrent(@Valid @NotNull Context context) {
-		final var sessionContext = sessionAccessor.getContext(getRequest());
+		final var sessionContext = sessionAccessor.getContext(getRequest().orElse(null));
 		Logs.of(getClass()).info(() -> "Remember context: " + context);
 		sessionContext.set(ContextMapper.MAPPER.convert(context));
 		return ResponseEntity.ok(context);

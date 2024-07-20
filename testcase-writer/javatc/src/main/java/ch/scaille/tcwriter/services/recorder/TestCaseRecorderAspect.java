@@ -21,12 +21,8 @@ public class TestCaseRecorderAspect {
 
 	/**
 	 * Configures the recording and saves the test
-	 * 
-	 * @param jp
-	 * @param test
-	 * @return
-	 * @throws Throwable
-	 */
+	 *
+     */
 	@Around("execution(* *.*(..)) && @annotation(test)")
 	public Object runAroundTest(final ProceedingJoinPoint jp, Test test) throws Throwable {
 		final var signature = (MethodSignature) jp.getSignature();
@@ -50,11 +46,8 @@ public class TestCaseRecorderAspect {
 
 	/**
 	 * Records calls
-	 * 
-	 * @param jp
-	 * @return
-	 * @throws Throwable
-	 */
+	 *
+     */
 	@Around("execution(@ch.scaille.tcwriter.annotations.TCApi * *.*(..))")
 	public Object recordApiCall(final ProceedingJoinPoint jp) throws Throwable {
 		if (recorder == null) {

@@ -19,7 +19,7 @@ public class TestParameterValueTableModel extends
 	 * @author scaille
 	 *
 	 */
-	static class ParameterValueEntry implements Comparable<ParameterValueEntry> {
+	public static class ParameterValueEntry implements Comparable<ParameterValueEntry> {
 		final String id;
 		final TestParameterFactory factory;
 		final String description;

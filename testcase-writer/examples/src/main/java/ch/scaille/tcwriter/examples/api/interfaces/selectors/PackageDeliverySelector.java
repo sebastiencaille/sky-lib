@@ -21,8 +21,7 @@ public class PackageDeliverySelector {
 	/**
 	 * Buy from internet
 	 *
-	 * @return
-	 */
+     */
 	@TCApi(description = "Item delivered by delivery company", humanReadable = "the delivered package")
 	public static PackageDeliverySelector deliveredItem() {
 		return new PackageDeliverySelector(ExampleService::getPackage);

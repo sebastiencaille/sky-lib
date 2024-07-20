@@ -35,7 +35,6 @@ public class ExportableTestCase extends TestCase {
 
 	/**
 	 * During restore of value, get the dictionary object matching the id 
-	 * @param id
 	 * @return a TC object (action, ...)
 	 */
 	public synchronized IdObject getRestoreValue(final String id) {

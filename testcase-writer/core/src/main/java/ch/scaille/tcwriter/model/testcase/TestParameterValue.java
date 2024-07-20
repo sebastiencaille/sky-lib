@@ -30,9 +30,7 @@ public class TestParameterValue extends IdObject {
 	/**
 	 *
 	 * @param id           either the id of the action's parameter
-	 * @param valueFactory
-	 * @param simpleValue
-	 */
+     */
 	public TestParameterValue(final String id, final String apiParameterId, final TestParameterFactory valueFactory,
 			final String simpleValue) {
 		super(id);

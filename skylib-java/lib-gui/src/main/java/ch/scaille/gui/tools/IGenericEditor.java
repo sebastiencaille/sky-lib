@@ -6,13 +6,13 @@ import ch.scaille.javabeans.properties.ErrorSet;
 /**
  * A generic property editor
  */
-public interface IGenericEditor {
+public interface IGenericEditor<T> {
 
-	IBindingController addEntry(final PropertyEntry prop, ErrorSet errorProperty);
+	IBindingController addEntry(final IPropertyEntry<T> prop, ErrorSet errorProperty);
 
 	/**
 	 * Extra operation needed to build the editor (after the entries have been added to the editor)
 	 */
-	void build(GenericEditorController<?> adapter, final ErrorSet errorProperty);
+	void build(GenericEditorController<T> adapter, final ErrorSet errorProperty);
 
 }

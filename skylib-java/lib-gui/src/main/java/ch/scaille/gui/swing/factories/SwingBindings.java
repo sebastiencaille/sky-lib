@@ -53,9 +53,22 @@ public class SwingBindings {
 	}
 
 	/**
+	 * Allow to register listeners on a component, to trigger a listener
+	 * @param <T> a value type
+	 * @param <C> a component type
+	 */
+	private interface IListenerRegistration<T, C> {
+
+		void addListener(C component, IComponentLink<T> converter);
+
+		void removeListener(C component);
+		
+	}
+	
+	/**
 	 * Class that contains all listener life cycle (create, add, remove)
 	 **/
-	private static class ListenerRegistration<T, C, L> {
+	private static class ListenerRegistration<T, C, L> implements IListenerRegistration<T, C> {
 		private final BiFunction<IComponentLink<T>, C, L> createListener;
 		private final BiConsumer<C, L> addListener;
 		private final BiConsumer<C, L> removeListener;
@@ -68,6 +81,7 @@ public class SwingBindings {
 			this.removeListener = removeListener;
 		}
 
+		@Override
 		public void addListener(final C component, final IComponentLink<T> toProperty) {
 			if (listener != null) {
 				throw new IllegalStateException("Listener already added");
@@ -76,6 +90,7 @@ public class SwingBindings {
 			addListener.accept(component, listener);
 		}
 
+		@Override
 		public void removeListener(final C component) {
 			removeListener.accept(component, listener);
 		}
@@ -93,7 +108,7 @@ public class SwingBindings {
 	 * @return
 	 */
 	public static <T, C extends JComponent> IComponentBinding<T> rw(final C component,
-			final ListenerRegistration<T, C, ?> componentReaderListener, final Consumer<T> componentWriter,
+			final IListenerRegistration<T, C> componentReaderListener, final Consumer<T> componentWriter,
 			final T defaultValue) {
 		return new IComponentBinding<>() {
 			@Override
@@ -130,7 +145,7 @@ public class SwingBindings {
 	 * @param converter the converter from the item value to the listener value
 	 * @return a listener registration
 	 */
-	public static <C extends ItemSelectable, T> ListenerRegistration<T, C, ?> itemListener(
+	public static <T, C extends ItemSelectable> IListenerRegistration<T, C> itemListener(
 			final Predicate<ItemEvent> activator, final Function<ItemEvent, T> converter) {
 		return new ListenerRegistration<>((link, component) -> event -> {
 			if (activator.test(event)) {

@@ -81,9 +81,9 @@ public class GenericEditorLauncher {
 		obj.setStr("Hello");
 		obj.setIntValue(1);
 
-		final var view = new SwingGenericEditorDialog(null, "Test", Dialog.ModalityType.DOCUMENT_MODAL);
+		final var view = new SwingGenericEditorDialog<EditedObject>(null, "Test", Dialog.ModalityType.DOCUMENT_MODAL);
 		final var model = GenericEditorClassModel.builder(EditedObject.class) //
-				.addAdapters(new GenericEditorValidationAdapter()) // optionally add validation
+				.addAdapters(new GenericEditorValidationAdapter<>()) // optionally add validation
 				.build();
 		final var editor = new GenericEditorController<>(view.mainPanel(), model);
 		SwingUtilities.invokeLater(() -> {

@@ -10,7 +10,7 @@ import javax.swing.SwingUtilities;
 
 import ch.scaille.gui.swing.tools.SwingGenericEditorDialog;
 import ch.scaille.gui.tools.GenericEditorController;
-import ch.scaille.gui.tools.PropertyEntry;
+import ch.scaille.gui.tools.IPropertyEntry;
 import ch.scaille.gui.tools.SimpleEditorModel;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.persisters.IPersisterFactory.IObjectProvider;
@@ -44,7 +44,7 @@ public class GenericPropertiesEditorLauncher {
 
 	}
 
-	private static List<PropertyEntry> builder(IPropertiesGroup support, IObjectProvider<EditedObject> obj) {
+	private static List<IPropertyEntry<EditedObject>> builder(IPropertiesGroup support, IObjectProvider<EditedObject> obj) {
 
 		final var strProp = new ObjectProperty<String>("str", support)
 				.configureTyped(persistent(obj, persister(EditedObject::getStr, EditedObject::setStr)));
@@ -52,9 +52,9 @@ public class GenericPropertiesEditorLauncher {
 				.configureTyped(persistent(obj, persister(EditedObject::isBool, EditedObject::setBool)));
 
 		return List.of(//
-				SimpleEditorModel.entry(strProp, AbstractTypedProperty::createBindingChain, String.class, false,
+				SimpleEditorModel.entry(String.class, strProp, AbstractTypedProperty::createBindingChain, false,
 						"A string property", null),
-				SimpleEditorModel.entry(boolProp, AbstractTypedProperty::createBindingChain, Boolean.class, false,
+				SimpleEditorModel.entry(Boolean.class, boolProp, AbstractTypedProperty::createBindingChain, false,
 						"A boolean property", null) //
 		);
 	}
@@ -63,7 +63,7 @@ public class GenericPropertiesEditorLauncher {
 
 		final var obj = new EditedObject();
 		final var model = new SimpleEditorModel<>(GenericPropertiesEditorLauncher::builder);
-		final var view = new SwingGenericEditorDialog(null, "Test", Dialog.ModalityType.DOCUMENT_MODAL);
+		final var view = new SwingGenericEditorDialog<EditedObject>(null, "Test", Dialog.ModalityType.DOCUMENT_MODAL);
 		final var editor = new GenericEditorController<>(view.mainPanel(), model);
 		SwingUtilities.invokeLater(() -> {
 			editor.activate();

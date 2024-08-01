@@ -3,11 +3,13 @@ package ch.scaille.gui.tools;
 import static ch.scaille.javabeans.properties.Configuration.persistent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 
 import ch.scaille.annotations.Labeled;
 import ch.scaille.annotations.Ordered;
@@ -28,19 +30,25 @@ import ch.scaille.util.dao.metadata.DataObjectMetaData;
  */
 public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 
-	public static class ClassPropertyEntry<U> extends PropertyEntry {
+	public interface IClassPropertyEntry<T> extends IPropertyEntry<T> {
+		int index();
+	}
+	
+	public static class ClassPropertyEntry<T, U> extends PropertyEntry<T, U> implements IClassPropertyEntry<T> {
 
-		private final AbstractAttributeMetaData<U> metadata;
+		private final AbstractAttributeMetaData<T> metadata;
 
-		public ClassPropertyEntry(final AbstractTypedProperty<Object> property,
-				final Function<AbstractTypedProperty<?>, EndOfChain<?>> endOfChainProvider,
-				final AbstractAttributeMetaData<U> metadata, final boolean readOnly, final String label,
+		public ClassPropertyEntry(final AbstractTypedProperty<U> property,
+				final Function<AbstractTypedProperty<U>, EndOfChain<U>> endOfChainProvider,
+				final AbstractAttributeMetaData<T> metadata, final boolean readOnly, final String label,
 				final String tooltip) {
-			super(property, endOfChainProvider, metadata.getClassType(), readOnly, label, tooltip);
+			super((Class<U>)metadata.getClassType(), property, endOfChainProvider, readOnly, label, tooltip);
 			this.metadata = metadata;
 		}
 
-		private int index() {
+		@Override
+
+		public int index() {
 			return metadata.getAnnotation(Ordered.class).map(Ordered::order).orElse(Integer.MAX_VALUE / 2);
 		}
 	}
@@ -49,7 +57,7 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 		private final Class<T> editedClazz;
 		private ResourceBundle bundle = null;
 		private boolean readOnly = false;
-		private IGenericModelAdapter[] adapters = new IGenericModelAdapter[0];
+		private IGenericModelAdapter<T>[] adapters = new IGenericModelAdapter[0];
 		private IPropertiesGroup propertySupport;
 		private ErrorSet errorSet;
 
@@ -73,7 +81,7 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 		/**
 		 * Adds the adapters, to tune the property bindings 
 		 */
-		public Builder<T> addAdapters(final IGenericModelAdapter... adapters) {
+		public Builder<T> addAdapters(final IGenericModelAdapter<T>... adapters) {
 			this.adapters = adapters;
 			return this;
 		}
@@ -106,7 +114,7 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 	public static <T> Builder<T> builder(final Class<T> clazz) {
 		return new Builder<>(clazz);
 	}
-
+	
 	protected GenericEditorClassModel(final Builder<T> builder) {
 		this.config = builder;
 		this.metaData = new DataObjectMetaData<>(builder.editedClazz);
@@ -126,9 +134,9 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 	 * Creates the properties by introspecting the displayed class Class
 	 */
 	@Override
-	public List<ClassPropertyEntry<T>> createProperties(IObjectProvider<T> object) {
+	public List<IPropertyEntry<T>> createProperties(IObjectProvider<T> object) {
 
-		final var properties = new ArrayList<ClassPropertyEntry<T>>();
+		final var properties = new ArrayList<IClassPropertyEntry<T>>();
 		for (var attrib : metaData.getAttributes()) {
 
 			final var property = new ObjectProperty<>(attrib.getName(), config.propertySupport);
@@ -140,13 +148,13 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 			properties.add(
 					new ClassPropertyEntry<>(property, this::createBindingChain, attrib, readOnly, message, toolTip));
 		}
-		properties.sort(Comparator.comparing(ClassPropertyEntry::index));
-		return properties;
+		properties.sort(Comparator.comparing(IClassPropertyEntry::index));
+		return properties.stream().map(p -> (IPropertyEntry<T>)p).collect(Collectors.toList());
 	}
 
-	private EndOfChain<?> createBindingChain(AbstractTypedProperty<?> property) {
+	private <V> EndOfChain<V> createBindingChain(AbstractTypedProperty<V> property) {
 		var chain = property.createBindingChain();
-		for (final IGenericModelAdapter adapter : config.adapters) {
+		for (final IGenericModelAdapter<T> adapter : config.adapters) {
 			chain = adapter.apply(config.editedClazz, chain);
 		}
 		return chain;

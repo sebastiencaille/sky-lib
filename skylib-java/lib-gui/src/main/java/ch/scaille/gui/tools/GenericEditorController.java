@@ -17,18 +17,18 @@ import ch.scaille.javabeans.properties.ErrorSet;
  */
 public class GenericEditorController<T> {
 
-	private final IGenericEditor editor;
+	private final IGenericEditor<T> editor;
 	private final IPropertiesGroup propertySupport;
 	private final ErrorSet errorProperty;
-	private final List<? extends PropertyEntry> props;
+	private final List<IPropertyEntry<T>> props;
 	private final ObjectHolder<T> currentObject = new ObjectHolder<>();
 
-	public GenericEditorController(final IGenericEditor view, final IGenericEditorModel<T> modelAdapter) {
+	public GenericEditorController(final IGenericEditor<T> view, final IGenericEditorModel<T> modelAdapter) {
 		this.editor = view;
 		this.propertySupport = modelAdapter.getPropertySupport();
 		this.errorProperty = modelAdapter.getErrorProperty();
 		props = modelAdapter.createProperties(currentObject);
-		props.forEach(p -> p.getProperty().configureTyped(errorNotifier(errorProperty)));
+		props.forEach(p -> p.getProperty().configure(errorNotifier(errorProperty)));
 	}
 
 	public void activate() {
@@ -50,7 +50,7 @@ public class GenericEditorController<T> {
 		if (!errorProperty.getErrors().getValue().isEmpty()) {
 			return;
 		}
-		props.forEach(PropertyEntry::saveInCurrentObject);
+		props.forEach(p -> p.saveInCurrentObject());
 	}
 
 }

@@ -17,7 +17,7 @@ import ch.scaille.gui.tools.GenericEditorController;
 import ch.scaille.gui.tools.IGenericEditor;
 import ch.scaille.javabeans.properties.ErrorSet;
 
-public class SwingGenericEditorDialog extends JDialog {
+public class SwingGenericEditorDialog<T> extends JDialog {
 
 	private JTabbedPane tabbedPane = null;
 	private final List<GenericEditorController<?>> controllers = new ArrayList<>();
@@ -27,18 +27,18 @@ public class SwingGenericEditorDialog extends JDialog {
 		getContentPane().setLayout(new BorderLayout());
 	}
 
-	public IGenericEditor mainPanel() {
-		final var panel = new SwingGenericEditorPanel();
+	public IGenericEditor<T> mainPanel() {
+		final var panel = new SwingGenericEditorPanel<T>();
 		getContentPane().add(panel, BorderLayout.CENTER);
 		return panel;
 	}
 
-	public IGenericEditor tab(String name) {
+	public IGenericEditor<T>tab(String name) {
 		if (tabbedPane == null) {
 			tabbedPane = new JTabbedPane(SwingConstants.TOP);
 			getContentPane().add(tabbedPane, BorderLayout.CENTER);
 		}
-		final var panel = new SwingGenericEditorPanel();
+		final var panel = new SwingGenericEditorPanel<T>();
 		tabbedPane.add(name, panel);
 		return panel;
 	}

@@ -12,7 +12,7 @@ import ch.scaille.javabeans.properties.ErrorSet;
  */
 public interface IGenericEditorModel<T> {
 
-	List<? extends PropertyEntry> createProperties(IObjectProvider<T> object);
+	List<IPropertyEntry<T>> createProperties(IObjectProvider<T> object);
 
 	ErrorSet getErrorProperty();
 

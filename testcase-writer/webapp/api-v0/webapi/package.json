@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "openapi-typescript": "^7.1.0",
-    "typescript": "^5.5.3"
+    "openapi-typescript": "^7.2.0",
+    "typescript": "^5.5.4"
   }
 }

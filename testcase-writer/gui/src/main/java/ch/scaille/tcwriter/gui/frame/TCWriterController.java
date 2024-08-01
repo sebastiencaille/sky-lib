@@ -105,11 +105,11 @@ public class TCWriterController extends GuiController {
 	}
 
 	public void editConfig() {
-		final var configEditorDialog = new SwingGenericEditorDialog(gui, "Configuration", ModalityType.DOCUMENT_MODAL);
+		final var configEditorDialog = new SwingGenericEditorDialog<>(gui, "Configuration", ModalityType.DOCUMENT_MODAL);
 		final var editorPropertySupport = PropertyChangeSupportController.mainGroup(configEditorDialog);
 		final var errorProp = new ErrorSet("Error", editorPropertySupport);
 		for (final var configToEdit : configDao.getCurrentConfig().getSubconfigs()) {
-			final var builder = GenericEditorClassModel.builder(configToEdit.getClass())
+			final var builder = GenericEditorClassModel.builder((Class<Object>)configToEdit.getClass())
 					.with(propertySupport)
 					.with(errorProp);
 			configEditorDialog.add(createEditor(configToEdit,
@@ -122,8 +122,8 @@ public class TCWriterController extends GuiController {
 		configDao.saveConfiguration();
 	}
 
-	private static GenericEditorController<?> createEditor(Object configToEdit, IGenericEditor tab,
-			GenericEditorClassModel.Builder<?> builder) {
+	private static GenericEditorController<Object> createEditor(Object configToEdit, IGenericEditor<Object> tab,
+			GenericEditorClassModel.Builder<Object> builder) {
 		final var configEditor = new GenericEditorController<>(tab, builder.build());
 		configEditor.activate();
 		configEditor.loadUnsafe(configToEdit);

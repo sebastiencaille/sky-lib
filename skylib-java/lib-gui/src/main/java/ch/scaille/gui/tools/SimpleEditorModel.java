@@ -23,28 +23,28 @@ public class SimpleEditorModel<T> implements IGenericEditorModel<T> {
 	/**
 	 * Creates an entry of the model
 	 */
-    public static <E> PropertyEntry entry(final AbstractTypedProperty<?> property,
-                                          final Function<AbstractTypedProperty<?>, EndOfChain<?>> endOfChainProvider, Class<E> endOfChainType,
+    public static <T, E> IPropertyEntry<T> entry(Class<E> propertyType,
+                                          final AbstractTypedProperty<E> property, final Function<AbstractTypedProperty<E>, EndOfChain<E>> endOfChainProvider,
                                           final boolean readOnly, final String label, final String tooltip) {
-        return new PropertyEntry(property, endOfChainProvider, endOfChainType, readOnly, label, tooltip);
+        return new PropertyEntry<>(propertyType, property, endOfChainProvider, readOnly, label, tooltip);
     }
 
 	/**
 	 * Creates an entry of the model
 	 */
-    public static <E> PropertyEntry entry(final AbstractTypedProperty<?> property,
-                                          final Function<AbstractTypedProperty<?>, EndOfChain<?>> endOfChainProvider, Class<E> endOfChainType,
+    public static <T, E> IPropertyEntry<T> entry(Class<E> propertyType,
+                                          final AbstractTypedProperty<E> property, final Function<AbstractTypedProperty<E>, EndOfChain<E>> endOfChainProvider,
                                           final boolean readOnly, final UnaryOperator<String> textProvider) {
-        return new PropertyEntry(property, endOfChainProvider, endOfChainType, readOnly,
+        return new PropertyEntry<>(propertyType, property, endOfChainProvider, readOnly,
                 textProvider.apply(PropertyEntry.descriptionKey(property.getName())),
                 textProvider.apply(PropertyEntry.tooltipKey(property.getName())));
     }
 
     private final IPropertiesGroup support;
     private final ErrorSet errorSet;
-    private final BiFunction<IPropertiesGroup, IObjectProvider<T>, List<PropertyEntry>> builder;
+    private final BiFunction<IPropertiesGroup, IObjectProvider<T>, List<IPropertyEntry<T>>> builder;
 
-    public SimpleEditorModel(final BiFunction<IPropertiesGroup, IObjectProvider<T>, List<PropertyEntry>> builder) {
+    public SimpleEditorModel(final BiFunction<IPropertiesGroup, IObjectProvider<T>, List<IPropertyEntry<T>>> builder) {
         this.support = PropertyChangeSupportController.mainGroup(this);
         this.errorSet = new ErrorSet("Error", support);
         this.builder = builder;
@@ -57,7 +57,7 @@ public class SimpleEditorModel<T> implements IGenericEditorModel<T> {
      * @return
      */
     @Override
-    public List<PropertyEntry> createProperties(IObjectProvider<T> object) {
+    public List<IPropertyEntry<T>> createProperties(IObjectProvider<T> object) {
         return builder.apply(support, object);
     }
 

@@ -21,7 +21,7 @@ import ch.scaille.javabeans.converters.IConverter;
  *
  * @author Sebastien Caille
  *
- * @param <T> the type of the object contained int the property
+ * @param <T> the type of the object contained in the property
  */
 public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 

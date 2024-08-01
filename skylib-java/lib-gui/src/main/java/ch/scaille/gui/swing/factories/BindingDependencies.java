@@ -6,6 +6,9 @@ import ch.scaille.gui.model.ListModel;
 import ch.scaille.javabeans.IBindingChainDependency;
 import ch.scaille.javabeans.IBindingController;
 
+/**
+ * Allow to define dependencies between bindings.
+ */
 public final class BindingDependencies {
 
 	private BindingDependencies() {

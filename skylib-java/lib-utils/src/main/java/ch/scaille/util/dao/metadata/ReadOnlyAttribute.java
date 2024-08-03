@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
  *
  * @param <T>
  */
-public class ReadOnlyAttribute<T> extends GetSetAttribute<T> {
+public class ReadOnlyAttribute<T, V> extends GetSetAttribute<T, V> {
 
 	public ReadOnlyAttribute(final String name, final Method attributeGetterInfo, final MethodHandle getter) {
 		super(name, attributeGetterInfo, getter, null);

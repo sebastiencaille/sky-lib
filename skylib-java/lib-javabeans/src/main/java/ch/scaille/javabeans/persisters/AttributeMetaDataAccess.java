@@ -8,26 +8,26 @@ import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
  * @author scaille
  *
  * @param <T> Type of the container object
- * @param <A> Type of the object's attribute
+ * @param <V> Type of the object's attribute
  */
-public class AttributeMetaDataAccess<T, A> implements IPersisterFactory<T, A> {
+public class AttributeMetaDataAccess<T, V> implements IPersisterFactory<T, V> {
 
-	private final AbstractAttributeMetaData<T> metadata;
+	private final AbstractAttributeMetaData<T, V> metadata;
 
-	public AttributeMetaDataAccess(AbstractAttributeMetaData<T> metadata) {
+	public AttributeMetaDataAccess(AbstractAttributeMetaData<T, V> metadata) {
 		this.metadata = metadata;
 	}
 
 	@Override
-	public IPersister<A> asPersister(final IObjectProvider<T> objectProvider) {
+	public IPersister<V> asPersister(final IObjectProvider<T> objectProvider) {
 		return new IPersister<>() {
 			@Override
-			public A get() {
-				return (A) metadata.getValueOf(objectProvider.getObject());
+			public V get() {
+				return (V) metadata.getValueOf(objectProvider.getObject());
 			}
 
 			@Override
-			public void set(final A value) {
+			public void set(final V value) {
 				metadata.setValueOf(objectProvider.getObject(), value);
 			}
 		};

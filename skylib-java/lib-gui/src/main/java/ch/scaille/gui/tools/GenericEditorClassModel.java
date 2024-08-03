@@ -3,7 +3,6 @@ package ch.scaille.gui.tools;
 import static ch.scaille.javabeans.properties.Configuration.persistent;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -23,6 +22,7 @@ import ch.scaille.javabeans.properties.ErrorSet;
 import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
 import ch.scaille.util.dao.metadata.DataObjectMetaData;
+import ch.scaille.util.dao.metadata.IAttributeMetaData;
 
 /**
  * Generic editor based on Class introspection
@@ -36,13 +36,13 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 	
 	public static class ClassPropertyEntry<T, U> extends PropertyEntry<T, U> implements IClassPropertyEntry<T> {
 
-		private final AbstractAttributeMetaData<T> metadata;
+		private final AbstractAttributeMetaData<T, U> metadata;
 
 		public ClassPropertyEntry(final AbstractTypedProperty<U> property,
 				final Function<AbstractTypedProperty<U>, EndOfChain<U>> endOfChainProvider,
-				final AbstractAttributeMetaData<T> metadata, final boolean readOnly, final String label,
+				final AbstractAttributeMetaData<T, U> metadata, final boolean readOnly, final String label,
 				final String tooltip) {
-			super((Class<U>)metadata.getClassType(), property, endOfChainProvider, readOnly, label, tooltip);
+			super(metadata.getClassType(), property, endOfChainProvider, readOnly, label, tooltip);
 			this.metadata = metadata;
 		}
 
@@ -66,7 +66,7 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 		}
 
 		/**
-		 * Sets the messsage / tooltips bundle
+		 * Sets the message / tooltips bundle
 		 */
 		public Builder<T> setBundle(final ResourceBundle bundle) {
 			this.bundle = bundle;
@@ -138,18 +138,22 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 
 		final var properties = new ArrayList<IClassPropertyEntry<T>>();
 		for (var attrib : metaData.getAttributes()) {
-
-			final var property = new ObjectProperty<>(attrib.getName(), config.propertySupport);
-			property.configureTyped(persistent(object, Persisters.persister(attrib)));
-
-			final var readOnly = config.readOnly || attrib.isReadOnly();
-			final var message = findText(attrib, Labeled::label, PropertyEntry::descriptionKey);
-			final var toolTip = findText(attrib, Labeled::tooltip, PropertyEntry::tooltipKey);
-			properties.add(
-					new ClassPropertyEntry<>(property, this::createBindingChain, attrib, readOnly, message, toolTip));
+			attrib.onTypedMetaDataC(t -> createProperty(object, properties, t));
 		}
 		properties.sort(Comparator.comparing(IClassPropertyEntry::index));
 		return properties.stream().map(p -> (IPropertyEntry<T>)p).collect(Collectors.toList());
+	}
+
+	private <V> void createProperty(IObjectProvider<T> object, final ArrayList<IClassPropertyEntry<T>> properties,
+			AbstractAttributeMetaData<T, V> typedAttribute ) {
+		final var property = new ObjectProperty<V>(typedAttribute.getName(), config.propertySupport);
+		property.configureTyped(persistent(object, Persisters.persister(typedAttribute)));
+
+		final var readOnly = config.readOnly || typedAttribute.isReadOnly();
+		final var message = findText(typedAttribute, Labeled::label, PropertyEntry::descriptionKey);
+		final var toolTip = findText(typedAttribute, Labeled::tooltip, PropertyEntry::tooltipKey);
+		properties.add(
+				new ClassPropertyEntry<>(property, this::createBindingChain, typedAttribute, readOnly, message, toolTip));
 	}
 
 	private <V> EndOfChain<V> createBindingChain(AbstractTypedProperty<V> property) {
@@ -160,7 +164,7 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 		return chain;
 	}
 
-	private String findText(final AbstractAttributeMetaData<T> attrib, final Function<Labeled, String> fromLabel,
+	private String findText(final IAttributeMetaData<T> attrib, final Function<Labeled, String> fromLabel,
 			final UnaryOperator<String> nameToKey) {
 		var value = attrib.getAnnotation(Labeled.class).map(fromLabel).orElse("");
 		if (value.isEmpty() && config.bundle != null) {

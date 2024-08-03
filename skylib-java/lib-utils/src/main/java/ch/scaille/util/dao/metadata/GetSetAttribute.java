@@ -15,7 +15,7 @@ import ch.scaille.annotations.Persistency;
  *
  * @param <T>
  */
-public class GetSetAttribute<T> extends AbstractAttributeMetaData<T> {
+public class GetSetAttribute<T, V> extends AbstractAttributeMetaData<T, V> {
 
 	protected final MethodHandle getter;
 	protected final MethodHandle setter;
@@ -23,7 +23,7 @@ public class GetSetAttribute<T> extends AbstractAttributeMetaData<T> {
 
 	public GetSetAttribute(final String name, Method attributeGetterInfo, final MethodHandle getter,
 			final MethodHandle setter) {
-		super(name, getter.type().returnType());
+		super(name, (Class<V>) getter.type().returnType());
 		this.attributeGetterInfo = attributeGetterInfo;
 		this.getter = getter;
 		this.setter = setter;
@@ -69,8 +69,8 @@ public class GetSetAttribute<T> extends AbstractAttributeMetaData<T> {
 	}
 
 	@Override
-	public Class<?> getDeclaringType() {
-		return attributeGetterInfo.getDeclaringClass();
+	public Class<T> getDeclaringType() {
+		return (Class<T>) attributeGetterInfo.getDeclaringClass();
 	}
 
 	@Override

@@ -4,8 +4,8 @@ import static java.util.Comparator.comparing;
 
 import java.util.stream.Collectors;
 
-import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
 import ch.scaille.util.dao.metadata.DataObjectManagerFactory;
+import ch.scaille.util.dao.metadata.IAttributeMetaData;
 
 public interface Reporting {
 
@@ -36,7 +36,7 @@ public interface Reporting {
 						.getAttributes()
 						.stream() //
 						.filter(a -> a.getValueOf(value) != null) //
-						.sorted(comparing(AbstractAttributeMetaData::getName)) //
+						.sorted(comparing(IAttributeMetaData::getName)) //
 						.map(a -> a.getName() + ": " + a.getValueOf(value)) //
 						.collect(Collectors.joining(", "))
 				+ "]";

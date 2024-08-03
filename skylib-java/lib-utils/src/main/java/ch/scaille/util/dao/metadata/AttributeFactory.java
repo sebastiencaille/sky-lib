@@ -28,7 +28,7 @@ class AttributeFactory {
 		AUTOMATIC, GET_SET, FIELD
 	}
 
-	public static <T> AbstractAttributeMetaData<T> create(final Class<?> currentClass, final String property,
+	public static <T, V> IAttributeMetaData<T> create(final Class<? super T> currentClass, final String property,
 			final String name, final Mode mode) {
 
 		switch (mode) {
@@ -36,14 +36,14 @@ class AttributeFactory {
 			try {
 				return createGetSetAttribute(currentClass, property, name);
 			} catch (final Exception exc) { // NOSONAR
-				final var attribute = AttributeFactory.<T>createFieldAttribute(currentClass, property, name);
+				final var attribute = AttributeFactory.<T, V>createFieldAttribute(currentClass, property, name);
 				if (attribute != null) {
 					return attribute;
 				}
 			}
 			break;
 		case FIELD:
-			final var attribute = AttributeFactory.<T>createFieldAttribute(currentClass, property, name);
+			final var attribute = AttributeFactory.<T, V>createFieldAttribute(currentClass, property, name);
 			if (attribute != null) {
 				return attribute;
 			}
@@ -61,7 +61,7 @@ class AttributeFactory {
 		return null;
 	}
 
-	private static <T> AbstractAttributeMetaData<T> createGetSetAttribute(final Class<?> currentClass,
+	private static <T> IAttributeMetaData<T> createGetSetAttribute(final Class<?> currentClass,
 			final String property, final String name) throws NoSuchMethodException {
 		Method getter;
 		try {
@@ -88,7 +88,7 @@ class AttributeFactory {
 		}
 	}
 
-	private static <T> FieldAttribute<T> createFieldAttribute(final Class<?> currentClass, final String property,
+	private static <T, V> FieldAttribute<T, V> createFieldAttribute(final Class<? super T> currentClass, final String property,
 			final String name) {
 		try {
 			var field = findField(currentClass, property);

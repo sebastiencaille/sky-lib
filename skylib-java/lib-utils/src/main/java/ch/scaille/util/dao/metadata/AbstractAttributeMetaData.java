@@ -1,8 +1,7 @@
 package ch.scaille.util.dao.metadata;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * This class contains the basic methods and attributes used to access DO's
@@ -11,45 +10,41 @@ import java.util.Optional;
  * @author Sebastien Caille
  *
  * @param <T>
+ * @param <V> value type
  */
-public abstract class AbstractAttributeMetaData<T> {
+public abstract class AbstractAttributeMetaData<T, V> implements IAttributeMetaData<T> {
 
 	protected final String name;
 
-	protected final Class<?> type;
-
-	/**
-	 * Gets the value of the object's attribute represented by this instance
-	 * 
-	 * @param from
-	 * @return the value
-	 */
-	public abstract Object getValueOf(T from);
-
-	public abstract void setValueOf(T to, Object value);
-
-	public abstract boolean isReadOnly();
-
-	public abstract Class<?> getDeclaringType();
-
-	public abstract <A extends Annotation> Optional<A> getAnnotation(Class<A> annotation);
-
-	public abstract Type getGenericType();
-
-	public abstract String getCodeName();
+	protected final Class<V> type;
 
 	public abstract int getModifier();
 
-	protected AbstractAttributeMetaData(final String name, final Class<?> type) {
+	protected AbstractAttributeMetaData(final String name, final Class<V> type) {
 		super();
 		this.name = name;
 		this.type = type;
 	}
 
-	public <U> U get(final T from, final Class<U> clazz) {
-		return clazz.cast(getValueOf(from));
+	@Override
+	public <W> void onTypedMetaDataC(Consumer<AbstractAttributeMetaData<T, W>> consumer) {
+		consumer.accept((AbstractAttributeMetaData<T, W>) this);
 	}
 
+	@Override
+	public <W, R> R onTypedMetaDataF(Function<AbstractAttributeMetaData<T, W>, R> function) {
+		return function.apply((AbstractAttributeMetaData<T, W>) this);
+	}
+	
+	public V get(T from) {
+		return (V) getValueOf(from);
+	}
+
+	public void set(T object, V value) {
+		setValueOf(object, value);
+	}
+	
+	@Override
 	public void copy(final T from, final T to) {
 		setValueOf(to, getValueOf(from));
 	}
@@ -59,7 +54,7 @@ public abstract class AbstractAttributeMetaData<T> {
 		if (!(o instanceof AbstractAttributeMetaData)) {
 			return false;
 		}
-		return name.equals(((AbstractAttributeMetaData<?>) o).name);
+		return name.equals(((AbstractAttributeMetaData<T, V>) o).name);
 	}
 
 	@Override
@@ -67,6 +62,7 @@ public abstract class AbstractAttributeMetaData<T> {
 		return name.hashCode();
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -76,7 +72,8 @@ public abstract class AbstractAttributeMetaData<T> {
 	 * 
 	 * @return
 	 */
-	public Class<?> getType() {
+	@Override
+	public Class<V> getType() {
 		return type;
 	}
 
@@ -86,26 +83,29 @@ public abstract class AbstractAttributeMetaData<T> {
 	 * 
 	 * @return
 	 */
-	public Class<?> getClassType() {
+	public Class<V> getClassType() {
 		if (!type.isPrimitive()) {
 			return type;
 		}
+		final Class<?> primitiveType;
 		if (type == Character.TYPE) {
-			return Character.class;
+			primitiveType = Character.class;
 		} else if (type == Boolean.TYPE) {
-			return Boolean.class;
+			primitiveType = Boolean.class;
 		} else if (type == Short.TYPE) {
-			return Short.class;
+			primitiveType = Short.class;
 		} else if (type == Integer.TYPE) {
-			return Integer.class;
+			primitiveType = Integer.class;
 		} else if (type == Long.TYPE) {
-			return Long.class;
+			primitiveType = Long.class;
 		} else if (type == Float.TYPE) {
-			return Float.class;
+			primitiveType = Float.class;
 		} else if (type == Double.TYPE) {
-			return Double.class;
+			primitiveType = Double.class;
+		} else {
+			throw new IllegalStateException("Unhandled type: " + type);
 		}
-		throw new IllegalStateException("Unhandled type: " + type);
+		return (Class<V>) primitiveType;
 	}
 
 }

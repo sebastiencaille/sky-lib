@@ -10,9 +10,10 @@ import java.util.Set;
 
 import ch.scaille.gui.mvc.ModelClassProcessor.GeneratorContext;
 import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
+import ch.scaille.util.dao.metadata.IAttributeMetaData;
 
 /**
- * To generate the code of the MVC model for a given model class attribute 
+ * To generate the code of the MVC model for a given model class attribute
  */
 public abstract class AttributeProcessor {
 
@@ -26,25 +27,26 @@ public abstract class AttributeProcessor {
 
 	}
 
-	public static AttributeProcessor create(final GeneratorContext context, final AbstractAttributeMetaData<?> attrib,
+	public static AttributeProcessor create(final GeneratorContext context, final IAttributeMetaData<?> a,
 			final AttributeProcessorDelegate delegate) {
-		final var type = attrib.getType();
-		if (type.isPrimitive()) {
-			return new PrimitiveProcessor(context, attrib, delegate);
-		} else if (Set.class.isAssignableFrom(type)) {
-			return new SetProcessor(context, attrib, delegate);
-		} else if (Map.class.isAssignableFrom(type)) {
-			return new MapProcessor(context, attrib, delegate);
-		} else if (List.class.isAssignableFrom(type)) {
-			return new ListProcessor(context, attrib, delegate);
-		}
-		return new ObjectProcessor(context, attrib, delegate);
-
+		return a.onTypedMetaDataF(attrib -> {
+			final var type = attrib.getType();
+			if (type.isPrimitive()) {
+				return new PrimitiveProcessor(context, attrib, delegate);
+			} else if (Set.class.isAssignableFrom(type)) {
+				return new SetProcessor(context, attrib, delegate);
+			} else if (Map.class.isAssignableFrom(type)) {
+				return new MapProcessor(context, attrib, delegate);
+			} else if (List.class.isAssignableFrom(type)) {
+				return new ListProcessor(context, attrib, delegate);
+			}
+			return new ObjectProcessor(context, attrib, delegate);
+		});
 	}
 
 	public static class PrimitiveProcessor extends AttributeProcessor {
 
-		public PrimitiveProcessor(final GeneratorContext context, final AbstractAttributeMetaData<?> attrib,
+		public PrimitiveProcessor(final GeneratorContext context, final AbstractAttributeMetaData<?, ?> attrib,
 				final AttributeProcessorDelegate delegate) {
 			super(context, attrib, delegate);
 		}
@@ -80,7 +82,7 @@ public abstract class AttributeProcessor {
 
 		private final String objectName;
 
-		public ContainerProcessorWithType(final GeneratorContext context, final AbstractAttributeMetaData<?> attrib,
+		public ContainerProcessorWithType(final GeneratorContext context, final AbstractAttributeMetaData<?, ?> attrib,
 				final String objectName, final AttributeProcessorDelegate delegate) {
 			super(context, attrib, delegate);
 			this.objectName = objectName;
@@ -102,7 +104,7 @@ public abstract class AttributeProcessor {
 
 	public static class SetProcessor extends ContainerProcessorWithType {
 
-		public SetProcessor(final GeneratorContext context, final AbstractAttributeMetaData<?> attrib,
+		public SetProcessor(final GeneratorContext context, final AbstractAttributeMetaData<?, ?> attrib,
 				final AttributeProcessorDelegate delegate) {
 			super(context, attrib, "SetProperty", delegate);
 		}
@@ -111,7 +113,7 @@ public abstract class AttributeProcessor {
 
 	public static class MapProcessor extends ContainerProcessorWithType {
 
-		public MapProcessor(final GeneratorContext context, final AbstractAttributeMetaData<?> attrib,
+		public MapProcessor(final GeneratorContext context, final AbstractAttributeMetaData<?, ?> attrib,
 				final AttributeProcessorDelegate delegate) {
 			super(context, attrib, "MapProperty", delegate);
 		}
@@ -119,7 +121,7 @@ public abstract class AttributeProcessor {
 
 	public static class ListProcessor extends ContainerProcessorWithType {
 
-		public ListProcessor(final GeneratorContext context, final AbstractAttributeMetaData<?> attrib,
+		public ListProcessor(final GeneratorContext context, final AbstractAttributeMetaData<?, ?> attrib,
 				final AttributeProcessorDelegate delegate) {
 			super(context, attrib, "ListProperty", delegate);
 		}
@@ -127,7 +129,7 @@ public abstract class AttributeProcessor {
 
 	public static class ObjectProcessor extends AttributeProcessor {
 
-		public ObjectProcessor(final GeneratorContext context, final AbstractAttributeMetaData<?> attrib,
+		public ObjectProcessor(final GeneratorContext context, final AbstractAttributeMetaData<?, ?> attrib,
 				final AttributeProcessorDelegate delegate) {
 			super(context, attrib, delegate);
 		}
@@ -173,7 +175,7 @@ public abstract class AttributeProcessor {
 
 	}
 
-	final AbstractAttributeMetaData<?> modelAttribute;
+	final AbstractAttributeMetaData<?, ?> modelAttribute;
 	final GeneratorContext context;
 	protected final AttributeProcessorDelegate delegate;
 
@@ -184,7 +186,7 @@ public abstract class AttributeProcessor {
 		return this;
 	}
 
-	protected AttributeProcessor(final GeneratorContext context, final AbstractAttributeMetaData<?> attrib,
+	protected AttributeProcessor(final GeneratorContext context, final AbstractAttributeMetaData<?, ?> attrib,
 			final AttributeProcessorDelegate delegate) {
 		this.context = context;
 		this.modelAttribute = attrib;

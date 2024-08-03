@@ -7,9 +7,9 @@ import java.lang.reflect.InvocationTargetException;
  *
  * @author Sebastien Caille
  *
- * @param <D>
+ * @param <T>
  */
-public class DataObjectManager<D> {
+public class DataObjectManager<T> {
 
 	private class ObjectAttributeAccessor implements DataObjectAttribute {
 
@@ -25,7 +25,7 @@ public class DataObjectManager<D> {
 		}
 
 		@Override
-		public <T> T getValue(final Class<T> clazz) {
+		public <V> V getValue(final Class<V> clazz) {
 			return DataObjectManager.this.getValueOf(name, clazz);
 		}
 
@@ -36,16 +36,16 @@ public class DataObjectManager<D> {
 
 	}
 
-	protected final AbstractObjectMetaData<D> metaData;
+	protected final AbstractObjectMetaData<T> metaData;
 
-	protected final D object;
+	protected final T object;
 
-	public DataObjectManager(final AbstractObjectMetaData<D> objectMetaData, final D object) {
+	public DataObjectManager(final AbstractObjectMetaData<T> objectMetaData, final T object) {
 		metaData = objectMetaData;
 		this.object = object;
 	}
 
-	public AbstractObjectMetaData<D> getMetaData() {
+	public AbstractObjectMetaData<T> getMetaData() {
 		return metaData;
 	}
 
@@ -65,7 +65,7 @@ public class DataObjectManager<D> {
 		metaData.getAttribute(name).setValueOf(object, o);
 	}
 
-	public <T> T getValueOf(final String name, final Class<T> clazz) {
+	public <V> V getValueOf(final String name, final Class<V> clazz) {
 		return clazz.cast(metaData.getAttribute(name).getValueOf(object));
 	}
 
@@ -76,18 +76,18 @@ public class DataObjectManager<D> {
 		return new ObjectAttributeAccessor(name);
 	}
 
-	public void copyInto(final D object) {
+	public void copyInto(final T object) {
 		metaData.copy(object, object);
 	}
 
-	public D createNewObject()
+	public T createNewObject()
 			throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		return metaData.getConstructor().newInstance();
 	}
 
-	public D cloneObject() {
+	public T cloneObject() {
 		try {
-			final var newObject = createNewObject();
+			final T newObject = createNewObject();
 			for (final var attribute : metaData.attributes.values()) {
 				attribute.copy(object, newObject);
 			}

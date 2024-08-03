@@ -16,7 +16,7 @@ import ch.scaille.generators.util.GenerationMetadata;
 import ch.scaille.generators.util.JavaCodeGenerator;
 import ch.scaille.generators.util.Template;
 import ch.scaille.gui.mvc.AttributeProcessor.AttributeProcessorDelegate;
-import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
+import ch.scaille.util.dao.metadata.IAttributeMetaData;
 import ch.scaille.util.dao.metadata.UntypedDataObjectMetaData;
 import ch.scaille.util.helpers.ClassFinder.URLClassFinder;
 
@@ -51,12 +51,12 @@ public class ModelClassProcessor {
 		public void addImport(final String className) {
 			imports.add(classFinder.loadByName(className).getName());
 		}
-		
+
 		public void reset() {
 			imports.clear();
 			properties.clear();
 		}
-		
+
 	}
 
 	public static String typeParametersToString(final Type type) {
@@ -93,14 +93,14 @@ public class ModelClassProcessor {
 		return modelClass.getSimpleName() + "GuiModel";
 	}
 
-	protected boolean includeAttribute(final AbstractAttributeMetaData<?> attrib) {
-		return !Modifier.isStatic(attrib.getModifier());
+	protected boolean includeAttribute(final IAttributeMetaData<?> attrib) {
+		return !Modifier.isStatic(attrib.onTypedMetaDataF(a -> a.getModifier()));
 	}
 
 	protected Template process(Class<?> modelClass) {
 
 		context.reset();
-		
+
 		final var generatedModelClassName = getClassName(modelClass);
 		final var targetPackage = defaultTargetPackage != null ? defaultTargetPackage
 				: modelClass.getPackage().getName();
@@ -115,7 +115,7 @@ public class ModelClassProcessor {
 		addAttributesDeclarations(metaData);
 		addAttributesGetters(metaData);
 		addAttributePersistenceMethods(metaData);
-		
+
 		// imports
 		if (defaultTargetPackage != null) {
 			context.addImport(modelClass);
@@ -159,23 +159,23 @@ public class ModelClassProcessor {
 	}
 
 	protected void forEachAttribute(final UntypedDataObjectMetaData metaData,
-			final Consumer<AbstractAttributeMetaData<?>> attributeApplier) {
+			final Consumer<IAttributeMetaData<?>> attributeApplier) {
 		metaData.getAttributes().stream().filter(this::includeAttribute).forEach(attributeApplier);
 	}
 
-	protected String generateLoadFrom(final AbstractAttributeMetaData<?> attrib) {
+	protected String generateLoadFrom(final IAttributeMetaData<?> attrib) {
 		return AttributeProcessor.create(context, attrib, delegate).getPropertyFieldName() + ".load(this);";
 	}
 
-	protected String generatePropertyNameOf(final AbstractAttributeMetaData<?> attrib) {
+	protected String generatePropertyNameOf(final IAttributeMetaData<?> attrib) {
 		return AttributeProcessor.create(context, attrib, delegate).getPropertyFieldName();
 	}
 
-	protected String generateSaveInto(final AbstractAttributeMetaData<?> attrib) {
+	protected String generateSaveInto(final IAttributeMetaData<?> attrib) {
 		return AttributeProcessor.create(context, attrib, delegate).getPropertyFieldName() + ".save();";
 	}
 
-	protected String generateAccessConstants(final AbstractAttributeMetaData<?> attrib) {
+	protected String generateAccessConstants(final IAttributeMetaData<?> attrib) {
 		final var gen = JavaCodeGenerator.inMemory();
 		gen.appendIndentedLine(
 				"public static final String " + toConstant(attrib.getName()) + " = \"" + attrib.getName() + "\";");
@@ -183,7 +183,7 @@ public class ModelClassProcessor {
 		return gen.toString();
 	}
 
-	protected String generateFieldConstants(final AbstractAttributeMetaData<?> attrib) {
+	protected String generateFieldConstants(final IAttributeMetaData<?> attrib) {
 		final var gen = JavaCodeGenerator.inMemory();
 		final var constant = toConstant(attrib.getName());
 		final var fieldConstant = constant + "_FIELD";
@@ -193,7 +193,7 @@ public class ModelClassProcessor {
 		return gen.toString();
 	}
 
-	protected String generateGetter(final AbstractAttributeMetaData<?> attrib) {
+	protected String generateGetter(final IAttributeMetaData<?> attrib) {
 		final var processor = AttributeProcessor.create(context, attrib, delegate);
 		final var gen = JavaCodeGenerator.inMemory();
 		gen.openBlock(ATTRIB_PUBLIC, processor.getPropertyType(), " get", attrib.getName(), "Property()");

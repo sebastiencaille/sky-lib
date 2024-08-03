@@ -4,7 +4,7 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 
-public class NioFieldAttribute<T> extends FieldAttribute<T> {
+public class NioFieldAttribute<T, V> extends FieldAttribute<T, V> {
 
     private final MethodHandle getter;
     private final MethodHandle setter;

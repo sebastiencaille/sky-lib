@@ -15,55 +15,55 @@ import ch.scaille.util.dao.metadata.AttributeFactory.Mode;
  * <p>
  *
  *
- * @param <D> a data type
+ * @param <T> a data type
  */
-public class AbstractObjectMetaData<D> {
+public class AbstractObjectMetaData<T> {
 
 	/**
 	 * Object attributes
 	 */
-	protected final Map<String, AbstractAttributeMetaData<D>> attributes = new HashMap<>();
+	protected final Map<String, IAttributeMetaData<T>> attributes = new HashMap<>();
 
 	/**
 	 * Type of the object
 	 */
-	private final Class<? extends D> dataType;
+	private final Class<? extends T> dataType;
 
 	/**
 	 * Access mode
 	 */
 	private Mode attributeMode = Mode.AUTOMATIC;
 
-	protected AbstractObjectMetaData(final Class<? extends D> clazz) {
+	protected AbstractObjectMetaData(final Class<? extends T> clazz) {
 		this(clazz, false);
 	}
 
-	protected AbstractObjectMetaData(final Class<? extends D> clazz, final boolean accessPrivateFields) {
+	protected AbstractObjectMetaData(final Class<? extends T> clazz, final boolean accessPrivateFields) {
 		dataType = clazz;
 		if (accessPrivateFields) {
 			attributeMode = Mode.FIELD;
 		}
-		introspectClass(clazz, accessPrivateFields);
+		introspectClass((Class<? super T>) clazz, accessPrivateFields);
 	}
 
-	protected AbstractObjectMetaData(final Class<? extends D> clazz, final Set<String> attribNames) {
+	protected AbstractObjectMetaData(final Class<? extends T> clazz, final Set<String> attribNames) {
 		dataType = clazz;
-		createAttributesMetaData(clazz, attribNames);
+		createAttributesMetaData((Class<? super T>) clazz, attribNames);
 	}
 
-	public Class<? extends D> getDataType() {
+	public Class<? extends T> getDataType() {
 		return dataType;
 	}
 
-	public Collection<AbstractAttributeMetaData<D>> getAttributes() {
+	public Collection<IAttributeMetaData<T>> getAttributes() {
 		return new HashSet<>(attributes.values());
 	}
 
-	public DataObjectManager<D> createAccessorTo(final D object) {
+	public DataObjectManager<T> createAccessorTo(final T object) {
 		return new DataObjectManager<>(this, object);
 	}
 
-	public UntypedDataObjectManager createUntypedAccessorTo(final D object) {
+	public UntypedDataObjectManager createUntypedAccessorTo(final T object) {
 		return new UntypedDataObjectMetaData(dataType).createUntypedObjectAccessorFor(object);
 	}
 
@@ -71,7 +71,7 @@ public class AbstractObjectMetaData<D> {
 		return new UntypedDataObjectMetaData(dataType);
 	}
 
-	protected void introspectClass(final Class<?> clazz, final boolean accessPrivateFields) {
+	protected void introspectClass(final Class<? super T> clazz, final boolean accessPrivateFields) {
 
 		final var attribNames = new HashSet<String>();
 
@@ -111,10 +111,10 @@ public class AbstractObjectMetaData<D> {
 		}
 	}
 
-	protected void createAttributesMetaData(final Class<?> clazz, final Set<String> attribNames) {
+	protected <V> void createAttributesMetaData(final Class<? super T> clazz, final Set<String> attribNames) {
 		for (final var name : attribNames) {
 			final var attribName = Character.toUpperCase(name.charAt(0)) + name.substring(1);
-			final var access = AttributeFactory.<D>create(clazz, name, attribName, attributeMode);
+			final var access = AttributeFactory.<T, V>create(clazz, name, attribName, attributeMode);
 			if (access != null) {
 				attributes.put(attribName, access);
 			}
@@ -131,7 +131,7 @@ public class AbstractObjectMetaData<D> {
 		return attributes.containsKey(name);
 	}
 
-	public AbstractAttributeMetaData<D> getAttribute(final String name) {
+	public IAttributeMetaData<T> getAttribute(final String name) {
 
 		final var attrib = attributes.get(name);
 		if (attrib == null) {
@@ -140,7 +140,7 @@ public class AbstractObjectMetaData<D> {
 		return attrib;
 	}
 
-	public void copy(final D from, final D to) {
+	public void copy(final T from, final T to) {
 		for (final var attrib : attributes.values()) {
 			if (!attrib.isReadOnly()) {
 				attrib.copy(from, to);
@@ -160,7 +160,7 @@ public class AbstractObjectMetaData<D> {
 		return getDataType().getSimpleName();
 	}
 
-	public Constructor<? extends D> getConstructor() throws NoSuchMethodException {
+	public Constructor<? extends T> getConstructor() throws NoSuchMethodException {
 		return getDataType().getConstructor();
 	}
 

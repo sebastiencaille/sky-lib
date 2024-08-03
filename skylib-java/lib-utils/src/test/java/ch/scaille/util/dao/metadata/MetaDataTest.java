@@ -46,15 +46,20 @@ class MetaDataTest {
 		assertTrue(attr.contains("ValB(int, ReadOnly)"), attr::toString);
 		assertTrue(attr.contains("ValC(int)"), attr::toString);
 
-		testMetaData.getAttributeAccessor("ValA").setValue(123);
+		final var valAAccessor = testMetaData.getAttributeAccessor("ValA");
+		final var valBAccessor = testMetaData.getAttributeAccessor("ValB");
+		final var valCAccessor = testMetaData.getAttributeAccessor("ValC");
+		
+		valAAccessor.setValue(123);
+		assertEquals(123, valAAccessor.getValue());
+		assertEquals(456, valBAccessor.getValue());
 		assertEquals(123, test.getValA());
-		assertEquals(123, testMetaData.getAttributeAccessor("ValA").getValue());
-		assertEquals(456, testMetaData.getAttributeAccessor("ValB").getValue());
+		assertEquals(456, test.getValB());
 
 		assertEquals(NioFieldAttribute.class, metaData.getAttribute("ValC").getClass());
-		testMetaData.getAttributeAccessor("ValC").setValue(789);
+		valCAccessor.setValue(789);
+		assertEquals(789, valCAccessor.getValue());
 		assertEquals(789, test.valC);
-		assertEquals(789, testMetaData.getAttributeAccessor("ValC").getValue());
 	}
 
 }

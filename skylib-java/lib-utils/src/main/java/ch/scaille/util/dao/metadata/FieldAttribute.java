@@ -16,13 +16,13 @@ import ch.scaille.annotations.Persistency;
  * @param <T>
  */
 @SuppressWarnings("java:S3011")
-public class FieldAttribute<T> extends AbstractAttributeMetaData<T> {
+public class FieldAttribute<T, V> extends AbstractAttributeMetaData<T, V> {
 
 	private final Field field;
 	private final boolean readOnly;
 
 	public FieldAttribute(final String name, final Field field) {
-		super(name, field.getType());
+		super(name, (Class<V>) field.getType());
 		this.field = field;
 		this.field.setAccessible(true);
 
@@ -64,8 +64,8 @@ public class FieldAttribute<T> extends AbstractAttributeMetaData<T> {
 	}
 
 	@Override
-	public Class<?> getDeclaringType() {
-		return field.getDeclaringClass();
+	public Class<T> getDeclaringType() {
+		return (Class<T>) field.getDeclaringClass();
 	}
 
 	@Override

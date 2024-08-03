@@ -13,10 +13,10 @@ public interface Persisters {
 	/**
 	 * Creates a persister that accesses an object using an IPersisterFactory 
 	 * @param <T> the type of the persisted bean
-	 * @param <A> the type of the persisted attribute
+	 * @param <V> the type of the persisted attribute
 	 */
-	static <T, A> IPersister<A> persister(final IObjectProvider<T> objectProvider,
-			final IPersisterFactory<T, A> persisterFactory) {
+	static <T, V> IPersister<V> persister(final IObjectProvider<T> objectProvider,
+			final IPersisterFactory<T, V> persisterFactory) {
 		return persisterFactory.asPersister(objectProvider);
 	}
 
@@ -32,27 +32,27 @@ public interface Persisters {
 	/**
 	 * Creates a persister factory that allows accessing an object using getters/setters
 	 * @param <T> the type of the persisted bean
-	 * @param <A> the type of the persisted attribute
+	 * @param <V> the type of the persisted attribute
 	 */
-	static <T, A> IPersisterFactory<T, A> persister(final Function<T, A> getter, final BiConsumer<T, A> setter) {
+	static <T, V> IPersisterFactory<T, V> persister(final Function<T, V> getter, final BiConsumer<T, V> setter) {
 		return new GetSetAccess<>(getter, setter);
 	}
 
 	/**
 	 * Creates a persister factory that allows accessing an object using the metadata package
-	 * @param <T> the type of the persisted bean
-	 * @param <A> the type of the persisted attribute
+	 * @param <V> the type of the persisted bean
+	 * @param <V> the type of the persisted attribute
 	 */
-	static <T, A> IPersisterFactory<T, A> persister(AbstractAttributeMetaData<T> attribute) {
+	static <T, V> IPersisterFactory<T, V> persister(AbstractAttributeMetaData<T, V> attribute) {
 		return new AttributeMetaDataAccess<>(attribute);
 	}
 
 	/**
 	 * Creates a persister factory that allows accessing an object through its public fields
 	 * @param <T> the type of the persisted bean
-	 * @param <A> the type of the persisted attribute
+	 * @param <V> the type of the persisted attribute
 	 */
-	static <T, A> IPersisterFactory<T, A> publicField(final Field field) {
+	static <T, V> IPersisterFactory<T, V> publicField(final Field field) {
 		return new MethodHandlerAccess<>(field);
 	}
 

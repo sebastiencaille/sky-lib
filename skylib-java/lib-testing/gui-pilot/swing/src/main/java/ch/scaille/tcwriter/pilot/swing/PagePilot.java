@@ -26,11 +26,12 @@ public class PagePilot {
 				.getMetaData()
 				.getAttributes()
 				.stream() //
-				.filter(a -> AbstractSwingComponentPilot.class.isAssignableFrom(a.getType())) //
+				.filter(a -> a.isOfType(AbstractSwingComponentPilot.class)) //
 				.filter(a -> a.getAnnotation(ByName.class).isPresent())//
+				.map(a -> a.unwrap(AbstractSwingComponentPilot.class))
 				.forEach(a -> {
 					final var name = a.getAnnotation(ByName.class).get().value();
-					final var pilotClass = ((Class<AbstractSwingComponentPilot<?>>) a.getType());
+					final var pilotClass = a.getType();
 					try {
 						a.setValueOf(this,
 								pilotClass.getConstructor(SwingPilot.class, String.class).newInstance(pilot, name));

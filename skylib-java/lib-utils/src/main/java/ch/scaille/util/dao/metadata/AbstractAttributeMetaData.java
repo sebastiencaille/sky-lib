@@ -1,5 +1,6 @@
 package ch.scaille.util.dao.metadata;
 
+import java.security.InvalidParameterException;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -34,6 +35,19 @@ public abstract class AbstractAttributeMetaData<T, V> implements IAttributeMetaD
 	@Override
 	public <W, R> R onTypedMetaDataF(Function<AbstractAttributeMetaData<T, W>, R> function) {
 		return function.apply((AbstractAttributeMetaData<T, W>) this);
+	}
+	
+	@Override
+	public boolean isOfType(Class<?> targetType) {
+		return targetType.isAssignableFrom(type);
+	}
+	
+	@Override
+	public <W> AbstractAttributeMetaData<T, W> unwrap(Class<W> targetType) {
+		if (!isOfType(targetType)) {
+			throw new InvalidParameterException("Expected type or parent of " + type + ", received " + targetType);
+		}
+		return (AbstractAttributeMetaData<T, W>) this;
 	}
 	
 	public V get(T from) {
@@ -72,7 +86,6 @@ public abstract class AbstractAttributeMetaData<T, V> implements IAttributeMetaD
 	 * 
 	 * @return
 	 */
-	@Override
 	public Class<V> getType() {
 		return type;
 	}

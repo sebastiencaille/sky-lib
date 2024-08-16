@@ -47,14 +47,14 @@ public abstract class ObjectControllerTableModel<O, M extends IObjectGuiModel<O>
 			changes.put(object, (U) newValue);
 		}
 
-		void commit(final Object object) {
+		void commit(final O object) {
 			if (changes.containsKey(object)) {
 				singleListener.setValueFromComponent(null, changes.get(object));
 				property.save();
 			}
 		}
 
-		Object getDisplayValue(final Object object) {
+		Object getDisplayValue(final O object) {
 			if (changes.containsKey(object)) {
 				return changes.get(object);
 			}

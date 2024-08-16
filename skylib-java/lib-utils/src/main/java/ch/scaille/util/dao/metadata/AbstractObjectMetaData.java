@@ -17,6 +17,7 @@ import ch.scaille.util.dao.metadata.AttributeFactory.Mode;
  *
  * @param <T> a data type
  */
+@SuppressWarnings("unchecked")
 public class AbstractObjectMetaData<T> {
 
 	/**

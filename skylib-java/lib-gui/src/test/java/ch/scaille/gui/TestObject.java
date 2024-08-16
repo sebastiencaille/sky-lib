@@ -19,7 +19,7 @@ public class TestObject {
 
 	@Override
 	public boolean equals(final Object obj) {
-		return val == ((TestObject) obj).val;
+		return obj != null && this.getClass().equals(obj.getClass()) && val == ((TestObject) obj).val;
 	}
 
 	@Override

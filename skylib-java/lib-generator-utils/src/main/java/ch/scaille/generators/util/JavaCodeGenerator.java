@@ -30,7 +30,6 @@ public class JavaCodeGenerator<E extends Exception> extends TextFormatter<JavaCo
 
 	/**
 	 * Generate the name of a constant
-	 * @param originalName
 	 * @return a name compatible with a constant
 	 */
 	public static String toConstant(final String originalName) {

@@ -20,9 +20,7 @@ public interface IComponentBinding<T> {
 
 	/**
 	 *
-	 * @param source
-	 * @param value
-	 */
+     */
 	void setComponentValue(final AbstractProperty source, final T value);
 
 	void removeComponentValueChangeListener();

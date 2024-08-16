@@ -18,8 +18,7 @@ public class SwingHelper {
 	/**
 	 * Low level calls to Swing. Prefer withSwing methods
 	 *
-	 * @param runnable
-	 */
+     */
 	public static void invokeAndWait(final Runnable runnable) {
 		try {
 			SwingUtilities.invokeAndWait(runnable);

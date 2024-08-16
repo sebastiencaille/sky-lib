@@ -95,9 +95,6 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 
 	/**
 	 * Executes binding when the property is updated (transmitMode = BOTH only)
-	 * 
-	 * @param binding
-	 * @return
 	 */
 	public IBindingController listenActive(final Consumer<T> binding) {
 		final var listen = createBindingChain().listen(binding);
@@ -108,9 +105,6 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 	/**
 	 * Executes binding when the property is updated (transmitMode =
 	 * BOTH|TO_COMPONENT)
-	 * 
-	 * @param binding
-	 * @return
 	 */
 	public IBindingController listen(final Consumer<T> binding) {
 		return createBindingChain().listen(binding);

@@ -2,7 +2,7 @@ package ch.scaille.gui.swing.jtable;
 
 import javax.swing.JTable;
 
-class ColumnComputationInfo {
+public class ColumnComputationInfo {
 
 	final int sameClassCount;
 	final int tableWidth;

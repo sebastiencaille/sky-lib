@@ -27,19 +27,19 @@ public class PagePilot {
 				.getAttributes()
 				.stream() //
 				.filter(a -> a.isOfType(AbstractSwingComponentPilot.class)) //
-				.filter(a -> a.getAnnotation(ByName.class).isPresent())//
 				.map(a -> a.unwrap(AbstractSwingComponentPilot.class))
-				.forEach(a -> {
-					final var name = a.getAnnotation(ByName.class).get().value();
-					final var pilotClass = a.getType();
-					try {
-						a.setValueOf(this,
-								pilotClass.getConstructor(SwingPilot.class, String.class).newInstance(pilot, name));
-					} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-							| InvocationTargetException | NoSuchMethodException | SecurityException e) {
-						throw new IllegalStateException("Cannot inject Swing component pilot", e);
-					}
-				});
+				.forEach(a -> a.getAnnotation(ByName.class).ifPresent(v -> {
+						final var name = v.value();
+						final var pilotClass = a.getType();
+						try {
+							a.setValueOf(this,
+									pilotClass.getConstructor(SwingPilot.class, String.class).newInstance(pilot, name));
+						} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+								 | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+							throw new IllegalStateException("Cannot inject Swing component pilot", e);
+						}
+					})
+				);
 	}
 
 }

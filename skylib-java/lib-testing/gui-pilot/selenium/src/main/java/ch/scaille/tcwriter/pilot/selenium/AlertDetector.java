@@ -16,10 +16,8 @@ public class AlertDetector {
 	}
 
 	/**
-	 * Allows to run an action within a context that acknowledges the alerts and 
-	 * @param pilot
-	 * @param runnable
-	 */
+	 * Allows to run an action within a context that acknowledges the alerts and
+     */
 	public static void withAlert(final SeleniumPilot pilot, final Runnable runnable) {
 		final var testThread = Thread.currentThread();
 		final var dialogDetector = new ModalDialogDetector.Builder(() -> AlertDetector.listAlerts(pilot, null), e -> testThread.interrupt());

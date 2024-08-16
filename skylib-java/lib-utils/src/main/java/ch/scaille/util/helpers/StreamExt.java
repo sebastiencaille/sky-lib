@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 public interface StreamExt {
 
 	class Single<T> {
-		private boolean allowZero = false;
+		private final boolean allowZero;
 		private T value = null;
 		private int count;
 

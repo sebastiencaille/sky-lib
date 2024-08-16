@@ -2,6 +2,7 @@ package ch.scaille.generators.util;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
@@ -33,12 +34,9 @@ public class CodeGeneratorParams {
 	}
 
 	public String getTargetFolder() {
-		if (targetFolder == null) {
-			// by default, store in source folder so changes can be audited
-			return sourceFolder;
-		}
-		return targetFolder;
-	}
+        // by default, store in source folder so changes can be audited
+        return Objects.requireNonNullElse(targetFolder, sourceFolder);
+    }
 
 	public String getScanPackage() {
 		return scanPackage;
@@ -50,10 +48,8 @@ public class CodeGeneratorParams {
 
 	/**
 	 * Gets the folder of a class
-	 * 
-	 * @param clazz
-	 * @return
-	 */
+	 *
+     */
 	public static Path locationOf(Class<?> clazz) {
 		return Paths.get(JavaExt.pathOf(clazz.getProtectionDomain().getCodeSource().getLocation()));
 	}

@@ -255,7 +255,6 @@ public final class Converters {
      * @param <U>       type on component side
      * @param prop2comp the function to convert value from property side to
      *                  component side
-     * @return
      */
     public static <T, U> IConverter<T, U> listen(final Function<T, U> prop2comp) {
         return converter(prop2comp, o -> {
@@ -304,7 +303,6 @@ public final class Converters {
             }
 
             /**
-             * @throws ConversionException exception thrown when a conversion error occurs
              */
             @Override
             public Boolean convertComponentValueToPropertyValue(final C componentValue) {

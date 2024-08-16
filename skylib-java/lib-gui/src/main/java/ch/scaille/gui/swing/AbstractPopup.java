@@ -22,7 +22,6 @@ public abstract class AbstractPopup<T> extends MouseAdapter {
 	/**
 	 * 
 	 * @param p location of the popup
-	 * @return
 	 */
 	protected T getValueForPopup(final Point p) {
 		return lastSelected.getValue();

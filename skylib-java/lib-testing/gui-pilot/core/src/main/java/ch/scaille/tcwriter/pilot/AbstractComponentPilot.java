@@ -41,7 +41,7 @@ public abstract class AbstractComponentPilot<C> {
 
 		@Override
 		public String toString() {
-			return "" + element + ", precond validated=" + preconditionValidated;
+			return element + ", precond validated=" + preconditionValidated;
 		}
 
 	}

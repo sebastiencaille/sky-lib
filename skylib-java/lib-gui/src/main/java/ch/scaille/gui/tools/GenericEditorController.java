@@ -50,7 +50,7 @@ public class GenericEditorController<T> {
 		if (!errorProperty.getErrors().getValue().isEmpty()) {
 			return;
 		}
-		props.forEach(p -> p.saveInCurrentObject());
+		props.forEach(IPropertyEntry::saveInCurrentObject);
 	}
 
 }

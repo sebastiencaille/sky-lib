@@ -14,7 +14,7 @@ Complete example: [[Screenshot](../screenshots/MVC_Full_TC.png)][[Model](lib-gui
 **Basic Examples**  
 (to display a boolean property as a checkbox and as a String)
 ```java
-protected final BooleanProperty booleanProperty = ...;
+private final BooleanProperty booleanProperty = ...;
 
 JCheckBox booleanEditor = new JCheckBox();
 booleanProperty.bind(selected(booleanEditor));

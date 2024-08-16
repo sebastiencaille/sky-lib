@@ -4,7 +4,6 @@ package ch.scaille.util.dao.metadata;
  * This class allows accessing a data object without enforcing the data types in
  * the methods parameters
  *
- * @param <D>
  */
 public class UntypedDataObjectManager extends DataObjectManager<Object> {
 

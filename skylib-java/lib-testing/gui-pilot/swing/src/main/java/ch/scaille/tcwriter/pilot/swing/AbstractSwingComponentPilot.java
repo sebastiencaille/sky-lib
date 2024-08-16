@@ -12,7 +12,6 @@ import ch.scaille.tcwriter.pilot.PollingResult;
 import ch.scaille.util.helpers.Poller;
 /**
  * An abstract class for Swing component pilots
- * @param <P> the type of the Swing Component Pilot
  * @param <C> the type of the Swing Component
  */
 public class AbstractSwingComponentPilot<C extends JComponent>

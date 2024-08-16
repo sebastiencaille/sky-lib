@@ -23,7 +23,7 @@ public abstract class ObjectTextView<T> {
 
 	@Override
 	public boolean equals(final Object obj) {
-		return Objects.equals(obj, object);
+		return obj != null && obj.getClass().equals(this.getClass()) && Objects.equals(((ObjectTextView<?>) obj).object, object);
 	}
 
 	@Override

@@ -102,9 +102,6 @@ public abstract class AbstractJavaFlowVisitor extends AbstractFlowVisitor {
 	/**
 	 * Specifies if a binding a data point is available (executed by any possible
 	 * binding)
-	 *
-	 * @param dataPoint
-	 * @return
 	 */
 	public String availableVarNameOf(final String dataPoint) {
 		return dataPoint + "_available";

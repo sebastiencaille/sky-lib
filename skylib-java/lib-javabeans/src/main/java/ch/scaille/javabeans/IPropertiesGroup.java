@@ -19,8 +19,9 @@ public interface IPropertiesGroup {
 
 	/**
 	 * Attaches all the properties to the bindings.
-	 *
+	 * <p>
 	 * Should be called after all the components are bound to the properties
+	 * </p>
 	 */
 	void attachAll();
 

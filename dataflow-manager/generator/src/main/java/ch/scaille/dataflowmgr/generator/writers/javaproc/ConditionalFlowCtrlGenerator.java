@@ -30,9 +30,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 	/**
 	 * Specifies if a binding is activated
 	 *
-	 * @param binding
-	 * @return
-	 */
+     */
 	private String activatedVarNameOf(final Binding binding) {
 		return "activated_" + visitor.toVariable(binding);
 	}
@@ -86,8 +84,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 	/**
 	 * Generates the code calling a list of activators
 	 *
-	 * @param context
-	 */
+     */
 	private void visitActivators(final BindingContext context) {
 		final var activators = ConditionalFlowCtrl.getActivators(context.binding.getRules()).toList();
 		if (activators.isEmpty()) {

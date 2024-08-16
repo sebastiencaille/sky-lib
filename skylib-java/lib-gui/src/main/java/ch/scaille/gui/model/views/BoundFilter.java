@@ -26,9 +26,7 @@ public abstract class BoundFilter<D, F> extends AbstractDynamicView<D> implement
 	 * * @param <D> the type of the filtered data
 	 * 
 	 * @param <F>      the type of the property that filters the data
-	 * @param consumer
-	 * @return
-	 */
+     */
 	public static <D, F> BoundFilter<D, F> filter(final BiPredicate<D, F> consumer) {
 		return new BoundFilter<>() {
 

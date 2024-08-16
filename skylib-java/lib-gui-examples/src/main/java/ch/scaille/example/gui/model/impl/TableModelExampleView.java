@@ -26,13 +26,13 @@ public class TableModelExampleView extends JFrame {
 	static final Comparator<TestObject> NATURAL_ORDER = Comparator.comparingInt(TestObject::getASecondValue);
 	static final Comparator<TestObject> REVERSE_ORDER = (o1, o2) -> o2.getASecondValue() - o1.getASecondValue();
 
-	private final transient TableModelExampleModel model = new TableModelExampleModel();
-
-	public TableModelExampleView() {
+    public TableModelExampleView() {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		final var listDynamicView = new DynamicView();
-		model.reverseOrder.bind(listDynamicView.reverseOrder());
+        final var  model = new TableModelExampleModel();
+
+        model.reverseOrder.bind(listDynamicView.reverseOrder());
 		model.enableFilter.bind(listDynamicView.enableFilter());
 
 		final var listModel = new ListModel<>(ListViews.sorted(NATURAL_ORDER));

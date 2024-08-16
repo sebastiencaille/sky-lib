@@ -9,7 +9,6 @@ import ch.scaille.util.helpers.Poller;
  * A polling of a component
  * 
  * @param <C> type of Component
- * @param <R> type of Result
  */
 public interface PollingConfiguration<C> {
 

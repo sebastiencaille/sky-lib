@@ -26,12 +26,11 @@ class SwingBindingsTest {
 		}
 	}
 
-	private GuiController controller;
-	private TestGuiModel model;
+    private TestGuiModel model;
 
 	@BeforeEach
 	public void init() {
-		controller = new GuiController(new PropertyChangeSupportController(this));
+        final var controller = new GuiController(new PropertyChangeSupportController(this));
 		model = new TestGuiModel(controller);
 	}
 

@@ -20,7 +20,7 @@ class ${flow.name} extends ch.scaille.dataflowmgr.examples.simple.AbstractFlow {
 		NOT_TRIGGERED, TRIGGERING, TRIGGERED, SKIPPED
 	}
 
-	public class FlowExecution {
+	public static class FlowExecution {
 	
 	    private final ${flow.input} inputDataPoint;
 		
@@ -46,7 +46,7 @@ class ${flow.name} extends ch.scaille.dataflowmgr.examples.simple.AbstractFlow {
 		FlowReport.report.clear();
 		simpleExternalAdapter.reset();
 		final FlowExecution result = execute(in, e -> e.doOnSuccess(r -> finished.release())).blockingGet();
-		Assertions.assertTrue(finished.tryAcquire(200, TimeUnit.MILLISECONDS), () -> "Promise executed");
+		Assertions.assertTrue(finished.tryAcquire(200, TimeUnit.MILLISECONDS), "Promise executed");
 		Assertions.assertEquals(out, simpleExternalAdapter.getOutput());
 		info(FlowReport.report.toString());
 	}

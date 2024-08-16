@@ -15,6 +15,7 @@ import ch.scaille.annotations.Persistency;
  *
  * @param <T>
  */
+@SuppressWarnings("unchecked")
 public class GetSetAttribute<T, V> extends AbstractAttributeMetaData<T, V> {
 
 	protected final MethodHandle getter;

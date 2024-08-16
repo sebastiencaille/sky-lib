@@ -144,9 +144,7 @@ public class Polling<C, R> implements PollingConfiguration<C> {
 	 * To say that the next action will have to wait for some arbitrary delay before
 	 * execution
 	 *
-	 * @param actionDelay
-	 * @return
-	 */
+     */
 	public Polling<C, R> andThen(final ActionDelay actionDelay) {
 		this.actionDelay = actionDelay;
 		return this;

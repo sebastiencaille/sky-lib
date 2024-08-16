@@ -25,9 +25,7 @@ public class ListView<T> implements IListView<T>, Serializable {
 	/**
 	 * Creates a list view using a comparator and a filter
 	 *
-	 * @param comparator
-	 * @param filter
-	 */
+     */
 	public ListView(final Comparator<? super T> comparator, final Predicate<? super T> filter) {
 		this.filter = filter;
 		this.comparator = comparator;

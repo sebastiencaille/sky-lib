@@ -162,9 +162,8 @@ public class Template {
 
 	/**
 	 * Sets the current context
-	 * 
-	 * @param context
-	 */
+	 *
+     */
 	public void setContext(final Map<String, String> context) {
 		properties.putAll(context);
 	}

@@ -40,7 +40,7 @@ public interface Persisters {
 
 	/**
 	 * Creates a persister factory that allows accessing an object using the metadata package
-	 * @param <V> the type of the persisted bean
+	 * @param <T> the type of the persisted bean
 	 * @param <V> the type of the persisted attribute
 	 */
 	static <T, V> IPersisterFactory<T, V> persister(AbstractAttributeMetaData<T, V> attribute) {

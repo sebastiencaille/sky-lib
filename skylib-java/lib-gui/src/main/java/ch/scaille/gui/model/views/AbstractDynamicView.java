@@ -22,9 +22,6 @@ public abstract class AbstractDynamicView<T> {
 	/**
 	 * Returns a component binding that calls c with the new value and refreshes the
 	 * view
-	 *
-	 * @param c
-	 * @return
 	 */
 	public <U> IComponentBinding<U> refreshWhenUpdated(final Consumer<U> c) {
 		return ComponentBindings.listen((s, v) -> {

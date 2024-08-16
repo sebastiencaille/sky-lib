@@ -58,7 +58,7 @@ public abstract class Pollings {
 	}
 
 
-	public static <C, V extends Object> Polling<C, V> get(Function<C, V> getter) {
+	public static <C, V> Polling<C, V> get(Function<C, V> getter) {
 		return new Polling<>(ctxt -> PollingResults.value(getter.apply(ctxt.getComponent())));
 	}
 

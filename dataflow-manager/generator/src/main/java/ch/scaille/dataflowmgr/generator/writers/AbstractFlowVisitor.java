@@ -130,8 +130,6 @@ public abstract class AbstractFlowVisitor {
 
 	/**
 	 * Lists the adapters required by the activators
-	 *
-	 * @return
 	 */
 	public Set<ExternalAdapter> listAdapters(final BindingContext context, final Call<?> call) {
 		final var adaptersRequiredByActivator = new HashSet<ExternalAdapter>();

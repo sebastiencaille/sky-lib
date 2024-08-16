@@ -13,6 +13,7 @@ import java.util.function.Function;
  * @param <T>
  * @param <V> value type
  */
+@SuppressWarnings("unchecked")
 public abstract class AbstractAttributeMetaData<T, V> implements IAttributeMetaData<T> {
 
 	protected final String name;
@@ -83,8 +84,6 @@ public abstract class AbstractAttributeMetaData<T, V> implements IAttributeMetaD
 
 	/**
 	 * Returns the attribute class, preserving the primitive type.
-	 * 
-	 * @return
 	 */
 	public Class<V> getType() {
 		return type;
@@ -93,8 +92,6 @@ public abstract class AbstractAttributeMetaData<T, V> implements IAttributeMetaD
 	/**
 	 * Returns the attribute class. Primitive type are replaced by non-primitive
 	 * types
-	 * 
-	 * @return
 	 */
 	public Class<V> getClassType() {
 		if (!type.isPrimitive()) {

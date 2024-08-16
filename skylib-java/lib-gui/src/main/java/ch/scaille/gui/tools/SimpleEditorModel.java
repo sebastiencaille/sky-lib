@@ -53,8 +53,6 @@ public class SimpleEditorModel<T> implements IGenericEditorModel<T> {
     /**
      * Creates the properties by introspecting the displayed object
      *
-     * @param object
-     * @return
      */
     @Override
     public List<IPropertyEntry<T>> createProperties(IObjectProvider<T> object) {

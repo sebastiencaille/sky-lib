@@ -39,6 +39,8 @@ import ch.scaille.util.helpers.WrongCountException;
  */
 public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 
+	public static final String PRIVATE = "private";
+	public static final String DATA_POINT_STATE = "DataPointState";
 	private final JavaCodeGenerator<RuntimeException> flowClass = JavaCodeGenerator.inMemory();
 
 	private final JavaCodeGenerator<RuntimeException> flowFactories = JavaCodeGenerator.inMemory();
@@ -186,11 +188,11 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 
 	private void generateDataSetter(final String type, final String property, boolean withState) {
 		if (withState) {
-			flowClass.addInstanceVarDecl("private", "DataPointState", stateOf(property),
+			flowClass.addInstanceVarDecl(PRIVATE, DATA_POINT_STATE, stateOf(property),
 					"DataPointState.NOT_TRIGGERED");
-			flowClass.addSetter("private", "DataPointState", stateOf(property));
+			flowClass.addSetter(PRIVATE, DATA_POINT_STATE, stateOf(property));
 		}
-		flowClass.addInstanceVarDecl("private", type, property);
+		flowClass.addInstanceVarDecl(PRIVATE, type, property);
 		flowClass.appendIndented(String.format("private void set%s(%s %s)", toCamelCase(property), type, property))
 				.openBlock() //
 				.appendIndented(String.format("this.%s = %s", property, property)).eos(); //
@@ -202,7 +204,7 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 
 	private void generateDataState(final BindingContext context) {
 		final var varNameOfBinding = varNameOf(context.binding);
-		flowClass.addInstanceVarDecl("private", "DataPointState", bindingStateOf(context.binding),
+		flowClass.addInstanceVarDecl(PRIVATE, DATA_POINT_STATE, bindingStateOf(context.binding),
 				"DataPointState.NOT_TRIGGERED");
 		flowClass.addSetter("private synchronized", "DataPointState", bindingStateOf(context.binding));
 
@@ -217,13 +219,10 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 
 	/**
 	 * Add dependencies checks.
-	 * 
+	 * <p>
 	 * For normal state, wait until parents are fully triggered.<br>
-	 * For default dependency, wait until parents + other conditions are eith
-	 * 
-	 * @param binding
-	 * @param dependencies
-	 * @return
+	 * For default dependency, wait until parents + other conditions are either triggered or skipped
+	 * </p>
 	 */
 	JavaCodeGenerator<RuntimeException> addBindingDepsCheck(final Binding binding, final List<Binding> dependencies) {
 		if (!dependencies.isEmpty()) {

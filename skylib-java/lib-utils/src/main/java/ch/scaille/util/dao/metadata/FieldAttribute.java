@@ -15,7 +15,7 @@ import ch.scaille.annotations.Persistency;
  *
  * @param <T>
  */
-@SuppressWarnings("java:S3011")
+@SuppressWarnings("unchecked")
 public class FieldAttribute<T, V> extends AbstractAttributeMetaData<T, V> {
 
 	private final Field field;

@@ -12,10 +12,11 @@ import java.util.function.Consumer;
  *
  * @author Sebastien Caille
  *
- * @param T the concrete type, used to chain calls
- * @param E the output's Exception type
+ * @param <T> the concrete type, used to chain calls
+ * @param <E> the output's Exception type
  *
  */
+@SuppressWarnings("unchecked")
 public class TextFormatter<T extends TextFormatter<T, E>, E extends Exception> {
 
 	public interface IOutput<E extends Exception> {

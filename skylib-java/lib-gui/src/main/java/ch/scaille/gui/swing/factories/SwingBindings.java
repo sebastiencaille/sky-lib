@@ -105,8 +105,7 @@ public class SwingBindings {
 	 * @param componentWriter         the consumer that sets the value of the
 	 *                                component based on the incoming value
 	 * @param defaultValue            a default value for null incoming value
-	 * @return
-	 */
+     */
 	public static <T, C extends JComponent> IComponentBinding<T> rw(final C component,
 			final IListenerRegistration<T, C> componentReaderListener, final Consumer<T> componentWriter,
 			final T defaultValue) {

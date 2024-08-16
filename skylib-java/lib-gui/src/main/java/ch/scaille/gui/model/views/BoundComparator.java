@@ -34,9 +34,7 @@ public abstract class BoundComparator<D, C> extends AbstractDynamicView<D>
 	/**
 	 * @param <D>        Type of the sorted data
 	 * @param <C>        Type of the comparator property
-	 * @param comparator
-	 * @return
-	 */
+     */
 	public static <D, C> BoundComparator<D, C> comparator(final BoundComparatorFunc<D, C> comparator) {
 		return new BoundComparator<>() {
 			@Override

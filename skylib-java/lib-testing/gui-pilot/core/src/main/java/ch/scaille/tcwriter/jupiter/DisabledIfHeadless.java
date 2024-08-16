@@ -8,9 +8,6 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 
 public class DisabledIfHeadless implements ExecutionCondition {
 
-	/**
-	 * @MyCustomDisabledIf - your own annotation
-	 */
 	@Override
 	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
 		if (GraphicsEnvironment.isHeadless()) {

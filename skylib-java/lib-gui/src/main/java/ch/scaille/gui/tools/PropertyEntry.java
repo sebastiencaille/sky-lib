@@ -52,8 +52,7 @@ public class PropertyEntry<T, V> implements IPropertyEntry<T> {
 
 	/**
 	 * Allows to get the typed EndOfChain of the parameterized entry
-	 * @param <V> the expected type
-	 * @param expectedType the expected type
+	 *
 	 * @return the typed EndOfChain
 	 */
 	public EndOfChain<V> getChain() {

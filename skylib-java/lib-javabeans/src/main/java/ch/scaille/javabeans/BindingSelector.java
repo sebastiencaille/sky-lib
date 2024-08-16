@@ -33,7 +33,7 @@ public class BindingSelector<T> implements PropertyChangeListener {
 	@Override
 	public void propertyChange(final PropertyChangeEvent evt) {
 
-		final var oldValue = evt.getOldValue();
+		final var oldValue = (T) evt.getOldValue();
 		if (oldValue != null) {
 			final var oldControllers = objectControllers.get(oldValue);
 			if (oldControllers != null) {
@@ -41,7 +41,7 @@ public class BindingSelector<T> implements PropertyChangeListener {
 			}
 		}
 
-		final var newValue = evt.getNewValue();
+		final var newValue = (T) evt.getNewValue();
 		if (newValue != null) {
 			final var newController = objectControllers.get(newValue);
 			if (newController != null) {

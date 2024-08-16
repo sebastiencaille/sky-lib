@@ -16,6 +16,7 @@ import ch.scaille.generators.util.GenerationMetadata;
 import ch.scaille.generators.util.JavaCodeGenerator;
 import ch.scaille.generators.util.Template;
 import ch.scaille.gui.mvc.AttributeProcessor.AttributeProcessorDelegate;
+import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
 import ch.scaille.util.dao.metadata.IAttributeMetaData;
 import ch.scaille.util.dao.metadata.UntypedDataObjectMetaData;
 import ch.scaille.util.helpers.ClassFinder.URLClassFinder;
@@ -94,7 +95,7 @@ public class ModelClassProcessor {
 	}
 
 	protected boolean includeAttribute(final IAttributeMetaData<?> attrib) {
-		return !Modifier.isStatic(attrib.onTypedMetaDataF(a -> a.getModifier()));
+		return !Modifier.isStatic(attrib.onTypedMetaDataF(AbstractAttributeMetaData::getModifier));
 	}
 
 	protected Template process(Class<?> modelClass) {

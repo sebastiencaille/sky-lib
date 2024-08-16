@@ -53,9 +53,8 @@ public class GuiPilot {
 
 	/**
 	 * Sets the delay implied by the last executed action
-	 * 
-	 * @param actionDelay
-	 */
+	 *
+     */
 	public void setActionDelay(final ActionDelay actionDelay) {
 		this.actionDelay = actionDelay;
 	}

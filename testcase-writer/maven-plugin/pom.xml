@@ -16,7 +16,8 @@
 	<name>TestCase Writer Maven Plugin</name>
 
 	<properties>
-		<maven.version>3.9.8</maven.version>
+		<maven.version>3.9.9</maven.version>
+		<maven-plugin-plugin.version>3.15.0</maven-plugin-plugin.version>
 	</properties>
 
 	<dependencies>
@@ -57,12 +58,12 @@
 		<dependency>
 			<groupId>org.codehaus.plexus</groupId>
 			<artifactId>plexus-xml</artifactId>
-			<version>4.0.3</version>
+			<version>4.0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.maven.plugin-tools</groupId>
 			<artifactId>maven-plugin-annotations</artifactId>
-			<version>3.13.1</version>
+			<version>3.15.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -79,7 +80,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-plugin-plugin</artifactId>
-				<version>3.13.0</version>
+				<version>${maven-plugin-plugin.version}</version>
 				<configuration>
 					<goalPrefix>testcase-writer-maven-plugin</goalPrefix>
 					<skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>

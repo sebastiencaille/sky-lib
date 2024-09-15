@@ -51,14 +51,23 @@ public class TupleStream<X, Y> {
 
 	// Mappers
 
+	/**
+	 * Creates a Function that maps x to a Tuple(x, xToY(x))
+	 */
 	public static <X, Y> Function<X, Tuple<X, Y>> of(Function<X, Y> xToY) {
 		return x -> new Tuple<>(x, xToY.apply(x));
 	}
 
+	/**
+	 * Creates a Function that maps x to a Stream of Tuples (x, y) by applying x to a collection of functions xToY.
+	 */
 	public static <X, Y> Function<X, Stream<Tuple<X, Y>>> ofList(Function<X, Collection<Y>> xToY) {
 		return x -> xToY.apply(x).stream().map(y -> new Tuple<>(x, y));
 	}
 
+	/**
+	 * Creates a Function that creates a Stream of Tuples (x, y) by applying x to a stream of functions xToY.
+	 */
 	public static <X, Y> Function<X, Stream<Tuple<X, Y>>> ofStream(Function<X, Stream<Y>> xToY) {
 		return x -> xToY.apply(x).map(y -> new Tuple<>(x, y));
 	}

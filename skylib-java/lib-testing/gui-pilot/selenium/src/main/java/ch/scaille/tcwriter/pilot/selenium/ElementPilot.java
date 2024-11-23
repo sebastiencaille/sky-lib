@@ -9,7 +9,6 @@ import org.openqa.selenium.WebElement;
 
 import ch.scaille.tcwriter.pilot.AbstractComponentPilot;
 import ch.scaille.tcwriter.pilot.Polling;
-import ch.scaille.tcwriter.pilot.PollingBuilder;
 import ch.scaille.tcwriter.pilot.PollingContext;
 import ch.scaille.tcwriter.pilot.PollingResult;
 import ch.scaille.tcwriter.pilot.factories.PollingResults;
@@ -51,15 +50,10 @@ public class ElementPilot extends AbstractComponentPilot<WebElement> {
 	}
 
 	@Override
-	protected boolean canCheck(final PollingContext<WebElement> ctxt) {
+	public boolean canCheck(final PollingContext<WebElement> ctxt) {
 		return ctxt.getComponent().isDisplayed();
 	}
 
-	@Override
-	public PollingBuilder<WebElement, SeleniumPollingBuilder, SeleniumPollingBuilder.WebElementPoller> polling() {
-		return new SeleniumPollingBuilder(this);
-	}
-	
 	@Override
 	protected <U> PollingResult<WebElement, U> waitPollingSuccessLoop(final Polling<WebElement, U> polling) {
 		polling.initializeFrom(this);

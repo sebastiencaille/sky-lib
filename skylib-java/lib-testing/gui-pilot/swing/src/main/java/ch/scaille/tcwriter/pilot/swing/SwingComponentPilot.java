@@ -14,14 +14,14 @@ import ch.scaille.util.helpers.Poller;
  * An abstract class for Swing component pilots
  * @param <C> the type of the Swing Component
  */
-public class AbstractSwingComponentPilot<C extends JComponent>
+public class SwingComponentPilot<C extends JComponent>
 		extends AbstractComponentPilot<C> {
 
 	protected final SwingPilot pilot;
 	protected final String name;
 	protected final Class<C> clazz;
 
-	public AbstractSwingComponentPilot(final SwingPilot pilot, final Class<C> clazz, final String name) {
+	public SwingComponentPilot(final SwingPilot pilot, final Class<C> clazz, final String name) {
 		super(pilot);
 		this.pilot = pilot;
 		this.name = name;
@@ -48,7 +48,7 @@ public class AbstractSwingComponentPilot<C extends JComponent>
 	}
 
 	@Override
-	protected boolean canCheck(final PollingContext<C> ctxt) {
+	public boolean canCheck(final PollingContext<C> ctxt) {
 		return ctxt.getComponent().isVisible();
 	}
 
@@ -70,18 +70,5 @@ public class AbstractSwingComponentPilot<C extends JComponent>
 		SwingHelper.invokeAndWait(() -> response[0] = super.executePolling(poller, polling));
 		return response[0];
 	}
-	
-	@Override
-	public SwingPollingBuilder<C> polling() {
-		return new SwingPollingBuilder<>(this);
-	}
-	
-	public void assertEnabled() {
-		polling().fail("Component is not enabled").ifNot().enabled();
-	}
-	
 
-	public void assertDisabled() {
-		polling().fail("Component is not enabled").ifNot().disabled();
-	}
 }

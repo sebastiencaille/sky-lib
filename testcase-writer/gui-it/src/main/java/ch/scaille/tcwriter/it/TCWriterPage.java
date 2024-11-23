@@ -1,49 +1,49 @@
 package ch.scaille.tcwriter.it;
 
 import ch.scaille.tcwriter.pilot.swing.ByName;
-import ch.scaille.tcwriter.pilot.swing.JButtonPilot;
-import ch.scaille.tcwriter.pilot.swing.JListPilot;
-import ch.scaille.tcwriter.pilot.swing.JTablePilot;
+import ch.scaille.tcwriter.pilot.swing.JButtonPoller;
+import ch.scaille.tcwriter.pilot.swing.JListPoller;
+import ch.scaille.tcwriter.pilot.swing.JTablePoller;
 import ch.scaille.tcwriter.pilot.swing.PagePilot;
 import ch.scaille.tcwriter.pilot.swing.SwingPilot;
 
 public class TCWriterPage extends PagePilot {
 
 	@ByName("Actors")
-	public JListPilot actors = null;
+	public JListPoller actors = null;
 
 	@ByName("Actions")
-	public JListPilot actions = null;
+	public JListPoller actions = null;
 
 	@ByName("Selectors")
-	public JListPilot selectors;
+	public JListPoller selectors;
 
 	@ByName("selector-valueTable")
-	public JTablePilot selectorValue;
+	public JTablePoller selectorValue;
 
 	@ByName("Parameters0")
-	public JListPilot parameters0;
+	public JListPoller parameters0;
 
 	@ByName("param0-valueTable")
-	public JTablePilot parameters0Value;
+	public JTablePoller parameters0Value;
 
 	@ByName("StepsTable")
-	public JTablePilot stepsTable;
+	public JTablePoller stepsTable;
 
 	@ByName("AddStep")
-	public JButtonPilot addStep;
+	public JButtonPoller addStep;
 
 	@ByName("ApplyStep")
-	public JButtonPilot applyStep;
+	public JButtonPoller applyStep;
 
 	@ByName("NewTC")
-	public JButtonPilot newTC;
+	public JButtonPoller newTC;
 
 	@ByName("LoadTC")
-	public JButtonPilot loadTC;
+	public JButtonPoller loadTC;
 
 	@ByName("SaveTC")
-	public JButtonPilot saveTC;
+	public JButtonPoller saveTC;
 
 	public TCWriterPage(SwingPilot pilot) {
 		super(pilot);

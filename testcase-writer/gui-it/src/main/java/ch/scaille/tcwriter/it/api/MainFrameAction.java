@@ -6,16 +6,16 @@ import java.util.function.Function;
 import ch.scaille.tcwriter.annotations.TCApi;
 import ch.scaille.tcwriter.it.TCGuiPilot;
 import ch.scaille.tcwriter.it.TCWriterPage;
-import ch.scaille.tcwriter.pilot.swing.JButtonPilot;
+import ch.scaille.tcwriter.pilot.swing.JButtonPoller;
 import ch.scaille.tcwriter.pilot.swing.JFileDialogPilot;
 
 @TCApi(description = "Main frame actions", humanReadable = "Main frame actions")
 public class MainFrameAction {
 
-	private final Function<TCWriterPage, JButtonPilot> button;
+	private final Function<TCWriterPage, JButtonPoller> button;
 	private final BiConsumer<TCGuiPilot, Runnable> dialogHandler;
 
-	public MainFrameAction(final Function<TCWriterPage, JButtonPilot> button,
+	public MainFrameAction(final Function<TCWriterPage, JButtonPoller> button,
 			BiConsumer<TCGuiPilot, Runnable> dialogHandler) {
 		this.button = button;
 		this.dialogHandler = dialogHandler;

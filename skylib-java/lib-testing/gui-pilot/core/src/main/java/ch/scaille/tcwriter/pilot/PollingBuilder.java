@@ -109,7 +109,7 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, U>, U extends Poll
 	}
 
 	/**
-	 * Waits until a component is edited, throwing a java assertion error in case of
+	 * Waits until a condition is applied, throwing a java assertion error in case of
 	 * failure
 	 */
 	public T fail() {
@@ -117,17 +117,31 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, U>, U extends Poll
 		return (T) this;
 	}
 
-	public T fail(String report) {
-		this.failureHandler = FailureHandlers.throwError(report);
+	/**
+	 * Waits until a condition is applied, throwing a java assertion error in case of
+	 * failure
+	 * @param report the text of the error;
+	 */
+	public T fail(String assertion) {
+		this.failureHandler = FailureHandlers.throwError(assertion);
 		return (T) this;
 	}
 
-	public T ignore() {
+	public T fail(ReportFunction<C> reportFunction) {
+		configure(polling -> polling.withReportFunction(reportFunction));
+		return fail();
+	}
+	
+	/**
+	 * Waits until a condition is applied, skipping the error in case of
+	 * failure
+	 */
+	public T eval() {
 		this.failureHandler = FailureHandlers.ignoreFailure();
 		return (T) this;
 	}
 
-	public T ignore(Duration timeout) {
+	public T eval(Duration timeout) {
 		configure(polling -> polling.withTimeout(timeout));
 		this.failureHandler = FailureHandlers.ignoreFailure();
 		return (T) this;
@@ -138,9 +152,5 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, U>, U extends Poll
 		return (T) this;
 	}
 
-	public T fail(ReportFunction<C> reportFunction) {
-		configure(polling -> polling.withReportFunction(reportFunction));
-		return fail();
-	}
 
 }

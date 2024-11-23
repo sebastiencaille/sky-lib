@@ -16,28 +16,28 @@ public interface PollingResults {
 	}
 	
 	/**
-	 * Creates a successful polling with a value
+	 * Creates a polling success with a value
 	 */
 	static <C, V> PollingResult<C, V> value(final V value) {
 		return new PollingResult<>(value, null);
 	}
 
 	/**
-	 * Creates a successful polling without value
+	 * Creates a polling success without any value
 	 */
 	static <C> PollingResult<C, Boolean> success() {
 		return new PollingResult<>(Boolean.TRUE, null);
 	}
 
 	/**
-	 * Creates a failed polling without value
+	 * Creates a polling failure without any value
 	 */
 	static <C, V> PollingResult<C, V> failed() {
 		return failure("Failed");
 	}
 
 	/**
-	 * Creates a failed polling with a reason for the failure 
+	 * Creates a polling failure with a reason for the failure 
 	 */
 	static <C, V> PollingResult<C, V> failure(final String reason) {
 		return new PollingResult<>(null, new AssertionError(reason));

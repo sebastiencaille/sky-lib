@@ -18,6 +18,9 @@ import javax.swing.text.JTextComponent;
 import ch.scaille.tcwriter.pilot.ModalDialogDetector;
 import ch.scaille.tcwriter.pilot.ModalDialogDetector.PollingResult;
 
+/**
+ * Allows to pilot a Swing component
+ */
 @SuppressWarnings("java:S5960")
 public class SwingPilot extends ch.scaille.tcwriter.pilot.GuiPilot {
 
@@ -156,28 +159,28 @@ public class SwingPilot extends ch.scaille.tcwriter.pilot.GuiPilot {
 		return page;
 	}
 
-	public JButtonPilot button(final String name) {
-		return new JButtonPilot(this, name);
+	public JButtonPoller button(final String name) {
+		return new JButtonPoller(this, name);
 	}
 
-	public JLabelPilot label(final String name) {
-		return new JLabelPilot(this, name);
+	public JLabelPoller label(final String name) {
+		return new JLabelPoller(this, name);
 	}
 
-	public JListPilot list(final String name) {
-		return new JListPilot(this, name);
+	public JListPoller list(final String name) {
+		return new JListPoller(this, name);
 	}
 
-	public JTablePilot table(final String name) {
-		return new JTablePilot(this, name);
+	public JTablePoller table(final String name) {
+		return new JTablePoller(this, name);
 	}
 
-	public JTextFieldPilot text(final String name) {
-		return new JTextFieldPilot(this, name);
+	public JTextFieldPoller text(final String name) {
+		return new JTextFieldPoller(this, name);
 	}
 
-	public JToggleButtonPilot toggleButton(final String name) {
-		return new JToggleButtonPilot(this, name);
+	public JToggleButtonPoller toggleButton(final String name) {
+		return new JToggleButtonPoller(this, name);
 	}
 
 }

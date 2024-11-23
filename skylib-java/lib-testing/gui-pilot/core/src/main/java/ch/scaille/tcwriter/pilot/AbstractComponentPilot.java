@@ -54,7 +54,7 @@ public abstract class AbstractComponentPilot<C> {
 	/**
 	 * Checks if a component is in a state that allows checking its state
 	 */
-	protected abstract boolean canCheck(final PollingContext<C> ctxt);
+	public abstract boolean canCheck(final PollingContext<C> ctxt);
 
 	private final GuiPilot pilot;
 
@@ -227,10 +227,4 @@ public abstract class AbstractComponentPilot<C> {
 		}
 	}
 
-	/**
-	 * Creates a polling builder for this component
-	 */
-	public <T extends PollingBuilder<C, T, U>, U extends PollingBuilder.Poller<C>> PollingBuilder<C, T, U> polling() {
-		return new PollingBuilder<>(this);
-	}
 }

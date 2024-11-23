@@ -30,8 +30,19 @@ public interface IAttributeMetaData<T> {
 
 	<V, R> R onTypedMetaDataF(Function<AbstractAttributeMetaData<T, V>, R> function);
 
-	boolean isOfType(Class<?> targetType);
+	/**
+	 * Tests if the attribute is applied on a given type
+	 * @param targetType
+	 * @return true if the type matches
+	 */
+	boolean isOnType(Class<?> targetType);
 	
+	/**
+	 * 
+	 * @param <V>
+	 * @param targetType
+	 * @return
+	 */
 	<V> AbstractAttributeMetaData<T, V> unwrap(Class<V> targetType);
 
 	

@@ -22,7 +22,7 @@ public class EditableComponentPolling<V> extends Polling<JComponent, V> {
 	@Override
 	public Optional<Predicate<PollingContext<JComponent>>> getPrecondition() {
 		return Optional.of(c -> super.getPrecondition().map(p -> p.test(c)).orElse(true)
-				&& ((AbstractSwingComponentPilot<JComponent>) c.getPilot()).canEdit(c));
+				&& ((SwingComponentPilot<JComponent>) c.getPilot()).canEdit(c));
 	}
 
 }

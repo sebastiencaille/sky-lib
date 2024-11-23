@@ -91,7 +91,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	public void assertHumanReadable(final StepSelector selector, final String humanReadable) {
 		selector.accept(tcWriterPage);
 
-		tcWriterPage.stepsTable.polling()
+		tcWriterPage.stepsTable
 				.fail("checking human readable text: " + humanReadable)
 				.ifNot()
 				.asserted(pc -> {
@@ -105,7 +105,6 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	@Override
 	public void updateParameter(final ParameterSelector selector, final ParameterValue value) {
 		selector.apply(tcWriterPage)
-				.polling()
 				.fail(Reporting.settingValue("parameter", value))
 				.ifNot()
 				.appliedCtxt(context -> updateParameterValues(context, value));

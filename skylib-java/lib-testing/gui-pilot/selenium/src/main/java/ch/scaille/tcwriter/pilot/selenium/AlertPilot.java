@@ -6,6 +6,7 @@ import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoAlertPresentException;
 
 import ch.scaille.tcwriter.pilot.AbstractComponentPilot;
+import ch.scaille.tcwriter.pilot.PollingBuilder;
 import ch.scaille.tcwriter.pilot.PollingContext;
 
 public class AlertPilot extends AbstractComponentPilot<Alert> {
@@ -32,12 +33,13 @@ public class AlertPilot extends AbstractComponentPilot<Alert> {
 	}
 
 	@Override
-	protected boolean canCheck(final PollingContext<Alert> ctxt) {
+	public boolean canCheck(final PollingContext<Alert> ctxt) {
 		return false;
 	}
 
 	public void doAcknowledge() {
-		polling().fail((context, text) -> "Acknowledging alert: " + context.getComponent().getText())
+		new PollingBuilder<>(this)
+				.fail((context, text) -> "Acknowledging alert: " + context.getComponent().getText())
 				.ifNot()
 				.applied((Alert::accept));
 	}

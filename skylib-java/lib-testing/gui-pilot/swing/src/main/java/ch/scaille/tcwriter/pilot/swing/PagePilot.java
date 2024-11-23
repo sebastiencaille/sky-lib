@@ -19,6 +19,7 @@ public class PagePilot {
 	}
 
 	/**
+	 * Injects the pilots in the page.
 	 * This must be called from the page's constructor
 	 */
 	protected void initialize() {
@@ -26,8 +27,8 @@ public class PagePilot {
 				.getMetaData()
 				.getAttributes()
 				.stream() //
-				.filter(a -> a.isOfType(AbstractSwingComponentPilot.class)) //
-				.map(a -> a.unwrap(AbstractSwingComponentPilot.class))
+				.filter(a -> a.isOnType(SwingComponentPilot.class) || a.isOnType(SwingPollingBuilder.class)) //
+				.map(a -> a.unwrap(Object.class))
 				.forEach(a -> a.getAnnotation(ByName.class).ifPresent(v -> {
 						final var name = v.value();
 						final var pilotClass = a.getType();

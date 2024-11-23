@@ -1,45 +1,45 @@
 package ch.scaille.example.gui.controller;
 
 import ch.scaille.tcwriter.pilot.swing.ByName;
-import ch.scaille.tcwriter.pilot.swing.JLabelPilot;
-import ch.scaille.tcwriter.pilot.swing.JListPilot;
-import ch.scaille.tcwriter.pilot.swing.JTablePilot;
-import ch.scaille.tcwriter.pilot.swing.JTextFieldPilot;
-import ch.scaille.tcwriter.pilot.swing.JToggleButtonPilot;
+import ch.scaille.tcwriter.pilot.swing.JLabelPoller;
+import ch.scaille.tcwriter.pilot.swing.JListPoller;
+import ch.scaille.tcwriter.pilot.swing.JTablePoller;
+import ch.scaille.tcwriter.pilot.swing.JTextFieldPoller;
+import ch.scaille.tcwriter.pilot.swing.JToggleButtonPoller;
 import ch.scaille.tcwriter.pilot.swing.PagePilot;
 import ch.scaille.tcwriter.pilot.swing.SwingPilot;
 
 public class ControllerExamplePage extends PagePilot {
 
 	@ByName("booleanEditor")
-	public JToggleButtonPilot booleanEditor = null;
+	public JToggleButtonPoller booleanEditor = null;
 
 	@ByName("booleanEditorCheck")
-	public JLabelPilot booleanEditorCheck = null;
+	public JLabelPoller booleanEditorCheck = null;
 
 	@ByName("intStringEditor")
-	public JTextFieldPilot intStringEditor = null;
+	public JTextFieldPoller intStringEditor = null;
 
 	@ByName("intCheck")
-	public JLabelPilot intCheck = null;
+	public JLabelPoller intCheck = null;
 
 	@ByName("dynamicListEditor")
-	public JListPilot dynamicListEditor = null;
+	public JListPoller dynamicListEditor = null;
 
 	@ByName("dynamicListSelectionCheck")
-	public JLabelPilot dynamicListSelectionCheck = null;
+	public JLabelPoller dynamicListSelectionCheck = null;
 
 	@ByName("staticListEditor")
-	public JListPilot staticListEditor = null;
+	public JListPoller staticListEditor = null;
 
 	@ByName("staticListSelectionCheck")
-	public JLabelPilot staticListSelectionCheck = null;
+	public JLabelPoller staticListSelectionCheck = null;
 
 	@ByName("tableSelectionEditor")
-	public JTablePilot tableSelectionEditor = null;
+	public JTablePoller tableSelectionEditor = null;
 
 	@ByName("tableSelectionCheck")
-	public JLabelPilot tableSelectionCheck = null;
+	public JLabelPoller tableSelectionCheck = null;
 
 	public ControllerExamplePage(SwingPilot pilot) {
 		super(pilot);

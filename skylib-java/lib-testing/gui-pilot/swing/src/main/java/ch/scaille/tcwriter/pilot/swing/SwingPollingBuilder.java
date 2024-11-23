@@ -6,8 +6,8 @@ import javax.swing.JComponent;
 
 import ch.scaille.tcwriter.pilot.PollingBuilder;
 
-public class SwingPollingBuilder<C extends JComponent>
-		extends PollingBuilder<C, SwingPollingBuilder<C>, SwingPollingBuilder.SwingPoller<C>> {
+public class SwingPollingBuilder<C extends JComponent, T extends SwingPollingBuilder<C, T, P>, P extends SwingPollingBuilder.SwingPoller<C>>
+		extends PollingBuilder<C, T, P> {
 
 	public static class SwingPoller<C extends JComponent> extends PollingBuilder.Poller<C> {
 
@@ -26,13 +26,16 @@ public class SwingPollingBuilder<C extends JComponent>
 		}
 	}
 
-	public SwingPollingBuilder(AbstractSwingComponentPilot<C> elementPilot) {
+	public SwingPollingBuilder(SwingComponentPilot<C> elementPilot) {
 		super(elementPilot);
 	}
 
-	@Override
-	public SwingPoller<C> ifNot() {
-		return new SwingPoller<>(this);
+	public void assertEnabled() {
+		fail().ifNot().enabled();
+	}
+
+	public void assertDisabled() {
+		fail().ifNot().disabled();
 	}
 
 }

@@ -46,7 +46,7 @@ class ComponentTest {
 		}
 
 		@Override
-		protected boolean canCheck(PollingContext<Object> ctxt) {
+		public boolean canCheck(PollingContext<Object> ctxt) {
 			return true;
 		}
 
@@ -56,7 +56,8 @@ class ComponentTest {
 	void testDuration() {
 		final var pilot = new GuiPilot();
 		final var testComponent = new TestComponent(pilot);
-		final var waitResult = testComponent.polling().ignore().ifNot().satisfied(c -> false);
+		final var poller = new PollingBuilder<>(testComponent);
+		final var waitResult = poller.eval().ifNot().satisfied(c -> false);
 		Assertions.assertFalse(waitResult);
 		Assertions.assertEquals(6, testComponent.delays.size(), testComponent.delays.toString());
 	}
@@ -66,9 +67,10 @@ class ComponentTest {
 	void testGet() {
 		final var pilot = new GuiPilot();
 		final var testComponent = new TestComponent(pilot);
-		final var successResult = testComponent.polling().fail().ifNot().get(o -> TEST_TEXT);
+		final var poller = new PollingBuilder<>(testComponent);
+		final var successResult = poller.fail().ifNot().get(o -> TEST_TEXT);
 		Assertions.assertEquals(TEST_TEXT, successResult.get());
-		final var failureResult = testComponent.polling().ignore(Duration.ofMillis(10)).ifNot().get(o -> null);
+		final var failureResult = poller.eval(Duration.ofMillis(10)).ifNot().get(o -> null);
 		Assertions.assertTrue(failureResult.isEmpty());
 	}
 

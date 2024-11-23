@@ -7,8 +7,6 @@ import javax.swing.JTable;
 
 import org.junit.jupiter.api.Assertions;
 
-import ch.scaille.tcwriter.pilot.swing.JListPoller.SwingPoller;
-
 @SuppressWarnings("java:S5960")
 public class JTablePoller extends SwingPollingBuilder<JTable, JTablePoller, JTablePoller.SwingPoller> {
 

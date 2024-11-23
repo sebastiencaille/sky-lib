@@ -9,7 +9,6 @@ import javax.swing.text.JTextComponent;
 import org.junit.jupiter.api.Assertions;
 
 import ch.scaille.tcwriter.pilot.PollingContext;
-import ch.scaille.tcwriter.pilot.swing.JListPoller.SwingPoller;
 
 @SuppressWarnings("java:S5960")
 public class JTextFieldPoller

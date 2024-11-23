@@ -11,7 +11,7 @@ on:
     
 env:
   MVN_INSTALL: mvn --batch-mode  -Pcoverage install
-  MVN_SONAR: mvn  --batch-mode -Pcoverage,sonar jacoco:report@report-for-sonar sonar:sonar ${{ vars.SONAR_CONFIG }}
+  MVN_SONAR: mvn --batch-mode -Pcoverage,sonar jacoco:report@report-for-sonar sonar:sonar ${{ vars.SONAR_CONFIG }}
   
 jobs:
   analyze:
@@ -25,9 +25,9 @@ jobs:
 
     steps:
     - name: Setup Node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
-        node-version: 21
+        node-version: 22
                 
     - name: Setup Maven and java
       uses: s4u/setup-maven-action@v1.13.0
@@ -47,7 +47,7 @@ jobs:
         languages: 'java'
         
     - name: Cache SonarCloud packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
          path: ~/.sonar/cache
          key: ${{ runner.os }}-sonar

@@ -75,7 +75,7 @@ public class Scenario<A extends AbstractAppTestApi<?>> {
         return new Scenario<>(newSteps);
     }
 
-    public ExecutionContext<A> run(A appTestApi) {
+    public ExecutionContext<A> validate(A appTestApi) {
     	var executionContext = new ExecutionContext<>(appTestApi);
         appTestApi.resetContext();
         if (executionConfigurer != null) {

@@ -43,8 +43,8 @@ class SeleniumExampleTest extends AbstractTestWebAppProvider {
 		final var testAlertScenario = testEnableScenario.followedBy(AppSteps.TEST_ALERT)
 				.withConfigurer(p -> p.getContext().example = "Hello world");
 
-		final var testEnableScenarioRun = testEnableScenario.run(pageProvider);
-		final var testAlertScenarioRun = testAlertScenario.run(pageProvider);
+		final var testEnableScenarioRun = testEnableScenario.validate(pageProvider);
+		final var testAlertScenarioRun = testAlertScenario.validate(pageProvider);
 
 		Logs.of(this).info(testEnableScenarioRun.toString());
 		Logs.of(this).info(testAlertScenarioRun.toString());

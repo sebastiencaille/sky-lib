@@ -2,7 +2,6 @@ package ch.scaille.tcwriter.server.config;
 
 import java.nio.charset.StandardCharsets;
 
-import org.openapitools.configuration.SpringDocConfiguration;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebApplicationContext;
 import org.springframework.context.MessageSource;
@@ -21,7 +20,7 @@ import ch.scaille.tcwriter.server.webapi.config.WebApiControllersConfig;
 import ch.scaille.tcwriter.server.webapi.config.WebSocketConfig;
 
 @Configuration
-@Import({SpringDocConfiguration.class})
+@Import({ch.scaille.tcwriter.generated.api.config.v0.SpringDocConfiguration.class})
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
 

@@ -17,7 +17,7 @@ import ch.scaille.util.dao.metadata.IAttributeMetaData;
  */
 public abstract class AttributeProcessor {
 
-	interface AttributeProcessorDelegate {
+	public interface AttributeProcessorDelegate {
 
 		String getFieldCreation(AttributeProcessor attributeProcessor);
 

@@ -6,7 +6,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 
 import ch.scaille.tcwriter.generated.api.controllers.v0.ContextApiController;
 import ch.scaille.tcwriter.generated.api.model.v0.Context;
-import ch.scaille.tcwriter.server.services.SessionAccessor;
+import ch.scaille.tcwriter.server.services.SessionManager;
 import ch.scaille.tcwriter.server.webapi.v0.mappers.ContextMapper;
 import ch.scaille.util.helpers.Logs;
 import jakarta.validation.Valid;
@@ -14,9 +14,9 @@ import jakarta.validation.constraints.NotNull;
 
 public class ContextController extends ContextApiController {
 
-	private final SessionAccessor sessionAccessor;
+	private final SessionManager sessionAccessor;
 
-	public ContextController(SessionAccessor sessionAccessor,
+	public ContextController(SessionManager sessionAccessor,
 			NativeWebRequest webNativeRequest) {
 		super(webNativeRequest);
 		this.sessionAccessor = sessionAccessor;

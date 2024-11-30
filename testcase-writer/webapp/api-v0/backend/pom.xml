@@ -43,6 +43,10 @@
 								${apiPackageBase}.${javaApiVersion}</apiPackage>
 							<modelPackage>
 								${modelPackageBase}.${javaApiVersion}</modelPackage>
+							<configOptions>
+								<configPackage>
+									${configPackageBase}.${javaApiVersion}</configPackage>
+							</configOptions>
 						</configuration>
 					</execution>
 				</executions>

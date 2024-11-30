@@ -8,7 +8,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import ch.scaille.tcwriter.server.facade.DictionaryFacade;
 import ch.scaille.tcwriter.server.facade.TestCaseFacade;
 import ch.scaille.tcwriter.server.facade.WebFeedbackFacade;
-import ch.scaille.tcwriter.server.services.SessionAccessor;
+import ch.scaille.tcwriter.server.services.SessionManager;
 import ch.scaille.tcwriter.server.webapi.v0.controllers.ContextController;
 import ch.scaille.tcwriter.server.webapi.v0.controllers.DictionaryController;
 import ch.scaille.tcwriter.server.webapi.v0.controllers.TestCaseController;
@@ -17,7 +17,7 @@ import ch.scaille.tcwriter.server.webapi.v0.controllers.TestCaseController;
 public class WebApiControllersConfig {
 	
 	@Bean
-	ContextController contextControllerV0(SessionAccessor sessionAccessor, NativeWebRequest nativeWebRequest) {
+	ContextController contextControllerV0(SessionManager sessionAccessor, NativeWebRequest nativeWebRequest) {
 		return new ContextController(sessionAccessor, nativeWebRequest);
 	}
 
@@ -28,7 +28,7 @@ public class WebApiControllersConfig {
 	}
 
 	@Bean
-	TestCaseController testCaseControllerV0(SessionAccessor sessionAccessor, SessionRepository<?> sessionRepository,
+	TestCaseController testCaseControllerV0(SessionManager sessionAccessor, SessionRepository<?> sessionRepository,
 			TestCaseFacade testCaseFacade, NativeWebRequest nativeWebRequest, WebFeedbackFacade webFeedbackFacade) {
 		return new TestCaseController(sessionAccessor, testCaseFacade, webFeedbackFacade, nativeWebRequest);
 	}

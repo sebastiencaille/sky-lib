@@ -96,12 +96,12 @@
 							<skip>${skipTests}</skip>
 							<classesDirectory>
 								${project.build.directory}/${project.build.finalName}/WEB-INF/classes</classesDirectory>
-							<directories>
+							<additionalClasspathElements>
 								<directory>
 									${project.build.directory}/${project.build.finalName}/WEB-INF/lib/*</directory>
 								<directory>
 									${project.build.directory}/${project.build.finalName}/</directory>
-							</directories>
+							</additionalClasspathElements>
 							<mainClass>ch.scaille.tcwriter.server.Server</mainClass>
 							<arguments>
 								<argument>--server.port=9000</argument>

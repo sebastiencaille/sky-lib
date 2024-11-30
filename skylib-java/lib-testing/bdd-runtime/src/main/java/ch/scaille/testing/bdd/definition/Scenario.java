@@ -70,7 +70,7 @@ public class Scenario<A extends AbstractAppTestApi<?>> {
 
     @SafeVarargs
     public final Scenario<A> followedBy(Steps<A>... addedSteps) {
-    	var newSteps = Arrays.copyOf(steps, steps.length + addedSteps.length);
+    	final var newSteps = Arrays.copyOf(steps, steps.length + addedSteps.length);
         System.arraycopy(addedSteps, 0, newSteps, steps.length, addedSteps.length);
         return new Scenario<>(newSteps);
     }

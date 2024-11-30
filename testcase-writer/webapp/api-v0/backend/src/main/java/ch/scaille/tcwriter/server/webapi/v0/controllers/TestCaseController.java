@@ -20,7 +20,7 @@ import ch.scaille.tcwriter.server.WebConstants;
 import ch.scaille.tcwriter.server.exceptions.WebRTException;
 import ch.scaille.tcwriter.server.facade.TestCaseFacade;
 import ch.scaille.tcwriter.server.facade.WebFeedbackFacade;
-import ch.scaille.tcwriter.server.services.SessionAccessor;
+import ch.scaille.tcwriter.server.services.SessionManager;
 import ch.scaille.tcwriter.server.webapi.v0.mappers.MetadataMapper;
 import ch.scaille.tcwriter.server.webapi.v0.mappers.TestCaseMapper;
 import jakarta.validation.Valid;
@@ -30,11 +30,11 @@ public class TestCaseController extends TestcaseApiController {
 
 	private final TestCaseFacade testCaseFacade;
 
-	private final SessionAccessor sessionAccessor;
+	private final SessionManager sessionAccessor;
 
 	private final WebFeedbackFacade webFeedbackFacade;
 
-	public TestCaseController(SessionAccessor sessionAccessor, TestCaseFacade testCaseFacade,
+	public TestCaseController(SessionManager sessionAccessor, TestCaseFacade testCaseFacade,
 			WebFeedbackFacade webFeedbackFacade, NativeWebRequest request) {
 		super(request);
 		this.sessionAccessor = sessionAccessor;

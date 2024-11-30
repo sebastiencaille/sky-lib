@@ -14,7 +14,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
 import ch.scaille.tcwriter.server.WebConstants;
-import ch.scaille.tcwriter.server.services.SessionAccessor;
+import ch.scaille.tcwriter.server.services.SessionManager;
 import ch.scaille.tcwriter.server.webapi.service.WebSocketConnectionHandler.WebSocketConnectedHandler;
 import ch.scaille.tcwriter.server.webapi.service.WebSocketConnectionHandler.WebSocketDisconnectedHandler;
 
@@ -42,12 +42,12 @@ public class WebSocketConfig  extends AbstractSessionWebSocketMessageBrokerConfi
 	}
 	
 	@Bean
-	<S extends Session> WebSocketConnectedHandler<S> webSocketConnectHandler(SessionRepository<S> sessionRepository, SessionAccessor sessionAccessor) {
+	<S extends Session> WebSocketConnectedHandler<S> webSocketConnectHandler(SessionRepository<S> sessionRepository, SessionManager sessionAccessor) {
 		return new WebSocketConnectedHandler<>(sessionRepository, sessionAccessor);
 	}
 
 	@Bean
-	<S extends Session> WebSocketDisconnectedHandler<S> webSocketDisconnectHandler(SessionRepository<S> sessionRepository, SessionAccessor sessionAccessor) {
+	<S extends Session> WebSocketDisconnectedHandler<S> webSocketDisconnectHandler(SessionRepository<S> sessionRepository, SessionManager sessionAccessor) {
 		return new WebSocketDisconnectedHandler<>(sessionRepository, sessionAccessor);
 	}
 

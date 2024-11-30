@@ -9,7 +9,7 @@ import ch.scaille.tcwriter.server.dao.IDictionaryDao;
 import ch.scaille.tcwriter.server.dao.ITestCaseDao;
 import ch.scaille.tcwriter.server.facade.DictionaryFacade;
 import ch.scaille.tcwriter.server.facade.TestCaseFacade;
-import ch.scaille.tcwriter.server.services.SessionAccessor;
+import ch.scaille.tcwriter.server.services.SessionManager;
 import ch.scaille.tcwriter.server.services.SessionManagerImpl;
 import ch.scaille.tcwriter.services.testexec.JUnitTestExecutor;
 import ch.scaille.util.helpers.ClassLoaderHelper;
@@ -34,7 +34,7 @@ public class ServiceConfig {
 	}
 
 	@Bean
-	SessionAccessor sessionAccessor() {
+	SessionManager sessionAccessor() {
 		return new SessionManagerImpl();
 	}
 

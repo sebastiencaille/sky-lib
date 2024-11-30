@@ -9,7 +9,7 @@ import org.springframework.web.socket.messaging.AbstractSubProtocolEvent;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
-import ch.scaille.tcwriter.server.services.SessionAccessor;
+import ch.scaille.tcwriter.server.services.SessionManager;
 
 public class WebSocketConnectionHandler<S extends Session> {
 
@@ -23,9 +23,9 @@ public class WebSocketConnectionHandler<S extends Session> {
 
 	protected final SessionRepository<S> sessionRepository;
 
-	protected final SessionAccessor sessionAccessor;
+	protected final SessionManager sessionAccessor;
 
-	public WebSocketConnectionHandler(SessionRepository<S> sessionRepository, SessionAccessor sessionAccessor) {
+	public WebSocketConnectionHandler(SessionRepository<S> sessionRepository, SessionManager sessionAccessor) {
 		this.sessionRepository = sessionRepository;
 		this.sessionAccessor = sessionAccessor;
 	}
@@ -51,7 +51,7 @@ public class WebSocketConnectionHandler<S extends Session> {
 	public static class WebSocketConnectedHandler<S extends Session> extends WebSocketConnectionHandler<S>
 			implements ApplicationListener<SessionConnectEvent> {
 
-		public WebSocketConnectedHandler(SessionRepository<S> sessionRepository, SessionAccessor sessionAccessor) {
+		public WebSocketConnectedHandler(SessionRepository<S> sessionRepository, SessionManager sessionAccessor) {
 			super(sessionRepository, sessionAccessor);
 		}
 
@@ -66,7 +66,7 @@ public class WebSocketConnectionHandler<S extends Session> {
 	public static class WebSocketDisconnectedHandler<S extends Session> extends WebSocketConnectionHandler<S>
 			implements ApplicationListener<SessionDisconnectEvent> {
 
-		public WebSocketDisconnectedHandler(SessionRepository<S> sessionRepository, SessionAccessor sessionAccessor) {
+		public WebSocketDisconnectedHandler(SessionRepository<S> sessionRepository, SessionManager sessionAccessor) {
 			super(sessionRepository, sessionAccessor);
 		}
 

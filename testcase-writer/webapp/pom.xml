@@ -26,6 +26,7 @@
 		<apiPackageBase>
 			ch.scaille.tcwriter.generated.api.controllers</apiPackageBase>
 		<modelPackageBase>ch.scaille.tcwriter.generated.api.model</modelPackageBase>
+		<configPackageBase>ch.scaille.tcwriter.generated.api.config</configPackageBase>
 		<sonar.exclusions>**/generated-sources/**</sonar.exclusions>
 	</properties>
 

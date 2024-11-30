@@ -18,9 +18,6 @@
 		<nodeApiVersion>${apiVersion}.0.0</nodeApiVersion>
 		<inputSpec>
 			${project.basedir}/../webapi/src/main/resources/webapi/openapi.yaml</inputSpec>
-		<apiPackage>
-			ch.scaille.tcwriter.generated.api.controllers</apiPackage>
-		<modelPackage>ch.scaille.tcwriter.generated.api.model</modelPackage>
 	</properties>
 
 	<modules>

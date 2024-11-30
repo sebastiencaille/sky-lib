@@ -57,7 +57,7 @@ public class SwingBindings {
 	 * @param <T> a value type
 	 * @param <C> a component type
 	 */
-	private interface IListenerRegistration<T, C> {
+	public interface IListenerRegistration<T, C> {
 
 		void addListener(C component, IComponentLink<T> converter);
 

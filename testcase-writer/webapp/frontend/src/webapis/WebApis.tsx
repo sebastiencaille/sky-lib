@@ -58,7 +58,11 @@ function headers(): HeadersInit {
  * Performs the call and handle the errors
  */
 function wrap(promise: Promise<void | object>): void {
-	promise.catch(reason => {
+	promise
+	.then(() => {
+		webApiErrorHandler.handle('');
+	})
+	.catch(reason => {
 		let msg;
 		if (reason instanceof Error) {
 			msg = reason.message;

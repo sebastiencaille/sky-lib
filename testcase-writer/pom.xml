@@ -67,9 +67,17 @@
 					<executions>
 						<execution>
 							<!-- IMPORTANT -->
+							<id>aop sources</id>
 							<phase>process-sources</phase>
 							<goals>
 								<goal>compile</goal>
+							</goals>
+						</execution>
+						<execution>
+							<!-- IMPORTANT -->
+							<id>aop test sources</id>
+							<phase>process-test-sources</phase>
+							<goals>
 								<goal>test-compile</goal>
 							</goals>
 						</execution>

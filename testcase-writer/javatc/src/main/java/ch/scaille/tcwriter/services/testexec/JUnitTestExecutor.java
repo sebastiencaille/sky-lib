@@ -60,8 +60,8 @@ public class JUnitTestExecutor implements ITestExecutor {
 				"-cp", ClassLoaderHelper.cpToCommandLine(classPath), //
 				"org.aspectj.tools.ajc.Main", //
 				"-aspectpath", aspectsClassPath, //
-				"-source", "11", //
-				"-target", "11", //
+				"-source", "21", //
+				"-target", "21", //
 				"-verbose", //
 				// "-verbose", "-showWeaveInfo", //
 				"-d", testConfig.binaryFolder.toString(), //

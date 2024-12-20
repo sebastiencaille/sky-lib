@@ -4,11 +4,11 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.junit.jupiter.api.Test;
 
 import ch.scaille.tcwriter.annotations.Recorded;
 import ch.scaille.tcwriter.annotations.TCRole;
 import ch.scaille.tcwriter.persistence.factory.DaoConfigs;
+import ch.scaille.util.helpers.Logs;
 
 @Aspect
 public class TestCaseRecorderAspect {
@@ -23,8 +23,8 @@ public class TestCaseRecorderAspect {
 	 * Configures the recording and saves the test
 	 *
      */
-	@Around("execution(* *.*(..)) && @annotation(test)")
-	public Object runAroundTest(final ProceedingJoinPoint jp, Test test) throws Throwable {
+	@Around("execution(@org.junit.jupiter.api.Test * *.*(..))")
+	public Object runAroundTest(final ProceedingJoinPoint jp) throws Throwable {
 		final var signature = (MethodSignature) jp.getSignature();
 		final var method = signature.getMethod();
 

@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ch.scaille.tcwriter.model.Metadata;
@@ -51,7 +52,7 @@ public class TestCaseFacade extends AbstractFacade {
 	}
 
 	public void executeTest(final ExportableTestCase loadedTC, Consumer<StepStatus> feedback) {
-		final var testRemoteControl = getTestRemoteControl(feedback);
+		final var testRemoteControl = createTestRemoteControl(feedback);
 
 		final var tcpPort = testRemoteControl.prepare();
 		Path tempDir;
@@ -65,11 +66,12 @@ public class TestCaseFacade extends AbstractFacade {
 			testRemoteControl.controlTest(loadedTC.getSteps().size());
 		} catch (IOException | InterruptedException | TestCaseException e) {
 			Thread.interrupted();
+			LOGGER.log(Level.WARNING, e, () -> "Error during test execution");
 			throw new WebRTException(e);
 		}
 	}
 
-	private static TestRemoteControl getTestRemoteControl(Consumer<StepStatus> feedback) {
+	private static TestRemoteControl createTestRemoteControl(Consumer<StepStatus> feedback) {
 		final var testRemoteControl = new TestRemoteControl(10_000, new TestExecutionListener() {
 			@Override
 			public void testRunning(boolean running) {

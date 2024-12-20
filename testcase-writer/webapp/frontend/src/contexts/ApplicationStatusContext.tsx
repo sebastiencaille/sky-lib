@@ -1,4 +1,4 @@
-import React, { ReactNode, createContext, useReducer, Dispatch, useMemo, useCallback, useContext } from 'react';
+import { ReactNode, createContext, useReducer, Dispatch, useMemo, useCallback, useContext } from 'react';
 
 export interface ApplicationStatus {
 	webSocketConnected: boolean;

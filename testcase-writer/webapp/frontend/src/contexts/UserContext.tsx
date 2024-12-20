@@ -1,4 +1,4 @@
-import React, { ReactNode, createContext, useReducer, Dispatch, useMemo, useCallback, useContext } from 'react';
+import { ReactNode, createContext, useReducer, Dispatch, useMemo, useCallback, useContext } from 'react';
 
 export interface UserContext {
 	dictionary: string | null;
@@ -10,7 +10,7 @@ export interface UserContextAction {
 	newContext: UserContext;
 }
 
-export const initialUserContext: UserContext = {
+const initialUserContext: UserContext = {
 	dictionary: null,
 	testCase: null,
 }
@@ -27,7 +27,7 @@ export function useUserContextUpdater(): Dispatch<UserContextAction> {
 	return useContext(UserContextUpdater);
 }
 
-function userContextReducer(userContext: UserContext, action: UserContextAction): UserContext {
+function userContextReducer(_state: UserContext, action: UserContextAction): UserContext {
 	if (action.type === 'update') {
 		return action.newContext;
 	}

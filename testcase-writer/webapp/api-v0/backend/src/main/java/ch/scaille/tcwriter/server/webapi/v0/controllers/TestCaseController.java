@@ -44,7 +44,7 @@ public class TestCaseController extends TestcaseApiController {
 
 	@Transactional(readOnly = true)
 	@Override
-	public ResponseEntity<List<Metadata>> listAll(@Valid @NotNull String dictionary) {
+	public ResponseEntity<List<Metadata>> listAllTestCases(@Valid @NotNull String dictionary) {
 		return ResponseEntity
 				.ok(testCaseFacade.listAll(dictionary).stream().map(MetadataMapper.MAPPER::convert).toList());
 	}

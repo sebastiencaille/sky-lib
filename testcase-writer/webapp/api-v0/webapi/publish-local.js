@@ -1,12 +1,15 @@
+/**
+ * Deploys a package using npm link
+ */
 const Os = require('os')
 const fs = require('fs');
 const { execFile } = require("child_process");
 
 const copyPackage = (dir, version, cb) => {
 	const filename = 'package.json';
-	fs.readFile(filename, 'utf8', function(err, data) {
+	fs.readFile(filename, 'utf8', function(err, fileContent) {
 		if (err) throw err;
-		let result = data.replace(/$version$/g, version);
+		let result = fileContent.replace(/\$version\$/g, version);
 		fs.writeFile(dir + filename, result, 'utf8', function(err) {
 			if (err) throw err;
 			cb();
@@ -42,7 +45,9 @@ const writeIndex = (dir, cb) =>
 	exports.components = components
 	`, {}, cb)
 
-const dir = process.argv[2];
+let dir = process.argv[2];
+dir = dir + (dir.endsWith('/') || dir.endsWith('\\') ? '': '/');
+console.info(`Deploying local package: ${dir}`);
 const version = process.argv[3];
 const thenDeploy = () => deploy(dir, () => { });
 const thenCopyPackage = () => copyPackage(dir, version, thenDeploy);

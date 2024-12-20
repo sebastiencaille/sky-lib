@@ -1,6 +1,6 @@
 get:
   summary: List all dictionaries
-  operationId: listAll
+  operationId: listAllDictionaries
   responses:
     '200':
       description: all dictionaries

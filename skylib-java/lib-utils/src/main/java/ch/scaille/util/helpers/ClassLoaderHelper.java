@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 public class ClassLoaderHelper {
 
 	private static final String CP_SEPARATOR = File.pathSeparator;
+	private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");
 
 	private ClassLoaderHelper() {
 	}
@@ -60,7 +61,10 @@ public class ClassLoaderHelper {
 	}
 
 	public static String cpToCommandLine(final URL[] classpath, final URL... extra) {
-		return Stream.concat(Stream.of(classpath), Stream.of(extra)).map(URL::getFile).collect(joining(CP_SEPARATOR));
+		return Stream.concat(Stream.of(classpath), Stream.of(extra))
+				.map(URL::getFile)
+				.map(c -> IS_WINDOWS ? c.substring(1).replace('/', '\\') : c)
+				.collect(joining(CP_SEPARATOR));
 	}
 
 	public static void registerResourceHandler() {

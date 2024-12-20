@@ -1,4 +1,3 @@
-import React from 'react';
 import TestCaseHelper from '../helpers/TestCaseHelper';
 import { TestDictionary, TestCase, StepStatus, TestStep } from '../webapis/Types';
 import './TestCaseTable.css';

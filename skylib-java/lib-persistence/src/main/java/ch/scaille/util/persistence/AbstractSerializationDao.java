@@ -1,6 +1,7 @@
 package ch.scaille.util.persistence;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -41,16 +42,23 @@ public abstract class AbstractSerializationDao<T> implements IDao<T> {
 
 	}
 
-	protected String[] nameAndExtensionOf(String locator) {
-		if (locator == null) {
+	/**
+	 * Find the name an extension of the locator
+	 * @param resourcePath a path
+	 * @return an array containing the path without extension and the extension 
+	 */
+	protected String[] nameAndExtensionOf(String resourcePath) {
+		if (resourcePath == null) {
 			return EMPTY_NAME_EXT;
 		}
-		final var lastDot = locator.lastIndexOf('.');
+		final var path = Paths.get(resourcePath).getFileName().toString();
+		final var lastDot = path.lastIndexOf('.');
 		final String[] nameAndExt;
 		if (lastDot >= 0) {
-			nameAndExt = new String[] { locator.substring(0, lastDot), locator.substring(lastDot + 1) };
+			final var extension = path.substring(lastDot + 1);
+			nameAndExt = new String[] { resourcePath.substring(0, resourcePath.length() - extension.length() - 1), extension};
 		} else {
-			nameAndExt = new String[] { locator, "" };
+			nameAndExt = new String[] { resourcePath, "" };
 		}
 		return nameAndExt;
 	}
@@ -75,19 +83,7 @@ public abstract class AbstractSerializationDao<T> implements IDao<T> {
 				.map(IStorageDataHandler::getDefaultMimeType)
 				.or(this::getPredefinedResourceMimeType)
 				.or(dataHandlerRegistry::getDefaultMimeType)
-				.map(m -> fixExtension(new ResourceMetaData(locator, storageLocator, m)));
-	}
-
-	protected ResourceMetaData fixExtension(ResourceMetaData resourceMeta) {
-		// Correct the extension if not consistent
-		final var nameAndExt = nameAndExtensionOf(resourceMeta.getStorageLocator());
-		final var handler = dataHandlerRegistry.find(resourceMeta.getMimeType());
-		if (handler.isPresent() && !handler.get().supports(nameAndExt[1])
-				&& !handler.get().getDefaultExtension().isEmpty()) {
-			return resourceMeta
-					.withStorageLocator(nameAndExt[0] + '.' + handler.get().getDefaultExtension());
-		}
-		return resourceMeta;
+				.map(m -> new ResourceMetaData(locator, storageLocator, m));
 	}
 
 	/**

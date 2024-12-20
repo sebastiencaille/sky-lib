@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { StompSessionProvider, useSubscription } from "react-stomp-hooks";
 import { StepStatus } from './Types'
 import { updateWebConnection, useApplicationStatusContextUpdater } from '../contexts/ApplicationStatusContext';

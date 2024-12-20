@@ -10,7 +10,7 @@ interface IMetadataChooserProps {
 
 export default function MetadataChooser(props: Readonly<IMetadataChooserProps>) {
 
-	const [selectedMetadata, setSelectedMetadata] = useState<Metadata>(undefined);
+	const [selectedMetadata, setSelectedMetadata] = useState<Metadata | undefined>(undefined);
 
 	useEffect(() => {
 

@@ -1,4 +1,12 @@
-import { TestDictionary, TestRole, TestAction, TestActor, TestParameterFactory } from '../webapis/Types'
+import {
+	TestDictionary,
+	TestRole,
+	TestAction,
+	TestActor,
+	TestParameterFactory,
+	TestCase,
+	TestReference
+} from '../webapis/Types'
 
 const enhanceDictionary = (dict: TestDictionary): TestDictionary => {
 	dict.actionsMap = dict.roles.flatMap(r => r.actions).reduce((a, v: TestAction) => a.set(v.id, v), new Map());

@@ -1,6 +1,6 @@
 {
   "name": "@scaille/testcase-writer-webapi",
-  "version": "$version$",
+  "version": "0.0.0",
   "description": "Typescript web api of testcase writer",
   "main": "./WebApis-generated-types.ts",
   "scripts": {
@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "openapi-typescript": "^7.4.3",
+    "openapi-typescript": "^7.4.4",
     "typescript": "^5.7.2"
   }
 }

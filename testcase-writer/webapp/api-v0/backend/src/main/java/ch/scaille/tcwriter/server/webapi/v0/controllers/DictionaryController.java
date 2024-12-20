@@ -27,7 +27,7 @@ public class DictionaryController extends DictionaryApiController {
 
 	@Transactional(readOnly = true)
 	@Override
-	public ResponseEntity<List<Metadata>> listAll() {
+	public ResponseEntity<List<Metadata>> listAllDictionaries() {
 		return ResponseEntity.ok(dictionaryFacade.listAll().stream().map(MetadataMapper.MAPPER::convert).toList());
 	}
 

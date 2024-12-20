@@ -1,9 +1,9 @@
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 
-import WebApis, { } from './webapis/WebApis';
+import WebApis from './webapis/WebApis';
 import WebApiFeedback from './webapis/WebApiFeedback'
 import { Metadata, TestDictionary, TestCase, ExportType, StepStatus } from './webapis/Types'
 import Mappers from './mappers/Mappers';
@@ -43,10 +43,10 @@ export default function App() {
 
 
 	useEffect(() => {
-		if (userContext.dictionary && userContext.dictionary !== currentDictionary?.metadata.id) {
+		if (userContext.dictionary && userContext.dictionary !== currentDictionary?.metadata.transientId) {
 			WebApis.loadDictionary(userContext.dictionary, dict => setCurrentDictionary(Mappers.enhanceDictionary(dict)));
 		}
-	}, [currentDictionary?.metadata.id, userContext.dictionary]);
+	}, [currentDictionary?.metadata.transientId, userContext.dictionary]);
 
 	useEffect(() => {
 		if (userContext.dictionary) {
@@ -56,10 +56,10 @@ export default function App() {
 
 
 	useEffect(() => {
-		if (currentDictionary && userContext.testCase && userContext.testCase !== currentTestCase?.metadata.id) {
+		if (currentDictionary && userContext.testCase && userContext.testCase !== currentTestCase?.metadata.transientId) {
 			WebApis.loadTestCase(userContext.testCase, tc => setCurrentTestCase(Mappers.enhanceTestCase(currentDictionary, tc)));
 		}
-	}, [currentDictionary, currentTestCase?.metadata.id, userContext]);
+	}, [currentDictionary, currentTestCase?.metadata.transientId, userContext]);
 
 	const dictionaryChanged = useCallback((metadata?: Metadata) => {
 		if (!metadata) {

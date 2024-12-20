@@ -1,4 +1,4 @@
-import { components } from '@scaille/testcase-writer-webapi'
+import { components } from '@scaille/testcase-writer-webapi';
 
 type Metadata = components["schemas"]["Metadata"];
 type IdObject = components["schemas"]["IdObject"];
@@ -18,7 +18,7 @@ type StepStatus = components["schemas"]["StepStatus"];
 interface TestDictionary extends ApiTestDictionary {
 
 	metadata: Metadata;
-	descriptions: TestObjectDescription[];
+	objectDescriptions: TestObjectDescription[];
 
 	actionsMap: Map<string, TestAction>;
 	rolesMap: Map<string, TestRole>;

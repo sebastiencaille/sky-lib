@@ -10,7 +10,9 @@ export const handleStepStatusAction = (stepStatuses: Map<number, StepStatus>, ac
 	switch (action.type) {
 		case 'update': {
 			const newStatuses = new Map(stepStatuses)
-			newStatuses.set(action.stepStatus.ordinal, action.stepStatus);
+			if (action.stepStatus) {
+				newStatuses.set(action.stepStatus.ordinal, action.stepStatus);
+			}
 			return newStatuses;
 		}
 		case 'clear': {

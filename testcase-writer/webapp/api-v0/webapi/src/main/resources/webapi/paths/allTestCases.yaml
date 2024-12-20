@@ -1,6 +1,6 @@
 get:
   summary: List all test cases
-  operationId: listAll
+  operationId: listAllTestCases
   parameters:
     - in: header
       name: X-UserContext

@@ -31,7 +31,7 @@ public class FileSystemDao<T> extends AbstractSerializationDao<T> {
 		if (!path.startsWith("/")) {
 			path = basePath + '/' + path;
 		}
-		this.basePath = Paths.get(path);
+		this.basePath = Paths.get(path).toAbsolutePath();
 	}
 
 	public FileSystemDao(Class<T> daoType, Path baseFolder, StorageDataHandlerRegistry serDeserializerRegistry) {
@@ -42,7 +42,7 @@ public class FileSystemDao<T> extends AbstractSerializationDao<T> {
 	/**
 	 * Finds the locator in basePath
 	 * 
-	 * @param locator empty to use basePath, null to list
+	 * @param locator a value to locate the files, empty String to use basePath, null to return all the content
 	 * @return a stream of metadata
 	 */
 	private Stream<ResourceMetaData> inFolder(String locator) throws IOException {

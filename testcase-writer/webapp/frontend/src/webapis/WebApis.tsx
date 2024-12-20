@@ -1,9 +1,9 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { Metadata, TestDictionary, TestCase, Context, ExportType } from './Types'
 import { addError, useApplicationStatusContextUpdater } from '../contexts/ApplicationStatusContext';
 import { UserContext, useUserContext } from '../contexts/UserContext';
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = '/api/v0';
 
 interface WebApiErrorHandler {
 	handle: (msg: string) => void;
@@ -71,8 +71,8 @@ function wrap(promise: Promise<void | object>): void {
 
 function mapUserContextFromBackend(context: Context) {
 	return {
-		dictionary: context.dictionary,
-		testCase: context.testCase
+		dictionary: context.dictionary || null,
+		testCase: context.testCase || null
 	};
 }
 

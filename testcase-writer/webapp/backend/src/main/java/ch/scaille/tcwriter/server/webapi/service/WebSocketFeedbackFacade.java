@@ -19,7 +19,7 @@ public class WebSocketFeedbackFacade implements WebFeedbackFacade {
 
 	@Override
 	public void send(String wsSessionId, String tabId, String destination, Object dto) {
-		if (wsSessionId.isEmpty() || tabId == null) {
+		if (wsSessionId == null || wsSessionId.isEmpty() || tabId == null) {
 			return;
 		}
 

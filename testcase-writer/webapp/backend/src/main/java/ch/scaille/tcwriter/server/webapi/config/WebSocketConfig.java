@@ -38,7 +38,7 @@ public class WebSocketConfig  extends AbstractSessionWebSocketMessageBrokerConfi
 
 	@Override
 	protected void configureStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/websocket").setAllowedOrigins("http://localhost:9000").withSockJS();
+		registry.addEndpoint("/websocket").setAllowedOrigins("localhost:9000", "localhost:5173").withSockJS();
 	}
 	
 	@Bean

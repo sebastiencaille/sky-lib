@@ -52,7 +52,7 @@
 					<webResources>
 						<resource>
 							<targetPath>/static</targetPath>
-							<directory>${project.build.directory}/frontend-dist</directory>
+							<directory>${project.build.directory}/dist</directory>
 						</resource>
 					</webResources>
 				</configuration>

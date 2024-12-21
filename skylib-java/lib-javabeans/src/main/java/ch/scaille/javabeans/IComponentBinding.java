@@ -1,7 +1,5 @@
 package ch.scaille.javabeans;
 
-import ch.scaille.javabeans.properties.AbstractProperty;
-
 /**
  * Unified access to a component's "property".
  * <p>
@@ -13,15 +11,16 @@ import ch.scaille.javabeans.properties.AbstractProperty;
 public interface IComponentBinding<T> {
 
 	/**
+	 * Sets the component side of the value
+     */
+	void setComponentValue(final IComponentChangeSource source, final T value);
+
+	/**
 	 * Called when bound to a link, so the component binding can hook to the
 	 * component and forward it's content to the property
 	 */
 	void addComponentValueChangeListener(final IComponentLink<T> link);
 
-	/**
-	 *
-     */
-	void setComponentValue(final AbstractProperty source, final T value);
 
 	void removeComponentValueChangeListener();
 }

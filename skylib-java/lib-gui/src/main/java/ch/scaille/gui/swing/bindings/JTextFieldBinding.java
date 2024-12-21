@@ -9,8 +9,8 @@ import javax.swing.AbstractAction;
 import javax.swing.JTextField;
 
 import ch.scaille.gui.mvc.ComponentBindingAdapter;
+import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
-import ch.scaille.javabeans.properties.AbstractProperty;
 
 public class JTextFieldBinding extends ComponentBindingAdapter<String> {
 
@@ -49,7 +49,7 @@ public class JTextFieldBinding extends ComponentBindingAdapter<String> {
 	}
 
 	@Override
-	public void setComponentValue(final AbstractProperty source, final String value) {
+	public void setComponentValue(final IComponentChangeSource source, final String value) {
         textField.setText(Objects.requireNonNullElse(value, ""));
 	}
 

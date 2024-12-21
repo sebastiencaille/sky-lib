@@ -11,9 +11,6 @@ import java.nio.charset.StandardCharsets;
 import ch.scaille.tcwriter.model.testexec.StepStatus;
 
 public class TestApi {
-	public enum StepState {
-		NOT_RUN, STARTED, OK, FAILED
-	}
 
 	public enum Command {
 		SET_BREAKPOINT('b'), REMOVE_BREAKPOINT('c'), RUN('r'), STEP_START('s'), STEP_DONE('o'), ERROR('e'),

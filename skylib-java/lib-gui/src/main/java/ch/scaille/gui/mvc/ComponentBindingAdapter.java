@@ -1,8 +1,8 @@
 package ch.scaille.gui.mvc;
 
 import ch.scaille.javabeans.IComponentBinding;
+import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
-import ch.scaille.javabeans.properties.AbstractProperty;
 
 /**
  * Parent class of all component bindings.
@@ -25,7 +25,7 @@ public class ComponentBindingAdapter<T> implements IComponentBinding<T> {
 	}
 
 	@Override
-	public void setComponentValue(final AbstractProperty source, final T value) {
+	public void setComponentValue(final IComponentChangeSource source, final T value) {
 		// no op
 	}
 

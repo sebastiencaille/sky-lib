@@ -7,9 +7,9 @@ import java.util.Objects;
 import javax.swing.JTextArea;
 
 import ch.scaille.gui.mvc.ComponentBindingAdapter;
-import ch.scaille.gui.swing.factories.SwingBindings;
+import ch.scaille.gui.swing.SwingExt;
+import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
-import ch.scaille.javabeans.properties.AbstractProperty;
 
 public class JTextAreaBinding extends ComponentBindingAdapter<String> {
 
@@ -40,13 +40,13 @@ public class JTextAreaBinding extends ComponentBindingAdapter<String> {
 	}
 
 	@Override
-	public void setComponentValue(final AbstractProperty source, final String value) {
+	public void setComponentValue(final IComponentChangeSource source, final String value) {
         textArea.setText(Objects.requireNonNullElse(value, ""));
 	}
 
 	@Override
 	public String toString() {
-		return "Value of " + SwingBindings.nameOf(textArea);
+		return "Value of " + SwingExt.nameOf(textArea);
 	}
 
 }

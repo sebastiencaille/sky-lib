@@ -6,8 +6,8 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 
 import ch.scaille.gui.mvc.ComponentBindingAdapter;
-import ch.scaille.gui.swing.factories.SwingBindings;
-import ch.scaille.javabeans.properties.AbstractProperty;
+import ch.scaille.gui.swing.SwingExt;
+import ch.scaille.javabeans.IComponentChangeSource;
 
 public class JListContentBinding<T> extends ComponentBindingAdapter<List<T>> {
 
@@ -18,7 +18,7 @@ public class JListContentBinding<T> extends ComponentBindingAdapter<List<T>> {
 	}
 
 	@Override
-	public void setComponentValue(final AbstractProperty source, final List<T> value) {
+	public void setComponentValue(final IComponentChangeSource source, final List<T> value) {
 		final var newModel = new DefaultListModel<T>();
 		value.forEach(newModel::addElement);
 		list.setModel(newModel);
@@ -26,6 +26,6 @@ public class JListContentBinding<T> extends ComponentBindingAdapter<List<T>> {
 
 	@Override
 	public String toString() {
-		return "Value of " + SwingBindings.nameOf(list);
+		return "Value of " + SwingExt.nameOf(list);
 	}
 }

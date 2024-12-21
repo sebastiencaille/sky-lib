@@ -5,8 +5,8 @@ import java.util.Collection;
 import ch.scaille.gui.model.views.IListView;
 import ch.scaille.gui.mvc.factories.ComponentBindings;
 import ch.scaille.javabeans.IComponentBinding;
+import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
-import ch.scaille.javabeans.properties.AbstractProperty;
 
 public interface ListModelBindings {
 
@@ -26,7 +26,7 @@ public interface ListModelBindings {
 			}
 
 			@Override
-			public void setComponentValue(final AbstractProperty source, final Collection<T> value) {
+			public void setComponentValue(final IComponentChangeSource source, final Collection<T> value) {
 				model.setValues(value);
 			}
 

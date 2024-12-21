@@ -6,10 +6,10 @@ import java.util.function.Supplier;
 import javax.swing.JTable;
 
 import ch.scaille.gui.mvc.ComponentBindingAdapter;
-import ch.scaille.gui.swing.factories.SwingBindings;
+import ch.scaille.gui.swing.SwingExt;
 import ch.scaille.gui.swing.model.ListModelTableModel;
+import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
-import ch.scaille.javabeans.properties.AbstractProperty;
 
 /**
  * Binds to multiple selection of JTable.
@@ -64,7 +64,7 @@ public class JTableMultiSelectionBinding<T, U extends Collection<T>> extends Com
 	}
 
 	@Override
-	public void setComponentValue(final AbstractProperty source, final U values) {
+	public void setComponentValue(final IComponentChangeSource source, final U values) {
 		if ((source == null || !source.isModifiedBy(table)) && values != null) {
 
 			table.getSelectionModel().setValueIsAdjusting(true);
@@ -82,6 +82,6 @@ public class JTableMultiSelectionBinding<T, U extends Collection<T>> extends Com
 
 	@Override
 	public String toString() {
-		return "Multi-selection of " + SwingBindings.nameOf(table);
+		return "Multi-selection of " + SwingExt.nameOf(table);
 	}
 }

@@ -1,6 +1,5 @@
 package ch.scaille.gui.swing.factories;
 
-import java.awt.Component;
 import java.awt.ItemSelectable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,6 +26,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import ch.scaille.gui.swing.SwingExt;
 import ch.scaille.gui.swing.bindings.JComboBoxContentBinding;
 import ch.scaille.gui.swing.bindings.JListContentBinding;
 import ch.scaille.gui.swing.bindings.JListSelectionBinding;
@@ -37,19 +37,12 @@ import ch.scaille.gui.swing.bindings.JTextAreaBinding;
 import ch.scaille.gui.swing.bindings.JTextFieldBinding;
 import ch.scaille.gui.swing.model.ListModelTableModel;
 import ch.scaille.javabeans.IComponentBinding;
+import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
-import ch.scaille.javabeans.properties.AbstractProperty;
 
 public class SwingBindings {
 
 	private SwingBindings() {
-	}
-
-	public static String nameOf(final Component component) {
-		if (component.getName() != null) {
-			return component.getClass().getSimpleName() + ':' + component.getName();
-		}
-		return component.toString();
 	}
 
 	/**
@@ -111,7 +104,7 @@ public class SwingBindings {
 			final T defaultValue) {
 		return new IComponentBinding<>() {
 			@Override
-			public void setComponentValue(final AbstractProperty source, final T value) {
+			public void setComponentValue(final IComponentChangeSource source, final T value) {
 				componentWriter.accept(value != null ? value : defaultValue);
 			}
 
@@ -127,7 +120,7 @@ public class SwingBindings {
 
 			@Override
 			public String toString() {
-				return "Binding to " + nameOf(component);
+				return "Binding to " + SwingExt.nameOf(component);
 			}
 		};
 	}
@@ -236,7 +229,7 @@ public class SwingBindings {
 			}
 
 			@Override
-			public void setComponentValue(final AbstractProperty source, final T value) {
+			public void setComponentValue(final IComponentChangeSource source, final T value) {
 				for (int i = 0; i < mapping.length; i += 2) {
 					if (Objects.equals(mapping[i], value)) {
 						group.setSelected(((AbstractButton) mapping[i + 1]).getModel(), true);

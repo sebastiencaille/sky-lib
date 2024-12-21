@@ -5,9 +5,9 @@ import java.awt.Component;
 import javax.swing.JTabbedPane;
 
 import ch.scaille.gui.mvc.ComponentBindingAdapter;
-import ch.scaille.gui.swing.factories.SwingBindings;
+import ch.scaille.gui.swing.SwingExt;
+import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
-import ch.scaille.javabeans.properties.AbstractProperty;
 
 /**
  * Select the tab of a tabbed pane according to the property's value.
@@ -48,7 +48,7 @@ public class JTabbedPaneSelectionBinding<T> extends ComponentBindingAdapter<T> {
 	}
 
 	@Override
-	public void setComponentValue(final AbstractProperty source, final T value) {
+	public void setComponentValue(final IComponentChangeSource source, final T value) {
 		for (int i = 0; i < pane.getComponentCount(); i++) {
 			if (pane.getClientProperty(pane.getComponentAt(i)) == value) {
 				pane.setSelectedIndex(i);
@@ -59,7 +59,7 @@ public class JTabbedPaneSelectionBinding<T> extends ComponentBindingAdapter<T> {
 
 	@Override
 	public String toString() {
-		return "Selection of " + SwingBindings.nameOf(pane);
+		return "Selection of " + SwingExt.nameOf(pane);
 	}
 
 	public static void setValueForTab(final JTabbedPane pane, final Component tabPanel,

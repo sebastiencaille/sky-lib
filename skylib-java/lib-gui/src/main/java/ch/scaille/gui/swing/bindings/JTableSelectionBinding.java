@@ -4,8 +4,8 @@ import javax.swing.JTable;
 
 import ch.scaille.gui.mvc.ComponentBindingAdapter;
 import ch.scaille.gui.swing.model.ListModelTableModel;
+import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
-import ch.scaille.javabeans.properties.AbstractProperty;
 
 public class JTableSelectionBinding<T> extends ComponentBindingAdapter<T> {
 
@@ -41,7 +41,7 @@ public class JTableSelectionBinding<T> extends ComponentBindingAdapter<T> {
 	}
 
 	@Override
-	public void setComponentValue(final AbstractProperty source, final T value) {
+	public void setComponentValue(final IComponentChangeSource source, final T value) {
 		if (source == null || !source.isModifiedBy(table)) {
 			if (value == null) {
 				table.getSelectionModel().clearSelection();

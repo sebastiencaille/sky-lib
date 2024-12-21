@@ -42,7 +42,7 @@ class LambdaExtTest {
 	@Test()
 	void testExceptionRaised() {
 		Assertions.assertThrows(IllegalStateException.class, () -> LambdaExt.uncheck(() -> {
-			throw new IOException("Huh");
+			throw new IOException("Test exception");
 		}));
 	}
 }

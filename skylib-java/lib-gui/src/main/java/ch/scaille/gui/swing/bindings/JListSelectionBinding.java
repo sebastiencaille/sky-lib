@@ -3,9 +3,9 @@ package ch.scaille.gui.swing.bindings;
 import javax.swing.JList;
 
 import ch.scaille.gui.mvc.ComponentBindingAdapter;
-import ch.scaille.gui.swing.factories.SwingBindings;
+import ch.scaille.gui.swing.SwingExt;
+import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
-import ch.scaille.javabeans.properties.AbstractProperty;
 
 public class JListSelectionBinding<T> extends ComponentBindingAdapter<T> {
 
@@ -27,7 +27,7 @@ public class JListSelectionBinding<T> extends ComponentBindingAdapter<T> {
 	}
 
 	@Override
-	public void setComponentValue(final AbstractProperty source, final T value) {
+	public void setComponentValue(final IComponentChangeSource source, final T value) {
 		if (!source.isModifiedBy(list)) {
 			list.setSelectedValue(value, true);
 			if (list.getSelectedValue() == null) {
@@ -38,6 +38,6 @@ public class JListSelectionBinding<T> extends ComponentBindingAdapter<T> {
 
 	@Override
 	public String toString() {
-		return "Selection of " + SwingBindings.nameOf(list);
+		return "Selection of " + SwingExt.nameOf(list);
 	}
 }

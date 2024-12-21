@@ -9,6 +9,7 @@ import java.util.Map;
 import ch.scaille.gui.model.ListModel;
 import ch.scaille.gui.mvc.IObjectGuiModel;
 import ch.scaille.javabeans.IComponentBinding;
+import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
 import ch.scaille.javabeans.properties.AbstractProperty;
 
@@ -74,7 +75,7 @@ public abstract class ObjectControllerTableModel<O, M extends IObjectGuiModel<O>
 		}
 
 		@Override
-		public void setComponentValue(final AbstractProperty source, final U value) {
+		public void setComponentValue(final IComponentChangeSource source, final U value) {
 			this.loadedValue = value;
 		}
 

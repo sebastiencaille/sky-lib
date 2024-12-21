@@ -3,8 +3,8 @@ package ch.scaille.gui.model.views;
 import java.util.Comparator;
 
 import ch.scaille.javabeans.IComponentBinding;
+import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
-import ch.scaille.javabeans.properties.AbstractProperty;
 
 /**
  * Comparator that can be used as a component Binding
@@ -67,7 +67,7 @@ public abstract class BoundComparator<D, C> extends AbstractDynamicView<D>
 	}
 
 	@Override
-	public void setComponentValue(final AbstractProperty source, final C value) {
+	public void setComponentValue(final IComponentChangeSource source, final C value) {
 		sorterPropertyValue = value;
 		owner.viewUpdated();
 	}

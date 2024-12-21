@@ -3,14 +3,12 @@ package ch.scaille.tcwriter.gui.frame;
 import static ch.scaille.gui.mvc.factories.ComponentBindings.listen;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
@@ -163,12 +161,7 @@ public class TCWriterGui extends JFrame {
 	}
 
 	protected void handleException(final Exception ex) {
-		handleException(this, ex);
-	}
-
-	public static void handleException(Component parent, final Exception ex) {
-		LOGGER.log(Level.WARNING, "Unable to execute action", ex);
-		JOptionPane.showMessageDialog(parent, "Unable to execution action: " + ex.getMessage());
+		ExceptionHelper.handleException(this, ex);
 	}
 
 }

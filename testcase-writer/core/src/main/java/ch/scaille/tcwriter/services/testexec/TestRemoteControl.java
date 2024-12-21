@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 import ch.scaille.tcwriter.model.testcase.TestStep;
 import ch.scaille.tcwriter.model.testexec.StepStatus;
-import ch.scaille.tcwriter.services.testexec.TestApi.StepState;
+import ch.scaille.tcwriter.model.testexec.StepStatus.StepState;
 import ch.scaille.util.helpers.Logs;
 
 public class TestRemoteControl {

@@ -7,6 +7,7 @@ import java.util.Arrays;
 import ch.scaille.gui.mvc.GuiModel;
 import ch.scaille.gui.mvc.IObjectGuiModel;
 import ch.scaille.javabeans.IComponentBinding;
+import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.Configuration;
@@ -113,7 +114,7 @@ public class ControllerExampleObjectGuiModel extends GuiModel implements IObject
 			}
             
             @Override
-            public void setComponentValue(final AbstractProperty source, final ch.scaille.example.gui.controller.impl.ControllerExampleObject value) {
+            public void setComponentValue(final IComponentChangeSource source, final ch.scaille.example.gui.controller.impl.ControllerExampleObject value) {
                 if (value != null) {
                     setCurrentObject(value);
                     load();

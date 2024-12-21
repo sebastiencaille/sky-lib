@@ -4,8 +4,8 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 import ch.scaille.javabeans.IComponentBinding;
+import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
-import ch.scaille.javabeans.properties.AbstractProperty;
 
 /**
  * Filter that can be used as a component Binding
@@ -60,7 +60,7 @@ public abstract class BoundFilter<D, F> extends AbstractDynamicView<D> implement
 	}
 
 	@Override
-	public void setComponentValue(final AbstractProperty source, final F value) {
+	public void setComponentValue(final IComponentChangeSource source, final F value) {
 		filterPropertyValue = value;
 		owner.viewUpdated();
 	}

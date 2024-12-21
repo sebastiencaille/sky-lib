@@ -10,12 +10,12 @@ import org.junit.jupiter.api.Test;
 import ch.scaille.gui.TestObject;
 import ch.scaille.javabeans.Converters;
 import ch.scaille.javabeans.IComponentBinding;
+import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
 import ch.scaille.javabeans.PropertyChangeSupportController;
 import ch.scaille.javabeans.converters.ConversionException;
 import ch.scaille.javabeans.persisters.IPersisterFactory;
 import ch.scaille.javabeans.persisters.Persisters;
-import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.Configuration;
 import ch.scaille.javabeans.properties.ErrorSet;
 import ch.scaille.javabeans.properties.IntProperty;
@@ -64,7 +64,7 @@ class ModelBasicTest {
 		}
 
 		@Override
-		public void setComponentValue(final AbstractProperty source, final String value) {
+		public void setComponentValue(final IComponentChangeSource source, final String value) {
 			this.value = value;
 		}
 

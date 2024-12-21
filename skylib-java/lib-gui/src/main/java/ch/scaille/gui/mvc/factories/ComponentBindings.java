@@ -5,8 +5,8 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 import ch.scaille.javabeans.IComponentBinding;
+import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
-import ch.scaille.javabeans.properties.AbstractProperty;
 
 public final class ComponentBindings {
 
@@ -16,7 +16,7 @@ public final class ComponentBindings {
 	}
 
 	public interface ValueSetter<C, T> {
-		void setComponentValue(C component, AbstractProperty property, T value);
+		void setComponentValue(C component, IComponentChangeSource property, T value);
 	}
 
 	public static <C, T, L> IComponentBinding<T> component(final C component,
@@ -32,7 +32,7 @@ public final class ComponentBindings {
 			}
 
 			@Override
-			public void setComponentValue(final AbstractProperty source, final T value) {
+			public void setComponentValue(final IComponentChangeSource source, final T value) {
 				setComponentValue.setComponentValue(component, source, value);
 			}
 
@@ -55,7 +55,7 @@ public final class ComponentBindings {
 	 *
 	 * @param setComponentValue (source, value)
      */
-	public static <T> IComponentBinding<T> listen(final BiConsumer<AbstractProperty, T> setComponentValue) {
+	public static <T> IComponentBinding<T> listen(final BiConsumer<IComponentChangeSource, T> setComponentValue) {
 		return new IComponentBinding<>() {
 
 			@Override
@@ -69,7 +69,7 @@ public final class ComponentBindings {
 			}
 
 			@Override
-			public void setComponentValue(final AbstractProperty source, final T value) {
+			public void setComponentValue(final IComponentChangeSource source, final T value) {
 				setComponentValue.accept(source, value);
 			}
 
@@ -99,7 +99,7 @@ public final class ComponentBindings {
 			}
 
 			@Override
-			public void setComponentValue(final AbstractProperty source, final T value) {
+			public void setComponentValue(final IComponentChangeSource source, final T value) {
 				setComponentValue.accept(value);
 			}
 
@@ -129,7 +129,7 @@ public final class ComponentBindings {
 			}
 
 			@Override
-			public void setComponentValue(final AbstractProperty source, final T value) {
+			public void setComponentValue(final IComponentChangeSource source, final T value) {
 				setComponentValue.setComponentValue(component, source, value);
 			}
 

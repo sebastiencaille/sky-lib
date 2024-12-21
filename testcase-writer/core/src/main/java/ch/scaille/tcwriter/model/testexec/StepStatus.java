@@ -1,8 +1,12 @@
 package ch.scaille.tcwriter.model.testexec;
 
-import ch.scaille.tcwriter.services.testexec.TestApi.StepState;
-
 public class StepStatus {
+
+	public enum StepState {
+		NOT_RUN, STARTED, OK, FAILED
+	}
+
+	
 	public final int ordinal;
 	private boolean breakPoint = false;
 	private StepState state = StepState.NOT_RUN;

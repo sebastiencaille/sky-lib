@@ -5,8 +5,8 @@ import java.util.Objects;
 import javax.swing.JSpinner;
 
 import ch.scaille.gui.mvc.ComponentBindingAdapter;
+import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
-import ch.scaille.javabeans.properties.AbstractProperty;
 
 public class JSpinnerBinding<T extends Number> extends ComponentBindingAdapter<T> {
 
@@ -22,7 +22,7 @@ public class JSpinnerBinding<T extends Number> extends ComponentBindingAdapter<T
 	}
 
 	@Override
-	public void setComponentValue(final AbstractProperty source, final T value) {
+	public void setComponentValue(final IComponentChangeSource source, final T value) {
         spinner.setValue(Objects.requireNonNullElse(value, 0));
 	}
 

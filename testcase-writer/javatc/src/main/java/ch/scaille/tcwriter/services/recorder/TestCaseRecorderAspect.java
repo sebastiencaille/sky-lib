@@ -8,7 +8,6 @@ import org.aspectj.lang.reflect.MethodSignature;
 import ch.scaille.tcwriter.annotations.Recorded;
 import ch.scaille.tcwriter.annotations.TCRole;
 import ch.scaille.tcwriter.persistence.factory.DaoConfigs;
-import ch.scaille.util.helpers.Logs;
 
 @Aspect
 public class TestCaseRecorderAspect {

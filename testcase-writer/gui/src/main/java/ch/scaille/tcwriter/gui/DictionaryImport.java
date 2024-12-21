@@ -15,7 +15,7 @@ import javax.swing.filechooser.FileFilter;
 import ch.scaille.gui.swing.SwingExt;
 import ch.scaille.tcwriter.annotations.TCActors;
 import ch.scaille.tcwriter.annotations.TCRole;
-import ch.scaille.tcwriter.gui.frame.TCWriterGui;
+import ch.scaille.tcwriter.gui.frame.ExceptionHelper;
 import ch.scaille.tcwriter.persistence.IModelDao;
 import ch.scaille.tcwriter.services.generators.JavaToDictionary;
 import ch.scaille.util.helpers.ClassFinder;
@@ -48,7 +48,7 @@ public class DictionaryImport extends JDialog {
 			importDictionary(new File(dictionaryJarFileDisplay.getText()), sourcePackageEditor.getText());
 			imported = true;
 			setVisible(false);
-		}, e -> TCWriterGui.handleException(this, e))));
+		}, e -> ExceptionHelper.handleException(this, e))));
 	}
 
 	public boolean runImport() {
@@ -87,7 +87,7 @@ public class DictionaryImport extends JDialog {
 					.collect(JavaToDictionary.toDictionary());
 			modelDao.writeTestDictionary(dictionary);
 		} catch (IOException e) {
-			TCWriterGui.handleException(this, e);
+			ExceptionHelper.handleException(this, e);
 		}
 	}
 

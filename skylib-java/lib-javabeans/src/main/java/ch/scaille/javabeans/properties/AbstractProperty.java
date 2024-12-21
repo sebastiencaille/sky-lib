@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 
 import javax.swing.event.EventListenerList;
 
+import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.PropertyEvent;
 import ch.scaille.javabeans.PropertyEvent.EventKind;
@@ -21,7 +22,7 @@ import ch.scaille.javabeans.Veto.TransmitMode;
  * @author Sebastien Caille
  *
  */
-public abstract class AbstractProperty implements Serializable {
+public abstract class AbstractProperty implements IComponentChangeSource, Serializable {
 
 	public interface ErrorNotifier {
 		void notifyError(Object source, ConversionError error);
@@ -126,6 +127,7 @@ public abstract class AbstractProperty implements Serializable {
 		propertySupport.getChangeSupport().removeAllPropertyChangeListener(name);
 	}
 
+	@Override
 	public boolean isModifiedBy(final Object caller) {
 		return propertySupport.getChangeSupport().isModifiedBy(name, caller);
 	}

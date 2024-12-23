@@ -1,10 +1,7 @@
 package ch.scaille.tcwriter.pilot.selenium;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;

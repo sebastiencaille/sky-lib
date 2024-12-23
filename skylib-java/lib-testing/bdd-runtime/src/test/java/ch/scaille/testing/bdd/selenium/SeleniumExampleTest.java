@@ -7,13 +7,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.WebDriver;
 
 import ch.scaille.tcwriter.jupiter.DisabledIfHeadless;
-import ch.scaille.tcwriter.pilot.selenium.AbstractTestWebAppProvider;
+import ch.scaille.tcwriter.pilot.selenium.AbstractSeleniumUndertowTest;
 import ch.scaille.tcwriter.pilot.selenium.SeleniumPilot;
 import ch.scaille.tcwriter.pilot.selenium.WebDriverFactory;
 import ch.scaille.util.helpers.Logs;
 
 @ExtendWith(DisabledIfHeadless.class)
-class SeleniumExampleTest extends AbstractTestWebAppProvider {
+class SeleniumExampleTest extends AbstractSeleniumUndertowTest {
 
 	@Override
 	public WebDriver createWebDriver() {

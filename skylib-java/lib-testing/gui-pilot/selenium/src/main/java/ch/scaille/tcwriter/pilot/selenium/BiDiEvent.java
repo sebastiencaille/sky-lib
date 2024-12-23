@@ -1,10 +1,13 @@
 package ch.scaille.tcwriter.pilot.selenium;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
-import org.openqa.selenium.WebDriver;
+import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.bidi.module.LogInspector;
 import org.openqa.selenium.bidi.module.Script;
 import org.openqa.selenium.bidi.script.EvaluateResult;
@@ -92,8 +95,9 @@ public class BiDiEvent<T extends Enum<T> & ch.scaille.tcwriter.pilot.selenium.Bi
 
 	public class BidiEventWaiter extends EventWaiter<T> {
 
-		public BidiEventWaiter() {
-			try (Script script = new Script(webDriver)) {
+		public BidiEventWaiter(Predicate<List<T>> historyTest) {
+			super(historyTest);
+			try (Script script = new Script(pilot.getDriver())) {
 				// Create the observers
 				for (T event : events) {
 					final EvaluateResult result = script.evaluateFunctionInRealm(script.getAllRealms().get(0).getRealmId(), toJs(event), true, Optional.empty());
@@ -102,7 +106,7 @@ public class BiDiEvent<T extends Enum<T> & ch.scaille.tcwriter.pilot.selenium.Bi
 					}
 				}
 				// Handle the log produced by the observer
-				try (LogInspector logInspector = new LogInspector(webDriver)) {
+				try (LogInspector logInspector = new LogInspector(pilot.getDriver())) {
 					logInspector.onConsoleEntry(entry -> {
 						if (entry.getText().startsWith(EVENT_MARKER) && entry.getText().contains(uuid) ) {
 							final String enumName = entry.getText().substring(EVENT_MARKER.length() + uuid.length() + 2);
@@ -115,26 +119,35 @@ public class BiDiEvent<T extends Enum<T> & ch.scaille.tcwriter.pilot.selenium.Bi
 				}
 			}
 		}
+		
 		protected String toJs(T event) {
 			return String.format(PATH_TEMPLATE, event.name(), event.name(), event.config().getComponentXpath(), event.config().getMutationType(), event.config().getEventLambda(), 
 					EVENT_MARKER, uuid, event.name(), event.config().getObserverConfig());
 		}
 		
+		public boolean matches() throws InterruptedException {
+			return super.matches(pilot.getPollingTimeout().toMillis(), TimeUnit.MILLISECONDS);
+		}
+		
+		@Override
+		public void assertMatches() throws InterruptedException {
+			Assertions.assertTrue(matches(), "Found events: " + received());
+		}
 	}
 	
-	private final WebDriver webDriver;
+	private final SeleniumPilot pilot;
 	private final T[] events;
 
 	private String uuid = UUID.randomUUID().toString();
 
-	public BiDiEvent(WebDriver webDriver, T... events) {
-		this.webDriver = webDriver;
+	public BiDiEvent(SeleniumPilot pilot, T... events) {
+		this.pilot = pilot;
 		this.events = events;
 	}
 
 	@Override
-	public EventWaiter<T> expect() {
-		return new BidiEventWaiter();
+	public EventWaiter<T> expect(Predicate<List<T>> historyTest) {
+		return new BidiEventWaiter(historyTest);
 	}
 
 }

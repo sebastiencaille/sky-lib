@@ -8,6 +8,7 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.WebDriver;
@@ -17,8 +18,10 @@ import ch.scaille.util.helpers.Logs;
 import io.undertow.Undertow;
 import io.undertow.server.HttpServerExchange;
 
-public abstract class AbstractTestWebAppProvider {
+public abstract class AbstractSeleniumUndertowTest {
 
+	private ConsoleErrorDetector consoleErrorDetector;
+	
 	/* **************************** WEB SERVER **************************** */
 
 	protected static Undertow webServer = null;
@@ -37,7 +40,7 @@ public abstract class AbstractTestWebAppProvider {
 	public abstract WebDriver createWebDriver();
 
 	public static void setDriver(WebDriver driver) {
-		AbstractTestWebAppProvider.driver = driver;
+		AbstractSeleniumUndertowTest.driver = driver;
 	}
 
 	@BeforeEach
@@ -45,13 +48,20 @@ public abstract class AbstractTestWebAppProvider {
 		if (driver == null) {
 			setDriver(createWebDriver());
 		}
+		consoleErrorDetector = new ConsoleErrorDetector(driver);
 	}
 
+	@AfterEach
+	public void checkLogs() throws InterruptedException {
+		consoleErrorDetector.close();
+		consoleErrorDetector.assertNoError();
+	}
+	
 	@BeforeAll
 	public static void startWebServer() {
 		webServer = Undertow.builder()
 				.addHttpListener(localUrl.getPort(), localUrl.getHost())
-				.setHandler(AbstractTestWebAppProvider::handleWebExchange)
+				.setHandler(AbstractSeleniumUndertowTest::handleWebExchange)
 				.build();
 		webServer.start();
 	}

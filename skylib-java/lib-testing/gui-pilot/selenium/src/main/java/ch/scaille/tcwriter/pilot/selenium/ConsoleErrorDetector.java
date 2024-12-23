@@ -47,15 +47,15 @@ public class ConsoleErrorDetector {
 		});
 	}
 	
-	public void assertNoError() throws InterruptedException {
+	public void assertNoError() {
+		assertTrue(errors.isEmpty(), () -> "Errors must not be detected: " + errors.stream().collect(Collectors.joining("\n")));
+	}
+	
+	public void close() throws InterruptedException {
 		try (Script script = new Script(webDriver)) {
 			script.evaluateFunctionInRealm(script.getAllRealms().get(0).getRealmId(), String.format("console.log('%s')", LAST_LOG), false, Optional.empty());
 			assertTrue(lastLogReceived.tryAcquire(5, TimeUnit.SECONDS));
 		}
-		assertTrue(errors.isEmpty(), () -> "Errors must not be detected: " + errors.stream().collect(Collectors.joining("\n")));
-	}
-	
-	public void close() {
 		logInspector.close();
 	}
 	

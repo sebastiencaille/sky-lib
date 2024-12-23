@@ -9,9 +9,13 @@ import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import ch.scaille.tcwriter.pilot.AbstractEvent.EventWaiter;
 import ch.scaille.tcwriter.pilot.ActionDelay;
 import ch.scaille.tcwriter.pilot.ModalDialogDetector;
 import ch.scaille.tcwriter.pilot.factories.Pollings;
+import ch.scaille.tcwriter.pilot.selenium.BiDiEvent.BiDiEventConfig;
+import ch.scaille.tcwriter.pilot.selenium.BiDiEvent.IBiDiEvent;
+import ch.scaille.tcwriter.pilot.selenium.BiDiEvent.MutationConfig;
 
 public class ExamplePage extends PagePilot {
 
@@ -25,8 +29,33 @@ public class ExamplePage extends PagePilot {
 
 	private static final By NOT_EXISTING = By.id("NotExisting");
 
+	private static final String TEXT_XPATH = "//div[@id='ElementChangeHolder']";
+
+	private enum TestEvents implements IBiDiEvent {
+
+		DISPLAY_HELLO(new BiDiEventConfig(TEXT_XPATH, MutationConfig.CHILD_LIST, false,
+				"mutation => {console.log(mutation); return mutation.target.children[0].textContent === 'Hello' }")),
+		DISPLAY_HELLO_AGAIN(new BiDiEventConfig(TEXT_XPATH, MutationConfig.CHILD_LIST, false,
+				"mutation => mutation.target.children[0].textContent === 'Hello again'"));
+
+		private final BiDiEventConfig biDiEventConfig;
+
+		TestEvents(BiDiEventConfig biDiEventConfig) {
+			this.biDiEventConfig = biDiEventConfig;
+		}
+
+		@Override
+		public BiDiEventConfig config() {
+			return biDiEventConfig;
+		}
+
+	}
+
+	private BiDiEvent<TestEvents> helloEventListener;
+
 	public ExamplePage(SeleniumPilot pilot) {
 		super(pilot);
+		helloEventListener = new BiDiEvent<>(pilot, TestEvents.DISPLAY_HELLO, TestEvents.DISPLAY_HELLO_AGAIN);
 	}
 
 	public class WaitEnableTestEnabledDelay extends ActionDelay {
@@ -91,9 +120,11 @@ public class ExamplePage extends PagePilot {
 		pilot.waitModalDialogHandled();
 	}
 
-	public void assertElementChange() {
+	public void assertElementChange() throws InterruptedException {
+		final EventWaiter<TestEvents> eventsWaiter = helloEventListener.expect(h -> h.size() == 2);
 		on(elementToBeClickable(ELEMENT_CHANGE_TEST)).fail().ifNot().clicked();
 		// Explicitly test using WebElement as source
+		eventsWaiter.assertMatches();
 		on(visibilityOfElementLocated(ELEMENT_CHANGE)).fail().ifNot().textEquals("Hello again");
 	}
 

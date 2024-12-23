@@ -22,10 +22,10 @@ import ch.scaille.tcwriter.pilot.factories.Pollings;
  * <p>
  * The idea is to
  * <ol> 
- * <li>create a PollingBuilder on a component.</li>
- * <li>define the error handling.</li>
- * <li>configure the poller.</li>
- * <li>apply a polling.</li>
+ * <li>Create a PollingBuilder on a component.</li>
+ * <li>Specifies how a failure is handled.</li>
+ * <li>Configure the poller.</li>
+ * <li>Execute the polling.</li>
  * </ol>
  * Example: on(myComponent).fail().ifNot().clicked();
  * </p>

@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.0</version>
+		<version>3.4.1</version>
 		<relativePath />
 	</parent>
 
@@ -22,23 +22,25 @@
 		<revision>0.0.1-SNAPSHOT</revision>
 		<aspectj.version>1.9.22.1</aspectj.version>
 
+		<spring-session.version>3.4.1</spring-session.version>
+
 		<jackson-bom.version>2.18.2</jackson-bom.version>
 		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
-		<guava.version>33.3.1-jre</guava.version>
-		<logback.version>1.5.12</logback.version>
+		<guava.version>33.4.0-jre</guava.version>
+		<logback.version>1.5.15</logback.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
 
 		<swagger-parser.version>2.1.23</swagger-parser.version>
-		<swagger.version>2.2.26</swagger.version>
+		<swagger.version>2.2.27</swagger.version>
 		<springdoc-openapi.version>2.7.0</springdoc-openapi.version>
 
 		<undertow.version>2.3.18.Final</undertow.version>
 		<liquibase.version>4.30.0</liquibase.version>
 
 		<mockito.version>5.14.2</mockito.version>
-		<junit-jupiter.version>5.11.3</junit-jupiter.version>
+		<junit-jupiter.version>5.11.4</junit-jupiter.version>
 		<junit.version>4.13.2</junit.version>
-		<junit-platform-console-standalone.version>1.11.3</junit-platform-console-standalone.version>
+		<junit-platform-console-standalone.version>1.11.4</junit-platform-console-standalone.version>
 		<selenium.version>4.27.0</selenium.version>
 		<h2.version>2.3.232</h2.version>
 
@@ -73,7 +75,7 @@
 			<dependency>
 				<groupId>org.springframework.session</groupId>
 				<artifactId>spring-session-bom</artifactId>
-				<version>3.4.0</version>
+				<version>${spring-session.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>

@@ -46,6 +46,7 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<?, O>, O exten
 	protected WebDriverFactory(O options) {
 		this.options = options;
 		logPrefs.enable(LogType.BROWSER, Level.ALL);
+		options.setCapability("webSocketUrl", true);
 	}
 
 	protected Path webDriverPath() {
@@ -62,11 +63,6 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<?, O>, O exten
 			return driver + "-windows-64bit.exe";
 		}
 		return driver + "-linux-64bit";
-	}
-
-	static String logFile(String folder, String basename) {
-		return folder + File.separatorChar + basename + '-' + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date())
-				+ ".log";
 	}
 
 	public static final class FirefoxDriverFactory extends WebDriverFactory<FirefoxDriverFactory, FirefoxOptions> {
@@ -182,7 +178,6 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<?, O>, O exten
 		@Override
 		public ChromeDriverFactory withDriverLogs(String logFolder) {
 			System.setProperty("webdriver.chrome.verboseLogging", "true");
-			System.setProperty("webdriver.chrome.logfile", logFile(logFolder, "chromedriver"));
 			return this;
 		}
 

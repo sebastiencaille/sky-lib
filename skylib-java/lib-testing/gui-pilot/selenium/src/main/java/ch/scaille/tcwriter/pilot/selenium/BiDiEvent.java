@@ -10,7 +10,6 @@ import java.util.function.Predicate;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.bidi.module.LogInspector;
 import org.openqa.selenium.bidi.module.Script;
-import org.openqa.selenium.bidi.script.EvaluateResult;
 import org.openqa.selenium.bidi.script.EvaluateResult.Type;
 
 import ch.scaille.tcwriter.pilot.AbstractEvent;
@@ -54,25 +53,31 @@ public class BiDiEvent<T extends Enum<T> & ch.scaille.tcwriter.pilot.selenium.Bi
 			+ "observer.observe(targetNode, %s);" 
 			+ "}"; 
 
+	
+	/**
+	 * Interface implemented by Event's Enum
+	 */
 	public interface IBiDiEvent {
 		BiDiEventConfig config();
 	}
 
+	/**
+	 * Basic config for mutation
+	 */
 	public static class BiDiEventConfig {
 		private final String mutationType;
 
 		private final String eventLambda;
 
-		private String observerConfig;
+		private final String observerConfig;
 
-		private String componentXpath;
+		private final String componentXpath;
 
 		public BiDiEventConfig(String componentXpath, MutationConfig config, boolean subtree, String eventLambda) {
 			this.componentXpath = componentXpath;
 			this.mutationType = config.js;
 			this.observerConfig = String.format("{ %s, subtree: %s }", config.js(), subtree);
 			this.eventLambda = eventLambda;
-			
 		}
 		
 		public String getMutationType() {
@@ -92,24 +97,26 @@ public class BiDiEvent<T extends Enum<T> & ch.scaille.tcwriter.pilot.selenium.Bi
 		}
 	}
 
-
+	/**
+	 * Allows to wait for the event
+	 */
 	public class BidiEventWaiter extends EventWaiter<T> {
 
 		public BidiEventWaiter(Predicate<List<T>> historyTest) {
 			super(historyTest);
-			try (Script script = new Script(pilot.getDriver())) {
+			try (var script = new Script(pilot.getDriver())) {
 				// Create the observers
-				for (T event : events) {
-					final EvaluateResult result = script.evaluateFunctionInRealm(script.getAllRealms().get(0).getRealmId(), toJs(event), true, Optional.empty());
+				for (var event : events) {
+					final var result = script.evaluateFunctionInRealm(script.getAllRealms().get(0).getRealmId(), toJs(event), true, Optional.empty());
 					if (result.getResultType() == Type.EXCEPTION) {
 						throw new IllegalStateException("Script installation failed");
 					}
 				}
 				// Handle the log produced by the observer
-				try (LogInspector logInspector = new LogInspector(pilot.getDriver())) {
+				try (var logInspector = new LogInspector(pilot.getDriver())) {
 					logInspector.onConsoleEntry(entry -> {
 						if (entry.getText().startsWith(EVENT_MARKER) && entry.getText().contains(uuid) ) {
-							final String enumName = entry.getText().substring(EVENT_MARKER.length() + uuid.length() + 2);
+							final var enumName = entry.getText().substring(EVENT_MARKER.length() + uuid.length() + 2);
 							Arrays.stream(events)
 									.filter(e -> e.name().equals(enumName))
 									.findAny()
@@ -138,7 +145,7 @@ public class BiDiEvent<T extends Enum<T> & ch.scaille.tcwriter.pilot.selenium.Bi
 	private final SeleniumPilot pilot;
 	private final T[] events;
 
-	private String uuid = UUID.randomUUID().toString();
+	private final String uuid = UUID.randomUUID().toString();
 
 	public BiDiEvent(SeleniumPilot pilot, T... events) {
 		this.pilot = pilot;

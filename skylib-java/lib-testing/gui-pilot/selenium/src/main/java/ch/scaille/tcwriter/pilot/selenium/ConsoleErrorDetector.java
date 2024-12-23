@@ -30,6 +30,7 @@ public class ConsoleErrorDetector {
 	public ConsoleErrorDetector(WebDriver webDriver, Pattern... ignoreRexeg) {
 		this.webDriver = webDriver;
 		this.logInspector = new LogInspector(webDriver);
+		
 		this.logInspector.onConsoleEntry(entry -> {
 			for (Pattern pattern: ignoreRexeg) {
 				if (pattern.matcher(entry.getText()).matches()) {
@@ -38,6 +39,7 @@ public class ConsoleErrorDetector {
 			}
 			errors.add(entry.getText());	
 		}, FilterBy.logLevel(LogLevel.ERROR));
+		
 		this.logInspector.onConsoleEntry(entry -> {
 			Logs.of(ConsoleErrorDetector.class).info(entry.getText());
 			// We received the closing log
@@ -52,7 +54,7 @@ public class ConsoleErrorDetector {
 	}
 	
 	public void close() throws InterruptedException {
-		try (Script script = new Script(webDriver)) {
+		try (var script = new Script(webDriver)) {
 			script.evaluateFunctionInRealm(script.getAllRealms().get(0).getRealmId(), String.format("console.log('%s')", LAST_LOG), false, Optional.empty());
 			assertTrue(lastLogReceived.tryAcquire(5, TimeUnit.SECONDS));
 		}

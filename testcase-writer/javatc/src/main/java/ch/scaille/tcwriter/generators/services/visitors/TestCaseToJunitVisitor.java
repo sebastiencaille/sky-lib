@@ -5,9 +5,11 @@ import static java.util.stream.Collectors.toSet;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import ch.scaille.generators.util.GenerationMetadata;
@@ -62,68 +64,71 @@ public class TestCaseToJunitVisitor {
 				generationMetadata);
 	}
 
-	private void visitTestStep(final JavaCodeGenerator<RuntimeException> javaContent, final TestDictionary model,
+	private void visitTestStep(final JavaCodeGenerator<RuntimeException> javaContent, final TestDictionary dictionary,
 			final TestStep step) throws TestCaseException {
 		final var comment = new StringBuilder();
-		final var stepContentCode = JavaCodeGenerator.inMemory();
-
-		for (final var stepParamValue : step.getParametersValue()) {
-			visitTestParameterValue(stepContentCode, model, step, stepParamValue);
-		}
+		final var stepCode = JavaCodeGenerator.inMemory();
 
 		if (step.getReference() != null) {
-			stepContentCode.addVarAssign(step.getReference().getParameterType(), step.getReference().getName());
+			stepCode.addVarAssign(step.getReference().getParameterType(), step.getReference().getName());
 		}
-		stepContentCode
+		stepCode
 				.addMethodCall(step.getActor().getName(), step.getAction().getName(),
-						g -> addParameterValuesToCall(g, step, step.getParametersValue(),
-								step.getAction().getParameters()))
+						paramsCode -> 
+					addParameterValuesToCall(javaContent, paramsCode, step, dictionary, step.getParametersValue(),
+									step.getAction().getParameters()))
 				.eos()
 				.eol();
 
 		javaContent.append(comment);
-		javaContent.append(stepContentCode);
+		javaContent.append(stepCode);
 	}
 
-	private void visitTestParameterValue(final JavaCodeGenerator<RuntimeException> javaContent,
-			final TestDictionary model, final TestStep step, final TestParameterValue paramValue)
+	/**
+	 * Returns the call to the factory, either inlined or using a variable created in testCode
+	 */
+	private String visitTestParameterValue(final JavaCodeGenerator<RuntimeException> testCode,
+			final TestDictionary dictionary, final TestStep step, final TestParameterValue paramValue)
 			throws TestCaseException {
 
-		final var valuefactory = paramValue.getValueFactory();
-		if (valuefactory.getNature().isSimpleValue()) {
-			return;
+		final var valueFactory = paramValue.getValueFactory();
+
+		// Check if we have optional parameters
+		final var optionalParameters = new HashSet<>(paramValue.getComplexTypeValues().keySet());
+		optionalParameters.retainAll(valueFactory.getOptionalParameters().stream().map(TestApiParameter::getId).collect(toSet()));
+		final var hasOptionalParameters = !optionalParameters.isEmpty();
+		
+		final var mandatoryParamContentCode = JavaCodeGenerator.inMemory();
+
+		// Write the variable if needed
+		final String parameterVarName;
+		if (hasOptionalParameters) {
+			parameterVarName = varNameOf(step, paramValue);
+			mandatoryParamContentCode.addVarAssign("var", parameterVarName);
+		} else {
+			parameterVarName = null;
 		}
-
-		final var parametersContentCode = JavaCodeGenerator.inMemory();
-
-		visitTestValueParams(parametersContentCode, model, step, paramValue.getComplexTypeValues());
-
-		final var parameterVarName = varNameOf(step, paramValue);
-		parametersContentCode.addVarAssign(valuefactory.getParameterType(), parameterVarName) //
-				.addMethodCall(valuefactory.getName(),
-						g -> addParameterValuesToCall(g, step, paramValue.getComplexTypeValues().values(),
-								valuefactory.getMandatoryParameters()))
-				.eos();
-		addOptionalParameters(step, parametersContentCode, parameterVarName, paramValue.getComplexTypeValues().values(),
-				valuefactory.getOptionalParameters());
-		javaContent.append(parametersContentCode);
+		// Write the call to the factory, with mandatory parameters
+		mandatoryParamContentCode.addMethodCall(valueFactory.getName(),
+						g -> addParameterValuesToCall(null, g, step, 
+								dictionary, paramValue.getComplexTypeValues().values(),
+								valueFactory.getMandatoryParameters()));
+		if (hasOptionalParameters) {
+			// Put the call before the step,  
+			testCode.append(mandatoryParamContentCode.eos().toString());
+			addOptionalParameters(testCode, step, parameterVarName, paramValue.getComplexTypeValues().values(),
+					valueFactory.getOptionalParameters());
+			return Objects.requireNonNull(parameterVarName);
+		}
+		return mandatoryParamContentCode.toString();
 	}
 
-	private void visitTestValueParams(final JavaCodeGenerator<RuntimeException> parametersContent,
-			final TestDictionary model, final TestStep step, final Map<String, TestParameterValue> testObjectValues)
-			throws TestCaseException {
-		for (final var testObjectValue : testObjectValues.values()) {
-			// No need to define a variable
-			if (testObjectValue.getValueFactory().getNature().isSimpleValue()) {
-				// Simple value
-				continue;
-			}
-			visitTestParameterValue(parametersContent, model, step, testObjectValue);
-		}
-	}
-
-	private void addParameterValuesToCall(final JavaCodeGenerator<RuntimeException> parametersContent,
-			final TestStep step, final Collection<TestParameterValue> parameterValues,
+	private void addParameterValuesToCall(
+			final JavaCodeGenerator<RuntimeException> javaContent,
+			final JavaCodeGenerator<RuntimeException> parametersContent,
+			final TestStep step,
+			final TestDictionary dictionary,
+			final Collection<TestParameterValue> parameterValues,
 			final List<TestApiParameter> filter) throws TestCaseException {
 		final var filterIds = filter.stream().map(IdObject::getId).collect(toSet());
 		var sep = "";
@@ -132,34 +137,38 @@ public class TestCaseToJunitVisitor {
 				continue;
 			}
 			parametersContent.append(sep);
-			inlineValue(parametersContent, step, parameterValue);
+			inlineValue(javaContent, parametersContent, step, dictionary, parameterValue);
 			sep = ", ";
 		}
 	}
 
-	private void addOptionalParameters(final TestStep step, final JavaCodeGenerator<RuntimeException> parametersContent,
+	private void addOptionalParameters(final JavaCodeGenerator<RuntimeException> parametersContent,
+									   final TestStep step,
 			final String parameterVarName, final Collection<TestParameterValue> parameterValues,
-			final List<TestApiParameter> filter) throws TestCaseException {
-		final var filteredMap = filter.stream().collect(toMap(IdObject::getId, t -> t));
+			final List<TestApiParameter> optionalParameters) throws TestCaseException {
+		final var parametersValueFilterMap = optionalParameters.stream().collect(toMap(IdObject::getId, t -> t));
 		for (final var parameterValue : parameterValues) {
-			if (!filteredMap.containsKey(parameterValue.getApiParameterId())) {
+			if (!parametersValueFilterMap.containsKey(parameterValue.getApiParameterId())) {
 				continue;
 			}
-			final var parameterType = filteredMap.get(parameterValue.getApiParameterId());
+			final var parameterType = parametersValueFilterMap.get(parameterValue.getApiParameterId());
 			parametersContent.addMethodCall(parameterVarName, parameterType.getName(), g -> {
 				if (parameterValue.getValueFactory().hasType()) {
-					inlineValue(g, step, parameterValue);
+					inlineValue(null, g, step, null, parameterValue);
 				}
 			}).eos();
 		}
 	}
 
-	private void inlineValue(final JavaCodeGenerator<RuntimeException> parametersContent, final TestStep step,
-			final TestParameterValue parameterValue) throws TestCaseException {
+	private void inlineValue(final JavaCodeGenerator<RuntimeException> stepContentCode, 
+							 final JavaCodeGenerator<RuntimeException> parametersContent,
+							 final TestStep step,
+							 final TestDictionary dictionary,
+							 final TestParameterValue parameterValue) throws TestCaseException {
 		switch (parameterValue.getValueFactory()) {
 
 		case TestParameterFactory f when f.getNature() == ParameterNature.TEST_API ->
-			parametersContent.append(varNameOf(step, parameterValue));
+			parametersContent.append(visitTestParameterValue(stepContentCode, dictionary, step, parameterValue));
 
 		case TestParameterFactory f when f.getNature() == ParameterNature.SIMPLE_TYPE
 				&& String.class.getName().equals(f.getParameterType()) ->
@@ -181,6 +190,7 @@ public class TestCaseToJunitVisitor {
 
 	private String varNameOf(final TestStep step, final TestParameterValue testValue) {
 		final var nextIndex = varIndex.computeIfAbsent(step.getOrdinal(), s -> new AtomicInteger(1)).getAndIncrement();
-		return varNames.computeIfAbsent(testValue, v -> "step" + step.getOrdinal() + "_var" + nextIndex);
+		return varNames.computeIfAbsent(testValue, v -> String.format("step_%s_%s_%s" , step.getOrdinal(), testValue.getValueFactory().getName().replace('.', '_'),
+				nextIndex));
 	}
 }

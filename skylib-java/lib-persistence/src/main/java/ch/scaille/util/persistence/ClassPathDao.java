@@ -13,7 +13,7 @@ import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
  * 
  * @param <T>
  */
-public class ClassPathDao<T> extends AbstractSerializationDao<T> {
+public class ClassPathDao<T> extends AbstractFSSerializationDao<T> {
 
 	static {
 		ClassLoaderHelper.registerResourceHandler();

@@ -18,7 +18,7 @@ import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
  * 
  * @param <T>
  */
-public class FileSystemDao<T> extends AbstractSerializationDao<T> {
+public class FileSystemDao<T> extends AbstractFSSerializationDao<T> {
 
 	private static final Logger LOGGER = Logs.of(FileSystemDao.class);
 
@@ -45,7 +45,7 @@ public class FileSystemDao<T> extends AbstractSerializationDao<T> {
 	 * @param locator a value to locate the files, empty String to use basePath, null to return all the content
 	 * @return a stream of metadata
 	 */
-	private Stream<ResourceMetaData> inFolder(String locator) throws IOException {
+	private Stream<ResourceMetaData> findInFolder(String locator) throws IOException {
 		if (locator != null && locator.isEmpty() && !Files.isDirectory(basePath)) {
 			// basePath points to a file
 			return Stream.of(buildAndValidateMetadata(basePath.getFileName().toString(), basePath.toString()));
@@ -71,6 +71,7 @@ public class FileSystemDao<T> extends AbstractSerializationDao<T> {
 		return Files.list(folder)
 				// basic filter
 				.filter(f -> filter == null || f.getFileName().toString().startsWith(filter))
+				.filter(f -> dataHandlerRegistry.find(extensionOf(f.toString())).isPresent())
 				.map(p -> buildMetadata(nameAndExtensionOf(folder.relativize(p).toString())[0], p.toString()))
 				// filter on the metadata
 				.filter(m -> filterMetaData(filter, m.orElse(null)))
@@ -83,18 +84,18 @@ public class FileSystemDao<T> extends AbstractSerializationDao<T> {
 
 	@Override
 	public ResourceMetaData resolve(String locator) throws IOException {
-		return inFolder(locator).findFirst().orElseThrow(() -> new StorageException("Resource not found: " + locator));
+		return findInFolder(locator).findFirst().orElseThrow(() -> new StorageException("Resource not found: " + locator));
 	}
 
 	@Override
 	protected ResourceMetaData resolveOrCreate(String locator) throws IOException {
-		return inFolder(locator).findFirst()
+		return findInFolder(locator).findFirst()
 				.orElse(buildAndValidateMetadata(locator, basePath.resolve(locator).toString()));
 	}
 
 	@Override
 	public Stream<ResourceMetaData> list() throws StorageException {
-		return StorageException.wrap("list", () -> inFolder(null));
+		return StorageException.wrap("list", () -> findInFolder(null));
 	}
 
 	@Override
@@ -115,10 +116,6 @@ public class FileSystemDao<T> extends AbstractSerializationDao<T> {
 		} catch (IOException e) {
 			throw new StorageException("Write failed", e);
 		}
-	}
-
-	public Path getBaseFolder() {
-		return basePath;
 	}
 
 	public static String resolvePlaceHolders(String path) {

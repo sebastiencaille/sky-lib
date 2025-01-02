@@ -11,12 +11,12 @@ public class TextStorageHandler implements IStorageDataHandler {
 
 	@Override
 	public boolean supports(String extensionOrType) {
-		return TEXT_MIMETYPE.equals(extensionOrType);
+		return TEXT_MIMETYPE.equals(extensionOrType) || getDefaultExtension().equals(extensionOrType);
 	}
 
 	@Override
 	public String getDefaultExtension() {
-		return "";
+		return "txt";
 	}
 
 	@Override

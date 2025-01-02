@@ -1,7 +1,6 @@
 package ch.scaille.util.persistence;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -15,9 +14,7 @@ import ch.scaille.util.persistence.handlers.TextStorageHandler;
  * @param <T>
  */
 public abstract class AbstractSerializationDao<T> implements IDao<T> {
-
-	private static final String[] EMPTY_NAME_EXT = new String[] { "", "" };
-
+	
 	/**
 	 * Type of persisted resource
 	 */
@@ -36,31 +33,13 @@ public abstract class AbstractSerializationDao<T> implements IDao<T> {
 
 	protected abstract Resource<String> writeRaw(Resource<String> resource) throws StorageException;
 
+	protected abstract String extensionOf(String storageLocator);
+
+	protected abstract ResourceMetaData fixOrValidate(ResourceMetaData resourceMetaData);
+
 	protected AbstractSerializationDao(Class<T> daoType, StorageDataHandlerRegistry serDeserializerRegistry) {
 		this.resourceType = daoType;
         this.dataHandlerRegistry = Objects.requireNonNullElseGet(serDeserializerRegistry, () -> new StorageDataHandlerRegistry(null));
-
-	}
-
-	/**
-	 * Find the name an extension of the locator
-	 * @param resourcePath a path
-	 * @return an array containing the path without extension and the extension 
-	 */
-	protected String[] nameAndExtensionOf(String resourcePath) {
-		if (resourcePath == null) {
-			return EMPTY_NAME_EXT;
-		}
-		final var path = Paths.get(resourcePath).getFileName().toString();
-		final var lastDot = path.lastIndexOf('.');
-		final String[] nameAndExt;
-		if (lastDot >= 0) {
-			final var extension = path.substring(lastDot + 1);
-			nameAndExt = new String[] { resourcePath.substring(0, resourcePath.length() - extension.length() - 1), extension};
-		} else {
-			nameAndExt = new String[] { resourcePath, "" };
-		}
-		return nameAndExt;
 	}
 
 	protected ResourceMetaData buildAndValidateMetadata(String locator, String storageLocator) {
@@ -78,14 +57,14 @@ public abstract class AbstractSerializationDao<T> implements IDao<T> {
 	 * @return the meta data
 	 */
 	protected Optional<ResourceMetaData> buildMetadata(String locator, String storageLocator) {
-		final var nameAndExt = nameAndExtensionOf(storageLocator);
-		return dataHandlerRegistry.find(nameAndExt[1])
+		final var extension = extensionOf(storageLocator);
+		return dataHandlerRegistry.find(extension)
 				.map(IStorageDataHandler::getDefaultMimeType)
 				.or(this::getPredefinedResourceMimeType)
 				.or(dataHandlerRegistry::getDefaultMimeType)
-				.map(m -> new ResourceMetaData(locator, storageLocator, m));
+				.map(mimeType -> fixOrValidate(new ResourceMetaData(locator, storageLocator, mimeType)));
 	}
-
+	
 	/**
 	 * Creates a metadata using pre-defined mime-types
 	 */

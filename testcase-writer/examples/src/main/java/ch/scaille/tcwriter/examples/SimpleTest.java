@@ -22,7 +22,7 @@ public class SimpleTest {
 	private DeliveryTestRole deliveryGuy;
 
 	public SimpleTest() {
-		coffeeMachine.setISO();
+		coffeeMachine.setISO(true);
 	}
 
 	@BeforeEach

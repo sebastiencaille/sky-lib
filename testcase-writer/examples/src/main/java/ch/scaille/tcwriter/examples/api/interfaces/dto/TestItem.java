@@ -38,8 +38,8 @@ public class TestItem {
 	}
 
 	@TCApi(description = "ISO", humanReadable = "ISO")
-	public void setISO() {
-		this.iso = true;
+	public void setISO(boolean iso) {
+		this.iso = iso;
 	}
 
 	@TCApi(description = "A coffee machine", humanReadable = "a coffee machine")

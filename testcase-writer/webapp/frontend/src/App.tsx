@@ -120,10 +120,11 @@ export default function App() {
 						prefix='testcase'
 						allMetadata={allTestCases}
 						initialySelectedMetadata={currentTestCase?.metadata}
-						onSelection={testCaseChanged} />
-					<button id='exportJava' onClick={exportJava}>Java Code</button>
-					<button id='exportText' onClick={exportHumanReadable}>Human Readable</button>
-					<button id='execute' onClick={executeTC}>Execute</button>
+						onSelection={testCaseChanged}
+						disabled={currentDictionary === undefined}/>
+					<button id='exportJava' onClick={exportJava} disabled={currentTestCase === undefined}>Java Code</button>
+					<button id='exportText' onClick={exportHumanReadable}  disabled={currentTestCase === undefined}>Human Readable</button>
+					<button id='execute' onClick={executeTC} disabled={currentTestCase === undefined}>Execute</button>
 					<Popup open={exportedTestCase !== undefined} onClose={closePopUp}
 						className="export-popup">
 						<pre>

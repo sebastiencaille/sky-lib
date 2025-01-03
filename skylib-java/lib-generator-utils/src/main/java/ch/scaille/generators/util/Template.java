@@ -44,7 +44,7 @@ public class Template {
 		this.content = content.replace("\r", "");
 	}
 
-	public String getPreferedFileName() {
+	public String getPreferredFileName() {
 		return preferredFile;
 	}
 

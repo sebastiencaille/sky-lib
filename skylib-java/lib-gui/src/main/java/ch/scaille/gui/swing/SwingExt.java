@@ -62,7 +62,7 @@ public interface SwingExt {
 		return SwingUtilities.computeStringWidth(metrics, text);
 	}
 
-	public static String nameOf(final Component component) {
+	static String nameOf(final Component component) {
 		if (component.getName() != null) {
 			return component.getClass().getSimpleName() + ':' + component.getName();
 		}

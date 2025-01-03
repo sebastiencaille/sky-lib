@@ -24,7 +24,7 @@ public class BiDiEvent<T extends Enum<T> & ch.scaille.tcwriter.pilot.selenium.Bi
 		CHARACTER_DATA("characterData"),
 		CHARACTER_DATA_OLD_VALUE("characterDataOldValue");
 
-		private String js;
+		private final String js;
 
 		MutationConfig(String js) {
 			this.js = js;

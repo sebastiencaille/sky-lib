@@ -31,17 +31,17 @@ public interface IAttributeMetaData<T> {
 	<V, R> R onTypedMetaDataF(Function<AbstractAttributeMetaData<T, V>, R> function);
 
 	/**
-	 * Tests if the attribute is applied on a given type
-	 * @param targetType
+	 * Tests if the attribute is of a given type
+	 * @param targetType the expected type of the attribute 
 	 * @return true if the type matches
 	 */
-	boolean isOnType(Class<?> targetType);
+	boolean isOfType(Class<?> targetType);
 	
 	/**
-	 * 
-	 * @param <V>
-	 * @param targetType
-	 * @return
+	 * Creates a derived metadata of the attribute, with a different type 
+	 * @param <V> the new target type
+	 * @param targetType the class of V
+	 * @return a new attibute metadata
 	 */
 	<V> AbstractAttributeMetaData<T, V> unwrap(Class<V> targetType);
 

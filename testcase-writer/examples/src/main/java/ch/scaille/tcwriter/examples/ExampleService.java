@@ -3,7 +3,7 @@ package ch.scaille.tcwriter.examples;
 public class ExampleService {
 
 	public enum ItemKind {
-		COFFE_MACHINE, TEA_POT
+		COFFEE_MACHINE, TEA_POT
 	}
 
 	public enum State {

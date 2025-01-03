@@ -109,7 +109,7 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
 					.forEach(LambdaExt
 							.uncheckedC(tcFile -> generateTestCase(generator, tcFile, testDictionary, modelDao)));
 		} catch (FileNotFoundException e) {
-			throw new MojoExecutionException("Unable to load dictonary", e);
+			throw new MojoExecutionException("Unable to load dictionary", e);
 		}
 
 	}

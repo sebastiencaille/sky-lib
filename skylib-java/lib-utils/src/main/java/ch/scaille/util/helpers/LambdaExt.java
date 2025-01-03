@@ -37,9 +37,6 @@ public class LambdaExt {
 	}
 
 	public static final FunctionWithException<?, ?, ?> FUNCTION_IDENTITY = v -> v;
-	private static final Runnable DO_NOTHING = () -> {
-		// noop
-	};
 
 	public static <T, E extends Exception> FunctionWithException<T, T, E> identity() {
 		return (FunctionWithException<T, T, E>) FUNCTION_IDENTITY;
@@ -209,7 +206,8 @@ public class LambdaExt {
 		uncheckedR(call, exceptionHandler).run();
 	}
 
-	public static Runnable doNothing() {
-		return DO_NOTHING;
+	public static void doNothing() {
+		// noop
 	}
+
 }

@@ -39,13 +39,13 @@ public abstract class AbstractAttributeMetaData<T, V> implements IAttributeMetaD
 	}
 	
 	@Override
-	public boolean isOnType(Class<?> targetType) {
+	public boolean isOfType(Class<?> targetType) {
 		return targetType.isAssignableFrom(type);
 	}
 	
 	@Override
 	public <W> AbstractAttributeMetaData<T, W> unwrap(Class<W> targetType) {
-		if (!isOnType(targetType)) {
+		if (!isOfType(targetType)) {
 			throw new InvalidParameterException("Expected type or parent of " + type + ", received " + targetType);
 		}
 		return (AbstractAttributeMetaData<T, W>) this;

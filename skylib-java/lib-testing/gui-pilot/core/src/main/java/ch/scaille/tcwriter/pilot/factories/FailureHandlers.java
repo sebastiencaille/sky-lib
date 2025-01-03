@@ -1,7 +1,8 @@
 package ch.scaille.tcwriter.pilot.factories;
 
+import static ch.scaille.util.helpers.LambdaExt.doNothing;
+
 import ch.scaille.tcwriter.pilot.PollingResult;
-import ch.scaille.util.helpers.LambdaExt;
 
 public interface FailureHandlers {
 	/*************************** Failure handlers ***************************/
@@ -13,10 +14,10 @@ public interface FailureHandlers {
 	/**
 	 * Fails using some text
 	 */
-	static <C, V> FailureHandler<C, V> throwError(final String actionDescr) {
+	static <C, V> FailureHandler<C, V> throwError(final String actionDescription) {
 		return r -> {
 			throw new AssertionError(
-					r.getComponentDescription() + ": action failed [" + actionDescr + "]: " + r.failureReason);
+					r.getComponentDescription() + ": action failed [" + actionDescription + "]: " + r.failureReason);
 		};
 	}
 
@@ -56,6 +57,6 @@ public interface FailureHandlers {
 	 * Do nothing on error
 	 */
 	static <C, V> FailureHandler<C, V> ignoreFailure() {
-		return result -> LambdaExt.doNothing();
+		return result -> doNothing();
 	}
 }

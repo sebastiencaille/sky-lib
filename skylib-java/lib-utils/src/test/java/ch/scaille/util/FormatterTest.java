@@ -17,17 +17,14 @@ class FormatterTest {
 
 	private static class ExceptionOutput implements TextFormatter.IOutput<IOException> {
 
-		private final StringBuilder buffer = new StringBuilder();
-
 		@Override
 		public void append(String str) throws IOException {
-			buffer.append(str);
 			throw new IOException("Expected");
 		}
 
 		@Override
 		public void append(char c) {
-			buffer.append(c);
+			// noop
 		}
 
 	}

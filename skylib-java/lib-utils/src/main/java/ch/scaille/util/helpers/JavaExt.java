@@ -113,7 +113,7 @@ public class JavaExt {
 
 		@Override
 		public void run() {
-			// Use a reader to handle multi-byte chars
+			// Use a reader to handle multibyte chars
 			try (var reader = new InputStreamReader(in.get(), StandardCharsets.UTF_8)) {
 				final var buffer = new char[1024 * 1024];
 				int read;

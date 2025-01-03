@@ -12,8 +12,8 @@ get:
     - in: query
       name: format
       schema:
-        $ref: ../openapi.yaml#/components/schemas/ExportType
-      # Default to human readable
+        $ref: '../openapi.yaml#/components/schemas/ExportType'
+      # Default to human-readable
       required: false
       description: Export format 
     - in: header
@@ -31,7 +31,7 @@ get:
         text/java:
           schema:
             type: string
-        # human readable
+        # human-readable
         application/json:
           schema: 
             type: array

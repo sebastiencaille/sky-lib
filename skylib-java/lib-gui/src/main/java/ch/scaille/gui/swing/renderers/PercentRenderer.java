@@ -13,7 +13,6 @@ import javax.swing.table.DefaultTableCellRenderer;
  * @author Sebastien Caille
  *
  */
-@SuppressWarnings("serial")
 public class PercentRenderer extends DefaultTableCellRenderer {
 
 	@Override

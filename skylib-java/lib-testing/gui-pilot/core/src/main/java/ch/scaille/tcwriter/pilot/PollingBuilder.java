@@ -120,7 +120,7 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, U>, U extends Poll
 	/**
 	 * Waits until a condition is applied, throwing a java assertion error in case of
 	 * failure
-	 * @param report the text of the error;
+	 * @param assertion the text of the assertion
 	 */
 	public T fail(String assertion) {
 		this.failureHandler = FailureHandlers.throwError(assertion);

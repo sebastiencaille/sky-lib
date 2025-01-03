@@ -4,8 +4,8 @@ import {Metadata} from '../webapis/Types'
 interface IMetadataChooserProps {
     prefix: string,
     allMetadata: Metadata[],
-    initialySelectedMetadata?: Metadata,
-    onSelection: (metatadata?: Metadata) => void
+    initiallySelectedMetadata?: Metadata,
+    onSelection: (metadata?: Metadata) => void
 }
 
 export default function MetadataChooser(props: Readonly<IMetadataChooserProps>) {
@@ -15,8 +15,8 @@ export default function MetadataChooser(props: Readonly<IMetadataChooserProps>) 
     useEffect(() => {
 
         let current: Metadata | undefined = undefined;
-        if (props.initialySelectedMetadata) {
-            current = props.initialySelectedMetadata;
+        if (props.initiallySelectedMetadata) {
+            current = props.initiallySelectedMetadata;
         }
         if (!current && props.allMetadata[0]) {
             current = props.allMetadata[0];
@@ -24,7 +24,7 @@ export default function MetadataChooser(props: Readonly<IMetadataChooserProps>) 
         if (current && current !== selectedMetadata) {
             setSelectedMetadata(current);
         }
-    }, [props.allMetadata, props.initialySelectedMetadata, selectedMetadata]);
+    }, [props.allMetadata, props.initiallySelectedMetadata, selectedMetadata]);
 
     const changeSelection = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedMetadata(props.allMetadata.find((m) => (m.transientId === e.target.value)));

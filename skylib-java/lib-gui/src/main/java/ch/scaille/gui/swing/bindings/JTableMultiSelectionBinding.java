@@ -34,7 +34,7 @@ public class JTableMultiSelectionBinding<T, U extends Collection<T>> extends Com
 		table.setModel(model);
 	}
 
-	private void updateSelection(final IComponentLink<U> componentlink) {
+	private void updateSelection(final IComponentLink<U> componentLink) {
 		final var selected = collectionType.get();
 
 		for (final var row : table.getSelectedRows()) {
@@ -42,20 +42,20 @@ public class JTableMultiSelectionBinding<T, U extends Collection<T>> extends Com
 				selected.add(model.getObjectAtRow(row));
 			}
 		}
-		componentlink.setValueFromComponent(table, selected);
+		componentLink.setValueFromComponent(table, selected);
 	}
 
 	@Override
-	public void addComponentValueChangeListener(final IComponentLink<U> componentlink) {
+	public void addComponentValueChangeListener(final IComponentLink<U> componentLink) {
 		table.getSelectionModel().addListSelectionListener(e -> {
 			if (!e.getValueIsAdjusting() && !modelChange) {
-				updateSelection(componentlink);
+				updateSelection(componentLink);
 			}
 		});
 		model.addTableModelListener(event -> {
 			if (event.getType() == ListModelTableModel.TABLE_CHANGE_DONE) {
 				modelChange = false;
-				componentlink.reloadComponentValue();
+				componentLink.reloadComponentValue();
 			} else if (event.getType() == ListModelTableModel.TABLE_ABOUT_TO_CHANGE) {
 				modelChange = true;
 			}

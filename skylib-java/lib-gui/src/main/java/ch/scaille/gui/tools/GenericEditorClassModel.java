@@ -131,7 +131,7 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 	}
 
 	/**
-	 * Creates the properties by introspecting the displayed class Class
+	 * Creates the properties by introspecting the displayed class
 	 */
 	@Override
 	public List<IPropertyEntry<T>> createProperties(IObjectProvider<T> object) {

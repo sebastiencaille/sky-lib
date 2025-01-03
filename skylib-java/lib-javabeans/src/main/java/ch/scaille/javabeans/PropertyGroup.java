@@ -6,7 +6,7 @@ import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.IPropertyEventListener;
 
 /**
- * Allows firering {@link IPropertyEventListener} when the value of a property
+ * Allows trigger {@link IPropertyEventListener} when the value of a property
  * in this group is changed
  * 
  * @author Sebastien Caille

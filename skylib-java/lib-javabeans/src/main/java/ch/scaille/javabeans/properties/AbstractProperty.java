@@ -16,7 +16,7 @@ import ch.scaille.javabeans.PropertyEvent.EventKind;
 import ch.scaille.javabeans.Veto.TransmitMode;
 
 /**
- * Provides default type-independant mechanisms of properties.
+ * Provides type-independent properties mechanisms.
  * <p>
  *
  * @author Sebastien Caille

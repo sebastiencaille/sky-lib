@@ -51,7 +51,7 @@ public class ExamplePage extends PagePilot {
 
 	}
 
-	private BiDiEvent<TestEvents> helloEventListener;
+	private final BiDiEvent<TestEvents> helloEventListener;
 
 	public ExamplePage(SeleniumPilot pilot) {
 		super(pilot);

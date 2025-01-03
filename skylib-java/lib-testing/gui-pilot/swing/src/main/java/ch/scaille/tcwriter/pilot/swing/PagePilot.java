@@ -27,7 +27,7 @@ public class PagePilot {
 				.getMetaData()
 				.getAttributes()
 				.stream() //
-				.filter(a -> a.isOnType(SwingComponentPilot.class) || a.isOnType(SwingPollingBuilder.class)) //
+				.filter(a -> a.isOfType(SwingComponentPilot.class) || a.isOfType(SwingPollingBuilder.class)) //
 				.map(a -> a.unwrap(Object.class))
 				.forEach(a -> a.getAnnotation(ByName.class).ifPresent(v -> {
 						final var name = v.value();

@@ -114,14 +114,13 @@ export default function App() {
 					<MetadataChooser
 						prefix='dictionary'
 						allMetadata={allDictionaries}
-						initialySelectedMetadata={currentDictionary?.metadata}
+						initiallySelectedMetadata={currentDictionary?.metadata}
 						onSelection={dictionaryChanged} />
 					<MetadataChooser
 						prefix='testcase'
 						allMetadata={allTestCases}
-						initialySelectedMetadata={currentTestCase?.metadata}
-						onSelection={testCaseChanged}
-						disabled={currentDictionary === undefined}/>
+						initiallySelectedMetadata={currentTestCase?.metadata}
+						onSelection={testCaseChanged} />
 					<button id='exportJava' onClick={exportJava} disabled={currentTestCase === undefined}>Java Code</button>
 					<button id='exportText' onClick={exportHumanReadable}  disabled={currentTestCase === undefined}>Human Readable</button>
 					<button id='execute' onClick={executeTC} disabled={currentTestCase === undefined}>Execute</button>

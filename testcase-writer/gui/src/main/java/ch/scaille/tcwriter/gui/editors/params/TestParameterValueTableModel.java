@@ -5,6 +5,7 @@ import java.util.Objects;
 import ch.scaille.gui.model.ListModel;
 import ch.scaille.gui.swing.model.ListModelTableModel;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
+import org.jetbrains.annotations.NotNull;
 
 public class TestParameterValueTableModel extends
 		ListModelTableModel<TestParameterValueTableModel.ParameterValueEntry, TestParameterValueTableModel.Columns> {
@@ -43,7 +44,7 @@ public class TestParameterValueTableModel extends
 		}
 
 		@Override
-		public int compareTo(final ParameterValueEntry other) {
+		public int compareTo(final @NotNull ParameterValueEntry other) {
 			if (mandatory && !other.mandatory) {
 				return -1;
 			} else if (!mandatory && other.mandatory) {

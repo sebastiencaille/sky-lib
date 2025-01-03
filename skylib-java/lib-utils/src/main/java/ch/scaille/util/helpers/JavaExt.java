@@ -18,6 +18,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * 
  */
@@ -61,13 +63,13 @@ public class JavaExt {
 		try {
 			Files.walkFileTree(path, new SimpleFileVisitor<>() {
 				@Override
-				public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
+				public @NotNull FileVisitResult visitFile(Path path, @NotNull BasicFileAttributes attrs) throws IOException {
 					Files.delete(path);
 					return FileVisitResult.CONTINUE;
 				}
 
 				@Override
-				public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+				public @NotNull FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
 					if (exc != null) {
 						throw exc;
 					}

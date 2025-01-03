@@ -5,6 +5,8 @@ import java.util.Enumeration;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
+import org.jetbrains.annotations.NotNull;
+
 public class PropertiesResourceBundle extends ResourceBundle {
 
 	private final Properties props;
@@ -14,12 +16,12 @@ public class PropertiesResourceBundle extends ResourceBundle {
 	}
 
 	@Override
-	protected Object handleGetObject(final String var1) {
-		return props.getOrDefault(var1, "");
+	protected Object handleGetObject(final @NotNull String key) {
+		return props.getOrDefault(key, "");
 	}
 
 	@Override
-	public Enumeration<String> getKeys() {
+	public @NotNull Enumeration<String> getKeys() {
 		return Collections.enumeration(props.stringPropertyNames());
 	}
 

@@ -62,15 +62,11 @@
 		</plugins>
 	</build>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>selenium-test-page</artifactId>
-				<version>${revision}</version>
-			</dependency>
-
-		</dependencies>
-	</dependencyManagement>
-
+	<dependencies>
+		<dependency>
+			<groupId>org.jetbrains</groupId>
+			<artifactId>annotations</artifactId>
+		</dependency>
+	</dependencies>
+	
 </project>

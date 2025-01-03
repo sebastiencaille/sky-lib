@@ -13,6 +13,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
+import org.jetbrains.annotations.NotNull;
+
 public class TupleStream<X, Y> {
 
 	public static class Tuple<X, Y> {
@@ -116,7 +118,7 @@ public class TupleStream<X, Y> {
 		}
 
 		@Override
-		public <V> BiFunction<List<X>, List<X>, V> andThen(final Function<? super List<X>, ? extends V> after) {
+		public <V> @NotNull BiFunction<List<X>, List<X>, V> andThen(final @NotNull Function<? super List<X>, ? extends V> after) {
 			return BinaryOperator.super.andThen(after);
 		}
 

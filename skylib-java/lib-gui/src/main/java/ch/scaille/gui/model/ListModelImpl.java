@@ -27,6 +27,7 @@ import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.PropertyChangeSupportController;
 import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.util.helpers.StreamExt;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * List Model with log(n) access.
@@ -380,7 +381,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 	}
 
 	@Override
-	public Iterator<T> iterator() {
+	public @NotNull Iterator<T> iterator() {
 		return new ArrayList<>(data).iterator();
 	}
 

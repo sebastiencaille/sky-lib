@@ -8,6 +8,8 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+import org.jetbrains.annotations.NotNull;
+
 public interface Logs {
 
 	static Logger of(Class<?> clazz) {
@@ -29,7 +31,7 @@ public interface Logs {
 			private StringBuilder builder = new StringBuilder();
 
 			@Override
-			public void write(char[] cbuf, int off, int len) {
+			public void write(char @NotNull [] cbuf, int off, int len) {
 				builder.append(cbuf, off, len);
 			}
 

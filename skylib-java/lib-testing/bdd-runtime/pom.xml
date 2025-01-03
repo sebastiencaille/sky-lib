@@ -14,6 +14,7 @@
 		<dependency>
 			<groupId>ch.scaille</groupId>
 			<artifactId>selenium-test-page</artifactId>
+			<version>${revision}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.web.servlet.error.AbstractErrorController;
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorViewResolver;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
@@ -66,7 +67,7 @@ public class WebErrorController extends AbstractErrorController {
 			}
 
 			@Override
-			public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response)
+			public void render(Map<String, ?> model, @NotNull HttpServletRequest request, HttpServletResponse response)
 					throws Exception {
 				response.setContentType(getContentType());
 				final var dto = (ExceptionDto) model.get("dto");

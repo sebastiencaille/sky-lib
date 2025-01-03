@@ -188,11 +188,12 @@ public class Template {
 	 */
 	public static Map<String, String> appendToList(final Map<String, String> context, final String key,
 			final String value) {
-		var existing = context.getOrDefault(key, "");
-		if (!existing.isEmpty()) {
-			existing = existing + ", ";
+		var existing = context.get(key);
+		if (existing != null) {
+			existing = existing + ", " + value;
+		} else {
+			existing = value;
 		}
-		existing += value;
 		context.put(key, existing);
 		return context;
 	}

@@ -1,6 +1,6 @@
 package ch.scaille.tcwriter.it;
 
-import static ch.scaille.tcwriter.it.api.ParameterSelector.selector;
+import static ch.scaille.tcwriter.it.api.ParameterSelector.currentSelector;
 import static ch.scaille.tcwriter.it.api.ParameterValue.oneValue;
 import static ch.scaille.tcwriter.it.api.StepSelector.addStep;
 import static ch.scaille.tcwriter.it.api.StepSelector.currentStep;
@@ -15,6 +15,7 @@ import ch.scaille.tcwriter.it.api.ParameterSelector;
 import ch.scaille.tcwriter.it.api.ParameterValue;
 import ch.scaille.tcwriter.it.api.StepEdition;
 import ch.scaille.tcwriter.it.api.StepSelector;
+import ch.scaille.tcwriter.it.api.TestContent;
 import ch.scaille.tcwriter.it.api.TestSessionRole;
 import ch.scaille.tcwriter.it.api.TestWriterRole;
 import ch.scaille.tcwriter.pilot.PollingContext;
@@ -24,7 +25,6 @@ import ch.scaille.tcwriter.pilot.factories.Reporting;
 
 public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 
-	private static final String ACTOR_TEST_WRITER = "Test writer";
 	private final TCWriterPage tcWriterPage;
 	private final TCGuiPilot guiPilot;
 
@@ -33,31 +33,14 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 		this.tcWriterPage = guiPilot.page(TCWriterPage::new);
 	}
 
-	private StepEdition[] basicTestContent() {
-		final var edition1 = new StepEdition();
-		edition1.setActor(ACTOR_TEST_WRITER);
-		edition1.setAction("Select a step");
-		edition1.setSelector("Append a step to the test");
-
-		final var edition2 = new StepEdition();
-		edition2.setActor(ACTOR_TEST_WRITER);
-		edition2.setAction("Verify the Human Readable text");
-		edition2.setSelector("Selected step");
-
-		final var edition3 = new StepEdition();
-		edition3.setActor(ACTOR_TEST_WRITER);
-		edition3.setAction("Select a step");
-		edition3.setSelector("Step at index");
-		return new StepEdition[] { edition1, edition2, edition3 };
-	}
 
 	@Override
-	public void selectStep(final StepSelector selector) {
+	public void doSelectStep(final StepSelector selector) {
 		selector.accept(tcWriterPage);
 	}
 
 	@Override
-	public void editStep(final StepSelector selector, final StepEdition edition) {
+	public void doEditStep(final StepSelector selector, final StepEdition edition) {
 		selector.accept(tcWriterPage);
 		tcWriterPage.actors.select(edition.getActor());
 		tcWriterPage.actions.select(edition.getAction());
@@ -66,7 +49,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	}
 
 	@Override
-	public void updateStep(final StepSelector selector, final StepEdition edition) {
+	public void doUpdateStep(final StepSelector selector, final StepEdition edition) {
 		editStep(selector, edition);
 		applyStepEdition();
 	}
@@ -76,7 +59,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	}
 
 	@Override
-	public void assertStepContent(final StepSelector selector, final StepEdition edition) {
+	public void doAssertStepContent(final StepSelector selector, final StepEdition edition) {
 		selector.accept(tcWriterPage);
 		tcWriterPage.actors.assertSelected(edition.getActor());
 		tcWriterPage.actions.assertSelected(edition.getAction());
@@ -88,7 +71,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	 * Checks the text has it would be displayed
 	 */
 	@Override
-	public void assertHumanReadable(final StepSelector selector, final String humanReadable) {
+	public void doAssertHumanReadable(final StepSelector selector, final String humanReadable) {
 		selector.accept(tcWriterPage);
 
 		tcWriterPage.stepsTable
@@ -103,7 +86,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	}
 
 	@Override
-	public void updateParameter(final ParameterSelector selector, final ParameterValue value) {
+	public void doUpdateParameter(final ParameterSelector selector, final ParameterValue value) {
 		selector.apply(tcWriterPage)
 				.fail(Reporting.settingValue("parameter", value))
 				.ifNot()
@@ -122,30 +105,31 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	}
 
 	@Override
-	public void injectBasicTest() {
-		final var basicTestContents = basicTestContent();
-		updateStep(StepSelector.selectStep(1), basicTestContents[0]);
-		updateStep(addStep(), basicTestContents[1]);
-		editStep(addStep(), basicTestContents[2]);
-		updateParameter(selector(), oneValue("index:1"));
+	public void doInjectTest(TestContent testContent) {
+		boolean firstStep = true;
+		for (var step: testContent.steps()) {
+			if (firstStep) {
+				updateStep(StepSelector.selectStep(1), step);
+				firstStep = false;
+			} else if (step.getParameterValue1() != null) {
+				editStep(addStep(), step);
+				updateParameter(currentSelector(), oneValue(step.getParameterValue1()));
+			} else {
+				updateStep(addStep(), step);
+			} 
+		}
 	}
 
 	@Override
-	public void assertBasicTest() {
-		final var basicTestContents = basicTestContent();
-
-		assertStepContent(StepSelector.selectStep(1), basicTestContents[0]);
-		assertHumanReadable(currentStep(), "As test writer, I add a step to the test case");
-
-		assertStepContent(StepSelector.selectStep(2), basicTestContents[1]);
-		assertHumanReadable(currentStep(), "As test writer, I verify that the human readable text is \"\"");
-
-		assertStepContent(StepSelector.selectStep(3), basicTestContents[2]);
-		assertHumanReadable(currentStep(), "As test writer, I select the step 1");
+	public void doAssertTest(TestContent testContent) {
+		for (int i = 0; i < testContent.steps().length; i++) {
+			assertStepContent(StepSelector.selectStep(i + 1), testContent.steps()[i]);
+			assertHumanReadable(currentStep(), testContent.humanReadable()[i]);
+		}
 	}
 
 	@Override
-	public void mainFrameAction(final MainFrameAction action) {
+	public void doManageTest(final MainFrameAction action) {
 		action.execute(tcWriterPage, guiPilot);
 	}
 

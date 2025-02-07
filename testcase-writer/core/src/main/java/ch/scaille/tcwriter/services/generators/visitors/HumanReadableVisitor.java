@@ -19,6 +19,13 @@ import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestReference;
 import ch.scaille.tcwriter.model.testcase.TestStep;
 
+/**
+ * Formats human readable text.
+ * <p>
+ * A pattern //some text %s more text // indicates that the entire text must not
+ * appear if the value of %s is empty
+ * 
+ */
 public class HumanReadableVisitor {
 
 	private static final Pattern BLOCK_PATTERN = Pattern.compile("//.*%s.*//");
@@ -130,7 +137,7 @@ public class HumanReadableVisitor {
 			formatted = formatted.replace("//", "").replace("/\\/", "//");
 			return formatted;
 		} catch (MissingFormatArgumentException e) {
-			return "Some parameter values are missing";
+			return "Some parameter values are missing in " + humanReadable;
 		}
 	}
 

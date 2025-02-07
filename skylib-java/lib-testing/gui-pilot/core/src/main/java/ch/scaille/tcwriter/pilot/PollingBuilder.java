@@ -100,14 +100,17 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, U>, U extends Poll
 
 	protected <R> PollingResult<C, R> poll(final Polling<C, R> polling) {
 		configurers.forEach(conf -> conf.accept(polling));
-		return pilot.processResult(pilot.waitPollingSuccess(polling), PollingResults.identity(),
+		final var pollingResult = pilot.processResult(pilot.waitPollingSuccess(polling), PollingResults.identity(),
 				((FailureHandler<C, R>) failureHandler));
+		reset();
+		return pollingResult;
 	}
 
-	public U ifNot() {
-		return (U) new Poller<>(this);
+	public void reset() {
+		failureHandler = null;
+		configurers.clear();
 	}
-
+	
 	/**
 	 * Waits until a condition is applied, throwing a java assertion error in case of
 	 * failure
@@ -152,5 +155,11 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, U>, U extends Poll
 		return (T) this;
 	}
 
+	/**
+	 * 
+	 */
+	public U ifNot() {
+		return (U) new Poller<>(this);
+	}
 
 }

@@ -10,7 +10,7 @@ import ch.scaille.tcwriter.pilot.swing.JTablePoller;
 public interface ParameterSelector extends Function<TCWriterPage, JTablePoller> {
 
 	@TCApi(description = "Current selector", humanReadable = "|the selector")
-    static ParameterSelector selector() {
+    static ParameterSelector currentSelector() {
 		return p -> p.selectorValue;
 	}
 

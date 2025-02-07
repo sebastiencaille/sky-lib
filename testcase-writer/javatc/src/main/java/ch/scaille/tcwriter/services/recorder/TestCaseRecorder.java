@@ -4,6 +4,7 @@ import static ch.scaille.tcwriter.model.dictionary.TestParameterFactory.simpleTy
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -83,8 +84,7 @@ public class TestCaseRecorder implements ITestCaseRecorder {
     }
 
     @Override
-    public void recordStep(final String description, final Object recordedActor, final String apiName,
-                           final Object[] apiArgs) {
+    public void recordStep(Object recordedActor, Method api, Object[] apiArgs) {
         final var step = new ExportableTestStep(testSteps.size() + 1);
 
         TestActor actor = null;
@@ -104,8 +104,8 @@ public class TestCaseRecorder implements ITestCaseRecorder {
         }
         step.setActor(actor);
 
-        final var action = role.getActions().stream().filter(a -> matches(a, apiName, apiArgs)).findFirst()
-                .orElseThrow(() -> new IllegalStateException("No action found for " + description));
+        final var action = role.getActions().stream().filter(a -> matches(a, api)).findFirst()
+                .orElseThrow(() -> new IllegalStateException("No action found for " + api));
         step.setAction(action);
         step.fixClassifier();
 
@@ -126,10 +126,9 @@ public class TestCaseRecorder implements ITestCaseRecorder {
     }
 
     @Override
-    public void recordParamFactory(final Class<?> apiFactoryClass, final String apiName, final Object[] apiArgs,
-                                   final Object returnValue) {
+    public void recordParamFactory(Class<?> apiFactoryClass, Method api, Object[] apiArgs, Object returnValue) {
         final var testParameterFactory = tcDictionary
-                .getTestParameterFactory(Helper.methodKey(apiFactoryClass, apiName));
+                .getTestParameterFactory(Helper.methodKey(apiFactoryClass, api.getName()));
         final var testParameterValue = new ExportableTestParameterValue("<PlaceHolder>", testParameterFactory);
         for (int i = 0; i < testParameterFactory.getMandatoryParameters().size(); i++) {
             testParameterValue.addComplexTypeValue(
@@ -139,7 +138,7 @@ public class TestCaseRecorder implements ITestCaseRecorder {
     }
 
     @Override
-    public void recordParamFactoryCall(final Object factory, final String callName, final Object[] args) {
+    public void recordParamFactoryCall(Object factory, Method api, Object[] args) {
         final var testParameterValue = testParameterValues.get(factory);
         if (testParameterValue == null) {
             // we are being called during the factory's call
@@ -153,7 +152,7 @@ public class TestCaseRecorder implements ITestCaseRecorder {
             apiArg = null;
         }
         testParameterValue.addComplexTypeValue(
-                createFactoryParameterValue(testParameterFactory.getOptionalParameterByName(callName), apiArg));
+                createFactoryParameterValue(testParameterFactory.getOptionalParameterByName(api.getName()), apiArg));
     }
 
     @Override
@@ -170,26 +169,23 @@ public class TestCaseRecorder implements ITestCaseRecorder {
         return new ExportableTestParameterValue(param, simpleType(param.getParameterType()), Objects.toString(apiArg));
     }
 
-    protected static boolean matches(final TestAction action, final String apiName, final Object[] apiArgs) {
-        if (!action.getName().equals(apiName) || action.getParameters().size() != apiArgs.length) {
+    protected static boolean matches(final TestAction action, Method api) {
+        if (!action.getName().equals(api.getName()) || action.getParameters().size() != api.getParameterCount()) {
             return false;
         }
         for (int i = 0; i < action.getParameters().size(); i++) {
-            final var expected = action.getParameters().get(i);
-            final var actual = apiArgs[i];
-            if (!expected.getParameterType().equals(actual.getClass().getName())
-                    && !expected.getParameterType().equals(asPrimitive(actual.getClass()).getName())) {
-                return false;
-            }
+            final var expectedType = action.getParameters().get(i).getParameterType();
+            final var actual = api.getParameters()[i].getType();
+            try {
+				if (!expectedType.equals(actual.toGenericString()) && 
+					!Class.forName(expectedType).isAssignableFrom(actual)) {
+				    return false;
+				}
+			} catch (ClassNotFoundException e) {
+				return false;
+			}
         }
         return true;
-    }
-
-    protected static Class<?> asPrimitive(final Class<?> clazz) {
-        if (Integer.class == clazz) {
-            return Integer.TYPE;
-        }
-        return Object.class;
     }
 
     @Override

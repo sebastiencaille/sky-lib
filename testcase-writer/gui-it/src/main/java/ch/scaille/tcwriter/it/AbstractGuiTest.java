@@ -4,6 +4,7 @@ import static ch.scaille.tcwriter.persistence.factory.DaoConfigs.cp;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.Arrays;
 
@@ -11,6 +12,7 @@ import javax.swing.SwingUtilities;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInfo;
 
 import ch.scaille.tcwriter.annotations.TCActors;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
@@ -20,7 +22,12 @@ import ch.scaille.tcwriter.model.config.TCConfig;
 import ch.scaille.tcwriter.persistence.ModelConfig;
 import ch.scaille.tcwriter.persistence.factory.DaoConfigs;
 import ch.scaille.tcwriter.persistence.testexec.JunitTestExecConfig;
+import ch.scaille.tcwriter.recorder.RecorderTestActors;
 import ch.scaille.tcwriter.services.generators.JavaToDictionary;
+import ch.scaille.tcwriter.services.generators.visitors.HumanReadableVisitor;
+import ch.scaille.tcwriter.services.recorder.ITestCaseRecorder;
+import ch.scaille.tcwriter.services.recorder.TestCaseRecorder;
+import ch.scaille.tcwriter.services.recorder.TestCaseRecorderAspect;
 import ch.scaille.tcwriter.services.testexec.JUnitTestExecutor;
 import ch.scaille.util.helpers.ClassLoaderHelper;
 import ch.scaille.util.helpers.Logs;
@@ -35,6 +42,8 @@ public class AbstractGuiTest {
 
 	protected TestWriterRole tcWriter;
 	protected TestSessionRole testSession;
+
+	private ITestCaseRecorder testRecorder;
 
 	@BeforeEach
 	public void startGui() throws InvocationTargetException, InterruptedException {
@@ -76,16 +85,21 @@ public class AbstractGuiTest {
 		pilot = new TCGuiPilot(controller.getGui());
 		pilot.setDefaultPollingTimeout(Duration.ofSeconds(5));
 
-		final var localRole = new LocalTCWriterRole(pilot);
-		tcWriter = localRole;
-		testSession = localRole;
+		tcWriter = RecorderTestActors.register(new LocalTCWriterRole(pilot), "tcWriter", null);
+		testSession = RecorderTestActors.register(new LocalTCWriterRole(pilot), "testSession", null);
+
+		testRecorder = new TestCaseRecorder(dictionary);
+		TestCaseRecorderAspect.setRecorder(testRecorder);
 	}
 
 	@AfterEach
-	public void closeGui() {
+	public void closeGui(TestInfo testInfo) {
 		if (pilot == null) {
 			return;
 		}
+		final var recordedTest = testRecorder.buildTestCase(testInfo.getTestMethod().map(Method::getName).get());
+		Logs.of(getClass()).info(new HumanReadableVisitor(recordedTest, false).processAllSteps());
+		
 		pilot.close();
 		Logs.of(getClass()).info(pilot.getActionReport().getFormattedReport());
 	}

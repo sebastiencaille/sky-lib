@@ -18,6 +18,8 @@ public class StepEdition {
 
 	private String parameter;
 
+	private String parameterValue1;
+
 	public String getActor() {
 		return actor;
 	}
@@ -54,6 +56,15 @@ public class StepEdition {
 		this.parameter = parameter;
 	}
 
+	public String getParameterValue1() {
+		return parameterValue1;
+	}
+
+	@TCApi(description = "Parameter Value 1", humanReadable = "Parameter Value")
+	public void setParameterValue1(String parameterValue1) {
+		this.parameterValue1 = parameterValue1;	
+	}
+	
 	@TCApi(description = "Step Edition", humanReadable = "Step Edition")
 	public static StepEdition edition() {
 		return new StepEdition();

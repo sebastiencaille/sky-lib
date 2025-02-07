@@ -1,18 +1,29 @@
 package ch.scaille.tcwriter.it.api;
 
 import ch.scaille.tcwriter.annotations.TCAction;
+import ch.scaille.tcwriter.annotations.TCActors;
 import ch.scaille.tcwriter.annotations.TCApi;
 import ch.scaille.tcwriter.annotations.TCCheck;
 import ch.scaille.tcwriter.annotations.TCRole;
 
 @TCRole(description = "Test Session", humanReadable = "test session")
+@TCActors("testSession|TestSessionRole")
 public interface TestSessionRole {
 
-	@TCApi(description = "Inject basic test", humanReadable = "I inject a basic test")
+	@TCApi(description = "Inject test", humanReadable = "I inject the test %s")
 	@TCAction(preparationOnly = true)
-	void injectBasicTest();
+	default void injectTest(TestContent testContent)  {
+		doInjectTest(testContent);
+	}
 
-	@TCApi(description = "Verify basic test", humanReadable = "I verify the basic test")
+	
+	void doInjectTest(TestContent testContent);
+	
+	@TCApi(description = "Verify test", humanReadable = "I verify the test %s")
 	@TCCheck
-	void assertBasicTest();
+	default void assertTest(TestContent testContent) {
+		doAssertTest(testContent);
+	}
+	
+	void doAssertTest(TestContent testContent);
 }

@@ -13,11 +13,13 @@ import ch.scaille.tcwriter.persistence.factory.DaoConfigs;
 public class TestCaseRecorderAspect {
 
 	private static ITestCaseRecorder recorder;
-
+	
 	public static void setRecorder(final ITestCaseRecorder recorder) {
 		TestCaseRecorderAspect.recorder = recorder;
 	}
 
+	private boolean inRecord = false; 
+	
 	/**
 	 * Configures the recording and saves the test
 	 *
@@ -40,6 +42,7 @@ public class TestCaseRecorderAspect {
 			final var daoConfig = DaoConfigs.withFolder(DaoConfigs.tempFolder());
 			setRecorder(new TestCaseRecorder(daoConfig.modelDao(), tcDictionaryName));
 		}
+		inRecord = false;
 		return jp.proceed();
 	}
 
@@ -49,23 +52,27 @@ public class TestCaseRecorderAspect {
      */
 	@Around("execution(@ch.scaille.tcwriter.annotations.TCApi * *.*(..))")
 	public Object recordApiCall(final ProceedingJoinPoint jp) throws Throwable {
-		if (recorder == null) {
+		if (recorder == null || inRecord) {
 			return jp.proceed();
 		}
+		final var calledMethod = ((MethodSignature)jp.getSignature()).getMethod();
 		if (jp.getTarget() != null) {
-			if (jp.getSignature().getDeclaringType().getAnnotation(TCRole.class) != null) {
-				recorder.recordStep(jp.toString(), jp.getTarget(), jp.getSignature().getName(), jp.getArgs());
+			if (calledMethod.getDeclaringClass().getAnnotation(TCRole.class) != null) {
+				recorder.recordStep(jp.getTarget(), calledMethod, jp.getArgs());
+				inRecord = true;
 			} else {
-				recorder.recordParamFactoryCall(jp.getTarget(), jp.getSignature().getName(), jp.getArgs());
+				recorder.recordParamFactoryCall(jp.getTarget(), calledMethod, jp.getArgs());
+				inRecord = true;
 			}
 		}
 		final var returnValue = jp.proceed();
 		if (jp.getTarget() == null) {
-			recorder.recordParamFactory(jp.getSignature().getDeclaringType(), jp.getSignature().getName(), jp.getArgs(),
+			recorder.recordParamFactory(calledMethod.getDeclaringClass(), calledMethod, jp.getArgs(),
 					returnValue);
 		} else if (returnValue != null) {
 			recorder.recordReturnValue(returnValue);
 		}
+		inRecord = false;
 		return returnValue;
 	}
 

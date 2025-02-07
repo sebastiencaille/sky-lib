@@ -1,6 +1,6 @@
 package ch.scaille.tcwriter.it;
 
-import static ch.scaille.tcwriter.it.api.ParameterSelector.selector;
+import static ch.scaille.tcwriter.it.api.ParameterSelector.currentSelector;
 import static ch.scaille.tcwriter.it.api.ParameterValue.oneValue;
 import static ch.scaille.tcwriter.it.api.StepSelector.addStep;
 import static ch.scaille.tcwriter.it.api.StepSelector.currentStep;
@@ -35,7 +35,7 @@ class StepEditionTest extends AbstractGuiTest {
 		edition3.setAction("Select a step");
 		edition3.setSelector("Step at index");
 		tcWriter.editStep(addStep(), edition3);
-		tcWriter.updateParameter(selector(), oneValue("index:1"));
+		tcWriter.updateParameter(currentSelector(), oneValue("index:1"));
 
 		tcWriter.assertStepContent(selectStep(1), edition1);
 		tcWriter.assertHumanReadable(currentStep(), "As test writer, I add a step to the test case");

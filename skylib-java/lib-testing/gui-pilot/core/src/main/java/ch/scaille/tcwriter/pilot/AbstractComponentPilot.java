@@ -139,8 +139,8 @@ public abstract class AbstractComponentPilot<C> {
 		}
 	}
 
-	public <V, U> PollingResult<C, U> processResult(final PollingResult<C, V> result, Function<PollingResult<C, V>, PollingResult<C, U>> resultTransformer,
-			FailureHandler<C, V> onFail) {
+	public <V, U> PollingResult<C, U> processResult(final PollingResult<C, V> result,
+			Function<PollingResult<C, V>, PollingResult<C, U>> resultTransformer, FailureHandler<C, V> onFail) {
 		if (result.isSuccess()) {
 			pilot.setActionDelay(result.getActionDelay());
 		} else {
@@ -157,14 +157,13 @@ public abstract class AbstractComponentPilot<C> {
 	protected <R> PollingResult<C, R> waitPollingSuccessLoop(final Polling<C, R> polling) {
 		polling.initializeFrom(this);
 		return new Poller(polling.getTimeout(), polling.getFirstDelay(), polling.getDelayFunction())
-				.run(p -> executePolling(p, polling), PollingResult::isSuccess)
-				.orElseThrow();
+				.run(p -> executePolling(p, polling), PollingResult::isSuccess).orElseThrow();
 	}
 
 	/**
 	 * Tries to execute the polling
 	 *
-	 * @param <R>          return type
+	 * @param <R> return type
 	 */
 	protected <R> Optional<PollingResult<C, R>> executePolling(Poller poller, final Polling<C, R> polling) {
 
@@ -187,7 +186,9 @@ public abstract class AbstractComponentPilot<C> {
 	}
 
 	/**
-	 * Loads and check that the element is valid
+	 * Loads and check that the element is valid.
+	 * 
+	 * @return a failure if the loading failed.
 	 */
 	protected <R> Optional<PollingResult<C, R>> loadComponent(final Polling<C, R> polling) {
 		if (cachedComponent == null) {
@@ -199,9 +200,8 @@ public abstract class AbstractComponentPilot<C> {
 			polling.getContext().setComponent(null, getDescription().orElse("<unknown>"));
 			return Optional.of(PollingResults.failure("not found"));
 		}
-		polling.getContext()
-				.setComponent(getCachedElement().orElse(null),
-						getDescription().or(() -> getCachedElement().map(Object::toString)).orElse("<unknown>"));
+		polling.getContext().setComponent(cachedComponent.element,
+				getDescription().orElseGet(() -> cachedComponent.element.toString()));
 		final var preCondition = polling.getPrecondition();
 		if (!cachedComponent.preconditionValidated && preCondition.isPresent()
 				&& !preCondition.get().test(polling.getContext())) {

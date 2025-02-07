@@ -16,7 +16,7 @@ public class PropertiesResourceBundle extends ResourceBundle {
 	}
 
 	@Override
-	protected Object handleGetObject(final @NotNull String key) {
+	protected Object handleGetObject(final String key) {
 		return props.getOrDefault(key, "");
 	}
 

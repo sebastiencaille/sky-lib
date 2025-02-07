@@ -31,7 +31,7 @@ public interface Logs {
 			private StringBuilder builder = new StringBuilder();
 
 			@Override
-			public void write(char @NotNull [] cbuf, int off, int len) {
+			public void write(char[] cbuf, int off, int len) {
 				builder.append(cbuf, off, len);
 			}
 

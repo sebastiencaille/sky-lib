@@ -63,7 +63,7 @@ public class JavaExt {
 		try {
 			Files.walkFileTree(path, new SimpleFileVisitor<>() {
 				@Override
-				public @NotNull FileVisitResult visitFile(Path path, @NotNull BasicFileAttributes attrs) throws IOException {
+				public @NotNull FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
 					Files.delete(path);
 					return FileVisitResult.CONTINUE;
 				}

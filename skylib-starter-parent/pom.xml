@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.1</version>
+		<version>3.4.2</version>
 		<relativePath />
 	</parent>
 
@@ -26,23 +26,23 @@
 		<jackson-bom.version>2.18.2</jackson-bom.version>
 		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
 		<guava.version>33.4.0-jre</guava.version>
-		<logback.version>1.5.15</logback.version>
+		<logback.version>1.5.16</logback.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
 
-		<jetbrain-annotations.version>26.0.1</jetbrain-annotations.version>
+		<jetbrain-annotations.version>26.0.2</jetbrain-annotations.version>
 		
-		<swagger-parser.version>2.1.23</swagger-parser.version>
-		<swagger.version>2.2.27</swagger.version>
-		<springdoc-openapi.version>2.7.0</springdoc-openapi.version>
+		<swagger-parser.version>2.1.25</swagger-parser.version>
+		<swagger.version>2.2.28</swagger.version>
+		<springdoc-openapi.version>2.8.4</springdoc-openapi.version>
 
 		<undertow.version>2.3.18.Final</undertow.version>
-		<liquibase.version>4.30.0</liquibase.version>
+		<liquibase.version>4.31.0</liquibase.version>
 
-		<mockito.version>5.14.2</mockito.version>
+		<mockito.version>5.15.2</mockito.version>
 		<junit-jupiter.version>5.11.4</junit-jupiter.version>
 		<junit.version>4.13.2</junit.version>
 		<junit-platform-console-standalone.version>1.11.4</junit-platform-console-standalone.version>
-		<selenium.version>4.27.0</selenium.version>
+		<selenium.version>4.28.1</selenium.version>
 		<h2.version>2.3.232</h2.version>
 
 		<coverage.temp>${java.io.tmpdir}/coverage/${basedir}</coverage.temp>
@@ -66,7 +66,7 @@
 		<maven-failsafe-plugin.version>3.5.2</maven-failsafe-plugin.version>
 
 		<maven-exec-plugin.version>3.5.0</maven-exec-plugin.version>
-		<openapi-generator-maven-plugin.version>7.10.0</openapi-generator-maven-plugin.version>
+		<openapi-generator-maven-plugin.version>7.11.0</openapi-generator-maven-plugin.version>
 		<jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
 
 	</properties>

@@ -16,7 +16,7 @@ public class PollingContext<C> {
 
 	private final AbstractComponentPilot<C> pilot;
 	private C component;
-	private String description;
+	private String description = "no component set";
 
 	public PollingContext(AbstractComponentPilot<C> pilot) {
 		this.pilot = pilot;
@@ -34,6 +34,11 @@ public class PollingContext<C> {
 		return clazz.cast(pilot.getPilot());
 	}
 	
+	/**
+	 * Get the component.
+	 *  
+	 * The component is never null when the library calls the polling methods  
+	 */
 	public C getComponent() {
 		return component;
 	}
@@ -46,6 +51,5 @@ public class PollingContext<C> {
 		this.component = component;
 		this.description = description;
 	}
-
 
 }

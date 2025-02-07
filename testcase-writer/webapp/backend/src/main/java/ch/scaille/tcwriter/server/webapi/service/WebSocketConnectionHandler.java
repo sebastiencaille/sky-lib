@@ -57,7 +57,7 @@ public class WebSocketConnectionHandler<S extends Session> {
 		}
 
 		@Override
-		public void onApplicationEvent(@NotNull SessionConnectEvent event) {
+		public void onApplicationEvent(SessionConnectEvent event) {
 			handleSession(event, (session, tabId, wsSessionId) -> sessionAccessor.webSocketSessionIdOf(session, tabId)
 					.set(wsSessionId));
 		}
@@ -72,7 +72,7 @@ public class WebSocketConnectionHandler<S extends Session> {
 		}
 
 		@Override
-		public void onApplicationEvent(@NotNull SessionDisconnectEvent event) {
+		public void onApplicationEvent(SessionDisconnectEvent event) {
 			handleSession(event, (session, tabId, wsSessionId) -> {
 				final var accessor = sessionAccessor.webSocketSessionIdOf(session, tabId);
 				final var sessionWsSessionId = accessor.get();

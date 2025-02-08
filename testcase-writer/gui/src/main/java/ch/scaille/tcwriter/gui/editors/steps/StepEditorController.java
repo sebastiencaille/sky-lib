@@ -8,6 +8,8 @@ import java.util.*;
 import ch.scaille.gui.mvc.GuiController;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.properties.ObjectProperty;
+import ch.scaille.tcwriter.gui.editors.params.TestParameterModel;
+import ch.scaille.tcwriter.gui.editors.params.TestParameterValueEditorPanel;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.tcwriter.gui.frame.TCWriterModel;
 import ch.scaille.tcwriter.model.ModelUtils;
@@ -25,22 +27,25 @@ public class StepEditorController extends GuiController {
 
 	private final TCWriterModel guiModel;
 
-	public StepEditorController(final TCWriterController controller, ObjectProperty<TestDictionary> testDictionary) {
-		this.model = new StepEditorModel(of(controller), testDictionary);
-		this.changeSupport = controller.getScopedChangeSupport();
-		this.guiModel = controller.getModel();
-	}
+	private final TestParameterModel selectorModel;
+	private final TestParameterModel param0Model;
 
-	public TCWriterModel getGuiModel() {
-		return guiModel;
-	}
+	private final StepEditorPanel stepEditorPanel;
 
-	public void build() {
+	private final TestParameterValueEditorPanel selectorEditor;
+
+	private final TestParameterValueEditorPanel param0Editor;
+
+	public StepEditorController(final TCWriterController guiController) {
+		this.model = new StepEditorModel(of(guiController), guiController.getModel().getTestDictionary());
+		this.changeSupport = guiController.getScopedChangeSupport();
+		this.guiModel = guiController.getModel();
+
 		final var dictionary = guiModel.getTestDictionary();
 		final var testStep = guiModel.getSelectedStep();
 
 		dictionary.listen(dict -> model.getPossibleActors().setValue(this, sorted(dict.getActors().values())));
-		
+
 		model.getActor().listenActive(actor -> {
 			if (actor != null) {
 				model.getPossibleActions().setValue(this, sorted(actor.getRole().getActions()));
@@ -75,6 +80,38 @@ public class StepEditorController extends GuiController {
 						model.getActionParameterValue().getValue().derivate(param)))
 				.addDependency(preserveOnUpdateOf(testStep));
 
+		this.stepEditorPanel = new StepEditorPanel(this);
+
+		this.selectorModel = new TestParameterModel("selector", guiController, model.getSelector(),
+				model.getSelectorValue());
+		this.selectorEditor = new TestParameterValueEditorPanel(guiController, selectorModel);
+
+		this.param0Model = new TestParameterModel("param0", guiController, model.getActionParameter(),
+				model.getActionParameterValue());
+		this.param0Editor = new TestParameterValueEditorPanel(guiController, param0Model);
+	}
+
+	public TCWriterModel getGuiModel() {
+		return guiModel;
+	}
+
+	public StepEditorPanel getStepEditorPanel() {
+		return stepEditorPanel;
+	}
+
+	public TestParameterValueEditorPanel getSelectorEditor() {
+		return selectorEditor;
+	}
+
+	public TestParameterValueEditorPanel getParam0Editor() {
+		return param0Editor;
+	}
+
+	@Override
+	public void activate() {
+		selectorModel.activate();
+		param0Model.activate();
+		super.activate();
 	}
 
 	/**
@@ -82,14 +119,14 @@ public class StepEditorController extends GuiController {
 	 * different action parameters) or when changing the action (because same step
 	 * but action has different parameters)
 	 *
-     */
+	 */
 	private void updateActionParameters(final TestDictionary td, final ObjectProperty<TestStep> testStep) {
 		final var step = testStep.getValue();
 		final var action = model.getAction().getValue();
 		if (step == null || action == null) {
 			return;
 		}
-		
+
 		final var actionUtils = ModelUtils.actionUtils(td, action);
 		actionUtils.synchronizeStep(testStep.getValue());
 		if (actionUtils.hasSelector()) {
@@ -100,7 +137,7 @@ public class StepEditorController extends GuiController {
 		} else {
 			emptySelectors();
 		}
-		
+
 		if (actionUtils.hasActionParameter(0)) {
 			final var param0Value = step.getParametersValue(actionUtils.parameterIndex(0));
 			model.getPossibleActionParameters().setValue(this,
@@ -139,8 +176,9 @@ public class StepEditorController extends GuiController {
 		step.setActor(model.getActor().getValue());
 		step.setAction(model.getAction().getValue());
 		step.getParametersValue().clear();
-		
-		final var actionUtils = guiModel.getTestDictionary().map(dictionary ->  ModelUtils.actionUtils(dictionary, step.getAction()));
+
+		final var actionUtils = guiModel.getTestDictionary()
+				.map(dictionary -> ModelUtils.actionUtils(dictionary, step.getAction()));
 		if (actionUtils.hasSelector()) {
 			step.getParametersValue().add(model.getSelectorValue().getValue());
 		}

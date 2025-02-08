@@ -16,6 +16,8 @@ import ch.scaille.tcwriter.services.testexec.TestRemoteControl;
 
 public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableModel.Column> {
 
+	private static final long serialVersionUID = 8601893907809393792L;
+	
 	private final TestRemoteControl testControl;
 	private final ObjectProperty<TestCase> testCaseProperty;
 	private HumanReadableVisitor humanReadableVisitor;

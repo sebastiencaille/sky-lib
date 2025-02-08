@@ -31,6 +31,7 @@ import ch.scaille.tcwriter.model.testcase.TestStep;
 
 public class StepEditorPanel extends JPanel {
 
+	private static final long serialVersionUID = -3035157435652102580L;
 	private final StepEditorModel model;
 
 	public StepEditorPanel(final StepEditorController controller) {

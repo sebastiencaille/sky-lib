@@ -12,6 +12,7 @@ import ch.scaille.tcwriter.model.testexec.StepStatus;
 
 public class StepStatusRenderer extends DefaultTableCellRenderer {
 
+	private static final long serialVersionUID = -1362069937024272245L;
 	final JCheckBox renderer = new JCheckBox();
 	final JPanel jPanel = new JPanel();
 

@@ -24,6 +24,7 @@ import ch.scaille.util.helpers.LambdaExt;
 
 public class DictionaryImport extends JDialog {
 
+	private static final long serialVersionUID = 8123471252947527763L;
 	private final IModelDao modelDao;
 	private final Component parentFrame;
 	private final JLabel dictionaryJarFileDisplay;

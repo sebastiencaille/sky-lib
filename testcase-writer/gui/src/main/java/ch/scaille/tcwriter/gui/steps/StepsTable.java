@@ -27,6 +27,8 @@ import ch.scaille.tcwriter.model.testcase.TestStep;
 
 public class StepsTable extends JPanel {
 
+	private static final long serialVersionUID = -8912254280325934892L;
+
 	private final StepsTableModel stepsTableModel;
 
 	private final JTable stepsJTable;
@@ -43,6 +45,8 @@ public class StepsTable extends JPanel {
 				(f, t) -> SwingUtilities.invokeLater(() -> stepsTableModel.stepExecutionUpdated(f - 1, t - 1)));
 
 		stepsJTable = new JTable(stepsTableModel) {
+
+			private static final long serialVersionUID = -3114512815335033791L;
 
 			@Override
 			protected void paintChildren(final Graphics g) {
@@ -69,6 +73,9 @@ public class StepsTable extends JPanel {
 							toPaintHR.y + toPaintHR.height - 1);
 
 					final var renderer = new DefaultTableCellRenderer() {
+						
+						private static final long serialVersionUID = 2857485822815100155L;
+
 						@Override
 						public Component getTableCellRendererComponent(final JTable table, final Object value,
 								final boolean isSelected, final boolean hasFocus, final int row, final int column) {
@@ -101,6 +108,8 @@ public class StepsTable extends JPanel {
 		columnModel.configureColumn(
 				TableColumnWithPolicy.fixedTextLength(Column.ORDINAL, 2, TableColumnWithPolicy.SAMPLE_NUMBERS,
 						TableColumnWithPolicy.DEFAULT_MARGIN).with(new DefaultTableCellRenderer() {
+							private static final long serialVersionUID = -8917034957019159554L;
+
 							@Override
 							public Component getTableCellRendererComponent(JTable table, Object obj, boolean var3,
 									boolean var4, int row, int col) {

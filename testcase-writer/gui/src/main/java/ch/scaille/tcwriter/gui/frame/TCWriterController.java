@@ -23,6 +23,7 @@ import ch.scaille.gui.tools.IGenericEditor;
 import ch.scaille.javabeans.PropertyChangeSupportController;
 import ch.scaille.javabeans.properties.ErrorSet;
 import ch.scaille.tcwriter.gui.DictionaryImport;
+import ch.scaille.tcwriter.gui.editors.steps.StepEditorController;
 import ch.scaille.tcwriter.gui.frame.TCWriterModel.TestExecutionState;
 import ch.scaille.tcwriter.model.TestCaseException;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
@@ -43,22 +44,26 @@ public class TCWriterController extends GuiController {
 	private static final Logger LOGGER = Logs.of(TCWriterController.class);
 
 	private final TCWriterModel model;
+
 	private final TestRemoteControl testRemoteControl;
 	private final TCWriterGui gui;
 	private final ITestExecutor testExecutor;
-
 	private final IConfigDao configDao;
 	private final ModelDao modelDao;
 
+	private final StepEditorController stepEditorController;
+	
 	public TCWriterController(final IConfigDao configDao, final ModelDao modelDao, TestDictionary tcDictionary,
 			final ITestExecutor testExecutor) {
 		this.configDao = configDao;
 		this.modelDao = modelDao;
 		this.testExecutor = testExecutor;
+		
+		this.model = new TCWriterModel(getScopedChangeSupport());
 
-		model = new TCWriterModel(getScopedChangeSupport());
-		gui = new TCWriterGui(this);
-		testRemoteControl = new TestRemoteControl(9998, new TestExecutionListener() {
+		this.stepEditorController = new StepEditorController(this);
+
+		this.testRemoteControl = new TestRemoteControl(9998, new TestExecutionListener() {
 
 			@Override
 			public void testRunning(boolean running) {
@@ -79,9 +84,14 @@ public class TCWriterController extends GuiController {
 			dictionary = loadDictionary(null);
 		}
 		model.getTestDictionary().setValue(this, dictionary);
-
+		
+		this.gui = new TCWriterGui(this);
 	}
 
+	public StepEditorController getStepEditorController() {
+		return stepEditorController;
+	}
+	
 	public TestDictionary loadDictionary(String name) {
 		TestDictionary dictionary = null;
 		while (dictionary == null) {
@@ -94,13 +104,6 @@ public class TCWriterController extends GuiController {
 			}
 		}
 		return dictionary;
-	}
-
-	public void run() {
-		gui.build();
-		activate();
-		gui.start();
-		newTestCase();
 	}
 
 	public TCWriterModel getModel() {
@@ -246,9 +249,16 @@ public class TCWriterController extends GuiController {
 		}
 	}
 
+	public void start() {
+		stepEditorController.activate();
+		activate();
+		gui.start();
+		newTestCase();
+	}
+	
 	public void restart() {
 		gui.setVisible(false);
-		new TCWriterController(configDao, modelDao, null, testExecutor).run();
+		new TCWriterController(configDao, modelDao, null, testExecutor).start();
 	}
 
 	public void resumeTestCase() throws IOException {

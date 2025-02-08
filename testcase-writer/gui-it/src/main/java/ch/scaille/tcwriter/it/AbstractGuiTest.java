@@ -80,7 +80,7 @@ public class AbstractGuiTest {
 		persister.writeTestDictionary(dictionary);
 
 		final var controller = new TCWriterController(configDao, persister, dictionary, executor);
-		SwingUtilities.invokeAndWait(controller::run);
+		SwingUtilities.invokeAndWait(controller::start);
 
 		pilot = new TCGuiPilot(controller.getGui());
 		pilot.setDefaultPollingTimeout(Duration.ofSeconds(5));

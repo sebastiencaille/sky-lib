@@ -47,6 +47,8 @@ import ch.scaille.tcwriter.model.testcase.TestReference;
 
 public class TestParameterValueEditorPanel extends JPanel {
 
+	private static final long serialVersionUID = 1686297570581922386L;
+
 	public static IConverter<TestReference, ObjectTextView<TestReference>> refToTextConverter() {
 		return ObjectTextView.converter(ref -> ref.toDescription().getDescription());
 	}

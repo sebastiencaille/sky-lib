@@ -10,6 +10,8 @@ import ch.scaille.tcwriter.model.testexec.StepStatus;
 
 public class StepStatusEditor extends DefaultCellEditor {
 
+	private static final long serialVersionUID = -4623973824541421254L;
+
 	public StepStatusEditor() {
 		super(new JCheckBox());
 	}

@@ -32,7 +32,7 @@ public class ExampleTCEditor {
 		eventDebug.addHandler(handlerConsole);
 
 		SwingUtilities.invokeLater(() -> {
-			controller.run();
+			controller.start();
 			controller.loadTestCase(testCase);
 		});
 	}

@@ -9,6 +9,8 @@ import ch.scaille.gui.swing.jtable.TableColumnWithPolicy;
 
 public class TestParameterValueTable extends JTable {
 
+	private static final long serialVersionUID = -6414986043651145474L;
+
 	public TestParameterValueTable(final TestParameterValueTableModel testParameterValueTableModel) {
 		super(testParameterValueTableModel);
 		final var myColumnModel = new PolicyTableColumnModel<TestParameterValueTableModel.Columns>(this);

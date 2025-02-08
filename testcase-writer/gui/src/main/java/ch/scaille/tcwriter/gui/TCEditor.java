@@ -28,7 +28,7 @@ public class TCEditor {
 		final var modelDao = daoConfig.modelDao();
 		final var testExecutor = new JUnitTestExecutor(configLoader, modelDao, ClassLoaderHelper.appClassPath());
 		final var tcWriterController = new TCWriterController(configLoader, modelDao, null, testExecutor);
-		SwingUtilities.invokeLater(tcWriterController::run);
+		SwingUtilities.invokeLater(tcWriterController::start);
 	}
 
 }

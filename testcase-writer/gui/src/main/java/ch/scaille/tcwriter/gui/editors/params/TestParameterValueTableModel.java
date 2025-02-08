@@ -9,6 +9,8 @@ import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 public class TestParameterValueTableModel extends
 		ListModelTableModel<TestParameterValueTableModel.ParameterValueEntry, TestParameterValueTableModel.Columns> {
 
+	private static final long serialVersionUID = 7217311713782884572L;
+
 	public enum Columns {
 		MANDATORY, ENABLED, DESCRIPTION, VALUE
 	}

@@ -18,10 +18,6 @@ import javax.swing.WindowConstants;
 
 import ch.scaille.gui.swing.SwingExt;
 import ch.scaille.javabeans.DependenciesBuildingReport;
-import ch.scaille.tcwriter.gui.editors.params.TestParameterModel;
-import ch.scaille.tcwriter.gui.editors.params.TestParameterValueEditorPanel;
-import ch.scaille.tcwriter.gui.editors.steps.StepEditorController;
-import ch.scaille.tcwriter.gui.editors.steps.StepEditorPanel;
 import ch.scaille.tcwriter.gui.steps.StepsTable;
 import ch.scaille.util.helpers.LambdaExt;
 import ch.scaille.util.helpers.LambdaExt.RunnableWithException;
@@ -29,33 +25,12 @@ import ch.scaille.util.helpers.Logs;
 
 public class TCWriterGui extends JFrame {
 
+	private static final long serialVersionUID = 7148676630414966965L;
+
 	private static final Logger LOGGER = Logs.of(TCWriterGui.class);
 
-	private final TCWriterController controller;
-
-	private TestParameterModel selectorModel;
-
-	private TestParameterModel param0Model;
-
 	public TCWriterGui(final TCWriterController controller) {
-		this.controller = controller;
 		setName("TCWriterGui");
-	}
-
-	private JButton button(final String name, final ImageIcon icon, final String toolTip,
-			RunnableWithException<?> action) {
-		final var newButton = new JButton(icon);
-		newButton.setToolTipText(toolTip);
-		newButton.addActionListener(SwingExt.action(LambdaExt.uncheckedR(action, this::handleException)));
-		newButton.setName(name);
-		return newButton;
-	}
-
-	private JButton button(final ImageIcon icon, final String toolTip, final RunnableWithException<?> action) {
-		return button(null, icon, toolTip, action);
-	}
-
-	public void build() {
 
 		final var screenBuildingReport = new DependenciesBuildingReport();
 		DependenciesBuildingReport.setScreenBuildingReport(screenBuildingReport);
@@ -108,24 +83,15 @@ public class TCWriterGui extends JFrame {
 		buttonsBar.add(removeStepButton);
 		this.getContentPane().add(buttonsBar, BorderLayout.NORTH);
 
-		final var stepEditorController = new StepEditorController(controller, controller.getModel().getTestDictionary());
-		final var stepEditorModel = stepEditorController.getModel();
-		final var stepEditor = new StepEditorPanel(stepEditorController);
-		stepEditorController.build();
+		final var stepEditorController = controller.getStepEditorController();
+		final var StepEditorPanel = stepEditorController.getStepEditorPanel();
 
-		selectorModel = new TestParameterModel("selector", controller, stepEditorModel.getSelector(),
-				stepEditorModel.getSelectorValue());
-		final var selectorEditor = new TestParameterValueEditorPanel(controller, selectorModel);
-
-		param0Model = new TestParameterModel("param0", controller, stepEditorModel.getActionParameter(),
-				stepEditorModel.getActionParameterValue());
-		final var param0Editor = new TestParameterValueEditorPanel(controller, param0Model);
-
-		final var paramsPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(selectorEditor),
-				new JScrollPane(param0Editor));
+		final var paramsPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+				new JScrollPane(stepEditorController.getSelectorEditor()),
+				new JScrollPane(stepEditorController.getParam0Editor()));
 
 		final var stepsPane = new JScrollPane(stepsTable);
-		final var stepPane = new JScrollPane(stepEditor);
+		final var stepPane = new JScrollPane(StepEditorPanel);
 		final var paramPane = new JScrollPane(paramsPane);
 
 		final int height = 1200;
@@ -144,10 +110,20 @@ public class TCWriterGui extends JFrame {
 		this.setSize(1600, height);
 	}
 
-	public void start() {
-		selectorModel.activate();
-		param0Model.activate();
+	private JButton button(final String name, final ImageIcon icon, final String toolTip,
+			RunnableWithException<?> action) {
+		final var newButton = new JButton(icon);
+		newButton.setToolTipText(toolTip);
+		newButton.addActionListener(SwingExt.action(LambdaExt.uncheckedR(action, this::handleException)));
+		newButton.setName(name);
+		return newButton;
+	}
 
+	private JButton button(final ImageIcon icon, final String toolTip, final RunnableWithException<?> action) {
+		return button(null, icon, toolTip, action);
+	}
+
+	public void start() {
 		this.setVisible(true);
 	}
 

@@ -12,7 +12,7 @@ import ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole;
 import ch.scaille.tcwriter.examples.api.interfaces.DeliveryTestRole;
 import ch.scaille.tcwriter.model.config.TCConfig;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
-import ch.scaille.tcwriter.model.testcase.TestCase;
+import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
 import ch.scaille.tcwriter.persistence.IConfigDao;
 import ch.scaille.tcwriter.persistence.ModelConfig;
 import ch.scaille.tcwriter.persistence.ModelDao;
@@ -76,12 +76,12 @@ public class ExampleHelper {
 	}
 
 	public TestDictionary generateDictionary() {
-		final var dictionary = new JavaToDictionary(CustomerTestRole.class, DeliveryTestRole.class).generate();
+		final var dictionary = new JavaToDictionary("BasicTest", CustomerTestRole.class, DeliveryTestRole.class).generate();
 		dictionary.getMetadata().setDescription("Test dictionary");
 		return dictionary;
 	}
 
-	public TestCase recordTestCase(final TestDictionary dictionary) {
+	public ExportableTestCase recordTestCase(final TestDictionary dictionary) {
 
 		final var recorder = new TestCaseRecorder(dictionary);
 		TestCaseRecorderAspect.setRecorder(recorder);

@@ -18,7 +18,7 @@ import ch.scaille.util.helpers.ClassFinder.Policy;
 public class JavaToDictionary extends AbstractGenerator<Dictionary> {
 
     public static Collector<Class<?>, ?, Dictionary> toDictionary() {
-        return toDictionary(JavaToDictionary::new);
+        return generate(JavaToDictionary::new);
     }
 
     public static ClassFinder configure(ClassFinder classFinder) {

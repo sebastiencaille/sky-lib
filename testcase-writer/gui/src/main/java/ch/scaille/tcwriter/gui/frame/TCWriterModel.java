@@ -18,19 +18,19 @@ public class TCWriterModel {
 
 	private final ObjectProperty<TestExecutionState> executionState;
 
-	private final TestDictionary testDictionary;
+	private final ObjectProperty<TestDictionary> testDictionary;
 
-	public TCWriterModel(final TestDictionary testDictionary, final IPropertiesGroup changeSupport) {
-		this.testDictionary = testDictionary;
-		tc = new ObjectProperty<>("TestCase", changeSupport);
-		selectedStep = new ObjectProperty<>("SelectedStep", changeSupport);
-		executionState = new ObjectProperty<>("ExecutionState", changeSupport, TestExecutionState.STOPPED);
+	public TCWriterModel(final IPropertiesGroup changeSupport) {
+		this.tc = new ObjectProperty<>("TestCase", changeSupport);
+		this.selectedStep = new ObjectProperty<>("SelectedStep", changeSupport);
+		this.executionState = new ObjectProperty<>("ExecutionState", changeSupport, TestExecutionState.STOPPED);
+		this.testDictionary = new ObjectProperty<>("TestDictionary", changeSupport);
 	}
 
-	public TestDictionary getTestDictionary() {
+	public ObjectProperty<TestDictionary> getTestDictionary() {
 		return testDictionary;
 	}
-
+	
 	public ObjectProperty<TestCase> getTestCase() {
 		return tc;
 	}

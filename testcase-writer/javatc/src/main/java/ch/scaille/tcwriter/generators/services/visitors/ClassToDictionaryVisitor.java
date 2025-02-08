@@ -46,7 +46,9 @@ public class ClassToDictionaryVisitor {
 
 	private final TestDictionary dictionary = new TestDictionary();
 
-	public ClassToDictionaryVisitor(Class<?>... classes) {
+	public ClassToDictionaryVisitor(String classifier, Class<?>... classes) {
+		this.dictionary.setClassifier(classifier);
+		this.dictionary.getMetadata().setTransientId(classifier);
 		Arrays.stream(classes).forEach(this::addClass);
 	}
 

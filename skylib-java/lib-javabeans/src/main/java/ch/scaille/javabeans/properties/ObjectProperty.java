@@ -121,4 +121,8 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 		return getObjectValue() != null;
 	}
 
+	public <R> R map(Function<T, R> mapper) {
+		return mapper.apply(value);
+	}
+
 }

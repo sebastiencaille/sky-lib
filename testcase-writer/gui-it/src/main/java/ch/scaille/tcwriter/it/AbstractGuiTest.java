@@ -75,7 +75,7 @@ public class AbstractGuiTest {
 		final var executor = new JUnitTestExecutor(configDao, persister, ClassLoaderHelper.appClassPath());
 
 		// Setup data
-		final var dictionary = new JavaToDictionary(TestWriterRole.class, TestSessionRole.class, AbstractGuiTest.class)
+		final var dictionary = new JavaToDictionary("gui-it", TestWriterRole.class, TestSessionRole.class, AbstractGuiTest.class)
 				.generate();
 		persister.writeTestDictionary(dictionary);
 

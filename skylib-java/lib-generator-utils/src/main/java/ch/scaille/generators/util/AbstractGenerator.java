@@ -13,7 +13,10 @@ import java.util.stream.Collector;
 
 public abstract class AbstractGenerator<R> {
 
-	protected static <A extends AbstractGenerator<R>, R> Collector<Class<?>, A, R> toDictionary(
+	/**
+	 * Collector that execute generations
+	 */
+	protected static <A extends AbstractGenerator<R>, R> Collector<Class<?>, A, R> generate(
 			Supplier<A> generatorSupplier) {
 		return new Collector<>() {
 

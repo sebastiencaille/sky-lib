@@ -108,10 +108,10 @@ public class TCWriterGui extends JFrame {
 		buttonsBar.add(removeStepButton);
 		this.getContentPane().add(buttonsBar, BorderLayout.NORTH);
 
-		final var stepEditorController = new StepEditorController(controller);
+		final var stepEditorController = new StepEditorController(controller, controller.getModel().getTestDictionary());
 		final var stepEditorModel = stepEditorController.getModel();
 		final var stepEditor = new StepEditorPanel(stepEditorController);
-		stepEditorController.load();
+		stepEditorController.build();
 
 		selectorModel = new TestParameterModel("selector", controller, stepEditorModel.getSelector(),
 				stepEditorModel.getSelectorValue());

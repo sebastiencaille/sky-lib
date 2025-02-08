@@ -22,13 +22,10 @@ import javax.swing.JScrollPane;
 import ch.scaille.gui.mvc.factories.ObjectTextView;
 import ch.scaille.gui.swing.factories.SwingBindings;
 import ch.scaille.javabeans.Converters;
-import ch.scaille.javabeans.converters.IConverter;
 import ch.scaille.javabeans.properties.AbstractTypedProperty;
-import ch.scaille.tcwriter.model.NamedObject;
 import ch.scaille.tcwriter.model.dictionary.StepClassifier;
 import ch.scaille.tcwriter.model.dictionary.TestAction;
 import ch.scaille.tcwriter.model.dictionary.TestActor;
-import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 import ch.scaille.tcwriter.model.testcase.TestStep;
 
@@ -36,12 +33,7 @@ public class StepEditorPanel extends JPanel {
 
 	private final StepEditorModel model;
 
-	public static <T extends NamedObject> IConverter<T, ObjectTextView<T>> object2Text(final TestDictionary tm) {
-		return ObjectTextView.converter(o -> tm.descriptionOf(o).getDescription());
-	}
-
 	public StepEditorPanel(final StepEditorController controller) {
-		final var dictionary = controller.getGuiModel().getTestDictionary();
 
 		this.model = controller.getModel();
 		final var selectedStep = controller.getGuiModel().getSelectedStep();
@@ -95,34 +87,34 @@ public class StepEditorPanel extends JPanel {
 		// Actors
 		final var actorsList = withEnabler(selectedStep, new JList<ObjectTextView<TestActor>>());
 		actorsList.setName("Actors");
-		model.getPossibleActors().bind(listConverter(object2Text(dictionary))).bind(values(actorsList));
-		model.getActor().bind(object2Text(dictionary)).bind(selection(actorsList))
+		model.getPossibleActors().bind(listConverter(model.object2Text())).bind(values(actorsList));
+		model.getActor().bind(model.object2Text()).bind(selection(actorsList))
 				.addDependency(preserveOnUpdateOf(model.getPossibleActors()));
 		stepEditors.add(new JScrollPane(actorsList));
 
 		// Actions
 		final var actionsList = withEnabler(selectedStep, new JList<ObjectTextView<TestAction>>());
 		actionsList.setName("Actions");
-		model.getPossibleActions().bind(listConverter(object2Text(dictionary))).bind(values(actionsList));
-		model.getAction().bind(object2Text(dictionary)).bind(selection(actionsList))
+		model.getPossibleActions().bind(listConverter(model.object2Text())).bind(values(actionsList));
+		model.getAction().bind(model.object2Text()).bind(selection(actionsList))
 				.addDependency(preserveOnUpdateOf(model.getPossibleActions()));
 		stepEditors.add(new JScrollPane(actionsList));
 
 		// Selectors
 		final var selectorList = withEnabler(selectedStep, new JList<ObjectTextView<TestParameterFactory>>());
 		selectorList.setName("Selectors");
-		model.getPossibleSelectors().bind(Converters.listConverter(object2Text(dictionary)))
+		model.getPossibleSelectors().bind(Converters.listConverter(model.object2Text()))
 				.bind(SwingBindings.values(selectorList));
-		model.getSelector().bind(object2Text(dictionary)).bind(selection(selectorList))
+		model.getSelector().bind(model.object2Text()).bind(selection(selectorList))
 				.addDependency(preserveOnUpdateOf(model.getPossibleSelectors()));
 		stepEditors.add(new JScrollPane(selectorList));
 
 		// Action Parameter
 		final var actionParameterList = withEnabler(selectedStep, new JList<ObjectTextView<TestParameterFactory>>());
 		actionParameterList.setName("Parameters0");
-		model.getPossibleActionParameters().bind(listConverter(object2Text(dictionary)))
+		model.getPossibleActionParameters().bind(listConverter(model.object2Text()))
 				.bind(values(actionParameterList));
-		model.getActionParameter().bind(object2Text(dictionary)).bind(selection(actionParameterList))
+		model.getActionParameter().bind(model.object2Text()).bind(selection(actionParameterList))
 				.addDependency(preserveOnUpdateOf(model.getPossibleActionParameters()));
 		stepEditors.add(new JScrollPane(actionParameterList));
 

@@ -11,6 +11,7 @@ import ch.scaille.javabeans.converters.IUnaryConverter;
 import ch.scaille.javabeans.properties.AbstractProperty.ErrorNotifier;
 import ch.scaille.javabeans.properties.AbstractTypedProperty;
 import ch.scaille.javabeans.properties.ErrorSet;
+import ch.scaille.javabeans.properties.ObjectProperty;
 
 public class GuiModel implements IPropertiesOwner {
 

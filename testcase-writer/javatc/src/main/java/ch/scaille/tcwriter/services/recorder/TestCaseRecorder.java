@@ -22,7 +22,6 @@ import ch.scaille.tcwriter.model.dictionary.TestParameterFactory.ParameterNature
 import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
 import ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue;
 import ch.scaille.tcwriter.model.testcase.ExportableTestStep;
-import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestReference;
 import ch.scaille.tcwriter.model.testcase.TestStep;
@@ -189,7 +188,7 @@ public class TestCaseRecorder implements ITestCaseRecorder {
     }
 
     @Override
-    public TestCase buildTestCase(final String testClassName) {
+    public ExportableTestCase buildTestCase(final String testClassName) {
         final var testCase = new ExportableTestCase(testClassName, tcDictionary);
         testCase.getMetadata().setDescription(String.format("%s: execution at %s", testClassName,
                 DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss").format(LocalDateTime.now())));

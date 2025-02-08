@@ -21,6 +21,8 @@ public class TestDictionary {
 	private static final TestObjectDescription NO_ID_DESCRIPTION = new TestObjectDescription("", "");
 
 	private Metadata metadata = new Metadata();
+
+	private String classifier;
 	
 	private final Map<String, TestObjectDescription> descriptions = new HashMap<>();
 
@@ -35,6 +37,14 @@ public class TestDictionary {
 
 	public TestDictionary() {
 		descriptions.put(IdObject.ID_NOT_SET, TestObjectDescription.NOT_SET);
+	}
+	
+	public String getClassifier() {
+		return classifier;
+	}
+	
+	public void setClassifier(String classifier) {
+		this.classifier = classifier;
 	}
 
 	public Metadata getMetadata() {
@@ -118,5 +128,7 @@ public class TestDictionary {
 	public boolean isSelector(final TestParameterValue value) {
 		return selectorTypes.contains(value.getValueFactory().getParameterType());
 	}
+
+
 
 }

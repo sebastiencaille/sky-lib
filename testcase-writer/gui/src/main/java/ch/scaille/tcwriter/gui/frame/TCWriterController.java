@@ -50,23 +50,13 @@ public class TCWriterController extends GuiController {
 	private final IConfigDao configDao;
 	private final ModelDao modelDao;
 
-	public TCWriterController(final IConfigDao configLoader, final ModelDao modelDao, TestDictionary tcDictionary,
+	public TCWriterController(final IConfigDao configDao, final ModelDao modelDao, TestDictionary tcDictionary,
 			final ITestExecutor testExecutor) {
-		this.configDao = configLoader;
+		this.configDao = configDao;
 		this.modelDao = modelDao;
 		this.testExecutor = testExecutor;
 
-		var dictionary = tcDictionary;
-		while (dictionary == null) {
-			try {
-				dictionary = modelDao.readTestDictionary(configLoader.getCurrentConfig().getName())
-						.orElseThrow(() -> new FileNotFoundException("default"));
-			} catch (FileNotFoundException e) {
-				new DictionaryImport(null, modelDao).runImport();
-			}
-		}
-
-		model = new TCWriterModel(dictionary, getScopedChangeSupport());
+		model = new TCWriterModel(getScopedChangeSupport());
 		gui = new TCWriterGui(this);
 		testRemoteControl = new TestRemoteControl(9998, new TestExecutionListener() {
 
@@ -83,6 +73,27 @@ public class TCWriterController extends GuiController {
 			}
 
 		});
+
+		var dictionary = tcDictionary;
+		if (dictionary == null) {
+			dictionary = loadDictionary(null);
+		}
+		model.getTestDictionary().setValue(this, dictionary);
+
+	}
+
+	public TestDictionary loadDictionary(String name) {
+		TestDictionary dictionary = null;
+		while (dictionary == null) {
+			try {
+				dictionary = modelDao.readTestDictionary(name)
+						.orElseThrow(() -> new FileNotFoundException("default"));
+			} catch (FileNotFoundException e) {
+				// UI that allows selecting a dictionary
+				new DictionaryImport(null, modelDao).runImport();
+			}
+		}
+		return dictionary;
 	}
 
 	public void run() {
@@ -131,7 +142,7 @@ public class TCWriterController extends GuiController {
 	}
 
 	public void newTestCase() {
-		final var newTestCase = new ExportableTestCase("undefined.Undefined", model.getTestDictionary());
+		final var newTestCase = new ExportableTestCase("undefined.Undefined", model.getTestDictionary().getValue());
 		newTestCase.addStep(new ExportableTestStep(1));
 		model.getTestCase().setValue(this, newTestCase);
 	}
@@ -172,6 +183,7 @@ public class TCWriterController extends GuiController {
 	}
 
 	public void loadTestCase(final TestCase testCase) {
+		model.getSelectedStep().setValue(this, null);
 		for (int i = 0; i < testCase.getSteps().size(); i++) {
 			final var testStep = testCase.getSteps().get(i);
 			if (testStep.getOrdinal() != i + 1) {
@@ -186,7 +198,7 @@ public class TCWriterController extends GuiController {
 		final var dialogResult = testFileChooser.showSaveDialog(gui);
 		if (dialogResult == 0) {
 			final var testFile = testFileChooser.getSelectedFile();
-			modelDao.writeTestCase(testFile.toString(), model.getTestCase().getValue());
+			modelDao.writeTestCase(testFile.toString(), (ExportableTestCase) model.getTestCase().getValue());
 		}
 	}
 
@@ -202,7 +214,7 @@ public class TCWriterController extends GuiController {
 		final int dialogResult = testFileChooser.showOpenDialog(gui);
 		if (dialogResult == 0) {
 			final var testFile = testFileChooser.getSelectedFile();
-			loadTestCase(modelDao.readTestCase(testFile.toString(), model.getTestDictionary())
+			loadTestCase(modelDao.readTestCase(testFile.toString(), this::loadDictionary)
 					.orElseThrow(() -> new FileNotFoundException(testFile.getName())));
 		}
 	}

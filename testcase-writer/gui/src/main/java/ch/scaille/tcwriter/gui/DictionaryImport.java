@@ -84,7 +84,7 @@ public class DictionaryImport extends JDialog {
 		try (var finder = ClassFinder.source(dictionaryJarFile)) {
 			final var dictionary = finder.withAnnotation(TCRole.class, Policy.CLASS_ONLY)
 					.withAnnotation(TCActors.class, Policy.CLASS_ONLY).withPackages(sourcePackage).scan()
-					.collect(JavaToDictionary.toDictionary());
+					.collect(JavaToDictionary.toDictionary(dictionaryJarFile.getName()));
 			modelDao.writeTestDictionary(dictionary);
 		} catch (IOException e) {
 			ExceptionHelper.handleException(this, e);

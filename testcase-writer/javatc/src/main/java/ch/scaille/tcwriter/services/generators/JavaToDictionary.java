@@ -17,29 +17,36 @@ import ch.scaille.util.helpers.ClassFinder;
 
 public class JavaToDictionary extends AbstractGenerator<TestDictionary> {
 
+	private String classifier;
+
 	public static class Args {
 		@Parameter(names = { "-c" }, description = "Name of configuration")
 		public String configuration = "default";
 
 		@Parameter(names = { "-s" }, required = true, description = "Source package")
 		public String sourcePackage;
+
+		@Parameter(names = { "-s" }, required = true, description = "Name of dictionary")
+		public String classifier;
+}
+
+	public static Collector<Class<?>, ?, TestDictionary> toDictionary(String classifier) {
+		return generate(() -> new JavaToDictionary(classifier));
 	}
 
-	public static Collector<Class<?>, ?, TestDictionary> toDictionary() {
-		return toDictionary(JavaToDictionary::new);
-	}
-
-	protected JavaToDictionary() {
+	protected JavaToDictionary(String classifier) {
 		super();
+		this.classifier = classifier;
 	}
 
-	public JavaToDictionary(final Class<?>... tcClasses) {
+	public JavaToDictionary(String classifier, final Class<?>... tcClasses) {
 		super(tcClasses);
+		this.classifier = classifier;
 	}
 
 	@Override
 	public TestDictionary generate() {
-		return new ClassToDictionaryVisitor(classes.toArray(new Class<?>[0])).visit();
+		return new ClassToDictionaryVisitor(classifier, classes.toArray(new Class<?>[0])).visit();
 	}
 
 	public static void main(final String[] args) {
@@ -55,7 +62,8 @@ public class JavaToDictionary extends AbstractGenerator<TestDictionary> {
 				.withAnnotation(TCRole.class, ClassFinder.Policy.CLASS_ONLY)
 				.withAnnotation(TCActors.class, ClassFinder.Policy.CLASS_ONLY)
 				.scan()
-				.collect(toDictionary());
+				.collect(toDictionary(mainArgs.classifier));
+		dictionary.getMetadata().setTransientId(mainArgs.classifier);
 		persister.writeTestDictionary(dictionary);
 	}
 

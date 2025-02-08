@@ -3,10 +3,14 @@ package ch.scaille.tcwriter.gui.editors.steps;
 import java.util.List;
 
 import ch.scaille.gui.mvc.GuiModel;
+import ch.scaille.gui.mvc.factories.ObjectTextView;
+import ch.scaille.javabeans.converters.IConverter;
 import ch.scaille.javabeans.properties.ObjectProperty;
+import ch.scaille.tcwriter.model.NamedObject;
 import ch.scaille.tcwriter.model.dictionary.StepClassifier;
 import ch.scaille.tcwriter.model.dictionary.TestAction;
 import ch.scaille.tcwriter.model.dictionary.TestActor;
+import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 import ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
@@ -28,9 +32,11 @@ public class StepEditorModel extends GuiModel {
 	private final ObjectProperty<TestParameterValue> actionParameterValues = new ObjectProperty<>(
 			"actionParameterValues", this, ExportableTestParameterValue.NO_VALUE);
 	private final ObjectProperty<StepClassifier> stepClassifier = new ObjectProperty<>("stepClassifier", this, null);
+	private final ObjectProperty<TestDictionary> testDictionary;
 
-	public StepEditorModel(final ModelConfiguration config) {
+	public StepEditorModel(final ModelConfiguration config, ObjectProperty<TestDictionary> testDictionary) {
 		super(config);
+		this.testDictionary = testDictionary; 
 	}
 
 	public ObjectProperty<List<TestActor>> getPossibleActors() {
@@ -75,5 +81,9 @@ public class StepEditorModel extends GuiModel {
 
 	public ObjectProperty<StepClassifier> getStepClassifier() {
 		return stepClassifier;
+	}
+	
+	public <T extends NamedObject> IConverter<T, ObjectTextView<T>> object2Text() {
+		return ObjectTextView.converter(o -> testDictionary.getValue().descriptionOf(o).getDescription());
 	}
 }

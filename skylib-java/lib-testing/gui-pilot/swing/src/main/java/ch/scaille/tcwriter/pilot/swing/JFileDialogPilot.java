@@ -1,6 +1,5 @@
 package ch.scaille.tcwriter.pilot.swing;
 
-import java.security.InvalidParameterException;
 import java.util.Locale;
 
 import javax.swing.JButton;
@@ -45,7 +44,7 @@ public class JFileDialogPilot {
 		}
 		filenameEditor.get().setText(fileName);
 		dialogBox.search(JButton.class, b -> closeButtonName.equals(b.getText()))
-				.orElseThrow(() -> new InvalidParameterException("No button " + closeButtonName)).doClick();
+				.orElseThrow(() -> new IllegalArgumentException("No button " + closeButtonName)).doClick();
 		return ModalDialogDetector.expected();
 	}
 

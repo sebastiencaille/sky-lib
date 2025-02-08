@@ -16,9 +16,12 @@ public class ExportableTestCase extends TestCase {
 
 	@JsonIgnore
 	private Map<String, IdObject> cachedValues = null;
+	
 	@JsonIgnore
 	private List<ExportReference> references;
 
+	protected String preferredDictionary;
+	
 	protected ExportableTestCase() {
 		super(null, null);
 	}
@@ -27,6 +30,14 @@ public class ExportableTestCase extends TestCase {
 		super(pkgAndClassName, testDictionary);
 	}
 
+	 public String getPreferredDictionary() {
+		return preferredDictionary;
+	}
+	
+	public void setPreferredDictionary(String preferredDictionary) {
+		this.preferredDictionary = preferredDictionary;
+	}
+	
 	public void restoreReferences() {
 		dynamicDescriptions.putAll(dynamicReferences.values().stream()
 				.collect(Collectors.toMap(TestReference::getId, TestReference::toDescription)));

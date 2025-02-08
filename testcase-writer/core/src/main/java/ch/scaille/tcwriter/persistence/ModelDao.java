@@ -5,6 +5,7 @@ import static ch.scaille.util.persistence.StorageRTException.uncheck;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.logging.Level;
 
 import ch.scaille.generators.util.Template;
@@ -112,17 +113,26 @@ public class ModelDao implements IModelDao {
 	public List<Metadata> listTestCases(final TestDictionary dictionary) {
 		return uncheck("Listing of test cases",
 				() -> testCaseRepo.list()
-						.map(f -> readTestCase(f.getLocator(), dictionary).get().getMetadata())
+						.map(f -> readTestCase(f.getLocator(), dict -> null, false).get())
+						.filter(tc -> tc.getPreferredDictionary().equals(dictionary.getClassifier()))
+						.map(TestCase::getMetadata)
 						.toList());
 	}
 
 	@Override
-	public Optional<ExportableTestCase> readTestCase(String locator, TestDictionary testDictionary) {
+	public Optional<ExportableTestCase> readTestCase(String locator, Function<String, TestDictionary> testDictionaryLoader) {
+		return readTestCase(locator, testDictionaryLoader, true);
+	}
+
+	private Optional<ExportableTestCase> readTestCase(String locator,
+			Function<String, TestDictionary> testDictionaryLoader, boolean resolve) {
 		try {
 			final var testCase = testCaseRepo.load(locator);
-			testCase.setDictionary(testDictionary);
 			testCase.getMetadata().setTransientId(locator);
-			testCase.restoreReferences();
+			testCase.setDictionary(testDictionaryLoader.apply(testCase.getPreferredDictionary()));
+			if (resolve) {
+				testCase.restoreReferences();
+			}
 			return Optional.of(testCase);
 		} catch (StorageException e) {
 			Logs.of(ModelDao.class).log(Level.WARNING, e, () -> "Unable to load test case " + locator);
@@ -131,8 +141,9 @@ public class ModelDao implements IModelDao {
 	}
 
 	@Override
-	public void writeTestCase(String locator, TestCase tc) {
-		uncheck("Writing of test case", () -> testCaseRepo.saveOrUpdate(locator, (ExportableTestCase) tc));
+	public void writeTestCase(String locator, ExportableTestCase tc) {
+		tc.setPreferredDictionary(tc.getDictionary().getClassifier());
+		uncheck("Writing of test case", () -> testCaseRepo.saveOrUpdate(locator, tc));
 	}
 
 	@Override

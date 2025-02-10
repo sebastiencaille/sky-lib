@@ -32,34 +32,34 @@ class ControllerExampleTest {
 
 		final var page = pilot.page(ControllerExamplePage::new);
 
-		page.booleanEditor.setSelected(true);
+		page.booleanEditor.failUnless().setSelected(true);
 		page.booleanEditorCheck.assertEnabled();
-		page.booleanEditor.setSelected(false);
+		page.booleanEditor.failUnless().setSelected(false);
 		page.booleanEditorCheck.assertDisabled();
 
-		page.intStringEditor.setText("123");
-		page.intCheck.assertTextEquals("123");
-		page.intStringEditor.setText("abc");
-		page.intCheck.assertTextEquals("123");
-		page.intStringEditor.fail("foreground color should be RED").ifNot()
+		page.intStringEditor.failUnless().setText("123");
+		page.intCheck.failUnless().assertTextEquals("123");
+		page.intStringEditor.failUnless().setText("abc");
+		page.intCheck.failUnless().assertTextEquals("123");
+		page.intStringEditor.fail("foreground color should be RED").unless()
 				.satisfied(c -> c.getForeground() == Color.RED);
 
-		page.staticListEditor.select("A");
-		page.staticListSelectionCheck.assertTextEquals("A");
-		page.dynamicListEditor.select("C");
-		page.dynamicListSelectionCheck.assertTextEquals("C");
+		page.staticListEditor.failUnless().select("A");
+		page.staticListSelectionCheck.failUnless().assertTextEquals("A");
+		page.dynamicListEditor.failUnless().select("C");
+		page.dynamicListSelectionCheck.failUnless().assertTextEquals("C");
 
-		page.staticListEditor.select("B");
-		page.staticListSelectionCheck.assertTextEquals("B");
-		page.dynamicListEditor.assertSelected("C");
-		page.dynamicListSelectionCheck.assertTextEquals("C");
+		page.staticListEditor.failUnless().select("B");
+		page.staticListSelectionCheck.failUnless().assertTextEquals("B");
+		page.dynamicListEditor.failUnless().assertSelected("C");
+		page.dynamicListSelectionCheck.failUnless().assertTextEquals("C");
 
-		page.tableSelectionEditor.selectRow(0);
-		page.tableSelectionCheck.assertTextEquals("Hello");
-		page.tableSelectionEditor.selectRow(1);
-		page.tableSelectionCheck.assertTextEquals("World");
-		page.tableSelectionEditor.editValueOnSelectedRow(0, "Bouh");
-		page.tableSelectionCheck.assertTextEquals("Bouh");
+		page.tableSelectionEditor.failUnless().selectRow(0);
+		page.tableSelectionCheck.failUnless().assertTextEquals("Hello");
+		page.tableSelectionEditor.failUnless().selectRow(1);
+		page.tableSelectionCheck.failUnless().assertTextEquals("World");
+		page.tableSelectionEditor.failUnless().editValueOnSelectedRow(0, "Bouh");
+		page.tableSelectionCheck.failUnless().assertTextEquals("Bouh");
 
 		Logs.of(this).info(pilot.getActionReport().getFormattedReport());
 	}

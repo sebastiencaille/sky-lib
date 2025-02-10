@@ -22,7 +22,7 @@ public class MainFrameAction {
 	}
 
 	public void execute(TCWriterPage page, final TCGuiPilot guiPilot) {
-		Runnable buttonClick = () -> button.apply(page).click();
+		Runnable buttonClick = () -> button.apply(page).failUnless().click();
 		if (dialogHandler != null) {
 			dialogHandler.accept(guiPilot, buttonClick);
 		} else {

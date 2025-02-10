@@ -1,5 +1,25 @@
 # MVC POC
 
+The model/ui related code is located in the project [[lib-gui](lib-gui) | [lib-gui-examples](lib-gui-examples)].
+
+The testing related code is located in the project [[lib-testing](lib-testing)].
+
+# Testing
+
+When developing end 2 end tests, the main challenge is to wait until actions can be performed / values can be validated.
+
+This can be done by try to perform actions / assertions many times. The following construction can be used:
+```java
+element.failUnless().clicked();
+element.fail("Click failed").timingOut(Duration.ofSeconds(10)).unless().clicked();
+element.failUnless().satisfied(JComponent::isEnabled);
+
+boolean clicked = element.evaluateThat().clicked();
+boolean clicked = element.evaluate().timingOut(Duration.ofSeconds(10)).that().clicked();
+boolean clicked = element.report("Click failed").unless().clicked();
+```
+
+
 # Model Properties
 
 **Key points**
@@ -79,7 +99,7 @@ model.editValue(toMove, v -> v.val = 2);
 
 checkModel(childModel, 1, 2, 3);
 ```
-It's possible to control the filter using the MVC concept  [[Code](lib-gui-examples/src/main/java/ch/scaille/example/gui/model/impl/TableModelExampleView.java)]
+It is possible to control the filter using the MVC concept  [[Code](lib-gui-examples/src/main/java/ch/scaille/example/gui/model/impl/TableModelExampleView.java)]
 
 ```java
 final DynamicView listDynamicView = new DynamicView();

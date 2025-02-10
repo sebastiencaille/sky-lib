@@ -21,13 +21,13 @@ import ch.scaille.tcwriter.pilot.factories.Pollings;
  * To build a polling
  * <p>
  * The idea is to
- * <ol> 
+ * <ol>
  * <li>Create a PollingBuilder on a component.</li>
  * <li>Specifies how a failure is handled.</li>
  * <li>Configure the poller.</li>
  * <li>Execute the polling.</li>
  * </ol>
- * Example: on(myComponent).fail().ifNot().clicked();
+ * Example: on(myComponent).failUnless().clicked();
  * </p>
  * 
  * @param <C> the Component type
@@ -89,15 +89,43 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, U>, U extends Poll
 
 	private FailureHandler<C, ?> failureHandler;
 
-	public PollingBuilder(AbstractComponentPilot<C> pilot) {
-		this.pilot = pilot;
+	public class Configurer<F> {
+
+		public F withConfig(Consumer<Polling<C, ?>> configurer) {
+			configurers.add(configurer);
+			return (F) this;
+		}
+
+		public F timingOut(Duration timeout) {
+			withConfig(polling -> polling.withDelay(timeout));
+			return (F) this;
+		}
+
 	}
 
-	public T configure(Consumer<Polling<C, ?>> configurer) {
-		configurers.add(configurer);
-		return (T) this;
+	public class UnlessConfigurer extends Configurer<UnlessConfigurer> {
+
+		public U unless() {
+			return createPoller();
+		}
+
 	}
 
+	public class ThatConfigurer extends Configurer<ThatConfigurer> {
+
+		/**
+		 * Waits until a condition is applied
+		 */
+		public U that() {
+			return createPoller();
+		}
+
+	}
+
+	protected U createPoller() {
+		return (U) new Poller<>(this);
+	}
+	
 	protected <R> PollingResult<C, R> poll(final Polling<C, R> polling) {
 		configurers.forEach(conf -> conf.accept(polling));
 		final var pollingResult = pilot.processResult(pilot.waitPollingSuccess(polling), PollingResults.identity(),
@@ -106,60 +134,58 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, U>, U extends Poll
 		return pollingResult;
 	}
 
+	public PollingBuilder(AbstractComponentPilot<C> pilot) {
+		this.pilot = pilot;
+	}
+
 	public void reset() {
 		failureHandler = null;
 		configurers.clear();
 	}
-	
+
 	/**
-	 * Waits until a condition is applied, throwing a java assertion error in case of
-	 * failure
+	 * Waits until a condition is applied, throwing a java assertion error in case
+	 * of failure
 	 */
-	public T fail() {
+	public UnlessConfigurer fail() {
 		this.failureHandler = FailureHandlers.throwError();
-		return (T) this;
+		return new UnlessConfigurer();
 	}
 
 	/**
-	 * Waits until a condition is applied, throwing a java assertion error in case of
-	 * failure
+	 * Waits until a condition is applied, throwing a java assertion error in case
+	 * of failure
+	 * 
 	 * @param assertion the text of the assertion
 	 */
-	public T fail(String assertion) {
+	public UnlessConfigurer fail(String assertion) {
 		this.failureHandler = FailureHandlers.throwError(assertion);
-		return (T) this;
+		return new UnlessConfigurer();
 	}
 
-	public T fail(ReportFunction<C> reportFunction) {
-		configure(polling -> polling.withReportFunction(reportFunction));
-		return fail();
+	public UnlessConfigurer fail(ReportFunction<C> reportFunction) {
+		return fail().withConfig(polling -> polling.withReportFunction(reportFunction));
 	}
-	
+
+	public U failUnless() {
+		return fail().unless();
+	}
+
 	/**
-	 * Waits until a condition is applied, skipping the error in case of
-	 * failure
+	 * Waits until a condition is applied, skipping the error in case of failure
 	 */
-	public T eval() {
+	public ThatConfigurer evaluate() {
 		this.failureHandler = FailureHandlers.ignoreFailure();
-		return (T) this;
+		return new ThatConfigurer();
 	}
 
-	public T eval(Duration timeout) {
-		configure(polling -> polling.withTimeout(timeout));
-		this.failureHandler = FailureHandlers.ignoreFailure();
-		return (T) this;
+	public U evaluateThat() {
+		return evaluate().that();
 	}
 
-	public T report(String report) {
+	public UnlessConfigurer report(String report) {
 		this.failureHandler = FailureHandlers.reportFailure(report);
-		return (T) this;
-	}
-
-	/**
-	 * 
-	 */
-	public U ifNot() {
-		return (U) new Poller<>(this);
+		return new UnlessConfigurer();
 	}
 
 }

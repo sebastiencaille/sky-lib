@@ -52,16 +52,16 @@ public class SeleniumPollingBuilder extends
 	}
 
 	@Override
-	public WebElementPoller ifNot() {
+	protected WebElementPoller createPoller() {
 		return new WebElementPoller(this);
 	}
 
 	public void click() {
-		fail().ifNot().clicked();
+		failUnless().clicked();
 	}
 
 	public void assertPresent() {
-		fail().ifNot().present();
+		failUnless().present();
 	}
 
 }

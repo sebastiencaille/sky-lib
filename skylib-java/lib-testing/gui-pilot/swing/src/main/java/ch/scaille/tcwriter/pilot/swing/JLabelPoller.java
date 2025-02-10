@@ -14,7 +14,7 @@ public class JLabelPoller extends SwingPollingBuilder<JLabel, JLabelPoller, JLab
 			super(builder);
 		}
 
-		public void textEquals(final String expected) {
+		public void assertTextEquals(final String expected) {
 			configure(polling -> polling.withReportText(Reporting.checkingValue(expected))).asserted(
 					pc -> Assertions.assertEquals(expected, pc.getComponent().getText(), pc.getDescription()));
 		}
@@ -26,12 +26,8 @@ public class JLabelPoller extends SwingPollingBuilder<JLabel, JLabelPoller, JLab
 	}
 
 	@Override
-	public SwingPoller ifNot() {
+	protected SwingPoller createPoller() {
 		return new SwingPoller(this);
-	}
-
-	public void assertTextEquals(final String expected) {
-		fail().ifNot().textEquals(expected);
 	}
 
 }

@@ -53,28 +53,7 @@ public class JTablePoller extends SwingPollingBuilder<JTable, JTablePoller, JTab
 	}
 	
 	@Override
-	public SwingPoller ifNot() {
+	protected SwingPoller createPoller() {
 		return new SwingPoller(this);
 	}
-	
-	public void selectRow(final int index) {
-		fail().ifNot().selectRow(index);
-	}
-
-	public void editValue(final int row, final int column, final String value) {
-		fail().ifNot().editValue(row, column, value);
-	}
-
-	public void editValueOnSelectedRow(final int column, final String value) {
-		fail().ifNot().editValueOnSelectedRow(column, value);
-	}
-
-	public void assertValue(final int row, final int column, final String expected) {
-		fail().ifNot().assertValue(row, column, expected);
-	}
-
-	public void assertValueOnSelectedRow(final int column, final String expected) {
-		fail().ifNot().assertValueOnSelectedRow(column, expected);
-	}
-
 }

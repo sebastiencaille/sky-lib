@@ -41,7 +41,7 @@ public class ControllerExampleObjectGuiModel extends GuiModel implements IObject
 	protected final AbstractProperty[] allProperties;
 	
     public ControllerExampleObjectGuiModel(final String prefix, ModelConfiguration config) {
-		super(config.ifNotSet(()->	GuiModel.createErrorProperty(prefix + "ControllerExampleObject-Error", config)));
+		super(config.unlessSet(()->	GuiModel.createErrorProperty(prefix + "ControllerExampleObject-Error", config)));
 		booleanPropProperty = new BooleanProperty(prefix + BOOLEAN_PROP, this).configureTyped(
 			Configuration.persistent(currentObjectProvider, Persisters.persister(ControllerExampleObject::isBooleanProp, ControllerExampleObject::setBooleanProp)),
 			implicitConverters(ControllerExampleObject.class, BOOLEAN_PROP, java.lang.Boolean.class));

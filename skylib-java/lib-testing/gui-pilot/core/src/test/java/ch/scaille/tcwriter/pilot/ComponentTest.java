@@ -57,7 +57,7 @@ class ComponentTest {
 		final var pilot = new GuiPilot();
 		final var testComponent = new TestComponent(pilot);
 		final var poller = new PollingBuilder<>(testComponent);
-		final var waitResult = poller.eval().ifNot().satisfied(c -> false);
+		final var waitResult = poller.evaluateThat().satisfied(c -> false);
 		Assertions.assertFalse(waitResult);
 		Assertions.assertEquals(6, testComponent.delays.size(), testComponent.delays.toString());
 	}
@@ -68,9 +68,9 @@ class ComponentTest {
 		final var pilot = new GuiPilot();
 		final var testComponent = new TestComponent(pilot);
 		final var poller = new PollingBuilder<>(testComponent);
-		final var successResult = poller.fail().ifNot().get(o -> TEST_TEXT);
+		final var successResult = poller.failUnless().get(o -> TEST_TEXT);
 		Assertions.assertEquals(TEST_TEXT, successResult.get());
-		final var failureResult = poller.eval(Duration.ofMillis(10)).ifNot().get(o -> null);
+		final var failureResult = poller.evaluate().timingOut(Duration.ofMillis(10)).that().get(o -> null);
 		Assertions.assertTrue(failureResult.isEmpty());
 	}
 

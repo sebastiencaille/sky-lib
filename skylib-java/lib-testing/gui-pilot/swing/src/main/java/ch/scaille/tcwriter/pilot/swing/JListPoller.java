@@ -62,15 +62,8 @@ public class JListPoller extends SwingPollingBuilder<JList, JListPoller, JListPo
 	}
 
 	@Override
-	public SwingPoller ifNot() {
+	protected SwingPoller createPoller() {
 		return new SwingPoller(this);
 	}
 
-	public void select(final String value) {
-		fail().ifNot().select(value);
-	}
-
-	public void assertSelected(final String expected) {
-		fail().ifNot().assertSelected(expected);
-	}
 }

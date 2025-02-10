@@ -42,10 +42,10 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	@Override
 	public void doEditStep(final StepSelector selector, final StepEdition edition) {
 		selector.accept(tcWriterPage);
-		tcWriterPage.actors.select(edition.getActor());
-		tcWriterPage.actions.select(edition.getAction());
-		tcWriterPage.selectors.select(edition.getSelector());
-		tcWriterPage.parameters0.select(edition.getParameter());
+		tcWriterPage.actors.failUnless().select(edition.getActor());
+		tcWriterPage.actions.failUnless().select(edition.getAction());
+		tcWriterPage.selectors.failUnless().select(edition.getSelector());
+		tcWriterPage.parameters0.failUnless().select(edition.getParameter());
 	}
 
 	@Override
@@ -55,16 +55,16 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	}
 
 	private void applyStepEdition() {
-		tcWriterPage.applyStep.click();
+		tcWriterPage.applyStep.failUnless().click();
 	}
 
 	@Override
 	public void doAssertStepContent(final StepSelector selector, final StepEdition edition) {
 		selector.accept(tcWriterPage);
-		tcWriterPage.actors.assertSelected(edition.getActor());
-		tcWriterPage.actions.assertSelected(edition.getAction());
-		tcWriterPage.selectors.assertSelected(edition.getSelector());
-		tcWriterPage.parameters0.assertSelected(edition.getParameter());
+		tcWriterPage.actors.failUnless().assertSelected(edition.getActor());
+		tcWriterPage.actions.failUnless().assertSelected(edition.getAction());
+		tcWriterPage.selectors.failUnless().assertSelected(edition.getSelector());
+		tcWriterPage.parameters0.failUnless().assertSelected(edition.getParameter());
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 
 		tcWriterPage.stepsTable
 				.fail("checking human readable text: " + humanReadable)
-				.ifNot()
+				.unless()
 				.asserted(pc -> {
 					final var component = pc.getComponent();
 					final var value = ((StepsTableModel) component.getModel())
@@ -89,7 +89,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	public void doUpdateParameter(final ParameterSelector selector, final ParameterValue value) {
 		selector.apply(tcWriterPage)
 				.fail(Reporting.settingValue("parameter", value))
-				.ifNot()
+				.unless()
 				.appliedCtxt(context -> updateParameterValues(context, value));
 
 		applyStepEdition();

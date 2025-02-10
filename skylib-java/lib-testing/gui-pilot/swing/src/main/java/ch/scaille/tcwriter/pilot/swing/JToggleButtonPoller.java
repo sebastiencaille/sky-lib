@@ -5,16 +5,19 @@ import static ch.scaille.tcwriter.pilot.factories.Reporting.checkingThat;
 import javax.swing.AbstractButton;
 import javax.swing.JToggleButton;
 
-public class JToggleButtonPoller extends SwingPollingBuilder<JToggleButton, JToggleButtonPoller, JToggleButtonPoller.SwingPoller> {
+public class JToggleButtonPoller
+		extends SwingPollingBuilder<JToggleButton, JToggleButtonPoller, JToggleButtonPoller.SwingPoller> {
 
-	public static class SwingPoller extends ch.scaille.tcwriter.pilot.swing.SwingPollingBuilder.SwingPoller<JToggleButton> {
+	public static class SwingPoller
+			extends ch.scaille.tcwriter.pilot.swing.SwingPollingBuilder.SwingPoller<JToggleButton> {
 
 		protected SwingPoller(JToggleButtonPoller builder) {
 			super(builder);
 		}
 
 		public boolean isSelected(final boolean expected) {
-			return configure(polling -> polling.withReportText(checkingThat("component is " + (expected ? "selected" : "not selected"))))
+			return configure(polling -> polling
+					.withReportText(checkingThat("component is " + (expected ? "selected" : "not selected"))))
 					.satisfied(AbstractButton::isSelected);
 		}
 
@@ -23,22 +26,14 @@ public class JToggleButtonPoller extends SwingPollingBuilder<JToggleButton, JTog
 					.applied(c -> c.setSelected(selected));
 		}
 	}
-	
-		public JToggleButtonPoller(SwingPilot pilot, String name) {
-			super(new SwingComponentPilot<>(pilot, JToggleButton.class, name));
-		}
-	
+
+	public JToggleButtonPoller(SwingPilot pilot, String name) {
+		super(new SwingComponentPilot<>(pilot, JToggleButton.class, name));
+	}
+
 	@Override
-	public SwingPoller ifNot() {
+	protected SwingPoller createPoller() {
 		return new SwingPoller(this);
-	}
-
-	public void assertSelected(final boolean expected) {
-		fail().ifNot().isSelected(expected);
-	}
-
-	public void setSelected(final boolean selected) {
-		fail().ifNot().setSelected(selected);
 	}
 
 }

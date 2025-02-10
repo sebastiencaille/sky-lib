@@ -34,7 +34,7 @@ public class TestObjectGuiModel extends GuiModel implements IObjectGuiModel<ch.s
 	protected final AbstractProperty[] allProperties;
 	
     public TestObjectGuiModel(final String prefix, ModelConfiguration config) {
-		super(config.ifNotSet(()->	GuiModel.createErrorProperty(prefix + "TestObject-Error", config)));
+		super(config.unlessSet(()->	GuiModel.createErrorProperty(prefix + "TestObject-Error", config)));
 		aSecondValueProperty = new IntProperty(prefix + ASECOND_VALUE, this).configureTyped(
 			Configuration.persistent(currentObjectProvider, Persisters.persister(TestObject::getASecondValue, TestObject::setASecondValue)),
 			implicitConverters(TestObject.class, ASECOND_VALUE, java.lang.Integer.class));

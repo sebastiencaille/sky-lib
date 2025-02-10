@@ -33,35 +33,35 @@ class ModelExampleTest {
 
 		var page = pilot.page(ModelExamplePage::new);
 
-		page.listTable.fail().ifNot().asserted(context -> {
+		page.listTable.failUnless().asserted(context -> {
 			final var component = context.getComponent();
 			Assertions.assertEquals(FIXED_COLUMN_WIDTH, component.getColumn(TestObjectTableModel.Columns.A_SECOND_VALUE).getWidth());
 			Assertions.assertEquals(component.getWidth() - FIXED_COLUMN_WIDTH, component.getColumn(TestObjectTableModel.Columns.A_FIRST_VALUE).getWidth());
 		});
-		page.listTable.assertValue(0, 0, "One");
-		page.listTable.assertValue(1, 0, "Two");
-		page.listTable.assertValue(2, 0, "Three");
-		page.listTable.assertValue(3, 0, "Four");
+		page.listTable.failUnless().assertValue(0, 0, "One");
+		page.listTable.failUnless().assertValue(1, 0, "Two");
+		page.listTable.failUnless().assertValue(2, 0, "Three");
+		page.listTable.failUnless().assertValue(3, 0, "Four");
 
-		page.reverseOrder.setSelected(true);
-		page.listTable.assertValue(3, 0, "One");
-		page.listTable.assertValue(2, 0, "Two");
-		page.listTable.assertValue(1, 0, "Three");
-		page.listTable.assertValue(0, 0, "Four");
+		page.reverseOrder.failUnless().setSelected(true);
+		page.listTable.failUnless().assertValue(3, 0, "One");
+		page.listTable.failUnless().assertValue(2, 0, "Two");
+		page.listTable.failUnless().assertValue(1, 0, "Three");
+		page.listTable.failUnless().assertValue(0, 0, "Four");
 
-		page.enableFilter.setSelected(true);
-		page.listTable.assertValue(1, 0, "Two");
-		page.listTable.assertValue(0, 0, "Four");
+		page.enableFilter.failUnless().setSelected(true);
+		page.listTable.failUnless().assertValue(1, 0, "Two");
+		page.listTable.failUnless().assertValue(0, 0, "Four");
 
-		page.reverseOrder.setSelected(false);
-		page.listTable.assertValue(0, 0, "Two");
-		page.listTable.assertValue(1, 0, "Four");
+		page.reverseOrder.failUnless().setSelected(false);
+		page.listTable.failUnless().assertValue(0, 0, "Two");
+		page.listTable.failUnless().assertValue(1, 0, "Four");
 
-		page.enableFilter.setSelected(false);
-		page.listTable.assertValue(0, 0, "One");
-		page.listTable.assertValue(1, 0, "Two");
-		page.listTable.assertValue(2, 0, "Three");
-		page.listTable.assertValue(3, 0, "Four");
+		page.enableFilter.failUnless().setSelected(false);
+		page.listTable.failUnless().assertValue(0, 0, "One");
+		page.listTable.failUnless().assertValue(1, 0, "Two");
+		page.listTable.failUnless().assertValue(2, 0, "Three");
+		page.listTable.failUnless().assertValue(3, 0, "Four");
 
 		Logs.of(this).info(pilot.getActionReport().getFormattedReport());
 	}

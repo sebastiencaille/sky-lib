@@ -21,12 +21,8 @@ public class JButtonPoller extends SwingPollingBuilder<JButton, JButtonPoller, J
 	}
 
 	@Override
-	public SwingPoller ifNot() {
+	protected SwingPoller createPoller() {
 		return new SwingPoller(this);
-	}
-
-	public void click() {
-		fail().ifNot().click();
 	}
 
 }

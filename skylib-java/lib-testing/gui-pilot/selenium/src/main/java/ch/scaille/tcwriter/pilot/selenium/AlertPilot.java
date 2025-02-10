@@ -40,7 +40,7 @@ public class AlertPilot extends AbstractComponentPilot<Alert> {
 	public void doAcknowledge() {
 		new PollingBuilder<>(this)
 				.fail((context, text) -> "Acknowledging alert: " + context.getComponent().getText())
-				.ifNot()
+				.unless()
 				.applied((Alert::accept));
 	}
 

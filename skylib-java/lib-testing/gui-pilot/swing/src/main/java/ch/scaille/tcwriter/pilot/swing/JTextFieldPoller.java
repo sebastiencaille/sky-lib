@@ -36,7 +36,7 @@ public class JTextFieldPoller
 			});
 		}
 
-		public void assertTextValue(final String expected) {
+		public void assertTextEquals(final String expected) {
 			if (expected == null) {
 				return;
 			}
@@ -57,19 +57,8 @@ public class JTextFieldPoller
 	}
 
 	@Override
-	public SwingPoller ifNot() {
+	protected SwingPoller createPoller() {
 		return new SwingPoller(this);
 	}
 	
-	/**
-	 * Select a value in a list, according to its String representation
-	 */
-	public void setText(final String value) {
-		fail().ifNot().setText(value);
-	}
-
-	public void assertTextValue(final String expected) {
-		fail().ifNot().assertTextValue(expected);
-	}
-
 }

@@ -5,11 +5,11 @@ The key to write business oriented test cases is to have adequate test APIs.
 The idea is to have 
 * Actors, each actor having a Role
 * Each Role contains Actions
-* Those Actions are made of
+* Actions are made of
   * the Action itself
   * a Selection operation (aka Selector), used to select the element targeted by the action
-  * the action's Parameters 
-* Factories to create business oriented Selectors and Parameters
+  * the Action's Parameters 
+* Factories, to create business oriented Selectors and Parameters
 
 *Example*
 
@@ -17,8 +17,8 @@ The idea is to have
 
 # Actions/Selectors/Parameters
 
-The Actions are methods defined by the Role classes  
-The idea is to combine the Actions, Selectors and Parameters to perform many different actions.    
+The Actions are methods defined by the Role classes.
+The idea is to combine the Actions, Selectors and Parameters to perform many different operations.    
 Some basic actions could be "edit", "check" and "delete"  
 Some selectors could be "create", "find", "current"  
 Let's consider that we have the data data1 and data2  
@@ -26,11 +26,11 @@ By combining the actions, we can
 
 | Code                    | Meaning                                               |
 |-------------------------|-------------------------------------------------------|
-| edit(create(i1), data2) | Creates an item i1 and fills it using data2           |
-| edit(current(), data1)  | Edits the selected item (i1) and fills it using data1 |
-| edit(create(i2), data2) | Creates an item i2 and fills it using data2           |
-| check(find(i1), data1)  | Checks that the content of i1 has data1               |
-| check(find(i2), data2)  | Checks that the content of i2 has data2               |
+| edit(create(i1), data1) | Creates an item i1 and fills it using data1           |
+| edit(current(), data2)  | Edits the selected item (i1) and fills it using data2 |
+| edit(create(i2), data1) | Creates an item i2 and fills it using data1           |
+| check(find(i1), data2)  | Checks that the content of i1 has data2               |
+| check(find(i2), data1)  | Checks that the content of i2 has data1               |
 | delete(find(i1))        | Deletes i1                                            |
 | delete(find(i2))        | Deletes i2                                            |
 

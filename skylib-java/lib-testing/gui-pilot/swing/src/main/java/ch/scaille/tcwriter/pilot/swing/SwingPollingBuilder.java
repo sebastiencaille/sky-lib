@@ -31,11 +31,11 @@ public class SwingPollingBuilder<C extends JComponent, T extends SwingPollingBui
 	}
 
 	public void assertEnabled() {
-		fail().ifNot().enabled();
+		failUnless().enabled();
 	}
 
 	public void assertDisabled() {
-		fail().ifNot().disabled();
+		failUnless().disabled();
 	}
 
 }

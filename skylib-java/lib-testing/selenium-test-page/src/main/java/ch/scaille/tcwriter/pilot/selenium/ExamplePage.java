@@ -84,7 +84,9 @@ public class ExamplePage extends PagePilot {
 	 * until "Proceed" is enabled
 	 */
 	public void executeEnable() {
-		on(elementToBeClickable(ENABLE_TEST)).configure(p -> p.andThen(new WaitEnableTestEnabledDelay())).click();
+		on(elementToBeClickable(ENABLE_TEST)).fail()
+			.withConfig(p -> p.andThen(new WaitEnableTestEnabledDelay()))
+			.unless().clicked();
 	}
 
 	public void assertedEnabledTested() {
@@ -97,9 +99,9 @@ public class ExamplePage extends PagePilot {
 
 	public void clickOnMissingButton() {
 		Assertions.assertFalse(
-				on(visibilityOfElementLocated(NOT_EXISTING)).report("isSatisfied should have returned false")
-						.ifNot()
-						.satisfied(Pollings.<WebElement>exists().withTimeout(Duration.ofMillis(500))));
+				on(visibilityOfElementLocated(NOT_EXISTING))
+					.report("isSatisfied should have returned false").unless()
+					.satisfied(Pollings.<WebElement>exists().withTimeout(Duration.ofMillis(500))));
 	}
 
 	/**
@@ -122,10 +124,10 @@ public class ExamplePage extends PagePilot {
 
 	public void assertElementChange() throws InterruptedException {
 		final EventWaiter<TestEvents> eventsWaiter = helloEventListener.expect(h -> h.size() == 2);
-		on(elementToBeClickable(ELEMENT_CHANGE_TEST)).fail().ifNot().clicked();
+		on(elementToBeClickable(ELEMENT_CHANGE_TEST)).failUnless().clicked();
 		// Explicitly test using WebElement as source
 		eventsWaiter.assertMatches();
-		on(visibilityOfElementLocated(ELEMENT_CHANGE)).fail().ifNot().textEquals("Hello again");
+		on(visibilityOfElementLocated(ELEMENT_CHANGE)).failUnless().textEquals("Hello again");
 	}
 
 }

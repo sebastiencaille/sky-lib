@@ -18,7 +18,7 @@ public interface StepSelector extends Consumer<TCWriterPage> {
 			final var stepsTable = page.stepsTable;
 			stepsTable.fail(checkingThat("the step " + ordinal + " exists"))
 					.unless()
-					.asserted(pc -> assertTrue(tableIndex < pc.getComponent().getRowCount(), "Step must exist"));
+					.asserted(component -> assertTrue(tableIndex < component.getRowCount(), "Step must exist"));
 			stepsTable.failUnless().selectRow(tableIndex);
 		};
 
@@ -44,7 +44,7 @@ public interface StepSelector extends Consumer<TCWriterPage> {
 	static StepSelector currentStep() {
 		return page -> page.stepsTable.fail(checkingThat("a step is selected"))
 				.unless()
-				.asserted(pc -> assertTrue(pc.getComponent().getSelectedRowCount() > 0));
+				.asserted(component -> assertTrue(component.getSelectedRowCount() > 0));
 	}
 
 }

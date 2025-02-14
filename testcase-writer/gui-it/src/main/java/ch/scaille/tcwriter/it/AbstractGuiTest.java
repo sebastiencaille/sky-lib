@@ -77,6 +77,7 @@ public class AbstractGuiTest {
 		// Setup data
 		final var dictionary = new JavaToDictionary("gui-it", TestWriterRole.class, TestSessionRole.class, AbstractGuiTest.class)
 				.generate();
+		dictionary.getMetadata().setDescription("Basic tcwriter tests");
 		persister.writeTestDictionary(dictionary);
 
 		final var controller = new TCWriterController(configDao, persister, dictionary, executor);
@@ -98,7 +99,7 @@ public class AbstractGuiTest {
 			return;
 		}
 		final var recordedTest = testRecorder.buildTestCase(testInfo.getTestMethod().map(Method::getName).get());
-		Logs.of(getClass()).info(new HumanReadableVisitor(recordedTest, false).processAllSteps());
+		Logs.of(getClass()).info(() -> new HumanReadableVisitor(recordedTest, false).processAllSteps());
 		
 		pilot.close();
 		Logs.of(getClass()).info(pilot.getActionReport().getFormattedReport());

@@ -69,7 +69,11 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, U>, U extends Poll
 			return satisfied(appliesCtxt(consumer));
 		}
 
-		public boolean asserted(Consumer<PollingContext<C>> assertion) {
+		public boolean asserted(Consumer<C> assertion) {
+			return applied(assertion);
+		}
+		
+		public boolean assertedCtxt(Consumer<PollingContext<C>> assertion) {
 			return appliedCtxt(assertion);
 		}
 

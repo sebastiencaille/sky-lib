@@ -3,12 +3,14 @@ package ch.scaille.tcwriter.it;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
 
 import ch.scaille.tcwriter.pilot.selenium.PagePilot;
 import ch.scaille.tcwriter.pilot.selenium.SeleniumPilot;
+import ch.scaille.util.helpers.LambdaExt;
 
 public class MainPage extends PagePilot {
 
@@ -30,11 +32,12 @@ public class MainPage extends PagePilot {
 
 	/**
 	 * To select the application context
-	 * @param selector the context selector (drop down)
+	 * 
+	 * @param selector          the context selector (drop down)
 	 * @param selectorSelection the selection on the selector
-	 * @param applier the button that applies the selection
+	 * @param button            the button that applies the selection
 	 */
-	public record ContextSelector(WebElement selector, Consumer<WebElement> selectorSelection, WebElement applier) {
+	public record ContextSelector(WebElement selector, Consumer<WebElement> selectorSelection, WebElement button) {
 	}
 
 	public static Function<MainPage, ContextSelector> dictionary(String name) {
@@ -43,14 +46,18 @@ public class MainPage extends PagePilot {
 	}
 
 	public static Function<MainPage, ContextSelector> currentTestCase() {
-		return mp -> new ContextSelector(mp.testCaseSelector, e -> {
-			// noop
-		}, mp.testCaseSelect);
+		return mp -> new ContextSelector(mp.testCaseSelector, e -> LambdaExt.doNothing(), mp.testCaseSelect);
 	}
 
-	public void assertSelected(Function<MainPage, ContextSelector> selector) {
-		on(() -> selector.apply(this).selector).failUnless().applied(selector.apply(this).selectorSelection);
-		on(() -> selector.apply(this).applier).failUnless().clicked();
+	public void select(Function<MainPage, ContextSelector> selector) {
+		on(() -> selector.apply(this).selector).failUnless()
+				.asserted(element -> Assertions.assertNotEquals("", element.getText()));
+		on(() -> selector.apply(this).button).failUnless().clicked();
+	}
+
+	public void assertAvailable(Function<MainPage, ContextSelector> selector) {
+		on(() -> selector.apply(this).selector).failUnless()
+				.asserted(element -> Assertions.assertNotEquals("", element.getText()));
 	}
 
 }

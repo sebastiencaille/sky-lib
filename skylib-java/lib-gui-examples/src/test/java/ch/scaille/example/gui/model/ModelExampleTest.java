@@ -33,8 +33,7 @@ class ModelExampleTest {
 
 		var page = pilot.page(ModelExamplePage::new);
 
-		page.listTable.failUnless().asserted(context -> {
-			final var component = context.getComponent();
+		page.listTable.failUnless().asserted(component -> {
 			Assertions.assertEquals(FIXED_COLUMN_WIDTH, component.getColumn(TestObjectTableModel.Columns.A_SECOND_VALUE).getWidth());
 			Assertions.assertEquals(component.getWidth() - FIXED_COLUMN_WIDTH, component.getColumn(TestObjectTableModel.Columns.A_FIRST_VALUE).getWidth());
 		});

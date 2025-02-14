@@ -35,13 +35,15 @@ export default function App() {
 
 	// On mount
 	useEffect(() => {
+		if (allDictionaries.length > 0) {
+			return;
+		}
 		WebApis.listAllDictionaries((allMetaData) => setAllDictionaries(allMetaData));
-		WebApis.loadCurrentContext((ctxt) => {
-			contextUpdater(contextUpdate(ctxt));
-		});
+		WebApis.loadCurrentContext((ctxt) => contextUpdater(contextUpdate(ctxt)));
 	}, [contextUpdater])
 
-
+	// Loads the dictionary when selected
+	// TODO: 404 should clear the dictionary
 	useEffect(() => {
 		if (userContext.dictionary && userContext.dictionary !== currentDictionary?.metadata.transientId) {
 			WebApis.loadDictionary(userContext.dictionary, dict => setCurrentDictionary(Mappers.enhanceDictionary(dict)));
@@ -61,6 +63,7 @@ export default function App() {
 		}
 	}, [currentDictionary, currentTestCase?.metadata.transientId, userContext]);
 
+	// When a dictionary is selected
 	const dictionaryChanged = useCallback((metadata?: Metadata) => {
 		if (!metadata) {
 			return;

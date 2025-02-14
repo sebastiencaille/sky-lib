@@ -214,7 +214,7 @@
 					<artifactId>versions-maven-plugin</artifactId>
 					<version>${versions-maven-plugin.version}</version>
 					<configuration>
-						<ignoredVersions>.*-M.*,.*-[Aa]lpha.*,.*-[Bb]eta.*, .*-RC.*</ignoredVersions>
+						<ignoredVersions>.*-M.*,.*-[Aa]lpha.*,.*-[Bb]eta.*,.*-RC.*</ignoredVersions>
 						<onlyProjectDependencies>true</onlyProjectDependencies>
 					</configuration>
 				</plugin>

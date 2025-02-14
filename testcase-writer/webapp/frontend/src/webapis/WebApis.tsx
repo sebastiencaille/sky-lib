@@ -75,8 +75,8 @@ function wrap(promise: Promise<void | object>): void {
 
 function mapUserContextFromBackend(context: Context) {
 	return {
-		dictionary: context.dictionary || null,
-		testCase: context.testCase || null
+		dictionary: context.dictionary?? null,
+		testCase: context.testCase ?? null
 	};
 }
 

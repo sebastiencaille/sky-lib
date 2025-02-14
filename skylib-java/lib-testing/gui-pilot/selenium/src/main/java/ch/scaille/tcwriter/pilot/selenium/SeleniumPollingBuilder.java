@@ -41,7 +41,7 @@ public class SeleniumPollingBuilder extends
 		}
 
 		public boolean textEquals(String text) {
-			return asserted(context -> Assertions.assertEquals(text, context.getComponent().getText(),
+			return asserted(component -> Assertions.assertEquals(text, component.getText(),
 					"text equals '" + text + "'"));
 		}
 

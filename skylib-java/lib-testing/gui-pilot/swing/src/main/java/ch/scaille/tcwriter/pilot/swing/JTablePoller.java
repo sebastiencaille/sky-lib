@@ -36,13 +36,13 @@ public class JTablePoller extends SwingPollingBuilder<JTable, JTablePoller, JTab
 
 		public void assertValue(final int row, final int column, final String expected) {
 			configure(polling -> polling.withReportText(checkingValue("at row/column " + row + '/' + column, expected)))
-					.asserted(pc -> Assertions.assertEquals(expected, pc.getComponent().getValueAt(row, column),
+					.assertedCtxt(pc -> Assertions.assertEquals(expected, pc.getComponent().getValueAt(row, column),
 							pc.getDescription()));
 		}
 
 		public void assertValueOnSelectedRow(final int column, final String expected) {
 			configure(polling -> polling.withReportText(checkingValue("at selected row, column " + column, expected)))
-					.asserted(pc -> Assertions.assertEquals(expected,
+					.assertedCtxt(pc -> Assertions.assertEquals(expected,
 							pc.getComponent().getValueAt(pc.getComponent().getSelectedRow(), column),
 							pc.getDescription()));
 		}

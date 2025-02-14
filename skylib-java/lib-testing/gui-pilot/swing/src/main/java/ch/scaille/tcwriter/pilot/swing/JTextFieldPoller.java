@@ -40,7 +40,7 @@ public class JTextFieldPoller
 			if (expected == null) {
 				return;
 			}
-			configure(polling -> polling.withReportText(checkingValue(expected))).asserted(
+			configure(polling -> polling.withReportText(checkingValue(expected))).assertedCtxt(
 					pc -> Assertions.assertEquals(expected, pc.getComponent().getText(), pc.getDescription()));
 		}
 

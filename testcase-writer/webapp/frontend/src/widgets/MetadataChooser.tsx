@@ -14,8 +14,8 @@ export default function MetadataChooser(props: Readonly<IMetadataChooserProps>) 
 
     useEffect(() => {
 
-        let current: Metadata | undefined = undefined;
-        if (props.initiallySelectedMetadata) {
+        let current: Metadata | undefined = selectedMetadata;
+        if (current == undefined && props.initiallySelectedMetadata) {
             current = props.initiallySelectedMetadata;
         }
         if (!current && props.allMetadata[0]) {

@@ -16,7 +16,6 @@ const descriptionOfParameter = (dict: TestDictionary, value?: TestParameterValue
 	return descriptionOf(dict, [value?.testParameterFactory], value?.simpleValue);
 }
 
-
 const TestCaseHelper = {
 	hasSelector: hasSelector,
 	descriptionOf: descriptionOf,

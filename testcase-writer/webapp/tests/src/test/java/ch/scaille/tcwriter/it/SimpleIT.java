@@ -24,8 +24,11 @@ class SimpleIT {
 	private SeleniumPilot pilot;
 
 	@BeforeEach
-	public void createPilot() {
+	public void createPilot() throws URISyntaxException, MalformedURLException  {
+		final var port = System.getProperty("app.port", "5173");
+		
 		pilot = new SeleniumPilot(driver);
+		pilot.getDriver().get(new URI("http://localhost:" + port + "/index.html").toURL().toString());
 	}
 
 	@AfterEach
@@ -38,14 +41,13 @@ class SimpleIT {
 	static void closeDriver() {
 		driver.quit();
 	}
-
+	
 	@Test
-	void simpleTest() throws URISyntaxException, MalformedURLException {
-		pilot.getDriver().get(new URI("http://localhost:9000/index.html").toURL().toString());
-
+	void simpleTest() {
 		final var mainPage = pilot.page(MainPage::new);
-		mainPage.assertSelected(MainPage.dictionary("Test dictionary"));
-		mainPage.assertSelected(MainPage.currentTestCase());
+		mainPage.select(MainPage.dictionary("Test dictionary"));
+		mainPage.assertAvailable(MainPage.currentTestCase());
+		mainPage.select(MainPage.currentTestCase());
 	}
 
 }

@@ -23,6 +23,12 @@ jobs:
       contents: read
       security-events: write
 
+    strategy:
+      matrix:
+	    include:
+	      - language: java
+	        build-mode: manual
+	  
     steps:
     - name: Setup Node
       uses: actions/setup-node@v4

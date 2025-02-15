@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>ch.scaille</groupId>
 		<artifactId>skylib-starter-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.1-M4-SNAPSHOT</version>
 		<relativePath />
 	</parent>
 
@@ -30,15 +30,6 @@
 		<maven.compiler.source>24</maven.compiler.source>
 		<maven.compiler.target>24</maven.compiler.target>
 	</properties>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>flatten-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
 
 	<dependencyManagement>
 		<dependencies>

@@ -8,7 +8,7 @@
 		unused dependencies -->
 		<groupId>ch.scaille</groupId>
 		<artifactId>skylib-starter-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>${starter.revision}</version>
 		<relativePath/>
 	</parent>
 

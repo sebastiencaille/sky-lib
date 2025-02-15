@@ -6,9 +6,9 @@
 
 	<parent>
 		<groupId>ch.scaille</groupId>
-	    <artifactId>skylib-starter-parent</artifactId>
-	    <version>0.0.1-M4-SNAPSHOT</version>
-	    <relativePath/>
+		<artifactId>skylib-starter-parent</artifactId>
+		<version>${starter.revision}</version>
+		<relativePath />
 	</parent>
 	<groupId>ch.scaille.tcwriter</groupId>
 	<artifactId>testcase-writer</artifactId>
@@ -111,40 +111,39 @@
 		</pluginManagement>
 	</build>
 	<dependencyManagement>
-	    <dependencies>
-
-            <dependency>
-                <groupId>ch.scaille.tcwriter</groupId>
-                <artifactId>testcase-writer-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>ch.scaille.tcwriter</groupId>
-                <artifactId>testcase-writer-javatc</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>ch.scaille.tcwriter</groupId>
-                <artifactId>testcase-writer-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>ch.scaille.tcwriter</groupId>
-                <artifactId>testcase-writer-gui</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>ch.scaille.tcwriter</groupId>
-                <artifactId>testcase-writer-examples</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>ch.scaille</groupId>
-            <artifactId>lib-testing-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+		<dependencies>
+			<dependency>
+				<groupId>ch.scaille.tcwriter</groupId>
+				<artifactId>testcase-writer-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille.tcwriter</groupId>
+				<artifactId>testcase-writer-javatc</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille.tcwriter</groupId>
+				<artifactId>testcase-writer-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille.tcwriter</groupId>
+				<artifactId>testcase-writer-gui</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille.tcwriter</groupId>
+				<artifactId>testcase-writer-examples</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>ch.scaille</groupId>
+			<artifactId>lib-testing-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>

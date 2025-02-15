@@ -6,9 +6,9 @@
 
 	<parent>
 		<groupId>ch.scaille</groupId>
-	    <artifactId>skylib-starter-parent</artifactId>
-        <version>${starter.revision}</version>
-	    <relativePath/>
+		<artifactId>skylib-starter-parent</artifactId>
+		<version>0.0.1-M4-SNAPSHOT</version>
+		<relativePath />
 	</parent>
 
 	<groupId>ch.scaille.dataflowmgr</groupId>
@@ -33,16 +33,8 @@
 		<rxjava3.version>3.1.12</rxjava3.version>
 	</properties>
 
-	  <dependencyManagement>
-    <dependencies>
-		<dependency>
-			<groupId>ch.scaille</groupId>
-	    <artifactId>skylib-starter-parent</artifactId>
-	    <version>0.0.1-M4-SNAPSHOT</version>
-	    <type>pom</type>
-	    <scope>import</scope>
-		</dependency>
-
+	<dependencyManagement>
+		<dependencies>
 			<dependency>
 				<groupId>ch.scaille</groupId>
 				<artifactId>lib-utils</artifactId>

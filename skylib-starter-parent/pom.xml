@@ -18,7 +18,7 @@
 	<name>skylib-starter-parent</name>
 	<packaging>pom</packaging>
 
-	<properties>
+	<properties>		
 		<aspectj.version>1.9.22.1</aspectj.version>
 		<spring-session.version>3.4.2</spring-session.version>
 		<jackson-bom.version>2.18.3</jackson-bom.version>
@@ -41,6 +41,7 @@
 		<junit.version>4.13.2</junit.version>
 		<junit-platform-console-standalone.version>1.12.0</junit-platform-console-standalone.version>
 		<selenium.version>4.29.0</selenium.version>
+
 		<h2.version>2.3.232</h2.version>
 
 		<coverage.temp>${java.io.tmpdir}/coverage/${basedir}</coverage.temp>
@@ -212,7 +213,7 @@
 					<artifactId>versions-maven-plugin</artifactId>
 					<version>${versions-maven-plugin.version}</version>
 					<configuration>
-						<ignoredVersions>.*-M.*,.*-[Aa]lpha.*,.*-[Bb]eta.*,.*-RC.*</ignoredVersions>
+						<ignoredVersions>.*-M.*,.*-[Aa]lpha.*,.*-[Bb]eta</ignoredVersions>
 						<onlyProjectDependencies>true</onlyProjectDependencies>
 					</configuration>
 				</plugin>
@@ -252,40 +253,8 @@
 						</dependency>
 					</dependencies>
 				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>flatten-maven-plugin</artifactId>
-					<version>1.7.0</version>
-					<configuration>
-						<updatePomFile>true</updatePomFile>
-						<flattenMode>resolveCiFriendliesOnly</flattenMode>
-					</configuration>
-					<executions>
-						<execution>
-							<id>flatten</id>
-							<phase>process-resources</phase>
-							<goals>
-								<goal>flatten</goal>
-							</goals>
-						</execution>
-						<execution>
-							<id>flatten.clean</id>
-							<phase>clean</phase>
-							<goals>
-								<goal>clean</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
 			</plugins>
 		</pluginManagement>
-		<plugins>
-			<plugin>
-				<inherited>false</inherited>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>flatten-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
 	</build>
 
 	<profiles>

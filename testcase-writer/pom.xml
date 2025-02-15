@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>ch.scaille</groupId>
 		<artifactId>skylib-starter-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>${starter.revision}</version>
 		<relativePath />
 	</parent>
 	<version>${revision}</version>
@@ -29,7 +29,6 @@
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 
 		<sonar.exclusions>**/node_modules/**,**/generated/**</sonar.exclusions>
-		<flatten>true</flatten>
 	</properties>
 	<build>
 		<plugins>
@@ -38,10 +37,6 @@
 				<version>2.10</version>
 				<configuration>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>flatten-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 		<pluginManagement>
@@ -95,27 +90,27 @@
 			<dependency>
 				<groupId>ch.scaille.tcwriter</groupId>
 				<artifactId>testcase-writer-api</artifactId>
-				<version>${revision}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>ch.scaille.tcwriter</groupId>
 				<artifactId>testcase-writer-javatc</artifactId>
-				<version>${revision}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>ch.scaille.tcwriter</groupId>
 				<artifactId>testcase-writer-core</artifactId>
-				<version>${revision}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>ch.scaille.tcwriter</groupId>
 				<artifactId>testcase-writer-gui</artifactId>
-				<version>${revision}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>ch.scaille.tcwriter</groupId>
 				<artifactId>testcase-writer-examples</artifactId>
-				<version>${revision}</version>
+				<version>${project.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

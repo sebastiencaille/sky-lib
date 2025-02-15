@@ -30,10 +30,10 @@ jobs:
         node-version: 22
                 
     - name: Setup Maven and java
-      uses: s4u/setup-maven-action@v1.13.0
+      uses: s4u/setup-maven-action@v1.18.0
       with:
         java-version: 21
-        maven-version: 3.9.6
+        maven-version: 3.9.9
 
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -86,4 +86,4 @@ jobs:
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
-        
+

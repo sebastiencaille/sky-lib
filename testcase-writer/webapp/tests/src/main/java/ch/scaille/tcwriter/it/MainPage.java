@@ -45,13 +45,15 @@ public class MainPage extends PagePilot {
 				mp.dictionarySelect);
 	}
 
+	public static Function<MainPage, ContextSelector> testDictionary() {
+		return dictionary("Test dictionary");
+	}
+	
 	public static Function<MainPage, ContextSelector> currentTestCase() {
 		return mp -> new ContextSelector(mp.testCaseSelector, e -> LambdaExt.doNothing(), mp.testCaseSelect);
 	}
 
 	public void select(Function<MainPage, ContextSelector> selector) {
-		on(() -> selector.apply(this).selector).failUnless()
-				.asserted(element -> Assertions.assertNotEquals("", element.getText()));
 		on(() -> selector.apply(this).button).failUnless().clicked();
 	}
 

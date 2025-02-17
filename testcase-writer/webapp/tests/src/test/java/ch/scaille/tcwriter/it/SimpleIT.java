@@ -45,7 +45,10 @@ class SimpleIT {
 	@Test
 	void simpleTest() {
 		final var mainPage = pilot.page(MainPage::new);
-		mainPage.select(MainPage.dictionary("Test dictionary"));
+		
+		mainPage.assertAvailable(MainPage.testDictionary());
+		mainPage.select(MainPage.testDictionary());
+		
 		mainPage.assertAvailable(MainPage.currentTestCase());
 		mainPage.select(MainPage.currentTestCase());
 	}

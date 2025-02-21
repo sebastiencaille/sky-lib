@@ -24,7 +24,7 @@ class SimpleIT {
 	private SeleniumPilot pilot;
 
 	@BeforeEach
-	public void createPilot() throws URISyntaxException, MalformedURLException  {
+	void createPilot() throws URISyntaxException, MalformedURLException  {
 		final var port = System.getProperty("app.port", "5173");
 		
 		pilot = new SeleniumPilot(driver);
@@ -32,7 +32,7 @@ class SimpleIT {
 	}
 
 	@AfterEach
-	public void releasePilot() {
+	void releasePilot() {
 		Logs.of(this).info(pilot.getActionReport().getFormattedReport());
 		pilot.close();
 	}

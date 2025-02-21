@@ -24,12 +24,12 @@ class SeleniumExampleTest extends AbstractSeleniumUndertowTest {
 	private SeleniumPilot pilot;
 
 	@BeforeEach
-	public void createPilot() {
+	void createPilot() {
 		pilot = new SeleniumPilot(driver);
 	}
 
 	@AfterEach
-	public void releasePilot() {
+	void releasePilot() {
 		try {
 			Logs.of(this).info(pilot.getActionReport().getFormattedReport());
 		} finally {

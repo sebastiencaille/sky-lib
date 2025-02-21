@@ -84,14 +84,14 @@ public class TCWriterGui extends JFrame {
 		this.getContentPane().add(buttonsBar, BorderLayout.NORTH);
 
 		final var stepEditorController = controller.getStepEditorController();
-		final var StepEditorPanel = stepEditorController.getStepEditorPanel();
+		final var stepEditorPanel = stepEditorController.getStepEditorPanel();
 
 		final var paramsPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 				new JScrollPane(stepEditorController.getSelectorEditor()),
 				new JScrollPane(stepEditorController.getParam0Editor()));
 
 		final var stepsPane = new JScrollPane(stepsTable);
-		final var stepPane = new JScrollPane(StepEditorPanel);
+		final var stepPane = new JScrollPane(stepEditorPanel);
 		final var paramPane = new JScrollPane(paramsPane);
 
 		final int height = 1200;

@@ -29,7 +29,7 @@ class SwingBindingsTest {
     private TestGuiModel model;
 
 	@BeforeEach
-	public void init() {
+	void init() {
         final var controller = new GuiController(new PropertyChangeSupportController(this));
 		model = new TestGuiModel(controller);
 	}

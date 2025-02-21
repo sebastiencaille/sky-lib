@@ -98,7 +98,7 @@ public class AbstractGuiTest {
 		if (pilot == null) {
 			return;
 		}
-		final var recordedTest = testRecorder.buildTestCase(testInfo.getTestMethod().map(Method::getName).get());
+		final var recordedTest = testRecorder.buildTestCase(testInfo.getTestMethod().map(Method::getName).orElseThrow());
 		Logs.of(getClass()).info(() -> new HumanReadableVisitor(recordedTest, false).processAllSteps());
 		
 		pilot.close();

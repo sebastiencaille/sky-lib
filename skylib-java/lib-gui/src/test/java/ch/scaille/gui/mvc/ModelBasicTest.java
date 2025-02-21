@@ -39,7 +39,7 @@ class ModelBasicTest {
 	private TestGuiModel model;
 
 	@BeforeEach
-	public void init() {
+	void init() {
 		controller = new GuiController(new PropertyChangeSupportController(this));
 		model = new TestGuiModel(controller);
 	}

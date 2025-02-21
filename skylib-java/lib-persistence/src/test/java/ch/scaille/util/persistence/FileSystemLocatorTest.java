@@ -19,12 +19,12 @@ class FileSystemLocatorTest {
     private Path tempFolder;
 
     @BeforeEach
-    public void setUp() throws IOException {
+    void setUp() throws IOException {
         tempFolder = Files.createTempDirectory(getClass().getSimpleName());
     }
 
     @AfterEach
-    public void tearDown() throws IOException {
+    void tearDown() throws IOException {
         try (var tempContent = Files.list(tempFolder)) {
             for (var file : tempContent.collect(Collectors.toList())) {
                 Files.delete(file);

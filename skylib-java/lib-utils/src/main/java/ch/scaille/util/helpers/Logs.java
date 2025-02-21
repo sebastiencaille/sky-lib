@@ -8,8 +8,6 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import org.jetbrains.annotations.NotNull;
-
 public interface Logs {
 
 	static Logger of(Class<?> clazz) {

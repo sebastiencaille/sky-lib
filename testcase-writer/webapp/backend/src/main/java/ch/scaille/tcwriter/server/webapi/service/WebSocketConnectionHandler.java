@@ -1,6 +1,5 @@
 package ch.scaille.tcwriter.server.webapi.service;
 
-import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationListener;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.support.NativeMessageHeaderAccessor;

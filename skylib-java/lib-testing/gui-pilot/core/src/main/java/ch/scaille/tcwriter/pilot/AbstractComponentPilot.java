@@ -201,7 +201,7 @@ public abstract class AbstractComponentPilot<C> {
 			return Optional.of(PollingResults.failure("not found"));
 		}
 		polling.getContext().setComponent(cachedComponent.element,
-				getDescription().orElseGet(() -> cachedComponent.element.toString()));
+				getDescription().orElseGet(cachedComponent.element::toString));
 		final var preCondition = polling.getPrecondition();
 		if (!cachedComponent.preconditionValidated && preCondition.isPresent()
 				&& !preCondition.get().test(polling.getContext())) {

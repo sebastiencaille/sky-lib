@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class Veto implements IVeto {
+import ch.scaille.javabeans.chain.BindingChain;
+
+public class Vetoer implements IVeto {
 
 	public enum TransmitMode {
 		/**
@@ -39,7 +41,7 @@ public class Veto implements IVeto {
 
 	private final List<Predicate<BindingChain>> transmitToComponentInhibitors = new ArrayList<>();
 
-	public Veto(TransmitMode startupTransmitMode) {
+	public Vetoer(TransmitMode startupTransmitMode) {
 		transmitMode = startupTransmitMode;
 	}
 

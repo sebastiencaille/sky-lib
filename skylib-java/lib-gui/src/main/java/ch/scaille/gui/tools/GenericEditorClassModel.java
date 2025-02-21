@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 import ch.scaille.annotations.Labeled;
 import ch.scaille.annotations.Ordered;
-import ch.scaille.javabeans.BindingChain.EndOfChain;
+import ch.scaille.javabeans.IChainBuilder;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.PropertyChangeSupportController;
 import ch.scaille.javabeans.persisters.IPersisterFactory.IObjectProvider;
@@ -39,7 +39,7 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 		private final AbstractAttributeMetaData<T, U> metadata;
 
 		public ClassPropertyEntry(final AbstractTypedProperty<U> property,
-				final Function<AbstractTypedProperty<U>, EndOfChain<U>> endOfChainProvider,
+				final Function<AbstractTypedProperty<U>, IChainBuilder<U, Object>> endOfChainProvider,
 				final AbstractAttributeMetaData<T, U> metadata, final boolean readOnly, final String label,
 				final String tooltip) {
 			super(metadata.getClassType(), property, endOfChainProvider, readOnly, label, tooltip);
@@ -156,8 +156,8 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 				new ClassPropertyEntry<>(property, this::createBindingChain, typedAttribute, readOnly, message, toolTip));
 	}
 
-	private <V> EndOfChain<V> createBindingChain(AbstractTypedProperty<V> property) {
-		var chain = property.createBindingChain();
+	private <V> IChainBuilder<V, Object> createBindingChain(AbstractTypedProperty<V> property) {
+		IChainBuilder<V, Object> chain = property.createBindingChain();
 		for (final IGenericModelAdapter<T> adapter : config.adapters) {
 			chain = adapter.apply(config.editedClazz, chain);
 		}

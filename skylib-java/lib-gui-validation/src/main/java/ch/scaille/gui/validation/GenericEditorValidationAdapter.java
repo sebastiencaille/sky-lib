@@ -1,7 +1,7 @@
 package ch.scaille.gui.validation;
 
 import ch.scaille.gui.tools.IGenericModelAdapter;
-import ch.scaille.javabeans.BindingChain.EndOfChain;
+import ch.scaille.javabeans.IChainBuilder;
 
 /**
  * Model adapter that validates a class
@@ -10,7 +10,7 @@ import ch.scaille.javabeans.BindingChain.EndOfChain;
 public class GenericEditorValidationAdapter<T> implements IGenericModelAdapter<T> {
 
 	@Override
-	public <U> EndOfChain<U> apply(final Class<T> editedClazz, final EndOfChain<U> chain) {
+	public <U> IChainBuilder<U, Object> apply(final Class<T> editedClazz, final IChainBuilder<U, Object> chain) {
 		return chain.bind(ValidationBinding.validator(editedClazz));
 	}
 }

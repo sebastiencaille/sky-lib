@@ -2,10 +2,10 @@ package ch.scaille.javabeans.properties;
 
 import java.util.function.Consumer;
 
-import ch.scaille.javabeans.BindingChain;
-import ch.scaille.javabeans.BindingChain.EndOfChain;
-import ch.scaille.javabeans.IPropertiesOwner;
+import ch.scaille.javabeans.IChainBuilderFactory;
 import ch.scaille.javabeans.IPropertiesGroup;
+import ch.scaille.javabeans.IPropertiesOwner;
+import ch.scaille.javabeans.chain.BindingChain;
 
 /**
  * Property containing a boolean value.
@@ -37,7 +37,7 @@ public class BooleanProperty extends AbstractTypedProperty<Boolean> {
 	}
 
 	@Override
-	public EndOfChain<Boolean> createBindingChain() {
+	public IChainBuilderFactory<Boolean> createBindingChain() {
 		return new BindingChain(this, errorNotifier).bindProperty(this::setObjectValueFromComponent);
 	}
 

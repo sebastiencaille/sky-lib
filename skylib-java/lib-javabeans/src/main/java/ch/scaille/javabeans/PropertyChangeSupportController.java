@@ -16,7 +16,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import ch.scaille.javabeans.PropertyEvent.EventKind;
-import ch.scaille.javabeans.Veto.TransmitMode;
+import ch.scaille.javabeans.Vetoer.TransmitMode;
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.IPropertyEventListener;
 
@@ -34,8 +34,6 @@ import ch.scaille.javabeans.properties.IPropertyEventListener;
  *
  */
 public class PropertyChangeSupportController {
-
-
 
 	private static class CallInfo {
 

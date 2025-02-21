@@ -3,6 +3,9 @@ package ch.scaille.javabeans;
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.IPropertyEventListener;
 
+/**
+ * Allows to add dependencies between properties
+ */
 public final class BindingDependencies {
 
 	private BindingDependencies() {
@@ -34,11 +37,11 @@ public final class BindingDependencies {
 			switch (event.getKind()) {
 			case BEFORE:
 				if (event.getProperty().mustSendToComponent()) {
-					controller.getVeto().detach();
+					controller.getVetoer().detach();
 				}
 				break;
 			case AFTER:
-				controller.getVeto().attach();
+				controller.getVetoer().attach();
 				controller.forceViewUpdate();
 				break;
 			default:

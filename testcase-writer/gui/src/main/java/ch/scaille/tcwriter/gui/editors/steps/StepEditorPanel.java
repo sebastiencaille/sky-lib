@@ -3,8 +3,9 @@ package ch.scaille.tcwriter.gui.editors.steps;
 import static ch.scaille.gui.swing.factories.SwingBindings.selection;
 import static ch.scaille.gui.swing.factories.SwingBindings.values;
 import static ch.scaille.javabeans.BindingDependencies.preserveOnUpdateOf;
-import static ch.scaille.javabeans.Converters.listConverter;
 import static ch.scaille.javabeans.Converters.listen;
+import static ch.scaille.tcwriter.gui.editors.steps.StepEditorModel.object2Text;
+import static ch.scaille.tcwriter.gui.editors.steps.StepEditorModel.objects2Texts;
 
 import java.awt.BorderLayout;
 import java.util.Arrays;
@@ -21,7 +22,6 @@ import javax.swing.JScrollPane;
 
 import ch.scaille.gui.mvc.factories.ObjectTextView;
 import ch.scaille.gui.swing.factories.SwingBindings;
-import ch.scaille.javabeans.Converters;
 import ch.scaille.javabeans.properties.AbstractTypedProperty;
 import ch.scaille.tcwriter.model.dictionary.StepClassifier;
 import ch.scaille.tcwriter.model.dictionary.TestAction;
@@ -33,7 +33,7 @@ public class StepEditorPanel extends JPanel {
 
 	private static final long serialVersionUID = -3035157435652102580L;
 	private final StepEditorModel model;
-
+	
 	public StepEditorPanel(final StepEditorController controller) {
 
 		this.model = controller.getModel();
@@ -85,37 +85,40 @@ public class StepEditorPanel extends JPanel {
 		final var stepEditors = new JPanel();
 		stepEditors.setLayout(new BoxLayout(stepEditors, BoxLayout.X_AXIS));
 
+		final var bindingContext = model.bindingContext();
+		
 		// Actors
 		final var actorsList = withEnabler(selectedStep, new JList<ObjectTextView<TestActor>>());
 		actorsList.setName("Actors");
-		model.getPossibleActors().bind(listConverter(model.object2Text())).bind(values(actorsList));
-		model.getActor().bind(model.object2Text()).bind(selection(actorsList))
+
+		model.getPossibleActors().contextualChain(bindingContext).bind(objects2Texts()).bind(values(actorsList));
+		model.getActor().contextualChain(bindingContext).bind(object2Text()).bind(selection(actorsList))
 				.addDependency(preserveOnUpdateOf(model.getPossibleActors()));
 		stepEditors.add(new JScrollPane(actorsList));
 
 		// Actions
 		final var actionsList = withEnabler(selectedStep, new JList<ObjectTextView<TestAction>>());
 		actionsList.setName("Actions");
-		model.getPossibleActions().bind(listConverter(model.object2Text())).bind(values(actionsList));
-		model.getAction().bind(model.object2Text()).bind(selection(actionsList))
+		model.getPossibleActions().contextualChain(bindingContext).bind(objects2Texts()).bind(values(actionsList));
+		model.getAction().contextualChain(bindingContext).bind(object2Text()).bind(selection(actionsList))
 				.addDependency(preserveOnUpdateOf(model.getPossibleActions()));
 		stepEditors.add(new JScrollPane(actionsList));
 
 		// Selectors
 		final var selectorList = withEnabler(selectedStep, new JList<ObjectTextView<TestParameterFactory>>());
 		selectorList.setName("Selectors");
-		model.getPossibleSelectors().bind(Converters.listConverter(model.object2Text()))
+		model.getPossibleSelectors().contextualChain(bindingContext).bind(objects2Texts())
 				.bind(SwingBindings.values(selectorList));
-		model.getSelector().bind(model.object2Text()).bind(selection(selectorList))
+		model.getSelector().contextualChain(bindingContext).bind(object2Text()).bind(selection(selectorList))
 				.addDependency(preserveOnUpdateOf(model.getPossibleSelectors()));
 		stepEditors.add(new JScrollPane(selectorList));
 
 		// Action Parameter
 		final var actionParameterList = withEnabler(selectedStep, new JList<ObjectTextView<TestParameterFactory>>());
 		actionParameterList.setName("Parameters0");
-		model.getPossibleActionParameters().bind(listConverter(model.object2Text()))
+		model.getPossibleActionParameters().contextualChain(bindingContext).bind(objects2Texts())
 				.bind(values(actionParameterList));
-		model.getActionParameter().bind(model.object2Text()).bind(selection(actionParameterList))
+		model.getActionParameter().contextualChain(bindingContext).bind(object2Text()).bind(selection(actionParameterList))
 				.addDependency(preserveOnUpdateOf(model.getPossibleActionParameters()));
 		stepEditors.add(new JScrollPane(actionParameterList));
 

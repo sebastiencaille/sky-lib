@@ -23,9 +23,9 @@ class AttributeFactory {
 	private AttributeFactory() {
 		// noop
 	}
-	
+
 	public enum Mode {
-		AUTOMATIC, GET_SET, FIELD
+		AUTOMATIC, GET_SET, FIELD, RECORD
 	}
 
 	public static <T, V> IAttributeMetaData<T> create(final Class<? super T> currentClass, final String property,
@@ -55,14 +55,21 @@ class AttributeFactory {
 				// ignore
 			}
 			break;
+		case RECORD:
+			try {
+				return createRecordAttribute(currentClass, property, name);
+			} catch (final NoSuchMethodException e) {
+				// ignore
+			}
+			break;
 		default:
 			throw new IllegalStateException("Unhandled mode " + mode);
 		}
 		return null;
 	}
 
-	private static <T> IAttributeMetaData<T> createGetSetAttribute(final Class<?> currentClass,
-			final String property, final String name) throws NoSuchMethodException {
+	private static <T> IAttributeMetaData<T> createGetSetAttribute(final Class<?> currentClass, final String property,
+			final String name) throws NoSuchMethodException {
 		Method getter;
 		try {
 			getter = currentClass.getMethod("get" + property);
@@ -88,8 +95,20 @@ class AttributeFactory {
 		}
 	}
 
-	private static <T, V> FieldAttribute<T, V> createFieldAttribute(final Class<? super T> currentClass, final String property,
-			final String name) {
+	private static <T> IAttributeMetaData<T> createRecordAttribute(final Class<?> currentClass, final String property,
+			final String name) throws NoSuchMethodException {
+		try {
+			final var getter = currentClass.getMethod(property);
+			final var getterHandler = MethodHandles.lookup().unreflect(getter);
+			return new ReadOnlyAttribute<>(name, getter, getterHandler);
+		} catch (Exception e) { // NOSONAR
+			throw new IllegalStateException("Unable to create handler", e);
+		}
+
+	}
+
+	private static <T, V> FieldAttribute<T, V> createFieldAttribute(final Class<? super T> currentClass,
+			final String property, final String name) {
 		try {
 			var field = findField(currentClass, property);
 			if (Modifier.isStatic(field.getModifiers())) {

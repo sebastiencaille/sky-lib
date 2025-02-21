@@ -36,7 +36,7 @@ public final class BindingDependencies {
 
 		@Override
 		public void mutates() {
-			controller.getVeto().detach();
+			controller.getVetoer().detach();
 		}
 
 		@Override
@@ -65,7 +65,7 @@ public final class BindingDependencies {
 		}
 
 		private void reattach() {
-			controller.getVeto().attach();
+			controller.getVetoer().attach();
 			controller.forceViewUpdate();
 		}
 

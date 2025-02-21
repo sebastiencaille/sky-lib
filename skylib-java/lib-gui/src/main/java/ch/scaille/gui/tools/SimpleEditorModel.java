@@ -5,7 +5,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
-import ch.scaille.javabeans.BindingChain.EndOfChain;
+import ch.scaille.javabeans.IChainBuilder;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.PropertyChangeSupportController;
 import ch.scaille.javabeans.persisters.IPersisterFactory.IObjectProvider;
@@ -23,8 +23,8 @@ public class SimpleEditorModel<T> implements IGenericEditorModel<T> {
 	/**
 	 * Creates an entry of the model
 	 */
-    public static <T, E> IPropertyEntry<T> entry(Class<E> propertyType,
-                                          final AbstractTypedProperty<E> property, final Function<AbstractTypedProperty<E>, EndOfChain<E>> endOfChainProvider,
+    public static <T, E> IPropertyEntry<T> entry(final Class<E> propertyType, final AbstractTypedProperty<E> property, 
+                                          final Function<AbstractTypedProperty<E>, IChainBuilder<E, Object>> endOfChainProvider,
                                           final boolean readOnly, final String label, final String tooltip) {
         return new PropertyEntry<>(propertyType, property, endOfChainProvider, readOnly, label, tooltip);
     }
@@ -32,8 +32,8 @@ public class SimpleEditorModel<T> implements IGenericEditorModel<T> {
 	/**
 	 * Creates an entry of the model
 	 */
-    public static <T, E> IPropertyEntry<T> entry(Class<E> propertyType,
-                                          final AbstractTypedProperty<E> property, final Function<AbstractTypedProperty<E>, EndOfChain<E>> endOfChainProvider,
+    public static <T, E> IPropertyEntry<T> entry(Class<E> propertyType, final AbstractTypedProperty<E> property, 
+                                          final Function<AbstractTypedProperty<E>, IChainBuilder<E, Object>> endOfChainProvider,
                                           final boolean readOnly, final UnaryOperator<String> textProvider) {
         return new PropertyEntry<>(propertyType, property, endOfChainProvider, readOnly,
                 textProvider.apply(PropertyEntry.descriptionKey(property.getName())),

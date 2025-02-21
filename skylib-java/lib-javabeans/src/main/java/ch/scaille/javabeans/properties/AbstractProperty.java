@@ -13,7 +13,7 @@ import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.PropertyEvent;
 import ch.scaille.javabeans.PropertyEvent.EventKind;
-import ch.scaille.javabeans.Veto.TransmitMode;
+import ch.scaille.javabeans.Vetoer.TransmitMode;
 
 /**
  * Provides type-independent properties mechanisms.
@@ -23,6 +23,8 @@ import ch.scaille.javabeans.Veto.TransmitMode;
  *
  */
 public abstract class AbstractProperty implements IComponentChangeSource, Serializable {
+
+	private static final long serialVersionUID = -4450857469217114845L;
 
 	public interface ErrorNotifier {
 		void notifyError(Object source, ConversionError error);

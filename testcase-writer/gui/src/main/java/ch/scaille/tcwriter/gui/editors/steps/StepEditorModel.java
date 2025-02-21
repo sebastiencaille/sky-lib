@@ -4,9 +4,10 @@ import java.util.List;
 
 import ch.scaille.gui.mvc.GuiModel;
 import ch.scaille.gui.mvc.factories.ObjectTextView;
-import ch.scaille.javabeans.converters.IConverter;
+import ch.scaille.javabeans.Converters;
+import ch.scaille.javabeans.converters.IConverterWithContext;
 import ch.scaille.javabeans.properties.ObjectProperty;
-import ch.scaille.tcwriter.model.NamedObject;
+import ch.scaille.tcwriter.model.IdObject;
 import ch.scaille.tcwriter.model.dictionary.StepClassifier;
 import ch.scaille.tcwriter.model.dictionary.TestAction;
 import ch.scaille.tcwriter.model.dictionary.TestActor;
@@ -36,7 +37,7 @@ public class StepEditorModel extends GuiModel {
 
 	public StepEditorModel(final ModelConfiguration config, ObjectProperty<TestDictionary> testDictionary) {
 		super(config);
-		this.testDictionary = testDictionary; 
+		this.testDictionary = testDictionary;
 	}
 
 	public ObjectProperty<List<TestActor>> getPossibleActors() {
@@ -82,8 +83,20 @@ public class StepEditorModel extends GuiModel {
 	public ObjectProperty<StepClassifier> getStepClassifier() {
 		return stepClassifier;
 	}
-	
-	public <T extends NamedObject> IConverter<T, ObjectTextView<T>> object2Text() {
-		return ObjectTextView.converter(o -> testDictionary.getValue().descriptionOf(o).getDescription());
+
+	public ObjectProperty<TestDictionary> bindingContext() {
+		return testDictionary;
+	}
+
+	public static <T extends IdObject> IConverterWithContext<T, ObjectTextView<T>, ObjectProperty<TestDictionary>> object2Text() {
+		final var objectTextFunction = ObjectTextView.<T, ObjectProperty<TestDictionary>>biObject2Text(
+				(o, k) -> k.getValue().descriptionOf(o).getDescription());
+		return Converters.converter(objectTextFunction::apply, (c, k) -> ObjectTextView.<T>comp2prop().apply(c));
+	}
+
+	public static <T extends IdObject> IConverterWithContext<List<T>, List<ObjectTextView<T>>, ObjectProperty<TestDictionary>> objects2Texts() {
+		final var objectTextFunction = ObjectTextView.<T, ObjectProperty<TestDictionary>>biObject2Text(
+				(o, k) -> k.getValue().descriptionOf(o).getDescription());
+		return Converters.listen((p, k) -> p.stream().map(v -> objectTextFunction.apply(v, k)).toList());
 	}
 }

@@ -33,7 +33,7 @@ public class AbstractObjectMetaData<T> {
 	/**
 	 * Access mode
 	 */
-	private Mode attributeMode = Mode.AUTOMATIC;
+	protected Mode attributeMode = Mode.AUTOMATIC;
 
 	protected AbstractObjectMetaData(final Class<? extends T> clazz) {
 		this(clazz, false);
@@ -86,7 +86,7 @@ public class AbstractObjectMetaData<T> {
 
 	}
 
-	private void scanFields(final Class<?> clazz, final boolean accessPrivateFields, final Set<String> attribNames) {
+	protected void scanFields(final Class<?> clazz, final boolean accessPrivateFields, final Set<String> attribNames) {
 		for (final var field : clazz.getDeclaredFields()) {
 			final var canAccess = Modifier.isPublic(field.getModifiers()) || accessPrivateFields;
 			if (canAccess && !field.getDeclaringClass().equals(Object.class)) {
@@ -95,7 +95,7 @@ public class AbstractObjectMetaData<T> {
 		}
 	}
 
-	private void scanMethods(final Class<?> clazz, final Set<String> attribNames) {
+	protected void scanMethods(final Class<?> clazz, final Set<String> attribNames) {
 		for (final var method : clazz.getMethods()) {
 			final var name = method.getName();
 			if (method.getDeclaringClass().equals(Object.class)) {

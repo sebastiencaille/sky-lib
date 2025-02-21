@@ -2,7 +2,8 @@ package ch.scaille.javabeans;
 
 import java.util.function.Predicate;
 
-import ch.scaille.javabeans.Veto.TransmitMode;
+import ch.scaille.javabeans.Vetoer.TransmitMode;
+import ch.scaille.javabeans.chain.BindingChain;
 
 public interface IVeto {
 

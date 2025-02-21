@@ -10,7 +10,7 @@ import ch.scaille.javabeans.properties.AbstractProperty;
  */
 public interface IBindingController {
 
-	IVeto getVeto();
+	IVeto getVetoer();
 
 	void forceViewUpdate();
 

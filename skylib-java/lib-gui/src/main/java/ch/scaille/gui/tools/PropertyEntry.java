@@ -2,7 +2,7 @@ package ch.scaille.gui.tools;
 
 import java.util.function.Function;
 
-import ch.scaille.javabeans.BindingChain.EndOfChain;
+import ch.scaille.javabeans.IChainBuilder;
 import ch.scaille.javabeans.properties.AbstractTypedProperty;
 
 /*
@@ -14,14 +14,14 @@ import ch.scaille.javabeans.properties.AbstractTypedProperty;
 public class PropertyEntry<T, V> implements IPropertyEntry<T> {
 
 	protected final AbstractTypedProperty<V> property;
-	private final Function<AbstractTypedProperty<V>, EndOfChain<V>> endOfChain;
+	private final Function<AbstractTypedProperty<V>, IChainBuilder<V, Object>> endOfChain;
 	private final Class<?> propertyType;
 	private final boolean readOnly;
 	private final String label;
 	private final String tooltip;
 
 	protected PropertyEntry(Class<V> propertyType,
-			final AbstractTypedProperty<V> property, Function<AbstractTypedProperty<V>, EndOfChain<V>> endOfChainProvider,
+			final AbstractTypedProperty<V> property, Function<AbstractTypedProperty<V>, IChainBuilder<V, Object>> endOfChainProvider,
 			final boolean readOnly, final String label, final String tooltip) {
 		this.property = property;
 		this.endOfChain = endOfChainProvider;
@@ -51,11 +51,11 @@ public class PropertyEntry<T, V> implements IPropertyEntry<T> {
 	}
 
 	/**
-	 * Allows to get the typed EndOfChain of the parameterized entry
+	 * Allows to get the typed EndOfChain of the parametendOfChainerized entry
 	 *
 	 * @return the typed EndOfChain
 	 */
-	public EndOfChain<V> getChain() {
+	public IChainBuilder<V, Object> getChain() {
 		return endOfChain.apply(property);
 	}
 

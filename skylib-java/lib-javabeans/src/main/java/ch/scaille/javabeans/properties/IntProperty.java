@@ -2,10 +2,10 @@ package ch.scaille.javabeans.properties;
 
 import java.util.function.Consumer;
 
-import ch.scaille.javabeans.BindingChain;
-import ch.scaille.javabeans.BindingChain.EndOfChain;
-import ch.scaille.javabeans.IPropertiesOwner;
+import ch.scaille.javabeans.IChainBuilderFactory;
 import ch.scaille.javabeans.IPropertiesGroup;
+import ch.scaille.javabeans.IPropertiesOwner;
+import ch.scaille.javabeans.chain.BindingChain;
 
 /**
  * Property containing an int value.
@@ -38,7 +38,7 @@ public class IntProperty extends AbstractTypedProperty<Integer> {
 	}
 
 	@Override
-	public EndOfChain<Integer> createBindingChain() {
+	public IChainBuilderFactory<Integer> createBindingChain() {
 		return new BindingChain(this, errorNotifier).bindProperty(this::setObjectValueFromComponent);
 	}
 

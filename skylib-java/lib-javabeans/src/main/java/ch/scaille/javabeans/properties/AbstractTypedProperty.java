@@ -6,13 +6,14 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import ch.scaille.javabeans.BindingChain.EndOfChain;
-import ch.scaille.javabeans.IPropertiesOwner;
 import ch.scaille.javabeans.IBindingController;
+import ch.scaille.javabeans.IChainBuilder;
+import ch.scaille.javabeans.IChainBuilderFactory;
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IPropertiesGroup;
+import ch.scaille.javabeans.IPropertiesOwner;
 import ch.scaille.javabeans.PropertyEvent.EventKind;
-import ch.scaille.javabeans.Veto.TransmitMode;
+import ch.scaille.javabeans.Vetoer.TransmitMode;
 import ch.scaille.javabeans.converters.IConverter;
 
 /**
@@ -28,6 +29,12 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 	private final List<IConverter<T, T>> implicitConverters = new ArrayList<>();
 
 	private transient IPersister<T> persister;
+
+	protected abstract T replaceValue(T newValue);
+
+	public abstract T getObjectValue();
+
+	public abstract IChainBuilderFactory<T> createBindingChain();
 
 	protected AbstractTypedProperty(final String name, final IPropertiesOwner model) {
 		super(name, model.getPropertySupport());
@@ -73,11 +80,15 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 		return this;
 	}
 
-	public <C> EndOfChain<C> bind(final IConverter<T, C> binding) {
+	public <K> IChainBuilder<T, K> contextualChain(K context) {
+		return createBindingChainWithConv().withContext(context);
+	}
+
+	public <C> IChainBuilder<C, Object> bind(final IConverter<T, C> binding) {
 		return createBindingChainWithConv().bind(binding);
 	}
 
-	public <C> EndOfChain<C> bind(final Function<T, C> binding) {
+	public <C> IChainBuilder<C, Object> bind(final Function<T, C> binding) {
 		return createBindingChainWithConv().bind(binding);
 	}
 
@@ -85,20 +96,12 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 		return createBindingChainWithConv().bind(binding);
 	}
 
-	private EndOfChain<T> createBindingChainWithConv() {
-		var chain = createBindingChain();
-		for (final var conv : implicitConverters) {
-			chain = chain.bind(conv);
-		}
-		return chain;
-	}
-
 	/**
 	 * Executes binding when the property is updated (transmitMode = BOTH only)
 	 */
 	public IBindingController listenActive(final Consumer<T> binding) {
 		final var listen = createBindingChain().listen(binding);
-		listen.getVeto().inhibitTransmitToComponentWhen(b -> b.getProperty().getTransmitMode() != TransmitMode.BOTH);
+		listen.getVetoer().inhibitTransmitToComponentWhen(b -> b.getProperty().getTransmitMode() != TransmitMode.BOTH);
 		return listen;
 	}
 
@@ -108,6 +111,14 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 	 */
 	public IBindingController listen(final Consumer<T> binding) {
 		return createBindingChain().listen(binding);
+	}
+
+	private IChainBuilderFactory<T> createBindingChainWithConv() {
+		var chain = createBindingChain();
+		for (final var conv : implicitConverters) {
+			chain = chain.earlyBind(conv);
+		}
+		return chain;
 	}
 
 	protected void setObjectValue(final Object caller, final T newValue) {
@@ -130,11 +141,5 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 	public void fireArtificialChange(final Object caller) {
 		propertySupport.getChangeSupport().firePropertyChange(getName(), caller, null, getObjectValue());
 	}
-
-	protected abstract T replaceValue(T newValue);
-
-	public abstract T getObjectValue();
-
-	public abstract EndOfChain<T> createBindingChain();
 
 }

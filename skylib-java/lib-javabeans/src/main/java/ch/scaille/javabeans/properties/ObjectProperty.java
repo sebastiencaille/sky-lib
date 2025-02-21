@@ -6,10 +6,10 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import ch.scaille.javabeans.BindingChain;
-import ch.scaille.javabeans.BindingChain.EndOfChain;
-import ch.scaille.javabeans.IPropertiesOwner;
+import ch.scaille.javabeans.IChainBuilderFactory;
 import ch.scaille.javabeans.IPropertiesGroup;
+import ch.scaille.javabeans.IPropertiesOwner;
+import ch.scaille.javabeans.chain.BindingChain;
 
 /**
  * A property that contains an object.
@@ -47,7 +47,7 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 	}
 
 	@Override
-	public EndOfChain<T> createBindingChain() {
+	public IChainBuilderFactory<T> createBindingChain() {
 		return new BindingChain(this, errorNotifier).bindProperty(this::setObjectValueFromComponent);
 	}
 

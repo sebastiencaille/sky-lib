@@ -85,7 +85,7 @@ public class StepEditorPanel extends JPanel {
 		final var stepEditors = new JPanel();
 		stepEditors.setLayout(new BoxLayout(stepEditors, BoxLayout.X_AXIS));
 
-		final var bindingContext = model.bindingContext();
+		final var bindingContext = model.getTestDictionary();
 		
 		// Actors
 		final var actorsList = withEnabler(selectedStep, new JList<ObjectTextView<TestActor>>());

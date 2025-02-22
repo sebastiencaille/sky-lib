@@ -42,19 +42,11 @@ public class StepEditorController extends GuiController {
 		this.guiModel = guiController.getModel();
 
 		final var dictionary = guiModel.getTestDictionary();
-		final var testStep = guiModel.getSelectedStep();
+		final var selectedStep = guiModel.getSelectedStep();
 
 		dictionary.listen(dict -> model.getPossibleActors().setValue(this, sorted(dict.getActors().values())));
 
-		model.getActor().listenActive(actor -> {
-			if (actor != null) {
-				model.getPossibleActions().setValue(this, sorted(actor.getRole().getActions()));
-			} else {
-				model.getPossibleActions().setValue(this, Collections.emptyList());
-			}
-		});
-
-		testStep.listenActive(step -> {
+		selectedStep.listenActive(step -> {
 			if (step == null) {
 				emptySelectors();
 				emptyParam0();
@@ -63,9 +55,18 @@ public class StepEditorController extends GuiController {
 			}
 			model.getActor().setValue(this, step.getActor());
 			model.getAction().setValue(this, step.getAction());
-			updateActionParameters(dictionary.getValue(), testStep);
+			updateActionParameters(dictionary.getValue(), selectedStep);
 		});
-		model.getAction().listenActive(action -> updateActionParameters(dictionary.getValue(), testStep));
+		
+		model.getActor().listenActive(actor -> {
+			if (actor != null) {
+				model.getPossibleActions().setValue(this, sorted(actor.getRole().getActions()));
+			} else {
+				model.getPossibleActions().setValue(this, Collections.emptyList());
+			}
+		});
+		
+		model.getAction().listenActive(action -> updateActionParameters(dictionary.getValue(), selectedStep));
 
 		model.getSelectorValue().setValue(this, ExportableTestParameterValue.NO_VALUE);
 		model.getActionParameterValue().setValue(this, ExportableTestParameterValue.NO_VALUE);
@@ -73,12 +74,12 @@ public class StepEditorController extends GuiController {
 		model.getSelector()
 				.listenActive(selector -> model.getSelectorValue().setValue(this,
 						model.getSelectorValue().getValue().derivate(selector)))
-				.addDependency(preserveOnUpdateOf(testStep));
+				.addDependency(preserveOnUpdateOf(selectedStep));
 
 		model.getActionParameter()
 				.listenActive(param -> model.getActionParameterValue().setValue(this,
 						model.getActionParameterValue().getValue().derivate(param)))
-				.addDependency(preserveOnUpdateOf(testStep));
+				.addDependency(preserveOnUpdateOf(selectedStep));
 
 		this.stepEditorPanel = new StepEditorPanel(this);
 

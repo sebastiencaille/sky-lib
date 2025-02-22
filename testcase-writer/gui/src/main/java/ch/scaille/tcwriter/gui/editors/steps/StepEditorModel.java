@@ -84,10 +84,10 @@ public class StepEditorModel extends GuiModel {
 		return stepClassifier;
 	}
 
-	public ObjectProperty<TestDictionary> bindingContext() {
+	public ObjectProperty<TestDictionary> getTestDictionary() {
 		return testDictionary;
 	}
-
+	
 	public static <T extends IdObject> IConverterWithContext<T, ObjectTextView<T>, ObjectProperty<TestDictionary>> object2Text() {
 		final var objectTextFunction = ObjectTextView.<T, ObjectProperty<TestDictionary>>biObject2Text(
 				(o, k) -> k.getValue().descriptionOf(o).getDescription());

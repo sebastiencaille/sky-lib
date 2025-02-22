@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.gui;
+package ch.scaille.tcwriter.gui.utils;
 
 import java.awt.BorderLayout;
 import java.awt.Component;

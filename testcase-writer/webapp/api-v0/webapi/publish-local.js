@@ -18,15 +18,22 @@ const copyPackage = (dir, version, cb) => {
 }
 
 const deploy = (dir, cb) => {
-	const npm = (Os.platform() === 'win32') ? 'npm.cmd' : 'npm';
-	const npmPack = execFile(npm, ['link'], { cwd: dir }, (error, stdout, stderr) => {
+	if (Os.platform() === 'win32')  {
+		cmd = 'cmd';
+		params = [ '/c', 'npm' ];
+	} else {
+		cmd = 'npm';
+		params = [];
+	}
+	params.push('link');
+	const npmPack = execFile(cmd, params, { cwd: dir }, (error, stdout, stderr) => {
 		if (error) {
 			console.log(`error: ${error.message}`);
-			return;
+			throw "Execution failed";
 		}
 		if (stderr) {
 			console.log(`stderr: ${stderr}`);
-			return;
+			throw "Execution failed";
 		}
 		console.log(`stdout: ${stdout}`);
 	});

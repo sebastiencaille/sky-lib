@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import ch.scaille.tcwriter.Extensions;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +26,7 @@ class SimpleIT {
 
 	@BeforeEach
 	void createPilot() throws URISyntaxException, MalformedURLException  {
+		Extensions.driver = driver;
 		final var port = System.getProperty("app.port", "5173");
 		
 		pilot = new SeleniumPilot(driver);

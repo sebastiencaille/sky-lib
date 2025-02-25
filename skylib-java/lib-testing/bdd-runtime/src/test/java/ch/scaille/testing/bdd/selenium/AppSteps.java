@@ -16,7 +16,7 @@ public class AppSteps {
     public static final TestDictionary<AppPages> BDD_FACTORY = new TestDictionary<>();
 
     public static final Steps<AppPages> OPEN_WEBSITE = BDD_FACTORY.with(
-            step("I open the website", LambdaExt.uncheckedC(p -> p.driver.get(AbstractSeleniumUndertowTest.localUrl.resolve("example1.html").toString()))),
+            step("I open the website", LambdaExt.uncheckedC(p -> p.driver.get(AbstractSeleniumUndertowTest.localUrl.resolve("/example1.html").toString()))),
             step("I see that the website is open", p -> p.examplePage.assertedEnabledTested()));
 
     public static final Steps<AppPages> TEST_ENABLE = BDD_FACTORY.with(

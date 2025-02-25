@@ -59,7 +59,7 @@ public class MainPage extends PagePilot {
 
 	public void assertAvailable(Function<MainPage, ContextSelector> selector) {
 		on(() -> selector.apply(this).selector).failUnless()
-				.asserted(element -> Assertions.assertNotEquals("", element.getText()));
+				.asserted(element -> Assertions.assertNotEquals("", element.getText(),  element + " has no selectable entry"));
 	}
 
 }

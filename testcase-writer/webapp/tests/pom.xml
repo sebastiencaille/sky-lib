@@ -10,13 +10,14 @@
 	<!-- allows to start the war as a local application -->
 	<packaging>war</packaging>
 	<artifactId>testcase-writer-webapp-tests</artifactId>
-
+	
 	<dependencies>
 
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-webapp-war</artifactId>
 			<type>war</type>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
@@ -33,7 +34,30 @@
 			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-examples</artifactId>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-loader</artifactId>
+		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<overlays>
+						<overlay>
+							<groupId>ch.scaille.tcwriter</groupId>
+							<artifactId>testcase-writer-webapp-war</artifactId>
+						</overlay>
+					</overlays>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 
 	<profiles>
 
@@ -93,16 +117,16 @@
 							</execution>
 						</executions>
 						<configuration>
+							<layout>WAR</layout>
 							<skip>${skipTests}</skip>
 							<classesDirectory>
-								${project.build.directory}/${project.build.finalName}/WEB-INF/classes</classesDirectory>
+								${project.build.directory}/classes</classesDirectory>
 							<additionalClasspathElements>
-								<directory>
-									${project.build.directory}/${project.build.finalName}/WEB-INF/lib/*</directory>
+								<directory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</directory>
 								<directory>
 									${project.build.directory}/${project.build.finalName}/</directory>
 							</additionalClasspathElements>
-							<mainClass>ch.scaille.tcwriter.server.Server</mainClass>
+							<mainClass>ch.scaille.tcwriter.TestWarLauncher</mainClass>
 							<arguments>
 								<argument>--server.port=9000</argument>
 							</arguments>

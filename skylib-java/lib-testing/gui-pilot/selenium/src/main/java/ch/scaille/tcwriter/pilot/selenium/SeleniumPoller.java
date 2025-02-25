@@ -19,6 +19,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import ch.scaille.util.helpers.Logs;
 import ch.scaille.util.helpers.Poller;
+import org.opentest4j.AssertionFailedError;
 
 public class SeleniumPoller extends Poller {
 
@@ -73,7 +74,8 @@ public class SeleniumPoller extends Poller {
 				})
 				.pollingEvery(duration) //
 				.ignoreAll(List.of(NoSuchElementException.class, StaleElementReferenceException.class,
-						ElementNotInteractableException.class, UnhandledAlertException.class))
+						ElementNotInteractableException.class, UnhandledAlertException.class, AssertionFailedError.class,
+						IndexOutOfBoundsException.class, TimeoutException.class))
 				.until(d -> {
 					try {
 						final var result = polling.apply(this);

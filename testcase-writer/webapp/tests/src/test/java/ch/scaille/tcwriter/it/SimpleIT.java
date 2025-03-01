@@ -4,32 +4,31 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import ch.scaille.tcwriter.Extensions;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.openqa.selenium.WebDriver;
 
-import ch.scaille.tcwriter.jupiter.DisabledIfHeadless;
-import ch.scaille.tcwriter.pilot.selenium.SeleniumPilot;
-import ch.scaille.tcwriter.pilot.selenium.WebDriverFactory;
+import ch.scaille.testing.testpilot.jupiter.DisabledIfHeadless;
+import ch.scaille.testing.testpilot.selenium.SeleniumPilot;
+import ch.scaille.testing.testpilot.selenium.WebDriverFactory;
+import ch.scaille.testing.testpilot.selenium.jupiter.ScreenShotExtensions;
+import ch.scaille.testing.testpilot.selenium.jupiter.WebDriverExtension;
+import ch.scaille.testing.testpilot.selenium.jupiter.WebDriverExtension.WebDriverConfigurer;
 import ch.scaille.util.helpers.Logs;
 
-@ExtendWith({ DisabledIfHeadless.class, Extensions.class })
+@ExtendWith({ DisabledIfHeadless.class, WebDriverExtension.class, ScreenShotExtensions.class })
 class SimpleIT {
-
-	public static final WebDriver driver = WebDriverFactory.firefox().build();
 
 	private SeleniumPilot pilot;
 
 	@BeforeEach
-	void createPilot() throws URISyntaxException, MalformedURLException  {
-		Extensions.driver = driver;
+	void createPilot(WebDriverConfigurer webDriverHolder) throws URISyntaxException, MalformedURLException  {
+		final var webDriver = webDriverHolder.getOrCreate(() -> WebDriverFactory.firefox().build());
 		final var port = System.getProperty("app.port", "5173");
 		
-		pilot = new SeleniumPilot(driver);
+		pilot = new SeleniumPilot(webDriver);
 		pilot.getDriver().get(new URI("http://localhost:" + port + "/index.html").toURL().toString());
 	}
 
@@ -40,8 +39,8 @@ class SimpleIT {
 	}
 
 	@AfterAll
-	static void closeDriver() {
-		driver.quit();
+	static void closeDriver(WebDriverConfigurer webDriverHolder) {
+		webDriverHolder.getDriver().quit();
 	}
 	
 	@Test

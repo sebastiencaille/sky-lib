@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.WebDriver;
 
+import ch.scaille.testing.testpilot.selenium.ConsoleErrorDetector;
 import ch.scaille.util.helpers.JavaExt;
 import ch.scaille.util.helpers.Logs;
 import io.undertow.Undertow;

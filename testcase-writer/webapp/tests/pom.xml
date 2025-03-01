@@ -25,39 +25,27 @@
 			<artifactId>gui-pilot-selenium</artifactId>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
+			<groupId>ch.scaille</groupId>
+			<artifactId>lib-testing-core</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-examples</artifactId>
 		</dependency>
-		
+
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-loader</artifactId>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>jakarta.annotation</groupId>
+			<artifactId>jakarta.annotation-api</artifactId>
+		</dependency>
+		
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<configuration>
-					<overlays>
-						<overlay>
-							<groupId>ch.scaille.tcwriter</groupId>
-							<artifactId>testcase-writer-webapp-war</artifactId>
-						</overlay>
-					</overlays>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-
 
 	<profiles>
 
@@ -117,18 +105,26 @@
 							</execution>
 						</executions>
 						<configuration>
-							<layout>WAR</layout>
 							<skip>${skipTests}</skip>
 							<classesDirectory>
 								${project.build.directory}/classes</classesDirectory>
+							<mainClass>ch.scaille.testing.spring.TestWarLauncher</mainClass>
+							<systemPropertyVariables>
+								<mainClass>ch.scaille.tcwriter.server.Server</mainClass>
+							</systemPropertyVariables>
+							<includes>
+								<include>ch.scaille:lib-testing-core</include>
+							</includes>
+							<arguments>
+								<argument>--server.port=9000</argument>
+							</arguments>
+														
+							<!-- needed for jmx -->
 							<additionalClasspathElements>
 								<directory>
 									${project.build.directory}/${project.build.finalName}/</directory>
 							</additionalClasspathElements>
-							<mainClass>ch.scaille.tcwriter.TestWarLauncher</mainClass>
-							<arguments>
-								<argument>--server.port=9000</argument>
-							</arguments>
+
 						</configuration>
 					</plugin>
 					<plugin>

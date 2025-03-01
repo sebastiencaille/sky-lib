@@ -1,6 +1,6 @@
 package ch.scaille.tcwriter.it.api;
 
-import static ch.scaille.tcwriter.pilot.factories.Reporting.checkingThat;
+import static ch.scaille.testing.testpilot.factories.Reporting.checkingThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.function.Consumer;

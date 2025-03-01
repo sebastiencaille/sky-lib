@@ -3,8 +3,8 @@ package ch.scaille.testing.bdd.selenium;
 import org.openqa.selenium.WebDriver;
 
 import ch.scaille.tcwriter.pilot.selenium.ExamplePage;
-import ch.scaille.tcwriter.pilot.selenium.SeleniumPilot;
 import ch.scaille.testing.bdd.definition.AbstractAppTestApi;
+import ch.scaille.testing.testpilot.selenium.SeleniumPilot;
 
 public class AppPages extends AbstractAppTestApi<AppPages.Context> {
 

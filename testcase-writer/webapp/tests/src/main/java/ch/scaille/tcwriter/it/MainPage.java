@@ -8,8 +8,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
 
-import ch.scaille.tcwriter.pilot.selenium.PagePilot;
-import ch.scaille.tcwriter.pilot.selenium.SeleniumPilot;
+import ch.scaille.testing.testpilot.selenium.PagePilot;
+import ch.scaille.testing.testpilot.selenium.SeleniumPilot;
 import ch.scaille.util.helpers.LambdaExt;
 
 public class MainPage extends PagePilot {

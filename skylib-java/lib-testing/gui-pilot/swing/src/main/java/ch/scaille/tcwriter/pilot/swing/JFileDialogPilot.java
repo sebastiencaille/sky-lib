@@ -6,7 +6,7 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
-import ch.scaille.tcwriter.pilot.ModalDialogDetector;
+import ch.scaille.testing.testpilot.ModalDialogDetector;
 
 public class JFileDialogPilot {
 

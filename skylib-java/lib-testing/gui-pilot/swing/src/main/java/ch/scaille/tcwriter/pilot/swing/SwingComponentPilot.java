@@ -5,10 +5,10 @@ import java.util.Optional;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
-import ch.scaille.tcwriter.pilot.AbstractComponentPilot;
-import ch.scaille.tcwriter.pilot.Polling;
-import ch.scaille.tcwriter.pilot.PollingContext;
-import ch.scaille.tcwriter.pilot.PollingResult;
+import ch.scaille.testing.testpilot.AbstractComponentPilot;
+import ch.scaille.testing.testpilot.Polling;
+import ch.scaille.testing.testpilot.PollingContext;
+import ch.scaille.testing.testpilot.PollingResult;
 import ch.scaille.util.helpers.Poller;
 /**
  * An abstract class for Swing component pilots

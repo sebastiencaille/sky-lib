@@ -5,8 +5,8 @@ import java.util.function.Predicate;
 
 import javax.swing.JComponent;
 
-import ch.scaille.tcwriter.pilot.Polling;
-import ch.scaille.tcwriter.pilot.PollingContext;
+import ch.scaille.testing.testpilot.Polling;
+import ch.scaille.testing.testpilot.PollingContext;
 
 public class EditableComponentPolling<V> extends Polling<JComponent, V> {
 

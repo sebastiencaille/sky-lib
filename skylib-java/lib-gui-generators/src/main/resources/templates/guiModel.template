@@ -8,8 +8,10 @@ import ch.scaille.gui.mvc.GuiModel;
 import ch.scaille.gui.mvc.IObjectGuiModel;
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentLink;
+import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.Configuration;
+
 import ch.scaille.javabeans.persisters.IPersisterFactory.ObjectHolder;
 import ch.scaille.javabeans.persisters.Persisters;
 ${imports}
@@ -75,7 +77,7 @@ public class ${modelClass} extends GuiModel implements IObjectGuiModel<${objectC
 			}
             
             @Override
-            public void setComponentValue(final AbstractProperty source, final ${objectClass} value) {
+            public void setComponentValue(final IComponentChangeSource source, final ${objectClass} value) {
                 if (value != null) {
                     setCurrentObject(value);
                     load();

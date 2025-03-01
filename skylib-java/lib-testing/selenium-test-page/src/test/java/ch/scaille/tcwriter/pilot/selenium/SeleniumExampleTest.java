@@ -8,7 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.WebDriver;
 
-import ch.scaille.tcwriter.jupiter.DisabledIfHeadless;
+import ch.scaille.testing.testpilot.jupiter.DisabledIfHeadless;
+import ch.scaille.testing.testpilot.selenium.SeleniumPilot;
+import ch.scaille.testing.testpilot.selenium.WebDriverFactory;
 import ch.scaille.util.helpers.Logs;
 
 @ExtendWith(DisabledIfHeadless.class)

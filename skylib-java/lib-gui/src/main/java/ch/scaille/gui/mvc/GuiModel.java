@@ -42,7 +42,7 @@ public class GuiModel implements IPropertiesOwner {
 			return this;
 		}
 
-		public ModelConfiguration unlessSet(Supplier<ErrorNotifier> errSupplier) {
+		public ModelConfiguration ifNotSet(Supplier<ErrorNotifier> errSupplier) {
 			if (this.errorNotifier == null) {
 				this.errorNotifier = errSupplier.get();
 			}

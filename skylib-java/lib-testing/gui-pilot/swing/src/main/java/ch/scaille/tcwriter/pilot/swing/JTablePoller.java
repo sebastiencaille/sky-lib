@@ -1,7 +1,7 @@
 package ch.scaille.tcwriter.pilot.swing;
 
-import static ch.scaille.tcwriter.pilot.factories.Reporting.checkingValue;
-import static ch.scaille.tcwriter.pilot.factories.Reporting.settingValue;
+import static ch.scaille.testing.testpilot.factories.Reporting.checkingValue;
+import static ch.scaille.testing.testpilot.factories.Reporting.settingValue;
 
 import javax.swing.JTable;
 

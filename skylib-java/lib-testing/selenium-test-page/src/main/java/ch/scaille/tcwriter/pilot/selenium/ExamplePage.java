@@ -9,13 +9,16 @@ import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import ch.scaille.tcwriter.pilot.AbstractEvent.EventWaiter;
-import ch.scaille.tcwriter.pilot.ActionDelay;
-import ch.scaille.tcwriter.pilot.ModalDialogDetector;
-import ch.scaille.tcwriter.pilot.factories.Pollings;
-import ch.scaille.tcwriter.pilot.selenium.BiDiEvent.BiDiEventConfig;
-import ch.scaille.tcwriter.pilot.selenium.BiDiEvent.IBiDiEvent;
-import ch.scaille.tcwriter.pilot.selenium.BiDiEvent.MutationConfig;
+import ch.scaille.testing.testpilot.ActionDelay;
+import ch.scaille.testing.testpilot.ModalDialogDetector;
+import ch.scaille.testing.testpilot.AbstractEvent.EventWaiter;
+import ch.scaille.testing.testpilot.factories.Pollings;
+import ch.scaille.testing.testpilot.selenium.BiDiEvent;
+import ch.scaille.testing.testpilot.selenium.PagePilot;
+import ch.scaille.testing.testpilot.selenium.SeleniumPilot;
+import ch.scaille.testing.testpilot.selenium.BiDiEvent.BiDiEventConfig;
+import ch.scaille.testing.testpilot.selenium.BiDiEvent.IBiDiEvent;
+import ch.scaille.testing.testpilot.selenium.BiDiEvent.MutationConfig;
 
 public class ExamplePage extends PagePilot {
 

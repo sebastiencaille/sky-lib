@@ -15,14 +15,14 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.text.JTextComponent;
 
-import ch.scaille.tcwriter.pilot.ModalDialogDetector;
-import ch.scaille.tcwriter.pilot.ModalDialogDetector.PollingResult;
+import ch.scaille.testing.testpilot.ModalDialogDetector;
+import ch.scaille.testing.testpilot.ModalDialogDetector.PollingResult;
 
 /**
  * Allows to pilot a Swing component
  */
 @SuppressWarnings("java:S5960")
-public class SwingPilot extends ch.scaille.tcwriter.pilot.GuiPilot {
+public class SwingPilot extends ch.scaille.testing.testpilot.GuiPilot {
 
 	private final WeakHashMap<String, JComponent> cache = new WeakHashMap<>();
 	private final Container root;

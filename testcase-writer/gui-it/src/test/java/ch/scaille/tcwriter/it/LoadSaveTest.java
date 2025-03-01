@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import ch.scaille.tcwriter.it.api.TestContent;
-import ch.scaille.tcwriter.jupiter.DisabledIfHeadless;
+import ch.scaille.testing.testpilot.jupiter.DisabledIfHeadless;
 import ch.scaille.util.helpers.Logs;
 
 @ExtendWith(DisabledIfHeadless.class)

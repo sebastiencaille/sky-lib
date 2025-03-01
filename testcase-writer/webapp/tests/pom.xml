@@ -122,7 +122,6 @@
 							<classesDirectory>
 								${project.build.directory}/classes</classesDirectory>
 							<additionalClasspathElements>
-								<directory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</directory>
 								<directory>
 									${project.build.directory}/${project.build.finalName}/</directory>
 							</additionalClasspathElements>

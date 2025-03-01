@@ -17,7 +17,7 @@ import ch.scaille.tcwriter.pilot.selenium.SeleniumPilot;
 import ch.scaille.tcwriter.pilot.selenium.WebDriverFactory;
 import ch.scaille.util.helpers.Logs;
 
-@ExtendWith(DisabledIfHeadless.class)
+@ExtendWith({ DisabledIfHeadless.class, Extensions.class })
 class SimpleIT {
 
 	public static final WebDriver driver = WebDriverFactory.firefox().build();

@@ -10,13 +10,14 @@
 	<!-- allows to start the war as a local application -->
 	<packaging>war</packaging>
 	<artifactId>testcase-writer-webapp-tests</artifactId>
-
+	
 	<dependencies>
 
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-webapp-war</artifactId>
 			<type>war</type>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
@@ -24,15 +25,26 @@
 			<artifactId>gui-pilot-selenium</artifactId>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
+			<groupId>ch.scaille</groupId>
+			<artifactId>lib-testing-core</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-examples</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>jakarta.annotation</groupId>
+			<artifactId>jakarta.annotation-api</artifactId>
+		</dependency>
+		
 	</dependencies>
 
 	<profiles>
@@ -95,17 +107,24 @@
 						<configuration>
 							<skip>${skipTests}</skip>
 							<classesDirectory>
-								${project.build.directory}/${project.build.finalName}/WEB-INF/classes</classesDirectory>
-							<additionalClasspathElements>
-								<directory>
-									${project.build.directory}/${project.build.finalName}/WEB-INF/lib/*</directory>
-								<directory>
-									${project.build.directory}/${project.build.finalName}/</directory>
-							</additionalClasspathElements>
-							<mainClass>ch.scaille.tcwriter.server.Server</mainClass>
+								${project.build.directory}/classes</classesDirectory>
+							<mainClass>ch.scaille.testing.spring.TestWarLauncher</mainClass>
+							<systemPropertyVariables>
+								<mainClass>ch.scaille.tcwriter.server.Server</mainClass>
+							</systemPropertyVariables>
+							<includes>
+								<include>ch.scaille:lib-testing-core</include>
+							</includes>
 							<arguments>
 								<argument>--server.port=9000</argument>
 							</arguments>
+														
+							<!-- needed for jmx -->
+							<additionalClasspathElements>
+								<directory>
+									${project.build.directory}/${project.build.finalName}/</directory>
+							</additionalClasspathElements>
+
 						</configuration>
 					</plugin>
 					<plugin>

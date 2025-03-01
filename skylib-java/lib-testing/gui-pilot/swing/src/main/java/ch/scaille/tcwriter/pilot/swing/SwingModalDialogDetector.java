@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 
-import ch.scaille.tcwriter.pilot.ModalDialogDetector;
-import ch.scaille.tcwriter.pilot.ModalDialogDetector.PollingResult;
+import ch.scaille.testing.testpilot.ModalDialogDetector;
+import ch.scaille.testing.testpilot.ModalDialogDetector.PollingResult;
 
 public class SwingModalDialogDetector extends SwingPilot {
 

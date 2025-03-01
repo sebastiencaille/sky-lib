@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import ch.scaille.tcwriter.it.api.StepEdition;
-import ch.scaille.tcwriter.jupiter.DisabledIfHeadless;
+import ch.scaille.testing.testpilot.jupiter.DisabledIfHeadless;
 
 @ExtendWith(DisabledIfHeadless.class)
 class StepEditionTest extends AbstractGuiTest {

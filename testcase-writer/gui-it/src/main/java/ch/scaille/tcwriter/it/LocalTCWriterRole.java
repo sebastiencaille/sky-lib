@@ -18,10 +18,10 @@ import ch.scaille.tcwriter.it.api.StepSelector;
 import ch.scaille.tcwriter.it.api.TestContent;
 import ch.scaille.tcwriter.it.api.TestSessionRole;
 import ch.scaille.tcwriter.it.api.TestWriterRole;
-import ch.scaille.tcwriter.pilot.PollingContext;
-import ch.scaille.tcwriter.pilot.PollingResult;
-import ch.scaille.tcwriter.pilot.factories.PollingResults;
-import ch.scaille.tcwriter.pilot.factories.Reporting;
+import ch.scaille.testing.testpilot.PollingContext;
+import ch.scaille.testing.testpilot.PollingResult;
+import ch.scaille.testing.testpilot.factories.PollingResults;
+import ch.scaille.testing.testpilot.factories.Reporting;
 
 public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 

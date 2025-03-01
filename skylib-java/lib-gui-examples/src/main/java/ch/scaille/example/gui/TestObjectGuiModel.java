@@ -7,16 +7,17 @@ import java.util.Arrays;
 import ch.scaille.gui.mvc.GuiModel;
 import ch.scaille.gui.mvc.IObjectGuiModel;
 import ch.scaille.javabeans.IComponentBinding;
-import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
+import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.Configuration;
+
 import ch.scaille.javabeans.persisters.IPersisterFactory.ObjectHolder;
 import ch.scaille.javabeans.persisters.Persisters;
 import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.javabeans.properties.IntProperty;
 
-@Generated(value = "ch.scaille.gui.mvc.GuiModelGenerator", date = "2023/12/10 21:22", comments = "-sp ch.scaille.example.gui -s /home/scaille/src/github/sky-lib/skylib-java/lib-gui-examples/target/classes -t /home/scaille/src/github/sky-lib/skylib-java/lib-gui-examples/src/main/java")
+@Generated(value = "ch.scaille.gui.mvc.GuiModelGenerator", date = "2025/03/01 19:53", comments = "-sp ch.scaille.example.gui -s /home/scaille/src/github/sky-lib/skylib-java/lib-gui-examples/target/classes -t /home/scaille/src/github/sky-lib/skylib-java/lib-gui-examples/src/main/java")
 public class TestObjectGuiModel extends GuiModel implements IObjectGuiModel<ch.scaille.example.gui.TestObject> {
    
     private final ObjectHolder<ch.scaille.example.gui.TestObject> currentObjectProvider = new ObjectHolder<>();
@@ -34,7 +35,7 @@ public class TestObjectGuiModel extends GuiModel implements IObjectGuiModel<ch.s
 	protected final AbstractProperty[] allProperties;
 	
     public TestObjectGuiModel(final String prefix, ModelConfiguration config) {
-		super(config.unlessSet(()->	GuiModel.createErrorProperty(prefix + "TestObject-Error", config)));
+		super(config.ifNotSet(()->	GuiModel.createErrorProperty(prefix + "TestObject-Error", config)));
 		aSecondValueProperty = new IntProperty(prefix + ASECOND_VALUE, this).configureTyped(
 			Configuration.persistent(currentObjectProvider, Persisters.persister(TestObject::getASecondValue, TestObject::setASecondValue)),
 			implicitConverters(TestObject.class, ASECOND_VALUE, java.lang.Integer.class));

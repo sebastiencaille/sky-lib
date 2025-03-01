@@ -1,14 +1,14 @@
 package ch.scaille.tcwriter.pilot.swing;
 
-import static ch.scaille.tcwriter.pilot.factories.Reporting.checkingValue;
-import static ch.scaille.tcwriter.pilot.factories.Reporting.settingValue;
+import static ch.scaille.testing.testpilot.factories.Reporting.checkingValue;
+import static ch.scaille.testing.testpilot.factories.Reporting.settingValue;
 
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
 import org.junit.jupiter.api.Assertions;
 
-import ch.scaille.tcwriter.pilot.PollingContext;
+import ch.scaille.testing.testpilot.PollingContext;
 
 @SuppressWarnings("java:S5960")
 public class JTextFieldPoller

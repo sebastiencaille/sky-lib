@@ -4,7 +4,7 @@ import javax.swing.JLabel;
 
 import org.junit.jupiter.api.Assertions;
 
-import ch.scaille.tcwriter.pilot.factories.Reporting;
+import ch.scaille.testing.testpilot.factories.Reporting;
 
 public class JLabelPoller extends SwingPollingBuilder<JLabel, JLabelPoller, JLabelPoller.SwingPoller> {
 

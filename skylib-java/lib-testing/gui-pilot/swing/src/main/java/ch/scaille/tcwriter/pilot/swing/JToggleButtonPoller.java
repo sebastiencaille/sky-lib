@@ -1,6 +1,6 @@
 package ch.scaille.tcwriter.pilot.swing;
 
-import static ch.scaille.tcwriter.pilot.factories.Reporting.checkingThat;
+import static ch.scaille.testing.testpilot.factories.Reporting.checkingThat;
 
 import javax.swing.AbstractButton;
 import javax.swing.JToggleButton;

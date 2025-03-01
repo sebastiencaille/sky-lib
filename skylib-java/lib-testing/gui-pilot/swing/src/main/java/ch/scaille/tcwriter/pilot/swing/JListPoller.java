@@ -1,14 +1,14 @@
 package ch.scaille.tcwriter.pilot.swing;
 
-import static ch.scaille.tcwriter.pilot.factories.PollingResults.failure;
-import static ch.scaille.tcwriter.pilot.factories.PollingResults.success;
-import static ch.scaille.tcwriter.pilot.factories.Reporting.checkingValue;
+import static ch.scaille.testing.testpilot.factories.PollingResults.failure;
+import static ch.scaille.testing.testpilot.factories.PollingResults.success;
+import static ch.scaille.testing.testpilot.factories.Reporting.checkingValue;
 
 import javax.swing.JList;
 
 import org.junit.jupiter.api.Assertions;
 
-import ch.scaille.tcwriter.pilot.Polling;
+import ch.scaille.testing.testpilot.Polling;
 
 public class JListPoller extends SwingPollingBuilder<JList, JListPoller, JListPoller.SwingPoller> {
 

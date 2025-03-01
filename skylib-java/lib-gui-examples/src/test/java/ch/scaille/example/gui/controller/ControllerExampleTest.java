@@ -10,8 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import ch.scaille.example.gui.controller.impl.ControllerExampleController;
 import ch.scaille.example.gui.controller.impl.ControllerExampleView;
-import ch.scaille.tcwriter.jupiter.DisabledIfHeadless;
 import ch.scaille.tcwriter.pilot.swing.SwingPilot;
+import ch.scaille.testing.testpilot.jupiter.DisabledIfHeadless;
 import ch.scaille.util.helpers.Logs;
 
 @ExtendWith(DisabledIfHeadless.class)

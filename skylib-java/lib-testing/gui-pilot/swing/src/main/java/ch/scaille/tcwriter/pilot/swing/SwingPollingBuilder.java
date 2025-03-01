@@ -1,10 +1,10 @@
 package ch.scaille.tcwriter.pilot.swing;
 
-import static ch.scaille.tcwriter.pilot.factories.Reporting.checkingThat;
+import static ch.scaille.testing.testpilot.factories.Reporting.checkingThat;
 
 import javax.swing.JComponent;
 
-import ch.scaille.tcwriter.pilot.PollingBuilder;
+import ch.scaille.testing.testpilot.PollingBuilder;
 
 public class SwingPollingBuilder<C extends JComponent, T extends SwingPollingBuilder<C, T, P>, P extends SwingPollingBuilder.SwingPoller<C>>
 		extends PollingBuilder<C, T, P> {

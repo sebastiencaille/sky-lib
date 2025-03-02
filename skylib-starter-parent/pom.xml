@@ -23,10 +23,10 @@
 		
 		<aspectj.version>1.9.22.1</aspectj.version>
 		<spring-session.version>3.4.2</spring-session.version>
-		<jackson-bom.version>2.18.2</jackson-bom.version>
+		<jackson-bom.version>2.18.3</jackson-bom.version>
 		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
 		<guava.version>33.4.0-jre</guava.version>
-		<logback.version>1.5.16</logback.version>
+		<logback.version>1.5.17</logback.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
 
 		<jetbrain-annotations.version>26.0.2</jetbrain-annotations.version>
@@ -47,13 +47,13 @@
 
 		<coverage.temp>${java.io.tmpdir}/coverage/${basedir}</coverage.temp>
 
-		<maven-install-plugin.version>3.1.3</maven-install-plugin.version>
+		<maven-install-plugin.version>3.1.4</maven-install-plugin.version>
 		<build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
 		<maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
 		<maven-help-plugin.version>3.5.1</maven-help-plugin.version>
 		<maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
 		<maven-source-plugin.version>3.3.1</maven-source-plugin.version>
-		<maven-deploy-plugin.version>3.1.3</maven-deploy-plugin.version>
+		<maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
 		<maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
 		<maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
 		<maven-war-plugin.version>3.4.0</maven-war-plugin.version>
@@ -66,7 +66,7 @@
 		<maven-failsafe-plugin.version>3.5.2</maven-failsafe-plugin.version>
 
 		<maven-exec-plugin.version>3.5.0</maven-exec-plugin.version>
-		<openapi-generator-maven-plugin.version>7.11.0</openapi-generator-maven-plugin.version>
+		<openapi-generator-maven-plugin.version>7.12.0</openapi-generator-maven-plugin.version>
 		<jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
 
 	</properties>

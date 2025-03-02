@@ -22,7 +22,7 @@ import ch.scaille.tcwriter.model.testcase.TestStep;
 /**
  * Formats human readable text.
  * <p>
- * A pattern //some text %s more text // indicates that the entire text must not
+ * A pattern //some text %s more text // indicates that either %s is replaced, or the entire text must not
  * appear if the value of %s is empty
  * 
  */

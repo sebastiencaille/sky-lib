@@ -19,7 +19,7 @@ public class ScreenShotExtensions implements TestWatcher {
 	
     @Override
     public void testFailed(ExtensionContext context, Throwable cause) {
-    	final var webDriver = WebDriverExtension.getDriver(context);
+    	final var webDriver = WebDriverExtension.getDriver();
         if (webDriver == null) {
             return;
         }

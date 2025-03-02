@@ -15,6 +15,10 @@ public class WebDriverExtension implements ParameterResolver {
 
 	private static WebDriver currentDriver = null;
 	
+	public static void setCurrentDriver(WebDriver currentDriver) {
+		WebDriverExtension.currentDriver = currentDriver;
+	}
+	
 	public static class WebDriverConfigurer {
 
 		public WebDriver getDriver() {
@@ -22,19 +26,19 @@ public class WebDriverExtension implements ParameterResolver {
 		}
 
 		public void setDriver(WebDriver webDriver) {
-			currentDriver = webDriver;
+			setCurrentDriver(webDriver);
 		}
 		
 		public WebDriver getOrCreate(Supplier<WebDriver> webDriverSupplier) {
 			if (currentDriver == null) {
-				currentDriver = webDriverSupplier.get();
+				setDriver(webDriverSupplier.get());
 			}
 			return currentDriver;
 		}
 
 	}
 
-	public static WebDriver getDriver(ExtensionContext context) {
+	public static WebDriver getDriver() {
 		return currentDriver;
 	}
 

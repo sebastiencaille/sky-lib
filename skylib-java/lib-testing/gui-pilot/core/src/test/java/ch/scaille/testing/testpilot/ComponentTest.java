@@ -8,12 +8,6 @@ import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import ch.scaille.testing.testpilot.AbstractComponentPilot;
-import ch.scaille.testing.testpilot.GuiPilot;
-import ch.scaille.testing.testpilot.Polling;
-import ch.scaille.testing.testpilot.PollingBuilder;
-import ch.scaille.testing.testpilot.PollingContext;
-import ch.scaille.testing.testpilot.PollingResult;
 import ch.scaille.util.helpers.Poller;
 import ch.scaille.util.helpers.Poller.DelayFunction;
 

@@ -38,7 +38,7 @@
 		<undertow.version>2.3.18.Final</undertow.version>
 		<liquibase.version>4.31.1</liquibase.version>
 
-		<mockito.version>5.15.2</mockito.version>
+		<mockito.version>5.16.0</mockito.version>
 		<junit-jupiter.version>5.12.0</junit-jupiter.version>
 		<junit.version>4.13.2</junit.version>
 		<junit-platform-console-standalone.version>1.12.0</junit-platform-console-standalone.version>
@@ -257,7 +257,7 @@
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>flatten-maven-plugin</artifactId>
-					<version>1.6.0</version>
+					<version>1.7.0</version>
 					<configuration>
 						<updatePomFile>true</updatePomFile>
 						<flattenMode>resolveCiFriendliesOnly</flattenMode>

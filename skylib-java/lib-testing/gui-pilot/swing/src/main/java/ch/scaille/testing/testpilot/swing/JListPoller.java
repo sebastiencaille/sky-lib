@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.pilot.swing;
+package ch.scaille.testing.testpilot.swing;
 
 import static ch.scaille.testing.testpilot.factories.PollingResults.failure;
 import static ch.scaille.testing.testpilot.factories.PollingResults.success;
@@ -12,7 +12,7 @@ import ch.scaille.testing.testpilot.Polling;
 
 public class JListPoller extends SwingPollingBuilder<JList, JListPoller, JListPoller.SwingPoller> {
 
-	public static class SwingPoller extends ch.scaille.tcwriter.pilot.swing.SwingPollingBuilder.SwingPoller<JList> {
+	public static class SwingPoller extends ch.scaille.testing.testpilot.swing.SwingPollingBuilder.SwingPoller<JList> {
 
 		protected SwingPoller(JListPoller builder) {
 			super(builder);

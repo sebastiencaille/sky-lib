@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.pilot.swing;
+package ch.scaille.testing.testpilot.swing;
 
 import static ch.scaille.testing.testpilot.factories.Reporting.checkingValue;
 import static ch.scaille.testing.testpilot.factories.Reporting.settingValue;
@@ -10,12 +10,11 @@ import org.junit.jupiter.api.Assertions;
 
 import ch.scaille.testing.testpilot.PollingContext;
 
-@SuppressWarnings("java:S5960")
 public class JTextFieldPoller
 		extends SwingPollingBuilder<JTextComponent, JTextFieldPoller, JTextFieldPoller.SwingPoller> {
 
 	public static class SwingPoller
-			extends ch.scaille.tcwriter.pilot.swing.SwingPollingBuilder.SwingPoller<JTextComponent> {
+			extends ch.scaille.testing.testpilot.swing.SwingPollingBuilder.SwingPoller<JTextComponent> {
 
 		protected SwingPoller(JTextFieldPoller builder) {
 			super(builder);

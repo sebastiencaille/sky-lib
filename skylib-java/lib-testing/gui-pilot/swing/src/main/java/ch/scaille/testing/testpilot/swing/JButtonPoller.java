@@ -1,10 +1,10 @@
-package ch.scaille.tcwriter.pilot.swing;
+package ch.scaille.testing.testpilot.swing;
 
 import javax.swing.JButton;
 
 public class JButtonPoller extends SwingPollingBuilder<JButton, JButtonPoller, JButtonPoller.SwingPoller> {
 
-	public static class SwingPoller extends ch.scaille.tcwriter.pilot.swing.SwingPollingBuilder.SwingPoller<JButton> {
+	public static class SwingPoller extends ch.scaille.testing.testpilot.swing.SwingPollingBuilder.SwingPoller<JButton> {
 
 		protected SwingPoller(JButtonPoller builder) {
 			super(builder);

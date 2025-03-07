@@ -4,7 +4,7 @@ import java.util.function.Function;
 
 import ch.scaille.tcwriter.annotations.TCApi;
 import ch.scaille.tcwriter.it.TCWriterPage;
-import ch.scaille.tcwriter.pilot.swing.JTablePoller;
+import ch.scaille.testing.testpilot.swing.JTablePoller;
 
 @TCApi(description = "Action parameter selection", humanReadable = "Action parameter selection", isSelector = true)
 public interface ParameterSelector extends Function<TCWriterPage, JTablePoller> {

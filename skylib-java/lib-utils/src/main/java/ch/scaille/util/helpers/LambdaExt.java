@@ -184,9 +184,8 @@ public class LambdaExt {
 				// not compatible
 				if (ex instanceof RuntimeException) {
 					throw (RuntimeException) ex;
-				} else {
-					throw new IllegalStateException(ex);
 				}
+				throw new IllegalStateException(ex);
 			}
 		}
 	}

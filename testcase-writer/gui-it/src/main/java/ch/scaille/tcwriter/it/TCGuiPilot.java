@@ -1,7 +1,7 @@
 package ch.scaille.tcwriter.it;
 
 import ch.scaille.tcwriter.gui.frame.TCWriterGui;
-import ch.scaille.tcwriter.pilot.swing.SwingPilot;
+import ch.scaille.testing.testpilot.swing.SwingPilot;
 
 public class TCGuiPilot extends SwingPilot {
 

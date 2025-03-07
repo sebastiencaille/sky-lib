@@ -6,8 +6,8 @@ import java.util.function.Function;
 import ch.scaille.tcwriter.annotations.TCApi;
 import ch.scaille.tcwriter.it.TCGuiPilot;
 import ch.scaille.tcwriter.it.TCWriterPage;
-import ch.scaille.tcwriter.pilot.swing.JButtonPoller;
-import ch.scaille.tcwriter.pilot.swing.JFileDialogPilot;
+import ch.scaille.testing.testpilot.swing.JButtonPoller;
+import ch.scaille.testing.testpilot.swing.JFileDialogPilot;
 
 @TCApi(description = "Main frame actions", humanReadable = "Main frame actions")
 public class MainFrameAction {

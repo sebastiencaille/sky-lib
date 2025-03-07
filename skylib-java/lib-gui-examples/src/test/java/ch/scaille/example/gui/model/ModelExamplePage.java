@@ -1,10 +1,10 @@
 package ch.scaille.example.gui.model;
 
-import ch.scaille.tcwriter.pilot.swing.ByName;
-import ch.scaille.tcwriter.pilot.swing.JTablePoller;
-import ch.scaille.tcwriter.pilot.swing.JToggleButtonPoller;
-import ch.scaille.tcwriter.pilot.swing.PagePilot;
-import ch.scaille.tcwriter.pilot.swing.SwingPilot;
+import ch.scaille.testing.testpilot.swing.ByName;
+import ch.scaille.testing.testpilot.swing.JTablePoller;
+import ch.scaille.testing.testpilot.swing.JToggleButtonPoller;
+import ch.scaille.testing.testpilot.swing.PagePilot;
+import ch.scaille.testing.testpilot.swing.SwingPilot;
 
 public class ModelExamplePage extends PagePilot {
 

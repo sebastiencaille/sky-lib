@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.pilot.swing;
+package ch.scaille.testing.testpilot.swing;
 
 public class NoSuchComponentException extends Exception {
 

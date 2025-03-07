@@ -1,14 +1,12 @@
-package ch.scaille.tcwriter.pilot.swing;
+package ch.scaille.testing.testpilot.swing;
 
 import java.awt.event.KeyEvent;
 import java.lang.reflect.InvocationTargetException;
+import java.util.function.Supplier;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
-import org.junit.jupiter.api.Assertions;
-
-@SuppressWarnings("java:S5960")
 public class SwingHelper {
 
 	private SwingHelper() {
@@ -26,7 +24,24 @@ public class SwingHelper {
 			throw new AssertionError(e.getCause());
 		} catch (final InterruptedException e) {
 			Thread.currentThread().interrupt();
-			Assertions.fail("Test case interrupted");
+			throw new AssertionError("Test case interrupted");
+		}
+	}
+	
+	/**
+	 * Low level calls to Swing. Prefer withSwing methods
+	 *
+     */
+	public static <T> T invokeAndWait(final Supplier<T> runnable) {
+		try {
+			final var response = new Object[1];
+			SwingUtilities.invokeAndWait(() -> response[0] = runnable.get());
+			return (T) response[0];
+		} catch (final InvocationTargetException e) {
+			throw new AssertionError(e.getCause());
+		} catch (final InterruptedException e) {
+			Thread.currentThread().interrupt();
+			throw new AssertionError("Test case interrupted");
 		}
 	}
 

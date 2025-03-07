@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.pilot.swing;
+package ch.scaille.testing.testpilot.swing;
 
 import java.util.Optional;
 
@@ -66,9 +66,7 @@ public class SwingComponentPilot<C extends JComponent>
 
 	@Override
 	protected <U> Optional<PollingResult<C, U>> executePolling(Poller poller, final Polling<C, U> polling) {
-		final var response = new Optional[1];
-		SwingHelper.invokeAndWait(() -> response[0] = super.executePolling(poller, polling));
-		return response[0];
+		return SwingHelper.invokeAndWait(() -> super.executePolling(poller, polling));
 	}
 
 }

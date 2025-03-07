@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.pilot.swing;
+package ch.scaille.testing.testpilot.swing;
 
 import javax.swing.JLabel;
 
@@ -8,7 +8,7 @@ import ch.scaille.testing.testpilot.factories.Reporting;
 
 public class JLabelPoller extends SwingPollingBuilder<JLabel, JLabelPoller, JLabelPoller.SwingPoller> {
 
-	public static class SwingPoller extends ch.scaille.tcwriter.pilot.swing.SwingPollingBuilder.SwingPoller<JLabel> {
+	public static class SwingPoller extends ch.scaille.testing.testpilot.swing.SwingPollingBuilder.SwingPoller<JLabel> {
 
 		protected SwingPoller(JLabelPoller builder) {
 			super(builder);

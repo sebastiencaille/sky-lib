@@ -29,7 +29,9 @@ public class TestWarLauncher extends WarLauncher {
 
     @Override
     protected ClassLoader createClassLoader(Collection<URL> urls) throws Exception {
-        return new LaunchedClassLoader(isExploded(), getArchive(), urls.toArray(new URL[0]), ClassLoader.getPlatformClassLoader());
+        try (var archive = getArchive()) {
+        	return new LaunchedClassLoader(isExploded(), archive, urls.toArray(new URL[0]), ClassLoader.getPlatformClassLoader());
+        }
     }
 
     public static void main(String[] args) throws Exception {

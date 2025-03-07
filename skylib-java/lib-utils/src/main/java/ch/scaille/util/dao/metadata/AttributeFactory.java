@@ -56,12 +56,7 @@ class AttributeFactory {
 			}
 			break;
 		case RECORD:
-			try {
-				return createRecordAttribute(currentClass, property, name);
-			} catch (final NoSuchMethodException e) {
-				// ignore
-			}
-			break;
+			return createRecordAttribute(currentClass, property, name);
 		default:
 			throw new IllegalStateException("Unhandled mode " + mode);
 		}
@@ -96,7 +91,7 @@ class AttributeFactory {
 	}
 
 	private static <T> IAttributeMetaData<T> createRecordAttribute(final Class<?> currentClass, final String property,
-			final String name) throws NoSuchMethodException {
+			final String name) {
 		try {
 			final var getter = currentClass.getMethod(property);
 			final var getterHandler = MethodHandles.lookup().unreflect(getter);

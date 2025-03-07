@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.pilot.swing;
+package ch.scaille.testing.testpilot.swing;
 
 import static ch.scaille.testing.testpilot.factories.Reporting.checkingThat;
 
@@ -9,7 +9,7 @@ public class JToggleButtonPoller
 		extends SwingPollingBuilder<JToggleButton, JToggleButtonPoller, JToggleButtonPoller.SwingPoller> {
 
 	public static class SwingPoller
-			extends ch.scaille.tcwriter.pilot.swing.SwingPollingBuilder.SwingPoller<JToggleButton> {
+			extends ch.scaille.testing.testpilot.swing.SwingPollingBuilder.SwingPoller<JToggleButton> {
 
 		protected SwingPoller(JToggleButtonPoller builder) {
 			super(builder);

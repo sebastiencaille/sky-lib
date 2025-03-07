@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.pilot.swing;
+package ch.scaille.testing.testpilot.swing;
 
 import static ch.scaille.testing.testpilot.factories.Reporting.checkingValue;
 import static ch.scaille.testing.testpilot.factories.Reporting.settingValue;
@@ -7,10 +7,9 @@ import javax.swing.JTable;
 
 import org.junit.jupiter.api.Assertions;
 
-@SuppressWarnings("java:S5960")
 public class JTablePoller extends SwingPollingBuilder<JTable, JTablePoller, JTablePoller.SwingPoller> {
 
-	public static class SwingPoller extends ch.scaille.tcwriter.pilot.swing.SwingPollingBuilder.SwingPoller<JTable> {
+	public static class SwingPoller extends ch.scaille.testing.testpilot.swing.SwingPollingBuilder.SwingPoller<JTable> {
 
 		protected SwingPoller(JTablePoller builder) {
 			super(builder);

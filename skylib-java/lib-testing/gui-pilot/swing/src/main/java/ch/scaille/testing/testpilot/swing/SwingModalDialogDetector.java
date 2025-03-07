@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.pilot.swing;
+package ch.scaille.testing.testpilot.swing;
 
 import java.awt.Window;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class SwingModalDialogDetector extends SwingPilot {
 	}
 
 	/**
-	 * Lists all the windows and apply the handlers.
+	 * Lists all the dialogs and apply the handlers.
 	 */
 	public static List<ModalDialogDetector.PollingResult> listDialogs(
 			final Function<SwingModalDialogDetector, PollingResult>... pollingHandlers) {

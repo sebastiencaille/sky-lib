@@ -12,14 +12,13 @@ import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
-import org.springframework.session.Session;
 import org.springframework.web.filter.RequestContextFilter;
 
 import ch.scaille.tcwriter.server.web.filter.TomcatOverloadDetectorFilter;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig<S extends Session> {
+public class WebSecurityConfig {
 	
 	@Bean
 	InMemoryUserDetailsManager userDetailsService(PasswordEncoder passwordEncoder) {

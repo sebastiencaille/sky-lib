@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.pilot.swing;
+package ch.scaille.testing.testpilot.swing;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

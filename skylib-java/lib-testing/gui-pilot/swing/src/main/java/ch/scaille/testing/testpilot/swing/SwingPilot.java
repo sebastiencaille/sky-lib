@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.pilot.swing;
+package ch.scaille.testing.testpilot.swing;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -21,7 +21,6 @@ import ch.scaille.testing.testpilot.ModalDialogDetector.PollingResult;
 /**
  * Allows to pilot a Swing component
  */
-@SuppressWarnings("java:S5960")
 public class SwingPilot extends ch.scaille.testing.testpilot.GuiPilot {
 
 	private final WeakHashMap<String, JComponent> cache = new WeakHashMap<>();

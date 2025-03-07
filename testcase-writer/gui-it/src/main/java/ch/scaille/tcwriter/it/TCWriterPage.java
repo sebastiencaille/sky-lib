@@ -1,11 +1,11 @@
 package ch.scaille.tcwriter.it;
 
-import ch.scaille.tcwriter.pilot.swing.ByName;
-import ch.scaille.tcwriter.pilot.swing.JButtonPoller;
-import ch.scaille.tcwriter.pilot.swing.JListPoller;
-import ch.scaille.tcwriter.pilot.swing.JTablePoller;
-import ch.scaille.tcwriter.pilot.swing.PagePilot;
-import ch.scaille.tcwriter.pilot.swing.SwingPilot;
+import ch.scaille.testing.testpilot.swing.ByName;
+import ch.scaille.testing.testpilot.swing.JButtonPoller;
+import ch.scaille.testing.testpilot.swing.JListPoller;
+import ch.scaille.testing.testpilot.swing.JTablePoller;
+import ch.scaille.testing.testpilot.swing.PagePilot;
+import ch.scaille.testing.testpilot.swing.SwingPilot;
 
 public class TCWriterPage extends PagePilot {
 

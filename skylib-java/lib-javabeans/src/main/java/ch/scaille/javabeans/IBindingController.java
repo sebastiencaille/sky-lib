@@ -1,22 +1,12 @@
 package ch.scaille.javabeans;
 
-import ch.scaille.javabeans.properties.AbstractProperty;
-
 /**
  * To change the state of the binding.
  * <p>
  *
  * @author Sebastien Caille
  */
-public interface IBindingController {
-
-	IVeto getVetoer();
-
-	void forceViewUpdate();
-
-	AbstractProperty getProperty();
-
-	void unbind();
+public interface IBindingController extends IBindingControl {
 
 	IBindingController addDependency(IBindingChainDependency dependency);
 

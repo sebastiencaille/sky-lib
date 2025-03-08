@@ -19,7 +19,6 @@ import ch.scaille.gui.mvc.GuiController;
 import ch.scaille.gui.swing.tools.SwingGenericEditorDialog;
 import ch.scaille.gui.tools.GenericEditorClassModel;
 import ch.scaille.gui.tools.GenericEditorController;
-import ch.scaille.gui.tools.IGenericEditor;
 import ch.scaille.javabeans.PropertyChangeSupportController;
 import ch.scaille.javabeans.properties.ErrorSet;
 import ch.scaille.tcwriter.gui.editors.steps.StepEditorController;
@@ -52,13 +51,13 @@ public class TCWriterController extends GuiController {
 	private final ModelDao modelDao;
 
 	private final StepEditorController stepEditorController;
-	
+
 	public TCWriterController(final IConfigDao configDao, final ModelDao modelDao, TestDictionary tcDictionary,
 			final ITestExecutor testExecutor) {
 		this.configDao = configDao;
 		this.modelDao = modelDao;
 		this.testExecutor = testExecutor;
-		
+
 		this.model = new TCWriterModel(getScopedChangeSupport());
 
 		this.stepEditorController = new StepEditorController(this);
@@ -84,20 +83,19 @@ public class TCWriterController extends GuiController {
 			dictionary = loadDictionary(null);
 		}
 		model.getTestDictionary().setValue(this, dictionary);
-		
+
 		this.gui = new TCWriterGui(this);
 	}
 
 	public StepEditorController getStepEditorController() {
 		return stepEditorController;
 	}
-	
+
 	public TestDictionary loadDictionary(String name) {
 		TestDictionary dictionary = null;
 		while (dictionary == null) {
 			try {
-				dictionary = modelDao.readTestDictionary(name)
-						.orElseThrow(() -> new FileNotFoundException("default"));
+				dictionary = modelDao.readTestDictionary(name).orElseThrow(() -> new FileNotFoundException("default"));
 			} catch (FileNotFoundException e) {
 				// UI that allows selecting a dictionary
 				new DictionaryImport(null, modelDao).runImport();
@@ -119,29 +117,23 @@ public class TCWriterController extends GuiController {
 	}
 
 	public void editConfig() {
-		final var configEditorDialog = new SwingGenericEditorDialog<>(gui, "Configuration", ModalityType.DOCUMENT_MODAL);
+		final var configEditorDialog = new SwingGenericEditorDialog(gui, "Configuration", ModalityType.DOCUMENT_MODAL);
 		final var editorPropertySupport = PropertyChangeSupportController.mainGroup(configEditorDialog);
 		final var errorProp = new ErrorSet("Error", editorPropertySupport);
 		for (final var configToEdit : configDao.getCurrentConfig().getSubconfigs()) {
-			final var builder = GenericEditorClassModel.builder((Class<Object>)configToEdit.getClass())
-					.with(propertySupport)
-					.with(errorProp);
-			configEditorDialog.add(createEditor(configToEdit,
-					configEditorDialog.tab(configToEdit.getClass().getSimpleName()), builder));
+			final var controller = new GenericEditorController<>(
+					GenericEditorClassModel.builder((Class<Object>) configToEdit.getClass())
+							.support(propertySupport)
+							.errorSet(errorProp)
+							.build());
+			controller.build(ctrl -> configEditorDialog.createTab(configToEdit.getClass().getSimpleName(), ctrl));
+			controller.loadUnsafe(configToEdit);
 		}
 		configEditorDialog.build(errorProp);
 		configEditorDialog.setSize(configEditorDialog.getWidth() + 400, configEditorDialog.getHeight() + 30);
 		configEditorDialog.setVisible(true);
 		configEditorDialog.dispose();
 		configDao.saveConfiguration();
-	}
-
-	private static GenericEditorController<Object> createEditor(Object configToEdit, IGenericEditor<Object> tab,
-			GenericEditorClassModel.Builder<Object> builder) {
-		final var configEditor = new GenericEditorController<>(tab, builder.build());
-		configEditor.activate();
-		configEditor.loadUnsafe(configToEdit);
-		return configEditor;
 	}
 
 	public void newTestCase() {
@@ -255,7 +247,7 @@ public class TCWriterController extends GuiController {
 		gui.start();
 		newTestCase();
 	}
-	
+
 	public void restart() {
 		gui.setVisible(false);
 		new TCWriterController(configDao, modelDao, null, testExecutor).start();

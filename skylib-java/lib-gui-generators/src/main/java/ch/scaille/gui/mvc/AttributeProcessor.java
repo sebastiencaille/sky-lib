@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import ch.scaille.gui.mvc.ModelClassProcessor.GeneratorContext;
 import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
 import ch.scaille.util.dao.metadata.IAttributeMetaData;
 
@@ -16,16 +15,6 @@ import ch.scaille.util.dao.metadata.IAttributeMetaData;
  * To generate the code of the MVC model for a given model class attribute
  */
 public abstract class AttributeProcessor {
-
-	public interface AttributeProcessorDelegate {
-
-		String getFieldCreation(AttributeProcessor attributeProcessor);
-
-		void addImports(AttributeProcessor attributeProcessor);
-
-		String getPrimitiveFieldCreation(PrimitiveProcessor primitiveProcessor);
-
-	}
 
 	public static AttributeProcessor create(final GeneratorContext context, final IAttributeMetaData<?> a,
 			final AttributeProcessorDelegate delegate) {

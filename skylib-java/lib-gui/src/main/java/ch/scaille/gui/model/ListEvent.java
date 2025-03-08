@@ -14,26 +14,26 @@ import java.util.List;
  */
 public class ListEvent<T> {
 
-	private final ListModelImpl<T> source;
+	private final ListModelContent<T> source;
 
 	private final List<T> objects;
 
-	public ListEvent(final ListModelImpl<T> source) {
+	public ListEvent(final ListModelContent<T> source) {
 		this.source = source;
 		objects = null;
 	}
 
-	public ListEvent(final ListModelImpl<T> source, final T object) {
+	public ListEvent(final ListModelContent<T> source, final T object) {
 		this.source = source;
 		this.objects = Collections.singletonList(object);
 	}
 
-	public ListEvent(final ListModelImpl<T> source, final List<T> objects) {
+	public ListEvent(final ListModelContent<T> source, final List<T> objects) {
 		this.source = source;
 		this.objects = objects;
 	}
 
-	public ListModelImpl<T> getSource() {
+	public ListModelContent<T> getSource() {
 		return source;
 	}
 

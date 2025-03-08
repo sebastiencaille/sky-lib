@@ -56,7 +56,7 @@ public class PolicyTableColumnModel<C extends Enum<C>> extends DefaultTableColum
 	/**
 	 * Updates the width of the columns
 	 */
-	void update() {
+	void updateColumnsWidth() {
 
 		// Computes the actual size of the columns
 		final var width = table.getWidth();
@@ -134,9 +134,9 @@ public class PolicyTableColumnModel<C extends Enum<C>> extends DefaultTableColum
 		tableColumns.removeElementAt(index);
 		column.setHeaderRenderer(old.getHeaderRenderer());
 		column.setHeaderValue(old.getHeaderValue());
-		column.setModel(this);
+		column.onUpdate(() -> this.updateColumnsWidth());
 		tableColumns.add(index, column);
-		update();
+		updateColumnsWidth();
 	}
 
 	@Override
@@ -146,7 +146,7 @@ public class PolicyTableColumnModel<C extends Enum<C>> extends DefaultTableColum
 
 	@Override
 	protected void recalcWidthCache() {
-		update();
+		updateColumnsWidth();
 		super.recalcWidthCache();
 	}
 

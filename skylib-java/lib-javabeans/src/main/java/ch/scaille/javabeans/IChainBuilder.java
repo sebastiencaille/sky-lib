@@ -6,6 +6,11 @@ import java.util.function.Function;
 import ch.scaille.javabeans.converters.IConverter;
 import ch.scaille.javabeans.converters.IConverterWithContext;
 
+/**
+ * 
+ * @param <T> The current type
+ * @param <K> The context type
+ */
 public interface IChainBuilder<T, K> {
 
 	IBindingController listen(Consumer<T> newBinding);

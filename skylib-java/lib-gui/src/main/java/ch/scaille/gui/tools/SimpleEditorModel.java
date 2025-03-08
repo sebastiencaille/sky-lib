@@ -5,7 +5,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
-import ch.scaille.javabeans.IChainBuilder;
+import ch.scaille.javabeans.IChainBuilderFactory;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.PropertyChangeSupportController;
 import ch.scaille.javabeans.persisters.IPersisterFactory.IObjectProvider;
@@ -23,8 +23,8 @@ public class SimpleEditorModel<T> implements IGenericEditorModel<T> {
 	/**
 	 * Creates an entry of the model
 	 */
-    public static <T, E> IPropertyEntry<T> entry(final Class<E> propertyType, final AbstractTypedProperty<E> property, 
-                                          final Function<AbstractTypedProperty<E>, IChainBuilder<E, Object>> endOfChainProvider,
+    public static <T, E> IPropertyEntry entry(final Class<E> propertyType, final AbstractTypedProperty<E> property, 
+                                          final Function<AbstractTypedProperty<E>, IChainBuilderFactory<E>> endOfChainProvider,
                                           final boolean readOnly, final String label, final String tooltip) {
         return new PropertyEntry<>(propertyType, property, endOfChainProvider, readOnly, label, tooltip);
     }
@@ -32,8 +32,8 @@ public class SimpleEditorModel<T> implements IGenericEditorModel<T> {
 	/**
 	 * Creates an entry of the model
 	 */
-    public static <T, E> IPropertyEntry<T> entry(Class<E> propertyType, final AbstractTypedProperty<E> property, 
-                                          final Function<AbstractTypedProperty<E>, IChainBuilder<E, Object>> endOfChainProvider,
+    public static <T, E> IPropertyEntry entry(Class<E> propertyType, final AbstractTypedProperty<E> property, 
+                                          final Function<AbstractTypedProperty<E>, IChainBuilderFactory<E>> endOfChainProvider,
                                           final boolean readOnly, final UnaryOperator<String> textProvider) {
         return new PropertyEntry<>(propertyType, property, endOfChainProvider, readOnly,
                 textProvider.apply(PropertyEntry.descriptionKey(property.getName())),
@@ -42,9 +42,9 @@ public class SimpleEditorModel<T> implements IGenericEditorModel<T> {
 
     private final IPropertiesGroup support;
     private final ErrorSet errorSet;
-    private final BiFunction<IPropertiesGroup, IObjectProvider<T>, List<IPropertyEntry<T>>> builder;
+    private final BiFunction<IPropertiesGroup, IObjectProvider<T>, List<IPropertyEntry>> builder;
 
-    public SimpleEditorModel(final BiFunction<IPropertiesGroup, IObjectProvider<T>, List<IPropertyEntry<T>>> builder) {
+    public SimpleEditorModel(final BiFunction<IPropertiesGroup, IObjectProvider<T>, List<IPropertyEntry>> builder) {
         this.support = PropertyChangeSupportController.mainGroup(this);
         this.errorSet = new ErrorSet("Error", support);
         this.builder = builder;
@@ -55,7 +55,7 @@ public class SimpleEditorModel<T> implements IGenericEditorModel<T> {
      *
      */
     @Override
-    public List<IPropertyEntry<T>> createProperties(IObjectProvider<T> object) {
+    public List<IPropertyEntry> createProperties(IObjectProvider<T> object) {
         return builder.apply(support, object);
     }
 

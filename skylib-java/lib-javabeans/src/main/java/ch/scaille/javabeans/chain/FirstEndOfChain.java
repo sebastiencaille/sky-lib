@@ -4,7 +4,7 @@ import ch.scaille.javabeans.IChainBuilder;
 import ch.scaille.javabeans.IChainBuilderFactory;
 import ch.scaille.javabeans.converters.IConverter;
 
-public class FirstEndOfChain<T> extends EndOfChain<T, Object> implements IChainBuilderFactory<T> {
+public class FirstEndOfChain<T> extends EndOfChain<T, Void> implements IChainBuilderFactory<T> {
 
 	private ContextGlue contextGlue = null;
 
@@ -20,6 +20,7 @@ public class FirstEndOfChain<T> extends EndOfChain<T, Object> implements IChainB
 
 	@Override
 	public <C> IChainBuilderFactory<C> earlyBind(IConverter<T, C> converter) {
+		converter.initialize(chain.getProperty());
 		chain.addLink(link(value -> converter.convertPropertyValueToComponentValue((T) value),
 				value -> converter.convertComponentValueToPropertyValue((C)value)));
 		return new FirstEndOfChain<>(chain);

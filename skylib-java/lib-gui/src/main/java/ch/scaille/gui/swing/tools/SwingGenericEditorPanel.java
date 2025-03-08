@@ -23,49 +23,46 @@ import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
 import ch.scaille.gui.tools.GenericEditorController;
-import ch.scaille.gui.tools.IGenericEditor;
+import ch.scaille.gui.tools.IGenericEditorView;
 import ch.scaille.gui.tools.IPropertyEntry;
-import ch.scaille.gui.tools.PropertyEntry;
 import ch.scaille.javabeans.IBindingController;
 import ch.scaille.javabeans.properties.ErrorSet;
 
 /**
  * Swing based editor panel
  */
-public class SwingGenericEditorPanel<T> extends JPanel implements IGenericEditor<T> {
+public class SwingGenericEditorPanel<T> extends JPanel implements IGenericEditorView<T> {
 
+	private final ErrorSet errors;
 	private int currentRow;
 
-	public SwingGenericEditorPanel() {
+	public SwingGenericEditorPanel(GenericEditorController<T> controller) {
+		this.errors = controller.getErrorProperty();
 		setLayout(new GridBagLayout());
 	}
 
 	@Override
-	public IBindingController addEntry(final IPropertyEntry<T> prop, ErrorSet errors) {
+	public IBindingController addEntry(final IPropertyEntry prop) {
 
-		IBindingController result;
+		final IBindingController result;
 
 		final var propType = prop.getPropertyType();
 		currentRow++;
 		if (propType == Boolean.class) {
-			final var typedProp = prop.as(Boolean.class);
-			final var component = addBooleanComponent(typedProp);
-			result = typedProp.getChain().bind(selected(component));
+			final var component = addBooleanComponent(prop);
+			result = prop.getChain(Boolean.class).bind(selected(component));
 		} else if (propType == Integer.class) {
-			final var typedProp = prop.as(Integer.class);
-			addLabel(typedProp);
-			final var component = addNumberComponent(typedProp);
-			result = typedProp.getChain().bind(value(component));
+			addLabel(prop);
+			final var component = addNumberComponent(prop);
+			result = prop.getChain(Integer.class).bind(value(component));
 		} else if (propType == Long.class) {
-			final var typedProp = prop.as(Long.class);
-			addLabel(typedProp);
-			final var component = addNumberComponent(typedProp);
-			result = typedProp.getChain().bind(value(component));
+			addLabel(prop);
+			final var component = addNumberComponent(prop);
+			result = prop.getChain(Long.class).bind(value(component));
 		} else if (propType == String.class) {
-			final var typedProp = prop.as(String.class);
-			addLabel(typedProp);
-			final var component = addStringComponent(typedProp);
-			result = typedProp.getChain().bind(value(component));
+			addLabel(prop);
+			final var component = addStringComponent(prop);
+			result = prop.getChain(String.class).bind(value(component));
 		} else {
 			result = null;
 		}
@@ -76,7 +73,7 @@ public class SwingGenericEditorPanel<T> extends JPanel implements IGenericEditor
 		return result;
 	}
 
-	protected <C extends JComponent> C setup(C component, IPropertyEntry<T> prop) {
+	protected <C extends JComponent> C setup(C component, IPropertyEntry prop) {
 		component.setToolTipText(prop.getTooltip());
 		if (component instanceof JTextComponent) {
 			((JTextComponent)component).setEditable(!prop.isReadOnly());
@@ -84,7 +81,7 @@ public class SwingGenericEditorPanel<T> extends JPanel implements IGenericEditor
 		return component;
 	}
 	
-	protected JCheckBox addBooleanComponent(final PropertyEntry<T, Boolean> prop) {
+	protected JCheckBox addBooleanComponent(final IPropertyEntry prop) {
 		final var cb = new JCheckBox(prop.getLabel());
 		final var cbConstraint = new GridBagConstraints();
 		cbConstraint.gridx = 1;
@@ -96,7 +93,7 @@ public class SwingGenericEditorPanel<T> extends JPanel implements IGenericEditor
 		return cb;
 	}
 	
-	protected JLabel addLabel(final IPropertyEntry<T> prop) {
+	protected JLabel addLabel(final IPropertyEntry prop) {
 		final var label = new JLabel();
 		label.setText(prop.getLabel());
 		
@@ -109,7 +106,7 @@ public class SwingGenericEditorPanel<T> extends JPanel implements IGenericEditor
 		return label;
 	}
 
-	protected <U extends Number> JSpinner addNumberComponent(final PropertyEntry<T, U> prop) {
+	protected JSpinner addNumberComponent(final IPropertyEntry prop) {
 		final var spinner = new JSpinner();
 
 		JComponent displayed = spinner;
@@ -125,7 +122,7 @@ public class SwingGenericEditorPanel<T> extends JPanel implements IGenericEditor
 		return spinner;
 	}
 
-	protected JTextField addStringComponent(final PropertyEntry<T, String> prop) {
+	protected JTextField addStringComponent(final IPropertyEntry prop) {
 		final var textField = new JTextField();
 		add(setup(textField, prop), defaultEditorGridBagConstraints(currentRow));
 		return textField;
@@ -141,7 +138,7 @@ public class SwingGenericEditorPanel<T> extends JPanel implements IGenericEditor
 		return fieldConstraint;
 	}
 	
-	protected void addErrorDisplay(final ErrorSet errorProperty, final IPropertyEntry<T> prop) {
+	protected void addErrorDisplay(final ErrorSet errorProperty, final IPropertyEntry prop) {
 		var errorLabel = new JLabel("");
 		errorLabel.setPreferredSize(new Dimension(20, 20));
 		final var fieldConstraint = new GridBagConstraints();
@@ -161,7 +158,7 @@ public class SwingGenericEditorPanel<T> extends JPanel implements IGenericEditor
 	}
 
 	@Override
-	public void build(final GenericEditorController<T> adapter, final ErrorSet errorProperty) {
+	public void build() {
 		// default
 	}
 }

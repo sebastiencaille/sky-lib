@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.EventListener;
 import java.util.Iterator;
 import java.util.List;
@@ -20,6 +21,8 @@ import java.util.stream.Stream;
 import javax.swing.AbstractListModel;
 import javax.swing.event.EventListenerList;
 
+import org.jetbrains.annotations.NotNull;
+
 import ch.scaille.gui.model.views.IListView;
 import ch.scaille.gui.model.views.IListViewOwner;
 import ch.scaille.gui.model.views.ListViews;
@@ -27,7 +30,6 @@ import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.PropertyChangeSupportController;
 import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.util.helpers.StreamExt;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * List Model with log(n) access.
@@ -50,8 +52,8 @@ import org.jetbrains.annotations.NotNull;
  *            the Object.equals method. It is better if an element of the list
  *            can be uniquely identified using Object.equals.
  */
-public class ListModelImpl<T> extends AbstractListModel<T>
-		implements IListModelDelegate<T>, Iterable<T>, ListModelRef<T> {
+public class ListModelContent<T> extends AbstractListModel<T>
+		implements ISourceModel<T>, Iterable<T>, ListModelRef<T> {
 
 	private static final long serialVersionUID = 5327890361188939439L;
 
@@ -107,18 +109,19 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 	}
 
 	/**
-	 * Local listeners. Mostly used to handle list stacking
+	 * Listeners. Mostly used to handle list stacking and views
 	 */
-	private class LocalImpl implements IListViewOwner<T>, PropertyChangeListener, IChildModelListener<T>, Serializable {
+	private class ContentListeners implements IListViewOwner<T>, PropertyChangeListener, IChildModelListener<T>, Serializable {
 
 		@Override
-		public IListView<T> getParentView() {
-			if (parent != null) {
-				return parent.getView();
+		public Comparator<T> parentComparator() {
+			if (parent == null) {
+				return null;
 			}
-			return null;
+			final var parentView = parent.getView();
+			return parentView::compare;
 		}
-
+		
 		@Override
 		public void propertyChange(final PropertyChangeEvent evt) {
 			viewProperty.getValue().attach(this);
@@ -127,7 +130,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 
 		@Override
 		public void viewUpdated() {
-			ListModelImpl.this.viewUpdated();
+			ListModelContent.this.viewUpdated();
 		}
 
 		@Override
@@ -146,7 +149,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 				return;
 			}
 			if (data.size() / event.getObjects().size() < 2) {
-				event.getObjects().forEach(ListModelImpl.this::insert);
+				event.getObjects().forEach(ListModelContent.this::insert);
 			} else {
 				addValues(event.getObjects());
 			}
@@ -154,7 +157,7 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 
 		@Override
 		public void valuesRemoved(final ListEvent<T> event) {
-			event.getObjects().forEach(ListModelImpl.this::remove);// NOSONAR
+			event.getObjects().forEach(ListModelContent.this::remove);// NOSONAR
 		}
 
 		@Override
@@ -197,14 +200,15 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 	 */
 	private final ObjectProperty<IListView<T>> viewProperty = new ObjectProperty<>("View", changeSupport);
 
-	private final ListModelImpl<T> parent;
+	private final ListModelContent<T> parent;
+
+	private final ContentListeners contentListeners = new ContentListeners();
 
 	private String name = getClass().getSimpleName();
-	private final LocalImpl localImpl = new LocalImpl();
 
 	private ListModel<T> base;
 
-	public ListModelImpl(final IListView<T> view) {
+	public ListModelContent(final IListView<T> view) {
 		this.parent = null;
 		if (view == null) {
 			throw new IllegalArgumentException("View must not be null");
@@ -212,8 +216,8 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 		setView(view);
 	}
 
-	public ListModelImpl(final ListModelImpl<T> source, final IListView<T> view) {
-		this.parent = source;
+	public ListModelContent(final ListModelContent<T> parent, final IListView<T> view) {
+		this.parent = parent;
 		attachToParent();
 		setView(view);
 	}
@@ -228,14 +232,14 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 	}
 
 	private void attachToParent() {
-		parent.addListener(localImpl);
-		parent.viewProperty.addListener(localImpl);
+		parent.addListener(contentListeners);
+		parent.viewProperty.addListener(contentListeners);
 	}
 
 	public void dispose() {
 		if (parent != null) {
-			parent.removeListener(localImpl);
-			parent.viewProperty.removeListener(localImpl);
+			parent.removeListener(contentListeners);
+			parent.viewProperty.removeListener(contentListeners);
 		}
 	}
 
@@ -352,10 +356,10 @@ public class ListModelImpl<T> extends AbstractListModel<T>
 	 */
 	public void setView(final IListView<T> newView) {
 		if (viewProperty.getValue() != null) {
-			viewProperty.getValue().detach(localImpl);
+			viewProperty.getValue().detach(contentListeners);
 		}
         viewProperty.setValue(this, Objects.requireNonNullElseGet(newView, ListViews::inherited));
-		viewProperty.getValue().attach(localImpl);
+		viewProperty.getValue().attach(contentListeners);
 		viewUpdated();
 	}
 

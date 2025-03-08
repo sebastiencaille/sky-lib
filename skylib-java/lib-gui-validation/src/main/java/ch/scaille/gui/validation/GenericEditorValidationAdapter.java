@@ -1,7 +1,7 @@
 package ch.scaille.gui.validation;
 
 import ch.scaille.gui.tools.IGenericModelAdapter;
-import ch.scaille.javabeans.IChainBuilder;
+import ch.scaille.javabeans.IChainBuilderFactory;
 
 /**
  * Model adapter that validates a class
@@ -10,7 +10,7 @@ import ch.scaille.javabeans.IChainBuilder;
 public class GenericEditorValidationAdapter<T> implements IGenericModelAdapter<T> {
 
 	@Override
-	public <U> IChainBuilder<U, Object> apply(final Class<T> editedClazz, final IChainBuilder<U, Object> chain) {
-		return chain.bind(ValidationBinding.validator(editedClazz));
+	public <U> IChainBuilderFactory<U> apply(final Class<T> editedClazz, final IChainBuilderFactory<U> chain) {
+		return chain.earlyBind(ValidationBinding.validator(editedClazz));
 	}
 }

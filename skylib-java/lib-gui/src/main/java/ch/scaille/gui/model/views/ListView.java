@@ -18,9 +18,12 @@ public class ListView<T> implements IListView<T>, Serializable {
 
 	private static final long serialVersionUID = -4696996416566266010L;
 
-	private IListView<T> parentView;
+	/**
+	 * Used to sort elements that are equals 
+	 */
 	protected final Predicate<? super T> filter;
 	protected final Comparator<? super T> comparator;
+	protected Comparator<? super T> parentComparator = null;
 
 	/**
 	 * Creates a list view using a comparator and a filter
@@ -39,22 +42,22 @@ public class ListView<T> implements IListView<T>, Serializable {
 	@Override
 	public int compare(final T o1, final T o2) {
 		final int compare;
-		if (comparator == null && parentView == null) {
+		if (comparator == null && parentComparator == null) {
 			throw new IllegalStateException(this + ": you must either set a comparator or override this method");
 		} else if (comparator != null) {
 			compare = comparator.compare(o1, o2);
 		} else {
 			compare = 0;
 		}
-		if (compare == 0 && parentView != null) {
-			return parentView.compare(o1, o2);
+		if (compare == 0 && parentComparator != null) {
+			return parentComparator.compare(o1, o2);
 		}
 		return compare;
 	}
 
 	@Override
 	public void attach(final IListViewOwner<T> owner) {
-		parentView = owner.getParentView();
+		this.parentComparator = owner.parentComparator();
 		if (filter instanceof AbstractDynamicView) {
 			((AbstractDynamicView<T>) filter).attach(owner);
 		}

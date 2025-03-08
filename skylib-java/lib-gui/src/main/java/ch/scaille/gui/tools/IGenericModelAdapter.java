@@ -1,12 +1,12 @@
 package ch.scaille.gui.tools;
 
-import ch.scaille.javabeans.IChainBuilder;
+import ch.scaille.javabeans.IChainBuilderFactory;
 
 /**
  * Allows to add a binding in a binding chain
  */
 public interface IGenericModelAdapter<T> {
 
-	<U> IChainBuilder<U, Object> apply(Class<T> editedClass, IChainBuilder<U, Object> chain);
+	<U> IChainBuilderFactory<U> apply(Class<T> editedClass, IChainBuilderFactory<U> chain);
 
 }

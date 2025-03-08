@@ -32,22 +32,22 @@ import org.jetbrains.annotations.NotNull;
  *            the Object.equals method. It is better if an element of the list
  *            can be uniquely identified using Object.equals.
  */
-public class ListModel<T> implements IListModelDelegate<T>, Iterable<T>, Serializable {
+public class ListModel<T> implements ISourceModel<T>, Iterable<T>, Serializable {
 
-	protected final ListModelImpl<T> impl;
-	protected final IListModelDelegate<T> delegate;
+	protected final ListModelContent<T> content;
+	protected final ISourceModel<T> sourceCallbacks;
 	private String name = null;
 
 	public ListModel(final IListView<T> view) {
-		this.impl = new ListModelImpl<>(view);
-		this.impl.setBase(this);
-		this.delegate = impl;
+		this.content = new ListModelContent<>(view);
+		this.content.setBase(this);
+		this.sourceCallbacks = content;
 	}
 
-	public ListModel(final ListModelImpl<T> listModelImpl, IListModelDelegate<T> delegate) {
-		this.impl = listModelImpl;
-		this.impl.setBase(this);
-		this.delegate = delegate;
+	public ListModel(final ListModelContent<T> listModelImpl, ISourceModel<T> sourceCallbacks) {
+		this.content = listModelImpl;
+		this.content.setBase(this);
+		this.sourceCallbacks = sourceCallbacks;
 	}
 
 	public ListModel<T> withName(String name) {
@@ -55,20 +55,23 @@ public class ListModel<T> implements IListModelDelegate<T>, Iterable<T>, Seriali
 		return this;
 	}
 
-	public ChildListModel<T> child(IListView<T> view) {
-		return new ChildListModel<>(this, view);
+	public ListModel<T> child(IListView<T> view) {
+		final var parent = this;
+		final var newContent = new ListModelContent<>(content, view);
+		newContent.addValues(parent.values());
+		return new ListModel<>(newContent, parent); 
 	}
 
 	public int getRowOf(final T value) {
-		return impl.getRowOf(value);
+		return content.getRowOf(value);
 	}
 
 	public T getValueAt(final int row) {
-		return impl.getValueAt(row);
+		return content.getValueAt(row);
 	}
 
 	public String getName() {
-		return impl.getName();
+		return content.getName();
 	}
 
 	@Override
@@ -80,44 +83,44 @@ public class ListModel<T> implements IListModelDelegate<T>, Iterable<T>, Seriali
 	}
 
 	public List<T> values() {
-		return impl.values();
+		return content.values();
 	}
 
 	/**
 	 * Sets a new view on the list
 	 */
 	public void setView(final IListView<T> newView) {
-		impl.setView(newView);
+		content.setView(newView);
 	}
 
 	public T getElementAt(final int index) {
-		return impl.getElementAt(index);
+		return content.getElementAt(index);
 	}
 
 	public int getSize() {
-		return impl.getSize();
+		return content.getSize();
 	}
 
 	@Override
 	public @NotNull Iterator<T> iterator() {
-		return impl.iterator();
+		return content.iterator();
 	}
 
 	public void addListener(final IListModelListener<T> listener) {
-		impl.addListener(listener);
+		content.addListener(listener);
 	}
 
 	public void removeListener(final IListModelListener<T> listener) {
-		impl.removeListener(listener);
+		content.removeListener(listener);
 	}
 
 	public void addListDataListener(final ListDataListener listener) {
-		impl.addListDataListener(listener);
+		content.addListDataListener(listener);
 
 	}
 
 	public void removeListDataListener(final ListDataListener listener) {
-		impl.addListDataListener(listener);
+		content.addListDataListener(listener);
 	}
 
 	/**
@@ -148,7 +151,7 @@ public class ListModel<T> implements IListModelDelegate<T>, Iterable<T>, Seriali
 	}
 
 	public void editValue(final T sample, final Consumer<T> editor) {
-		try (var edition = impl.startEditingValue(sample)) {
+		try (var edition = content.startEditingValue(sample)) {
 			if (edition != null) {
 				editor.accept(edition.edited());
 			}
@@ -157,57 +160,57 @@ public class ListModel<T> implements IListModelDelegate<T>, Iterable<T>, Seriali
 
 	@Override
 	public void setValues(final Collection<T> newData) {
-		delegate.setValues(newData);
+		sourceCallbacks.setValues(newData);
 	}
 
 	@Override
 	public void addValues(final Collection<T> newData) {
-		delegate.addValues(newData);
+		sourceCallbacks.addValues(newData);
 	}
 
 	@Override
 	public void clear() {
-		delegate.clear();
+		sourceCallbacks.clear();
 	}
 
 	@Override
 	public int insert(final T value) {
-		return delegate.insert(value);
+		return sourceCallbacks.insert(value);
 	}
 
 	@Override
 	public T remove(final T sample) {
-		return delegate.remove(sample);
+		return sourceCallbacks.remove(sample);
 	}
 
 	@Override
 	public T remove(final int row) {
-		return delegate.remove(row);
+		return sourceCallbacks.remove(row);
 	}
 
 	@Override
 	public T getEditedValue() {
-		return delegate.getEditedValue();
+		return sourceCallbacks.getEditedValue();
 	}
 
 	@Override
 	public IEdition<T> startEditingValue(final T value) {
-		return delegate.startEditingValue(value);
+		return sourceCallbacks.startEditingValue(value);
 	}
 
 	@Override
 	public void stopEditingValue() {
-		delegate.stopEditingValue();
+		sourceCallbacks.stopEditingValue();
 	}
 
 	@Override
 	public T find(final T sample) {
-		return delegate.find(sample);
+		return sourceCallbacks.find(sample);
 	}
 
 	@Override
 	public IEdition<T> findForEdition(final T sample) {
-		return delegate.findForEdition(sample);
+		return sourceCallbacks.findForEdition(sample);
 	}
 
 	/**
@@ -219,16 +222,16 @@ public class ListModel<T> implements IListModelDelegate<T>, Iterable<T>, Seriali
 	 */
 	@Override
 	public T findOrCreate(final T sample) {
-		return delegate.findOrCreate(sample);
+		return sourceCallbacks.findOrCreate(sample);
 	}
 
 	@Override
 	public IEdition<T> findOrCreateForEdition(final T sample) {
-		return delegate.findOrCreateForEdition(sample);
+		return sourceCallbacks.findOrCreateForEdition(sample);
 	}
 
 	public void dispose() {
-		impl.dispose();
+		content.dispose();
 	}
 
 }

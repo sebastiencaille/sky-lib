@@ -4,7 +4,7 @@ import ch.scaille.gui.model.IListModelListener;
 import ch.scaille.gui.model.ListEvent;
 import ch.scaille.gui.model.ListModel;
 import ch.scaille.javabeans.IBindingChainDependency;
-import ch.scaille.javabeans.IBindingController;
+import ch.scaille.javabeans.IBindingControl;
 
 /**
  * Allow to define dependencies between bindings.
@@ -17,15 +17,15 @@ public final class BindingDependencies {
 	public static class PreserveOnUpdateOfListModel<T> implements IBindingChainDependency, IListModelListener<T> {
 
 		private final ch.scaille.gui.model.ListModel<T> model;
-		private IBindingController controller;
+		private IBindingControl bindingControl;
 
 		public PreserveOnUpdateOfListModel(final ListModel<T> model) {
 			this.model = model;
 		}
 
 		@Override
-		public void register(final IBindingController controller) {
-			this.controller = controller;
+		public void register(final IBindingControl bindingControl) {
+			this.bindingControl = bindingControl;
 			model.addListener(this);
 		}
 
@@ -36,7 +36,7 @@ public final class BindingDependencies {
 
 		@Override
 		public void mutates() {
-			controller.getVetoer().detach();
+			bindingControl.getVetoer().detach();
 		}
 
 		@Override
@@ -65,8 +65,8 @@ public final class BindingDependencies {
 		}
 
 		private void reattach() {
-			controller.getVetoer().attach();
-			controller.forceViewUpdate();
+			bindingControl.getVetoer().attach();
+			bindingControl.forceViewUpdate();
 		}
 
 		@Override

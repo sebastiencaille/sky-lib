@@ -44,7 +44,7 @@ public class GenericPropertiesEditorLauncher {
 
 	}
 
-	private static List<IPropertyEntry<EditedObject>> builder(IPropertiesGroup support, IObjectProvider<EditedObject> obj) {
+	private static List<IPropertyEntry> builder(IPropertiesGroup support, IObjectProvider<EditedObject> obj) {
 
 		final var strProp = new ObjectProperty<String>("str", support)
 				.configureTyped(persistent(obj, persister(EditedObject::getStr, EditedObject::setStr)));
@@ -63,10 +63,10 @@ public class GenericPropertiesEditorLauncher {
 
 		final var obj = new EditedObject();
 		final var model = new SimpleEditorModel<>(GenericPropertiesEditorLauncher::builder);
-		final var view = new SwingGenericEditorDialog<EditedObject>(null, "Test", Dialog.ModalityType.DOCUMENT_MODAL);
-		final var editor = new GenericEditorController<>(view.mainPanel(), model);
+		final var view = new SwingGenericEditorDialog(null, "Test", Dialog.ModalityType.DOCUMENT_MODAL);
+		final var editor = new GenericEditorController<>(model);
 		SwingUtilities.invokeLater(() -> {
-			editor.activate();
+			editor.build(view::createMainPanel);
 			editor.load(obj);
 			view.build(model.getErrorProperty());
 			view.validate();

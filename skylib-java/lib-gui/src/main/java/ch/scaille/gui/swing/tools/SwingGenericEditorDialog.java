@@ -14,10 +14,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 
 import ch.scaille.gui.tools.GenericEditorController;
-import ch.scaille.gui.tools.IGenericEditor;
 import ch.scaille.javabeans.properties.ErrorSet;
 
-public class SwingGenericEditorDialog<T> extends JDialog {
+public class SwingGenericEditorDialog extends JDialog {
 
 	private JTabbedPane tabbedPane = null;
 	private final List<GenericEditorController<?>> controllers = new ArrayList<>();
@@ -27,24 +26,22 @@ public class SwingGenericEditorDialog<T> extends JDialog {
 		getContentPane().setLayout(new BorderLayout());
 	}
 
-	public IGenericEditor<T> mainPanel() {
-		final var panel = new SwingGenericEditorPanel<T>();
+	public <T> SwingGenericEditorPanel<T> createMainPanel(GenericEditorController<T> controller) {
+		controllers.add(controller);
+		final var panel = new SwingGenericEditorPanel<>(controller);
 		getContentPane().add(panel, BorderLayout.CENTER);
 		return panel;
 	}
 
-	public IGenericEditor<T>tab(String name) {
+	public <T> SwingGenericEditorPanel<T> createTab(String name, GenericEditorController<T> controller) {
+		controllers.add(controller);
 		if (tabbedPane == null) {
 			tabbedPane = new JTabbedPane(SwingConstants.TOP);
 			getContentPane().add(tabbedPane, BorderLayout.CENTER);
 		}
-		final var panel = new SwingGenericEditorPanel<T>();
+		final var panel = new SwingGenericEditorPanel<>(controller);
 		tabbedPane.add(name, panel);
 		return panel;
-	}
-
-	public void add(GenericEditorController<?> controller) {
-		controllers.add(controller);
 	}
 
 	public void build(final ErrorSet errorProperty) {

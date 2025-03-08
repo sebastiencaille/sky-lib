@@ -5,7 +5,7 @@ import ch.scaille.javabeans.properties.AbstractProperty;
 public interface IConverterWithContext<P, C, K> {
 	
 	default void initialize(final AbstractProperty p) {
-		
+		// noop
 	}
 	
 	C convertPropertyValueToComponentValue(final P propertyValue, K context);

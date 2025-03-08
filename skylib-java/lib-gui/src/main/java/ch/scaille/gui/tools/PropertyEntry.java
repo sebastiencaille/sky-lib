@@ -2,7 +2,7 @@ package ch.scaille.gui.tools;
 
 import java.util.function.Function;
 
-import ch.scaille.javabeans.IChainBuilder;
+import ch.scaille.javabeans.IChainBuilderFactory;
 import ch.scaille.javabeans.properties.AbstractTypedProperty;
 
 /*
@@ -11,18 +11,18 @@ import ch.scaille.javabeans.properties.AbstractTypedProperty;
  * @param <T> the owner type
  * @param <V> the end of chain type
  */
-public class PropertyEntry<T, V> implements IPropertyEntry<T> {
+public class PropertyEntry<T, V> implements IPropertyEntry {
 
 	protected final AbstractTypedProperty<V> property;
-	private final Function<AbstractTypedProperty<V>, IChainBuilder<V, Object>> endOfChain;
+	private final Function<AbstractTypedProperty<V>, IChainBuilderFactory<V>> endOfChain;
 	private final Class<?> propertyType;
 	private final boolean readOnly;
 	private final String label;
 	private final String tooltip;
 
-	protected PropertyEntry(Class<V> propertyType,
-			final AbstractTypedProperty<V> property, Function<AbstractTypedProperty<V>, IChainBuilder<V, Object>> endOfChainProvider,
-			final boolean readOnly, final String label, final String tooltip) {
+	protected PropertyEntry(Class<V> propertyType, final AbstractTypedProperty<V> property,
+			Function<AbstractTypedProperty<V>, IChainBuilderFactory<V>> endOfChainProvider, final boolean readOnly,
+			final String label, final String tooltip) {
 		this.property = property;
 		this.endOfChain = endOfChainProvider;
 		this.propertyType = propertyType;
@@ -37,26 +37,22 @@ public class PropertyEntry<T, V> implements IPropertyEntry<T> {
 	}
 
 	@Override
-	public <W> PropertyEntry<T, W> as(Class<W> expectedType) {
-		if (!expectedType.equals(propertyType)) {
-			throw new IllegalArgumentException(
-					"Expected " + expectedType + ", but property type is " + getPropertyType());
-		}
-		return (PropertyEntry<T, W>)this;
-	}
-	
-	@Override
 	public AbstractTypedProperty<V> getProperty() {
 		return property;
 	}
 
 	/**
-	 * Allows to get the typed EndOfChain of the parametendOfChainerized entry
+	 * Allows to get the typed EndOfChain of the entry
 	 *
 	 * @return the typed EndOfChain
 	 */
-	public IChainBuilder<V, Object> getChain() {
-		return endOfChain.apply(property);
+	@Override
+	public <R> IChainBuilderFactory<R> getChain(Class<R> expectedType) {
+		if (!expectedType.equals(propertyType)) {
+			throw new IllegalArgumentException(
+					"Expected " + expectedType + ", but property type is " + getPropertyType());
+		}
+		return (IChainBuilderFactory<R>) endOfChain.apply(property);
 	}
 
 	@Override

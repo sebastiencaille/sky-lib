@@ -14,14 +14,14 @@ public final class BindingDependencies {
 	public static class PreserveOnUpdateOf implements IBindingChainDependency, IPropertyEventListener {
 
 		private final AbstractProperty property;
-		private IBindingController controller;
+		private IBindingControl controller;
 
 		public PreserveOnUpdateOf(final AbstractProperty property) {
 			this.property = property;
 		}
 
 		@Override
-		public void register(final IBindingController controller) {
+		public void register(final IBindingControl controller) {
 			this.controller = controller;
 			property.addListener(this);
 			DependenciesBuildingReport.addDependency(this, controller);

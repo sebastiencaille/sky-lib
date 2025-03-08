@@ -25,7 +25,7 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 	public static final String SAMPLE_LOREM_IPSUM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vehicula lorem ut neque condimentum, non hendrerit nisl molestie. Morbi non vehicula erat. Phasellus nec diam quis ipsum lacinia congue id in nisi. Aenean dolor lectus, ornare ut faucibus nec, sagittis in mauris. Nulla ac bibendum sapien, quis porta nunc. Morbi sit amet metus massa. Vestibulum feugiat pretium enim, at maximus mi convallis eget. Duis maximus in nunc quis ornare. Duis dui risus, mattis in leo a, semper rutrum ante. Aliquam rutrum laoreet feugiat. Quisque rhoncus felis vitae metus volutpat finibus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed sed viverra ipsum. In hac habitasse platea dictumst. Pellentesque a purus diam. Nullam facilisis metus ut nulla dapibus finibus.";
 	public static final String SAMPLE_NUMBERS = "0";
 
-	private PolicyTableColumnModel<C> model;
+	private Runnable onUpdate;
 
 	private final C column;
 
@@ -45,11 +45,11 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 	@Override
 	public void setWidth(final int width) {
 		forcedWidth = width;
-		model.update();
+		onUpdate.run();
 	}
 
-	public void setModel(final PolicyTableColumnModel<C> model) {
-		this.model = model;
+	public void onUpdate(Runnable onUpdate) {
+		this.onUpdate = onUpdate;
 	}
 
 	public void setComputedWidth(final int width) {

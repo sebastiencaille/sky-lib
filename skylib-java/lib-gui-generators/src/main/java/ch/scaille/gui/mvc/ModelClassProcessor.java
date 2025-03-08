@@ -6,16 +6,11 @@ import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
 
 import ch.scaille.generators.util.GenerationMetadata;
 import ch.scaille.generators.util.JavaCodeGenerator;
 import ch.scaille.generators.util.Template;
-import ch.scaille.gui.mvc.AttributeProcessor.AttributeProcessorDelegate;
 import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
 import ch.scaille.util.dao.metadata.IAttributeMetaData;
 import ch.scaille.util.dao.metadata.UntypedDataObjectMetaData;
@@ -27,38 +22,6 @@ import ch.scaille.util.helpers.ClassFinder.URLClassFinder;
 public class ModelClassProcessor {
 
 	private static final String ATTRIB_PUBLIC = "public ";
-
-	public static class GeneratorContext {
-		private final URLClassFinder classFinder;
-		private final Map<String, String> properties = new HashMap<>();
-		private final Set<String> imports = new HashSet<>();
-
-		public GeneratorContext(URLClassFinder classFinder) {
-			this.classFinder = classFinder;
-		}
-
-		public void addImport(final Class<?> class1) {
-			imports.add(class1.getName());
-		}
-
-		public void append(final String key, final String value) {
-			Template.append(properties, key, value);
-		}
-
-		public void appendToList(final String key, final String value) {
-			Template.appendToList(properties, key, value);
-		}
-
-		public void addImport(final String className) {
-			imports.add(classFinder.loadByName(className).getName());
-		}
-
-		public void reset() {
-			imports.clear();
-			properties.clear();
-		}
-
-	}
 
 	public static String typeParametersToString(final Type type) {
 		if (!(type instanceof ParameterizedType)) {

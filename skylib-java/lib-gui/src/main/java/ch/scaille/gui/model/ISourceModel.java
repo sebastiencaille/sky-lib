@@ -2,7 +2,7 @@ package ch.scaille.gui.model;
 
 import java.util.Collection;
 
-public interface IListModelDelegate<T> {
+public interface ISourceModel<T> {
 
 	void setValues(final Collection<T> newData);
 

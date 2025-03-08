@@ -33,7 +33,7 @@ public final class Converters {
 	}
 
 	public static <P, C, K> IConverterWithContext<P, C, K> wrap(IConverter<P, C> converter) {
-		return new IConverterWithContext<P, C, K>() {
+		return new IConverterWithContext<>() {
 
 			@Override
 			public void initialize(AbstractProperty p) {

@@ -1,5 +1,7 @@
 package ch.scaille.gui.model.views;
 
+import java.util.Comparator;
+
 /**
  * Must be implemented by the ListView's owner.
  * <p>
@@ -10,8 +12,8 @@ package ch.scaille.gui.model.views;
  */
 public interface IListViewOwner<T> {
 
-	IListView<T> getParentView();
-
 	void viewUpdated();
+
+	Comparator<T> parentComparator();
 
 }

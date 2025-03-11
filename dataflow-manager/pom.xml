@@ -6,11 +6,11 @@
 
 	<parent>
 		<groupId>ch.scaille</groupId>
-		<artifactId>skylib-starter-parent</artifactId>
-		<version>0.0.1-M4-SNAPSHOT</version>
-		<relativePath />
+	    <artifactId>skylib-starter-parent</artifactId>
+	    <version>0.0.1-M4-SNAPSHOT</version>
+	    <relativePath/>
 	</parent>
-
+	
 	<groupId>ch.scaille.dataflowmgr</groupId>
 	<artifactId>data-flow-manager</artifactId>
 	<version>${revision}</version>
@@ -31,8 +31,16 @@
 		<maven.compiler.target>24</maven.compiler.target>
 	</properties>
 
-	<dependencyManagement>
-		<dependencies>
+	  <dependencyManagement>
+    <dependencies>
+		<dependency>
+			<groupId>ch.scaille</groupId>
+	    <artifactId>skylib-starter-parent</artifactId>
+	    <version>0.0.1-M4-SNAPSHOT</version>
+	    <type>pom</type>
+	    <scope>import</scope>
+		</dependency>
+
 			<dependency>
 				<groupId>ch.scaille</groupId>
 				<artifactId>lib-utils</artifactId>

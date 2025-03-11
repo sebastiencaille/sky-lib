@@ -3,8 +3,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 http://maven.apache.org/xsd/maven-4.1.0.xsd">
 	<modelVersion>4.1.0</modelVersion>
+	<parent>
+		<groupId>ch.scaille</groupId>
+	    <artifactId>skylib-starter-parent</artifactId>
+	    <version>0.0.1-M4-SNAPSHOT</version>
+	    <relativePath/>
+	</parent>
 
-  <groupId>ch.scaille</groupId>
 	<artifactId>libs</artifactId>
 	<version>${revision}</version>
 	<name>libs</name>
@@ -26,6 +31,31 @@
 		<java.version>21</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
+		
+		<coverage.temp>${java.io.tmpdir}/coverage/${basedir}</coverage.temp>
+
+		<maven-install-plugin.version>3.1.3</maven-install-plugin.version>
+		<build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
+		<maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
+		<maven-help-plugin.version>3.5.1</maven-help-plugin.version>
+		<maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
+		<maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+		<maven-deploy-plugin.version>3.1.3</maven-deploy-plugin.version>
+		<maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
+		<maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+		<maven-war-plugin.version>3.4.0</maven-war-plugin.version>
+		<maven-dependency-plugin.version>3.8.1</maven-dependency-plugin.version>
+		<maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
+		<maven-clean-plugin.version>3.4.0</maven-clean-plugin.version>
+		<versions-maven-plugin.version>2.18.0</versions-maven-plugin.version>
+
+		<maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
+		<maven-failsafe-plugin.version>3.5.2</maven-failsafe-plugin.version>
+
+		<maven-exec-plugin.version>3.5.0</maven-exec-plugin.version>
+		<openapi-generator-maven-plugin.version>7.11.0</openapi-generator-maven-plugin.version>
+		<jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
+
 	</properties>
 	<build>
 		<plugins>

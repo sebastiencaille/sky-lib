@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns="http://maven.apache.org/POM/4.1.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 http://maven.apache.org/xsd/maven-4.1.0.xsd">
+	<modelVersion>4.1.0</modelVersion>
 
-	<parent>
-		<groupId>ch.scaille.tcwriter</groupId>
-		<artifactId>testcase-writer</artifactId>
-		<version>${revision}</version>
-	</parent>
-
+	<parent/>
 	<artifactId>testcase-writer-maven-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
 
 	<name>TestCase Writer Maven Plugin</name>
 
 	<properties>
-		<maven.version>4.0.0-rc-2</maven.version>
+		<maven.version>4.0.0-rc-3</maven.version>
 		<maven-plugin-plugin.version>4.0.0-beta-1</maven-plugin-plugin.version>
 	</properties>
 

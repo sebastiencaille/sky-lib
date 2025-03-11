@@ -1,26 +1,22 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns="http://maven.apache.org/POM/4.1.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 http://maven.apache.org/xsd/maven-4.1.0.xsd">
+	<modelVersion>4.1.0</modelVersion>
 
-	<parent>
-		<groupId>ch.scaille.tcwriter</groupId>
-		<artifactId>testcase-writer</artifactId>
-		<version>${revision}</version>
-	</parent>
+	<parent/>
 
 	<artifactId>testcase-writer-webapp</artifactId>
 	<packaging>pom</packaging>
 
-	<modules>
-		<module>api-validators</module>
-		<module>backend-core</module>
-		<module>api-v0</module>
-		<module>backend</module>
-		<module>frontend</module>
-		<module>war</module>
-		<module>tests</module>
-	</modules>
+	<subprojects>
+		<subproject>api-validators</subproject>
+		<subproject>backend-core</subproject>
+		<subproject>api-v0</subproject>
+		<subproject>backend</subproject>
+		<subproject>frontend</subproject>
+		<subproject>war</subproject>
+		<subproject>tests</subproject>
+	</subprojects>
 
 	<properties>
 		<apiPackageBase>

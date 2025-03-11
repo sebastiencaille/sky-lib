@@ -1,20 +1,16 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns="http://maven.apache.org/POM/4.1.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>ch.scaille</groupId>
-		<artifactId>lib-testing</artifactId>
-		<version>${revision}</version>
-	</parent>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 https://maven.apache.org/xsd/maven-4.1.0.xsd">
+	<modelVersion>4.1.0</modelVersion>
+	<parent/>
 
 	<artifactId>gui-pilot</artifactId>
 	<name>gui-pilot</name>
 	<packaging>pom</packaging>
 
-	<modules>
-		<module>core</module>
-		<module>swing</module>
-		<module>selenium</module>
-	</modules>
+	<subprojects>
+		<subproject>core</subproject>
+		<subproject>swing</subproject>
+		<subproject>selenium</subproject>
+	</subprojects>
 </project>

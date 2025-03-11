@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns="http://maven.apache.org/POM/4.1.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 http://maven.apache.org/xsd/maven-4.1.0.xsd">
+	<modelVersion>4.1.0</modelVersion>
+
 	<parent>
 		<groupId>ch.scaille</groupId>
-		<artifactId>skylib-starter-parent</artifactId>
-		<version>${starter.revision}</version>
-		<relativePath />
+	    <artifactId>skylib-starter-parent</artifactId>
+	    <version>0.0.1-M4-SNAPSHOT</version>
+	    <relativePath/>
 	</parent>
-	<version>${revision}</version>
 	<groupId>ch.scaille.tcwriter</groupId>
 	<artifactId>testcase-writer</artifactId>
+	<version>${revision}</version>
 	<packaging>pom</packaging>
-	<modules>
-		<module>api</module>
-		<module>core</module>
-		<module>javatc</module>
-		<module>maven-plugin</module>
-		<module>gui</module>
-		<module>gui-it</module>
-		<module>examples</module>
-		<module>webapp</module>
-	</modules>
+	<subprojects>
+		<subproject>api</subproject>
+		<subproject>core</subproject>
+		<subproject>javatc</subproject>
+		<subproject>maven-plugin</subproject>
+		<subproject>gui</subproject>
+		<subproject>gui-it</subproject>
+		<subproject>examples</subproject>
+		<subproject>webapp</subproject>
+	</subprojects>
 	<properties>
 		<java.version>21</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
@@ -78,6 +79,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${maven-compiler-plugin.version}</version>
 					<configuration>
 						<useIncrementalCompilation>false</useIncrementalCompilation>
 					</configuration>
@@ -86,7 +88,8 @@
 		</pluginManagement>
 	</build>
 	<dependencyManagement>
-		<dependencies>
+	    <dependencies>
+
 			<dependency>
 				<groupId>ch.scaille.tcwriter</groupId>
 				<artifactId>testcase-writer-api</artifactId>

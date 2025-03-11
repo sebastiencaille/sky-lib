@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns="http://maven.apache.org/POM/4.1.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 http://maven.apache.org/xsd/maven-4.1.0.xsd">
+	<modelVersion>4.1.0</modelVersion>
 
 	<parent>
 		<groupId>ch.scaille</groupId>
-		<artifactId>skylib-starter-parent</artifactId>
-		<version>0.0.1-M4-SNAPSHOT</version>
-		<relativePath />
+	    <artifactId>skylib-starter-parent</artifactId>
+	    <version>0.0.1-M4-SNAPSHOT</version>
+	    <relativePath/>
 	</parent>
-
+	
 	<groupId>ch.scaille.dataflowmgr</groupId>
 	<artifactId>data-flow-manager</artifactId>
 	<version>${revision}</version>
@@ -18,12 +18,12 @@
 
 	<name>data-flow-manager</name>
 
-	<modules>
-		<module>model</module>
-		<module>generator</module>
-		<module>examples</module>
-		<module>annotations</module>
-	</modules>
+	<subprojects>
+		<subproject>model</subproject>
+		<subproject>generator</subproject>
+		<subproject>examples</subproject>
+		<subproject>annotations</subproject>
+	</subprojects>
 
 	<properties>
 		<data-flow-manager-version>${revision}</data-flow-manager-version>
@@ -31,8 +31,16 @@
 		<maven.compiler.target>17</maven.compiler.target>
 	</properties>
 
-	<dependencyManagement>
-		<dependencies>
+	  <dependencyManagement>
+    <dependencies>
+		<dependency>
+			<groupId>ch.scaille</groupId>
+	    <artifactId>skylib-starter-parent</artifactId>
+	    <version>0.0.1-M4-SNAPSHOT</version>
+	    <type>pom</type>
+	    <scope>import</scope>
+		</dependency>
+
 			<dependency>
 				<groupId>ch.scaille</groupId>
 				<artifactId>lib-utils</artifactId>

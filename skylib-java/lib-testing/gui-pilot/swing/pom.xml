@@ -1,14 +1,10 @@
 <?xml version="1.0"?>
 <project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 https://maven.apache.org/xsd/maven-4.1.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.1.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>ch.scaille</groupId>
-		<artifactId>gui-pilot</artifactId>
-		<version>${revision}</version>
-	</parent>
+	<modelVersion>4.1.0</modelVersion>
+	<parent/>
 
 	<artifactId>gui-pilot-swing</artifactId>
 

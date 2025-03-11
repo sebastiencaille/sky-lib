@@ -1,13 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns="http://maven.apache.org/POM/4.1.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 http://maven.apache.org/xsd/maven-4.1.0.xsd">
+	<modelVersion>4.1.0</modelVersion>
 
-	<parent>
-		<groupId>ch.scaille.tcwriter</groupId>
-		<artifactId>testcase-writer-webapp</artifactId>
-		<version>${revision}</version>
-	</parent>
+	<parent/>
 
 	<artifactId>testcase-writer-webapp-api-v0</artifactId>
 	<packaging>pom</packaging>
@@ -20,9 +16,9 @@
 			${project.basedir}/../webapi/src/main/resources/webapi/openapi.yaml</inputSpec>
 	</properties>
 
-	<modules>
-		<module>webapi</module>
-		<module>backend</module>
-	</modules>
+	<subprojects>
+		<subproject>webapi</subproject>
+		<subproject>backend</subproject>
+	</subprojects>
 
 </project>

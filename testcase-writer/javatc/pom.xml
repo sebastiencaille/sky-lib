@@ -1,15 +1,21 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>ch.scaille.tcwriter</groupId>
-        <artifactId>testcase-writer</artifactId>
-        <version>${revision}</version>
-    </parent>
-    <artifactId>testcase-writer-javatc</artifactId>
-
-    <dependencies>
+<project xmlns="http://maven.apache.org/POM/4.1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 https://maven.apache.org/xsd/maven-4.1.0.xsd">
+	<modelVersion>4.1.0</modelVersion>
+	<parent/>
+	<artifactId>testcase-writer-javatc</artifactId>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>aspectj-maven-plugin</artifactId>
+				<configuration>
+					<aspectLibraries combine.self="override" />
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
 
         <dependency>
             <groupId>ch.scaille.tcwriter</groupId>
@@ -45,7 +51,7 @@
                     <aspectLibraries combine.self="override"/>
                 </configuration>
             </plugin>
-            
+
         </plugins>
     </build>
 </project>

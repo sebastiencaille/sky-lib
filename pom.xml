@@ -1,25 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns="http://maven.apache.org/POM/4.1.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<!-- including the parent makes that the version plugin does not show
-		unused dependencies -->
-		<groupId>ch.scaille</groupId>
-		<artifactId>skylib-starter-parent</artifactId>
-		<version>${starter.revision}</version>
-		<relativePath/>
-	</parent>
-
+	xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 http://maven.apache.org/xsd/maven-4.1.0.xsd">
+	<modelVersion>4.1.0</modelVersion>
+	
+	<groupId>ch.scaille</groupId>
 	<artifactId>skylib</artifactId>
+	<version>${revision}</version>
 	<name>skylib</name>
 	<packaging>pom</packaging>
-	<modules>
-		<module>skylib-starter-parent</module>
-		<module>skylib-java</module>
-		<module>testcase-writer</module>
-		<module>dataflow-manager</module>
-	</modules>
+	<subprojects>
+		<subproject>skylib-starter-parent</subproject>
+		<subproject>skylib-java</subproject>
+		<subproject>testcase-writer</subproject>
+		<subproject>dataflow-manager</subproject>
+	</subprojects>
 
 </project>

@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.1.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 http://maven.apache.org/xsd/maven-4.1.0.xsd">
-	<modelVersion>4.1.0</modelVersion>
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 http://maven.apache.org/xsd/maven-4.1.0.xsd">
+    <modelVersion>4.1.0</modelVersion>
 
-	<parent>
-		<groupId>ch.scaille</groupId>
-	    <artifactId>skylib-starter-parent</artifactId>
-	    <version>0.0.1-M4-SNAPSHOT</version>
-	    <relativePath/>
-	</parent>
-	<groupId>ch.scaille.tcwriter</groupId>
-	<artifactId>testcase-writer</artifactId>
-	<version>${revision}</version>
-	<packaging>pom</packaging>
-	<subprojects>
-		<subproject>api</subproject>
-		<subproject>model</subproject>
-		<subproject>core</subproject>
-		<subproject>javatc</subproject>
-		<subproject>flowtc</subproject>
-		<subproject>maven-plugin</subproject>
-		<subproject>gui</subproject>
-		<subproject>gui-it</subproject>
-		<subproject>examples</subproject>
-		<subproject>webapp</subproject>
-	</subprojects>
-	<properties>
-		<java.version>25</java.version>
-		<maven.compiler.source>${java.version}</maven.compiler.source>
-		<maven.compiler.target>${java.version}</maven.compiler.target>
+    <parent>
+        <groupId>ch.scaille</groupId>
+         <artifactId>skylib-starter-parent</artifactId>
+         <version>${starter.revision}</version>
+        <relativePath/>
+    </parent>
+    <groupId>ch.scaille.tcwriter</groupId>
+    <artifactId>testcase-writer</artifactId>
+    <version>${revision}</version>
+    <packaging>pom</packaging>
+    <subprojects>
+        <subproject>api</subproject>
+        <subproject>model</subproject>
+        <subproject>core</subproject>
+        <subproject>javatc</subproject>
+        <subproject>flowtc</subproject>
+        <subproject>maven-plugin</subproject>
+        <subproject>gui</subproject>
+        <subproject>gui-it</subproject>
+        <subproject>examples</subproject>
+        <subproject>webapp</subproject>
+    </subprojects>
+    <properties>
+        <java.version>21</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
 
 		<sonar.exclusions>**/node_modules/**,**/generated/**</sonar.exclusions>
 	</properties>
@@ -112,38 +112,38 @@
 	<dependencyManagement>
 	    <dependencies>
 
-			<dependency>
-				<groupId>ch.scaille.tcwriter</groupId>
-				<artifactId>testcase-writer-api</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille.tcwriter</groupId>
-				<artifactId>testcase-writer-javatc</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille.tcwriter</groupId>
-				<artifactId>testcase-writer-core</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille.tcwriter</groupId>
-				<artifactId>testcase-writer-gui</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille.tcwriter</groupId>
-				<artifactId>testcase-writer-examples</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-	<dependencies>
-		<dependency>
-			<groupId>ch.scaille</groupId>
-			<artifactId>lib-testing-core</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+            <dependency>
+                <groupId>ch.scaille.tcwriter</groupId>
+                <artifactId>testcase-writer-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.scaille.tcwriter</groupId>
+                <artifactId>testcase-writer-javatc</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.scaille.tcwriter</groupId>
+                <artifactId>testcase-writer-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.scaille.tcwriter</groupId>
+                <artifactId>testcase-writer-gui</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.scaille.tcwriter</groupId>
+                <artifactId>testcase-writer-examples</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>ch.scaille</groupId>
+            <artifactId>lib-testing-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>

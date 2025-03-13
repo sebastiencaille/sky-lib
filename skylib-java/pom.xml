@@ -26,7 +26,6 @@
 		<module>lib-generator-utils</module>
 	</modules>
 	<properties>
-		<revision>0.0.1-SNAPSHOT</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>11</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>

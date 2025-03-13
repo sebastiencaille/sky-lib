@@ -9,9 +9,9 @@
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath />
 	</parent>
+	<version>${revision}</version>
 	<groupId>ch.scaille.tcwriter</groupId>
 	<artifactId>testcase-writer</artifactId>
-	<version>${revision}</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>api</module>
@@ -24,7 +24,6 @@
 		<module>webapp</module>
 	</modules>
 	<properties>
-		<revision>0.0.1-SNAPSHOT</revision>
 		<java.version>21</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>

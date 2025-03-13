@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>ch.scaille</groupId>
 	    <artifactId>skylib-starter-parent</artifactId>
-	    <version>0.0.1-M4-SNAPSHOT</version>
+        <version>${starter.revision}</version>
 	    <relativePath/>
 	</parent>
 	

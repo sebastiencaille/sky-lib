@@ -13,6 +13,7 @@
 	<properties>
 		<maven.version>4.0.0-rc-5</maven.version>
 		<maven-plugin-plugin.version>4.0.0-beta-1</maven-plugin-plugin.version>
+		<maven-plugin-harness.version>4.0.0-beta-1</maven-plugin-harness.version>
 	</properties>
 
 	<dependencies>

@@ -31,36 +31,26 @@ class AttributeFactory {
 	public static <T, V> IAttributeMetaData<T> create(final Class<? super T> currentClass, final String property,
 			final String name, final Mode mode) {
 
-		switch (mode) {
-		case AUTOMATIC:
+		return switch (mode) {
+		case AUTOMATIC: 
 			try {
-				return createGetSetAttribute(currentClass, property, name);
+				yield createGetSetAttribute(currentClass, property, name);
 			} catch (final Exception exc) { // NOSONAR
-				final var attribute = AttributeFactory.<T, V>createFieldAttribute(currentClass, property, name);
-				if (attribute != null) {
-					return attribute;
-				}
+				yield AttributeFactory.<T, V>createFieldAttribute(currentClass, property, name);
 			}
-			break;
 		case FIELD:
-			final var attribute = AttributeFactory.<T, V>createFieldAttribute(currentClass, property, name);
-			if (attribute != null) {
-				return attribute;
-			}
-			break;
+			yield AttributeFactory.<T, V>createFieldAttribute(currentClass, property, name);
 		case GET_SET:
 			try {
-				return createGetSetAttribute(currentClass, property, name);
+				yield createGetSetAttribute(currentClass, property, name);
 			} catch (final NoSuchMethodException e) {
-				// ignore
+				yield null;
 			}
-			break;
 		case RECORD:
-			return createRecordAttribute(currentClass, property, name);
+			yield createRecordAttribute(currentClass, property, name);
 		default:
 			throw new IllegalStateException("Unhandled mode " + mode);
-		}
-		return null;
+		};
 	}
 
 	private static <T> IAttributeMetaData<T> createGetSetAttribute(final Class<?> currentClass, final String property,

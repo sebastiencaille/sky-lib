@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import ch.scaille.annotations.GuiObject;
 import ch.scaille.generators.util.CodeGeneratorParams;
@@ -36,7 +35,7 @@ public class GuiModelGenerator {
 							"ch.scaille.javabeans."))
 					.withPackages(params.getScanPackage())
 					.scan()
-					.collect(Collectors.toList());
+					.toList();
 			Logs.of(this).info(() -> "Processing classes: " + classes);
 
 			final var modelClassProcessor = new ModelClassProcessor(classFinder, params.getTargetPackage(), generationMetadata);

@@ -3,8 +3,6 @@ package ch.scaille.util.dao.metadata;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.stream.Collectors;
-
 import org.junit.jupiter.api.Test;
 
 class MetaDataTest {
@@ -41,7 +39,7 @@ class MetaDataTest {
 		final var metaData = new DataObjectMetaData<>(ObjectTest.class);
 		final var testMetaData = metaData.createAccessorTo(test);
 
-		final var attr = metaData.getAttributes().stream().map(Object::toString).sorted().collect(Collectors.toList());
+		final var attr = metaData.getAttributes().stream().map(Object::toString).sorted().toList();
 		assertTrue(attr.contains("ValA(int)"), attr::toString);
 		assertTrue(attr.contains("ValB(int, ReadOnly)"), attr::toString);
 		assertTrue(attr.contains("ValC(int)"), attr::toString);

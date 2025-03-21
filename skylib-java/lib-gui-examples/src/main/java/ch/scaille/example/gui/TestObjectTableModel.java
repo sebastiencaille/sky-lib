@@ -23,26 +23,19 @@ public class TestObjectTableModel extends ListModelTableModel<TestObject, Column
 
 	@Override
 	protected Object getValueAtColumn(final TestObject object, final Columns column) {
-		switch (column) {
-		case A_FIRST_VALUE:
-			return object.getAFirstValue();
-		case A_SECOND_VALUE:
-			return object.getASecondValue();
-		default:
-			throw new IllegalArgumentException("Unknown column " + column);
-		}
+		return switch (column) {
+			case A_FIRST_VALUE -> object.getAFirstValue();
+			case A_SECOND_VALUE -> object.getASecondValue();
+			default -> throw new IllegalArgumentException("Unknown column " + column);
+		};
 	}
 
 	@Override
 	protected void setValueAtColumn(final TestObject object, final Columns column, final Object value) {
 		switch (column) {
-		case A_FIRST_VALUE:
-			object.setAFirstValue((String) value);
-			break;
-		case A_SECOND_VALUE:
-			break;
-		default:
-			throw new IllegalArgumentException("Unknown column " + column);
+			case A_FIRST_VALUE -> object.setAFirstValue((String) value);
+			case A_SECOND_VALUE -> { /* nope */ }
+			default -> throw new IllegalArgumentException("Unknown column " + column);
 		}
 	}
 

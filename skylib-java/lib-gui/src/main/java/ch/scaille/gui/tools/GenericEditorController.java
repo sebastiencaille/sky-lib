@@ -34,7 +34,7 @@ public class GenericEditorController<T> {
 		return errorProperty;
 	}
 	
-	public <V extends IGenericEditorView<T>> V build(Function<GenericEditorController<T>, V> viewFactory) {
+	public <V extends IGenericEditorView> V build(Function<GenericEditorController<T>, V> viewFactory) {
 		final var view = viewFactory.apply(this);
 		props.forEach(view::addEntry);
 		view.build();

@@ -134,7 +134,7 @@ public class PolicyTableColumnModel<C extends Enum<C>> extends DefaultTableColum
 		tableColumns.removeElementAt(index);
 		column.setHeaderRenderer(old.getHeaderRenderer());
 		column.setHeaderValue(old.getHeaderValue());
-		column.onUpdate(() -> this.updateColumnsWidth());
+		column.onUpdate(this::updateColumnsWidth);
 		tableColumns.add(index, column);
 		updateColumnsWidth();
 	}

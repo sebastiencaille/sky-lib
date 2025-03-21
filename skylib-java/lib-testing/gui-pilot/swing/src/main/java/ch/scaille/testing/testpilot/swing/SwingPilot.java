@@ -57,14 +57,11 @@ public class SwingPilot extends ch.scaille.testing.testpilot.GuiPilot {
 	 */
 	public void scan(final Container container) {
 		for (final var child : container.getComponents()) {
-			if (child instanceof JComponent) {
-				final var jChild = (JComponent) child;
-				if (child.getName() != null) {
-					cache.put(child.getName(), jChild);
-				}
+			if (child instanceof JComponent component && child.getName() != null) {
+				cache.put(child.getName(), component);
 			}
-			if (child instanceof Container) {
-				scan((Container) child);
+			if (child instanceof Container childContainer) {
+				scan(childContainer);
 			}
 		}
 	}
@@ -73,7 +70,7 @@ public class SwingPilot extends ch.scaille.testing.testpilot.GuiPilot {
 	 * Search for a component by scanning the components hierarchy, starting from
 	 * the root component
 	 *
-	 * @param clazz     the class of the searched component
+	 * @param clazz the class of the searched component
 	 */
 	public <T extends JComponent> Optional<T> search(final Class<T> clazz) {
 		return search(new HashSet<>(), root, clazz, c -> true, s -> !s.isEmpty()).stream().findAny();
@@ -104,8 +101,8 @@ public class SwingPilot extends ch.scaille.testing.testpilot.GuiPilot {
 					return result;
 				}
 			}
-			if (child instanceof Container) {
-				search(result, (Container) child, clazz, filter, searchFinished);
+			if (child instanceof Container childContainer) {
+				search(result, childContainer, clazz, filter, searchFinished);
 				if (searchFinished.test(result)) {
 					return result;
 				}
@@ -137,16 +134,16 @@ public class SwingPilot extends ch.scaille.testing.testpilot.GuiPilot {
 	public void dumpHierarchy(final Container container, final StringBuilder result, final String indent) {
 		Arrays.stream(container.getComponents()).forEach(c -> {
 			result.append(indent).append(c.getClass()).append('[');
-			if (c instanceof JLabel) {
-				result.append((((JLabel) c).getText()));
-			} else if (c instanceof JTextComponent) {
-				result.append((((JTextComponent) c).getText()));
-			} else if (c instanceof AbstractButton) {
-				result.append((((AbstractButton) c).getText()));
+			if (c instanceof JLabel label) {
+				result.append(label.getText());
+			} else if (c instanceof JTextComponent textComponent) {
+				result.append(textComponent.getText());
+			} else if (c instanceof AbstractButton button) {
+				result.append(button.getText());
 			}
 			result.append("]\n");
-			if (c instanceof Container) {
-				dumpHierarchy((Container) c, result, indent + "  ");
+			if (c instanceof Container childContainer) {
+				dumpHierarchy(childContainer, result, indent + "  ");
 			}
 		});
 

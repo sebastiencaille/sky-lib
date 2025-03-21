@@ -11,7 +11,7 @@ import ch.scaille.javabeans.properties.AbstractTypedProperty;
  * @param <T> the owner type
  * @param <V> the end of chain type
  */
-public class PropertyEntry<T, V> implements IPropertyEntry {
+public class PropertyEntry<V> implements IPropertyEntry {
 
 	protected final AbstractTypedProperty<V> property;
 	private final Function<AbstractTypedProperty<V>, IChainBuilderFactory<V>> endOfChain;

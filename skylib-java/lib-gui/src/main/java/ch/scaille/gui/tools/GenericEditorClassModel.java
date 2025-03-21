@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
-import java.util.stream.Collectors;
 
 import ch.scaille.annotations.Labeled;
 import ch.scaille.annotations.Ordered;
@@ -28,26 +27,36 @@ import ch.scaille.util.dao.metadata.IAttributeMetaData;
  */
 public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 
-	public static class ClassPropertyEntry<T, U> extends PropertyEntry<T, U> implements Comparable<ClassPropertyEntry<T, U>> {
+	public static class ClassPropertyEntry<T, U> extends PropertyEntry<U> implements Comparable<ClassPropertyEntry<T, U>> {
 
-		private final AbstractAttributeMetaData<T, U> metadata;
+		private int index;
 
 		public ClassPropertyEntry(final AbstractTypedProperty<U> property,
 				final Function<AbstractTypedProperty<U>, IChainBuilderFactory<U>> endOfChainProvider,
 				final AbstractAttributeMetaData<T, U> metadata, final boolean readOnly, final String label,
 				final String tooltip) {
 			super(metadata.getClassType(), property, endOfChainProvider, readOnly, label, tooltip);
-			this.metadata = metadata;
+			this.index = metadata.getAnnotation(Ordered.class).map(Ordered::order).orElse(Integer.MAX_VALUE / 2);
 		}
 
 		public int index() {
-			return metadata.getAnnotation(Ordered.class).map(Ordered::order).orElse(Integer.MAX_VALUE / 2);
+			return index;
 		}
 		
 		@Override
 		public int compareTo(ClassPropertyEntry<T, U> o) {
 			return index() - o.index();
 		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			return (obj instanceof ClassPropertyEntry<?, ?> cpe) && this.index == cpe.index;
+		}
+		
+		@Override
+			public int hashCode() {
+				return Integer.hashCode(index);
+			}
 	}
 
 	public static class Builder<T> {
@@ -136,7 +145,7 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 				.map(attrib -> attrib.onTypedMetaDataF(t -> createProperty(object, t)))
 				.sorted()
 				.map(p -> (IPropertyEntry)p)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private <V> ClassPropertyEntry<T, V> createProperty(IObjectProvider<T> object,

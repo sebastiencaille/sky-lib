@@ -4,14 +4,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
-import ch.scaille.util.persistence.handlers.TextStorageHandler;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
+import ch.scaille.util.persistence.handlers.TextStorageHandler;
 
 class FileSystemLocatorTest {
 
@@ -26,7 +26,7 @@ class FileSystemLocatorTest {
     @AfterEach
     void tearDown() throws IOException {
         try (var tempContent = Files.list(tempFolder)) {
-            for (var file : tempContent.collect(Collectors.toList())) {
+            for (var file : tempContent.toList()) {
                 Files.delete(file);
             }
         }
@@ -42,7 +42,7 @@ class FileSystemLocatorTest {
             final var savedResource = dao.saveOrUpdate(TEST_1, "Test 1 content");
             validateResourceTest1(savedResource);
 
-            Assertions.assertEquals(List.of(TEST_1), dao.list().map(ResourceMetaData::getLocator).collect(Collectors.toList()));
+            Assertions.assertEquals(List.of(TEST_1), dao.list().map(ResourceMetaData::getLocator).toList());
             
             final var loadedResource = dao.loadResource(TEST_1);
             validateResourceTest1(loadedResource);

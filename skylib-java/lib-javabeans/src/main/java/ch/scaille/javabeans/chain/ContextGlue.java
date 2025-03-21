@@ -19,8 +19,8 @@ public class ContextGlue implements PropertyChangeListener {
 	}
 
 	private void install(Object context) {
-		if (context instanceof AbstractProperty) {
-			((AbstractProperty) context).addListener(this);
+		if (context instanceof AbstractProperty property) {
+			property.addListener(this);
 		} else {
 			final var metaData = new RecordMetaData<>((Class<Object>) context.getClass());
 			metaData.getAttributes().stream().filter(attrib -> attrib.isOfType(AbstractProperty.class))

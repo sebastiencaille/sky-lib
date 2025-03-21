@@ -182,8 +182,8 @@ public class LambdaExt {
 				return exceptionHandler.apply((E) ex);
 			} catch (ClassCastException c) {
 				// not compatible
-				if (ex instanceof RuntimeException) {
-					throw (RuntimeException) ex;
+				if (ex instanceof RuntimeException rex) {
+					throw rex;
 				}
 				throw new IllegalStateException(ex);
 			}

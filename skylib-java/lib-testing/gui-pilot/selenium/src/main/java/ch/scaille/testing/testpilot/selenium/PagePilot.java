@@ -43,7 +43,7 @@ public class PagePilot {
 			protected Optional<WebElement> loadGuiComponent() {
 				reloadPage();
 				final var webElement = element.get();
-				if (webElement instanceof WrapsElement && ((WrapsElement) webElement).getWrappedElement() == null) {
+				if (webElement instanceof WrapsElement wrapsElement && wrapsElement.getWrappedElement() == null) {
 					return Optional.empty();
 				}
 				return Optional.ofNullable(webElement);

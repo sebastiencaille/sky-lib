@@ -70,8 +70,8 @@ public class FileSystemDao<T> extends AbstractFSSerializationDao<T> {
 		// Closed by caller
 		return Files.list(folder)
 				// basic filter
-				.filter(f -> filter == null || f.getFileName().toString().startsWith(filter))
-				.filter(f -> dataHandlerRegistry.find(extensionOf(f.toString())).isPresent())
+				.filter(f -> (filter == null || f.getFileName().toString().startsWith(filter))
+					&& dataHandlerRegistry.find(extensionOf(f.toString())).isPresent())
 				.map(p -> buildMetadata(nameAndExtensionOf(folder.relativize(p).toString())[0], p.toString()))
 				// filter on the metadata
 				.filter(m -> filterMetaData(filter, m.orElse(null)))

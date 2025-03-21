@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -39,8 +38,7 @@ public class SwingModalDialogDetector extends SwingPilot {
 					continue;
 				}
 				final var dialogPilot = new SwingModalDialogDetector((JDialog) window);
-				result.addAll(
-						Arrays.stream(pollingHandlers).map(p -> p.apply(dialogPilot)).collect(Collectors.toList()));
+				result.addAll(Arrays.stream(pollingHandlers).map(p -> p.apply(dialogPilot)).toList());
 			}
 		});
 		return result;

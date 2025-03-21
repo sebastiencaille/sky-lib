@@ -31,7 +31,7 @@ import ch.scaille.javabeans.properties.ErrorSet;
 /**
  * Swing based editor panel
  */
-public class SwingGenericEditorPanel<T> extends JPanel implements IGenericEditorView<T> {
+public class SwingGenericEditorPanel<T> extends JPanel implements IGenericEditorView {
 
 	private final ErrorSet errors;
 	private int currentRow;
@@ -75,8 +75,8 @@ public class SwingGenericEditorPanel<T> extends JPanel implements IGenericEditor
 
 	protected <C extends JComponent> C setup(C component, IPropertyEntry prop) {
 		component.setToolTipText(prop.getTooltip());
-		if (component instanceof JTextComponent) {
-			((JTextComponent)component).setEditable(!prop.isReadOnly());
+		if (component instanceof JTextComponent jText) {
+			jText.setEditable(!prop.isReadOnly());
 		}
 		return component;
 	}

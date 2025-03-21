@@ -23,10 +23,10 @@ public class TimeRenderer extends DefaultTableCellRenderer {
 			final boolean hasFocus, final int row, final int column) {
 		super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 		String text;
-		if (value instanceof TemporalAccessor) {
-			text = SHORT_FORMATTER.format((TemporalAccessor) value);
-		} else if (value instanceof Duration) {
-			text = TIME_FORMATTER.format(((Duration) value).addTo(aDay));
+		if (value instanceof TemporalAccessor temporal) {
+			text = SHORT_FORMATTER.format(temporal);
+		} else if (value instanceof Duration  duration) {
+			text = TIME_FORMATTER.format(duration.addTo(aDay));
 		} else {
 			text = "";
 		}

@@ -46,8 +46,8 @@ public class ClassLoaderHelper {
 	}
 
 	public static URL[] guessClassPath() {
-		if (Thread.currentThread().getContextClassLoader() instanceof URLClassLoader) {
-			return urlClassPath((URLClassLoader) Thread.currentThread().getContextClassLoader());
+		if (Thread.currentThread().getContextClassLoader() instanceof URLClassLoader urlClassLoader) {
+			return urlClassPath(urlClassLoader);
 		}
 		return appClassPath();
 	}

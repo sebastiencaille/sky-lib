@@ -2,7 +2,6 @@ package ch.scaille.util;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Assertions;
@@ -19,17 +18,17 @@ class TupleStreamTest {
 				Stream.of(1, 2, 3)
 						.map(TupleStream.of(i -> i + 1))
 						.map(Tuple::getY)
-						.collect(Collectors.toList()));
+						.toList());
 		Assertions.assertEquals(List.of(1, 2, 2, 3, 3, 4),
 				Stream.of(1, 2, 3)
 						.flatMap(TupleStream.ofList(i -> List.of(i, i + 1)))
 						.map(Tuple::getY)
-						.collect(Collectors.toList()));
+						.toList());
 		Assertions.assertEquals(List.of(1, 2, 2, 3, 3, 4),
 				Stream.of(1, 2, 3)
 						.flatMap(TupleStream.<Integer, Integer>ofStream(i -> Stream.of(i, i + 1)))
 						.map(Tuple::getY)
-						.collect(Collectors.toList()));
+						.toList());
 
 	}
 

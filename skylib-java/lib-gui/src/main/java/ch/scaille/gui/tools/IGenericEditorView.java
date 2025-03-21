@@ -5,7 +5,7 @@ import ch.scaille.javabeans.IBindingController;
 /**
  * A generic property editor
  */
-public interface IGenericEditorView<T> {
+public interface IGenericEditorView {
 
 	IBindingController addEntry(final IPropertyEntry prop);
 

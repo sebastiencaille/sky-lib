@@ -15,16 +15,12 @@ public class DynamicListContentConverter implements IConverter<String, List<Stri
 			return Collections.emptyList();
 		}
 
-		switch (propertyValue) {
-		case "A":
-			return List.of("A", "B", "C");
-		case "B":
-			return List.of("B", "C", "D");
-		case "C":
-			return List.of("C", "D", "E");
-		default:
-			return Collections.emptyList();
-		}
+		return switch (propertyValue) {
+			case "A" -> List.of("A", "B", "C");
+			case "B" -> List.of("B", "C", "D");
+			case "C" ->List.of("C", "D", "E");
+			default -> Collections.emptyList();
+		};
 	}
 
 	@Override

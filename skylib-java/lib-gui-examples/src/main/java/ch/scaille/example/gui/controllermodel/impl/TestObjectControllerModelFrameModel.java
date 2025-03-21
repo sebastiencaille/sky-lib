@@ -33,27 +33,20 @@ public class TestObjectControllerModelFrameModel
 
 	@Override
 	public String getColumnName(final int column) {
-		switch (Columns.values()[column]) {
-		case VAL1:
-			return "Value1";
-		case VAL2:
-			return "Value2";
-		default:
-			throw JavaExt.notImplemented();
-		}
+		return switch (Columns.values()[column]) {
+			case VAL1 -> "Value1";
+			case VAL2 -> "Value2";
+			default -> throw JavaExt.notImplemented();
+		};
 	}
 
 	@Override
 	protected AbstractProperty getPropertyAt(final TestObjectGuiModel controller, final Columns column) {
-
-		switch (column) {
-		case VAL1:
-			return controller.getAFirstValueProperty();
-		case VAL2:
-			return controller.getASecondValueProperty();
-		default:
-			throw JavaExt.notImplemented();
-		}
+		return switch (column) {
+			case VAL1 -> controller.getAFirstValueProperty();
+			case VAL2 -> controller.getASecondValueProperty();
+			default -> throw JavaExt.notImplemented();
+		};
 	}
 
 	@Override

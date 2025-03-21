@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.swing.AbstractListModel;
@@ -409,7 +408,7 @@ public class ListModelContent<T> extends AbstractListModel<T>
 	protected List<T> addToModel(final Collection<T> newData) {
 		final var oldSize = data.size();
 		StreamExt.throwIfContainsNull(newData.stream());
-		final var addedData = newData.stream().filter(viewProperty.getValue()::accept).collect(Collectors.toList());
+		final var addedData = newData.stream().filter(viewProperty.getValue()::accept).toList();
 		data.addAll(addedData);
 		data.sort(viewProperty.getValue());
 		fireContentsChanged(this, 0, oldSize - 1);

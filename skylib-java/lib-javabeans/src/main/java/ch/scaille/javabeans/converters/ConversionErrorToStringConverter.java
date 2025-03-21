@@ -21,8 +21,8 @@ public class ConversionErrorToStringConverter implements IConverter<ConversionEr
 			return noError;
 		}
 		final var content = value.getContent();
-		if (content instanceof Exception) {
-			return ((Exception) content).getLocalizedMessage();
+		if (content instanceof Exception exc) {
+			return exc.getLocalizedMessage();
 		}
 		return String.valueOf(content);
 	}

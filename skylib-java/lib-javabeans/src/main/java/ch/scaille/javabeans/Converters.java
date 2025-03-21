@@ -11,7 +11,6 @@ import java.util.function.IntFunction;
 import java.util.function.LongFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import ch.scaille.javabeans.converters.ChainInhibitedException;
 import ch.scaille.javabeans.converters.ConversionErrorToStringConverter;
@@ -123,7 +122,7 @@ public final class Converters {
 
 			@Override
 			public List<C> convertPropertyValueToComponentValue(final List<T> propertyValue) {
-				return propertyValue.stream().map(prop2comp).collect(Collectors.toList());
+				return propertyValue.stream().map(prop2comp).toList();
 			}
 
 			@Override
@@ -143,7 +142,7 @@ public final class Converters {
 		return new IConverter<>() {
 			@Override
 			public List<V> convertPropertyValueToComponentValue(final List<V> propertyValue) {
-				return propertyValue.stream().filter(filter).collect(Collectors.toList());
+				return propertyValue.stream().filter(filter).toList();
 			}
 
 			@Override
@@ -158,7 +157,7 @@ public final class Converters {
 
 			@Override
 			public List<C> convertPropertyValueToComponentValue(final List<T> propertyValue) {
-				return propertyValue.stream().map(prop2comp).collect(Collectors.toList());
+				return propertyValue.stream().map(prop2comp).toList();
 			}
 
 			@Override
@@ -175,7 +174,7 @@ public final class Converters {
 			@Override
 			public List<C> convertPropertyValueToComponentValue(final List<T> propertyValue) {
 				return propertyValue.stream().map(prop2comp::convertPropertyValueToComponentValue)
-						.collect(Collectors.toList());
+						.toList();
 			}
 
 			@Override

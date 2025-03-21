@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.3</version>
+		<version>3.4.4</version>
 		<relativePath />
 	</parent>
 
@@ -23,8 +23,8 @@
 		<spring-session.version>3.4.2</spring-session.version>
 		<jackson-bom.version>2.18.3</jackson-bom.version>
 		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
-		<guava.version>33.4.0-jre</guava.version>
-		<logback.version>1.5.17</logback.version>
+		<guava.version>33.4.5-jre</guava.version>
+		<logback.version>1.5.18</logback.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
 
 		<jetbrain-annotations.version>26.0.2</jetbrain-annotations.version>

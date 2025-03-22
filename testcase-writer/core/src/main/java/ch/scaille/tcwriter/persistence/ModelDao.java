@@ -79,7 +79,11 @@ public class ModelDao implements IModelDao {
 	@Override
 	public List<Metadata> listDictionaries() {
 		return uncheck("Listing of dictionaries",
-				() -> dictionaryRepo.list().map(f -> readTestDictionary(f.getLocator()).get().getMetadata()).toList());
+				() -> dictionaryRepo.list()
+						.map(f ->
+								readTestDictionary(f.getLocator())
+										.orElseThrow(() -> new IllegalStateException("Listed Dictionary not found"))
+										.getMetadata()).toList());
 	}
 
 	@Override
@@ -113,7 +117,8 @@ public class ModelDao implements IModelDao {
 	public List<Metadata> listTestCases(final TestDictionary dictionary) {
 		return uncheck("Listing of test cases",
 				() -> testCaseRepo.list()
-						.map(f -> readTestCase(f.getLocator(), dict -> null, false).get())
+						.map(f ->
+								readTestCase(f.getLocator(), dict -> null, false).orElseThrow(() -> new IllegalStateException("Listed TestCase not found")))
 						.filter(tc -> tc.getPreferredDictionary().equals(dictionary.getClassifier()))
 						.map(TestCase::getMetadata)
 						.toList());

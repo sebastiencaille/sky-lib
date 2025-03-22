@@ -29,7 +29,7 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 
 	public static class ClassPropertyEntry<T, U> extends PropertyEntry<U> implements Comparable<ClassPropertyEntry<T, U>> {
 
-		private int index;
+		private final int index;
 
 		public ClassPropertyEntry(final AbstractTypedProperty<U> property,
 				final Function<AbstractTypedProperty<U>, IChainBuilderFactory<U>> endOfChainProvider,
@@ -39,13 +39,9 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 			this.index = metadata.getAnnotation(Ordered.class).map(Ordered::order).orElse(Integer.MAX_VALUE / 2);
 		}
 
-		public int index() {
-			return index;
-		}
-		
 		@Override
 		public int compareTo(ClassPropertyEntry<T, U> o) {
-			return index() - o.index();
+			return index - o.index;
 		}
 		
 		@Override

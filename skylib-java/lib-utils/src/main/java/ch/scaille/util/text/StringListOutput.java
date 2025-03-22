@@ -42,7 +42,7 @@ public class StringListOutput implements TextFormatter.IOutput<RuntimeException>
 	}
 
 	public List<String> getLines() {
-		if (currentLine.length() == 0) {
+		if (currentLine.isEmpty()) {
 			return buffer;
 		}
 		final var fixed = new ArrayList<>(buffer);

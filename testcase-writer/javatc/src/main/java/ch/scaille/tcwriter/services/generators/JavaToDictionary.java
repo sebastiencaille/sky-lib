@@ -17,7 +17,7 @@ import ch.scaille.util.helpers.ClassFinder;
 
 public class JavaToDictionary extends AbstractGenerator<TestDictionary> {
 
-	private String classifier;
+	private final String classifier;
 
 	public static class Args {
 		@Parameter(names = { "-c" }, description = "Name of configuration")

@@ -1,5 +1,6 @@
 package ch.scaille.util.helpers;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 /**
@@ -11,7 +12,7 @@ public class OverridableParameter<S, T> {
 
 	private final Function<S, T> defaultProvider;
 
-	private S source;
+	private S source = null;
 
 	private T value = null;
 
@@ -37,10 +38,7 @@ public class OverridableParameter<S, T> {
 		if (this.value != null) {
 			return;
 		}
-		if (source == null) {
-			throw new IllegalStateException("Source not available");
-		}
-		this.value = defaultProvider.apply(source);
+		this.value = defaultProvider.apply(Objects.requireNonNull(source));
 	}
 
 }

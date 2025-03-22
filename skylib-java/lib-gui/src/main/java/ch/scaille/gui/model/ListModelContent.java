@@ -117,8 +117,7 @@ public class ListModelContent<T> extends AbstractListModel<T>
 			if (parent == null) {
 				return null;
 			}
-			final var parentView = parent.getView();
-			return parentView::compare;
+            return parent.getView();
 		}
 		
 		@Override

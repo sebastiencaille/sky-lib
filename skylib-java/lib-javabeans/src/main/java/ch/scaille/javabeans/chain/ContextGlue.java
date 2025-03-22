@@ -11,7 +11,7 @@ import ch.scaille.util.dao.metadata.RecordMetaData;
 
 public class ContextGlue implements PropertyChangeListener {
 
-	private List<AbstractProperty> propertiesToRefresh = new ArrayList<>();
+	private final List<AbstractProperty> propertiesToRefresh = new ArrayList<>();
 
 	public ContextGlue(Object context, AbstractProperty property) {
 		propertiesToRefresh.add(property);
@@ -29,7 +29,7 @@ public class ContextGlue implements PropertyChangeListener {
 	}
 
 	private void install(Object context, IAttributeMetaData<Object> attrib) {
-		AbstractProperty.class.cast(attrib.getValueOf(context)).addListener(this);
+		((AbstractProperty) attrib.getValueOf(context)).addListener(this);
 	}
 
 	@Override

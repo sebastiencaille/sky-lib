@@ -53,7 +53,7 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 
 	}
 
-	static class Graph {
+	protected static class Graph {
 		final Map<String, Node> nodes = new HashMap<>();
 		final List<Link> links = new ArrayList<>();
 		final Set<String> executed = new HashSet<>();

@@ -4,8 +4,6 @@ import static ch.scaille.generators.util.JavaCodeGenerator.toConstant;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.function.Consumer;
 
 import ch.scaille.generators.util.GenerationMetadata;
@@ -23,26 +21,11 @@ public class ModelClassProcessor {
 
 	private static final String ATTRIB_PUBLIC = "public ";
 
-	public static String typeParametersToString(final Type type) {
-		if (!(type instanceof ParameterizedType)) {
-			throw new IllegalArgumentException("Unhandled type " + type);
-		}
-		final var parameterizedType = (ParameterizedType) type;
-		final var textOutput = new StringBuilder();
-		var sep = "<";
-		for (final var argType : parameterizedType.getActualTypeArguments()) {
-			textOutput.append(sep).append(argType.getTypeName());
-			sep = ", ";
-		}
-		textOutput.append('>');
-		return textOutput.toString();
-	}
-
 	private final GenerationMetadata generationMetadata;
 
 	private final GeneratorContext context;
 
-	private final AttributeProcessorDelegate delegate = new AttributeProcessor.GetSetAttributeDelegate();
+	private final BeanAccess delegate = new BeanAccess.GetSetAttributeBeanAccess();
 
 	private final String defaultTargetPackage;
 

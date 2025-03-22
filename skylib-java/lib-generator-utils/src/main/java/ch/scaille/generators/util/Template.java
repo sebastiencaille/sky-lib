@@ -119,7 +119,7 @@ public class Template {
 	public Path writeTo(final Path path) throws IOException {
 		Logs.of(this).info(() -> "Writing " + path);
 		Files.createDirectories(path.getParent());
-		Files.write(path, generate().getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE,
+		Files.writeString(path, generate(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
 		return path;
 	}

@@ -21,7 +21,7 @@ public class PropertyGroup {
 	private class Impl implements IPropertyEventListener {
 		@Override
 		public void propertyModified(final Object caller, final PropertyEvent event) {
-			switch (event.getKind()) {
+			switch (event.kind()) {
 			case BEFORE:
 				if (callCount > 0) {
 					return;

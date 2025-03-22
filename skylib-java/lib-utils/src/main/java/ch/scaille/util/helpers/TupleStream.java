@@ -17,22 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class TupleStream<X, Y> {
 
-	public static class Tuple<X, Y> {
-		private final X x;
-		private final Y y;
-
-		public Tuple(X x, Y y) {
-			this.x = x;
-			this.y = y;
-		}
-
-		public X getX() {
-			return x;
-		}
-
-		public Y getY() {
-			return y;
-		}
+	public record Tuple<X, Y>(X x, Y y) {
 
 		@Override
 		public String toString() {
@@ -103,7 +88,7 @@ public class TupleStream<X, Y> {
 		}
 
 		public Stream<Tuple<X, Y>> stream() {
-			return innerStream.stream().flatMap(t -> t.getY().stream().map(y -> new Tuple<>(t.getX(), y)));
+			return innerStream.stream().flatMap(t -> t.y().stream().map(y -> new Tuple<>(t.x(), y)));
 		}
 
 	}

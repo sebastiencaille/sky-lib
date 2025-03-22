@@ -13,8 +13,9 @@ import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.IPropertiesOwner;
 import ch.scaille.javabeans.PropertyEvent.EventKind;
-import ch.scaille.javabeans.Vetoer.TransmitMode;
+import ch.scaille.javabeans.chain.Vetoer.TransmitMode;
 import ch.scaille.javabeans.converters.IConverter;
+import ch.scaille.javabeans.persisters.Persisters;
 
 /**
  * A property with a typed value.
@@ -28,7 +29,7 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 
 	private final List<IConverter<T, T>> implicitConverters = new ArrayList<>();
 
-	private transient IPersister<T> persister;
+	private transient IPersister<T> persister = Persisters.dummy();
 
 	protected abstract T replaceValue(T newValue);
 
@@ -46,7 +47,11 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 	}
 
 	public void setPersister(final IPersister<T> persister) {
-		this.persister = persister;
+		if (persister == null) {
+			this.persister = Persisters.dummy();
+		} else {
+			this.persister = persister;
+		}
 	}
 
 	public void addImplicitConverter(IConverter<T, T> converter) {
@@ -55,9 +60,7 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 
 	@Override
 	public void load(final Object caller) {
-		if (persister != null) {
-			setObjectValue(caller, persister.get());
-		}
+		setObjectValue(caller, persister.get());
 	}
 
 	@Override
@@ -101,7 +104,7 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 	 */
 	public IBindingController listenActive(final Consumer<T> binding) {
 		final var listen = createBindingChain().listen(binding);
-		listen.getVetoer().inhibitTransmitToComponentWhen(b -> b.getProperty().getTransmitMode() != TransmitMode.BOTH);
+		listen.getVetoer().inhibitTransmitToComponentWhen(p -> p.getTransmitMode() != TransmitMode.BOTH);
 		return listen;
 	}
 

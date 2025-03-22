@@ -95,9 +95,9 @@ class ModelBasicTest {
 		testBinding.setValue("bla");
 		assertEquals(456, model.integerProperty.getValue());
 		final var errorProperty = (ErrorSet) model.getErrorNotifier();
-		Assertions.assertNotNull(errorProperty.getLastError().getValue().getContent(),
+		Assertions.assertNotNull(errorProperty.getLastError().getValue().content(),
                 "errorProperty.getLastError().getValue().getContent()");
-		assertEquals(ConversionException.class, errorProperty.getLastError().getValue().getContent().getClass());
+		assertEquals(ConversionException.class, errorProperty.getLastError().getValue().content().getClass());
 	}
 
 	@Test

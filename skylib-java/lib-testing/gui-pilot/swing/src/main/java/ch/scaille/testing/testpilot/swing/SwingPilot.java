@@ -36,6 +36,7 @@ public class SwingPilot extends ch.scaille.testing.testpilot.GuiPilot {
 	}
 
 	public void expectModalDialog(final Function<SwingModalDialogDetector, PollingResult> check) {
+		// Closed by waitModalDialogHandled
 		expectModalDialog(SwingModalDialogDetector.withHandler(check));
 	}
 

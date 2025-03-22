@@ -50,7 +50,7 @@ public class ConsoleErrorDetector {
 	}
 	
 	public void assertNoError() {
-		assertTrue(errors.isEmpty(), () -> "Errors must not be detected: " + errors.stream().collect(Collectors.joining("\n")));
+		assertTrue(errors.isEmpty(), () -> "Errors must not be detected: " + String.join("\n", errors));
 	}
 	
 	public void close() throws InterruptedException {

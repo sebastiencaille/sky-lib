@@ -8,7 +8,7 @@ public class FirstEndOfChain<T> extends EndOfChain<T, Void> implements IChainBui
 
 	private ContextGlue contextGlue = null;
 
-	public FirstEndOfChain(BindingChain chain) {
+	public FirstEndOfChain(IBindingChainModifier chain) {
 		super(chain, null);
 	}
 

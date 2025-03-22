@@ -36,7 +36,7 @@ public class PollingContext<C> {
 	
 	/**
 	 * Get the component.
-	 *  
+	 * <p>
 	 * The component is never null when the library calls the polling methods  
 	 */
 	public C getComponent() {

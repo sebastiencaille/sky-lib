@@ -181,8 +181,4 @@ public class WebErrorController extends AbstractErrorController {
 		return toDto(request);
 	}
 
-	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST })
-	public Object handleError(HttpServletRequest request) {
-		return null;
-	}
 }

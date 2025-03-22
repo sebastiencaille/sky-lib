@@ -14,7 +14,7 @@ public class TestWarLauncher extends WarLauncher {
     }
 
     @Override
-    protected String getMainClass() throws Exception {
+    protected String getMainClass() {
         final var mainClass = System.getProperty("mainClass");
         if (mainClass == null) {
         	throw new IllegalStateException("System Property mainClass must be defined");

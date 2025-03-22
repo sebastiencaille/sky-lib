@@ -20,7 +20,7 @@ public class ConversionErrorToStringConverter implements IConverter<ConversionEr
 		if (value == null) {
 			return noError;
 		}
-		final var content = value.getContent();
+		final var content = value.content();
 		if (content instanceof Exception exc) {
 			return exc.getLocalizedMessage();
 		}

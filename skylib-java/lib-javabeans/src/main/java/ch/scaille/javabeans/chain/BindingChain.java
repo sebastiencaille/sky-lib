@@ -12,10 +12,9 @@ import java.util.logging.Level;
 import ch.scaille.javabeans.IBindingChainDependency;
 import ch.scaille.javabeans.IBindingController;
 import ch.scaille.javabeans.IChainBuilderFactory;
-import ch.scaille.javabeans.IVeto;
+import ch.scaille.javabeans.IVetoer;
 import ch.scaille.javabeans.Logging;
-import ch.scaille.javabeans.Vetoer;
-import ch.scaille.javabeans.Vetoer.TransmitMode;
+import ch.scaille.javabeans.chain.Vetoer.TransmitMode;
 import ch.scaille.javabeans.converters.ChainInhibitedException;
 import ch.scaille.javabeans.converters.ConversionErrors;
 import ch.scaille.javabeans.converters.ConversionException;
@@ -32,12 +31,12 @@ import ch.scaille.javabeans.properties.AbstractProperty.ErrorNotifier;
  * @author scaille
  *
  */
-public class BindingChain implements IBindingController {
+public class BindingChain implements IBindingChainModifier {
 
 	/**
 	 * To enable / disable the binding
 	 */
-	private IVeto vetoer;
+	private Vetoer vetoer;
 
 	/**
 	 * All the links (converters, ...)
@@ -114,10 +113,12 @@ public class BindingChain implements IBindingController {
 		return new FirstEndOfChain<>(this);
 	}
 
+	@Override
 	public void addLink(Link link) {
 		links.add(link);
 	}
 	
+	@Override
 	public void propagateComponentChange(final Object component, final Object componentValue) {
 		final var pos = links.size();
 		var value = componentValue;
@@ -161,25 +162,32 @@ public class BindingChain implements IBindingController {
 	}
 
 	@Override
-	public IVeto getVetoer() {
+	public IVetoer getVetoer() {
+		return getVetoerImpl();
+	}
+	
+	public Vetoer getVetoerImpl() {
 		if (vetoer == null) {
 			vetoer = new Vetoer(TransmitMode.BOTH);
 		}
 		return vetoer;
 	}
 
-	public void setVetoer(final IVeto vetoer) {
+	public void setVetoer(final Vetoer vetoer) {
 		this.vetoer = vetoer;
 	}
 
 	/**
 	 * Allows to block the transmission of the value
-	 * @param inhibitor
-	 * @return
 	 */
-	public IBindingController addPropertyInhibitor(Predicate<BindingChain> inhibitor) {
-		getVetoer().inhibitTransmitToComponentWhen(inhibitor);
+	public IBindingController addPropertyInhibitor(Predicate<AbstractProperty> inhibitor) {
+		getVetoerImpl().inhibitTransmitToComponentWhen(inhibitor);
 		return this;
+	}
+
+	@Override
+	public boolean mustSendToProperty(IBindingChainModifier chain) {
+		return getVetoerImpl().mustSendToProperty(chain);
 	}
 	
 	@Override

@@ -1,10 +1,15 @@
 #!/bin/sh
-export JAVA_HOME=/usr/lib/jvm/java-17-temurin/
-for f in skylib-java testcase-writer dataflow-manager; do
-	pushd $f
-	mvn -Pcoverage install
-	mvn -Pcoverage jacoco:merge@merge-for-sonar jacoco:report@report-for-sonar sonar:sonar 
-	popd
-done
+BUILD="mvn -Pcoverage clean install"
+SONAR="mvn -Pcoverage jacoco:merge@merge-for-sonar jacoco:report@report-for-sonar sonar:sonar -Dsonar.token=$SONAR_TOKEN -Dsonar.organization=sebastiencaille-github"
+
+pushd skylib-java
+$BUILD
+$SONAR -Dsonar.projectKey=sebastiencaille-github_libs
+popd
+
+pushd testcase-writer
+$BUILD
+$SONAR -Dsonar.projectKey=sebastiencaille-github_testcase-writer
+popd
 
 

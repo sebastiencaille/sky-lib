@@ -33,7 +33,7 @@ public class EndOfChain<T, K> implements IChainBuilder<T, K> {
 			newBinding.addComponentValueChangeListener(new IComponentLink<>() {
 				@Override
 				public void setValueFromComponent(final Object component, final T componentValue) {
-					if (chain.getVetoer() != null && !chain.getVetoer().mustSendToProperty(chain)) {
+					if (chain.getVetoer() != null && !chain.mustSendToProperty(chain)) {
 						return;
 					}
 					Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE,
@@ -73,11 +73,11 @@ public class EndOfChain<T, K> implements IChainBuilder<T, K> {
 
 	}
 
-	protected final BindingChain chain;
+	protected final IBindingChainModifier chain;
 	
 	protected final K context;
 	
-	public EndOfChain(BindingChain chain, K context) {
+	public EndOfChain(IBindingChainModifier chain, K context) {
 		this.chain = chain;
 		this.context = context;
 	}

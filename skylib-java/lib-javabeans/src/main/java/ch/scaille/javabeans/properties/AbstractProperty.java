@@ -13,7 +13,7 @@ import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.PropertyEvent;
 import ch.scaille.javabeans.PropertyEvent.EventKind;
-import ch.scaille.javabeans.Vetoer.TransmitMode;
+import ch.scaille.javabeans.chain.Vetoer.TransmitMode;
 
 /**
  * Provides type-independent properties mechanisms.

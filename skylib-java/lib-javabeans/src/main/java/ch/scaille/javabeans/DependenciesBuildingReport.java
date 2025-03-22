@@ -2,7 +2,7 @@ package ch.scaille.javabeans;
 
 public class DependenciesBuildingReport {
 
-	private static DependenciesBuildingReport screenBuildingReport;
+	private static DependenciesBuildingReport screenBuildingReport = null;
 
 	public static void setScreenBuildingReport(final DependenciesBuildingReport screenBuildingReport) {
 		DependenciesBuildingReport.screenBuildingReport = screenBuildingReport;

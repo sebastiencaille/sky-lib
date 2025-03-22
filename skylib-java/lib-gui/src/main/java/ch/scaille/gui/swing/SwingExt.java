@@ -33,9 +33,9 @@ public interface SwingExt {
 
 	static IPropertyEventListener checkSwingThread() {
 		return (c, e) -> {
-			if (e.getKind() == EventKind.BEFORE && e.getProperty().getTransmitMode().toComponent
+			if (e.kind() == EventKind.BEFORE && e.property().getTransmitMode().toComponent
 					&& !EventQueue.isDispatchThread()) {
-				throw new IllegalStateException("Property " + e.getProperty().getName() + " fired out of Swing thread");
+				throw new IllegalStateException("Property " + e.property().getName() + " fired out of Swing thread");
 			}
 		};
 	}

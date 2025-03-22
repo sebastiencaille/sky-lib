@@ -57,12 +57,11 @@ public class TestCaseRecorderAspect {
 		}
 		final var calledMethod = ((MethodSignature)jp.getSignature()).getMethod();
 		if (jp.getTarget() != null) {
+			inRecord = true;
 			if (calledMethod.getDeclaringClass().getAnnotation(TCRole.class) != null) {
 				recorder.recordStep(jp.getTarget(), calledMethod, jp.getArgs());
-				inRecord = true;
 			} else {
 				recorder.recordParamFactoryCall(jp.getTarget(), calledMethod, jp.getArgs());
-				inRecord = true;
 			}
 		}
 		final var returnValue = jp.proceed();

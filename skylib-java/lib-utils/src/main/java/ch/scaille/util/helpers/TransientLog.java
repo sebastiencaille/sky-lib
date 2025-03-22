@@ -46,7 +46,7 @@ public class TransientLog {
 		for (var i = logs.size() - 1; i >= 0; i--) {
 			builder.append(logs.get(i));
 		}
-		builder.append(currentBucket.toString());
+		builder.append(currentBucket);
 		return builder.toString();
 	}
 

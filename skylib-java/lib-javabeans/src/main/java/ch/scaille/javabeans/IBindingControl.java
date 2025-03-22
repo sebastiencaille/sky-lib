@@ -3,7 +3,7 @@ package ch.scaille.javabeans;
 import ch.scaille.javabeans.properties.AbstractProperty;
 
 public interface IBindingControl {
-	IVeto getVetoer();
+	IVetoer getVetoer();
 
 	void forceViewUpdate();
 

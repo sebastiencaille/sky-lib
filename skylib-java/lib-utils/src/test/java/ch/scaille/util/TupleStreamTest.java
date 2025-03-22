@@ -17,17 +17,17 @@ class TupleStreamTest {
 		Assertions.assertEquals(List.of(2, 3, 4),
 				Stream.of(1, 2, 3)
 						.map(TupleStream.of(i -> i + 1))
-						.map(Tuple::getY)
+						.map(Tuple::y)
 						.toList());
 		Assertions.assertEquals(List.of(1, 2, 2, 3, 3, 4),
 				Stream.of(1, 2, 3)
 						.flatMap(TupleStream.ofList(i -> List.of(i, i + 1)))
-						.map(Tuple::getY)
+						.map(Tuple::y)
 						.toList());
 		Assertions.assertEquals(List.of(1, 2, 2, 3, 3, 4),
 				Stream.of(1, 2, 3)
-						.flatMap(TupleStream.<Integer, Integer>ofStream(i -> Stream.of(i, i + 1)))
-						.map(Tuple::getY)
+						.flatMap(TupleStream.ofStream(i -> Stream.of(i, i + 1)))
+						.map(Tuple::y)
 						.toList());
 
 	}

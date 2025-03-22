@@ -1,12 +1,14 @@
-package ch.scaille.javabeans;
+package ch.scaille.javabeans.chain;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-import ch.scaille.javabeans.chain.BindingChain;
+import ch.scaille.javabeans.IBindingControl;
+import ch.scaille.javabeans.IVetoer;
+import ch.scaille.javabeans.properties.AbstractProperty;
 
-public class Vetoer implements IVeto {
+public class Vetoer implements IVetoer {
 
 	public enum TransmitMode {
 		/**
@@ -39,7 +41,7 @@ public class Vetoer implements IVeto {
 
 	private final TransmitMode transmitMode;
 
-	private final List<Predicate<BindingChain>> transmitToComponentInhibitors = new ArrayList<>();
+	private final List<Predicate<AbstractProperty>> transmitToComponentInhibitors = new ArrayList<>();
 
 	public Vetoer(TransmitMode startupTransmitMode) {
 		transmitMode = startupTransmitMode;
@@ -57,19 +59,17 @@ public class Vetoer implements IVeto {
 		detached++;
 	}
 
-	@Override
-	public boolean mustSendToComponent(final BindingChain chain) {
+	public boolean mustSendToComponent(final IBindingControl chain) {
 		return detached == 0 && transmitMode.toComponent && chain.getProperty().mustSendToComponent()
-				&& transmitToComponentInhibitors.stream().noneMatch(t -> t.test(chain));
+				&& transmitToComponentInhibitors.stream().noneMatch(t -> t.test(chain.getProperty()));
 	}
 
-	@Override
-	public boolean mustSendToProperty(final BindingChain chain) {
+	public boolean mustSendToProperty(final IBindingControl chain) {
 		return detached == 0 && transmitMode.toProperty && chain.getProperty().mustSendToProperty();
 	}
 
 	@Override
-	public void inhibitTransmitToComponentWhen(Predicate<BindingChain> inhibitor) {
+	public void inhibitTransmitToComponentWhen(Predicate<AbstractProperty> inhibitor) {
 		transmitToComponentInhibitors.add(inhibitor);
 	}
 

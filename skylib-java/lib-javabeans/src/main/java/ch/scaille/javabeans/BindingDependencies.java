@@ -34,9 +34,9 @@ public final class BindingDependencies {
 
 		@Override
 		public void propertyModified(final Object caller, final PropertyEvent event) {
-			switch (event.getKind()) {
+			switch (event.kind()) {
 			case BEFORE:
-				if (event.getProperty().mustSendToComponent()) {
+				if (event.property().mustSendToComponent()) {
 					controller.getVetoer().detach();
 				}
 				break;

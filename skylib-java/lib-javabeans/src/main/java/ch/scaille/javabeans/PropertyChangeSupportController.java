@@ -16,7 +16,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import ch.scaille.javabeans.PropertyEvent.EventKind;
-import ch.scaille.javabeans.Vetoer.TransmitMode;
+import ch.scaille.javabeans.chain.Vetoer.TransmitMode;
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.IPropertyEventListener;
 
@@ -35,15 +35,7 @@ import ch.scaille.javabeans.properties.IPropertyEventListener;
  */
 public class PropertyChangeSupportController {
 
-	private static class CallInfo {
-
-		private final Object caller;
-		private final Object newValue;
-
-		public CallInfo(final Object caller, final Object newValue) {
-			this.caller = caller;
-			this.newValue = newValue;
-		}
+	private record CallInfo(Object caller, Object newValue) {
 
 		@Override
 		public String toString() {
@@ -144,15 +136,7 @@ public class PropertyChangeSupportController {
 		Arrays.stream(abstractProperties).forEach(this::unregister);
 	}
 
-	private static class ListenerRegistration {
-
-		private final String name;
-		private final PropertyChangeListener listener;
-
-		public ListenerRegistration(final String name, final PropertyChangeListener listener) {
-			this.name = name;
-			this.listener = listener;
-		}
+	private record ListenerRegistration(String name, PropertyChangeListener listener) {
 	}
 
 	public class PropertiesGroup implements IPropertiesGroup {
@@ -211,9 +195,9 @@ public class PropertyChangeSupportController {
 		@Override
 		public IPropertyEventListener detachWhenPropLoading() {
 			return (caller, event) -> {
-				if (event.getKind() == EventKind.BEFORE) {
+				if (event.kind() == EventKind.BEFORE) {
 					transmitAllToComponentOnly();
-				} else if (event.getKind() == EventKind.AFTER) {
+				} else if (event.kind() == EventKind.AFTER) {
 					enableAllTransmit();
 				}
 			};

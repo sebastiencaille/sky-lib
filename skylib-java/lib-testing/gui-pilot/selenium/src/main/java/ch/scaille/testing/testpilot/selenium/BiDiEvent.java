@@ -64,36 +64,14 @@ public class BiDiEvent<T extends Enum<T> & ch.scaille.testing.testpilot.selenium
 	/**
 	 * Basic config for mutation
 	 */
-	public static class BiDiEventConfig {
-		private final String mutationType;
-
-		private final String eventLambda;
-
-		private final String observerConfig;
-
-		private final String componentXpath;
-
-		public BiDiEventConfig(String componentXpath, MutationConfig config, boolean subtree, String eventLambda) {
-			this.componentXpath = componentXpath;
-			this.mutationType = config.js;
-			this.observerConfig = String.format("{ %s, subtree: %s }", config.js(), subtree);
-			this.eventLambda = eventLambda;
-		}
+	public record BiDiEventConfig(String componentXpath, MutationConfig config, boolean subtree, String eventLambda) {
 		
 		public String getMutationType() {
-			return mutationType;
-		}
-
-		public String getEventLambda() {
-			return eventLambda;
+			return config.js;
 		}
 		
 		public String getObserverConfig() {
-			return observerConfig;
-		}
-		
-		public String getComponentXpath() {
-			return componentXpath;
+			return String.format("{ %s, subtree: %s }", config.js(), subtree);
 		}
 	}
 
@@ -128,7 +106,7 @@ public class BiDiEvent<T extends Enum<T> & ch.scaille.testing.testpilot.selenium
 		}
 		
 		protected String toJs(T event) {
-			return String.format(PATH_TEMPLATE, event.name(), event.name(), event.config().getComponentXpath(), event.config().getMutationType(), event.config().getEventLambda(), 
+			return String.format(PATH_TEMPLATE, event.name(), event.name(), event.config().componentXpath(), event.config().getMutationType(), event.config().eventLambda(), 
 					EVENT_MARKER, uuid, event.name(), event.config().getObserverConfig());
 		}
 		

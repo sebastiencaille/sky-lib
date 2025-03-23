@@ -12,16 +12,16 @@ import ch.scaille.util.helpers.JavaExt;
 public class CodeGeneratorParams {
 
 	@Parameter(names = { "-s", "--sourceFolder" }, required = true)
-	private final String sourceFolder = ".";
+	private String sourceFolder = ".";
 
 	@Parameter(names = { "-t", "--targetFolder" })
-	private final String targetFolder = null;
+	private String targetFolder = null;
 
 	@Parameter(names = { "-sp", "--scanPackage" }, required = true)
-	private final String scanPackage = null;
+	private String scanPackage = null;
 
 	@Parameter(names = { "-tp", "--targetPackage" })
-	private final String targetPackage = null;
+	private String targetPackage = null;
 
 	public static CodeGeneratorParams parse(final String[] args) {
 		final var params = new CodeGeneratorParams();

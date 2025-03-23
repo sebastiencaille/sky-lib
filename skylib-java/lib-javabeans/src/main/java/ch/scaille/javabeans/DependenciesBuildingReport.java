@@ -11,11 +11,11 @@ public class DependenciesBuildingReport {
 	private final StringBuilder report = new StringBuilder();
 
 	@Override
-	public String toString() {
+	public synchronized String toString() {
 		return report.toString();
 	}
 
-	public static void addDependency(final Object from, final Object to) {
+	public static synchronized void addDependency(final Object from, final Object to) {
 		if (screenBuildingReport != null) {
 			screenBuildingReport.report.append(from).append(" -> ").append(to).append('\n');
 		}

@@ -18,7 +18,7 @@ public class Persisters {
 
 		@Override
 		public void set(T value) {
-
+			// No target available to set value
 		}
 	}
 

@@ -39,7 +39,7 @@ public class AlertDetector {
 			if (errorChecks != null) {
 				pollingResult = errorChecks.apply(alertPilot);
 			}
-			if (!pollingResult.handled) {
+			if (!pollingResult.handled()) {
 				final var existingAlert = alert.get();
 				pollingResult = ModalDialogDetector.unhandled(existingAlert.getText(), existingAlert::accept);
 			}

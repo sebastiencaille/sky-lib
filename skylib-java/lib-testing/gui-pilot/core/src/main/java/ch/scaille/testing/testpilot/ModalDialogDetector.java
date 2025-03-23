@@ -52,20 +52,7 @@ public class ModalDialogDetector {
 		return new Builder(Collections::emptyList, e -> testThread.interrupt());
 	}
 
-	public static class PollingResult {
-		public final boolean handled;
-		private final String error;
-		private final String extraInfo;
-		private final Runnable closeOnErrorFunction;
-
-		private PollingResult(final boolean handled, final String error, final Runnable closeOnErrorFunction,
-				final String extraInfo) {
-			this.handled = handled;
-			this.error = error;
-			this.closeOnErrorFunction = closeOnErrorFunction;
-			this.extraInfo = extraInfo;
-		}
-
+	public record PollingResult(boolean handled, String error, Runnable closeOnErrorFunction, String extraInfo) {
 	}
 
 	public static class Builder {

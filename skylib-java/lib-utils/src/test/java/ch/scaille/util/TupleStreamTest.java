@@ -26,7 +26,7 @@ class TupleStreamTest {
 						.toList());
 		Assertions.assertEquals(List.of(1, 2, 2, 3, 3, 4),
 				Stream.of(1, 2, 3)
-						.flatMap(TupleStream.ofStream(i -> Stream.of(i, i + 1)))
+						.flatMap(TupleStream.<Integer, Integer>ofStream(i -> Stream.of(i, i + 1)))
 						.map(Tuple::y)
 						.toList());
 
@@ -34,11 +34,11 @@ class TupleStreamTest {
 
 	@Test
 	void testCollect() {
-		List<Integer> result1 = new ArrayList<>();
+		final var result1 = new ArrayList<Integer>();
 		Stream.of(1, 2, 3).collect(TupleStream.streamOf(i -> i + 1)).forEach((x, y) -> result1.add(y));
 		Assertions.assertEquals(List.of(2, 3, 4), result1);
 
-		List<Integer> result2 = new ArrayList<>();
+		final var result2 = new ArrayList<Integer>();
 		Stream.of(1, 2, 3)
 				.collect(TupleStream.streamOfList(i -> List.of(i, i + 1)))
 				.forEach((x, y) -> result2.add(y));

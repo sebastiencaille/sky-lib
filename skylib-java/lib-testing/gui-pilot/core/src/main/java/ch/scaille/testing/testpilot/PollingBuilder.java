@@ -80,7 +80,7 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, U>, U extends Poll
 		public <R> Optional<R> get(Function<C, R> getter) {
 			final var pollResult = builder.poll(Pollings.get(getter));
 			if (pollResult.isSuccess()) {
-				return Optional.ofNullable(pollResult.polledValue);
+				return Optional.ofNullable(pollResult.polledValue());
 			}
 			return Optional.empty();
 		}

@@ -10,7 +10,7 @@ import ch.scaille.util.helpers.Poller;
  * 
  * @param <C> type of Component
  */
-public interface PollingConfiguration<C> {
+public interface PollingMetadata<C> {
 
 	PollingContext<C> getContext();
 

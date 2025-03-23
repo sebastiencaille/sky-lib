@@ -55,6 +55,9 @@ class SeleniumExampleTest extends AbstractSeleniumUndertowTest {
 
 		mainPage.assertElementChange();
 
+		 /*
+		  * [[FirefoxDriver: firefox on linux (780b50ba-dc8c-484a-bde7-ca84325d50c4)] -> id: EnableTest]: clicked, Test delayed by: Wait until EnableTest enabled, [[FirefoxDriver: firefox on linux (780b50ba-dc8c-484a-bde7-ca84325d50c4)] -> id: AlertTest]: clicked, Acknowledging alert: Alert Test, visibility of element located by By.id: NotExisting: isSatisfied should have returned false, [[FirefoxDriver: firefox on linux (780b50ba-dc8c-484a-bde7-ca84325d50c4)] -> id: ElementChangeTest]: clicked]
+		  */
 		assertEquals(6, pilot.getActionReport().getReport().size(), () -> pilot.getActionReport().getFormattedReport());
 	}
 

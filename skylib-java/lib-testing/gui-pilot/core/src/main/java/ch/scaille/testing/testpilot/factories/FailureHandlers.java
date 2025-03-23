@@ -17,7 +17,7 @@ public interface FailureHandlers {
 	static <C, V> FailureHandler<C, V> throwError(final String actionDescription) {
 		return r -> {
 			throw new AssertionError(
-					r.getComponentDescription() + ": action failed [" + actionDescription + "]: " + r.failureReason);
+					r.getComponentDescription() + ": action failed [" + actionDescription + "]: " + r.failureReason());
 		};
 	}
 
@@ -26,12 +26,12 @@ public interface FailureHandlers {
 	 */
 	static <C, V> FailureHandler<C, V> throwError() {
 		return r -> {
-			if (r.failureReason instanceof AssertionError) {
-				throw new AssertionError(r.getComponentDescription() + ": " + r.failureReason.getMessage(),
-						r.failureReason.getCause());
+			if (r.failureReason() instanceof AssertionError) {
+				throw new AssertionError(r.getComponentDescription() + ": " + r.failureReason().getMessage(),
+						r.failureReason().getCause());
 			}
-			throw new AssertionError(r.getComponentDescription() + ": " + r.failureReason.getMessage(),
-					r.failureReason);
+			throw new AssertionError(r.getComponentDescription() + ": " + r.failureReason().getMessage(),
+					r.failureReason());
 		};
 	}
 

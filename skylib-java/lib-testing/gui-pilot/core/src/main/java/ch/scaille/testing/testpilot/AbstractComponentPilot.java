@@ -129,8 +129,7 @@ public abstract class AbstractComponentPilot<C> {
 		polling.withExtraDelay(pilot.getActionDelay());
 		waitActionDelay();
 		try (var closeable = pilot.withModalDialogDetection()) {
-			final var result = waitPollingSuccessLoop(polling);
-			result.setPolling(polling);
+			final var result = waitPollingSuccessLoop(polling).withPolling(polling);
 			if (result.isSuccess()) {
 				fired = true;
 				postExecutions.forEach(p -> p.accept(cachedComponent.element));

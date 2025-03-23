@@ -14,7 +14,7 @@ import ch.scaille.util.helpers.Poller;
  * @param <C> type of Component
  * @param <R> type of Result
  */
-public class Polling<C, R> implements PollingConfiguration<C> {
+public class Polling<C, R> implements PollingMetadata<C> {
 
 	public interface PollingFunction<C, R> {
 		PollingResult<C, R> poll(PollingContext<C> context);

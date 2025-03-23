@@ -51,7 +51,7 @@ public interface PollingResults {
 	}
 
 	static <C, V> Transformer<C, V, Boolean> returnSuccess() {
-		return r -> r.derivate(r.isSuccess());
+		return r -> r.withValue(r.isSuccess());
 	}
 	
 	static <C, R> Transformer<C, R, R> identity() {

@@ -113,7 +113,7 @@ public class SimpleTestGenerator {
 				var ls = Logs.streamOf(SimpleTestGenerator.class, Level.INFO)) {
 			es.transferTo(ls);
 		}
-		final int dotExit = dotExec.waitFor(args);
+		final int dotExit = dotExec.waitFor();
 		if (dotExit != 0) {
 			throw new IllegalStateException("Png generation failed");
 		}

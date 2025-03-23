@@ -68,7 +68,7 @@ public abstract class AbstractComponentPilot<C> {
 		this.pilot = pilot;
 	}
 
-	public GuiPilot getPilot() {
+	public IReporter getPilot() {
 		return pilot;
 	}
 

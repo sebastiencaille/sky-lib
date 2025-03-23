@@ -1,0 +1,1786 @@
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille:skylib-starter-parent:pom:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille:lib-testing-core:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille:gui-pilot-core:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille:gui-pilot-swing:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille:gui-pilot-selenium:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille:gui-pilot:pom:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille:lib-testing-bdd-runtime:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille:selenium-test-page:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille:lib-testing:pom:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille:lib-annotations:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille:lib-utils:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille:lib-javabeans:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille:lib-persistence:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille:lib-gui:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille:lib-gui-generators:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille:lib-gui-validation:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille:lib-gui-examples:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille:lib-generator-utils:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille:libs:pom:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille.tcwriter:testcase-writer-api:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille.tcwriter:testcase-writer-core:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille.tcwriter:testcase-writer-javatc:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille.tcwriter:testcase-writer-maven-plugin:maven-plugin:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille.tcwriter:testcase-writer-gui:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille.tcwriter:testcase-writer-gui-it:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille.tcwriter:testcase-writer-examples:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille.tcwriter:testcase-writer-webapp-api-validators:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille.tcwriter:testcase-writer-webapp-backend-core:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille.tcwriter:testcase-writer-webapp-api-v0-webapi:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille.tcwriter:testcase-writer-webapp-api-v0-backend:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille.tcwriter:testcase-writer-webapp-api-v0:pom:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille.tcwriter:testcase-writer-webapp-backend:war:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille.tcwriter:testcase-writer-webapp-frontend:war:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille.tcwriter:testcase-writer-webapp-war:war:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille.tcwriter:testcase-writer-webapp-tests:war:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille.tcwriter:testcase-writer-webapp:pom:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille.tcwriter:testcase-writer:pom:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille.dataflowmgr:data-flow-model:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille.dataflowmgr:data-flow-generator:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille.dataflowmgr:data-flow-examples:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille.dataflowmgr:data-flow-annotations:jar:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille.dataflowmgr:data-flow-manager:pom:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for 'ch.scaille:skylib:pom:0.0.1-SNAPSHOT'
+[WARNING] Ignored POM import for: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.7.0@compile as already imported org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.13.1@compile. Add the conflicting managed dependency directly to the dependencyManagement section of the POM.
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] skylib-starter-parent                                              [pom]
+[INFO] libs                                                               [pom]
+[INFO] lib-testing                                                        [pom]
+[INFO] lib-testing-core                                                   [jar]
+[INFO] lib-annotations                                                    [jar]
+[INFO] lib-utils                                                          [jar]
+[INFO] gui-pilot                                                          [pom]
+[INFO] gui-pilot-core                                                     [jar]
+[INFO] gui-pilot-swing                                                    [jar]
+[INFO] gui-pilot-selenium                                                 [jar]
+[INFO] selenium-test-page                                                 [jar]
+[INFO] lib-testing-bdd-runtime                                            [jar]
+[INFO] lib-javabeans                                                      [jar]
+[INFO] lib-persistence                                                    [jar]
+[INFO] lib-gui                                                            [jar]
+[INFO] lib-generator-utils                                                [jar]
+[INFO] lib-gui-generators                                                 [jar]
+[INFO] lib-gui-validation                                                 [jar]
+[INFO] lib-gui-examples                                                   [jar]
+[INFO] testcase-writer                                                    [pom]
+[INFO] testcase-writer-api                                                [jar]
+[INFO] testcase-writer-core                                               [jar]
+[INFO] testcase-writer-javatc                                             [jar]
+[INFO] TestCase Writer Maven Plugin                              [maven-plugin]
+[INFO] testcase-writer-gui                                                [jar]
+[INFO] testcase-writer-gui-it                                             [jar]
+[INFO] testcase-writer-examples                                           [jar]
+[INFO] testcase-writer-webapp                                             [pom]
+[INFO] testcase-writer-webapp-api-validators                              [jar]
+[INFO] testcase-writer-webapp-backend-core                                [jar]
+[INFO] testcase-writer-webapp-api-v0                                      [pom]
+[INFO] testcase-writer-webapp-api-v0-webapi                               [jar]
+[INFO] testcase-writer-webapp-api-v0-backend                              [jar]
+[INFO] testcase-writer-webapp-backend                                     [war]
+[INFO] testcase-writer-webapp-frontend                                    [war]
+[INFO] testcase-writer-webapp-war                                         [war]
+[INFO] testcase-writer-webapp-tests                                       [war]
+[INFO] data-flow-manager                                                  [pom]
+[INFO] data-flow-model                                                    [jar]
+[INFO] data-flow-annotations                                              [jar]
+[INFO] data-flow-generator                                                [jar]
+[INFO] data-flow-examples                                                 [jar]
+[INFO] skylib                                                             [pom]
+[INFO] 
+[INFO] ------------------< ch.scaille:skylib-starter-parent >------------------
+[INFO] Building skylib-starter-parent 0.0.1-SNAPSHOT                     [1/43]
+[INFO]   from skylib-starter-parent/pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ skylib-starter-parent ---
+[INFO] ch.scaille:skylib-starter-parent:pom:0.0.1-SNAPSHOT
+[INFO] Copying ch.scaille:skylib-starter-parent:pom:0.0.1-SNAPSHOT to project local repository
+[INFO] 
+[INFO] --------------------------< ch.scaille:libs >---------------------------
+[INFO] Building libs 0.0.1-SNAPSHOT                                      [2/43]
+[INFO]   from skylib-java/pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ libs ---
+[INFO] ch.scaille:libs:pom:0.0.1-SNAPSHOT
+[INFO] \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] Copying ch.scaille:libs:pom:0.0.1-SNAPSHOT to project local repository
+[INFO] 
+[INFO] -----------------------< ch.scaille:lib-testing >-----------------------
+[INFO] Building lib-testing 0.0.1-SNAPSHOT                               [3/43]
+[INFO]   from skylib-java/lib-testing/pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ lib-testing ---
+[INFO] ch.scaille:lib-testing:pom:0.0.1-SNAPSHOT
+[INFO] \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] Copying ch.scaille:lib-testing:pom:0.0.1-SNAPSHOT to project local repository
+[INFO] 
+[INFO] --------------------< ch.scaille:lib-testing-core >---------------------
+[INFO] Building lib-testing-core 0.0.1-SNAPSHOT                          [4/43]
+[INFO]   from skylib-java/lib-testing/core/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ lib-testing-core ---
+[INFO] ch.scaille:lib-testing-core:jar:0.0.1-SNAPSHOT
+[INFO] +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:compile
+[INFO] |  +- org.opentest4j:opentest4j:jar:1.3.0:compile
+[INFO] |  +- org.junit.platform:junit-platform-commons:jar:1.12.0:compile
+[INFO] |  \- org.apiguardian:apiguardian-api:jar:1.1.2:compile
+[INFO] +- org.mockito:mockito-core:jar:5.16.0:compile
+[INFO] |  +- net.bytebuddy:byte-buddy:jar:1.15.11:compile
+[INFO] |  +- net.bytebuddy:byte-buddy-agent:jar:1.15.11:compile
+[INFO] |  \- org.objenesis:objenesis:jar:3.3:runtime
+[INFO] +- org.springframework.boot:spring-boot-loader:jar:3.4.3:compile
+[INFO] \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] 
+[INFO] ---------------------< ch.scaille:lib-annotations >---------------------
+[INFO] Building lib-annotations 0.0.1-SNAPSHOT                           [5/43]
+[INFO]   from skylib-java/lib-annotations/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ lib-annotations ---
+[INFO] ch.scaille:lib-annotations:jar:0.0.1-SNAPSHOT
+[INFO] \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] 
+[INFO] ------------------------< ch.scaille:lib-utils >------------------------
+[INFO] Building lib-utils 0.0.1-SNAPSHOT                                 [6/43]
+[INFO]   from skylib-java/lib-utils/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ lib-utils ---
+[INFO] ch.scaille:lib-utils:jar:0.0.1-SNAPSHOT
+[INFO] +- ch.scaille:lib-annotations:jar:0.0.1-SNAPSHOT:compile
+[INFO] +- ch.scaille:lib-testing-core:jar:0.0.1-SNAPSHOT:test
+[INFO] |  +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:test
+[INFO] |  |  +- org.opentest4j:opentest4j:jar:1.3.0:test
+[INFO] |  |  \- org.junit.platform:junit-platform-commons:jar:1.12.0:test
+[INFO] |  +- org.mockito:mockito-core:jar:5.16.0:test
+[INFO] |  |  +- net.bytebuddy:byte-buddy:jar:1.15.11:test
+[INFO] |  |  +- net.bytebuddy:byte-buddy-agent:jar:1.15.11:test
+[INFO] |  |  \- org.objenesis:objenesis:jar:3.3:test
+[INFO] |  \- org.springframework.boot:spring-boot-loader:jar:3.4.3:test
+[INFO] +- org.junit.jupiter:junit-jupiter-params:jar:5.12.0:test
+[INFO] |  \- org.apiguardian:apiguardian-api:jar:1.1.2:test
+[INFO] \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] 
+[INFO] ------------------------< ch.scaille:gui-pilot >------------------------
+[INFO] Building gui-pilot 0.0.1-SNAPSHOT                                 [7/43]
+[INFO]   from skylib-java/lib-testing/gui-pilot/pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ gui-pilot ---
+[INFO] ch.scaille:gui-pilot:pom:0.0.1-SNAPSHOT
+[INFO] \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] Copying ch.scaille:gui-pilot:pom:0.0.1-SNAPSHOT to project local repository
+[INFO] 
+[INFO] ---------------------< ch.scaille:gui-pilot-core >----------------------
+[INFO] Building gui-pilot-core 0.0.1-SNAPSHOT                            [8/43]
+[INFO]   from skylib-java/lib-testing/gui-pilot/core/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ gui-pilot-core ---
+[INFO] ch.scaille:gui-pilot-core:jar:0.0.1-SNAPSHOT
+[INFO] +- ch.scaille:lib-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  \- ch.scaille:lib-annotations:jar:0.0.1-SNAPSHOT:compile
+[INFO] +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:compile
+[INFO] |  +- org.opentest4j:opentest4j:jar:1.3.0:compile
+[INFO] |  +- org.junit.platform:junit-platform-commons:jar:1.12.0:compile
+[INFO] |  \- org.apiguardian:apiguardian-api:jar:1.1.2:compile
+[INFO] +- org.junit.jupiter:junit-jupiter-engine:jar:5.12.0:compile
+[INFO] |  \- org.junit.platform:junit-platform-engine:jar:1.12.0:compile
+[INFO] \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] 
+[INFO] ---------------------< ch.scaille:gui-pilot-swing >---------------------
+[INFO] Building gui-pilot-swing 0.0.1-SNAPSHOT                           [9/43]
+[INFO]   from skylib-java/lib-testing/gui-pilot/swing/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ gui-pilot-swing ---
+[INFO] ch.scaille:gui-pilot-swing:jar:0.0.1-SNAPSHOT
+[INFO] +- ch.scaille:lib-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  \- ch.scaille:lib-annotations:jar:0.0.1-SNAPSHOT:compile
+[INFO] +- ch.scaille:gui-pilot-core:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:compile
+[INFO] |  |  +- org.opentest4j:opentest4j:jar:1.3.0:compile
+[INFO] |  |  +- org.junit.platform:junit-platform-commons:jar:1.12.0:compile
+[INFO] |  |  \- org.apiguardian:apiguardian-api:jar:1.1.2:compile
+[INFO] |  \- org.junit.jupiter:junit-jupiter-engine:jar:5.12.0:compile
+[INFO] |     \- org.junit.platform:junit-platform-engine:jar:1.12.0:compile
+[INFO] \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] 
+[INFO] -------------------< ch.scaille:gui-pilot-selenium >--------------------
+[INFO] Building gui-pilot-selenium 0.0.1-SNAPSHOT                       [10/43]
+[INFO]   from skylib-java/lib-testing/gui-pilot/selenium/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ gui-pilot-selenium ---
+[INFO] ch.scaille:gui-pilot-selenium:jar:0.0.1-SNAPSHOT
+[INFO] +- ch.scaille:gui-pilot-core:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- ch.scaille:lib-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  \- ch.scaille:lib-annotations:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:compile
+[INFO] |  |  +- org.opentest4j:opentest4j:jar:1.3.0:compile
+[INFO] |  |  +- org.junit.platform:junit-platform-commons:jar:1.12.0:compile
+[INFO] |  |  \- org.apiguardian:apiguardian-api:jar:1.1.2:compile
+[INFO] |  \- org.junit.jupiter:junit-jupiter-engine:jar:5.12.0:compile
+[INFO] |     \- org.junit.platform:junit-platform-engine:jar:1.12.0:compile
+[INFO] +- org.seleniumhq.selenium:selenium-java:jar:4.29.0:compile
+[INFO] |  +- org.seleniumhq.selenium:selenium-api:jar:4.29.0:compile
+[INFO] |  |  \- org.jspecify:jspecify:jar:1.0.0:compile
+[INFO] |  +- org.seleniumhq.selenium:selenium-chrome-driver:jar:4.29.0:compile
+[INFO] |  |  +- com.google.auto.service:auto-service-annotations:jar:1.1.1:compile
+[INFO] |  |  +- org.seleniumhq.selenium:selenium-chromium-driver:jar:4.29.0:compile
+[INFO] |  |  +- org.seleniumhq.selenium:selenium-json:jar:4.29.0:compile
+[INFO] |  |  \- org.seleniumhq.selenium:selenium-manager:jar:4.29.0:compile
+[INFO] |  +- org.seleniumhq.selenium:selenium-devtools-v131:jar:4.29.0:compile
+[INFO] |  +- org.seleniumhq.selenium:selenium-devtools-v132:jar:4.29.0:compile
+[INFO] |  +- org.seleniumhq.selenium:selenium-devtools-v133:jar:4.29.0:compile
+[INFO] |  +- org.seleniumhq.selenium:selenium-devtools-v85:jar:4.29.0:compile
+[INFO] |  +- org.seleniumhq.selenium:selenium-edge-driver:jar:4.29.0:compile
+[INFO] |  +- org.seleniumhq.selenium:selenium-firefox-driver:jar:4.29.0:compile
+[INFO] |  |  \- org.seleniumhq.selenium:selenium-http:jar:4.29.0:compile
+[INFO] |  +- org.seleniumhq.selenium:selenium-ie-driver:jar:4.29.0:compile
+[INFO] |  +- org.seleniumhq.selenium:selenium-remote-driver:jar:4.29.0:compile
+[INFO] |  |  +- com.google.guava:guava:jar:33.4.0-jre:compile
+[INFO] |  |  |  +- com.google.guava:failureaccess:jar:1.0.2:compile
+[INFO] |  |  |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:compile
+[INFO] |  |  |  +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
+[INFO] |  |  |  +- org.checkerframework:checker-qual:jar:3.43.0:compile
+[INFO] |  |  |  +- com.google.errorprone:error_prone_annotations:jar:2.36.0:compile
+[INFO] |  |  |  \- com.google.j2objc:j2objc-annotations:jar:3.0.0:compile
+[INFO] |  |  +- io.opentelemetry.semconv:opentelemetry-semconv:jar:1.28.0-alpha:compile
+[INFO] |  |  +- io.opentelemetry:opentelemetry-api:jar:1.43.0:compile
+[INFO] |  |  +- io.opentelemetry:opentelemetry-context:jar:1.43.0:compile
+[INFO] |  |  +- io.opentelemetry:opentelemetry-exporter-logging:jar:1.43.0:compile
+[INFO] |  |  +- io.opentelemetry:opentelemetry-sdk-common:jar:1.43.0:compile
+[INFO] |  |  +- io.opentelemetry:opentelemetry-sdk-extension-autoconfigure-spi:jar:1.43.0:compile
+[INFO] |  |  +- io.opentelemetry:opentelemetry-sdk-extension-autoconfigure:jar:1.43.0:compile
+[INFO] |  |  |  \- io.opentelemetry:opentelemetry-api-incubator:jar:1.43.0-alpha:runtime
+[INFO] |  |  +- io.opentelemetry:opentelemetry-sdk-trace:jar:1.43.0:compile
+[INFO] |  |  +- io.opentelemetry:opentelemetry-sdk:jar:1.43.0:compile
+[INFO] |  |  |  +- io.opentelemetry:opentelemetry-sdk-metrics:jar:1.43.0:compile
+[INFO] |  |  |  \- io.opentelemetry:opentelemetry-sdk-logs:jar:1.43.0:compile
+[INFO] |  |  +- net.bytebuddy:byte-buddy:jar:1.15.11:compile
+[INFO] |  |  \- org.seleniumhq.selenium:selenium-os:jar:4.29.0:compile
+[INFO] |  |     \- org.apache.commons:commons-exec:jar:1.4.0:compile
+[INFO] |  +- org.seleniumhq.selenium:selenium-safari-driver:jar:4.29.0:compile
+[INFO] |  \- org.seleniumhq.selenium:selenium-support:jar:4.29.0:compile
+[INFO] \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] 
+[INFO] -------------------< ch.scaille:selenium-test-page >--------------------
+[INFO] Building selenium-test-page 0.0.1-SNAPSHOT                       [11/43]
+[INFO]   from skylib-java/lib-testing/selenium-test-page/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ selenium-test-page ---
+[INFO] ch.scaille:selenium-test-page:jar:0.0.1-SNAPSHOT
+[INFO] +- ch.scaille:gui-pilot-selenium:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- ch.scaille:gui-pilot-core:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:compile
+[INFO] |  |  |  +- org.opentest4j:opentest4j:jar:1.3.0:compile
+[INFO] |  |  |  +- org.junit.platform:junit-platform-commons:jar:1.12.0:compile
+[INFO] |  |  |  \- org.apiguardian:apiguardian-api:jar:1.1.2:compile
+[INFO] |  |  \- org.junit.jupiter:junit-jupiter-engine:jar:5.12.0:compile
+[INFO] |  |     \- org.junit.platform:junit-platform-engine:jar:1.12.0:compile
+[INFO] |  \- org.seleniumhq.selenium:selenium-java:jar:4.29.0:compile
+[INFO] |     +- org.seleniumhq.selenium:selenium-api:jar:4.29.0:compile
+[INFO] |     |  \- org.jspecify:jspecify:jar:1.0.0:compile
+[INFO] |     +- org.seleniumhq.selenium:selenium-chrome-driver:jar:4.29.0:compile
+[INFO] |     |  +- com.google.auto.service:auto-service-annotations:jar:1.1.1:compile
+[INFO] |     |  +- org.seleniumhq.selenium:selenium-chromium-driver:jar:4.29.0:compile
+[INFO] |     |  +- org.seleniumhq.selenium:selenium-json:jar:4.29.0:compile
+[INFO] |     |  \- org.seleniumhq.selenium:selenium-manager:jar:4.29.0:compile
+[INFO] |     +- org.seleniumhq.selenium:selenium-devtools-v131:jar:4.29.0:compile
+[INFO] |     +- org.seleniumhq.selenium:selenium-devtools-v132:jar:4.29.0:compile
+[INFO] |     +- org.seleniumhq.selenium:selenium-devtools-v133:jar:4.29.0:compile
+[INFO] |     +- org.seleniumhq.selenium:selenium-devtools-v85:jar:4.29.0:compile
+[INFO] |     +- org.seleniumhq.selenium:selenium-edge-driver:jar:4.29.0:compile
+[INFO] |     +- org.seleniumhq.selenium:selenium-firefox-driver:jar:4.29.0:compile
+[INFO] |     |  \- org.seleniumhq.selenium:selenium-http:jar:4.29.0:compile
+[INFO] |     +- org.seleniumhq.selenium:selenium-ie-driver:jar:4.29.0:compile
+[INFO] |     +- org.seleniumhq.selenium:selenium-remote-driver:jar:4.29.0:compile
+[INFO] |     |  +- com.google.guava:guava:jar:33.4.0-jre:compile
+[INFO] |     |  |  +- com.google.guava:failureaccess:jar:1.0.2:compile
+[INFO] |     |  |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:compile
+[INFO] |     |  |  +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
+[INFO] |     |  |  +- org.checkerframework:checker-qual:jar:3.43.0:compile
+[INFO] |     |  |  +- com.google.errorprone:error_prone_annotations:jar:2.36.0:compile
+[INFO] |     |  |  \- com.google.j2objc:j2objc-annotations:jar:3.0.0:compile
+[INFO] |     |  +- io.opentelemetry.semconv:opentelemetry-semconv:jar:1.28.0-alpha:compile
+[INFO] |     |  +- io.opentelemetry:opentelemetry-api:jar:1.43.0:compile
+[INFO] |     |  +- io.opentelemetry:opentelemetry-context:jar:1.43.0:compile
+[INFO] |     |  +- io.opentelemetry:opentelemetry-exporter-logging:jar:1.43.0:compile
+[INFO] |     |  +- io.opentelemetry:opentelemetry-sdk-common:jar:1.43.0:compile
+[INFO] |     |  +- io.opentelemetry:opentelemetry-sdk-extension-autoconfigure-spi:jar:1.43.0:compile
+[INFO] |     |  +- io.opentelemetry:opentelemetry-sdk-extension-autoconfigure:jar:1.43.0:compile
+[INFO] |     |  |  \- io.opentelemetry:opentelemetry-api-incubator:jar:1.43.0-alpha:runtime
+[INFO] |     |  +- io.opentelemetry:opentelemetry-sdk-trace:jar:1.43.0:compile
+[INFO] |     |  +- io.opentelemetry:opentelemetry-sdk:jar:1.43.0:compile
+[INFO] |     |  |  +- io.opentelemetry:opentelemetry-sdk-metrics:jar:1.43.0:compile
+[INFO] |     |  |  \- io.opentelemetry:opentelemetry-sdk-logs:jar:1.43.0:compile
+[INFO] |     |  +- net.bytebuddy:byte-buddy:jar:1.15.11:compile
+[INFO] |     |  \- org.seleniumhq.selenium:selenium-os:jar:4.29.0:compile
+[INFO] |     |     \- org.apache.commons:commons-exec:jar:1.4.0:compile
+[INFO] |     +- org.seleniumhq.selenium:selenium-safari-driver:jar:4.29.0:compile
+[INFO] |     \- org.seleniumhq.selenium:selenium-support:jar:4.29.0:compile
+[INFO] +- ch.scaille:lib-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  \- ch.scaille:lib-annotations:jar:0.0.1-SNAPSHOT:compile
+[INFO] +- io.undertow:undertow-core:jar:2.3.18.Final:compile
+[INFO] |  +- org.jboss.logging:jboss-logging:jar:3.6.1.Final:compile
+[INFO] |  +- org.jboss.xnio:xnio-api:jar:3.8.16.Final:compile
+[INFO] |  |  +- org.wildfly.common:wildfly-common:jar:1.6.0.Final:compile
+[INFO] |  |  \- org.wildfly.client:wildfly-client-config:jar:1.0.1.Final:compile
+[INFO] |  +- org.jboss.xnio:xnio-nio:jar:3.8.16.Final:runtime
+[INFO] |  \- org.jboss.threads:jboss-threads:jar:3.5.0.Final:compile
+[INFO] \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] 
+[INFO] -----------------< ch.scaille:lib-testing-bdd-runtime >-----------------
+[INFO] Building lib-testing-bdd-runtime 0.0.1-SNAPSHOT                  [12/43]
+[INFO]   from skylib-java/lib-testing/bdd-runtime/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ lib-testing-bdd-runtime ---
+[INFO] ch.scaille:lib-testing-bdd-runtime:jar:0.0.1-SNAPSHOT
+[INFO] +- ch.scaille:selenium-test-page:jar:0.0.1-SNAPSHOT:test
+[INFO] |  +- ch.scaille:gui-pilot-selenium:jar:0.0.1-SNAPSHOT:test
+[INFO] |  |  +- ch.scaille:gui-pilot-core:jar:0.0.1-SNAPSHOT:test
+[INFO] |  |  |  +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:test
+[INFO] |  |  |  |  +- org.opentest4j:opentest4j:jar:1.3.0:test
+[INFO] |  |  |  |  +- org.junit.platform:junit-platform-commons:jar:1.12.0:test
+[INFO] |  |  |  |  \- org.apiguardian:apiguardian-api:jar:1.1.2:test
+[INFO] |  |  |  \- org.junit.jupiter:junit-jupiter-engine:jar:5.12.0:test
+[INFO] |  |  |     \- org.junit.platform:junit-platform-engine:jar:1.12.0:test
+[INFO] |  |  \- org.seleniumhq.selenium:selenium-java:jar:4.29.0:test
+[INFO] |  |     +- org.seleniumhq.selenium:selenium-api:jar:4.29.0:test
+[INFO] |  |     |  \- org.jspecify:jspecify:jar:1.0.0:test
+[INFO] |  |     +- org.seleniumhq.selenium:selenium-chrome-driver:jar:4.29.0:test
+[INFO] |  |     |  +- com.google.auto.service:auto-service-annotations:jar:1.1.1:test
+[INFO] |  |     |  +- org.seleniumhq.selenium:selenium-chromium-driver:jar:4.29.0:test
+[INFO] |  |     |  +- org.seleniumhq.selenium:selenium-json:jar:4.29.0:test
+[INFO] |  |     |  \- org.seleniumhq.selenium:selenium-manager:jar:4.29.0:test
+[INFO] |  |     +- org.seleniumhq.selenium:selenium-devtools-v131:jar:4.29.0:test
+[INFO] |  |     +- org.seleniumhq.selenium:selenium-devtools-v132:jar:4.29.0:test
+[INFO] |  |     +- org.seleniumhq.selenium:selenium-devtools-v133:jar:4.29.0:test
+[INFO] |  |     +- org.seleniumhq.selenium:selenium-devtools-v85:jar:4.29.0:test
+[INFO] |  |     +- org.seleniumhq.selenium:selenium-edge-driver:jar:4.29.0:test
+[INFO] |  |     +- org.seleniumhq.selenium:selenium-firefox-driver:jar:4.29.0:test
+[INFO] |  |     |  \- org.seleniumhq.selenium:selenium-http:jar:4.29.0:test
+[INFO] |  |     +- org.seleniumhq.selenium:selenium-ie-driver:jar:4.29.0:test
+[INFO] |  |     +- org.seleniumhq.selenium:selenium-remote-driver:jar:4.29.0:test
+[INFO] |  |     |  +- com.google.guava:guava:jar:33.4.0-jre:test
+[INFO] |  |     |  |  +- com.google.guava:failureaccess:jar:1.0.2:test
+[INFO] |  |     |  |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:test
+[INFO] |  |     |  |  +- com.google.code.findbugs:jsr305:jar:3.0.2:test
+[INFO] |  |     |  |  +- org.checkerframework:checker-qual:jar:3.43.0:test
+[INFO] |  |     |  |  +- com.google.errorprone:error_prone_annotations:jar:2.36.0:test
+[INFO] |  |     |  |  \- com.google.j2objc:j2objc-annotations:jar:3.0.0:test
+[INFO] |  |     |  +- io.opentelemetry.semconv:opentelemetry-semconv:jar:1.28.0-alpha:test
+[INFO] |  |     |  +- io.opentelemetry:opentelemetry-api:jar:1.43.0:test
+[INFO] |  |     |  +- io.opentelemetry:opentelemetry-context:jar:1.43.0:test
+[INFO] |  |     |  +- io.opentelemetry:opentelemetry-exporter-logging:jar:1.43.0:test
+[INFO] |  |     |  +- io.opentelemetry:opentelemetry-sdk-common:jar:1.43.0:test
+[INFO] |  |     |  +- io.opentelemetry:opentelemetry-sdk-extension-autoconfigure-spi:jar:1.43.0:test
+[INFO] |  |     |  +- io.opentelemetry:opentelemetry-sdk-extension-autoconfigure:jar:1.43.0:test
+[INFO] |  |     |  |  \- io.opentelemetry:opentelemetry-api-incubator:jar:1.43.0-alpha:test
+[INFO] |  |     |  +- io.opentelemetry:opentelemetry-sdk-trace:jar:1.43.0:test
+[INFO] |  |     |  +- io.opentelemetry:opentelemetry-sdk:jar:1.43.0:test
+[INFO] |  |     |  |  +- io.opentelemetry:opentelemetry-sdk-metrics:jar:1.43.0:test
+[INFO] |  |     |  |  \- io.opentelemetry:opentelemetry-sdk-logs:jar:1.43.0:test
+[INFO] |  |     |  +- net.bytebuddy:byte-buddy:jar:1.15.11:test
+[INFO] |  |     |  \- org.seleniumhq.selenium:selenium-os:jar:4.29.0:test
+[INFO] |  |     |     \- org.apache.commons:commons-exec:jar:1.4.0:test
+[INFO] |  |     +- org.seleniumhq.selenium:selenium-safari-driver:jar:4.29.0:test
+[INFO] |  |     \- org.seleniumhq.selenium:selenium-support:jar:4.29.0:test
+[INFO] |  +- ch.scaille:lib-utils:jar:0.0.1-SNAPSHOT:test
+[INFO] |  |  \- ch.scaille:lib-annotations:jar:0.0.1-SNAPSHOT:test
+[INFO] |  \- io.undertow:undertow-core:jar:2.3.18.Final:test
+[INFO] |     +- org.jboss.logging:jboss-logging:jar:3.6.1.Final:test
+[INFO] |     +- org.jboss.xnio:xnio-api:jar:3.8.16.Final:test
+[INFO] |     |  +- org.wildfly.common:wildfly-common:jar:1.6.0.Final:test
+[INFO] |     |  \- org.wildfly.client:wildfly-client-config:jar:1.0.1.Final:test
+[INFO] |     +- org.jboss.xnio:xnio-nio:jar:3.8.16.Final:test
+[INFO] |     \- org.jboss.threads:jboss-threads:jar:3.5.0.Final:test
+[INFO] \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] 
+[INFO] ----------------------< ch.scaille:lib-javabeans >----------------------
+[INFO] Building lib-javabeans 0.0.1-SNAPSHOT                            [13/43]
+[INFO]   from skylib-java/lib-javabeans/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ lib-javabeans ---
+[INFO] ch.scaille:lib-javabeans:jar:0.0.1-SNAPSHOT
+[INFO] +- ch.scaille:lib-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  \- ch.scaille:lib-annotations:jar:0.0.1-SNAPSHOT:compile
+[INFO] +- ch.scaille:lib-testing-core:jar:0.0.1-SNAPSHOT:test
+[INFO] |  +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:test
+[INFO] |  |  +- org.opentest4j:opentest4j:jar:1.3.0:test
+[INFO] |  |  +- org.junit.platform:junit-platform-commons:jar:1.12.0:test
+[INFO] |  |  \- org.apiguardian:apiguardian-api:jar:1.1.2:test
+[INFO] |  +- org.mockito:mockito-core:jar:5.16.0:test
+[INFO] |  |  +- net.bytebuddy:byte-buddy:jar:1.15.11:test
+[INFO] |  |  +- net.bytebuddy:byte-buddy-agent:jar:1.15.11:test
+[INFO] |  |  \- org.objenesis:objenesis:jar:3.3:test
+[INFO] |  \- org.springframework.boot:spring-boot-loader:jar:3.4.3:test
+[INFO] \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] 
+[INFO] ---------------------< ch.scaille:lib-persistence >---------------------
+[INFO] Building lib-persistence 0.0.1-SNAPSHOT                          [14/43]
+[INFO]   from skylib-java/lib-persistence/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ lib-persistence ---
+[INFO] ch.scaille:lib-persistence:jar:0.0.1-SNAPSHOT
+[INFO] +- ch.scaille:lib-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  \- ch.scaille:lib-annotations:jar:0.0.1-SNAPSHOT:compile
+[INFO] +- ch.scaille:lib-testing-core:jar:0.0.1-SNAPSHOT:test
+[INFO] |  +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:test
+[INFO] |  |  +- org.opentest4j:opentest4j:jar:1.3.0:test
+[INFO] |  |  \- org.junit.platform:junit-platform-commons:jar:1.12.0:test
+[INFO] |  +- org.mockito:mockito-core:jar:5.16.0:test
+[INFO] |  |  +- net.bytebuddy:byte-buddy:jar:1.15.11:test
+[INFO] |  |  +- net.bytebuddy:byte-buddy-agent:jar:1.15.11:test
+[INFO] |  |  \- org.objenesis:objenesis:jar:3.3:test
+[INFO] |  \- org.springframework.boot:spring-boot-loader:jar:3.4.3:test
+[INFO] +- org.junit.jupiter:junit-jupiter-params:jar:5.12.0:test
+[INFO] |  \- org.apiguardian:apiguardian-api:jar:1.1.2:test
+[INFO] \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] 
+[INFO] -------------------------< ch.scaille:lib-gui >-------------------------
+[INFO] Building lib-gui 0.0.1-SNAPSHOT                                  [15/43]
+[INFO]   from skylib-java/lib-gui/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ lib-gui ---
+[INFO] ch.scaille:lib-gui:jar:0.0.1-SNAPSHOT
+[INFO] +- ch.scaille:lib-javabeans:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  \- ch.scaille:lib-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |     \- ch.scaille:lib-annotations:jar:0.0.1-SNAPSHOT:compile
+[INFO] +- ch.scaille:lib-testing-core:jar:0.0.1-SNAPSHOT:test
+[INFO] |  +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:test
+[INFO] |  |  +- org.opentest4j:opentest4j:jar:1.3.0:test
+[INFO] |  |  +- org.junit.platform:junit-platform-commons:jar:1.12.0:test
+[INFO] |  |  \- org.apiguardian:apiguardian-api:jar:1.1.2:test
+[INFO] |  +- org.mockito:mockito-core:jar:5.16.0:test
+[INFO] |  |  +- net.bytebuddy:byte-buddy:jar:1.15.11:test
+[INFO] |  |  +- net.bytebuddy:byte-buddy-agent:jar:1.15.11:test
+[INFO] |  |  \- org.objenesis:objenesis:jar:3.3:test
+[INFO] |  \- org.springframework.boot:spring-boot-loader:jar:3.4.3:test
+[INFO] \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] 
+[INFO] -------------------< ch.scaille:lib-generator-utils >-------------------
+[INFO] Building lib-generator-utils 0.0.1-SNAPSHOT                      [16/43]
+[INFO]   from skylib-java/lib-generator-utils/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ lib-generator-utils ---
+[INFO] ch.scaille:lib-generator-utils:jar:0.0.1-SNAPSHOT
+[INFO] +- ch.scaille:lib-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  \- ch.scaille:lib-annotations:jar:0.0.1-SNAPSHOT:compile
+[INFO] +- com.beust:jcommander:jar:1.82:compile
+[INFO] \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] 
+[INFO] -------------------< ch.scaille:lib-gui-generators >--------------------
+[INFO] Building lib-gui-generators 0.0.1-SNAPSHOT                       [17/43]
+[INFO]   from skylib-java/lib-gui-generators/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ lib-gui-generators ---
+[INFO] ch.scaille:lib-gui-generators:jar:0.0.1-SNAPSHOT
+[INFO] +- ch.scaille:lib-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  \- ch.scaille:lib-annotations:jar:0.0.1-SNAPSHOT:compile
+[INFO] +- ch.scaille:lib-javabeans:jar:0.0.1-SNAPSHOT:compile
+[INFO] +- ch.scaille:lib-generator-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  \- com.beust:jcommander:jar:1.82:compile
+[INFO] \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] 
+[INFO] -------------------< ch.scaille:lib-gui-validation >--------------------
+[INFO] Building lib-gui-validation 0.0.1-SNAPSHOT                       [18/43]
+[INFO]   from skylib-java/lib-gui-validation/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ lib-gui-validation ---
+[INFO] ch.scaille:lib-gui-validation:jar:0.0.1-SNAPSHOT
+[INFO] +- jakarta.validation:jakarta.validation-api:jar:3.0.2:compile
+[INFO] +- org.hibernate.validator:hibernate-validator:jar:8.0.2.Final:compile
+[INFO] |  +- org.jboss.logging:jboss-logging:jar:3.6.1.Final:compile
+[INFO] |  \- com.fasterxml:classmate:jar:1.7.0:compile
+[INFO] +- org.hibernate.validator:hibernate-validator-annotation-processor:jar:8.0.2.Final:compile
+[INFO] +- jakarta.el:jakarta.el-api:jar:5.0.1:compile
+[INFO] +- org.glassfish:jakarta.el:jar:4.0.2:compile
+[INFO] +- ch.scaille:lib-gui:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  \- ch.scaille:lib-javabeans:jar:0.0.1-SNAPSHOT:compile
+[INFO] |     \- ch.scaille:lib-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |        \- ch.scaille:lib-annotations:jar:0.0.1-SNAPSHOT:compile
+[INFO] \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] 
+[INFO] --------------------< ch.scaille:lib-gui-examples >---------------------
+[INFO] Building lib-gui-examples 0.0.1-SNAPSHOT                         [19/43]
+[INFO]   from skylib-java/lib-gui-examples/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ lib-gui-examples ---
+[INFO] ch.scaille:lib-gui-examples:jar:0.0.1-SNAPSHOT
+[INFO] +- ch.scaille:lib-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  \- ch.scaille:lib-annotations:jar:0.0.1-SNAPSHOT:compile
+[INFO] +- ch.scaille:lib-gui:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  \- ch.scaille:lib-javabeans:jar:0.0.1-SNAPSHOT:compile
+[INFO] +- ch.scaille:lib-gui-validation:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- jakarta.validation:jakarta.validation-api:jar:3.0.2:compile
+[INFO] |  +- org.hibernate.validator:hibernate-validator:jar:8.0.2.Final:compile
+[INFO] |  |  +- org.jboss.logging:jboss-logging:jar:3.6.1.Final:compile
+[INFO] |  |  \- com.fasterxml:classmate:jar:1.7.0:compile
+[INFO] |  +- org.hibernate.validator:hibernate-validator-annotation-processor:jar:8.0.2.Final:compile
+[INFO] |  +- jakarta.el:jakarta.el-api:jar:5.0.1:compile
+[INFO] |  \- org.glassfish:jakarta.el:jar:4.0.2:compile
+[INFO] +- ch.scaille:gui-pilot-swing:jar:0.0.1-SNAPSHOT:test
+[INFO] |  \- ch.scaille:gui-pilot-core:jar:0.0.1-SNAPSHOT:test
+[INFO] |     +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:test
+[INFO] |     |  +- org.opentest4j:opentest4j:jar:1.3.0:test
+[INFO] |     |  +- org.junit.platform:junit-platform-commons:jar:1.12.0:test
+[INFO] |     |  \- org.apiguardian:apiguardian-api:jar:1.1.2:test
+[INFO] |     \- org.junit.jupiter:junit-jupiter-engine:jar:5.12.0:test
+[INFO] |        \- org.junit.platform:junit-platform-engine:jar:1.12.0:test
+[INFO] \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] 
+[INFO] ----------------< ch.scaille.tcwriter:testcase-writer >-----------------
+[INFO] Building testcase-writer 0.0.1-SNAPSHOT                          [20/43]
+[INFO]   from testcase-writer/pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ testcase-writer ---
+[INFO] ch.scaille.tcwriter:testcase-writer:pom:0.0.1-SNAPSHOT
+[INFO] \- ch.scaille:lib-testing-core:jar:0.0.1-SNAPSHOT:test
+[INFO]    +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:test
+[INFO]    |  +- org.opentest4j:opentest4j:jar:1.3.0:test
+[INFO]    |  +- org.junit.platform:junit-platform-commons:jar:1.12.0:test
+[INFO]    |  \- org.apiguardian:apiguardian-api:jar:1.1.2:test
+[INFO]    +- org.mockito:mockito-core:jar:5.16.0:test
+[INFO]    |  +- net.bytebuddy:byte-buddy:jar:1.15.11:test
+[INFO]    |  +- net.bytebuddy:byte-buddy-agent:jar:1.15.11:test
+[INFO]    |  \- org.objenesis:objenesis:jar:3.3:test
+[INFO]    +- org.springframework.boot:spring-boot-loader:jar:3.4.3:test
+[INFO]    \- org.jetbrains:annotations:jar:26.0.2:test
+[INFO] Copying ch.scaille.tcwriter:testcase-writer:pom:0.0.1-SNAPSHOT to project local repository
+[INFO] 
+[INFO] --------------< ch.scaille.tcwriter:testcase-writer-api >---------------
+[INFO] Building testcase-writer-api 0.0.1-SNAPSHOT                      [21/43]
+[INFO]   from testcase-writer/api/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ testcase-writer-api ---
+[INFO] ch.scaille.tcwriter:testcase-writer-api:jar:0.0.1-SNAPSHOT
+[INFO] +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:compile
+[INFO] |  +- org.opentest4j:opentest4j:jar:1.3.0:compile
+[INFO] |  +- org.junit.platform:junit-platform-commons:jar:1.12.0:compile
+[INFO] |  \- org.apiguardian:apiguardian-api:jar:1.1.2:compile
+[INFO] \- ch.scaille:lib-testing-core:jar:0.0.1-SNAPSHOT:test
+[INFO]    +- org.mockito:mockito-core:jar:5.16.0:test
+[INFO]    |  +- net.bytebuddy:byte-buddy:jar:1.15.11:test
+[INFO]    |  +- net.bytebuddy:byte-buddy-agent:jar:1.15.11:test
+[INFO]    |  \- org.objenesis:objenesis:jar:3.3:test
+[INFO]    +- org.springframework.boot:spring-boot-loader:jar:3.4.3:test
+[INFO]    \- org.jetbrains:annotations:jar:26.0.2:test
+[INFO] 
+[INFO] --------------< ch.scaille.tcwriter:testcase-writer-core >--------------
+[INFO] Building testcase-writer-core 0.0.1-SNAPSHOT                     [22/43]
+[INFO]   from testcase-writer/core/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ testcase-writer-core ---
+[INFO] ch.scaille.tcwriter:testcase-writer-core:jar:0.0.1-SNAPSHOT
+[INFO] +- ch.scaille:lib-generator-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- ch.scaille:lib-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  \- ch.scaille:lib-annotations:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- com.beust:jcommander:jar:1.82:compile
+[INFO] |  \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] +- ch.scaille:lib-persistence:jar:0.0.1-SNAPSHOT:compile
+[INFO] +- ch.scaille:lib-javabeans:jar:0.0.1-SNAPSHOT:compile
+[INFO] +- com.google.guava:guava:jar:33.4.0-jre:compile
+[INFO] |  +- com.google.guava:failureaccess:jar:1.0.2:compile
+[INFO] |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:compile
+[INFO] |  +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
+[INFO] |  +- org.checkerframework:checker-qual:jar:3.43.0:compile
+[INFO] |  +- com.google.errorprone:error_prone_annotations:jar:2.36.0:compile
+[INFO] |  \- com.google.j2objc:j2objc-annotations:jar:3.0.0:compile
+[INFO] +- com.fasterxml.jackson.core:jackson-databind:jar:2.18.3:compile
+[INFO] |  +- com.fasterxml.jackson.core:jackson-annotations:jar:2.18.3:compile
+[INFO] |  \- com.fasterxml.jackson.core:jackson-core:jar:2.18.3:compile
+[INFO] +- com.fasterxml.jackson.datatype:jackson-datatype-guava:jar:2.18.3:compile
+[INFO] +- com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:jar:2.18.3:compile
+[INFO] |  \- org.yaml:snakeyaml:jar:2.3:compile
+[INFO] \- ch.scaille:lib-testing-core:jar:0.0.1-SNAPSHOT:test
+[INFO]    +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:test
+[INFO]    |  +- org.opentest4j:opentest4j:jar:1.3.0:test
+[INFO]    |  +- org.junit.platform:junit-platform-commons:jar:1.12.0:test
+[INFO]    |  \- org.apiguardian:apiguardian-api:jar:1.1.2:test
+[INFO]    +- org.mockito:mockito-core:jar:5.16.0:test
+[INFO]    |  +- net.bytebuddy:byte-buddy:jar:1.15.11:test
+[INFO]    |  +- net.bytebuddy:byte-buddy-agent:jar:1.15.11:test
+[INFO]    |  \- org.objenesis:objenesis:jar:3.3:test
+[INFO]    \- org.springframework.boot:spring-boot-loader:jar:3.4.3:test
+[INFO] 
+[INFO] -------------< ch.scaille.tcwriter:testcase-writer-javatc >-------------
+[INFO] Building testcase-writer-javatc 0.0.1-SNAPSHOT                   [23/43]
+[INFO]   from testcase-writer/javatc/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ testcase-writer-javatc ---
+[INFO] ch.scaille.tcwriter:testcase-writer-javatc:jar:0.0.1-SNAPSHOT
+[INFO] +- ch.scaille:lib-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- ch.scaille:lib-annotations:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] +- ch.scaille.tcwriter:testcase-writer-core:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- ch.scaille:lib-generator-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  \- com.beust:jcommander:jar:1.82:compile
+[INFO] |  +- ch.scaille:lib-persistence:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- ch.scaille:lib-javabeans:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- com.google.guava:guava:jar:33.4.0-jre:compile
+[INFO] |  |  +- com.google.guava:failureaccess:jar:1.0.2:compile
+[INFO] |  |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:compile
+[INFO] |  |  +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
+[INFO] |  |  +- org.checkerframework:checker-qual:jar:3.43.0:compile
+[INFO] |  |  +- com.google.errorprone:error_prone_annotations:jar:2.36.0:compile
+[INFO] |  |  \- com.google.j2objc:j2objc-annotations:jar:3.0.0:compile
+[INFO] |  +- com.fasterxml.jackson.core:jackson-databind:jar:2.18.3:compile
+[INFO] |  |  +- com.fasterxml.jackson.core:jackson-annotations:jar:2.18.3:compile
+[INFO] |  |  \- com.fasterxml.jackson.core:jackson-core:jar:2.18.3:compile
+[INFO] |  +- com.fasterxml.jackson.datatype:jackson-datatype-guava:jar:2.18.3:compile
+[INFO] |  \- com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:jar:2.18.3:compile
+[INFO] |     \- org.yaml:snakeyaml:jar:2.3:compile
+[INFO] +- ch.scaille.tcwriter:testcase-writer-api:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  \- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:compile
+[INFO] |     +- org.opentest4j:opentest4j:jar:1.3.0:compile
+[INFO] |     +- org.junit.platform:junit-platform-commons:jar:1.12.0:compile
+[INFO] |     \- org.apiguardian:apiguardian-api:jar:1.1.2:compile
+[INFO] +- org.aspectj:aspectjweaver:jar:1.9.22.1:compile
+[INFO] +- org.aspectj:aspectjrt:jar:1.9.22.1:compile
+[INFO] +- org.aspectj:aspectjtools:jar:1.9.22.1:compile
+[INFO] +- org.junit.platform:junit-platform-console-standalone:jar:1.12.0:compile
+[INFO] \- ch.scaille:lib-testing-core:jar:0.0.1-SNAPSHOT:test
+[INFO]    +- org.mockito:mockito-core:jar:5.16.0:test
+[INFO]    |  +- net.bytebuddy:byte-buddy:jar:1.15.11:test
+[INFO]    |  +- net.bytebuddy:byte-buddy-agent:jar:1.15.11:test
+[INFO]    |  \- org.objenesis:objenesis:jar:3.3:test
+[INFO]    \- org.springframework.boot:spring-boot-loader:jar:3.4.3:test
+[INFO] 
+[INFO] ----------< ch.scaille.tcwriter:testcase-writer-maven-plugin >----------
+[INFO] Building TestCase Writer Maven Plugin 0.0.1-SNAPSHOT             [24/43]
+[INFO]   from testcase-writer/maven-plugin/pom.xml
+[INFO] ----------------------------[ maven-plugin ]----------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ testcase-writer-maven-plugin ---
+[INFO] ch.scaille.tcwriter:testcase-writer-maven-plugin:maven-plugin:0.0.1-SNAPSHOT
+[INFO] +- ch.scaille.tcwriter:testcase-writer-javatc:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- ch.scaille:lib-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  \- ch.scaille:lib-annotations:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- ch.scaille.tcwriter:testcase-writer-core:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  +- ch.scaille:lib-generator-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  |  \- com.beust:jcommander:jar:1.82:compile
+[INFO] |  |  +- ch.scaille:lib-persistence:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  +- ch.scaille:lib-javabeans:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  +- com.google.guava:guava:jar:33.4.0-jre:compile
+[INFO] |  |  |  +- com.google.guava:failureaccess:jar:1.0.2:compile
+[INFO] |  |  |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:compile
+[INFO] |  |  |  +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
+[INFO] |  |  |  +- org.checkerframework:checker-qual:jar:3.43.0:compile
+[INFO] |  |  |  +- com.google.errorprone:error_prone_annotations:jar:2.36.0:compile
+[INFO] |  |  |  \- com.google.j2objc:j2objc-annotations:jar:3.0.0:compile
+[INFO] |  |  +- com.fasterxml.jackson.core:jackson-databind:jar:2.18.3:compile
+[INFO] |  |  |  +- com.fasterxml.jackson.core:jackson-annotations:jar:2.18.3:compile
+[INFO] |  |  |  \- com.fasterxml.jackson.core:jackson-core:jar:2.18.3:compile
+[INFO] |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-guava:jar:2.18.3:compile
+[INFO] |  |  \- com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:jar:2.18.3:compile
+[INFO] |  |     \- org.yaml:snakeyaml:jar:2.3:compile
+[INFO] |  +- ch.scaille.tcwriter:testcase-writer-api:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- org.aspectj:aspectjweaver:jar:1.9.22.1:compile
+[INFO] |  +- org.aspectj:aspectjrt:jar:1.9.22.1:compile
+[INFO] |  +- org.aspectj:aspectjtools:jar:1.9.22.1:compile
+[INFO] |  \- org.junit.platform:junit-platform-console-standalone:jar:1.12.0:compile
+[INFO] +- org.apache.maven:maven-plugin-api:jar:4.0.0-rc-2:provided
+[INFO] |  +- org.apache.maven:maven-api-xml:jar:4.0.0-rc-2:compile
+[INFO] |  +- org.apache.maven:maven-api-annotations:jar:4.0.0-rc-2:compile
+[INFO] |  +- org.apache.maven:maven-api-plugin:jar:4.0.0-rc-2:provided
+[INFO] |  +- org.apache.maven:maven-xml:jar:4.0.0-rc-2:provided
+[INFO] |  +- org.apache.maven:maven-model:jar:4.0.0-rc-2:provided
+[INFO] |  |  \- org.apache.maven:maven-api-model:jar:4.0.0-rc-2:provided
+[INFO] |  +- com.fasterxml.woodstox:woodstox-core:jar:7.1.0:compile
+[INFO] |  +- org.codehaus.woodstox:stax2-api:jar:4.2.2:compile
+[INFO] |  +- org.eclipse.sisu:org.eclipse.sisu.plexus:jar:0.9.0.M3:provided
+[INFO] |  +- org.codehaus.plexus:plexus-classworlds:jar:2.8.0:provided
+[INFO] |  \- org.apache.maven.resolver:maven-resolver-api:jar:2.0.5:provided
+[INFO] +- org.apache.maven:maven-core:jar:4.0.0-rc-2:provided
+[INFO] |  +- org.apache.maven:maven-di:jar:4.0.0-rc-2:provided
+[INFO] |  |  \- org.apache.maven:maven-api-di:jar:4.0.0-rc-2:provided
+[INFO] |  +- org.apache.maven:maven-settings:jar:4.0.0-rc-2:provided
+[INFO] |  |  \- org.apache.maven:maven-api-settings:jar:4.0.0-rc-2:provided
+[INFO] |  +- org.apache.maven:maven-settings-builder:jar:4.0.0-rc-2:provided
+[INFO] |  |  +- org.apache.maven:maven-builder-support:jar:4.0.0-rc-2:provided
+[INFO] |  |  \- org.codehaus.plexus:plexus-sec-dispatcher:jar:4.0.3:provided
+[INFO] |  +- org.apache.maven:maven-toolchain-model:jar:4.0.0-rc-2:provided
+[INFO] |  |  \- org.apache.maven:maven-api-toolchain:jar:4.0.0-rc-2:provided
+[INFO] |  +- org.apache.maven:maven-toolchain-builder:jar:4.0.0-rc-2:provided
+[INFO] |  +- org.apache.maven:maven-repository-metadata:jar:4.0.0-rc-2:provided
+[INFO] |  |  \- org.apache.maven:maven-api-metadata:jar:4.0.0-rc-2:provided
+[INFO] |  +- org.apache.maven:maven-model-builder:jar:4.0.0-rc-2:provided
+[INFO] |  +- org.apache.maven:maven-api-core:jar:4.0.0-rc-2:provided
+[INFO] |  +- org.apache.maven:maven-api-spi:jar:4.0.0-rc-2:provided
+[INFO] |  +- org.apache.maven:maven-impl:jar:4.0.0-rc-2:provided
+[INFO] |  +- org.apache.maven:maven-jline:jar:4.0.0-rc-2:provided
+[INFO] |  |  +- org.jline:jline-reader:jar:3.28.0:provided
+[INFO] |  |  |  \- org.jline:jline-terminal:jar:3.28.0:provided
+[INFO] |  |  +- org.jline:jline-style:jar:3.28.0:provided
+[INFO] |  |  +- org.jline:jline-builtins:jar:3.28.0:provided
+[INFO] |  |  +- org.jline:jline-console-ui:jar:3.28.0:provided
+[INFO] |  |  +- org.jline:jline-terminal-jni:jar:3.28.0:provided
+[INFO] |  |  |  \- org.jline:jline-native:jar:3.28.0:provided
+[INFO] |  |  +- org.jline:jansi-core:jar:3.28.0:provided
+[INFO] |  |  +- javax.inject:javax.inject:jar:1:provided
+[INFO] |  |  +- javax.annotation:javax.annotation-api:jar:1.3.2:provided
+[INFO] |  |  \- org.codehaus.plexus:plexus-interactivity-api:jar:1.3:provided
+[INFO] |  +- org.apache.maven:maven-logging:jar:4.0.0-rc-2:provided
+[INFO] |  +- org.apache.maven.resolver:maven-resolver-spi:jar:2.0.5:provided
+[INFO] |  |  \- com.google.code.gson:gson:jar:2.11.0:provided
+[INFO] |  +- org.apache.maven.resolver:maven-resolver-util:jar:2.0.5:provided
+[INFO] |  +- org.apache.maven.resolver:maven-resolver-impl:jar:2.0.5:provided
+[INFO] |  |  \- org.apache.maven.resolver:maven-resolver-named-locks:jar:2.0.5:provided
+[INFO] |  \- org.slf4j:slf4j-api:jar:2.0.16:provided
+[INFO] +- org.apache.maven:maven-artifact:jar:4.0.0-rc-2:provided
+[INFO] +- org.apache.maven:maven-compat:jar:4.0.0-rc-2:test
+[INFO] |  +- org.apache.maven:maven-resolver-provider:jar:4.0.0-rc-2:test
+[INFO] |  |  +- org.apache.maven.resolver:maven-resolver-connector-basic:jar:2.0.5:test
+[INFO] |  |  +- org.apache.maven.resolver:maven-resolver-transport-file:jar:2.0.5:test
+[INFO] |  |  \- org.apache.maven.resolver:maven-resolver-transport-apache:jar:2.0.5:test
+[INFO] |  |     +- org.apache.httpcomponents:httpclient:jar:4.5.14:test
+[INFO] |  |     +- org.apache.httpcomponents:httpcore:jar:4.4.16:test
+[INFO] |  |     +- commons-codec:commons-codec:jar:1.17.2:test
+[INFO] |  |     \- org.slf4j:jcl-over-slf4j:jar:2.0.16:test
+[INFO] |  +- org.codehaus.plexus:plexus-interpolation:jar:1.27:provided
+[INFO] |  \- org.apache.maven.wagon:wagon-provider-api:jar:3.5.3:test
+[INFO] +- org.codehaus.plexus:plexus-utils:jar:4.0.2:compile
+[INFO] +- org.codehaus.plexus:plexus-xml:jar:4.0.4:compile
+[INFO] |  \- org.apache.maven:maven-xml-impl:jar:4.0.0-alpha-9:compile
+[INFO] +- org.apache.maven.plugin-testing:maven-plugin-testing-harness:jar:3.3.0:test
+[INFO] |  +- commons-io:commons-io:jar:2.2:test
+[INFO] |  \- org.codehaus.plexus:plexus-archiver:jar:2.2:test
+[INFO] |     +- org.codehaus.plexus:plexus-container-default:jar:1.0-alpha-9-stable-1:test
+[INFO] |     |  +- junit:junit:jar:4.13.2:provided
+[INFO] |     |  |  \- org.hamcrest:hamcrest-core:jar:2.2:provided
+[INFO] |     |  |     \- org.hamcrest:hamcrest:jar:2.2:provided
+[INFO] |     |  \- classworlds:classworlds:jar:1.1-alpha-2:test
+[INFO] |     \- org.codehaus.plexus:plexus-io:jar:2.0.4:test
+[INFO] \- ch.scaille:lib-testing-core:jar:0.0.1-SNAPSHOT:test
+[INFO]    +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:compile
+[INFO]    |  +- org.opentest4j:opentest4j:jar:1.3.0:compile
+[INFO]    |  +- org.junit.platform:junit-platform-commons:jar:1.12.0:compile
+[INFO]    |  \- org.apiguardian:apiguardian-api:jar:1.1.2:compile
+[INFO]    +- org.mockito:mockito-core:jar:5.16.0:test
+[INFO]    |  +- net.bytebuddy:byte-buddy:jar:1.15.11:test
+[INFO]    |  +- net.bytebuddy:byte-buddy-agent:jar:1.15.11:test
+[INFO]    |  \- org.objenesis:objenesis:jar:3.3:test
+[INFO]    +- org.springframework.boot:spring-boot-loader:jar:3.4.3:test
+[INFO]    \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] 
+[INFO] --------------< ch.scaille.tcwriter:testcase-writer-gui >---------------
+[INFO] Building testcase-writer-gui 0.0.1-SNAPSHOT                      [25/43]
+[INFO]   from testcase-writer/gui/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ testcase-writer-gui ---
+[INFO] ch.scaille.tcwriter:testcase-writer-gui:jar:0.0.1-SNAPSHOT
+[INFO] +- ch.scaille.tcwriter:testcase-writer-javatc:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- ch.scaille:lib-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  \- ch.scaille:lib-annotations:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- ch.scaille.tcwriter:testcase-writer-core:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  +- ch.scaille:lib-generator-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  |  \- com.beust:jcommander:jar:1.82:compile
+[INFO] |  |  +- ch.scaille:lib-persistence:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  +- com.google.guava:guava:jar:33.4.0-jre:compile
+[INFO] |  |  |  +- com.google.guava:failureaccess:jar:1.0.2:compile
+[INFO] |  |  |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:compile
+[INFO] |  |  |  +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
+[INFO] |  |  |  +- org.checkerframework:checker-qual:jar:3.43.0:compile
+[INFO] |  |  |  +- com.google.errorprone:error_prone_annotations:jar:2.36.0:compile
+[INFO] |  |  |  \- com.google.j2objc:j2objc-annotations:jar:3.0.0:compile
+[INFO] |  |  +- com.fasterxml.jackson.core:jackson-databind:jar:2.18.3:compile
+[INFO] |  |  |  +- com.fasterxml.jackson.core:jackson-annotations:jar:2.18.3:compile
+[INFO] |  |  |  \- com.fasterxml.jackson.core:jackson-core:jar:2.18.3:compile
+[INFO] |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-guava:jar:2.18.3:compile
+[INFO] |  |  \- com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:jar:2.18.3:compile
+[INFO] |  |     \- org.yaml:snakeyaml:jar:2.3:compile
+[INFO] |  +- ch.scaille.tcwriter:testcase-writer-api:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- org.aspectj:aspectjweaver:jar:1.9.22.1:compile
+[INFO] |  +- org.aspectj:aspectjrt:jar:1.9.22.1:compile
+[INFO] |  \- org.junit.platform:junit-platform-console-standalone:jar:1.12.0:compile
+[INFO] +- ch.scaille:lib-gui:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- ch.scaille:lib-javabeans:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] +- net.java.linoleum:jlfgr:jar:1_0:compile
+[INFO] +- org.aspectj:aspectjtools:jar:1.9.22.1:compile
+[INFO] \- ch.scaille:lib-testing-core:jar:0.0.1-SNAPSHOT:test
+[INFO]    +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:compile
+[INFO]    |  +- org.opentest4j:opentest4j:jar:1.3.0:compile
+[INFO]    |  +- org.junit.platform:junit-platform-commons:jar:1.12.0:compile
+[INFO]    |  \- org.apiguardian:apiguardian-api:jar:1.1.2:compile
+[INFO]    +- org.mockito:mockito-core:jar:5.16.0:test
+[INFO]    |  +- net.bytebuddy:byte-buddy:jar:1.15.11:test
+[INFO]    |  +- net.bytebuddy:byte-buddy-agent:jar:1.15.11:test
+[INFO]    |  \- org.objenesis:objenesis:jar:3.3:test
+[INFO]    \- org.springframework.boot:spring-boot-loader:jar:3.4.3:test
+[INFO] 
+[INFO] -------------< ch.scaille.tcwriter:testcase-writer-gui-it >-------------
+[INFO] Building testcase-writer-gui-it 0.0.1-SNAPSHOT                   [26/43]
+[INFO]   from testcase-writer/gui-it/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ testcase-writer-gui-it ---
+[INFO] ch.scaille.tcwriter:testcase-writer-gui-it:jar:0.0.1-SNAPSHOT
+[INFO] +- ch.scaille.tcwriter:testcase-writer-gui:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- ch.scaille.tcwriter:testcase-writer-javatc:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  +- ch.scaille.tcwriter:testcase-writer-core:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  |  +- ch.scaille:lib-generator-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  |  |  \- com.beust:jcommander:jar:1.82:compile
+[INFO] |  |  |  +- ch.scaille:lib-persistence:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  |  +- com.google.guava:guava:jar:33.4.0-jre:compile
+[INFO] |  |  |  |  +- com.google.guava:failureaccess:jar:1.0.2:compile
+[INFO] |  |  |  |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:compile
+[INFO] |  |  |  |  +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
+[INFO] |  |  |  |  +- org.checkerframework:checker-qual:jar:3.43.0:compile
+[INFO] |  |  |  |  +- com.google.errorprone:error_prone_annotations:jar:2.36.0:compile
+[INFO] |  |  |  |  \- com.google.j2objc:j2objc-annotations:jar:3.0.0:compile
+[INFO] |  |  |  +- com.fasterxml.jackson.core:jackson-databind:jar:2.18.3:compile
+[INFO] |  |  |  |  +- com.fasterxml.jackson.core:jackson-annotations:jar:2.18.3:compile
+[INFO] |  |  |  |  \- com.fasterxml.jackson.core:jackson-core:jar:2.18.3:compile
+[INFO] |  |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-guava:jar:2.18.3:compile
+[INFO] |  |  |  \- com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:jar:2.18.3:compile
+[INFO] |  |  |     \- org.yaml:snakeyaml:jar:2.3:compile
+[INFO] |  |  +- ch.scaille.tcwriter:testcase-writer-api:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  +- org.aspectj:aspectjweaver:jar:1.9.22.1:compile
+[INFO] |  |  +- org.aspectj:aspectjrt:jar:1.9.22.1:compile
+[INFO] |  |  \- org.junit.platform:junit-platform-console-standalone:jar:1.12.0:compile
+[INFO] |  +- ch.scaille:lib-gui:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  \- ch.scaille:lib-javabeans:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- net.java.linoleum:jlfgr:jar:1_0:compile
+[INFO] |  \- org.aspectj:aspectjtools:jar:1.9.22.1:compile
+[INFO] +- ch.scaille:gui-pilot-swing:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- ch.scaille:lib-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  \- ch.scaille:lib-annotations:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- ch.scaille:gui-pilot-core:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  \- org.junit.jupiter:junit-jupiter-engine:jar:5.12.0:compile
+[INFO] |  |     \- org.junit.platform:junit-platform-engine:jar:1.12.0:compile
+[INFO] |  \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:compile
+[INFO] |  +- org.opentest4j:opentest4j:jar:1.3.0:compile
+[INFO] |  +- org.junit.platform:junit-platform-commons:jar:1.12.0:compile
+[INFO] |  \- org.apiguardian:apiguardian-api:jar:1.1.2:compile
+[INFO] \- ch.scaille:lib-testing-core:jar:0.0.1-SNAPSHOT:test
+[INFO]    +- org.mockito:mockito-core:jar:5.16.0:test
+[INFO]    |  +- net.bytebuddy:byte-buddy:jar:1.15.11:test
+[INFO]    |  +- net.bytebuddy:byte-buddy-agent:jar:1.15.11:test
+[INFO]    |  \- org.objenesis:objenesis:jar:3.3:test
+[INFO]    \- org.springframework.boot:spring-boot-loader:jar:3.4.3:test
+[INFO] 
+[INFO] ------------< ch.scaille.tcwriter:testcase-writer-examples >------------
+[INFO] Building testcase-writer-examples 0.0.1-SNAPSHOT                 [27/43]
+[INFO]   from testcase-writer/examples/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ testcase-writer-examples ---
+[INFO] ch.scaille.tcwriter:testcase-writer-examples:jar:0.0.1-SNAPSHOT
+[INFO] +- ch.scaille.tcwriter:testcase-writer-gui:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- ch.scaille.tcwriter:testcase-writer-javatc:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  +- ch.scaille:lib-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  |  \- ch.scaille:lib-annotations:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  +- ch.scaille.tcwriter:testcase-writer-core:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  |  +- ch.scaille:lib-generator-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  |  |  \- com.beust:jcommander:jar:1.82:compile
+[INFO] |  |  |  +- ch.scaille:lib-persistence:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  |  +- com.google.guava:guava:jar:33.4.0-jre:compile
+[INFO] |  |  |  |  +- com.google.guava:failureaccess:jar:1.0.2:compile
+[INFO] |  |  |  |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:compile
+[INFO] |  |  |  |  +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
+[INFO] |  |  |  |  +- org.checkerframework:checker-qual:jar:3.43.0:compile
+[INFO] |  |  |  |  +- com.google.errorprone:error_prone_annotations:jar:2.36.0:compile
+[INFO] |  |  |  |  \- com.google.j2objc:j2objc-annotations:jar:3.0.0:compile
+[INFO] |  |  |  +- com.fasterxml.jackson.core:jackson-databind:jar:2.18.3:compile
+[INFO] |  |  |  |  +- com.fasterxml.jackson.core:jackson-annotations:jar:2.18.3:compile
+[INFO] |  |  |  |  \- com.fasterxml.jackson.core:jackson-core:jar:2.18.3:compile
+[INFO] |  |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-guava:jar:2.18.3:compile
+[INFO] |  |  |  \- com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:jar:2.18.3:compile
+[INFO] |  |  |     \- org.yaml:snakeyaml:jar:2.3:compile
+[INFO] |  |  +- ch.scaille.tcwriter:testcase-writer-api:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  +- org.aspectj:aspectjweaver:jar:1.9.22.1:compile
+[INFO] |  |  +- org.aspectj:aspectjrt:jar:1.9.22.1:compile
+[INFO] |  |  \- org.junit.platform:junit-platform-console-standalone:jar:1.12.0:compile
+[INFO] |  +- ch.scaille:lib-gui:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  \- ch.scaille:lib-javabeans:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- net.java.linoleum:jlfgr:jar:1_0:compile
+[INFO] |  \- org.aspectj:aspectjtools:jar:1.9.22.1:compile
+[INFO] +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:compile
+[INFO] |  +- org.opentest4j:opentest4j:jar:1.3.0:compile
+[INFO] |  +- org.junit.platform:junit-platform-commons:jar:1.12.0:compile
+[INFO] |  \- org.apiguardian:apiguardian-api:jar:1.1.2:compile
+[INFO] \- ch.scaille:lib-testing-core:jar:0.0.1-SNAPSHOT:test
+[INFO]    +- org.mockito:mockito-core:jar:5.16.0:test
+[INFO]    |  +- net.bytebuddy:byte-buddy:jar:1.15.11:test
+[INFO]    |  +- net.bytebuddy:byte-buddy-agent:jar:1.15.11:test
+[INFO]    |  \- org.objenesis:objenesis:jar:3.3:test
+[INFO]    +- org.springframework.boot:spring-boot-loader:jar:3.4.3:test
+[INFO]    \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] 
+[INFO] -------------< ch.scaille.tcwriter:testcase-writer-webapp >-------------
+[INFO] Building testcase-writer-webapp 0.0.1-SNAPSHOT                   [28/43]
+[INFO]   from testcase-writer/webapp/pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ testcase-writer-webapp ---
+[INFO] ch.scaille.tcwriter:testcase-writer-webapp:pom:0.0.1-SNAPSHOT
+[INFO] \- ch.scaille:lib-testing-core:jar:0.0.1-SNAPSHOT:test
+[INFO]    +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:test
+[INFO]    |  +- org.opentest4j:opentest4j:jar:1.3.0:test
+[INFO]    |  +- org.junit.platform:junit-platform-commons:jar:1.12.0:test
+[INFO]    |  \- org.apiguardian:apiguardian-api:jar:1.1.2:test
+[INFO]    +- org.mockito:mockito-core:jar:5.16.0:test
+[INFO]    |  +- net.bytebuddy:byte-buddy:jar:1.15.11:test
+[INFO]    |  +- net.bytebuddy:byte-buddy-agent:jar:1.15.11:test
+[INFO]    |  \- org.objenesis:objenesis:jar:3.3:test
+[INFO]    +- org.springframework.boot:spring-boot-loader:jar:3.4.3:test
+[INFO]    \- org.jetbrains:annotations:jar:26.0.2:test
+[INFO] Copying ch.scaille.tcwriter:testcase-writer-webapp:pom:0.0.1-SNAPSHOT to project local repository
+[INFO] 
+[INFO] -----< ch.scaille.tcwriter:testcase-writer-webapp-api-validators >------
+[INFO] Building testcase-writer-webapp-api-validators 0.0.1-SNAPSHOT    [29/43]
+[INFO]   from testcase-writer/webapp/api-validators/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ testcase-writer-webapp-api-validators ---
+[INFO] ch.scaille.tcwriter:testcase-writer-webapp-api-validators:jar:0.0.1-SNAPSHOT
+[INFO] +- jakarta.validation:jakarta.validation-api:jar:3.0.2:compile
+[INFO] \- ch.scaille:lib-testing-core:jar:0.0.1-SNAPSHOT:test
+[INFO]    +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:test
+[INFO]    |  +- org.opentest4j:opentest4j:jar:1.3.0:test
+[INFO]    |  +- org.junit.platform:junit-platform-commons:jar:1.12.0:test
+[INFO]    |  \- org.apiguardian:apiguardian-api:jar:1.1.2:test
+[INFO]    +- org.mockito:mockito-core:jar:5.16.0:test
+[INFO]    |  +- net.bytebuddy:byte-buddy:jar:1.15.11:test
+[INFO]    |  +- net.bytebuddy:byte-buddy-agent:jar:1.15.11:test
+[INFO]    |  \- org.objenesis:objenesis:jar:3.3:test
+[INFO]    +- org.springframework.boot:spring-boot-loader:jar:3.4.3:test
+[INFO]    \- org.jetbrains:annotations:jar:26.0.2:test
+[INFO] 
+[INFO] ------< ch.scaille.tcwriter:testcase-writer-webapp-backend-core >-------
+[INFO] Building testcase-writer-webapp-backend-core 0.0.1-SNAPSHOT      [30/43]
+[INFO]   from testcase-writer/webapp/backend-core/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[WARNING] 1 problem was encountered while building the effective model for org.springdoc:springdoc-openapi-starter-webmvc-ui:jar:2.8.5 during dependency collection step for project (use -X to see details)
+[WARNING] 1 problem was encountered while building the effective model for org.springdoc:springdoc-openapi-starter-webmvc-api:jar:2.8.5 during dependency collection step for project (use -X to see details)
+[WARNING] 1 problem was encountered while building the effective model for org.springdoc:springdoc-openapi-starter-common:jar:2.8.5 during dependency collection step for project (use -X to see details)
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ testcase-writer-webapp-backend-core ---
+[INFO] ch.scaille.tcwriter:testcase-writer-webapp-backend-core:jar:0.0.1-SNAPSHOT
+[INFO] +- ch.scaille.tcwriter:testcase-writer-javatc:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- ch.scaille:lib-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  \- ch.scaille:lib-annotations:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- ch.scaille.tcwriter:testcase-writer-core:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  +- ch.scaille:lib-generator-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  |  \- com.beust:jcommander:jar:1.82:compile
+[INFO] |  |  +- ch.scaille:lib-persistence:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  +- ch.scaille:lib-javabeans:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  +- com.google.guava:guava:jar:33.4.0-jre:compile
+[INFO] |  |  |  +- com.google.guava:failureaccess:jar:1.0.2:compile
+[INFO] |  |  |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:compile
+[INFO] |  |  |  +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
+[INFO] |  |  |  +- org.checkerframework:checker-qual:jar:3.43.0:compile
+[INFO] |  |  |  +- com.google.errorprone:error_prone_annotations:jar:2.36.0:compile
+[INFO] |  |  |  \- com.google.j2objc:j2objc-annotations:jar:3.0.0:compile
+[INFO] |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-guava:jar:2.18.3:compile
+[INFO] |  |  \- com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:jar:2.18.3:compile
+[INFO] |  +- ch.scaille.tcwriter:testcase-writer-api:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- org.aspectj:aspectjweaver:jar:1.9.22.1:compile
+[INFO] |  +- org.aspectj:aspectjrt:jar:1.9.22.1:compile
+[INFO] |  +- org.aspectj:aspectjtools:jar:1.9.22.1:compile
+[INFO] |  \- org.junit.platform:junit-platform-console-standalone:jar:1.12.0:compile
+[INFO] +- org.springframework.boot:spring-boot-starter-websocket:jar:3.4.3:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-web:jar:3.4.3:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-json:jar:3.4.3:compile
+[INFO] |  |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.18.3:compile
+[INFO] |  |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.18.3:compile
+[INFO] |  |  |  \- com.fasterxml.jackson.module:jackson-module-parameter-names:jar:2.18.3:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-tomcat:jar:3.4.3:compile
+[INFO] |  |  |  +- org.apache.tomcat.embed:tomcat-embed-core:jar:10.1.36:compile
+[INFO] |  |  |  \- org.apache.tomcat.embed:tomcat-embed-websocket:jar:10.1.36:compile
+[INFO] |  |  +- org.springframework:spring-web:jar:6.2.3:compile
+[INFO] |  |  \- org.springframework:spring-webmvc:jar:6.2.3:compile
+[INFO] |  +- org.springframework:spring-messaging:jar:6.2.3:compile
+[INFO] |  |  +- org.springframework:spring-beans:jar:6.2.3:compile
+[INFO] |  |  \- org.springframework:spring-core:jar:6.2.3:compile
+[INFO] |  \- org.springframework:spring-websocket:jar:6.2.3:compile
+[INFO] +- org.springframework.boot:spring-boot-starter-data-jpa:jar:3.4.3:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter:jar:3.4.3:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot:jar:3.4.3:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-autoconfigure:jar:3.4.3:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-logging:jar:3.4.3:compile
+[INFO] |  |  |  +- ch.qos.logback:logback-classic:jar:1.5.17:compile
+[INFO] |  |  |  |  \- ch.qos.logback:logback-core:jar:1.5.17:compile
+[INFO] |  |  |  +- org.apache.logging.log4j:log4j-to-slf4j:jar:2.24.3:compile
+[INFO] |  |  |  |  \- org.apache.logging.log4j:log4j-api:jar:2.24.3:compile
+[INFO] |  |  |  \- org.slf4j:jul-to-slf4j:jar:2.0.16:compile
+[INFO] |  |  +- jakarta.annotation:jakarta.annotation-api:jar:2.1.1:compile
+[INFO] |  |  \- org.yaml:snakeyaml:jar:2.3:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-jdbc:jar:3.4.3:compile
+[INFO] |  |  \- com.zaxxer:HikariCP:jar:5.1.0:compile
+[INFO] |  +- org.hibernate.orm:hibernate-core:jar:6.6.8.Final:compile
+[INFO] |  |  +- jakarta.persistence:jakarta.persistence-api:jar:3.1.0:compile
+[INFO] |  |  +- jakarta.transaction:jakarta.transaction-api:jar:2.0.1:compile
+[INFO] |  |  +- org.jboss.logging:jboss-logging:jar:3.6.1.Final:compile
+[INFO] |  |  +- org.hibernate.common:hibernate-commons-annotations:jar:7.0.3.Final:runtime
+[INFO] |  |  +- io.smallrye:jandex:jar:3.2.0:runtime
+[INFO] |  |  +- com.fasterxml:classmate:jar:1.7.0:compile
+[INFO] |  |  +- net.bytebuddy:byte-buddy:jar:1.15.11:runtime
+[INFO] |  |  +- jakarta.xml.bind:jakarta.xml.bind-api:jar:4.0.2:compile
+[INFO] |  |  |  \- jakarta.activation:jakarta.activation-api:jar:2.1.3:compile
+[INFO] |  |  +- org.glassfish.jaxb:jaxb-runtime:jar:4.0.5:runtime
+[INFO] |  |  |  \- org.glassfish.jaxb:jaxb-core:jar:4.0.5:runtime
+[INFO] |  |  |     +- org.eclipse.angus:angus-activation:jar:2.0.2:runtime
+[INFO] |  |  |     +- org.glassfish.jaxb:txw2:jar:4.0.5:runtime
+[INFO] |  |  |     \- com.sun.istack:istack-commons-runtime:jar:4.1.2:runtime
+[INFO] |  |  +- jakarta.inject:jakarta.inject-api:jar:2.0.1:runtime
+[INFO] |  |  \- org.antlr:antlr4-runtime:jar:4.13.0:compile
+[INFO] |  +- org.springframework.data:spring-data-jpa:jar:3.4.3:compile
+[INFO] |  |  +- org.springframework.data:spring-data-commons:jar:3.4.3:compile
+[INFO] |  |  +- org.springframework:spring-orm:jar:6.2.3:compile
+[INFO] |  |  +- org.springframework:spring-tx:jar:6.2.3:compile
+[INFO] |  |  \- org.slf4j:slf4j-api:jar:2.0.16:compile
+[INFO] |  \- org.springframework:spring-aspects:jar:6.2.3:compile
+[INFO] +- org.springframework.boot:spring-boot-starter-data-rest:jar:3.4.3:compile
+[INFO] |  \- org.springframework.data:spring-data-rest-webmvc:jar:4.4.3:compile
+[INFO] |     +- org.springframework.data:spring-data-rest-core:jar:4.4.3:compile
+[INFO] |     |  +- org.springframework.hateoas:spring-hateoas:jar:2.4.1:compile
+[INFO] |     |  |  \- com.jayway.jsonpath:json-path:jar:2.9.0:compile
+[INFO] |     |  |     \- net.minidev:json-smart:jar:2.5.2:runtime
+[INFO] |     |  |        \- net.minidev:accessors-smart:jar:2.5.2:runtime
+[INFO] |     |  |           \- org.ow2.asm:asm:jar:9.7.1:runtime
+[INFO] |     |  +- org.springframework.plugin:spring-plugin-core:jar:3.0.0:compile
+[INFO] |     |  \- org.atteo:evo-inflector:jar:1.3:compile
+[INFO] |     \- com.fasterxml.jackson.core:jackson-annotations:jar:2.18.3:compile
+[INFO] +- org.springframework.boot:spring-boot-starter-security:jar:3.4.3:compile
+[INFO] |  +- org.springframework:spring-aop:jar:6.2.3:compile
+[INFO] |  +- org.springframework.security:spring-security-config:jar:6.4.3:compile
+[INFO] |  |  \- org.springframework.security:spring-security-core:jar:6.4.3:compile
+[INFO] |  |     \- org.springframework.security:spring-security-crypto:jar:6.4.3:compile
+[INFO] |  \- org.springframework.security:spring-security-web:jar:6.4.3:compile
+[INFO] |     \- org.springframework:spring-expression:jar:6.2.3:compile
+[INFO] +- org.springframework.session:spring-session-core:jar:3.4.2:compile
+[INFO] |  \- org.springframework:spring-jcl:jar:6.2.3:compile
+[INFO] +- org.springframework.boot:spring-boot-starter-validation:jar:3.4.3:compile
+[INFO] |  +- org.apache.tomcat.embed:tomcat-embed-el:jar:10.1.36:compile
+[INFO] |  \- org.hibernate.validator:hibernate-validator:jar:8.0.2.Final:compile
+[INFO] |     \- jakarta.validation:jakarta.validation-api:jar:3.0.2:compile
+[INFO] +- org.springframework.session:spring-session-jdbc:jar:3.4.2:compile
+[INFO] |  +- org.springframework:spring-context:jar:6.2.3:compile
+[INFO] |  |  \- io.micrometer:micrometer-observation:jar:1.14.4:compile
+[INFO] |  |     \- io.micrometer:micrometer-commons:jar:1.14.4:compile
+[INFO] |  \- org.springframework:spring-jdbc:jar:6.2.3:compile
+[INFO] +- org.springdoc:springdoc-openapi-starter-webmvc-ui:jar:2.8.5:compile
+[INFO] |  +- org.springdoc:springdoc-openapi-starter-webmvc-api:jar:2.8.5:compile
+[INFO] |  |  \- org.springdoc:springdoc-openapi-starter-common:jar:2.8.5:compile
+[INFO] |  |     \- io.swagger.core.v3:swagger-core-jakarta:jar:2.2.28:compile
+[INFO] |  |        +- org.apache.commons:commons-lang3:jar:3.17.0:compile
+[INFO] |  |        +- io.swagger.core.v3:swagger-annotations-jakarta:jar:2.2.28:compile
+[INFO] |  |        \- io.swagger.core.v3:swagger-models-jakarta:jar:2.2.28:compile
+[INFO] |  +- org.webjars:swagger-ui:jar:5.18.3:compile
+[INFO] |  \- org.webjars:webjars-locator-lite:jar:1.0.1:compile
+[INFO] |     \- org.jspecify:jspecify:jar:1.0.0:compile
+[INFO] +- org.openapitools:jackson-databind-nullable:jar:0.2.6:compile
+[INFO] |  \- com.fasterxml.jackson.core:jackson-databind:jar:2.18.3:compile
+[INFO] |     \- com.fasterxml.jackson.core:jackson-core:jar:2.18.3:compile
+[INFO] +- io.swagger.core.v3:swagger-annotations:jar:2.2.28:compile
+[INFO] +- org.mapstruct:mapstruct:jar:1.6.3:compile
+[INFO] \- ch.scaille:lib-testing-core:jar:0.0.1-SNAPSHOT:test
+[INFO]    +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:compile
+[INFO]    |  +- org.opentest4j:opentest4j:jar:1.3.0:compile
+[INFO]    |  +- org.junit.platform:junit-platform-commons:jar:1.12.0:compile
+[INFO]    |  \- org.apiguardian:apiguardian-api:jar:1.1.2:compile
+[INFO]    +- org.mockito:mockito-core:jar:5.16.0:test
+[INFO]    |  +- net.bytebuddy:byte-buddy-agent:jar:1.15.11:test
+[INFO]    |  \- org.objenesis:objenesis:jar:3.3:test
+[INFO]    +- org.springframework.boot:spring-boot-loader:jar:3.4.3:test
+[INFO]    \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] 
+[INFO] ---------< ch.scaille.tcwriter:testcase-writer-webapp-api-v0 >----------
+[INFO] Building testcase-writer-webapp-api-v0 0.0.1-SNAPSHOT            [31/43]
+[INFO]   from testcase-writer/webapp/api-v0/pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ testcase-writer-webapp-api-v0 ---
+[INFO] ch.scaille.tcwriter:testcase-writer-webapp-api-v0:pom:0.0.1-SNAPSHOT
+[INFO] \- ch.scaille:lib-testing-core:jar:0.0.1-SNAPSHOT:test
+[INFO]    +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:test
+[INFO]    |  +- org.opentest4j:opentest4j:jar:1.3.0:test
+[INFO]    |  +- org.junit.platform:junit-platform-commons:jar:1.12.0:test
+[INFO]    |  \- org.apiguardian:apiguardian-api:jar:1.1.2:test
+[INFO]    +- org.mockito:mockito-core:jar:5.16.0:test
+[INFO]    |  +- net.bytebuddy:byte-buddy:jar:1.15.11:test
+[INFO]    |  +- net.bytebuddy:byte-buddy-agent:jar:1.15.11:test
+[INFO]    |  \- org.objenesis:objenesis:jar:3.3:test
+[INFO]    +- org.springframework.boot:spring-boot-loader:jar:3.4.3:test
+[INFO]    \- org.jetbrains:annotations:jar:26.0.2:test
+[INFO] Copying ch.scaille.tcwriter:testcase-writer-webapp-api-v0:pom:0.0.1-SNAPSHOT to project local repository
+[INFO] 
+[INFO] ------< ch.scaille.tcwriter:testcase-writer-webapp-api-v0-webapi >------
+[INFO] Building testcase-writer-webapp-api-v0-webapi 0.0.1-SNAPSHOT     [32/43]
+[INFO]   from testcase-writer/webapp/api-v0/webapi/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ testcase-writer-webapp-api-v0-webapi ---
+[INFO] ch.scaille.tcwriter:testcase-writer-webapp-api-v0-webapi:jar:0.0.1-SNAPSHOT
+[INFO] +- ch.scaille.tcwriter:testcase-writer-webapp-api-validators:jar:0.0.1-SNAPSHOT:compile
+[INFO] +- org.openapitools:jackson-databind-nullable:jar:0.2.6:compile
+[INFO] |  \- com.fasterxml.jackson.core:jackson-databind:jar:2.18.3:compile
+[INFO] |     +- com.fasterxml.jackson.core:jackson-annotations:jar:2.18.3:compile
+[INFO] |     \- com.fasterxml.jackson.core:jackson-core:jar:2.18.3:compile
+[INFO] +- jakarta.validation:jakarta.validation-api:jar:3.0.2:compile
+[INFO] +- jakarta.annotation:jakarta.annotation-api:jar:2.1.1:compile
+[INFO] +- org.springframework:spring-context:jar:6.2.3:compile
+[INFO] |  +- org.springframework:spring-aop:jar:6.2.3:compile
+[INFO] |  +- org.springframework:spring-beans:jar:6.2.3:compile
+[INFO] |  +- org.springframework:spring-core:jar:6.2.3:compile
+[INFO] |  |  \- org.springframework:spring-jcl:jar:6.2.3:compile
+[INFO] |  +- org.springframework:spring-expression:jar:6.2.3:compile
+[INFO] |  \- io.micrometer:micrometer-observation:jar:1.14.4:compile
+[INFO] |     \- io.micrometer:micrometer-commons:jar:1.14.4:compile
+[INFO] +- io.swagger.core.v3:swagger-annotations:jar:2.2.28:compile
+[INFO] \- ch.scaille:lib-testing-core:jar:0.0.1-SNAPSHOT:test
+[INFO]    +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:test
+[INFO]    |  +- org.opentest4j:opentest4j:jar:1.3.0:test
+[INFO]    |  +- org.junit.platform:junit-platform-commons:jar:1.12.0:test
+[INFO]    |  \- org.apiguardian:apiguardian-api:jar:1.1.2:test
+[INFO]    +- org.mockito:mockito-core:jar:5.16.0:test
+[INFO]    |  +- net.bytebuddy:byte-buddy:jar:1.15.11:test
+[INFO]    |  +- net.bytebuddy:byte-buddy-agent:jar:1.15.11:test
+[INFO]    |  \- org.objenesis:objenesis:jar:3.3:test
+[INFO]    +- org.springframework.boot:spring-boot-loader:jar:3.4.3:test
+[INFO]    \- org.jetbrains:annotations:jar:26.0.2:test
+[INFO] 
+[INFO] -----< ch.scaille.tcwriter:testcase-writer-webapp-api-v0-backend >------
+[INFO] Building testcase-writer-webapp-api-v0-backend 0.0.1-SNAPSHOT    [33/43]
+[INFO]   from testcase-writer/webapp/api-v0/backend/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ testcase-writer-webapp-api-v0-backend ---
+[INFO] ch.scaille.tcwriter:testcase-writer-webapp-api-v0-backend:jar:0.0.1-SNAPSHOT
+[INFO] +- ch.scaille.tcwriter:testcase-writer-webapp-backend-core:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- ch.scaille.tcwriter:testcase-writer-javatc:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  +- ch.scaille:lib-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  |  \- ch.scaille:lib-annotations:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  +- ch.scaille.tcwriter:testcase-writer-core:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  |  +- ch.scaille:lib-generator-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  |  |  \- com.beust:jcommander:jar:1.82:compile
+[INFO] |  |  |  +- ch.scaille:lib-persistence:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  |  +- ch.scaille:lib-javabeans:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  |  +- com.google.guava:guava:jar:33.4.0-jre:compile
+[INFO] |  |  |  |  +- com.google.guava:failureaccess:jar:1.0.2:compile
+[INFO] |  |  |  |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:compile
+[INFO] |  |  |  |  +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
+[INFO] |  |  |  |  +- org.checkerframework:checker-qual:jar:3.43.0:compile
+[INFO] |  |  |  |  +- com.google.errorprone:error_prone_annotations:jar:2.36.0:compile
+[INFO] |  |  |  |  \- com.google.j2objc:j2objc-annotations:jar:3.0.0:compile
+[INFO] |  |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-guava:jar:2.18.3:compile
+[INFO] |  |  |  \- com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:jar:2.18.3:compile
+[INFO] |  |  +- ch.scaille.tcwriter:testcase-writer-api:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  +- org.aspectj:aspectjweaver:jar:1.9.22.1:compile
+[INFO] |  |  +- org.aspectj:aspectjrt:jar:1.9.22.1:compile
+[INFO] |  |  +- org.aspectj:aspectjtools:jar:1.9.22.1:compile
+[INFO] |  |  \- org.junit.platform:junit-platform-console-standalone:jar:1.12.0:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-websocket:jar:3.4.3:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-web:jar:3.4.3:compile
+[INFO] |  |  |  +- org.springframework.boot:spring-boot-starter-json:jar:3.4.3:compile
+[INFO] |  |  |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.18.3:compile
+[INFO] |  |  |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.18.3:compile
+[INFO] |  |  |  |  \- com.fasterxml.jackson.module:jackson-module-parameter-names:jar:2.18.3:compile
+[INFO] |  |  |  +- org.springframework.boot:spring-boot-starter-tomcat:jar:3.4.3:compile
+[INFO] |  |  |  |  +- org.apache.tomcat.embed:tomcat-embed-core:jar:10.1.36:compile
+[INFO] |  |  |  |  \- org.apache.tomcat.embed:tomcat-embed-websocket:jar:10.1.36:compile
+[INFO] |  |  |  +- org.springframework:spring-web:jar:6.2.3:compile
+[INFO] |  |  |  \- org.springframework:spring-webmvc:jar:6.2.3:compile
+[INFO] |  |  +- org.springframework:spring-messaging:jar:6.2.3:compile
+[INFO] |  |  \- org.springframework:spring-websocket:jar:6.2.3:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-data-jpa:jar:3.4.3:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter:jar:3.4.3:compile
+[INFO] |  |  |  +- org.springframework.boot:spring-boot:jar:3.4.3:compile
+[INFO] |  |  |  +- org.springframework.boot:spring-boot-autoconfigure:jar:3.4.3:compile
+[INFO] |  |  |  +- org.springframework.boot:spring-boot-starter-logging:jar:3.4.3:compile
+[INFO] |  |  |  |  +- ch.qos.logback:logback-classic:jar:1.5.17:compile
+[INFO] |  |  |  |  |  \- ch.qos.logback:logback-core:jar:1.5.17:compile
+[INFO] |  |  |  |  +- org.apache.logging.log4j:log4j-to-slf4j:jar:2.24.3:compile
+[INFO] |  |  |  |  |  \- org.apache.logging.log4j:log4j-api:jar:2.24.3:compile
+[INFO] |  |  |  |  \- org.slf4j:jul-to-slf4j:jar:2.0.16:compile
+[INFO] |  |  |  \- org.yaml:snakeyaml:jar:2.3:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-jdbc:jar:3.4.3:compile
+[INFO] |  |  |  \- com.zaxxer:HikariCP:jar:5.1.0:compile
+[INFO] |  |  +- org.hibernate.orm:hibernate-core:jar:6.6.8.Final:compile
+[INFO] |  |  |  +- jakarta.persistence:jakarta.persistence-api:jar:3.1.0:compile
+[INFO] |  |  |  +- jakarta.transaction:jakarta.transaction-api:jar:2.0.1:compile
+[INFO] |  |  |  +- org.jboss.logging:jboss-logging:jar:3.6.1.Final:compile
+[INFO] |  |  |  +- org.hibernate.common:hibernate-commons-annotations:jar:7.0.3.Final:runtime
+[INFO] |  |  |  +- io.smallrye:jandex:jar:3.2.0:runtime
+[INFO] |  |  |  +- com.fasterxml:classmate:jar:1.7.0:compile
+[INFO] |  |  |  +- jakarta.xml.bind:jakarta.xml.bind-api:jar:4.0.2:compile
+[INFO] |  |  |  |  \- jakarta.activation:jakarta.activation-api:jar:2.1.3:compile
+[INFO] |  |  |  +- org.glassfish.jaxb:jaxb-runtime:jar:4.0.5:runtime
+[INFO] |  |  |  |  \- org.glassfish.jaxb:jaxb-core:jar:4.0.5:runtime
+[INFO] |  |  |  |     +- org.eclipse.angus:angus-activation:jar:2.0.2:runtime
+[INFO] |  |  |  |     +- org.glassfish.jaxb:txw2:jar:4.0.5:runtime
+[INFO] |  |  |  |     \- com.sun.istack:istack-commons-runtime:jar:4.1.2:runtime
+[INFO] |  |  |  +- jakarta.inject:jakarta.inject-api:jar:2.0.1:runtime
+[INFO] |  |  |  \- org.antlr:antlr4-runtime:jar:4.13.0:compile
+[INFO] |  |  +- org.springframework.data:spring-data-jpa:jar:3.4.3:compile
+[INFO] |  |  |  +- org.springframework.data:spring-data-commons:jar:3.4.3:compile
+[INFO] |  |  |  +- org.springframework:spring-orm:jar:6.2.3:compile
+[INFO] |  |  |  +- org.springframework:spring-tx:jar:6.2.3:compile
+[INFO] |  |  |  \- org.slf4j:slf4j-api:jar:2.0.16:compile
+[INFO] |  |  \- org.springframework:spring-aspects:jar:6.2.3:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-data-rest:jar:3.4.3:compile
+[INFO] |  |  \- org.springframework.data:spring-data-rest-webmvc:jar:4.4.3:compile
+[INFO] |  |     +- org.springframework.data:spring-data-rest-core:jar:4.4.3:compile
+[INFO] |  |     |  +- org.springframework.hateoas:spring-hateoas:jar:2.4.1:compile
+[INFO] |  |     |  |  \- com.jayway.jsonpath:json-path:jar:2.9.0:compile
+[INFO] |  |     |  |     \- net.minidev:json-smart:jar:2.5.2:runtime
+[INFO] |  |     |  |        \- net.minidev:accessors-smart:jar:2.5.2:runtime
+[INFO] |  |     |  |           \- org.ow2.asm:asm:jar:9.7.1:runtime
+[INFO] |  |     |  +- org.springframework.plugin:spring-plugin-core:jar:3.0.0:compile
+[INFO] |  |     |  \- org.atteo:evo-inflector:jar:1.3:compile
+[INFO] |  |     \- com.fasterxml.jackson.core:jackson-annotations:jar:2.18.3:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-security:jar:3.4.3:compile
+[INFO] |  |  +- org.springframework:spring-aop:jar:6.2.3:compile
+[INFO] |  |  +- org.springframework.security:spring-security-config:jar:6.4.3:compile
+[INFO] |  |  |  \- org.springframework.security:spring-security-core:jar:6.4.3:compile
+[INFO] |  |  |     \- org.springframework.security:spring-security-crypto:jar:6.4.3:compile
+[INFO] |  |  \- org.springframework.security:spring-security-web:jar:6.4.3:compile
+[INFO] |  +- org.springframework.session:spring-session-core:jar:3.4.2:compile
+[INFO] |  |  \- org.springframework:spring-jcl:jar:6.2.3:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-validation:jar:3.4.3:compile
+[INFO] |  |  +- org.apache.tomcat.embed:tomcat-embed-el:jar:10.1.36:compile
+[INFO] |  |  \- org.hibernate.validator:hibernate-validator:jar:8.0.2.Final:compile
+[INFO] |  +- org.springframework.session:spring-session-jdbc:jar:3.4.2:compile
+[INFO] |  |  \- org.springframework:spring-jdbc:jar:6.2.3:compile
+[INFO] |  +- org.springdoc:springdoc-openapi-starter-webmvc-ui:jar:2.8.5:compile
+[INFO] |  |  +- org.springdoc:springdoc-openapi-starter-webmvc-api:jar:2.8.5:compile
+[INFO] |  |  |  \- org.springdoc:springdoc-openapi-starter-common:jar:2.8.5:compile
+[INFO] |  |  |     \- io.swagger.core.v3:swagger-core-jakarta:jar:2.2.28:compile
+[INFO] |  |  |        +- org.apache.commons:commons-lang3:jar:3.17.0:compile
+[INFO] |  |  |        +- io.swagger.core.v3:swagger-annotations-jakarta:jar:2.2.28:compile
+[INFO] |  |  |        \- io.swagger.core.v3:swagger-models-jakarta:jar:2.2.28:compile
+[INFO] |  |  +- org.webjars:swagger-ui:jar:5.18.3:compile
+[INFO] |  |  \- org.webjars:webjars-locator-lite:jar:1.0.1:compile
+[INFO] |  |     \- org.jspecify:jspecify:jar:1.0.0:compile
+[INFO] |  +- org.openapitools:jackson-databind-nullable:jar:0.2.6:compile
+[INFO] |  |  \- com.fasterxml.jackson.core:jackson-databind:jar:2.18.3:compile
+[INFO] |  |     \- com.fasterxml.jackson.core:jackson-core:jar:2.18.3:compile
+[INFO] |  +- io.swagger.core.v3:swagger-annotations:jar:2.2.28:compile
+[INFO] |  \- org.mapstruct:mapstruct:jar:1.6.3:compile
+[INFO] +- ch.scaille.tcwriter:testcase-writer-webapp-api-v0-webapi:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- ch.scaille.tcwriter:testcase-writer-webapp-api-validators:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- jakarta.validation:jakarta.validation-api:jar:3.0.2:compile
+[INFO] |  +- jakarta.annotation:jakarta.annotation-api:jar:2.1.1:compile
+[INFO] |  \- org.springframework:spring-context:jar:6.2.3:compile
+[INFO] |     +- org.springframework:spring-beans:jar:6.2.3:compile
+[INFO] |     +- org.springframework:spring-core:jar:6.2.3:compile
+[INFO] |     +- org.springframework:spring-expression:jar:6.2.3:compile
+[INFO] |     \- io.micrometer:micrometer-observation:jar:1.14.4:compile
+[INFO] |        \- io.micrometer:micrometer-commons:jar:1.14.4:compile
+[INFO] \- ch.scaille:lib-testing-core:jar:0.0.1-SNAPSHOT:test
+[INFO]    +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:compile
+[INFO]    |  +- org.opentest4j:opentest4j:jar:1.3.0:compile
+[INFO]    |  +- org.junit.platform:junit-platform-commons:jar:1.12.0:compile
+[INFO]    |  \- org.apiguardian:apiguardian-api:jar:1.1.2:compile
+[INFO]    +- org.mockito:mockito-core:jar:5.16.0:test
+[INFO]    |  +- net.bytebuddy:byte-buddy:jar:1.15.11:runtime
+[INFO]    |  +- net.bytebuddy:byte-buddy-agent:jar:1.15.11:test
+[INFO]    |  \- org.objenesis:objenesis:jar:3.3:test
+[INFO]    +- org.springframework.boot:spring-boot-loader:jar:3.4.3:test
+[INFO]    \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] 
+[INFO] ---------< ch.scaille.tcwriter:testcase-writer-webapp-backend >---------
+[INFO] Building testcase-writer-webapp-backend 0.0.1-SNAPSHOT           [34/43]
+[INFO]   from testcase-writer/webapp/backend/pom.xml
+[INFO] --------------------------------[ war ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ testcase-writer-webapp-backend ---
+[INFO] ch.scaille.tcwriter:testcase-writer-webapp-backend:war:0.0.1-SNAPSHOT
+[INFO] +- ch.scaille.tcwriter:testcase-writer-webapp-backend-core:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- ch.scaille.tcwriter:testcase-writer-javatc:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  +- ch.scaille:lib-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  |  \- ch.scaille:lib-annotations:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  +- ch.scaille.tcwriter:testcase-writer-core:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  |  +- ch.scaille:lib-generator-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  |  |  \- com.beust:jcommander:jar:1.82:compile
+[INFO] |  |  |  +- ch.scaille:lib-persistence:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  |  +- ch.scaille:lib-javabeans:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  |  +- com.google.guava:guava:jar:33.4.0-jre:compile
+[INFO] |  |  |  |  +- com.google.guava:failureaccess:jar:1.0.2:compile
+[INFO] |  |  |  |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:compile
+[INFO] |  |  |  |  +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
+[INFO] |  |  |  |  +- org.checkerframework:checker-qual:jar:3.43.0:compile
+[INFO] |  |  |  |  +- com.google.errorprone:error_prone_annotations:jar:2.36.0:compile
+[INFO] |  |  |  |  \- com.google.j2objc:j2objc-annotations:jar:3.0.0:compile
+[INFO] |  |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-guava:jar:2.18.3:compile
+[INFO] |  |  |  \- com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:jar:2.18.3:compile
+[INFO] |  |  +- ch.scaille.tcwriter:testcase-writer-api:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  +- org.aspectj:aspectjweaver:jar:1.9.22.1:compile
+[INFO] |  |  +- org.aspectj:aspectjrt:jar:1.9.22.1:compile
+[INFO] |  |  +- org.aspectj:aspectjtools:jar:1.9.22.1:compile
+[INFO] |  |  \- org.junit.platform:junit-platform-console-standalone:jar:1.12.0:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-websocket:jar:3.4.3:compile
+[INFO] |  |  +- org.springframework:spring-messaging:jar:6.2.3:compile
+[INFO] |  |  \- org.springframework:spring-websocket:jar:6.2.3:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-data-jpa:jar:3.4.3:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-jdbc:jar:3.4.3:compile
+[INFO] |  |  |  \- com.zaxxer:HikariCP:jar:5.1.0:compile
+[INFO] |  |  +- org.hibernate.orm:hibernate-core:jar:6.6.8.Final:compile
+[INFO] |  |  |  +- jakarta.persistence:jakarta.persistence-api:jar:3.1.0:compile
+[INFO] |  |  |  +- jakarta.transaction:jakarta.transaction-api:jar:2.0.1:compile
+[INFO] |  |  |  +- org.jboss.logging:jboss-logging:jar:3.6.1.Final:compile
+[INFO] |  |  |  +- org.hibernate.common:hibernate-commons-annotations:jar:7.0.3.Final:runtime
+[INFO] |  |  |  +- io.smallrye:jandex:jar:3.2.0:runtime
+[INFO] |  |  |  +- com.fasterxml:classmate:jar:1.7.0:compile
+[INFO] |  |  |  +- jakarta.xml.bind:jakarta.xml.bind-api:jar:4.0.2:compile
+[INFO] |  |  |  |  \- jakarta.activation:jakarta.activation-api:jar:2.1.3:compile
+[INFO] |  |  |  +- org.glassfish.jaxb:jaxb-runtime:jar:4.0.5:runtime
+[INFO] |  |  |  |  \- org.glassfish.jaxb:jaxb-core:jar:4.0.5:runtime
+[INFO] |  |  |  |     +- org.eclipse.angus:angus-activation:jar:2.0.2:runtime
+[INFO] |  |  |  |     +- org.glassfish.jaxb:txw2:jar:4.0.5:runtime
+[INFO] |  |  |  |     \- com.sun.istack:istack-commons-runtime:jar:4.1.2:runtime
+[INFO] |  |  |  +- jakarta.inject:jakarta.inject-api:jar:2.0.1:runtime
+[INFO] |  |  |  \- org.antlr:antlr4-runtime:jar:4.13.0:compile
+[INFO] |  |  +- org.springframework.data:spring-data-jpa:jar:3.4.3:compile
+[INFO] |  |  |  +- org.springframework.data:spring-data-commons:jar:3.4.3:compile
+[INFO] |  |  |  +- org.springframework:spring-orm:jar:6.2.3:compile
+[INFO] |  |  |  +- org.springframework:spring-tx:jar:6.2.3:compile
+[INFO] |  |  |  \- org.slf4j:slf4j-api:jar:2.0.16:compile
+[INFO] |  |  \- org.springframework:spring-aspects:jar:6.2.3:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-data-rest:jar:3.4.3:compile
+[INFO] |  |  \- org.springframework.data:spring-data-rest-webmvc:jar:4.4.3:compile
+[INFO] |  |     +- org.springframework.data:spring-data-rest-core:jar:4.4.3:compile
+[INFO] |  |     |  +- org.springframework.hateoas:spring-hateoas:jar:2.4.1:compile
+[INFO] |  |     |  |  \- com.jayway.jsonpath:json-path:jar:2.9.0:compile
+[INFO] |  |     |  |     \- net.minidev:json-smart:jar:2.5.2:runtime
+[INFO] |  |     |  |        \- net.minidev:accessors-smart:jar:2.5.2:runtime
+[INFO] |  |     |  |           \- org.ow2.asm:asm:jar:9.7.1:runtime
+[INFO] |  |     |  +- org.springframework.plugin:spring-plugin-core:jar:3.0.0:compile
+[INFO] |  |     |  \- org.atteo:evo-inflector:jar:1.3:compile
+[INFO] |  |     \- com.fasterxml.jackson.core:jackson-annotations:jar:2.18.3:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-security:jar:3.4.3:compile
+[INFO] |  |  +- org.springframework:spring-aop:jar:6.2.3:compile
+[INFO] |  |  +- org.springframework.security:spring-security-config:jar:6.4.3:compile
+[INFO] |  |  |  \- org.springframework.security:spring-security-core:jar:6.4.3:compile
+[INFO] |  |  |     \- org.springframework.security:spring-security-crypto:jar:6.4.3:compile
+[INFO] |  |  \- org.springframework.security:spring-security-web:jar:6.4.3:compile
+[INFO] |  +- org.springframework.session:spring-session-core:jar:3.4.2:compile
+[INFO] |  |  \- org.springframework:spring-jcl:jar:6.2.3:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-validation:jar:3.4.3:compile
+[INFO] |  |  +- org.apache.tomcat.embed:tomcat-embed-el:jar:10.1.36:compile
+[INFO] |  |  \- org.hibernate.validator:hibernate-validator:jar:8.0.2.Final:compile
+[INFO] |  +- org.springframework.session:spring-session-jdbc:jar:3.4.2:compile
+[INFO] |  |  +- org.springframework:spring-context:jar:6.2.3:compile
+[INFO] |  |  \- org.springframework:spring-jdbc:jar:6.2.3:compile
+[INFO] |  +- org.springdoc:springdoc-openapi-starter-webmvc-ui:jar:2.8.5:compile
+[INFO] |  |  +- org.springdoc:springdoc-openapi-starter-webmvc-api:jar:2.8.5:compile
+[INFO] |  |  |  \- org.springdoc:springdoc-openapi-starter-common:jar:2.8.5:compile
+[INFO] |  |  |     \- io.swagger.core.v3:swagger-core-jakarta:jar:2.2.28:compile
+[INFO] |  |  |        +- io.swagger.core.v3:swagger-annotations-jakarta:jar:2.2.28:compile
+[INFO] |  |  |        \- io.swagger.core.v3:swagger-models-jakarta:jar:2.2.28:compile
+[INFO] |  |  +- org.webjars:swagger-ui:jar:5.18.3:compile
+[INFO] |  |  \- org.webjars:webjars-locator-lite:jar:1.0.1:compile
+[INFO] |  |     \- org.jspecify:jspecify:jar:1.0.0:compile
+[INFO] |  +- org.openapitools:jackson-databind-nullable:jar:0.2.6:compile
+[INFO] |  |  \- com.fasterxml.jackson.core:jackson-databind:jar:2.18.3:compile
+[INFO] |  |     \- com.fasterxml.jackson.core:jackson-core:jar:2.18.3:compile
+[INFO] |  +- io.swagger.core.v3:swagger-annotations:jar:2.2.28:compile
+[INFO] |  \- org.mapstruct:mapstruct:jar:1.6.3:compile
+[INFO] +- ch.scaille.tcwriter:testcase-writer-webapp-api-v0-backend:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  \- ch.scaille.tcwriter:testcase-writer-webapp-api-v0-webapi:jar:0.0.1-SNAPSHOT:compile
+[INFO] |     +- ch.scaille.tcwriter:testcase-writer-webapp-api-validators:jar:0.0.1-SNAPSHOT:compile
+[INFO] |     +- jakarta.validation:jakarta.validation-api:jar:3.0.2:compile
+[INFO] |     \- jakarta.annotation:jakarta.annotation-api:jar:2.1.1:compile
+[INFO] +- org.springframework.boot:spring-boot-starter-web:jar:3.4.3:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter:jar:3.4.3:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot:jar:3.4.3:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-autoconfigure:jar:3.4.3:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-logging:jar:3.4.3:compile
+[INFO] |  |  |  +- ch.qos.logback:logback-classic:jar:1.5.17:compile
+[INFO] |  |  |  |  \- ch.qos.logback:logback-core:jar:1.5.17:compile
+[INFO] |  |  |  +- org.apache.logging.log4j:log4j-to-slf4j:jar:2.24.3:compile
+[INFO] |  |  |  |  \- org.apache.logging.log4j:log4j-api:jar:2.24.3:compile
+[INFO] |  |  |  \- org.slf4j:jul-to-slf4j:jar:2.0.16:compile
+[INFO] |  |  \- org.springframework:spring-core:jar:6.2.3:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-json:jar:3.4.3:compile
+[INFO] |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.18.3:compile
+[INFO] |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.18.3:compile
+[INFO] |  |  \- com.fasterxml.jackson.module:jackson-module-parameter-names:jar:2.18.3:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-tomcat:jar:3.4.3:compile
+[INFO] |  |  +- org.apache.tomcat.embed:tomcat-embed-core:jar:10.1.36:compile
+[INFO] |  |  \- org.apache.tomcat.embed:tomcat-embed-websocket:jar:10.1.36:compile
+[INFO] |  +- org.springframework:spring-web:jar:6.2.3:compile
+[INFO] |  |  \- org.springframework:spring-beans:jar:6.2.3:compile
+[INFO] |  \- org.springframework:spring-webmvc:jar:6.2.3:compile
+[INFO] |     \- org.springframework:spring-expression:jar:6.2.3:compile
+[INFO] +- org.springframework.boot:spring-boot-starter-actuator:jar:3.4.3:compile
+[INFO] |  +- org.springframework.boot:spring-boot-actuator-autoconfigure:jar:3.4.3:compile
+[INFO] |  |  \- org.springframework.boot:spring-boot-actuator:jar:3.4.3:compile
+[INFO] |  +- io.micrometer:micrometer-observation:jar:1.14.4:compile
+[INFO] |  |  \- io.micrometer:micrometer-commons:jar:1.14.4:compile
+[INFO] |  \- io.micrometer:micrometer-jakarta9:jar:1.14.4:compile
+[INFO] |     \- io.micrometer:micrometer-core:jar:1.14.4:compile
+[INFO] |        +- org.hdrhistogram:HdrHistogram:jar:2.2.2:runtime
+[INFO] |        \- org.latencyutils:LatencyUtils:jar:2.0.3:runtime
+[INFO] +- com.h2database:h2:jar:2.3.232:runtime
+[INFO] +- org.liquibase:liquibase-core:jar:4.31.1:compile
+[INFO] |  +- com.opencsv:opencsv:jar:5.9:compile
+[INFO] |  +- org.yaml:snakeyaml:jar:2.3:compile
+[INFO] |  +- javax.xml.bind:jaxb-api:jar:2.3.1:compile
+[INFO] |  +- org.apache.commons:commons-collections4:jar:4.4:compile
+[INFO] |  +- org.apache.commons:commons-text:jar:1.13.0:compile
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.17.0:compile
+[INFO] |  \- commons-io:commons-io:jar:2.18.0:compile
+[INFO] \- ch.scaille:lib-testing-core:jar:0.0.1-SNAPSHOT:test
+[INFO]    +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:compile
+[INFO]    |  +- org.opentest4j:opentest4j:jar:1.3.0:compile
+[INFO]    |  +- org.junit.platform:junit-platform-commons:jar:1.12.0:compile
+[INFO]    |  \- org.apiguardian:apiguardian-api:jar:1.1.2:compile
+[INFO]    +- org.mockito:mockito-core:jar:5.16.0:test
+[INFO]    |  +- net.bytebuddy:byte-buddy:jar:1.15.11:runtime
+[INFO]    |  +- net.bytebuddy:byte-buddy-agent:jar:1.15.11:test
+[INFO]    |  \- org.objenesis:objenesis:jar:3.3:test
+[INFO]    +- org.springframework.boot:spring-boot-loader:jar:3.4.3:test
+[INFO]    \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] 
+[INFO] --------< ch.scaille.tcwriter:testcase-writer-webapp-frontend >---------
+[INFO] Building testcase-writer-webapp-frontend 0.0.1-SNAPSHOT          [35/43]
+[INFO]   from testcase-writer/webapp/frontend/pom.xml
+[INFO] --------------------------------[ war ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ testcase-writer-webapp-frontend ---
+[INFO] ch.scaille.tcwriter:testcase-writer-webapp-frontend:war:0.0.1-SNAPSHOT
+[INFO] \- ch.scaille:lib-testing-core:jar:0.0.1-SNAPSHOT:test
+[INFO]    +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:test
+[INFO]    |  +- org.opentest4j:opentest4j:jar:1.3.0:test
+[INFO]    |  +- org.junit.platform:junit-platform-commons:jar:1.12.0:test
+[INFO]    |  \- org.apiguardian:apiguardian-api:jar:1.1.2:test
+[INFO]    +- org.mockito:mockito-core:jar:5.16.0:test
+[INFO]    |  +- net.bytebuddy:byte-buddy:jar:1.15.11:test
+[INFO]    |  +- net.bytebuddy:byte-buddy-agent:jar:1.15.11:test
+[INFO]    |  \- org.objenesis:objenesis:jar:3.3:test
+[INFO]    +- org.springframework.boot:spring-boot-loader:jar:3.4.3:test
+[INFO]    \- org.jetbrains:annotations:jar:26.0.2:test
+[INFO] 
+[INFO] -----------< ch.scaille.tcwriter:testcase-writer-webapp-war >-----------
+[INFO] Building testcase-writer-webapp-war 0.0.1-SNAPSHOT               [36/43]
+[INFO]   from testcase-writer/webapp/war/pom.xml
+[INFO] --------------------------------[ war ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ testcase-writer-webapp-war ---
+[INFO] ch.scaille.tcwriter:testcase-writer-webapp-war:war:0.0.1-SNAPSHOT
+[INFO] +- ch.scaille.tcwriter:testcase-writer-webapp-backend:war:0.0.1-SNAPSHOT:compile
+[INFO] +- ch.scaille.tcwriter:testcase-writer-webapp-frontend:war:0.0.1-SNAPSHOT:compile
+[INFO] +- org.springframework.boot:spring-boot-starter-actuator:jar:3.4.3:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter:jar:3.4.3:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot:jar:3.4.3:compile
+[INFO] |  |  |  \- org.springframework:spring-context:jar:6.2.3:compile
+[INFO] |  |  |     +- org.springframework:spring-aop:jar:6.2.3:compile
+[INFO] |  |  |     +- org.springframework:spring-beans:jar:6.2.3:compile
+[INFO] |  |  |     \- org.springframework:spring-expression:jar:6.2.3:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-autoconfigure:jar:3.4.3:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-logging:jar:3.4.3:compile
+[INFO] |  |  |  +- ch.qos.logback:logback-classic:jar:1.5.17:compile
+[INFO] |  |  |  |  +- ch.qos.logback:logback-core:jar:1.5.17:compile
+[INFO] |  |  |  |  \- org.slf4j:slf4j-api:jar:2.0.16:compile
+[INFO] |  |  |  +- org.apache.logging.log4j:log4j-to-slf4j:jar:2.24.3:compile
+[INFO] |  |  |  |  \- org.apache.logging.log4j:log4j-api:jar:2.24.3:compile
+[INFO] |  |  |  \- org.slf4j:jul-to-slf4j:jar:2.0.16:compile
+[INFO] |  |  +- jakarta.annotation:jakarta.annotation-api:jar:2.1.1:compile
+[INFO] |  |  +- org.springframework:spring-core:jar:6.2.3:compile
+[INFO] |  |  |  \- org.springframework:spring-jcl:jar:6.2.3:compile
+[INFO] |  |  \- org.yaml:snakeyaml:jar:2.3:compile
+[INFO] |  +- org.springframework.boot:spring-boot-actuator-autoconfigure:jar:3.4.3:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-actuator:jar:3.4.3:compile
+[INFO] |  |  +- com.fasterxml.jackson.core:jackson-databind:jar:2.18.3:runtime
+[INFO] |  |  |  +- com.fasterxml.jackson.core:jackson-annotations:jar:2.18.3:runtime
+[INFO] |  |  |  \- com.fasterxml.jackson.core:jackson-core:jar:2.18.3:runtime
+[INFO] |  |  \- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.18.3:runtime
+[INFO] |  +- io.micrometer:micrometer-observation:jar:1.14.4:compile
+[INFO] |  |  \- io.micrometer:micrometer-commons:jar:1.14.4:compile
+[INFO] |  \- io.micrometer:micrometer-jakarta9:jar:1.14.4:compile
+[INFO] |     \- io.micrometer:micrometer-core:jar:1.14.4:compile
+[INFO] |        +- org.hdrhistogram:HdrHistogram:jar:2.2.2:runtime
+[INFO] |        \- org.latencyutils:LatencyUtils:jar:2.0.3:runtime
+[INFO] \- ch.scaille:lib-testing-core:jar:0.0.1-SNAPSHOT:test
+[INFO]    +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:test
+[INFO]    |  +- org.opentest4j:opentest4j:jar:1.3.0:test
+[INFO]    |  +- org.junit.platform:junit-platform-commons:jar:1.12.0:test
+[INFO]    |  \- org.apiguardian:apiguardian-api:jar:1.1.2:test
+[INFO]    +- org.mockito:mockito-core:jar:5.16.0:test
+[INFO]    |  +- net.bytebuddy:byte-buddy:jar:1.15.11:test
+[INFO]    |  +- net.bytebuddy:byte-buddy-agent:jar:1.15.11:test
+[INFO]    |  \- org.objenesis:objenesis:jar:3.3:test
+[INFO]    +- org.springframework.boot:spring-boot-loader:jar:3.4.3:test
+[INFO]    \- org.jetbrains:annotations:jar:26.0.2:test
+[INFO] 
+[INFO] ----------< ch.scaille.tcwriter:testcase-writer-webapp-tests >----------
+[INFO] Building testcase-writer-webapp-tests 0.0.1-SNAPSHOT             [37/43]
+[INFO]   from testcase-writer/webapp/tests/pom.xml
+[INFO] --------------------------------[ war ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:tree (default-cli) @ testcase-writer-webapp-tests ---
+[INFO] ch.scaille.tcwriter:testcase-writer-webapp-tests:war:0.0.1-SNAPSHOT
+[INFO] +- ch.scaille.tcwriter:testcase-writer-webapp-war:war:0.0.1-SNAPSHOT:runtime
+[INFO] +- ch.scaille:gui-pilot-selenium:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- ch.scaille:gui-pilot-core:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  +- ch.scaille:lib-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  |  \- ch.scaille:lib-annotations:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  |  \- org.junit.jupiter:junit-jupiter-engine:jar:5.12.0:compile
+[INFO] |  |     \- org.junit.platform:junit-platform-engine:jar:1.12.0:compile
+[INFO] |  +- org.seleniumhq.selenium:selenium-java:jar:4.29.0:compile
+[INFO] |  |  +- org.seleniumhq.selenium:selenium-api:jar:4.29.0:compile
+[INFO] |  |  |  \- org.jspecify:jspecify:jar:1.0.0:compile
+[INFO] |  |  +- org.seleniumhq.selenium:selenium-chrome-driver:jar:4.29.0:compile
+[INFO] |  |  |  +- com.google.auto.service:auto-service-annotations:jar:1.1.1:compile
+[INFO] |  |  |  +- org.seleniumhq.selenium:selenium-chromium-driver:jar:4.29.0:compile
+[INFO] |  |  |  +- org.seleniumhq.selenium:selenium-json:jar:4.29.0:compile
+[INFO] |  |  |  \- org.seleniumhq.selenium:selenium-manager:jar:4.29.0:compile
+[INFO] |  |  +- org.seleniumhq.selenium:selenium-devtools-v131:jar:4.29.0:compile
+[INFO] |  |  +- org.seleniumhq.selenium:selenium-devtools-v132:jar:4.29.0:compile
+[INFO] |  |  +- org.seleniumhq.selenium:selenium-devtools-v133:jar:4.29.0:compile
+[INFO] |  |  +- org.seleniumhq.selenium:selenium-devtools-v85:jar:4.29.0:compile
+[INFO] |  |  +- org.seleniumhq.selenium:selenium-edge-driver:jar:4.29.0:compile
+[INFO] |  |  +- org.seleniumhq.selenium:selenium-firefox-driver:jar:4.29.0:compile
+[INFO] |  |  |  \- org.seleniumhq.selenium:selenium-http:jar:4.29.0:compile
+[INFO] |  |  +- org.seleniumhq.selenium:selenium-ie-driver:jar:4.29.0:compile
+[INFO] |  |  +- org.seleniumhq.selenium:selenium-remote-driver:jar:4.29.0:compile
+[INFO] |  |  |  +- com.google.guava:guava:jar:33.4.0-jre:compile
+[INFO] |  |  |  |  +- com.google.guava:failureaccess:jar:1.0.2:compile
+[INFO] |  |  |  |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:compile
+[INFO] |  |  |  |  +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
+[INFO] |  |  |  |  +- org.checkerframework:checker-qual:jar:3.43.0:compile
+[INFO] |  |  |  |  +- com.google.errorprone:error_prone_annotations:jar:2.36.0:compile
+[INFO] |  |  |  |  \- com.google.j2objc:j2objc-annotations:jar:3.0.0:compile
+[INFO] |  |  |  +- io.opentelemetry.semconv:opentelemetry-semconv:jar:1.28.0-alpha:compile
+[INFO] |  |  |  +- io.opentelemetry:opentelemetry-api:jar:1.43.0:compile
+[INFO] |  |  |  +- io.opentelemetry:opentelemetry-context:jar:1.43.0:compile
+[INFO] |  |  |  +- io.opentelemetry:opentelemetry-exporter-logging:jar:1.43.0:compile
+[INFO] |  |  |  +- io.opentelemetry:opentelemetry-sdk-common:jar:1.43.0:compile
+[INFO] |  |  |  +- io.opentelemetry:opentelemetry-sdk-extension-autoconfigure-spi:jar:1.43.0:compile
+[INFO] |  |  |  +- io.opentelemetry:opentelemetry-sdk-extension-autoconfigure:jar:1.43.0:compile
+[INFO] |  |  |  |  \- io.opentelemetry:opentelemetry-api-incubator:jar:1.43.0-alpha:runtime
+[INFO] |  |  |  +- io.opentelemetry:opentelemetry-sdk-trace:jar:1.43.0:compile
+[INFO] |  |  |  +- io.opentelemetry:opentelemetry-sdk:jar:1.43.0:compile
+[INFO] |  |  |  |  +- io.opentelemetry:opentelemetry-sdk-metrics:jar:1.43.0:compile
+[INFO] |  |  |  |  \- io.opentelemetry:opentelemetry-sdk-logs:jar:1.43.0:compile
+[INFO] |  |  |  \- org.seleniumhq.selenium:selenium-os:jar:4.29.0:compile
+[INFO] |  |  |     \- org.apache.commons:commons-exec:jar:1.4.0:compile
+[INFO] |  |  +- org.seleniumhq.selenium:selenium-safari-driver:jar:4.29.0:compile
+[INFO] |  |  \- org.seleniumhq.selenium:selenium-support:jar:4.29.0:compile
+[INFO] |  \- org.jetbrains:annotations:jar:26.0.2:compile
+[INFO] +- ch.scaille:lib-testing-core:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- org.junit.jupiter:junit-jupiter-api:jar:5.12.0:compile
+[INFO] |  |  +- org.opentest4j:opentest4j:jar:1.3.0:compile
+[INFO] |  |  +- org.junit.platform:junit-platform-commons:jar:1.12.0:compile
+[INFO] |  |  \- org.apiguardian:apiguardian-api:jar:1.1.2:compile
+[INFO] |  +- org.mockito:mockito-core:jar:5.16.0:compile
+[INFO] |  |  +- net.bytebuddy:byte-buddy:jar:1.15.11:compile
+[INFO] |  |  +- net.bytebuddy:byte-buddy-agent:jar:1.15.11:compile
+[INFO] |  |  \- org.objenesis:objenesis:jar:3.3:runtime
+[INFO] |  \- org.springframework.boot:spring-boot-loader:jar:3.4.3:compile
+[INFO] +- ch.scaille.tcwriter:testcase-writer-examples:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  \- ch.scaille.tcwriter:testcase-writer-gui:jar:0.0.1-SNAPSHOT:compile
+[INFO] |     +- ch.scaille.tcwriter:testcase-writer-javatc:jar:0.0.1-SNAPSHOT:compile
+[INFO] |     |  +- ch.scaille.tcwriter:testcase-writer-core:jar:0.0.1-SNAPSHOT:compile
+[INFO] |     |  |  +- ch.scaille:lib-generator-utils:jar:0.0.1-SNAPSHOT:compile
+[INFO] |     |  |  |  \- com.beust:jcommander:jar:1.82:compile
+[INFO] |     |  |  +- ch.scaille:lib-persistence:jar:0.0.1-SNAPSHOT:compile
+[INFO] |     |  |  +- com.fasterxml.jackson.core:jackson-databind:jar:2.18.3:compile
+[INFO] |     |  |  |  +- com.fasterxml.jackson.core:jackson-annotations:jar:2.18.3:compile
+[INFO] |     |  |  |  \- com.fasterxml.jackson.core:jackson-core:jar:2.18.3:compile
+[INFO] |     |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-guava:jar:2.18.3:compile
+[INFO] |     |  |  \- com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:jar:2.18.3:compile
+[INFO] |     |  |     \- org.yaml:snakeyaml:jar:2.3:compile
+[INFO] |     |  +- ch.scaille.tcwriter:testcase-writer-api:jar:0.0.1-SNAPSHOT:compile
+[INFO] |     |  +- org.aspectj:aspectjweaver:jar:1.9.22.1:compile
+[INFO] |     |  +- org.aspectj:aspectjrt:jar:1.9.22.1:compile
+[INFO] |     |  \- org.junit.platform:junit-platform-console-standalone:jar:1.12.0:compile
+[INFO] |     +- ch.scaille:lib-gui:jar:0.0.1-SNAPSHOT:compile
+[INFO] |     |  \- ch.scaille:lib-javabeans:jar:0.0.1-SNAPSHOT:compile
+[INFO] |     +- net.java.linoleum:jlfgr:jar:1_0:compile
+[INFO] |     \- org.aspectj:aspectjtools:jar:1.9.22.1:compile
+[INFO] +- org.springframework:spring-context:jar:6.2.3:compile
+[INFO] |  +- org.springframework:spring-aop:jar:6.2.3:compile
+[INFO] |  +- org.springframework:spring-beans:jar:6.2.3:compile
+[INFO] |  +- org.springframework:spring-core:jar:6.2.3:compile
+[INFO] |  |  \- org.springframework:spring-jcl:jar:6.2.3:compile
+[INFO] |  +- org.springframework:spring-expression:jar:6.2.3:compile
+[INFO] |  \- io.micrometer:micrometer-observation:jar:1.14.4:compile
+[INFO] |     \- io.micrometer:micrometer-commons:jar:1.14.4:compile
+[INFO] \- jakarta.annotation:jakarta.annotation-api:jar:2.1.1:compile
+[INFO] 
+[INFO] --------------< ch.scaille.dataflowmgr:data-flow-manager >--------------
+[INFO] Building data-flow-manager 0.0.1-SNAPSHOT                        [38/43]
+[INFO]   from dataflow-manager/pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for skylib 0.0.1-SNAPSHOT:
+[INFO] 
+[INFO] skylib-starter-parent .............................. SUCCESS [  0.542 s]
+[INFO] libs ............................................... SUCCESS [  0.029 s]
+[INFO] lib-testing ........................................ SUCCESS [  0.012 s]
+[INFO] lib-testing-core ................................... SUCCESS [  0.052 s]
+[INFO] lib-annotations .................................... SUCCESS [  0.011 s]
+[INFO] lib-utils .......................................... SUCCESS [  0.022 s]
+[INFO] gui-pilot .......................................... SUCCESS [  0.010 s]
+[INFO] gui-pilot-core ..................................... SUCCESS [  0.026 s]
+[INFO] gui-pilot-swing .................................... SUCCESS [  0.029 s]
+[INFO] gui-pilot-selenium ................................. SUCCESS [  0.114 s]
+[INFO] selenium-test-page ................................. SUCCESS [  0.090 s]
+[INFO] lib-testing-bdd-runtime ............................ SUCCESS [  0.062 s]
+[INFO] lib-javabeans ...................................... SUCCESS [  0.018 s]
+[INFO] lib-persistence .................................... SUCCESS [  0.022 s]
+[INFO] lib-gui ............................................ SUCCESS [  0.022 s]
+[INFO] lib-generator-utils ................................ SUCCESS [  0.017 s]
+[INFO] lib-gui-generators ................................. SUCCESS [  0.017 s]
+[INFO] lib-gui-validation ................................. SUCCESS [  0.044 s]
+[INFO] lib-gui-examples ................................... SUCCESS [  0.024 s]
+[INFO] testcase-writer .................................... SUCCESS [  0.012 s]
+[INFO] testcase-writer-api ................................ SUCCESS [  0.012 s]
+[INFO] testcase-writer-core ............................... SUCCESS [  0.049 s]
+[INFO] testcase-writer-javatc ............................. SUCCESS [  0.035 s]
+[INFO] TestCase Writer Maven Plugin ....................... SUCCESS [  0.185 s]
+[INFO] testcase-writer-gui ................................ SUCCESS [  0.025 s]
+[INFO] testcase-writer-gui-it ............................. SUCCESS [  0.029 s]
+[INFO] testcase-writer-examples ........................... SUCCESS [  0.042 s]
+[INFO] testcase-writer-webapp ............................. SUCCESS [  0.009 s]
+[INFO] testcase-writer-webapp-api-validators .............. SUCCESS [  0.009 s]
+[INFO] testcase-writer-webapp-backend-core ................ SUCCESS [  0.128 s]
+[INFO] testcase-writer-webapp-api-v0 ...................... SUCCESS [  0.008 s]
+[INFO] testcase-writer-webapp-api-v0-webapi ............... SUCCESS [  0.020 s]
+[INFO] testcase-writer-webapp-api-v0-backend .............. SUCCESS [  0.059 s]
+[INFO] testcase-writer-webapp-backend ..................... SUCCESS [  0.161 s]
+[INFO] testcase-writer-webapp-frontend .................... SUCCESS [  0.013 s]
+[INFO] testcase-writer-webapp-war ......................... SUCCESS [  0.023 s]
+[INFO] testcase-writer-webapp-tests ....................... SUCCESS [  0.067 s]
+[INFO] data-flow-manager .................................. FAILURE [  0.082 s]
+[INFO] data-flow-model .................................... SKIPPED
+[INFO] data-flow-annotations .............................. SKIPPED
+[INFO] data-flow-generator ................................ SKIPPED
+[INFO] data-flow-examples ................................. SKIPPED
+[INFO] skylib ............................................. SKIPPED
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.318 s
+[INFO] Finished at: 2025-03-09T10:38:43+01:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal on project data-flow-manager: Could not collect dependencies for project ch.scaille.dataflowmgr:data-flow-manager:pom:0.0.1-SNAPSHOT
+[ERROR] Failed to read artifact descriptor for ch.scaille:lib-testing-core:jar:0.0.1-M4-SNAPSHOT
+[ERROR] 	Caused by: Unable to resolve artifact: The following artifacts could not be resolved: ch.scaille:lib-testing:pom:${revision} (absent): ch.scaille:lib-testing:pom:${revision} was not found in https://repo.maven.apache.org/maven2 during a previous attempt. This failure was cached in the local repository and resolution is not reattempted until the update interval of central has elapsed or updates are forced (remote repositories: central (https://repo.maven.apache.org/maven2, default, releases)): Failed to collect dependencies at ch.scaille:lib-testing-core:jar:0.0.1-M4-SNAPSHOT
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the '-e' switch
+[ERROR] Re-run Maven using the '-X' switch to enable verbose output
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/DependencyResolutionException
+[ERROR] 
+[ERROR] After correcting the problems, you can resume the build with the command
+[ERROR]   mvn [args] -r

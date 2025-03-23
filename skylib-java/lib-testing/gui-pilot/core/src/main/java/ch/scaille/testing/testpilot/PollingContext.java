@@ -26,7 +26,7 @@ public class PollingContext<C> {
 		return pilot;
 	}
 	
-	public GuiPilot getGuiPilot() {
+	public IReporter getGuiPilot() {
 		return pilot.getPilot();
 	}
 

@@ -43,7 +43,7 @@ public class PollingResult<C, V> {
 		return orElse.get();
 	}
 
-	public GuiPilot getGuiPilot() {
+	public IReporter getGuiPilot() {
 		return polling.getContext().getGuiPilot();
 	}
 

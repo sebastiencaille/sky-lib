@@ -9,7 +9,7 @@ import ch.scaille.testing.testpilot.factories.FailureHandlers.FailureHandler;
 import ch.scaille.util.helpers.NoExceptionCloseable;
 import ch.scaille.util.helpers.Poller;
 
-public class GuiPilot {
+public class GuiPilot implements IReporter {
 
 	private final PilotReport actionReport = new PilotReport();
 

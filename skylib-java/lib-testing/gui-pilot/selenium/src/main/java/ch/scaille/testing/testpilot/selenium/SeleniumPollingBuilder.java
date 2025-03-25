@@ -12,8 +12,8 @@ import ch.scaille.testing.testpilot.PollingBuilder;
 import ch.scaille.testing.testpilot.PollingContext;
 import ch.scaille.testing.testpilot.factories.Pollings;
 
-public class SeleniumPollingBuilder extends
-		PollingBuilder<WebElement, SeleniumPollingBuilder,SeleniumPollingBuilder.WebElementPoller> {
+public class SeleniumPollingBuilder extends PollingBuilder<WebElement, SeleniumPollingBuilder, 
+		SeleniumPollingBuilder.WebElementPoller, PollingBuilder.DefaultConfigurer<WebElement>> {
 
 	public static Predicate<PollingContext<WebElement>> satisfies(
 			Function<WebElement, ExpectedCondition<WebElement>> expectedCondition) {
@@ -23,7 +23,7 @@ public class SeleniumPollingBuilder extends
 
 	public static class WebElementPoller extends PollingBuilder.Poller<WebElement> {
 
-		protected WebElementPoller(PollingBuilder<WebElement, ?, ?> builder) {
+		protected WebElementPoller(PollingBuilder<WebElement, ?, ?, ?> builder) {
 			super(builder);
 		}
 

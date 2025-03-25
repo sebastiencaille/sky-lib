@@ -7,11 +7,11 @@ import javax.swing.JComponent;
 import ch.scaille.testing.testpilot.PollingBuilder;
 
 public class SwingPollingBuilder<C extends JComponent, T extends SwingPollingBuilder<C, T, P>, P extends SwingPollingBuilder.SwingPoller<C>>
-		extends PollingBuilder<C, T, P> {
+		extends PollingBuilder<C, T, P, PollingBuilder.DefaultConfigurer<C>> {
 
 	public static class SwingPoller<C extends JComponent> extends PollingBuilder.Poller<C> {
 
-		protected SwingPoller(PollingBuilder<C, ?, ?> builder) {
+		protected SwingPoller(PollingBuilder<C, ?, ?, ?> builder) {
 			super(builder);
 		}
 

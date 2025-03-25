@@ -13,9 +13,9 @@ import java.util.function.Predicate;
 
 import ch.scaille.testing.testpilot.PilotReport.ReportFunction;
 import ch.scaille.testing.testpilot.factories.FailureHandlers;
+import ch.scaille.testing.testpilot.factories.FailureHandlers.FailureHandler;
 import ch.scaille.testing.testpilot.factories.PollingResults;
 import ch.scaille.testing.testpilot.factories.Pollings;
-import ch.scaille.testing.testpilot.factories.FailureHandlers.FailureHandler;
 
 /**
  * To build a polling
@@ -34,13 +34,13 @@ import ch.scaille.testing.testpilot.factories.FailureHandlers.FailureHandler;
  * @param <T> the Builder (sub)type
  * @param <U> the Poller (sub)type
  */
-public class PollingBuilder<C, T extends PollingBuilder<C, T, U>, U extends PollingBuilder.Poller<C>> {
+public class PollingBuilder<C, T extends PollingBuilder<C, T, U, V>, U extends PollingBuilder.Poller<C>, V extends PollingBuilder.Configurer<C, V>> {
 
 	public static class Poller<C> {
 
-		protected final PollingBuilder<C, ?, ?> builder;
+		protected final PollingBuilder<C, ?, ?, ?> builder;
 
-		protected Poller(PollingBuilder<C, ?, ?> builder) {
+		protected Poller(PollingBuilder<C, ?, ?, ?> builder) {
 			this.builder = builder;
 		}
 
@@ -72,7 +72,7 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, U>, U extends Poll
 		public boolean asserted(Consumer<C> assertion) {
 			return applied(assertion);
 		}
-		
+
 		public boolean assertedCtxt(Consumer<PollingContext<C>> assertion) {
 			return appliedCtxt(assertion);
 		}
@@ -93,21 +93,43 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, U>, U extends Poll
 
 	private FailureHandler<C, ?> failureHandler;
 
-	public class Configurer<F> {
+	public static class Configurer<C, V> {
 
-		public F withConfig(Consumer<Polling<C, ?>> configurer) {
-			configurers.add(configurer);
-			return (F) this;
+		private final PollingBuilder<C, ?, ?, ?> pollingBuilder;
+
+		public Configurer(PollingBuilder<C, ?, ?, ?> pollingBuilder) {
+			this.pollingBuilder = pollingBuilder;
 		}
 
-		public F timingOut(Duration timeout) {
+		public V withConfig(Consumer<Polling<C, ?>> configurer) {
+			pollingBuilder.configurers.add(configurer);
+			return (V) this;
+		}
+
+		public V timingOut(Duration timeout) {
 			withConfig(polling -> polling.withDelay(timeout));
-			return (F) this;
+			return (V) this;
 		}
 
 	}
 
-	public class UnlessConfigurer extends Configurer<UnlessConfigurer> {
+	public static class DefaultConfigurer<C> extends Configurer<C, DefaultConfigurer<C>> {
+		public DefaultConfigurer(PollingBuilder<C, ?, ?, ?> pollingBuilder) {
+			super(pollingBuilder);
+		}
+	}
+
+	public class UnlessConfigurer {
+
+		public UnlessConfigurer configure(Consumer<V> configuration) {
+			configuration.accept(createConfigurer());
+			return this;
+		}
+		
+		public UnlessConfigurer withConfig(Consumer<Polling<C, ?>> configurer) {
+			configurers.add(configurer);
+			return this;
+		}
 
 		public U unless() {
 			return createPoller();
@@ -115,7 +137,18 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, U>, U extends Poll
 
 	}
 
-	public class ThatConfigurer extends Configurer<ThatConfigurer> {
+	public class ThatConfigurer {
+
+		public ThatConfigurer with(Consumer<V> configuration) {
+			configuration.accept(createConfigurer());
+			return this;
+		}
+		
+		public ThatConfigurer withConfig(Consumer<Polling<C, ?>> configurer) {
+			configurers.add(configurer);
+			return this;
+		}
+
 
 		/**
 		 * Waits until a condition is applied
@@ -129,7 +162,11 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, U>, U extends Poll
 	protected U createPoller() {
 		return (U) new Poller<>(this);
 	}
-	
+
+	protected V createConfigurer() {
+		return (V) new DefaultConfigurer<>(this);
+	}
+
 	protected <R> PollingResult<C, R> poll(final Polling<C, R> polling) {
 		configurers.forEach(conf -> conf.accept(polling));
 		final var pollingResult = pilot.processResult(pilot.waitPollingSuccess(polling), PollingResults.identity(),

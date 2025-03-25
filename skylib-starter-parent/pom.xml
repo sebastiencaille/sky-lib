@@ -23,15 +23,15 @@
 		<spring-session.version>3.4.2</spring-session.version>
 		<jackson-bom.version>2.18.3</jackson-bom.version>
 		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
-		<guava.version>33.4.5-jre</guava.version>
+		<guava.version>33.4.6-jre</guava.version>
 		<logback.version>1.5.18</logback.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
 
 		<jetbrain-annotations.version>26.0.2</jetbrain-annotations.version>
 		
-		<swagger-parser.version>2.1.25</swagger-parser.version>
+		<swagger-parser.version>2.1.26</swagger-parser.version>
 		<swagger.version>2.2.29</swagger.version>
-		<springdoc-openapi.version>2.8.5</springdoc-openapi.version>
+		<springdoc-openapi.version>2.8.6</springdoc-openapi.version>
 
 		<undertow.version>2.3.18.Final</undertow.version>
 		<liquibase.version>4.31.1</liquibase.version>
@@ -205,7 +205,7 @@
 				<plugin>
 					<groupId>org.sonarsource.scanner.maven</groupId>
 					<artifactId>sonar-maven-plugin</artifactId>
-					<version>5.0.0.4389</version>
+					<version>5.1.0.4751</version>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>

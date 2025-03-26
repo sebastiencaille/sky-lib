@@ -70,9 +70,9 @@ class ComponentTest {
 		final var poller = new PollingBuilder<>(testComponent);
 		final var successResult = poller.failUnless().get(o -> TEST_TEXT);
 		Assertions.assertEquals(TEST_TEXT, successResult.get());
-		final var failureResult = poller.evaluate()
+		final var failureResult = poller
 				.with(cfg -> cfg.timingOut(Duration.ofMillis(10)))
-				.that().get(o -> null);
+				.evaluateThat().get(o -> null);
 		Assertions.assertTrue(failureResult.isEmpty());
 	}
 

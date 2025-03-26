@@ -87,9 +87,9 @@ public class ExamplePage extends PagePilot {
 	 * until "Proceed" is enabled
 	 */
 	public void executeEnable() {
-		on(elementToBeClickable(ENABLE_TEST)).fail()
+		on(elementToBeClickable(ENABLE_TEST))
 			.withConfig(p -> p.andThen(new WaitEnableTestEnabledDelay()))
-			.unless().clicked();
+			.failUnless().clicked();
 	}
 
 	public void assertedEnabledTested() {

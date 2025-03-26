@@ -32,9 +32,9 @@ import ch.scaille.testing.testpilot.factories.Pollings;
  * 
  * @param <C> the Component type
  * @param <T> the Builder (sub)type
- * @param <U> the Poller (sub)type
+ * @param <P> the Poller (sub)type
  */
-public class PollingBuilder<C, T extends PollingBuilder<C, T, U, V>, U extends PollingBuilder.Poller<C>, V extends PollingBuilder.Configurer<C, V>> {
+public class PollingBuilder<C, T extends PollingBuilder<C, T, P, V>, P extends PollingBuilder.Poller<C>, V extends PollingBuilder.Configurer<C, V>> {
 
 	public static class Poller<C> {
 
@@ -86,13 +86,7 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, U, V>, U extends P
 		}
 
 	}
-
-	protected final AbstractComponentPilot<C> pilot;
-
-	protected final List<Consumer<Polling<C, ?>>> configurers = new ArrayList<>(2);
-
-	private FailureHandler<C, ?> failureHandler;
-
+	
 	public static class Configurer<C, V> {
 
 		private final PollingBuilder<C, ?, ?, ?> pollingBuilder;
@@ -112,26 +106,23 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, U, V>, U extends P
 		}
 
 	}
-
+	
 	public static class DefaultConfigurer<C> extends Configurer<C, DefaultConfigurer<C>> {
 		public DefaultConfigurer(PollingBuilder<C, ?, ?, ?> pollingBuilder) {
 			super(pollingBuilder);
 		}
 	}
 
+	protected final AbstractComponentPilot<C> pilot;
+
+	protected final List<Consumer<Polling<C, ?>>> configurers = new ArrayList<>(2);
+
+	private FailureHandler<C, ?> failureHandler;
+
+
 	public class UnlessConfigurer {
 
-		public UnlessConfigurer configure(Consumer<V> configuration) {
-			configuration.accept(createConfigurer());
-			return this;
-		}
-		
-		public UnlessConfigurer withConfig(Consumer<Polling<C, ?>> configurer) {
-			configurers.add(configurer);
-			return this;
-		}
-
-		public U unless() {
+		public P unless() {
 			return createPoller();
 		}
 
@@ -139,28 +130,22 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, U, V>, U extends P
 
 	public class ThatConfigurer {
 
-		public ThatConfigurer with(Consumer<V> configuration) {
-			configuration.accept(createConfigurer());
-			return this;
-		}
-		
-		public ThatConfigurer withConfig(Consumer<Polling<C, ?>> configurer) {
-			configurers.add(configurer);
-			return this;
-		}
-
-
 		/**
 		 * Waits until a condition is applied
 		 */
-		public U that() {
+		public P that() {
 			return createPoller();
 		}
 
 	}
+	
+	public PollingBuilder(AbstractComponentPilot<C> pilot) {
+		this.pilot = pilot;
+	}
 
-	protected U createPoller() {
-		return (U) new Poller<>(this);
+
+	protected P createPoller() {
+		return (P) new Poller<>(this);
 	}
 
 	protected V createConfigurer() {
@@ -175,15 +160,22 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, U, V>, U extends P
 		return pollingResult;
 	}
 
-	public PollingBuilder(AbstractComponentPilot<C> pilot) {
-		this.pilot = pilot;
-	}
-
 	public void reset() {
 		failureHandler = null;
 		configurers.clear();
 	}
 
+
+	public T with(Consumer<V> configuration) {
+		configuration.accept(createConfigurer());
+		return (T)this;
+	}
+	
+	public T withConfig(Consumer<Polling<C, ?>> configurer) {
+		configurers.add(configurer);
+		return (T)this;
+	}
+	
 	/**
 	 * Waits until a condition is applied, throwing a java assertion error in case
 	 * of failure
@@ -205,10 +197,10 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, U, V>, U extends P
 	}
 
 	public UnlessConfigurer fail(ReportFunction<C> reportFunction) {
-		return fail().withConfig(polling -> polling.withReportFunction(reportFunction));
+		return withConfig(polling -> polling.withReportFunction(reportFunction)).fail();
 	}
 
-	public U failUnless() {
+	public P failUnless() {
 		return fail().unless();
 	}
 
@@ -220,7 +212,7 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, U, V>, U extends P
 		return new ThatConfigurer();
 	}
 
-	public U evaluateThat() {
+	public P evaluateThat() {
 		return evaluate().that();
 	}
 

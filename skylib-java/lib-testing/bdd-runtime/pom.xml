@@ -13,7 +13,7 @@
 		<!-- http server -->
 		<dependency>
 			<groupId>ch.scaille</groupId>
-			<artifactId>selenium-test-page</artifactId>
+			<artifactId>lib-testing-selenium-test-page</artifactId>
 			<version>${revision}</version>
 			<scope>test</scope>
 		</dependency>

@@ -1,11 +1,14 @@
 package ch.scaille.testing.testpilot.selenium;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DomMutation;
 
 import ch.scaille.testing.testpilot.AbstractComponentPilot;
 import ch.scaille.testing.testpilot.Polling;
@@ -31,8 +34,19 @@ public class ElementPilot extends AbstractComponentPilot<WebElement> {
 	}
 	
 	@Override
+	protected <R> Optional<PollingResult<WebElement, R>> loadComponent(Polling<WebElement, R> polling) {
+		try {
+			return super.loadComponent(polling);
+		} catch (StaleElementReferenceException e) {
+			invalidateCache();
+			throw e;
+		}
+	}
+	
+	@Override
 	protected Optional<String> getDescription() {
-		final var description = getCachedElement().map(Object::toString);
+		final var description = getCachedElement().map(pilot::getElementPath);
+
 		if (locator != null) {
 			return description.or(() -> Optional.of(locator.toString()));
 		}
@@ -71,6 +85,23 @@ public class ElementPilot extends AbstractComponentPilot<WebElement> {
 			invalidateCache();
 			throw e;
 		}
+	}
+	
+
+	public static String uniqueId(WebElement element) {
+		 return element.getDomAttribute("data-__webdriver_id");
+	}
+	
+	public void expectMutations(Predicate<DomMutation> filter) {
+		pilot.expectMutations(mutation ->  
+			loadGuiComponent().map(ElementPilot::uniqueId)
+				.filter(c -> c.equals(uniqueId(mutation.getElement())))
+				.isPresent() && filter.test(mutation));
+	}
+
+	public List<DomMutation> getMutations() {
+		final var uid = loadGuiComponent().map(ElementPilot::uniqueId).orElse("");
+		return pilot.getMutations(mutation -> uid.equals(uniqueId(mutation.getElement())));
 	}
 
 }

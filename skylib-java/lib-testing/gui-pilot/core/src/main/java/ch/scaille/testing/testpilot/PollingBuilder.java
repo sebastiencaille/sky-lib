@@ -34,7 +34,10 @@ import ch.scaille.testing.testpilot.factories.Pollings;
  * @param <T> the Builder (sub)type
  * @param <P> the Poller (sub)type
  */
-public class PollingBuilder<C, T extends PollingBuilder<C, T, P, V>, P extends PollingBuilder.Poller<C>, V extends PollingBuilder.Configurer<C, V>> {
+public class PollingBuilder<C, 
+	T extends PollingBuilder<C, T, P, V>, 
+	P extends PollingBuilder.Poller<C>, 
+	V extends PollingBuilder.Configurer<C, V>> {
 
 	public static class Poller<C> {
 
@@ -87,6 +90,9 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, P, V>, P extends P
 
 	}
 	
+	/**
+	 * This allows extending the configuration
+	 */
 	public static class Configurer<C, V> {
 
 		private final PollingBuilder<C, ?, ?, ?> pollingBuilder;
@@ -100,7 +106,7 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, P, V>, P extends P
 			return (V) this;
 		}
 
-		public V timingOut(Duration timeout) {
+		public V timingOutAfter(Duration timeout) {
 			withConfig(polling -> polling.withDelay(timeout));
 			return (V) this;
 		}
@@ -120,7 +126,7 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, P, V>, P extends P
 	private FailureHandler<C, ?> failureHandler;
 
 
-	public class UnlessConfigurer {
+	public class Unless {
 
 		public P unless() {
 			return createPoller();
@@ -128,7 +134,7 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, P, V>, P extends P
 
 	}
 
-	public class ThatConfigurer {
+	public class That {
 
 		/**
 		 * Waits until a condition is applied
@@ -180,23 +186,27 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, P, V>, P extends P
 	 * Waits until a condition is applied, throwing a java assertion error in case
 	 * of failure
 	 */
-	public UnlessConfigurer fail() {
+	public Unless fail() {
 		this.failureHandler = FailureHandlers.throwError();
-		return new UnlessConfigurer();
+		return new Unless();
 	}
 
 	/**
 	 * Waits until a condition is applied, throwing a java assertion error in case
 	 * of failure
 	 * 
+	public T with(Consumer<V> configuration) {
+		configuration.accept(createConfigurer());
+		return (T)this;
+	}
 	 * @param assertion the text of the assertion
 	 */
-	public UnlessConfigurer fail(String assertion) {
+	public Unless fail(String assertion) {
 		this.failureHandler = FailureHandlers.throwError(assertion);
-		return new UnlessConfigurer();
+		return new Unless();
 	}
 
-	public UnlessConfigurer fail(ReportFunction<C> reportFunction) {
+	public Unless fail(ReportFunction<C> reportFunction) {
 		return withConfig(polling -> polling.withReportFunction(reportFunction)).fail();
 	}
 
@@ -207,18 +217,17 @@ public class PollingBuilder<C, T extends PollingBuilder<C, T, P, V>, P extends P
 	/**
 	 * Waits until a condition is applied, skipping the error in case of failure
 	 */
-	public ThatConfigurer evaluate() {
-		this.failureHandler = FailureHandlers.ignoreFailure();
-		return new ThatConfigurer();
-	}
-
 	public P evaluateThat() {
-		return evaluate().that();
+		this.failureHandler = FailureHandlers.ignoreFailure();
+		return createPoller();
 	}
 
-	public UnlessConfigurer report(String report) {
+	/**
+	 * Reports the failure, but do not fail the test
+	 */
+	public That evaluateWithReport(String report) {
 		this.failureHandler = FailureHandlers.reportFailure(report);
-		return new UnlessConfigurer();
+		return new That();
 	}
 
 }

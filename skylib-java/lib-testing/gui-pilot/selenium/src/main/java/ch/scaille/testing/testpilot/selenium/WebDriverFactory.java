@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -17,6 +16,7 @@ import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.AbstractDriverOptions;
 import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 public abstract class WebDriverFactory<T extends WebDriverFactory<?, O>, O extends AbstractDriverOptions<?>> {
 
@@ -38,7 +38,7 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<?, O>, O exten
 
 	public abstract T withBinary(String binary);
 
-	public abstract WebDriver build();
+	public abstract RemoteWebDriver build();
 
 	protected WebDriverFactory(O options) {
 		this.options = options;
@@ -120,7 +120,7 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<?, O>, O exten
 		}
 
 		@Override
-		public WebDriver build() {
+		public RemoteWebDriver build() {
 			return new FirefoxDriver(options);
 		}
 	}
@@ -194,7 +194,7 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<?, O>, O exten
 		}
 
 		@Override
-		public WebDriver build() {
+		public RemoteWebDriver build() {
 			return new ChromeDriver(options);
 		}
 	}

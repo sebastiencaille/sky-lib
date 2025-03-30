@@ -49,7 +49,10 @@ public class ConsoleErrorDetector {
 	}
 	
 	public void assertNoError() {
-		assertTrue(errors.isEmpty(), () -> "Errors must not be detected: " + String.join("\n", errors));
+		if (!errors.isEmpty()) {
+			// Using assertions seems to break the failure message
+			throw new IllegalStateException("There must not be any error in the console: " + String.join("\n", errors));
+		}
 	}
 	
 	public void close() throws InterruptedException {

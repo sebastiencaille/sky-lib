@@ -5,7 +5,7 @@
 		<artifactId>lib-testing</artifactId>
 		<version>${revision}</version>
 	</parent>
-	<artifactId>selenium-test-page</artifactId>
+	<artifactId>lib-testing-selenium-test-page</artifactId>
 
 	<dependencies>
 		<dependency>

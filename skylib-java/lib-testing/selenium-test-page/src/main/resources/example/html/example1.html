@@ -10,7 +10,7 @@
 				setTimeout(() => { 
 					document.getElementById('EnableTest').disabled=false;
 					document.getElementById('AlertTest').disabled=false; 
-				}, 2000)
+				}, 2000);
 			};
 			
 			const alertTest = function() {
@@ -21,15 +21,16 @@
 			const elementChangeTest = function() {
 				console.log("ElementChangeTest");
 				const elementChangeHolder = document.getElementById('ElementChangeHolder');
+				elementChangeHolder.replaceChildren();
+				elementChangeHolder.insertAdjacentHTML('beforeend', '<div id="ElementChange"><div id="TextChange"></div></div>');
 				setTimeout(() => {
 					console.log("ElementChangeTest change 1"); 
-					elementChangeHolder.insertAdjacentHTML('beforeend', '<div id="ElementChange"><div id="TextChange">Hello</div></div>');
-				}, 500)
+					document.getElementById('TextChange').textContent = 'Hello world';
+				}, 500);
 				setTimeout(() => { 
 					console.log("ElementChangeTest change 2");
-					elementChangeHolder.replaceChildren();
-					elementChangeHolder.insertAdjacentHTML('beforeend', '<div id="ElementChange"><div id="TextChange">Hello again</div></div>');
-				}, 1000)
+					document.getElementById('TextChange').textContent = 'Hello again';
+				}, 1000);
 			};
 			
 		</script>

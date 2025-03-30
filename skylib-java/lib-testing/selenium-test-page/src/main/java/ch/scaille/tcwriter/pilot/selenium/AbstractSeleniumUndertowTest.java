@@ -11,7 +11,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import ch.scaille.testing.testpilot.selenium.ConsoleErrorDetector;
 import ch.scaille.util.helpers.JavaExt;
@@ -26,7 +26,7 @@ public abstract class AbstractSeleniumUndertowTest {
 	/* **************************** WEB SERVER **************************** */
 
 	protected static Undertow webServer = null;
-	protected static WebDriver driver = null;
+	protected static RemoteWebDriver driver = null;
 
 	public static final URI localUrl;
 
@@ -38,9 +38,9 @@ public abstract class AbstractSeleniumUndertowTest {
 		}
 	}
 
-	public abstract WebDriver createWebDriver();
+	public abstract RemoteWebDriver createWebDriver();
 
-	public static void setDriver(WebDriver driver) {
+	public static void setDriver(RemoteWebDriver driver) {
 		AbstractSeleniumUndertowTest.driver = driver;
 	}
 

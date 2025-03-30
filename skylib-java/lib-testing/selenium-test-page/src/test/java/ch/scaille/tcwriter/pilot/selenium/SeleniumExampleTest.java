@@ -2,11 +2,13 @@ package ch.scaille.tcwriter.pilot.selenium;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.time.Duration;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import ch.scaille.testing.testpilot.jupiter.DisabledIfHeadless;
 import ch.scaille.testing.testpilot.selenium.SeleniumPilot;
@@ -17,7 +19,7 @@ import ch.scaille.util.helpers.Logs;
 class SeleniumExampleTest extends AbstractSeleniumUndertowTest {
 
 	@Override
-	public WebDriver createWebDriver() {
+	public RemoteWebDriver createWebDriver() {
 		return WebDriverFactory.firefox().build();
 	}
 
@@ -28,6 +30,7 @@ class SeleniumExampleTest extends AbstractSeleniumUndertowTest {
 	@BeforeEach
 	void createPilot() {
 		pilot = new SeleniumPilot(driver);
+		pilot.setDefaultPollingTimeout(Duration.ofSeconds(5));
 	}
 
 	@AfterEach
@@ -40,7 +43,7 @@ class SeleniumExampleTest extends AbstractSeleniumUndertowTest {
 	}
 
 	@Test
-	void testExample() throws SecurityException, InterruptedException {
+	void testExample() throws SecurityException {
 		pilot.getDriver().get(localUrl.resolve("/example1.html").toString());
 
 		final var mainPage = pilot.page(ExamplePage::new);

@@ -7,15 +7,16 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 /**
  * Allows to propagate the web driver to the extensions
  */
 public class WebDriverExtension implements ParameterResolver {
 
-	private static WebDriver currentDriver = null;
+	private static RemoteWebDriver currentDriver = null;
 	
-	public static void setCurrentDriver(WebDriver currentDriver) {
+	public static void setCurrentDriver(RemoteWebDriver currentDriver) {
 		WebDriverExtension.currentDriver = currentDriver;
 	}
 	
@@ -25,11 +26,11 @@ public class WebDriverExtension implements ParameterResolver {
 			return currentDriver;
 		}
 
-		public void setDriver(WebDriver webDriver) {
+		public void setDriver(RemoteWebDriver webDriver) {
 			setCurrentDriver(webDriver);
 		}
 		
-		public WebDriver getOrCreate(Supplier<WebDriver> webDriverSupplier) {
+		public RemoteWebDriver getOrCreate(Supplier<RemoteWebDriver> webDriverSupplier) {
 			if (currentDriver == null) {
 				setDriver(webDriverSupplier.get());
 			}

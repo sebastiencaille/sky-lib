@@ -11,14 +11,10 @@ import org.openqa.selenium.WebElement;
 
 import ch.scaille.testing.testpilot.ActionDelay;
 import ch.scaille.testing.testpilot.ModalDialogDetector;
-import ch.scaille.testing.testpilot.AbstractEvent.EventWaiter;
 import ch.scaille.testing.testpilot.factories.Pollings;
-import ch.scaille.testing.testpilot.selenium.BiDiEvent;
 import ch.scaille.testing.testpilot.selenium.PagePilot;
 import ch.scaille.testing.testpilot.selenium.SeleniumPilot;
-import ch.scaille.testing.testpilot.selenium.BiDiEvent.BiDiEventConfig;
-import ch.scaille.testing.testpilot.selenium.BiDiEvent.IBiDiEvent;
-import ch.scaille.testing.testpilot.selenium.BiDiEvent.MutationConfig;
+import ch.scaille.testing.testpilot.selenium.SeleniumPollingBuilder;
 
 public class ExamplePage extends PagePilot {
 
@@ -32,33 +28,10 @@ public class ExamplePage extends PagePilot {
 
 	private static final By NOT_EXISTING = By.id("NotExisting");
 
-	private static final String TEXT_XPATH = "//div[@id='ElementChangeHolder']";
-
-	private enum TestEvents implements IBiDiEvent {
-
-		DISPLAY_HELLO(new BiDiEventConfig(TEXT_XPATH, MutationConfig.CHILD_LIST, false,
-				"mutation => {console.log(mutation); return mutation.target.children[0].textContent === 'Hello' }")),
-		DISPLAY_HELLO_AGAIN(new BiDiEventConfig(TEXT_XPATH, MutationConfig.CHILD_LIST, false,
-				"mutation => mutation.target.children[0].textContent === 'Hello again'"));
-
-		private final BiDiEventConfig biDiEventConfig;
-
-		TestEvents(BiDiEventConfig biDiEventConfig) {
-			this.biDiEventConfig = biDiEventConfig;
-		}
-
-		@Override
-		public BiDiEventConfig config() {
-			return biDiEventConfig;
-		}
-
-	}
-
-	private final BiDiEvent<TestEvents> helloEventListener;
+	private static final By TEXT_XPATH = By.xpath("//div[@id='TextChange']");
 
 	public ExamplePage(SeleniumPilot pilot) {
 		super(pilot);
-		helloEventListener = new BiDiEvent<>(pilot, TestEvents.DISPLAY_HELLO, TestEvents.DISPLAY_HELLO_AGAIN);
 	}
 
 	public class WaitEnableTestEnabledDelay extends ActionDelay {
@@ -103,7 +76,8 @@ public class ExamplePage extends PagePilot {
 	public void clickOnMissingButton() {
 		Assertions.assertFalse(
 				on(visibilityOfElementLocated(NOT_EXISTING))
-					.report("isSatisfied should have returned false").unless()
+					.withConfig(p -> p.withTimeout(Duration.ofSeconds(2)))
+					.evaluateWithReport("Button does not exist").that()
 					.satisfied(Pollings.<WebElement>exists().withTimeout(Duration.ofMillis(500))));
 	}
 
@@ -125,12 +99,14 @@ public class ExamplePage extends PagePilot {
 		pilot.waitModalDialogHandled();
 	}
 
-	public void assertElementChange() throws InterruptedException {
-		final EventWaiter<TestEvents> eventsWaiter = helloEventListener.expect(h -> h.size() == 2);
+	public void assertElementChange() {
+		var changedElement = on(p -> p.findElement(TEXT_XPATH));
+		changedElement.expectMutations(mutation -> "textContent".equals(mutation.getAttributeName()));
 		on(elementToBeClickable(ELEMENT_CHANGE_TEST)).failUnless().clicked();
 		// Explicitly test using WebElement as source
-		eventsWaiter.assertMatches();
-		on(visibilityOfElementLocated(ELEMENT_CHANGE)).failUnless().textEquals("Hello again");
+		changedElement.failUnless().assertedCtxt(SeleniumPollingBuilder.assertMutations(mutations -> 
+			Assertions.assertEquals(2, mutations.size(), mutations::toString)));
+		changedElement.failUnless().textEquals("Hello again");
 	}
 
 }

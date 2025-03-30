@@ -14,8 +14,8 @@
 	<modules>
 		<module>core</module>
 		<module>gui-pilot</module>
-		<module>bdd-runtime</module>
 		<module>selenium-test-page</module>
+		<module>bdd-runtime</module>
 	</modules>
 
 </project>

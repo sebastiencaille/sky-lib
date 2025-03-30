@@ -71,7 +71,7 @@ class ComponentTest {
 		final var successResult = poller.failUnless().get(o -> TEST_TEXT);
 		Assertions.assertEquals(TEST_TEXT, successResult.get());
 		final var failureResult = poller
-				.with(cfg -> cfg.timingOut(Duration.ofMillis(10)))
+				.with(cfg -> cfg.timingOutAfter(Duration.ofMillis(10)))
 				.evaluateThat().get(o -> null);
 		Assertions.assertTrue(failureResult.isEmpty());
 	}

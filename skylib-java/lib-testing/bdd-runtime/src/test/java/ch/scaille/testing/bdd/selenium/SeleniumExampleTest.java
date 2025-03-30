@@ -4,7 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import ch.scaille.tcwriter.pilot.selenium.AbstractSeleniumUndertowTest;
 import ch.scaille.testing.testpilot.jupiter.DisabledIfHeadless;
@@ -16,7 +16,7 @@ import ch.scaille.util.helpers.Logs;
 class SeleniumExampleTest extends AbstractSeleniumUndertowTest {
 
 	@Override
-	public WebDriver createWebDriver() {
+	public RemoteWebDriver createWebDriver() {
 		return WebDriverFactory.firefox().build();
 	}
 

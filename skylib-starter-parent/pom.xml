@@ -65,7 +65,7 @@
 
 		<maven-exec-plugin.version>3.5.0</maven-exec-plugin.version>
 		<openapi-generator-maven-plugin.version>7.12.0</openapi-generator-maven-plugin.version>
-		<jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
+		<jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
 
 	</properties>
 

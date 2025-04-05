@@ -12,8 +12,8 @@ import ch.scaille.javabeans.IChainBuilderFactory;
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.IPropertiesOwner;
+import ch.scaille.javabeans.IVetoer.TransmitMode;
 import ch.scaille.javabeans.PropertyEvent.EventKind;
-import ch.scaille.javabeans.chain.Vetoer.TransmitMode;
 import ch.scaille.javabeans.converters.IConverter;
 import ch.scaille.javabeans.persisters.Persisters;
 

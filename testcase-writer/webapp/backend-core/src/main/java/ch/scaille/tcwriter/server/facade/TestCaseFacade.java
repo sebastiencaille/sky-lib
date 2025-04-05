@@ -64,8 +64,11 @@ public class TestCaseFacade extends AbstractFacade {
 		try (var config = new ITestExecutor.TestConfig(loadedTC, tempDir, tcpPort)) {
 			testExecutor.startTest(config);
 			testRemoteControl.controlTest(loadedTC.getSteps().size());
-		} catch (IOException | InterruptedException | TestCaseException e) {
-			Thread.interrupted();
+		} catch (InterruptedException e) {
+			LOGGER.log(Level.WARNING, e, () -> "Error during test execution");
+			Thread.currentThread().interrupt();
+			throw new WebRTException(e);
+		} catch (IOException | TestCaseException e) {
 			LOGGER.log(Level.WARNING, e, () -> "Error during test execution");
 			throw new WebRTException(e);
 		}

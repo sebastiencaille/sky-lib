@@ -15,8 +15,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import ch.scaille.javabeans.IVetoer.TransmitMode;
 import ch.scaille.javabeans.PropertyEvent.EventKind;
-import ch.scaille.javabeans.chain.Vetoer.TransmitMode;
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.IPropertyEventListener;
 

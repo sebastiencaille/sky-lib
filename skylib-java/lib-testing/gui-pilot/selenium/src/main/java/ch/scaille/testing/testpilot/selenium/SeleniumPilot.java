@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.logging.Logger;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -25,6 +26,8 @@ import ch.scaille.util.helpers.NoExceptionCloseable;
 
 public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 
+	private static final Logger LOGGER = Logs.of(SeleniumPilot.class);
+	
 	private final RemoteWebDriver driver;
 	private final Script remoteScript;
 	private final org.openqa.selenium.bidi.module.Script script;
@@ -42,8 +45,7 @@ public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 	}
 
 	private void mutationHandler(DomMutation mutation) {
-		Logs.of(SeleniumPilot.class)
-				.info("Received on %s, %s: %s -> %s".formatted(getElementPath(mutation.getElement()),
+		LOGGER.info(() -> "Received on %s, %s: %s -> %s".formatted(getElementPath(mutation.getElement()),
 						mutation.getAttributeName(), mutation.getOldValue(), mutation.getCurrentValue()));
 		if (mutationFilter != null && mutationFilter.test(mutation)) {
 			synchronized (mutations) {

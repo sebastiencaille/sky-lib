@@ -24,8 +24,6 @@ public class ExamplePage extends PagePilot {
 
 	private static final By ELEMENT_CHANGE_TEST = By.id("ElementChangeTest");
 
-	private static final By ELEMENT_CHANGE = By.id("ElementChange");
-
 	private static final By NOT_EXISTING = By.id("NotExisting");
 
 	private static final By TEXT_XPATH = By.xpath("//div[@id='TextChange']");

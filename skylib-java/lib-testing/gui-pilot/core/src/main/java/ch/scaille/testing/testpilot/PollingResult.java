@@ -49,7 +49,7 @@ public record PollingResult<C, V>(V polledValue,
 	}
 
 	public <R> PollingResult<C, R> withValue(R newValue) {
-		return new PollingResult<C, R>(newValue, failureReason, null);
+		return new PollingResult<>(newValue, failureReason, null);
 	}
 
 	public PollingResult<C, V> withPolling(PollingMetadata<C> polling) {

@@ -50,7 +50,7 @@ public class MainPage extends PagePilot {
 	}
 	
 	public static Function<MainPage, ContextSelector> currentTestCase() {
-		return mp -> new ContextSelector(mp.testCaseSelector, e -> LambdaExt.doNothing(), mp.testCaseSelect);
+		return mp -> new ContextSelector(mp.testCaseSelector, _ -> LambdaExt.doNothing(), mp.testCaseSelect);
 	}
 
 	public void select(Function<MainPage, ContextSelector> selector) {

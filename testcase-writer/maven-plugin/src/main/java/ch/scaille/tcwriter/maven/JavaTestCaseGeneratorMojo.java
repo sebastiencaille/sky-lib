@@ -119,7 +119,7 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
 		final var generationMetadata = new GenerationMetadata(JavaTestCaseGeneratorMojo.class,
 				"dictionary=" + testDictionary.getMetadata());
 		final var testcaseLocator = tcFile.split("\\.")[0];
-		final var testCase = modelDao.readTestCase(testcaseLocator, preferred -> testDictionary)
+		final var testCase = modelDao.readTestCase(testcaseLocator, _ -> testDictionary)
 				.orElseThrow(() -> new RuntimeException("Unable to find test case: " + testcaseLocator));
 		generator.generate(testCase, generationMetadata).writeTo(LambdaExt.uncheckedF2((file, src) -> {
 			final var outputFile = Paths.get(resolve(outputFolder)).resolve(file);

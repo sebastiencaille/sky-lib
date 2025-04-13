@@ -29,7 +29,7 @@ public class PackageDeliverySelector {
 
 	@TCApi(description = "Item bought at the shop", humanReadable = "the package bought at the shop")
 	public static PackageDeliverySelector fromShop() {
-		return new PackageDeliverySelector(svc -> {
+		return new PackageDeliverySelector(_ -> {
 			// do nothing, we already have it
 		});
 	}

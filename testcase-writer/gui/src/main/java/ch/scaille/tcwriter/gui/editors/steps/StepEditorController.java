@@ -55,7 +55,7 @@ public class StepEditorController extends GuiController {
 			}
 			model.getActor().setValue(this, step.getActor());
 			model.getAction().setValue(this, step.getAction());
-			updateActionParameters(dictionary.getValue(), selectedStep);
+			updateCurrentActionParameters(dictionary.getValue(), selectedStep);
 		});
 		
 		model.getActor().listenActive(actor -> {
@@ -66,7 +66,7 @@ public class StepEditorController extends GuiController {
 			}
 		});
 		
-		model.getAction().listenActive(action -> updateActionParameters(dictionary.getValue(), selectedStep));
+		model.getAction().listenActive(_ -> updateCurrentActionParameters(dictionary.getValue(), selectedStep));
 
 		model.getSelectorValue().setValue(this, ExportableTestParameterValue.NO_VALUE);
 		model.getActionParameterValue().setValue(this, ExportableTestParameterValue.NO_VALUE);
@@ -121,7 +121,7 @@ public class StepEditorController extends GuiController {
 	 * but action has different parameters)
 	 *
 	 */
-	private void updateActionParameters(final TestDictionary td, final ObjectProperty<TestStep> testStep) {
+	private void updateCurrentActionParameters(final TestDictionary td, final ObjectProperty<TestStep> testStep) {
 		final var step = testStep.getValue();
 		final var action = model.getAction().getValue();
 		if (step == null || action == null) {

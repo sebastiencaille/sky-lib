@@ -23,7 +23,7 @@ public class TestCaseDao extends AbstractDao implements ITestCaseDao {
 
     @Override
     public Optional<ExportableTestCase> load(String testCaseName, TestDictionary dictionary) {
-        return modelDao.readTestCase(testCaseName, preferred -> dictionary);
+        return modelDao.readTestCase(testCaseName, _ -> dictionary);
     }
 
 }

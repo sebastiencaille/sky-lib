@@ -41,10 +41,10 @@ public class StepEditorPanel extends JPanel {
 
 		final var applyButton = withEnabler(selectedStep, new JButton("Apply"));
 		applyButton.setName("ApplyStep");
-		applyButton.addActionListener(l -> controller.applyChanges());
+		applyButton.addActionListener(_ -> controller.applyChanges());
 
 		final var cancelButton = withEnabler(selectedStep, new JButton("Cancel"));
-		cancelButton.addActionListener(l -> controller.cancelChanges());
+		cancelButton.addActionListener(_ -> controller.cancelChanges());
 
 		final var classifiersEditor = withEnabler(selectedStep, new JComboBox<>(StepClassifier.values()));
 		classifiersEditor.setMaximumSize(classifiersEditor.getPreferredSize());

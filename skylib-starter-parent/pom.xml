@@ -19,27 +19,27 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<aspectj.version>1.9.23</aspectj.version>
+		<aspectj.version>1.9.24</aspectj.version>
 		<spring-session.version>3.4.2</spring-session.version>
-		<jackson-bom.version>2.18.3</jackson-bom.version>
+		<jackson-bom.version>2.19.0-rc2</jackson-bom.version>
 		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
-		<guava.version>33.4.6-jre</guava.version>
+		<guava.version>33.4.7-jre</guava.version>
 		<logback.version>1.5.18</logback.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
 
 		<jetbrain-annotations.version>26.0.2</jetbrain-annotations.version>
 		
 		<swagger-parser.version>2.1.26</swagger-parser.version>
-		<swagger.version>2.2.29</swagger.version>
+		<swagger.version>2.2.30</swagger.version>
 		<springdoc-openapi.version>2.8.6</springdoc-openapi.version>
 
 		<undertow.version>2.3.18.Final</undertow.version>
 		<liquibase.version>4.31.1</liquibase.version>
 
 		<mockito.version>5.17.0</mockito.version>
-		<junit-jupiter.version>5.12.1</junit-jupiter.version>
+		<junit-jupiter.version>5.12.2</junit-jupiter.version>
 		<junit.version>4.13.2</junit.version>
-		<junit-platform-console-standalone.version>1.12.1</junit-platform-console-standalone.version>
+		<junit-platform-console-standalone.version>1.12.2</junit-platform-console-standalone.version>
 		<selenium.version>4.31.0</selenium.version>
 		<h2.version>2.3.232</h2.version>
 

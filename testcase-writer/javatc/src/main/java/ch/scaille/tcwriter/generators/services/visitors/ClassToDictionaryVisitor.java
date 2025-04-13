@@ -252,8 +252,8 @@ public class ClassToDictionaryVisitor {
 			return;
 		}
 
-		forClassAndSuper(tcClazz, new HashSet<>(), apiClazz -> {
-			for (final var apiMethod : tcClazz.getMethods()) {
+		forClassAndSuper(tcClazz, new HashSet<>(), clazz -> {
+			for (final var apiMethod : clazz.getMethods()) {
 				final var annotation = apiMethod.getAnnotation(TCApi.class);
 				if (annotation != null) {
 					methods.add(apiMethod);

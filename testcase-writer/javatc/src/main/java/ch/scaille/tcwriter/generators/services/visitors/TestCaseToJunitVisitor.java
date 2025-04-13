@@ -189,8 +189,8 @@ public class TestCaseToJunitVisitor {
 	}
 
 	private String varNameOf(final TestStep step, final TestParameterValue testValue) {
-		final var nextIndex = varIndex.computeIfAbsent(step.getOrdinal(), s -> new AtomicInteger(1)).getAndIncrement();
-		return varNames.computeIfAbsent(testValue, v -> String.format("step_%s_%s_%s" , step.getOrdinal(), testValue.getValueFactory().getName().replace('.', '_'),
+		final var nextIndex = varIndex.computeIfAbsent(step.getOrdinal(), _ -> new AtomicInteger(1)).getAndIncrement();
+		return varNames.computeIfAbsent(testValue, v -> String.format("step_%s_%s_%s" , step.getOrdinal(), v.getValueFactory().getName().replace('.', '_'),
 				nextIndex));
 	}
 }

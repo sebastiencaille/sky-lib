@@ -118,7 +118,7 @@ public class ModelDao implements IModelDao {
 		return uncheck("Listing of test cases",
 				() -> testCaseRepo.list()
 						.map(f ->
-								readTestCase(f.getLocator(), dict -> null, false).orElseThrow(() -> new IllegalStateException("Listed TestCase not found")))
+								readTestCase(f.getLocator(), _ -> null, false).orElseThrow(() -> new IllegalStateException("Listed TestCase not found")))
 						.filter(tc -> tc.getPreferredDictionary().equals(dictionary.getClassifier()))
 						.map(TestCase::getMetadata)
 						.toList());

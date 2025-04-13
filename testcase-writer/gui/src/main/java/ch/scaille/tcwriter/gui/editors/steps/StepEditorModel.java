@@ -91,7 +91,7 @@ public class StepEditorModel extends GuiModel {
 	public static <T extends IdObject> IConverterWithContext<T, ObjectTextView<T>, ObjectProperty<TestDictionary>> object2Text() {
 		final var objectTextFunction = ObjectTextView.<T, ObjectProperty<TestDictionary>>biObject2Text(
 				(o, k) -> k.getValue().descriptionOf(o).getDescription());
-		return Converters.converter(objectTextFunction::apply, (c, k) -> ObjectTextView.<T>comp2prop().apply(c));
+		return Converters.converter(objectTextFunction::apply, (c, _) -> ObjectTextView.<T>comp2prop().apply(c));
 	}
 
 	public static <T extends IdObject> IConverterWithContext<List<T>, List<ObjectTextView<T>>, ObjectProperty<TestDictionary>> objects2Texts() {

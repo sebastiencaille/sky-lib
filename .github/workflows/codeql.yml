@@ -32,7 +32,7 @@ jobs:
     - name: Setup Maven and java
       uses: s4u/setup-maven-action@v1.18.0
       with:
-        java-version: 21
+        java-version: 24
         maven-version: 3.9.9
 
     - name: Checkout repository

@@ -2,14 +2,18 @@ package ch.scaille.tcwriter.it;
 
 import static ch.scaille.tcwriter.persistence.factory.DaoConfigs.cp;
 
-import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
-import java.util.Arrays;
 
 import javax.swing.SwingUtilities;
 
+import ch.scaille.util.helpers.LambdaExt;
+import ch.scaille.util.helpers.StreamExt;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
@@ -36,7 +40,7 @@ import ch.scaille.util.helpers.Logs;
 		"testSession|TestSessionRole|Test session|test session" })
 public class AbstractGuiTest {
 
-	private static final File RESOURCE_FOLDER = new File(System.getProperty("java.io.tmpdir"));
+	private static final Path RESOURCE_FOLDER = Paths.get(System.getProperty("java.io.tmpdir"));
 
 	private TCGuiPilot pilot;
 
@@ -46,16 +50,20 @@ public class AbstractGuiTest {
 	private ITestCaseRecorder testRecorder;
 
 	@BeforeEach
-	public void startGui() throws InvocationTargetException, InterruptedException {
-		final var tcPath = new File(RESOURCE_FOLDER, "testCase");
-		tcPath.mkdirs();
-		Arrays.stream(tcPath.listFiles()).forEach(File::delete);
+	public void startGui() throws InvocationTargetException, InterruptedException, IOException {
+		final var tcPath = RESOURCE_FOLDER.resolve("testCase");
+		if (!Files.exists(tcPath)) {
+			Files.createDirectory(tcPath);
+		}
+		StreamExt.onCloseableC(Files.list(tcPath), s -> s.forEach(LambdaExt.uncheckedC(Files::delete)));
 
-		final var dictionariesPath = new File(RESOURCE_FOLDER, "dictionaries");
-		dictionariesPath.mkdirs();
+		final var dictionariesPath = RESOURCE_FOLDER.resolve("dictionaries");
+		if (!Files.exists(dictionariesPath)) {
+			Files.createDirectory(dictionariesPath);
+		}
+
 
 		// Setup config
-
 		final var modelConfig = new ModelConfig();
 		modelConfig.setTcPath(tcPath.toString());
 		modelConfig.setTcExportPath("./src/test/java");

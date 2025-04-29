@@ -6,14 +6,8 @@ import static ch.scaille.tcwriter.services.generators.Helper.roleKey;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.function.Consumer;
 
 import ch.scaille.tcwriter.annotations.TCAction;
@@ -64,7 +58,7 @@ public class ClassToDictionaryVisitor {
 	}
 
 	private void processRoles(Class<?> roleClass) {
-		final var roleAnnotation = roleClass.getAnnotation(TCRole.class);
+		final var roleAnnotation = Objects.requireNonNull(roleClass.getAnnotation(TCRole.class));
 		final var testRole = new TestRole(roleKey(roleClass), roleClass.getSimpleName());
 		dictionary.addDescription(testRole, descriptionFrom(roleAnnotation));
 		dictionary.getRoles().put(testRole.getId(), testRole);
@@ -86,7 +80,10 @@ public class ClassToDictionaryVisitor {
 	}
 
 	private void processActors(Class<?> unprocessedActor) {
-		final var actorsAnnotation = unprocessedActor.getAnnotation(TCActors.class);
+		final var actorsAnnotation = Objects.requireNonNull(unprocessedActor.getAnnotation(TCActors.class));
+		if (actorsAnnotation.value() == null) {
+			throw new IllegalStateException("value must not be null");
+		}
 		for (var actorDef : actorsAnnotation.value()) {
 			final var actorAndSimpleName = actorDef.split("\\|");
 			if (actorAndSimpleName.length < 2) {
@@ -197,7 +194,7 @@ public class ClassToDictionaryVisitor {
 	}
 
 	private void processMethodAnnotation(final IdObject idObject, final Method apiMethod) {
-		final var methodAnnotation = apiMethod.getAnnotation(TCApi.class);
+		final var methodAnnotation = Objects.requireNonNull(apiMethod.getAnnotation(TCApi.class));
 		dictionary.addDescription(idObject, descriptionFrom(methodAnnotation));
 	}
 

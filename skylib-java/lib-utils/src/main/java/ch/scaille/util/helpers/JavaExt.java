@@ -158,4 +158,9 @@ public class JavaExt {
 		return new IllegalStateException("Not implemented");
 	}
 
+	public static void failIfFalse(boolean flag, Supplier<RuntimeException> throwable) {
+		if (!flag) {
+			throw throwable.get();
+		}
+	}
 }

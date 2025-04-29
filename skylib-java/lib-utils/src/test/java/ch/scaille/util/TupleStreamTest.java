@@ -26,7 +26,7 @@ class TupleStreamTest {
 						.toList());
 		Assertions.assertEquals(List.of(1, 2, 2, 3, 3, 4),
 				Stream.of(1, 2, 3)
-						.flatMap(TupleStream.<Integer, Integer>ofStream(i -> Stream.of(i, i + 1)))
+						.flatMap(TupleStream.ofStream(i -> Stream.of(i, i + 1)))
 						.map(Tuple::y)
 						.toList());
 

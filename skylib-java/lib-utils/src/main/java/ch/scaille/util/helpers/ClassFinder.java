@@ -24,6 +24,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -210,15 +211,15 @@ public class ClassFinder {
 		}
 
 		private Stream<Class<?>> scan(final Path rootOfPackage, String aPackage) throws IOException {
-			try (var walk = Files.walk(rootOfPackage.resolve(aPackage.replace('.', '/')))) {
-				// We need a terminal operation before the close
-				final Set<Class<?>> result = walk.map(rootOfPackage::relativize). //
-						map(Path::toString).filter(p -> p.endsWith(CLASS_EXTENSION)). //
-						map(p -> p.replace(CLASS_EXTENSION, "").replace('/', '.').replace("\\", "."))
+			return StreamExt.onCloseableF(Files.walk(rootOfPackage.resolve(aPackage.replace('.', '/'))),
+				// We need a terminal operation before the close. Also, the toCollection is needed for cast reasons
+				walk -> walk.map(rootOfPackage::relativize)
+						.map(Path::toString)
+						.filter(p -> p.endsWith(CLASS_EXTENSION))
+						.map(p -> p.replace(CLASS_EXTENSION, "").replace('/', '.').replace("\\", "."))
 						.map(ClassFinder.this::handleClass)
-						.collect(Collectors.toSet());
-				return result.stream();
-			}
+						.collect(Collectors.toCollection((Supplier<HashSet<Class<?>>>) HashSet::new)))
+					.stream();
 		}
 
 	}

@@ -98,7 +98,7 @@ public class ExamplePage extends PagePilot {
 	}
 
 	public void assertElementChange() {
-		var changedElement = on(p -> p.findElement(TEXT_XPATH));
+		var changedElement = on(driver -> driver.findElement(TEXT_XPATH));
 		changedElement.expectMutations(mutation -> "textContent".equals(mutation.getAttributeName()));
 		on(elementToBeClickable(ELEMENT_CHANGE_TEST)).failUnless().clicked();
 		// Explicitly test using WebElement as source

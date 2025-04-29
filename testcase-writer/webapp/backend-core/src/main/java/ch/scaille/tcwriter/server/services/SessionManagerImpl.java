@@ -41,11 +41,11 @@ public class SessionManagerImpl implements SessionManager {
 		}
 	}
 
-	private static class SpringSessionAccess implements SessionAccessor {
+	private static class SpringSessionAccessor implements SessionAccessor {
 
 		private final Session session;
 
-		public SpringSessionAccess(Session session) {
+		public SpringSessionAccessor(Session session) {
 			this.session = session;
 		}
 
@@ -84,7 +84,7 @@ public class SessionManagerImpl implements SessionManager {
 
 	@Override
 	public SessionGetSet<String> webSocketSessionIdOf(Session session, String tabId) {
-		return webSocketSessionIdOf(new SpringSessionAccess(session), tabId);
+		return webSocketSessionIdOf(new SpringSessionAccessor(session), tabId);
 	}
 
 }

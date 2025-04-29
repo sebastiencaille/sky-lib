@@ -69,7 +69,7 @@ class ComponentTest {
 		final var testComponent = new TestComponent(pilot);
 		final var poller = new PollingBuilder<>(testComponent);
 		final var successResult = poller.failUnless().get(o -> TEST_TEXT);
-		Assertions.assertEquals(TEST_TEXT, successResult.get());
+		Assertions.assertEquals(TEST_TEXT, successResult.orElseThrow());
 		final var failureResult = poller
 				.with(cfg -> cfg.timingOutAfter(Duration.ofMillis(10)))
 				.evaluateThat().get(o -> null);

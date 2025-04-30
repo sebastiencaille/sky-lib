@@ -45,7 +45,7 @@ public class ListEvent<T> {
 		if (objects.size() > 1) {
 			throw new IllegalStateException("Event has more than one object");
 		}
-		return objects.get(0);
+		return objects.getFirst();
 	}
 
 }

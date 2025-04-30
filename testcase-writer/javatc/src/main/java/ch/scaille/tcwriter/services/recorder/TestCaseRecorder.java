@@ -193,10 +193,10 @@ public class TestCaseRecorder implements ITestCaseRecorder {
         testCase.getMetadata().setDescription(String.format("%s: execution at %s", testClassName,
                 DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss").format(LocalDateTime.now())));
 
-        actors.forEach((_, ta) -> {
-            var description = RecorderTestActors.getDescriptions().getOrDefault(ta.getId(), ta.getId());
-            tcDictionary.addActor(ta, new TestObjectDescription(description, description));
-        });
+        for (var actor: actors.values()) {
+            var description = RecorderTestActors.getDescriptions().getOrDefault(actor.getId(), actor.getId());
+            tcDictionary.addActor(actor, new TestObjectDescription(description, description));
+        }
         testCase.getSteps().addAll(testSteps);
         testParameterValues.values().stream().map(TestParameterValue::getValueFactory)
                 .filter(t -> t.getNature() == ParameterNature.REFERENCE)

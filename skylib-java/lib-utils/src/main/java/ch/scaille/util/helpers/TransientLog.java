@@ -30,12 +30,12 @@ public class TransientLog {
 		bucketCount++;
 		if (bucketCount == bucketSize) {
 			bucketCount = 0;
-			logs.add(0, currentBucket.toString());
+			logs.addFirst(currentBucket.toString());
 			currentBucket = new StringBuilder();
 		}
 		if (lineCount > maxLineNumber) {
 			lineCount -= bucketSize;
-			logs.remove(logs.size() - 1);
+			logs.removeLast();
 		}
 
 	}

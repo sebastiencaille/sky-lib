@@ -3,6 +3,7 @@ package ch.scaille.gui.model;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,6 +55,7 @@ import ch.scaille.util.helpers.StreamExt;
 public class ListModelContent<T> extends AbstractListModel<T>
 		implements ISourceModel<T>, Iterable<T>, ListModelRef<T> {
 
+	@Serial
 	private static final long serialVersionUID = 5327890361188939439L;
 
 	private class Edition implements IEdition<T> {
@@ -615,6 +617,7 @@ public class ListModelContent<T> extends AbstractListModel<T>
 		return getClass().getSimpleName() + ":[" + name + ", " + viewProperty + ']';
 	}
 
+	@Serial
 	private void readObject(final java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
 		stream.defaultReadObject();
 		changeSupport = PropertyChangeSupportController.mainGroup(this);

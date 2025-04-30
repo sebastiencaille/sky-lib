@@ -17,16 +17,12 @@ public class DateRenderer extends DefaultTableCellRenderer {
 	public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
 			final boolean hasFocus, final int row, final int column) {
 		super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-		final TemporalAccessor accessor;
-		if (value instanceof TemporalAccessor temporalValue) {
-			accessor = temporalValue;
-		} else if (value instanceof Date dateValue) {
-			accessor = LocalDateTime.ofInstant(dateValue.toInstant(), ZoneId.systemDefault());
-		} else if (value instanceof Long longValue) {
-			accessor = LocalDateTime.ofInstant(Instant.ofEpochMilli(longValue), ZoneId.systemDefault());
-		} else {
-			accessor = null;
-		}
+		final var accessor = switch (value) {
+			case TemporalAccessor temporalValue -> temporalValue;
+			case Date dateValue -> LocalDateTime.ofInstant(dateValue.toInstant(), ZoneId.systemDefault());
+			case Long longValue -> LocalDateTime.ofInstant(Instant.ofEpochMilli(longValue), ZoneId.systemDefault());
+			default -> null;
+		};
 
 		if (accessor != null) {
 			setText(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm").format(accessor));

@@ -1,6 +1,7 @@
 package ch.scaille.javabeans.properties;
 
 import java.beans.PropertyChangeListener;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
@@ -24,6 +25,7 @@ import ch.scaille.javabeans.PropertyEvent.EventKind;
  */
 public abstract class AbstractProperty implements IComponentChangeSource, Serializable {
 
+	@Serial
 	private static final long serialVersionUID = -4450857469217114845L;
 
 	public interface ErrorNotifier {

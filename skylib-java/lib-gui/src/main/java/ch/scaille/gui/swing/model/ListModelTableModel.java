@@ -8,6 +8,8 @@ import javax.swing.table.AbstractTableModel;
 import ch.scaille.gui.model.ListModel;
 import ch.scaille.util.helpers.Logs;
 
+import java.io.Serial;
+
 /**
  * Table model based on a {@link ListModel}, with enum based column identifiers.
  * <p>
@@ -20,6 +22,7 @@ import ch.scaille.util.helpers.Logs;
  */
 public abstract class ListModelTableModel<T, C extends Enum<C>> extends AbstractTableModel implements ListDataListener {
 
+	@Serial
 	private static final long serialVersionUID = -877625721248108739L;
 
 	public static final int TABLE_ABOUT_TO_CHANGE = 98;

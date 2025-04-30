@@ -135,14 +135,13 @@ public class SwingPilot extends ch.scaille.testing.testpilot.GuiPilot {
 	public void dumpHierarchy(final Container container, final StringBuilder result, final String indent) {
 		Arrays.stream(container.getComponents()).forEach(c -> {
 			result.append(indent).append(c.getClass()).append('[');
-			if (c instanceof JLabel label) {
-				result.append(label.getText());
-			} else if (c instanceof JTextComponent textComponent) {
-				result.append(textComponent.getText());
-			} else if (c instanceof AbstractButton button) {
-				result.append(button.getText());
-			}
-			result.append("]\n");
+			final var text = switch(c) {
+				case JLabel label -> label.getText();
+				case JTextComponent textComponent -> textComponent.getText();
+				case AbstractButton button -> button.getText();
+				default -> c.getClass().getSimpleName();
+			};
+			result.append(text).append("]\n");
 			if (c instanceof Container childContainer) {
 				dumpHierarchy(childContainer, result, indent + "  ");
 			}

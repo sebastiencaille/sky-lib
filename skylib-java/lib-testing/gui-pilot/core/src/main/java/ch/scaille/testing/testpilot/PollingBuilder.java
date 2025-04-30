@@ -194,11 +194,6 @@ public class PollingBuilder<C,
 	/**
 	 * Waits until a condition is applied, throwing a java assertion error in case
 	 * of failure
-	 * 
-	public T with(Consumer<V> configuration) {
-		configuration.accept(createConfigurer());
-		return (T)this;
-	}
 	 * @param assertion the text of the assertion
 	 */
 	public Unless fail(String assertion) {

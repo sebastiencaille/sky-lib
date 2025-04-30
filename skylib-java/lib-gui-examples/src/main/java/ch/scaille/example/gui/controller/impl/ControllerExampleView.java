@@ -18,6 +18,7 @@ import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.io.Serial;
 
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
@@ -38,6 +39,7 @@ import ch.scaille.util.helpers.JavaExt;
 
 public class ControllerExampleView extends JFrame {
 
+	@Serial
 	private static final long serialVersionUID = -7524991791160097387L;
 	private final JPanel mainContainer;
 	private final ErrorSet errorProperty;

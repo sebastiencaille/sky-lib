@@ -114,7 +114,7 @@ public class PolicyTableColumnModel<C extends Enum<C>> extends DefaultTableColum
 		if (remainingWidth > 0 && remainingPercentWidthCols != null && !remainingPercentWidthCols.isEmpty()) {
 			final var percentSum = (Integer) remainingPercentWidthCols.stream().mapToInt(c -> ((PercentOfAvailableSpaceColumn<C>) c).getPercent()).sum();
 			if (percentSum == 100) {
-				final var lastPercentColumn = remainingPercentWidthCols.get(remainingPercentWidthCols.size() - 1);
+				final var lastPercentColumn = remainingPercentWidthCols.getLast();
 				lastPercentColumn.setComputedWidth(lastPercentColumn.getWidth() + remainingWidth);
 			}
 		}

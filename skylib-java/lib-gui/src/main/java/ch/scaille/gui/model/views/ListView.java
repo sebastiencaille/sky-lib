@@ -1,5 +1,6 @@
 package ch.scaille.gui.model.views;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.function.Predicate;
@@ -16,6 +17,7 @@ import java.util.function.Predicate;
  */
 public class ListView<T> implements IListView<T>, Serializable {
 
+	@Serial
 	private static final long serialVersionUID = -4696996416566266010L;
 
 	/**

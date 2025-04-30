@@ -10,7 +10,6 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import ch.scaille.generators.util.GenerationMetadata;
 import ch.scaille.generators.util.JavaCodeGenerator;
@@ -33,8 +32,6 @@ import ch.scaille.tcwriter.services.generators.visitors.HumanReadableVisitor;
 public class TestCaseToJunitVisitor {
 
 	private final Template template;
-
-	private final Map<Integer, AtomicInteger> varIndex = new HashMap<>();
 
 	private final Map<TestParameterValue, String> varNames = new IdentityHashMap<>();
 
@@ -189,7 +186,7 @@ public class TestCaseToJunitVisitor {
 	}
 
 	private String varNameOf(final TestStep step, final TestParameterValue testValue) {
-		final var nextIndex = varIndex.computeIfAbsent(step.getOrdinal(), _ -> new AtomicInteger(1)).getAndIncrement();
+		final var nextIndex = step.getOrdinal();
 		return varNames.computeIfAbsent(testValue, v -> String.format("step_%s_%s_%s" , step.getOrdinal(), v.getValueFactory().getName().replace('.', '_'),
 				nextIndex));
 	}

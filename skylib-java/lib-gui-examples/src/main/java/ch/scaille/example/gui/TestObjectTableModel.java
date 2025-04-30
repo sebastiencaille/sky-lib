@@ -4,8 +4,11 @@ import ch.scaille.example.gui.TestObjectTableModel.Columns;
 import ch.scaille.gui.model.ListModel;
 import ch.scaille.gui.swing.model.ListModelTableModel;
 
+import java.io.Serial;
+
 public class TestObjectTableModel extends ListModelTableModel<TestObject, Columns> {
 
+	@Serial
 	private static final long serialVersionUID = 5035556443525716721L;
 
 	public enum Columns {

@@ -3,8 +3,6 @@ package ch.scaille.util.helpers;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
@@ -112,17 +110,5 @@ public interface StreamExt {
 					"Collection has an instances of " + mismatches + ", which are not " + clazz);
 		}
 	}
-
-	static <T, R> R onCloseableF(Stream<T> stream, Function<Stream<T>, R> streamActions) {
-		try (stream) {
-			return streamActions.apply(stream);
-		}
-	}
-	static <T> void onCloseableC(Stream<T> stream, Consumer<Stream<T>> streamActions) {
-		try (stream) {
-			streamActions.accept(stream);
-		}
-	}
-
 
 }

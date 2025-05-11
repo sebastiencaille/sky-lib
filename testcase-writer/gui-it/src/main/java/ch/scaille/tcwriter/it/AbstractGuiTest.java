@@ -12,8 +12,6 @@ import java.time.Duration;
 
 import javax.swing.SwingUtilities;
 
-import ch.scaille.util.helpers.LambdaExt;
-import ch.scaille.util.helpers.StreamExt;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
@@ -34,6 +32,7 @@ import ch.scaille.tcwriter.services.recorder.TestCaseRecorder;
 import ch.scaille.tcwriter.services.recorder.TestCaseRecorderAspect;
 import ch.scaille.tcwriter.services.testexec.JUnitTestExecutor;
 import ch.scaille.util.helpers.ClassLoaderHelper;
+import ch.scaille.util.helpers.LambdaExt;
 import ch.scaille.util.helpers.Logs;
 
 @TCActors({ "tcWriter|TestWriterRole|Test writer|test writer",
@@ -55,7 +54,9 @@ public class AbstractGuiTest {
 		if (!Files.exists(tcPath)) {
 			Files.createDirectory(tcPath);
 		}
-		StreamExt.onCloseableC(Files.list(tcPath), s -> s.forEach(LambdaExt.uncheckedC(Files::delete)));
+		try (var stream = Files.list(tcPath)) {
+			stream.forEach(LambdaExt.uncheckedC(Files::delete));
+		}
 
 		final var dictionariesPath = RESOURCE_FOLDER.resolve("dictionaries");
 		if (!Files.exists(dictionariesPath)) {

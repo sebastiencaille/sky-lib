@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import ch.scaille.util.helpers.Logs;
-import ch.scaille.util.helpers.StreamExt;
 import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
 
 /**
@@ -69,14 +68,15 @@ public class FileSystemDao<T> extends AbstractFSSerializationDao<T> {
 			return Stream.empty();
 		}
 		// basic filter
-		return StreamExt.onCloseableF(Files.list(folder), folders->
-			folders.filter(f -> (filter == null || f.getFileName().toString().startsWith(filter))
+		try (var stream = Files.list(folder)) {
+			return stream.filter(f -> (filter == null || f.getFileName().toString().startsWith(filter))
 				&& dataHandlerRegistry.find(extensionOf(f.toString())).isPresent())
 				.map(p -> buildMetadata(nameAndExtensionOf(folder.relativize(p).toString())[0], p.toString()))
 				// filter on the metadata
 				.filter(m -> filterMetaData(filter, m.orElse(null)))
-				.map(Optional::get).toList())
-			.stream();
+				.map(Optional::get)
+				.toList().stream();
+		}
 	}
 
 	private boolean filterMetaData(final String filter, ResourceMetaData m) {

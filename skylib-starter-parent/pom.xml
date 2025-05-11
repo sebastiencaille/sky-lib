@@ -29,9 +29,9 @@
 
 		<jetbrain-annotations.version>26.0.2</jetbrain-annotations.version>
 		
-		<swagger-parser.version>2.1.26</swagger-parser.version>
+		<swagger-parser.version>2.1.27</swagger-parser.version>
 		<swagger.version>2.2.30</swagger.version>
-		<springdoc-openapi.version>2.8.6</springdoc-openapi.version>
+		<springdoc-openapi.version>2.8.8</springdoc-openapi.version>
 
 		<undertow.version>2.3.18.Final</undertow.version>
 		<liquibase.version>4.31.1</liquibase.version>
@@ -40,7 +40,7 @@
 		<junit-jupiter.version>5.12.2</junit-jupiter.version>
 		<junit.version>4.13.2</junit.version>
 		<junit-platform-console-standalone.version>1.12.2</junit-platform-console-standalone.version>
-		<selenium.version>4.31.0</selenium.version>
+		<selenium.version>4.32.0</selenium.version>
 		<h2.version>2.3.232</h2.version>
 
 		<coverage.temp>${java.io.tmpdir}/coverage/${basedir}</coverage.temp>

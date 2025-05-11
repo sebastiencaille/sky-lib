@@ -211,15 +211,16 @@ public class ClassFinder {
 		}
 
 		private Stream<Class<?>> scan(final Path rootOfPackage, String aPackage) throws IOException {
-			return StreamExt.onCloseableF(Files.walk(rootOfPackage.resolve(aPackage.replace('.', '/'))),
+			try (var stream = Files.walk(rootOfPackage.resolve(aPackage.replace('.', '/')))) {
 				// We need a terminal operation before the close. Also, the toCollection is needed for cast reasons
-				walk -> walk.map(rootOfPackage::relativize)
+				return stream.map(rootOfPackage::relativize)
 						.map(Path::toString)
 						.filter(p -> p.endsWith(CLASS_EXTENSION))
 						.map(p -> p.replace(CLASS_EXTENSION, "").replace('/', '.').replace("\\", "."))
 						.map(ClassFinder.this::handleClass)
-						.collect(Collectors.toCollection((Supplier<HashSet<Class<?>>>) HashSet::new)))
-					.stream();
+						.collect(Collectors.toCollection((Supplier<HashSet<Class<?>>>) HashSet::new))
+						.stream();
+			}
 		}
 
 	}

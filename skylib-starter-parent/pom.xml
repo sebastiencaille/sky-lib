@@ -21,33 +21,33 @@
 	<properties>
 		<aspectj.version>1.9.24</aspectj.version>
 		<spring-session.version>3.5.0</spring-session.version>
-		<jackson-bom.version>2.19.0</jackson-bom.version>
+		<jackson-bom.version>2.19.1</jackson-bom.version>
 		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
 		<guava.version>33.4.8-jre</guava.version>
 		<logback.version>1.5.18</logback.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
-		<hibernate-validator.version>9.0.0.Final</hibernate-validator.version>
+		<hibernate-validator.version>9.0.1.Final</hibernate-validator.version>
 
 		<jetbrain-annotations.version>26.0.2</jetbrain-annotations.version>
 		
 		<swagger-parser.version>2.1.29</swagger-parser.version>
-		<swagger.version>2.2.32</swagger.version>
-		<springdoc-openapi.version>2.8.8</springdoc-openapi.version>
+		<swagger.version>2.2.33</swagger.version>
+		<springdoc-openapi.version>2.8.9</springdoc-openapi.version>
 
 		<undertow.version>2.3.18.Final</undertow.version>
 		<liquibase.version>4.32.0</liquibase.version>
 
 		<mockito.version>5.18.0</mockito.version>
-		<junit-jupiter.version>5.13.0</junit-jupiter.version>
+		<junit-jupiter.version>5.13.1</junit-jupiter.version>
 		<junit.version>4.13.2</junit.version>
-		<junit-platform-console-standalone.version>1.13.0</junit-platform-console-standalone.version>
+		<junit-platform-console-standalone.version>1.13.1</junit-platform-console-standalone.version>
 		<selenium.version>4.33.0</selenium.version>
 		<h2.version>2.3.232</h2.version>
 
 		<coverage.temp>${java.io.tmpdir}/coverage/${basedir}</coverage.temp>
 
 		<maven-install-plugin.version>3.1.4</maven-install-plugin.version>
-		<build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
+		<build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
 		<maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
 		<maven-help-plugin.version>3.5.1</maven-help-plugin.version>
 		<maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>

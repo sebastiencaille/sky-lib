@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.0</version>
+		<version>3.5.3</version>
 		<relativePath />
 	</parent>
 
@@ -20,7 +20,7 @@
 
 	<properties>
 		<aspectj.version>1.9.24</aspectj.version>
-		<spring-session.version>3.5.0</spring-session.version>
+		<spring-session.version>3.5.1</spring-session.version>
 		<jackson-bom.version>2.19.1</jackson-bom.version>
 		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
 		<guava.version>33.4.8-jre</guava.version>
@@ -30,8 +30,8 @@
 
 		<jetbrain-annotations.version>26.0.2</jetbrain-annotations.version>
 		
-		<swagger-parser.version>2.1.29</swagger-parser.version>
-		<swagger.version>2.2.33</swagger.version>
+		<swagger-parser.version>2.1.30</swagger-parser.version>
+		<swagger.version>2.2.34</swagger.version>
 		<springdoc-openapi.version>2.8.9</springdoc-openapi.version>
 
 		<undertow.version>2.3.18.Final</undertow.version>
@@ -256,7 +256,7 @@
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>flatten-maven-plugin</artifactId>
-					<version>1.7.0</version>
+					<version>1.7.1</version>
 					<configuration>
 						<updatePomFile>true</updatePomFile>
 						<flattenMode>resolveCiFriendliesOnly</flattenMode>

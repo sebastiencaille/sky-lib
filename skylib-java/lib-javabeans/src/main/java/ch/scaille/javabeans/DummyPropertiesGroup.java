@@ -1,6 +1,7 @@
 package ch.scaille.javabeans;
 
 import java.beans.PropertyChangeListener;
+import java.util.function.Consumer;
 
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.IPropertyEventListener;
@@ -18,24 +19,30 @@ public class DummyPropertiesGroup implements IPropertiesGroup {
 	}
 
 	@Override
-	public void attachAll() {
+	public void forAllProperties(Consumer<AbstractProperty> applier) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void flushChanges() {
 		// noop
 	}
 
 	@Override
-	public void detachAll() {
+	public void bufferizeChanges() {
 		// noop
 
 	}
 
 	@Override
-	public void transmitAllToComponentOnly() {
+	public void transmitChangesOnlyToComponent() {
 		// noop
 
 	}
 
 	@Override
-	public void enableAllTransmit() {
+	public void transmitChangesBothWays() {
 		// noop
 
 	}

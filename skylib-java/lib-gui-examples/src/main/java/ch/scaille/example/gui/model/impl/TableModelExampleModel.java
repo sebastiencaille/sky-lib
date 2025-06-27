@@ -25,7 +25,7 @@ public class TableModelExampleModel {
 	}
 
 	public void setCreated() {
-		changeSupport.attachAll();
+		changeSupport.flushChanges();
 	}
 
 }

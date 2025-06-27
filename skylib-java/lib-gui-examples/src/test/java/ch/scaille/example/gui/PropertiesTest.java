@@ -25,7 +25,7 @@ class PropertiesTest {
 
 		p1.contextualChain(p2).bind(Converters.listen((v, k) -> v + k.getValue())).listen(v -> accumlator[0] = v);
 		
-		changeSupport.attachAll();
+		changeSupport.flushChanges();
 		
 		p1.setValue(this, 1);
 		assertEquals(1, accumlator[0]);
@@ -48,7 +48,7 @@ class PropertiesTest {
 
 		p1.contextualChain(new Context(p2)).bind(Converters.listen((v, k) -> v + k.ctxt.getValue())).listen(v -> accumlator[0] = v);
 		
-		changeSupport.attachAll();
+		changeSupport.flushChanges();
 		
 		p1.setValue(this, 1);
 		assertEquals(1, accumlator[0]);

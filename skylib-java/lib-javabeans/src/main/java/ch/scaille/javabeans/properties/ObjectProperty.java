@@ -104,9 +104,9 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 	}
 
 	@Override
-	public void attach() {
+	public void flush() {
 		boolean mustUpdate = !mustSendToComponent();
-		super.attach();
+		super.flush();
 		if (mustUpdate) {
 			propertySupport.getChangeSupport().firePropertyChange(getName(), this, null, getValue());
 		}

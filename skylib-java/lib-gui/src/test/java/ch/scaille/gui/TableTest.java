@@ -37,7 +37,7 @@ class TableTest {
 
 		final var support = PropertyChangeSupportController.mainGroup(this);
 		final var model = new Model(GuiModel.with(support));
-		support.attachAll();
+		support.flushChanges();
 
 		final var listModel = new ListModel<>(VIEW);
 		final var tableModel = new TestObjectTableModel(listModel);

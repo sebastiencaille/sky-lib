@@ -22,7 +22,7 @@ class SwingBindingsTest {
 
 		public TestGuiModel(final GuiController controller) {
 			super(of(controller));
-			getPropertySupport().attachAll();
+			getPropertySupport().flushChanges();
 		}
 	}
 
@@ -41,7 +41,7 @@ class SwingBindingsTest {
 		final IBindingController cbBinding = model.stringProperty
 				.bind(Converters.converter(Boolean::valueOf, Object::toString))
 				.bind(SwingBindings.selected(cb));
-		model.stringProperty.attach();
+		model.stringProperty.flush();
 
 		assertEquals(Boolean.FALSE.toString(), model.stringProperty.getValue());
 		assertFalse(cb.isSelected(), "cb.isSelected");

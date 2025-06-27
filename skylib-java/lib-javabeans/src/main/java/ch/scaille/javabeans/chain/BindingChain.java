@@ -168,7 +168,7 @@ public class BindingChain implements IBindingChainModifier {
 	
 	public Vetoer getVetoerImpl() {
 		if (vetoer == null) {
-			vetoer = new Vetoer(TransmitMode.BOTH);
+			vetoer = new Vetoer(TransmitMode.TRANSMIT);
 		}
 		return vetoer;
 	}

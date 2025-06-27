@@ -73,8 +73,8 @@ public class LongProperty extends AbstractTypedProperty<Long> {
 	}
 
 	@Override
-	public void attach() {
-		super.attach();
+	public void flush() {
+		super.flush();
 		propertySupport.getChangeSupport().firePropertyChange(getName(), this, null, value);
 	}
 

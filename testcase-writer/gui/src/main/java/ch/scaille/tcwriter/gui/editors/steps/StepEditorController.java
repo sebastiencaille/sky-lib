@@ -50,7 +50,7 @@ public class StepEditorController extends GuiController {
 			if (step == null) {
 				emptySelectors();
 				emptyParam0();
-				changeSupport.attachAll();
+				changeSupport.flushChanges();
 				return;
 			}
 			model.getActor().setValue(this, step.getActor());

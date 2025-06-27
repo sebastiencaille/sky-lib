@@ -1,6 +1,7 @@
 package ch.scaille.javabeans;
 
 import java.beans.PropertyChangeListener;
+import java.util.function.Consumer;
 
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.IPropertyEventListener;
@@ -17,22 +18,24 @@ public interface IPropertiesGroup {
 
 	void addPropertyChangeListener(String name, PropertyChangeListener propertyChangeListener);
 
-	/**
-	 * Attaches all the properties to the bindings.
-	 * <p>
-	 * Should be called after all the components are bound to the properties
-	 * </p>
-	 */
-	void attachAll();
+	void forAllProperties(Consumer<AbstractProperty> applier);
 
 	/**
 	 * Detaches all the properties of this scope.
 	 */
-	void detachAll();
+	void bufferizeChanges();
 
-	void transmitAllToComponentOnly();
+	/**
+	 * Flushes all the properties to the bindings and enable the transmission.
+	 * <p>
+	 * Should be called after all the components are bound to the properties
+	 * </p>
+	 */
+	void flushChanges();
+	
+	void transmitChangesOnlyToComponent();
 
-	void enableAllTransmit();
+	void transmitChangesBothWays();
 
 	void disposeBindings();
 

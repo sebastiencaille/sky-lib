@@ -71,7 +71,7 @@ public abstract class AbstractProperty implements IComponentChangeSource, Serial
 	 */
 	protected transient ErrorNotifier errorNotifier = emptyErrorNotifier();
 
-	protected transient TransmitMode transmitMode = TransmitMode.NONE;
+	protected transient TransmitMode transmitMode = TransmitMode.BUFFERIZE;
 
 	public abstract void reset(Object caller);
 
@@ -107,8 +107,8 @@ public abstract class AbstractProperty implements IComponentChangeSource, Serial
 		return transmitMode.toComponent;
 	}
 
-	public void attach() {
-		setTransmitMode(TransmitMode.BOTH);
+	public void flush() {
+		setTransmitMode(TransmitMode.TRANSMIT);
 	}
 
 	public void setErrorNotifier(final ErrorNotifier errorNotifier) {

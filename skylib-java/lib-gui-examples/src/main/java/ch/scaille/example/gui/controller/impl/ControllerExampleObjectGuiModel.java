@@ -84,10 +84,10 @@ public class ControllerExampleObjectGuiModel extends GuiModel implements IObject
     @Override
     public void load() {
     	try {
-    		getPropertySupport().transmitAllToComponentOnly();
+    		getPropertySupport().transmitChangesOnlyToComponent();
 			Arrays.stream(allProperties).forEach(p -> p.load(this));
 		} finally {
-			getPropertySupport().enableAllTransmit();
+			getPropertySupport().transmitChangesBothWays();
 		}
     }
 

@@ -24,7 +24,7 @@ public class ConfigDao implements IConfigDao {
 
 	public ConfigDao(DaoFactory daoFactory, String locator, StorageDataHandlerRegistry configSerDeserializerRegistry) {
 		this.loader = daoFactory.loaderOf(TCConfig.class, locator, configSerDeserializerRegistry);
-		this.propertiesGroup.enableAllTransmit();
+		this.propertiesGroup.transmitChangesBothWays();
 	}
 	
 	@Override

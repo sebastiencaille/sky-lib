@@ -123,7 +123,7 @@ public class GuiModel implements IPropertiesOwner {
 	}
 
 	public void activate() {
-		configuration.propertySupport.attachAll();
+		configuration.propertySupport.flushChanges();
 	}
 
 }

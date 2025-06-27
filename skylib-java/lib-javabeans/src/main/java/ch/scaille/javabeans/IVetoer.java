@@ -13,7 +13,7 @@ public interface IVetoer {
 		/**
 		 * When detached. Properties/components are not updated
 		 */
-		NONE(false, false),
+		BUFFERIZE(false, false),
 
 		/**
 		 * Component are kept in sync with property updates, but component changes are
@@ -25,7 +25,7 @@ public interface IVetoer {
 		/**
 		 * When attached. Properties/component are fully kept in sync
 		 */
-		BOTH(true, true);
+		TRANSMIT(true, true);
 
 		public final boolean toComponent;
 		public final boolean toProperty;

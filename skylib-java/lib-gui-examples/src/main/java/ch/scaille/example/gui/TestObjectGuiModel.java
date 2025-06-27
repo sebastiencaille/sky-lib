@@ -65,10 +65,10 @@ public class TestObjectGuiModel extends GuiModel implements IObjectGuiModel<ch.s
     @Override
     public void load() {
     	try {
-    		getPropertySupport().transmitAllToComponentOnly();
+    		getPropertySupport().transmitChangesOnlyToComponent();
 			Arrays.stream(allProperties).forEach(p -> p.load(this));
 		} finally {
-			getPropertySupport().enableAllTransmit();
+			getPropertySupport().transmitChangesBothWays();
 		}
     }
 

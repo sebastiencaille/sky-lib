@@ -49,7 +49,7 @@ public class EndOfChain<T, K> implements IChainBuilder<T, K> {
 				@Override
 				public void reloadComponentValue() {
 					// should trigger the listeners
-					chain.getProperty().attach();
+					chain.getProperty().flush();
 				}
 			});
 		}

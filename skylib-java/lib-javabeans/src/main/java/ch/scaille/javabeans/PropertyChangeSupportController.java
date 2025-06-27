@@ -13,10 +13,10 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import ch.scaille.javabeans.IVetoer.TransmitMode;
-import ch.scaille.javabeans.PropertyEvent.EventKind;
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.IPropertyEventListener;
 
@@ -45,7 +45,7 @@ public class PropertyChangeSupportController {
 	}
 
 	private final PropertyChangeSupport support;
-	
+
 	/** Information about properties currently called */
 	private final Map<String, Deque<CallInfo>> callInfo = new HashMap<>();
 
@@ -54,7 +54,7 @@ public class PropertyChangeSupportController {
 	public static IPropertiesGroup mainGroup(Object bean) {
 		return new PropertyChangeSupportController(bean).scoped(bean);
 	}
-	
+
 	public PropertyChangeSupportController(final Object bean) {
 		support = new PropertyChangeSupport(bean);
 	}
@@ -158,25 +158,30 @@ public class PropertyChangeSupportController {
 		public void register(final AbstractProperty abstractProperty) {
 			properties.add(abstractProperty);
 		}
-
+		
 		@Override
-		public void attachAll() {
-			properties.forEach(AbstractProperty::attach);
+		public void forAllProperties(Consumer<AbstractProperty> applier) {
+			properties.forEach(applier);
 		}
 
 		@Override
-		public void detachAll() {
-			properties.forEach(p -> p.setTransmitMode(TransmitMode.NONE));
+		public void flushChanges() {
+			forAllProperties(AbstractProperty::flush);
 		}
 
 		@Override
-		public void transmitAllToComponentOnly() {
-			properties.forEach(p -> p.setTransmitMode(TransmitMode.TO_COMPONENT_ONLY));
+		public void bufferizeChanges() {
+			forAllProperties(p -> p.setTransmitMode(TransmitMode.BUFFERIZE));
 		}
 
 		@Override
-		public void enableAllTransmit() {
-			properties.forEach(p -> p.setTransmitMode(TransmitMode.BOTH));
+		public void transmitChangesOnlyToComponent() {
+			forAllProperties(p -> p.setTransmitMode(TransmitMode.TO_COMPONENT_ONLY));
+		}
+
+		@Override
+		public void transmitChangesBothWays() {
+			forAllProperties(p -> p.setTransmitMode(TransmitMode.TRANSMIT));
 		}
 
 		@Override
@@ -187,7 +192,7 @@ public class PropertyChangeSupportController {
 
 		@Override
 		public void disposeBindings() {
-			properties.forEach(PropertyChangeSupportController.this::unregister);
+			forAllProperties(PropertyChangeSupportController.this::unregister);
 			listeners.forEach(
 					l -> PropertyChangeSupportController.this.removePropertyChangeListener(l.name, l.listener));
 		}
@@ -195,10 +200,16 @@ public class PropertyChangeSupportController {
 		@Override
 		public IPropertyEventListener detachWhenPropLoading() {
 			return (caller, event) -> {
-				if (event.kind() == EventKind.BEFORE) {
-					transmitAllToComponentOnly();
-				} else if (event.kind() == EventKind.AFTER) {
-					enableAllTransmit();
+				switch (event.kind()) {
+				case BEFORE:
+					// Disable component -> properties keep current value 
+					transmitChangesOnlyToComponent();
+					break;
+				case AFTER:
+					transmitChangesBothWays();
+					break;
+				default:
+					// noop
 				}
 			};
 		}

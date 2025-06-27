@@ -104,7 +104,7 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 	 */
 	public IBindingController listenActive(final Consumer<T> binding) {
 		final var listen = createBindingChain().listen(binding);
-		listen.getVetoer().inhibitTransmitToComponentWhen(p -> p.getTransmitMode() != TransmitMode.BOTH);
+		listen.getVetoer().inhibitTransmitToComponentWhen(p -> p.getTransmitMode() != TransmitMode.TRANSMIT);
 		return listen;
 	}
 

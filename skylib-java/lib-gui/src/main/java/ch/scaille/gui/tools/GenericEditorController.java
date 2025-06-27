@@ -38,7 +38,7 @@ public class GenericEditorController<T> {
 		final var view = viewFactory.apply(this);
 		props.forEach(view::addEntry);
 		view.build();
-		propertySupport.attachAll();
+		propertySupport.flushChanges();
 		return view;
 	}
 

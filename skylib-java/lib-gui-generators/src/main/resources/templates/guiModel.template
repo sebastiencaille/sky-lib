@@ -46,10 +46,10 @@ public class ${modelClass} extends GuiModel implements IObjectGuiModel<${objectC
     @Override
     public void load() {
     	try {
-    		getPropertySupport().transmitAllToComponentOnly();
+    		getPropertySupport().transmitChangesOnlyToComponent();
 			Arrays.stream(allProperties).forEach(p -> p.load(this));
 		} finally {
-			getPropertySupport().enableAllTransmit();
+			getPropertySupport().transmitChangesBothWays();
 		}
     }
 

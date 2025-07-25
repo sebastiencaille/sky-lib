@@ -83,15 +83,12 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 		return this;
 	}
 
-	public <K> IChainBuilder<T, K> contextualChain(K context) {
-		return createBindingChainWithConv().withContext(context);
-	}
 
-	public <C> IChainBuilder<C, Void> bind(final IConverter<T, C> binding) {
+	public <C> IChainBuilder<C> bind(final IConverter<T, C> binding) {
 		return createBindingChainWithConv().bind(binding);
 	}
 
-	public <C> IChainBuilder<C, Void> bind(final Function<T, C> binding) {
+	public <C> IChainBuilder<C> bind(final Function<T, C> binding) {
 		return createBindingChainWithConv().bind(binding);
 	}
 

@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import ch.scaille.javabeans.Converters;
 import ch.scaille.javabeans.PropertyChangeSupportController;
 import ch.scaille.javabeans.properties.IntProperty;
 import ch.scaille.javabeans.properties.LongProperty;
+import ch.scaille.javabeans.properties.PropertiesRecord;
 
 class PropertiesTest {
 
@@ -16,45 +16,23 @@ class PropertiesTest {
 	}
 
 	@Test
-	void testContext() {
+	void testRecord() {
 
-		final var accumlator = new long[] {0}; 
+		final var accumulator = new long[] {0}; 
 		final var changeSupport = PropertyChangeSupportController.mainGroup(this);
 		final var p1 = new IntProperty("p1", changeSupport);
 		final var p2 = new LongProperty("p2", changeSupport);
 
-		p1.contextualChain(p2).bind(Converters.listen((v, k) -> v + k.getValue())).listen(v -> accumlator[0] = v);
+		PropertiesRecord.of(new P1P2(p1, p2), changeSupport).listen(p1p2 -> accumulator[0] = p1p2.p1().getValue() + p1p2.p2().getValue());
 		
 		changeSupport.flushChanges();
 		
 		p1.setValue(this, 1);
-		assertEquals(1, accumlator[0]);
+		assertEquals(1, accumulator[0]);
 
 		p2.setValue(this, 1000);
-		assertEquals(1001, accumlator[0]);
+		assertEquals(1001, accumulator[0]);
 	}
-	
-	private record Context(LongProperty ctxt) {
-		
-	}
-	
-	@Test
-	void testRecordContext() {
 
-		final var accumlator = new long[] {0}; 
-		final var changeSupport = PropertyChangeSupportController.mainGroup(this);
-		final var p1 = new IntProperty("p1", changeSupport);
-		final var p2 = new LongProperty("p2", changeSupport);
-
-		p1.contextualChain(new Context(p2)).bind(Converters.listen((v, k) -> v + k.ctxt.getValue())).listen(v -> accumlator[0] = v);
-		
-		changeSupport.flushChanges();
-		
-		p1.setValue(this, 1);
-		assertEquals(1, accumlator[0]);
-
-		p2.setValue(this, 1000);
-		assertEquals(1001, accumlator[0]);
-	}
 }
 

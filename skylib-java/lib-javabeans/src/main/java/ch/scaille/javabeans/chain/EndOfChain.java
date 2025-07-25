@@ -11,15 +11,14 @@ import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentLink;
 import ch.scaille.javabeans.Logging;
 import ch.scaille.javabeans.converters.ConversionException;
-import ch.scaille.javabeans.converters.IConverterWithContext;
+import ch.scaille.javabeans.converters.IConverter;
 
 /**
  * Chain builder
  * 
  * @param <T>
- * @param <K>
  */
-public class EndOfChain<T, K> implements IChainBuilder<T, K> {
+public class EndOfChain<T> implements IChainBuilder<T> {
 	
 	/**
 	 * Link that targets the component
@@ -75,11 +74,8 @@ public class EndOfChain<T, K> implements IChainBuilder<T, K> {
 
 	protected final IBindingChainModifier chain;
 	
-	protected final K context;
-	
-	public EndOfChain(IBindingChainModifier chain, K context) {
+	public EndOfChain(IBindingChainModifier chain) {
 		this.chain = chain;
-		this.context = context;
 	}
 
 	private IllegalStateException prop2CompOnlyException() {
@@ -108,31 +104,31 @@ public class EndOfChain<T, K> implements IChainBuilder<T, K> {
 	 * @param <N> type of the next converter
 	 */
 	@Override
-	public <N> EndOfChain<N, K> bind(final IConverterWithContext<T, N, K> converter) {
+	public <N> EndOfChain<N> bind(final IConverter<T, N> converter) {
 		converter.initialize(chain.getProperty());
-		chain.addLink(link(value -> converter.convertPropertyValueToComponentValue((T) value, context),
-				value -> converter.convertComponentValueToPropertyValue((N) value, context)));
-		return new EndOfChain<>(chain, context);
+		chain.addLink(link(value -> converter.convertPropertyValueToComponentValue((T) value),
+				value -> converter.convertComponentValueToPropertyValue((N) value)));
+		return new EndOfChain<>(chain);
 	}
 
 	/**
 	 * @param <N> type of the next converter
 	 */
 	@Override
-	public <N> EndOfChain<N, K> bind(final Function<T, N> prop2Comp, final Function<N, T> comp2Prop) {
+	public <N> EndOfChain<N> bind(final Function<T, N> prop2Comp, final Function<N, T> comp2Prop) {
 		chain.addLink(link(value -> prop2Comp.apply((T) value), value -> comp2Prop.apply((N) value)));
-		return new EndOfChain<>(chain, context);
+		return new EndOfChain<>(chain);
 	}
 
 	/**
 	 * @param <N> type of the next converter
 	 */
 	@Override
-	public <N> EndOfChain<N, K> bind(final Function<T, N> prop2Comp) {
+	public <N> EndOfChain<N> bind(final Function<T, N> prop2Comp) {
 		chain.addLink(link(value -> prop2Comp.apply((T) value), value -> {
 			throw new ConversionException("Read only");
 		}));
-		return new EndOfChain<>(chain, context);
+		return new EndOfChain<>(chain);
 	}
 
 	protected Link link(final ConversionFunction prop2Comp, final ConversionFunction comp2Prop) {

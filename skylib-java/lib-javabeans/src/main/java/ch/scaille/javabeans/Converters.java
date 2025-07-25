@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.LongFunction;
@@ -16,12 +15,10 @@ import ch.scaille.javabeans.converters.ChainInhibitedException;
 import ch.scaille.javabeans.converters.ConversionErrorToStringConverter;
 import ch.scaille.javabeans.converters.ConversionException;
 import ch.scaille.javabeans.converters.IConverter;
-import ch.scaille.javabeans.converters.IConverterWithContext;
 import ch.scaille.javabeans.converters.WriteOnlyException;
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.ConversionError;
 import ch.scaille.util.helpers.LambdaExt;
-import ch.scaille.util.helpers.LambdaExt.BiFunctionWithException;
 import ch.scaille.util.helpers.LambdaExt.FunctionWithException;
 import ch.scaille.util.text.FormatterHelper;
 
@@ -31,8 +28,8 @@ public final class Converters {
 		// noop
 	}
 
-	public static <P, C, K> IConverterWithContext<P, C, K> wrap(IConverter<P, C> converter) {
-		return new IConverterWithContext<>() {
+	public static <P, C> IConverter<P, C> wrap(IConverter<P, C> converter) {
+		return new IConverter<>() {
 
 			@Override
 			public void initialize(AbstractProperty p) {
@@ -40,50 +37,17 @@ public final class Converters {
 			}
 
 			@Override
-			public C convertPropertyValueToComponentValue(P propertyValue, K context) {
+			public C convertPropertyValueToComponentValue(P propertyValue) {
 				return converter.convertPropertyValueToComponentValue(propertyValue);
 			}
 
 			@Override
-			public P convertComponentValueToPropertyValue(C componentValue, K context) throws ConversionException {
+			public P convertComponentValueToPropertyValue(C componentValue) throws ConversionException {
 				return converter.convertComponentValueToPropertyValue(componentValue);
 			}
 		};
 	}
 
-	/**
-	 * Write only converter
-	 *
-	 * @param <T>       type on property side
-	 * @param <U>       type on component side
-	 * @param prop2comp the function to convert value from property side to
-	 *                  component side
-	 */
-	public static <T, U, K> IConverterWithContext<T, U, K> listen(final BiFunction<T, K, U> prop2comp) {
-		return converter(prop2comp, (o, k) -> {
-			throw new WriteOnlyException();
-		});
-	}
-
-	
-	public static <T, C, K> IConverterWithContext<T, C, K> converter(final BiFunction<T, K, C> prop2comp,
-			final BiFunctionWithException<C, K, T, ConversionException> comp2prop) {
-		return new IConverterWithContext<>() {
-
-			@Override
-			public C convertPropertyValueToComponentValue(final T propertyValue, K context) {
-				return prop2comp.apply(propertyValue, context);
-			}
-
-			@Override
-			public T convertComponentValueToPropertyValue(final C componentValue, K context)
-					throws ConversionException {
-				return comp2prop.apply(componentValue, context);
-			}
-
-		};
-	}
-	
 	/**
 	 * Write only converter
 	 *

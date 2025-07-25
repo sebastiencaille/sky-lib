@@ -5,7 +5,8 @@ import java.util.List;
 import ch.scaille.gui.mvc.GuiModel;
 import ch.scaille.gui.mvc.factories.ObjectTextView;
 import ch.scaille.javabeans.Converters;
-import ch.scaille.javabeans.converters.IConverterWithContext;
+import ch.scaille.javabeans.converters.IConverter;
+import ch.scaille.javabeans.properties.ListProperty;
 import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.tcwriter.model.IdObject;
 import ch.scaille.tcwriter.model.dictionary.StepClassifier;
@@ -18,16 +19,16 @@ import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 
 public class StepEditorModel extends GuiModel {
 
-	private final ObjectProperty<List<TestActor>> possibleActors = new ObjectProperty<>("possibleActors", this);
+	private final ListProperty<TestActor> possibleActors = new ListProperty<>("possibleActors", this);
 	private final ObjectProperty<TestActor> actor = new ObjectProperty<>("actor", this);
-	private final ObjectProperty<List<TestAction>> possibleActions = new ObjectProperty<>("possibleActions", this);
+	private final ListProperty<TestAction> possibleActions = new ListProperty<>("possibleActions", this);
 	private final ObjectProperty<TestAction> action = new ObjectProperty<>("action", this);
-	private final ObjectProperty<List<TestParameterFactory>> possibleSelectors = new ObjectProperty<>(
+	private final ListProperty<TestParameterFactory> possibleSelectors = new ListProperty<>(
 			"possibleSelectors", this);
 	private final ObjectProperty<TestParameterFactory> selector = new ObjectProperty<>("selector", this);
 	private final ObjectProperty<TestParameterValue> selectorValues = new ObjectProperty<>("selectorValues", this,
 			ExportableTestParameterValue.NO_VALUE);
-	private final ObjectProperty<List<TestParameterFactory>> possibleActionParameters = new ObjectProperty<>(
+	private final ListProperty<TestParameterFactory> possibleActionParameters = new ListProperty<>(
 			"possibleActionParameters", this);
 	private final ObjectProperty<TestParameterFactory> actionParameter = new ObjectProperty<>("actionParameter", this);
 	private final ObjectProperty<TestParameterValue> actionParameterValues = new ObjectProperty<>(
@@ -40,7 +41,7 @@ public class StepEditorModel extends GuiModel {
 		this.testDictionary = testDictionary;
 	}
 
-	public ObjectProperty<List<TestActor>> getPossibleActors() {
+	public ListProperty<TestActor> getPossibleActors() {
 		return possibleActors;
 	}
 
@@ -48,7 +49,7 @@ public class StepEditorModel extends GuiModel {
 		return actor;
 	}
 
-	public ObjectProperty<List<TestAction>> getPossibleActions() {
+	public ListProperty<TestAction> getPossibleActions() {
 		return possibleActions;
 	}
 
@@ -56,7 +57,7 @@ public class StepEditorModel extends GuiModel {
 		return action;
 	}
 
-	public ObjectProperty<List<TestParameterFactory>> getPossibleSelectors() {
+	public ListProperty<TestParameterFactory> getPossibleSelectors() {
 		return possibleSelectors;
 	}
 
@@ -68,7 +69,7 @@ public class StepEditorModel extends GuiModel {
 		return selectorValues;
 	}
 
-	public ObjectProperty<List<TestParameterFactory>> getPossibleActionParameters() {
+	public ListProperty<TestParameterFactory> getPossibleActionParameters() {
 		return possibleActionParameters;
 	}
 
@@ -88,15 +89,18 @@ public class StepEditorModel extends GuiModel {
 		return testDictionary;
 	}
 	
-	public static <T extends IdObject> IConverterWithContext<T, ObjectTextView<T>, ObjectProperty<TestDictionary>> object2Text() {
-		final var objectTextFunction = ObjectTextView.<T, ObjectProperty<TestDictionary>>biObject2Text(
-				(o, k) -> k.getValue().descriptionOf(o).getDescription());
-		return Converters.converter(objectTextFunction::apply, (c, _) -> ObjectTextView.<T>comp2prop().apply(c));
+	
+	public static <T extends IdObject> IConverter<T, ObjectTextView<T>> object2TextRef() {
+		final var obj2Text = ObjectTextView.<T, TestDictionary>biObject2Text((_, _) -> null);
+		return Converters.converter(prop -> obj2Text.apply(prop , null), ObjectTextView.comp2prop());
 	}
 
-	public static <T extends IdObject> IConverterWithContext<List<T>, List<ObjectTextView<T>>, ObjectProperty<TestDictionary>> objects2Texts() {
-		final var objectTextFunction = ObjectTextView.<T, ObjectProperty<TestDictionary>>biObject2Text(
-				(o, k) -> k.getValue().descriptionOf(o).getDescription());
-		return Converters.listen((p, k) -> p.stream().map(v -> objectTextFunction.apply(v, k)).toList());
+	public record ListPropertyDictionary<T>(ObjectProperty<TestDictionary> dictionary, ListProperty<T> property) {
+		
+	}
+	
+	public static <T extends IdObject> IConverter<ListPropertyDictionary<T>, List<ObjectTextView<T>>> objects2Texts() {
+		final var objectTextFunction = ObjectTextView.<T, TestDictionary>biObject2Text((o, d) -> d.descriptionOf(o).getDescription());
+		return Converters.listen(rec -> rec.property().getValue().stream().map(v -> objectTextFunction.apply(v, rec.dictionary().getValue())).toList());
 	}
 }

@@ -1,21 +1,12 @@
 package ch.scaille.javabeans.chain;
 
-import ch.scaille.javabeans.IChainBuilder;
 import ch.scaille.javabeans.IChainBuilderFactory;
 import ch.scaille.javabeans.converters.IConverter;
 
-public class FirstEndOfChain<T> extends EndOfChain<T, Void> implements IChainBuilderFactory<T> {
-
-	private ContextGlue contextGlue = null;
+public class FirstEndOfChain<T> extends EndOfChain<T> implements IChainBuilderFactory<T> {
 
 	public FirstEndOfChain(IBindingChainModifier chain) {
-		super(chain, null);
-	}
-
-	@Override
-	public <K> IChainBuilder<T, K> withContext(K context) {
-		contextGlue = new ContextGlue(context, chain.getProperty());
-		return new EndOfChain<>(chain, context);
+		super(chain);
 	}
 
 	@Override

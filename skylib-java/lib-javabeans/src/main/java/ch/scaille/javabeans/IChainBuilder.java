@@ -4,14 +4,12 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import ch.scaille.javabeans.converters.IConverter;
-import ch.scaille.javabeans.converters.IConverterWithContext;
 
 /**
  * 
  * @param <T> The current type
- * @param <K> The context type
  */
-public interface IChainBuilder<T, K> {
+public interface IChainBuilder<T> {
 
 	IBindingController listen(Consumer<T> newBinding);
 
@@ -20,23 +18,16 @@ public interface IChainBuilder<T, K> {
 	/**
 	 * @param <N> type of the next co>nverter
 	 */
-	<N> IChainBuilder<N, K> bind(IConverterWithContext<T, N, K> converter);
+	<N> IChainBuilder<N> bind(IConverter<T, N> converter);
 
 	/**
 	 * @param <N> type of the next converter
 	 */
-	default <N> IChainBuilder<N, K> bind(IConverter<T, N> converter) {
-		return bind(Converters.wrap(converter));
-	}
-	
-	/**
-	 * @param <N> type of the next converter
-	 */
-	<N> IChainBuilder<N, K> bind(Function<T, N> prop2Comp, Function<N, T> comp2Prop);
+	<N> IChainBuilder<N> bind(Function<T, N> prop2Comp, Function<N, T> comp2Prop);
 
 	/**
 	 * @param <N> type of the next converter
 	 */
-	<N> IChainBuilder<N, K> bind(Function<T, N> prop2Comp);
+	<N> IChainBuilder<N> bind(Function<T, N> prop2Comp);
 
 }

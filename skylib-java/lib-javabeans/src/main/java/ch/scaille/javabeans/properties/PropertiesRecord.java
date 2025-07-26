@@ -12,7 +12,8 @@ import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.IPropertiesOwner;
 
 /**
- * Allows to listen to a record made of properties. 
+ * Allows to listen to a record made of properties.
+ * <br> 
  * @param <T> the record type
  */
 public class PropertiesRecord<T> extends ObjectProperty<T> implements PropertyChangeListener{
@@ -39,13 +40,8 @@ public class PropertiesRecord<T> extends ObjectProperty<T> implements PropertyCh
 			final var accessor = component.getAccessor();
 			accessor.setAccessible(true);
 			return (AbstractTypedProperty<?>)accessor.invoke(propsRecord);
-		} catch (IllegalArgumentException | IllegalAccessException e) {
+		} catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
 			// ignore
-			e.printStackTrace();
-			return null;
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 			return null;
 		}
 	}

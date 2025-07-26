@@ -136,7 +136,7 @@ public class HumanReadableVisitor {
 			}
 			formatted = formatted.replace("//", "").replace("/\\/", "//");
 			return formatted;
-		} catch (MissingFormatArgumentException e) {
+		} catch (MissingFormatArgumentException _) {
 			return "Some parameter values are missing in " + humanReadable;
 		}
 	}

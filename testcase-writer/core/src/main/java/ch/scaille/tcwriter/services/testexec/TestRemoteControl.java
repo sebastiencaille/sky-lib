@@ -55,7 +55,7 @@ public class TestRemoteControl {
 		while (controlServer == null && controlPort < baseTcpPort + 10) {
 			try {
 				controlServer = new ServerSocket(controlPort);
-			} catch (final IOException e) {
+			} catch (final IOException _) {
 				controlPort++;
 			}
 		}
@@ -133,7 +133,7 @@ public class TestRemoteControl {
 		if (controlConnection != null) {
 			try {
 				controlConnection.close();
-			} catch (final IOException e) {
+			} catch (final IOException _) {
 				// ignore
 			}
 			api = null;

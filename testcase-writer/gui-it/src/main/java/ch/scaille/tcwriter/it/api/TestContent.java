@@ -1,10 +1,17 @@
 package ch.scaille.tcwriter.it.api;
 
+import java.util.Arrays;
+
 import ch.scaille.tcwriter.annotations.TCApi;
 
 public record TestContent(StepEdition[] steps, String[] humanReadable) {
 	
 	private static final String ACTOR_TEST_WRITER = "Test writer";
+
+	@Override
+	public final boolean equals(Object arg0) {
+		return (arg0 instanceof TestContent tc) && Arrays.deepEquals(steps, tc.steps) && Arrays.deepEquals(humanReadable, tc.humanReadable);
+	}
 	
 	@TCApi(description = "Basic test", humanReadable = "Basic test")
 	public static TestContent basicTestContent() {
@@ -31,6 +38,7 @@ public record TestContent(StepEdition[] steps, String[] humanReadable) {
 						"As test writer, I verify that the human readable text is \"\"",
 						"As test writer, I select the step 1"
 				});
+	
 	}
 	
 }

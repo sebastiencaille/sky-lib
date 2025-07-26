@@ -13,7 +13,7 @@ post:
       name: tabId
       schema:
         type: string
-      required: false
+      required: true
       description: tab id of the caller
       x-constraints: "Id" 
     - in: header

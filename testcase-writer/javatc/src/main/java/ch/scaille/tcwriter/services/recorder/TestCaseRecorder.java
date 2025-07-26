@@ -180,7 +180,7 @@ public class TestCaseRecorder implements ITestCaseRecorder {
 					!Class.forName(expectedType).isAssignableFrom(actual)) {
 				    return false;
 				}
-			} catch (ClassNotFoundException e) {
+			} catch (ClassNotFoundException _) {
 				return false;
 			}
         }

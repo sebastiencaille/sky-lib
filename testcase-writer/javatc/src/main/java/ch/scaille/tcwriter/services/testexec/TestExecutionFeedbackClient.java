@@ -36,7 +36,7 @@ public class TestExecutionFeedbackClient implements ITestExecutionFeedbackClient
 			while (!remoteControlConnection.isConnected() && retry > 0) {
 				try {
 					remoteControlConnection.connect(remoteControlAddress, 5000);
-				} catch (final SocketTimeoutException e) {
+				} catch (final SocketTimeoutException _) {
 					retry--;
 				}
 			}
@@ -86,7 +86,7 @@ public class TestExecutionFeedbackClient implements ITestExecutionFeedbackClient
 		if (api != null) {
 			try {
 				api.writeStepCommand(command, index);
-			} catch (final IOException e) {
+			} catch (final IOException _) {
 				// ignore
 			}
 		}

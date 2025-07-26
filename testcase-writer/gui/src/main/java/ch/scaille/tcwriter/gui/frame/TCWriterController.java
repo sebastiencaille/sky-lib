@@ -96,7 +96,7 @@ public class TCWriterController extends GuiController {
 		while (dictionary == null) {
 			try {
 				dictionary = modelDao.readTestDictionary(name).orElseThrow(() -> new FileNotFoundException("default"));
-			} catch (FileNotFoundException e) {
+			} catch (FileNotFoundException _) {
 				// UI that allows selecting a dictionary
 				new DictionaryImport(null, modelDao).runImport();
 			}

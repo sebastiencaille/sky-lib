@@ -7,8 +7,11 @@ import java.io.OutputStream;
 import java.io.StringWriter;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.rmi.server.LogStream;
+import java.util.logging.Level;
 
 import ch.scaille.tcwriter.model.testexec.StepStatus;
+import ch.scaille.util.helpers.Logs;
 
 public class TestApi {
 
@@ -129,7 +132,8 @@ public class TestApi {
 					commandHandler.execute(receivedCommand);
 				}
 			} catch (final IOException e) {
-				// ignore
+				Logs.of(TestApi.class).log(Level.INFO, "Unexpected error", e);
+				// fallback
 			} finally {
 				if (disconnectionHandler != null) {
 					disconnectionHandler.run();

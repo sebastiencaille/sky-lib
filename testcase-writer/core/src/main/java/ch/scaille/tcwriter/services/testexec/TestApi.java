@@ -7,7 +7,6 @@ import java.io.OutputStream;
 import java.io.StringWriter;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.rmi.server.LogStream;
 import java.util.logging.Level;
 
 import ch.scaille.tcwriter.model.testexec.StepStatus;

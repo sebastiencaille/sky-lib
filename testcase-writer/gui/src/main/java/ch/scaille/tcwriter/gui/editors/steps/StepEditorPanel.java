@@ -3,8 +3,8 @@ package ch.scaille.tcwriter.gui.editors.steps;
 import static ch.scaille.gui.swing.factories.SwingBindings.selection;
 import static ch.scaille.gui.swing.factories.SwingBindings.values;
 import static ch.scaille.javabeans.BindingDependencies.preserveOnUpdateOf;
-import static ch.scaille.javabeans.Converters.listen;
-import static ch.scaille.tcwriter.gui.editors.steps.StepEditorModel.object2TextRef;
+import static ch.scaille.javabeans.converters.Converters.listen;
+import static ch.scaille.tcwriter.gui.editors.steps.StepEditorModel.object2Text;
 import static ch.scaille.tcwriter.gui.editors.steps.StepEditorModel.objects2Texts;
 
 import java.awt.BorderLayout;
@@ -23,7 +23,6 @@ import javax.swing.JScrollPane;
 import ch.scaille.gui.mvc.factories.ObjectTextView;
 import ch.scaille.gui.swing.factories.SwingBindings;
 import ch.scaille.javabeans.properties.AbstractTypedProperty;
-import ch.scaille.javabeans.properties.PropertiesRecord;
 import ch.scaille.tcwriter.model.dictionary.StepClassifier;
 import ch.scaille.tcwriter.model.dictionary.TestAction;
 import ch.scaille.tcwriter.model.dictionary.TestActor;
@@ -92,39 +91,39 @@ public class StepEditorPanel extends JPanel {
 		final var actorsList = withEnabler(selectedStep, new JList<ObjectTextView<TestActor>>());
 		actorsList.setName("Actors");
 
-		PropertiesRecord.of(new StepEditorModel.ListPropertyDictionary<>(dictionary, model.getPossibleActors()), model)
-				.bind(objects2Texts())
+		model.getPossibleActors()
+				.bind(objects2Texts(dictionary))
 				.bind(values(actorsList));
-		model.getActor().bind(object2TextRef()).bind(selection(actorsList)).addDependency(preserveOnUpdateOf(model.getPossibleActors()));
+		model.getActor().bind(object2Text(dictionary)).bind(selection(actorsList)).addDependency(preserveOnUpdateOf(model.getPossibleActors()));
 		stepEditors.add(new JScrollPane(actorsList));
 
 		// Actions
 		final var actionsList = withEnabler(selectedStep, new JList<ObjectTextView<TestAction>>());
 		actionsList.setName("Actions");
-		PropertiesRecord.of(new StepEditorModel.ListPropertyDictionary<>(dictionary, model.getPossibleActions()), model)
-				.bind(objects2Texts())
+		model.getPossibleActions()
+				.bind(objects2Texts(dictionary))
 				.bind(values(actionsList));
-		model.getAction().bind(object2TextRef()).bind(selection(actionsList))
+		model.getAction().bind(object2Text(dictionary)).bind(selection(actionsList))
 				.addDependency(preserveOnUpdateOf(model.getPossibleActions()));
 		stepEditors.add(new JScrollPane(actionsList));
 
 		// Selectors
 		final var selectorList = withEnabler(selectedStep, new JList<ObjectTextView<TestParameterFactory>>());
 		selectorList.setName("Selectors");
-		PropertiesRecord.of(new StepEditorModel.ListPropertyDictionary<>(dictionary, model.getPossibleSelectors()), model)
-				.bind(objects2Texts())
+		model.getPossibleSelectors()
+				.bind(objects2Texts(dictionary))
 				.bind(SwingBindings.values(selectorList));
-		model.getSelector().bind(object2TextRef()).bind(selection(selectorList))
+		model.getSelector().bind(object2Text(dictionary)).bind(selection(selectorList))
 				.addDependency(preserveOnUpdateOf(model.getPossibleSelectors()));
 		stepEditors.add(new JScrollPane(selectorList));
 
 		// Action Parameter
 		final var actionParameterList = withEnabler(selectedStep, new JList<ObjectTextView<TestParameterFactory>>());
 		actionParameterList.setName("Parameters0");
-		PropertiesRecord.of(new StepEditorModel.ListPropertyDictionary<>(dictionary, model.getPossibleActionParameters()), model)
-				.bind(objects2Texts())
+		model.getPossibleActionParameters()
+				.bind(objects2Texts(dictionary))
 				.bind(values(actionParameterList));
-		model.getActionParameter().bind(object2TextRef()).bind(selection(actionParameterList))
+		model.getActionParameter().bind(object2Text(dictionary)).bind(selection(actionParameterList))
 				.addDependency(preserveOnUpdateOf(model.getPossibleActionParameters()));
 		stepEditors.add(new JScrollPane(actionParameterList));
 

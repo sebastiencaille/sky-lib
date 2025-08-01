@@ -1,33 +1,50 @@
 package ch.scaille.javabeans;
 
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 import ch.scaille.javabeans.converters.IConverter;
+import ch.scaille.javabeans.converters.IContextualConverter;
 
 /**
  * 
- * @param <T> The current type
+ * @param <P> The property side type
  */
-public interface IChainBuilder<T> {
+public interface IChainBuilder<P> {
 
-	IBindingController listen(Consumer<T> newBinding);
+	IBindingController listen(Consumer<P> newBinding);
 
-	IBindingController bind(IComponentBinding<T> newBinding);
-
-	/**
-	 * @param <N> type of the next co>nverter
-	 */
-	<N> IChainBuilder<N> bind(IConverter<T, N> converter);
+	IBindingController bind(IComponentBinding<P> newBinding);
 
 	/**
-	 * @param <N> type of the next converter
+	 * @param <C> The component side type
 	 */
-	<N> IChainBuilder<N> bind(Function<T, N> prop2Comp, Function<N, T> comp2Prop);
+	<C> IChainBuilder<C> bind(IConverter<P, C> converter);
 
 	/**
-	 * @param <N> type of the next converter
+	 * @param <C> The component side type
 	 */
-	<N> IChainBuilder<N> bind(Function<T, N> prop2Comp);
+	<C> IChainBuilder<C> bind(Function<P, C> prop2Comp, Function<C, P> comp2Prop);
+
+	/**
+	 * @param <C> The component side type
+	 */
+	<C> IChainBuilder<C> bind(Function<P, C> prop2Comp);
+
+	/**
+	 * @param <C> The component side type
+	 */
+	<C, K> IChainBuilder<C> bind(IContextualConverter<P, C, K> converter);
+
+	/**
+	 * @param <C> The component side type
+	 */
+	<C, K> IChainBuilder<C> bind(ContextProperties<K> multiProperties, BiFunction<P, K, C> prop2Comp, BiFunction<C, K, P> comp2Prop);
+
+	/**
+	 * @param <C> The component side type
+	 */
+	<C, K> IChainBuilder<C> bind(ContextProperties<K> multiProperties, BiFunction<P, K, C> prop2Comp);
 
 }

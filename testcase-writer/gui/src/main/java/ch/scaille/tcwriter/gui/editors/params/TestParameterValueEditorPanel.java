@@ -5,8 +5,8 @@ import static ch.scaille.gui.swing.factories.SwingBindings.group;
 import static ch.scaille.gui.swing.factories.SwingBindings.selection;
 import static ch.scaille.gui.swing.factories.SwingBindings.value;
 import static ch.scaille.gui.swing.factories.SwingBindings.values;
-import static ch.scaille.javabeans.Converters.filter;
-import static ch.scaille.javabeans.Converters.listConverter;
+import static ch.scaille.javabeans.converters.Converters.filter;
+import static ch.scaille.javabeans.converters.Converters.listConverter;
 import static java.util.stream.Collectors.toSet;
 
 import java.awt.BorderLayout;

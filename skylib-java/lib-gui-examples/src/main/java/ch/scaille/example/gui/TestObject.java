@@ -1,7 +1,7 @@
 package ch.scaille.example.gui;
 
 import ch.scaille.annotations.GuiObject;
-import ch.scaille.javabeans.Converters;
+import ch.scaille.javabeans.converters.Converters;
 import ch.scaille.javabeans.converters.IConverter;
 
 @GuiObject

@@ -53,8 +53,8 @@ public class BindingChain implements IBindingChainModifier {
 	
 
 
-	public BindingChain(final AbstractProperty prop, final ErrorNotifier errorNotifier) {
-		this.property = prop;
+	public BindingChain(final AbstractProperty property, final ErrorNotifier errorNotifier) {
+		this.property = property;
 		this.errorNotifier = errorNotifier;
 		// handle property change
 		this.valueUpdateListener = this::propagatePropertyChange;
@@ -91,6 +91,10 @@ public class BindingChain implements IBindingChainModifier {
 	 */
 	public <T> IChainBuilderFactory<T> bindProperty(final BiConsumer<Object, T> propertySetter) {
 		property.addListener(valueUpdateListener);
+		return linkComponentToProperty(propertySetter);
+	}
+
+	public <T> IChainBuilderFactory<T> linkComponentToProperty(final BiConsumer<Object, T> propertySetter) {
 		links.add(new Link() {
 			@Override
 			public Object toProperty(final Object component, final Object value) {

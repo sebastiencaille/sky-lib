@@ -31,7 +31,7 @@
 		<jetbrain-annotations.version>26.0.2</jetbrain-annotations.version>
 		
 		<swagger-parser.version>2.1.31</swagger-parser.version>
-		<swagger.version>2.2.34</swagger.version>
+		<swagger.version>2.2.35</swagger.version>
 		<springdoc-openapi.version>2.8.9</springdoc-openapi.version>
 
 		<undertow.version>2.3.18.Final</undertow.version>
@@ -256,7 +256,7 @@
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>flatten-maven-plugin</artifactId>
-					<version>1.7.1</version>
+					<version>1.7.2</version>
 					<configuration>
 						<updatePomFile>true</updatePomFile>
 						<flattenMode>resolveCiFriendliesOnly</flattenMode>

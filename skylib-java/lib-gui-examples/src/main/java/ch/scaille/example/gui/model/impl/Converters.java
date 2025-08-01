@@ -9,7 +9,7 @@ import ch.scaille.javabeans.converters.IConverter;
 public interface Converters {
 
 	static IConverter<Boolean, IListView<TestObject>> booleanToOrder() {
-		return ch.scaille.javabeans.Converters.either(
+		return ch.scaille.javabeans.converters.Converters.either(
 				() -> sorted(TableModelExampleView.NATURAL_ORDER), () -> sorted(TableModelExampleView.REVERSE_ORDER));
 	}
 

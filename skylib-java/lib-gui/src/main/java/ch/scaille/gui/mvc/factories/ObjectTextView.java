@@ -4,8 +4,8 @@ import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import ch.scaille.javabeans.Converters;
 import ch.scaille.javabeans.converters.ConversionException;
+import ch.scaille.javabeans.converters.Converters;
 import ch.scaille.javabeans.converters.IConverter;
 import ch.scaille.util.helpers.LambdaExt.FunctionWithException;
 
@@ -92,14 +92,14 @@ public abstract class ObjectTextView<T> {
 	}
 	
 	public static <T> IConverter<T, ObjectTextView<T>> converter(final Function<T, String> objToText) {
-		return Converters.converter(prop2Comp(objToText), comp2prop());
+		return Converters.converter(obj2Text(objToText), text2Obj());
 	}
 
-	public static <T> Function<T, ObjectTextView<T>> prop2Comp(final Function<T, String> objToText) {
+	public static <T> Function<T, ObjectTextView<T>> obj2Text(final Function<T, String> objToText) {
 		return o -> object2Text(objToText).apply(o);
 	}
 
-	public static <T> FunctionWithException<ObjectTextView<T>, T, ConversionException> comp2prop() {
+	public static <T> FunctionWithException<ObjectTextView<T>, T, ConversionException> text2Obj() {
 		return tv -> tv != null ? tv.getObject() : null;
 	}
 }

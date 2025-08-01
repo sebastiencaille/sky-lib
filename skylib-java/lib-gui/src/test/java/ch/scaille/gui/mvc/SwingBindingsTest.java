@@ -10,9 +10,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import ch.scaille.gui.swing.factories.SwingBindings;
-import ch.scaille.javabeans.Converters;
 import ch.scaille.javabeans.IBindingController;
 import ch.scaille.javabeans.PropertyChangeSupportController;
+import ch.scaille.javabeans.converters.Converters;
 import ch.scaille.javabeans.properties.ObjectProperty;
 
 class SwingBindingsTest {

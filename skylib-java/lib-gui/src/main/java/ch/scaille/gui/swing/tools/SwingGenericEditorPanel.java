@@ -2,9 +2,9 @@ package ch.scaille.gui.swing.tools;
 
 import static ch.scaille.gui.swing.factories.SwingBindings.selected;
 import static ch.scaille.gui.swing.factories.SwingBindings.value;
-import static ch.scaille.javabeans.Converters.guiErrorToString;
-import static ch.scaille.javabeans.Converters.listen;
-import static ch.scaille.javabeans.Converters.mapContains;
+import static ch.scaille.javabeans.converters.Converters.guiErrorToString;
+import static ch.scaille.javabeans.converters.Converters.listen;
+import static ch.scaille.javabeans.converters.Converters.mapContains;
 
 import java.awt.Color;
 import java.awt.Dimension;

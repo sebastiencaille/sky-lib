@@ -2,10 +2,12 @@ package ch.scaille.javabeans.properties;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import ch.scaille.javabeans.ContextProperties;
 import ch.scaille.javabeans.IBindingController;
 import ch.scaille.javabeans.IChainBuilder;
 import ch.scaille.javabeans.IChainBuilderFactory;
@@ -14,6 +16,7 @@ import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.IPropertiesOwner;
 import ch.scaille.javabeans.IVetoer.TransmitMode;
 import ch.scaille.javabeans.PropertyEvent.EventKind;
+import ch.scaille.javabeans.converters.IContextualConverter;
 import ch.scaille.javabeans.converters.IConverter;
 import ch.scaille.javabeans.persisters.Persisters;
 
@@ -25,7 +28,7 @@ import ch.scaille.javabeans.persisters.Persisters;
  *
  * @param <T> the type of the object contained in the property
  */
-public abstract class AbstractTypedProperty<T> extends AbstractProperty {
+public abstract class AbstractTypedProperty<T> extends AbstractProperty implements IChainBuilder<T> {
 
 	private final List<IConverter<T, T>> implicitConverters = new ArrayList<>();
 
@@ -84,16 +87,41 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 	}
 
 
+	@Override
 	public <C> IChainBuilder<C> bind(final IConverter<T, C> binding) {
 		return createBindingChainWithConv().bind(binding);
 	}
 
+	@Override
 	public <C> IChainBuilder<C> bind(final Function<T, C> binding) {
 		return createBindingChainWithConv().bind(binding);
 	}
 
+	@Override
 	public IBindingController bind(final IComponentBinding<T> binding) {
 		return createBindingChainWithConv().bind(binding);
+	}
+	
+	@Override
+	public <C> IChainBuilder<C> bind(Function<T, C> prop2Comp, Function<C, T> comp2Prop) {
+		return createBindingChainWithConv().bind(prop2Comp, comp2Prop);
+	}
+	
+	
+	@Override
+	public <C, K> IChainBuilder<C> bind(ContextProperties<K> multiProperties, BiFunction<T, K, C> prop2Comp) {
+		return createBindingChainWithConv().bind(multiProperties, prop2Comp);
+	}
+	
+	@Override
+	public <C, K> IChainBuilder<C> bind(ContextProperties<K> multiProperties, BiFunction<T, K, C> prop2Comp,
+			BiFunction<C, K, T> comp2Prop) {
+		return createBindingChainWithConv().bind(multiProperties, prop2Comp, comp2Prop);
+	}
+	
+	@Override
+	public <C, K> IChainBuilder<C> bind(IContextualConverter<T, C, K> converter) {
+		return createBindingChainWithConv().bind(converter);
 	}
 
 	/**
@@ -109,6 +137,7 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty {
 	 * Executes binding when the property is updated (transmitMode =
 	 * BOTH|TO_COMPONENT)
 	 */
+	@Override
 	public IBindingController listen(final Consumer<T> binding) {
 		return createBindingChain().listen(binding);
 	}

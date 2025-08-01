@@ -8,7 +8,7 @@ import ch.scaille.example.gui.controllermodel.impl.TestObjectControllerModelFram
 import ch.scaille.gui.model.ListModel;
 import ch.scaille.gui.mvc.GuiController;
 import ch.scaille.gui.swing.model.ObjectControllerTableModel;
-import ch.scaille.javabeans.Converters;
+import ch.scaille.javabeans.converters.Converters;
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.util.helpers.JavaExt;
 

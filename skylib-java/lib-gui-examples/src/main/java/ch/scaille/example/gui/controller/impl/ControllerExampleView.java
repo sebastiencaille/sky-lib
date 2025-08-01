@@ -6,10 +6,10 @@ import static ch.scaille.gui.swing.factories.SwingBindings.selection;
 import static ch.scaille.gui.swing.factories.SwingBindings.value;
 import static ch.scaille.gui.swing.factories.SwingBindings.values;
 import static ch.scaille.javabeans.BindingDependencies.preserveOnUpdateOf;
-import static ch.scaille.javabeans.Converters.guiErrorToString;
-import static ch.scaille.javabeans.Converters.intToString;
-import static ch.scaille.javabeans.Converters.listen;
-import static ch.scaille.javabeans.Converters.mapContains;
+import static ch.scaille.javabeans.converters.Converters.guiErrorToString;
+import static ch.scaille.javabeans.converters.Converters.intToString;
+import static ch.scaille.javabeans.converters.Converters.listen;
+import static ch.scaille.javabeans.converters.Converters.mapContains;
 
 import java.awt.Color;
 import java.awt.Dimension;

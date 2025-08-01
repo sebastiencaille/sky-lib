@@ -1,11 +1,13 @@
 package ch.scaille.tcwriter.gui.editors.steps;
 
+import static ch.scaille.javabeans.ContextProperties.ofProperty;
+
 import java.util.List;
 
 import ch.scaille.gui.mvc.GuiModel;
 import ch.scaille.gui.mvc.factories.ObjectTextView;
-import ch.scaille.javabeans.Converters;
-import ch.scaille.javabeans.converters.IConverter;
+import ch.scaille.javabeans.converters.Converters;
+import ch.scaille.javabeans.converters.IContextualConverter;
 import ch.scaille.javabeans.properties.ListProperty;
 import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.tcwriter.model.IdObject;
@@ -90,17 +92,18 @@ public class StepEditorModel extends GuiModel {
 	}
 	
 	
-	public static <T extends IdObject> IConverter<T, ObjectTextView<T>> object2TextRef() {
-		final var obj2Text = ObjectTextView.<T, TestDictionary>biObject2Text((_, _) -> null);
-		return Converters.converter(prop -> obj2Text.apply(prop , null), ObjectTextView.comp2prop());
+	public static <T extends IdObject> IContextualConverter<T, ObjectTextView<T>, ObjectProperty<TestDictionary>> object2Text(ObjectProperty<TestDictionary> dictionary) {
+		final var obj2Text = ObjectTextView.<T, TestDictionary>biObject2Text((o, d) -> d.descriptionOf(o).getDescription());
+		final var text2Obj = ObjectTextView.<T>text2Obj();
+		return Converters.<T, ObjectTextView<T>, ObjectProperty<TestDictionary>>converter(ofProperty(dictionary), 
+				(prop, dic) -> obj2Text.apply(prop , dic.getValue()),
+				(comp, _) -> text2Obj.apply(comp));
 	}
 
-	public record ListPropertyDictionary<T>(ObjectProperty<TestDictionary> dictionary, ListProperty<T> property) {
-		
-	}
 	
-	public static <T extends IdObject> IConverter<ListPropertyDictionary<T>, List<ObjectTextView<T>>> objects2Texts() {
-		final var objectTextFunction = ObjectTextView.<T, TestDictionary>biObject2Text((o, d) -> d.descriptionOf(o).getDescription());
-		return Converters.listen(rec -> rec.property().getValue().stream().map(v -> objectTextFunction.apply(v, rec.dictionary().getValue())).toList());
+	public static <T extends IdObject> IContextualConverter<List<T>, List<ObjectTextView<T>>, ObjectProperty<TestDictionary>> objects2Texts(ObjectProperty<TestDictionary> dictionary) {
+		final var obj2Text = ObjectTextView.<T, TestDictionary>biObject2Text((o, d) -> d.descriptionOf(o).getDescription());
+		return Converters.listen(ofProperty(dictionary),  
+				(prop, dic) -> prop.stream().map(v -> obj2Text.apply(v, dic.getValue())).toList());
 	}
 }

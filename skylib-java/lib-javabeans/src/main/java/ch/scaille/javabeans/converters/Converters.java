@@ -1,24 +1,22 @@
-package ch.scaille.javabeans;
+package ch.scaille.javabeans.converters;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.LongFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import ch.scaille.javabeans.converters.ChainInhibitedException;
-import ch.scaille.javabeans.converters.ConversionErrorToStringConverter;
-import ch.scaille.javabeans.converters.ConversionException;
-import ch.scaille.javabeans.converters.IConverter;
-import ch.scaille.javabeans.converters.WriteOnlyException;
+import ch.scaille.javabeans.ContextProperties;
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.ConversionError;
 import ch.scaille.util.helpers.LambdaExt;
+import ch.scaille.util.helpers.LambdaExt.BiFunctionWithException;
 import ch.scaille.util.helpers.LambdaExt.FunctionWithException;
 import ch.scaille.util.text.FormatterHelper;
 
@@ -62,6 +60,20 @@ public final class Converters {
 		});
 	}
 
+	/**
+	 * Write only converter
+	 *
+	 * @param <T>       type on property side
+	 * @param <U>       type on component side
+	 * @param prop2comp the function to convert value from property side to
+	 *                  component side
+	 */
+	public static <T, U, K> IContextualConverter<T, U, K> listen(final ContextProperties<K> context, final BiFunction<T, K, U> prop2comp) {
+		return converter(context, prop2comp, (o, k) -> {
+			throw new WriteOnlyException();
+		});
+	}
+
 
 	public static <T, C> IConverter<T, C> converter(final Function<T, C> prop2comp,
 			final FunctionWithException<C, T, ConversionException> comp2prop) {
@@ -79,6 +91,29 @@ public final class Converters {
 
 		};
 	}
+	
+	public static <P, C, K> IContextualConverter<P, C, K> converter(final ContextProperties<K> context, final BiFunction<P, K, C> prop2comp,
+			final BiFunctionWithException<C, K, P, ConversionException> comp2prop) {
+		return new IContextualConverter<>() {
+
+			@Override
+			public C convertPropertyValueToComponentValue(final P propertyValue, K context) {
+				return prop2comp.apply(propertyValue, context);
+			}
+
+			@Override
+			public P convertComponentValueToPropertyValue(final C componentValue, K context) throws ConversionException {
+				return comp2prop.apply(componentValue, context);
+			}
+
+			@Override
+			public ContextProperties<K> contextProperties() {
+				return context;
+			}
+			
+		};
+	}
+
 
 	public static <T, C> IConverter<List<T>, List<C>> listConverter(final Function<T, C> prop2comp,
 			final FunctionWithException<C, T, ConversionException> comp2prop) {

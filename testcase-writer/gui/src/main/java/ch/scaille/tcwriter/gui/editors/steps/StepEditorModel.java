@@ -1,6 +1,6 @@
 package ch.scaille.tcwriter.gui.editors.steps;
 
-import static ch.scaille.javabeans.ContextProperties.ofProperty;
+import static ch.scaille.javabeans.properties.ContextProperties.ofProperty;
 
 import java.util.List;
 

@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.Level;
 
-import ch.scaille.javabeans.ContextProperties;
+import ch.scaille.javabeans.properties.ContextProperties;
 import ch.scaille.javabeans.DependenciesBuildingReport;
 import ch.scaille.javabeans.IBindingController;
 import ch.scaille.javabeans.IChainBuilder;

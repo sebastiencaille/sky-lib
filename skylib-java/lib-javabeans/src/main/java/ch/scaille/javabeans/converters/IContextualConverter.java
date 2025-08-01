@@ -1,6 +1,6 @@
 package ch.scaille.javabeans.converters;
 
-import ch.scaille.javabeans.ContextProperties;
+import ch.scaille.javabeans.properties.ContextProperties;
 import ch.scaille.javabeans.properties.AbstractProperty;
 
 /**

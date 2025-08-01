@@ -1,13 +1,10 @@
-package ch.scaille.javabeans;
+package ch.scaille.javabeans.properties;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.RecordComponent;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-
-import ch.scaille.javabeans.properties.AbstractProperty;
-import ch.scaille.javabeans.properties.AbstractTypedProperty;
 
 /**
  * Allows to provide a context and firing changes from other properties 

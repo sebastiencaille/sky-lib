@@ -6,6 +6,7 @@ import java.util.function.Function;
 
 import ch.scaille.javabeans.converters.IConverter;
 import ch.scaille.javabeans.converters.IContextualConverter;
+import ch.scaille.javabeans.properties.ContextProperties;
 
 /**
  * 

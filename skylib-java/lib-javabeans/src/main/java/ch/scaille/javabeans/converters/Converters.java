@@ -12,7 +12,7 @@ import java.util.function.LongFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import ch.scaille.javabeans.ContextProperties;
+import ch.scaille.javabeans.properties.ContextProperties;
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.ConversionError;
 import ch.scaille.util.helpers.LambdaExt;

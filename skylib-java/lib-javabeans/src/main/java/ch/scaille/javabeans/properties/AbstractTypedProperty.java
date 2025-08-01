@@ -7,7 +7,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import ch.scaille.javabeans.ContextProperties;
 import ch.scaille.javabeans.IBindingController;
 import ch.scaille.javabeans.IChainBuilder;
 import ch.scaille.javabeans.IChainBuilderFactory;

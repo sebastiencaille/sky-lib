@@ -1,6 +1,6 @@
 package ch.scaille.example.gui;
 
-import static ch.scaille.javabeans.ContextProperties.ofProperty;
+import static ch.scaille.javabeans.properties.ContextProperties.ofProperty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;

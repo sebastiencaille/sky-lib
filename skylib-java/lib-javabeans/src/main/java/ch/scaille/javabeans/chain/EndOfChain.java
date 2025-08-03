@@ -50,8 +50,7 @@ public class EndOfChain<P> implements IChainBuilder<P> {
 
 				@Override
 				public void reloadComponentValue() {
-					// should trigger the listeners
-					chain.getProperty().flush();
+					chain.refresh();
 				}
 			});
 		}
@@ -171,7 +170,7 @@ public class EndOfChain<P> implements IChainBuilder<P> {
 
 
 	private void register(ContextProperties<?> multiProperties) {
-		multiProperties.properties().forEach(p -> p.addListener(e -> chain.getProperty().fireArtificialChange(e.getPropertyName())));
+		multiProperties.properties().forEach(p -> p.addListener(e -> chain.refresh()));
 	}
 
 	

@@ -1,5 +1,6 @@
 package ch.scaille.javabeans.properties;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.Serial;
 import java.io.Serializable;
@@ -79,8 +80,11 @@ public abstract class AbstractProperty implements IComponentChangeSource, Serial
 
 	public abstract void save();
 
-	public abstract void fireArtificialChange(Object caller);
+	public abstract void refresh(Object caller);
 
+	public abstract PropertyChangeEvent getRefreshChangeEvent();
+
+	
 	protected AbstractProperty(final String name, final IPropertiesGroup propertySupport) {
 		this.name = name;
 		this.propertySupport = propertySupport;
@@ -107,7 +111,7 @@ public abstract class AbstractProperty implements IComponentChangeSource, Serial
 		return transmitMode.toComponent;
 	}
 
-	public void flush() {
+	public void flushChanges() {
 		setTransmitMode(TransmitMode.TRANSMIT);
 	}
 

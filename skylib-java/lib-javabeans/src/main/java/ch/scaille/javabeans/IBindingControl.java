@@ -9,7 +9,7 @@ public interface IBindingControl {
 	
 	IVetoer getVetoer();
 
-	void forceViewUpdate();
+	void refresh();
 
 	AbstractProperty getProperty();
 

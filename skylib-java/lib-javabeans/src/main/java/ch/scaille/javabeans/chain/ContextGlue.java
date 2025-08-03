@@ -34,7 +34,7 @@ public class ContextGlue implements PropertyChangeListener {
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		propertiesToRefresh.forEach(prop -> prop.fireArtificialChange(evt.getSource()));
+		propertiesToRefresh.forEach(prop -> prop.refresh(evt.getSource()));
 	}
 
 }

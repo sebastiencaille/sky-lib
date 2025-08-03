@@ -73,12 +73,6 @@ public class FloatProperty extends AbstractTypedProperty<Float> {
 	}
 
 	@Override
-	public void flush() {
-		super.flush();
-		propertySupport.getChangeSupport().firePropertyChange(getName(), this, null, value);
-	}
-
-	@Override
 	public void reset(final Object caller) {
 		setValue(this, defaultValue);
 	}

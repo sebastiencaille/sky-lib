@@ -135,12 +135,12 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 		final var allEditedParameters = new ListModel<ParameterValueEntry>(ListViews.sorted());
 		final var visibleParameters = allEditedParameters.child(ListViews.filtered(p -> p.visible));
-		final var valueTable = new TestParameterValueTable(new TestParameterValueTableModel(visibleParameters));
-		valueTable.setName(tpModel.getPrefix() + "-valueTable");
+		final var complexParameterTable = new TestParameterValueTable(new TestParameterValueTableModel(visibleParameters));
+		complexParameterTable.setName(tpModel.getPrefix() + "-valueTable");
 		final var complexValues = editedParamValue.child("ComplexParams", TestParameterValue::getComplexTypeValues,
 				TestParameterValue::updateComplexTypeValues);
-		complexValues.bind(toListModel(testCase, editedParamValue)).bind(values(allEditedParameters));
-		final var valueTablePane = new JScrollPane(valueTable);
+		complexValues.bind(params2ListModel(testCase, editedParamValue)).bind(values(allEditedParameters));
+		final var valueTablePane = new JScrollPane(complexParameterTable);
 		tpModel.getValueNature().bind(v -> v == ParameterNature.TEST_API).listen(enableAndVisible(valueTablePane));
 		tpModel.getTestApi().listenActive(api -> fixParamsOfApi(testCase, api, editedParamValue, allEditedParameters));
 
@@ -252,7 +252,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 		allEditedParameters.addValues(newValues);
 	}
 
-	public static IConverter<Map<String, TestParameterValue>, Collection<ParameterValueEntry>> toListModel(
+	public static IConverter<Map<String, TestParameterValue>, Collection<ParameterValueEntry>> params2ListModel(
 			final ObjectProperty<TestCase> tc, final ObjectProperty<TestParameterValue> propertyValue) {
 
 		return new IConverter<>() {

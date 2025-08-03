@@ -62,6 +62,7 @@ public class BindingChain implements IBindingChainModifier {
 
 	private void propagatePropertyChange(final PropertyChangeEvent evt) {
 		if (vetoer != null && !vetoer.mustSendToComponent(BindingChain.this)) {
+			Logging.MVC_EVENTS_DEBUGGER.log(Level.FINEST, () -> "Vetoed: " + evt.getPropertyName());
 			return;
 		}
 		var value = evt.getNewValue();
@@ -142,8 +143,8 @@ public class BindingChain implements IBindingChainModifier {
 	}
 	
 	@Override
-	public void forceViewUpdate() {
-		property.fireArtificialChange(this);
+	public void refresh() {
+		propagatePropertyChange(property.getRefreshChangeEvent());
 	}
 
 	@Override

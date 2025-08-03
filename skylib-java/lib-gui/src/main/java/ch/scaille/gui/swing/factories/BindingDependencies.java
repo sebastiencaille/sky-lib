@@ -66,7 +66,7 @@ public final class BindingDependencies {
 
 		private void reattach() {
 			bindingControl.getVetoer().attach();
-			bindingControl.forceViewUpdate();
+			bindingControl.refresh();
 		}
 
 		@Override

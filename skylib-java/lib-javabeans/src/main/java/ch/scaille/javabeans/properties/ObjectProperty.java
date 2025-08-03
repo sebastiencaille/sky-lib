@@ -104,15 +104,6 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 	}
 
 	@Override
-	public void flush() {
-		boolean mustUpdate = !mustSendToComponent();
-		super.flush();
-		if (mustUpdate) {
-			propertySupport.getChangeSupport().firePropertyChange(getName(), this, null, getValue());
-		}
-	}
-
-	@Override
 	public void reset(final Object caller) {
 		setObjectValue(this, defaultValue);
 	}

@@ -33,8 +33,8 @@ class LoadSaveTest extends AbstractGuiTest {
 		final var test = TestContent.basicTestContent();
 		
 		testSession.injectTest(test);
-		tcWriter.manageTest(saveTC("test"));
 		testSession.assertTest(test);
+		tcWriter.manageTest(saveTC("test"));
 		
 		tcWriter.manageTest(newTC());
 		tcWriter.manageTest(loadTC("test"));

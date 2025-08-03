@@ -41,7 +41,7 @@ class SwingBindingsTest {
 		final IBindingController cbBinding = model.stringProperty
 				.bind(Converters.converter(Boolean::valueOf, Object::toString))
 				.bind(SwingBindings.selected(cb));
-		model.stringProperty.flush();
+		model.stringProperty.flushChanges();
 
 		assertEquals(Boolean.FALSE.toString(), model.stringProperty.getValue());
 		assertFalse(cb.isSelected(), "cb.isSelected");

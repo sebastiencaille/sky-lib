@@ -42,7 +42,7 @@ public final class BindingDependencies {
 				break;
 			case AFTER:
 				controller.getVetoer().attach();
-				controller.forceViewUpdate();
+				controller.refresh();
 				break;
 			default:
 				// ignore

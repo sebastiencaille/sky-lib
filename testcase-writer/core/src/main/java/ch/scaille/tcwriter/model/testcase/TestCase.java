@@ -126,4 +126,9 @@ public class TestCase {
 				.orElseThrow(() -> new IllegalStateException("Unable to find " + apiParameterId));
 	}
 
+	@Override
+	public String toString() {
+		return "Steps: " + steps.size();
+	}
+	
 }

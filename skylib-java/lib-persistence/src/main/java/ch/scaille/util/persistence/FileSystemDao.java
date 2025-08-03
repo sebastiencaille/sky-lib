@@ -69,7 +69,8 @@ public class FileSystemDao<T> extends AbstractFSSerializationDao<T> {
 		}
 		// basic filter
 		try (var stream = Files.list(folder)) {
-			return stream.filter(f -> (filter == null || f.getFileName().toString().startsWith(filter))
+			return stream.filter(f -> (filter == null 
+					|| f.getFileName().toString().startsWith(filter))
 				&& dataHandlerRegistry.find(extensionOf(f.toString())).isPresent())
 				.map(p -> buildMetadata(nameAndExtensionOf(folder.relativize(p).toString())[0], p.toString()))
 				// filter on the metadata
@@ -80,7 +81,9 @@ public class FileSystemDao<T> extends AbstractFSSerializationDao<T> {
 	}
 
 	private boolean filterMetaData(final String filter, ResourceMetaData m) {
-		return m != null && (filter == null || m.getLocator().equals(filter));
+		return m != null && (filter == null 
+				|| m.getLocator().equals(filter) 
+				|| m.getStorageLocator().endsWith('/' + filter));
 	}
 
 	@Override

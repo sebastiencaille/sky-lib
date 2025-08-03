@@ -67,7 +67,7 @@ public class TestParameterValueTableModel extends
 
 		@Override
 		public String toString() {
-			return id + ":[" + enabled + ", " + value;
+			return id + ":[" + enabled + ", " + value + "]";
 		}
 	}
 

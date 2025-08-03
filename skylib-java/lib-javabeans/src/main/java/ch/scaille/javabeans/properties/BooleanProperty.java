@@ -76,10 +76,4 @@ public class BooleanProperty extends AbstractTypedProperty<Boolean> {
 		setValue(this, defaultValue);
 	}
 
-	@Override
-	public void flush() {
-		super.flush();
-		propertySupport.getChangeSupport().firePropertyChange(getName(), this, null, value);
-	}
-
 }

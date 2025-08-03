@@ -151,7 +151,7 @@ public class ListModel<T> implements ISourceModel<T>, Iterable<T>, Serializable 
 	}
 
 	public void editValue(final T sample, final Consumer<T> editor) {
-		try (var edition = content.startEditingValue(sample)) {
+		try (var edition = startEditingValue(sample)) {
 			if (edition != null) {
 				editor.accept(edition.edited());
 			}

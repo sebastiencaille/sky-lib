@@ -1,5 +1,6 @@
 package ch.scaille.javabeans.properties;
 
+import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -166,8 +167,21 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty implemen
 	}
 
 	@Override
-	public void fireArtificialChange(final Object caller) {
-		propertySupport.getChangeSupport().firePropertyChange(getName(), caller, null, getObjectValue());
+	public void flushChanges() {
+		boolean mustUpdate = !mustSendToComponent();
+		super.flushChanges();
+		if (mustUpdate) {
+			refresh(this);
+		}
 	}
-
+	
+	@Override
+	public void refresh(Object caller) {
+		propertySupport.getChangeSupport().firePropertyChange(getName(), this, null, getObjectValue());
+	}
+	
+	@Override
+	public PropertyChangeEvent getRefreshChangeEvent() {
+		return new PropertyChangeEvent(this, getName(), null, getObjectValue());
+	}
 }

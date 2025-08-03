@@ -166,7 +166,7 @@ public class PropertyChangeSupportController {
 
 		@Override
 		public void flushChanges() {
-			forAllProperties(AbstractProperty::flush);
+			forAllProperties(AbstractProperty::flushChanges);
 		}
 
 		@Override

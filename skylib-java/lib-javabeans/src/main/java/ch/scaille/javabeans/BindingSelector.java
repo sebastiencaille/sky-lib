@@ -45,7 +45,7 @@ public class BindingSelector<T> implements PropertyChangeListener {
 			final var newController = objectControllers.get(newValue);
 			if (newController != null) {
 				newController.forEach(c -> c.getVetoer().attach());
-				newController.forEach(IBindingController::forceViewUpdate);
+				newController.forEach(IBindingController::refresh);
 			}
 		}
 

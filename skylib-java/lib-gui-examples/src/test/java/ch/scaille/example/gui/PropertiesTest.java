@@ -14,10 +14,6 @@ import ch.scaille.javabeans.properties.LongProperty;
 
 class PropertiesTest {
 
-	record P1P2(IntProperty p1, LongProperty p2) {
-
-	}
-
 	@Test
 	void testRecord() {
 
@@ -28,7 +24,7 @@ class PropertiesTest {
 
 		p1.bind(ofProperty(p2), (v, cp2) ->  v + cp2.getValue()).listen(v -> accumulator[0] = v);
 		
-		changeSupport.flushChanges();
+		changeSupport.transmitChangesBothWays();
 		
 		p1.setValue(this, 1);
 		assertEquals(1, accumulator[0]);
@@ -67,7 +63,7 @@ class PropertiesTest {
 					
 				
 		
-		changeSupport.flushChanges();
+		changeSupport.transmitChangesBothWays();
 		
 		p1.setValue(this, 1);
 		assertEquals(1, accumulator[0]);

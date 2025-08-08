@@ -36,7 +36,7 @@ public class BindingSelector<T> implements PropertyChangeListener {
 		if (oldValue != null) {
 			final var oldControllers = objectControllers.get(oldValue);
 			if (oldControllers != null) {
-				oldControllers.forEach(c -> c.getVetoer().detach());
+				oldControllers.forEach(IPropertyController::bufferizeChanges);
 			}
 		}
 
@@ -44,8 +44,7 @@ public class BindingSelector<T> implements PropertyChangeListener {
 		if (newValue != null) {
 			final var newController = objectControllers.get(newValue);
 			if (newController != null) {
-				newController.forEach(c -> c.getVetoer().attach());
-				newController.forEach(IBindingController::refresh);
+				newController.forEach(IPropertyController::transmitChangesBothWays);
 			}
 		}
 

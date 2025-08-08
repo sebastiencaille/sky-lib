@@ -80,7 +80,7 @@ public abstract class AbstractProperty implements IComponentChangeSource, Serial
 
 	public abstract void save();
 
-	public abstract void refresh(Object caller);
+	public abstract void flushChanges(Object caller);
 
 	public abstract PropertyChangeEvent getRefreshChangeEvent();
 
@@ -100,7 +100,15 @@ public abstract class AbstractProperty implements IComponentChangeSource, Serial
 	}
 
 	public void setTransmitMode(final TransmitMode transmitMode) {
-		this.transmitMode = transmitMode;
+		final var wasTransmitToComponent = this.transmitMode.toComponent;
+		forceTransmitMode(transmitMode);
+		if (!wasTransmitToComponent && this.transmitMode.toComponent) {
+			flushChanges(this);
+		}
+	}
+
+	public void forceTransmitMode(final TransmitMode newTransmitMode) {
+		this.transmitMode = newTransmitMode;
 	}
 
 	public boolean mustSendToProperty() {
@@ -109,10 +117,6 @@ public abstract class AbstractProperty implements IComponentChangeSource, Serial
 
 	public boolean mustSendToComponent() {
 		return transmitMode.toComponent;
-	}
-
-	public void flushChanges() {
-		setTransmitMode(TransmitMode.TRANSMIT);
 	}
 
 	public void setErrorNotifier(final ErrorNotifier errorNotifier) {

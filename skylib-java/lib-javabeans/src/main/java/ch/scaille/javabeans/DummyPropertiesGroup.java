@@ -20,19 +20,12 @@ public class DummyPropertiesGroup implements IPropertiesGroup {
 
 	@Override
 	public void forAllProperties(Consumer<AbstractProperty> applier) {
-		// TODO Auto-generated method stub
-		
+		// noop	
 	}
 	
 	@Override
-	public void flushChanges() {
-		// noop
-	}
-
-	@Override
 	public void bufferizeChanges() {
 		// noop
-
 	}
 
 	@Override
@@ -63,6 +56,11 @@ public class DummyPropertiesGroup implements IPropertiesGroup {
 	public IPropertyEventListener detachWhenPropLoading() {
 		// noop
 		return null;
+	}
+	
+	@Override
+	public void flushChanges() {
+		// noop
 	}
 
 }

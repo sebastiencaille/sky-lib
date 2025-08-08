@@ -35,7 +35,7 @@ public class EndOfChain<P> implements IChainBuilder<P> {
 			newBinding.addComponentValueChangeListener(new IComponentLink<>() {
 				@Override
 				public void setValueFromComponent(final Object component, final P componentValue) {
-					if (chain.getVetoer() != null && !chain.mustSendToProperty(chain)) {
+					if (!chain.mustSendToProperty(chain)) {
 						return;
 					}
 					Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE,
@@ -50,7 +50,7 @@ public class EndOfChain<P> implements IChainBuilder<P> {
 
 				@Override
 				public void reloadComponentValue() {
-					chain.refresh();
+					chain.transmitChangesBothWays();
 				}
 			});
 		}
@@ -170,7 +170,7 @@ public class EndOfChain<P> implements IChainBuilder<P> {
 
 
 	private void register(ContextProperties<?> multiProperties) {
-		multiProperties.properties().forEach(p -> p.addListener(e -> chain.refresh()));
+		multiProperties.properties().forEach(p -> p.addListener(e -> chain.flushChanges()));
 	}
 
 	

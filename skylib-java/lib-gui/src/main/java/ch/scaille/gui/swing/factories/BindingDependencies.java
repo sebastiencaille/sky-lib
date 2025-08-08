@@ -36,7 +36,7 @@ public final class BindingDependencies {
 
 		@Override
 		public void mutates() {
-			bindingControl.getVetoer().detach();
+			bindingControl.bufferizeBinding();
 		}
 
 		@Override
@@ -65,8 +65,7 @@ public final class BindingDependencies {
 		}
 
 		private void reattach() {
-			bindingControl.getVetoer().attach();
-			bindingControl.refresh();
+			bindingControl.releaseBinding();
 		}
 
 		@Override

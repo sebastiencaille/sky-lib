@@ -165,11 +165,6 @@ public class PropertyChangeSupportController {
 		}
 
 		@Override
-		public void flushChanges() {
-			forAllProperties(AbstractProperty::flushChanges);
-		}
-
-		@Override
 		public void bufferizeChanges() {
 			forAllProperties(p -> p.setTransmitMode(TransmitMode.BUFFERIZE));
 		}
@@ -196,6 +191,11 @@ public class PropertyChangeSupportController {
 			listeners.forEach(
 					l -> PropertyChangeSupportController.this.removePropertyChangeListener(l.name, l.listener));
 		}
+		
+		@Override
+		public void flushChanges() {
+			forAllProperties(p -> p.flushChanges(this));	
+		}
 
 		@Override
 		public IPropertyEventListener detachWhenPropLoading() {
@@ -217,6 +217,9 @@ public class PropertyChangeSupportController {
 		@Override
 		public String toString() {
 			return "Scoped controller: " + scope;
+		}
+
+		private void flushChanges(AbstractProperty abstractproperty1) {
 		}
 	}
 

@@ -36,13 +36,10 @@ public final class BindingDependencies {
 		public void propertyModified(final Object caller, final PropertyEvent event) {
 			switch (event.kind()) {
 			case BEFORE:
-				if (event.property().mustSendToComponent()) {
-					controller.getVetoer().detach();
-				}
+				controller.bufferizeBinding();
 				break;
 			case AFTER:
-				controller.getVetoer().attach();
-				controller.refresh();
+				controller.releaseBinding();
 				break;
 			default:
 				// ignore

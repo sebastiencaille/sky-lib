@@ -23,27 +23,27 @@ public class ListProperty<T> extends ObjectProperty<List<T>> {
 		@Override
 		public boolean add(T e) {
 			final var res = super.add(e);
-			refresh(this);
+			flushChanges(this);
 			return res;
 		}
 		
 		@Override
 		public void add(int index, T element) {
 			super.add(index, element);
-			refresh(this);
+			flushChanges(this);
 		}
 		
 		@Override
 		public T remove(int index) {
 			final var remove = super.remove(index);
-			refresh(this);
+			flushChanges(this);
 			return remove;
 		}
 		
 		@Override
 		public boolean addAll(Collection<? extends T> toAdd) {
 			final var res = super.addAll(toAdd);
-			refresh(this);
+			flushChanges(this);
 			return res;
 		}
 	}

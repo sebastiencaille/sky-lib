@@ -31,7 +31,7 @@ class ModelBasicTest {
 
 		public TestGuiModel(final GuiController controller) {
 			super(of(controller));
-			getPropertySupport().flushChanges();
+			activate();
 		}
 	}
 

@@ -29,7 +29,7 @@ class ModelChildTest {
 		final var propertySupport = PropertyChangeSupportController.mainGroup(this);
 		final var parentProperty = new ObjectProperty<Parent>("parent", propertySupport);
 		final var childProperty = parentProperty.child("child", Parent::getChild, Parent::setChild);
-		propertySupport.flushChanges();
+		propertySupport.transmitChangesBothWays();
 
 		final var parent = new Parent();
 		parent.setChild("C1");

@@ -36,9 +36,9 @@ public interface IVetoer {
 		}
 	}
 	
-	void attach();
+	boolean release();
 
-	void detach();
+	void bufferize();
 
 	void inhibitTransmitToComponentWhen(Predicate<AbstractProperty> inhibitor);
 

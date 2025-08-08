@@ -52,7 +52,6 @@ public class BindingChain implements IBindingChainModifier {
 	private final List<IBindingChainDependency> dependencies = new ArrayList<>();
 	
 
-
 	public BindingChain(final AbstractProperty property, final ErrorNotifier errorNotifier) {
 		this.property = property;
 		this.errorNotifier = errorNotifier;
@@ -100,7 +99,8 @@ public class BindingChain implements IBindingChainModifier {
 			@Override
 			public Object toProperty(final Object component, final Object value) {
 				Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE, () -> "Setting property value: " + value);
-				propertySetter.accept(component, (T) value);
+				propertySetter.accept(component, (T) value);	// TODO Auto-generated method stub
+				
 				return null;
 			}
 
@@ -120,7 +120,8 @@ public class BindingChain implements IBindingChainModifier {
 
 	@Override
 	public void addLink(Link link) {
-		links.add(link);
+		links.add(link);	// TODO Auto-generated method stub
+		
 	}
 	
 	@Override
@@ -143,7 +144,7 @@ public class BindingChain implements IBindingChainModifier {
 	}
 	
 	@Override
-	public void refresh() {
+	public void flushChanges() {
 		propagatePropertyChange(property.getRefreshChangeEvent());
 	}
 
@@ -160,7 +161,35 @@ public class BindingChain implements IBindingChainModifier {
 	}
 
 	@Override
-	public void unbind() {
+	public void bufferizeChanges() {
+		property.setTransmitMode(TransmitMode.BUFFERIZE);
+	}
+	
+	@Override
+	public void transmitChangesBothWays() {
+		property.setTransmitMode(TransmitMode.TRANSMIT);	
+	}
+
+	@Override
+	public void transmitChangesOnlyToComponent() {
+		property.setTransmitMode(TransmitMode.TO_COMPONENT_ONLY);		
+	}
+	
+	@Override
+	public void bufferizeBinding() {
+		getVetoer().bufferize();
+	}
+	
+	@Override
+	public void releaseBinding() {
+		final var released = getVetoer().release();
+		if (released) {
+			flushChanges();
+		}
+	}
+		
+	@Override
+	public void disposeBindings() {
 		property.removeListener(valueUpdateListener);
 		dependencies.forEach(IBindingChainDependency::unbind);
 		links.forEach(Link::unbind);

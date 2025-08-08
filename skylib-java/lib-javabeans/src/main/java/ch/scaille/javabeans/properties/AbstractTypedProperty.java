@@ -165,18 +165,9 @@ public abstract class AbstractTypedProperty<T> extends AbstractProperty implemen
 			onValueSet(caller, EventKind.AFTER);
 		}
 	}
-
-	@Override
-	public void flushChanges() {
-		boolean mustUpdate = !mustSendToComponent();
-		super.flushChanges();
-		if (mustUpdate) {
-			refresh(this);
-		}
-	}
 	
 	@Override
-	public void refresh(Object caller) {
+	public void flushChanges(Object caller) {
 		propertySupport.getChangeSupport().firePropertyChange(getName(), this, null, getObjectValue());
 	}
 	

@@ -20,14 +20,14 @@ public class ErrorSet implements ErrorNotifier {
 	@Override
 	public void notifyError(final Object source, final ConversionError error) {
 		errors.getValue().put(error.property(), error);
-		errors.refresh(source);
+		errors.flushChanges(source);
 		lastError.setValue(source, error);
 	}
 
 	@Override
 	public void clearError(final Object source, final AbstractProperty property) {
 		errors.getValue().remove(property);
-		errors.refresh(source);
+		errors.flushChanges(source);
 		if (lastError.getValue() != null && property.equals(lastError.getValue().property())) {
 			lastError.setValue(source, null);
 		}

@@ -8,6 +8,8 @@ public interface IBindingChainModifier extends IBindingController {
 
 	<T> void propagateComponentChange(Object component, T componentValue);
 
+	void flushChanges();
+
 	boolean mustSendToProperty(IBindingChainModifier chain);
 
 }

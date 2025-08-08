@@ -21,14 +21,15 @@ public class Vetoer implements IVetoer {
 	}
 
 	@Override
-	public void attach() {
+	public boolean release() {
 		if (detached > 0) {
 			detached--;
 		}
+		return detached == 0;
 	}
 
 	@Override
-	public void detach() {
+	public void bufferize() {
 		detached++;
 	}
 

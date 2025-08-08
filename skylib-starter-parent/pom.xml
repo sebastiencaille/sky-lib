@@ -21,7 +21,7 @@
 	<properties>
 		<aspectj.version>1.9.24</aspectj.version>
 		<spring-session.version>3.5.1</spring-session.version>
-		<jackson-bom.version>2.19.2</jackson-bom.version>
+		<jackson-bom.version>2.20.0-rc1</jackson-bom.version>
 		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
 		<guava.version>33.4.8-jre</guava.version>
 		<logback.version>1.5.18</logback.version>

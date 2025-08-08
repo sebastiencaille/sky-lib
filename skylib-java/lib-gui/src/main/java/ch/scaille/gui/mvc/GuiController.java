@@ -40,7 +40,7 @@ public class GuiController {
 	 * values to be sent to the components
 	 */
 	public void activate() {
-		propertySupport.flushChanges();
+		propertySupport.transmitChangesBothWays();
 	}
 
 }

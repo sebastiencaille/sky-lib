@@ -5,13 +5,20 @@ import ch.scaille.javabeans.properties.AbstractProperty;
 /**
  * Interface used to control the behavior of the bindings
  */
-public interface IBindingControl {
+public interface IBindingControl extends IPropertyController {
 	
 	IVetoer getVetoer();
 
-	void refresh();
-
 	AbstractProperty getProperty();
 
-	void unbind();
+	
+	/**
+	 * Bufferize the binding changes until all release are called
+	 */
+	void bufferizeBinding();
+
+	/**
+	 * Release the binding changes
+	 */
+	void releaseBinding();
 }

@@ -82,6 +82,7 @@
 				<artifactId>maven-plugin-plugin</artifactId>
 				<version>${maven-plugin-plugin.version}</version>
 				<configuration>
+				    <requiredJavaVersion>21</requiredJavaVersion>
 					<goalPrefix>testcase-writer-maven-plugin</goalPrefix>
 					<skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
 				</configuration>

@@ -53,6 +53,7 @@
 						<resource>
 							<targetPath>/static</targetPath>
 							<directory>${project.build.directory}/dist</directory>
+                            <filtering>true</filtering>
 						</resource>
 					</webResources>
 				</configuration>

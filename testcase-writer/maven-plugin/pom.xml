@@ -11,9 +11,9 @@
 	<name>TestCase Writer Maven Plugin</name>
 
 	<properties>
-		<maven.version>4.0.0-rc-3</maven.version>
+		<maven.version>4.0.0-rc-5</maven.version>
 		<maven-plugin-plugin.version>4.0.0-beta-2</maven-plugin-plugin.version>
-		<maven-plugin-harness.version>4.0.0-beta-2</maven-plugin-harness.version>
+		<maven-plugin-harness.version>4.0.0-beta-4</maven-plugin-harness.version>
 	</properties>
 
 	<dependencies>

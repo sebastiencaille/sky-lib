@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 
 import ch.scaille.tcwriter.persistence.ConfigDao;
 import ch.scaille.tcwriter.persistence.IModelDao;
@@ -52,7 +51,6 @@ public class StorageConfig {
 	@Bean
 	ObjectMapper defaultMapper() {
 		final var mapper = new ObjectMapper();
-		mapper.registerModule(new Jdk8Module());
 		return mapper;
 	}
 

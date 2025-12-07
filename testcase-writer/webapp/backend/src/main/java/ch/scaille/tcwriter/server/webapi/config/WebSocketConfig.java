@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.converter.JacksonJsonMessageConverter;
 import org.springframework.messaging.converter.MessageConverter;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.session.Session;
@@ -32,7 +32,7 @@ public class WebSocketConfig  extends AbstractSessionWebSocketMessageBrokerConfi
 
 	@Override
 	public boolean configureMessageConverters(List<MessageConverter> messageConverters) {
-		messageConverters.add(new MappingJackson2MessageConverter());
+		messageConverters.add(new JacksonJsonMessageConverter());
 		return false;
 	}
 

@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.7</version>
+		<version>4.0.0</version>
 		<relativePath />
 	</parent>
 
@@ -20,54 +20,53 @@
 
 	<properties>
 		<aspectj.version>1.9.25</aspectj.version>
-		<spring-session.version>3.5.3</spring-session.version>
-		<jackson-bom.version>2.20.1</jackson-bom.version>
+		<spring-session.version>4.0.0</spring-session.version>
+		<jackson-bom.version>3.0.3</jackson-bom.version>
 		<jackson-databind-nullable.version>0.2.8</jackson-databind-nullable.version>
 		<guava.version>33.5.0-jre</guava.version>
 		<logback.version>1.5.21</logback.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
-        <!--hibernate.version>7.1.7.Final</hibernate.version-->
+		<!--hibernate.version>7.1.7.Final</hibernate.version-->
 		<hibernate-validator.version>9.1.0.Final</hibernate-validator.version>
 
 		<jetbrain-annotations.version>26.0.2-1</jetbrain-annotations.version>
-		
-		<swagger-parser.version>2.1.35</swagger-parser.version>
-		<swagger.version>2.2.40</swagger.version>
-		<springdoc-openapi.version>2.8.14</springdoc-openapi.version>
 
-		<undertow.version>2.3.20.Final</undertow.version>
+		<swagger-parser.version>2.1.36</swagger-parser.version>
+		<swagger.version>2.2.41</swagger.version>
+
+		<undertow.version>2.4.0.Alpha1</undertow.version>
 		<liquibase.version>5.0.1</liquibase.version>
 
 		<mockito.version>5.20.0</mockito.version>
 		<junit-jupiter.version>6.0.1</junit-jupiter.version>
 		<junit.version>4.13.2</junit.version>
 		<junit-platform-console-standalone.version>6.0.1</junit-platform-console-standalone.version>
-		<selenium.version>4.38.0</selenium.version>
+		<selenium.version>4.39.0</selenium.version>
 		<h2.version>2.4.240</h2.version>
 
 		<coverage.temp>${java.io.tmpdir}/coverage/${basedir}</coverage.temp>
 
 		<maven-install-plugin.version>3.1.4</maven-install-plugin.version>
 		<build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
-		<maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
+		<maven-assembly-plugin.version>3.8.0</maven-assembly-plugin.version>
 		<maven-help-plugin.version>3.5.1</maven-help-plugin.version>
-		<maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-		<maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+		<maven-resources-plugin.version>3.4.0</maven-resources-plugin.version>
+		<maven-source-plugin.version>3.4.0</maven-source-plugin.version>
 		<maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
 		<maven-jar-plugin.version>3.5.0</maven-jar-plugin.version>
 		<maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
-		<maven-war-plugin.version>3.5.0</maven-war-plugin.version>
+		<maven-war-plugin.version>3.5.1</maven-war-plugin.version>
 		<maven-dependency-plugin.version>3.9.0</maven-dependency-plugin.version>
 		<maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
 		<maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
 		<maven-shade-plugin.version>3.6.1</maven-shade-plugin.version>
-		<versions-maven-plugin.version>2.19.1</versions-maven-plugin.version>
+		<versions-maven-plugin.version>2.20.1</versions-maven-plugin.version>
 		<flatten-maven-plugin.version>1.7.3</flatten-maven-plugin.version>
 
 		<maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
 		<maven-failsafe-plugin.version>3.5.4</maven-failsafe-plugin.version>
-		
-		<sonar-maven-plugin.version>5.3.0.6276</sonar-maven-plugin.version>
+
+		<sonar-maven-plugin.version>5.5.0.6356</sonar-maven-plugin.version>
 
 		<maven-exec-plugin.version>3.6.2</maven-exec-plugin.version>
 		<openapi-generator-maven-plugin.version>7.17.0</openapi-generator-maven-plugin.version>
@@ -108,11 +107,6 @@
 				<groupId>io.swagger.core.v3</groupId>
 				<artifactId>swagger-annotations</artifactId>
 				<version>${swagger.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springdoc</groupId>
-				<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-				<version>${springdoc-openapi.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>ch.scaille</groupId>
@@ -189,6 +183,11 @@
 				<artifactId>annotations</artifactId>
 				<version>${jetbrain-annotations.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>io.undertow</groupId>
+				<artifactId>undertow-core</artifactId>
+				<version>${undertow.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -218,7 +217,8 @@
 					<artifactId>versions-maven-plugin</artifactId>
 					<version>${versions-maven-plugin.version}</version>
 					<configuration>
-						<ignoredVersions>.*-M.*,.*-[Aa]lpha.*,.*-[Bb]eta.*,.*-RC.*</ignoredVersions>
+						<ignoredVersions>
+							.*-M.*,.*-[Aa]lpha.*,.*-[Bb]eta.*,.*-RC.*</ignoredVersions>
 						<onlyProjectDependencies>true</onlyProjectDependencies>
 					</configuration>
 				</plugin>

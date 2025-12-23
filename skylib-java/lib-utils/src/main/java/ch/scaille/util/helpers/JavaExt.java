@@ -82,12 +82,7 @@ public class JavaExt {
 		}
 	}
 
-	public static class AutoRemove implements NoExceptionCloseable {
-		public final Path path;
-
-		public AutoRemove(Path path) {
-			this.path = path;
-		}
+	public record AutoRemove(Path path) implements NoExceptionCloseable {
 
 		@Override
 		public void close() {

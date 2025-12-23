@@ -32,7 +32,7 @@ public class JavaTestCaseGeneratorMojoTest {
 		assertNotNull(pom);
 		assertTrue(pom.exists());
 
-		JavaTestCaseGeneratorMojo myMojo = (JavaTestCaseGeneratorMojo) rule.lookupConfiguredMojo(pom,
+		JavaTestCaseGeneratorMojo myMojo = rule.lookupConfiguredMojo(pom,
 				"generateTestCases");
 		assertNotNull(myMojo);
 		myMojo.execute();

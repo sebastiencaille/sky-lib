@@ -45,7 +45,11 @@ public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 	}
 
 	private void mutationHandler(DomMutation mutation) {
-		LOGGER.info(() -> "Received on %s, %s: %s -> %s".formatted(getElementPath(mutation.getElement()),
+		final var elementPath = getElementPath(mutation.getElement());
+		if (elementPath.isEmpty()) {
+			return;
+		}
+		LOGGER.info(() -> "Received on %s, %s: %s -> %s".formatted(elementPath,
 						mutation.getAttributeName(), mutation.getOldValue(), mutation.getCurrentValue()));
 		if (mutationFilter != null && mutationFilter.test(mutation)) {
 			synchronized (mutations) {

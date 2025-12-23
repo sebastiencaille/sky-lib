@@ -97,10 +97,10 @@ public class TestRemoteControl {
 					break;
 				case ERROR:
 					final var errorMessage = api.readErrorBody();
-					final var errStepNumber = errorMessage.stepNumber;
+					final var errStepNumber = errorMessage.stepNumber();
 					final var errStepStatus = stepStatus(errStepNumber);
 					errStepStatus.setState(StepState.FAILED);
-					errStepStatus.setMessage(errorMessage.message);
+					errStepStatus.setMessage(errorMessage.message());
 					stepChangedListener.accept(errStepNumber, errStepNumber);
 					break;
 				default:

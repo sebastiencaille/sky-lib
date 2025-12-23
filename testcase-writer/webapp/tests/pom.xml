@@ -17,7 +17,7 @@
 			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-webapp-war</artifactId>
 			<type>war</type>
-			<scope>runtime</scope>
+			<scope>compile</scope>
 		</dependency>
 
 		<dependency>
@@ -80,7 +80,6 @@
 									</arguments>
 								</configuration>
 							</execution>
-
 						</executions>
 					</plugin>
 					<plugin>
@@ -96,6 +95,11 @@
 								<goals>
 									<goal>start</goal>
 								</goals>
+								<configuration>
+									<includes>
+										<include>ch.scaille:lib-testing-core</include>
+									</includes>
+								</configuration>
 							</execution>
 							<execution>
 								<id>post-integration-test</id>
@@ -106,23 +110,19 @@
 						</executions>
 						<configuration>
 							<skip>${skipTests}</skip>
-							<classesDirectory>
-								${project.build.directory}/classes</classesDirectory>
+							<classesDirectory>${project.build.directory}/classes</classesDirectory>
 							<mainClass>ch.scaille.testing.spring.TestWarLauncher</mainClass>
 							<systemPropertyVariables>
 								<mainClass>ch.scaille.tcwriter.server.Server</mainClass>
+								<spring.datasource.url>jdbc:h2:mem:test</spring.datasource.url>
 							</systemPropertyVariables>
-							<includes>
-								<include>ch.scaille:lib-testing-core</include>
-							</includes>
 							<arguments>
 								<argument>--server.port=9000</argument>
 							</arguments>
-														
+
 							<!-- needed for jmx -->
 							<additionalClasspathElements>
-								<directory>
-									${project.build.directory}/${project.build.finalName}/</directory>
+								<directory>${project.build.directory}/${project.build.finalName}/</directory>
 							</additionalClasspathElements>
 
 						</configuration>

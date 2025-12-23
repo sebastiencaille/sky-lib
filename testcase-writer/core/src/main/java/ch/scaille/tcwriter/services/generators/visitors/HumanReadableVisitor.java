@@ -63,7 +63,7 @@ public class HumanReadableVisitor {
 	private String processTestParameter(final TestParameterValue parameterValue) {
 		return switch (parameterValue.getValueFactory()) {
 		case TestReference testRef ->
-			"[" + testRef.toDescription().getHumanReadable() + ": " + parameterValue.getSimpleValue() + "]";
+			"[" + testRef.toDescription().humanReadable() + ": " + parameterValue.getSimpleValue() + "]";
 			
 		case TestParameterFactory f when f.getNature() == ParameterNature.SIMPLE_TYPE && 
 				(Boolean.class.getName().equals(f.getParameterType()) || Boolean.TYPE.getName().equals(f.getParameterType())) ->
@@ -107,7 +107,7 @@ public class HumanReadableVisitor {
 	}
 
 	private String summaryOf(final IdObject idObject, final List<String> list) {
-		return format(tc.descriptionOf(idObject).getHumanReadable(), list);
+		return format(tc.descriptionOf(idObject).humanReadable(), list);
 	}
 
 	@VisibleForTesting

@@ -146,16 +146,7 @@ public class TestApi {
 		void execute(Command command) throws IOException;
 	}
 
-	public static class TestCaseError {
-		public final int stepNumber;
-		public final String message;
-		public final String stack;
-
-		public TestCaseError(final int step, final String message, final String stack) {
-			this.stepNumber = step;
-			this.message = message;
-			this.stack = stack;
-		}
+	public record TestCaseError(int stepNumber, String message, String stack) {
 
 	}
 

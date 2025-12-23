@@ -9,8 +9,9 @@ public record TestContent(StepEdition[] steps, String[] humanReadable) {
 	private static final String ACTOR_TEST_WRITER = "Test writer";
 
 	@Override
-	public final boolean equals(Object arg0) {
-		return (arg0 instanceof TestContent tc) && Arrays.deepEquals(steps, tc.steps) && Arrays.deepEquals(humanReadable, tc.humanReadable);
+	public boolean equals(Object arg0) {
+		return (arg0 instanceof TestContent(StepEdition[] steps1, String[] readable))
+				&& Arrays.deepEquals(steps, steps1) && Arrays.deepEquals(humanReadable, readable);
 	}
 	
 	@TCApi(description = "Basic test", humanReadable = "Basic test")

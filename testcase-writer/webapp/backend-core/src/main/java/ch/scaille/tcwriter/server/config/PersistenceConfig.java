@@ -20,8 +20,6 @@ import jakarta.persistence.EntityManagerFactory;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = "ch.scaille.tcwriter.server.repository")
-@EnableJdbcHttpSession
 public class PersistenceConfig {
 
 	@Bean
@@ -47,7 +45,7 @@ public class PersistenceConfig {
 	}
 
 	@Bean
-	PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
+	static PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
 		return new PersistenceExceptionTranslationPostProcessor();
 	}
 

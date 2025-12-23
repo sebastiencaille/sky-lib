@@ -49,10 +49,10 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 			yield testStep.getOrdinal();
 		case ACTOR:
 			tcObject = testStep.getActor();
-			yield tc.descriptionOf(tcObject).getDescription();
+			yield tc.descriptionOf(tcObject).description();
 		case ACTION:
 			tcObject = testAction;
-			yield tc.descriptionOf(tcObject).getDescription();
+			yield tc.descriptionOf(tcObject).description();
 		case SELECTOR:
 			if (!actionUtils.hasSelector()) {
 				yield "";
@@ -82,7 +82,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 	}
 
 	private String toString(final TestCase tc, final TestParameterFactory parameterDef) {
-		return tc.descriptionOf(parameterDef).getDescription();
+		return tc.descriptionOf(parameterDef).description();
 	}
 
 	@Override

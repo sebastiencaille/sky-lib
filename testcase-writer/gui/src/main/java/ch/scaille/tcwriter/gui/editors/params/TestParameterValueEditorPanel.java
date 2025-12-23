@@ -50,7 +50,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 	private static final long serialVersionUID = 1686297570581922386L;
 
 	public static IConverter<TestReference, ObjectTextView<TestReference>> refToTextConverter() {
-		return ObjectTextView.converter(ref -> ref.toDescription().getDescription());
+		return ObjectTextView.converter(ref -> ref.toDescription().description());
 	}
 
 	private List<TestReference> getReferences(final TestCase testCase, final TestParameterValue testParameterValue) {
@@ -237,14 +237,14 @@ public class TestParameterValueEditorPanel extends JPanel {
 		final var newValues = new ArrayList<ParameterValueEntry>();
 		for (final var mandatoryId : missingMandatoryIds) {
 			final var newValue = new ExportableTestParameterValue(mandatoryId,
-					tc.getValue().descriptionOf(mandatoryId).getDescription(),
+					tc.getValue().descriptionOf(mandatoryId).description(),
 					api.getMandatoryParameterById(mandatoryId).asSimpleParameter(), null);
 			editedParamValue.getValue().addComplexTypeValue(newValue);
 			newValues.add(asParam(tc.getObjectValue(), mandatoryId, newValue, api));
 		}
 		for (final var optionalId : missingOptionalIds) {
 			final var newValue = new ExportableTestParameterValue(optionalId,
-					tc.getValue().descriptionOf(optionalId).getDescription(),
+					tc.getValue().descriptionOf(optionalId).description(),
 					api.getOptionalParameterById(optionalId).asSimpleParameter(), null);
 			editedParamValue.getValue().addComplexTypeValue(newValue);
 			newValues.add(asParam(tc.getObjectValue(), optionalId, newValue, api));
@@ -297,7 +297,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 			final TestParameterValue complexValue, final TestParameterFactory complexTypeFactory) {
 		final var simpleValue = complexValue.getSimpleValue();
 		final var newParamValue = new ParameterValueEntry(complexParameterId, complexValue.getValueFactory(),
-				tc.descriptionOf(complexParameterId).getDescription(), simpleValue,
+				tc.descriptionOf(complexParameterId).description(), simpleValue,
 				!Strings.isNullOrEmpty(simpleValue));
 		updateParam(newParamValue, complexTypeFactory);
 		return newParamValue;

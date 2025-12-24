@@ -136,7 +136,8 @@ public abstract class AbstractComponentPilot<C> {
     }
 
     public <V, U> PollingResult<C, U> processResult(final PollingResult<C, V> result,
-                                                    Function<PollingResult<C, V>, PollingResult<C, U>> resultTransformer, FailureHandler<C, V> onFail) {
+                                                    Function<PollingResult<C, V>, PollingResult<C, U>> resultTransformer,
+                                                    @Nullable FailureHandler<C, V> onFail) {
         if (result.isSuccess()) {
             pilot.setActionDelay(result.getAndThen());
         } else {

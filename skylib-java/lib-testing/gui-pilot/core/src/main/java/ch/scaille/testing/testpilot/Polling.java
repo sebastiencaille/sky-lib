@@ -1,6 +1,7 @@
 package ch.scaille.testing.testpilot;
 
 import java.time.Duration;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import ch.scaille.testing.testpilot.PilotReport.ReportFunction;

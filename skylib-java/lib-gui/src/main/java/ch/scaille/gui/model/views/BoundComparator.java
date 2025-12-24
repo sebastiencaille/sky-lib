@@ -1,24 +1,26 @@
 package ch.scaille.gui.model.views;
 
 import java.util.Comparator;
+import java.util.Objects;
 
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
- * Comparator that can be used as a component Binding
- *
- * @author scaille
+ * View with a comparator that can be used as a component Binding
  *
  * @param <D> type of the compared data
  * @param <C> type of the comparator
  */
+@NullMarked
 public abstract class BoundComparator<D, C> extends AbstractDynamicView<D>
 		implements IComponentBinding<C>, Comparator<D> {
 
 	private C sorterPropertyValue;
-	private IListViewOwner<D> owner;
+	private @Nullable IListViewOwner<D> owner;
 
 	protected abstract int compare(D value1, D value2, C filter);
 
@@ -63,13 +65,13 @@ public abstract class BoundComparator<D, C> extends AbstractDynamicView<D>
 
 	@Override
 	public void removeComponentValueChangeListener() {
-		// Read only
+		// Read-only
 	}
 
 	@Override
 	public void setComponentValue(final IComponentChangeSource source, final C value) {
 		sorterPropertyValue = value;
-		owner.viewUpdated();
+		Objects.requireNonNull(owner, "attach was not called yet").viewUpdated();
 	}
 
 	@Override

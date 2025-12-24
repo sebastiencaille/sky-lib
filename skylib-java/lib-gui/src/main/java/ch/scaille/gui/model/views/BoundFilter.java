@@ -1,24 +1,26 @@
 package ch.scaille.gui.model.views;
 
+import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Filter that can be used as a component Binding
  *
- * @author scaille
- *
  * @param <D> the type of the filtered data
  * @param <F> the type of the property that filters the data
  */
+@NullMarked
 public abstract class BoundFilter<D, F> extends AbstractDynamicView<D> implements IComponentBinding<F>, Predicate<D> {
 
-	private F filterPropertyValue;
-	private IListViewOwner<D> owner;
+	private @Nullable F filterPropertyValue;
+	private @Nullable IListViewOwner<D> owner;
 
 	protected abstract boolean accept(D value, F filter);
 
@@ -40,10 +42,6 @@ public abstract class BoundFilter<D, F> extends AbstractDynamicView<D> implement
 	protected BoundFilter() {
 	}
 
-	protected F getFilterPropertyValue() {
-		return filterPropertyValue;
-	}
-
 	@Override
 	public void attach(final IListViewOwner<D> viewOwner) {
 		this.owner = viewOwner;
@@ -51,25 +49,24 @@ public abstract class BoundFilter<D, F> extends AbstractDynamicView<D> implement
 
 	@Override
 	public void addComponentValueChangeListener(final IComponentLink<F> link) {
-		// Read only
+		// Read-only
 	}
 
 	@Override
 	public void removeComponentValueChangeListener() {
-		// Read only
+		// Read-only
 	}
 
 	@Override
 	public void setComponentValue(final IComponentChangeSource source, final F value) {
 		filterPropertyValue = value;
-		owner.viewUpdated();
+		Objects.requireNonNull(owner, "attach was not called yet").viewUpdated();
 	}
 
 	@Override
 	public boolean test(final D value) {
 		if (filterPropertyValue == null) {
-			// not yet initialized
-			return false;
+			return true;
 		}
 		return accept(value, filterPropertyValue);
 	}

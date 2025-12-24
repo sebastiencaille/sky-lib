@@ -27,13 +27,13 @@ public class ${modelClass} extends GuiModel implements IObjectGuiModel<${objectC
 	
 	protected final AbstractProperty[] allProperties;
 	
-    public ${modelClass}(final String prefix, ModelConfiguration config) {
-		super(config.ifNotSet(()->	GuiModel.createErrorProperty(prefix + "${objectClassSimpleName}-Error", config)));
+    public ${modelClass}(final String prefix, ModelConfiguration.ModelConfigurationBuilder config) {
+		super(config.ifNotSet(modelConfiguration -> GuiModel.createErrorProperty(prefix + "${objectClassSimpleName}-Error", modelConfiguration)));
 		${fields.init}
 		allProperties = new AbstractProperty[]{${properties.all}};
     }
             
-    public ${modelClass}(ModelConfiguration config) {
+    public ${modelClass}(ModelConfiguration.ModelConfigurationBuilder config) {
     	this("", config);
     }
 

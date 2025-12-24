@@ -18,7 +18,7 @@ import ch.scaille.javabeans.properties.BooleanProperty;
 import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.javabeans.properties.IntProperty;
 
-@Generated(value = "ch.scaille.gui.mvc.GuiModelGenerator", date = "2025/03/01 19:53", comments = "-sp ch.scaille.example.gui -s /home/scaille/src/github/sky-lib/skylib-java/lib-gui-examples/target/classes -t /home/scaille/src/github/sky-lib/skylib-java/lib-gui-examples/src/main/java")
+@Generated(value = "ch.scaille.gui.mvc.GuiModelGenerator", date = "2025/12/24 17:32", comments = "-sp ch.scaille.example -cp ../lib-gui-examples/target/classes -t ../lib-gui-examples/src/main/java")
 public class ControllerExampleObjectGuiModel extends GuiModel implements IObjectGuiModel<ch.scaille.example.gui.controller.impl.ControllerExampleObject> {
    
     private final ObjectHolder<ch.scaille.example.gui.controller.impl.ControllerExampleObject> currentObjectProvider = new ObjectHolder<>();
@@ -41,8 +41,8 @@ public class ControllerExampleObjectGuiModel extends GuiModel implements IObject
 	
 	protected final AbstractProperty[] allProperties;
 	
-    public ControllerExampleObjectGuiModel(final String prefix, ModelConfiguration config) {
-		super(config.ifNotSet(()->	GuiModel.createErrorProperty(prefix + "ControllerExampleObject-Error", config)));
+    public ControllerExampleObjectGuiModel(final String prefix, ModelConfiguration.ModelConfigurationBuilder config) {
+		super(config.ifNotSet(modelConfiguration -> GuiModel.createErrorProperty(prefix + "ControllerExampleObject-Error", modelConfiguration)));
 		booleanPropProperty = new BooleanProperty(prefix + BOOLEAN_PROP, this).configureTyped(
 			Configuration.persistent(currentObjectProvider, Persisters.persister(ControllerExampleObject::isBooleanProp, ControllerExampleObject::setBooleanProp)),
 			implicitConverters(ControllerExampleObject.class, BOOLEAN_PROP, java.lang.Boolean.class));
@@ -59,7 +59,7 @@ public class ControllerExampleObjectGuiModel extends GuiModel implements IObject
 		allProperties = new AbstractProperty[]{booleanPropProperty, intPropProperty, stringPropProperty, testObjectPropProperty};
     }
             
-    public ControllerExampleObjectGuiModel(ModelConfiguration config) {
+    public ControllerExampleObjectGuiModel(ModelConfiguration.ModelConfigurationBuilder config) {
     	this("", config);
     }
 

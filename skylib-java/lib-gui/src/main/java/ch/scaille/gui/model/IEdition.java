@@ -1,6 +1,8 @@
 package ch.scaille.gui.model;
 
-public interface IEdition<T> extends AutoCloseable {
+import ch.scaille.util.helpers.JavaExt;
+
+public interface IEdition<T> extends JavaExt.AutoCloseableNoException {
 
 	T edited();
 

@@ -1,6 +1,9 @@
 package ch.scaille.gui.model;
 
+import ch.scaille.util.helpers.JavaExt;
+
 import java.util.Collection;
+import java.util.Optional;
 
 public interface ISourceModel<T> {
 
@@ -12,18 +15,19 @@ public interface ISourceModel<T> {
 
 	int insert(final T value);
 
-	T remove(final T sample);
+	Optional<T> remove(final T sample);
 
-	T remove(final int row);
+	Optional<T> remove(final int row);
 
-	T getEditedValue();
+	Optional<T> getEditedValue();
 
-	T find(T sample);
+
+	Optional<T> find(T sample);
 
 	/**
 	 * Starts the edition of the sample
 	 */
-	IEdition<T> startEditingValue(final T sample);
+	JavaExt.CloseableOptional<IEdition<T>> startEditingValue(final T sample);
 
 	/**
 	 * Stops the current object edition
@@ -39,7 +43,7 @@ public interface ISourceModel<T> {
 	 *               find the object)
 	 * @return an object if found, null if not
 	 */
-	IEdition<T> findForEdition(T sample);
+	JavaExt.CloseableOptional<IEdition<T>> findForEdition(T sample);
 
 	/**
 	 * Finds an object in the model, starting its edition, or insert the sample if

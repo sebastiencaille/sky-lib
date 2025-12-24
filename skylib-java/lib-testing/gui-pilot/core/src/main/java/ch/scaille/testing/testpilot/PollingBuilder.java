@@ -132,7 +132,7 @@ public class PollingBuilder<C,
 
 	protected final List<Consumer<Polling.PollingBuilder<C, ?>>> configurers = new ArrayList<>(2);
 
-	private FailureHandler<C, ?> failureHandler;
+	private @Nullable FailureHandler<C, ?> failureHandler;
 
 
 	public class Unless {
@@ -172,7 +172,8 @@ public class PollingBuilder<C,
 	 */
 	protected <R> PollingResult<C, R> poll(final Polling.PollingBuilder<C, R> polling) {
 		configurers.forEach(conf -> conf.accept(polling));
-		final var pollingResult = pilot.processResult(pilot.waitPollingSuccess(polling), PollingResults.identity(),
+		final var pollingResult = pilot.processResult(pilot.waitPollingSuccess(polling),
+				PollingResults.identity(),
 				((FailureHandler<C, R>) failureHandler));
 		reset();
 		return pollingResult;

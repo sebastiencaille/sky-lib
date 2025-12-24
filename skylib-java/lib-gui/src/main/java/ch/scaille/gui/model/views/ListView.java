@@ -1,5 +1,7 @@
 package ch.scaille.gui.model.views;
 
+import org.jspecify.annotations.NonNull;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Comparator;
@@ -58,7 +60,7 @@ public class ListView<T> implements IListView<T>, Serializable {
 	}
 
 	@Override
-	public void attach(final IListViewOwner<T> owner) {
+	public void attach(@NonNull final IListViewOwner<T> owner) {
 		this.parentComparator = owner.parentComparator();
 		if (filter instanceof AbstractDynamicView) {
 			((AbstractDynamicView<T>) filter).attach(owner);
@@ -66,7 +68,7 @@ public class ListView<T> implements IListView<T>, Serializable {
 	}
 
 	@Override
-	public void detach(final IListViewOwner<T> owner) {
+	public void detach(@NonNull final IListViewOwner<T> owner) {
 		// no op
 	}
 

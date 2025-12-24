@@ -38,7 +38,7 @@ public class StepEditorModel extends GuiModel {
 	private final ObjectProperty<StepClassifier> stepClassifier = new ObjectProperty<>("stepClassifier", this, null);
 	private final ObjectProperty<TestDictionary> testDictionary;
 
-	public StepEditorModel(final ModelConfiguration config, ObjectProperty<TestDictionary> testDictionary) {
+	public StepEditorModel(final ModelConfiguration.ModelConfigurationBuilder config, ObjectProperty<TestDictionary> testDictionary) {
 		super(config);
 		this.testDictionary = testDictionary;
 	}

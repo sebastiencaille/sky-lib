@@ -27,7 +27,7 @@ class TableTest {
 
 		private final ListProperty<TestObject> selection = new ListProperty<>("Selection", this);
 
-		public Model(final ModelConfiguration config) {
+		public Model(final ModelConfiguration.ModelConfigurationBuilder config) {
 			super(config);
 		}
 	}
@@ -36,7 +36,7 @@ class TableTest {
 	void testSelectionOnInsert() throws InvocationTargetException, InterruptedException {
 
 		final var support = PropertyChangeSupportController.mainGroup(this);
-		final var model = new Model(GuiModel.with(support));
+		final var model = new Model(GuiModel.ModelConfiguration.builder().propertySupport(support));
 		support.transmitChangesBothWays();
 
 		final var listModel = new ListModel<>(VIEW);

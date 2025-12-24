@@ -89,9 +89,9 @@ public class ClassFinder {
 		return new URLClassFinder(cp);
 	}
 
-	public static URLClassFinder source(final File... source) {
+	public static URLClassFinder source(final File... files) {
 		return new URLClassFinder(
-				Arrays.stream(source).map(LambdaExt.uncheckedF(f -> f.toURI().toURL())).toArray(URL[]::new));
+				Arrays.stream(files).map(LambdaExt.uncheckedF(f -> f.toURI().toURL())).toArray(URL[]::new));
 
 	}
 

@@ -17,7 +17,7 @@ import ch.scaille.javabeans.persisters.Persisters;
 import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.javabeans.properties.IntProperty;
 
-@Generated(value = "ch.scaille.gui.mvc.GuiModelGenerator", date = "2025/03/01 19:53", comments = "-sp ch.scaille.example.gui -s /home/scaille/src/github/sky-lib/skylib-java/lib-gui-examples/target/classes -t /home/scaille/src/github/sky-lib/skylib-java/lib-gui-examples/src/main/java")
+@Generated(value = "ch.scaille.gui.mvc.GuiModelGenerator", date = "2025/12/24 17:32", comments = "-sp ch.scaille.example -cp ../lib-gui-examples/target/classes -t ../lib-gui-examples/src/main/java")
 public class TestObjectGuiModel extends GuiModel implements IObjectGuiModel<ch.scaille.example.gui.TestObject> {
    
     private final ObjectHolder<ch.scaille.example.gui.TestObject> currentObjectProvider = new ObjectHolder<>();
@@ -34,8 +34,8 @@ public class TestObjectGuiModel extends GuiModel implements IObjectGuiModel<ch.s
 	
 	protected final AbstractProperty[] allProperties;
 	
-    public TestObjectGuiModel(final String prefix, ModelConfiguration config) {
-		super(config.ifNotSet(()->	GuiModel.createErrorProperty(prefix + "TestObject-Error", config)));
+    public TestObjectGuiModel(final String prefix, ModelConfiguration.ModelConfigurationBuilder config) {
+		super(config.ifNotSet(modelConfiguration -> GuiModel.createErrorProperty(prefix + "TestObject-Error", modelConfiguration)));
 		aSecondValueProperty = new IntProperty(prefix + ASECOND_VALUE, this).configureTyped(
 			Configuration.persistent(currentObjectProvider, Persisters.persister(TestObject::getASecondValue, TestObject::setASecondValue)),
 			implicitConverters(TestObject.class, ASECOND_VALUE, java.lang.Integer.class));
@@ -46,7 +46,7 @@ public class TestObjectGuiModel extends GuiModel implements IObjectGuiModel<ch.s
 		allProperties = new AbstractProperty[]{aSecondValueProperty, aFirstValueProperty};
     }
             
-    public TestObjectGuiModel(ModelConfiguration config) {
+    public TestObjectGuiModel(ModelConfiguration.ModelConfigurationBuilder config) {
     	this("", config);
     }
 

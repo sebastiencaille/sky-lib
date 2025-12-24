@@ -4,16 +4,17 @@ import java.util.function.Consumer;
 
 import ch.scaille.gui.mvc.factories.ComponentBindings;
 import ch.scaille.javabeans.IComponentBinding;
+import org.jspecify.annotations.NonNull;
 
 public abstract class AbstractDynamicView<T> {
 
 	private IListViewOwner<T> viewOwner;
 
-	public void attach(final IListViewOwner<T> aViewOwner) {
+	public void attach(@NonNull final IListViewOwner<T> aViewOwner) {
 		this.viewOwner = aViewOwner;
 	}
 
-	public void detach(final IListViewOwner<T> aViewOwner) {
+	public void detach(@NonNull final IListViewOwner<T> aViewOwner) {
 		if (viewOwner == aViewOwner) {
 			this.viewOwner = null;
 		}

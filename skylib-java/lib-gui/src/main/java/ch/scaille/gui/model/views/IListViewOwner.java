@@ -1,5 +1,7 @@
 package ch.scaille.gui.model.views;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Comparator;
 
 /**
@@ -14,6 +16,6 @@ public interface IListViewOwner<T> {
 
 	void viewUpdated();
 
-	Comparator<T> parentComparator();
+	@Nullable Comparator<T> parentComparator();
 
 }

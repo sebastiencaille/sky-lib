@@ -10,6 +10,7 @@ import ch.scaille.javabeans.IChainBuilderFactory;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.IPropertiesOwner;
 import ch.scaille.javabeans.chain.BindingChain;
+import lombok.Getter;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -23,6 +24,7 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 
     private final T defaultValue;
 
+    @Getter
     private T value;
 
     public ObjectProperty(@NonNull final String name, final @NonNull IPropertiesOwner model, final T defaultValue) {
@@ -93,10 +95,6 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 
     public void forceChanged(final Object caller) {
         propertySupport.getChangeSupport().firePropertyChange(getName(), caller, null, getValue());
-    }
-
-    public T getValue() {
-        return value;
     }
 
     public Optional<T> optional() {

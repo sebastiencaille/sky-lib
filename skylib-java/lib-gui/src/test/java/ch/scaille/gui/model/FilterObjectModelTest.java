@@ -40,8 +40,8 @@ class FilterObjectModelTest {
 
 		baseModel.insert(new TestObject(1));
 		baseModel.insert(new TestObject(4));
-		assertSame(baseModel.getValueAt(0), baseModel.find(new TestObject(1)));
-		assertSame(baseModel.getValueAt(1), baseModel.find(new TestObject(4)));
+		assertSame(baseModel.getValueAt(0), baseModel.find(new TestObject(1)).orElse(null));
+		assertSame(baseModel.getValueAt(1), baseModel.find(new TestObject(4)).orElse(null));
 	}
 
 	@Test

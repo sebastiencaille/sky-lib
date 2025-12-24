@@ -1,5 +1,7 @@
 package ch.scaille.gui.model.views;
 
+import org.jspecify.annotations.NonNull;
+
 import java.util.Comparator;
 
 /**
@@ -14,7 +16,7 @@ public interface IListView<T> extends Comparator<T> {
 
 	boolean accept(final T object);
 
-	void attach(final IListViewOwner<T> owner);
+	void attach(@NonNull final IListViewOwner<T> owner);
 
-	void detach(final IListViewOwner<T> owner);
+	void detach(@NonNull final IListViewOwner<T> owner);
 }

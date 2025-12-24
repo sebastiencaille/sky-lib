@@ -2,8 +2,9 @@ package ch.scaille.gui.mvc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.IPropertiesOwner;
@@ -11,7 +12,14 @@ import ch.scaille.javabeans.converters.IUnaryConverter;
 import ch.scaille.javabeans.properties.AbstractProperty.ErrorNotifier;
 import ch.scaille.javabeans.properties.AbstractTypedProperty;
 import ch.scaille.javabeans.properties.ErrorSet;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@Getter
+@NullMarked
 public class GuiModel implements IPropertiesOwner {
 
 	public interface ImplicitConvertProvider {
@@ -22,69 +30,45 @@ public class GuiModel implements IPropertiesOwner {
 				Class<?> attributeClass);
 	}
 
-	public static class ModelConfiguration {
 
+	@Builder
+	@AllArgsConstructor
+    public static class ModelConfiguration {
+
+		public static class ModelConfigurationBuilder {
+			public ModelConfigurationBuilder implicitConverters(List<ImplicitConvertProvider> implicitConverters) {
+				this.implicitConverters = (Objects.requireNonNullElseGet(this.implicitConverters, ArrayList::new));
+				this.implicitConverters.addAll(implicitConverters);
+				return this;
+			}
+		}
+
+		@Getter
 		protected final IPropertiesGroup propertySupport;
 
-		protected ErrorNotifier errorNotifier;
+		protected @Nullable ErrorNotifier errorNotifier;
 
+		protected @Nullable Function<ModelConfiguration, ErrorNotifier> ifNotSet;
 		/**
 		 * Allows converting a persisted value to a Property value
 		 */
-		protected final List<ImplicitConvertProvider> implicitConverters = new ArrayList<>();
-
-		public ModelConfiguration(IPropertiesGroup propertySupport) {
-			this.propertySupport = propertySupport;
-		}
-
-		public ModelConfiguration with(ErrorNotifier errorNotifier) {
-			this.errorNotifier = errorNotifier;
-			return this;
-		}
-
-		public ModelConfiguration ifNotSet(Supplier<ErrorNotifier> errSupplier) {
-			if (this.errorNotifier == null) {
-				this.errorNotifier = errSupplier.get();
-			}
-			return this;
-		}
-
-		public ModelConfiguration with(ImplicitConvertProvider factory) {
-			implicitConverters.add(factory);
-			return this;
-		}
-
-		public List<ImplicitConvertProvider> getImplicitConverters() {
-			return implicitConverters;
-		}
-
-		public ModelConfiguration validate() {
-			if (errorNotifier == null) {
-				errorNotifier = createErrorProperty("InputError", this);
-			}
-			return this;
-		}
-
-		public IPropertiesGroup getPropertySupport() {
-			return propertySupport;
-		}
+		@Getter
+		protected final List<ImplicitConvertProvider> implicitConverters;
 
 		public ErrorNotifier getErrorNotifier() {
+			if (errorNotifier == null && ifNotSet != null) {
+				errorNotifier = ifNotSet.apply(this);
+			}
+			if (errorNotifier == null) {
+				errorNotifier = createErrorProperty("Error", this);
+			}
 			return errorNotifier;
 		}
 
 	}
 
-	public static ModelConfiguration with(final IPropertiesGroup propertySupport, final ErrorNotifier errorProperty) {
-		return new ModelConfiguration(propertySupport).with(errorProperty);
-	}
-
-	public static ModelConfiguration with(final IPropertiesGroup propertySupport) {
-		return new ModelConfiguration(propertySupport);
-	}
-
-	public static ModelConfiguration of(final GuiController controller) {
-		return new ModelConfiguration(controller.getScopedChangeSupport());
+	public static ModelConfiguration.ModelConfigurationBuilder of(final GuiController controller) {
+		return ModelConfiguration.builder().propertySupport(controller.getScopedChangeSupport());
 	}
 
 	public static ErrorNotifier createErrorProperty(final String name, final ModelConfiguration config) {
@@ -93,17 +77,13 @@ public class GuiModel implements IPropertiesOwner {
 
 	protected final ModelConfiguration configuration;
 
-	public GuiModel(ModelConfiguration configuration) {
-		this.configuration = configuration.validate();
+	public GuiModel(ModelConfiguration.ModelConfigurationBuilder configuration) {
+		this.configuration = configuration.build();
 	}
 
-	public ModelConfiguration getConfiguration() {
-		return configuration;
-	}
-
-	@Override
+    @Override
 	public ErrorNotifier getErrorNotifier() {
-		return configuration.getErrorNotifier();
+		return Objects.requireNonNull(configuration.getErrorNotifier());
 	}
 
 	@Override

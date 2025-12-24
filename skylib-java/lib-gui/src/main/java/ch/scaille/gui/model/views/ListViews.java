@@ -25,4 +25,7 @@ public interface ListViews {
 		return new ListView<>(null, null);
 	}
 
+	static <U> IListView<U> simple() {
+		return new ListView<>(Comparator.comparingLong(Object::hashCode), null);
+	}
 }

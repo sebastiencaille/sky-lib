@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Optional;
 import java.util.TimerTask;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -27,137 +28,175 @@ import org.jspecify.annotations.Nullable;
 @NullMarked
 public class JavaExt {
 
-	private JavaExt() {
-		// noop
-	}
+    private JavaExt() {
+        // noop
+    }
 
-	public static TimerTask timerTask(Runnable runnable) {
-		return new TimerTask() {
-			@Override
-			public void run() {
-				runnable.run();
-			}
-		};
-	}
+    public static TimerTask timerTask(Runnable runnable) {
+        return new TimerTask() {
+            @Override
+            public void run() {
+                runnable.run();
+            }
+        };
+    }
 
-	/**
-	 * Gets the path of a URI
-	 */
-	public static String pathOf(URI uri) {
-		return pathOf(uri.getPath());
-	}
+    /**
+     * Gets the path of a URI
+     */
+    public static String pathOf(URI uri) {
+        return pathOf(uri.getPath());
+    }
 
-	/**
-	 * Gets the path of a URL
-	 */
-	public static String pathOf(URL url) {
-		return pathOf(url.getPath());
-	}
+    /**
+     * Gets the path of a URL
+     */
+    public static String pathOf(URL url) {
+        return pathOf(url.getPath());
+    }
 
-	private static String pathOf(String uriPath) {
-		if (uriPath.length() > 2 && uriPath.charAt(2) == ':') {
-			return uriPath.substring(1);
-		}
-		return uriPath;
-	}
+    private static String pathOf(String uriPath) {
+        if (uriPath.length() > 2 && uriPath.charAt(2) == ':') {
+            return uriPath.substring(1);
+        }
+        return uriPath;
+    }
 
-	public static void removeFolderUnsafe(Path path) {
-		try {
-			Files.walkFileTree(path, new SimpleFileVisitor<>() {
-				@Override
-				public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
-					Files.delete(path);
-					return FileVisitResult.CONTINUE;
-				}
+    public static void removeFolderUnsafe(Path path) {
+        try {
+            Files.walkFileTree(path, new SimpleFileVisitor<>() {
+                @Override
+                public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
+                    Files.delete(path);
+                    return FileVisitResult.CONTINUE;
+                }
 
-				@Override
-				public FileVisitResult postVisitDirectory(Path dir, @Nullable IOException exc) throws IOException {
-					if (exc != null) {
-						throw exc;
-					}
-					Files.delete(dir);
-					return FileVisitResult.CONTINUE;
-				}
-			});
-		} catch (IOException e) {
-			Logs.of(JavaExt.class).log(Level.INFO, e, () -> "Cannot delete temp folder");
-		}
-	}
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, @Nullable IOException exc) throws IOException {
+                    if (exc != null) {
+                        throw exc;
+                    }
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e) {
+            Logs.of(JavaExt.class).log(Level.INFO, e, () -> "Cannot delete temp folder");
+        }
+    }
 
-	public record AutoRemove(Path path) implements NoExceptionCloseable {
 
-		@Override
-		public void close() {
-			removeFolderUnsafe(path);
-		}
-	}
+    public record AutoRemove(Path path) implements NoExceptionCloseable {
 
-	public static AutoRemove autoRemove(Path path) {
-		return new AutoRemove(path);
-	}
+        @Override
+        public void close() {
+            removeFolderUnsafe(path);
+        }
+    }
 
-	public static class StreamHandler implements Runnable {
+    public static AutoRemove autoRemove(Path path) {
+        return new AutoRemove(path);
+    }
 
-		private final Supplier<InputStream> in;
-		private final Consumer<String> flow;
+    public static class StreamHandler implements Runnable {
 
-		public StreamHandler(Supplier<InputStream> in, final Consumer<String> flow) {
-			this.in = in;
-			this.flow = flow;
-		}
+        private final Supplier<InputStream> in;
+        private final Consumer<String> flow;
 
-		public void start() {
-			new Thread(this).start();
-		}
+        public StreamHandler(Supplier<InputStream> in, final Consumer<String> flow) {
+            this.in = in;
+            this.flow = flow;
+        }
 
-		@Override
-		public void run() {
-			// Use a reader to handle multibyte chars
-			try (var reader = new InputStreamReader(in.get(), StandardCharsets.UTF_8)) {
-				final var buffer = new char[1024 * 1024];
-				int read;
-				while ((read = reader.read(buffer, 0, buffer.length)) >= 0) {
-					flow.accept(new String(buffer, 0, read));
-				}
-			} catch (final IOException e) {
-				// ignore
-			}
-		}
-	}
+        public void start() {
+            new Thread(this).start();
+        }
 
-	/**
-	 * To consume an input stream
-	 */
-	public static StreamHandler inputStreamHandler(Supplier<InputStream> in, final Consumer<String> flow) {
-		return new StreamHandler(in, flow);
-	}
+        @Override
+        public void run() {
+            // Use a reader to handle multibyte chars
+            try (var reader = new InputStreamReader(in.get(), StandardCharsets.UTF_8)) {
+                final var buffer = new char[1024 * 1024];
+                int read;
+                while ((read = reader.read(buffer, 0, buffer.length)) >= 0) {
+                    flow.accept(new String(buffer, 0, read));
+                }
+            } catch (final IOException e) {
+                // ignore
+            }
+        }
+    }
 
-	public interface AutoCloseableNoException extends AutoCloseable {
-		@Override
-		void close();
-	}
+    /**
+     * To consume an input stream
+     */
+    public static StreamHandler inputStreamHandler(Supplier<InputStream> in, final Consumer<String> flow) {
+        return new StreamHandler(in, flow);
+    }
 
-	public static byte[] read(InputStream in) throws IOException {
-		final var out = new ByteArrayOutputStream();
-		in.transferTo(out);
-		return out.toByteArray();
-	}
+    public interface AutoCloseableNoException extends AutoCloseable {
+        @Override
+        void close();
+    }
 
-	public static String readUTF8Stream(final InputStream in) throws IOException {
-		final var inReader = new InputStreamReader(in, StandardCharsets.UTF_8);
-		try (final var stringWriter = new StringWriter()) {
-			inReader.transferTo(stringWriter);
-			return stringWriter.toString();
-		}
-	}
+    public static byte[] read(InputStream in) throws IOException {
+        final var out = new ByteArrayOutputStream();
+        in.transferTo(out);
+        return out.toByteArray();
+    }
 
-	public static RuntimeException notImplemented() {
-		return new IllegalStateException("Not implemented");
-	}
+    public static String readUTF8Stream(final InputStream in) throws IOException {
+        final var inReader = new InputStreamReader(in, StandardCharsets.UTF_8);
+        try (final var stringWriter = new StringWriter()) {
+            inReader.transferTo(stringWriter);
+            return stringWriter.toString();
+        }
+    }
 
-	public static void failIfFalse(boolean flag, Supplier<RuntimeException> throwable) {
-		if (!flag) {
-			throw throwable.get();
-		}
-	}
+    public static RuntimeException notImplemented() {
+        return new IllegalStateException("Not implemented");
+    }
+
+    public static void failIfFalse(boolean flag, Supplier<RuntimeException> throwable) {
+        if (!flag) {
+            throw throwable.get();
+        }
+    }
+
+    public interface CloseableOptional<T extends AutoCloseableNoException> extends AutoCloseableNoException {
+        Optional<T> opt();
+    }
+
+    public record CloseableOptionalNotNull<T extends AutoCloseableNoException>(T closeable) implements CloseableOptional<T> {
+
+        public Optional<T> opt() {
+            return Optional.of(closeable);
+        }
+
+        @Override
+        public void close() {
+            closeable.close();
+        }
+    }
+
+    private static final CloseableOptional<?> EMPTY = new CloseableOptional<>() {
+        @Override
+        public Optional<AutoCloseableNoException> opt() {
+            return Optional.empty();
+        }
+
+        @Override
+        public void close() {
+            // noop
+        }
+    };
+
+
+    public static <T extends AutoCloseableNoException> CloseableOptional<T> ofNullable(@Nullable T closeable) {
+        if (closeable == null) {
+            return (CloseableOptional<T>) EMPTY;
+        }
+        return new CloseableOptionalNotNull<>(closeable);
+    }
+
 }

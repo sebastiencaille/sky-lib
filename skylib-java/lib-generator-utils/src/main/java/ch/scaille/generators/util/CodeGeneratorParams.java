@@ -8,19 +8,23 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 
 import ch.scaille.util.helpers.JavaExt;
+import lombok.Getter;
 
 public class CodeGeneratorParams {
 
-	@Parameter(names = { "-s", "--sourceFolder" }, required = true)
-	private String sourceFolder = ".";
+	@Getter
+    @Parameter(names = { "-cp", "--cpFolder" }, required = true)
+	private String classPathFolder = ".";
 
 	@Parameter(names = { "-t", "--targetFolder" })
 	private String targetFolder = null;
 
-	@Parameter(names = { "-sp", "--scanPackage" }, required = true)
+	@Getter
+    @Parameter(names = { "-sp", "--scanPackage" }, required = true)
 	private String scanPackage = null;
 
-	@Parameter(names = { "-tp", "--targetPackage" })
+	@Getter
+    @Parameter(names = { "-tp", "--targetPackage" })
 	private String targetPackage = null;
 
 	public static CodeGeneratorParams parse(final String[] args) {
@@ -29,24 +33,12 @@ public class CodeGeneratorParams {
 		return params;
 	}
 
-	public String getSourceFolder() {
-		return sourceFolder;
-	}
-
-	public String getTargetFolder() {
+    public String getTargetFolder() {
         // by default, store in source folder so changes can be audited
-        return Objects.requireNonNullElse(targetFolder, sourceFolder);
+        return Objects.requireNonNullElse(targetFolder, classPathFolder);
     }
 
-	public String getScanPackage() {
-		return scanPackage;
-	}
-
-	public String getTargetPackage() {
-		return targetPackage;
-	}
-
-	/**
+    /**
 	 * Gets the folder of a class
 	 *
      */

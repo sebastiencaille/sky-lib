@@ -28,8 +28,9 @@ public class GuiModelGenerator {
 		final var targetFolder = Paths.get(params.getTargetFolder());
 		Files.createDirectories(targetFolder);
 
-		Logs.of(this).info("Scanning " + params.getSourceFolder());
-		try (var classFinder = ClassFinder.source(new File(params.getSourceFolder()))) {
+		final var classPathFile = new File(params.getClassPathFolder());
+		Logs.of(this).info("Scanning " + classPathFile.getAbsolutePath());
+		try (var classFinder = ClassFinder.source(classPathFile)) {
 			final var classes = classFinder.withAnnotation(GuiObject.class, ClassFinder.Policy.CLASS_ONLY)
 					.withLibPackages(List.of("ch.scaille.javabeans.properties.", "ch.scaille.javabeans.persisters.",
 							"ch.scaille.javabeans."))

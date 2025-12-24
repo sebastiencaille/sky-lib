@@ -3,6 +3,7 @@ package ch.scaille.gui.mvc;
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Parent class of all component bindings.
@@ -12,6 +13,7 @@ import ch.scaille.javabeans.IComponentLink;
  *
  * @param <T>
  */
+@NullMarked
 public class ComponentBindingAdapter<T> implements IComponentBinding<T> {
 
 	@Override

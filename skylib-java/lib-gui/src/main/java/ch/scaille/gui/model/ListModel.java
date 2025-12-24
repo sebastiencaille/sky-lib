@@ -4,11 +4,13 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import javax.swing.event.ListDataListener;
 
 import ch.scaille.gui.model.views.IListView;
+import ch.scaille.util.helpers.JavaExt;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -131,9 +133,7 @@ public class ListModel<T> implements ISourceModel<T>, Iterable<T>, Serializable 
 	 */
 	public void findAndEdit(final T sample, final Consumer<T> editor) {
 		try (var edition = findForEdition(sample)) {
-			if (edition != null) {
-				editor.accept(edition.edited());
-			}
+			edition.opt().ifPresent(edit -> editor.accept(edit.edited()));
 		}
 	}
 
@@ -152,9 +152,7 @@ public class ListModel<T> implements ISourceModel<T>, Iterable<T>, Serializable 
 
 	public void editValue(final T sample, final Consumer<T> editor) {
 		try (var edition = startEditingValue(sample)) {
-			if (edition != null) {
-				editor.accept(edition.edited());
-			}
+			edition.opt().ifPresent(edit -> editor.accept(edit.edited()));
 		}
 	}
 
@@ -179,22 +177,22 @@ public class ListModel<T> implements ISourceModel<T>, Iterable<T>, Serializable 
 	}
 
 	@Override
-	public T remove(final T sample) {
+	public Optional<T> remove(final T sample) {
 		return sourceCallbacks.remove(sample);
 	}
 
 	@Override
-	public T remove(final int row) {
+	public Optional<T> remove(final int row) {
 		return sourceCallbacks.remove(row);
 	}
 
 	@Override
-	public T getEditedValue() {
+	public Optional<T> getEditedValue() {
 		return sourceCallbacks.getEditedValue();
 	}
 
 	@Override
-	public IEdition<T> startEditingValue(final T value) {
+	public JavaExt.CloseableOptional<IEdition<T>> startEditingValue(final T value) {
 		return sourceCallbacks.startEditingValue(value);
 	}
 
@@ -204,12 +202,12 @@ public class ListModel<T> implements ISourceModel<T>, Iterable<T>, Serializable 
 	}
 
 	@Override
-	public T find(final T sample) {
+	public Optional<T> find(final T sample) {
 		return sourceCallbacks.find(sample);
 	}
 
 	@Override
-	public IEdition<T> findForEdition(final T sample) {
+	public JavaExt.CloseableOptional<IEdition<T>> findForEdition(final T sample) {
 		return sourceCallbacks.findForEdition(sample);
 	}
 

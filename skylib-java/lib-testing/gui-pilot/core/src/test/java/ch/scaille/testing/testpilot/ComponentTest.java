@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import ch.scaille.util.helpers.DelayFunction;
+import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import ch.scaille.util.helpers.Poller;
-import ch.scaille.util.helpers.Poller.DelayFunction;
 
+@NullMarked
 class ComponentTest {
 
 	private static final String TEST_TEXT = "Hello";
@@ -35,7 +37,7 @@ class ComponentTest {
 		}
 
 		@Override
-		protected <U> Optional<PollingResult<Object, U>> executePolling(Poller poller, Polling<Object, U> polling) {
+		protected <U> Optional<PollingResult<Object, U>> executePolling(Poller poller, Polling<Object, U>.InitializedPolling polling) {
 			delays.add(poller.getTimeTracker().elapsedTimeMs());
 			return super.executePolling(poller, polling);
 		}
@@ -46,7 +48,7 @@ class ComponentTest {
 		}
 
 		@Override
-		public boolean canCheck(PollingContext<Object> ctxt) {
+		public boolean canCheck(PolledComponent<Object> ctxt) {
 			return true;
 		}
 

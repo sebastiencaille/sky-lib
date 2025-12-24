@@ -5,10 +5,12 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 
 import ch.scaille.javabeans.properties.IPersister;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * To access a property using a getter and a setter
  */
+@NullMarked
 public class MethodHandlerAccess<T, A> implements IPersisterFactory<T, A> {
 
 	private final MethodHandle getter;

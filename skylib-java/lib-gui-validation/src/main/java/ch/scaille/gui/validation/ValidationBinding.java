@@ -12,7 +12,10 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class ValidationBinding {
 
 	private static final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -25,6 +28,7 @@ public class ValidationBinding {
 
 		return new IUnaryConverter<>() {
 
+			@Nullable
 			private String propertyName;
 
 			@Override

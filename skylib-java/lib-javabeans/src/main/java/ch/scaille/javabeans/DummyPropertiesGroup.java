@@ -5,8 +5,12 @@ import java.util.function.Consumer;
 
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.IPropertyEventListener;
+import org.jspecify.annotations.NullMarked;
 
-public class DummyPropertiesGroup implements IPropertiesGroup {
+@NullMarked
+public class DummyPropertiesGroup implements IPropertiesGroup, IPropertyEventListener {
+
+	private final PropertyChangeSupportController propertyChangeSupportController = new PropertyChangeSupportController(this);
 
 	@Override
 	public void register(AbstractProperty abstractProperty) {
@@ -49,13 +53,13 @@ public class DummyPropertiesGroup implements IPropertiesGroup {
 	@Override
 	public PropertyChangeSupportController getChangeSupport() {
 		// noop
-		return null;
+		return propertyChangeSupportController;
 	}
 
 	@Override
 	public IPropertyEventListener detachWhenPropLoading() {
 		// noop
-		return null;
+		return this;
 	}
 	
 	@Override
@@ -63,4 +67,8 @@ public class DummyPropertiesGroup implements IPropertiesGroup {
 		// noop
 	}
 
+	@Override
+	public void propertyModified(Object caller, PropertyEvent event) {
+		// noop
+	}
 }

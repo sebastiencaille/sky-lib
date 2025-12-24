@@ -8,6 +8,7 @@ import ch.scaille.gui.mvc.ComponentBindingAdapter;
 import ch.scaille.gui.swing.SwingExt;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Select the tab of a tabbed pane according to the property's value.
@@ -17,6 +18,7 @@ import ch.scaille.javabeans.IComponentLink;
  *
  * @param <T>
  */
+@NullMarked
 public class JTabbedPaneSelectionBinding<T> extends ComponentBindingAdapter<T> {
 
 	private final JTabbedPane pane;

@@ -3,6 +3,7 @@ package ch.scaille.javabeans.properties;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -19,160 +20,161 @@ import ch.scaille.javabeans.PropertyEvent.EventKind;
 import ch.scaille.javabeans.converters.IContextualConverter;
 import ch.scaille.javabeans.converters.IConverter;
 import ch.scaille.javabeans.persisters.Persisters;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A property with a typed value.
  * <p>
  *
- * @author Sebastien Caille
- *
  * @param <T> the type of the object contained in the property
+ * @author Sebastien Caille
  */
 public abstract class AbstractTypedProperty<T> extends AbstractProperty implements IChainBuilder<T> {
 
-	private final List<IConverter<T, T>> implicitConverters = new ArrayList<>();
+    private final List<IConverter<T, T>> implicitConverters = new ArrayList<>();
 
-	private transient IPersister<T> persister = Persisters.dummy();
+    private transient @NonNull IPersister<T> persister = Persisters.dummy();
 
-	protected abstract T replaceValue(T newValue);
+    protected abstract T replaceValue(T newValue);
 
-	public abstract T getObjectValue();
+    public abstract T getObjectValue();
 
-	public abstract IChainBuilderFactory<T> createBindingChain();
+    public abstract @NonNull IChainBuilderFactory<T> createBindingChain();
 
-	protected AbstractTypedProperty(final String name, final IPropertiesOwner model) {
-		super(name, model.getPropertySupport());
-		setErrorNotifier(model.getErrorNotifier());
-	}
+    protected AbstractTypedProperty(final String name, final IPropertiesOwner model) {
+        super(name, model.getPropertySupport());
+        setErrorNotifier(model.getErrorNotifier());
+    }
 
-	protected AbstractTypedProperty(final String name, final IPropertiesGroup propertySupport) {
-		super(name, propertySupport);
-	}
+    protected AbstractTypedProperty(final String name, final IPropertiesGroup propertySupport) {
+        super(name, propertySupport);
+    }
 
-	public void setPersister(final IPersister<T> persister) {
-		if (persister == null) {
-			this.persister = Persisters.dummy();
-		} else {
-			this.persister = persister;
-		}
-	}
+    public void setPersister(@Nullable final IPersister<T> persister) {
+        this.persister = Objects.requireNonNullElseGet(persister, Persisters::dummy);
+    }
 
-	public void addImplicitConverter(IConverter<T, T> converter) {
-		implicitConverters.add(converter);
-	}
+    public void addImplicitConverter(IConverter<T, T> converter) {
+        implicitConverters.add(converter);
+    }
 
-	@Override
-	public void load(final Object caller) {
-		setObjectValue(caller, persister.get());
-	}
+    @Override
+    public void load(final @NonNull Object caller) {
+        setObjectValue(caller, persister.get());
+    }
 
-	@Override
-	public void save() {
-		try {
-			persister.set(getObjectValue());
-		} catch (final RuntimeException e) {
-			throw new IllegalStateException("Failed to set property " + getName(), e);
-		}
-	}
+    @Override
+    public void save() {
+        try {
+            persister.set(getObjectValue());
+        } catch (final RuntimeException e) {
+            throw new IllegalStateException("Failed to set property " + getName(), e);
+        }
+    }
 
-	public void setObjectValueFromComponent(final Object caller, final T newValue) {
-		if (mustSendToProperty()) {
-			setObjectValue(caller, newValue);
-		}
-	}
+    public void setObjectValueFromComponent(final @NonNull Object caller, final T newValue) {
+        if (mustSendToProperty()) {
+            setObjectValue(caller, newValue);
+        }
+    }
 
-	public AbstractTypedProperty<T> configureTyped(final Consumer<AbstractTypedProperty<T>>... propertyConfigurer) {
-		Stream.of(propertyConfigurer).forEach(prop -> prop.accept(this));
-		return this;
-	}
+    public @NonNull AbstractTypedProperty<T> configureTyped(final Consumer<AbstractTypedProperty<T>>... propertyConfigurer) {
+        Stream.of(propertyConfigurer).forEach(prop -> prop.accept(this));
+        return this;
+    }
 
 
-	@Override
-	public <C> IChainBuilder<C> bind(final IConverter<T, C> binding) {
-		return createBindingChainWithConv().bind(binding);
-	}
+    @Override
+    public <C> @NonNull IChainBuilder<C> bind(final @NonNull IConverter<T, C> binding) {
+        return createBindingChainWithConv().bind(binding);
+    }
 
-	@Override
-	public <C> IChainBuilder<C> bind(final Function<T, C> binding) {
-		return createBindingChainWithConv().bind(binding);
-	}
+    @Override
+    public <C> @NonNull IChainBuilder<C> bind(final @NonNull Function<T, C> binding) {
+        return createBindingChainWithConv().bind(binding);
+    }
 
-	@Override
-	public IBindingController bind(final IComponentBinding<T> binding) {
-		return createBindingChainWithConv().bind(binding);
-	}
-	
-	@Override
-	public <C> IChainBuilder<C> bind(Function<T, C> prop2Comp, Function<C, T> comp2Prop) {
-		return createBindingChainWithConv().bind(prop2Comp, comp2Prop);
-	}
-	
-	
-	@Override
-	public <C, K> IChainBuilder<C> bind(ContextProperties<K> multiProperties, BiFunction<T, K, C> prop2Comp) {
-		return createBindingChainWithConv().bind(multiProperties, prop2Comp);
-	}
-	
-	@Override
-	public <C, K> IChainBuilder<C> bind(ContextProperties<K> multiProperties, BiFunction<T, K, C> prop2Comp,
-			BiFunction<C, K, T> comp2Prop) {
-		return createBindingChainWithConv().bind(multiProperties, prop2Comp, comp2Prop);
-	}
-	
-	@Override
-	public <C, K> IChainBuilder<C> bind(IContextualConverter<T, C, K> converter) {
-		return createBindingChainWithConv().bind(converter);
-	}
+    @Override
+    public @NonNull IBindingController bind(final @NonNull IComponentBinding<T> binding) {
+        return createBindingChainWithConv().bind(binding);
+    }
 
-	/**
-	 * Executes binding when the property is updated (transmitMode = BOTH only)
-	 */
-	public IBindingController listenActive(final Consumer<T> binding) {
-		final var listen = createBindingChain().listen(binding);
-		listen.getVetoer().inhibitTransmitToComponentWhen(p -> p.getTransmitMode() != TransmitMode.TRANSMIT);
-		return listen;
-	}
+    @Override
+    public <C> @NonNull IChainBuilder<C> bind(@NonNull Function<T, C> prop2Comp,
+                                              @NonNull Function<C, T> comp2Prop) {
+        return createBindingChainWithConv().bind(prop2Comp, comp2Prop);
+    }
 
-	/**
-	 * Executes binding when the property is updated (transmitMode =
-	 * BOTH|TO_COMPONENT)
-	 */
-	@Override
-	public IBindingController listen(final Consumer<T> binding) {
-		return createBindingChain().listen(binding);
-	}
 
-	private IChainBuilderFactory<T> createBindingChainWithConv() {
-		var chain = createBindingChain();
-		for (final var conv : implicitConverters) {
-			chain = chain.earlyBind(conv);
-		}
-		return chain;
-	}
+    @Override
+    public <C, K> @NonNull IChainBuilder<C> bind(@NonNull ContextProperties<K> multiProperties,
+                                                 @NonNull BiFunction<T, @NonNull K, C> prop2Comp) {
+        return createBindingChainWithConv().bind(multiProperties, prop2Comp);
+    }
 
-	protected void setObjectValue(final Object caller, final T newValue) {
-		onValueSet(caller, EventKind.BEFORE);
-		try {
-			if (!mustSendToComponent()) {
-				replaceValue(newValue);
-				return;
-			}
-			final var oldValue = replaceValue(newValue);
-			if (oldValue != null || newValue != null) {
-				propertySupport.getChangeSupport().firePropertyChange(getName(), caller, oldValue, newValue);
-			}
-		} finally {
-			onValueSet(caller, EventKind.AFTER);
-		}
-	}
-	
-	@Override
-	public void flushChanges(Object caller) {
-		propertySupport.getChangeSupport().firePropertyChange(getName(), this, null, getObjectValue());
-	}
-	
-	@Override
-	public PropertyChangeEvent getRefreshChangeEvent() {
-		return new PropertyChangeEvent(this, getName(), null, getObjectValue());
-	}
+    @Override
+    public <C, K> @NonNull IChainBuilder<C> bind(@NonNull ContextProperties<K> multiProperties,
+                                                 @NonNull BiFunction<T, @NonNull K, C> prop2Comp,
+                                                 @NonNull BiFunction<C, K, T> comp2Prop) {
+        return createBindingChainWithConv().bind(multiProperties, prop2Comp, comp2Prop);
+    }
+
+    @Override
+    public <C, K> @NonNull IChainBuilder<C> bind(@NonNull IContextualConverter<T, C, @NonNull K> converter) {
+        return createBindingChainWithConv().bind(converter);
+    }
+
+    /**
+     * Executes binding when the property is updated (transmitMode = BOTH only)
+     */
+    public IBindingController listenActive(final Consumer<T> binding) {
+        final var listen = createBindingChain().listen(binding);
+        listen.getVetoer().inhibitTransmitToComponentWhen(p -> p.getTransmitMode() != TransmitMode.TRANSMIT);
+        return listen;
+    }
+
+    /**
+     * Executes binding when the property is updated (transmitMode =
+     * BOTH|TO_COMPONENT)
+     */
+    @Override
+    @NonNull
+    public IBindingController listen(final @NonNull Consumer<T> binding) {
+        return createBindingChain().listen(binding);
+    }
+
+    private IChainBuilderFactory<T> createBindingChainWithConv() {
+        var chain = createBindingChain();
+        for (final var conv : implicitConverters) {
+            chain = chain.earlyBind(conv);
+        }
+        return chain;
+    }
+
+    protected void setObjectValue(final @NonNull Object caller, @Nullable final T newValue) {
+        onValueSet(caller, EventKind.BEFORE);
+        try {
+            if (!mustSendToComponent()) {
+                replaceValue(newValue);
+                return;
+            }
+            final var oldValue = replaceValue(newValue);
+            if (oldValue != null || newValue != null) {
+                propertySupport.getChangeSupport().firePropertyChange(getName(), caller, oldValue, newValue);
+            }
+        } finally {
+            onValueSet(caller, EventKind.AFTER);
+        }
+    }
+
+    @Override
+    public void flushChanges(@NonNull Object caller) {
+        propertySupport.getChangeSupport().firePropertyChange(getName(), this, null, getObjectValue());
+    }
+
+    @Override
+    public @NonNull PropertyChangeEvent getRefreshChangeEvent() {
+        return new PropertyChangeEvent(this, getName(), null, getObjectValue());
+    }
 }

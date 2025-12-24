@@ -1,9 +1,11 @@
 package ch.scaille.javabeans.properties;
 
+import org.jspecify.annotations.Nullable;
+
 public interface IPersister<T> {
 
-	T get();
+	@Nullable T get();
 
-	void set(T value);
+	void set(@Nullable T value);
 
 }

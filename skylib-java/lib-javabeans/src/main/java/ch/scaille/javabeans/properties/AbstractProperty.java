@@ -16,6 +16,7 @@ import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.IVetoer.TransmitMode;
 import ch.scaille.javabeans.PropertyEvent;
 import ch.scaille.javabeans.PropertyEvent.EventKind;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Provides type-independent properties mechanisms.
@@ -24,6 +25,7 @@ import ch.scaille.javabeans.PropertyEvent.EventKind;
  * @author Sebastien Caille
  *
  */
+@NullMarked
 public abstract class AbstractProperty implements IComponentChangeSource, Serializable {
 
 	@Serial

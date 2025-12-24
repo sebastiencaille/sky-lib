@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 import javax.swing.event.ListDataListener;
 
 import ch.scaille.gui.model.views.IListView;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * List Model with log(n) access.
@@ -102,7 +102,7 @@ public class ListModel<T> implements ISourceModel<T>, Iterable<T>, Serializable 
 	}
 
 	@Override
-	public @NotNull Iterator<T> iterator() {
+	public @NonNull Iterator<T> iterator() {
 		return content.iterator();
 	}
 

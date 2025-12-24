@@ -6,6 +6,7 @@ import ch.scaille.javabeans.IChainBuilderFactory;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.IPropertiesOwner;
 import ch.scaille.javabeans.chain.BindingChain;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Property containing a long value.
@@ -14,6 +15,7 @@ import ch.scaille.javabeans.chain.BindingChain;
  * @author Sebastien Caille
  *
  */
+@NullMarked
 public class LongProperty extends AbstractTypedProperty<Long> {
 
 	private long value;

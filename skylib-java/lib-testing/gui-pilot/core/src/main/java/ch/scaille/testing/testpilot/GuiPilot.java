@@ -1,27 +1,36 @@
 package ch.scaille.testing.testpilot;
 
 import java.time.Duration;
+import java.util.Optional;
 
 import ch.scaille.testing.testpilot.ModalDialogDetector.Builder;
 import ch.scaille.testing.testpilot.PilotReport.ReportFunction;
 import ch.scaille.testing.testpilot.factories.FailureHandlers;
 import ch.scaille.testing.testpilot.factories.FailureHandlers.FailureHandler;
+import ch.scaille.util.helpers.DelayFunction;
 import ch.scaille.util.helpers.NoExceptionCloseable;
-import ch.scaille.util.helpers.Poller;
+import lombok.Getter;
+import lombok.Setter;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
+@Getter
+@Setter
 public class GuiPilot {
 
 	private final PilotReport actionReport = new PilotReport();
 
+	@Nullable
 	private ActionDelay actionDelay = null;
 
 	private Duration defaultModalDialogTimeout = Duration.ofSeconds(30);
 
-	private Duration pollingTimeout = Duration.ofSeconds(30);
+	private Duration defaultPollingTimeout = Duration.ofSeconds(30);
 
 	private Duration pollingFirstDelay = Duration.ofMillis(0);
 
-	private Poller.DelayFunction pollingDelayFunction = p -> {
+	private DelayFunction pollingDelayFunction = p -> {
 		final var elapsedTime = p.getTimeTracker().elapsedTimeMs();
 		if (elapsedTime < 500) {
 			return Duration.ofMillis(100);
@@ -37,62 +46,26 @@ public class GuiPilot {
 		if (text == null) {
 			return "";
 		}
-		return pc.getDescription() + ": " + text;
+		return pc.description() + ": " + text;
 	};
 
+	@Nullable
 	private ModalDialogDetector currentModalDialogDetector;
 
 	public <T extends GuiPilot> T unwrap(Class<T> target) {
 		return target.cast(this);
 	}
 
-	
-	public PilotReport getActionReport() {
-		return actionReport;
-	}
-
 	/**
 	 * Sets the delay implied by the last executed action
 	 *
      */
-	public void setActionDelay(final ActionDelay actionDelay) {
+	public void setActionDelay(@Nullable final ActionDelay actionDelay) {
 		this.actionDelay = actionDelay;
 	}
 
-	public ActionDelay getActionDelay() {
-		return actionDelay;
-	}
-
-	public Duration getPollingTimeout() {
-		return pollingTimeout;
-	}
-
-	public void setDefaultPollingTimeout(final Duration pollingTimeout) {
-		this.pollingTimeout = pollingTimeout;
-	}
-
-	public Duration getPollingFirstDelay() {
-		return pollingFirstDelay;
-	}
-
-	public void setPollingFirstDelay(Duration pollingFirstDelay) {
-		this.pollingFirstDelay = pollingFirstDelay;
-	}
-
-	public ReportFunction<Object> getReportFunction() {
-		return reportFunction;
-	}
-
-	public void setReportFunction(ReportFunction<Object> reportFunction) {
-		this.reportFunction = reportFunction;
-	}
-
-	public Poller.DelayFunction getPollingDelayFunction() {
-		return pollingDelayFunction;
-	}
-
-	public void setPollingDelayFunction(Poller.DelayFunction pollingDelayFunction) {
-		this.pollingDelayFunction = pollingDelayFunction;
+	public Optional<ActionDelay> getActionDelay() {
+		return Optional.ofNullable(actionDelay);
 	}
 
 	protected Builder createDefaultModalDialogDetector() {
@@ -101,14 +74,6 @@ public class GuiPilot {
 
 	public void waitModalDialogHandled() {
 		waitModalDialogHandled(FailureHandlers.throwError());
-	}
-
-	public Duration getDefaultModalDialogTimeout() {
-		return defaultModalDialogTimeout;
-	}
-
-	public void setDefaultModalDialogTimeout(Duration modalDialogTimeout) {
-		this.defaultModalDialogTimeout = modalDialogTimeout;
 	}
 
 	/**

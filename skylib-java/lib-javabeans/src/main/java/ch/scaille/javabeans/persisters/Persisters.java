@@ -7,17 +7,21 @@ import java.util.function.Function;
 import ch.scaille.javabeans.persisters.IPersisterFactory.IObjectProvider;
 import ch.scaille.javabeans.properties.IPersister;
 import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class Persisters {
 
 	private static class DummyPersister<T> implements IPersister<T> {
 		@Override
+		@Nullable
 		public T get() {
 			return null;
 		}
 
 		@Override
-		public void set(T value) {
+		public void set(@Nullable T value) {
 			// No target available to set value
 		}
 	}

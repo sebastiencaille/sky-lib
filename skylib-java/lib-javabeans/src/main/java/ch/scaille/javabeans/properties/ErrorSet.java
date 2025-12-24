@@ -2,10 +2,15 @@ package ch.scaille.javabeans.properties;
 
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.properties.AbstractProperty.ErrorNotifier;
+import org.jspecify.annotations.NullMarked;
+
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * To track the current errors (validation, exceptions, ...) 
  */
+@NullMarked
 public class ErrorSet implements ErrorNotifier {
 
 	private final MapProperty<AbstractProperty, ConversionError> errors;
@@ -17,16 +22,20 @@ public class ErrorSet implements ErrorNotifier {
 		lastError = new ObjectProperty<>(name + "-last", support);
 	}
 
+	private Map<AbstractProperty, ConversionError> errors() {
+		return Objects.requireNonNull(errors.getValue());
+	}
+
 	@Override
 	public void notifyError(final Object source, final ConversionError error) {
-		errors.getValue().put(error.property(), error);
+		errors().put(error.property(), error);
 		errors.flushChanges(source);
 		lastError.setValue(source, error);
 	}
 
 	@Override
 	public void clearError(final Object source, final AbstractProperty property) {
-		errors.getValue().remove(property);
+		errors().remove(property);
 		errors.flushChanges(source);
 		if (lastError.getValue() != null && property.equals(lastError.getValue().property())) {
 			lastError.setValue(source, null);
@@ -43,7 +52,7 @@ public class ErrorSet implements ErrorNotifier {
 
 	@Override
 	public String toString() {
-		return "Errors: " + errors.getObjectValue().size() + ", last=" + lastError.getValue();
+		return "Errors: " + errors().size() + ", last=" + lastError.getValue();
 	}
 
 }

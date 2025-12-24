@@ -8,7 +8,10 @@ import javax.swing.JList;
 import ch.scaille.gui.mvc.ComponentBindingAdapter;
 import ch.scaille.gui.swing.SwingExt;
 import ch.scaille.javabeans.IComponentChangeSource;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class JListContentBinding<T> extends ComponentBindingAdapter<List<T>> {
 
 	private final JList<T> list;
@@ -18,7 +21,7 @@ public class JListContentBinding<T> extends ComponentBindingAdapter<List<T>> {
 	}
 
 	@Override
-	public void setComponentValue(final IComponentChangeSource source, final List<T> value) {
+	public void setComponentValue(final IComponentChangeSource source, @Nullable final List<T> value) {
 		final var newModel = new DefaultListModel<T>();
 		value.forEach(newModel::addElement);
 		list.setModel(newModel);

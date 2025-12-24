@@ -18,7 +18,7 @@ import ch.scaille.tcwriter.it.api.StepSelector;
 import ch.scaille.tcwriter.it.api.TestContent;
 import ch.scaille.tcwriter.it.api.TestSessionRole;
 import ch.scaille.tcwriter.it.api.TestWriterRole;
-import ch.scaille.testing.testpilot.PollingContext;
+import ch.scaille.testing.testpilot.PolledComponent;
 import ch.scaille.testing.testpilot.PollingResult;
 import ch.scaille.testing.testpilot.factories.PollingResults;
 import ch.scaille.testing.testpilot.factories.Reporting;
@@ -95,11 +95,11 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 
 	}
 
-	private PollingResult<JTable, Boolean> updateParameterValues(PollingContext<JTable> context,
-			final ParameterValue value) {
-		updateValue(context.getComponent(), value.getKeyValue1());
-		updateValue(context.getComponent(), value.getKeyValue2());
-		updateValue(context.getComponent(), value.getKeyValue3());
+	private PollingResult<JTable, Boolean> updateParameterValues(PolledComponent<JTable> context,
+																 final ParameterValue value) {
+		updateValue(context.component(), value.getKeyValue1());
+		updateValue(context.component(), value.getKeyValue2());
+		updateValue(context.component(), value.getKeyValue3());
 		return PollingResults.success();
 	}
 

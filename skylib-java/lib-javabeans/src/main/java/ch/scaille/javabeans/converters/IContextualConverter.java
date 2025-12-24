@@ -2,6 +2,8 @@ package ch.scaille.javabeans.converters;
 
 import ch.scaille.javabeans.properties.ContextProperties;
 import ch.scaille.javabeans.properties.AbstractProperty;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * 
@@ -9,15 +11,18 @@ import ch.scaille.javabeans.properties.AbstractProperty;
  * @param <C> The component side type
  * @param <K> the context type
  */
+@NullMarked
 public interface IContextualConverter<P, C, K> {
 
 	default void initialize(final AbstractProperty p) {
 		// noop
 	}
-	
-	C convertPropertyValueToComponentValue(final P propertyValue, K context);
 
-	P convertComponentValueToPropertyValue(C componentValue, K context) throws ConversionException;
+	@Nullable
+	C convertPropertyValueToComponentValue(@Nullable P propertyValue, K context);
+
+	@Nullable
+	P convertComponentValueToPropertyValue(@Nullable C componentValue, K context) throws ConversionException;
 	
 	ContextProperties<K> contextProperties();
 

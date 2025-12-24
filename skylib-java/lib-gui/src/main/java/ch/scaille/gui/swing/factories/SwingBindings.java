@@ -39,6 +39,8 @@ import ch.scaille.gui.swing.model.ListModelTableModel;
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public class SwingBindings {
 
@@ -65,6 +67,7 @@ public class SwingBindings {
 		private final BiFunction<IComponentLink<T>, C, L> createListener;
 		private final BiConsumer<C, L> addListener;
 		private final BiConsumer<C, L> removeListener;
+		@Nullable
 		private L listener;
 
 		public ListenerRegistration(final BiFunction<IComponentLink<T>, C, L> createListener,
@@ -104,12 +107,12 @@ public class SwingBindings {
 			final T defaultValue) {
 		return new IComponentBinding<>() {
 			@Override
-			public void setComponentValue(final IComponentChangeSource source, final T value) {
+			public void setComponentValue(@NonNull final IComponentChangeSource source, final T value) {
 				componentWriter.accept(value != null ? value : defaultValue);
 			}
 
 			@Override
-			public void addComponentValueChangeListener(final IComponentLink<T> converter) {
+			public void addComponentValueChangeListener(@NonNull final IComponentLink<T> converter) {
 				componentReaderListener.addListener(component, converter);
 			}
 
@@ -220,7 +223,7 @@ public class SwingBindings {
 			ActionListenerImplementation<T> actionListener;
 
 			@Override
-			public void addComponentValueChangeListener(final IComponentLink<T> link) {
+			public void addComponentValueChangeListener(@NonNull final IComponentLink<T> link) {
 				actionListener = new ActionListenerImplementation<>(link, mapping, group);
 				final var elements = group.getElements();
 				while (elements.hasMoreElements()) {
@@ -229,7 +232,7 @@ public class SwingBindings {
 			}
 
 			@Override
-			public void setComponentValue(final IComponentChangeSource source, final T value) {
+			public void setComponentValue(@NonNull final IComponentChangeSource source, final T value) {
 				for (int i = 0; i < mapping.length; i += 2) {
 					if (Objects.equals(mapping[i], value)) {
 						group.setSelected(((AbstractButton) mapping[i + 1]).getModel(), true);

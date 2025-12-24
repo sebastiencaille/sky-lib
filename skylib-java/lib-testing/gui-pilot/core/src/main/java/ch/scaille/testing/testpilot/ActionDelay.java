@@ -1,5 +1,7 @@
 package ch.scaille.testing.testpilot;
 
+import org.jspecify.annotations.NullMarked;
+
 import java.time.Duration;
 
 /**
@@ -8,7 +10,11 @@ import java.time.Duration;
  * @author scaille
  *
  */
+@NullMarked
 public class ActionDelay {
+
+	public static final ActionDelay NO_DELAY = new ActionDelay();
+
 	public void assertFinished() {
 		// noop
 	}

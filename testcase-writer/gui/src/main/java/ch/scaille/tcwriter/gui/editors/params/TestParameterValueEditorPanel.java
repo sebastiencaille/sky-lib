@@ -10,6 +10,7 @@ import static ch.scaille.javabeans.converters.Converters.listConverter;
 import static java.util.stream.Collectors.toSet;
 
 import java.awt.BorderLayout;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -44,10 +45,12 @@ import ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestReference;
+import org.jspecify.annotations.NonNull;
 
 public class TestParameterValueEditorPanel extends JPanel {
 
-	private static final long serialVersionUID = 1686297570581922386L;
+	@Serial
+    private static final long serialVersionUID = 1686297570581922386L;
 
 	public static IConverter<TestReference, ObjectTextView<TestReference>> refToTextConverter() {
 		return ObjectTextView.converter(ref -> ref.toDescription().description());
@@ -210,9 +213,9 @@ public class TestParameterValueEditorPanel extends JPanel {
 	 * Update the values table when changing the api. Don't trigger when loading the
 	 * step, because we may not have the right value during the loading
 	 */
-	private void fixParamsOfApi(final ObjectProperty<TestCase> tc, final TestParameterFactory api,
-			final ObjectProperty<TestParameterValue> editedParamValue,
-			final ListModel<ParameterValueEntry> allEditedParameters) {
+	private void fixParamsOfApi(final ObjectProperty<@NonNull TestCase> tc, final TestParameterFactory api,
+								final ObjectProperty<TestParameterValue> editedParamValue,
+								final ListModel<ParameterValueEntry> allEditedParameters) {
 		if (api == null) {
 			return;
 		}

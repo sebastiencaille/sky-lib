@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import ch.scaille.util.helpers.DelayFunction;
 import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.InvalidSelectorException;
 import org.openqa.selenium.StaleElementReferenceException;

@@ -2,13 +2,15 @@ package ch.scaille.testing.testpilot.selenium;
 
 import java.util.Optional;
 
+import org.jspecify.annotations.NullMarked;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoAlertPresentException;
 
 import ch.scaille.testing.testpilot.AbstractComponentPilot;
 import ch.scaille.testing.testpilot.PollingBuilder;
-import ch.scaille.testing.testpilot.PollingContext;
+import ch.scaille.testing.testpilot.PolledComponent;
 
+@NullMarked
 public class AlertPilot extends AbstractComponentPilot<Alert> {
 
 	private final SeleniumPilot pilot;
@@ -33,13 +35,13 @@ public class AlertPilot extends AbstractComponentPilot<Alert> {
 	}
 
 	@Override
-	public boolean canCheck(final PollingContext<Alert> ctxt) {
+	public boolean canCheck(final PolledComponent<Alert> ctxt) {
 		return false;
 	}
 
 	public void doAcknowledge() {
 		new PollingBuilder<>(this)
-				.fail((context, text) -> "Acknowledging alert: " + context.getComponent().getText())
+				.fail((context, text) -> "Acknowledging alert: " + context.component().getText())
 				.unless()
 				.applied((Alert::accept));
 	}

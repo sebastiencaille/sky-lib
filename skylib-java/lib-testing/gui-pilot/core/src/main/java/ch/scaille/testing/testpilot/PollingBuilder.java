@@ -16,6 +16,8 @@ import ch.scaille.testing.testpilot.factories.FailureHandlers;
 import ch.scaille.testing.testpilot.factories.FailureHandlers.FailureHandler;
 import ch.scaille.testing.testpilot.factories.PollingResults;
 import ch.scaille.testing.testpilot.factories.Pollings;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * To build a polling
@@ -34,6 +36,7 @@ import ch.scaille.testing.testpilot.factories.Pollings;
  * @param <T> the Builder (sub)type
  * @param <P> the Poller (sub)type
  */
+@NullMarked
 public class PollingBuilder<C, 
 	T extends PollingBuilder<C, T, P, V>, 
 	P extends PollingBuilder.Poller<C>, 
@@ -47,12 +50,15 @@ public class PollingBuilder<C,
 			this.builder = builder;
 		}
 
-		public Poller<C> configure(Consumer<Polling<C, ?>> configurer) {
+		public Poller<C> configure(Consumer<Polling.PollingBuilder<C, ?>> configurer) {
 			builder.configurers.add(configurer);
 			return this;
 		}
 
-		public boolean satisfied(final Polling<C, Boolean> polling) {
+		/**
+		 * Polls for a condition on a component
+		 */
+		public boolean satisfied(final Polling.PollingBuilder<C, Boolean> polling) {
 			return builder.poll(polling).isSuccess();
 		}
 
@@ -60,15 +66,15 @@ public class PollingBuilder<C,
 			return satisfied(Pollings.satisfies(predicate));
 		}
 
-		public boolean satisfiedCtxt(Predicate<PollingContext<C>> action) {
-			return satisfied(new Polling<>(ctxt -> PollingResults.value(action.test(ctxt))));
+		public boolean satisfiedCtxt(Predicate<PolledComponent<C>> action) {
+			return satisfied(Polling.of(ctxt -> PollingResults.value(action.test(ctxt))));
 		}
 
 		public boolean applied(Consumer<C> consumer) {
 			return satisfied(applies(consumer));
 		}
 
-		public boolean appliedCtxt(Consumer<PollingContext<C>> consumer) {
+		public boolean appliedCtxt(Consumer<PolledComponent<C>> consumer) {
 			return satisfied(appliesCtxt(consumer));
 		}
 
@@ -76,11 +82,14 @@ public class PollingBuilder<C,
 			return applied(assertion);
 		}
 
-		public boolean assertedCtxt(Consumer<PollingContext<C>> assertion) {
+		public boolean assertedCtxt(Consumer<PolledComponent<C>> assertion) {
 			return appliedCtxt(assertion);
 		}
 
-		public <R> Optional<R> get(Function<C, R> getter) {
+		/**
+		 * Gets a value from the component
+		 */
+		public <R> Optional<R> get(Function<C, @Nullable R> getter) {
 			final var pollResult = builder.poll(Pollings.get(getter));
 			if (pollResult.isSuccess()) {
 				return Optional.ofNullable(pollResult.polledValue());
@@ -101,13 +110,13 @@ public class PollingBuilder<C,
 			this.pollingBuilder = pollingBuilder;
 		}
 
-		public V withConfig(Consumer<Polling<C, ?>> configurer) {
+		public V withConfig(Consumer<Polling.PollingBuilder<C, ?>> configurer) {
 			pollingBuilder.configurers.add(configurer);
 			return (V) this;
 		}
 
 		public V timingOutAfter(Duration timeout) {
-			withConfig(polling -> polling.withDelay(timeout));
+			withConfig(polling -> polling.timeout(timeout));
 			return (V) this;
 		}
 
@@ -121,7 +130,7 @@ public class PollingBuilder<C,
 
 	protected final AbstractComponentPilot<C> pilot;
 
-	protected final List<Consumer<Polling<C, ?>>> configurers = new ArrayList<>(2);
+	protected final List<Consumer<Polling.PollingBuilder<C, ?>>> configurers = new ArrayList<>(2);
 
 	private FailureHandler<C, ?> failureHandler;
 
@@ -158,7 +167,10 @@ public class PollingBuilder<C,
 		return (V) new DefaultConfigurer<>(this);
 	}
 
-	protected <R> PollingResult<C, R> poll(final Polling<C, R> polling) {
+	/**
+	 * Executes the polling
+	 */
+	protected <R> PollingResult<C, R> poll(final Polling.PollingBuilder<C, R> polling) {
 		configurers.forEach(conf -> conf.accept(polling));
 		final var pollingResult = pilot.processResult(pilot.waitPollingSuccess(polling), PollingResults.identity(),
 				((FailureHandler<C, R>) failureHandler));
@@ -177,7 +189,7 @@ public class PollingBuilder<C,
 		return (T)this;
 	}
 	
-	public T withConfig(Consumer<Polling<C, ?>> configurer) {
+	public T withConfig(Consumer<Polling.PollingBuilder<C, ?>> configurer) {
 		configurers.add(configurer);
 		return (T)this;
 	}
@@ -202,7 +214,7 @@ public class PollingBuilder<C,
 	}
 
 	public Unless fail(ReportFunction<C> reportFunction) {
-		return withConfig(polling -> polling.withReportFunction(reportFunction)).fail();
+		return withConfig(polling -> polling.reportFunction(reportFunction)).fail();
 	}
 
 	public P failUnless() {

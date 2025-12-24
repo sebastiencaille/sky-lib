@@ -2,7 +2,9 @@ package ch.scaille.javabeans.chain;
 
 import ch.scaille.javabeans.IChainBuilderFactory;
 import ch.scaille.javabeans.converters.IConverter;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class FirstEndOfChain<T> extends EndOfChain<T> implements IChainBuilderFactory<T> {
 
 	public FirstEndOfChain(IBindingChainModifier chain) {
@@ -12,8 +14,8 @@ public class FirstEndOfChain<T> extends EndOfChain<T> implements IChainBuilderFa
 	@Override
 	public <C> IChainBuilderFactory<C> earlyBind(IConverter<T, C> converter) {
 		converter.initialize(chain.getProperty());
-		chain.addLink(link(value -> converter.convertPropertyValueToComponentValue((T) value),
-				value -> converter.convertComponentValueToPropertyValue((C)value)));
+		chain.addLink(link(converter::convertPropertyValueToComponentValue,
+                converter::convertComponentValueToPropertyValue));
 		return new FirstEndOfChain<>(chain);
 	} 
 }

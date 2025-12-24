@@ -18,11 +18,13 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
- * 
+ * Some helpers for java
  */
+@NullMarked
 public class JavaExt {
 
 	private JavaExt() {
@@ -63,13 +65,13 @@ public class JavaExt {
 		try {
 			Files.walkFileTree(path, new SimpleFileVisitor<>() {
 				@Override
-				public @NotNull FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
+				public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
 					Files.delete(path);
 					return FileVisitResult.CONTINUE;
 				}
 
 				@Override
-				public @NotNull FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+				public FileVisitResult postVisitDirectory(Path dir, @Nullable IOException exc) throws IOException {
 					if (exc != null) {
 						throw exc;
 					}

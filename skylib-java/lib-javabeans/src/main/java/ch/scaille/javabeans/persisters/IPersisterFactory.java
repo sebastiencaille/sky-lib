@@ -1,6 +1,7 @@
 package ch.scaille.javabeans.persisters;
 
 import ch.scaille.javabeans.properties.IPersister;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * To create a persister factory, which will create a persister on an object
@@ -9,6 +10,7 @@ import ch.scaille.javabeans.properties.IPersister;
  *
  * @param <T>
  */
+@NullMarked
 public interface IPersisterFactory<T, A> {
 
 	IPersister<A> asPersister(final IObjectProvider<T> object);

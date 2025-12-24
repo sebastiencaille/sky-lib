@@ -5,10 +5,15 @@ import ch.scaille.gui.model.ListEvent;
 import ch.scaille.gui.model.ListModel;
 import ch.scaille.javabeans.IBindingChainDependency;
 import ch.scaille.javabeans.IBindingControl;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
- * Allow to define dependencies between bindings.
+ * Allow defining dependencies between bindings.
  */
+@NullMarked
 public final class BindingDependencies {
 
 	private BindingDependencies() {
@@ -17,6 +22,7 @@ public final class BindingDependencies {
 	public static class PreserveOnUpdateOfListModel<T> implements IBindingChainDependency, IListModelListener<T> {
 
 		private final ch.scaille.gui.model.ListModel<T> model;
+		@Nullable
 		private IBindingControl bindingControl;
 
 		public PreserveOnUpdateOfListModel(final ListModel<T> model) {
@@ -36,7 +42,7 @@ public final class BindingDependencies {
 
 		@Override
 		public void mutates() {
-			bindingControl.bufferizeBinding();
+			Objects.requireNonNull(bindingControl, "register was not called").bufferizeBinding();
 		}
 
 		@Override

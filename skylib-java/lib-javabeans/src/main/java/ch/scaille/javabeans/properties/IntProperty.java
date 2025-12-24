@@ -1,11 +1,14 @@
 package ch.scaille.javabeans.properties;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import ch.scaille.javabeans.IChainBuilderFactory;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.IPropertiesOwner;
 import ch.scaille.javabeans.chain.BindingChain;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Property containing an int value.
@@ -14,6 +17,7 @@ import ch.scaille.javabeans.chain.BindingChain;
  * @author Sebastien Caille
  *
  */
+@NullMarked
 public class IntProperty extends AbstractTypedProperty<Integer> {
 
 	private int value;
@@ -58,12 +62,9 @@ public class IntProperty extends AbstractTypedProperty<Integer> {
 	}
 
 	@Override
-	protected Integer replaceValue(final Integer newValue) {
-		if (newValue == null) {
-			throw new IllegalArgumentException("Null value is not allowed");
-		}
+	protected Integer replaceValue(@Nullable final Integer newValue) {
 		final var oldValue = value;
-		value = newValue;
+		value = Objects.requireNonNull(newValue, "Null value is not allowed");
 		return oldValue;
 	}
 

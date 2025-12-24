@@ -11,7 +11,7 @@ public class JButtonPoller extends SwingPollingBuilder<JButton, JButtonPoller, J
 		}
 
 		public void click() {
-			configure(polling -> polling.withReportText("click")).applied(JButton::doClick);
+			configure(polling -> polling.reportText("click")).applied(JButton::doClick);
 		}
 
 	}

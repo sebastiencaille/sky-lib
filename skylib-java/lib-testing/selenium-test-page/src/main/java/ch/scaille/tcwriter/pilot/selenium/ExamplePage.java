@@ -54,7 +54,7 @@ public class ExamplePage extends PagePilot {
 	}
 
 	/**
-	 * Perform a click, and tell the next action that the next action must wait
+	 * Perform a click and tell the next action that the next action must wait
 	 * until "Proceed" is enabled
 	 */
 	public void executeEnable() {
@@ -74,9 +74,9 @@ public class ExamplePage extends PagePilot {
 	public void clickOnMissingButton() {
 		Assertions.assertFalse(
 				on(visibilityOfElementLocated(NOT_EXISTING))
-					.withConfig(p -> p.withTimeout(Duration.ofSeconds(2)))
+					.withConfig(p -> p.timeout(Duration.ofSeconds(2)))
 					.evaluateWithReport("Button does not exist").that()
-					.satisfied(Pollings.<WebElement>exists().withTimeout(Duration.ofMillis(500))));
+					.satisfied(Pollings.<WebElement>exists().timeout(Duration.ofMillis(500))));
 	}
 
 	/**

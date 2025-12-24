@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
 import ch.scaille.javabeans.IVetoer.TransmitMode;
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.IPropertyEventListener;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * PropertyChangeSupport adapted to the property controllers.
@@ -33,9 +35,10 @@ import ch.scaille.javabeans.properties.IPropertyEventListener;
  * @author Sebastien Caille
  *
  */
+@NullMarked
 public class PropertyChangeSupportController {
 
-	private record CallInfo(Object caller, Object newValue) {
+	private record CallInfo(Object caller, @Nullable Object newValue) {
 
 		@Override
 		public String toString() {
@@ -67,7 +70,7 @@ public class PropertyChangeSupportController {
 		}
 	}
 
-	private void prepareFire(final String propertyName, final Object caller, final Object newValue) {
+	private void prepareFire(final String propertyName, final Object caller, @Nullable final Object newValue) {
 		final var info = callInfo.computeIfAbsent(propertyName, k -> new ArrayDeque<>(5));
 		if (info.size() > 5) {
 			final var stack = new StringBuilder();
@@ -113,8 +116,9 @@ public class PropertyChangeSupportController {
 	 * @param oldValue     the old value of the property
 	 * @param newValue     the new value of the property
 	 */
-	public void firePropertyChange(final String propertyName, final Object caller, final Object oldValue,
-			final Object newValue) {
+	public void firePropertyChange(final String propertyName, final Object caller,
+								   @Nullable final Object oldValue,
+								   @Nullable final Object newValue) {
 		if (Objects.equals(oldValue, newValue)) {
 			return;
 		}

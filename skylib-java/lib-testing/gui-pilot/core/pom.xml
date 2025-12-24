@@ -21,5 +21,5 @@
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
 		</dependency>
-	</dependencies>
+    </dependencies>
 </project>

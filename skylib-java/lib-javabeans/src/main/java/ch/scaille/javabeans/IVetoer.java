@@ -3,13 +3,15 @@ package ch.scaille.javabeans;
 import java.util.function.Predicate;
 
 import ch.scaille.javabeans.properties.AbstractProperty;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Allows to block transmission
  */
+@NullMarked
 public interface IVetoer {
 
-	public enum TransmitMode {
+	enum TransmitMode {
 		/**
 		 * When detached. Properties/components are not updated
 		 */

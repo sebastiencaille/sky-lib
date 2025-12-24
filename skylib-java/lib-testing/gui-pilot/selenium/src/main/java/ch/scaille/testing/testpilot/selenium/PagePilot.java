@@ -3,6 +3,7 @@ package ch.scaille.testing.testpilot.selenium;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import org.jspecify.annotations.NullMarked;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WrapsElement;
@@ -12,6 +13,7 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 /**
  * Allows to pilot application using selenium's page concept
  */
+@NullMarked
 public class PagePilot {
 
 	protected final SeleniumPilot pilot;
@@ -43,6 +45,7 @@ public class PagePilot {
 			protected Optional<WebElement> loadGuiComponent() {
 				reloadPage();
 				final var webElement = element.get();
+				// Not always respected
 				if (webElement instanceof WrapsElement wrapsElement && wrapsElement.getWrappedElement() == null) {
 					return Optional.empty();
 				}

@@ -4,7 +4,6 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -12,6 +11,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Assertions;
 
 import ch.scaille.testing.testpilot.factories.PollingResults;
@@ -27,6 +28,7 @@ import ch.scaille.util.helpers.Poller;
  * @author scaille
  *
  */
+@NullMarked
 public class ModalDialogDetector {
 
 	private static final java.util.logging.Logger LOGGER = Logs.of(ModalDialogDetector.class);
@@ -52,7 +54,7 @@ public class ModalDialogDetector {
 		return new Builder(Collections::emptyList, e -> testThread.interrupt());
 	}
 
-	public record PollingResult(boolean handled, String error, Runnable closeOnErrorFunction, String extraInfo) {
+	public record PollingResult(boolean handled, @Nullable String error, @Nullable Runnable closeOnErrorFunction, @Nullable String extraInfo) {
 	}
 
 	public static class Builder {
@@ -84,6 +86,7 @@ public class ModalDialogDetector {
 
 	private final List<String> errors = new ArrayList<>();
 
+	@Nullable
 	private PollingResult handledDialog = null;
 
 	private int stackCount = 0;
@@ -92,6 +95,7 @@ public class ModalDialogDetector {
 
 	private final Builder builder;
 
+	@Nullable
 	private TimerTask timerTask;
 
 	public ModalDialogDetector(Builder builder, GuiPilot pilot) {
@@ -145,7 +149,7 @@ public class ModalDialogDetector {
 			running.lock();
 			LOGGER.fine(() -> "Unscheduling " + stackCount);
 			stackCount--;
-			if (stackCount == 0) {
+			if (stackCount == 0 && timerTask != null) {
 				timerTask.cancel();
 				timerTask = null;
 				Assertions.assertEquals(0, errors.size(),
@@ -178,7 +182,7 @@ public class ModalDialogDetector {
 
 	public boolean waitModalDialogHandled(final FailureHandler<ModalDialogDetector.PollingResult, Boolean> onFail) {
 		return new Poller(builder.timeout.get(), Duration.ofMillis(100), p -> Duration.ofMillis(100))
-				.run(this::getPollingResult, Objects::nonNull)
+				.run(this::getPollingResult, t -> true)
 				.map(p -> true)
 				.orElseGet(() -> {
 					onFail.apply(PollingResults.failure("Modal dialog not detected"));

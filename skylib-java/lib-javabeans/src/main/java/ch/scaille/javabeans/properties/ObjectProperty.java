@@ -10,110 +10,110 @@ import ch.scaille.javabeans.IChainBuilderFactory;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.IPropertiesOwner;
 import ch.scaille.javabeans.chain.BindingChain;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A property that contains an object.
  * <p>
  *
- * @author Sebastien Caille
- *
  * @param <T>
  */
 public class ObjectProperty<T> extends AbstractTypedProperty<T> {
 
-	private final T defaultValue;
+    private final T defaultValue;
 
-	private T value;
+    private T value;
 
+    public ObjectProperty(@NonNull final String name, final @NonNull IPropertiesOwner model, final T defaultValue) {
+        super(name, model);
+        this.defaultValue = defaultValue;
+        value = defaultValue;
+    }
 
-	public ObjectProperty(final String name, final IPropertiesOwner model, final T defaultValue) {
-		super(name, model);
-		this.defaultValue = defaultValue;
-		value = defaultValue;
-	}
+    public ObjectProperty(final @NonNull String name, final @NonNull IPropertiesOwner model) {
+        this(name, model, null);
+    }
 
-	public ObjectProperty(String name, IPropertiesOwner model) {
-		this(name, model, null);
-	}
+    public ObjectProperty(@NonNull final String name, @NonNull final IPropertiesGroup propertySupport, final T defaultValue) {
+        super(name, propertySupport);
+        this.defaultValue = defaultValue;
+        value = defaultValue;
+    }
 
-	public ObjectProperty(final String name, final IPropertiesGroup propertySupport, final T defaultValue) {
-		super(name, propertySupport);
-		this.defaultValue = defaultValue;
-		value = defaultValue;
-	}
+    public ObjectProperty(final String name, final IPropertiesGroup propertySupport) {
+        this(name, propertySupport, null);
+    }
 
-	public ObjectProperty(final String name, final IPropertiesGroup propertySupport) {
-		this(name, propertySupport, null);
-	}
+    @Override
+    public @NonNull IChainBuilderFactory<T> createBindingChain() {
+        return new BindingChain(this, errorNotifier).bindProperty(this::setObjectValueFromComponent);
+    }
 
-	@Override
-	public IChainBuilderFactory<T> createBindingChain() {
-		return new BindingChain(this, errorNotifier).bindProperty(this::setObjectValueFromComponent);
-	}
+    @Override
+    public @NonNull ObjectProperty<T> configureTyped(final Consumer<AbstractTypedProperty<T>>... properties) {
+        super.configureTyped(properties);
+        return this;
+    }
 
-	@Override
-	public ObjectProperty<T> configureTyped(final Consumer<AbstractTypedProperty<T>>... properties) {
-		super.configureTyped(properties);
-		return this;
-	}
+    public <U> ObjectProperty<U> child(final @NonNull String name, final @NonNull Function<T, U> getter, final @NonNull BiConsumer<T, U> setter) {
+        final var child = new ObjectProperty<U>(getName() + "-" + name, propertySupport);
+        asChild(child, getter, setter);
+        return child;
+    }
 
-	public <U> ObjectProperty<U> child(final String name, final Function<T, U> getter, final BiConsumer<T, U> setter) {
-		final var child = new ObjectProperty<U>(getName() + "-" + name, propertySupport);
-		asChild(child, getter, setter);
-		return child;
-	}
+    public <U> void asChild(final @NonNull ObjectProperty<U> child, final @NonNull Function<T, U> getter,
+                            final BiConsumer<T, U> setter) {
+        this.addListener(p -> child.setValue(this, getter.apply(this.getValue())));
+        child.addListener(c -> {
+            final var oldValue = getter.apply(this.getValue());
+            final var newValue = child.getValue();
+            if (!Objects.equals(oldValue, newValue)) {
+                setter.accept(getValue(), newValue);
+                this.forceChanged(c.getSource());
+            }
+        });
+    }
 
-	public <U> void asChild(final ObjectProperty<U> child, final Function<T, U> getter, final BiConsumer<T, U> setter) {
-		this.addListener(p -> child.setValue(this, getter.apply(this.getValue())));
-		child.addListener(c -> {
-			final var oldValue = getter.apply(this.getValue());
-			final var newValue = child.getValue();
-			if (!Objects.equals(oldValue, newValue)) {
-				setter.accept(getValue(), newValue);
-				this.forceChanged(c.getSource());
-			}
-		});
-	}
+    @Override
+    protected T replaceValue(final T newValue) {
+        final var oldValue = value;
+        value = newValue;
+        return oldValue;
+    }
 
-	@Override
-	protected T replaceValue(final T newValue) {
-		final var oldValue = value;
-		value = newValue;
-		return oldValue;
-	}
+    public void setValue(final Object caller, @Nullable final T newValue) {
+        setObjectValue(caller, newValue);
+    }
 
-	public void setValue(final Object caller, final T newValue) {
-		setObjectValue(caller, newValue);
-	}
+    @Override
+    public T getObjectValue() {
+        return getValue();
+    }
 
-	@Override
-	public T getObjectValue() {
-		return getValue();
-	}
+    public void forceChanged(final Object caller) {
+        propertySupport.getChangeSupport().firePropertyChange(getName(), caller, null, getValue());
+    }
 
-	public void forceChanged(final Object caller) {
-		propertySupport.getChangeSupport().firePropertyChange(getName(), caller, null, getValue());
-	}
+    public T getValue() {
+        return value;
+    }
 
-	public T getValue() {
-		return value;
-	}
+    public Optional<T> optional() {
+        return Optional.ofNullable(value);
+    }
 
-	public Optional<T> optional() {
-		return Optional.ofNullable(value);
-	}
+    @Override
+    public void reset(final @NonNull Object caller) {
+        setObjectValue(this, defaultValue);
+    }
 
-	@Override
-	public void reset(final Object caller) {
-		setObjectValue(this, defaultValue);
-	}
+    public boolean isSet() {
+        return getObjectValue() != null;
+    }
 
-	public boolean isSet() {
-		return getObjectValue() != null;
-	}
-
-	public <R> R map(Function<T, R> mapper) {
-		return mapper.apply(value);
-	}
+    public <R> R map(@NonNull Function<T, R> mapper) {
+        return mapper.apply(value);
+    }
 
 }

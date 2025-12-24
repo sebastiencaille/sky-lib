@@ -7,11 +7,13 @@ import java.util.function.Function;
 import ch.scaille.javabeans.converters.IConverter;
 import ch.scaille.javabeans.converters.IContextualConverter;
 import ch.scaille.javabeans.properties.ContextProperties;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * 
  * @param <P> The property side type
  */
+@NullMarked
 public interface IChainBuilder<P> {
 
 	IBindingController listen(Consumer<P> newBinding);

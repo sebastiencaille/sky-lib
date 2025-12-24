@@ -19,14 +19,14 @@ public interface PollingResults {
 	 * Creates a polling success with a value
 	 */
 	static <C, V> PollingResult<C, V> value(final V value) {
-		return new PollingResult<>(value, null);
+		return PollingResult.value(value);
 	}
 
 	/**
 	 * Creates a polling success without any value
 	 */
 	static <C> PollingResult<C, Boolean> success() {
-		return new PollingResult<>(Boolean.TRUE, null);
+		return PollingResult.value(Boolean.TRUE);
 	}
 
 	/**
@@ -40,14 +40,14 @@ public interface PollingResults {
 	 * Creates a polling failure with a reason for the failure 
 	 */
 	static <C, V> PollingResult<C, V> failure(final String reason) {
-		return new PollingResult<>(null, new AssertionError(reason));
+		return PollingResult.failure(new AssertionError(reason));
 	}
 
 	/**
 	 * Creates a failed polling with a cause for the failure 
 	 */
 	static <C, V> PollingResult<C, V> failWithException(final Throwable cause) {
-		return new PollingResult<>(null, cause);
+		return PollingResult.failure(cause);
 	}
 
 	static <C, V> Transformer<C, V, Boolean> returnSuccess() {

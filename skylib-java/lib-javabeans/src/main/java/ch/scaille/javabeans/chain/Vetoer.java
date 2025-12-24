@@ -7,7 +7,9 @@ import java.util.function.Predicate;
 import ch.scaille.javabeans.IBindingControl;
 import ch.scaille.javabeans.IVetoer;
 import ch.scaille.javabeans.properties.AbstractProperty;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class Vetoer implements IVetoer {
 
 	private int detached = 0;

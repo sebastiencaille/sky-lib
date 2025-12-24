@@ -3,6 +3,7 @@ package ch.scaille.gui.mvc;
 import static ch.scaille.javabeans.properties.Configuration.persistent;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.jspecify.annotations.NullUnmarked;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import ch.scaille.javabeans.properties.ErrorSet;
 import ch.scaille.javabeans.properties.IntProperty;
 import ch.scaille.javabeans.properties.ObjectProperty;
 
+@NullUnmarked
 class ModelBasicTest {
 
 	private static class TestGuiModel extends GuiModel {

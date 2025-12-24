@@ -1,16 +1,16 @@
 package ch.scaille.javabeans.properties;
 
+import org.jspecify.annotations.NullMarked;
+
 /**
- * Error container
- *
- * @author Sebastien Caille
- *
+ * To report a conversion error
  */
+@NullMarked
 public record ConversionError(AbstractProperty property, String message, Object content) {
 
-	@Override
-	public String toString() {
-		return property.getName() + ": " + message;
-	}
+    @Override
+    public String toString() {
+        return property.getName() + ": " + message;
+    }
 
 }

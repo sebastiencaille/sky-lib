@@ -8,7 +8,8 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.webmvc.autoconfigure.error.AbstractErrorController;
 import org.springframework.boot.webmvc.autoconfigure.error.ErrorViewResolver;
@@ -29,6 +30,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/error")
+@NullMarked
 public class WebErrorController extends AbstractErrorController {
 
 	private static final Locale LOCALE = Locale.US;
@@ -64,7 +66,7 @@ public class WebErrorController extends AbstractErrorController {
 			}
 
 			@Override
-			public void render(Map<String, ?> model, @NotNull HttpServletRequest request, HttpServletResponse response)
+			public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response)
 					throws Exception {
 				response.setContentType(getContentType());
 				final var dto = (ExceptionDto) model.get("dto");
@@ -99,6 +101,7 @@ public class WebErrorController extends AbstractErrorController {
 		private final String code;
 		private final Object[] arguments;
 		private final HttpStatus status;
+		@Nullable
 		private String message = null;
 		private String trace = "";
 
@@ -121,6 +124,7 @@ public class WebErrorController extends AbstractErrorController {
 			this.message = text;
 		}
 
+		@Nullable
 		public String getMessage() {
 			return message;
 		}

@@ -2,10 +2,15 @@ package ch.scaille.javabeans;
 
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.IPropertyEventListener;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
- * Allows to add dependencies between properties
+ * Allows adding dependencies between properties
  */
+@NullMarked
 public final class BindingDependencies {
 
 	private BindingDependencies() {
@@ -14,6 +19,7 @@ public final class BindingDependencies {
 	public static class PreserveOnUpdateOf implements IBindingChainDependency, IPropertyEventListener {
 
 		private final AbstractProperty property;
+		@Nullable
 		private IBindingControl controller;
 
 		public PreserveOnUpdateOf(final AbstractProperty property) {
@@ -34,6 +40,7 @@ public final class BindingDependencies {
 
 		@Override
 		public void propertyModified(final Object caller, final PropertyEvent event) {
+			Objects.requireNonNull(controller, "register must have been called before");
 			switch (event.kind()) {
 			case BEFORE:
 				controller.bufferizeBinding();

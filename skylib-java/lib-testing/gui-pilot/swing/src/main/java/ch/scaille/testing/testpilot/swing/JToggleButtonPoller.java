@@ -17,12 +17,12 @@ public class JToggleButtonPoller
 
 		public boolean isSelected(final boolean expected) {
 			return configure(polling -> polling
-					.withReportText(checkingThat("component is " + (expected ? "selected" : "not selected"))))
+					.reportText(checkingThat("component is " + (expected ? "selected" : "not selected"))))
 					.satisfied(AbstractButton::isSelected);
 		}
 
 		public boolean setSelected(final boolean selected) {
-			return configure(polling -> polling.withReportText(selected ? "selecting" : "deselecting"))
+			return configure(polling -> polling.reportText(selected ? "selecting" : "deselecting"))
 					.applied(c -> c.setSelected(selected));
 		}
 	}

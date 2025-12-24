@@ -1,28 +1,21 @@
 package ch.scaille.testing.testpilot.swing;
 
-import java.util.Optional;
 import java.util.function.Predicate;
 
 import javax.swing.JComponent;
 
 import ch.scaille.testing.testpilot.Polling;
-import ch.scaille.testing.testpilot.PollingContext;
+import ch.scaille.testing.testpilot.PolledComponent;
 
-public class EditableComponentPolling<V> extends Polling<JComponent, V> {
+public class EditableComponentPolling {
 
-	public EditableComponentPolling(final PollingFunction<JComponent, V> pollingFunction) {
-		super(null, pollingFunction);
-	}
+    public static <V> Polling.PollingBuilder<JComponent, V> ofComponent(Polling.PollingFunction<JComponent, V> function) {
+        return Polling.of(function);
+    }
 
-	public EditableComponentPolling(final Predicate<PollingContext<JComponent>> precondition,
-			final PollingFunction<JComponent, V> pollingFunction) {
-		super(precondition, pollingFunction);
-	}
-
-	@Override
-	public Optional<Predicate<PollingContext<JComponent>>> getPrecondition() {
-		return Optional.of(c -> super.getPrecondition().map(p -> p.test(c)).orElse(true)
-				&& ((SwingComponentPilot<JComponent>) c.getPilot()).canEdit(c));
-	}
+    public static <V> Polling.PollingBuilder<JComponent, V> ofComponent(final Predicate<PolledComponent<JComponent>> precondition, Polling.PollingFunction<JComponent, V> function) {
+        return Polling.of(precondition.and(context -> context.getComponentPilot(SwingComponentPilot.class).canEdit(context)),
+                function);
+    }
 
 }

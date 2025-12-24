@@ -4,6 +4,7 @@ import javax.swing.event.EventListenerList;
 
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.IPropertyEventListener;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Allows trigger {@link IPropertyEventListener} when the value of a property
@@ -12,6 +13,7 @@ import ch.scaille.javabeans.properties.IPropertyEventListener;
  * @author Sebastien Caille
  * 
  */
+@NullMarked
 public class PropertyGroup {
 
 	private final EventListenerList actions = new EventListenerList();

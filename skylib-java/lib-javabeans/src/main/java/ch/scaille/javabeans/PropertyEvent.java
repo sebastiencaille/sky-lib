@@ -1,6 +1,7 @@
 package ch.scaille.javabeans;
 
 import ch.scaille.javabeans.properties.AbstractProperty;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Event fired when the property is modified.
@@ -8,6 +9,7 @@ import ch.scaille.javabeans.properties.AbstractProperty;
  *
  * @author Sebastien Caille
  */
+@NullMarked
 public record PropertyEvent(ch.scaille.javabeans.PropertyEvent.EventKind kind, AbstractProperty property) {
 
 	public enum EventKind {

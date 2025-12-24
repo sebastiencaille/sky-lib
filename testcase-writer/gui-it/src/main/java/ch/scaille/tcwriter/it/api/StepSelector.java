@@ -29,7 +29,7 @@ public interface StepSelector extends Consumer<TCWriterPage> {
 		return page -> {
 			final var stepsTable = page.stepsTable;
 			stepsTable.fail("selecting the last step").unless().appliedCtxt(pc -> {
-				final var table = pc.getComponent();
+				final var table = pc.component();
 				final int stepsCount = table.getRowCount();
 				if (stepsCount > 0) {
 					table.setRowSelectionInterval(stepsCount - 1, stepsCount - 1);

@@ -4,6 +4,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import ch.scaille.javabeans.properties.IPersister;
+import org.jspecify.annotations.NullMarked;
 
 /**
  *
@@ -12,6 +13,7 @@ import ch.scaille.javabeans.properties.IPersister;
  * @param <T> Type of the container object
  * @param <A> Type of the object's attribute
  */
+@NullMarked
 public class GetSetAccess<T, A> implements IPersisterFactory<T, A> {
 
 	private final Function<T, A> getter;

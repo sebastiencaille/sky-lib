@@ -3,6 +3,7 @@ package ch.scaille.javabeans.properties;
 import java.util.EventListener;
 
 import ch.scaille.javabeans.PropertyEvent;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Listener on some extra property events.
@@ -11,6 +12,7 @@ import ch.scaille.javabeans.PropertyEvent;
  * @author Sebastien Caille
  * 
  */
+@NullMarked
 public interface IPropertyEventListener extends EventListener {
 
 	/**

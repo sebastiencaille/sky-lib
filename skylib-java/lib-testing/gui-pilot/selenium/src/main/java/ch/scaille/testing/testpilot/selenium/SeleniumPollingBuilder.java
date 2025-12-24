@@ -12,15 +12,15 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import ch.scaille.testing.testpilot.PollingBuilder;
-import ch.scaille.testing.testpilot.PollingContext;
+import ch.scaille.testing.testpilot.PolledComponent;
 import ch.scaille.testing.testpilot.factories.Pollings;
 
 public class SeleniumPollingBuilder extends
 		PollingBuilder<WebElement, SeleniumPollingBuilder, SeleniumPollingBuilder.WebElementPoller, PollingBuilder.DefaultConfigurer<WebElement>> {
 
-	public static Predicate<PollingContext<WebElement>> satisfies(
+	public static Predicate<PolledComponent<WebElement>> satisfies(
 			Function<WebElement, ExpectedCondition<WebElement>> expectedCondition) {
-		return context -> expectedCondition.apply(context.getComponent())
+		return context -> expectedCondition.apply(context.component())
 				.apply(context.getGuiPilot(SeleniumPilot.class).getDriver()) != null;
 	}
 
@@ -35,12 +35,12 @@ public class SeleniumPollingBuilder extends
 		}
 
 		public boolean isEnabled() {
-			return configure(polling -> polling.withReportText("is enabled"))
+			return configure(polling -> polling.reportText("is enabled"))
 					.satisfiedCtxt(satisfies(ExpectedConditions::elementToBeClickable));
 		}
 
 		public boolean clicked() {
-			return configure(polling -> polling.withReportText("clicked")).applied(WebElement::click);
+			return configure(polling -> polling.reportText("clicked")).applied(WebElement::click);
 		}
 
 		public boolean textEquals(String text) {
@@ -50,12 +50,12 @@ public class SeleniumPollingBuilder extends
 
 	}
 	
-	public static Consumer<PollingContext<WebElement>> mutations(Predicate<List<DomMutation>> mutationsTest) {
-		return ctxt -> mutationsTest.test(((ElementPilot) ctxt.getPilot()).getMutations());
+	public static Consumer<PolledComponent<WebElement>> mutations(Predicate<List<DomMutation>> mutationsTest) {
+		return ctxt -> mutationsTest.test(((ElementPilot) ctxt.componentPilot()).getMutations());
 	}
 	
-	public static Consumer<PollingContext<WebElement>> assertMutations(Consumer<List<DomMutation>> mutationsTest) {
-		return ctxt -> mutationsTest.accept(((ElementPilot) ctxt.getPilot()).getMutations());
+	public static Consumer<PolledComponent<WebElement>> assertMutations(Consumer<List<DomMutation>> mutationsTest) {
+		return ctxt -> mutationsTest.accept(((ElementPilot) ctxt.componentPilot()).getMutations());
 	}
 
 	private final ElementPilot elementPilot;

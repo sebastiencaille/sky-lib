@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import ch.scaille.javabeans.properties.AbstractProperty;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Allows enabling some properties on a per-object basis.
@@ -16,6 +17,7 @@ import ch.scaille.javabeans.properties.AbstractProperty;
  *
  * @param <T> type of the object according to which the properties are enabled
  */
+@NullMarked
 public class BindingSelector<T> implements PropertyChangeListener {
 
 	private final Map<T, List<IBindingController>> objectControllers = new WeakHashMap<>();

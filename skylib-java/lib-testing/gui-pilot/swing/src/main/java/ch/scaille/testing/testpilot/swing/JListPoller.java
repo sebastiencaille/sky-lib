@@ -25,15 +25,15 @@ public class JListPoller extends SwingPollingBuilder<JList, JListPoller, JListPo
 			if (value == null) {
 				return;
 			}
-			configure(polling -> polling.withReportText("selecting element " + value)).appliedCtxt(ctxt -> {
-				final var c = ctxt.getComponent();
+			configure(polling -> polling.reportText("selecting element " + value)).appliedCtxt(ctxt -> {
+				final var c = ctxt.component();
 				for (int i = 0; i < c.getModel().getSize(); i++) {
 					if (value.equals(c.getModel().getElementAt(i).toString())) {
 						c.setSelectedIndex(i);
 					}
 				}
-				Assertions.assertTrue(ctxt.getPilot().getCachedElement().map(JList::getSelectedIndex).orElse(-1) >= 0,
-						() -> ctxt.getComponent().getName() + ": element must have been selected: " + value);
+				Assertions.assertTrue(ctxt.componentPilot().getCachedElement().map(JList::getSelectedIndex).orElse(-1) >= 0,
+						() -> ctxt.component().getName() + ": element must have been selected: " + value);
 			});
 		}
 
@@ -41,9 +41,9 @@ public class JListPoller extends SwingPollingBuilder<JList, JListPoller, JListPo
 			if (expected == null) {
 				return;
 			}
-			configure(polling -> polling.withReportText(checkingValue(expected)))
-					.satisfied(new Polling<>(ctxt -> ctxt.getPilot().canCheck(ctxt), ctxt -> {
-						final var component = ctxt.getComponent();
+			configure(polling -> polling.reportText(checkingValue(expected)))
+					.satisfied(Polling.of(ctxt -> ctxt.componentPilot().canCheck(ctxt), ctxt -> {
+						final var component = ctxt.component();
 						if (component.getSelectedIndex() < 0) {
 							return failure("No element selected");
 						}

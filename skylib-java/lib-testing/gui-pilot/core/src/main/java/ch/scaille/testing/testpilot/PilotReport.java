@@ -1,12 +1,18 @@
 package ch.scaille.testing.testpilot;
 
+import lombok.Getter;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@NullMarked
 public class PilotReport {
 
 	public interface ReportFunction<C> {
-		String build(PollingContext<C> context, String text);
+		String build(PolledComponent<C> context, @Nullable String text);
 	}
 
 	private final List<String> report = new ArrayList<>();
@@ -15,11 +21,7 @@ public class PilotReport {
 		report.add(reportLine);
 	}
 
-	public List<String> getReport() {
-		return report;
-	}
-
-	public String getFormattedReport() {
+    public String getFormattedReport() {
 		return String.join("\n", report);
 	}
 

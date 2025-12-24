@@ -1,162 +1,151 @@
 package ch.scaille.testing.testpilot;
 
 import java.time.Duration;
-import java.util.Optional;
 import java.util.function.Predicate;
 
 import ch.scaille.testing.testpilot.PilotReport.ReportFunction;
+import ch.scaille.util.helpers.DelayFunction;
 import ch.scaille.util.helpers.OverridableParameter;
-import ch.scaille.util.helpers.Poller;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A polling of a component
- * 
+ *
  * @param <C> type of Component
  * @param <R> type of Result
  */
-public class Polling<C, R> implements PollingMetadata<C> {
+@NullMarked
+@Builder
+@AllArgsConstructor
+@Getter
+public class Polling<C, R> {
 
-	public interface PollingFunction<C, R> {
-		PollingResult<C, R> poll(PollingContext<C> context);
-	}
+    public static <C, R> Polling.PollingBuilder<C, R> of(PollingFunction<C, R> pollingFunction) {
+        return Polling.<C, R>builder().pollingFunction(pollingFunction);
+    }
 
-	private final OverridableParameter<AbstractComponentPilot<C>, Duration> timeout = new OverridableParameter<>(
-			AbstractComponentPilot::getDefaultPollingTimeout);
-	private final OverridableParameter<AbstractComponentPilot<C>, Duration> firstDelay = new OverridableParameter<>(
-			AbstractComponentPilot::getDefaultPollingFirstDelay);
-	private final OverridableParameter<AbstractComponentPilot<C>, Poller.DelayFunction> delayFunction = new OverridableParameter<>(
-			AbstractComponentPilot::getDefaultPollingDelayFunction);
-	private final OverridableParameter<AbstractComponentPilot<C>, ReportFunction<C>> reportFunction = new OverridableParameter<>(
-			AbstractComponentPilot::getDefaultReportFunction);
+    public static <C, R> Polling.PollingBuilder<C, R> of(Predicate<PolledComponent<C>> precondition, PollingFunction<C, R> pollingFunction) {
+        return Polling.<C, R>builder().precondition(precondition).pollingFunction(pollingFunction);
+    }
 
-	private final Predicate<PollingContext<C>> precondition;
+    public interface PollingFunction<C, R> {
+        PollingResult<C, R> poll(PolledComponent<C> context);
+    }
 
-	private final PollingFunction<C, R> pollingFunction;
+    @Nullable
+    private Duration timeout;
 
-	private String reportText = null;
+    @Nullable
+    private Duration firstDelay;
 
-	private ActionDelay actionDelay = null;
+    @Nullable
+    private DelayFunction delayFunction;
 
-	private PollingContext<C> context = null;
-
-	private ActionDelay currentDelay;
-
-	public Polling(PollingFunction<C, R> pollingFunction) {
-		this(null, pollingFunction);
-	}
-
-	public Polling(final Predicate<PollingContext<C>> precondition, final PollingFunction<C, R> pollingFunction) {
-		this.precondition = precondition;
-		this.pollingFunction = pollingFunction;
-	}
-
-	@Override
-	public PollingContext<C> getContext() {
-		return context;
-	}
-
-	public Optional<Predicate<PollingContext<C>>> getPrecondition() {
-		return Optional.ofNullable(precondition);
-	}
-
-	public PollingFunction<C, R> getPollingFunction() {
-		return pollingFunction;
-	}
-
-	@Override
-	public Duration getFirstDelay() {
-		return firstDelay.get();
-	}
-
-	@Override
-	public Poller.DelayFunction getDelayFunction() {
-		return delayFunction.get();
-	}
-
-	@Override
-	public ReportFunction<C> getReportFunction() {
-		return reportFunction.get();
-	}
-
-	@Override
-	public String getReportText() {
-		return reportText;
-	}
-
-	@Override
-	public ActionDelay getActionDelay() {
-		return actionDelay;
-	}
-
-	public Polling<C, R> withTimeout(Duration timeout) {
-		this.timeout.set(timeout);
-		return this;
-	}
-
-	public Polling<C, R> withFirstDelay(Duration initialDelay) {
-		this.firstDelay.set(initialDelay);
-		return this;
-	}
-
-	public Polling<C, R> withDelay(Duration delay) {
-		this.delayFunction.set(t -> delay);
-		return this;
-	}
-
-	public Polling<C, R> withDelayFunction(Poller.DelayFunction delay) {
-		this.delayFunction.set(delay);
-		return this;
-	}
-
-	public Polling<C, R> withExtraDelay(ActionDelay currentDelay) {
-		this.currentDelay = currentDelay;
-		return this;
-	}
-
-	/**
-	 * Sets a report generation function. Setting a function will make that the
-	 * polling is logged in the report
-	 */
-	public Polling<C, R> withReportFunction(ReportFunction<C> reportFunction) {
-		this.reportFunction.set(reportFunction);
-		return this;
-	}
-
-	/**
-	 * Sets the text reported in the logger. Setting a text will make that the
-	 * polling is logged in the report
-	 */
-	public Polling<C, R> withReportText(final String reportText) {
-		this.reportText = reportText;
-		return this;
-	}
-
-	@Override
-	public Duration getTimeout() {
-		var effectiveTimeout = timeout.get();
-		if (currentDelay != null) {
-			effectiveTimeout = currentDelay.applyOnTimeout(effectiveTimeout);
-		}
-		return effectiveTimeout;
-	}
-
-	/**
-	 * To say that the next action will have to wait for some arbitrary delay before
-	 * execution
-	 *
+    /**
+     * Sets a report generation function. Setting a function will make that the
+     * polling is logged in the report
      */
-	public Polling<C, R> andThen(final ActionDelay actionDelay) {
-		this.actionDelay = actionDelay;
-		return this;
-	}
+    @Nullable
+    private ReportFunction<C> reportFunction;
 
-	public Polling<C, R> initializeFrom(AbstractComponentPilot<C> pilot) {
-		timeout.withSource(pilot).ensureLoaded();
-		firstDelay.withSource(pilot).ensureLoaded();
-		delayFunction.withSource(pilot).ensureLoaded();
-		reportFunction.withSource(pilot).ensureLoaded();
-		context = new PollingContext<>(pilot);
-		return this;
-	}
+    @Nullable
+    private final Predicate<PolledComponent<C>> precondition;
+
+    private final PollingFunction<C, R> pollingFunction;
+
+    /**
+     * Sets the text reported in the logger. Setting a text will make that the
+     * polling is logged in the report
+     */
+    @Nullable
+    private String reportText;
+
+    /**
+     * To make that the next action will have to wait for some arbitrary delay before
+     * execution
+     */
+    @Builder.Default
+    private ActionDelay actionDelay = ActionDelay.NO_DELAY;
+
+    private ActionDelay andThen;
+
+    public class InitializedPolling implements PollingMetadata<C> {
+
+        private final AbstractComponentPilot<C> componentPilot;
+
+        @Setter
+        private @Nullable PolledComponent<C> component;
+
+        public InitializedPolling(AbstractComponentPilot<C> componentPilot) {
+            this.componentPilot = componentPilot;
+        }
+
+        public Optional<Predicate<PolledComponent<C>>> getPrecondition() {
+            return Optional.ofNullable(precondition);
+        }
+
+        public Duration getFirstDelay() {
+            return firstDelayParam.get();
+        }
+
+        public DelayFunction getDelayFunction() {
+            return delayFunctionParam.get();
+        }
+
+        public ReportFunction<C> getReportFunction() {
+            return reportFunctionParam.get();
+        }
+
+        public Optional<String> getReportText() {
+            return Optional.ofNullable(reportText);
+        }
+
+        @Nullable
+        public ActionDelay getAndThen() {
+            return andThen;
+        }
+
+        @Override
+        public Duration getTimeout() {
+            return actionDelay.applyOnTimeout(timeoutParam.get());
+        }
+
+        public PollingFunction<C, R> getPollingFunction() {
+            return pollingFunction;
+       }
+
+        @Override
+        public AbstractComponentPilot<C> getComponentPilot() {
+            return componentPilot;
+        }
+
+        public Optional<PolledComponent<C>> getComponent() {
+            return Optional.ofNullable(component);
+        }
+    }
+
+
+
+    private final OverridableParameter<AbstractComponentPilot<C>, Duration> timeoutParam = new OverridableParameter<>(
+            AbstractComponentPilot::getDefaultPollingTimeout);
+    private final OverridableParameter<AbstractComponentPilot<C>, Duration> firstDelayParam = new OverridableParameter<>(
+            AbstractComponentPilot::getDefaultPollingFirstDelay);
+    private final OverridableParameter<AbstractComponentPilot<C>, DelayFunction> delayFunctionParam = new OverridableParameter<>(
+            AbstractComponentPilot::getDefaultPollingDelayFunction);
+    private final OverridableParameter<AbstractComponentPilot<C>, ReportFunction<C>> reportFunctionParam = new OverridableParameter<>(
+            AbstractComponentPilot::getDefaultReportFunction);
+
+    public InitializedPolling initializeFrom(AbstractComponentPilot<C> pilot) {
+        timeoutParam.set(timeout).withSource(pilot).ensureLoaded();
+        firstDelayParam.set(firstDelay).withSource(pilot).ensureLoaded();
+        delayFunctionParam.set(delayFunction).withSource(pilot).ensureLoaded();
+        reportFunctionParam.set(reportFunction).withSource(pilot).ensureLoaded();
+        return new InitializedPolling(pilot);
+    }
 
 }

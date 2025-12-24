@@ -10,7 +10,10 @@ import ch.scaille.gui.mvc.ComponentBindingAdapter;
 import ch.scaille.gui.swing.SwingExt;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class JTextAreaBinding extends ComponentBindingAdapter<String> {
 
 	private final JTextArea textArea;
@@ -40,7 +43,7 @@ public class JTextAreaBinding extends ComponentBindingAdapter<String> {
 	}
 
 	@Override
-	public void setComponentValue(final IComponentChangeSource source, final String value) {
+	public void setComponentValue(final IComponentChangeSource source, @Nullable final String value) {
         textArea.setText(Objects.requireNonNullElse(value, ""));
 	}
 

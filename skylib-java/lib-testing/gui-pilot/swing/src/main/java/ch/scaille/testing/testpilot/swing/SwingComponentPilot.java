@@ -7,13 +7,16 @@ import javax.swing.SwingUtilities;
 
 import ch.scaille.testing.testpilot.AbstractComponentPilot;
 import ch.scaille.testing.testpilot.Polling;
-import ch.scaille.testing.testpilot.PollingContext;
+import ch.scaille.testing.testpilot.PolledComponent;
 import ch.scaille.testing.testpilot.PollingResult;
 import ch.scaille.util.helpers.Poller;
+import org.jspecify.annotations.NullMarked;
+
 /**
  * An abstract class for Swing component pilots
  * @param <C> the type of the Swing Component
  */
+@NullMarked
 public class SwingComponentPilot<C extends JComponent>
 		extends AbstractComponentPilot<C> {
 
@@ -48,16 +51,16 @@ public class SwingComponentPilot<C extends JComponent>
 	}
 
 	@Override
-	public boolean canCheck(final PollingContext<C> ctxt) {
-		return ctxt.getComponent().isVisible();
+	public boolean canCheck(final PolledComponent<C> ctxt) {
+		return ctxt.component().isVisible();
 	}
 
-	protected boolean canEdit(final PollingContext<C> ctxt) {
-		return ctxt.getComponent().isVisible() && ctxt.getComponent().isEnabled();
+	protected boolean canEdit(final PolledComponent<C> ctxt) {
+		return ctxt.component().isVisible() && ctxt.component().isEnabled();
 	}
 
 	@Override
-	public <V> PollingResult<C, V> waitPollingSuccess(final Polling<C, V> polling) {
+	public <V> PollingResult<C, V> waitPollingSuccess(final Polling.PollingBuilder<C, V> polling) {
 		if (SwingUtilities.isEventDispatchThread()) {
 			throw new IllegalStateException("Polling must not run in Swing thread");
 		}
@@ -65,7 +68,7 @@ public class SwingComponentPilot<C extends JComponent>
 	}
 
 	@Override
-	protected <U> Optional<PollingResult<C, U>> executePolling(Poller poller, final Polling<C, U> polling) {
+	protected <U> Optional<PollingResult<C, U>> executePolling(Poller poller, final Polling<C, U>.InitializedPolling polling) {
 		return SwingHelper.invokeAndWait(() -> super.executePolling(poller, polling));
 	}
 

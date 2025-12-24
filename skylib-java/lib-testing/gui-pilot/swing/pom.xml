@@ -21,6 +21,6 @@
 			<groupId>ch.scaille</groupId>
 			<artifactId>gui-pilot-core</artifactId>
 		</dependency>
-	</dependencies>
+    </dependencies>
 
 </project>

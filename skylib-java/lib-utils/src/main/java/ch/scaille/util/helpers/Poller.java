@@ -7,10 +7,6 @@ import java.util.function.Predicate;
 
 public class Poller {
 
-	public interface DelayFunction extends Function<Poller, Duration> {
-		// inherited
-	}
-
 	protected final TimeTracker timeTracker;
 
 	protected final Duration firstDelay;

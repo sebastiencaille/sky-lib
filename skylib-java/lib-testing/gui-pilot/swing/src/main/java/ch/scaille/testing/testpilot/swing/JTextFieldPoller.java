@@ -6,10 +6,13 @@ import static ch.scaille.testing.testpilot.factories.Reporting.settingValue;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Assertions;
 
-import ch.scaille.testing.testpilot.PollingContext;
+import ch.scaille.testing.testpilot.PolledComponent;
 
+@NullMarked
 public class JTextFieldPoller
 		extends SwingPollingBuilder<JTextComponent, JTextFieldPoller, JTextFieldPoller.SwingPoller> {
 
@@ -23,11 +26,11 @@ public class JTextFieldPoller
 		/**
 		 * Select a value in a list, according to its String representation
 		 */
-		public void setText(final String value) {
+		public void setText(@Nullable final String value) {
 			if (value == null) {
 				return;
 			}
-			configure(polling -> polling.withReportText(settingValue(value))).applied(t -> {
+			configure(polling -> polling.reportText(settingValue(value))).applied(t -> {
 				t.setText(value);
 				if (t instanceof JTextField) {
 					SwingHelper.doPressReturn(t);
@@ -35,12 +38,12 @@ public class JTextFieldPoller
 			});
 		}
 
-		public void assertTextEquals(final String expected) {
+		public void assertTextEquals(@Nullable final String expected) {
 			if (expected == null) {
 				return;
 			}
-			configure(polling -> polling.withReportText(checkingValue(expected))).assertedCtxt(
-					pc -> Assertions.assertEquals(expected, pc.getComponent().getText(), pc.getDescription()));
+			configure(polling -> polling.reportText(checkingValue(expected))).assertedCtxt(
+					pc -> Assertions.assertEquals(expected, pc.component().getText(), pc.description()));
 		}
 
 	}
@@ -49,8 +52,8 @@ public class JTextFieldPoller
 		super(new SwingComponentPilot<>(pilot, JTextComponent.class, name) {
 
 			@Override
-			protected boolean canEdit(final PollingContext<JTextComponent> ctxt) {
-				return super.canEdit(ctxt) && ctxt.getComponent().isEditable();
+			protected boolean canEdit(final PolledComponent<JTextComponent> ctxt) {
+				return super.canEdit(ctxt) && ctxt.component().isEditable();
 			}
 		});
 	}

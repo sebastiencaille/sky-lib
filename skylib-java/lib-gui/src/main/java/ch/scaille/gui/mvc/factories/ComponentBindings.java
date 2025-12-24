@@ -7,7 +7,10 @@ import java.util.function.Consumer;
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public final class ComponentBindings {
 
 	private static final String BINDING_TO_WRITE_ONLY_COMPONENT = "Binding to write only component";
@@ -24,6 +27,7 @@ public final class ComponentBindings {
 			final BiConsumer<C, L> removeValueChangeListener, final ValueSetter<C, T> setComponentValue) {
 		return new IComponentBinding<>() {
 
+			@Nullable
 			private L listener;
 
 			@Override

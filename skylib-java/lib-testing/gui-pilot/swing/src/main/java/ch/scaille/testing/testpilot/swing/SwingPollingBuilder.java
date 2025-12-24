@@ -16,12 +16,12 @@ public class SwingPollingBuilder<C extends JComponent, T extends SwingPollingBui
 		}
 
 		public boolean enabled() {
-			return configure(polling -> polling.withReportText(checkingThat("component is enabled")))
+			return configure(polling -> polling.reportText(checkingThat("component is enabled")))
 					.satisfied(JComponent::isEnabled);
 		}
 
 		public boolean disabled() {
-			return configure(polling -> polling.withReportText(checkingThat("component is disabled")))
+			return configure(polling -> polling.reportText(checkingThat("component is disabled")))
 					.satisfied(c -> !c.isEnabled());
 		}
 	}

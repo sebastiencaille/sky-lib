@@ -21,8 +21,6 @@ import java.util.stream.Stream;
 import javax.swing.AbstractListModel;
 import javax.swing.event.EventListenerList;
 
-import org.jetbrains.annotations.NotNull;
-
 import ch.scaille.gui.model.views.IListView;
 import ch.scaille.gui.model.views.IListViewOwner;
 import ch.scaille.gui.model.views.ListViews;
@@ -30,6 +28,9 @@ import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.PropertyChangeSupportController;
 import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.util.helpers.StreamExt;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * List Model with log(n) access.
@@ -52,6 +53,7 @@ import ch.scaille.util.helpers.StreamExt;
  *            the Object.equals method. It is better if an element of the list
  *            can be uniquely identified using Object.equals.
  */
+@NullMarked
 public class ListModelContent<T> extends AbstractListModel<T>
 		implements ISourceModel<T>, Iterable<T>, ListModelRef<T> {
 
@@ -187,6 +189,7 @@ public class ListModelContent<T> extends AbstractListModel<T>
 	 * Current edition. If edition is in progress serialization may store a list
 	 * with inconsistent order
 	 */
+	@Nullable
 	private transient Edition objectEdition = null;
 
 	private transient IPropertiesGroup changeSupport = PropertyChangeSupportController.mainGroup(this);
@@ -200,6 +203,7 @@ public class ListModelContent<T> extends AbstractListModel<T>
 	 */
 	private final ObjectProperty<IListView<T>> viewProperty = new ObjectProperty<>("View", changeSupport);
 
+	@Nullable
 	private final ListModelContent<T> parent;
 
 	private final ContentListeners contentListeners = new ContentListeners();
@@ -210,9 +214,6 @@ public class ListModelContent<T> extends AbstractListModel<T>
 
 	public ListModelContent(final IListView<T> view) {
 		this.parent = null;
-		if (view == null) {
-			throw new IllegalArgumentException("View must not be null");
-		}
 		setView(view);
 	}
 
@@ -385,7 +386,7 @@ public class ListModelContent<T> extends AbstractListModel<T>
 	}
 
 	@Override
-	public @NotNull Iterator<T> iterator() {
+	public @NonNull Iterator<T> iterator() {
 		return new ArrayList<>(data).iterator();
 	}
 

@@ -15,8 +15,8 @@ public class JLabelPoller extends SwingPollingBuilder<JLabel, JLabelPoller, JLab
 		}
 
 		public void assertTextEquals(final String expected) {
-			configure(polling -> polling.withReportText(Reporting.checkingValue(expected))).assertedCtxt(
-					pc -> Assertions.assertEquals(expected, pc.getComponent().getText(), pc.getDescription()));
+			configure(polling -> polling.reportText(Reporting.checkingValue(expected))).assertedCtxt(
+					pc -> Assertions.assertEquals(expected, pc.component().getText(), pc.description()));
 		}
 
 	}

@@ -5,8 +5,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import ch.scaille.javabeans.converters.IConverter;
-import ch.scaille.javabeans.converters.IContextualConverter;
-import ch.scaille.javabeans.properties.ContextProperties;
+import ch.scaille.javabeans.converters.IConverterWithContext;
+import ch.scaille.javabeans.properties.PropertiesContext;
 import org.jspecify.annotations.NullMarked;
 
 /**
@@ -38,16 +38,16 @@ public interface IChainBuilder<P> {
 	/**
 	 * @param <C> The component side type
 	 */
-	<C, K> IChainBuilder<C> bind(IContextualConverter<P, C, K> converter);
+	<C, K> IChainBuilder<C> bind(IConverterWithContext<P, C, K> converter);
 
 	/**
 	 * @param <C> The component side type
 	 */
-	<C, K> IChainBuilder<C> bind(ContextProperties<K> multiProperties, BiFunction<P, K, C> prop2Comp, BiFunction<C, K, P> comp2Prop);
+	<C, K> IChainBuilder<C> bind(PropertiesContext<K> multiProperties, BiFunction<P, K, C> prop2Comp, BiFunction<C, K, P> comp2Prop);
 
 	/**
 	 * @param <C> The component side type
 	 */
-	<C, K> IChainBuilder<C> bind(ContextProperties<K> multiProperties, BiFunction<P, K, C> prop2Comp);
+	<C, K> IChainBuilder<C> bind(PropertiesContext<K> multiProperties, BiFunction<P, K, C> prop2Comp);
 
 }

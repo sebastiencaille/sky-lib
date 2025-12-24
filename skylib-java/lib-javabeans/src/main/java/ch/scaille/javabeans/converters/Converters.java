@@ -12,7 +12,7 @@ import java.util.function.LongFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import ch.scaille.javabeans.properties.ContextProperties;
+import ch.scaille.javabeans.properties.PropertiesContext;
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.ConversionError;
 import ch.scaille.util.helpers.LambdaExt;
@@ -69,8 +69,8 @@ public final class Converters {
      * @param prop2comp the function to convert value from property side to
      *                  component side
      */
-    public static @NonNull <T, U, K> IContextualConverter<T, U, K> listen(final @NonNull ContextProperties<K> context,
-                                                                 final @NonNull BiFunction<T, @NonNull K, U> prop2comp) {
+    public static @NonNull <T, U, K> IConverterWithContext<T, U, K> listen(final @NonNull PropertiesContext<K> context,
+                                                                           final @NonNull BiFunction<T, @NonNull K, U> prop2comp) {
         return converter(context, prop2comp, (o, k) -> {
             throw new WriteOnlyException();
         });
@@ -94,10 +94,10 @@ public final class Converters {
         };
     }
 
-    public static @NonNull <P, C, K> IContextualConverter<P, C, K> converter(final @NonNull ContextProperties<K> context,
-                                                                    final BiFunction<P, @NonNull K, C> prop2comp,
-                                                                    final BiFunctionWithException<C, @NonNull K, P, ConversionException> comp2prop) {
-        return new IContextualConverter<>() {
+    public static @NonNull <P, C, K> IConverterWithContext<P, C, K> converter(final @NonNull PropertiesContext<K> context,
+                                                                              final BiFunction<P, @NonNull K, C> prop2comp,
+                                                                              final BiFunctionWithException<C, @NonNull K, P, ConversionException> comp2prop) {
+        return new IConverterWithContext<>() {
 
             @Override
             public C convertPropertyValueToComponentValue(final P propertyValue, K context) {
@@ -110,7 +110,7 @@ public final class Converters {
             }
 
             @Override
-            public @NonNull ContextProperties<K> contextProperties() {
+            public @NonNull PropertiesContext<K> contextProperties() {
                 return context;
             }
 

@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.Level;
 
-import ch.scaille.javabeans.properties.ContextProperties;
+import ch.scaille.javabeans.properties.PropertiesContext;
 import ch.scaille.javabeans.DependenciesBuildingReport;
 import ch.scaille.javabeans.IBindingController;
 import ch.scaille.javabeans.IChainBuilder;
@@ -14,7 +14,7 @@ import ch.scaille.javabeans.IComponentLink;
 import ch.scaille.javabeans.Logging;
 import ch.scaille.javabeans.converters.ConversionException;
 import ch.scaille.javabeans.converters.IConverter;
-import ch.scaille.javabeans.converters.IContextualConverter;
+import ch.scaille.javabeans.converters.IConverterWithContext;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -140,7 +140,7 @@ public class EndOfChain<P> implements IChainBuilder<P> {
      * @param <C> The component side type
      */
     @Override
-    public <C, K> EndOfChain<C> bind(final IContextualConverter<P, C, K> converter) {
+    public <C, K> EndOfChain<C> bind(final IConverterWithContext<P, C, K> converter) {
         converter.initialize(chain.getProperty());
         final var contextProperties = converter.contextProperties();
         register(contextProperties);
@@ -154,7 +154,7 @@ public class EndOfChain<P> implements IChainBuilder<P> {
      * @param <C> The component side type
      */
     @Override
-    public <C, K> EndOfChain<C> bind(final ContextProperties<K> multiProperties,
+    public <C, K> EndOfChain<C> bind(final PropertiesContext<K> multiProperties,
                                      final BiFunction<@Nullable P, K, @Nullable C> prop2Comp,
                                      final BiFunction<@Nullable C, K, @Nullable P> comp2Prop) {
         register(multiProperties);
@@ -168,7 +168,7 @@ public class EndOfChain<P> implements IChainBuilder<P> {
      * @param <C> The component side type
      */
     @Override
-    public <C, K> EndOfChain<C> bind(final ContextProperties<K> multiProperties, final BiFunction<@Nullable P, K, @Nullable C> prop2Comp) {
+    public <C, K> EndOfChain<C> bind(final PropertiesContext<K> multiProperties, final BiFunction<@Nullable P, K, @Nullable C> prop2Comp) {
         register(multiProperties);
         chain.addLink(link(
                 value -> prop2Comp.apply(value, multiProperties.object()),
@@ -179,7 +179,7 @@ public class EndOfChain<P> implements IChainBuilder<P> {
     }
 
 
-    private void register(ContextProperties<?> multiProperties) {
+    private void register(PropertiesContext<?> multiProperties) {
         multiProperties.properties().forEach(p -> p.addListener(e -> chain.flushChanges()));
     }
 

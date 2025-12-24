@@ -16,6 +16,7 @@ import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.IVetoer.TransmitMode;
 import ch.scaille.javabeans.PropertyEvent;
 import ch.scaille.javabeans.PropertyEvent.EventKind;
+import lombok.Getter;
 import org.jspecify.annotations.NullMarked;
 
 /**
@@ -57,7 +58,8 @@ public abstract class AbstractProperty implements IComponentChangeSource, Serial
 	/**
 	 * Name of the property
 	 */
-	private final String name;
+	@Getter
+    private final String name;
 
 	/**
 	 * Support to trigger property change
@@ -74,7 +76,8 @@ public abstract class AbstractProperty implements IComponentChangeSource, Serial
 	 */
 	protected transient ErrorNotifier errorNotifier = emptyErrorNotifier();
 
-	protected transient TransmitMode transmitMode = TransmitMode.BUFFERIZE;
+	@Getter
+    protected transient TransmitMode transmitMode = TransmitMode.BUFFERIZE;
 
 	public abstract void reset(Object caller);
 
@@ -93,15 +96,7 @@ public abstract class AbstractProperty implements IComponentChangeSource, Serial
 		propertySupport.register(this);
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public TransmitMode getTransmitMode() {
-		return transmitMode;
-	}
-
-	public void setTransmitMode(final TransmitMode transmitMode) {
+    public void setTransmitMode(final TransmitMode transmitMode) {
 		final var wasTransmitToComponent = this.transmitMode.toComponent;
 		forceTransmitMode(transmitMode);
 		if (!wasTransmitToComponent && this.transmitMode.toComponent) {

@@ -7,6 +7,7 @@ import ch.scaille.javabeans.IChainBuilderFactory;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.IPropertiesOwner;
 import ch.scaille.javabeans.chain.BindingChain;
+import lombok.Getter;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -20,6 +21,7 @@ import org.jspecify.annotations.Nullable;
 @NullMarked
 public class IntProperty extends AbstractTypedProperty<Integer> {
 
+	@Getter
 	private int value;
 	private final int defaultValue;
 
@@ -51,10 +53,6 @@ public class IntProperty extends AbstractTypedProperty<Integer> {
 	public final IntProperty configureTyped(final Consumer<AbstractTypedProperty<Integer>>... propertyConfigurer) {
 		super.configureTyped(propertyConfigurer);
 		return this;
-	}
-
-	public int getValue() {
-		return value;
 	}
 
 	public void setValue(final Object caller, final int newValue) {

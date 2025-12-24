@@ -15,14 +15,14 @@ import java.util.Objects;
  * @param <T> the record type
  */
 @NullMarked
-public record ContextProperties<T>(T object, List<AbstractProperty> properties) {
+public record PropertiesContext<T>(T object, List<AbstractProperty> properties) {
 
-	public static <T extends AbstractProperty> ContextProperties<T> ofProperty(T property) {
-		return new ContextProperties<>(property, List.of(property));
+	public static <T extends AbstractProperty> PropertiesContext<T> ofProperty(T property) {
+		return new PropertiesContext<>(property, List.of(property));
 	}
 	
-	public static <T> ContextProperties<T> ofRecord(T propertiesRecord) {
-		return new ContextProperties<>(propertiesRecord, Arrays.stream(propertiesRecord.getClass().getRecordComponents())
+	public static <T> PropertiesContext<T> ofRecord(T propertiesRecord) {
+		return new PropertiesContext<>(propertiesRecord, Arrays.stream(propertiesRecord.getClass().getRecordComponents())
 				.map(field -> asProperty(propertiesRecord, field))
 				.filter(Objects::nonNull)
 				.toList());

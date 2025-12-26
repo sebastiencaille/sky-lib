@@ -7,6 +7,7 @@ import org.jspecify.annotations.NonNull;
 import java.beans.PropertyChangeEvent;
 import java.util.IdentityHashMap;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -28,6 +29,7 @@ public class PropertiesAggregator<T> extends AbstractProperty {
                     impl.propertyModified(PropertyEvent.EventKind.BEFORE);
                     value = v;
                     if (!notSet.isEmpty()) {
+                        // Startup recording. We trigger the binding once all the data are available.
                         notSet.remove(this);
                     }
                 } finally {
@@ -41,6 +43,12 @@ public class PropertiesAggregator<T> extends AbstractProperty {
         }
     }
 
+    public <K> PropertiesAggregator<T> of(PropertiesContext<K> context, Function<K, T> applier) {
+        this.evaluator = () -> applier.apply(context.object());
+        context.properties().forEach(p -> p.addListener((c, event) -> impl.propertyModified(event.kind())));
+        return this;
+    }
+
 
     // ****************** 1 properties (for x properties + 1), final evaluator
     public interface Applier1<T1, R> {
@@ -48,7 +56,7 @@ public class PropertiesAggregator<T> extends AbstractProperty {
     }
 
     public <T1> PropertiesAggregator<T> add(IChainBuilder<T1> chain1, Applier1<T1, T> applier) {
-        final Snapshot<T1> value1 = new Snapshot<>(chain1);
+        final var value1 = new Snapshot<>(chain1);
         this.evaluator = () -> applier.apply(value1);
         return this;
     }
@@ -61,8 +69,8 @@ public class PropertiesAggregator<T> extends AbstractProperty {
 
     public <T1, T2> PropertiesAggregator<T>
     add(IChainBuilder<T1> chain1, IChainBuilder<T2> chain2, Applier2<T1, T2, T> applier) {
-        final Snapshot<T1> value1 = new Snapshot<>(chain1);
-        final Snapshot<T2> value2 = new Snapshot<>(chain2);
+        final var value1 = new Snapshot<>(chain1);
+        final var value2 = new Snapshot<>(chain2);
         this.evaluator = () -> applier.apply(value1, value2);
         return this;
     }
@@ -76,9 +84,9 @@ public class PropertiesAggregator<T> extends AbstractProperty {
     public <T1, T2, T3> PropertiesAggregator<T>
     add(IChainBuilder<T1> chain1, IChainBuilder<T2> chain2, IChainBuilder<T3> chain3,
         Applier3<T1, T2, T3, T> applier) {
-        final Snapshot<T1> value1 = new Snapshot<>(chain1);
-        final Snapshot<T2> value2 = new Snapshot<>(chain2);
-        final Snapshot<T3> value3 = new Snapshot<>(chain3);
+        final var value1 = new Snapshot<>(chain1);
+        final var value2 = new Snapshot<>(chain2);
+        final var value3 = new Snapshot<>(chain3);
         this.evaluator = () -> applier.apply(value1, value2, value3);
         return this;
     }
@@ -92,10 +100,10 @@ public class PropertiesAggregator<T> extends AbstractProperty {
     public <T1, T2 extends IChainBuilder<T2>, T3 extends IChainBuilder<T3>, T4 extends IChainBuilder<T4>>
     PropertiesAggregator<T> add(IChainBuilder<T1> chain1, IChainBuilder<T2> chain2, IChainBuilder<T3> chain3, IChainBuilder<T4> chain4,
                                 Applier4<T1, T2, T3, T4, T> applier) {
-        final Snapshot<T1> value1 = new Snapshot<>(chain1);
-        final Snapshot<T2> value2 = new Snapshot<>(chain2);
-        final Snapshot<T3> value3 = new Snapshot<>(chain3);
-        final Snapshot<T4> value4 = new Snapshot<>(chain4);
+        final var value1 = new Snapshot<>(chain1);
+        final var value2 = new Snapshot<>(chain2);
+        final var value3 = new Snapshot<>(chain3);
+        final var value4 = new Snapshot<>(chain4);
         this.evaluator = () -> applier.apply(value1, value2, value3, value4);
         return this;
     }
@@ -110,10 +118,10 @@ public class PropertiesAggregator<T> extends AbstractProperty {
     public <T1, T2, T3, T4>
     PropertiesAggregator<T> addWithMore(IChainBuilder<T1> chain1, IChainBuilder<T2> chain2, IChainBuilder<T3> chain3, IChainBuilder<T4> chain4,
                                         Applier4More<T1, T2, T3, T4, T> applier) {
-        final Snapshot<T1> value1 = new Snapshot<>(chain1);
-        final Snapshot<T2> value2 = new Snapshot<>(chain2);
-        final Snapshot<T3> value3 = new Snapshot<>(chain3);
-        final Snapshot<T4> value4 = new Snapshot<>(chain4);
+        final var value1 = new Snapshot<>(chain1);
+        final var value2 = new Snapshot<>(chain2);
+        final var value3 = new Snapshot<>(chain3);
+        final var value4 = new Snapshot<>(chain4);
         applier.apply(value1, value2, value3, value4, this);
         return this;
     }
@@ -139,9 +147,6 @@ public class PropertiesAggregator<T> extends AbstractProperty {
 
         }
     }
-
-
-
 
     private int callCount = 0;
 

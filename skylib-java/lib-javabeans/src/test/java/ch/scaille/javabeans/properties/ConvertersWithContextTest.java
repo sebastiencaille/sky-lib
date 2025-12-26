@@ -11,19 +11,21 @@ import java.util.List;
 class ConvertersWithContextTest {
     private final IPropertiesGroup group =  PropertyChangeSupportController.mainGroup(this);
 
-    private final IntProperty intProperty1 = new IntProperty("p1", group);
-    private final IntProperty intProperty2 = new IntProperty("p2", group);
-    private final IntProperty intProperty3 = new IntProperty("p3", group);
-
     public record Context(IntProperty p1, IntProperty p2) {
         // noop
     }
 
+    private final IntProperty intProperty1 = new IntProperty("p1", group);
+    private final IntProperty intProperty2 = new IntProperty("p2", group);
+    private final IntProperty intProperty3 = new IntProperty("p3", group);
+
+    private final PropertiesContext<Context> p1p2Context = PropertiesContext.ofRecord(new Context(intProperty1, intProperty2));
+
     @Test
     void testConverterRecordContext() {
         final List<Integer> computations = new ArrayList<>();
-        intProperty3.bind(PropertiesContext.ofRecord(new Context(intProperty1, intProperty2)),
-                (v3, k) -> k.p1.getValue() + k.p2.getValue() + v3,
+        intProperty3.bind(p1p2Context,
+                (value3, k) -> k.p1.getValue() + k.p2.getValue() + value3,
                 (r, k) -> r)
                 .listen(computations::add);
 

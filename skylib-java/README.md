@@ -23,10 +23,11 @@ boolean clicked = element.report("Click failed").unless().clicked();
 # Model Properties
 
 **Key points**
-* The Model is made of Properties (basically, a typed value + listeners)
-* The dynamic properties of all the visual components are always driven by the properties
-  (The visual components are never directly linked together)
-* The properties of the model and the visual components are bound through converters
+* The Model is made of Properties (basically, a typed value + listeners).
+* The model properties are driving the components properties.
+  This is similar to JavaFX, but model-centric instead of component centric.
+* The properties of the model and the visual components are bound through converters (possibly weak)
+* Properties can be derived from other properties (through records or a cascade of lambda expressions).
 * The MVC model can be generated from the application model
 
 Complete example: [[Screenshot](../screenshots/MVC_Full_TC.png)][[Model](lib-gui-examples/src/main/java/ch/scaille/example/gui/controller/impl/ControllerExampleModel.java)] [[View](lib-gui-examples/src/main/java/ch/scaille/example/gui/controller/impl/ControllerExampleView.java)] 
@@ -42,6 +43,37 @@ booleanProperty.bind(selected(booleanEditor));
 JTextField stringEditor = new JTextField();
 booleanProperty.bind(booleanToString()).bind(value(stringEditor));
 ```
+
+Deriving a value from multiple properties (lambda version)
+```
+    private final PropertiesAggregator<Integer> lambdaAggregator = new PropertiesAggregator<Integer>("lambdaAggregator", group)
+            .addWithMore(intProperty1, intProperty2, intProperty3, intProperty4,
+                    (p1, p2, p3, p4, more) ->
+                            more.add(intProperty5, intProperty6, (p5, p6) ->
+                                    p1.get() + p2.get() + p3.get() + p4.get() + p5.get() + p6.get()));
+
+```
+Deriving a value from multiple properties (record version)
+```
+    private record P12(IntProperty p1, IntProperty p2) {};
+
+    private final PropertiesAggregator<Integer> recordAggregator = new ch.scaille.javabeans.properties.PropertiesAggregator<Integer>("recordAggregator", group)
+            .of(PropertiesContext.ofRecord(new P12(intProperty1, intProperty2)),
+                    k -> k.p1().getValue() + k.p2().getValue());
+```
+Binding with a record as context.
+```
+    public record Context(IntProperty p1, IntProperty p2) {};
+...
+    private final PropertiesContext<Context> p1p2Context = PropertiesContext.ofRecord(new Context(intProperty1, intProperty2));
+
+    intProperty3.bind(p1p2Context,
+                (value3, k) -> k.p1.getValue() + k.p2.getValue() + value3,
+                (r, k) -> r)
+                .listen(computations::add);
+
+```
+
 **Working with selections**  
 
 The lists/tables/... selection is bound to a property. This property is updated when the selection has changed, and the selection is updated when the property is updated.  
@@ -84,6 +116,8 @@ model.insert(new TestObject(3));
 model.insert(toMove);
 checkModel(childModel, 1, 3, 4);
 
+model.editValue(toMove, v -> v.val = 2);
+// or
 try {
   model.startEditingValue(toMove);
   toMove.val = 2;
@@ -94,8 +128,6 @@ try {
 try (IEdition e = model.startEditingValue(toMove)) {
     toMove.val = 2;
 }
-// or
-model.editValue(toMove, v -> v.val = 2);
 
 checkModel(childModel, 1, 2, 3);
 ```

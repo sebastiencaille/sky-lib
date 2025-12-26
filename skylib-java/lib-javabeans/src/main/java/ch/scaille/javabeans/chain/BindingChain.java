@@ -221,6 +221,7 @@ public class BindingChain implements IBindingChainModifier {
 
         private WeakLink(WeakLinkHolder weakRefHolder, Link<C, C> link) {
 			weakRef = new WeakReference<>(link);
+			// Keep a reference until the controller or whatever is garbage collected
 			weakRefHolder.getLinksHolder().add(link);
         }
 

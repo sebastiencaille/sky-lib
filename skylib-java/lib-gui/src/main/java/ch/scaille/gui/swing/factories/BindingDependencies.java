@@ -42,7 +42,7 @@ public final class BindingDependencies {
 
 		@Override
 		public void mutates() {
-			Objects.requireNonNull(bindingControl, "register was not called").bufferizeBinding();
+			Objects.requireNonNull(bindingControl, "register was not called").pauseBinding();
 		}
 
 		@Override
@@ -71,7 +71,7 @@ public final class BindingDependencies {
 		}
 
 		private void reattach() {
-			bindingControl.releaseBinding();
+			bindingControl.resumeBinding();
 		}
 
 		@Override

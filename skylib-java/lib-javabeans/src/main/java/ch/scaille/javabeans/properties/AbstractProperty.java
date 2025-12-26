@@ -77,7 +77,7 @@ public abstract class AbstractProperty implements IComponentChangeSource, Serial
 	protected transient ErrorNotifier errorNotifier = emptyErrorNotifier();
 
 	@Getter
-    protected transient TransmitMode transmitMode = TransmitMode.BUFFERIZE;
+    protected transient TransmitMode transmitMode = TransmitMode.STOPPED;
 
 	public abstract void reset(Object caller);
 

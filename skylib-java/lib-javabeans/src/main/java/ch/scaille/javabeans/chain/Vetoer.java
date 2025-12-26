@@ -23,7 +23,7 @@ public class Vetoer implements IVetoer {
 	}
 
 	@Override
-	public boolean release() {
+	public boolean resume() {
 		if (detached > 0) {
 			detached--;
 		}
@@ -31,7 +31,7 @@ public class Vetoer implements IVetoer {
 	}
 
 	@Override
-	public void bufferize() {
+	public void pause() {
 		detached++;
 	}
 

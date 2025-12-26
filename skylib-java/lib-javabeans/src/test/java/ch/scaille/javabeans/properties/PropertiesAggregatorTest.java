@@ -26,9 +26,9 @@ class PropertiesAggregatorTest {
                 .addWithMore(intProperty1, intProperty2, intProperty3, intProperty4,
                         (p1, p2, p3, p4, more) ->
                                 more.add(intProperty5, intProperty6, (p5, p6) ->
-                                        p1.getValue() + p2.getValue() + p3.getValue() +
-                                                p4.getValue() + p5.getValue() + p6.getValue()))
-                .listen(computations::add);
+                                        p1.get() + p2.get() + p3.get() +
+                                                p4.get() + p5.get() + p6.get()))
+                .listenActive(computations::add);
         group.transmitChangesBothWays();
         intProperty1.setValue(this, 10);
         intProperty2.setValue(this, 100);

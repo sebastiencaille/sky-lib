@@ -38,7 +38,7 @@ public class BindingSelector<T> implements PropertyChangeListener {
 		if (oldValue != null) {
 			final var oldControllers = objectControllers.get(oldValue);
 			if (oldControllers != null) {
-				oldControllers.forEach(IPropertyController::bufferizeChanges);
+				oldControllers.forEach(IPropertyController::stopTransmit);
 			}
 		}
 

@@ -8,19 +8,18 @@ import org.jspecify.annotations.NullMarked;
  */
 @NullMarked
 public interface IBindingControl extends IPropertyController {
-	
+
 	IVetoer getVetoer();
 
 	AbstractProperty getProperty();
 
-	
 	/**
-	 * Bufferize the binding changes until all release are called
+	 * Allows pausing the binding changes until released
 	 */
-	void bufferizeBinding();
+	void pauseBinding();
 
 	/**
 	 * Release the binding changes
 	 */
-	void releaseBinding();
+	void resumeBinding();
 }

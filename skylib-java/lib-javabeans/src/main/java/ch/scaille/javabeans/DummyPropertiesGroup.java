@@ -28,7 +28,7 @@ public class DummyPropertiesGroup implements IPropertiesGroup, IPropertyEventLis
 	}
 	
 	@Override
-	public void bufferizeChanges() {
+	public void stopTransmit() {
 		// noop
 	}
 

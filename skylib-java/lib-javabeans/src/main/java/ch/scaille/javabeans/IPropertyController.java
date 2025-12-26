@@ -4,7 +4,7 @@ public interface IPropertyController {
 	/**
 	 * Detaches all the properties of this scope.
 	 */
-	void bufferizeChanges();
+	void stopTransmit();
 	
 	void transmitChangesOnlyToComponent();
 

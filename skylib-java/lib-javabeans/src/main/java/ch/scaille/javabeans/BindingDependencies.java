@@ -43,10 +43,10 @@ public final class BindingDependencies {
 			Objects.requireNonNull(controller, "register must have been called before");
 			switch (event.kind()) {
 			case BEFORE:
-				controller.bufferizeBinding();
+				controller.pauseBinding();
 				break;
 			case AFTER:
-				controller.releaseBinding();
+				controller.resumeBinding();
 				break;
 			default:
 				// ignore

@@ -59,7 +59,10 @@ public class PropertyChangeSupportController {
 	}
 
 	public PropertyChangeSupportController(final Object bean) {
-		support = new PropertyChangeSupport(bean);
+		this.support = new PropertyChangeSupport(bean);
+	}
+	public PropertyChangeSupportController(final PropertyChangeSupport support) {
+		this.support = support;
 	}
 
 	private void endFire(final String propertyName) {
@@ -169,8 +172,8 @@ public class PropertyChangeSupportController {
 		}
 
 		@Override
-		public void bufferizeChanges() {
-			forAllProperties(p -> p.setTransmitMode(TransmitMode.BUFFERIZE));
+		public void stopTransmit() {
+			forAllProperties(p -> p.setTransmitMode(TransmitMode.STOPPED));
 		}
 
 		@Override
@@ -223,8 +226,6 @@ public class PropertyChangeSupportController {
 			return "Scoped controller: " + scope;
 		}
 
-		private void flushChanges(AbstractProperty abstractproperty1) {
-		}
 	}
 
 	public IPropertiesGroup scoped(final Object scope) {

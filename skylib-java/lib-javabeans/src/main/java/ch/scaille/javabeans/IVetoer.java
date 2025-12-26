@@ -15,7 +15,7 @@ public interface IVetoer {
 		/**
 		 * When detached. Properties/components are not updated
 		 */
-		BUFFERIZE(false, false),
+		STOPPED(false, false),
 
 		/**
 		 * Component are kept in sync with property updates, but component changes are
@@ -38,9 +38,9 @@ public interface IVetoer {
 		}
 	}
 	
-	boolean release();
+	boolean resume();
 
-	void bufferize();
+	void pause();
 
 	void inhibitTransmitToComponentWhen(Predicate<AbstractProperty> inhibitor);
 

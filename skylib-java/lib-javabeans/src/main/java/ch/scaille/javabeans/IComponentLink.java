@@ -14,6 +14,8 @@ import org.jspecify.annotations.Nullable;
 @NullMarked
 public interface IComponentLink<T> {
 
+
+
 	void setValueFromComponent(Object component, @Nullable T componentValue);
 
 	void reloadComponentValue();

@@ -5,7 +5,7 @@ import ch.scaille.javabeans.chain.BindingChain;
 import org.jspecify.annotations.NonNull;
 
 import java.beans.PropertyChangeEvent;
-import java.util.Arrays;
+import java.util.IdentityHashMap;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -18,15 +18,145 @@ import java.util.function.Supplier;
  */
 public class PropertiesAggregator<T> extends AbstractProperty {
 
+    private class Snapshot<P> implements Supplier<P> {
+        private P value;
+
+        private Snapshot(IChainBuilder<P> chain) {
+            notSet.put(this, this);
+            chain.listen(v -> {
+                try {
+                    impl.propertyModified(PropertyEvent.EventKind.BEFORE);
+                    value = v;
+                    if (!notSet.isEmpty()) {
+                        notSet.remove(this);
+                    }
+                } finally {
+                    impl.propertyModified(PropertyEvent.EventKind.AFTER);
+                }
+            });
+        }
+
+        public P get() {
+            return value;
+        }
+    }
+
+
+    // ****************** 1 properties (for x properties + 1), final evaluator
+    public interface Applier1<T1, R> {
+        R apply(Supplier<T1> value1);
+    }
+
+    public <T1> PropertiesAggregator<T> add(IChainBuilder<T1> chain1, Applier1<T1, T> applier) {
+        final Snapshot<T1> value1 = new Snapshot<>(chain1);
+        this.evaluator = () -> applier.apply(value1);
+        return this;
+    }
+
+    // ****************** 2 properties, final evaluator
+
+    public interface Applier2<T1, T2, R> {
+        R apply(Supplier<T1> value1, Supplier<T2> value2);
+    }
+
+    public <T1, T2> PropertiesAggregator<T>
+    add(IChainBuilder<T1> chain1, IChainBuilder<T2> chain2, Applier2<T1, T2, T> applier) {
+        final Snapshot<T1> value1 = new Snapshot<>(chain1);
+        final Snapshot<T2> value2 = new Snapshot<>(chain2);
+        this.evaluator = () -> applier.apply(value1, value2);
+        return this;
+    }
+
+    // ****************** 3 properties, final evaluator
+
+    public interface Applier3<T1, T2, T3, R> {
+        R apply(Supplier<T1> property1, Supplier<T2> value2, Supplier<T3> value3);
+    }
+
+    public <T1, T2, T3> PropertiesAggregator<T>
+    add(IChainBuilder<T1> chain1, IChainBuilder<T2> chain2, IChainBuilder<T3> chain3,
+        Applier3<T1, T2, T3, T> applier) {
+        final Snapshot<T1> value1 = new Snapshot<>(chain1);
+        final Snapshot<T2> value2 = new Snapshot<>(chain2);
+        final Snapshot<T3> value3 = new Snapshot<>(chain3);
+        this.evaluator = () -> applier.apply(value1, value2, value3);
+        return this;
+    }
+
+    // ****************** 4 properties, final evaluator
+
+    public interface Applier4<T1, T2, T3, T4, R> {
+        R apply(Supplier<T1> value1, Supplier<T2> value2, Supplier<T3> value3, Supplier<T4> value4);
+    }
+
+    public <T1, T2 extends IChainBuilder<T2>, T3 extends IChainBuilder<T3>, T4 extends IChainBuilder<T4>>
+    PropertiesAggregator<T> add(IChainBuilder<T1> chain1, IChainBuilder<T2> chain2, IChainBuilder<T3> chain3, IChainBuilder<T4> chain4,
+                                Applier4<T1, T2, T3, T4, T> applier) {
+        final Snapshot<T1> value1 = new Snapshot<>(chain1);
+        final Snapshot<T2> value2 = new Snapshot<>(chain2);
+        final Snapshot<T3> value3 = new Snapshot<>(chain3);
+        final Snapshot<T4> value4 = new Snapshot<>(chain4);
+        this.evaluator = () -> applier.apply(value1, value2, value3, value4);
+        return this;
+    }
+
+
+    // ****************** 4 properties, and more
+
+    public interface Applier4More<T1, T2, T3, T4, R> {
+        PropertiesAggregator<R> apply(Supplier<T1> property1, Supplier<T2> value2, Supplier<T3> value3, Supplier<T4> value4, PropertiesAggregator<R> group);
+    }
+
+    public <T1, T2, T3, T4>
+    PropertiesAggregator<T> addWithMore(IChainBuilder<T1> chain1, IChainBuilder<T2> chain2, IChainBuilder<T3> chain3, IChainBuilder<T4> chain4,
+                                        Applier4More<T1, T2, T3, T4, T> applier) {
+        final Snapshot<T1> value1 = new Snapshot<>(chain1);
+        final Snapshot<T2> value2 = new Snapshot<>(chain2);
+        final Snapshot<T3> value3 = new Snapshot<>(chain3);
+        final Snapshot<T4> value4 = new Snapshot<>(chain4);
+        applier.apply(value1, value2, value3, value4, this);
+        return this;
+    }
+
+    private class Impl {
+
+        public void propertyModified(PropertyEvent.EventKind kind) {
+            switch (kind) {
+                case BEFORE:
+                    callCount++;
+                    break;
+
+                case AFTER:
+                    callCount--;
+                    if (callCount != 0) {
+                        return;
+                    }
+                    flushChanges(this);
+                    break;
+                default:
+                    break;
+            }
+
+        }
+    }
+
+
+
+
     private int callCount = 0;
 
-    private Supplier<T> evaluator = () -> null;
+    private transient Supplier<T> evaluator = () -> null;
+
+    private final transient Impl impl = new Impl();
+
+    private final IdentityHashMap<Snapshot<?>, Snapshot<?>> notSet = new IdentityHashMap<>();
+
 
     public PropertiesAggregator(String name, IPropertiesGroup group) {
         super(name, group);
     }
 
-    protected PropertiesAggregator(final String name, final IPropertiesOwner model) {
+    public PropertiesAggregator(final String name, final IPropertiesOwner model) {
         super(name, model.getPropertySupport());
     }
 
@@ -47,7 +177,9 @@ public class PropertiesAggregator<T> extends AbstractProperty {
 
     @Override
     public void flushChanges(@NonNull final Object caller) {
-        propertySupport.getChangeSupport().firePropertyChange(getName(), this, null, evaluator.get());
+        if (notSet.isEmpty()) {
+            propertySupport.getChangeSupport().firePropertyChange(getName(), this, null, evaluator.get());
+        }
     }
 
     @NonNull
@@ -55,103 +187,6 @@ public class PropertiesAggregator<T> extends AbstractProperty {
     public PropertyChangeEvent getRefreshChangeEvent() {
         return new PropertyChangeEvent(this, getName(), null, null);
     }
-
-
-    // ****************** 1 properties (for x properties + 1), final evaluator
-    public interface Applier1<P1, R> {
-        R apply(P1 property1);
-    }
-
-    public <P1 extends AbstractProperty> PropertiesAggregator<T> add(P1 property1, Applier1<P1, T> applier) {
-        register(property1);
-        this.evaluator = () -> applier.apply(property1);
-        return this;
-    }
-
-    // ****************** 2 properties, final evaluator
-
-    public interface Applier2<P1, P2, R> {
-        R apply(P1 property1, P2 property2);
-    }
-
-    public <P1 extends AbstractProperty, P2 extends AbstractProperty> PropertiesAggregator<T>
-    add(P1 property1, P2 property2, Applier2<P1, P2, T> applier) {
-        register(property1, property2);
-        this.evaluator = () -> applier.apply(property1, property2);
-        return this;
-    }
-
-    // ****************** 3 properties, final evaluator
-
-    public interface Applier3<P1, P2, P3, R> {
-        R apply(P1 property1, P2 property2, P3 property3);
-    }
-
-    public <P1 extends AbstractProperty, P2 extends AbstractProperty, P3 extends AbstractProperty> PropertiesAggregator<T>
-    add(P1 property1, P2 property2, P3 property3, Applier3<P1, P2, P3, T> applier) {
-        register(property1, property2, property3);
-        this.evaluator = () -> applier.apply(property1, property2, property3);
-        return this;
-    }
-
-    // ****************** 4 properties, final evaluator
-
-    public interface Applier4<P1, P2, P3, P4, R> {
-        R apply(P1 property1, P2 property2, P3 property3, P4 property4);
-    }
-
-    public <P1 extends AbstractProperty, P2 extends AbstractProperty, P3 extends AbstractProperty, P4 extends AbstractProperty>
-    PropertiesAggregator<T> add(P1 property1, P2 property2, P3 property3, P4 property4, Applier4<P1, P2, P3, P4, T> applier) {
-        register(property1, property2, property3, property4);
-        this.evaluator = () -> applier.apply(property1, property2, property3, property4);
-        return this;
-    }
-
-
-    // ****************** 4 properties, and more
-
-    public interface Applier4More<P1, P2, P3, P4, R> {
-        PropertiesAggregator<R> apply(P1 property1, P2 property2, P3 property3, P4 property4, PropertiesAggregator<R> group);
-    }
-
-    public <P1 extends AbstractProperty, P2 extends AbstractProperty, P3 extends AbstractProperty, P4 extends AbstractProperty>
-    PropertiesAggregator<T> addWithMore(P1 property1, P2 property2, P3 property3, P4 property4,
-                                        Applier4More<P1, P2, P3, P4, T> applier) {
-        register(property1, property2, property3, property4);
-        applier.apply(property1, property2, property3, property4, this);
-        return this;
-    }
-
-    private void register(AbstractProperty... properties) {
-        Arrays.stream(properties).forEach(p -> p.addListener(impl));
-    }
-
-    private class Impl implements IPropertyEventListener {
-        @Override
-        public void propertyModified(@NonNull final Object caller, final PropertyEvent event) {
-            switch (event.kind()) {
-                case BEFORE:
-                    if (callCount > 0) {
-                        return;
-                    }
-                    callCount++;
-                    break;
-
-                case AFTER:
-                    callCount--;
-                    if (callCount != 0) {
-                        return;
-                    }
-                    flushChanges(this);
-                    break;
-                default:
-                    break;
-            }
-
-        }
-    }
-
-    private final Impl impl = new Impl();
 
     /**
      * Executes binding when the property is updated (transmitMode = BOTH only)
@@ -173,7 +208,9 @@ public class PropertiesAggregator<T> extends AbstractProperty {
 
     @NonNull
     public IChainBuilderFactory<T> createBindingChain() {
-        return new BindingChain(this, errorNotifier).bindProperty((caller, value) -> {});
+        return new BindingChain(this, errorNotifier).bindProperty((caller, value) -> {
+            // nothing to set
+        });
     }
 
 }

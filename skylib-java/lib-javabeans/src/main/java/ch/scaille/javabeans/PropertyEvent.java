@@ -1,6 +1,7 @@
 package ch.scaille.javabeans;
 
 import ch.scaille.javabeans.properties.AbstractProperty;
+import lombok.Getter;
 import org.jspecify.annotations.NullMarked;
 
 /**
@@ -12,7 +13,8 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public record PropertyEvent(ch.scaille.javabeans.PropertyEvent.EventKind kind, AbstractProperty property) {
 
-	public enum EventKind {
+	@Getter
+    public enum EventKind {
 		BEFORE(98), AFTER(99);
 
 		private final int tableModelId;
@@ -21,10 +23,7 @@ public record PropertyEvent(ch.scaille.javabeans.PropertyEvent.EventKind kind, A
 			this.tableModelId = tableModelId;
 		}
 
-		public int getTableModelId() {
-			return tableModelId;
-		}
-	}
+    }
 
 
 }

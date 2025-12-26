@@ -2,11 +2,9 @@ package ch.scaille.javabeans.chain;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.lang.ref.WeakReference;
+import java.util.*;
 import java.util.function.BiConsumer;
-import java.util.function.Predicate;
 import java.util.logging.Level;
 
 import ch.scaille.javabeans.IBindingChainDependency;
@@ -20,6 +18,7 @@ import ch.scaille.javabeans.converters.ConversionErrors;
 import ch.scaille.javabeans.converters.ConversionException;
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.AbstractProperty.ErrorNotifier;
+import lombok.Setter;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -39,7 +38,8 @@ public class BindingChain implements IBindingChainModifier {
 	/**
 	 * To enable / disable the binding
 	 */
-	@Nullable
+	@Setter
+    @Nullable
 	private Vetoer vetoer;
 
 	/**
@@ -54,7 +54,6 @@ public class BindingChain implements IBindingChainModifier {
 	private final ErrorNotifier errorNotifier;
 
 	private final List<IBindingChainDependency> dependencies = new ArrayList<>();
-	
 
 	public BindingChain(final AbstractProperty property, final ErrorNotifier errorNotifier) {
 		this.property = property;
@@ -91,7 +90,7 @@ public class BindingChain implements IBindingChainModifier {
 	 * Binds to the property
 	 * @param <T> the type of the property
 	 * @param propertySetter the property setter that must be called then setting the value coming from the components
-	 * @return an end of chain, to dynamically control the chain
+	 * @return the end of the chain, to dynamically control the chain
 	 */
 	public <T> IChainBuilderFactory<T> bindProperty(final BiConsumer<Object, T> propertySetter) {
 		property.addListener(valueUpdateListener);
@@ -165,8 +164,8 @@ public class BindingChain implements IBindingChainModifier {
 	}
 
 	@Override
-	public void bufferizeChanges() {
-		property.setTransmitMode(TransmitMode.BUFFERIZE);
+	public void stopTransmit() {
+		property.setTransmitMode(TransmitMode.STOPPED);
 	}
 	
 	@Override
@@ -180,14 +179,14 @@ public class BindingChain implements IBindingChainModifier {
 	}
 	
 	@Override
-	public void bufferizeBinding() {
-		getVetoer().bufferize();
+	public void pauseBinding() {
+		getVetoer().pause();
 	}
 	
 	@Override
-	public void releaseBinding() {
-		final var released = getVetoer().release();
-		if (released) {
+	public void resumeBinding() {
+		final var resumed = getVetoer().resume();
+		if (resumed) {
 			flushChanges();
 		}
 	}
@@ -211,23 +210,52 @@ public class BindingChain implements IBindingChainModifier {
 		return vetoer;
 	}
 
-	public void setVetoer(final Vetoer vetoer) {
-		this.vetoer = vetoer;
-	}
-
-	/**
-	 * Allows to block the transmission of the value
-	 */
-	public IBindingController addPropertyInhibitor(Predicate<AbstractProperty> inhibitor) {
-		getVetoerImpl().inhibitTransmitToComponentWhen(inhibitor);
-		return this;
-	}
-
 	@Override
 	public boolean mustSendToProperty(IBindingChainModifier chain) {
 		return getVetoerImpl().mustSendToProperty(chain);
 	}
-	
+
+	private class WeakLink<C> implements Link<C, C> {
+
+		private final WeakReference<Link<C, C>> weakRef;
+
+        private WeakLink(WeakLinkHolder weakRefHolder, Link<C, C> link) {
+			weakRef = new WeakReference<>(link);
+			weakRefHolder.getLinksHolder().add(link);
+        }
+
+        @Override
+		public @Nullable C toComponent(@Nullable C value) throws ConversionException {
+			final var link = weakRef.get();
+			if (link != null) {
+				return link.toComponent(value);
+			} else {
+				disposeBindings();
+			}
+			return null;
+		}
+
+		@Override
+		public @Nullable C toProperty(Object source, @Nullable C value) {
+			return value;
+		}
+
+		@Override
+		public void unbind() {
+			// noop
+		}
+	}
+
+	public static WeakLinkHolder weakHolder() {
+		return new WeakLinkHolder();
+	}
+
+	@Override
+	public IBindingController makeWeak(WeakLinkHolder weakLinkHolder) {
+        links.replaceAll(link -> new WeakLink<>(weakLinkHolder, (Link<Object, Object>) link));
+		return this;
+	}
+
 	@Override
 	public String toString() {
 		return "Chain of " + property.getName();

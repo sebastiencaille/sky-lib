@@ -15,7 +15,6 @@ class PropertiesTest {
 
         private Integer value;
 
-
         private GarbageCollected(IntProperty p1) {
             p1.listen(this::useValue).makeWeak(weakLinkHolder);
         }

@@ -14,8 +14,6 @@ public interface IBindingChainModifier extends IBindingController {
 
 	<C> void propagateComponentChange(Object component, @Nullable C componentValue);
 
-	void flushChanges();
-
 	boolean mustSendToProperty(IBindingChainModifier chain);
 
 }

@@ -1,13 +1,14 @@
 package ch.scaille.gui.model;
 
+import static java.util.Comparator.comparingInt;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.stream.IntStream;
 
 import javax.swing.JTable;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import ch.scaille.gui.TestObject;
@@ -18,8 +19,9 @@ import ch.scaille.gui.swing.model.ListModelTableModel;
 
 class ListModelBasicTest {
 
-	private static final IListView<TestObject> VIEW = ListViews.sorted(Comparator.comparingInt(TestObject::getVal));
-	static final IListView<TestObject> REVERTED_VIEW = ListViews.sorted((o1, o2) -> o2.getVal() - o1.getVal());
+	private static final Comparator<TestObject> COMPARE = comparingInt(TestObject::getVal);
+	private static final IListView<TestObject> VIEW = ListViews.sorted(COMPARE);
+	private static final IListView<TestObject> REVERSED_VIEW = ListViews.sorted(COMPARE.reversed());
 
 	private static final class EventsCounting implements IListModelListener<TestObject> {
 		int editionStartedEvent = 0;
@@ -184,11 +186,11 @@ class ListModelBasicTest {
 
 	@Test
 	void testDelete() {
-		final ListModel<TestObject> model = new ListModel<>(VIEW);
-		final ListModel<TestObject> childModel = model.child(ListViews.inherited());
+		final var model = new ListModel<>(VIEW);
+		final var childModel = model.child(ListViews.inherited());
 
 		model.insert(new TestObject(1));
-		final TestObject toAddAndRemove = new TestObject(2);
+		final var toAddAndRemove = new TestObject(2);
 		model.insert(toAddAndRemove);
 		model.insert(new TestObject(3));
 		model.remove(toAddAndRemove);
@@ -200,11 +202,10 @@ class ListModelBasicTest {
 	@Test
 	void testSearch() {
 
-		final ListModel<TestObject> model = new ListModel<>(VIEW);
-		final ListModel<TestObject> childModel = model.child(ListViews
-				.sortedFiltered((t1, t2) -> Integer.compare(t2.getVal(), t1.getVal()), t -> t.getVal() % 2 == 0));
+		final var model = new ListModel<>(VIEW);
+		final var childModel = model.child(REVERSED_VIEW);
 
-		TestObjectTableListModel tableModel = new TestObjectTableListModel(childModel);
+		final var tableModel = new TestObjectTableListModel(childModel);
 
 		model.findOrCreateAndEdit(new TestObject(1), t -> t.setVal(2));
 		model.findOrCreateAndEdit(new TestObject(3), t -> t.setVal(4));
@@ -213,7 +214,6 @@ class ListModelBasicTest {
 		checkModel(childModel, 4, 2);
 
 		assertEquals(2, tableModel.getInsertCount());
-
 	}
 
 	@Test
@@ -225,7 +225,7 @@ class ListModelBasicTest {
 		model.insert(new TestObject(2));
 		model.insert(new TestObject(3));
 
-		model.setView(REVERTED_VIEW);
+		model.setView(REVERSED_VIEW);
 
 		checkModel(model, 3, 2, 1);
 		checkModel(childModel, 3, 2, 1);
@@ -233,19 +233,15 @@ class ListModelBasicTest {
 
 	private void checkModel(final ListModel<TestObject> model, final int... expected) {
 		assertEquals(expected.length, model.getSize(), "size");
-		final var current = new int[model.getSize()];
-		for (int i = 0; i < current.length; i++) {
-			current[i] = model.getValueAt(i).getVal();
-		}
+		final var current = model.values().stream().map(TestObject::getVal).toArray();
 		assertEquals(Arrays.toString(expected), Arrays.toString(current));
 	}
 
 	private void checkModel(final JTable table, final int... expected) {
-		Assertions.assertEquals(expected.length, table.getRowCount(), "size");
-		final var current = new int[table.getRowCount()];
-		for (int i = 0; i < current.length; i++) {
-			current[i] = (int) table.getValueAt(i, 0);
-		}
+		assertEquals(expected.length, table.getRowCount(), "size");
+		final var current = IntStream.range(0, table.getRowCount())
+				.map(i -> (Integer)table.getValueAt(i, 0))
+				.toArray();
 		assertEquals(Arrays.toString(expected), Arrays.toString(current));
 	}
 }

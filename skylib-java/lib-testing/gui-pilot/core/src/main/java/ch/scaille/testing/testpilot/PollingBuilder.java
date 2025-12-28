@@ -132,7 +132,8 @@ public class PollingBuilder<C,
 
 	protected final List<Consumer<Polling.PollingBuilder<C, ?>>> configurers = new ArrayList<>(2);
 
-	private @Nullable FailureHandler<C, ?> failureHandler;
+	@Nullable
+	private FailureHandler<C, ?> failureHandler;
 
 
 	public class Unless {

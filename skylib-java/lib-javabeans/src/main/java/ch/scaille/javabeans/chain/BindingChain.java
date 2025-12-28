@@ -230,9 +230,8 @@ public class BindingChain implements IBindingChainModifier {
 			final var link = weakRef.get();
 			if (link != null) {
 				return link.toComponent(value);
-			} else {
-				disposeBindings();
 			}
+			disposeBindings();
 			return null;
 		}
 

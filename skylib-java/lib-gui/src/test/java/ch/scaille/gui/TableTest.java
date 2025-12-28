@@ -57,9 +57,9 @@ class TableTest {
 				listModel.insert(object5);
 				model.selection.setValue(this, Collections.singletonList(object3));
 				listModel.insert(new TestObject(2));
-				assertEquals(1, model.selection.getValue().size()); // NOSONAR
+				assertEquals(1, model.selection.getValue().size());
 				listModel.insert(new TestObject(4));
-				assertEquals(1, model.selection.getValue().size()); // NOSONAR
+				assertEquals(1, model.selection.getValue().size());
 			}
 		});
 

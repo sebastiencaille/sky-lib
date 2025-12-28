@@ -48,7 +48,7 @@ public class DotFileGenerator<E extends Exception> extends TextFormatter<DotFile
 
 	public DotFileGenerator<E> addEdge(final String from, final String to, final String label, final boolean isXLabel,
 			final String extra) throws E {
-		String formatted;
+		final String formatted;
 		if (label == null || label.isEmpty()) {
 			formatted = String.format("\"%s\" -> \"%s\" [ %s ];", from, to, extra);
 		} else if (isXLabel) {

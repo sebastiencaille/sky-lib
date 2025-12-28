@@ -24,13 +24,13 @@ import ch.scaille.gui.swing.jtable.TableColumnWithPolicy;
 public class TableModelExampleView extends JFrame {
 
 	static final Comparator<TestObject> NATURAL_ORDER = Comparator.comparingInt(TestObject::getASecondValue);
-	static final Comparator<TestObject> REVERSE_ORDER = (o1, o2) -> o2.getASecondValue() - o1.getASecondValue();
+	static final Comparator<TestObject> REVERSE_ORDER = NATURAL_ORDER.reversed();
 
     public TableModelExampleView() {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		final var listDynamicView = new DynamicView();
-        final var  model = new TableModelExampleModel();
+        final var model = new TableModelExampleModel();
 
         model.reverseOrder.bind(listDynamicView.reverseOrder());
 		model.enableFilter.bind(listDynamicView.enableFilter());

@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import ch.scaille.gui.swing.factories.SwingBindings;
-import ch.scaille.javabeans.IBindingController;
 import ch.scaille.javabeans.PropertyChangeSupportController;
 import ch.scaille.javabeans.IVetoer.TransmitMode;
 import ch.scaille.javabeans.converters.Converters;
@@ -37,12 +36,12 @@ class SwingBindingsTest {
 
 	@Test
 	void testItemSelectable() {
-		final JCheckBox cb = new JCheckBox("UnitTest");
+		final var cb = new JCheckBox("UnitTest");
 		model.stringProperty.setValue(this, Boolean.FALSE.toString());
-		final IBindingController cbBinding = model.stringProperty
+		final var cbBinding = model.stringProperty
 				.bind(Converters.converter(Boolean::valueOf, Object::toString))
 				.bind(SwingBindings.selected(cb));
-		model.stringProperty.setTransmitMode(TransmitMode.TRANSMIT);;
+		model.stringProperty.setTransmitMode(TransmitMode.TRANSMIT);
 
 		assertEquals(Boolean.FALSE.toString(), model.stringProperty.getValue());
 		assertFalse(cb.isSelected(), "cb.isSelected");

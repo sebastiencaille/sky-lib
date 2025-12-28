@@ -6,21 +6,16 @@ import org.junit.jupiter.api.Test;
 
 import ch.scaille.javabeans.PropertyChangeSupportController;
 import ch.scaille.javabeans.properties.ObjectProperty;
+import lombok.Getter;
+import lombok.Setter;
 
 class ModelChildTest {
 
+	@Getter
+	@Setter
 	private static class Parent {
 
-		String child;
-
-		public String getChild() {
-			return child;
-		}
-
-		public void setChild(final String child) {
-			this.child = child;
-		}
-
+		private String child;
 	}
 
 	@Test

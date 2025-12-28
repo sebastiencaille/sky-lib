@@ -63,7 +63,7 @@ public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 	 * from selenium's code
 	 */
 	public void prelaodScript(String resourceName, String channelname) {
-		try (InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName)) {
+		try (var stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName)) {
 			if (stream == null) {
 				throw new IllegalStateException("Unable to find helper script");
 			}

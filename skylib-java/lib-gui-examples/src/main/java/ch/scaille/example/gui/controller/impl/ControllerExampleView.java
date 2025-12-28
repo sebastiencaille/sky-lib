@@ -94,7 +94,7 @@ public class ControllerExampleView extends JFrame {
 		intCheck.setName("intCheck");
 		intProperty.bind(intToString()).listen(intCheck::setText);
 
-		final JLabel intCounter = new JLabel();
+		final var intCounter = new JLabel();
 		intProperty.bind(counter()).listen(intCounter::setText);
 
 		addGuiLineItem(intProperty, intStringEditor, intCheck, intCounter);

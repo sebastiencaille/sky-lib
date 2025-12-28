@@ -23,7 +23,7 @@ class ConvertersWithContextTest {
 
     @Test
     void testConverterRecordContext() {
-        final List<Integer> computations = new ArrayList<>();
+        final var computations = new ArrayList<>();
         intProperty3.bind(p1p2Context,
                 (value3, k) -> k.p1.getValue() + k.p2.getValue() + value3,
                 (r, k) -> r)

@@ -11,6 +11,8 @@ import ch.scaille.util.helpers.Logs;
 import ch.scaille.util.text.ArrowIndentationManager;
 import ch.scaille.util.text.SimpleTextFormatter;
 import ch.scaille.util.text.TextFormatter;
+import lombok.Getter;
+import lombok.Setter;
 
 public interface UntypedObjectAccessorExample2 {
 
@@ -20,17 +22,11 @@ public interface UntypedObjectAccessorExample2 {
 
 	}
 
+	@Getter
+	@Setter
 	class AThirdDataObject {
 
 		private String anAttribute = "data1";
-
-		public String getAnAttribute() {
-			return anAttribute;
-		}
-
-		public void setAnAttribute(final String anAttribute) {
-			this.anAttribute = anAttribute;
-		}
 
 	}
 

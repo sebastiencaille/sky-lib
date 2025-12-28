@@ -1,34 +1,18 @@
 package ch.scaille.gui;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
 public class TestObject {
 
 	private int val;
 
-	public TestObject(final int val) {
-		super();
-		this.val = val;
-	}
-
-	public int getVal() {
-		return val;
-	}
-
-	public void setVal(int val) {
-		this.val = val;
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		return obj != null && this.getClass().equals(obj.getClass()) && val == ((TestObject) obj).val;
-	}
-
-	@Override
-	public String toString() {
-		return String.valueOf(val);
-	}
-
-	@Override
-	public int hashCode() {
-		return val;
-	}
 }

@@ -59,8 +59,9 @@ public abstract class AbstractComponentPilot<C> {
     private final GuiPilot pilot;
 
     private final List<Consumer<C>> postExecutions = new ArrayList<>();
-
-    private @Nullable LoadedComponent<C> cachedComponent = null;
+    
+    @Nullable 
+    private LoadedComponent<C> cachedComponent = null;
 
     protected boolean fired = false;
 

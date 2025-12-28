@@ -3,6 +3,11 @@ package ch.scaille.generators.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class GenerationMetadata {
 	private final String generator;
 	private final String comments;
@@ -18,15 +23,4 @@ public class GenerationMetadata {
 		this.generationDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").format(new Date());
 	}
 
-	public String getGenerator() {
-		return generator;
-	}
-
-	public String getComments() {
-		return comments;
-	}
-
-	public String getGenerationDate() {
-		return generationDate;
-	}
 }

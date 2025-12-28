@@ -15,5 +15,4 @@ public class ControllerExampleController extends GuiController {
 		model.getTableModel().insert(new TestObject("Hello", 1));
 	}
 
-
 }

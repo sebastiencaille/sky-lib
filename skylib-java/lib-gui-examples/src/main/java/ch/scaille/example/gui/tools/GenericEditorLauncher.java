@@ -14,9 +14,13 @@ import ch.scaille.gui.validation.GenericEditorValidationAdapter;
 import ch.scaille.util.helpers.Logs;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Setter;
+import lombok.ToString;
 
 public class GenericEditorLauncher {
 
+	@Setter
+	@ToString
 	public static class EditedObject {
 		private String str;
 
@@ -33,18 +37,10 @@ public class GenericEditorLauncher {
 			return str;
 		}
 
-		public void setStr(final String str) {
-			this.str = str;
-		}
-
 		@Ordered(order = 1)
 		@Labeled(label = "A boolean value")
 		public boolean isBool() {
 			return bool;
-		}
-
-		public void setBool(final boolean bool) {
-			this.bool = bool;
 		}
 
 		@Ordered(order = 2)
@@ -54,24 +50,12 @@ public class GenericEditorLauncher {
 			return intValue;
 		}
 
-		public void setIntValue(final Integer intValue) {
-			this.intValue = intValue;
-		}
-
 		@Labeled(label = "Read only component")
 		@Persistency(readOnly = true)
 		public int getReadOnly() {
 			return readOnly;
 		}
 
-		public void setReadOnly(final int readOnly) {
-			this.readOnly = readOnly;
-		}
-
-		@Override
-		public String toString() {
-			return str + " / " + bool + " / " + intValue;
-		}
 	}
 
 	public static void main(final String[] args) {

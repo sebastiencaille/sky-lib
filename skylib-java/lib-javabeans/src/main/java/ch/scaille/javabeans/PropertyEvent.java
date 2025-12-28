@@ -25,5 +25,4 @@ public record PropertyEvent(ch.scaille.javabeans.PropertyEvent.EventKind kind, A
 
     }
 
-
 }

@@ -9,6 +9,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.jspecify.annotations.NullMarked;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -17,6 +18,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+@NullMarked
 public class TomcatOverloadDetectorFilter extends OncePerRequestFilter {
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(TomcatOverloadDetectorFilter.class);

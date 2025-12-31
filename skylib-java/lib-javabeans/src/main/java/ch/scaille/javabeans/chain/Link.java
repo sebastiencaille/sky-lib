@@ -1,17 +1,13 @@
 package ch.scaille.javabeans.chain;
 
 import ch.scaille.javabeans.converters.ConversionException;
-import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
-@NullMarked
 public interface Link<P, C> {
 
-	@Nullable
-	C toComponent(@Nullable P value) throws ConversionException;
+	C toComponent(P value) throws ConversionException;
 
-	@Nullable
-	P toProperty(Object component, @Nullable C value) throws ConversionException;
+	P toProperty(@NonNull Object component, C value) throws ConversionException;
 
 	void unbind();
 }

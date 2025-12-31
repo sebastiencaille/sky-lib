@@ -6,6 +6,7 @@ import static ch.scaille.testing.testpilot.factories.Pollings.appliesCtxt;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -175,7 +176,7 @@ public class PollingBuilder<C,
 		configurers.forEach(conf -> conf.accept(polling));
 		final var pollingResult = pilot.processResult(pilot.waitPollingSuccess(polling),
 				PollingResults.identity(),
-				((FailureHandler<C, R>) failureHandler));
+				(FailureHandler<C, R>) Objects.requireNonNull(failureHandler, "Failure handler was not set"));
 		reset();
 		return pollingResult;
 	}
@@ -232,7 +233,7 @@ public class PollingBuilder<C,
 	}
 
 	/**
-	 * Reports the failure, but do not fail the test
+	 * Reports the failure but do not fail the test
 	 */
 	public That evaluateWithReport(String report) {
 		this.failureHandler = FailureHandlers.reportFailure(report);

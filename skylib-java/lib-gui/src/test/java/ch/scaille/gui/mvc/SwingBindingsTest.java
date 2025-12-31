@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import javax.swing.JCheckBox;
 
+import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,6 +17,7 @@ import ch.scaille.javabeans.converters.Converters;
 import ch.scaille.javabeans.properties.ObjectProperty;
 
 class SwingBindingsTest {
+	@NullMarked
 	private static class TestGuiModel extends GuiModel {
 
 		private final ObjectProperty<String> stringProperty = new ObjectProperty<>("StringProperty", this);

@@ -1,5 +1,7 @@
 package ch.scaille.util.helpers;
 
+import org.jspecify.annotations.NullMarked;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
@@ -8,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+@NullMarked
 public interface Logs {
 
 	static Logger of(Class<?> clazz) {

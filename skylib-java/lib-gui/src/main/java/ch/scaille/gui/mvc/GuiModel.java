@@ -37,8 +37,7 @@ public class GuiModel implements IPropertiesOwner {
 
 		public static class ModelConfigurationBuilder {
 			public ModelConfigurationBuilder implicitConverters(List<ImplicitConvertProvider> implicitConverters) {
-				this.implicitConverters = (Objects.requireNonNullElseGet(this.implicitConverters, ArrayList::new));
-				this.implicitConverters.addAll(implicitConverters);
+				this.implicitConverters = new ArrayList<>(implicitConverters);
 				return this;
 			}
 		}

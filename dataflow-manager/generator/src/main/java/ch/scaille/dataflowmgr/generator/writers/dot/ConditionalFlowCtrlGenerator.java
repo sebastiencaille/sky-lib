@@ -29,9 +29,9 @@ public class ConditionalFlowCtrlGenerator extends AbstractDotFlowGenerator {
 				.orElseThrow(() -> new IllegalStateException("Unable to find conditional flow"));
 
 		final var conditionNodeName = getConditionGroupNodeName(conditionalCtrl);
-		if (!graph.nodes.containsKey(conditionNodeName)) {
+		if (!graph.nodes().containsKey(conditionNodeName)) {
 			addConditionGroup(conditionalCtrl);
-			graph.links.add(new Link(genContext.getLocalContext(), conditionNodeName, "", ""));
+			graph.links().add(new Link(genContext.getLocalContext(), conditionNodeName, "", ""));
 		}
 		var nextLink = conditionNodeName;
 
@@ -61,13 +61,13 @@ public class ConditionalFlowCtrlGenerator extends AbstractDotFlowGenerator {
 
 	private String addConditionGroup(final ConditionalFlowCtrl group) {
 		final var condGroupNode = getConditionGroupNodeName(group);
-		graph.nodes.put(condGroupNode, new Node(condGroupNode, group.getName(), "$ ?", DotFileGenerator.Shape.DIAMOND));
+		graph.nodes().put(condGroupNode, new Node(condGroupNode, group.getName(), "$ ?", DotFileGenerator.Shape.DIAMOND));
 		return condGroupNode;
 	}
 
 	private String addCondition(final CustomCall condition) {
 		final var condNode = getConditionNodeName(condition);
-		graph.nodes.put(condNode, new Node(condNode, condition.getCall(), "$: true", DotFileGenerator.Shape.OCTAGON));
+		graph.nodes().put(condNode, new Node(condNode, condition.getCall(), "$: true", DotFileGenerator.Shape.OCTAGON));
 		return condNode;
 	}
 

@@ -20,6 +20,7 @@ import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.AbstractProperty.ErrorNotifier;
 import lombok.Setter;
 import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -215,6 +216,7 @@ public class BindingChain implements IBindingChainModifier {
 		return getVetoerImpl().mustSendToProperty(chain);
 	}
 
+	@NullUnmarked
 	private class WeakLink<C> implements Link<C, C> {
 
 		private final WeakReference<Link<C, C>> weakRef;
@@ -226,7 +228,7 @@ public class BindingChain implements IBindingChainModifier {
         }
 
         @Override
-		public @Nullable C toComponent(@Nullable C value) throws ConversionException {
+		public C toComponent(C value) throws ConversionException {
 			final var link = weakRef.get();
 			if (link != null) {
 				return link.toComponent(value);
@@ -236,7 +238,7 @@ public class BindingChain implements IBindingChainModifier {
 		}
 
 		@Override
-		public @Nullable C toProperty(Object source, @Nullable C value) {
+		public C toProperty(@Nullable Object source, C value) {
 			return value;
 		}
 

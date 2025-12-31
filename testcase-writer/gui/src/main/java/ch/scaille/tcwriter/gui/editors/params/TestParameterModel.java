@@ -7,7 +7,9 @@ import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestReference;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class TestParameterModel extends GuiModel {
 	private final ObjectProperty<TestParameterFactory.ParameterNature> valueNature;
 	private final ObjectProperty<String> simpleValue;

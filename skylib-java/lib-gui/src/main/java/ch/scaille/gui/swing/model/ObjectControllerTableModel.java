@@ -12,6 +12,8 @@ import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
 import ch.scaille.javabeans.properties.AbstractProperty;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A table model that is using an object controller per column.
@@ -23,6 +25,7 @@ import ch.scaille.javabeans.properties.AbstractProperty;
  * @param <M> type of the object's gui model
  * @param <C> type that enums the columns
  */
+@NullMarked
 public abstract class ObjectControllerTableModel<O, M extends IObjectGuiModel<O>, C extends Enum<C>>
 		extends ListModelTableModel<O, C> {
 
@@ -37,11 +40,17 @@ public abstract class ObjectControllerTableModel<O, M extends IObjectGuiModel<O>
 
 		private final Map<O, U> changes = new HashMap<>();
 
-		private AbstractProperty property;
+		private final AbstractProperty property;
 
+		@Nullable
 		private IComponentLink<U> singleListener;
 
+		@Nullable
 		private Object loadedValue;
+
+		public TableBinding(AbstractProperty property) {
+			this.property = property;
+		}
 
 		@SuppressWarnings("unchecked")
 		void addChange(final O object, final Object newValue) {
@@ -49,12 +58,13 @@ public abstract class ObjectControllerTableModel<O, M extends IObjectGuiModel<O>
 		}
 
 		void commit(final O object) {
-			if (changes.containsKey(object)) {
+			if (changes.containsKey(object) && singleListener != null) {
 				singleListener.setValueFromComponent(this, changes.get(object));
 				property.save();
 			}
 		}
 
+		@Nullable
 		Object getDisplayValue(final O object) {
 			if (changes.containsKey(object)) {
 				return changes.get(object);
@@ -75,7 +85,7 @@ public abstract class ObjectControllerTableModel<O, M extends IObjectGuiModel<O>
 		}
 
 		@Override
-		public void setComponentValue(final IComponentChangeSource source, final U value) {
+		public void setComponentValue(final IComponentChangeSource source, @Nullable final U value) {
 			this.loadedValue = value;
 		}
 
@@ -96,20 +106,17 @@ public abstract class ObjectControllerTableModel<O, M extends IObjectGuiModel<O>
 			final Class<C> columnsEnumClass) {
 		super(listModel, columnsEnumClass);
 		this.objectModel = objectModel;
-		bindings = new TableBinding[columnsEnumClass.getEnumConstants().length];
+		this.bindings = new TableBinding[columnsEnumClass.getEnumConstants().length];
 		bindModel(objectModel);
-
-		for (final var column : columnsEnumClass.getEnumConstants()) {
-			bindings[column.ordinal()].property = getPropertyAt(objectModel, column);
-		}
 	}
 
 	protected <U> IComponentBinding<U> createColumnBinding(final C column) {
-		final var binding = new TableBinding<O, U>();
+		final var binding = new TableBinding<O, U>(getPropertyAt(objectModel, column));
 		bindings[column.ordinal()] = binding;
 		return binding;
 	}
 
+	@Nullable
 	@Override
 	protected Object getValueAtColumn(final O object, final C column) {
 		final var binding = bindings[column.ordinal()];

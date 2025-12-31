@@ -17,8 +17,10 @@ import ch.scaille.javabeans.persisters.Persisters;
 import ch.scaille.javabeans.properties.BooleanProperty;
 import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.javabeans.properties.IntProperty;
+import org.jspecify.annotations.NullMarked;
 
 @Generated(value = "ch.scaille.gui.mvc.GuiModelGenerator", date = "2025/12/24 17:32", comments = "-sp ch.scaille.example -cp ../lib-gui-examples/target/classes -t ../lib-gui-examples/src/main/java")
+@NullMarked
 public class ControllerExampleObjectGuiModel extends GuiModel implements IObjectGuiModel<ch.scaille.example.gui.controller.impl.ControllerExampleObject> {
    
     private final ObjectHolder<ch.scaille.example.gui.controller.impl.ControllerExampleObject> currentObjectProvider = new ObjectHolder<>();

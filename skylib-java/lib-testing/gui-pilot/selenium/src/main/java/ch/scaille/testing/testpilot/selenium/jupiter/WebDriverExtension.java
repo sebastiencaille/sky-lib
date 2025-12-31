@@ -1,7 +1,10 @@
 package ch.scaille.testing.testpilot.selenium.jupiter;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -10,10 +13,12 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 /**
- * Allows to propagate the web driver to the extensions
+ * Allows propagating the web driver to the junit extensions
  */
+@NullMarked
 public class WebDriverExtension implements ParameterResolver {
 
+	@Nullable
 	private static RemoteWebDriver currentDriver = null;
 	
 	public static void setCurrentDriver(RemoteWebDriver currentDriver) {
@@ -22,8 +27,8 @@ public class WebDriverExtension implements ParameterResolver {
 	
 	public static class WebDriverConfigurer {
 
-		public WebDriver getDriver() {
-			return currentDriver;
+		public Optional<WebDriver> getDriver() {
+			return Optional.ofNullable(currentDriver);
 		}
 
 		public void setDriver(RemoteWebDriver webDriver) {
@@ -39,8 +44,8 @@ public class WebDriverExtension implements ParameterResolver {
 
 	}
 
-	public static WebDriver getDriver() {
-		return currentDriver;
+	public static Optional<WebDriver> getDriver() {
+		return Optional.ofNullable(currentDriver);
 	}
 
 	@Override

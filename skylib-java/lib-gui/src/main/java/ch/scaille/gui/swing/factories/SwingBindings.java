@@ -44,216 +44,211 @@ import org.jspecify.annotations.Nullable;
 
 public class SwingBindings {
 
-	private SwingBindings() {
-	}
+    private SwingBindings() {
+    }
 
-	/**
-	 * Allow to register listeners on a component, to trigger a listener
-	 * @param <T> a value type
-	 * @param <C> a component type
-	 */
-	public interface IListenerRegistration<T, C> {
-
-		void addListener(C component, IComponentLink<T> converter);
-
-		void removeListener(C component);
-		
-	}
-	
-	/**
-	 * Class that contains all listener life cycle (create, add, remove)
-	 **/
-	private static class ListenerRegistration<T, C, L> implements IListenerRegistration<T, C> {
-		private final BiFunction<IComponentLink<T>, C, L> createListener;
-		private final BiConsumer<C, L> addListener;
-		private final BiConsumer<C, L> removeListener;
-		@Nullable
-		private L listener;
-
-		public ListenerRegistration(final BiFunction<IComponentLink<T>, C, L> createListener,
-				final BiConsumer<C, L> addListener, final BiConsumer<C, L> removeListener) {
-			this.createListener = createListener;
-			this.addListener = addListener;
-			this.removeListener = removeListener;
-		}
-
-		@Override
-		public void addListener(final C component, final IComponentLink<T> toProperty) {
-			if (listener != null) {
-				throw new IllegalStateException("Listener already added");
-			}
-			listener = createListener.apply(toProperty, component);
-			addListener.accept(component, listener);
-		}
-
-		@Override
-		public void removeListener(final C component) {
-			removeListener.accept(component, listener);
-		}
-
-	}
-
-	/**
-	 *
-	 * @param component               an awt component
-	 * @param componentReaderListener the listener registration that propagate value
-	 *                                changed by the component
-	 * @param componentWriter         the consumer that sets the value of the
-	 *                                component based on the incoming value
-	 * @param defaultValue            a default value for null incoming value
+    /**
+     * Allow to register listeners on a component, to trigger a listener
+     *
+     * @param <T> a value type
+     * @param <C> a component type
      */
-	public static <T, C extends JComponent> IComponentBinding<T> rw(final C component,
-			final IListenerRegistration<T, C> componentReaderListener, final Consumer<T> componentWriter,
-			final T defaultValue) {
-		return new IComponentBinding<>() {
-			@Override
-			public void setComponentValue(@NonNull final IComponentChangeSource source, final T value) {
-				componentWriter.accept(value != null ? value : defaultValue);
-			}
+    public interface IListenerRegistration<T, C> {
 
-			@Override
-			public void addComponentValueChangeListener(@NonNull final IComponentLink<T> converter) {
-				componentReaderListener.addListener(component, converter);
-			}
+        void addListener(C component, IComponentLink<T> converter);
 
-			@Override
-			public void removeComponentValueChangeListener() {
-				componentReaderListener.removeListener(component);
-			}
+        void removeListener(C component);
 
-			@Override
-			public String toString() {
-				return "Binding to " + SwingExt.nameOf(component);
-			}
-		};
-	}
+    }
 
-	public static String textOrNull(final String val) {
-		return val != null ? val : "<null>";
-	}
+    /**
+     * Class that contains all listener life cycle (create, add, remove)
+     **/
+    private static class ListenerRegistration<T, C, L> implements IListenerRegistration<T, C> {
+        private final BiFunction<IComponentLink<T>, C, L> createListener;
+        private final BiConsumer<C, L> addListener;
+        private final BiConsumer<C, L> removeListener;
+        @Nullable
+        private L listener;
 
-	/**
-	 * Conditionally listen to an item and converts its value
-	 * @param <C> the ItemSelectable type
-	 * @param <T> the converted type
-	 * @param activator the condition that allows the value propagation 
-	 * @param converter the converter from the item value to the listener value
-	 * @return a listener registration
-	 */
-	public static <T, C extends ItemSelectable> IListenerRegistration<T, C> itemListener(
-			final Predicate<ItemEvent> activator, final Function<ItemEvent, T> converter) {
-		return new ListenerRegistration<>((link, component) -> event -> {
-			if (activator.test(event)) {
-				link.setValueFromComponent(component, converter.apply(event));
-			}
-		}, ItemSelectable::addItemListener, ItemSelectable::removeItemListener);
-	}
+        public ListenerRegistration(final BiFunction<IComponentLink<T>, C, L> createListener,
+                                    final BiConsumer<C, L> addListener, final BiConsumer<C, L> removeListener) {
+            this.createListener = createListener;
+            this.addListener = addListener;
+            this.removeListener = removeListener;
+        }
 
-	public static IComponentBinding<Boolean> selected(final JCheckBox cb) {
-		return rw(cb, itemListener(e -> true, e -> e.getStateChange() == ItemEvent.SELECTED), cb::setSelected, false);
-	}
+        @Override
+        public void addListener(final C component, final IComponentLink<T> toProperty) {
+            if (listener != null) {
+                throw new IllegalStateException("Listener already added");
+            }
+            listener = createListener.apply(toProperty, component);
+            addListener.accept(component, listener);
+        }
 
-	public static JTextFieldBinding value(final JTextField component) {
-		return new JTextFieldBinding(component);
-	}
+        @Override
+        public void removeListener(final C component) {
+            removeListener.accept(component, listener);
+        }
 
-	public static <T extends Number> JSpinnerBinding<T> value(final JSpinner component) {
-		return new JSpinnerBinding<>(component);
-	}
+    }
 
-	public static IComponentBinding<String> value(final JTextArea component, final boolean readOnly) {
-		return new JTextAreaBinding(component, readOnly);
-	}
+    /**
+     *
+     * @param component               an awt component
+     * @param componentReaderListener the listener registration that propagate value
+     *                                changed by the component
+     * @param componentWriter         the consumer that sets the value of the
+     *                                component based on the incoming value
+     * @param defaultValue            a default value for null incoming value
+     */
+    public static <T, C extends JComponent> IComponentBinding<T> rw(final C component,
+                                                                    final IListenerRegistration<T, C> componentReaderListener, final Consumer<T> componentWriter,
+                                                                    final T defaultValue) {
+        return new IComponentBinding<>() {
+            @Override
+            public void setComponentValue(@NonNull final IComponentChangeSource source, final T value) {
+                componentWriter.accept(value != null ? value : defaultValue);
+            }
 
-	public static <T> IComponentBinding<T> selection(final JList<T> editor) {
-		return new JListSelectionBinding<>(editor);
-	}
+            @Override
+            public void addComponentValueChangeListener(@NonNull final IComponentLink<T> converter) {
+                componentReaderListener.addListener(component, converter);
+            }
 
-	public static <T> IComponentBinding<List<T>> values(final JList<T> editor) {
-		return new JListContentBinding<>(editor);
-	}
+            @Override
+            public void removeComponentValueChangeListener() {
+                componentReaderListener.removeListener(component);
+            }
 
-	public static <T> IComponentBinding<T> selection(final JTable editor, final ListModelTableModel<T, ?> tableModel) {
-		return new JTableSelectionBinding<>(editor, tableModel);
-	}
+            @Override
+            public String toString() {
+                return "Binding to " + SwingExt.nameOf(component);
+            }
+        };
+    }
 
-	public static <T, U extends Collection<T>> IComponentBinding<U> multipleSelection(final JTable editor,
-			final ListModelTableModel<T, ?> tableModel, Supplier<U> collectionSupplier) {
-		return new JTableMultiSelectionBinding<>(editor, tableModel, collectionSupplier);
-	}
+    public static String textOrNull(final String val) {
+        return val != null ? val : "<null>";
+    }
 
-	public static <T> IComponentBinding<List<T>> multipleSelection(final JTable editor,
-			final ListModelTableModel<T, ?> tableModel) {
-		return new JTableMultiSelectionBinding<>(editor, tableModel, ArrayList::new);
-	}
+    /**
+     * Conditionally listen to an item and converts its value
+     *
+     * @param <C>       the ItemSelectable type
+     * @param <T>       the converted type
+     * @param activator the condition that allows the value propagation
+     * @param converter the converter from the item value to the listener value
+     * @return a listener registration
+     */
+    public static <T, C extends ItemSelectable> IListenerRegistration<T, C> itemListener(
+            final Predicate<ItemEvent> activator, final Function<ItemEvent, T> converter) {
+        return new ListenerRegistration<>((link, component) -> event -> {
+            if (activator.test(event)) {
+                link.setValueFromComponent(component, converter.apply(event));
+            }
+        }, ItemSelectable::addItemListener, ItemSelectable::removeItemListener);
+    }
 
-	public static <T, U extends Collection<T>> IComponentBinding<U> values(final JComboBox<T> component) {
-		return new JComboBoxContentBinding<>(component);
-	}
+    public static IComponentBinding<Boolean> selected(final JCheckBox cb) {
+        return rw(cb, itemListener(e -> true, e -> e.getStateChange() == ItemEvent.SELECTED), cb::setSelected, false);
+    }
 
-	public static <T> IComponentBinding<T> selection(final JComboBox<T> component) {
-		return rw(component, itemListener(e -> e.getStateChange() == ItemEvent.SELECTED, e -> (T) e.getItem()),
-				component::setSelectedItem, null);
-	}
+    public static JTextFieldBinding value(final JTextField component) {
+        return new JTextFieldBinding(component);
+    }
 
-	private static final class ActionListenerImplementation<T> implements ActionListener {
-		private final IComponentLink<T> link;
-		private final Object[] mapping;
-		private final ButtonGroup group;
+    public static <T extends Number> JSpinnerBinding<T> value(final JSpinner component) {
+        return new JSpinnerBinding<>(component);
+    }
 
-		private ActionListenerImplementation(final IComponentLink<T> link, final Object[] mapping,
-				final ButtonGroup group) {
-			this.link = link;
-			this.mapping = mapping;
-			this.group = group;
-		}
+    public static IComponentBinding<String> value(final JTextArea component, final boolean readOnly) {
+        return new JTextAreaBinding(component, readOnly);
+    }
 
-		@Override
-		public void actionPerformed(final ActionEvent e) {
-			for (int i = 0; i < mapping.length; i += 2) {
-				if (Objects.equals(mapping[i + 1], e.getSource())) {
-					link.setValueFromComponent(group, (T) mapping[i]);
-				}
-			}
-		}
-	}
+    public static <T> IComponentBinding<T> selection(final JList<T> editor) {
+        return new JListSelectionBinding<>(editor);
+    }
 
-	public static <T> IComponentBinding<T> group(final ButtonGroup group, final Object... mapping) {
-		return new IComponentBinding<>() {
-			ActionListenerImplementation<T> actionListener;
+    public static <T> IComponentBinding<List<T>> values(final JList<T> editor) {
+        return new JListContentBinding<>(editor);
+    }
 
-			@Override
-			public void addComponentValueChangeListener(@NonNull final IComponentLink<T> link) {
-				actionListener = new ActionListenerImplementation<>(link, mapping, group);
-				final var elements = group.getElements();
-				while (elements.hasMoreElements()) {
-					elements.nextElement().addActionListener(actionListener);
-				}
-			}
+    public static <T> IComponentBinding<T> selection(final JTable editor, final ListModelTableModel<T, ?> tableModel) {
+        return new JTableSelectionBinding<>(editor, tableModel);
+    }
 
-			@Override
-			public void setComponentValue(@NonNull final IComponentChangeSource source, final T value) {
-				for (int i = 0; i < mapping.length; i += 2) {
-					if (Objects.equals(mapping[i], value)) {
-						group.setSelected(((AbstractButton) mapping[i + 1]).getModel(), true);
-					}
-				}
+    public static <T, U extends Collection<T>> IComponentBinding<U> multipleSelection(final JTable editor,
+                                                                                      final ListModelTableModel<T, ?> tableModel, Supplier<U> collectionSupplier) {
+        return new JTableMultiSelectionBinding<>(editor, tableModel, collectionSupplier);
+    }
 
-			}
+    public static <T> IComponentBinding<List<T>> multipleSelection(final JTable editor,
+                                                                   final ListModelTableModel<T, ?> tableModel) {
+        return new JTableMultiSelectionBinding<>(editor, tableModel, ArrayList::new);
+    }
 
-			@Override
-			public void removeComponentValueChangeListener() {
-				final var elements = group.getElements();
-				while (elements.hasMoreElements()) {
-					elements.nextElement().removeActionListener(actionListener);
-				}
-			}
+    public static <T, U extends Collection<T>> IComponentBinding<U> values(final JComboBox<T> component) {
+        return new JComboBoxContentBinding<>(component);
+    }
 
-			@Override
-			public String toString() {
-				return "Binding to group of buttons " + group;
-			}
-		};
-	}
+    public static <T> IComponentBinding<T> selection(final JComboBox<T> component) {
+        return rw(component, itemListener(e -> e.getStateChange() == ItemEvent.SELECTED, e -> (T) e.getItem()),
+                component::setSelectedItem, null);
+    }
+
+    private record ActionListenerImplementation<T>(IComponentLink<T> link,
+                                                   Object[] mapping,
+                                                   ButtonGroup group)
+            implements ActionListener {
+
+        @Override
+        public void actionPerformed(final ActionEvent e) {
+            for (int i = 0; i < mapping.length; i += 2) {
+                if (Objects.equals(mapping[i + 1], e.getSource())) {
+                    link.setValueFromComponent(group, (T) mapping[i]);
+                }
+            }
+        }
+    }
+
+    public static <T> IComponentBinding<T> group(final ButtonGroup group, final Object... mapping) {
+        return new IComponentBinding<>() {
+            ActionListenerImplementation<T> actionListener;
+
+            @Override
+            public void addComponentValueChangeListener(@NonNull final IComponentLink<T> link) {
+                actionListener = new ActionListenerImplementation<>(link, mapping, group);
+                final var elements = group.getElements();
+                while (elements.hasMoreElements()) {
+                    elements.nextElement().addActionListener(actionListener);
+                }
+            }
+
+            @Override
+            public void setComponentValue(@NonNull final IComponentChangeSource source, final T value) {
+                for (int i = 0; i < mapping.length; i += 2) {
+                    if (Objects.equals(mapping[i], value)) {
+                        group.setSelected(((AbstractButton) mapping[i + 1]).getModel(), true);
+                    }
+                }
+
+            }
+
+            @Override
+            public void removeComponentValueChangeListener() {
+                final var elements = group.getElements();
+                while (elements.hasMoreElements()) {
+                    elements.nextElement().removeActionListener(actionListener);
+                }
+            }
+
+            @Override
+            public String toString() {
+                return "Binding to group of buttons " + group;
+            }
+        };
+    }
 
 }

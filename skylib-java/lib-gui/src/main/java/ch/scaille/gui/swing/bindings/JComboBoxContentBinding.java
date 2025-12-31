@@ -9,7 +9,6 @@ import ch.scaille.gui.mvc.ComponentBindingAdapter;
 import ch.scaille.gui.swing.SwingExt;
 import ch.scaille.javabeans.IComponentChangeSource;
 import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
 
 @NullMarked
 public class JComboBoxContentBinding<T, U extends Collection<T>> extends ComponentBindingAdapter<U> {
@@ -21,7 +20,7 @@ public class JComboBoxContentBinding<T, U extends Collection<T>> extends Compone
 	}
 
 	@Override
-	public void setComponentValue(final IComponentChangeSource source, @Nullable final U value) {
+	public void setComponentValue(final IComponentChangeSource source, final U value) {
 		final var newModel = new DefaultComboBoxModel<T>();
 		value.forEach(newModel::addElement);
 		box.setModel(newModel);

@@ -7,38 +7,39 @@ import java.util.function.Function;
 import ch.scaille.javabeans.converters.IConverter;
 import ch.scaille.javabeans.converters.IConverterWithContext;
 import ch.scaille.javabeans.properties.PropertiesContext;
-import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.NonNull;
 
 /**
  *
  * @param <P> The property side type
  */
-@NullMarked
 public interface IChainBuilder<P> {
 
-    IBindingController listen(Consumer<P> newBinding);
+    @NonNull
+    IBindingController listen(@NonNull Consumer<P> newBinding);
 
-    IBindingController bind(IComponentBinding<P> newBinding);
-
-    /**
-     * @param <C> The component side type
-     */
-    <C> IChainBuilder<C> bind(IConverter<P, C> converter);
+    @NonNull
+    IBindingController bind(@NonNull IComponentBinding<P> newBinding);
 
     /**
      * @param <C> The component side type
      */
-    <C> IChainBuilder<C> bind(Function<P, C> prop2Comp, Function<C, P> comp2Prop);
+    <C> IChainBuilder<C> bind(@NonNull IConverter<P, C> converter);
 
     /**
      * @param <C> The component side type
      */
-    <C> IChainBuilder<C> bind(Function<P, C> prop2Comp);
+    <C> IChainBuilder<C> bind(@NonNull Function<P, C> prop2Comp, Function<C, P> comp2Prop);
 
     /**
      * @param <C> The component side type
      */
-    <C, K> IChainBuilder<C> bind(IConverterWithContext<P, C, K> converter);
+    <C> IChainBuilder<C> bind(@NonNull Function<P, C> prop2Comp);
+
+    /**
+     * @param <C> The component side type
+     */
+    <C, K> IChainBuilder<C> bind(@NonNull IConverterWithContext<P, C, K> converter);
 
     /**
      * @param <C> The component side type

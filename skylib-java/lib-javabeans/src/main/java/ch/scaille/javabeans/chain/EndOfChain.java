@@ -15,7 +15,7 @@ import ch.scaille.javabeans.Logging;
 import ch.scaille.javabeans.converters.ConversionException;
 import ch.scaille.javabeans.converters.IConverter;
 import ch.scaille.javabeans.converters.IConverterWithContext;
-import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -23,7 +23,6 @@ import org.jspecify.annotations.Nullable;
  *
  * @param <P> The property side type
  */
-@NullMarked
 public class EndOfChain<P> implements IChainBuilder<P> {
 
     /**
@@ -37,7 +36,7 @@ public class EndOfChain<P> implements IChainBuilder<P> {
 
             newBinding.addComponentValueChangeListener(new IComponentLink<>() {
                 @Override
-                public void setValueFromComponent(final Object component, final P componentValue) {
+                public void setValueFromComponent(@NonNull final Object component, final P componentValue) {
                     if (!chain.mustSendToProperty(chain)) {
                         return;
                     }
@@ -59,14 +58,14 @@ public class EndOfChain<P> implements IChainBuilder<P> {
         }
 
         @Override
-        public P toComponent(@Nullable final P value) {
+        public P toComponent(final P value) {
             Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE, () -> "Setting component value: " + value);
             newBinding.setComponentValue(chain.getProperty(), value);
             return value;
         }
 
         @Override
-        public P toProperty(final Object component, @Nullable final P value) {
+        public P toProperty(final @NonNull Object component, @Nullable final P value) {
             return value;
         }
 
@@ -88,7 +87,7 @@ public class EndOfChain<P> implements IChainBuilder<P> {
     }
 
     @Override
-    public IBindingController listen(final Consumer<@Nullable P> newBinding) {
+    public @NonNull IBindingController listen(final @NonNull Consumer<P> newBinding) {
         chain.addLink(link(v -> {
             newBinding.accept(v);
             return null;
@@ -99,7 +98,7 @@ public class EndOfChain<P> implements IChainBuilder<P> {
     }
 
     @Override
-    public IBindingController bind(final IComponentBinding<P> newBinding) {
+    public @NonNull IBindingController bind(final @NonNull IComponentBinding<P> newBinding) {
         chain.addLink(new LinkToComponent(newBinding));
         DependenciesBuildingReport.addDependency(chain.getProperty(), newBinding);
         return chain;
@@ -109,7 +108,7 @@ public class EndOfChain<P> implements IChainBuilder<P> {
      * @param <C> The component side type
      */
     @Override
-    public <C> EndOfChain<C> bind(final IConverter<P, C> converter) {
+    public <C> EndOfChain<C> bind(final @NonNull IConverter<P, C> converter) {
         converter.initialize(chain.getProperty());
         chain.addLink(link(converter::convertPropertyValueToComponentValue,
                 converter::convertComponentValueToPropertyValue));
@@ -120,7 +119,7 @@ public class EndOfChain<P> implements IChainBuilder<P> {
      * @param <C> The component side type
      */
     @Override
-    public <C> EndOfChain<C> bind(final Function<@Nullable P, @Nullable C> prop2Comp, final Function<@Nullable C, @Nullable P> comp2Prop) {
+    public <C> EndOfChain<C> bind(final @NonNull Function<P, C> prop2Comp, final Function<C, P> comp2Prop) {
         chain.addLink(link(prop2Comp::apply, comp2Prop::apply));
         return new EndOfChain<>(chain);
     }
@@ -129,7 +128,7 @@ public class EndOfChain<P> implements IChainBuilder<P> {
      * @param <C> The component side type
      */
     @Override
-    public <C> EndOfChain<C> bind(final Function<@Nullable P, @Nullable C> prop2Comp) {
+    public <C> EndOfChain<C> bind(final @NonNull Function<P, C> prop2Comp) {
         chain.addLink(link(prop2Comp::apply, value -> {
             throw new ConversionException("Read only");
         }));
@@ -140,7 +139,7 @@ public class EndOfChain<P> implements IChainBuilder<P> {
      * @param <C> The component side type
      */
     @Override
-    public <C, K> EndOfChain<C> bind(final IConverterWithContext<P, C, K> converter) {
+    public <C, K> EndOfChain<C> bind(final @NonNull IConverterWithContext<P, C, K> converter) {
         converter.initialize(chain.getProperty());
         final var contextProperties = converter.contextProperties();
         register(contextProperties);
@@ -155,8 +154,8 @@ public class EndOfChain<P> implements IChainBuilder<P> {
      */
     @Override
     public <C, K> EndOfChain<C> bind(final PropertiesContext<K> multiProperties,
-                                     final BiFunction<@Nullable P, K, @Nullable C> prop2Comp,
-                                     final BiFunction<@Nullable C, K, @Nullable P> comp2Prop) {
+                                     final BiFunction<P, K, C> prop2Comp,
+                                     final BiFunction<C, K, @Nullable P> comp2Prop) {
         register(multiProperties);
         chain.addLink(link(
                 value -> prop2Comp.apply(value, multiProperties.object()),
@@ -168,7 +167,7 @@ public class EndOfChain<P> implements IChainBuilder<P> {
      * @param <C> The component side type
      */
     @Override
-    public <C, K> EndOfChain<C> bind(final PropertiesContext<K> multiProperties, final BiFunction<@Nullable P, K, @Nullable C> prop2Comp) {
+    public <C, K> EndOfChain<C> bind(final @NonNull PropertiesContext<K> multiProperties, final @NonNull BiFunction<P, K, C> prop2Comp) {
         register(multiProperties);
         chain.addLink(link(
                 value -> prop2Comp.apply(value, multiProperties.object()),
@@ -184,16 +183,16 @@ public class EndOfChain<P> implements IChainBuilder<P> {
     }
 
 
-    protected <C> Link<P, C> link(final ConversionFunction<@Nullable P, @Nullable C> prop2Comp, final ConversionFunction<@Nullable C, @Nullable P> comp2Prop) {
+    protected <C> Link<P, C> link(final ConversionFunction<P, C> prop2Comp, final ConversionFunction<C, @Nullable P> comp2Prop) {
         return new Link<>() {
 
             @Override
-            public @Nullable C toComponent(@Nullable final P value) throws ConversionException {
+            public C toComponent(final P value) throws ConversionException {
                 return prop2Comp.apply(value);
             }
 
             @Override
-            public @Nullable P toProperty(final Object component, @Nullable final C value) throws ConversionException {
+            public P toProperty(final @NonNull Object component, final C value) throws ConversionException {
                 return comp2Prop.apply(value);
             }
 

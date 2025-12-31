@@ -7,10 +7,9 @@ import java.util.function.Consumer;
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
-import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-@NullMarked
 public final class ComponentBindings {
 
 	private static final String BINDING_TO_WRITE_ONLY_COMPONENT = "Binding to write only component";
@@ -19,10 +18,10 @@ public final class ComponentBindings {
 	}
 
 	public interface ValueSetter<C, T> {
-		void setComponentValue(C component, IComponentChangeSource property, T value);
+		void setComponentValue(@NonNull C component, IComponentChangeSource property, T value);
 	}
 
-	public static <C, T, L> IComponentBinding<T> component(final C component,
+	public static <C, T, L> IComponentBinding<T> component(final @NonNull C component,
 			final BiFunction<C, IComponentLink<T>, L> addValueChangeListener,
 			final BiConsumer<C, L> removeValueChangeListener, final ValueSetter<C, T> setComponentValue) {
 		return new IComponentBinding<>() {
@@ -31,12 +30,12 @@ public final class ComponentBindings {
 			private L listener;
 
 			@Override
-			public void addComponentValueChangeListener(final IComponentLink<T> link) {
+			public void addComponentValueChangeListener(final @NonNull IComponentLink<T> link) {
 				listener = addValueChangeListener.apply(component, link);
 			}
 
 			@Override
-			public void setComponentValue(final IComponentChangeSource source, final T value) {
+			public void setComponentValue(final @NonNull IComponentChangeSource source, final T value) {
 				setComponentValue.setComponentValue(component, source, value);
 			}
 
@@ -63,7 +62,7 @@ public final class ComponentBindings {
 		return new IComponentBinding<>() {
 
 			@Override
-			public void addComponentValueChangeListener(final IComponentLink<T> link) {
+			public void addComponentValueChangeListener(final @NonNull IComponentLink<T> link) {
 				// component value never read
 			}
 
@@ -73,7 +72,7 @@ public final class ComponentBindings {
 			}
 
 			@Override
-			public void setComponentValue(final IComponentChangeSource source, final T value) {
+			public void setComponentValue(final @NonNull IComponentChangeSource source, final T value) {
 				setComponentValue.accept(source, value);
 			}
 
@@ -93,7 +92,7 @@ public final class ComponentBindings {
 		return new IComponentBinding<>() {
 
 			@Override
-			public void addComponentValueChangeListener(final IComponentLink<T> link) {
+			public void addComponentValueChangeListener(final @NonNull IComponentLink<T> link) {
 				// component value never read
 			}
 
@@ -103,7 +102,7 @@ public final class ComponentBindings {
 			}
 
 			@Override
-			public void setComponentValue(final IComponentChangeSource source, final T value) {
+			public void setComponentValue(final @NonNull IComponentChangeSource source, final T value) {
 				setComponentValue.accept(value);
 			}
 
@@ -119,11 +118,11 @@ public final class ComponentBindings {
 	 *
 	 * @param setComponentValue (source, value)
      */
-	public static <C, T> IComponentBinding<T> listen(final C component, final ValueSetter<C, T> setComponentValue) {
+	public static <C, T> IComponentBinding<T> listen(final @NonNull C component, final ValueSetter<C, T> setComponentValue) {
 		return new IComponentBinding<>() {
 
 			@Override
-			public void addComponentValueChangeListener(final IComponentLink<T> link) {
+			public void addComponentValueChangeListener(final @NonNull IComponentLink<T> link) {
 				// component value never read
 			}
 
@@ -133,7 +132,7 @@ public final class ComponentBindings {
 			}
 
 			@Override
-			public void setComponentValue(final IComponentChangeSource source, final T value) {
+			public void setComponentValue(final @NonNull IComponentChangeSource source, final T value) {
 				setComponentValue.setComponentValue(component, source, value);
 			}
 

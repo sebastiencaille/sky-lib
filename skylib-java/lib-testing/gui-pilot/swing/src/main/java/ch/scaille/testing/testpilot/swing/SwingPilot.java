@@ -17,10 +17,12 @@ import javax.swing.text.JTextComponent;
 
 import ch.scaille.testing.testpilot.ModalDialogDetector;
 import ch.scaille.testing.testpilot.ModalDialogDetector.PollingResult;
+import org.jspecify.annotations.NullMarked;
 
 /**
- * Allows to pilot a Swing component
+ * Allows piloting a Swing component
  */
+@NullMarked
 public class SwingPilot extends ch.scaille.testing.testpilot.GuiPilot {
 
 	private final WeakHashMap<String, JComponent> cache = new WeakHashMap<>();

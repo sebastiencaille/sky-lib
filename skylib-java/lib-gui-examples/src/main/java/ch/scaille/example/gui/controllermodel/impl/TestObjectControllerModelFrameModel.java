@@ -11,8 +11,9 @@ import ch.scaille.gui.swing.model.ObjectControllerTableModel;
 import ch.scaille.javabeans.converters.Converters;
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.util.helpers.JavaExt;
+import org.jspecify.annotations.NullMarked;
 
-@SuppressWarnings("serial")
+@NullMarked
 public class TestObjectControllerModelFrameModel
 		extends ObjectControllerTableModel<TestObject, TestObjectGuiModel, Columns> {
 
@@ -36,7 +37,6 @@ public class TestObjectControllerModelFrameModel
 		return switch (Columns.values()[column]) {
 			case VAL1 -> "Value1";
 			case VAL2 -> "Value2";
-			default -> throw JavaExt.notImplemented();
 		};
 	}
 
@@ -45,7 +45,6 @@ public class TestObjectControllerModelFrameModel
 		return switch (column) {
 			case VAL1 -> controller.getAFirstValueProperty();
 			case VAL2 -> controller.getASecondValueProperty();
-			default -> throw JavaExt.notImplemented();
 		};
 	}
 

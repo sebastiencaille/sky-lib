@@ -3,10 +3,7 @@ package ch.scaille.tcwriter.server.web.controller;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -33,158 +30,147 @@ import jakarta.servlet.http.HttpServletResponse;
 @NullMarked
 public class WebErrorController extends AbstractErrorController {
 
-	private static final Locale LOCALE = Locale.US;
+    private static final Locale LOCALE = Locale.US;
 
-	private static class WebErrorViewResolver implements ErrorViewResolver {
+    private record WebErrorViewResolver(ApplicationContext context) implements ErrorViewResolver {
 
-		private final ApplicationContext context;
+        @Override
+        public ModelAndView resolveErrorView(HttpServletRequest request, HttpStatus status, Map<String, Object> model) {
+            final var resource = this.context.getResource("classpath:templates/errorPage.html");
+            return new ModelAndView(new HtmlResourceView(resource), model);
+        }
 
-		public WebErrorViewResolver(ApplicationContext context) {
-			this.context = context;
-		}
+    }
 
-		@Override
-		public ModelAndView resolveErrorView(HttpServletRequest request, HttpStatus status, Map<String, Object> model) {
-			final var resource = this.context.getResource("classpath:templates/errorPage.html");
-			return new ModelAndView(new HtmlResourceView(resource), model);
-		}
+    /**
+     * {@link View} backed by an HTML resource.
+     */
+    private record HtmlResourceView(Resource resource) implements View {
 
-		/**
-		 * {@link View} backed by an HTML resource.
-		 */
-		private static class HtmlResourceView implements View {
+        @Override
+        public String getContentType() {
+            return MediaType.TEXT_HTML_VALUE;
+        }
 
-			private final Resource resource;
+        @Override
+        public void render(@Nullable Map<String, ?> model, HttpServletRequest request, HttpServletResponse response)
+                throws Exception {
+            response.setContentType(getContentType());
+            final var dto = (ExceptionDto) Objects.requireNonNull(model, "No model provided").get("dto");
+            try (var rsrcStream = new BufferedReader(
+                    new InputStreamReader(this.resource.getInputStream(), StandardCharsets.UTF_8))) {
+                String line;
+                while ((line = rsrcStream.readLine()) != null) {
+                    response.getWriter()
+                            .write(line.replace("{code}", dto.getCode())
+                                    .replace("{arguments}", Arrays.toString(dto.getArguments()))
+                                    .replace("{message}", Objects.requireNonNullElse(dto.getMessage(), ""))
+                                    .replace("{trace}", dto.getTrace())
+                                    .replace("{httpStatusValue}", Integer.toString(dto.getStatus().value()))
+                                    .replace("{httpStatusCode}", dto.getStatus().name()));
+                }
+            }
+        }
 
-			HtmlResourceView(Resource resource) {
-				this.resource = resource;
-			}
+    }
 
-			@Override
-			public String getContentType() {
-				return MediaType.TEXT_HTML_VALUE;
-			}
+    private final MessageSource messageSource;
 
-			@Override
-			public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response)
-					throws Exception {
-				response.setContentType(getContentType());
-				final var dto = (ExceptionDto) model.get("dto");
-				try (var rsrcStream = new BufferedReader(
-						new InputStreamReader(this.resource.getInputStream(), StandardCharsets.UTF_8))) {
-					String line;
-					while ((line = rsrcStream.readLine()) != null) {
-						response.getWriter()
-								.write(line.replace("{code}", dto.getCode())
-										.replace("{arguments}", Arrays.toString(dto.getArguments()))
-										.replace("{message}", dto.getMessage())
-										.replace("{trace}", dto.getTrace())
-										.replace("{httpStatusValue}", Integer.toString(dto.getStatus().value()))
-										.replace("{httpStatusCode}", dto.getStatus().name()));
-					}
-				}
-			}
+    public WebErrorController(ErrorAttributes errorAttributes, ApplicationContext context,
+                              MessageSource messageSource) {
+        super(errorAttributes, Collections.singletonList(new WebErrorViewResolver(context)));
+        this.messageSource = messageSource;
+    }
 
-		}
+    public static class ExceptionDto {
+        private final String code;
+        private final Object[] arguments;
+        private final HttpStatus status;
+        @Nullable
+        private String message = null;
+        private String trace = "";
 
-	}
+        public ExceptionDto(String code, final Object @Nullable [] nullableArguments, HttpStatus status) {
+            super();
+            this.code = code;
+            this.arguments = Objects.requireNonNullElse(nullableArguments, new Object[0]);
+            this.status = status;
+        }
 
-	private final MessageSource messageSource;
+        public String getCode() {
+            return code;
+        }
 
-	public WebErrorController(ErrorAttributes errorAttributes, ApplicationContext context,
-			MessageSource messageSource) {
-		super(errorAttributes, Collections.singletonList(new WebErrorViewResolver(context)));
-		this.messageSource = messageSource;
-	}
+        public Object[] getArguments() {
+            return arguments;
+        }
 
-	public static class ExceptionDto {
-		private final String code;
-		private final Object[] arguments;
-		private final HttpStatus status;
-		@Nullable
-		private String message = null;
-		private String trace = "";
+        public void setMessage(@Nullable String text) {
+            this.message = text;
+        }
 
-		public ExceptionDto(String code, Object[] arguments, HttpStatus status) {
-			super();
-			this.code = code;
-			this.arguments = arguments;
-			this.status = status;
-		}
+        @Nullable
+        public String getMessage() {
+            return message;
+        }
 
-		public String getCode() {
-			return code;
-		}
+        public String getTrace() {
+            return trace;
+        }
 
-		public Object[] getArguments() {
-			return arguments;
-		}
+        public void setTrace(String trace) {
+            this.trace = trace;
+        }
 
-		public void setMessage(String text) {
-			this.message = text;
-		}
+        public HttpStatus getStatus() {
+            return status;
+        }
 
-		@Nullable
-		public String getMessage() {
-			return message;
-		}
+    }
 
-		public String getTrace() {
-			return trace;
-		}
+    private ExceptionDto toDto(HttpServletRequest request) {
+        final var exc = (Exception) request.getAttribute(DispatcherServlet.EXCEPTION_ATTRIBUTE);
+        final var status = getStatus(request);
+        ExceptionDto dto;
+        String defaultText;
+        if (exc instanceof WebRTException webRTexc) {
+            dto = new ExceptionDto(webRTexc.getDetailMessageCode(), webRTexc.getDetailMessageArguments(), status);
+            defaultText = webRTexc.getDetailMessageCode();
+        } else if (exc != null) {
+            dto = new ExceptionDto("exception." + exc.getClass().getName(), new Object[]{exc.getMessage()}, status);
+            defaultText = messageSource.getMessage("error.exception",
+                    new Object[]{exc.getClass().getName(), exc.getMessage()}, "error.exception", LOCALE);
+        } else {
+            dto = new ExceptionDto("exception." + status.name(), new Object[]{status.getReasonPhrase()}, status);
+            defaultText = messageSource.getMessage("error.status", new Object[]{status}, "error.status", LOCALE);
+        }
+        dto.setMessage(messageSource.getMessage(dto.getCode(), dto.getArguments(), defaultText, LOCALE));
+        var trace = (String) getErrorAttributes(request,
+                ErrorAttributeOptions.of(ErrorAttributeOptions.Include.STACK_TRACE)).get("trace");
+        if (trace != null) {
+            dto.setTrace(trace);
+        }
 
-		public void setTrace(String trace) {
-			this.trace = trace;
-		}
+        return dto;
+    }
 
-		public HttpStatus getStatus() {
-			return status;
-		}
+    @GetMapping(produces = MediaType.TEXT_HTML_VALUE)
+    @Nullable
+    public ModelAndView handleErrorHtml(HttpServletRequest request, HttpServletResponse response,
+                                        Map<String, Object> model) {
+        final var dto = toDto(request);
+        model.put("dto", dto);
+        return super.resolveErrorView(request, response, getStatus(request), model);
+    }
 
-	}
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ExceptionDto handleErrorJsonGet(HttpServletRequest request) {
+        return toDto(request);
+    }
 
-	private ExceptionDto toDto(HttpServletRequest request) {
-		final var exc = (Exception) request.getAttribute(DispatcherServlet.EXCEPTION_ATTRIBUTE);
-		final var status = getStatus(request);
-		ExceptionDto dto;
-		String defaultText;
-		if (exc instanceof WebRTException webRTexc) {
-			dto = new ExceptionDto(webRTexc.getDetailMessageCode(), webRTexc.getDetailMessageArguments(), status);
-			defaultText = webRTexc.getDetailMessageCode();
-		} else if (exc != null) {
-			dto = new ExceptionDto("exception." + exc.getClass().getName(), new Object[]{exc.getMessage()}, status);
-			defaultText = messageSource.getMessage("error.exception",
-					new Object[] { exc.getClass().getName(), exc.getMessage() }, "error.exception", LOCALE);
-		} else {
-			dto = new ExceptionDto("exception." + status.name(), new Object[]{status.getReasonPhrase()}, status);
-			defaultText = messageSource.getMessage("error.status", new Object[] { status }, "error.status", LOCALE);
-		}
-		dto.setMessage(messageSource.getMessage(dto.getCode(), dto.getArguments(), defaultText, LOCALE));
-		var trace = (String) getErrorAttributes(request,
-				ErrorAttributeOptions.of(ErrorAttributeOptions.Include.STACK_TRACE)).get("trace");
-		if (trace != null) {
-			dto.setTrace(trace);
-		}
-
-		return dto;
-	}
-
-	@GetMapping(produces = MediaType.TEXT_HTML_VALUE)
-	public ModelAndView handleErrorHtml(HttpServletRequest request, HttpServletResponse response,
-			Map<String, Object> model) {
-		final var dto = toDto(request);
-		model.put("dto", dto);
-		return super.resolveErrorView(request, response, getStatus(request), model);
-	}
-
-	@GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ExceptionDto handleErrorJsonGet(HttpServletRequest request) {
-		return toDto(request);
-	}
-
-	@PostMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ExceptionDto handleErrorJsonPost(HttpServletRequest request) {
-		return toDto(request);
-	}
+    @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ExceptionDto handleErrorJsonPost(HttpServletRequest request) {
+        return toDto(request);
+    }
 
 }

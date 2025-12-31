@@ -9,15 +9,17 @@ import ch.scaille.javabeans.IComponentLink;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 @NullMarked
-public class JTableSelectionBinding<T> extends ComponentBindingAdapter<T> {
+public class JTableSelectionBinding<T> extends ComponentBindingAdapter<@Nullable T> {
 
     private final JTable table;
     private final ListModelTableModel<T, ?> model;
 
     private boolean modelChange = false;
     @Nullable
-    private IComponentLink<T> converter;
+    private IComponentLink<@Nullable T> converter;
 
     public JTableSelectionBinding(final JTable component, final ListModelTableModel<T, ?> model) {
         this.table = component;
@@ -57,12 +59,12 @@ public class JTableSelectionBinding<T> extends ComponentBindingAdapter<T> {
                 table.getSelectionModel().setSelectionInterval(index, index);
             }
             if (index < 0) {
-                converter.setValueFromComponent(this, null);
+                converterSafe().setValueFromComponent(this, null);
             }
         }
     }
 
-    protected void updateSelection(final IComponentLink<T> converter) {
+    protected void updateSelection(final IComponentLink<@Nullable T> converter) {
         final var selectedRow = table.getSelectedRow();
         if (selectedRow >= 0) {
             final var object = model.getObjectAtRow(selectedRow);
@@ -70,6 +72,10 @@ public class JTableSelectionBinding<T> extends ComponentBindingAdapter<T> {
         } else {
             converter.setValueFromComponent(table, null);
         }
+    }
+
+    private IComponentLink<@Nullable T> converterSafe() {
+        return Objects.requireNonNull(converter, "Component value change listener not set yet");
     }
 
     @Override

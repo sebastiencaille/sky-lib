@@ -22,7 +22,7 @@ public class ProcessorGenerator extends AbstractDotFlowGenerator {
 		final var missingAdapters = context.unprocessedAdapters(context.bindingAdapters);
 		visitor.addExternalAdapters(missingAdapters, genContext.getLocalContext(), processorNode);
 
-		graph.links.add(new Link(processorNode, context.outputDataPoint));
+		graph.links().add(new Link(processorNode, context.outputDataPoint));
 		genContext.next(context);
 	}
 

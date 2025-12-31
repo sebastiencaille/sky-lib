@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -19,13 +22,17 @@ import ch.scaille.util.helpers.Logs;
 import io.undertow.Undertow;
 import io.undertow.server.HttpServerExchange;
 
+@NullMarked
 public abstract class AbstractSeleniumUndertowTest {
 
+	@Nullable
 	private ConsoleErrorDetector consoleErrorDetector;
 	
 	/* **************************** WEB SERVER **************************** */
 
+	@Nullable
 	protected static Undertow webServer = null;
+	@Nullable
 	protected static RemoteWebDriver driver = null;
 
 	public static final URI localUrl;
@@ -54,8 +61,11 @@ public abstract class AbstractSeleniumUndertowTest {
 
 	@AfterEach
 	public void checkLogs() throws InterruptedException {
-		consoleErrorDetector.close();
-		consoleErrorDetector.assertNoError();
+		if (consoleErrorDetector != null) {
+			consoleErrorDetector.close();
+			consoleErrorDetector.assertNoError();
+			consoleErrorDetector = null;
+		}
 	}
 	
 	@BeforeAll
@@ -74,7 +84,7 @@ public abstract class AbstractSeleniumUndertowTest {
 			try (var in = Thread.currentThread()
 					.getContextClassLoader()
 					.getResourceAsStream("example/html/example1.html")) {
-				exchange.getResponseSender().send(JavaExt.readUTF8Stream(in), StandardCharsets.UTF_8);
+				exchange.getResponseSender().send(JavaExt.readUTF8Stream(Objects.requireNonNull(in, "Resource was not found")), StandardCharsets.UTF_8);
 			} catch (final IOException e) {
 				throw new IllegalStateException("Cannot serve file", e);
 			}

@@ -9,6 +9,7 @@ import java.util.Comparator;
 
 import javax.swing.JTable;
 
+import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.Test;
 
 import ch.scaille.gui.model.ListModel;
@@ -23,6 +24,7 @@ class TableTest {
 
 	private static final IListView<TestObject> VIEW = ListViews.sorted(Comparator.comparingInt(TestObject::getVal));
 
+	@NullMarked
 	private static class Model extends GuiModel {
 
 		private final ListProperty<TestObject> selection = new ListProperty<>("Selection", this);

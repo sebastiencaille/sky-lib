@@ -4,27 +4,29 @@ import ch.scaille.javabeans.properties.IPersister;
 import lombok.Getter;
 import lombok.Setter;
 
-import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.NonNull;
 
 /**
  * To create a persister factory, which will create a persister on an object
  * 
  * @author scaille
  *
- * @param <T>
+ * @param <T> Type of the container object
+ * @param <A> Type of the object's attribute
  */
-@NullMarked
 public interface IPersisterFactory<T, A> {
 
-	IPersister<A> asPersister(final IObjectProvider<T> object);
+	@NonNull
+	IPersister<A> asPersister(@NonNull final IObjectProvider<@NonNull T> object);
 	
 	interface IObjectProvider<T> {
+		@NonNull
 		T getObject();
 	}
 
 	@Getter
 	@Setter
-	class ObjectHolder<T> implements IObjectProvider<T> {
+	class ObjectHolder<T> implements IObjectProvider<@NonNull T> {
 		private T object;
 	}
 

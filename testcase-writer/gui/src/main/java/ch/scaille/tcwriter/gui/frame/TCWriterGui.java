@@ -3,6 +3,7 @@ package ch.scaille.tcwriter.gui.frame;
 import static ch.scaille.gui.mvc.factories.ComponentBindings.listen;
 
 import java.awt.BorderLayout;
+import java.io.Serial;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,10 +23,13 @@ import ch.scaille.tcwriter.gui.steps.StepsTable;
 import ch.scaille.util.helpers.LambdaExt;
 import ch.scaille.util.helpers.LambdaExt.RunnableWithException;
 import ch.scaille.util.helpers.Logs;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class TCWriterGui extends JFrame {
 
-	private static final long serialVersionUID = 7148676630414966965L;
+	@Serial
+    private static final long serialVersionUID = 7148676630414966965L;
 
 	private static final Logger LOGGER = Logs.of(TCWriterGui.class);
 
@@ -120,7 +124,7 @@ public class TCWriterGui extends JFrame {
 	}
 
 	private JButton button(final ImageIcon icon, final String toolTip, final RunnableWithException<?> action) {
-		return button(null, icon, toolTip, action);
+		return button("unnamed", icon, toolTip, action);
 	}
 
 	public void start() {

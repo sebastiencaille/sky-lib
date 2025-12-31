@@ -56,7 +56,7 @@ public class Persisters {
 	 * @param <T> the type of the persisted bean
 	 * @param <V> the type of the persisted attribute
 	 */
-	public static <T, V> IPersisterFactory<T, V> persister(final Function<T, V> getter, final BiConsumer<T, V> setter) {
+	public static <T, V> IPersisterFactory<T, V> persister(final Function<T, V> getter, @Nullable final BiConsumer<T, V> setter) {
 		return new GetSetAccess<>(getter, setter);
 	}
 

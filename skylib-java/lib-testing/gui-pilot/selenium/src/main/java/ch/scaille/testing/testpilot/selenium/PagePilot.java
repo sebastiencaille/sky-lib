@@ -3,6 +3,7 @@ package ch.scaille.testing.testpilot.selenium;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import lombok.Getter;
 import org.jspecify.annotations.NullMarked;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -16,7 +17,8 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 @NullMarked
 public class PagePilot {
 
-	protected final SeleniumPilot pilot;
+	@Getter
+    protected final SeleniumPilot pilot;
 
 	private boolean invalid = true;
 
@@ -28,11 +30,7 @@ public class PagePilot {
 		return pilot.getDriver();
 	}
 
-	public SeleniumPilot getPilot() {
-		return pilot;
-	}
-
-	public SeleniumPollingBuilder on(Supplier<WebElement> element) {
+    public SeleniumPollingBuilder on(Supplier<WebElement> element) {
 		return new SeleniumPollingBuilder(pilotOf(element));
 	}
 	
@@ -81,6 +79,7 @@ public class PagePilot {
 		return new ElementPilot(pilot) {
 			@Override
 			protected Optional<WebElement> loadGuiComponent() {
+
 				return Optional.ofNullable(conditions.apply(pilot.getDriver()));
 			}
 

@@ -4,7 +4,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import ch.scaille.javabeans.properties.IPersister;
-import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  *
@@ -13,19 +14,19 @@ import org.jspecify.annotations.NullMarked;
  * @param <T> Type of the container object
  * @param <A> Type of the object's attribute
  */
-@NullMarked
-public class GetSetAccess<T, A> implements IPersisterFactory<T, A> {
+public class GetSetAccess<T, A> implements IPersisterFactory<@NonNull T, A> {
 
 	private final Function<T, A> getter;
 	private final BiConsumer<T, A> setter;
 
-	public GetSetAccess(final Function<T, A> getter, final BiConsumer<T, A> setter) {
+	public GetSetAccess(final Function<T, A> getter, @Nullable final BiConsumer<T, A> setter) {
 		this.getter = getter;
 		this.setter = setter;
 	}
 
+	@NonNull
 	@Override
-	public IPersister<A> asPersister(final IObjectProvider<T> objectProvider) {
+	public IPersister<A> asPersister(@NonNull final IObjectProvider<@NonNull T> objectProvider) {
 		return new IPersister<>() {
 			@Override
 			public A get() {
@@ -34,7 +35,9 @@ public class GetSetAccess<T, A> implements IPersisterFactory<T, A> {
 
 			@Override
 			public void set(final A value) {
-				setter.accept(objectProvider.getObject(), value);
+				if (setter != null) {
+					setter.accept(objectProvider.getObject(), value);
+				}
 			}
 		};
 	}

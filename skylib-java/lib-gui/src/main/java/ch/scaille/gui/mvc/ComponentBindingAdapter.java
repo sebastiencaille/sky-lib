@@ -3,7 +3,7 @@ package ch.scaille.gui.mvc;
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
-import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Parent class of all component bindings.
@@ -13,11 +13,10 @@ import org.jspecify.annotations.NullMarked;
  *
  * @param <T>
  */
-@NullMarked
 public class ComponentBindingAdapter<T> implements IComponentBinding<T> {
 
 	@Override
-	public void addComponentValueChangeListener(final IComponentLink<T> converter) {
+	public void addComponentValueChangeListener(@NonNull final IComponentLink<T> converter) {
 		// no op
 	}
 
@@ -27,7 +26,7 @@ public class ComponentBindingAdapter<T> implements IComponentBinding<T> {
 	}
 
 	@Override
-	public void setComponentValue(final IComponentChangeSource source, final T value) {
+	public void setComponentValue(@NonNull final IComponentChangeSource source, final T value) {
 		// no op
 	}
 

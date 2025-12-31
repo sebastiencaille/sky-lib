@@ -18,7 +18,10 @@ import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 import ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class StepEditorModel extends GuiModel {
 
     private final ListProperty<TestActor> possibleActors = new ListProperty<>("possibleActors", this);
@@ -35,7 +38,7 @@ public class StepEditorModel extends GuiModel {
     private final ObjectProperty<TestParameterFactory> actionParameter = new ObjectProperty<>("actionParameter", this);
     private final ObjectProperty<TestParameterValue> actionParameterValues = new ObjectProperty<>(
             "actionParameterValues", this, ExportableTestParameterValue.NO_VALUE);
-    private final ObjectProperty<StepClassifier> stepClassifier = new ObjectProperty<>("stepClassifier", this, null);
+    private final ObjectProperty<@Nullable StepClassifier> stepClassifier = new ObjectProperty<>("stepClassifier", this, null);
     private final ObjectProperty<TestDictionary> testDictionary;
 
     public StepEditorModel(final ModelConfiguration.ModelConfigurationBuilder config, ObjectProperty<TestDictionary> testDictionary) {
@@ -83,7 +86,7 @@ public class StepEditorModel extends GuiModel {
         return actionParameterValues;
     }
 
-    public ObjectProperty<StepClassifier> getStepClassifier() {
+    public ObjectProperty<@Nullable StepClassifier> getStepClassifier() {
         return stepClassifier;
     }
 

@@ -1,7 +1,6 @@
 package ch.scaille.testing.testpilot.selenium;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +9,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -24,6 +25,7 @@ import ch.scaille.testing.testpilot.ModalDialogDetector.PollingResult;
 import ch.scaille.util.helpers.Logs;
 import ch.scaille.util.helpers.NoExceptionCloseable;
 
+@NullMarked
 public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 
 	private static final Logger LOGGER = Logs.of(SeleniumPilot.class);
@@ -33,6 +35,7 @@ public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 	private final org.openqa.selenium.bidi.module.Script script;
 	private final List<Long> domMutationHandlerIds = new ArrayList<>();
 	private final List<DomMutation> mutations = new ArrayList<>();
+	@Nullable
 	private Predicate<DomMutation> mutationFilter = null;
 
 	public SeleniumPilot(final RemoteWebDriver driver) {
@@ -62,7 +65,7 @@ public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 	 * Only inject a new script, that will use the existing handler. The code comes
 	 * from selenium's code
 	 */
-	public void prelaodScript(String resourceName, String channelname) {
+	public void prelaodScript(String resourceName, @Nullable String channelname) {
 		try (var stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName)) {
 			if (stream == null) {
 				throw new IllegalStateException("Unable to find helper script");

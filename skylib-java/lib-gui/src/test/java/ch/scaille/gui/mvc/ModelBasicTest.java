@@ -3,7 +3,7 @@ package ch.scaille.gui.mvc;
 import static ch.scaille.javabeans.properties.Configuration.persistent;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,6 @@ import ch.scaille.javabeans.properties.ErrorSet;
 import ch.scaille.javabeans.properties.IntProperty;
 import ch.scaille.javabeans.properties.ObjectProperty;
 
-@NullUnmarked
 class ModelBasicTest {
 
 	private static class TestGuiModel extends GuiModel {
@@ -52,7 +51,7 @@ class ModelBasicTest {
 		private IComponentLink<String> onlyConverter;
 
 		@Override
-		public void addComponentValueChangeListener(final IComponentLink<String> converter) {
+		public void addComponentValueChangeListener(final @NonNull IComponentLink<String> converter) {
 			this.onlyConverter = converter;
 		}
 
@@ -66,7 +65,7 @@ class ModelBasicTest {
 		}
 
 		@Override
-		public void setComponentValue(final IComponentChangeSource source, final String value) {
+		public void setComponentValue(final @NonNull IComponentChangeSource source, final String value) {
 			this.value = value;
 		}
 

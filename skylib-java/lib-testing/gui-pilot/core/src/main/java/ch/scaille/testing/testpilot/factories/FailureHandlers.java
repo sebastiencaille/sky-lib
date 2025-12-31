@@ -26,12 +26,16 @@ public interface FailureHandlers {
 	 */
 	static <C, V> FailureHandler<C, V> throwError() {
 		return r -> {
-			if (r.failureCause() instanceof AssertionError) {
-				throw new AssertionError(r.getComponentDescription() + ": " + r.failureCause().getMessage(),
-						r.failureCause().getCause());
+			final var failureCause = r.failureCause();
+			if (failureCause instanceof AssertionError) {
+				throw new AssertionError(r.getComponentDescription() + ": " + failureCause.getMessage(),
+						failureCause.getCause());
+			} else if (failureCause != null) {
+				throw new AssertionError(r.getComponentDescription() + ": " + failureCause.getMessage(),
+						failureCause);
+			} else {
+				throw new AssertionError(r.getComponentDescription() + ": failure without cause");
 			}
-			throw new AssertionError(r.getComponentDescription() + ": " + r.failureCause().getMessage(),
-					r.failureCause());
 		};
 	}
 

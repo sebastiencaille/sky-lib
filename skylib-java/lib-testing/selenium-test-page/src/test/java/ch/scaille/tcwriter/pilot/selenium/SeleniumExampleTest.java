@@ -3,11 +3,15 @@ package ch.scaille.tcwriter.pilot.selenium;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.Duration;
+import java.util.Objects;
 
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import ch.scaille.testing.testpilot.jupiter.DisabledIfHeadless;
@@ -16,6 +20,7 @@ import ch.scaille.testing.testpilot.selenium.WebDriverFactory;
 import ch.scaille.util.helpers.Logs;
 
 @ExtendWith(DisabledIfHeadless.class)
+@NullMarked
 class SeleniumExampleTest extends AbstractSeleniumUndertowTest {
 
 	@Override
@@ -25,6 +30,7 @@ class SeleniumExampleTest extends AbstractSeleniumUndertowTest {
 
 	/* **************************** TESTS **************************** */
 
+	@Nullable
 	private SeleniumPilot pilot;
 
 	@BeforeEach
@@ -35,6 +41,9 @@ class SeleniumExampleTest extends AbstractSeleniumUndertowTest {
 
 	@AfterEach
 	void releasePilot() {
+		if (pilot == null) {
+			return;
+		}
 		try {
 			Logs.of(this).info(pilot.getActionReport().getFormattedReport());
 		} finally {
@@ -44,6 +53,7 @@ class SeleniumExampleTest extends AbstractSeleniumUndertowTest {
 
 	@Test
 	void testExample() throws SecurityException {
+		Objects.requireNonNull(pilot, "pilot was not set");
 		pilot.getDriver().get(localUrl.resolve("/example1.html").toString());
 
 		final var mainPage = pilot.page(ExamplePage::new);

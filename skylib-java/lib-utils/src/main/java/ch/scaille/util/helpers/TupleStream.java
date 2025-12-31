@@ -1,5 +1,7 @@
 package ch.scaille.util.helpers;
 
+import org.jspecify.annotations.NonNull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -17,6 +19,7 @@ public class TupleStream<X, Y> {
 
     public record Tuple<X, Y>(X x, Y y) {
 
+        @NonNull
         @Override
         public String toString() {
             return "(" + x + ", " + y + ')';
@@ -94,8 +97,9 @@ public class TupleStream<X, Y> {
     private record CollectorFunction<X, R>(Function<List<X>, R> finisher)
             implements Collector<X, List<X>, R>, BiConsumer<List<X>, X>, BinaryOperator<List<X>> {
 
+        @NonNull
         @Override
-        public <V> BiFunction<List<X>, List<X>, V> andThen(final Function<? super List<X>, ? extends V> after) {
+        public <V> BiFunction<List<X>, List<X>, V> andThen(final @NonNull Function<? super List<X>, ? extends V> after) {
             return BinaryOperator.super.andThen(after);
         }
 

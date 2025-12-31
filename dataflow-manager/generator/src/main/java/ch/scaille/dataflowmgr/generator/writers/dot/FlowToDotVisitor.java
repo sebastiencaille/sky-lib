@@ -20,44 +20,42 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 
 	private final Graph graph;
 
-	static class Node {
-		final String name;
-		final String label;
-		final DotFileGenerator.Shape shape;
+	public record Node(
+		 String name,
+		 String label,
+		 DotFileGenerator.Shape shape) {
 
 		public Node(final String name, final String label, String enhancer, final DotFileGenerator.Shape shape) {
-			this.name = name;
-			String shortLabel = label.substring(label.lastIndexOf('.') + 1);
-			this.label = (enhancer != null) ? enhancer.replace("$", shortLabel) : shortLabel;
-			this.shape = shape;
+			this(name, enhancedLabel(label, enhancer), shape);
+		}
+
+		private static String enhancedLabel(String aLabel, String enhancer) {
+			final var shortLabel = aLabel.substring(aLabel.lastIndexOf('.') + 1);
+			return (enhancer != null) ? enhancer.replace("$", shortLabel) : shortLabel;
 		}
 
 	}
 
-	static class Link {
-		final String from;
-		final String to;
-		final String label;
-		final String extra;
+	public record Link(
+		 String from,
+		 String to,
+		 String label,
+		 String extra) {
 
 		public Link(final String from, final String to) {
 			this(from, to, "", "");
 		}
-
-		public Link(final String from, final String to, final String label, final String extra) {
-			this.from = from;
-			this.to = to;
-			this.label = label;
-			this.extra = extra;
-		}
-
 	}
 
-	protected static class Graph {
-		final Map<String, Node> nodes = new HashMap<>();
-		final List<Link> links = new ArrayList<>();
-		final Set<String> executed = new HashSet<>();
-		final Set<String> expected = new HashSet<>();
+	public record Graph(
+		 Map<String, Node> nodes,
+		 List<Link> links,
+		 Set<String> executed,
+		 Set<String> expected) {
+
+		public Graph() {
+			this(new HashMap<>(), new ArrayList<>(), new HashSet<>(), new HashSet<>());
+		}
 	}
 
 	private final FlowGeneratorVisitor<String> flowGeneratorVisitor = new FlowGeneratorVisitor<>();

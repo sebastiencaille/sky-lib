@@ -17,6 +17,7 @@ import ch.scaille.testing.testpilot.selenium.jupiter.ScreenShotExtensions;
 import ch.scaille.testing.testpilot.selenium.jupiter.WebDriverExtension;
 import ch.scaille.testing.testpilot.selenium.jupiter.WebDriverExtension.WebDriverConfigurer;
 import ch.scaille.util.helpers.Logs;
+import org.openqa.selenium.WebDriver;
 
 @ExtendWith({ DisabledIfHeadless.class, WebDriverExtension.class, ScreenShotExtensions.class })
 class SimpleIT {
@@ -40,7 +41,7 @@ class SimpleIT {
 
 	@AfterAll
 	static void closeDriver(WebDriverConfigurer webDriverHolder) {
-		webDriverHolder.getDriver().quit();
+		webDriverHolder.getDriver().ifPresent(WebDriver::quit);
 	}
 	
 	@Test

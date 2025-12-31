@@ -220,7 +220,7 @@ public class ListModelContent<T> extends AbstractListModel<T>
 
     @Override
     public ListModel<T> getListModel() {
-        return base;
+        return Objects.requireNonNull(base, "The list's base model was not set");
     }
 
     private void attachToParent() {

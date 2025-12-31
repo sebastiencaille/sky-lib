@@ -1,15 +1,19 @@
 package ch.scaille.tcwriter.gui.editors.params;
 
+import java.io.Serial;
 import java.util.Objects;
 
 import ch.scaille.gui.model.ListModel;
 import ch.scaille.gui.swing.model.ListModelTableModel;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class TestParameterValueTableModel extends
 		ListModelTableModel<TestParameterValueTableModel.ParameterValueEntry, TestParameterValueTableModel.Columns> {
 
-	private static final long serialVersionUID = 7217311713782884572L;
+	@Serial
+    private static final long serialVersionUID = 7217311713782884572L;
 
 	public enum Columns {
 		MANDATORY, ENABLED, DESCRIPTION, VALUE
@@ -88,7 +92,6 @@ public class TestParameterValueTableModel extends
 			case ENABLED -> object.enabled || object.mandatory;
 			case DESCRIPTION -> object.description;
 			case VALUE -> object.factory.hasType() ? object.value : "<no value>";
-			default -> throw new IllegalStateException("Unknown column " + column);
 		};
 	}
 

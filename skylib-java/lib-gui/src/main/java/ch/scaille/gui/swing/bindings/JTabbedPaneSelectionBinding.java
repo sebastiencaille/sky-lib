@@ -4,8 +4,8 @@ import java.awt.Component;
 
 import javax.swing.JTabbedPane;
 
-import ch.scaille.gui.mvc.ComponentBindingAdapter;
 import ch.scaille.gui.swing.SwingExt;
+import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
 import org.jspecify.annotations.NullMarked;
@@ -19,7 +19,7 @@ import org.jspecify.annotations.NullMarked;
  * @param <T>
  */
 @NullMarked
-public class JTabbedPaneSelectionBinding<T> extends ComponentBindingAdapter<T> {
+public class JTabbedPaneSelectionBinding<T> implements IComponentBinding<T> {
 
 	private final JTabbedPane pane;
 	private final Class<T> clazz;

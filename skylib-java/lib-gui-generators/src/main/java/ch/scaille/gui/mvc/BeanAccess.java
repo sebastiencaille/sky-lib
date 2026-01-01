@@ -1,7 +1,9 @@
 package ch.scaille.gui.mvc;
 
 import ch.scaille.gui.mvc.AttributeProcessor.PrimitiveProcessor;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public interface BeanAccess {
 
 	String getFieldCreation(AttributeProcessor attributeProcessor);

@@ -6,6 +6,7 @@ import ch.scaille.javabeans.IChainBuilderFactory;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.IPropertiesOwner;
 import ch.scaille.javabeans.chain.BindingChain;
+import lombok.Getter;
 import org.jspecify.annotations.NullMarked;
 
 /**
@@ -18,7 +19,8 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public class LongProperty extends AbstractTypedProperty<Long> {
 
-	private long value;
+	@Getter
+    private long value;
 	private final long defaultValue;
 
 	public LongProperty(final String name, final IPropertiesOwner model, final long defaultValue) {
@@ -51,19 +53,12 @@ public class LongProperty extends AbstractTypedProperty<Long> {
 		return this;
 	}
 
-	public long getValue() {
-		return value;
-	}
-
-	public void setValue(final Object caller, final long newValue) {
+    public void setValue(final Object caller, final long newValue) {
 		setObjectValue(caller, newValue);
 	}
 
 	@Override
 	protected Long replaceValue(final Long newValue) {
-		if (newValue == null) {
-			throw new IllegalArgumentException("Null value is not allowed");
-		}
 		final var oldValue = value;
 		value = newValue;
 		return oldValue;

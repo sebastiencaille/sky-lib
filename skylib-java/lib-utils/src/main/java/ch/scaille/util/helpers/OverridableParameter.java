@@ -34,7 +34,7 @@ public class OverridableParameter<S, T> {
 		return this;
 	}
 
-	public @NonNull T get() {
+	public T get() {
 		ensureLoaded();
 		return this.value;
 	}

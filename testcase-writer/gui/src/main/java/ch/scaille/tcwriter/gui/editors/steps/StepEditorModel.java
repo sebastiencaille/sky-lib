@@ -18,24 +18,26 @@ import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 import ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
+import lombok.Getter;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 @NullMarked
+@Getter
 public class StepEditorModel extends GuiModel {
 
     private final ListProperty<TestActor> possibleActors = new ListProperty<>("possibleActors", this);
-    private final ObjectProperty<TestActor> actor = new ObjectProperty<>("actor", this);
+    private final ObjectProperty<@Nullable TestActor> actor = new ObjectProperty<>("actor", this, null);
     private final ListProperty<TestAction> possibleActions = new ListProperty<>("possibleActions", this);
-    private final ObjectProperty<TestAction> action = new ObjectProperty<>("action", this);
+    private final ObjectProperty<@Nullable TestAction> action = new ObjectProperty<>("action", this, null);
     private final ListProperty<TestParameterFactory> possibleSelectors = new ListProperty<>(
             "possibleSelectors", this);
-    private final ObjectProperty<TestParameterFactory> selector = new ObjectProperty<>("selector", this);
+    private final ObjectProperty<@Nullable TestParameterFactory> selector = new ObjectProperty<>("selector", this, null);
     private final ObjectProperty<TestParameterValue> selectorValues = new ObjectProperty<>("selectorValues", this,
             ExportableTestParameterValue.NO_VALUE);
     private final ListProperty<TestParameterFactory> possibleActionParameters = new ListProperty<>(
             "possibleActionParameters", this);
-    private final ObjectProperty<TestParameterFactory> actionParameter = new ObjectProperty<>("actionParameter", this);
+    private final ObjectProperty<@Nullable TestParameterFactory> actionParameter = new ObjectProperty<>("actionParameter", this, null);
     private final ObjectProperty<TestParameterValue> actionParameterValues = new ObjectProperty<>(
             "actionParameterValues", this, ExportableTestParameterValue.NO_VALUE);
     private final ObjectProperty<@Nullable StepClassifier> stepClassifier = new ObjectProperty<>("stepClassifier", this, null);
@@ -45,55 +47,6 @@ public class StepEditorModel extends GuiModel {
         super(config);
         this.testDictionary = testDictionary;
     }
-
-    public ListProperty<TestActor> getPossibleActors() {
-        return possibleActors;
-    }
-
-    public ObjectProperty<TestActor> getActor() {
-        return actor;
-    }
-
-    public ListProperty<TestAction> getPossibleActions() {
-        return possibleActions;
-    }
-
-    public ObjectProperty<TestAction> getAction() {
-        return action;
-    }
-
-    public ListProperty<TestParameterFactory> getPossibleSelectors() {
-        return possibleSelectors;
-    }
-
-    public ObjectProperty<TestParameterFactory> getSelector() {
-        return selector;
-    }
-
-    public ObjectProperty<TestParameterValue> getSelectorValue() {
-        return selectorValues;
-    }
-
-    public ListProperty<TestParameterFactory> getPossibleActionParameters() {
-        return possibleActionParameters;
-    }
-
-    public ObjectProperty<TestParameterFactory> getActionParameter() {
-        return actionParameter;
-    }
-
-    public ObjectProperty<TestParameterValue> getActionParameterValue() {
-        return actionParameterValues;
-    }
-
-    public ObjectProperty<@Nullable StepClassifier> getStepClassifier() {
-        return stepClassifier;
-    }
-
-    public ObjectProperty<TestDictionary> getTestDictionary() {
-        return testDictionary;
-    }
-
 
     public static <T extends IdObject> IConverterWithContext<T, ObjectTextView<T>, ObjectProperty<TestDictionary>> object2Text(ObjectProperty<TestDictionary> dictionary) {
         final var obj2Text = ObjectTextView.<T, TestDictionary>biObject2Text((o, d) -> d.descriptionOf(o).description());

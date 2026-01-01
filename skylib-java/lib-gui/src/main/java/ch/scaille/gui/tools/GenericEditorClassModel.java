@@ -20,6 +20,7 @@ import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
 import ch.scaille.util.dao.metadata.DataObjectMetaData;
 import ch.scaille.util.dao.metadata.IAttributeMetaData;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Generic editor based on Class introspection
@@ -145,8 +146,8 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 	}
 
 	private <V> ClassPropertyEntry<T, V> createProperty(IObjectProvider<T> object,
-			AbstractAttributeMetaData<T, V> typedAttribute ) {
-		final var property = new ObjectProperty<V>(typedAttribute.getName(), config.propertySupport);
+																		  AbstractAttributeMetaData<T, V> typedAttribute ) {
+		final var property = new ObjectProperty<@Nullable V>(typedAttribute.getName(), config.propertySupport, null);
 		property.configureTyped(persistent(object, Persisters.persister(typedAttribute)));
 
 		final var readOnly = config.readOnly || typedAttribute.isReadOnly();

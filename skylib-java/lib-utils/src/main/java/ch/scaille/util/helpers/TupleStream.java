@@ -99,7 +99,7 @@ public class TupleStream<X, Y> {
 
         @NonNull
         @Override
-        public <V> BiFunction<List<X>, List<X>, V> andThen(final @NonNull Function<? super List<X>, ? extends V> after) {
+        public <V> BiFunction<List<X>, List<X>, V> andThen(@NonNull final Function<? super List<X>, ? extends V> after) {
             return BinaryOperator.super.andThen(after);
         }
 

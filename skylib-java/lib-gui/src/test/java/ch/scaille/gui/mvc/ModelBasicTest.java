@@ -3,7 +3,9 @@ package ch.scaille.gui.mvc;
 import static ch.scaille.javabeans.properties.Configuration.persistent;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.jspecify.annotations.NonNull;
+import ch.scaille.javabeans.properties.*;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,18 +19,17 @@ import ch.scaille.javabeans.converters.ConversionException;
 import ch.scaille.javabeans.converters.Converters;
 import ch.scaille.javabeans.persisters.IPersisterFactory;
 import ch.scaille.javabeans.persisters.Persisters;
-import ch.scaille.javabeans.properties.Configuration;
-import ch.scaille.javabeans.properties.ErrorSet;
-import ch.scaille.javabeans.properties.IntProperty;
-import ch.scaille.javabeans.properties.ObjectProperty;
 
+import java.util.Objects;
+
+@NullMarked
 class ModelBasicTest {
 
 	private static class TestGuiModel extends GuiModel {
 
 		private final IntProperty integerProperty = new IntProperty("IntegerProperty", this);
 
-		private final ObjectProperty<String> stringProperty = new ObjectProperty<>("StringProperty", this);
+		private final ObjectProperty<@Nullable String> stringProperty = new ObjectProperty<>("StringProperty", this, null);
 
 		public TestGuiModel(final GuiController controller) {
 			super(of(controller));
@@ -47,11 +48,13 @@ class ModelBasicTest {
 
 	private static class TestBinding implements IComponentBinding<String> {
 
+		@Nullable
 		private String value;
+		@Nullable
 		private IComponentLink<String> onlyConverter;
 
 		@Override
-		public void addComponentValueChangeListener(final @NonNull IComponentLink<String> converter) {
+		public void addComponentValueChangeListener(final IComponentLink<String> converter) {
 			this.onlyConverter = converter;
 		}
 
@@ -61,11 +64,11 @@ class ModelBasicTest {
 		}
 
 		public void setValue(final String value) {
-			onlyConverter.setValueFromComponent(this, value);
+			Objects.requireNonNull(onlyConverter).setValueFromComponent(this, value);
 		}
 
 		@Override
-		public void setComponentValue(final @NonNull IComponentChangeSource source, final String value) {
+		public void setComponentValue(final IComponentChangeSource source, final String value) {
 			this.value = value;
 		}
 
@@ -96,9 +99,10 @@ class ModelBasicTest {
 		testBinding.setValue("bla");
 		assertEquals(456, model.integerProperty.getValue());
 		final var errorProperty = (ErrorSet) model.getErrorNotifier();
-		Assertions.assertNotNull(errorProperty.getLastError().getValue().content(),
-                "errorProperty.getLastError().getValue().getContent()");
-		assertEquals(ConversionException.class, errorProperty.getLastError().getValue().content().getClass());
+		final var errorValue = errorProperty.getLastError().getValue();
+		Assertions.assertNotNull(errorValue, "errorProperty.getLastError().getValue()");
+		Assertions.assertNotNull(errorValue.content(), "errorProperty.getLastError().getValue().getContent()");
+		assertEquals(ConversionException.class, errorValue.content().getClass());
 	}
 
 	@Test

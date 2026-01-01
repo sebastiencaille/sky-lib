@@ -1,6 +1,7 @@
 package ch.scaille.javabeans;
 
-import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Unified access to a component's "property".
@@ -10,19 +11,20 @@ import org.jspecify.annotations.NonNull;
  *
  * @param <T> the type of the component's property
  */
-public interface IComponentBinding<T> {
+@NullMarked
+public interface IComponentBinding<T extends @Nullable Object> {
 
 	/**
 	 * Sets the component side of the value
      */
-	void setComponentValue(@NonNull final IComponentChangeSource source, final T value);
+	void setComponentValue(final IComponentChangeSource source, final T value);
 
 	/**
 	 * Called when bound to a link, so the component binding can hook to the
 	 * component and forward it's content to the property
 	 */
-	void addComponentValueChangeListener(@NonNull final IComponentLink<T> link);
+	default void addComponentValueChangeListener(final IComponentLink<T> link) { }
 
 
-	void removeComponentValueChangeListener();
+	default void removeComponentValueChangeListener() { }
 }

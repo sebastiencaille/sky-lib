@@ -5,9 +5,11 @@ import java.util.Date;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.jspecify.annotations.NullMarked;
 
 @Getter
 @Setter
+@NullMarked
 public class GenerationMetadata {
 	private final String generator;
 	private final String comments;

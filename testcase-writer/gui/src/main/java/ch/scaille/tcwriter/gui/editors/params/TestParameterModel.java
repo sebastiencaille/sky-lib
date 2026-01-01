@@ -7,13 +7,16 @@ import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestReference;
+import lombok.Getter;
 import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@Getter
 @NullMarked
 public class TestParameterModel extends GuiModel {
 	private final ObjectProperty<TestParameterFactory.ParameterNature> valueNature;
 	private final ObjectProperty<String> simpleValue;
-	private final ObjectProperty<TestReference> selectedReference;
+	private final ObjectProperty<@Nullable TestReference> selectedReference;
 	private final ListProperty<TestReference> references;
 	private final ObjectProperty<TestParameterFactory> testApi;
 	private final ObjectProperty<TestParameterValue> editedParameterValue;
@@ -27,40 +30,12 @@ public class TestParameterModel extends GuiModel {
 		this.editedParameterValue = editedParameterValue;
 		this.testApi = testApi;
 
-		valueNature = new ObjectProperty<>(prefix + "-nature", this);
+		valueNature = new ObjectProperty<>(prefix + "-nature", this, TestParameterFactory.ParameterNature.SIMPLE_TYPE);
 		simpleValue = editedParameterValue.child(prefix + "-simpleValue", TestParameterValue::getSimpleValue,
 				TestParameterValue::setSimpleValue);
-		selectedReference = new ObjectProperty<>(prefix + "-reference", this);
+		selectedReference = new ObjectProperty<>(prefix + "-reference", this, null);
 		references = new ListProperty<>(prefix + "-references", this);
 		editedParameterValue.addListener(getPropertySupport().detachWhenPropLoading());
-	}
-
-	public String getPrefix() {
-		return prefix;
-	}
-
-	public ObjectProperty<TestParameterFactory.ParameterNature> getValueNature() {
-		return valueNature;
-	}
-
-	public ObjectProperty<String> getSimpleValue() {
-		return simpleValue;
-	}
-
-	public ListProperty<TestReference> getReferences() {
-		return references;
-	}
-
-	public ObjectProperty<TestReference> getSelectedReference() {
-		return selectedReference;
-	}
-
-	public ObjectProperty<TestParameterFactory> getTestApi() {
-		return testApi;
-	}
-
-	public ObjectProperty<TestParameterValue> getEditedParameterValue() {
-		return editedParameterValue;
 	}
 
 }

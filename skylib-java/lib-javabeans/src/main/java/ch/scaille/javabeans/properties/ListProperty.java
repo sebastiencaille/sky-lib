@@ -51,12 +51,12 @@ public class ListProperty<T> extends ObjectProperty<List<T>> {
 	}
 	
 	public ListProperty(final String name, final IPropertiesOwner model) {
-		super(name, model);
+		super(name, model, List.of());
 		super.setObjectValue(this, new ObservableArrayList());
 	}
 
 	public ListProperty(final String name, final IPropertiesGroup propertySupport) {
-		super(name, propertySupport);
+		super(name, propertySupport, List.of());
 		super.setObjectValue(this, new ObservableArrayList());
 	}
 

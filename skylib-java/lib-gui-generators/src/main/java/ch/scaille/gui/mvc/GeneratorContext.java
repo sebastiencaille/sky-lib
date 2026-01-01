@@ -7,7 +7,9 @@ import java.util.Set;
 
 import ch.scaille.generators.util.Template;
 import ch.scaille.util.helpers.ClassFinder.URLClassFinder;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class GeneratorContext {
 	private final URLClassFinder classFinder;
 	final Map<String, String> properties = new HashMap<>();

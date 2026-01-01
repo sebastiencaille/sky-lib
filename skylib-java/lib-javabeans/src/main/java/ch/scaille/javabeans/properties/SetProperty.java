@@ -1,5 +1,6 @@
 package ch.scaille.javabeans.properties;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -11,11 +12,11 @@ import org.jspecify.annotations.NullMarked;
 public class SetProperty<T> extends ObjectProperty<Set<T>> {
 
 	public SetProperty(final String name, final IPropertiesOwner model) {
-		super(name, model);
+		super(name, model, new HashSet<>());
 	}
 
 	public SetProperty(final String name, final IPropertiesGroup propertySupport) {
-		super(name, propertySupport);
+		super(name, propertySupport, new HashSet<>());
 	}
 
 	@SafeVarargs

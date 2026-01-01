@@ -51,10 +51,10 @@ public class ControllerExampleObjectGuiModel extends GuiModel implements IObject
 		intPropProperty = new IntProperty(prefix + INT_PROP, this).configureTyped(
 			Configuration.persistent(currentObjectProvider, Persisters.persister(ControllerExampleObject::getIntProp, ControllerExampleObject::setIntProp)),
 			implicitConverters(ControllerExampleObject.class, INT_PROP, java.lang.Integer.class));
-		stringPropProperty = new ObjectProperty<java.lang.String>(prefix + STRING_PROP, this).configureTyped(
+		stringPropProperty = new ObjectProperty<java.lang.String>(prefix + STRING_PROP, this, null).configureTyped(
 			Configuration.persistent(currentObjectProvider, Persisters.persister(ControllerExampleObject::getStringProp, ControllerExampleObject::setStringProp)),
 			implicitConverters(ControllerExampleObject.class, STRING_PROP, java.lang.String.class));
-		testObjectPropProperty = new ObjectProperty<ch.scaille.example.gui.TestObject>(prefix + TEST_OBJECT_PROP, this).configureTyped(
+		testObjectPropProperty = new ObjectProperty<ch.scaille.example.gui.TestObject>(prefix + TEST_OBJECT_PROP, this, null).configureTyped(
 			Configuration.persistent(currentObjectProvider, Persisters.persister(ControllerExampleObject::getTestObjectProp, ControllerExampleObject::setTestObjectProp)),
 			implicitConverters(ControllerExampleObject.class, TEST_OBJECT_PROP, ch.scaille.example.gui.TestObject.class));
 		

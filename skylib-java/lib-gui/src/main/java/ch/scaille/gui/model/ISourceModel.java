@@ -1,11 +1,14 @@
 package ch.scaille.gui.model;
 
 import ch.scaille.util.helpers.JavaExt;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Optional;
 
-public interface ISourceModel<T> {
+@NullMarked
+public interface ISourceModel<T extends @Nullable Object> {
 
 	void setValues(final Collection<T> newData);
 
@@ -37,16 +40,15 @@ public interface ISourceModel<T> {
 	T findOrCreate(final T sample);
 
 	/**
-	 * Finds an object in the model, and starts its edition if found
+	 * Finds an object in the model and starts editing it if found
 	 *
 	 * @param sample a sample of the object (must contain the values required to
 	 *               find the object)
-	 * @return an object if found, null if not
 	 */
 	JavaExt.CloseableOptional<IEdition<T>> findForEdition(T sample);
 
 	/**
-	 * Finds an object in the model, starting its edition, or insert the sample if
+	 * Finds an object in the model and start editing it, or insert the sample if
 	 * not found.
 	 *
 	 * @param sample a sample of the object (must contain the values required to

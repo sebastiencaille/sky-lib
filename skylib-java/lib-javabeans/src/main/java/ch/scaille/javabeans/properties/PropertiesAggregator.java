@@ -2,10 +2,14 @@ package ch.scaille.javabeans.properties;
 
 import ch.scaille.javabeans.*;
 import ch.scaille.javabeans.chain.BindingChain;
-import org.jspecify.annotations.NonNull;
+import ch.scaille.javabeans.converters.IConverter;
+import ch.scaille.javabeans.converters.IConverterWithContext;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.beans.PropertyChangeEvent;
 import java.util.IdentityHashMap;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -17,9 +21,11 @@ import java.util.function.Supplier;
  * @author Sebastien Caille
  *
  */
-public class PropertiesAggregator<T> extends AbstractProperty {
+@NullMarked
+public class PropertiesAggregator<T extends @Nullable Object> extends AbstractProperty implements IChainBuilder<T> {
 
-    private class Snapshot<P> implements Supplier<P> {
+    private class Snapshot<P extends @Nullable Object> implements Supplier<P> {
+        @Nullable
         private P value;
 
         private Snapshot(IChainBuilder<P> chain) {
@@ -38,6 +44,7 @@ public class PropertiesAggregator<T> extends AbstractProperty {
             });
         }
 
+        @Nullable
         public P get() {
             return value;
         }
@@ -51,7 +58,7 @@ public class PropertiesAggregator<T> extends AbstractProperty {
 
 
     // ****************** 1 properties (for x properties + 1), final evaluator
-    public interface Applier1<T1, R> {
+    public interface Applier1<T1, R extends @Nullable Object> {
         R apply(Supplier<T1> value1);
     }
 
@@ -63,7 +70,7 @@ public class PropertiesAggregator<T> extends AbstractProperty {
 
     // ****************** 2 properties, final evaluator
 
-    public interface Applier2<T1, T2, R> {
+    public interface Applier2<T1, T2, R extends @Nullable Object> {
         R apply(Supplier<T1> value1, Supplier<T2> value2);
     }
 
@@ -77,7 +84,7 @@ public class PropertiesAggregator<T> extends AbstractProperty {
 
     // ****************** 3 properties, final evaluator
 
-    public interface Applier3<T1, T2, T3, R> {
+    public interface Applier3<T1, T2, T3, R extends @Nullable Object> {
         R apply(Supplier<T1> property1, Supplier<T2> value2, Supplier<T3> value3);
     }
 
@@ -93,7 +100,7 @@ public class PropertiesAggregator<T> extends AbstractProperty {
 
     // ****************** 4 properties, final evaluator
 
-    public interface Applier4<T1, T2, T3, T4, R> {
+    public interface Applier4<T1, T2, T3, T4, R extends @Nullable Object> {
         R apply(Supplier<T1> value1, Supplier<T2> value2, Supplier<T3> value3, Supplier<T4> value4);
     }
 
@@ -111,7 +118,7 @@ public class PropertiesAggregator<T> extends AbstractProperty {
 
     // ****************** 4 properties, and more
 
-    public interface Applier4More<T1, T2, T3, T4, R> {
+    public interface Applier4More<T1, T2, T3, T4, R extends @Nullable Object> {
         PropertiesAggregator<R> apply(Supplier<T1> property1, Supplier<T2> value2, Supplier<T3> value3, Supplier<T4> value4, PropertiesAggregator<R> group);
     }
 
@@ -166,12 +173,12 @@ public class PropertiesAggregator<T> extends AbstractProperty {
     }
 
     @Override
-    public void reset(@NonNull final Object caller) {
+    public void reset(final Object caller) {
         // noop
     }
 
     @Override
-    public void load(@NonNull final Object caller) {
+    public void load(final Object caller) {
         // noop
     }
 
@@ -181,13 +188,13 @@ public class PropertiesAggregator<T> extends AbstractProperty {
     }
 
     @Override
-    public void flushChanges(@NonNull final Object caller) {
+    public void flushChanges(final Object caller) {
         if (notSet.isEmpty()) {
             propertySupport.getChangeSupport().firePropertyChange(getName(), this, null, evaluator.get());
         }
     }
 
-    @NonNull
+   
     @Override
     public PropertyChangeEvent getRefreshChangeEvent() {
         return new PropertyChangeEvent(this, getName(), null, null);
@@ -206,13 +213,47 @@ public class PropertiesAggregator<T> extends AbstractProperty {
      * Executes binding when the property is updated (transmitMode =
      * BOTH|TO_COMPONENT)
      */
-    @NonNull
-    public IBindingController listen(final @NonNull Consumer<T> binding) {
+   
+    public IBindingController listen(final Consumer<T> binding) {
         return createBindingChain().listen(binding);
     }
 
-    @NonNull
-    public IChainBuilderFactory<T> createBindingChain() {
+    @Override
+    public <C> IChainBuilder<C> bind(IConverter<T, C> converter) {
+        return createBindingChain().bind(converter);
+    }
+
+    @Override
+    public <C> IChainBuilder<C> bind(Function<T, C> prop2Comp, Function<C, T> comp2Prop) {
+        return createBindingChain().bind(prop2Comp, comp2Prop);
+    }
+
+    @Override
+    public <C> IChainBuilder<C> listenF(Function<T, C> prop2Comp) {
+        return createBindingChain().listenF(prop2Comp);
+    }
+
+    @Override
+    public <C, K> IChainBuilder<C> bind(IConverterWithContext<T, C, K> converter) {
+        return createBindingChain().bind(converter);
+    }
+
+    @Override
+    public <C, K> IChainBuilder<C> bind(PropertiesContext<K> multiProperties, BiFunction<T, K, C> prop2Comp, BiFunction<C, K, T> comp2Prop) {
+        return createBindingChain().bind(multiProperties, prop2Comp, comp2Prop);
+    }
+
+    @Override
+    public <C, K> IChainBuilder<C> listen(PropertiesContext<K> multiProperties, BiFunction<T, K, C> prop2Comp) {
+        return createBindingChain().listen(multiProperties, prop2Comp);
+    }
+
+    public IBindingController bind(final IComponentBinding<T> binding) {
+        return createBindingChain().bind(binding);
+    }
+
+
+    private IChainBuilderFactory<T> createBindingChain() {
         return new BindingChain(this, errorNotifier).bindProperty((caller, value) -> {
             // nothing to set
         });

@@ -1,5 +1,7 @@
 package ch.scaille.generators.util;
 
+import org.jspecify.annotations.NullMarked;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -11,10 +13,11 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
+@NullMarked
 public abstract class AbstractGenerator<R> {
 
 	/**
-	 * Collector that execute generations
+	 * Collector that executes generations
 	 */
 	protected static <A extends AbstractGenerator<R>, R> Collector<Class<?>, A, R> generate(
 			Supplier<A> generatorSupplier) {

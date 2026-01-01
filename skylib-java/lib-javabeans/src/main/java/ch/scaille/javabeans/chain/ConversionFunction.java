@@ -1,9 +1,10 @@
 package ch.scaille.javabeans.chain;
 
 import ch.scaille.javabeans.converters.ConversionException;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-public interface ConversionFunction<T, R> {
-	@Nullable
-	R apply(@Nullable T value) throws ConversionException;
+@NullMarked
+public interface ConversionFunction<T extends @Nullable Object, R extends @Nullable Object> {
+    R apply(T value) throws ConversionException;
 }

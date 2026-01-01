@@ -18,8 +18,8 @@ public interface IVetoer {
 		STOPPED(false, false),
 
 		/**
-		 * Component are kept in sync with property updates, but component changes are
-		 * not propagated to properties. Useful when loading new data, i.e. when selected
+		 * Components are kept in sync with property updates, but component changes are
+		 * not propagated to properties. Useful when loading new data, i.e. when the selected
 		 * item is not available because component content is not loaded
 		 */
 		TO_COMPONENT_ONLY(true, false),

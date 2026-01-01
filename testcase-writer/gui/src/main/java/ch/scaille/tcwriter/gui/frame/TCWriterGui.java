@@ -56,13 +56,13 @@ public class TCWriterGui extends JFrame {
 		final var generateButton = button(icon("general/Export24"), "Export to Java", controller::generateCode);
 
 		final var runButton = button(icon("media/Play24"), "Start execution", controller::startTestCase);
-		controller.getModel().getExecutionState().bind(s -> s == TCWriterModel.TestExecutionState.STOPPED)
+		controller.getModel().getExecutionState().listenF(s -> s == TCWriterModel.TestExecutionState.STOPPED)
 				.bind(listen(runButton::setEnabled));
 
 		final var continueButton = button(icon("media/StepForward24"), "Continue execution",
 				controller::resumeTestCase);
 		continueButton.setEnabled(false);
-		controller.getModel().getExecutionState().bind(s -> s == TCWriterModel.TestExecutionState.PAUSED)
+		controller.getModel().getExecutionState().listenF(s -> s == TCWriterModel.TestExecutionState.PAUSED)
 				.bind(listen(continueButton::setEnabled));
 
 		final var sep = new JSeparator(SwingConstants.VERTICAL);

@@ -11,7 +11,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import ch.scaille.testing.testpilot.jupiter.DisabledIfHeadless;
@@ -35,7 +34,7 @@ class SeleniumExampleTest extends AbstractSeleniumUndertowTest {
 
 	@BeforeEach
 	void createPilot() {
-		pilot = new SeleniumPilot(driver);
+		pilot = new SeleniumPilot(Objects.requireNonNull(driver));
 		pilot.setDefaultPollingTimeout(Duration.ofSeconds(5));
 	}
 

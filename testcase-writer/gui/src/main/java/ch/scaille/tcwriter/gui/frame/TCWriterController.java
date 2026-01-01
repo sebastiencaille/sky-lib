@@ -37,7 +37,9 @@ import ch.scaille.tcwriter.services.testexec.ITestExecutor.TestConfig;
 import ch.scaille.tcwriter.services.testexec.TestExecutionListener;
 import ch.scaille.tcwriter.services.testexec.TestRemoteControl;
 import ch.scaille.util.helpers.Logs;
+import lombok.Getter;
 
+@Getter
 public class TCWriterController extends GuiController {
 
 	private static final Logger LOGGER = Logs.of(TCWriterController.class);
@@ -87,10 +89,6 @@ public class TCWriterController extends GuiController {
 		this.gui = new TCWriterGui(this);
 	}
 
-	public StepEditorController getStepEditorController() {
-		return stepEditorController;
-	}
-
 	public TestDictionary loadDictionary(String name) {
 		TestDictionary dictionary = null;
 		while (dictionary == null) {
@@ -102,18 +100,6 @@ public class TCWriterController extends GuiController {
 			}
 		}
 		return dictionary;
-	}
-
-	public TCWriterModel getModel() {
-		return model;
-	}
-
-	public TestRemoteControl getTestRemoteControl() {
-		return testRemoteControl;
-	}
-
-	public TCWriterGui getGui() {
-		return gui;
 	}
 
 	public void editConfig() {
@@ -230,8 +216,7 @@ public class TCWriterController extends GuiController {
 
 	public void generateCode() throws TestCaseException {
 		this.testExecutor.createTemplate(this.model.getTestCase().getValue())
-				.writeTo(uncheckedF2(this.modelDao::writeTestCaseCode))
-				.getStorageLocator();
+				.writeTo(uncheckedF2(this.modelDao::writeTestCaseCode));
 	}
 
 	public void importDictionary() {

@@ -9,7 +9,10 @@ import com.beust.jcommander.Parameter;
 
 import ch.scaille.util.helpers.JavaExt;
 import lombok.Getter;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class CodeGeneratorParams {
 
 	@Getter
@@ -17,14 +20,17 @@ public class CodeGeneratorParams {
 	private String classPathFolder = ".";
 
 	@Parameter(names = { "-t", "--targetFolder" })
+	@Nullable
 	private String targetFolder = null;
 
 	@Getter
     @Parameter(names = { "-sp", "--scanPackage" }, required = true)
+	@Nullable
 	private String scanPackage = null;
 
 	@Getter
     @Parameter(names = { "-tp", "--targetPackage" })
+	@Nullable
 	private String targetPackage = null;
 
 	public static CodeGeneratorParams parse(final String[] args) {
@@ -34,7 +40,7 @@ public class CodeGeneratorParams {
 	}
 
     public String getTargetFolder() {
-        // by default, store in source folder so changes can be audited
+        // by default, store the file in the source folder so changes can be audited
         return Objects.requireNonNullElse(targetFolder, classPathFolder);
     }
 

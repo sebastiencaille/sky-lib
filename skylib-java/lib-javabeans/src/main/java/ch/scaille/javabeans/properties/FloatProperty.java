@@ -1,14 +1,13 @@
 package ch.scaille.javabeans.properties;
 
-import java.util.Objects;
 import java.util.function.Consumer;
 
 import ch.scaille.javabeans.IChainBuilderFactory;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.IPropertiesOwner;
 import ch.scaille.javabeans.chain.BindingChain;
+import lombok.Getter;
 import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
 
 /**
  * Property containing a float value.
@@ -20,6 +19,7 @@ import org.jspecify.annotations.Nullable;
 @NullMarked
 public class FloatProperty extends AbstractTypedProperty<Float> {
 
+    @Getter
     private float value;
     private final float defaultValue;
 
@@ -53,18 +53,14 @@ public class FloatProperty extends AbstractTypedProperty<Float> {
         return this;
     }
 
-    public float getValue() {
-        return value;
-    }
-
     public void setValue(final Object caller, final float newValue) {
         setObjectValue(caller, newValue);
     }
 
     @Override
-    protected Float replaceValue(@Nullable final Float newValue) {
+    protected Float replaceValue(final Float newValue) {
         final var oldValue = value;
-        value = Objects.requireNonNull(newValue, "Null value is not allowed");
+        value = newValue;
         return oldValue;
     }
 

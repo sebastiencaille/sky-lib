@@ -14,10 +14,6 @@
 
 	<name>lib-gui</name>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-
 	<dependencies>
 
 		<dependency>
@@ -31,6 +27,6 @@
 			<scope>test</scope>
 		</dependency>
 
-	</dependencies>
+    </dependencies>
 
 </project>

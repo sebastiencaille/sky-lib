@@ -7,7 +7,6 @@ import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.IPropertiesOwner;
 import ch.scaille.javabeans.chain.BindingChain;
 import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
 
 /**
  * Property containing a boolean value.
@@ -60,9 +59,9 @@ public class BooleanProperty extends AbstractTypedProperty<Boolean> {
     }
 
     @Override
-    protected Boolean replaceValue(@Nullable final Boolean newValue) {
+    protected Boolean replaceValue(final Boolean newValue) {
         final var oldValue = value;
-        value = newValue != null && newValue;
+        value = newValue;
         return oldValue;
     }
 

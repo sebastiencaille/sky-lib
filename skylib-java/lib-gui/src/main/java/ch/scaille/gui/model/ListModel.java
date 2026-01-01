@@ -10,20 +10,22 @@ import java.util.function.Consumer;
 import javax.swing.event.ListDataListener;
 
 import ch.scaille.gui.model.views.IListView;
+import ch.scaille.gui.model.views.StaticListView;
 import ch.scaille.util.helpers.JavaExt;
-import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * List Model with log(n) access.
  * <p>
- * List entry edition must start by calling startEditingValue(). Edition is
+ * Editions must start by calling startEditingValue(). Edition is
  * committed using stopEditingValue.<br>
  * Only one single edition can be made at a time, because the modification of
  * the edited entry may break the ordering of the list, making impossible to
  * compute the actual row of another edition with a log(n) complexity.
  * <p>
  * The sorting and filtering is done using an {@link IListView}. A default
- * implementation ({@link ch.scaille.gui.model.views.ListView) is provided. Note
+ * implementation ({@link StaticListView ) is provided. Note
  * that total ordering is mandatory to have a log(n) access. <p> The lists can
  * be stacked. If no ListView is defined for a list, the IListView of the parent
  * is used. <p>
@@ -34,10 +36,12 @@ import org.jspecify.annotations.NonNull;
  *            the Object.equals method. It is better if an element of the list
  *            can be uniquely identified using Object.equals.
  */
-public class ListModel<T> implements ISourceModel<T>, Iterable<T>, Serializable {
+@NullMarked
+public class ListModel<T extends @Nullable Object> implements ISourceModel<T>, Iterable<T>, Serializable {
 
 	protected final ListModelContent<T> content;
-	protected final ISourceModel<T> sourceCallbacks;
+	protected final transient ISourceModel<T> sourceCallbacks;
+	@Nullable
 	private String name = null;
 
 	public ListModel(final IListView<T> view) {
@@ -104,7 +108,7 @@ public class ListModel<T> implements ISourceModel<T>, Iterable<T>, Serializable 
 	}
 
 	@Override
-	public @NonNull Iterator<T> iterator() {
+	public Iterator<T> iterator() {
 		return content.iterator();
 	}
 

@@ -25,7 +25,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * Holds and applies the bindings in chains. Each chain listens to the property and to a
- * gui component, and propagates the updates from the property to the component, and from the component to the properties.
+ * gui component and propagates the updates from the property to the component, and from the component to the properties.
  * <p>
  * 
  * </p>
@@ -98,19 +98,17 @@ public class BindingChain implements IBindingChainModifier {
 		return linkComponentToProperty(propertySetter);
 	}
 
-	public <T> IChainBuilderFactory<T> linkComponentToProperty(final BiConsumer<Object, @Nullable T> propertySetter) {
+	public <T extends @Nullable Object> IChainBuilderFactory<T> linkComponentToProperty(final BiConsumer<Object, T> propertySetter) {
 		links.add(new Link<T, T>() {
 			@Override
-			@Nullable
-			public T toProperty(final Object component, @Nullable final T value) {
+			public T toProperty(final Object component, final T value) {
 				Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE, () -> "Setting property value: " + value);
 				propertySetter.accept(component, value);
 				return value;
 			}
 
 			@Override
-			@Nullable
-			public T toComponent(@Nullable final T value) {
+			public T toComponent(final T value) {
 				return value;
 			}
 
@@ -129,7 +127,7 @@ public class BindingChain implements IBindingChainModifier {
 	}
 	
 	@Override
-	public void propagateComponentChange(final Object component, @Nullable final Object componentValue) {
+	public void propagateComponentChange(final Object component, final Object componentValue) {
 		final var pos = links.size();
 		var value = componentValue;
 		for (int i = pos - 1; i >= 0; i--) {

@@ -3,6 +3,7 @@ package ch.scaille.javabeans.persisters;
 import ch.scaille.javabeans.properties.IPersister;
 import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
 import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  *
@@ -12,7 +13,7 @@ import org.jspecify.annotations.NullMarked;
  * @param <V> Type of the object's attribute
  */
 @NullMarked
-public class AttributeMetaDataAccess<T, V> implements IPersisterFactory<T, V> {
+public class AttributeMetaDataAccess<T, V extends @Nullable Object> implements IPersisterFactory<T, V> {
 
 	private final AbstractAttributeMetaData<T, V> metadata;
 

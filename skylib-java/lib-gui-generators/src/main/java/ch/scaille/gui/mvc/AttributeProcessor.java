@@ -12,10 +12,12 @@ import java.util.Set;
 
 import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
 import ch.scaille.util.dao.metadata.IAttributeMetaData;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * To generate the code of the MVC model for a given model class attribute
  */
+@NullMarked
 public abstract class AttributeProcessor {
 
 	public static String typeParametersToString(final Type type) {
@@ -140,6 +142,11 @@ public abstract class AttributeProcessor {
 		}
 
 		@Override
+		protected String defaultValue() {
+			return ", null";
+		}
+
+		@Override
 		AttributeProcessor addImports() {
 			super.addImports();
 			context.addImport("ObjectProperty");
@@ -183,16 +190,22 @@ public abstract class AttributeProcessor {
 		return delegate.getFieldCreation(this);
 	}
 
+	protected String defaultValue() {
+		return "";
+	}
+
 	String generateDeclaration() {
 		return String.format("protected final %s %s;", getPropertyType(), getPropertyFieldName());
 	}
 
 	String generateInitialization(Class<?> modelClass) {
 		return String.format(
-				"%s = new %s(prefix + %s, this).configureTyped(%n"
+				"%s = new %s(prefix + %s, this%s).configureTyped(%n"
 						+ "\tConfiguration.persistent(currentObjectProvider, %s),%n"
 						+ "\timplicitConverters(%s.class, %s, %s.class));",
-				getPropertyFieldName(), getPropertyType(), getAttributeNameConstant(), getFieldCreation(),
+				getPropertyFieldName(), getPropertyType(), getAttributeNameConstant(),
+				defaultValue(),
+				getFieldCreation(),
 				modelClass.getSimpleName(), getAttributeNameConstant(),
 				modelAttribute.getClassType().getCanonicalName());
 	}

@@ -12,11 +12,6 @@
 	<artifactId>lib-gui-examples</artifactId>
 	<packaging>jar</packaging>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>17</java.version>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>ch.scaille</groupId>

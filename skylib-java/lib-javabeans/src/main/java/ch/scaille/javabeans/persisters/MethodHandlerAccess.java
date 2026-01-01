@@ -5,12 +5,14 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 
 import ch.scaille.javabeans.properties.IPersister;
-import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * To access a property using a getter and a setter
  */
-public class MethodHandlerAccess<T, A> implements IPersisterFactory<@NonNull T, A> {
+@NullMarked
+public class MethodHandlerAccess<T, A extends @Nullable Object> implements IPersisterFactory<T, A> {
 
 	private final MethodHandle getter;
 	private final MethodHandle setter;
@@ -24,9 +26,8 @@ public class MethodHandlerAccess<T, A> implements IPersisterFactory<@NonNull T, 
 		}
 	}
 
-	@NonNull
 	@Override
-	public IPersister<A> asPersister(@NonNull final IObjectProvider<@NonNull T> objectProvider) {
+	public IPersister<A> asPersister(final IObjectProvider<T> objectProvider) {
 		return new IPersister<>() {
 			@Override
 			public A get() {

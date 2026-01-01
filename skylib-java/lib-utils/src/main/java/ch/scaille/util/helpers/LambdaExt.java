@@ -1,11 +1,15 @@
 package ch.scaille.util.helpers;
 
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
+
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 @SuppressWarnings("unchecked")
+@NullMarked
 public class LambdaExt {
 
 	private LambdaExt() {
@@ -27,12 +31,12 @@ public class LambdaExt {
 	}
 
 	@FunctionalInterface
-	public interface FunctionWithException<T, R, E extends Throwable> {
+	public interface FunctionWithException<T extends @Nullable Object, R extends @Nullable Object, E extends Throwable> {
 		R apply(T value) throws E;
 	}
 
 	@FunctionalInterface
-	public interface BiFunctionWithException<T, U, R, E extends Throwable> {
+	public interface BiFunctionWithException<T extends @Nullable Object, U extends @Nullable Object, R extends @Nullable Object, E extends Throwable> {
 		R apply(T value, U value2) throws E;
 	}
 
@@ -55,7 +59,7 @@ public class LambdaExt {
 
 	public static <R> R defaultExceptionHandler(Exception e) {
 		exceptionHandler.accept(e);
-		return null;
+		throw new IllegalStateException("Exception was not handled");
 	}
 
 	public static void setDefaultExceptionHandler(Consumer<Exception> anExceptionHandler) {

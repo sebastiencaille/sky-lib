@@ -13,32 +13,34 @@ import org.jspecify.annotations.Nullable;
 @NullMarked
 public interface ListModelBindings {
 
-	static <T> IComponentBinding<IListView<T>> view(final ListModel<T> model) {
-		return ComponentBindings.listen(model, (c, p, t) -> c.setView(t));
-	}
+    static <T extends @Nullable Object> IComponentBinding<IListView<T>> view(final ListModel<T> model) {
+        return ComponentBindings.listen(model, (c, p, t) -> c.setView(t));
+    }
 
-	static <T> IComponentBinding<Collection<T>> values(final ListModel<T> model) {
-		return new IComponentBinding<>() {
+    static <T extends @Nullable Object> IComponentBinding<Collection<T>> values(final ListModel<T> model) {
+        return new IComponentBinding<>() {
 
-			@Nullable
-			private IListModelListener<T> listener;
+            @Nullable
+            private IListModelListener<T> listener;
 
-			@Override
-			public void addComponentValueChangeListener(final IComponentLink<Collection<T>> link) {
-				listener = IListModelListener.editionStopped(e -> link.setValueFromComponent(model, model.values()));
-				model.addListener(listener);
-			}
+            @Override
+            public void addComponentValueChangeListener(final IComponentLink<Collection<T>> link) {
+                listener = IListModelListener.editionStopped(e -> link.setValueFromComponent(model, model.values()));
+                model.addListener(listener);
+            }
 
-			@Override
-			public void setComponentValue(final IComponentChangeSource source, @Nullable final Collection<T> value) {
-				model.setValues(value);
-			}
+            @Override
+            public void setComponentValue(final IComponentChangeSource source, final Collection<T> value) {
+                model.setValues(value);
+            }
 
-			@Override
-			public void removeComponentValueChangeListener() {
-				model.removeListener(listener);
-			}
+            @Override
+            public void removeComponentValueChangeListener() {
+                if (listener != null) {
+                    model.removeListener(listener);
+                }
+            }
 
-		};
-	}
+        };
+    }
 }

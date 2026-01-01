@@ -18,23 +18,26 @@ import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 import ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestStep;
+import lombok.Getter;
 
+@Getter
 public class StepEditorController extends GuiController {
 
 	private final StepEditorModel model;
 
 	private final IPropertiesGroup changeSupport;
 
-	private final TCWriterModel guiModel;
+    private final TCWriterModel guiModel;
 
 	private final TestParameterModel selectorModel;
+
 	private final TestParameterModel param0Model;
 
-	private final StepEditorPanel stepEditorPanel;
+    private final StepEditorPanel stepEditorPanel;
 
-	private final TestParameterValueEditorPanel selectorEditor;
+    private final TestParameterValueEditorPanel selectorEditor;
 
-	private final TestParameterValueEditorPanel param0Editor;
+    private final TestParameterValueEditorPanel param0Editor;
 
 	public StepEditorController(final TCWriterController guiController) {
 		this.model = new StepEditorModel(of(guiController), guiController.getModel().getTestDictionary());
@@ -68,47 +71,31 @@ public class StepEditorController extends GuiController {
 		
 		model.getAction().listenActive(_ -> updateCurrentActionParameters(dictionary.getValue(), selectedStep));
 
-		model.getSelectorValue().setValue(this, ExportableTestParameterValue.NO_VALUE);
-		model.getActionParameterValue().setValue(this, ExportableTestParameterValue.NO_VALUE);
+		model.getSelectorValues().setValue(this, ExportableTestParameterValue.NO_VALUE);
+		model.getActionParameterValues().setValue(this, ExportableTestParameterValue.NO_VALUE);
 		// set temporary cloned object, so it's possible to edit and cancel edition
 		model.getSelector()
-				.listenActive(selector -> model.getSelectorValue().setValue(this,
-						model.getSelectorValue().getValue().derivate(selector)))
+				.listenActive(selector -> model.getSelectorValues().setValue(this,
+						model.getSelectorValues().getValue().derivate(selector)))
 				.addDependency(preserveOnUpdateOf(selectedStep));
 
 		model.getActionParameter()
-				.listenActive(param -> model.getActionParameterValue().setValue(this,
-						model.getActionParameterValue().getValue().derivate(param)))
+				.listenActive(param -> model.getActionParameterValues().setValue(this,
+						model.getActionParameterValues().getValue().derivate(param)))
 				.addDependency(preserveOnUpdateOf(selectedStep));
 
 		this.stepEditorPanel = new StepEditorPanel(this);
 
 		this.selectorModel = new TestParameterModel("selector", guiController, model.getSelector(),
-				model.getSelectorValue());
+				model.getSelectorValues());
 		this.selectorEditor = new TestParameterValueEditorPanel(guiController, selectorModel);
 
 		this.param0Model = new TestParameterModel("param0", guiController, model.getActionParameter(),
-				model.getActionParameterValue());
+				model.getActionParameterValues());
 		this.param0Editor = new TestParameterValueEditorPanel(guiController, param0Model);
 	}
 
-	public TCWriterModel getGuiModel() {
-		return guiModel;
-	}
-
-	public StepEditorPanel getStepEditorPanel() {
-		return stepEditorPanel;
-	}
-
-	public TestParameterValueEditorPanel getSelectorEditor() {
-		return selectorEditor;
-	}
-
-	public TestParameterValueEditorPanel getParam0Editor() {
-		return param0Editor;
-	}
-
-	@Override
+    @Override
 	public void activate() {
 		selectorModel.activate();
 		param0Model.activate();
@@ -124,7 +111,7 @@ public class StepEditorController extends GuiController {
 	private void updateCurrentActionParameters(final TestDictionary td, final ObjectProperty<TestStep> testStep) {
 		final var step = testStep.getValue();
 		final var action = model.getAction().getValue();
-		if (step == null || action == null) {
+		if (action == null) {
 			return;
 		}
 
@@ -134,7 +121,7 @@ public class StepEditorController extends GuiController {
 			final var selectorValue = step.getParametersValue(actionUtils.selectorIndex());
 			model.getPossibleSelectors().setValue(this, sorted(td.getParameterFactories(actionUtils.selector())));
 			model.getSelector().setValue(this, selectorValue.getValueFactory());
-			model.getSelectorValue().setValue(this, selectorValue.derivate(selectorValue.getValueFactory()));
+			model.getSelectorValues().setValue(this, selectorValue.derivate(selectorValue.getValueFactory()));
 		} else {
 			emptySelectors();
 		}
@@ -144,26 +131,22 @@ public class StepEditorController extends GuiController {
 			model.getPossibleActionParameters().setValue(this,
 					sorted(td.getParameterFactories(actionUtils.parameter(0))));
 			model.getActionParameter().setValue(this, param0Value.getValueFactory());
-			model.getActionParameterValue().setValue(this, param0Value.derivate(param0Value.getValueFactory()));
+			model.getActionParameterValues().setValue(this, param0Value.derivate(param0Value.getValueFactory()));
 		} else {
 			emptyParam0();
 		}
 	}
 
 	private void emptyParam0() {
-		model.getActionParameterValue().setValue(this, ExportableTestParameterValue.NO_VALUE);
+		model.getActionParameterValues().setValue(this, ExportableTestParameterValue.NO_VALUE);
 		model.getActionParameter().setValue(this, TestParameterFactory.NO_FACTORY);
 		model.getPossibleActionParameters().setValue(this, Collections.emptyList());
 	}
 
 	private void emptySelectors() {
-		model.getSelectorValue().setValue(this, ExportableTestParameterValue.NO_VALUE);
+		model.getSelectorValues().setValue(this, ExportableTestParameterValue.NO_VALUE);
 		model.getSelector().setValue(this, TestParameterFactory.NO_FACTORY);
 		model.getPossibleSelectors().setValue(this, Collections.emptyList());
-	}
-
-	public StepEditorModel getModel() {
-		return model;
 	}
 
 	public static <T extends NamedObject> List<T> sorted(final Collection<T> original) {
@@ -181,10 +164,10 @@ public class StepEditorController extends GuiController {
 		final var actionUtils = guiModel.getTestDictionary()
 				.map(dictionary -> ModelUtils.actionUtils(dictionary, step.getAction()));
 		if (actionUtils.hasSelector()) {
-			step.getParametersValue().add(model.getSelectorValue().getValue());
+			step.getParametersValue().add(model.getSelectorValues().getValue());
 		}
 		if (actionUtils.hasActionParameter(0)) {
-			step.getParametersValue().add(model.getActionParameterValue().getValue());
+			step.getParametersValue().add(model.getActionParameterValues().getValue());
 		}
 		guiModel.getSelectedStep().forceChanged(this);
 	}

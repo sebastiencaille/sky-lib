@@ -1,17 +1,14 @@
 package ch.scaille.gui.swing.bindings;
 
-import java.util.Objects;
-
 import javax.swing.JSpinner;
 
-import ch.scaille.gui.mvc.ComponentBindingAdapter;
+import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
 import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
 
 @NullMarked
-public class JSpinnerBinding<T extends Number> extends ComponentBindingAdapter<T> {
+public class JSpinnerBinding<T extends Number> implements IComponentBinding<T> {
 
 	private final JSpinner spinner;
 
@@ -25,8 +22,8 @@ public class JSpinnerBinding<T extends Number> extends ComponentBindingAdapter<T
 	}
 
 	@Override
-	public void setComponentValue(final IComponentChangeSource source, @Nullable final T value) {
-        spinner.setValue(Objects.requireNonNullElse(value, 0));
+	public void setComponentValue(final IComponentChangeSource source, final T value) {
+        spinner.setValue(value);
 	}
 
 	@Override

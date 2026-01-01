@@ -13,6 +13,8 @@ import java.util.function.Function;
 
 import ch.scaille.util.helpers.ClassLoaderHelper;
 import ch.scaille.util.helpers.Logs;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Simple template made of a content with placeholders (${...}) and properties
@@ -24,11 +26,13 @@ import ch.scaille.util.helpers.Logs;
  * @author scaille
  *
  */
+@NullMarked
 public class Template {
 
 	private final String content;
 	private final Map<String, String> properties = new HashMap<>();
 
+	@Nullable
 	private String preferredFile;
 
 	public static Template from(final File file) throws IOException {
@@ -43,12 +47,9 @@ public class Template {
 		this.content = content.replace("\r", "");
 	}
 
-	public String getPreferredFileName() {
-		return preferredFile;
-	}
 
 	public Template apply(final Map<String, String> templateProperties, final String providedPreferredFile,
-			GenerationMetadata generationMetadata) {
+			@Nullable GenerationMetadata generationMetadata) {
 		final var newTemplate = instantiate(content);
 		newTemplate.preferredFile = providedPreferredFile;
 		newTemplate.setContext(templateProperties);

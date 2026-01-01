@@ -8,14 +8,14 @@ import java.util.Objects;
 import javax.swing.AbstractAction;
 import javax.swing.JTextField;
 
-import ch.scaille.gui.mvc.ComponentBindingAdapter;
+import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 @NullMarked
-public class JTextFieldBinding extends ComponentBindingAdapter<String> {
+public class JTextFieldBinding implements IComponentBinding<String> {
 
 	private final JTextField textField;
 	private boolean withFocusLoss = true;

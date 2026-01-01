@@ -1,5 +1,9 @@
 package ch.scaille.javabeans.converters;
 
-public interface IUnaryConverter<T> extends IConverter<T, T> {
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
+
+@NullMarked
+public interface IUnaryConverter<T extends @Nullable Object> extends IConverter<T, T> {
 	// extended
 }

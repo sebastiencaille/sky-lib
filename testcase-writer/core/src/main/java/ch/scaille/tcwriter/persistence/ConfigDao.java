@@ -9,12 +9,15 @@ import ch.scaille.util.persistence.DaoFactory;
 import ch.scaille.util.persistence.IDao;
 import ch.scaille.util.persistence.StorageRTException;
 import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 public class ConfigDao implements IConfigDao {
 
 	protected final IPropertiesGroup propertiesGroup = PropertyChangeSupportController.mainGroup(this);
 
-	protected final ObjectProperty<TCConfig> currentConfig = new ObjectProperty<>("config", propertiesGroup);
+	protected final ObjectProperty<@Nullable TCConfig> currentConfig = new ObjectProperty<>("config", propertiesGroup, null);
 
 	public static StorageDataHandlerRegistry defaultDataHandlers() {
 		return new StorageDataHandlerRegistry(new YamlConfigDataHandler());
@@ -28,7 +31,7 @@ public class ConfigDao implements IConfigDao {
 	}
 	
 	@Override
-	public ObjectProperty<TCConfig> getCurrentConfigProperty() {
+	public ObjectProperty<@Nullable TCConfig> getCurrentConfigProperty() {
 		return currentConfig;
 	}
 
@@ -54,7 +57,7 @@ public class ConfigDao implements IConfigDao {
 	@Override
 	public void saveConfiguration() {
 		StorageRTException.uncheck("Writing of configuration",
-				() -> loader.saveOrUpdate(currentConfig.getValue().getName(), currentConfig.getValue()));
+				() -> loader.saveOrUpdate(Objects.requireNonNull(currentConfig.getValue(), "No configuration to save").getName(), currentConfig.getValue()));
 	}
 
 }

@@ -1,7 +1,10 @@
 package ch.scaille.generators.util;
 
 import ch.scaille.util.text.TextFormatter;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class DotFileGenerator<E extends Exception> extends TextFormatter<DotFileGenerator<E>, E> {
 
 	public enum Shape {
@@ -33,7 +36,7 @@ public class DotFileGenerator<E extends Exception> extends TextFormatter<DotFile
 		return this;
 	}
 
-	public DotFileGenerator<E> addNode(final String name, final String label, final Shape shape, final String color)
+	public DotFileGenerator<E> addNode(final String name, final String label, final Shape shape, @Nullable final String color)
 			throws E {
 		final String extra;
 		if (color != null) {
@@ -46,8 +49,8 @@ public class DotFileGenerator<E extends Exception> extends TextFormatter<DotFile
 		return this;
 	}
 
-	public DotFileGenerator<E> addEdge(final String from, final String to, final String label, final boolean isXLabel,
-			final String extra) throws E {
+	public DotFileGenerator<E> addEdge(final String from, final String to, @Nullable final String label, final boolean isXLabel,
+									   final String extra) throws E {
 		final String formatted;
 		if (label == null || label.isEmpty()) {
 			formatted = String.format("\"%s\" -> \"%s\" [ %s ];", from, to, extra);
@@ -65,7 +68,7 @@ public class DotFileGenerator<E extends Exception> extends TextFormatter<DotFile
 		appendIndented("}");
 	}
 
-	public static String escape(final String str) {
+	public static String escape(@Nullable final String str) {
 		if (str == null) {
 			return "";
 		}

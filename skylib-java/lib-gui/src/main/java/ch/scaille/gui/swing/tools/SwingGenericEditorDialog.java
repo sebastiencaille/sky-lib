@@ -47,7 +47,7 @@ public class SwingGenericEditorDialog extends JDialog {
 	public void build(final ErrorSet errorProperty) {
 		final var buttonPanel = new JPanel(new FlowLayout());
 		final var okButton = new JButton("OK");
-		errorProperty.getErrors().bind(Map::isEmpty).listen(okButton::setEnabled);
+		errorProperty.getErrors().listenF(Map::isEmpty).listen(okButton::setEnabled);
 		buttonPanel.add(okButton);
 		okButton.addActionListener(e -> {
 			controllers.forEach(GenericEditorController::save);

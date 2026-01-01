@@ -10,9 +10,9 @@ import org.jspecify.annotations.Nullable;
 @NullMarked
 public interface IBindingChainModifier extends IBindingController {
 
-	<P, C> void addLink(Link<P, C> link);
+	<P extends @Nullable Object, C extends @Nullable Object> void addLink(Link<P, C> link);
 
-	<C> void propagateComponentChange(Object component, @Nullable C componentValue);
+	<C extends @Nullable Object> void propagateComponentChange(Object component, C componentValue);
 
 	boolean mustSendToProperty(IBindingChainModifier chain);
 

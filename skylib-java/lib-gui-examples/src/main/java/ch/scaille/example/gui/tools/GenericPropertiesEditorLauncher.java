@@ -20,6 +20,7 @@ import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.util.helpers.Logs;
 import lombok.Getter;
 import lombok.Setter;
+import org.jspecify.annotations.Nullable;
 
 public class GenericPropertiesEditorLauncher {
 
@@ -34,7 +35,7 @@ public class GenericPropertiesEditorLauncher {
 
 	private static List<IPropertyEntry> builder(IPropertiesGroup support, IObjectProvider<EditedObject> obj) {
 
-		final var strProp = new ObjectProperty<String>("str", support)
+		final var strProp = new ObjectProperty<@Nullable String>("str", support, null)
 				.configureTyped(persistent(obj, persister(EditedObject::getStr, EditedObject::setStr)));
 		final var boolProp = new BooleanProperty("bool", support)
 				.configureTyped(persistent(obj, persister(EditedObject::isBool, EditedObject::setBool)));

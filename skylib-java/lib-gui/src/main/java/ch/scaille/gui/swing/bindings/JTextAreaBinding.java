@@ -6,15 +6,15 @@ import java.util.Objects;
 
 import javax.swing.JTextArea;
 
-import ch.scaille.gui.mvc.ComponentBindingAdapter;
 import ch.scaille.gui.swing.SwingExt;
+import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 @NullMarked
-public class JTextAreaBinding extends ComponentBindingAdapter<String> {
+public class JTextAreaBinding implements IComponentBinding<String> {
 
 	private final JTextArea textArea;
 	private final boolean readOnly;

@@ -8,6 +8,7 @@ import static ch.scaille.tcwriter.gui.editors.steps.StepEditorModel.object2Text;
 import static ch.scaille.tcwriter.gui.editors.steps.StepEditorModel.objects2Texts;
 
 import java.awt.BorderLayout;
+import java.io.Serial;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -31,7 +32,9 @@ import ch.scaille.tcwriter.model.testcase.TestStep;
 
 public class StepEditorPanel extends JPanel {
 
-	private static final long serialVersionUID = -3035157435652102580L;
+	@Serial
+    private static final long serialVersionUID = -3035157435652102580L;
+
 	private final StepEditorModel model;
 	
 	public StepEditorPanel(final StepEditorController controller) {
@@ -48,10 +51,8 @@ public class StepEditorPanel extends JPanel {
 
 		final var classifiersEditor = withEnabler(selectedStep, new JComboBox<>(StepClassifier.values()));
 		classifiersEditor.setMaximumSize(classifiersEditor.getPreferredSize());
-		selectedStep.listen(
-				s -> model.getStepClassifier().setValue(this, (s != null) ? s.getClassifier() : StepClassifier.ACTION));
-		model.getStepClassifier().bind(selection(classifiersEditor))
-				.addDependency(preserveOnUpdateOf(model.getAction()));
+		selectedStep.listen(s -> model.getStepClassifier().setValue(this, (s != null) ? s.getClassifier() : StepClassifier.ACTION));
+		model.getStepClassifier().bind(selection(classifiersEditor)).addDependency(preserveOnUpdateOf(model.getAction()));
 		model.getStepClassifier().listenActive(c -> {
 			if (selectedStep.getValue() != null) {
 				selectedStep.getValue().setClassifier(c);

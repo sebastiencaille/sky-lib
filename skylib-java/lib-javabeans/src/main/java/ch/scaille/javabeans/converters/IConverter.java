@@ -10,16 +10,14 @@ import org.jspecify.annotations.Nullable;
  * @param <C> The component side type
  */
 @NullMarked
-public interface IConverter<P, C> {
+public interface IConverter<P extends @Nullable Object, C extends @Nullable Object> {
 
 	default void initialize(final AbstractProperty p) {
 		// noop
 	}
 
-	@Nullable
-	C convertPropertyValueToComponentValue(@Nullable P propertyValue);
+	C convertPropertyValueToComponentValue(P propertyValue);
 
-	@Nullable
-	P convertComponentValueToPropertyValue(@Nullable C componentValue) throws ConversionException;
+	P convertComponentValueToPropertyValue(C componentValue) throws ConversionException;
 
 }

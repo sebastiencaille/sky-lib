@@ -41,7 +41,7 @@ public class TestObjectGuiModel extends GuiModel implements IObjectGuiModel<ch.s
 		aSecondValueProperty = new IntProperty(prefix + ASECOND_VALUE, this).configureTyped(
 			Configuration.persistent(currentObjectProvider, Persisters.persister(TestObject::getASecondValue, TestObject::setASecondValue)),
 			implicitConverters(TestObject.class, ASECOND_VALUE, java.lang.Integer.class));
-		aFirstValueProperty = new ObjectProperty<java.lang.String>(prefix + AFIRST_VALUE, this).configureTyped(
+		aFirstValueProperty = new ObjectProperty<java.lang.String>(prefix + AFIRST_VALUE, this, null).configureTyped(
 			Configuration.persistent(currentObjectProvider, Persisters.persister(TestObject::getAFirstValue, TestObject::setAFirstValue)),
 			implicitConverters(TestObject.class, AFIRST_VALUE, java.lang.String.class));
 		

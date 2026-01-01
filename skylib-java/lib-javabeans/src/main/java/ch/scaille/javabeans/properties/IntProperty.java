@@ -1,6 +1,5 @@
 package ch.scaille.javabeans.properties;
 
-import java.util.Objects;
 import java.util.function.Consumer;
 
 import ch.scaille.javabeans.IChainBuilderFactory;
@@ -9,7 +8,6 @@ import ch.scaille.javabeans.IPropertiesOwner;
 import ch.scaille.javabeans.chain.BindingChain;
 import lombok.Getter;
 import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
 
 /**
  * Property containing an int value.
@@ -60,9 +58,9 @@ public class IntProperty extends AbstractTypedProperty<Integer> {
 	}
 
 	@Override
-	protected Integer replaceValue(@Nullable final Integer newValue) {
+	protected Integer replaceValue(final Integer newValue) {
 		final var oldValue = value;
-		value = Objects.requireNonNull(newValue, "Null value is not allowed");
+		value = newValue;
 		return oldValue;
 	}
 

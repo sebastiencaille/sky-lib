@@ -5,9 +5,9 @@ import java.util.function.Supplier;
 
 import javax.swing.JTable;
 
-import ch.scaille.gui.mvc.ComponentBindingAdapter;
 import ch.scaille.gui.swing.SwingExt;
 import ch.scaille.gui.swing.model.ListModelTableModel;
+import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
 import org.jspecify.annotations.NullMarked;
@@ -21,7 +21,7 @@ import org.jspecify.annotations.Nullable;
  * @author Sebastien Caille
  */
 @NullMarked
-public class JTableMultiSelectionBinding<T, U extends Collection<T>> extends ComponentBindingAdapter<U> {
+public class JTableMultiSelectionBinding<T, U extends Collection<T>> implements IComponentBinding<U> {
 
     private final JTable table;
     private final ListModelTableModel<T, ?> model;

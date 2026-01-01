@@ -2,8 +2,8 @@ package ch.scaille.gui.swing.bindings;
 
 import javax.swing.JTable;
 
-import ch.scaille.gui.mvc.ComponentBindingAdapter;
 import ch.scaille.gui.swing.model.ListModelTableModel;
+import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
 import org.jspecify.annotations.NullMarked;
@@ -12,7 +12,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 
 @NullMarked
-public class JTableSelectionBinding<T> extends ComponentBindingAdapter<@Nullable T> {
+public class JTableSelectionBinding<T> implements IComponentBinding<@Nullable T> {
 
     private final JTable table;
     private final ListModelTableModel<T, ?> model;

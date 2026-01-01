@@ -11,7 +11,7 @@ import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.IPropertiesOwner;
 import ch.scaille.javabeans.chain.BindingChain;
 import lombok.Getter;
-import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -20,51 +20,44 @@ import org.jspecify.annotations.Nullable;
  *
  * @param <T>
  */
-public class ObjectProperty<T> extends AbstractTypedProperty<T> {
+@NullMarked
+public class ObjectProperty<T extends @Nullable Object> extends AbstractTypedProperty<T> {
 
     private final T defaultValue;
 
     @Getter
     private T value;
 
-    public ObjectProperty(@NonNull final String name, final @NonNull IPropertiesOwner model, final T defaultValue) {
+    public ObjectProperty(final String name, final IPropertiesOwner model, final T defaultValue) {
         super(name, model);
         this.defaultValue = defaultValue;
         value = defaultValue;
     }
 
-    public ObjectProperty(final @NonNull String name, final @NonNull IPropertiesOwner model) {
-        this(name, model, null);
-    }
-
-    public ObjectProperty(@NonNull final String name, @NonNull final IPropertiesGroup propertySupport, final T defaultValue) {
+    public ObjectProperty(final String name, final IPropertiesGroup propertySupport, final T defaultValue) {
         super(name, propertySupport);
         this.defaultValue = defaultValue;
         value = defaultValue;
     }
 
-    public ObjectProperty(final String name, final IPropertiesGroup propertySupport) {
-        this(name, propertySupport, null);
-    }
-
     @Override
-    public @NonNull IChainBuilderFactory<T> createBindingChain() {
+    public IChainBuilderFactory<T> createBindingChain() {
         return new BindingChain(this, errorNotifier).bindProperty(this::setObjectValueFromComponent);
     }
 
     @Override
-    public @NonNull ObjectProperty<T> configureTyped(final Consumer<AbstractTypedProperty<T>>... properties) {
+    public ObjectProperty<T> configureTyped(final Consumer<AbstractTypedProperty<T>>... properties) {
         super.configureTyped(properties);
         return this;
     }
 
-    public <U> ObjectProperty<U> child(final @NonNull String name, final @NonNull Function<T, U> getter, final @NonNull BiConsumer<T, U> setter) {
-        final var child = new ObjectProperty<U>(getName() + "-" + name, propertySupport);
+    public <U extends @Nullable Object> ObjectProperty<U> child(final String name, final Function<T, U> getter, final BiConsumer<T, U> setter) {
+        final var child = new ObjectProperty<>(getName() + "-" + name, propertySupport, getter.apply(getValue()));
         asChild(child, getter, setter);
         return child;
     }
 
-    public <U> void asChild(final @NonNull ObjectProperty<U> child, final @NonNull Function<T, U> getter,
+    public <U> void asChild(final ObjectProperty<U> child, final Function<T, U> getter,
                             final BiConsumer<T, U> setter) {
         this.addListener(p -> child.setValue(this, getter.apply(this.getValue())));
         child.addListener(c -> {
@@ -84,7 +77,7 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
         return oldValue;
     }
 
-    public void setValue(final Object caller, @Nullable final T newValue) {
+    public void setValue(final Object caller, final T newValue) {
         setObjectValue(caller, newValue);
     }
 
@@ -102,7 +95,7 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
     }
 
     @Override
-    public void reset(final @NonNull Object caller) {
+    public void reset(final Object caller) {
         setObjectValue(this, defaultValue);
     }
 
@@ -110,7 +103,7 @@ public class ObjectProperty<T> extends AbstractTypedProperty<T> {
         return getObjectValue() != null;
     }
 
-    public <R> R map(@NonNull Function<T, R> mapper) {
+    public <R> R map(Function<T, R> mapper) {
         return mapper.apply(value);
     }
 

@@ -11,10 +11,12 @@ import ch.scaille.generators.util.CodeGeneratorParams;
 import ch.scaille.generators.util.GenerationMetadata;
 import ch.scaille.util.helpers.ClassFinder;
 import ch.scaille.util.helpers.Logs;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * To generate MVC model files, based on model classes 
  */
+@NullMarked
 public class GuiModelGenerator {
 
 	public static void main(final String[] args) throws IOException {

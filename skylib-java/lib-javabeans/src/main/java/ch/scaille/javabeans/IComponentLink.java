@@ -1,21 +1,21 @@
 package ch.scaille.javabeans;
 
-import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Interface to the Component binding.
  * <p>
  *
- * @author Sebastien Caille
- *
  * @param <T> the data type handled by the component
  */
-public interface IComponentLink<T> {
+@NullMarked
+public interface IComponentLink<T extends @Nullable Object> {
 
-	void setValueFromComponent(@NonNull Object component, T componentValue);
+    void setValueFromComponent(Object component, T componentValue);
 
-	void reloadComponentValue();
+    void reloadComponentValue();
 
-	void unbind();
+    void unbind();
 
 }

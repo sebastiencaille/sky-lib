@@ -39,9 +39,10 @@ import ch.scaille.gui.swing.model.ListModelTableModel;
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
-import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class SwingBindings {
 
     private SwingBindings() {
@@ -53,7 +54,7 @@ public class SwingBindings {
      * @param <T> a value type
      * @param <C> a component type
      */
-    public interface IListenerRegistration<T, C> {
+    public interface IListenerRegistration<T extends @Nullable Object, C> {
 
         void addListener(C component, IComponentLink<T> converter);
 
@@ -89,7 +90,9 @@ public class SwingBindings {
 
         @Override
         public void removeListener(final C component) {
-            removeListener.accept(component, listener);
+            if (listener != null) {
+                removeListener.accept(component, listener);
+            }
         }
 
     }
@@ -97,23 +100,24 @@ public class SwingBindings {
     /**
      *
      * @param component               an awt component
-     * @param componentReaderListener the listener registration that propagate value
+     * @param componentReaderListener the listener that propagates value
      *                                changed by the component
      * @param componentWriter         the consumer that sets the value of the
      *                                component based on the incoming value
-     * @param defaultValue            a default value for null incoming value
      */
-    public static <T, C extends JComponent> IComponentBinding<T> rw(final C component,
-                                                                    final IListenerRegistration<T, C> componentReaderListener, final Consumer<T> componentWriter,
-                                                                    final T defaultValue) {
+    public static <T extends @Nullable Object, C extends JComponent>
+    IComponentBinding<T> rw(final C component,
+                            final IListenerRegistration<T, C> componentReaderListener,
+                            final Consumer<T> componentWriter) {
         return new IComponentBinding<>() {
+
             @Override
-            public void setComponentValue(@NonNull final IComponentChangeSource source, final T value) {
-                componentWriter.accept(value != null ? value : defaultValue);
+            public void setComponentValue(final IComponentChangeSource source, final T value) {
+                componentWriter.accept(value);
             }
 
             @Override
-            public void addComponentValueChangeListener(@NonNull final IComponentLink<T> converter) {
+            public void addComponentValueChangeListener(final IComponentLink<T> converter) {
                 componentReaderListener.addListener(component, converter);
             }
 
@@ -129,7 +133,7 @@ public class SwingBindings {
         };
     }
 
-    public static String textOrNull(final String val) {
+    public static String textOrNull(@Nullable final String val) {
         return val != null ? val : "<null>";
     }
 
@@ -152,7 +156,7 @@ public class SwingBindings {
     }
 
     public static IComponentBinding<Boolean> selected(final JCheckBox cb) {
-        return rw(cb, itemListener(e -> true, e -> e.getStateChange() == ItemEvent.SELECTED), cb::setSelected, false);
+        return rw(cb, itemListener(e -> true, e -> e.getStateChange() == ItemEvent.SELECTED), cb::setSelected);
     }
 
     public static JTextFieldBinding value(final JTextField component) {
@@ -167,7 +171,7 @@ public class SwingBindings {
         return new JTextAreaBinding(component, readOnly);
     }
 
-    public static <T> IComponentBinding<T> selection(final JList<T> editor) {
+    public static <T> IComponentBinding<@Nullable T> selection(final JList<T> editor) {
         return new JListSelectionBinding<>(editor);
     }
 
@@ -175,7 +179,7 @@ public class SwingBindings {
         return new JListContentBinding<>(editor);
     }
 
-    public static <T> IComponentBinding<T> selection(final JTable editor, final ListModelTableModel<T, ?> tableModel) {
+    public static <T> IComponentBinding<@Nullable T> selection(final JTable editor, final ListModelTableModel<T, ?> tableModel) {
         return new JTableSelectionBinding<>(editor, tableModel);
     }
 
@@ -193,9 +197,9 @@ public class SwingBindings {
         return new JComboBoxContentBinding<>(component);
     }
 
-    public static <T> IComponentBinding<T> selection(final JComboBox<T> component) {
+    public static <T extends @Nullable Object> IComponentBinding<T> selection(final JComboBox<T> component) {
         return rw(component, itemListener(e -> e.getStateChange() == ItemEvent.SELECTED, e -> (T) e.getItem()),
-                component::setSelectedItem, null);
+                component::setSelectedItem);
     }
 
     private record ActionListenerImplementation<T>(IComponentLink<T> link,
@@ -215,10 +219,12 @@ public class SwingBindings {
 
     public static <T> IComponentBinding<T> group(final ButtonGroup group, final Object... mapping) {
         return new IComponentBinding<>() {
-            ActionListenerImplementation<T> actionListener;
+
+            @Nullable
+            private ActionListenerImplementation<T> actionListener;
 
             @Override
-            public void addComponentValueChangeListener(@NonNull final IComponentLink<T> link) {
+            public void addComponentValueChangeListener(final IComponentLink<T> link) {
                 actionListener = new ActionListenerImplementation<>(link, mapping, group);
                 final var elements = group.getElements();
                 while (elements.hasMoreElements()) {
@@ -227,7 +233,7 @@ public class SwingBindings {
             }
 
             @Override
-            public void setComponentValue(@NonNull final IComponentChangeSource source, final T value) {
+            public void setComponentValue(final IComponentChangeSource source, final T value) {
                 for (int i = 0; i < mapping.length; i += 2) {
                     if (Objects.equals(mapping[i], value)) {
                         group.setSelected(((AbstractButton) mapping[i + 1]).getModel(), true);

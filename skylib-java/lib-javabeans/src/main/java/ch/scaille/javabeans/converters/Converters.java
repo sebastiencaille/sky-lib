@@ -20,18 +20,22 @@ import ch.scaille.util.helpers.LambdaExt.BiFunctionWithException;
 import ch.scaille.util.helpers.LambdaExt.FunctionWithException;
 import ch.scaille.util.text.FormatterHelper;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public final class Converters {
 
     private Converters() {
-        // noop
+        // identity
     }
 
-    public static @NonNull <P, C> IConverter<P, C> wrap(IConverter<P, C> converter) {
+    public static <P extends @Nullable Object, C extends @Nullable Object> IConverter<P, C>
+    wrap(IConverter<P, C> converter) {
         return new IConverter<>() {
 
             @Override
-            public void initialize(@NonNull AbstractProperty p) {
+            public void initialize(AbstractProperty p) {
                 converter.initialize(p);
             }
 
@@ -48,55 +52,58 @@ public final class Converters {
     }
 
     /**
-     * Write only converter
+     * Write-only converter
      *
-     * @param <T>       type on property side
-     * @param <U>       type on component side
+     * @param <P>       type of the property side
+     * @param <C>       type of the component side
      * @param prop2comp the function to convert value from property side to
      *                  component side
      */
-    public static @NonNull <T, U> IConverter<T, U> listen(final @NonNull Function<T, U> prop2comp) {
+    public static <P extends @Nullable Object, C extends @Nullable Object> IConverter<P, C> listen(final Function<P, C> prop2comp) {
         return converter(prop2comp, o -> {
             throw new WriteOnlyException();
         });
     }
 
     /**
-     * Write only converter
+     * Write-only converter
      *
-     * @param <T>       type on property side
-     * @param <U>       type on component side
+     * @param <P>       type of the property side
+     * @param <C>       type of the component side
      * @param prop2comp the function to convert value from property side to
      *                  component side
      */
-    public static @NonNull <T, U, K> IConverterWithContext<T, U, K> listen(final @NonNull PropertiesContext<K> context,
-                                                                           final @NonNull BiFunction<T, @NonNull K, U> prop2comp) {
+    public static <P extends @Nullable Object, C extends @Nullable Object, K>
+    IConverterWithContext<P, C, K> listen(final PropertiesContext<K> context,
+                                          final BiFunction<P, K, C> prop2comp) {
         return converter(context, prop2comp, (o, k) -> {
             throw new WriteOnlyException();
         });
     }
 
 
-    public static @NonNull <T, C> IConverter<T, C> converter(final @NonNull Function<T, C> prop2comp,
-                                                    final @NonNull FunctionWithException<C, T, ConversionException> comp2prop) {
+    public static <P extends @Nullable Object, C extends @Nullable Object>
+    IConverter<P, C> converter(final Function<P, C> prop2comp,
+                               final FunctionWithException<C, P, ConversionException> comp2prop) {
         return new IConverter<>() {
 
             @Override
-            public C convertPropertyValueToComponentValue(final T propertyValue) {
+            public C convertPropertyValueToComponentValue(final P propertyValue) {
                 return prop2comp.apply(propertyValue);
             }
 
             @Override
-            public T convertComponentValueToPropertyValue(final C componentValue) throws ConversionException {
+            public P convertComponentValueToPropertyValue(final C componentValue) throws ConversionException {
                 return comp2prop.apply(componentValue);
             }
 
         };
     }
 
-    public static @NonNull <P, C, K> IConverterWithContext<P, C, K> converter(final @NonNull PropertiesContext<K> context,
-                                                                              final BiFunction<P, @NonNull K, C> prop2comp,
-                                                                              final BiFunctionWithException<C, @NonNull K, P, ConversionException> comp2prop) {
+    public static <P extends @Nullable Object, C extends @Nullable Object, K>
+    IConverterWithContext<P, C, K> converter(final PropertiesContext<K> context,
+                                             final BiFunction<P, K, C> prop2comp,
+                                             final BiFunctionWithException<C, K, P, ConversionException> comp2prop) {
         return new IConverterWithContext<>() {
 
             @Override
@@ -110,7 +117,7 @@ public final class Converters {
             }
 
             @Override
-            public @NonNull PropertiesContext<K> contextProperties() {
+            public PropertiesContext<K> contextProperties() {
                 return context;
             }
 
@@ -118,19 +125,18 @@ public final class Converters {
     }
 
 
-    public static @NonNull <T, C> IConverter<List<T>, List<C>> listConverter(final @NonNull Function<T, C> prop2comp,
-                                                                    final @NonNull FunctionWithException<C, T, ConversionException> comp2prop) {
+    public static <P, C> IConverter<List<P>, List<C>> listConverter(final Function<P, C> prop2comp,
+                  final FunctionWithException<C, P, ConversionException> comp2prop) {
         return new IConverter<>() {
 
             @Override
-            public List<C> convertPropertyValueToComponentValue(final List<T> propertyValue) {
+            public List<C> convertPropertyValueToComponentValue(final List<P> propertyValue) {
                 return propertyValue.stream().map(prop2comp).toList();
             }
 
             @Override
-            public List<T> convertComponentValueToPropertyValue(final List<C> componentValue)
-                    throws ConversionException {
-                final var result = new ArrayList<T>(componentValue.size());
+            public List<P> convertComponentValueToPropertyValue(final List<C> componentValue) throws ConversionException {
+                final var result = new ArrayList<P>(componentValue.size());
                 for (final var compValue : componentValue) {
                     result.add(comp2prop.apply(compValue));
                 }
@@ -140,7 +146,7 @@ public final class Converters {
         };
     }
 
-    public static @NonNull <V> IConverter<List<V>, List<V>> filter(final @NonNull Predicate<V> filter) {
+    public static <V> IConverter<List<V>, List<V>> filter(final Predicate<V> filter) {
         return new IConverter<>() {
             @Override
             public List<V> convertPropertyValueToComponentValue(final List<V> propertyValue) {
@@ -154,41 +160,41 @@ public final class Converters {
         };
     }
 
-    public static @NonNull <T, C> IConverter<List<T>, List<C>> listConverter(final @NonNull Function<T, C> prop2comp) {
+    public static <P, C> IConverter<List<P>, List<C>> listConverter(final Function<P, C> prop2comp) {
         return new IConverter<>() {
 
             @Override
-            public List<C> convertPropertyValueToComponentValue(final List<T> propertyValue) {
+            public List<C> convertPropertyValueToComponentValue(final List<P> propertyValue) {
                 return propertyValue.stream().map(prop2comp).toList();
             }
 
             @Override
-            public List<T> convertComponentValueToPropertyValue(final List<C> componentValue) {
+            public List<P> convertComponentValueToPropertyValue(final List<C> componentValue) {
                 throw new WriteOnlyException();
             }
 
         };
     }
 
-    public static @NonNull <T, C> IConverter<List<T>, List<C>> listConverter(final IConverter<T, C> prop2comp) {
+    public static <P, C> IConverter<List<P>, List<C>> listConverter(final IConverter<P, C> prop2comp) {
         return new IConverter<>() {
 
             @Override
-            public List<C> convertPropertyValueToComponentValue(final List<T> propertyValue) {
+            public List<C> convertPropertyValueToComponentValue(final List<P> propertyValue) {
                 return propertyValue.stream().map(prop2comp::convertPropertyValueToComponentValue)
                         .toList();
             }
 
             @Override
-            public List<T> convertComponentValueToPropertyValue(final List<C> componentValue) {
+            public List<P> convertComponentValueToPropertyValue(final List<C> componentValue) {
                 throw new WriteOnlyException();
             }
 
         };
     }
 
-    public static @NonNull <C> IConverter<Integer, C> intConverter(final @NonNull IntFunction<C> prop2comp,
-                                                          final @NonNull FunctionWithException<C, @NonNull Integer, ConversionException> comp2prop) {
+    public static <C extends @Nullable Object> IConverter<Integer, C> intConverter(final IntFunction<C> prop2comp,
+                                                          final FunctionWithException<C, Integer, ConversionException> comp2prop) {
         return new IConverter<>() {
 
             @Override
@@ -204,8 +210,8 @@ public final class Converters {
         };
     }
 
-    public static @NonNull <C> IConverter<Long, C> longConverter(final @NonNull LongFunction<C> prop2comp,
-                                                        final @NonNull FunctionWithException<C, @NonNull Long, ConversionException> comp2prop) {
+    public static <C extends @Nullable Object> IConverter<Long, C> longConverter(final LongFunction<C> prop2comp,
+                                                        final FunctionWithException<C, Long, ConversionException> comp2prop) {
         return new IConverter<>() {
 
             @Override
@@ -221,8 +227,8 @@ public final class Converters {
         };
     }
 
-    public static @NonNull <C> IConverter<Boolean, C> booleanConverter(final @NonNull Function<Boolean, C> prop2comp,
-                                                              final @NonNull FunctionWithException<C, @NonNull Boolean, ConversionException> comp2prop) {
+    public static <C extends @Nullable Object> IConverter<Boolean, C> booleanConverter(final Function<Boolean, C> prop2comp,
+                                                              final FunctionWithException<C, Boolean, ConversionException> comp2prop) {
         return new IConverter<>() {
 
             @Override
@@ -238,8 +244,8 @@ public final class Converters {
         };
     }
 
-    public static @NonNull <C> IConverter<Float, C> floatConverter(final @NonNull Function<Float, C> prop2comp,
-                                                          final @NonNull FunctionWithException<C, @NonNull Float, ConversionException> comp2prop) {
+    public static <C extends @Nullable Object> IConverter<Float, C> floatConverter(final Function<Float, C> prop2comp,
+                                                          final FunctionWithException<C, Float, ConversionException> comp2prop) {
         return new IConverter<>() {
 
             @Override
@@ -255,48 +261,45 @@ public final class Converters {
         };
     }
 
-    public static @NonNull IConverter<ConversionError, String> guiErrorToString() {
+    public static IConverter<ConversionError, String> guiErrorToString() {
         return new ConversionErrorToStringConverter("");
     }
 
-    public static @NonNull IConverter<ConversionError, String> guiErrorToString(String noError) {
+    public static IConverter<ConversionError, String> guiErrorToString(String noError) {
         return new ConversionErrorToStringConverter(noError);
     }
 
-    public static @NonNull <K, V, U> IConverter<Map<K, V>, U> mapContains(K key, U either, U or) {
+    public static <K, V, U> IConverter<Map<K, V>, U> mapContains(K key, U either, U or) {
         return listen(e -> e.containsKey(key) ? either : or);
     }
 
-    public static @NonNull IConverter<String, String> toSingleLine() {
-        return converter(s -> s, s -> s != null ? s.replace('\n', ' ') : null);
+    public static IConverter<@Nullable String, @Nullable String> toSingleLine(char separator) {
+        return converter(s -> s, s -> s != null ? s.replace('\n', separator) : null);
     }
 
-    public static @NonNull <T> IConverter<T, T> identity() {
+    public static <P> IConverter<P, P> identity() {
         return converter(Function.identity(), LambdaExt.identity());
     }
 
-    public static @NonNull IConverter<Integer, Integer> intIdentity() {
+    public static IConverter<Integer, Integer> intIdentity() {
         return intConverter(i -> i, LambdaExt.identity());
     }
 
-    public static @NonNull IConverter<Long, Long> longIdentity() {
+    public static IConverter<Long, Long> longIdentity() {
         return longConverter(l -> l, LambdaExt.identity());
     }
 
-    public static @NonNull IConverter<Boolean, Boolean> booleanIdentity() {
+    public static IConverter<Boolean, Boolean> booleanIdentity() {
         return booleanConverter(Function.identity(), LambdaExt.identity());
     }
 
-    public static @NonNull IConverter<Float, Float> floatIdentity() {
+    public static IConverter<Float, Float> floatIdentity() {
         return floatConverter(Function.identity(), LambdaExt.identity());
     }
 
-    public static @NonNull <T extends Number> FunctionWithException<String, T, ConversionException> numberToString(
-            final @NonNull FunctionWithException<String, T, NumberFormatException> converter) {
+    public static <P extends Number> FunctionWithException<String, P, ConversionException> numberToString(
+            final FunctionWithException<String, P, NumberFormatException> converter) {
         return c -> {
-            if (c == null) {
-                throw new ConversionException("Null value is not allowed");
-            }
             try {
                 return converter.apply(c);
             } catch (final NumberFormatException e) {
@@ -305,57 +308,57 @@ public final class Converters {
         };
     }
 
-    public static @NonNull IConverter<String, String> stringToString() {
+    public static IConverter<@Nullable String, @Nullable String> stringToString() {
         return converter(s -> (s != null && !s.isEmpty()) ? s : null, s -> s != null ? s : "");
     }
 
-    public static @NonNull IConverter<Integer, String> intToString() {
+    public static IConverter<Integer, String> intToString() {
         return intConverter(Integer::toString, numberToString(Integer::parseInt)); // NOSONAR
     }
 
-    public static @NonNull IConverter<Long, String> longToString() {
+    public static IConverter<Long, String> longToString() {
         return longConverter(Long::toString, numberToString(Long::parseLong)); // NOSONAR
     }
 
-    public static @NonNull IConverter<Boolean, String> booleanToString() {
+    public static IConverter<Boolean, String> booleanToString() {
         return booleanConverter(b -> Boolean.toString(b), Boolean::parseBoolean); // NOSONAR
     }
 
-    public static @NonNull <T> IConverter<T, String> objectToString() {
+    public static <P> IConverter<P, String> objectToString() {
         return listen(Object::toString);
     }
 
-    public static @NonNull <T extends Number> IConverter<T, String> numberToSize() {
+    public static <T extends Number> IConverter<T, String> numberToSize() {
         return listen(FormatterHelper::toSize);
     }
 
-    public static @NonNull <T> IConverter<T, Boolean> isNotNull() {
+    public static <P extends @Nullable Object> IConverter<P, Boolean> isNotNull() {
         return listen(Objects::nonNull);
     }
 
-    public static @NonNull <T> IConverter<T, T> noOp(final BiConsumer<Boolean, T> consumer) {
+    public static <P> IConverter<P, P> identity(final BiConsumer<Boolean, P> consumer) {
         return new IConverter<>() {
 
             @Override
-            public T convertPropertyValueToComponentValue(final T propertyValue) {
+            public P convertPropertyValueToComponentValue(final P propertyValue) {
                 consumer.accept(true, propertyValue);
                 return propertyValue;
             }
 
             @Override
-            public T convertComponentValueToPropertyValue(final T componentValue) {
+            public P convertComponentValueToPropertyValue(final P componentValue) {
                 consumer.accept(false, componentValue);
                 return componentValue;
             }
         };
     }
 
-    public static @NonNull <C> IConverter<Boolean, C> either(final Supplier<C> either, final Supplier<C> or) {
+    public static <C extends @Nullable Object> IConverter<Boolean, C> either(final Supplier<C> either, final Supplier<C> or) {
         return new IConverter<>() {
 
             @Override
             public C convertPropertyValueToComponentValue(final Boolean propertyValue) {
-                if (propertyValue != null && propertyValue) {
+                if (propertyValue) {
                     return either.get();
                 }
                 return or.get();
@@ -371,7 +374,7 @@ public final class Converters {
         };
     }
 
-    public static @NonNull <P extends Enum<P>> IConverter<P, Boolean> matches(P enumValue) {
+    public static <P extends Enum<P>> IConverter<P, Boolean> matches(P enumValue) {
         return new IConverter<>() {
 
             @Override
@@ -384,7 +387,7 @@ public final class Converters {
              */
             @Override
             public P convertComponentValueToPropertyValue(final Boolean componentValue) throws ConversionException {
-                if (componentValue == null || !componentValue) {
+                if (!componentValue) {
                     throw new ChainInhibitedException("Component is false");
                 }
                 return enumValue;

@@ -16,6 +16,7 @@ import javax.swing.event.EventListenerList;
 import ch.scaille.gui.model.views.IListView;
 import ch.scaille.gui.model.views.IListViewOwner;
 import ch.scaille.gui.model.views.ListViews;
+import ch.scaille.gui.model.views.StaticListView;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.PropertyChangeSupportController;
 import ch.scaille.javabeans.properties.ObjectProperty;
@@ -36,7 +37,7 @@ import org.jspecify.annotations.Nullable;
  * compute the actual row of another edition with a log(n) complexity.
  * <p>
  * The sorting and filtering is done using an {@link IListView}. A default
- * implementation ({@link ch.scaille.gui.model.views.ListView) is provided. Note
+ * implementation ({@link StaticListView ) is provided. Note
  * that total ordering is mandatory to have a log(n) access. <p> The lists can
  * be stacked. If no ListView is defined for a list, the IListView of the parent
  * is used. <p>
@@ -48,7 +49,7 @@ import org.jspecify.annotations.Nullable;
  * <p>
  */
 @NullMarked
-public class ListModelContent<T> extends AbstractListModel<T>
+public class ListModelContent<T extends @Nullable Object> extends AbstractListModel<T>
         implements ISourceModel<T>, Iterable<T>, ListModelRef<T> {
 
     @Serial
@@ -98,7 +99,7 @@ public class ListModelContent<T> extends AbstractListModel<T>
     /**
      * Marker
      */
-    private interface IChildModelListener<T> extends IListModelListener<T> {
+    private interface IChildModelListener<T extends @Nullable Object> extends IListModelListener<T> {
 //	just a marker
     }
 
@@ -440,15 +441,15 @@ public class ListModelContent<T> extends AbstractListModel<T>
     private Optional<T> removeFromModel(final T value) {
         checkNoEdition();
         final var row = getRowOf(value);
-        final T removed;
+
         if (row < 0) {
             return Optional.empty();
         }
         fireMutating();
-        removed = data.remove(row);
+        final T removed = data.remove(row);
         fireIntervalRemoved(this, row, row);
         fireValueRemoved(value);
-        return Optional.of(removed);
+        return Optional.ofNullable(removed);
     }
 
     @Override
@@ -571,19 +572,19 @@ public class ListModelContent<T> extends AbstractListModel<T>
         if (index < 0) {
             return index;
         }
-        if (data.get(index).equals(value)) {
+        if (Objects.equals(data.get(index), value)) {
             return index;
         }
         var min = index - 1;
         while (min >= 0 && viewProperty.getValue().compare(value, data.get(min)) == 0) {
-            if (data.get(min).equals(value)) {
+            if (Objects.equals(data.get(min), value)) {
                 return min;
             }
             min--;
         }
         var max = index + 1;
         while (max < data.size() && viewProperty.getValue().compare(value, data.get(max)) == 0) {
-            if (data.get(max).equals(value)) {
+            if (Objects.equals(data.get(max), value)) {
                 return max;
             }
             max++;
@@ -613,7 +614,7 @@ public class ListModelContent<T> extends AbstractListModel<T>
         if (row < 0) {
             return Optional.empty();
         }
-        return Optional.of(getValueAt(row));
+        return Optional.ofNullable(getValueAt(row));
     }
 
     /**

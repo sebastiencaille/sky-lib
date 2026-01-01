@@ -5,13 +5,13 @@ import java.util.Collection;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 
-import ch.scaille.gui.mvc.ComponentBindingAdapter;
 import ch.scaille.gui.swing.SwingExt;
+import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class JComboBoxContentBinding<T, U extends Collection<T>> extends ComponentBindingAdapter<U> {
+public class JComboBoxContentBinding<T, U extends Collection<T>> implements IComponentBinding<U> {
 
 	private final JComboBox<T> box;
 

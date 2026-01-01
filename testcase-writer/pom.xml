@@ -24,7 +24,7 @@
 		<module>webapp</module>
 	</modules>
 	<properties>
-		<java.version>25</java.version>
+		<java.version>24</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 

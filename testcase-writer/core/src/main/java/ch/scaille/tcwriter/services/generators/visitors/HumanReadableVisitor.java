@@ -9,11 +9,11 @@ import java.util.MissingFormatArgumentException;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+import ch.scaille.tcwriter.model.dictionary.ParameterNature;
 import com.google.common.annotations.VisibleForTesting;
 
 import ch.scaille.tcwriter.model.IdObject;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
-import ch.scaille.tcwriter.model.dictionary.TestParameterFactory.ParameterNature;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestReference;
@@ -65,7 +65,7 @@ public class HumanReadableVisitor {
 		case TestReference testRef ->
 			"[" + testRef.toDescription().humanReadable() + ": " + parameterValue.getSimpleValue() + "]";
 			
-		case TestParameterFactory f when f.getNature() == ParameterNature.SIMPLE_TYPE && 
+		case TestParameterFactory f when f.getNature() == ParameterNature.SIMPLE_TYPE &&
 				(Boolean.class.getName().equals(f.getParameterType()) || Boolean.TYPE.getName().equals(f.getParameterType())) ->
 			Boolean.TRUE.toString().equals(parameterValue.getSimpleValue()) ? "yes" : "no";
 			

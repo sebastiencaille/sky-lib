@@ -22,7 +22,7 @@ public class BootstrapConfig {
 
 	private final Path dataFolder;
 	
-	public BootstrapConfig(@Value("${app.dataFolder:/var/lib/tcwriter/data}") Path dataFolder) {
+	public BootstrapConfig(@Value("${app.dataFolder:#{systemProperties['user.home'] + '/.var/lib/tcwriter/data'}}") Path dataFolder) {
 		this.dataFolder = dataFolder;
 	}
 

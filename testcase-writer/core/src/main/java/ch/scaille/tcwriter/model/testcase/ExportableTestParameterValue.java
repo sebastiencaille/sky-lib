@@ -2,13 +2,13 @@ package ch.scaille.tcwriter.model.testcase;
 
 import java.util.UUID;
 
+import ch.scaille.tcwriter.model.dictionary.ParameterNature;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import ch.scaille.tcwriter.model.ExportReference;
 import ch.scaille.tcwriter.model.dictionary.TestApiParameter;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
-import ch.scaille.tcwriter.model.dictionary.TestParameterFactory.ParameterNature;
 
 @JsonIgnoreProperties("factory")
 public class ExportableTestParameterValue extends TestParameterValue {

@@ -23,7 +23,7 @@ import ch.scaille.util.persistence.DaoFactory;
 public class StorageConfig {
 
 	@Bean
-	DaoFactory daoFactory(@Value("${app.dataFolder:/var/lib/tcwriter/data}") Path dataFolder) {
+	DaoFactory daoFactory(@Value("${app.dataFolder:#{systemProperties['user.home'] + '/.var/lib/tcwriter/data'}}") Path dataFolder) {
 		return DaoFactory.cpPlus(Set.of(DaoConfigs.USER_RESOURCES), new DaoFactory.FsDsFactory(dataFolder));
 	}
 
@@ -50,8 +50,7 @@ public class StorageConfig {
 
 	@Bean
 	ObjectMapper defaultMapper() {
-		final var mapper = new ObjectMapper();
-		return mapper;
+		return new ObjectMapper();
 	}
 
 }

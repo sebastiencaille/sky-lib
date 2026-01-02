@@ -1,6 +1,7 @@
 package ch.scaille.tcwriter.model.testcase;
 
 import ch.scaille.tcwriter.model.TestObjectDescription;
+import ch.scaille.tcwriter.model.dictionary.ParameterNature;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 
 public class TestReference extends TestParameterFactory {

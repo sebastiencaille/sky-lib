@@ -28,6 +28,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
+import ch.scaille.tcwriter.model.dictionary.ParameterNature;
 import com.google.common.base.Strings;
 
 import ch.scaille.gui.model.ListModel;
@@ -40,7 +41,6 @@ import ch.scaille.tcwriter.gui.editors.params.TestParameterValueTableModel.Param
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.tcwriter.model.dictionary.TestApiParameter;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
-import ch.scaille.tcwriter.model.dictionary.TestParameterFactory.ParameterNature;
 import ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;

@@ -17,14 +17,7 @@ import ch.scaille.tcwriter.annotations.TCCheck;
 import ch.scaille.tcwriter.annotations.TCRole;
 import ch.scaille.tcwriter.model.IdObject;
 import ch.scaille.tcwriter.model.TestObjectDescription;
-import ch.scaille.tcwriter.model.dictionary.StepClassifier;
-import ch.scaille.tcwriter.model.dictionary.TestAction;
-import ch.scaille.tcwriter.model.dictionary.TestActor;
-import ch.scaille.tcwriter.model.dictionary.TestApiParameter;
-import ch.scaille.tcwriter.model.dictionary.TestDictionary;
-import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
-import ch.scaille.tcwriter.model.dictionary.TestParameterFactory.ParameterNature;
-import ch.scaille.tcwriter.model.dictionary.TestRole;
+import ch.scaille.tcwriter.model.dictionary.*;
 
 /**
  * To generate a Dictionary from a Java class

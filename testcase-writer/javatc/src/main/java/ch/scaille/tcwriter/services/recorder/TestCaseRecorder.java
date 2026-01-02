@@ -14,11 +14,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import ch.scaille.tcwriter.model.TestObjectDescription;
-import ch.scaille.tcwriter.model.dictionary.TestAction;
-import ch.scaille.tcwriter.model.dictionary.TestActor;
-import ch.scaille.tcwriter.model.dictionary.TestApiParameter;
-import ch.scaille.tcwriter.model.dictionary.TestDictionary;
-import ch.scaille.tcwriter.model.dictionary.TestParameterFactory.ParameterNature;
+import ch.scaille.tcwriter.model.dictionary.*;
 import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
 import ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue;
 import ch.scaille.tcwriter.model.testcase.ExportableTestStep;
@@ -62,10 +58,6 @@ public class TestCaseRecorder implements ITestCaseRecorder {
 
     public List<TestStep> getSteps() {
         return testSteps;
-    }
-
-    public Map<Object, TestParameterValue> getTestParameterValues() {
-        return testParameterValues;
     }
 
     public void reset() {

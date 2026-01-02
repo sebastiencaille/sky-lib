@@ -16,10 +16,10 @@ import ch.scaille.generators.util.JavaCodeGenerator;
 import ch.scaille.generators.util.Template;
 import ch.scaille.tcwriter.model.IdObject;
 import ch.scaille.tcwriter.model.TestCaseException;
+import ch.scaille.tcwriter.model.dictionary.ParameterNature;
 import ch.scaille.tcwriter.model.dictionary.TestApiParameter;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
-import ch.scaille.tcwriter.model.dictionary.TestParameterFactory.ParameterNature;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestReference;
@@ -176,7 +176,7 @@ public class TestCaseToJunitVisitor {
 						|| Long.TYPE.getName().equals(f.getParameterType())) ->
 			parametersContent.append(parameterValue.getSimpleValue()).append("L");
 
-		case TestParameterFactory f when f.getNature() == ParameterNature.SIMPLE_TYPE ->
+		case TestParameterFactory f when ParameterNature.SIMPLE_TYPE == f.getNature() ->
 			parametersContent.append(parameterValue.getSimpleValue());
 
 		case TestReference f when f.getNature() == ParameterNature.REFERENCE -> parametersContent.append(f.getName());

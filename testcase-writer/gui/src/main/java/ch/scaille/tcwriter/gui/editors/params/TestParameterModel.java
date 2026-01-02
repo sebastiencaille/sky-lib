@@ -4,6 +4,7 @@ import ch.scaille.gui.mvc.GuiModel;
 import ch.scaille.javabeans.properties.ListProperty;
 import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
+import ch.scaille.tcwriter.model.dictionary.ParameterNature;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestReference;
@@ -14,11 +15,11 @@ import org.jspecify.annotations.Nullable;
 @Getter
 @NullMarked
 public class TestParameterModel extends GuiModel {
-	private final ObjectProperty<TestParameterFactory.ParameterNature> valueNature;
-	private final ObjectProperty<String> simpleValue;
+	private final ObjectProperty<ParameterNature> valueNature;
+	private final ObjectProperty<@Nullable String> simpleValue;
 	private final ObjectProperty<@Nullable TestReference> selectedReference;
 	private final ListProperty<TestReference> references;
-	private final ObjectProperty<TestParameterFactory> testApi;
+	private final ObjectProperty<@Nullable TestParameterFactory> testApi;
 	private final ObjectProperty<TestParameterValue> editedParameterValue;
 	private final String prefix;
 
@@ -30,12 +31,12 @@ public class TestParameterModel extends GuiModel {
 		this.editedParameterValue = editedParameterValue;
 		this.testApi = testApi;
 
-		valueNature = new ObjectProperty<>(prefix + "-nature", this, TestParameterFactory.ParameterNature.SIMPLE_TYPE);
-		simpleValue = editedParameterValue.child(prefix + "-simpleValue", TestParameterValue::getSimpleValue,
+		this.valueNature = new ObjectProperty<>(prefix + "-nature", this, ParameterNature.SIMPLE_TYPE);
+		this.simpleValue = editedParameterValue.child(prefix + "-simpleValue", TestParameterValue::getSimpleValue,
 				TestParameterValue::setSimpleValue);
-		selectedReference = new ObjectProperty<>(prefix + "-reference", this, null);
-		references = new ListProperty<>(prefix + "-references", this);
-		editedParameterValue.addListener(getPropertySupport().detachWhenPropLoading());
+		this.selectedReference = new ObjectProperty<>(prefix + "-reference", this, null);
+		this.references = new ListProperty<>(prefix + "-references", this);
+		this.editedParameterValue.addListener(getPropertySupport().detachWhenPropLoading());
 	}
 
 }

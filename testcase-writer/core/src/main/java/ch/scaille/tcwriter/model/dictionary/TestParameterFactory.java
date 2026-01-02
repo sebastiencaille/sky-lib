@@ -5,6 +5,7 @@ import java.util.List;
 
 import ch.scaille.tcwriter.model.IdObject;
 import ch.scaille.tcwriter.model.NamedObject;
+import lombok.Getter;
 
 /**
  * Factory to create test parameter values
@@ -12,21 +13,8 @@ import ch.scaille.tcwriter.model.NamedObject;
  * @author scaille
  *
  */
+@Getter
 public class TestParameterFactory extends NamedObject {
-
-	public enum ParameterNature {
-		SIMPLE_TYPE(true), TEST_API(false), REFERENCE(true), NOT_SET(false);
-
-		private final boolean requiresSimpleValue;
-
-		ParameterNature(final boolean requiresSimpleValue) {
-			this.requiresSimpleValue = requiresSimpleValue;
-		}
-
-		public boolean isSimpleValue() {
-			return requiresSimpleValue;
-		}
-	}
 
 	public static final TestParameterFactory NO_FACTORY = new TestParameterFactory(IdObject.ID_NOT_SET,
 			IdObject.ID_NOT_SET, ParameterNature.NOT_SET, "");
@@ -47,15 +35,7 @@ public class TestParameterFactory extends NamedObject {
 		this.nature = nature;
 	}
 
-	public String getParameterType() {
-		return parameterType;
-	}
-
-	public ParameterNature getNature() {
-		return nature;
-	}
-
-	public TestApiParameter getMandatoryParameter(final int index) {
+    public TestApiParameter getMandatoryParameter(final int index) {
 		return mandatoryParameters.get(index);
 	}
 
@@ -70,11 +50,7 @@ public class TestParameterFactory extends NamedObject {
 		return mandatoryParameters.stream().anyMatch(p -> p.getId().equals(id));
 	}
 
-	public List<TestApiParameter> getMandatoryParameters() {
-		return mandatoryParameters;
-	}
-
-	public TestApiParameter getOptionalParameterById(final String id) {
+    public TestApiParameter getOptionalParameterById(final String id) {
 		return optionalParameters.stream()
 				.filter(p -> p.getId().equals(id))
 				.findFirst()
@@ -92,11 +68,7 @@ public class TestParameterFactory extends NamedObject {
 		return optionalParameters.stream().anyMatch(p -> p.getId().equals(id));
 	}
 
-	public List<TestApiParameter> getOptionalParameters() {
-		return optionalParameters;
-	}
-
-	public boolean hasType() {
+    public boolean hasType() {
 		return !TestApiParameter.NO_TYPE.equals(parameterType);
 	}
 

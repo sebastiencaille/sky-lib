@@ -57,7 +57,7 @@ public class ObjectProperty<T extends @Nullable Object> extends AbstractTypedPro
         return child;
     }
 
-    public <U> void asChild(final ObjectProperty<U> child, final Function<T, U> getter,
+    public <U extends @Nullable Object> void asChild(final ObjectProperty<U> child, final Function<T, U> getter,
                             final BiConsumer<T, U> setter) {
         this.addListener(p -> child.setValue(this, getter.apply(this.getValue())));
         child.addListener(c -> {

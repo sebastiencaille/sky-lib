@@ -174,11 +174,13 @@ public class PollingBuilder<C,
 	 */
 	protected <R> PollingResult<C, R> poll(final Polling.PollingBuilder<C, R> polling) {
 		configurers.forEach(conf -> conf.accept(polling));
-		final var pollingResult = pilot.processResult(pilot.waitPollingSuccess(polling),
-				PollingResults.identity(),
-				(FailureHandler<C, R>) Objects.requireNonNull(failureHandler, "Failure handler was not set"));
-		reset();
-		return pollingResult;
+		try {
+			return pilot.processResult(pilot.waitPollingSuccess(polling),
+					PollingResults.identity(),
+					(FailureHandler<C, R>) Objects.requireNonNull(failureHandler, "Failure handler was not set"));
+		} finally {
+			reset();
+		}
 	}
 
 	public void reset() {

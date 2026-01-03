@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
@@ -84,10 +84,10 @@ public class SwingExt {
 		return component.toString();
 	}
 
-	private static ResourceBundle DEFAULT_BUNDLE;
-	private static Function<String, String> LABEL_PROVIDER = key -> {
+	private static ResourceBundle defaultBundle;
+	private static UnaryOperator<String> labelProvider = key -> {
 		try {
-			return Objects.requireNonNull(DEFAULT_BUNDLE, "Bundle not configured").getString(key);
+			return Objects.requireNonNull(defaultBundle, "Bundle not configured").getString(key);
 		} catch (MissingResourceException e) {
 			return null;
 		}
@@ -98,29 +98,32 @@ public class SwingExt {
 			loadBundle(TRANSLATIONS_APPLICATION);
 		} catch (MissingResourceException r) {
 			Logs.of(SwingExt.class).info("Default bundle not found: " + TRANSLATIONS_APPLICATION);
-			DEFAULT_BUNDLE = null;
+			defaultBundle = null;
 		}
 	}
 
+	public static void setLabelProvider(UnaryOperator<String> labelProvider) {
+		SwingExt.labelProvider = labelProvider;
+	}
+
 	public static void loadBundle(String bundle) {
-		DEFAULT_BUNDLE = ResourceBundle.getBundle(bundle);
+		defaultBundle = ResourceBundle.getBundle(bundle);
 	}
 
 	public static String getText(String key) {
-		return LABEL_PROVIDER.apply(key);
+		return labelProvider.apply(key);
 	}
 
 	public static void configureTableHeaders(JTable table) {
 		table.setTableHeader(new JTableHeader(table.getColumnModel()) {
+			@Override
 			public String getToolTipText(MouseEvent e) {
 				int colIndex = columnModel.getColumnIndexAtX(e.getPoint().x);
 				int index = columnModel.getColumn(colIndex).getModelIndex();
 				return getText(columnKey(table, columnModel.getColumn(index), ".tooltip"));
 			}
 		});
-		table.getColumnModel().getColumns().asIterator().forEachRemaining(column -> {
-			column.setHeaderValue(getText(columnKey(table, column)));
-		});
+		table.getColumnModel().getColumns().asIterator().forEachRemaining(column -> column.setHeaderValue(getText(columnKey(table, column))));
 	}
 
 	private static String columnKey(JTable table, TableColumn column, String... suffix) {

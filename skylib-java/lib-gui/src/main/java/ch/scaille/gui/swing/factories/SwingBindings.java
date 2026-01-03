@@ -214,6 +214,19 @@ public class SwingBindings {
         }
 
         @Override
+        public boolean equals(Object obj) {
+            return (obj instanceof ActionListenerImplementation<?>(IComponentLink<?> link1, Object[] mapping1, ButtonGroup group1))
+                    && this.link.equals(link1)
+                    && Arrays.equals(this.mapping, mapping1)
+                    && this.group.equals(group1);
+        }
+
+        @Override
+        public int hashCode() {
+            return link.hashCode() + Arrays.hashCode(mapping) + group.hashCode();
+        }
+
+        @Override
         public String toString() {
             return "link = %s, mapping = %s, group = %s".formatted(link, Arrays.asList(mapping), group);
         }

@@ -88,7 +88,7 @@ public class FileSystemDao<T> extends AbstractFSSerializationDao<T> {
 
 	@Override
 	public ResourceMetaData resolve(String locator) throws IOException {
-		return findInFolder(locator).findFirst().orElseThrow(() -> new StorageException("Resource not found: " + locator));
+		return findInFolder(locator).findFirst().orElseThrow(() -> new StorageException("Resource not found: " + locator + " in: " + basePath));
 	}
 
 	@Override

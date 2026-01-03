@@ -1,41 +1,48 @@
 package ch.scaille.tcwriter.maven;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
-import java.io.File;
+import org.apache.maven.api.di.Provides;
+import org.apache.maven.api.plugin.testing.InjectMojo;
+import org.apache.maven.api.plugin.testing.MojoParameter;
+import org.apache.maven.api.plugin.testing.MojoTest;
+import org.apache.maven.model.Build;
+import org.apache.maven.model.Resource;
+import org.apache.maven.project.MavenProject;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
-import org.apache.maven.plugin.testing.MojoRule;
-import org.junit.Rule;
-import org.junit.Test;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 
-public class JavaTestCaseGeneratorMojoTest {
-	@Rule
-	public final MojoRule rule = new MojoRule() {
-		@Override
-		protected void before() {
-			// noop
-		}
+@MojoTest
+class JavaTestCaseGeneratorMojoTest {
 
-		@Override
-		protected void after() {
-			// noop
-		}
-	};
+    private static final String SRC_TEST_RESOURCES_UNIT = "src/test/resources/unit";
+    private static final String BUILD_DIR = "target";
 
-	/**
-	 * @throws Exception if any
-	 */
-	@Test
-	public void testGeneration() throws Exception {
-		File pom = new File("target/test-classes/nominal-test/");
-		assertNotNull(pom);
-		assertTrue(pom.exists());
+    @Provides
+    private MavenProject project() {
+        final var mock = mock(MavenProject.class);
+        final var unitTestResource = new Resource();
+        unitTestResource.setDirectory(SRC_TEST_RESOURCES_UNIT);
+        Mockito.when(mock.getTestResources()).thenReturn(List.of(unitTestResource));
+        final var mockBuild = Mockito.mock(Build.class);
+        Mockito.when(mockBuild.getDirectory()).thenReturn(BUILD_DIR);
+        Mockito.when(mock.getBuild()).thenReturn(mockBuild);
+        return mock;
+    }
 
-		JavaTestCaseGeneratorMojo myMojo = rule.lookupConfiguredMojo(pom,
-				"generateTestCases");
-		assertNotNull(myMojo);
-		myMojo.execute();
-
-	}
+    @Test
+    @InjectMojo(goal = "generateTestCases", pom = SRC_TEST_RESOURCES_UNIT + "/nominal.xml")
+    @MojoParameter(name = "dictionaryFolder", value = SRC_TEST_RESOURCES_UNIT + "/dictionaries")
+    @MojoParameter(name = "template", value = SRC_TEST_RESOURCES_UNIT + "/templates/TC.template")
+    void testGeneration(JavaTestCaseGeneratorMojo myMojo) throws Exception {
+        assertNotNull(myMojo);
+        myMojo.execute();
+        Assertions.assertTrue(Files.exists(Paths.get("target/generated-test-sources/tcwriter/ch/scaille/tcwriter/examples/GeneratedTest.java")));
+    }
 }

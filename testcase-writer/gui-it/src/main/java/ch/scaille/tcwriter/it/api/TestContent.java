@@ -3,7 +3,9 @@ package ch.scaille.tcwriter.it.api;
 import java.util.Arrays;
 
 import ch.scaille.tcwriter.annotations.TCApi;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public record TestContent(StepEdition[] steps, String[] humanReadable) {
 	
 	private static final String ACTOR_TEST_WRITER = "Test writer";
@@ -13,7 +15,17 @@ public record TestContent(StepEdition[] steps, String[] humanReadable) {
 		return (arg0 instanceof TestContent(StepEdition[] steps1, String[] readable))
 				&& Arrays.deepEquals(steps, steps1) && Arrays.deepEquals(humanReadable, readable);
 	}
-	
+
+	@Override
+	public int hashCode() {
+		return Arrays.hashCode(steps) + Arrays.hashCode(humanReadable);
+	}
+
+	@Override
+	public String toString() {
+		return "%s: steps=%s, humanReadable=%s".formatted(getClass().getSimpleName(), Arrays.toString(steps), Arrays.toString(humanReadable));
+	}
+
 	@TCApi(description = "Basic test", humanReadable = "Basic test")
 	public static TestContent basicTestContent() {
 		

@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ch.scaille.tcwriter.model.Metadata;
@@ -65,11 +64,9 @@ public class TestCaseFacade extends AbstractFacade {
 			testExecutor.startTest(config);
 			testRemoteControl.controlTest(loadedTC.getSteps().size());
 		} catch (InterruptedException e) {
-			LOGGER.log(Level.WARNING, e, () -> "Error during test execution");
 			Thread.currentThread().interrupt();
 			throw new WebRTException(e);
 		} catch (IOException | TestCaseException e) {
-			LOGGER.log(Level.WARNING, e, () -> "Error during test execution");
 			throw new WebRTException(e);
 		}
 	}

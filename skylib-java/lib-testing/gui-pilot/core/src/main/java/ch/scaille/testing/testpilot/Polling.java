@@ -26,16 +26,16 @@ import org.jspecify.annotations.Nullable;
 @Getter
 public class Polling<C, R> {
 
-    public static <C, R> Polling.PollingBuilder<C, R> of(PollingFunction<C, R> pollingFunction) {
-        return Polling.<C, R>builder().pollingFunction(pollingFunction);
+    public static <C1, R1> Polling.PollingBuilder<C1, R1> of(PollingFunction<C1, R1> pollingFunction) {
+        return Polling.<C1, R1>builder().pollingFunction(pollingFunction);
     }
 
-    public static <C, R> Polling.PollingBuilder<C, R> of(Predicate<PolledComponent<C>> precondition, PollingFunction<C, R> pollingFunction) {
-        return Polling.<C, R>builder().precondition(precondition).pollingFunction(pollingFunction);
+    public static <C1, R1> Polling.PollingBuilder<C1, R1> of(Predicate<PolledComponent<C1>> precondition, PollingFunction<C1, R1> pollingFunction) {
+        return Polling.<C1, R1>builder().precondition(precondition).pollingFunction(pollingFunction);
     }
 
-    public interface PollingFunction<C, R> {
-        PollingResult<C, R> poll(PolledComponent<C> context);
+    public interface PollingFunction<C1, R1> {
+        PollingResult<C1, R1> poll(PolledComponent<C1> context);
     }
 
     @Nullable

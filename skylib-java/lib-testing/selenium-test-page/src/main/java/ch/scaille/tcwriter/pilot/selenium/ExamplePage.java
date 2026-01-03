@@ -6,6 +6,7 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElem
 import java.time.Duration;
 import java.util.Objects;
 
+import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -17,6 +18,7 @@ import ch.scaille.testing.testpilot.selenium.PagePilot;
 import ch.scaille.testing.testpilot.selenium.SeleniumPilot;
 import ch.scaille.testing.testpilot.selenium.SeleniumPollingBuilder;
 
+@NullMarked
 public class ExamplePage extends PagePilot {
 
     private static final By ENABLE_TEST = By.id("EnableTest");
@@ -33,11 +35,13 @@ public class ExamplePage extends PagePilot {
         super(pilot);
     }
 
-    public class WaitEnableTestEnabledDelay extends ActionDelay {
+    public class WaitEnableTestEnabledDelay implements ActionDelay {
 
         public WaitEnableTestEnabledDelay() {
             // noop
         }
+
+
 
         @Override
         public void assertFinished() {
@@ -45,6 +49,11 @@ public class ExamplePage extends PagePilot {
             page.on(elementToBeClickable(ENABLE_TEST)).assertPresent();
             Assertions.assertTrue(Objects.requireNonNull(visibilityOfElementLocated(ENABLE_TEST).apply(getDriver()), "Element not found").isEnabled(),
                     "EnableTest is enabled");
+        }
+
+        @Override
+        public Duration applyOnTimeout(Duration currentDelay) {
+            return currentDelay;
         }
 
         @Override

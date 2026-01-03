@@ -1,6 +1,7 @@
 package ch.scaille.gui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
@@ -22,48 +23,46 @@ import ch.scaille.javabeans.properties.ListProperty;
 
 class TableTest {
 
-	private static final IListView<TestObject> VIEW = ListViews.sorted(Comparator.comparingInt(TestObject::getVal));
+    private static final IListView<TestObject> VIEW = ListViews.sorted(Comparator.comparingInt(TestObject::getVal));
 
-	@NullMarked
-	private static class Model extends GuiModel {
+    @NullMarked
+    private static class Model extends GuiModel {
 
-		private final ListProperty<TestObject> selection = new ListProperty<>("Selection", this);
+        private final ListProperty<TestObject> selection = new ListProperty<>("Selection", this);
 
-		public Model(final ModelConfiguration.ModelConfigurationBuilder config) {
-			super(config);
-		}
-	}
+        public Model(final ModelConfiguration.ModelConfigurationBuilder config) {
+            super(config);
+        }
+    }
 
-	@Test
-	void testSelectionOnInsert() throws InvocationTargetException, InterruptedException {
+    @Test
+    void testSelectionOnInsert() throws InvocationTargetException, InterruptedException {
 
-		final var support = PropertyChangeSupportController.mainGroup(this);
-		final var model = new Model(GuiModel.ModelConfiguration.builder().propertySupport(support));
-		support.transmitChangesBothWays();
+        final var support = PropertyChangeSupportController.mainGroup(this);
+        final var model = new Model(GuiModel.ModelConfiguration.builder().propertySupport(support));
+        support.transmitChangesBothWays();
 
-		final var listModel = new ListModel<>(VIEW);
-		final var tableModel = new TestObjectTableModel(listModel);
-		final var table = new JTable(tableModel);
-		model.selection.bind(SwingBindings.multipleSelection(table, tableModel));
+        final var listModel = new ListModel<>(VIEW);
+        final var tableModel = new TestObjectTableModel(listModel);
+        final var table = new JTable(tableModel);
+        model.selection.bind(SwingBindings.multipleSelection(table, tableModel));
 
-		final var object1 = new TestObject(1);
-		final var object3 = new TestObject(3);
-		final var object5 = new TestObject(5);
+        final var object1 = new TestObject(1);
+        final var object3 = new TestObject(3);
+        final var object5 = new TestObject(5);
 
-		EventQueue.invokeAndWait(new Runnable() {
+        EventQueue.invokeAndWait(() -> {
+                listModel.insert(object1);
+                listModel.insert(object3);
+                listModel.insert(object5);
+                model.selection.setValue(this, Collections.singletonList(object3));
+                listModel.insert(new TestObject(2));
+        });
 
-			@Override
-			public void run() {
-				listModel.insert(object1);
-				listModel.insert(object3);
-				listModel.insert(object5);
-				model.selection.setValue(this, Collections.singletonList(object3));
-				listModel.insert(new TestObject(2));
-				assertEquals(1, model.selection.getValue().size());
-				listModel.insert(new TestObject(4));
-				assertEquals(1, model.selection.getValue().size());
-			}
-		});
+        assertNotNull(model.selection.getValue());
+        assertEquals(1, model.selection.getValue().size());
+        EventQueue.invokeAndWait(() -> listModel.insert(new TestObject(4)));
+        assertEquals(1, model.selection.getValue().size());
 
-	}
+    }
 }

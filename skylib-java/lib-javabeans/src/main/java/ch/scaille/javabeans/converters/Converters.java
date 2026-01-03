@@ -19,7 +19,6 @@ import ch.scaille.util.helpers.LambdaExt;
 import ch.scaille.util.helpers.LambdaExt.BiFunctionWithException;
 import ch.scaille.util.helpers.LambdaExt.FunctionWithException;
 import ch.scaille.util.text.FormatterHelper;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 

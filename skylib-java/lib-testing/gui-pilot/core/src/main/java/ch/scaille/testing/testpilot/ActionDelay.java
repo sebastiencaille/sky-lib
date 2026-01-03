@@ -11,16 +11,14 @@ import java.time.Duration;
  *
  */
 @NullMarked
-public class ActionDelay {
+public interface ActionDelay {
 
-	public static final ActionDelay NO_DELAY = new ActionDelay();
+	 ActionDelay NO_DELAY = currentDelay -> currentDelay;
 
-	public void assertFinished() {
+	 default void assertFinished() {
 		// noop
 	}
 
-	public Duration applyOnTimeout(Duration currentDelay) {
-		return currentDelay;
-	}
+	Duration applyOnTimeout(Duration currentDelay);
 
 }

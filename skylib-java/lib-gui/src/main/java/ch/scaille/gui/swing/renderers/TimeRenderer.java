@@ -22,15 +22,11 @@ public class TimeRenderer extends DefaultTableCellRenderer {
 	public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
 			final boolean hasFocus, final int row, final int column) {
 		super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-		String text;
-		if (value instanceof TemporalAccessor temporal) {
-			text = SHORT_FORMATTER.format(temporal);
-		} else if (value instanceof Duration  duration) {
-			text = TIME_FORMATTER.format(duration.addTo(aDay));
-		} else {
-			text = "";
-		}
-		setText(text);
+		setText(switch (value) {
+			case TemporalAccessor temporal ->  SHORT_FORMATTER.format(temporal);
+			case Duration  duration -> TIME_FORMATTER.format(duration.addTo(aDay));
+			default -> "";
+		});
 		return this;
 	}
 

@@ -1,5 +1,6 @@
 package ch.scaille.gui.swing.jtable;
 
+import java.io.Serial;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +21,9 @@ import ch.scaille.gui.swing.model.ListModelTableModel;
  * @param <C> enum that defines the columns (see {@link ListModelTableModel}
  */
 public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColumn {
-
+	@Serial
+	private static final long serialVersionUID = 6441064779321521655L;
+	
 	public static final Margin DEFAULT_MARGIN = Margin.px(5);
 	public static final String SAMPLE_LOREM_IPSUM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vehicula lorem ut neque condimentum, non hendrerit nisl molestie. Morbi non vehicula erat. Phasellus nec diam quis ipsum lacinia congue id in nisi. Aenean dolor lectus, ornare ut faucibus nec, sagittis in mauris. Nulla ac bibendum sapien, quis porta nunc. Morbi sit amet metus massa. Vestibulum feugiat pretium enim, at maximus mi convallis eget. Duis maximus in nunc quis ornare. Duis dui risus, mattis in leo a, semper rutrum ante. Aliquam rutrum laoreet feugiat. Quisque rhoncus felis vitae metus volutpat finibus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed sed viverra ipsum. In hac habitasse platea dictumst. Pellentesque a purus diam. Nullam facilisis metus ut nulla dapibus finibus.";
 	public static final String SAMPLE_NUMBERS = "0";
@@ -36,6 +39,7 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 		
 	protected TableColumnWithPolicy(final C column) {
 		this.column = column;
+		setIdentifier(column.name());
 	}
 
 	public C getColumn() {
@@ -74,6 +78,9 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 
 	protected static class FixedWidthColumn<C extends Enum<C>> extends TableColumnWithPolicy<C> {
 
+		@Serial
+		private static final long serialVersionUID = 9186866524593837361L;
+		
 		private final int fixedWidth;
 
 		public FixedWidthColumn(final C column, final int fixedWidth) {
@@ -95,6 +102,9 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 	}
 
 	protected static class FixedTextLengthColumn<C extends Enum<C>> extends TableColumnWithPolicy<C> {
+
+		@Serial
+		private static final long serialVersionUID = 3704779792866427376L;
 
 		private static final Map<String, Float> WIDTH_CACHE = new HashMap<>();
 
@@ -145,6 +155,10 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 	}
 
 	protected static class PercentOfTableWidthColumn<C extends Enum<C>> extends TableColumnWithPolicy<C> {
+		
+		@Serial
+		private static final long serialVersionUID = -6264204115324227837L;
+		
 		private final int percent;
 
 		public PercentOfTableWidthColumn(final C column, final int percent) {
@@ -170,6 +184,10 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 	}
 
 	protected static class PercentOfAvailableSpaceColumn<C extends Enum<C>> extends TableColumnWithPolicy<C> {
+		
+		@Serial
+		private static final long serialVersionUID = 5672380476791184732L;
+		
 		private final int percent;
 
 		public PercentOfAvailableSpaceColumn(final C column, final int percent) {

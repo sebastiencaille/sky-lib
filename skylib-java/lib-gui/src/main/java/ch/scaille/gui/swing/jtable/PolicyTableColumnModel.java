@@ -1,5 +1,6 @@
 package ch.scaille.gui.swing.jtable;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,11 +21,12 @@ import ch.scaille.gui.swing.model.ListModelTableModel;
  * <p>
  * The remaining space will be occupied by freePercentColumns.
  *
- * @author Sebastien Caille
- *
  * @param <C> enum that defines the columns (see {@link ListModelTableModel}
  */
 public class PolicyTableColumnModel<C extends Enum<C>> extends DefaultTableColumnModel {
+
+	@Serial
+	private static final long serialVersionUID = 2481246856601976176L;
 
 	private final List<Class<?>> policyExecutionOrder;
 

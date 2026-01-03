@@ -2,7 +2,6 @@ package ch.scaille.gui.mvc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import ch.scaille.javabeans.PropertyChangeSupportController;

@@ -1,6 +1,8 @@
 package ch.scaille.tcwriter.gui.steps;
 
 import static ch.scaille.gui.swing.factories.SwingBindings.selection;
+import static ch.scaille.gui.swing.jtable.TableColumnWithPolicy.fixedTextLength;
+import static ch.scaille.gui.swing.jtable.TableColumnWithPolicy.percentOfAvailableSpace;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -9,6 +11,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Objects;
 
 import javax.swing.CellRendererPane;
 import javax.swing.JPanel;
@@ -19,6 +22,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import ch.scaille.gui.model.ListModel;
 import ch.scaille.gui.model.views.ListViews;
+import ch.scaille.gui.swing.SwingExt;
 import ch.scaille.gui.swing.jtable.PolicyTableColumnModel;
 import ch.scaille.gui.swing.jtable.TableColumnWithPolicy;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
@@ -57,9 +61,7 @@ public class StepsTable extends JPanel {
 						toDraw = pane;
 					}
 				}
-				if (toDraw == null) {
-					throw new IllegalStateException("No renderer pane");
-				}
+				Objects.requireNonNull(toDraw, "No renderer pane");
 				for (int i = 0; i < getRowCount(); i++) {
 					final var toPaintHR = getCellRect(i, 2, true);
 					toPaintHR.width = getColumnModel().getTotalColumnWidth();
@@ -106,7 +108,7 @@ public class StepsTable extends JPanel {
 		columnModel.configureColumn(TableColumnWithPolicy.fixedWidth(Column.BREAKPOINT, 20)
 				.with(new StepStatusRenderer(), new StepStatusEditor()));
 		columnModel.configureColumn(
-				TableColumnWithPolicy.fixedTextLength(Column.ORDINAL, 2, TableColumnWithPolicy.SAMPLE_NUMBERS,
+				fixedTextLength(Column.ORDINAL, 2, TableColumnWithPolicy.SAMPLE_NUMBERS,
 						TableColumnWithPolicy.DEFAULT_MARGIN).with(new DefaultTableCellRenderer() {
 							private static final long serialVersionUID = -8917034957019159554L;
 
@@ -128,14 +130,16 @@ public class StepsTable extends JPanel {
 						}));
 
 		columnModel
-				.configureColumn(TableColumnWithPolicy.fixedTextLength(Column.ACTOR, 15).with(new StepsCellRenderer()));
+				.configureColumn(fixedTextLength(Column.ACTOR, 15).with(new StepsCellRenderer()));
 		columnModel.configureColumn(
-				TableColumnWithPolicy.percentOfAvailableSpace(Column.SELECTOR, 50).with(new StepsCellRenderer()));
+				percentOfAvailableSpace(Column.SELECTOR, 50).with(new StepsCellRenderer()));
 		columnModel.configureColumn(
-				TableColumnWithPolicy.percentOfAvailableSpace(Column.PARAM0, 50).with(new StepsCellRenderer()));
+				percentOfAvailableSpace(Column.PARAM0, 50).with(new StepsCellRenderer()));
 		columnModel
-				.configureColumn(TableColumnWithPolicy.fixedTextLength(Column.TO_VAR, 30).with(new StepsCellRenderer()));
+				.configureColumn(fixedTextLength(Column.TO_VAR, 30).with(new StepsCellRenderer()));
 
+		SwingExt.configureTableHeaders(stepsJTable);
+		
 		// Refresh table when step is updated
 		final var selectedStepCtrl = model.getSelectedStep().bind(selection(stepsJTable, stepsTableModel));
 		model.getSelectedStep().addListener(l -> {

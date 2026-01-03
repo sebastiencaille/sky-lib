@@ -13,7 +13,7 @@ import ch.scaille.tcwriter.gui.frame.TCWriterController;
 
 public class ExampleTCEditor {
 
-		public static void main(final String[] args) throws IOException {
+	public static void main(final String[] args) throws IOException {
 		final var exampleHelper = new ExampleHelper();
 		final var tcDictionary = exampleHelper.generateDictionary();
 		final var testCase = exampleHelper.recordTestCase(tcDictionary);
@@ -21,7 +21,8 @@ public class ExampleTCEditor {
 		exampleHelper.getModelDao().writeTestDictionary(testCase.getDictionary());
 		exampleHelper.getModelDao().writeTestCase(ExampleHelper.TC_NAME, testCase);
 
-		final var controller = new TCWriterController(exampleHelper.getConfigDao(), exampleHelper.getModelDao(), tcDictionary, exampleHelper.testExecutor());
+		final var controller = new TCWriterController(exampleHelper.getConfigDao(), exampleHelper.getModelDao(),
+				tcDictionary, exampleHelper.testExecutor());
 
 		final var eventDebug = Logging.MVC_EVENTS_DEBUGGER;
 		final var eventDebugLevel = Level.FINE;

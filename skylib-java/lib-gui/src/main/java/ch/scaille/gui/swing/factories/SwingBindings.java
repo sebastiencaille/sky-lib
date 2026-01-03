@@ -4,10 +4,7 @@ import java.awt.ItemSelectable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -214,6 +211,11 @@ public class SwingBindings {
                     link.setValueFromComponent(group, (T) mapping[i]);
                 }
             }
+        }
+
+        @Override
+        public String toString() {
+            return "link = %s, mapping = %s, group = %s".formatted(link, Arrays.asList(mapping), group);
         }
     }
 

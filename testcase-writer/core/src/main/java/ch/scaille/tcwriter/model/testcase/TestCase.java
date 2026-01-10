@@ -15,17 +15,23 @@ import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.model.TestObjectDescription;
 import ch.scaille.tcwriter.model.dictionary.TestApiParameter;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
+import lombok.Getter;
+import lombok.Setter;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
+@Setter
+@Getter
 public class TestCase {
 
-	protected Metadata metadata = new Metadata();
+    protected Metadata metadata = new Metadata();
 	
 	@JsonIgnore
 	protected TestDictionary testDictionary;
 
-	protected final List<TestStep> steps = new ArrayList<>();
+    protected final List<TestStep> steps = new ArrayList<>();
 
-	protected String pkgAndClassName;
+    protected String pkgAndClassName;
 
 	protected final Multimap<String, TestReference> dynamicReferences = MultimapBuilder.hashKeys().arrayListValues()
 			.build();
@@ -37,15 +43,7 @@ public class TestCase {
 		this.testDictionary = testDictionary;
 	}
 
-	public Metadata getMetadata() {
-		return metadata;
-	}
-	
-	public void setMetadata(Metadata metadata) {
-		this.metadata = metadata;
-	}
-	
-	public void setDictionary(final TestDictionary testDictionary) {
+    public void setDictionary(final TestDictionary testDictionary) {
 		this.testDictionary = testDictionary;
 	}
 
@@ -57,11 +55,7 @@ public class TestCase {
 		steps.add(step);
 	}
 
-	public List<TestStep> getSteps() {
-		return steps;
-	}
-
-	public String getPackage() {
+    public String getPackage() {
 		return pkgAndClassName.substring(0, pkgAndClassName.lastIndexOf('.'));
 	}
 
@@ -69,15 +63,7 @@ public class TestCase {
 		return pkgAndClassName.substring(pkgAndClassName.lastIndexOf('.') + 1);
 	}
 
-	public void setPkgAndClassName(String pkgAndClassName) {
-		this.pkgAndClassName = pkgAndClassName;
-	}
-
-	public String getPkgAndClassName() {
-		return pkgAndClassName;
-	}
-
-	public void publishReference(final TestReference reference) {
+    public void publishReference(final TestReference reference) {
 		dynamicReferences.put(reference.getParameterType(), reference);
 		dynamicDescriptions.put(reference.getId(), reference.toDescription());
 	}

@@ -1,7 +1,6 @@
 package ch.scaille.gui.model.views;
 
 import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
@@ -10,9 +9,9 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
- *
- * @param <T> value type
- * @param <P> view parameter type
+ * A list view that can be dynamically modified using a parameter provided through a component binding.
+ * @param <T> the type of the sorted/filtered value
+ * @param <P> the type of the view's parameter
  */
 @NullMarked
 public class DynamicListView<T extends @Nullable Object, P> extends AbstractListView<T>
@@ -22,17 +21,6 @@ public class DynamicListView<T extends @Nullable Object, P> extends AbstractList
     public interface DynamicComparator<T extends @Nullable Object, P> {
         int compare(T o1, T o2, P parameters);
     }
-
-    public interface View<T extends @Nullable Object> {
-        default int compare(T o1, T o2) {
-            return 0;
-        }
-
-        default boolean test(T o) {
-            return true;
-        }
-    }
-
 
     @Nullable
     private IListViewOwner<T> viewOwner;
@@ -65,17 +53,6 @@ public class DynamicListView<T extends @Nullable Object, P> extends AbstractList
         super.detach(aViewOwner);
     }
 
-    /**
-     * Returns a component binding that calls c with the new value and refreshes the
-     * view
-     */
-    public <U> Consumer<U> refreshAfterExecution(final Consumer<U> c) {
-        return (propertyValue -> {
-            c.accept(propertyValue);
-            updateView();
-        });
-    }
-
     protected void updateView() {
         if (viewOwner != null) {
             viewOwner.viewUpdated();
@@ -99,11 +76,11 @@ public class DynamicListView<T extends @Nullable Object, P> extends AbstractList
     }
 
     @Override
-    public boolean accept(T object) {
+    public boolean test(T object) {
         if (filter != null) {
             return filter.test(object, viewParameter);
         }
-        return super.accept(object);
+        return super.test(object);
     }
 
     @Override

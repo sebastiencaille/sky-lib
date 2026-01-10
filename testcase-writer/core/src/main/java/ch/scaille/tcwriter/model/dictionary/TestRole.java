@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.scaille.tcwriter.model.NamedObject;
+import lombok.Getter;
 
+@Getter
 public class TestRole extends NamedObject {
 
 	public static final TestRole NOT_SET = new TestRole(ID_NOT_SET, "");
@@ -18,11 +20,7 @@ public class TestRole extends NamedObject {
 		super(id, name);
 	}
 
-	public List<TestAction> getActions() {
-		return actions;
-	}
-
-	public TestAction getAction(final String newId) {
+    public TestAction getAction(final String newId) {
 		return actions.stream()
 				.filter(api -> api.getId().equals(newId))
 				.findFirst()

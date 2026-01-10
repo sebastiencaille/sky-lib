@@ -11,7 +11,9 @@ import javax.swing.JLabel;
 
 import ch.scaille.testing.testpilot.ModalDialogDetector;
 import ch.scaille.testing.testpilot.ModalDialogDetector.PollingResult;
+import lombok.Getter;
 
+@Getter
 public class SwingModalDialogDetector extends SwingPilot {
 
 	public static ModalDialogDetector.Builder withHandler(
@@ -51,11 +53,7 @@ public class SwingModalDialogDetector extends SwingPilot {
 		this.dialog = dialog;
 	}
 
-	public JDialog getDialog() {
-		return dialog;
-	}
-
-	/**
+    /**
 	 * Triggers an error when a dialog box is detected
 	 */
 	public PollingResult defaultCheck() {

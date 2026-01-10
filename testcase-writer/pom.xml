@@ -47,6 +47,19 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<annotationProcessorPaths>
+							<path>
+								<groupId>org.projectlombok</groupId>
+								<artifactId>lombok</artifactId>
+								<version>${lombok.version}</version>
+							</path>
+						</annotationProcessorPaths>
+					</configuration>
+				</plugin>
+				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>aspectj-maven-plugin</artifactId>
 					<configuration>
@@ -62,38 +75,30 @@
 							</aspectLibrary>
 						</aspectLibraries>
 						<verbose>true</verbose>
+						<!-- this is important: start-->
+						<forceAjcCompile>true</forceAjcCompile>
+						<sources/>
+						<weaveDirectories>
+							<weaveDirectory>${project.build.directory}/classes</weaveDirectory>
+						</weaveDirectories>
+
 					</configuration>
 					<executions>
 						<execution>
 							<id>aop sources</id>
-							<phase>process-sources</phase>
+							<phase>compile</phase>
 							<goals>
 								<goal>compile</goal>
 							</goals>
 						</execution>
 						<execution>
 							<id>aop test sources</id>
-							<phase>process-test-sources</phase>
+							<phase>test-compile</phase>
 							<goals>
 								<goal>test-compile</goal>
 							</goals>
 						</execution>
 					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<configuration>
-						<annotationProcessorPaths>
-							<path>
-								<groupId>org.projectlombok</groupId>
-								<artifactId>lombok</artifactId>
-								<version>${lombok.version}</version>
-							</path>
-							<!-- other annotation processors -->
-						</annotationProcessorPaths>
-						<useIncrementalCompilation>false</useIncrementalCompilation>
-					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>

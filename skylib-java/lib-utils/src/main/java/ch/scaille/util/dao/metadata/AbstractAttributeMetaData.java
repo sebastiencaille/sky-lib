@@ -1,5 +1,7 @@
 package ch.scaille.util.dao.metadata;
 
+import lombok.Getter;
+
 import java.security.InvalidParameterException;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -14,11 +16,16 @@ import java.util.function.Function;
  * @param <V> value type
  */
 @SuppressWarnings("unchecked")
+@Getter
 public abstract class AbstractAttributeMetaData<T, V> implements IAttributeMetaData<T> {
 
 	protected final String name;
 
-	protected final Class<V> type;
+    /**
+     * -- GETTER --
+     *  Returns the attribute class, preserving the primitive type.
+     */
+    protected final Class<V> type;
 
 	public abstract int getModifier();
 
@@ -82,14 +89,7 @@ public abstract class AbstractAttributeMetaData<T, V> implements IAttributeMetaD
 		return name;
 	}
 
-	/**
-	 * Returns the attribute class, preserving the primitive type.
-	 */
-	public Class<V> getType() {
-		return type;
-	}
-
-	/**
+    /**
 	 * Returns the attribute class. Primitive type are replaced by non-primitive
 	 * types
 	 */

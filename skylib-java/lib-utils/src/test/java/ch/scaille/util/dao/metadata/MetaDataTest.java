@@ -3,23 +3,21 @@ package ch.scaille.util.dao.metadata;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import lombok.Getter;
 import org.junit.jupiter.api.Test;
 
 class MetaDataTest {
 
 	private static class ObjectTest {
 
-		private int valA;
+		@Getter
+        private int valA;
 		private final int valB = 456;
 		public int valC;
 		@SuppressWarnings("unused")
 		public final int valD = 123;
 
-		public int getValA() {
-			return valA;
-		}
-
-		@SuppressWarnings("unused")
+        @SuppressWarnings("unused")
 		public void setValA(int valA) {
 			this.valA = valA;
 		}

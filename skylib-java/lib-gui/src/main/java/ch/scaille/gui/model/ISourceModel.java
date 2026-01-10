@@ -18,12 +18,13 @@ public interface ISourceModel<T extends @Nullable Object> {
 
 	int insert(final T value);
 
+	T getValueAt(int index);
+
 	Optional<T> remove(final T sample);
 
 	Optional<T> remove(final int row);
 
 	Optional<T> getEditedValue();
-
 
 	Optional<T> find(T sample);
 

@@ -2,6 +2,7 @@ package ch.scaille.tcwriter.gui.steps;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.io.Serial;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
@@ -12,7 +13,8 @@ import ch.scaille.tcwriter.model.testexec.StepStatus;
 
 public class StepStatusRenderer extends DefaultTableCellRenderer {
 
-	private static final long serialVersionUID = -1362069937024272245L;
+	@Serial
+    private static final long serialVersionUID = -1362069937024272245L;
 	final JCheckBox renderer = new JCheckBox();
 	final JPanel jPanel = new JPanel();
 

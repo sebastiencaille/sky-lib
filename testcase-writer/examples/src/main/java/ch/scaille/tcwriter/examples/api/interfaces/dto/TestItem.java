@@ -2,32 +2,24 @@ package ch.scaille.tcwriter.examples.api.interfaces.dto;
 
 import ch.scaille.tcwriter.annotations.TCApi;
 import ch.scaille.tcwriter.examples.ExampleService.ItemKind;
+import lombok.Getter;
 
 @TCApi(description = "an item you can buy", humanReadable = "")
 public class TestItem {
 
 	public final ItemKind itemKind;
-	private String brand;
-	private int numberOfItems;
-	private boolean iso;
+	@Getter
+    private String brand;
+	@Getter
+    private int numberOfItems;
+	@Getter
+    private boolean iso;
 
 	private TestItem(final ItemKind itemKind) {
 		this.itemKind = itemKind;
 	}
 
-	public String getBrand() {
-		return brand;
-	}
-
-	public int getNumberOfItems() {
-		return numberOfItems;
-	}
-
-	public boolean isIso() {
-		return iso;
-	}
-
-	@TCApi(description = "Number of items", humanReadable = "count")
+    @TCApi(description = "Number of items", humanReadable = "count")
 	public void setNumberOfItems(final int numberOfItems) {
 		this.numberOfItems = numberOfItems;
 	}

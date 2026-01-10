@@ -1,5 +1,6 @@
 package ch.scaille.gui.model.views;
 
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
@@ -12,7 +13,8 @@ import java.util.Comparator;
  * 
  * @param <T>
  */
-public interface IListViewOwner<T> {
+@NullMarked
+public interface IListViewOwner<T extends @Nullable Object> {
 
 	void viewUpdated();
 

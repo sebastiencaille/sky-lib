@@ -37,7 +37,7 @@ public abstract class AbstractTypedProperty<T extends @Nullable Object> extends 
 
     private transient IPersister<T> persister = Persisters.dummy();
 
-    protected abstract @Nullable T replaceValue(T newValue);
+    protected abstract T replaceValue(T newValue);
 
     public abstract T getObjectValue();
 

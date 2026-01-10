@@ -26,17 +26,20 @@ import ch.scaille.tcwriter.services.testexec.ITestExecutor;
 import ch.scaille.tcwriter.services.testexec.JUnitTestExecutor;
 import ch.scaille.util.helpers.ClassLoaderHelper;
 import ch.scaille.util.helpers.Logs;
+import lombok.Getter;
 
 /**
  * To set basic dictionary / test / configuration up
  */
+@Getter
 public class ExampleHelper {
 
 	private static final Path RESOURCE_FOLDER = Paths.get(System.getProperty("java.io.tmpdir"));
 
 	public static final String TC_NAME = "testCase";
 	
-	public static final String TC_FILE = "ch/scaille/tcwriter/examples/GeneratedTest.java";
+	public static final String TC_FILE_JAVA = "ch/scaille/tcwriter/examples/GeneratedTest.java";
+	public static final String TC_FILE_YAML = "IntegrationTest.yaml";
 
 	private final IConfigDao configDao;
 
@@ -71,11 +74,7 @@ public class ExampleHelper {
 		modelDao = daoConfig.modelDao();
 	}
 
-	public ModelDao getModelDao() {
-		return modelDao;
-	}
-
-	public TestDictionary generateDictionary() {
+    public TestDictionary generateDictionary() {
 		final var dictionary = new JavaToDictionary("BasicTest", CustomerTestRole.class, DeliveryTestRole.class).generate();
 		dictionary.getMetadata().setDescription("Test dictionary");
 		return dictionary;
@@ -101,7 +100,4 @@ public class ExampleHelper {
 		return new JUnitTestExecutor(configDao, getModelDao(), ClassLoaderHelper.appClassPath());
 	}
 
-	public IConfigDao getConfigDao() {
-		return configDao;
-	}
 }

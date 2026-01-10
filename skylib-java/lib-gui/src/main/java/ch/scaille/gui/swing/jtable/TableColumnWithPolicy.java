@@ -10,6 +10,7 @@ import javax.swing.table.TableColumn;
 
 import ch.scaille.gui.swing.SwingExt;
 import ch.scaille.gui.swing.model.ListModelTableModel;
+import lombok.Getter;
 
 /**
  * Table column model based on per-column contribution.
@@ -30,7 +31,8 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 
 	private Runnable onUpdate;
 
-	private final C column;
+	@Getter
+    private final C column;
 
 	protected int forcedWidth = 0;
 
@@ -42,11 +44,7 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 		setIdentifier(column.name());
 	}
 
-	public C getColumn() {
-		return column;
-	}
-
-	@Override
+    @Override
 	public void setWidth(final int width) {
 		forcedWidth = width;
 		onUpdate.run();
@@ -183,7 +181,8 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 		return new PercentOfTableWidthColumn<>(column, percent);
 	}
 
-	protected static class PercentOfAvailableSpaceColumn<C extends Enum<C>> extends TableColumnWithPolicy<C> {
+	@Getter
+    protected static class PercentOfAvailableSpaceColumn<C extends Enum<C>> extends TableColumnWithPolicy<C> {
 		
 		@Serial
 		private static final long serialVersionUID = 5672380476791184732L;
@@ -195,11 +194,7 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 			this.percent = percent;
 		}
 
-		public int getPercent() {
-			return percent;
-		}
-
-		@Override
+        @Override
 		public int computeWidth(final ColumnComputationInfo policyInfo) {
 			if (forcedWidth > 0) {
 				return forcedWidth;

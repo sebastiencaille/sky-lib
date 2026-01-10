@@ -1,5 +1,8 @@
 package ch.scaille.tcwriter.model;
 
+import lombok.Getter;
+
+@Getter
 public class NamedObject extends IdObject {
 
 	private String name;
@@ -9,11 +12,7 @@ public class NamedObject extends IdObject {
 		this.name = name;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	protected void setName(final String name) {
+    protected void setName(final String name) {
 		this.name = name;
 	}
 

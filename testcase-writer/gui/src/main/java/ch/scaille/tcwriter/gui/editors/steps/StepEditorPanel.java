@@ -71,10 +71,12 @@ public class StepEditorPanel extends JPanel {
 			classifiersEditor.setModel(classifierEditorModel);
 			
 			final var step = selectedStep.getValue();
-			if (step.getClassifier() == null || Arrays.binarySearch(availableClassifiers, step.getClassifier()) < 0) {
-				step.setClassifier(availableClassifiers[0]);
+			if (step != null) {
+				if (step.getClassifier() == null || Arrays.binarySearch(availableClassifiers, step.getClassifier()) < 0) {
+					step.setClassifier(availableClassifiers[0]);
+				}
+				model.getStepClassifier().setValue(this, step.getClassifier());
 			}
-			model.getStepClassifier().setValue(this, step.getClassifier());
 		});
 
 		final var topPanel = new JPanel();

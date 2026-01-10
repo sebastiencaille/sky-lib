@@ -7,7 +7,9 @@ import java.util.List;
 
 import ch.scaille.tcwriter.model.IdObject;
 import ch.scaille.tcwriter.model.NamedObject;
+import lombok.Getter;
 
+@Getter
 public class TestAction extends NamedObject {
 
 	public static final TestAction NOT_SET = new TestAction(IdObject.ID_NOT_SET, "", "", new StepClassifier[0]);
@@ -31,23 +33,11 @@ public class TestAction extends NamedObject {
 		this.allowedClassifiers = allowedClassifiers;
 	}
 
-	public StepClassifier[] getAllowedClassifiers() {
-		return allowedClassifiers;
-	}
-
-	public List<TestApiParameter> getParameters() {
-		return parameters;
-	}
-
-	public TestApiParameter getParameter(final int index) {
+    public TestApiParameter getParameter(final int index) {
 		return parameters.get(index);
 	}
 
-	public String getReturnType() {
-		return returnType;
-	}
-
-	@Override
+    @Override
 	public boolean equals(Object obj) {
 		return super.equals(obj);
 	}

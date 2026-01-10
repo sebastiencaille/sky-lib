@@ -52,7 +52,7 @@ public class JTextFieldBinding implements IComponentBinding<String> {
 	}
 
 	@Override
-	public void setComponentValue(final IComponentChangeSource source, @Nullable final String value) {
+	public void setComponentValue(final IComponentChangeSource source, final @Nullable String value) {
         textField.setText(Objects.requireNonNullElse(value, ""));
 	}
 

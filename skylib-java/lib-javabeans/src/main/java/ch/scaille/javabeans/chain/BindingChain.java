@@ -127,12 +127,12 @@ public class BindingChain implements IBindingChainModifier {
 	}
 	
 	@Override
-	public void propagateComponentChange(final Object component, final Object componentValue) {
+	public void propagateComponentChange(final Object component, @Nullable final Object componentValue) {
 		final var pos = links.size();
 		var value = componentValue;
 		for (int i = pos - 1; i >= 0; i--) {
 			try {
-				value = ((Link<Object, Object>)links.get(i)).toProperty(component, value);
+				value = ((Link<@Nullable Object, @Nullable Object>)links.get(i)).toProperty(component, value);
 			} catch (final ChainInhibitedException e) {
 				Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE,
 						() -> "Component change inhibited: " + e.getMessage());

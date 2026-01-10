@@ -29,8 +29,7 @@ public class TestObjectTableModel extends ListModelTableModel<TestObject, Column
 		return switch (column) {
 			case A_FIRST_VALUE -> object.getAFirstValue();
 			case A_SECOND_VALUE -> object.getASecondValue();
-			default -> throw new IllegalArgumentException("Unknown column " + column);
-		};
+        };
 	}
 
 	@Override

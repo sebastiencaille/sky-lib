@@ -1,5 +1,7 @@
 package ch.scaille.gui.model;
 
+import lombok.Getter;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -14,7 +16,8 @@ import java.util.List;
  */
 public class ListEvent<T> {
 
-	private final ListModelContent<T> source;
+	@Getter
+    private final ListModelContent<T> source;
 
 	private final List<T> objects;
 
@@ -33,11 +36,7 @@ public class ListEvent<T> {
 		this.objects = objects;
 	}
 
-	public ListModelContent<T> getSource() {
-		return source;
-	}
-
-	public Collection<T> getObjects() {
+    public Collection<T> getObjects() {
 		return objects;
 	}
 

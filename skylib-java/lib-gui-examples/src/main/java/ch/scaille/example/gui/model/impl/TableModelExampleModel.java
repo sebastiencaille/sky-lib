@@ -1,7 +1,7 @@
 package ch.scaille.example.gui.model.impl;
 
 import ch.scaille.example.gui.TestObject;
-import ch.scaille.gui.model.views.DynamicListView;
+import ch.scaille.gui.model.views.IView;
 import ch.scaille.javabeans.PropertyChangeSupportController;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.properties.BooleanProperty;
@@ -17,15 +17,15 @@ import static ch.scaille.example.gui.model.impl.TableModelExampleView.REVERSE_OR
 public class TableModelExampleModel {
 
 	public record ViewFilter(boolean reverseOrder, boolean enableFilter)
-			implements DynamicListView.View<TestObject> {
+			implements IView<TestObject> {
 
 		@Override
-		public int compare(TestObject o1, TestObject o2) {
+		public int compare(final TestObject o1, final TestObject o2) {
 			return (reverseOrder ? REVERSE_ORDER : NATURAL_ORDER).compare(o1, o2);
 		}
 
 		@Override
-		public boolean test(TestObject o) {
+		public boolean test(final TestObject o) {
 			return !enableFilter || o.getASecondValue() % 2 == 0;
 		}
 	}

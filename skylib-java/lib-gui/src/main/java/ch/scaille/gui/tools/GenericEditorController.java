@@ -8,6 +8,7 @@ import java.util.function.Function;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.persisters.IPersisterFactory.ObjectHolder;
 import ch.scaille.javabeans.properties.ErrorSet;
+import lombok.Getter;
 
 /**
  * This controller is the root of the generic editor. It binds the view
@@ -19,7 +20,8 @@ import ch.scaille.javabeans.properties.ErrorSet;
 public class GenericEditorController<T> {
 
 	private final IPropertiesGroup propertySupport;
-	private final ErrorSet errorProperty;
+	@Getter
+    private final ErrorSet errorProperty;
 	private final List<IPropertyEntry> props;
 	private final ObjectHolder<T> currentObject = new ObjectHolder<>();
 
@@ -30,11 +32,7 @@ public class GenericEditorController<T> {
 		props.forEach(p -> p.getProperty().configure(errorNotifier(errorProperty)));
 	}
 
-	public ErrorSet getErrorProperty() {
-		return errorProperty;
-	}
-	
-	public <V extends IGenericEditorView> V build(Function<GenericEditorController<T>, V> viewFactory) {
+    public <V extends IGenericEditorView> V build(Function<GenericEditorController<T>, V> viewFactory) {
 		final var view = viewFactory.apply(this);
 		props.forEach(view::addEntry);
 		view.build();

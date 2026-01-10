@@ -72,6 +72,7 @@ public class ListModel<T extends @Nullable Object> implements ISourceModel<T>, I
 		return content.getRowOf(value);
 	}
 
+	@Override
 	public T getValueAt(final int row) {
 		return content.getValueAt(row);
 	}

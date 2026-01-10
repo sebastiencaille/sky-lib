@@ -1,5 +1,7 @@
 package ch.scaille.util.dao.metadata;
 
+import lombok.Getter;
+
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -36,7 +38,8 @@ public class DataObjectManager<T> {
 
 	}
 
-	protected final AbstractObjectMetaData<T> metaData;
+	@Getter
+    protected final AbstractObjectMetaData<T> metaData;
 
 	protected final T object;
 
@@ -45,11 +48,7 @@ public class DataObjectManager<T> {
 		this.object = object;
 	}
 
-	public AbstractObjectMetaData<T> getMetaData() {
-		return metaData;
-	}
-
-	public UntypedDataObjectMetaData getUntypedMetaData(final boolean accessPrivateFields) {
+    public UntypedDataObjectMetaData getUntypedMetaData(final boolean accessPrivateFields) {
 		return new UntypedDataObjectMetaData(metaData.getDataType(), accessPrivateFields);
 	}
 

@@ -1,8 +1,11 @@
 package ch.scaille.util.persistence;
 
+import lombok.Getter;
+
 /**
  * A full reference to a persistent data
  */
+@Getter
 public class ResourceMetaData {
 
 	/**
@@ -24,19 +27,7 @@ public class ResourceMetaData {
 		this.mimeType = mimeType;
 	}
 
-	public String getLocator() {
-		return locator;
-	}
-
-	public String getStorageLocator() {
-		return storageLocator;
-	}
-
-	public String getMimeType() {
-		return mimeType;
-	}
-
-	public ResourceMetaData withStorageLocator(String newStorageLocator) {
+    public ResourceMetaData withStorageLocator(String newStorageLocator) {
 		return new ResourceMetaData(getLocator(), newStorageLocator, getMimeType());
 	}
 

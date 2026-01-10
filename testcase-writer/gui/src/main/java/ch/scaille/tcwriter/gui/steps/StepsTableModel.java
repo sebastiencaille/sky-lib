@@ -14,9 +14,13 @@ import ch.scaille.tcwriter.model.testcase.TestStep;
 import ch.scaille.tcwriter.services.generators.visitors.HumanReadableVisitor;
 import ch.scaille.tcwriter.services.testexec.TestRemoteControl;
 
+import java.io.Serial;
+import java.util.Objects;
+
 public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableModel.Column> {
 
-	private static final long serialVersionUID = 8601893907809393792L;
+	@Serial
+    private static final long serialVersionUID = 8601893907809393792L;
 	
 	private final TestRemoteControl testControl;
 	private final ObjectProperty<TestCase> testCaseProperty;
@@ -122,7 +126,8 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 			}
 			break;
 		case TO_VAR:
-			testCase.publishReference(testStep.getReference().rename((String) value, "TODO"));
+			testCase.publishReference(Objects.requireNonNull(testStep.getReference(), "No reference set")
+					.rename((String) value, "TODO"));
 			break;
 		default:
 			break;

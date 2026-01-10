@@ -11,13 +11,17 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 @NullMarked
-public interface ListModelBindings {
+public class ListModelBindings {
 
-    static <T extends @Nullable Object> IComponentBinding<IListView<T>> view(final ListModel<T> model) {
+    private ListModelBindings() {
+        // noop
+    }
+
+    public static <T extends @Nullable Object> IComponentBinding<IListView<T>> view(final ListModel<T> model) {
         return ComponentBindings.listen(model, (c, p, t) -> c.setView(t));
     }
 
-    static <T extends @Nullable Object> IComponentBinding<Collection<T>> values(final ListModel<T> model) {
+    public static <T extends @Nullable Object> IComponentBinding<Collection<T>> values(final ListModel<T> model) {
         return new IComponentBinding<>() {
 
             @Nullable

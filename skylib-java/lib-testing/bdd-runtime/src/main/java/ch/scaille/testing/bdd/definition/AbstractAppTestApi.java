@@ -1,22 +1,21 @@
 package ch.scaille.testing.bdd.definition;
 
+import lombok.Getter;
+
 import java.util.function.Supplier;
 
+@Getter
 public abstract class AbstractAppTestApi<C> {
 
 	private final Supplier<C> contextFactory;
 
-	private C context;
+    private C context;
 
 	protected AbstractAppTestApi(Supplier<C> contextFactory) {
 		this.contextFactory = contextFactory;
 	}
 
-	public C getContext() {
-		return context;
-	}
-
-	public void resetContext() {
+    public void resetContext() {
 		context = contextFactory.get();
 	}
 

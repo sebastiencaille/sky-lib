@@ -10,6 +10,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import ch.scaille.tcwriter.model.ExportReference;
 import ch.scaille.tcwriter.model.IdObject;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
+import lombok.Getter;
+import lombok.Setter;
 
 @JsonIgnoreProperties({ "testDictionary", "dynamicDescriptions" })
 public class ExportableTestCase extends TestCase {
@@ -20,25 +22,19 @@ public class ExportableTestCase extends TestCase {
 	@JsonIgnore
 	private List<ExportReference> references;
 
-	protected String preferredDictionary;
+	@Setter
+    @Getter
+    protected String preferredDictionary;
 	
 	protected ExportableTestCase() {
-		super(null, null);
+		super("", new TestDictionary());
 	}
 
 	public ExportableTestCase(String pkgAndClassName, TestDictionary testDictionary) {
 		super(pkgAndClassName, testDictionary);
 	}
 
-	 public String getPreferredDictionary() {
-		return preferredDictionary;
-	}
-	
-	public void setPreferredDictionary(String preferredDictionary) {
-		this.preferredDictionary = preferredDictionary;
-	}
-	
-	public void restoreReferences() {
+    public void restoreReferences() {
 		dynamicDescriptions.putAll(dynamicReferences.values().stream()
 				.collect(Collectors.toMap(TestReference::getId, TestReference::toDescription)));
 		references.forEach(e -> e.restore(this));
@@ -59,9 +55,6 @@ public class ExportableTestCase extends TestCase {
 		var restoredObject = cachedValues.get(id);
 		if (restoredObject == null) {
 			restoredObject = getReference(id);
-		}
-		if (restoredObject == null) {
-			throw new IllegalArgumentException("No cached value for " + id);
 		}
 		return restoredObject;
 	}

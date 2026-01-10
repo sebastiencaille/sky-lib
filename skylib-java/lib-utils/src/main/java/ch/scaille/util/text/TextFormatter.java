@@ -1,5 +1,8 @@
 package ch.scaille.util.text;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
@@ -88,18 +91,16 @@ public class TextFormatter<T extends TextFormatter<T, E>, E extends Exception> {
 		};
 	}
 
-	private IIndentationManager indentationManager = new CharIndentationManager();
-	private final IOutput<E> output;
+	@Setter
+    private IIndentationManager indentationManager = new CharIndentationManager();
+	@Getter
+    private final IOutput<E> output;
 
 	public TextFormatter(final IOutput<E> output) {
 		this.output = output;
 	}
 
-	public void setIndentationManager(final IIndentationManager indentationManager) {
-		this.indentationManager = indentationManager;
-	}
-
-	public T indent() {
+    public T indent() {
 		indentationManager.indent();
 		return (T) this;
 	}
@@ -175,11 +176,7 @@ public class TextFormatter<T extends TextFormatter<T, E>, E extends Exception> {
 		return indentationManager.getIndentation();
 	}
 
-	public IOutput<E> getOutput() {
-		return output;
-	}
-
-	public static String toCamelCase(final String s) {
+    public static String toCamelCase(final String s) {
 		final var b = new StringBuilder();
 		final var parts = s.split("_");
 		for (final var part : parts) {

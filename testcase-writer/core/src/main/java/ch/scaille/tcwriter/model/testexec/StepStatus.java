@@ -1,5 +1,8 @@
 package ch.scaille.tcwriter.model.testexec;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class StepStatus {
 
 	public enum StepState {
@@ -8,35 +11,17 @@ public class StepStatus {
 
 	
 	public final int ordinal;
-	private boolean breakPoint = false;
-	private StepState state = StepState.NOT_RUN;
-	private String message;
+	@Setter
+    @Getter
+    private boolean breakPoint = false;
+	@Setter
+    @Getter
+    private StepState state = StepState.NOT_RUN;
+	@Setter
+    @Getter
+    private String message;
 
-	public void setBreakPoint(boolean breakPoint) {
-		this.breakPoint = breakPoint;
-	}
-
-	public boolean isBreakPoint() {
-		return breakPoint;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
-	public StepState getState() {
-		return state;
-	}
-
-	public void setState(StepState state) {
-		this.state = state;
-	}
-
-	public StepStatus(final int ordinal) {
+    public StepStatus(final int ordinal) {
 		this.ordinal = ordinal;
 	}
 

@@ -5,8 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import ch.scaille.tcwriter.model.ExportReference;
 import ch.scaille.tcwriter.model.dictionary.TestAction;
+import org.jspecify.annotations.NullMarked;
 
 @JsonIgnoreProperties({"actor", "role", "action" })
+@NullMarked
 public class ExportableTestStep extends TestStep {
 	
 	public static final ExportableTestStep EMPTY_STEP = new ExportableTestStep();

@@ -14,15 +14,20 @@ import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.model.TestObjectDescription;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.services.generators.Helper;
+import lombok.Getter;
+import lombok.Setter;
 
 
+@Getter
 public class TestDictionary {
 
 	private static final TestObjectDescription NO_ID_DESCRIPTION = new TestObjectDescription("", "");
 
-	private Metadata metadata = new Metadata();
+	@Setter
+    private Metadata metadata = new Metadata();
 
-	private String classifier;
+	@Setter
+    private String classifier;
 	
 	private final Map<String, TestObjectDescription> descriptions = new HashMap<>();
 
@@ -38,44 +43,16 @@ public class TestDictionary {
 	public TestDictionary() {
 		descriptions.put(IdObject.ID_NOT_SET, TestObjectDescription.NOT_SET);
 	}
-	
-	public String getClassifier() {
-		return classifier;
-	}
-	
-	public void setClassifier(String classifier) {
-		this.classifier = classifier;
-	}
 
-	public Metadata getMetadata() {
-		return metadata;
-	}
-	
-	public void setMetadata(Metadata metadata) {
-		this.metadata = metadata;
-	}
-	
-	public Map<String, TestObjectDescription> getDescriptions() {
-		return descriptions;
-	}
-
-	public void addDescription(final IdObject idObject, final TestObjectDescription description) {
+    public void addDescription(final IdObject idObject, final TestObjectDescription description) {
 		descriptions.put(idObject.getId(), description);
 	}
 
-	public Map<String, TestRole> getRoles() {
-		return roles;
-	}
-
-	public TestRole getRole(final Class<?> clazz) {
+    public TestRole getRole(final Class<?> clazz) {
 		return roles.get(Helper.roleKey(clazz));
 	}
 
-	public Map<String, TestActor> getActors() {
-		return actors;
-	}
-
-	public void addActor(final TestActor actor, final TestObjectDescription actorDescription) {
+    public void addActor(final TestActor actor, final TestObjectDescription actorDescription) {
 		actors.put(actor.getId(), actor);
 		if (actorDescription != null) {
 			descriptions.put(actor.getId(), actorDescription);
@@ -84,19 +61,11 @@ public class TestDictionary {
 		}
 	}
 
-	public Multimap<String, TestParameterFactory> getTestObjectFactories() {
-		return testObjectFactories;
-	}
-
-	public Collection<TestParameterFactory> getParameterFactories(final TestApiParameter paramType) {
+    public Collection<TestParameterFactory> getParameterFactories(final TestApiParameter paramType) {
 		return testObjectFactories.get(paramType.getParameterType());
 	}
 
-	public Set<String> getSelectorTypes() {
-		return selectorTypes;
-	}
-	
-	public void addSelectorType(final Class<?> type) {
+    public void addSelectorType(final Class<?> type) {
 		selectorTypes.add(type.getName());
 	}
 

@@ -16,7 +16,7 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
- * A table model that is using an object controller per column.
+ * A table model that is using object controllers for each column.
  * <p>
  *
  * @author Sebastien Caille
@@ -30,13 +30,10 @@ public abstract class ObjectControllerTableModel<O, M extends IObjectGuiModel<O>
 		extends ListModelTableModel<O, C> {
 
 	/**
-	 *
-	 * @author scaille
-	 *
 	 * @param <O> type of the displayed object
 	 * @param <U> type of the column's data
 	 */
-	static class TableBinding<O, U> implements IComponentBinding<U> {
+	static class TableBinding<O, U extends @Nullable Object> implements IComponentBinding<U> {
 
 		private final Map<O, U> changes = new HashMap<>();
 
@@ -85,7 +82,7 @@ public abstract class ObjectControllerTableModel<O, M extends IObjectGuiModel<O>
 		}
 
 		@Override
-		public void setComponentValue(final IComponentChangeSource source, @Nullable final U value) {
+		public void setComponentValue(final IComponentChangeSource source, final U value) {
 			this.loadedValue = value;
 		}
 

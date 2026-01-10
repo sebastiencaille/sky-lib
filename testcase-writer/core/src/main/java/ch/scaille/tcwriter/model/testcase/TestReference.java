@@ -3,10 +3,12 @@ package ch.scaille.tcwriter.model.testcase;
 import ch.scaille.tcwriter.model.TestObjectDescription;
 import ch.scaille.tcwriter.model.dictionary.ParameterNature;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
+import lombok.Getter;
 
 public class TestReference extends TestParameterFactory {
 
-	protected TestStep step;
+	@Getter
+    protected TestStep step;
 	protected String description;
 
 	public TestReference(final TestStep step, final String name, final String description) {
@@ -21,11 +23,7 @@ public class TestReference extends TestParameterFactory {
 		return this;
 	}
 
-	public TestStep getStep() {
-		return step;
-	}
-
-	public TestObjectDescription toDescription() {
+    public TestObjectDescription toDescription() {
 		return new TestObjectDescription("[" + getName() + " from step " + getStep().getOrdinal() + "] " + description,
 				description);
 	}

@@ -1,34 +1,31 @@
 package ch.scaille.tcwriter.server.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
 
 
+@Getter
+@Setter
 public class Context implements Serializable {
 
 	private String dictionaryName;
-	private String testCase;
+    private String testCase;
 
-	public Optional<String> getDictionary() {
+	public Optional<String> getDictionaryName() {
 		return Optional.ofNullable(dictionaryName);
-	}
-
-	public void setDictionary(String dictionaryName) {
-		this.dictionaryName = dictionaryName;
 	}
 
 	public Optional<String> getTestCase() {
 		return Optional.ofNullable(testCase);
 	}
 
-	public void setTestCase(String testCase) {
-		this.testCase = testCase;
-	}
-	
-	public Context copy() {
+    public Context copy() {
 		final var copy = new Context();
-		copy.setDictionary(dictionaryName);
+		copy.setDictionaryName(dictionaryName);
 		copy.setTestCase(testCase);
 		return copy;
 	}

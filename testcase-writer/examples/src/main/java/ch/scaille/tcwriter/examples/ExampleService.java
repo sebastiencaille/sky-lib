@@ -1,5 +1,7 @@
 package ch.scaille.tcwriter.examples;
 
+import lombok.Getter;
+
 public class ExampleService {
 
 	public enum ItemKind {
@@ -11,13 +13,10 @@ public class ExampleService {
 	}
 
 	private State currentState = State.COMPULSIVE_BUYING;
-	private ItemKind ownedItem = null;
+	@Getter
+    private ItemKind ownedItem = null;
 
-	public ItemKind getOwnedItem() {
-		return ownedItem;
-	}
-
-	public void openBrowser() {
+    public void openBrowser() {
 		ensureInState(State.COMPULSIVE_BUYING);
 		currentState = State.ON_INTERNET;
 	}

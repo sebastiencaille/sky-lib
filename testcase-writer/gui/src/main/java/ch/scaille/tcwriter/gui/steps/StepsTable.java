@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.io.Serial;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Objects;
@@ -31,7 +32,8 @@ import ch.scaille.tcwriter.model.testcase.TestStep;
 
 public class StepsTable extends JPanel {
 
-	private static final long serialVersionUID = -8912254280325934892L;
+	@Serial
+    private static final long serialVersionUID = -8912254280325934892L;
 
 	private final StepsTableModel stepsTableModel;
 
@@ -50,7 +52,8 @@ public class StepsTable extends JPanel {
 
 		stepsJTable = new JTable(stepsTableModel) {
 
-			private static final long serialVersionUID = -3114512815335033791L;
+			@Serial
+            private static final long serialVersionUID = -3114512815335033791L;
 
 			@Override
 			protected void paintChildren(final Graphics g) {
@@ -76,7 +79,8 @@ public class StepsTable extends JPanel {
 
 					final var renderer = new DefaultTableCellRenderer() {
 						
-						private static final long serialVersionUID = 2857485822815100155L;
+						@Serial
+                        private static final long serialVersionUID = 2857485822815100155L;
 
 						@Override
 						public Component getTableCellRendererComponent(final JTable table, final Object value,
@@ -110,7 +114,8 @@ public class StepsTable extends JPanel {
 		columnModel.configureColumn(
 				fixedTextLength(Column.ORDINAL, 2, TableColumnWithPolicy.SAMPLE_NUMBERS,
 						TableColumnWithPolicy.DEFAULT_MARGIN).with(new DefaultTableCellRenderer() {
-							private static final long serialVersionUID = -8917034957019159554L;
+							@Serial
+                            private static final long serialVersionUID = -8917034957019159554L;
 
 							@Override
 							public Component getTableCellRendererComponent(JTable table, Object obj, boolean var3,

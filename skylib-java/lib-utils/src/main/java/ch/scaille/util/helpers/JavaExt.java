@@ -19,6 +19,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -196,7 +197,7 @@ public class JavaExt {
         if (closeable == null) {
             return (CloseableOptional<T>) EMPTY;
         }
-        return new CloseableOptionalNotNull<>(closeable);
+        return new CloseableOptionalNotNull<@NonNull T>(closeable);
     }
 
 }

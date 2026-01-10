@@ -9,7 +9,9 @@ import ch.scaille.gui.model.ListModel;
 import ch.scaille.gui.model.views.ListViews;
 import ch.scaille.gui.mvc.GuiController;
 import ch.scaille.util.helpers.Logs;
+import lombok.Getter;
 
+@Getter
 public class TestObjectControllerModelController extends GuiController {
 
 	private static final Logger LOGGER = Logs.of(TestObjectControllerModelController.class);
@@ -31,15 +33,7 @@ public class TestObjectControllerModelController extends GuiController {
 		};
 	}
 
-	public ListModel<TestObject> getModel() {
-		return model;
-	}
-
-	public TestObjectControllerModelFrameModel getTableModel() {
-		return tableModel;
-	}
-
-	public ActionListener getCommitAction() {
+    public ActionListener getCommitAction() {
 		return e -> tableModel.commit();
 	}
 

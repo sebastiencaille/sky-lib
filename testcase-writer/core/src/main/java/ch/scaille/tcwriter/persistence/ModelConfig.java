@@ -2,12 +2,14 @@ package ch.scaille.tcwriter.persistence;
 
 import ch.scaille.annotations.Labeled;
 import ch.scaille.annotations.Ordered;
+import lombok.Setter;
 
 /**
  * File based configuration
  * @author scaille
  *
  */
+@Setter
 public class ModelConfig {
 
 
@@ -25,18 +27,10 @@ public class ModelConfig {
         return dictionaryPath;
     }
 
-    public void setDictionaryPath(final String dictionaryPath) {
-        this.dictionaryPath = dictionaryPath;
-    }
-
     @Ordered(order = 3)
     @Labeled(label = "Location of the test cases")
     public String getTcPath() {
         return tcPath;
-    }
-
-    public void setTcPath(final String tcPath) {
-        this.tcPath = tcPath;
     }
 
     @Ordered(order = 4)
@@ -45,18 +39,10 @@ public class ModelConfig {
         return tcExportPath;
     }
 
-    public void setTcExportPath(final String tcExportPath) {
-        this.tcExportPath = tcExportPath;
-    }
-
     @Ordered(order = 5)
     @Labeled(label = "Location of the test case template")
     public String getTemplatePath() {
         return templatePath;
-    }
-
-    public void setTemplatePath(final String templatePath) {
-        this.templatePath = templatePath;
     }
 
 }

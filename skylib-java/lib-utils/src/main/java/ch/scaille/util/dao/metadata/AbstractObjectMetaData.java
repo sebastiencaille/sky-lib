@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Set;
 
 import ch.scaille.util.dao.metadata.AttributeFactory.Mode;
+import lombok.Getter;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Contains all the DO's meta-data.
@@ -18,6 +20,7 @@ import ch.scaille.util.dao.metadata.AttributeFactory.Mode;
  * @param <T> a data type
  */
 @SuppressWarnings("unchecked")
+@NullMarked
 public class AbstractObjectMetaData<T> {
 
 	/**
@@ -28,7 +31,8 @@ public class AbstractObjectMetaData<T> {
 	/**
 	 * Type of the object
 	 */
-	private final Class<? extends T> dataType;
+	@Getter
+    private final Class<? extends T> dataType;
 
 	/**
 	 * Access mode
@@ -52,11 +56,7 @@ public class AbstractObjectMetaData<T> {
 		createAttributesMetaData((Class<? super T>) clazz, attribNames);
 	}
 
-	public Class<? extends T> getDataType() {
-		return dataType;
-	}
-
-	public Collection<IAttributeMetaData<T>> getAttributes() {
+    public Collection<IAttributeMetaData<T>> getAttributes() {
 		return new HashSet<>(attributes.values());
 	}
 

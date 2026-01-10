@@ -11,11 +11,14 @@ import com.google.common.base.Objects;
 import ch.scaille.tcwriter.model.IdObject;
 import ch.scaille.tcwriter.model.dictionary.TestApiParameter;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
+import lombok.Getter;
+import lombok.Setter;
 
 /** A value in the test case */
 public class TestParameterValue extends IdObject {
 
-	private final String apiParameterId;
+	@Getter
+    private final String apiParameterId;
 
 	/**
 	 * A test api used to create selector/parameters, or a reference, or a simple
@@ -23,9 +26,12 @@ public class TestParameterValue extends IdObject {
 	 */
 	protected TestParameterFactory factory;
 
-	private final Map<String, TestParameterValue> complexTypeValues = new HashMap<>();
+	@Getter
+    private final Map<String, TestParameterValue> complexTypeValues = new HashMap<>();
 	
-	private String simpleValue;
+	@Setter
+    @Getter
+    private String simpleValue;
 
 	/**
 	 *
@@ -54,11 +60,7 @@ public class TestParameterValue extends IdObject {
 		return simpleValue.hashCode() + complexTypeValues.hashCode() * 13 + apiParameterId.hashCode() * 29;
 	}
 
-	public String getApiParameterId() {
-		return apiParameterId;
-	}
-
-	public TestParameterFactory getValueFactory() {
+    public TestParameterFactory getValueFactory() {
 		return factory;
 	}
 
@@ -69,11 +71,7 @@ public class TestParameterValue extends IdObject {
 		this.factory = valueFactory;
 	}
 
-	public Map<String, TestParameterValue> getComplexTypeValues() {
-		return complexTypeValues;
-	}
-
-	public void updateComplexTypeValues(final Map<String, TestParameterValue> idsToValues) {
+    public void updateComplexTypeValues(final Map<String, TestParameterValue> idsToValues) {
 		for (final var testParam : idsToValues.entrySet()) {
 			complexTypeValues.get(testParam.getKey()).setSimpleValue(testParam.getValue().getSimpleValue());
 		}
@@ -83,15 +81,7 @@ public class TestParameterValue extends IdObject {
 		complexTypeValues.put(value.getId(), value);
 	}
 
-	public String getSimpleValue() {
-		return simpleValue;
-	}
-
-	public void setSimpleValue(final String simpleValue) {
-		this.simpleValue = simpleValue;
-	}
-
-	public TestParameterValue duplicate() {
+    public TestParameterValue duplicate() {
 		final var newParamValue = createTestParameterValue(getId(), getApiParameterId(), factory, simpleValue);
 		for (final Entry<String, TestParameterValue> complexValue : complexTypeValues.entrySet()) {
 			newParamValue.complexTypeValues.put(complexValue.getKey(), complexValue.getValue().duplicate());

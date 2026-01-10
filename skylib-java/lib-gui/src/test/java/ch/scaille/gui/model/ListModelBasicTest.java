@@ -9,6 +9,7 @@ import java.util.stream.IntStream;
 
 import javax.swing.JTable;
 
+import lombok.Getter;
 import org.junit.jupiter.api.Test;
 
 import ch.scaille.gui.TestObject;
@@ -51,7 +52,8 @@ class ListModelBasicTest {
 
 	}
 
-	private static class TestObjectTableListModel
+	@Getter
+    private static class TestObjectTableListModel
 			extends ListModelTableModel<TestObject, TestObjectTableListModel.Columns> {
 		public enum Columns {
 			VAL
@@ -63,11 +65,7 @@ class ListModelBasicTest {
 			super(model, Columns.class);
 		}
 
-		public int getInsertCount() {
-			return insertCount;
-		}
-
-		@Override
+        @Override
 		public void fireTableRowsInserted(int firstRow, int lastRow) {
 			insertCount++;
 			super.fireTableRowsInserted(firstRow, lastRow);

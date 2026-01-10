@@ -1,5 +1,7 @@
 package ch.scaille.util.helpers;
 
+import lombok.Getter;
+
 import java.time.Duration;
 import java.util.Optional;
 import java.util.function.Function;
@@ -7,13 +9,15 @@ import java.util.function.Predicate;
 
 public class Poller {
 
-	protected final TimeTracker timeTracker;
+	@Getter
+    protected final TimeTracker timeTracker;
 
 	protected final Duration firstDelay;
 
 	protected final DelayFunction delayFunction;
 
-	private int executionCount = 0;
+	@Getter
+    private int executionCount = 0;
 
 	/*
 	 * End of last polling
@@ -85,14 +89,6 @@ public class Poller {
 
 	public void executed() {
 		executionCount++;
-	}
-
-	public int getExecutionCount() {
-		return executionCount;
-	}
-
-	public TimeTracker getTimeTracker() {
-		return timeTracker;
 	}
 
 }

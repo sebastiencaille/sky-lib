@@ -1,6 +1,7 @@
 package ch.scaille.tcwriter.gui.steps;
 
 import java.awt.Component;
+import java.io.Serial;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
@@ -10,7 +11,8 @@ import ch.scaille.tcwriter.model.testexec.StepStatus;
 
 public class StepStatusEditor extends DefaultCellEditor {
 
-	private static final long serialVersionUID = -4623973824541421254L;
+	@Serial
+    private static final long serialVersionUID = -4623973824541421254L;
 
 	public StepStatusEditor() {
 		super(new JCheckBox());

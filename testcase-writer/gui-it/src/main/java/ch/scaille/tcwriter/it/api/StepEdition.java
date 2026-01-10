@@ -1,6 +1,7 @@
 package ch.scaille.tcwriter.it.api;
 
 import ch.scaille.tcwriter.annotations.TCApi;
+import lombok.Getter;
 
 /**
  * To edit a step (actor/action/selector/parameter
@@ -8,6 +9,7 @@ import ch.scaille.tcwriter.annotations.TCApi;
  * @author scaille
  *
  */
+@Getter
 public class StepEdition {
 
 	private String actor;
@@ -20,47 +22,27 @@ public class StepEdition {
 
 	private String parameterValue1;
 
-	public String getActor() {
-		return actor;
-	}
-
-	@TCApi(description = "Actor", humanReadable = "Actor")
+    @TCApi(description = "Actor", humanReadable = "Actor")
 	public void setActor(final String actor) {
 		this.actor = actor;
 	}
 
-	public String getAction() {
-		return action;
-	}
-
-	@TCApi(description = "Action", humanReadable = "Action")
+    @TCApi(description = "Action", humanReadable = "Action")
 	public void setAction(final String action) {
 		this.action = action;
 	}
 
-	public String getSelector() {
-		return selector;
-	}
-
-	@TCApi(description = "Selector", humanReadable = "Selector")
+    @TCApi(description = "Selector", humanReadable = "Selector")
 	public void setSelector(final String selector) {
 		this.selector = selector;
 	}
 
-	public String getParameter() {
-		return parameter;
-	}
-
-	@TCApi(description = "Parameter", humanReadable = "Parameter")
+    @TCApi(description = "Parameter", humanReadable = "Parameter")
 	public void setParameter(final String parameter) {
 		this.parameter = parameter;
 	}
 
-	public String getParameterValue1() {
-		return parameterValue1;
-	}
-
-	@TCApi(description = "Parameter Value 1", humanReadable = "Parameter Value")
+    @TCApi(description = "Parameter Value 1", humanReadable = "Parameter Value")
 	public void setParameterValue1(String parameterValue1) {
 		this.parameterValue1 = parameterValue1;	
 	}

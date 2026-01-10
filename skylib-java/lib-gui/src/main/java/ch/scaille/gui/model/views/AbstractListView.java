@@ -38,11 +38,6 @@ public abstract class AbstractListView<T extends @Nullable Object> implements IL
 	}
 
 	@Override
-	public boolean accept(final T object) {
-		return true;
-	}
-
-	@Override
 	public int compare(final T o1, final T o2) {
 		return Objects.requireNonNull(parentComparator, this + ": parent comparator is null").compare(o1, o2);
 	}

@@ -33,7 +33,7 @@ public interface ListViews {
         return new StaticListView<>(Comparator.comparingLong(Object::hashCode), null);
     }
 
-    static <T extends @Nullable Object, P extends DynamicListView.View<T>> DynamicListView<T, P> dynamic(P parameters) {
+    static <T extends @Nullable Object, P extends IView<T>> DynamicListView<T, P> dynamic(P parameters) {
         return new DynamicListView<>(parameters,(o1, o2, p) -> p.compare(o1, o2), (o, p) -> p.test(o));
     }
 }

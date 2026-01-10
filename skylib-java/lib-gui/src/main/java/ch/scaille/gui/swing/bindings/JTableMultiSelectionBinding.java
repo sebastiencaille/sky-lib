@@ -66,8 +66,8 @@ public class JTableMultiSelectionBinding<T, U extends Collection<T>> implements 
     }
 
     @Override
-    public void setComponentValue(final IComponentChangeSource source, @Nullable final U values) {
-        if (source.isModifiedBy(table) || values == null) {
+    public void setComponentValue(final IComponentChangeSource source, U values) {
+        if (source.isModifiedBy(table)) {
             return;
         }
 

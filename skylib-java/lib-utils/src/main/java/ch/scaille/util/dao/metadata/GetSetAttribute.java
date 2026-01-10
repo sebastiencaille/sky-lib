@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 import java.util.Optional;
 
 import ch.scaille.annotations.Persistency;
+import lombok.Getter;
 
 /**
  * This class allows accessing an attribute through its get/set methods
@@ -18,8 +19,10 @@ import ch.scaille.annotations.Persistency;
 @SuppressWarnings("unchecked")
 public class GetSetAttribute<T, V> extends AbstractAttributeMetaData<T, V> {
 
-	protected final MethodHandle getter;
-	protected final MethodHandle setter;
+	@Getter
+    protected final MethodHandle getter;
+	@Getter
+    protected final MethodHandle setter;
 	protected final Method attributeGetterInfo;
 
 	public GetSetAttribute(final String name, Method attributeGetterInfo, final MethodHandle getter,
@@ -30,15 +33,7 @@ public class GetSetAttribute<T, V> extends AbstractAttributeMetaData<T, V> {
 		this.setter = setter;
 	}
 
-	public MethodHandle getGetter() {
-		return getter;
-	}
-
-	public MethodHandle getSetter() {
-		return setter;
-	}
-
-	@Override
+    @Override
 	public Object getValueOf(final T from) {
 		try {
 			return getter.bindTo(from).invoke();

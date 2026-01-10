@@ -48,9 +48,7 @@ class AttributeFactory {
 			}
 		case RECORD:
 			yield createRecordAttribute(currentClass, property, name);
-		default:
-			throw new IllegalStateException("Unhandled mode " + mode);
-		};
+        };
 	}
 
 	private static <T> IAttributeMetaData<T> createGetSetAttribute(final Class<?> currentClass, final String property,

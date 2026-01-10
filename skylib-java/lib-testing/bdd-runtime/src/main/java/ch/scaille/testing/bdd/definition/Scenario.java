@@ -7,20 +7,18 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import ch.scaille.testing.bdd.definition.Steps.Step;
+import lombok.Getter;
 
 public class Scenario<A extends AbstractAppTestApi<?>> {
 
     public static class ExecutionContext<A> {
 
         private final List<String> report = new ArrayList<>();
-		private final A appTestApi;
+		@Getter
+        private final A appTestApi;
 
         public ExecutionContext(A appTestApi) {
             this.appTestApi = appTestApi;
-        }
-
-        public A getAppTestApi() {
-            return appTestApi;
         }
 
         private void add(String verb, Step<?> step) {

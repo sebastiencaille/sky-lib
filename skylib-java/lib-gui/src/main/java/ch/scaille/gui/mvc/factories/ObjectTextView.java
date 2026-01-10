@@ -8,10 +8,12 @@ import ch.scaille.javabeans.converters.ConversionException;
 import ch.scaille.javabeans.converters.Converters;
 import ch.scaille.javabeans.converters.IConverter;
 import ch.scaille.util.helpers.LambdaExt.FunctionWithException;
+import lombok.Getter;
 
 /**
  * To display some text based on the content of an object
  */
+@Getter
 public abstract class ObjectTextView<T> {
 
 	private final T object;
@@ -20,11 +22,7 @@ public abstract class ObjectTextView<T> {
 		this.object = object;
 	}
 
-	public T getObject() {
-		return object;
-	}
-
-	@Override
+    @Override
 	public boolean equals(final Object obj) {
 		return obj != null && obj.getClass().equals(this.getClass())
 				&& Objects.equals(((ObjectTextView<?>) obj).object, object);

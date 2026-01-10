@@ -3,6 +3,7 @@ package ch.scaille.testing.bdd.definition;
 import java.util.function.Consumer;
 
 import ch.scaille.testing.bdd.definition.Scenario.ExecutionContext;
+import lombok.Getter;
 
 /**
  * 
@@ -18,7 +19,8 @@ public class Steps<A> {
 		/**
 		 * Indicates that the step is purely useful for automation
 		 */
-		private final boolean automationStep;
+		@Getter
+        private final boolean automationStep;
 
 		public Step(String description, Consumer<A> stepCall, boolean automationStep) {
 			super();
@@ -27,10 +29,7 @@ public class Steps<A> {
 			this.automationStep = automationStep;
 		}
 
-		public boolean isAutomationStep() {
-			return automationStep;
-		}
-	}
+    }
 
 	public static <A> Step<A> step(String description, Consumer<A> call) {
 		return new Step<>(description, call, false);

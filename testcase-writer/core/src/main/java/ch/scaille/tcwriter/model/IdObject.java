@@ -1,5 +1,8 @@
 package ch.scaille.tcwriter.model;
 
+import lombok.Getter;
+
+@Getter
 public class IdObject {
 
 	public static final String ID_NOT_SET = "NotSet";
@@ -10,11 +13,7 @@ public class IdObject {
 		this.id = id;
 	}
 
-	public String getId() {
-		return id;
-	}
-
-	@Override
+    @Override
 	public String toString() {
 		return super.toString() + ": " + id;
 	}

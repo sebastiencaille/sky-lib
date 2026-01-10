@@ -14,6 +14,8 @@ import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.tcwriter.gui.frame.TCWriterModel;
 import ch.scaille.tcwriter.model.ModelUtils;
 import ch.scaille.tcwriter.model.NamedObject;
+import ch.scaille.tcwriter.model.dictionary.TestAction;
+import ch.scaille.tcwriter.model.dictionary.TestActor;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 import ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue;
@@ -116,7 +118,7 @@ public class StepEditorController extends GuiController {
 		}
 
 		final var actionUtils = ModelUtils.actionUtils(td, action);
-		actionUtils.synchronizeStep(testStep.getValue());
+		actionUtils.synchronizeStep(step);
 		if (actionUtils.hasSelector()) {
 			final var selectorValue = step.getParametersValue(actionUtils.selectorIndex());
 			model.getPossibleSelectors().setValue(this, sorted(td.getParameterFactories(actionUtils.selector())));
@@ -156,18 +158,18 @@ public class StepEditorController extends GuiController {
 	}
 
 	public void applyChanges() {
-		final var step = guiModel.getSelectedStep().getValue();
-		step.setActor(model.getActor().getValue());
-		step.setAction(model.getAction().getValue());
+		final var step = Objects.requireNonNull(guiModel.getSelectedStep().getValue(), "No step selected");
+		step.setActor(Objects.requireNonNullElse(model.getActor().getValue(), TestActor.NOT_SET));
+		step.setAction(Objects.requireNonNullElse(model.getAction().getValue(), TestAction.NOT_SET));
 		step.getParametersValue().clear();
 
 		final var actionUtils = guiModel.getTestDictionary()
 				.map(dictionary -> ModelUtils.actionUtils(dictionary, step.getAction()));
 		if (actionUtils.hasSelector()) {
-			step.getParametersValue().add(model.getSelectorValues().getValue());
+			step.getParametersValue().add(Objects.requireNonNull(model.getSelectorValues().getValue(), "Selector is not set"));
 		}
 		if (actionUtils.hasActionParameter(0)) {
-			step.getParametersValue().add(model.getActionParameterValues().getValue());
+			step.getParametersValue().add(Objects.requireNonNull(model.getActionParameterValues().getValue(), "Parameter model is not set"));
 		}
 		guiModel.getSelectedStep().forceChanged(this);
 	}

@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serial;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -24,7 +25,8 @@ import ch.scaille.util.helpers.LambdaExt;
 
 public class DictionaryImport extends JDialog {
 
-	private static final long serialVersionUID = 8123471252947527763L;
+	@Serial
+    private static final long serialVersionUID = 8123471252947527763L;
 	private final IModelDao modelDao;
 	private final Component parentFrame;
 	private final JLabel dictionaryJarFileDisplay;

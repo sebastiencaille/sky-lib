@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ch.scaille.tcwriter.model.IdObject;
 import ch.scaille.tcwriter.model.NamedObject;
+import lombok.Getter;
 
 /**
  * A typed parameter of the test action or parameter factory. Used to link the
@@ -12,6 +13,7 @@ import ch.scaille.tcwriter.model.NamedObject;
  * @author scaille
  *
  */
+@Getter
 public class TestApiParameter extends NamedObject {
 
 	public static final TestApiParameter NO_PARAMETER = new TestApiParameter(IdObject.ID_NOT_SET, "", "");
@@ -30,11 +32,7 @@ public class TestApiParameter extends NamedObject {
 		this.parameterType = type;
 	}
 
-	public String getParameterType() {
-		return parameterType;
-	}
-
-	public boolean hasType() {
+    public boolean hasType() {
 		return !TestApiParameter.NO_TYPE.equals(parameterType);
 	}
 

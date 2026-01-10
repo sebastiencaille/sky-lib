@@ -1,13 +1,17 @@
 package ch.scaille.tcwriter.recorder;
 
+import lombok.Getter;
+
 import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RecorderTestActors {
 
-	private static final Map<Object, String> descriptions = new HashMap<>();
-	private static final Map<Object, String> names = new HashMap<>();
+	@Getter
+    private static final Map<Object, String> descriptions = new HashMap<>();
+	@Getter
+    private static final Map<Object, String> names = new HashMap<>();
 
 	private RecorderTestActors() {
 	}
@@ -29,14 +33,6 @@ public class RecorderTestActors {
 			descriptions.put(testActor, description);
 		}
 		return testActor;
-	}
-
-	public static Map<Object, String> getNames() {
-		return names;
-	}
-
-	public static Map<Object, String> getDescriptions() {
-		return descriptions;
 	}
 
 }

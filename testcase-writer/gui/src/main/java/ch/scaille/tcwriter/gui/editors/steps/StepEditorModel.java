@@ -56,7 +56,6 @@ public class StepEditorModel extends GuiModel {
                 (comp, _) -> text2Obj.apply(comp));
     }
 
-
     public static <T extends IdObject> IConverterWithContext<List<T>, List<ObjectTextView<T>>, ObjectProperty<TestDictionary>> objects2Texts(ObjectProperty<TestDictionary> dictionary) {
         final var obj2Text = ObjectTextView.<T, TestDictionary>biObject2Text((o, d) -> d.descriptionOf(o).description());
         return Converters.listen(ofProperty(dictionary),

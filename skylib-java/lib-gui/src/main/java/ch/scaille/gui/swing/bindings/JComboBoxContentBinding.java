@@ -8,10 +8,11 @@ import javax.swing.JComboBox;
 import ch.scaille.gui.swing.SwingExt;
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class JComboBoxContentBinding<T, U extends Collection<T>> implements IComponentBinding<U> {
+public class JComboBoxContentBinding<T, U extends @NonNull Collection<T>> implements IComponentBinding<U> {
 
 	private final JComboBox<T> box;
 

@@ -5,7 +5,7 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
- * 
+ * Allows converting property-side values and component-side values.
  * @param <P> The property side type
  * @param <C> The component side type
  */

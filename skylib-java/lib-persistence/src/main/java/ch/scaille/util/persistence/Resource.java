@@ -1,10 +1,13 @@
 package ch.scaille.util.persistence;
 
+import lombok.Getter;
+
 /**
  * A resource (meta data + data)
  * 
  * @param <T>
  */
+@Getter
 public class Resource<T> extends ResourceMetaData {
 
 	private final T value;
@@ -22,10 +25,6 @@ public class Resource<T> extends ResourceMetaData {
 	public Resource(Resource<?> resource, T value) {
 		super(resource.getLocator(), resource.getStorageLocator(), resource.getMimeType());
 		this.value = value;
-	}
-
-	public T getValue() {
-		return value;
 	}
 
 }

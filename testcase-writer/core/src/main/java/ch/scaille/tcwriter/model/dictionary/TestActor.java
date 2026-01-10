@@ -2,7 +2,9 @@ package ch.scaille.tcwriter.model.dictionary;
 
 import ch.scaille.tcwriter.model.IdObject;
 import ch.scaille.tcwriter.model.NamedObject;
+import lombok.Getter;
 
+@Getter
 public class TestActor extends NamedObject {
 
 	public static final TestActor NOT_SET = new TestActor(IdObject.ID_NOT_SET, "", TestRole.NOT_SET);
@@ -18,11 +20,7 @@ public class TestActor extends NamedObject {
 		this.role = testRole;
 	}
 
-	public TestRole getRole() {
-		return role;
-	}
-
-	@Override
+    @Override
 	public boolean equals(Object obj) {
 		return super.equals(obj);
 	}

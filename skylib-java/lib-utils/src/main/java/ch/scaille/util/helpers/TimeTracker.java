@@ -1,5 +1,7 @@
 package ch.scaille.util.helpers;
 
+import lombok.Getter;
+
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -15,7 +17,8 @@ public class TimeTracker {
 		return new TimeTracker(Duration.ofMillis(unit.toMillis(time)));
 	}
 
-	private final Duration duration;
+	@Getter
+    private final Duration duration;
 	private long absoluteTimeout = -1;
 	private final Object info;
 
@@ -24,11 +27,7 @@ public class TimeTracker {
 		this.duration = duration;
 	}
 
-	public Duration getDuration() {
-		return duration;
-	}
-
-	public void start() {
+    public void start() {
 		getAbsoluteTimeout();
 	}
 

@@ -30,7 +30,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * List Model with log(n) access.
  * <p>
- * List entry edition must start by calling startEditingValue(). Edition is
+ * Edition of list entries must start by calling startEditingValue(). Edition is
  * committed using stopEditingValue.<br>
  * Only one single edition can be made at a time, because the modification of
  * the edited entry may break the ordering of the list, making impossible to
@@ -71,7 +71,7 @@ public class ListModelContent<T extends @Nullable Object> extends AbstractListMo
         public Edition(final T value, final int oldIndex) {
             this.value = value;
             this.oldIndex = oldIndex;
-            accepted = viewProperty.getValue().accept(value);
+            accepted = viewProperty.getValue().test(value);
             editionStack = Thread.currentThread().getStackTrace();
         }
 
@@ -81,7 +81,7 @@ public class ListModelContent<T extends @Nullable Object> extends AbstractListMo
         }
 
         public void updateAccepted() {
-            accepted = viewProperty.getValue().accept(value);
+            accepted = viewProperty.getValue().test(value);
         }
 
         @Override
@@ -109,7 +109,7 @@ public class ListModelContent<T extends @Nullable Object> extends AbstractListMo
     private class ContentListeners implements IListViewOwner<T>, PropertyChangeListener, IChildModelListener<T>, Serializable {
 
         @Override
-        public @Nullable Comparator<T> parentComparator() {
+        public @Nullable IListView<T> parentComparator() {
             if (parent == null) {
                 return null;
             }
@@ -401,7 +401,7 @@ public class ListModelContent<T extends @Nullable Object> extends AbstractListMo
     protected List<T> addToModel(final Collection<T> newData) {
         final var oldSize = data.size();
         StreamExt.throwIfContainsNull(newData.stream());
-        final var addedData = newData.stream().filter(viewProperty.getValue()::accept).toList();
+        final var addedData = newData.stream().filter(viewProperty.getValue()::test).toList();
         data.addAll(addedData);
         data.sort(viewProperty.getValue());
         fireContentsChanged(this, 0, oldSize - 1);
@@ -455,7 +455,7 @@ public class ListModelContent<T extends @Nullable Object> extends AbstractListMo
     @Override
     public int insert(final T value) {
         checkNoEdition();
-        if (viewProperty.getValue().accept(value)) {
+        if (viewProperty.getValue().test(value)) {
             fireMutating();
             final var row = computeInsertionPoint(value);
             data.add(row, value);

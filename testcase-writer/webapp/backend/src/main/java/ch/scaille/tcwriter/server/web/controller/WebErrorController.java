@@ -5,6 +5,8 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
@@ -83,11 +85,16 @@ public class WebErrorController extends AbstractErrorController {
     }
 
     public static class ExceptionDto {
+        @Getter
         private final String code;
+        @Getter
         private final Object[] arguments;
+        @Getter
         private final HttpStatus status;
         @Nullable
         private String message = null;
+        @Setter
+        @Getter
         private String trace = "";
 
         public ExceptionDto(String code, final Object @Nullable [] nullableArguments, HttpStatus status) {
@@ -97,14 +104,6 @@ public class WebErrorController extends AbstractErrorController {
             this.status = status;
         }
 
-        public String getCode() {
-            return code;
-        }
-
-        public Object[] getArguments() {
-            return arguments;
-        }
-
         public void setMessage(@Nullable String text) {
             this.message = text;
         }
@@ -112,18 +111,6 @@ public class WebErrorController extends AbstractErrorController {
         @Nullable
         public String getMessage() {
             return message;
-        }
-
-        public String getTrace() {
-            return trace;
-        }
-
-        public void setTrace(String trace) {
-            this.trace = trace;
-        }
-
-        public HttpStatus getStatus() {
-            return status;
         }
 
     }

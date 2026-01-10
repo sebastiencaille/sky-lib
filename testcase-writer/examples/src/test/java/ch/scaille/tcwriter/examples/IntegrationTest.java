@@ -21,8 +21,7 @@ class IntegrationTest {
         
         final var modelDao = exampleHelper.getModelDao();
         modelDao.writeTestDictionary(model);
-        modelDao.writeTestCase(ExampleHelper.TC_FILE, testCase);
-        
+        modelDao.writeTestCase(ExampleHelper.TC_FILE_YAML, testCase);
     }
 
     @Test
@@ -32,7 +31,7 @@ class IntegrationTest {
         final var tc = exampleHelper.recordTestCase(model);
 
         exampleHelper.getModelDao().writeTestDictionary(model);
-        exampleHelper.getModelDao().writeTestCase(ExampleHelper.TC_FILE, tc);
+        exampleHelper.getModelDao().writeTestCase(ExampleHelper.TC_FILE_YAML, tc);
 
         // TODO: find a way to compare both
     }

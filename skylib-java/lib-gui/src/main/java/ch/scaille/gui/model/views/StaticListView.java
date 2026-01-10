@@ -5,6 +5,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -15,7 +16,7 @@ import java.util.function.Predicate;
  * @param <T>
  */
 @NullMarked
-public class StaticListView<T> extends AbstractListView<T> {
+public class StaticListView<T extends @Nullable Object> extends AbstractListView<T> {
 
     @Serial
     private static final long serialVersionUID = -4696996416566266010L;
@@ -31,6 +32,9 @@ public class StaticListView<T> extends AbstractListView<T> {
     /**
      * Creates a list view using a comparator and a filter
      *
+     * @param comparator The comparator used to sort elements. If null, falls back to the parent comparator.
+     * @param filter     The filter used to filter elements. If null, no filter is applied.
+     *
      */
     public StaticListView(@Nullable final Comparator<? super T> comparator, @Nullable final Predicate<? super T> filter) {
         this.filter = filter;
@@ -38,16 +42,14 @@ public class StaticListView<T> extends AbstractListView<T> {
     }
 
     @Override
-    public boolean accept(final T object) {
+    public boolean test(final T object) {
         return filter == null || filter.test(object);
     }
 
     @Override
     public int compare(final T o1, final T o2) {
-        if (comparator != null) {
-            return comparator.compare(o1, o2);
-        }
-        return parentComparator.compare(o1, o2);
+        final Comparator<? super T> safeComparator = Objects.requireNonNullElse(comparator, parentComparator);
+        return safeComparator.compare(o1, o2);
     }
 
     @Override

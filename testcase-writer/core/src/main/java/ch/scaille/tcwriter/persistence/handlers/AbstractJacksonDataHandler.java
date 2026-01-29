@@ -5,18 +5,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
-import com.fasterxml.jackson.databind.cfg.MapperBuilder;
-import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.node.TextNode;
-import com.fasterxml.jackson.datatype.guava.GuavaModule;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.MapperFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.DefaultTyping;
+import tools.jackson.databind.ValueDeserializer;
+import tools.jackson.databind.cfg.ConstructorDetector;
+import tools.jackson.databind.cfg.MapperBuilder;
+import tools.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+import tools.jackson.databind.module.SimpleModule;
+import tools.jackson.databind.node.StringNode;
+import tools.jackson.datatype.guava.GuavaModule;
 
 import ch.scaille.tcwriter.model.ExportReference;
 import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
@@ -36,10 +36,9 @@ public abstract class AbstractJacksonDataHandler implements IStorageDataHandler 
 
 	protected static final SimpleModule testCaseWriterModule = new SimpleModule("TCWriterModel");
 	static {
-		testCaseWriterModule.addDeserializer(ExportReference.class, new JsonDeserializer<>() {
+		testCaseWriterModule.addDeserializer(ExportReference.class, new ValueDeserializer<>() {
 			@Override
-			public ExportReference deserialize(final JsonParser p, final DeserializationContext ctxt)
-					throws IOException {
+			public ExportReference deserialize(final JsonParser p, final DeserializationContext ctxt) {
 				// yaml and json have different behavior
 				if (!ExportReference.class.getName().equals(p.getTypeId())
 						&& !ExportReference.class.getName().equals(p.currentName())) {
@@ -50,7 +49,7 @@ public abstract class AbstractJacksonDataHandler implements IStorageDataHandler 
 				if (id == null) {
 					throw new StorageRTException("Unexpected attribute in ExportReference: " + p.currentName());
 				}
-				final var exportReference = new ExportReference(((TextNode) id).asText());
+				final var exportReference = new ExportReference(((StringNode) id).asString());
 				((List<ExportReference>) ctxt.getAttribute(CONTEXT_ALL_REFERENCES)).add(exportReference);
 				return exportReference;
 			}
@@ -65,9 +64,9 @@ public abstract class AbstractJacksonDataHandler implements IStorageDataHandler 
 
 	protected static <M extends ObjectMapper, B extends MapperBuilder<M, B>> MapperBuilder<M, B> configure(
 			MapperBuilder<M, B> builder) {
-		return builder.configure(MapperFeature.AUTO_DETECT_GETTERS, false)
-				.configure(MapperFeature.AUTO_DETECT_IS_GETTERS, false)
-				.configure(MapperFeature.AUTO_DETECT_FIELDS, true).visibility(PropertyAccessor.FIELD, Visibility.ANY)
+		return builder.configure(MapperFeature.USE_ANNOTATIONS, true)
+				.changeDefaultVisibility(checker -> checker.withFieldVisibility(Visibility.ANY))
+				.constructorDetector(ConstructorDetector.EXPLICIT_ONLY)
 				.activateDefaultTyping(BasicPolymorphicTypeValidator.builder()
 						.allowIfBaseType("ch.scaille.tcwriter.")
 						.allowIfBaseType("java.util.")
@@ -87,7 +86,7 @@ public abstract class AbstractJacksonDataHandler implements IStorageDataHandler 
 		if (ExportableTestCase.class.isAssignableFrom(targetType)) {
 			final var references = new ArrayList<ExportReference>();
 			final var tc = (ExportableTestCase) mapper.readerFor(ExportableTestCase.class)
-					.with(mapper.getDeserializationConfig().getAttributes().withPerCallAttribute(CONTEXT_ALL_REFERENCES,
+					.with(mapper.deserializationConfig().getAttributes().withPerCallAttribute(CONTEXT_ALL_REFERENCES,
 							references))
 					.readValue(value);
 			tc.setExportedReferences(references);

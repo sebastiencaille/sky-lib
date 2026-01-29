@@ -24,7 +24,7 @@
 		<jackson-bom.version>3.0.3</jackson-bom.version>
 		<jackson-databind-nullable.version>0.2.8</jackson-databind-nullable.version>
 		<guava.version>33.5.0-jre</guava.version>
-		<logback.version>1.5.24</logback.version>
+		<logback.version>1.5.25</logback.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
 		<!--hibernate.version>7.1.7.Final</hibernate.version-->
 		<hibernate-validator.version>9.1.0.Final</hibernate-validator.version>
@@ -32,7 +32,7 @@
 		<jetbrain-annotations.version>26.0.2-1</jetbrain-annotations.version>
 
 		<swagger-parser.version>2.1.37</swagger-parser.version>
-		<swagger.version>2.2.41</swagger.version>
+		<swagger.version>2.2.42</swagger.version>
 
 		<undertow.version>2.4.0.Alpha1</undertow.version>
 		<liquibase.version>5.0.1</liquibase.version>
@@ -41,7 +41,7 @@
 		<junit-jupiter.version>6.0.2</junit-jupiter.version>
 		<junit.version>4.13.2</junit.version>
 		<junit-platform-console-standalone.version>6.0.2</junit-platform-console-standalone.version>
-		<selenium.version>4.39.0</selenium.version>
+		<selenium.version>4.40.0</selenium.version>
 		<h2.version>2.4.240</h2.version>
 
 		<coverage.temp>${java.io.tmpdir}/coverage/${basedir}</coverage.temp>
@@ -60,7 +60,7 @@
 		<maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
 		<maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
 		<maven-shade-plugin.version>3.6.1</maven-shade-plugin.version>
-		<versions-maven-plugin.version>2.20.1</versions-maven-plugin.version>
+		<versions-maven-plugin.version>2.21.0</versions-maven-plugin.version>
 		<flatten-maven-plugin.version>1.7.3</flatten-maven-plugin.version>
 
 		<maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
@@ -69,7 +69,7 @@
 		<sonar-maven-plugin.version>5.5.0.6356</sonar-maven-plugin.version>
 
 		<maven-exec-plugin.version>3.6.3</maven-exec-plugin.version>
-		<openapi-generator-maven-plugin.version>7.18.0</openapi-generator-maven-plugin.version>
+		<openapi-generator-maven-plugin.version>7.19.0</openapi-generator-maven-plugin.version>
 		<jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
 
 	</properties>
@@ -230,7 +230,7 @@
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>aspectj-maven-plugin</artifactId>
-					<version>1.15.0</version>
+					<version>1.16.0</version>
 					<dependencies>
 						<dependency>
 							<groupId>org.aspectj</groupId>
@@ -257,9 +257,9 @@
                         -->
 
 						<dependency>
-							<groupId>com.fasterxml.jackson.dataformat</groupId>
+							<groupId>tools.jackson.dataformat</groupId>
 							<artifactId>jackson-dataformat-yaml</artifactId>
-							<version>2.17.1</version>
+							<version>${jackson-bom.version}</version>
 						</dependency>
 					</dependencies>
 				</plugin>

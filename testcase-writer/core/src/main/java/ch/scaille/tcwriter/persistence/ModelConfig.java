@@ -2,6 +2,7 @@ package ch.scaille.tcwriter.persistence;
 
 import ch.scaille.annotations.Labeled;
 import ch.scaille.annotations.Ordered;
+import ch.scaille.tcwriter.model.config.SubConfig;
 import lombok.Setter;
 
 /**
@@ -10,7 +11,7 @@ import lombok.Setter;
  *
  */
 @Setter
-public class ModelConfig {
+public class ModelConfig implements SubConfig {
 
 
     private String dictionaryPath;

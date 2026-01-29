@@ -19,6 +19,10 @@ public class ClassLoaderHelper {
 	private ClassLoaderHelper() {
 	}
 
+	public static Stream<URL> clean(Stream<URL> original) {
+		return original.distinct().filter(u -> !u.toString().endsWith(".idx"));
+	}
+
 	public static String readUTF8Resource(final String resourceName) throws IOException {
 		try (final var inStream = openResourceStream(resourceName)) {
 			return JavaExt.readUTF8Stream(inStream);
@@ -36,8 +40,8 @@ public class ClassLoaderHelper {
 
 	public static URL[] appClassPath() {
 		final var cp = System.getProperty("java.class.path").split(CP_SEPARATOR);
-		return Arrays.stream(cp)
-				.map(LambdaExt.uncheckedF(jar -> Paths.get(jar).toUri().toURL()))
+		return clean(Arrays.stream(cp)
+				.map(LambdaExt.uncheckedF(jar -> Paths.get(jar).toUri().toURL())))
 				.toArray(URL[]::new);
 	}
 
@@ -57,7 +61,7 @@ public class ClassLoaderHelper {
 		if (urls.length == 0) {
 			return appClassPath();
 		}
-		return urls;
+		return clean(Arrays.stream(urls)).toArray(URL[]::new);
 	}
 
 	public static String cpToCommandLine(final URL[] classpath, final URL... extra) {

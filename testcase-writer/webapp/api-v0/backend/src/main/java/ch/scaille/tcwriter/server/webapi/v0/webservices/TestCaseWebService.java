@@ -1,18 +1,21 @@
-package ch.scaille.tcwriter.server.webapi.v0.controllers;
+package ch.scaille.tcwriter.server.webapi.v0.webservices;
 
 import java.util.List;
+import java.util.Optional;
 
+import ch.scaille.tcwriter.generated.api.controllers.v0.TestcaseApi;
 import ch.scaille.tcwriter.server.facade.DictionaryFacade;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ch.scaille.tcwriter.generated.api.controllers.v0.TestcaseApiController;
 import ch.scaille.tcwriter.generated.api.model.v0.ExportType;
 import ch.scaille.tcwriter.generated.api.model.v0.Metadata;
 import ch.scaille.tcwriter.generated.api.model.v0.TestCase;
@@ -27,7 +30,9 @@ import ch.scaille.tcwriter.server.webapi.v0.mappers.TestCaseMapper;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
-public class TestCaseController extends TestcaseApiController {
+@RestController
+@RequestMapping("${openapi.testCaseServer.base-path:rest/v0}")
+public class TestCaseWebService implements TestcaseApi {
 
 	private final TestCaseFacade testCaseFacade;
 
@@ -36,17 +41,23 @@ public class TestCaseController extends TestcaseApiController {
 	private final SessionManager sessionAccessor;
 
 	private final WebFeedbackFacade webFeedbackFacade;
+	private final NativeWebRequest request;
 
-	public TestCaseController(SessionManager sessionAccessor,
+	public TestCaseWebService(SessionManager sessionAccessor,
 							  TestCaseFacade testCaseFacade,
-                              WebFeedbackFacade webFeedbackFacade, NativeWebRequest request,
+							  WebFeedbackFacade webFeedbackFacade, NativeWebRequest request,
 							  DictionaryFacade dictionaryFacade) {
-		super(request);
+		this.request = request;
 		this.sessionAccessor = sessionAccessor;
 		this.testCaseFacade = testCaseFacade;
 		this.webFeedbackFacade = webFeedbackFacade;
         this.dictionaryFacade = dictionaryFacade;
     }
+
+	@Override
+	public Optional<NativeWebRequest> getRequest() {
+		return Optional.ofNullable(request);
+	}
 
 	@Transactional(readOnly = true)
 	@Override
@@ -70,6 +81,7 @@ public class TestCaseController extends TestcaseApiController {
 	@Transactional
 	@Override
 	public ResponseEntity<Void> createTestcase(@Valid String dictionary, @Valid TestCase testCase) {
+
 		testCaseFacade.saveTestCase(TestCaseMapper.MAPPER.convertToExportable(testCase, dictionaryFacade.load(dictionary)));
 		return ResponseEntity.ok().build();
 	}

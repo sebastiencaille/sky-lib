@@ -26,4 +26,8 @@ public class TestCaseDao extends AbstractDao implements ITestCaseDao {
         return modelDao.readTestCase(testCaseName, _ -> dictionary);
     }
 
+    @Override
+    public void save(ExportableTestCase testCase) {
+        modelDao.writeTestCase(testCase.getName(), testCase);
+    }
 }

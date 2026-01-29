@@ -52,8 +52,10 @@ public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 		if (elementPath.isEmpty()) {
 			return;
 		}
-		LOGGER.info(() -> "Received on %s, %s: %s -> %s".formatted(elementPath,
+		/*
+		LOGGER.debug(() -> "Received on %s, %s: %s -> %s".formatted(elementPath,
 						mutation.getAttributeName(), mutation.getOldValue(), mutation.getCurrentValue()));
+		 */
 		if (mutationFilter != null && mutationFilter.test(mutation)) {
 			synchronized (mutations) {
 				mutations.add(mutation);

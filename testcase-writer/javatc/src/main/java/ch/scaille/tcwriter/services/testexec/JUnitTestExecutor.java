@@ -60,8 +60,9 @@ public class JUnitTestExecutor implements ITestExecutor {
 				"-cp", ClassLoaderHelper.cpToCommandLine(classPath), //
 				"org.aspectj.tools.ajc.Main", //
 				"-aspectpath", aspectsClassPath, //
-				"-source", "21", //
-				"-target", "21", //
+ 				// TODO config
+				"-source", "25", //
+				"-target", "25", //
 				"-verbose", //
 				// "-verbose", "-showWeaveInfo", //
 				"-d", testConfig.binaryFolder.toString(), //
@@ -76,25 +77,25 @@ public class JUnitTestExecutor implements ITestExecutor {
 	public void execute(TestConfig testConfig, String binaryRef) throws IOException {
 
 		final var binaryURL = testConfig.binaryFolder;
-		final var junit = Arrays.stream(classPath)
+		final var junitJarFile = Arrays.stream(classPath)
 				.filter(s -> s.toString().contains("junit-platform-console-standalone"))
 				.findAny()
 				.orElseThrow(() -> new IllegalStateException("junit-platform-console-standalone was not found"));
 
-		final var parameters = new ArrayList<String>();
-		parameters.addAll(List.of(config.getJava(), //
+		final var javaParameters = new ArrayList<String>();
+		javaParameters.addAll(List.of(config.getJava(), //
 				"-Dtest.port=" + testConfig.tcpPort, "-Dtc.stepping=true", //
-				"-jar",  ClassLoaderHelper.cpToCommandLine(new URL[]{ junit }), "--select-class=" + binaryRef, "--details", "verbose"));
-		parameters.addAll(toMultipleCommandLine(classPath));
-		parameters.add("-cp=" + binaryURL);
-		parameters.add("-cp=" + ClassLoaderHelper.cpToCommandLine(ClassLoaderHelper.cpToURLs(config.getClasspath())));
-		exec("Execution", parameters.toArray(new String[0]));
+				"-jar",  ClassLoaderHelper.cpToCommandLine(new URL[]{ junitJarFile }), "execute", "--select-class=" + binaryRef, "--details", "verbose"));
+		javaParameters.addAll(toMultipleCommandLine(classPath));
+		javaParameters.add("-cp=" + binaryURL);
+		javaParameters.add("-cp=" + ClassLoaderHelper.cpToCommandLine(ClassLoaderHelper.cpToURLs(config.getClasspath())));
+		exec("Execution", javaParameters.toArray(new String[0]));
 	}
 
 	private List<String> toMultipleCommandLine(URL[] classPath) {
 		return Lists.partition(List.of(classPath), 50)
 				.stream()
-				.map(c -> LambdaExt.uncheck(() -> "-cp=" + ClassLoaderHelper.cpToCommandLine(c.toArray(new URL[0]))))
+				.map(cp -> LambdaExt.uncheck(() -> "-cp=" + ClassLoaderHelper.cpToCommandLine(cp.toArray(new URL[0]))))
 				.toList();
 	}
 

@@ -1,11 +1,17 @@
 package ch.scaille.tcwriter.model.testcase;
 
+import ch.scaille.tcwriter.model.dictionary.StepClassifier;
+import ch.scaille.tcwriter.model.dictionary.TestActor;
+import ch.scaille.tcwriter.model.dictionary.TestRole;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import ch.scaille.tcwriter.model.ExportReference;
 import ch.scaille.tcwriter.model.dictionary.TestAction;
 import org.jspecify.annotations.NullMarked;
+
+import java.util.List;
 
 @JsonIgnoreProperties({"actor", "role", "action" })
 @NullMarked
@@ -20,7 +26,12 @@ public class ExportableTestStep extends TestStep {
 	public ExportableTestStep(int ordinal) {
 		super(ordinal);
 	}
-	
+
+	@JsonCreator
+	public ExportableTestStep(final int ordinal, List<TestParameterValue> parametersValue, TestReference reference, StepClassifier classifier) {
+		super(ordinal, TestActor.NOT_SET, TestRole.NOT_SET, TestAction.NOT_SET, parametersValue, reference, classifier);
+	}
+
 	@Override
 	protected TestStep createTestStep() {
 		return new ExportableTestStep(-1);

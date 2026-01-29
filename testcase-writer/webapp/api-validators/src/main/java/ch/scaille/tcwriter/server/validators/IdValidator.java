@@ -7,7 +7,7 @@ import jakarta.validation.ConstraintValidatorContext;
 
 public class IdValidator implements ConstraintValidator<Id, String> {
 
-	private static final Pattern ID_VALIDATOR = Pattern.compile("^[\\w\\-]+$");
+	private static final Pattern ID_VALIDATOR = Pattern.compile("^[\\w\\-.]+$");
 
 	@Override
 	public boolean isValid(String id, ConstraintValidatorContext context) {

@@ -5,6 +5,7 @@ import java.util.List;
 
 import ch.scaille.tcwriter.model.IdObject;
 import ch.scaille.tcwriter.model.NamedObject;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 
 /**
@@ -16,89 +17,102 @@ import lombok.Getter;
 @Getter
 public class TestParameterFactory extends NamedObject {
 
-	public static final TestParameterFactory NO_FACTORY = new TestParameterFactory(IdObject.ID_NOT_SET,
-			IdObject.ID_NOT_SET, ParameterNature.NOT_SET, "");
-	private final List<TestApiParameter> mandatoryParameters = new ArrayList<>();
-	private final List<TestApiParameter> optionalParameters = new ArrayList<>();
-	private final ParameterNature nature;
-	private final String parameterType;
+    public static final TestParameterFactory NO_FACTORY = new TestParameterFactory(IdObject.ID_NOT_SET,
+            IdObject.ID_NOT_SET, ParameterNature.NOT_SET, "");
+    private final List<TestApiParameter> mandatoryParameters = new ArrayList<>();
+    private final List<TestApiParameter> optionalParameters = new ArrayList<>();
+    private final ParameterNature nature;
+    private final String parameterType;
 
-	protected TestParameterFactory() {
-		super(null, null);
-		this.nature = null;
-		this.parameterType = null;
-	}
+    protected TestParameterFactory() {
+        super(null, null);
+        this.nature = null;
+        this.parameterType = null;
+    }
 
-	public TestParameterFactory(final String id, final String name, final ParameterNature nature, final String type) {
-		super(id, name);
-		this.parameterType = type;
-		this.nature = nature;
-	}
+    public TestParameterFactory(final String id, final String name, final ParameterNature nature, final String type) {
+        super(id, name);
+        this.parameterType = type;
+        this.nature = nature;
+    }
+
+    @JsonCreator
+    public TestParameterFactory(final String id, final String name,
+                                List<TestApiParameter> mandatoryParameters,
+                                List<TestApiParameter> optionalParameters,
+                                ParameterNature nature,
+                                String parameterType) {
+        super(id, name);
+        this.mandatoryParameters.addAll(mandatoryParameters);
+        this.optionalParameters.addAll(optionalParameters);
+        this.nature = nature;
+        this.parameterType = parameterType;
+    }
 
     public TestApiParameter getMandatoryParameter(final int index) {
-		return mandatoryParameters.get(index);
-	}
+        return mandatoryParameters.get(index);
+    }
 
-	public TestApiParameter getMandatoryParameterById(final String id) {
-		return mandatoryParameters.stream()
-				.filter(p -> p.getId().equals(id))
-				.findFirst()
-				.orElseThrow(() -> new IllegalStateException("Can't find mandatory parameter " + id));
-	}
+    public TestApiParameter getMandatoryParameterById(final String id) {
+        return mandatoryParameters.stream()
+                .filter(p -> p.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Can't find mandatory parameter " + id));
+    }
 
-	public boolean hasMandatoryParameter(final String id) {
-		return mandatoryParameters.stream().anyMatch(p -> p.getId().equals(id));
-	}
+    public boolean hasMandatoryParameter(final String id) {
+        return mandatoryParameters.stream().anyMatch(p -> p.getId().equals(id));
+    }
 
     public TestApiParameter getOptionalParameterById(final String id) {
-		return optionalParameters.stream()
-				.filter(p -> p.getId().equals(id))
-				.findFirst()
-				.orElseThrow(() -> new IllegalStateException("Can't find optional parameter " + id));
-	}
+        return optionalParameters.stream()
+                .filter(p -> p.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Can't find optional parameter " + id));
+    }
 
-	public TestApiParameter getOptionalParameterByName(final String name) {
-		return optionalParameters.stream()
-				.filter(p -> p.getName().equals(name))
-				.findFirst()
-				.orElseThrow(() -> new IllegalStateException("Can't find optional parameter " + name));
-	}
+    public TestApiParameter getOptionalParameterByName(final String name) {
+        return optionalParameters.stream()
+                .filter(p -> p.getName().equals(name))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Can't find optional parameter " + name));
+    }
 
-	public boolean hasOptionalParameter(final String id) {
-		return optionalParameters.stream().anyMatch(p -> p.getId().equals(id));
-	}
+    public boolean hasOptionalParameter(final String id) {
+        return optionalParameters.stream().anyMatch(p -> p.getId().equals(id));
+    }
 
     public boolean hasType() {
-		return !TestApiParameter.NO_TYPE.equals(parameterType);
-	}
+        return !TestApiParameter.NO_TYPE.equals(parameterType);
+    }
 
-	public boolean matches(final TestApiParameter param) {
-		return getParameterType().equals(param.getParameterType());
+    public boolean matches(final TestApiParameter param) {
+        return getParameterType().equals(param.getParameterType());
 
-	}
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		return super.equals(obj);
-	}
-	
-	@Override
-	public int hashCode() {
-		return super.hashCode();
-	}
-	
-	@Override
-	public String toString() {
-		return String.format("%s, %s, %s mandatory, %s optional ", super.toString(), getParameterType(),
-				mandatoryParameters.size(), optionalParameters.size());
-	}
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
 
-	public static TestParameterFactory simpleType(final String type) {
-		return new TestParameterFactory("", "", ParameterNature.SIMPLE_TYPE, type);
-	}
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 
-	public static TestParameterFactory unSet(final TestApiParameter param) {
-		return new TestParameterFactory("", "", ParameterNature.NOT_SET, param.getParameterType());
-	}
+    @Override
+    public String toString() {
+        return String.format("%s, %s, %s mandatory, %s optional ", super.toString(), getParameterType(),
+                mandatoryParameters.size(), optionalParameters.size());
+    }
+
+    public static TestParameterFactory simpleType(final String type) {
+        return new TestParameterFactory("", "", ParameterNature.SIMPLE_TYPE, type);
+    }
+
+    public static TestParameterFactory unSet(final TestApiParameter param) {
+        return new TestParameterFactory("", "", ParameterNature.NOT_SET, param.getParameterType());
+    }
 
 }

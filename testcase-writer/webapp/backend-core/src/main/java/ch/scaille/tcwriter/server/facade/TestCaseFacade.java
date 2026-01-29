@@ -45,6 +45,11 @@ public class TestCaseFacade extends AbstractFacade {
 		return ValidationHelper.testCaseFound(tcId, testCaseDao.load(tcId, loadDictionary(dictionaryId)).orElse(null));
 	}
 
+	public void saveTestCase(ExportableTestCase testCase) {
+		testCaseDao.save(testCase);
+	}
+
+
 	public List<String> computeHumanReadableTexts(TestCase tc, List<TestStep> steps) {
 		final var humanReadableVisitor = new HumanReadableVisitor(tc, false);
 		return steps.stream().map(humanReadableVisitor::process).toList();
@@ -101,6 +106,5 @@ public class TestCaseFacade extends AbstractFacade {
 			throw new WebRTException(e);
 		}
 	}
-
 
 }

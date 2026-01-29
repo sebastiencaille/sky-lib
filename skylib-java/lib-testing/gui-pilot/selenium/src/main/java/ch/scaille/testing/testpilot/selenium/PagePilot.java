@@ -5,9 +5,11 @@ import java.util.function.Supplier;
 
 import lombok.Getter;
 import org.jspecify.annotations.NullMarked;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WrapsElement;
+import org.openqa.selenium.devtools.v142.network.model.DataReceived;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
@@ -33,7 +35,11 @@ public class PagePilot {
     public SeleniumPollingBuilder on(Supplier<WebElement> element) {
 		return new SeleniumPollingBuilder(pilotOf(element));
 	}
-	
+
+	public SeleniumPollingBuilder on(By by) {
+		return new SeleniumPollingBuilder(pilotOf(driver -> driver.findElement(by)));
+	}
+
 	/**
 	 * Creates a pilot to interact with a WebElement
 	 */

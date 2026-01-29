@@ -12,7 +12,7 @@ TestCase:
       type: string
 TestStep:
   type: object
-  required: [ ordinal, classifier, actorRef, roleRef, actionRef, parametersValue, reference, classifier ]
+  required: [ ordinal, actorRef, roleRef, actionRef, parametersValue ]
   properties:
     ordinal:
       type: integer

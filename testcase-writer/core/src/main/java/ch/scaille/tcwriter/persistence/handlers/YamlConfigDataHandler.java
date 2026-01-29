@@ -1,13 +1,14 @@
 package ch.scaille.tcwriter.persistence.handlers;
 
-import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature;
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import tools.jackson.dataformat.yaml.YAMLMapper;
+import tools.jackson.dataformat.yaml.YAMLWriteFeature;
 
 public class YamlConfigDataHandler extends AbstractJacksonDataHandler {
 
 	public YamlConfigDataHandler() {
-		super(configure(YAMLMapper.builder().configure(Feature.USE_NATIVE_TYPE_ID, true)
-				.configure(Feature.USE_NATIVE_OBJECT_ID, true)).build());
+		super(configure(YAMLMapper.builder()
+				.configure(YAMLWriteFeature.USE_NATIVE_OBJECT_ID, true))
+				.build());
 	}
 
 	@Override

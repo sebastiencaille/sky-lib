@@ -15,6 +15,10 @@
 			<artifactId>testcase-writer-gui</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>ch.scaille</groupId>
+			<artifactId>gui-pilot-selenium</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
 		</dependency>

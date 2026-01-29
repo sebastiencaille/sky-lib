@@ -1,7 +1,6 @@
 StepClassifier:
-  property:
-    name: string
-    enum: [ ACTION, PREPARATION, CHECK ]
+  type: string
+  enum: [ ACTION, PREPARATION, CHECK ]
 TestDictionary:
   required: [ metadata, roles, descriptions, actors, testObjectFactories, selectorTypes ]
   properties:

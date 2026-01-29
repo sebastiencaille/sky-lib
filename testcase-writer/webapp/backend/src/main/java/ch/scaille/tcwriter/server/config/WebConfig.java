@@ -45,6 +45,10 @@ public class WebConfig implements WebMvcConfigurer {
 		return messageSource;
 	}
 
+	/**
+	 * Web apis
+	 * @return
+	 */
 	@Bean
 	ServletRegistrationBean<?> webApiServlet() {
 		final var annotationContext = new AnnotationConfigServletWebApplicationContext();

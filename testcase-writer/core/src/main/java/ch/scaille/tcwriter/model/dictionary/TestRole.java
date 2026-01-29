@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.scaille.tcwriter.model.NamedObject;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 
 @Getter
@@ -20,7 +21,13 @@ public class TestRole extends NamedObject {
 		super(id, name);
 	}
 
-    public TestAction getAction(final String newId) {
+	@JsonCreator
+	public TestRole(final String id, String name, List<TestAction> actions) {
+		super(id, name);
+		this.actions.addAll(actions);
+	}
+
+	public TestAction getAction(final String newId) {
 		return actions.stream()
 				.filter(api -> api.getId().equals(newId))
 				.findFirst()

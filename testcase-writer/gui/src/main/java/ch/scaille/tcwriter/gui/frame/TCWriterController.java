@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 import javax.swing.JFileChooser;
@@ -25,6 +26,7 @@ import ch.scaille.tcwriter.gui.editors.steps.StepEditorController;
 import ch.scaille.tcwriter.gui.frame.TCWriterModel.TestExecutionState;
 import ch.scaille.tcwriter.gui.utils.DictionaryImport;
 import ch.scaille.tcwriter.model.TestCaseException;
+import ch.scaille.tcwriter.model.config.SubConfig;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
 import ch.scaille.tcwriter.model.testcase.ExportableTestStep;
@@ -108,7 +110,7 @@ public class TCWriterController extends GuiController {
 		final var errorProp = new ErrorSet("Error", editorPropertySupport);
 		for (final var configToEdit : configDao.getCurrentConfig().getSubconfigs()) {
 			final var controller = new GenericEditorController<>(
-					GenericEditorClassModel.builder((Class<Object>) configToEdit.getClass())
+					GenericEditorClassModel.builder((Class<SubConfig>) configToEdit.getClass())
 							.support(propertySupport)
 							.errorSet(errorProp)
 							.build());
@@ -179,7 +181,8 @@ public class TCWriterController extends GuiController {
 		final var dialogResult = testFileChooser.showSaveDialog(gui);
 		if (dialogResult == 0) {
 			final var testFile = testFileChooser.getSelectedFile();
-			modelDao.writeTestCase(testFile.toString(), (ExportableTestCase) model.getTestCase().getValue());
+			final var testCase = Objects.requireNonNull(model.getTestCase().getValue(), "No test case to save");
+			modelDao.writeTestCase(testFile.toString(), (ExportableTestCase) testCase);
 		}
 	}
 
@@ -208,9 +211,10 @@ public class TCWriterController extends GuiController {
 	public void runTestCase() throws IOException, InterruptedException, TestCaseException {
 		final int rcPort = testRemoteControl.prepare();
 		LOGGER.info(() -> "Using port " + rcPort);
-		try (var config = new TestConfig(model.getTestCase().getValue(), Files.createTempDirectory("tc"), rcPort)) {
+		final var testCase = Objects.requireNonNull(model.getTestCase().getValue(), "No test case to run");
+		try (var config = new TestConfig(testCase, Files.createTempDirectory("tc"), rcPort)) {
 			testExecutor.startTest(config);
-			testRemoteControl.controlTest(model.getTestCase().getValue().getSteps().size());
+			testRemoteControl.controlTest(testCase.getSteps().size());
 		}
 	}
 

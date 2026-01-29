@@ -13,4 +13,5 @@ public interface ITestCaseDao {
 
 	Optional<ExportableTestCase> load(String dictionaryName, TestDictionary dictionary);
 
+    void save(ExportableTestCase testCase);
 }

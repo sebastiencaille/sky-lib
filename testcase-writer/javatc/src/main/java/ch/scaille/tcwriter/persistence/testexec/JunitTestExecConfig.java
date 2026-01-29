@@ -2,10 +2,12 @@ package ch.scaille.tcwriter.persistence.testexec;
 
 import ch.scaille.annotations.Labeled;
 import ch.scaille.annotations.Ordered;
+import ch.scaille.tcwriter.model.config.SubConfig;
 import lombok.Setter;
 
 @Setter
-public class JunitTestExecConfig {
+public class JunitTestExecConfig implements SubConfig {
+
 	private String java = System.getProperty("java.home") + "/bin/java";
 	private String classpath = null;
 

@@ -3,6 +3,7 @@ package ch.scaille.tcwriter.model.testcase;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.scaille.tcwriter.mappers.Default;
 import ch.scaille.tcwriter.model.dictionary.StepClassifier;
 import ch.scaille.tcwriter.model.dictionary.TestAction;
 import ch.scaille.tcwriter.model.dictionary.TestActor;
@@ -29,6 +30,17 @@ public class TestStep {
 
     public TestStep(final int ordinal) {
         this.ordinal = ordinal;
+    }
+
+    @Default
+    public TestStep(final int ordinal, TestActor actor, TestRole role, TestAction action, List<TestParameterValue> parametersValue, TestReference reference, StepClassifier classifier) {
+        this.ordinal = ordinal;
+        this.actor = actor;
+        this.role = role;
+        this.action = action;
+        this.parametersValue.addAll(parametersValue);
+        this.reference = reference;
+        this.classifier = classifier;
     }
 
     public void setActor(final TestActor actor) {

@@ -7,6 +7,7 @@ import java.util.*;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
@@ -30,6 +31,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @RestController
 @RequestMapping("/error")
 @NullMarked
+@Slf4j
 public class WebErrorController extends AbstractErrorController {
 
     private static final Locale LOCALE = Locale.US;
@@ -84,17 +86,14 @@ public class WebErrorController extends AbstractErrorController {
         this.messageSource = messageSource;
     }
 
+    @Getter
+    @Setter
     public static class ExceptionDto {
-        @Getter
         private final String code;
-        @Getter
         private final Object[] arguments;
-        @Getter
         private final HttpStatus status;
         @Nullable
         private String message = null;
-        @Setter
-        @Getter
         private String trace = "";
 
         public ExceptionDto(String code, final Object @Nullable [] nullableArguments, HttpStatus status) {
@@ -117,22 +116,20 @@ public class WebErrorController extends AbstractErrorController {
 
     private ExceptionDto toDto(HttpServletRequest request) {
         final var exc = (Exception) request.getAttribute(DispatcherServlet.EXCEPTION_ATTRIBUTE);
+        log.warn("Unexpected exception: {}", exc.getMessage(), exc);
         final var status = getStatus(request);
-        ExceptionDto dto;
-        String defaultText;
+        final ExceptionDto dto;
+        final String defaultText;
         if (exc instanceof WebRTException webRTexc) {
             dto = new ExceptionDto(webRTexc.getDetailMessageCode(), webRTexc.getDetailMessageArguments(), status);
             defaultText = webRTexc.getDetailMessageCode();
-        } else if (exc != null) {
-            dto = new ExceptionDto("exception." + exc.getClass().getName(), new Object[]{exc.getMessage()}, status);
+        } else {
+            dto = new ExceptionDto("exception." + exc.getClass().getName(), new Object[] { exc.getMessage() }, status);
             defaultText = messageSource.getMessage("error.exception",
                     new Object[]{exc.getClass().getName(), exc.getMessage()}, "error.exception", LOCALE);
-        } else {
-            dto = new ExceptionDto("exception." + status.name(), new Object[]{status.getReasonPhrase()}, status);
-            defaultText = messageSource.getMessage("error.status", new Object[]{status}, "error.status", LOCALE);
         }
         dto.setMessage(messageSource.getMessage(dto.getCode(), dto.getArguments(), defaultText, LOCALE));
-        var trace = (String) getErrorAttributes(request,
+        final var trace = (String) getErrorAttributes(request,
                 ErrorAttributeOptions.of(ErrorAttributeOptions.Include.STACK_TRACE)).get("trace");
         if (trace != null) {
             dto.setTrace(trace);

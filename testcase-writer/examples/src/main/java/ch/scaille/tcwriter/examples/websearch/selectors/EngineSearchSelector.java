@@ -14,12 +14,12 @@ public class EngineSearchSelector {
     private final String queryUrl;
     private final String mainPageXPath;
 
-    @TCApi(description = "DuckDuckGo search", humanReadable = "on DuckDuckGo", isSelector = true)
+    @TCApi(description = "DuckDuckGo search", humanReadable = "%s on DuckDuckGo", isSelector = true)
     public static EngineSearchSelector duckDuckGo(String query) {
         return new EngineSearchSelector("https://www.duckduckgo.com/search?q=" + URLEncoder.encode(query),  "//div[@id= 'react-layout']");
     }
 
-    @TCApi(description = "Bing search", humanReadable = "on Bing", isSelector = true)
+    @TCApi(description = "Bing search", humanReadable = "%s on Bing", isSelector = true)
     public static EngineSearchSelector bing(String query) {
         return new EngineSearchSelector("https://www.bing.com/search?q=" + URLEncoder.encode(query), "//div[@id='b_content']");
     }

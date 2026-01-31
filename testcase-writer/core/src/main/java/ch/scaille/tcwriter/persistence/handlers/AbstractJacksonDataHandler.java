@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import tools.jackson.core.JsonParser;
 import tools.jackson.databind.DeserializationContext;
@@ -92,7 +93,11 @@ public abstract class AbstractJacksonDataHandler implements IStorageDataHandler 
 			tc.setExportedReferences(references);
 			return (T) tc;
 		}
-		return mapper.readerFor(targetType).readValue(value);
+        final var deserializeObject = mapper.readerFor(targetType).readValue(value);
+        if (deserializeObject instanceof TestDictionary testDictionary) {
+            testDictionary.getActors().values().forEach(actor ->  actor.restore(testDictionary.getRoles()));
+        }
+        return (T)deserializeObject;
 	}
 
 }

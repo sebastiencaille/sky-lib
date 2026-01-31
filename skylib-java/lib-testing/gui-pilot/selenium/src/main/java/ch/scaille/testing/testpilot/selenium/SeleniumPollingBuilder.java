@@ -48,7 +48,10 @@ public class SeleniumPollingBuilder extends
 					component -> Assertions.assertEquals(text, component.getText(), "text equals '" + text + "'"));
 		}
 
-	}
+        public boolean absent() {
+            return true;
+        }
+    }
 	
 	public static Consumer<PolledComponent<WebElement>> mutations(Predicate<List<DomMutation>> mutationsTest) {
 		return ctxt -> mutationsTest.test(((ElementPilot) ctxt.componentPilot()).getMutations());

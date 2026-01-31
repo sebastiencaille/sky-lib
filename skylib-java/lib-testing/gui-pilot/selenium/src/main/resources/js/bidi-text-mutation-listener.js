@@ -31,7 +31,7 @@ function observeMutations(channel) {
 		  }
 		  const childJson = JSON.stringify({
 		    target: childId,
-		    name: 'textContent',
+		    name: 'childAdded',
 		    value: childCurr,
 		    oldValue: null,
 		  })

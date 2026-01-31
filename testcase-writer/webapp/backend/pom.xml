@@ -46,6 +46,10 @@
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+        <dependency>
+            <groupId>ch.scaille</groupId>
+            <artifactId>gui-pilot-selenium</artifactId>
+        </dependency>
 	</dependencies>
 
 </project>

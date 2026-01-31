@@ -92,7 +92,6 @@ public class TestDictionary {
         return description;
     }
 
-
     public TestParameterFactory getTestParameterFactory(final String factoryId) {
         return testObjectFactories.values().stream().filter(tObj -> tObj.getId().equals(factoryId)).findFirst()
                 .orElseThrow(
@@ -112,6 +111,5 @@ public class TestDictionary {
     public boolean isSelector(final TestParameterValue value) {
         return selectorTypes.contains(value.getValueFactory().getParameterType());
     }
-
-
+    
 }

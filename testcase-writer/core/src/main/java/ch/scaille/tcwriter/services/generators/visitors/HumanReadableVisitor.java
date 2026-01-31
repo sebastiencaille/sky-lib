@@ -116,8 +116,6 @@ public class HumanReadableVisitor {
 		final List<String> formatParams;
 		if (paramsTexts != null) {
 			formatParams = paramsTexts.stream()
-					.flatMap(s -> stream((' ' + s + ' ').split("\\|")))
-					.map(String::trim)
 					.map(s -> s.replace("//", "/\\/"))
 					.toList();
 		} else {

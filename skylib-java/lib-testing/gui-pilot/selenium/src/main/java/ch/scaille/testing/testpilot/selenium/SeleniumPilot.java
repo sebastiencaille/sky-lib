@@ -43,8 +43,9 @@ public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 		this.script = new org.openqa.selenium.bidi.module.Script(driver);
 		this.remoteScript = driver.script();
 		installPathFunction();
-		domMutationHandlerIds.add(this.remoteScript.addDomMutationHandler(this::mutationHandler));
-		this.prelaodScript("js/bidi-text-mutation-listener.js", "channel_name");
+        // This is triggering too many events
+		//domMutationHandlerIds.add(this.remoteScript.addDomMutationHandler(this::mutationHandler));
+		this.preloadScript("js/bidi-text-mutation-listener.js", "channel_name");
 	}
 
 	private void mutationHandler(DomMutation mutation) {
@@ -67,7 +68,7 @@ public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 	 * Only inject a new script, that will use the existing handler. The code comes
 	 * from selenium's code
 	 */
-	public void prelaodScript(String resourceName, @Nullable String channelname) {
+	public void preloadScript(String resourceName, @Nullable String channelname) {
 		try (var stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName)) {
 			if (stream == null) {
 				throw new IllegalStateException("Unable to find helper script");
@@ -133,7 +134,7 @@ public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 	}
 
 	protected void installPathFunction() {
-		prelaodScript("js/compute-path-function.js", null);
+		preloadScript("js/compute-path-function.js", null);
 	}
 
 	public String getElementPath(WebElement element) {

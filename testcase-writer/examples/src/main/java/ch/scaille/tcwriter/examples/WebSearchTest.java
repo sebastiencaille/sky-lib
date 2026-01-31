@@ -23,20 +23,22 @@ public class WebSearchTest {
 	private final RemoteWebDriver webDriver = new WebDriverFactory.FirefoxDriverFactory()
 			.build();
 
+    private final InternautRole internaut = new InternautRole(new SeleniumPilot((webDriver)));
+    
 	@AfterEach
 	public void tearDown() {
 		webDriver.quit();
 	}
 
 	@Test
-	public void testNormalCase() {
+	public void testNormalCase() throws InterruptedException {
 		final var dictionary = new JavaToDictionary("searchTests", InternautRole.class).generate();
 		dictionary.getMetadata().setDescription("Search on internet dictionary");
 		final var daoConfig = DaoConfigs.withFolder(Paths.get("/tmp"));
 		daoConfig.modelDao().writeTestDictionary(dictionary);
 
 		TestCaseRecorderAspect.setRecorder(null);
-		final var internaut = new InternautRole(new SeleniumPilot((webDriver)));
+		
 		internaut.search(EngineSearchSelector.duckDuckGo("Flowable"), MatcherDto.startsWith("Flowable"));
 		internaut.search(EngineSearchSelector.bing("ELCA"), MatcherDto.contains("ELCA"));
 	}

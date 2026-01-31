@@ -46,7 +46,7 @@ public class TestCase {
     public TestCase(Metadata metadata, List<TestStep> steps, final String pkgAndClassName,
                     @Nullable Multimap<String, TestReference> dynamicReferences,
                     @Nullable Map<String, TestObjectDescription> dynamicDescriptions) {
-        this.metadata = metadata;
+        this.metadata = Objects.requireNonNull(metadata, "Metadata must not be null");
         this.pkgAndClassName = pkgAndClassName;
         this.steps.addAll(steps);
         if (dynamicReferences != null) {

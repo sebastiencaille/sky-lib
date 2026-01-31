@@ -12,6 +12,7 @@ import ch.scaille.tcwriter.model.dictionary.TestAction;
 import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
+import java.util.Objects;
 
 @JsonIgnoreProperties({"actor", "role", "action" })
 @NullMarked
@@ -48,7 +49,7 @@ public class ExportableTestStep extends TestStep {
 	}
 
 	public void setActorRef(final ExportReference ref) {
-		ref.setRestoreAction((tc, id) -> actor = tc.getDictionary().getActors().get(id));
+		ref.setRestoreAction((tc, id) -> actor = Objects.requireNonNull(tc.getDictionary().getActors().get(id), "Actor not found: " + id));
 	}
 
 	@JsonProperty

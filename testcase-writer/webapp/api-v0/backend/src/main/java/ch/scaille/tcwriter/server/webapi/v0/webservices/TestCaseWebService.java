@@ -81,7 +81,6 @@ public class TestCaseWebService implements TestcaseApi {
 	@Transactional
 	@Override
 	public ResponseEntity<Void> createTestcase(@Valid String dictionary, @Valid TestCase testCase) {
-
 		testCaseFacade.saveTestCase(TestCaseMapper.MAPPER.convertToExportable(testCase, dictionaryFacade.load(dictionary)));
 		return ResponseEntity.ok().build();
 	}

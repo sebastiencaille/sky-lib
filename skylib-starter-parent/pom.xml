@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>4.0.1</version>
+		<version>4.0.2</version>
 		<relativePath />
 	</parent>
 
@@ -24,7 +24,7 @@
 		<jackson-bom.version>3.0.3</jackson-bom.version>
 		<jackson-databind-nullable.version>0.2.8</jackson-databind-nullable.version>
 		<guava.version>33.5.0-jre</guava.version>
-		<logback.version>1.5.25</logback.version>
+		<logback.version>1.5.27</logback.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
 		<!--hibernate.version>7.1.7.Final</hibernate.version-->
 		<hibernate-validator.version>9.1.0.Final</hibernate-validator.version>
@@ -54,7 +54,7 @@
 		<maven-source-plugin.version>3.4.0</maven-source-plugin.version>
 		<maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
 		<maven-jar-plugin.version>3.5.0</maven-jar-plugin.version>
-		<maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
+		<maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
 		<maven-war-plugin.version>3.5.1</maven-war-plugin.version>
 		<maven-dependency-plugin.version>3.9.0</maven-dependency-plugin.version>
 		<maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>

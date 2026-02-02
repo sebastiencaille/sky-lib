@@ -10,7 +10,7 @@ import tools.jackson.databind.annotation.JsonAppend;
 
 import static ch.scaille.tcwriter.persistence.handlers.serdeser.mixins.TestReferenceMixin.STEP_REF;
 
-@JsonIgnoreProperties("step")
+@JsonIgnoreProperties({ "step", "mandatoryParameters", "optionalParameters" })
 @JsonAppend(props = {
         @JsonAppend.Prop(value = ExportReferenceWriter.class, name = STEP_REF, type = ExportReference.class)
 })
@@ -21,4 +21,9 @@ public class TestReferenceMixin {
             new ReferenceHandler<>(TestReference.class, STEP_REF,
                     testRef -> Integer.toString(testRef.getStep().getOrdinal()),
                     (testCase, testRef, reference) -> testRef.setStep(testCase.getSteps().get(Integer.parseInt(reference) - 1)));
+
+    private TestReferenceMixin() {
+        /* This utility class should not be instantiated */
+    }
+
 }

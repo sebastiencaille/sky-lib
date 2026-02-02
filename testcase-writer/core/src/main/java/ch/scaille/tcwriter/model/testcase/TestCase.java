@@ -35,7 +35,7 @@ public class TestCase {
 
     protected String pkgAndClassName;
 
-    protected final Multimap<String, TestReference> dynamicReferences = MultimapBuilder.hashKeys().arrayListValues()
+    protected final Multimap<String, TestReference> dynamicReferencesByType = MultimapBuilder.hashKeys().arrayListValues()
             .build();
 
     protected final Map<String, TestObjectDescription> dynamicDescriptions = new HashMap<>();
@@ -47,19 +47,11 @@ public class TestCase {
 
     @Default
     @JsonCreator
-    public TestCase(Metadata metadata, String preferredDictionary, List<TestStep> steps, final String pkgAndClassName,
-                    @Nullable Multimap<String, TestReference> dynamicReferences,
-                    @Nullable Map<String, TestObjectDescription> dynamicDescriptions) {
+    public TestCase(Metadata metadata, String preferredDictionary, List<TestStep> steps, final String pkgAndClassName) {
         this.metadata = Objects.requireNonNull(metadata, "Metadata must not be null");
         this.preferredDictionary = preferredDictionary;
         this.pkgAndClassName = pkgAndClassName;
         this.steps.addAll(steps);
-        if (dynamicReferences != null) {
-            this.dynamicReferences.putAll(dynamicReferences);
-        }
-        if (dynamicDescriptions != null) {
-            this.dynamicDescriptions.putAll(dynamicDescriptions);
-        }
     }
 
     public void addStep(final TestStep step) {
@@ -75,8 +67,12 @@ public class TestCase {
     }
 
     public void publishReference(final TestReference reference) {
-        dynamicReferences.put(reference.getParameterType(), reference);
+        dynamicReferencesByType.put(reference.getParameterType(), reference);
         dynamicDescriptions.put(reference.getId(), reference.toDescription());
+    }
+
+    public void republishReferences() {
+        this.steps.stream().map(TestStep::getReference).filter(Objects::nonNull).forEach(this::publishReference);
     }
 
     public TestObjectDescription descriptionOf(final IdObject idObject) {
@@ -95,16 +91,15 @@ public class TestCase {
         return new TestObjectDescription(id, "");
     }
 
-    public Optional<TestReference> getReference(final String reference) {
-        return dynamicReferences.values().stream().filter(ref -> ref.getName().equals(reference)).findFirst();
-    }
-
-    public Collection<TestReference> getReferences(final String returnType) {
-        return dynamicReferences.get(returnType);
+    public Optional<TestReference> findReferenceInSteps(final String reference) {
+        return steps.stream()
+                .map(TestStep::getReference)
+                .filter(ref -> ref != null && ref.getName().equals(reference))
+                .findFirst();
     }
 
     public Collection<TestReference> getSuitableReferences(final TestApiParameter param) {
-        return getReferences(param.getParameterType());
+        return dynamicReferencesByType.get(param.getParameterType());
     }
 
     public void fixOrdinals() {

@@ -95,10 +95,8 @@ public class TestDictionary {
         return description;
     }
 
-    public TestParameterFactory getTestParameterFactory(final String factoryId) {
-        return testObjectFactories.values().stream().filter(tObj -> tObj.getId().equals(factoryId)).findFirst()
-                .orElseThrow(
-                        () -> new IllegalArgumentException("No test parameter factory found with id " + factoryId));
+    public Optional<TestParameterFactory> getTestParameterFactory(final String factoryId) {
+        return testObjectFactories.values().stream().filter(tObj -> tObj.getId().equals(factoryId)).findFirst();
     }
 
     @Override

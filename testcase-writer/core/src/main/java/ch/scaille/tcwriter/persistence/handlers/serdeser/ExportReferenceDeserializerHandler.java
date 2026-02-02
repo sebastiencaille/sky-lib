@@ -28,7 +28,8 @@ public class ExportReferenceDeserializerHandler extends DeserializationProblemHa
             if (safeHandler.isEmpty()) {
                 return false;
             }
-            references.add(safeHandler.get().of(beanOrClass, ((StringNode) p.readValueAsTree().get("ref")).asString()));
+            final var ref = ((StringNode) p.readValueAsTree().get("ref")).asString();
+            references.add(safeHandler.get().of(beanOrClass, ref));
             return true;
         }
 

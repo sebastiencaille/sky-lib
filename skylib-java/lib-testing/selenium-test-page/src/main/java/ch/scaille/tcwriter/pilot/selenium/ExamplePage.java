@@ -6,6 +6,7 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElem
 
 import java.time.Duration;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.Assertions;
@@ -18,6 +19,7 @@ import ch.scaille.testing.testpilot.factories.Pollings;
 import ch.scaille.testing.testpilot.selenium.PagePilot;
 import ch.scaille.testing.testpilot.selenium.SeleniumPilot;
 import ch.scaille.testing.testpilot.selenium.SeleniumPollingBuilder;
+import org.openqa.selenium.remote.DomMutation;
 
 @NullMarked
 public class ExamplePage extends PagePilot {
@@ -114,7 +116,10 @@ public class ExamplePage extends PagePilot {
             on(elementToBeClickable(ELEMENT_CHANGE_TEST)).failUnless().clicked();
             // Explicitly test using WebElement as source
             changedElement.failUnless().assertedCtxt(SeleniumPollingBuilder.assertMutations(mutations ->
-                    Assertions.assertEquals(2, mutations.size(), mutations::toString)));
+                    Assertions.assertEquals(2, mutations.stream().map(DomMutation::getCurrentValue).distinct().count(),
+                            mutations.stream()
+                                    .map(m -> "%s %s: %s -> %s".formatted(m.getElement(), m.getAttributeName(), m.getOldValue(), m.getCurrentValue()))
+                                    .collect(Collectors.joining(",\n")))));
             changedElement.failUnless().textEquals("Hello again");
         }
     }

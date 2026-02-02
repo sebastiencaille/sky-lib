@@ -2,6 +2,7 @@ package ch.scaille.tcwriter.server.webapi.v0.mappers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import ch.scaille.tcwriter.persistence.handlers.serdeser.Deserializers;
 import ch.scaille.tcwriter.persistence.handlers.serdeser.ExportReference;
@@ -58,13 +59,14 @@ public interface TestCaseMapper extends MetadataMapper {
         final var testCase = convertToModelNoRef(dto, exportReferences);
         testCase.setDictionary(dictionary);
         exportReferences.forEach(ref -> ref.apply(testCase));
+        testCase.republishReferences();
         return testCase;
     }
 
     @Mapping(target = "dictionary", ignore = true)
     @Mapping(target = "preferredDictionary", ignore = true)
     @Mapping(target = "dynamicDescriptions", ignore = true)
-    @Mapping(target = "dynamicReferences", ignore = true)
+    @Mapping(target = "dynamicReferencesByType", ignore = true)
     ch.scaille.tcwriter.model.testcase.TestCase convertToModelNoRef(TestCase dto,
                                                                     @Context List<ExportReference<ch.scaille.tcwriter.model.testcase.TestCase, ?>> exportReferences);
 
@@ -82,9 +84,9 @@ public interface TestCaseMapper extends MetadataMapper {
     default ch.scaille.tcwriter.model.testcase.TestStep convertToModel(TestStep dto,
                                                                        @Context List<ExportReference<ch.scaille.tcwriter.model.testcase.TestCase, ?>> exportReferences) {
         final var testStep = convertToModelNoRef(dto, exportReferences);
-        exportReferences.add(Deserializers.getTestCaseHandler(TestStep.class, TestStepMixin.ACTOR_REF).get().of(testStep, dto.getActorRef()));
-        exportReferences.add(Deserializers.getTestCaseHandler(TestStep.class, TestStepMixin.ROLE_REF).get().of(testStep, dto.getRoleRef()));
-        exportReferences.add(Deserializers.getTestCaseHandler(TestStep.class, TestStepMixin.ACTION_REF).get().of(testStep, dto.getActionRef()));
+        exportReferences.add(validate(Deserializers.getTestCaseHandler(TestStep.class, TestStepMixin.ACTOR_REF)).of(testStep, dto.getActorRef()));
+        exportReferences.add(validate(Deserializers.getTestCaseHandler(TestStep.class, TestStepMixin.ROLE_REF)).of(testStep, dto.getRoleRef()));
+        exportReferences.add(validate(Deserializers.getTestCaseHandler(TestStep.class, TestStepMixin.ACTION_REF)).of(testStep, dto.getActionRef()));
         return testStep;
     }
 
@@ -96,7 +98,7 @@ public interface TestCaseMapper extends MetadataMapper {
     default ch.scaille.tcwriter.model.testcase.TestReference convertToModel(TestReference dto,
                                                                             @Context List<ExportReference<ch.scaille.tcwriter.model.testcase.TestCase, ?>> exportReferences) {
         final var reference = convertToModelNoRef(dto, exportReferences);
-        exportReferences.add(Deserializers.getTestCaseHandler(TestReference.class, TestReferenceMixin.STEP_REF).get().of(reference, dto.getTestStepRef()));
+        exportReferences.add(validate(Deserializers.getTestCaseHandler(TestReference.class, TestReferenceMixin.STEP_REF)).of(reference, dto.getTestStepRef()));
         return reference;
     }
 
@@ -110,7 +112,7 @@ public interface TestCaseMapper extends MetadataMapper {
     default ch.scaille.tcwriter.model.testcase.TestParameterValue convertToModel(TestParameterValue dto,
                                                                                  @Context List<ExportReference<ch.scaille.tcwriter.model.testcase.TestCase, ?>> exportReferences) {
         final var parameterValue = convertToModelNoRef(dto, exportReferences);
-        exportReferences.add(Deserializers.getTestCaseHandler(TestReference.class, TestParameterValueMixin.TEST_PARAMETER_FACTORY_REF).get().of(parameterValue, dto.getTestParameterFactoryRef()));
+        exportReferences.add(validate(Deserializers.getTestCaseHandler(TestReference.class, TestParameterValueMixin.TEST_PARAMETER_FACTORY_REF)).of(parameterValue, dto.getTestParameterFactoryRef()));
         return parameterValue;
     }
 
@@ -119,5 +121,8 @@ public interface TestCaseMapper extends MetadataMapper {
         return dto.stream().map(value -> convertToModel(value, exportReferences)).toList();
     }
 
+    private <T> T validate(Optional<T> ref) {
+        return ref.orElseThrow(() -> new IllegalStateException("Reference not found."));
+    }
 
 }

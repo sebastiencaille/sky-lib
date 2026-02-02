@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import ch.scaille.util.persistence.handlers.IStorageDataHandler;
 import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
-import ch.scaille.util.persistence.handlers.TextStorageHandler;
 
 /**
  * Abstraction of dao with serialization (json, yaml, ...)
@@ -60,19 +59,8 @@ public abstract class AbstractSerializationDao<T> implements IDao<T> {
 		final var extension = extensionOf(storageLocator);
 		return dataHandlerRegistry.find(extension)
 				.map(IStorageDataHandler::getDefaultMimeType)
-				.or(this::getPredefinedResourceMimeType)
 				.or(dataHandlerRegistry::getDefaultMimeType)
 				.map(mimeType -> fixOrValidate(new ResourceMetaData(locator, storageLocator, mimeType)));
-	}
-	
-	/**
-	 * Creates a metadata using pre-defined mime-types
-	 */
-	private Optional<String> getPredefinedResourceMimeType() {
-		if (String.class.equals(resourceType)) {
-			return Optional.of(TextStorageHandler.TEXT_MIMETYPE);
-		}
-		return Optional.empty();
 	}
 
 	@Override

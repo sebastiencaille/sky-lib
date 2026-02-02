@@ -87,12 +87,9 @@ public class TestCaseRecorder implements ITestCaseRecorder {
         if (actor == null) {
             actor = recordActor(recordedActor);
         }
-        final var role = actor.getRole();
-        if (role == null) {
-            throw new IllegalStateException("No role found for " + actor);
-        }
         step.setActor(actor);
 
+        final var role = actor.getRole();
         final var action = role.getActions().stream().filter(a -> matches(a, api)).findFirst()
                 .orElseThrow(() -> new IllegalStateException("No action found for " + api));
         step.setAction(action);
@@ -117,7 +114,8 @@ public class TestCaseRecorder implements ITestCaseRecorder {
     @Override
     public void recordParamFactory(Class<?> apiFactoryClass, Method api, Object[] apiArgs, Object returnValue) {
         final var testParameterFactory = tcDictionary
-                .getTestParameterFactory(Helper.methodKey(apiFactoryClass, api.getName()));
+                .getTestParameterFactory(Helper.methodKey(apiFactoryClass, api.getName()))
+                .orElseThrow(() -> new IllegalStateException("No parameter factory found for " + apiFactoryClass.getName() + "." + api.getName()))  ;
         final var testParameterValue = new TestParameterValue("<PlaceHolder>", testParameterFactory);
         for (int i = 0; i < testParameterFactory.getMandatoryParameters().size(); i++) {
             testParameterValue.addComplexTypeValue(

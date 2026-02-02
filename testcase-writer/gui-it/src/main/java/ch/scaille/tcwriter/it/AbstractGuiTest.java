@@ -37,7 +37,7 @@ import ch.scaille.util.helpers.LambdaExt;
 import ch.scaille.util.helpers.Logs;
 
 @TCActors({
-        @TCActor(variable = "tcWriter", humanReadable = "test writer", description = "test writer", role = TestWriterRole.class),
+        @TCActor(variable = "tcWriter", humanReadable = "test writer", description = "Test writer", role = TestWriterRole.class),
         @TCActor(variable = "testSession", humanReadable = "test session", description = "A test session", role = TestSessionRole.class)
 })
 public class AbstractGuiTest {

@@ -106,6 +106,7 @@ public interface Deserializers {
             if (references != null) {
                 references.forEach(e -> e.apply(testCase));
             }
+            testCase.republishReferences();
             return testCase;
         }
     }

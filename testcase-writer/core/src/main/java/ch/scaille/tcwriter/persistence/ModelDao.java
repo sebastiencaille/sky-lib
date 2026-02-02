@@ -44,6 +44,10 @@ public class ModelDao implements IModelDao {
 
 	private final StorageDataHandlerRegistry serDeserializerRegistry;
 
+	private final StorageDataHandlerRegistry templateRegistry = new StorageDataHandlerRegistry(new TemplateStorageHandler());
+
+	private final StorageDataHandlerRegistry testCaseCodeRegistry = new StorageDataHandlerRegistry(new TextStorageHandler());
+
 	private final DaoFactory daoFactory;
 
 	protected IDao<TestDictionary> dictionaryRepo;
@@ -72,9 +76,9 @@ public class ModelDao implements IModelDao {
 				serDeserializerRegistry);
 		this.testCaseRepo = daoFactory.loaderOf(TestCase.class, modelConfig.getTcPath(),
 				serDeserializerRegistry);
-		this.templateRepo = daoFactory.loaderOf(String.class, modelConfig.getTemplatePath(), serDeserializerRegistry);
+		this.templateRepo = daoFactory.loaderOf(String.class, modelConfig.getTemplatePath(), templateRegistry);
 		this.testCaseCodeRepo = daoFactory.loaderOf(String.class, modelConfig.getTcExportPath(),
-				serDeserializerRegistry);
+				testCaseCodeRegistry);
 	}
 
 	@Override

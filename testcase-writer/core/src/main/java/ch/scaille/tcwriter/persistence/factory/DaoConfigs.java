@@ -15,7 +15,6 @@ import ch.scaille.util.persistence.DaoFactory.FsDsFactory;
 
 public interface DaoConfigs {
 
-
 	String USER_RESOURCES = "userResources/";
 
 	static String cp(String path) {
@@ -37,8 +36,8 @@ public interface DaoConfigs {
 	static DaoConfigs withFolder(Path path) {
 		final var daoFactory = DaoFactory.cpPlus(Set.of(USER_RESOURCES), new FsDsFactory(path));
 		final var configDao = new ConfigDao(daoFactory, ".", ConfigDao.defaultDataHandlers());
-		final var modelDao = new ModelDao(daoFactory, configDao.getCurrentConfigProperty(),
-				ModelDao.defaultDataHandlers());
+		final ModelDao modelDao = new ModelDao(daoFactory, configDao.getCurrentConfigProperty(),
+                ModelDao::defaultDataHandlers);
 		
 		final var tempModelConfig = new ModelConfig();
 		tempModelConfig.setDictionaryPath(".");

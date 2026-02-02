@@ -30,7 +30,8 @@ class SeleniumExampleTest extends AbstractSeleniumUndertowTest {
 
     @BeforeEach
     void createPilot() {
-        pilot = new SeleniumPilot(Objects.requireNonNull(driver));
+        pilot = new SeleniumPilot(Objects.requireNonNull(driver))
+                .withAllMutations();
     }
 
     @AfterEach

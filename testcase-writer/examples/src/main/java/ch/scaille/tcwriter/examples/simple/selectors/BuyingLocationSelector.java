@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.examples.api.interfaces.selectors;
+package ch.scaille.tcwriter.examples.simple.selectors;
 
 import java.util.function.Consumer;
 

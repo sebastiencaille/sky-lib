@@ -28,8 +28,6 @@ import ch.scaille.tcwriter.gui.utils.DictionaryImport;
 import ch.scaille.tcwriter.model.TestCaseException;
 import ch.scaille.tcwriter.model.config.SubConfig;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
-import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
-import ch.scaille.tcwriter.model.testcase.ExportableTestStep;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestStep;
 import ch.scaille.tcwriter.persistence.IConfigDao;
@@ -125,8 +123,8 @@ public class TCWriterController extends GuiController {
 	}
 
 	public void newTestCase() {
-		final var newTestCase = new ExportableTestCase("undefined.Undefined", model.getTestDictionary().getValue());
-		newTestCase.addStep(new ExportableTestStep(1));
+		final var newTestCase = new TestCase("undefined.Undefined", model.getTestDictionary().getValue());
+		newTestCase.addStep(new TestStep(1));
 		model.getTestCase().setValue(this, newTestCase);
 	}
 
@@ -182,7 +180,7 @@ public class TCWriterController extends GuiController {
 		if (dialogResult == 0) {
 			final var testFile = testFileChooser.getSelectedFile();
 			final var testCase = Objects.requireNonNull(model.getTestCase().getValue(), "No test case to save");
-			modelDao.writeTestCase(testFile.toString(), (ExportableTestCase) testCase);
+			modelDao.writeTestCase(testFile.toString(), (TestCase) testCase);
 		}
 	}
 

@@ -8,12 +8,12 @@ import java.util.function.Function;
 import ch.scaille.generators.util.Template;
 import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
-import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
+import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.util.persistence.Resource;
 
 public interface IModelDao {
 	
-	Template readTemplate();
+	Template readTemplate(String templateName);
 
 
 	// ----------------------- Dictionary -----------------------
@@ -30,9 +30,9 @@ public interface IModelDao {
 
 	List<Metadata> listTestCases(TestDictionary dictionary);
 	
-	Optional<ExportableTestCase> readTestCase(String identifier, Function<String, TestDictionary> testDictionaryLoader);
+	Optional<TestCase> readTestCase(String identifier, Function<String, TestDictionary> testDictionaryLoader);
 
-	void writeTestCase(String identifier, ExportableTestCase testCase);
+	void writeTestCase(String identifier, TestCase testCase);
 
 	Resource<String> writeTestCaseCode(String identifier, String content);
 

@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.logging.Logger;
 
+import ch.scaille.util.helpers.Logs;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.openqa.selenium.By;
@@ -22,14 +22,14 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import ch.scaille.testing.testpilot.ModalDialogDetector;
 import ch.scaille.testing.testpilot.ModalDialogDetector.PollingResult;
-import ch.scaille.util.helpers.Logs;
 import ch.scaille.util.helpers.NoExceptionCloseable;
 
 @NullMarked
 public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 
-	private static final Logger LOGGER = Logs.of(SeleniumPilot.class);
-	
+	// Used in js script
+	public static final String MUTATION_TEXT_CONTENT = "TextContent";
+
 	private final RemoteWebDriver driver;
 	private final Script remoteScript;
 	private final org.openqa.selenium.bidi.module.Script script;
@@ -43,9 +43,16 @@ public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 		this.script = new org.openqa.selenium.bidi.module.Script(driver);
 		this.remoteScript = driver.script();
 		installPathFunction();
-        // This is triggering too many events
-		//domMutationHandlerIds.add(this.remoteScript.addDomMutationHandler(this::mutationHandler));
+		withAllMutations();
+	}
+
+	/**
+	 * In some cases this is triggering too many events
+	 */
+	public SeleniumPilot withAllMutations() {
 		this.preloadScript("js/bidi-text-mutation-listener.js", "channel_name");
+		domMutationHandlerIds.add(this.remoteScript.addDomMutationHandler(this::mutationHandler));
+		return this;
 	}
 
 	private void mutationHandler(DomMutation mutation) {
@@ -53,11 +60,9 @@ public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 		if (elementPath.isEmpty()) {
 			return;
 		}
-		/*
-		LOGGER.debug(() -> "Received on %s, %s: %s -> %s".formatted(elementPath,
+		Logs.of(this).fine(() -> "Received mutation on %s, %s: %s -> %s".formatted(elementPath,
 						mutation.getAttributeName(), mutation.getOldValue(), mutation.getCurrentValue()));
-		 */
-		if (mutationFilter != null && mutationFilter.test(mutation)) {
+		if (mutationFilter == null || mutationFilter.test(mutation)) {
 			synchronized (mutations) {
 				mutations.add(mutation);
 			}
@@ -142,10 +147,17 @@ public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 	}
 
 	public void expectMutations(Predicate<DomMutation> filter) {
+		withAllMutations();
 		synchronized (mutations) {
 			mutations.clear();
+			withAllMutations();
 			mutationFilter = filter;
 		}
+	}
+
+	public void stopExpectingMutations() {
+		mutationFilter = null;
+		domMutationHandlerIds.clear();
 	}
 
 	public List<DomMutation> getMutations(Predicate<DomMutation> filter) {

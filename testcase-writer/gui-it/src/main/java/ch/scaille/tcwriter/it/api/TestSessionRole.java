@@ -7,7 +7,6 @@ import ch.scaille.tcwriter.annotations.TCCheck;
 import ch.scaille.tcwriter.annotations.TCRole;
 
 @TCRole(description = "Test Session", humanReadable = "test session")
-@TCActors("testSession|TestSessionRole")
 public interface TestSessionRole {
 
 	@TCApi(description = "Inject test", humanReadable = "I inject the test %s")

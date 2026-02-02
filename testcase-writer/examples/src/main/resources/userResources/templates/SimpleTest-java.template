@@ -1,0 +1,18 @@
+package ${package};
+
+import ch.scaille.tcwriter.examples.simple.dto.*;
+import ch.scaille.tcwriter.examples.simple.selectors.*;
+import ch.scaille.tcwriter.examples.simple.*;
+import ch.scaille.tcwriter.recorder.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class ${testName} extends AbstractSimpleTest {
+
+	@Test
+	void testCase() {
+		${testContent}
+	}
+
+}

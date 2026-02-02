@@ -1,16 +1,18 @@
 package ch.scaille.tcwriter.persistence.handlers;
 
+import ch.scaille.tcwriter.persistence.IModelDao;
+import ch.scaille.tcwriter.persistence.handlers.serdeser.Deserializers;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import tools.jackson.databind.DefaultTyping;
 import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 
-public class JsonModelDataHandler extends AbstractJacksonDataHandler {
+public class JsonModelDataHandler extends AbstractModelDataHandler {
 
-    public JsonModelDataHandler() {
-        super(configure(JsonMapper.builder()
+    public JsonModelDataHandler(IModelDao dao) {
+        super(dao, configure(JsonMapper.builder()
                 .activateDefaultTyping(BasicPolymorphicTypeValidator.builder().build(), DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY))
-                .addModule(testCaseWriterModule)
+                .addModule(Deserializers.TCVWRITER_MODULE)
                 .build());
     }
 

@@ -41,7 +41,6 @@ import ch.scaille.tcwriter.gui.editors.params.TestParameterValueTableModel.Param
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.tcwriter.model.dictionary.TestApiParameter;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
-import ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestReference;
@@ -74,12 +73,12 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 		setLayout(new BorderLayout());
 
-		editedParamValue.listenF(v -> !v.equals(ExportableTestParameterValue.NO_VALUE)) //
+		editedParamValue.listenF(v -> !v.equals(TestParameterValue.NO_VALUE)) //
 				.listen(this::setVisible);
 
 		editedParamValue
-				.listenF(v -> !v.getValueFactory().getMandatoryParameters().isEmpty()
-						|| !v.getValueFactory().getOptionalParameters().isEmpty()) //
+				.listenF(v -> !v.getParameterValueFactory().getMandatoryParameters().isEmpty()
+						|| !v.getParameterValueFactory().getOptionalParameters().isEmpty()) //
 				.listen(this::setEnabled);
 
 		final var topPanel = new JPanel();
@@ -123,7 +122,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 		final var referenceEditor = new JComboBox<ObjectTextView<TestReference>>();
 		tpModel.getReferences()
 				.bind(filter(r -> r.getParameterType()
-						.equals(editedParamValue.getValue().getValueFactory().getParameterType()))) //
+						.equals(editedParamValue.getValue().getParameterValueFactory().getParameterType()))) //
 				.bind(listConverter(refToTextConverter())) //
 				.bind(values(referenceEditor));
 		tpModel.getSelectedReference()
@@ -162,9 +161,9 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 		// when updating the parameter value, update the reference
 		editedParamValue.listenActive(value -> {
-			tpModel.getValueNature().setValue(this, value.getValueFactory().getNature());
-			if (value.getValueFactory().getNature() == ParameterNature.REFERENCE) {
-				tpModel.getSelectedReference().setValue(this, (TestReference) value.getValueFactory());
+			tpModel.getValueNature().setValue(this, value.getParameterValueFactory().getNature());
+			if (value.getParameterValueFactory().getNature() == ParameterNature.REFERENCE) {
+				tpModel.getSelectedReference().setValue(this, (TestReference) value.getParameterValueFactory());
 			} else {
 				tpModel.getSelectedReference().setValue(this, null);
 			}
@@ -174,9 +173,9 @@ public class TestParameterValueEditorPanel extends JPanel {
 		tpModel.getSelectedReference().listenActive(ref -> {
 			if (tpModel.getEditedParameterValue()
 					.getObjectValue()
-					.getValueFactory()
+					.getParameterValueFactory()
 					.getNature() == ParameterNature.REFERENCE) {
-				editedParamValue.getValue().setParameterFactory(ref);
+				editedParamValue.getValue().setParameterValueFactory(ref);
 			}
 		});
 
@@ -186,14 +185,14 @@ public class TestParameterValueEditorPanel extends JPanel {
 
 			switch (v) {
 			case SIMPLE_TYPE ->
-				paramValue.setParameterFactory(apiOf(testCase.getValue(), paramValue).asSimpleParameter());
+				paramValue.setParameterValueFactory(apiOf(testCase.getValue(), paramValue).asSimpleParameter());
 			case REFERENCE -> {
 				final var testRef = tpModel.getSelectedReference().getValue();
 				if (testRef != null) {
-					paramValue.setParameterFactory(testRef);
+					paramValue.setParameterValueFactory(testRef);
 				}
 			}
-			case TEST_API -> paramValue.setParameterFactory(tpModel.getTestApi().getValue());
+			case TEST_API -> paramValue.setParameterValueFactory(tpModel.getTestApi().getValue());
 			case NOT_SET -> { // noop
 			}
 			default -> throw new IllegalStateException("Not handled: " + v);
@@ -239,14 +238,14 @@ public class TestParameterValueEditorPanel extends JPanel {
 		// Add missing values in parameter value and in table
 		final var newValues = new ArrayList<ParameterValueEntry>();
 		for (final var mandatoryId : missingMandatoryIds) {
-			final var newValue = new ExportableTestParameterValue(mandatoryId,
+			final var newValue = new TestParameterValue(mandatoryId,
 					tc.getValue().descriptionOf(mandatoryId).description(),
 					api.getMandatoryParameterById(mandatoryId).asSimpleParameter(), null);
 			editedParamValue.getValue().addComplexTypeValue(newValue);
 			newValues.add(asParam(tc.getObjectValue(), mandatoryId, newValue, api));
 		}
 		for (final var optionalId : missingOptionalIds) {
-			final var newValue = new ExportableTestParameterValue(optionalId,
+			final var newValue = new TestParameterValue(optionalId,
 					tc.getValue().descriptionOf(optionalId).description(),
 					api.getOptionalParameterById(optionalId).asSimpleParameter(), null);
 			editedParamValue.getValue().addComplexTypeValue(newValue);
@@ -266,7 +265,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 				final var paramList = new ArrayList<ParameterValueEntry>();
 				for (final var paramValue : values.entrySet()) {
 					paramList.add(asParam(tc.getValue(), paramValue.getKey(), paramValue.getValue(),
-							propertyValue.getValue().getValueFactory()));
+							propertyValue.getValue().getParameterValueFactory()));
 				}
 				return paramList;
 			}
@@ -279,7 +278,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 					if (!parameterValueEntry.enabled && !parameterValueEntry.mandatory) {
 						continue;
 					}
-					result.put(parameterValueEntry.id, new ExportableTestParameterValue(parameterValueEntry.id,
+					result.put(parameterValueEntry.id, new TestParameterValue(parameterValueEntry.id,
 							parameterValueEntry.factory, parameterValueEntry.value));
 				}
 				return result;
@@ -299,7 +298,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 	private static ParameterValueEntry asParam(final TestCase tc, final String complexParameterId,
 			final TestParameterValue complexValue, final TestParameterFactory complexTypeFactory) {
 		final var simpleValue = complexValue.getSimpleValue();
-		final var newParamValue = new ParameterValueEntry(complexParameterId, complexValue.getValueFactory(),
+		final var newParamValue = new ParameterValueEntry(complexParameterId, complexValue.getParameterValueFactory(),
 				tc.descriptionOf(complexParameterId).description(), simpleValue,
 				!Strings.isNullOrEmpty(simpleValue));
 		updateParam(newParamValue, complexTypeFactory);

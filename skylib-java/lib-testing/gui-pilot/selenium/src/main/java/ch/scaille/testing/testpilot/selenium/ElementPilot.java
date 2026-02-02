@@ -104,6 +104,10 @@ public class ElementPilot extends AbstractComponentPilot<WebElement> {
 				.isPresent() && filter.test(mutation));
 	}
 
+	public void stopExpectingMutations() {
+		pilot.stopExpectingMutations();
+	}
+
 	public List<DomMutation> getMutations() {
 		final var uid = loadGuiComponent().map(ElementPilot::uniqueId).orElse("");
 		return pilot.getMutations(mutation -> uid.equals(uniqueId(mutation.getElement())));

@@ -39,10 +39,11 @@ public class ClassPathDao<T> extends AbstractFSSerializationDao<T> {
 
 	@Override
 	protected ResourceMetaData resolve(String locator) {
+		final var fullPath = resourcePath.endsWith("/") ? resourcePath + locator : resourcePath + '/' + locator;
 		if (!resourcePathWhiteListed && whiteList.stream().noneMatch(locator::startsWith)) {
-			throw unableToIdentifyException(locator, resourcePath + locator, "not in white-list");
+			throw unableToIdentifyException(locator, fullPath, "not in white-list");
 		}
-		return buildAndValidateMetadata(locator, resourcePath + locator);
+		return buildAndValidateMetadata(locator, fullPath);
 	}
 
 	@Override

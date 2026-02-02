@@ -1,12 +1,14 @@
 package ch.scaille.tcwriter.persistence.handlers;
 
+import ch.scaille.tcwriter.persistence.IModelDao;
+import ch.scaille.tcwriter.persistence.handlers.serdeser.Deserializers;
 import tools.jackson.dataformat.yaml.YAMLMapper;
 
-public class YamlModelDataHandler extends AbstractJacksonDataHandler {
+public class YamlModelDataHandler extends AbstractModelDataHandler {
 
-	public YamlModelDataHandler() {
-		super(configure(YAMLMapper.builder()
-				.addModule(testCaseWriterModule))
+	public YamlModelDataHandler(IModelDao dao) {
+		super(dao, configure(YAMLMapper.builder()
+				.addModule(Deserializers.TCVWRITER_MODULE))
 				.build());
 	}
 

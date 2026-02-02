@@ -1,13 +1,9 @@
-package ch.scaille.tcwriter.examples.api.interfaces;
+package ch.scaille.tcwriter.examples.simple;
 
-import ch.scaille.tcwriter.annotations.TCAction;
-import ch.scaille.tcwriter.annotations.TCActors;
-import ch.scaille.tcwriter.annotations.TCApi;
-import ch.scaille.tcwriter.annotations.TCRole;
+import ch.scaille.tcwriter.annotations.*;
 import ch.scaille.tcwriter.examples.ExampleService;
 
 @TCRole(description = "A delivery company", humanReadable = "delivery company")
-@TCActors("deliveryGuy|DeliveryTestRole|delivery guy")
 public class DeliveryTestRole {
 
 	private final ExampleService testedService;

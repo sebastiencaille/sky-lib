@@ -86,6 +86,15 @@ public class JavaExt {
         }
     }
 
+    public static <T extends @Nullable Object> @NonNull T firstNonNull(T... objects) {
+        for (T object : objects) {
+            if (object != null) {
+                return object;
+            }
+        }
+        throw new NullPointerException("No non-null object found");
+    }
+
 
     public record AutoRemove(Path path) implements NoExceptionCloseable {
 

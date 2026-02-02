@@ -18,6 +18,9 @@ public interface PollingMetadata<C> {
 
 	Optional<PolledComponent<C>> getComponent();
 
+	/**
+	 * Time to wait before the first polling attempt
+	 */
 	Duration getFirstDelay();
 
 	DelayFunction getDelayFunction();

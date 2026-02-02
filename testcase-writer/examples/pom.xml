@@ -64,7 +64,7 @@
 							<goal>generateTestCases</goal>
 						</goals>
 						<configuration>
-							<template>file:src/main/resources/userResources/templates/TC.template</template>
+							<templatesFolder>file:src/main/resources/userResources/templates</templatesFolder>
 						</configuration>
 					</execution>
 				</executions>

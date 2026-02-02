@@ -1,5 +1,6 @@
 package ch.scaille.tcwriter.pilot.selenium;
 
+import static ch.scaille.testing.testpilot.selenium.SeleniumPilot.MUTATION_TEXT_CONTENT;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
@@ -109,12 +110,13 @@ public class ExamplePage extends PagePilot {
 
     public void assertElementChange() {
         var changedElement = on(driver -> driver.findElement(TEXT_XPATH));
-        changedElement.expectMutations(mutation -> "textContent".equals(mutation.getAttributeName()));
-        on(elementToBeClickable(ELEMENT_CHANGE_TEST)).failUnless().clicked();
-        // Explicitly test using WebElement as source
-        changedElement.failUnless().assertedCtxt(SeleniumPollingBuilder.assertMutations(mutations ->
-                Assertions.assertEquals(2, mutations.size(), mutations::toString)));
-        changedElement.failUnless().textEquals("Hello again");
+        try (var autoClose = changedElement.expectMutations(mutation -> MUTATION_TEXT_CONTENT.equals(mutation.getAttributeName()))) {
+            on(elementToBeClickable(ELEMENT_CHANGE_TEST)).failUnless().clicked();
+            // Explicitly test using WebElement as source
+            changedElement.failUnless().assertedCtxt(SeleniumPollingBuilder.assertMutations(mutations ->
+                    Assertions.assertEquals(2, mutations.size(), mutations::toString)));
+            changedElement.failUnless().textEquals("Hello again");
+        }
     }
 
 }

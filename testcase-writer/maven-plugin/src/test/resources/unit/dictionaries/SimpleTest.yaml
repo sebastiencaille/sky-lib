@@ -1,0 +1,270 @@
+--- !<ch.scaille.tcwriter.model.dictionary.TestDictionary>
+metadata: !<ch.scaille.tcwriter.model.Metadata>
+  description: "Test dictionary"
+  creationDate: null
+classifier: "SimpleTest"
+descriptions: !<java.util.HashMap>
+  method-ch.scaille.tcwriter.examples.simple.CustomerTestRole.resellOwnedItem:
+    description: "Resell the item"
+    humanReadable: "I resell the item for %s$"
+  NotSet:
+    description: "N/A"
+    humanReadable: "N/A"
+  method-ch.scaille.tcwriter.examples.simple.dto.TestItem.teaPot:
+    description: "A tea pot"
+    humanReadable: "a tea pot"
+  method-ch.scaille.tcwriter.examples.simple.selectors.BuyingLocationSelector.inLocalShop:
+    description: "In a local shop"
+    humanReadable: "in a local shop"
+  method-ch.scaille.tcwriter.examples.simple.CustomerTestRole.findAnotherBrand:
+    description: "Look for another brand"
+    humanReadable: "I find another brand"
+  method-ch.scaille.tcwriter.examples.simple.selectors.PackageDeliverySelector.fromShop:
+    description: "Item bought at the shop"
+    humanReadable: "the package bought at the shop"
+  param-ch.scaille.tcwriter.examples.simple.selectors.BuyingLocationSelector.onInternet-0:
+    description: "url"
+    humanReadable: "url"
+  role-ch.scaille.tcwriter.examples.simple.CustomerTestRole:
+    description: "A customer"
+    humanReadable: "customer"
+  method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setNumberOfItems:
+    description: "Number of items"
+    humanReadable: "count"
+  method-ch.scaille.tcwriter.examples.simple.CustomerTestRole.buy:
+    description: "Buy an item"
+    humanReadable: "I go %s and buy %s"
+  method-ch.scaille.tcwriter.examples.simple.DeliveryTestRole.deliverItem:
+    description: "Deliver item"
+    humanReadable: "I deliver the item"
+  method-ch.scaille.tcwriter.examples.simple.selectors.BuyingLocationSelector.onInternet:
+    description: "On internet"
+    humanReadable: "on internet (%s)"
+  method-ch.scaille.tcwriter.examples.simple.dto.TestItem.coffeeMachine:
+    description: "A coffee machine"
+    humanReadable: "a coffee machine"
+  method-ch.scaille.tcwriter.examples.simple.CustomerTestRole.checkPackage:
+    description: "Check the packaged item"
+    humanReadable: "I get %s and check that the packaged item is %s"
+  method-ch.scaille.tcwriter.examples.simple.selectors.PackageDeliverySelector.deliveredItem:
+    description: "Item delivered by delivery company"
+    humanReadable: "the delivered package"
+  role-ch.scaille.tcwriter.examples.simple.DeliveryTestRole:
+    description: "A delivery company"
+    humanReadable: "delivery company"
+  method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setISO:
+    description: "ISO"
+    humanReadable: "ISO"
+  method-ch.scaille.tcwriter.examples.simple.dto.TestItem.coffeeMachineOfBrand:
+    description: "A coffee machine of a specific brand"
+    humanReadable: "a coffee machine of brand \"%s\""
+  deliveryGuy:
+    description: "A delivery guy"
+    humanReadable: "delivery guy"
+  param-ch.scaille.tcwriter.examples.simple.CustomerTestRole.keepNote-0:
+    description: "a note"
+    humanReadable: "a note"
+  method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setBrandName:
+    description: "A brand"
+    humanReadable: "of brand"
+  method-ch.scaille.tcwriter.examples.simple.CustomerTestRole.keepNote:
+    description: "Keep a note"
+    humanReadable: "I keep the note \"%s\""
+  customer:
+    description: "A customer"
+    humanReadable: "customer"
+  param-ch.scaille.tcwriter.examples.simple.dto.TestItem.coffeeMachineOfBrand-0:
+    description: "Name of brand"
+    humanReadable: ""
+roles: !<java.util.HashMap>
+  role-ch.scaille.tcwriter.examples.simple.DeliveryTestRole: !<ch.scaille.tcwriter.model.dictionary.TestRole>
+    id: "role-ch.scaille.tcwriter.examples.simple.DeliveryTestRole"
+    name: "DeliveryTestRole"
+    actions: !<java.util.ArrayList>
+      - !<ch.scaille.tcwriter.model.dictionary.TestAction>
+        id: "method-ch.scaille.tcwriter.examples.simple.DeliveryTestRole.deliverItem"
+        name: "deliverItem"
+        returnType: "void"
+        allowedClassifiers:
+          - "PREPARATION"
+          - "ACTION"
+        parameters: !<java.util.ArrayList> []
+  role-ch.scaille.tcwriter.examples.simple.CustomerTestRole: !<ch.scaille.tcwriter.model.dictionary.TestRole>
+    id: "role-ch.scaille.tcwriter.examples.simple.CustomerTestRole"
+    name: "CustomerTestRole"
+    actions: !<java.util.ArrayList>
+      - !<ch.scaille.tcwriter.model.dictionary.TestAction>
+        id: "method-ch.scaille.tcwriter.examples.simple.CustomerTestRole.checkPackage"
+        name: "checkPackage"
+        returnType: "void"
+        allowedClassifiers:
+          - "CHECK"
+        parameters: !<java.util.ArrayList>
+          - !<ch.scaille.tcwriter.model.dictionary.TestApiParameter>
+            id: "param-ch.scaille.tcwriter.examples.simple.CustomerTestRole.checkPackage-0"
+            name: "checkPackage-0"
+            parameterType: "ch.scaille.tcwriter.examples.simple.selectors.PackageDeliverySelector"
+          - !<ch.scaille.tcwriter.model.dictionary.TestApiParameter>
+            id: "param-ch.scaille.tcwriter.examples.simple.CustomerTestRole.checkPackage-1"
+            name: "checkPackage-1"
+            parameterType: "ch.scaille.tcwriter.examples.simple.dto.TestItem"
+      - !<ch.scaille.tcwriter.model.dictionary.TestAction>
+        id: "method-ch.scaille.tcwriter.examples.simple.CustomerTestRole.keepNote"
+        name: "keepNote"
+        returnType: "void"
+        allowedClassifiers:
+          - "PREPARATION"
+          - "ACTION"
+        parameters: !<java.util.ArrayList>
+          - !<ch.scaille.tcwriter.model.dictionary.TestApiParameter>
+            id: "param-ch.scaille.tcwriter.examples.simple.CustomerTestRole.keepNote-0"
+            name: "keepNote-0"
+            parameterType: "java.lang.String"
+      - !<ch.scaille.tcwriter.model.dictionary.TestAction>
+        id: "method-ch.scaille.tcwriter.examples.simple.CustomerTestRole.findAnotherBrand"
+        name: "findAnotherBrand"
+        returnType: "java.lang.String"
+        allowedClassifiers:
+          - "PREPARATION"
+          - "ACTION"
+        parameters: !<java.util.ArrayList> []
+      - !<ch.scaille.tcwriter.model.dictionary.TestAction>
+        id: "method-ch.scaille.tcwriter.examples.simple.CustomerTestRole.buy"
+        name: "buy"
+        returnType: "void"
+        allowedClassifiers:
+          - "PREPARATION"
+          - "ACTION"
+        parameters: !<java.util.ArrayList>
+          - !<ch.scaille.tcwriter.model.dictionary.TestApiParameter>
+            id: "param-ch.scaille.tcwriter.examples.simple.CustomerTestRole.buy-0"
+            name: "buy-0"
+            parameterType: "ch.scaille.tcwriter.examples.simple.selectors.BuyingLocationSelector"
+          - !<ch.scaille.tcwriter.model.dictionary.TestApiParameter>
+            id: "param-ch.scaille.tcwriter.examples.simple.CustomerTestRole.buy-1"
+            name: "buy-1"
+            parameterType: "ch.scaille.tcwriter.examples.simple.dto.TestItem"
+      - !<ch.scaille.tcwriter.model.dictionary.TestAction>
+        id: "method-ch.scaille.tcwriter.examples.simple.CustomerTestRole.resellOwnedItem"
+        name: "resellOwnedItem"
+        returnType: "void"
+        allowedClassifiers:
+          - "PREPARATION"
+          - "ACTION"
+        parameters: !<java.util.ArrayList>
+          - !<ch.scaille.tcwriter.model.dictionary.TestApiParameter>
+            id: "param-ch.scaille.tcwriter.examples.simple.CustomerTestRole.resellOwnedItem-0"
+            name: "resellOwnedItem-0"
+            parameterType: "int"
+actors: !<java.util.HashMap>
+  deliveryGuy: !<ch.scaille.tcwriter.model.dictionary.TestActor>
+    id: "deliveryGuy"
+    name: "deliveryGuy"
+    roleRef:
+      ref: "role-ch.scaille.tcwriter.examples.simple.DeliveryTestRole"
+  customer: !<ch.scaille.tcwriter.model.dictionary.TestActor>
+    id: "customer"
+    name: "customer"
+    roleRef:
+      ref: "role-ch.scaille.tcwriter.examples.simple.CustomerTestRole"
+testObjectFactories: !<com.google.common.collect.Multimaps$CustomListMultimap>
+  ch.scaille.tcwriter.examples.simple.selectors.BuyingLocationSelector:
+    - !<ch.scaille.tcwriter.model.dictionary.TestParameterFactory>
+      id: "method-ch.scaille.tcwriter.examples.simple.selectors.BuyingLocationSelector.inLocalShop"
+      name: "BuyingLocationSelector.inLocalShop"
+      mandatoryParameters: !<java.util.ArrayList> []
+      optionalParameters: !<java.util.ArrayList> []
+      nature: "TEST_API"
+      parameterType: "ch.scaille.tcwriter.examples.simple.selectors.BuyingLocationSelector"
+    - !<ch.scaille.tcwriter.model.dictionary.TestParameterFactory>
+      id: "method-ch.scaille.tcwriter.examples.simple.selectors.BuyingLocationSelector.onInternet"
+      name: "BuyingLocationSelector.onInternet"
+      mandatoryParameters: !<java.util.ArrayList>
+        - !<ch.scaille.tcwriter.model.dictionary.TestApiParameter>
+          id: "param-ch.scaille.tcwriter.examples.simple.selectors.BuyingLocationSelector.onInternet-0"
+          name: "onInternet-0"
+          parameterType: "java.lang.String"
+      optionalParameters: !<java.util.ArrayList> []
+      nature: "TEST_API"
+      parameterType: "ch.scaille.tcwriter.examples.simple.selectors.BuyingLocationSelector"
+  ch.scaille.tcwriter.examples.simple.selectors.PackageDeliverySelector:
+    - !<ch.scaille.tcwriter.model.dictionary.TestParameterFactory>
+      id: "method-ch.scaille.tcwriter.examples.simple.selectors.PackageDeliverySelector.deliveredItem"
+      name: "PackageDeliverySelector.deliveredItem"
+      mandatoryParameters: !<java.util.ArrayList> []
+      optionalParameters: !<java.util.ArrayList> []
+      nature: "TEST_API"
+      parameterType: "ch.scaille.tcwriter.examples.simple.selectors.PackageDeliverySelector"
+    - !<ch.scaille.tcwriter.model.dictionary.TestParameterFactory>
+      id: "method-ch.scaille.tcwriter.examples.simple.selectors.PackageDeliverySelector.fromShop"
+      name: "PackageDeliverySelector.fromShop"
+      mandatoryParameters: !<java.util.ArrayList> []
+      optionalParameters: !<java.util.ArrayList> []
+      nature: "TEST_API"
+      parameterType: "ch.scaille.tcwriter.examples.simple.selectors.PackageDeliverySelector"
+  ch.scaille.tcwriter.examples.simple.dto.TestItem:
+    - !<ch.scaille.tcwriter.model.dictionary.TestParameterFactory>
+      id: "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.coffeeMachine"
+      name: "TestItem.coffeeMachine"
+      mandatoryParameters: !<java.util.ArrayList> []
+      optionalParameters: !<java.util.ArrayList>
+        - !<ch.scaille.tcwriter.model.dictionary.TestApiParameter>
+          id: "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setNumberOfItems"
+          name: "setNumberOfItems"
+          parameterType: "int"
+        - !<ch.scaille.tcwriter.model.dictionary.TestApiParameter>
+          id: "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setISO"
+          name: "setISO"
+          parameterType: "boolean"
+        - !<ch.scaille.tcwriter.model.dictionary.TestApiParameter>
+          id: "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setBrandName"
+          name: "setBrandName"
+          parameterType: "java.lang.String"
+      nature: "TEST_API"
+      parameterType: "ch.scaille.tcwriter.examples.simple.dto.TestItem"
+    - !<ch.scaille.tcwriter.model.dictionary.TestParameterFactory>
+      id: "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.coffeeMachineOfBrand"
+      name: "TestItem.coffeeMachineOfBrand"
+      mandatoryParameters: !<java.util.ArrayList>
+        - !<ch.scaille.tcwriter.model.dictionary.TestApiParameter>
+          id: "param-ch.scaille.tcwriter.examples.simple.dto.TestItem.coffeeMachineOfBrand-0"
+          name: "coffeeMachineOfBrand-0"
+          parameterType: "java.lang.String"
+      optionalParameters: !<java.util.ArrayList>
+        - !<ch.scaille.tcwriter.model.dictionary.TestApiParameter>
+          id: "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setNumberOfItems"
+          name: "setNumberOfItems"
+          parameterType: "int"
+        - !<ch.scaille.tcwriter.model.dictionary.TestApiParameter>
+          id: "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setISO"
+          name: "setISO"
+          parameterType: "boolean"
+        - !<ch.scaille.tcwriter.model.dictionary.TestApiParameter>
+          id: "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setBrandName"
+          name: "setBrandName"
+          parameterType: "java.lang.String"
+      nature: "TEST_API"
+      parameterType: "ch.scaille.tcwriter.examples.simple.dto.TestItem"
+    - !<ch.scaille.tcwriter.model.dictionary.TestParameterFactory>
+      id: "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.teaPot"
+      name: "TestItem.teaPot"
+      mandatoryParameters: !<java.util.ArrayList> []
+      optionalParameters: !<java.util.ArrayList>
+        - !<ch.scaille.tcwriter.model.dictionary.TestApiParameter>
+          id: "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setNumberOfItems"
+          name: "setNumberOfItems"
+          parameterType: "int"
+        - !<ch.scaille.tcwriter.model.dictionary.TestApiParameter>
+          id: "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setISO"
+          name: "setISO"
+          parameterType: "boolean"
+        - !<ch.scaille.tcwriter.model.dictionary.TestApiParameter>
+          id: "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setBrandName"
+          name: "setBrandName"
+          parameterType: "java.lang.String"
+      nature: "TEST_API"
+      parameterType: "ch.scaille.tcwriter.examples.simple.dto.TestItem"
+selectorTypes: !<java.util.HashSet>
+  - "ch.scaille.tcwriter.examples.simple.selectors.BuyingLocationSelector"
+  - "ch.scaille.tcwriter.examples.simple.selectors.PackageDeliverySelector"
+explicitTemplate: null

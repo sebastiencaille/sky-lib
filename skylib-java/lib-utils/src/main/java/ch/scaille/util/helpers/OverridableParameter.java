@@ -40,10 +40,9 @@ public class OverridableParameter<S, T> {
 	}
 
 	public void ensureLoaded() {
-		if (this.value != null) {
-			return;
+		if (this.value == null) {
+			this.value = defaultProvider.apply(Objects.requireNonNull(source, "No source defined"));
 		}
-		this.value = defaultProvider.apply(Objects.requireNonNull(source, "No source defined"));
 	}
 
 }

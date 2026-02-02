@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
-import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
+import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.persistence.IModelDao;
 
 public class TestCaseDao extends AbstractDao implements ITestCaseDao {
@@ -22,12 +22,12 @@ public class TestCaseDao extends AbstractDao implements ITestCaseDao {
     }
 
     @Override
-    public Optional<ExportableTestCase> load(String testCaseName, TestDictionary dictionary) {
+    public Optional<TestCase> load(String testCaseName, TestDictionary dictionary) {
         return modelDao.readTestCase(testCaseName, _ -> dictionary);
     }
 
     @Override
-    public void save(ExportableTestCase testCase) {
+    public void save(TestCase testCase) {
         modelDao.writeTestCase(testCase.getName(), testCase);
     }
 }

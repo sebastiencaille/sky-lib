@@ -16,7 +16,6 @@ import ch.scaille.tcwriter.model.dictionary.TestAction;
 import ch.scaille.tcwriter.model.dictionary.TestActor;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
-import ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import lombok.Getter;
 import org.jspecify.annotations.NullMarked;
@@ -34,12 +33,12 @@ public class StepEditorModel extends GuiModel {
             "possibleSelectors", this);
     private final ObjectProperty<@Nullable TestParameterFactory> selector = new ObjectProperty<>("selector", this, null);
     private final ObjectProperty<TestParameterValue> selectorValues = new ObjectProperty<>("selectorValues", this,
-            ExportableTestParameterValue.NO_VALUE);
+            TestParameterValue.NO_VALUE);
     private final ListProperty<TestParameterFactory> possibleActionParameters = new ListProperty<>(
             "possibleActionParameters", this);
     private final ObjectProperty<@Nullable TestParameterFactory> actionParameter = new ObjectProperty<>("actionParameter", this, null);
     private final ObjectProperty<TestParameterValue> actionParameterValues = new ObjectProperty<>(
-            "actionParameterValues", this, ExportableTestParameterValue.NO_VALUE);
+            "actionParameterValues", this, TestParameterValue.NO_VALUE);
     private final ObjectProperty<@Nullable StepClassifier> stepClassifier = new ObjectProperty<>("stepClassifier", this, null);
     private final ObjectProperty<TestDictionary> testDictionary;
 

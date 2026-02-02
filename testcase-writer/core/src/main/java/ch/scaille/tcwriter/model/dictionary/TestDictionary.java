@@ -1,11 +1,8 @@
 package ch.scaille.tcwriter.model.dictionary;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import ch.scaille.util.helpers.JavaExt;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
@@ -15,14 +12,17 @@ import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.model.TestObjectDescription;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.services.generators.Helper;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class TestDictionary {
 
+    public static final TestDictionary NOT_SET = new TestDictionary();
     private static final TestObjectDescription NO_ID_DESCRIPTION = new TestObjectDescription("", "");
 
     private Metadata metadata = new Metadata();
@@ -40,6 +40,8 @@ public class TestDictionary {
 
     private final Set<String> selectorTypes = new HashSet<>();
 
+    private String explicitTemplate;
+
     public TestDictionary() {
         descriptions.put(IdObject.ID_NOT_SET, TestObjectDescription.NOT_SET);
     }
@@ -48,7 +50,7 @@ public class TestDictionary {
     public TestDictionary(Metadata metadata, String classifier, Map<String, TestObjectDescription> descriptions,
                           Map<String, TestRole> roles, Map<String, TestActor> actors,
                           Multimap<String, TestParameterFactory> testObjectFactories,
-                          Set<String> selectorTypes) {
+                          Set<String> selectorTypes, String explicitTemplate) {
 
         this.metadata = metadata;
         this.classifier = classifier;
@@ -57,6 +59,7 @@ public class TestDictionary {
         this.actors.putAll(actors);
         this.testObjectFactories.putAll(testObjectFactories);
         this.selectorTypes.addAll(selectorTypes);
+        this.explicitTemplate = explicitTemplate;
     }
 
     public void addDescription(final IdObject idObject, final TestObjectDescription description) {
@@ -109,7 +112,17 @@ public class TestDictionary {
     }
 
     public boolean isSelector(final TestParameterValue value) {
-        return selectorTypes.contains(value.getValueFactory().getParameterType());
+        return selectorTypes.contains(value.getParameterValueFactory().getParameterType());
     }
-    
+
+
+    public String template() {
+        return JavaExt.firstNonNull(getExplicitTemplate(), getClassifier(), "default") + "-java.template";
+    }
+
+    public void overrideTemplate(String tcTemplate) {
+        if (tcTemplate != null) {
+            this.explicitTemplate = tcTemplate;
+        }
+    }
 }

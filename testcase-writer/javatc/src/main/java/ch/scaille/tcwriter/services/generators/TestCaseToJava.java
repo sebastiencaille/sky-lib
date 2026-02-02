@@ -11,7 +11,7 @@ import com.beust.jcommander.Parameter;
 
 import ch.scaille.generators.util.GenerationMetadata;
 import ch.scaille.generators.util.Template;
-import ch.scaille.tcwriter.generators.services.visitors.TestCaseToJunitVisitor;
+import ch.scaille.tcwriter.generators.services.visitors.TestCaseToJavaVisitor;
 import ch.scaille.tcwriter.model.TestCaseException;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.persistence.IModelDao;
@@ -20,13 +20,16 @@ import ch.scaille.tcwriter.persistence.factory.DaoConfigs;
 public class TestCaseToJava {
 
 	public static class Args {
-		@Parameter(names = { "-c" }, description = "Name of configuration")
+		@Parameter(names = { "--config", "-c" }, description = "Name of configuration")
 		public String configuration;
 
-		@Parameter(names = { "-td" }, description = "Name of test case dictionary")
+		@Parameter(names = { "--dictionary", "-d" }, description = "Name of test case dictionary")
 		public String tcDictionary = "default";
 
-		@Parameter(names = { "-tc" }, required = true, description = "Name of test case")
+		@Parameter(names = { "--template", "-t" }, description = "Name of test case template")
+		public String tcTemplate;
+
+		@Parameter(names = { "--testcase", "-tc" }, required = true, description = "Name of test case")
 		public String testCase;
 	}
 
@@ -37,7 +40,7 @@ public class TestCaseToJava {
 	private final IModelDao modelDao;
 
 	public Template generate(TestCase tc, GenerationMetadata generationMetadata) throws TestCaseException {
-		return new TestCaseToJunitVisitor(this.modelDao.readTemplate()).visitTestCase(tc, generationMetadata);
+		return new TestCaseToJavaVisitor(this.modelDao.readTemplate(tc.getDictionary().template())).visitTestCase(tc, generationMetadata);
 	}
 
 	public static void main(String[] args) throws IOException, TestCaseException {
@@ -51,8 +54,9 @@ public class TestCaseToJava {
 		final var modelDao = daoConfig.modelDao();
 		final var testDictionary = modelDao.readTestDictionary(mainArgs.tcDictionary)
 				.orElseThrow(FileNotFoundException::new);
+		testDictionary.overrideTemplate(mainArgs.tcTemplate);
 		final var testCase = modelDao.readTestCase(tcFile, _ -> testDictionary).orElseThrow(FileNotFoundException::new);
-		
+
 		new TestCaseToJava(modelDao).generate(testCase, generationMetadata)
 				.writeTo(uncheckedC(tc -> modelDao.writeTestCaseCode(tcFile, tc)));
 	}

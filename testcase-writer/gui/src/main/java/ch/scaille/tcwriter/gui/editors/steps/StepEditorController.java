@@ -18,7 +18,7 @@ import ch.scaille.tcwriter.model.dictionary.TestAction;
 import ch.scaille.tcwriter.model.dictionary.TestActor;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
-import ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue;
+import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestStep;
 import lombok.Getter;
 
@@ -73,8 +73,8 @@ public class StepEditorController extends GuiController {
 		
 		model.getAction().listenActive(_ -> updateCurrentActionParameters(dictionary.getValue(), selectedStep));
 
-		model.getSelectorValues().setValue(this, ExportableTestParameterValue.NO_VALUE);
-		model.getActionParameterValues().setValue(this, ExportableTestParameterValue.NO_VALUE);
+		model.getSelectorValues().setValue(this, TestParameterValue.NO_VALUE);
+		model.getActionParameterValues().setValue(this, TestParameterValue.NO_VALUE);
 		// set temporary cloned object, so it's possible to edit and cancel edition
 		model.getSelector()
 				.listenActive(selector -> model.getSelectorValues().setValue(this,
@@ -122,8 +122,8 @@ public class StepEditorController extends GuiController {
 		if (actionUtils.hasSelector()) {
 			final var selectorValue = step.getParametersValue(actionUtils.selectorIndex());
 			model.getPossibleSelectors().setValue(this, sorted(td.getParameterFactories(actionUtils.selector())));
-			model.getSelector().setValue(this, selectorValue.getValueFactory());
-			model.getSelectorValues().setValue(this, selectorValue.derivate(selectorValue.getValueFactory()));
+			model.getSelector().setValue(this, selectorValue.getParameterValueFactory());
+			model.getSelectorValues().setValue(this, selectorValue.derivate(selectorValue.getParameterValueFactory()));
 		} else {
 			emptySelectors();
 		}
@@ -132,21 +132,21 @@ public class StepEditorController extends GuiController {
 			final var param0Value = step.getParametersValue(actionUtils.parameterIndex(0));
 			model.getPossibleActionParameters().setValue(this,
 					sorted(td.getParameterFactories(actionUtils.parameter(0))));
-			model.getActionParameter().setValue(this, param0Value.getValueFactory());
-			model.getActionParameterValues().setValue(this, param0Value.derivate(param0Value.getValueFactory()));
+			model.getActionParameter().setValue(this, param0Value.getParameterValueFactory());
+			model.getActionParameterValues().setValue(this, param0Value.derivate(param0Value.getParameterValueFactory()));
 		} else {
 			emptyParam0();
 		}
 	}
 
 	private void emptyParam0() {
-		model.getActionParameterValues().setValue(this, ExportableTestParameterValue.NO_VALUE);
+		model.getActionParameterValues().setValue(this, TestParameterValue.NO_VALUE);
 		model.getActionParameter().setValue(this, TestParameterFactory.NO_FACTORY);
 		model.getPossibleActionParameters().setValue(this, Collections.emptyList());
 	}
 
 	private void emptySelectors() {
-		model.getSelectorValues().setValue(this, ExportableTestParameterValue.NO_VALUE);
+		model.getSelectorValues().setValue(this, TestParameterValue.NO_VALUE);
 		model.getSelector().setValue(this, TestParameterFactory.NO_FACTORY);
 		model.getPossibleSelectors().setValue(this, Collections.emptyList());
 	}

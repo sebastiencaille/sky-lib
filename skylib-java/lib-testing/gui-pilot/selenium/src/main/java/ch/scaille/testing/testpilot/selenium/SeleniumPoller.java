@@ -55,8 +55,7 @@ public class SeleniumPoller extends Poller {
 	public <T> Optional<T> run(Function<Poller, Optional<T>> polling, Predicate<T> isSuccess) {
 		try {
 			beforeRun();
-			return pollWithSpecificDelay(polling, isSuccess, firstDelay).filter(isSuccess)
-					.or(() -> pollWithSpecificDelay(polling, isSuccess, delayFunction.apply(this)));
+			return pollWithSpecificDelay(polling, isSuccess, delayFunction.apply(this));
 		} catch (TimeoutException e) {
 			LOGGER.log(Level.INFO, "Polling timeout", e);
 			timeoutException = e;

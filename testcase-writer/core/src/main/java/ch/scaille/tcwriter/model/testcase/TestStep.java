@@ -8,6 +8,7 @@ import ch.scaille.tcwriter.model.dictionary.StepClassifier;
 import ch.scaille.tcwriter.model.dictionary.TestAction;
 import ch.scaille.tcwriter.model.dictionary.TestActor;
 import ch.scaille.tcwriter.model.dictionary.TestRole;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 import lombok.Setter;
 import org.jspecify.annotations.NullMarked;
@@ -33,6 +34,7 @@ public class TestStep {
     }
 
     @Default
+    @JsonCreator
     public TestStep(final int ordinal, TestActor actor, TestRole role, TestAction action, List<TestParameterValue> parametersValue, TestReference reference, StepClassifier classifier) {
         this.ordinal = ordinal;
         this.actor = actor;

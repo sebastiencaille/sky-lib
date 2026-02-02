@@ -3,10 +3,10 @@ package ch.scaille.tcwriter.persistence.handlers;
 import tools.jackson.dataformat.yaml.YAMLMapper;
 import tools.jackson.dataformat.yaml.YAMLWriteFeature;
 
-public class YamlConfigDataHandler extends AbstractJacksonDataHandler {
+public class YamlConfigDataHandler extends AbstractModelDataHandler {
 
 	public YamlConfigDataHandler() {
-		super(configure(YAMLMapper.builder()
+		super(null, configure(YAMLMapper.builder()
 				.configure(YAMLWriteFeature.USE_NATIVE_OBJECT_ID, true))
 				.build());
 	}

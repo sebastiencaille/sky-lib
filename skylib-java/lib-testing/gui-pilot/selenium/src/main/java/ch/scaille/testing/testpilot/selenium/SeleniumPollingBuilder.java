@@ -5,7 +5,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import ch.scaille.util.helpers.JavaExt;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AutoClose;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DomMutation;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -48,9 +50,6 @@ public class SeleniumPollingBuilder extends
 					component -> Assertions.assertEquals(text, component.getText(), "text equals '" + text + "'"));
 		}
 
-        public boolean absent() {
-            return true;
-        }
     }
 	
 	public static Consumer<PolledComponent<WebElement>> mutations(Predicate<List<DomMutation>> mutationsTest) {
@@ -81,8 +80,9 @@ public class SeleniumPollingBuilder extends
 		failUnless().present();
 	}
 
-	public void expectMutations(Predicate<DomMutation> filter) {
+	public JavaExt.AutoCloseableNoException expectMutations(Predicate<DomMutation> filter) {
 		elementPilot.expectMutations(filter);
+		return elementPilot::stopExpectingMutations;
 	}
 
 }

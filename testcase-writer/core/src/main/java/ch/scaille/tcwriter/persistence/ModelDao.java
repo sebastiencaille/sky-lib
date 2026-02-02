@@ -13,9 +13,9 @@ import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.model.config.TCConfig;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
-import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.persistence.handlers.JsonModelDataHandler;
+import ch.scaille.tcwriter.persistence.handlers.TemplateStorageHandler;
 import ch.scaille.tcwriter.persistence.handlers.YamlModelDataHandler;
 import ch.scaille.util.helpers.Logs;
 import ch.scaille.util.persistence.DaoFactory;
@@ -27,10 +27,11 @@ import ch.scaille.util.persistence.handlers.TextStorageHandler;
 
 public class ModelDao implements IModelDao {
 
-	public static StorageDataHandlerRegistry defaultDataHandlers() {
-		final var modelSerDeserializerRegistry = new StorageDataHandlerRegistry(new YamlModelDataHandler());
-		modelSerDeserializerRegistry.register(new JsonModelDataHandler());
+	public static StorageDataHandlerRegistry defaultDataHandlers(IModelDao modelDao) {
+		final var modelSerDeserializerRegistry = new StorageDataHandlerRegistry(new YamlModelDataHandler(modelDao));
+		modelSerDeserializerRegistry.register(new JsonModelDataHandler(modelDao));
 		modelSerDeserializerRegistry.register(new TextStorageHandler());
+		modelSerDeserializerRegistry.register(new TemplateStorageHandler());
 		return modelSerDeserializerRegistry;
 	}
 
@@ -47,17 +48,17 @@ public class ModelDao implements IModelDao {
 
 	protected IDao<TestDictionary> dictionaryRepo;
 
-	protected IDao<ExportableTestCase> testCaseRepo;
+	protected IDao<TestCase> testCaseRepo;
 
 	protected IDao<String> templateRepo;
 
 	protected IDao<String> testCaseCodeRepo;
 
 	public ModelDao(DaoFactory daoFactory, ObjectProperty<TCConfig> config,
-			StorageDataHandlerRegistry serDeserializerRegistry) {
+			Function<IModelDao, StorageDataHandlerRegistry> serDeserializerRegistry) {
 		this.daoFactory = daoFactory;
 		this.config = config;
-		this.serDeserializerRegistry = serDeserializerRegistry;
+		this.serDeserializerRegistry = serDeserializerRegistry.apply(this);
 		this.config.listen(this::reload);
 		reload(this.config.getValue());
 	}
@@ -69,7 +70,7 @@ public class ModelDao implements IModelDao {
 		final var modelConfig = configOf(config);
 		this.dictionaryRepo = daoFactory.loaderOf(TestDictionary.class, modelConfig.getDictionaryPath(),
 				serDeserializerRegistry);
-		this.testCaseRepo = daoFactory.loaderOf(ExportableTestCase.class, modelConfig.getTcPath(),
+		this.testCaseRepo = daoFactory.loaderOf(TestCase.class, modelConfig.getTcPath(),
 				serDeserializerRegistry);
 		this.templateRepo = daoFactory.loaderOf(String.class, modelConfig.getTemplatePath(), serDeserializerRegistry);
 		this.testCaseCodeRepo = daoFactory.loaderOf(String.class, modelConfig.getTcExportPath(),
@@ -118,26 +119,18 @@ public class ModelDao implements IModelDao {
 		return uncheck("Listing of test cases",
 				() -> testCaseRepo.list()
 						.map(f ->
-								readTestCase(f.getLocator(), _ -> null, false).orElseThrow(() -> new IllegalStateException("Listed TestCase not found")))
+								readTestCase(f.getLocator(), _ -> null).orElseThrow(() -> new IllegalStateException("Listed TestCase not found")))
 						.filter(tc -> tc.getPreferredDictionary().equals(dictionary.getClassifier()))
 						.map(TestCase::getMetadata)
 						.toList());
 	}
 
 	@Override
-	public Optional<ExportableTestCase> readTestCase(String locator, Function<String, TestDictionary> testDictionaryLoader) {
-		return readTestCase(locator, testDictionaryLoader, true);
-	}
-
-	private Optional<ExportableTestCase> readTestCase(String locator,
-			Function<String, TestDictionary> testDictionaryLoader, boolean resolve) {
+	public Optional<TestCase> readTestCase(String locator, Function<String, TestDictionary> testDictionaryLoader) {
 		try {
 			final var testCase = testCaseRepo.load(locator);
 			testCase.getMetadata().setTransientId(locator);
 			testCase.setDictionary(testDictionaryLoader.apply(testCase.getPreferredDictionary()));
-			if (resolve) {
-				testCase.restoreReferences();
-			}
 			return Optional.of(testCase);
 		} catch (StorageException e) {
 			Logs.of(ModelDao.class).log(Level.WARNING, e, () -> "Unable to load test case " + locator);
@@ -146,14 +139,14 @@ public class ModelDao implements IModelDao {
 	}
 
 	@Override
-	public void writeTestCase(String locator, ExportableTestCase tc) {
+	public void writeTestCase(String locator, TestCase tc) {
 		tc.setPreferredDictionary(tc.getDictionary().getClassifier());
 		uncheck("Writing of test case", () -> testCaseRepo.saveOrUpdate(locator, tc));
 	}
 
 	@Override
-	public Template readTemplate() {
-		return uncheck("Reading of template", () -> new Template(templateRepo.load("")));
+	public Template readTemplate(String templateLocator) {
+		return uncheck("Reading of template", () -> new Template(templateRepo.load(templateLocator)));
 	}
 
 	@Override

@@ -39,7 +39,7 @@ class JavaTestCaseGeneratorMojoTest {
     @Test
     @InjectMojo(goal = "generateTestCases", pom = SRC_TEST_RESOURCES_UNIT + "/nominal.xml")
     @MojoParameter(name = "dictionaryFolder", value = SRC_TEST_RESOURCES_UNIT + "/dictionaries")
-    @MojoParameter(name = "template", value = SRC_TEST_RESOURCES_UNIT + "/templates/TC.template")
+    @MojoParameter(name = "templatesFolder", value = SRC_TEST_RESOURCES_UNIT + "/templates")
     void testGeneration(JavaTestCaseGeneratorMojo myMojo) throws Exception {
         assertNotNull(myMojo);
         myMojo.execute();

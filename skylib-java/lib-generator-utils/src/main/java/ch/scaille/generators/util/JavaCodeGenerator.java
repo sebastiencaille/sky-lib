@@ -104,6 +104,9 @@ public class JavaCodeGenerator<E extends Exception> extends TextFormatter<JavaCo
 		return append("%s.%s(%s)", instance, methodName, String.join(",", parameters));
 	}
 
+	/**
+	 * End of statement
+	 */
 	public JavaCodeGenerator<E> eos() throws E {
 		return append(";").eol();
 	}

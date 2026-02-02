@@ -2,6 +2,7 @@ package ch.scaille.tcwriter.model.testcase;
 
 import java.util.*;
 
+import ch.scaille.tcwriter.mappers.Default;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Multimap;
@@ -25,8 +26,10 @@ public class TestCase {
     protected Metadata metadata = new Metadata();
 
     @JsonIgnore
+    protected TestDictionary dictionary = TestDictionary.NOT_SET;
+
     @Nullable
-    protected TestDictionary testDictionary;
+    protected String preferredDictionary;
 
     protected final List<TestStep> steps = new ArrayList<>();
 
@@ -37,16 +40,18 @@ public class TestCase {
 
     protected final Map<String, TestObjectDescription> dynamicDescriptions = new HashMap<>();
 
-    protected TestCase(final String pkgAndClassName, final TestDictionary testDictionary) {
+    public TestCase(final String pkgAndClassName, final TestDictionary testDictionary) {
         this.pkgAndClassName = pkgAndClassName;
-        this.testDictionary = testDictionary;
+        this.dictionary = testDictionary;
     }
 
+    @Default
     @JsonCreator
-    public TestCase(Metadata metadata, List<TestStep> steps, final String pkgAndClassName,
+    public TestCase(Metadata metadata, String preferredDictionary, List<TestStep> steps, final String pkgAndClassName,
                     @Nullable Multimap<String, TestReference> dynamicReferences,
                     @Nullable Map<String, TestObjectDescription> dynamicDescriptions) {
         this.metadata = Objects.requireNonNull(metadata, "Metadata must not be null");
+        this.preferredDictionary = preferredDictionary;
         this.pkgAndClassName = pkgAndClassName;
         this.steps.addAll(steps);
         if (dynamicReferences != null) {
@@ -55,15 +60,6 @@ public class TestCase {
         if (dynamicDescriptions != null) {
             this.dynamicDescriptions.putAll(dynamicDescriptions);
         }
-    }
-
-
-    public void setDictionary(final TestDictionary testDictionary) {
-        this.testDictionary = testDictionary;
-    }
-
-    public TestDictionary getDictionary() {
-        return testDictionary;
     }
 
     public void addStep(final TestStep step) {
@@ -88,7 +84,7 @@ public class TestCase {
     }
 
     public TestObjectDescription descriptionOf(final String id) {
-        final var modelDescr = Objects.requireNonNull(testDictionary, "Test dictionary must be set").getDescriptions().get(id);
+        final var modelDescr = Objects.requireNonNull(dictionary, "Test dictionary must be set").getDescriptions().get(id);
         if (modelDescr != null) {
             return modelDescr;
         }
@@ -121,7 +117,7 @@ public class TestCase {
         if (apiParameterId.isEmpty()) {
             return TestApiParameter.NO_PARAMETER;
         }
-        return Objects.requireNonNull(testDictionary, "Test dictionary must be set")
+        return Objects.requireNonNull(dictionary, "Test dictionary must be set")
                 .getRoles().values().stream()
                 .flatMap(s -> s.getActions().stream())
                 .flatMap(a -> a.getParameters().stream()).filter(p -> p.getId().equals(apiParameterId)).findFirst()

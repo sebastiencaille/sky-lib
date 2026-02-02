@@ -57,6 +57,7 @@ public class TimeTracker {
 	}
 
 	public Duration remainingDuration() {
+		// TODO must be shorter for the 1st run
 		return Duration.ofMillis(remainingTimeMs());
 	}
 

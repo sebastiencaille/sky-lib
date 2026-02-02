@@ -1,7 +1,9 @@
 package ch.scaille.testing.testpilot.selenium;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -36,9 +38,17 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<?, O>, O exten
 
 	public abstract T withWebDriverPath(Path path);
 
-	public abstract T withBinary(String binary);
+	public abstract T withBinaries(String... binaries);
 
 	public abstract RemoteWebDriver build();
+
+	protected Path firstExistingOf(String[] binaries) {
+		return Arrays.stream(binaries)
+				.map(Paths::get)
+				.filter(Files::exists)
+				.findFirst()
+				.orElseThrow(() -> new IllegalArgumentException("No file found in " + Arrays.toString(binaries)));
+	}
 
 	protected WebDriverFactory(O options) {
 		this.options = options;
@@ -67,7 +77,6 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<?, O>, O exten
 
 		public FirefoxDriverFactory() {
 			super(new FirefoxOptions());
-			withWebDriverPath(webDriverPath());
 			options.addPreference("dom.disable_beforeunload", true);
 			options.setCapability(CapabilityType.UNHANDLED_PROMPT_BEHAVIOUR, "ignore");
 			profile.setPreference("gfx.direct2d.disabled", true);
@@ -83,8 +92,8 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<?, O>, O exten
 		}
 
 		@Override
-		public FirefoxDriverFactory withBinary(String binary) {
-			options.setBinary(binary);
+		public FirefoxDriverFactory withBinaries(String... binaries) {
+			options.setBinary(firstExistingOf(binaries));
 			return this;
 		}
 
@@ -160,8 +169,8 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<?, O>, O exten
 		}
 
 		@Override
-		public ChromeDriverFactory withBinary(String binary) {
-			options.setBinary(binary);
+		public ChromeDriverFactory withBinaries(String... binaries) {
+			options.setBinary(firstExistingOf(binaries).toFile());
 			return this;
 		}
 

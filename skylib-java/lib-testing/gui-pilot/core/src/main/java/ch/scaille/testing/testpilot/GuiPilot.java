@@ -28,6 +28,9 @@ public class GuiPilot {
 
 	private Duration defaultPollingTimeout = Duration.ofSeconds(30);
 
+	/**
+	 * First quickly poll, then increase the delay
+	 */
 	private Duration pollingFirstDelay = Duration.ofMillis(0);
 
 	private DelayFunction pollingDelayFunction = p -> {

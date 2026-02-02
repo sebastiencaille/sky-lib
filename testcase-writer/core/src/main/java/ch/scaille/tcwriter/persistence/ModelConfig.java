@@ -13,7 +13,6 @@ import lombok.Setter;
 @Setter
 public class ModelConfig implements SubConfig {
 
-
     private String dictionaryPath;
 
     private String tcPath;

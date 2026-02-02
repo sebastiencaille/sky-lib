@@ -1,19 +1,14 @@
-package ch.scaille.tcwriter.examples.api.interfaces;
+package ch.scaille.tcwriter.examples.simple;
 
+import ch.scaille.tcwriter.annotations.*;
 import org.junit.jupiter.api.Assertions;
 
-import ch.scaille.tcwriter.annotations.TCAction;
-import ch.scaille.tcwriter.annotations.TCActors;
-import ch.scaille.tcwriter.annotations.TCApi;
-import ch.scaille.tcwriter.annotations.TCCheck;
-import ch.scaille.tcwriter.annotations.TCRole;
 import ch.scaille.tcwriter.examples.ExampleService;
-import ch.scaille.tcwriter.examples.api.interfaces.dto.TestItem;
-import ch.scaille.tcwriter.examples.api.interfaces.selectors.BuyingLocationSelector;
-import ch.scaille.tcwriter.examples.api.interfaces.selectors.PackageDeliverySelector;
+import ch.scaille.tcwriter.examples.simple.dto.TestItem;
+import ch.scaille.tcwriter.examples.simple.selectors.BuyingLocationSelector;
+import ch.scaille.tcwriter.examples.simple.selectors.PackageDeliverySelector;
 
 @TCRole(description = "A customer", humanReadable = "customer")
-@TCActors("customer|CustomerTestRole")
 public class CustomerTestRole extends Assertions {
 
 	private final ExampleService testedService;

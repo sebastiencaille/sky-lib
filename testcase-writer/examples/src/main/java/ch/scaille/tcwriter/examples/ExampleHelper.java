@@ -8,11 +8,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import ch.scaille.generators.util.CodeGeneratorParams;
-import ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole;
-import ch.scaille.tcwriter.examples.api.interfaces.DeliveryTestRole;
+import ch.scaille.tcwriter.examples.simple.AbstractSimpleTest;
+import ch.scaille.tcwriter.examples.simple.CustomerTestRole;
+import ch.scaille.tcwriter.examples.simple.DeliveryTestRole;
 import ch.scaille.tcwriter.model.config.TCConfig;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
-import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
+import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.persistence.IConfigDao;
 import ch.scaille.tcwriter.persistence.ModelConfig;
 import ch.scaille.tcwriter.persistence.ModelDao;
@@ -64,7 +65,7 @@ public class ExampleHelper {
 		modelConfig.setTcExportPath(
 				CodeGeneratorParams.mavenTargetFolderOf(ExampleHelper.class).resolve("generated-tests").toString());
 		modelConfig.setDictionaryPath(dictionaryPath.toString());
-		modelConfig.setTemplatePath(cp("templates/TC.template"));
+		modelConfig.setTemplatePath(cp("templates"));
 
 		final var junitTestConfig = new JunitTestExecConfig();
 		junitTestConfig.setClasspath("");
@@ -75,12 +76,12 @@ public class ExampleHelper {
 	}
 
     public TestDictionary generateDictionary() {
-		final var dictionary = new JavaToDictionary("BasicTest", CustomerTestRole.class, DeliveryTestRole.class).generate();
+		final var dictionary = new JavaToDictionary("SimpleTest", CustomerTestRole.class, DeliveryTestRole.class, AbstractSimpleTest.class).generate();
 		dictionary.getMetadata().setDescription("Test dictionary");
 		return dictionary;
 	}
 
-	public ExportableTestCase recordTestCase(final TestDictionary dictionary) {
+	public TestCase recordTestCase(final TestDictionary dictionary) {
 
 		final var recorder = new TestCaseRecorder(dictionary);
 		TestCaseRecorderAspect.setRecorder(recorder);

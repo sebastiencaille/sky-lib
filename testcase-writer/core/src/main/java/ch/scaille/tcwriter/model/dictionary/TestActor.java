@@ -1,37 +1,31 @@
 package ch.scaille.tcwriter.model.dictionary;
 
-import java.util.Map;
-
 import ch.scaille.tcwriter.model.IdObject;
 import ch.scaille.tcwriter.model.NamedObject;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.Setter;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 @Getter
+@Setter
 public class TestActor extends NamedObject {
 
     public static final TestActor NOT_SET = new TestActor(IdObject.ID_NOT_SET, "", TestRole.NOT_SET);
-    private final String roleId;
-    @JsonIgnore
-    private TestRole role;
+    private TestRole role = TestRole.NOT_SET;
 
     protected TestActor() {
         super(null, null);
-        this.role = null;
-        this.roleId = null;
+        this.role = TestRole.NOT_SET;
     }
 
     public TestActor(final String id, final String name, final TestRole role) {
         super(id, name);
         this.role = role;
-        this.roleId = role.getId();
     }
 
-    @JsonCreator
-    public TestActor(final String id, final String name, final String roleId) {
-        super(id, name);
-        this.roleId = roleId;
+    public void setRole(TestRole role) {
+        this.role = role;
     }
 
     @Override
@@ -44,7 +38,4 @@ public class TestActor extends NamedObject {
         return super.hashCode();
     }
 
-    public void restore(Map<String, TestRole> roles) {
-        this.role = roles.get(this.roleId);
-    }
 }

@@ -78,28 +78,13 @@ public class ClassToDictionaryVisitor {
 			throw new IllegalStateException("value must not be null");
 		}
 		for (var actorDef : actorsAnnotation.value()) {
-			final var actorAndSimpleName = actorDef.split("\\|");
-			if (actorAndSimpleName.length < 2) {
-				throw new IllegalStateException("At least code|role_simple_call_name must be provided");
-			}
-			final var codeVariable = actorAndSimpleName[0];
-			final var simpleClassName = actorAndSimpleName[1];
-			
-			final String description;
-			if (actorAndSimpleName.length > 2) {
-				description = actorAndSimpleName[2];
-			} else {
-				description = codeVariable;
-			}
-			
-			final String humanReadable;
-			if (actorAndSimpleName.length > 3) {
-				humanReadable = actorAndSimpleName[3];
-			} else {
-				humanReadable = description;
-			}
-			
-			final var role = dictionary.getRoles().entrySet().stream().filter(r -> r.getKey().endsWith("." + simpleClassName))
+			final var codeVariable = actorDef.variable();
+			final var simpleClassName = actorDef.role().getSimpleName();
+			final String description = actorDef.description();
+			final String humanReadable = actorDef.humanReadable();
+
+			final var role = dictionary.getRoles().entrySet().stream()
+					.filter(r -> r.getKey().endsWith("." + simpleClassName))
 					.map(Entry::getValue).findFirst();
 			if (role.isPresent()) {
 				final var actor = new TestActor(codeVariable, codeVariable, role.get());

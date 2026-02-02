@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ch.scaille.tcwriter.generated.api.model.v0.ExportType;
 import ch.scaille.tcwriter.generated.api.model.v0.Metadata;
 import ch.scaille.tcwriter.generated.api.model.v0.TestCase;
-import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
 import ch.scaille.tcwriter.server.WebConstants;
 import ch.scaille.tcwriter.server.exceptions.WebRTException;
 import ch.scaille.tcwriter.server.facade.TestCaseFacade;
@@ -81,7 +80,7 @@ public class TestCaseWebService implements TestcaseApi {
 	@Transactional
 	@Override
 	public ResponseEntity<Void> createTestcase(@Valid String dictionary, @Valid TestCase testCase) {
-		testCaseFacade.saveTestCase(TestCaseMapper.MAPPER.convertToExportable(testCase, dictionaryFacade.load(dictionary)));
+		testCaseFacade.saveTestCase(TestCaseMapper.MAPPER.convertToModel(testCase, dictionaryFacade.load(dictionary)));
 		return ResponseEntity.ok().build();
 	}
 
@@ -105,7 +104,7 @@ public class TestCaseWebService implements TestcaseApi {
 		return exportHumanReadable(loadedTC);
 	}
 
-	private ResponseEntity<String> exportHumanReadable(ExportableTestCase tc) {
+	private ResponseEntity<String> exportHumanReadable(ch.scaille.tcwriter.model.testcase.TestCase tc) {
 		try {
 			final var headers = new org.springframework.http.HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
@@ -118,13 +117,13 @@ public class TestCaseWebService implements TestcaseApi {
 
 	}
 
-	private ResponseEntity<String> exportJava(ExportableTestCase tc) {
+	private ResponseEntity<String> exportJava(ch.scaille.tcwriter.model.testcase.TestCase tc) {
 		var headers = new org.springframework.http.HttpHeaders();
 		headers.setContentType(new MediaType("text", "java"));
 		return new ResponseEntity<>(testCaseFacade.generateCode(tc), headers, HttpStatus.OK);
 	}
 
-	private ExportableTestCase loadValidTestCase(String tc, String dictionary) {
+	private ch.scaille.tcwriter.model.testcase.TestCase loadValidTestCase(String tc, String dictionary) {
 		return testCaseFacade.load(tc, dictionary);
 	}
 

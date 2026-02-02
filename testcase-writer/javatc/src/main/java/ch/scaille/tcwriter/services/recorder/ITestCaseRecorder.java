@@ -1,8 +1,8 @@
 package ch.scaille.tcwriter.services.recorder;
 
-import java.lang.reflect.Method;
+import ch.scaille.tcwriter.model.testcase.TestCase;
 
-import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
+import java.lang.reflect.Method;
 
 public interface ITestCaseRecorder {
 
@@ -14,5 +14,5 @@ public interface ITestCaseRecorder {
 
 	void recordReturnValue(Object reference);
 
-	ExportableTestCase buildTestCase(String testName);
+	TestCase buildTestCase(String testName);
 }

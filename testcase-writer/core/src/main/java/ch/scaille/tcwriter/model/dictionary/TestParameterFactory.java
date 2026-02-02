@@ -108,7 +108,7 @@ public class TestParameterFactory extends NamedObject {
     }
 
     public static TestParameterFactory simpleType(final String type) {
-        return new TestParameterFactory("", "", ParameterNature.SIMPLE_TYPE, type);
+        return new TestParameterFactory(type, type, ParameterNature.SIMPLE_TYPE, type);
     }
 
     public static TestParameterFactory unSet(final TestApiParameter param) {

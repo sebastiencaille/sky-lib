@@ -20,7 +20,7 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Class that allows to poll graphical components
+ * Class that allows polling graphical components
  *
  * @param <C> Component type
  */
@@ -90,19 +90,19 @@ public abstract class AbstractComponentPilot<C> {
     }
 
     protected Duration getDefaultPollingTimeout() {
-        return pilot.getDefaultPollingTimeout();
+        return pilot.getConfig().getDefaultPollingTimeout();
     }
 
     protected Duration getDefaultPollingFirstDelay() {
-        return pilot.getPollingFirstDelay();
+        return pilot.getConfig().getPollingFirstDelay();
     }
 
     protected DelayFunction getDefaultPollingDelayFunction() {
-        return pilot.getPollingDelayFunction();
+        return pilot.getConfig().getPollingDelayFunction();
     }
 
     protected ReportFunction<C> getDefaultReportFunction() {
-        return (pc, text) -> pilot.getReportFunction().build(PolledComponent.generic(pc), text);
+        return (pc, text) -> pilot.getConfig().getReportFunction().build(PolledComponent.generic(pc), text);
     }
 
     /**

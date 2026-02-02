@@ -15,9 +15,7 @@ import java.util.Objects;
 
 import ch.scaille.tcwriter.model.TestObjectDescription;
 import ch.scaille.tcwriter.model.dictionary.*;
-import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
-import ch.scaille.tcwriter.model.testcase.ExportableTestParameterValue;
-import ch.scaille.tcwriter.model.testcase.ExportableTestStep;
+import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestReference;
 import ch.scaille.tcwriter.model.testcase.TestStep;
@@ -76,7 +74,7 @@ public class TestCaseRecorder implements ITestCaseRecorder {
 
     @Override
     public void recordStep(Object recordedActor, Method api, Object[] apiArgs) {
-        final var step = new ExportableTestStep(testSteps.size() + 1);
+        final var step = new TestStep(testSteps.size() + 1);
 
         TestActor actor = null;
         final var actorName = RecorderTestActors.getNames().get(recordedActor);
@@ -89,12 +87,9 @@ public class TestCaseRecorder implements ITestCaseRecorder {
         if (actor == null) {
             actor = recordActor(recordedActor);
         }
-        final var role = actor.getRole();
-        if (role == null) {
-            throw new IllegalStateException("No role found for " + actor);
-        }
         step.setActor(actor);
 
+        final var role = actor.getRole();
         final var action = role.getActions().stream().filter(a -> matches(a, api)).findFirst()
                 .orElseThrow(() -> new IllegalStateException("No action found for " + api));
         step.setAction(action);
@@ -109,7 +104,7 @@ public class TestCaseRecorder implements ITestCaseRecorder {
                 final var actionParameter = step.getAction().getParameter(i);
                 final var simpleParameter = actionParameter.asSimpleParameter();
                 step.getParametersValue().add(
-                        new ExportableTestParameterValue(actionParameter, simpleParameter, Objects.toString(apiArg)));
+                        new TestParameterValue(actionParameter, simpleParameter, Objects.toString(apiArg)));
             }
         }
 
@@ -119,8 +114,9 @@ public class TestCaseRecorder implements ITestCaseRecorder {
     @Override
     public void recordParamFactory(Class<?> apiFactoryClass, Method api, Object[] apiArgs, Object returnValue) {
         final var testParameterFactory = tcDictionary
-                .getTestParameterFactory(Helper.methodKey(apiFactoryClass, api.getName()));
-        final var testParameterValue = new ExportableTestParameterValue("<PlaceHolder>", testParameterFactory);
+                .getTestParameterFactory(Helper.methodKey(apiFactoryClass, api.getName()))
+                .orElseThrow(() -> new IllegalStateException("No parameter factory found for " + apiFactoryClass.getName() + "." + api.getName()))  ;
+        final var testParameterValue = new TestParameterValue("<PlaceHolder>", testParameterFactory);
         for (int i = 0; i < testParameterFactory.getMandatoryParameters().size(); i++) {
             testParameterValue.addComplexTypeValue(
                     createFactoryParameterValue(testParameterFactory.getMandatoryParameter(i), apiArgs[i]));
@@ -135,7 +131,7 @@ public class TestCaseRecorder implements ITestCaseRecorder {
             // we are being called during the factory's call
             return;
         }
-        final var testParameterFactory = testParameterValue.getValueFactory();
+        final var testParameterFactory = testParameterValue.getParameterValueFactory();
         Object apiArg;
         if (args.length > 0) {
             apiArg = args[0];
@@ -151,13 +147,13 @@ public class TestCaseRecorder implements ITestCaseRecorder {
         final var currentStep = testSteps.getLast();
         final var paramFactory = currentStep.asNamedReference("ref" + currentStep.getOrdinal(),
                 "Value of step " + currentStep.getOrdinal());
-        final var paramValue = new ExportableTestParameterValue("<placeHolder>", paramFactory,
+        final var paramValue = new TestParameterValue("<placeHolder>", paramFactory,
                 Objects.toString(reference));
         testParameterValues.put(reference, paramValue);
     }
 
     private TestParameterValue createFactoryParameterValue(final TestApiParameter param, final Object apiArg) {
-        return new ExportableTestParameterValue(param, simpleType(param.getParameterType()), Objects.toString(apiArg));
+        return new TestParameterValue(param, simpleType(param.getParameterType()), Objects.toString(apiArg));
     }
 
     protected static boolean matches(final TestAction action, Method api) {
@@ -180,8 +176,8 @@ public class TestCaseRecorder implements ITestCaseRecorder {
     }
 
     @Override
-    public ExportableTestCase buildTestCase(final String testClassName) {
-        final var testCase = new ExportableTestCase(testClassName, tcDictionary);
+    public TestCase buildTestCase(final String testClassName) {
+        final var testCase = new TestCase(testClassName, tcDictionary);
         testCase.getMetadata().setDescription(String.format("%s: execution at %s", testClassName,
                 DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss").format(LocalDateTime.now())));
 
@@ -190,7 +186,7 @@ public class TestCaseRecorder implements ITestCaseRecorder {
             tcDictionary.addActor(actor, new TestObjectDescription(description, description));
         }
         testCase.getSteps().addAll(testSteps);
-        testParameterValues.values().stream().map(TestParameterValue::getValueFactory)
+        testParameterValues.values().stream().map(TestParameterValue::getParameterValueFactory)
                 .filter(t -> t.getNature() == ParameterNature.REFERENCE)
                 .forEach(t -> testCase.publishReference(((TestReference) t)));
 

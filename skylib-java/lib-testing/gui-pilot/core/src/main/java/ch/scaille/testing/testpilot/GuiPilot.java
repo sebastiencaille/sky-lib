@@ -2,6 +2,7 @@ package ch.scaille.testing.testpilot;
 
 import java.time.Duration;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import ch.scaille.testing.testpilot.ModalDialogDetector.Builder;
 import ch.scaille.testing.testpilot.PilotReport.ReportFunction;
@@ -10,48 +11,91 @@ import ch.scaille.testing.testpilot.factories.FailureHandlers.FailureHandler;
 import ch.scaille.util.helpers.DelayFunction;
 import ch.scaille.util.helpers.NoExceptionCloseable;
 import lombok.Getter;
-import lombok.Setter;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 @NullMarked
 @Getter
-@Setter
 public class GuiPilot {
+    
+    @Getter
+    public static class AbstractConfig<T extends AbstractConfig<T>> {
+        private Duration defaultModalDialogTimeout = Duration.ofSeconds(30);
 
-	private final PilotReport actionReport = new PilotReport();
+        private Duration defaultPollingTimeout = Duration.ofSeconds(30);
 
+        /**
+         * First quickly poll, then increase the delay
+         */
+        private Duration pollingFirstDelay = Duration.ofMillis(0);
+
+
+        private ReportFunction<Object> reportFunction = (pc, text) -> {
+            if (text == null) {
+                return "";
+            }
+            return pc.description() + ": " + text;
+        };
+        
+        private DelayFunction pollingDelayFunction = p -> {
+            final var elapsedTime = p.getTimeTracker().elapsedTimeMs();
+            if (elapsedTime < 500) {
+                return Duration.ofMillis(100);
+            } else if (elapsedTime < 10_000) {
+                return Duration.ofMillis(500);
+            } else if (elapsedTime < 60_000) {
+                return Duration.ofMillis(1_000);
+            }
+            return Duration.ofMillis(5_000);
+        };
+
+        public T defaultModalDialogTimeout(Duration timeout) {
+            this.defaultModalDialogTimeout = timeout;
+            return (T)this;
+        }
+        
+        public T defaultPollingTimeout(Duration defaultPollingTimeout) {
+            this.defaultPollingTimeout = defaultPollingTimeout;
+            return (T)this;
+        }
+
+        public T pollingFirstDelay(Duration pollingFirstDelay) {
+            this.pollingFirstDelay = pollingFirstDelay;
+            return (T)this;
+        }
+
+        public T pollingDelayFunction(DelayFunction pollingDelayFunction) {
+            this.pollingDelayFunction = pollingDelayFunction;
+            return (T)this;
+        }
+
+        public T reportFunction(ReportFunction<Object> reportFunction) {
+            this.reportFunction = reportFunction;
+            return (T)this;
+        }
+    }
+
+    public static class Config extends AbstractConfig<Config> {
+        
+    }
+
+    private final Config config = new Config();
+
+    private final PilotReport actionReport = new PilotReport();
+
+    
 	@Nullable
 	private ActionDelay actionDelay = null;
 
-	private Duration defaultModalDialogTimeout = Duration.ofSeconds(30);
-
-	private Duration defaultPollingTimeout = Duration.ofSeconds(30);
-
-	private Duration pollingFirstDelay = Duration.ofMillis(0);
-
-	private DelayFunction pollingDelayFunction = p -> {
-		final var elapsedTime = p.getTimeTracker().elapsedTimeMs();
-		if (elapsedTime < 500) {
-			return Duration.ofMillis(100);
-		} else if (elapsedTime < 10_000) {
-			return Duration.ofMillis(500);
-		} else if (elapsedTime < 60_000) {
-			return Duration.ofMillis(1_000);
-		}
-		return Duration.ofMillis(5_000);
-	};
-
-	private ReportFunction<Object> reportFunction = (pc, text) -> {
-		if (text == null) {
-			return "";
-		}
-		return pc.description() + ": " + text;
-	};
 
 	@Nullable
 	private ModalDialogDetector currentModalDialogDetector;
 
+    public <T extends GuiPilot> T configure(Consumer<Config> configurer) {
+        configurer.accept(config);
+        return (T)this;
+    }
+    
 	public <T extends GuiPilot> T unwrap(Class<T> target) {
 		return target.cast(this);
 	}

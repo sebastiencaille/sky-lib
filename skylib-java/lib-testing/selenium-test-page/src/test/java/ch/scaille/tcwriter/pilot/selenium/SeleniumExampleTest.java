@@ -34,8 +34,8 @@ class SeleniumExampleTest extends AbstractSeleniumUndertowTest {
 
 	@BeforeEach
 	void createPilot() {
-		pilot = new SeleniumPilot(Objects.requireNonNull(driver));
-		pilot.setDefaultPollingTimeout(Duration.ofSeconds(5));
+		pilot = new SeleniumPilot(Objects.requireNonNull(driver))
+                .configure(config -> config.defaultPollingTimeout(Duration.ofSeconds(5)));
 	}
 
 	@AfterEach

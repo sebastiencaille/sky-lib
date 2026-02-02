@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>4.0.1</version>
+		<version>4.0.2</version>
 		<relativePath />
 	</parent>
 
@@ -21,15 +21,13 @@
 	<properties>
 		<aspectj.version>1.9.25.1</aspectj.version>
 		<spring-session.version>4.0.1</spring-session.version>
-		<jackson-bom.version>3.0.3</jackson-bom.version>
-		<jackson-databind-nullable.version>0.2.8</jackson-databind-nullable.version>
+		<jackson-bom.version>3.0.4</jackson-bom.version>
+		<jackson-databind-nullable.version>0.2.9</jackson-databind-nullable.version>
 		<guava.version>33.5.0-jre</guava.version>
-		<logback.version>1.5.25</logback.version>
+		<logback.version>1.5.32</logback.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
 		<!--hibernate.version>7.1.7.Final</hibernate.version-->
 		<hibernate-validator.version>9.1.0.Final</hibernate-validator.version>
-
-		<jetbrain-annotations.version>26.0.2-1</jetbrain-annotations.version>
 
 		<swagger-parser.version>2.1.37</swagger-parser.version>
 		<swagger.version>2.2.42</swagger.version>
@@ -38,9 +36,9 @@
 		<liquibase.version>5.0.1</liquibase.version>
 
 		<mockito.version>5.21.0</mockito.version>
-		<junit-jupiter.version>6.0.2</junit-jupiter.version>
+		<junit-jupiter.version>6.0.3</junit-jupiter.version>
 		<junit.version>4.13.2</junit.version>
-		<junit-platform-console-standalone.version>6.0.2</junit-platform-console-standalone.version>
+		<junit-platform-console-standalone.version>6.0.3</junit-platform-console-standalone.version>
 		<selenium.version>4.40.0</selenium.version>
 		<h2.version>2.4.240</h2.version>
 
@@ -54,9 +52,9 @@
 		<maven-source-plugin.version>3.4.0</maven-source-plugin.version>
 		<maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
 		<maven-jar-plugin.version>3.5.0</maven-jar-plugin.version>
-		<maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
+		<maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
 		<maven-war-plugin.version>3.5.1</maven-war-plugin.version>
-		<maven-dependency-plugin.version>3.9.0</maven-dependency-plugin.version>
+		<maven-dependency-plugin.version>3.10.0</maven-dependency-plugin.version>
 		<maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
 		<maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
 		<maven-shade-plugin.version>3.6.1</maven-shade-plugin.version>
@@ -69,7 +67,7 @@
 		<sonar-maven-plugin.version>5.5.0.6356</sonar-maven-plugin.version>
 
 		<maven-exec-plugin.version>3.6.3</maven-exec-plugin.version>
-		<openapi-generator-maven-plugin.version>7.19.0</openapi-generator-maven-plugin.version>
+		<openapi-generator-maven-plugin.version>7.20.0</openapi-generator-maven-plugin.version>
 		<jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
 
 	</properties>
@@ -182,11 +180,6 @@
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>${jacoco-maven-plugin.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.jetbrains</groupId>
-				<artifactId>annotations</artifactId>
-				<version>${jetbrain-annotations.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>io.undertow</groupId>

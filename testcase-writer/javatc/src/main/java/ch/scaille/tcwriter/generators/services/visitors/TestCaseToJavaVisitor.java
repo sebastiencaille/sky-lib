@@ -29,13 +29,13 @@ import ch.scaille.tcwriter.services.generators.visitors.HumanReadableVisitor;
 /**
  * To generate a JUnit test from a Test Case
  */
-public class TestCaseToJunitVisitor {
+public class TestCaseToJavaVisitor {
 
 	private final Template template;
 
 	private final Map<TestParameterValue, String> varNames = new IdentityHashMap<>();
 
-	public TestCaseToJunitVisitor(final Template template) {
+	public TestCaseToJavaVisitor(final Template template) {
 		this.template = template;
 	}
 
@@ -88,7 +88,7 @@ public class TestCaseToJunitVisitor {
 			final TestDictionary dictionary, final TestStep step, final TestParameterValue paramValue)
 			throws TestCaseException {
 
-		final var valueFactory = paramValue.getValueFactory();
+		final var valueFactory = paramValue.getParameterValueFactory();
 
 		// Check if we have optional parameters
 		final var optionalParameters = new HashSet<>(paramValue.getComplexTypeValues().keySet());
@@ -150,7 +150,7 @@ public class TestCaseToJunitVisitor {
 			}
 			final var parameterType = parametersValueFilterMap.get(parameterValue.getApiParameterId());
 			parametersContent.addMethodCall(parameterVarName, parameterType.getName(), g -> {
-				if (parameterValue.getValueFactory().hasType()) {
+				if (parameterValue.getParameterValueFactory().hasType()) {
 					inlineValue(null, g, step, null, parameterValue);
 				}
 			}).eos();
@@ -162,7 +162,7 @@ public class TestCaseToJunitVisitor {
 							 final TestStep step,
 							 final TestDictionary dictionary,
 							 final TestParameterValue parameterValue) throws TestCaseException {
-		switch (parameterValue.getValueFactory()) {
+		switch (parameterValue.getParameterValueFactory()) {
 
 		case TestParameterFactory f when f.getNature() == ParameterNature.TEST_API ->
 			parametersContent.append(visitTestParameterValue(stepContentCode, dictionary, step, parameterValue));
@@ -181,13 +181,13 @@ public class TestCaseToJunitVisitor {
 
 		case TestReference f when f.getNature() == ParameterNature.REFERENCE -> parametersContent.append(f.getName());
 
-		default -> throw new TestCaseException("Parameter value is not set: " + parameterValue.getValueFactory());
+		default -> throw new TestCaseException("Parameter value is not set: " + parameterValue.getParameterValueFactory());
 		}
 	}
 
 	private String varNameOf(final TestStep step, final TestParameterValue testValue) {
 		final var nextIndex = step.getOrdinal();
-		return varNames.computeIfAbsent(testValue, v -> String.format("step_%s_%s_%s" , step.getOrdinal(), v.getValueFactory().getName().replace('.', '_'),
+		return varNames.computeIfAbsent(testValue, v -> String.format("step_%s_%s_%s" , step.getOrdinal(), v.getParameterValueFactory().getName().replace('.', '_'),
 				nextIndex));
 	}
 }

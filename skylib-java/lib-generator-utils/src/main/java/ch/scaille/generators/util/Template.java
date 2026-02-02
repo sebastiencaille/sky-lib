@@ -64,9 +64,9 @@ public class Template {
 	}
 
 	public Template withGenerationMetadata(GenerationMetadata generationMetadata) {
-		this.properties.put("generator", generationMetadata.getGenerator());
-		this.properties.put("commandLine", generationMetadata.getComments());
-		this.properties.put("generationDate", generationMetadata.getGenerationDate());
+		this.properties.put("generator", generationMetadata.generator());
+		this.properties.put("commandLine", generationMetadata.commandLine());
+		this.properties.put("generationDate", generationMetadata.generationDate());
 		return this;
 	}
 

@@ -1,6 +1,5 @@
 package ch.scaille.tcwriter.model.testcase;
 
-import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -23,36 +22,56 @@ import lombok.Setter;
 @Setter
 public class TestParameterValue extends IdObject {
 
+    public static final TestParameterValue NO_VALUE = new TestParameterValue(IdObject.ID_NOT_SET, "", TestParameterFactory.NO_FACTORY, "");
     private final String apiParameterId;
 
     /**
      * A test api used to create selector/parameters, or a reference, or a simple
      * value type
      */
-    protected TestParameterFactory factory;
+    protected TestParameterFactory parameterValueFactory;
 
     private final Map<String, TestParameterValue> complexTypeValues = new HashMap<>();
 
     private String simpleValue;
 
     /**
-     *
      * @param id either the id of the action's parameter
      */
-    public TestParameterValue(final String id, final String apiParameterId, final TestParameterFactory valueFactory,
+    public TestParameterValue(final String id, final String apiParameterId, final TestParameterFactory parameterValueFactory,
                               final String simpleValue) {
         super(id);
         this.apiParameterId = apiParameterId;
-        this.setParameterFactory(valueFactory);
+        this.setParameterValueFactory(parameterValueFactory);
         this.simpleValue = simpleValue;
     }
 
+
+    public TestParameterValue(final TestApiParameter apiParameter, final TestParameterFactory valueFactory) {
+        this(UUID.randomUUID().toString(), apiParameter.getId(), valueFactory, null);
+    }
+
+
+    public TestParameterValue(final TestApiParameter apiParameter, final TestParameterFactory valueFactory,
+                                        final String simpleValue) {
+        this(apiParameter.getId(), apiParameter.getId(), valueFactory, simpleValue);
+    }
+
+    public TestParameterValue(final String apiParameterId, final TestParameterFactory valueFactory,
+                                        final String simpleValue) {
+        this(apiParameterId, apiParameterId, valueFactory, simpleValue);
+    }
+
+    public TestParameterValue(final String apiParameterId, final TestParameterFactory valueFactory) {
+        this(apiParameterId, apiParameterId, valueFactory, null);
+    }
+
     @Default
-    public TestParameterValue(final String id, final String apiParameterId, final TestParameterFactory valueFactory,
+    @JsonCreator
+    public TestParameterValue(final String id, final String apiParameterId,
                               Map<String, TestParameterValue> complexTypeValues, String simpleValue) {
         super(id);
         this.apiParameterId = apiParameterId;
-        this.factory = valueFactory;
         this.complexTypeValues.putAll(complexTypeValues);
         this.simpleValue = simpleValue;
     }
@@ -72,12 +91,8 @@ public class TestParameterValue extends IdObject {
         return simpleValue.hashCode() + complexTypeValues.hashCode() * 13 + apiParameterId.hashCode() * 29;
     }
 
-    public TestParameterFactory getValueFactory() {
-        return factory;
-    }
-
-    public void setParameterFactory(final TestParameterFactory valueFactory) {
-        this.factory = java.util.Objects.requireNonNull(valueFactory,"Factory must not be null");
+    public void setParameterValueFactory(final TestParameterFactory valueFactory) {
+        this.parameterValueFactory = java.util.Objects.requireNonNull(valueFactory,"Factory must not be null");
     }
 
     public void updateComplexTypeValues(final Map<String, TestParameterValue> idsToValues) {
@@ -91,7 +106,7 @@ public class TestParameterValue extends IdObject {
     }
 
     public TestParameterValue duplicate() {
-        final var newParamValue = createTestParameterValue(getId(), getApiParameterId(), factory, simpleValue);
+        final var newParamValue = createTestParameterValue(getId(), getApiParameterId(), parameterValueFactory, simpleValue);
         for (final Entry<String, TestParameterValue> complexValue : complexTypeValues.entrySet()) {
             newParamValue.complexTypeValues.put(complexValue.getKey(), complexValue.getValue().duplicate());
         }
@@ -110,7 +125,7 @@ public class TestParameterValue extends IdObject {
     }
 
     public TestParameterValue derivate(final TestApiParameter parameter) {
-        final var newValue = createTestParameterValue(UUID.randomUUID().toString(), parameter.getId(), factory, simpleValue);
+        final var newValue = createTestParameterValue(UUID.randomUUID().toString(), parameter.getId(), parameterValueFactory, simpleValue);
         newValue.getComplexTypeValues().putAll(getComplexTypeValues());
         return newValue;
     }
@@ -121,13 +136,13 @@ public class TestParameterValue extends IdObject {
     }
 
     public boolean matches(final TestApiParameter param) {
-        return getValueFactory().matches(param);
+        return getParameterValueFactory().matches(param);
     }
 
     @Override
     public String toString() {
-        return "Value " + factory.getName() + ":"
-                + (factory.getNature().isSimpleValue() ? getSimpleValue() : getComplexTypeValues());
+        return "Value " + parameterValueFactory.getName() + ":"
+                + (parameterValueFactory.getNature().isSimpleValue() ? getSimpleValue() : getComplexTypeValues());
     }
 
 }

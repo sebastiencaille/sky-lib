@@ -83,7 +83,7 @@ public class FileSystemDao<T> extends AbstractFSSerializationDao<T> {
 	private boolean filterMetaData(final String filter, ResourceMetaData m) {
 		return m != null && (filter == null 
 				|| m.getLocator().equals(filter) 
-				|| m.getStorageLocator().endsWith('/' + filter));
+				|| Paths.get(m.getStorageLocator()).getFileName().toString().equals(filter));
 	}
 
 	@Override

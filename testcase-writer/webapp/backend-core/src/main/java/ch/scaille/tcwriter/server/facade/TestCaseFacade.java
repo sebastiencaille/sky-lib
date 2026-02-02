@@ -5,12 +5,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.model.TestCaseException;
-import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestStep;
 import ch.scaille.tcwriter.model.testexec.StepStatus;
@@ -38,14 +38,14 @@ public class TestCaseFacade extends AbstractFacade {
 	}
 
 	public Collection<Metadata> listAll(String dictionaryId) {
-		return testCaseDao.listAll(loadDictionary(dictionaryId));
+		return testCaseDao.listAll(ValidationHelper.dictionaryFound(dictionaryId, dictionaryDao.loadMetadata(dictionaryId)));
 	}
 
-	public ExportableTestCase load(String tcId, String dictionaryId) {
-		return ValidationHelper.testCaseFound(tcId, testCaseDao.load(tcId, loadDictionary(dictionaryId)).orElse(null));
+	public TestCase load(String tcId, String dictionaryId) {
+		return ValidationHelper.testCaseFound(tcId, testCaseDao.load(tcId, loadDictionary(dictionaryId)));
 	}
 
-	public void saveTestCase(ExportableTestCase testCase) {
+	public void saveTestCase(TestCase testCase) {
 		testCaseDao.save(testCase);
 	}
 
@@ -55,7 +55,7 @@ public class TestCaseFacade extends AbstractFacade {
 		return steps.stream().map(humanReadableVisitor::process).toList();
 	}
 
-	public void executeTest(final ExportableTestCase loadedTC, Consumer<StepStatus> feedback) {
+	public void executeTest(final TestCase loadedTC, Consumer<StepStatus> feedback) {
 		final var testRemoteControl = createTestRemoteControl(feedback);
 
 		final var tcpPort = testRemoteControl.prepare();
@@ -99,7 +99,7 @@ public class TestCaseFacade extends AbstractFacade {
 		return testRemoteControl;
 	}
 
-	public String generateCode(ExportableTestCase tc) {
+	public String generateCode(TestCase tc) {
 		try {
 			return testExecutor.createTemplate(tc).generate();
 		} catch (TestCaseException e) {

@@ -20,10 +20,9 @@ import ch.scaille.tcwriter.model.testcase.TestReference;
 import ch.scaille.tcwriter.model.testcase.TestStep;
 
 /**
- * Formats human readable text.
+ * Formats human-readable text.
  * <p>
- * A pattern //some text %s more text // indicates that either %s is replaced, or the entire text must not
- * appear if the value of %s is empty
+ * A pattern //some text %s more text // indicates that either %s is replaced if %s is set, or the text will not be displayed
  * 
  */
 public class HumanReadableVisitor {
@@ -61,7 +60,7 @@ public class HumanReadableVisitor {
 	}
 
 	private String processTestParameter(final TestParameterValue parameterValue) {
-		return switch (parameterValue.getValueFactory()) {
+		return switch (parameterValue.getParameterValueFactory()) {
 		case TestReference testRef ->
 			"[" + testRef.toDescription().humanReadable() + ": " + parameterValue.getSimpleValue() + "]";
 			
@@ -73,7 +72,7 @@ public class HumanReadableVisitor {
 			parameterValue.getSimpleValue();
 			
 		case TestParameterFactory f when f.getNature() == ParameterNature.TEST_API ->
-			processTestParameter(parameterValue, parameterValue.getValueFactory()
+			processTestParameter(parameterValue, parameterValue.getParameterValueFactory()
 					.getMandatoryParameters()
 					.stream()
 					.map(p -> processTestParameter(parameterValue.getComplexTypeValues().get(p.getId())))
@@ -88,7 +87,7 @@ public class HumanReadableVisitor {
 		final var optionals = new StringBuilder();
 		var sep = "(";
 		boolean hasOptionals = false;
-		for (final var optionalParameter : parameterValue.getValueFactory().getOptionalParameters()) {
+		for (final var optionalParameter : parameterValue.getParameterValueFactory().getOptionalParameters()) {
 			final var optionalParameterValue = parameterValue.getComplexTypeValues().get(optionalParameter.getId());
 			if (optionalParameterValue == null) {
 				continue;
@@ -103,7 +102,7 @@ public class HumanReadableVisitor {
 			hasOptionals = true;
 		}
 		optionals.append(")");
-		return summaryOf(parameterValue.getValueFactory(), mandatoryParams) + ((hasOptionals) ? " " + optionals : "");
+		return summaryOf(parameterValue.getParameterValueFactory(), mandatoryParams) + ((hasOptionals) ? " " + optionals : "");
 	}
 
 	private String summaryOf(final IdObject idObject, final List<String> list) {

@@ -64,7 +64,7 @@
 							<goal>generateTestCases</goal>
 						</goals>
 						<configuration>
-							<template>file:src/main/resources/userResources/templates/TC.template</template>
+							<templatesFolder>file:src/main/resources/userResources/templates</templatesFolder>
 						</configuration>
 					</execution>
 				</executions>
@@ -88,6 +88,29 @@
 					</execution>
 				</executions>
 			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+
+                <configuration>
+                    <artifactSet>
+                        <excludes>
+                            <exclude>org.aspectj:aspectjrt</exclude>
+                            <exclude>org.aspectj:aspectjtools</exclude>
+                        </excludes>
+                    </artifactSet>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <id>shade</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
 	</build>
 

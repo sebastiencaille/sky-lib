@@ -64,7 +64,7 @@ public class ModalDialogDetector {
 		private final Consumer<List<String>> dialogNotHandled;
 
 		private final OverridableParameter<GuiPilot, Duration> timeout = new OverridableParameter<>(
-				GuiPilot::getDefaultModalDialogTimeout);
+				pilot -> pilot.getConfig().getDefaultModalDialogTimeout());
 
 		public Builder(final Supplier<List<PollingResult>> pollingHandlers,
 				final Consumer<List<String>> errorsHandler) {

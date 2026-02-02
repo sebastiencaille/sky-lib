@@ -3,26 +3,20 @@ package ch.scaille.generators.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.jspecify.annotations.NullMarked;
 
-@Getter
-@Setter
 @NullMarked
-public class GenerationMetadata {
-	private final String generator;
-	private final String comments;
-	private final String generationDate;
+public record GenerationMetadata (
+	 String generator,
+	 String commandLine,
+	 String generationDate) {
 
 	public static GenerationMetadata fromCommandLine(Class<?> generator, String[] commandLineArgs) {
 		return new GenerationMetadata(generator, String.join(" ", commandLineArgs));
 	}
 
-	public GenerationMetadata(Class<?> generator, String comments) {
-		this.generator = generator.getName();
-		this.comments = comments;
-		this.generationDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").format(new Date());
+	public GenerationMetadata(Class<?> generator, String commandLine) {
+		this(generator.getName(), commandLine, new SimpleDateFormat("yyyy/MM/dd HH:mm").format(new Date()));
 	}
 
 }

@@ -2,7 +2,6 @@ package ch.scaille.tcwriter.persistence;
 
 import static ch.scaille.util.persistence.StorageRTException.uncheck;
 
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -13,9 +12,9 @@ import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.model.config.TCConfig;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
-import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.persistence.handlers.JsonModelDataHandler;
+import ch.scaille.tcwriter.persistence.handlers.TemplateStorageHandler;
 import ch.scaille.tcwriter.persistence.handlers.YamlModelDataHandler;
 import ch.scaille.util.helpers.Logs;
 import ch.scaille.util.persistence.DaoFactory;
@@ -27,142 +26,147 @@ import ch.scaille.util.persistence.handlers.TextStorageHandler;
 
 public class ModelDao implements IModelDao {
 
-	public static StorageDataHandlerRegistry defaultDataHandlers() {
-		final var modelSerDeserializerRegistry = new StorageDataHandlerRegistry(new YamlModelDataHandler());
-		modelSerDeserializerRegistry.register(new JsonModelDataHandler());
-		modelSerDeserializerRegistry.register(new TextStorageHandler());
-		return modelSerDeserializerRegistry;
-	}
+        public static StorageDataHandlerRegistry defaultDataHandlers(IModelDao modelDao) {
+        final var modelSerDeserializerRegistry = new StorageDataHandlerRegistry(new YamlModelDataHandler(modelDao));
+        modelSerDeserializerRegistry.register(new JsonModelDataHandler(modelDao));
+        modelSerDeserializerRegistry.register(new TextStorageHandler());
+        modelSerDeserializerRegistry.register(new TemplateStorageHandler());
+        return modelSerDeserializerRegistry;
+    }
 
-	private static ModelConfig configOf(TCConfig config) {
-		return config.getSubconfig(ModelConfig.class)
-				.orElseThrow(() -> new IllegalStateException("Cannot find FsModelConfig"));
-	}
+    private static ModelConfig configOf(TCConfig config) {
+        return config.getSubconfig(ModelConfig.class)
+                .orElseThrow(() -> new IllegalStateException("Cannot find FsModelConfig"));
+    }
 
-	private final ObjectProperty<TCConfig> config;
+    private final ObjectProperty<TCConfig> config;
 
-	private final StorageDataHandlerRegistry serDeserializerRegistry;
+    private final StorageDataHandlerRegistry serDeserializerRegistry;
 
-	private final DaoFactory daoFactory;
+    private final StorageDataHandlerRegistry templateRegistry = new StorageDataHandlerRegistry(new TemplateStorageHandler());
 
-	protected IDao<TestDictionary> dictionaryRepo;
+    private final StorageDataHandlerRegistry testCaseCodeRegistry = new StorageDataHandlerRegistry(new TextStorageHandler());
 
-	protected IDao<ExportableTestCase> testCaseRepo;
+    private final DaoFactory daoFactory;
 
-	protected IDao<String> templateRepo;
+    protected final MetadataCacheDao dictionaryMetadataCache;
+    protected final MetadataCacheDao testcaseMetadataCache;
 
-	protected IDao<String> testCaseCodeRepo;
+    protected IDao<TestDictionary> dictionaryRepo;
 
-	public ModelDao(DaoFactory daoFactory, ObjectProperty<TCConfig> config,
-			StorageDataHandlerRegistry serDeserializerRegistry) {
-		this.daoFactory = daoFactory;
-		this.config = config;
-		this.serDeserializerRegistry = serDeserializerRegistry;
-		this.config.listen(this::reload);
-		reload(this.config.getValue());
-	}
+    protected IDao<TestCase> testCaseRepo;
 
-	protected void reload(TCConfig config) {
-		if (config == null) {
-			return;
-		}
-		final var modelConfig = configOf(config);
-		this.dictionaryRepo = daoFactory.loaderOf(TestDictionary.class, modelConfig.getDictionaryPath(),
-				serDeserializerRegistry);
-		this.testCaseRepo = daoFactory.loaderOf(ExportableTestCase.class, modelConfig.getTcPath(),
-				serDeserializerRegistry);
-		this.templateRepo = daoFactory.loaderOf(String.class, modelConfig.getTemplatePath(), serDeserializerRegistry);
-		this.testCaseCodeRepo = daoFactory.loaderOf(String.class, modelConfig.getTcExportPath(),
-				serDeserializerRegistry);
-	}
+    protected IDao<String> templateRepo;
 
-	@Override
-	public List<Metadata> listDictionaries() {
-		return uncheck("Listing of dictionaries",
-				() -> dictionaryRepo.list()
-						.map(f ->
-								readTestDictionary(f.getLocator())
-										.orElseThrow(() -> new IllegalStateException("Listed Dictionary not found"))
-										.getMetadata()).toList());
-	}
+    protected IDao<String> testCaseCodeRepo;
 
-	@Override
-	public void writeTestDictionary(TestDictionary tm) {
-		var id = tm.getMetadata().getTransientId();
-		if (id.isEmpty()) {
-			id = "default";
-		}
-		final var idSafe = id;
-		uncheck("Writing of test dictionary", () -> dictionaryRepo.saveOrUpdate(idSafe, tm));
-	}
+    public ModelDao(DaoFactory daoFactory, ObjectProperty<TCConfig> config,
+                    DaoFactory.IDataSourceFactory cacheDsFactory,
+                    Function<IModelDao, StorageDataHandlerRegistry> serDeserializerRegistry) {
+        this.daoFactory = daoFactory;
+        this.config = config;
+        this.serDeserializerRegistry = serDeserializerRegistry.apply(this);
+        this.config.listen(this::reload);
+        this.dictionaryMetadataCache = new MetadataCacheDao("Dictionary", cacheDsFactory);
+        this.testcaseMetadataCache = new MetadataCacheDao("TestCase", cacheDsFactory);
+        reload(this.config.getValue());
+    }
 
-	@Override
-	public Optional<TestDictionary> readTestDictionary(String dictionaryId) {
-		try {
-			final var dictionary = dictionaryRepo.load(dictionaryId);
-			dictionary.getMetadata().setTransientId(dictionaryId);
-			return Optional.of(dictionary);
-		} catch (StorageException e) {
-			Logs.of(ModelDao.class).log(Level.WARNING, e, () -> "Unable to load dictionary " + dictionaryId);
-			return Optional.empty();
-		}
-	}
+    protected void reload(TCConfig config) {
+        if (config == null) {
+            return;
+        }
+        final var modelConfig = configOf(config);
+        this.dictionaryRepo = daoFactory.loaderOf(TestDictionary.class, modelConfig.getDictionaryPath(),
+                serDeserializerRegistry);
+        this.testCaseRepo = daoFactory.loaderOf(TestCase.class, modelConfig.getTcPath(),
+                serDeserializerRegistry);
+        this.templateRepo = daoFactory.loaderOf(String.class, modelConfig.getTemplatePath(), templateRegistry);
+        this.testCaseCodeRepo = daoFactory.loaderOf(String.class, modelConfig.getTcExportPath(),
+                testCaseCodeRegistry);
+    }
 
-	@Override
-	public void writeTestDictionary(Path path, TestDictionary tm) {
-		uncheck("Writing of test dictionary", () -> dictionaryRepo.saveOrUpdate(path.toString(), tm));
-	}
+    @Override
+    public Metadata loadDictionaryMetadata(String locator) {
+        return  dictionaryMetadataCache.loadMetadata(locator,
+                l -> readTestDictionary(l).map(TestDictionary::getMetadata).orElse(null));
+    }
 
-	@Override
-	public List<Metadata> listTestCases(final TestDictionary dictionary) {
-		return uncheck("Listing of test cases",
-				() -> testCaseRepo.list()
-						.map(f ->
-								readTestCase(f.getLocator(), _ -> null, false).orElseThrow(() -> new IllegalStateException("Listed TestCase not found")))
-						.filter(tc -> tc.getPreferredDictionary().equals(dictionary.getClassifier()))
-						.map(TestCase::getMetadata)
-						.toList());
-	}
+    @Override
+    public List<Metadata> listDictionaries(Metadata filter) {
+        return uncheck("Unable to load dictionary", () -> dictionaryRepo.list()
+                .map(f -> loadDictionaryMetadata(f.getLocator()))
+                .filter(metadata -> metadata == null || filter == null ||
+                        filter.matches(metadata))
+                .toList());
+    }
 
-	@Override
-	public Optional<ExportableTestCase> readTestCase(String locator, Function<String, TestDictionary> testDictionaryLoader) {
-		return readTestCase(locator, testDictionaryLoader, true);
-	}
+    @Override
+    public void writeTestDictionary(TestDictionary tm) {
+        var id = tm.getMetadata().getTransientId();
+        if (id.isEmpty()) {
+            id = "default";
+        }
+        final var idSafe = id;
+        uncheck("Writing of test dictionary", () -> dictionaryRepo.saveOrUpdate(idSafe, tm));
+    }
 
-	private Optional<ExportableTestCase> readTestCase(String locator,
-			Function<String, TestDictionary> testDictionaryLoader, boolean resolve) {
-		try {
-			final var testCase = testCaseRepo.load(locator);
-			testCase.getMetadata().setTransientId(locator);
-			testCase.setDictionary(testDictionaryLoader.apply(testCase.getPreferredDictionary()));
-			if (resolve) {
-				testCase.restoreReferences();
-			}
-			return Optional.of(testCase);
-		} catch (StorageException e) {
-			Logs.of(ModelDao.class).log(Level.WARNING, e, () -> "Unable to load test case " + locator);
-			return Optional.empty();
-		}
-	}
+    @Override
+    public Optional<TestDictionary> readTestDictionary(String dictionaryId) {
+        try {
+            final var dictionary = dictionaryRepo.load(dictionaryId);
+            dictionary.getMetadata().setTransientId(dictionaryId);
+            return Optional.of(dictionary);
+        } catch (StorageException e) {
+            Logs.of(ModelDao.class).log(Level.WARNING, e, () -> "Unable to load dictionary " + dictionaryId);
+            return Optional.empty();
+        }
+    }
 
-	@Override
-	public void writeTestCase(String locator, ExportableTestCase tc) {
-		tc.setPreferredDictionary(tc.getDictionary().getClassifier());
-		uncheck("Writing of test case", () -> testCaseRepo.saveOrUpdate(locator, tc));
-	}
+    @Override
+    public Metadata loadTestCaseMetadata(String locator) {
+        return  testcaseMetadataCache.loadMetadata(locator,
+                l -> readTestCase(l, TestDictionary.NOT_SET).map(TestCase::getMetadata).orElse(null));
+    }
 
-	@Override
-	public Template readTemplate() {
-		return uncheck("Reading of template", () -> new Template(templateRepo.load("")));
-	}
+    @Override
+    public List<Metadata> listTestCases(final Metadata dictionary) {
+        return uncheck("Unable to load test case list", () -> testCaseRepo.list()
+                .map(f -> loadTestCaseMetadata(f.getLocator()))
+                .filter(tcMetadata -> tcMetadata == null || dictionary == null ||
+                        tcMetadata.matches(dictionary))
+                .toList());
+    }
 
-	@Override
-	public Resource<String> writeTestCaseCode(String locator, String code) {
-		return uncheck("Writing of test case code", () -> testCaseCodeRepo.saveOrUpdate(locator, code));
-	}
+    @Override
+    public Optional<TestCase> readTestCase(String locator, TestDictionary dictionary) {
+        try {
+            final var testCase = testCaseRepo.load(locator, new TestCase("", dictionary));
+            testCase.getMetadata().setTransientId(locator);
+            return Optional.of(testCase);
+        } catch (StorageException e) {
+            Logs.of(ModelDao.class).log(Level.WARNING, e, () -> "Unable to load test case " + locator);
+            return Optional.empty();
+        }
+    }
 
-	public ModelConfig getCurrentConfig() {
-		return configOf(config.getValue());
-	}
+    @Override
+    public void writeTestCase(String locator, TestCase tc) {
+        uncheck("Writing of test case", () -> testCaseRepo.saveOrUpdate(locator, tc));
+    }
+
+    @Override
+    public Template readTemplate(String templateLocator) {
+        return uncheck("Reading of template", () -> new Template(templateRepo.load(templateLocator)));
+    }
+
+    @Override
+    public Resource<String> writeTestCaseCode(String locator, String code) {
+        return uncheck("Writing of test case code", () -> testCaseCodeRepo.saveOrUpdate(locator, code));
+    }
+
+    public ModelConfig getCurrentConfig() {
+        return configOf(config.getValue());
+    }
 
 }

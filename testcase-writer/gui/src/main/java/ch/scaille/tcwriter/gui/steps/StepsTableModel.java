@@ -76,7 +76,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 	}
 
 	private String toString(final TestCase tc, final TestParameterValue parameterValue) {
-		final var parameterDef = parameterValue.getValueFactory();
+		final var parameterDef = parameterValue.getParameterValueFactory();
 
 		return switch (parameterDef.getNature()) {
 		case REFERENCE, TEST_API -> toString(tc, parameterDef);

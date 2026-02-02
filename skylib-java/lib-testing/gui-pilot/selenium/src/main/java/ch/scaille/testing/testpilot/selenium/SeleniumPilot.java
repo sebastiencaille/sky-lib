@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.logging.Logger;
 
+import ch.scaille.util.helpers.Logs;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.openqa.selenium.By;
@@ -22,14 +22,14 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import ch.scaille.testing.testpilot.ModalDialogDetector;
 import ch.scaille.testing.testpilot.ModalDialogDetector.PollingResult;
-import ch.scaille.util.helpers.Logs;
 import ch.scaille.util.helpers.NoExceptionCloseable;
 
 @NullMarked
 public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 
-	private static final Logger LOGGER = Logs.of(SeleniumPilot.class);
-	
+	// Used in js script
+	public static final String MUTATION_TEXT_CONTENT = "textContent";
+
 	private final RemoteWebDriver driver;
 	private final Script remoteScript;
 	private final org.openqa.selenium.bidi.module.Script script;
@@ -43,8 +43,16 @@ public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 		this.script = new org.openqa.selenium.bidi.module.Script(driver);
 		this.remoteScript = driver.script();
 		installPathFunction();
+		withAllMutations();
+	}
+
+	/**
+	 * In some cases this is triggering too many events
+	 */
+	public SeleniumPilot withAllMutations() {
+		this.preloadScript("js/bidi-text-mutation-listener.js", "channel_name");
 		domMutationHandlerIds.add(this.remoteScript.addDomMutationHandler(this::mutationHandler));
-		this.prelaodScript("js/bidi-text-mutation-listener.js", "channel_name");
+		return this;
 	}
 
 	private void mutationHandler(DomMutation mutation) {
@@ -52,11 +60,9 @@ public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 		if (elementPath.isEmpty()) {
 			return;
 		}
-		/*
-		LOGGER.debug(() -> "Received on %s, %s: %s -> %s".formatted(elementPath,
+		Logs.of(this).fine(() -> "Received mutation on %s, %s: %s -> %s".formatted(elementPath,
 						mutation.getAttributeName(), mutation.getOldValue(), mutation.getCurrentValue()));
-		 */
-		if (mutationFilter != null && mutationFilter.test(mutation)) {
+		if (mutationFilter == null || mutationFilter.test(mutation)) {
 			synchronized (mutations) {
 				mutations.add(mutation);
 			}
@@ -64,10 +70,10 @@ public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 	}
 
 	/**
-	 * Only inject a new script, that will use the existing handler. The code comes
+	 * Inject a new script that will use the existing handler. The code comes
 	 * from selenium's code
 	 */
-	public void prelaodScript(String resourceName, @Nullable String channelname) {
+	public void preloadScript(String resourceName, @Nullable String channelName) {
 		try (var stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName)) {
 			if (stream == null) {
 				throw new IllegalStateException("Unable to find helper script");
@@ -75,8 +81,8 @@ public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 			final var scriptValue = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
 
 			final List<ChannelValue> arguments;
-			if (channelname != null) {
-				arguments = List.of(new ChannelValue(channelname));
+			if (channelName != null) {
+				arguments = List.of(new ChannelValue(channelName));
 			} else {
 				arguments = List.of();
 			}
@@ -133,7 +139,7 @@ public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 	}
 
 	protected void installPathFunction() {
-		prelaodScript("js/compute-path-function.js", null);
+		preloadScript("js/compute-path-function.js", null);
 	}
 
 	public String getElementPath(WebElement element) {
@@ -141,10 +147,17 @@ public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 	}
 
 	public void expectMutations(Predicate<DomMutation> filter) {
+		withAllMutations();
 		synchronized (mutations) {
 			mutations.clear();
+			withAllMutations();
 			mutationFilter = filter;
 		}
+	}
+
+	public void stopExpectingMutations() {
+		mutationFilter = null;
+		domMutationHandlerIds.clear();
 	}
 
 	public List<DomMutation> getMutations(Predicate<DomMutation> filter) {

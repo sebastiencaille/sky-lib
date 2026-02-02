@@ -78,7 +78,9 @@ public class ElementPilot extends AbstractComponentPilot<WebElement> {
 		final var initializedPolling = polling.initializeFrom(this);
 		return new SeleniumPoller(pilot.getDriver(), initializedPolling.getTimeout(), initializedPolling.getFirstDelay(),
 				initializedPolling.getDelayFunction())
-				.run(p -> executePolling(p, initializedPolling), PollingResult::isSuccess, PollingResults::failWithException)
+				.run(p -> executePolling(p, initializedPolling),
+						PollingResult::isSuccess,
+						exc -> PollingResults.<WebElement, U>failWithException(exc).withPolling(initializedPolling))
 				.orElseThrow();
 	}
 
@@ -102,6 +104,10 @@ public class ElementPilot extends AbstractComponentPilot<WebElement> {
 			loadGuiComponent().map(ElementPilot::uniqueId)
 				.filter(c -> c.equals(uniqueId(mutation.getElement())))
 				.isPresent() && filter.test(mutation));
+	}
+
+	public void stopExpectingMutations() {
+		pilot.stopExpectingMutations();
 	}
 
 	public List<DomMutation> getMutations() {

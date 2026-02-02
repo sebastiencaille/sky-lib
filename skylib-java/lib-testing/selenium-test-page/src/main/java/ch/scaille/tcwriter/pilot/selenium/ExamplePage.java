@@ -1,10 +1,12 @@
 package ch.scaille.tcwriter.pilot.selenium;
 
+import static ch.scaille.testing.testpilot.selenium.SeleniumPilot.MUTATION_TEXT_CONTENT;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 import java.time.Duration;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.Assertions;
@@ -17,6 +19,7 @@ import ch.scaille.testing.testpilot.factories.Pollings;
 import ch.scaille.testing.testpilot.selenium.PagePilot;
 import ch.scaille.testing.testpilot.selenium.SeleniumPilot;
 import ch.scaille.testing.testpilot.selenium.SeleniumPollingBuilder;
+import org.openqa.selenium.remote.DomMutation;
 
 @NullMarked
 public class ExamplePage extends PagePilot {
@@ -109,12 +112,16 @@ public class ExamplePage extends PagePilot {
 
     public void assertElementChange() {
         var changedElement = on(driver -> driver.findElement(TEXT_XPATH));
-        changedElement.expectMutations(mutation -> "textContent".equals(mutation.getAttributeName()));
-        on(elementToBeClickable(ELEMENT_CHANGE_TEST)).failUnless().clicked();
-        // Explicitly test using WebElement as source
-        changedElement.failUnless().assertedCtxt(SeleniumPollingBuilder.assertMutations(mutations ->
-                Assertions.assertEquals(2, mutations.size(), mutations::toString)));
-        changedElement.failUnless().textEquals("Hello again");
+        try (var autoClose = changedElement.expectMutations(mutation -> MUTATION_TEXT_CONTENT.equals(mutation.getAttributeName()))) {
+            on(elementToBeClickable(ELEMENT_CHANGE_TEST)).failUnless().clicked();
+            // Explicitly test using WebElement as source
+            changedElement.failUnless().assertedCtxt(SeleniumPollingBuilder.assertMutations(mutations ->
+                    Assertions.assertEquals(2, mutations.stream().map(DomMutation::getCurrentValue).distinct().count(),
+                            mutations.stream()
+                                    .map(m -> "%s %s: %s -> %s".formatted(m.getElement(), m.getAttributeName(), m.getOldValue(), m.getCurrentValue()))
+                                    .collect(Collectors.joining(",\n")))));
+            changedElement.failUnless().textEquals("Hello again");
+        }
     }
 
 }

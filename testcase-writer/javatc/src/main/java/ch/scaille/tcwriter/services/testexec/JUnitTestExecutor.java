@@ -12,7 +12,7 @@ import com.google.common.collect.Lists;
 
 import ch.scaille.generators.util.GenerationMetadata;
 import ch.scaille.generators.util.Template;
-import ch.scaille.tcwriter.generators.services.visitors.TestCaseToJunitVisitor;
+import ch.scaille.tcwriter.generators.services.visitors.TestCaseToJavaVisitor;
 import ch.scaille.tcwriter.model.TestCaseException;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.persistence.IConfigDao;
@@ -42,7 +42,7 @@ public class JUnitTestExecutor implements ITestExecutor {
 	@Override
 	public Template createTemplate(TestCase tc) throws TestCaseException {
 		final var generationMetadata = new GenerationMetadata(this.getClass(), tc.getName());
-		return new TestCaseToJunitVisitor(this.modelDao.readTemplate()).visitTestCase(tc, generationMetadata);
+		return new TestCaseToJavaVisitor(this.modelDao.readTemplate(tc.getDictionary().template())).visitTestCase(tc, generationMetadata);
 	}
 
 	@Override

@@ -4,16 +4,21 @@ import ch.scaille.tcwriter.model.IdObject;
 import ch.scaille.tcwriter.model.NamedObject;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
+import lombok.Setter;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 @Getter
+@Setter
 public class TestActor extends NamedObject {
 
     public static final TestActor NOT_SET = new TestActor(IdObject.ID_NOT_SET, "", TestRole.NOT_SET);
-    private final TestRole role;
+
+    private TestRole role;
 
     protected TestActor() {
         super(null, null);
-        role = null;
+        role = TestRole.NOT_SET;
     }
 
     @JsonCreator

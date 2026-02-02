@@ -7,7 +7,6 @@ import ch.scaille.tcwriter.annotations.TCCheck;
 import ch.scaille.tcwriter.annotations.TCRole;
 
 @TCRole(description = "Test writer", humanReadable = "test writer")
-@TCActors("testWriter|TestWriterRole")
 public interface TestWriterRole {
 
 	@TCApi(description = "Select a step", humanReadable = "I %s")

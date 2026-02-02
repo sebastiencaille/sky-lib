@@ -1,38 +1,50 @@
 package ch.scaille.tcwriter.model;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
 @Setter
 public class Metadata {
 
-	private String transientId = "";
+    @JsonIgnore
+    private String transientId = null;
 
-	@Getter
     private String description = "";
-	
-	@Getter
+
     private LocalDateTime creationDate;
 
-	public Metadata() {
-	}
+    private Set<String> tags = new HashSet<>();
 
-	public Metadata(String transientId, String description) {
-		this.transientId = transientId;
-		this.description = description;
-	}
+    public Metadata() {
+    }
 
-	@JsonIgnore
-	public String getTransientId() {
-		return transientId;
-	}
+    @JsonCreator
+    public Metadata(String transientId, String description, LocalDateTime creationDate, Set<String> tags) {
+        this.transientId = transientId;
+        this.description = description;
+        this.creationDate = creationDate;
+        if (tags != null) {
+            this.tags.addAll(tags);
+        }
+    }
 
     @Override
-	public String toString() {
-		return transientId;
-	}
-	
+    public String toString() {
+        return transientId + " " + tags;
+    }
+
+    public boolean matches(Metadata other) {
+        return other != null && other.tags.stream().anyMatch(tags::contains);
+    }
+
+    public boolean matches(String other) {
+        return other != null && tags.contains(other);
+    }
 }

@@ -23,8 +23,13 @@ import ch.scaille.util.persistence.DaoFactory;
 public class StorageConfig {
 
 	@Bean
-	DaoFactory daoFactory(@Value("${app.dataFolder:#{systemProperties['user.home'] + '/.var/lib/tcwriter/data'}}") Path dataFolder) {
-		return DaoFactory.cpPlus(Set.of(DaoConfigs.USER_RESOURCES), new DaoFactory.FsDsFactory(dataFolder));
+	DaoFactory.IDataSourceFactory fsDataSource(@Value("${app.dataFolder:#{systemProperties['user.home'] + '/.var/lib/tcwriter/data'}}") Path dataFolder) {
+		return new DaoFactory.FsDsFactory(dataFolder);
+	}
+
+	@Bean
+	DaoFactory daoFactory(DaoFactory.IDataSourceFactory fsDataSource) {
+		return DaoFactory.cpPlus(Set.of(DaoConfigs.USER_RESOURCES), fsDataSource);
 	}
 
 	@Bean
@@ -34,8 +39,8 @@ public class StorageConfig {
 	}
 
 	@Bean
-	IModelDao modelDao(DaoFactory daoFactory, ConfigDao configDao) {
-		return new ModelDao(daoFactory, configDao.getCurrentConfigProperty(), ModelDao.defaultDataHandlers());
+	IModelDao modelDao(DaoFactory daoFactory, ConfigDao configDao, DaoFactory.IDataSourceFactory fsDataSource) {
+		return new ModelDao(daoFactory, configDao.getCurrentConfigProperty(), fsDataSource, ModelDao::defaultDataHandlers);
 	}
 
 	@Bean

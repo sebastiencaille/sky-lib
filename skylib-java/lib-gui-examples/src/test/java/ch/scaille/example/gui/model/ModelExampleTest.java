@@ -28,8 +28,8 @@ class ModelExampleTest {
 			view[0].setVisible(true);
 		});
 
-		final var pilot = new SwingPilot(view[0]);
-		pilot.setDefaultPollingTimeout(Duration.ofSeconds(1));
+		final SwingPilot pilot = new SwingPilot(view[0])
+                .configure(config -> config.defaultPollingTimeout(Duration.ofSeconds(1)));
 
 		var page = pilot.page(ModelExamplePage::new);
 

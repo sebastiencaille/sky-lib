@@ -13,10 +13,9 @@ import org.junit.jupiter.api.Test;
 import ch.scaille.util.helpers.Poller;
 
 @NullMarked
-class ComponentTest {
+class PilotComponentTest {
 
 	private static final String TEST_TEXT = "Hello";
-
 
 	public static class TestComponent extends AbstractComponentPilot<Object> {
 

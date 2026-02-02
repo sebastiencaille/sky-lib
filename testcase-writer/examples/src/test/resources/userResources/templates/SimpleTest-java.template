@@ -1,8 +1,8 @@
 package ${package};
 
-import ch.scaille.tcwriter.examples.api.interfaces.dto.*;
-import ch.scaille.tcwriter.examples.api.interfaces.selectors.*;
-import ch.scaille.tcwriter.examples.api.interfaces.*;
+import ch.scaille.tcwriter.examples.interfaces.dto.*;
+import ch.scaille.tcwriter.examples.interfaces.selectors.*;
+import ch.scaille.tcwriter.examples.interfaces.*;
 import ch.scaille.tcwriter.recorder.*;
 
 import org.junit.jupiter.api.BeforeEach;

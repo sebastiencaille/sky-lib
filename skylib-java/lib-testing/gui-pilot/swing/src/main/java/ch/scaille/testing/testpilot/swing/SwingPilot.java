@@ -31,8 +31,8 @@ public class SwingPilot extends ch.scaille.testing.testpilot.GuiPilot {
 	public SwingPilot(final Container root) {
 		this.root = root;
 	}
-
-	@Override
+    
+    @Override
 	protected ModalDialogDetector.Builder createDefaultModalDialogDetector() {
 		return SwingModalDialogDetector.defaultDetector();
 	}

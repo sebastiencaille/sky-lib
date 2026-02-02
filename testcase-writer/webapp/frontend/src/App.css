@@ -1,6 +1,6 @@
 :root {
   --ok-color: #78bc0f;
-  --ko-color: darkred;
+  --ko-color: rgba(225, 0, 0, 0.83);
   --ko-color-reverse: lightgray;
 }
 

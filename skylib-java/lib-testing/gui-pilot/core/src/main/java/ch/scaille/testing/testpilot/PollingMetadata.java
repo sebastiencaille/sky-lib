@@ -18,8 +18,6 @@ public interface PollingMetadata<C> {
 
 	Optional<PolledComponent<C>> getComponent();
 
-	Duration getFirstDelay();
-
 	DelayFunction getDelayFunction();
 
 	ReportFunction<C> getReportFunction();

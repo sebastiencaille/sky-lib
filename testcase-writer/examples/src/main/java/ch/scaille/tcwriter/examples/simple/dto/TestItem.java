@@ -1,18 +1,16 @@
-package ch.scaille.tcwriter.examples.api.interfaces.dto;
+package ch.scaille.tcwriter.examples.simple.dto;
 
 import ch.scaille.tcwriter.annotations.TCApi;
 import ch.scaille.tcwriter.examples.ExampleService.ItemKind;
 import lombok.Getter;
 
 @TCApi(description = "an item you can buy", humanReadable = "")
+@Getter
 public class TestItem {
 
 	public final ItemKind itemKind;
-	@Getter
     private String brand;
-	@Getter
     private int numberOfItems;
-	@Getter
     private boolean iso;
 
 	private TestItem(final ItemKind itemKind) {

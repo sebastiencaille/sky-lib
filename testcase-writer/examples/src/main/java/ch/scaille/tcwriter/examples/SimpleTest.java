@@ -1,35 +1,23 @@
 package ch.scaille.tcwriter.examples;
 
-import static ch.scaille.tcwriter.examples.api.interfaces.selectors.BuyingLocationSelector.inLocalShop;
-import static ch.scaille.tcwriter.examples.api.interfaces.selectors.BuyingLocationSelector.onInternet;
-import static ch.scaille.tcwriter.examples.api.interfaces.selectors.PackageDeliverySelector.deliveredItem;
-import static ch.scaille.tcwriter.examples.api.interfaces.selectors.PackageDeliverySelector.fromShop;
+import static ch.scaille.tcwriter.examples.simple.selectors.BuyingLocationSelector.inLocalShop;
+import static ch.scaille.tcwriter.examples.simple.selectors.BuyingLocationSelector.onInternet;
+import static ch.scaille.tcwriter.examples.simple.selectors.PackageDeliverySelector.deliveredItem;
+import static ch.scaille.tcwriter.examples.simple.selectors.PackageDeliverySelector.fromShop;
 
+import ch.scaille.tcwriter.examples.simple.AbstractSimpleTest;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import ch.scaille.tcwriter.examples.api.interfaces.CustomerTestRole;
-import ch.scaille.tcwriter.examples.api.interfaces.DeliveryTestRole;
-import ch.scaille.tcwriter.examples.api.interfaces.dto.TestItem;
-import ch.scaille.tcwriter.recorder.RecorderTestActors;
+import ch.scaille.tcwriter.examples.simple.dto.TestItem;
 
-public class SimpleTest {
+public class SimpleTest extends AbstractSimpleTest {
 
 	private final TestItem coffeeMachine = TestItem.coffeeMachineOfBrand("OldSchool");
 	private final TestItem teaPot = TestItem.teaPot();
-	private CustomerTestRole customer;
-	private DeliveryTestRole deliveryGuy;
 
 	public SimpleTest() {
 		coffeeMachine.setISO(true);
-	}
-
-	@BeforeEach
-	public void initActors() {
-		final var testedService = new ExampleService();
-		customer = RecorderTestActors.register(new CustomerTestRole(testedService), "customer", null);
-		deliveryGuy = RecorderTestActors.register(new DeliveryTestRole(testedService), "deliveryGuy", null);
 	}
 
 	@Test

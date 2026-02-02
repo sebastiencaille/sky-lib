@@ -5,13 +5,15 @@ import java.util.Optional;
 
 import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
-import ch.scaille.tcwriter.model.testcase.ExportableTestCase;
+import ch.scaille.tcwriter.model.testcase.TestCase;
 
 public interface ITestCaseDao {
 
-	List<Metadata> listAll(TestDictionary dictionary);
+	List<Metadata> listAll(Metadata dictionary);
 
-	Optional<ExportableTestCase> load(String dictionaryName, TestDictionary dictionary);
+	Metadata loadMetadata(String testCaseName);
 
-    void save(ExportableTestCase testCase);
+	TestCase load(String testCaseName, TestDictionary dictionary);
+
+    void save(TestCase testCase);
 }

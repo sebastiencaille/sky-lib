@@ -1,13 +1,14 @@
 package ch.scaille.tcwriter.maven;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
+import lombok.SneakyThrows;
 import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -22,7 +23,6 @@ import ch.scaille.javabeans.DummyPropertiesGroup;
 import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.tcwriter.model.TestCaseException;
 import ch.scaille.tcwriter.model.config.TCConfig;
-import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.persistence.ModelConfig;
 import ch.scaille.tcwriter.persistence.ModelDao;
 import ch.scaille.tcwriter.services.generators.TestCaseToJava;
@@ -36,13 +36,13 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project}", readonly = true)
     private MavenProject project;
 
-    @Parameter(property = "template", defaultValue = "file:${project.testResources.testResource.directory}/userResources/templates/TC.template")
-    private String template;
+    @Parameter(property = "templatesFolder", defaultValue = "file:${project.testResources.testResource.directory}/userResources/templates")
+    private String templatesFolder;
 
     @Parameter(property = "dictionaryFolder", defaultValue = "file:${project.testResources.testResource.directory}/dictionaries")
     private String dictionaryFolder;
 
-    @Parameter(property = "dictionary", defaultValue = "default")
+    @Parameter(property = "dictionary", required = false)
     private String dictionaryLocator;
 
     @Parameter(property = "testCases")
@@ -66,6 +66,7 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
         return new File(project.getBasedir(), p).toString();
     }
 
+    @SneakyThrows
     @Override
     public void execute() throws MojoExecutionException {
 
@@ -78,17 +79,17 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
 
         project.addTestCompileSourceRoot(outputFolder);
 
-        // config folders and build model
-        final var daoFactory = DaoFactory.cpPlus(Set.of(), new FsDsFactory(null));
-        final var mavenModelConfig = new ModelConfig();
-        mavenModelConfig.setDictionaryPath(resolve(dictionaryFolder));
-        mavenModelConfig.setTcPath(resolve(DaoFactory.fs(testCases.getDirectory())));
-        mavenModelConfig.setTemplatePath(resolve(template));
-        mavenModelConfig.setTcExportPath("");
-        final var config = new TCConfig("maven", List.of(mavenModelConfig));
-        final var modelDao = new ModelDao(daoFactory,
-                new ObjectProperty<>("config", new DummyPropertiesGroup(), config), ModelDao.defaultDataHandlers());
-        try {
+            // config folders and build model
+            final var fsDsFactory = new FsDsFactory(Paths.get("."));
+            final var daoFactory = DaoFactory.cpPlus(Set.of(), fsDsFactory);
+            final var mavenModelConfig = new ModelConfig();
+            mavenModelConfig.setDictionaryPath(resolve(dictionaryFolder));
+            mavenModelConfig.setTcPath(resolve(DaoFactory.fs(testCases.getDirectory())));
+            mavenModelConfig.setTemplatePath(resolve(templatesFolder));
+            mavenModelConfig.setTcExportPath("");
+            final var config = new TCConfig("maven", List.of(mavenModelConfig));
+            final var modelDao = new ModelDao(daoFactory,
+                    new ObjectProperty<>("config", new DummyPropertiesGroup(), config), fsDsFactory, ModelDao::defaultDataHandlers);
             // Search test cases
             final var scanner = new DirectoryScanner();
             scanner.setBasedir(new File(testCases.getDirectory()));
@@ -103,28 +104,23 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
             getLog().debug("Scanning of: " + scanner.getBasedir().getAbsolutePath());
             getLog().info("Found: " + Arrays.asList(scanner.getIncludedFiles()));
 
-            // Load dictionary
-            final var testDictionary = modelDao.readTestDictionary(dictionaryLocator)
-                    .orElseThrow(() -> new FileNotFoundException(dictionaryLocator));
-
             // Generate tests
             final var generator = new TestCaseToJava(modelDao);
             Arrays.stream(scanner.getIncludedFiles())
                     .forEach(LambdaExt
-                            .uncheckedC(tcFile -> generateTestCase(generator, tcFile, testDictionary, modelDao)));
-        } catch (FileNotFoundException e) {
-            throw new MojoExecutionException("Unable to load dictionary", e);
-        }
-
+                            .uncheckedC(tcFile -> generateTestCase(generator, tcFile, modelDao)));
     }
 
-    private void generateTestCase(final TestCaseToJava generator, String tcFile, final TestDictionary testDictionary,
+    private void generateTestCase(final TestCaseToJava generator,
+                                  final String tcFile,
                                   final ModelDao modelDao) throws TestCaseException {
-        final var generationMetadata = new GenerationMetadata(JavaTestCaseGeneratorMojo.class,
-                "dictionary=" + testDictionary.getMetadata());
         final var testcaseLocator = tcFile.split("\\.")[0];
-        final var testCase = modelDao.readTestCase(testcaseLocator, _ -> testDictionary)
-                .orElseThrow(() -> new RuntimeException("Unable to find test case: " + testcaseLocator));
+        final var testMetadata = modelDao.loadTestCaseMetadata(testcaseLocator);
+        final var dictionaryLocatorToLoad = Objects.requireNonNullElseGet(dictionaryLocator, () -> modelDao.listDictionaries(testMetadata).get(0).getTransientId());
+        final var testCase = modelDao.readTestCase(testcaseLocator, modelDao.readTestDictionary(dictionaryLocatorToLoad).get())
+                .orElseThrow(() -> new RuntimeException("Unable to find dictionary: " + dictionaryLocator));
+        final var generationMetadata = new GenerationMetadata(JavaTestCaseGeneratorMojo.class,
+                "dictionary=" + testCase.getDictionary());
         generator.generate(testCase, generationMetadata).writeTo(LambdaExt.uncheckedF2((file, src) -> {
             final var outputFile = Paths.get(resolve(outputFolder)).resolve(file);
             getLog().info("Writing " + outputFile);

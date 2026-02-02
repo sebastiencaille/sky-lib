@@ -1,5 +1,6 @@
 package ch.scaille.testing.bdd.selenium;
 
+import lombok.extern.java.Log;
 import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +18,7 @@ import java.util.Objects;
 
 @ExtendWith(DisabledIfHeadless.class)
 @NullMarked
+@Log
 class SeleniumExampleTest extends AbstractSeleniumUndertowTest {
 
     @Override
@@ -30,12 +32,13 @@ class SeleniumExampleTest extends AbstractSeleniumUndertowTest {
 
     @BeforeEach
     void createPilot() {
-        pilot = new SeleniumPilot(Objects.requireNonNull(driver));
+        pilot = new SeleniumPilot(Objects.requireNonNull(driver))
+                .withAllMutations();
     }
 
     @AfterEach
     void releasePilot() {
-        System.out.print(pilot.getActionReport().getFormattedReport());
+        log.info(pilot.getActionReport().getFormattedReport());
         pilot.close();
     }
 

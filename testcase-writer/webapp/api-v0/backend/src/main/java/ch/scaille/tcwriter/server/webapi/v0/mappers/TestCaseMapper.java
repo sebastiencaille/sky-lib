@@ -64,7 +64,6 @@ public interface TestCaseMapper extends MetadataMapper {
     }
 
     @Mapping(target = "dictionary", ignore = true)
-    @Mapping(target = "preferredDictionary", ignore = true)
     @Mapping(target = "dynamicDescriptions", ignore = true)
     @Mapping(target = "dynamicReferencesByType", ignore = true)
     ch.scaille.tcwriter.model.testcase.TestCase convertToModelNoRef(TestCase dto,

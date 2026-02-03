@@ -64,14 +64,14 @@ public abstract class AbstractSerializationDao<T> implements IDao<T> {
 	}
 
 	@Override
-	public Resource<T> loadResource(ResourceMetaData resourceMetaData) throws StorageException {
+	public Resource<T> loadResource(ResourceMetaData resourceMetaData, T template) throws StorageException {
 		return StorageException.wrap("loadResource",
-				() -> dataHandlerRegistry.decode(readRaw(resourceMetaData), resourceType));
+				() -> dataHandlerRegistry.decode(readRaw(resourceMetaData), resourceType, template));
 	}
 
 	@Override
-	public Resource<T> loadResource(String locator) throws StorageException {
-		return StorageException.wrap("loadResource", () -> loadResource(resolve(locator)));
+	public Resource<T> loadResource(String locator, T template) throws StorageException {
+		return StorageException.wrap("loadResource", () -> loadResource(resolve(locator), template));
 	}
 
 	@Override

@@ -10,6 +10,8 @@ public interface IDictionaryDao {
 
 	List<Metadata> listAll();
 
-	Optional<TestDictionary> load(String dictionaryName);
+	Metadata loadMetadata(String dictionaryId);
+
+	TestDictionary load(String dictionaryId);
 	
 }

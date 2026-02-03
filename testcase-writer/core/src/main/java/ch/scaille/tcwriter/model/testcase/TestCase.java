@@ -28,9 +28,6 @@ public class TestCase {
     @JsonIgnore
     protected TestDictionary dictionary = TestDictionary.NOT_SET;
 
-    @Nullable
-    protected String preferredDictionary;
-
     protected final List<TestStep> steps = new ArrayList<>();
 
     protected String pkgAndClassName;
@@ -47,9 +44,8 @@ public class TestCase {
 
     @Default
     @JsonCreator
-    public TestCase(Metadata metadata, String preferredDictionary, List<TestStep> steps, final String pkgAndClassName) {
+    public TestCase(Metadata metadata, List<TestStep> steps, final String pkgAndClassName) {
         this.metadata = Objects.requireNonNull(metadata, "Metadata must not be null");
-        this.preferredDictionary = preferredDictionary;
         this.pkgAndClassName = pkgAndClassName;
         this.steps.addAll(steps);
     }

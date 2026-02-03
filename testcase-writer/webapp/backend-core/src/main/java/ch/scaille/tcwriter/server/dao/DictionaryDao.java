@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.persistence.IModelDao;
+import ch.scaille.util.persistence.DaoFactory;
+import ch.scaille.util.persistence.StorageException;
 
 public class DictionaryDao extends AbstractDao implements IDictionaryDao {
 
@@ -15,7 +18,8 @@ public class DictionaryDao extends AbstractDao implements IDictionaryDao {
 
     private final IModelDao modelDao;
 
-    public DictionaryDao(IModelDao modelDao) {
+    public DictionaryDao(IModelDao modelDao, DaoFactory.IDataSourceFactory factory) {
+        super(factory);
         this.modelDao = modelDao;
     }
 
@@ -25,9 +29,18 @@ public class DictionaryDao extends AbstractDao implements IDictionaryDao {
     }
 
     @Override
-    public Optional<TestDictionary> load(String dictionaryName) {
+    public Metadata loadMetadata(String locator) {
+        return super.loadMetadata(locator,
+                        l -> modelDao.readTestDictionary(l)
+                                .map(TestDictionary::getMetadata)
+                                .orElse(null))
+                .orElse(null);
+    }
+
+    @Override
+    public TestDictionary load(String dictionaryName) {
         return cacheIfPresent(cache, dictionaryName,
-                () -> modelDao.readTestDictionary(dictionaryName));
+                () -> modelDao.readTestDictionary(dictionaryName)).orElse(null);
     }
 
 }

@@ -44,7 +44,7 @@ public interface Deserializers {
     }
 
     String CONTEXT_ALL_REFERENCES = "AllTestReferences";
-    String CONTEXT_DICTIONARY_LOADER = "DictionaryLoaderFunction";
+    String CONTEXT_DICTIONARY = "DictionaryLoaderFunction";
 
     SimpleModule TCVWRITER_MODULE = new SimpleModule("TCWriter")
             .setMixInAnnotation(TestActor.class, TestActorMixin.class)
@@ -101,7 +101,7 @@ public interface Deserializers {
         @Override
         public TestCase deserialize(JsonParser p, DeserializationContext ctxt) throws JacksonException {
             final var testCase = (TestCase) super.deserialize(p, ctxt);
-            testCase.setDictionary(((Function<String, TestDictionary>)ctxt.getAttribute(CONTEXT_DICTIONARY_LOADER)).apply(testCase.getPreferredDictionary()));
+            testCase.setDictionary((TestDictionary) ctxt.getAttribute(CONTEXT_DICTIONARY));
             final var references = (List<ExportReference<TestCase, ?>>) ctxt.getAttribute(CONTEXT_ALL_REFERENCES);
             if (references != null) {
                 references.forEach(e -> e.apply(testCase));

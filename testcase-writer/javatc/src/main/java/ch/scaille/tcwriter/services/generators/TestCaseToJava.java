@@ -55,7 +55,8 @@ public class TestCaseToJava {
 		final var testDictionary = modelDao.readTestDictionary(mainArgs.tcDictionary)
 				.orElseThrow(FileNotFoundException::new);
 		testDictionary.overrideTemplate(mainArgs.tcTemplate);
-		final var testCase = modelDao.readTestCase(tcFile, _ -> testDictionary).orElseThrow(FileNotFoundException::new);
+		final var testCase = modelDao.readTestCase(tcFile, testDictionary)
+				.orElseThrow(FileNotFoundException::new);
 
 		new TestCaseToJava(modelDao).generate(testCase, generationMetadata)
 				.writeTo(uncheckedC(tc -> modelDao.writeTestCaseCode(tcFile, tc)));

@@ -9,9 +9,11 @@ import ch.scaille.tcwriter.model.testcase.TestCase;
 
 public interface ITestCaseDao {
 
-	List<Metadata> listAll(TestDictionary dictionary);
+	List<Metadata> listAll(Metadata dictionary);
 
-	Optional<TestCase> load(String dictionaryName, TestDictionary dictionary);
+	Metadata loadMetadata(String testCaseName);
+
+	TestCase load(String testCaseName, TestDictionary dictionary);
 
     void save(TestCase testCase);
 }

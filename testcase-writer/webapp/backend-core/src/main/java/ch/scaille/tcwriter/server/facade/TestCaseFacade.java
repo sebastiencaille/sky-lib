@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
@@ -37,11 +38,11 @@ public class TestCaseFacade extends AbstractFacade {
 	}
 
 	public Collection<Metadata> listAll(String dictionaryId) {
-		return testCaseDao.listAll(loadDictionary(dictionaryId));
+		return testCaseDao.listAll(ValidationHelper.dictionaryFound(dictionaryId, dictionaryDao.loadMetadata(dictionaryId)));
 	}
 
 	public TestCase load(String tcId, String dictionaryId) {
-		return ValidationHelper.testCaseFound(tcId, testCaseDao.load(tcId, loadDictionary(dictionaryId)).orElse(null));
+		return ValidationHelper.testCaseFound(tcId, testCaseDao.load(tcId, loadDictionary(dictionaryId)));
 	}
 
 	public void saveTestCase(TestCase testCase) {

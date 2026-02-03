@@ -40,8 +40,8 @@ public class StorageDataHandlerRegistry {
 		return resource.withValue(findHandler(resource).encode(targetType, resource.getValue()));
 	}
 
-	public <T> Resource<T> decode(Resource<String> resource, Class<T> targetType) throws IOException {
-		return resource.withValue(findHandler(resource).decode(resource.getValue(), targetType));
+	public <T> Resource<T> decode(Resource<String> resource, Class<T> targetType, T template) throws IOException {
+		return resource.withValue(findHandler(resource).decode(resource.getValue(), targetType, template));
 	}
 
 	public Optional<IStorageDataHandler> getDefaultHandler() {

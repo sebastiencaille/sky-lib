@@ -196,7 +196,7 @@ public class TCWriterController extends GuiController {
 		final int dialogResult = testFileChooser.showOpenDialog(gui);
 		if (dialogResult == 0) {
 			final var testFile = testFileChooser.getSelectedFile();
-			loadTestCase(modelDao.readTestCase(testFile.toString(), this::loadDictionary)
+			loadTestCase(modelDao.readTestCase(testFile.toString(), model.getTestDictionary().getValue())
 					.orElseThrow(() -> new FileNotFoundException(testFile.getName())));
 		}
 	}

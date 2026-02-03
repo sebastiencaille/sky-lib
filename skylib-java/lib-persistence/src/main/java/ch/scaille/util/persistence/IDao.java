@@ -19,18 +19,39 @@ public interface IDao<T> {
 	/**
 	 * Loads a resource from metadata
 	 */
-	Resource<T> loadResource(ResourceMetaData metadata) throws StorageException;
-	
+	default Resource<T> loadResource(ResourceMetaData metadata) throws StorageException {
+		return loadResource(metadata, null);
+	}
+
+	/**
+	 * Loads a resource from metadata
+	 */
+	Resource<T> loadResource(ResourceMetaData metadata, T template) throws StorageException;
+
 	/**
 	 * Loads a resource from a locator
 	 */
-	Resource<T> loadResource(String locator) throws StorageException;
+	default Resource<T> loadResource(String locator) throws StorageException {
+		return loadResource(locator, null);
+	}
+
+	/**
+	 * Loads a resource from a locator
+	 */
+	Resource<T> loadResource(String locator, T template) throws StorageException;
 
 	/**
 	 * Loads data from a locator
 	 */
 	default T load(String locator) throws StorageException {
-		return loadResource(locator).getValue();
+		return loadResource(locator, null).getValue();
+	}
+
+	/**
+	 * Loads data from a locator
+	 */
+	default T load(String locator, T template) throws StorageException {
+		return loadResource(locator, template).getValue();
 	}
 
 	/**

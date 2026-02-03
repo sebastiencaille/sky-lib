@@ -107,10 +107,12 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
                         .uncheckedC(tcFile -> generateTestCase(generator, tcFile, modelDao)));
     }
 
-    private void generateTestCase(final TestCaseToJava generator, String tcFile,
+    private void generateTestCase(final TestCaseToJava generator,
+                                  String tcFile,
                                   final ModelDao modelDao) throws TestCaseException {
         final var testcaseLocator = tcFile.split("\\.")[0];
-        final var testCase = modelDao.readTestCase(testcaseLocator, dico -> modelDao.readTestDictionary(dico).get())
+        final var testCase = modelDao.readTestCase(testcaseLocator, modelDao.readTestDictionary(dictionaryLocator)
+                    .orElseThrow(() -> new RuntimeException("Unable to find dictionary: " + dictionaryLocator)))
                 .orElseThrow(() -> new RuntimeException("Unable to find test case: " + testcaseLocator));
         final var generationMetadata = new GenerationMetadata(JavaTestCaseGeneratorMojo.class,
                 "dictionary=" + testCase.getDictionary());

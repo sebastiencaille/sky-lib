@@ -28,7 +28,7 @@ public class TextStorageHandler implements IStorageDataHandler {
 	}
 
 	@Override
-	public <T> T decode(String value, Class<T> targetType) {
+	public <T> T decode(String value, Class<T> targetType, T template) {
 		if (!String.class.equals(targetType)) {
 			throw new IllegalStateException("Expected String target, got " + targetType);
 		}

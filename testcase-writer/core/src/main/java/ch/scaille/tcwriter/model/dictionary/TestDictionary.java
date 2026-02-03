@@ -27,8 +27,6 @@ public class TestDictionary {
 
     private Metadata metadata = new Metadata();
 
-    private String classifier;
-
     private final Map<String, TestObjectDescription> descriptions = new HashMap<>();
 
     private final Map<String, TestRole> roles = new HashMap<>();
@@ -47,13 +45,12 @@ public class TestDictionary {
     }
 
     @JsonCreator
-    public TestDictionary(Metadata metadata, String classifier, Map<String, TestObjectDescription> descriptions,
+    public TestDictionary(Metadata metadata, Map<String, TestObjectDescription> descriptions,
                           Map<String, TestRole> roles, Map<String, TestActor> actors,
                           Multimap<String, TestParameterFactory> testObjectFactories,
                           Set<String> selectorTypes, String explicitTemplate) {
 
         this.metadata = metadata;
-        this.classifier = classifier;
         this.descriptions.putAll(descriptions);
         this.roles.putAll(roles);
         this.actors.putAll(actors);
@@ -115,7 +112,8 @@ public class TestDictionary {
 
 
     public String template() {
-        return JavaExt.firstNonNull(getExplicitTemplate(), getClassifier(), "default") + "-java.template";
+        // TODO Search by tag
+        return JavaExt.firstNonNull(getExplicitTemplate(), getMetadata().getTransientId(), "default") + "-java.template";
     }
 
     public void overrideTemplate(String tcTemplate) {

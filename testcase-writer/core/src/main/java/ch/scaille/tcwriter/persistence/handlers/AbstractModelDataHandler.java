@@ -1,6 +1,6 @@
 package ch.scaille.tcwriter.persistence.handlers;
 
-import ch.scaille.tcwriter.model.dictionary.TestDictionary;
+import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.persistence.IModelDao;
 import ch.scaille.tcwriter.persistence.handlers.serdeser.Deserializers;
 import ch.scaille.tcwriter.persistence.handlers.serdeser.ExportReferenceDeserializerHandler;
@@ -13,8 +13,6 @@ import tools.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import tools.jackson.datatype.guava.GuavaModule;
 
 import ch.scaille.util.persistence.handlers.IStorageDataHandler;
-
-import java.util.function.Function;
 
 public abstract class AbstractModelDataHandler implements IStorageDataHandler {
 
@@ -55,14 +53,13 @@ public abstract class AbstractModelDataHandler implements IStorageDataHandler {
     }
 
     @Override
-    public <T> T decode(String value, Class<T> targetType) {
+    public <T> T decode(String value, Class<T> targetType, T template) {
         final var config = mapper.deserializationConfig()
                 .withHandler(referenceHandler);
-
-        var reader = mapper.readerFor(targetType)
-                .with(config)
-                .with(config.getAttributes().withSharedAttribute(Deserializers.CONTEXT_DICTIONARY_LOADER,
-                        (Function<String, TestDictionary>) name -> dao.readTestDictionary(name).get()));
+        var reader = mapper.readerFor(targetType).with(config);
+        if (template instanceof TestCase tcTemplate) {
+            reader = reader.with(config.getAttributes().withPerCallAttribute(Deserializers.CONTEXT_DICTIONARY, tcTemplate.getDictionary()));
+        }
         return reader.readValue(value);
     }
 

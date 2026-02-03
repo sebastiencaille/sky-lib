@@ -24,13 +24,11 @@ public interface IModelDao {
 
 	void writeTestDictionary(TestDictionary testDictionary);
 
-	void writeTestDictionary(Path path, TestDictionary testDictionary);
-
 	// ----------------------- Test case -----------------------
 
-	List<Metadata> listTestCases(TestDictionary dictionary);
-	
-	Optional<TestCase> readTestCase(String identifier, Function<String, TestDictionary> testDictionaryLoader);
+	List<Metadata> listTestCases(final Metadata dictionary, Function<String, Metadata> metadataLoader);
+
+	Optional<TestCase> readTestCase(String identifier, TestDictionary dictionary);
 
 	void writeTestCase(String identifier, TestCase testCase);
 

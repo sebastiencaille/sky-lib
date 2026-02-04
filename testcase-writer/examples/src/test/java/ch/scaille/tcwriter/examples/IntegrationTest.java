@@ -5,7 +5,6 @@ import java.io.IOException;
 import ch.scaille.generators.util.GenerationMetadata;
 import ch.scaille.tcwriter.generators.services.visitors.TestCaseToJavaVisitor;
 import ch.scaille.tcwriter.model.TestCaseException;
-import ch.scaille.tcwriter.model.testcase.TestCase;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

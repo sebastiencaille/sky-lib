@@ -10,21 +10,19 @@ import ch.scaille.util.persistence.DaoFactory;
 
 public class TestCaseDao extends AbstractDao implements ITestCaseDao {
 
-    private final IModelDao modelDao;
 
-    public TestCaseDao(IModelDao modelDao, DaoFactory.IDataSourceFactory factory) {
-        super(factory);
-        this.modelDao = modelDao;
+    public TestCaseDao(IModelDao modelDao) {
+       super(modelDao);
     }
 
     @Override
     public List<Metadata> listAll(Metadata dictionary) {
-        return modelDao.listTestCases(dictionary, this::loadMetadata);
+        return modelDao.listTestCases(dictionary);
     }
 
     @Override
     public Metadata loadMetadata(String testCaseName) {
-        return super.loadMetadata(testCaseName, locator -> load(locator, TestDictionary.NOT_SET).getMetadata());
+        return modelDao.loadTestCaseMetadata(testCaseName);
     }
 
     @Override

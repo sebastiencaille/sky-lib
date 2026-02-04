@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.server.dao;
+package ch.scaille.tcwriter.persistence.handlers;
 
 import ch.scaille.util.persistence.handlers.IStorageDataHandler;
 import tools.jackson.databind.ObjectMapper;

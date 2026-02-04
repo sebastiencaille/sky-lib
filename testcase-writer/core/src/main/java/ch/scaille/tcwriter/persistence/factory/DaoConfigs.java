@@ -15,48 +15,49 @@ import ch.scaille.util.persistence.DaoFactory.FsDsFactory;
 
 public interface DaoConfigs {
 
-	String USER_RESOURCES = "userResources/";
+    String USER_RESOURCES = "userResources/";
 
-	static String cp(String path) {
-		return DaoFactory.CP_DATASOURCE + USER_RESOURCES + path;
-	}
+    static String cp(String path) {
+        return DaoFactory.CP_DATASOURCE + USER_RESOURCES + path;
+    }
 
-	static Path homeFolder() {
-		return Paths.get(FileSystemDao.resolvePlaceHolders("${user.home}/.tcwriter"));
-	}
+    static Path homeFolder() {
+        return Paths.get(FileSystemDao.resolvePlaceHolders("${user.home}/.tcwriter"));
+    }
 
-	static Path tempFolder() {
-		return Paths.get(System.getProperty("java.io.tmpdir"));
-	}
+    static Path tempFolder() {
+        return Paths.get(System.getProperty("java.io.tmpdir"));
+    }
 
-	ConfigDao configDao();
+    ConfigDao configDao();
 
-	ModelDao modelDao();
+    ModelDao modelDao();
 
-	static DaoConfigs withFolder(Path path) {
-		final var daoFactory = DaoFactory.cpPlus(Set.of(USER_RESOURCES), new FsDsFactory(path));
-		final var configDao = new ConfigDao(daoFactory, ".", ConfigDao.defaultDataHandlers());
-		final ModelDao modelDao = new ModelDao(daoFactory, configDao.getCurrentConfigProperty(),
+    static DaoConfigs withFolder(Path path) {
+        final var fsDsFactory = new FsDsFactory(path);
+        final var daoFactory = DaoFactory.cpPlus(Set.of(USER_RESOURCES), fsDsFactory);
+        final var configDao = new ConfigDao(daoFactory, ".", ConfigDao.defaultDataHandlers());
+        final ModelDao modelDao = new ModelDao(daoFactory, configDao.getCurrentConfigProperty(), fsDsFactory,
                 ModelDao::defaultDataHandlers);
-		
-		final var tempModelConfig = new ModelConfig();
-		tempModelConfig.setDictionaryPath(".");
-		tempModelConfig.setTcPath(".");
-		tempModelConfig.setTemplatePath("");
-		tempModelConfig.setTcExportPath(".");
-		configDao.setConfiguration(new TCConfig("temp", List.of(tempModelConfig)));
-		
-		return new DaoConfigs() {
-			@Override
-			public ConfigDao configDao() {
-				return configDao;
-			}
 
-			@Override
-			public ModelDao modelDao() {
-				return modelDao;
-			}
-		};
-	}
+        final var tempModelConfig = new ModelConfig();
+        tempModelConfig.setDictionaryPath(".");
+        tempModelConfig.setTcPath(".");
+        tempModelConfig.setTemplatePath("");
+        tempModelConfig.setTcExportPath(".");
+        configDao.setConfiguration(new TCConfig("temp", List.of(tempModelConfig)));
+
+        return new DaoConfigs() {
+            @Override
+            public ConfigDao configDao() {
+                return configDao;
+            }
+
+            @Override
+            public ModelDao modelDao() {
+                return modelDao;
+            }
+        };
+    }
 
 }

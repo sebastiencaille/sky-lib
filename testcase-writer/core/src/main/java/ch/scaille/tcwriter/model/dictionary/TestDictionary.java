@@ -113,7 +113,6 @@ public class TestDictionary {
 
 
     public String template() {
-        // TODO Search by tag
         return JavaExt.firstNonNull(getExplicitTemplate(), getMetadata().getTransientId(), "default") + "-java.template";
     }
 

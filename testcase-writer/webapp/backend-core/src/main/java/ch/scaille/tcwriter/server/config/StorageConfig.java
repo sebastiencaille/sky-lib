@@ -39,18 +39,18 @@ public class StorageConfig {
 	}
 
 	@Bean
-	IModelDao modelDao(DaoFactory daoFactory, ConfigDao configDao) {
-		return new ModelDao(daoFactory, configDao.getCurrentConfigProperty(), ModelDao::defaultDataHandlers);
+	IModelDao modelDao(DaoFactory daoFactory, ConfigDao configDao, DaoFactory.IDataSourceFactory fsDataSource) {
+		return new ModelDao(daoFactory, configDao.getCurrentConfigProperty(), fsDataSource, ModelDao::defaultDataHandlers);
 	}
 
 	@Bean
-	IDictionaryDao dictionaryDao(IModelDao modelDao, DaoFactory.FsDsFactory fsDsFactory) {
-		return new DictionaryDao(modelDao, fsDsFactory);
+	IDictionaryDao dictionaryDao(IModelDao modelDao) {
+		return new DictionaryDao(modelDao);
 	}
 
 	@Bean
-	ITestCaseDao testCaseDao(IModelDao modelDao, DaoFactory.FsDsFactory fsDsFactory) {
-		return new TestCaseDao(modelDao, fsDsFactory);
+	ITestCaseDao testCaseDao(IModelDao modelDao) {
+		return new TestCaseDao(modelDao);
 	}
 
 	@Bean

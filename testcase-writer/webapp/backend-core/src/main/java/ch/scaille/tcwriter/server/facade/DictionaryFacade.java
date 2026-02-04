@@ -11,7 +11,7 @@ public class DictionaryFacade extends AbstractFacade {
 	}
 
 	public List<ch.scaille.tcwriter.model.Metadata> listAll() {
-		return dictionaryDao.listAll();
+		return dictionaryDao.listAll(null);
 	}
 	
 	public ch.scaille.tcwriter.model.dictionary.TestDictionary load(String dictionaryId) {

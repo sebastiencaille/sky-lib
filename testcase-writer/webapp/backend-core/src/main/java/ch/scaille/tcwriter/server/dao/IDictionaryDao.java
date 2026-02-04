@@ -8,9 +8,9 @@ import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 
 public interface IDictionaryDao {
 
-	List<Metadata> listAll();
+    List<Metadata> listAll(Metadata testMetadata);
 
-	Metadata loadMetadata(String dictionaryId);
+    Metadata loadMetadata(String dictionaryId);
 
 	TestDictionary load(String dictionaryId);
 	

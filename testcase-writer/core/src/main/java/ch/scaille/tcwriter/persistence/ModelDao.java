@@ -2,7 +2,6 @@ package ch.scaille.tcwriter.persistence;
 
 import static ch.scaille.util.persistence.StorageRTException.uncheck;
 
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -27,7 +26,7 @@ import ch.scaille.util.persistence.handlers.TextStorageHandler;
 
 public class ModelDao implements IModelDao {
 
-    public static StorageDataHandlerRegistry defaultDataHandlers(IModelDao modelDao) {
+        public static StorageDataHandlerRegistry defaultDataHandlers(IModelDao modelDao) {
         final var modelSerDeserializerRegistry = new StorageDataHandlerRegistry(new YamlModelDataHandler(modelDao));
         modelSerDeserializerRegistry.register(new JsonModelDataHandler(modelDao));
         modelSerDeserializerRegistry.register(new TextStorageHandler());
@@ -50,6 +49,9 @@ public class ModelDao implements IModelDao {
 
     private final DaoFactory daoFactory;
 
+    protected final MetadataCacheDao dictionaryMetadataCache;
+    protected final MetadataCacheDao testcaseMetadataCache;
+
     protected IDao<TestDictionary> dictionaryRepo;
 
     protected IDao<TestCase> testCaseRepo;
@@ -59,11 +61,14 @@ public class ModelDao implements IModelDao {
     protected IDao<String> testCaseCodeRepo;
 
     public ModelDao(DaoFactory daoFactory, ObjectProperty<TCConfig> config,
+                    DaoFactory.IDataSourceFactory cacheDsFactory,
                     Function<IModelDao, StorageDataHandlerRegistry> serDeserializerRegistry) {
         this.daoFactory = daoFactory;
         this.config = config;
         this.serDeserializerRegistry = serDeserializerRegistry.apply(this);
         this.config.listen(this::reload);
+        this.dictionaryMetadataCache = new MetadataCacheDao("Dictionary", cacheDsFactory);
+        this.testcaseMetadataCache = new MetadataCacheDao("TestCase", cacheDsFactory);
         reload(this.config.getValue());
     }
 
@@ -82,13 +87,18 @@ public class ModelDao implements IModelDao {
     }
 
     @Override
-    public List<Metadata> listDictionaries() {
-        return uncheck("Listing of dictionaries",
-                () -> dictionaryRepo.list()
-                        .map(f ->
-                                readTestDictionary(f.getLocator())
-                                        .orElseThrow(() -> new IllegalStateException("Listed Dictionary not found"))
-                                        .getMetadata()).toList());
+    public Metadata loadDictionaryMetadata(String locator) {
+        return  dictionaryMetadataCache.loadMetadata(locator,
+                l -> readTestDictionary(l).map(TestDictionary::getMetadata).orElse(null));
+    }
+
+    @Override
+    public List<Metadata> listDictionaries(Metadata filter) {
+        return uncheck("Unable to load dictionary", () -> dictionaryRepo.list()
+                .map(f -> loadDictionaryMetadata(f.getLocator()))
+                .filter(metadata -> metadata == null || filter == null ||
+                        filter.matches(metadata))
+                .toList());
     }
 
     @Override
@@ -114,10 +124,16 @@ public class ModelDao implements IModelDao {
     }
 
     @Override
-    public List<Metadata> listTestCases(final Metadata dictionary, Function<String, Metadata> metadataLoader) {
+    public Metadata loadTestCaseMetadata(String locator) {
+        return  testcaseMetadataCache.loadMetadata(locator,
+                l -> readTestDictionary(l).map(TestDictionary::getMetadata).orElse(null));
+    }
+
+    @Override
+    public List<Metadata> listTestCases(final Metadata dictionary) {
         return uncheck("Unable to load test case", () -> testCaseRepo.list()
-                .map(f -> metadataLoader.apply(f.getLocator()))
-                .filter(tcMetadata -> tcMetadata != null &&
+                .map(f -> loadDictionaryMetadata(f.getLocator()))
+                .filter(tcMetadata -> tcMetadata == null || dictionary == null ||
                         tcMetadata.matches(dictionary))
                 .toList());
     }

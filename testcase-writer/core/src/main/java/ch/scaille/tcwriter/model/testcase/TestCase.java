@@ -39,6 +39,7 @@ public class TestCase {
     public TestCase(final String pkgAndClassName, final TestDictionary testDictionary) {
         this.pkgAndClassName = pkgAndClassName;
         this.dictionary = testDictionary;
+        this.metadata.getTags().add(testDictionary.getMetadata().getTransientId());
     }
 
     @Default

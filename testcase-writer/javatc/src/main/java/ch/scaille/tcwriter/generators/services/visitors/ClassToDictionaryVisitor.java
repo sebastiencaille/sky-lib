@@ -31,11 +31,11 @@ public class ClassToDictionaryVisitor {
 
 	private final Map<Class<?>, Set<Method>> apiClassIntrospectionCache = new HashMap<>();
 
-	private final TestDictionary dictionary = new TestDictionary();
+	private final TestDictionary dictionary;
 
-	public ClassToDictionaryVisitor(String classifier, Class<?>... classes) {
-		this.dictionary.getMetadata().getTags().add(classifier);
-		this.dictionary.getMetadata().setTransientId(classifier);
+	public ClassToDictionaryVisitor(String name, Class<?>... classes) {
+		dictionary = new TestDictionary(name);
+		this.dictionary.getMetadata().getTags().add(name);
 		Arrays.stream(classes).forEach(this::addClass);
 	}
 

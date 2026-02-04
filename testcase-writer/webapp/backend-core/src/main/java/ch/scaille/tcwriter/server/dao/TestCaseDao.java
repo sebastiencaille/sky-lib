@@ -1,13 +1,11 @@
 package ch.scaille.tcwriter.server.dao;
 
 import java.util.List;
-import java.util.Optional;
 
 import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.persistence.IModelDao;
-import ch.scaille.tcwriter.server.config.PersistenceConfig;
 import ch.scaille.util.persistence.DaoFactory;
 
 public class TestCaseDao extends AbstractDao implements ITestCaseDao {
@@ -26,7 +24,7 @@ public class TestCaseDao extends AbstractDao implements ITestCaseDao {
 
     @Override
     public Metadata loadMetadata(String testCaseName) {
-        return super.loadMetadata(testCaseName, locator -> load(locator, TestDictionary.NOT_SET).getMetadata()).get();
+        return super.loadMetadata(testCaseName, locator -> load(locator, TestDictionary.NOT_SET).getMetadata());
     }
 
     @Override

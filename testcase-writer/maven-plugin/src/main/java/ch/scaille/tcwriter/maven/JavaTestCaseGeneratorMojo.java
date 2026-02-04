@@ -40,7 +40,7 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
     @Parameter(property = "dictionaryFolder", defaultValue = "file:${project.testResources.testResource.directory}/dictionaries")
     private String dictionaryFolder;
 
-    @Parameter(property = "dictionary", defaultValue = "default")
+    @Parameter(property = "dictionary", required = false)
     private String dictionaryLocator;
 
     @Parameter(property = "testCases")
@@ -111,7 +111,8 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
                                   String tcFile,
                                   final ModelDao modelDao) throws TestCaseException {
         final var testcaseLocator = tcFile.split("\\.")[0];
-        final var testCase = modelDao.readTestCase(testcaseLocator, modelDao.readTestDictionary(dictionaryLocator)
+        // TODO list by tags
+        final var testCase = modelDao.readTestCase(testcaseLocator, modelDao.readTestDictionary(modelDao.listDictionaries().get(0).getTransientId())
                     .orElseThrow(() -> new RuntimeException("Unable to find dictionary: " + dictionaryLocator)))
                 .orElseThrow(() -> new RuntimeException("Unable to find test case: " + testcaseLocator));
         final var generationMetadata = new GenerationMetadata(JavaTestCaseGeneratorMojo.class,

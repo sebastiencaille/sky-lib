@@ -6,6 +6,7 @@ import ch.scaille.util.persistence.DaoFactory;
 import ch.scaille.util.persistence.IDao;
 import ch.scaille.util.persistence.StorageException;
 import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
+import lombok.Getter;
 import tools.jackson.databind.ObjectMapper;
 
 
@@ -17,40 +18,48 @@ import java.util.function.Supplier;
 
 public class AbstractDao {
 
+    @Getter
+    private static class MetadataMap {
+        private final Map<String, Metadata> metadataMap = new HashMap<>();
+    }
+
     private static final StorageDataHandlerRegistry REGISTRY =
             new StorageDataHandlerRegistry(new JsonStorageHandler(new ObjectMapper()));
 
-    private final IDao<Map> metadataDao;
-    private final Map<String, Metadata> metadataMap = new HashMap<>();
+    private final IDao<MetadataMap> metadataDao;
+    private final MetadataMap metadataCache;
 
     public AbstractDao(DaoFactory.IDataSourceFactory factory) {
-        this.metadataDao = factory.create(Map.class, this.getClass().getSimpleName(), REGISTRY);
+        this.metadataDao = factory.create(MetadataMap.class, this.getClass().getSimpleName(), REGISTRY);
+        MetadataMap loaded;
         try {
-            metadataMap.putAll(metadataDao.load(""));
+            loaded = metadataDao.load("");
         } catch (StorageException e) {
             // ignore;
+            loaded = new MetadataMap();
         }
+        metadataCache = loaded;
     }
 
-    public synchronized Optional<Metadata> putInCache(String locator, Metadata metadata) throws StorageException {
+    public synchronized Metadata putInCache(String locator, Metadata metadata) throws StorageException {
         if (metadata == null) {
-            return Optional.empty();
+            return null;
         }
-        metadataMap.put(locator, metadata);
-        metadataDao.saveOrUpdate("", (Map) metadataMap);
-        return Optional.of(metadata);
+        metadataCache.getMetadataMap().put(locator, metadata);
+        metadataDao.saveOrUpdate("", metadataCache);
+        return metadata;
     }
 
-    protected Optional<Metadata> loadMetadata(String locator, Function<String, Metadata> loader) {
+    protected Metadata loadMetadata(String locator, Function<String, Metadata> loader) {
         try {
-            final var cached = metadataMap.get(locator);
+            final var cached = metadataCache.getMetadataMap().get(locator);
             if (cached != null) {
-                return Optional.of(cached);
+                return cached;
             }
             return putInCache(locator, loader.apply(locator));
         } catch (StorageException e) {
             Logs.of(this).warning("Unable to save cache: " + e.getMessage());
-            return Optional.empty();
+            return null;
         }
     }
 

@@ -1,5 +1,6 @@
 package ch.scaille.tcwriter.persistence.handlers.serdeser;
 
+import ch.scaille.tcwriter.model.IdObject;
 import ch.scaille.tcwriter.model.dictionary.TestActor;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.testcase.TestCase;
@@ -103,10 +104,10 @@ public interface Deserializers {
             final var testCase = (TestCase) super.deserialize(p, ctxt);
             testCase.setDictionary((TestDictionary) ctxt.getAttribute(CONTEXT_DICTIONARY));
             final var references = (List<ExportReference<TestCase, ?>>) ctxt.getAttribute(CONTEXT_ALL_REFERENCES);
-            if (references != null) {
+            if (references != null && testCase.getDictionary().getMetadata().getTransientId() != null) {
                 references.forEach(e -> e.apply(testCase));
+                testCase.republishReferences();
             }
-            testCase.republishReferences();
             return testCase;
         }
     }

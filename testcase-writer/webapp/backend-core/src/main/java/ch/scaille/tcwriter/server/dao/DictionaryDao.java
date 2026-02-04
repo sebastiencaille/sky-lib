@@ -33,8 +33,7 @@ public class DictionaryDao extends AbstractDao implements IDictionaryDao {
         return super.loadMetadata(locator,
                         l -> modelDao.readTestDictionary(l)
                                 .map(TestDictionary::getMetadata)
-                                .orElse(null))
-                .orElse(null);
+                                .orElse(null));
     }
 
     @Override

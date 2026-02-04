@@ -24,10 +24,10 @@ public class TCWriterModel {
    private final ObjectProperty<TestDictionary> testDictionary;
 
 	public TCWriterModel(final IPropertiesGroup changeSupport) {
-		this.testCase = new ObjectProperty<>("TestCase", changeSupport, new TestCase("", new TestDictionary()));
+		this.testCase = new ObjectProperty<>("TestCase", changeSupport, new TestCase("", TestDictionary.NOT_SET));
 		this.selectedStep = new ObjectProperty<>("SelectedStep", changeSupport, null);
 		this.executionState = new ObjectProperty<>("ExecutionState", changeSupport, TestExecutionState.STOPPED);
-		this.testDictionary = new ObjectProperty<>("TestDictionary", changeSupport, new TestDictionary());
+		this.testDictionary = new ObjectProperty<>("TestDictionary", changeSupport, TestDictionary.NOT_SET);
 	}
 
 }

@@ -4,38 +4,35 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
 @Setter
 public class Metadata {
 
-    private String transientId = "";
+    @JsonIgnore
+    private String transientId = null;
 
-    @Getter
     private String description = "";
 
-    @Getter
     private LocalDateTime creationDate;
 
-    @Getter
     private Set<String> tags = new HashSet<>();
 
     public Metadata() {
     }
 
-    public Metadata(String transientId, String description, Set<String> tags) {
+    @JsonCreator
+    public Metadata(String transientId, String description, LocalDateTime creationDate, Set<String> tags) {
         this.transientId = transientId;
         this.description = description;
+        this.creationDate = creationDate;
         if (tags != null) {
             this.tags.addAll(tags);
         }
-    }
-
-    @JsonIgnore
-    public String getTransientId() {
-        return transientId;
     }
 
     @Override
@@ -45,5 +42,9 @@ public class Metadata {
 
     public boolean matches(Metadata other) {
         return other != null && other.tags.stream().anyMatch(tags::contains);
+    }
+
+    public boolean matches(String other) {
+        return other != null && tags.contains(other);
     }
 }

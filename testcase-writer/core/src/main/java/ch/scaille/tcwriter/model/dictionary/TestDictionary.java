@@ -22,7 +22,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class TestDictionary {
 
-    public static final TestDictionary NOT_SET = new TestDictionary();
+    public static final TestDictionary NOT_SET = new TestDictionary(null);
     private static final TestObjectDescription NO_ID_DESCRIPTION = new TestObjectDescription("", "");
 
     private Metadata metadata = new Metadata();
@@ -40,7 +40,8 @@ public class TestDictionary {
 
     private String explicitTemplate;
 
-    public TestDictionary() {
+    public TestDictionary(String transientId) {
+        metadata.setTransientId(transientId);
         descriptions.put(IdObject.ID_NOT_SET, TestObjectDescription.NOT_SET);
     }
 

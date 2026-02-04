@@ -16,7 +16,6 @@ import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import lombok.Getter;
 import lombok.Setter;
 import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
 
 @NullMarked
 @Getter

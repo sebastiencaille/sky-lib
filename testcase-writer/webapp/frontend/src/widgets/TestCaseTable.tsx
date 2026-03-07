@@ -28,7 +28,6 @@ const createTestCaseStep = (dictionary: TestDictionary, step: TestStep, stepStat
 				<td className="human-readable" colSpan={5}>{step.humanReadable ?? '---'}</td>
 			</tr>
 			<tr>
-				<td></td>
 				<td>{TestCaseHelper.descriptionOf(dictionary, [step.actor])}</td>
 				<td>{TestCaseHelper.descriptionOf(dictionary, [step.action])}</td>
 				<td>{TestCaseHelper.descriptionOfParameter(dictionary, selector)}</td>

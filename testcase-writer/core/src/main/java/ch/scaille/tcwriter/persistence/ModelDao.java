@@ -102,13 +102,14 @@ public class ModelDao implements IModelDao {
     }
 
     @Override
-    public void writeTestDictionary(TestDictionary tm) {
-        var id = tm.getMetadata().getTransientId();
+    public void writeTestDictionary(TestDictionary dictionary) {
+        var id = dictionary.getMetadata().getTransientId();
         if (id.isEmpty()) {
             id = "default";
         }
         final var idSafe = id;
-        uncheck("Writing of test dictionary", () -> dictionaryRepo.saveOrUpdate(idSafe, tm));
+        uncheck("Writing of test dictionary", () -> dictionaryRepo.saveOrUpdate(idSafe, dictionary));
+        uncheck("Updating metadata", () -> testcaseMetadataCache.putInCache(idSafe, dictionary.getMetadata()));
     }
 
     @Override
@@ -125,7 +126,7 @@ public class ModelDao implements IModelDao {
 
     @Override
     public Metadata loadTestCaseMetadata(String locator) {
-        return  testcaseMetadataCache.loadMetadata(locator,
+        return testcaseMetadataCache.loadMetadata(locator,
                 l -> readTestCase(l, TestDictionary.NOT_SET).map(TestCase::getMetadata).orElse(null));
     }
 
@@ -153,6 +154,7 @@ public class ModelDao implements IModelDao {
     @Override
     public void writeTestCase(String locator, TestCase tc) {
         uncheck("Writing of test case", () -> testCaseRepo.saveOrUpdate(locator, tc));
+        uncheck("Updating metadata", () -> testcaseMetadataCache.putInCache(locator, tc.getMetadata()));
     }
 
     @Override

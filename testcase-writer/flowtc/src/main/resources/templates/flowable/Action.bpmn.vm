@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:design="http://flowable.org/design" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://flowable.org/test" exporter="Flowable Design" exporterVersion="2025.2.03" design:palette="flowable-work-process-palette" design:template="true">
+  <process id="${action.key}" name="${action.name}" isExecutable="true" flowable:candidateStarterGroups="flowableUser">
+    <extensionElements>
+      <flowable:security-policy-model><![CDATA[TCW-SEC-001]]></flowable:security-policy-model>
+      <design:stencilid><![CDATA[BPMNDiagram]]></design:stencilid>
+      <design:creationdate><![CDATA[2026-02-26T18:52:46.008Z]]></design:creationdate>
+      <design:modificationdate><![CDATA[2026-02-28T00:26:31.899Z]]></design:modificationdate>
+      <design:securitypolicy><![CDATA[TCW-SEC-001]]></design:securitypolicy>
+    </extensionElements>
+    <userTask id="FormTask_2" name="${action.name}" flowable:assignee="#[[$]]#{initiator}" flowable:formKey="${action.formKey}" flowable:formFieldValidation="false">
+      <extensionElements>
+        <flowable:executionListener event="start" expression="#[[$]]#{self.setVariable('testStep', root.testCase.get('flowSteps').optional(bpmn:getBusinessKey()).orElse(json:object()))}"></flowable:executionListener>
+        <flowable:task-candidates-type><![CDATA[all]]></flowable:task-candidates-type>
+        <design:stencilid><![CDATA[FormTask]]></design:stencilid>
+        <design:stencilsuperid><![CDATA[Task]]></design:stencilsuperid>
+      </extensionElements>
+    </userTask>
+    <scriptTask id="ScriptTask_12" name="Consolidate" scriptFormat="javascript" flowable:resultVariable="consolidatedStep" flowable:autoStoreVariables="false">
+      <extensionElements>
+        <flowable:in sourceExpression="#[[$]]#{self.getBusinessKey()}" target="businessKey"></flowable:in>
+        <flowable:in source="testStep" target="step"></flowable:in>
+        <flowable:in sourceExpression="#[[$]]#{testStep.param0}" target="param0"></flowable:in>
+        <flowable:in sourceExpression="#[[$]]#{testStep.param1}" target="param1"></flowable:in>
+        <flowable:in sourceExpression="#[[$]]#{root.testCase.steps}" target="testCaseSteps"></flowable:in>
+        <flowable:in sourceExpression="#[[$]]#{root.testCase.flowSteps}" target="testCaseFlowSteps"></flowable:in>
+        <flowable:executionListener event="end" expression="#[[$]]#{root.testCase.steps.add(consolidatedStep)}"></flowable:executionListener>
+        <flowable:executionListener event="end" expression="#[[$]]#{root.testCase.flowSteps.put(bpmn:getBusinessKey(), testStep)}"></flowable:executionListener>
+        <design:stencilid><![CDATA[ScriptTask]]></design:stencilid>
+        <design:stencilsuperid><![CDATA[Task]]></design:stencilsuperid>
+      </extensionElements>
+      <script><![CDATA[
+var params = [];
+#if( $param0 )
+var param0mappings = [];
+#foreach( $parameterMappingName in ${param0.parameterMappings.keySet()} )
+param0mappings['${parameterMappingName}'] = '${param0.parameterMappings.get($parameterMappingName)}';
+#end 
+      
+var tcwParam0 = {
+  	id: 'param0-' + businessKey,
+  	tcDataType: 'TestParameterValue',
+	apiParameterId: '${param0.testApiParameter}',
+#if ( ${param0.nature} == 'SimpleType' )
+    simpleValue: param0.get('simpleValue').asText(),
+#end
+  	testParameterFactoryRef: param0.get("factory").asText(),
+    complexTypeValues: {}
+};
+#if( ${param0.nature} == 'TEST_API' )
+var param0values = param0.get('values');
+if (param0values) {
+    param0values.properties().forEach(function (prop) {
+        var paramId = param0mappings[prop.getKey()];
+        var tcwParam0Param = {
+            id: paramId,
+            tcDataType: 'TestParameterValue',
+            // Get the types
+            apiParameterId: paramId,
+            testParameterFactoryRef: param0mappings[paramId],
+            simpleValue: prop.getValue().asText(),
+            complexTypeValues: {}
+        };
+        tcwParam0.complexTypeValues[tcwParam0Param.id] = tcwParam0Param;
+    });
+}
+#end
+params.push(tcwParam0);
+#end
+
+#if( $param1 )
+var param1mappings = [];
+#foreach( $parameterMappingName in ${param1.parameterMappings.keySet()} )
+param1mappings['${parameterMappingName}'] = '${param1.parameterMappings.get($parameterMappingName)}';
+#end
+
+var tcwParam1 = {
+  id: 'param1-' + businessKey,
+  tcDataType: 'TestParameterValue',
+  apiParameterId: '${param1.testApiParameter}',
+#if ( ${param1.nature} == 'SimpleType' )
+  simpleValue: param1.get('simpleValue').asText(),
+#end
+  testParameterFactoryRef: param1.get("factory").asText(),
+  complexTypeValues: {}
+};
+
+#if( ${param1.nature} == 'TEST_API' )
+var param1values = param1.get('values');
+if (param1values) {
+    param1values.properties().forEach(function (prop) {
+        var paramId = param1mappings[prop.getKey()];
+        var tcwParam1Param = {
+            id: paramId,
+            tcDataType: 'TestParameterValue',
+            // Get the types
+            apiParameterId: paramId,
+            testParameterFactoryRef: param1mappings[paramId],
+            simpleValue: prop.getValue().asText(),
+            complexTypeValues: {}
+        };
+        tcwParam1.complexTypeValues[tcwParam1Param.id] = tcwParam1Param;
+    });
+}
+#end
+params.push(tcwParam1);
+#end
+
+var consolidatedStep = {
+	roleRef: '${action.role}',
+    actorRef: step.get('actor').asText(),
+	actionRef: '${action.action}',
+	classifier: 'PREPARATION',
+	ordinal: testCaseSteps.size() + 1,
+    parametersValue: params,
+};
+
+flw.json.stringToJson(JSON.stringify(consolidatedStep))
+
+]]></script>
+    </scriptTask>
+    <startEvent id="startnoneevent1" flowable:initiator="initiator" flowable:formFieldValidation="false">
+      <extensionElements>
+        <flowable:work-actionForm-field-validation><![CDATA[false]]></flowable:work-actionForm-field-validation>
+        <design:stencilid><![CDATA[StartNoneEvent]]></design:stencilid>
+      </extensionElements>
+    </startEvent>
+    <endEvent id="EndNoneEvent_2">
+      <extensionElements>
+        <design:stencilid><![CDATA[EndNoneEvent]]></design:stencilid>
+      </extensionElements>
+    </endEvent>
+    <sequenceFlow id="SequenceFlow_10" sourceRef="FormTask_2" targetRef="ScriptTask_12">
+      <extensionElements>
+        <design:stencilid><![CDATA[SequenceFlow]]></design:stencilid>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="SequenceFlow_14" sourceRef="ScriptTask_12" targetRef="EndNoneEvent_2">
+      <extensionElements>
+        <design:stencilid><![CDATA[SequenceFlow]]></design:stencilid>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="SequenceFlow_13" sourceRef="startnoneevent1" targetRef="FormTask_2">
+      <extensionElements>
+        <design:stencilid><![CDATA[SequenceFlow]]></design:stencilid>
+      </extensionElements>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_TCW-SEARCH-WEB">
+    <bpmndi:BPMNPlane bpmnElement="TCW-SEARCH-WEB" id="BPMNPlane_TCW-SEARCH-WEB">
+      <bpmndi:BPMNShape bpmnElement="FormTask_2" id="BPMNShape_FormTask_2">
+        <omgdc:Bounds height="80.0" width="100.0" x="695.0" y="236.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ScriptTask_12" id="BPMNShape_ScriptTask_12">
+        <omgdc:Bounds height="80.0" width="100.0" x="968.0" y="236.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="startnoneevent1" id="BPMNShape_startnoneevent1">
+        <omgdc:Bounds height="30.0" width="30.0" x="559.0" y="261.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EndNoneEvent_2" id="BPMNShape_EndNoneEvent_2">
+        <omgdc:Bounds height="28.0" width="28.0" x="1343.0" y="262.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="SequenceFlow_13" id="BPMNEdge_SequenceFlow_13" flowable:sourceDockerX="15.0" flowable:sourceDockerY="15.0" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
+        <omgdi:waypoint x="589.0" y="276.0"></omgdi:waypoint>
+        <omgdi:waypoint x="695.0" y="276.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="SequenceFlow_14" id="BPMNEdge_SequenceFlow_14" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="14.0" flowable:targetDockerY="14.0">
+        <omgdi:waypoint x="1068.0" y="276.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1343.0" y="276.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="SequenceFlow_10" id="BPMNEdge_SequenceFlow_10" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
+        <omgdi:waypoint x="795.0" y="276.0"></omgdi:waypoint>
+        <omgdi:waypoint x="968.0" y="276.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

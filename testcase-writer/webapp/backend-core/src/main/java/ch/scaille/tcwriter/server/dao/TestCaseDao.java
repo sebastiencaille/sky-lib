@@ -6,10 +6,8 @@ import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.persistence.IModelDao;
-import ch.scaille.util.persistence.DaoFactory;
 
 public class TestCaseDao extends AbstractDao implements ITestCaseDao {
-
 
     public TestCaseDao(IModelDao modelDao) {
        super(modelDao);

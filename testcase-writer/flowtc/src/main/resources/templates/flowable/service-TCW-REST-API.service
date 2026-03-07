@@ -1,0 +1,39 @@
+{
+  "type": "REST",
+  "operations": [
+    {
+      "name": "Publish",
+      "key": "TCW-PUBLISH",
+      "inputParameters": [
+        {
+          "displayName": "Test Case",
+          "name": "testCase",
+          "type": "json",
+          "required": true
+        }
+      ],
+      "outputParameters": [],
+      "config": {
+        "method": "PUT",
+        "url": "testcase",
+        "bodyTemplateModel": {
+          "bodyTemplateTemplateModelKey": "TCW-BODY-JSON",
+          "bodyTemplateTemplateModelId": "TEMPLATE_MODEL-57f35662-fd63-11f0-bcda-5e37f42212fc"
+        },
+        "bodyTemplateModelSameDeployment": true
+      },
+      "type": "update"
+    }
+  ],
+  "config": {
+    "baseUrl": "http://localhost:9000/api/rest/v0/",
+    "headers": [
+      {
+        "name": "X-UserContext",
+        "value": ""
+      }
+    ]
+  },
+  "name": "TC Writer API",
+  "key": "TCW-REST-API"
+}

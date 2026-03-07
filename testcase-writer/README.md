@@ -105,7 +105,7 @@ customer.checkPackage(deliveredItem(), coffeeMachine());
 ```
 
 # Business expert test cases
-We can transform the dev's test case into a more readable form by using the annotations attached to the Roles/Actions/Selectors/Parameters   
+We can transform the dev's test case into a more readable actionForm by using the annotations attached to the Roles/Actions/Selectors/Parameters   
 
 | Actor          | Action                           | Selector    | Parameter        |
 |----------------|----------------------------------|-------------|------------------|

@@ -1,0 +1,159 @@
+info:
+  name: Update TC
+  type: http
+  seq: 1
+
+http:
+  method: PUT
+  url: http://localhost:9000/api/rest/v0/testcase
+  headers:
+    - name: "x-usercontext "
+      value: SimpleTest
+  body:
+    type: json
+    data: |-
+      {
+        "flowSteps": {
+          "search1": {
+            "actor": "customer",
+            "param0": {
+              "factory": "method-ch.scaille.tcwriter.examples.simple.selectors.BuyingLocationSelector.inLocalShop"
+            },
+            "param1": {
+              "factory": "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.coffeeMachine",
+              "values": {
+                "method_ch_scaille_tcwriter_examples_simple_dto_TestItem_setNumberOfItems": "1",
+                "method_ch_scaille_tcwriter_examples_simple_dto_TestItem_setISO": "yes",
+                "method_ch_scaille_tcwriter_examples_simple_dto_TestItem_setBrandName": "Bob"
+              }
+            }
+          },
+          "search2": {
+            "actor": "customer",
+            "param0": {
+              "factory": "method-ch.scaille.tcwriter.examples.simple.selectors.PackageDeliverySelector.deliveredItem"
+            },
+            "param1": {
+              "factory": "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.coffeeMachine",
+              "values": {
+                "method_ch_scaille_tcwriter_examples_simple_dto_TestItem_setNumberOfItems": "1",
+                "method_ch_scaille_tcwriter_examples_simple_dto_TestItem_setISO": "yes",
+                "method_ch_scaille_tcwriter_examples_simple_dto_TestItem_setBrandName": "Bob"
+              }
+            }
+          }
+        },
+        "steps": [
+          {
+            "roleRef": "role-ch.scaille.tcwriter.examples.simple.CustomerTestRole",
+            "actorRef": "customer",
+            "actionRef": "method-ch.scaille.tcwriter.examples.simple.CustomerTestRole.buy",
+            "classifier": "PREPARATION",
+            "ordinal": 1,
+            "parametersValue": [
+              {
+                "id": "param0-search1",
+                "tcDataType": "TestParameterValue",
+                "apiParameterId": "param-ch.scaille.tcwriter.examples.simple.CustomerTestRole.buy-0",
+                "testParameterFactoryRef": "method-ch.scaille.tcwriter.examples.simple.selectors.BuyingLocationSelector.inLocalShop",
+                "complexTypeValues": {}
+              },
+              {
+                "id": "param1-search1",
+                "tcDataType": "TestParameterValue",
+                "apiParameterId": "param-ch.scaille.tcwriter.examples.simple.CustomerTestRole.buy-1",
+                "testParameterFactoryRef": "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.coffeeMachine",
+                "complexTypeValues": {
+                  "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setNumberOfItems": {
+                    "id": "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setNumberOfItems",
+                    "tcDataType": "TestParameterValue",
+                    "apiParameterId": "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setNumberOfItems",
+                    "testParameterFactoryRef": "int",
+                    "simpleValue": "1",
+                    "complexTypeValues": {}
+                  },
+                  "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setISO": {
+                    "id": "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setISO",
+                    "tcDataType": "TestParameterValue",
+                    "apiParameterId": "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setISO",
+                    "testParameterFactoryRef": "boolean",
+                    "simpleValue": "true",
+                    "complexTypeValues": {}
+                  },
+                  "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setBrandName": {
+                    "id": "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setBrandName",
+                    "tcDataType": "TestParameterValue",
+                    "apiParameterId": "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setBrandName",
+                    "testParameterFactoryRef": "java.lang.String",
+                    "simpleValue": "Bob",
+                    "complexTypeValues": {}
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "roleRef": "role-ch.scaille.tcwriter.examples.simple.CustomerTestRole",
+            "actorRef": "customer",
+            "actionRef": "method-ch.scaille.tcwriter.examples.simple.CustomerTestRole.checkPackage",
+            "classifier": "PREPARATION",
+            "ordinal": 2,
+            "parametersValue": [
+              {
+                "id": "param0-search2",
+                "tcDataType": "TestParameterValue",
+                "apiParameterId": "param-ch.scaille.tcwriter.examples.simple.CustomerTestRole.checkPackage-0",
+                "testParameterFactoryRef": "method-ch.scaille.tcwriter.examples.simple.selectors.PackageDeliverySelector.deliveredItem",
+                "complexTypeValues": {}
+              },
+              {
+                "id": "param1-search2",
+                "tcDataType": "TestParameterValue",
+                "apiParameterId": "param-ch.scaille.tcwriter.examples.simple.CustomerTestRole.checkPackage-1",
+                "testParameterFactoryRef": "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.coffeeMachine",
+                "complexTypeValues": {
+                  "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setNumberOfItems": {
+                    "id": "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setNumberOfItems",
+                    "tcDataType": "TestParameterValue",
+                    "apiParameterId": "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setNumberOfItems",
+                    "testParameterFactoryRef": "int",
+                    "simpleValue": "1",
+                    "complexTypeValues": {}
+                  },
+                  "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setISO": {
+                    "id": "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setISO",
+                    "tcDataType": "TestParameterValue",
+                    "apiParameterId": "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setISO",
+                    "testParameterFactoryRef": "boolean",
+                    "simpleValue": "true",
+                    "complexTypeValues": {}
+                  },
+                  "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setBrandName": {
+                    "id": "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setBrandName",
+                    "tcDataType": "TestParameterValue",
+                    "apiParameterId": "method-ch.scaille.tcwriter.examples.simple.dto.TestItem.setBrandName",
+                    "testParameterFactoryRef": "java.lang.String",
+                    "simpleValue": "Bob",
+                    "complexTypeValues": {}
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "pkgAndClassName": "ch.scaille.tcwriter.flowableTest",
+        "metadata": {
+          "tags": [
+            "SimpleTest"
+          ],
+          "description": "A test generated using Flowable",
+          "transientId": "FlowableTest1"
+        }
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

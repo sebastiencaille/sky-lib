@@ -9,3 +9,4 @@ target/
 logs/
 .idea
 *.versionsBackup
+/testcase-writer/maven-plugin/Cache/

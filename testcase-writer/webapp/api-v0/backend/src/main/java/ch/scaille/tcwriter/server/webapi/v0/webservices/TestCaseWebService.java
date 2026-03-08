@@ -13,14 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import ch.scaille.tcwriter.generated.api.model.v0.ExportType;
 import ch.scaille.tcwriter.generated.api.model.v0.Metadata;
 import ch.scaille.tcwriter.generated.api.model.v0.TestCase;
 import ch.scaille.tcwriter.server.WebConstants;
-import ch.scaille.tcwriter.server.exceptions.WebRTException;
 import ch.scaille.tcwriter.server.facade.TestCaseFacade;
 import ch.scaille.tcwriter.server.facade.WebFeedbackFacade;
 import ch.scaille.tcwriter.server.services.SessionManager;
@@ -28,6 +24,7 @@ import ch.scaille.tcwriter.server.webapi.v0.mappers.MetadataMapper;
 import ch.scaille.tcwriter.server.webapi.v0.mappers.TestCaseMapper;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import tools.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping("${openapi.testCaseServer.base-path:rest/v0}")
@@ -40,7 +37,10 @@ public class TestCaseWebService implements TestcaseApi {
 	private final SessionManager sessionAccessor;
 
 	private final WebFeedbackFacade webFeedbackFacade;
+
 	private final NativeWebRequest request;
+
+	private final ObjectMapper websocketMapper = new ObjectMapper();
 
 	public TestCaseWebService(SessionManager sessionAccessor,
 							  TestCaseFacade testCaseFacade,
@@ -106,17 +106,12 @@ public class TestCaseWebService implements TestcaseApi {
 	}
 
 	private ResponseEntity<String> exportHumanReadable(ch.scaille.tcwriter.model.testcase.TestCase tc) {
-		try {
-			final var headers = new org.springframework.http.HttpHeaders();
-			headers.setContentType(MediaType.APPLICATION_JSON);
-			return new ResponseEntity<>(
-					new ObjectMapper().writeValueAsString(testCaseFacade.computeHumanReadableTexts(tc, tc.getSteps())),
-					headers, HttpStatus.OK);
-		} catch (JsonProcessingException e) {
-			throw new WebRTException(e);
-		}
-
-	}
+        final var headers = new org.springframework.http.HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<>(
+                websocketMapper.writeValueAsString(testCaseFacade.computeHumanReadableTexts(tc, tc.getSteps())),
+                headers, HttpStatus.OK);
+    }
 
 	private ResponseEntity<String> exportJava(ch.scaille.tcwriter.model.testcase.TestCase tc) {
 		var headers = new org.springframework.http.HttpHeaders();

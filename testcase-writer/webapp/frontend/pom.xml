@@ -9,6 +9,9 @@
 	</parent>
 	<artifactId>testcase-writer-webapp-frontend</artifactId>
 	<packaging>war</packaging>
+	<properties>
+		<project.build.directory>node_modules</project.build.directory>
+	</properties>
 	<build>
 		<plugins>
 			<plugin>

@@ -28,7 +28,7 @@ public class MetadataCacheDao {
     private final MetadataCache metadataCache;
 
     public MetadataCacheDao(String cacheName, DaoFactory.IDataSourceFactory cacheDsFactory) {
-        this.metadataDao = cacheDsFactory.create(MetadataCache.class, "Cache-" + cacheName, REGISTRY);
+        this.metadataDao = cacheDsFactory.create(MetadataCache.class, "Cache/Cache-" + cacheName, REGISTRY);
         MetadataCache loaded;
         try {
             loaded = metadataDao.load("cache.json");

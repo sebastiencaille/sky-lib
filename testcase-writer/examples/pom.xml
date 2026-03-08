@@ -39,18 +39,14 @@
 						<id>generate-tests</id>
 						<phase>generate-test-sources</phase>
 						<goals>
-							<goal>exec</goal>
+							<goal>java</goal>
 						</goals>
+
+						<configuration>
+							<mainClass>ch.scaille.tcwriter.examples.JavaTestGenerator</mainClass>
+						</configuration>
 					</execution>
 				</executions>
-				<configuration>
-					<executable>${java.home}/bin/java</executable>
-					<arguments>
-						<argument>-classpath</argument>
-						<classpath />
-						<argument>ch.scaille.tcwriter.examples.JavaTestGenerator</argument>
-					</arguments>
-				</configuration>
 			</plugin>
 			<!--plugin>
 				<groupId>ch.scaille.tcwriter</groupId>

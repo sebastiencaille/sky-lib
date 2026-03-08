@@ -16,10 +16,6 @@
 			<artifactId>testcase-writer-webapp-api-validators</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.openapitools</groupId>
-			<artifactId>jackson-databind-nullable</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>jakarta.validation</groupId>
 			<artifactId>jakarta.validation-api</artifactId>
 		</dependency>
@@ -30,6 +26,15 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+		</dependency>
+		<!-- Source: https://mvnrepository.com/artifact/org.openapitools/jackson-databind-nullable -->
+		<dependency>
+		    <groupId>org.openapitools</groupId>
+		    <artifactId>jackson-databind-nullable</artifactId>
 		</dependency>
 		<!--
 		https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations -->
@@ -51,6 +56,11 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
+							<additionalProperties>
+								<useJackson3>true</useJackson3>
+								<useSpringBoot4>true</useSpringBoot4>
+							</additionalProperties>
+dd
 							<generateApis>false</generateApis>
 							<templateDirectory>
 								${project.basedir}/../openapi/templates

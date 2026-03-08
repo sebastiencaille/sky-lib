@@ -18,17 +18,17 @@
     "reactjs-popup": "^2.0.6"
   },
   "devDependencies": {
-    "@eslint/js": "^9.17.0",
+    "@eslint/js": "^9.0.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react-swc": "^4.0.0",
     "esbuild": "^0.27.0",
-    "eslint": "^9.17.0",
+    "eslint": "^9.0.0",
     "eslint-plugin-react-hooks": "^7.0.0",
     "eslint-plugin-react-refresh": "^0.4.16",
     "globals": "^17",
     "typescript": "~5.9",
-    "typescript-eslint": "^8.18.1",
-    "vite": "^7.0.0"
+    "typescript-eslint": "^8.57.1",
+    "vite": "^8.0.0"
   }
 }

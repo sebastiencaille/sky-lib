@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>4.0.2</version>
+		<version>4.0.5</version>
 		<relativePath />
 	</parent>
 
@@ -20,26 +20,25 @@
 
 	<properties>
 		<aspectj.version>1.9.25.1</aspectj.version>
-		<spring-session.version>4.0.1</spring-session.version>
-		<jackson-bom.version>3.0.4</jackson-bom.version>
-		<jackson-databind-nullable.version>0.2.9</jackson-databind-nullable.version>
+		<spring-session.version>4.0.2</spring-session.version>
+		<jackson-bom.version>3.1.0</jackson-bom.version>
 		<guava.version>33.5.0-jre</guava.version>
 		<logback.version>1.5.32</logback.version>
-		<mapstruct.version>1.6.3</mapstruct.version>
+		<mapstruct.version>1.7.0.Beta1</mapstruct.version>
 		<!--hibernate.version>7.1.7.Final</hibernate.version-->
 		<hibernate-validator.version>9.1.0.Final</hibernate-validator.version>
 
-		<swagger-parser.version>2.1.37</swagger-parser.version>
-		<swagger.version>2.2.42</swagger.version>
+		<swagger-parser.version>2.1.39</swagger-parser.version>
+		<swagger.version>2.2.45</swagger.version>
 
-		<undertow.version>2.4.0.Alpha1</undertow.version>
-		<liquibase.version>5.0.1</liquibase.version>
+		<undertow.version>2.4.0.RC4</undertow.version>
+		<liquibase.version>5.0.2</liquibase.version>
 
-		<mockito.version>5.21.0</mockito.version>
+		<mockito.version>5.23.0</mockito.version>
 		<junit-jupiter.version>6.0.3</junit-jupiter.version>
 		<junit.version>4.13.2</junit.version>
 		<junit-platform-console-standalone.version>6.0.3</junit-platform-console-standalone.version>
-		<selenium.version>4.40.0</selenium.version>
+		<selenium.version>4.41.0</selenium.version>
 		<h2.version>2.4.240</h2.version>
 
 		<coverage.temp>${java.io.tmpdir}/coverage/${basedir}</coverage.temp>
@@ -48,7 +47,7 @@
 		<build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
 		<maven-assembly-plugin.version>3.8.0</maven-assembly-plugin.version>
 		<maven-help-plugin.version>3.5.1</maven-help-plugin.version>
-		<maven-resources-plugin.version>3.4.0</maven-resources-plugin.version>
+		<maven-resources-plugin.version>3.5.0</maven-resources-plugin.version>
 		<maven-source-plugin.version>3.4.0</maven-source-plugin.version>
 		<maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
 		<maven-jar-plugin.version>3.5.0</maven-jar-plugin.version>
@@ -57,23 +56,24 @@
 		<maven-dependency-plugin.version>3.10.0</maven-dependency-plugin.version>
 		<maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
 		<maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
-		<maven-shade-plugin.version>3.6.1</maven-shade-plugin.version>
+		<maven-shade-plugin.version>3.6.2</maven-shade-plugin.version>
 		<versions-maven-plugin.version>2.21.0</versions-maven-plugin.version>
 		<flatten-maven-plugin.version>1.7.3</flatten-maven-plugin.version>
 
-		<maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
-		<maven-failsafe-plugin.version>3.5.4</maven-failsafe-plugin.version>
+		<maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
+		<maven-failsafe-plugin.version>3.5.5</maven-failsafe-plugin.version>
 
 		<sonar-maven-plugin.version>5.5.0.6356</sonar-maven-plugin.version>
 
 		<maven-exec-plugin.version>3.6.3</maven-exec-plugin.version>
-		<openapi-generator-maven-plugin.version>7.20.0</openapi-generator-maven-plugin.version>
+		<openapi-generator-maven-plugin.version>7.21.0</openapi-generator-maven-plugin.version>
 		<jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
 
 	</properties>
 
 	<dependencyManagement>
 		<dependencies>
+
 			<dependency>
 				<groupId>org.springframework.session</groupId>
 				<artifactId>spring-session-bom</artifactId>
@@ -85,11 +85,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-session-jdbc</artifactId>
 				<version>${spring-session.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openapitools</groupId>
-				<artifactId>jackson-databind-nullable</artifactId>
-				<version>${jackson-databind-nullable.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.guava</groupId>
@@ -186,7 +181,18 @@
 				<artifactId>undertow-core</artifactId>
 				<version>${undertow.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-annotations</artifactId>
+				<version>2.21</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.openapitools</groupId>
+			    <artifactId>jackson-databind-nullable</artifactId>
+			    <version>0.2.10</version>
+			</dependency>
 		</dependencies>
+
 	</dependencyManagement>
 
 	<build>

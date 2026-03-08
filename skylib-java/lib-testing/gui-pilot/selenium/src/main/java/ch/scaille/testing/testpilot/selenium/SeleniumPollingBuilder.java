@@ -7,7 +7,6 @@ import java.util.function.Predicate;
 
 import ch.scaille.util.helpers.JavaExt;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.AutoClose;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DomMutation;
 import org.openqa.selenium.support.ui.ExpectedCondition;

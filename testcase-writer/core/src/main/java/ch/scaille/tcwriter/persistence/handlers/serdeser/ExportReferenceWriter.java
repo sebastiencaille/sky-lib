@@ -27,7 +27,7 @@ public class ExportReferenceWriter<T> extends VirtualBeanPropertyWriter {
     }
 
     @Override
-    protected Object value(Object bean, JsonGenerator g, SerializationContext context) throws Exception {
+    protected Object value(Object bean, JsonGenerator g, SerializationContext context) {
         return new ExportReference<>(null, handler.exporter().apply((T) bean), null);
     }
 

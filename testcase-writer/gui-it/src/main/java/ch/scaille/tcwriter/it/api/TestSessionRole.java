@@ -1,7 +1,6 @@
 package ch.scaille.tcwriter.it.api;
 
 import ch.scaille.tcwriter.annotations.TCAction;
-import ch.scaille.tcwriter.annotations.TCActors;
 import ch.scaille.tcwriter.annotations.TCApi;
 import ch.scaille.tcwriter.annotations.TCCheck;
 import ch.scaille.tcwriter.annotations.TCRole;

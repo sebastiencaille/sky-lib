@@ -45,14 +45,7 @@ public class DaoFactory {
 
 	}
 
-	@Getter
-	public static class FsDsFactory implements IDataSourceFactory {
-
-		private final Path baseFolder;
-
-		public FsDsFactory(Path baseFolder) {
-			this.baseFolder = baseFolder;
-		}
+	public record FsDsFactory(Path baseFolder) implements IDataSourceFactory {
 
 		@Override
 		public boolean matches(String locator) {

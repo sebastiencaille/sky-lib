@@ -1,7 +1,5 @@
 package ch.scaille.util.persistence.handlers;
 
-import java.io.IOException;
-
 /**
  * Handles the encoding/decoding of data, per MimeType or extension 
  */
@@ -16,14 +14,14 @@ public interface IStorageDataHandler {
 	/**
 	 * TODO Use streams
 	 */
-	<T> String encode(Class<T> targetType, T value) throws IOException;
+	<T> String encode(Class<T> targetType, T value);
 
 	/**
 	 * TODO Use streams
 	 */
-	default <T> T decode(String value, Class<T> targetType) throws IOException {
+	default <T> T decode(String value, Class<T> targetType) {
 		return decode(value, targetType, null);
 	}
 
-	<T> T decode(String value, Class<T> targetType, T template) throws IOException;
+	<T> T decode(String value, Class<T> targetType, T template);
 }

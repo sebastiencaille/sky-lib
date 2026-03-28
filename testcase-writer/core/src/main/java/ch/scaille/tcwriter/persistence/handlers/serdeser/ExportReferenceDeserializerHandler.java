@@ -1,6 +1,5 @@
 package ch.scaille.tcwriter.persistence.handlers.serdeser;
 
-import ch.scaille.tcwriter.model.NamedObject;
 import tools.jackson.core.JacksonException;
 import tools.jackson.core.JsonParser;
 import tools.jackson.databind.DeserializationContext;

@@ -12,7 +12,6 @@ import ch.scaille.tcwriter.annotations.TCRole;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import javax.xml.xpath.XPath;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 

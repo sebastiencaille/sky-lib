@@ -97,7 +97,7 @@ public interface TestCaseMapper extends MetadataMapper {
     @Mapping(target = "step", ignore = true)
     ch.scaille.tcwriter.model.testcase.TestReference convertToModelNoRef(TestReference dto,
                                                                          @Context List<ExportReference<ch.scaille.tcwriter.model.testcase.TestCase, ?>> exportReferences);
-    
+
     default ch.scaille.tcwriter.model.testcase.TestReference convertToModel(@Nullable TestReference dto,
                                                                             @Context List<ExportReference<ch.scaille.tcwriter.model.testcase.TestCase, ?>> exportReferences) {
         if (dto == null) {

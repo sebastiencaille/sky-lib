@@ -20,8 +20,7 @@
 
 	<properties>
 		<aspectj.version>1.9.25.1</aspectj.version>
-		<spring-session.version>4.0.2</spring-session.version>
-		<jackson-bom.version>3.1.0</jackson-bom.version>
+		<jackson-bom.version>3.1.1</jackson-bom.version>
 		<guava.version>33.5.0-jre</guava.version>
 		<logback.version>1.5.32</logback.version>
 		<mapstruct.version>1.7.0.Beta1</mapstruct.version>
@@ -29,7 +28,7 @@
 		<hibernate-validator.version>9.1.0.Final</hibernate-validator.version>
 
 		<swagger-parser.version>2.1.39</swagger-parser.version>
-		<swagger.version>2.2.45</swagger.version>
+		<swagger.version>2.2.46</swagger.version>
 
 		<undertow.version>2.4.0.RC4</undertow.version>
 		<liquibase.version>5.0.2</liquibase.version>
@@ -73,19 +72,6 @@
 
 	<dependencyManagement>
 		<dependencies>
-
-			<dependency>
-				<groupId>org.springframework.session</groupId>
-				<artifactId>spring-session-bom</artifactId>
-				<version>${spring-session.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-session-jdbc</artifactId>
-				<version>${spring-session.version}</version>
-			</dependency>
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>

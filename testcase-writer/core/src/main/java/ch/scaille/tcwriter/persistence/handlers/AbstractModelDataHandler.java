@@ -1,7 +1,6 @@
 package ch.scaille.tcwriter.persistence.handlers;
 
 import ch.scaille.tcwriter.model.testcase.TestCase;
-import ch.scaille.tcwriter.persistence.IModelDao;
 import ch.scaille.tcwriter.persistence.handlers.serdeser.Deserializers;
 import ch.scaille.tcwriter.persistence.handlers.serdeser.ExportReferenceDeserializerHandler;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
@@ -23,13 +22,11 @@ public abstract class AbstractModelDataHandler implements IStorageDataHandler {
     protected static final String JSON_EXT_1 = "json";
     public static final String JSON_MIME_TYPE = "application/json";
 
-    private final IModelDao dao;
     protected final ObjectMapper mapper;
 
     private final DeserializationProblemHandler referenceHandler = new ExportReferenceDeserializerHandler();
 
-    protected AbstractModelDataHandler(IModelDao dao, ObjectMapper mapper) {
-        this.dao = dao;
+    protected AbstractModelDataHandler(ObjectMapper mapper) {
         this.mapper = mapper;
     }
 

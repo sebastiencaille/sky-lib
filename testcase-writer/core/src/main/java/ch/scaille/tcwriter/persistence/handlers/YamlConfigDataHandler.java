@@ -6,7 +6,7 @@ import tools.jackson.dataformat.yaml.YAMLWriteFeature;
 public class YamlConfigDataHandler extends AbstractModelDataHandler {
 
 	public YamlConfigDataHandler() {
-		super(null, configure(YAMLMapper.builder()
+		super(configure(YAMLMapper.builder()
 				.configure(YAMLWriteFeature.USE_NATIVE_OBJECT_ID, true))
 				.build());
 	}

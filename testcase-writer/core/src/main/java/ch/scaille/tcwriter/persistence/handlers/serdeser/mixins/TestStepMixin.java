@@ -38,5 +38,5 @@ public class TestStepMixin {
     public static final ReferenceHandler<TestCase, TestStep> ACTION_REF_HANDLER =
             new ReferenceHandler<>(TestStep.class, ACTION_REF,
                     testStep -> testStep.getAction().getId(),
-                    (testCase, testStep, reference) -> testStep.setAction(Objects.requireNonNull(testStep.getRole().getAction(reference), reference)));
+                    (_, testStep, reference) -> testStep.setAction(Objects.requireNonNull(testStep.getRole().getAction(reference), reference)));
 }

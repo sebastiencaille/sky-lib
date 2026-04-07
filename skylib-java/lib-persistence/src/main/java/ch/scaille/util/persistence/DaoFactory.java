@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 
 import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
-import lombok.Getter;
 
 /**
  * Factory responsible for creating the DAO, which is turning Resources loaded by

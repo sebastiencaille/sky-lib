@@ -7,7 +7,7 @@ import tools.jackson.dataformat.yaml.YAMLMapper;
 public class YamlModelDataHandler extends AbstractModelDataHandler {
 
 	public YamlModelDataHandler(IModelDao dao) {
-		super(dao, configure(YAMLMapper.builder()
+		super(configure(YAMLMapper.builder()
 				.addModule(Deserializers.TCWRITER_MODULE))
 				.build());
 	}

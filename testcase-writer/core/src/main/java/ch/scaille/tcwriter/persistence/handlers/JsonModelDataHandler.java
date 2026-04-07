@@ -10,7 +10,7 @@ import tools.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 public class JsonModelDataHandler extends AbstractModelDataHandler {
 
     public JsonModelDataHandler(IModelDao dao) {
-        super(dao, configure(JsonMapper.builder()
+        super(configure(JsonMapper.builder()
                 .activateDefaultTyping(BasicPolymorphicTypeValidator.builder().build(), DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY))
                 .addModule(Deserializers.TCWRITER_MODULE)
                 .build());

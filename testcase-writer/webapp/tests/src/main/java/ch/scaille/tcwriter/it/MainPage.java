@@ -41,7 +41,9 @@ public class MainPage extends PagePilot {
 	}
 
 	public static Function<MainPage, ContextSelector> dictionary(String name) {
-		return mp -> new ContextSelector(mp.dictionarySelector, e -> new Select(e).selectByVisibleText(name),
+		return mp -> new ContextSelector(
+				mp.dictionarySelector, 
+				e -> new Select(e).selectByValue("SimpleTest"),
 				mp.dictionarySelect);
 	}
 
@@ -54,12 +56,17 @@ public class MainPage extends PagePilot {
 	}
 
 	public void select(Function<MainPage, ContextSelector> selector) {
-		on(() -> selector.apply(this).button).failUnless().clicked();
+		final var contextSelector =	selector.apply(this);
+		on(() -> contextSelector.selector).failUnless().appliedCtxt(ctxt -> {
+			contextSelector.selectorSelection.accept(ctxt.component());
+			contextSelector.button.click();
+		});
 	}
 
 	public void assertAvailable(Function<MainPage, ContextSelector> selector) {
-		on(() -> selector.apply(this).selector).failUnless()
-				.asserted(element -> Assertions.assertNotEquals("", element.getText(),  element + " has no selectable entry"));
+		on(() -> selector.apply(this).selector)
+			.failUnless()
+			.asserted(element -> Assertions.assertNotEquals("", element.getText(),  element + " has no selectable entry"));
 	}
 
 }

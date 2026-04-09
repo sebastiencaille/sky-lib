@@ -31,7 +31,9 @@ import org.jspecify.annotations.Nullable;
 
 @NullMarked
 public class FlowGenerator {
-    
+
+    public static final String METADATA = "metadata";
+
     // Inner class for form items
     public record FormMetadata(
             String modelKey,
@@ -161,7 +163,7 @@ public class FlowGenerator {
                                             @Nullable TestApiParameter param0, List<FormMetadata> param0List,
                                             @Nullable TestApiParameter param1, List<FormMetadata> param1List) {
         final var context = new VelocityContext(new HashMap<>(Map.of(
-                "metadata", metadata, 
+                METADATA, metadata,
                 "form", actionForm
         )));
         if (param0 != null) {
@@ -214,7 +216,6 @@ public class FlowGenerator {
                                 .collect(Collectors.toMap(TestActor::getId, actor -> dictionary.descriptionOf(actor).description()))),
                 param0, param0List,
                 param1, param1List);
-        System.out.println("Form generated successfully!");
     }
 
     private String actionFormOf(TestAction action) {

@@ -3,6 +3,7 @@ package ch.scaille.tcwriter.server.webapi.v0.mappers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import ch.scaille.tcwriter.generated.api.model.v0.TestCase;
 import ch.scaille.tcwriter.generated.api.model.v0.TestParameterValue;
@@ -57,10 +58,10 @@ public interface TestCaseMapper extends MetadataMapper {
     TestReference convertToDto(ch.scaille.tcwriter.model.testcase.TestReference model);
 
     default ch.scaille.tcwriter.model.testcase.TestCase convertToModel(TestCase dto, TestDictionary dictionary) {
-        final var exportReferences = new ArrayList<ExportReference<ch.scaille.tcwriter.model.testcase.TestCase, ?>>();
+        final var exportReferences = new ArrayList<Consumer<ch.scaille.tcwriter.model.testcase.TestCase>>();
         final var testCase = convertToModelNoRef(dto, exportReferences);
         testCase.setDictionary(dictionary);
-        exportReferences.forEach(ref -> ref.apply(testCase));
+        exportReferences.forEach(ref -> ref.accept(testCase));
         testCase.republishReferences();
         return testCase;
     }
@@ -68,10 +69,10 @@ public interface TestCaseMapper extends MetadataMapper {
     @Mapping(target = "dictionary", ignore = true)
     @Mapping(target = "dynamicDescriptions", ignore = true)
     ch.scaille.tcwriter.model.testcase.TestCase convertToModelNoRef(TestCase dto,
-                                                                    @Context List<ExportReference<ch.scaille.tcwriter.model.testcase.TestCase, ?>> exportReferences);
+                                                                    @Context List<Consumer<ch.scaille.tcwriter.model.testcase.TestCase>> exportReferences);
 
     default List<ch.scaille.tcwriter.model.testcase.TestStep> convertStepsToModel(List<TestStep> dto,
-                                                                                  @Context List<ExportReference<ch.scaille.tcwriter.model.testcase.TestCase, ?>> exportReferences) {
+                                                                                  @Context List<Consumer<ch.scaille.tcwriter.model.testcase.TestCase>> exportReferences) {
         return dto.stream().map(step -> convertToModel(step, exportReferences)).toList();
     }
 
@@ -79,10 +80,10 @@ public interface TestCaseMapper extends MetadataMapper {
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "action", ignore = true)
     ch.scaille.tcwriter.model.testcase.TestStep convertToModelNoRef(TestStep dto,
-                                                                    @Context List<ExportReference<ch.scaille.tcwriter.model.testcase.TestCase, ?>> exportReferences);
+                                                                    @Context List<Consumer<ch.scaille.tcwriter.model.testcase.TestCase>> exportReferences);
 
     default ch.scaille.tcwriter.model.testcase.TestStep convertToModel(TestStep dto,
-                                                                       @Context List<ExportReference<ch.scaille.tcwriter.model.testcase.TestCase, ?>> exportReferences) {
+                                                                       @Context List<Consumer<ch.scaille.tcwriter.model.testcase.TestCase>> exportReferences) {
         final var testStep = convertToModelNoRef(dto, exportReferences);
         exportReferences.add(validate(Deserializers.getTestCaseHandler(ch.scaille.tcwriter.model.testcase.TestStep.class, TestStepMixin.ACTOR_REF), TestStepMixin.ACTOR_REF)
                 .of(testStep, dto.getActorRef()));
@@ -96,10 +97,10 @@ public interface TestCaseMapper extends MetadataMapper {
     @DoIgnore
     @Mapping(target = "step", ignore = true)
     ch.scaille.tcwriter.model.testcase.TestReference convertToModelNoRef(TestReference dto,
-                                                                         @Context List<ExportReference<ch.scaille.tcwriter.model.testcase.TestCase, ?>> exportReferences);
+                                                                         @Context List<Consumer<ch.scaille.tcwriter.model.testcase.TestCase>> exportReferences);
 
     default ch.scaille.tcwriter.model.testcase.TestReference convertToModel(@Nullable TestReference dto,
-                                                                            @Context List<ExportReference<ch.scaille.tcwriter.model.testcase.TestCase, ?>> exportReferences) {
+                                                                            @Context List<Consumer<ch.scaille.tcwriter.model.testcase.TestCase>> exportReferences) {
         if (dto == null) {
             return null;
         }
@@ -113,11 +114,11 @@ public interface TestCaseMapper extends MetadataMapper {
     @Mapping(target = "derivate", ignore = true)
     @Mapping(target = "parameterValueFactory", ignore = true)
     ch.scaille.tcwriter.model.testcase.TestParameterValue convertToModelNoRef(TestParameterValue dto,
-                                                                              @Context List<ExportReference<ch.scaille.tcwriter.model.testcase.TestCase, ?>> exportReferences);
+                                                                              @Context List<Consumer<ch.scaille.tcwriter.model.testcase.TestCase>> exportReferences);
 
 
     default ch.scaille.tcwriter.model.testcase.TestParameterValue convertToModel(TestParameterValue dto,
-                                                                                 @Context List<ExportReference<ch.scaille.tcwriter.model.testcase.TestCase, ?>> exportReferences) {
+                                                                                 @Context List<Consumer<ch.scaille.tcwriter.model.testcase.TestCase>> exportReferences) {
         final var parameterValue = convertToModelNoRef(dto, exportReferences);
         exportReferences.add(validate(Deserializers.getTestCaseHandler(ch.scaille.tcwriter.model.testcase.TestParameterValue.class, TestParameterValueMixin.TEST_PARAMETER_FACTORY_REF),
                     TestParameterValueMixin.TEST_PARAMETER_FACTORY_REF)
@@ -126,7 +127,7 @@ public interface TestCaseMapper extends MetadataMapper {
     }
 
     default List<ch.scaille.tcwriter.model.testcase.TestParameterValue> convertParameterValuesToModel(List<TestParameterValue> dto,
-                                                                                                      @Context List<ExportReference<ch.scaille.tcwriter.model.testcase.TestCase, ?>> exportReferences) {
+                                                                                                      @Context List<Consumer<ch.scaille.tcwriter.model.testcase.TestCase>> exportReferences) {
         return dto.stream().map(value -> convertToModel(value, exportReferences)).toList();
     }
 

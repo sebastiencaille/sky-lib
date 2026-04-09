@@ -83,7 +83,7 @@ public interface Deserializers {
             final var dictionary = (TestDictionary) super.deserialize(p, ctxt);
             final var references = (List<ExportReference<TestDictionary, ?>>) ctxt.getAttribute(CONTEXT_ALL_REFERENCES);
             if (references != null) {
-                references.forEach(e -> e.apply(dictionary));
+                references.forEach(e -> e.accept(dictionary));
             }
             return dictionary;
         }
@@ -107,7 +107,7 @@ public interface Deserializers {
             testCase.setDictionary((TestDictionary) ctxt.getAttribute(CONTEXT_DICTIONARY));
             final var references = (List<ExportReference<TestCase, ?>>) ctxt.getAttribute(CONTEXT_ALL_REFERENCES);
             if (references != null && testCase.getDictionary().getMetadata().getTransientId() != null) {
-                references.forEach(e -> e.apply(testCase));
+                references.forEach(e -> e.accept(testCase));
                 testCase.republishReferences();
             }
             return testCase;

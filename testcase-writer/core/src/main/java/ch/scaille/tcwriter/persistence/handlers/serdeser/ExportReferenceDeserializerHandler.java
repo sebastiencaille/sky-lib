@@ -10,6 +10,7 @@ import tools.jackson.databind.node.StringNode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static ch.scaille.tcwriter.persistence.handlers.serdeser.Deserializers.CONTEXT_ALL_REFERENCES;
@@ -17,7 +18,7 @@ import static ch.scaille.tcwriter.persistence.handlers.serdeser.Deserializers.CO
 public class ExportReferenceDeserializerHandler extends DeserializationProblemHandler {
         @Override
         public boolean handleUnknownProperty(DeserializationContext ctxt, JsonParser p, ValueDeserializer<?> deserializer, Object beanOrClass, String propertyName) throws JacksonException {
-            var references = (List<ExportReference<?, ?>>) ctxt.getAttribute(CONTEXT_ALL_REFERENCES);
+            var references = (List<Consumer<?>>) ctxt.getAttribute(CONTEXT_ALL_REFERENCES);
             if (references == null) {
                 references = new ArrayList<>();
                 ctxt.setAttribute(CONTEXT_ALL_REFERENCES, references);

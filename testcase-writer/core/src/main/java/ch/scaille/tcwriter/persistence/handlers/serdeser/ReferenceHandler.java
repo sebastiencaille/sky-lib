@@ -1,5 +1,6 @@
 package ch.scaille.tcwriter.persistence.handlers.serdeser;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -16,7 +17,7 @@ public record ReferenceHandler<M, T>(Class<T> clazz, String propName, Function<T
                         (beanOrClass instanceof Class<?> otherClazz && clazz.isAssignableFrom(otherClazz)));
     }
 
-    public ExportReference<M, ?> of(Object beanOrClass, String ref) {
+    public Consumer<M> of(Object beanOrClass, String ref) {
         return new ExportReference<>(clazz.cast(beanOrClass), ref, this);
     }
 

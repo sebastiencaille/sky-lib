@@ -43,7 +43,7 @@ public class MainPage extends PagePilot {
 	public static Function<MainPage, ContextSelector> dictionary(String name) {
 		return mp -> new ContextSelector(
 				mp.dictionarySelector, 
-				e -> new Select(e).selectByValue("SimpleTest"),
+				e -> new Select(e).selectByVisibleText(name),
 				mp.dictionarySelect);
 	}
 

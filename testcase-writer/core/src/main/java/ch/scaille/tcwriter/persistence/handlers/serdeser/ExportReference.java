@@ -2,9 +2,12 @@ package ch.scaille.tcwriter.persistence.handlers.serdeser;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public record ExportReference<M, T> (@JsonIgnore T object, String ref, @JsonIgnore ReferenceHandler<M, T> handler) {
+import java.util.function.Consumer;
 
-	public void apply(M model) {
+public record ExportReference<M, T> (@JsonIgnore T object, String ref, @JsonIgnore ReferenceHandler<M, T> handler) implements Consumer<M> {
+
+	@Override
+	public void accept(M model) {
 		handler.importer().apply(model, object, ref);
 	}
 }

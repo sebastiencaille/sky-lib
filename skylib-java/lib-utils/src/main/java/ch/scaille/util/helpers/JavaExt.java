@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.TimerTask;
 import java.util.function.Consumer;
@@ -206,7 +207,8 @@ public class JavaExt {
         if (closeable == null) {
             return (CloseableOptional<T>) EMPTY;
         }
-        return new CloseableOptionalNotNull<@NonNull T>(closeable);
+        final var notClosed = Objects.requireNonNull(closeable, "The closeable must not be null");
+        return new CloseableOptionalNotNull<>(notClosed);
     }
 
 }

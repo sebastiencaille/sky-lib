@@ -37,8 +37,8 @@ public interface DaoConfigs {
         final var fsDsFactory = new FsDsFactory(path);
         final var daoFactory = DaoFactory.cpPlus(Set.of(USER_RESOURCES), fsDsFactory);
         final var configDao = new ConfigDao(daoFactory, ".", ConfigDao.defaultDataHandlers());
-        final ModelDao modelDao = new ModelDao(daoFactory, configDao.getCurrentConfigProperty(), fsDsFactory,
-                ModelDao::defaultDataHandlers);
+        final ModelDao modelDao = new ModelDao(daoFactory, configDao.getCurrentConfigProperty(),
+                fsDsFactory, ModelDao.defaultDataHandlers());
 
         final var tempModelConfig = new ModelConfig();
         tempModelConfig.setDictionaryPath(".");

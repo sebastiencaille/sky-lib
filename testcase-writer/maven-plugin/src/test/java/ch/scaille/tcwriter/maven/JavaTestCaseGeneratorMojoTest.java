@@ -40,7 +40,7 @@ class JavaTestCaseGeneratorMojoTest {
     @InjectMojo(goal = "generateTestCases", pom = SRC_TEST_RESOURCES_UNIT + "/nominal.xml")
     @MojoParameter(name = "dictionaryFolder", value = SRC_TEST_RESOURCES_UNIT + "/dictionaries")
     @MojoParameter(name = "templatesFolder", value = SRC_TEST_RESOURCES_UNIT + "/templates")
-    void testGeneration(JavaTestCaseGeneratorMojo myMojo) throws Exception {
+    void testGeneration(JavaTestCaseGeneratorMojo myMojo) {
         assertNotNull(myMojo);
         myMojo.execute();
         Assertions.assertTrue(Files.exists(Paths.get("target/generated-test-sources/tcwriter/ch/scaille/tcwriter/examples/GeneratedTest.java")));

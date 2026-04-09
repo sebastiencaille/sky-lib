@@ -40,7 +40,8 @@ public class StorageConfig {
 
 	@Bean
 	IModelDao modelDao(DaoFactory daoFactory, ConfigDao configDao, DaoFactory.IDataSourceFactory fsDataSource) {
-		return new ModelDao(daoFactory, configDao.getCurrentConfigProperty(), fsDataSource, ModelDao::defaultDataHandlers);
+		return new ModelDao(daoFactory, configDao.getCurrentConfigProperty(),
+				fsDataSource, ModelDao.defaultDataHandlers());
 	}
 
 	@Bean

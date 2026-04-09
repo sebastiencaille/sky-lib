@@ -1,6 +1,5 @@
 package ch.scaille.testing.testpilot;
 
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -15,7 +14,7 @@ import java.util.function.Supplier;
  * @param <V> The type of returned Value
  */
 @NullMarked
-public record PollingResult<C, V>(@Nullable V polledValue,
+public record PollingResult<C, V extends @Nullable Object>(@Nullable V polledValue,
                                   @Nullable Throwable failureCause,
                                   @Nullable PollingMetadata<C> polling) {
 
@@ -71,7 +70,7 @@ public record PollingResult<C, V>(@Nullable V polledValue,
      * Adds the polling parameters to the result, so we can use the texts, ...
      */
     public PollingResult<C, V> withPolling(PollingMetadata<C> polling) {
-        return new PollingResult<@NonNull C, @NonNull V>(polledValue, failureCause, polling);
+        return new PollingResult<>(polledValue, failureCause, polling);
     }
 
     @Override

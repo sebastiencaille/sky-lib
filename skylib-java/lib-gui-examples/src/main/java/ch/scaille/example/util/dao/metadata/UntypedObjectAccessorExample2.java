@@ -14,9 +14,9 @@ import ch.scaille.util.text.TextFormatter;
 import lombok.Getter;
 import lombok.Setter;
 
-public interface UntypedObjectAccessorExample2 {
+public class UntypedObjectAccessorExample2 {
 
-	class ASecondDataObject extends ADataObject {
+	private static class ASecondDataObject extends ADataObject {
 
 		// Maybe more...
 
@@ -24,17 +24,17 @@ public interface UntypedObjectAccessorExample2 {
 
 	@Getter
 	@Setter
-	class AThirdDataObject {
+	private static class AThirdDataObject {
 
 		private String anAttribute = "data1";
 
 	}
 
-	static String getAttributeOf(final UntypedDataObjectManager accessor) {
+	private static String getAttributeOf(final UntypedDataObjectManager accessor) {
 		return accessor.getValueOf(AN_ATTRIBUTE, String.class);
 	}
 
-	static void main(final String[] args) throws IOException {
+	public static void main(final String[] args) throws IOException {
 
 		try (var output = Logs.streamOf(DataObjectMetaDataExample.class, Level.INFO)) {
 			final var log = new SimpleTextFormatter<>(TextFormatter.safeOutput(output));

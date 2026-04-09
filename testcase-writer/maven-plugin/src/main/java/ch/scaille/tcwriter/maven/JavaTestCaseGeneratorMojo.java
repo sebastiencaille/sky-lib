@@ -88,7 +88,8 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
             mavenModelConfig.setTcExportPath("");
             final var config = new TCConfig("maven", List.of(mavenModelConfig));
             final var modelDao = new ModelDao(daoFactory,
-                    new ObjectProperty<>("config", new DummyPropertiesGroup(), config), fsDsFactory, ModelDao::defaultDataHandlers);
+                    new ObjectProperty<>("config", new DummyPropertiesGroup(), config),
+                        fsDsFactory, ModelDao.defaultDataHandlers());
             // Search test cases
             final var scanner = new DirectoryScanner();
             scanner.setBasedir(new File(testCases.getDirectory()));

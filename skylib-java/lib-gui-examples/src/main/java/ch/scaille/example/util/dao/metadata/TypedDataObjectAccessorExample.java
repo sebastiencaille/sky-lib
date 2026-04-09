@@ -18,9 +18,9 @@ import ch.scaille.util.text.TextFormatter;
  * @author Sebastien Caille
  *
  */
-public interface TypedDataObjectAccessorExample {
+public class TypedDataObjectAccessorExample {
 
-	static void main(final String[] args) throws IOException {
+	public static void main(final String[] args) throws IOException {
 
 		try (var output = Logs.streamOf(DataObjectMetaDataExample.class, Level.INFO)) {
 			final var log = new SimpleTextFormatter<>(TextFormatter.safeOutput(output));

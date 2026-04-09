@@ -4,7 +4,6 @@ import static ch.scaille.util.persistence.StorageRTException.uncheck;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.logging.Level;
 
 import ch.scaille.generators.util.Template;
@@ -26,9 +25,9 @@ import ch.scaille.util.persistence.handlers.TextStorageHandler;
 
 public class ModelDao implements IModelDao {
 
-        public static StorageDataHandlerRegistry defaultDataHandlers(IModelDao modelDao) {
-        final var modelSerDeserializerRegistry = new StorageDataHandlerRegistry(new YamlModelDataHandler(modelDao));
-        modelSerDeserializerRegistry.register(new JsonModelDataHandler(modelDao));
+    public static StorageDataHandlerRegistry defaultDataHandlers() {
+        final var modelSerDeserializerRegistry = new StorageDataHandlerRegistry(new YamlModelDataHandler());
+        modelSerDeserializerRegistry.register(new JsonModelDataHandler());
         modelSerDeserializerRegistry.register(new TextStorageHandler());
         modelSerDeserializerRegistry.register(new TemplateStorageHandler());
         return modelSerDeserializerRegistry;
@@ -62,10 +61,10 @@ public class ModelDao implements IModelDao {
 
     public ModelDao(DaoFactory daoFactory, ObjectProperty<TCConfig> config,
                     DaoFactory.IDataSourceFactory cacheDsFactory,
-                    Function<IModelDao, StorageDataHandlerRegistry> serDeserializerRegistry) {
+                    StorageDataHandlerRegistry serDeserializerRegistry) {
         this.daoFactory = daoFactory;
         this.config = config;
-        this.serDeserializerRegistry = serDeserializerRegistry.apply(this);
+        this.serDeserializerRegistry = serDeserializerRegistry;
         this.config.listen(this::reload);
         this.dictionaryMetadataCache = new MetadataCacheDao("Dictionary", cacheDsFactory);
         this.testcaseMetadataCache = new MetadataCacheDao("TestCase", cacheDsFactory);

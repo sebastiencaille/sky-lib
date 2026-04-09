@@ -109,7 +109,8 @@ public class ListModelContent<T extends @Nullable Object> extends AbstractListMo
     private class ContentListeners implements IListViewOwner<T>, PropertyChangeListener, IChildModelListener<T>, Serializable {
 
         @Override
-        public @Nullable IListView<T> parentComparator() {
+        @Nullable
+        public final IListView<T> parentComparator() {
             if (parent == null) {
                 return null;
             }

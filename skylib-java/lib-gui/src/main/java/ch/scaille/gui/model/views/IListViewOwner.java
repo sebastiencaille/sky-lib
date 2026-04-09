@@ -18,6 +18,7 @@ public interface IListViewOwner<T extends @Nullable Object> {
 
 	void viewUpdated();
 
-	@Nullable Comparator<T> parentComparator();
+	@Nullable
+	Comparator<T> parentComparator();
 
 }

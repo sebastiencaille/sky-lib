@@ -152,7 +152,7 @@ public class FlowGenerator {
 
     private FormMetadata generateSubForm(VelocityEngine engine, FormMetadata metadata, List<SubFormItem> rows) {
         generateFile(engine, Map.of(
-                "metadata", metadata,
+                METADATA, metadata,
                 "rows", rows
         ), "TestParameterFactoryForm.form.vm", metadata.modelKey() + ".form");
         return metadata;

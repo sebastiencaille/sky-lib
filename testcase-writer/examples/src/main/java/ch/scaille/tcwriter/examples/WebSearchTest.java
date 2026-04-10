@@ -12,16 +12,17 @@ import org.junit.jupiter.api.Test;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.nio.file.Paths;
+import java.io.IOException;
+import java.nio.file.Files;
 
 @ExtendWith(DisabledIfHeadless.class)
 public class WebSearchTest extends AbstractWebSearchTest {
 
 	@Test
-	public void testNormalCase() {
+	public void testNormalCase() throws IOException {
 		final var dictionary = new JavaToDictionary("searchTests", InternautRole.class).generate();
 		dictionary.getMetadata().setDescription("Search on internet dictionary");
-		final var daoConfig = DaoConfigs.withFolder(Paths.get("/tmp"));
+		final var daoConfig = DaoConfigs.withFolder(Files.createTempDirectory("tcw"));
 		daoConfig.modelDao().writeTestDictionary(dictionary);
 
 		TestCaseRecorderAspect.setRecorder(null);

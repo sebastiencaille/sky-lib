@@ -13,7 +13,6 @@ import ch.scaille.tcwriter.model.dictionary.StepClassifier;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.testexec.StepStatus;
 import ch.scaille.tcwriter.persistence.handlers.serdeser.Deserializers;
-import ch.scaille.tcwriter.persistence.handlers.serdeser.ExportReference;
 import ch.scaille.tcwriter.persistence.handlers.serdeser.mixins.TestParameterValueMixin;
 import ch.scaille.tcwriter.persistence.handlers.serdeser.mixins.TestReferenceMixin;
 import ch.scaille.tcwriter.persistence.handlers.serdeser.mixins.TestStepMixin;

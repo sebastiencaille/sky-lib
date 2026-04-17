@@ -43,6 +43,7 @@ class PropertiesTest {
             Assertions.assertEquals(2, gcEd.value);
         }
 
+        // To garbage collect
         gcEd = null;
         // Garbage collect the links
         for (int i = 0; i < 10; i++) {

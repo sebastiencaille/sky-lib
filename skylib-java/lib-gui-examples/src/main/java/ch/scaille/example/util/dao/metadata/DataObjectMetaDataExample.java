@@ -11,9 +11,6 @@ import ch.scaille.util.text.TextFormatter;
 
 /**
  * This just shows how to use the DataObjectMetaData...
- *
- * @author Sebastien Caille
- *
  */
 public class DataObjectMetaDataExample {
 
@@ -22,7 +19,7 @@ public class DataObjectMetaDataExample {
 	private DataObjectMetaDataExample() {
 	}
 
-	public static void main(final String[] args) throws IOException {
+	static void main(final String[] args) throws IOException {
 
 		try (var output = Logs.streamOf(DataObjectMetaDataExample.class, Level.INFO)) {
 			final var log = new SimpleTextFormatter<>(TextFormatter.safeOutput(output));

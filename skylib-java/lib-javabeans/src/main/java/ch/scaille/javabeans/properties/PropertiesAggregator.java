@@ -52,7 +52,7 @@ public class PropertiesAggregator<T extends @Nullable Object> extends AbstractPr
 
     public <K> PropertiesAggregator<T> of(PropertiesContext<K> context, Function<K, T> applier) {
         this.evaluator = () -> applier.apply(context.object());
-        context.properties().forEach(p -> p.addListener((c, event) -> impl.propertyModified(event.kind())));
+        context.properties().forEach(p -> p.addListener((_, event) -> impl.propertyModified(event.kind())));
         return this;
     }
 
@@ -254,7 +254,7 @@ public class PropertiesAggregator<T extends @Nullable Object> extends AbstractPr
 
 
     private IChainBuilderFactory<T> createBindingChain() {
-        return new BindingChain(this, errorNotifier).bindProperty((caller, value) -> {
+        return new BindingChain(this, errorNotifier).bindProperty((_, _) -> {
             // nothing to set
         });
     }

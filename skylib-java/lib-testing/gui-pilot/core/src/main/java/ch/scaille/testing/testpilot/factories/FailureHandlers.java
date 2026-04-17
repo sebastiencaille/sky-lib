@@ -61,6 +61,6 @@ public interface FailureHandlers {
 	 * Do nothing on error
 	 */
 	static <C, V> FailureHandler<C, V> ignoreFailure() {
-		return result -> doNothing();
+		return _ -> doNothing();
 	}
 }

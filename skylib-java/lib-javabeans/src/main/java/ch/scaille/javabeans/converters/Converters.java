@@ -59,7 +59,7 @@ public final class Converters {
      *                  component side
      */
     public static <P extends @Nullable Object, C extends @Nullable Object> IConverter<P, C> listen(final Function<P, C> prop2comp) {
-        return converter(prop2comp, o -> {
+        return converter(prop2comp, _ -> {
             throw new WriteOnlyException();
         });
     }
@@ -75,7 +75,7 @@ public final class Converters {
     public static <P extends @Nullable Object, C extends @Nullable Object, K>
     IConverterWithContext<P, C, K> listen(final PropertiesContext<K> context,
                                           final BiFunction<P, K, C> prop2comp) {
-        return converter(context, prop2comp, (o, k) -> {
+        return converter(context, prop2comp, (_, _) -> {
             throw new WriteOnlyException();
         });
     }

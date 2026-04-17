@@ -18,7 +18,7 @@ public class JSpinnerBinding<T extends Number> implements IComponentBinding<T> {
 
 	@Override
 	public void addComponentValueChangeListener(final IComponentLink<T> converter) {
-		spinner.addChangeListener(e -> converter.setValueFromComponent(spinner, (T) spinner.getValue()));
+		spinner.addChangeListener(_ -> converter.setValueFromComponent(spinner, (T) spinner.getValue()));
 	}
 
 	@Override

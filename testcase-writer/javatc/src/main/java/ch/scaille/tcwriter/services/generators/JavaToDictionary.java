@@ -49,7 +49,7 @@ public class JavaToDictionary extends AbstractGenerator<TestDictionary> {
 		return new ClassToDictionaryVisitor(classifier, classes.toArray(new Class<?>[0])).visit();
 	}
 
-	public static void main(final String[] args) {
+	static void main(final String[] args) {
 		final var mainArgs = new Args();
 		JCommander.newBuilder().addObject(mainArgs).build().parse(args);
 		

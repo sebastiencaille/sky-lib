@@ -47,7 +47,6 @@ public class WebConfig implements WebMvcConfigurer {
 
 	/**
 	 * Web apis
-	 * @return
 	 */
 	@Bean
 	ServletRegistrationBean<?> webApiServlet() {

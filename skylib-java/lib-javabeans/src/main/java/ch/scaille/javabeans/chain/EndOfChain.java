@@ -93,7 +93,7 @@ public class EndOfChain<P extends @Nullable Object> implements IChainBuilder<P> 
         chain.addLink(link(v -> {
             newBinding.accept(v);
             return null;
-        }, v -> {
+        }, _ -> {
             throw prop2CompOnlyException();
         }));
         return chain;
@@ -131,7 +131,7 @@ public class EndOfChain<P extends @Nullable Object> implements IChainBuilder<P> 
      */
     @Override
     public <C extends @Nullable Object> EndOfChain<C> listenF(final Function<P, C> prop2Comp) {
-        chain.addLink(link(prop2Comp::apply, value -> {
+        chain.addLink(link(prop2Comp::apply, _ -> {
             throw new ConversionException("Read only");
         }));
         return new EndOfChain<>(chain);
@@ -173,7 +173,7 @@ public class EndOfChain<P extends @Nullable Object> implements IChainBuilder<P> 
         register(multiProperties);
         chain.addLink(link(
                 value -> prop2Comp.apply(value, multiProperties.object()),
-                value -> {
+                _ -> {
                     throw new ConversionException("Read only");
                 }));
         return new EndOfChain<>(chain);
@@ -181,7 +181,7 @@ public class EndOfChain<P extends @Nullable Object> implements IChainBuilder<P> 
 
 
     private void register(PropertiesContext<?> multiProperties) {
-        multiProperties.properties().forEach(p -> p.addListener(e -> chain.flushChanges()));
+        multiProperties.properties().forEach(p -> p.addListener(_ -> chain.flushChanges()));
     }
 
 

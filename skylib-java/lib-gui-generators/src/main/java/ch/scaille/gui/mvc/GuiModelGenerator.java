@@ -19,7 +19,7 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public class GuiModelGenerator {
 
-	public static void main(final String[] args) throws IOException {
+	static void main(final String[] args) throws IOException {
 		final var params = CodeGeneratorParams.parse(args);
 		
 		final var generationMetadata = GenerationMetadata.fromCommandLine(GuiModelGenerator.class, args);

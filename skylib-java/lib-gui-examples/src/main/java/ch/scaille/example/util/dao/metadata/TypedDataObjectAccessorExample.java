@@ -20,7 +20,7 @@ import ch.scaille.util.text.TextFormatter;
  */
 public class TypedDataObjectAccessorExample {
 
-	public static void main(final String[] args) throws IOException {
+	static void main(final String[] args) throws IOException {
 
 		try (var output = Logs.streamOf(DataObjectMetaDataExample.class, Level.INFO)) {
 			final var log = new SimpleTextFormatter<>(TextFormatter.safeOutput(output));

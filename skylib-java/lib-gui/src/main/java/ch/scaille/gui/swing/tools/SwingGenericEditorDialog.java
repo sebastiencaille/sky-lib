@@ -49,7 +49,7 @@ public class SwingGenericEditorDialog extends JDialog {
 		final var okButton = new JButton("OK");
 		errorProperty.getErrors().listenF(Map::isEmpty).listen(okButton::setEnabled);
 		buttonPanel.add(okButton);
-		okButton.addActionListener(e -> {
+		okButton.addActionListener(_ -> {
 			controllers.forEach(GenericEditorController::save);
 			close();
 		});
@@ -57,7 +57,7 @@ public class SwingGenericEditorDialog extends JDialog {
 		final var cancelButton = new JButton("Cancel");
 		buttonPanel.add(cancelButton);
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
-		cancelButton.addActionListener(e -> this.close());
+		cancelButton.addActionListener(_ -> this.close());
 
 		validate();
 		pack();

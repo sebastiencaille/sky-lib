@@ -41,7 +41,7 @@ public class AlertPilot extends AbstractComponentPilot<Alert> {
 
 	public void doAcknowledge() {
 		new PollingBuilder<>(this)
-				.fail((context, text) -> "Acknowledging alert: " + context.component().getText())
+				.fail((context, _) -> "Acknowledging alert: " + context.component().getText())
 				.unless()
 				.applied((Alert::accept));
 	}

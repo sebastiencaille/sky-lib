@@ -18,7 +18,7 @@ public class ListModelBindings {
     }
 
     public static <T extends @Nullable Object> IComponentBinding<IListView<T>> view(final ListModel<T> model) {
-        return ComponentBindings.listen(model, (c, p, t) -> c.setView(t));
+        return ComponentBindings.listen(model, (c, _, t) -> c.setView(t));
     }
 
     public static <T extends @Nullable Object> IComponentBinding<Collection<T>> values(final ListModel<T> model) {
@@ -29,7 +29,7 @@ public class ListModelBindings {
 
             @Override
             public void addComponentValueChangeListener(final IComponentLink<Collection<T>> link) {
-                listener = IListModelListener.editionStopped(e -> link.setValueFromComponent(model, model.values()));
+                listener = IListModelListener.editionStopped(_ -> link.setValueFromComponent(model, model.values()));
                 model.addListener(listener);
             }
 

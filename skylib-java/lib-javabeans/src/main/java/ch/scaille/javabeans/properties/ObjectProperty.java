@@ -59,7 +59,7 @@ public class ObjectProperty<T extends @Nullable Object> extends AbstractTypedPro
 
     public <U extends @Nullable Object> void asChild(final ObjectProperty<U> child, final Function<T, U> getter,
                             final BiConsumer<T, U> setter) {
-        this.addListener(p -> child.setValue(this, getter.apply(this.getValue())));
+        this.addListener(_ -> child.setValue(this, getter.apply(this.getValue())));
         child.addListener(c -> {
             final var oldValue = getter.apply(this.getValue());
             final var newValue = child.getValue();

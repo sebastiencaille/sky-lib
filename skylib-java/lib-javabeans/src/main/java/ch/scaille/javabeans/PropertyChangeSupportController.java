@@ -74,7 +74,7 @@ public class PropertyChangeSupportController {
 	}
 
 	private void prepareFire(final String propertyName, final Object caller, @Nullable final Object newValue) {
-		final var info = callInfo.computeIfAbsent(propertyName, k -> new ArrayDeque<>(5));
+		final var info = callInfo.computeIfAbsent(propertyName, _ -> new ArrayDeque<>(5));
 		if (info.size() > 5) {
 			final var stack = new StringBuilder();
 			info.forEach(i -> stack.append(i).append(";"));
@@ -206,7 +206,7 @@ public class PropertyChangeSupportController {
 
 		@Override
 		public IPropertyEventListener detachWhenPropLoading() {
-			return (caller, event) -> {
+			return (_, event) -> {
 				switch (event.kind()) {
 				case BEFORE:
 					// Disable component -> properties keep current value 

@@ -48,7 +48,7 @@ public class GenericPropertiesEditorLauncher {
 		);
 	}
 
-	public static void main(final String[] args) {
+	static void main(final String[] args) {
 
 		final var obj = new EditedObject();
 		final var model = new SimpleEditorModel<>(GenericPropertiesEditorLauncher::builder);

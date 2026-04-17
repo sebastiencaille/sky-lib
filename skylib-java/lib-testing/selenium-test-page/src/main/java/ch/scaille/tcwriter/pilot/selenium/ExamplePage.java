@@ -112,7 +112,7 @@ public class ExamplePage extends PagePilot {
 
     public void assertElementChange() {
         var changedElement = on(driver -> driver.findElement(TEXT_XPATH));
-        try (var autoClose = changedElement.expectMutations(mutation -> MUTATION_TEXT_CONTENT.equals(mutation.getAttributeName()))) {
+        try (var _ = changedElement.expectMutations(mutation -> MUTATION_TEXT_CONTENT.equals(mutation.getAttributeName()))) {
             on(elementToBeClickable(ELEMENT_CHANGE_TEST)).failUnless().clicked();
             // Explicitly test using WebElement as source
             changedElement.failUnless().assertedCtxt(SeleniumPollingBuilder.assertMutations(mutations ->

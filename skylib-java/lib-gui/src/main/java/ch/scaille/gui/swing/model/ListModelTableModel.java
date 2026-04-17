@@ -80,7 +80,7 @@ public abstract class ListModelTableModel<T, C extends Enum<C>> extends Abstract
 	public void setValueAt(final Object aValue, final int row, final int column) {
 		super.setValueAt(aValue, row, column);
 		final var editedValue = model.getValueAt(row);
-		model.editValue(editedValue, v -> setValueAtColumn(model.getValueAt(row), columnOf(column), aValue));
+		model.editValue(editedValue, _ -> setValueAtColumn(model.getValueAt(row), columnOf(column), aValue));
 	}
 
 	@Override

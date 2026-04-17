@@ -20,8 +20,8 @@ public class AlertDetector {
      */
 	public static void withAlert(final SeleniumPilot pilot, final Runnable runnable) {
 		final var testThread = Thread.currentThread();
-		final var dialogDetector = new ModalDialogDetector.Builder(() -> AlertDetector.listAlerts(pilot, null), e -> testThread.interrupt());
-		try (var dialogEnabler = ModalDialogDetector.withModalDialogDetection(dialogDetector.build(pilot))) {
+		final var dialogDetector = new ModalDialogDetector.Builder(() -> AlertDetector.listAlerts(pilot, null), _ -> testThread.interrupt());
+		try (var _ = ModalDialogDetector.withModalDialogDetection(dialogDetector.build(pilot))) {
 			runnable.run();
 		}
 	}

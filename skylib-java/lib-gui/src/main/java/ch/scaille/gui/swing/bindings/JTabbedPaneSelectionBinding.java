@@ -31,7 +31,7 @@ public class JTabbedPaneSelectionBinding<T> implements IComponentBinding<T> {
 
 	@Override
 	public void addComponentValueChangeListener(final IComponentLink<T> converter) {
-		pane.addChangeListener(e -> {
+		pane.addChangeListener(_ -> {
 			final var index = pane.getSelectedIndex();
 
 			if (index >= 0) {

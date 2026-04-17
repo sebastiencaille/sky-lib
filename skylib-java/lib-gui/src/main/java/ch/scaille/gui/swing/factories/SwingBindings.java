@@ -153,7 +153,7 @@ public class SwingBindings {
     }
 
     public static IComponentBinding<Boolean> selected(final JCheckBox cb) {
-        return rw(cb, itemListener(e -> true, e -> e.getStateChange() == ItemEvent.SELECTED), cb::setSelected);
+        return rw(cb, itemListener(_ -> true, e -> e.getStateChange() == ItemEvent.SELECTED), cb::setSelected);
     }
 
     public static JTextFieldBinding value(final JTextField component) {

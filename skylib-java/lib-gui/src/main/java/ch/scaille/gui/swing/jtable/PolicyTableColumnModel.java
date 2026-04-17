@@ -42,7 +42,7 @@ public class PolicyTableColumnModel<C extends Enum<C>> extends DefaultTableColum
 	protected PolicyTableColumnModel(final JTable table, final List<Class<?>> executionOrder) {
 		this.table = table;
 		this.policyExecutionOrder = executionOrder;
-		table.addPropertyChangeListener("columnModel", p -> table.setAutoCreateColumnsFromModel(false));
+		table.addPropertyChangeListener("columnModel", _ -> table.setAutoCreateColumnsFromModel(false));
 	}
 
 	public PolicyTableColumnModel<C> install() {
@@ -73,7 +73,7 @@ public class PolicyTableColumnModel<C extends Enum<C>> extends DefaultTableColum
 		while (columnsEnum.hasMoreElements()) {
 			final var column = columnsEnum.nextElement();
 			if (column instanceof TableColumnWithPolicy) {
-				columnPerClass.computeIfAbsent(column.getClass(), v -> new ArrayList<>())
+				columnPerClass.computeIfAbsent(column.getClass(), _ -> new ArrayList<>())
 						.add((TableColumnWithPolicy<C>) column);
 			} else {
 				unallocatedWidth -= column.getWidth();

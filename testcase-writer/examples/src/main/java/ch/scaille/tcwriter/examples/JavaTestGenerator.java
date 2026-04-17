@@ -10,7 +10,7 @@ import ch.scaille.tcwriter.services.generators.TestCaseToJava;
 
 public class JavaTestGenerator {
 
-	public static void main(String[] args) throws IOException, TestCaseException {
+	static void main(String[] args) throws IOException, TestCaseException {
 
 		final var generationMetadata = GenerationMetadata.fromCommandLine(JavaTestGenerator.class, args);
 

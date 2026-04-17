@@ -19,13 +19,13 @@ public class SwingModalDialogDetector extends SwingPilot {
 	public static ModalDialogDetector.Builder withHandler(
 			final Function<SwingModalDialogDetector, PollingResult>... pollingHandlers) {
 		final var testThread = Thread.currentThread();
-		return new ModalDialogDetector.Builder(() -> listDialogs(pollingHandlers), e -> testThread.interrupt());
+		return new ModalDialogDetector.Builder(() -> listDialogs(pollingHandlers), _ -> testThread.interrupt());
 	}
 
 	public static ModalDialogDetector.Builder defaultDetector() {
 		final var testThread = Thread.currentThread();
 		return new ModalDialogDetector.Builder(() -> listDialogs(SwingModalDialogDetector::defaultCheck),
-				e -> testThread.interrupt());
+				_ -> testThread.interrupt());
 	}
 
 	/**

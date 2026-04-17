@@ -51,7 +51,7 @@ public class ModalDialogDetector {
 
 	public static Builder threadInterruptor() {
 		final var testThread = Thread.currentThread();
-		return new Builder(Collections::emptyList, e -> testThread.interrupt());
+		return new Builder(Collections::emptyList, _ -> testThread.interrupt());
 	}
 
 	public record PollingResult(boolean handled, @Nullable String error, @Nullable Runnable closeOnErrorFunction, @Nullable String extraInfo) {
@@ -181,9 +181,9 @@ public class ModalDialogDetector {
 	}
 
 	public boolean waitModalDialogHandled(final FailureHandler<ModalDialogDetector.PollingResult, Boolean> onFail) {
-		return new Poller(builder.timeout.get(), Duration.ofMillis(100), p -> Duration.ofMillis(100))
-				.run(this::getPollingResult, t -> true)
-				.map(p -> true)
+		return new Poller(builder.timeout.get(), Duration.ofMillis(100), _ -> Duration.ofMillis(100))
+				.run(this::getPollingResult, _ -> true)
+				.map(_ -> true)
 				.orElseGet(() -> {
 					onFail.apply(PollingResults.failure("Modal dialog not detected"));
 					return false;

@@ -27,7 +27,7 @@ public class BindingSelector<T> implements PropertyChangeListener {
 	}
 
 	public void add(final T object, final IBindingController... controllers) {
-		final var ctrls = objectControllers.computeIfAbsent(object, k -> new ArrayList<>());
+		final var ctrls = objectControllers.computeIfAbsent(object, _ -> new ArrayList<>());
 		ctrls.addAll(List.of(controllers));
 	}
 

@@ -32,7 +32,7 @@ class PilotComponentTest {
 
 		@Override
 		protected DelayFunction getDefaultPollingDelayFunction() {
-			return t -> Duration.ofMillis(100);
+			return _ -> Duration.ofMillis(100);
 		}
 
 		@Override
@@ -58,7 +58,7 @@ class PilotComponentTest {
 		final var pilot = new GuiPilot();
 		final var testComponent = new TestComponent(pilot);
 		final var poller = new PollingBuilder<>(testComponent);
-		final var waitResult = poller.evaluateThat().satisfied(c -> false);
+		final var waitResult = poller.evaluateThat().satisfied(_ -> false);
 		Assertions.assertFalse(waitResult);
 		Assertions.assertEquals(6, testComponent.delays.size(), testComponent.delays.toString());
 	}
@@ -69,11 +69,11 @@ class PilotComponentTest {
 		final var pilot = new GuiPilot();
 		final var testComponent = new TestComponent(pilot);
 		final var poller = new PollingBuilder<>(testComponent);
-		final var successResult = poller.failUnless().get(o -> TEST_TEXT);
+		final var successResult = poller.failUnless().get(_ -> TEST_TEXT);
 		Assertions.assertEquals(TEST_TEXT, successResult.orElseThrow());
 		final var failureResult = poller
 				.with(cfg -> cfg.timingOutAfter(Duration.ofMillis(10)))
-				.evaluateThat().get(o -> null);
+				.evaluateThat().get(_ -> null);
 		Assertions.assertTrue(failureResult.isEmpty());
 	}
 

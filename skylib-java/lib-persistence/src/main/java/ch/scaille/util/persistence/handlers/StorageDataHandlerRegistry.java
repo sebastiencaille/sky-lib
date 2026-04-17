@@ -1,6 +1,5 @@
 package ch.scaille.util.persistence.handlers;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,11 +35,11 @@ public class StorageDataHandlerRegistry {
 		return find(resource.getMimeType()).orElseThrow(() -> new IllegalStateException("Not handled: " + resource));
 	}
 
-	public <T> Resource<String> encode(Resource<T> resource, Class<T> targetType) throws IOException {
+	public <T> Resource<String> encode(Resource<T> resource, Class<T> targetType) {
 		return resource.withValue(findHandler(resource).encode(targetType, resource.getValue()));
 	}
 
-	public <T> Resource<T> decode(Resource<String> resource, Class<T> targetType, T template) throws IOException {
+	public <T> Resource<T> decode(Resource<String> resource, Class<T> targetType, T template) {
 		return resource.withValue(findHandler(resource).decode(resource.getValue(), targetType, template));
 	}
 

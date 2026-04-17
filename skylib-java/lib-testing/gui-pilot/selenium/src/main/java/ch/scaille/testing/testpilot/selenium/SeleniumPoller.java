@@ -76,7 +76,7 @@ public class SeleniumPoller extends Poller {
 				.ignoreAll(List.of(NoSuchElementException.class, StaleElementReferenceException.class,
 						ElementNotInteractableException.class, UnhandledAlertException.class, AssertionFailedError.class,
 						IndexOutOfBoundsException.class, TimeoutException.class))
-				.until(d -> {
+				.until(_ -> {
 					try {
 						final var result = polling.apply(this);
 						lastPollingResult = result.orElse(null);

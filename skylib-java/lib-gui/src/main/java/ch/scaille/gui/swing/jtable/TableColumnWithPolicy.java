@@ -122,7 +122,7 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 		@Override
 		public int computeWidth(final ColumnComputationInfo policyInfo) {
 			final var charRatio = WIDTH_CACHE.computeIfAbsent(sample + policyInfo.getFont().toString(),
-					d -> ((float) SwingExt.computeTextWidth(policyInfo.table, sample)) / sample.length());
+					_ -> ((float) SwingExt.computeTextWidth(policyInfo.table, sample)) / sample.length());
 			final var columnWidth = (int) (charRatio * fixedTextLength);
 			return columnWidth + margin.compute(columnWidth);
 		}

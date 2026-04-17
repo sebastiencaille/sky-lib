@@ -5,7 +5,7 @@ public interface Margin {
 	int compute(int columnWidth);
 
 	static Margin px(int i) {
-		return cw -> i;
+		return _ -> i;
 	}
 
 	static Margin percent(float pct) {

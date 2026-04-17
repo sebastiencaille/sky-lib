@@ -76,7 +76,7 @@ public class SwingPilot extends ch.scaille.testing.testpilot.GuiPilot {
 	 * @param clazz the class of the searched component
 	 */
 	public <T extends JComponent> Optional<T> search(final Class<T> clazz) {
-		return search(new HashSet<>(), root, clazz, c -> true, s -> !s.isEmpty()).stream().findAny();
+		return search(new HashSet<>(), root, clazz, _ -> true, s -> !s.isEmpty()).stream().findAny();
 	}
 
 	public <T extends JComponent> Optional<T> search(final Class<T> clazz, final Predicate<T> filter) {
@@ -84,7 +84,7 @@ public class SwingPilot extends ch.scaille.testing.testpilot.GuiPilot {
 	}
 
 	public <T extends JComponent> Set<T> searchAll(final Class<T> clazz, final Predicate<T> filter) {
-		return search(new HashSet<>(), root, clazz, filter, s -> false);
+		return search(new HashSet<>(), root, clazz, filter, _ -> false);
 	}
 
 	/**

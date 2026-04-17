@@ -126,7 +126,7 @@ public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 	@Override
 	protected ModalDialogDetector.Builder createDefaultModalDialogDetector() {
 		final var testThread = Thread.currentThread();
-		return new ModalDialogDetector.Builder(() -> AlertDetector.listAlerts(this, null), e -> testThread.interrupt());
+		return new ModalDialogDetector.Builder(() -> AlertDetector.listAlerts(this, null), _ -> testThread.interrupt());
 	}
 
 	/**
@@ -135,7 +135,7 @@ public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 	public NoExceptionCloseable expectModalDialog(final Function<AlertPilot, PollingResult> check) {
 		final var testThread = Thread.currentThread();
 		return expectModalDialog(new ModalDialogDetector.Builder(() -> AlertDetector.listAlerts(this, check),
-				e -> testThread.interrupt()));
+				_ -> testThread.interrupt()));
 	}
 
 	protected void installPathFunction() {

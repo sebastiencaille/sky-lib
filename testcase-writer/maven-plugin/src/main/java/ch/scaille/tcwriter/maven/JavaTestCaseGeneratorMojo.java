@@ -41,7 +41,7 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
     @Parameter(property = "dictionaryFolder", defaultValue = "file:${project.testResources.testResource.directory}/dictionaries")
     private String dictionaryFolder;
 
-    @Parameter(property = "dictionary", required = false)
+    @Parameter(property = "dictionary")
     private String dictionaryLocator;
 
     @Parameter(property = "testCases")

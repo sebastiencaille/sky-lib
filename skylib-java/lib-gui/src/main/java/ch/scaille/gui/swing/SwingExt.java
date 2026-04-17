@@ -47,7 +47,7 @@ public class SwingExt {
 	}
 
 	public static IPropertyEventListener checkSwingThread() {
-		return (c, e) -> {
+		return (_, e) -> {
 			if (e.kind() == EventKind.BEFORE && e.property().getTransmitMode().toComponent
 					&& !EventQueue.isDispatchThread()) {
 				throw new IllegalStateException("Property " + e.property().getName() + " fired out of Swing thread");
@@ -66,7 +66,7 @@ public class SwingExt {
 	 * Bridge between ActionListener and Lambda function
 	 */
 	public static ActionListener action(Runnable runnable) {
-		return e -> runnable.run();
+		return _ -> runnable.run();
 	}
 
 	/*

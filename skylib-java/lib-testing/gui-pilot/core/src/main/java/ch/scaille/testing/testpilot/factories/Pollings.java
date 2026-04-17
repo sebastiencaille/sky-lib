@@ -20,7 +20,7 @@ public abstract class Pollings {
 	 * Succeed if the component was found
 	 */
 	public static <C> Polling.PollingBuilder<C, Boolean> exists() {
-		return Polling.of(ctxt -> PollingResults.success());
+		return Polling.of(_ -> PollingResults.success());
 	}
 
 	

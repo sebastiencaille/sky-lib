@@ -34,7 +34,7 @@ public class TestObjectControllerModelController extends GuiController {
 	}
 
     public ActionListener getCommitAction() {
-		return e -> tableModel.commit();
+		return _ -> tableModel.commit();
 	}
 
 }

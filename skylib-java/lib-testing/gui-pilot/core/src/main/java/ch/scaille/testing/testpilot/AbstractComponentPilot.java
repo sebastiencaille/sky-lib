@@ -126,7 +126,7 @@ public abstract class AbstractComponentPilot<C> {
      */
     public <V> PollingResult<C, V> waitPollingSuccess(final Polling.PollingBuilder<C, V> polling) {
         waitActionDelay();
-        try (var closeable = pilot.withModalDialogDetection()) {
+        try (var _ = pilot.withModalDialogDetection()) {
             final var result = waitPollingSuccessLoop(polling.build());
             if (result.isSuccess()) {
                 fired = true;

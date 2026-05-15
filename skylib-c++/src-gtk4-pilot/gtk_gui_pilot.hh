@@ -15,12 +15,12 @@
 #include <types.hh>
 #include "gtk_entry_pilot.hh"
 
-namespace ch_skymarshall::gui::gtk4::pilot {
+namespace ch_scaille::gui::gtk4::pilot {
 
 using namespace std;
 using Glib::ustring;
 
-class gui_pilot_exception: public ch_skymarshall::gui::gui_exception {
+class gui_pilot_exception: public ch_scaille::gui::gui_exception {
 public:
 	explicit gui_pilot_exception(const string_view &_msg) :
 			gui_exception(_msg) {

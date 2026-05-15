@@ -8,7 +8,6 @@ import java.time.Duration;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -21,7 +20,7 @@ import ch.scaille.testing.testpilot.selenium.SeleniumPilot;
 import ch.scaille.testing.testpilot.selenium.SeleniumPollingBuilder;
 import org.openqa.selenium.remote.DomMutation;
 
-@NullMarked
+
 public class ExamplePage extends PagePilot {
 
     private static final By ENABLE_TEST = By.id("EnableTest");

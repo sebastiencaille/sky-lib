@@ -3,6 +3,7 @@ package ch.scaille.gui.tools;
 import static ch.scaille.javabeans.properties.Configuration.persistent;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
@@ -58,10 +59,13 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 
 	public static class Builder<T> {
 		private final Class<T> editedClazz;
+		@Nullable
 		private ResourceBundle bundle = null;
 		private boolean readOnly = false;
 		private IGenericModelAdapter<T>[] adapters = new IGenericModelAdapter[0];
+		@Nullable
 		private IPropertiesGroup propertySupport;
+		@Nullable
 		private ErrorSet errorSet;
 
 		public Builder(final Class<T> clazz) {
@@ -82,7 +86,7 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 		}
 
 		/**
-		 * Adds the adapters, to tune the property bindings 
+		 * Adds adapters to tune the property bindings
 		 */
 		public Builder<T> adapters(final IGenericModelAdapter<T>... adapters) {
 			this.adapters = adapters;
@@ -125,12 +129,12 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 
 	@Override
 	public IPropertiesGroup getPropertySupport() {
-		return config.propertySupport;
+		return Objects.requireNonNull(config.propertySupport, "Model was not built");
 	}
 
 	@Override
 	public ErrorSet getErrorProperty() {
-		return config.errorSet;
+		return Objects.requireNonNull(config.errorSet, "Model was not built");
 	}
 
 	/**
@@ -147,7 +151,7 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 
 	private <V> ClassPropertyEntry<T, V> createProperty(IObjectProvider<T> object,
 																		  AbstractAttributeMetaData<T, V> typedAttribute ) {
-		final var property = new ObjectProperty<@Nullable V>(typedAttribute.getName(), config.propertySupport, null);
+		final var property = new ObjectProperty<V>(typedAttribute.getName(), getPropertySupport(), null);
 		property.configureTyped(persistent(object, Persisters.persister(typedAttribute)));
 
 		final var readOnly = config.readOnly || typedAttribute.isReadOnly();

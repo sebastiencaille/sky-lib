@@ -20,7 +20,6 @@ import ch.scaille.javabeans.PropertyEvent.EventKind;
 import ch.scaille.javabeans.converters.IConverterWithContext;
 import ch.scaille.javabeans.converters.IConverter;
 import ch.scaille.javabeans.persisters.Persisters;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -30,7 +29,7 @@ import org.jspecify.annotations.Nullable;
  * @param <T> the type of the object contained in the property
  * @author Sebastien Caille
  */
-@NullMarked
+
 public abstract class AbstractTypedProperty<T extends @Nullable Object> extends AbstractProperty implements IChainBuilder<T> {
 
     private final List<IConverter<T, T>> implicitConverters = new ArrayList<>();
@@ -87,13 +86,13 @@ public abstract class AbstractTypedProperty<T extends @Nullable Object> extends 
 
 
     @Override
-    public <C> IChainBuilder<C> bind(final IConverter<T, C> binding) {
+    public <C extends @Nullable Object> IChainBuilder<C> bind(final IConverter<T, C> binding) {
         return createBindingChainWithConv().bind(binding);
     }
 
 
     @Override
-    public <C> IChainBuilder<C> listenF(final Function<T, C> binding) {
+    public <C extends @Nullable Object> IChainBuilder<C> listenF(final Function<T, C> binding) {
         return createBindingChainWithConv().listenF(binding);
     }
 

@@ -9,11 +9,9 @@ import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestReference;
 import lombok.Getter;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 @Getter
-@NullMarked
 public class TestParameterModel extends GuiModel {
 	private final ObjectProperty<ParameterNature> valueNature;
 	private final ObjectProperty<@Nullable String> simpleValue;

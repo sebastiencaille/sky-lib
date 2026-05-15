@@ -9,7 +9,6 @@ import ch.scaille.javabeans.AutoCommitListener;
 import ch.scaille.javabeans.persisters.IPersisterFactory;
 import ch.scaille.javabeans.persisters.IPersisterFactory.IObjectProvider;
 import ch.scaille.javabeans.properties.AbstractProperty.ErrorNotifier;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * To tune the properties.
@@ -19,7 +18,7 @@ import org.jspecify.annotations.NullMarked;
  *
  * @author Sebastien Caille
  */
-@NullMarked
+
 public class Configuration {
 
 	private Configuration() {

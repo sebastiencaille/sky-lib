@@ -9,10 +9,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.List;
 
 import javax.swing.SwingUtilities;
 
 import ch.scaille.tcwriter.annotations.TCActor;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
@@ -26,29 +28,35 @@ import ch.scaille.tcwriter.persistence.ModelConfig;
 import ch.scaille.tcwriter.persistence.factory.DaoConfigs;
 import ch.scaille.tcwriter.persistence.testexec.JunitTestExecConfig;
 import ch.scaille.tcwriter.recorder.RecorderTestActors;
-import ch.scaille.tcwriter.services.generators.JavaToDictionary;
+import ch.scaille.tcwriter.javatc.generators.JavaToDictionary;
 import ch.scaille.tcwriter.services.generators.visitors.HumanReadableVisitor;
-import ch.scaille.tcwriter.services.recorder.ITestCaseRecorder;
-import ch.scaille.tcwriter.services.recorder.TestCaseRecorder;
-import ch.scaille.tcwriter.services.recorder.TestCaseRecorderAspect;
-import ch.scaille.tcwriter.services.testexec.JUnitTestExecutor;
-import ch.scaille.util.helpers.ClassLoaderHelper;
+import ch.scaille.tcwriter.javatc.recorder.TestCaseRecorder;
+import ch.scaille.tcwriter.javatc.testexec.JUnitTestExecutor;
+import ch.scaille.tcwriter.javatc.testexec.recorder.ITestCaseRecorder;
+import ch.scaille.tcwriter.javatc.testexec.recorder.TestCaseRecorderAspect;
+import ch.scaille.util.helpers.JavaExt;
 import ch.scaille.util.helpers.LambdaExt;
-import ch.scaille.util.helpers.Logs;
+import lombok.extern.java.Log;
 
 @TCActors({
         @TCActor(variable = "tcWriter", humanReadable = "test writer", description = "Test writer", role = TestWriterRole.class),
         @TCActor(variable = "testSession", humanReadable = "test session", description = "A test session", role = TestSessionRole.class)
 })
+@Log
 public class AbstractGuiTest {
 
     private static final Path RESOURCE_FOLDER = Paths.get(System.getProperty("java.io.tmpdir"));
 
+    @Nullable
     private TCGuiPilot pilot;
 
+    @Nullable
     protected TestWriterRole tcWriter;
+
+    @Nullable
     protected TestSessionRole testSession;
 
+    @Nullable
     private ITestCaseRecorder testRecorder;
 
     @BeforeEach
@@ -76,20 +84,20 @@ public class AbstractGuiTest {
 
         final var junitTestConfig = new JunitTestExecConfig();
         junitTestConfig.setJava("");
-        junitTestConfig.setClasspath("");
+        junitTestConfig.setClasspath();
 
-        final var daoConfig = DaoConfigs.withFolder(DaoConfigs.tempFolder());
+        final var daoConfig = DaoConfigs.withFolder(DaoConfigs.tempFolder(), getClass().getModule());
         final var configDao = daoConfig.configDao()
                 .setConfiguration(TCConfig.of("default", modelConfig, junitTestConfig));
 
         // Setup services
         final var persister = daoConfig.modelDao();
-        final var executor = new JUnitTestExecutor(configDao, persister, ClassLoaderHelper.appClassPath());
+        final var executor = new JUnitTestExecutor(configDao, persister, JavaExt.locationOf(TCWriterController.class).resolve("../javatc-resources"));
 
         // Setup data
         final var dictionary = new JavaToDictionary("gui-it", TestWriterRole.class, TestSessionRole.class, AbstractGuiTest.class)
                 .generate();
-        dictionary.getMetadata().setDescription("Basic tcwriter tests");
+        dictionary.getMetadata().setDescription("Basic tcWriter tests");
         persister.writeTestDictionary(dictionary);
 
         final var controller = new TCWriterController(configDao, persister, dictionary, executor);
@@ -107,14 +115,15 @@ public class AbstractGuiTest {
 
     @AfterEach
     public void closeGui(TestInfo testInfo) {
-        if (pilot == null) {
-            return;
+        if (testRecorder != null) {
+            final var recordedTest = testRecorder.buildTestCase(testInfo.getTestMethod().map(Method::getName).orElseThrow());
+            log.info(() -> new HumanReadableVisitor(recordedTest, false).processAllSteps());
         }
-        final var recordedTest = testRecorder.buildTestCase(testInfo.getTestMethod().map(Method::getName).orElseThrow());
-        Logs.of(getClass()).info(() -> new HumanReadableVisitor(recordedTest, false).processAllSteps());
 
-        pilot.close();
-        Logs.of(getClass()).info(pilot.getActionReport().getFormattedReport());
+        if (pilot != null) {
+            pilot.close();
+            log.info(() -> pilot.getActionReport().getFormattedReport());
+        }
     }
 
 }

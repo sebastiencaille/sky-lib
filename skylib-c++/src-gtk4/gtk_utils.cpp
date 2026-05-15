@@ -7,7 +7,7 @@
 
 #include <gtk_utils.hh>
 
-namespace ch_skymarshall::gui::gtk4::utils {
+namespace ch_scaille::gui::gtk4::utils {
 
 void run_in_gtk(const std::function<void()> & _lambda) {
 	Glib::signal_idle().connect_once(_lambda);

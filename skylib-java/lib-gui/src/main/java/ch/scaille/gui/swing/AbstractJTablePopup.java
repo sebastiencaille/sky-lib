@@ -7,6 +7,7 @@ import javax.swing.JTable;
 
 import ch.scaille.gui.swing.model.ListModelTableModel;
 import ch.scaille.javabeans.properties.ObjectProperty;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Popup on JTable with a ListModelTableModel
@@ -21,10 +22,11 @@ public abstract class AbstractJTablePopup<T> extends AbstractPopup<T> {
 
 	private final JTable table;
 	private final ListModelTableModel<T, ?> model;
+	@Nullable
 	private final ObjectProperty<? extends Collection<T>> selections;
 
 	protected AbstractJTablePopup(final JTable table, final ListModelTableModel<T, ?> model,
-			final ObjectProperty<T> lastSelected, final ObjectProperty<? extends Collection<T>> selections) {
+	                              @Nullable final ObjectProperty<T> lastSelected, @Nullable final ObjectProperty<? extends Collection<T>> selections) {
 		super(lastSelected);
 		this.table = table;
 		this.model = model;
@@ -34,15 +36,13 @@ public abstract class AbstractJTablePopup<T> extends AbstractPopup<T> {
 	@Override
 	protected T getValueForPopup(final Point p) {
 		final var objectToSelect = model.getObjectAtRow(table.rowAtPoint(p));
-		if (objectToSelect != null) {
-			var selected = selections != null && selections.getValue() != null
-					&& selections.getValue().contains(objectToSelect);
-			selected |= lastSelected != null && lastSelected.getValue() == objectToSelect;
+		var selected = selections != null && selections.getValue() != null
+				&& selections.getValue().contains(objectToSelect);
+		selected |= lastSelected != null && lastSelected.getValue() == objectToSelect;
 
-			if (!selected) {
-				final var index = model.getRowOf(objectToSelect);
-				table.getSelectionModel().setSelectionInterval(index, index);
-			}
+		if (!selected) {
+			final var index = model.getRowOf(objectToSelect);
+			table.getSelectionModel().setSelectionInterval(index, index);
 		}
 		return objectToSelect;
 	}

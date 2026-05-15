@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import javax.swing.JCheckBox;
 
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,9 @@ import ch.scaille.javabeans.IVetoer.TransmitMode;
 import ch.scaille.javabeans.converters.Converters;
 import ch.scaille.javabeans.properties.ObjectProperty;
 
-@NullMarked
+import java.util.Objects;
+
+
 class SwingBindingsTest {
 	private static class TestGuiModel extends GuiModel {
 
@@ -42,7 +43,7 @@ class SwingBindingsTest {
 		final var cb = new JCheckBox("UnitTest");
 		model.stringProperty.setValue(this, Boolean.FALSE.toString());
 		final var cbBinding = model.stringProperty
-				.bind(Converters.<String, Boolean>converter(Boolean::valueOf, Object::toString))
+				.bind(Converters.converter(Boolean::valueOf, Objects::toString))
 				.bind(SwingBindings.selected(cb));
 		model.stringProperty.setTransmitMode(TransmitMode.TRANSMIT);
 

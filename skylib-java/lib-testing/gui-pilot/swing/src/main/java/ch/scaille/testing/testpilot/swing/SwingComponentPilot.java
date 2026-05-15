@@ -10,13 +10,13 @@ import ch.scaille.testing.testpilot.Polling;
 import ch.scaille.testing.testpilot.PolledComponent;
 import ch.scaille.testing.testpilot.PollingResult;
 import ch.scaille.util.helpers.Poller;
-import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An abstract class for Swing component pilots
  * @param <C> the type of the Swing Component
  */
-@NullMarked
+
 public class SwingComponentPilot<C extends JComponent>
 		extends AbstractComponentPilot<C> {
 
@@ -60,7 +60,7 @@ public class SwingComponentPilot<C extends JComponent>
 	}
 
 	@Override
-	public <V> PollingResult<C, V> waitPollingSuccess(final Polling.PollingBuilder<C, V> polling) {
+	public <V extends @Nullable Object> PollingResult<C, V> waitPollingSuccess(final Polling.PollingBuilder<C, V> polling) {
 		if (SwingUtilities.isEventDispatchThread()) {
 			throw new IllegalStateException("Polling must not run in Swing thread");
 		}

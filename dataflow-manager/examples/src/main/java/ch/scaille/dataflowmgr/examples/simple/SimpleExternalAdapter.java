@@ -1,5 +1,7 @@
 package ch.scaille.dataflowmgr.examples.simple;
 
+import java.util.Objects;
+
 import ch.scaille.dataflowmgr.annotations.ExternalAdapters;
 import ch.scaille.dataflowmgr.examples.simple.dto.MyData;
 
@@ -14,7 +16,7 @@ public class SimpleExternalAdapter {
 
 	public String getCompletion(final MyData input) {
 		FlowReport.add("getCompletion");
-        return switch (input.parameter) {
+        return switch (input.parameter()) {
             case "Hello" -> "World";
             case "Hi" -> "There";
             default -> throw new IllegalStateException("Unknown id: " + input);
@@ -22,11 +24,8 @@ public class SimpleExternalAdapter {
 	}
 
 	public void display(final MyData result) {
-		if (result == null) {
-			throw new IllegalStateException("Result must not be null");
-		}
 		FlowReport.add("display");
-		this.output = result.output;
+		this.output = Objects.requireNonNull(result, "Result must not be null").output();
 	}
 
 	public String getOutput() {

@@ -7,15 +7,17 @@ import java.awt.event.MouseEvent;
 import javax.swing.JPopupMenu;
 
 import ch.scaille.javabeans.properties.ObjectProperty;
+import org.jspecify.annotations.Nullable;
 
 public abstract class AbstractPopup<T> extends MouseAdapter {
 
 	private final JPopupMenu componentPopupMenu = new JPopupMenu();
+	@Nullable
 	protected final ObjectProperty<T> lastSelected;
 
 	protected abstract void buildPopup(JPopupMenu popupMenu, T selected);
 
-	protected AbstractPopup(final ObjectProperty<T> lastSelected) {
+	protected AbstractPopup(@Nullable final ObjectProperty<T> lastSelected) {
 		this.lastSelected = lastSelected;
 	}
 
@@ -23,7 +25,11 @@ public abstract class AbstractPopup<T> extends MouseAdapter {
 	 * 
 	 * @param p location of the popup
 	 */
+	@Nullable
 	protected T getValueForPopup(final Point p) {
+		if (lastSelected == null) {
+			return null;
+		}
 		return lastSelected.getValue();
 	}
 
@@ -31,8 +37,10 @@ public abstract class AbstractPopup<T> extends MouseAdapter {
 	public void mousePressed(final MouseEvent e) {
 		if (e.isPopupTrigger()) {
 			final var selected = getValueForPopup(e.getPoint());
-			buildPopup(componentPopupMenu, selected);
-			componentPopupMenu.show(e.getComponent(), e.getX(), e.getY());
+			if (selected != null) {
+				buildPopup(componentPopupMenu, selected);
+				componentPopupMenu.show(e.getComponent(), e.getX(), e.getY());
+			}
 		}
 	}
 

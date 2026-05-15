@@ -7,21 +7,20 @@ import ch.scaille.gui.mvc.factories.ComponentBindings;
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@NullMarked
+
 public class ListModelBindings {
 
     private ListModelBindings() {
         // noop
     }
 
-    public static <T extends @Nullable Object> IComponentBinding<IListView<T>> view(final ListModel<T> model) {
+    public static <T> IComponentBinding<IListView<T>> view(final ListModel<T> model) {
         return ComponentBindings.listen(model, (c, _, t) -> c.setView(t));
     }
 
-    public static <T extends @Nullable Object> IComponentBinding<Collection<T>> values(final ListModel<T> model) {
+    public static <T> IComponentBinding<Collection<T>> values(final ListModel<T> model) {
         return new IComponentBinding<>() {
 
             @Nullable

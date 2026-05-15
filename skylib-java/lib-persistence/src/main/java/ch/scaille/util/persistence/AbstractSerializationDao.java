@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import ch.scaille.util.persistence.handlers.IStorageDataHandler;
 import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Abstraction of dao with serialization (json, yaml, ...)
@@ -24,10 +25,6 @@ public abstract class AbstractSerializationDao<T> implements IDao<T> {
 	 */
 	protected final StorageDataHandlerRegistry dataHandlerRegistry;
 
-	protected abstract ResourceMetaData resolve(String locator) throws IOException;
-
-	protected abstract ResourceMetaData resolveOrCreate(String locator) throws IOException;
-
 	protected abstract Resource<String> readRaw(ResourceMetaData resourceMetaData) throws IOException;
 
 	protected abstract Resource<String> writeRaw(Resource<String> resource) throws StorageException;
@@ -41,6 +38,11 @@ public abstract class AbstractSerializationDao<T> implements IDao<T> {
         this.dataHandlerRegistry = Objects.requireNonNullElseGet(serDeserializerRegistry, () -> new StorageDataHandlerRegistry(null));
 	}
 
+	@Override
+	public ResourceMetaData resolve(String locator, String mimetype) throws StorageException {
+		return resolve(locator).withMimeType(mimetype);
+	}
+	
 	protected ResourceMetaData buildAndValidateMetadata(String locator, String storageLocator) {
 		return buildMetadata(locator, storageLocator)
 				.orElseThrow(() -> unableToIdentifyException(locator, storageLocator, "not found"));
@@ -64,13 +66,13 @@ public abstract class AbstractSerializationDao<T> implements IDao<T> {
 	}
 
 	@Override
-	public Resource<T> loadResource(ResourceMetaData resourceMetaData, T template) throws StorageException {
+	public Resource<T> loadResource(ResourceMetaData resourceMetaData, @Nullable T template) throws StorageException {
 		return StorageException.wrap("loadResource",
 				() -> dataHandlerRegistry.decode(readRaw(resourceMetaData), resourceType, template));
 	}
 
 	@Override
-	public Resource<T> loadResource(String locator, T template) throws StorageException {
+	public Resource<T> loadResource(String locator, @Nullable T template) throws StorageException {
 		return StorageException.wrap("loadResource", () -> loadResource(resolve(locator), template));
 	}
 

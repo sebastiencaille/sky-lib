@@ -3,7 +3,6 @@ package ch.scaille.testing.testpilot.selenium.jupiter;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -15,7 +14,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 /**
  * Allows propagating the web driver to the junit extensions
  */
-@NullMarked
+
 public class WebDriverExtension implements ParameterResolver {
 
 	@Nullable

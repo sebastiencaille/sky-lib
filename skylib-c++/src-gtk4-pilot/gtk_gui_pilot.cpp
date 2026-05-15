@@ -9,7 +9,7 @@
 #include "gtk_entry_pilot.hh"
 #include "gtk_gui_pilot.hh"
 
-namespace ch_skymarshall::gui::gtk4::pilot {
+namespace ch_scaille::gui::gtk4::pilot {
 
 gtk_gui_pilot::gtk_gui_pilot(Gtk::Window *_window) :
 		m_window(_window) {

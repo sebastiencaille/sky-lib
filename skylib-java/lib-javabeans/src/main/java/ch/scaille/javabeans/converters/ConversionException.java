@@ -1,10 +1,8 @@
 package ch.scaille.javabeans.converters;
 
-import org.jspecify.annotations.NullMarked;
-
 import java.io.Serial;
 
-@NullMarked
+
 public class ConversionException extends Exception {
 
 	@Serial

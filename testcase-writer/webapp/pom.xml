@@ -14,9 +14,8 @@
 
 	<modules>
 		<module>api-validators</module>
-		<module>backend-core</module>
-		<module>api-v0</module>
 		<module>backend</module>
+		<module>api-v0</module>
 		<module>frontend</module>
 		<module>war</module>
 		<module>tests</module>
@@ -60,7 +59,6 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
 
 	<profiles>
 		<profile>
@@ -106,7 +104,10 @@
 						<ignoreFileOverride>
 							${project.basedir}/.openapi-generator-ignore</ignoreFileOverride>
 						<configOptions>
-							<useSpringBoot3>true</useSpringBoot3>
+							<useSpringBoot4>true</useSpringBoot4>
+							<useJackson3>true</useJackson3>
+							<useJakartaEe>true</useJakartaEe>
+							<useJspecify>true</useJspecify>
 							<throwsException>true</throwsException>
 							<useBeanValidation>true</useBeanValidation>
 						</configOptions>
@@ -116,5 +117,30 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</path>
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>${mapstruct.version}</version>
+						</path>
+						<path>
+							<groupId>org.springframework.boot</groupId>
+							<artifactId>spring-boot-autoconfigure-processor</artifactId>
+						</path>
+						<!-- other annotation processors -->
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
 </project>

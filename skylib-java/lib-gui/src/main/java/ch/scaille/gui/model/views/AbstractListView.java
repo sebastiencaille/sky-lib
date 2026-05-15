@@ -1,6 +1,5 @@
 package ch.scaille.gui.model.views;
 
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
@@ -18,7 +17,7 @@ import java.util.Objects;
  *
  * @param <T>
  */
-@NullMarked
+
 public abstract class AbstractListView<T extends @Nullable Object> implements IListView<T>, Serializable {
 
 	@Serial

@@ -11,7 +11,7 @@
 #include <functional>
 #include <chrono>
 
-namespace ch_skymarshall::gui::pilot {
+namespace ch_scaille::gui::pilot {
 
 using namespace std;
 

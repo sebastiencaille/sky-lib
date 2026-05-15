@@ -13,7 +13,7 @@
 #include "typed_property.hh"
 #include "binding_chain.hh"
 
-namespace ch_skymarshall::gui {
+namespace ch_scaille::gui {
 
 using namespace std::placeholders;
 /**

@@ -18,6 +18,7 @@ import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestReference;
 import ch.scaille.tcwriter.model.testcase.TestStep;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Formats human-readable text.
@@ -59,6 +60,7 @@ public class HumanReadableVisitor {
 		return result.toString();
 	}
 
+	@Nullable
 	private String processTestParameter(final TestParameterValue parameterValue) {
 		return switch (parameterValue.getParameterValueFactory()) {
 		case TestReference testRef ->
@@ -83,7 +85,7 @@ public class HumanReadableVisitor {
 
 	}
 
-	private String processTestParameter(final TestParameterValue parameterValue, final List<String> mandatoryParams) {
+	private String processTestParameter(final TestParameterValue parameterValue, final List<@Nullable String> mandatoryParams) {
 		final var optionals = new StringBuilder();
 		var sep = "(";
 		boolean hasOptionals = false;
@@ -105,12 +107,12 @@ public class HumanReadableVisitor {
 		return summaryOf(parameterValue.getParameterValueFactory(), mandatoryParams) + ((hasOptionals) ? " " + optionals : "");
 	}
 
-	private String summaryOf(final IdObject idObject, final List<String> list) {
+	private String summaryOf(final IdObject idObject, @Nullable  final List<@Nullable String> list) {
 		return format(tc.descriptionOf(idObject).humanReadable(), list);
 	}
 
 	@VisibleForTesting
-	public static String format(final String humanReadable, final List<String> paramsTexts) {
+	public static String format(final String humanReadable, @Nullable final List<@Nullable String> paramsTexts) {
 		final var emptiedBlocks = new ArrayList<String>();
 		final List<String> formatParams;
 		if (paramsTexts != null) {

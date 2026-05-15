@@ -17,7 +17,6 @@ import ch.scaille.javabeans.IVetoer.TransmitMode;
 import ch.scaille.javabeans.PropertyEvent;
 import ch.scaille.javabeans.PropertyEvent.EventKind;
 import lombok.Getter;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * Provides type-independent properties mechanisms.
@@ -26,7 +25,7 @@ import org.jspecify.annotations.NullMarked;
  * @author Sebastien Caille
  *
  */
-@NullMarked
+
 public abstract class AbstractProperty implements IComponentChangeSource, Serializable {
 
 	@Serial

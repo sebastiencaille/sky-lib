@@ -23,8 +23,10 @@ import javax.swing.table.TableColumn;
 import ch.scaille.javabeans.PropertyEvent.EventKind;
 import ch.scaille.javabeans.properties.IPropertyEventListener;
 import ch.scaille.util.helpers.JavaExt;
-import ch.scaille.util.helpers.Logs;
+import lombok.extern.java.Log;
+import org.jspecify.annotations.Nullable;
 
+@Log
 public class SwingExt {
 
 	private static final String TRANSLATIONS_APPLICATION = "translations/application";
@@ -33,17 +35,14 @@ public class SwingExt {
 		// noop
 	}
 
-	public static ImageIcon iconFromStream(final Supplier<InputStream> inSupplier) throws IOException {
+	public static ImageIcon iconFromStream(final Supplier<@Nullable InputStream> inSupplier) throws IOException {
 		try (var inStream = inSupplier.get()) {
 			return iconFromStream(inStream);
 		}
 	}
 
-	public static ImageIcon iconFromStream(final InputStream in) throws IOException {
-		if (in == null) {
-			throw new IllegalArgumentException("Stream must not be null");
-		}
-		return new ImageIcon(JavaExt.read(in));
+	public static ImageIcon iconFromStream(@Nullable final InputStream in) throws IOException {
+		return new ImageIcon(JavaExt.read(Objects.requireNonNull(in, "InputStream must not be null")));
 	}
 
 	public static IPropertyEventListener checkSwingThread() {
@@ -84,20 +83,21 @@ public class SwingExt {
 		return component.toString();
 	}
 
+	@Nullable
 	private static ResourceBundle defaultBundle;
 	private static UnaryOperator<String> labelProvider = key -> {
 		try {
 			return Objects.requireNonNull(defaultBundle, "Bundle not configured").getString(key);
-		} catch (MissingResourceException e) {
-			return null;
+		} catch (MissingResourceException _) {
+			return "";
 		}
 	};
 
 	static {
 		try {
 			loadBundle(TRANSLATIONS_APPLICATION);
-		} catch (MissingResourceException r) {
-			Logs.of(SwingExt.class).info("Default bundle not found: " + TRANSLATIONS_APPLICATION);
+		} catch (MissingResourceException _) {
+			log.info("Default bundle not found: " + TRANSLATIONS_APPLICATION);
 			defaultBundle = null;
 		}
 	}
@@ -106,6 +106,10 @@ public class SwingExt {
 		SwingExt.labelProvider = labelProvider;
 	}
 
+	public static void loadDefaultBundle(Module module) {
+		defaultBundle = ResourceBundle.getBundle(TRANSLATIONS_APPLICATION, module);
+	}
+	
 	public static void loadBundle(String bundle) {
 		defaultBundle = ResourceBundle.getBundle(bundle);
 	}

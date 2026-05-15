@@ -15,7 +15,6 @@ import ch.scaille.javabeans.Logging;
 import ch.scaille.javabeans.converters.ConversionException;
 import ch.scaille.javabeans.converters.IConverter;
 import ch.scaille.javabeans.converters.IConverterWithContext;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -23,7 +22,7 @@ import org.jspecify.annotations.Nullable;
  *
  * @param <P> The property side type
  */
-@NullMarked
+
 public class EndOfChain<P extends @Nullable Object> implements IChainBuilder<P> {
 
     /**
@@ -38,13 +37,13 @@ public class EndOfChain<P extends @Nullable Object> implements IChainBuilder<P> 
 
             newBinding.addComponentValueChangeListener(new IComponentLink<>() {
                 @Override
-                public void setValueFromComponent(final Object component, @Nullable final P componentValue) {
+                public void setValueFromComponent(final Object component, @Nullable final P componentValue, boolean force) {
                     if (!chain.mustSendToProperty(chain)) {
                         return;
                     }
                     Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE,
                             () -> "Component change: " + component.getClass().getSimpleName() + ": " + componentValue);
-                    chain.propagateComponentChange(component, componentValue);
+                    chain.propagateComponentChange(component, componentValue, force);
                 }
 
                 @Override
@@ -67,7 +66,7 @@ public class EndOfChain<P extends @Nullable Object> implements IChainBuilder<P> 
         }
 
         @Override
-        public P toProperty(final Object component, final P value) {
+        public P toProperty(final Object component, final P value, boolean force) {
             return value;
         }
 
@@ -194,7 +193,7 @@ public class EndOfChain<P extends @Nullable Object> implements IChainBuilder<P> 
             }
 
             @Override
-            public P toProperty(final Object component, final C value) throws ConversionException {
+            public P toProperty(final Object component, final C value, boolean force) throws ConversionException {
                 return comp2Prop.apply(value);
             }
 

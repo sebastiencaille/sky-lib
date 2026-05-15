@@ -7,13 +7,11 @@ import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.properties.BooleanProperty;
 import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.javabeans.properties.PropertiesAggregator;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import static ch.scaille.example.gui.model.impl.TableModelExampleView.NATURAL_ORDER;
 import static ch.scaille.example.gui.model.impl.TableModelExampleView.REVERSE_ORDER;
 
-@NullMarked
 public class TableModelExampleModel {
 
 	public record ViewFilter(boolean reverseOrder, boolean enableFilter)

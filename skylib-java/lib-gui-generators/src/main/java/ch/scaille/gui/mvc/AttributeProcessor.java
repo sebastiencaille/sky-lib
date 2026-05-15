@@ -12,12 +12,11 @@ import java.util.Set;
 
 import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
 import ch.scaille.util.dao.metadata.IAttributeMetaData;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * To generate the code of the MVC model for a given model class attribute
  */
-@NullMarked
+
 public abstract class AttributeProcessor {
 
 	public static String typeParametersToString(final Type type) {

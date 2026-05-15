@@ -1,5 +1,6 @@
 package ch.scaille.tcwriter.server.webapi.service;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.context.ApplicationListener;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.support.NativeMessageHeaderAccessor;
@@ -11,13 +12,15 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import ch.scaille.tcwriter.server.services.SessionManager;
 
+import java.util.Objects;
+
 public class WebSocketConnectionHandler<S extends Session> {
 
 	private static final String SPRING_SESSION_ID_ATTR_NAME = "SPRING.SESSION.ID";
 
 	public interface ConnectHandler {
 
-		void handle(Session session, String tabId, String wsSessionId);
+		void handle(Session session, @Nullable String tabId, @Nullable String wsSessionId);
 
 	}
 
@@ -75,7 +78,7 @@ public class WebSocketConnectionHandler<S extends Session> {
 			handleSession(event, (session, tabId, wsSessionId) -> {
 				final var accessor = sessionAccessor.webSocketSessionIdOf(session, tabId);
 				final var sessionWsSessionId = accessor.get();
-				if (sessionWsSessionId.isPresent() && wsSessionId.equals(sessionWsSessionId.get())) {
+				if (sessionWsSessionId.isPresent() && Objects.equals(wsSessionId, sessionWsSessionId.get())) {
 					accessor.remove();
 				}
 			});

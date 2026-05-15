@@ -2,7 +2,6 @@ package ch.scaille.testing.testpilot.selenium;
 
 import java.util.Optional;
 
-import org.jspecify.annotations.NullMarked;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoAlertPresentException;
 
@@ -10,7 +9,7 @@ import ch.scaille.testing.testpilot.AbstractComponentPilot;
 import ch.scaille.testing.testpilot.PollingBuilder;
 import ch.scaille.testing.testpilot.PolledComponent;
 
-@NullMarked
+
 public class AlertPilot extends AbstractComponentPilot<Alert> {
 
 	private final SeleniumPilot pilot;

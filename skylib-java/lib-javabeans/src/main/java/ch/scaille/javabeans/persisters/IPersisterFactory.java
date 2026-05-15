@@ -4,7 +4,6 @@ import ch.scaille.javabeans.properties.IPersister;
 import lombok.Getter;
 import lombok.Setter;
 
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -15,7 +14,7 @@ import org.jspecify.annotations.Nullable;
  * @param <T> Type of the container object
  * @param <A> Type of the object's attribute
  */
-@NullMarked
+
 public interface IPersisterFactory<T, A extends @Nullable Object> {
 
 	IPersister<A> asPersister(final IObjectProvider<T> object);

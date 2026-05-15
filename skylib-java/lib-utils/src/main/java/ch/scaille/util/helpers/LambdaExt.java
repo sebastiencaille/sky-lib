@@ -1,6 +1,5 @@
 package ch.scaille.util.helpers;
 
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiFunction;
@@ -8,7 +7,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 @SuppressWarnings("unchecked")
-@NullMarked
+
 public class LambdaExt {
 
 	private LambdaExt() {
@@ -25,7 +24,7 @@ public class LambdaExt {
 	}
 
 	@FunctionalInterface
-	public interface SupplierWithException<T, E extends Exception> {
+	public interface SupplierWithException<T extends @Nullable Object, E extends Exception> {
 		T execute() throws E;
 	}
 
@@ -173,7 +172,7 @@ public class LambdaExt {
 		} catch (final Exception ex) {
 			try {
 				return exceptionHandler.apply((E) ex);
-			} catch (ClassCastException c) {
+			} catch (ClassCastException _) {
 				// not compatible
 				if (ex instanceof RuntimeException rex) {
 					throw rex;

@@ -6,9 +6,7 @@ import ch.scaille.tcwriter.model.config.SubConfig;
 import lombok.Setter;
 
 /**
- * File based configuration
- * @author scaille
- *
+ * File-based configuration
  */
 @Setter
 public class ModelConfig implements SubConfig {

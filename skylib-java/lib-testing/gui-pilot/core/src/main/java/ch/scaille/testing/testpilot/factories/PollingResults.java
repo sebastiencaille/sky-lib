@@ -3,6 +3,7 @@ package ch.scaille.testing.testpilot.factories;
 import java.util.function.Function;
 
 import ch.scaille.testing.testpilot.PollingResult;
+import org.jspecify.annotations.Nullable;
 
 public interface PollingResults {
 	
@@ -18,7 +19,7 @@ public interface PollingResults {
 	/**
 	 * Creates a polling success with a value
 	 */
-	static <C, V> PollingResult<C, V> value(final V value) {
+	static <C, V extends @Nullable Object> PollingResult<C, V> value(final V value) {
 		return PollingResult.value(value);
 	}
 

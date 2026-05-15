@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.JacksonJsonMessageConverter;
 import org.springframework.messaging.converter.MessageConverter;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.session.Session;
 import org.springframework.session.SessionRepository;
@@ -13,8 +14,10 @@ import org.springframework.session.web.socket.config.annotation.AbstractSessionW
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
-import ch.scaille.tcwriter.server.WebConstants;
+import ch.scaille.tcwriter.server.facade.WebConstants;
+import ch.scaille.tcwriter.server.facade.WebFeedbackFacade;
 import ch.scaille.tcwriter.server.services.SessionManager;
+import ch.scaille.tcwriter.server.webapi.service.WebSocketFeedbackFacade;
 import ch.scaille.tcwriter.server.webapi.service.WebSocketConnectionHandler.WebSocketConnectedHandler;
 import ch.scaille.tcwriter.server.webapi.service.WebSocketConnectionHandler.WebSocketDisconnectedHandler;
 
@@ -22,6 +25,11 @@ import ch.scaille.tcwriter.server.webapi.service.WebSocketConnectionHandler.WebS
 @EnableWebSocketMessageBroker
 public class WebSocketConfig  extends AbstractSessionWebSocketMessageBrokerConfigurer<Session> {
     
+	@Bean
+	WebFeedbackFacade webFeedbackFacade(SimpMessageSendingOperations feedbackSendingTemplate) {
+		return new WebSocketFeedbackFacade(feedbackSendingTemplate);
+	}
+	
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
 		config.enableSimpleBroker(WebConstants.TEST_EXECUTION_FEEDBACK);

@@ -2,11 +2,13 @@ package ch.scaille.gui.tools;
 
 import ch.scaille.javabeans.IChainBuilderFactory;
 import ch.scaille.javabeans.properties.AbstractProperty;
+import org.jspecify.annotations.Nullable;
 
 public interface IPropertyEntry {
 
 	String getLabel();
 
+	@Nullable
 	String getTooltip();
 
 	boolean isReadOnly();

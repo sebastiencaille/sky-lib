@@ -18,10 +18,9 @@ import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import lombok.Getter;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@NullMarked
+
 @Getter
 public class StepEditorModel extends GuiModel {
 

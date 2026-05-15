@@ -15,7 +15,7 @@
 #include "property_listener.hh"
 #include "property_manager.hh"
 
-namespace ch_skymarshall::gui {
+namespace ch_scaille::gui {
 
 /**
  * Basic property

@@ -19,10 +19,9 @@ import ch.scaille.util.helpers.LambdaExt;
 import ch.scaille.util.helpers.LambdaExt.BiFunctionWithException;
 import ch.scaille.util.helpers.LambdaExt.FunctionWithException;
 import ch.scaille.util.text.FormatterHelper;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@NullMarked
+
 public final class Converters {
 
     private Converters() {
@@ -312,15 +311,15 @@ public final class Converters {
     }
 
     public static IConverter<Integer, String> intToString() {
-        return intConverter(Integer::toString, numberToString(Integer::parseInt)); // NOSONAR
+        return intConverter(Integer::toString, numberToString(Integer::parseInt));
     }
 
     public static IConverter<Long, String> longToString() {
-        return longConverter(Long::toString, numberToString(Long::parseLong)); // NOSONAR
+        return longConverter(Long::toString, numberToString(Long::parseLong));
     }
 
     public static IConverter<Boolean, String> booleanToString() {
-        return booleanConverter(b -> Boolean.toString(b), Boolean::parseBoolean); // NOSONAR
+        return booleanConverter(b -> Boolean.toString(b), Boolean::parseBoolean);
     }
 
     public static <P> IConverter<P, String> objectToString() {

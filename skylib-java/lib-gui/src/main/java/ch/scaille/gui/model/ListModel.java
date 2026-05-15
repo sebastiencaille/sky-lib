@@ -12,7 +12,6 @@ import javax.swing.event.ListDataListener;
 import ch.scaille.gui.model.views.IListView;
 import ch.scaille.gui.model.views.StaticListView;
 import ch.scaille.util.helpers.JavaExt;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -36,8 +35,8 @@ import org.jspecify.annotations.Nullable;
  *            the Object.equals method. It is better if an element of the list
  *            can be uniquely identified using Object.equals.
  */
-@NullMarked
-public class ListModel<T extends @Nullable Object> implements ISourceModel<T>, Iterable<T>, Serializable {
+
+public class ListModel<T> implements ISourceModel<T>, Iterable<T>, Serializable {
 
 	protected final ListModelContent<T> content;
 	protected final transient ISourceModel<T> sourceCallbacks;

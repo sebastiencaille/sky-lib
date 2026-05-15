@@ -2,7 +2,6 @@ package ch.scaille.javabeans;
 
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.IPropertyEventListener;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
@@ -10,7 +9,7 @@ import java.util.Objects;
 /**
  * Allows adding dependencies between properties
  */
-@NullMarked
+
 public final class BindingDependencies {
 
 	private BindingDependencies() {

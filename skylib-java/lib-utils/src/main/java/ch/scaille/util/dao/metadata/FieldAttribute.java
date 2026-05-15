@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 import java.util.Optional;
 
 import ch.scaille.annotations.Persistency;
+import org.jspecify.annotations.Nullable;
 
 /**
  * This class allows to access a public field attribute
@@ -41,7 +42,7 @@ public class FieldAttribute<T, V> extends AbstractAttributeMetaData<T, V> {
 	}
 
 	@Override
-	public void setValueOf(final T to, final Object value) {
+	public void setValueOf(final T to, @Nullable final Object value) {
 		if (isReadOnly()) {
 			throw new IllegalStateException("Attribute " + getName() + " is read-only");
 		}

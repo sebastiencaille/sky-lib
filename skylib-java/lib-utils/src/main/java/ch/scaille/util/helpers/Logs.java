@@ -6,27 +6,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.util.function.Supplier;
-import java.util.logging.Level;
 import java.util.logging.LogManager;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @NullMarked
 public interface Logs {
 
-	static Logger of(Class<?> clazz) {
-		return Logger.getLogger(clazz.getName());
-	}
-
 	static Logger of(String logger) {
 		return Logger.getLogger(logger);
 	}
 
-	static Logger of(Object obj) {
-		return of(obj.getClass());
-	}
-
 	static Writer streamOf(Class<?> clazz, Level level) {
-		final var logger = Logs.of(clazz);
+		final var logger = Logger.getLogger(clazz.getName());
 		return new Writer() {
 
 			private StringBuilder builder = new StringBuilder();

@@ -11,10 +11,9 @@ import ch.scaille.testing.testpilot.factories.FailureHandlers.FailureHandler;
 import ch.scaille.util.helpers.DelayFunction;
 import ch.scaille.util.helpers.NoExceptionCloseable;
 import lombok.Getter;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@NullMarked
+
 @Getter
 public class GuiPilot {
     
@@ -121,7 +120,7 @@ public class GuiPilot {
 	}
 
 	/**
-	 * Enables the existing dialog detector (or a default one) until the finally is
+	 * Enables the existing dialog detector (or a default one) until the "finally" block is
 	 * executed
 	 */
 	public NoExceptionCloseable withModalDialogDetection() {

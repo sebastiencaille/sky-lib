@@ -1,6 +1,7 @@
 package ch.scaille.tcwriter.persistence.handlers;
 
 import ch.scaille.util.persistence.handlers.IStorageDataHandler;
+import org.jspecify.annotations.Nullable;
 import tools.jackson.databind.ObjectMapper;
 
 public class JsonStorageHandler implements IStorageDataHandler {
@@ -34,7 +35,7 @@ public class JsonStorageHandler implements IStorageDataHandler {
     }
 
     @Override
-    public <T> T decode(String value, Class<T> targetType, T template) {
+    public <T> T decode(String value, Class<T> targetType, @Nullable T template) {
         return mapper.readValue(value, targetType);
     }
 

@@ -6,7 +6,6 @@ import ch.scaille.javabeans.IChainBuilderFactory;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.IPropertiesOwner;
 import ch.scaille.javabeans.chain.BindingChain;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * Property containing a boolean value.
@@ -15,7 +14,7 @@ import org.jspecify.annotations.NullMarked;
  * @author Sebastien Caille
  *
  */
-@NullMarked
+
 public class BooleanProperty extends AbstractTypedProperty<Boolean> {
     private boolean value;
     private final boolean defaultValue;

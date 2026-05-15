@@ -17,7 +17,7 @@
 #include "property.hh"
 #include "property_listener.hh"
 
-namespace ch_skymarshall::gui {
+namespace ch_scaille::gui {
 
 using namespace std;
 using namespace std::placeholders;

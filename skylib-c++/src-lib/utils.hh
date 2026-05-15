@@ -13,7 +13,7 @@
 #include <functional>
 
 
-namespace ch_skymarshall::utils {
+namespace ch_scaille::utils {
 
 #ifdef DEBUG_DESTR
 #define DESTR_LOG(p) cout << p << endl;

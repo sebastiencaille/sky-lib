@@ -3,6 +3,7 @@ package ch.scaille.util.persistence;
 import java.nio.file.Paths;
 
 import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
+import org.jspecify.annotations.Nullable;
 
 public abstract class AbstractFSSerializationDao<T> extends AbstractSerializationDao<T> {
 
@@ -31,7 +32,7 @@ public abstract class AbstractFSSerializationDao<T> extends AbstractSerializatio
      * @param storageLocator a path
      * @return an array containing the path without extension and the extension 
      */
-    protected String[] nameAndExtensionOf(String storageLocator) {
+    protected String[] nameAndExtensionOf(@Nullable String storageLocator) {
         if (storageLocator == null) {
             return EMPTY_NAME_EXT;
         }

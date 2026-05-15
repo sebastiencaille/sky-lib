@@ -1,5 +1,7 @@
 package ch.scaille.util.persistence.handlers;
 
+import org.jspecify.annotations.Nullable;
+
 public class TextStorageHandler implements IStorageDataHandler {
 
 	public static final String TEXT_MIMETYPE = "application/text";
@@ -28,7 +30,7 @@ public class TextStorageHandler implements IStorageDataHandler {
 	}
 
 	@Override
-	public <T> T decode(String value, Class<T> targetType, T template) {
+	public <T> T decode(String value, Class<T> targetType, @Nullable T template) {
 		if (!String.class.equals(targetType)) {
 			throw new IllegalStateException("Expected String target, got " + targetType);
 		}

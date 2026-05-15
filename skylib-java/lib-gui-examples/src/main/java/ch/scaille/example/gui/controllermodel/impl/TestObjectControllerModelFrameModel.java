@@ -10,9 +10,8 @@ import ch.scaille.gui.mvc.GuiController;
 import ch.scaille.gui.swing.model.ObjectControllerTableModel;
 import ch.scaille.javabeans.converters.Converters;
 import ch.scaille.javabeans.properties.AbstractProperty;
-import org.jspecify.annotations.NullMarked;
 
-@NullMarked
+
 public class TestObjectControllerModelFrameModel
 		extends ObjectControllerTableModel<TestObject, TestObjectGuiModel, Columns> {
 

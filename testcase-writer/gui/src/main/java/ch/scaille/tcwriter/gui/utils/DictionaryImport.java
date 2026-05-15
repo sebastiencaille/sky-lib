@@ -18,21 +18,23 @@ import ch.scaille.tcwriter.annotations.TCActors;
 import ch.scaille.tcwriter.annotations.TCRole;
 import ch.scaille.tcwriter.gui.frame.ExceptionHelper;
 import ch.scaille.tcwriter.persistence.IModelDao;
-import ch.scaille.tcwriter.services.generators.JavaToDictionary;
+import ch.scaille.tcwriter.javatc.generators.JavaToDictionary;
 import ch.scaille.util.helpers.ClassFinder;
 import ch.scaille.util.helpers.ClassFinder.Policy;
 import ch.scaille.util.helpers.LambdaExt;
+import org.jspecify.annotations.Nullable;
 
 public class DictionaryImport extends JDialog {
 
 	@Serial
     private static final long serialVersionUID = 8123471252947527763L;
 	private final IModelDao modelDao;
+	@Nullable
 	private final Component parentFrame;
 	private final JLabel dictionaryJarFileDisplay;
 	private boolean imported = true;
 
-	public DictionaryImport(Component parentFrame, IModelDao modelDao) {
+	public DictionaryImport(@Nullable Component parentFrame, IModelDao modelDao) {
 		this.parentFrame = parentFrame;
 		this.modelDao = modelDao;
 		setLayout(new BorderLayout());

@@ -15,11 +15,10 @@ import ch.scaille.javabeans.properties.ErrorSet;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 @Getter
-@NullMarked
+
 public class GuiModel implements IPropertiesOwner {
 
 	public interface ImplicitConvertProvider {

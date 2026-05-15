@@ -10,13 +10,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Logger;
 
 import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import ch.scaille.gui.mvc.GuiController;
+import ch.scaille.gui.swing.SwingExt;
 import ch.scaille.gui.swing.tools.SwingGenericEditorDialog;
 import ch.scaille.gui.tools.GenericEditorClassModel;
 import ch.scaille.gui.tools.GenericEditorController;
@@ -36,13 +36,13 @@ import ch.scaille.tcwriter.services.testexec.ITestExecutor;
 import ch.scaille.tcwriter.services.testexec.ITestExecutor.TestConfig;
 import ch.scaille.tcwriter.services.testexec.TestExecutionListener;
 import ch.scaille.tcwriter.services.testexec.TestRemoteControl;
-import ch.scaille.util.helpers.Logs;
 import lombok.Getter;
+import lombok.extern.java.Log;
+import org.jspecify.annotations.Nullable;
 
 @Getter
+@Log
 public class TCWriterController extends GuiController {
-
-	private static final Logger LOGGER = Logs.of(TCWriterController.class);
 
 	private final TCWriterModel model;
 
@@ -54,7 +54,7 @@ public class TCWriterController extends GuiController {
 
 	private final StepEditorController stepEditorController;
 
-	public TCWriterController(final IConfigDao configDao, final ModelDao modelDao, TestDictionary tcDictionary,
+	public TCWriterController(final IConfigDao configDao, final ModelDao modelDao, @Nullable TestDictionary tcDictionary,
 			final ITestExecutor testExecutor) {
 		this.configDao = configDao;
 		this.modelDao = modelDao;
@@ -82,10 +82,11 @@ public class TCWriterController extends GuiController {
 
 		var dictionary = tcDictionary;
 		if (dictionary == null) {
-			dictionary = loadDictionary(null);
+			dictionary = loadDictionary("default");
 		}
 		model.getTestDictionary().setValue(this, dictionary);
 
+		SwingExt.loadDefaultBundle(getClass().getModule());
 		this.gui = new TCWriterGui(this);
 	}
 
@@ -106,7 +107,7 @@ public class TCWriterController extends GuiController {
 		final var configEditorDialog = new SwingGenericEditorDialog(gui, "Configuration", ModalityType.DOCUMENT_MODAL);
 		final var editorPropertySupport = PropertyChangeSupportController.mainGroup(configEditorDialog);
 		final var errorProp = new ErrorSet("Error", editorPropertySupport);
-		for (final var configToEdit : configDao.getCurrentConfig().getSubconfigs()) {
+		for (final var configToEdit : Objects.requireNonNull(configDao.getCurrentConfig(), "Config was not loaded").getSubConfigs()) {
 			final var controller = new GenericEditorController<>(
 					GenericEditorClassModel.builder((Class<SubConfig>) configToEdit.getClass())
 							.support(propertySupport)
@@ -180,7 +181,7 @@ public class TCWriterController extends GuiController {
 		if (dialogResult == 0) {
 			final var testFile = testFileChooser.getSelectedFile();
 			final var testCase = Objects.requireNonNull(model.getTestCase().getValue(), "No test case to save");
-			modelDao.writeTestCase(testFile.toString(), (TestCase) testCase);
+			modelDao.writeTestCase(testFile.toString(), testCase);
 		}
 	}
 
@@ -208,7 +209,7 @@ public class TCWriterController extends GuiController {
 
 	public void runTestCase() throws IOException, InterruptedException, TestCaseException {
 		final int rcPort = testRemoteControl.prepare();
-		LOGGER.info(() -> "Using port " + rcPort);
+		log.info(() -> "Using port " + rcPort);
 		final var testCase = Objects.requireNonNull(model.getTestCase().getValue(), "No test case to run");
 		try (var config = new TestConfig(testCase, Files.createTempDirectory("tc"), rcPort)) {
 			testExecutor.startTest(config);

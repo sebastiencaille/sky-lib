@@ -5,18 +5,20 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.jspecify.annotations.Nullable;
 
 import ch.scaille.tcwriter.model.testcase.TestStep;
 import ch.scaille.tcwriter.model.testexec.StepStatus;
 import ch.scaille.tcwriter.model.testexec.StepStatus.StepState;
-import ch.scaille.util.helpers.Logs;
+import ch.scaille.tcwriter.model.testexec.TestApi;
+import lombok.extern.java.Log;
 
+@Log
 public class TestRemoteControl {
-
-	private static final Logger LOGGER = Logs.of(TestRemoteControl.class);
 
 	private final int baseTcpPort;
 
@@ -24,12 +26,16 @@ public class TestRemoteControl {
 
 	private final Map<Integer, StepStatus> stepStates = new HashMap<>();
 
+	@Nullable
 	private Socket controlConnection = null;
 
+	@Nullable
 	private BiConsumer<Integer, Integer> stepChangedListener;
 
+	@Nullable
 	private ServerSocket controlServer;
 
+	@Nullable
 	private TestApi api;
 
 	public TestRemoteControl(int baseTcpPort, TestExecutionListener testExecutionListener) {
@@ -60,19 +66,19 @@ public class TestRemoteControl {
 			}
 		}
 
-		if (controlServer == null) {
-			throw new IllegalStateException("Unable to open control port");
-		}
+		Objects.requireNonNull(controlServer, "Unable to open control port");
 		return controlPort;
 	}
 
 	public void controlTest(int stepsCount) throws IOException {
+		final var safeControl = Objects.requireNonNull(controlServer, "Not correctly initialized");
+		final var safeStepChangedListener = Objects.requireNonNull(stepChangedListener, "Not correctly initialized");
 		testExecutionListener.testRunning(true);
 		cleanSteps(stepsCount);
-		controlServer.setSoTimeout(20_000);
+		safeControl.setSoTimeout(20_000);
 		try {
-			controlConnection = controlServer.accept();
-			LOGGER.log(Level.INFO, "Connected");
+			controlConnection = Objects.requireNonNull(safeControl.accept(), "Connection accepted, but null");
+			log.log(Level.INFO, "Connected");
 			api = new TestApi(controlConnection);
 			TestApi.handleCommands(api, command -> {
 
@@ -81,7 +87,7 @@ public class TestRemoteControl {
 					final var startStepNumber = api.readStartBody();
 					final var startStatus = stepStatus(startStepNumber);
 					startStatus.setState(StepState.STARTED);
-					stepChangedListener.accept(startStepNumber, startStepNumber);
+					safeStepChangedListener.accept(startStepNumber, startStepNumber);
 					if (startStatus.isBreakPoint()) {
 						testExecutionListener.testPaused(true);
 					}
@@ -93,7 +99,7 @@ public class TestRemoteControl {
 						stopStepStatus.setState(StepState.OK);
 					}
 					testExecutionListener.testPaused(false);
-					stepChangedListener.accept(stopStepNumber, stopStepNumber);
+					safeStepChangedListener.accept(stopStepNumber, stopStepNumber);
 					break;
 				case ERROR:
 					final var errorMessage = api.readErrorBody();
@@ -129,7 +135,7 @@ public class TestRemoteControl {
 	}
 
 	public void resetConnection() {
-		LOGGER.log(Level.INFO, "Disconnected");
+		log.log(Level.INFO, "Disconnected");
 		if (controlConnection != null) {
 			try {
 				controlConnection.close();
@@ -143,12 +149,14 @@ public class TestRemoteControl {
 	}
 
 	public void resume() throws IOException {
-		api.write(TestApi.Command.RUN);
+		if (api != null) {
+			api.write(TestApi.Command.RUN);
+		}
 	}
 
 	/**
 	 *
-	 * @param stepChangedListener listen to first and last changed step
+	 * @param stepChangedListener listen to the first and last changed step
 	 */
 	public void setStepListener(final BiConsumer<Integer, Integer> stepChangedListener) {
 		this.stepChangedListener = stepChangedListener;

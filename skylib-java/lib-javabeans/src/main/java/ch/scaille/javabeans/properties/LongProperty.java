@@ -7,7 +7,6 @@ import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.IPropertiesOwner;
 import ch.scaille.javabeans.chain.BindingChain;
 import lombok.Getter;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * Property containing a long value.
@@ -16,7 +15,7 @@ import org.jspecify.annotations.NullMarked;
  * @author Sebastien Caille
  *
  */
-@NullMarked
+
 public class LongProperty extends AbstractTypedProperty<Long> {
 
 	@Getter

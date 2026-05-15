@@ -7,7 +7,6 @@ import java.util.function.Consumer;
 
 import ch.scaille.javabeans.IPropertiesOwner;
 import ch.scaille.javabeans.IPropertiesGroup;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * Property containing a list of Objects.
@@ -17,7 +16,7 @@ import org.jspecify.annotations.NullMarked;
  *
  * @param <T> type of the contained objects
  */
-@NullMarked
+
 public class ListProperty<T> extends ObjectProperty<List<T>> {
 	
 	private class ObservableArrayList extends ArrayList<T> {

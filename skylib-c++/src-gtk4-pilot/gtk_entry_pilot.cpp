@@ -8,10 +8,10 @@
 #include "gtk_entry_pilot.hh"
 #include "gtk_gui_pilot.hh"
 
-namespace ch_skymarshall::gui::gtk4::pilot {
+namespace ch_scaille::gui::gtk4::pilot {
 
 using namespace std;
-using namespace ch_skymarshall::gui::pilot;
+using namespace ch_scaille::gui::pilot;
 
 gtk_entry_pilot::gtk_entry_pilot(gtk_gui_pilot* _gui_pilot, const string& _name) :
 		abstract_gtk_component(_gui_pilot, _name) {

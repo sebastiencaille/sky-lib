@@ -11,6 +11,11 @@ import ch.scaille.generators.util.CodeGeneratorParams;
 import ch.scaille.tcwriter.examples.simple.AbstractSimpleTest;
 import ch.scaille.tcwriter.examples.simple.CustomerTestRole;
 import ch.scaille.tcwriter.examples.simple.DeliveryTestRole;
+import ch.scaille.tcwriter.gui.frame.TCWriterController;
+import ch.scaille.tcwriter.javatc.generators.JavaToDictionary;
+import ch.scaille.tcwriter.javatc.testexec.JUnitTestExecutor;
+import ch.scaille.tcwriter.javatc.recorder.TestCaseRecorder;
+import ch.scaille.tcwriter.javatc.testexec.recorder.TestCaseRecorderAspect;
 import ch.scaille.tcwriter.model.config.TCConfig;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.testcase.TestCase;
@@ -19,20 +24,17 @@ import ch.scaille.tcwriter.persistence.ModelConfig;
 import ch.scaille.tcwriter.persistence.ModelDao;
 import ch.scaille.tcwriter.persistence.factory.DaoConfigs;
 import ch.scaille.tcwriter.persistence.testexec.JunitTestExecConfig;
-import ch.scaille.tcwriter.services.generators.JavaToDictionary;
 import ch.scaille.tcwriter.services.generators.visitors.HumanReadableVisitor;
-import ch.scaille.tcwriter.services.recorder.TestCaseRecorder;
-import ch.scaille.tcwriter.services.recorder.TestCaseRecorderAspect;
 import ch.scaille.tcwriter.services.testexec.ITestExecutor;
-import ch.scaille.tcwriter.services.testexec.JUnitTestExecutor;
-import ch.scaille.util.helpers.ClassLoaderHelper;
-import ch.scaille.util.helpers.Logs;
+import ch.scaille.util.helpers.JavaExt;
 import lombok.Getter;
+import lombok.extern.java.Log;
 
 /**
- * To set basic dictionary / test / configuration up
+ * To a basic dictionary / test / configuration up
  */
 @Getter
+@Log
 public class ExampleHelper {
 
 	private static final Path RESOURCE_FOLDER = Paths.get(System.getProperty("java.io.tmpdir"));
@@ -68,9 +70,9 @@ public class ExampleHelper {
 		modelConfig.setTemplatePath(cp("templates"));
 
 		final var junitTestConfig = new JunitTestExecConfig();
-		junitTestConfig.setClasspath("");
+		junitTestConfig.setClasspath(JavaExt.locationOf(getClass()).toString());
 
-		final var daoConfig = DaoConfigs.withFolder(dataPath);
+		final var daoConfig = DaoConfigs.withFolder(dataPath, getClass().getModule());
 		configDao = daoConfig.configDao().setConfiguration(TCConfig.of(configName, modelConfig, junitTestConfig));
 		modelDao = daoConfig.modelDao();
 	}
@@ -92,13 +94,14 @@ public class ExampleHelper {
 		test.testNormalCase();
 
 		final var testCase = recorder.buildTestCase("ch.scaille.tcwriter.examples.GeneratedTest");
-		Logs.of(ExampleHelper.class).info(() -> new HumanReadableVisitor(testCase, true).processAllSteps());
+		log.info(() -> new HumanReadableVisitor(testCase, true).processAllSteps());
 
 		return testCase;
 	}
 
 	public ITestExecutor testExecutor() {
-		return new JUnitTestExecutor(configDao, getModelDao(), ClassLoaderHelper.appClassPath());
+			final var testJarPath = JavaExt.locationOf(TCWriterController.class).resolve("../javatc-resources");
+			return new JUnitTestExecutor(configDao, modelDao, testJarPath);
 	}
 
 }

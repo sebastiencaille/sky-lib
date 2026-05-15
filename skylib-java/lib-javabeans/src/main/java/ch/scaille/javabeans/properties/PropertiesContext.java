@@ -1,6 +1,5 @@
 package ch.scaille.javabeans.properties;
 
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
@@ -14,7 +13,7 @@ import java.util.Objects;
  * 
  * @param <T> the record type
  */
-@NullMarked
+
 public record PropertiesContext<T>(T object, List<AbstractProperty> properties) {
 
 	public static <T extends AbstractProperty> PropertiesContext<T> ofProperty(T property) {

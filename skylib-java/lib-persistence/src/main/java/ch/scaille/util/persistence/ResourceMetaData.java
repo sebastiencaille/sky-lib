@@ -31,6 +31,10 @@ public class ResourceMetaData {
 		return new ResourceMetaData(getLocator(), newStorageLocator, getMimeType());
 	}
 
+	public ResourceMetaData withMimeType(String newMimetype) {
+		return new ResourceMetaData(getLocator(), getStorageLocator(), newMimetype);
+	}
+    
 	public <U> Resource<U> withValue(U value) {
 		return new Resource<>(locator, storageLocator, mimeType, value);
 	}
@@ -39,4 +43,5 @@ public class ResourceMetaData {
 	public String toString() {
 		return locator + ',' + storageLocator + ',' + mimeType;
 	}
+
 }

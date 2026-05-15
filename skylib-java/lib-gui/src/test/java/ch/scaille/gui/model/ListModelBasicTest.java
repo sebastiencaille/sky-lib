@@ -10,6 +10,7 @@ import java.util.stream.IntStream;
 import javax.swing.JTable;
 
 import lombok.Getter;
+import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.Test;
 
 import ch.scaille.gui.TestObject;
@@ -18,6 +19,7 @@ import ch.scaille.gui.model.views.IListView;
 import ch.scaille.gui.model.views.ListViews;
 import ch.scaille.gui.swing.model.ListModelTableModel;
 
+@NullMarked
 class ListModelBasicTest {
 
 	private static final Comparator<TestObject> COMPARE = comparingInt(TestObject::getVal);

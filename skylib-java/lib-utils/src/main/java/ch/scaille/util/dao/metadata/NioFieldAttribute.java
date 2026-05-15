@@ -1,5 +1,7 @@
 package ch.scaille.util.dao.metadata;
 
+import org.jspecify.annotations.Nullable;
+
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
@@ -7,6 +9,7 @@ import java.lang.reflect.Field;
 public class NioFieldAttribute<T, V> extends FieldAttribute<T, V> {
 
     private final MethodHandle getter;
+    @Nullable
     private final MethodHandle setter;
 
     public NioFieldAttribute(String name, Field field) {
@@ -33,9 +36,9 @@ public class NioFieldAttribute<T, V> extends FieldAttribute<T, V> {
     }
 
     @Override
-    public void setValueOf(T to, Object value) {
+    public void setValueOf(T to, @Nullable Object value) {
         try {
-            if (isReadOnly()) {
+            if (isReadOnly() || setter == null) {
                 throw new IllegalStateException("Attribute " + getDeclaringType().getName() + '.' + getName() + " is read-only");
             }
             setter.bindTo(to).invoke(value);

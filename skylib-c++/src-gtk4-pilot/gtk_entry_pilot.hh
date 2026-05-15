@@ -14,7 +14,7 @@
 
 #include "abstract_gtk_component.hh"
 
-namespace ch_skymarshall::gui::gtk4::pilot {
+namespace ch_scaille::gui::gtk4::pilot {
 
 using namespace std;
 

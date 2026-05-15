@@ -15,7 +15,9 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>api</module>
+		<module>model</module>
 		<module>core</module>
+		<module>javatc-client</module>
 		<module>javatc</module>
 		<module>flowtc</module>
 		<module>maven-plugin</module>
@@ -72,13 +74,13 @@
 						<aspectLibraries>
 							<aspectLibrary>
 								<groupId>ch.scaille.tcwriter</groupId>
-								<artifactId>testcase-writer-javatc</artifactId>
+								<artifactId>testcase-writer-javatc-client</artifactId>
 							</aspectLibrary>
 						</aspectLibraries>
 						<verbose>true</verbose>
 						<!-- this is important: start-->
 						<forceAjcCompile>true</forceAjcCompile>
-						<sources/>
+						<sources />
 						<weaveDirectories>
 							<weaveDirectory>${project.build.directory}/classes</weaveDirectory>
 						</weaveDirectories>
@@ -113,7 +115,17 @@
 			</dependency>
 			<dependency>
 				<groupId>ch.scaille.tcwriter</groupId>
+				<artifactId>testcase-writer-model</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille.tcwriter</groupId>
 				<artifactId>testcase-writer-javatc</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille.tcwriter</groupId>
+				<artifactId>testcase-writer-javatc-client</artifactId>
 				<version>${revision}</version>
 			</dependency>
 			<dependency>

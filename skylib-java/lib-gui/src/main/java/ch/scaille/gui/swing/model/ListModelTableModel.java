@@ -6,9 +6,10 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.table.AbstractTableModel;
 
 import ch.scaille.gui.model.ListModel;
-import ch.scaille.util.helpers.Logs;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
+import java.util.Objects;
 
 /**
  * Table model based on a {@link ListModel}, with enum based column identifiers.
@@ -34,6 +35,7 @@ public abstract class ListModelTableModel<T, C extends Enum<C>> extends Abstract
 
 	protected int warningLimit = 20;
 
+	@Nullable
 	protected abstract Object getValueAtColumn(T object, C column);
 
 	protected abstract void setValueAtColumn(T object, C column, Object value);
@@ -47,14 +49,6 @@ public abstract class ListModelTableModel<T, C extends Enum<C>> extends Abstract
 
 	public ListModel<T> getBaseModel() {
 		return model;
-	}
-
-	protected void setWarningLimit(final int warningLimit) {
-		this.warningLimit = warningLimit;
-	}
-
-	protected void warn(final String string) {
-		Logs.of(this).warning("WARNING: " + string); // NOSONAR
 	}
 
 	@Override
@@ -72,15 +66,16 @@ public abstract class ListModelTableModel<T, C extends Enum<C>> extends Abstract
 	}
 
 	@Override
+	@Nullable
 	public Object getValueAt(final int row, final int column) {
-		return getValueAtColumn(model.getValueAt(row), columnOf(column));
+		return getValueAtColumn(Objects.requireNonNull(model.getValueAt(row)), columnOf(column));
 	}
 
 	@Override
 	public void setValueAt(final Object aValue, final int row, final int column) {
 		super.setValueAt(aValue, row, column);
 		final var editedValue = model.getValueAt(row);
-		model.editValue(editedValue, _ -> setValueAtColumn(model.getValueAt(row), columnOf(column), aValue));
+		model.editValue(editedValue, _ -> setValueAtColumn(Objects.requireNonNull(model.getValueAt(row)), columnOf(column), aValue));
 	}
 
 	@Override

@@ -3,15 +3,19 @@ package ch.scaille.tcwriter.it.api;
 import ch.scaille.tcwriter.annotations.TCApi;
 import lombok.Getter;
 import lombok.Setter;
+import org.jspecify.annotations.Nullable;
 
-@Setter
 @Getter
+@Setter
 public class ParameterValue {
 
+	@Nullable
 	private String keyValue1 = null;
 
+	@Nullable
 	private String keyValue2 = null;
 
+	@Nullable
 	private String keyValue3 = null;
 
 	public static ParameterValue value() {

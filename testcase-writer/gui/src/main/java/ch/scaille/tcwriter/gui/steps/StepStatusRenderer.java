@@ -10,6 +10,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import ch.scaille.tcwriter.model.testexec.StepStatus;
+import org.jspecify.annotations.Nullable;
 
 public class StepStatusRenderer extends DefaultTableCellRenderer {
 
@@ -24,8 +25,8 @@ public class StepStatusRenderer extends DefaultTableCellRenderer {
 	}
 
 	@Override
-	public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
-			final boolean hasFocus, final int row, final int column) {
+	public Component getTableCellRendererComponent(final JTable table, @Nullable final Object value, final boolean isSelected,
+	                                               final boolean hasFocus, final int row, final int column) {
 		if (value == null) {
 			jPanel.setBackground(table.getBackground());
 			return jPanel;

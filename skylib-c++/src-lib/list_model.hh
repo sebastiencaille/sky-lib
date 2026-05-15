@@ -23,9 +23,9 @@
 #include "list_model_interfaces.hh"
 #include "utils.hh"
 
-namespace ch_skymarshall::gui {
+namespace ch_scaille::gui {
 
-using namespace ch_skymarshall::utils;
+using namespace ch_scaille::utils;
 using namespace std;
 using namespace __gnu_cxx;
 using namespace std::placeholders;

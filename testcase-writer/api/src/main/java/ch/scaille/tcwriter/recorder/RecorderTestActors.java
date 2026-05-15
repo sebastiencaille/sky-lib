@@ -1,6 +1,7 @@
 package ch.scaille.tcwriter.recorder;
 
 import lombok.Getter;
+import org.jspecify.annotations.Nullable;
 
 import java.security.InvalidParameterException;
 import java.util.HashMap;
@@ -22,7 +23,7 @@ public class RecorderTestActors {
 	 * @param modelName   the name of the actor
 	 * @param description a description
 	 */
-	public static <T> T register(final T testActor, final String modelName, final String description) {
+	public static <T> T register(final T testActor, final @Nullable String modelName, @Nullable final String description) {
 		if (modelName == null && description == null) {
 			throw new InvalidParameterException("Either modelName or description must be provided");
 		}

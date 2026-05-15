@@ -14,7 +14,7 @@
 
 #include <binding_interface.hh>
 
-namespace ch_skymarshall::gui::gtk4 {
+namespace ch_scaille::gui::gtk4 {
 
 class entry_binding: public component_binding<Glib::ustring> {
 private:

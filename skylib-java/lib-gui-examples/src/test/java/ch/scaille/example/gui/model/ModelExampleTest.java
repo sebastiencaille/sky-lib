@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.time.Duration;
 
+import lombok.extern.java.Log;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,9 +13,9 @@ import ch.scaille.example.gui.TestObjectTableModel;
 import ch.scaille.example.gui.model.impl.TableModelExampleView;
 import ch.scaille.testing.testpilot.jupiter.DisabledIfHeadless;
 import ch.scaille.testing.testpilot.swing.SwingPilot;
-import ch.scaille.util.helpers.Logs;
 
 @ExtendWith(DisabledIfHeadless.class)
+@Log
 class ModelExampleTest {
 
 	private static final int FIXED_COLUMN_WIDTH = 15;
@@ -62,7 +63,7 @@ class ModelExampleTest {
 		page.listTable.failUnless().assertValue(2, 0, "Three");
 		page.listTable.failUnless().assertValue(3, 0, "Four");
 
-		Logs.of(this).info(pilot.getActionReport().getFormattedReport());
+		log.info(pilot.getActionReport().getFormattedReport());
 	}
 
 }

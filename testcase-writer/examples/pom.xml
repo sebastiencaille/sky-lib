@@ -13,6 +13,12 @@
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-gui</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.junit.platform</groupId>
+					<artifactId>junit-platform-console-standalone</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>ch.scaille</groupId>
@@ -43,7 +49,8 @@
 						</goals>
 
 						<configuration>
-							<mainClass>ch.scaille.tcwriter.examples.JavaTestGenerator</mainClass>
+							<mainClass>
+								ch.scaille.tcwriter.examples.JavaTestGenerator</mainClass>
 						</configuration>
 					</execution>
 				</executions>
@@ -84,29 +91,7 @@
 					</execution>
 				</executions>
 			</plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
 
-                <configuration>
-                    <artifactSet>
-                        <excludes>
-                            <exclude>org.aspectj:aspectjrt</exclude>
-                            <exclude>org.aspectj:aspectjtools</exclude>
-                        </excludes>
-                    </artifactSet>
-                </configuration>
-
-                <executions>
-                    <execution>
-                        <id>shade</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
 		</plugins>
 	</build>
 

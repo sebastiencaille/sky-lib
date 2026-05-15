@@ -27,10 +27,8 @@ public class JTablePoller extends SwingPollingBuilder<JTable, JTablePoller, JTab
 
         public void editValueOnSelectedRow(final int column, final String value) {
             configure(polling -> polling.reportText(settingValue("at selected row, column " + column, value)))
-                    .applied(t -> {
-                        t.setValueAt(value, t.getSelectedRow(), column);
-                        SwingHelper.doPressReturn(t);
-                    });
+                    .applied(t ->
+                        t.setValueAt(value, t.getSelectedRow(), column));
         }
 
         public void assertValue(final int row, final int column, final String expected) {

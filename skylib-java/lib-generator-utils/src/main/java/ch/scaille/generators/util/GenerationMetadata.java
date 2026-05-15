@@ -3,9 +3,7 @@ package ch.scaille.generators.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.jspecify.annotations.NullMarked;
 
-@NullMarked
 public record GenerationMetadata (
 	 String generator,
 	 String commandLine,

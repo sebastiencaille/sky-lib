@@ -1,6 +1,6 @@
 package ch.scaille.example.gui;
 
-import javax.annotation.processing.Generated;
+import jakarta.annotation.Generated;
 
 import java.util.Arrays;
 
@@ -16,10 +16,9 @@ import ch.scaille.javabeans.persisters.IPersisterFactory.ObjectHolder;
 import ch.scaille.javabeans.persisters.Persisters;
 import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.javabeans.properties.IntProperty;
-import org.jspecify.annotations.NullMarked;
 
 @Generated(value = "ch.scaille.gui.mvc.GuiModelGenerator", date = "2025/12/24 17:32", comments = "-sp ch.scaille.example -cp ../lib-gui-examples/target/classes -t ../lib-gui-examples/src/main/java")
-@NullMarked
+
 public class TestObjectGuiModel extends GuiModel implements IObjectGuiModel<ch.scaille.example.gui.TestObject> {
    
     private final ObjectHolder<ch.scaille.example.gui.TestObject> currentObjectProvider = new ObjectHolder<>();
@@ -27,12 +26,10 @@ public class TestObjectGuiModel extends GuiModel implements IObjectGuiModel<ch.s
 	public static final String ASECOND_VALUE = "ASecondValue";
 	
 	public static final String AFIRST_VALUE = "AFirstValue";
-	
-	
 
 	protected final IntProperty aSecondValueProperty;
+
 	protected final ObjectProperty<java.lang.String> aFirstValueProperty;
-	
 	
 	protected final AbstractProperty[] allProperties;
 	

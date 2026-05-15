@@ -4,6 +4,7 @@ import java.util.function.Function;
 
 import ch.scaille.javabeans.IChainBuilderFactory;
 import ch.scaille.javabeans.properties.AbstractTypedProperty;
+import org.jspecify.annotations.Nullable;
 
 /*
  * A property based entry of the editor.
@@ -18,11 +19,12 @@ public class PropertyEntry<V> implements IPropertyEntry {
 	private final Class<?> propertyType;
 	private final boolean readOnly;
 	private final String label;
+	@Nullable
 	private final String tooltip;
 
 	protected PropertyEntry(Class<V> propertyType, final AbstractTypedProperty<V> property,
 			Function<AbstractTypedProperty<V>, IChainBuilderFactory<V>> endOfChainProvider, final boolean readOnly,
-			final String label, final String tooltip) {
+			final String label, @Nullable final String tooltip) {
 		this.property = property;
 		this.endOfChain = endOfChainProvider;
 		this.propertyType = propertyType;
@@ -76,6 +78,7 @@ public class PropertyEntry<V> implements IPropertyEntry {
 	}
 
 	@Override
+	@Nullable
 	public String getTooltip() {
 		return tooltip;
 	}

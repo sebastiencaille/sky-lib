@@ -1,6 +1,5 @@
 package ch.scaille.gui.model.views;
 
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -11,7 +10,7 @@ import org.jspecify.annotations.Nullable;
  *
  * @param <T> the type of the element to sort/filter
  */
-@NullMarked
+
 public interface IListView<T extends @Nullable Object> extends IView<T> {
 
 	void attach(final IListViewOwner<T> owner);

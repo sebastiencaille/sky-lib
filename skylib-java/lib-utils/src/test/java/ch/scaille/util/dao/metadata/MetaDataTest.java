@@ -57,5 +57,5 @@ class MetaDataTest {
 		assertEquals(789, valCAccessor.getValue());
 		assertEquals(789, test.valC);
 	}
-
+	
 }

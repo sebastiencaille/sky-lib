@@ -1,6 +1,5 @@
 package ch.scaille.javabeans;
 
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -11,7 +10,7 @@ import org.jspecify.annotations.Nullable;
  *
  * @param <T> the type of the component's property
  */
-@NullMarked
+
 public interface IComponentBinding<T extends @Nullable Object> {
 
 	/**

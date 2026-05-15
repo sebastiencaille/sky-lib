@@ -1,5 +1,7 @@
 package ch.scaille.util.dao.metadata;
 
+import org.jspecify.annotations.Nullable;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Optional;
@@ -14,9 +16,10 @@ public interface IAttributeMetaData<T> {
 
 	<A extends Annotation> Optional<A> getAnnotation(Class<A> annotation);
 
+	@Nullable
 	Object getValueOf(T object);
 
-	void setValueOf(T object, Object o);
+	void setValueOf(T object, @Nullable Object o);
 
 	void copy(T from, T to);
 
@@ -41,7 +44,7 @@ public interface IAttributeMetaData<T> {
 	 * Creates a derived metadata of the attribute, with a different type 
 	 * @param <V> the new target type
 	 * @param targetType the class of V
-	 * @return a new attibute metadata
+	 * @return a new attribute metadata
 	 */
 	<V> AbstractAttributeMetaData<T, V> unwrap(Class<V> targetType);
 

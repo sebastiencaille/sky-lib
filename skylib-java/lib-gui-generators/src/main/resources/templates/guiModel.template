@@ -1,6 +1,6 @@
 package ${package};
 
-import javax.annotation.processing.Generated;
+import jakarta.annotation.Generated;
 
 import java.util.Arrays;
 
@@ -20,7 +20,7 @@ import org.jspecify.annotations.NullMarked;
 ${imports}
 
 @Generated(value = "${generator}", date = "${generationDate}", comments = "${commandLine}")
-@NullMarked
+
 public class ${modelClass} extends GuiModel implements IObjectGuiModel<${objectClass}> {
    
     private final ObjectHolder<${objectClass}> currentObjectProvider = new ObjectHolder<>();

@@ -10,7 +10,7 @@ import org.mapstruct.factory.Mappers;
 
 import ch.scaille.tcwriter.generated.api.model.v0.Metadata;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.ERROR, implementationPackage = "<PACKAGE_NAME>.generated")
+@Mapper(unmappedTargetPolicy = ReportingPolicy.ERROR)
 public interface MetadataMapper {
 
 	MetadataMapper MAPPER = Mappers.getMapper(MetadataMapper.class);

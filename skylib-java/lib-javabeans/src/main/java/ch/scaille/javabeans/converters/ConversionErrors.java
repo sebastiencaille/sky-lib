@@ -2,9 +2,8 @@ package ch.scaille.javabeans.converters;
 
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.ConversionError;
-import org.jspecify.annotations.NullMarked;
 
-@NullMarked
+
 public class ConversionErrors {
 	private ConversionErrors() {
 	}

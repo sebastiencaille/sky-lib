@@ -45,7 +45,7 @@ public class ConfigDao implements IConfigDao {
 	 * @param locator the name of the configuration
 	 */
 	public ConfigDao setConfiguration(String locator) {
-		apply(StorageRTException.uncheck("Reading of configuration: " + locator + " (try to run the class SetupDemoServer", () -> loader.load(locator)));
+		apply(StorageRTException.uncheck("Reading of configuration: " + locator, () -> loader.load(locator)));
 		return this;
 	}
 

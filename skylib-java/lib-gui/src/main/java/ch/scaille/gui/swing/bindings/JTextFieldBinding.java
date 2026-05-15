@@ -11,10 +11,9 @@ import javax.swing.JTextField;
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@NullMarked
+
 public class JTextFieldBinding implements IComponentBinding<String> {
 
 	private final JTextField textField;

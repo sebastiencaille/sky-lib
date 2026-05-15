@@ -9,7 +9,7 @@ import org.mapstruct.factory.Mappers;
 
 import ch.scaille.tcwriter.generated.api.model.v0.Context;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.ERROR, implementationPackage = "<PACKAGE_NAME>.generated",
+@Mapper(unmappedTargetPolicy = ReportingPolicy.ERROR,
         uses = DefaultMappers.class)
 public interface ContextMapper {
 

@@ -4,7 +4,6 @@ import ch.scaille.javabeans.*;
 import ch.scaille.javabeans.chain.BindingChain;
 import ch.scaille.javabeans.converters.IConverter;
 import ch.scaille.javabeans.converters.IConverterWithContext;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.beans.PropertyChangeEvent;
@@ -21,7 +20,7 @@ import java.util.function.Supplier;
  * @author Sebastien Caille
  *
  */
-@NullMarked
+
 public class PropertiesAggregator<T extends @Nullable Object> extends AbstractProperty implements IChainBuilder<T> {
 
     private class Snapshot<P extends @Nullable Object> implements Supplier<P> {
@@ -57,7 +56,7 @@ public class PropertiesAggregator<T extends @Nullable Object> extends AbstractPr
     }
 
 
-    // ****************** 1 properties (for x properties + 1), final evaluator
+    // ****************** 1 property (for x properties + 1), final evaluator
     public interface Applier1<T1, R extends @Nullable Object> {
         R apply(Supplier<T1> value1);
     }
@@ -219,32 +218,32 @@ public class PropertiesAggregator<T extends @Nullable Object> extends AbstractPr
     }
 
     @Override
-    public <C> IChainBuilder<C> bind(IConverter<T, C> converter) {
+    public <C extends @Nullable Object> IChainBuilder<C> bind(IConverter<T, C> converter) {
         return createBindingChain().bind(converter);
     }
 
     @Override
-    public <C> IChainBuilder<C> bind(Function<T, C> prop2Comp, Function<C, T> comp2Prop) {
+    public <C extends @Nullable Object> IChainBuilder<C> bind(Function<T, C> prop2Comp, Function<C, T> comp2Prop) {
         return createBindingChain().bind(prop2Comp, comp2Prop);
     }
 
     @Override
-    public <C> IChainBuilder<C> listenF(Function<T, C> prop2Comp) {
+    public <C extends @Nullable Object> IChainBuilder<C> listenF(Function<T, C> prop2Comp) {
         return createBindingChain().listenF(prop2Comp);
     }
 
     @Override
-    public <C, K> IChainBuilder<C> bind(IConverterWithContext<T, C, K> converter) {
+    public <C extends @Nullable Object, K> IChainBuilder<C> bind(IConverterWithContext<T, C, K> converter) {
         return createBindingChain().bind(converter);
     }
 
     @Override
-    public <C, K> IChainBuilder<C> bind(PropertiesContext<K> multiProperties, BiFunction<T, K, C> prop2Comp, BiFunction<C, K, T> comp2Prop) {
+    public <C extends @Nullable Object, K> IChainBuilder<C> bind(PropertiesContext<K> multiProperties, BiFunction<T, K, C> prop2Comp, BiFunction<C, K, T> comp2Prop) {
         return createBindingChain().bind(multiProperties, prop2Comp, comp2Prop);
     }
 
     @Override
-    public <C, K> IChainBuilder<C> listen(PropertiesContext<K> multiProperties, BiFunction<T, K, C> prop2Comp) {
+    public <C extends @Nullable Object, K> IChainBuilder<C> listen(PropertiesContext<K> multiProperties, BiFunction<T, K, C> prop2Comp) {
         return createBindingChain().listen(multiProperties, prop2Comp);
     }
 

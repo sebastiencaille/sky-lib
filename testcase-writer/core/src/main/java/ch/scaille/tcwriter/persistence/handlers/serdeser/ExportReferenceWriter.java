@@ -1,6 +1,7 @@
 package ch.scaille.tcwriter.persistence.handlers.serdeser;
 
 import lombok.NoArgsConstructor;
+import org.jspecify.annotations.Nullable;
 import tools.jackson.core.JsonGenerator;
 import tools.jackson.databind.JavaType;
 import tools.jackson.databind.SerializationContext;
@@ -10,12 +11,14 @@ import tools.jackson.databind.introspect.BeanPropertyDefinition;
 import tools.jackson.databind.ser.VirtualBeanPropertyWriter;
 import tools.jackson.databind.util.Annotations;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
 @NoArgsConstructor
 public class ExportReferenceWriter<T> extends VirtualBeanPropertyWriter {
 
+    @Nullable
     private ReferenceHandler<?, T> handler;
 
     public ExportReferenceWriter(ReferenceHandler<?, T> handler,
@@ -28,7 +31,7 @@ public class ExportReferenceWriter<T> extends VirtualBeanPropertyWriter {
 
     @Override
     protected Object value(Object bean, JsonGenerator g, SerializationContext context) {
-        return new ExportReference<>(null, handler.exporter().apply((T) bean), null);
+        return new ExportReference<>(null, Objects.requireNonNull(handler, "No handler set").exporter().apply((T) bean), null);
     }
 
     @Override

@@ -83,10 +83,13 @@ public class ClassLoaderHelper {
 	}
 
 	public static URL[] cpToURLs(String classpath) {
-		if (classpath == null) {
-			return new URL[0];
-		}
 		return Arrays.stream(classpath.split(CP_SEPARATOR))
+				.map(LambdaExt.uncheckedF(c -> Paths.get(c).toUri().toURL()))
+				.toArray(URL[]::new);
+	}
+	
+	public static URL[] cpToURLs(String... classpath) {
+		return Arrays.stream(classpath)
 				.map(LambdaExt.uncheckedF(c -> Paths.get(c).toUri().toURL()))
 				.toArray(URL[]::new);
 	}

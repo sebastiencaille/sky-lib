@@ -3,11 +3,12 @@ package ch.scaille.testing.testpilot.factories;
 import static ch.scaille.util.helpers.LambdaExt.doNothing;
 
 import ch.scaille.testing.testpilot.PollingResult;
+import org.jspecify.annotations.Nullable;
 
 public interface FailureHandlers {
 	/*************************** Failure handlers ***************************/
 
-    interface FailureHandler<C, V> {
+    interface FailureHandler<C, V extends @Nullable Object> {
 		void apply(PollingResult<C, V> result);
 	}
 

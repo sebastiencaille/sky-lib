@@ -1,12 +1,13 @@
 package ch.scaille.tcwriter.gui.frame;
 
+import lombok.extern.java.Log;
+
 import java.awt.Component;
 import java.util.logging.Level;
 
 import javax.swing.JOptionPane;
 
-import ch.scaille.util.helpers.Logs;
-
+@Log
 public class ExceptionHelper {
 	
 	private ExceptionHelper() {
@@ -14,7 +15,7 @@ public class ExceptionHelper {
 	}
 	
 	public static void handleException(Component parent, final Exception ex) {
-		Logs.of(ExceptionHelper.class).log(Level.WARNING, "Unable to execute action", ex);
+		log.log(Level.WARNING, "Unable to execute action", ex);
 		JOptionPane.showMessageDialog(parent, "Unable to execution action: " + ex.getMessage());
 	}
 

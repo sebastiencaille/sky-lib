@@ -2,6 +2,7 @@ package ch.scaille.tcwriter.it.api;
 
 import ch.scaille.tcwriter.annotations.TCApi;
 import lombok.Getter;
+import org.jspecify.annotations.Nullable;
 
 /**
  * To edit a step (actor/action/selector/parameter
@@ -12,14 +13,19 @@ import lombok.Getter;
 @Getter
 public class StepEdition {
 
+	@Nullable
 	private String actor;
 
+	@Nullable
 	private String action;
 
+	@Nullable
 	private String selector;
 
+	@Nullable
 	private String parameter;
 
+	@Nullable
 	private String parameterValue1;
 
     @TCApi(description = "Actor", humanReadable = "Actor")

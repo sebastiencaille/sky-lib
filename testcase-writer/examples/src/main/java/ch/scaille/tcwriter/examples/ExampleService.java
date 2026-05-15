@@ -1,6 +1,7 @@
 package ch.scaille.tcwriter.examples;
 
 import lombok.Getter;
+import org.jspecify.annotations.Nullable;
 
 public class ExampleService {
 
@@ -14,6 +15,7 @@ public class ExampleService {
 
 	private State currentState = State.COMPULSIVE_BUYING;
 	@Getter
+	@Nullable
     private ItemKind ownedItem = null;
 
     public void openBrowser() {

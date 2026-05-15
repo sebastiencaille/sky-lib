@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import ch.scaille.testing.bdd.definition.Steps.Step;
 import lombok.Getter;
+import org.jspecify.annotations.Nullable;
 
 public class Scenario<A extends AbstractAppTestApi<?>> {
 
@@ -54,6 +55,7 @@ public class Scenario<A extends AbstractAppTestApi<?>> {
 
     private final Steps<A>[] steps;
 
+    @Nullable
     private Consumer<A> executionConfigurer;
 
     @SafeVarargs

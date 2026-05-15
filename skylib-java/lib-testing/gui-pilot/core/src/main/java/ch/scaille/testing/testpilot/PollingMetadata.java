@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import ch.scaille.testing.testpilot.PilotReport.ReportFunction;
 import ch.scaille.util.helpers.DelayFunction;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -13,7 +12,7 @@ import org.jspecify.annotations.Nullable;
  * 
  * @param <C> type of Component
  */
-@NullMarked
+
 public interface PollingMetadata<C> {
 
 	Optional<PolledComponent<C>> getComponent();

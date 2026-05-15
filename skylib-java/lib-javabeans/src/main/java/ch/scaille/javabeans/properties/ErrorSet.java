@@ -3,16 +3,15 @@ package ch.scaille.javabeans.properties;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.properties.AbstractProperty.ErrorNotifier;
 import lombok.Getter;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * To track the current errors (validation, exceptions, ...) 
  */
 @Getter
-@NullMarked
 public class ErrorSet implements ErrorNotifier {
 
 	private final MapProperty<AbstractProperty, ConversionError> errors;
@@ -25,7 +24,7 @@ public class ErrorSet implements ErrorNotifier {
 	}
 
 	private Map<AbstractProperty, ConversionError> errors() {
-		return errors.getValue();
+		return Objects.requireNonNull(errors.getValue());
 	}
 
 	@Override

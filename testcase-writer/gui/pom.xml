@@ -18,7 +18,6 @@
 			<groupId>ch.scaille</groupId>
 			<artifactId>lib-gui</artifactId>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/net.java.linoleum/jlfgr -->
 		<dependency>
 			<groupId>net.java.linoleum</groupId>
 			<artifactId>jlfgr</artifactId>
@@ -31,4 +30,59 @@
 		</dependency>
 
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+						    <overWriteIfNewer>true</overWriteIfNewer>
+						    <stripVersion>true</stripVersion>
+						    <stripClassifier>true</stripClassifier>
+							<outputDirectory>
+										${project.build.directory}/javatc-resources</outputDirectory>
+							<artifactItems>	
+								<artifactItem>
+									<groupId>ch.scaille.tcwriter</groupId>
+									<artifactId>testcase-writer-javatc-client</artifactId>
+									<version>${revision}</version>
+									<type>jar</type>
+									<classifier>fatjar</classifier>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.aspectj</groupId>
+									<artifactId>aspectjrt</artifactId>
+									<version>${aspectj.version}</version>
+									<type>jar</type>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.aspectj</groupId>
+									<artifactId>aspectjtools</artifactId>
+									<version>${aspectj.version}</version>
+									<type>jar</type>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.junit.platform</groupId>
+									<artifactId>
+										junit-platform-console-standalone</artifactId>
+									<version>
+										${junit-platform-console-standalone.version}</version>
+									<type>jar</type>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>

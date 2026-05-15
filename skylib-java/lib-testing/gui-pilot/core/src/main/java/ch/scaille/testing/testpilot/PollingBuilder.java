@@ -17,7 +17,6 @@ import ch.scaille.testing.testpilot.factories.FailureHandlers;
 import ch.scaille.testing.testpilot.factories.FailureHandlers.FailureHandler;
 import ch.scaille.testing.testpilot.factories.PollingResults;
 import ch.scaille.testing.testpilot.factories.Pollings;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -37,7 +36,7 @@ import org.jspecify.annotations.Nullable;
  * @param <T> the Builder (sub)type
  * @param <P> the Poller (sub)type
  */
-@NullMarked
+
 public class PollingBuilder<C, 
 	T extends PollingBuilder<C, T, P, V>, 
 	P extends PollingBuilder.Poller<C>, 
@@ -172,7 +171,7 @@ public class PollingBuilder<C,
 	/**
 	 * Executes the polling
 	 */
-	protected <R> PollingResult<C, R> poll(final Polling.PollingBuilder<C, R> polling) {
+	protected <R extends @Nullable Object> PollingResult<C, R> poll(final Polling.PollingBuilder<C, R> polling) {
 		configurers.forEach(conf -> conf.accept(polling));
 		try {
 			return pilot.processResult(pilot.waitPollingSuccess(polling),

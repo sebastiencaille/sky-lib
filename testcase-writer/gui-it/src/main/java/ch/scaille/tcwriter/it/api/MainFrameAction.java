@@ -8,15 +8,17 @@ import ch.scaille.tcwriter.it.TCGuiPilot;
 import ch.scaille.tcwriter.it.TCWriterPage;
 import ch.scaille.testing.testpilot.swing.JButtonPoller;
 import ch.scaille.testing.testpilot.swing.JFileDialogPilot;
+import org.jspecify.annotations.Nullable;
 
 @TCApi(description = "Main frame actions", humanReadable = "Main frame actions")
 public class MainFrameAction {
 
 	private final Function<TCWriterPage, JButtonPoller> button;
+	@Nullable
 	private final BiConsumer<TCGuiPilot, Runnable> dialogHandler;
 
 	public MainFrameAction(final Function<TCWriterPage, JButtonPoller> button,
-			BiConsumer<TCGuiPilot, Runnable> dialogHandler) {
+	                       @Nullable BiConsumer<TCGuiPilot, Runnable> dialogHandler) {
 		this.button = button;
 		this.dialogHandler = dialogHandler;
 	}

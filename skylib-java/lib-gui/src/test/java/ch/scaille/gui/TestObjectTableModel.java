@@ -3,7 +3,9 @@ package ch.scaille.gui;
 import ch.scaille.gui.TestObjectTableModel.Columns;
 import ch.scaille.gui.model.ListModel;
 import ch.scaille.gui.swing.model.ListModelTableModel;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class TestObjectTableModel extends ListModelTableModel<TestObject, Columns> {
 
 	public enum Columns {

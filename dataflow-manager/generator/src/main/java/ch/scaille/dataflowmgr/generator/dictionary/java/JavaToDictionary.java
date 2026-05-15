@@ -14,6 +14,7 @@ import ch.scaille.dataflowmgr.model.Dictionary;
 import ch.scaille.generators.util.AbstractGenerator;
 import ch.scaille.util.helpers.ClassFinder;
 import ch.scaille.util.helpers.ClassFinder.Policy;
+import org.jspecify.annotations.NullMarked;
 
 public class JavaToDictionary extends AbstractGenerator<Dictionary> {
 
@@ -49,6 +50,7 @@ public class JavaToDictionary extends AbstractGenerator<Dictionary> {
         super(classes);
     }
 
+    @NullMarked
     @Override
     public Dictionary generate() {
         var dictionary = new Dictionary();

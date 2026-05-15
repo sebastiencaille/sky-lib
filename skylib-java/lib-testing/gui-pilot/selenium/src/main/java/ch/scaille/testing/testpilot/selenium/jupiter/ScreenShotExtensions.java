@@ -5,19 +5,17 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 
-import org.jspecify.annotations.NullMarked;
+import lombok.extern.java.Log;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 
-import ch.scaille.util.helpers.Logs;
-
 /**
  * Takes screenshots through the webdriver. Initializing the WebDriverExtension is required
  */
-@NullMarked
+@Log
 public class ScreenShotExtensions implements TestWatcher {
 	
     @Override
@@ -32,7 +30,7 @@ public class ScreenShotExtensions implements TestWatcher {
                 final var screenShotTaker = ((TakesScreenshot) driver);
                 Files.write(mainScreenshotPath, screenShotTaker.getScreenshotAs(OutputType.BYTES));
             } catch (IOException e) {
-                Logs.of(ScreenShotExtensions.class).log(Level.WARNING, "Unable to take screenshot", e);
+                log.log(Level.WARNING, "Unable to take screenshot", e);
             }
         });
     }

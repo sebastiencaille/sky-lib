@@ -6,9 +6,8 @@ import java.util.function.Consumer;
 
 import ch.scaille.javabeans.IPropertiesOwner;
 import ch.scaille.javabeans.IPropertiesGroup;
-import org.jspecify.annotations.NullMarked;
 
-@NullMarked
+
 public class SetProperty<T> extends ObjectProperty<Set<T>> {
 
 	public SetProperty(final String name, final IPropertiesOwner model) {

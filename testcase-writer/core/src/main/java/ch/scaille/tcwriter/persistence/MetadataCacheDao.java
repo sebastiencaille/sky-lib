@@ -2,22 +2,24 @@ package ch.scaille.tcwriter.persistence;
 
 import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.persistence.handlers.JsonStorageHandler;
-import ch.scaille.util.helpers.Logs;
 import ch.scaille.util.persistence.DaoFactory;
 import ch.scaille.util.persistence.IDao;
 import ch.scaille.util.persistence.StorageException;
 import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
 import lombok.Getter;
+import lombok.extern.java.Log;
+import org.jspecify.annotations.Nullable;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+@Log
 public class MetadataCacheDao {
 
     @Getter
-    private static class MetadataCache {
+    public static class MetadataCache {
         private final Map<String, Metadata> metadataMap = new HashMap<>();
     }
 
@@ -39,7 +41,8 @@ public class MetadataCacheDao {
         metadataCache = loaded;
     }
 
-    public synchronized Metadata putInCache(String locator, Metadata metadata) throws StorageException {
+    @Nullable
+    public synchronized Metadata putInCache(String locator, @Nullable Metadata metadata) throws StorageException {
         if (metadata == null) {
             return null;
         }
@@ -48,7 +51,8 @@ public class MetadataCacheDao {
         return metadata;
     }
 
-    protected Metadata loadMetadata(String locator, Function<String, Metadata> loader) {
+    @Nullable
+    protected Metadata loadMetadata(String locator, Function<String, @Nullable Metadata> loader) {
         try {
             final var cached = metadataCache.getMetadataMap().get(locator);
             if (cached != null) {
@@ -56,7 +60,7 @@ public class MetadataCacheDao {
             }
             return putInCache(locator, loader.apply(locator));
         } catch (StorageException e) {
-            Logs.of(this).warning("Unable to save cache: " + e.getMessage());
+            log.warning("Unable to save cache: " + e.getMessage());
             return null;
         }
     }

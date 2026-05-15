@@ -21,11 +21,12 @@ import ch.scaille.gui.swing.factories.SwingBindings;
 import ch.scaille.javabeans.PropertyChangeSupportController;
 import ch.scaille.javabeans.properties.ListProperty;
 
+@NullMarked
 class TableTest {
 
     private static final IListView<TestObject> VIEW = ListViews.sorted(Comparator.comparingInt(TestObject::getVal));
 
-    @NullMarked
+    
     private static class Model extends GuiModel {
 
         private final ListProperty<TestObject> selection = new ListProperty<>("Selection", this);

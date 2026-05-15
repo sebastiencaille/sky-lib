@@ -2,7 +2,7 @@
 #include <errno.h>
 #include "converters.hh"
 
-namespace ch_skymarshall::gui::converters {
+namespace ch_scaille::gui::converters {
 
 using namespace std;
 

@@ -9,14 +9,14 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
+import lombok.extern.java.Log;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.bidi.log.FilterBy;
 import org.openqa.selenium.bidi.log.LogLevel;
 import org.openqa.selenium.bidi.module.LogInspector;
 import org.openqa.selenium.bidi.module.Script;
 
-import ch.scaille.util.helpers.Logs;
-
+@Log
 public class ConsoleErrorDetector {
 	
 	private static final String LAST_LOG = ConsoleErrorDetector.class.getSimpleName();
@@ -40,7 +40,7 @@ public class ConsoleErrorDetector {
 		}, FilterBy.logLevel(LogLevel.ERROR));
 		
 		this.logInspector.onConsoleEntry(entry -> {
-			Logs.of(ConsoleErrorDetector.class).info(entry.getText());
+			log.info(entry.getText());
 			// We received the closing log
 			if (LAST_LOG.equals(entry.getText())) {
 				lastLogReceived.release();

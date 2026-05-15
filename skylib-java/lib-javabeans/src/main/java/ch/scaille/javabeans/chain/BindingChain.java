@@ -19,21 +19,15 @@ import ch.scaille.javabeans.converters.ConversionException;
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.AbstractProperty.ErrorNotifier;
 import lombok.Setter;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
 
 /**
  * Holds and applies the bindings in chains. Each chain listens to the property and to a
- * gui component and propagates the updates from the property to the component, and from the component to the properties.
- * <p>
- * 
- * </p>
- *
- * @author scaille
- *
+ * gui component and propagates the updates from the property to the component, 
+ * and from the component to the properties.
  */
-@NullMarked
+
 public class BindingChain implements IBindingChainModifier {
 
 	/**
@@ -75,7 +69,7 @@ public class BindingChain implements IBindingChainModifier {
 
 		for (final var link : links) {
 			try {
-				value = ((Link<Object, Object>) link).toComponent(value);
+				value = ((Link<@Nullable Object, @Nullable Object>) link).toComponent(value);
 			} catch (final ChainInhibitedException e) {
 				Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE, () -> "Property change inhibited: " + e.getMessage());
 				return;
@@ -101,9 +95,12 @@ public class BindingChain implements IBindingChainModifier {
 	public <T extends @Nullable Object> IChainBuilderFactory<T> linkComponentToProperty(final BiConsumer<Object, T> propertySetter) {
 		links.add(new Link<T, T>() {
 			@Override
-			public T toProperty(final Object component, final T value) {
+			public T toProperty(final Object component, final T value, boolean force) {
 				Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE, () -> "Setting property value: " + value);
 				propertySetter.accept(component, value);
+				if (force) {
+					property.flushChanges(component);
+				}
 				return value;
 			}
 
@@ -122,17 +119,17 @@ public class BindingChain implements IBindingChainModifier {
 	}
 
 	@Override
-	public <P, C> void addLink(Link<P, C> link) {
+	public <P extends @Nullable Object, C extends @Nullable Object> void addLink(Link<P, C> link) {
 		links.add(link);
 	}
 	
 	@Override
-	public void propagateComponentChange(final Object component, @Nullable final Object componentValue) {
+	public void propagateComponentChange(final Object component, @Nullable final Object componentValue, boolean force) {
 		final var pos = links.size();
 		var value = componentValue;
 		for (int i = pos - 1; i >= 0; i--) {
 			try {
-				value = ((Link<@Nullable Object, @Nullable Object>)links.get(i)).toProperty(component, value);
+				value = ((Link<@Nullable Object, @Nullable Object>)links.get(i)).toProperty(component, value, force);
 			} catch (final ChainInhibitedException e) {
 				Logging.MVC_EVENTS_DEBUGGER.log(Level.FINE,
 						() -> "Component change inhibited: " + e.getMessage());
@@ -236,7 +233,7 @@ public class BindingChain implements IBindingChainModifier {
 		}
 
 		@Override
-		public C toProperty(@Nullable Object source, C value) {
+		public C toProperty(@Nullable Object source, C value, boolean force) {
 			return value;
 		}
 
@@ -252,7 +249,7 @@ public class BindingChain implements IBindingChainModifier {
 
 	@Override
 	public IBindingController makeWeak(WeakLinkHolder weakLinkHolder) {
-        links.replaceAll(link -> new WeakLink<>(weakLinkHolder, (Link<Object, Object>) link));
+        links.replaceAll(link -> new WeakLink<>(weakLinkHolder, (Link<@Nullable Object, @Nullable Object>) link));
 		return this;
 	}
 

@@ -1,5 +1,7 @@
 package ch.scaille.util.persistence;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.stream.Stream;
 
 /**
@@ -16,6 +18,12 @@ public interface IDao<T> {
 	 */
 	Stream<ResourceMetaData> list() throws StorageException;
 
+	ResourceMetaData resolve(String locator) throws StorageException;
+	
+	ResourceMetaData resolve(String locator, String mimetype) throws StorageException;
+	
+	ResourceMetaData resolveOrCreate(String locator) throws StorageException;
+	
 	/**
 	 * Loads a resource from metadata
 	 */
@@ -26,7 +34,7 @@ public interface IDao<T> {
 	/**
 	 * Loads a resource from metadata
 	 */
-	Resource<T> loadResource(ResourceMetaData metadata, T template) throws StorageException;
+	Resource<T> loadResource(ResourceMetaData metadata, @Nullable T template) throws StorageException;
 
 	/**
 	 * Loads a resource from a locator
@@ -38,7 +46,7 @@ public interface IDao<T> {
 	/**
 	 * Loads a resource from a locator
 	 */
-	Resource<T> loadResource(String locator, T template) throws StorageException;
+	Resource<T> loadResource(String locator, @Nullable T template) throws StorageException;
 
 	/**
 	 * Loads data from a locator

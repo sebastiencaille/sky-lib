@@ -12,7 +12,7 @@
 #include <utils.hh>
 #include "gtk_bindings.hh"
 
-namespace ch_skymarshall::gui::gtk4 {
+namespace ch_scaille::gui::gtk4 {
 
 entry_binding::entry_binding(Gtk::Entry &_entry) :
 		m_entry(_entry) {

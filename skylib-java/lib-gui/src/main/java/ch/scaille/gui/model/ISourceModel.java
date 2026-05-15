@@ -1,14 +1,12 @@
 package ch.scaille.gui.model;
 
 import ch.scaille.util.helpers.JavaExt;
-import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Optional;
 
-@NullMarked
-public interface ISourceModel<T extends @Nullable Object> {
+
+public interface ISourceModel<T> {
 
 	void setValues(final Collection<T> newData);
 

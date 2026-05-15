@@ -6,6 +6,7 @@ import java.util.function.Predicate;
 
 import ch.scaille.testing.testpilot.Polling;
 import ch.scaille.testing.testpilot.PolledComponent;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Polling factories
@@ -61,7 +62,7 @@ public abstract class Pollings {
 	}
 
 
-	public static <C, V> Polling.PollingBuilder<C, V> get(Function<C, V> getter) {
+	public static <C, V extends @Nullable Object> Polling.PollingBuilder<C, V> get(Function<C, V> getter) {
 		return Polling.of(ctxt -> PollingResults.value(getter.apply(ctxt.component())));
 	}
 

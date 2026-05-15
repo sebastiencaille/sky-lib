@@ -6,9 +6,8 @@ import java.util.Objects;
 import ch.scaille.gui.model.ListModel;
 import ch.scaille.gui.swing.model.ListModelTableModel;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
-import org.jspecify.annotations.NullMarked;
 
-@NullMarked
+
 public class TestParameterValueTableModel extends
 		ListModelTableModel<TestParameterValueTableModel.ParameterValueEntry, TestParameterValueTableModel.Columns> {
 

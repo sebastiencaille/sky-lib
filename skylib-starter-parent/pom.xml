@@ -20,7 +20,7 @@
 
 	<properties>
 		<aspectj.version>1.9.25.1</aspectj.version>
-		<jackson-bom.version>3.1.2</jackson-bom.version>
+		<jackson-bom.version>3.1.3</jackson-bom.version>
 		<guava.version>33.6.0-jre</guava.version>
 		<logback.version>1.5.32</logback.version>
 		<mapstruct.version>1.7.0.Beta1</mapstruct.version>
@@ -30,7 +30,7 @@
 		<swagger-parser.version>2.1.41</swagger-parser.version>
 		<swagger.version>2.2.49</swagger.version>
 
-		<undertow.version>2.4.0.RC4</undertow.version>
+		<undertow.version>2.4.0.Final</undertow.version>
 		<liquibase.version>5.0.2</liquibase.version>
 
 		<mockito.version>5.23.0</mockito.version>
@@ -68,10 +68,25 @@
 		<openapi-generator-maven-plugin.version>7.22.0</openapi-generator-maven-plugin.version>
 		<jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
 
+		<argLine />
+		<surefireArgLine />
+		<surefireTestArgLine>
+			--add-exports
+			org.junit.platform.commons/org.junit.platform.commons.util=ALL-UNNAMED
+			--add-opens
+			org.seleniumhq.selenium.remote_driver/org.openqa.selenium.remote=ALL-UNNAMED
+			--add-exports
+			org.junit.platform.commons/org.junit.platform.commons.logging=ALL-UNNAMED
+		</surefireTestArgLine>
 	</properties>
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>jakarta.el</groupId>
+				<artifactId>jakarta.el-api</artifactId>
+				<version>6.0.0</version>
+			</dependency>
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
@@ -173,9 +188,9 @@
 				<version>2.21</version>
 			</dependency>
 			<dependency>
-			    <groupId>org.openapitools</groupId>
-			    <artifactId>jackson-databind-nullable</artifactId>
-			    <version>0.2.10</version>
+				<groupId>org.openapitools</groupId>
+				<artifactId>jackson-databind-nullable</artifactId>
+				<version>0.2.10</version>
 			</dependency>
 		</dependencies>
 
@@ -272,6 +287,68 @@
 							</goals>
 						</execution>
 					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<configuration>
+						<useModulePath>false</useModulePath>
+						<argLine>@{argLine} ${surefireArgLine}
+							${surefireTestArgLine}</argLine>
+					</configuration>
+					<dependencies>
+						<dependency>
+							<groupId>org.junit.jupiter</groupId>
+							<artifactId>junit-jupiter-engine</artifactId>
+							<version>${junit-jupiter.version}</version>
+						</dependency>
+						<dependency>
+							<groupId>org.junit.jupiter</groupId>
+							<artifactId>junit-jupiter-api</artifactId>
+							<version>${junit-jupiter.version}</version>
+						</dependency>
+						<dependency>
+							<groupId>org.junit.platform</groupId>
+							<artifactId>junit-platform-commons</artifactId>
+							<version>${junit-jupiter.version}</version>
+						</dependency>
+						<dependency>
+							<groupId>org.junit.platform</groupId>
+							<artifactId>junit-platform-engine</artifactId>
+							<version>${junit-jupiter.version}</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<configuration>
+						<useModulePath>false</useModulePath>
+						<argLine>@{argLine} ${surefireArgLine}
+							${surefireTestArgLine}</argLine>
+					</configuration>
+					<dependencies>
+						<dependency>
+							<groupId>org.junit.jupiter</groupId>
+							<artifactId>junit-jupiter-engine</artifactId>
+							<version>${junit-jupiter.version}</version>
+						</dependency>
+						<dependency>
+							<groupId>org.junit.jupiter</groupId>
+							<artifactId>junit-jupiter-api</artifactId>
+							<version>${junit-jupiter.version}</version>
+						</dependency>
+						<dependency>
+							<groupId>org.junit.platform</groupId>
+							<artifactId>junit-platform-commons</artifactId>
+							<version>${junit-jupiter.version}</version>
+						</dependency>
+						<dependency>
+							<groupId>org.junit.platform</groupId>
+							<artifactId>junit-platform-engine</artifactId>
+							<version>${junit-jupiter.version}</version>
+						</dependency>
+					</dependencies>
 				</plugin>
 			</plugins>
 		</pluginManagement>

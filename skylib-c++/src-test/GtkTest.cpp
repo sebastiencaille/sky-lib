@@ -24,11 +24,11 @@
 #include <gtk_bindings.hh>
 #include <gtk_gui_pilot.hh>
 
-using namespace ch_skymarshall::gui;
-using namespace ch_skymarshall::gui::converters;
-using namespace ch_skymarshall::gui::glib;
-using namespace ch_skymarshall::gui::gtk4;
-using namespace ch_skymarshall::gui::gtk4::pilot;
+using namespace ch_scaille::gui;
+using namespace ch_scaille::gui::converters;
+using namespace ch_scaille::gui::glib;
+using namespace ch_scaille::gui::gtk4;
+using namespace ch_scaille::gui::gtk4::pilot;
 
 using namespace std;
 using namespace __gnu_cxx;

@@ -16,6 +16,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.DirectoryScanner;
+import org.jspecify.annotations.NullMarked;
 
 import ch.scaille.generators.util.GenerationMetadata;
 import ch.scaille.javabeans.DummyPropertiesGroup;
@@ -24,12 +25,14 @@ import ch.scaille.tcwriter.model.TestCaseException;
 import ch.scaille.tcwriter.model.config.TCConfig;
 import ch.scaille.tcwriter.persistence.ModelConfig;
 import ch.scaille.tcwriter.persistence.ModelDao;
-import ch.scaille.tcwriter.services.generators.TestCaseToJava;
+import ch.scaille.tcwriter.javatc.generators.TestCaseToJava;
 import ch.scaille.util.helpers.LambdaExt;
 import ch.scaille.util.persistence.DaoFactory;
 import ch.scaille.util.persistence.DaoFactory.FsDsFactory;
+import org.jspecify.annotations.Nullable;
 
 @Mojo(name = "generateTestCases", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES)
+@NullMarked
 public class JavaTestCaseGeneratorMojo extends AbstractMojo {
 
     @Parameter(defaultValue = "${project}", readonly = true)
@@ -42,9 +45,11 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
     private String dictionaryFolder;
 
     @Parameter(property = "dictionary")
+    @Nullable
     private String dictionaryLocator;
 
     @Parameter(property = "testCases")
+    @Nullable
     private Resource testCases;
 
     @Parameter(property = "outputFolder", defaultValue = "${project.build.directory}/generated-test-sources/tcwriter")
@@ -78,37 +83,37 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
 
         project.addTestCompileSourceRoot(outputFolder);
 
-            // config folders and build model
-            final var fsDsFactory = new FsDsFactory(Paths.get("."));
-            final var daoFactory = DaoFactory.cpPlus(Set.of(), fsDsFactory);
-            final var mavenModelConfig = new ModelConfig();
-            mavenModelConfig.setDictionaryPath(resolve(dictionaryFolder));
-            mavenModelConfig.setTcPath(resolve(DaoFactory.fs(testCases.getDirectory())));
-            mavenModelConfig.setTemplatePath(resolve(templatesFolder));
-            mavenModelConfig.setTcExportPath("");
-            final var config = new TCConfig("maven", List.of(mavenModelConfig));
-            final var modelDao = new ModelDao(daoFactory,
-                    new ObjectProperty<>("config", new DummyPropertiesGroup(), config),
-                        fsDsFactory, ModelDao.defaultDataHandlers());
-            // Search test cases
-            final var scanner = new DirectoryScanner();
-            scanner.setBasedir(new File(testCases.getDirectory()));
-            if (!testCases.getIncludes().isEmpty()) {
-                scanner.setIncludes(testCases.getIncludes().toArray(new String[0]));
-            }
-            if (!testCases.getExcludes().isEmpty()) {
-                scanner.setExcludes(testCases.getExcludes().toArray(new String[0]));
-            }
-            scanner.scan();
+        // config folders and build model
+        final var fsDsFactory = new FsDsFactory(Paths.get("."));
+        final var daoFactory = DaoFactory.cpPlus(Set.of(), fsDsFactory);
+        final var mavenModelConfig = new ModelConfig();
+        mavenModelConfig.setDictionaryPath(resolve(dictionaryFolder));
+        mavenModelConfig.setTcPath(resolve(DaoFactory.fs(testCases.getDirectory())));
+        mavenModelConfig.setTemplatePath(resolve(templatesFolder));
+        mavenModelConfig.setTcExportPath("");
+        final var config = new TCConfig("maven", List.of(mavenModelConfig));
+        final var modelDao = new ModelDao(daoFactory,
+                new ObjectProperty<>("config", new DummyPropertiesGroup(), config),
+                    fsDsFactory, ModelDao.defaultDataHandlers());
+        // Search test cases
+        final var scanner = new DirectoryScanner();
+        scanner.setBasedir(new File(testCases.getDirectory()));
+        if (!testCases.getIncludes().isEmpty()) {
+            scanner.setIncludes(testCases.getIncludes().toArray(new String[0]));
+        }
+        if (!testCases.getExcludes().isEmpty()) {
+            scanner.setExcludes(testCases.getExcludes().toArray(new String[0]));
+        }
+        scanner.scan();
 
-            getLog().debug("Scanning of: " + scanner.getBasedir().getAbsolutePath());
-            getLog().info("Found: " + Arrays.asList(scanner.getIncludedFiles()));
+        getLog().debug("Scanning of: " + scanner.getBasedir().getAbsolutePath());
+        getLog().info("Found: " + Arrays.asList(scanner.getIncludedFiles()));
 
-            // Generate tests
-            final var generator = new TestCaseToJava(modelDao);
-            Arrays.stream(scanner.getIncludedFiles())
-                    .forEach(LambdaExt
-                            .uncheckedC(tcFile -> generateTestCase(generator, tcFile, modelDao)));
+        // Generate tests
+        final var generator = new TestCaseToJava(modelDao);
+        Arrays.stream(scanner.getIncludedFiles())
+                .forEach(LambdaExt
+                        .uncheckedC(tcFile -> generateTestCase(generator, tcFile, modelDao)));
     }
 
     private void generateTestCase(final TestCaseToJava generator,

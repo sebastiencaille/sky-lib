@@ -5,7 +5,6 @@ import java.util.function.BiPredicate;
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -13,7 +12,7 @@ import org.jspecify.annotations.Nullable;
  * @param <T> the type of the sorted/filtered value
  * @param <P> the type of the view's parameter
  */
-@NullMarked
+
 public class DynamicListView<T extends @Nullable Object, P> extends AbstractListView<T>
         implements IComponentBinding<P> {
 

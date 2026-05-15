@@ -1,18 +1,17 @@
 package ch.scaille.generators.util;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Objects;
+
+import org.jspecify.annotations.Nullable;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 
 import ch.scaille.util.helpers.JavaExt;
 import lombok.Getter;
-import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
 
-@NullMarked
+
 public class CodeGeneratorParams {
 
 	@Getter
@@ -25,8 +24,7 @@ public class CodeGeneratorParams {
 
 	@Getter
     @Parameter(names = { "-sp", "--scanPackage" }, required = true)
-	@Nullable
-	private String scanPackage = null;
+	private String scanPackage;
 
 	@Getter
     @Parameter(names = { "-tp", "--targetPackage" })
@@ -44,15 +42,8 @@ public class CodeGeneratorParams {
         return Objects.requireNonNullElse(targetFolder, classPathFolder);
     }
 
-    /**
-	 * Gets the folder of a class
-	 *
-     */
-	public static Path locationOf(Class<?> clazz) {
-		return Paths.get(JavaExt.pathOf(clazz.getProtectionDomain().getCodeSource().getLocation()));
-	}
 
 	public static Path mavenTargetFolderOf(Class<?> clazz) {
-		return locationOf(clazz).resolve("..");
+		return JavaExt.locationOf(clazz).resolve("..");
 	}
 }

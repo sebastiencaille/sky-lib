@@ -7,16 +7,14 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.logging.Logger;
 
 import ch.scaille.testing.testpilot.PilotReport.ReportFunction;
 import ch.scaille.testing.testpilot.factories.PollingResults;
 import ch.scaille.testing.testpilot.factories.FailureHandlers.FailureHandler;
 import ch.scaille.util.helpers.DelayFunction;
-import ch.scaille.util.helpers.Logs;
 import ch.scaille.util.helpers.Poller;
 import lombok.Getter;
-import org.jspecify.annotations.NullMarked;
+import lombok.extern.java.Log;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -24,10 +22,8 @@ import org.jspecify.annotations.Nullable;
  *
  * @param <C> Component type
  */
-@NullMarked
+@Log
 public abstract class AbstractComponentPilot<C> {
-
-    private final Logger logger = Logs.of(this);
 
     protected static class LoadedComponent<T> {
         public final T element;
@@ -124,7 +120,7 @@ public abstract class AbstractComponentPilot<C> {
      * Try to override waitActionSuccessLoop instead.
      * </p>
      */
-    public <V> PollingResult<C, V> waitPollingSuccess(final Polling.PollingBuilder<C, V> polling) {
+    public <V extends @Nullable Object> PollingResult<C, V> waitPollingSuccess(final Polling.PollingBuilder<C, V> polling) {
         waitActionDelay();
         try (var _ = pilot.withModalDialogDetection()) {
             final var result = waitPollingSuccessLoop(polling.build());
@@ -136,9 +132,9 @@ public abstract class AbstractComponentPilot<C> {
         }
     }
 
-    public <V, U> PollingResult<C, U> processResult(final PollingResult<C, V> result,
-                                                    Function<PollingResult<C, V>, PollingResult<C, U>> resultTransformer,
-                                                    FailureHandler<C, V> onFail) {
+    public <V extends @Nullable Object, R extends @Nullable Object> PollingResult<C, R> processResult(final PollingResult<C, V> result,
+                                                                             Function<PollingResult<C, V>, PollingResult<C, R>> resultTransformer,
+                                                                             FailureHandler<C, V> onFail) {
         if (result.isSuccess()) {
             pilot.setActionDelay(result.getAndThen());
         } else {
@@ -152,7 +148,7 @@ public abstract class AbstractComponentPilot<C> {
      *
      * @return a polling result, either successful or failure
      */
-    protected <R> PollingResult<C, R> waitPollingSuccessLoop(final Polling<C, R> polling) {
+    protected <R extends @Nullable Object> PollingResult<C, R> waitPollingSuccessLoop(final Polling<C, R> polling) {
         final var initializedPolling = polling.initializeFrom(this);
         return new Poller(initializedPolling.getTimeout(), initializedPolling.getFirstDelay(), initializedPolling.getDelayFunction())
                 .run(p -> executePolling(p, initializedPolling), PollingResult::isSuccess).orElseThrow();
@@ -176,9 +172,9 @@ public abstract class AbstractComponentPilot<C> {
                 .build(polling.getComponent().orElseThrow(() -> new IllegalStateException("component not set yet")),
                         polling.getReportText().orElse(null));
 
-        logger.fine(() -> "Polling " + logReport + "...");
+        log.fine(() -> "Polling " + logReport + "...");
         final var pollingResult = callPollingFunction(polling);
-        logger.fine(() -> "Polling result: " + pollingResult);
+        log.fine(() -> "Polling result: " + pollingResult);
         if (pollingResult.isSuccess() && !logReport.isEmpty()) {
             pilot.getActionReport().report(logReport);
         }
@@ -194,9 +190,9 @@ public abstract class AbstractComponentPilot<C> {
         if (cachedComponent == null) {
             cachedComponent = loadGuiComponent().map(LoadedComponent::new).orElse(null);
         }
-        logger.fine(() -> "Cached component: " + cachedComponent);
+        log.fine(() -> "Cached component: " + cachedComponent);
         if (cachedComponent == null) {
-            logger.fine("Not found");
+            log.fine("Not found");
             return Optional.of(PollingResults.failure("not found"));
         }
         final var polledComponent = new PolledComponent<>(this, getCachedComponent().element,
@@ -205,7 +201,7 @@ public abstract class AbstractComponentPilot<C> {
         final var preCondition = polling.getPrecondition();
         if (!getCachedComponent().preconditionValidated && preCondition.isPresent()
                 && !preCondition.get().test(polledComponent)) {
-            logger.fine("Precondition failed");
+            log.fine("Precondition failed");
             return Optional.of(PollingResults.failure("precondition failed"));
         }
         getCachedComponent().preconditionValidated = true;

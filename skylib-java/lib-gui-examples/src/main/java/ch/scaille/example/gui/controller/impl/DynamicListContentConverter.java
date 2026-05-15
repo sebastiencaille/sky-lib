@@ -5,11 +5,12 @@ import java.util.List;
 
 import ch.scaille.javabeans.converters.IConverter;
 import ch.scaille.util.helpers.JavaExt;
+import org.jspecify.annotations.Nullable;
 
 public class DynamicListContentConverter implements IConverter<String, List<String>> {
 
 	@Override
-	public List<String> convertPropertyValueToComponentValue(final String propertyValue) {
+	public List<String> convertPropertyValueToComponentValue(@Nullable final String propertyValue) {
 
 		if (propertyValue == null) {
 			return Collections.emptyList();

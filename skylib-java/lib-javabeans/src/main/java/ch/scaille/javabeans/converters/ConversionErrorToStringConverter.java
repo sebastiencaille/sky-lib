@@ -1,10 +1,9 @@
 package ch.scaille.javabeans.converters;
 
 import ch.scaille.javabeans.properties.ConversionError;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@NullMarked
+
 public class ConversionErrorToStringConverter implements IConverter<ConversionError, String> {
 
 	private final String noError;

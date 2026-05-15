@@ -6,12 +6,11 @@ import ch.scaille.gui.swing.SwingExt;
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
-@NullMarked
+
 public class JListSelectionBinding<T extends @Nullable Object> implements IComponentBinding<T> {
 
     private final JList<T> list;

@@ -1,5 +1,7 @@
 package ch.scaille.util.persistence.handlers;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Handles the encoding/decoding of data, per MimeType or extension 
  */
@@ -23,5 +25,5 @@ public interface IStorageDataHandler {
 		return decode(value, targetType, null);
 	}
 
-	<T> T decode(String value, Class<T> targetType, T template);
+	<T> T decode(String value, Class<T> targetType, @Nullable T template);
 }

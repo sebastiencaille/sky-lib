@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Factory responsible for creating the DAO, which is turning Resources loaded by
@@ -44,7 +45,30 @@ public class DaoFactory {
 
 	}
 
-	public record FsDsFactory(Path baseFolder) implements IDataSourceFactory {
+	public static class ModuleDsFactory implements IDataSourceFactory {
+
+		private final Set<String> whiteList;
+		private final Module[] modules;
+
+		public ModuleDsFactory(Set<String> whiteList, Module... modules) {
+			this.whiteList = whiteList;
+			this.modules = modules;
+		}
+
+		@Override
+		public boolean matches(String locator) {
+			return locator.startsWith(CP_DATASOURCE);
+		}
+
+		@Override
+		public <T> IDao<T> create(Class<T> daoType, String locator, StorageDataHandlerRegistry dataHandlersRegistry) {
+			return new ModuleDao<>(daoType, locator.substring(CP_DATASOURCE.length()), dataHandlersRegistry,
+					whiteList, modules);
+		}
+
+	}
+	
+	public record FsDsFactory(@Nullable Path baseFolder) implements IDataSourceFactory {
 
 		@Override
 		public boolean matches(String locator) {
@@ -83,12 +107,22 @@ public class DaoFactory {
 	 * Creates a dao factory that includes resources on classpath, and more
 	 * @param cpWhiteList the classpath whitelist (packages)
 	 */
-	public static DaoFactory cpPlus(Set<String> cpWhiteList, IDataSourceFactory extraFactory) {
+	public static DaoFactory cpPlus(Set<String> cpWhiteList, IDataSourceFactory defaults) {
 		final var factories = new ArrayList<IDataSourceFactory>();
 		factories.add(new ClassPathDsFactory(cpWhiteList));
-		return new DaoFactory(factories, extraFactory);
+		return new DaoFactory(factories, defaults);
 	}
 
+	/**
+	 * Creates a dao factory that includes resources on modules, and more
+	 * @param whiteList the classpath whitelist (packages)
+	 */
+	public static DaoFactory modulesPlus(Set<String> whiteList, IDataSourceFactory defaults, Module... modules) {
+		final var factories = new ArrayList<IDataSourceFactory>();
+		factories.add(new ModuleDsFactory(whiteList, modules));
+		return new DaoFactory(factories, defaults);
+	}
+	
 	public static String fs(String path) {
 		return FS_DATASOURCE + path;
 	}

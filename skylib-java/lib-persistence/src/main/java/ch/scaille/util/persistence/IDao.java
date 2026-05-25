@@ -1,5 +1,7 @@
 package ch.scaille.util.persistence;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.stream.Stream;
 
 /**
@@ -16,6 +18,12 @@ public interface IDao<T> {
 	 */
 	Stream<ResourceMetaData> list() throws StorageException;
 
+	ResourceMetaData resolve(String identifier) throws StorageException;
+	
+	ResourceMetaData resolve(String identifier, String mimetype) throws StorageException;
+	
+	ResourceMetaData resolveOrCreate(String identifier) throws StorageException;
+	
 	/**
 	 * Loads a resource from metadata
 	 */
@@ -26,38 +34,38 @@ public interface IDao<T> {
 	/**
 	 * Loads a resource from metadata
 	 */
-	Resource<T> loadResource(ResourceMetaData metadata, T template) throws StorageException;
+	Resource<T> loadResource(ResourceMetaData metadata, @Nullable T template) throws StorageException;
 
 	/**
 	 * Loads a resource from a locator
 	 */
-	default Resource<T> loadResource(String locator) throws StorageException {
-		return loadResource(locator, null);
+	default Resource<T> loadResource(String identifier) throws StorageException {
+		return loadResource(identifier, null);
 	}
 
 	/**
 	 * Loads a resource from a locator
 	 */
-	Resource<T> loadResource(String locator, T template) throws StorageException;
+	Resource<T> loadResource(String identifier, @Nullable T template) throws StorageException;
 
 	/**
 	 * Loads data from a locator
 	 */
-	default T load(String locator) throws StorageException {
-		return loadResource(locator, null).getValue();
+	default T load(String identifier) throws StorageException {
+		return loadResource(identifier, null).getValue();
 	}
 
 	/**
 	 * Loads data from a locator
 	 */
-	default T load(String locator, T template) throws StorageException {
-		return loadResource(locator, template).getValue();
+	default T load(String identifier, T template) throws StorageException {
+		return loadResource(identifier, template).getValue();
 	}
 
 	/**
 	 * Saves data in a location
 	 */
-	Resource<T> saveOrUpdate(String locator, T value) throws StorageException;
+	Resource<T> saveOrUpdate(String identifier, T value) throws StorageException;
 
 	/**
 	 * Saves data contained in a resource

@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import ch.scaille.util.persistence.handlers.IStorageDataHandler;
 import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Abstraction of dao with serialization (json, yaml, ...)
@@ -24,10 +25,6 @@ public abstract class AbstractSerializationDao<T> implements IDao<T> {
 	 */
 	protected final StorageDataHandlerRegistry dataHandlerRegistry;
 
-	protected abstract ResourceMetaData resolve(String locator) throws IOException;
-
-	protected abstract ResourceMetaData resolveOrCreate(String locator) throws IOException;
-
 	protected abstract Resource<String> readRaw(ResourceMetaData resourceMetaData) throws IOException;
 
 	protected abstract Resource<String> writeRaw(Resource<String> resource) throws StorageException;
@@ -41,13 +38,18 @@ public abstract class AbstractSerializationDao<T> implements IDao<T> {
         this.dataHandlerRegistry = Objects.requireNonNullElseGet(serDeserializerRegistry, () -> new StorageDataHandlerRegistry(null));
 	}
 
-	protected ResourceMetaData buildAndValidateMetadata(String locator, String storageLocator) {
-		return buildMetadata(locator, storageLocator)
-				.orElseThrow(() -> unableToIdentifyException(locator, storageLocator, "not found"));
+	@Override
+	public ResourceMetaData resolve(String identifier, String mimetype) throws StorageException {
+		return resolve(identifier).withMimeType(mimetype);
+	}
+	
+	protected ResourceMetaData buildAndValidateMetadata(String identifier, String storageLocator) {
+		return buildMetadata(identifier, storageLocator)
+				.orElseThrow(() -> unableToIdentifyException(identifier, storageLocator, "not found"));
 	}
 
-	protected IllegalStateException unableToIdentifyException(String locator, String storageLocator, String extra) {
-		return new IllegalStateException(String.format( "Unable to identify meta-data of %s / %s (%s)" ,locator , storageLocator , extra));
+	protected IllegalStateException unableToIdentifyException(String identifier, String storageLocator, String extra) {
+		return new IllegalStateException(String.format( "Unable to identify meta-data of %s / %s (%s)", identifier, storageLocator, extra));
 	}
 
 	/**
@@ -55,29 +57,29 @@ public abstract class AbstractSerializationDao<T> implements IDao<T> {
 	 * 
 	 * @return the meta data
 	 */
-	protected Optional<ResourceMetaData> buildMetadata(String locator, String storageLocator) {
+	protected Optional<ResourceMetaData> buildMetadata(String identifier, String storageLocator) {
 		final var extension = extensionOf(storageLocator);
 		return dataHandlerRegistry.find(extension)
 				.map(IStorageDataHandler::getDefaultMimeType)
 				.or(dataHandlerRegistry::getDefaultMimeType)
-				.map(mimeType -> fixOrValidate(new ResourceMetaData(locator, storageLocator, mimeType)));
+				.map(mimeType -> fixOrValidate(new ResourceMetaData(identifier, storageLocator, mimeType)));
 	}
 
 	@Override
-	public Resource<T> loadResource(ResourceMetaData resourceMetaData, T template) throws StorageException {
+	public Resource<T> loadResource(ResourceMetaData resourceMetaData, @Nullable T template) throws StorageException {
 		return StorageException.wrap("loadResource",
 				() -> dataHandlerRegistry.decode(readRaw(resourceMetaData), resourceType, template));
 	}
 
 	@Override
-	public Resource<T> loadResource(String locator, T template) throws StorageException {
-		return StorageException.wrap("loadResource", () -> loadResource(resolve(locator), template));
+	public Resource<T> loadResource(String identifier, @Nullable T template) throws StorageException {
+		return StorageException.wrap("loadResource", () -> loadResource(resolve(identifier), template));
 	}
 
 	@Override
-	public Resource<T> saveOrUpdate(String locator, T value) throws StorageException {
+	public Resource<T> saveOrUpdate(String identifier, T value) throws StorageException {
 		return StorageException.wrap("saveOrUpdate", () -> {
-			final var resource = resolveOrCreate(locator).withValue(value);
+			final var resource = resolveOrCreate(identifier).withValue(value);
 			return writeRaw(dataHandlerRegistry.encode(resource, resourceType));
 		}).withValue(value);
 	}

@@ -6,13 +6,12 @@ import static ch.scaille.testing.testpilot.factories.Reporting.settingValue;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Assertions;
 
 import ch.scaille.testing.testpilot.PolledComponent;
 
-@NullMarked
+
 public class JTextFieldPoller
 		extends SwingPollingBuilder<JTextComponent, JTextFieldPoller, JTextFieldPoller.SwingPoller> {
 

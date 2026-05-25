@@ -20,9 +20,8 @@ public class CustomerTestRole extends Assertions {
 	@TCApi(description = "Buy an item", humanReadable = "I go %s and buy %s")
 	@TCAction
 	public void buy(final BuyingLocationSelector selector, final TestItem newItem) {
-		// the selector defines all the actions required to apply/check you data (could
-		// be button clicks on some
-		// gui, ...)
+		// the selector defines all the actions required to apply/check your data (could
+		// be button clicks on some gui, ...)
 		selector.apply(testedService);
 		testedService.buy(newItem.itemKind);
 	}

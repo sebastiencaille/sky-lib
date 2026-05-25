@@ -1,17 +1,19 @@
 package ch.scaille.gui.swing.bindings;
 
 import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
 
 import ch.scaille.gui.swing.model.ListModelTableModel;
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
-import org.jspecify.annotations.NullMarked;
+import lombok.extern.java.Log;
+
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
-@NullMarked
+@Log
 public class JTableSelectionBinding<T> implements IComponentBinding<@Nullable T> {
 
     private final JTable table;
@@ -21,7 +23,7 @@ public class JTableSelectionBinding<T> implements IComponentBinding<@Nullable T>
     @Nullable
     private IComponentLink<@Nullable T> converter;
 
-    public JTableSelectionBinding(final JTable component, final ListModelTableModel<T, ?> model) {
+	public JTableSelectionBinding(final JTable component, final ListModelTableModel<T, ?> model) {
         this.table = component;
         this.model = model;
     }
@@ -29,18 +31,26 @@ public class JTableSelectionBinding<T> implements IComponentBinding<@Nullable T>
     @Override
     public void addComponentValueChangeListener(final IComponentLink<T> converter) {
         this.converter = converter;
-        table.getSelectionModel().addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting() && !modelChange) {
+        table.getSelectionModel().addListSelectionListener(event -> {
+            if (!event.getValueIsAdjusting() && !modelChange) {
                 updateSelection(converter);
             }
         });
 
         model.addTableModelListener(event -> {
-            if (event.getType() == ListModelTableModel.TABLE_CHANGE_DONE) {
+        	switch (event.getType()) {
+        	case ListModelTableModel.TABLE_CHANGE_DONE:
                 modelChange = false;
                 converter.reloadComponentValue();
-            } else if (event.getType() == ListModelTableModel.TABLE_ABOUT_TO_CHANGE) {
+                break;
+        	case ListModelTableModel.TABLE_ABOUT_TO_CHANGE:
                 modelChange = true;
+        		break;
+        	case TableModelEvent.UPDATE:
+      			updateSelection(converter);
+            	break;
+            default:
+                break;
             }
         });
 
@@ -68,7 +78,7 @@ public class JTableSelectionBinding<T> implements IComponentBinding<@Nullable T>
         final var selectedRow = table.getSelectedRow();
         if (selectedRow >= 0) {
             final var object = model.getObjectAtRow(selectedRow);
-            converter.setValueFromComponent(table, object);
+            converter.setValueFromComponent(table, object, true);
         } else {
             converter.setValueFromComponent(table, null);
         }

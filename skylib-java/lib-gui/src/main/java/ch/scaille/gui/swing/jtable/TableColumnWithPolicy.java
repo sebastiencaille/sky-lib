@@ -11,6 +11,7 @@ import javax.swing.table.TableColumn;
 import ch.scaille.gui.swing.SwingExt;
 import ch.scaille.gui.swing.model.ListModelTableModel;
 import lombok.Getter;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Table column model based on per-column contribution.
@@ -29,6 +30,7 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
 	public static final String SAMPLE_LOREM_IPSUM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vehicula lorem ut neque condimentum, non hendrerit nisl molestie. Morbi non vehicula erat. Phasellus nec diam quis ipsum lacinia congue id in nisi. Aenean dolor lectus, ornare ut faucibus nec, sagittis in mauris. Nulla ac bibendum sapien, quis porta nunc. Morbi sit amet metus massa. Vestibulum feugiat pretium enim, at maximus mi convallis eget. Duis maximus in nunc quis ornare. Duis dui risus, mattis in leo a, semper rutrum ante. Aliquam rutrum laoreet feugiat. Quisque rhoncus felis vitae metus volutpat finibus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed sed viverra ipsum. In hac habitasse platea dictumst. Pellentesque a purus diam. Nullam facilisis metus ut nulla dapibus finibus.";
 	public static final String SAMPLE_NUMBERS = "0";
 
+	@Nullable
 	private Runnable onUpdate;
 
 	@Getter
@@ -47,7 +49,9 @@ public abstract class TableColumnWithPolicy<C extends Enum<C>> extends TableColu
     @Override
 	public void setWidth(final int width) {
 		forcedWidth = width;
-		onUpdate.run();
+		if (onUpdate != null) {
+			onUpdate.run();
+		}
 	}
 
 	public void onUpdate(Runnable onUpdate) {

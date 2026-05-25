@@ -41,9 +41,9 @@ class ClassFinderTest {
 
 	@ParameterizedTest
 	@CsvSource({ //
-			"file:/C:/toto/mypackage,file:/,C:/toto", // windows
-			"file:/toto/mypackage,file:/,/toto", // unix
-			"jar:file:/toto.jar!/mypackage,jar:file:/toto.jar,/" // jar
+			"file:/C:/toto/myPackage,file:/,C:/toto", // windows
+			"file:/toto/myPackage,file:/,/toto", // Unix
+			"jar:file:/toto.jar!/myPackage,jar:file:/toto.jar,/" // jar
 	})
 	void testUriTransformation(String urlPackageLocation, String fsRoot, String fsPackageLocation)
 			throws URISyntaxException, IOException {
@@ -51,7 +51,7 @@ class ClassFinderTest {
 			final var scanner = finder.scanner();
 			final var testUri = new URI(urlPackageLocation);
 			Assertions.assertEquals(URI.create(fsRoot), scanner.rootOf(testUri));
-			Assertions.assertEquals(fsPackageLocation, scanner.packageLocationOf(testUri, "mypackage"));
+			Assertions.assertEquals(fsPackageLocation, scanner.packageLocationOf(testUri, "myPackage"));
 		}
 	}
 
@@ -59,7 +59,7 @@ class ClassFinderTest {
 	void testScan() throws IOException {
 		try (var finder = ClassFinder.of(ClassLoaderHelper.appClassPath())) {
 			Assertions.assertEquals(1,
-					finder.withPackages("ch.scaille.util").scan().filter(c -> c.equals(ClassFinder.class)).count());
+					finder.withPackages("ch.scaille.util").scan().filter(c -> c.equals(ClassFinderTest.class)).count());
 		}
 	}
 }

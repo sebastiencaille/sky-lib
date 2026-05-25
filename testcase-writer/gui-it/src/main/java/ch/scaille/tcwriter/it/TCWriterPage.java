@@ -10,10 +10,10 @@ import ch.scaille.testing.testpilot.swing.SwingPilot;
 public class TCWriterPage extends PagePilot {
 
 	@ByName("Actors")
-	public JListPoller actors = null;
+	public JListPoller actors;
 
 	@ByName("Actions")
-	public JListPoller actions = null;
+	public JListPoller actions;
 
 	@ByName("Selectors")
 	public JListPoller selectors;

@@ -36,6 +36,7 @@ import ch.scaille.javabeans.converters.IConverter;
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.ErrorSet;
 import ch.scaille.util.helpers.JavaExt;
+import org.jspecify.annotations.Nullable;
 
 public class ControllerExampleView extends JFrame {
 
@@ -165,6 +166,7 @@ public class ControllerExampleView extends JFrame {
 		// ------------------------------------------
 		final var tableObjectProperty = model.getComplexProperty();
 
+	
 		final var tableSelectionTableModel = new TestObjectTableModel(model.getTableModel());
 		final var tableSelectionEditor = new JTable(tableSelectionTableModel);
 		tableSelectionEditor.setName("tableSelectionEditor");
@@ -203,12 +205,12 @@ public class ControllerExampleView extends JFrame {
 		private int count = 0;
 
 		@Override
-		public T convertComponentValueToPropertyValue(final String componentValue) {
+		public T convertComponentValueToPropertyValue(@Nullable final String componentValue) {
 			throw JavaExt.notImplemented();
 		}
 
 		@Override
-		public String convertPropertyValueToComponentValue(final T propertyValue) {
+		public String convertPropertyValueToComponentValue(@Nullable final T propertyValue) {
 			return String.valueOf(++count);
 		}
 	}

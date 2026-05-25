@@ -1,0 +1,5 @@
+
+
+patch-module lib.testing.selenium.test.page {
+    add-opens org.seleniumhq.selenium.remote_driver/org.openqa.selenium.remote=org.seleniumhq.selenium.api
+}

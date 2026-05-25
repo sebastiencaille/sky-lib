@@ -17,7 +17,7 @@ import ch.scaille.tcwriter.generated.api.model.v0.TestObjectDescription;
 import ch.scaille.tcwriter.generated.api.model.v0.TestParameterFactory;
 import ch.scaille.tcwriter.generated.api.model.v0.TestRole;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.ERROR, implementationPackage = "<PACKAGE_NAME>.generated")
+@Mapper(unmappedTargetPolicy = ReportingPolicy.ERROR)
 public interface TestDictionaryMapper extends MetadataMapper {
 
 	TestDictionaryMapper MAPPER = Mappers.getMapper(TestDictionaryMapper.class);

@@ -4,7 +4,6 @@ import lombok.Getter;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 public class TimeTracker {
 
@@ -20,10 +19,8 @@ public class TimeTracker {
 	@Getter
     private final Duration duration;
 	private long absoluteTimeout = -1;
-	private final Object info;
 
 	public TimeTracker(final Duration duration) {
-		this.info = "";
 		this.duration = duration;
 	}
 
@@ -40,16 +37,6 @@ public class TimeTracker {
 
 	public boolean hasTimedOut() {
 		return System.currentTimeMillis() > getAbsoluteTimeout();
-	}
-
-	public void waitOn(final Object obj) throws InterruptedException, TimeoutException {
-		final var waitTime = remainingTimeMs();
-		if (waitTime > 0) {
-			obj.wait(waitTime); // NOSONAR
-		}
-		if (hasTimedOut()) {
-			throw new TimeoutException("Time out: " + info);
-		}
 	}
 
 	public long elapsedTimeMs() {

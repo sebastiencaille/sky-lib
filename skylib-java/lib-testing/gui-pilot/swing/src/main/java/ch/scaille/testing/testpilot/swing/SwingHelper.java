@@ -55,4 +55,9 @@ public class SwingHelper {
 		SwingHelper.checkSwingThread();
 		t.dispatchEvent(new KeyEvent(t, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, '\n'));
 	}
+
+	public static void doPressTab(JComponent t) {
+		SwingHelper.checkSwingThread();
+		t.dispatchEvent(new KeyEvent(t, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_TAB, '\t'));
+	}
 }

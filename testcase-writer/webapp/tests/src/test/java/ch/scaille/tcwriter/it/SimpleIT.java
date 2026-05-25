@@ -16,10 +16,12 @@ import ch.scaille.testing.testpilot.selenium.WebDriverFactory;
 import ch.scaille.testing.testpilot.selenium.jupiter.ScreenShotExtensions;
 import ch.scaille.testing.testpilot.selenium.jupiter.WebDriverExtension;
 import ch.scaille.testing.testpilot.selenium.jupiter.WebDriverExtension.WebDriverConfigurer;
-import ch.scaille.util.helpers.Logs;
+import lombok.extern.java.Log;
+
 import org.openqa.selenium.WebDriver;
 
 @ExtendWith({ DisabledIfHeadless.class, WebDriverExtension.class, ScreenShotExtensions.class })
+@Log
 class SimpleIT {
 
 	private SeleniumPilot pilot;
@@ -35,7 +37,7 @@ class SimpleIT {
 
 	@AfterEach
 	void releasePilot() {
-		Logs.of(this).info(pilot.getActionReport().getFormattedReport());
+		log.info(pilot.getActionReport().getFormattedReport());
 		pilot.close();
 	}
 

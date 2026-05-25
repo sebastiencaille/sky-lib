@@ -4,6 +4,7 @@ import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.persistence.handlers.serdeser.Deserializers;
 import ch.scaille.tcwriter.persistence.handlers.serdeser.ExportReferenceDeserializerHandler;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import org.jspecify.annotations.Nullable;
 import tools.jackson.databind.*;
 import tools.jackson.databind.cfg.ConstructorDetector;
 import tools.jackson.databind.cfg.MapperBuilder;
@@ -22,6 +23,8 @@ public abstract class AbstractModelDataHandler implements IStorageDataHandler {
     protected static final String JSON_EXT_1 = "json";
     public static final String JSON_MIME_TYPE = "application/json";
 
+    public static final String METADATA_MIME_TYPE = "tcwriter/metadata";
+    
     protected final ObjectMapper mapper;
 
     private final DeserializationProblemHandler referenceHandler = new ExportReferenceDeserializerHandler();
@@ -50,7 +53,7 @@ public abstract class AbstractModelDataHandler implements IStorageDataHandler {
     }
 
     @Override
-    public <T> T decode(String value, Class<T> targetType, T template) {
+    public <T> T decode(String value, Class<T> targetType, @Nullable T template) {
         final var config = mapper.deserializationConfig()
                 .withHandler(referenceHandler);
         var reader = mapper.readerFor(targetType).with(config);

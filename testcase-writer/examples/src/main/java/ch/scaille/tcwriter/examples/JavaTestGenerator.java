@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import ch.scaille.generators.util.GenerationMetadata;
 import ch.scaille.tcwriter.model.TestCaseException;
-import ch.scaille.tcwriter.services.generators.TestCaseToJava;
+import ch.scaille.tcwriter.javatc.generators.TestCaseToJava;
 
 public class JavaTestGenerator {
 

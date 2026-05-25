@@ -4,12 +4,13 @@ import java.util.function.Consumer;
 
 import ch.scaille.testing.bdd.definition.Scenario.ExecutionContext;
 import lombok.Getter;
+import org.jspecify.annotations.Nullable;
 
 /**
- * 
+ *
  * @author scaille
  *
- * @param <A> Application test apis
+ * @param <A> Application test APIs
  */
 public class Steps<A> {
 
@@ -39,11 +40,12 @@ public class Steps<A> {
 		return new Step<>(description, call, true);
 	}
 
+	@Nullable
 	private final Step<A> givenStep;
 	private final Step<A> whenStep;
 	private final Step<A> thenStep;
 
-	protected Steps(Step<A> givenStep, Step<A> whenStep, Step<A> thenStep) {
+	protected Steps(@Nullable Step<A> givenStep, Step<A> whenStep, Step<A> thenStep) {
 		this.givenStep = givenStep;
 		this.whenStep = whenStep;
 		this.thenStep = thenStep;

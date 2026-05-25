@@ -11,7 +11,7 @@
 #include <stdexcept>
 #include <memory>
 
-namespace ch_skymarshall::gui {
+namespace ch_scaille::gui {
 
 using source_ptr = const void*;
 

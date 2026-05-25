@@ -12,10 +12,9 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@NullMarked
+
 public class ValidationBinding {
 
 	private static final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -24,7 +23,7 @@ public class ValidationBinding {
 	private ValidationBinding() {
 	}
 
-	public static <B, T> IUnaryConverter<T> validator(final Class<B> beanType) {
+	public static <B, T extends @Nullable Object> IUnaryConverter<T> validator(final Class<B> beanType) {
 
 		return new IUnaryConverter<>() {
 
@@ -54,7 +53,7 @@ public class ValidationBinding {
 
 	}
 
-	private static class Converter<T, U> implements IUnaryConverter<U> {
+	private static class Converter<T, U extends @Nullable Object> implements IUnaryConverter<U> {
 
 		private final Class<T> beanType;
 		private final String attributeName;

@@ -2,6 +2,7 @@ package ch.scaille.tcwriter.server.webapi.service;
 
 import java.util.HashMap;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.SimpMessageType;
@@ -18,7 +19,7 @@ public class WebSocketFeedbackFacade implements WebFeedbackFacade {
 	}
 
 	@Override
-	public void send(String wsSessionId, String tabId, String destination, Object dto) {
+	public void send(@Nullable String wsSessionId, @Nullable String tabId, String destination, Object dto) {
 		if (wsSessionId == null || wsSessionId.isEmpty() || tabId == null) {
 			return;
 		}

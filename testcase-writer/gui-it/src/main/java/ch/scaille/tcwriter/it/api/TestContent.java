@@ -3,9 +3,8 @@ package ch.scaille.tcwriter.it.api;
 import java.util.Arrays;
 
 import ch.scaille.tcwriter.annotations.TCApi;
-import org.jspecify.annotations.NullMarked;
 
-@NullMarked
+
 public record TestContent(StepEdition[] steps, String[] humanReadable) {
 	
 	private static final String ACTOR_TEST_WRITER = "Test writer";

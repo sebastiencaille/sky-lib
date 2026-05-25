@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.time.Duration;
 
+import lombok.extern.java.Log;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -12,9 +13,9 @@ import ch.scaille.example.gui.controller.impl.ControllerExampleController;
 import ch.scaille.example.gui.controller.impl.ControllerExampleView;
 import ch.scaille.testing.testpilot.jupiter.DisabledIfHeadless;
 import ch.scaille.testing.testpilot.swing.SwingPilot;
-import ch.scaille.util.helpers.Logs;
 
 @ExtendWith(DisabledIfHeadless.class)
+@Log
 class ControllerExampleTest {
 
 	@Test
@@ -58,10 +59,10 @@ class ControllerExampleTest {
 		page.tableSelectionCheck.failUnless().assertTextEquals("Hello");
 		page.tableSelectionEditor.failUnless().selectRow(1);
 		page.tableSelectionCheck.failUnless().assertTextEquals("World");
-		page.tableSelectionEditor.failUnless().editValueOnSelectedRow(0, "Bouh");
-		page.tableSelectionCheck.failUnless().assertTextEquals("Bouh");
+		page.tableSelectionEditor.failUnless().editValueOnSelectedRow(0, "Meh");
+		page.tableSelectionCheck.failUnless().assertTextEquals("Meh");
 
-		Logs.of(this).info(pilot.getActionReport().getFormattedReport());
+		log.info(pilot.getActionReport().getFormattedReport());
 	}
 
 }

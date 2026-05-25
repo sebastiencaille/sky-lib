@@ -11,7 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -20,11 +19,11 @@ import org.jspecify.annotations.Nullable;
  * @param <C> type of Component
  * @param <R> type of Result
  */
-@NullMarked
+
 @Builder
 @AllArgsConstructor
 @Getter
-public class Polling<C, R> {
+public class Polling<C, R extends @Nullable Object> {
 
     public static <C1, R1> Polling.PollingBuilder<C1, R1> of(PollingFunction<C1, R1> pollingFunction) {
         return Polling.<C1, R1>builder().pollingFunction(pollingFunction);
@@ -34,7 +33,7 @@ public class Polling<C, R> {
         return Polling.<C1, R1>builder().precondition(precondition).pollingFunction(pollingFunction);
     }
 
-    public interface PollingFunction<C1, R1> {
+    public interface PollingFunction<C1, R1 extends @Nullable Object> {
         PollingResult<C1, R1> poll(PolledComponent<C1> context);
     }
 
@@ -60,7 +59,7 @@ public class Polling<C, R> {
     private final PollingFunction<C, R> pollingFunction;
 
     /**
-     * Sets the text reported in the logger. Setting a text will make that the
+     * Sets the text reported in the log. Setting a text will make that the
      * polling is logged in the report
      */
     @Nullable

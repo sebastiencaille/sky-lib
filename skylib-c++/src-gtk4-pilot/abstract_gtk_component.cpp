@@ -10,10 +10,10 @@
 
 #include "abstract_gtk_component.hh"
 
-namespace ch_skymarshall::gui::gtk4::pilot {
+namespace ch_scaille::gui::gtk4::pilot {
 
-using namespace ch_skymarshall::gui::pilot;
-using namespace ch_skymarshall::gui::gtk4::utils;
+using namespace ch_scaille::gui::pilot;
+using namespace ch_scaille::gui::gtk4::utils;
 
 abstract_gtk_component::abstract_gtk_component(
 		gtk_gui_pilot* _gui_pilot, const string &_name) :

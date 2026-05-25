@@ -4,7 +4,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import ch.scaille.javabeans.properties.IPersister;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -13,7 +12,7 @@ import org.jspecify.annotations.Nullable;
  * @param <A> Type of the object's attribute
  * @author scaille
  */
-@NullMarked
+
 public class GetSetAccess<T, A extends @Nullable Object> implements IPersisterFactory<T, A> {
 
     private final Function<T, A> getter;

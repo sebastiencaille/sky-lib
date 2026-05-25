@@ -15,13 +15,15 @@ import javax.swing.SwingConstants;
 
 import ch.scaille.gui.tools.GenericEditorController;
 import ch.scaille.javabeans.properties.ErrorSet;
+import org.jspecify.annotations.Nullable;
 
 public class SwingGenericEditorDialog extends JDialog {
 
+	@Nullable
 	private JTabbedPane tabbedPane = null;
 	private final List<GenericEditorController<?>> controllers = new ArrayList<>();
 
-	public SwingGenericEditorDialog(final Window parent, final String title, final ModalityType modality) {
+	public SwingGenericEditorDialog(@Nullable final Window parent, final String title, final ModalityType modality) {
 		super(parent, title, modality);
 		getContentPane().setLayout(new BorderLayout());
 	}

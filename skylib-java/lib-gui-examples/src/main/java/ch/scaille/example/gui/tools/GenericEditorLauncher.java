@@ -11,12 +11,13 @@ import ch.scaille.gui.swing.tools.SwingGenericEditorDialog;
 import ch.scaille.gui.tools.GenericEditorClassModel;
 import ch.scaille.gui.tools.GenericEditorController;
 import ch.scaille.gui.validation.GenericEditorValidationAdapter;
-import ch.scaille.util.helpers.Logs;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.java.Log;
 
+@Log
 public class GenericEditorLauncher {
 
 	@Setter
@@ -58,7 +59,7 @@ public class GenericEditorLauncher {
 
 	}
 
-	static void main(final String[] args) {
+	static void main() {
 
 		final var obj = new EditedObject();
 		obj.setBool(true);
@@ -75,7 +76,7 @@ public class GenericEditorLauncher {
 			editor.load(obj);
 			view.build(model.getErrorProperty());
 			view.setVisible(true);
-			Logs.of(GenericEditorLauncher.class).info(obj.toString());
+			log.info(obj.toString());
 			view.dispose();
 		});
 	}

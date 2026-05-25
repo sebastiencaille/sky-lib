@@ -6,7 +6,7 @@ import ch.scaille.example.gui.model.impl.TableModelExampleView;
 
 public class Launcher {
 
-	static void main(final String[] args) {
+	static void main() {
 		EventQueue.invokeLater(() -> new TableModelExampleView().setVisible(true));
 	}
 }

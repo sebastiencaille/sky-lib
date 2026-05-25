@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 import ch.scaille.javabeans.IVetoer.TransmitMode;
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.IPropertyEventListener;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -35,7 +34,7 @@ import org.jspecify.annotations.Nullable;
  * @author Sebastien Caille
  *
  */
-@NullMarked
+
 public class PropertyChangeSupportController {
 
 	private record CallInfo(Object caller, @Nullable Object newValue) {

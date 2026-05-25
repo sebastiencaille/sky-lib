@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 
-import org.jspecify.annotations.NullMarked;
+import ch.scaille.util.helpers.Logs;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -18,11 +18,9 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 import ch.scaille.testing.testpilot.selenium.ConsoleErrorDetector;
 import ch.scaille.util.helpers.JavaExt;
-import ch.scaille.util.helpers.Logs;
 import io.undertow.Undertow;
 import io.undertow.server.HttpServerExchange;
 
-@NullMarked
 public abstract class AbstractSeleniumUndertowTest {
 
 	@Nullable
@@ -105,12 +103,12 @@ public abstract class AbstractSeleniumUndertowTest {
 	/* **************************** TESTS **************************** */
 
 	@BeforeAll
-	public static void initLogger() {
-		final var rootLogger = Logs.of("ch");
-		rootLogger.setLevel(Level.ALL);
+	public static void initlog() {
+		final var rootlog = Logs.of("ch");
+		rootlog.setLevel(Level.ALL);
 		final var console = new ConsoleHandler();
 		console.setLevel(Level.ALL);
-		rootLogger.addHandler(console);
+		rootlog.addHandler(console);
 	}
 
 }

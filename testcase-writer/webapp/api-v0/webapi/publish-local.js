@@ -1,5 +1,5 @@
 /**
- * Deploys a package using npm link
+ * Deploys a package using "npm link"
  */
 const Os = require('os')
 const fs = require('fs');
@@ -18,6 +18,8 @@ const copyPackage = (dir, version, cb) => {
 }
 
 const deploy = (dir, cb) => {
+	let cmd;
+	let params;
 	if (Os.platform() === 'win32')  {
 		cmd = 'cmd';
 		params = [ '/c', 'npm' ];

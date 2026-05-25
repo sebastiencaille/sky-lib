@@ -7,14 +7,13 @@ import java.util.function.Function;
 import ch.scaille.javabeans.converters.IConverter;
 import ch.scaille.javabeans.converters.IConverterWithContext;
 import ch.scaille.javabeans.properties.PropertiesContext;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
  *
  * @param <P> The property side type
  */
-@NullMarked
+
 public interface IChainBuilder<P extends @Nullable Object> {
 
 

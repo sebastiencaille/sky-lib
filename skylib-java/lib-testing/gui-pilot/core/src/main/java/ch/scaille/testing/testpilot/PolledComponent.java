@@ -1,14 +1,12 @@
 package ch.scaille.testing.testpilot;
 
-import org.jspecify.annotations.NullMarked;
-
 /**
  * Context of the polling, giving access to meta-information of the polling
  * (i.e. the component, some descriptions, ...)
  *
  * @param <C>
  */
-@NullMarked
+
 public record PolledComponent<C>(AbstractComponentPilot<C> componentPilot,
                                  C component,
                                  String description) {

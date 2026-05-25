@@ -7,6 +7,7 @@ import static ch.scaille.tcwriter.it.api.StepSelector.currentStep;
 
 import javax.swing.JTable;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Assertions;
 
 import ch.scaille.tcwriter.gui.steps.StepsTableModel;
@@ -132,7 +133,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 		action.execute(tcWriterPage, guiPilot);
 	}
 
-	private static void updateValue(final JTable valueTable, final String keyValueStr) {
+	private static void updateValue(final JTable valueTable, @Nullable final String keyValueStr) {
 		if (keyValueStr == null) {
 			return;
 		}

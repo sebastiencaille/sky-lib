@@ -29,7 +29,7 @@ function WebApiFeedback(props: Readonly<WebApiFeedbackProps>) {
 	const disconnect = useCallback(() => appStatusUpdate(updateWebConnection(false)), [appStatusUpdate]);
 
 	return (
-		<StompSessionProvider url={"/api/websocket"}
+		<StompSessionProvider url={"/api/v0/websocket"}
 			connectHeaders={headers}
 			onConnect={connect}
 			onDisconnect={disconnect}

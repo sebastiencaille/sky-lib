@@ -9,11 +9,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
-import ch.scaille.generators.util.CodeGeneratorParams;
 import ch.scaille.tcwriter.examples.ExampleHelper;
 import ch.scaille.tcwriter.persistence.ModelConfig;
 import ch.scaille.tcwriter.persistence.factory.DaoConfigs;
 import ch.scaille.tcwriter.persistence.testexec.JunitTestExecConfig;
+import ch.scaille.util.helpers.JavaExt;
 import jakarta.annotation.PostConstruct;
 
 @Configuration
@@ -38,7 +38,8 @@ public class BootstrapConfig {
         currentConfig.getSubconfig(ModelConfig.class).orElseThrow().setTemplatePath(TC_TEMPLATES_FOLDER);
         currentConfig.getSubconfig(JunitTestExecConfig.class)
                 .orElseThrow()
-                .setClasspath(CodeGeneratorParams.locationOf(ExampleHelper.class).toString());
+                .setClasspath(JavaExt.locationOf(this.getClass()).toString()
+                		.replaceFirst("WEB-INF.*", "example-resources/testcase-writer-examples.jar"));
 
         exampleHelper.getConfigDao().saveConfiguration();
         exampleHelper.getModelDao().writeTestDictionary(dictionary);

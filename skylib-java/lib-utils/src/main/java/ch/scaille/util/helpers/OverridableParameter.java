@@ -1,6 +1,5 @@
 package ch.scaille.util.helpers;
 
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
@@ -13,14 +12,15 @@ import java.util.function.Function;
  */
 public class OverridableParameter<S, T> {
 
-	@NonNull
 	private final Function<S, T> defaultProvider;
 
+	@Nullable
 	private S source = null;
 
+	@Nullable
 	private T value = null;
 
-	public OverridableParameter(@NonNull Function<S, T> defaultProvider) {
+	public OverridableParameter(Function<S, T> defaultProvider) {
 		this.defaultProvider = defaultProvider;
 	}
 
@@ -36,7 +36,7 @@ public class OverridableParameter<S, T> {
 
 	public T get() {
 		ensureLoaded();
-		return this.value;
+		return Objects.requireNonNull(this.value);
 	}
 
 	public void ensureLoaded() {

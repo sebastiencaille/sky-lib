@@ -8,6 +8,6 @@ public class AbstractFlow {
 	protected final SimpleExternalAdapter simpleExternalAdapter = new SimpleExternalAdapter();
 
 	protected void info(String message) {
-		Logs.of(this).info(message);
+		Logs.of(this.getClass().getName()).info(message);
 	}
 }

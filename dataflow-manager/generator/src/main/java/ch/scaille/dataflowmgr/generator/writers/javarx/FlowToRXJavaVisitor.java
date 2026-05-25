@@ -218,10 +218,10 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 	}
 
 	/**
-	 * Add dependencies checks.
+	 * Add dependency checks.
 	 * <p>
 	 * For normal state, wait until parents are fully triggered.<br>
-	 * For default dependency, wait until parents + other conditions are either triggered or skipped
+	 * For default dependency, wait until parents and other conditions are either triggered or skipped
 	 * </p>
 	 */
 	JavaCodeGenerator<RuntimeException> addBindingDepsCheck(final Binding binding, final List<Binding> dependencies) {

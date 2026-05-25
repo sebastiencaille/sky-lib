@@ -6,7 +6,7 @@
  */
 #include "abstract_gui_component.hh"
 
-namespace ch_skymarshall::gui::pilot {
+namespace ch_scaille::gui::pilot {
 
 using namespace std;
 

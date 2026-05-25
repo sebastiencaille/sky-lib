@@ -11,6 +11,7 @@ import ch.scaille.javabeans.PropertyChangeSupportController;
 import ch.scaille.javabeans.persisters.IPersisterFactory.IObjectProvider;
 import ch.scaille.javabeans.properties.AbstractTypedProperty;
 import ch.scaille.javabeans.properties.ErrorSet;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A simple editor, with an arbitrary content
@@ -25,7 +26,7 @@ public class SimpleEditorModel<T> implements IGenericEditorModel<T> {
 	 */
     public static <E> IPropertyEntry entry(final Class<E> propertyType, final AbstractTypedProperty<E> property, 
                                           final Function<AbstractTypedProperty<E>, IChainBuilderFactory<E>> endOfChainProvider,
-                                          final boolean readOnly, final String label, final String tooltip) {
+                                          final boolean readOnly, final String label, @Nullable final String tooltip) {
         return new PropertyEntry<>(propertyType, property, endOfChainProvider, readOnly, label, tooltip);
     }
 

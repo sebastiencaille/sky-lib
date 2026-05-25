@@ -10,7 +10,6 @@ import ch.scaille.gui.swing.model.ListModelTableModel;
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * Binds to multiple selection of JTable.
@@ -19,7 +18,7 @@ import org.jspecify.annotations.NullMarked;
  * @param <T>
  * @author Sebastien Caille
  */
-@NullMarked
+
 public class JTableMultiSelectionBinding<T, U extends Collection<T>> implements IComponentBinding<U> {
 
     private final JTable table;

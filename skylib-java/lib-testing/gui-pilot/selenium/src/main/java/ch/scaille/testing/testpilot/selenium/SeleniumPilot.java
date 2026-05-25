@@ -8,8 +8,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import ch.scaille.util.helpers.Logs;
-import org.jspecify.annotations.NullMarked;
+import lombok.extern.java.Log;
 import org.jspecify.annotations.Nullable;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -24,7 +23,7 @@ import ch.scaille.testing.testpilot.ModalDialogDetector;
 import ch.scaille.testing.testpilot.ModalDialogDetector.PollingResult;
 import ch.scaille.util.helpers.NoExceptionCloseable;
 
-@NullMarked
+@Log
 public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 
 	// Used in js script
@@ -60,7 +59,7 @@ public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 		if (elementPath.isEmpty()) {
 			return;
 		}
-		Logs.of(this).fine(() -> "Received mutation on %s, %s: %s -> %s".formatted(elementPath,
+		log.fine(() -> "Received mutation on %s, %s: %s -> %s".formatted(elementPath,
 						mutation.getAttributeName(), mutation.getOldValue(), mutation.getCurrentValue()));
 		if (mutationFilter == null || mutationFilter.test(mutation)) {
 			synchronized (mutations) {
@@ -87,7 +86,7 @@ public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 				arguments = List.of();
 			}
 			this.script.addPreloadScript(scriptValue, arguments);
-		} catch (IOException e) {
+		} catch (IOException _) {
 			throw new IllegalStateException("Unable to read helper script");
 		}
 
@@ -117,7 +116,7 @@ public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 	}
 
 	/**
-	 * Creates a page (method/constructor that takes a SeleniumPilot as parameter)
+	 * Creates a page (method/constructor that takes a SeleniumPilot as a parameter)
 	 */
 	public <C extends PagePilot> C page(Function<SeleniumPilot, C> factory) {
 		return factory.apply(this);

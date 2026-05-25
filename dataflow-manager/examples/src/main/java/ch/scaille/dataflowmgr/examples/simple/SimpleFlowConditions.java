@@ -8,7 +8,7 @@ public class SimpleFlowConditions {
 
 	public boolean mustComplete(final MyData input) {
 		FlowReport.add("mustComplete");
-		return input.parameter.equals("Hello") || input.parameter.equals("Hi");
+		return input.parameter().equals("Hello") || input.parameter().equals("Hi");
 	}
 
 }

@@ -24,7 +24,6 @@ import ch.scaille.util.helpers.JavaExt;
 import ch.scaille.util.helpers.StreamExt;
 import lombok.Getter;
 import lombok.Setter;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -48,8 +47,8 @@ import org.jspecify.annotations.Nullable;
  * @author Sebastien Caille
  * <p>
  */
-@NullMarked
-public class ListModelContent<T extends @Nullable Object> extends AbstractListModel<T>
+
+public class ListModelContent<T> extends AbstractListModel<T>
         implements ISourceModel<T>, Iterable<T>, ListModelRef<T> {
 
     @Serial
@@ -99,7 +98,7 @@ public class ListModelContent<T extends @Nullable Object> extends AbstractListMo
     /**
      * Marker
      */
-    private interface IChildModelListener<T extends @Nullable Object> extends IListModelListener<T> {
+    private interface IChildModelListener<T> extends IListModelListener<T> {
 //	just a marker
     }
 
@@ -152,7 +151,7 @@ public class ListModelContent<T extends @Nullable Object> extends AbstractListMo
 
         @Override
         public void valuesRemoved(final ListEvent<T> event) {
-            event.getObjects().forEach(ListModelContent.this::remove);// NOSONAR
+            event.getObjects().forEach(ListModelContent.this::remove);
         }
 
         @Override
@@ -450,7 +449,7 @@ public class ListModelContent<T extends @Nullable Object> extends AbstractListMo
         final T removed = data.remove(row);
         fireIntervalRemoved(this, row, row);
         fireValueRemoved(value);
-        return Optional.ofNullable(removed);
+        return Optional.of(removed);
     }
 
     @Override
@@ -615,7 +614,7 @@ public class ListModelContent<T extends @Nullable Object> extends AbstractListMo
         if (row < 0) {
             return Optional.empty();
         }
-        return Optional.ofNullable(getValueAt(row));
+        return Optional.of(getValueAt(row));
     }
 
     /**

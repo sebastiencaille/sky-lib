@@ -12,11 +12,11 @@ import ch.scaille.tcwriter.pilot.selenium.AbstractSeleniumUndertowTest;
 import ch.scaille.testing.testpilot.jupiter.DisabledIfHeadless;
 import ch.scaille.testing.testpilot.selenium.SeleniumPilot;
 import ch.scaille.testing.testpilot.selenium.WebDriverFactory;
-import ch.scaille.util.helpers.Logs;
 
 import java.util.Objects;
 
 @ExtendWith(DisabledIfHeadless.class)
+
 @NullMarked
 @Log
 class SeleniumExampleTest extends AbstractSeleniumUndertowTest {
@@ -53,8 +53,8 @@ class SeleniumExampleTest extends AbstractSeleniumUndertowTest {
         final var testEnableScenarioRun = testEnableScenario.validate(pageProvider);
         final var testAlertScenarioRun = testAlertScenario.validate(pageProvider);
 
-        Logs.of(this).info(testEnableScenarioRun.toString());
-        Logs.of(this).info(testAlertScenarioRun.toString());
+        log.info(testEnableScenarioRun.toString());
+        log.info(testAlertScenarioRun.toString());
     }
 
 }

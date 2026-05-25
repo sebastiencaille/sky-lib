@@ -4,6 +4,7 @@ import ch.scaille.tcwriter.annotations.TCActor;
 import ch.scaille.tcwriter.annotations.TCActors;
 import ch.scaille.tcwriter.examples.ExampleService;
 import ch.scaille.tcwriter.recorder.RecorderTestActors;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 
 @TCActors({
@@ -11,7 +12,9 @@ import org.junit.jupiter.api.BeforeEach;
         @TCActor(variable = "deliveryGuy", humanReadable = "delivery guy", description = "A delivery guy", role = DeliveryTestRole.class)
 })
 public class AbstractSimpleTest {
+    @Nullable
     protected CustomerTestRole customer;
+    @Nullable
     protected DeliveryTestRole deliveryGuy;
 
     @BeforeEach

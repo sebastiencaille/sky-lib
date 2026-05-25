@@ -10,7 +10,7 @@
 
 #include "glib_converter.hh"
 
-namespace ch_skymarshall::gui::glib {
+namespace ch_scaille::gui::glib {
 using namespace std;
 using namespace Glib;
 

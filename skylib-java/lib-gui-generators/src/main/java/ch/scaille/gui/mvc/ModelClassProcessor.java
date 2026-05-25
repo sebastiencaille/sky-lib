@@ -13,13 +13,12 @@ import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
 import ch.scaille.util.dao.metadata.IAttributeMetaData;
 import ch.scaille.util.dao.metadata.UntypedDataObjectMetaData;
 import ch.scaille.util.helpers.ClassFinder.URLClassFinder;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
  * To generate the code of the MVC model for a given model class
  */
-@NullMarked
+
 public class ModelClassProcessor {
 
     private static final String ATTRIB_PUBLIC = "public ";

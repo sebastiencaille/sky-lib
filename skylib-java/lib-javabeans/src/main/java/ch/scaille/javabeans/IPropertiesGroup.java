@@ -5,7 +5,6 @@ import java.util.function.Consumer;
 
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.IPropertyEventListener;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * A group of properties allows controlling a group of properties
@@ -13,7 +12,7 @@ import org.jspecify.annotations.NullMarked;
  * @author scaille
  *
  */
-@NullMarked
+
 public interface IPropertiesGroup extends IPropertyController {
 
 	void register(AbstractProperty abstractProperty);

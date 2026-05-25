@@ -1,7 +1,7 @@
-import { useCallback } from 'react';
 import { Metadata, TestDictionary, TestCase, Context, ExportType } from './Types'
 import { addError, useApplicationStatusContextUpdater } from '../contexts/ApplicationStatusContext';
 import { UserContext, useUserContext } from '../contexts/UserContext';
+import {useCallback} from "react";
 
 const API_URL = '/api/v0';
 
@@ -43,7 +43,7 @@ async function callResult(url: string, init?: RequestInit): Promise<Response> {
 
 
 /**
- * Performs the call, handle the errors and unwrap the received object
+ * Performs the call, handle the errors, and unwrap the received object
  */
 async function call(url: string, init?: RequestInit): Promise<object> {
 	return await callResult(url, init).then(r => r.json());

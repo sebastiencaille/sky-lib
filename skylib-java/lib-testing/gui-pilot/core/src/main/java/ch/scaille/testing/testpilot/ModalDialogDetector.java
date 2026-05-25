@@ -11,13 +11,12 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import org.jspecify.annotations.NullMarked;
+import lombok.extern.java.Log;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Assertions;
 
 import ch.scaille.testing.testpilot.factories.PollingResults;
 import ch.scaille.testing.testpilot.factories.FailureHandlers.FailureHandler;
-import ch.scaille.util.helpers.Logs;
 import ch.scaille.util.helpers.NoExceptionCloseable;
 import ch.scaille.util.helpers.OverridableParameter;
 import ch.scaille.util.helpers.Poller;
@@ -28,10 +27,8 @@ import ch.scaille.util.helpers.Poller;
  * @author scaille
  *
  */
-@NullMarked
+@Log
 public class ModalDialogDetector {
-
-	private static final java.util.logging.Logger LOGGER = Logs.of(ModalDialogDetector.class);
 
 	public static PollingResult expected() {
 		return new PollingResult(true, null, null, null);
@@ -135,7 +132,7 @@ public class ModalDialogDetector {
 		if (handledDialog != null) {
 			throw new IllegalStateException("The detector already detected a dialog");
 		}
-		LOGGER.fine(() -> "Scheduled: " + stackCount);
+		log.fine(() -> "Scheduled: " + stackCount);
 		if (stackCount == 0) {
 			timerTask = timerTask();
 			t.schedule(timerTask, 0, 500);
@@ -147,7 +144,7 @@ public class ModalDialogDetector {
 	public void close() {
 		try {
 			running.lock();
-			LOGGER.fine(() -> "Unscheduling " + stackCount);
+			log.fine(() -> "Unscheduling " + stackCount);
 			stackCount--;
 			if (stackCount == 0 && timerTask != null) {
 				timerTask.cancel();

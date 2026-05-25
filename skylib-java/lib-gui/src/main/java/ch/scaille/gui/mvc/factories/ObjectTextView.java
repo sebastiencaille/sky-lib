@@ -9,12 +9,13 @@ import ch.scaille.javabeans.converters.Converters;
 import ch.scaille.javabeans.converters.IConverter;
 import ch.scaille.util.helpers.LambdaExt.FunctionWithException;
 import lombok.Getter;
+import org.jspecify.annotations.Nullable;
 
 /**
  * To display some text based on the content of an object
  */
 @Getter
-public abstract class ObjectTextView<T> {
+public abstract class ObjectTextView<T extends @Nullable Object> {
 
 	private final T object;
 
@@ -23,14 +24,14 @@ public abstract class ObjectTextView<T> {
 	}
 
     @Override
-	public boolean equals(final Object obj) {
+	public boolean equals(@Nullable final Object obj) {
 		return obj != null && obj.getClass().equals(this.getClass())
 				&& Objects.equals(((ObjectTextView<?>) obj).object, object);
 	}
 
 	@Override
 	public int hashCode() {
-		return object.hashCode();
+		return Objects.hashCode(object);
 	}
 
 	/**
@@ -44,7 +45,7 @@ public abstract class ObjectTextView<T> {
 			this.objToText = objToText;
 		}
 
-		public ObjectTextView<T> apply(T object) {
+		public ObjectTextView<T> apply(@Nullable T object) {
 			return new ObjectTextView<>(object) {
 				@Override
 				public String toString() {
@@ -68,7 +69,7 @@ public abstract class ObjectTextView<T> {
 			this.objToText = objToText;
 		}
 
-		public ObjectTextView<T> apply(T object, U context) {
+		public ObjectTextView<T> apply(@Nullable T object, U context) {
 			return new ObjectTextView<>(object) {
 				@Override
 				public String toString() {

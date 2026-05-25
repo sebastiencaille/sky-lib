@@ -5,9 +5,8 @@ import java.util.function.Consumer;
 
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.IPropertyEventListener;
-import org.jspecify.annotations.NullMarked;
 
-@NullMarked
+
 public class DummyPropertiesGroup implements IPropertiesGroup, IPropertyEventListener {
 
 	private final PropertyChangeSupportController propertyChangeSupportController = new PropertyChangeSupportController(this);

@@ -1,14 +1,13 @@
 package ch.scaille.testing.testpilot;
 
 import lombok.Getter;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@NullMarked
+
 public class PilotReport {
 
 	public interface ReportFunction<C> {

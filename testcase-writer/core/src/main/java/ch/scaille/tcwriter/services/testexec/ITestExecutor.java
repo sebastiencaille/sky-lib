@@ -37,7 +37,7 @@ public interface ITestExecutor {
 
 	Template createTemplate(TestCase tc) throws TestCaseException;
 	
-	String write(TestConfig config) throws IOException, TestCaseException;
+	void write(TestConfig config) throws IOException, TestCaseException;
 
 	String compile(TestConfig config) throws IOException, InterruptedException;
 

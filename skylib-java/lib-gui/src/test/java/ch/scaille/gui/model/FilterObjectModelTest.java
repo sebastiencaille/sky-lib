@@ -7,12 +7,14 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.function.Predicate;
 
+import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.Test;
 
 import ch.scaille.gui.TestObject;
 import ch.scaille.gui.model.views.IListView;
 import ch.scaille.gui.model.views.ListViews;
 
+@NullMarked
 class FilterObjectModelTest {
 
 	private static final IListView<TestObject> COMPARATOR = ListViews.sorted(Comparator.comparingInt(TestObject::getVal));

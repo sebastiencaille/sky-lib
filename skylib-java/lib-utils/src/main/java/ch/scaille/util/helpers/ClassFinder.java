@@ -1,5 +1,8 @@
 package ch.scaille.util.helpers;
 
+import lombok.extern.java.Log;
+import org.jspecify.annotations.Nullable;
+
 import static ch.scaille.util.helpers.LambdaExt.uncheckedF;
 
 import java.io.File;
@@ -26,7 +29,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -35,9 +37,8 @@ import java.util.stream.Stream;
  *
  * @author scaille
  */
+@Log
 public class ClassFinder {
-
-	public static final Logger LOGGER = Logs.of(ClassFinder.class);
 
 	private static final String CLASS_EXTENSION = ".class";
 
@@ -114,7 +115,7 @@ public class ClassFinder {
 	}
 	
 	public ClassFinder withClasses(Class<?>... classes) {
-		collectedClasses.putAll(Arrays.stream(classes).collect(Collectors.toMap(c -> c, c -> Policy.CLASS_ONLY)));
+		collectedClasses.putAll(Arrays.stream(classes).collect(Collectors.toMap(c -> c, _ -> Policy.CLASS_ONLY)));
 		return this;
 	}
 
@@ -130,7 +131,7 @@ public class ClassFinder {
 			try {
 				found = loader.loadClass(pkg + className);
 				break;
-			} catch (final ClassNotFoundException e) {
+			} catch (final ClassNotFoundException _) {
 				// ignore
 			}
 		}
@@ -190,7 +191,7 @@ public class ClassFinder {
 		}
 
 		@Override
-		public Stream<Class<?>> scan(URL resource, String aPackage) throws IOException {
+		public Stream<Class<?>> scan(@Nullable URL resource, String aPackage) throws IOException {
 			if (resource == null) {
 				return Stream.empty();
 			}
@@ -205,7 +206,7 @@ public class ClassFinder {
 			}
 			try (var fs = FileSystems.newFileSystem(rootUri, Collections.emptyMap())) {
 				return scan(fs.getPath(scanPath), aPackage);
-			} catch (FileSystemAlreadyExistsException e) {
+			} catch (FileSystemAlreadyExistsException _) {
 				return scan(FileSystems.getFileSystem(rootUri).getPath(scanPath), aPackage);
 			}
 		}
@@ -225,6 +226,7 @@ public class ClassFinder {
 
 	}
 
+	@Nullable
 	private Class<?> handleClass(final String className) {
 		if ("module-info".equals(className)) {
 			return null;
@@ -235,9 +237,9 @@ public class ClassFinder {
 			if (result != Policy.SCANNED) {
 				return candidate;
 			}
-		} catch (final Exception | NoClassDefFoundError e) { // NOSONAR
+		} catch (final Exception | NoClassDefFoundError e) {
 			// ignore
-			LOGGER.log(Level.FINE, "Unable to load class", e);
+			log.log(Level.FINE, "Unable to load class", e);
 		}
 		return null;
 	}
@@ -283,7 +285,7 @@ public class ClassFinder {
 		return appliedPolicy;
 	}
 
-	private Policy scanInheritedClass(final Class<?> inheritedClass) {
+	private Policy scanInheritedClass(@Nullable final Class<?> inheritedClass) {
 		if (inheritedClass == null) {
 			return Policy.SCANNED;
 		}

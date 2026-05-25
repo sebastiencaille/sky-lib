@@ -1,0 +1,85 @@
+package ch.scaille.tcwriter.server.services;
+
+import java.util.Optional;
+
+import org.jspecify.annotations.Nullable;
+import org.springframework.session.Session;
+import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.context.request.RequestAttributes;
+
+import ch.scaille.tcwriter.server.dto.Context;
+import jakarta.transaction.Transactional;
+
+public class SessionManagerImpl implements SessionManager {
+
+    private static class NativeWebRequestAccessor implements SessionAccessor {
+
+        private final NativeWebRequest request;
+
+        public NativeWebRequestAccessor(NativeWebRequest request) {
+            this.request = request;
+        }
+
+        private Optional<NativeWebRequest> request() {
+            return Optional.of(request);
+        }
+
+        @Override
+        public <T> Optional<T> get(String attribName) {
+            // Creates the session if needed
+            return request().map(r -> (T) r.getAttribute(attribName, RequestAttributes.SCOPE_SESSION));
+        }
+
+        @Override
+        public void set(String attribName, Object value) {
+            request().ifPresent(s -> s.setAttribute(attribName, value, RequestAttributes.SCOPE_SESSION));
+        }
+
+        @Override
+        public void remove(String attribName) {
+            request().ifPresent(s -> s.removeAttribute(attribName, RequestAttributes.SCOPE_SESSION));
+
+        }
+    }
+
+    private record SpringSessionAccessor(Session session) implements SessionAccessor {
+
+        @Override
+        public <T> Optional<T> get(String attribName) {
+            return Optional.ofNullable(session.getAttribute(attribName));
+        }
+
+        @Override
+        public void set(String attribName, Object value) {
+            session.setAttribute(attribName, value);
+        }
+
+        @Override
+        public void remove(String attribName) {
+            session.removeAttribute(attribName);
+        }
+
+    }
+
+    @Override
+    @Transactional
+    public SessionGetSet<Context> getContext(NativeWebRequest request) {
+        return new SessionGetSet<>(new NativeWebRequestAccessor(request), "UserContext",
+                ch.scaille.tcwriter.server.dto.Context::new);
+    }
+
+    private SessionGetSet<String> webSocketSessionIdOf(SessionAccessor accessor, @Nullable String tabId) {
+        return new SessionGetSet<>(accessor, "WsSocketSession_" + tabId, null);
+    }
+
+    @Override
+    public SessionGetSet<String> webSocketSessionIdOf(NativeWebRequest request,  @Nullable String tabId) {
+        return webSocketSessionIdOf(new NativeWebRequestAccessor(request), tabId);
+    }
+
+    @Override
+    public SessionGetSet<String> webSocketSessionIdOf(Session session, @Nullable String tabId) {
+        return webSocketSessionIdOf(new SpringSessionAccessor(session), tabId);
+    }
+
+}

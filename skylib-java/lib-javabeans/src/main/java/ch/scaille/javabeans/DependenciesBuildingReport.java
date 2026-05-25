@@ -1,9 +1,8 @@
 package ch.scaille.javabeans;
 
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@NullMarked
+
 public class DependenciesBuildingReport {
 
 	@Nullable

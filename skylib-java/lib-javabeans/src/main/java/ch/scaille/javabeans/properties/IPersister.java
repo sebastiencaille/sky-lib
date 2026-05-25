@@ -1,6 +1,8 @@
 package ch.scaille.javabeans.properties;
 
-public interface IPersister<T> {
+import org.jspecify.annotations.Nullable;
+
+public interface IPersister<T extends @Nullable Object> {
 
 	T get();
 

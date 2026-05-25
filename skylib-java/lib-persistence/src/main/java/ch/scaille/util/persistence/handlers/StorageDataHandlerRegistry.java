@@ -5,14 +5,16 @@ import java.util.List;
 import java.util.Optional;
 
 import ch.scaille.util.persistence.Resource;
+import org.jspecify.annotations.Nullable;
 
 public class StorageDataHandlerRegistry {
 
 	private final List<IStorageDataHandler> handlers = new ArrayList<>();
 
+	@Nullable
 	private final IStorageDataHandler defaultDataHandler;
 
-	public StorageDataHandlerRegistry(IStorageDataHandler defaultDataHandler) {
+	public StorageDataHandlerRegistry(@Nullable IStorageDataHandler defaultDataHandler) {
 		this.defaultDataHandler = defaultDataHandler;
 		if (defaultDataHandler != null) {
 			handlers.add(defaultDataHandler);
@@ -39,7 +41,7 @@ public class StorageDataHandlerRegistry {
 		return resource.withValue(findHandler(resource).encode(targetType, resource.getValue()));
 	}
 
-	public <T> Resource<T> decode(Resource<String> resource, Class<T> targetType, T template) {
+	public <T> Resource<T> decode(Resource<String> resource, Class<T> targetType, @Nullable T template) {
 		return resource.withValue(findHandler(resource).decode(resource.getValue(), targetType, template));
 	}
 

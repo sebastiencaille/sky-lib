@@ -17,11 +17,12 @@ import ch.scaille.javabeans.persisters.IPersisterFactory.IObjectProvider;
 import ch.scaille.javabeans.properties.AbstractTypedProperty;
 import ch.scaille.javabeans.properties.BooleanProperty;
 import ch.scaille.javabeans.properties.ObjectProperty;
-import ch.scaille.util.helpers.Logs;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.java.Log;
 import org.jspecify.annotations.Nullable;
 
+@Log
 public class GenericPropertiesEditorLauncher {
 
 	@Getter
@@ -48,7 +49,7 @@ public class GenericPropertiesEditorLauncher {
 		);
 	}
 
-	static void main(final String[] args) {
+	static void main() {
 
 		final var obj = new EditedObject();
 		final var model = new SimpleEditorModel<>(GenericPropertiesEditorLauncher::builder);
@@ -61,7 +62,7 @@ public class GenericPropertiesEditorLauncher {
 			view.validate();
 			view.pack();
 			view.setVisible(true);
-			Logs.of(GenericPropertiesEditorLauncher.class).info(obj.toString());
+			log.info(obj.toString());
 			view.dispose();
 		});
 	}

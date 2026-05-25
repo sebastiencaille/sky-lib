@@ -19,7 +19,7 @@ public class DataObjectMetaDataExample {
 	private DataObjectMetaDataExample() {
 	}
 
-	static void main(final String[] args) throws IOException {
+	static void main() throws IOException {
 
 		try (var output = Logs.streamOf(DataObjectMetaDataExample.class, Level.INFO)) {
 			final var log = new SimpleTextFormatter<>(TextFormatter.safeOutput(output));

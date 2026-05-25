@@ -12,7 +12,6 @@ import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
 import ch.scaille.javabeans.properties.AbstractProperty;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -25,7 +24,7 @@ import org.jspecify.annotations.Nullable;
  * @param <M> type of the object's gui model
  * @param <C> type that enums the columns
  */
-@NullMarked
+
 public abstract class ObjectControllerTableModel<O, M extends IObjectGuiModel<O>, C extends Enum<C>>
 		extends ListModelTableModel<O, C> {
 

@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
@@ -18,7 +17,7 @@ import ch.scaille.testing.testpilot.PolledComponent;
 import ch.scaille.testing.testpilot.PollingResult;
 import ch.scaille.testing.testpilot.factories.PollingResults;
 
-@NullMarked
+
 public class ElementPilot extends AbstractComponentPilot<WebElement> {
 
 	private final SeleniumPilot pilot;
@@ -74,7 +73,7 @@ public class ElementPilot extends AbstractComponentPilot<WebElement> {
 	}
 
 	@Override
-	protected <U> PollingResult<WebElement, U> waitPollingSuccessLoop(final Polling<WebElement, U> polling) {
+	protected <U extends @Nullable Object> PollingResult<WebElement, U> waitPollingSuccessLoop(final Polling<WebElement, U> polling) {
 		final var initializedPolling = polling.initializeFrom(this);
 		return new SeleniumPoller(pilot.getDriver(), initializedPolling.getTimeout(), initializedPolling.getFirstDelay(),
 				initializedPolling.getDelayFunction())

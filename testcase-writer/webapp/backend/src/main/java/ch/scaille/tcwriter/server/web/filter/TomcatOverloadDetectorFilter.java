@@ -9,19 +9,17 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.jspecify.annotations.NullMarked;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
-@NullMarked
+
+@Slf4j
 public class TomcatOverloadDetectorFilter extends OncePerRequestFilter {
-
-	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(TomcatOverloadDetectorFilter.class);
 
 	private static final Timer TIMER = new Timer(TomcatOverloadDetectorFilter.class.getName());
 
@@ -53,7 +51,7 @@ public class TomcatOverloadDetectorFilter extends OncePerRequestFilter {
 	}
 	
 	private void dumpThreads() {
-		LOGGER.debug("Active threads: {}", activeThreadsCount.get());
+		log.debug("Active threads: {}", activeThreadsCount.get());
 		if (activeThreadsCount.get() <= dumpIfMoreThan) {
 			return;
 		}
@@ -64,13 +62,13 @@ public class TomcatOverloadDetectorFilter extends OncePerRequestFilter {
 		if (!thread.getName().contains("-exec-")) {
 			return;
 		}
-		final var log = new StringBuilder("\n[overload] ").append(thread.getName());
+		final var logMessage = new StringBuilder("\n[overload] ").append(thread.getName());
 		Arrays.stream(stack).filter(this::keepElement)
-				.forEach(e -> log.append("\n[overload] at ").append(e.getClassName()).append('.')
+				.forEach(e -> logMessage.append("\n[overload] at ").append(e.getClassName()).append('.')
 						.append(e.getMethodName()).append("(").append(e.getFileName()).append(':')
 						.append(e.getLineNumber()).append(')'));
-		if (LOGGER.isWarnEnabled()) {
-			LOGGER.warn(log.toString());
+		if (log.isWarnEnabled()) {
+			log.warn(logMessage.toString());
 		}
 	}
 

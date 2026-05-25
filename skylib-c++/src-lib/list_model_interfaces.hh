@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 
-namespace ch_skymarshall::gui {
+namespace ch_scaille::gui {
 
 using namespace std;
 using namespace __gnu_cxx;

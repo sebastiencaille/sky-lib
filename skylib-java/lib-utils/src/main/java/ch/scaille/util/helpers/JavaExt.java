@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Objects;
@@ -20,14 +21,14 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
+import lombok.extern.java.Log;
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
  * Some helpers for java
  */
-@NullMarked
+@Log
 public class JavaExt {
 
     private JavaExt() {
@@ -83,7 +84,7 @@ public class JavaExt {
                 }
             });
         } catch (IOException e) {
-            Logs.of(JavaExt.class).log(Level.INFO, e, () -> "Cannot delete temp folder");
+            log.log(Level.INFO, e, () -> "Cannot delete temp folder");
         }
     }
 
@@ -210,5 +211,13 @@ public class JavaExt {
         final var notClosed = Objects.requireNonNull(closeable, "The closeable must not be null");
         return new CloseableOptionalNotNull<>(notClosed);
     }
+
+    /**
+	 * Gets the folder of a class
+	 *
+     */
+	public static Path locationOf(Class<?> clazz) {
+		return Paths.get(JavaExt.pathOf(clazz.getProtectionDomain().getCodeSource().getLocation()));
+	}
 
 }

@@ -36,10 +36,9 @@ import ch.scaille.gui.swing.model.ListModelTableModel;
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@NullMarked
+
 public class SwingBindings {
 
     private SwingBindings() {
@@ -60,9 +59,9 @@ public class SwingBindings {
     }
 
     /**
-     * Class that contains all listener life cycle (create, add, remove)
+     * Class that contains all the listeners' life cycle (create, add, remove)
      **/
-    private static class ListenerRegistration<T, C, L> implements IListenerRegistration<T, C> {
+    private static class ListenerRegistration<T extends @Nullable Object, C, L> implements IListenerRegistration<T, C> {
         private final BiFunction<IComponentLink<T>, C, L> createListener;
         private final BiConsumer<C, L> addListener;
         private final BiConsumer<C, L> removeListener;
@@ -199,7 +198,7 @@ public class SwingBindings {
                 component::setSelectedItem);
     }
 
-    private record ActionListenerImplementation<T>(IComponentLink<T> link,
+    private record ActionListenerImplementation<T extends @Nullable Object>(IComponentLink<T> link,
                                                    Object[] mapping,
                                                    ButtonGroup group)
             implements ActionListener {
@@ -232,7 +231,7 @@ public class SwingBindings {
         }
     }
 
-    public static <T> IComponentBinding<T> group(final ButtonGroup group, final Object... mapping) {
+    public static <T extends @Nullable Object> IComponentBinding<T> group(final ButtonGroup group, final Object... mapping) {
         return new IComponentBinding<>() {
 
             @Nullable

@@ -7,9 +7,10 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import ch.scaille.util.helpers.DelayFunction;
+import lombok.extern.java.Log;
+import org.jspecify.annotations.Nullable;
 import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.InvalidSelectorException;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -19,15 +20,15 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.opentest4j.AssertionFailedError;
 
-import ch.scaille.util.helpers.Logs;
 import ch.scaille.util.helpers.Poller;
 
+@Log
 public class SeleniumPoller extends Poller {
 
-	private static final Logger LOGGER = Logs.of(SeleniumPoller.class);
-
 	private final WebDriver webDriver;
+	@Nullable
 	private TimeoutException timeoutException;
+	@Nullable
 	private Object lastPollingResult;
 
 	public SeleniumPoller(WebDriver webDriver, Duration timeout, Duration firstDelay, DelayFunction delayFunction) {
@@ -41,13 +42,13 @@ public class SeleniumPoller extends Poller {
 		final var result = run(polling, isSuccess);
 		if (timeoutException != null && lastPollingResult != null) {
 			// Return the root cause of the failure, which is nicer than selenium exception
-			LOGGER.fine("Timeout with polling result");
+			log.fine("Timeout with polling result");
 			return Optional.of((T) lastPollingResult);
 		} else if (timeoutException != null) {
-			LOGGER.fine("Timeout");
+			log.fine("Timeout");
 			return Optional.of(timeoutHandler.apply(timeoutException));
 		}
-		LOGGER.fine(() -> "Returning " + result);
+		log.fine(() -> "Returning " + result);
 		return result;
 	}
 
@@ -57,7 +58,7 @@ public class SeleniumPoller extends Poller {
 			beforeRun();
 			return pollWithSpecificDelay(polling, isSuccess, delayFunction.apply(this));
 		} catch (TimeoutException e) {
-			LOGGER.log(Level.INFO, "Polling timeout", e);
+			log.log(Level.INFO, "Polling timeout", e);
 			timeoutException = e;
 			return Optional.empty();
 		}
@@ -65,12 +66,12 @@ public class SeleniumPoller extends Poller {
 
 	private <T> Optional<T> pollWithSpecificDelay(Function<Poller, Optional<T>> polling, Predicate<T> isSuccess,
 			Duration duration) {
-		return Optional.ofNullable(new WebDriverWait(webDriver, timeTracker.remainingDuration()) //
+		return Optional.of(new WebDriverWait(webDriver, timeTracker.remainingDuration()) //
 				.withMessage(() -> {
 					if (lastPollingResult != null) {
 						return lastPollingResult.toString();
 					}
-					return null;
+					return "";
 				})
 				.pollingEvery(duration) //
 				.ignoreAll(List.of(NoSuchElementException.class, StaleElementReferenceException.class,

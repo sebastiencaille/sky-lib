@@ -3,12 +3,14 @@ package ch.scaille.tcwriter.examples.simple.dto;
 import ch.scaille.tcwriter.annotations.TCApi;
 import ch.scaille.tcwriter.examples.ExampleService.ItemKind;
 import lombok.Getter;
+import org.jspecify.annotations.Nullable;
 
 @TCApi(description = "an item you can buy", humanReadable = "")
 @Getter
 public class TestItem {
 
 	public final ItemKind itemKind;
+	@Nullable
     private String brand;
     private int numberOfItems;
     private boolean iso;

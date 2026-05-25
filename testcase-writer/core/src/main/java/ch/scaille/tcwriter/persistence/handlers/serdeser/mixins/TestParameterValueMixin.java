@@ -7,7 +7,6 @@ import ch.scaille.tcwriter.persistence.handlers.serdeser.ExportReference;
 import ch.scaille.tcwriter.persistence.handlers.serdeser.ExportReferenceWriter;
 import ch.scaille.tcwriter.persistence.handlers.serdeser.ReferenceHandler;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.jspecify.annotations.NullMarked;
 import tools.jackson.databind.annotation.JsonAppend;
 
 import static ch.scaille.tcwriter.persistence.handlers.serdeser.mixins.TestParameterValueMixin.TEST_PARAMETER_FACTORY_REF;
@@ -16,7 +15,7 @@ import static ch.scaille.tcwriter.persistence.handlers.serdeser.mixins.TestParam
 @JsonAppend(props = {
         @JsonAppend.Prop(value = ExportReferenceWriter.class, name = TEST_PARAMETER_FACTORY_REF, type = ExportReference.class)
 })
-@NullMarked
+
 public class TestParameterValueMixin {
     private TestParameterValueMixin() {
         /* This utility class should not be instantiated */

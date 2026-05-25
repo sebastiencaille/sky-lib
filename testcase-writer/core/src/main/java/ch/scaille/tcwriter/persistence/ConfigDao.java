@@ -25,8 +25,8 @@ public class ConfigDao implements IConfigDao {
 
 	private final IDao<TCConfig> loader;
 
-	public ConfigDao(DaoFactory daoFactory, String locator, StorageDataHandlerRegistry configSerDeserializerRegistry) {
-		this.loader = daoFactory.loaderOf(TCConfig.class, locator, configSerDeserializerRegistry);
+	public ConfigDao(DaoFactory daoFactory, String identifier, StorageDataHandlerRegistry configSerDeserializerRegistry) {
+		this.loader = daoFactory.loaderOf(TCConfig.class, identifier, configSerDeserializerRegistry);
 		this.propertiesGroup.transmitChangesBothWays();
 	}
 	
@@ -44,8 +44,8 @@ public class ConfigDao implements IConfigDao {
 	 * 
 	 * @param locator the name of the configuration
 	 */
-	public ConfigDao setConfiguration(String locator) {
-		apply(StorageRTException.uncheck("Reading of configuration: " + locator + " (try to run the class SetupDemoServer", () -> loader.load(locator)));
+	public ConfigDao setConfiguration(String identifier) {
+		apply(StorageRTException.uncheck("Reading of configuration: " + identifier, () -> loader.load(identifier)));
 		return this;
 	}
 

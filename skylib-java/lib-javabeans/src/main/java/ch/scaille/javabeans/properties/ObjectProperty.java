@@ -11,7 +11,6 @@ import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.IPropertiesOwner;
 import ch.scaille.javabeans.chain.BindingChain;
 import lombok.Getter;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -20,7 +19,7 @@ import org.jspecify.annotations.Nullable;
  *
  * @param <T>
  */
-@NullMarked
+
 public class ObjectProperty<T extends @Nullable Object> extends AbstractTypedProperty<T> {
 
     private final T defaultValue;

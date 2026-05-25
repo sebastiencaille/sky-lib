@@ -1,5 +1,7 @@
 package ch.scaille.util.helpers;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
@@ -13,7 +15,10 @@ public interface StreamExt {
 
 	class Single<T> {
 		private final boolean allowZero;
+
+		@Nullable
 		private T value = null;
+
 		private int count;
 
 		private Single(boolean allowZero) {
@@ -28,7 +33,7 @@ public interface StreamExt {
 			return new Single<>(false);
 		}
 
-		void setValue(final T newValue) {
+		void setValue(@Nullable final T newValue) {
 			if (newValue == null) {
 				return;
 			}
@@ -44,6 +49,7 @@ public interface StreamExt {
 			return (count == 0 && !allowZero) || count > 1;
 		}
 
+		@Nullable
 		public T get() {
 			if (wrongCount()) {
 				throw new WrongCountException(count);
@@ -55,9 +61,10 @@ public interface StreamExt {
 			if (wrongCount()) {
 				throw new WrongCountException(count);
 			}
-			return Optional.of(value);
+			return Optional.ofNullable(value);
 		}
 
+		@Nullable
 		public <E extends Exception> T orElseThrow(final IntFunction<E> supplier) throws E {
 			if (wrongCount()) {
 				throw supplier.apply(count);
@@ -91,13 +98,13 @@ public interface StreamExt {
 		return Collector.of(() -> target, Collection::add, (t, u) -> t);
 	}
 
-	static <T> void throwIfContainsNull(final Stream<T> stream) {
+	static <T extends @Nullable Object> void throwIfContainsNull(final Stream<T> stream) {
 		stream.filter(Objects::isNull).findAny().ifPresent(t -> { 
 			throw new IllegalArgumentException("No null value allowed"); 
 		});
 	}
 
-	static <T> Predicate<T> notEq(final T val) {
+	static <T> Predicate<T> notEq(@Nullable final T val) {
 		return v -> !Objects.equals(v, val);
 	}
 

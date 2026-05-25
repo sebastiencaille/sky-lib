@@ -16,7 +16,6 @@ import ch.scaille.tcwriter.persistence.handlers.serdeser.Deserializers;
 import ch.scaille.tcwriter.persistence.handlers.serdeser.mixins.TestParameterValueMixin;
 import ch.scaille.tcwriter.persistence.handlers.serdeser.mixins.TestReferenceMixin;
 import ch.scaille.tcwriter.persistence.handlers.serdeser.mixins.TestStepMixin;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
@@ -25,9 +24,8 @@ import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 import org.openapitools.jackson.nullable.JsonNullable;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.ERROR,
-        implementationPackage = "<PACKAGE_NAME>.generated")
-@NullMarked
+@Mapper(unmappedTargetPolicy = ReportingPolicy.ERROR)
+
 public interface TestCaseMapper extends MetadataMapper {
 
     TestCaseMapper MAPPER = Mappers.getMapper(TestCaseMapper.class);

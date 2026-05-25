@@ -5,9 +5,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import ch.scaille.util.text.TextFormatter;
-import org.jspecify.annotations.NullMarked;
 
-@NullMarked
+
 public class JavaCodeGenerator<E extends Exception> extends TextFormatter<JavaCodeGenerator<E>, E> {
 
 	public interface InlinedCode<E extends Exception, F extends Exception> {

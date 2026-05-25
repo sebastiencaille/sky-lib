@@ -13,6 +13,7 @@ import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestStep;
 import ch.scaille.tcwriter.services.generators.visitors.HumanReadableVisitor;
 import ch.scaille.tcwriter.services.testexec.TestRemoteControl;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
 import java.util.Objects;
@@ -21,9 +22,10 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 
 	@Serial
     private static final long serialVersionUID = 8601893907809393792L;
-	
+
 	private final TestRemoteControl testControl;
 	private final ObjectProperty<TestCase> testCaseProperty;
+	@Nullable
 	private HumanReadableVisitor humanReadableVisitor;
 
 	public enum Column {
@@ -81,7 +83,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 		return switch (parameterDef.getNature()) {
 		case REFERENCE, TEST_API -> toString(tc, parameterDef);
 		case SIMPLE_TYPE -> parameterValue.getSimpleValue();
-            default -> "N/A";
+		default -> "N/A";
 		};
 	}
 
@@ -101,17 +103,17 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 
 	@Override
 	public Object getValueAt(final int row, final int column) {
-		return getValueAtColumn(getObjectAtRow(row), columnOf(column));
+		return getValueAtColumn(Objects.requireNonNull(getObjectAtRow(row)), columnOf(column));
 	}
 
 	@Override
 	public void setValueAt(final Object aValue, final int row, final int column) {
-		setValueAtColumn(getObjectAtRow(row), columnOf(column), aValue);
+		setValueAtColumn(Objects.requireNonNull(getObjectAtRow(row)), columnOf(column), aValue);
 		fireTableRowsUpdated(row - 1, row);
 	}
 
 	@Override
-	protected void setValueAtColumn(final TestStep testStep, final Column column, final Object value) {
+	protected void setValueAtColumn(final TestStep testStep, final Column column, @Nullable final Object value) {
 		if (value == null) {
 			return;
 		}

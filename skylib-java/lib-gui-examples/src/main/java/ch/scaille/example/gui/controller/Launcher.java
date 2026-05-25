@@ -7,7 +7,7 @@ import ch.scaille.example.gui.controller.impl.ControllerExampleView;
 
 public class Launcher {
 
-	static void main(final String[] args) {
+	static void main() {
 		final var controller = new ControllerExampleController();
 		EventQueue.invokeLater(() -> new ControllerExampleView(controller).setVisible(true));
 	}

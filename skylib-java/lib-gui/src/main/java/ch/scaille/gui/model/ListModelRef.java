@@ -1,6 +1,5 @@
 package ch.scaille.gui.model;
 
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -11,7 +10,7 @@ import org.jspecify.annotations.Nullable;
  *
  * @param <T>
  */
-@NullMarked
+
 public interface ListModelRef<T extends @Nullable Object> {
 	ListModel<T> getListModel();
 }

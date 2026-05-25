@@ -1,6 +1,5 @@
 package ch.scaille.testing.testpilot;
 
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
@@ -13,16 +12,16 @@ import java.util.function.Supplier;
  * @param <C> The type of Component
  * @param <V> The type of returned Value
  */
-@NullMarked
+
 public record PollingResult<C, V extends @Nullable Object>(@Nullable V polledValue,
                                   @Nullable Throwable failureCause,
                                   @Nullable PollingMetadata<C> polling) {
 
-    public static <C, V> PollingResult<C, V> value(final V polledValue) {
+    public static <C, V extends @Nullable Object> PollingResult<C, V> value(final V polledValue) {
         return new PollingResult<>(polledValue, null, null);
     }
 
-    public static <C, V> PollingResult<C, V> failure(final Throwable failureCause) {
+    public static <C, V extends @Nullable Object> PollingResult<C, V> failure(final Throwable failureCause) {
         return new PollingResult<>(null, failureCause, null);
     }
 

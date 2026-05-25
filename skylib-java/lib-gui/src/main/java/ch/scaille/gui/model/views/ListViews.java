@@ -1,12 +1,11 @@
 package ch.scaille.gui.model.views;
 
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.function.Predicate;
 
-@NullMarked
+
 public interface ListViews {
 
     static <U extends @Nullable Object> IListView<U> sortedFiltered(@Nullable final Comparator<? super U> comparator, @Nullable final Predicate<? super U> filter) {

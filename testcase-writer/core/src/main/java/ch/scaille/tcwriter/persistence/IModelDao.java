@@ -8,6 +8,7 @@ import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.util.persistence.Resource;
+import org.jspecify.annotations.Nullable;
 
 public interface IModelDao {
 
@@ -15,10 +16,10 @@ public interface IModelDao {
 
 
 	// ----------------------- Dictionary -----------------------
+	@Nullable
+	Metadata loadDictionaryMetadata(String identifier);
 
-	Metadata loadDictionaryMetadata(String locator);
-
-	List<Metadata> listDictionaries(Metadata filter);
+	List<Metadata> listDictionaries(@Nullable Metadata filter);
 
 	Optional<TestDictionary> readTestDictionary(String dictionaryName);
 
@@ -26,7 +27,8 @@ public interface IModelDao {
 
 	// ----------------------- Test case -----------------------
 
-	Metadata loadTestCaseMetadata(String locator);
+	@Nullable
+	Metadata loadTestCaseMetadata(String identifier);
 
 	List<Metadata> listTestCases(final Metadata dictionary);
 

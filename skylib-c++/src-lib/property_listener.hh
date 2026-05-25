@@ -16,7 +16,7 @@
 #include "utils.hh"
 #include "types.hh"
 
-namespace ch_skymarshall::gui {
+namespace ch_scaille::gui {
 
 using namespace std;
 
@@ -59,7 +59,7 @@ public:
 	static shared_ptr<property_listener_dispatcher> ofLazy(
 			weak_ptr<property_listener_dispatcher> &_lazy,
 			weak_ptr<void> const &_owner, fire_function const &_fireFunction) {
-		return ch_skymarshall::utils::withLazy<property_listener_dispatcher>(
+		return ch_scaille::utils::withLazy<property_listener_dispatcher>(
 				_lazy, _owner,
 				[_owner, _fireFunction] {
 					return make_shared<property_listener_dispatcher>(_owner,
@@ -72,7 +72,7 @@ public:
 			weak_ptr<void> const &_owner,
 			before_after_function const &_beforeFireFunction,
 			before_after_function const &_afterFireFunction) {
-		return ch_skymarshall::utils::withLazy<property_listener_dispatcher>(
+		return ch_scaille::utils::withLazy<property_listener_dispatcher>(
 				_lazy, _owner,
 				[_owner, _beforeFireFunction, _afterFireFunction] {
 					return make_shared<property_listener_dispatcher>(_owner,

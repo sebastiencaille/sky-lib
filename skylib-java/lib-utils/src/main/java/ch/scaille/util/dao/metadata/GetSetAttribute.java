@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import ch.scaille.annotations.Persistency;
 import lombok.Getter;
+import org.jspecify.annotations.Nullable;
 
 /**
  * This class allows accessing an attribute through its get/set methods
@@ -22,11 +23,12 @@ public class GetSetAttribute<T, V> extends AbstractAttributeMetaData<T, V> {
 	@Getter
     protected final MethodHandle getter;
 	@Getter
+	@Nullable
     protected final MethodHandle setter;
 	protected final Method attributeGetterInfo;
 
 	public GetSetAttribute(final String name, Method attributeGetterInfo, final MethodHandle getter,
-			final MethodHandle setter) {
+						   @Nullable final MethodHandle setter) {
 		super(name, (Class<V>) getter.type().returnType());
 		this.attributeGetterInfo = attributeGetterInfo;
 		this.getter = getter;
@@ -43,7 +45,10 @@ public class GetSetAttribute<T, V> extends AbstractAttributeMetaData<T, V> {
 	}
 
 	@Override
-	public void setValueOf(final T to, final Object value) {
+	public void setValueOf(final T to,  @Nullable final Object value) {
+		if (isReadOnly() || setter == null) {
+			throw new IllegalStateException("Object is read-only");
+		}
 		try {
 			setter.bindTo(to).invoke(value);
 		} catch (final Throwable e) {

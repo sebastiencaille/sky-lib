@@ -1,16 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>ch.scaille.tcwriter</groupId>
 		<artifactId>testcase-writer-webapp</artifactId>
 		<version>${revision}</version>
 	</parent>
-	<!-- allows to start the war as a local application -->
+	<!-- allows starting the war as a local application -->
 	<packaging>war</packaging>
 	<artifactId>testcase-writer-webapp-tests</artifactId>
-	
+
 	<dependencies>
 
 		<dependency>
@@ -44,8 +44,54 @@
 			<groupId>jakarta.annotation</groupId>
 			<artifactId>jakarta.annotation-api</artifactId>
 		</dependency>
-		
+
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<overWriteIfNewer>true</overWriteIfNewer>
+							<stripVersion>true</stripVersion>
+							<stripClassifier>true</stripClassifier>
+							<outputDirectory>
+								${project.build.directory}/example-resources</outputDirectory>
+							<artifactItems>
+								<artifactItem>
+									<groupId>ch.scaille.tcwriter</groupId>
+									<artifactId>testcase-writer-examples</artifactId>
+									<version>${revision}</version>
+									<type>jar</type>
+								</artifactItem>
+							</artifactItems>
+							<!-- other configurations here -->
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<webResources>
+						<resource>
+							<directory>
+								${project.build.directory}/example-resources</directory>
+							<targetPath>example-resources</targetPath>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 	<profiles>
 
@@ -122,7 +168,8 @@
 
 							<!-- needed for jmx -->
 							<additionalClasspathElements>
-								<directory>${project.build.directory}/${project.build.finalName}/</directory>
+								<directory>
+									${project.build.directory}/${project.build.finalName}/</directory>
 							</additionalClasspathElements>
 
 						</configuration>

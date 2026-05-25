@@ -1,6 +1,5 @@
 package ch.scaille.javabeans;
 
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -9,10 +8,14 @@ import org.jspecify.annotations.Nullable;
  *
  * @param <T> the data type handled by the component
  */
-@NullMarked
+
 public interface IComponentLink<T extends @Nullable Object> {
 
-    void setValueFromComponent(Object component, T componentValue);
+	void setValueFromComponent(Object component, T componentValue, boolean force);
+	
+    default void setValueFromComponent(Object component, T componentValue) {
+    	setValueFromComponent(component, componentValue, false);
+    }
 
     void reloadComponentValue();
 

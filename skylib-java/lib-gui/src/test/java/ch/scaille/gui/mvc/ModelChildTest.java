@@ -2,7 +2,6 @@ package ch.scaille.gui.mvc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.Test;
 
 import ch.scaille.javabeans.PropertyChangeSupportController;
@@ -10,7 +9,7 @@ import ch.scaille.javabeans.properties.ObjectProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-@NullMarked
+
 class ModelChildTest {
 
 	@Getter

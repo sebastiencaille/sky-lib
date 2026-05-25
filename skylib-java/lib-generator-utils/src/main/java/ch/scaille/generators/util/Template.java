@@ -12,8 +12,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import ch.scaille.util.helpers.ClassLoaderHelper;
-import ch.scaille.util.helpers.Logs;
-import org.jspecify.annotations.NullMarked;
+import lombok.extern.java.Log;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -26,7 +25,7 @@ import org.jspecify.annotations.Nullable;
  * @author scaille
  *
  */
-@NullMarked
+@Log
 public class Template {
 
 	private final String content;
@@ -117,7 +116,7 @@ public class Template {
 	 * Writes the resulting content in a file
 	 */
 	public Path writeTo(final Path path) throws IOException {
-		Logs.of(this).info(() -> "Writing " + path);
+		log.info(() -> "Writing " + path);
 		Files.createDirectories(path.getParent());
 		Files.writeString(path, generate(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);

@@ -5,7 +5,6 @@ import ch.scaille.gui.model.ListEvent;
 import ch.scaille.gui.model.ListModel;
 import ch.scaille.javabeans.IBindingChainDependency;
 import ch.scaille.javabeans.IBindingControl;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
@@ -13,7 +12,7 @@ import java.util.Objects;
 /**
  * Allow defining dependencies between bindings.
  */
-@NullMarked
+
 public final class BindingDependencies {
 
 	private BindingDependencies() {

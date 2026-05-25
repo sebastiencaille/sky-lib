@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Factory responsible for creating the DAO, which is turning Resources loaded by
@@ -18,9 +19,9 @@ public class DaoFactory {
 	public static final String FS_DATASOURCE = "file:";
 
 	public interface IDataSourceFactory {
-		boolean matches(String locator);
+		boolean matches(String identifier);
 
-		<T> IDao<T> create(Class<T> daoType, String locator, StorageDataHandlerRegistry dataHandlersRegistry);
+		<T> IDao<T> create(Class<T> daoType, String identifier, StorageDataHandlerRegistry dataHandlersRegistry);
 	}
 
 	public static class ClassPathDsFactory implements IDataSourceFactory {
@@ -32,33 +33,56 @@ public class DaoFactory {
 		}
 
 		@Override
-		public boolean matches(String locator) {
-			return locator.startsWith(CP_DATASOURCE);
+		public boolean matches(String identifier) {
+			return identifier.startsWith(CP_DATASOURCE);
 		}
 
 		@Override
-		public <T> IDao<T> create(Class<T> daoType, String locator, StorageDataHandlerRegistry dataHandlersRegistry) {
-			return new ClassPathDao<>(daoType, locator.substring(CP_DATASOURCE.length()), dataHandlersRegistry,
+		public <T> IDao<T> create(Class<T> daoType, String identifier, StorageDataHandlerRegistry dataHandlersRegistry) {
+			return new ClassPathDao<>(daoType, Paths.get(identifier.substring(CP_DATASOURCE.length())), dataHandlersRegistry,
 					whiteList);
 		}
 
 	}
 
-	public record FsDsFactory(Path baseFolder) implements IDataSourceFactory {
+	public static class ModuleDsFactory implements IDataSourceFactory {
 
-		@Override
-		public boolean matches(String locator) {
-			return locator.startsWith(FS_DATASOURCE);
+		private final Set<String> whiteList;
+		private final Module[] modules;
+
+		public ModuleDsFactory(Set<String> whiteList, Module... modules) {
+			this.whiteList = whiteList;
+			this.modules = modules;
 		}
 
 		@Override
-		public <T> IDao<T> create(Class<T> daoType, String locator, StorageDataHandlerRegistry dataHandlersRegistry) {
-			var cleaned = locator;
+		public boolean matches(String identifier) {
+			return identifier.startsWith(CP_DATASOURCE);
+		}
+
+		@Override
+		public <T> IDao<T> create(Class<T> daoType, String identifier, StorageDataHandlerRegistry dataHandlersRegistry) {
+			return new ModuleDao<>(daoType, Paths.get(identifier.substring(CP_DATASOURCE.length())), dataHandlersRegistry,
+					whiteList, modules);
+		}
+
+	}
+	
+	public record FsDsFactory(@Nullable Path baseFolder, boolean validatePath) implements IDataSourceFactory {
+
+		@Override
+		public boolean matches(String identifier) {
+			return identifier.startsWith(FS_DATASOURCE);
+		}
+
+		@Override
+		public <T> IDao<T> create(Class<T> daoType, String identifier, StorageDataHandlerRegistry dataHandlersRegistry) {
+			var cleaned = identifier;
 			if (cleaned.startsWith(FS_DATASOURCE)) {
 				cleaned = cleaned.substring(FS_DATASOURCE.length());
 			}
 			final var resolved = baseFolder != null ? baseFolder.resolve(cleaned) : Paths.get(cleaned);
-			return new FileSystemDao<>(daoType, resolved, dataHandlersRegistry);
+			return new FileSystemDao<>(daoType, resolved, dataHandlersRegistry,validatePath);
 		}
 
 	}
@@ -71,24 +95,34 @@ public class DaoFactory {
 		this.defaultDs = defaultDs;
 	}
 
-	public <T> IDao<T> loaderOf(Class<T> daoType, String locator, StorageDataHandlerRegistry dataHandlerRegistry) {
+	public <T> IDao<T> loaderOf(Class<T> daoType, String identifier, StorageDataHandlerRegistry dataHandlerRegistry) {
 		return factories.stream()
-				.filter(factory -> factory.matches(locator))
+				.filter(factory -> factory.matches(identifier))
 				.findFirst()
 				.orElse(defaultDs)
-				.create(daoType, locator, dataHandlerRegistry);
+				.create(daoType, identifier, dataHandlerRegistry);
 	}
 
 	/**
 	 * Creates a dao factory that includes resources on classpath, and more
 	 * @param cpWhiteList the classpath whitelist (packages)
 	 */
-	public static DaoFactory cpPlus(Set<String> cpWhiteList, IDataSourceFactory extraFactory) {
+	public static DaoFactory cpPlus(Set<String> cpWhiteList, IDataSourceFactory defaults) {
 		final var factories = new ArrayList<IDataSourceFactory>();
 		factories.add(new ClassPathDsFactory(cpWhiteList));
-		return new DaoFactory(factories, extraFactory);
+		return new DaoFactory(factories, defaults);
 	}
 
+	/**
+	 * Creates a dao factory that includes resources on modules, and more
+	 * @param whiteList the classpath whitelist (packages)
+	 */
+	public static DaoFactory modulesPlus(Set<String> whiteList, IDataSourceFactory defaults, Module... modules) {
+		final var factories = new ArrayList<IDataSourceFactory>();
+		factories.add(new ModuleDsFactory(whiteList, modules));
+		return new DaoFactory(factories, defaults);
+	}
+	
 	public static String fs(String path) {
 		return FS_DATASOURCE + path;
 	}

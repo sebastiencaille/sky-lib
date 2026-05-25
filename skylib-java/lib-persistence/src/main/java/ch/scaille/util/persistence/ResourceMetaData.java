@@ -11,7 +11,7 @@ public class ResourceMetaData {
 	/**
 	 * The abstract locator of the resource
 	 */
-	private final String locator;
+	private final String identifier;
 	/**
 	 * The storage specific location
 	 */
@@ -21,22 +21,27 @@ public class ResourceMetaData {
 	 */
 	private final String mimeType;
 
-	public ResourceMetaData(String locator, String storageLocator, String mimeType) {
-		this.locator = locator;
+	public ResourceMetaData(String identifier, String storageLocator, String mimeType) {
+		this.identifier = identifier;
 		this.storageLocator = storageLocator;
 		this.mimeType = mimeType;
 	}
 
     public ResourceMetaData withStorageLocator(String newStorageLocator) {
-		return new ResourceMetaData(getLocator(), newStorageLocator, getMimeType());
+		return new ResourceMetaData(getIdentifier(), newStorageLocator, getMimeType());
 	}
 
+	public ResourceMetaData withMimeType(String newMimetype) {
+		return new ResourceMetaData(getIdentifier(), getStorageLocator(), newMimetype);
+	}
+    
 	public <U> Resource<U> withValue(U value) {
-		return new Resource<>(locator, storageLocator, mimeType, value);
+		return new Resource<>(identifier, storageLocator, mimeType, value);
 	}
 
 	@Override
 	public String toString() {
-		return locator + ',' + storageLocator + ',' + mimeType;
+		return identifier + ',' + storageLocator + ',' + mimeType;
 	}
+
 }

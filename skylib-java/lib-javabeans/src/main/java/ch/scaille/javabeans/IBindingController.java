@@ -2,7 +2,6 @@ package ch.scaille.javabeans;
 
 import ch.scaille.javabeans.chain.Link;
 import lombok.Getter;
-import org.jspecify.annotations.NullMarked;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,7 +12,7 @@ import java.util.Set;
  *
  * @author Sebastien Caille
  */
-@NullMarked
+
 public interface IBindingController extends IBindingControl {
 
 	/**

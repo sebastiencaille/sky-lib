@@ -4,7 +4,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import lombok.Getter;
-import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -15,7 +15,7 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 /**
  * Allows to pilot application using selenium's page concept
  */
-@NullMarked
+
 public class PagePilot {
 
 	@Getter
@@ -31,7 +31,7 @@ public class PagePilot {
 		return pilot.getDriver();
 	}
 
-    public SeleniumPollingBuilder on(Supplier<WebElement> element) {
+    public SeleniumPollingBuilder on(Supplier<@Nullable WebElement> element) {
 		return new SeleniumPollingBuilder(pilotOf(element));
 	}
 
@@ -42,7 +42,7 @@ public class PagePilot {
 	/**
 	 * Creates a pilot to interact with a WebElement
 	 */
-	protected ElementPilot pilotOf(Supplier<WebElement> element) {
+	protected ElementPilot pilotOf(Supplier<@Nullable WebElement> element) {
 		return new ElementPilot(pilot) {
 			@Override
 			protected Optional<WebElement> loadGuiComponent() {
@@ -57,7 +57,7 @@ public class PagePilot {
 
 			@Override
 			protected Optional<String> getDescription() {
-				return super.getDescription().or(() -> Optional.of(element.get().toString()));
+				return super.getDescription().or(() -> Optional.ofNullable(element.get()).map(Object::toString));
 			}
 			
 			@Override
@@ -80,7 +80,7 @@ public class PagePilot {
 	/**
 	 * Creates a pilot to interact with a WebElement
 	 */
-	protected ElementPilot pilotOf(ExpectedCondition<WebElement> conditions) {
+	protected ElementPilot pilotOf(ExpectedCondition<@Nullable WebElement> conditions) {
 		return new ElementPilot(pilot) {
 			@Override
 			protected Optional<WebElement> loadGuiComponent() {

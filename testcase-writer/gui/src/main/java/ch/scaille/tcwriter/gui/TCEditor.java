@@ -6,10 +6,10 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
+import ch.scaille.tcwriter.javatc.testexec.JUnitTestExecutor;
 import ch.scaille.tcwriter.model.config.TCConfig;
 import ch.scaille.tcwriter.persistence.factory.DaoConfigs;
-import ch.scaille.tcwriter.services.testexec.JUnitTestExecutor;
-import ch.scaille.util.helpers.ClassLoaderHelper;
+import ch.scaille.util.helpers.JavaExt;
 
 public class TCEditor {
 
@@ -23,10 +23,13 @@ public class TCEditor {
 		final var mainArgs = new Args();
 		JCommander.newBuilder().addObject(mainArgs).build().parse(args);
 
-		final var daoConfig = DaoConfigs.withFolder(DaoConfigs.homeFolder());
+		final var daoConfig = DaoConfigs.withFolder(DaoConfigs.homeFolder(), false);
 		final var configLoader = daoConfig.configDao().setConfiguration(mainArgs.configuration);
 		final var modelDao = daoConfig.modelDao();
-		final var testExecutor = new JUnitTestExecutor(configLoader, modelDao, ClassLoaderHelper.appClassPath());
+		
+		final var testJarPath = JavaExt.locationOf(TCEditor.class).resolve("../javatc-resources");
+		final var testExecutor = new JUnitTestExecutor(configLoader, modelDao, 
+				testJarPath.resolve("test-client.jar"));
 		final var tcWriterController = new TCWriterController(configLoader, modelDao, null, testExecutor);
 		SwingUtilities.invokeLater(tcWriterController::start);
 	}

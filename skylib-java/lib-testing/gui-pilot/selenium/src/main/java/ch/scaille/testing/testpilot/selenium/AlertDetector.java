@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
+import org.jspecify.annotations.Nullable;
 import org.openqa.selenium.NoSuchSessionException;
 
 import ch.scaille.testing.testpilot.ModalDialogDetector;
@@ -27,7 +28,7 @@ public class AlertDetector {
 	}
 
 	public static List<ModalDialogDetector.PollingResult> listAlerts(final SeleniumPilot pilot,
-			final Function<AlertPilot, PollingResult> errorChecks) {
+			@Nullable final Function<AlertPilot, PollingResult> errorChecks) {
 
 		final var alertPilot = new AlertPilot(pilot);
 		try {

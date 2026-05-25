@@ -9,10 +9,9 @@ import ch.scaille.gui.model.views.ListViews;
 import ch.scaille.gui.validation.ValidationBinding;
 import ch.scaille.javabeans.properties.ObjectProperty;
 import lombok.Getter;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@NullMarked
+
 @Getter
 public class ControllerExampleModel extends ControllerExampleObjectGuiModel {
 

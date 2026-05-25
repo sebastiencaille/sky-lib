@@ -5,8 +5,8 @@ import ch.scaille.tcwriter.examples.websearch.InternautRole;
 import ch.scaille.tcwriter.examples.websearch.dto.MatcherDto;
 import ch.scaille.tcwriter.examples.websearch.selectors.EngineSearchSelector;
 import ch.scaille.tcwriter.persistence.factory.DaoConfigs;
-import ch.scaille.tcwriter.services.generators.JavaToDictionary;
-import ch.scaille.tcwriter.services.recorder.TestCaseRecorderAspect;
+import ch.scaille.tcwriter.javatc.generators.JavaToDictionary;
+import ch.scaille.tcwriter.javatc.testexec.recorder.TestCaseRecorderAspect;
 import ch.scaille.testing.testpilot.jupiter.DisabledIfHeadless;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +22,7 @@ public class WebSearchTest extends AbstractWebSearchTest {
 	public void testNormalCase() throws IOException {
 		final var dictionary = new JavaToDictionary("searchTests", InternautRole.class).generate();
 		dictionary.getMetadata().setDescription("Search on internet dictionary");
-		final var daoConfig = DaoConfigs.withFolder(Files.createTempDirectory("tcw"));
+		final var daoConfig = DaoConfigs.withFolder(Files.createTempDirectory("tcw"), true);
 		daoConfig.modelDao().writeTestDictionary(dictionary);
 
 		TestCaseRecorderAspect.setRecorder(null);

@@ -12,9 +12,9 @@
 		</layout>
 	</appender>
 
-	<Logger name="liquibase" additivity="false" level="all">
+	<log name="liquibase" additivity="false" level="all">
 		<AppenderRef ref="Console" />
-	</Logger>
+	</log>
 
 
 	<!-- LOG everything at INFO level -->

@@ -5,7 +5,6 @@ import static ch.scaille.gui.mvc.factories.ComponentBindings.listen;
 import java.awt.BorderLayout;
 import java.io.Serial;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -22,16 +21,14 @@ import ch.scaille.javabeans.DependenciesBuildingReport;
 import ch.scaille.tcwriter.gui.steps.StepsTable;
 import ch.scaille.util.helpers.LambdaExt;
 import ch.scaille.util.helpers.LambdaExt.RunnableWithException;
-import ch.scaille.util.helpers.Logs;
-import org.jspecify.annotations.NullMarked;
+import lombok.extern.java.Log;
 
-@NullMarked
+@Log
 public class TCWriterGui extends JFrame {
 
 	@Serial
     private static final long serialVersionUID = 7148676630414966965L;
 
-	private static final Logger LOGGER = Logs.of(TCWriterGui.class);
 
 	public TCWriterGui(final TCWriterController controller) {
 		setName("TCWriterGui");
@@ -106,8 +103,8 @@ public class TCWriterGui extends JFrame {
 		bottomSplit.setDividerLocation(height / 2);
 
 		this.getContentPane().add(bottomSplit, BorderLayout.CENTER);
-		if (LOGGER.isLoggable(Level.FINE)) {
-			LOGGER.fine(screenBuildingReport.toString());
+		if (log.isLoggable(Level.FINE)) {
+			log.fine(screenBuildingReport.toString());
 		}
 		this.validate();
 		this.pack();

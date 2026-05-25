@@ -8,10 +8,9 @@ import ch.scaille.tcwriter.generated.api.controllers.v0.ContextApiController;
 import ch.scaille.tcwriter.generated.api.model.v0.Context;
 import ch.scaille.tcwriter.server.services.SessionManager;
 import ch.scaille.tcwriter.server.webapi.v0.mappers.ContextMapper;
-import ch.scaille.util.helpers.Logs;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
+import lombok.extern.java.Log;
 
+@Log
 public class ContextController extends ContextApiController {
 
 	private final SessionManager sessionAccessor;
@@ -25,15 +24,15 @@ public class ContextController extends ContextApiController {
 	@Transactional(readOnly = true)
 	@Override
 	public ResponseEntity<Context> getCurrent() {
-		final var context = sessionAccessor.getContext(getRequest().orElse(null)).mandatory();
+		final var context = sessionAccessor.getContext(getRequest().orElseThrow()).mandatory();
 		return ResponseEntity.ok(ContextMapper.MAPPER.convert(context));
 	}
 
 	@Override
 	@Transactional
-	public ResponseEntity<Context> validateAndRememberCurrent(@Valid @NotNull Context context) {
-		final var sessionContext = sessionAccessor.getContext(getRequest().orElse(null));
-		Logs.of(getClass()).info(() -> "Remember context: " + context);
+	public ResponseEntity<Context> validateAndRememberCurrent(Context context) {
+		final var sessionContext = sessionAccessor.getContext(getRequest().orElseThrow());
+		log.info(() -> "Remember context: " + context);
 		sessionContext.set(ContextMapper.MAPPER.convert(context));
 		return ResponseEntity.ok(context);
 	}

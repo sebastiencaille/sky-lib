@@ -10,7 +10,6 @@ import java.util.Set;
 
 import ch.scaille.util.dao.metadata.AttributeFactory.Mode;
 import lombok.Getter;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * Contains all the DO's meta-data.
@@ -20,7 +19,7 @@ import org.jspecify.annotations.NullMarked;
  * @param <T> a data type
  */
 @SuppressWarnings("unchecked")
-@NullMarked
+
 public class AbstractObjectMetaData<T> {
 
 	/**

@@ -5,9 +5,8 @@ import javax.swing.JSpinner;
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
-import org.jspecify.annotations.NullMarked;
 
-@NullMarked
+
 public class JSpinnerBinding<T extends Number> implements IComponentBinding<T> {
 
 	private final JSpinner spinner;

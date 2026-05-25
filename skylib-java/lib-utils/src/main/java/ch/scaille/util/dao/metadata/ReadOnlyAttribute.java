@@ -1,5 +1,7 @@
 package ch.scaille.util.dao.metadata;
 
+import org.jspecify.annotations.Nullable;
+
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Method;
 
@@ -17,7 +19,7 @@ public class ReadOnlyAttribute<T, V> extends GetSetAttribute<T, V> {
 	}
 
 	@Override
-	public void setValueOf(final T to, final Object value) {
+	public void setValueOf(final T to, @Nullable final Object value) {
 		throw new IllegalStateException("Attribute " + name + " is read only");
 	}
 

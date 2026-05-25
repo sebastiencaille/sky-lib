@@ -44,7 +44,6 @@ import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestReference;
-import org.jspecify.annotations.NonNull;
 
 public class TestParameterValueEditorPanel extends JPanel {
 
@@ -212,7 +211,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 	 * Update the values table when changing the api. Don't trigger when loading the
 	 * step, because we may not have the right value during the loading
 	 */
-	private void fixParamsOfApi(final ObjectProperty<@NonNull TestCase> tc, final TestParameterFactory api,
+	private void fixParamsOfApi(final ObjectProperty<TestCase> tc, final TestParameterFactory api,
 								final ObjectProperty<TestParameterValue> editedParamValue,
 								final ListModel<ParameterValueEntry> allEditedParameters) {
 		if (api == null) {

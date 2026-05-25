@@ -1,10 +1,9 @@
 package ch.scaille.generators.util;
 
 import ch.scaille.util.text.TextFormatter;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@NullMarked
+
 public class DotFileGenerator<E extends Exception> extends TextFormatter<DotFileGenerator<E>, E> {
 
 	public enum Shape {

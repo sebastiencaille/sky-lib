@@ -2,7 +2,6 @@ package ch.scaille.javabeans;
 
 import ch.scaille.javabeans.properties.AbstractProperty;
 import lombok.Getter;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * Event fired when the property is modified.
@@ -10,7 +9,7 @@ import org.jspecify.annotations.NullMarked;
  *
  * @author Sebastien Caille
  */
-@NullMarked
+
 public record PropertyEvent(ch.scaille.javabeans.PropertyEvent.EventKind kind, AbstractProperty property) {
 
 	@Getter

@@ -1,7 +1,5 @@
 package ch.scaille.generators.util;
 
-import org.jspecify.annotations.NullMarked;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -13,7 +11,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
-@NullMarked
+
 public abstract class AbstractGenerator<R> {
 
 	/**

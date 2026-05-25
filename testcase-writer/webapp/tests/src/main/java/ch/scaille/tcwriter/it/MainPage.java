@@ -57,8 +57,8 @@ public class MainPage extends PagePilot {
 
 	public void select(Function<MainPage, ContextSelector> selector) {
 		final var contextSelector =	selector.apply(this);
-		on(() -> contextSelector.selector).failUnless().appliedCtxt(ctxt -> {
-			contextSelector.selectorSelection.accept(ctxt.component());
+		on(() -> contextSelector.selector).failUnless().applied(selectorComponent -> {
+			contextSelector.selectorSelection.accept(selectorComponent);
 			contextSelector.button.click();
 		});
 	}

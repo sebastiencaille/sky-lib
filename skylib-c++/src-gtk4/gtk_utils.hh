@@ -5,7 +5,7 @@
 
 #include <glibmm.h>
 
-namespace ch_skymarshall::gui::gtk4::utils {
+namespace ch_scaille::gui::gtk4::utils {
 
 void run_in_gtk(std::function<void()> _lambda);
 

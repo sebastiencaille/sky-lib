@@ -8,9 +8,8 @@ import javax.swing.JList;
 import ch.scaille.gui.swing.SwingExt;
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
-import org.jspecify.annotations.NullMarked;
 
-@NullMarked
+
 public class JListContentBinding<T> implements IComponentBinding<List<T>> {
 
 	private final JList<T> list;

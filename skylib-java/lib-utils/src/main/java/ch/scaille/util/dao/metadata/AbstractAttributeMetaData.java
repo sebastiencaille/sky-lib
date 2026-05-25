@@ -1,6 +1,7 @@
 package ch.scaille.util.dao.metadata;
 
 import lombok.Getter;
+import org.jspecify.annotations.Nullable;
 
 import java.security.InvalidParameterException;
 import java.util.function.Consumer;
@@ -17,7 +18,7 @@ import java.util.function.Function;
  */
 @SuppressWarnings("unchecked")
 @Getter
-public abstract class AbstractAttributeMetaData<T, V> implements IAttributeMetaData<T> {
+public abstract class AbstractAttributeMetaData<T, V extends @Nullable Object> implements IAttributeMetaData<T> {
 
 	protected final String name;
 

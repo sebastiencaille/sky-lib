@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.time.Duration;
 import java.util.Objects;
 
+import lombok.extern.java.Log;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
@@ -16,10 +17,11 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import ch.scaille.testing.testpilot.jupiter.DisabledIfHeadless;
 import ch.scaille.testing.testpilot.selenium.SeleniumPilot;
 import ch.scaille.testing.testpilot.selenium.WebDriverFactory;
-import ch.scaille.util.helpers.Logs;
 
 @ExtendWith(DisabledIfHeadless.class)
-@NullMarked
+
+ @NullMarked
+@Log
 class SeleniumExampleTest extends AbstractSeleniumUndertowTest {
 
 	@Override
@@ -44,7 +46,7 @@ class SeleniumExampleTest extends AbstractSeleniumUndertowTest {
 			return;
 		}
 		try {
-			Logs.of(this).info(pilot.getActionReport().getFormattedReport());
+			log.info(pilot.getActionReport().getFormattedReport());
 		} finally {
 			pilot.close();
 		}

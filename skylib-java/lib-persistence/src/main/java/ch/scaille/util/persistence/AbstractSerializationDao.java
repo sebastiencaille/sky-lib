@@ -33,6 +33,8 @@ public abstract class AbstractSerializationDao<T> implements IDao<T> {
 
 	protected abstract ResourceMetaData fixOrValidate(ResourceMetaData resourceMetaData);
 
+	protected abstract String validateIdentifier(String identifier);
+
 	protected AbstractSerializationDao(Class<T> daoType, StorageDataHandlerRegistry serDeserializerRegistry) {
 		this.resourceType = daoType;
         this.dataHandlerRegistry = Objects.requireNonNullElseGet(serDeserializerRegistry, () -> new StorageDataHandlerRegistry(null));
@@ -44,7 +46,7 @@ public abstract class AbstractSerializationDao<T> implements IDao<T> {
 	}
 	
 	protected ResourceMetaData buildAndValidateMetadata(String identifier, String storageLocator) {
-		return buildMetadata(identifier, storageLocator)
+		return buildMetadata(validateIdentifier(identifier), storageLocator)
 				.orElseThrow(() -> unableToIdentifyException(identifier, storageLocator, "not found"));
 	}
 

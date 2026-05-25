@@ -50,7 +50,7 @@ public class TestCaseToJava {
 		
 		final var tcFile = mainArgs.testCase;
 
-		final var daoConfig = DaoConfigs.withFolder(homeFolder());
+		final var daoConfig = DaoConfigs.withFolder(homeFolder(), false);
 		final var modelDao = daoConfig.modelDao();
 		final var testDictionary = modelDao.readTestDictionary(mainArgs.tcDictionary)
 				.orElseThrow(FileNotFoundException::new);

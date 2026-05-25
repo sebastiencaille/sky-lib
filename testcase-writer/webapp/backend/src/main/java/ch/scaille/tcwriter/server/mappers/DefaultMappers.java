@@ -5,7 +5,7 @@ import org.mapstruct.Mapper;
 
 import java.util.Optional;
 
-@Mapper
+@Mapper(componentModel = "jakarta")
 public interface DefaultMappers {
 
     @Nullable

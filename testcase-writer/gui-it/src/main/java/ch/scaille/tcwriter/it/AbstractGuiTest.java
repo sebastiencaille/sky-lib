@@ -86,7 +86,7 @@ public class AbstractGuiTest {
         junitTestConfig.setJava("");
         junitTestConfig.setClasspath();
 
-        final var daoConfig = DaoConfigs.withFolder(DaoConfigs.tempFolder(), getClass().getModule());
+        final var daoConfig = DaoConfigs.withFolder(DaoConfigs.tempFolder(), false, getClass().getModule());
         final var configDao = daoConfig.configDao()
                 .setConfiguration(TCConfig.of("default", modelConfig, junitTestConfig));
 

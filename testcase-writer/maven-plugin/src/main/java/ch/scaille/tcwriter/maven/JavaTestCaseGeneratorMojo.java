@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import lombok.SneakyThrows;
 import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -17,19 +16,20 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import ch.scaille.generators.util.GenerationMetadata;
 import ch.scaille.javabeans.DummyPropertiesGroup;
 import ch.scaille.javabeans.properties.ObjectProperty;
+import ch.scaille.tcwriter.javatc.generators.TestCaseToJava;
 import ch.scaille.tcwriter.model.TestCaseException;
 import ch.scaille.tcwriter.model.config.TCConfig;
 import ch.scaille.tcwriter.persistence.ModelConfig;
 import ch.scaille.tcwriter.persistence.ModelDao;
-import ch.scaille.tcwriter.javatc.generators.TestCaseToJava;
 import ch.scaille.util.helpers.LambdaExt;
 import ch.scaille.util.persistence.DaoFactory;
 import ch.scaille.util.persistence.DaoFactory.FsDsFactory;
-import org.jspecify.annotations.Nullable;
+import lombok.SneakyThrows;
 
 @Mojo(name = "generateTestCases", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES)
 @NullMarked
@@ -84,7 +84,7 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
         project.addTestCompileSourceRoot(outputFolder);
 
         // config folders and build model
-        final var fsDsFactory = new FsDsFactory(Paths.get("."));
+        final var fsDsFactory = new FsDsFactory(Paths.get("."), false);
         final var daoFactory = DaoFactory.cpPlus(Set.of(), fsDsFactory);
         final var mavenModelConfig = new ModelConfig();
         mavenModelConfig.setDictionaryPath(resolve(dictionaryFolder));
@@ -121,7 +121,11 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
                                   final ModelDao modelDao) throws TestCaseException {
         final var testcaseLocator = tcFile.split("\\.")[0];
         final var testMetadata = modelDao.loadTestCaseMetadata(testcaseLocator);
-        final var dictionaryLocatorToLoad = Objects.requireNonNullElseGet(dictionaryLocator, () -> modelDao.listDictionaries(testMetadata).getFirst().getTransientId());
+        final var dictionaries = modelDao.listDictionaries(testMetadata);
+        if (dictionaries.isEmpty()) {
+        	throw new IllegalStateException("No dictionary found for " + testcaseLocator + '/' + testMetadata);
+        }
+	    final var dictionaryLocatorToLoad = Objects.requireNonNullElseGet(dictionaryLocator, () -> dictionaries.getFirst().getTransientId());
         final var testCase = modelDao.readTestCase(testcaseLocator, modelDao.readTestDictionary(dictionaryLocatorToLoad)
                         .orElseThrow(() -> new IllegalStateException("Dictionary not found")))
                 .orElseThrow(() -> new RuntimeException("Unable to find dictionary: " + dictionaryLocator));

@@ -1,16 +1,23 @@
 package ch.scaille.util.persistence;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
 import org.jspecify.annotations.Nullable;
+
+import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
 
 public abstract class AbstractFSSerializationDao<T> extends AbstractSerializationDao<T> {
 
     private static final String[] EMPTY_NAME_EXT = new String[] { "", "" };
 
-    protected AbstractFSSerializationDao(Class<T> daoType, StorageDataHandlerRegistry serDeserializerRegistry) {
+    private static final Path PATH_VALIDATING_BASE = Paths.get("/", "MyBasePath");
+    
+	private final boolean validatePath;
+	    
+    protected AbstractFSSerializationDao(Class<T> daoType, StorageDataHandlerRegistry serDeserializerRegistry, boolean validatePath) {
         super(daoType, serDeserializerRegistry);
+        this.validatePath = validatePath;
     }
 
     @Override
@@ -32,7 +39,7 @@ public abstract class AbstractFSSerializationDao<T> extends AbstractSerializatio
      * @param storageLocator a path
      * @return an array containing the path without extension and the extension 
      */
-    protected String[] nameAndExtensionOf(@Nullable String storageLocator) {
+    protected static String[] nameAndExtensionOf(@Nullable String storageLocator) {
         if (storageLocator == null) {
             return EMPTY_NAME_EXT;
         }
@@ -47,4 +54,22 @@ public abstract class AbstractFSSerializationDao<T> extends AbstractSerializatio
         }
         return nameAndExt;
     }
+    
+
+	protected Path validateLocator(Path basePath, Path locator) {
+		if (!validatePath) {
+			return locator;
+		}
+		final var validatedPath = locator.toAbsolutePath();
+		if (!validatedPath.startsWith(basePath.toAbsolutePath())) {
+			throw new IllegalStateException("Locator must be within base path: " + validatedPath + " not in " + basePath);
+		}
+		return locator;
+	}
+    
+	protected String validateIdentifier(String identifier) {
+		validateLocator(PATH_VALIDATING_BASE, PATH_VALIDATING_BASE.resolve(identifier));
+		return identifier;
+	}
+    
 }

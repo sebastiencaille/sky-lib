@@ -17,7 +17,7 @@ public interface IModelDao {
 
 	// ----------------------- Dictionary -----------------------
 	@Nullable
-	Metadata loadDictionaryMetadata(String locator);
+	Metadata loadDictionaryMetadata(String identifier);
 
 	List<Metadata> listDictionaries(@Nullable Metadata filter);
 
@@ -28,7 +28,7 @@ public interface IModelDao {
 	// ----------------------- Test case -----------------------
 
 	@Nullable
-	Metadata loadTestCaseMetadata(String locator);
+	Metadata loadTestCaseMetadata(String identifier);
 
 	List<Metadata> listTestCases(final Metadata dictionary);
 

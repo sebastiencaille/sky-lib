@@ -1,6 +1,7 @@
 package ch.scaille.util.persistence;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -19,14 +20,14 @@ public class ClassPathDao<T> extends AbstractFSSerializationDao<T> {
 		ClassLoaderHelper.registerResourceHandler();
 	}
 
-	private final String resourcePath;
+	private final Path resourcePath;
 
 	private final Set<String> whiteList;
 
 	private final boolean resourcePathWhiteListed;
 
-	public ClassPathDao(Class<T> daoType, String resourcePath, StorageDataHandlerRegistry serDeserializerRegistry, Set<String> whiteList) {
-		super(daoType, serDeserializerRegistry);
+	public ClassPathDao(Class<T> daoType, Path resourcePath, StorageDataHandlerRegistry serDeserializerRegistry, Set<String> whiteList) {
+		super(daoType, serDeserializerRegistry, true);
 		this.whiteList = whiteList;
 		this.resourcePath = resourcePath;
 		this.resourcePathWhiteListed = whiteList.stream().anyMatch(resourcePath::startsWith);
@@ -38,12 +39,12 @@ public class ClassPathDao<T> extends AbstractFSSerializationDao<T> {
 	}
 
 	@Override
-	public ResourceMetaData resolve(String locator) {
-		final var fullPath = resourcePath.endsWith("/") ? resourcePath + locator : resourcePath + '/' + locator;
-		if (!resourcePathWhiteListed && whiteList.stream().noneMatch(locator::startsWith)) {
-			throw unableToIdentifyException(locator, fullPath, "not in white-list");
+	public ResourceMetaData resolve(String identifier) {
+		final var fullPath =  resourcePath.resolve(validateIdentifier(identifier)).toString();
+		if (!resourcePathWhiteListed && whiteList.stream().noneMatch(identifier::startsWith)) {
+			throw unableToIdentifyException(identifier, fullPath, "not in white-list");
 		}
-		return buildAndValidateMetadata(locator, fullPath);
+		return buildAndValidateMetadata(identifier, fullPath);
 	}
 
 	@Override
@@ -59,12 +60,12 @@ public class ClassPathDao<T> extends AbstractFSSerializationDao<T> {
 	}
 
 	@Override
-	public Resource<T> resolveOrCreate(String locator) {
+	public Resource<T> resolveOrCreate(String identifier) {
 		throw JavaExt.notImplemented();
 	}
 
 	@Override
-	public Resource<T> saveOrUpdate(String locator, T value) {
+	public Resource<T> saveOrUpdate(String identifier, T value) {
 		throw JavaExt.notImplemented();
 	}
 

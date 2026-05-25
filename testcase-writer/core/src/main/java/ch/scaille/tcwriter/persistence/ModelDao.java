@@ -102,13 +102,13 @@ public class ModelDao implements IModelDao {
     
     @Override
     @Nullable
-    public Metadata loadDictionaryMetadata(String locator) {
-        return dictionaryMetadataCache.loadMetadata(locator,
+    public Metadata loadDictionaryMetadata(String identifier) {
+        return dictionaryMetadataCache.loadMetadata(identifier,
                 l -> {
                 	try {
                 		final var metadataResource = dictionaryMetadataRepo.resolve(l, AbstractModelDataHandler.METADATA_MIME_TYPE);
 						final var metadata = dictionaryMetadataRepo.loadResource(metadataResource).getValue();
-						metadata.setTransientId(locator);
+						metadata.setTransientId(identifier);
 						return metadata;
                 	} catch (StorageException _) {
                 		return null;
@@ -119,7 +119,7 @@ public class ModelDao implements IModelDao {
     @Override
     public List<Metadata> listDictionaries(@Nullable Metadata filter) {
         return uncheck("Unable to load dictionary", () -> dictionaryRepo.list()
-                .map(f -> loadDictionaryMetadata(f.getLocator()))
+                .map(f -> loadDictionaryMetadata(f.getIdentifier()))
                 .filter(metadata -> metadata != null && (filter == null ||
                         filter.matches(metadata)))
                 .toList());
@@ -150,13 +150,13 @@ public class ModelDao implements IModelDao {
 
     @Override
     @Nullable
-    public Metadata loadTestCaseMetadata(String locator) {
-        return testcaseMetadataCache.loadMetadata(locator,
+    public Metadata loadTestCaseMetadata(String identifier) {
+        return testcaseMetadataCache.loadMetadata(identifier,
                 l -> {
                 	try {
                 		final var metadataResource = testCaseMetadataRepo.resolve(l, AbstractModelDataHandler.METADATA_MIME_TYPE);
 						final var metadata = testCaseMetadataRepo.loadResource(metadataResource).getValue();
-						metadata.setTransientId(locator);
+						metadata.setTransientId(identifier);
 						return metadata;
                 	} catch (StorageException _) {
                 		return null;
@@ -167,28 +167,28 @@ public class ModelDao implements IModelDao {
     @Override
     public List<Metadata> listTestCases(@Nullable final Metadata dictionary) {
         return uncheck("Unable to load test case list", () -> testCaseRepo.list()
-                .map(f -> loadTestCaseMetadata(f.getLocator()))
+                .map(f -> loadTestCaseMetadata(f.getIdentifier()))
                 .filter(tcMetadata -> tcMetadata != null && (dictionary == null ||
                         tcMetadata.matches(dictionary)))
                 .toList());
     }
 
     @Override
-    public Optional<TestCase> readTestCase(String locator, TestDictionary dictionary) {
+    public Optional<TestCase> readTestCase(String identifier, TestDictionary dictionary) {
         try {
-            final var testCase = testCaseRepo.load(locator, new TestCase("", dictionary));
-            testCase.getMetadata().setTransientId(locator);
+            final var testCase = testCaseRepo.load(identifier, new TestCase("", dictionary));
+            testCase.getMetadata().setTransientId(identifier);
             return Optional.of(testCase);
         } catch (StorageException e) {
-            log.log(Level.WARNING, e, () -> "Unable to load test case " + locator);
+            log.log(Level.WARNING, e, () -> "Unable to load test case " + identifier);
             return Optional.empty();
         }
     }
 
     @Override
-    public void writeTestCase(String locator, TestCase tc) {
-        uncheck("Writing of test case", () -> testCaseRepo.saveOrUpdate(locator, tc));
-        uncheck("Updating metadata", () -> testcaseMetadataCache.putInCache(locator, tc.getMetadata()));
+    public void writeTestCase(String identifier, TestCase tc) {
+        uncheck("Writing of test case", () -> testCaseRepo.saveOrUpdate(identifier, tc));
+        uncheck("Updating metadata", () -> testcaseMetadataCache.putInCache(identifier, tc.getMetadata()));
     }
 
     @Override
@@ -197,8 +197,8 @@ public class ModelDao implements IModelDao {
     }
 
     @Override
-    public Resource<String> writeTestCaseCode(String locator, String code) {
-        return uncheck("Writing of test case code", () -> testCaseCodeRepo.saveOrUpdate(locator, code));
+    public Resource<String> writeTestCaseCode(String identifier, String code) {
+        return uncheck("Writing of test case code", () -> testCaseCodeRepo.saveOrUpdate(identifier, code));
     }
 
     public ModelConfig getCurrentConfig() {

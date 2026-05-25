@@ -1,6 +1,7 @@
 package ch.scaille.util.persistence;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Set;
 
 import ch.scaille.util.helpers.JavaExt;
@@ -15,7 +16,7 @@ public class ModuleDao<T> extends ClassPathDao<T> {
 
 	private Module[] modules;
 
-	public ModuleDao(Class<T> daoType, String resourcePath, StorageDataHandlerRegistry serDeserializerRegistry, Set<String> whiteList, Module... modules) {
+	public ModuleDao(Class<T> daoType, Path resourcePath, StorageDataHandlerRegistry serDeserializerRegistry, Set<String> whiteList, Module... modules) {
 		super(daoType, resourcePath, serDeserializerRegistry, whiteList);
 		this.modules = modules;
 	}

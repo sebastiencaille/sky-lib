@@ -24,7 +24,7 @@ public class StorageConfig {
 
 	@Bean
 	DaoFactory.IDataSourceFactory fsDataSource(@Value("${app.dataFolder:#{systemProperties['user.home'] + '/.var/lib/tcwriter/data'}}") Path dataFolder) {
-		return new DaoFactory.FsDsFactory(dataFolder);
+		return new DaoFactory.FsDsFactory(dataFolder, true);
 	}
 
 	@Bean

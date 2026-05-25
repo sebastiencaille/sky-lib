@@ -33,8 +33,8 @@ public interface DaoConfigs {
 
     ModelDao modelDao();
 
-    static DaoConfigs withFolder(Path path, Module...modules) {
-        final var fsDsFactory = new FsDsFactory(path);
+    static DaoConfigs withFolder(Path path, boolean validate, Module... modules) {
+        final var fsDsFactory = new FsDsFactory(path, false);
         final var daoFactory = DaoFactory.modulesPlus(Set.of(USER_RESOURCES), fsDsFactory, modules);
         final var configDao = new ConfigDao(daoFactory, ".", ConfigDao.defaultDataHandlers());
         final ModelDao modelDao = new ModelDao(daoFactory, configDao.getCurrentConfigProperty(),

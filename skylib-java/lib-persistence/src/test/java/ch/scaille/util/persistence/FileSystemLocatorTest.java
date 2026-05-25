@@ -38,11 +38,11 @@ class FileSystemLocatorTest {
         
         final var otherFile = Files.createTempFile(tempFolder, "test", ".nottxt");
         try {
-            final var dao = new FileSystemDao<>(String.class, tempFolder, new StorageDataHandlerRegistry(new TextStorageHandler()));
+            final var dao = new FileSystemDao<>(String.class, tempFolder, new StorageDataHandlerRegistry(new TextStorageHandler()), true);
             final var savedResource = dao.saveOrUpdate(TEST_1, "Test 1 content");
             validateResourceTest1(savedResource);
 
-            Assertions.assertEquals(List.of(TEST_1), dao.list().map(ResourceMetaData::getLocator).toList());
+            Assertions.assertEquals(List.of(TEST_1), dao.list().map(ResourceMetaData::getIdentifier).toList());
             
             final var loadedResource = dao.loadResource(TEST_1);
             validateResourceTest1(loadedResource);
@@ -54,7 +54,7 @@ class FileSystemLocatorTest {
 
     private void validateResourceTest1(Resource<String> resource) {
         Assertions.assertNotNull(resource);
-        Assertions.assertEquals(TEST_1, resource.getLocator());
+        Assertions.assertEquals(TEST_1, resource.getIdentifier());
         Assertions.assertEquals(tempFolder.resolve("test1.txt").toString(), resource.getStorageLocator());
         Assertions.assertEquals(TextStorageHandler.TEXT_MIMETYPE, resource.getMimeType());
     }

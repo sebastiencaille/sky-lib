@@ -24,8 +24,8 @@ public class FileSystemDao<T> extends AbstractFSSerializationDao<T> {
 	private final Path basePath;
 
 	public FileSystemDao(Class<T> daoType, String basePath, String subPath,
-			StorageDataHandlerRegistry serDeserializerRegistry) {
-		super(daoType, serDeserializerRegistry);
+			StorageDataHandlerRegistry serDeserializerRegistry, boolean validatePath) {
+		super(daoType, serDeserializerRegistry, validatePath);
 		var path = resolvePlaceHolders(subPath);
 		if (!path.startsWith("/")) {
 			path = basePath + '/' + path;
@@ -33,8 +33,8 @@ public class FileSystemDao<T> extends AbstractFSSerializationDao<T> {
 		this.basePath = Paths.get(path).toAbsolutePath();
 	}
 
-	public FileSystemDao(Class<T> daoType, Path baseFolder, StorageDataHandlerRegistry serDeserializerRegistry) {
-		super(daoType, serDeserializerRegistry);
+	public FileSystemDao(Class<T> daoType, Path baseFolder, StorageDataHandlerRegistry serDeserializerRegistry, boolean validatePath) {
+		super(daoType, serDeserializerRegistry, validatePath);
 		this.basePath = baseFolder;
 	}
 
@@ -44,19 +44,16 @@ public class FileSystemDao<T> extends AbstractFSSerializationDao<T> {
 	 * @param locator a value to locate the files, empty String to use basePath, null to return all the content
 	 * @return a stream of metadata
 	 */
-	private Stream<ResourceMetaData> findInFolder(@Nullable String locator) throws StorageException {
-		if (locator != null && locator.isEmpty() && !Files.isDirectory(basePath)) {
+	private Stream<ResourceMetaData> findInFolder(@Nullable String identifier) throws StorageException {
+		if (identifier != null && identifier.isEmpty() && !Files.isDirectory(basePath)) {
 			// basePath points to a file
 			return Stream.of(buildAndValidateMetadata(basePath.getFileName().toString(), basePath.toString()));
 		}
 		final Path folder;
 		final String filter;
-		if (locator != null) {
+		if (identifier != null) {
 			// The locator may contain a folder
-			var target = basePath.resolve(locator);
-			if (!target.startsWith(basePath)) {
-				throw new IllegalStateException("Locator must be within base path");
-			}
+			final var target = basePath.resolve(validateIdentifier(identifier));
 			folder = target.getParent();
 			filter = target.getFileName().toString();
 		} else {
@@ -83,19 +80,19 @@ public class FileSystemDao<T> extends AbstractFSSerializationDao<T> {
 
 	private boolean filterMetaData(@Nullable final String filter, @Nullable ResourceMetaData m) {
 		return m != null && (filter == null 
-				|| m.getLocator().equals(filter) 
+				|| m.getIdentifier().equals(filter) 
 				|| Paths.get(m.getStorageLocator()).getFileName().toString().equals(filter));
 	}
 
 	@Override
-	public ResourceMetaData resolve(String locator) throws StorageException {
-		return findInFolder(locator).findFirst().orElseThrow(() -> new StorageException("Resource not found: " + locator + " in: " + basePath));
+	public ResourceMetaData resolve(String identifier) throws StorageException {
+		return findInFolder(identifier).findFirst().orElseThrow(() -> new StorageException("Resource not found: " + identifier + " in: " + basePath));
 	}
 
 	@Override
-	public ResourceMetaData resolveOrCreate(String locator) throws StorageException {
-		return findInFolder(locator).findFirst()
-				.orElse(buildAndValidateMetadata(locator, basePath.resolve(locator).toString()));
+	public ResourceMetaData resolveOrCreate(String identifier) throws StorageException {
+		return findInFolder(identifier).findFirst()
+				.orElse(buildAndValidateMetadata(identifier, basePath.resolve(identifier).toString()));
 	}
 
 	@Override
@@ -106,14 +103,15 @@ public class FileSystemDao<T> extends AbstractFSSerializationDao<T> {
 	@Override
 	protected Resource<String> readRaw(ResourceMetaData metadata) throws IOException {
 		log.info(() -> "Reading " + metadata);
-		return metadata.withValue(Files.readString(Paths.get(metadata.getStorageLocator()), StandardCharsets.UTF_8));
+		final var path = validateLocator(basePath, Paths.get(metadata.getStorageLocator()));
+		return metadata.withValue(Files.readString(path, StandardCharsets.UTF_8));
 	}
 
 	@Override
 	protected Resource<String> writeRaw(Resource<String> resource) throws StorageException {
 		log.info(() -> "Writing " + resource);
 		try {
-			final var path = basePath.resolve(resource.getStorageLocator());
+			final var path = validateLocator(basePath, Paths.get(resource.getStorageLocator()));
 			Files.createDirectories(path.getParent());
 			Files.writeString(path, resource.getValue(), StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING,
 					StandardOpenOption.CREATE);

@@ -23,8 +23,8 @@ public class DictionaryDao extends AbstractDao implements IDictionaryDao {
 
     @Override
     @Nullable
-    public Metadata loadMetadata(String locator) {
-        return modelDao.loadDictionaryMetadata(locator);
+    public Metadata loadMetadata(String identifier) {
+        return modelDao.loadDictionaryMetadata(identifier);
     }
 
     @Override

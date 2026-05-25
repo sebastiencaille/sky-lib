@@ -42,23 +42,23 @@ public class MetadataCacheDao {
     }
 
     @Nullable
-    public synchronized Metadata putInCache(String locator, @Nullable Metadata metadata) throws StorageException {
+    public synchronized Metadata putInCache(String identifier, @Nullable Metadata metadata) throws StorageException {
         if (metadata == null) {
             return null;
         }
-        metadataCache.getMetadataMap().put(locator, metadata);
+        metadataCache.getMetadataMap().put(identifier, metadata);
         metadataDao.saveOrUpdate("cache.json", metadataCache);
         return metadata;
     }
 
     @Nullable
-    protected Metadata loadMetadata(String locator, Function<String, @Nullable Metadata> loader) {
+    protected Metadata loadMetadata(String identifier, Function<String, @Nullable Metadata> loader) {
         try {
-            final var cached = metadataCache.getMetadataMap().get(locator);
+            final var cached = metadataCache.getMetadataMap().get(identifier);
             if (cached != null) {
                 return cached;
             }
-            return putInCache(locator, loader.apply(locator));
+            return putInCache(identifier, loader.apply(identifier));
         } catch (StorageException e) {
             log.warning("Unable to save cache: " + e.getMessage());
             return null;

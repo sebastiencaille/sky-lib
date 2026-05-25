@@ -53,7 +53,7 @@ public class JavaToDictionary extends AbstractGenerator<TestDictionary> {
 		final var mainArgs = new Args();
 		JCommander.newBuilder().addObject(mainArgs).build().parse(args);
 		
-		final var daoConfig = DaoConfigs.withFolder(homeFolder());
+		final var daoConfig = DaoConfigs.withFolder(homeFolder(), false);
 		daoConfig.configDao().setConfiguration(mainArgs.configuration);
 		
 		final var persister = daoConfig.modelDao();

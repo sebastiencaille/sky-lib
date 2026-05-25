@@ -23,7 +23,7 @@ public class TCEditor {
 		final var mainArgs = new Args();
 		JCommander.newBuilder().addObject(mainArgs).build().parse(args);
 
-		final var daoConfig = DaoConfigs.withFolder(DaoConfigs.homeFolder());
+		final var daoConfig = DaoConfigs.withFolder(DaoConfigs.homeFolder(), false);
 		final var configLoader = daoConfig.configDao().setConfiguration(mainArgs.configuration);
 		final var modelDao = daoConfig.modelDao();
 		

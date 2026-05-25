@@ -72,7 +72,7 @@ public class ExampleHelper {
 		final var junitTestConfig = new JunitTestExecConfig();
 		junitTestConfig.setClasspath(JavaExt.locationOf(getClass()).toString());
 
-		final var daoConfig = DaoConfigs.withFolder(dataPath, getClass().getModule());
+		final var daoConfig = DaoConfigs.withFolder(dataPath, false, getClass().getModule());
 		configDao = daoConfig.configDao().setConfiguration(TCConfig.of(configName, modelConfig, junitTestConfig));
 		modelDao = daoConfig.modelDao();
 	}

@@ -11,17 +11,17 @@ public class DummyDao<T> implements IDao<T> {
     }
 
     @Override
-    public ResourceMetaData resolve(String locator) {
+    public ResourceMetaData resolve(String identifier) {
         throw new IllegalStateException("Dao not initialized");
     }
 
     @Override
-    public ResourceMetaData resolve(String locator, String mimetype) {
+    public ResourceMetaData resolve(String identifier, String mimetype) {
         throw new IllegalStateException("Dao not initialized");
     }
 
     @Override
-    public ResourceMetaData resolveOrCreate(String locator) {
+    public ResourceMetaData resolveOrCreate(String identifier) {
         throw new IllegalStateException("Dao not initialized");
     }
 
@@ -31,12 +31,12 @@ public class DummyDao<T> implements IDao<T> {
     }
 
     @Override
-    public Resource<T> loadResource(String locator, @Nullable T template) {
+    public Resource<T> loadResource(String identifier, @Nullable T template) {
         throw new IllegalStateException("Dao not initialized");
     }
 
     @Override
-    public Resource<T> saveOrUpdate(String locator, T value) {
+    public Resource<T> saveOrUpdate(String identifier, T value) {
         throw new IllegalStateException("Dao not initialized");
     }
 

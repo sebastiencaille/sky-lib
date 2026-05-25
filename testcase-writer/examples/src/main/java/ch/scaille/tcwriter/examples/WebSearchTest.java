@@ -22,7 +22,7 @@ public class WebSearchTest extends AbstractWebSearchTest {
 	public void testNormalCase() throws IOException {
 		final var dictionary = new JavaToDictionary("searchTests", InternautRole.class).generate();
 		dictionary.getMetadata().setDescription("Search on internet dictionary");
-		final var daoConfig = DaoConfigs.withFolder(Files.createTempDirectory("tcw"));
+		final var daoConfig = DaoConfigs.withFolder(Files.createTempDirectory("tcw"), true);
 		daoConfig.modelDao().writeTestDictionary(dictionary);
 
 		TestCaseRecorderAspect.setRecorder(null);

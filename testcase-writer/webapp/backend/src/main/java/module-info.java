@@ -22,11 +22,11 @@ import org.jspecify.annotations.NullMarked;
 	requires transitive testcase.writer.javatc;
 	requires transitive lib.utils;
 	requires transitive lib.persistence;
+	requires transitive jakarta.persistence;
+	requires transitive jakarta.transaction;
 	requires transitive spring.messaging;
 	requires transitive spring.web;
 	requires transitive tools.jackson.databind;
-	requires transitive jakarta.persistence;
-	requires transitive jakarta.transaction;
 	requires transitive org.slf4j;
 	
 	requires spring.tx;

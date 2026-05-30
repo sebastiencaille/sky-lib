@@ -78,7 +78,7 @@ public class ClassFinder {
 
 	protected final ClassLoader loader;
 
-	private final Function<URL, Scanner> defaultScanner = u -> new FsScanner();
+	private final Function<URL, Scanner> defaultScanner = _ -> new FsScanner();
 
 	private final List<String> packagesToScan = new ArrayList<>();
 

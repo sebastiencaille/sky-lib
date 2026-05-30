@@ -65,7 +65,7 @@ public class LambdaExt {
 	}
 
 	public static <T> Consumer<T> emptyConsumer() {
-		return t -> {
+		return _ -> {
 			// empty
 		};
 	}
@@ -116,7 +116,7 @@ public class LambdaExt {
 	 * Turns a checked exception thrown by a Function into a runtime exception
 	 */
 	public static <T, R, E extends Exception> Function<T, R> uncheckedF(final FunctionWithException<T, R, E> call) {
-		return uncheckedF(call, (m, e) -> defaultExceptionHandler(e));
+		return uncheckedF(call, (_, e) -> defaultExceptionHandler(e));
 	}
 
 	/**

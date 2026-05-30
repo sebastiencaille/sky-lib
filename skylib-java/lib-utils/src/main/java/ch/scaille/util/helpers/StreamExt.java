@@ -95,11 +95,11 @@ public interface StreamExt {
 	}
 
 	static <E> Collector<E, ?, Collection<E>> addTo(Collection<E> target) {
-		return Collector.of(() -> target, Collection::add, (t, u) -> t);
+		return Collector.of(() -> target, Collection::add, (t, _) -> t);
 	}
 
 	static <T extends @Nullable Object> void throwIfContainsNull(final Stream<T> stream) {
-		stream.filter(Objects::isNull).findAny().ifPresent(t -> { 
+		stream.filter(Objects::isNull).findAny().ifPresent(_ -> { 
 			throw new IllegalArgumentException("No null value allowed"); 
 		});
 	}

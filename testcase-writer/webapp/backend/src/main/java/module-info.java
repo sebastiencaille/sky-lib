@@ -51,5 +51,6 @@ import org.jspecify.annotations.NullMarked;
 	
 	requires transitive org.apache.tomcat.embed.el;
 	requires jakarta.validation;
+	requires java.compiler;
 
 }

@@ -31,7 +31,7 @@ class LambdaExtTest {
 		Assertions.assertNotNull(LambdaExt.uncheckedR(this::url));
 		Optional.of(STR).ifPresent(LambdaExt.uncheckedC(this::consumeUrl));
 		Assertions.assertEquals(url(), LambdaExt.uncheck(this::url));
-		Assertions.assertEquals(Optional.of(url()), Optional.of(STR).map(LambdaExt.uncheckedF(u -> url())));
+		Assertions.assertEquals(Optional.of(url()), Optional.of(STR).map(LambdaExt.uncheckedF(_ -> url())));
 
 		Assertions.assertNotNull(LambdaExt.uncheckedR(this::url));
 		Optional.of(STR).ifPresent(LambdaExt.uncheckedC(this::consumeUrl));

@@ -17,7 +17,8 @@ module testcase.writer.javatc {
 
     requires lib.annotations;
     requires lib.utils;
-    requires jcommander;
+    
     requires com.google.common;
+	requires jcommander;
     
 }

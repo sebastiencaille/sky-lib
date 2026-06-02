@@ -17,40 +17,42 @@ import org.jspecify.annotations.NullMarked;
 
 	opens ch.scaille.tcwriter.server.webapi.config to spring.beans, spring.context, spring.core;
 	
-	
 	requires transitive testcase.writer.core;
 	requires transitive testcase.writer.javatc;
 	requires transitive lib.utils;
 	requires transitive lib.persistence;
+	
 	requires transitive jakarta.persistence;
 	requires transitive jakarta.transaction;
-	requires transitive spring.messaging;
-	requires transitive spring.web;
+
 	requires transitive tools.jackson.databind;
 	requires transitive org.slf4j;
+	requires transitive org.apache.tomcat.embed.el;
+	
+	requires jakarta.servlet;
+	requires jakarta.validation;
+	requires java.compiler;
+	
+	requires spring.boot;
+	requires spring.boot.webmvc;
+	requires spring.boot.autoconfigure;
 	
 	requires spring.tx;
 	requires spring.beans;
 	requires spring.context;
 	requires spring.orm;
-	requires spring.session.core;
-	requires spring.boot;
 	requires spring.core;
-	requires spring.boot.webmvc;
+	requires spring.messaging;
+	requires spring.web;
 	requires spring.webmvc;
 	requires spring.websocket;
 	requires spring.security.core;
 	requires spring.security.crypto;
 	requires spring.security.web;
 	requires spring.security.config;
-	requires spring.boot.autoconfigure;
-
-	requires jakarta.servlet;
+	requires spring.session.core;
+	
 	requires org.mapstruct;
 	requires org.openapitools.jackson.nullable;
 	
-	requires transitive org.apache.tomcat.embed.el;
-	requires jakarta.validation;
-	requires java.compiler;
-
 }

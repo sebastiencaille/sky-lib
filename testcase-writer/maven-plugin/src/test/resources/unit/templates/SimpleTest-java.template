@@ -1,5 +1,7 @@
 package ${package};
 
+import java.util.Objects;
+
 import ch.scaille.tcwriter.examples.simple.dto.*;
 import ch.scaille.tcwriter.examples.simple.selectors.*;
 import ch.scaille.tcwriter.examples.simple.*;
@@ -22,6 +24,8 @@ class ${testName} {
 	
 	@Test
 	void testCase() {
+        Objects.requireNonNull(customer);
+        Objects.requireNonNull(deliveryGuy);
 		${testContent}
 	}
 

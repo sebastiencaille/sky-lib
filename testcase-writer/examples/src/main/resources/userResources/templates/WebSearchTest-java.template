@@ -1,5 +1,7 @@
 package ${package};
 
+import java.util.Objects;
+
 import ch.scaille.tcwriter.examples.websearch.interfaces.dto.*;
 import ch.scaille.tcwriter.examples.websearch.interfaces.selectors.*;
 import ch.scaille.tcwriter.examples.websearch.interfaces.*;
@@ -10,6 +12,7 @@ class ${testName} extends AbstractWebSearchTest {
 
 	@Test
 	void testCase() {
+        Objects.requireNonNull(internaut);
 		${testContent}
 	}
 

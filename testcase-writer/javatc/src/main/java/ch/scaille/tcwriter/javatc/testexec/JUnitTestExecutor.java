@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import com.google.common.collect.Lists;
 
@@ -41,7 +42,7 @@ public class JUnitTestExecutor implements ITestExecutor {
 	public JUnitTestExecutor(final IConfigDao configDao, final IModelDao modelDao, 
 			URL aspectPath, URL junitJarFile, 
 			final URL... classPath) {
-		this.config = configDao.getCurrentConfig().getSubconfig(JunitTestExecConfig.class).orElseThrow();
+		this.config = Objects.requireNonNull(configDao.getCurrentConfig()).getSubconfig(JunitTestExecConfig.class).orElseThrow();
 		this.aspectPath = aspectPath;
 		this.junitJarFile = junitJarFile;
 		this.modelDao = modelDao;

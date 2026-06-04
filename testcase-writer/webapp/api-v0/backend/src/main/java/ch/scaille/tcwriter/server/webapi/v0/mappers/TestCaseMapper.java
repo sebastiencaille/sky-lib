@@ -2,7 +2,6 @@ package ch.scaille.tcwriter.server.webapi.v0.mappers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 import ch.scaille.tcwriter.generated.api.model.v0.TestCase;
@@ -82,12 +81,12 @@ public interface TestCaseMapper extends MetadataMapper {
     default ch.scaille.tcwriter.model.testcase.TestStep convertToModel(TestStep dto,
                                                                        @Context List<Consumer<ch.scaille.tcwriter.model.testcase.TestCase>> exportReferences) {
         final var testStep = convertToModelNoRef(dto, exportReferences);
-        exportReferences.add(validate(Deserializers.getTestCaseHandler(ch.scaille.tcwriter.model.testcase.TestStep.class, TestStepMixin.ACTOR_REF), TestStepMixin.ACTOR_REF)
-                .of(testStep, dto.getActorRef()));
-        exportReferences.add(validate(Deserializers.getTestCaseHandler(ch.scaille.tcwriter.model.testcase.TestStep.class, TestStepMixin.ROLE_REF), TestStepMixin.ROLE_REF)
-                .of(testStep, dto.getRoleRef()));
-        exportReferences.add(validate(Deserializers.getTestCaseHandler(ch.scaille.tcwriter.model.testcase.TestStep.class, TestStepMixin.ACTION_REF), TestStepMixin.ACTION_REF)
-                .of(testStep, dto.getActionRef()));
+        exportReferences.add(resolver(ch.scaille.tcwriter.model.testcase.TestStep.class, TestStepMixin.ACTOR_REF,
+                testStep, dto.getActorRef()));
+        exportReferences.add(resolver(ch.scaille.tcwriter.model.testcase.TestStep.class, TestStepMixin.ROLE_REF,
+                testStep, dto.getRoleRef()));
+        exportReferences.add(resolver(ch.scaille.tcwriter.model.testcase.TestStep.class, TestStepMixin.ACTION_REF,
+                testStep, dto.getActionRef()));
         return testStep;
     }
 
@@ -102,8 +101,8 @@ public interface TestCaseMapper extends MetadataMapper {
             return null;
         }
         final var reference = convertToModelNoRef(dto, exportReferences);
-        exportReferences.add(validate(Deserializers.getTestCaseHandler(ch.scaille.tcwriter.model.testcase.TestReference.class, TestReferenceMixin.STEP_REF), TestReferenceMixin.STEP_REF)
-                .of(reference, dto.getTestStepRef()));
+        exportReferences.add(resolver(ch.scaille.tcwriter.model.testcase.TestReference.class, TestReferenceMixin.STEP_REF,
+            reference, dto.getTestStepRef()));
         return reference;
     }
 
@@ -117,9 +116,8 @@ public interface TestCaseMapper extends MetadataMapper {
     default ch.scaille.tcwriter.model.testcase.TestParameterValue convertToModel(TestParameterValue dto,
                                                                                  @Context List<Consumer<ch.scaille.tcwriter.model.testcase.TestCase>> exportReferences) {
         final var parameterValue = convertToModelNoRef(dto, exportReferences);
-        exportReferences.add(validate(Deserializers.getTestCaseHandler(ch.scaille.tcwriter.model.testcase.TestParameterValue.class, TestParameterValueMixin.TEST_PARAMETER_FACTORY_REF),
-                    TestParameterValueMixin.TEST_PARAMETER_FACTORY_REF)
-                .of(parameterValue, dto.getTestParameterFactoryRef()));
+        exportReferences.add(resolver(ch.scaille.tcwriter.model.testcase.TestParameterValue.class, TestParameterValueMixin.TEST_PARAMETER_FACTORY_REF,
+                parameterValue, dto.getTestParameterFactoryRef()));
         return parameterValue;
     }
 
@@ -127,9 +125,13 @@ public interface TestCaseMapper extends MetadataMapper {
                                                                                                       @Context List<Consumer<ch.scaille.tcwriter.model.testcase.TestCase>> exportReferences) {
         return dto.stream().map(value -> convertToModel(value, exportReferences)).toList();
     }
-
-    private <T> T validate(Optional<T> ref, String description) {
-        return ref.orElseThrow(() -> new IllegalStateException("Not found: " +  description));
+    //ch.scaille.tcwriter.model.testcase.TestParameterValue.class
+    // TestParameterValueMixin.TEST_PARAMETER_FACTORY_REF
+    private <T> Consumer<ch.scaille.tcwriter.model.testcase.TestCase> resolver(Class<T> clazz, String refKind,
+                                                                               Object beanClass, @Nullable String refName) {
+        return Deserializers.getTestCaseHandler(clazz, refKind)
+                .orElseThrow(() -> new IllegalStateException("Handler not found: " + refName))
+                .of(beanClass, refName);
     }
 
 }

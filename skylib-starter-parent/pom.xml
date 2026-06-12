@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>4.0.6</version>
+		<version>4.1.0</version>
 		<relativePath />
 	</parent>
 
@@ -20,7 +20,7 @@
 
 	<properties>
 		<aspectj.version>1.9.25.1</aspectj.version>
-		<jackson-bom.version>3.1.4</jackson-bom.version>
+		<jackson-bom.version>3.2.0</jackson-bom.version>
 		<guava.version>33.6.0-jre</guava.version>
 		<logback.version>1.5.34</logback.version>
 		<mapstruct.version>1.7.0.Beta1</mapstruct.version>
@@ -65,7 +65,7 @@
 		<sonar-maven-plugin.version>5.7.0.6970</sonar-maven-plugin.version>
 
 		<maven-exec-plugin.version>3.6.3</maven-exec-plugin.version>
-		<openapi-generator-maven-plugin.version>7.22.0</openapi-generator-maven-plugin.version>
+		<openapi-generator-maven-plugin.version>7.23.0</openapi-generator-maven-plugin.version>
 		<jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
 
 		<argLine />

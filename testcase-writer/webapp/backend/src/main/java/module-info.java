@@ -1,6 +1,7 @@
 import org.jspecify.annotations.NullMarked;
 
-@NullMarked module testcase.writer.webapp.backend {
+@NullMarked 
+module testcase.writer.webapp.backend {
 
 	exports ch.scaille.tcwriter.server.facade;
 	exports ch.scaille.tcwriter.server.services;
@@ -24,9 +25,10 @@ import org.jspecify.annotations.NullMarked;
 	
 	requires transitive jakarta.persistence;
 	requires transitive jakarta.transaction;
+    requires transitive org.slf4j;
 
 	requires transitive tools.jackson.databind;
-	requires transitive org.slf4j;
+    
 	requires transitive org.apache.tomcat.embed.el;
 	
 	requires jakarta.servlet;
@@ -51,8 +53,11 @@ import org.jspecify.annotations.NullMarked;
 	requires spring.security.web;
 	requires spring.security.config;
 	requires spring.session.core;
-	
-	requires org.mapstruct;
+    requires spring.aop;
+
+    requires com.fasterxml.jackson.databind;
+
+    requires org.mapstruct;
 	requires org.openapitools.jackson.nullable;
 	
 }

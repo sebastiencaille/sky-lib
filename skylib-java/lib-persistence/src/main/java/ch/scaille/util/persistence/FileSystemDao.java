@@ -86,12 +86,12 @@ public class FileSystemDao<T> extends AbstractFSSerializationDao<T> {
 
 	@Override
 	public ResourceMetaData resolve(String identifier) throws StorageException {
-		return findInFolder(identifier).findFirst().orElseThrow(() -> new StorageException("Resource not found: " + identifier + " in: " + basePath));
+		return findInFolder(validateIdentifier(identifier)).findFirst().orElseThrow(() -> new StorageException("Resource not found: " + identifier + " in: " + basePath));
 	}
 
 	@Override
 	public ResourceMetaData resolveOrCreate(String identifier) throws StorageException {
-		return findInFolder(identifier).findFirst()
+		return findInFolder(validateIdentifier(identifier)).findFirst()
 				.orElse(buildAndValidateMetadata(identifier, basePath.resolve(identifier).toString()));
 	}
 

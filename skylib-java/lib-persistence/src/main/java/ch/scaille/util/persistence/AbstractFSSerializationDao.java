@@ -11,7 +11,7 @@ public abstract class AbstractFSSerializationDao<T> extends AbstractSerializatio
 
     private static final String[] EMPTY_NAME_EXT = new String[] { "", "" };
 
-    private static final Path PATH_VALIDATING_BASE = Paths.get("/", "MyBasePath");
+    private static final Path PATH_VALIDATING_BASE = Paths.get("", "MyBasePath");
     
 	private final boolean validatePath;
 	    

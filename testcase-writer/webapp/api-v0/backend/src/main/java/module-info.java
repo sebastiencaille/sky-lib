@@ -29,6 +29,7 @@ module testcase.writer.webapp.api.v0.backend {
 	requires spring.web;
 	requires spring.webmvc;
 	requires spring.tx;
+	requires spring.aop;
 
 	requires com.fasterxml.jackson.databind;
 	requires com.google.common;

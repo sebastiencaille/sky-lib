@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import lombok.Getter;
+import lombok.Setter;
+
 import org.junit.jupiter.api.Test;
 
 class MetaDataTest {
@@ -12,20 +14,12 @@ class MetaDataTest {
 
 		@Getter
         private int valA;
+		@Getter
+		@Setter
 		private final int valB = 456;
 		public int valC;
 		@SuppressWarnings("unused")
 		public final int valD = 123;
-
-        @SuppressWarnings("unused")
-		public void setValA(int valA) {
-			this.valA = valA;
-		}
-
-		@SuppressWarnings("unused")
-		public int getValB() {
-			return valB;
-		}
 
 	}
 

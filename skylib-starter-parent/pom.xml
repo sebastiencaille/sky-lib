@@ -22,15 +22,15 @@
 		<aspectj.version>1.9.25.1</aspectj.version>
 		<jackson-bom.version>3.2.0</jackson-bom.version>
 		<guava.version>33.6.0-jre</guava.version>
-		<logback.version>1.5.34</logback.version>
+		<logback.version>1.5.37</logback.version>
 		<mapstruct.version>1.7.0.Beta1</mapstruct.version>
 		<!--hibernate.version>7.1.7.Final</hibernate.version-->
-		<hibernate-validator.version>9.1.0.Final</hibernate-validator.version>
+		<hibernate-validator.version>9.1.1.Final</hibernate-validator.version>
 
-		<swagger-parser.version>2.1.44</swagger-parser.version>
-		<swagger.version>2.2.51</swagger.version>
+		<swagger-parser.version>2.1.45</swagger-parser.version>
+		<swagger.version>2.2.52</swagger.version>
 
-		<undertow.version>2.4.1.Final</undertow.version>
+		<undertow.version>2.4.2.Final</undertow.version>
 		<liquibase.version>5.0.3</liquibase.version>
 
 		<mockito.version>5.23.0</mockito.version>
@@ -46,17 +46,17 @@
 		<build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
 		<maven-assembly-plugin.version>3.8.0</maven-assembly-plugin.version>
 		<maven-help-plugin.version>3.5.1</maven-help-plugin.version>
-		<maven-resources-plugin.version>4.0.0-beta-1</maven-resources-plugin.version>
+		<maven-resources-plugin.version>3.5.0</maven-resources-plugin.version>
 		<maven-source-plugin.version>4.0.0-beta-1</maven-source-plugin.version>
 		<maven-deploy-plugin.version>4.0.0-beta-2</maven-deploy-plugin.version>
-		<maven-jar-plugin.version>4.0.0-beta-1</maven-jar-plugin.version>
-		<maven-compiler-plugin.version>4.0.0-beta-3</maven-compiler-plugin.version>
+		<maven-jar-plugin.version>3.5.0</maven-jar-plugin.version>
+		<maven-compiler-plugin.version>4.0.0-beta-4</maven-compiler-plugin.version>
 		<maven-war-plugin.version>3.5.1</maven-war-plugin.version>
-		<maven-dependency-plugin.version>3.9.0</maven-dependency-plugin.version>
-		<maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
+		<maven-dependency-plugin.version>3.11.0</maven-dependency-plugin.version>
+		<maven-enforcer-plugin.version>3.6.3</maven-enforcer-plugin.version>
 		<maven-clean-plugin.version>4.0.0-beta-2</maven-clean-plugin.version>
-		<maven-shade-plugin.version>3.6.1</maven-shade-plugin.version>
-		<versions-maven-plugin.version>2.20.1</versions-maven-plugin.version>
+		<maven-shade-plugin.version>3.6.2</maven-shade-plugin.version>
+		<versions-maven-plugin.version>2.21.0</versions-maven-plugin.version>
 		<flatten-maven-plugin.version>1.7.3</flatten-maven-plugin.version>
 
 		<maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>

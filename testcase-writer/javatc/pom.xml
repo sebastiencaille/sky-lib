@@ -4,17 +4,7 @@
 	<modelVersion>4.1.0</modelVersion>
 	<parent/>
 	<artifactId>testcase-writer-javatc</artifactId>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>aspectj-maven-plugin</artifactId>
-				<configuration>
-					<aspectLibraries combine.self="override" />
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+
 	<dependencies>
 
         <dependency>

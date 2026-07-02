@@ -49,13 +49,6 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <configuration>
                         <useIncrementalCompilation>false</useIncrementalCompilation>
-                        <annotationProcessorPaths>
-                            <path>
-                                <groupId>org.projectlombok</groupId>
-                                <artifactId>lombok</artifactId>
-                                <version>${lombok.version}</version>
-                            </path>
-                        </annotationProcessorPaths>
                     </configuration>
                 </plugin>
 				<plugin>
@@ -98,14 +91,6 @@
 						</execution>
 					</executions>
 				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>${maven-compiler-plugin.version}</version>
-					<configuration>
-						<useIncrementalCompilation>false</useIncrementalCompilation>
-					</configuration>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -120,6 +105,11 @@
             <dependency>
                 <groupId>ch.scaille.tcwriter</groupId>
                 <artifactId>testcase-writer-javatc</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.scaille.tcwriter</groupId>
+                <artifactId>testcase-writer-javatc-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -139,11 +129,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>ch.scaille</groupId>
-            <artifactId>lib-testing-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 </project>

@@ -1,5 +1,6 @@
 target/
 .settings/
+overlay/
 *.iml
 .classpath
 .project

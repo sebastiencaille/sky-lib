@@ -1,3 +1,4 @@
 # only keep the model
 **/controllers/**
 **/openapitools/**
+**/application.properties

@@ -18,6 +18,8 @@ import { contextUpdate, useUserContext, useUserContextUpdater } from './contexts
 
 export default function App() {
 
+	const [loggedIn, setLoggedIn] = useState<boolean>(false);
+	
 	const [allDictionaries, setAllDictionaries] = useState<Metadata[]>([]);
 	const [allTestCases, setAllTestCases] = useState<Metadata[]>([]);
 
@@ -32,36 +34,41 @@ export default function App() {
 
 	const userContext = useUserContext();
 	const contextUpdater = useUserContextUpdater();
-
+	
 	// On mount
 	useEffect(() => {
-		if (allDictionaries.length > 0) {
+		if (loggedIn) {
 			return;
 		}
-		WebApis.listAllDictionaries((allMetaData) => setAllDictionaries(allMetaData));
-		WebApis.loadCurrentContext((ctxt) => contextUpdater(contextUpdate(ctxt)));
-	}, [contextUpdater])
+		WebApis.login()
+			.then(_ => setLoggedIn(true))
+			.then(_ => WebApis.listAllDictionaries()).then(allMetaData => setAllDictionaries(allMetaData))
+			.then(_ => WebApis.loadCurrentContext()).then(ctxt => contextUpdater(contextUpdate(ctxt)));
+	}, [contextUpdater, loggedIn])
 
 	// Loads the dictionary when selected
 	// TODO: 404 should clear the dictionary
 	useEffect(() => {
 		if (userContext.dictionary && userContext.dictionary !== currentDictionary?.metadata.transientId) {
-			WebApis.loadDictionary(userContext.dictionary, dict => setCurrentDictionary(Mappers.enhanceDictionary(dict)));
+			WebApis.loadDictionary(userContext.dictionary)
+				.then(dict => setCurrentDictionary(Mappers.enhanceDictionary(dict)));
 		}
 	}, [currentDictionary?.metadata.transientId, userContext.dictionary]);
 
 	useEffect(() => {
 		if (userContext.dictionary) {
-			WebApis.listAllTestCases((allMetaData) => setAllTestCases(allMetaData));
+			WebApis.listAllTestCases()
+				.then(allMetaData => setAllTestCases(allMetaData));
 		}
 	}, [userContext.dictionary]);
 
 
 	useEffect(() => {
 		if (currentDictionary && userContext.testCase && userContext.testCase !== currentTestCase?.metadata.transientId) {
-			WebApis.loadTestCase(userContext.testCase, tc => setCurrentTestCase(Mappers.enhanceTestCase(currentDictionary, tc)));
+			WebApis.loadTestCase(userContext.testCase)
+				.then(tc => setCurrentTestCase(Mappers.enhanceTestCase(currentDictionary, tc)));
 		}
-	}, [currentDictionary, currentTestCase?.metadata.transientId, userContext]);
+	}, [currentDictionary, currentTestCase?.metadata.transientId, userContext.testCase]);
 
 	// When a dictionary is selected
 	const dictionaryChanged = useCallback((metadata?: Metadata) => {
@@ -70,7 +77,8 @@ export default function App() {
 		}
 		const newContext = { ...userContext };
 		newContext.dictionary = metadata.transientId;
-		WebApis.validateContext(newContext, (context) => contextUpdater(contextUpdate(context)));
+		WebApis.validateContext(newContext)
+			.then(context => contextUpdater(contextUpdate(context)));
 	}, [contextUpdater, userContext]);
 
 	const testCaseChanged = useCallback((metadata?: Metadata) => {
@@ -79,7 +87,7 @@ export default function App() {
 		}
 		const newContext = { ...userContext };
 		newContext.testCase = metadata.transientId;
-		WebApis.validateContext(newContext, (context) => contextUpdater(contextUpdate(context)));
+		WebApis.validateContext(newContext).then(context => contextUpdater(contextUpdate(context)));
 	}, [contextUpdater, userContext]);
 
 	const updateSteps = useCallback((action: StepStatusAction) => {
@@ -92,7 +100,8 @@ export default function App() {
 	}, [tabId, updateSteps]);
 
 	const exportTC = useCallback((format: ExportType) => {
-		WebApis.exportCurrentTestCase(format, (text) => setExportedTestCase(text));
+		WebApis.exportCurrentTestCase(format)
+			.then(text => setExportedTestCase(text));
 	}, []);
 
 	const exportJava = useCallback(() => {
@@ -142,7 +151,7 @@ export default function App() {
 					<div>
 						<ApplicationStatusDisplay />
 					</div>
-					<WebApiFeedback tabId={tabId} updateStepStatus={stepUpdated} />
+					<WebApiFeedback tabId={tabId} updateStepStatus={stepUpdated} enabled={loggedIn}/>
 					<WebApis.Component />
 
 		</div>

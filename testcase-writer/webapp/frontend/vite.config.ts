@@ -9,9 +9,14 @@ export default defineConfig({
   },
   server: {
     proxy: {
+		'/api/v0/websocket': {
+		   target: 'http://localhost:9000/',
+		   ws: true
+		 },
       '/api': {
         target: 'http://localhost:9000/',
-      },
-    },
-  },
+      }
+   }
+ 
+  }
 })

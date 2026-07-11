@@ -73,7 +73,6 @@
 									<type>jar</type>
 								</artifactItem>
 							</artifactItems>
-							<!-- other configurations here -->
 						</configuration>
 					</execution>
 				</executions>
@@ -88,6 +87,35 @@
 							<targetPath>example-resources</targetPath>
 						</resource>
 					</webResources>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.5.1</version>
+				<configuration>
+					<from>
+						<image>openjdk:25-ea-slim</image>
+					</from>
+					<to>
+						<image>tcwriter-webapp</image>
+					</to>
+					<container>
+						<workingDirectory>/var/lib/jetty/webapps/ROOT</workingDirectory>
+						<entrypoint>
+							<entrypoint>java</entrypoint>
+							<entrypoint>-cp</entrypoint>
+							<entrypoint>.:WEB-INF/classes:WEB-INF/lib/*</entrypoint>
+							<entrypoint>-DmainClass=ch.scaille.tcwriter.server.Server</entrypoint>
+							<entrypoint>-Dspring.datasource.url=jdbc:h2:mem:test</entrypoint>
+							<entrypoint>
+								ch.scaille.testing.spring.TestWarLauncher
+							</entrypoint>
+						</entrypoint>
+						<ports>
+							<port>9000</port>
+						</ports>
+					</container>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -128,7 +156,7 @@
 							</execution>
 						</executions>
 					</plugin>
-					<plugin>
+					<plugin>							<!-- other configurations here -->
 						<groupId>org.springframework.boot</groupId>
 						<artifactId>spring-boot-maven-plugin</artifactId>
 						<executions>
@@ -157,6 +185,7 @@
 						<configuration>
 							<skip>${skipTests}</skip>
 							<classesDirectory>${project.build.directory}/classes</classesDirectory>
+							
 							<mainClass>ch.scaille.testing.spring.TestWarLauncher</mainClass>
 							<systemPropertyVariables>
 								<mainClass>ch.scaille.tcwriter.server.Server</mainClass>

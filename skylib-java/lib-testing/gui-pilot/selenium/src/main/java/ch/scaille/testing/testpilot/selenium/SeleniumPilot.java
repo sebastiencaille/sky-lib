@@ -32,7 +32,7 @@ public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 	private final RemoteWebDriver driver;
 	private final Script remoteScript;
 	private final org.openqa.selenium.bidi.module.Script script;
-	private final List<Long> domMutationHandlerIds = new ArrayList<>();
+	private final List<String> domMutationHandlerIds = new ArrayList<>();
 	private final List<DomMutation> mutations = new ArrayList<>();
 	@Nullable
 	private Predicate<DomMutation> mutationFilter = null;

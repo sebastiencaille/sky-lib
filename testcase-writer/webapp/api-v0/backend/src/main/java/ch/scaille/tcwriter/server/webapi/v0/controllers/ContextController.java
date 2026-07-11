@@ -1,7 +1,9 @@
 package ch.scaille.tcwriter.server.webapi.v0.controllers;
 
+import ch.scaille.tcwriter.generated.api.controllers.v0.ContextApi;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import ch.scaille.tcwriter.generated.api.controllers.v0.ContextApiController;
@@ -19,6 +21,12 @@ public class ContextController extends ContextApiController {
 			NativeWebRequest webNativeRequest) {
 		super(webNativeRequest);
 		this.sessionAccessor = sessionAccessor;
+	}
+
+	@PostMapping(value = ContextApi.PATH_GET_CURRENT)
+	public ResponseEntity<Void> init() {
+		validateAndRememberCurrent(new Context());
+		return ResponseEntity.ok(null);
 	}
 
 	@Transactional(readOnly = true)

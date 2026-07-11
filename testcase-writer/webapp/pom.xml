@@ -19,6 +19,7 @@
 		<module>frontend</module>
 		<module>war</module>
 		<module>tests</module>
+		<module>ide-runner</module>
 	</modules>
 
 	<properties>
@@ -37,12 +38,17 @@
 			</dependency>
 			<dependency>
 				<groupId>ch.scaille.tcwriter</groupId>
-				<artifactId>testcase-writer-webapp-backend-core</artifactId>
+				<artifactId>testcase-writer-webapp-backend</artifactId>
 				<version>${revision}</version>
 			</dependency>
 			<dependency>
 				<groupId>ch.scaille.tcwriter</groupId>
-				<artifactId>testcase-writer-webapp-backend</artifactId>
+				<artifactId>testcase-writer-webapp-api-v0-backend</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille.tcwriter</groupId>
+				<artifactId>testcase-writer-webapp-api-v0-webapi</artifactId>
 				<version>${revision}</version>
 			</dependency>
 			<dependency>
@@ -115,32 +121,81 @@
 						<library>spring-boot</library>
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<annotationProcessorPaths>
+							<path>
+								<groupId>org.projectlombok</groupId>
+								<artifactId>lombok</artifactId>
+								<version>${lombok.version}</version>
+							</path>
+							<path>
+								<groupId>org.mapstruct</groupId>
+								<artifactId>mapstruct-processor</artifactId>
+								<version>${mapstruct.version}</version>
+							</path>
+							<path>
+								<groupId>org.springframework.boot</groupId>
+								<artifactId>spring-boot-autoconfigure-processor</artifactId>
+								<version>${springboot.version}</version>
+							</path>
+						</annotationProcessorPaths>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<executions>
+						<execution>
+							<id>copy</id>
+							<phase>generate-resources</phase>
+							<goals>
+								<goal>copy</goal>
+							</goals>
+							<configuration>
+								<overWriteIfNewer>true</overWriteIfNewer>
+								<stripVersion>true</stripVersion>
+								<stripClassifier>true</stripClassifier>
+								<outputDirectory>
+									${project.build.directory}/javatc-resources</outputDirectory>
+								<artifactItems>
+									<artifactItem>
+										<groupId>ch.scaille.tcwriter</groupId>
+										<artifactId>
+											testcase-writer-javatc-client</artifactId>
+										<version>${revision}</version>
+										<type>jar</type>
+										<classifier>fatjar</classifier>
+									</artifactItem>
+									<artifactItem>
+										<groupId>org.aspectj</groupId>
+										<artifactId>aspectjrt</artifactId>
+										<version>${aspectj.version}</version>
+										<type>jar</type>
+									</artifactItem>
+									<artifactItem>
+										<groupId>org.aspectj</groupId>
+										<artifactId>aspectjtools</artifactId>
+										<version>${aspectj.version}</version>
+										<type>jar</type>
+									</artifactItem>
+									<artifactItem>
+										<groupId>org.junit.platform</groupId>
+										<artifactId>
+											junit-platform-console-standalone</artifactId>
+										<version>
+											${junit-platform-console-standalone.version}</version>
+										<type>jar</type>
+									</artifactItem>
+								</artifactItems>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 		</pluginManagement>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<annotationProcessorPaths>
-						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-							<version>${lombok.version}</version>
-						</path>
-						<path>
-							<groupId>org.mapstruct</groupId>
-							<artifactId>mapstruct-processor</artifactId>
-							<version>${mapstruct.version}</version>
-						</path>
-						<path>
-							<groupId>org.springframework.boot</groupId>
-							<artifactId>spring-boot-autoconfigure-processor</artifactId>
-						</path>
-						<!-- other annotation processors -->
-					</annotationProcessorPaths>
-				</configuration>
-			</plugin>
-		</plugins>
+
 	</build>
 </project>

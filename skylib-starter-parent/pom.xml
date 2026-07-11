@@ -19,25 +19,26 @@
 	<packaging>pom</packaging>
 
 	<properties>
+		<springboot.version>4.1.0</springboot.version>
 		<aspectj.version>1.9.25.1</aspectj.version>
-		<jackson-bom.version>3.2.0</jackson-bom.version>
+		<jackson-bom.version>3.2.1</jackson-bom.version>
 		<guava.version>33.6.0-jre</guava.version>
-		<logback.version>1.5.34</logback.version>
+		<logback.version>1.5.38</logback.version>
 		<mapstruct.version>1.7.0.Beta1</mapstruct.version>
 		<!--hibernate.version>7.1.7.Final</hibernate.version-->
-		<hibernate-validator.version>9.1.0.Final</hibernate-validator.version>
+		<hibernate-validator.version>9.1.2.Final</hibernate-validator.version>
 
-		<swagger-parser.version>2.1.44</swagger-parser.version>
-		<swagger.version>2.2.51</swagger.version>
+		<swagger-parser.version>2.1.45</swagger-parser.version>
+		<swagger.version>2.2.52</swagger.version>
 
-		<undertow.version>2.4.1.Final</undertow.version>
+		<undertow.version>2.4.2.Final</undertow.version>
 		<liquibase.version>5.0.3</liquibase.version>
 
 		<mockito.version>5.23.0</mockito.version>
-		<junit-jupiter.version>6.1.0</junit-jupiter.version>
+		<junit-jupiter.version>6.1.2</junit-jupiter.version>
 		<junit.version>4.13.2</junit.version>
-		<junit-platform-console-standalone.version>6.1.0</junit-platform-console-standalone.version>
-		<selenium.version>4.45.0</selenium.version>
+		<junit-platform-console-standalone.version>6.1.2</junit-platform-console-standalone.version>
+		<selenium.version>4.46.0</selenium.version>
 		<h2.version>2.4.240</h2.version>
 
 		<coverage.temp>${java.io.tmpdir}/coverage/${basedir}</coverage.temp>
@@ -45,7 +46,7 @@
 		<maven-install-plugin.version>3.1.4</maven-install-plugin.version>
 		<build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
 		<maven-assembly-plugin.version>3.8.0</maven-assembly-plugin.version>
-		<maven-help-plugin.version>3.5.1</maven-help-plugin.version>
+		<maven-help-plugin.version>3.5.2</maven-help-plugin.version>
 		<maven-resources-plugin.version>3.5.0</maven-resources-plugin.version>
 		<maven-source-plugin.version>3.4.0</maven-source-plugin.version>
 		<maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>

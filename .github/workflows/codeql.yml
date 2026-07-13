@@ -10,7 +10,7 @@ on:
     - cron: '31 22 * * 6'
     
 env:
-  MVN_INSTALL: mvn --batch-mode  -Pcoverage install
+  MVN_INSTALL: mvn --batch-mode  -Pcoverage install -T 4
   MVN_SONAR: mvn --batch-mode -Pcoverage,sonar jacoco:report@report-for-sonar sonar:sonar ${{ vars.SONAR_CONFIG }}
   
 jobs:
@@ -25,18 +25,18 @@ jobs:
 
     steps:
     - name: Setup Node
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
-        node-version: 22
+        node-version: 24
                 
     - name: Setup Maven and java
-      uses: s4u/setup-maven-action@v1.18.0
+      uses: s4u/setup-maven-action@v1.20.0
       with:
         java-version: 26
-        maven-version: 3.9.9
+        maven-version: 3.9.16
 
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         fetch-depth: 0
 
@@ -47,7 +47,7 @@ jobs:
         languages: 'java,typescript'
         
     - name: Cache SonarCloud packages
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       with:
          path: ~/.sonar/cache
          key: ${{ runner.os }}-sonar

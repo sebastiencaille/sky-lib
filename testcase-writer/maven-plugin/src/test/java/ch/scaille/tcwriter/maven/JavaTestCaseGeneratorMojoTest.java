@@ -1,6 +1,8 @@
 package ch.scaille.tcwriter.maven;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -15,7 +17,6 @@ import org.apache.maven.model.Resource;
 import org.apache.maven.project.MavenProject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 @MojoTest
 class JavaTestCaseGeneratorMojoTest {
@@ -25,13 +26,13 @@ class JavaTestCaseGeneratorMojoTest {
 
     @Provides
     private MavenProject project() {
-        final var mock = Mockito.mock(MavenProject.class);
+        final var mock = mock(MavenProject.class);
         final var unitTestResource = new Resource();
         unitTestResource.setDirectory(SRC_TEST_RESOURCES_UNIT);
-        Mockito.when(mock.getTestResources()).thenReturn(List.of(unitTestResource));
-        final var mockBuild = Mockito.mock(Build.class);
-        Mockito.when(mockBuild.getDirectory()).thenReturn(BUILD_DIR);
-        Mockito.when(mock.getBuild()).thenReturn(mockBuild);
+        when(mock.getTestResources()).thenReturn(List.of(unitTestResource));
+        final var mockBuild = mock(Build.class);
+        when(mockBuild.getDirectory()).thenReturn(BUILD_DIR);
+        when(mock.getBuild()).thenReturn(mockBuild);
         return mock;
     }
 

@@ -42,7 +42,7 @@ public class ServiceConfig {
 			@Value("${tcwriter.javatc-resources:}") String tcResource) {
 		Path resourcesFolder; 
 		try {
-			if (tcResource.length() > 0) {
+			if (!tcResource.isEmpty()) {
 				resourcesFolder = Paths.get(tcResource);
 				if (!Files.isDirectory(resourcesFolder)) {
 					throw new IllegalStateException("No javatc resources in " + resourcesFolder.toAbsolutePath());

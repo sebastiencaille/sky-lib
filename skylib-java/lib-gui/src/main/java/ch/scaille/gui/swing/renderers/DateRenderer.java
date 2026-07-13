@@ -25,7 +25,7 @@ public class DateRenderer extends DefaultTableCellRenderer {
 		};
 
 		if (accessor != null) {
-			setText(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm").format(accessor));
+			setText(DateTimeFormatter.ISO_DATE.format(accessor));
 		} else {
 			setText("");
 		}

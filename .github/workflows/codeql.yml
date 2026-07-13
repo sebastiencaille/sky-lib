@@ -45,6 +45,7 @@ jobs:
       uses: github/codeql-action/init@v4
       with:
         languages: 'java,typescript'
+        build-mode: none
         
     - name: Cache SonarCloud packages
       uses: actions/cache@v6

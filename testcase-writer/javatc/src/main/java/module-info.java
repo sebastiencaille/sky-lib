@@ -13,7 +13,7 @@ module testcase.writer.javatc {
     
     requires transitive lib.generator.utils;
 
-	requires transitive org.aspectj.weaver;
+	requires org.aspectj.weaver;
 
     requires lib.annotations;
     requires lib.utils;

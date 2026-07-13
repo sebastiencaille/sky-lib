@@ -24,6 +24,7 @@ public class ContextController extends ContextApiController {
 	}
 
 	@PostMapping(value = ContextApi.PATH_GET_CURRENT)
+	@Transactional
 	public ResponseEntity<Void> init() {
 		validateAndRememberCurrent(new Context());
 		return ResponseEntity.ok(null);
@@ -39,10 +40,14 @@ public class ContextController extends ContextApiController {
 	@Override
 	@Transactional
 	public ResponseEntity<Context> validateAndRememberCurrent(Context context) {
+		validateAndSet(context);
+		return ResponseEntity.ok(context);
+	}
+
+	private void validateAndSet(Context context) {
 		final var sessionContext = sessionAccessor.getContext(getRequest().orElseThrow());
 		log.info(() -> "Remember context: " + context);
 		sessionContext.set(ContextMapper.MAPPER.convert(context));
-		return ResponseEntity.ok(context);
 	}
 
 }

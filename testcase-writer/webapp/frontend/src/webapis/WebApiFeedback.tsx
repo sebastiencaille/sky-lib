@@ -9,7 +9,8 @@ interface StepStatusUpdaterType {
 
 
 interface WebApiFeedbackProps extends StepStatusUpdaterType {
-	tabId: string
+	enabled: boolean;
+	tabId: string;
 }
 
 function SubscribingComponent(stepStatusUpdater: Readonly<StepStatusUpdaterType>) {
@@ -24,16 +25,17 @@ function WebApiFeedback(props: Readonly<WebApiFeedbackProps>) {
 
 	const headers = useMemo(() => ({ 'tabId': props.tabId }), [props.tabId]);
 
-	const connect = useCallback(() => appStatusUpdate(updateWebConnection(true)), [appStatusUpdate]);
+	const connected = useCallback(() => appStatusUpdate(updateWebConnection(true)), [appStatusUpdate]);
 
-	const disconnect = useCallback(() => appStatusUpdate(updateWebConnection(false)), [appStatusUpdate]);
+	const disconnected = useCallback(() => appStatusUpdate(updateWebConnection(false)), [appStatusUpdate]);
 
 	return (
 		<StompSessionProvider url={"/api/v0/websocket"}
+			enabled={props.enabled}
 			connectHeaders={headers}
-			onConnect={connect}
-			onDisconnect={disconnect}
-			onWebSocketClose={disconnect}
+			onConnect={connected}
+			onDisconnect={disconnected}
+			onWebSocketClose={disconnected}
 			>
 			<SubscribingComponent updateStepStatus={props.updateStepStatus} />
 		</StompSessionProvider >

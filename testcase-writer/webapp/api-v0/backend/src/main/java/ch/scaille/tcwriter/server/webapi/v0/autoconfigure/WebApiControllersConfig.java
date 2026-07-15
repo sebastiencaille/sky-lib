@@ -50,11 +50,10 @@ public class WebApiControllersConfig {
 
 	@Bean
 	@DependsOn("webApiServlet")
-	TestCaseWebService webApiTestCase(SessionManager sessionAccessor,
-									  TestCaseFacade testCaseFacade,
-									  WebFeedbackFacade webFeedbackFacade, NativeWebRequest request,
+	TestCaseWebService webApiTestCase(TestCaseFacade testCaseFacade,
+									  NativeWebRequest request,
 									  DictionaryFacade dictionaryFacade) {
-		return new TestCaseWebService(sessionAccessor, testCaseFacade, webFeedbackFacade, request, dictionaryFacade);
+		return new TestCaseWebService(testCaseFacade, request, dictionaryFacade);
 	}
 	
 }

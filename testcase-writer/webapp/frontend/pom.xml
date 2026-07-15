@@ -12,6 +12,14 @@
 	<properties>
 		<project.build.directory>node_modules</project.build.directory>
 	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>ch.scaille.tcwriter</groupId>
+			<artifactId>testcase-writer-webapp-api-v0-webapi</artifactId>
+		</dependency>
+	</dependencies>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -56,7 +64,7 @@
 						<resource>
 							<targetPath>/static</targetPath>
 							<directory>${project.build.directory}/dist</directory>
-                            <filtering>true</filtering>
+							<filtering>true</filtering>
 						</resource>
 					</webResources>
 				</configuration>

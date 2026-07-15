@@ -11,9 +11,11 @@ import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import ch.scaille.tcwriter.server.services.SessionManager;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
 
+@Slf4j
 public class WebSocketConnectionHandler<S extends Session> {
 
 	private static final String SPRING_SESSION_ID_ATTR_NAME = "SPRING.SESSION.ID";
@@ -26,11 +28,11 @@ public class WebSocketConnectionHandler<S extends Session> {
 
 	protected final SessionRepository<S> sessionRepository;
 
-	protected final SessionManager sessionAccessor;
+	protected final SessionManager sessionManager;
 
-	public WebSocketConnectionHandler(SessionRepository<S> sessionRepository, SessionManager sessionAccessor) {
+	public WebSocketConnectionHandler(SessionRepository<S> sessionRepository, SessionManager sessionManager) {
 		this.sessionRepository = sessionRepository;
-		this.sessionAccessor = sessionAccessor;
+		this.sessionManager = sessionManager;
 	}
 
 	protected void handleSession(AbstractSubProtocolEvent event, ConnectHandler handler) {
@@ -42,8 +44,8 @@ public class WebSocketConnectionHandler<S extends Session> {
 		final var springSessionId = (String) sessionAttributes.get(SPRING_SESSION_ID_ATTR_NAME);
 		final var session = sessionRepository.findById(springSessionId);
 		if (session == null) {
-			// session timed out
-			return;
+			// session timed out or not yet created
+			throw new IllegalStateException("No spring session");
 		}
 		final var wsSessionId = SimpMessageHeaderAccessor.getSessionId(messageHeaders);
 		final var tabId = NativeMessageHeaderAccessor.getFirstNativeHeader("tabId", messageHeaders);
@@ -60,7 +62,8 @@ public class WebSocketConnectionHandler<S extends Session> {
 
 		@Override
 		public void onApplicationEvent(SessionConnectEvent event) {
-			handleSession(event, (session, tabId, wsSessionId) -> sessionAccessor.webSocketSessionIdOf(session, tabId)
+			log.info("Connected: " + event);
+			handleSession(event, (session, tabId, wsSessionId) -> sessionManager.webSocketSessionIdOf(session, tabId)
 					.set(wsSessionId));
 		}
 
@@ -75,8 +78,9 @@ public class WebSocketConnectionHandler<S extends Session> {
 
 		@Override
 		public void onApplicationEvent(SessionDisconnectEvent event) {
+			log.info("Disonnected: " + event);
 			handleSession(event, (session, tabId, wsSessionId) -> {
-				final var accessor = sessionAccessor.webSocketSessionIdOf(session, tabId);
+				final var accessor = sessionManager.webSocketSessionIdOf(session, tabId);
 				final var sessionWsSessionId = accessor.get();
 				if (sessionWsSessionId.isPresent() && Objects.equals(wsSessionId, sessionWsSessionId.get())) {
 					accessor.remove();

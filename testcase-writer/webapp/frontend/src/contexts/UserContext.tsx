@@ -1,6 +1,7 @@
 import { ReactNode, createContext, useReducer, Dispatch, useMemo, useCallback, useContext } from 'react';
 
 export interface UserContext {
+	loaded: boolean;
 	dictionary: string | null;
 	testCase: string | null;
 }
@@ -11,6 +12,7 @@ export interface UserContextAction {
 }
 
 const initialUserContext: UserContext = {
+	loaded: false,
 	dictionary: null,
 	testCase: null,
 }

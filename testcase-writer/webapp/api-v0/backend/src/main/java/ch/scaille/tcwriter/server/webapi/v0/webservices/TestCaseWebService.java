@@ -1,5 +1,6 @@
 package ch.scaille.tcwriter.server.webapi.v0.webservices;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,9 +19,6 @@ import ch.scaille.tcwriter.generated.api.model.v0.ExportType;
 import ch.scaille.tcwriter.generated.api.model.v0.Metadata;
 import ch.scaille.tcwriter.generated.api.model.v0.TestCase;
 import ch.scaille.tcwriter.server.facade.TestCaseFacade;
-import ch.scaille.tcwriter.server.facade.WebConstants;
-import ch.scaille.tcwriter.server.facade.WebFeedbackFacade;
-import ch.scaille.tcwriter.server.services.SessionManager;
 import ch.scaille.tcwriter.server.webapi.v0.mappers.MetadataMapper;
 import ch.scaille.tcwriter.server.webapi.v0.mappers.TestCaseMapper;
 import jakarta.validation.Valid;
@@ -35,22 +33,15 @@ public class TestCaseWebService implements TestcaseApi {
 
 	private final DictionaryFacade dictionaryFacade;
 
-	private final SessionManager sessionAccessor;
-
-	private final WebFeedbackFacade webFeedbackFacade;
-
 	private final NativeWebRequest request;
 
 	private final ObjectMapper websocketMapper = new ObjectMapper();
 
-	public TestCaseWebService(SessionManager sessionAccessor,
-							  TestCaseFacade testCaseFacade,
-							  WebFeedbackFacade webFeedbackFacade, NativeWebRequest request,
+	public TestCaseWebService(TestCaseFacade testCaseFacade,
+							  NativeWebRequest request,
 							  DictionaryFacade dictionaryFacade) {
 		this.request = request;
-		this.sessionAccessor = sessionAccessor;
 		this.testCaseFacade = testCaseFacade;
-		this.webFeedbackFacade = webFeedbackFacade;
         this.dictionaryFacade = dictionaryFacade;
     }
 
@@ -91,9 +82,9 @@ public class TestCaseWebService implements TestcaseApi {
 	public ResponseEntity<Void> executeTestCase(@Valid @NotNull String tc,
 			@Valid @NotNull String tabId, @Valid @NotNull String dictionary) {
 		final var loadedTC = loadValidTestCase(tc, dictionary);
-		final var wsSessionId = sessionAccessor.webSocketSessionIdOf(getRequest().orElseThrow(), tabId).get();
-		testCaseFacade.executeTest(loadedTC, s -> webFeedbackFacade.send(wsSessionId.orElseThrow(), tabId,
-				WebConstants.TEST_EXECUTION_FEEDBACK, TestCaseMapper.MAPPER.convertToDto(s)));
+		final List<Object> testResult = new ArrayList<>();
+		testCaseFacade.executeTest(loadedTC, s -> testResult.add(TestCaseMapper.MAPPER.convertToDto(s)));
+		// TODO: response
 		return ResponseEntity.ok(null);
 	}
 

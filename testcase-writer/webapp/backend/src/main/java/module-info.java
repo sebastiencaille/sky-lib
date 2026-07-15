@@ -3,6 +3,7 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked 
 module testcase.writer.webapp.backend {
 
+	exports ch.scaille.tcwriter.server.config;
 	exports ch.scaille.tcwriter.server.facade;
 	exports ch.scaille.tcwriter.server.services;
 	exports ch.scaille.tcwriter.server.mappers;

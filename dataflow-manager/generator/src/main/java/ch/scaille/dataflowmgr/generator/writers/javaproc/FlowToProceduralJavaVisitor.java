@@ -27,7 +27,7 @@ public class FlowToProceduralJavaVisitor extends AbstractJavaFlowVisitor {
 
 	public Template process() {
 
-		availableVars.add(new BindingImplVariable(Flow.ENTRY_POINT, flow.getEntryPointType(), Flow.ENTRY_POINT));
+		availableVars.add(new CallVariable(Flow.ENTRY_POINT, flow.getEntryPointType(), Flow.ENTRY_POINT));
 
 		super.processFlow();
 
@@ -42,25 +42,25 @@ public class FlowToProceduralJavaVisitor extends AbstractJavaFlowVisitor {
 	}
 
 	@Override
-	protected void process(final BindingContext context) {
-		appendInfo(generator, context.binding).eol();
+	protected void process(final CallContext context) {
+		appendInfo(generator, context.processor).eol();
 
-		availableVars.add(new BindingImplVariable(context.outputDataPoint, context.getProcessor().getReturnType(),
+		availableVars.add(new CallVariable(context.outputDataPoint, context.getProcessorCall().getReturnType(),
 				context.outputDataPoint));
 
 		flowGeneratorVisitor.generateFlow(context, null);
 		generator.eol();
 	}
 
-	void visitExternalAdapters(final BindingContext context, final Set<ExternalAdapter> externalAdapter) {
+	void visitExternalAdapters(final CallContext context, final Set<ExternalAdapter> externalAdapter) {
 		for (final var adapter : externalAdapter) {
-			final var adapterVariable = new BindingImplVariable(adapter, varNameOf(context.binding, adapter));
+			final var adapterVariable = new CallVariable(adapter, varNameOf(context.processor, adapter));
 			appendNewVarAndCall(context, adapterVariable.codeVariable, adapter);
 			availableVars.add(adapterVariable);
 		}
 	}
 
-	public void appendNewVariable(final String variableName, final Call<?> call) {
+	public void appendNewVariable(final String variableName, final Call call) {
 		var returnType = call.getReturnType();
 		if (returnType.startsWith("java.lang")) {
 			returnType = returnType.substring("java.lang".length() + 1);
@@ -68,11 +68,11 @@ public class FlowToProceduralJavaVisitor extends AbstractJavaFlowVisitor {
 		generator.appendIndented(returnType).append(" ").append(variableName);
 	}
 
-	void appendCall(final BindingContext context, final Call<?> call) {
-		generator.appendMethodCall("this", call.getCall(), guessParameters(context, call)).eos();
+	void appendCall(final CallContext context, final Call call) {
+		generator.appendMethodCall("this", call.getCall(), guessParameters(context, call).toList()).eos();
 	}
 
-	private void appendNewVarAndCall(final BindingContext context, final String variableName, final Call<?> call) {
+	private void appendNewVarAndCall(final CallContext context, final String variableName, final Call call) {
 		if (call.hasReturnType()) {
 			appendNewVariable(variableName, call);
 			generator.append(" = ");

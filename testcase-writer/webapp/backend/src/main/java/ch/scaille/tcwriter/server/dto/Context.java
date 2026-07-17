@@ -36,7 +36,7 @@ public class Context implements Serializable {
 	
 	@Override
 	public String toString() {
-		return String.format("[dictionary: %s, testCase: %s ]", dictionaryName, testCase);
+		return "[dictionary: %s, testCase: %s ]".formatted(dictionaryName, testCase);
 	}
 
 }

@@ -5,8 +5,8 @@ import static java.util.stream.Collectors.toSet;
 
 import java.util.ArrayList;
 
-import ch.scaille.dataflowmgr.generator.writers.AbstractFlowVisitor.BindingContext;
-import ch.scaille.dataflowmgr.model.Binding;
+import ch.scaille.dataflowmgr.generator.writers.AbstractFlowVisitor.CallContext;
+import ch.scaille.dataflowmgr.model.Processor;
 import ch.scaille.dataflowmgr.model.flowctrl.ConditionalFlowCtrl;
 import ch.scaille.generators.util.JavaCodeGenerator;
 
@@ -18,31 +18,31 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 	}
 
 	@Override
-	public boolean matches(BindingContext context) {
-		return ConditionalFlowCtrl.getCondition(context.binding.getRules()).isPresent();
+	public boolean matches(CallContext context) {
+		return ConditionalFlowCtrl.getCondition(context.processor.getRules()).isPresent();
 	}
 
-	/** Specifies if the default binding must be executed */
-	private String executeDefaultVarNameOf(final BindingContext context) {
+	/** Specifies if the default call must be executed */
+	private String executeDefaultVarNameOf(final CallContext context) {
 		return context.outputDataPoint + "_executeDefault";
 	}
 
 	/**
-	 * Specifies if a binding is activated
+	 * Specifies if a call is activated
 	 *
      */
-	private String activatedVarNameOf(final Binding binding) {
-		return "activated_" + visitor.toVariable(binding);
+	private String activatedVarNameOf(final Processor processorCall) {
+		return "activated_" + visitor.toVariable(processorCall);
 	}
 
 	@Override
-	public void generate(BaseGenContext<Void> genContext, BindingContext context) {
+	public void generate(BaseGenContext<Void> genContext, CallContext context) {
 		visitor.setConditional(context.outputDataPoint);
 
 		visitActivators(context);
 
-		final var activators = ConditionalFlowCtrl.getActivators(context.binding.getRules()).toList();
-		final var exclusions = ConditionalFlowCtrl.getExclusions(context.binding.getRules()).map(Binding::toDataPoint)
+		final var activators = ConditionalFlowCtrl.getActivators(context.processor.getRules()).toList();
+		final var exclusions = ConditionalFlowCtrl.getExclusions(context.processor.getRules(), Processor.class).map(Processor::toDataPoint)
 				.collect(toSet());
 
 		if (!exclusions.isEmpty()) {
@@ -58,24 +58,24 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 			conditions.add(visitor.availableVarNameOf(context.inputDataPoint));
 		}
 		if (!activators.isEmpty()) {
-			conditions.add(activatedVarNameOf(context.binding));
+			conditions.add(activatedVarNameOf(context.processor));
 		}
 		if (!exclusions.isEmpty()) {
 			conditions.add(executeDefaultVarNameOf(context));
 		}
-		generator.openIf(String.join(" && ", conditions));
-		genContext.next(context);
-		generator.appendIndented(visitor.availableVarNameOf(context.outputDataPoint)).append(" = true").eos();
-		generator.closeBlock();
+		generator.inIf(String.join(" && ", conditions), gen -> {
+			genContext.run(context);
+			gen.appendIndented(visitor.availableVarNameOf(context.outputDataPoint)).append(" = true").eos();
+		});
 
 	}
 
-	private void generateDataPoint(BindingContext context) {
+	private void generateDataPoint(CallContext context) {
 		if (visitor.definedDataPoints.contains(context.outputDataPoint)) {
 			return;
 		}
 		visitor.definedDataPoints.add(context.outputDataPoint);
-		visitor.appendNewVariable(context.outputDataPoint, context.getProcessor());
+		visitor.appendNewVariable(context.outputDataPoint, context.getProcessorCall());
 		generator.append(" = null").eos();
 		generator.addLocalVariable(Boolean.TYPE.getName(), visitor.availableVarNameOf(context.outputDataPoint),
 				"false");
@@ -85,23 +85,23 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 	 * Generates the code calling a list of activators
 	 *
      */
-	private void visitActivators(final BindingContext context) {
-		final var activators = ConditionalFlowCtrl.getActivators(context.binding.getRules()).toList();
+	private void visitActivators(final CallContext context) {
+		final var activators = ConditionalFlowCtrl.getActivators(context.processor.getRules()).toList();
 		if (activators.isEmpty()) {
 			return;
 		}
-		generator.addLocalVariable(Boolean.TYPE.getName(), activatedVarNameOf(context.binding), "true");
+		generator.addLocalVariable(Boolean.TYPE.getName(), activatedVarNameOf(context.processor), "true");
 		for (final var activator : activators) {
-			generator.openIf(activatedVarNameOf(context.binding));
+			generator.inIf(activatedVarNameOf(context.processor), gen -> {
 
-			final var unprocessed = context.unprocessedAdapters(visitor.listAdapters(context, activator));
-			visitor.visitExternalAdapters(context, unprocessed);
-			context.processedAdapters.addAll(unprocessed);
+				final var unprocessed = context.unprocessedAdapters(visitor.listAdapters(context, activator));
+				visitor.visitExternalAdapters(context, unprocessed);
+				context.processedAdapters.addAll(unprocessed);
 
-			generator.appendIndented(activatedVarNameOf(context.binding)).append(" &= ");
-			visitor.appendCall(context, activator);
+				gen.appendIndented(activatedVarNameOf(context.processor)).append(" &= ");
+				visitor.appendCall(context, activator);
+			});
 
-			generator.closeBlock();
 		}
 	}
 }

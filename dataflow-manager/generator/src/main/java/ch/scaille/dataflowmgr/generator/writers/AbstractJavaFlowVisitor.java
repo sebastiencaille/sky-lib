@@ -4,22 +4,24 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
-import ch.scaille.dataflowmgr.model.Binding;
+import ch.scaille.dataflowmgr.model.Processor;
 import ch.scaille.dataflowmgr.model.Call;
-import ch.scaille.dataflowmgr.model.ExternalAdapter;
 import ch.scaille.dataflowmgr.model.Flow;
 import ch.scaille.generators.util.JavaCodeGenerator;
 import ch.scaille.generators.util.Template;
 
+import static ch.scaille.util.text.TextFormatter.snakeCaseToCamelCase;
+
 public abstract class AbstractJavaFlowVisitor extends AbstractFlowVisitor {
 
-	protected static class BindingImplVariable {
+	public static class CallVariable {
 		final String name;
 		final String dataType;
 		public final String codeVariable;
 
-		public BindingImplVariable(final String name, final String dataType, final String codeVariable) {
+		public CallVariable(final String name, final String dataType, final String codeVariable) {
 			if (name.startsWith("get")) {
 				this.name = Character.toLowerCase(name.charAt(3)) + name.substring(4);
 			} else {
@@ -29,7 +31,7 @@ public abstract class AbstractJavaFlowVisitor extends AbstractFlowVisitor {
 			this.codeVariable = codeVariable;
 		}
 
-		public BindingImplVariable(final Call<?> call, final String variable) {
+		public CallVariable(final Call call, final String variable) {
 			this(call.getName().substring(call.getName().lastIndexOf('.') + 1), call.getReturnType(), variable);
 		}
 
@@ -49,7 +51,7 @@ public abstract class AbstractJavaFlowVisitor extends AbstractFlowVisitor {
 	public final Set<String> definedDataPoints = new HashSet<>();
 
 	// All variables declared until now
-	protected final List<BindingImplVariable> availableVars = new ArrayList<>();
+	final public List<CallVariable> availableVars = new ArrayList<>();
 
 	protected AbstractJavaFlowVisitor(final Flow flow, final String packageName, final Template template) {
 		super(flow);
@@ -57,59 +59,54 @@ public abstract class AbstractJavaFlowVisitor extends AbstractFlowVisitor {
 		this.template = template;
 	}
 
-	public List<String> guessParameters(final BindingContext context, final Call<?> call) {
-		return call.getParameters().entrySet().stream().map(kv -> guessParameter(context, kv.getKey(), kv.getValue()))
-				.toList();
+	public Stream<String> guessParameters(final CallContext context, final Call call) {
+		return call.getParameters().entrySet().stream().map(kv -> guessParameter(context, kv.getKey(), kv.getValue()));
 	}
 
-	protected String guessParameter(final BindingContext context, final String paramName, final String paramType) {
+	protected String guessParameter(final CallContext context, final String paramName, final String paramType) {
 		if (paramType.equals(context.inputDataType)) {
-			return availableVars.stream().filter(a -> a.name.equals(context.inputDataPoint)).findFirst()
+			// Matches the processor's input datatype
+			System.out.println(context.processor + ": " + paramName + ": match by type: " + availableVars.stream().filter(a -> a.name.equals(context.inputDataPoint)).toList());
+			return availableVars.stream()
+					.filter(a -> a.name.equals(context.inputDataPoint))
+					.reduce((_, second) -> second)
 					.map(v -> v.codeVariable)
-					.orElseThrow(() -> new IllegalStateException("Not found: " + context.inputDataPoint));
+					.orElseThrow(() -> new IllegalStateException(paramName + ": not found: " + context.inputDataPoint));
 		}
 		var matches = availableVars.stream().filter(a -> a.name.equals(paramName)).toList();
 		if (matches.size() > 1) {
-			throw new IllegalArgumentException("Too many possible parameters found for " + paramName + ": " + matches);
+			throw new IllegalArgumentException(paramName + ": too many possible parameters found for " + paramName + ": " + matches);
 		} else if (matches.size() == 1) {
-			return matches.get(0).codeVariable;
+			return matches.getFirst().codeVariable;
 		}
 		matches = availableVars.stream().filter(a -> a.dataType.equals(paramType)).toList();
 		if (matches.size() > 1) {
-			throw new IllegalArgumentException("Too many possible parameters found for " + paramType + ": " + matches);
+			throw new IllegalArgumentException(paramName + ": too many possible parameters found for " + paramType + ": " + matches);
 		} else if (matches.size() == 1) {
-			return matches.get(0).codeVariable;
+			return matches.getFirst().codeVariable;
 		}
 		throw new IllegalStateException("No parameter found for " + paramName + "/" + paramType);
 	}
 
-	protected String varNameOf(final Binding binding, final Call<?> call) {
-		return call.getCall().replace('.', '_') + toVariable(binding);
+	public String varNameOf(final Processor processorCall, final Call call) {
+		return snakeCaseToCamelCase(call.getCall().replace('.', '_') + toVariable(processorCall));
 	}
 
-	protected String toVariable(final ExternalAdapter adapter) {
-		return JavaCodeGenerator.simpleNameOf(adapter.getName());
-	}
-
-	public String toVariable(final Binding binding) {
-		return (binding.getProcessor().getCall() + '_' + binding.toDataPoint()).replace('-', '_').replace('.', '_');
-	}
-
-	public String toVariable(final Call<?> call) {
-		return call.getName().replace('.', '_');
+	public static String toVariable(final Processor processorCall) {
+		return snakeCaseToCamelCase((processorCall.getCall().getCall() + '_' + processorCall.toDataPoint()).replace('-', '_').replace('.', '_'));
 	}
 
 	/**
-	 * Specifies if a binding a data point is available (executed by any possible
-	 * binding)
+	 * Specifies if a call a data point is available (executed by any possible
+	 * call)
 	 */
 	public String availableVarNameOf(final String dataPoint) {
 		return dataPoint + "_available";
 	}
 
 	protected JavaCodeGenerator<RuntimeException> appendInfo(final JavaCodeGenerator<RuntimeException> generator,
-			final Binding binding) {
-		return generator.append("// ------------------------- ").append(binding.toString())
+			final Processor processorCall) {
+		return generator.append("// ------------------------- ").append(processorCall.toString())
 				.append(" -------------------------");
 	}
 

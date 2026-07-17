@@ -22,6 +22,7 @@ import ch.scaille.tcwriter.model.dictionary.TestApiParameter;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 import ch.scaille.tcwriter.model.dictionary.TestRole;
+import ch.scaille.util.text.TextFormatter;
 import com.google.common.collect.Streams;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.velocity.VelocityContext;
@@ -214,7 +215,7 @@ public class FlowGenerator {
 	}
 
 	private String variableNameOf(TestApiParameter parameter) {
-		return parameter.getId().replaceAll("[-.]", "_");
+		return TextFormatter.snakeCaseToCamelCase(parameter.getId().replaceAll("[-.]", "_"));
 	}
 
 	public void generate() throws IOException {

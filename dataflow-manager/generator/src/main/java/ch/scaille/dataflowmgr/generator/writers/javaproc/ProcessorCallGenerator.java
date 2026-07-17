@@ -1,7 +1,7 @@
 package ch.scaille.dataflowmgr.generator.writers.javaproc;
 
-import ch.scaille.dataflowmgr.generator.writers.AbstractFlowVisitor.BindingContext;
-import ch.scaille.dataflowmgr.model.Processor;
+import ch.scaille.dataflowmgr.generator.writers.AbstractFlowVisitor.CallContext;
+import ch.scaille.dataflowmgr.model.ProcessorCall;
 import ch.scaille.generators.util.JavaCodeGenerator;
 
 public class ProcessorCallGenerator extends AbstractFlowGenerator {
@@ -11,29 +11,29 @@ public class ProcessorCallGenerator extends AbstractFlowGenerator {
 	}
 
 	@Override
-	public boolean matches(BindingContext context) {
+	public boolean matches(CallContext context) {
 		return true;
 	}
 
 	@Override
-	public void generate(BaseGenContext<Void> genContext, BindingContext context) {
-		visitor.visitExternalAdapters(context, context.unprocessedAdapters(context.bindingAdapters));
+	public void generate(BaseGenContext<Void> genContext, CallContext context) {
+		visitor.visitExternalAdapters(context, context.unprocessedAdapters(context.callAdapters));
 		if (context.isExit()) {
 			// Exit only has adapters
 			return;
 		}
 		if (!visitor.definedDataPoints.contains(context.outputDataPoint)) {
-			generateDataPoint(context.getProcessor(), context.outputDataPoint);
+			generateDataPoint(context.getProcessorCall(), context.outputDataPoint);
 		} else {
 			generator.appendIndented(context.outputDataPoint).append(" = ");
 		}
-		visitor.appendCall(context, context.getProcessor());
-		genContext.next(context);
+		visitor.appendCall(context, context.getProcessorCall());
+		genContext.run(context);
 	}
 
-	private void generateDataPoint(final Processor processor, final String outputDataPoint) {
+	private void generateDataPoint(final ProcessorCall processorCall, final String outputDataPoint) {
 		visitor.definedDataPoints.add(outputDataPoint);
-		visitor.appendNewVariable(outputDataPoint, processor);
+		visitor.appendNewVariable(outputDataPoint, processorCall);
 		generator.append(" = ");
 	}
 

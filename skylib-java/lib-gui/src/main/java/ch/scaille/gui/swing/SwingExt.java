@@ -131,6 +131,6 @@ public class SwingExt {
 	}
 
 	private static String columnKey(JTable table, TableColumn column, String... suffix) {
-		return String.format("%s.%s%s", table.getName(), column.getIdentifier(), String.join("", suffix));
+		return "%s.%s%s".formatted(table.getName(), column.getIdentifier(), String.join("", suffix));
 	}
 }

@@ -189,7 +189,10 @@ public class TestCaseToJavaVisitor {
 
 	private String varNameOf(final TestStep step, final TestParameterValue testValue) {
 		final var nextIndex = step.getOrdinal();
-		return varNames.computeIfAbsent(testValue, v -> String.format("step_%s_%s_%s" , step.getOrdinal(), v.getParameterValueFactory().getName().replace('.', '_'),
-				nextIndex));
+		return varNames.computeIfAbsent(testValue, 
+				v -> "step_%s_%s_%s".formatted(
+						step.getOrdinal(), 
+						v.getParameterValueFactory().getName().replace('.', '_'),
+						nextIndex));
 	}
 }

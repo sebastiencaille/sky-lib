@@ -27,8 +27,7 @@
 
 	<properties>
 		<data-flow-manager-version>${revision}</data-flow-manager-version>
-		<maven.compiler.source>24</maven.compiler.source>
-		<maven.compiler.target>24</maven.compiler.target>
+		<java.version>25</java.version>
 	</properties>
 
 	<build>

@@ -33,7 +33,6 @@
         <dependency>
             <groupId>io.reactivex.rxjava3</groupId>
             <artifactId>rxjava</artifactId>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>
@@ -68,7 +67,7 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>${project.build.directory}/generated-tests</source>
+                                <source>${project.build.directory}/generated-test-sources/data-flow</source>
                             </sources>
                         </configuration>
                     </execution>

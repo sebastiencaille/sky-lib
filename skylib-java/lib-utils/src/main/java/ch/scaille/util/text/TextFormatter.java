@@ -23,9 +23,9 @@ import java.util.function.Consumer;
 public class TextFormatter<T extends TextFormatter<T, E>, E extends Exception> {
 
 	public interface IOutput<E extends Exception> {
-		void append(String str) throws E;
+		IOutput<E> append(String str) throws E;
 
-		void append(char c) throws E;
+		IOutput<E> append(char c) throws E;
 		
 		default byte[] getUTF8() {
 			return toString().getBytes(StandardCharsets.UTF_8);
@@ -36,13 +36,15 @@ public class TextFormatter<T extends TextFormatter<T, E>, E extends Exception> {
 		return new IOutput<>() {
 
 			@Override
-			public void append(final char c) {
+			public IOutput<RuntimeException> append(final char c) {
 				builder.append(c);
+				return this;
 			}
 
 			@Override
-			public void append(final String str) {
+			public IOutput<RuntimeException> append(final String str) {
 				builder.append(str);
+				return this;
 			}
 
 			@Override
@@ -57,13 +59,15 @@ public class TextFormatter<T extends TextFormatter<T, E>, E extends Exception> {
 		return new IOutput<>() {
 
 			@Override
-			public void append(final char c) throws IOException {
+			public IOutput<IOException> append(final char c) throws IOException {
 				stream.write((byte) c);
+				return this;
 			}
 
 			@Override
-			public void append(final String str) throws IOException {
+			public IOutput<IOException> append(final String str) throws IOException {
 				stream.write(str.getBytes());
+				return this;
 			}
 		};
 	}
@@ -72,23 +76,29 @@ public class TextFormatter<T extends TextFormatter<T, E>, E extends Exception> {
 		return new IOutput<>() {
 
 			@Override
-			public void append(final char c) {
+			public IOutput<RuntimeException>  append(final char c) {
 				try {
 					writer.write(c);
+					return this;
 				} catch (IOException e) {
 					throw new IllegalStateException("Unable to write into stream", e);
 				}
 			}
 
 			@Override
-			public void append(final String str) {
+			public IOutput<RuntimeException>  append(final String str) {
 				try {
 					writer.write(str);
+					return this;
 				} catch (IOException e) {
 					throw new IllegalStateException("Unable to write into stream", e);
 				}
 			}
 		};
+	}
+
+	public static IOutput<RuntimeException> memoryOutput() {
+		return output(new StringBuilder(1000));
 	}
 
 	@Setter
@@ -125,6 +135,12 @@ public class TextFormatter<T extends TextFormatter<T, E>, E extends Exception> {
 		return (T) this;
 	}
 
+	public T appendQuoted(final String str) throws E {
+		output.append('"').append(str).append('"');
+		return (T) this;
+	}
+
+
 	public T appendIndented(final String string) throws E {
 		output.append(indentationManager.getIndentation());
 		return append(string);
@@ -143,15 +159,15 @@ public class TextFormatter<T extends TextFormatter<T, E>, E extends Exception> {
 	}
 
 	public T append(final String format, final Object... parameters) throws E {
-		return append(String.format(format, parameters));
+		return append(format.formatted(parameters));
 	}
 
 	public T appendIndented(final String format, final Object... parameters) throws E {
-		return appendIndented(String.format(format, parameters));
+		return appendIndented(format.formatted(parameters));
 	}
 
 	public T appendIndentedLine(final String format, final Object... parameters) throws E {
-		return appendIndentedLine(String.format(format, parameters));
+		return appendIndentedLine(format.formatted(parameters));
 	}
 
 	public T append(final TextFormatter<?, E> text) throws E {
@@ -163,6 +179,9 @@ public class TextFormatter<T extends TextFormatter<T, E>, E extends Exception> {
 		return (T) this;
 	}
 
+	/**
+	 * write an eol + indent
+	 */
 	public T eoli() throws E {
 		output.append('\n');
 		return appendIndent();
@@ -176,7 +195,7 @@ public class TextFormatter<T extends TextFormatter<T, E>, E extends Exception> {
 		return indentationManager.getIndentation();
 	}
 
-    public static String toCamelCase(final String s) {
+    public static String snakeCaseToPascalCase(final String s) {
 		final var b = new StringBuilder();
 		final var parts = s.split("_");
 		for (final var part : parts) {
@@ -185,5 +204,16 @@ public class TextFormatter<T extends TextFormatter<T, E>, E extends Exception> {
 		}
 		return b.toString();
 	}
+
+	public static String snakeCaseToCamelCase(final String s) {
+		final var result = snakeCaseToPascalCase(s);
+		return Character.toLowerCase(result.charAt(0)) + result.substring(1);
+	}
+
+
+	public static String camelCaseToPascalCase(final String s) {
+		return Character.toUpperCase(s.charAt(0)) + s.substring(1);
+	}
+
 
 }

@@ -9,32 +9,32 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import ch.scaille.dataflowmgr.model.Binding;
+import ch.scaille.dataflowmgr.model.Processor;
 import ch.scaille.dataflowmgr.model.Call;
 import ch.scaille.dataflowmgr.model.ExternalAdapter;
 import ch.scaille.dataflowmgr.model.Flow;
-import ch.scaille.dataflowmgr.model.Processor;
+import ch.scaille.dataflowmgr.model.ProcessorCall;
 
 public abstract class AbstractFlowVisitor {
 
-	public static class BindingContext {
+	public static class CallContext {
 
-		public final Binding binding;
-		public final List<ExternalAdapter> bindingAdapters;
+		public final Processor processor;
+		public final List<ExternalAdapter> callAdapters;
 		public final Set<ExternalAdapter> processedAdapters;
 
 		public final String inputDataPoint;
 		public final String inputDataType;
 		public final String outputDataPoint;
-		private List<Binding> reverseDeps;
+		private List<Processor> reverseDeps;
 
-		public BindingContext(final Binding binding, final String inputDataType) {
-			this.binding = binding;
-			this.bindingAdapters = binding.getAdapters();
+		public CallContext(final Processor processor, final String inputDataType) {
+			this.processor = processor;
+			this.callAdapters = processor.getAdapters();
 			this.processedAdapters = new HashSet<>();
-			this.inputDataPoint = binding.fromDataPoint();
+			this.inputDataPoint = processor.fromDataPoint();
 			this.inputDataType = inputDataType;
-			this.outputDataPoint = binding.toDataPoint();
+			this.outputDataPoint = processor.toDataPoint();
 		}
 
 		public Set<ExternalAdapter> unprocessedAdapters(final Collection<ExternalAdapter> adapters) {
@@ -43,11 +43,11 @@ public abstract class AbstractFlowVisitor {
 			return unprocessed;
 		}
 
-		public List<Binding> getReverseDeps() {
+		public List<Processor> getReverseDeps() {
 			return reverseDeps;
 		}
 
-		public void setReverseDeps(final List<Binding> reverseDeps) {
+		public void setReverseDeps(final List<Processor> reverseDeps) {
 			this.reverseDeps = reverseDeps;
 		}
 
@@ -55,26 +55,26 @@ public abstract class AbstractFlowVisitor {
 			return Flow.EXIT_PROCESSOR.equals(outputDataPoint);
 		}
 
-		public Processor getProcessor() {
-			return binding.getProcessor();
+		public ProcessorCall getProcessorCall() {
+			return processor.getCall();
 		}
 
 	}
 
 	protected final Flow flow;
-	private final Map<Binding, Set<Binding>> missingDeps;
+	private final Map<Processor, Set<Processor>> missingDeps;
 	private final Set<String> conditionalState = new HashSet<>();
-	private final Set<Binding> untriggeredBindings;
+	private final Set<Processor> untriggeredProcessorCalls;
 	private final Map<String, String> availableDataPoints = new HashMap<>();
-	private final Map<Binding, List<Binding>> reverseDeps = new HashMap<>();
-	protected final List<BindingContext> processOrder = new ArrayList<>();
+	private final Map<Processor, List<Processor>> reverseDeps = new HashMap<>();
+	protected final List<CallContext> processOrder = new ArrayList<>();
 
-	protected abstract void process(BindingContext context);
+	protected abstract void process(CallContext context);
 
 	protected AbstractFlowVisitor(final Flow flow) {
 		this.flow = flow;
 		this.missingDeps = flow.cloneDependencies();
-		this.untriggeredBindings = new HashSet<>(flow.getBindings());
+		this.untriggeredProcessorCalls = new HashSet<>(flow.getCalls());
 	}
 
 	public boolean isConditionalData(final String input) {
@@ -83,58 +83,58 @@ public abstract class AbstractFlowVisitor {
 
 	protected void processFlow() {
 		availableDataPoints.put(Flow.ENTRY_POINT, flow.getEntryPointType());
-		while (!untriggeredBindings.isEmpty()) {
+		while (!untriggeredProcessorCalls.isEmpty()) {
 			// More to process
-			final var newlyTriggeredBindings = getTriggeredBindings();
-			untriggeredBindings.removeAll(newlyTriggeredBindings);
-			// make data point available only if all corresponding bindings have been
+			final var newlyTriggeredCalls = getTriggeredCalls();
+			untriggeredProcessorCalls.removeAll(newlyTriggeredCalls);
+			// make data point available only if all corresponding calls have been
 			// executed
-			for (final var binding : newlyTriggeredBindings) {
-				if (untriggeredBindings.stream().noneMatch(b -> binding.toDataPoint().equals(b.toDataPoint()))) {
-					availableDataPoints.put(binding.toDataPoint(), binding.getProcessor().getReturnType());
+			for (final var call : newlyTriggeredCalls) {
+				if (untriggeredProcessorCalls.stream().noneMatch(b -> call.toDataPoint().equals(b.toDataPoint()))) {
+					availableDataPoints.put(call.toDataPoint(), call.getCall().getReturnType());
 				}
 			}
-			missingDeps.values().forEach(v -> v.removeAll(newlyTriggeredBindings));
+			missingDeps.values().forEach(v -> v.removeAll(newlyTriggeredCalls));
 		}
 
 		for (final var c : processOrder) {
-			c.setReverseDeps(reverseDeps.getOrDefault(c.binding, Collections.emptyList()));
+			c.setReverseDeps(reverseDeps.getOrDefault(c.processor, Collections.emptyList()));
 			process(c);
 		}
 	}
 
-	private Set<Binding> getTriggeredBindings() {
-		final var newlyTriggeredBindings = new HashSet<Binding>();
-		for (final var binding : untriggeredBindings) {
-			// Next potential binding
-			final var bindingDeps = missingDeps.get(binding);
-			final boolean depsTriggered = bindingDeps == null || bindingDeps.isEmpty();
-			if (!availableDataPoints.containsKey(binding.fromDataPoint()) || !depsTriggered) {
+	private Set<Processor> getTriggeredCalls() {
+		final var newlyTriggeredCalls = new HashSet<Processor>();
+		for (final var call : untriggeredProcessorCalls) {
+			// Next potential call
+			final var callDeps = missingDeps.get(call);
+			final boolean depsTriggered = callDeps == null || callDeps.isEmpty();
+			if (!availableDataPoints.containsKey(call.fromDataPoint()) || !depsTriggered) {
 				continue;
 			}
 
 			// Process
-			final var context = new BindingContext(binding, availableDataPoints.get(binding.fromDataPoint()));
+			final var context = new CallContext(call, availableDataPoints.get(call.fromDataPoint()));
 			processOrder.add(context);
-			for (final var dep : flow.getAllDependencies(binding)) {
-				reverseDeps.computeIfAbsent(dep, v -> new ArrayList<>()).add(context.binding);
+			for (final var dep : flow.getAllDependencies(call)) {
+				reverseDeps.computeIfAbsent(dep, v -> new ArrayList<>()).add(context.processor);
 			}
 
-			newlyTriggeredBindings.add(binding);
+			newlyTriggeredCalls.add(call);
 		}
-		if (!untriggeredBindings.isEmpty() && newlyTriggeredBindings.isEmpty()) {
-			throw new IllegalStateException("Remaining bindings cannot be processed: " + untriggeredBindings);
+		if (!untriggeredProcessorCalls.isEmpty() && newlyTriggeredCalls.isEmpty()) {
+			throw new IllegalStateException("Remaining calls cannot be processed: " + untriggeredProcessorCalls);
 		}
-		return newlyTriggeredBindings;
+		return newlyTriggeredCalls;
 	}
 
 	/**
 	 * Lists the adapters required by the activators
 	 */
-	public Set<ExternalAdapter> listAdapters(final BindingContext context, final Call<?> call) {
+	public Set<ExternalAdapter> listAdapters(final CallContext context, final Call call) {
 		final var adaptersRequiredByActivator = new HashSet<ExternalAdapter>();
 		for (final var param : call.getParameters().entrySet()) {
-			for (final var adapter : context.bindingAdapters) {
+			for (final var adapter : context.callAdapters) {
 				final boolean match = adapter.getName().endsWith('.' + param.getKey())
 						|| adapter.getReturnType().equals(param.getValue());
 				if (match) {

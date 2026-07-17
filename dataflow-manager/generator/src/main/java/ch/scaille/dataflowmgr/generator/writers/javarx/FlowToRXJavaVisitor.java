@@ -1,20 +1,16 @@
 package ch.scaille.dataflowmgr.generator.writers.javarx;
 
-import static ch.scaille.util.text.TextFormatter.toCamelCase;
 import static java.util.stream.Collectors.joining;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
 
 import ch.scaille.dataflowmgr.generator.writers.AbstractJavaFlowVisitor;
 import ch.scaille.dataflowmgr.generator.writers.FlowGeneratorVisitor;
 import ch.scaille.dataflowmgr.generator.writers.javarx.AbstractFlowGenerator.GenContext;
-import ch.scaille.dataflowmgr.model.Binding;
-import ch.scaille.dataflowmgr.model.ExternalAdapter;
+import ch.scaille.dataflowmgr.model.Call;
+import ch.scaille.dataflowmgr.model.Processor;
 import ch.scaille.dataflowmgr.model.Flow;
 import ch.scaille.generators.util.JavaCodeGenerator;
 import ch.scaille.generators.util.Template;
@@ -25,12 +21,10 @@ import ch.scaille.util.helpers.WrongCountException;
  * Tricky points:
  * <ul>
  * *
- * <li>All deps must have been skipped/triggered before executing a binding,
- * because we must know the state of all dependencies to evaluate the binding
+ * <li>All deps must have been triggered before executing a call,
+ * because we must know the state of all dependencies to evaluate the call
  * execution</li>
- * <li>When a binding is skipped, we must set all dependent bindings to skipped
- * </li>
- * <li>When we start evaluating a binding, we atomically check and change it's
+ * <li>When we start evaluating a call, we atomically check and change it's
  * state to ensure we run it only once (in case of concurrent evaluation)</li>
  * </ul>
  *
@@ -39,11 +33,11 @@ import ch.scaille.util.helpers.WrongCountException;
  */
 public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 
-	public static final String PRIVATE = "private";
-	public static final String DATA_POINT_STATE = "DataPointState";
-	private final JavaCodeGenerator<RuntimeException> flowClass = JavaCodeGenerator.inMemory();
+	private final JavaCodeGenerator<RuntimeException> flowExecutionAttributes = JavaCodeGenerator.inMemory();
 
-	private final JavaCodeGenerator<RuntimeException> flowFactories = JavaCodeGenerator.inMemory();
+	private final JavaCodeGenerator<RuntimeException> flowExecutionBuilder = JavaCodeGenerator.inMemory();
+
+	private final JavaCodeGenerator<RuntimeException> flowExecutionDependencies = JavaCodeGenerator.inMemory();
 
 	private final JavaCodeGenerator<RuntimeException> flowCode = JavaCodeGenerator.inMemory();
 
@@ -55,19 +49,19 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 			final boolean debug) {
 		super(flow, packageName, template);
 		this.debug = debug;
-		flowGeneratorVisitor.register(new ProcessorCallGenerator(this, flowFactories));
-		flowGeneratorVisitor.register(new ConditionalFlowCtrlGenerator(this, flowFactories));
+		flowGeneratorVisitor.register(new ProcessorCallGenerator(this, flowExecutionAttributes, flowExecutionBuilder, flowExecutionDependencies));
+		flowGeneratorVisitor.register(new ConditionalFlowCtrlGenerator(this, flowExecutionAttributes, flowExecutionBuilder, flowExecutionDependencies));
 	}
 
 	public Template process() {
 
-		availableVars.add(new BindingImplVariable(Flow.ENTRY_POINT, flow.getEntryPointType(), "f." + Flow.ENTRY_POINT));
+		availableVars.add(new CallVariable(Flow.ENTRY_POINT, flow.getEntryPointType(), Flow.ENTRY_POINT));
 
 		super.processFlow();
 
 		generateGlobalFlow();
 
-		final var inputBinding = flow.getBindings().stream().filter(Binding::isEntry).map(this::varNameOf)
+		final var inputCall = flow.getCalls().stream().filter(Processor::isEntry).map(FlowToRXJavaVisitor::fieldNameOf)
 				.collect(StreamExt.single()).orElseThrow(WrongCountException::new);
 
 		final var templateProperties = new HashMap<String, String>();
@@ -75,10 +69,11 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 		templateProperties.put("flow.name", flow.getName());
 		templateProperties.put("flow.input", flow.getEntryPointType());
 		templateProperties.put("flow.output", "void");
-		templateProperties.put("flow.executionClass", flowClass.toString());
-		templateProperties.put("flow.factories", flowFactories.toString());
+		templateProperties.put("flow.executionAttributes", flowExecutionAttributes.toString());
+		templateProperties.put("flow.executionBuilder", flowExecutionBuilder.toString());
+		templateProperties.put("flow.executionDependencies", flowExecutionDependencies.toString());
 		templateProperties.put("flow.code", flowCode.toString());
-		templateProperties.put("flow.start", inputBinding);
+		templateProperties.put("flow.start", inputCall);
 		templateProperties.put("imports", imports.stream().map(i -> "import " + i + ";").collect(joining("\n")));
 		return template.apply(templateProperties, JavaCodeGenerator.toSourceFilename(packageName, flow.getName()), null);
 	}
@@ -86,172 +81,39 @@ public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 	private void generateGlobalFlow() {
 		Collections.reverse(processOrder);
 		for (final var context : processOrder) {
-			appendInfo(flowCode, context.binding).eol();
+			appendInfo(flowCode, context.processor).eol();
 
-			final var varNameOfBinding = varNameOf(context.binding);
+			final var varNameOfCall = fieldNameOf(context.processor);
 
 			final var deps = context.getReverseDeps();
-			flowCode.appendIndented("final Maybe<FlowExecution> %s = %s(execution", varNameOfBinding, varNameOfBinding);
-			if (context.binding.isExit()) {
-				flowCode.append(", exitModifier");
+			flowCode.appendIndented("final var %s = triggerProcess(execution.%s, ", varNameOfCall, varNameOfCall);
+			if (context.processor.isExit()) {
+				flowCode.append("onFlowFinished");
+			} else if (!deps.isEmpty()) {
+				flowCode.append(
+						deps.stream().map(d -> fieldNameOf(d) + "::subscribe").collect(joining(", ")));
 			} else {
-				flowCode.append(", null");
-			}
-			if (!deps.isEmpty()) {
-				flowCode.append(", ").append(
-						deps.stream().map(d -> "() -> " + varNameOf(d) + ".subscribe()").collect(joining(", ")));
+				flowCode.append("() -> {}");
 			}
 			flowCode.append(")").eos();
 		}
 	}
 
 	@Override
-	protected void process(final BindingContext context) {
+	protected void process(final CallContext context) {
+		flowExecutionAttributes.appendIndentedLine("// Processor call %s", context.getProcessorCall().asDataPoint());
+		final var dependencies = flow.getAllDependencies(context.processor).stream()
+				.sorted(Comparator.comparing(Processor::fromDataPoint)).toList();
+		flowGeneratorVisitor.generateFlow(context, new AbstractFlowGenerator.GenContext(debug, dependencies));
 
-		availableVars.add(new BindingImplVariable(context.outputDataPoint, context.getProcessor().getReturnType(),
-				"f." + context.outputDataPoint));
-		appendInfo(flowFactories, context.binding).eol();
-		generateDataState(context);
-		if (!context.binding.isExit() && !definedDataPoints.contains(context.outputDataPoint)) {
-			generateDataPoint(context);
-		}
-		visitExecution(context);
 	}
 
-	private void generateDataPoint(final BindingContext context) {
-		definedDataPoints.add(context.outputDataPoint);
-		generateDataSetter(context.binding.getProcessor().getReturnType(), context.outputDataPoint, true);
+	static String fieldNameOf(final Processor processorCall) {
+		return toVariable(processorCall) + "Call";
 	}
 
-	private void visitExecution(final BindingContext context) {
-		final var dependencies = flow.getAllDependencies(context.binding).stream()
-				.sorted(Comparator.comparing(Binding::fromDataPoint)).toList();
-		final var genContext = new AbstractFlowGenerator.GenContext(debug, dependencies);
-		flowGeneratorVisitor.generateFlow(context, genContext);
-
-		flowFactories.appendIndented(
-				"private Maybe<FlowExecution> %s(FlowExecution execution, final Function<Maybe<FlowExecution>, Maybe<FlowExecution>> callModifier, Runnable... callbacks)",
-				varNameOf(context.binding)).openBlock();
-		flowFactories.appendIndented("final Maybe<FlowExecution> topCall = %s(execution, callModifier, callbacks)",
-				genContext.getTopCall()).eos();
-		flowFactories.appendIndented("return Maybe.just(execution)").indent();
-
-		// Call default activation when all deps are ok
-		addBindingDepsCheck(context.binding, dependencies);
-
-		if (debug) {
-			flowFactories.eoli().append(".doOnSuccess(r -> info(\"%s: Deps success\"))", context.binding).eoli()
-					.append(".doOnComplete(() -> info(\"%s: Deps skipping\"))", context.binding); //
-		}
-		flowFactories.eoli().append(".doOnSuccess(r -> topCall.subscribe())").eos().unindent();
-		flowFactories.closeBlock().eol();
+	 static String fieldNameOf(CallContext context, Call call) {
+		return (context.outputDataPoint + "_" + call.getCall()).replace('.', '_');
 	}
 
-	List<String> visitExternalAdapters(final BindingContext context, final Set<ExternalAdapter> externalAdapter) {
-
-		final var adapterNames = new ArrayList<String>();
-
-		for (final var adapter : externalAdapter) {
-			final var varNameOfAdapter = varNameOf(context.binding, adapter);
-			if (!context.binding.isExit()) {
-				generateDataSetter(adapter.getReturnType(), varNameOfAdapter, false);
-				availableVars.add(new BindingImplVariable(adapter, "f." + varNameOfAdapter));
-			}
-
-			adapterNames.add("adapter_" + toVariable(adapter));
-			flowFactories.appendIndentedLine("final Maybe<?> adapter_%s = Maybe.just(execution)", toVariable(adapter));
-			flowFactories.indent(); //
-
-			if (adapter.hasReturnType()) {
-				flowFactories.appendIndented(".map(f -> ")
-						.appendMethodCall("this", adapter.getCall(), guessParameters(context, adapter)).append(")") //
-						.eoli().append(".doOnSuccess(execution::set").append(toCamelCase(varNameOfAdapter)).append(")");
-
-			} else {
-				flowFactories.appendIndented(".doOnSuccess(f -> ")
-						.appendMethodCall("this", adapter.getCall(), guessParameters(context, adapter)).append(")");
-			}
-			flowFactories.eoli().append(".subscribeOn(Schedulers.io())");//
-			flowFactories.eos().unindent().eol();
-		}
-		return adapterNames;
-	}
-
-	void addAdapterZip(final List<String> adapterNames) {
-		if (adapterNames.isEmpty()) {
-			return;
-		}
-		for (final var adapterName : adapterNames) {
-			flowFactories.eoli().append(".zipWith(").append(adapterName).append(", (r, s) -> execution)");
-		}
-	}
-
-	private void generateDataSetter(final String type, final String property, boolean withState) {
-		if (withState) {
-			flowClass.addInstanceVarDecl(PRIVATE, DATA_POINT_STATE, stateOf(property),
-					"DataPointState.NOT_TRIGGERED");
-			flowClass.addSetter(PRIVATE, DATA_POINT_STATE, stateOf(property));
-		}
-		flowClass.addInstanceVarDecl(PRIVATE, type, property);
-		flowClass.appendIndented(String.format("private void set%s(%s %s)", toCamelCase(property), type, property))
-				.openBlock() //
-				.appendIndented(String.format("this.%s = %s", property, property)).eos(); //
-		if (withState) {
-			flowClass.appendIndented(String.format("this.state_%s = DataPointState.TRIGGERED", property)).eos(); //
-		}
-		flowClass.closeBlock().eol();
-	}
-
-	private void generateDataState(final BindingContext context) {
-		final var varNameOfBinding = varNameOf(context.binding);
-		flowClass.addInstanceVarDecl(PRIVATE, DATA_POINT_STATE, bindingStateOf(context.binding),
-				"DataPointState.NOT_TRIGGERED");
-		flowClass.addSetter("private synchronized", "DataPointState", bindingStateOf(context.binding));
-
-		flowClass.appendIndented("private synchronized boolean canTrigger%s()", toCamelCase(varNameOfBinding))
-				.openBlock()//
-				.openIf(String.format("this.%s == DataPointState.NOT_TRIGGERED", bindingStateOf(context.binding))) //
-				.appendIndented("this.%s = DataPointState.TRIGGERING", bindingStateOf(context.binding)).eos() //
-				.appendIndented("return true").eos().closeBlock() //
-				.appendIndented("return false").eos() //
-				.closeBlock();
-	}
-
-	/**
-	 * Add dependency checks.
-	 * <p>
-	 * For normal state, wait until parents are fully triggered.<br>
-	 * For default dependency, wait until parents and other conditions are either triggered or skipped
-	 * </p>
-	 */
-	JavaCodeGenerator<RuntimeException> addBindingDepsCheck(final Binding binding, final List<Binding> dependencies) {
-		if (!dependencies.isEmpty()) {
-			flowFactories.eoli().append(".mapOptional(f -> (")
-					.append(dependencies.stream()
-							.map(d -> "(DataPointState.TRIGGERED == f." + dataPointStateOf(d)
-									+ " || DataPointState.SKIPPED == f." + dataPointStateOf(d) + ")")
-							.distinct().collect(joining("\n " + flowFactories.currentIndentation() + " && ")))
-					.append(")?Optional.of(execution):Optional.empty())");
-		}
-		flowFactories.eoli().append(".mapOptional(f -> f.canTrigger%s()?Optional.of(execution):Optional.empty())",
-				toCamelCase(varNameOf(binding)));
-
-		return flowFactories;
-	}
-
-	String varNameOf(final Binding binding) {
-		return "binding_" + toVariable(binding);
-	}
-
-	String bindingStateOf(final Binding binding) {
-		return stateOf(varNameOf(binding));
-	}
-
-	String dataPointStateOf(final Binding binding) {
-		return stateOf(binding.toDataPoint());
-	}
-
-	private String stateOf(final String property) {
-		return "state_" + property;
-	}
 }

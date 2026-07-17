@@ -22,8 +22,8 @@ public class Flow extends WithId {
 	public static class FlowBuilder {
 		final String flowName;
 		final UUID uuid;
-		private final List<Binding> bindings = new ArrayList<>();
-		private final IdentityHashMap<Binding, Set<Binding>> dependencies = new IdentityHashMap<>();
+		private final List<Processor> processorCalls = new ArrayList<>();
+		private final IdentityHashMap<Processor, Set<Processor>> dependencies = new IdentityHashMap<>();
 		private final String inputType;
 
 		public FlowBuilder(final String flowName, final UUID uuid, final String inputType) {
@@ -32,28 +32,28 @@ public class Flow extends WithId {
 			this.inputType = inputType;
 		}
 
-		public FlowBuilder add(final Binding.Builder binding) {
-			this.add(binding.build());
+		public FlowBuilder add(final Processor.Builder call) {
+			this.add(call.build());
 			return this;
 		}
 
-		public FlowBuilder add(final Binding binding) {
-			bindings.add(binding);
+		public FlowBuilder add(final Processor processorCall) {
+			processorCalls.add(processorCall);
 			return this;
 		}
 
-		public FlowBuilder add(final ConditionalFlowCtrl.Builder binding) {
-			return add(binding.build());
+		public FlowBuilder add(final ConditionalFlowCtrl.Builder call) {
+			return add(call.build());
 		}
 
 		public FlowBuilder add(final ConditionalFlowCtrl caseControl) {
-			caseControl.getBindings().forEach(this::add);
-			final var defaultBinding = caseControl.getDefaultBinding();
-			if (defaultBinding.isPresent()) {
-				// make default depend on all other bindings
-				final var defaultBindingDeps = dependencies.computeIfAbsent(defaultBinding.get(), b -> new HashSet<>());
-				defaultBindingDeps.addAll(caseControl.getBindings());
-				defaultBindingDeps.remove(defaultBinding.get());
+			caseControl.getCalls().forEach(this::add);
+			final var defaultCall = caseControl.getDefaultCall();
+			if (defaultCall.getCall() != null) {
+				// make default depend on all other calls
+				final var defaultCallDeps = dependencies.computeIfAbsent(defaultCall, b -> new HashSet<>());
+				defaultCallDeps.addAll(caseControl.getCalls());
+				defaultCallDeps.remove(defaultCall);
 			}
 			return this;
 		}
@@ -70,36 +70,36 @@ public class Flow extends WithId {
 	private final FlowBuilder config;
 
 	public static final String EXIT_PROCESSOR = "exit";
-	public static final Processor EXIT_POINT = new Processor("exit", "exit", EMPTY_PARAMETERS, Void.TYPE.getName());
+	public static final ProcessorCall EXIT_POINT = new ProcessorCall("exit", "exit", EMPTY_PARAMETERS, Void.TYPE.getName());
 	public static final String ENTRY_POINT = "inputDataPoint";
 
-	public Flow(final FlowBuilder bindingsBuilder) {
-		super(bindingsBuilder.uuid);
-		this.config = bindingsBuilder;
+	public Flow(final FlowBuilder callsBuilder) {
+		super(callsBuilder.uuid);
+		this.config = callsBuilder;
 	}
 
 	public String getName() {
 		return config.flowName;
 	}
 
-	public List<Binding> getBindings() {
-		return config.bindings;
+	public List<Processor> getCalls() {
+		return config.processorCalls;
 	}
 
 	public String getEntryPointType() {
 		return config.inputType;
 	}
 
-	public Map<Binding, Set<Binding>> cloneDependencies() {
+	public Map<Processor, Set<Processor>> cloneDependencies() {
 		return config.dependencies.entrySet().stream()
 				.collect(toMap(Map.Entry::getKey, kv -> new HashSet<>(kv.getValue())));
 	}
 
-	public Set<Binding> getAllDependencies(final Binding binding) {
-		final var deps = new HashSet<Binding>();
+	public Set<Processor> getAllDependencies(final Processor processorCall) {
+		final var deps = new HashSet<Processor>();
 		deps.addAll(
-				config.bindings.stream().filter(b -> b.toDataPoint().equals(binding.fromDataPoint())).collect(toSet()));
-		deps.addAll(config.dependencies.getOrDefault(binding, emptySet()));
+				config.processorCalls.stream().filter(b -> b.toDataPoint().equals(processorCall.fromDataPoint())).collect(toSet()));
+		deps.addAll(config.dependencies.getOrDefault(processorCall, emptySet()));
 		return deps;
 	}
 

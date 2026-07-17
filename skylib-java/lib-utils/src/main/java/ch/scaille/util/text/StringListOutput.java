@@ -14,7 +14,7 @@ public class StringListOutput implements TextFormatter.IOutput<RuntimeException>
 	}
 
 	@Override
-	public void append(String str) {
+	public TextFormatter.IOutput<RuntimeException> append(String str) {
 		if (str.startsWith("\n")) {
 			push();
 		}
@@ -30,15 +30,17 @@ public class StringListOutput implements TextFormatter.IOutput<RuntimeException>
 		if (str.endsWith("\n")) {
 			push();
 		}
+		return this;
 	}
 
 	@Override
-	public void append(char c) {
+	public TextFormatter.IOutput<RuntimeException> append(char c) {
 		if (c == '\n') {
 			push();
 		} else {
 			currentLine.append(c);
 		}
+		return this;
 	}
 
 	public List<String> getLines() {

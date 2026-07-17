@@ -9,25 +9,25 @@ It eventually happens, at some point in time, that the teams involved in a softw
 ## What is a software
 A software is basically made of data (or a collection of...) and processing units (processors).
 ```
-data -> processor -> data
+data -> processorCall -> data
 ```
 
-**Data** may be coming as an external input or from a processor. 
+**Data** may be coming as an external input or from a processorCall.
 Acquiring some the data may require send an explicit event (to trigger a remote call to a remote service or send a data request to a storage)
 Data are sent as an external output (which may be a remote service, a storage device, ...) 
 **Processors** are pure functions that are transforming some data to other ones.
 
 The combination of data and processors can be considered as a data processing **flow**.
 ```                 
-external input -> processor -> processor output ->
-processor input + external input -> processor -> processor output ->
+external input -> processorCall -> processorCall output ->
+processorCall input + external input -> processorCall -> processorCall output ->
 ...
-processor input + external input -> processor -> external output
+processorCall input + external input -> processorCall -> external output
 ```
 
 In a traditional software, procedures and functions are taking the responsibility of loading durable data, processing all data and opportunistically triggering the subsequent processing. This approach is creating a hierarchy, which may become quite complex.
 
-In a reactive software, the loading of the durable data are still performed by the processor, and the processor is still opportunistically triggering the subsequent processing. A complexity is added because of the difficulty to transfer a growing set of data from a processing to another one
+In a reactive software, the loading of the durable data are still performed by the processorCall, and the processorCall is still opportunistically triggering the subsequent processing. A complexity is added because of the difficulty to transfer a growing set of data from a processing to another one
 ```
 processor1(processorInput): myData=f_1(processorInput)
     return r(processor2(myData))...
@@ -49,13 +49,13 @@ As a solution, we could consider taking an approach that is closer to the data p
 A flow is defined by 
 * A set of processors, which are 
    * taking a set of data as parameters
-   * producing a set of data (except for the processor at the end of the chain, which is only consuming data)
+   * producing a set of data (except for the processorCall at the end of the chain, which is only consuming data)
 * Sub flows
 * Binding Rules (defining how to bind two processors according to the data semantic and conditions)
 * External Input Providers (to retrieve on-demand external data, eg from a database)
 
 For the shake of simplicity, Binding rules and External Input Triggers may contain function to 
-adapt the data used to call the processor or to trigger the external input provider.
+adapt the data used to call the processorCall or to trigger the external input provider.
 Eg an external input provider may call the target in a paginated way.
 
 The flow implementations would be defined in a way that allows adequate visualization and testing.

@@ -9,7 +9,7 @@ It eventually happens, at some point in time, that the teams involved in a softw
 ## What is a software
 A software is basically made of data (or a collection of...) and processing units (processors).
 ```
-data -> processor -> data -> processor -> ...
+data -> processorCall -> data -> processorCall -> ...
 ```
 
 **Data** are coming from external systems/services and are processed by processors. 
@@ -20,12 +20,12 @@ Data produced by the system are sent to an external service (database, hardware,
 
 The combination of data, processors and external systems are forming a data **flow**.
 ```                 
-input data -> processor -> data [ + external data ] -> processor -> ... -> output data
+input data -> processorCall -> data [ + external data ] -> processorCall -> ... -> output data
 ```
 
 In a traditional software, the procedures/methods/functions are taking the responsibility of loading durable data, processing all data and opportunistically triggering the subsequent processing. This approach is creating a hierarchy, which may become quite complex.
 
-In a reactive software, the loading of the durable data are still performed by the processors, and each processor is still opportunistically triggering the subsequent processing. A complexity is added because of the difficulty to transfer a growing set of data from a processing to the next one
+In a reactive software, the loading of the durable data are still performed by the processors, and each processorCall is still opportunistically triggering the subsequent processing. A complexity is added because of the difficulty to transfer a growing set of data from a processing to the next one
 ```
 processor1(processorInput): myData=f_1(processorInput)
     return r(processor2(myData))...
@@ -48,10 +48,10 @@ A solution could be to use the data processing flow approach, as previously defi
 A flow is defined by 
 * Processors, which are 
    * taking a set of data as parameters
-   * producing a set of data (except for the last processor of the chain, which is only consuming data)
+   * producing a set of data (except for the last processorCall of the chain, which is only consuming data)
 * External Adapters (to retrieve/push data from an external service, i.e. from a database)
 * Flow controls, like
-   * conditions, which are controlling which processor must be executed according to the current set of data
+   * conditions, which are controlling which processorCall must be executed according to the current set of data
    * data splitters, which are splitting large amounts of data into smaller chunks
 
 The flow implementations would be defined in a way that allows adequate visualization and testing.
@@ -59,10 +59,10 @@ The flow implementations would be defined in a way that allows adequate visualiz
 ## Example
 
 The flow must be understood this way:
-* The 'input data' are sent to the 'init' processor
+* The 'input data' are sent to the 'init' processorCall
 * Depending on the 'Complete' conditions
-   * if 'mustComplete', 'getCompletion' is called to retrieve data from an external system, then 'complete' processor is called
-   * otherwise, the 'keepAsIs' processor is called
+   * if 'mustComplete', 'getCompletion' is called to retrieve data from an external system, then 'complete' processorCall is called
+   * otherwise, the 'keepAsIs' processorCall is called
 * The resulting data are then sent to the 'display' of an external system
 * The flow is terminated
 

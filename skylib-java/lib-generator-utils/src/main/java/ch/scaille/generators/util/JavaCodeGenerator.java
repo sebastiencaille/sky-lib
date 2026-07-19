@@ -1,10 +1,13 @@
 package ch.scaille.generators.util;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import ch.scaille.util.text.TextFormatter;
+import org.jspecify.annotations.Nullable;
 
 
 public class JavaCodeGenerator<E extends Exception> extends TextFormatter<JavaCodeGenerator<E>, E> {
@@ -14,7 +17,7 @@ public class JavaCodeGenerator<E extends Exception> extends TextFormatter<JavaCo
 	}
 
 	public static JavaCodeGenerator<RuntimeException> inMemory() {
-		return new JavaCodeGenerator<>(output(new StringBuilder(1000)));
+		return new JavaCodeGenerator<>(memoryOutput());
 	}
 
 	public JavaCodeGenerator(IOutput<E> output) {
@@ -62,6 +65,13 @@ public class JavaCodeGenerator<E extends Exception> extends TextFormatter<JavaCo
 		return toImport.stream().map(p -> "import " + p + ';').collect(Collectors.joining("\n"));
 	}
 
+	public JavaCodeGenerator<E> inBlock(InlinedCode<E, E> consumer) throws E {
+		openBlock();
+		consumer.apply(this);
+		return closeBlock();
+	}
+
+	
 	public JavaCodeGenerator<E> openBlock(final String... extra) throws E {
 		if (extra.length > 0) {
 			appendIndent();
@@ -80,28 +90,43 @@ public class JavaCodeGenerator<E extends Exception> extends TextFormatter<JavaCo
 		return appendIndented("if (").append(condition).append(")").openBlock();
 	}
 
+	public JavaCodeGenerator<E> inIf(final String condition, InlinedCode<E, E> inlinedCode) throws E {
+		return appendIndented("if (").append(condition).append(")").inBlock(inlinedCode);
+	}
+
+
 	public JavaCodeGenerator<E> addVarAssign(final String type, final String name) throws E {
 		return appendIndented(type).append(" ").append(name).append(" = ");
 	}
 
 	public JavaCodeGenerator<E> addInstanceVarDecl(final String modifiers, final String type, final String name)
 			throws E {
-		return appendIndented(String.format("%s %s %s", modifiers, type, name)).eos();
+		return appendIndented("%s %s %s".formatted(modifiers, type, name)).eos();
 	}
 
 	public JavaCodeGenerator<E> addInstanceVarDecl(final String modifiers, final String type, final String name,
 			final String value) throws E {
-		return appendIndented(String.format("%s %s %s = %s", modifiers, type, name, value)).eos();
+		return appendIndented("%s %s %s = %s".formatted(modifiers, type, name, value)).eos();
 	}
 
 	public JavaCodeGenerator<E> addLocalVariable(final String type, final String name, final String value) throws E {
 		return appendIndented(type).append(" ").append(name).append(" = ").append(value).eos();
 	}
 
-	public JavaCodeGenerator<E> appendMethodCall(final String instance, final String methodName,
+
+	public JavaCodeGenerator<E> appendMethodCall(@Nullable final String instance, final String methodName,
 			final Collection<String> parameters) throws E {
-		return append("%s.%s(%s)", instance, methodName, String.join(",", parameters));
+		if (instance == null) {
+			return append("%s(%s)", methodName, String.join(", ", parameters));
+		}
+		return append("%s.%s(%s)", instance, methodName, String.join(", ", parameters));
 	}
+
+	public JavaCodeGenerator<E> appendMethodCall(@Nullable final String instance, final String methodName,
+	                                             final String... parameters) throws E {
+		return appendMethodCall(instance, methodName, List.of(parameters));
+	}
+
 
 	/**
 	 * End of statement
@@ -129,12 +154,18 @@ public class JavaCodeGenerator<E extends Exception> extends TextFormatter<JavaCo
 		return getOutput().toString();
 	}
 
+	public JavaCodeGenerator<E> addSetter(final String modifiers, final String type, final String property, @Nullable Consumer<JavaCodeGenerator<E>> extra) throws E {
+		return appendIndented("%s void set%s(%s %s)".formatted(modifiers, snakeCaseToPascalCase(property), type, property))
+				.inBlock(gen -> {
+					gen.appendIndented("this.%s = %s".formatted(property, property)).eos();
+					if (extra != null) {
+						extra.accept(this);
+					}
+				});
+	}
+	
 	public JavaCodeGenerator<E> addSetter(final String modifiers, final String type, final String property) throws E {
-		appendIndented(String.format("%s void set%s(%s %s)", modifiers, toCamelCase(property), type, property))
-				.openBlock();
-		appendIndented(String.format("this.%s = %s", property, property)).eos();
-		closeBlock();
-		return this;
+		return addSetter(modifiers, type, property, null);
 	}
 
 }

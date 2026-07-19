@@ -130,7 +130,7 @@ public class HumanReadableVisitor {
 			emptiedBlocks.add(blockMatcher.group().replace("%s", ""));
 		}
 		try {
-			var formatted = String.format(humanReadable, (formatParams != null) ? formatParams.toArray() : null);
+			var formatted = humanReadable.formatted((formatParams != null) ? formatParams.toArray() : null);
 			// remove empty blocks
 			for (final var emptyBlock : emptiedBlocks) {
 				formatted = formatted.replaceAll(emptyBlock, "");

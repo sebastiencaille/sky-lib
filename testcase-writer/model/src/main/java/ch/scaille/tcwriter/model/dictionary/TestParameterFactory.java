@@ -104,7 +104,7 @@ public class TestParameterFactory extends NamedObject {
 
     @Override
     public String toString() {
-        return String.format("%s, %s, %s mandatory, %s optional ", super.toString(), getParameterType(),
+        return "%s, %s, %s mandatory, %s optional ".formatted(super.toString(), getParameterType(),
                 mandatoryParameters.size(), optionalParameters.size());
     }
 

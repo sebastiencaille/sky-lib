@@ -1,6 +1,6 @@
 package ch.scaille.dataflowmgr.generator.writers.dot;
 
-import ch.scaille.dataflowmgr.generator.writers.AbstractFlowVisitor.BindingContext;
+import ch.scaille.dataflowmgr.generator.writers.AbstractFlowVisitor.CallContext;
 import ch.scaille.dataflowmgr.generator.writers.dot.FlowToDotVisitor.Graph;
 import ch.scaille.dataflowmgr.generator.writers.dot.FlowToDotVisitor.Link;
 
@@ -11,19 +11,19 @@ public class ProcessorGenerator extends AbstractDotFlowGenerator {
 	}
 
 	@Override
-	public boolean matches(BindingContext context) {
+	public boolean matches(CallContext context) {
 		return true;
 	}
 
 	@Override
-	public void generate(BaseGenContext<String> genContext, BindingContext context) {
+	public void generate(BaseGenContext<String> genContext, CallContext context) {
 
-		final var processorNode = visitor.addProcessor(context.binding, context.getProcessor());
-		final var missingAdapters = context.unprocessedAdapters(context.bindingAdapters);
+		final var processorNode = visitor.addProcessor(context.processor, context.getProcessorCall());
+		final var missingAdapters = context.unprocessedAdapters(context.callAdapters);
 		visitor.addExternalAdapters(missingAdapters, genContext.getLocalContext(), processorNode);
 
 		graph.links().add(new Link(processorNode, context.outputDataPoint));
-		genContext.next(context);
+		genContext.run(context);
 	}
 
 }

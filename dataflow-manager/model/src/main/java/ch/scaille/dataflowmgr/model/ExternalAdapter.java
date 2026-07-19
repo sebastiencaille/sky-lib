@@ -2,7 +2,7 @@ package ch.scaille.dataflowmgr.model;
 
 import java.util.LinkedHashMap;
 
-public class ExternalAdapter extends Call<ExternalAdapter> {
+public class ExternalAdapter extends Call implements DerivableCall<ExternalAdapter> {
 
 	public ExternalAdapter(final String name, final String methodName, final LinkedHashMap<String, String> parameters,
 			final String returnType) {

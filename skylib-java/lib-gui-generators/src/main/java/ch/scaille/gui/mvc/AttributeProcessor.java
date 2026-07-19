@@ -194,19 +194,19 @@ public abstract class AttributeProcessor {
 	}
 
 	String generateDeclaration() {
-		return String.format("protected final %s %s;", getPropertyType(), getPropertyFieldName());
+		return "protected final %s %s;".formatted(getPropertyType(), getPropertyFieldName());
 	}
 
 	String generateInitialization(Class<?> modelClass) {
-		return String.format(
+		return 
 				"%s = new %s(prefix + %s, this%s).configureTyped(%n"
 						+ "\tConfiguration.persistent(currentObjectProvider, %s),%n"
-						+ "\timplicitConverters(%s.class, %s, %s.class));",
-				getPropertyFieldName(), getPropertyType(), getAttributeNameConstant(),
-				defaultValue(),
-				getFieldCreation(),
-				modelClass.getSimpleName(), getAttributeNameConstant(),
-				modelAttribute.getClassType().getCanonicalName());
+						+ "\timplicitConverters(%s.class, %s, %s.class));"
+					.formatted(getPropertyFieldName(), getPropertyType(), getAttributeNameConstant(),
+						defaultValue(),
+						getFieldCreation(),
+						modelClass.getSimpleName(), getAttributeNameConstant(),
+						modelAttribute.getClassType().getCanonicalName());
 	}
 
 	public String getAttributeNameConstant() {

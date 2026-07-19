@@ -1,121 +1,95 @@
 package ch.scaille.dataflowmgr.generator.writers.javarx;
 
-import static ch.scaille.util.text.TextFormatter.toCamelCase;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toSet;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import ch.scaille.dataflowmgr.generator.writers.AbstractFlowVisitor.BindingContext;
-import ch.scaille.dataflowmgr.model.Binding;
-import ch.scaille.dataflowmgr.model.CustomCall;
+import ch.scaille.dataflowmgr.generator.writers.AbstractFlowVisitor.CallContext;
+import ch.scaille.dataflowmgr.generator.writers.AbstractJavaFlowVisitor;
+import ch.scaille.dataflowmgr.model.Call;
+import ch.scaille.dataflowmgr.model.Processor;
 import ch.scaille.dataflowmgr.model.flowctrl.ConditionalFlowCtrl;
 import ch.scaille.generators.util.JavaCodeGenerator;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static ch.scaille.dataflowmgr.generator.writers.javarx.FlowToRXJavaVisitor.fieldNameOf;
+
 public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 
-	protected ConditionalFlowCtrlGenerator(FlowToRXJavaVisitor visitor, JavaCodeGenerator<RuntimeException> generator) {
-		super(visitor, generator);
+	public static final String CONTROL_TYPE = "CONTROL";
+	private final Set<String> alreadyDefinedDataPoints = new HashSet<>();
+
+	protected ConditionalFlowCtrlGenerator(FlowToRXJavaVisitor visitor,
+										   JavaCodeGenerator<RuntimeException> flowExecutionAttributes,
+										   JavaCodeGenerator<RuntimeException> flowExecutionBuilder,
+										   JavaCodeGenerator<RuntimeException> flowExecutionDependencies) {
+		super(visitor, flowExecutionAttributes, flowExecutionBuilder, flowExecutionDependencies);
 	}
 
 	@Override
-	public boolean matches(BindingContext context) {
-		return ConditionalFlowCtrl.getCondition(context.binding.getRules()).isPresent();
+	public boolean matches(CallContext context) {
+		return ConditionalFlowCtrl.getCondition(context.processor.getRules()).isPresent();
 	}
 
 	@Override
-	public void generate(BaseGenContext<GenContext> genContext, BindingContext context) {
-		final var exclusions = ConditionalFlowCtrl.getExclusions(context.binding.getRules()).collect(toSet());
-		visitor.setConditional(context.outputDataPoint);
+	public void generate(BaseGenContext<GenContext> genContext, CallContext context) {
+		final var processor = context.processor;
 
-		final var topCall = visitor.toVariable(context.binding) + "_conditional";
-		flowFactories.appendIndented(
-				"private Maybe<FlowExecution> %s(FlowExecution execution, final Function<Maybe<FlowExecution>, Maybe<FlowExecution>> callModifier, Runnable... callbacks)",
-				topCall).openBlock();
-
-		flowFactories.appendIndented("final Maybe<FlowExecution> topCall = %s(execution, callModifier, callbacks)",
-				genContext.getLocalContext().getTopCall()).eos();
-		genContext.getLocalContext().setTopCall("topCall");
-
-		visitActivators(context, genContext.getLocalContext());
-
-		if (!exclusions.isEmpty()) {
-			generateConditionalCallToService(genContext, context, exclusions);
-		} else {
-			flowFactories.appendIndented("return %s", genContext.getLocalContext().getTopCall()).eos();
+		// Call activators
+		flowExecutionDependencies.appendIndentedLine("// activation dependencies");
+		for (var activator: ConditionalFlowCtrl.getActivators(processor.getRules()).toList()) {
+			final var fieldName = fieldNameOf(context, activator);
+			addCallBuilder(context, fieldName, activator.getCall(), CONTROL_TYPE, "always()", activator, "false");
+			flowExecutionDependencies.appendMethodCall(fieldNameOf(context.processor), "addDependency", List.of(fieldName)).eos();
+			flowExecutionDependencies.appendMethodCall(fieldName, "addOnSuccess","_ -> triggerProcess(%s).subscribe()".formatted(fieldNameOf(context.processor))).eos();
+		}
+		final var activatorsSymbols = ConditionalFlowCtrl.getActivators(processor.getRules()).map(activator -> fieldNameOf(context, activator)).toList();
+		if (!activatorsSymbols.isEmpty()) {
+			flowExecutionDependencies.appendMethodCall(fieldNameOf(context.processor), "addActivations",
+					activatorsSymbols.stream().map("%s::getOutput"::formatted).toList()).eos();
 		}
 
-		flowFactories.closeBlock();
-
-		genContext.getLocalContext().setTopCall(topCall);
-		genContext.next(context);
-	}
-
-	/**
-	 * Generates the code calling a list of activators
-	 *
-     */
-	private void visitActivators(final BindingContext context, GenContext genContext) {
-		final var activators = ConditionalFlowCtrl.getActivators(context.binding.getRules()).toList();
-		if (activators.isEmpty()) {
-			return;
+		// Call exclusions
+		flowExecutionDependencies.appendIndentedLine("// exclusion dependencies");
+		final var callExclusions = ConditionalFlowCtrl.getExclusions(processor.getRules(), Call.class).toList();
+		for (var exclusion: callExclusions) {
+			final var fieldName = fieldNameOf(context, exclusion);
+			addCallBuilder(context, fieldName,  exclusion.getCall(), CONTROL_TYPE,"always()", exclusion, "false");
+			flowExecutionDependencies.appendMethodCall(fieldNameOf(context.processor), "addDependency", List.of(fieldName)).eos();
+			flowExecutionDependencies.appendMethodCall(fieldName, "addOnSuccess","_ -> triggerProcess(%s).subscribe()".formatted(fieldNameOf(context.processor))).eos();
 		}
-		final var activatorNames = new ArrayList<String>();
-
-		// Activators
-		for (final var activator : activators) {
-
-			final var unprocessedAdapters = context.unprocessedAdapters(visitor.listAdapters(context, activator));
-			final var adapterNames = visitor.visitExternalAdapters(context, unprocessedAdapters);
-			context.processedAdapters.addAll(unprocessedAdapters);
-
-			final var activatorParameters = visitor.guessParameters(context, activator);
-
-			activatorNames.add("activator_" + visitor.toVariable(activator));
-			generateCallActivator(activator, adapterNames, activatorParameters);
+		final var callExclusionSymbols = ConditionalFlowCtrl.getExclusions(processor.getRules(), Call.class).map(exclusion -> fieldNameOf(context, exclusion)).toList();
+		if (!callExclusionSymbols.isEmpty()) {
+			flowExecutionDependencies.appendMethodCall(fieldNameOf(context.processor), "addExclusions",
+					callExclusionSymbols.stream().map(" %s::getOutput"::formatted).toList()).eos();
 		}
 
-		// Activation check
-		generateCallAllActivators(context, activatorNames);
-		genContext.setTopCall("activators");
-	}
-
-	private void generateConditionalCallToService(BaseGenContext<GenContext> genContext, BindingContext context,
-			final Set<Binding> exclusions) {
-		flowFactories.eoli().append("return Maybe.just(execution).mapOptional(f -> ").append(exclusions.stream()
-				.map(x -> "DataPointState.SKIPPED == f." + visitor.dataPointStateOf(x)).collect(joining(" && ")))
-				.append("?Optional.of(f):Optional.empty())");
-		if (genContext.getLocalContext().debug) {
-			flowFactories.append(".doOnComplete(() -> info(\"%s: Call skipped\"))",
-					visitor.toVariable(context.binding));
+		// Processor exclusions
+		final var processorExclusions = ConditionalFlowCtrl.getExclusions(processor.getRules(), Processor.class).toList();
+		for (var activator:  processorExclusions.stream().flatMap(activated -> ConditionalFlowCtrl.getActivators(activated.getRules())).toList()) {
+			final var fieldName = fieldNameOf(context, activator);
+			flowExecutionDependencies.appendMethodCall(fieldNameOf(context.processor), "addDependency", fieldName).eos();
+			flowExecutionDependencies.appendMethodCall(fieldName, "addOnSuccess","_ -> triggerProcess(%s).subscribe()".formatted(fieldNameOf(context.processor))).eos();
 		}
-		flowFactories.append(".doOnSuccess(f -> %s.subscribe())", genContext.getLocalContext().getTopCall()).eos();
-	}
-
-	private void generateCallActivator(final CustomCall activator, final List<String> adapterNames,
-			final List<String> activatorParameters) {
-		flowFactories.appendIndented("final Maybe<Boolean> activator_%s = Maybe.just(execution)",
-				visitor.toVariable(activator)).indent();
-		visitor.addAdapterZip(adapterNames);
-		flowFactories.eoli() //
-				.append(".map(f -> ").appendMethodCall("this", activator.getCall(), activatorParameters).append(")") //
-				.eoli().append(".subscribeOn(Schedulers.computation())").eos().unindent().eol();
-	}
-
-	private void generateCallAllActivators(final BindingContext context, final List<String> activatorNames) {
-		flowFactories.appendIndented("final Maybe<FlowExecution> activators = Maybe.just(true)").indent();
-		for (final var activatorName : activatorNames) {
-			flowFactories.eoli().append(".zipWith(").append(activatorName)
-					.append(", (u, r) -> u.booleanValue() && r.booleanValue())");
+		for (var exclusion: processorExclusions.stream().flatMap(excluded -> ConditionalFlowCtrl.getExclusions(excluded.getRules(), Call.class)).toList()) {
+			final var fieldName = fieldNameOf(context, exclusion);
+			flowExecutionDependencies.appendMethodCall(fieldNameOf(context.processor), "addDependency", fieldName).eos();
+			flowExecutionDependencies.appendMethodCall(fieldName, "addOnSuccess","_ -> triggerProcess(%s).subscribe()".formatted(fieldNameOf(context.processor))).eos();
 		}
-		flowFactories.eoli().append(".mapOptional(b -> b ? Optional.of(execution) : Optional.empty())") //
-				.eoli().append(".flatMap(e -> topCall)") //
-				.eoli()
-				.append(".doOnComplete(() -> { execution.setState%s(DataPointState.TRIGGERED); execution.setState%s(DataPointState.SKIPPED); })",
-						toCamelCase(visitor.varNameOf(context.binding)), toCamelCase(context.binding.toDataPoint())) //
-				.eoli().append(".doOnTerminate(() -> Arrays.stream(callbacks).forEach(Runnable::run))") //
-				.eos().unindent().eol();
+
+		final var processorExclusionSymbols = ConditionalFlowCtrl.getExclusions(processor.getRules(), Processor.class).map(FlowToRXJavaVisitor::fieldNameOf).toList();
+		if (!processorExclusionSymbols.isEmpty()) {
+			flowExecutionDependencies.appendMethodCall(fieldNameOf(context.processor), "addExclusions",
+					processorExclusionSymbols.stream().map("%s::evaluateCondition"::formatted).toList()).eos();
+		}
+
+		// result's DataPoint
+		if (!alreadyDefinedDataPoints.contains(context.outputDataPoint)) {
+			flowExecutionAttributes.addInstanceVarDecl("private final", "DataPoint<%s>".formatted(context.getProcessorCall().getReturnType()), context.outputDataPoint, "new DataPoint<>()");
+			alreadyDefinedDataPoints.add(context.outputDataPoint);
+		}
+		visitor.availableVars.add(new AbstractJavaFlowVisitor.CallVariable(context.outputDataPoint, context.getProcessorCall().getReturnType(),
+				context.outputDataPoint));
+		flowExecutionDependencies.appendMethodCall(fieldNameOf(context.processor), "addOnSuccess", List.of("%s::setOutput".formatted(context.outputDataPoint))).eos();
 	}
+
 }

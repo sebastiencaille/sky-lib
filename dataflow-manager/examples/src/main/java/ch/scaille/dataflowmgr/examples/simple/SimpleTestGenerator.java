@@ -9,12 +9,13 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 import ch.scaille.dataflowmgr.annotations.Conditions;
+import ch.scaille.dataflowmgr.examples.simple.annotations.ExampleApis;
 import ch.scaille.dataflowmgr.generator.dictionary.java.JavaToDictionary;
 import ch.scaille.dataflowmgr.generator.writers.dot.FlowToDotVisitor;
 import ch.scaille.dataflowmgr.generator.writers.javaproc.FlowToProceduralJavaVisitor;
 import ch.scaille.dataflowmgr.generator.writers.javarx.FlowToRXJavaVisitor;
-import ch.scaille.dataflowmgr.model.Binding;
-import ch.scaille.dataflowmgr.model.CustomCall;
+import ch.scaille.dataflowmgr.model.Processor;
+import ch.scaille.dataflowmgr.model.GenericCall;
 import ch.scaille.dataflowmgr.model.Dictionary.Calls;
 import ch.scaille.dataflowmgr.model.Flow;
 import ch.scaille.dataflowmgr.model.flowctrl.ConditionalFlowCtrl;
@@ -31,65 +32,59 @@ import ch.scaille.util.helpers.Logs;
  */
 public class SimpleTestGenerator {
 
-	private static final String SIMPLE_SERVICE_PKG = "ch.scaille.dataflowmgr.examples.simple";
-
-	private static final String DP_COMPLETE = "complete";
-
-	public static final String SIMPLE_SERVICE_CLASS = SIMPLE_SERVICE_PKG + ".SimpleService";
-	public static final String SIMPLE_FLOW_CONDITIONS_CLASS = SIMPLE_SERVICE_PKG + ".SimpleFlowConditions";
-	public static final String SIMPLE_EXTERNAL_ADAPTER_CLASS = SIMPLE_SERVICE_PKG + ".SimpleExternalAdapter";
+	private static final String SIMPLE_EXAMPLE_PACKAGE = "ch.scaille.dataflowmgr.examples.simple";
+	public static final String CONDITIONAL_MUTATION = "conditionalMutation";
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		final var targetFolder = CodeGeneratorParams.mavenTargetFolderOf(SimpleTestGenerator.class);
-		final var targetPathSrc = targetFolder.resolve("generated-tests").toAbsolutePath();
+		final var targetPathSrc = targetFolder.resolve("generated-test-sources/data-flow").toAbsolutePath();
 		final var targetPathDot = targetFolder.resolve("reports");
 		final var generationMetadata = GenerationMetadata.fromCommandLine(SimpleTestGenerator.class, args);
 
 		final var dictionary = JavaToDictionary.configure(ClassFinder.ofCurrentThread())
-				.withPackages(SIMPLE_SERVICE_PKG)
+				.withPackages(SIMPLE_EXAMPLE_PACKAGE)
 				.scan()
 				.collect(JavaToDictionary.toDictionary());
 
 		// Services (see AbstractFlow)
-		final var simpleService = dictionary.processors.map(SIMPLE_SERVICE_CLASS, "simpleService");
-		final var simpleFlowConditions = (Calls<CustomCall>) dictionary.flowControl.get(Conditions.class)
-				.map(SIMPLE_FLOW_CONDITIONS_CLASS, "simpleFlowConditions");
-		final var simpleExternalAdapter = dictionary.externalAdapters.map(SIMPLE_EXTERNAL_ADAPTER_CLASS,
-				"simpleExternalAdapter");
+		final var simpleService = dictionary.processors.map(ExampleApis.SIMPLE_SERVICE);
+		final var simpleFlowConditions = (Calls<GenericCall>) dictionary.flowControl.get(Conditions.class)
+				.map(ExampleApis.SIMPLE_FLOW_CONDITIONS);
+		final var simpleExternalAdapter = dictionary.externalAdapters.map(ExampleApis.SIMPLE_EXTERNAL_ADAPTER);
 
 		// Processors
-		final var initCall = simpleService.get("init");
-		final var completeCall = simpleService.get(DP_COMPLETE);
-		final var keepAsIsCall = simpleService.get("keepAsIs");
+		final var initCall = simpleService.get(ExampleApis.INIT);
+		final var mutateCall = simpleService.get(ExampleApis.MUTATE);
+		final var keepAsIsCall = simpleService.get(ExampleApis.KEEP_AS_IS);
 
 		// Conditions
-		final var mustCompleteCond = simpleFlowConditions.get("mustComplete");
+		final var mustMutateCond = simpleFlowConditions.get(ExampleApis.MUST_MUTATE);
 
-		// Eternal adapters
-		final var getCompletionCall = simpleExternalAdapter.get("getCompletion");
-		final var displayDataCall = simpleExternalAdapter.get("display");
+		// Eternal adaptersDP_
+		final var getMutationCall = simpleExternalAdapter.get(ExampleApis.GET_MUTATION);
+		final var displayDataCall = simpleExternalAdapter.get(ExampleApis.DISPLAY);
 
-		// Bindings
-		final var entryToInitCall = Binding.builder(Flow.ENTRY_POINT, initCall);
-		final var initToCompleteCall = Binding.builder(initCall, completeCall)
-				.withExternalData(getCompletionCall)
-				.as(DP_COMPLETE);
-		final var initToKeepAsIsCall = Binding.builder(initCall, keepAsIsCall).as(DP_COMPLETE);
-		final var completeToExitCall = Binding.builder(DP_COMPLETE, Flow.EXIT_POINT).withExternalData(displayDataCall);
+		// Calls
+		final var entryToInitCall = Processor.builder(Flow.ENTRY_POINT, initCall);
+		final var initToMutateCall = Processor.builder(initCall, mutateCall)
+				.withExternalData(getMutationCall)
+				.as(CONDITIONAL_MUTATION);
+		final var initToKeepAsIsCall = Processor.builder(initCall, keepAsIsCall).as(CONDITIONAL_MUTATION);
+		final var mutateToExitCall = Processor.builder(CONDITIONAL_MUTATION, Flow.EXIT_POINT).withExternalData(displayDataCall);
 
 		// Flow
-		final var flow = Flow.builder("SimpleFlowTest", UUID.randomUUID(), "java.lang.String") //
-				.add(entryToInitCall) //
+		final var flow = Flow.builder("SimpleFlowTest", UUID.randomUUID(), String.class.getName()) //
+				.add(entryToInitCall) //DP_
 				.add(ConditionalFlowCtrl.builder("CompleteData") //
-						.conditional(mustCompleteCond, initToCompleteCall)
+						.conditional(mustMutateCond, initToMutateCall)
 						.fallback(initToKeepAsIsCall)) //
-				.add(completeToExitCall)
+				.add(mutateToExitCall)
 				.build();
 
 		Files.createDirectories(targetPathSrc);
 
 		// Generate the procedural flow
-		new FlowToProceduralJavaVisitor(flow, SIMPLE_SERVICE_PKG,
+		new FlowToProceduralJavaVisitor(flow, SIMPLE_EXAMPLE_PACKAGE,
 				Template.from("templates/flow.template").withGenerationMetadata(generationMetadata)).process()
 				.writeToFolder(targetPathSrc);
 

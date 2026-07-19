@@ -9,10 +9,10 @@ import java.util.Set;
 
 import ch.scaille.dataflowmgr.generator.writers.AbstractFlowVisitor;
 import ch.scaille.dataflowmgr.generator.writers.FlowGeneratorVisitor;
-import ch.scaille.dataflowmgr.model.Binding;
+import ch.scaille.dataflowmgr.model.ProcessorCall;
+import ch.scaille.dataflowmgr.model.Processor;
 import ch.scaille.dataflowmgr.model.ExternalAdapter;
 import ch.scaille.dataflowmgr.model.Flow;
-import ch.scaille.dataflowmgr.model.Processor;
 import ch.scaille.dataflowmgr.model.WithId;
 import ch.scaille.generators.util.DotFileGenerator;
 
@@ -69,7 +69,7 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 	}
 
 	@Override
-	protected void process(final BindingContext context) {
+	protected void process(final CallContext context) {
 		// Create data point
 		if (!graph.nodes.containsKey(context.outputDataPoint)) {
 			addDataPoint(context.outputDataPoint);
@@ -99,8 +99,8 @@ public class FlowToDotVisitor extends AbstractFlowVisitor {
 		return nodeName;
 	}
 
-	String addProcessor(final Binding binding, final Processor processor) {
-		final var nodeName = toVar(binding) + "_" + processor.getCall().replace('.', '_');
+	String addProcessor(final Processor processorCall, final ProcessorCall processor) {
+		final var nodeName = toVar(processorCall) + "_" + processor.getCall().replace('.', '_');
 		graph.nodes.put(nodeName, new Node(nodeName, processor.getCall(), null, DotFileGenerator.Shape.ELLIPSE));
 		return nodeName;
 	}

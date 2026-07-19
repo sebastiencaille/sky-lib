@@ -3,11 +3,12 @@ package ch.scaille.dataflowmgr.generator.writers.dot;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import ch.scaille.dataflowmgr.generator.writers.AbstractFlowVisitor.BindingContext;
+import ch.scaille.dataflowmgr.generator.writers.AbstractFlowVisitor.CallContext;
 import ch.scaille.dataflowmgr.generator.writers.dot.FlowToDotVisitor.Graph;
 import ch.scaille.dataflowmgr.generator.writers.dot.FlowToDotVisitor.Link;
 import ch.scaille.dataflowmgr.generator.writers.dot.FlowToDotVisitor.Node;
-import ch.scaille.dataflowmgr.model.CustomCall;
+import ch.scaille.dataflowmgr.model.Call;
+import ch.scaille.dataflowmgr.model.GenericCall;
 import ch.scaille.dataflowmgr.model.flowctrl.ConditionalFlowCtrl;
 import ch.scaille.generators.util.DotFileGenerator;
 
@@ -18,14 +19,14 @@ public class ConditionalFlowCtrlGenerator extends AbstractDotFlowGenerator {
 	}
 
 	@Override
-	public boolean matches(BindingContext context) {
-		return ConditionalFlowCtrl.getCondition(context.binding.getRules()).isPresent();
+	public boolean matches(CallContext context) {
+		return ConditionalFlowCtrl.getCondition(context.processor.getRules()).isPresent();
 	}
 
 	@Override
-	public void generate(BaseGenContext<String> genContext, BindingContext context) {
+	public void generate(BaseGenContext<String> genContext, CallContext context) {
 
-		final var conditionalCtrl = ConditionalFlowCtrl.getCondition(context.binding.getRules())
+		final var conditionalCtrl = ConditionalFlowCtrl.getCondition(context.processor.getRules())
 				.orElseThrow(() -> new IllegalStateException("Unable to find conditional flow"));
 
 		final var conditionNodeName = getConditionGroupNodeName(conditionalCtrl);
@@ -36,9 +37,9 @@ public class ConditionalFlowCtrlGenerator extends AbstractDotFlowGenerator {
 		var nextLink = conditionNodeName;
 
 		final var activators = new ArrayList<>(
-				ConditionalFlowCtrl.getActivators(context.binding.getRules()).toList());
+				ConditionalFlowCtrl.getActivators(context.processor.getRules()).toList());
 		if (activators.isEmpty()) {
-			activators.add(new CustomCall("Default", "Default", new LinkedHashMap<>(), Boolean.TYPE.toString()));
+			activators.add(new GenericCall("Default", "Default", new LinkedHashMap<>(), Boolean.TYPE.toString()));
 		}
 		for (final var activator : activators) {
 			final var activatorNode = addCondition(activator);
@@ -48,14 +49,14 @@ public class ConditionalFlowCtrlGenerator extends AbstractDotFlowGenerator {
 			nextLink = activatorNode;
 		}
 		genContext.setLocalContext(nextLink);
-		genContext.next(context);
+		genContext.run(context);
 	}
 
 	private String getConditionGroupNodeName(final ConditionalFlowCtrl group) {
 		return "condGrp_" + visitor.toVar(group);
 	}
 
-	private String getConditionNodeName(final CustomCall cond) {
+	private String getConditionNodeName(final Call cond) {
 		return "cond_" + visitor.toVar(cond);
 	}
 
@@ -65,7 +66,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractDotFlowGenerator {
 		return condGroupNode;
 	}
 
-	private String addCondition(final CustomCall condition) {
+	private String addCondition(final Call condition) {
 		final var condNode = getConditionNodeName(condition);
 		graph.nodes().put(condNode, new Node(condNode, condition.getCall(), "$: true", DotFileGenerator.Shape.OCTAGON));
 		return condNode;

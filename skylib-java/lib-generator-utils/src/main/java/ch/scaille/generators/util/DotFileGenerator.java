@@ -43,7 +43,7 @@ public class DotFileGenerator<E extends Exception> extends TextFormatter<DotFile
 		} else {
 			extra = "";
 		}
-		appendIndented(String.format("\"%s\" [ label=\"%s\", shape=\"%s\" %s ];", escape(name), escape(label),
+		appendIndented("\"%s\" [ label=\"%s\", shape=\"%s\" %s ];".formatted(escape(name), escape(label),
 				shape.name().toLowerCase(), extra)).eol();
 		return this;
 	}
@@ -52,11 +52,11 @@ public class DotFileGenerator<E extends Exception> extends TextFormatter<DotFile
 									   final String extra) throws E {
 		final String formatted;
 		if (label == null || label.isEmpty()) {
-			formatted = String.format("\"%s\" -> \"%s\" [ %s ];", from, to, extra);
+			formatted = "\"%s\" -> \"%s\" [ %s ];".formatted(from, to, extra);
 		} else if (isXLabel) {
-			formatted = String.format("\"%s\" -> \"%s\" [ xlabel=\"%s\" %s ];", from, to, escape(label), extra);
+			formatted = "\"%s\" -> \"%s\" [ xlabel=\"%s\" %s ];".formatted(from, to, escape(label), extra);
 		} else {
-			formatted = String.format("\"%s\" -> \"%s\" [ label=\"%s\" %s ];", from, to, escape(label), extra);
+			formatted = "\"%s\" -> \"%s\" [ label=\"%s\" %s ];".formatted(from, to, escape(label), extra);
 		}
 		appendIndented(formatted).eol();
 		return this;

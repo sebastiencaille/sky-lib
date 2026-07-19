@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 ${imports}
 
-class ${flow.name} extends AbstractFlow {
+class ${flow.name} extends AbstractSimpleFlow {
 
 	public void execute(${flow.input} inputDataPoint) {
 		${flow.code}

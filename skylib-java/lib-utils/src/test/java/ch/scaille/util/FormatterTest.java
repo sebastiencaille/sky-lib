@@ -18,13 +18,13 @@ class FormatterTest {
 	private static class ExceptionOutput implements TextFormatter.IOutput<IOException> {
 
 		@Override
-		public void append(String str) throws IOException {
+		public TextFormatter.IOutput<IOException> append(String str) throws IOException {
 			throw new IOException("Expected");
 		}
 
 		@Override
-		public void append(char c) {
-			// noop
+		public TextFormatter.IOutput<IOException> append(char c) {
+			return this;
 		}
 
 	}
@@ -40,9 +40,9 @@ class FormatterTest {
 		final var  output = new StringListOutput();
 		final var tf = new SimpleTextFormatter<>(output);
 		tf.setIndentationManager(new ArrowIndentationManager());
-		tf.appendIndentedLine("Hello");
-		tf.indented(t -> t.appendIndentedLine("World"));
-		tf.appendIndentedLine("Done");
+		tf.appendIndentedLine("Hello")
+			.indented(t -> t.appendIndentedLine("World"))
+			.appendIndentedLine("Done");
 		assertEquals(List.of("--> Hello", "    World", "--> Done"), output.getLines());
 	}
 

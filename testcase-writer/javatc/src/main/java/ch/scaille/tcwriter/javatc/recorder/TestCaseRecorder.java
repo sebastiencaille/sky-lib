@@ -3,8 +3,7 @@ package ch.scaille.tcwriter.javatc.recorder;
 import static ch.scaille.tcwriter.model.dictionary.TestParameterFactory.simpleType;
 
 import java.lang.reflect.Method;
-import java.time.Instant;
-import java.time.ZoneId;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -180,8 +179,8 @@ public class TestCaseRecorder implements ITestCaseRecorder {
     @Override
     public TestCase buildTestCase(final String testClassName) {
         final var testCase = new TestCase(testClassName, tcDictionary);
-        testCase.getMetadata().setDescription(String.format("%s: execution at %s", testClassName,
-               EXECUTION_FORMATTER.format(Instant.now().atZone(ZoneId.systemDefault()))));
+        testCase.getMetadata().setDescription("%s: execution at %s".formatted(testClassName,
+               EXECUTION_FORMATTER.format(LocalDateTime.now())));
 
         for (var actor: actors.values()) {
             var description = RecorderTestActors.getDescriptions().getOrDefault(actor.getId(), actor.getId());

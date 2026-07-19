@@ -3,7 +3,7 @@ package ch.scaille.dataflowmgr.generator.writers;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.scaille.dataflowmgr.generator.writers.AbstractFlowVisitor.BindingContext;
+import ch.scaille.dataflowmgr.generator.writers.AbstractFlowVisitor.CallContext;
 import ch.scaille.dataflowmgr.generator.writers.IFlowGenerator.BaseGenContext;
 
 public class FlowGeneratorVisitor<T> {
@@ -14,11 +14,11 @@ public class FlowGeneratorVisitor<T> {
 		flowGenerators.add(flowCtrl);
 	}
 
-	public void generateFlow(final BindingContext context, T genContext) {
-		new BaseGenContext<>(getFlowGenerators(context), genContext).next(context);
+	public void generateFlow(final CallContext context, T genContext) {
+		new BaseGenContext<>(getFlowGenerators(context), genContext).run(context);
 	}
 
-	private List<IFlowGenerator<T>> getFlowGenerators(BindingContext context) {
+	private List<IFlowGenerator<T>> getFlowGenerators(CallContext context) {
 		return flowGenerators.stream().filter(g -> g.matches(context)).toList();
 	}
 

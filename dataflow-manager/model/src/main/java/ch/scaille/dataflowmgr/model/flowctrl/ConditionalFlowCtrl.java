@@ -10,10 +10,11 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import ch.scaille.dataflowmgr.model.Binding;
-import ch.scaille.dataflowmgr.model.BindingRule;
-import ch.scaille.dataflowmgr.model.BindingRule.Type;
-import ch.scaille.dataflowmgr.model.CustomCall;
+import ch.scaille.dataflowmgr.model.Call;
+import ch.scaille.dataflowmgr.model.Processor;
+import ch.scaille.dataflowmgr.model.CallRule;
+import ch.scaille.dataflowmgr.model.CallRule.Type;
+import ch.scaille.dataflowmgr.model.GenericCall;
 import ch.scaille.dataflowmgr.model.IFlowCheck;
 import ch.scaille.dataflowmgr.model.WithId;
 
@@ -21,7 +22,7 @@ public class ConditionalFlowCtrl extends WithId implements IFlowCheck {
 
 	public static class Builder {
 
-		private final List<Binding.Builder> bindings = new ArrayList<>();
+		private final List<Processor.Builder> calls = new ArrayList<>();
 
 		private String check;
 
@@ -42,24 +43,33 @@ public class ConditionalFlowCtrl extends WithId implements IFlowCheck {
 			return this;
 		}
 
-		public Builder conditional(CustomCall condition, final Binding.Builder binding) {
-			bindings.add(binding.addRule(activator(condition)));
+		public Builder conditional(GenericCall condition, final Processor.Builder call) {
+			calls.add(call.addRule(activator(condition)));
 			return this;
 		}
 
-		public Builder fallback(final Binding.Builder binding) {
-			if (getActivators(binding.getRules()).findAny().isPresent() && getDefaultBinding().isPresent()) {
-				throw new IllegalStateException("A default binding is already present");
+		public Builder fallback(final Processor.Builder call) {
+			if (getActivators(call.getRules()).findAny().isPresent() && findDefaultCall().isPresent()) {
+				throw new IllegalStateException("A default call is already present");
 			}
-			bindings.add(binding);
+			calls.add(call);
 			return this;
 		}
 
-		public Optional<Binding.Builder> getDefaultBinding() {
-			return bindings.stream().filter(b -> getActivators(b.getRules()).findAny().isEmpty()).findAny();
+		public Processor.Builder getDefaultCall() {
+			return findDefaultCall()
+					.orElseGet(() -> {
+						final var firstCall = calls.getFirst().build();
+						return new Processor.Builder(firstCall.fromDataPoint(), null).as(firstCall.toDataPoint());
+					});
+		}
+
+		private Optional<Processor.Builder> findDefaultCall() {
+			return calls.stream().filter(b -> getActivators(b.getRules()).findAny().isEmpty()).findAny();
 		}
 
 		public ConditionalFlowCtrl build() {
+			// TODO: check that all "from"" are the same
 			return new ConditionalFlowCtrl(this);
 		}
 	}
@@ -70,32 +80,32 @@ public class ConditionalFlowCtrl extends WithId implements IFlowCheck {
 
 	private final Builder config;
 
-	private final List<Binding> bindings = new ArrayList<>();
-	private final Binding defaultBinding;
+	private final List<Processor> processorCalls = new ArrayList<>();
+	private final Processor defaultProcessorCall;
 
 	public ConditionalFlowCtrl(final Builder configuration) {
 		super(UUID.randomUUID());
 		this.config = configuration;
 
-		final var defaultBindingBuilder = config.getDefaultBinding();
-		bindings.addAll(config.bindings.stream().filter(notEq(defaultBindingBuilder.orElse(null)))
+		final var defaultCallBuilder = config.getDefaultCall();
+		processorCalls.addAll(config.calls.stream().filter(notEq(defaultCallBuilder))
 				.map(b -> b.addRule(condition(this)).build()).toList());
 
-		this.defaultBinding = defaultBindingBuilder.map(b -> b.addRule(condition(this))
-				.addRules(bindings.stream().map(ConditionalFlowCtrl::exclusion).collect(toSet())).build())
-				.orElse(null);
-		if (this.defaultBinding != null) {
-			bindings.add(this.defaultBinding);
-		}
+		this.defaultProcessorCall = defaultCallBuilder.addRule(condition(this))
+						.addRules(processorCalls.stream()
+								.map(ConditionalFlowCtrl::exclusion)
+								.collect(toSet()))
+						.build();
+		processorCalls.add(this.defaultProcessorCall);
 
 	}
 
-	public List<Binding> getBindings() {
-		return bindings;
+	public List<Processor> getCalls() {
+		return processorCalls;
 	}
 
-	public Optional<Binding> getDefaultBinding() {
-		return Optional.ofNullable(defaultBinding);
+	public Processor getDefaultCall() {
+		return defaultProcessorCall;
 	}
 
 	@Override
@@ -111,32 +121,28 @@ public class ConditionalFlowCtrl extends WithId implements IFlowCheck {
 		return config.exclusive;
 	}
 
-	public static BindingRule activator(final CustomCall condition) {
-		return new BindingRule(Type.ACTIVATION, condition);
+	public static CallRule activator(final GenericCall condition) {
+		return new CallRule(Type.ACTIVATION, condition);
 	}
 
-	public static CustomCall activator(final BindingRule rule) {
-		return rule.get(CustomCall.class);
+	public static Stream<Call> getActivators(final Collection<CallRule> rules) {
+		return CallRule.getAll(rules, Type.ACTIVATION, Call.class);
 	}
 
-	public static Stream<CustomCall> getActivators(final Collection<BindingRule> rules) {
-		return BindingRule.getAll(rules, Type.ACTIVATION, CustomCall.class);
+	public static CallRule exclusion(final Processor exclusion) {
+		return new CallRule(Type.EXCLUSION, exclusion);
 	}
 
-	public static BindingRule exclusion(final Binding exclusion) {
-		return new BindingRule(Type.EXCLUSION, exclusion);
+	public static <T> Stream<T> getExclusions(Collection<CallRule> rules, Class<T> clazz) {
+		return CallRule.getAll(rules, CallRule.Type.EXCLUSION, clazz);
 	}
 
-	public static Stream<Binding> getExclusions(Collection<BindingRule> rules) {
-		return BindingRule.getAll(rules, BindingRule.Type.EXCLUSION, Binding.class);
+	public static CallRule condition(final ConditionalFlowCtrl condition) {
+		return new CallRule(Type.CONDITIONAL, condition);
 	}
 
-	public static BindingRule condition(final ConditionalFlowCtrl condition) {
-		return new BindingRule(Type.CONDITIONAL, condition);
-	}
-
-	public static Optional<ConditionalFlowCtrl> getCondition(final Collection<BindingRule> rules) {
-		return BindingRule.getAll(rules, Type.CONDITIONAL, ConditionalFlowCtrl.class).findFirst();
+	public static Optional<ConditionalFlowCtrl> getCondition(final Collection<CallRule> rules) {
+		return CallRule.getAll(rules, Type.CONDITIONAL, ConditionalFlowCtrl.class).findFirst();
 	}
 
 }

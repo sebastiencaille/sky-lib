@@ -11,9 +11,6 @@
 	</parent>
 	<artifactId>data-flow-model</artifactId>
 	<name>data-flow-model</name>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
 
 	<dependencies>
 		<dependency>

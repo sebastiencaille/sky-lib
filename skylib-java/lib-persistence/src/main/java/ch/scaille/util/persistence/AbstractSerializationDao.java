@@ -49,7 +49,7 @@ public abstract class AbstractSerializationDao<T> implements IDao<T> {
 	}
 
 	protected IllegalStateException unableToIdentifyException(String identifier, String storageLocator, String extra) {
-		return new IllegalStateException(String.format( "Unable to identify meta-data of %s / %s (%s)", identifier, storageLocator, extra));
+		return new IllegalStateException("Unable to identify meta-data of %s / %s (%s)".formatted(identifier, storageLocator, extra));
 	}
 
 	/**

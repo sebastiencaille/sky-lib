@@ -61,6 +61,7 @@ public class JavaToDictionary extends AbstractGenerator<Dictionary> {
                     .map(annotation2Handlers::get)
                     .forEach(a -> a.accept(dictionary, clazz));
         }
+        System.out.println(dictionary);
         return dictionary;
     }
 

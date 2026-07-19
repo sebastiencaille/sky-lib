@@ -17,14 +17,16 @@ public interface BeanAccess {
 		public String getFieldCreation(final AttributeProcessor attributeProcessor) {
 			final var attr = attributeProcessor.modelAttribute;
 
-			String setter;
+			final String setter;
 			if (!attributeProcessor.modelAttribute.isReadOnly()) {
 				setter = attr.getDeclaringType().getSimpleName() + "::" + attributeProcessor.setter();
 			} else {
 				setter = "null";
 			}
-			return String.format("Persisters.persister(%s::%s, %s)", attr.getDeclaringType().getSimpleName(),
-					attributeProcessor.getter(), setter);
+			return "Persisters.persister(%s::%s, %s)"
+					.formatted(
+						attr.getDeclaringType().getSimpleName(),
+						attributeProcessor.getter(), setter);
 		}
 
 		@Override

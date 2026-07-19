@@ -34,7 +34,7 @@ public abstract class AbstractClassToDictionary {
 
 	protected LinkedHashMap<String, String> parameters(final Method m) {
 		return Arrays.stream(m.getParameters())
-				.collect(toMap(this::methodParamName, this::methodParamType, (s1, s2) -> s1, LinkedHashMap::new));
+				.collect(toMap(this::methodParamName, this::methodParamType, (s1, _) -> s1, LinkedHashMap::new));
 	}
 
 	public Stream<Method> methodsOf(final Class<?> clazz) {

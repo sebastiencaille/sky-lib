@@ -5,7 +5,7 @@ import ch.scaille.dataflowmgr.examples.simple.FlowReport;
 import io.reactivex.rxjava3.core.Maybe;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-import java.util.Set;
+import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

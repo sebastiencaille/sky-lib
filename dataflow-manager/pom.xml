@@ -21,13 +21,15 @@
 	<modules>
 		<module>model</module>
 		<module>generator</module>
+		<module>runtime</module>
 		<module>examples</module>
 		<module>annotations</module>
 	</modules>
-
 	<properties>
 		<data-flow-manager-version>${revision}</data-flow-manager-version>
 		<java.version>25</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<rxjava3.version>3.1.12</rxjava3.version>
 	</properties>
 
 	<build>
@@ -59,6 +61,11 @@
 			<dependency>
 				<groupId>ch.scaille.dataflowmgr</groupId>
 				<artifactId>data-flow-annotations</artifactId>
+				<version>${data-flow-manager-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille.dataflowmgr</groupId>
+				<artifactId>data-flow-runtime</artifactId>
 				<version>${data-flow-manager-version}</version>
 			</dependency>
 		</dependencies>

@@ -1,5 +1,6 @@
 package ch.scaille.dataflowmgr.generator.writers.javaproc;
 
+import static ch.scaille.dataflowmgr.generator.writers.AbstractJavaFlowVisitor.toVariable;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toSet;
 
@@ -32,7 +33,7 @@ public class ConditionalFlowCtrlGenerator extends AbstractFlowGenerator {
 	 *
      */
 	private String activatedVarNameOf(final Processor processorCall) {
-		return "activated_" + visitor.toVariable(processorCall);
+		return "activated_" + toVariable(processorCall);
 	}
 
 	@Override

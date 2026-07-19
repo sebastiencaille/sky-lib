@@ -12,7 +12,7 @@ import ch.scaille.util.helpers.JavaExt;
 import lombok.Getter;
 
 
-public class CodeGeneratorParams {
+public class CodeGeneratorParams implements ICodeGeneratorParams{
 
 	@Getter
     @Parameter(names = { "-cp", "--cpFolder" }, required = true)
@@ -37,11 +37,11 @@ public class CodeGeneratorParams {
 		return params;
 	}
 
+	@Override
     public String getTargetFolder() {
         // by default, store the file in the source folder so changes can be audited
         return Objects.requireNonNullElse(targetFolder, classPathFolder);
     }
-
 
 	public static Path mavenTargetFolderOf(Class<?> clazz) {
 		return JavaExt.locationOf(clazz).resolve("..");

@@ -60,7 +60,7 @@ public class ClassFinder {
 	public static class URLClassFinder extends ClassFinder implements AutoCloseable {
 
 		protected URLClassFinder(URL[] uris) {
-			super(new URLClassLoader(uris));
+			super(new URLClassLoader(uris, Thread.currentThread().getContextClassLoader()));
 		}
 
 		@Override
@@ -192,6 +192,7 @@ public class ClassFinder {
 
 		@Override
 		public Stream<Class<?>> scan(@Nullable URL resource, String aPackage) throws IOException {
+			System.out.println("Scanning " + resource);
 			if (resource == null) {
 				return Stream.empty();
 			}
@@ -304,9 +305,9 @@ public class ClassFinder {
 	}
 
 	public Stream<Class<?>> scan() {
-		return packagesToScan.stream().map(p -> p.replace(".", "/")). //
-				flatMap(uncheckedF(this::scan)). //
-				filter(Objects::nonNull).distinct();
+		return packagesToScan.stream().map(p -> p.replace(".", "/"))
+			.flatMap(uncheckedF(this::scan))
+			.filter(Objects::nonNull).distinct();
 	}
 
 }

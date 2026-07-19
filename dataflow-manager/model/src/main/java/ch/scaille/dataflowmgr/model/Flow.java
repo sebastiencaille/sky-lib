@@ -51,7 +51,7 @@ public class Flow extends WithId {
 			final var defaultCall = caseControl.getDefaultCall();
 			if (defaultCall.getCall() != null) {
 				// make default depend on all other calls
-				final var defaultCallDeps = dependencies.computeIfAbsent(defaultCall, b -> new HashSet<>());
+				final var defaultCallDeps = dependencies.computeIfAbsent(defaultCall, _ -> new HashSet<>());
 				defaultCallDeps.addAll(caseControl.getCalls());
 				defaultCallDeps.remove(defaultCall);
 			}

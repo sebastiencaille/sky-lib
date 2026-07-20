@@ -1,0 +1,48 @@
+package ch.scaille.gui.maven;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+
+import org.apache.maven.api.di.Provides;
+import org.apache.maven.api.plugin.testing.InjectMojo;
+import org.apache.maven.api.plugin.testing.MojoParameter;
+import org.apache.maven.api.plugin.testing.MojoTest;
+import org.apache.maven.model.Build;
+import org.apache.maven.model.Resource;
+import org.apache.maven.project.MavenProject;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+@MojoTest
+class LibGuiGeneratorMojoTest {
+
+    private static final String SRC_TEST_RESOURCES_UNIT = "src/test/resources/unit";
+    private static final String BUILD_DIR = "target";
+
+    @Provides
+    private MavenProject project() {
+        final var mock = mock(MavenProject.class);
+        final var unitTestResource = new Resource();
+        unitTestResource.setDirectory(SRC_TEST_RESOURCES_UNIT);
+        when(mock.getTestResources()).thenReturn(List.of(unitTestResource));
+        final var mockBuild = mock(Build.class);
+        when(mockBuild.getDirectory()).thenReturn(BUILD_DIR);
+        when(mock.getBuild()).thenReturn(mockBuild);
+        return mock;
+    }
+
+//    @Test
+    @InjectMojo(goal = "generateTestCases", pom = SRC_TEST_RESOURCES_UNIT + "/nominal.xml")
+    @MojoParameter(name = "dictionaryFolder", value = SRC_TEST_RESOURCES_UNIT + "/dictionaries")
+    @MojoParameter(name = "templatesFolder", value = SRC_TEST_RESOURCES_UNIT + "/templates")
+    void testGeneration(LibGuiGeneratorMojo myMojo) {
+        assertNotNull(myMojo);
+        myMojo.execute();
+        Assertions.assertTrue(Files.exists(Paths.get("target/generated-test-sources/tcwriter/ch/scaille/tcwriter/examples/GeneratedTest.java")));
+    }
+}

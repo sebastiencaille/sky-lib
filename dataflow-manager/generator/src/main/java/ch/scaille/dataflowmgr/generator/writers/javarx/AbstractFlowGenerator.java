@@ -52,7 +52,7 @@ public abstract class AbstractFlowGenerator implements IFlowGenerator<AbstractFl
 
 		flowExecutionBuilder.append(variableName).append(" = new ")
 				.appendMethodCall(null, "CallExecution<>",
-					'"' + description + '"', "Set.of(\"" + callType + "\")", conditionFactory,
+					'"' + description + '"', "Map.of(\"TYPE\", \"" + callType + "\")", conditionFactory,
 					buildMethodCall(context, call, returnType)).eos();
 
 		if (defaultValue != null) {

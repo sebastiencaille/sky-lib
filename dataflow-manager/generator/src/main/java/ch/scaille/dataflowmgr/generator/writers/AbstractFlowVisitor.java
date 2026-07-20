@@ -117,7 +117,7 @@ public abstract class AbstractFlowVisitor {
 			final var context = new CallContext(call, availableDataPoints.get(call.fromDataPoint()));
 			processOrder.add(context);
 			for (final var dep : flow.getAllDependencies(call)) {
-				reverseDeps.computeIfAbsent(dep, v -> new ArrayList<>()).add(context.processor);
+				reverseDeps.computeIfAbsent(dep, _ -> new ArrayList<>()).add(context.processor);
 			}
 
 			newlyTriggeredCalls.add(call);

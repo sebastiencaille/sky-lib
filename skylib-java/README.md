@@ -1,6 +1,6 @@
 # MVC POC
 
-The model/ui related code is located in the project [[lib-gui](lib-gui) | [lib-gui-examples](lib-gui-examples)].
+The model/ui related code is located in the project [[lib-gui](gui/lib-gui) | [lib-gui-examples](gui/lib-gui-examples)].
 
 The testing related code is located in the project [[lib-testing](lib-testing)].
 
@@ -30,7 +30,7 @@ boolean clicked = element.report("Click failed").unless().clicked();
 * Properties can be derived from other properties (through records or a cascade of lambda expressions).
 * The MVC model can be generated from the application model
 
-Complete example: [[Screenshot](../screenshots/MVC_Full_TC.png)][[Model](lib-gui-examples/src/main/java/ch/scaille/example/gui/controller/impl/ControllerExampleModel.java)] [[View](lib-gui-examples/src/main/java/ch/scaille/example/gui/controller/impl/ControllerExampleView.java)] 
+Complete example: [[Screenshot](../screenshots/MVC_Full_TC.png)][[Model](gui/lib-gui-examples/src/main/java/ch/scaille/example/gui/controller/impl/ControllerExampleModel.java)] [[View](gui/lib-gui-examples/src/main/java/ch/scaille/example/gui/controller/impl/ControllerExampleView.java)] 
 
 **Basic Examples**  
 (to display a boolean property as a checkbox and as a String)
@@ -103,7 +103,7 @@ dynamicListSelectionProperty.bind(selection(dynamicListEditor)).addDependency(de
 * startEditingValue(editedValue) must be called before editing the value (editedValue only containing the values required for sorting)
 * stopEditingValue() must be called to validate the edition, move the edit value at the right place, and propagate the change
 
-Example: [[Code](lib-gui/src/test/java/ch/scaille/gui/model/ListModelBasicTest.java)] [[Filters Example](lib-gui/src/test/java/ch/scaille/gui/model/FilterObjectModelTest.java)]
+Example: [[Code](gui/lib-gui/src/test/java/ch/scaille/gui/model/ListModelBasicTest.java)] [[Filters Example](gui/lib-gui/src/test/java/ch/scaille/gui/model/FilterObjectModelTest.java)]
 
 ```java
 IListView<TestObject> VIEW = ListViews.sorted((o1, o2) -> o1.val - o2.val);
@@ -131,7 +131,7 @@ try (IEdition e = model.startEditingValue(toMove)) {
 
 checkModel(childModel, 1, 2, 3);
 ```
-It is possible to control the filter using the MVC concept  [[Code](lib-gui-examples/src/main/java/ch/scaille/example/gui/model/impl/TableModelExampleView.java)]
+It is possible to control the filter using the MVC concept  [[Code](gui/lib-gui-examples/src/main/java/ch/scaille/example/gui/model/impl/TableModelExampleView.java)]
 
 ```java
 final DynamicView listDynamicView = new DynamicView();
@@ -150,7 +150,7 @@ ListModel<TestObject> filteredModel = new ChildListModel<>(model, listDynamicVie
 * The model is a ListModel
 * The column can have a fixed size, or adapt it's size according to the table's size
  
-Model Example: [[Model](lib-gui-examples/src/main/java/ch/scaille/example/gui/TestObjectTableModel.java)] [[View](lib-gui-examples/src/main/java/ch/scaille/example/gui/model/impl/TableModelExampleView.java)]
+Model Example: [[Model](gui/lib-gui-examples/src/main/java/ch/scaille/example/gui/TestObjectTableModel.java)] [[View](gui/lib-gui-examples/src/main/java/ch/scaille/example/gui/model/impl/TableModelExampleView.java)]
 
 ```java
 import java.util.Objects;
@@ -191,7 +191,7 @@ The editor is made of
 * An adapter that binds the widget and the adapter 
 
 [[Screenshot](../screenshots/Generic_Editor.png)]
-[[Example](lib-gui-examples/src/main/java/ch/scaille/example/gui/tools/GenericEditorLauncher.java)]
+[[Example](gui/lib-gui-examples/src/main/java/ch/scaille/example/gui/tools/GenericEditorLauncher.java)]
 
 ```java
 final SwingGenericEditorDialog view = new SwingGenericEditorDialog(null, "Test",

@@ -24,7 +24,7 @@
 		<jackson-bom.version>3.2.1</jackson-bom.version>
 		<guava.version>33.6.0-jre</guava.version>
 		<logback.version>1.5.38</logback.version>
-		<mapstruct.version>1.7.0.Beta1</mapstruct.version>
+		<mapstruct.version>1.7.0.Beta2</mapstruct.version>
 		<!--hibernate.version>7.1.7.Final</hibernate.version-->
 		<hibernate-validator.version>9.1.2.Final</hibernate-validator.version>
 
@@ -46,7 +46,7 @@
 		<maven-install-plugin.version>4.0.0-beta-2</maven-install-plugin.version>
 		<build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
 		<maven-assembly-plugin.version>3.8.0</maven-assembly-plugin.version>
-		<maven-help-plugin.version>3.5.1</maven-help-plugin.version>
+		<maven-help-plugin.version>3.5.2</maven-help-plugin.version>
 		<maven-resources-plugin.version>3.5.0</maven-resources-plugin.version>
 		<maven-source-plugin.version>4.0.0-beta-1</maven-source-plugin.version>
 		<maven-deploy-plugin.version>4.0.0-beta-2</maven-deploy-plugin.version>
@@ -66,7 +66,7 @@
 		<sonar-maven-plugin.version>5.7.0.6970</sonar-maven-plugin.version>
 
 		<maven-exec-plugin.version>3.6.3</maven-exec-plugin.version>
-		<openapi-generator-maven-plugin.version>7.23.0</openapi-generator-maven-plugin.version>
+		<openapi-generator-maven-plugin.version>7.24.0</openapi-generator-maven-plugin.version>
 		<jacoco-maven-plugin.version>0.8.15</jacoco-maven-plugin.version>
 
 		<argLine />

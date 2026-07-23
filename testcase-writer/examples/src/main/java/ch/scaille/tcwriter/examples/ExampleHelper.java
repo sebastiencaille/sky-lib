@@ -15,7 +15,7 @@ import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.tcwriter.javatc.generators.JavaToDictionary;
 import ch.scaille.tcwriter.javatc.testexec.JUnitTestExecutor;
 import ch.scaille.tcwriter.javatc.recorder.TestCaseRecorder;
-import ch.scaille.tcwriter.javatc.testexec.recorder.TestCaseRecorderAspect;
+import ch.scaille.tcwriter.javatc.recorder.TestCaseRecorderAspect;
 import ch.scaille.tcwriter.model.config.TCConfig;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.testcase.TestCase;

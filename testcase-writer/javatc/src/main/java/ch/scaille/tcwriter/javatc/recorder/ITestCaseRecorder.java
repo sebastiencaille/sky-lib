@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.javatc.testexec.recorder;
+package ch.scaille.tcwriter.javatc.recorder;
 
 import ch.scaille.tcwriter.model.testcase.TestCase;
 

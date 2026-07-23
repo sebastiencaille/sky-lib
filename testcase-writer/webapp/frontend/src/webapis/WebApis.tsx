@@ -49,7 +49,7 @@ async function call(url: string, init?: RequestInit): Promise<any> {
 				if (result.headers.get('Content-Type') === "application/json") {
 					return result.json()
 				}
-				return Promise.resolve({});
+				return result.text();
 			},
 			reason => {
 				let msg;
@@ -137,14 +137,8 @@ async function exportCurrentTestCase(format: ExportType): Promise<string> {
 		{
 			headers: headers()
 		})
-		.then(async r => {
-			if (r.headers.get("Content-Type")?.startsWith("application/json")) {
-				const r_1 = await r.json();
-				return (r_1 as Array<string>).join('\n');
-			} else {
-				return r.text();
-			}
-		});
+		.then(r => typeof r === 'string' ? r : r.join('\n')
+		);
 }
 
 const WebApis = {

@@ -14,4 +14,5 @@ module testcase.writer.gui {
     requires lib.utils;
     requires jcommander;
     requires com.google.common;
+	requires testcase.writer.api;
 }

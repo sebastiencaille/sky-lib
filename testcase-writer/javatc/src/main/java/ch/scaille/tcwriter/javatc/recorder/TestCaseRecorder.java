@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import ch.scaille.tcwriter.javatc.testexec.recorder.ITestCaseRecorder;
 import ch.scaille.tcwriter.model.Helper;
 import ch.scaille.tcwriter.model.TestObjectDescription;
 import ch.scaille.tcwriter.model.dictionary.ParameterNature;

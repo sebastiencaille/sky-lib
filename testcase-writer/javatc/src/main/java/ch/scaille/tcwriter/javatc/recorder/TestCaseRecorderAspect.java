@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.javatc.testexec.recorder;
+package ch.scaille.tcwriter.javatc.recorder;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

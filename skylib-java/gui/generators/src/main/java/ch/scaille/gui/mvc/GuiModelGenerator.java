@@ -40,6 +40,7 @@ public class GuiModelGenerator {
 					.scan()
 					.toList();
 			log.info(() -> "Processing classes: " + classes);
+			log.info(() -> "Forced target package: " + params.getTargetPackage());
 
 			final var modelClassProcessor = new ModelClassProcessor(classFinder, params.getTargetPackage(), generationMetadata);
 			for (final var clazz : classes) {

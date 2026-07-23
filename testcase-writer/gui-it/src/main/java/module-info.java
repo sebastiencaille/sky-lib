@@ -12,5 +12,6 @@ module testcase.writer.gui.it {
 	requires testcase.writer.gui;
 	requires java.desktop;
 	requires org.junit.jupiter.api;
+	requires testcase.writer.api;
 	
 }

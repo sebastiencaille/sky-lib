@@ -6,7 +6,7 @@ import ch.scaille.tcwriter.examples.websearch.dto.MatcherDto;
 import ch.scaille.tcwriter.examples.websearch.selectors.EngineSearchSelector;
 import ch.scaille.tcwriter.persistence.factory.DaoConfigs;
 import ch.scaille.tcwriter.javatc.generators.JavaToDictionary;
-import ch.scaille.tcwriter.javatc.testexec.recorder.TestCaseRecorderAspect;
+import ch.scaille.tcwriter.javatc.recorder.TestCaseRecorderAspect;
 import ch.scaille.testing.testpilot.jupiter.DisabledIfHeadless;
 import org.junit.jupiter.api.Test;
 

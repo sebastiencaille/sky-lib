@@ -2,6 +2,7 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 module testcase.writer.javatc {
+
 	exports ch.scaille.tcwriter.persistence.testexec;
     exports ch.scaille.tcwriter.javatc.testexec;
     exports ch.scaille.tcwriter.javatc.generators;
@@ -9,8 +10,9 @@ module testcase.writer.javatc {
     exports ch.scaille.tcwriter.javatc.visitors;
 
     requires transitive testcase.writer.core;
-    requires transitive testcase.writer.javatc.client;
-    
+    requires transitive testcase.writer.api;
+    requires transitive testcase.writer.model;
+
     requires transitive lib.generator.utils;
 
 	requires org.aspectj.weaver;
@@ -20,5 +22,5 @@ module testcase.writer.javatc {
     
     requires com.google.common;
 	requires jcommander;
-    
+
 }

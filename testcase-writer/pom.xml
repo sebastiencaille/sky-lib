@@ -76,6 +76,10 @@
 						<aspectLibraries>
 							<aspectLibrary>
 								<groupId>ch.scaille.tcwriter</groupId>
+								<artifactId>testcase-writer-javatc</artifactId>
+							</aspectLibrary>
+							<aspectLibrary>
+								<groupId>ch.scaille.tcwriter</groupId>
 								<artifactId>testcase-writer-javatc-client</artifactId>
 							</aspectLibrary>
 						</aspectLibraries>
@@ -129,6 +133,13 @@
 				<groupId>ch.scaille.tcwriter</groupId>
 				<artifactId>testcase-writer-javatc-client</artifactId>
 				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille.tcwriter</groupId>
+				<artifactId>testcase-writer-javatc-client</artifactId>
+				<classifier>fatjar</classifier>
+				<version>${revision}</version>
+				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>ch.scaille.tcwriter</groupId>

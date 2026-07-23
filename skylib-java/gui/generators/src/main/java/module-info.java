@@ -8,5 +8,5 @@ module lib.gui.generators {
 
     requires lib.annotations;
     requires lib.utils;
-    requires lib.generator.utils;
+    requires transitive lib.generator.utils;
 }

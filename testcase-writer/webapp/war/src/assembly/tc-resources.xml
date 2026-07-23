@@ -1,0 +1,30 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.2.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.2.0 http://maven.apache.org/xsd/assembly-2.2.0.xsd">
+	<id>tc-resources</id>
+	<formats>
+		<format>dir</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<dependencySets>
+		<dependencySet>
+			<useProjectArtifact>true</useProjectArtifact>
+			<outputDirectory>javatc</outputDirectory>
+            <scope>provided</scope>
+			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+			<includes>
+				<include>ch.scaille.tcwriter:testcase-writer-javatc-client:jar:fatjar</include>
+				<include>org.junit.platform:junit-platform-console-standalone</include>
+			</includes>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>javatc</outputDirectory>
+			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+			<includes>
+				<include>org.aspectj:aspectjtools</include>
+				<include>org.aspectj:aspectjrt</include>
+			</includes>
+		</dependencySet>
+	</dependencySets>
+				
+</assembly>

@@ -33,6 +33,7 @@ import org.jspecify.annotations.Nullable;
  */
 public class TestCaseToJavaVisitor {
 
+	public static final String NOT_SET_LABEL = "<not set>";
 	private final Template template;
 
 	private final Map<TestParameterValue, String> varNames = new IdentityHashMap<>();
@@ -172,15 +173,15 @@ public class TestCaseToJavaVisitor {
 
 		case TestParameterFactory f when f.getNature() == ParameterNature.SIMPLE_TYPE
 				&& String.class.getName().equals(f.getParameterType()) ->
-			parametersContent.append("\"").append(requireNonNullElse(parameterValue.getSimpleValue(), "<not set>")).append("\"");
+			parametersContent.append("\"").append(requireNonNullElse(parameterValue.getSimpleValue(), NOT_SET_LABEL)).append("\"");
 
 		case TestParameterFactory f when f.getNature() == ParameterNature.SIMPLE_TYPE
 				&& (Long.class.getName().equals(f.getParameterType())
 						|| Long.TYPE.getName().equals(f.getParameterType())) ->
-			parametersContent.append(requireNonNullElse(parameterValue.getSimpleValue(), "<not set>")).append("L");
+			parametersContent.append(requireNonNullElse(parameterValue.getSimpleValue(), NOT_SET_LABEL)).append("L");
 
 		case TestParameterFactory f when ParameterNature.SIMPLE_TYPE == f.getNature() ->
-			parametersContent.append(requireNonNullElse(parameterValue.getSimpleValue(), "<not set>"));
+			parametersContent.append(requireNonNullElse(parameterValue.getSimpleValue(), NOT_SET_LABEL));
 
 		case TestReference f when f.getNature() == ParameterNature.REFERENCE -> parametersContent.append(f.getName());
 

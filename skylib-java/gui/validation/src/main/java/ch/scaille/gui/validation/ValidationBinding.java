@@ -23,7 +23,7 @@ public class ValidationBinding {
 	private ValidationBinding() {
 	}
 
-	public static <B, T extends @Nullable Object> IUnaryConverter<T> validator(final Class<B> beanType) {
+	public static <B extends @Nullable Object, T extends @Nullable Object> IUnaryConverter<T> validator(final Class<B> beanType) {
 
 		return new IUnaryConverter<>() {
 

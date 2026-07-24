@@ -82,7 +82,7 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 
 		return switch (parameterDef.getNature()) {
 		case REFERENCE, TEST_API -> toString(tc, parameterDef);
-		case SIMPLE_TYPE -> parameterValue.getSimpleValue();
+		case SIMPLE_TYPE -> Objects.requireNonNullElse(parameterValue.getSimpleValue(), "");
 		default -> "N/A";
 		};
 	}
@@ -146,6 +146,6 @@ public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableMod
 	}
 
 	public String getHumanReadable(final int row) {
-		return humanReadableVisitor.process(testCaseProperty.getValue().getSteps().get(row));
+		return Objects.requireNonNull(humanReadableVisitor).process(testCaseProperty.getValue().getSteps().get(row));
 	}
 }

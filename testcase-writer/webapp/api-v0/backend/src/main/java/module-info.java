@@ -18,12 +18,9 @@ module testcase.writer.webapp.api.v0.backend {
 	
 	requires transitive testcase.writer.webapp.api.validators;
 
-	requires jakarta.annotation;
-	requires jakarta.validation;
-	requires jakarta.servlet;
-	requires java.compiler;
-	
-	requires spring.boot;
+    requires jakarta.validation;
+
+    requires spring.boot;
 	requires spring.boot.autoconfigure;	
 	
 	requires spring.core;
@@ -31,14 +28,14 @@ module testcase.writer.webapp.api.v0.backend {
 	requires spring.web;
 	requires spring.webmvc;
 	requires spring.tx;
-	requires spring.aop;
 
-	requires com.fasterxml.jackson.databind;
+    requires com.fasterxml.jackson.databind;
 	requires com.google.common;
 	requires org.openapitools.jackson.nullable;
-	requires io.swagger.v3.oas.annotations;
-	requires io.swagger.v3.oas.models;
 
-	requires org.mapstruct;
-	requires spring.beans;
+    requires org.mapstruct;
+
+    requires io.swagger.v3.oas.annotations;
+    requires io.swagger.v3.oas.models;
+    requires jakarta.servlet;
 }

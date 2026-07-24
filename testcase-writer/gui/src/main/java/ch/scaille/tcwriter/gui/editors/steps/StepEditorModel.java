@@ -7,7 +7,7 @@ import java.util.List;
 import ch.scaille.gui.mvc.GuiModel;
 import ch.scaille.gui.mvc.factories.ObjectTextView;
 import ch.scaille.javabeans.converters.Converters;
-import ch.scaille.javabeans.converters.IConverterWithContext;
+import ch.scaille.javabeans.converters.IContextualConverter;
 import ch.scaille.javabeans.properties.ListProperty;
 import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.tcwriter.model.IdObject;
@@ -46,16 +46,20 @@ public class StepEditorModel extends GuiModel {
         this.testDictionary = testDictionary;
     }
 
-    public static <T extends IdObject> IConverterWithContext<T, ObjectTextView<T>, ObjectProperty<TestDictionary>> object2Text(ObjectProperty<TestDictionary> dictionary) {
-        final var obj2Text = ObjectTextView.<T, TestDictionary>biObject2Text((o, d) -> d.descriptionOf(o).description());
+    public static <T extends IdObject> IContextualConverter<T, @Nullable ObjectTextView<T>, ObjectProperty<TestDictionary>>
+            object2Text(ObjectProperty<TestDictionary> dictionary) {
+
+        final var obj2Text = ObjectTextView.<T, TestDictionary>contextualObject2Text((o, d) -> d.descriptionOf(o).description());
         final var text2Obj = ObjectTextView.<T>text2Obj();
         return Converters.converter(ofProperty(dictionary),
                 (prop, dic) -> obj2Text.apply(prop, dic.getValue()),
                 (comp, _) -> text2Obj.apply(comp));
     }
 
-    public static <T extends IdObject> IConverterWithContext<List<T>, List<ObjectTextView<T>>, ObjectProperty<TestDictionary>> objects2Texts(ObjectProperty<TestDictionary> dictionary) {
-        final var obj2Text = ObjectTextView.<T, TestDictionary>biObject2Text((o, d) -> d.descriptionOf(o).description());
+    public static <T extends IdObject> IContextualConverter<List<T>, List<ObjectTextView<T>>, ObjectProperty<TestDictionary>>
+            objects2Texts(ObjectProperty<TestDictionary> dictionary) {
+
+        final var obj2Text = ObjectTextView.<T, TestDictionary>contextualObject2Text((o, d) -> d.descriptionOf(o).description());
         return Converters.listen(ofProperty(dictionary),
                 (prop, dic) -> prop.stream().map(v -> obj2Text.apply(v, dic.getValue())).toList());
     }

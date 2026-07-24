@@ -42,7 +42,7 @@ public class ConfigDao implements IConfigDao {
 	/**
 	 * Applies the configuration file
 	 * 
-	 * @param locator the name of the configuration
+	 * @param identifier the name of the configuration
 	 */
 	public ConfigDao setConfiguration(String identifier) {
 		apply(StorageRTException.uncheck("Reading of configuration: " + identifier, () -> loader.load(identifier)));

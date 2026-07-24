@@ -15,8 +15,6 @@ import ch.scaille.javabeans.properties.Configuration;
 import ch.scaille.javabeans.persisters.IPersisterFactory.ObjectHolder;
 import ch.scaille.javabeans.persisters.Persisters;
 
-import org.jspecify.annotations.NullMarked;
-
 import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.javabeans.properties.IntProperty;
 

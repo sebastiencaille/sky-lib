@@ -1,7 +1,5 @@
 package ch.scaille.gui.model.views;
 
-import org.jspecify.annotations.Nullable;
-
 /**
  * To customize the view on the list (filtering and sorting).
  * <p>
@@ -11,7 +9,7 @@ import org.jspecify.annotations.Nullable;
  * @param <T> the type of the element to sort/filter
  */
 
-public interface IListView<T extends @Nullable Object> extends IView<T> {
+public interface IListView<T> extends IView<T> {
 
 	void attach(final IListViewOwner<T> owner);
 

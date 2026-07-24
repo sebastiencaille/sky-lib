@@ -34,13 +34,14 @@ public class TestParameterValue extends IdObject {
 
     private final Map<String, TestParameterValue> complexTypeValues = new HashMap<>();
 
+    @Nullable
     private String simpleValue;
 
     /**
      * @param id either the id of the action's parameter
      */
     public TestParameterValue(final String id, final String apiParameterId, final TestParameterFactory parameterValueFactory,
-                              final String simpleValue) {
+                             @Nullable final String simpleValue) {
         super(id);
         this.apiParameterId = apiParameterId;
         this.parameterValueFactory = parameterValueFactory;

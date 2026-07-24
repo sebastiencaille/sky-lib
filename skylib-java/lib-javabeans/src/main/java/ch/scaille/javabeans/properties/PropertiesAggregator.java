@@ -3,7 +3,7 @@ package ch.scaille.javabeans.properties;
 import ch.scaille.javabeans.*;
 import ch.scaille.javabeans.chain.BindingChain;
 import ch.scaille.javabeans.converters.IConverter;
-import ch.scaille.javabeans.converters.IConverterWithContext;
+import ch.scaille.javabeans.converters.IContextualConverter;
 import org.jspecify.annotations.Nullable;
 
 import java.beans.PropertyChangeEvent;
@@ -57,11 +57,11 @@ public class PropertiesAggregator<T extends @Nullable Object> extends AbstractPr
 
 
     // ****************** 1 property (for x properties + 1), final evaluator
-    public interface Applier1<T1, R extends @Nullable Object> {
+    public interface Applier1<T1 extends @Nullable Object, R extends @Nullable Object> {
         R apply(Supplier<T1> value1);
     }
 
-    public <T1> PropertiesAggregator<T> add(IChainBuilder<T1> chain1, Applier1<T1, T> applier) {
+    public <T1 extends @Nullable Object> PropertiesAggregator<T> add(IChainBuilder<T1> chain1, Applier1<T1, T> applier) {
         final var value1 = new Snapshot<>(chain1);
         this.evaluator = () -> applier.apply(value1);
         return this;
@@ -69,11 +69,11 @@ public class PropertiesAggregator<T extends @Nullable Object> extends AbstractPr
 
     // ****************** 2 properties, final evaluator
 
-    public interface Applier2<T1, T2, R extends @Nullable Object> {
+    public interface Applier2<T1 extends @Nullable Object, T2 extends @Nullable Object, R extends @Nullable Object> {
         R apply(Supplier<T1> value1, Supplier<T2> value2);
     }
 
-    public <T1, T2> PropertiesAggregator<T>
+    public <T1 extends @Nullable Object, T2 extends @Nullable Object> PropertiesAggregator<T>
     add(IChainBuilder<T1> chain1, IChainBuilder<T2> chain2, Applier2<T1, T2, T> applier) {
         final var value1 = new Snapshot<>(chain1);
         final var value2 = new Snapshot<>(chain2);
@@ -83,11 +83,11 @@ public class PropertiesAggregator<T extends @Nullable Object> extends AbstractPr
 
     // ****************** 3 properties, final evaluator
 
-    public interface Applier3<T1, T2, T3, R extends @Nullable Object> {
+    public interface Applier3<T1 extends @Nullable Object, T2 extends @Nullable Object, T3 extends @Nullable Object, R extends @Nullable Object> {
         R apply(Supplier<T1> property1, Supplier<T2> value2, Supplier<T3> value3);
     }
 
-    public <T1, T2, T3> PropertiesAggregator<T>
+    public <T1 extends @Nullable Object, T2 extends @Nullable Object, T3 extends @Nullable Object> PropertiesAggregator<T>
     add(IChainBuilder<T1> chain1, IChainBuilder<T2> chain2, IChainBuilder<T3> chain3,
         Applier3<T1, T2, T3, T> applier) {
         final var value1 = new Snapshot<>(chain1);
@@ -99,11 +99,11 @@ public class PropertiesAggregator<T extends @Nullable Object> extends AbstractPr
 
     // ****************** 4 properties, final evaluator
 
-    public interface Applier4<T1, T2, T3, T4, R extends @Nullable Object> {
+    public interface Applier4<T1 extends @Nullable Object, T2 extends @Nullable Object, T3 extends @Nullable Object, T4 extends @Nullable Object, R extends @Nullable Object> {
         R apply(Supplier<T1> value1, Supplier<T2> value2, Supplier<T3> value3, Supplier<T4> value4);
     }
 
-    public <T1, T2 extends IChainBuilder<T2>, T3 extends IChainBuilder<T3>, T4 extends IChainBuilder<T4>>
+    public <T1 extends @Nullable Object, T2 extends @Nullable Object, T3 extends @Nullable Object, T4 extends @Nullable Object>
     PropertiesAggregator<T> add(IChainBuilder<T1> chain1, IChainBuilder<T2> chain2, IChainBuilder<T3> chain3, IChainBuilder<T4> chain4,
                                 Applier4<T1, T2, T3, T4, T> applier) {
         final var value1 = new Snapshot<>(chain1);
@@ -117,11 +117,11 @@ public class PropertiesAggregator<T extends @Nullable Object> extends AbstractPr
 
     // ****************** 4 properties, and more
 
-    public interface Applier4More<T1, T2, T3, T4, R extends @Nullable Object> {
+    public interface Applier4More<T1 extends @Nullable Object, T2 extends @Nullable Object, T3 extends @Nullable Object, T4 extends @Nullable Object, R extends @Nullable Object> {
         PropertiesAggregator<R> apply(Supplier<T1> property1, Supplier<T2> value2, Supplier<T3> value3, Supplier<T4> value4, PropertiesAggregator<R> group);
     }
 
-    public <T1, T2, T3, T4>
+    public <T1 extends @Nullable Object, T2 extends @Nullable Object, T3 extends @Nullable Object, T4 extends @Nullable Object>
     PropertiesAggregator<T> addWithMore(IChainBuilder<T1> chain1, IChainBuilder<T2> chain2, IChainBuilder<T3> chain3, IChainBuilder<T4> chain4,
                                         Applier4More<T1, T2, T3, T4, T> applier) {
         final var value1 = new Snapshot<>(chain1);
@@ -233,7 +233,7 @@ public class PropertiesAggregator<T extends @Nullable Object> extends AbstractPr
     }
 
     @Override
-    public <C extends @Nullable Object, K> IChainBuilder<C> bind(IConverterWithContext<T, C, K> converter) {
+    public <C extends @Nullable Object, K> IChainBuilder<C> bind(IContextualConverter<T, C, K> converter) {
         return createBindingChain().bind(converter);
     }
 

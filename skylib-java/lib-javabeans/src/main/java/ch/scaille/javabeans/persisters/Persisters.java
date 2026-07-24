@@ -36,7 +36,7 @@ public class Persisters {
 	 * @param <T> the type of the persisted bean
 	 * @param <V> the type of the persisted attribute
 	 */
-	public static <T, V> IPersister<V> persister(final IObjectProvider<T> objectProvider,
+	public static <T, V extends @Nullable Object> IPersister<V> persister(final IObjectProvider<T> objectProvider,
 			final IPersisterFactory<T, V> persisterFactory) {
 		return persisterFactory.asPersister(objectProvider);
 	}
@@ -55,7 +55,7 @@ public class Persisters {
 	 * @param <T> the type of the persisted bean
 	 * @param <V> the type of the persisted attribute
 	 */
-	public static <T, V> IPersisterFactory<T, V> persister(final Function<T, V> getter, @Nullable final BiConsumer<T, V> setter) {
+	public static <T, V extends @Nullable Object> IPersisterFactory<T, V> persister(final Function<T, V> getter, @Nullable final BiConsumer<T, V> setter) {
 		return new GetSetAccess<>(getter, setter);
 	}
 
@@ -64,7 +64,7 @@ public class Persisters {
 	 * @param <T> the type of the persisted bean
 	 * @param <V> the type of the persisted attribute
 	 */
-	public static <T, V> IPersisterFactory<T, V> persister(AbstractAttributeMetaData<T, V> attribute) {
+	public static <T, V extends @Nullable Object> IPersisterFactory<T, V> persister(AbstractAttributeMetaData<T, V> attribute) {
 		return new AttributeMetaDataAccess<>(attribute);
 	}
 
@@ -73,7 +73,7 @@ public class Persisters {
 	 * @param <T> the type of the persisted bean
 	 * @param <V> the type of the persisted attribute
 	 */
-	public static <T, V> IPersisterFactory<T, V> publicField(final Field field) {
+	public static <T, V extends @Nullable Object> IPersisterFactory<T, V> publicField(final Field field) {
 		return new MethodHandlerAccess<>(field);
 	}
 

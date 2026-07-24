@@ -24,7 +24,7 @@ public class CodeGeneratorParams implements ICodeGeneratorParams{
 
 	@Getter
     @Parameter(names = { "-sp", "--scanPackage" }, required = true)
-	private String scanPackage;
+	private String scanPackage = null;
 
 	@Getter
     @Parameter(names = { "-tp", "--targetPackage" })

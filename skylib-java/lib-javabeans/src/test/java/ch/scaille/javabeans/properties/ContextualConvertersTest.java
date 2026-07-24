@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-class ConvertersWithContextTest {
+class ContextualConvertersTest {
     private final IPropertiesGroup group =  PropertyChangeSupportController.mainGroup(this);
 
     public record Context(IntProperty p1, IntProperty p2) {

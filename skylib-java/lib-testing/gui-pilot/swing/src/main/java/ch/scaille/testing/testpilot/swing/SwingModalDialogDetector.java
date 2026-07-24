@@ -57,11 +57,9 @@ public class SwingModalDialogDetector extends SwingPilot {
 	 * Triggers an error when a dialog box is detected
 	 */
 	public PollingResult defaultCheck() {
-		final var dialogLabel = search(JLabel.class);
-		if (dialogLabel.isEmpty()) {
-			return failure(dialog.getTitle());
-		}
-		return failure(dialogLabel.get().getText());
+		return search(JLabel.class)
+				.map(label -> failure(label.getText()))
+				.orElseGet(() ->failure(dialog.getTitle()));
 	}
 
 	public void closeDialog() {

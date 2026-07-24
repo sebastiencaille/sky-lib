@@ -33,10 +33,8 @@ module testcase.writer.webapp.backend {
 	requires transitive org.apache.tomcat.embed.el;
 	
 	requires jakarta.servlet;
-	requires jakarta.validation;
-	requires java.compiler;
-	
-	requires spring.boot;
+
+    requires spring.boot;
 	requires spring.boot.webmvc;
 	requires spring.boot.autoconfigure;
 	
@@ -54,9 +52,6 @@ module testcase.writer.webapp.backend {
 	requires spring.security.web;
 	requires spring.security.config;
 	requires spring.session.core;
-    requires spring.aop;
-
-    requires com.fasterxml.jackson.databind;
 
     requires org.mapstruct;
 	requires org.openapitools.jackson.nullable;

@@ -72,8 +72,8 @@ public final class Converters {
      *                  component side
      */
     public static <P extends @Nullable Object, C extends @Nullable Object, K>
-    IConverterWithContext<P, C, K> listen(final PropertiesContext<K> context,
-                                          final BiFunction<P, K, C> prop2comp) {
+    IContextualConverter<P, C, K> listen(final PropertiesContext<K> context,
+                                         final BiFunction<P, K, C> prop2comp) {
         return converter(context, prop2comp, (_, _) -> {
             throw new WriteOnlyException();
         });
@@ -99,10 +99,10 @@ public final class Converters {
     }
 
     public static <P extends @Nullable Object, C extends @Nullable Object, K>
-    IConverterWithContext<P, C, K> converter(final PropertiesContext<K> context,
-                                             final BiFunction<P, K, C> prop2comp,
-                                             final BiFunctionWithException<C, K, P, ConversionException> comp2prop) {
-        return new IConverterWithContext<>() {
+    IContextualConverter<P, C, K> converter(final PropertiesContext<K> context,
+                                            final BiFunction<P, K, C> prop2comp,
+                                            final BiFunctionWithException<C, K, P, ConversionException> comp2prop) {
+        return new IContextualConverter<>() {
 
             @Override
             public C convertPropertyValueToComponentValue(final P propertyValue, K context) {

@@ -3,6 +3,7 @@ package ch.scaille.gui.mvc.factories;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import ch.scaille.javabeans.converters.ConversionException;
 import ch.scaille.javabeans.converters.Converters;
@@ -15,15 +16,17 @@ import org.jspecify.annotations.Nullable;
  * To display some text based on the content of an object
  */
 @Getter
-public abstract class ObjectTextView<T extends @Nullable Object> {
+public class ObjectTextView<T extends @Nullable Object> {
 
 	private final T object;
+    private final Supplier<String> textSupplier;
 
-	protected ObjectTextView(final T object) {
+    protected ObjectTextView(final T object, Supplier<String> textSupplier) {
 		this.object = object;
-	}
+        this.textSupplier = textSupplier;
+    }
 
-    @Override
+	@Override
 	public boolean equals(@Nullable final Object obj) {
 		return obj != null && obj.getClass().equals(this.getClass())
 				&& Objects.equals(((ObjectTextView<?>) obj).object, object);
@@ -34,71 +37,29 @@ public abstract class ObjectTextView<T extends @Nullable Object> {
 		return Objects.hashCode(object);
 	}
 
+	@Override
+	public String toString() {
+		return textSupplier.get();
+	}
+
 	/**
-	 * To display some text based on the content of an object using a function
+	 * To convert an object to a text
+	 * @param objToText the conversion function
 	 */
-	public static class FunctionObjectTextView<T> {
-
-		private final Function<T, String> objToText;
-
-		public FunctionObjectTextView(final Function<T, String> objToText) {
-			this.objToText = objToText;
-		}
-
-		public ObjectTextView<T> apply(@Nullable T object) {
-			return new ObjectTextView<>(object) {
-				@Override
-				public String toString() {
-					if (object == null) {
-						return "";
-					}
-					return objToText.apply(object);
-				}
-			};
-		}
-	}
-	
-	/**
-	 * To display some text based on the content of an object using a function
-	 */
-	public static class BiFunctionObjectTextView<T, U> {
-
-		private final BiFunction<T, U, String> objToText;
-
-		public BiFunctionObjectTextView(final BiFunction<T, U, String> objToText) {
-			this.objToText = objToText;
-		}
-
-		public ObjectTextView<T> apply(@Nullable T object, U context) {
-			return new ObjectTextView<>(object) {
-				@Override
-				public String toString() {
-					if (object == null) {
-						return "";
-					}
-					return objToText.apply(object, context);
-				}
-			};
-		}
-	}
-
-	public static <T> FunctionObjectTextView<T> object2Text(final Function<T, String> objToText) {
-		return new FunctionObjectTextView<>(objToText);
-	}
-
-	public static <T, U> BiFunctionObjectTextView<T, U> biObject2Text(final BiFunction<T, U, String> objToText) {
-		return new BiFunctionObjectTextView<>(objToText);
-	}
-	
-	public static <T> IConverter<T, ObjectTextView<T>> converter(final Function<T, String> objToText) {
+	public static <T extends @Nullable Object> IConverter<T, @Nullable ObjectTextView<T>> converter(final Function<T, String> objToText) {
 		return Converters.converter(obj2Text(objToText), text2Obj());
 	}
 
-	public static <T> Function<T, ObjectTextView<T>> obj2Text(final Function<T, String> objToText) {
-		return o -> object2Text(objToText).apply(o);
+	public static <T extends @Nullable Object> Function<T, @Nullable ObjectTextView<T>> obj2Text(final Function<T, String> objToText) {
+		return o -> new ObjectTextView<>(o, () -> objToText.apply(o));
 	}
 
-	public static <T> FunctionWithException<ObjectTextView<T>, T, ConversionException> text2Obj() {
-		return tv -> tv != null ? tv.getObject() : null;
+	public static <T extends @Nullable Object, K extends @Nullable Object> BiFunction<T, K, @Nullable ObjectTextView<T>> contextualObject2Text(final BiFunction<T, K, String> objToText) {
+		return (o, k) -> new ObjectTextView<>(o, () -> objToText.apply(o, k));
+	}
+
+	public static <T extends @Nullable Object> FunctionWithException<@Nullable ObjectTextView<T>, T, ConversionException> text2Obj() {
+		return otv ->  otv != null ? otv.getObject() : null;
+
 	}
 }

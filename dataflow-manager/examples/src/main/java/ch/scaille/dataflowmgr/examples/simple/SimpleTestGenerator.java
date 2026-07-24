@@ -35,7 +35,7 @@ public class SimpleTestGenerator {
 	private static final String SIMPLE_EXAMPLE_PACKAGE = "ch.scaille.dataflowmgr.examples.simple";
 	public static final String CONDITIONAL_MUTATION = "conditionalMutation";
 
-	public static void main(String[] args) throws IOException, InterruptedException {
+	static void main(String[] args) throws IOException, InterruptedException {
 		final var targetFolder = CodeGeneratorParams.mavenTargetFolderOf(SimpleTestGenerator.class);
 		final var targetPathSrc = targetFolder.resolve("generated-test-sources/data-flow").toAbsolutePath();
 		final var targetPathDot = targetFolder.resolve("reports");

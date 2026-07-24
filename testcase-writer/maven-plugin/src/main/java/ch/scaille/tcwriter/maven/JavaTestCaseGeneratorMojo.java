@@ -39,21 +39,21 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
     private MavenProject project;
 
     @Parameter(property = "templatesFolder", defaultValue = "file:${project.testResources.testResource.directory}/userResources/templates")
-    private String templatesFolder;
+    private String templatesFolder= "";
 
     @Parameter(property = "dictionaryFolder", defaultValue = "file:${project.testResources.testResource.directory}/dictionaries")
-    private String dictionaryFolder;
+    private String dictionaryFolder= "";
 
     @Parameter(property = "dictionary")
     @Nullable
-    private String dictionaryLocator;
+    private String dictionaryLocator = null;
 
     @Parameter(property = "testCases")
     @Nullable
-    private Resource testCases;
+    private Resource testCases = null;
 
     @Parameter(property = "outputFolder", defaultValue = "${project.build.directory}/generated-test-sources/tcwriter")
-    private String outputFolder;
+    private String outputFolder = "";
 
     private String resolve(String path) {
         if (!path.startsWith(DaoFactory.FS_DATASOURCE)) {

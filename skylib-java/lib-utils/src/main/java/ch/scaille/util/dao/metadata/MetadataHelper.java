@@ -1,18 +1,22 @@
 package ch.scaille.util.dao.metadata;
 
+import org.jspecify.annotations.Nullable;
+
 public class MetadataHelper {
 
 	private MetadataHelper() {
 	}
 
-	public static String toFirstLetterInUpperCase(final String str) {
+	@Nullable
+	public static String toFirstLetterInUpperCase(@Nullable final String str) {
 		if (str == null) {
 			return null;
 		}
 		return Character.toUpperCase(str.charAt(0)) + str.substring(1);
 	}
 
-	public static String toFirstLetterInLowerCase(final String str) {
+	@Nullable
+	public static String toFirstLetterInLowerCase(@Nullable final String str) {
 		if (str == null) {
 			return null;
 		}

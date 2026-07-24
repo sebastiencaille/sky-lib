@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 
+import org.jspecify.annotations.Nullable;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
@@ -17,14 +18,16 @@ public interface MetadataMapper {
 
 	Metadata convert(ch.scaille.tcwriter.model.Metadata model);
 
-	default LocalDateTime convert(OffsetDateTime from) {
+	@Nullable
+	default LocalDateTime convert(@Nullable OffsetDateTime from) {
 		if (from == null) {
 			return null;
 		}
 		return from.toLocalDateTime();
 	}
 
-	default OffsetDateTime convert(LocalDateTime from) {
+	@Nullable
+	default OffsetDateTime convert(@Nullable LocalDateTime from) {
 		if (from == null) {
 			return null;
 		}

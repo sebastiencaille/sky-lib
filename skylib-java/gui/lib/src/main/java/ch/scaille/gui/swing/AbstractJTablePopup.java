@@ -26,7 +26,8 @@ public abstract class AbstractJTablePopup<T> extends AbstractPopup<T> {
 	private final ObjectProperty<? extends Collection<T>> selections;
 
 	protected AbstractJTablePopup(final JTable table, final ListModelTableModel<T, ?> model,
-	                              @Nullable final ObjectProperty<T> lastSelected, @Nullable final ObjectProperty<? extends Collection<T>> selections) {
+	                              @Nullable final ObjectProperty<@Nullable T> lastSelected,
+	                              @Nullable final ObjectProperty<? extends Collection<T>> selections) {
 		super(lastSelected);
 		this.table = table;
 		this.model = model;

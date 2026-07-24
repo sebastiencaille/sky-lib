@@ -29,6 +29,7 @@ import ch.scaille.tcwriter.model.dictionary.TestAction;
 import ch.scaille.tcwriter.model.dictionary.TestActor;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 import ch.scaille.tcwriter.model.testcase.TestStep;
+import org.jspecify.annotations.Nullable;
 
 public class StepEditorPanel extends JPanel {
 
@@ -135,7 +136,7 @@ public class StepEditorPanel extends JPanel {
 		add(stepEditors, BorderLayout.CENTER);
 	}
 
-	private <T extends JComponent> T withEnabler(AbstractTypedProperty<TestStep> selectedStep, T comp) {
+	private <T extends JComponent> T withEnabler(AbstractTypedProperty<@Nullable TestStep> selectedStep, T comp) {
 		comp.setEnabled(false);
 		selectedStep.bind(listen(Objects::nonNull)).listen(comp::setEnabled);
 		return comp;

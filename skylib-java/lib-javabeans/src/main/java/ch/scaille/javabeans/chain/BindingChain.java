@@ -223,6 +223,7 @@ public class BindingChain implements IBindingChainModifier {
         }
 
         @Override
+		@Nullable
 		public C toComponent(C value) throws ConversionException {
 			final var link = weakRef.get();
 			if (link != null) {

@@ -54,10 +54,10 @@ class SeleniumExampleTest extends AbstractSeleniumUndertowTest {
 
 	@Test
 	void testExample() throws SecurityException {
-		Objects.requireNonNull(pilot, "pilot was not set");
-		pilot.getDriver().get(localUrl.resolve("/example1.html").toString());
+		final var safePilot = Objects.requireNonNull(pilot, "pilot was not set");
+		safePilot.getDriver().get(localUrl.resolve("/example1.html").toString());
 
-		final var mainPage = pilot.page(ExamplePage::new);
+		final var mainPage = safePilot.page(ExamplePage::new);
 
 		mainPage.executeEnable();
 
@@ -72,7 +72,7 @@ class SeleniumExampleTest extends AbstractSeleniumUndertowTest {
 		 /*
 		  * [[FirefoxDriver: firefox on linux (780b50ba-dc8c-484a-bde7-ca84325d50c4)] -> id: EnableTest]: clicked, Test delayed by: Wait until EnableTest enabled, [[FirefoxDriver: firefox on linux (780b50ba-dc8c-484a-bde7-ca84325d50c4)] -> id: AlertTest]: clicked, Acknowledging alert: Alert Test, visibility of element located by By.id: NotExisting: isSatisfied should have returned false, [[FirefoxDriver: firefox on linux (780b50ba-dc8c-484a-bde7-ca84325d50c4)] -> id: ElementChangeTest]: clicked]
 		  */
-		assertEquals(6, pilot.getActionReport().getReport().size(), () -> pilot.getActionReport().getFormattedReport());
+		assertEquals(6, safePilot.getActionReport().getReport().size(), () -> safePilot.getActionReport().getFormattedReport());
 	}
 
 }

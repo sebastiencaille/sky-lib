@@ -12,7 +12,7 @@ import org.jspecify.annotations.Nullable;
  * @param <T> the owner type
  * @param <V> the end of chain type
  */
-public class PropertyEntry<V> implements IPropertyEntry {
+public class PropertyEntry<V extends @Nullable Object> implements IPropertyEntry {
 
 	protected final AbstractTypedProperty<V> property;
 	private final Function<AbstractTypedProperty<V>, IChainBuilderFactory<V>> endOfChain;

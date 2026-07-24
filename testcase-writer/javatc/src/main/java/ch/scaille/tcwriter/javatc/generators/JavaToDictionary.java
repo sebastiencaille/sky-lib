@@ -24,10 +24,10 @@ public class JavaToDictionary extends AbstractGenerator<TestDictionary> {
 		public String configuration = "default";
 
 		@Parameter(names = { "-s" }, required = true, description = "Source package")
-		public String sourcePackage;
+		public String sourcePackage = "";
 
 		@Parameter(names = { "-s" }, required = true, description = "Name of dictionary")
-		public String classifier;
+		public String classifier = "";
 }
 
 	public static Collector<Class<?>, ?, TestDictionary> toDictionary(String classifier) {

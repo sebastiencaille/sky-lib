@@ -7,7 +7,6 @@ import ch.scaille.tcwriter.model.IdObject;
 import ch.scaille.tcwriter.model.NamedObject;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
-import org.jspecify.annotations.Nullable;
 
 /**
  * Factory to create test parameter values
@@ -22,7 +21,6 @@ public class TestParameterFactory extends NamedObject {
     private final List<TestApiParameter> mandatoryParameters = new ArrayList<>();
     private final List<TestApiParameter> optionalParameters = new ArrayList<>();
     private final ParameterNature nature;
-    @Nullable
     private final String parameterType;
 
     protected TestParameterFactory() {
@@ -31,7 +29,7 @@ public class TestParameterFactory extends NamedObject {
         this.parameterType = "";
     }
 
-    public TestParameterFactory(final String id, final String name, final ParameterNature nature, @Nullable final String type) {
+    public TestParameterFactory(final String id, final String name, final ParameterNature nature, final String type) {
         super(id, name);
         this.parameterType = type;
         this.nature = nature;
@@ -88,7 +86,7 @@ public class TestParameterFactory extends NamedObject {
     }
 
     public boolean matches(final TestApiParameter param) {
-        return getParameterType() != null && getParameterType().equals(param.getParameterType());
+        return getParameterType().equals(param.getParameterType());
 
     }
 

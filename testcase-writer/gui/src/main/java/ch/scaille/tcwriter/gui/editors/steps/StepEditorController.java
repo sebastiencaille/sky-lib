@@ -21,6 +21,7 @@ import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestStep;
 import lombok.Getter;
+import org.jspecify.annotations.Nullable;
 
 @Getter
 public class StepEditorController extends GuiController {
@@ -110,7 +111,7 @@ public class StepEditorController extends GuiController {
 	 * but action has different parameters)
 	 *
 	 */
-	private void updateCurrentActionParameters(final TestDictionary td, final ObjectProperty<TestStep> testStep) {
+	private void updateCurrentActionParameters(final TestDictionary td, final ObjectProperty<@Nullable TestStep> testStep) {
 		final var step = testStep.getValue();
 		final var action = model.getAction().getValue();
 		if (action == null) {

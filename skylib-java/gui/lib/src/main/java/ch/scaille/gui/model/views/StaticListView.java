@@ -15,7 +15,7 @@ import java.util.function.Predicate;
  * @param <T>
  */
 
-public class StaticListView<T extends @Nullable Object> extends AbstractListView<T> {
+public class StaticListView<T> extends AbstractListView<T> {
 
     @Serial
     private static final long serialVersionUID = -4696996416566266010L;

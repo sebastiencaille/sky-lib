@@ -29,7 +29,7 @@ import org.jspecify.annotations.Nullable;
  */
 public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 
-	public static class ClassPropertyEntry<T, U> extends PropertyEntry<U> implements Comparable<ClassPropertyEntry<T, U>> {
+	public static class ClassPropertyEntry<T, U extends @Nullable Object> extends PropertyEntry<U> implements Comparable<ClassPropertyEntry<T, U>> {
 
 		private final int index;
 
@@ -149,7 +149,7 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 				.toList();
 	}
 
-	private <V> ClassPropertyEntry<T, V> createProperty(IObjectProvider<T> object,
+	private <V extends @Nullable Object> ClassPropertyEntry<T, V> createProperty(IObjectProvider<T> object,
 																		  AbstractAttributeMetaData<T, V> typedAttribute ) {
 		final var property = new ObjectProperty<V>(typedAttribute.getName(), getPropertySupport(), null);
 		property.configureTyped(persistent(object, Persisters.persister(typedAttribute)));

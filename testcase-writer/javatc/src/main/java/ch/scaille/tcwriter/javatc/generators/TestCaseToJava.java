@@ -21,16 +21,16 @@ public class TestCaseToJava {
 
 	public static class Args {
 		@Parameter(names = { "--config", "-c" }, description = "Name of configuration")
-		public String configuration;
+		public String configuration = "";
 
 		@Parameter(names = { "--dictionary", "-d" }, description = "Name of test case dictionary")
 		public String tcDictionary = "default";
 
 		@Parameter(names = { "--template", "-t" }, description = "Name of test case template")
-		public String tcTemplate;
+		public String tcTemplate = "";
 
 		@Parameter(names = { "--testcase", "-tc" }, required = true, description = "Name of test case")
-		public String testCase;
+		public String testCase = "";
 	}
 
 	public TestCaseToJava(IModelDao modelDao) {
@@ -43,7 +43,7 @@ public class TestCaseToJava {
 		return new TestCaseToJavaVisitor(this.modelDao.readTemplate(tc.getDictionary().template())).visitTestCase(tc, generationMetadata);
 	}
 
-	public static void main(String[] args) throws IOException, TestCaseException {
+	static void main(String[] args) throws IOException, TestCaseException {
 		final var generationMetadata = GenerationMetadata.fromCommandLine(TestCaseToJava.class, args);
 		final var mainArgs = new Args();
 		JCommander.newBuilder().addObject(mainArgs).build().parse(args);

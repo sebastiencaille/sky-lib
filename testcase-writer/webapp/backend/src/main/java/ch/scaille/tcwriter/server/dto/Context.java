@@ -2,6 +2,7 @@ package ch.scaille.tcwriter.server.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -12,8 +13,8 @@ import java.util.Optional;
 @Setter
 public class Context implements Serializable {
 
-	private String dictionaryName;
-    private String testCase;
+	private @Nullable String dictionaryName;
+    private @Nullable String testCase;
 
 	public Optional<String> getDictionaryName() {
 		return Optional.ofNullable(dictionaryName);
@@ -23,17 +24,6 @@ public class Context implements Serializable {
 		return Optional.ofNullable(testCase);
 	}
 
-    public Context copy() {
-		final var copy = new Context();
-		copy.setDictionaryName(dictionaryName);
-		copy.setTestCase(testCase);
-		return copy;
-	}
-
-	public boolean differs(Context other) {
-		return Objects.equals(dictionaryName, other.dictionaryName) && Objects.equals(testCase, other.testCase);
-	}
-	
 	@Override
 	public String toString() {
 		return "[dictionary: %s, testCase: %s ]".formatted(dictionaryName, testCase);

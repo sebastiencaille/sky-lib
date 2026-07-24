@@ -122,7 +122,7 @@ public class LambdaExt {
 	/**
 	 * Turns a checked exception thrown by a Function into a runtime exception
 	 */
-	public static <T, R, E extends Exception> Function<T, R> uncheckedF(final FunctionWithException<T, R, E> call,
+	public static <T extends @Nullable Object, R extends @Nullable Object, E extends Exception> Function<T, R> uncheckedF(final FunctionWithException<T, R, E> call,
 			final BiFunction<T, ? super E, R> exceptionHandler) {
 		return t -> {
 			try {

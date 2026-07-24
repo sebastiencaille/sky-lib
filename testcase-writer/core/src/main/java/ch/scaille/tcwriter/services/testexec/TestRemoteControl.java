@@ -80,7 +80,7 @@ public class TestRemoteControl {
 			controlConnection = Objects.requireNonNull(safeControl.accept(), "Connection accepted, but null");
 			log.log(Level.INFO, "Connected");
 			api = new TestApi(controlConnection);
-			TestApi.handleCommands(api, command -> {
+			TestApi.handleCommands(api, (api, command) -> {
 
 				switch (command) {
 				case STEP_START:
@@ -107,7 +107,7 @@ public class TestRemoteControl {
 					final var errStepStatus = stepStatus(errStepNumber);
 					errStepStatus.setState(StepState.FAILED);
 					errStepStatus.setMessage(errorMessage.message());
-					stepChangedListener.accept(errStepNumber, errStepNumber);
+					safeStepChangedListener.accept(errStepNumber, errStepNumber);
 					break;
 				default:
 					break;

@@ -50,7 +50,7 @@ public class TestExecutionFeedbackClient implements ITestExecutionFeedbackClient
 				throw new IllegalStateException("Cannot connect to remote control: " + remoteControlAddress);
 			}
 			api = new TestApi(remoteControlConnection);
-			TestApi.handleCommands(api, this::commandHandler, null, () -> System.exit(1));
+			TestApi.handleCommands(api, (_, command) -> commandHandler(command), null, () -> System.exit(1));
 		} else {
 			api = null;
 			remoteControlConnection = null;

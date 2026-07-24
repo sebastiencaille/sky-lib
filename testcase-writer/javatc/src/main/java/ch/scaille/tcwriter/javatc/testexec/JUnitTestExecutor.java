@@ -80,27 +80,33 @@ public class JUnitTestExecutor implements ITestExecutor {
 
 	@Override
 	public void write(TestConfig testConfig) throws IOException, TestCaseException {
-		createTemplate(testConfig.testCase).writeToFolder(testConfig.sourceFolder).toString();
+		createTemplate(testConfig.testCase).writeToFolder(testConfig.sourceFolder);
 	}
 
 	@Override
 	public String compile(TestConfig testConfig) throws IOException, InterruptedException {
-		final var testCompiler = exec("Compile", new String[] { config.getJava(), //
-				"-cp", ClassLoaderHelper.cpToCommandLine(classPath, 
-						Arrays.stream(config.getClasspath())
-							.map(LambdaExt.uncheckedF(cp -> Paths.get(cp).toUri().toURL()))
-							.toArray(URL[]::new)), //
+		final var parameters = new String[]{
+				config.getJava(), //
+				"-cp", ClassLoaderHelper.cpToCommandLine(classPath,
+				Arrays.stream(config.getClasspath())
+						.map(LambdaExt.uncheckedF(cp -> Paths.get(cp).toUri().toURL()))
+						.toArray(URL[]::new)), //
 				"org.aspectj.tools.ajc.Main", //
 				"-aspectpath", aspectPath.getFile(), //
- 				// TODO config
+				// TODO config
 				"-source", "25", //
 				"-target", "25", //
 				"-verbose", //
 				// "-verbose", "-showWeaveInfo", //
 				"-d", testConfig.binaryFolder.toString(), //
-				"-sourceroots", testConfig.sourceFolder.toString() });//
-		if (testCompiler.waitFor() != 0) {
-			throw new IllegalStateException("Compiler failed with status " + testCompiler.exitValue());
+				"-sourceroots", testConfig.sourceFolder.toString() };
+		final var testCompiler = exec("Compile", parameters);
+		try {
+			if (testCompiler.waitFor() != 0) {
+				throw new IllegalStateException("Compiler failed with status " + testCompiler.exitValue());
+			}
+		} finally {
+			//testCompiler.close();
 		}
 		return testConfig.testCase.getPkgAndClassName();
 	}
@@ -117,7 +123,16 @@ public class JUnitTestExecutor implements ITestExecutor {
 		javaParameters.addAll(toMultipleCommandLine(classPath));
 		javaParameters.add("-cp=" + binaryURL);
 		javaParameters.add("-cp=" + ClassLoaderHelper.cpToCommandLine(ClassLoaderHelper.cpToURLs(config.getClasspath())));
-		exec("Execution", javaParameters.toArray(new String[0]));
+		new Thread(() -> LambdaExt.uncheck(() -> {
+			final var process = exec("Execution", javaParameters.toArray(new String[0]));
+			try {
+				if (process.waitFor() != 0) {
+					throw new IllegalStateException("Compiler failed with status " + process.exitValue());
+				}
+			} finally {
+				//process.close();
+			}
+		})).start();
 	}
 
 	private List<String> toMultipleCommandLine(URL[] classPath) {

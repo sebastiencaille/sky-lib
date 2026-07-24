@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -34,7 +35,7 @@ public class BootstrapConfig {
         final var tc = exampleHelper.recordTestCase(dictionary);
 
         // Sets up the test execution
-        final var currentConfig = exampleHelper.getConfigDao().getCurrentConfig();
+        final var currentConfig = Objects.requireNonNull(exampleHelper.getConfigDao().getCurrentConfig());
         currentConfig.getSubconfig(ModelConfig.class).orElseThrow().setTemplatePath(TC_TEMPLATES_FOLDER);
         currentConfig.getSubconfig(JunitTestExecConfig.class)
                 .orElseThrow()

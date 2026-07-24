@@ -42,6 +42,6 @@ public class DummyDao<T> implements IDao<T> {
 
     @Override
     public Resource<T> saveOrUpdate(Resource<T> value) {
-        return null;
+        return value;
     }
 }

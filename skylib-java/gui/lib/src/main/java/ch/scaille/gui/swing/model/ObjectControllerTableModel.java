@@ -106,7 +106,7 @@ public abstract class ObjectControllerTableModel<O, M extends IObjectGuiModel<O>
 		bindModel(objectModel);
 	}
 
-	protected <U> IComponentBinding<U> createColumnBinding(final C column) {
+	protected <U extends @Nullable Object> IComponentBinding<U> createColumnBinding(final C column) {
 		final var binding = new TableBinding<O, U>(getPropertyAt(objectModel, column));
 		bindings[column.ordinal()] = binding;
 		return binding;

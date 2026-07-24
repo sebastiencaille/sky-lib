@@ -2,6 +2,7 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 module testcase.writer.model {
+
 	exports ch.scaille.tcwriter.model;
 	exports ch.scaille.tcwriter.model.dictionary;
 	exports ch.scaille.tcwriter.model.testcase;

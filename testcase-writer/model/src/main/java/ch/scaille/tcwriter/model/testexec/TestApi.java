@@ -129,7 +129,7 @@ public class TestApi {
 			try {
 				Command receivedCommand;
 				while ((receivedCommand = api.readCommand()) != Command.EXIT) {
-					commandHandler.execute(receivedCommand);
+					commandHandler.execute(api, receivedCommand);
 				}
 			} catch (final IOException e) {
 				log.log(Level.INFO, "Unexpected error", e);
@@ -144,7 +144,7 @@ public class TestApi {
 	}
 	
 	public interface CommandHandler {
-		void execute(Command command) throws IOException;
+		void execute(TestApi api, Command command) throws IOException;
 	}
 
 	public record TestCaseError(int stepNumber, String message, String stack) {

@@ -5,7 +5,6 @@ import ch.scaille.javabeans.converters.Converters;
 import ch.scaille.javabeans.converters.IConverter;
 import lombok.Getter;
 import lombok.Setter;
-import org.jspecify.annotations.Nullable;
 
 @Getter
 @Setter
@@ -17,12 +16,11 @@ public class TestObject {
 		aSecondValue = i;
 	}
 
-	@Nullable
 	private String aFirstValue;
 
 	private int aSecondValue;
 
 	public static IConverter<TestObject, String> testObjectToString() {
-		return Converters.listen(o -> o != null && o.aFirstValue != null ? o.aFirstValue : "");
+		return Converters.listen(o -> o.aFirstValue);
 	}
 }

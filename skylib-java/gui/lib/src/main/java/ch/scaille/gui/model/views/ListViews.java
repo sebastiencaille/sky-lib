@@ -8,15 +8,15 @@ import java.util.function.Predicate;
 
 public interface ListViews {
 
-    static <U extends @Nullable Object> IListView<U> sortedFiltered(@Nullable final Comparator<? super U> comparator, @Nullable final Predicate<? super U> filter) {
+    static <U> IListView<U> sortedFiltered(@Nullable final Comparator<? super U> comparator, @Nullable final Predicate<? super U> filter) {
         return new StaticListView<>(comparator, filter);
     }
 
-    static <U extends @Nullable Object> IListView<U> sorted(final Comparator<? super U> comparator) {
+    static <U> IListView<U> sorted(final Comparator<? super U> comparator) {
         return sortedFiltered(comparator, null);
     }
 
-    static <U extends @Nullable Object> IListView<U> filtered(final Predicate<? super U> filter) {
+    static <U> IListView<U> filtered(final Predicate<? super U> filter) {
         return sortedFiltered(null, filter);
     }
 
@@ -24,7 +24,7 @@ public interface ListViews {
         return sorted(Comparator.naturalOrder());
     }
 
-    static <U extends @Nullable Object> IListView<U> inherited() {
+    static <U> IListView<U> inherited() {
         return new StaticListView<>(null, null);
     }
 
@@ -32,7 +32,7 @@ public interface ListViews {
         return new StaticListView<>(Comparator.comparingLong(Object::hashCode), null);
     }
 
-    static <T extends @Nullable Object, P extends IView<T>> DynamicListView<T, P> dynamic(P parameters) {
+    static <T, P extends IView<T>> DynamicListView<T, P> dynamic(P parameters) {
         return new DynamicListView<>(parameters,(o1, o2, p) -> p.compare(o1, o2), (o, p) -> p.test(o));
     }
 }

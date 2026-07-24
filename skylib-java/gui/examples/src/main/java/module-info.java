@@ -8,7 +8,6 @@ module lib.gui.examples {
 	opens ch.scaille.example.util.dao.metadata to lib.utils;
 	
 	requires java.desktop;
-    requires java.compiler;
     requires lib.utils;
     requires lib.annotations;
     requires lib.javabeans;

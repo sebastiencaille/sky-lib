@@ -4,15 +4,13 @@ import ch.scaille.annotations.Labeled;
 import ch.scaille.annotations.Ordered;
 import ch.scaille.tcwriter.model.config.SubConfig;
 import lombok.Setter;
-import org.jspecify.annotations.Nullable;
 
 @Setter
 public class JunitTestExecConfig implements SubConfig {
 
 	private String java = System.getProperty("java.home") + "/bin/java";
 
-	@Nullable
-	private String[] classpath = null;
+	private String [] classpath = new String[0];
 
 	@Ordered(order = 1)
 	@Labeled(label = "Path to java (empty for default)")
@@ -22,7 +20,6 @@ public class JunitTestExecConfig implements SubConfig {
 
     @Ordered(order = 2)
 	@Labeled(label = "ClassPath of dictionary implementation")
-	@Nullable
 	public String[] getClasspath() {
 		return classpath;
 	}

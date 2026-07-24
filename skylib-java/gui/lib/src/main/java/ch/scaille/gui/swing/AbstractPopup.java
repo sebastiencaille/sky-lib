@@ -12,12 +12,13 @@ import org.jspecify.annotations.Nullable;
 public abstract class AbstractPopup<T> extends MouseAdapter {
 
 	private final JPopupMenu componentPopupMenu = new JPopupMenu();
+
 	@Nullable
-	protected final ObjectProperty<T> lastSelected;
+	protected final ObjectProperty<@Nullable T> lastSelected;
 
 	protected abstract void buildPopup(JPopupMenu popupMenu, T selected);
 
-	protected AbstractPopup(@Nullable final ObjectProperty<T> lastSelected) {
+	protected AbstractPopup(@Nullable final ObjectProperty<@Nullable T> lastSelected) {
 		this.lastSelected = lastSelected;
 	}
 

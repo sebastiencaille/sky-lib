@@ -9,6 +9,7 @@ import ch.scaille.javabeans.AutoCommitListener;
 import ch.scaille.javabeans.persisters.IPersisterFactory;
 import ch.scaille.javabeans.persisters.IPersisterFactory.IObjectProvider;
 import ch.scaille.javabeans.properties.AbstractProperty.ErrorNotifier;
+import org.jspecify.annotations.Nullable;
 
 /**
  * To tune the properties.
@@ -24,7 +25,7 @@ public class Configuration {
 	private Configuration() {
 	}
 
-	public static <A, P extends AbstractTypedProperty<A>> Consumer<P> persistent(final IPersister<A> persister) {
+	public static <A extends @Nullable Object, P extends AbstractTypedProperty<A>> Consumer<P> persistent(final IPersister<A> persister) {
 		return property -> property.setPersister(persister);
 	}
 
@@ -34,8 +35,8 @@ public class Configuration {
 	 * @param <A> the type of the persisted attribute
 	 * @param <P> the type of the attribute Property
 	 */
-	public static <T, A, P extends AbstractTypedProperty<A>> Consumer<P> persistent(IObjectProvider<T> object,
-			final IPersisterFactory<T, A> persisterFactory) {
+	public static <T, A extends @Nullable Object, P extends AbstractTypedProperty<A>> Consumer<P> persistent(IObjectProvider<T> object,
+                                                                                                             final IPersisterFactory<T, A> persisterFactory) {
 		return persistent(persister(object, persisterFactory));
 	}
 

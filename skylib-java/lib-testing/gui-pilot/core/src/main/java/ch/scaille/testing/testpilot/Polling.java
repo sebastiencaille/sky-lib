@@ -25,11 +25,11 @@ import org.jspecify.annotations.Nullable;
 @Getter
 public class Polling<C, R extends @Nullable Object> {
 
-    public static <C1, R1> Polling.PollingBuilder<C1, R1> of(PollingFunction<C1, R1> pollingFunction) {
+    public static <C1, R1 extends @Nullable Object> Polling.PollingBuilder<C1, R1> of(PollingFunction<C1, R1> pollingFunction) {
         return Polling.<C1, R1>builder().pollingFunction(pollingFunction);
     }
 
-    public static <C1, R1> Polling.PollingBuilder<C1, R1> of(Predicate<PolledComponent<C1>> precondition, PollingFunction<C1, R1> pollingFunction) {
+    public static <C1, R1 extends @Nullable Object> Polling.PollingBuilder<C1, R1> of(Predicate<PolledComponent<C1>> precondition, PollingFunction<C1, R1> pollingFunction) {
         return Polling.<C1, R1>builder().precondition(precondition).pollingFunction(pollingFunction);
     }
 

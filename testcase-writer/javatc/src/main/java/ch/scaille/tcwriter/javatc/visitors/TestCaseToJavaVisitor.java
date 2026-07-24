@@ -1,6 +1,7 @@
 package ch.scaille.tcwriter.javatc.visitors;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.Objects.requireNonNullElse;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
@@ -171,15 +172,15 @@ public class TestCaseToJavaVisitor {
 
 		case TestParameterFactory f when f.getNature() == ParameterNature.SIMPLE_TYPE
 				&& String.class.getName().equals(f.getParameterType()) ->
-			parametersContent.append("\"").append(parameterValue.getSimpleValue()).append("\"");
+			parametersContent.append("\"").append(requireNonNullElse(parameterValue.getSimpleValue(), "<not set>")).append("\"");
 
 		case TestParameterFactory f when f.getNature() == ParameterNature.SIMPLE_TYPE
 				&& (Long.class.getName().equals(f.getParameterType())
 						|| Long.TYPE.getName().equals(f.getParameterType())) ->
-			parametersContent.append(parameterValue.getSimpleValue()).append("L");
+			parametersContent.append(requireNonNullElse(parameterValue.getSimpleValue(), "<not set>")).append("L");
 
 		case TestParameterFactory f when ParameterNature.SIMPLE_TYPE == f.getNature() ->
-			parametersContent.append(parameterValue.getSimpleValue());
+			parametersContent.append(requireNonNullElse(parameterValue.getSimpleValue(), "<not set>"));
 
 		case TestReference f when f.getNature() == ParameterNature.REFERENCE -> parametersContent.append(f.getName());
 

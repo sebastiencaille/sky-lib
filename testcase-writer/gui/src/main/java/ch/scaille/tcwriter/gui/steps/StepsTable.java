@@ -152,9 +152,12 @@ public class StepsTable extends JPanel {
 				return;
 			}
 			selectedStepCtrl.pauseBinding();
-			final int row = stepsTableModel.getRowOf(model.getSelectedStep().getValue());
-			stepsTableModel.fireTableRowsUpdated(row, row + 1);
-			selectedStepCtrl.resumeBinding();
+			model.getSelectedStep().optional()
+				.ifPresent(step -> {
+					final int row = stepsTableModel.getRowOf(step);
+					stepsTableModel.fireTableRowsUpdated(row, row + 1);
+					selectedStepCtrl.resumeBinding();
+				});
 		});
 
 		add(new JScrollPane(stepsJTable), BorderLayout.CENTER);

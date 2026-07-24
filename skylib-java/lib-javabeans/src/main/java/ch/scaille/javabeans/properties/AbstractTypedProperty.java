@@ -17,7 +17,7 @@ import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.IPropertiesOwner;
 import ch.scaille.javabeans.IVetoer.TransmitMode;
 import ch.scaille.javabeans.PropertyEvent.EventKind;
-import ch.scaille.javabeans.converters.IConverterWithContext;
+import ch.scaille.javabeans.converters.IContextualConverter;
 import ch.scaille.javabeans.converters.IConverter;
 import ch.scaille.javabeans.persisters.Persisters;
 import org.jspecify.annotations.Nullable;
@@ -90,7 +90,6 @@ public abstract class AbstractTypedProperty<T extends @Nullable Object> extends 
         return createBindingChainWithConv().bind(binding);
     }
 
-
     @Override
     public <C extends @Nullable Object> IChainBuilder<C> listenF(final Function<T, C> binding) {
         return createBindingChainWithConv().listenF(binding);
@@ -126,7 +125,7 @@ public abstract class AbstractTypedProperty<T extends @Nullable Object> extends 
 
 
     @Override
-    public <C extends @Nullable Object, K> IChainBuilder<C> bind(IConverterWithContext<T, C, K> converter) {
+    public <C extends @Nullable Object, K> IChainBuilder<C> bind(IContextualConverter<T, C, K> converter) {
         return createBindingChainWithConv().bind(converter);
     }
 

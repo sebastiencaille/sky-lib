@@ -28,6 +28,8 @@ public class GenericPropertiesEditorLauncher {
 	@Getter
 	@Setter
 	public static class EditedObject {
+
+		@Nullable
 		private String str;
 
 		private boolean bool;
@@ -36,7 +38,7 @@ public class GenericPropertiesEditorLauncher {
 
 	private static List<IPropertyEntry> builder(IPropertiesGroup support, IObjectProvider<EditedObject> obj) {
 
-		final var strProp = new ObjectProperty<@Nullable String>("str", support, null)
+		final var strProp = new ObjectProperty<@Nullable String>("str", support, "")
 				.configureTyped(persistent(obj, persister(EditedObject::getStr, EditedObject::setStr)));
 		final var boolProp = new BooleanProperty("bool", support)
 				.configureTyped(persistent(obj, persister(EditedObject::isBool, EditedObject::setBool)));

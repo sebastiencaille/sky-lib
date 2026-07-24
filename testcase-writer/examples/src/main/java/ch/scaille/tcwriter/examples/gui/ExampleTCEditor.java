@@ -13,7 +13,7 @@ import ch.scaille.tcwriter.gui.frame.TCWriterController;
 
 public class ExampleTCEditor {
 
-	public static void main() throws IOException {
+	static void main() throws IOException {
 		final var exampleHelper = new ExampleHelper();
 		final var tcDictionary = exampleHelper.generateDictionary();
 		final var testCase = exampleHelper.recordTestCase(tcDictionary);

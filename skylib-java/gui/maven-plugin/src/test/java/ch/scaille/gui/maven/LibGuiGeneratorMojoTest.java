@@ -16,7 +16,6 @@ import org.apache.maven.model.Build;
 import org.apache.maven.model.Resource;
 import org.apache.maven.project.MavenProject;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 @MojoTest
 class LibGuiGeneratorMojoTest {

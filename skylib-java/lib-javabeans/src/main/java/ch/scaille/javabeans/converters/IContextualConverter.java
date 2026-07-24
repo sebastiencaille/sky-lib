@@ -10,7 +10,7 @@ import org.jspecify.annotations.Nullable;
  * @param <C> The component side type
  * @param <K> the context type
  */
-public interface IConverterWithContext<P extends @Nullable Object, C extends @Nullable Object, K> {
+public interface IContextualConverter<P extends @Nullable Object, C extends @Nullable Object, K> {
 
 	default void initialize(final AbstractProperty p) {
 		// noop

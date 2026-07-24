@@ -13,11 +13,11 @@ import org.jspecify.annotations.Nullable;
  * @param <P> the type of the view's parameter
  */
 
-public class DynamicListView<T extends @Nullable Object, P> extends AbstractListView<T>
+public class DynamicListView<T, P> extends AbstractListView<T>
         implements IComponentBinding<P> {
 
 
-    public interface DynamicComparator<T extends @Nullable Object, P> {
+    public interface DynamicComparator<T, P> {
         int compare(T o1, T o2, P parameters);
     }
 

@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import ch.scaille.util.helpers.LambdaExt.RunnableWithException;
 import ch.scaille.util.helpers.LambdaExt.SupplierWithException;
+import org.jspecify.annotations.Nullable;
 
 public class StorageException extends IOException {
 
@@ -23,7 +24,7 @@ public class StorageException extends IOException {
 		}
 	}
 
-	public static <T> T wrap(String operation, SupplierWithException<T, IOException> supplier) throws StorageException {
+	public static <T extends @Nullable Object> T wrap(String operation, SupplierWithException<T, IOException> supplier) throws StorageException {
 		try {
 			return supplier.execute();
 		} catch (IOException e) {

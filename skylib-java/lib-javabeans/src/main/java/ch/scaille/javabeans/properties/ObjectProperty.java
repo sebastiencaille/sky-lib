@@ -11,6 +11,7 @@ import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.IPropertiesOwner;
 import ch.scaille.javabeans.chain.BindingChain;
 import lombok.Getter;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -89,7 +90,7 @@ public class ObjectProperty<T extends @Nullable Object> extends AbstractTypedPro
         propertySupport.getChangeSupport().firePropertyChange(getName(), caller, null, getValue());
     }
 
-    public Optional<T> optional() {
+    public Optional<@NonNull T> optional() {
         return Optional.ofNullable(value);
     }
 

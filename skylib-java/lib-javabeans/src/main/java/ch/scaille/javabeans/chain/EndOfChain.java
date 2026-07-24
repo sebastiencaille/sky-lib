@@ -14,7 +14,7 @@ import ch.scaille.javabeans.IComponentLink;
 import ch.scaille.javabeans.Logging;
 import ch.scaille.javabeans.converters.ConversionException;
 import ch.scaille.javabeans.converters.IConverter;
-import ch.scaille.javabeans.converters.IConverterWithContext;
+import ch.scaille.javabeans.converters.IContextualConverter;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -140,7 +140,7 @@ public class EndOfChain<P extends @Nullable Object> implements IChainBuilder<P> 
      * @param <C> The component side type
      */
     @Override
-    public <C extends @Nullable Object, K> EndOfChain<C> bind(final IConverterWithContext<P, C, K> converter) {
+    public <C extends @Nullable Object, K> EndOfChain<C> bind(final IContextualConverter<P, C, K> converter) {
         converter.initialize(chain.getProperty());
         final var contextProperties = converter.contextProperties();
         register(contextProperties);

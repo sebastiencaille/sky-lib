@@ -1,8 +1,10 @@
 package ch.scaille.util.dao.metadata;
 
 import lombok.Getter;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 
 /**
  * This class gives access to the attributes of a class.
@@ -22,6 +24,7 @@ public class DataObjectManager<T> {
 		}
 
 		@Override
+		@Nullable
 		public Object getValue() {
 			return DataObjectManager.this.getValueOf(name);
 		}
@@ -32,7 +35,7 @@ public class DataObjectManager<T> {
 		}
 
 		@Override
-		public void setValue(final Object value) {
+		public void setValue(@Nullable final Object value) {
 			DataObjectManager.this.setValueOf(name, value);
 		}
 
@@ -56,11 +59,12 @@ public class DataObjectManager<T> {
 		return metaData.createUntypedAccessorTo(object);
 	}
 
+	@Nullable
 	public Object getValueOf(final String name) {
-		return metaData.getAttribute(name).getValueOf(object);
+		return Objects.requireNonNull(metaData.getAttribute(name), () -> "No such attribute: " + name).getValueOf(object);
 	}
 
-	public void setValueOf(final String name, final Object o) {
+	public void setValueOf(final String name, @Nullable final Object o) {
 		metaData.getAttribute(name).setValueOf(object, o);
 	}
 

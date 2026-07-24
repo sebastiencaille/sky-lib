@@ -3,6 +3,7 @@ package ch.scaille.example.gui;
 import ch.scaille.example.gui.TestObjectTableModel.Columns;
 import ch.scaille.gui.model.ListModel;
 import ch.scaille.gui.swing.model.ListModelTableModel;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
 
@@ -25,6 +26,7 @@ public class TestObjectTableModel extends ListModelTableModel<TestObject, Column
 	}
 
 	@Override
+	@Nullable
 	protected Object getValueAtColumn(final TestObject object, final Columns column) {
 		return switch (column) {
 			case A_FIRST_VALUE -> object.getAFirstValue();

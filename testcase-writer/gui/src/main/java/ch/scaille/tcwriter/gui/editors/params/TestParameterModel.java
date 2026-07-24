@@ -22,7 +22,7 @@ public class TestParameterModel extends GuiModel {
 	private final String prefix;
 
 	public TestParameterModel(final String prefix, final TCWriterController guiController,
-			final ObjectProperty<TestParameterFactory> testApi,
+			final ObjectProperty<@Nullable TestParameterFactory> testApi,
 			final ObjectProperty<TestParameterValue> editedParameterValue) {
 		super(ModelConfiguration.builder().propertySupport(guiController.getScopedChangeSupport().getChangeSupport().scoped(prefix + "-controller")));
 		this.prefix = prefix;
@@ -30,8 +30,8 @@ public class TestParameterModel extends GuiModel {
 		this.testApi = testApi;
 
 		this.valueNature = new ObjectProperty<>(prefix + "-nature", this, ParameterNature.SIMPLE_TYPE);
-		this.simpleValue = editedParameterValue.child(prefix + "-simpleValue", TestParameterValue::getSimpleValue,
-				TestParameterValue::setSimpleValue);
+		this.simpleValue = editedParameterValue.child(prefix + "-simpleValue",
+				TestParameterValue::getSimpleValue, TestParameterValue::setSimpleValue);
 		this.selectedReference = new ObjectProperty<>(prefix + "-reference", this, null);
 		this.references = new ListProperty<>(prefix + "-references", this);
 		this.editedParameterValue.addListener(getPropertySupport().detachWhenPropLoading());

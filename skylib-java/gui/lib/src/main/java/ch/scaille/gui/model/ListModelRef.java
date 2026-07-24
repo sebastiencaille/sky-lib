@@ -1,7 +1,5 @@
 package ch.scaille.gui.model;
 
-import org.jspecify.annotations.Nullable;
-
 /**
  * Events are triggered by the list model implementation. This interface allows
  * retrieving the according list model
@@ -11,6 +9,6 @@ import org.jspecify.annotations.Nullable;
  * @param <T>
  */
 
-public interface ListModelRef<T extends @Nullable Object> {
+public interface ListModelRef<T> {
 	ListModel<T> getListModel();
 }

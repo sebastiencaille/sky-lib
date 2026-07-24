@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import ch.scaille.javabeans.converters.IConverter;
-import ch.scaille.javabeans.converters.IConverterWithContext;
+import ch.scaille.javabeans.converters.IContextualConverter;
 import ch.scaille.javabeans.properties.PropertiesContext;
 import org.jspecify.annotations.Nullable;
 
@@ -40,7 +40,7 @@ public interface IChainBuilder<P extends @Nullable Object> {
     /**
      * @param <C> The component side type
      */
-    <C extends @Nullable Object, K> IChainBuilder<C> bind(IConverterWithContext<P, C, K> converter);
+    <C extends @Nullable Object, K> IChainBuilder<C> bind(IContextualConverter<P, C, K> converter);
 
     /**
      * @param <C> The component side type

@@ -18,7 +18,7 @@ import java.util.Objects;
  * @param <T>
  */
 
-public abstract class AbstractListView<T extends @Nullable Object> implements IListView<T>, Serializable {
+public abstract class AbstractListView<T> implements IListView<T>, Serializable {
 
 	@Serial
 	private static final long serialVersionUID = -4696996416566266010L;

@@ -41,7 +41,7 @@ public class FileSystemDao<T> extends AbstractFSSerializationDao<T> {
 	/**
 	 * Finds the locator in basePath
 	 * 
-	 * @param locator a value to locate the files, empty String to use basePath, null to return all the content
+	 * @param identifier a value to locate the files, empty String to use basePath, null to return all the content
 	 * @return a stream of metadata
 	 */
 	private Stream<ResourceMetaData> findInFolder(@Nullable String identifier) throws StorageException {

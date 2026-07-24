@@ -23,16 +23,16 @@ public class LibGuiGeneratorMojo extends AbstractMojo {
     private MavenProject project;
 
     @Parameter(property = "classPathFolder", required = true)
-    private String classPathFolder;
+    private String classPathFolder = "";
 
     @Parameter(property = "scanPackage", required = true)
-    private String scanPackage;
+    private String scanPackage = "";
 
     @Parameter(property = "targetPackage")
-    private String targetPackage;
+    private String targetPackage = "";
 
     @Parameter(property = "targetFolder", required = true)
-    private String targetFolder;
+    private String targetFolder = "";
 
     private String resolveFile(String p) {
         final var path = new File(p);

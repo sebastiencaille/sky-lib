@@ -14,7 +14,7 @@ import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
  */
 public class ModuleDao<T> extends ClassPathDao<T> {
 
-	private Module[] modules;
+	private final Module[] modules;
 
 	public ModuleDao(Class<T> daoType, Path resourcePath, StorageDataHandlerRegistry serDeserializerRegistry, Set<String> whiteList, Module... modules) {
 		super(daoType, resourcePath, serDeserializerRegistry, whiteList);

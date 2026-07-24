@@ -60,15 +60,18 @@ public class SwingBindings {
 
     /**
      * Class that contains all the listeners' life cycle (create, add, remove)
+     * @param <P> the property side type
+     * @param <C> the component type side
+     * @param <L> the listener type
      **/
-    private static class ListenerRegistration<T extends @Nullable Object, C, L> implements IListenerRegistration<T, C> {
-        private final BiFunction<IComponentLink<T>, C, L> createListener;
+    private static class ListenerRegistration<P extends @Nullable Object, C, L> implements IListenerRegistration<P, C> {
+        private final BiFunction<IComponentLink<P>, C, L> createListener;
         private final BiConsumer<C, L> addListener;
         private final BiConsumer<C, L> removeListener;
         @Nullable
         private L listener;
 
-        public ListenerRegistration(final BiFunction<IComponentLink<T>, C, L> createListener,
+        public ListenerRegistration(final BiFunction<IComponentLink<P>, C, L> createListener,
                                     final BiConsumer<C, L> addListener, final BiConsumer<C, L> removeListener) {
             this.createListener = createListener;
             this.addListener = addListener;
@@ -76,7 +79,7 @@ public class SwingBindings {
         }
 
         @Override
-        public void addListener(final C component, final IComponentLink<T> toProperty) {
+        public void addListener(final C component, final IComponentLink<P> toProperty) {
             if (listener != null) {
                 throw new IllegalStateException("Listener already added");
             }
@@ -137,15 +140,15 @@ public class SwingBindings {
      * Conditionally listen to an item and converts its value
      *
      * @param <C>       the ItemSelectable type
-     * @param <T>       the converted type
-     * @param activator the condition that allows the value propagation
+     * @param <P>       the property side type
+     * @param filter the condition that allows the value propagation
      * @param converter the converter from the item value to the listener value
      * @return a listener registration
      */
-    public static <T, C extends ItemSelectable> IListenerRegistration<T, C> itemListener(
-            final Predicate<ItemEvent> activator, final Function<ItemEvent, T> converter) {
+    public static <P, C extends ItemSelectable> IListenerRegistration<P, C> itemListener(
+            final Predicate<ItemEvent> filter, final Function<ItemEvent, P> converter) {
         return new ListenerRegistration<>((link, component) -> event -> {
-            if (activator.test(event)) {
+            if (filter.test(event)) {
                 link.setValueFromComponent(component, converter.apply(event));
             }
         }, ItemSelectable::addItemListener, ItemSelectable::removeItemListener);

@@ -1,13 +1,13 @@
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-module testcase.writer.webapp.api.v0.backend {
+module testcase.writer.webapp.api.v0_.backend {
+	
 	exports ch.scaille.tcwriter.server.webapi.v0.autoconfigure to spring.beans, spring.context, spring.core;
 	exports ch.scaille.tcwriter.server.webapi.v0.controllers to spring.web;
 	exports ch.scaille.tcwriter.generated.api.config.v0;
 	exports ch.scaille.tcwriter.generated.api.model.v0;
 
-	
 	opens ch.scaille.tcwriter.server.webapi.v0.autoconfigure to spring.beans, spring.context, spring.core;
 	opens ch.scaille.tcwriter.server.webapi.v0.controllers to spring.beans, spring.context, spring.core;
 	opens ch.scaille.tcwriter.server.webapi.v0.mappers to org.mapstruct;
@@ -19,6 +19,7 @@ module testcase.writer.webapp.api.v0.backend {
 	requires transitive testcase.writer.webapp.api.validators;
 
     requires jakarta.validation;
+    requires java.compiler;
 
     requires spring.boot;
 	requires spring.boot.autoconfigure;	

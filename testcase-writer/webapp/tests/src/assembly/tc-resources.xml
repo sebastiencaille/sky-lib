@@ -9,20 +9,10 @@
 	<dependencySets>
 		<dependencySet>
 			<useProjectArtifact>true</useProjectArtifact>
-			<outputDirectory>javatc</outputDirectory>
-            <scope>provided</scope>
+			<outputDirectory>example</outputDirectory>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 			<includes>
-				<include>ch.scaille.tcwriter:testcase-writer-javatc-client:jar:fatjar</include>
-				<include>org.junit.platform:junit-platform-console-standalone</include>
-			</includes>
-		</dependencySet>
-		<dependencySet>
-			<outputDirectory>javatc</outputDirectory>
-			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-			<includes>
-				<include>org.aspectj:aspectjtools</include>
-				<include>org.aspectj:aspectjrt</include>
+				<include>ch.scaille.tcwriter:testcase-writer-examples:jar</include>
 			</includes>
 		</dependencySet>
 	</dependencySets>

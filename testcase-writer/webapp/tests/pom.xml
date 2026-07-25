@@ -51,31 +51,12 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>copy</goal>
-						</goals>
-						<configuration>
-							<overWriteIfNewer>true</overWriteIfNewer>
-							<stripVersion>true</stripVersion>
-							<stripClassifier>true</stripClassifier>
-							<outputDirectory>
-								${project.build.directory}/example-resources</outputDirectory>
-							<artifactItems>
-								<artifactItem>
-									<groupId>ch.scaille.tcwriter</groupId>
-									<artifactId>testcase-writer-examples</artifactId>
-									<version>${revision}</version>
-									<type>jar</type>
-								</artifactItem>
-							</artifactItems>
-						</configuration>
-					</execution>
-				</executions>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptors>
+						<descriptor>src/assembly/tc-resources.xml</descriptor>
+					</descriptors>
+				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
@@ -83,7 +64,7 @@
 					<webResources>
 						<resource>
 							<directory>
-								${project.build.directory}/example-resources</directory>
+								${project.build.directory}/tc-resources/example</directory>
 							<targetPath>example-resources</targetPath>
 						</resource>
 					</webResources>
@@ -92,7 +73,7 @@
 			<plugin>
 				<groupId>com.google.cloud.tools</groupId>
 				<artifactId>jib-maven-plugin</artifactId>
-				<version>3.5.1</version>
+				<version>3.5.2</version>
 				<configuration>
 					<from>
 						<image>openjdk:25-ea-slim</image>

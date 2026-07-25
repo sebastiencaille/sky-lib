@@ -18,7 +18,7 @@
 		</plugins>
 	</build>
 	<dependencies>
-			<dependency>
+		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-javatc-client</artifactId>
 		</dependency>

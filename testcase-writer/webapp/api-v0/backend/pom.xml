@@ -23,7 +23,6 @@
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-webapp-api-v0-webapi</artifactId>
-			<version>${revision}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

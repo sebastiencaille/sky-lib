@@ -6,8 +6,8 @@ module testcase.writer.examples {
 	exports ch.scaille.tcwriter.examples;
 	opens userResources.templates;
 
-	requires transitive testcase.writer.core;
-	requires transitive testcase.writer.javatc.client;
+	requires testcase.writer.core;
+	requires testcase.writer.javatc.client;
 		
 	requires testcase.writer.api;
 	requires testcase.writer.gui;

@@ -63,6 +63,7 @@
 				<type>war</type>
 				<version>${revision}</version>
 			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 
@@ -135,28 +136,6 @@
 								<version>${springboot.version}</version>
 							</path>
 						</annotationProcessorPaths>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-assembly-plugin</artifactId>
-					<executions>
-						<execution>
-							<id>default</id>
-							<phase>none</phase>
-						</execution>
-						<execution>
-							<id>single</id>
-							<phase>package</phase>
-							<goals>
-								<goal>single</goal>
-							</goals>
-						</execution>
-					</executions>
-					<configuration>
-						<finalName>tc-resources</finalName>
-						<appendAssemblyId>false</appendAssemblyId>
-						<attach>false</attach>
 					</configuration>
 				</plugin>
 				<plugin>

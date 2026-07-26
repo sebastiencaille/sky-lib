@@ -17,14 +17,17 @@
 
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
-			<artifactId>testcase-writer-javatc-client</artifactId>
+			<artifactId>testcase-writer-examples</artifactId>
 			<classifier>fatjar</classifier>
-			<scope>provided</scope>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.junit.platform</groupId>
-			<artifactId>junit-platform-console-standalone</artifactId>
-			<scope>provided</scope>
+			<groupId>ch.scaille.tcwriter</groupId>
+			<artifactId>testcase-writer-javatc</artifactId>
+			<classifier>client-bundle</classifier>
+			<version>${project.version}</version>
+			<type>zip</type>
+			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
 
@@ -36,15 +39,10 @@
 				<configuration>
 					<descriptors>
 						<descriptor>../war/src/assembly/tc-resources.xml</descriptor>
+						<descriptor>../tests/src/assembly/tc-resources.xml</descriptor>
 					</descriptors>
 				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>org.junit.platform</groupId>
-						<artifactId>junit-platform-console-standalone</artifactId>
-						<version>${junit-platform-console-standalone.version}</version>
-					</dependency>
-				</dependencies>
+
 			</plugin>
 		</plugins>
 	</build>

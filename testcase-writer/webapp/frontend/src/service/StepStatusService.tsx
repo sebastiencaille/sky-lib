@@ -19,7 +19,7 @@ export const handleStepStatusAction = (stepStatuses: Map<number, StepStatus>, ac
 			return new Map();
 		}
 		default: {
-			throw Error('Unknown action: ' + action.type);
+			throw new Error('Unknown action: ' + action.type);
 		}
 	}
 }

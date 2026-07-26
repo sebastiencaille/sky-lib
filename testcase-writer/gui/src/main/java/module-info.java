@@ -9,10 +9,13 @@ module testcase.writer.gui {
 	
     requires transitive testcase.writer.core;
     requires transitive testcase.writer.javatc;
+
+    requires testcase.writer.api;
+
     requires lib.gui;
     requires lib.javabeans;
     requires lib.utils;
     requires jcommander;
     requires com.google.common;
-	requires testcase.writer.api;
+
 }

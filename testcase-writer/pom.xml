@@ -109,6 +109,27 @@
 						</execution>
 					</executions>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<executions>
+						<execution>
+							<id>default</id>
+							<phase>none</phase>
+						</execution>
+						<execution>
+							<id>single</id>
+							<phase>package</phase>
+							<goals>
+								<goal>single</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<appendAssemblyId>false</appendAssemblyId>
+						<attach>false</attach>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -155,6 +176,13 @@
 				<groupId>ch.scaille.tcwriter</groupId>
 				<artifactId>testcase-writer-examples</artifactId>
 				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille.tcwriter</groupId>
+				<artifactId>testcase-writer-examples</artifactId>
+				<classifier>fatjar</classifier>
+				<version>${revision}</version>
+				<scope>provided</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

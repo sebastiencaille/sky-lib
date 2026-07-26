@@ -1,7 +1,7 @@
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/2.2.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.2.0 http://maven.apache.org/xsd/assembly-2.2.0.xsd">
-	<id>tc-resources-example</id>
+	<id>tc-resources</id>
 	<formats>
 		<format>dir</format>
 	</formats>
@@ -9,12 +9,12 @@
 	<dependencySets>
 		<dependencySet>
 			<useProjectArtifact>true</useProjectArtifact>
-			<scope>runtime</scope>
-			<outputDirectory>example-resources</outputDirectory>
-			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+			<outputDirectory>javatc</outputDirectory>
+            <scope>runtime</scope>
 			<includes>
-				<include>ch.scaille.tcwriter:testcase-writer-examples:jar:fatjar</include>
+				<include>ch.scaille.tcwriter:testcase-writer-javatc:zip:client-bundle</include>
 			</includes>
+			<unpack>true</unpack>
 		</dependencySet>
 	</dependencySets>
 </assembly>

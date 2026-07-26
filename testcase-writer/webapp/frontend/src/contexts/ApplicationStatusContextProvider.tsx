@@ -21,7 +21,7 @@ function applicationStatusReducer(applicationStatus: ApplicationStatus, action: 
 			return newStatus;
 		}
 		default: {
-			throw Error('Unknown action: ' + action.type);
+			throw new Error('Unknown action: ' + action.type);
 		}
 	}
 }

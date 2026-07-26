@@ -22,7 +22,7 @@ const enhanceDictionary = (dict: TestDictionary): TestDictionary => {
 
 const enhanceTestCase = (dict: TestDictionary, tc: TestCase): TestCase => {
 	tc.references = tc.steps.map(step => (step.reference as TestReference))
-		.filter(ref => ref)
+		.filter(Boolean)
 		.reduce((a, v) => a.set(v.id, v), new Map<string, TestReference>());
 	for (const step of tc.steps) {
 		step.action = dict.actionsMap.get(step.actionRef) as TestAction;

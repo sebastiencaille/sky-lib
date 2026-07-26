@@ -32,7 +32,19 @@
 
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
+			<artifactId>testcase-writer-javatc</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-examples</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>ch.scaille.tcwriter</groupId>
+			<artifactId>testcase-writer-examples</artifactId>
+			<classifier>fatjar</classifier>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
@@ -60,15 +72,6 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
-				<configuration>
-					<webResources>
-						<resource>
-							<directory>
-								${project.build.directory}/tc-resources/example</directory>
-							<targetPath>example-resources</targetPath>
-						</resource>
-					</webResources>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>com.google.cloud.tools</groupId>

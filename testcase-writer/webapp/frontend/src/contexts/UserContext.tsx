@@ -33,7 +33,7 @@ function userContextReducer(_state: UserContext, action: UserContextAction): Use
 	if (action.type === 'update') {
 		return action.newContext;
 	}
-	throw Error('Unknown action: ' + action.type);
+	throw new Error('Unknown action: ' + action.type);
 }
 
 export function UserContextProvider({ children }: Readonly<{ children: ReactNode[] | ReactNode }>): ReactNode {

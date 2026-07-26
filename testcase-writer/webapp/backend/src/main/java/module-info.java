@@ -33,7 +33,7 @@ module testcase.writer.webapp.backend {
 	requires transitive org.apache.tomcat.embed.el;
 	
 	requires jakarta.servlet;
-	requires java.desktop;
+	requires java.compiler;
 	
     requires spring.boot;
 	requires spring.boot.webmvc;
@@ -42,6 +42,7 @@ module testcase.writer.webapp.backend {
 	requires spring.tx;
 	requires spring.beans;
 	requires spring.context;
+	requires spring.aop;
 	requires spring.orm;
 	requires spring.core;
 	requires spring.messaging;

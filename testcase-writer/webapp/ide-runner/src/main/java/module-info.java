@@ -4,6 +4,7 @@ import org.jspecify.annotations.NullMarked;
 module testcase.writer.webapp.ide.runner {
 	
 	requires testcase.writer.webapp.backend;
+	requires testcase.writer.webapp.api.v0_.backend;
 
     requires spring.boot;
     requires spring.boot.autoconfigure;

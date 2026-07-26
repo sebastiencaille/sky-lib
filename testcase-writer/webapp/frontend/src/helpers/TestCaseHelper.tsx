@@ -7,7 +7,7 @@ const hasSelector = (dict: TestDictionary, action: TestAction): boolean => {
 
 
 const descriptionOf = (dict: TestDictionary, testObjects: (IdObject|undefined)[], fallback ?: string) : string => {
-	const descr = testObjects.map(o => o && dict.descriptions[o.id]?.description).find(descr => descr);
+	const descr = testObjects.map(o => o && dict.descriptions[o.id]?.description).find(Boolean);
 	return descr ?? fallback ?? '---';
 }
 

@@ -14,4 +14,5 @@ module testcase.writer.model {
 	requires transitive com.fasterxml.jackson.annotation;
 
 	requires transitive com.google.common;
+	requires static org.junit.platform.commons;
 }

@@ -1,0 +1,39 @@
+get:
+  summary: List all test cases
+  operationId: listAllTestCases
+  parameters:
+    - in: header
+      name: X-UserContext
+      schema:
+        type: string
+      required: true
+      description: id of the dictionary
+  responses:
+    '200':
+      description: all  test cases
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: ../openapi.yaml#/components/schemas/Metadata
+put:
+  summary: Create a test case
+  operationId: createTestcase
+  parameters:
+    - in: header
+      name: X-UserContext
+      schema:
+        type: string
+      required: true
+      description: id of the dictionary
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../openapi.yaml#/components/schemas/TestCase
+  responses:
+    '200':
+      description: test case exported
+

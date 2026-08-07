@@ -1,82 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.1.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 http://maven.apache.org/xsd/maven-4.1.0.xsd">
+    <modelVersion>4.1.0</modelVersion>
 
-	<parent>
-		<groupId>ch.scaille</groupId>
-		<artifactId>skylib-starter-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-		<relativePath />
-	</parent>
+    <parent>
+        <groupId>ch.scaille</groupId>
+        <artifactId>libs</artifactId>
+        <version>${revision}</version>
+    </parent>
 
-	<groupId>ch.scaille.dataflowmgr</groupId>
-	<artifactId>data-flow-manager</artifactId>
-	<version>${revision}</version>
-	<packaging>pom</packaging>
+    <groupId>ch.scaille.dataflowmgr</groupId>
+    <artifactId>data-flow-manager</artifactId>
+    <version>${revision}</version>
+    <packaging>pom</packaging>
 
-	<name>data-flow-manager</name>
+    <name>data-flow-manager</name>
 
-	<modules>
-		<module>model</module>
-		<module>generator</module>
-		<module>runtime</module>
-		<module>examples</module>
-		<module>annotations</module>
-	</modules>
-	<properties>
-		<data-flow-manager-version>${revision}</data-flow-manager-version>
-		<java.version>25</java.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<rxjava3.version>3.1.12</rxjava3.version>
-	</properties>
+    <subprojects>
+        <subproject>model</subproject>
+        <subproject>generator</subproject>
+        <subproject>runtime</subproject>
+        <subproject>examples</subproject>
+        <subproject>annotations</subproject>
+    </subprojects>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>flatten-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+    <properties>
+        <data-flow-manager-version>${revision}</data-flow-manager-version>
+        <java.version>25</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <rxjava3.version>3.1.12</rxjava3.version>
+    </properties>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>lib-utils</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille.dataflowmgr</groupId>
-				<artifactId>data-flow-model</artifactId>
-				<version>${data-flow-manager-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille.dataflowmgr</groupId>
-				<artifactId>data-flow-generator</artifactId>
-				<version>${data-flow-manager-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille.dataflowmgr</groupId>
-				<artifactId>data-flow-annotations</artifactId>
-				<version>${data-flow-manager-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille.dataflowmgr</groupId>
-				<artifactId>data-flow-runtime</artifactId>
-				<version>${data-flow-manager-version}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>ch.scaille</groupId>
+                <artifactId>skylib-starter-parent</artifactId>
+                <version>0.0.1-M4-SNAPSHOT</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
 
-	<dependencies>
-		<dependency>
-			<groupId>ch.scaille</groupId>
-			<artifactId>lib-testing-core</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+            <dependency>
+                <groupId>ch.scaille</groupId>
+                <artifactId>lib-utils</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.scaille.dataflowmgr</groupId>
+                <artifactId>data-flow-model</artifactId>
+                <version>${data-flow-manager-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.scaille.dataflowmgr</groupId>
+                <artifactId>data-flow-generator</artifactId>
+                <version>${data-flow-manager-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.scaille.dataflowmgr</groupId>
+                <artifactId>data-flow-annotations</artifactId>
+                <version>${data-flow-manager-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.scaille.dataflowmgr</groupId>
+                <artifactId>data-flow-runtime</artifactId>
+                <version>${data-flow-manager-version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>ch.scaille</groupId>
+            <artifactId>lib-testing-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
 </project>

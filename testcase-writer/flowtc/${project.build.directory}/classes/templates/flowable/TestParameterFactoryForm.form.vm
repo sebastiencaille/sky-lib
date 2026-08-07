@@ -1,0 +1,44 @@
+{
+ "rows": [
+#foreach($row in $rows)
+    {
+      "cols": [
+        {
+          "designInfo": {
+            "stencilSuperIds": [
+              "base-text"
+            ],
+            "stencilId": "cloud-text"
+          },
+          "labelAlign": "top",
+          "value": "$row.variable",
+          "ignore": false,
+          "visible": true,
+          "enabled": true,
+          "isRequired": ${row.required},
+          "extraSettings": {
+            "validationPanelDisplay": "show",
+            "useDelay": true,
+            "delay": 200
+          },
+          "size": 12,
+          "tabIndex": 0,
+          "label": "$row.label",
+          "id": "$row.id",
+          "type": "text"
+        }
+      ]
+    }#if($foreach.hasNext),#end
+
+#end
+  ],
+  "metadata": {
+    "key": "${metadata.modelKey}",
+    "name": "${metadata.name}",
+    "description": "${metadata.description}",
+    "version": "${metadata.version}",
+    "modelType": "form",
+    "flowableDesignVersion": 3110,
+    "palette": "flowable-work-form-palette"
+  }
+}

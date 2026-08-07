@@ -9,8 +9,9 @@ module testcase.writer.javatc.core {
     exports ch.scaille.tcwriter.javatc.visitors;
     exports ch.scaille.tcwriter.javatc.recorderimpl;
 
+    requires transitive testcase.writer.core;
     opens templates;
-    
+
     requires transitive testcase.writer.api;
     requires transitive testcase.writer.model;
     requires transitive testcase.writer.core;
@@ -18,12 +19,11 @@ module testcase.writer.javatc.core {
 
     requires transitive lib.generator.utils;
 
-	requires org.aspectj.weaver;
-
     requires lib.annotations;
     requires lib.utils;
     
     requires com.google.common;
 	requires jcommander;
 
+    requires org.aspectj.weaver;
 }

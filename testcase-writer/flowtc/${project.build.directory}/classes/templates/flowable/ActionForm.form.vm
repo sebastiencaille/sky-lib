@@ -1,0 +1,319 @@
+{
+  "outcomes": [
+    {
+      "label": "Next step",
+      "value": "nextStep",
+      "visible": null,
+      "enabled": null,
+      "outcomeFormKey": "",
+      "ignorePayload": null,
+      "ignoreValidation": null,
+      "hideErrors": null,
+      "primary": null,
+      "styleClass": null,
+      "navigationUrl": null
+    }
+  ],
+  "rows": [
+    {
+      "cols": [
+        {
+          "designInfo": {
+            "stencilSuperIds": [
+              "base-single-select"
+            ],
+            "stencilId": "cloud-single-select"
+          },
+          "extraSettings": {
+            "enableAutocomplete": false,
+            "dataSource": "Static",
+            "linkTarget": "_blank",
+            "storage": "Id",
+            "identity": "value",
+            "items": [
+#foreach($id in ${form.actors.keySet()})            {
+              "text": "${form.actors.get($id)}",
+              "value": "$id"
+            }#if($foreach.hasNext),#end
+#end
+            ],
+            "validationPanelDisplay": "show",
+            "tagsEnabled": false,
+            "multi": false,
+            "preselectAll": false
+          },
+          "size": 12,
+          "isRequired": true,
+          "enabled": true,
+          "visible": true,
+          "ignore": false,
+          "label": "Actor",
+          "labelAlign": "top",
+          "tabIndex": 0,
+          "value": "{{testStep.actor}}",
+          "id": "ACTOR",
+          "type": "select"
+        }
+      ]
+    },
+    {
+      "cols": [
+        {
+          "designInfo": {
+            "stencilSuperIds": [
+              "base-wizard"
+            ],
+            "stencilId": "cloud-wizard"
+          },
+          "labelAlign": "top",
+          "ignore": false,
+          "visible": true,
+          "enabled": true,
+          "isRequired": false,
+          "extraSettings": {
+            "validationPanelDisplay": "show",
+            "tabsorder": [
+              "tab-param0",
+              "tab-param1"
+            ],
+            "showLastPageFooter": true,
+            "nextEnabled": true,
+            "nextVisible": "{{!$isLast}}",
+            "previousEnabled": true,
+            "previousVisible": true,
+            "initialPage": 0,
+            "showBorder": false,
+            "disableAutoScroll": false,
+            "disableHeaderNavigation": false,
+            "stepType": "default",
+            "display": "Horizontal",
+            "sections": [
+#if($param0.size() > 0)
+              {
+                "designInfo": {
+                  "stencilSuperIds": [
+                    "base-tab-panel"
+                  ],
+                  "stencilId": "cloud-tab-panel"
+                },
+                "label": "",
+                "labelAlign": "top",
+                "ignore": false,
+                "visible": true,
+                "enabled": true,
+                "isRequired": false,
+                "extraSettings": {
+                  "validationPanelDisplay": "show",
+                  "serverValidationMethod": "GET",
+                  "layoutDefinition": {
+                    "rows": [
+                      {
+                        "cols": [
+                          {
+                            "designInfo": {
+                              "stencilSuperIds": [
+                                "base-single-select"
+                              ],
+                              "stencilId": "cloud-single-select"
+                            },
+                            "extraSettings": {
+                              "enableAutocomplete": false,
+                              "tagsEnabled": false,
+                              "preselectAll": false,
+                              "dataSource": "Static",
+                              "items": [
+#foreach($obj in $param0)                                {
+                                  "text": "$obj.text",
+                                  "value": "$obj.value"
+                                }#if($foreach.hasNext),#end
+#end
+                              ],
+                              "storage": "Id",
+                              "identity": "value",
+                              "linkTarget": "_blank",
+                              "validationPanelDisplay": "show",
+                              "multi": false
+                            },
+                            "enabled": true,
+                            "labelAlign": "top",
+                            "value": "{{testStep.param0.factory}}",
+                            "ignore": false,
+                            "visible": true,
+                            "isRequired": true,
+                            "size": 6,
+                            "tabIndex": 0,
+                            "label": "${form.param0Label}",
+                            "id": "single-select1",
+                            "type": "select"
+                          },
+                          {
+                            "size": 6,
+                            "type": ""
+                          }
+                        ]
+                      },
+
+#foreach($obj in $param0)
+                      {
+                        "cols": [
+                          {
+                            "designInfo": {
+                              "stencilSuperIds": [
+                                "base-sub-form"
+                              ],
+                              "stencilId": "cloud-sub-form"
+                            },
+                            "labelAlign": "top",
+                            "ignore": "{{testStep.param0.factory != '$obj.value'}}",
+                            "visible": true,
+                            "enabled": true,
+                            "isRequired": false,
+                            "extraSettings": {
+                              "validationPanelDisplay": "show",
+                              "showBorder": false,
+                              "collapsible": false,
+                              "collapsed": false,
+                              "formRef": "$obj.formRef"
+                            },
+                            "size": 6,
+                            "id": "$obj.id",
+                            "value": "{{testStep.param0.values}}",
+                            "type": "subform"
+                          },
+                          {
+                            "size": 6,
+                            "type": ""
+                          }
+                        ]
+                      }#if($foreach.hasNext),#end
+#end
+                    ]
+                  }
+                },
+                "size": 11,
+                "id": "tab-param0",
+                "type": "panel"
+              }
+#end ## param0.size() > 0)
+#if($param1.size() > 0)
+              ,
+              {
+                "designInfo": {
+                  "stencilSuperIds": [
+                    "base-tab-panel"
+                  ],
+                  "stencilId": "cloud-tab-panel"
+                },
+                "label": "${form.param1Label}",
+                "labelAlign": "top",
+                "ignore": false,
+                "visible": true,
+                "enabled": true,
+                "isRequired": false,
+                "extraSettings": {
+                  "validationPanelDisplay": "show",
+                  "serverValidationMethod": "GET",
+                  "layoutDefinition": {
+                    "rows": [
+                      {
+                        "cols": [
+                          {
+                            "designInfo": {
+                              "stencilSuperIds": [
+                                "base-single-select"
+                              ],
+                              "stencilId": "cloud-single-select"
+                            },
+                            "extraSettings": {
+                              "enableAutocomplete": false,
+                              "tagsEnabled": false,
+                              "preselectAll": false,
+                              "dataSource": "Static",
+                              "items": [
+#foreach($obj in $param1)                                {
+                                  "text": "$obj.text",
+                                  "value": "$obj.value"
+                                }#if($foreach.hasNext),#end
+#end
+                              ],
+                              "storage": "Id",
+                              "identity": "value",
+                              "linkTarget": "_blank",
+                              "validationPanelDisplay": "show",
+                              "multi": false
+                            },
+                            "enabled": true,
+                            "labelAlign": "top",
+                            "value": "{{testStep.param1.factory}}",
+                            "ignore": false,
+                            "visible": true,
+                            "isRequired": true,
+                            "size": 12,
+                            "tabIndex": 0,
+                            "label": "${form.param1Label}",
+                            "id": "single-select2",
+                            "type": "select"
+                          }
+                        ]
+                      },
+    #foreach($obj in $param1)
+                      {
+                        "cols": [
+                          {
+                            "designInfo": {
+                              "stencilSuperIds": [
+                                "base-sub-form"
+                              ],
+                              "stencilId": "cloud-sub-form"
+                            },
+                            "labelAlign": "top",
+                            "ignore": "{{testStep.param1.factory != '$obj.value'}}",
+                            "visible": true,
+                            "enabled": true,
+                            "isRequired": false,
+                            "extraSettings": {
+                              "validationPanelDisplay": "show",
+                              "showBorder": false,
+                              "collapsible": false,
+                              "collapsed": false,
+                              "formRef": "$obj.formRef"
+                            },
+                            "size": 12,
+                            "id": "$obj.id",
+                            "value": "{{testStep.param1.values}}",
+                            "type": "subform"
+                          }
+                        ]
+                      }#if($foreach.hasNext),#end
+#end
+                    ]
+                  }
+                },
+                "size": 11,
+                "id": "tab-param1",
+                "type": "panel"
+              }#end
+            ],
+            "activetab": "tab-param0"
+          },
+          "size": 11,
+          "id": "wizard1",
+          "type": "wizard"
+        },
+        {
+          "size": 1,
+          "type": ""
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "key": "${metadata.modelKey}",
+    "name": "${metadata.name}-ActionForm",
+    "description": "${metadata.description}",
+    "version": "${metadata.version}",
+    "modelType": "form",
+    "flowableDesignVersion": 3110,
+    "palette": "flowable-work-form-palette"
+  }
+}

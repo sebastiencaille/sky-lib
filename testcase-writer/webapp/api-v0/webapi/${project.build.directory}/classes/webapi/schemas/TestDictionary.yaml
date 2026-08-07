@@ -1,0 +1,103 @@
+StepClassifier:
+  type: string
+  enum: [ ACTION, PREPARATION, CHECK ]
+TestDictionary:
+  required: [ metadata, roles, descriptions, actors, testObjectFactories, selectorTypes ]
+  properties:
+    metadata:
+      $ref: '../openapi.yaml#/components/schemas/Metadata'
+    roles:
+      type: array
+      items:
+        $ref: '#/TestRole'
+    descriptions:
+      $ref: '#/TestObjectDescriptions'
+    actors:
+      type: array
+      items:
+        $ref: '#/TestActor'
+    testObjectFactories:
+      type: array
+      items:
+        $ref: '#/TestParameterFactory'
+    selectorTypes:
+      type: array
+      items:
+        type: string
+TestObjectDescriptions:
+  type: object
+  additionalProperties:
+    $ref: '#/TestObjectDescription'
+TestObjectDescription:
+    description: description of a test object
+    type: object
+    properties:
+      description:
+        type: string
+      humanReadable:
+        type: string
+TestActor:
+  description: A test actor
+  allOf:
+  - $ref: '../openapi.yaml#/components/schemas/NamedObject'
+  - type: object
+    required: [ role ]
+    properties:
+      role:
+        description: role of the actor
+        type: string
+TestApiParameter:
+  description: A test parameter factory (selectors factory, parameters factory)
+  allOf:
+  - $ref: '../openapi.yaml#/components/schemas/NamedObject'
+  - type: object
+    required: [ parameterType ]
+    properties:
+      parameterType:
+        type: string
+TestParameterFactory:
+  description: A test parameter factory (selectors factory, parameters factory)
+  allOf:
+  - $ref: '../openapi.yaml#/components/schemas/NamedObject'
+  - type: object
+    properties:
+      mandatoryParameters:
+        type: array
+        items:
+          $ref: '#/TestApiParameter'
+      optionalParameters:
+        type: array
+        items:
+          $ref: '#/TestApiParameter'
+      nature:
+        type: string
+      parameterType:
+        type: string
+TestRole:
+  description: A test role
+  allOf:
+  - $ref: '../openapi.yaml#/components/schemas/NamedObject'
+  - type: object
+    required: [ actions ]
+    properties:
+      actions:
+        type: array
+        items:
+          $ref: '#/TestAction'
+TestAction:
+  description: A test action
+  allOf:
+  - $ref: '../openapi.yaml#/components/schemas/NamedObject'
+  - type: object
+    required: [ parameters, allowedClassifiers, returnType ] 
+    properties:
+      parameters:
+        type: array
+        items:
+          $ref: '#/TestApiParameter'
+      allowedClassifiers:
+        type: array
+        items:
+          $ref: '#/StepClassifier'
+      returnType:
+        type: string

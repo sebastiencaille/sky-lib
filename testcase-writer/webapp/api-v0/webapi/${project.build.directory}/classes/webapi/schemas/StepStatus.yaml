@@ -1,0 +1,14 @@
+StepState:
+  type: string
+  enum: [ NOT_RUN, STARTED, OK, FAILED ]
+StepStatus:
+  properties:
+    ordinal: 
+      type: integer
+    breakPoint:
+      type: boolean
+    state:
+      $ref: '#/StepState'
+    message:
+      type: string
+  required: [ ordinal, state ]

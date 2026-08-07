@@ -1,0 +1,307 @@
+---- AspectJ Properties ---
+AspectJ Compiler 1.9.25.1 built on Tuesday Dec 16, 2025 at 15:21:40 PST
+---- Dump Properties ---
+Dump file: ajcore.20260807.124852.288.txt
+Dump reason: java.lang.RuntimeException
+Dump on exception: true
+Dump at exit condition: abort
+---- Exception Information ---
+java.lang.RuntimeException: key not found in wovenClassFile
+	at org.aspectj.weaver.WeaverStateInfo.findEndOfKey(WeaverStateInfo.java:431)
+	at org.aspectj.weaver.WeaverStateInfo.replaceKeyWithDiff(WeaverStateInfo.java:387)
+	at org.aspectj.weaver.bcel.LazyClassGen.getJavaClassBytesIncludingReweavable(LazyClassGen.java:777)
+	at org.aspectj.weaver.bcel.BcelWeaver.getClassFilesFor(BcelWeaver.java:1462)
+	at org.aspectj.weaver.bcel.BcelWeaver.weaveAndNotify(BcelWeaver.java:1424)
+	at org.aspectj.weaver.bcel.BcelWeaver.weave(BcelWeaver.java:1189)
+	at org.aspectj.ajdt.internal.compiler.AjPipeliningCompilerAdapter.weaveQueuedEntries(AjPipeliningCompilerAdapter.java:510)
+	at org.aspectj.ajdt.internal.compiler.AjPipeliningCompilerAdapter.queueForWeaving(AjPipeliningCompilerAdapter.java:446)
+	at org.aspectj.ajdt.internal.compiler.AjPipeliningCompilerAdapter.afterProcessing(AjPipeliningCompilerAdapter.java:431)
+	at org.aspectj.ajdt.internal.compiler.CompilerAdapter.ajc$after$org_aspectj_ajdt_internal_compiler_CompilerAdapter$5$6b855184(CompilerAdapter.aj:104)
+	at org.aspectj.org.eclipse.jdt.internal.compiler.Compiler.process(Compiler.java:852)
+	at org.aspectj.org.eclipse.jdt.internal.compiler.Compiler.processCompiledUnits(Compiler.java:458)
+	at org.aspectj.org.eclipse.jdt.internal.compiler.Compiler.compile(Compiler.java:359)
+	at org.aspectj.org.eclipse.jdt.internal.compiler.Compiler.compile(Compiler.java:310)
+	at org.aspectj.ajdt.internal.core.builder.AjBuildManager.performCompilation(AjBuildManager.java:1102)
+	at org.aspectj.ajdt.internal.core.builder.AjBuildManager.performBuild(AjBuildManager.java:276)
+	at org.aspectj.ajdt.internal.core.builder.AjBuildManager.batchBuild(AjBuildManager.java:189)
+	at org.aspectj.ajdt.ajc.AjdtCommand.doCommand(AjdtCommand.java:103)
+	at org.aspectj.ajdt.ajc.AjdtCommand.runCommand(AjdtCommand.java:47)
+	at org.aspectj.tools.ajc.Main.run(Main.java:385)
+	at org.aspectj.tools.ajc.Main.runMain(Main.java:274)
+	at org.codehaus.mojo.aspectj.AbstractAjcCompiler.execute(AbstractAjcCompiler.java:567)
+	at org.codehaus.mojo.aspectj.AjcTestCompileMojo.execute(AjcTestCompileMojo.java:105)
+	at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo(DefaultBuildPluginManager.java:153)
+	at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute2(MojoExecutor.java:339)
+	at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute(MojoExecutor.java:310)
+	at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:214)
+	at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:179)
+	at org.apache.maven.lifecycle.internal.MojoExecutor$1.run(MojoExecutor.java:168)
+	at org.apache.maven.plugin.DefaultMojosExecutionStrategy.execute(DefaultMojosExecutionStrategy.java:39)
+	at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:165)
+	at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject(LifecycleModuleBuilder.java:110)
+	at org.apache.maven.lifecycle.internal.builder.multithreaded.MultiThreadedBuilder.lambda$createBuildCallable$1(MultiThreadedBuilder.java:191)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:330)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:330)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1516)
+---- System Properties ---
+java.specification.version=26
+sun.jnu.encoding=UTF-8
+java.class.path=/opt/apache-maven-4.0.0-rc-6/boot/plexus-classworlds-2.12.0.jar
+java.vm.vendor=Eclipse Adoptium
+sun.arch.data.model=64
+library.jline.path=/opt/apache-maven-4.0.0-rc-6/lib/jline-native
+java.vendor.url=https://adoptium.net/
+user.timezone=Europe/Zurich
+maven.conf=/opt/apache-maven-4.0.0-rc-6/conf
+java.vm.specification.version=26
+os.name=Linux
+sun.java.launcher=SUN_STANDARD
+user.country=CH
+session.topDirectory=/home/scaille/src/sky-lib
+sun.boot.library.path=/usr/lib/jvm/java-26-temurin/lib
+sun.java.command=org.codehaus.plexus.classworlds.launcher.Launcher clean install -T 8
+guice_custom_class_loading=CHILD
+jdk.debug=release
+maven.home=/opt/apache-maven-4.0.0-rc-6
+sun.cpu.endian=little
+user.home=/home/scaille
+user.language=fr
+java.specification.vendor=Oracle Corporation
+java.version.date=2026-07-21
+java.home=/usr/lib/jvm/java-26-temurin
+revision=0.0.1-SNAPSHOT
+file.separator=/
+java.vm.compressedOopsMode=Zero based
+line.separator=
+
+java.vm.specification.vendor=Oracle Corporation
+java.specification.name=Java Platform API Specification
+session.rootDirectory=/home/scaille/src/sky-lib
+sun.management.compiler=HotSpot 64-Bit Tiered Compilers
+java.runtime.version=26.0.2+10
+user.name=scaille
+stdout.encoding=UTF-8
+maven.installation.conf=/opt/apache-maven-4.0.0-rc-6/conf
+path.separator=:
+os.version=7.1.6-1-MANJARO
+java.runtime.name=OpenJDK Runtime Environment
+file.encoding=UTF-8
+guice.disable.misplaced.annotation.check=true
+java.vm.name=OpenJDK 64-Bit Server VM
+java.vendor.version=Temurin-26.0.2+10
+java.vendor.url.bug=https://github.com/adoptium/adoptium-support/issues
+java.io.tmpdir=/tmp
+java.version=26.0.2
+user.dir=/home/scaille/src/sky-lib
+os.arch=amd64
+maven.multiModuleProjectDirectory=/home/scaille/src/sky-lib
+java.vm.specification.name=Java Virtual Machine Specification
+native.encoding=UTF-8
+java.library.path=/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib
+java.vm.info=mixed mode, sharing
+stderr.encoding=UTF-8
+java.vendor=Eclipse Adoptium
+java.vm.version=26.0.2+10
+stdin.encoding=UTF-8
+classworlds.conf=/opt/apache-maven-4.0.0-rc-6/bin/m2.conf
+sun.io.unicode.encoding=UnicodeLittle
+java.class.version=70.0
+maven.mainClass=org.apache.maven.cling.MavenCling
+---- Command Line ---
+-Xajruntimetarget:1.5
+-Xlint:ignore
+-25
+-encoding
+UTF-8
+-source
+25
+-target
+25
+-verbose
+-classpath
+/home/scaille/src/sky-lib/testcase-writer/javatc-client/target/testcase-writer-javatc-client-0.0.1-SNAPSHOT.jar:/home/scaille/src/sky-lib/testcase-writer/api/target/testcase-writer-api-0.0.1-SNAPSHOT.jar:/home/scaille/src/sky-lib/testcase-writer/model/target/testcase-writer-model-0.0.1-SNAPSHOT.jar:/home/scaille/.m2/repository/com/google/guava/guava/33.6.0-jre/guava-33.6.0-jre.jar:/home/scaille/.m2/repository/com/google/guava/failureaccess/1.0.3/failureaccess-1.0.3.jar:/home/scaille/.m2/repository/com/google/guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/home/scaille/.m2/repository/com/google/errorprone/error_prone_annotations/2.47.0/error_prone_annotations-2.47.0.jar:/home/scaille/.m2/repository/com/google/j2objc/j2objc-annotations/3.1/j2objc-annotations-3.1.jar:/home/scaille/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.22/jackson-annotations-2.22.jar:/home/scaille/src/sky-lib/skylib-java/lib-utils/target/lib-utils-0.0.1-SNAPSHOT.jar:/home/scaille/src/sky-lib/skylib-java/lib-annotations/target/lib-annotations-0.0.1-SNAPSHOT.jar:/home/scaille/.m2/repository/org/aspectj/aspectjweaver/1.9.25.1/aspectjweaver-1.9.25.1.jar:/home/scaille/.m2/repository/org/aspectj/aspectjrt/1.9.25.1/aspectjrt-1.9.25.1.jar:/home/scaille/src/sky-lib/testcase-writer/gui/target/testcase-writer-gui-0.0.1-SNAPSHOT.jar:/home/scaille/src/sky-lib/testcase-writer/javatc/target/testcase-writer-javatc-0.0.1-SNAPSHOT.jar:/home/scaille/src/sky-lib/testcase-writer/core/target/testcase-writer-core-0.0.1-SNAPSHOT.jar:/home/scaille/src/sky-lib/skylib-java/lib-generator-utils/target/lib-generator-utils-0.0.1-SNAPSHOT.jar:/home/scaille/.m2/repository/org/jcommander/jcommander/3.0/jcommander-3.0.jar:/home/scaille/src/sky-lib/skylib-java/lib-persistence/target/lib-persistence-0.0.1-SNAPSHOT.jar:/home/scaille/.m2/repository/tools/jackson/core/jackson-databind/3.2.1/jackson-databind-3.2.1.jar:/home/scaille/.m2/repository/tools/jackson/core/jackson-core/3.2.1/jackson-core-3.2.1.jar:/home/scaille/.m2/repository/tools/jackson/datatype/jackson-datatype-guava/3.2.1/jackson-datatype-guava-3.2.1.jar:/home/scaille/.m2/repository/tools/jackson/dataformat/jackson-dataformat-yaml/3.2.1/jackson-dataformat-yaml-3.2.1.jar:/home/scaille/.m2/repository/org/snakeyaml/snakeyaml-engine/3.0.1/snakeyaml-engine-3.0.1.jar:/home/scaille/src/sky-lib/skylib-java/gui/lib/target/lib-gui-0.0.1-SNAPSHOT.jar:/home/scaille/src/sky-lib/skylib-java/lib-javabeans/target/lib-javabeans-0.0.1-SNAPSHOT.jar:/home/scaille/.m2/repository/net/java/linoleum/jlfgr/1_0/jlfgr-1_0.jar:/home/scaille/.m2/repository/org/aspectj/aspectjtools/1.9.25.1/aspectjtools-1.9.25.1.jar:/home/scaille/src/sky-lib/skylib-java/lib-testing/gui-pilot/selenium/target/gui-pilot-selenium-0.0.1-SNAPSHOT.jar:/home/scaille/src/sky-lib/skylib-java/lib-testing/gui-pilot/core/target/gui-pilot-core-0.0.1-SNAPSHOT.jar:/home/scaille/.m2/repository/org/junit/platform/junit-platform-launcher/6.1.2/junit-platform-launcher-6.1.2.jar:/home/scaille/.m2/repository/org/junit/platform/junit-platform-engine/6.1.2/junit-platform-engine-6.1.2.jar:/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-java/4.46.0/selenium-java-4.46.0.jar:/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-api/4.46.0/selenium-api-4.46.0.jar:/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-chrome-driver/4.46.0/selenium-chrome-driver-4.46.0.jar:/home/scaille/.m2/repository/com/google/auto/service/auto-service-annotations/1.1.1/auto-service-annotations-1.1.1.jar:/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-chromium-driver/4.46.0/selenium-chromium-driver-4.46.0.jar:/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-json/4.46.0/selenium-json-4.46.0.jar:/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-manager/4.46.0/selenium-manager-4.46.0.jar:/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-devtools-latest/4.46.0/selenium-devtools-latest-4.46.0.jar:/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-devtools-v148/4.46.0/selenium-devtools-v148-4.46.0.jar:/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-devtools-v149/4.46.0/selenium-devtools-v149-4.46.0.jar:/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-devtools-v150/4.46.0/selenium-devtools-v150-4.46.0.jar:/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-edge-driver/4.46.0/selenium-edge-driver-4.46.0.jar:/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-firefox-driver/4.46.0/selenium-firefox-driver-4.46.0.jar:/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-http/4.46.0/selenium-http-4.46.0.jar:/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-ie-driver/4.46.0/selenium-ie-driver-4.46.0.jar:/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-remote-driver/4.46.0/selenium-remote-driver-4.46.0.jar:/home/scaille/.m2/repository/io/opentelemetry/opentelemetry-api/1.62.0/opentelemetry-api-1.62.0.jar:/home/scaille/.m2/repository/io/opentelemetry/opentelemetry-context/1.62.0/opentelemetry-context-1.62.0.jar:/home/scaille/.m2/repository/io/opentelemetry/opentelemetry-common/1.62.0/opentelemetry-common-1.62.0.jar:/home/scaille/.m2/repository/io/opentelemetry/opentelemetry-exporter-logging/1.62.0/opentelemetry-exporter-logging-1.62.0.jar:/home/scaille/.m2/repository/io/opentelemetry/opentelemetry-sdk-common/1.62.0/opentelemetry-sdk-common-1.62.0.jar:/home/scaille/.m2/repository/io/opentelemetry/opentelemetry-sdk-extension-autoconfigure-spi/1.62.0/opentelemetry-sdk-extension-autoconfigure-spi-1.62.0.jar:/home/scaille/.m2/repository/io/opentelemetry/opentelemetry-sdk-extension-autoconfigure/1.62.0/opentelemetry-sdk-extension-autoconfigure-1.62.0.jar:/home/scaille/.m2/repository/io/opentelemetry/opentelemetry-sdk-trace/1.62.0/opentelemetry-sdk-trace-1.62.0.jar:/home/scaille/.m2/repository/io/opentelemetry/opentelemetry-sdk/1.62.0/opentelemetry-sdk-1.62.0.jar:/home/scaille/.m2/repository/io/opentelemetry/opentelemetry-sdk-metrics/1.62.0/opentelemetry-sdk-metrics-1.62.0.jar:/home/scaille/.m2/repository/io/opentelemetry/opentelemetry-sdk-logs/1.62.0/opentelemetry-sdk-logs-1.62.0.jar:/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-os/4.46.0/selenium-os-4.46.0.jar:/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-safari-driver/4.46.0/selenium-safari-driver-4.46.0.jar:/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-support/4.46.0/selenium-support-4.46.0.jar:/home/scaille/.m2/repository/org/jspecify/jspecify/1.0.1/jspecify-1.0.1.jar:/home/scaille/.m2/repository/org/junit/jupiter/junit-jupiter-api/6.1.2/junit-jupiter-api-6.1.2.jar:/home/scaille/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/home/scaille/.m2/repository/org/junit/platform/junit-platform-commons/6.1.2/junit-platform-commons-6.1.2.jar:/home/scaille/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/scaille/src/sky-lib/skylib-java/lib-testing/core/target/lib-testing-core-0.0.1-SNAPSHOT.jar:/home/scaille/.m2/repository/org/mockito/mockito-core/5.23.0/mockito-core-5.23.0.jar:/home/scaille/.m2/repository/net/bytebuddy/byte-buddy/1.18.10/byte-buddy-1.18.10.jar:/home/scaille/.m2/repository/net/bytebuddy/byte-buddy-agent/1.18.10/byte-buddy-agent-1.18.10.jar:/home/scaille/.m2/repository/org/objenesis/objenesis/3.3/objenesis-3.3.jar:/home/scaille/.m2/repository/org/springframework/boot/spring-boot-loader/4.1.0/spring-boot-loader-4.1.0.jar:/home/scaille/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar:/home/scaille/src/sky-lib/testcase-writer/examples/target/test-classes:/home/scaille/src/sky-lib/testcase-writer/examples/target/classes
+-inpath
+/home/scaille/src/sky-lib/testcase-writer/examples/target/classes
+-aspectpath
+/home/scaille/src/sky-lib/testcase-writer/examples/target/classes:/home/scaille/src/sky-lib/testcase-writer/javatc/target/testcase-writer-javatc-0.0.1-SNAPSHOT.jar:/home/scaille/src/sky-lib/testcase-writer/javatc-client/target/testcase-writer-javatc-client-0.0.1-SNAPSHOT.jar
+-d
+/home/scaille/src/sky-lib/testcase-writer/examples/target/test-classes
+-s
+/home/scaille/src/sky-lib/testcase-writer/examples/target/generated-test-sources/aspectj-maven-plugin
+/home/scaille/src/sky-lib/testcase-writer/examples/src/test/java/ch/scaille/tcwriter/examples/tests/IntegrationTest.java
+/home/scaille/src/sky-lib/testcase-writer/examples/target/generated-tests/ch/scaille/tcwriter/examples/GeneratedTest.java
+---- Full Classpath ---
+/usr/lib/jvm/java-26-temurin/lib/jrt-fs.jar(108925 bytes)
+/home/scaille/src/sky-lib/testcase-writer/examples/target/classes(4 entries)
+/home/scaille/src/sky-lib/testcase-writer/examples/target/classes(4 entries)
+/home/scaille/src/sky-lib/testcase-writer/javatc/target/testcase-writer-javatc-0.0.1-SNAPSHOT.jar(38639 bytes)
+/home/scaille/src/sky-lib/testcase-writer/javatc-client/target/testcase-writer-javatc-client-0.0.1-SNAPSHOT.jar(11198 bytes)
+/home/scaille/src/sky-lib/testcase-writer/javatc-client/target/testcase-writer-javatc-client-0.0.1-SNAPSHOT.jar(11198 bytes)
+/home/scaille/src/sky-lib/testcase-writer/api/target/testcase-writer-api-0.0.1-SNAPSHOT.jar(7092 bytes)
+/home/scaille/src/sky-lib/testcase-writer/model/target/testcase-writer-model-0.0.1-SNAPSHOT.jar(48087 bytes)
+/home/scaille/.m2/repository/com/google/guava/guava/33.6.0-jre/guava-33.6.0-jre.jar(3064793 bytes)
+/home/scaille/.m2/repository/com/google/guava/failureaccess/1.0.3/failureaccess-1.0.3.jar(10763 bytes)
+/home/scaille/.m2/repository/com/google/guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar(2199 bytes)
+/home/scaille/.m2/repository/com/google/errorprone/error_prone_annotations/2.47.0/error_prone_annotations-2.47.0.jar(20254 bytes)
+/home/scaille/.m2/repository/com/google/j2objc/j2objc-annotations/3.1/j2objc-annotations-3.1.jar(16762 bytes)
+/home/scaille/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.22/jackson-annotations-2.22.jar(84211 bytes)
+/home/scaille/src/sky-lib/skylib-java/lib-utils/target/lib-utils-0.0.1-SNAPSHOT.jar(93636 bytes)
+/home/scaille/src/sky-lib/skylib-java/lib-annotations/target/lib-annotations-0.0.1-SNAPSHOT.jar(3844 bytes)
+/home/scaille/.m2/repository/org/aspectj/aspectjweaver/1.9.25.1/aspectjweaver-1.9.25.1.jar(2190661 bytes)
+/home/scaille/.m2/repository/org/aspectj/aspectjrt/1.9.25.1/aspectjrt-1.9.25.1.jar(132611 bytes)
+/home/scaille/src/sky-lib/testcase-writer/gui/target/testcase-writer-gui-0.0.1-SNAPSHOT.jar(75455 bytes)
+/home/scaille/src/sky-lib/testcase-writer/javatc/target/testcase-writer-javatc-0.0.1-SNAPSHOT.jar(38639 bytes)
+/home/scaille/src/sky-lib/testcase-writer/core/target/testcase-writer-core-0.0.1-SNAPSHOT.jar(65214 bytes)
+/home/scaille/src/sky-lib/skylib-java/lib-generator-utils/target/lib-generator-utils-0.0.1-SNAPSHOT.jar(20764 bytes)
+/home/scaille/.m2/repository/org/jcommander/jcommander/3.0/jcommander-3.0.jar(107847 bytes)
+/home/scaille/src/sky-lib/skylib-java/lib-persistence/target/lib-persistence-0.0.1-SNAPSHOT.jar(33777 bytes)
+/home/scaille/.m2/repository/tools/jackson/core/jackson-databind/3.2.1/jackson-databind-3.2.1.jar(1973737 bytes)
+/home/scaille/.m2/repository/tools/jackson/core/jackson-core/3.2.1/jackson-core-3.2.1.jar(604776 bytes)
+/home/scaille/.m2/repository/tools/jackson/datatype/jackson-datatype-guava/3.2.1/jackson-datatype-guava-3.2.1.jar(150953 bytes)
+/home/scaille/.m2/repository/tools/jackson/dataformat/jackson-dataformat-yaml/3.2.1/jackson-dataformat-yaml-3.2.1.jar(66045 bytes)
+/home/scaille/.m2/repository/org/snakeyaml/snakeyaml-engine/3.0.1/snakeyaml-engine-3.0.1.jar(299438 bytes)
+/home/scaille/src/sky-lib/skylib-java/gui/lib/target/lib-gui-0.0.1-SNAPSHOT.jar(143676 bytes)
+/home/scaille/src/sky-lib/skylib-java/lib-javabeans/target/lib-javabeans-0.0.1-SNAPSHOT.jar(126291 bytes)
+/home/scaille/.m2/repository/net/java/linoleum/jlfgr/1_0/jlfgr-1_0.jar(114252 bytes)
+/home/scaille/.m2/repository/org/aspectj/aspectjtools/1.9.25.1/aspectjtools-1.9.25.1.jar(15511905 bytes)
+/home/scaille/src/sky-lib/skylib-java/lib-testing/gui-pilot/selenium/target/gui-pilot-selenium-0.0.1-SNAPSHOT.jar(43296 bytes)
+/home/scaille/src/sky-lib/skylib-java/lib-testing/gui-pilot/core/target/gui-pilot-core-0.0.1-SNAPSHOT.jar(52209 bytes)
+/home/scaille/.m2/repository/org/junit/platform/junit-platform-launcher/6.1.2/junit-platform-launcher-6.1.2.jar(252726 bytes)
+/home/scaille/.m2/repository/org/junit/platform/junit-platform-engine/6.1.2/junit-platform-engine-6.1.2.jar(323941 bytes)
+/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-java/4.46.0/selenium-java-4.46.0.jar(545 bytes)
+/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-api/4.46.0/selenium-api-4.46.0.jar(241333 bytes)
+/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-chrome-driver/4.46.0/selenium-chrome-driver-4.46.0.jar(18406 bytes)
+/home/scaille/.m2/repository/com/google/auto/service/auto-service-annotations/1.1.1/auto-service-annotations-1.1.1.jar(3172 bytes)
+/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-chromium-driver/4.46.0/selenium-chromium-driver-4.46.0.jar(33469 bytes)
+/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-json/4.46.0/selenium-json-4.46.0.jar(88397 bytes)
+/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-manager/4.46.0/selenium-manager-4.46.0.jar(8288823 bytes)
+/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-devtools-latest/4.46.0/selenium-devtools-latest-4.46.0.jar(1767926 bytes)
+/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-devtools-v148/4.46.0/selenium-devtools-v148-4.46.0.jar(1770343 bytes)
+/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-devtools-v149/4.46.0/selenium-devtools-v149-4.46.0.jar(1773049 bytes)
+/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-devtools-v150/4.46.0/selenium-devtools-v150-4.46.0.jar(1782488 bytes)
+/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-edge-driver/4.46.0/selenium-edge-driver-4.46.0.jar(15912 bytes)
+/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-firefox-driver/4.46.0/selenium-firefox-driver-4.46.0.jar(71047 bytes)
+/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-http/4.46.0/selenium-http-4.46.0.jar(92272 bytes)
+/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-ie-driver/4.46.0/selenium-ie-driver-4.46.0.jar(17139 bytes)
+/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-remote-driver/4.46.0/selenium-remote-driver-4.46.0.jar(606002 bytes)
+/home/scaille/.m2/repository/io/opentelemetry/opentelemetry-api/1.62.0/opentelemetry-api-1.62.0.jar(175114 bytes)
+/home/scaille/.m2/repository/io/opentelemetry/opentelemetry-context/1.62.0/opentelemetry-context-1.62.0.jar(50758 bytes)
+/home/scaille/.m2/repository/io/opentelemetry/opentelemetry-common/1.62.0/opentelemetry-common-1.62.0.jar(4458 bytes)
+/home/scaille/.m2/repository/io/opentelemetry/opentelemetry-exporter-logging/1.62.0/opentelemetry-exporter-logging-1.62.0.jar(17272 bytes)
+/home/scaille/.m2/repository/io/opentelemetry/opentelemetry-sdk-common/1.62.0/opentelemetry-sdk-common-1.62.0.jar(85065 bytes)
+/home/scaille/.m2/repository/io/opentelemetry/opentelemetry-sdk-extension-autoconfigure-spi/1.62.0/opentelemetry-sdk-extension-autoconfigure-spi-1.62.0.jar(20581 bytes)
+/home/scaille/.m2/repository/io/opentelemetry/opentelemetry-sdk-extension-autoconfigure/1.62.0/opentelemetry-sdk-extension-autoconfigure-1.62.0.jar(50091 bytes)
+/home/scaille/.m2/repository/io/opentelemetry/opentelemetry-sdk-trace/1.62.0/opentelemetry-sdk-trace-1.62.0.jar(145227 bytes)
+/home/scaille/.m2/repository/io/opentelemetry/opentelemetry-sdk/1.62.0/opentelemetry-sdk-1.62.0.jar(13010 bytes)
+/home/scaille/.m2/repository/io/opentelemetry/opentelemetry-sdk-metrics/1.62.0/opentelemetry-sdk-metrics-1.62.0.jar(365132 bytes)
+/home/scaille/.m2/repository/io/opentelemetry/opentelemetry-sdk-logs/1.62.0/opentelemetry-sdk-logs-1.62.0.jar(79362 bytes)
+/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-os/4.46.0/selenium-os-4.46.0.jar(9708 bytes)
+/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-safari-driver/4.46.0/selenium-safari-driver-4.46.0.jar(27021 bytes)
+/home/scaille/.m2/repository/org/seleniumhq/selenium/selenium-support/4.46.0/selenium-support-4.46.0.jar(173395 bytes)
+/home/scaille/.m2/repository/org/jspecify/jspecify/1.0.1/jspecify-1.0.1.jar(3064 bytes)
+/home/scaille/.m2/repository/org/junit/jupiter/junit-jupiter-api/6.1.2/junit-jupiter-api-6.1.2.jar(312564 bytes)
+/home/scaille/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar(14304 bytes)
+/home/scaille/.m2/repository/org/junit/platform/junit-platform-commons/6.1.2/junit-platform-commons-6.1.2.jar(175866 bytes)
+/home/scaille/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar(6806 bytes)
+/home/scaille/src/sky-lib/skylib-java/lib-testing/core/target/lib-testing-core-0.0.1-SNAPSHOT.jar(3949 bytes)
+/home/scaille/.m2/repository/org/mockito/mockito-core/5.23.0/mockito-core-5.23.0.jar(720687 bytes)
+/home/scaille/.m2/repository/net/bytebuddy/byte-buddy/1.18.10/byte-buddy-1.18.10.jar(4655898 bytes)
+/home/scaille/.m2/repository/net/bytebuddy/byte-buddy-agent/1.18.10/byte-buddy-agent-1.18.10.jar(267556 bytes)
+/home/scaille/.m2/repository/org/objenesis/objenesis/3.3/objenesis-3.3.jar(49423 bytes)
+/home/scaille/.m2/repository/org/springframework/boot/spring-boot-loader/4.1.0/spring-boot-loader-4.1.0.jar(203871 bytes)
+/home/scaille/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar(2045364 bytes)
+/home/scaille/src/sky-lib/testcase-writer/examples/target/test-classes(3 entries)
+/home/scaille/src/sky-lib/testcase-writer/examples/target/classes(4 entries)
+---- Compiler Messages ---
+info Pipelining compilation
+warning You aren't using a compiler supported by lombok, so lombok will not work and has been disabled.
+Your processor is: org.aspectj.org.eclipse.jdt.internal.compiler.apt.dispatch.BatchProcessingEnvImpl
+Lombok supports: OpenJDK javac, ECJ
+info compiling /home/scaille/src/sky-lib/testcase-writer/examples/src/test/java/ch/scaille/tcwriter/examples/tests/IntegrationTest.java
+info weaver operating in reweavable mode.  Need to verify any required types exist.
+info processing reweavable type ch.scaille.tcwriter.examples.websearch.InternautRole: ch/scaille/tcwriter/examples/websearch/InternautRole.java
+info successfully verified type ch.scaille.tcwriter.javatc.recorder.TestCaseRecorderAspect exists.  Originates from ch/scaille/tcwriter/javatc/recorder/TestCaseRecorderAspect.java
+info successfully verified type ch.scaille.tcwriter.javatc.testexec.client.TestSteppingAspect exists.  Originates from ch/scaille/tcwriter/javatc/testexec/client/TestSteppingAspect.java
+info processing reweavable type ch.scaille.tcwriter.examples.simple.selectors.BuyingLocationSelector: ch/scaille/tcwriter/examples/simple/selectors/BuyingLocationSelector.java
+info successfully verified type ch.scaille.tcwriter.javatc.recorder.TestCaseRecorderAspect exists.  Originates from ch/scaille/tcwriter/javatc/recorder/TestCaseRecorderAspect.java
+info successfully verified type ch.scaille.tcwriter.javatc.testexec.client.TestSteppingAspect exists.  Originates from ch/scaille/tcwriter/javatc/testexec/client/TestSteppingAspect.java
+info processing reweavable type ch.scaille.tcwriter.examples.simple.selectors.PackageDeliverySelector: ch/scaille/tcwriter/examples/simple/selectors/PackageDeliverySelector.java
+info successfully verified type ch.scaille.tcwriter.javatc.recorder.TestCaseRecorderAspect exists.  Originates from ch/scaille/tcwriter/javatc/recorder/TestCaseRecorderAspect.java
+info successfully verified type ch.scaille.tcwriter.javatc.testexec.client.TestSteppingAspect exists.  Originates from ch/scaille/tcwriter/javatc/testexec/client/TestSteppingAspect.java
+info processing reweavable type ch.scaille.tcwriter.examples.websearch.selectors.EngineSearchSelector: ch/scaille/tcwriter/examples/websearch/selectors/EngineSearchSelector.java
+info successfully verified type ch.scaille.tcwriter.javatc.recorder.TestCaseRecorderAspect exists.  Originates from ch/scaille/tcwriter/javatc/recorder/TestCaseRecorderAspect.java
+info successfully verified type ch.scaille.tcwriter.javatc.testexec.client.TestSteppingAspect exists.  Originates from ch/scaille/tcwriter/javatc/testexec/client/TestSteppingAspect.java
+info processing reweavable type ch.scaille.tcwriter.examples.simple.CustomerTestRole: ch/scaille/tcwriter/examples/simple/CustomerTestRole.java
+info successfully verified type ch.scaille.tcwriter.javatc.recorder.TestCaseRecorderAspect exists.  Originates from ch/scaille/tcwriter/javatc/recorder/TestCaseRecorderAspect.java
+info successfully verified type ch.scaille.tcwriter.javatc.testexec.client.TestSteppingAspect exists.  Originates from ch/scaille/tcwriter/javatc/testexec/client/TestSteppingAspect.java
+info processing reweavable type ch.scaille.tcwriter.examples.simple.DeliveryTestRole: ch/scaille/tcwriter/examples/simple/DeliveryTestRole.java
+info successfully verified type ch.scaille.tcwriter.javatc.recorder.TestCaseRecorderAspect exists.  Originates from ch/scaille/tcwriter/javatc/recorder/TestCaseRecorderAspect.java
+info successfully verified type ch.scaille.tcwriter.javatc.testexec.client.TestSteppingAspect exists.  Originates from ch/scaille/tcwriter/javatc/testexec/client/TestSteppingAspect.java
+info processing reweavable type ch.scaille.tcwriter.examples.SimpleTest: ch/scaille/tcwriter/examples/SimpleTest.java
+info successfully verified type ch.scaille.tcwriter.javatc.recorder.TestCaseRecorderAspect exists.  Originates from ch/scaille/tcwriter/javatc/recorder/TestCaseRecorderAspect.java
+info successfully verified type ch.scaille.tcwriter.javatc.testexec.client.TestSteppingAspect exists.  Originates from ch/scaille/tcwriter/javatc/testexec/client/TestSteppingAspect.java
+info processing reweavable type ch.scaille.tcwriter.examples.WebSearchTest: ch/scaille/tcwriter/examples/WebSearchTest.java
+info successfully verified type ch.scaille.tcwriter.javatc.recorder.TestCaseRecorderAspect exists.  Originates from ch/scaille/tcwriter/javatc/recorder/TestCaseRecorderAspect.java
+info successfully verified type ch.scaille.tcwriter.javatc.testexec.client.TestSteppingAspect exists.  Originates from ch/scaille/tcwriter/javatc/testexec/client/TestSteppingAspect.java
+info processing reweavable type ch.scaille.tcwriter.examples.websearch.dto.MatcherDto: ch/scaille/tcwriter/examples/websearch/dto/MatcherDto.java
+info successfully verified type ch.scaille.tcwriter.javatc.recorder.TestCaseRecorderAspect exists.  Originates from ch/scaille/tcwriter/javatc/recorder/TestCaseRecorderAspect.java
+info successfully verified type ch.scaille.tcwriter.javatc.testexec.client.TestSteppingAspect exists.  Originates from ch/scaille/tcwriter/javatc/testexec/client/TestSteppingAspect.java
+info processing reweavable type ch.scaille.tcwriter.examples.simple.dto.TestItem: ch/scaille/tcwriter/examples/simple/dto/TestItem.java
+info successfully verified type ch.scaille.tcwriter.javatc.recorder.TestCaseRecorderAspect exists.  Originates from ch/scaille/tcwriter/javatc/recorder/TestCaseRecorderAspect.java
+info successfully verified type ch.scaille.tcwriter.javatc.testexec.client.TestSteppingAspect exists.  Originates from ch/scaille/tcwriter/javatc/testexec/client/TestSteppingAspect.java
+info woven class ch.scaille.tcwriter.examples.tests.IntegrationTest (from /home/scaille/src/sky-lib/testcase-writer/examples/src/test/java/ch/scaille/tcwriter/examples/tests/IntegrationTest.java)
+info woven class ch.scaille.tcwriter.examples.tests.IntegrationTest$AjcClosure1 (from /home/scaille/src/sky-lib/testcase-writer/examples/src/test/java/ch/scaille/tcwriter/examples/tests/IntegrationTest.java)
+info woven class ch.scaille.tcwriter.examples.tests.IntegrationTest$AjcClosure3 (from /home/scaille/src/sky-lib/testcase-writer/examples/src/test/java/ch/scaille/tcwriter/examples/tests/IntegrationTest.java)
+info woven class ch.scaille.tcwriter.examples.tests.IntegrationTest$AjcClosure5 (from /home/scaille/src/sky-lib/testcase-writer/examples/src/test/java/ch/scaille/tcwriter/examples/tests/IntegrationTest.java)
+info woven class ch.scaille.tcwriter.examples.tests.IntegrationTest$AjcClosure7 (from /home/scaille/src/sky-lib/testcase-writer/examples/src/test/java/ch/scaille/tcwriter/examples/tests/IntegrationTest.java)
+info woven class ch.scaille.tcwriter.examples.websearch.InternautRole (from /home/scaille/src/sky-lib/testcase-writer/examples/target/classes/ch/scaille/tcwriter/examples/websearch/InternautRole.class)
+info woven class ch.scaille.tcwriter.examples.websearch.InternautRole$AjcClosure1 (from /home/scaille/src/sky-lib/testcase-writer/examples/target/classes/ch/scaille/tcwriter/examples/websearch/InternautRole.class)
+info woven class ch.scaille.tcwriter.examples.websearch.InternautRole$AjcClosure3 (from /home/scaille/src/sky-lib/testcase-writer/examples/target/classes/ch/scaille/tcwriter/examples/websearch/InternautRole.class)
+info woven class ch.scaille.tcwriter.examples.simple.selectors.BuyingLocationSelector$AjcClosure3 (from /home/scaille/src/sky-lib/testcase-writer/examples/target/classes/ch/scaille/tcwriter/examples/simple/selectors/BuyingLocationSelector$AjcClosure3.class)
+info woven class ch.scaille.tcwriter.examples.simple.dto.TestItem$AjcClosure3 (from /home/scaille/src/sky-lib/testcase-writer/examples/target/classes/ch/scaille/tcwriter/examples/simple/dto/TestItem$AjcClosure3.class)
+abort ABORT -- (RuntimeException) key not found in wovenClassFile
+key not found in wovenClassFile
+java.lang.RuntimeException: key not found in wovenClassFile
+	at org.aspectj.weaver.WeaverStateInfo.findEndOfKey(WeaverStateInfo.java:431)
+	at org.aspectj.weaver.WeaverStateInfo.replaceKeyWithDiff(WeaverStateInfo.java:387)
+	at org.aspectj.weaver.bcel.LazyClassGen.getJavaClassBytesIncludingReweavable(LazyClassGen.java:777)
+	at org.aspectj.weaver.bcel.BcelWeaver.getClassFilesFor(BcelWeaver.java:1462)
+	at org.aspectj.weaver.bcel.BcelWeaver.weaveAndNotify(BcelWeaver.java:1424)
+	at org.aspectj.weaver.bcel.BcelWeaver.weave(BcelWeaver.java:1189)
+	at org.aspectj.ajdt.internal.compiler.AjPipeliningCompilerAdapter.weaveQueuedEntries(AjPipeliningCompilerAdapter.java:510)
+	at org.aspectj.ajdt.internal.compiler.AjPipeliningCompilerAdapter.queueForWeaving(AjPipeliningCompilerAdapter.java:446)
+	at org.aspectj.ajdt.internal.compiler.AjPipeliningCompilerAdapter.afterProcessing(AjPipeliningCompilerAdapter.java:431)
+	at org.aspectj.ajdt.internal.compiler.CompilerAdapter.ajc$after$org_aspectj_ajdt_internal_compiler_CompilerAdapter$5$6b855184(CompilerAdapter.aj:104)
+	at org.aspectj.org.eclipse.jdt.internal.compiler.Compiler.process(Compiler.java:852)
+	at org.aspectj.org.eclipse.jdt.internal.compiler.Compiler.processCompiledUnits(Compiler.java:458)
+	at org.aspectj.org.eclipse.jdt.internal.compiler.Compiler.compile(Compiler.java:359)
+	at org.aspectj.org.eclipse.jdt.internal.compiler.Compiler.compile(Compiler.java:310)
+	at org.aspectj.ajdt.internal.core.builder.AjBuildManager.performCompilation(AjBuildManager.java:1102)
+	at org.aspectj.ajdt.internal.core.builder.AjBuildManager.performBuild(AjBuildManager.java:276)
+	at org.aspectj.ajdt.internal.core.builder.AjBuildManager.batchBuild(AjBuildManager.java:189)
+	at org.aspectj.ajdt.ajc.AjdtCommand.doCommand(AjdtCommand.java:103)
+	at org.aspectj.ajdt.ajc.AjdtCommand.runCommand(AjdtCommand.java:47)
+	at org.aspectj.tools.ajc.Main.run(Main.java:385)
+	at org.aspectj.tools.ajc.Main.runMain(Main.java:274)
+	at org.codehaus.mojo.aspectj.AbstractAjcCompiler.execute(AbstractAjcCompiler.java:567)
+	at org.codehaus.mojo.aspectj.AjcTestCompileMojo.execute(AjcTestCompileMojo.java:105)
+	at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo(DefaultBuildPluginManager.java:153)
+	at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute2(MojoExecutor.java:339)
+	at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute(MojoExecutor.java:310)
+	at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:214)
+	at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:179)
+	at org.apache.maven.lifecycle.internal.MojoExecutor$1.run(MojoExecutor.java:168)
+	at org.apache.maven.plugin.DefaultMojosExecutionStrategy.execute(DefaultMojosExecutionStrategy.java:39)
+	at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:165)
+	at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject(LifecycleModuleBuilder.java:110)
+	at org.apache.maven.lifecycle.internal.builder.multithreaded.MultiThreadedBuilder.lambda$createBuildCallable$1(MultiThreadedBuilder.java:191)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:330)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:330)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1516)
+

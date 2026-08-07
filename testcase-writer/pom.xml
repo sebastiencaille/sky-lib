@@ -1,37 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns="http://maven.apache.org/POM/4.1.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 http://maven.apache.org/xsd/maven-4.1.0.xsd">
+	<modelVersion>4.1.0</modelVersion>
+
 	<parent>
 		<groupId>ch.scaille</groupId>
 		<artifactId>skylib-starter-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>${starter.revision}</version>
 		<relativePath />
 	</parent>
-	<version>${revision}</version>
 	<groupId>ch.scaille.tcwriter</groupId>
 	<artifactId>testcase-writer</artifactId>
+	<version>${revision}</version>
 	<packaging>pom</packaging>
-	<modules>
-		<module>api</module>
-		<module>model</module>
-		<module>core</module>
-		<module>javatc</module>
-		<module>flowtc</module>
-		<module>maven-plugin</module>
-		<module>gui</module>
-		<module>gui-it</module>
-		<module>examples</module>
-		<module>webapp</module>
-	</modules>
+	<subprojects>
+		<subproject>api</subproject>
+		<subproject>model</subproject>
+		<subproject>core</subproject>
+		<subproject>javatc</subproject>
+		<subproject>flowtc</subproject>
+		<subproject>maven-plugin</subproject>
+		<subproject>gui</subproject>
+		<subproject>gui-it</subproject>
+		<subproject>examples</subproject>
+		<subproject>webapp</subproject>
+	</subprojects>
 	<properties>
 		<java.version>25</java.version>
-		<maven.compiler.source>${java.version}</maven.compiler.source>
-		<maven.compiler.target>${java.version}</maven.compiler.target>
 
 		<sonar.exclusions>**/node_modules/**,**/generated/**</sonar.exclusions>
-		<flatten>true</flatten>
 	</properties>
 	<build>
 		<plugins>
@@ -41,10 +39,6 @@
 				<configuration>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>flatten-maven-plugin</artifactId>
-			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -52,8 +46,8 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<configuration>
-						<!-- for aspectj -->
-						<useIncrementalCompilation>false</useIncrementalCompilation>
+						<incrementalCompilation>classes</incrementalCompilation>
+						<debuglevel>all</debuglevel>
 						<annotationProcessorPaths>
 							<path>
 								<groupId>org.projectlombok</groupId>
@@ -73,13 +67,12 @@
 						<encoding>${project.build.sourceEncoding}</encoding>
 						<Xlint>ignore</Xlint>
 						<verbose>true</verbose>
-						<!-- this is important: start-->
+
 						<forceAjcCompile>true</forceAjcCompile>
 						<sources />
 						<weaveDirectories>
 							<weaveDirectory>${project.build.directory}/classes</weaveDirectory>
 						</weaveDirectories>
-
 					</configuration>
 					<executions>
 						<execution>
@@ -122,12 +115,14 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+
 	<dependencyManagement>
 		<dependencies>
+
 			<dependency>
 				<groupId>ch.scaille.tcwriter</groupId>
 				<artifactId>testcase-writer-api</artifactId>
-				<version>${revision}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>ch.scaille.tcwriter</groupId>

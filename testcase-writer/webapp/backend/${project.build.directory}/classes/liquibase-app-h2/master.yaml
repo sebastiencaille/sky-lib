@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: init
+      author: scaille
+      changes:
+      - sqlFile:
+          id: init-spring-session
+          author: spring
+          dbms: h2
+          path: org/springframework/session/jdbc/schema-h2.sql
+          endDelimiter: ;

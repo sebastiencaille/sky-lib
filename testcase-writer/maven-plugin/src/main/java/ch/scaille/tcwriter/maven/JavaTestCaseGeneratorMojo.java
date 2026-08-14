@@ -2,6 +2,7 @@ package ch.scaille.tcwriter.maven;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.Set;
 
 import org.apache.maven.api.Language;
 import org.apache.maven.api.Session;
+import org.apache.maven.api.model.PatternSet;
 import org.apache.maven.model.Resource;
 import org.apache.maven.api.di.Inject;
 import org.apache.maven.api.ProjectScope;
@@ -47,14 +49,11 @@ public class JavaTestCaseGeneratorMojo implements org.apache.maven.api.plugin.Mo
     @Inject
     private ProjectManager projectManager;
 
-    @Inject
-    Session session;
-    
     @Parameter(property = "templatesFolder", defaultValue = "file:${project.testResources.testResource.directory}/userResources/templates")
-    private String templatesFolder= "";
+    private String templatesFolder = "";
 
     @Parameter(property = "dictionaryFolder", defaultValue = "file:${project.testResources.testResource.directory}/dictionaries")
-    private String dictionaryFolder= "";
+    private String dictionaryFolder = "";
 
     @Parameter(property = "dictionary")
     @Nullable
@@ -62,72 +61,74 @@ public class JavaTestCaseGeneratorMojo implements org.apache.maven.api.plugin.Mo
 
     @Parameter(property = "testCases")
     @Nullable
-    private Resource testCases = null;
+    private List<Resource> testCases = null;
 
     @Parameter(property = "outputFolder", defaultValue = "${project.build.directory}/generated-test-sources/tcwriter")
     private String outputFolder = "";
 
     private String resolve(String path) {
         if (!path.startsWith(DaoFactory.FS_DATASOURCE)) {
-            return path;
+            return resolveFile(path).toString();
         }
         return DaoFactory.fs(resolveFile(path.substring(DaoFactory.FS_DATASOURCE.length())));
     }
 
-    private String resolveFile(String p) {
-        final var path = new File(p);
+    private Path resolveFile(String p) {
+        final var path = Paths.get(p);
         if (path.isAbsolute()) {
-            return path.toString();
+            return path;
         }
-        return project.getBasedir().resolve(p).toString();
+        return project.getBasedir().resolve(p);
     }
 
     @SneakyThrows
     @Override
     public void execute() {
-        System.out.println(System.identityHashCode(project));
         // Defaults
-        System.out.println(project.getBuild().getSources());
-        if (testCases == null || testCases.getDirectory() == null) {
-            testCases = new Resource();
-            testCases.setDirectory(resolveFile(project.getBuild().getSources().stream()
-                    .filter(s -> session.requireLanguage(s.getLang()) == Language.RESOURCES
-                            && session.requireProjectScope(s.getScope()) == ProjectScope.TEST).findFirst().get() + "/testcases"));
-            testCases.addInclude("*.yaml");
+        System.out.println(testCases);
+        if (testCases == null || testCases.isEmpty()) {
+            // Implicitly scan for resource folder
+            final var resource = new Resource();
+            resource.setDirectory(resolve("src/test/resources/testcases"));
+            resource.addInclude("*.yaml");
+            testCases = List.of(resource);
         }
     	projectManager.addSourceRoot(project, ProjectScope.TEST, Language.JAVA_FAMILY, Paths.get(outputFolder));
 
-        // config folders and build model
-        final var fsDsFactory = new FsDsFactory(Paths.get("."), false);
-        final var daoFactory = DaoFactory.cpPlus(Set.of(), fsDsFactory);
-        final var mavenModelConfig = new ModelConfig();
-        mavenModelConfig.setDictionaryPath(resolve(dictionaryFolder));
-        mavenModelConfig.setTcPath(resolve(DaoFactory.fs(testCases.getDirectory())));
-        mavenModelConfig.setTemplatePath(resolve(templatesFolder));
-        mavenModelConfig.setTcExportPath("");
-        final var config = new TCConfig("maven", List.of(mavenModelConfig));
-        final var modelDao = new ModelDao(daoFactory,
-                new ObjectProperty<>("config", new DummyPropertiesGroup(), config),
-                    fsDsFactory, ModelDao.defaultDataHandlers());
-        // Search test cases
-        final var scanner = new DirectoryScanner();
-        scanner.setBasedir(new File(testCases.getDirectory()));
-        if (!testCases.getIncludes().isEmpty()) {
-            scanner.setIncludes(testCases.getIncludes().toArray(new String[0]));
-        }
-        if (!testCases.getExcludes().isEmpty()) {
-            scanner.setExcludes(testCases.getExcludes().toArray(new String[0]));
-        }
-        scanner.scan();
+        for (var testCaseResource: testCases) {
+            // config folders and build model
+            final var fsDsFactory = new FsDsFactory(Paths.get("."), false);
+            final var daoFactory = DaoFactory.cpPlus(Set.of(), fsDsFactory);
+            final var mavenModelConfig = new ModelConfig();
+            mavenModelConfig.setDictionaryPath(resolve(dictionaryFolder));
+            mavenModelConfig.setTcPath(resolve(testCaseResource.getDirectory()));
+            mavenModelConfig.setTemplatePath(resolve(templatesFolder));
+            mavenModelConfig.setTcExportPath("");
+            final var config = new TCConfig("maven", List.of(mavenModelConfig));
+            final var modelDao = new ModelDao(daoFactory,
+                    new ObjectProperty<>("config", new DummyPropertiesGroup(), config),
+                        fsDsFactory, ModelDao.defaultDataHandlers());
 
-        log.debug("Scanning of: " + scanner.getBasedir().getAbsolutePath());
-        log.info("Found: " + Arrays.asList(scanner.getIncludedFiles()));
+            // Search test cases
+            final var scanner = new DirectoryScanner();
+            scanner.setBasedir(resolveFile(testCaseResource.getDirectory()).toFile());
+            if (!testCaseResource.getIncludes().isEmpty()) {
+                scanner.setIncludes(testCaseResource.getIncludes().toArray(new String[0]));
+            }
+            if (!testCaseResource.getExcludes().isEmpty()) {
+                scanner.setExcludes(testCaseResource.getExcludes().toArray(new String[0]));
+            }
+            scanner.scan();
 
-        // Generate tests
-        final var generator = new TestCaseToJava(modelDao);
-        Arrays.stream(scanner.getIncludedFiles())
-                .forEach(LambdaExt
-                        .uncheckedC(tcFile -> generateTestCase(generator, tcFile, modelDao)));
+            log.debug("Scanning of {}", scanner.getBasedir().getAbsolutePath());
+            log.info("Found {}", Arrays.asList(scanner.getIncludedFiles()));
+
+            // Generate tests
+            final var generator = new TestCaseToJava(modelDao);
+            Arrays.stream(scanner.getIncludedFiles())
+                    .forEach(LambdaExt
+                            .uncheckedC(tcFile -> generateTestCase(generator, tcFile, modelDao)));
+        }
     }
 
     private void generateTestCase(final TestCaseToJava generator,
@@ -146,7 +147,7 @@ public class JavaTestCaseGeneratorMojo implements org.apache.maven.api.plugin.Mo
         final var generationMetadata = new GenerationMetadata(JavaTestCaseGeneratorMojo.class,
                 "dictionary=" + testCase.getDictionary());
         generator.generate(testCase, generationMetadata).writeTo(LambdaExt.uncheckedF2((file, src) -> {
-            final var outputFile = Paths.get(resolve(outputFolder)).resolve(file);
+            final var outputFile = resolveFile(outputFolder).resolve(file);
             log.info("Writing " + outputFile);
             Files.createDirectories(outputFile.getParent());
             Files.writeString(outputFile, src);

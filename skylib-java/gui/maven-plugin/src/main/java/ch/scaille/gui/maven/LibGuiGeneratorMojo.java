@@ -1,26 +1,19 @@
 package ch.scaille.gui.maven;
 
-import java.io.File;
 
 import ch.scaille.generators.util.ICodeGeneratorParams;
 import ch.scaille.gui.mvc.GuiModelGenerator;
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.MavenProject;
+import org.apache.maven.api.plugin.annotations.Mojo;
+import org.apache.maven.api.plugin.annotations.Parameter;
 import org.jspecify.annotations.NullMarked;
 
 import ch.scaille.generators.util.GenerationMetadata;
 
 import lombok.SneakyThrows;
 
-@Mojo(name = "generateMvc", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES)
+@Mojo(name = "generateMvc", defaultPhase = "GENERATE_TEST_SOURCES")
 @NullMarked
-public class LibGuiGeneratorMojo implements Mojo {
-
-    @Parameter(defaultValue = "${project}", readonly = true)
-    private MavenProject project;
+public class LibGuiGeneratorMojo implements org.apache.maven.api.plugin.Mojo {
 
     @Parameter(property = "classPathFolder", required = true)
     private String classPathFolder = "";
@@ -33,14 +26,6 @@ public class LibGuiGeneratorMojo implements Mojo {
 
     @Parameter(property = "targetFolder", required = true)
     private String targetFolder = "";
-
-    private String resolveFile(String p) {
-        final var path = new File(p);
-        if (path.isAbsolute()) {
-            return path.toString();
-        }
-        return new File(project.getBasedir(), p).toString();
-    }
 
     @SneakyThrows
     @Override
@@ -70,11 +55,6 @@ public class LibGuiGeneratorMojo implements Mojo {
             }
         };
         new GuiModelGenerator().process(params, generationMetadata);
-
     }
 
-    public boolean threadSafe() {
-    	return true;
-    }
-    
 }

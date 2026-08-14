@@ -25,5 +25,5 @@ module testcase.writer.javatc.core {
     requires com.google.common;
 	requires jcommander;
 
-    requires org.aspectj.runtime;
+    requires org.aspectj.weaver;
 }

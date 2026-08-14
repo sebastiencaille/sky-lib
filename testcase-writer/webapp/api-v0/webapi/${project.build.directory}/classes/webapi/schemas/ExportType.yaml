@@ -1,3 +1,0 @@
-ExportType:
-  type: string
-  enum: [JAVA, HUMAN_READABLE]

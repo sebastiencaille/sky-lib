@@ -12,6 +12,6 @@ module testcase.writer.javatc.client {
 
     requires org.jspecify;
     
-    requires org.aspectj.runtime;
+    requires org.aspectj.weaver;
 
 }

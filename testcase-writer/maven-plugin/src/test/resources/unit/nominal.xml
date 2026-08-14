@@ -4,18 +4,23 @@
 	<modelVersion>4.1.0</modelVersion>
 	<groupId>ch.scaille.tcwriter</groupId>
 	<artifactId>testcase-writer-maven-plugin-test</artifactId>
-	<version>0.0.1-M4-SNAPSHOT</version>
+	<version>1.0-SNAPSHOT</version>
 
 	<packaging>jar</packaging>
 
 	<build>
+
 		<plugins>
 			<plugin>
 				<groupId>ch.scaille.tcwriter</groupId>
 				<artifactId>testcase-writer-maven-plugin</artifactId>
-				<version>0.0.1-M4-SNAPSHOT</version>
-
 				<configuration>
+					<testCases>
+						<FileSet>
+							<directory>src/test/resources/unit/testcases</directory>
+							<includes>**/*.yaml</includes>
+						</FileSet>
+					</testCases>
 				</configuration>
 			</plugin>
 		</plugins>

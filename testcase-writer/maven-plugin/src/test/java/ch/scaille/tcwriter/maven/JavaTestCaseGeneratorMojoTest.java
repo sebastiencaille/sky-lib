@@ -7,9 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 
-import org.apache.maven.api.Language;
 import org.apache.maven.api.Project;
-import org.apache.maven.api.ProjectScope;
 
 
 import org.apache.maven.api.di.Inject;
@@ -19,7 +17,6 @@ import org.apache.maven.testing.plugin.MojoTest;
 import org.apache.maven.api.services.ProjectManager;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
@@ -27,18 +24,11 @@ import org.junit.jupiter.api.Test;
 class JavaTestCaseGeneratorMojoTest {
 
     private static final String SRC_TEST_RESOURCES_UNIT = "src/test/resources/unit";
-    private static final String BUILD_DIR = "target";
+
     @Inject
     private Project project;
     @Inject
     private ProjectManager projectManager;
-
-    @BeforeEach
-    public void before() {
-        System.out.println(System.identityHashCode(project));
-        projectManager.addSourceRoot(project, ProjectScope.TEST, Language.RESOURCES, Paths.get(SRC_TEST_RESOURCES_UNIT));
-        System.out.println(project.getBuild().getSources());
-    }
 
     @Test
     @InjectMojo(goal = "generateTestCases", pom = SRC_TEST_RESOURCES_UNIT + "/nominal.xml")

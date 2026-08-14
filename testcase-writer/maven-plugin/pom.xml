@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.1.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 https://maven.apache.org/xsd/maven-4.1.0.xsd">
-	<modelVersion>4.1.0</modelVersion>
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 https://maven.apache.org/xsd/maven-4.1.0.xsd">
+    <modelVersion>4.1.0</modelVersion>
 
-	<parent/>
-	<groupId>ch.scaille.tcwriter</groupId>
-	<artifactId>testcase-writer-maven-plugin</artifactId>
-	<packaging>maven-plugin</packaging>
-	<version>0.0.1-M4-SNAPSHOT</version>
+    <parent/>
+    <groupId>ch.scaille.tcwriter</groupId>
+    <artifactId>testcase-writer-maven-plugin</artifactId>
+    <packaging>maven-plugin</packaging>
+    <version>0.0.1-M4-SNAPSHOT</version>
 
-	<name>TestCase Writer Maven Plugin</name>
+    <name>TestCase Writer Maven Plugin</name>
 
-	<properties>
-		<maven.version>4.0.0-rc-6</maven.version>
-		<mavenResolverVersion>2.0.2</mavenResolverVersion>
-		<maven-plugin-plugin.version>4.0.0-beta-2</maven-plugin-plugin.version>
-		<maven-plugin-harness.version>4.0.0-beta-4</maven-plugin-harness.version>
-	</properties>
+    <properties>
+        <maven.version>4.0.0-rc-6</maven.version>
+        <maven-plugin-plugin.version>4.0.0-beta-2</maven-plugin-plugin.version>
+    </properties>
 
-	<dependencies>
+    <dependencies>
 
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
@@ -48,16 +46,16 @@
             <version>4.0.0-beta-3</version>
             <scope>provided</scope>
         </dependency>
-              <dependency>
-          <groupId>org.apache.maven</groupId>
-          <artifactId>maven-testing</artifactId>
-          <version>${maven.version}</version>
-          <scope>test</scope>
-      </dependency>
-              <dependency>
+        <dependency>
+            <groupId>ch.scaille.tcwriter</groupId>
+            <artifactId>testcase-writer-examples</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.apache.maven</groupId>
-            <artifactId>maven-core</artifactId>
+            <artifactId>maven-testing</artifactId>
             <version>${maven.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.resolver</groupId>
@@ -68,35 +66,43 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-impl</artifactId>
-            <version>4.0.0-rc-6</version>
+            <version>${maven.version}</version>
             <scope>test</scope>
         </dependency>
 
-	</dependencies>
+    </dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-plugin-plugin</artifactId>
-				<version>${maven-plugin-plugin.version}</version>
-				<configuration>
-				    <requiredJavaVersion>21</requiredJavaVersion>
+    <build>
+        <sources>
+            <source>
+                <directory>src/test/resources</directory>
+                <scope>TEST</scope>
+                <lang>RESOURCES</lang>
+                <enabled>true</enabled>
+            </source>
+        </sources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-plugin-plugin</artifactId>
+                <version>${maven-plugin-plugin.version}</version>
+                <configuration>
+                    <requiredJavaVersion>21</requiredJavaVersion>
                     <extractors>
                         <extractor>java-annotations</extractor>
                     </extractors>
                     <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
-				</configuration>
-				<executions>
+                </configuration>
+                <executions>
 
-					<execution>
-						<id>help-mojo</id>
-						<goals>
-							<goal>helpmojo</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+                    <execution>
+                        <id>help-mojo</id>
+                        <goals>
+                            <goal>helpmojo</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -2,7 +2,7 @@
 <project
 	xmlns="http://maven.apache.org/POM/4.1.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 http://maven.apache.org/xsd/maven-4.1.0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 https://maven.apache.org/xsd/maven-4.1.0.xsd">
 	<modelVersion>4.1.0</modelVersion>
 
     <parent>
@@ -44,19 +44,19 @@
 
         <coverage.temp>${java.io.tmpdir}/coverage/${basedir}</coverage.temp>
 
-        <maven-install-plugin.version>3.1.4</maven-install-plugin.version>
+        <maven-install-plugin.version>4.0.0-beta-2</maven-install-plugin.version>
         <build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
         <maven-assembly-plugin.version>3.8.0</maven-assembly-plugin.version>
         <maven-help-plugin.version>3.5.2</maven-help-plugin.version>
         <maven-resources-plugin.version>3.5.0</maven-resources-plugin.version>
-        <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
+        <maven-source-plugin.version>4.0.0-beta-1</maven-source-plugin.version>
         <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
         <maven-jar-plugin.version>3.5.1</maven-jar-plugin.version>
-        <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>4.0.0-beta-4</maven-compiler-plugin.version>
         <maven-war-plugin.version>3.5.1</maven-war-plugin.version>
         <maven-dependency-plugin.version>3.11.0</maven-dependency-plugin.version>
         <maven-enforcer-plugin.version>3.6.3</maven-enforcer-plugin.version>
-        <maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
+        <maven-clean-plugin.version>4.0.0-beta-2</maven-clean-plugin.version>
         <maven-shade-plugin.version>3.6.2</maven-shade-plugin.version>
         <versions-maven-plugin.version>2.21.0</versions-maven-plugin.version>
         <flatten-maven-plugin.version>1.8.0</flatten-maven-plugin.version>
@@ -189,6 +189,12 @@
                 <groupId>io.undertow</groupId>
                 <artifactId>undertow-core</artifactId>
                 <version>${undertow.version}</version>
+                <type>jar</type>
+            </dependency>
+            <dependency>
+                <groupId>io.undertow</groupId>
+                <artifactId>undertow-core</artifactId>
+                <version>${undertow.version}</version>
                 <type>modular-jar</type>
             </dependency>
             <dependency>
@@ -200,6 +206,12 @@
                 <groupId>org.openapitools</groupId>
                 <artifactId>jackson-databind-nullable</artifactId>
                 <version>0.2.11</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jcommander</groupId>
+                <artifactId>jcommander</artifactId>
+                <type>jar</type>
+                <version>3.0</version>
             </dependency>
             <dependency>
                 <groupId>org.jcommander</groupId>

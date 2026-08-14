@@ -10,7 +10,8 @@ module testcase.writer.javatc.client {
     
 	requires transitive org.junit.jupiter.api;
 
-    requires org.jspecify;    	
-    requires org.aspectj.weaver;
+    requires org.jspecify;
+    
+    requires org.aspectj.runtime;
 
 }

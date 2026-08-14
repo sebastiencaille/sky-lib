@@ -17,7 +17,7 @@ import lombok.SneakyThrows;
 
 @Mojo(name = "generateMvc", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES)
 @NullMarked
-public class LibGuiGeneratorMojo extends AbstractMojo {
+public class LibGuiGeneratorMojo implements Mojo {
 
     @Parameter(defaultValue = "${project}", readonly = true)
     private MavenProject project;
@@ -73,4 +73,8 @@ public class LibGuiGeneratorMojo extends AbstractMojo {
 
     }
 
+    public boolean threadSafe() {
+    	return true;
+    }
+    
 }

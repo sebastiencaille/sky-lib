@@ -8,12 +8,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import org.apache.maven.api.Language;
+import org.apache.maven.api.Session;
 import org.apache.maven.model.Resource;
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.MavenProject;
+import org.apache.maven.api.di.Inject;
+import org.apache.maven.api.ProjectScope;
+import org.apache.maven.api.plugin.annotations.Mojo;
+import org.apache.maven.api.plugin.annotations.Parameter;
+import org.apache.maven.api.Project;
+import org.apache.maven.api.services.ProjectManager;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -30,14 +33,23 @@ import ch.scaille.util.helpers.LambdaExt;
 import ch.scaille.util.persistence.DaoFactory;
 import ch.scaille.util.persistence.DaoFactory.FsDsFactory;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.maven.api.di.Inject;
 
-@Mojo(name = "generateTestCases", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES)
+@Mojo(name = "generateTestCases", defaultPhase = "generate-test-sources")
 @NullMarked
-public class JavaTestCaseGeneratorMojo extends AbstractMojo {
+@Slf4j
+public class JavaTestCaseGeneratorMojo implements org.apache.maven.api.plugin.Mojo {
 
-    @Parameter(defaultValue = "${project}", readonly = true)
-    private MavenProject project;
+    @Inject
+    private Project project;
 
+    @Inject
+    private ProjectManager projectManager;
+
+    @Inject
+    Session session;
+    
     @Parameter(property = "templatesFolder", defaultValue = "file:${project.testResources.testResource.directory}/userResources/templates")
     private String templatesFolder= "";
 
@@ -67,21 +79,23 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
         if (path.isAbsolute()) {
             return path.toString();
         }
-        return new File(project.getBasedir(), p).toString();
+        return project.getBasedir().resolve(p).toString();
     }
 
     @SneakyThrows
     @Override
     public void execute() {
-
+        System.out.println(System.identityHashCode(project));
         // Defaults
+        System.out.println(project.getBuild().getSources());
         if (testCases == null || testCases.getDirectory() == null) {
             testCases = new Resource();
-            testCases.setDirectory(resolveFile(project.getTestResources().getFirst().getDirectory() + "/testcases"));
+            testCases.setDirectory(resolveFile(project.getBuild().getSources().stream()
+                    .filter(s -> session.requireLanguage(s.getLang()) == Language.RESOURCES
+                            && session.requireProjectScope(s.getScope()) == ProjectScope.TEST).findFirst().get() + "/testcases"));
             testCases.addInclude("*.yaml");
         }
-
-        project.addTestCompileSourceRoot(outputFolder);
+    	projectManager.addSourceRoot(project, ProjectScope.TEST, Language.JAVA_FAMILY, Paths.get(outputFolder));
 
         // config folders and build model
         final var fsDsFactory = new FsDsFactory(Paths.get("."), false);
@@ -106,8 +120,8 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
         }
         scanner.scan();
 
-        getLog().debug("Scanning of: " + scanner.getBasedir().getAbsolutePath());
-        getLog().info("Found: " + Arrays.asList(scanner.getIncludedFiles()));
+        log.debug("Scanning of: " + scanner.getBasedir().getAbsolutePath());
+        log.info("Found: " + Arrays.asList(scanner.getIncludedFiles()));
 
         // Generate tests
         final var generator = new TestCaseToJava(modelDao);
@@ -133,7 +147,7 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
                 "dictionary=" + testCase.getDictionary());
         generator.generate(testCase, generationMetadata).writeTo(LambdaExt.uncheckedF2((file, src) -> {
             final var outputFile = Paths.get(resolve(outputFolder)).resolve(file);
-            getLog().info("Writing " + outputFile);
+            log.info("Writing " + outputFile);
             Files.createDirectories(outputFile.getParent());
             Files.writeString(outputFile, src);
             return outputFile;

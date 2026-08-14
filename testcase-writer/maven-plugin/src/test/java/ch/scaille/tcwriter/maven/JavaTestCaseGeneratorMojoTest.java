@@ -1,39 +1,43 @@
 package ch.scaille.tcwriter.maven;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
 
-import org.apache.maven.api.di.Provides;
-import org.apache.maven.api.plugin.testing.InjectMojo;
-import org.apache.maven.api.plugin.testing.MojoParameter;
-import org.apache.maven.api.plugin.testing.MojoTest;
-import org.apache.maven.model.Build;
-import org.apache.maven.model.Resource;
-import org.apache.maven.project.MavenProject;
+import java.nio.file.Paths;
+
+
+import org.apache.maven.api.Language;
+import org.apache.maven.api.Project;
+import org.apache.maven.api.ProjectScope;
+
+
+import org.apache.maven.api.di.Inject;
+import org.apache.maven.testing.plugin.InjectMojo;
+import org.apache.maven.testing.plugin.MojoParameter;
+import org.apache.maven.testing.plugin.MojoTest;
+import org.apache.maven.api.services.ProjectManager;
+
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 
 @MojoTest
 class JavaTestCaseGeneratorMojoTest {
 
     private static final String SRC_TEST_RESOURCES_UNIT = "src/test/resources/unit";
     private static final String BUILD_DIR = "target";
+    @Inject
+    private Project project;
+    @Inject
+    private ProjectManager projectManager;
 
-    @Provides
-    private MavenProject project() {
-        final var mock = mock(MavenProject.class);
-        final var unitTestResource = new Resource();
-        unitTestResource.setDirectory(SRC_TEST_RESOURCES_UNIT);
-        when(mock.getTestResources()).thenReturn(List.of(unitTestResource));
-        final var mockBuild = mock(Build.class);
-        when(mockBuild.getDirectory()).thenReturn(BUILD_DIR);
-        when(mock.getBuild()).thenReturn(mockBuild);
-        return mock;
+    @BeforeEach
+    public void before() {
+        System.out.println(System.identityHashCode(project));
+        projectManager.addSourceRoot(project, ProjectScope.TEST, Language.RESOURCES, Paths.get(SRC_TEST_RESOURCES_UNIT));
+        System.out.println(project.getBuild().getSources());
     }
 
     @Test

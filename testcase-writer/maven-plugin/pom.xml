@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.1.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 http://maven.apache.org/xsd/maven-4.1.0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 https://maven.apache.org/xsd/maven-4.1.0.xsd">
 	<modelVersion>4.1.0</modelVersion>
 
 	<parent/>
+	<groupId>ch.scaille.tcwriter</groupId>
 	<artifactId>testcase-writer-maven-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
+	<version>0.0.1-M4-SNAPSHOT</version>
 
 	<name>TestCase Writer Maven Plugin</name>
 
 	<properties>
 		<maven.version>4.0.0-rc-6</maven.version>
+		<mavenResolverVersion>2.0.2</mavenResolverVersion>
 		<maven-plugin-plugin.version>4.0.0-beta-2</maven-plugin-plugin.version>
 		<maven-plugin-harness.version>4.0.0-beta-4</maven-plugin-harness.version>
 	</properties>
@@ -27,49 +30,46 @@
 			<artifactId>testcase-writer-examples</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.maven</groupId>
-			<artifactId>maven-core</artifactId>
-			<version>${maven.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.maven</groupId>
-			<artifactId>maven-artifact</artifactId>
-			<version>${maven.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.maven</groupId>
-			<artifactId>maven-compat</artifactId>
-			<version>${maven.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.plexus</groupId>
-			<artifactId>plexus-utils</artifactId>
-			<version>4.1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.plexus</groupId>
-			<artifactId>plexus-xml</artifactId>
-			<version>4.2.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.maven.plugin-tools</groupId>
-			<artifactId>maven-plugin-annotations</artifactId>
-			<version>3.15.2</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.maven.plugin-testing</groupId>
-			<artifactId>maven-plugin-testing-harness</artifactId>
-			<version>${maven-plugin-harness.version}</version>
-			<scope>test</scope>
-		</dependency>
+	        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-api-core</artifactId>
+            <version>${maven.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-api-di</artifactId>
+            <version>${maven.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-api-meta</artifactId>
+            <version>4.0.0-beta-3</version>
+            <scope>provided</scope>
+        </dependency>
+              <dependency>
+          <groupId>org.apache.maven</groupId>
+          <artifactId>maven-testing</artifactId>
+          <version>${maven.version}</version>
+          <scope>test</scope>
+      </dependency>
+              <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-core</artifactId>
+            <version>${maven.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.resolver</groupId>
+            <artifactId>maven-resolver-api</artifactId>
+            <version>2.0.21</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-impl</artifactId>
+            <version>4.0.0-rc-6</version>
+            <scope>test</scope>
         </dependency>
 
 	</dependencies>
@@ -82,16 +82,13 @@
 				<version>${maven-plugin-plugin.version}</version>
 				<configuration>
 				    <requiredJavaVersion>21</requiredJavaVersion>
-					<goalPrefix>testcase-writer-maven-plugin</goalPrefix>
-					<skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+                    <extractors>
+                        <extractor>java-annotations</extractor>
+                    </extractors>
+                    <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
 				</configuration>
 				<executions>
-					<execution>
-						<id>mojo-descriptor</id>
-						<goals>
-							<goal>descriptor</goal>
-						</goals>
-					</execution>
+
 					<execution>
 						<id>help-mojo</id>
 						<goals>

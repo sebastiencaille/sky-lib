@@ -52,6 +52,13 @@
 						<configuration>
 							<shadedArtifactAttached>true</shadedArtifactAttached>
 							<shadedClassifierName>fatjar</shadedClassifierName>
+							<createDependencyReducedPom>false</createDependencyReducedPom>
+							<artifactSet>
+								<excludes>
+									<exclude>ch.scaille.tcwriter:testcase-writer-javatc-client:jar</exclude>
+									<exclude>org.aspectj:aspectjrt</exclude>
+								</excludes>
+							</artifactSet>
 						</configuration>
 					</execution>
 				</executions>

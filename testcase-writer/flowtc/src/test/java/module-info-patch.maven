@@ -1,0 +1,7 @@
+patch-module  testcase.writer.flowtc  {
+    add-modules TEST-MODULE-PATH;
+
+    add-reads org.junit.jupiter.api,
+              testcase.writer.javatc,
+              testcase.writer.examples;
+}

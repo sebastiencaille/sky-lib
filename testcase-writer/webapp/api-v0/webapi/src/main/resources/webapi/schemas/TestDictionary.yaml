@@ -72,7 +72,7 @@ TestParameterFactory:
       nature:
         type: string
       parameterType:
-        type: string      
+        type: string
 TestRole:
   description: A test role
   allOf:

@@ -27,6 +27,7 @@ interface TestDictionary extends ApiTestDictionary {
 	selectors: Set<string>;
 
 }
+
 interface TestCase extends ApiTestCase {
 	metadata: Metadata;
 	steps: TestStep[];
@@ -37,15 +38,18 @@ interface TestCase extends ApiTestCase {
 interface TestStep extends ApiTestStep  {
 	ordinal: number;
 	humanReadable: string;
-	
+
 	action: TestAction;
 	actor: TestActor;
 	parametersValue: TestParameterValue[];
 }
 
+// Allows assigning both TestParameterFactory and TestReference
+type TestParameterFactoryBase = Omit<TestParameterFactory, 'tcDataType'> & { tcDataType: string };
+
 interface TestParameterValue extends ApiTestParameterValue  {
 	simpleValue?: string;
-	testParameterFactory: TestParameterFactory;
+	testParameterFactory: TestParameterFactoryBase | undefined;
 }
 
 export enum ExportType {
@@ -55,7 +59,8 @@ export enum ExportType {
 
 export type {
 	Metadata, IdObject,
-	TestDictionary, TestAction, TestActor, TestRole, TestParameterFactory, TestObjectDescription,
+	TestDictionary, TestAction, TestActor, TestRole,
+	TestParameterFactoryBase, TestParameterFactory, TestObjectDescription,
 	TestCase, TestStep, TestReference, TestParameterValue,
 	StepStatus,
 	Context

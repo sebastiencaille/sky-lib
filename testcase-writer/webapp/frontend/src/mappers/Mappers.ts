@@ -29,9 +29,9 @@ const enhanceTestCase = (dict: TestDictionary, tc: TestCase): TestCase => {
 		step.actor = dict.actorsMap.get(step.actorRef) as TestActor;
 		for (const value of step.parametersValue) {
 			if (value.testParameterFactoryRef) {
-				value.testParameterFactory = dict.testObjectFactoriesMap.get(value.testParameterFactoryRef) as TestParameterFactory;
+				value.testParameterFactory = dict.testObjectFactoriesMap.get(value.testParameterFactoryRef);
 				if (!value.testParameterFactory) {
-					value.testParameterFactory = tc.references.get(value.testParameterFactoryRef) as TestParameterFactory;
+					value.testParameterFactory = tc.references.get(value.testParameterFactoryRef);
 				}
 			}
 		}

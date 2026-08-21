@@ -7,7 +7,6 @@ import ch.scaille.tcwriter.server.config.ApplicationConfig;
 
 /**
  * Run with<br>
- * Project: testcase-writer-webapp-api-v0-backend<br>
  * jvm arg: --add-reads org.hibernate.validator=org.apache.tomcat.embed.el --add-opens=java.base/java.lang=spring.core
  */
 @EnableAutoConfiguration

@@ -96,7 +96,7 @@
 		</dependency>
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
-			<artifactId>testcase-writer-javatc</artifactId>
+			<artifactId>testcase-writer-javatc-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>io.swagger.core.v3</groupId>

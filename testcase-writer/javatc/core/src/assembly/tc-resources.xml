@@ -9,19 +9,22 @@
 	<dependencySets>
 		<dependencySet>
 			<useProjectArtifact>true</useProjectArtifact>
-			<outputDirectory>javatc</outputDirectory>
+			<outputDirectory>javatc-resources</outputDirectory>
             <scope>runtime</scope>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 			<includes>
 				<include>ch.scaille.tcwriter:testcase-writer-javatc-client:jar:fatjar</include>
+				<include>ch.scaille.tcwriter:testcase-writer-javatc-recorder:jar</include>
 				<include>org.junit.platform:junit-platform-console-standalone</include>
-				<include>org.aspectj:aspectjtools</include>
+				<include>org.aspectj:aspectjweaver</include>
 			</includes>
 		</dependencySet>
 		<dependencySet>
-			<outputDirectory>javatc</outputDirectory>
+			<outputDirectory>javatc-resources</outputDirectory>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 			<includes>
+				<include>ch.scaille.tcwriter:testcase-writer-javatc-recorder:jar</include>
+				<include>ch.scaille.tcwriter:testcase-writer-api:jar</include>
 				<include>org.aspectj:aspectjrt</include>
 			</includes>
 		</dependencySet>

@@ -47,7 +47,7 @@ class SimpleIT {
 	}
 	
 	@Test
-	void simpleTest() {
+	void simpleTest() throws InterruptedException {
 		final var mainPage = pilot.page(MainPage::new);
 		
 		mainPage.assertAvailable(MainPage.testDictionary());
@@ -55,6 +55,10 @@ class SimpleIT {
 		
 		mainPage.assertAvailable(MainPage.currentTestCase());
 		mainPage.select(MainPage.currentTestCase());
+
+		mainPage.executeTC();
+		// TODO: check TC execution
+		Thread.sleep(2000);
 	}
 
 }

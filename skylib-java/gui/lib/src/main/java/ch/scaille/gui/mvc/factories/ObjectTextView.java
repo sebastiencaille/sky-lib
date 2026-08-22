@@ -19,9 +19,9 @@ import org.jspecify.annotations.Nullable;
 public class ObjectTextView<T extends @Nullable Object> {
 
 	private final T object;
-    private final Supplier<String> textSupplier;
+    private final Function<T, String> textSupplier;
 
-    protected ObjectTextView(final T object, Supplier<String> textSupplier) {
+    protected ObjectTextView(final T object, Function<T, String> textSupplier) {
 		this.object = object;
         this.textSupplier = textSupplier;
     }
@@ -39,7 +39,7 @@ public class ObjectTextView<T extends @Nullable Object> {
 
 	@Override
 	public String toString() {
-		return textSupplier.get();
+		return textSupplier.apply(object);
 	}
 
 	/**
@@ -51,11 +51,11 @@ public class ObjectTextView<T extends @Nullable Object> {
 	}
 
 	public static <T extends @Nullable Object> Function<T, @Nullable ObjectTextView<T>> obj2Text(final Function<T, String> objToText) {
-		return o -> new ObjectTextView<>(o, () -> objToText.apply(o));
+		return o -> new ObjectTextView<>(o, obj -> objToText.apply(obj));
 	}
 
 	public static <T extends @Nullable Object, K extends @Nullable Object> BiFunction<T, K, @Nullable ObjectTextView<T>> contextualObject2Text(final BiFunction<T, K, String> objToText) {
-		return (o, k) -> new ObjectTextView<>(o, () -> objToText.apply(o, k));
+		return (o, k) -> new ObjectTextView<>(o, obj -> objToText.apply(obj, k));
 	}
 
 	public static <T extends @Nullable Object> FunctionWithException<@Nullable ObjectTextView<T>, T, ConversionException> text2Obj() {

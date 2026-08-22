@@ -13,3 +13,9 @@ dependency-reduced-pom.xml
 *.iml
 /testcase-writer/maven-plugin/Cache/
 logs/
+
+/sonar.sh
+node_modules
+*.info
+ajcore*
+

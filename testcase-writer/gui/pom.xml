@@ -12,7 +12,14 @@
 	<dependencies>
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
-			<artifactId>testcase-writer-javatc</artifactId>
+			<artifactId>testcase-writer-javatc-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ch.scaille.tcwriter</groupId>
+			<artifactId>testcase-writer-javatc-core</artifactId>
+			<classifier>client-bundle</classifier>
+			<type>zip</type>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>ch.scaille</groupId>
@@ -24,14 +31,7 @@
 			<artifactId>jlfgr</artifactId>
 			<version>1_0</version>
 		</dependency>
-		<dependency>
-			<groupId>ch.scaille.tcwriter</groupId>
-			<artifactId>testcase-writer-javatc</artifactId>
-			<classifier>client-bundle</classifier>
-			<version>${project.version}</version>
-			<type>zip</type>
-			<scope>runtime</scope>
-		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -40,6 +40,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
+					<finalName>tc-resources</finalName>
 					<descriptors>
 						<descriptor>src/assembly/tc-resources.xml</descriptor>
 					</descriptors>

@@ -14,8 +14,8 @@ import ch.scaille.tcwriter.examples.simple.DeliveryTestRole;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.tcwriter.javatc.generators.JavaToDictionary;
 import ch.scaille.tcwriter.javatc.testexec.JUnitTestExecutor;
-import ch.scaille.tcwriter.javatc.recorder.TestCaseRecorder;
 import ch.scaille.tcwriter.javatc.recorder.TestCaseRecorderAspect;
+import ch.scaille.tcwriter.javatc.recorderimpl.TestCaseRecorder;
 import ch.scaille.tcwriter.model.config.TCConfig;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.testcase.TestCase;
@@ -100,7 +100,7 @@ public class ExampleHelper {
 	}
 
 	public ITestExecutor testExecutor() {
-			final var testJarPath = JavaExt.locationOf(TCWriterController.class).resolve("../javatc-resources");
+			final var testJarPath = JavaExt.locationOf(TCWriterController.class).resolve("../tc-resources/javatc-resources");
 			return new JUnitTestExecutor(configDao, modelDao, testJarPath);
 	}
 

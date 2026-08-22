@@ -27,7 +27,8 @@ public class TCEditor {
 		final var configLoader = daoConfig.configDao().setConfiguration(mainArgs.configuration);
 		final var modelDao = daoConfig.modelDao();
 		
-		final var testJarPath = JavaExt.locationOf(TCEditor.class).resolve("../javatc-resources");
+		// TODO: configurable
+		final var testJarPath = JavaExt.locationOf(TCEditor.class).resolve("../tc-resources/javatc-resources");
 		final var testExecutor = new JUnitTestExecutor(configLoader, modelDao, 
 				testJarPath.resolve("test-client.jar"));
 		final var tcWriterController = new TCWriterController(configLoader, modelDao, null, testExecutor);

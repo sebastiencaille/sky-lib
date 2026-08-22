@@ -51,7 +51,7 @@ public class TestParameterValueEditorPanel extends JPanel {
     private static final long serialVersionUID = 1686297570581922386L;
 
 	public static IConverter<TestReference, ObjectTextView<TestReference>> refToTextConverter() {
-		return ObjectTextView.converter(ref -> ref.toDescription().description());
+		return ObjectTextView.converter(ref -> ref != null ? ref.toDescription().description() : "");
 	}
 
 	private List<TestReference> getReferences(final TestCase testCase, final TestParameterValue testParameterValue) {

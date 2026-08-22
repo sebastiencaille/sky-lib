@@ -23,7 +23,7 @@
 		</dependency>
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
-			<artifactId>testcase-writer-javatc</artifactId>
+			<artifactId>testcase-writer-javatc-core</artifactId>
 			<classifier>client-bundle</classifier>
 			<version>${project.version}</version>
 			<type>zip</type>
@@ -32,11 +32,18 @@
 	</dependencies>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>${project.d}</directory>
+			</resource>
+		</resources>
+
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
+					<finalName>classes</finalName>
 					<descriptors>
 						<descriptor>../war/src/assembly/tc-resources.xml</descriptor>
 						<descriptor>../tests/src/assembly/tc-resources.xml</descriptor>

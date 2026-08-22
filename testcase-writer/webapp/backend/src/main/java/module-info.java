@@ -20,7 +20,7 @@ module testcase.writer.webapp.backend {
 	opens ch.scaille.tcwriter.server.webapi.config to spring.beans, spring.context, spring.core;
 	
 	requires transitive testcase.writer.core;
-	requires transitive testcase.writer.javatc;
+	requires transitive testcase.writer.javatc.core;
 	requires transitive lib.utils;
 	requires transitive lib.persistence;
 	
@@ -57,5 +57,6 @@ module testcase.writer.webapp.backend {
 
     requires org.mapstruct;
 	requires org.openapitools.jackson.nullable;
-	
+    requires org.junit.platform.commons;
+
 }

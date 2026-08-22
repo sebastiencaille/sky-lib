@@ -12,27 +12,26 @@ import java.time.Duration;
 
 import javax.swing.SwingUtilities;
 
-import ch.scaille.tcwriter.annotations.TCActor;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 
+import ch.scaille.tcwriter.annotations.TCActor;
 import ch.scaille.tcwriter.annotations.TCActors;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
 import ch.scaille.tcwriter.it.api.TestSessionRole;
 import ch.scaille.tcwriter.it.api.TestWriterRole;
+import ch.scaille.tcwriter.javatc.generators.JavaToDictionary;
+import ch.scaille.tcwriter.javatc.recorder.TestCaseRecorderAspect;
+import ch.scaille.tcwriter.javatc.recorderimpl.TestCaseRecorder;
+import ch.scaille.tcwriter.javatc.testexec.JUnitTestExecutor;
 import ch.scaille.tcwriter.model.config.TCConfig;
 import ch.scaille.tcwriter.persistence.ModelConfig;
 import ch.scaille.tcwriter.persistence.factory.DaoConfigs;
 import ch.scaille.tcwriter.persistence.testexec.JunitTestExecConfig;
 import ch.scaille.tcwriter.recorder.RecorderTestActors;
-import ch.scaille.tcwriter.javatc.generators.JavaToDictionary;
 import ch.scaille.tcwriter.services.generators.visitors.HumanReadableVisitor;
-import ch.scaille.tcwriter.javatc.recorder.ITestCaseRecorder;
-import ch.scaille.tcwriter.javatc.recorder.TestCaseRecorder;
-import ch.scaille.tcwriter.javatc.recorder.TestCaseRecorderAspect;
-import ch.scaille.tcwriter.javatc.testexec.JUnitTestExecutor;
 import ch.scaille.util.helpers.JavaExt;
 import ch.scaille.util.helpers.LambdaExt;
 import lombok.extern.java.Log;
@@ -56,7 +55,7 @@ public class AbstractGuiTest {
     protected TestSessionRole testSession;
 
     @Nullable
-    private ITestCaseRecorder testRecorder;
+    private TestCaseRecorder testRecorder;
 
     @BeforeEach
     public void startGui() throws InvocationTargetException, InterruptedException, IOException {

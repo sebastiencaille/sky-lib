@@ -9,7 +9,7 @@ module testcase.writer.gui.it {
 	requires lib.testing.gui.pilot.swing;
 
 	requires testcase.writer.api;
-	requires testcase.writer.javatc;
+	requires testcase.writer.javatc.core;
 	requires testcase.writer.core;
 	requires testcase.writer.gui;
 

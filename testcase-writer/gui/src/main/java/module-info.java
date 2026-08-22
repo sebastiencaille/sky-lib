@@ -8,7 +8,7 @@ module testcase.writer.gui {
 	opens translations;
 	
     requires transitive testcase.writer.core;
-    requires transitive testcase.writer.javatc;
+    requires transitive testcase.writer.javatc.core;
 
     requires testcase.writer.api;
 

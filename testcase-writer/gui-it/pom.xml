@@ -19,26 +19,25 @@
 	</build>
 	<dependencies>
 		<dependency>
-			<groupId>ch.scaille.tcwriter</groupId>
-			<artifactId>testcase-writer-javatc-client</artifactId>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-gui</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>ch.scaille.tcwriter</groupId>
+			<artifactId>testcase-writer-javatc-core</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>ch.scaille</groupId>
 			<artifactId>gui-pilot-swing</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjrt</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
-			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 </project>

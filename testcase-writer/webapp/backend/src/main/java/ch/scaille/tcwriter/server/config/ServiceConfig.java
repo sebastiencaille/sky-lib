@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.junit.platform.commons.io.Resource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,22 +39,14 @@ public class ServiceConfig {
 	@Bean
 	JUnitTestExecutor jUnitTestExecutor(IConfigDao configDao, IModelDao modelDao,
 			org.springframework.context.ApplicationContext context,
-			@Value("${tcwriter.javatc-resources:}") String tcResource) {
-		Path resourcesFolder; 
+			@Value("${tcwriter.javatc-resources:javatc-resources}") String tcResource) {
+		final Path resourcesFolder;
 		try {
-			if (!tcResource.isEmpty()) {
-				resourcesFolder = Paths.get(tcResource);
-				if (!Files.isDirectory(resourcesFolder)) {
-					throw new IllegalStateException("No javatc resources in " + resourcesFolder.toAbsolutePath());
-				}
-			} else {
-				final var url = context.getResource("javatc-resources");
-				if (url.exists()) {
-					resourcesFolder = url.getFilePath();
-				} else {
-					throw new IllegalStateException("No resource javatc-resources found on classpath");
-				}
+			final var resource = context.getResource(tcResource);
+			if (!resource.exists()) {
+				throw new IOException("No resource " + tcResource + " was found. Current folder: " + Paths.get("").toAbsolutePath());
 			}
+			resourcesFolder = resource.getFilePath();
 		} catch (IOException e) {
 			throw new IllegalStateException("", e);
 		}

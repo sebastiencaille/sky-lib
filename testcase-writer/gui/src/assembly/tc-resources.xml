@@ -9,10 +9,9 @@
 	<dependencySets>
 		<dependencySet>
 			<useProjectArtifact>true</useProjectArtifact>
-			<outputDirectory>javatc</outputDirectory>
             <scope>runtime</scope>
 			<includes>
-				<include>ch.scaille.tcwriter:testcase-writer-javatc:zip:client-bundle</include>
+				<include>ch.scaille.tcwriter:testcase-writer-javatc-core:zip:client-bundle</include>
 			</includes>
 			<unpack>true</unpack>
 		</dependencySet>

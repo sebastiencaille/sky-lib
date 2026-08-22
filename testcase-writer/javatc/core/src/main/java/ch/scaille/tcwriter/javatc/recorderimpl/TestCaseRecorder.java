@@ -1,4 +1,4 @@
-package ch.scaille.tcwriter.javatc.recorder;
+package ch.scaille.tcwriter.javatc.recorderimpl;
 
 import static ch.scaille.tcwriter.model.dictionary.TestParameterFactory.simpleType;
 
@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import ch.scaille.tcwriter.javatc.recorder.ITestCaseRecorder;
 import ch.scaille.tcwriter.model.Helper;
 import ch.scaille.tcwriter.model.TestObjectDescription;
 import ch.scaille.tcwriter.model.dictionary.ParameterNature;
@@ -175,7 +176,6 @@ public class TestCaseRecorder implements ITestCaseRecorder {
         return true;
     }
 
-    @Override
     public TestCase buildTestCase(final String testClassName) {
         final var testCase = new TestCase(testClassName, tcDictionary);
         testCase.getMetadata().setDescription("%s: execution at %s".formatted(testClassName,

@@ -38,9 +38,8 @@
 
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
-			<artifactId>testcase-writer-javatc</artifactId>
+			<artifactId>testcase-writer-javatc-core</artifactId>
 			<classifier>client-bundle</classifier>
-			<version>${project.version}</version>
 			<type>zip</type>
 			<scope>runtime</scope>
 		</dependency>
@@ -63,7 +62,7 @@
 					<webResources>
 						<resource>
 							<directory>
-								${project.build.directory}/tc-resources/javatc</directory>
+								${project.build.directory}/tc-resources/javatc-resources</directory>
 							<targetPath>javatc-resources</targetPath>
 						</resource>
 					</webResources>

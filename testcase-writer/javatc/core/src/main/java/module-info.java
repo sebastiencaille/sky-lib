@@ -1,17 +1,20 @@
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-module testcase.writer.javatc {
+module testcase.writer.javatc.core {
 
 	exports ch.scaille.tcwriter.persistence.testexec;
     exports ch.scaille.tcwriter.javatc.testexec;
     exports ch.scaille.tcwriter.javatc.generators;
-    exports ch.scaille.tcwriter.javatc.recorder;
     exports ch.scaille.tcwriter.javatc.visitors;
+    exports ch.scaille.tcwriter.javatc.recorderimpl;
 
-    requires transitive testcase.writer.core;
+    opens templates;
+    
     requires transitive testcase.writer.api;
     requires transitive testcase.writer.model;
+    requires transitive testcase.writer.core;
+    requires transitive testcase.writer.javatc.recorder;
 
     requires transitive lib.generator.utils;
 

@@ -1,6 +1,3 @@
-/.project
-/sonar.sh
-node_modules
 
 # misc
 .DS_Store
@@ -15,4 +12,4 @@ yarn-error.log*
 
 webapp/server/.factorypath
 .temp-Server*
-*.info
+

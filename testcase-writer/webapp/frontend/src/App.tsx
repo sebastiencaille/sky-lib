@@ -135,7 +135,7 @@ export default function App() {
 						onSelection={testCaseChanged} />
 					<button id='exportJava' onClick={exportJava} disabled={currentTestCase === undefined}>Java Code</button>
 					<button id='exportText' onClick={exportHumanReadable}  disabled={currentTestCase === undefined}>Human Readable</button>
-					<button id='execute' onClick={executeTC} disabled={currentTestCase === undefined}>Execute</button>
+					<button id='executeTc' onClick={executeTC} disabled={currentTestCase === undefined}>Execute</button>
 					<Popup open={exportedTestCase !== undefined} onClose={closePopUp}
 						className="export-popup">
 						<pre>

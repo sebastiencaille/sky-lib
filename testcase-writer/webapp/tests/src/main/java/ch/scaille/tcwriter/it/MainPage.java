@@ -26,11 +26,18 @@ public class MainPage extends PagePilot {
 	@FindBy(id = "testcaseSelect")
 	public WebElement testCaseSelect;
 
+	@FindBy(id = "executeTc")
+	public WebElement executeTc;
+
 	public MainPage(SeleniumPilot pilot) {
 		super(pilot);
 	}
 
-	/**
+    public void runTc() {
+
+    }
+
+    /**
 	 * To select the application context
 	 * 
 	 * @param selector          the context selector (drop down)
@@ -69,4 +76,7 @@ public class MainPage extends PagePilot {
 			.asserted(element -> Assertions.assertNotEquals("", element.getText(),  element + " has no selectable entry"));
 	}
 
+	public void executeTC() {
+		on(() -> executeTc).failUnless().applied(WebElement::click);
+	}
 }

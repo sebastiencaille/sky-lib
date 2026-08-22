@@ -1,0 +1,11 @@
+<aspectj>
+
+	<aspects>
+		<aspect name="ch.scaille.tcwriter.javatc.testexec.client.TestSteppingAspect" />
+	</aspects>
+
+	<weaver options="-verbose">
+		<!-- WITHIN_TAGS -->
+	</weaver>
+
+</aspectj>

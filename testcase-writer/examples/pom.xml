@@ -12,7 +12,14 @@
 	<dependencies>
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
-			<artifactId>testcase-writer-javatc-client</artifactId>
+			<artifactId>testcase-writer-javatc-core</artifactId>
+			<classifier>client-bundle</classifier>
+			<type>zip</type>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.scaille.tcwriter</groupId>
+			<artifactId>testcase-writer-javatc-recorder</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
@@ -39,6 +46,24 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>aspectj-maven-plugin</artifactId>
+				<configuration>
+					<aspectLibraries>
+						<aspectLibrary>
+							<groupId>ch.scaille.tcwriter</groupId>
+							<artifactId>testcase-writer-javatc-recorder</artifactId>
+						</aspectLibrary>
+					</aspectLibraries>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptors>
+						<descriptor>../gui/src/assembly/tc-resources.xml</descriptor>
+					</descriptors>
+					<workDirectory>${project.build}</workDirectory>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -55,7 +80,8 @@
 							<createDependencyReducedPom>false</createDependencyReducedPom>
 							<artifactSet>
 								<excludes>
-									<exclude>ch.scaille.tcwriter:testcase-writer-javatc-client:jar</exclude>
+									<exclude>
+										ch.scaille.tcwriter:testcase-writer-javatc-client:jar</exclude>
 									<exclude>org.aspectj:aspectjrt</exclude>
 								</excludes>
 							</artifactSet>

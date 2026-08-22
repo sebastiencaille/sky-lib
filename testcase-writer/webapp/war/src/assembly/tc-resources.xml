@@ -12,7 +12,7 @@
 			<scope>runtime</scope>
 			<unpack>true</unpack>
 			<includes>
-				<include>ch.scaille.tcwriter:testcase-writer-javatc:zip:client-bundle</include>
+
 			</includes>
 		</dependencySet>
 	</dependencySets>

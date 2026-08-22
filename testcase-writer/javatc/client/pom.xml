@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>ch.scaille.tcwriter</groupId>
-		<artifactId>testcase-writer</artifactId>
+		<artifactId>testcase-writer-javatc</artifactId>
 		<version>${revision}</version>
 	</parent>
 	<artifactId>testcase-writer-javatc-client</artifactId>

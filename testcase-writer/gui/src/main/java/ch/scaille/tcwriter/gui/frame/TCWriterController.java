@@ -204,10 +204,10 @@ public class TCWriterController extends GuiController {
 
 	public void startTestCase() {
 		testRemoteControl.resetConnection();
-		new Thread(uncheckedR(this::runTestCase, gui::handleException), "Test execution").start();
+		new Thread(uncheckedR(this::executeTestCase, gui::handleException), "Test execution").start();
 	}
 
-	public void runTestCase() throws IOException, InterruptedException, TestCaseException {
+	public void executeTestCase() throws IOException, InterruptedException, TestCaseException {
 		final int rcPort = testRemoteControl.prepare();
 		log.info(() -> "Using port " + rcPort);
 		final var testCase = Objects.requireNonNull(model.getTestCase().getValue(), "No test case to run");

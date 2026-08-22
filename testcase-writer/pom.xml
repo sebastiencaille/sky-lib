@@ -17,7 +17,6 @@
 		<module>api</module>
 		<module>model</module>
 		<module>core</module>
-		<module>javatc-client</module>
 		<module>javatc</module>
 		<module>flowtc</module>
 		<module>maven-plugin</module>
@@ -68,21 +67,11 @@
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>aspectj-maven-plugin</artifactId>
 					<configuration>
-						<source>${maven.compiler.source}</source>
-						<target>${maven.compiler.target}</target>
-						<complianceLevel>${maven.compiler.source}</complianceLevel>
+						<source>${java.version}</source>
+						<target>${java.version}</target>
+						<complianceLevel>${java.version}</complianceLevel>
 						<encoding>${project.build.sourceEncoding}</encoding>
 						<Xlint>ignore</Xlint>
-						<aspectLibraries>
-							<aspectLibrary>
-								<groupId>ch.scaille.tcwriter</groupId>
-								<artifactId>testcase-writer-javatc</artifactId>
-							</aspectLibrary>
-							<aspectLibrary>
-								<groupId>ch.scaille.tcwriter</groupId>
-								<artifactId>testcase-writer-javatc-client</artifactId>
-							</aspectLibrary>
-						</aspectLibraries>
 						<verbose>true</verbose>
 						<!-- this is important: start-->
 						<forceAjcCompile>true</forceAjcCompile>
@@ -147,23 +136,6 @@
 			</dependency>
 			<dependency>
 				<groupId>ch.scaille.tcwriter</groupId>
-				<artifactId>testcase-writer-javatc</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille.tcwriter</groupId>
-				<artifactId>testcase-writer-javatc-client</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille.tcwriter</groupId>
-				<artifactId>testcase-writer-javatc-client</artifactId>
-				<classifier>fatjar</classifier>
-				<version>${revision}</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille.tcwriter</groupId>
 				<artifactId>testcase-writer-core</artifactId>
 				<version>${revision}</version>
 			</dependency>
@@ -182,7 +154,61 @@
 				<artifactId>testcase-writer-examples</artifactId>
 				<classifier>fatjar</classifier>
 				<version>${revision}</version>
-				<scope>provided</scope>
+				<scope>runtime</scope>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille.tcwriter</groupId>
+				<artifactId>testcase-writer-javatc-core</artifactId>
+				<version>${revision}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>ch.scaille.tcwriter</groupId>
+						<artifactId>testcase-writer-javatc-client</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.junit.platform</groupId>
+						<artifactId>junit-platform-console-standalone</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille.tcwriter</groupId>
+				<artifactId>testcase-writer-javatc-core</artifactId>
+				<classifier>client-bundle</classifier>
+				<version>${revision}</version>
+				<type>zip</type>
+				<scope>runtime</scope>
+				<exclusions>
+					<exclusion>
+						<groupId>ch.scaille.tcwriter</groupId>
+						<artifactId>testcase-writer-javatc-client</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>ch.scaille.tcwriter</groupId>
+						<artifactId>testcase-writer-javatc-recorder</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.junit.platform</groupId>
+						<artifactId>junit-platform-console-standalone</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille.tcwriter</groupId>
+				<artifactId>testcase-writer-javatc-client</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille.tcwriter</groupId>
+				<artifactId>testcase-writer-javatc-client</artifactId>
+				<classifier>fatjar</classifier>
+				<version>${revision}</version>
+				<scope>runtime</scope>
+			</dependency>
+			<dependency>
+				<groupId>ch.scaille.tcwriter</groupId>
+				<artifactId>testcase-writer-javatc-recorder</artifactId>
+				<version>${revision}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

@@ -7,11 +7,11 @@ module testcase.writer.examples {
 	opens userResources.templates;
 
 	requires testcase.writer.core;
-	requires testcase.writer.javatc.client;
 		
 	requires testcase.writer.api;
 	requires testcase.writer.gui;
-	requires testcase.writer.javatc;
+	requires testcase.writer.javatc.core;
+	requires testcase.writer.javatc.recorder;
 	requires lib.testing.gui.pilot.selenium;
 	requires lib.javabeans;
 	requires lib.generator.utils;

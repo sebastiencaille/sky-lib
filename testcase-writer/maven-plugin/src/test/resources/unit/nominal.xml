@@ -16,10 +16,10 @@
 				<artifactId>testcase-writer-maven-plugin</artifactId>
 				<configuration>
 					<testCases>
-						<FileSet>
+						<source>
 							<directory>src/test/resources/unit/testcases</directory>
 							<includes>**/*.yaml</includes>
-						</FileSet>
+						</source>
 					</testCases>
 				</configuration>
 			</plugin>

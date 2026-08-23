@@ -25,11 +25,6 @@ class JavaTestCaseGeneratorMojoTest {
 
     private static final String SRC_TEST_RESOURCES_UNIT = "src/test/resources/unit";
 
-    @Inject
-    private Project project;
-    @Inject
-    private ProjectManager projectManager;
-
     @Test
     @InjectMojo(goal = "generateTestCases", pom = SRC_TEST_RESOURCES_UNIT + "/nominal.xml")
     @MojoParameter(name = "dictionaryFolder", value = SRC_TEST_RESOURCES_UNIT + "/dictionaries")

@@ -2,6 +2,7 @@ import { components } from '@scaille/testcase-writer-webapi';
 
 type Metadata = components["schemas"]["Metadata"];
 type IdObject = components["schemas"]["IdObject"];
+type NamedObject = components["schemas"]["NamedObject"];
 type ApiTestDictionary = components["schemas"]["TestDictionary"];
 type TestAction = components["schemas"]["TestAction"];
 type TestActor = components["schemas"]["TestActor"];
@@ -58,7 +59,7 @@ export enum ExportType {
 }
 
 export type {
-	Metadata, IdObject,
+	Metadata, IdObject, NamedObject,
 	TestDictionary, TestAction, TestActor, TestRole,
 	TestParameterFactoryBase, TestParameterFactory, TestObjectDescription,
 	TestCase, TestStep, TestReference, TestParameterValue,

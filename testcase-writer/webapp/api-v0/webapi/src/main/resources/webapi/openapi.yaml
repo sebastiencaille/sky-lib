@@ -6,7 +6,7 @@ servers:
   - url: /
 paths:
   /dictionary:
-    $ref: 'paths/allDictionaries.yaml'
+    $ref: paths/allDictionaries.yaml
   /dictionary/{dictionary}:
     $ref: paths/dictionary.yaml
   /testcase:
@@ -22,23 +22,25 @@ paths:
 components:
   schemas:
     Context:
-      $ref: schemas/Context.yaml#/Context
+      $ref: 'schemas/Context.yaml#/Context'
     Metadata:
-      $ref: schemas/Metadata.yaml#/Metadata
+      $ref: 'schemas/Metadata.yaml#/Metadata'
     IdObject:
-      $ref: schemas/Metadata.yaml#/IdObject
+      allOf:
+        - $ref: 'schemas/Metadata.yaml#/_IdObject'
     NamedObject:
-      $ref: schemas/Metadata.yaml#/NamedObject
+      allOf:
+        - $ref: 'schemas/Metadata.yaml#/_NamedObject'
     TestDictionary:
-      $ref: schemas/TestDictionary.yaml#/TestDictionary
+      $ref: 'schemas/TestDictionary.yaml#/TestDictionary'
     StepClassifier:
-      $ref: schemas/TestDictionary.yaml#/StepClassifier
+      $ref: 'schemas/TestDictionary.yaml#/StepClassifier'
     TestParameterFactory:
-      $ref: schemas/TestDictionary.yaml#/TestParameterFactory
+      $ref: 'schemas/TestDictionary.yaml#/TestParameterFactory'
     TestCase:
-      $ref: schemas/TestCase.yaml#/TestCase
+      $ref: 'schemas/TestCase.yaml#/TestCase'
     TestStatus:
-      $ref: schemas/StepStatus.yaml#/StepStatus
+      $ref: 'schemas/StepStatus.yaml#/StepStatus'
     ExportType:
-      $ref: schemas/ExportType.yaml#/ExportType
+      $ref: 'schemas/ExportType.yaml#/ExportType'
 

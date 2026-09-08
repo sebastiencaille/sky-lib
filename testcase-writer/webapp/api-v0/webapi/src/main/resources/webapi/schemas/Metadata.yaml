@@ -1,4 +1,4 @@
-IdObject:
+'_IdObject':
   type: object
   discriminator:
     propertyName: tcDataType
@@ -7,14 +7,14 @@ IdObject:
     id:
       type: string
       x-constraints: "Id" 
-NamedObject:
+'_NamedObject':
   type: object
+  allOf:
+    - $ref: '#/_IdObject'
   discriminator:
     propertyName: tcDataType
-  required: [ id, name ]
+  required: [ name ]
   properties:
-    id:
-      type: string
     name:
       type: string
 Metadata:

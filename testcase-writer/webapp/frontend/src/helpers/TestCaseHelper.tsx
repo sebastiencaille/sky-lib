@@ -1,4 +1,4 @@
-import {  IdObject, TestParameterValue, TestDictionary, TestAction } from '../webapis/Types'
+import { TestParameterValue, TestDictionary, TestAction } from '../webapis/Types'
 
 
 const hasSelector = (dict: TestDictionary, action: TestAction): boolean => {
@@ -6,7 +6,7 @@ const hasSelector = (dict: TestDictionary, action: TestAction): boolean => {
 }
 
 
-const descriptionOf = (dict: TestDictionary, testObjects: (IdObject|undefined)[], fallback ?: string) : string => {
+const descriptionOf = (dict: TestDictionary, testObjects: ({ id: string }|undefined)[], fallback ?: string) : string => {
 	const descr = testObjects.map(o => o && dict.descriptions[o.id]?.description).find(Boolean);
 	return descr ?? fallback ?? '---';
 }

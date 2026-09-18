@@ -84,10 +84,7 @@
 						<configuration>
 							<executable>${npm.cmd}</executable>
 							<arguments>
-								<argument>i</argument>
-								<argument>-D</argument>
-								<argument>openapi-typescript</argument>
-								<argument>typescript</argument>
+								<argument>ci</argument>
 							</arguments>
 						</configuration>
 					</execution>

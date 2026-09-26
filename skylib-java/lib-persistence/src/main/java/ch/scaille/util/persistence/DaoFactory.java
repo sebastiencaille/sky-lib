@@ -123,7 +123,7 @@ public class DaoFactory {
 		return new DaoFactory(factories, defaults);
 	}
 	
-	public static String fs(String path) {
+	public static String fs(Path path) {
 		return FS_DATASOURCE + path;
 	}
 }

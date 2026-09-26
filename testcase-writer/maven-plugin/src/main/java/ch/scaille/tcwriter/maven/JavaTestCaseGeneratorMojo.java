@@ -1,20 +1,28 @@
 package ch.scaille.tcwriter.maven;
 
-import java.io.File;
+import java.nio.file.FileVisitOption;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import org.apache.maven.model.Resource;
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.util.DirectoryScanner;
+import org.apache.maven.api.Language;
+import org.apache.maven.api.model.FileSet;
+import org.apache.maven.api.model.PatternSet;
+import org.apache.maven.api.model.Source;
+import org.apache.maven.api.services.PathMatcherFactory;
+import org.apache.maven.api.di.Inject;
+import org.apache.maven.api.ProjectScope;
+import org.apache.maven.api.plugin.annotations.Mojo;
+import org.apache.maven.api.plugin.annotations.Parameter;
+import org.apache.maven.api.Project;
+import org.apache.maven.api.services.ProjectManager;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -30,19 +38,35 @@ import ch.scaille.util.helpers.LambdaExt;
 import ch.scaille.util.persistence.DaoFactory;
 import ch.scaille.util.persistence.DaoFactory.FsDsFactory;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
-@Mojo(name = "generateTestCases", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES)
+@Mojo(name = "generateTestCases", defaultPhase = "generate-test-sources")
 @NullMarked
-public class JavaTestCaseGeneratorMojo extends AbstractMojo {
+@Slf4j
+public class JavaTestCaseGeneratorMojo implements org.apache.maven.api.plugin.Mojo {
 
-    @Parameter(defaultValue = "${project}", readonly = true)
-    private MavenProject project;
+    public static class TCFileSet extends FileSet.Builder {
+
+        public TCFileSet() {
+            super(true);
+        }
+    }
+
+    @Inject
+    private Project project;
+
+    @Inject
+    private ProjectManager projectManager;
+
+    @Inject
+    protected PathMatcherFactory matcherFactory;
+
 
     @Parameter(property = "templatesFolder", defaultValue = "file:${project.testResources.testResource.directory}/userResources/templates")
-    private String templatesFolder= "";
+    private String templatesFolder = "";
 
     @Parameter(property = "dictionaryFolder", defaultValue = "file:${project.testResources.testResource.directory}/dictionaries")
-    private String dictionaryFolder= "";
+    private String dictionaryFolder = "";
 
     @Parameter(property = "dictionary")
     @Nullable
@@ -50,90 +74,96 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
 
     @Parameter(property = "testCases")
     @Nullable
-    private Resource testCases = null;
+    private List<TCFileSet> testCases = null;
 
     @Parameter(property = "outputFolder", defaultValue = "${project.build.directory}/generated-test-sources/tcwriter")
     private String outputFolder = "";
 
     private String resolve(String path) {
         if (!path.startsWith(DaoFactory.FS_DATASOURCE)) {
-            return path;
+            return resolveFile(path).toString();
         }
         return DaoFactory.fs(resolveFile(path.substring(DaoFactory.FS_DATASOURCE.length())));
     }
 
-    private String resolveFile(String p) {
-        final var path = new File(p);
+    private Path resolveFile(String p) {
+        final var path = Paths.get(p);
         if (path.isAbsolute()) {
-            return path.toString();
+            return path;
         }
-        return new File(project.getBasedir(), p).toString();
+        return project.getBasedir().resolve(p);
     }
 
     @SneakyThrows
     @Override
     public void execute() {
-
         // Defaults
-        if (testCases == null || testCases.getDirectory() == null) {
-            testCases = new Resource();
-            testCases.setDirectory(resolveFile(project.getTestResources().getFirst().getDirectory() + "/testcases"));
-            testCases.addInclude("*.yaml");
+
+/*
+        if (testCases == null || testCases.isEmpty()) {
+            // Implicitly scan for resource folder
+            final var resource = Source.newBuilder()
+                    .directory(resolve("src/test/resources/testcases"))
+                    .includes(List.of("*.yaml"))
+                    .enabled(true)
+                    .build();
+            testCases = List.of(resource);
+        }*/
+    	projectManager.addSourceRoot(project, ProjectScope.TEST, Language.JAVA_FAMILY, Paths.get(outputFolder));
+
+        for (var testCaseSource: testCases.stream().map(TCFileSet::build).toList()) {
+            // config folders and build model
+            final var fsDsFactory = new FsDsFactory(Paths.get("."), false);
+            final var daoFactory = DaoFactory.cpPlus(Set.of(), fsDsFactory);
+            final var mavenModelConfig = new ModelConfig();
+            mavenModelConfig.setDictionaryPath(resolve(dictionaryFolder));
+            mavenModelConfig.setTcPath(resolve(testCaseSource.getDirectory()));
+            mavenModelConfig.setTemplatePath(resolve(templatesFolder));
+            mavenModelConfig.setTcExportPath("");
+            final var config = new TCConfig("maven", List.of(mavenModelConfig));
+            final var modelDao = new ModelDao(daoFactory,
+                    new ObjectProperty<>("config", new DummyPropertiesGroup(), config),
+                        fsDsFactory, ModelDao.defaultDataHandlers());
+
+            final var sourceFilter = matcherFactory.createPathMatcher(Paths.get(testCaseSource.getDirectory()), testCaseSource.getIncludes(), testCaseSource.getExcludes());
+
+            // Search test cases
+            final var generator = new TestCaseToJava(modelDao);
+                Files.walkFileTree(Paths.get(testCaseSource.getDirectory()), EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE,
+                    new SimpleFileVisitor<>() {
+                        @Override
+                        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                            if (sourceFilter.matches(file)) {
+                                try {
+                                    generateTestCase(generator, file, modelDao);
+                                } catch (TestCaseException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                            return FileVisitResult.CONTINUE;
+                        }
+                    });
         }
-
-        project.addTestCompileSourceRoot(outputFolder);
-
-        // config folders and build model
-        final var fsDsFactory = new FsDsFactory(Paths.get("."), false);
-        final var daoFactory = DaoFactory.cpPlus(Set.of(), fsDsFactory);
-        final var mavenModelConfig = new ModelConfig();
-        mavenModelConfig.setDictionaryPath(resolve(dictionaryFolder));
-        mavenModelConfig.setTcPath(resolve(DaoFactory.fs(testCases.getDirectory())));
-        mavenModelConfig.setTemplatePath(resolve(templatesFolder));
-        mavenModelConfig.setTcExportPath("");
-        final var config = new TCConfig("maven", List.of(mavenModelConfig));
-        final var modelDao = new ModelDao(daoFactory,
-                new ObjectProperty<>("config", new DummyPropertiesGroup(), config),
-                    fsDsFactory, ModelDao.defaultDataHandlers());
-        // Search test cases
-        final var scanner = new DirectoryScanner();
-        scanner.setBasedir(new File(testCases.getDirectory()));
-        if (!testCases.getIncludes().isEmpty()) {
-            scanner.setIncludes(testCases.getIncludes().toArray(new String[0]));
-        }
-        if (!testCases.getExcludes().isEmpty()) {
-            scanner.setExcludes(testCases.getExcludes().toArray(new String[0]));
-        }
-        scanner.scan();
-
-        getLog().debug("Scanning of: " + scanner.getBasedir().getAbsolutePath());
-        getLog().info("Found: " + Arrays.asList(scanner.getIncludedFiles()));
-
-        // Generate tests
-        final var generator = new TestCaseToJava(modelDao);
-        Arrays.stream(scanner.getIncludedFiles())
-                .forEach(LambdaExt
-                        .uncheckedC(tcFile -> generateTestCase(generator, tcFile, modelDao)));
     }
 
     private void generateTestCase(final TestCaseToJava generator,
-                                  final String tcFile,
+                                  final Path tcFile,
                                   final ModelDao modelDao) throws TestCaseException {
-        final var testcaseLocator = tcFile.split("\\.")[0];
-        final var testMetadata = modelDao.loadTestCaseMetadata(testcaseLocator);
+        final var testCaseLocator = tcFile.getFileName().toString().split("\\.")[0];
+        final var testMetadata = modelDao.loadTestCaseMetadata(testCaseLocator);
         final var dictionaries = modelDao.listDictionaries(testMetadata);
         if (dictionaries.isEmpty()) {
-        	throw new IllegalStateException("No dictionary found for " + testcaseLocator + '/' + testMetadata);
+        	throw new IllegalStateException("No dictionary found for " + testCaseLocator + '/' + testMetadata);
         }
 	    final var dictionaryLocatorToLoad = Objects.requireNonNullElseGet(dictionaryLocator, () -> dictionaries.getFirst().getTransientId());
-        final var testCase = modelDao.readTestCase(testcaseLocator, modelDao.readTestDictionary(dictionaryLocatorToLoad)
+        System.out.println("Dictionary: " + dictionaryLocatorToLoad);
+        final var testCase = modelDao.readTestCase(testCaseLocator, modelDao.readTestDictionary(dictionaryLocatorToLoad)
                         .orElseThrow(() -> new IllegalStateException("Dictionary not found")))
                 .orElseThrow(() -> new RuntimeException("Unable to find dictionary: " + dictionaryLocator));
         final var generationMetadata = new GenerationMetadata(JavaTestCaseGeneratorMojo.class,
                 "dictionary=" + testCase.getDictionary());
         generator.generate(testCase, generationMetadata).writeTo(LambdaExt.uncheckedF2((file, src) -> {
-            final var outputFile = Paths.get(resolve(outputFolder)).resolve(file);
-            getLog().info("Writing " + outputFile);
+            final var outputFile = resolveFile(outputFolder).resolve(file);
             Files.createDirectories(outputFile.getParent());
             Files.writeString(outputFile, src);
             return outputFile;

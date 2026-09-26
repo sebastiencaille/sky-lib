@@ -1,23 +1,19 @@
 package ch.scaille.gui.maven;
 
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.MavenProject;
+
+import ch.scaille.generators.util.ICodeGeneratorParams;
+import ch.scaille.gui.mvc.GuiModelGenerator;
+import org.apache.maven.api.plugin.annotations.Mojo;
+import org.apache.maven.api.plugin.annotations.Parameter;
 import org.jspecify.annotations.NullMarked;
 
 import ch.scaille.generators.util.GenerationMetadata;
-import ch.scaille.generators.util.ICodeGeneratorParams;
-import ch.scaille.gui.mvc.GuiModelGenerator;
+
 import lombok.SneakyThrows;
 
-@Mojo(name = "generateMvc", defaultPhase = LifecyclePhase.GENERATE_SOURCES, threadSafe = true)
+@Mojo(name = "generateMvc", defaultPhase = "GENERATE_TEST_SOURCES")
 @NullMarked
-public class LibGuiGeneratorMojo extends AbstractMojo {
-
-    @Parameter(defaultValue = "${project}", readonly = true)
-    private MavenProject project;
+public class LibGuiGeneratorMojo implements org.apache.maven.api.plugin.Mojo {
 
     @Parameter(property = "classPathFolder", required = true)
     private String classPathFolder = "";
@@ -59,7 +55,6 @@ public class LibGuiGeneratorMojo extends AbstractMojo {
             }
         };
         new GuiModelGenerator().process(params, generationMetadata);
-
     }
 
 }

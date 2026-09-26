@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project
-	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns="http://maven.apache.org/POM/4.1.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 https://maven.apache.org/xsd/maven-4.1.0.xsd">
+	<modelVersion>4.1.0</modelVersion>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -22,7 +22,7 @@
 		<jspecify.version>1.0.1</jspecify.version>
 		<springboot.version>4.1.0</springboot.version>
 		<aspectj.version>1.9.27</aspectj.version>
-		<jackson-bom.version>3.2.4</jackson-bom.version>
+		<jackson-bom.version>3.3.0</jackson-bom.version>
 		<guava.version>33.8.0-jre</guava.version>
 		<logback.version>1.6.6</logback.version>
 		<mapstruct.version>1.7.0.Beta1</mapstruct.version>
@@ -59,8 +59,8 @@
 		<maven-enforcer-plugin.version>3.7.0</maven-enforcer-plugin.version>
 		<maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
 		<maven-shade-plugin.version>3.6.2</maven-shade-plugin.version>
-		<versions-maven-plugin.version>2.24.0</versions-maven-plugin.version>
-		<flatten-maven-plugin.version>1.9.0</flatten-maven-plugin.version>
+		<versions-maven-plugin.version>2.25.0</versions-maven-plugin.version>
+		<flatten-maven-plugin.version>1.8.0</flatten-maven-plugin.version>
 
 		<maven-surefire-plugin.version>3.6.1</maven-surefire-plugin.version>
 		<maven-failsafe-plugin.version>3.6.1</maven-failsafe-plugin.version>
@@ -83,124 +83,132 @@
 		</surefireTestArgLine>
 	</properties>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>jakarta.el</groupId>
-				<artifactId>jakarta.el-api</artifactId>
-				<version>6.0.1</version>
-			</dependency>
-			<dependency>
-				<groupId>com.google.guava</groupId>
-				<artifactId>guava</artifactId>
-				<version>${guava.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.mapstruct</groupId>
-				<artifactId>mapstruct</artifactId>
-				<version>${mapstruct.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.junit.platform</groupId>
-				<artifactId>junit-platform-console-standalone</artifactId>
-				<version>${junit-platform-console-standalone.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.swagger.core.v3</groupId>
-				<artifactId>swagger-annotations</artifactId>
-				<version>${swagger.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>lib-testing-core</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>lib-testing-bdd-runtime</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>lib-testing-bdd-tools</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>lib-annotations</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>lib-utils</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>lib-javabeans</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>lib-gui-core</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>lib-gui-validation</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>gui-pilot-core</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>gui-pilot-swing</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>gui-pilot-selenium</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>lib-generator-utils</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.scaille</groupId>
-				<artifactId>lib-persistence</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>${jacoco-maven-plugin.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.undertow</groupId>
-				<artifactId>undertow-core</artifactId>
-				<version>${undertow.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-annotations</artifactId>
-				<version>2.22</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openapitools</groupId>
-				<artifactId>jackson-databind-nullable</artifactId>
-				<version>0.2.13</version>
-			</dependency>
-			<dependency>
-				<groupId>org.jcommander</groupId>
-				<artifactId>jcommander</artifactId>
-				<version>3.0</version>
-			</dependency>
-		</dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.el</groupId>
+                <artifactId>jakarta.el-api</artifactId>
+                <version>6.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${mapstruct.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-console-standalone</artifactId>
+                <version>${junit-platform-console-standalone.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.scaille</groupId>
+                <artifactId>lib-testing-core</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.scaille</groupId>
+                <artifactId>lib-testing-bdd-runtime</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.scaille</groupId>
+                <artifactId>lib-testing-bdd-tools</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.scaille</groupId>
+                <artifactId>lib-annotations</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.scaille</groupId>
+                <artifactId>lib-utils</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.scaille</groupId>
+                <artifactId>lib-javabeans</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.scaille</groupId>
+                <artifactId>lib-gui</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.scaille</groupId>
+                <artifactId>lib-gui-validation</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.scaille</groupId>
+                <artifactId>gui-pilot-core</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.scaille</groupId>
+                <artifactId>gui-pilot-swing</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.scaille</groupId>
+                <artifactId>gui-pilot-selenium</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.scaille</groupId>
+                <artifactId>lib-generator-utils</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.scaille</groupId>
+                <artifactId>lib-persistence</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven-plugin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.undertow</groupId>
+                <artifactId>undertow-core</artifactId>
+                <version>${undertow.version}</version>
+                <!--type>modular-jar</type-->
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>2.23</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openapitools</groupId>
+                <artifactId>jackson-databind-nullable</artifactId>
+                <version>0.2.13</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jcommander</groupId>
+                <artifactId>jcommander</artifactId>
+                <!--type>modular-jar</type-->
+                <version>3.0</version>
+            </dependency>
+        </dependencies>
 
 	</dependencyManagement>
 
@@ -269,7 +277,6 @@
                         core is kept, but the version of jackson-dataformat-yaml is overridden.
                         Force it to avoid discrepancies and failures
                         -->
-
 						<dependency>
 							<groupId>tools.jackson.dataformat</groupId>
 							<artifactId>jackson-dataformat-yaml</artifactId>
@@ -278,38 +285,12 @@
 					</dependencies>
 				</plugin>
 				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>flatten-maven-plugin</artifactId>
-					<version>${flatten-maven-plugin.version}</version>
-					<configuration>
-						<updatePomFile>true</updatePomFile>
-						<flattenMode>resolveCiFriendliesOnly</flattenMode>
-					</configuration>
-					<executions>
-						<execution>
-							<id>flatten</id>
-							<phase>process-resources</phase>
-							<goals>
-								<goal>flatten</goal>
-							</goals>
-						</execution>
-						<execution>
-							<id>flatten.clean</id>
-							<phase>clean</phase>
-							<goals>
-								<goal>clean</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<configuration>
 						<useModulePath>false</useModulePath>
 						<argLine>@{argLine} ${surefireArgLine}
-							${surefireTestArgLine}
-						</argLine>
+							${surefireTestArgLine}</argLine>
 					</configuration>
 					<dependencies>
 						<dependency>
@@ -340,8 +321,7 @@
 					<configuration>
 						<useModulePath>false</useModulePath>
 						<argLine>@{argLine} ${surefireArgLine}
-							${surefireTestArgLine}
-						</argLine>
+							${surefireTestArgLine}</argLine>
 					</configuration>
 					<dependencies>
 						<dependency>
@@ -366,20 +346,8 @@
 						</dependency>
 					</dependencies>
 				</plugin>
-				<plugin>
-					<groupId>org.jacoco</groupId>
-					<artifactId>jacoco-maven-plugin</artifactId>
-					<version>${jacoco-maven-plugin.version}</version>
-				</plugin>
 			</plugins>
 		</pluginManagement>
-		<plugins>
-			<plugin>
-				<inherited>false</inherited>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>flatten-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
 	</build>
 
 	<profiles>

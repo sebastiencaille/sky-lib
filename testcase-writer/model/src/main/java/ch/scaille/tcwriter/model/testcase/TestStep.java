@@ -16,7 +16,6 @@ import org.jspecify.annotations.Nullable;
 
 @Getter
 @Setter
-
 public class TestStep {
 
     private int ordinal;

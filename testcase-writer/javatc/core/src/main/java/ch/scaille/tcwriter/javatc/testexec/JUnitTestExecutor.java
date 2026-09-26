@@ -42,7 +42,7 @@ public class JUnitTestExecutor implements ITestExecutor {
 	private final URL[] classPath;
 
 	public JUnitTestExecutor(final IConfigDao configDao, final IModelDao modelDao, 
-			URL aspectjWeaverPath, URL junitJarFile, 
+			URL aspectjWeaverPath, URL junitJarFile,
 			final URL... classPath) {
 		this.config = Objects.requireNonNull(configDao.getCurrentConfig()).getSubconfig(JunitTestExecConfig.class).orElseThrow();
 		this.aspectjWeaverPath = aspectjWeaverPath;
@@ -125,11 +125,11 @@ public class JUnitTestExecutor implements ITestExecutor {
 			Files.createDirectories(binaryFolder.resolve("META-INF"));
 			Files.writeString(binaryFolder.resolve("META-INF/aop.xml"), aopTemplate.replace("<!-- WITHIN -->", "<include within=\"ch.scaille.tcwriter.examples\"/>"), StandardCharsets.UTF_8);
 		}
-		
+
 		final var javaParameters = new ArrayList<String>();
 		javaParameters.addAll(List.of(config.getJava(), //
 				"-Dtest.port=" + testConfig.tcpPort, "-Dtc.stepping=true", //
-				"-javaagent:" + ClassLoaderHelper.cpToCommandLine(new URL[] {aspectjWeaverPath}), 
+				"-javaagent:" + ClassLoaderHelper.cpToCommandLine(new URL[] {aspectjWeaverPath}),
 				"-jar",  ClassLoaderHelper.cpToCommandLine(new URL[]{ junitJarFile }), "execute", "--select-class=" + binaryRef, "--details", "verbose"));
 		javaParameters.addAll(toMultipleCommandLine(classPath));
 		javaParameters.add("-cp=" + binaryFolder);

@@ -12,7 +12,7 @@ dependency-reduced-pom.xml
 *.versionsBackup
 *.iml
 /testcase-writer/maven-plugin/Cache/
-logs/
+${*}
 
 /sonar.sh
 node_modules

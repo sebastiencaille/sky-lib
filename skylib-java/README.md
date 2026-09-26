@@ -2,7 +2,7 @@
 
 The model/ui related code is located in the project [[lib-gui](gui/lib-gui) | [lib-gui-examples](gui/lib-gui-examples)].
 
-The testing related code is located in the project [[lib-testing](lib-testing)].
+The testing related code is located in the project [[lib-testing](testing)].
 
 # Testing
 

@@ -42,7 +42,7 @@ class ControllerExampleTest {
 		page.intCheck.failUnless().assertTextEquals("123");
 		page.intStringEditor.failUnless().setText("abc");
 		page.intCheck.failUnless().assertTextEquals("123");
-		page.intStringEditor.fail("foreground color should be RED").unless()
+		page.intStringEditor.failWith("foreground color should be RED").unless()
 				.satisfied(c -> c.getForeground() == Color.RED);
 
 		page.staticListEditor.failUnless().select("A");

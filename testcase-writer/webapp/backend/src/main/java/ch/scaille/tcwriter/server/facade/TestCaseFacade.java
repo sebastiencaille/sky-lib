@@ -99,7 +99,7 @@ public class TestCaseFacade extends AbstractFacade {
 
 	public String generateCode(TestCase tc) {
 		try {
-			return testExecutor.createTemplate(tc).generate();
+			return testExecutor.generateTestCase(tc).generate();
 		} catch (TestCaseException e) {
 			throw new WebRTException(e);
 		}

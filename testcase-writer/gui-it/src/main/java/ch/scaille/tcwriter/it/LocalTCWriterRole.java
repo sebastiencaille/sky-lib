@@ -76,7 +76,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 		selector.accept(tcWriterPage);
 
 		tcWriterPage.stepsTable
-				.fail("checking human readable text: " + humanReadable)
+				.failWith("checking human readable text: " + humanReadable)
 				.unless()
 				.asserted(component -> {
 					final var value = ((StepsTableModel) component.getModel())
@@ -88,7 +88,7 @@ public class LocalTCWriterRole implements TestSessionRole, TestWriterRole {
 	@Override
 	public void doUpdateParameter(final ParameterSelector selector, final ParameterValue value) {
 		selector.apply(tcWriterPage)
-				.fail(Reporting.settingValue("parameter", value))
+				.failWith(Reporting.settingValue("parameter", value.toString()))
 				.unless()
 				.appliedCtxt(context -> updateParameterValues(context, value));
 

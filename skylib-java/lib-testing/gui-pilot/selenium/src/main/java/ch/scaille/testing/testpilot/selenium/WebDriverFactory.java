@@ -30,8 +30,6 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<?, O>, O exten
 
 	public abstract T headless();
 
-	public abstract T withUntrustedConnection();
-
 	public abstract T withDriverLogs(String folder);
 
 	public abstract T withSilentDownload(String folder);
@@ -122,13 +120,6 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<?, O>, O exten
 		}
 
 		@Override
-		public FirefoxDriverFactory withUntrustedConnection() {
-			profile.setAcceptUntrustedCertificates(true);
-			profile.setAssumeUntrustedCertificateIssuer(false);
-			return withUntrustedConnections();
-		}
-
-		@Override
 		public RemoteWebDriver build() {
 			return new FirefoxDriver(options);
 		}
@@ -197,7 +188,7 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<?, O>, O exten
 		}
 
 		@Override
-		public ChromeDriverFactory withUntrustedConnection() {
+		public ChromeDriverFactory withUntrustedConnections() {
 			options.addArguments("--ignore-certificate-errors");
 			return withUntrustedConnections();
 		}

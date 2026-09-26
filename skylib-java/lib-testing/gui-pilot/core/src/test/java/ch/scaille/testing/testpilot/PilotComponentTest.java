@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import ch.scaille.testing.testpilot.builder.AssertionBuilder;
 import ch.scaille.util.helpers.DelayFunction;
 import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.Assertions;
@@ -57,9 +58,9 @@ class PilotComponentTest {
 	void testDuration() {
 		final var pilot = new GuiPilot();
 		final var testComponent = new TestComponent(pilot);
-		final var poller = new PollingBuilder<>(testComponent);
+		final var poller = new AssertionBuilder<>(testComponent);
 		final var waitResult = poller.evaluateThat().satisfied(_ -> false);
-		Assertions.assertFalse(waitResult);
+		Assertions.assertFalse(waitResult.success());
 		Assertions.assertEquals(6, testComponent.delays.size(), testComponent.delays.toString());
 	}
 	
@@ -68,7 +69,7 @@ class PilotComponentTest {
 	void testGet() {
 		final var pilot = new GuiPilot();
 		final var testComponent = new TestComponent(pilot);
-		final var poller = new PollingBuilder<>(testComponent);
+		final var poller = new AssertionBuilder<>(testComponent);
 		final var successResult = poller.failUnless().get(_ -> TEST_TEXT);
 		Assertions.assertEquals(TEST_TEXT, successResult.orElseThrow());
 		final var failureResult = poller

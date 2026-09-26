@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import ch.scaille.testing.testpilot.PilotReport.ReportFunction;
+import ch.scaille.testing.testpilot.PilotReport.PilotReportBuilder;
 import ch.scaille.testing.testpilot.factories.PollingResults;
 import ch.scaille.testing.testpilot.factories.FailureHandlers.FailureHandler;
 import ch.scaille.util.helpers.DelayFunction;
@@ -97,8 +97,8 @@ public abstract class AbstractComponentPilot<C> {
         return pilot.getConfig().getPollingDelayFunction();
     }
 
-    protected ReportFunction<C> getDefaultReportFunction() {
-        return (pc, text) -> pilot.getConfig().getReportFunction().build(PolledComponent.generic(pc), text);
+    public PilotReportBuilder<C> getDefaultReportBuilder() {
+        return ch.scaille.testing.testpilot.builder.ReportBuilder.none();
     }
 
     /**
@@ -120,10 +120,10 @@ public abstract class AbstractComponentPilot<C> {
      * Try to override waitActionSuccessLoop instead.
      * </p>
      */
-    public <V extends @Nullable Object> PollingResult<C, V> waitPollingSuccess(final Polling.PollingBuilder<C, V> polling) {
+    public <V extends @Nullable Object> PollingResult<C, V> waitPollingSuccess(final Polling<C, V> polling) {
         waitActionDelay();
         try (var _ = pilot.withModalDialogDetection()) {
-            final var result = waitPollingSuccessLoop(polling.build());
+            final var result = waitPollingSuccessLoop(polling);
             if (result.isSuccess()) {
                 fired = true;
                 postExecutions.forEach(p -> p.accept(getCachedComponent().element));
@@ -149,9 +149,9 @@ public abstract class AbstractComponentPilot<C> {
      * @return a polling result, either successful or failure
      */
     protected <R extends @Nullable Object> PollingResult<C, R> waitPollingSuccessLoop(final Polling<C, R> polling) {
-        final var initializedPolling = polling.initializeFrom(this);
-        return new Poller(initializedPolling.getTimeout(), initializedPolling.getFirstDelay(), initializedPolling.getDelayFunction())
-                .run(p -> executePolling(p, initializedPolling), PollingResult::isSuccess).orElseThrow();
+        final var fullyInitializedPolling = polling.initializeFrom(this);
+        return new Poller(fullyInitializedPolling.getTimeout(), fullyInitializedPolling.getFirstDelay(), fullyInitializedPolling.getDelayFunction())
+                .run(p -> executePolling(p, fullyInitializedPolling), PollingResult::isSuccess).orElseThrow();
     }
 
     /**
@@ -166,16 +166,16 @@ public abstract class AbstractComponentPilot<C> {
             return pollingFailure.map(result -> result.withPolling(polling));
         }
 
-        // cachedElement.element may disappear after polling, so prepare the report line
+        // cachedElement.element may not be reachable after polling, so prepare the report line
         // here
-        final var logReport = polling.getReportFunction()
-                .build(polling.getComponent().orElseThrow(() -> new IllegalStateException("component not set yet")),
-                        polling.getReportText().orElse(null));
+        polling.getReportBuilder()
+                .prepare(polling.getComponent().orElseThrow(() -> new IllegalStateException("BUG: component not set yet")));
 
-        log.fine(() -> "Polling " + logReport + "...");
+        log.fine(() -> "Polling...");
         final var pollingResult = callPollingFunction(polling);
-        log.fine(() -> "Polling result: " + pollingResult);
-        if (pollingResult.isSuccess() && !logReport.isEmpty()) {
+        final var logReport = polling.getReportBuilder().build();
+        log.fine(() -> "Polling %s: %s".formatted(logReport, pollingResult));
+        if (pollingResult.isSuccess() && logReport != null && !logReport.isEmpty()) {
             pilot.getActionReport().report(logReport);
         }
         return Optional.of(pollingResult.withPolling(polling));

@@ -36,7 +36,7 @@ public class InternautRole extends Assertions {
         Assertions.assertFalse(page.on(By.xpath(engineSearch.mainPageXPath()))
 				.withConfig(c -> c.timeout(Duration.of(3, ChronoUnit.SECONDS)))
 				.evaluateThat()
-				.present());
+				.present().success());
 	}
 
 }

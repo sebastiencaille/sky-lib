@@ -35,7 +35,7 @@ public interface ITestExecutor {
 		}
 	}
 
-	Template createTemplate(TestCase tc) throws TestCaseException;
+	Template generateTestCase(TestCase tc) throws TestCaseException;
 	
 	void write(TestConfig config) throws IOException, TestCaseException;
 

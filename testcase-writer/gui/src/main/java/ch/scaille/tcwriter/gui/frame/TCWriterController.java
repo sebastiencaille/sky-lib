@@ -218,7 +218,7 @@ public class TCWriterController extends GuiController {
 	}
 
 	public void generateCode() throws TestCaseException {
-		this.testExecutor.createTemplate(this.model.getTestCase().getValue())
+		this.testExecutor.generateTestCase(this.model.getTestCase().getValue())
 				.writeTo(uncheckedF2(this.modelDao::writeTestCaseCode));
 	}
 

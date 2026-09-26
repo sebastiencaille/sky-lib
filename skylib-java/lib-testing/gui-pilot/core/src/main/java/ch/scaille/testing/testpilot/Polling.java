@@ -4,7 +4,7 @@ import java.time.Duration;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import ch.scaille.testing.testpilot.PilotReport.ReportFunction;
+import ch.scaille.testing.testpilot.PilotReport.PilotReportBuilder;
 import ch.scaille.util.helpers.DelayFunction;
 import ch.scaille.util.helpers.OverridableParameter;
 import lombok.AllArgsConstructor;
@@ -50,20 +50,13 @@ public class Polling<C, R extends @Nullable Object> {
      * Sets a report generation function. Setting a function will make that the
      * polling is logged in the report
      */
-    @Nullable
-    private ReportFunction<C> reportFunction;
+    @Setter
+    private PilotReportBuilder<C> reporting;
 
     @Nullable
     private final Predicate<PolledComponent<C>> precondition;
 
     private final PollingFunction<C, R> pollingFunction;
-
-    /**
-     * Sets the text reported in the log. Setting a text will make that the
-     * polling is logged in the report
-     */
-    @Nullable
-    private String reportText;
 
     /**
      * To make that the next action will have to wait for some arbitrary delay before
@@ -97,12 +90,8 @@ public class Polling<C, R extends @Nullable Object> {
             return delayFunctionParam.get();
         }
 
-        public ReportFunction<C> getReportFunction() {
+        public PilotReportBuilder<C> getReportBuilder() {
             return reportFunctionParam.get();
-        }
-
-        public Optional<String> getReportText() {
-            return Optional.ofNullable(reportText);
         }
 
         @Nullable
@@ -137,14 +126,14 @@ public class Polling<C, R extends @Nullable Object> {
             AbstractComponentPilot::getDefaultPollingFirstDelay);
     private final OverridableParameter<AbstractComponentPilot<C>, DelayFunction> delayFunctionParam = new OverridableParameter<>(
             AbstractComponentPilot::getDefaultPollingDelayFunction);
-    private final OverridableParameter<AbstractComponentPilot<C>, ReportFunction<C>> reportFunctionParam = new OverridableParameter<>(
-            AbstractComponentPilot::getDefaultReportFunction);
+    private final OverridableParameter<AbstractComponentPilot<C>, PilotReportBuilder<C>> reportFunctionParam = new OverridableParameter<>(
+            AbstractComponentPilot::getDefaultReportBuilder);
 
     public InitializedPolling initializeFrom(AbstractComponentPilot<C> pilot) {
         timeoutParam.set(timeout).withSource(pilot).ensureLoaded();
         firstDelayParam.set(firstDelay).withSource(pilot).ensureLoaded();
         delayFunctionParam.set(delayFunction).withSource(pilot).ensureLoaded();
-        reportFunctionParam.set(reportFunction).withSource(pilot).ensureLoaded();
+        reportFunctionParam.set(reporting).withSource(pilot).ensureLoaded();
         return new InitializedPolling(pilot);
     }
 

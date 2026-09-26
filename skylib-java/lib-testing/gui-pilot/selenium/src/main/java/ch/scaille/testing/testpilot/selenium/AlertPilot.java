@@ -6,8 +6,9 @@ import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoAlertPresentException;
 
 import ch.scaille.testing.testpilot.AbstractComponentPilot;
-import ch.scaille.testing.testpilot.PollingBuilder;
 import ch.scaille.testing.testpilot.PolledComponent;
+import ch.scaille.testing.testpilot.builder.AssertionBuilder;
+import ch.scaille.testing.testpilot.factories.Reporting;
 
 
 public class AlertPilot extends AbstractComponentPilot<Alert> {
@@ -39,8 +40,8 @@ public class AlertPilot extends AbstractComponentPilot<Alert> {
 	}
 
 	public void doAcknowledge() {
-		new PollingBuilder<>(this)
-				.fail((context, _) -> "Acknowledging alert: " + context.component().getText())
+		new AssertionBuilder<>(this)
+				.failWith(Reporting.formatted( "Acknowledging alert: %s", poller -> poller.component().getText()))
 				.unless()
 				.applied((Alert::accept));
 	}

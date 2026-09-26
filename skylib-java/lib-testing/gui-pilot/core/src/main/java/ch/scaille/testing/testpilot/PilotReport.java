@@ -7,11 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-
 public class PilotReport {
 
-	public interface ReportFunction<C> {
-		String build(PolledComponent<C> context, @Nullable String text);
+	public interface PilotReportBuilder<C> {
+
+		void prepare(PolledComponent<C> context);
+
+		@Nullable
+		String build();
 	}
 
 	private final List<String> report = new ArrayList<>();

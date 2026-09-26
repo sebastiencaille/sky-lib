@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import ch.scaille.testing.testpilot.ModalDialogDetector.Builder;
-import ch.scaille.testing.testpilot.PilotReport.ReportFunction;
 import ch.scaille.testing.testpilot.factories.FailureHandlers;
 import ch.scaille.testing.testpilot.factories.FailureHandlers.FailureHandler;
 import ch.scaille.util.helpers.DelayFunction;
@@ -29,13 +28,6 @@ public class GuiPilot {
         private Duration pollingFirstDelay = Duration.ofMillis(0);
 
 
-        private ReportFunction<Object> reportFunction = (pc, text) -> {
-            if (text == null) {
-                return "";
-            }
-            return pc.description() + ": " + text;
-        };
-        
         private DelayFunction pollingDelayFunction = p -> {
             final var elapsedTime = p.getTimeTracker().elapsedTimeMs();
             if (elapsedTime < 500) {
@@ -58,20 +50,16 @@ public class GuiPilot {
             return (T)this;
         }
 
-        public T pollingFirstDelay(Duration pollingFirstDelay) {
+        public T defaultPollingFirstDelay(Duration pollingFirstDelay) {
             this.pollingFirstDelay = pollingFirstDelay;
             return (T)this;
         }
 
-        public T pollingDelayFunction(DelayFunction pollingDelayFunction) {
+        public T defaultPollingDelayFunction(DelayFunction pollingDelayFunction) {
             this.pollingDelayFunction = pollingDelayFunction;
             return (T)this;
         }
 
-        public T reportFunction(ReportFunction<Object> reportFunction) {
-            this.reportFunction = reportFunction;
-            return (T)this;
-        }
     }
 
     public static class Config extends AbstractConfig<Config> {

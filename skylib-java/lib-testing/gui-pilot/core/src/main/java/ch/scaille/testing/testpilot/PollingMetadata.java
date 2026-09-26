@@ -3,7 +3,7 @@ package ch.scaille.testing.testpilot;
 import java.time.Duration;
 import java.util.Optional;
 
-import ch.scaille.testing.testpilot.PilotReport.ReportFunction;
+import ch.scaille.testing.testpilot.PilotReport.PilotReportBuilder;
 import ch.scaille.util.helpers.DelayFunction;
 import org.jspecify.annotations.Nullable;
 
@@ -19,9 +19,7 @@ public interface PollingMetadata<C> {
 
 	DelayFunction getDelayFunction();
 
-	ReportFunction<C> getReportFunction();
-
-	Optional<String> getReportText();
+	PilotReportBuilder<C> getReportBuilder();
 
 	@Nullable
 	ActionDelay getAndThen();

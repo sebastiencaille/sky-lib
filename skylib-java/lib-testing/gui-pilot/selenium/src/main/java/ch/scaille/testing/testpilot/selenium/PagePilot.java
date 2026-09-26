@@ -31,19 +31,19 @@ public class PagePilot {
 		return pilot.getDriver();
 	}
 
-    public SeleniumPollingBuilder on(Supplier<@Nullable WebElement> element) {
-		return new SeleniumPollingBuilder(pilotOf(element));
+    public SeleniumAssertionBuilder on(Supplier<@Nullable WebElement> element) {
+		return new SeleniumAssertionBuilder(pilotOf(element));
 	}
 
-	public SeleniumPollingBuilder on(By by) {
-		return new SeleniumPollingBuilder(pilotOf(driver -> driver.findElement(by)));
+	public SeleniumAssertionBuilder on(By by) {
+		return new SeleniumAssertionBuilder(pilotOf(driver -> driver.findElement(by)));
 	}
 
 	/**
 	 * Creates a pilot to interact with a WebElement
 	 */
-	protected ElementPilot pilotOf(Supplier<@Nullable WebElement> element) {
-		return new ElementPilot(pilot) {
+	protected WebElementPilot pilotOf(Supplier<@Nullable WebElement> element) {
+		return new WebElementPilot(pilot) {
 			@Override
 			protected Optional<WebElement> loadGuiComponent() {
 				reloadPage();
@@ -73,15 +73,15 @@ public class PagePilot {
 		};
 	}
 	
-	public SeleniumPollingBuilder on(ExpectedCondition<WebElement> conditions) {
-		return new SeleniumPollingBuilder(pilotOf(conditions));
+	public SeleniumAssertionBuilder on(ExpectedCondition<WebElement> conditions) {
+		return new SeleniumAssertionBuilder(pilotOf(conditions));
 	}
 	
 	/**
 	 * Creates a pilot to interact with a WebElement
 	 */
-	protected ElementPilot pilotOf(ExpectedCondition<@Nullable WebElement> conditions) {
-		return new ElementPilot(pilot) {
+	protected WebElementPilot pilotOf(ExpectedCondition<@Nullable WebElement> conditions) {
+		return new WebElementPilot(pilot) {
 			@Override
 			protected Optional<WebElement> loadGuiComponent() {
 

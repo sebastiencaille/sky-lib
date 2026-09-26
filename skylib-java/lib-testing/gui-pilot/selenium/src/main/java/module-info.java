@@ -14,5 +14,6 @@ module lib.testing.gui.pilot.selenium {
     requires transitive org.seleniumhq.selenium.remote_driver;
     requires transitive org.seleniumhq.selenium.chrome_driver;
     requires transitive org.seleniumhq.selenium.support;
-	
+
+    requires org.assertj.core;
 }

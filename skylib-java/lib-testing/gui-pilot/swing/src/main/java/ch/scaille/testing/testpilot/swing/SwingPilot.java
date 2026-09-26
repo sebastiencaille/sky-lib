@@ -156,28 +156,28 @@ public class SwingPilot extends ch.scaille.testing.testpilot.GuiPilot {
 		return page;
 	}
 
-	public JButtonPoller button(final String name) {
-		return new JButtonPoller(this, name);
+	public JButtonAssertionBuilder button(final String name) {
+		return new JButtonAssertionBuilder(this, name);
 	}
 
-	public JLabelPoller label(final String name) {
-		return new JLabelPoller(this, name);
+	public JLabelAssertionBuilder label(final String name) {
+		return new JLabelAssertionBuilder(this, name);
 	}
 
-	public JListPoller list(final String name) {
-		return new JListPoller(this, name);
+	public JListAssertionBuilder list(final String name) {
+		return new JListAssertionBuilder(this, name);
 	}
 
-	public JTablePoller table(final String name) {
-		return new JTablePoller(this, name);
+	public JTableAssertionBuilder table(final String name) {
+		return new JTableAssertionBuilder(this, name);
 	}
 
-	public JTextFieldPoller text(final String name) {
-		return new JTextFieldPoller(this, name);
+	public JTextFieldAssertionBuilder text(final String name) {
+		return new JTextFieldAssertionBuilder(this, name);
 	}
 
-	public JToggleButtonPoller toggleButton(final String name) {
-		return new JToggleButtonPoller(this, name);
+	public JToggleButtonAssertionBuilder toggleButton(final String name) {
+		return new JToggleButtonAssertionBuilder(this, name);
 	}
 
 }

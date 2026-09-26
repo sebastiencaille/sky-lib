@@ -16,7 +16,7 @@ public interface StepSelector extends Consumer<TCWriterPage> {
 		return page -> {
 			final int tableIndex = ordinal - 1;
 			final var stepsTable = page.stepsTable;
-			stepsTable.fail(checkingThat("the step " + ordinal + " exists"))
+			stepsTable.failWith(checkingThat("the step " + ordinal + " exists"))
 					.unless()
 					.asserted(component -> assertTrue(tableIndex < component.getRowCount(), "Step must exist"));
 			stepsTable.failUnless().selectRow(tableIndex);
@@ -28,7 +28,7 @@ public interface StepSelector extends Consumer<TCWriterPage> {
 	static StepSelector addStep() {
 		return page -> {
 			final var stepsTable = page.stepsTable;
-			stepsTable.fail("selecting the last step").unless().appliedCtxt(pc -> {
+			stepsTable.failWith("selecting the last step").unless().appliedCtxt(pc -> {
 				final var table = pc.component();
 				final int stepsCount = table.getRowCount();
 				if (stepsCount > 0) {
@@ -42,7 +42,7 @@ public interface StepSelector extends Consumer<TCWriterPage> {
 
 	@TCApi(description = "Selected step", humanReadable = "")
 	static StepSelector currentStep() {
-		return page -> page.stepsTable.fail(checkingThat("a step is selected"))
+		return page -> page.stepsTable.failWith(checkingThat("a step is selected"))
 				.unless()
 				.asserted(component -> assertTrue(component.getSelectedRowCount() > 0));
 	}

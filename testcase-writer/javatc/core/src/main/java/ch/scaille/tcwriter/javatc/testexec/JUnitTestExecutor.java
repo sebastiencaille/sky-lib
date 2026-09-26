@@ -79,14 +79,14 @@ public class JUnitTestExecutor implements ITestExecutor {
 
 	
 	@Override
-	public Template createTemplate(TestCase tc) throws TestCaseException {
+	public Template generateTestCase(TestCase tc) throws TestCaseException {
 		final var generationMetadata = new GenerationMetadata(this.getClass(), tc.getName());
 		return new TestCaseToJavaVisitor(this.modelDao.readTemplate(tc.getDictionary().template())).visitTestCase(tc, generationMetadata);
 	}
 
 	@Override
 	public void write(TestConfig testConfig) throws IOException, TestCaseException {
-		createTemplate(testConfig.testCase).writeToFolder(testConfig.sourceFolder);
+		generateTestCase(testConfig.testCase).writeToFolder(testConfig.sourceFolder);
 	}
 
 	@Override

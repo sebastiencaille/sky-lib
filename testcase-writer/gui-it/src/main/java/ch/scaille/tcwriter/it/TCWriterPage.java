@@ -1,49 +1,49 @@
 package ch.scaille.tcwriter.it;
 
 import ch.scaille.testing.testpilot.swing.ByName;
-import ch.scaille.testing.testpilot.swing.JButtonPoller;
-import ch.scaille.testing.testpilot.swing.JListPoller;
-import ch.scaille.testing.testpilot.swing.JTablePoller;
+import ch.scaille.testing.testpilot.swing.JButtonAssertionBuilder;
+import ch.scaille.testing.testpilot.swing.JListAssertionBuilder;
+import ch.scaille.testing.testpilot.swing.JTableAssertionBuilder;
 import ch.scaille.testing.testpilot.swing.PagePilot;
 import ch.scaille.testing.testpilot.swing.SwingPilot;
 
 public class TCWriterPage extends PagePilot {
 
 	@ByName("Actors")
-	public JListPoller actors;
+	public JListAssertionBuilder actors;
 
 	@ByName("Actions")
-	public JListPoller actions;
+	public JListAssertionBuilder actions;
 
 	@ByName("Selectors")
-	public JListPoller selectors;
+	public JListAssertionBuilder selectors;
 
 	@ByName("selector-valueTable")
-	public JTablePoller selectorValue;
+	public JTableAssertionBuilder selectorValue;
 
 	@ByName("Parameters0")
-	public JListPoller parameters0;
+	public JListAssertionBuilder parameters0;
 
 	@ByName("param0-valueTable")
-	public JTablePoller parameters0Value;
+	public JTableAssertionBuilder parameters0Value;
 
 	@ByName("StepsTable")
-	public JTablePoller stepsTable;
+	public JTableAssertionBuilder stepsTable;
 
 	@ByName("AddStep")
-	public JButtonPoller addStep;
+	public JButtonAssertionBuilder addStep;
 
 	@ByName("ApplyStep")
-	public JButtonPoller applyStep;
+	public JButtonAssertionBuilder applyStep;
 
 	@ByName("NewTC")
-	public JButtonPoller newTC;
+	public JButtonAssertionBuilder newTC;
 
 	@ByName("LoadTC")
-	public JButtonPoller loadTC;
+	public JButtonAssertionBuilder loadTC;
 
 	@ByName("SaveTC")
-	public JButtonPoller saveTC;
+	public JButtonAssertionBuilder saveTC;
 
 	public TCWriterPage(SwingPilot pilot) {
 		super(pilot);

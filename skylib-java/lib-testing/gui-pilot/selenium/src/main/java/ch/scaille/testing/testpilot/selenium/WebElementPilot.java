@@ -18,20 +18,20 @@ import ch.scaille.testing.testpilot.PollingResult;
 import ch.scaille.testing.testpilot.factories.PollingResults;
 
 
-public class ElementPilot extends AbstractComponentPilot<WebElement> {
+public class WebElementPilot extends AbstractComponentPilot<WebElement> {
 
 	private final SeleniumPilot pilot;
 
 	@Nullable
 	private final Function<WebDriver, WebElement> locator;
 
-	public ElementPilot(final SeleniumPilot pilot, Function<WebDriver, WebElement> locator) {
+	public WebElementPilot(final SeleniumPilot pilot, Function<WebDriver, WebElement> locator) {
 		super(pilot);
 		this.pilot = pilot;
 		this.locator = locator;
 	}
 
-	public ElementPilot(final SeleniumPilot pilot) {
+	public WebElementPilot(final SeleniumPilot pilot) {
 		super(pilot);
 		this.pilot = pilot;
 		this.locator = null;
@@ -49,8 +49,9 @@ public class ElementPilot extends AbstractComponentPilot<WebElement> {
 	
 	@Override
 	protected Optional<String> getDescription() {
-		final var description = getCachedElement().map(pilot::getElementPath);
-
+		final var description = getCachedElement().map(WebElement::getText)
+				.or(() -> getCachedElement().map(element -> element.getAttribute("name")))
+				.or(() -> getCachedElement().map(element -> element.getAttribute("id")));
 		if (locator != null) {
 			return description.or(() -> Optional.of(locator.toString()));
 		}
@@ -100,7 +101,7 @@ public class ElementPilot extends AbstractComponentPilot<WebElement> {
 	
 	public void expectMutations(Predicate<DomMutation> filter) {
 		pilot.expectMutations(mutation ->  
-			loadGuiComponent().map(ElementPilot::uniqueId)
+			loadGuiComponent().map(WebElementPilot::uniqueId)
 				.filter(c -> c.equals(uniqueId(mutation.getElement())))
 				.isPresent() && filter.test(mutation));
 	}
@@ -110,7 +111,7 @@ public class ElementPilot extends AbstractComponentPilot<WebElement> {
 	}
 
 	public List<DomMutation> getMutations() {
-		final var uid = loadGuiComponent().map(ElementPilot::uniqueId).orElse("");
+		final var uid = loadGuiComponent().map(WebElementPilot::uniqueId).orElse("");
 		return pilot.getMutations(mutation -> uid.equals(uniqueId(mutation.getElement())));
 	}
 

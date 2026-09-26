@@ -5,19 +5,23 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import ch.scaille.util.helpers.JavaExt;
-import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DomMutation;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-import ch.scaille.testing.testpilot.PollingBuilder;
 import ch.scaille.testing.testpilot.PolledComponent;
+import ch.scaille.testing.testpilot.builder.AssertionBuilder;
+import ch.scaille.testing.testpilot.builder.AssertionChain;
+import ch.scaille.testing.testpilot.builder.AssertionResult;
+import ch.scaille.testing.testpilot.builder.DefaultConfigurer;
 import ch.scaille.testing.testpilot.factories.Pollings;
+import ch.scaille.testing.testpilot.factories.Reporting;
+import ch.scaille.util.helpers.JavaExt;
 
-public class SeleniumPollingBuilder extends
-		PollingBuilder<WebElement, SeleniumPollingBuilder, SeleniumPollingBuilder.WebElementPoller, PollingBuilder.DefaultConfigurer<WebElement>> {
+
+public class SeleniumAssertionBuilder extends
+		AssertionBuilder<WebElement, SeleniumAssertionBuilder, SeleniumAssertionBuilder.WebElementAssertion, DefaultConfigurer<WebElement>> {
 
 	public static Predicate<PolledComponent<WebElement>> satisfies(
 			Function<WebElement, ExpectedCondition<WebElement>> expectedCondition) {
@@ -25,54 +29,40 @@ public class SeleniumPollingBuilder extends
 				.apply(context.getGuiPilot(SeleniumPilot.class).getDriver()) != null;
 	}
 
-	public static class WebElementPoller extends PollingBuilder.Poller<WebElement> {
+	public static class WebElementAssertion extends AssertionChain<WebElement> {
 
-		protected WebElementPoller(PollingBuilder<WebElement, ?, ?, ?> builder) {
+		protected WebElementAssertion(AssertionBuilder<WebElement, ?, ?, ?> builder) {
 			super(builder);
 		}
 
-		public boolean present() {
-			return satisfied(Pollings.exists());
+		public AssertionResult<WebElement> present() {
+			return testAssertion(Pollings.exists());
 		}
 
-		public boolean isEnabled() {
-			return configure(polling -> polling.reportText("is enabled"))
+		public AssertionResult<WebElement> isEnabled() {
+			return configure(polling -> polling.reporting(Reporting.text("is enabled")))
 					.satisfiedCtxt(satisfies(ExpectedConditions::elementToBeClickable));
 		}
-
-		public boolean clicked() {
-			return configure(polling -> polling.reportText("clicked")).applied(WebElement::click);
-		}
-
-		public boolean textEquals(String text) {
-			return asserted(
-					component -> Assertions.assertEquals(text, component.getText(), "text equals '" + text + "'"));
-		}
-
 	}
 	
 	public static Consumer<PolledComponent<WebElement>> mutations(Predicate<List<DomMutation>> mutationsTest) {
-		return ctxt -> mutationsTest.test(((ElementPilot) ctxt.componentPilot()).getMutations());
+		return ctxt -> mutationsTest.test(((WebElementPilot) ctxt.componentPilot()).getMutations());
 	}
 	
 	public static Consumer<PolledComponent<WebElement>> assertMutations(Consumer<List<DomMutation>> mutationsTest) {
-		return ctxt -> mutationsTest.accept(((ElementPilot) ctxt.componentPilot()).getMutations());
+		return ctxt -> mutationsTest.accept(((WebElementPilot) ctxt.componentPilot()).getMutations());
 	}
 
-	private final ElementPilot elementPilot;
+	private final WebElementPilot elementPilot;
 
-	public SeleniumPollingBuilder(ElementPilot elementPilot) {
+	public SeleniumAssertionBuilder(WebElementPilot elementPilot) {
 		super(elementPilot);
 		this.elementPilot = elementPilot;
 	}
 
 	@Override
-	protected WebElementPoller createPoller() {
-		return new WebElementPoller(this);
-	}
-
-	public void click() {
-		failUnless().clicked();
+	protected WebElementAssertion createPoller() {
+		return new WebElementAssertion(this);
 	}
 
 	public void assertPresent() {

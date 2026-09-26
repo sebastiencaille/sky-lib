@@ -4,10 +4,10 @@ import java.util.function.Function;
 
 import ch.scaille.tcwriter.annotations.TCApi;
 import ch.scaille.tcwriter.it.TCWriterPage;
-import ch.scaille.testing.testpilot.swing.JTablePoller;
+import ch.scaille.testing.testpilot.swing.JTableAssertionBuilder;
 
 @TCApi(description = "Action parameter selection", humanReadable = "Action parameter selection", isSelector = true)
-public interface ParameterSelector extends Function<TCWriterPage, JTablePoller> {
+public interface ParameterSelector extends Function<TCWriterPage, JTableAssertionBuilder> {
 
 	@TCApi(description = "Current selector", humanReadable = "|the selector")
     static ParameterSelector currentSelector() {

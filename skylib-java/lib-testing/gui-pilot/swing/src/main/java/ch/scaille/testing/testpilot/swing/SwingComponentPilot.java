@@ -60,7 +60,7 @@ public class SwingComponentPilot<C extends JComponent>
 	}
 
 	@Override
-	public <V extends @Nullable Object> PollingResult<C, V> waitPollingSuccess(final Polling.PollingBuilder<C, V> polling) {
+	public <V extends @Nullable Object> PollingResult<C, V> waitPollingSuccess(final Polling<C, V> polling) {
 		if (SwingUtilities.isEventDispatchThread()) {
 			throw new IllegalStateException("Polling must not run in Swing thread");
 		}

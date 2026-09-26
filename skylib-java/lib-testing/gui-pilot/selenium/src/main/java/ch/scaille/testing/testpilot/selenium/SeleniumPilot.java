@@ -103,12 +103,12 @@ public class SeleniumPilot extends ch.scaille.testing.testpilot.GuiPilot {
 		return driver;
 	}
 
-	public ElementPilot element(final By locator) {
-		return new ElementPilot(this, webDriver -> webDriver.findElement(locator));
+	public WebElementPilot element(final By locator) {
+		return new WebElementPilot(this, webDriver -> webDriver.findElement(locator));
 	}
 
-	public ElementPilot element(final ExpectedCondition<WebElement> expectedCondition) {
-		return new ElementPilot(this, expectedCondition);
+	public WebElementPilot element(final ExpectedCondition<WebElement> expectedCondition) {
+		return new WebElementPilot(this, expectedCondition);
 	}
 
 	public AlertPilot alert() {

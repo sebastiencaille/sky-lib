@@ -8,4 +8,5 @@ module lib.testing.gui.pilot.swing {
     requires lib.utils;
     requires transitive lib.gui.pilot.core;
     requires transitive java.desktop;
+    requires org.assertj.core;
 }

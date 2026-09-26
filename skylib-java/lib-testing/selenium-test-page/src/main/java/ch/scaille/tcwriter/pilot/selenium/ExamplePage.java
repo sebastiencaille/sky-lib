@@ -1,5 +1,7 @@
 package ch.scaille.tcwriter.pilot.selenium;
 
+import static ch.scaille.testing.testpilot.selenium.AssertjAsserts.clicked;
+import static ch.scaille.testing.testpilot.selenium.AssertjAsserts.textEquals;
 import static ch.scaille.testing.testpilot.selenium.SeleniumPilot.MUTATION_TEXT_CONTENT;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
@@ -17,7 +19,7 @@ import ch.scaille.testing.testpilot.ModalDialogDetector;
 import ch.scaille.testing.testpilot.factories.Pollings;
 import ch.scaille.testing.testpilot.selenium.PagePilot;
 import ch.scaille.testing.testpilot.selenium.SeleniumPilot;
-import ch.scaille.testing.testpilot.selenium.SeleniumPollingBuilder;
+import ch.scaille.testing.testpilot.selenium.SeleniumAssertionBuilder;
 import org.openqa.selenium.remote.DomMutation;
 
 
@@ -72,7 +74,7 @@ public class ExamplePage extends PagePilot {
     public void executeEnable() {
         on(elementToBeClickable(ENABLE_TEST))
                 .withConfig(p -> p.andThen(new WaitEnableTestEnabledDelay()))
-                .failUnless().clicked();
+                .assertThat(clicked());
     }
 
     public void assertedEnabledTested() {
@@ -80,7 +82,7 @@ public class ExamplePage extends PagePilot {
     }
 
     public void testAlert() {
-        on(elementToBeClickable(ALERT_TEST)).click();
+        on(elementToBeClickable(ALERT_TEST)).assertThat(clicked());
     }
 
     public void clickOnMissingButton() {
@@ -88,7 +90,8 @@ public class ExamplePage extends PagePilot {
                 on(visibilityOfElementLocated(NOT_EXISTING))
                         .withConfig(p -> p.timeout(Duration.ofSeconds(2)))
                         .evaluateWithReport("Button does not exist").that()
-                        .satisfied(Pollings.<WebElement>exists().timeout(Duration.ofMillis(500))));
+                        .testAssertion(Pollings.<WebElement>exists().timeout(Duration.ofMillis(500)))
+                        .success());
     }
 
     /**
@@ -112,14 +115,15 @@ public class ExamplePage extends PagePilot {
     public void assertElementChange() {
         var changedElement = on(driver -> driver.findElement(TEXT_XPATH));
         try (var _ = changedElement.expectMutations(mutation -> MUTATION_TEXT_CONTENT.equals(mutation.getAttributeName()))) {
-            on(elementToBeClickable(ELEMENT_CHANGE_TEST)).failUnless().clicked();
+            on(elementToBeClickable(ELEMENT_CHANGE_TEST)).assertThat(clicked());
             // Explicitly test using WebElement as source
-            changedElement.failUnless().assertedCtxt(SeleniumPollingBuilder.assertMutations(mutations ->
-                    Assertions.assertEquals(2, mutations.stream().map(DomMutation::getCurrentValue).distinct().count(),
+            changedElement.failUnless()
+                    .assertedCtxt(SeleniumAssertionBuilder.assertMutations(mutations ->
+                        Assertions.assertEquals(2, mutations.stream().map(DomMutation::getCurrentValue).distinct().count(),
                             mutations.stream()
                                     .map(m -> "%s %s: %s -> %s".formatted(m.getElement(), m.getAttributeName(), m.getOldValue(), m.getCurrentValue()))
-                                    .collect(Collectors.joining(",\n")))));
-            changedElement.failUnless().textEquals("Hello again");
+                                    .collect(Collectors.joining(",\n")))))
+                    .then().assertThat(textEquals("Hello again"));
         }
     }
 

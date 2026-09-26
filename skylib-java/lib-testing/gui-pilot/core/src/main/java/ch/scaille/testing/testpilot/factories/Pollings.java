@@ -38,7 +38,7 @@ public abstract class Pollings {
 	}
 
 	/**
-	 * Succeed if the assertion has not failed (no AssertionError raised)
+	 * Succeed if action was applied (that is, no exception or AssertionError was raised)
 	 */
 	public static <C> Polling.PollingBuilder<C, Boolean> appliesCtxt(final Consumer<PolledComponent<C>> assertion) {
 		return Polling.of(ctxt -> {
@@ -52,7 +52,21 @@ public abstract class Pollings {
 	}
 
 	/**
-	 * Succeed if action was applied (no exception raised)
+	 * Succeed if action was applied (that is, no exception or AssertionError was raised)
+	 */
+	public static <C> Predicate<C> satisfiesC(final Consumer<C> assertion) {
+		return ctxt -> {
+			try {
+				assertion.accept(ctxt);
+				return true;
+			} catch (final AssertionError e) {
+				return true;
+			}
+		};
+	}
+
+	/**
+	 * Succeed if action was applied (that is, no exception or AssertionError was raised)
 	 */
 	public static <C> Polling.PollingBuilder<C, Boolean> applies(final Consumer<C> action) {
 		return Polling.of(ctxt -> {
@@ -61,7 +75,10 @@ public abstract class Pollings {
 		});
 	}
 
-
+	/**
+	 * Returns a value if available (that is, getter is not returning any exception or a null value)
+	 * @param getter the getter
+	 */
 	public static <C, V extends @Nullable Object> Polling.PollingBuilder<C, V> get(Function<C, V> getter) {
 		return Polling.of(ctxt -> PollingResults.value(getter.apply(ctxt.component())));
 	}

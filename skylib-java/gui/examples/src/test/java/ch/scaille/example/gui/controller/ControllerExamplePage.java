@@ -1,45 +1,45 @@
 package ch.scaille.example.gui.controller;
 
 import ch.scaille.testing.testpilot.swing.ByName;
-import ch.scaille.testing.testpilot.swing.JLabelPoller;
-import ch.scaille.testing.testpilot.swing.JListPoller;
-import ch.scaille.testing.testpilot.swing.JTablePoller;
-import ch.scaille.testing.testpilot.swing.JTextFieldPoller;
-import ch.scaille.testing.testpilot.swing.JToggleButtonPoller;
+import ch.scaille.testing.testpilot.swing.JLabelAssertionBuilder;
+import ch.scaille.testing.testpilot.swing.JListAssertionBuilder;
+import ch.scaille.testing.testpilot.swing.JTableAssertionBuilder;
+import ch.scaille.testing.testpilot.swing.JTextFieldAssertionBuilder;
+import ch.scaille.testing.testpilot.swing.JToggleButtonAssertionBuilder;
 import ch.scaille.testing.testpilot.swing.PagePilot;
 import ch.scaille.testing.testpilot.swing.SwingPilot;
 
 public class ControllerExamplePage extends PagePilot {
 
 	@ByName("booleanEditor")
-	public JToggleButtonPoller booleanEditor = null;
+	public JToggleButtonAssertionBuilder booleanEditor = null;
 
 	@ByName("booleanEditorCheck")
-	public JLabelPoller booleanEditorCheck = null;
+	public JLabelAssertionBuilder booleanEditorCheck = null;
 
 	@ByName("intStringEditor")
-	public JTextFieldPoller intStringEditor = null;
+	public JTextFieldAssertionBuilder intStringEditor = null;
 
 	@ByName("intCheck")
-	public JLabelPoller intCheck = null;
+	public JLabelAssertionBuilder intCheck = null;
 
 	@ByName("dynamicListEditor")
-	public JListPoller dynamicListEditor = null;
+	public JListAssertionBuilder dynamicListEditor = null;
 
 	@ByName("dynamicListSelectionCheck")
-	public JLabelPoller dynamicListSelectionCheck = null;
+	public JLabelAssertionBuilder dynamicListSelectionCheck = null;
 
 	@ByName("staticListEditor")
-	public JListPoller staticListEditor = null;
+	public JListAssertionBuilder staticListEditor = null;
 
 	@ByName("staticListSelectionCheck")
-	public JLabelPoller staticListSelectionCheck = null;
+	public JLabelAssertionBuilder staticListSelectionCheck = null;
 
 	@ByName("tableSelectionEditor")
-	public JTablePoller tableSelectionEditor = null;
+	public JTableAssertionBuilder tableSelectionEditor = null;
 
 	@ByName("tableSelectionCheck")
-	public JLabelPoller tableSelectionCheck = null;
+	public JLabelAssertionBuilder tableSelectionCheck = null;
 
 	public ControllerExamplePage(SwingPilot pilot) {
 		super(pilot);

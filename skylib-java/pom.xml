@@ -9,9 +9,9 @@
         <version>0.0.1-SNAPSHOT</version>
         <relativePath/>
     </parent>
-    <artifactId>libs</artifactId>
+    <artifactId>skylib-java</artifactId>
     <version>${revision}</version>
-    <name>libs</name>
+    <name>libs-java</name>
     <packaging>pom</packaging>
     <modules>
         <module>lib-annotations</module>
@@ -20,7 +20,7 @@
         <module>lib-javabeans</module>
         <module>lib-persistence</module>
         <module>lib-generator-utils</module>
-        <module>gui</module>
+        <module>lib-gui</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -4,16 +4,15 @@ import java.util.regex.Pattern;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import org.jspecify.annotations.Nullable;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 public class IdValidator implements ConstraintValidator<Id, String> {
 
-	private static final Pattern ID_VALIDATOR = Pattern.compile("^[\\w\\-.]+$");
+	static final Pattern ID_VALIDATOR = Pattern.compile("^[\\w\\-.]+$");
 
 	@Override
-	public boolean isValid(String id, ConstraintValidatorContext context) {
-		if (id == null) {
-			return true;
-		}
-		return ID_VALIDATOR.matcher(id).find();
+	public boolean isValid(@Nullable String id, ConstraintValidatorContext context) {
+		return id == null || ID_VALIDATOR.matcher(id).find();
 	}
 }

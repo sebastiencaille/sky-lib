@@ -10,11 +10,11 @@ import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
 @Documented
-@Constraint(validatedBy = { IdValidator.class })
-@Target({ ElementType.PARAMETER, ElementType.FIELD, ElementType.METHOD })
+@Constraint(validatedBy = { IdValidator.class, NullableIdValidator.class })
+@Target({ElementType.TYPE_USE, ElementType.PARAMETER, ElementType.FIELD, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Id {
-	String message() default "The value should be an id";
+	String message() default "The value must be an id";
 
 	Class<?>[] groups() default {};
 

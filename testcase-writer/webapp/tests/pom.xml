@@ -39,7 +39,7 @@
 			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-examples</artifactId>
 			<classifier>fatjar</classifier>
-			<scope>runtime</scope>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>

@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.jspecify.annotations.Nullable;
 import org.mapstruct.Mapper;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 @Mapper(componentModel = "jakarta")
 public interface DefaultMappers {
@@ -20,7 +21,17 @@ public interface DefaultMappers {
     default <T> Optional<T> toOptional(@Nullable T value) {
         return Optional.ofNullable(value);
     }
-    
+
+    @Nullable
+    default <T> JsonNullable<T> fromOptionalToJSsnNullable(Optional<T> value) {
+        return value.map(JsonNullable::of).orElse(JsonNullable.undefined());
+    }
+
+    default <T> Optional<T> fromJsonNullableToOptional(JsonNullable<T> value) {
+        return value.map(Optional::ofNullable).orElse(Optional.empty());
+    }
+
+
     default <T> List<T> setToList(Set<T> set)  {
     	return new ArrayList<>(set);
     }

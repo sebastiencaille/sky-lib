@@ -119,7 +119,7 @@ public class JUnitTestExecutor implements ITestExecutor {
 	public void execute(TestConfig testConfig, String binaryRef) throws IOException {
 		final var binaryFolder = testConfig.binaryFolder;
 
-		try (var aopTemplateStream = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResourceAsStream("templates/aop.xml"), "aop template not found")) {
+		try (var aopTemplateStream = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResourceAsStream("aop/templates/aop.xml"), "aop template not found")) {
 			final var aopTemplate = new String(aopTemplateStream.readAllBytes(), StandardCharsets.UTF_8);
 			// TODO config
 			Files.createDirectories(binaryFolder.resolve("META-INF"));

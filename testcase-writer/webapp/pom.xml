@@ -110,6 +110,9 @@
 							<useJspecify>true</useJspecify>
 							<throwsException>true</throwsException>
 							<useBeanValidation>true</useBeanValidation>
+							<generateJsonIncludeAnnotations>true</generateJsonIncludeAnnotations>
+							<generateJsonSetterNullsAnnotations>true</generateJsonSetterNullsAnnotations>
+							<optionalNonNullPropertyJsonSetterNulls>FAIL</optionalNonNullPropertyJsonSetterNulls>
 						</configOptions>
 						<generatorName>spring</generatorName>
 						<library>spring-boot</library>

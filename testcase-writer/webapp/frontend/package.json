@@ -27,7 +27,7 @@
     "eslint-plugin-react-hooks": "^7",
     "eslint-plugin-react-refresh": "^0",
     "globals": "^17",
-    "typescript": "~6",
+    "typescript": "~",
     "typescript-eslint": "^8",
     "vite": "^8"
   }

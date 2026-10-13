@@ -6,7 +6,6 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.DispatcherServlet;
 
-import ch.scaille.tcwriter.server.webapi.config.JacksonConfig;
 import ch.scaille.tcwriter.server.webapi.config.WebSocketConfig;
 
 @AutoConfiguration
@@ -15,8 +14,7 @@ public class WebApiControllersAutoConfiguration {
 	@Bean
 	ServletRegistrationBean<DispatcherServlet> webApiServlet() {
 		final var annotationContext = new AnnotationConfigServletWebApplicationContext();
-		annotationContext.register(JacksonConfig.class, WebSocketConfig.class, 
-				WebApiControllersConfig.class);
+		annotationContext.register(WebSocketConfig.class, WebApiControllersConfig.class);
 		annotationContext.setDisplayName("Web Api");
 		final var dispatcher = new DispatcherServlet(annotationContext);
 

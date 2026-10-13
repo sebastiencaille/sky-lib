@@ -70,7 +70,7 @@ function headers(): HeadersInit {
 function mapUserContextFromBackend(context: Context): UserContext {
 	return {
 		loaded: true,
-		dictionary: context.dictionary?? null,
+		dictionary: context.dictionary ?? null,
 		testCase: context.testCase ?? null
 	};
 }

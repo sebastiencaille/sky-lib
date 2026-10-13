@@ -1,57 +1,60 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>ch.scaille.tcwriter</groupId>
-		<artifactId>testcase-writer-webapp</artifactId>
-		<version>${revision}</version>
-	</parent>
-	<artifactId>testcase-writer-webapp-ide-runner</artifactId>
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>ch.scaille.tcwriter</groupId>
+        <artifactId>testcase-writer-webapp</artifactId>
+        <version>${revision}</version>
+    </parent>
+    <artifactId>testcase-writer-webapp-ide-runner</artifactId>
 
-	<dependencies>
-		<dependency>
-			<groupId>ch.scaille.tcwriter</groupId>
-			<artifactId>testcase-writer-webapp-api-v0-backend</artifactId>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>ch.scaille.tcwriter</groupId>
+            <artifactId>testcase-writer-webapp-api-v0-backend</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>ch.scaille.tcwriter</groupId>
-			<artifactId>testcase-writer-examples</artifactId>
-			<classifier>fatjar</classifier>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>ch.scaille.tcwriter</groupId>
-			<artifactId>testcase-writer-javatc-core</artifactId>
-			<classifier>client-bundle</classifier>
-			<version>${project.version}</version>
-			<type>zip</type>
-			<scope>runtime</scope>
-		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>ch.scaille.tcwriter</groupId>
+            <artifactId>testcase-writer-examples</artifactId>
+            <classifier>fatjar</classifier>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.scaille.tcwriter</groupId>
+            <artifactId>testcase-writer-javatc-core</artifactId>
+            <classifier>client-bundle</classifier>
+            <version>${revision}</version>
+            <type>zip</type>
+            <scope>provided</scope>
+        </dependency>
 
-	<build>
-		<resources>
-			<resource>
-				<directory>${project.d}</directory>
-			</resource>
-		</resources>
+    </dependencies>
 
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<finalName>classes</finalName>
-					<descriptors>
-						<descriptor>../war/src/assembly/tc-resources.xml</descriptor>
-						<descriptor>../tests/src/assembly/tc-resources.xml</descriptor>
-					</descriptors>
-				</configuration>
+    <build>
 
-			</plugin>
-		</plugins>
-	</build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>tc-resources</id>
+                        <phase>generate-resources</phase>
+                        <goals><goal>single</goal></goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <finalName>classes</finalName>
+                    <descriptors>
+                        <descriptor>../war/src/assembly/tc-resources.xml</descriptor>
+                        <descriptor>../tests/src/assembly/tc-resources.xml</descriptor>
+                    </descriptors>
+                </configuration>
+
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

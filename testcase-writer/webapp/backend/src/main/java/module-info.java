@@ -1,4 +1,6 @@
+import ch.scaille.tcwriter.server.config.JsonNullableModule;
 import org.jspecify.annotations.NullMarked;
+import org.openapitools.jackson.nullable.JsonNullableJackson3Module;
 
 @NullMarked 
 module testcase.writer.webapp.backend {
@@ -58,5 +60,8 @@ module testcase.writer.webapp.backend {
     requires org.mapstruct;
 	requires org.openapitools.jackson.nullable;
     requires org.junit.platform.commons;
+
+	provides tools.jackson.databind.JacksonModule
+			with JsonNullableModule;
 
 }

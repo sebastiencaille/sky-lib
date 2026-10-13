@@ -9,7 +9,7 @@ module testcase.writer.javatc.core {
     exports ch.scaille.tcwriter.javatc.visitors;
     exports ch.scaille.tcwriter.javatc.recorderimpl;
 
-    opens templates;
+    opens aop.templates;
     
     requires transitive testcase.writer.api;
     requires transitive testcase.writer.model;

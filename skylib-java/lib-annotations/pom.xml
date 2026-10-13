@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>ch.scaille</groupId>
-		<artifactId>libs</artifactId>
+		<artifactId>skylib-java</artifactId>
 		<version>${revision}</version>
 	</parent>
 	<artifactId>lib-annotations</artifactId>

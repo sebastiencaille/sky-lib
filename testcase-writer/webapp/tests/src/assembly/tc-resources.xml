@@ -9,7 +9,7 @@
 	<dependencySets>
 		<dependencySet>
 			<useProjectArtifact>true</useProjectArtifact>
-			<scope>runtime</scope>
+			<scope>provided</scope>
 			<outputDirectory>example-resources</outputDirectory>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 			<includes>

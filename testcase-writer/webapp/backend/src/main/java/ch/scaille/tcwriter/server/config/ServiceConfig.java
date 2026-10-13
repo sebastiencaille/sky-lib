@@ -39,7 +39,7 @@ public class ServiceConfig {
 	@Bean
 	JUnitTestExecutor jUnitTestExecutor(IConfigDao configDao, IModelDao modelDao,
 			org.springframework.context.ApplicationContext context,
-			@Value("${tcwriter.javatc-resources:javatc-resources}") String tcResource) {
+			@Value("${tcwriter.javatc-resources:javatc_resources}") String tcResource) {
 		final Path resourcesFolder;
 		try {
 			final var resource = context.getResource(tcResource);

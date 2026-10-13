@@ -9,7 +9,7 @@
 	<dependencySets>
 		<dependencySet>
 			<useProjectArtifact>true</useProjectArtifact>
-			<outputDirectory>javatc-resources</outputDirectory>
+			<outputDirectory>javatc_resources</outputDirectory>
             <scope>runtime</scope>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 			<includes>
@@ -20,7 +20,7 @@
 			</includes>
 		</dependencySet>
 		<dependencySet>
-			<outputDirectory>javatc-resources</outputDirectory>
+			<outputDirectory>javatc_resources</outputDirectory>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 			<includes>
 				<include>ch.scaille.tcwriter:testcase-writer-javatc-recorder:jar</include>

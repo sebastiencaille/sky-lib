@@ -5,7 +5,7 @@
 
 	<parent>
 		<groupId>ch.scaille</groupId>
-		<artifactId>gui</artifactId>
+		<artifactId>lib-gui</artifactId>
 		<version>${revision}</version>
 	</parent>
 
@@ -19,7 +19,7 @@
 		</dependency>
 		<dependency>
 			<groupId>ch.scaille</groupId>
-			<artifactId>lib-gui</artifactId>
+			<artifactId>lib-gui-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>ch.scaille</groupId>

@@ -41,7 +41,7 @@
 			<artifactId>testcase-writer-javatc-core</artifactId>
 			<classifier>client-bundle</classifier>
 			<type>zip</type>
-			<scope>runtime</scope>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	<build>
@@ -62,8 +62,8 @@
 					<webResources>
 						<resource>
 							<directory>
-								${project.build.directory}/tc-resources/javatc-resources</directory>
-							<targetPath>javatc-resources</targetPath>
+								${project.build.directory}/tc-resources/javatc_resources</directory>
+							<targetPath>javatc_resources</targetPath>
 						</resource>
 					</webResources>
 				</configuration>

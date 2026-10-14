@@ -54,7 +54,7 @@ jobs:
          key: ${{ runner.os }}-sonar
          restore-keys: ${{ runner.os }}-sonar
 
-    - name: 'bom: build'
+    - name: 'starter-parent: build'
       run: $MVN_INSTALL
       working-directory: skylib-starter-parent
 
@@ -80,11 +80,6 @@ jobs:
       run: $MVN_SONAR -Dsonar.projectKey=sebastiencaille-github_testcase-writer
       working-directory: testcase-writer
       
-# gtkmm packages are missing
-#    - name: Build c++ lib
-#      run: make all
-#      working-directory: skylib-c++/Debug
-
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v4
 

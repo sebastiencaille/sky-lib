@@ -20,13 +20,12 @@ import org.jspecify.annotations.Nullable;
 
 @Getter
 @Setter
-@AllArgsConstructor
 public class TestDictionary {
 
     public static final TestDictionary NOT_SET = new TestDictionary("not set");
     private static final TestObjectDescription NO_ID_DESCRIPTION = new TestObjectDescription("", "");
 
-    private Metadata metadata = new Metadata();
+    private Metadata metadata;
 
     private final Map<String, TestObjectDescription> descriptions = new HashMap<>();
 
@@ -42,6 +41,7 @@ public class TestDictionary {
     private String explicitTemplate;
 
     public TestDictionary(String transientId) {
+    	metadata = new Metadata();
         metadata.setTransientId(transientId);
         descriptions.put(IdObject.ID_NOT_SET, TestObjectDescription.NOT_SET);
     }

@@ -4,14 +4,14 @@ import java.time.Duration;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import org.jspecify.annotations.Nullable;
+
 import ch.scaille.testing.testpilot.PilotReport.PilotReportBuilder;
 import ch.scaille.util.helpers.DelayFunction;
 import ch.scaille.util.helpers.OverridableParameter;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.jspecify.annotations.Nullable;
 
 /**
  * A polling of a component
@@ -21,7 +21,6 @@ import org.jspecify.annotations.Nullable;
  */
 
 @Builder
-@AllArgsConstructor
 @Getter
 public class Polling<C, R extends @Nullable Object> {
 
@@ -67,8 +66,22 @@ public class Polling<C, R extends @Nullable Object> {
 
     private ActionDelay andThen;
 
+    public InitializedPolling initializeFrom(AbstractComponentPilot<C> pilot) {
+        return this.new InitializedPolling(pilot);
+    }
+    
     public class InitializedPolling implements PollingMetadata<C> {
 
+        private final OverridableParameter<AbstractComponentPilot<C>, Duration> timeoutParam = new OverridableParameter<>(
+                AbstractComponentPilot::getDefaultPollingTimeout);
+        private final OverridableParameter<AbstractComponentPilot<C>, Duration> firstDelayParam = new OverridableParameter<>(
+                AbstractComponentPilot::getDefaultPollingFirstDelay);
+        private final OverridableParameter<AbstractComponentPilot<C>, DelayFunction> delayFunctionParam = new OverridableParameter<>(
+                AbstractComponentPilot::getDefaultPollingDelayFunction);
+        private final OverridableParameter<AbstractComponentPilot<C>, PilotReportBuilder<C>> reportFunctionParam = new OverridableParameter<>(
+                AbstractComponentPilot::getDefaultReportBuilder);
+
+    	
         private final AbstractComponentPilot<C> componentPilot;
 
         @Setter
@@ -76,6 +89,10 @@ public class Polling<C, R extends @Nullable Object> {
 
         public InitializedPolling(AbstractComponentPilot<C> componentPilot) {
             this.componentPilot = componentPilot;
+            timeoutParam.set(timeout).withSource(componentPilot).ensureLoaded();
+            firstDelayParam.set(firstDelay).withSource(componentPilot).ensureLoaded();
+            delayFunctionParam.set(delayFunction).withSource(componentPilot).ensureLoaded();
+            reportFunctionParam.set(reporting).withSource(componentPilot).ensureLoaded();
         }
 
         public Optional<Predicate<PolledComponent<C>>> getPrecondition() {
@@ -86,17 +103,17 @@ public class Polling<C, R extends @Nullable Object> {
             return firstDelayParam.get();
         }
 
+        @Override
+        public @Nullable ActionDelay getAndThen() {
+        	return andThen;
+        }
+        
         public DelayFunction getDelayFunction() {
             return delayFunctionParam.get();
         }
 
         public PilotReportBuilder<C> getReportBuilder() {
             return reportFunctionParam.get();
-        }
-
-        @Nullable
-        public ActionDelay getAndThen() {
-            return andThen;
         }
 
         @Override
@@ -116,25 +133,6 @@ public class Polling<C, R extends @Nullable Object> {
         public Optional<PolledComponent<C>> getComponent() {
             return Optional.ofNullable(component);
         }
-    }
-
-
-
-    private final OverridableParameter<AbstractComponentPilot<C>, Duration> timeoutParam = new OverridableParameter<>(
-            AbstractComponentPilot::getDefaultPollingTimeout);
-    private final OverridableParameter<AbstractComponentPilot<C>, Duration> firstDelayParam = new OverridableParameter<>(
-            AbstractComponentPilot::getDefaultPollingFirstDelay);
-    private final OverridableParameter<AbstractComponentPilot<C>, DelayFunction> delayFunctionParam = new OverridableParameter<>(
-            AbstractComponentPilot::getDefaultPollingDelayFunction);
-    private final OverridableParameter<AbstractComponentPilot<C>, PilotReportBuilder<C>> reportFunctionParam = new OverridableParameter<>(
-            AbstractComponentPilot::getDefaultReportBuilder);
-
-    public InitializedPolling initializeFrom(AbstractComponentPilot<C> pilot) {
-        timeoutParam.set(timeout).withSource(pilot).ensureLoaded();
-        firstDelayParam.set(firstDelay).withSource(pilot).ensureLoaded();
-        delayFunctionParam.set(delayFunction).withSource(pilot).ensureLoaded();
-        reportFunctionParam.set(reporting).withSource(pilot).ensureLoaded();
-        return new InitializedPolling(pilot);
     }
 
 }

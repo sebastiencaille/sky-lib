@@ -1,5 +1,9 @@
 package ch.scaille.tcwriter.persistence;
 
+import java.util.Objects;
+
+import org.jspecify.annotations.Nullable;
+
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.PropertyChangeSupportController;
 import ch.scaille.javabeans.properties.ObjectProperty;
@@ -9,10 +13,9 @@ import ch.scaille.util.persistence.DaoFactory;
 import ch.scaille.util.persistence.IDao;
 import ch.scaille.util.persistence.StorageRTException;
 import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
-import org.jspecify.annotations.Nullable;
+import lombok.extern.java.Log;
 
-import java.util.Objects;
-
+@Log
 public class ConfigDao implements IConfigDao {
 
 	protected final IPropertiesGroup propertiesGroup = PropertyChangeSupportController.mainGroup(this);
@@ -37,6 +40,7 @@ public class ConfigDao implements IConfigDao {
 
 	protected void apply(TCConfig config) {
 		this.currentConfig.setValue(this, config);
+		log.info("Applied configurations: " + config.subConfigs().stream().map(Object::getClass).toList());
 	}
 
 	/**

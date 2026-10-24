@@ -3,7 +3,7 @@ package ch.scaille.tcwriter.server;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
-import ch.scaille.tcwriter.server.config.ApplicationConfig;
+import ch.scaille.tcwriter.server.config.ServiceConfig;
 
 /**
  * Run with<br>
@@ -16,7 +16,7 @@ public class Server {
 	static void main(String[] args) {
 		// This adds the package of Application.class in Spring. Using Server may cause
 		// spring to scan the entire application
-		SpringApplication.run(ApplicationConfig.class, args);
+		SpringApplication.run(ServiceConfig.class, args);
 	}
 
 }

@@ -9,8 +9,8 @@
 	</parent>
 	<artifactId>testcase-writer-core</artifactId>
 
-	<dependencies>
 
+	<dependencies>
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-model</artifactId>

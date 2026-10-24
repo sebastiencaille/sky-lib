@@ -17,8 +17,8 @@
 		<module>backend</module>
 		<module>api-v0</module>
 		<module>frontend</module>
+		<module>testing</module>
 		<module>war</module>
-		<module>tests</module>
 		<module>ide-runner</module>
 	</modules>
 
@@ -57,6 +57,14 @@
 				<type>war</type>
 				<version>${revision}</version>
 			</dependency>
+		<dependency>
+			<groupId>ch.scaille.tcwriter</groupId>
+			<artifactId>testcase-writer-webapp-testing</artifactId>
+			<version>${revision}</version>
+			<scope>test</scope>
+		</dependency>
+
+
 			<dependency>
 				<groupId>ch.scaille.tcwriter</groupId>
 				<artifactId>testcase-writer-webapp-war</artifactId>
@@ -66,33 +74,6 @@
 
 		</dependencies>
 	</dependencyManagement>
-
-	<profiles>
-		<profile>
-			<id>linux</id>
-			<activation>
-				<os>
-					<family>unix</family>
-				</os>
-			</activation>
-			<properties>
-				<npm.cmd>npm</npm.cmd>
-				<npx.cmd>npx</npx.cmd>
-			</properties>
-		</profile>
-		<profile>
-			<id>windows</id>
-			<activation>
-				<os>
-					<family>windows</family>
-				</os>
-			</activation>
-			<properties>
-				<npm.cmd>npm.cmd</npm.cmd>
-				<npx.cmd>npx.cmd</npx.cmd>
-			</properties>
-		</profile>
-	</profiles>
 
 	<build>
 		<pluginManagement>
@@ -157,13 +138,65 @@
 								<goal>war</goal>
 							</goals>
 						</execution>
-					</executions>
+						</executions>
 					<configuration>
 						<failOnMissingWebXml>false</failOnMissingWebXml>
+
 					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
 
 	</build>
+	
+	
+	<profiles>
+		<profile>
+			<id>linux</id>
+			<activation>
+				<os>
+					<family>unix</family>
+				</os>
+			</activation>
+			<properties>
+				<npm.cmd>npm</npm.cmd>
+				<npx.cmd>npx</npx.cmd>
+			</properties>
+		</profile>
+		<profile>
+			<id>windows</id>
+			<activation>
+				<os>
+					<family>windows</family>
+				</os>
+			</activation>
+			<properties>
+				<npm.cmd>npm.cmd</npm.cmd>
+				<npx.cmd>npx.cmd</npx.cmd>
+			</properties>
+		</profile>
+		<profile>
+			<id>it</id>
+			<activation>
+				<property>
+					<name>it</name>
+					<value>!false</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-failsafe-plugin</artifactId>
+						<configuration>
+							<systemPropertyVariables>
+								<app.port>9000</app.port>
+							</systemPropertyVariables>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+
+		</profile>
+	</profiles>
 </project>

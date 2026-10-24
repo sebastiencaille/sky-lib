@@ -7,8 +7,13 @@
 		<artifactId>testcase-writer</artifactId>
 		<version>${revision}</version>
 	</parent>
+
 	<artifactId>testcase-writer-examples</artifactId>
 
+<properties>
+
+<fatjar.name>${project.artifactId}-fatjar</fatjar.name>
+</properties>
 	<dependencies>
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
@@ -24,6 +29,10 @@
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-gui</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ch.scaille</groupId>
+			<artifactId>lib-testing-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>ch.scaille</groupId>
@@ -57,16 +66,6 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptors>
-						<descriptor>../gui/src/assembly/tc-resources.xml</descriptor>
-					</descriptors>
-					<workDirectory>${project.build}</workDirectory>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
 				<executions>
 					<execution>
@@ -75,8 +74,8 @@
 							<goal>shade</goal>
 						</goals>
 						<configuration>
-							<shadedArtifactAttached>true</shadedArtifactAttached>
-							<shadedClassifierName>fatjar</shadedClassifierName>
+							<shadedArtifactAttached>false</shadedArtifactAttached>
+							<finalName>${fatjar.name}</finalName>
 							<createDependencyReducedPom>false</createDependencyReducedPom>
 							<artifactSet>
 								<excludes>
@@ -89,6 +88,46 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>tc-resources</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<descriptors>
+								<descriptor>../gui/src/assembly/tc-resources.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution>
+					<execution>
+						<id>single</id>
+						<configuration>
+							<attach>true</attach>
+							<appendAssemblyId>true</appendAssemblyId>
+							<inlineDescriptors>
+								<inlinedescriptor>
+									<id>client-bundle</id>
+									<formats>
+										<format>zip</format>
+									</formats>
+									<includeBaseDirectory>false</includeBaseDirectory>
+									<files>
+										<file>
+											<source>${project.build.directory}/${fatjar.name}.jar</source>
+										</file>
+									</files>
+								</inlinedescriptor>
+							</inlineDescriptors>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
@@ -119,7 +158,8 @@
 							<goal>generateTestCases</goal>
 						</goals>
 						<configuration>
-							<templatesFolder>file:src/main/resources/userResources/templates</templatesFolder>
+							<templatesFolder>
+								file:src/main/resources/userResources/templates</templatesFolder>
 						</configuration>
 					</execution>
 				</executions>

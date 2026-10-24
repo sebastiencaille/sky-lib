@@ -15,7 +15,6 @@
 		<m2e.apt.activation>jdt_apt</m2e.apt.activation>
 	</properties>
 	<dependencies>
-		<!-- included as jar for aot -->
 		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-webapp-api-v0-backend</artifactId>
@@ -43,6 +42,35 @@
 			<type>zip</type>
 			<scope>provided</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>ch.scaille.tcwriter</groupId>
+			<artifactId>testcase-writer-webapp-testing</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+
+		<dependency>
+			<groupId>ch.scaille.tcwriter</groupId>
+			<artifactId>testcase-writer-examples</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>ch.scaille.tcwriter</groupId>
+			<artifactId>testcase-writer-examples</artifactId>
+			<version>${revision}</version>
+			<type>zip</type>
+			<classifier>client-bundle</classifier>
+			<scope>provided</scope>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<plugins>
@@ -54,6 +82,47 @@
 					<descriptors>
 						<descriptor>src/assembly/tc-resources.xml</descriptor>
 					</descriptors>
+					<inlineDescriptors>
+						<inlineDescriptor>
+							<id>test-resources</id>
+							<formats>
+								<format>dir</format>
+							</formats>
+							<includeBaseDirectory>false</includeBaseDirectory>
+							<dependencySets>
+								<dependencySet>
+									<scope>test</scope>
+									<includes>
+										<include>ch.scaille:*:jar</include>
+										<include>ch.scaille.tcwriter:*:jar</include>
+										<include>*:h2:jar</include>
+									</includes>
+									<excludes>
+									</excludes>
+									<outputDirectory>test-deps</outputDirectory>
+								</dependencySet>
+							</dependencySets>
+						</inlineDescriptor>
+						<inlineDescriptor>
+							<id>example-test-resources</id>
+							<formats>
+								<format>dir</format>
+							</formats>
+							<includeBaseDirectory>false</includeBaseDirectory>
+							<dependencySets>
+								<dependencySet>
+									<useProjectArtifact>true</useProjectArtifact>
+									<scope>provided</scope>
+									<outputDirectory>example_resources</outputDirectory>
+									<includes>
+										<include>
+											ch.scaille.tcwriter:testcase-writer-examples:zip:client-bundle</include>
+									</includes>
+									<unpack>true</unpack>
+								</dependencySet>
+							</dependencySets>
+						</inlineDescriptor>
+					</inlineDescriptors>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -71,18 +140,79 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>ch.scaille.tcwriter.server.war.Server</mainClass>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.5.2</version>
 				<executions>
 					<execution>
+						<id>build</id>
+						<phase>package</phase>
 						<goals>
-							<goal>repackage</goal>
+							<goal>dockerBuild</goal>
 						</goals>
 					</execution>
 					<execution>
-						<id>repackage</id>
+						<id>build-tests</id>
+						<phase>package</phase>
+						<goals>
+							<goal>dockerBuild</goal>
+						</goals>
+						<configuration>
+							<extraDirectories>
+								<paths>
+									<path>
+										<from>
+											${project.build.testOutputDirectory}</from>
+										<into>
+											/var/lib/jetty/webapps/ROOT/WEB-INF/classes</into>
+									</path>
+									<path>
+										<from>
+											${project.build.directory}/tc-resources/test-deps</from>
+										<into>
+											/var/lib/jetty/webapps/ROOT/WEB-INF/lib</into>
+									</path>
+									<path>
+										<from>
+											${project.build.directory}/tc-resources/example_resources</from>
+										<into>
+											/var/lib/jetty/webapps/ROOT/example_resources</into>
+									</path>
+								</paths>
+							</extraDirectories>
+							<to>
+								<image>tcwriter-webapp-test</image>
+							</to>
+						</configuration>
 					</execution>
 				</executions>
 				<configuration>
-					<mainClass>ch.scaille.tcwriter.server.war.Server</mainClass>
+					<from>
+						<image>openjdk:25-ea-slim</image>
+					</from>
+
+					<container>
+						<workingDirectory>/var/lib/jetty/webapps/ROOT</workingDirectory>
+
+						<entrypoint>
+							<entrypoint>java</entrypoint>
+							<entrypoint>-cp</entrypoint>
+							<entrypoint>.:WEB-INF/classes:WEB-INF/lib/*</entrypoint>
+							<entrypoint>
+								-DmainClass=ch.scaille.tcwriter.server.Server</entrypoint>
+							<entrypoint>
+								ch.scaille.tcwriter.war.Server
+							</entrypoint>
+						</entrypoint>
+						<ports>
+							<port>9000</port>
+						</ports>
+					</container>
 				</configuration>
 			</plugin>
 		</plugins>

@@ -44,7 +44,8 @@ public class JUnitTestExecutor implements ITestExecutor {
 	public JUnitTestExecutor(final IConfigDao configDao, final IModelDao modelDao, 
 			URL aspectjWeaverPath, URL junitJarFile, 
 			final URL... classPath) {
-		this.config = Objects.requireNonNull(configDao.getCurrentConfig()).getSubconfig(JunitTestExecConfig.class).orElseThrow();
+		this.config = Objects.requireNonNull(configDao.getCurrentConfig(), "No config available").getSubconfig(JunitTestExecConfig.class)
+				.orElseThrow(() -> new IllegalArgumentException("No JunitTestExecConfig found"));
 		this.aspectjWeaverPath = aspectjWeaverPath;
 		this.junitJarFile = junitJarFile;
 		this.modelDao = modelDao;

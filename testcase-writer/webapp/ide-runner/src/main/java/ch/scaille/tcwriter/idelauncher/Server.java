@@ -1,7 +1,6 @@
 package ch.scaille.tcwriter.idelauncher;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import ch.scaille.tcwriter.server.config.ApplicationConfig;
 
@@ -9,7 +8,6 @@ import ch.scaille.tcwriter.server.config.ApplicationConfig;
  * Run with<br>
  * jvm arg: --add-reads org.hibernate.validator=org.apache.tomcat.embed.el --add-opens=java.base/java.lang=spring.core
  */
-@EnableAutoConfiguration
 public class Server {
 
 	static void main(String[] args) {

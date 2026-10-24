@@ -60,6 +60,12 @@
 			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-examples</artifactId>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -93,12 +99,12 @@
 								<dependencySet>
 									<scope>test</scope>
 									<includes>
-										<include>ch.scaille:*:jar</include>
-										<include>ch.scaille.tcwriter:*:jar</include>
+										<include>ch.scaille.tcwriter:testcase-writer-webapp-testing:jar</include>
+										<include>ch.scaille.tcwriter:testcase-writer-examples:jar</include>
 										<include>*:h2:jar</include>
 									</includes>
-									<excludes>
-									</excludes>
+									<useTransitiveDependencies>true</useTransitiveDependencies>
+									<useTransitiveFiltering>true</useTransitiveFiltering>
 									<outputDirectory>test-deps</outputDirectory>
 								</dependencySet>
 							</dependencySets>
@@ -195,16 +201,12 @@
 					<from>
 						<image>openjdk:25-ea-slim</image>
 					</from>
-
 					<container>
 						<workingDirectory>/var/lib/jetty/webapps/ROOT</workingDirectory>
-
 						<entrypoint>
 							<entrypoint>java</entrypoint>
 							<entrypoint>-cp</entrypoint>
 							<entrypoint>.:WEB-INF/classes:WEB-INF/lib/*</entrypoint>
-							<entrypoint>
-								-DmainClass=ch.scaille.tcwriter.server.Server</entrypoint>
 							<entrypoint>
 								ch.scaille.tcwriter.war.Server
 							</entrypoint>

@@ -10,10 +10,10 @@
 		<dependencySet>
 			<useProjectArtifact>true</useProjectArtifact>
 			<scope>provided</scope>
-			<unpack>true</unpack>
 			<includes>
 				<include>ch.scaille.tcwriter:testcase-writer-javatc-core:zip:client-bundle</include>
 			</includes>
+			<unpack>true</unpack>
 		</dependencySet>
 	</dependencySets>
 </assembly>

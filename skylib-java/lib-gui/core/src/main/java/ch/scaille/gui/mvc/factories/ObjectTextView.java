@@ -3,14 +3,14 @@ package ch.scaille.gui.mvc.factories;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.Supplier;
+
+import org.jspecify.annotations.Nullable;
 
 import ch.scaille.javabeans.converters.ConversionException;
 import ch.scaille.javabeans.converters.Converters;
 import ch.scaille.javabeans.converters.IConverter;
 import ch.scaille.util.helpers.LambdaExt.FunctionWithException;
 import lombok.Getter;
-import org.jspecify.annotations.Nullable;
 
 /**
  * To display some text based on the content of an object

@@ -1,10 +1,10 @@
 package ch.scaille.tcwriter.server.config;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.Bean;
+import org.springframework.orm.jpa.JpaVendorAdapter;
 
 @SpringBootApplication
-@PropertySource("defaults.properties")
 public class ApplicationConfig {
-	// for SpringBootApplication
+
 }

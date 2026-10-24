@@ -1,6 +1,6 @@
-import ch.scaille.tcwriter.server.config.JsonNullableModule;
 import org.jspecify.annotations.NullMarked;
-import org.openapitools.jackson.nullable.JsonNullableJackson3Module;
+
+import ch.scaille.tcwriter.server.config.JsonNullableModule;
 
 @NullMarked 
 module testcase.writer.webapp.backend {

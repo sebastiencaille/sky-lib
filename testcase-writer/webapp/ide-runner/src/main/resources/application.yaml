@@ -1,0 +1,43 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: TCWriter
+  aop:
+    proxy-target-class: true
+  jmx:
+    enabled: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+  sql:
+    init:
+      platform: h2
+  datasource:
+    url: jdbc:h2:file:~/tcwriter-db
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  liquibase:
+    changelog: liquibase-app-h2/master.yaml
+    contexts: ${spring.datasource.platform}
+
+h2:
+  console:
+    enabled: true
+
+springdoc:
+  cache:
+    disabled: true
+  api-docs:
+    path: /api-docs
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health"
+
+tcwriter.javatc-resources: classpath:javatc_resources
+
+logging.level.org.springframework.boot.autoconfigure: DEBUG

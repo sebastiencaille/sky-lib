@@ -1,8 +1,14 @@
 package ch.scaille.tcwriter.model.dictionary;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
-import ch.scaille.util.helpers.JavaExt;
+import org.jspecify.annotations.Nullable;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
@@ -12,10 +18,9 @@ import ch.scaille.tcwriter.model.IdObject;
 import ch.scaille.tcwriter.model.Metadata;
 import ch.scaille.tcwriter.model.TestObjectDescription;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
-import lombok.AllArgsConstructor;
+import ch.scaille.util.helpers.JavaExt;
 import lombok.Getter;
 import lombok.Setter;
-import org.jspecify.annotations.Nullable;
 
 
 @Getter

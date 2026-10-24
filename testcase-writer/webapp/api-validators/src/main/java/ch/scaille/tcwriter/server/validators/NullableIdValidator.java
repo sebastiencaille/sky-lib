@@ -1,11 +1,11 @@
 package ch.scaille.tcwriter.server.validators;
 
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
-import org.jspecify.annotations.Nullable;
+import java.util.regex.Pattern;
+
 import org.openapitools.jackson.nullable.JsonNullable;
 
-import java.util.regex.Pattern;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class NullableIdValidator implements ConstraintValidator<Id, JsonNullable<String>> {
 

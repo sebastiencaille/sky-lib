@@ -90,11 +90,6 @@
 			<artifactId>jackson-databind-nullable</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
 			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-javatc-core</artifactId>
 		</dependency>

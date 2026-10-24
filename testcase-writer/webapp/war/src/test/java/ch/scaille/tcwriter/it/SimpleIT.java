@@ -9,7 +9,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.openqa.selenium.WebDriver;
 
+import ch.scaille.tcwriter.it.testcontainer.TestContainers;
 import ch.scaille.testing.testpilot.jupiter.DisabledIfHeadless;
 import ch.scaille.testing.testpilot.selenium.SeleniumPilot;
 import ch.scaille.testing.testpilot.selenium.WebDriverFactory;
@@ -18,18 +20,19 @@ import ch.scaille.testing.testpilot.selenium.jupiter.WebDriverExtension;
 import ch.scaille.testing.testpilot.selenium.jupiter.WebDriverExtension.WebDriverConfigurer;
 import lombok.extern.java.Log;
 
-import org.openqa.selenium.WebDriver;
-
 @ExtendWith({ DisabledIfHeadless.class, WebDriverExtension.class, ScreenShotExtensions.class })
 @Log
 class SimpleIT {
 
+	
 	private SeleniumPilot pilot;
 
 	@BeforeEach
 	void createPilot(WebDriverConfigurer webDriverHolder) throws URISyntaxException, MalformedURLException  {
+		final var app = TestContainers.app("tcwriter-webapp-test");
+		app.start();
+		final var port = app.getMappedPort(9000);
 		final var webDriver = webDriverHolder.getOrCreate(() -> WebDriverFactory.firefox().build());
-		final var port = System.getProperty("app.port", "5173");
 		
 		pilot = new SeleniumPilot(webDriver);
 		pilot.getDriver().get(new URI("http://localhost:" + port + "/index.html").toURL().toString());

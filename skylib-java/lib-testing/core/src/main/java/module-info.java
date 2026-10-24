@@ -2,6 +2,16 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 module lib.testing.core {
+	
+	exports ch.scaille.testing.api;
+	
     requires transitive org.jspecify;
-    requires spring.boot.loader;
+    
+    requires java.logging;
+    
+    requires spring.core;
+	requires spring.context;
+	requires spring.beans;
+	requires spring.boot.autoconfigure;
+	requires lombok;
 }

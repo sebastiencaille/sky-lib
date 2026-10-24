@@ -2,10 +2,10 @@ package ch.scaille.tcwriter.server.validators;
 
 import java.util.regex.Pattern;
 
+import org.jspecify.annotations.Nullable;
+
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.jspecify.annotations.Nullable;
-import org.openapitools.jackson.nullable.JsonNullable;
 
 public class IdValidator implements ConstraintValidator<Id, String> {
 

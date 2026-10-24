@@ -17,13 +17,13 @@ import lombok.extern.java.Log;
 public class BootstrapAutoConfiguration {
 
 	@Bean
-	static BeanFactoryPostProcessor bootstrap(
+	BeanFactoryPostProcessor bootstrap(
 			@Value("${app.dataFolder:#{systemProperties['user.home'] + '/.var/lib/tcwriter/data'}}") Path dataFolder)
 			throws IOException {
 		
 		final var services = ServiceLoader.load(TestBootstrapService.class).stream().toList();
 		log.info(() -> "Bootstrapping " + services.size() + " services");
-		return _ -> services.stream().forEach(bootstrap -> bootstrap.get().bootstrap(dataFolder));
+		return _ -> services.forEach(bootstrap -> bootstrap.get().bootstrap(dataFolder));
 	}
 
 }

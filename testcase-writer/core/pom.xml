@@ -45,6 +45,12 @@
 			<groupId>tools.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-yaml</artifactId>
 		</dependency>
+		
+		<dependency>
+			<groupId>ch.scaille</groupId>
+			<artifactId>lib-testing-core</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 </project>

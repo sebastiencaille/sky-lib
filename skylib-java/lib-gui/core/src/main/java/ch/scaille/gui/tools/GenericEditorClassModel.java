@@ -43,7 +43,7 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 
 		@Override
 		public int compareTo(ClassPropertyEntry<T, U> o) {
-			return index - o.index;
+			return Integer.compare(index, o.index);
 		}
 		
 		@Override

@@ -8,6 +8,7 @@ dependency-reduced-pom.xml
 .factorypath
 .flattened-pom.xml
 .idea
+.sonar
 *.bak
 *.versionsBackup
 *.iml

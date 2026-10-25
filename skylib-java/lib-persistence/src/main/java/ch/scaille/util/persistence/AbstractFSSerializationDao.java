@@ -9,7 +9,7 @@ import ch.scaille.util.persistence.handlers.StorageDataHandlerRegistry;
 
 public abstract class AbstractFSSerializationDao<T> extends AbstractSerializationDao<T> {
 
-    private static final String[] EMPTY_NAME_EXT = new String[] { "", "" };
+    private static final String[] EMPTY_NAME_EXT = { "", "" };
 
     private static final Path PATH_VALIDATING_BASE = Paths.get("", "MyBasePath");
     

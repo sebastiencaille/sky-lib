@@ -8,6 +8,10 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class ReportBuilder {
+    private ReportBuilder() {
+        /* This utility class should not be instantiated */
+    }
+
 
     private static PilotReport.PilotReportBuilder<Object> NO_REPORT = new PilotReport.PilotReportBuilder<>() {
         @Override

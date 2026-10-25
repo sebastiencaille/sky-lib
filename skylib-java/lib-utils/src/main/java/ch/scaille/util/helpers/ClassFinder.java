@@ -192,7 +192,6 @@ public class ClassFinder {
 
 		@Override
 		public Stream<Class<?>> scan(@Nullable URL resource, String aPackage) throws IOException {
-			System.out.println("Scanning " + resource);
 			if (resource == null) {
 				return Stream.empty();
 			}

@@ -6,6 +6,10 @@ import org.openqa.selenium.WebElement;
 import java.util.function.Consumer;
 
 public class AssertjAsserts {
+    private AssertjAsserts() {
+        /* This utility class should not be instantiated */
+    }
+
 
     public static Consumer<ObjectAssert<WebElement>> textEquals(String text) {
         return assertj -> assertj

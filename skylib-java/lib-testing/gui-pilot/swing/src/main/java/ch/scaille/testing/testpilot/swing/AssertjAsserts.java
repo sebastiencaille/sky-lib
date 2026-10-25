@@ -7,6 +7,10 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class AssertjAsserts {
+    private AssertjAsserts() {
+        /* This utility class should not be instantiated */
+    }
+
 
     public static <C> Consumer<ObjectAssert<C>> textEquals(String text, Function<C, String> textExtractor) {
         return assertj -> assertj

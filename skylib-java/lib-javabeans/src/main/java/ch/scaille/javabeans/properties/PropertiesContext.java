@@ -33,7 +33,7 @@ public record PropertiesContext<T>(T object, List<AbstractProperty> properties) 
 			final var accessor = component.getAccessor();
 			accessor.setAccessible(true);
 			return (AbstractTypedProperty<?>) accessor.invoke(propsRecord);
-		} catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+		} catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException _) {
 			// ignore
 			return null;
 		}

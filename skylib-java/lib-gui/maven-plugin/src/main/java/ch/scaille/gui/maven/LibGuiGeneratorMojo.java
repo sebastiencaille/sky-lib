@@ -1,9 +1,5 @@
 package ch.scaille.gui.maven;
 
-import java.io.File;
-
-import ch.scaille.generators.util.ICodeGeneratorParams;
-import ch.scaille.gui.mvc.GuiModelGenerator;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -12,10 +8,11 @@ import org.apache.maven.project.MavenProject;
 import org.jspecify.annotations.NullMarked;
 
 import ch.scaille.generators.util.GenerationMetadata;
-
+import ch.scaille.generators.util.ICodeGeneratorParams;
+import ch.scaille.gui.mvc.GuiModelGenerator;
 import lombok.SneakyThrows;
 
-@Mojo(name = "generateMvc", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES)
+@Mojo(name = "generateMvc", defaultPhase = LifecyclePhase.GENERATE_SOURCES, threadSafe = true)
 @NullMarked
 public class LibGuiGeneratorMojo extends AbstractMojo {
 
@@ -33,14 +30,6 @@ public class LibGuiGeneratorMojo extends AbstractMojo {
 
     @Parameter(property = "targetFolder", required = true)
     private String targetFolder = "";
-
-    private String resolveFile(String p) {
-        final var path = new File(p);
-        if (path.isAbsolute()) {
-            return path.toString();
-        }
-        return new File(project.getBasedir(), p).toString();
-    }
 
     @SneakyThrows
     @Override

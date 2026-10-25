@@ -48,7 +48,7 @@ public class Poller {
 				}
 			}
 			lastPolling = endOfSleep;
-		} catch (final InterruptedException e) {
+		} catch (final InterruptedException _) {
 			Thread.currentThread().interrupt();
 			throw new IllegalStateException("Test interrupted");
 		}

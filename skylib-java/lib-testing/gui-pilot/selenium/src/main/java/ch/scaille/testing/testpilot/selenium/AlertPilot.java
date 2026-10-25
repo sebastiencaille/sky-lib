@@ -24,7 +24,7 @@ public class AlertPilot extends AbstractComponentPilot<Alert> {
 	protected Optional<Alert> loadGuiComponent() {
 		try {
 			return Optional.of(pilot.getDriver().switchTo().alert());
-		} catch (final NoAlertPresentException e) {
+		} catch (final NoAlertPresentException _) {
 			return Optional.empty();
 		}
 	}

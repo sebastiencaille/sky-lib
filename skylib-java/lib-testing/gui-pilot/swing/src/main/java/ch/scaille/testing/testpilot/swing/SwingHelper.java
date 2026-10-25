@@ -22,7 +22,7 @@ public class SwingHelper {
 			SwingUtilities.invokeAndWait(runnable);
 		} catch (final InvocationTargetException e) {
 			throw new AssertionError(e.getCause());
-		} catch (final InterruptedException e) {
+		} catch (final InterruptedException _) {
 			Thread.currentThread().interrupt();
 			throw new AssertionError("Test case interrupted");
 		}

@@ -6,7 +6,7 @@ import ch.scaille.javabeans.IChainBuilderFactory;
 import ch.scaille.javabeans.properties.AbstractTypedProperty;
 import org.jspecify.annotations.Nullable;
 
-/*
+/**
  * A property based entry of the editor.
  * 
  * @param <T> the owner type

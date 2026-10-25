@@ -237,7 +237,9 @@ public class TCWriterController extends GuiController {
 	}
 
 	public void restart() {
-		gui.setVisible(false);
+		if (gui != null) {
+			gui.setVisible(false);
+		}
 		new TCWriterController(configDao, modelDao, null, testExecutor).start();
 	}
 

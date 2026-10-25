@@ -51,7 +51,7 @@ public class ObjectTextView<T extends @Nullable Object> {
 	}
 
 	public static <T extends @Nullable Object> Function<T, @Nullable ObjectTextView<T>> obj2Text(final Function<T, String> objToText) {
-		return o -> new ObjectTextView<>(o, obj -> objToText.apply(obj));
+		return o -> new ObjectTextView<>(o, objToText::apply);
 	}
 
 	public static <T extends @Nullable Object, K extends @Nullable Object> BiFunction<T, K, @Nullable ObjectTextView<T>> contextualObject2Text(final BiFunction<T, K, String> objToText) {

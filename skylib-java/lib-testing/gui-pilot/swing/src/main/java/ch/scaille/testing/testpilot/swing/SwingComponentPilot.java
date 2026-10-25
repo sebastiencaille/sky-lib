@@ -45,7 +45,7 @@ public class SwingComponentPilot<C extends JComponent>
 	protected Optional<C> loadGuiComponent() {
 		try {
 			return Optional.of(pilot.getComponent(name, clazz));
-		} catch (final NoSuchComponentException e) {
+		} catch (final NoSuchComponentException _) {
 			return Optional.empty();
 		}
 	}

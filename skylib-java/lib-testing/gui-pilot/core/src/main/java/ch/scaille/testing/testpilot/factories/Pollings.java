@@ -59,7 +59,7 @@ public abstract class Pollings {
 			try {
 				assertion.accept(ctxt);
 				return true;
-			} catch (final AssertionError e) {
+			} catch (final AssertionError _) {
 				return true;
 			}
 		};

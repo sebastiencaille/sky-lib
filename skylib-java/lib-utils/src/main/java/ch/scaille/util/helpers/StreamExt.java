@@ -11,9 +11,12 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public interface StreamExt {
+public class StreamExt {
+	private StreamExt() {
+		/* This utility class should not be instantiated */
+	}
 
-	class Single<T> {
+	public static class Single<T> {
 		private final boolean allowZero;
 
 		@Nullable
@@ -83,32 +86,32 @@ public interface StreamExt {
 	/**
 	 * Collector that checks for zero or one value available
 	 */
-	static <E> Collector<E, ?, Single<E>> zeroOrOne() {
+	public static <E> Collector<E, ?, Single<E>> zeroOrOne() {
 		return Collector.of(Single::zeroOrOne, Single::setValue, Single::combiner);
 	}
 
 	/**
 	 * Collector that checks for zero or one value available
 	 */
-	static <E> Collector<E, ?, Single<E>> single() {
+	public static <E> Collector<E, ?, Single<E>> single() {
 		return Collector.of(Single::single, Single::setValue, Single::combiner);
 	}
 
-	static <E> Collector<E, ?, Collection<E>> addTo(Collection<E> target) {
+	public static <E> Collector<E, ?, Collection<E>> addTo(Collection<E> target) {
 		return Collector.of(() -> target, Collection::add, (t, _) -> t);
 	}
 
-	static <T extends @Nullable Object> void throwIfContainsNull(final Stream<T> stream) {
+	public static <T extends @Nullable Object> void throwIfContainsNull(final Stream<T> stream) {
 		stream.filter(Objects::isNull).findAny().ifPresent(_ -> { 
 			throw new IllegalArgumentException("No null value allowed"); 
 		});
 	}
 
-	static <T> Predicate<T> notEq(@Nullable final T val) {
+	public 	static <T> Predicate<T> notEq(@Nullable final T val) {
 		return v -> !Objects.equals(v, val);
 	}
 
-	static void checkContent(final Stream<?> collection, final Class<?> clazz) {
+	public static void checkContent(final Stream<?> collection, final Class<?> clazz) {
 		final var mismatches = collection.filter(c -> !clazz.isInstance(c))
 				.map(Object::getClass)
 				.collect(Collectors.toSet());

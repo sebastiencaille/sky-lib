@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.TimeZone;
 
 import ch.scaille.tcwriter.javatc.recorder.ITestCaseRecorder;
 import ch.scaille.tcwriter.model.Helper;
@@ -179,7 +180,7 @@ public class TestCaseRecorder implements ITestCaseRecorder {
     public TestCase buildTestCase(final String testClassName) {
         final var testCase = new TestCase(testClassName, tcDictionary);
         testCase.getMetadata().setDescription("%s: execution at %s".formatted(testClassName,
-               EXECUTION_FORMATTER.format(LocalDateTime.now())));
+               EXECUTION_FORMATTER.format(LocalDateTime.now(TimeZone.getDefault().toZoneId()))));
 
         for (var actor: actors.values()) {
             var description = RecorderTestActors.getDescriptions().getOrDefault(actor.getId(), actor.getId());

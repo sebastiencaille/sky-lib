@@ -2,6 +2,8 @@ package ch.scaille.javabeans.properties;
 
 import ch.scaille.javabeans.IBindingController;
 import ch.scaille.javabeans.PropertyChangeSupportController;
+import ch.scaille.javabeans.WeakLinkHolder;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +13,7 @@ class PropertiesTest {
 
     private static class GarbageCollected {
 
-        private final IBindingController.WeakLinkHolder weakLinkHolder = IBindingController.weakHolder();
+        private final WeakLinkHolder weakLinkHolder = IBindingController.weakHolder();
 
         private Integer value;
 

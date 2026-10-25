@@ -11,8 +11,7 @@ import ch.scaille.javabeans.IComponentLink;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.Configuration;
-
-import ch.scaille.javabeans.persisters.IPersisterFactory.ObjectHolder;
+import ch.scaille.javabeans.persisters.ObjectHolder;
 import ch.scaille.javabeans.persisters.Persisters;
 
 import ch.scaille.javabeans.properties.BooleanProperty;

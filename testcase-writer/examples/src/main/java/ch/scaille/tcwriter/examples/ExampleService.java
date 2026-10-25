@@ -50,7 +50,7 @@ public class ExampleService {
 
 	private void ensureInState(final State expected) {
 		if (currentState != expected) {
-			throw new IllegalStateException("Not in expected state. Expected " + expected + ", found " + currentState);
+			throw new AssertionError("Not in expected state. Expected " + expected + ", found " + currentState);
 		}
 	}
 

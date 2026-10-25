@@ -4,7 +4,6 @@ import java.lang.reflect.Field;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import ch.scaille.javabeans.persisters.IPersisterFactory.IObjectProvider;
 import ch.scaille.javabeans.properties.IPersister;
 import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
 import org.jspecify.annotations.Nullable;

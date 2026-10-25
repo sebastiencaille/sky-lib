@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -87,7 +88,7 @@ public class FlowGenerator {
 	}
 
 	public List<FormMetadata> generateSubForm(VelocityEngine engine, TestApiParameter apiParameter) {
-
+		Objects.requireNonNull(apiParameter);
 		var factories = dictionary.getTestObjectFactories().get(apiParameter.getParameterType());
 		if (factories.isEmpty()) {
 			factories = List.of(apiParameter.asSimpleParameter());

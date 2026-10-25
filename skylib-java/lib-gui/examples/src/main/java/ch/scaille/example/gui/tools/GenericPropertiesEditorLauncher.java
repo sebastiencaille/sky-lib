@@ -13,7 +13,7 @@ import ch.scaille.gui.tools.GenericEditorController;
 import ch.scaille.gui.tools.IPropertyEntry;
 import ch.scaille.gui.tools.SimpleEditorModel;
 import ch.scaille.javabeans.IPropertiesGroup;
-import ch.scaille.javabeans.persisters.IPersisterFactory.IObjectProvider;
+import ch.scaille.javabeans.persisters.IObjectProvider;
 import ch.scaille.javabeans.properties.AbstractTypedProperty;
 import ch.scaille.javabeans.properties.BooleanProperty;
 import ch.scaille.javabeans.properties.ObjectProperty;

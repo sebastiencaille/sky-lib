@@ -39,7 +39,7 @@ public class SwingHelper {
 			return (T) response[0];
 		} catch (final InvocationTargetException e) {
 			throw new AssertionError(e.getCause());
-		} catch (final InterruptedException e) {
+		} catch (final InterruptedException _) {
 			Thread.currentThread().interrupt();
 			throw new AssertionError("Test case interrupted");
 		}

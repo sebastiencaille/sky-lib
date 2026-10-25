@@ -13,7 +13,7 @@ import ch.scaille.annotations.Ordered;
 import ch.scaille.javabeans.IChainBuilderFactory;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.PropertyChangeSupportController;
-import ch.scaille.javabeans.persisters.IPersisterFactory.IObjectProvider;
+import ch.scaille.javabeans.persisters.IObjectProvider;
 import ch.scaille.javabeans.persisters.Persisters;
 import ch.scaille.javabeans.properties.AbstractTypedProperty;
 import ch.scaille.javabeans.properties.ErrorSet;

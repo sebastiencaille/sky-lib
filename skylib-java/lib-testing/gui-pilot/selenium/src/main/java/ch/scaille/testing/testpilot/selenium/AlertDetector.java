@@ -45,7 +45,7 @@ public class AlertDetector {
 				pollingResult = ModalDialogDetector.unhandled(existingAlert.getText(), existingAlert::accept);
 			}
 			return Collections.singletonList(pollingResult);
-		} catch (NoSuchSessionException e) {
+		} catch (NoSuchSessionException _) {
 			// ignore
 			return Collections.emptyList();
 		}

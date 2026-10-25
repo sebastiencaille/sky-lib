@@ -6,8 +6,8 @@ import static ch.scaille.javabeans.persisters.Persisters.persister;
 import java.util.function.Consumer;
 
 import ch.scaille.javabeans.AutoCommitListener;
+import ch.scaille.javabeans.persisters.IObjectProvider;
 import ch.scaille.javabeans.persisters.IPersisterFactory;
-import ch.scaille.javabeans.persisters.IPersisterFactory.IObjectProvider;
 import ch.scaille.javabeans.properties.AbstractProperty.ErrorNotifier;
 import org.jspecify.annotations.Nullable;
 

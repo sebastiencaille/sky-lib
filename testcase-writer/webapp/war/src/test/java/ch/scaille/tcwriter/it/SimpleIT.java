@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.WebDriver;
+import org.testcontainers.containers.GenericContainer;
 
 import ch.scaille.tcwriter.it.testcontainer.TestContainers;
 import ch.scaille.testing.testpilot.jupiter.DisabledIfHeadless;
@@ -26,10 +27,11 @@ class SimpleIT {
 
 	
 	private SeleniumPilot pilot;
+	private GenericContainer<?> app;
 
 	@BeforeEach
 	void createPilot(WebDriverConfigurer webDriverHolder) throws URISyntaxException, MalformedURLException  {
-		final var app = TestContainers.app("tcwriter-webapp-test");
+		app = TestContainers.app("tcwriter-webapp-test");
 		app.start();
 		final var port = app.getMappedPort(9000);
 		final var webDriver = webDriverHolder.getOrCreate(() -> WebDriverFactory.firefox().build());
@@ -42,6 +44,7 @@ class SimpleIT {
 	void releasePilot() {
 		log.info(pilot.getActionReport().getFormattedReport());
 		pilot.close();
+		app.close();
 	}
 
 	@AfterAll

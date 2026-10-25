@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import ch.scaille.javabeans.IPropertiesGroup;
-import ch.scaille.javabeans.persisters.IPersisterFactory.ObjectHolder;
+import ch.scaille.javabeans.persisters.ObjectHolder;
 import ch.scaille.javabeans.properties.ErrorSet;
 import lombok.Getter;
 

@@ -16,7 +16,7 @@ import ch.scaille.util.helpers.JavaExt;
 public class ExampleConfigurationBootstrapService implements TestBootstrapService {
 
 	
-	private String TC_TEMPLATES_FOLDER = "templates";
+	private static final String TC_TEMPLATES_FOLDER = "templates";
 
 	@Override
 	public void bootstrap(Path dataFolder) {

@@ -27,7 +27,7 @@ public class ModelClassProcessor {
 
     private final GeneratorContext context;
 
-    private final BeanAccess delegate = new BeanAccess.GetSetAttributeBeanAccess();
+    private final BeanAccess delegate = new GetSetAttributeBeanAccess();
 
     @Nullable
     private final String fixedTargetPackage;

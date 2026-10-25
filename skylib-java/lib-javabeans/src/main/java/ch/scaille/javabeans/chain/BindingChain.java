@@ -13,6 +13,7 @@ import ch.scaille.javabeans.IChainBuilderFactory;
 import ch.scaille.javabeans.IVetoer;
 import ch.scaille.javabeans.IVetoer.TransmitMode;
 import ch.scaille.javabeans.Logging;
+import ch.scaille.javabeans.WeakLinkHolder;
 import ch.scaille.javabeans.converters.ChainInhibitedException;
 import ch.scaille.javabeans.converters.ConversionErrors;
 import ch.scaille.javabeans.converters.ConversionException;
@@ -58,7 +59,7 @@ public class BindingChain implements IBindingChainModifier {
 	}
 
 	private void propagatePropertyChange(final PropertyChangeEvent evt) {
-		if (vetoer != null && !vetoer.mustSendToComponent(BindingChain.this)) {
+		if (vetoer != null && !vetoer.mustSendToComponent(this)) {
 			Logging.MVC_EVENTS_DEBUGGER.log(Level.FINEST, () -> "Vetoed: " + evt.getPropertyName());
 			return;
 		}

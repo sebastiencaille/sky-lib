@@ -190,7 +190,7 @@ public abstract class WebDriverFactory<T extends WebDriverFactory<?, O>, O exten
 		@Override
 		public ChromeDriverFactory withUntrustedConnections() {
 			options.addArguments("--ignore-certificate-errors");
-			return withUntrustedConnections();
+			return this;
 		}
 
 		@Override

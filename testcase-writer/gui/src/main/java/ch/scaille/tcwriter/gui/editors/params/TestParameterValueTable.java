@@ -1,15 +1,15 @@
 package ch.scaille.tcwriter.gui.editors.params;
 
+import static ch.scaille.gui.swing.jtable.TableColumnWithPolicy.fixedTextLength;
+
+import java.io.Serial;
+
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 
 import ch.scaille.gui.swing.jtable.PolicyTableColumnModel;
 import ch.scaille.gui.swing.jtable.TableColumnWithPolicy;
-
-import java.io.Serial;
-
-import static ch.scaille.gui.swing.jtable.TableColumnWithPolicy.fixedTextLength;
 
 public class TestParameterValueTable extends JTable {
 

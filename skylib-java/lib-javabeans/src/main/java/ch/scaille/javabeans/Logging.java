@@ -1,8 +1,8 @@
 package ch.scaille.javabeans;
 
-import ch.scaille.util.helpers.Logs;
-
 import java.util.logging.Logger;
+
+import ch.scaille.util.helpers.Logs;
 
 public class Logging {
 

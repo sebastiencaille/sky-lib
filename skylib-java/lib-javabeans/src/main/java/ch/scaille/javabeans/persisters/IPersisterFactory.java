@@ -1,8 +1,8 @@
 package ch.scaille.javabeans.persisters;
 
-import ch.scaille.javabeans.properties.IPersister;
-
 import org.jspecify.annotations.Nullable;
+
+import ch.scaille.javabeans.properties.IPersister;
 
 /**
  * To create a persister factory, which will create a persister on an object

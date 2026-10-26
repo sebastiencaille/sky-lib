@@ -20,6 +20,7 @@ public class TestCaseDao extends AbstractDao implements ITestCaseDao {
     }
 
     @Override
+    @Nullable
     public Metadata loadMetadata(String testCaseName) {
         return modelDao.loadTestCaseMetadata(testCaseName);
     }

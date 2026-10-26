@@ -1,7 +1,8 @@
 package ch.scaille.javabeans.chain;
 
-import ch.scaille.javabeans.converters.ConversionException;
 import org.jspecify.annotations.Nullable;
+
+import ch.scaille.javabeans.converters.ConversionException;
 
 
 public interface Link<P extends @Nullable Object, C extends @Nullable Object> {

@@ -10,15 +10,7 @@ import ch.scaille.generators.util.JavaCodeGenerator;
 
 public abstract class AbstractFlowGenerator implements IFlowGenerator<AbstractFlowGenerator.GenContext> {
 
-	public static class GenContext {
-
-		public final boolean debug;
-		public final List<Processor> processorCallDeps;
-
-		public GenContext(boolean debug, List<Processor> processorCallDeps) {
-			this.debug = debug;
-			this.processorCallDeps = processorCallDeps;
-		}
+	public record GenContext(boolean debug, List<Processor> processorCallDeps) {
 
 	}
 

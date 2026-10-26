@@ -119,8 +119,8 @@ public class AbstractGuiTest {
         }
 
         if (pilot != null) {
-            pilot.close();
             log.info(() -> pilot.getActionReport().getFormattedReport());
+            pilot.close();
         }
     }
 

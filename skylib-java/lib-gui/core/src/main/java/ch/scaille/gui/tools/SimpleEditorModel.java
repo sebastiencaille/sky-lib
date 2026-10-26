@@ -5,13 +5,14 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
+import org.jspecify.annotations.Nullable;
+
 import ch.scaille.javabeans.IChainBuilderFactory;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.PropertyChangeSupportController;
 import ch.scaille.javabeans.persisters.IObjectProvider;
-import ch.scaille.javabeans.properties.AbstractTypedProperty;
 import ch.scaille.javabeans.properties.ErrorSet;
-import org.jspecify.annotations.Nullable;
+import ch.scaille.javabeans.properties.ITypedProperty;
 
 /**
  * A simple editor, with an arbitrary content
@@ -24,8 +25,8 @@ public class SimpleEditorModel<T> implements IGenericEditorModel<T> {
 	/**
 	 * Creates an entry of the model
 	 */
-    public static <E extends @Nullable Object> IPropertyEntry entry(final Class<E> propertyType, final AbstractTypedProperty<@Nullable E> property,
-                                          final Function<AbstractTypedProperty<E>, IChainBuilderFactory<E>> endOfChainProvider,
+    public static <E extends @Nullable Object> IPropertyEntry entry(final Class<E> propertyType, final ITypedProperty<E> property,
+                                          final Function<ITypedProperty<E>, IChainBuilderFactory<E>> endOfChainProvider,
                                           final boolean readOnly, final String label, @Nullable final String tooltip) {
         return new PropertyEntry<>(propertyType, property, endOfChainProvider, readOnly, label, tooltip);
     }
@@ -33,8 +34,8 @@ public class SimpleEditorModel<T> implements IGenericEditorModel<T> {
 	/**
 	 * Creates an entry of the model
 	 */
-    public static <E extends @Nullable Object> IPropertyEntry entry(Class<E> propertyType, final AbstractTypedProperty<@Nullable E> property,
-                                          final Function<AbstractTypedProperty<E>, IChainBuilderFactory<E>> endOfChainProvider,
+    public static <E extends @Nullable Object> IPropertyEntry entry(Class<E> propertyType, final ITypedProperty<E> property,
+                                          final Function<ITypedProperty<E>, IChainBuilderFactory<E>> endOfChainProvider,
                                           final boolean readOnly, final UnaryOperator<String> textProvider) {
         return new PropertyEntry<>(propertyType, property, endOfChainProvider, readOnly,
                 textProvider.apply(PropertyEntry.descriptionKey(property.getName())),

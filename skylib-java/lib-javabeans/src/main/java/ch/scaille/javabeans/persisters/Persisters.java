@@ -4,9 +4,10 @@ import java.lang.reflect.Field;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+import org.jspecify.annotations.Nullable;
+
 import ch.scaille.javabeans.properties.IPersister;
 import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
-import org.jspecify.annotations.Nullable;
 
 
 public class Persisters {

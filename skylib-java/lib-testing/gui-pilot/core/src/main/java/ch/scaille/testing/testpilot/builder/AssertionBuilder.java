@@ -95,13 +95,11 @@ public class AssertionBuilder<C,
 		final var polling = pollingBuilder.build();
 		final var actualReportFunction = polling.initializeFrom(pilot).getReportBuilder();
 		polling.setReporting(new PilotReportBuilder<>() {
-			private String elementName = null;
+			private @Nullable String elementName = null;
 			@Override
 			public void prepare(PolledComponent<C> context) {
 				elementName = context.description();
-				if (actualReportFunction != null) {
-					actualReportFunction.prepare(context);
-				}
+				actualReportFunction.prepare(context);
 			}
 
 			@Override

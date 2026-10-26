@@ -9,13 +9,9 @@ import ch.scaille.javabeans.chain.BindingChain;
 
 /**
  * Property containing a boolean value.
- * <p>
- *
- * @author Sebastien Caille
- *
  */
+public class BooleanProperty extends AbstractTypedProperty<Boolean, BooleanProperty> {
 
-public class BooleanProperty extends AbstractTypedProperty<Boolean> {
     private boolean value;
     private final boolean defaultValue;
 
@@ -42,11 +38,11 @@ public class BooleanProperty extends AbstractTypedProperty<Boolean> {
         return new BindingChain(this, errorNotifier).bindProperty(this::setObjectValueFromComponent);
     }
 
+
     @SafeVarargs
     @Override
-    public final BooleanProperty configureTyped(final Consumer<AbstractTypedProperty<Boolean>>... propertyConfigurer) {
-        super.configureTyped(propertyConfigurer);
-        return this;
+    public final BooleanProperty configureTyped(Consumer<? super BooleanProperty>... propertyConfigurer) {
+        return super.configureTyped(propertyConfigurer);
     }
 
     public boolean getValue() {

@@ -12,24 +12,24 @@ import ch.scaille.util.helpers.JavaExt;
 import lombok.Getter;
 
 
-public class CodeGeneratorParams implements ICodeGeneratorParams{
+public class CodeGeneratorParams implements ICodeGeneratorParams {
 
 	@Getter
     @Parameter(names = { "-cp", "--cpFolder" }, required = true)
-	private String classPathFolder = ".";
+	private String classPathFolder = "required";
 
 	@Parameter(names = { "-t", "--targetFolder" })
 	@Nullable
-	private String targetFolder = null;
+	private String targetFolder = "src/main/java";
 
 	@Getter
     @Parameter(names = { "-sp", "--scanPackage" }, required = true)
-	private String scanPackage = null;
+	private String scanPackage = "required";
 
 	@Getter
     @Parameter(names = { "-tp", "--targetPackage" })
 	@Nullable
-	private String targetPackage = null;
+	private final String targetPackage = null;
 
 	public static CodeGeneratorParams parse(final String[] args) {
 		final var params = new CodeGeneratorParams();

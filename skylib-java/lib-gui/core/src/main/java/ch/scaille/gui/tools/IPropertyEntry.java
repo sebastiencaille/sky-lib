@@ -1,8 +1,9 @@
 package ch.scaille.gui.tools;
 
-import ch.scaille.javabeans.IChainBuilderFactory;
-import ch.scaille.javabeans.properties.AbstractProperty;
 import org.jspecify.annotations.Nullable;
+
+import ch.scaille.javabeans.IChainBuilderFactory;
+import ch.scaille.javabeans.properties.IProperty;
 
 public interface IPropertyEntry {
 
@@ -13,7 +14,7 @@ public interface IPropertyEntry {
 
 	boolean isReadOnly();
 
-	AbstractProperty getProperty();
+	IProperty getProperty();
 
 	Class<?> getPropertyType();
 

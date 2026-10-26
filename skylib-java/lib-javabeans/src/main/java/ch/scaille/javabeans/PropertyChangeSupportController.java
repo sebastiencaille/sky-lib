@@ -16,10 +16,11 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import org.jspecify.annotations.Nullable;
+
 import ch.scaille.javabeans.IVetoer.TransmitMode;
 import ch.scaille.javabeans.properties.AbstractProperty;
 import ch.scaille.javabeans.properties.IPropertyEventListener;
-import org.jspecify.annotations.Nullable;
 
 /**
  * PropertyChangeSupport adapted to the property controllers.

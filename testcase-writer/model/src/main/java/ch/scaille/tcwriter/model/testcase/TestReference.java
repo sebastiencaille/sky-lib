@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Reference to the value of a test's step
@@ -22,7 +23,7 @@ public class TestReference extends TestParameterFactory {
     protected String description;
 
     public TestReference(final TestStep step, final String name, final String description) {
-        super(name, name, ParameterNature.REFERENCE, step.getAction().getReturnType());
+        super(name, name, ParameterNature.REFERENCE, Objects.requireNonNull(step.getAction().getReturnType()));
         this.step = step;
         this.description = description;
     }

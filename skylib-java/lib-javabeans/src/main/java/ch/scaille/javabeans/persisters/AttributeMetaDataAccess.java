@@ -1,8 +1,9 @@
 package ch.scaille.javabeans.persisters;
 
+import org.jspecify.annotations.Nullable;
+
 import ch.scaille.javabeans.properties.IPersister;
 import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
-import org.jspecify.annotations.Nullable;
 
 /**
  *

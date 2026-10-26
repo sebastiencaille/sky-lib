@@ -39,14 +39,14 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
     private MavenProject project;
 
     @Parameter(property = "templatesFolder", defaultValue = "file:${project.testResources.testResource.directory}/userResources/templates")
-    private String templatesFolder= "";
+    private String templatesFolder = "";
 
     @Parameter(property = "dictionaryFolder", defaultValue = "file:${project.testResources.testResource.directory}/dictionaries")
-    private String dictionaryFolder= "";
+    private String dictionaryFolder = "";
 
     @Parameter(property = "dictionary")
     @Nullable
-    private String dictionaryLocator = null;
+    private final String dictionaryLocator = null;
 
     @Parameter(property = "testCases")
     @Nullable
@@ -123,7 +123,7 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
         final var testMetadata = modelDao.loadTestCaseMetadata(testcaseLocator);
         final var dictionaries = modelDao.listDictionaries(testMetadata);
         if (dictionaries.isEmpty()) {
-        	throw new IllegalStateException("No dictionary found for " + testcaseLocator + '/' + testMetadata);
+        	throw new IllegalStateException("No dictionary found in " + dictionaryFolder + " for " + testcaseLocator + '/' + testMetadata);
         }
 	    final var dictionaryLocatorToLoad = Objects.requireNonNullElseGet(dictionaryLocator, () -> dictionaries.getFirst().getTransientId());
         final var testCase = modelDao.readTestCase(testcaseLocator, modelDao.readTestDictionary(dictionaryLocatorToLoad)

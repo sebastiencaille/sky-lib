@@ -106,14 +106,10 @@ public class JUnitTestExecutor implements ITestExecutor {
 				testConfig.sourceFolder.resolve(testConfig.testCase.getPkgAndClassName().replace(".", "/") + ".java").toString()
 			};
 		final var testCompiler = exec("Compile", parameters);
-		try {
-			if (testCompiler.waitFor() != 0) {
-				throw new IllegalStateException("Compiler failed with status " + testCompiler.exitValue());
-			}
-		} finally {
-			//testCompiler.close();
-		}
-		return testConfig.testCase.getPkgAndClassName();
+        if (testCompiler.waitFor() != 0) {
+            throw new IllegalStateException("Compiler failed with status " + testCompiler.exitValue());
+        }
+        return testConfig.testCase.getPkgAndClassName();
 	}
 
 	@Override
@@ -137,14 +133,10 @@ public class JUnitTestExecutor implements ITestExecutor {
 		javaParameters.add("-cp=" + ClassLoaderHelper.cpToCommandLine(ClassLoaderHelper.cpToURLs(config.getClasspath())));
 		new Thread(() -> LambdaExt.uncheck(() -> {
 			final var process = exec("Execution", javaParameters.toArray(new String[0]));
-			try {
-				if (process.waitFor() != 0) {
-					throw new IllegalStateException("Compiler failed with status " + process.exitValue());
-				}
-			} finally {
-				//process.close();
-			}
-		})).start();
+            if (process.waitFor() != 0) {
+                throw new IllegalStateException("Compiler failed with status " + process.exitValue());
+            }
+        })).start();
 	}
 
 	private List<String> toMultipleCommandLine(URL[] classPath) {

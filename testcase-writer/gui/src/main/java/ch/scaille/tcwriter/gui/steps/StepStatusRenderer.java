@@ -9,8 +9,9 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import ch.scaille.tcwriter.model.testexec.StepStatus;
 import org.jspecify.annotations.Nullable;
+
+import ch.scaille.tcwriter.model.testexec.StepStatus;
 
 public class StepStatusRenderer extends DefaultTableCellRenderer {
 

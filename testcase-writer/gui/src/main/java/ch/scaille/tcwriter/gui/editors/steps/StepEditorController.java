@@ -3,7 +3,14 @@ package ch.scaille.tcwriter.gui.editors.steps;
 import static ch.scaille.gui.mvc.GuiModel.of;
 import static ch.scaille.javabeans.BindingDependencies.preserveOnUpdateOf;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+
+import org.jspecify.annotations.Nullable;
 
 import ch.scaille.gui.mvc.GuiController;
 import ch.scaille.javabeans.IPropertiesGroup;
@@ -21,7 +28,6 @@ import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestStep;
 import lombok.Getter;
-import org.jspecify.annotations.Nullable;
 
 @Getter
 public class StepEditorController extends GuiController {
@@ -113,6 +119,9 @@ public class StepEditorController extends GuiController {
 	 */
 	private void updateCurrentActionParameters(final TestDictionary td, final ObjectProperty<@Nullable TestStep> testStep) {
 		final var step = testStep.getValue();
+		if (step == null) {
+			return;
+		}
 		final var action = model.getAction().getValue();
 		if (action == null) {
 			return;

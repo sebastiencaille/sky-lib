@@ -8,6 +8,8 @@ import java.util.ResourceBundle;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
+import org.jspecify.annotations.Nullable;
+
 import ch.scaille.annotations.Labeled;
 import ch.scaille.annotations.Ordered;
 import ch.scaille.javabeans.IChainBuilderFactory;
@@ -15,13 +17,12 @@ import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.PropertyChangeSupportController;
 import ch.scaille.javabeans.persisters.IObjectProvider;
 import ch.scaille.javabeans.persisters.Persisters;
-import ch.scaille.javabeans.properties.AbstractTypedProperty;
 import ch.scaille.javabeans.properties.ErrorSet;
+import ch.scaille.javabeans.properties.ITypedProperty;
 import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
 import ch.scaille.util.dao.metadata.DataObjectMetaData;
 import ch.scaille.util.dao.metadata.IAttributeMetaData;
-import org.jspecify.annotations.Nullable;
 
 /**
  * Generic editor based on Class introspection
@@ -33,8 +34,8 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 
 		private final int index;
 
-		public ClassPropertyEntry(final AbstractTypedProperty<U> property,
-				final Function<AbstractTypedProperty<U>, IChainBuilderFactory<U>> endOfChainProvider,
+		public ClassPropertyEntry(final ITypedProperty<U> property,
+				final Function<ITypedProperty<U>, IChainBuilderFactory<U>> endOfChainProvider,
 				final AbstractAttributeMetaData<T, U> metadata, final boolean readOnly, final String label,
 				final String tooltip) {
 			super(metadata.getClassType(), property, endOfChainProvider, readOnly, label, tooltip);
@@ -160,7 +161,7 @@ public class GenericEditorClassModel<T> implements IGenericEditorModel<T> {
 		return new ClassPropertyEntry<>(property, this::createBindingChain, typedAttribute, readOnly, message, toolTip);
 	}
 
-	private <V> IChainBuilderFactory<V> createBindingChain(AbstractTypedProperty<V> property) {
+	private <V> IChainBuilderFactory<V> createBindingChain(ITypedProperty<V> property) {
 		IChainBuilderFactory<V> chain = property.createBindingChain();
 		for (final IGenericModelAdapter<T> adapter : config.adapters) {
 			chain = adapter.apply(config.editedClazz, chain);

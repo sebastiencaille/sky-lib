@@ -10,13 +10,8 @@ import lombok.Getter;
 
 /**
  * Property containing an int value.
- * <p>
- *
- * @author Sebastien Caille
- *
  */
-
-public class IntProperty extends AbstractTypedProperty<Integer> {
+public class IntProperty extends AbstractTypedProperty<Integer, IntProperty> {
 
 	@Getter
 	private int value;
@@ -47,7 +42,7 @@ public class IntProperty extends AbstractTypedProperty<Integer> {
 
 	@SafeVarargs
 	@Override
-	public final IntProperty configureTyped(final Consumer<AbstractTypedProperty<Integer>>... propertyConfigurer) {
+	public final IntProperty configureTyped(final Consumer<? super IntProperty>... propertyConfigurer) {
 		super.configureTyped(propertyConfigurer);
 		return this;
 	}

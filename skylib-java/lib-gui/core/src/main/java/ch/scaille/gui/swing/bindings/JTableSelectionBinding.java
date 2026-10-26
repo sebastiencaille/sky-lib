@@ -14,7 +14,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 
 @Log
-public class JTableSelectionBinding<T> implements IComponentBinding<@Nullable T> {
+public class JTableSelectionBinding<T> implements IComponentBinding<T> {
 
     private final JTable table;
     private final ListModelTableModel<T, ?> model;

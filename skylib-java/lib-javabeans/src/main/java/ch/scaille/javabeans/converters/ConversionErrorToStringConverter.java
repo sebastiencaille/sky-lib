@@ -1,7 +1,8 @@
 package ch.scaille.javabeans.converters;
 
-import ch.scaille.javabeans.properties.ConversionError;
 import org.jspecify.annotations.Nullable;
+
+import ch.scaille.javabeans.properties.ConversionError;
 
 
 public class ConversionErrorToStringConverter implements IConverter<ConversionError, String> {

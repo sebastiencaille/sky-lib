@@ -1,13 +1,13 @@
 package ch.scaille.javabeans.properties;
 
-import ch.scaille.javabeans.IBindingController;
-import ch.scaille.javabeans.PropertyChangeSupportController;
-import ch.scaille.javabeans.WeakLinkHolder;
+import java.beans.PropertyChangeSupport;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.beans.PropertyChangeSupport;
+import ch.scaille.javabeans.IBindingController;
+import ch.scaille.javabeans.PropertyChangeSupportController;
+import ch.scaille.javabeans.WeakLinkHolder;
 
 class PropertiesTest {
 

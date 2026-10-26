@@ -1,7 +1,8 @@
 package ch.scaille.javabeans.converters;
 
-import ch.scaille.javabeans.properties.AbstractProperty;
 import org.jspecify.annotations.Nullable;
+
+import ch.scaille.javabeans.properties.IProperty;
 
 /**
  * Allows converting property-side values and component-side values.
@@ -11,7 +12,7 @@ import org.jspecify.annotations.Nullable;
 
 public interface IConverter<P extends @Nullable Object, C extends @Nullable Object> {
 
-	default void initialize(final AbstractProperty p) {
+	default void initialize(final IProperty p) {
 		// noop
 	}
 

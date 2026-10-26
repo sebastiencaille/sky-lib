@@ -8,19 +8,20 @@ import java.util.List;
 
 import javax.swing.SwingUtilities;
 
+import org.jspecify.annotations.Nullable;
+
 import ch.scaille.gui.swing.tools.SwingGenericEditorDialog;
 import ch.scaille.gui.tools.GenericEditorController;
 import ch.scaille.gui.tools.IPropertyEntry;
 import ch.scaille.gui.tools.SimpleEditorModel;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.persisters.IObjectProvider;
-import ch.scaille.javabeans.properties.AbstractTypedProperty;
 import ch.scaille.javabeans.properties.BooleanProperty;
+import ch.scaille.javabeans.properties.ITypedProperty;
 import ch.scaille.javabeans.properties.ObjectProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.java.Log;
-import org.jspecify.annotations.Nullable;
 
 @Log
 public class GenericPropertiesEditorLauncher {
@@ -38,15 +39,15 @@ public class GenericPropertiesEditorLauncher {
 
 	private static List<IPropertyEntry> builder(IPropertiesGroup support, IObjectProvider<EditedObject> obj) {
 
-		final var strProp = new ObjectProperty<@Nullable String>("str", support, "")
+		final var strProp = new ObjectProperty<>("str", support, "")
 				.configureTyped(persistent(obj, persister(EditedObject::getStr, EditedObject::setStr)));
 		final var boolProp = new BooleanProperty("bool", support)
 				.configureTyped(persistent(obj, persister(EditedObject::isBool, EditedObject::setBool)));
 
 		return List.of(//
-				SimpleEditorModel.entry(String.class, strProp, AbstractTypedProperty::createBindingChain, false,
+				SimpleEditorModel.entry(String.class, strProp, ITypedProperty::createBindingChain, false,
 						"A string property", null),
-				SimpleEditorModel.entry(Boolean.class, boolProp, AbstractTypedProperty::createBindingChain, false,
+				SimpleEditorModel.entry(Boolean.class, boolProp, ITypedProperty::createBindingChain, false,
 						"A boolean property", null) //
 		);
 	}

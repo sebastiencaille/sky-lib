@@ -1,9 +1,11 @@
 package ch.scaille.util.dao.metadata;
 
 import lombok.Getter;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.security.InvalidParameterException;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -59,8 +61,8 @@ public abstract class AbstractAttributeMetaData<T, V extends @Nullable Object> i
 		return (AbstractAttributeMetaData<T, W>) this;
 	}
 	
-	public V get(T from) {
-		return (V) getValueOf(from);
+	public Optional<@NonNull V> get(T from) {
+		return (Optional<@NonNull V>) getValueOf(from);
 	}
 
 	public void set(T object, V value) {

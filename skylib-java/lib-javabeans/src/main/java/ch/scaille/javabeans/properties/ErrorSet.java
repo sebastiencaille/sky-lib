@@ -1,12 +1,12 @@
 package ch.scaille.javabeans.properties;
 
-import ch.scaille.javabeans.IPropertiesGroup;
-import ch.scaille.javabeans.properties.AbstractProperty.ErrorNotifier;
-import lombok.Getter;
-import org.jspecify.annotations.Nullable;
-
 import java.util.Map;
 import java.util.Objects;
+
+import org.jspecify.annotations.Nullable;
+
+import ch.scaille.javabeans.IPropertiesGroup;
+import lombok.Getter;
 
 /**
  * To track the current errors (validation, exceptions, ...) 
@@ -14,7 +14,7 @@ import java.util.Objects;
 @Getter
 public class ErrorSet implements ErrorNotifier {
 
-	private final MapProperty<AbstractProperty, ConversionError> errors;
+	private final MapProperty<IProperty, ConversionError> errors;
 
 	private final ObjectProperty<@Nullable ConversionError> lastError;
 
@@ -23,7 +23,7 @@ public class ErrorSet implements ErrorNotifier {
 		lastError = new ObjectProperty<>(name + "-last", support, null );
 	}
 
-	private Map<AbstractProperty, ConversionError> errors() {
+	private Map<IProperty, ConversionError> errors() {
 		return Objects.requireNonNull(errors.getValue());
 	}
 
@@ -35,7 +35,7 @@ public class ErrorSet implements ErrorNotifier {
 	}
 
 	@Override
-	public void clearError(final Object source, final AbstractProperty property) {
+	public void clearError(final Object source, final IProperty property) {
 		errors().remove(property);
 		errors.flushChanges(source);
 		if (lastError.getValue() != null && property.equals(lastError.getValue().property())) {

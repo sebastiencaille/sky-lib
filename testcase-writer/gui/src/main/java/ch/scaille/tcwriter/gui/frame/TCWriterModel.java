@@ -1,12 +1,13 @@
 package ch.scaille.tcwriter.gui.frame;
 
+import org.jspecify.annotations.Nullable;
+
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestStep;
 import lombok.Getter;
-import org.jspecify.annotations.Nullable;
 
 @Getter
 public class TCWriterModel {

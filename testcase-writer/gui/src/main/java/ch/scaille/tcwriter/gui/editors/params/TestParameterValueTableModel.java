@@ -6,6 +6,7 @@ import java.util.Objects;
 import ch.scaille.gui.model.ListModel;
 import ch.scaille.gui.swing.model.ListModelTableModel;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
+import org.jspecify.annotations.Nullable;
 
 
 public class TestParameterValueTableModel extends
@@ -30,11 +31,12 @@ public class TestParameterValueTableModel extends
 		final String description;
 		boolean mandatory;
 		boolean enabled;
+		@Nullable
 		String value;
 		boolean visible;
 
 		ParameterValueEntry(final String id, final TestParameterFactory parameterFactory, final String description,
-				final String value, final boolean enabled) {
+							final @Nullable String value, final boolean enabled) {
 			this.id = id;
 			this.factory = parameterFactory;
 			this.enabled = enabled;
@@ -90,7 +92,7 @@ public class TestParameterValueTableModel extends
 			case MANDATORY -> object.mandatory;
 			case ENABLED -> object.enabled || object.mandatory;
 			case DESCRIPTION -> object.description;
-			case VALUE -> object.factory.hasType() ? object.value : "<no value>";
+			case VALUE -> Objects.requireNonNull(object.factory.hasType() ? object.value : "<no value>", "");
 		};
 	}
 

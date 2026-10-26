@@ -1,6 +1,6 @@
 package ch.scaille.javabeans;
 
-import ch.scaille.javabeans.properties.AbstractProperty.ErrorNotifier;
+import ch.scaille.javabeans.properties.ErrorNotifier;
 
 
 public interface IPropertiesOwner {

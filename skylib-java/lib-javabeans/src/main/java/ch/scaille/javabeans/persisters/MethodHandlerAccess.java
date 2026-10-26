@@ -4,8 +4,9 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 
-import ch.scaille.javabeans.properties.IPersister;
 import org.jspecify.annotations.Nullable;
+
+import ch.scaille.javabeans.properties.IPersister;
 
 /**
  * To access a property using a getter and a setter

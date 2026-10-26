@@ -10,13 +10,8 @@ import lombok.Getter;
 
 /**
  * Property containing a long value.
- * <p>
- *
- * @author Sebastien Caille
- *
  */
-
-public class LongProperty extends AbstractTypedProperty<Long> {
+public class LongProperty extends AbstractTypedProperty<Long, LongProperty> {
 
 	@Getter
     private long value;
@@ -47,7 +42,7 @@ public class LongProperty extends AbstractTypedProperty<Long> {
 
 	@SafeVarargs
 	@Override
-	public final LongProperty configureTyped(final Consumer<AbstractTypedProperty<Long>>... propertyConfigurer) {
+	public final LongProperty configureTyped(final Consumer<? super LongProperty>... propertyConfigurer) {
 		super.configureTyped(propertyConfigurer);
 		return this;
 	}

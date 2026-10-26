@@ -4,6 +4,8 @@ import static ch.scaille.javabeans.properties.PropertiesContext.ofProperty;
 
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
+
 import ch.scaille.gui.mvc.GuiModel;
 import ch.scaille.gui.mvc.factories.ObjectTextView;
 import ch.scaille.javabeans.converters.Converters;
@@ -18,7 +20,6 @@ import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import lombok.Getter;
-import org.jspecify.annotations.Nullable;
 
 
 @Getter

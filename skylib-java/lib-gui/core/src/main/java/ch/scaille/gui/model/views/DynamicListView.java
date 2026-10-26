@@ -1,5 +1,6 @@
 package ch.scaille.gui.model.views;
 
+import java.util.Objects;
 import java.util.function.BiPredicate;
 
 import ch.scaille.javabeans.IComponentBinding;
@@ -59,13 +60,13 @@ public class DynamicListView<T, P> extends AbstractListView<T>
     }
 
     @Override
-    public void setComponentValue(IComponentChangeSource source, P value) {
-        this.viewParameter = value;
+    public void setComponentValue(IComponentChangeSource source, @Nullable P value) {
+        this.viewParameter = Objects.requireNonNull(value);
         updateView();
     }
 
     @Override
-    public void addComponentValueChangeListener(IComponentLink<P> link) {
+    public void addComponentValueChangeListener(IComponentLink<@Nullable P> link) {
         // noop
     }
 

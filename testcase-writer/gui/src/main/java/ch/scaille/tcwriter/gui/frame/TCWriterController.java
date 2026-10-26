@@ -15,6 +15,8 @@ import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.jspecify.annotations.Nullable;
+
 import ch.scaille.gui.mvc.GuiController;
 import ch.scaille.gui.swing.SwingExt;
 import ch.scaille.gui.swing.tools.SwingGenericEditorDialog;
@@ -38,7 +40,6 @@ import ch.scaille.tcwriter.services.testexec.TestExecutionListener;
 import ch.scaille.tcwriter.services.testexec.TestRemoteControl;
 import lombok.Getter;
 import lombok.extern.java.Log;
-import org.jspecify.annotations.Nullable;
 
 @Getter
 @Log

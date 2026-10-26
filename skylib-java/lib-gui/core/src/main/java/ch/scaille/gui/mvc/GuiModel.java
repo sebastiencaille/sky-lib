@@ -6,16 +6,17 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import org.jspecify.annotations.Nullable;
+
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.IPropertiesOwner;
 import ch.scaille.javabeans.converters.IUnaryConverter;
-import ch.scaille.javabeans.properties.AbstractProperty.ErrorNotifier;
-import ch.scaille.javabeans.properties.AbstractTypedProperty;
+import ch.scaille.javabeans.properties.ErrorNotifier;
 import ch.scaille.javabeans.properties.ErrorSet;
+import ch.scaille.javabeans.properties.ITypedProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.jspecify.annotations.Nullable;
 
 @Getter
 
@@ -25,7 +26,7 @@ public class GuiModel implements IPropertiesOwner {
 		/**
 		 * Creates an implicit converter
 		 */
-		<T, U> IUnaryConverter<U> create(Class<T> modelClass, AbstractTypedProperty<U> property, String attributeName,
+		<T, U> IUnaryConverter<U> create(Class<T> modelClass, ITypedProperty<U> property, String attributeName,
 				Class<?> attributeClass);
 	}
 
@@ -92,8 +93,8 @@ public class GuiModel implements IPropertiesOwner {
 	/**
 	 * Creates a property that uses implicit converters. 
 	 */
-	public <T, U> Consumer<AbstractTypedProperty<U>> implicitConverters(Class<T> modelClass, String attributeName,
-			Class<?> attributeClass) {
+	public <T, U> Consumer<ITypedProperty<U>> implicitConverters(Class<T> modelClass, String attributeName,
+																 Class<U> attributeClass) {
 		return p -> configuration.getImplicitConverters()
 				.stream()
 				.map(c -> c.create(modelClass, p, attributeName, attributeClass))

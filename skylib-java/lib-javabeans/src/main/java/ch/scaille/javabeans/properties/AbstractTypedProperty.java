@@ -9,6 +9,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
+
 import ch.scaille.javabeans.IBindingController;
 import ch.scaille.javabeans.IChainBuilder;
 import ch.scaille.javabeans.IChainBuilderFactory;
@@ -20,17 +22,15 @@ import ch.scaille.javabeans.PropertyEvent.EventKind;
 import ch.scaille.javabeans.converters.IContextualConverter;
 import ch.scaille.javabeans.converters.IConverter;
 import ch.scaille.javabeans.persisters.Persisters;
-import org.jspecify.annotations.Nullable;
 
 /**
  * A property with a typed value.
- * <p>
  *
  * @param <T> the type of the object contained in the property
- * @author Sebastien Caille
  */
-
-public abstract class AbstractTypedProperty<T extends @Nullable Object> extends AbstractProperty implements IChainBuilder<T> {
+public abstract class AbstractTypedProperty<T extends @Nullable Object, S extends AbstractTypedProperty<T, S>>
+        extends AbstractProperty
+        implements ITypedProperty<T> {
 
     private final List<IConverter<T, T>> implicitConverters = new ArrayList<>();
 
@@ -39,8 +39,6 @@ public abstract class AbstractTypedProperty<T extends @Nullable Object> extends 
     protected abstract T replaceValue(T newValue);
 
     public abstract T getObjectValue();
-
-    public abstract IChainBuilderFactory<T> createBindingChain();
 
     protected AbstractTypedProperty(final String name, final IPropertiesOwner model) {
         super(name, model.getPropertySupport());
@@ -51,6 +49,7 @@ public abstract class AbstractTypedProperty<T extends @Nullable Object> extends 
         super(name, propertySupport);
     }
 
+    @Override
     public void setPersister(@Nullable final IPersister<T> persister) {
         this.persister = Objects.requireNonNullElseGet(persister, Persisters::dummy);
     }
@@ -79,11 +78,10 @@ public abstract class AbstractTypedProperty<T extends @Nullable Object> extends 
         }
     }
 
-    public AbstractTypedProperty<T> configureTyped(final Consumer<AbstractTypedProperty<T>>... propertyConfigurer) {
-        Stream.of(propertyConfigurer).forEach(prop -> prop.accept(this));
-        return this;
+    public S configureTyped(final Consumer<? super S>... propertyConfigurer) {
+        Stream.of(propertyConfigurer).forEach(prop -> prop.accept((S)this));
+        return (S)this;
     }
-
 
     @Override
     public <C extends @Nullable Object> IChainBuilder<C> bind(final IConverter<T, C> binding) {
@@ -179,7 +177,7 @@ public abstract class AbstractTypedProperty<T extends @Nullable Object> extends 
 
 
     @Override
-    public PropertyChangeEvent getRefreshChangeEvent() {
+    public PropertyChangeEvent createRefreshChangeEvent() {
         return new PropertyChangeEvent(this, getName(), null, getObjectValue());
     }
 }

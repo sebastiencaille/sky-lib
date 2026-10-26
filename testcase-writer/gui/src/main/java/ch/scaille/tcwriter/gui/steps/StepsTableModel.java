@@ -1,6 +1,11 @@
 package ch.scaille.tcwriter.gui.steps;
 
+import java.io.Serial;
+import java.util.Objects;
+
 import javax.swing.event.TableModelEvent;
+
+import org.jspecify.annotations.Nullable;
 
 import ch.scaille.gui.model.ListModel;
 import ch.scaille.gui.swing.model.ListModelTableModel;
@@ -13,10 +18,6 @@ import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestStep;
 import ch.scaille.tcwriter.services.generators.visitors.HumanReadableVisitor;
 import ch.scaille.tcwriter.services.testexec.TestRemoteControl;
-import org.jspecify.annotations.Nullable;
-
-import java.io.Serial;
-import java.util.Objects;
 
 public class StepsTableModel extends ListModelTableModel<TestStep, StepsTableModel.Column> {
 

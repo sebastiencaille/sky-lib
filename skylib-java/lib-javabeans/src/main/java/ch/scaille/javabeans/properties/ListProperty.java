@@ -5,19 +5,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
-import ch.scaille.javabeans.IPropertiesOwner;
 import ch.scaille.javabeans.IPropertiesGroup;
+import ch.scaille.javabeans.IPropertiesOwner;
 
 /**
  * Property containing a list of Objects.
- * <p>
  *
- * @author Sebastien Caille
- *
- * @param <T> type of the contained objects
- */
-
-public class ListProperty<T> extends ObjectProperty<List<T>> {
+ * @param <T> type of the contained objects */
+public class ListProperty<T> extends ExtendableObjectProperty<List<T>, ListProperty<T>> {
 	
 	private class ObservableArrayList extends ArrayList<T> {
 		
@@ -61,7 +56,7 @@ public class ListProperty<T> extends ObjectProperty<List<T>> {
 
 	@SafeVarargs
 	@Override
-	public final ListProperty<T> configureTyped(final Consumer<AbstractTypedProperty<List<T>>>... propertyConfigurer) {
+	public final ListProperty<T> configureTyped(final Consumer<? super ListProperty<T>>... propertyConfigurer) {
 		super.configureTyped(propertyConfigurer);
 		return this;
 	}

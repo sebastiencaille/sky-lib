@@ -3,8 +3,9 @@ package ch.scaille.javabeans.persisters;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import ch.scaille.javabeans.properties.IPersister;
 import org.jspecify.annotations.Nullable;
+
+import ch.scaille.javabeans.properties.IPersister;
 
 /**
  *

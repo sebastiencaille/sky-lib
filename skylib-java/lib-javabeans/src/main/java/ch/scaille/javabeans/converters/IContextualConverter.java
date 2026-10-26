@@ -1,8 +1,9 @@
 package ch.scaille.javabeans.converters;
 
-import ch.scaille.javabeans.properties.PropertiesContext;
-import ch.scaille.javabeans.properties.AbstractProperty;
 import org.jspecify.annotations.Nullable;
+
+import ch.scaille.javabeans.properties.IProperty;
+import ch.scaille.javabeans.properties.PropertiesContext;
 
 /**
  * 
@@ -12,7 +13,7 @@ import org.jspecify.annotations.Nullable;
  */
 public interface IContextualConverter<P extends @Nullable Object, C extends @Nullable Object, K> {
 
-	default void initialize(final AbstractProperty p) {
+	default void initialize(final IProperty p) {
 		// noop
 	}
 

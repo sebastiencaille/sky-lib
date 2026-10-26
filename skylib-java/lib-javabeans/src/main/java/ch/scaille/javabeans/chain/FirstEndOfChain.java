@@ -1,8 +1,9 @@
 package ch.scaille.javabeans.chain;
 
+import org.jspecify.annotations.Nullable;
+
 import ch.scaille.javabeans.IChainBuilderFactory;
 import ch.scaille.javabeans.converters.IConverter;
-import org.jspecify.annotations.Nullable;
 
 
 public class FirstEndOfChain<T extends @Nullable Object> extends EndOfChain<T> implements IChainBuilderFactory<T> {

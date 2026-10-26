@@ -39,4 +39,5 @@ module testcase.writer.webapp.api.v0_.backend {
     requires io.swagger.v3.oas.annotations;
     requires io.swagger.v3.oas.models;
     requires jakarta.servlet;
+	requires spring.beans;
 }

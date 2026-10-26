@@ -10,13 +10,8 @@ import lombok.Getter;
 
 /**
  * Property containing a float value.
- * <p>
- *
- * @author Sebastien Caille
- *
  */
-
-public class FloatProperty extends AbstractTypedProperty<Float> {
+public class FloatProperty extends AbstractTypedProperty<Float, FloatProperty> {
 
     @Getter
     private float value;
@@ -47,7 +42,7 @@ public class FloatProperty extends AbstractTypedProperty<Float> {
 
     @SafeVarargs
     @Override
-    public final FloatProperty configureTyped(final Consumer<AbstractTypedProperty<Float>>... propertyConfigurer) {
+    public final FloatProperty configureTyped(final Consumer<? super FloatProperty>... propertyConfigurer) {
         super.configureTyped(propertyConfigurer);
         return this;
     }

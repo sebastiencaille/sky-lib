@@ -1,7 +1,8 @@
 package ch.scaille.gui.tools;
 
-import ch.scaille.javabeans.IChainBuilderFactory;
 import org.jspecify.annotations.Nullable;
+
+import ch.scaille.javabeans.IChainBuilderFactory;
 
 /**
  * Allows to add a binding in a binding chain

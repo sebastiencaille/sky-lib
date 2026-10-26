@@ -2,17 +2,18 @@ package ch.scaille.gui.validation;
 
 import static java.util.stream.Collectors.joining;
 
+import org.jspecify.annotations.Nullable;
+
 import ch.scaille.gui.mvc.GuiModel.ImplicitConvertProvider;
 import ch.scaille.javabeans.converters.ConversionException;
 import ch.scaille.javabeans.converters.IUnaryConverter;
-import ch.scaille.javabeans.properties.AbstractProperty;
-import ch.scaille.javabeans.properties.AbstractTypedProperty;
+import ch.scaille.javabeans.properties.IProperty;
+import ch.scaille.javabeans.properties.ITypedProperty;
 import ch.scaille.util.dao.metadata.MetadataHelper;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import org.jspecify.annotations.Nullable;
 
 
 public class ValidationBinding {
@@ -31,7 +32,7 @@ public class ValidationBinding {
 			private String propertyName;
 
 			@Override
-			public void initialize(final AbstractProperty p) {
+			public void initialize(final IProperty p) {
 				propertyName = MetadataHelper.toFirstLetterInLowerCase(p.getName());
 			}
 
@@ -58,8 +59,8 @@ public class ValidationBinding {
 		private final Class<T> beanType;
 		private final String attributeName;
 
-		public Converter(Class<T> modelClass, AbstractTypedProperty<U> prop, String attributeName,
-				Class<?> attributeClass) {
+		public Converter(Class<T> modelClass, ITypedProperty<U> prop, String attributeName,
+						 Class<?> attributeClass) {
 			this.beanType = modelClass;
 			this.attributeName = MetadataHelper.toFirstLetterInLowerCase(attributeName);
 		}

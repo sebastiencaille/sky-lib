@@ -13,7 +13,7 @@ public class ReportBuilder {
     }
 
 
-    private static PilotReport.PilotReportBuilder<Object> NO_REPORT = new PilotReport.PilotReportBuilder<>() {
+    private static final PilotReport.PilotReportBuilder<Object> NO_REPORT = new PilotReport.PilotReportBuilder<>() {
         @Override
         public void prepare(PolledComponent<Object> context) {
             // nope

@@ -3,9 +3,14 @@ package ch.scaille.javabeans.chain;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.ref.WeakReference;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.logging.Level;
+
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 
 import ch.scaille.javabeans.IBindingChainDependency;
 import ch.scaille.javabeans.IBindingController;
@@ -17,11 +22,9 @@ import ch.scaille.javabeans.WeakLinkHolder;
 import ch.scaille.javabeans.converters.ChainInhibitedException;
 import ch.scaille.javabeans.converters.ConversionErrors;
 import ch.scaille.javabeans.converters.ConversionException;
-import ch.scaille.javabeans.properties.AbstractProperty;
-import ch.scaille.javabeans.properties.AbstractProperty.ErrorNotifier;
+import ch.scaille.javabeans.properties.ErrorNotifier;
+import ch.scaille.javabeans.properties.IProperty;
 import lombok.Setter;
-import org.jspecify.annotations.NullUnmarked;
-import org.jspecify.annotations.Nullable;
 
 /**
  * Holds and applies the bindings in chains. Each chain listens to the property and to a
@@ -43,7 +46,7 @@ public class BindingChain implements IBindingChainModifier {
 	 */
 	private final List<Link<?, ?>> links = new ArrayList<>();
 
-	private final AbstractProperty property;
+	private final IProperty property;
 
 	private final PropertyChangeListener valueUpdateListener;
 
@@ -51,7 +54,7 @@ public class BindingChain implements IBindingChainModifier {
 
 	private final List<IBindingChainDependency> dependencies = new ArrayList<>();
 
-	public BindingChain(final AbstractProperty property, final ErrorNotifier errorNotifier) {
+	public BindingChain(final IProperty property, final ErrorNotifier errorNotifier) {
 		this.property = property;
 		this.errorNotifier = errorNotifier;
 		// handle property change
@@ -145,11 +148,11 @@ public class BindingChain implements IBindingChainModifier {
 	
 	@Override
 	public void flushChanges() {
-		propagatePropertyChange(property.getRefreshChangeEvent());
+		propagatePropertyChange(property.createRefreshChangeEvent());
 	}
 
 	@Override
-	public AbstractProperty getProperty() {
+	public IProperty getProperty() {
 		return property;
 	}
 

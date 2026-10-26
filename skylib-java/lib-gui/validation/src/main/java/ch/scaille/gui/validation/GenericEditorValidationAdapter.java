@@ -1,8 +1,9 @@
 package ch.scaille.gui.validation;
 
+import org.jspecify.annotations.Nullable;
+
 import ch.scaille.gui.tools.IGenericModelAdapter;
 import ch.scaille.javabeans.IChainBuilderFactory;
-import org.jspecify.annotations.Nullable;
 
 /**
  * Model adapter that validates a class

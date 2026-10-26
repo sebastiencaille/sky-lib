@@ -2,7 +2,7 @@ package ch.scaille.javabeans;
 
 import java.util.function.Predicate;
 
-import ch.scaille.javabeans.properties.AbstractProperty;
+import ch.scaille.javabeans.properties.IProperty;
 
 /**
  * Allows to block transmission
@@ -41,7 +41,7 @@ public interface IVetoer {
 
 	void pause();
 
-	void inhibitTransmitToComponentWhen(Predicate<AbstractProperty> inhibitor);
+	void inhibitTransmitToComponentWhen(Predicate<IProperty> inhibitor);
 
 	boolean isTransmitMode(TransmitMode mode);
 

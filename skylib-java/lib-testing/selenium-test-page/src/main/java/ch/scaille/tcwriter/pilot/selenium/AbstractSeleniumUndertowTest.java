@@ -54,7 +54,7 @@ public abstract class AbstractSeleniumUndertowTest {
 		if (driver == null) {
 			setDriver(createWebDriver());
 		}
-		consoleErrorDetector = new ConsoleErrorDetector(driver);
+		consoleErrorDetector = new ConsoleErrorDetector(Objects.requireNonNull(driver));
 	}
 
 	@AfterEach

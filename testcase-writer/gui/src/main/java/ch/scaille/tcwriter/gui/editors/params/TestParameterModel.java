@@ -1,5 +1,7 @@
 package ch.scaille.tcwriter.gui.editors.params;
 
+import org.jspecify.annotations.Nullable;
+
 import ch.scaille.gui.mvc.GuiModel;
 import ch.scaille.javabeans.properties.ListProperty;
 import ch.scaille.javabeans.properties.ObjectProperty;
@@ -9,7 +11,6 @@ import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestReference;
 import lombok.Getter;
-import org.jspecify.annotations.Nullable;
 
 @Getter
 public class TestParameterModel extends GuiModel {

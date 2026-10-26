@@ -21,15 +21,16 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.jspecify.annotations.Nullable;
+
 import ch.scaille.gui.mvc.factories.ObjectTextView;
 import ch.scaille.gui.swing.factories.SwingBindings;
-import ch.scaille.javabeans.properties.AbstractTypedProperty;
+import ch.scaille.javabeans.properties.ITypedProperty;
 import ch.scaille.tcwriter.model.dictionary.StepClassifier;
 import ch.scaille.tcwriter.model.dictionary.TestAction;
 import ch.scaille.tcwriter.model.dictionary.TestActor;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 import ch.scaille.tcwriter.model.testcase.TestStep;
-import org.jspecify.annotations.Nullable;
 
 public class StepEditorPanel extends JPanel {
 
@@ -136,7 +137,7 @@ public class StepEditorPanel extends JPanel {
 		add(stepEditors, BorderLayout.CENTER);
 	}
 
-	private <T extends JComponent> T withEnabler(AbstractTypedProperty<@Nullable TestStep> selectedStep, T comp) {
+	private <T extends JComponent> T withEnabler(ITypedProperty<@Nullable TestStep> selectedStep, T comp) {
 		comp.setEnabled(false);
 		selectedStep.bind(listen(Objects::nonNull)).listen(comp::setEnabled);
 		return comp;

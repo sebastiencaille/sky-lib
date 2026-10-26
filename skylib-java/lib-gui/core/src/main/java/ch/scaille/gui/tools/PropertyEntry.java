@@ -2,28 +2,28 @@ package ch.scaille.gui.tools;
 
 import java.util.function.Function;
 
-import ch.scaille.javabeans.IChainBuilderFactory;
-import ch.scaille.javabeans.properties.AbstractTypedProperty;
 import org.jspecify.annotations.Nullable;
+
+import ch.scaille.javabeans.IChainBuilderFactory;
+import ch.scaille.javabeans.properties.ITypedProperty;
 
 /**
  * A property based entry of the editor.
  * 
- * @param <T> the owner type
  * @param <V> the end of chain type
  */
 public class PropertyEntry<V extends @Nullable Object> implements IPropertyEntry {
 
-	protected final AbstractTypedProperty<V> property;
-	private final Function<AbstractTypedProperty<V>, IChainBuilderFactory<V>> endOfChain;
+	protected final ITypedProperty<V> property;
+	private final Function<ITypedProperty<V>, IChainBuilderFactory<V>> endOfChain;
 	private final Class<?> propertyType;
 	private final boolean readOnly;
 	private final String label;
 	@Nullable
 	private final String tooltip;
 
-	protected PropertyEntry(Class<V> propertyType, final AbstractTypedProperty<V> property,
-			Function<AbstractTypedProperty<V>, IChainBuilderFactory<V>> endOfChainProvider, final boolean readOnly,
+	protected PropertyEntry(Class<V> propertyType, final ITypedProperty<V> property,
+			Function<ITypedProperty<V>, IChainBuilderFactory<V>> endOfChainProvider, final boolean readOnly,
 			final String label, @Nullable final String tooltip) {
 		this.property = property;
 		this.endOfChain = endOfChainProvider;
@@ -33,13 +33,13 @@ public class PropertyEntry<V extends @Nullable Object> implements IPropertyEntry
 		this.readOnly = readOnly;
 	}
 
-	protected PropertyEntry(final AbstractTypedProperty<V> property, Class<V> propertyType, final boolean readOnly,
+	protected PropertyEntry(final ITypedProperty<V> property, Class<V> propertyType, final boolean readOnly,
 			final String label, final String tooltip) {
-		this(propertyType, property, AbstractTypedProperty::createBindingChain, readOnly, label, tooltip);
+		this(propertyType, property, ITypedProperty::createBindingChain, readOnly, label, tooltip);
 	}
 
 	@Override
-	public AbstractTypedProperty<V> getProperty() {
+	public ITypedProperty<V> getProperty() {
 		return property;
 	}
 

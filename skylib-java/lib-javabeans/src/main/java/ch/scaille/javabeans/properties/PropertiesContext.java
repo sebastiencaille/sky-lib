@@ -1,19 +1,17 @@
 package ch.scaille.javabeans.properties;
 
-import org.jspecify.annotations.Nullable;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.RecordComponent;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Allows providing a context and firing changes from other properties
  * 
- * @param <T> the record type
- */
-
+ * @param <T> the record type */
 public record PropertiesContext<T>(T object, List<AbstractProperty> properties) {
 
 	public static <T extends AbstractProperty> PropertiesContext<T> ofProperty(T property) {
@@ -32,7 +30,7 @@ public record PropertiesContext<T>(T object, List<AbstractProperty> properties) 
 		try {
 			final var accessor = component.getAccessor();
 			accessor.setAccessible(true);
-			return (AbstractTypedProperty<?>) accessor.invoke(propsRecord);
+			return (AbstractTypedProperty<?, ?>) accessor.invoke(propsRecord);
 		} catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException _) {
 			// ignore
 			return null;

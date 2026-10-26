@@ -1,7 +1,8 @@
 package ch.scaille.javabeans.chain;
 
-import ch.scaille.javabeans.IBindingController;
 import org.jspecify.annotations.Nullable;
+
+import ch.scaille.javabeans.IBindingController;
 
 /**
  * To change the structure of the binding chain

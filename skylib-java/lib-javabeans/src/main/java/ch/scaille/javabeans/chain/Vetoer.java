@@ -6,7 +6,7 @@ import java.util.function.Predicate;
 
 import ch.scaille.javabeans.IBindingControl;
 import ch.scaille.javabeans.IVetoer;
-import ch.scaille.javabeans.properties.AbstractProperty;
+import ch.scaille.javabeans.properties.IProperty;
 
 
 public class Vetoer implements IVetoer {
@@ -15,7 +15,7 @@ public class Vetoer implements IVetoer {
 
 	private final TransmitMode transmitMode;
 
-	private final List<Predicate<AbstractProperty>> transmitToComponentInhibitors = new ArrayList<>();
+	private final List<Predicate<IProperty>> transmitToComponentInhibitors = new ArrayList<>();
 
 	public Vetoer(TransmitMode startupTransmitMode) {
 		transmitMode = startupTransmitMode;
@@ -44,7 +44,7 @@ public class Vetoer implements IVetoer {
 	}
 
 	@Override
-	public void inhibitTransmitToComponentWhen(Predicate<AbstractProperty> inhibitor) {
+	public void inhibitTransmitToComponentWhen(Predicate<IProperty> inhibitor) {
 		transmitToComponentInhibitors.add(inhibitor);
 	}
 

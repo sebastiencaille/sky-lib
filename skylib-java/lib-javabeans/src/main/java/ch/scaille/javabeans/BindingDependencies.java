@@ -1,10 +1,11 @@
 package ch.scaille.javabeans;
 
-import ch.scaille.javabeans.properties.AbstractProperty;
-import ch.scaille.javabeans.properties.IPropertyEventListener;
+import java.util.Objects;
+
 import org.jspecify.annotations.Nullable;
 
-import java.util.Objects;
+import ch.scaille.javabeans.properties.AbstractProperty;
+import ch.scaille.javabeans.properties.IPropertyEventListener;
 
 /**
  * Allows adding dependencies between properties

@@ -47,8 +47,8 @@ class StreamExtTest {
 		assertEquals("Wrong count: 2", exception.getMessage());
 	}
 
-	private Integer testWith2Values() {
-		return Stream.of(1, 2).collect(StreamExt.zeroOrOne()).orElseThrow(WrongCountException::new);
+	private void testWith2Values() {
+		Stream.of(1, 2).collect(StreamExt.zeroOrOne()).orElseThrow(WrongCountException::new);
 	}
 
 }

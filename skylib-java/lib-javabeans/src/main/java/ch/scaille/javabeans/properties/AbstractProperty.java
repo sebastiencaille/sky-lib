@@ -11,7 +11,6 @@ import java.util.stream.Stream;
 
 import javax.swing.event.EventListenerList;
 
-import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.IVetoer.TransmitMode;
 import ch.scaille.javabeans.PropertyEvent;
@@ -21,38 +20,12 @@ import lombok.Getter;
 /**
  * Provides type-independent properties mechanisms.
  * <p>
- *
- * @author Sebastien Caille
- *
- */
 
-public abstract class AbstractProperty implements IComponentChangeSource, Serializable {
+ * */
+public abstract class AbstractProperty implements IProperty, Serializable {
 
 	@Serial
 	private static final long serialVersionUID = -4450857469217114845L;
-
-	public interface ErrorNotifier {
-		void notifyError(Object source, ConversionError error);
-
-		void clearError(Object source, AbstractProperty property);
-
-	}
-
-	public static ErrorNotifier emptyErrorNotifier() {
-		return new ErrorNotifier() {
-
-			@Override
-			public void notifyError(final Object source, final ConversionError error) {
-				// noop
-			}
-
-			@Override
-			public void clearError(final Object source, AbstractProperty property) {
-				// noop
-			}
-
-		};
-	}
 
 	/**
 	 * Name of the property
@@ -73,22 +46,11 @@ public abstract class AbstractProperty implements IComponentChangeSource, Serial
 	/**
 	 * Error property
 	 */
-	protected transient ErrorNotifier errorNotifier = emptyErrorNotifier();
+	protected transient ErrorNotifier errorNotifier = ErrorNotifier.emptyErrorNotifier();
 
 	@Getter
     protected transient TransmitMode transmitMode = TransmitMode.STOPPED;
 
-	public abstract void reset(Object caller);
-
-	public abstract void load(Object caller);
-
-	public abstract void save();
-
-	public abstract void flushChanges(Object caller);
-
-	public abstract PropertyChangeEvent getRefreshChangeEvent();
-
-	
 	protected AbstractProperty(final String name, final IPropertiesGroup propertySupport) {
 		this.name = name;
 		this.propertySupport = propertySupport;
@@ -116,7 +78,7 @@ public abstract class AbstractProperty implements IComponentChangeSource, Serial
 	}
 
 	public void setErrorNotifier(final ErrorNotifier errorNotifier) {
-        this.errorNotifier = Objects.requireNonNullElseGet(errorNotifier, AbstractProperty::emptyErrorNotifier);
+        this.errorNotifier = Objects.requireNonNullElseGet(errorNotifier, ErrorNotifier::emptyErrorNotifier);
 	}
 
 	public void addListener(final PropertyChangeListener propertyChangeListener) {
@@ -155,7 +117,7 @@ public abstract class AbstractProperty implements IComponentChangeSource, Serial
 	}
 
 	@SafeVarargs
-	public final AbstractProperty configure(final Consumer<AbstractProperty>... properties) {
+	public final IProperty configure(final Consumer<IProperty>... properties) {
 		Stream.of(properties).forEach(prop -> prop.accept(this));
 		return this;
 	}

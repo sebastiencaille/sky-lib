@@ -1,11 +1,5 @@
 package ch.scaille.javabeans.properties;
 
-import ch.scaille.javabeans.*;
-import ch.scaille.javabeans.chain.BindingChain;
-import ch.scaille.javabeans.converters.IConverter;
-import ch.scaille.javabeans.converters.IContextualConverter;
-import org.jspecify.annotations.Nullable;
-
 import java.beans.PropertyChangeEvent;
 import java.util.IdentityHashMap;
 import java.util.function.BiFunction;
@@ -13,14 +7,24 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import org.jspecify.annotations.Nullable;
+
+import ch.scaille.javabeans.IBindingController;
+import ch.scaille.javabeans.IChainBuilder;
+import ch.scaille.javabeans.IChainBuilderFactory;
+import ch.scaille.javabeans.IComponentBinding;
+import ch.scaille.javabeans.IPropertiesGroup;
+import ch.scaille.javabeans.IPropertiesOwner;
+import ch.scaille.javabeans.IVetoer;
+import ch.scaille.javabeans.PropertyEvent;
+import ch.scaille.javabeans.chain.BindingChain;
+import ch.scaille.javabeans.converters.IContextualConverter;
+import ch.scaille.javabeans.converters.IConverter;
+
 /**
  * Allows trigger {@link IPropertyEventListener} when the value of a property
  * in this group is changed
- *
- * @author Sebastien Caille
- *
- */
-
+ * */
 public class PropertiesAggregator<T extends @Nullable Object> extends AbstractProperty implements IChainBuilder<T> {
 
     private class Snapshot<P extends @Nullable Object> implements Supplier<P> {
@@ -195,7 +199,7 @@ public class PropertiesAggregator<T extends @Nullable Object> extends AbstractPr
 
    
     @Override
-    public PropertyChangeEvent getRefreshChangeEvent() {
+    public PropertyChangeEvent createRefreshChangeEvent() {
         return new PropertyChangeEvent(this, getName(), null, null);
     }
 

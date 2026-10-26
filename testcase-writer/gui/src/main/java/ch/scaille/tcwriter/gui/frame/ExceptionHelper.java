@@ -1,11 +1,11 @@
 package ch.scaille.tcwriter.gui.frame;
 
-import lombok.extern.java.Log;
-
 import java.awt.Component;
 import java.util.logging.Level;
 
 import javax.swing.JOptionPane;
+
+import lombok.extern.java.Log;
 
 @Log
 public class ExceptionHelper {

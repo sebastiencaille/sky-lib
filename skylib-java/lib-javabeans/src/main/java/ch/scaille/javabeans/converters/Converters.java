@@ -12,41 +12,20 @@ import java.util.function.LongFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import ch.scaille.javabeans.properties.PropertiesContext;
-import ch.scaille.javabeans.properties.AbstractProperty;
+import org.jspecify.annotations.Nullable;
+
 import ch.scaille.javabeans.properties.ConversionError;
+import ch.scaille.javabeans.properties.PropertiesContext;
 import ch.scaille.util.helpers.LambdaExt;
 import ch.scaille.util.helpers.LambdaExt.BiFunctionWithException;
 import ch.scaille.util.helpers.LambdaExt.FunctionWithException;
 import ch.scaille.util.text.FormatterHelper;
-import org.jspecify.annotations.Nullable;
 
 
 public final class Converters {
 
     private Converters() {
         // identity
-    }
-
-    public static <P extends @Nullable Object, C extends @Nullable Object> IConverter<P, C>
-    wrap(IConverter<P, C> converter) {
-        return new IConverter<>() {
-
-            @Override
-            public void initialize(AbstractProperty p) {
-                converter.initialize(p);
-            }
-
-            @Override
-            public C convertPropertyValueToComponentValue(P propertyValue) {
-                return converter.convertPropertyValueToComponentValue(propertyValue);
-            }
-
-            @Override
-            public P convertComponentValueToPropertyValue(C componentValue) throws ConversionException {
-                return converter.convertComponentValueToPropertyValue(componentValue);
-            }
-        };
     }
 
     /**
@@ -78,7 +57,6 @@ public final class Converters {
             throw new WriteOnlyException();
         });
     }
-
 
     public static <P extends @Nullable Object, C extends @Nullable Object>
     IConverter<P, C> converter(final Function<P, C> prop2comp,
@@ -121,7 +99,6 @@ public final class Converters {
 
         };
     }
-
 
     public static <P, C> IConverter<List<P>, List<C>> listConverter(final Function<P, C> prop2comp,
                   final FunctionWithException<C, P, ConversionException> comp2prop) {

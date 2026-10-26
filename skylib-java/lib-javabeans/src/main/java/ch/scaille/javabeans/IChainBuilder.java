@@ -4,10 +4,11 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import ch.scaille.javabeans.converters.IConverter;
-import ch.scaille.javabeans.converters.IContextualConverter;
-import ch.scaille.javabeans.properties.PropertiesContext;
 import org.jspecify.annotations.Nullable;
+
+import ch.scaille.javabeans.converters.IContextualConverter;
+import ch.scaille.javabeans.converters.IConverter;
+import ch.scaille.javabeans.properties.PropertiesContext;
 
 /**
  *

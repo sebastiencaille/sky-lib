@@ -1,12 +1,13 @@
 package ch.scaille.javabeans.properties;
 
-import ch.scaille.javabeans.IPropertiesGroup;
-import ch.scaille.javabeans.PropertyChangeSupportController;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import ch.scaille.javabeans.IPropertiesGroup;
+import ch.scaille.javabeans.PropertyChangeSupportController;
 
 class PropertiesAggregatorTest {
 

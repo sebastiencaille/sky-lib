@@ -12,11 +12,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import ch.scaille.tcwriter.it.api.StepEdition;
 import ch.scaille.testing.testpilot.jupiter.DisabledIfHeadless;
 
+import java.util.Objects;
+
 @ExtendWith(DisabledIfHeadless.class)
 class StepEditionTest extends AbstractGuiTest {
 
 	@Test
 	void addAndEditSteps() {
+		Objects.requireNonNull(tcWriter);
 
 		final var edition1 = new StepEdition();
 		edition1.setActor("Test writer");

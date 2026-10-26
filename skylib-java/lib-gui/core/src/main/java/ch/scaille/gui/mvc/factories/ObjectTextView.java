@@ -46,20 +46,29 @@ public class ObjectTextView<T extends @Nullable Object> {
 	 * To convert an object to a text
 	 * @param objToText the conversion function
 	 */
-	public static <T extends @Nullable Object> IConverter<T, @Nullable ObjectTextView<T>> converter(final Function<T, String> objToText) {
+	public static <T> IConverter<@Nullable T, @Nullable ObjectTextView<T>>
+	converter(final Function<T, String> objToText) {
 		return Converters.converter(obj2Text(objToText), text2Obj());
 	}
 
-	public static <T extends @Nullable Object> Function<T, @Nullable ObjectTextView<T>> obj2Text(final Function<T, String> objToText) {
-		return o -> new ObjectTextView<>(o, objToText::apply);
+	/**
+	 * To convert an object to a text
+	 * @param objToText the conversion function
+	 */
+	public static <T> IConverter<T, ObjectTextView<T>> convertWo(final Function<T, String> objToText) {
+		return Converters.converter(o -> new ObjectTextView<>(o, objToText), ObjectTextView::getObject);
 	}
 
-	public static <T extends @Nullable Object, K extends @Nullable Object> BiFunction<T, K, @Nullable ObjectTextView<T>> contextualObject2Text(final BiFunction<T, K, String> objToText) {
+	public static <T extends @Nullable Object> Function<T, @Nullable ObjectTextView<T>> obj2Text(final Function<T, String> objToText) {
+		return o -> o != null ? new ObjectTextView<>(o, objToText) : null;
+	}
+
+	public static <T extends @Nullable Object, K extends @Nullable Object> BiFunction<T, K, ObjectTextView<T>> contextualObject2Text(final BiFunction<T, K, String> objToText) {
 		return (o, k) -> new ObjectTextView<>(o, obj -> objToText.apply(obj, k));
 	}
 
 	public static <T extends @Nullable Object> FunctionWithException<@Nullable ObjectTextView<T>, T, ConversionException> text2Obj() {
-		return otv ->  otv != null ? otv.getObject() : null;
+		return otv -> otv != null ? otv.getObject(): null;
 
 	}
 }

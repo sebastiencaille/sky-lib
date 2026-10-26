@@ -1,5 +1,6 @@
 package ch.scaille.testing.testpilot.selenium.jupiter;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -38,7 +39,7 @@ public class WebDriverExtension implements ParameterResolver {
 			if (currentDriver == null) {
 				setDriver(webDriverSupplier.get());
 			}
-			return currentDriver;
+			return Objects.requireNonNull(currentDriver);
 		}
 
 	}

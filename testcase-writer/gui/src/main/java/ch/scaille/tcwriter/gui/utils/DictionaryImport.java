@@ -13,16 +13,17 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 
+import org.jspecify.annotations.Nullable;
+
 import ch.scaille.gui.swing.SwingExt;
 import ch.scaille.tcwriter.annotations.TCActors;
 import ch.scaille.tcwriter.annotations.TCRole;
 import ch.scaille.tcwriter.gui.frame.ExceptionHelper;
-import ch.scaille.tcwriter.persistence.IModelDao;
 import ch.scaille.tcwriter.javatc.generators.JavaToDictionary;
+import ch.scaille.tcwriter.persistence.IModelDao;
 import ch.scaille.util.helpers.ClassFinder;
 import ch.scaille.util.helpers.ClassFinder.Policy;
 import ch.scaille.util.helpers.LambdaExt;
-import org.jspecify.annotations.Nullable;
 
 public class DictionaryImport extends JDialog {
 

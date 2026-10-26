@@ -1,7 +1,8 @@
 package ch.scaille.javabeans;
 
-import ch.scaille.javabeans.converters.IConverter;
 import org.jspecify.annotations.Nullable;
+
+import ch.scaille.javabeans.converters.IConverter;
 
 /**
  *

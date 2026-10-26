@@ -11,14 +11,9 @@ import static java.util.stream.Collectors.toSet;
 
 import java.awt.BorderLayout;
 import java.io.Serial;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
-
+import java.util.function.Function;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
@@ -28,7 +23,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import ch.scaille.tcwriter.model.dictionary.ParameterNature;
+import ch.scaille.javabeans.converters.Converters;
 import com.google.common.base.Strings;
 
 import ch.scaille.gui.model.ListModel;
@@ -39,19 +34,22 @@ import ch.scaille.javabeans.converters.IConverter;
 import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.tcwriter.gui.editors.params.TestParameterValueTableModel.ParameterValueEntry;
 import ch.scaille.tcwriter.gui.frame.TCWriterController;
+import ch.scaille.tcwriter.model.dictionary.ParameterNature;
 import ch.scaille.tcwriter.model.dictionary.TestApiParameter;
 import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestReference;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public class TestParameterValueEditorPanel extends JPanel {
 
 	@Serial
     private static final long serialVersionUID = 1686297570581922386L;
 
-	public static IConverter<TestReference, ObjectTextView<TestReference>> refToTextConverter() {
-		return ObjectTextView.converter(ref -> ref != null ? ref.toDescription().description() : "");
+	private static Function<TestReference, String> ref2Text() {
+		return ref -> ref.toDescription().description();
 	}
 
 	private List<TestReference> getReferences(final TestCase testCase, final TestParameterValue testParameterValue) {
@@ -122,10 +120,10 @@ public class TestParameterValueEditorPanel extends JPanel {
 		tpModel.getReferences()
 				.bind(filter(r -> r.getParameterType()
 						.equals(editedParamValue.getValue().getParameterValueFactory().getParameterType()))) //
-				.bind(listConverter(refToTextConverter())) //
+				.bind(Converters.listConverter(ObjectTextView.convertWo(ref2Text()))) //
 				.bind(values(referenceEditor));
 		tpModel.getSelectedReference()
-				.bind(refToTextConverter())//
+				.bind(ObjectTextView.converter(ref2Text()))//
 				.bind(selection(referenceEditor)) //
 				.addDependency(BindingDependencies.preserveOnUpdateOf(tpModel.getReferences()));
 		tpModel.getValueNature().listenF(v -> v == ParameterNature.REFERENCE).listen(enableAndVisible(referenceEditor));
@@ -174,7 +172,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 					.getObjectValue()
 					.getParameterValueFactory()
 					.getNature() == ParameterNature.REFERENCE) {
-				editedParamValue.getValue().setParameterValueFactory(ref);
+				editedParamValue.getValue().setParameterValueFactory(Objects.requireNonNull(ref));
 			}
 		});
 
@@ -191,7 +189,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 					paramValue.setParameterValueFactory(testRef);
 				}
 			}
-			case TEST_API -> paramValue.setParameterValueFactory(tpModel.getTestApi().getValue());
+			case TEST_API -> paramValue.setParameterValueFactory(Objects.requireNonNull(tpModel.getTestApi().getValue()));
 			case NOT_SET -> { // noop
 			}
 			default -> throw new IllegalStateException("Not handled: " + v);
@@ -211,7 +209,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 	 * Update the values table when changing the api. Don't trigger when loading the
 	 * step, because we may not have the right value during the loading
 	 */
-	private void fixParamsOfApi(final ObjectProperty<TestCase> tc, final TestParameterFactory api,
+	private void fixParamsOfApi(final ObjectProperty<TestCase> tc, @Nullable final TestParameterFactory api,
 								final ObjectProperty<TestParameterValue> editedParamValue,
 								final ListModel<ParameterValueEntry> allEditedParameters) {
 		if (api == null) {
@@ -295,9 +293,9 @@ public class TestParameterValueEditorPanel extends JPanel {
 	}
 
 	private static ParameterValueEntry asParam(final TestCase tc, final String complexParameterId,
-			final TestParameterValue complexValue, final TestParameterFactory complexTypeFactory) {
-		final var simpleValue = complexValue.getSimpleValue();
-		final var newParamValue = new ParameterValueEntry(complexParameterId, complexValue.getParameterValueFactory(),
+			final TestParameterValue parameterValue, final TestParameterFactory complexTypeFactory) {
+		final var simpleValue = parameterValue.getSimpleValue();
+		final var newParamValue = new ParameterValueEntry(complexParameterId, parameterValue.getParameterValueFactory(),
 				tc.descriptionOf(complexParameterId).description(), simpleValue,
 				!Strings.isNullOrEmpty(simpleValue));
 		updateParam(newParamValue, complexTypeFactory);

@@ -1,9 +1,11 @@
 import org.jspecify.annotations.NullMarked;
 
+import ch.scaille.testing.api.TestBootstrapService;
+
 @NullMarked
 module lib.testing.core {
-	
-	exports ch.scaille.testing.api;
+
+    exports ch.scaille.testing.api;
 	
     requires transitive org.jspecify;
     
@@ -14,4 +16,7 @@ module lib.testing.core {
 	requires spring.beans;
 	requires spring.boot.autoconfigure;
 	requires lombok;
+
+    uses TestBootstrapService;
+
 }

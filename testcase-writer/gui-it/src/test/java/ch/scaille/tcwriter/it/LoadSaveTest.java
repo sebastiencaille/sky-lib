@@ -4,6 +4,7 @@ import static ch.scaille.tcwriter.it.api.MainFrameAction.loadTC;
 import static ch.scaille.tcwriter.it.api.MainFrameAction.newTC;
 import static ch.scaille.tcwriter.it.api.MainFrameAction.saveTC;
 
+import java.util.Objects;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 
@@ -19,19 +20,21 @@ import ch.scaille.util.helpers.Logs;
 class LoadSaveTest extends AbstractGuiTest {
 
 	@BeforeAll
-	static void initlog() {
-		final var rootlog = Logs.of("ch");
-		rootlog.setLevel(Level.ALL);
+	static void initLog() {
+		final var rootLog = Logs.of("ch");
+		rootLog.setLevel(Level.ALL);
 		
 		final var logConsole = new ConsoleHandler();
 		logConsole.setLevel(Level.ALL);
-		rootlog.addHandler(logConsole);
+		rootLog.addHandler(logConsole);
 	}
 
 	@Test
 	void testSaveNewLoad() {
 		final var test = TestContent.basicTestContent();
-		
+		Objects.requireNonNull(testSession);
+		Objects.requireNonNull(tcWriter);
+
 		testSession.injectTest(test);
 		testSession.assertTest(test);
 		tcWriter.manageTest(saveTC("test"));

@@ -1,6 +1,5 @@
 package ch.scaille.testing.spring.autoconfiguration;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ServiceLoader;
 
@@ -18,9 +17,7 @@ public class BootstrapAutoConfiguration {
 
 	@Bean
 	BeanFactoryPostProcessor bootstrap(
-			@Value("${app.dataFolder:#{systemProperties['user.home'] + '/.var/lib/tcwriter/data'}}") Path dataFolder)
-			throws IOException {
-		
+			@Value("${app.dataFolder:#{systemProperties['user.home'] + '/.var/lib/tcwriter/data'}}") Path dataFolder) {
 		final var services = ServiceLoader.load(TestBootstrapService.class).stream().toList();
 		log.info(() -> "Bootstrapping " + services.size() + " services");
 		return _ -> services.forEach(bootstrap -> bootstrap.get().bootstrap(dataFolder));

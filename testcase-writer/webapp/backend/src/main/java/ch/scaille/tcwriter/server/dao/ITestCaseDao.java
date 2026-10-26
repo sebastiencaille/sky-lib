@@ -11,6 +11,7 @@ public interface ITestCaseDao {
 
 	List<Metadata> listAll(Metadata dictionary);
 
+	@Nullable
 	Metadata loadMetadata(String testCaseName);
 
 	@Nullable

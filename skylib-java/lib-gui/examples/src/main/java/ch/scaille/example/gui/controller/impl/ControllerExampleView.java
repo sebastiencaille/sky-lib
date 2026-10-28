@@ -271,10 +271,9 @@ public class ControllerExampleView extends JFrame {
 		// Property check widget
 		constraints.gridx++;
 		constraints.weightx = 0.0;
-		if (propertyCheck != null) {
-			propertyCheck.setPreferredSize(new Dimension(100, -1));
-			mainContainer.add(propertyCheck, constraints);
-		}
+
+		propertyCheck.setPreferredSize(new Dimension(100, -1));
+		mainContainer.add(propertyCheck, constraints);
 
 		// Error handling
 		errorProperty.getErrors().bind(listen(e -> e.get(property))).bind(guiErrorToString())

@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 
 import ch.scaille.tcwriter.examples.simple.dto.TestItem;
 
+import java.util.Objects;
+
 public class SimpleTest extends AbstractSimpleTest {
 
 	private final TestItem coffeeMachine = TestItem.coffeeMachineOfBrand("OldSchool");
@@ -22,7 +24,8 @@ public class SimpleTest extends AbstractSimpleTest {
 
 	@Test
 	public void testNormalCase() {
-
+		Objects.requireNonNull(customer);
+		Objects.requireNonNull(deliveryGuy);
 		customer.buy(onInternet("https://somewebsite"), coffeeMachine);
 		deliveryGuy.deliverItem();
 		customer.checkPackage(deliveredItem(), coffeeMachine);
@@ -38,6 +41,7 @@ public class SimpleTest extends AbstractSimpleTest {
 
 	@Test
 	public void testFailureCase() {
+		Objects.requireNonNull(customer);
 		customer.buy(inLocalShop(), coffeeMachine);
 		Assertions.assertThrows(AssertionError.class, () -> customer.checkPackage(fromShop(), teaPot));
 	}

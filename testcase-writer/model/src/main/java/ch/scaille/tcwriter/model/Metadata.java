@@ -28,7 +28,7 @@ public class Metadata {
     }
 
     @JsonCreator
-    public Metadata(String transientId, String description, LocalDateTime creationDate, Set<String> tags) {
+    public Metadata(String transientId, String description, LocalDateTime creationDate, @Nullable Set<String> tags) {
         this.transientId = transientId;
         this.description = description;
         this.creationDate = creationDate;
@@ -43,10 +43,10 @@ public class Metadata {
     }
 
     public boolean matches(Metadata other) {
-        return other != null && other.tags.stream().anyMatch(tags::contains);
+        return other.tags.stream().anyMatch(tags::contains);
     }
 
     public boolean matches(String other) {
-        return other != null && tags.contains(other);
+        return tags.contains(other);
     }
 }

@@ -9,7 +9,6 @@ import org.jspecify.annotations.Nullable;
 /**
  * A property based entry of the editor.
  * 
- * @param <T> the owner type
  * @param <V> the end of chain type
  */
 public class PropertyEntry<V extends @Nullable Object> implements IPropertyEntry {

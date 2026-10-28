@@ -12,7 +12,7 @@ import ch.scaille.util.dao.metadata.AttributeFactory.Mode;
 import lombok.Getter;
 
 /**
- * Contains all the DO's meta-data.
+ * Contains all the DO's metadata.
  * <p>
  *
  *

@@ -12,7 +12,11 @@ import ch.scaille.testing.testpilot.builder.ReportBuilder.FormattedPilotReport;
 import ch.scaille.util.dao.metadata.DataObjectManagerFactory;
 import ch.scaille.util.dao.metadata.IAttributeMetaData;
 
-public interface Reporting {
+public class Reporting {
+
+	private Reporting() {
+		// cannot instantiate
+	}
 
     public static <C> PilotReport.PilotReportBuilder<C> formatted(String text, Function<PolledComponent<C>, String>... parametersMapper) {
         return new FormattedPilotReport<>(text, parametersMapper);
@@ -21,28 +25,28 @@ public interface Reporting {
     public static <C> PilotReport.PilotReportBuilder<C> text(String text) {
         return formatted("%s: %s", PolledComponent::description, _ -> text);
     }
-	
-	static <C> PilotReportBuilder<C> settingValue(String value) {
+
+	public static <C> PilotReportBuilder<C> settingValue(String value) {
 		return text("setting: " + value);
 	}
 
-	static <C> PilotReportBuilder<C> settingValue(String location, String value) {
+	public static <C> PilotReportBuilder<C> settingValue(String location, String value) {
 		return text("setting " + location + ": " + value);
 	}
 
-	static <C> PilotReportBuilder<C> checkingThat(String message) {
+	public static <C> PilotReportBuilder<C> checkingThat(String message) {
 		return text("checking that " + message);
 	}
 
-	static <C> PilotReportBuilder<C> checkingValue(String value) {
+	public static <C> PilotReportBuilder<C> checkingValue(String value) {
 		return text("checking value: " + value);
 	}
 
-	static <C> PilotReportBuilder<C> checkingValue(String location, String value) {
+	public static <C> PilotReportBuilder<C> checkingValue(String location, String value) {
 		return text("checking value " + location + ": " + value);
 	}
 
-	static <C> PilotReportBuilder<C> ettingValue(String location, Object value) {
+	public static <C> PilotReportBuilder<C> ettingValue(String location, Object value) {
 		return text("setting " + location + ": ["
 				+ DataObjectManagerFactory.createFor(value)
 						.getMetaData()

@@ -2,6 +2,9 @@ package ch.scaille.tcwriter.server.config;
 
 import java.nio.charset.StandardCharsets;
 
+import ch.scaille.tcwriter.server.web.controller.WebErrorController;
+import org.springframework.boot.webmvc.error.ErrorAttributes;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +39,11 @@ public class WebConfig implements WebMvcConfigurer {
 		messageSource.setBundleClassLoader(Thread.currentThread().getContextClassLoader());
 		messageSource.addBasenames("web/messages");
 		return messageSource;
+	}
+
+	@Bean
+	WebErrorController errorController(MessageSource messageSource, ErrorAttributes errorAttributes, ApplicationContext context) {
+		return new WebErrorController(errorAttributes, context, messageSource);
 	}
 
 }

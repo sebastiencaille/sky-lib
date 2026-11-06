@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import ch.scaille.javabeans.properties.ObjectProperty;
 import com.google.common.collect.Lists;
 
 import ch.scaille.generators.util.GenerationMetadata;
@@ -19,7 +20,6 @@ import ch.scaille.generators.util.Template;
 import ch.scaille.tcwriter.javatc.visitors.TestCaseToJavaVisitor;
 import ch.scaille.tcwriter.model.TestCaseException;
 import ch.scaille.tcwriter.model.testcase.TestCase;
-import ch.scaille.tcwriter.persistence.IConfigDao;
 import ch.scaille.tcwriter.persistence.IModelDao;
 import ch.scaille.tcwriter.persistence.testexec.JunitTestExecConfig;
 import ch.scaille.tcwriter.services.testexec.ITestExecutor;
@@ -33,7 +33,7 @@ public class JUnitTestExecutor implements ITestExecutor {
 
 	private final IModelDao modelDao;
 
-	private final JunitTestExecConfig config;
+	private JunitTestExecConfig config;
 
 	private final URL aspectjWeaverPath;
 	
@@ -41,11 +41,11 @@ public class JUnitTestExecutor implements ITestExecutor {
 
 	private final URL[] classPath;
 
-	public JUnitTestExecutor(final IConfigDao configDao, final IModelDao modelDao, 
-			URL aspectjWeaverPath, URL junitJarFile, 
-			final URL... classPath) {
-		this.config = Objects.requireNonNull(configDao.getCurrentConfig(), "No config available").getSubconfig(JunitTestExecConfig.class)
-				.orElseThrow(() -> new IllegalArgumentException("No JunitTestExecConfig found"));
+	public JUnitTestExecutor(ObjectProperty<JunitTestExecConfig> junitConfig, final IModelDao modelDao,
+                             URL aspectjWeaverPath, URL junitJarFile,
+                             final URL... classPath) {
+		this.config = junitConfig.getValue();
+		junitConfig.listen(newConfig -> this.config = newConfig);
 		this.aspectjWeaverPath = aspectjWeaverPath;
 		this.junitJarFile = junitJarFile;
 		this.modelDao = modelDao;
@@ -53,9 +53,9 @@ public class JUnitTestExecutor implements ITestExecutor {
 		this.classPath = classPath;
 	}
 
-
-	public JUnitTestExecutor(final IConfigDao configDao, final IModelDao modelDao, final Path testClientJarPath) {
-		this(configDao, modelDao,
+	public JUnitTestExecutor(ObjectProperty<JunitTestExecConfig> junitConfig, final IModelDao modelDao, final Path testClientJarPath) {
+		// TODO: scan folder ?
+		this(junitConfig, modelDao,
 				// aspect
 				resolved(testClientJarPath, "aspectjweaver.jar"),
 				// junit
@@ -68,7 +68,7 @@ public class JUnitTestExecutor implements ITestExecutor {
 		);
 		
 	}
-	
+
 	private static URL resolved(Path testClientJarPath, String jarName) {
 		try {
 			return testClientJarPath.resolve(jarName).toUri().toURL();
@@ -77,7 +77,6 @@ public class JUnitTestExecutor implements ITestExecutor {
 		}
 		
 	}
-
 	
 	@Override
 	public Template generateTestCase(TestCase tc) throws TestCaseException {
@@ -90,16 +89,27 @@ public class JUnitTestExecutor implements ITestExecutor {
 		generateTestCase(testConfig.testCase).writeToFolder(testConfig.sourceFolder);
 	}
 
+	private String resolveJava() {
+		final String jdk;
+		if (Files.exists(Paths.get(System.getProperty("java.home") + "/bin/javac"))) {
+			jdk = System.getProperty("java.home") + "/bin/java";
+		} else if (Files.exists(Paths.get(config.getJava() + "c"))) {
+			jdk = config.getJava();
+		} else {
+			jdk = "java";
+		}
+		return jdk;
+	}
+
 	@Override
 	public String compile(TestConfig testConfig) throws IOException, InterruptedException {
 		final var tcConfigClasspath = Arrays.stream(config.getClasspath())
 				.map(LambdaExt.uncheckedF(cp -> Paths.get(cp).toUri().toURL()))
 				.toArray(URL[]::new);
 		final var parameters = new String[]{
-				// TODO Config
-				config.getJava() + 'c', //
+				resolveJava() + "c", //
 				"-cp", ClassLoaderHelper.cpToCommandLine(classPath, tcConfigClasspath), //
-				// TODO Cconfig
+				// TODO Config
 				"-source", "25", //
 				"-target", "25", //
 				"-d", testConfig.binaryFolder.toString(),
@@ -124,7 +134,7 @@ public class JUnitTestExecutor implements ITestExecutor {
 		}
 		
 		final var javaParameters = new ArrayList<String>();
-		javaParameters.addAll(List.of(config.getJava(), //
+		javaParameters.addAll(List.of(resolveJava(), //
 				"-Dtest.port=" + testConfig.tcpPort, "-Dtc.stepping=true", //
 				"-javaagent:" + ClassLoaderHelper.cpToCommandLine(new URL[] {aspectjWeaverPath}), 
 				"-jar",  ClassLoaderHelper.cpToCommandLine(new URL[]{ junitJarFile }), "execute", "--select-class=" + binaryRef, "--details", "verbose"));
@@ -147,7 +157,7 @@ public class JUnitTestExecutor implements ITestExecutor {
 	}
 
 	private Process exec(String stage, String[] command) throws IOException {
-		log.info(() -> stage + ' ' + String.join("\n", command));
+		log.info(() -> stage + ": " + String.join("\n", command));
 		final var process = new ProcessBuilder(command).redirectErrorStream(true).start();
 		JavaExt.inputStreamHandler(process::getInputStream, log::info).start();
 		return process;

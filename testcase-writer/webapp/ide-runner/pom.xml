@@ -40,6 +40,10 @@
 			<groupId>ch.scaille.tcwriter</groupId>
 			<artifactId>testcase-writer-webapp-testing</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>ch.scaille.tcwriter</groupId>
+			<artifactId>testcase-writer-examples</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

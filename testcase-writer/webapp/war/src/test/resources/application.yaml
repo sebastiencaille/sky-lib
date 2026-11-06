@@ -38,4 +38,7 @@ management:
       exposure:
         include: "health"
 
-tcwriter.javatc-resources: classpath:javatc_resources
+tcwriter:
+  javatc-resources: classpath:javatc_resources
+  data.folder: #{systemProperties['user.home']}/.var/lib/tcwriter/data
+  testJars.folder: classpath:example_resources

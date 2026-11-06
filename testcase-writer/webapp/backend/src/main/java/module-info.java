@@ -14,7 +14,8 @@ module testcase.writer.webapp.backend {
 	exports ch.scaille.tcwriter.server.dao;
 
 	exports ch.scaille.tcwriter.server.webapi.config;
-	
+	exports ch.scaille.tcwriter.server.web.controller to spring.web;
+
 	opens ch.scaille.tcwriter.server.config to spring.beans, spring.context, spring.core;
 	opens ch.scaille.tcwriter.server.services to spring.core;
 	opens ch.scaille.tcwriter.server.mappers to org.mapstruct;

@@ -90,7 +90,7 @@
 					</descriptors>
 					<inlineDescriptors>
 						<inlineDescriptor>
-							<id>test-resources</id>
+							<id>test-server-resources</id>
 							<formats>
 								<format>dir</format>
 							</formats>
@@ -99,8 +99,10 @@
 								<dependencySet>
 									<scope>test</scope>
 									<includes>
+										<!-- bootstrap -->
 										<include>ch.scaille.tcwriter:testcase-writer-webapp-testing:jar</include>
 										<include>ch.scaille.tcwriter:testcase-writer-examples:jar</include>
+										<!-- db -->
 										<include>*:h2:jar</include>
 									</includes>
 									<useTransitiveDependencies>true</useTransitiveDependencies>
@@ -140,6 +142,11 @@
 								${project.build.directory}/tc-resources/javatc_resources</directory>
 							<targetPath>javatc_resources</targetPath>
 						</resource>
+						<resource>
+							<directory>
+								${project.build.directory}/tc-resources/example_resources</directory>
+							<targetPath>example_resources</targetPath>
+						</resource>
 					</webResources>
 				</configuration>
 			</plugin>
@@ -172,22 +179,16 @@
 							<extraDirectories>
 								<paths>
 									<path>
-										<from>
-											${project.build.testOutputDirectory}</from>
-										<into>
-											/var/lib/jetty/webapps/ROOT/WEB-INF/classes</into>
+										<from>${project.build.testOutputDirectory}</from>
+										<into>/var/lib/jetty/webapps/ROOT/WEB-INF/classes</into>
 									</path>
 									<path>
-										<from>
-											${project.build.directory}/tc-resources/test-deps</from>
-										<into>
-											/var/lib/jetty/webapps/ROOT/WEB-INF/lib</into>
+										<from>${project.build.directory}/tc-resources/test-deps</from>
+										<into>/var/lib/jetty/webapps/ROOT/WEB-INF/lib</into>
 									</path>
 									<path>
-										<from>
-											${project.build.directory}/tc-resources/example_resources</from>
-										<into>
-											/var/lib/jetty/webapps/ROOT/example_resources</into>
+										<from>${project.build.directory}/tc-resources/example_resources</from>
+										<into>/var/lib/jetty/webapps/ROOT/example_resources</into>
 									</path>
 								</paths>
 							</extraDirectories>

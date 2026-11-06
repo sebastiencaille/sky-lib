@@ -4,7 +4,6 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -23,7 +22,6 @@ import ch.scaille.javabeans.DummyPropertiesGroup;
 import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.tcwriter.javatc.generators.TestCaseToJava;
 import ch.scaille.tcwriter.model.TestCaseException;
-import ch.scaille.tcwriter.model.config.TCConfig;
 import ch.scaille.tcwriter.persistence.ModelConfig;
 import ch.scaille.tcwriter.persistence.ModelDao;
 import ch.scaille.util.helpers.LambdaExt;
@@ -91,9 +89,8 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
         mavenModelConfig.setTcPath(resolve(DaoFactory.fs(testCases.getDirectory())));
         mavenModelConfig.setTemplatePath(resolve(templatesFolder));
         mavenModelConfig.setTcExportPath("");
-        final var config = new TCConfig("maven", List.of(mavenModelConfig));
         final var modelDao = new ModelDao(daoFactory,
-                new ObjectProperty<>("config", new DummyPropertiesGroup(), config),
+                new ObjectProperty<>("config", new DummyPropertiesGroup(), mavenModelConfig),
                     fsDsFactory, ModelDao.defaultDataHandlers());
         // Search test cases
         final var scanner = new DirectoryScanner();

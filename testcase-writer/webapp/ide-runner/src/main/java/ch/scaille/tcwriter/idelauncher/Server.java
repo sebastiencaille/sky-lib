@@ -13,6 +13,7 @@ public class Server {
 	static void main(String[] args) {
 		// This adds the package of Application.class in Spring. Using Server may cause
 		// spring to scan the entire application
+		System.setProperty("app.testJars.folder", Server.class.getProtectionDomain().getCodeSource().getLocation().toString());
 		SpringApplication.run(ApplicationConfig.class, args);
 	}
 

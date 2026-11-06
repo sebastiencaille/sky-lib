@@ -21,7 +21,10 @@ module testcase.writer.examples {
 	requires lib.javabeans;
 	requires lib.generator.utils;
 	requires org.junit.jupiter.api;
+    requires spring.beans;
+    
+    requires org.apiguardian.api;
 
-	provides TestBootstrapService with ExampleConfigurationBootstrapService; 
+    provides TestBootstrapService with ExampleConfigurationBootstrapService;
 	
 }

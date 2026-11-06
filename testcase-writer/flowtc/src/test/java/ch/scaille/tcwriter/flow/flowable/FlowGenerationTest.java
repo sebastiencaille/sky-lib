@@ -3,7 +3,7 @@ package ch.scaille.tcwriter.flow.flowable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import ch.scaille.tcwriter.examples.ExampleHelper;
+import ch.scaille.tcwriter.examples.ExampleFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +11,7 @@ class FlowGenerationTest {
     
     @Test
     void testGeneration() throws IOException {
-        final var helper = new ExampleHelper();
+        final var helper = new ExampleFactory();
         final var dictionary = helper.generateDictionary();
 
         final var outputFolder = Paths.get("./target/flowableModel");

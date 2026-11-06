@@ -19,7 +19,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.DispatcherServlet;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 
@@ -29,11 +29,11 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/error")
-
 @Slf4j
 public class WebErrorController extends AbstractErrorController {
 
     private static final Locale LOCALE = Locale.US;
+    private final ErrorAttributes errorAttributes;
 
     private record WebErrorViewResolver(ApplicationContext context) implements ErrorViewResolver {
 
@@ -82,6 +82,7 @@ public class WebErrorController extends AbstractErrorController {
     public WebErrorController(ErrorAttributes errorAttributes, ApplicationContext context,
                               MessageSource messageSource) {
         super(errorAttributes, Collections.singletonList(new WebErrorViewResolver(context)));
+        this.errorAttributes = errorAttributes;
         this.messageSource = messageSource;
     }
 
@@ -114,7 +115,7 @@ public class WebErrorController extends AbstractErrorController {
     }
 
     private ExceptionDto toDto(HttpServletRequest request) {
-        final var exc = (Exception) request.getAttribute(DispatcherServlet.EXCEPTION_ATTRIBUTE);
+        final var exc = Objects.requireNonNull(errorAttributes.getError(new ServletWebRequest(request)));
         log.warn("Unexpected exception: {}", exc.getMessage(), exc);
         final var status = getStatus(request);
         final ExceptionDto dto;
@@ -128,8 +129,8 @@ public class WebErrorController extends AbstractErrorController {
                     new Object[]{exc.getClass().getName(), exc.getMessage()}, "error.exception", LOCALE);
         }
         dto.setMessage(messageSource.getMessage(dto.getCode(), dto.getArguments(), defaultText, LOCALE));
-        final var trace = (String) getErrorAttributes(request,
-                ErrorAttributeOptions.of(ErrorAttributeOptions.Include.STACK_TRACE)).get("trace");
+        final var trace = (String)getErrorAttributes(request,  ErrorAttributeOptions.of(ErrorAttributeOptions.Include.STACK_TRACE))
+                .get(ErrorAttributeOptions.Include.STACK_TRACE.name());
         if (trace != null) {
             dto.setTrace(trace);
         }
@@ -137,7 +138,7 @@ public class WebErrorController extends AbstractErrorController {
         return dto;
     }
 
-    @GetMapping(produces = MediaType.TEXT_HTML_VALUE)
+    @RequestMapping(method = { RequestMethod.GET, RequestMethod.PUT, RequestMethod.POST, RequestMethod.DELETE }, produces = MediaType.TEXT_HTML_VALUE)
     @Nullable
     public ModelAndView handleErrorHtml(HttpServletRequest request, HttpServletResponse response,
                                         Map<String, Object> model) {
@@ -146,12 +147,7 @@ public class WebErrorController extends AbstractErrorController {
         return super.resolveErrorView(request, response, getStatus(request), model);
     }
 
-    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ExceptionDto handleErrorJsonGet(HttpServletRequest request) {
-        return toDto(request);
-    }
-
-    @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(method = { RequestMethod.GET, RequestMethod.PUT, RequestMethod.POST, RequestMethod.DELETE }, produces = MediaType.APPLICATION_JSON_VALUE)
     public ExceptionDto handleErrorJsonPost(HttpServletRequest request) {
         return toDto(request);
     }

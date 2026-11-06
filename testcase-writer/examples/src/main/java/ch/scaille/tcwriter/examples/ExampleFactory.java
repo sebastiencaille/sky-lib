@@ -1,6 +1,6 @@
 package ch.scaille.tcwriter.examples;
 
-import static ch.scaille.tcwriter.persistence.factory.DaoConfigs.cp;
+import static ch.scaille.tcwriter.persistence.factory.DaoFactory.cp;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,7 +22,7 @@ import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.persistence.IConfigDao;
 import ch.scaille.tcwriter.persistence.ModelConfig;
 import ch.scaille.tcwriter.persistence.ModelDao;
-import ch.scaille.tcwriter.persistence.factory.DaoConfigs;
+import ch.scaille.tcwriter.persistence.factory.DaoFactory;
 import ch.scaille.tcwriter.persistence.testexec.JunitTestExecConfig;
 import ch.scaille.tcwriter.services.generators.visitors.HumanReadableVisitor;
 import ch.scaille.tcwriter.services.testexec.ITestExecutor;
@@ -35,7 +35,7 @@ import lombok.extern.java.Log;
  */
 @Getter
 @Log
-public class ExampleHelper {
+public class ExampleFactory {
 
 	private static final Path RESOURCE_FOLDER = Paths.get(System.getProperty("java.io.tmpdir"));
 
@@ -48,14 +48,14 @@ public class ExampleHelper {
 
 	private final ModelDao modelDao;
 
-	public ExampleHelper() throws IOException {
-		this(RESOURCE_FOLDER, "default");
+	public ExampleFactory(String... extraClassPath) throws IOException {
+		this(RESOURCE_FOLDER, "default", extraClassPath);
 	}
 
 	/**
 	 * Configure the example environment
 	 */
-	public ExampleHelper(Path dataPath, String configName) throws IOException {
+	public ExampleFactory(Path dataPath, String configName, String... extraClassPath) throws IOException {
 		final var tcPath = dataPath.resolve("testcase");
 		Files.createDirectories(tcPath);
 
@@ -65,16 +65,16 @@ public class ExampleHelper {
 		final var modelConfig = new ModelConfig();
 		modelConfig.setTcPath(tcPath.toString());
 		modelConfig.setTcExportPath(
-				CodeGeneratorParams.mavenTargetFolderOf(ExampleHelper.class).resolve("generated-tests").toString());
+				CodeGeneratorParams.mavenTargetFolderOf(ExampleFactory.class).resolve("generated-tests").toString());
 		modelConfig.setDictionaryPath(dictionaryPath.toString());
 		modelConfig.setTemplatePath(cp("templates"));
 
 		final var junitTestConfig = new JunitTestExecConfig();
-		junitTestConfig.setClasspath(JavaExt.locationOf(getClass()).toString());
+		junitTestConfig.setClasspath(extraClassPath);
 
-		final var daoConfig = DaoConfigs.withFolder(dataPath, false, getClass().getModule());
-		configDao = daoConfig.configDao().setConfiguration(TCConfig.of(configName, modelConfig, junitTestConfig));
-		modelDao = daoConfig.modelDao();
+		final var daoFactory = DaoFactory.withFolder(dataPath, TCConfig.of(configName, modelConfig, junitTestConfig), getClass().getModule());
+		configDao = daoFactory.configDao();
+		modelDao = daoFactory.modelDao();
 	}
 
     public TestDictionary generateDictionary() {
@@ -100,8 +100,8 @@ public class ExampleHelper {
 	}
 
 	public ITestExecutor testExecutor() {
-			final var testJarPath = JavaExt.locationOf(TCWriterController.class).resolve("../tc-resources/javatc-resources");
-			return new JUnitTestExecutor(configDao, modelDao, testJarPath);
+			final var testJarPath = JavaExt.locationOf(TCWriterController.class).resolve("../tc-resources/javatc_resources");
+			return new JUnitTestExecutor(configDao.getSubConfig(JunitTestExecConfig.class), modelDao, testJarPath);
 	}
 
 }

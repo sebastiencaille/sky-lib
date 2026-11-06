@@ -10,7 +10,7 @@ on:
     - cron: '31 22 * * 6'
     
 env:
-  MVN_INSTALL: mvn --batch-mode  -Pcoverage install -T 4
+  MVN_INSTALL: mvn --batch-mode  -Pcoverage clean install -T 4
   MVN_SONAR: mvn --batch-mode -Pcoverage,sonar jacoco:report@report-for-sonar sonar:sonar ${{ vars.SONAR_CONFIG }}
   
 jobs:

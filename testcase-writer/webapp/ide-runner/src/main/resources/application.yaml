@@ -22,10 +22,6 @@ spring:
     changelog: liquibase-app-h2/master.yaml
     contexts: ${spring.datasource.platform}
 
-h2:
-  console:
-    enabled: true
-
 springdoc:
   cache:
     disabled: true
@@ -38,6 +34,8 @@ management:
       exposure:
         include: "health"
 
-tcwriter.javatc-resources: classpath:javatc_resources
-
+tcwriter:
+  javatc-resources: classpath:javatc_resources
+  data.folder: ./target/var/data
+  testJars.folder: ./target/classes/example_resources
 logging.level.org.springframework.boot.autoconfigure: DEBUG

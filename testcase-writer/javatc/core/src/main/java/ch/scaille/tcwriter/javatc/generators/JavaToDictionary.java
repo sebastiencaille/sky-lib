@@ -1,6 +1,6 @@
 package ch.scaille.tcwriter.javatc.generators;
 
-import static ch.scaille.tcwriter.persistence.factory.DaoConfigs.homeFolder;
+import static ch.scaille.tcwriter.persistence.factory.DaoFactory.homeFolder;
 
 import java.util.stream.Collector;
 
@@ -12,7 +12,7 @@ import ch.scaille.tcwriter.annotations.TCActors;
 import ch.scaille.tcwriter.annotations.TCRole;
 import ch.scaille.tcwriter.javatc.visitors.ClassToDictionaryVisitor;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
-import ch.scaille.tcwriter.persistence.factory.DaoConfigs;
+import ch.scaille.tcwriter.persistence.factory.DaoFactory;
 import ch.scaille.util.helpers.ClassFinder;
 
 public class JavaToDictionary extends AbstractGenerator<TestDictionary> {
@@ -53,10 +53,10 @@ public class JavaToDictionary extends AbstractGenerator<TestDictionary> {
 		final var mainArgs = new Args();
 		JCommander.newBuilder().addObject(mainArgs).build().parse(args);
 		
-		final var daoConfig = DaoConfigs.withFolder(homeFolder(), false);
-		daoConfig.configDao().setConfiguration(mainArgs.configuration);
+		final var daoFactory = DaoFactory.withFolder(homeFolder());
+		daoFactory.configDao().setConfiguration(mainArgs.configuration);
 		
-		final var persister = daoConfig.modelDao();
+		final var persister = daoFactory.modelDao();
 		final var dictionary = ClassFinder.ofCurrentThread()
 				.withPackages(mainArgs.sourcePackage)
 				.withAnnotation(TCRole.class, ClassFinder.Policy.CLASS_ONLY)

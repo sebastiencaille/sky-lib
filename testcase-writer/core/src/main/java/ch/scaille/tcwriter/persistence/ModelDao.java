@@ -3,14 +3,12 @@ package ch.scaille.tcwriter.persistence;
 import static ch.scaille.util.persistence.StorageRTException.uncheck;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Level;
 
 import ch.scaille.generators.util.Template;
 import ch.scaille.javabeans.properties.ObjectProperty;
 import ch.scaille.tcwriter.model.Metadata;
-import ch.scaille.tcwriter.model.config.TCConfig;
 import ch.scaille.tcwriter.model.dictionary.TestDictionary;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.persistence.handlers.AbstractModelDataHandler;
@@ -31,6 +29,7 @@ import org.jspecify.annotations.Nullable;
 @Log
 public class ModelDao implements IModelDao {
 
+
     public static StorageDataHandlerRegistry defaultDataHandlers() {
         final var modelSerDeserializerRegistry = new StorageDataHandlerRegistry(new YamlModelDataHandler());
         modelSerDeserializerRegistry.register(new JsonModelDataHandler());
@@ -39,13 +38,6 @@ public class ModelDao implements IModelDao {
         modelSerDeserializerRegistry.register(new YamlModelMetadataHandler());
         return modelSerDeserializerRegistry;
     }
-
-    private static ModelConfig configOf(TCConfig config) {
-        return config.getSubconfig(ModelConfig.class)
-                .orElseThrow(() -> new IllegalStateException("Cannot find FsModelConfig"));
-    }
-
-    private final ObjectProperty<@Nullable TCConfig> config;
 
     private final StorageDataHandlerRegistry serDeserializerRegistry;
 
@@ -70,23 +62,28 @@ public class ModelDao implements IModelDao {
 
     protected IDao<String> testCaseCodeRepo = new DummyDao<>();
 
-    public ModelDao(DaoFactory daoFactory, ObjectProperty<@Nullable TCConfig> config,
+    private ModelConfig config;
+
+    public ModelDao(DaoFactory daoFactory, ObjectProperty<ModelConfig> config,
+                    DaoFactory.IDataSourceFactory cacheDsFactory,
+                    StorageDataHandlerRegistry serDeserializerRegistry) {
+        this(daoFactory, config.getValue(), cacheDsFactory, serDeserializerRegistry);
+        config.listen(this::reload);
+        reload(config.getValue());
+    }
+
+    public ModelDao(DaoFactory daoFactory, ModelConfig config,
                     DaoFactory.IDataSourceFactory cacheDsFactory,
                     StorageDataHandlerRegistry serDeserializerRegistry) {
         this.daoFactory = daoFactory;
-        this.config = config;
         this.serDeserializerRegistry = serDeserializerRegistry;
-        this.config.listen(this::reload);
         this.dictionaryMetadataCache = new MetadataCacheDao("Dictionary", cacheDsFactory);
         this.testcaseMetadataCache = new MetadataCacheDao("TestCase", cacheDsFactory);
-        reload(this.config.getValue());
+        reload(config);
     }
 
-    protected void reload(@Nullable TCConfig config) {
-        if (config == null) {
-            return;    
-        }
-        final var modelConfig = configOf(config);
+    protected void reload(ModelConfig modelConfig) {
+        this.config = modelConfig;
         this.dictionaryRepo = daoFactory.loaderOf(TestDictionary.class, modelConfig.getDictionaryPath(),
                 serDeserializerRegistry);
         this.dictionaryMetadataRepo = daoFactory.loaderOf(Metadata.class, modelConfig.getDictionaryPath(),
@@ -201,8 +198,7 @@ public class ModelDao implements IModelDao {
         return uncheck("Writing of test case code", () -> testCaseCodeRepo.saveOrUpdate(identifier, code));
     }
 
-    public ModelConfig getCurrentConfig() {
-        return configOf(Objects.requireNonNull(config.getValue(), "Config was not loaded"));
+    public String getTcPath() {
+        return this.config.getTcPath();
     }
-
 }

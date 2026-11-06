@@ -1,6 +1,6 @@
 package ch.scaille.tcwriter.it;
 
-import static ch.scaille.tcwriter.persistence.factory.DaoConfigs.cp;
+import static ch.scaille.tcwriter.persistence.factory.DaoFactory.cp;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -28,7 +28,7 @@ import ch.scaille.tcwriter.javatc.recorderimpl.TestCaseRecorder;
 import ch.scaille.tcwriter.javatc.testexec.JUnitTestExecutor;
 import ch.scaille.tcwriter.model.config.TCConfig;
 import ch.scaille.tcwriter.persistence.ModelConfig;
-import ch.scaille.tcwriter.persistence.factory.DaoConfigs;
+import ch.scaille.tcwriter.persistence.factory.DaoFactory;
 import ch.scaille.tcwriter.persistence.testexec.JunitTestExecConfig;
 import ch.scaille.tcwriter.recorder.RecorderTestActors;
 import ch.scaille.tcwriter.services.generators.visitors.HumanReadableVisitor;
@@ -80,25 +80,19 @@ public class AbstractGuiTest {
         modelConfig.setDictionaryPath(dictionariesPath.toString());
         modelConfig.setTemplatePath(cp("templates"));
 
-        final var junitTestConfig = new JunitTestExecConfig();
-        junitTestConfig.setJava("");
-        junitTestConfig.setClasspath();
-
-        final var daoConfig = DaoConfigs.withFolder(DaoConfigs.tempFolder(), false, getClass().getModule());
-        final var configDao = daoConfig.configDao()
-                .setConfiguration(TCConfig.of("default", modelConfig, junitTestConfig));
+        final var daoFactory = DaoFactory.withFolder(DaoFactory.tempFolder(), TCConfig.of("default", modelConfig), getClass().getModule());
 
         // Setup services
-        final var persister = daoConfig.modelDao();
-        final var executor = new JUnitTestExecutor(configDao, persister, JavaExt.locationOf(TCWriterController.class).resolve("../javatc-resources"));
+        final var modelDao = daoFactory.modelDao();
+        final var executor = new JUnitTestExecutor(daoFactory.configDao().getSubConfig(JunitTestExecConfig.class), modelDao, JavaExt.locationOf(TCWriterController.class).resolve("../javatc-resources"));
 
         // Setup data
         final var dictionary = new JavaToDictionary("gui-it", TestWriterRole.class, TestSessionRole.class, AbstractGuiTest.class)
                 .generate();
         dictionary.getMetadata().setDescription("Basic tcWriter tests");
-        persister.writeTestDictionary(dictionary);
+        modelDao.writeTestDictionary(dictionary);
 
-        final var controller = new TCWriterController(configDao, persister, dictionary, executor);
+        final var controller = new TCWriterController(daoFactory.configDao(), modelDao, dictionary, executor);
         SwingUtilities.invokeAndWait(controller::start);
 
         pilot = new TCGuiPilot(controller.getGui())

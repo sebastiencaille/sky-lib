@@ -15,7 +15,7 @@ public class TestContainers {
 	public static GenericContainer<?> app(String imageName) {
 		return new GenericContainer<>(DockerImageName.parse(imageName)).withExposedPorts(9000)
 				.withStartupTimeout(Duration.ofSeconds(2)).waitingFor(
-						Wait.forHttp("/actuator/health").forStatusCode(200).withStartupTimeout(Duration.ofSeconds(30)));
+						Wait.forHttp("/actuator/health").forStatusCode(200).withStartupTimeout(Duration.ofSeconds(15)));
 	}
 
 }

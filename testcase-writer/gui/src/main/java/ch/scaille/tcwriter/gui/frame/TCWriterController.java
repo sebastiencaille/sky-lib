@@ -108,7 +108,7 @@ public class TCWriterController extends GuiController {
 		final var configEditorDialog = new SwingGenericEditorDialog(gui, "Configuration", ModalityType.DOCUMENT_MODAL);
 		final var editorPropertySupport = PropertyChangeSupportController.mainGroup(configEditorDialog);
 		final var errorProp = new ErrorSet("Error", editorPropertySupport);
-		for (final var configToEdit : Objects.requireNonNull(configDao.getCurrentConfig(), "Config was not loaded").getSubConfigs()) {
+		for (final var configToEdit : Objects.requireNonNull(configDao.getCurrentConfig().getValue(), "Config was not loaded").getSubConfigs()) {
 			final var controller = new GenericEditorController<>(
 					GenericEditorClassModel.builder((Class<SubConfig>) configToEdit.getClass())
 							.support(propertySupport)
@@ -189,7 +189,7 @@ public class TCWriterController extends GuiController {
 	private JFileChooser fileChooser() {
 		final var testFileChooser = new JFileChooser();
 		testFileChooser.setFileFilter(new FileNameExtensionFilter("Test case", "yaml"));
-		testFileChooser.setCurrentDirectory(new File(modelDao.getCurrentConfig().getTcPath()));
+		testFileChooser.setCurrentDirectory(new File(modelDao.getTcPath()));
 		return testFileChooser;
 	}
 

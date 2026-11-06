@@ -1,8 +1,7 @@
 package ch.scaille.tcwriter.persistence;
 
+import java.util.List;
 import java.util.Objects;
-
-import org.jspecify.annotations.Nullable;
 
 import ch.scaille.javabeans.IPropertiesGroup;
 import ch.scaille.javabeans.PropertyChangeSupportController;
@@ -20,7 +19,7 @@ public class ConfigDao implements IConfigDao {
 
 	protected final IPropertiesGroup propertiesGroup = PropertyChangeSupportController.mainGroup(this);
 
-	protected final ObjectProperty<@Nullable TCConfig> currentConfig = new ObjectProperty<>("config", propertiesGroup, null);
+	protected final ObjectProperty<TCConfig> currentConfig = new ObjectProperty<>("config", propertiesGroup, new TCConfig("Empty", List.of()));
 
 	public static StorageDataHandlerRegistry defaultDataHandlers() {
 		return new StorageDataHandlerRegistry(new YamlConfigDataHandler());
@@ -34,7 +33,7 @@ public class ConfigDao implements IConfigDao {
 	}
 	
 	@Override
-	public ObjectProperty<@Nullable TCConfig> getCurrentConfigProperty() {
+	public ObjectProperty<TCConfig> getCurrentConfig() {
 		return currentConfig;
 	}
 

@@ -1,6 +1,6 @@
 package ch.scaille.tcwriter.javatc.generators;
 
-import static ch.scaille.tcwriter.persistence.factory.DaoConfigs.homeFolder;
+import static ch.scaille.tcwriter.persistence.factory.DaoFactory.homeFolder;
 import static ch.scaille.util.helpers.LambdaExt.uncheckedC;
 
 import java.io.FileNotFoundException;
@@ -15,7 +15,7 @@ import ch.scaille.tcwriter.javatc.visitors.TestCaseToJavaVisitor;
 import ch.scaille.tcwriter.model.TestCaseException;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.persistence.IModelDao;
-import ch.scaille.tcwriter.persistence.factory.DaoConfigs;
+import ch.scaille.tcwriter.persistence.factory.DaoFactory;
 
 public class TestCaseToJava {
 
@@ -50,8 +50,8 @@ public class TestCaseToJava {
 		
 		final var tcFile = mainArgs.testCase;
 
-		final var daoConfig = DaoConfigs.withFolder(homeFolder(), false);
-		final var modelDao = daoConfig.modelDao();
+		final var daoFactory = DaoFactory.withFolder(homeFolder());
+		final var modelDao = daoFactory.modelDao();
 		final var testDictionary = modelDao.readTestDictionary(mainArgs.tcDictionary)
 				.orElseThrow(FileNotFoundException::new);
 		testDictionary.overrideTemplate(mainArgs.tcTemplate);

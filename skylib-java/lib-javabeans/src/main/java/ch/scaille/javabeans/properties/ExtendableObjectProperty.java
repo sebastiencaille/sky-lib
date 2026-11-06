@@ -19,8 +19,8 @@ import lombok.Getter;
  *
  * @param <T>
  */
-public class ExtendableObjectProperty<T extends @Nullable Object, SELF extends ExtendableObjectProperty<T, SELF>>
-        extends AbstractTypedProperty<T, SELF> {
+public class ExtendableObjectProperty<T extends @Nullable Object, S extends ExtendableObjectProperty<T, S>>
+        extends AbstractTypedProperty<T, S> {
 
     private static final long serialVersionUID = 1L;
 

@@ -46,7 +46,7 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
 
     @Parameter(property = "dictionary")
     @Nullable
-    private final String dictionaryLocator = null;
+    private String dictionaryLocator = null;
 
     @Parameter(property = "testCases")
     @Nullable

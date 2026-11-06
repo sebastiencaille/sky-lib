@@ -29,7 +29,7 @@ public class CodeGeneratorParams implements ICodeGeneratorParams {
 	@Getter
     @Parameter(names = { "-tp", "--targetPackage" })
 	@Nullable
-	private final String targetPackage = null;
+	private String targetPackage = null;
 
 	public static CodeGeneratorParams parse(final String[] args) {
 		final var params = new CodeGeneratorParams();

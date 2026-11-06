@@ -8,6 +8,10 @@ import org.testcontainers.utility.DockerImageName;
 
 public class TestContainers {
 
+	private TestContainers() {
+		// noop
+	}
+
 	public static GenericContainer<?> app(String imageName) {
 		return new GenericContainer<>(DockerImageName.parse(imageName)).withExposedPorts(9000)
 				.withStartupTimeout(Duration.ofSeconds(2)).waitingFor(

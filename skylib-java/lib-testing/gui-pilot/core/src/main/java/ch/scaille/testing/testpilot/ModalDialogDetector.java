@@ -24,8 +24,6 @@ import ch.scaille.util.helpers.Poller;
 /**
  * Handles unexpected dialog boxes, alerts, ...
  *
- * @author scaille
- *
  */
 @Log
 public class ModalDialogDetector {

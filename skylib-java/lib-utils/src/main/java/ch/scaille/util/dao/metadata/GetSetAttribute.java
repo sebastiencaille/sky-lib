@@ -35,6 +35,7 @@ public class GetSetAttribute<T, V> extends AbstractAttributeMetaData<T, V> {
 		this.setter = setter;
 	}
 
+	@Nullable
     @Override
 	public Object getValueOf(final T from) {
 		try {
@@ -45,7 +46,7 @@ public class GetSetAttribute<T, V> extends AbstractAttributeMetaData<T, V> {
 	}
 
 	@Override
-	public void setValueOf(final T to,  @Nullable final Object value) {
+	public void setValueOf(final T to, @Nullable final Object value) {
 		if (isReadOnly() || setter == null) {
 			throw new IllegalStateException("Object is read-only");
 		}

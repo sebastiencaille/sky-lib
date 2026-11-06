@@ -11,8 +11,6 @@ import lombok.Getter;
 /**
  * Factory to create test parameter values
  *
- * @author scaille
- *
  */
 @Getter
 public class TestParameterFactory extends NamedObject {

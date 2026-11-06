@@ -14,8 +14,6 @@ import lombok.Getter;
  * This controller is the root of the generic editor. It binds the view
  * and the model.
  *
- * @author scaille
- *
  */
 public class GenericEditorController<T> {
 

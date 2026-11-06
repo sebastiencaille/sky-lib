@@ -6,7 +6,6 @@ import static ch.scaille.gui.swing.factories.SwingBindings.selection;
 import static ch.scaille.gui.swing.factories.SwingBindings.value;
 import static ch.scaille.gui.swing.factories.SwingBindings.values;
 import static ch.scaille.javabeans.converters.Converters.filter;
-import static ch.scaille.javabeans.converters.Converters.listConverter;
 import static java.util.stream.Collectors.toSet;
 
 import java.awt.BorderLayout;
@@ -40,7 +39,6 @@ import ch.scaille.tcwriter.model.dictionary.TestParameterFactory;
 import ch.scaille.tcwriter.model.testcase.TestCase;
 import ch.scaille.tcwriter.model.testcase.TestParameterValue;
 import ch.scaille.tcwriter.model.testcase.TestReference;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 public class TestParameterValueEditorPanel extends JPanel {
@@ -276,7 +274,7 @@ public class TestParameterValueEditorPanel extends JPanel {
 						continue;
 					}
 					result.put(parameterValueEntry.id, new TestParameterValue(parameterValueEntry.id,
-							parameterValueEntry.factory, parameterValueEntry.value));
+							parameterValueEntry.factory, Objects.requireNonNull(parameterValueEntry.value, "")));
 				}
 				return result;
 			}

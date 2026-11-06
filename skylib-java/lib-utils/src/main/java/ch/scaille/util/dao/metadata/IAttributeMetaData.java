@@ -16,6 +16,7 @@ public interface IAttributeMetaData<T> {
 
 	<A extends Annotation> Optional<A> getAnnotation(Class<A> annotation);
 
+	@Nullable
 	Object getValueOf(T object);
 
 	void setValueOf(T object, @Nullable Object o);

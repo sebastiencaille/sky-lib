@@ -34,8 +34,6 @@ import java.util.stream.Stream;
 
 /**
  * To select some classes according to an annotation, ...
- *
- * @author scaille
  */
 @Log
 public class ClassFinder {

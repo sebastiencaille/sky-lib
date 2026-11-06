@@ -8,8 +8,6 @@ import ch.scaille.tcwriter.examples.ExampleService;
 /**
  * To selects buying actions
  *
- * @author scaille
- *
  */
 @TCApi(description = "where to buy the item", humanReadable = "", isSelector = true)
 public class BuyingLocationSelector {

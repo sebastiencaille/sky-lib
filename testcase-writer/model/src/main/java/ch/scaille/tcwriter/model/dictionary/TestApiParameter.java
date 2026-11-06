@@ -11,8 +11,6 @@ import lombok.Getter;
  * A typed parameter of the test action or parameter factory. Used to link the
  * expected type of parameter with the effective type of parameter
  *
- * @author scaille
- *
  */
 @Getter
 public class TestApiParameter extends NamedObject {

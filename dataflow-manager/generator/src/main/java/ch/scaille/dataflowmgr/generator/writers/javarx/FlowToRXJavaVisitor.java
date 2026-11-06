@@ -28,8 +28,6 @@ import ch.scaille.util.helpers.WrongCountException;
  * state to ensure we run it only once (in case of concurrent evaluation)</li>
  * </ul>
  *
- * @author scaille
- *
  */
 public class FlowToRXJavaVisitor extends AbstractJavaFlowVisitor {
 

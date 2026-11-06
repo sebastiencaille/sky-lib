@@ -7,13 +7,11 @@ import ch.scaille.gui.swing.model.ListModelTableModel;
 import ch.scaille.javabeans.IComponentBinding;
 import ch.scaille.javabeans.IComponentChangeSource;
 import ch.scaille.javabeans.IComponentLink;
-import lombok.extern.java.Log;
 
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
-@Log
 public class JTableSelectionBinding<T> implements IComponentBinding<T> {
 
     private final JTable table;

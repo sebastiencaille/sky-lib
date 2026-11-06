@@ -1,6 +1,5 @@
 package ch.scaille.javabeans.properties;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.Serial;
 import java.io.Serializable;

@@ -27,8 +27,6 @@ import ch.scaille.util.helpers.Logs;
 
 /**
  * This test case generates the java and dot flows
- *
- * @author scaille
  */
 public class SimpleTestGenerator {
 

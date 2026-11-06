@@ -10,8 +10,6 @@ import java.lang.annotation.Target;
  * Annotation for classes/interfaces methods that are part of the test api.
  * Methods must be in classes / interfaces tagged with TCActor/TCApi/TCData
  *
- * @author scaille
- *
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD, ElementType.TYPE, ElementType.PARAMETER })

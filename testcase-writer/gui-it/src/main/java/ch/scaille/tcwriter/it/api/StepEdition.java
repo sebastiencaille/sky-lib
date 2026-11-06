@@ -7,8 +7,6 @@ import org.jspecify.annotations.Nullable;
 /**
  * To edit a step (actor/action/selector/parameter
  *
- * @author scaille
- *
  */
 @Getter
 public class StepEdition {

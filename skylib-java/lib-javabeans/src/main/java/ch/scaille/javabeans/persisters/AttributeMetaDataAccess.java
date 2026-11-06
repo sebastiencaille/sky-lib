@@ -7,12 +7,9 @@ import ch.scaille.util.dao.metadata.AbstractAttributeMetaData;
 
 /**
  *
- * @author scaille
- *
  * @param <T> Type of the container object
  * @param <V> Type of the object's attribute
  */
-
 public class AttributeMetaDataAccess<T, V extends @Nullable Object> implements IPersisterFactory<T, V> {
 
 	private final AbstractAttributeMetaData<T, V> metadata;

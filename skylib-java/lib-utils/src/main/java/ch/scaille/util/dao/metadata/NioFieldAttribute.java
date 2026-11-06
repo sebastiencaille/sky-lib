@@ -26,6 +26,7 @@ public class NioFieldAttribute<T, V> extends FieldAttribute<T, V> {
         }
     }
 
+    @Nullable
     @Override
     public Object getValueOf(T from) {
         try {

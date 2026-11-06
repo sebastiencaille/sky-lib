@@ -46,7 +46,7 @@ public class Reporting {
 		return text("checking value " + location + ": " + value);
 	}
 
-	public static <C> PilotReportBuilder<C> ettingValue(String location, Object value) {
+	public static <C> PilotReportBuilder<C> gettingValue(String location, Object value) {
 		return text("setting " + location + ": ["
 				+ DataObjectManagerFactory.createFor(value)
 						.getMetaData()

@@ -9,8 +9,6 @@ import ch.scaille.javabeans.properties.IPropertyEventListener;
 /**
  * A group of properties allows controlling a group of properties
  *
- * @author scaille
- *
  */
 
 public interface IPropertiesGroup extends IPropertyController {

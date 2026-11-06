@@ -8,8 +8,6 @@ import org.jspecify.annotations.Nullable;
 
 /**
  *
- * @author scaille
- *
  * @param <A> Application test APIs
  */
 public class Steps<A> {

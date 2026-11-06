@@ -8,7 +8,6 @@ import org.jspecify.annotations.Nullable;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.WrapsElement;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
@@ -47,12 +46,7 @@ public class PagePilot {
 			@Override
 			protected Optional<WebElement> loadGuiComponent() {
 				reloadPage();
-				final var webElement = element.get();
-				// Not always respected
-				if (webElement instanceof WrapsElement wrapsElement && wrapsElement.getWrappedElement() == null) {
-					return Optional.empty();
-				}
-				return Optional.ofNullable(webElement);
+				return Optional.ofNullable(element.get());
 			}
 
 			@Override

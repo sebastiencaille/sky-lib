@@ -31,6 +31,7 @@ public class FieldAttribute<T, V> extends AbstractAttributeMetaData<T, V> {
 				|| getAnnotation(Persistency.class).map(Persistency::readOnly).orElse(false);
 	}
 
+	@Nullable
 	@Override
 	public Object getValueOf(final T from) {
 		try {

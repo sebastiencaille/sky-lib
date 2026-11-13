@@ -3,11 +3,12 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 module testcase.writer.gui.it {
 	
-	opens userResources.templates;
-	
-	requires lib.utils;
-	requires lib.testing.gui.pilot.swing;
+	exports ch.scaille.tcwriter.it;
+	opens ch.scaille.tcwriter.it to lib.utils;
 
+	requires lib.utils;
+	requires lib.testing.gui.pilot.swing; 
+	
 	requires testcase.writer.api;
 	requires testcase.writer.javatc.core;
 	requires testcase.writer.core;

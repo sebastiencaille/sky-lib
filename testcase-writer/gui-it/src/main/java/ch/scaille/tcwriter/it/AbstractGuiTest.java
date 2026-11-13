@@ -72,7 +72,6 @@ public class AbstractGuiTest {
             Files.createDirectory(dictionariesPath);
         }
 
-
         // Setup config
         final var modelConfig = new ModelConfig();
         modelConfig.setTcPath(tcPath.toString());
@@ -80,7 +79,9 @@ public class AbstractGuiTest {
         modelConfig.setDictionaryPath(dictionariesPath.toString());
         modelConfig.setTemplatePath(cp("templates"));
 
-        final var daoFactory = DaoFactory.withFolder(DaoFactory.tempFolder(), TCConfig.of("default", modelConfig), getClass().getModule());
+        final var tcConfig = new JunitTestExecConfig();
+        
+        final var daoFactory = DaoFactory.withFolder(DaoFactory.tempFolder(), TCConfig.of("default", modelConfig, tcConfig), getClass().getModule());
 
         // Setup services
         final var modelDao = daoFactory.modelDao();

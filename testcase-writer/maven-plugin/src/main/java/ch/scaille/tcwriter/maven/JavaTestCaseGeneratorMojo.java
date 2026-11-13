@@ -51,7 +51,7 @@ public class JavaTestCaseGeneratorMojo extends AbstractMojo {
     private Resource testCases = null;
 
     @Parameter(property = "outputFolder", defaultValue = "${project.build.directory}/generated-test-sources/tcwriter")
-    private String outputFolder = "";
+    private String outputFolder;
 
     private String resolve(String path) {
         if (!path.startsWith(DaoFactory.FS_DATASOURCE)) {

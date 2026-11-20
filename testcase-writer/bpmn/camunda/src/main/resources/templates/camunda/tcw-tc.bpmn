@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1ninkdz" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.53.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.10.0">
+  <bpmn:process id="Process_1phdpjt" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0gq59l1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:callActivity id="Activity_1tw7k1o" name="Test Case Init">
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="TCW-INIT" propagateAllChildVariables="false" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0gq59l1</bpmn:incoming>
+      <bpmn:outgoing>Flow_0wwv7fa</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:callActivity id="Activity_19ygvna" name="Buy an item">
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="ACTION_buy" propagateAllChildVariables="false" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0wwv7fa</bpmn:incoming>
+      <bpmn:outgoing>Flow_19v2u22</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:sequenceFlow id="Flow_0gq59l1" sourceRef="StartEvent_1" targetRef="Activity_1tw7k1o" />
+    <bpmn:sequenceFlow id="Flow_0wwv7fa" sourceRef="Activity_1tw7k1o" targetRef="Activity_19ygvna" />
+    <bpmn:callActivity id="Activity_02k80d8" name="TCW-PUBLISH">
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="TCW-PUBLISH" propagateAllChildVariables="false" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_19v2u22</bpmn:incoming>
+      <bpmn:outgoing>Flow_0z2n1ra</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:sequenceFlow id="Flow_19v2u22" sourceRef="Activity_19ygvna" targetRef="Activity_02k80d8" />
+    <bpmn:endEvent id="Event_1k694kb">
+      <bpmn:incoming>Flow_0z2n1ra</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0z2n1ra" sourceRef="Activity_02k80d8" targetRef="Event_1k694kb" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1phdpjt">
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="182" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1tw7k1o_di" bpmnElement="Activity_1tw7k1o">
+        <dc:Bounds x="320" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_19ygvna_di" bpmnElement="Activity_19ygvna">
+        <dc:Bounds x="540" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_02k80d8_di" bpmnElement="Activity_02k80d8">
+        <dc:Bounds x="760" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1k694kb_di" bpmnElement="Event_1k694kb">
+        <dc:Bounds x="982" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0gq59l1_di" bpmnElement="Flow_0gq59l1">
+        <di:waypoint x="218" y="120" />
+        <di:waypoint x="320" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wwv7fa_di" bpmnElement="Flow_0wwv7fa">
+        <di:waypoint x="420" y="120" />
+        <di:waypoint x="540" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_19v2u22_di" bpmnElement="Flow_19v2u22">
+        <di:waypoint x="640" y="120" />
+        <di:waypoint x="760" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0z2n1ra_di" bpmnElement="Flow_0z2n1ra">
+        <di:waypoint x="860" y="120" />
+        <di:waypoint x="982" y="120" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

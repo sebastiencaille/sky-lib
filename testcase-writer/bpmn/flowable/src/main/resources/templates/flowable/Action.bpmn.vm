@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:design="http://flowable.org/design" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://flowable.org/test" exporter="Flowable Design" exporterVersion="2025.2.03" design:palette="flowable-work-process-palette" design:template="true">
+  <bpmn:process id="${action.key}" name="${action.name}" isExecutable="true" flowable:candidateStarterGroups="flowableUser">
+    <bpmn:extensionElements>
+      <flowable:security-policy-model><![CDATA[TCW-SEC-001]]></flowable:security-policy-model>
+      <design:stencilid><![CDATA[BPMNDiagram]]></design:stencilid>
+      <design:creationdate><![CDATA[2026-02-26T18:52:46.008Z]]></design:creationdate>
+      <design:modificationdate><![CDATA[2026-02-28T00:26:31.899Z]]></design:modificationdate>
+      <design:securitypolicy><![CDATA[TCW-SEC-001]]></design:securitypolicy>
+    </bpmn:extensionElements>
+    <bpmn:userTask id="FormTask_2" name="${action.name}" flowable:assignee="#[[$]]#{initiator}" flowable:formKey="${action.formKey}" flowable:formFieldValidation="false">
+      <bpmn:extensionElements>
+        <flowable:executionListener event="start" expression="#[[$]]#{self.setVariable('testStep', root.testCase.get('flowSteps').optional(bpmn:getBusinessKey()).orElse(json:object()))}"></flowable:executionListener>
+        <flowable:task-candidates-type><![CDATA[all]]></flowable:task-candidates-type>
+        <design:stencilid><![CDATA[FormTask]]></design:stencilid>
+        <design:stencilsuperid><![CDATA[Task]]></design:stencilsuperid>
+      </bpmn:extensionElements>
+    </bpmn:userTask>
+    <bpmn:scriptTask id="ScriptTask_12" name="Consolidate" scriptFormat="javascript" flowable:resultVariable="consolidatedStep" flowable:autoStoreVariables="false">
+      <bpmn:extensionElements>
+        <flowable:in sourceExpression="#[[$]]#{self.getBusinessKey()}" target="businessKey"></flowable:in>
+        <flowable:in source="testStep" target="step"></flowable:in>
+        <flowable:in sourceExpression="#[[$]]#{testStep.param0}" target="param0"></flowable:in>
+        <flowable:in sourceExpression="#[[$]]#{testStep.param1}" target="param1"></flowable:in>
+        <flowable:in sourceExpression="#[[$]]#{root.testCase.steps}" target="testCaseSteps"></flowable:in>
+        <flowable:in sourceExpression="#[[$]]#{root.testCase.flowSteps}" target="testCaseFlowSteps"></flowable:in>
+        <flowable:executionListener event="end" expression="#[[$]]#{root.testCase.steps.add(consolidatedStep)}"></flowable:executionListener>
+        <flowable:executionListener event="end" expression="#[[$]]#{root.testCase.flowSteps.put(bpmn:getBusinessKey(), testStep)}"></flowable:executionListener>
+        <design:stencilid><![CDATA[ScriptTask]]></design:stencilid>
+        <design:stencilsuperid><![CDATA[Task]]></design:stencilsuperid>
+      </bpmn:extensionElements>
+      <bpmn:script><![CDATA[
+var params = [];
+
+/**
+ * Builds a TestParameterValue and its nested complex values.
+ * @param {string} index        parameter index (used in the id)
+ * @param {string} apiParamId   apiParameterId of the top-level parameter
+ * @param {object} param        input node (has "factory" and "values")
+ * @param {object} mappings     key -> id / id -> type mappings
+ */
+function buildTestApiParam(index, apiParamId, param, mappings) {
+    var tcwParam = {
+        id: 'param' + index + '-' + businessKey,
+        tcDataType: 'TestParameterValue',
+        apiParameterId: apiParamId,
+        testParameterFactoryRef: param.get('factory').asText(),
+        complexTypeValues: {}
+    };
+
+    var values = param.get('values');
+    if (values) {
+        values.properties().forEach(function (prop) {
+            var paramId = mappings[prop.getKey()];
+            tcwParam.complexTypeValues[paramId] = {
+                id: paramId,
+                tcDataType: 'TestParameterValue',
+                apiParameterId: paramId,
+                testParameterFactoryRef: mappings[paramId], // the type
+                simpleValue: prop.getValue().asText(),
+                complexTypeValues: {}
+            };
+        });
+    }
+    return tcwParam;
+}
+
+/**
+ * Builds a TestParameterValue and its nested complex values.
+ * @param {string} index        parameter index (used in the id)
+ * @param {string} apiParamId   apiParameterId of the top-level parameter
+ * @param {object} param        input node (has "factory" and "values")
+ * @param {object} mappings     key -> id / id -> type mappings
+ */
+function buildSimpleParam(index, apiParamId, param, mappings) {
+    var tcwParam = {
+        id: 'param' + index + '-' + businessKey,
+        tcDataType: 'TestParameterValue',
+        simpleValue: param.getValue().asText(),
+        apiParameterId: apiParamId,
+        testParameterFactoryRef: param.get('factory').asText(),
+        complexTypeValues: {}
+    };
+    return tcwParam;
+}
+
+#if( $param0 )
+var param0mappings = [];
+#foreach( $parameterMappingName in ${param0.parameterMappings.keySet()} )
+param0mappings['${parameterMappingName}'] = '${param0.parameterMappings.get($parameterMappingName)}';
+#end
+
+#if ( ${param0.nature} == 'SimpleType' )
+params.push(buildSimpleParam(0, '${param0.testApiParameter}', param0, param0mappings));
+#else
+params.push(buildTestApiParam(0, '${param0.testApiParameter}', param0, param0mappings));
+#end
+
+#end## if( $param0 )
+
+#if( $param1 )
+var param1mappings = [];
+#foreach( $parameterMappingName in ${param1.parameterMappings.keySet()} )
+param1mappings['${parameterMappingName}'] = '${param1.parameterMappings.get($parameterMappingName)}';
+#end
+
+#if ( ${param1.nature} == 'SimpleType' )
+params.push(buildSimpleParam(1, '${param1.testApiParameter}', param1, param0mappings));
+#else
+params.push(buildTestApiParam(1, '${param1.testApiParameter}', param1, param0mappings));
+#end
+#end## if( $param1 )
+
+var consolidatedStep = {
+	roleRef: '${action.role}',
+    actorRef: step.get('actor').asText(),
+	actionRef: '${action.action}',
+	classifier: 'PREPARATION',
+	ordinal: testCaseSteps.size() + 1,
+    parametersValue: params,
+};
+
+flw.json.stringToJson(JSON.stringify(consolidatedStep))
+
+]]></bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:startEvent id="startnoneevent1" flowable:initiator="initiator" flowable:formFieldValidation="false">
+      <bpmn:extensionElements>
+        <flowable:work-actionForm-field-validation><![CDATA[false]]></flowable:work-actionForm-field-validation>
+        <design:stencilid><![CDATA[StartNoneEvent]]></design:stencilid>
+      </bpmn:extensionElements>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="EndNoneEvent_2">
+      <bpmn:extensionElements>
+        <design:stencilid><![CDATA[EndNoneEvent]]></design:stencilid>
+      </bpmn:extensionElements>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_10" sourceRef="FormTask_2" targetRef="ScriptTask_12">
+      <bpmn:extensionElements>
+        <design:stencilid><![CDATA[SequenceFlow]]></design:stencilid>
+      </bpmn:extensionElements>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_14" sourceRef="ScriptTask_12" targetRef="EndNoneEvent_2">
+      <bpmn:extensionElements>
+        <design:stencilid><![CDATA[SequenceFlow]]></design:stencilid>
+      </bpmn:extensionElements>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_13" sourceRef="startnoneevent1" targetRef="FormTask_2">
+      <bpmn:extensionElements>
+        <design:stencilid><![CDATA[SequenceFlow]]></design:stencilid>
+      </bpmn:extensionElements>
+    </bpmn:sequenceFlow>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_TCW-SEARCH-WEB">
+    <bpmndi:BPMNPlane bpmnElement="TCW-SEARCH-WEB" id="BPMNPlane_TCW-SEARCH-WEB">
+      <bpmndi:BPMNShape bpmnElement="FormTask_2" id="BPMNShape_FormTask_2">
+        <omgdc:Bounds height="80.0" width="100.0" x="695.0" y="236.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ScriptTask_12" id="BPMNShape_ScriptTask_12">
+        <omgdc:Bounds height="80.0" width="100.0" x="968.0" y="236.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="startnoneevent1" id="BPMNShape_startnoneevent1">
+        <omgdc:Bounds height="30.0" width="30.0" x="559.0" y="261.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EndNoneEvent_2" id="BPMNShape_EndNoneEvent_2">
+        <omgdc:Bounds height="28.0" width="28.0" x="1343.0" y="262.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="SequenceFlow_13" id="BPMNEdge_SequenceFlow_13" flowable:sourceDockerX="15.0" flowable:sourceDockerY="15.0" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
+        <omgdi:waypoint x="589.0" y="276.0"></omgdi:waypoint>
+        <omgdi:waypoint x="695.0" y="276.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="SequenceFlow_14" id="BPMNEdge_SequenceFlow_14" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="14.0" flowable:targetDockerY="14.0">
+        <omgdi:waypoint x="1068.0" y="276.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1343.0" y="276.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="SequenceFlow_10" id="BPMNEdge_SequenceFlow_10" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
+        <omgdi:waypoint x="795.0" y="276.0"></omgdi:waypoint>
+        <omgdi:waypoint x="968.0" y="276.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

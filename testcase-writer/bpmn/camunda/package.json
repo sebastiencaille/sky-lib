@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@camunda8/cli": "^4.6.1"
+  }
+}

@@ -18,7 +18,7 @@
 		<module>model</module>
 		<module>core</module>
 		<module>javatc</module>
-		<module>flowtc</module>
+		<module>bpmn</module>
 		<module>maven-plugin</module>
 		<module>gui</module>
 		<module>gui-it</module>

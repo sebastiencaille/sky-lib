@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Definitions_1985xny" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.53.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.10.0">
+  <bpmn:process id="${action.key}" name="${action.name}" isExecutable="true">
+    <bpmn:userTask id="FormTask_2" name="${action.name}">
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:formDefinition formId="${action.formKey}" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_13</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_10</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:scriptTask id="ScriptTask_12" name="Consolidate" scriptFormat="javascript">
+      <bpmn:extensionElements>
+        <zeebe:script expression="={&#10;  buildTestApiParam: function(prefix, apiId, p, mappings)&#10;    {&#10;      id: prefix + &#34;-&#34; + businessKey,&#10;      tcDataType: &#34;TestParameterValue&#34;,&#10;      apiParameterId: apiId,&#10;      testParameterFactoryRef: p.factory,&#10;      complexTypeValues:&#10;        if p.values = null then {}&#10;        else context(&#10;          for e in get entries(p.values) return {&#10;            key: get value(mappings, e.key),&#10;            value: {&#10;              id: get value(mappings, e.key),&#10;              tcDataType: &#34;TestParameterValue&#34;,&#10;              apiParameterId: get value(mappings, e.key),&#10;              testParameterFactoryRef: get value(mappings, get value(mappings, e.key)),&#10;              simpleValue: string(e.value),&#10;              complexTypeValues: {}&#10;            }&#10;          }&#10;&#10;        )&#10;    },&#10;    buildSimpleParam: function(prefix, apiId, p, mappings)&#10;        {&#10;          id: prefix + &#34; &#34; + businessKey,&#10;          tcDataType: &#34;TestParameterValue&#34;,&#10;          apiParameterId: apiId,&#10;          simpleValue: string(p.value)&#10;        },&#10;#if( $param0 )&#10;   param0mappings: {&#10;#foreach( $parameterMappingName in ${param0.parameterMappings.keySet()} )&#34;${parameterMappingName}&#34;: &#34;${param0.parameterMappings.get($parameterMappingName)}&#34;#if($foreach.hasNext),#end&#10;#end&#10;    },#end&#10;#if( $param1 )&#10;   param1mappings: {&#10;#foreach( $parameterMappingName in ${param1.parameterMappings.keySet()} )&#34;${parameterMappingName}&#34;: &#34;${param1.parameterMappings.get($parameterMappingName)}&#34;#if($foreach.hasNext),#end&#10;#end&#10;    },#end&#10;result: {&#10;    roleRef: &#34;${action.role}&#34;,&#10;    actorRef: &#34;$step.get('actor').asText()&#34;,&#10;    actionRef: &#34;${action.action}&#34;,&#10;    classifier: &#34;PREPARATION&#34;,&#10;    ordinal: count(testCaseSteps) + 1,&#10;    parametersValue: [#if( $param0 )#if ( ${param0.nature} == 'SimpleType' )      buildSimpleParam(&#34;param0&#34;, &#34;${param0.testApiParameter}&#34;, param0, param0mappings)#else&#10;      buildTestApiParam(&#34;param0&#34;, &#34;${param0.testApiParameter}&#34;, param0, param0mappings)#end#end #if( $param0 && $param1 ),#end #if( $param1 )#if ( ${param1.nature} == 'SimpleType' )&#10;      buildSimpleParam(&#34;param1&#34;, &#34;${param1.testApiParameter}&#34;, param1, param1mappings),&#10;    #else&#10;      buildTestApiParam(&#34;param1&#34;, &#34;${param1.testApiParameter}&#34;, param1, param1mappings)&#10;#end#end]&#10;  }&#10;}.result"
+         resultVariable="consolidatedStep"/>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_10</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_14</bpmn:outgoing>
+    </bpmn:scriptTask>
+    <bpmn:startEvent id="startnoneevent1">
+      <bpmn:outgoing>SequenceFlow_13</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="EndNoneEvent_2">
+      <bpmn:incoming>SequenceFlow_14</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_10" sourceRef="FormTask_2" targetRef="ScriptTask_12" />
+    <bpmn:sequenceFlow id="SequenceFlow_14" sourceRef="ScriptTask_12" targetRef="EndNoneEvent_2" />
+    <bpmn:sequenceFlow id="SequenceFlow_13" sourceRef="startnoneevent1" targetRef="FormTask_2" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="${action.key}-Process">
+    <bpmndi:BPMNPlane bpmnElement="${action.key}" id="BPMNPlane_${action.key}">
+      <bpmndi:BPMNShape bpmnElement="FormTask_2" id="BPMNShape_FormTask_2">
+        <omgdc:Bounds height="80.0" width="100.0" x="695.0" y="236.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ScriptTask_12" id="BPMNShape_ScriptTask_12">
+        <omgdc:Bounds height="80.0" width="100.0" x="968.0" y="236.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="startnoneevent1" id="BPMNShape_startnoneevent1">
+        <omgdc:Bounds height="30.0" width="30.0" x="559.0" y="261.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EndNoneEvent_2" id="BPMNShape_EndNoneEvent_2">
+        <omgdc:Bounds height="28.0" width="28.0" x="1343.0" y="262.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="SequenceFlow_13" id="BPMNEdge_SequenceFlow_13">
+        <omgdi:waypoint x="589.0" y="276.0"></omgdi:waypoint>
+        <omgdi:waypoint x="695.0" y="276.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="SequenceFlow_14" id="BPMNEdge_SequenceFlow_14">
+        <omgdi:waypoint x="1068.0" y="276.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1343.0" y="276.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="SequenceFlow_10" id="BPMNEdge_SequenceFlow_10">
+        <omgdi:waypoint x="795.0" y="276.0"></omgdi:waypoint>
+        <omgdi:waypoint x="968.0" y="276.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

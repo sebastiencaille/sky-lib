@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import ch.scaille.tcwriter.bpmn.flowable.FlowableGenerator;
-import ch.scaille.tcwriter.examples.ExampleFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import ch.scaille.tcwriter.examples.ExampleFactory;
 
 class FlowableGenerationTest {
     

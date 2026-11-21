@@ -198,6 +198,7 @@ public abstract class BpmnGenerator {
 			}
 		}
 		generateFile(engine, new VelocityContext(), "TCW-PUBLISH.bpmn", "TCW-PUBLISH.bpmn");
+		generateFile(engine, Map.of(), "TCW-PUBLISH-FORM.form", "TCW-PUBLISH-FORM.form");
 		return engine;
 	}
 

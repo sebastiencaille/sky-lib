@@ -1,0 +1,141 @@
+{
+  "components": [
+    {
+      "text": "${action.description}",
+      "type": "text",
+      "layout": {
+        "row": "Row_0pcu1jc",
+        "columns": null
+      },
+      "id": "Field_0ue7fv1"
+    }
+#if($param0.parameters.size() > 0),
+    {
+      "text": "${param0.label}",
+      "type": "text",
+      "layout": {
+        "row": "Row_0e42bh4",
+        "columns": null
+      },
+      "id": "Field_06en9pc"
+    },
+    {
+      "label": "Select",
+      "values": [
+#foreach($factory in $param0.parameters)
+        {
+           "label": "$factory.description",
+           "value": "$factory.modelKey"
+        }#if($foreach.hasNext),#end
+ #end
+ ],
+      "type": "select",
+      "layout": {
+        "row": "Row_1f3ye4x",
+        "columns": null
+      },
+      "id": "Field_036mecq",
+      "key": "testStep.param0.factory",
+      "defaultValue": "testStep.param0.factory"
+    },
+#foreach($factory in $param0.parameters)
+    {
+      "label": "",
+      "components": [
+#foreach($parameter in $factory.parameters)
+        {
+          "label": "$parameter.label",
+          "type": "textfield",
+          "layout": {
+            "row": "Row_0q4599n",
+            "columns": null
+          },
+          "id": "$factory.formKey-$parameter.id",
+          "key": "$factory.formKey-$parameter.variable"
+        }#if($foreach.hasNext),#end
+#end
+      ],
+      "showOutline": true,
+      "type": "group",
+      "layout": {
+        "row": "Row_1rif0k3",
+        "columns": null
+      },
+      "id": "$factory.modelKey",
+      "conditional": {
+         "hide": "=testStep.param0.factory != \"$factory.modelKey\""
+       }
+    }#if($foreach.hasNext),#end
+#end
+#end
+#if ($param1.parameters.size() >= 1),
+    {
+      "text": "${param1.label}",
+      "type": "text",
+      "layout": {
+        "row": "Row_1gym6xo",
+        "columns": null
+      },
+      "id": "Field_1v7n94p"
+    },
+    {
+      "label": "Select",
+      "values": [
+ #foreach($factory in $param1.parameters)
+         {
+           "label": "$factory.description",
+           "value": "$factory.modelKey"
+         }#if($foreach.hasNext),#end
+  #end
+      ],
+      "type": "select",
+      "layout": {
+        "row": "Row_0qnclof",
+        "columns": null
+      },
+      "id": "Field_0ws1y8f",
+      "key": "testStep.param1.factory",
+      "defaultValue": "testStep.param1.factory"
+    },
+#foreach($factory in $param1.parameters)
+    {
+      "label": "",
+      "components": [
+#foreach($parameter in $factory.parameters())
+        {
+          "label": "$parameter.label",
+          "type": "textfield",
+          "layout": {
+            "row": "Row_0q4599n",
+            "columns": null
+          },
+          "id": "$factory.formKey-$parameter.id",
+          "key": "$factory.formKey-$parameter.variable"
+        }#if($foreach.hasNext),#end
+#end
+      ],
+      "showOutline": true,
+      "type": "group",
+      "layout": {
+        "row": "Row_4main",
+        "columns": null
+      },
+      "id": "$factory.modelKey",
+      "conditional": {
+         "hide": "=testStep.param1.factory != \"$factory.modelKey\""
+       }
+    }#if($foreach.hasNext),#end
+#end
+#end
+  ],
+  "type": "default",
+  "id": "$form.formKey",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.10.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.53.0"
+  },
+  "schemaVersion": 19
+
+}

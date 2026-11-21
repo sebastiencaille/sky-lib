@@ -47,7 +47,6 @@ public class CamundaGenerator extends BpmnGenerator {
 	public VelocityEngine generate() throws IOException {
 	
 		final var engine = super.generate();
-		generateFile(engine, Map.of(), "tcw-tc.bpmn", "tcw-tc.bpmn");
 		generateFile(engine, new VelocityContext(), "camunda.json", "camunda.json");
 		return engine;
 	}

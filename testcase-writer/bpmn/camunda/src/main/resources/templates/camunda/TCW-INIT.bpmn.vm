@@ -3,9 +3,9 @@
   <bpmn:process id="TCW-INIT" name="Test Case Init" isExecutable="true">
     <bpmn:scriptTask id="InitTestCaseTask" name="Init Test Case" scriptFormat="javascript">
       <bpmn:extensionElements>
-        <zeebe:script expression="={&#10;  baseTestCase: {&#10;    flowSteps: {},&#10;    steps: [],&#10;    pkgAndClassName: &#34;${testCase.className}&#34;,&#10;    metadata: {&#10;	  tags: testCase.tags,&#10;      description: &#34;${testCase.description}&#34;,&#10;      transientId: &#34;${testCase.name}&#34;&#10;    }&#10;  },&#10;  extraFlowSteps: if testCaseValues != null and testCaseValues.flowSteps != null&#10;                  then testCaseValues.flowSteps&#10;                  else {},&#10;  result: context merge([&#10;    baseTestCase,&#10;    { flowSteps: context merge([baseTestCase.flowSteps, extraFlowSteps]) }&#10;  ])&#10;}.result" resultVariable="jsonTestCase"/>
+        <zeebe:script expression="={&#10;  jsonTestCase: {&#10;    flowSteps: {},&#10;    steps: [],&#10;    pkgAndClassName: &#34;${testCase.className}&#34;,&#10;    metadata: {&#10;	  tags: testCase.tags,&#10;      description: &#34;${testCase.description}&#34;,&#10;      transientId: &#34;${testCase.name}&#34;&#10;    }&#10;  },&#10;  extraFlowSteps: if testCaseValues != null and testCaseValues.flowSteps != null&#10;                  then testCaseValues.flowSteps&#10;                  else {},&#10;  result: context merge([&#10;    jsonTestCase,&#10;    { flowSteps: context merge([jsonTestCase.flowSteps, extraFlowSteps]) }&#10;  ])&#10;}.result" resultVariable="jsonTestCase"/>
         <zeebe:ioMapping>
-          <zeebe:output source="=jsonTestCase" target="jsonTestCase" />
+          <zeebe:output source="=jsonTestCase" target="testCase" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_4</bpmn:incoming>
@@ -17,7 +17,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_4" sourceRef="startnoneevent1" targetRef="InitTestCaseTask" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_TCW-INIT">
-  <bpmndi:BPMNPlane id="BPMNPlane_TCW-INIT" bpmnElement="TCW-INIT">
+    <bpmndi:BPMNPlane id="BPMNPlane_TCW-INIT" bpmnElement="TCW-INIT">
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="InitTestCaseTask">
         <omgdc:Bounds x="336" y="76" width="100" height="80" />
       </bpmndi:BPMNShape>

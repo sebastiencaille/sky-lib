@@ -1,0 +1,22 @@
+{
+  "components": [
+    {
+      "text": "=jsonTestCase",
+      "type": "text",
+      "layout": {
+        "row": "Row_0yrhs4z",
+        "columns": null
+      },
+      "id": "Field_02uizp3"
+    }
+  ],
+  "type": "default",
+  "id": "TCW-PUBLISH-FORM",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.10.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.53.0"
+  },
+  "schemaVersion": 19
+}

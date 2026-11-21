@@ -9,4 +9,6 @@ module testcase.writer.bpmn.camunda {
     requires testcase.writer.bpmn.core;
     requires org.jspecify;
     requires org.apache.commons.lang3;
+
+    requires org.junit.jupiter.api;
 }
